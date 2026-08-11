@@ -6,10 +6,12 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, MapPin } from 'lucide-react';
+import { ArrowLeft, MapPin, Share2 } from 'lucide-react';
 import { useStoreById, useStoreListings, useStoreListing } from '@/hooks/use-stores';
 import { StoreListingCard } from '@/components/app/stores/StoreListingCard';
 import { ListingDetailDrawer } from '@/components/app/stores/ListingDetailDrawer';
+import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
+import { dehubLinkFor } from '@/lib/dehub-links';
 import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/SEOHead';
 
@@ -20,6 +22,7 @@ export default function StoreDetailPage() {
   const { data: store, isLoading: storeLoading } = useStoreById(storeId);
   const { data: listings = [], isLoading: listingsLoading } = useStoreListings(storeId);
   const [selectedListing, setSelectedListing] = useState<any>(null);
+  const [shareOpen, setShareOpen] = useState(false);
 
   // Open drawer when ?listing=<id> is present (e.g. from a shared post embed).
   const linkedListingId = searchParams.get('listing');
@@ -68,6 +71,14 @@ export default function StoreDetailPage() {
           aria-label="Go back"
         >
           <ArrowLeft className="w-4 h-4 text-white" />
+        </button>
+
+        <button
+          onClick={() => setShareOpen(true)}
+          className="absolute top-3 right-3 z-10 bg-black/50 backdrop-blur-sm rounded-full p-2"
+          aria-label="Share store"
+        >
+          <Share2 className="w-4 h-4 text-white" />
         </button>
 
         <div className="aspect-[3/1] w-full bg-zinc-900">
@@ -137,6 +148,13 @@ export default function StoreDetailPage() {
         listing={selectedListing}
         open={!!selectedListing}
         onClose={closeListing}
+      />
+
+      <ShareEntityDrawer
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        url={dehubLinkFor.store(store.id)}
+        shareTitle={store.name || 'Store'}
       />
     </div>
   );

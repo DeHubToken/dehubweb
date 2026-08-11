@@ -12,7 +12,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from './ShippingAddressForm';
-import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck } from 'lucide-react';
+import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2 } from 'lucide-react';
+import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
+import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCreateOrder } from '@/hooks/use-stores';
 import { sendERC20Token } from '@/lib/wallet/send';
@@ -36,6 +38,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const [imgIdx, setImgIdx] = useState(0);
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useState('');
+  const [shareOpen, setShareOpen] = useState(false);
   const { data: prices } = useTokenPrices();
   const dhbPrice = prices?.DHB ?? 0;
   if (!listing) return null;
@@ -90,10 +93,19 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   };
 
   return (
+    <>
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
       <DrawerContent className={GLASS_STYLES.drawer}>
-        <DrawerHeader>
+        <DrawerHeader className="flex flex-row items-center justify-between gap-3">
           <DrawerTitle className="truncate">{listing.title}</DrawerTitle>
+          <button
+            type="button"
+            onClick={() => setShareOpen(true)}
+            aria-label="Share item"
+            className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
         </DrawerHeader>
         <div className="px-4 pb-6 space-y-4 max-h-[75vh] overflow-y-auto">
           {/* Image carousel */}
@@ -199,5 +211,15 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
         </div>
       </DrawerContent>
     </Drawer>
+
+    {/* Sibling, not a child: a Drawer nested inside another Drawer's root is
+        how the "DialogPortal must be used within Dialog" crash gets in. */}
+    <ShareEntityDrawer
+      open={shareOpen}
+      onOpenChange={setShareOpen}
+      url={dehubLinkFor.listing(listing.store_id, listing.id)}
+      shareTitle={listing.title}
+    />
+    </>
   );
 }
