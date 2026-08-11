@@ -294,10 +294,9 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
-        {/* Tip message — system-style bubble */}
+        {/* Tip message — system-style bubble. Monochrome, as on mobile: the amber
+            was the last colour left in a thread whose palette is black and white. */}
         {message.msgType === 'tip' && (
-          {/* Monochrome, as on mobile — the amber was the last colour left in a
-              thread whose palette is black and white. */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.16] text-zinc-200 text-sm">
             <Gem className="w-4 h-4 text-white" />
             <span>
