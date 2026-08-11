@@ -10,6 +10,7 @@ import { uploadCommunityMedia, useUpdateCommunity, usePinnedCommunities, usePinC
 import type { Community } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
+import { dehubLinkFor } from '@/lib/dehub-links';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { DescriptionWithLinks } from './DescriptionWithLinks';
@@ -203,8 +204,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             <PopoverContent align="end" className="w-48 p-1.5">
               <button
                 onClick={() => {
-                  const url = `${window.location.origin}/app/communities/${community.slug}`;
-                  openPostModal(url, community.slug.toLowerCase());
+                  openPostModal(dehubLinkFor.community(community.slug), community.slug.toLowerCase());
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
               >
@@ -220,8 +220,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               </button>
               <button
                 onClick={() => {
-                  const url = `${window.location.origin}/app/communities/${community.slug}`;
-                  navigator.clipboard.writeText(url);
+                  navigator.clipboard.writeText(dehubLinkFor.community(community.slug));
                   toast.success(t('communities.linkCopied'));
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
@@ -375,7 +374,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
         open={inviteOpen}
         onOpenChange={setInviteOpen}
         title={t('communities.inviteToCommunity', { defaultValue: 'Invite to community' })}
-        initialMessage={`${window.location.origin}/app/communities/${community.slug}`}
+        initialMessage={dehubLinkFor.community(community.slug)}
         onConversationCreated={() => {
           setInviteOpen(false);
           toast.success(t('communities.inviteSent', { defaultValue: 'Invite sent' }));

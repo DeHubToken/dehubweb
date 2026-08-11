@@ -10,7 +10,8 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
-import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { stripDehubLinkMatches } from '@/lib/dehub-links';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -354,44 +355,60 @@ function FeedDescription({
     return [title, description];
   }, [isTranslated, translatedText, title, description]);
   
+  // DeHub links become cards, so they come out of the text — and they come out
+  // BEFORE the truncation below, not after. Stripping afterwards meant a URL
+  // could be cut in half by the 150-character clamp and then no longer match,
+  // leaving half a link on screen next to its own card; it also spent a third
+  // of the visible budget on a URL nobody reads.
+  const linkSource = useMemo(
+    () => [displayTitle, displayDescription].filter(Boolean).join('\n'),
+    [displayTitle, displayDescription],
+  );
+  const { links: dehubLinks } = useDehubLinks(linkSource);
+  const linkFreeTitle = useMemo(
+    () => (dehubLinks.length ? stripDehubLinkMatches(displayTitle, dehubLinks) : displayTitle),
+    [displayTitle, dehubLinks],
+  );
+  const linkFreeDescription = useMemo(
+    () => (dehubLinks.length ? stripDehubLinkMatches(displayDescription, dehubLinks) : displayDescription),
+    [displayDescription, dehubLinks],
+  );
+
   // Suppress duplicate: if description starts with the title text, strip it out
   const dedupedDescription = useMemo(() => {
-    if (!displayTitle || !displayDescription) return displayDescription;
-    const trimTitle = displayTitle.trim();
-    const trimDesc = displayDescription.trim();
+    if (!linkFreeTitle || !linkFreeDescription) return linkFreeDescription;
+    const trimTitle = linkFreeTitle.trim();
+    const trimDesc = linkFreeDescription.trim();
     if (trimDesc === trimTitle) return undefined;
     if (trimDesc.startsWith(trimTitle)) {
       const rest = trimDesc.slice(trimTitle.length).replace(/^\s*\n+/, '').trim();
       return rest || undefined;
     }
-    return displayDescription;
-  }, [displayTitle, displayDescription]);
+    return linkFreeDescription;
+  }, [linkFreeTitle, linkFreeDescription]);
 
   const hasLongDescription = dedupedDescription && dedupedDescription.length > MAX_LENGTH;
-  const shownDescription = expanded || !hasLongDescription 
-    ? dedupedDescription 
+  const shownDescription = expanded || !hasLongDescription
+    ? dedupedDescription
     : `${dedupedDescription.slice(0, MAX_LENGTH)}...`;
-  
-  if (!title && !description) return null;
 
-  // Strip community URLs from display text — card embed handles them visually elsewhere
-  const cleanedTitle = displayTitle && hasCommunityLink(displayTitle) ? stripCommunityLinks(displayTitle) : displayTitle;
-  const cleanedShownDescription = shownDescription && hasCommunityLink(shownDescription) ? stripCommunityLinks(shownDescription) : shownDescription;
+  // A post whose whole caption was a link still has something to show.
+  if (!title && !description && dehubLinks.length === 0) return null;
 
   return (
     <div className="space-y-1">
-      {cleanedTitle && (
+      {linkFreeTitle && (
         <h3 className="text-white text-sm font-semibold leading-tight">
-          {renderTextWithLinks(cleanedTitle)}
+          {renderTextWithLinks(linkFreeTitle)}
         </h3>
       )}
-      {cleanedShownDescription && (
+      {shownDescription && (
         <div>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            {renderTextWithLinks(cleanedShownDescription)}
+            {renderTextWithLinks(shownDescription)}
           </p>
           {hasLongDescription && (
-            <button 
+            <button
               onClick={() => setExpanded(!expanded)}
               className="text-zinc-500 text-xs flex items-center gap-0.5 mt-1 hover:text-zinc-400 transition-colors"
             >
@@ -404,6 +421,7 @@ function FeedDescription({
           )}
         </div>
       )}
+      <DehubLinkEmbeds links={dehubLinks} />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { ChatLinkPreviews } from './ChatLinkPreviews';
-import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -189,6 +189,12 @@ export const ChatMessage = memo(function ChatMessage({
     handleShowOriginal,
   } = useTextTranslation(message.content);
 
+  // Community chat used to card up community links and nothing else — a store
+  // item or an event dropped into a channel arrived as a bare URL.
+  const { links: chatDehubLinks, displayText: chatDisplayText } = useDehubLinks(
+    isTranslated ? translatedText : message.content,
+  );
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
@@ -358,18 +364,14 @@ export const ChatMessage = memo(function ChatMessage({
           </div>
         </div>
         
-        {message.type === 'text' && (() => {
-          const raw = isTranslated ? translatedText : message.content;
-          const communitySlug = raw ? extractCommunitySlug(raw) : null;
-          const displayText = raw && communitySlug ? stripCommunityLinks(raw) : raw;
-          return (
+        {message.type === 'text' && (
             <div>
-              {displayText && (
+              {chatDisplayText && (
                 <p className="text-zinc-300 text-sm break-words whitespace-pre-wrap">
-                  {renderTextWithLinks(displayText)}
+                  {renderTextWithLinks(chatDisplayText)}
                 </p>
               )}
-              {communitySlug && <CommunityLinkEmbed slug={communitySlug} />}
+              <DehubLinkEmbeds links={chatDehubLinks} />
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
                 {!isTooShort && (
@@ -390,8 +392,7 @@ export const ChatMessage = memo(function ChatMessage({
                 )}
               </div>
             </div>
-          );
-        })()}
+        )}
         
         {message.type === 'image' && message.imageUrl && (
           <div className="mt-1">
