@@ -527,7 +527,7 @@ export function formatDuration(seconds?: number): string {
  */
 export function formatViews(count?: number): string {
   if (!count) return '0 views';
-  
+
   if (count >= 1000000) {
     return `${(count / 1000000).toFixed(1)}M views`;
   }
@@ -535,6 +535,42 @@ export function formatViews(count?: number): string {
     return `${(count / 1000).toFixed(1)}K views`;
   }
   return `${count} views`;
+}
+
+/**
+ * Read a count back out of a string produced by formatCount or formatViews.
+ *
+ * Feed items carry their counts already formatted — `views` on a VideoItem is
+ * "15.4K", not 15420 — so anything converting a feed item back into an API
+ * shape has to undo that. `parseInt` does not: it stops at the first non-digit,
+ * turning "15.4K" into 15 and "1.2K views" into 1, which is how opening a post
+ * from the feed painted "15 views" for a moment before the real count arrived.
+ *
+ * The suffix is what carries the magnitude, so it has to be handled here rather
+ * than by the caller. Kept next to the formatters deliberately: this is their
+ * inverse and has to change whenever they do.
+ *
+ * Lossy by nature — "15.4K" cannot give back 15,420 — but only to the precision
+ * the string had already discarded, so re-formatting the result reproduces the
+ * same string and nothing visibly changes.
+ */
+export function parseFormattedCount(value?: string | number | null): number {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  if (!value) return 0;
+
+  const match = /(-?[\d.]+)\s*([KM])?/i.exec(value.trim());
+  if (!match) return 0;
+
+  const amount = parseFloat(match[1]);
+  if (!Number.isFinite(amount)) return 0;
+
+  const multiplier = match[2]?.toUpperCase() === 'M'
+    ? 1_000_000
+    : match[2]?.toUpperCase() === 'K'
+      ? 1_000
+      : 1;
+
+  return Math.max(0, Math.round(amount * multiplier));
 }
 
 /**
