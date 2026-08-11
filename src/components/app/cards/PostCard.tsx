@@ -22,6 +22,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
+import { PostAttachments } from './PostAttachments';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -422,6 +423,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {bodyWithoutLinks?.trim() ? (
           <TranslatableText text={bodyWithoutLinks} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
         ) : null}
+
+        {/* Attached documents (feed-file posts) */}
+        <PostAttachments attachments={post.attachments} className="pt-1" />
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (

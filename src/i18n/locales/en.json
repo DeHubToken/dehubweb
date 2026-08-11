@@ -332,6 +332,8 @@
     "videos": "Videos",
     "images": "Images",
     "text": "Text",
+    "audio": "Audio",
+    "files": "Files",
     "ppv": "PPV",
     "bounty": "Bounty",
     "locked": "Gated",
