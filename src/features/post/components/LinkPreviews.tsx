@@ -1,71 +1,47 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
-import { EventLinkEmbed, extractEventNumber } from '@/components/app/events/EventLinkEmbed';
-import { StoreLinkEmbed, extractStoreLinkInfo } from '@/components/app/stores/StoreLinkEmbed';
+import { DehubLinkEmbed, MAX_EMBEDS_PER_MESSAGE } from '@/components/app/cards/DehubLinkEmbed';
+import { findDehubLinks, parseDehubLink } from '@/lib/dehub-links';
 
 interface LinkPreviewsProps {
   text: string;
   onRemoveCommunityLink?: () => void;
 }
 
+/**
+ * What the composer shows under the text box: a card per DeHub entity link, and
+ * OG previews for outside links.
+ *
+ * This used to keep one piece of dismissal state per entity KIND — a
+ * `communityDismissed`, an `eventDismissed`, a `storeDismissed` — which meant
+ * dismissing one community link and then pasting a different one showed the new
+ * one only because of a dedicated effect written to undo the flag, and there was
+ * no such effect for stores. Dismissal is now keyed by the link itself, so it
+ * survives an edit elsewhere in the text and clears when that exact link goes.
+ */
 export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps) {
   const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(new Map());
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
-  const [communityDismissed, setCommunityDismissed] = useState(false);
-  const [eventDismissed, setEventDismissed] = useState(false);
-  const [storeDismissed, setStoreDismissed] = useState(false);
+  const [dismissedLinks, setDismissedLinks] = useState<Set<string>>(new Set());
   const fetchedUrls = useRef<Set<string>>(new Set());
 
-  // Detect community slug from text
-  const communitySlug = communityDismissed ? null : extractCommunitySlug(text);
-  
-  // Detect event ID from text
-  const eventNum = eventDismissed ? null : extractEventNumber(text);
-
-  // Detect store / listing link from text
-  const storeInfo = storeDismissed ? null : extractStoreLinkInfo(text);
-
-  // Reset dismissed state when text changes to a different community or no community
-  const prevSlugRef = useRef<string | null>(null);
-  useEffect(() => {
-    const currentSlug = extractCommunitySlug(text);
-    if (currentSlug !== prevSlugRef.current) {
-      prevSlugRef.current = currentSlug;
-      if (currentSlug && communityDismissed) {
-        // New community link added — un-dismiss
-        setCommunityDismissed(false);
-      }
-    }
-  }, [text, communityDismissed]);
-
-  // Reset dismissed state when text changes to a different event
-  const prevEventRef = useRef<string | null>(null);
-  useEffect(() => {
-    const currentEid = extractEventNumber(text);
-    if (currentEid !== prevEventRef.current) {
-      prevEventRef.current = currentEid;
-      if (currentEid && eventDismissed) {
-        setEventDismissed(false);
-      }
-    }
-  }, [text, eventDismissed]);
+  const dehubLinks = useMemo(
+    () => findDehubLinks(text)
+      .filter((link) => !dismissedLinks.has(link.path))
+      .slice(0, MAX_EMBEDS_PER_MESSAGE),
+    [text, dismissedLinks],
+  );
 
   useEffect(() => {
-    const urls = extractUrlsFromText(text);
-    
-    // Skip community, event and store URLs - they get their own embeds
-    const nonSpecialUrls = urls.filter(
-      url => !extractCommunitySlug(url) && !extractEventNumber(url) && !extractStoreLinkInfo(url)
-    );
-    
-    // Filter out removed and already fetched URLs
-    const newUrls = nonSpecialUrls.filter(
+    // Outside links only — DeHub links get their own cards above.
+    const urls = extractUrlsFromText(text).filter((url) => !parseDehubLink(url));
+
+    const newUrls = urls.filter(
       url => !removedUrls.has(url) && !fetchedUrls.current.has(url) && !previews.has(url)
     );
 
@@ -79,9 +55,9 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
 
     newUrls.forEach(async (url) => {
       fetchedUrls.current.add(url);
-      
+
       const preview = await fetchLinkPreview(url);
-      
+
       setLoading(prev => {
         const next = new Set(prev);
         next.delete(url);
@@ -103,78 +79,38 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     });
   };
 
-  const handleRemoveCommunity = () => {
-    setCommunityDismissed(true);
-    onRemoveCommunityLink?.();
-  };
-
-  const handleRemoveEvent = () => {
-    setEventDismissed(true);
-  };
-
-  // Get URLs that should be displayed (in text, not removed, not community/event/store links)
+  // Get URLs that should be displayed (in text, not removed, not DeHub links)
   const currentUrls = extractUrlsFromText(text)
-    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url) && !extractEventNumber(url) && !extractStoreLinkInfo(url));
+    .filter(url => !removedUrls.has(url) && !parseDehubLink(url));
   const visiblePreviews = currentUrls
     .map(url => previews.get(url))
     .filter((p): p is LinkPreviewData => !!p);
   const loadingUrls = currentUrls.filter(url => loading.has(url));
 
-  const hasContent = communitySlug || eventNum || storeInfo || visiblePreviews.length > 0 || loadingUrls.length > 0;
+  const hasContent = dehubLinks.length > 0 || visiblePreviews.length > 0 || loadingUrls.length > 0;
   if (!hasContent) return null;
 
   return (
     <div className="mt-3 space-y-2">
-      {/* Community link embed with dismiss button */}
-      {communitySlug && (
-        <div className="relative">
-          <CommunityLinkEmbed slug={communitySlug} />
+      {dehubLinks.map((link) => (
+        <div className="relative" key={`${link.kind}-${link.path}`}>
+          <DehubLinkEmbed link={link} />
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              handleRemoveCommunity();
+              setDismissedLinks(prev => new Set(prev).add(link.path));
+              // The composer strips the community URL out of the draft when its
+              // card is dismissed; kept to that one kind because it is the only
+              // one the caller knows how to remove from the text.
+              if (link.kind === 'community') onRemoveCommunityLink?.();
             }}
             className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
-      )}
-
-      {/* Event link embed with dismiss button */}
-      {eventNum && (
-        <div className="relative">
-          <EventLinkEmbed eventNumber={eventNum} />
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRemoveEvent();
-            }}
-            className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
-
-      {/* Store / listing link embed with dismiss button */}
-      {storeInfo && (
-        <div className="relative">
-          <StoreLinkEmbed storeId={storeInfo.storeId} listingId={storeInfo.listingId} />
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setStoreDismissed(true);
-            }}
-            className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
+      ))}
 
       <AnimatePresence mode="popLayout">
         {visiblePreviews.map((preview) => (
@@ -185,7 +121,7 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
           />
         ))}
       </AnimatePresence>
-      
+
       {/* Loading skeletons */}
       {loadingUrls.map((url) => (
         <div key={url} className="flex bg-white/5 border border-white/10 rounded-xl overflow-hidden">

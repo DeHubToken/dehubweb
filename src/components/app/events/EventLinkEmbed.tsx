@@ -8,26 +8,28 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Calendar, MapPin, Users, Flame, Lock } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useEventRsvps, type CommunityEvent } from '@/hooks/use-events';
+import { findDehubLinks } from '@/lib/dehub-links';
 import { FriendsAtEvent } from './FriendsAtEvent';
 
-/** Extract event number from a URL like /app/events/1 */
+/** @deprecated Use `findDehubLink` from `@/lib/dehub-links`. */
 export function extractEventNumber(text: string): string | null {
-  const match = text.match(/\/app\/events\/(\d+)/);
-  return match ? match[1] : null;
+  return findDehubLinks(text).find((l) => l.kind === 'event')?.eventNumber ?? null;
 }
 
-/** Check if text contains an event link */
+/** @deprecated Use `findDehubLink` from `@/lib/dehub-links`. */
 export function hasEventLink(text: string): boolean {
-  return /\/app\/events\/\d+/.test(text);
+  return findDehubLinks(text).some((l) => l.kind === 'event');
 }
 
 interface EventLinkEmbedProps {
   eventNumber: string;
+  fallback?: ReactNode;
 }
 
-export function EventLinkEmbed({ eventNumber }: EventLinkEmbedProps) {
+export function EventLinkEmbed({ eventNumber, fallback = null }: EventLinkEmbedProps) {
   const navigate = useNavigate();
   const num = parseInt(eventNumber, 10);
   const { data: event, isLoading } = useQuery({
@@ -51,7 +53,7 @@ export function EventLinkEmbed({ eventNumber }: EventLinkEmbedProps) {
     );
   }
 
-  if (!event) return null;
+  if (!event) return <>{fallback}</>;
 
   const startDate = new Date(event.starts_at);
   const goingCount = rsvps.filter(r => r.status === 'going' || r.status === 'approved').length || event.going_count;

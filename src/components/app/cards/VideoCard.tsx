@@ -33,7 +33,7 @@ import { PPVDrawerContent } from './PPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
-import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -426,9 +426,10 @@ interface ExpandableDescriptionProps {
 
 function ExpandableDescription({ description: rawDescription, isImmersive }: ExpandableDescriptionProps) {
   // Normalize line breaks: unify \r\n → \n, then cap consecutive blank lines to max 1 (i.e. max 2 newlines)
-  // Also strip community URLs — the CommunityLinkEmbed card handles that visually (display-only, never sent to API).
   const normalized = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
-  const description = hasCommunityLink(normalized) ? stripCommunityLinks(normalized) : normalized;
+  // DeHub links render as cards below, so the URLs come out of the copy
+  // (display-only — never sent back to the API).
+  const { links: dehubLinks, displayText: description } = useDehubLinks(normalized);
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -450,12 +451,17 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
   if (!isImmersive) {
     // Non-immersive: simple 1-line truncation
     return (
-      <TranslatableText
-        text={description}
-        className="text-zinc-400 text-sm mb-2 line-clamp-1"
-        as="p"
-        auto={false}
-      />
+      <>
+        {description ? (
+          <TranslatableText
+            text={description}
+            className="text-zinc-400 text-sm mb-2 line-clamp-1"
+            as="p"
+            auto={false}
+          />
+        ) : null}
+        <DehubLinkEmbeds links={dehubLinks} />
+      </>
     );
   }
 
@@ -465,13 +471,16 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
         ref={containerRef}
         className={isExpanded ? '' : 'line-clamp-4'}
       >
-        <TranslatableText
-          text={description}
-          className="text-zinc-400 text-sm"
-          as="p"
-          auto={false}
-        />
+        {description ? (
+          <TranslatableText
+            text={description}
+            className="text-zinc-400 text-sm"
+            as="p"
+            auto={false}
+          />
+        ) : null}
       </div>
+      <DehubLinkEmbeds links={dehubLinks} />
       {needsExpansion && !isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}

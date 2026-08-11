@@ -11,35 +11,40 @@
 
 import { useNavigate } from 'react-router-dom';
 import { ImageIcon, Store as StoreIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useStoreById, useStoreListing } from '@/hooks/use-stores';
 import { useTokenPrices } from '@/hooks/use-token-prices';
+import { findDehubLinks } from '@/lib/dehub-links';
 import dehubCoin from '@/assets/dehub-coin.png';
 
-const STORE_PATH_RE = /\/app\/stores\/([a-fA-F0-9-]{8,})(?:\?[^\s]*?listing=([a-fA-F0-9-]{8,}))?/;
-
-/** Returns { storeId, listingId } if a store/listing URL is present. */
+/**
+ * @deprecated Use `findDehubLink` from `@/lib/dehub-links` — it is host-checked
+ * and reads `?listing=` off the parsed query rather than out of the raw string.
+ */
 export function extractStoreLinkInfo(text: string): { storeId: string; listingId: string | null } | null {
-  const m = text.match(STORE_PATH_RE);
-  if (!m) return null;
-  return { storeId: m[1], listingId: m[2] || null };
+  const match = findDehubLinks(text).find((l) => l.kind === 'store' || l.kind === 'listing');
+  if (!match) return null;
+  return { storeId: match.storeId!, listingId: match.listingId ?? null };
 }
 
+/** @deprecated Use `findDehubLink` from `@/lib/dehub-links`. */
 export function hasStoreLink(text: string): boolean {
-  return STORE_PATH_RE.test(text);
+  return findDehubLinks(text).some((l) => l.kind === 'store' || l.kind === 'listing');
 }
 
 interface Props {
   storeId: string;
   listingId: string | null;
+  fallback?: ReactNode;
 }
 
-export function StoreLinkEmbed({ storeId, listingId }: Props) {
-  if (listingId) return <ListingEmbed listingId={listingId} />;
-  return <StoreEmbed storeId={storeId} />;
+export function StoreLinkEmbed({ storeId, listingId, fallback = null }: Props) {
+  if (listingId) return <ListingEmbed listingId={listingId} fallback={fallback} />;
+  return <StoreEmbed storeId={storeId} fallback={fallback} />;
 }
 
 // ── Listing card ────────────────────────────────────────────
-function ListingEmbed({ listingId }: { listingId: string }) {
+function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: ReactNode }) {
   const navigate = useNavigate();
   const { data: listing, isLoading } = useStoreListing(listingId);
   const { data: prices } = useTokenPrices();
@@ -47,7 +52,7 @@ function ListingEmbed({ listingId }: { listingId: string }) {
   if (isLoading) {
     return <div className="mt-2 h-24 rounded-xl bg-white/[0.04] animate-pulse" />;
   }
-  if (!listing) return null;
+  if (!listing) return <>{fallback}</>;
 
   const images = (listing.images as string[]) || [];
   const firstImage = images[0];
@@ -102,14 +107,14 @@ function ListingEmbed({ listingId }: { listingId: string }) {
 }
 
 // ── Store card ──────────────────────────────────────────────
-function StoreEmbed({ storeId }: { storeId: string }) {
+function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNode }) {
   const navigate = useNavigate();
   const { data: store, isLoading } = useStoreById(storeId);
 
   if (isLoading) {
     return <div className="mt-2 h-16 rounded-xl bg-white/[0.04] animate-pulse" />;
   }
-  if (!store) return null;
+  if (!store) return <>{fallback}</>;
 
   return (
     <button

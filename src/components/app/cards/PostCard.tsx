@@ -22,8 +22,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
-import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
-import { StoreLinkEmbed, extractStoreLinkInfo, hasStoreLink } from '@/components/app/stores/StoreLinkEmbed';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -145,6 +144,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     handleShowOriginal,
     isTooShort: nothingToTranslate,
   } = useTranslation(post.content);
+
+  // DeHub links in the body become cards, and the URLs that became cards come
+  // out of the text. Run on the text actually being displayed so the strip
+  // matches what is on screen — a translation that mangled a URL then keeps it
+  // as visible text rather than dropping it for a card that never renders.
+  const bodyText = isTranslated ? translatedText : post.content;
+  const { links: dehubLinks, displayText: bodyWithoutLinks } = useDehubLinks(bodyText);
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
@@ -409,37 +415,25 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {post.title && (
           <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
         )}
-        {(() => {
-          const rawDisplay = isTranslated ? translatedText : post.content;
-          const displayText = rawDisplay && hasCommunityLink(rawDisplay) ? stripCommunityLinks(rawDisplay) : rawDisplay;
-          // auto={false}: the useTranslation above owns this post's translation
-          // and `displayText` is already its output. Left on, TranslatableText
-          // ran a second translation of the same body — and once the first one
-          // landed, a third of the translated text.
-          return displayText?.trim() ? (
-            <TranslatableText text={displayText} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
-          ) : null;
-        })()}
+        {/* auto={false}: the useTranslation above owns this post's translation
+            and `bodyWithoutLinks` is already its output. Left on, TranslatableText
+            ran a second translation of the same body — and once the first one
+            landed, a third of the translated text. */}
+        {bodyWithoutLinks?.trim() ? (
+          <TranslatableText text={bodyWithoutLinks} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
+        ) : null}
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
           <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
         )}
 
-        {/* Community link embed */}
-        {post.content && hasCommunityLink(post.content) && (() => {
-          const slug = extractCommunitySlug(post.content);
-          return slug ? <CommunityLinkEmbed slug={slug} /> : null;
-        })()}
+        {/* DeHub entity cards — post, profile, community, invite, store, item, event */}
+        <DehubLinkEmbeds links={dehubLinks} />
 
-        {/* Store / listing link embed */}
-        {post.content && hasStoreLink(post.content) && (() => {
-          const info = extractStoreLinkInfo(post.content);
-          return info ? <StoreLinkEmbed storeId={info.storeId} listingId={info.listingId} /> : null;
-        })()}
-
-        {/* Link previews for URLs in content (skip if community/store link is shown) */}
-        {post.content && !hasCommunityLink(post.content) && !hasStoreLink(post.content) && <FeedLinkPreviews text={post.content} />}
+        {/* OG previews for outside links. Skipped when an entity card is already
+            showing: two stacked cards for one line of text is noise. */}
+        {post.content && dehubLinks.length === 0 && <FeedLinkPreviews text={post.content} />}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
