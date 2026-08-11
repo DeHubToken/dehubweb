@@ -945,6 +945,232 @@ ${primaryNavHtml()}
 </html>`;
 }
 
+// ==========================================================================
+// Stores, shop items and events — edge-rendered crawler HTML
+// ==========================================================================
+// These three route families used to fall straight through to the SPA, so a
+// shop item posted to X, WhatsApp or Telegram unfurled as the DeHub homepage:
+// same title, same description, same generic card for every item in every
+// store. They are rendered here rather than added to the ssr-seo function
+// because the function only moves on a manual `supabase functions deploy`
+// that nobody runs, while this worker ships with the Cloudflare build.
+//
+// The data comes straight from PostgREST with the publishable anon key (the
+// same values that ship in the browser bundle). All three tables are readable
+// by `anon` — `stores`, `store_listings` and `community_events` each carry a
+// SELECT policy with a `true` predicate — so no privileged key is involved and
+// a crawler sees exactly what a signed-out visitor would.
+const SUPABASE_REST_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/rest/v1';
+const SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I';
+
+/** First row of a PostgREST select, or null. Never throws. */
+async function supabaseRow(query) {
+  const controller = new AbortController();
+  // Short: a crawler that waits is a crawler that gives up and re-queues the
+  // scrape hours later. Missing the row costs the generic card, not the page.
+  const timer = setTimeout(() => controller.abort(), 6000);
+  try {
+    const res = await fetch(`${SUPABASE_REST_BASE}/${query}`, {
+      signal: controller.signal,
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        Accept: 'application/json',
+      },
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return Array.isArray(rows) ? rows[0] || null : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * og:image for an entity that has a picture of its own.
+ *
+ * No width/height hints here, unlike shareMetaTags: those are only correct for
+ * the 1200x630 cards in public/og, and a store banner or a photo of a jacket is
+ * whatever shape the seller uploaded. Claiming 1200x630 for a square photo gets
+ * it letterboxed or cropped by the scraper.
+ */
+function entityImageMetaTags(imageUrl, alt) {
+  if (!imageUrl) return shareMetaTags('fallback', alt);
+  const img = escHtml(imageUrl);
+  return `<meta property="og:image" content="${img}">
+<meta property="og:image:alt" content="${escHtml(alt)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${img}">`;
+}
+
+/**
+ * `noindex` is not the same as "do not render". A private event or a sold item
+ * still needs its OG tags, because somebody deliberately sharing that link into
+ * a group chat should see what they shared — it is the search index it does not
+ * belong in.
+ */
+function entityHtml({ canonicalUrl, title, description, image, jsonLd, breadcrumb, heading, bodyHtml, ogType = 'website', noindex = false }) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${escHtml(title)}</title>
+<meta name="description" content="${escHtml(description)}">
+${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
+<link rel="canonical" href="${escHtml(canonicalUrl)}">
+<meta property="og:type" content="${ogType}">
+<meta property="og:site_name" content="DeHub">
+<meta property="og:url" content="${escHtml(canonicalUrl)}">
+<meta property="og:title" content="${escHtml(title)}">
+<meta property="og:description" content="${escHtml(description)}">
+${entityImageMetaTags(image, title)}
+<meta name="twitter:site" content="@dehub_official">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+</head>
+<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
+<p>${breadcrumb}</p>
+<h1>${escHtml(heading)}</h1>
+${image ? `<img src="${escHtml(image)}" alt="${escHtml(heading)}" style="max-width:100%">` : ''}
+${bodyHtml}
+<p style="margin-top:24px"><a href="${escHtml(canonicalUrl)}" style="color:#9f9">Open on DeHub</a></p>
+</body>
+</html>`;
+}
+
+function truncate(text, max) {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  return t.length > max ? `${t.slice(0, max - 1)}…` : t;
+}
+
+function buildStoreHtml(store) {
+  const canonicalUrl = `${APP_URL}/app/stores/${store.id}`;
+  const name = store.name || 'Store';
+  const title = `${name} — DeHub Stores`;
+  const description = truncate(
+    store.description || `Shop ${name} on DeHub. Peer-to-peer commerce paid in DHB or USDC.`,
+    200,
+  );
+  const image = absolutize(store.banner_url || store.avatar_url);
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image,
+    ogType: 'profile',
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/app/stores" style="color:#9f9">Stores</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Store',
+      name,
+      description,
+      url: canonicalUrl,
+      ...(image ? { image } : {}),
+      parentOrganization: ORG_JSONLD,
+    },
+  });
+}
+
+function buildListingHtml(listing) {
+  const storeId = listing.store_id;
+  const canonicalUrl = `${APP_URL}/app/stores/${storeId}?listing=${listing.id}`;
+  const name = listing.title || 'Item';
+  const storeName = (listing.stores && listing.stores.name) || 'a DeHub store';
+  const price = Number(listing.price) || 0;
+  const currency = (listing.currency || 'USD').toUpperCase();
+  const title = `${name} — ${storeName} on DeHub`;
+  const description = truncate(
+    listing.description || `${name} from ${storeName}, on DeHub. Paid in DHB or USDC.`,
+    200,
+  );
+  const images = Array.isArray(listing.images) ? listing.images : [];
+  const image = absolutize(images[0]);
+  const inStock = listing.stock_quantity === null || Number(listing.stock_quantity) > 0;
+
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image,
+    ogType: 'product',
+    // A sold or withdrawn item is not something to leave in the index; the
+    // link still unfurls for anyone who shares it.
+    noindex: listing.status !== 'active',
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/app/stores/${escHtml(storeId)}" style="color:#9f9">${escHtml(storeName)}</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><strong>${price.toLocaleString('en-US', { style: 'currency', currency: currency === 'DHB' ? 'USD' : currency })}</strong>${listing.is_digital ? ' · digital' : ''}${inStock ? '' : ' · sold out'}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name,
+      description,
+      ...(image ? { image } : {}),
+      ...(listing.category ? { category: listing.category } : {}),
+      offers: {
+        '@type': 'Offer',
+        url: canonicalUrl,
+        price: String(price),
+        // DHB-denominated listings are still priced in USD in this column;
+        // schema.org wants a currency code it recognises.
+        priceCurrency: currency === 'DHB' ? 'USD' : currency,
+        availability: inStock
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+        seller: { '@type': 'Organization', name: storeName },
+      },
+    },
+  });
+}
+
+function buildEventHtml(event) {
+  const canonicalUrl = `${APP_URL}/app/events/${event.event_number}`;
+  const name = event.title || 'Event';
+  const title = `${name} — DeHub Events`;
+  const startsAt = event.starts_at || '';
+  const when = startsAt ? new Date(startsAt).toUTCString() : '';
+  const description = truncate(
+    event.description || `${name} on DeHub${event.location ? ` · ${event.location}` : ''}${when ? ` · ${when}` : ''}`,
+    200,
+  );
+  const image = absolutize(event.cover_image_url);
+
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image,
+    ogType: 'article',
+    // A private event is shareable by whoever holds the link, not crawlable.
+    noindex: !!event.is_private,
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/app/events" style="color:#9f9">Events</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
+${event.location ? `<p>${escHtml(event.location)}</p>` : ''}
+<p>${Number(event.going_count) || 0} going · ${Number(event.interested_count) || 0} interested</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      name,
+      description,
+      url: canonicalUrl,
+      ...(startsAt ? { startDate: startsAt } : {}),
+      ...(event.ends_at ? { endDate: event.ends_at } : {}),
+      ...(image ? { image } : {}),
+      eventAttendanceMode: event.location
+        ? 'https://schema.org/OfflineEventAttendanceMode'
+        : 'https://schema.org/OnlineEventAttendanceMode',
+      ...(event.location ? { location: { '@type': 'Place', name: event.location } } : {}),
+      organizer: ORG_JSONLD,
+    },
+  });
+}
+
 function buildGuidePageHtml(slug, meta) {
   const canonicalUrl = `${APP_URL}/guides/${slug}`;
   return `<!DOCTYPE html>
@@ -1123,6 +1349,10 @@ function shouldServeSSR(pathname) {
   if (pathname.includes('/post/')) return true;
   // Always SSR for community pages
   if (pathname.includes('/communities/')) return true;
+  // Stores, shop items and events — rendered at the edge below. Without these
+  // a shared listing unfurled as the SPA shell, i.e. as the homepage.
+  if (/^\/app\/stores\/[^/]+/.test(pathname)) return true;
+  if (/^\/app\/events\/\d+/.test(pathname)) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
   // Always SSR for the blog: index + posts at both URL schemes
@@ -1840,6 +2070,66 @@ async function handleRequest(request, env) {
     return guard(new Response(buildMarketingHtml(sectionKey, MARKETING_PAGES[sectionKey]), {
       status: 200,
       headers: blogHeaders,
+    }));
+  }
+
+  // Stores and shop items. `?listing=<id>` is the item; the bare path is the
+  // store. Read straight from PostgREST rather than through the ssr-seo
+  // function, which has never been redeployed and does not know these routes.
+  const storeMatch = cleanPath.match(/^\/app\/stores\/([0-9a-fA-F-]{8,})$/);
+  if (storeMatch) {
+    const listingId = url.searchParams.get('listing');
+    if (listingId && /^[0-9a-fA-F-]{8,}$/.test(listingId)) {
+      const listing = await supabaseRow(
+        `store_listings?id=eq.${encodeURIComponent(listingId)}&select=*,stores(name)&limit=1`,
+      );
+      if (listing) {
+        return guard(new Response(buildListingHtml(listing), {
+          status: 200,
+          headers: listing.status === 'active'
+            ? blogHeaders
+            : { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
+        }));
+      }
+    }
+    const store = await supabaseRow(
+      `stores?id=eq.${encodeURIComponent(storeMatch[1])}&select=id,name,description,banner_url,avatar_url&limit=1`,
+    );
+    if (store) {
+      return guard(new Response(buildStoreHtml(store), { status: 200, headers: blogHeaders }));
+    }
+    // Row missing or Supabase unreachable: fall through to the generic stub
+    // rather than 404, because we cannot tell those two apart from here.
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    }));
+  }
+
+  const eventMatch = cleanPath.match(/^\/app\/events\/(\d+)$/);
+  if (eventMatch) {
+    const event = await supabaseRow(
+      `community_events?event_number=eq.${eventMatch[1]}&select=*&limit=1`,
+    );
+    if (event) {
+      return guard(new Response(buildEventHtml(event), {
+        status: 200,
+        headers: event.is_private
+          ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' }
+          : blogHeaders,
+      }));
+    }
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
     }));
   }
 
