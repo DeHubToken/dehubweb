@@ -19,6 +19,7 @@ import { autoTranslateEnabled, setAutoTranslateEnabled } from '@/lib/auto-transl
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
+import { parseDehubLink } from '@/lib/dehub-links';
 
 export { LANGUAGE_NAMES };
 import { cn } from '@/lib/utils';
@@ -204,21 +205,46 @@ export function renderTextWithLinks(text: string): ReactNode[] {
         </a>
       );
     } else {
-      // URL — render as link emoji (skip community links since they get a card embed)
+      // URL — render as link emoji
       const { leadingBoundary, url } = splitLeadingUrlBoundary(fullMatch);
       if (leadingBoundary) {
         parts.push(leadingBoundary);
       }
-      if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(url)) {
-        // Community link — don't show 🔗, the CommunityLinkEmbed handles it
+
+      // A link to something inside DeHub stays inside DeHub: same 🔗 affordance,
+      // but a client navigation instead of a new tab.
+      //
+      // This used to `continue` for community and store links — dropping them
+      // from the rendered text entirely, on the assumption that a card was
+      // being rendered alongside. That assumption held on the two surfaces that
+      // had the cards and nowhere else, so the same link that carded up in the
+      // feed simply vanished from a post title or a comment. Surfaces now strip
+      // exactly the links they card (see `useDehubLinks`), which leaves this
+      // free to render whatever is left rather than guess.
+      const dehubLink = parseDehubLink(url);
+      if (dehubLink) {
+        parts.push(
+          <a
+            key={`dehub-${dehubLink.path}-${match.index}`}
+            href={dehubLink.path}
+            className="inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              clientNavigate(dehubLink.path);
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            title={url}
+            data-no-navigate="true"
+          >
+            🔗
+          </a>
+        );
         lastIndex = combinedRegex.lastIndex;
         continue;
       }
-      if (/\/app\/stores\/[a-fA-F0-9-]{8,}/.test(url)) {
-        // Store / listing link — handled by StoreLinkEmbed
-        lastIndex = combinedRegex.lastIndex;
-        continue;
-      }
+
       const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
       parts.push(
         <a

@@ -7,39 +7,38 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Users } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useCommunity } from '@/hooks/use-communities';
+import { findDehubLinks, stripDehubLinks } from '@/lib/dehub-links';
 
-/** Extract community slug from a URL like /app/communities/dehub */
+// ── Legacy detection helpers ────────────────────────────────────────────────
+//
+// Detection moved to lib/dehub-links, which is host-checked and also matches
+// the /communities/<slug> form these regexes never saw. Kept as thin wrappers
+// so existing call sites keep working; prefer `useDehubLinks` in new code.
+
+/** @deprecated Use `findDehubLink` from `@/lib/dehub-links`. */
 export function extractCommunitySlug(text: string): string | null {
-  const match = text.match(/\/app\/communities\/([a-zA-Z0-9_-]+)/);
-  return match ? match[1] : null;
+  const match = findDehubLinks(text).find((l) => l.kind === 'community');
+  return match?.slug ?? null;
 }
 
-/** Check if text contains a community link */
+/** @deprecated Use `findDehubLink` from `@/lib/dehub-links`. */
 export function hasCommunityLink(text: string): boolean {
-  return /\/app\/communities\/[a-zA-Z0-9_-]+/.test(text);
+  return findDehubLinks(text).some((l) => l.kind === 'community');
 }
 
-/**
- * Strip community link URLs from display text (display-only — never use for API payloads).
- * Removes the full URL containing /app/communities/<slug> along with any surrounding whitespace.
- */
+/** @deprecated Use `stripDehubLinks` from `@/lib/dehub-links`. */
 export function stripCommunityLinks(text: string): string {
-  if (!text) return text;
-  return text
-    // Full URL form (with optional protocol/host)
-    .replace(/(?:https?:\/\/)?[^\s)<>"']*\/app\/communities\/[a-zA-Z0-9_-]+[^\s)<>"']*/gi, '')
-    // Collapse leftover whitespace
-    .replace(/[ \t]{2,}/g, ' ')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+  return stripDehubLinks(text);
 }
 
 interface CommunityLinkEmbedProps {
   slug: string;
+  fallback?: ReactNode;
 }
 
-export function CommunityLinkEmbed({ slug }: CommunityLinkEmbedProps) {
+export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbedProps) {
   const navigate = useNavigate();
   const { data: community, isLoading } = useCommunity(slug);
 
@@ -49,7 +48,7 @@ export function CommunityLinkEmbed({ slug }: CommunityLinkEmbedProps) {
     );
   }
 
-  if (!community) return null;
+  if (!community) return <>{fallback}</>;
 
   return (
     <button

@@ -32,6 +32,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { TranslatableText, useTranslation } from '../TranslatableText';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
@@ -237,6 +238,11 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
   const badgeUrl = getBadgeUrl(comment.badgeBalance, comment.username);
   const shownName = comment.displayName || comment.username;
 
+  // Comments carry links as often as posts do — a reply pointing at another
+  // post, a shop item or a community deserves the same card the post got.
+  const commentBody = translation.isTranslated ? translation.translatedText : comment.text;
+  const { links: commentLinks, displayText: commentDisplayText } = useDehubLinks(commentBody);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -309,15 +315,16 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
             {/* auto={false}: the `translation` hook above already translates
                 this comment and its output is what gets rendered here. Left on,
                 every comment in the thread was translated twice. */}
-            {comment.text && (
+            {commentDisplayText && (
               <TranslatableText
-                text={translation.isTranslated ? translation.translatedText : comment.text}
+                text={commentDisplayText}
                 className="text-zinc-300 text-sm leading-relaxed break-words"
                 as="p"
                 hideControls
                 auto={false}
               />
             )}
+            <DehubLinkEmbeds links={commentLinks} />
             {comment.imageUrl && (
               <img
                 src={comment.imageUrl}

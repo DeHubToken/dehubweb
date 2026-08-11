@@ -9,10 +9,16 @@ import { useState, useEffect, useRef } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
+import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface FeedLinkPreviewsProps {
   text: string;
+}
+
+/** Outside links only — DeHub links are rendered as entity cards instead. */
+function externalUrls(text: string): string[] {
+  return extractUrlsFromText(text).filter((url) => !parseDehubLink(url));
 }
 
 export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
@@ -22,7 +28,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
 
   useEffect(() => {
     if (fetchedRef.current) return;
-    const urls = extractUrlsFromText(text);
+    const urls = externalUrls(text);
     if (urls.length === 0) { setLoading(false); return; }
 
     fetchedRef.current = true;
@@ -37,7 +43,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
     });
   }, [text]);
 
-  const urls = extractUrlsFromText(text);
+  const urls = externalUrls(text);
   if (urls.length === 0) return null;
 
   const visiblePreviews = [...previews.values()];

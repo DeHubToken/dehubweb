@@ -4,7 +4,7 @@
  * Full-screen 1:1 direct message chat view.
  */
 
-import { useState, useRef, useEffect, useCallback, useReducer, memo } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight } from 'lucide-react';
@@ -12,8 +12,8 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
-import { SharedPostEmbed } from './SharedPostEmbed';
-import { extractPostTokenId, stripPostLinks } from '@/lib/post-link';
+import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
+import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { useTranslation } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
@@ -201,14 +201,24 @@ const MessageBubble = memo(function MessageBubble({
 
   const primaryMediaUrl = message.mediaUrls?.[0]?.url;
 
-  // A shared post: a text message whose content contains an /app/post/<id> link.
-  // Rendered as a rich, tappable card (matches the mobile app) instead of a raw link.
-  const postTokenId = message.msgType === 'msg' ? extractPostTokenId(message.content) : null;
-  const isPostShare = !!postTokenId;
+  // A shared entity: a text message whose content contains a link to something
+  // inside DeHub. Rendered as a rich, tappable card instead of a raw link.
+  //
+  // This used to recognise posts only, which is why sending someone a shop item
+  // or a community from the app produced a naked URL in their inbox while a post
+  // produced a card.
+  const sharedLink = useMemo(
+    () => (message.msgType === 'msg' ? findDehubLinks(message.content)[0] ?? null : null),
+    [message.msgType, message.content],
+  );
+  const isPostShare = !!sharedLink;
 
-  // Post shares translate their caption (link stripped) — feeding the raw URL to the
+  // Entity shares translate their caption (link stripped) — feeding the raw URL to the
   // translator garbles it and previously the translate control was hidden entirely.
-  const shareCaption = isPostShare ? stripPostLinks(message.content || '') : '';
+  const shareCaption = useMemo(
+    () => (sharedLink ? stripDehubLinkMatches(message.content || '', [sharedLink]) : ''),
+    [sharedLink, message.content],
+  );
   const textContent = isPostShare ? shareCaption : (message.content || '');
   const {
     isTranslated,
@@ -320,7 +330,13 @@ const MessageBubble = memo(function MessageBubble({
                       {isTranslated ? translatedText : shareCaption}
                     </p>
                   ) : null}
-                  <SharedPostEmbed tokenId={postTokenId!} />
+                  {/* The bubble is inline-block, so it has no definite width for
+                      a `w-full` card to resolve against — the entity cards would
+                      collapse to their content. Give them the same 280px the
+                      post card already pins itself to. */}
+                  <div className="w-[280px] max-w-full text-left">
+                    <DehubLinkEmbed link={sharedLink!} compact />
+                  </div>
                 </div>
               ) : (
                 <p dir="auto" className="text-sm break-words whitespace-pre-wrap text-left">
