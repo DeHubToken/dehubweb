@@ -75,6 +75,9 @@ function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
   // Audio posts render through VideoCard (which has AudioVisualizer support)
   if (postType === 'audio' || postType === 'feed-audio' || (post as any).audioUrl) return 'video';
   if (postType === 'video' || post.videoUrl) return 'video';
+  // File posts render as text posts with a download list. Checked ahead of the
+  // image branch so a stray imageUrl on an old post can't steer them there.
+  if (postType === 'feed-file') return 'post';
   if (
     postType === 'image' ||
     postType === 'feed-images' ||
@@ -301,6 +304,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     isReposted: nft.isReposted ?? false,
     isQuotePost: !!nft.isQuotePost,
     quotedPost: nft.quotedPost || null,
+    attachments: nft.attachments?.length ? nft.attachments : undefined,
   };
 }
 
