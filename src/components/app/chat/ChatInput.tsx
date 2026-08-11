@@ -12,6 +12,9 @@ import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
+import { SmartReplyTray } from './SmartReplyTray';
+import { ReplyOrb } from './ReplyOrb';
+import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 
 interface ChatInputSendArgs {
   content: string;
@@ -39,9 +42,16 @@ interface ChatInputProps {
    * the user reviews the fee and sends with one tap instead of retyping).
    */
   initialText?: string;
+  /**
+   * Recent turns, oldest first. Supplying this turns on the reply orb; leave it
+   * off and the composer is exactly what it was (Public Chat passes nothing).
+   */
+  thread?: SmartReplyTurn[];
+  /** Who the user is talking to — labels the other side for the drafter. */
+  peerName?: string;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, replyTo, onCancelReply, initialText }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, replyTo, onCancelReply, initialText, thread, peerName }: ChatInputProps) {
   const [message, setMessage] = useState(initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
   // in an effect once the conversation resolves) — adopt it only while the
@@ -61,6 +71,40 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     onMentionInsert: (_user, newText) => setMessage(newText),
   });
 
+  const [showReplyTray, setShowReplyTray] = useState(false);
+  const smartReplies = useSmartReplies(thread ?? [], peerName);
+  const replyOrbEnabled = !!thread && thread.length > 0;
+
+  const handleOrbToggle = () => {
+    if (showReplyTray) {
+      setShowReplyTray(false);
+      return;
+    }
+    setShowReplyTray(true);
+    // Only draft on the first open; the tray keeps whatever it already has so
+    // reopening is free. Its own orb is the redraft control.
+    if (smartReplies.status === 'idle') smartReplies.generate();
+  };
+
+  /**
+   * Drop a suggestion into the composer rather than sending it. The user still
+   * owns the send — a drafted line that fires on one tap is how the wrong
+   * thing gets sent to the wrong person.
+   */
+  const handlePickSuggestion = (text: string) => {
+    setMessage(prev => (prev.trim() ? `${prev.trimEnd()} ${text}` : text));
+    setShowReplyTray(false);
+    requestAnimationFrame(() => {
+      const t = textareaRef.current;
+      if (!t) return;
+      t.focus();
+      const end = t.value.length;
+      t.setSelectionRange(end, end);
+      t.style.height = 'auto';
+      t.style.height = `${Math.min(t.scrollHeight, 128)}px`;
+    });
+  };
+
   // The auto-grown textarea height is set imperatively on input, so clearing
   // the value alone leaves a tall empty composer covering the last messages.
   const resetComposerHeight = () => {
@@ -70,6 +114,9 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const handleSend = () => {
     if (sendDisabled || isSendingFee) return;
+    // Whatever is in the tray was drafted against a thread that no longer ends
+    // where it did, so it goes away with the send.
+    setShowReplyTray(false);
     if (audioPreview) {
       onSendMessage({
         content: '',
@@ -235,10 +282,21 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   };
 
   return (
-    /* No fill: both consumers (DM + Public Chat) are flat shells now, so a
+    <>
+    {replyOrbEnabled && showReplyTray && (
+      <SmartReplyTray
+        status={smartReplies.status}
+        suggestions={smartReplies.suggestions}
+        error={smartReplies.error}
+        onGenerate={smartReplies.generate}
+        onPick={handlePickSuggestion}
+        onDismiss={() => setShowReplyTray(false)}
+      />
+    )}
+    {/* No fill: both consumers (DM + Public Chat) are flat shells now, so a
        zinc-900 bar would float inside a hairline frame. Carrying no colour
        utility also puts it permanently out of reach of the Osaka/Jungle
-       `#app-root` class nets, which outrank any re-declaration here. */
+       `#app-root` class nets, which outrank any re-declaration here. */}
     <div className="p-3 lg:pl-4 border-t border-white/[0.07]">
       {/* Reply preview */}
       {replyTo && (
@@ -324,6 +382,29 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
         {/* Action buttons */}
         <div className="flex items-center justify-end gap-0.5 pt-1">
+          {replyOrbEnabled && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className={`h-8 w-8 mr-auto hover:bg-zinc-700 ${showReplyTray ? 'bg-white/10' : ''}`}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={handleOrbToggle}
+                  aria-expanded={showReplyTray}
+                  aria-label="Suggested replies"
+                >
+                  <ReplyOrb
+                    state={showReplyTray && smartReplies.status === 'loading' ? 'thinking' : 'idle'}
+                    size={22}
+                  />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Suggested replies</TooltipContent>
+            </Tooltip>
+          )}
+
           {onTipClick && (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -441,5 +522,6 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         </div>
       </div>
     </div>
+    </>
   );
 }
