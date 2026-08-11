@@ -2674,29 +2674,23 @@ export default function AssistantPage() {
                     }}
                   >
                     
-                    <div className="relative shrink-0">
-                      <LiquidGlassBubble2
-                        label="🧠 Skills"
-                        onClick={() => setSkillsHubOpen(true)}
-                        width="auto"
-                        height="32px"
-                        className={actionBubbleClass}
-                      />
-                      <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
-                    </div>
-                    <div className="relative shrink-0">
-                      <LiquidGlassBubble2
-                        label="🎨 Make DeHub Poster"
-                        onClick={() => {
-                          setPendingPosterPrompt('');
-                          setPosterConfigOpen(true);
-                        }}
-                        width="auto"
-                        height="32px"
-                        className={actionBubbleClass}
-                      />
-                      <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
-                    </div>
+                    <LiquidGlassBubble2
+                      label="🧠 Skills"
+                      onClick={() => setSkillsHubOpen(true)}
+                      width="auto"
+                      height="32px"
+                      className={actionBubbleClass}
+                    />
+                    <LiquidGlassBubble2
+                      label="🎨 Make DeHub Poster"
+                      onClick={() => {
+                        setPendingPosterPrompt('');
+                        setPosterConfigOpen(true);
+                      }}
+                      width="auto"
+                      height="32px"
+                      className={actionBubbleClass}
+                    />
                     <LiquidGlassBubble2
                       label={`🖼️ ${t('assistant.generateImage')}`}
                       onClick={() => {
