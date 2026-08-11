@@ -1,7 +1,9 @@
 import type React from 'react';
 import {
   AudioLines,
+  BarChart3,
   Bookmark,
+  CalendarDays,
   Crosshair,
   Film,
   Home,
@@ -18,14 +20,18 @@ import {
   Briefcase,
   Clapperboard,
   Flame,
+  Gamepad2,
   Lamp,
   Lightbulb,
+  LayoutDashboard,
   Lock,
   MessageCircle,
+  Megaphone,
   Mic,
   Settings,
   ShieldCheck,
   Sparkles,
+  Store,
   Ticket,
   Trophy,
   User,
@@ -101,6 +107,13 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
   ['ppv-ticket-icon', Ticket],
   ['lava-lamp-icon', Lamp],
   ['dehub-originals', Clapperboard],
+  ['arcade.webp', Gamepad2],
+  ['stores.webp', Store],
+  ['bounties.webp', Briefcase],
+  ['events.webp', CalendarDays],
+  ['stats.webp', BarChart3],
+  ['ads.webp', Megaphone],
+  ['command.webp', LayoutDashboard],
 
   // Crosshair rather than a magnifier: on a tactical readout, search reads as
   // acquiring a target. Both search assets map to it.
@@ -121,7 +134,8 @@ type ThemeIconKey =
   | 'live' | 'fractions' | 'pinned' | 'search' | 'messages' | 'bookmarks'
   | 'wand' | 'communities' | 'careers' | 'features' | 'glossary'
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
-  | 'assistant' | 'lock' | 'profile';
+  | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
+  | 'events' | 'stats' | 'ads' | 'command';
 
 /**
  * Raster icon replacements shared by every non-War themed page.
@@ -163,12 +177,20 @@ const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
   ['padlock', 'lock'],
   ['profile-icon', 'profile'],
   ['dehub-originals', 'videos'],
+  ['arcade.webp', 'arcade'],
+  ['stores.webp', 'stores'],
+  ['bounties.webp', 'bounties'],
+  ['events.webp', 'events'],
+  ['stats.webp', 'stats'],
+  ['ads.webp', 'ads'],
+  ['command.webp', 'command'],
 ];
 
 const FULL_RASTER_THEMES = new Set(['hazy', 'swarms', 'winter', 'osaka', 'jungle']);
 const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
+  'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
 ]);
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {

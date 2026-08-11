@@ -14,6 +14,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useMyStores } from '@/hooks/use-stores';
 import { useAuth } from '@/contexts/AuthContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 
 export default function StoresPage() {
   const [tab, setTab] = useState('browse');
@@ -37,7 +38,7 @@ export default function StoresPage() {
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-4xl mx-auto">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
-            <Store className="w-6 h-6 text-white" />
+            <BrandIcon src="/theme-icons/system/stores.webp" alt="" className="w-10 h-10 shrink-0 object-contain" />
             <h1 className="text-xl font-bold text-white">Stores</h1>
           </div>
 
