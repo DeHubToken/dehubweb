@@ -32,9 +32,10 @@ import {
 import { ReactionPicker } from './ReactionPicker';
 import { useAuth } from '@/contexts/AuthContext';
 import { PostUtilityButtons } from './PostUtilityButtons';
+import { dehubLinkFor } from '@/lib/dehub-links';
 // Lazy so the DM/socket graph doesn't ride in the feed chunk — only loads when a user shares.
-const SharePostToDmModal = lazy(() =>
-  import('@/components/app/modals/SharePostToDmModal').then((m) => ({ default: m.SharePostToDmModal }))
+const ShareToDmModal = lazy(() =>
+  import('@/components/app/modals/ShareToDmModal').then((m) => ({ default: m.ShareToDmModal }))
 );
 // Only ever opened by the author of the post, so it stays out of the bundle
 // every card pays for.
@@ -583,9 +584,7 @@ export function ActionBar({
     .slice(0, 2);
 
   const handleCopyLink = () => {
-    const url = postId
-      ? `${window.location.origin}/app/post/${postId}`
-      : window.location.href;
+    const url = postId ? dehubLinkFor.post(postId) : window.location.href;
     navigator.clipboard.writeText(url);
     toast.success('Post URL copied to clipboard');
     // Feed copies feed the same reposts+copies share counter shown on shorts
@@ -942,7 +941,7 @@ export function ActionBar({
 
       {canSendInDm && dmShareOpen && (
         <Suspense fallback={null}>
-          <SharePostToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} tokenId={tokenId!} />
+          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={dehubLinkFor.post(tokenId!)} />
         </Suspense>
       )}
 
