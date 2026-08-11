@@ -71,6 +71,8 @@ export interface TextPost extends BaseFeedItem {
   quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
   /** Post categories */
   categories?: string[];
+  /** Documents attached to a feed-file post. Absent on every other post type. */
+  attachments?: import('@/lib/attachments').PostAttachment[];
 }
 
 /**

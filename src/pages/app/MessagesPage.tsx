@@ -38,7 +38,7 @@ function ConversationsSkeleton() {
     <div className="space-y-1">
       {[...Array(5)].map((_, i) => (
         <div key={i} className="flex items-center gap-3 p-4">
-          <Skeleton className="w-12 h-12 rounded-xl bg-white/[0.06]" />
+          <Skeleton className="w-12 h-12 rounded-lg bg-white/[0.06]" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-32 bg-white/[0.06]" />
             <Skeleton className="h-3 w-48 bg-white/[0.06]" />
@@ -77,8 +77,8 @@ function ConversationItem({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left ${
-        isSelected ? 'bg-zinc-800' : ''
+      className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left ${
+        isSelected ? 'bg-white/[0.07]' : ''
       }`}
     >
       <div className="relative">
@@ -88,20 +88,13 @@ function ConversationItem({
             {(fallbackName.startsWith('0x') ? fallbackName.charAt(2) : fallbackName.charAt(0)).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        {/* Online indicator */}
+        {/* Online indicator. Monochrome by default — Osaka and Jungle recolour it
+            through [data-status-dot], which is why the hook stays. */}
         {isOnline && (
-          <div data-status-dot className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900" />
-        )}
-        {/* Unread indicator on top-right of avatar */}
-        {conversation.unreadCount > 0 && (
-          <div data-count-badge className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-zinc-900">
-            <span className="text-white text-[10px] font-bold leading-none">
-              {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
-            </span>
-          </div>
+          <div data-status-dot className="absolute bottom-0 right-0 w-3 h-3 bg-white rounded-full border-2 border-black" />
         )}
       </div>
-      
+
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className="inline-flex items-center gap-1 min-w-0">
@@ -119,12 +112,23 @@ function ConversationItem({
             )}
           </span>
           {lastMessageTime && (
-            <span className="text-zinc-500 text-sm ml-auto flex-shrink-0">{lastMessageTime}</span>
+            <span className="text-zinc-500 text-sm ml-auto flex-shrink-0 tabular-nums">{lastMessageTime}</span>
+          )}
+          {/* Count rides in the name row rather than welded to the avatar corner,
+              matching the mobile app. White-on-near-black instead of red-500:
+              the palette has no colour in it, and Osaka/Jungle still repaint
+              this through [data-count-badge]. */}
+          {conversation.unreadCount > 0 && (
+            <div data-count-badge className="ml-0.5 min-w-[18px] h-[18px] px-1.5 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-zinc-950 text-[10px] font-bold leading-none tabular-nums">
+                {conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}
+              </span>
+            </div>
           )}
         </div>
-        <p className="text-zinc-500 text-sm truncate">
-          {conversation.lastMessage?.type === 'image' ? '📷 Photo' : 
-           conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' : 
+        <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-zinc-200' : 'text-zinc-500'}`}>
+          {conversation.lastMessage?.type === 'image' ? '📷 Photo' :
+           conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' :
            lastMessagePreview}
         </p>
       </div>
@@ -388,8 +392,12 @@ export default function MessagesPage() {
       <SEOHead title="Messages — Direct & Group Chat" description="Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." url="https://dehub.io/app/messages" />
       <h1 className="sr-only">DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] max-h-full`}>
-        {/* Full Width Messages Panel */}
-        <div data-page-bento className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
+        {/* Full Width Messages Panel. A list, not a set of cards, so it is drawn
+            as a frame rather than a filled slab — see [data-bento-flat] in
+            index.css. The [data-page-bento] hook stays: the Osaka and Jungle
+            `#app-root` class nets exclude on it, and without it every
+            bg-zinc-8/9 descendant in here becomes a frosted rectangle. */}
+        <div data-page-bento data-bento-flat className="w-full h-full flex flex-col overflow-hidden">
           {/* Header */}
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
@@ -413,12 +421,12 @@ export default function MessagesPage() {
                 placeholder={t('messages.searchConversations')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-12 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+                className="pl-10 pr-12 bg-white/[0.06] border-0 text-white placeholder:text-zinc-500 rounded-lg"
               />
-              <Button 
-                size="icon" 
+              <Button
+                size="icon"
                 onClick={() => setShowNewConversation(true)}
-                className="absolute right-1.5 w-7 h-7 rounded-xl bg-zinc-800 hover:bg-zinc-700 border-0"
+                className="absolute right-1.5 w-7 h-7 rounded-lg bg-white/[0.10] hover:bg-white/[0.16] border-0"
               >
                 <Plus className="w-4 h-4 text-white" />
               </Button>
@@ -430,9 +438,9 @@ export default function MessagesPage() {
             {/* Public Chat (pinned) */}
             <button
               onClick={() => setShowPublicChat(true)}
-              className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left"
+              className="w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left"
             >
-              <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center flex-shrink-0">
                 <img 
                   src={dehubLogo} 
                   alt="Public Chat" 
@@ -508,8 +516,8 @@ export default function MessagesPage() {
                       key={user._id || user.address}
                       onClick={() => handleSelectSearchUser(user)}
                       disabled={dmDisabled}
-                      className={`w-full flex items-center gap-3 p-4 transition-colors text-left ${
-                        dmDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-zinc-800/50'
+                      className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] transition-colors text-left ${
+                        dmDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/[0.04]'
                       }`}
                     >
                       <Avatar className="w-12 h-12">
