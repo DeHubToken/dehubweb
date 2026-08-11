@@ -168,6 +168,7 @@ const PricingPage = React.lazy(() => import("./pages/PricingPage"));
 const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
 const ConnectChatGPTPage = React.lazy(() => import("./pages/ConnectChatGPTPage"));
 const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
+const ApkPage = React.lazy(() => import("./pages/ApkPage"));
 // The arcade player is a standalone full-viewport surface (no AppLayout): the
 // games take the whole window and two of them take the pointer, so the header
 // and sidebars would be in the way rather than useful. Its own chunk, like the
@@ -392,6 +393,11 @@ function AppContent() {
           <Route path="/connect/chatgpt" element={<Suspense fallback={<PageLoader />}><ConnectChatGPTPage /></Suspense>} />
           <Route path="/connect/claude" element={<Suspense fallback={<PageLoader />}><ConnectClaudePage /></Suspense>} />
           <Route path="/mcp" element={<Navigate to="/connect" replace />} />
+
+          {/* Direct APK download lander. Standalone (no AppLayout) — it is a
+              single non-scrolling screen that owns the viewport, and it is
+              reached from outside the app far more often than from inside it. */}
+          <Route path="/apk" element={<Suspense fallback={<PageLoader />}><ApkPage /></Suspense>} />
 
           {/* Arcade player. Two segments, so it outranks the /:username
               catch-all inside AppLayout below and never has to be ordered
