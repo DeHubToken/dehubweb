@@ -104,6 +104,49 @@ const ORG_JSONLD = {
 const HOME_TITLE = 'DeHub — Open Source, User Owned Social Media';
 const HOME_TITLE_LEGACY = 'DeHub — Open Source, User Owned & Censorship Resistant Media';
 
+// Signed-out introduction on "/". MIRRORS src/components/app/HomeIntro.tsx —
+// keep the prose identical in both, or the bot and browser variants diverge and
+// this becomes the cloaking surface the HOME_TITLE comment above guards against.
+// HomeIntro renders for signed-out visitors only; Googlebot is signed out, so
+// what it reads here is what a signed-out human reads in the SPA.
+//
+// Why it exists: dehub.net 301s into "/", and a 301 only carries a ranking if
+// the destination can hold the query. The old marketing site explained DeHub in
+// prose; the feed it redirects into gave crawlers ~149 words of nav plus scraped
+// post titles, so the brand term had nothing to land on. "DeHub" is also a
+// contested string (DePaul's student portal, deHUB Access, Rowan's DEHub), and
+// entity establishment has to happen in crawlable body copy.
+const HOME_INTRO_LINKS = [
+  ['/guides/what-is-watch-to-earn', 'What is watch-to-earn?'],
+  ['/guides/tokenized-subscriptions-explained', 'Tokenised subscriptions'],
+  ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming'],
+  ['/guides/decentralised-social-media-explained-uk', 'Decentralised social media'],
+  ['/docs/token/overview', 'The DHB currency'],
+  ['/guides/what-is-dehub', 'What is DeHub?'],
+];
+
+// Story slides — mirror SLIDES in src/components/app/HomeIntro.tsx, which in
+// turn mirror the mobile app's screens/auth/OnboardingScreen.tsx. All three are
+// always mounted in the SPA (stacked and cross-faded, never conditionally
+// rendered), so all three belong here too.
+const HOME_INTRO_SLIDES = [
+  ['The Social Media We All Deserve', 'Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation.'],
+  ['The App For Everyone', 'No algorithms that favor one side of the argument. Everyone is amplified equally and fairly with open source code.'],
+  ['You Will Own Everything, And Be Happy', 'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.'],
+];
+
+const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left">
+<h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
+${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
+<p>DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p><a href="${APP_URL}/guide" style="color:#9f9">Take the tour</a></p>
+<nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
+  HOME_INTRO_LINKS.map(([href, label]) =>
+    `<li style="margin:6px 0"><a href="${APP_URL}${href}" style="color:#9f9">${label}</a></li>`
+  ).join('')
+}</ul></nav>
+</section>`;
+
 // Standalone hand-built React guide pages under /guides/ that are NOT manifest
 // blog posts. Served meta directly at the edge — the deployed Supabase fn's
 // STATIC_ROUTES allowlist is stale and 404s the newer one.
@@ -1956,6 +1999,11 @@ async function handleRequest(request, env) {
       } else {
         html = html.replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
       }
+      // What DeHub IS, in prose. Injected before the nav so it is the first
+      // body content a crawler reads — this is the copy the "dehub" brand term
+      // has to land on after dehub.net's 301, and it mirrors HomeIntro.tsx in
+      // the SPA so the signed-out browser variant says the same thing.
+      html = html.replace('</body>', `${HOME_INTRO_HTML}</body>`);
       // Primary section nav: the homepage bot HTML had no links to Explore /
       // Video Feed / Shorts / Music / TV, so crawlers only ever found profiles
       // and posts — which is why Google's sitelinks were random "@user" pages.
