@@ -48,6 +48,7 @@ import {
   type SiteStatsUnavailable,
 } from '@/hooks/use-site-stats';
 import { cn } from '@/lib/utils';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 
 type Range = '24h' | '3d' | '7d' | '30d' | 'all';
 
@@ -469,9 +470,7 @@ export default function StatsPage() {
       >
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-zinc-800/50 flex items-center justify-center shrink-0">
-              <BarChart3 className="w-5 h-5 text-white" />
-            </div>
+            <BrandIcon src="/theme-icons/system/stats.webp" alt="" className="w-10 h-10 shrink-0 object-contain" />
             <div className="min-w-0 flex-1">
               <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">
                 {t('stats.title', 'Live stats')}

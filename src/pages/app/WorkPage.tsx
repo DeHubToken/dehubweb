@@ -7,6 +7,7 @@ import type { WorkJobType, WorkCurrency } from '@/features/work/types';
 import { SEOHead } from '@/components/SEOHead';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 
 
 const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
@@ -51,9 +52,12 @@ export default function WorkPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <h1 className="text-xl font-bold text-white">Bounties</h1>
-              <p className="text-sm text-white/60">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
+            <div className="flex items-center gap-3 min-w-0">
+              <BrandIcon src="/theme-icons/system/bounties.webp" alt="" className="w-10 h-10 shrink-0 object-contain" />
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold text-white">Bounties</h1>
+                <p className="text-sm text-white/60">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
+              </div>
             </div>
             <LiquidGlassBubble2
               label="Post a Bounty"

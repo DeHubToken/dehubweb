@@ -17,7 +17,8 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Gamepad2, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
@@ -106,7 +107,7 @@ export default function ArcadePage() {
       >
         <div data-page-bento className="space-y-2 rounded-2xl bg-zinc-900 px-4 py-3">
           <div className="flex items-center gap-3">
-            <Gamepad2 className="h-6 w-6 text-white" />
+            <BrandIcon src="/theme-icons/system/arcade.webp" alt="" className="h-10 w-10 shrink-0 object-contain" />
             <h1 className="text-xl font-bold text-white">{t('arcade.title')}</h1>
           </div>
           <p className="text-xs leading-relaxed text-zinc-400">
