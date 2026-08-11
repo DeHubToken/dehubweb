@@ -16,6 +16,7 @@ import { AdsOverviewTab } from '@/components/app/ads/AdsOverviewTab';
 import { CampaignsTab } from '@/components/app/ads/CampaignsTab';
 import { BillingTab } from '@/components/app/ads/BillingTab';
 import { CampaignWizard } from '@/components/app/ads/CampaignWizard';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 
 export default function AdsPage() {
   const [tab, setTab] = useState<'overview' | 'campaigns' | 'billing'>('overview');
@@ -46,7 +47,7 @@ export default function AdsPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <Megaphone className="w-6 h-6 text-white shrink-0" />
+              <BrandIcon src="/theme-icons/system/ads.webp" alt="" className="w-10 h-10 shrink-0 object-contain" />
               <h1 className="text-xl font-bold text-white truncate">Ads Manager</h1>
             </div>
             {isAuthenticated && (
