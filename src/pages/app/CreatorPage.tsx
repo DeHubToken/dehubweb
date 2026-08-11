@@ -59,7 +59,7 @@ interface Tool {
   description: string;
   icon: React.ComponentType<{ className?: string }>;
   category: 'Image' | 'Video' | 'Audio' | 'Studio' | 'Agents';
-  badge?: 'TEST' | 'NEW' | 'TRENDING';
+  badge?: 'TRENDING';
   action: ToolAction;
 }
 
@@ -105,7 +105,6 @@ const tools: Tool[] = [
     description: 'Describe an app and get it live — AI builds it, DeHub hosts it, you share the link.',
     icon: PanelsTopLeft,
     category: 'Studio',
-    badge: 'NEW',
     action: { kind: 'navigate', to: '/app/builder' },
   },
   {
@@ -115,7 +114,6 @@ const tools: Tool[] = [
     description: 'Campaign posters, launch assets and social posts with DeHub logo rules.',
     icon: Megaphone,
     category: 'Studio',
-    badge: 'TEST',
     action: { kind: 'assistant', preset: 'poster' },
   },
   {
@@ -134,7 +132,6 @@ const tools: Tool[] = [
     description: 'Cinematic clips from text, references and creator prompts.',
     icon: Film,
     category: 'Video',
-    badge: 'NEW',
     action: { kind: 'assistant', preset: 'video' },
   },
   {
@@ -144,7 +141,6 @@ const tools: Tool[] = [
     description: 'Save reusable prompts, models, assets and workflows.',
     icon: Blocks,
     category: 'Agents',
-    badge: 'TEST',
     action: { kind: 'assistant', preset: 'skills' },
   },
   {
@@ -285,7 +281,6 @@ export default function CreatorPage() {
         {!bannerDismissed && (
           <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
             <span>Launch creative campaigns faster with DeHub AI tools</span>
-            <span className="ml-2 hidden rounded px-2 py-0.5 text-[10px] font-black italic text-white sm:inline-flex" style={{ backgroundColor: hot }}>TEST STUDIO</span>
             <button
               type="button"
               onClick={() => setBannerDismissed(true)}
@@ -341,9 +336,6 @@ export default function CreatorPage() {
                   >
                     {index === 4 && <span className="mr-2 text-white/40">••</span>}
                     {item}
-                    {(item === 'Studio' || item === 'Agents') && (
-                      <span className="rounded px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black" style={metallicStyle}>New</span>
-                    )}
                   </button>
                 ))}
               </nav>
@@ -491,11 +483,9 @@ export default function CreatorPage() {
                   style={{ backgroundColor: '#1b1c1f' }}
                 >
                   {tool.badge && (
-                    <span className={cn(
-                      'absolute right-3 top-3 rounded px-1.5 py-0.5 text-[9px] font-black uppercase italic leading-none',
-                      tool.badge === 'TEST' ? 'bg-white text-black' : tool.badge === 'TRENDING' ? 'text-white' : 'text-black'
-                    )}
-                    style={tool.badge === 'TRENDING' ? { backgroundColor: hot } : tool.badge === 'NEW' ? metallicStyle : undefined}
+                    <span
+                      className="absolute right-3 top-3 rounded px-1.5 py-0.5 text-[9px] font-black uppercase italic leading-none text-white"
+                      style={{ backgroundColor: hot }}
                     >
                       {tool.badge}
                     </span>
