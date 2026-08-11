@@ -343,11 +343,6 @@ export function MobileBottomNav() {
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                       )}
                     />
-                    {item.label === 'Prompt' && (
-                      <span className="absolute -top-2 -right-3 px-1 h-[12px] flex items-center justify-center bg-white/90 text-black text-[8px] font-bold rounded-md leading-none tracking-wide uppercase shadow-sm">
-                        Test
-                      </span>
-                    )}
                     {item.label === 'Notifications' && totalNotifUnread > 0 && (
                       <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                         {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
