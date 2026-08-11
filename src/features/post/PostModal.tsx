@@ -175,9 +175,11 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         imageInputRef={refs.imageInputRef}
         videoInputRef={refs.videoInputRef}
         audioInputRef={refs.audioInputRef}
+        documentInputRef={refs.documentInputRef}
         onImageSelect={actions.handleImageSelect}
         onVideoSelect={actions.handleVideoSelect}
         onAudioSelect={actions.handleAudioSelect}
+        onDocumentSelect={actions.handleDocumentSelect}
         onStartRecording={actions.startRecording}
         liveMode={state.liveMode}
         setLiveMode={actions.setLiveMode}
@@ -205,6 +207,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         hasText={!!state.text.trim()}
         hasImage={computed.hasImage}
         hasVideo={computed.hasVideo}
+        hasDocument={computed.hasDocument}
         isScheduled={!!state.scheduledDate}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
         onOpenSoundPicker={() => setSoundPickerOpen(true)}

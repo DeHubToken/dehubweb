@@ -294,9 +294,10 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
-        {/* Tip message — system-style bubble */}
+        {/* Tip message — system-style bubble. Monochrome, as on mobile: the amber
+            was the last colour left in a thread whose palette is black and white. */}
         {message.msgType === 'tip' && (
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.16] text-zinc-200 text-sm">
             <Gem className="w-4 h-4 text-white" />
             <span>
               Tip: {message.tipAmount} {message.tipSymbol || 'DHB'}
@@ -307,13 +308,17 @@ const MessageBubble = memo(function MessageBubble({
         {/* Regular message bubble */}
         {message.msgType !== 'tip' && !message.isDeleted && (
           <div
-            className={`inline-block rounded-2xl ${
+            /* Mine vs theirs is carried by fill-vs-outline rather than by a
+               glass stack: a filled block with no border for own messages, a
+               hairline block with no fill for theirs. Geometry matches the
+               mobile app — 12px with the tail corner squared to 2px. */
+            className={`inline-block rounded-xl ${
               message.msgType === 'media' || message.msgType === 'gif' || isPostShare
                 ? 'text-white'
                 : `px-4 py-2 ${
                     isOwnMessage
-                      ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] text-white rounded-br-md'
-                      : 'bg-zinc-800 text-white rounded-bl-md'
+                      ? 'bg-white/[0.11] text-white rounded-br-sm'
+                      : 'border border-white/[0.16] text-zinc-100 rounded-bl-sm'
                   }`
             }`}
           >
@@ -322,10 +327,10 @@ const MessageBubble = memo(function MessageBubble({
               isPostShare ? (
                 <div className={`flex flex-col gap-1.5 ${isOwnMessage ? 'items-end' : 'items-start'}`}>
                   {shareCaption ? (
-                    <p dir="auto" className={`text-sm break-words whitespace-pre-wrap text-left rounded-2xl px-4 py-2 ${
+                    <p dir="auto" className={`text-sm break-words whitespace-pre-wrap text-left rounded-xl px-4 py-2 ${
                       isOwnMessage
-                        ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white'
-                        : 'bg-zinc-800 text-white'
+                        ? 'bg-white/[0.11] text-white'
+                        : 'border border-white/[0.16] text-zinc-100'
                     }`}>
                       {isTranslated ? translatedText : shareCaption}
                     </p>
@@ -409,7 +414,7 @@ const MessageBubble = memo(function MessageBubble({
 
         {/* Deleted message */}
         {message.isDeleted && (
-          <div className={`inline-block rounded-2xl px-4 py-2 bg-zinc-800/50 text-zinc-500 text-sm italic ${isOwnMessage ? 'rounded-br-md' : 'rounded-bl-md'}`}>
+          <div className={`inline-block rounded-xl px-4 py-2 border border-white/[0.10] text-zinc-500 text-sm italic ${isOwnMessage ? 'rounded-br-sm' : 'rounded-bl-sm'}`}>
             Message deleted
           </div>
         )}
@@ -1207,9 +1212,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const isVirtualConv = resolvedConversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(resolvedConversationId);
 
   return (
-    <div className="h-full flex flex-col bg-zinc-900 rounded-2xl overflow-hidden relative">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-zinc-900/95 backdrop-blur-sm">
+    <div data-page-bento data-bento-flat className="h-full flex flex-col overflow-hidden relative">
+      {/* Header. The shell carries no fill now, so the bar is separated by a
+          hairline instead of sitting on its own slightly-lighter slab. */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.07]">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -1559,7 +1565,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
 
       {/* DM Gated Banner */}
       {dmGateChecked && dmGated && (
-        <div className="absolute inset-0 bg-zinc-900/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-2xl">
+        <div className="absolute inset-0 bg-zinc-900/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-lg">
           <div className="text-center px-6">
             <ShieldBan className="w-12 h-12 text-zinc-500 mx-auto mb-3" />
             <h3 className="text-white font-semibold text-lg mb-1">DMs Restricted</h3>
