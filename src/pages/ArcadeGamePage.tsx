@@ -7,7 +7,9 @@
  * are the right frame for a feed and the wrong one for a game: all three of
  * these want the full window, two of them take the pointer, and one of them
  * runs a post chain that has to share a frame budget with whatever else is on
- * screen. So the app chrome steps aside and the only host UI left is a way out.
+ * screen. So the app chrome steps aside and the host draws no exit of its own:
+ * the browser's own Back is always there, and each game's pause menu has a
+ * close that routes through the exit bridge below.
  *
  * Everything game-specific — the URL and its settings, the boot shape, the
  * preflight — comes from `config/arcade-games`. This component knows how to
@@ -26,7 +28,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Gamepad2 } from 'lucide-react';
+import { Gamepad2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useBootProgress } from '@/lib/game-boot-progress';
 import { useGameExitRequest } from '@/lib/game-exit-request';
@@ -99,9 +101,9 @@ export default function ArcadeGamePage() {
     return () => window.clearTimeout(timer);
   }, [ready]);
 
-  // The close button inside the game's own settings/pause menu. It is the exit
-  // that works while a pointer lock is (or has just been) held, when the host's
-  // corner link is unaimable — see lib/game-exit-request.
+  // The close button inside the game's own settings/pause menu. With no host
+  // chrome on screen, this and the browser's Back are the way out; it is also
+  // the one that works while a pointer lock is held — see lib/game-exit-request.
   useGameExitRequest(
     game?.exitSource,
     useCallback(() => navigate('/arcade'), [navigate]),
@@ -148,19 +150,6 @@ export default function ArcadeGamePage() {
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }}
       />
-
-      {/* The way out. Above the frame, and never behind the boot panel: a
-          player who decides mid-boot that they did not want this must not have
-          to wait for a progress bar to finish before they can leave. Escape is
-          NOT bound here — two of these games use Escape to release the pointer
-          lock, and stealing it would make them impossible to play. */}
-      <Link
-        to="/arcade"
-        className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white ring-1 ring-white/15 backdrop-blur transition-colors hover:bg-black/90"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        Arcade
-      </Link>
 
       {!cap.ok ? (
         <div className="flex h-full flex-col items-center justify-center gap-3 px-8 text-center">
