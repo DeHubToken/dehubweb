@@ -80,7 +80,7 @@ const SLIDES = [
 ] as const;
 
 const ENTITY_COPY =
-  'DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB.\u00a0';
+  'DeHub is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first free, never fearing the algorithm again.';
 
 const LINKS: { to: string; label: string }[] = [
   { to: '/guides/what-is-watch-to-earn', label: 'What is watch-to-earn?' },
