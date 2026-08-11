@@ -11,6 +11,7 @@ import { QueryClient } from '@tanstack/react-query';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { getVoteCache } from '@/lib/vote-cache';
+import { parseFormattedCount } from '@/lib/feed-utils';
 
 /**
  * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
@@ -50,7 +51,10 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     minterAvatarUrl: video.channelAvatar,
     minter: video.creatorId,
     status: video.status || 'minted',
-    views: parseInt(video.views) || 0,
+    // Seeded onto totalViews, the field resolveViewCount prefers, so the shell
+    // renders the same count the card showed rather than falling through to the
+    // signed-in-only `views`.
+    totalViews: parseFormattedCount(video.views),
     isLiked: video.isLiked,
     isDisliked: video.isDisliked,
     totalVotes: {
@@ -106,7 +110,8 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
     minterAvatarUrl: post.avatar,
     minter: post.creatorId,
     status: post.status || 'minted',
-    views: parseInt(post.views || '0') || 0,
+    // See videoItemToNFT — the feed carries this already formatted.
+    totalViews: parseFormattedCount(post.views),
     isLiked: post.isLiked,
     isDisliked: post.isDisliked,
     totalVotes: {
@@ -158,7 +163,8 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
     minterAvatarUrl: post.author.avatarSeed,
     minter: post.author.id,
     status: post.status || 'minted',
-    views: parseInt(post.views || '0') || 0,
+    // See videoItemToNFT — the feed carries this already formatted.
+    totalViews: parseFormattedCount(post.views),
     isLiked: post.isLiked,
     isDisliked: post.isDisliked,
     totalVotes: {
