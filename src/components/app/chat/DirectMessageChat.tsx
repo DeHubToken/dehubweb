@@ -745,6 +745,32 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
 
   const pinnedMessage = pinnedMessageId ? messages.find(m => m._id === pinnedMessageId) ?? null : null;
 
+  /**
+   * Tail of the thread handed to the reply drafter, oldest first. Text only —
+   * an image or voice note carries nothing the model can reply to, and paid or
+   * gated bubbles have no business being summarised into a draft.
+   */
+  const smartReplyThread = useMemo(() => {
+    const ownAddress = walletAddress?.toLowerCase();
+    const ownId = user?._id;
+    return messages
+      .filter(m => (m.msgType ?? 'msg') === 'msg' && !!m.content?.trim())
+      .slice(-12)
+      .map(m => {
+        const senderAddress = m.sender?.address?.toLowerCase();
+        const senderId = m.sender?._id;
+        const isOwn =
+          m.author === 'me' ||
+          (!!senderAddress && !!ownAddress && senderAddress === ownAddress) ||
+          (!!senderId && !!ownId && senderId === ownId);
+        return {
+          from: isOwn ? ('me' as const) : ('them' as const),
+          name: isOwn ? undefined : displayName,
+          text: m.content!.trim(),
+        };
+      });
+  }, [messages, walletAddress, user?._id, displayName]);
+
   const sendMessageMutation = useSendMessage(resolvedConversationId);
   const deleteConversationMutation = useDeleteConversation();
 
@@ -1509,6 +1535,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       {/* Chat Input — always shown, disabled send when insufficient balance */}
       <ChatInput
         initialText={initialComposerText}
+        thread={smartReplyThread}
+        peerName={displayName}
         onSendMessage={handleSendMessage}
         onTipClick={feeRequired ? undefined : () => setShowTipDialog(true)}
         sendDisabled={!!feeSendDisabled || (initError && isVirtualConv)}

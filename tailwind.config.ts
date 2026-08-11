@@ -153,6 +153,24 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        /* Reply-orb layers. Kept in lockstep with the Reanimated port in
+           dehub-mobile (components/DM/ReplyOrb.tsx) — same durations, same
+           scale endpoints, so the two platforms read as one object. Every
+           layer animates transform/opacity only, so all of it runs off the
+           main thread on both. */
+        "orb-breathe": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.08)" },
+        },
+        "orb-sonar": {
+          "0%": { transform: "scale(0.85)", opacity: "0.55" },
+          "70%": { opacity: "0" },
+          "100%": { transform: "scale(2.2)", opacity: "0" },
+        },
+        "orb-orbit": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
