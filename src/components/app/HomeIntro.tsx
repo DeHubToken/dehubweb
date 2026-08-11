@@ -39,6 +39,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const DISMISS_KEY = 'dehub.homeIntroDismissed';
@@ -344,20 +345,16 @@ export function HomeIntro() {
           ))}
         </div>
 
+        {/* The app's own liquid-glass buttons — monochrome, and consistent with
+            every other CTA in the product. The earlier solid white/black pair
+            was invented here and matched nothing else. */}
         <div className="mt-6 flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={openLoginModal}
-            className="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
+          <Button type="button" variant="glass" size="lg" onClick={openLoginModal}>
             Join DeHub
-          </button>
-          <Link
-            to="/guide"
-            className="rounded-xl border border-white/20 bg-black/30 px-5 py-2.5 text-sm font-semibold text-zinc-200 backdrop-blur-sm transition-colors hover:border-white/40 hover:text-white"
-          >
-            Take the tour
-          </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link to="/guide">Take the tour</Link>
+          </Button>
         </div>
 
         {/* Entity + disambiguation copy. Clamped on mobile only — unclamped the
