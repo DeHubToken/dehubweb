@@ -20,7 +20,12 @@ export interface LinkPreviewData {
 export interface MediaFile {
   file: File;
   preview: string;
-  type: 'image' | 'video' | 'audio';
+  /**
+   * 'file' is a document attachment (PDF, spreadsheet, archive, …). It has no
+   * visual preview, so `preview` is left empty for that type — anything reading
+   * `preview` to build an <img>/<video> src must skip it.
+   */
+  type: 'image' | 'video' | 'audio' | 'file';
   duration?: number;
   audio?: AudioFile;
   isMusicVideo?: boolean;
@@ -102,6 +107,7 @@ export interface PostFormActions {
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDocumentSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFileDrop: (files: FileList) => void;
   removeMedia: (index: number) => void;
   addAudioToMedia: (index: number, audio: AudioFile) => void;
@@ -125,6 +131,7 @@ export interface PostFormComputed {
   hasVideo: boolean;
   hasImage: boolean;
   hasAudio: boolean;
+  hasDocument: boolean;
   isShort: boolean;
   destinations: string[];
   canPost: boolean;

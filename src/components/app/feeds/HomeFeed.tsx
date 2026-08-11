@@ -29,7 +29,8 @@ import {
   SORT_OPTIONS, 
   DATE_FILTER_OPTIONS, 
   CONTENT_TYPE_FILTERS, 
-  POST_TYPE_FILTERS, 
+  POST_TYPE_FILTERS,
+  POST_TYPE_FILTER_I18N_KEYS,
   formatCount, 
   formatViews, 
   formatDuration, 
@@ -266,7 +267,7 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
           <GlassFilterRow
-            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
+            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${POST_TYPE_FILTER_I18N_KEYS[o.value]}`, o.label) }))}
             activeKey={selectedPostType}
             onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
             borderRadius="0.75rem"
@@ -641,6 +642,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     enabled: useInterleavedFeed,
   });
 
+  // Fetch file posts. Its own query rather than widening textsFeed's postType:
+  // the API returns an *unfiltered* feed for a postType it doesn't recognise, so
+  // changing the text lane's value would fill it with videos on any deploy where
+  // the API is behind. A separate lane keeps that blast radius to file posts.
+  const filesFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'feed-file',
+    enabled: useInterleavedFeed,
+  });
+
   // Fallback: single unified feed when post type filter is active OR using global sort
   const singleFeed = useUnifiedFeed({
     ...commonParams,
@@ -838,20 +849,26 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     const allVideos = videosFeed.data?.pages.flatMap(page => page.items || []) || [];
     const allImages = imagesFeed.data?.pages.flatMap(page => page.items || []) || [];
     const allTexts = textsFeed.data?.pages.flatMap(page => page.items || []) || [];
-    
+    const allFiles = filesFeed.data?.pages.flatMap(page => page.items || []) || [];
+
     // Filter out pinned post from all feeds
-    const filterPinned = (items: any[]) => 
+    const filterPinned = (items: any[]) =>
       pinnedPostId ? items.filter(item => String(item.tokenId) !== String(pinnedPostId)) : items;
-    
+
     const filteredVideos = filterPinned(allVideos);
     const filteredImages = filterPinned(allImages);
-    const filteredTexts = filterPinned(allTexts);
-    
+    // File posts share the text lane — they map to the same card, so the
+    // three-lane interleave pattern stays as-is. Re-sorted by date because two
+    // separately-paginated feeds arrive already sorted only within themselves.
+    const filteredTexts = [...filterPinned(allTexts), ...filterPinned(allFiles)].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
     // Map to component types
     const mappedVideos = filteredVideos.map((item, i) => mapToVideoItem(item, i));
     const mappedImages = filteredImages.map((item, i) => mapToImagePost(item, i));
     const mappedTexts = filteredTexts.map((item, i) => mapToTextPost(item, i));
-    
+
     // Interleave according to pattern
     const interleaved = interleaveByPattern(mappedVideos, mappedImages, mappedTexts, CONTENT_PATTERN);
     
@@ -866,7 +883,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           return { type: 'post' as const, data: item.data };
       }
     });
-  }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, pinnedPostId]);
+  }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, filesFeed.data, pinnedPostId]);
 
   // ============================================================================
   // SINGLE FEED ITEMS (when post type filter is active OR global sort mode)
@@ -894,6 +911,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         case 'feed-images':
           return { type: 'image', data: mapToImagePost(item, index) };
         case 'feed-simple':
+        // A file post is a text post with a download list — anything not named
+        // here falls through to the video card, which would render a blank player.
+        case 'feed-file':
           return { type: 'post', data: mapToTextPost(item, index) };
         case 'live':
         case 'video':
@@ -960,14 +980,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // ============================================================================
 
   // Determine if any feed has more content
-  const hasNextPage = useInterleavedFeed 
-    ? (videosFeed.hasNextPage || imagesFeed.hasNextPage || textsFeed.hasNextPage)
+  const hasNextPage = useInterleavedFeed
+    ? (videosFeed.hasNextPage || imagesFeed.hasNextPage || textsFeed.hasNextPage || filesFeed.hasNextPage)
     : singleFeed.hasNextPage;
 
   const isFetchingNextPage = useInterleavedFeed
-    ? (videosFeed.isFetchingNextPage || imagesFeed.isFetchingNextPage || textsFeed.isFetchingNextPage)
+    ? (videosFeed.isFetchingNextPage || imagesFeed.isFetchingNextPage || textsFeed.isFetchingNextPage || filesFeed.isFetchingNextPage)
     : singleFeed.isFetchingNextPage;
 
+  // Deliberately not including filesFeed: it is the smallest lane and the rest
+  // of the feed shouldn't sit behind a skeleton waiting for it.
   const isLoading = useInterleavedFeed
     ? (videosFeed.isLoading || imagesFeed.isLoading || textsFeed.isLoading)
     : singleFeed.isLoading;
@@ -1044,14 +1066,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (textsFeed.hasNextPage && !textsFeed.isFetchingNextPage) {
         promises.push(textsFeed.fetchNextPage());
       }
+      if (filesFeed.hasNextPage && !filesFeed.isFetchingNextPage) {
+        promises.push(filesFeed.fetchNextPage());
+      }
     } else {
       if (singleFeed.hasNextPage && !singleFeed.isFetchingNextPage) {
         promises.push(singleFeed.fetchNextPage());
       }
     }
-    
+
     return Promise.all(promises);
-  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, singleFeed]);
+  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, filesFeed, singleFeed]);
 
   // Infinite scroll observer
   useEffect(() => {
