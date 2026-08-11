@@ -3,7 +3,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Share2, X, Lock, Globe, Clock, UserCheck, UserX, Pencil, Link2, PenSquare } from 'lucide-react';
+import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Share2, X, Lock, Globe, Clock, UserCheck, UserX, Pencil } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
@@ -20,7 +20,8 @@ import { useNavigate } from 'react-router-dom';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { FriendsAtEvent } from './FriendsAtEvent';
 import { EditEventDrawer } from './EditEventDrawer';
-import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
+import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
+import { dehubLinkFor } from '@/lib/dehub-links';
 
 function CreatorInfo({ event }: { event: CommunityEvent }) {
   const navigate = useNavigate();
@@ -94,7 +95,6 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [showFullImage, setShowFullImage] = useState(false);
   const [showShareDrawer, setShowShareDrawer] = useState(false);
-  const { openPostModal } = useGlobalDropZone();
 
   const hasGateFee = (event?.gate_fee ?? 0) > 0;
   const isPrivate = event?.is_private ?? false;
@@ -475,53 +475,14 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
         />
       )}
 
-      {/* Share options drawer */}
-      <Drawer open={showShareDrawer} onOpenChange={setShowShareDrawer}>
-        <DrawerContent className={cn(GLASS_STYLES.drawer, 'max-h-[50vh]')}>
-          <DrawerHeader className="sr-only">
-            <DrawerTitle>Share Event</DrawerTitle>
-          </DrawerHeader>
-          <div className="p-4 space-y-2">
-            <button
-              onClick={() => {
-                const url = `${window.location.origin}/app/events/${event.event_number}`;
-                navigator.clipboard.writeText(url);
-                toast.success('Event link copied!');
-                setShowShareDrawer(false);
-              }}
-              className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] transition-colors text-left"
-            >
-              <div className="p-2 rounded-xl bg-white/[0.06]">
-                <Link2 className="w-5 h-5 text-zinc-300" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-white">Copy Link</p>
-                <p className="text-xs text-zinc-500">Copy event link to clipboard</p>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                const url = `${window.location.origin}/app/events/${event.event_number}`;
-                setShowShareDrawer(false);
-                onOpenChange(false);
-                // Small delay so drawers close first
-                setTimeout(() => {
-                  openPostModal(url);
-                }, 300);
-              }}
-              className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] transition-colors text-left"
-            >
-              <div className="p-2 rounded-xl bg-white/[0.06]">
-                <PenSquare className="w-5 h-5 text-zinc-300" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-white">Create Post</p>
-                <p className="text-xs text-zinc-500">Share this event in a post</p>
-              </div>
-            </button>
-          </div>
-        </DrawerContent>
-      </Drawer>
+      {/* Share options — the shared sheet, so an event can also be sent
+          straight into a DM rather than only copied or posted. */}
+      <ShareEntityDrawer
+        open={showShareDrawer}
+        onOpenChange={setShowShareDrawer}
+        url={dehubLinkFor.event(event.event_number)}
+        shareTitle={event.title}
+      />
 
       {/* Fullscreen image lightbox */}
       {showFullImage && event.cover_image_url && (

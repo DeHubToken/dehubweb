@@ -1,11 +1,16 @@
 /**
- * Share Post To DM Modal
- * ======================
- * Lets a user send a post into a direct message. Opened from a post's Share
- * drawer ("Send in a message"). Lists existing conversations + user search,
- * and sends the post via the DeHub DM socket endpoint (emitSendMessage) as a
- * message containing the post link — which renders as a rich card on the
- * recipient's side (see SharedPostEmbed).
+ * Share To DM Modal
+ * =================
+ * Lets a user send anything in DeHub into a direct message — a post, a shop
+ * item, a store, a community, an event, a profile. Opened from that thing's
+ * Share drawer ("Send in a message"). Lists existing conversations + user
+ * search, and sends the link over the DM socket (emitSendMessage), which
+ * renders as a rich card on the recipient's side (see DehubLinkEmbed).
+ *
+ * It takes a URL rather than a post id. The sheet is identical for every kind
+ * of thing being shared and only the link and the preview above it vary;
+ * hard-coding a tokenId is the reason "send in a message" existed on posts and
+ * nowhere else.
  *
  * Recipients who charge a per-message DM fee are routed into the conversation
  * (openDmWith + autoSendBody) so the existing fee-payment flow handles it.
@@ -19,19 +24,19 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { SharedPostEmbed } from '@/components/app/chat/SharedPostEmbed';
+import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { useConversations, useUserSearchForDM } from '@/hooks/use-messages';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { emitCreateAndStart, emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import { getAccountInfo, type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import { buildPostShareUrl } from '@/lib/post-link';
+import { parseDehubLink, dehubLinkLabel } from '@/lib/dehub-links';
 
-interface SharePostToDmModalProps {
+interface ShareToDmModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Numeric post tokenId being shared. */
-  tokenId: number;
+  /** Absolute URL of the thing being shared — build it with `dehubLinkFor`. */
+  url: string;
 }
 
 /**
@@ -48,7 +53,7 @@ function perMessageFeeOf(user: DeHubUser | undefined): number {
 
 type RowStatus = 'idle' | 'sending' | 'sent';
 
-export function SharePostToDmModal({ open, onOpenChange, tokenId }: SharePostToDmModalProps) {
+export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps) {
   const navigate = useNavigate();
   const [caption, setCaption] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -67,10 +72,14 @@ export function SharePostToDmModal({ open, onOpenChange, tokenId }: SharePostToD
     }
   }, [open]);
 
-  const shareUrl = buildPostShareUrl(tokenId);
+  const sharedLink = useMemo(() => parseDehubLink(url), [url]);
+  // Capitalised for the toast: "Item sent to Ana", "Community sent to Ana".
+  const noun = sharedLink ? dehubLinkLabel(sharedLink.kind) : 'link';
+  const sentLabel = noun.charAt(0).toUpperCase() + noun.slice(1);
+
   const buildContent = () => {
     const c = caption.trim();
-    return c ? `${c}\n${shareUrl}` : shareUrl;
+    return c ? `${c}\n${url}` : url;
   };
 
   // Filter existing conversations by the search term (client-side).
@@ -122,18 +131,18 @@ export function SharePostToDmModal({ open, onOpenChange, tokenId }: SharePostToD
       // the message behind a dmId that never materialised — the user landed on
       // an empty composer and the share was silently lost.
       if (conv.otherUser) { await sendToUser(conv.otherUser, key); return; }
-      toast.error('Failed to send post');
+      toast.error(`Failed to send ${noun}`);
       return;
     }
     setRowStatus(s => ({ ...s, [key]: 'sending' }));
     try {
       emitSendMessage({ dmId: conv.id, content: buildContent(), type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
-      toast.success(`Post sent to ${conv.otherUser?.displayName || conv.otherUser?.username || 'chat'}`);
+      toast.success(`${sentLabel} sent to ${conv.otherUser?.displayName || conv.otherUser?.username || 'chat'}`);
     } catch (err) {
-      console.error('[SharePostToDm] send to conversation failed:', err);
+      console.error('[ShareToDm] send to conversation failed:', err);
       setRowStatus(s => ({ ...s, [key]: 'idle' }));
-      toast.error('Failed to send post');
+      toast.error(`Failed to send ${noun}`);
     }
   };
 
@@ -160,11 +169,11 @@ export function SharePostToDmModal({ open, onOpenChange, tokenId }: SharePostToD
       if (!conv?._id) throw new Error('Could not open conversation');
       emitSendMessage({ dmId: conv._id, content: buildContent(), type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
-      toast.success(`Post sent to ${user.displayName || user.username || 'user'}`);
+      toast.success(`${sentLabel} sent to ${user.displayName || user.username || 'user'}`);
     } catch (err) {
-      console.error('[SharePostToDm] send to user failed:', err);
+      console.error('[ShareToDm] send to user failed:', err);
       setRowStatus(s => ({ ...s, [key]: 'idle' }));
-      toast.error('Failed to send post');
+      toast.error(`Failed to send ${noun}`);
     }
   };
 
@@ -192,7 +201,7 @@ export function SharePostToDmModal({ open, onOpenChange, tokenId }: SharePostToD
 
         <div className="px-4 pb-6 space-y-3 overflow-y-auto overscroll-contain flex-1">
           {/* What's being shared */}
-          <SharedPostEmbed tokenId={String(tokenId)} />
+          {sharedLink && <DehubLinkEmbed link={sharedLink} compact />}
 
           {/* Optional caption */}
           <Input
