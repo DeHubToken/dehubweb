@@ -80,7 +80,7 @@ const SLIDES = [
 ] as const;
 
 const ENTITY_COPY =
-  'DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University’s student portal, Rowan’s DEHub or the deHUB Access door-entry app.';
+  'DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB.\u00a0';
 
 const LINKS: { to: string; label: string }[] = [
   { to: '/guides/what-is-watch-to-earn', label: 'What is watch-to-earn?' },
