@@ -55,7 +55,7 @@ const OG_CARD_ROUTES = new Set([
   'affiliate', 'premium', 'governance', 'leaderboard',
   'top-100', 'music', 'tv',
   'glossary', 'bridge', 'agents', 'assistant',
-  'creators', 'jobs',
+  'creators', 'jobs', 'apk',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -752,6 +752,31 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>A screen-by-screen walkthrough of the DeHub app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
 <p><a href="${APP_URL}/guide" style="color:#9f9">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs" style="color:#9f9">documentation</a>.</p>`,
   },
+  // Direct APK download. The file itself is a GitHub release asset (~205 MB,
+  // well past the 25 MiB per-file ceiling on Workers static assets), reached
+  // through `releases/latest/download/dehub.apk` so a new upload needs no
+  // deploy. Version and size are the SPA's fallback strings — the live page
+  // reads both from the releases API, but a crawler runs no JS, so these are
+  // what a share card and a search result will carry.
+  'apk': {
+    title: 'Download the DeHub APK — Latest Android Build',
+    description: 'Skip the stores and get the latest version of DeHub right here. Direct APK download for Android — open source, user-owned social media, no store account needed.',
+    heading: 'Download the DeHub APK',
+    jsonLdType: 'SoftwareApplication',
+    jsonLdExtra: {
+      alternateName: 'DeHub APK',
+      downloadUrl: 'https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk',
+      installUrl: `${APP_URL}/apk`,
+      softwareVersion: '1.14.0',
+      fileSize: '205 MB',
+      applicationCategory: 'SocialNetworkingApplication',
+      operatingSystem: 'Android 8.0 and up',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+    bodyHtml: `<p>Skip the stores and get the latest version of DeHub right here — straight from us, no store account and no waiting on a review queue.</p>
+<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk" style="color:#9f9">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
+<p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile" style="color:#9f9">on Google Play</a>.</p>`,
+  },
 
   // The rest of SSR_STATIC_ROUTES, moved here from the Supabase fn's own
   // STATIC_ROUTES map. The fn deploys on its own track (`supabase functions
@@ -910,12 +935,17 @@ const MARKETING_PAGES = {
 
 function buildMarketingHtml(key, meta) {
   const canonicalUrl = `${APP_URL}/${key}`;
+  // A page whose subject is a *thing* rather than a document can name its own
+  // schema type (`meta.jsonLdType` + `jsonLdExtra`); everything else stays a
+  // plain WebPage. Must mirror the type the SPA writes for the same route, or
+  // the two UA variants describe the same URL as two different entities.
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
+    '@type': meta.jsonLdType || 'WebPage',
     name: meta.title,
     description: meta.description,
     url: canonicalUrl,
+    ...(meta.jsonLdExtra || {}),
     isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
     publisher: ORG_JSONLD,
   };
@@ -1261,6 +1291,10 @@ const SYSTEM_ROUTES = [
   // (noindex, follow shell).
   'connect', 'pricing', 'communities', 'stages', 'guide', 'launchpad',
   'events', 'stage',
+  // Same class again: without this, /apk reads as the profile of a user called
+  // @apk and the download lander answers "Join @apk" to every crawler — and to
+  // every Telegram/X/Facebook unfurl, which is the whole point of the page.
+  'apk',
   // 'blog' is reserved: a user registered that handle, and without this every
   // /blog/<anything> minted an indexable "Join @blog" profile page.
   'blog',
