@@ -922,8 +922,16 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   box-shadow: var(--glass-edge-flat) !important; /* no ambient drop shadow — see --glass-edge-flat */
 }
 
-/* Side panels and page bentos — regular glass. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) :is([data-side-panel], [data-page-bento]) {
+/* Side panels and page bentos — regular glass.
+
+   [data-bento-flat] opts a bento OUT of the slab while keeping the
+   [data-page-bento] hook. Both are needed and they do different jobs: the hook
+   is what the Osaka and Jungle `#app-root` class nets exclude on, so dropping
+   it would expose every bg-zinc-8/9 descendant inside the surface to being
+   repainted as a frosted rectangle. The attribute only says "don't paint the
+   container" — see the flat-surface block further down for what it gets
+   instead. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) :is([data-side-panel], [data-page-bento]:not([data-bento-flat])) {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
   backdrop-filter: var(--glass-blur) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
@@ -936,6 +944,46 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    above — they're normal-sized cards where the soft halo reads correctly. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-side-panel] {
   box-shadow: var(--glass-edge-panel) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Flat page surfaces ([data-bento-flat])
+
+   For pages whose content is a LIST, not a set of cards. A slab is doing real
+   work behind the home feed, where every post is a discrete object; behind the
+   Messages inbox it is just a second fill under rows that already read as rows.
+   The surface keeps its hook (see above) but is drawn as a 1px frame instead of
+   a filled, blurred, drop-shadowed panel — the same move the mobile app makes,
+   where the DM list is full-bleed on the screen background with hairline row
+   separators and no card at all.
+
+   On the canvas themes the frame alone is not enough: with no fill, page copy
+   sits directly over a moving background, and the text-halo rule below
+   deliberately excludes [data-page-bento] descendants (they are supposed to
+   have a dark backing). Rather than re-admit them to the halo — which would
+   give Messages a text shadow the rest of the app does not have — seat the copy
+   on a thin plane. It is roughly half the density of --glass-regular: enough to
+   hold text, far short of reading as a panel. No ring, no ambient halo.
+   -------------------------------------------------------------------------- */
+[data-bento-flat] {
+  border: 1px solid rgb(255 255 255 / 0.13);
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-bento-flat] {
+  background: rgb(var(--glass-tint) / 0.30) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-color: rgb(255 255 255 / 0.16) !important;
+  box-shadow: none !important;
+}
+
+/* Minimal and Light already dissolve [data-page-bento] entirely, which is the
+   same intent taken further — let them win and drop the frame too, so Messages
+   does not become the one page in those themes with a box on it. */
+html:is([data-theme="minimal"], [data-theme="light"]) [data-bento-flat]:not([data-keep-dark]) {
+  border: 0 !important;
 }
 
 /* ==========================================================================

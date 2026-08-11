@@ -235,7 +235,11 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   };
 
   return (
-    <div className="p-3 lg:pl-4 border-t border-transparent bg-zinc-900">
+    /* No fill: both consumers (DM + Public Chat) are flat shells now, so a
+       zinc-900 bar would float inside a hairline frame. Carrying no colour
+       utility also puts it permanently out of reach of the Osaka/Jungle
+       `#app-root` class nets, which outrank any re-declaration here. */
+    <div className="p-3 lg:pl-4 border-t border-white/[0.07]">
       {/* Reply preview */}
       {replyTo && (
         <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg border-l-2 border-white/30">
