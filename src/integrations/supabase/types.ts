@@ -4484,7 +4484,16 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      chess_records: {
+        Row: {
+          draws: number | null
+          losses: number | null
+          played: number | null
+          wallet: string | null
+          wins: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       ads_estimate_audience: { Args: { p_targeting: Json }; Returns: Json }
