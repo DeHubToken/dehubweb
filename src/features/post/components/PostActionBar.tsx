@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, Paperclip } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -12,7 +12,6 @@ import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
 import { openStageModal } from '@/contexts/StageContext';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
-import { ATTACHMENT_ACCEPT } from '@/lib/attachments';
 import type { LiveMode } from '../types';
 import type { AttachedSound } from '../hooks/usePostSound';
 
@@ -20,11 +19,9 @@ interface PostActionBarProps {
   imageInputRef: React.RefObject<HTMLInputElement>;
   videoInputRef: React.RefObject<HTMLInputElement>;
   audioInputRef: React.RefObject<HTMLInputElement>;
-  documentInputRef: React.RefObject<HTMLInputElement>;
   onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onDocumentSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onStartRecording: () => void;
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
@@ -42,7 +39,6 @@ interface PostActionBarProps {
   hasText: boolean;
   hasImage?: boolean;
   hasVideo?: boolean;
-  hasDocument?: boolean;
   isScheduled?: boolean;
   onCloseModal?: () => void;
   onOpenCategories?: () => void;
@@ -57,11 +53,9 @@ export function PostActionBar({
   imageInputRef,
   videoInputRef,
   audioInputRef,
-  documentInputRef,
   onImageSelect,
   onVideoSelect,
   onAudioSelect,
-  onDocumentSelect,
   onStartRecording,
   liveMode,
   setLiveMode,
@@ -79,7 +73,6 @@ export function PostActionBar({
   hasText,
   hasImage,
   hasVideo,
-  hasDocument,
   isScheduled,
   onCloseModal,
   onOpenCategories,
@@ -280,10 +273,9 @@ export function PostActionBar({
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
         <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
-        <input ref={documentInputRef} type="file" accept={ATTACHMENT_ACCEPT} multiple onChange={onDocumentSelect} className="hidden" />
-
+        
         {/* Camera button for recording - leftmost position */}
-        {!isLive && !hasVideo && !hasImage && !hasDocument && (
+        {!isLive && !hasVideo && !hasImage && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
@@ -299,7 +291,7 @@ export function PostActionBar({
         )}
 
         {/* Image button */}
-        {!isLive && !hasVideo && !hasDocument && (
+        {!isLive && !hasVideo && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
@@ -315,7 +307,7 @@ export function PostActionBar({
         )}
         
         {/* Desktop: Separate video button */}
-        {!hasImage && !isLive && !hasDocument && (
+        {!hasImage && !isLive && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
@@ -330,25 +322,8 @@ export function PostActionBar({
           </Tooltip>
         )}
 
-        {/* Attach documents — a file post carries no other media, so this is
-            hidden once image/video/audio is on the draft (and vice versa). */}
-        {!isLive && !hasImage && !hasVideo && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                onClick={() => documentInputRef.current?.click()}
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-              >
-                <Paperclip className="w-5 h-5 text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Attach files</TooltipContent>
-          </Tooltip>
-        )}
-
         {/* Audio button with popover for upload/record options */}
-        {!isLive && !hasDocument && (
+        {!isLive && (
           <Popover open={audioPopoverOpen} onOpenChange={setAudioPopoverOpen} modal={true}>
             <PopoverTrigger asChild>
               <button 
@@ -405,7 +380,7 @@ export function PostActionBar({
           </Popover>
         )}
         
-        {!hasImage && !hasDocument && (
+        {!hasImage && (
           <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen} modal={true}>
             <PopoverTrigger asChild>
               <button 

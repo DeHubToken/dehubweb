@@ -422,27 +422,10 @@ export const POST_TYPE_FILTERS = [
   { label: 'Images', value: 'feed-images' as const },
   { label: 'Audio', value: 'feed-audio' as const },
   { label: 'Text', value: 'feed-simple' as const },
-  { label: 'Files', value: 'feed-file' as const },
 ] as const;
 
 export type PostTypeFilterOption = typeof POST_TYPE_FILTERS[number];
 export type PostTypeFilterValue = PostTypeFilterOption['value'];
-
-/**
- * i18n key under `filters.` for each post-type filter. A map rather than a
- * ternary chain so adding a filter can't silently inherit another one's label —
- * the previous chain ended in `: 'text'`, so any new value read as "Text".
- * `t()` is called with the option's own label as the fallback, so a locale that
- * hasn't picked up a key yet shows English rather than the raw key.
- */
-export const POST_TYPE_FILTER_I18N_KEYS: Record<PostTypeFilterValue, string> = {
-  all: 'all',
-  video: 'videos',
-  'feed-images': 'images',
-  'feed-audio': 'audio',
-  'feed-simple': 'text',
-  'feed-file': 'files',
-};
 
 /**
  * Filter NFTs by content type (PPV, W2E/Bounty, Locked)
