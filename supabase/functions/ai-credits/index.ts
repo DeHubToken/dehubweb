@@ -1,12 +1,13 @@
 /**
  * ai-credits
  * ==========
- * The one endpoint the client talks to about AI credit. Four actions:
+ * The one endpoint the client talks to about AI credit. Five actions:
  *
- *   balance     what this wallet has
- *   quote       what a job would cost, priced here rather than on the client
- *   topup       credit an on-chain DHB transfer to the treasury
- *   claim-free  the one-off starter allowance
+ *   balance      what this wallet has
+ *   quote        what a job would cost, priced here rather than on the client
+ *   topup        credit an on-chain DHB transfer to the treasury
+ *   claim-free   the one-off starter allowance
+ *   claim-daily  starter (folded in) + the accruing daily allowance
  *
  * Top-up needs no price lookup. Credit is denominated in DHB and the gateway
  * sells DHB at a fixed $0.001, so a transfer of N DHB credits exactly N DHB —
@@ -24,7 +25,7 @@ import {
   serviceClient,
 } from '../_shared/auth.ts';
 import { DHB_USD_PEG, dhbToUsd, quotePriceDhb, type JobKind } from '../_shared/ai-pricing.ts';
-import { FREE_GRANT_DHB } from '../_shared/ai-plans.ts';
+import { DAILY_ACCRUAL_CAP_DHB, DAILY_GRANT_DHB, FREE_GRANT_DHB } from '../_shared/ai-plans.ts';
 
 const DHB_BASE = '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c';
 const DHB_BNB = '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D';
@@ -143,6 +144,35 @@ Deno.serve(async (req) => {
         throw error;
       }
       return jsonResponse({ ok: true, granted: FREE_GRANT_DHB, balanceDhb: Number(data) });
+    }
+
+    if (action === 'claim-daily') {
+      // Starter (once ever) + the accruing daily allowance, in one RPC. The
+      // whole read-accrue-insert sequence lives in ai_credit_claim_daily,
+      // serialized per wallet, because doing it here in two round trips left
+      // a hole: two requests straddling UTC midnight build refs for different
+      // dates, so the ledger's (reason, ref) unique index cannot see that
+      // their accrual ranges overlap and both would pay the same missed days.
+      // Amounts are passed in so ai-plans.ts stays the authority on sizing.
+      const { data, error } = await serviceClient().rpc('ai_credit_claim_daily', {
+        p_wallet: wallet,
+        p_starter_dhb: FREE_GRANT_DHB,
+        p_daily_dhb: DAILY_GRANT_DHB,
+        p_cap_dhb: DAILY_ACCRUAL_CAP_DHB,
+      });
+      if (error) throw error;
+
+      const result = data as {
+        granted_dhb?: number;
+        already_claimed?: boolean;
+        balance_dhb?: number;
+      } | null;
+      return jsonResponse({
+        ok: true,
+        granted: Number(result?.granted_dhb ?? 0),
+        alreadyClaimed: Boolean(result?.already_claimed),
+        balanceDhb: Number(result?.balance_dhb ?? 0),
+      });
     }
 
     if (action === 'topup') {
