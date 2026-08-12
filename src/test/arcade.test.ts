@@ -198,6 +198,84 @@ describe('arcade readiness bridge', () => {
   });
 });
 
+describe('arcade touch controls', () => {
+  // Two of the three games are pointer-lock-and-WASD upstream and cannot be
+  // played on a touchscreen without the adapter each one's index.html carries.
+  // Everything those adapters depend on is in another file — a shared layer, a
+  // headers rule, and, for the war build, three property names inside a
+  // minified bundle nobody here can rebuild. None of it is visible to the
+  // compiler, and every failure mode is silent: the game still boots, still
+  // looks right, and simply does not move.
+  const TOUCH_GAMES = ['war-game', 'jungle-game'];
+  const LAYER = 'public/arcade-touch/touch-controls.js';
+
+  it('ships the shared layer both entry documents load', () => {
+    expect(existsSync(repo(LAYER)), LAYER).toBe(true);
+    for (const dir of TOUCH_GAMES) {
+      const html = readFileSync(repo('public', dir, 'index.html'), 'utf8');
+      expect(html, `${dir} loads the touch layer`).toContain('/arcade-touch/touch-controls.js');
+      // A module entry in an opaque-origin frame is fetched in CORS mode and
+      // dropped without a word if the header is missing — the failure this repo
+      // has already paid for twice. A classic script cannot fail that way, so
+      // the tag is asserted to stay classic.
+      expect(
+        /<script src="\/arcade-touch\/touch-controls\.js"><\/script>/.test(html),
+        `${dir} loads it as a classic script, not a module`,
+      ).toBe(true);
+    }
+  });
+
+  it('leaves a real pointer completely alone', () => {
+    // The layer is loaded by every desktop player too, so "does nothing unless
+    // asked" is a promise about their experience, not an optimisation.
+    const layer = readFileSync(repo(LAYER), 'utf8');
+    expect(layer).toContain('(hover: none) and (pointer: coarse)');
+    expect(layer, 'mount() bails before touching the DOM').toMatch(
+      /if \(!isTouchDevice\(\)\) return null;/,
+    );
+  });
+
+  it('keeps the war adapter pointed at engine internals that still exist', () => {
+    // The single most breakable thing in the arcade. The war game is vendored
+    // as a minified build, so its touch adapter reaches into the input object
+    // by property name: `_rawLook` because `_onMouseMove` is gated on a pointer
+    // lock a WebView never grants, and the pending sets because the real
+    // handlers would ask for that lock on every tap. esbuild does not mangle
+    // property names, so these read the same in the bundle as in upstream's
+    // source — but a rename upstream would be completely silent, and the game
+    // would boot, look perfect, and refuse to aim.
+    const bundle = readdirSync(repo('public/war-game/assets'))
+      .filter((f) => f.endsWith('.js'))
+      .map((f) => readFileSync(repo('public/war-game/assets', f), 'utf8'))
+      .join('\n');
+
+    // Booleans, not toContain: a failed toContain against a 1.6 MB bundle
+    // prints the whole bundle.
+    for (const name of ['_rawLook', '_pendingDown', '_pendingUp']) {
+      expect(bundle.includes(name), `war bundle still has ${name}`).toBe(true);
+    }
+    // And the gamepad path movement rides in on, which is the half that is
+    // supposed to be re-vendor-proof.
+    expect(bundle.includes('getGamepads'), 'war bundle still polls getGamepads').toBe(true);
+    expect(/stick\.moveX/.test(bundle), 'war bundle still sums stick.moveX into movement').toBe(true);
+  });
+
+  it('keeps the jungle adapter pointed at walker fields that still exist', () => {
+    // Same hazard, different shape: jungle is vendored as SOURCE and re-vendored
+    // by copying upstream's src/ straight over the top, so this file is the one
+    // most likely to change under the adapter.
+    const controller = readFileSync(repo('public/jungle-game/src/player/controller.js'), 'utf8');
+    expect(controller, 'walker still reads a plain key map').toContain('this.keys');
+    expect(controller, 'walker still exposes yaw').toContain('this.yaw');
+    expect(controller, 'walker still exposes pitch').toContain('this.pitch');
+    expect(controller, 'walker still has a jump() to queue').toMatch(/jump\(\)\s*\{/);
+    // The adapter shadows this to stop a tap capturing a pointer there is no
+    // cursor for. If upstream stops asking, the shadow is harmless — but if it
+    // moves somewhere else, the tap starts failing again.
+    expect(controller).toContain('requestPointerLock');
+  });
+});
+
 describe('arcade headers', () => {
   const headers = readFileSync(repo('public/_headers'), 'utf8');
 
@@ -220,6 +298,15 @@ describe('arcade headers', () => {
       expect(block.slice(0, 200), dir).toContain('must-revalidate');
       expect(block.slice(0, 200), dir).not.toContain('immutable');
     }
+  });
+
+  it('keeps the touch layer revalidating', () => {
+    // Unhashed and loaded by both games, so `immutable` here would mean a fix
+    // to the controls never reaching anyone who has already played once —
+    // exactly the trap the index.html rules above were split to avoid.
+    const block = headers.split('/arcade-touch/*')[1] ?? '';
+    expect(block.slice(0, 200)).toContain('must-revalidate');
+    expect(block.slice(0, 200)).not.toContain('immutable');
   });
 
   it('allows the chess game to reach the bucket its armies live in', () => {
