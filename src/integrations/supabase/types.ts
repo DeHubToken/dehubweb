@@ -1041,6 +1041,125 @@ export type Database = {
         }
         Relationships: []
       }
+      chess_matches: {
+        Row: {
+          black_ms: number | null
+          black_wallet: string | null
+          clock_initial_ms: number
+          created_at: string
+          created_by: string
+          end_reason: string | null
+          fen: string
+          finished_at: string | null
+          id: string
+          last_move_at: string | null
+          opponent: string | null
+          ply: number
+          stake_dhb: number
+          start_fen: string | null
+          status: string
+          turn: string
+          white_ms: number | null
+          white_wallet: string | null
+          winner: string | null
+        }
+        Insert: {
+          black_ms?: number | null
+          black_wallet?: string | null
+          clock_initial_ms: number
+          created_at?: string
+          created_by: string
+          end_reason?: string | null
+          fen: string
+          finished_at?: string | null
+          id?: string
+          last_move_at?: string | null
+          opponent?: string | null
+          ply?: number
+          stake_dhb?: number
+          start_fen?: string | null
+          status?: string
+          turn?: string
+          white_ms?: number | null
+          white_wallet?: string | null
+          winner?: string | null
+        }
+        Update: {
+          black_ms?: number | null
+          black_wallet?: string | null
+          clock_initial_ms?: number
+          created_at?: string
+          created_by?: string
+          end_reason?: string | null
+          fen?: string
+          finished_at?: string | null
+          id?: string
+          last_move_at?: string | null
+          opponent?: string | null
+          ply?: number
+          stake_dhb?: number
+          start_fen?: string | null
+          status?: string
+          turn?: string
+          white_ms?: number | null
+          white_wallet?: string | null
+          winner?: string | null
+        }
+        Relationships: []
+      }
+      chess_moves: {
+        Row: {
+          black_ms: number | null
+          created_at: string
+          fen_after: string
+          from_sq: string
+          id: number
+          match_id: string
+          ply: number
+          promotion: string | null
+          san: string
+          to_sq: string
+          wallet: string
+          white_ms: number | null
+        }
+        Insert: {
+          black_ms?: number | null
+          created_at?: string
+          fen_after: string
+          from_sq: string
+          id?: never
+          match_id: string
+          ply: number
+          promotion?: string | null
+          san: string
+          to_sq: string
+          wallet: string
+          white_ms?: number | null
+        }
+        Update: {
+          black_ms?: number | null
+          created_at?: string
+          fen_after?: string
+          from_sq?: string
+          id?: never
+          match_id?: string
+          ply?: number
+          promotion?: string | null
+          san?: string
+          to_sq?: string
+          wallet?: string
+          white_ms?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chess_moves_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "chess_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_error_logs: {
         Row: {
           component: string | null
