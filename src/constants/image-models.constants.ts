@@ -32,10 +32,22 @@ export const imageModelSupportsEdit = (model: ImageModel): boolean =>
 export const IMAGE_GENERATION_MARKUP = 0.2; // 20% markup
 
 /**
+ * Per-model markup bands, mirroring MARKUP_OVERRIDES in ai-pricing.ts. The
+ * image paywall quotes its DHB figure from the server, so this only keeps
+ * the USD sub-labels honest — but a mismatch here still reads as a wrong
+ * price to anyone comparing the picker against their ledger.
+ */
+export const IMAGE_MARKUP_OVERRIDES: Record<string, number> = {
+  'z-image-turbo': 0.1,
+  'gemini-3.1-flash-image': 0.1,
+};
+
+/**
  * Calculate the final cost in USD with markup
  */
 export const getImageCostUsd = (model: ImageModel): number => {
-  return model.baseCostUsd * (1 + IMAGE_GENERATION_MARKUP);
+  const markup = IMAGE_MARKUP_OVERRIDES[model.id] ?? IMAGE_GENERATION_MARKUP;
+  return model.baseCostUsd * (1 + markup);
 };
 
 /**
