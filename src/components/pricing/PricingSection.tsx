@@ -47,9 +47,40 @@ interface Plan {
  * was inherited from a competitor whose credit unit is not ours. Nothing ever
  * granted it, which was lucky: at our cost basis that is $525 of retail sold
  * for £129. These figures are rebuilt from what we pay providers, at the
- * gateway peg of 1,000 DHB = $1 of generation.
+ * gateway peg of 1,000 DHB = $1 of generation. The per-model counts in each
+ * breakdown are at current server pricing (ai-pricing.ts, including the veo
+ * markup band) and go stale if a provider reprices — recompute, don't copy.
  */
 const plans: Plan[] = [
+  {
+    id: 'creator',
+    name: 'Creator',
+    monthlyPriceId: 'creator_monthly',
+    annualPriceId: 'creator_annual',
+    discount: '21% OFF',
+    tagline: '',
+    headline: 'For getting started with AI creation',
+    breakdown: [
+      '23,000 DHB credit/mo',
+      '= 54 Veo 3.1 Fast videos  ·  212 Nano Banana Pro images',
+      'Credit is DHB — it never expires',
+    ],
+    monthly: 19,
+    annual: 15,
+    perLabel: 'per month, billed annually',
+    cta: 'Get Creator',
+    groups: [
+      {
+        title: 'Included',
+        items: [
+          'Access to all models & features',
+          'Parallel generations: up to 4 videos, 4 images',
+          'Top up any time with your own DHB',
+          'Publish straight to DeHub',
+        ],
+      },
+    ],
+  },
   {
     id: 'ultra',
     name: 'Ultra',
@@ -60,8 +91,8 @@ const plans: Plan[] = [
     headline: 'For creators building AI projects',
     breakdown: [
       '130,000 DHB credit/mo',
-      '= 433 Nano Banana Pro images  ·  ~ 41 Seedance 2.0 videos',
-      'Credit is DHB — spend it, or top up with your own',
+      '= 78 Veo 3.1 videos  ·  1,203 Nano Banana Pro images',
+      'DHB credit never expires — top up any time',
     ],
     monthly: 129,
     annual: 99,
@@ -78,7 +109,9 @@ const plans: Plan[] = [
           'Access to all models & features',
           'Early access to advanced AI features',
           'Access to unlimited marketplace',
-          'Lowest cost per credit',
+          // 'Lowest cost per credit' used to sit here. Creator at £15 for
+          // 23,000 DHB beats Ultra's £99 for 130,000 per credit, so the
+          // claim became false the day Creator was listed.
         ],
       },
       {
@@ -97,8 +130,8 @@ const plans: Plan[] = [
     headline: 'For agencies and small teams to create faster',
     breakdown: [
       '88,000 DHB credit per seat/mo',
-      '= 293 Nano Banana Pro images  ·  ~ 28 Seedance 2.0 videos',
-      'Pooled across the workspace',
+      '= 53 Veo 3.1 videos  ·  814 Nano Banana Pro images',
+      'Pooled across the workspace — never expires',
     ],
     monthly: 79,
     annual: 65,
@@ -150,14 +183,16 @@ const plans: Plan[] = [
     headline: 'Designed for growing creative teams',
     breakdown: [
       '210,000 DHB credit per seat/mo',
-      '= 700 Nano Banana Pro images  ·  ~ 67 Seedance 2.0 videos',
-      'Pooled across the workspace',
+      '= 126 Veo 3.1 videos  ·  1,944 Nano Banana Pro images',
+      'Pooled across the workspace — never expires',
     ],
     monthly: 215,
     annual: 150,
     perLabel: 'per seat/mo, billed annually',
     cta: 'Get Scale',
-    savings: 'Save £228 compared to monthly',
+    // (215 − 150) × 12 — the £228 that sat here before reconciled with
+    // nothing on the card.
+    savings: 'Save £780 compared to monthly',
     seats: '5 seats',
     groups: [
       {
@@ -196,11 +231,10 @@ const plans: Plan[] = [
 ];
 
 interface Props {
-  compact?: boolean;
   showHeader?: boolean;
 }
 
-export function PricingSection({ compact = false, showHeader = true }: Props) {
+export function PricingSection({ showHeader = true }: Props) {
   const [billing, setBilling] = useState<Billing>('annual');
   const { walletAddress, user, openLoginModal } = useAuth() as any;
   const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
@@ -237,7 +271,10 @@ export function PricingSection({ compact = false, showHeader = true }: Props) {
       <div
         className={cn(
           'mx-auto grid max-w-7xl gap-4',
-          compact ? 'md:grid-cols-3' : 'lg:grid-cols-3'
+          // Four plans since Creator was listed: 2x2 until xl on every
+          // surface. The old compact/full split (3-up at md vs lg) only made
+          // sense with three cards.
+          'md:grid-cols-2 xl:grid-cols-4'
         )}
       >
         {plans.map((plan) => (
@@ -281,7 +318,9 @@ function BillingToggle({
       {label}
       {value === 'annual' && (
         <span className={cn('ml-2 text-[10px] font-bold', active ? 'text-black/70' : 'text-white/50')}>
-          −23%
+          {/* Annual discounts range 18–30% across the tiers (each card wears
+              its own), so the toggle can only honestly claim the ceiling. */}
+          up to −30%
         </span>
       )}
     </button>

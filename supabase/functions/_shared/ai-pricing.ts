@@ -20,7 +20,8 @@
 export const DHB_USD_PEG = 0.001;
 
 /**
- * 20% markup over provider cost, applied to every generation type.
+ * Default markup over provider cost — 20% wherever MARKUP_OVERRIDES below
+ * does not band a model up or down.
  *
  * Was 100%. The thinner margin only works because provider cost is now the
  * kie.ai rate wherever kie serves the model (see the tables below): kie
@@ -34,6 +35,44 @@ export const DHB_USD_PEG = 0.001;
  * video entries).
  */
 export const MARKUP = 0.2;
+
+/**
+ * Per-model markup bands. Anything not listed pays the default MARKUP.
+ *
+ * The flat rate turned out to be wrong in both directions at once: too thin
+ * to fund a free allowance out of margin, and not thin enough to matter on
+ * the entry images. So the rate bands per model instead of moving for
+ * everyone.
+ *
+ * The entry images drop to 10% because their absolute prices are pennies and
+ * the round-up to whole DHB in quotePriceDhb already protects the floor —
+ * z-image-turbo retails at $0.0066 and bills as 7 DHB, so the ceil adds back
+ * most of what the band gives up.
+ *
+ * The two Veos rise to 30% because kie bills them flat per video: at 20%
+ * they sat 46% and 20% under the main competitor's price, which is deeper
+ * than anyone comparison-shops. At 30% they still undercut it (42% and 13%)
+ * and the difference is what pays for the free allowance grants in
+ * ai-plans.ts.
+ *
+ * The ceiling rule above survives banding: whatever the markup, the cost
+ * entry must be the CEILING of what the routed provider can bill for that
+ * model across the options the composer exposes, so no override may take the
+ * price below the routed provider ceiling.
+ *
+ * Keys are bare model ids, looked up regardless of kind — so an id listed
+ * here must stay unique across all four cost tables, the same convention the
+ * tables themselves already rely on. The client display constants mirror
+ * these bands (VIDEO_MARKUP_OVERRIDES / IMAGE_MARKUP_OVERRIDES in
+ * src/constants); a band added here alone makes the video paywall understate
+ * the debit and pass users the server will 402.
+ */
+export const MARKUP_OVERRIDES: Record<string, number> = {
+  'z-image-turbo': 0.1,
+  'gemini-3.1-flash-image': 0.1,
+  'veo-3.1-fast': 0.3,
+  'veo-3.1': 0.3,
+};
 
 export type JobKind = 'image' | 'video' | 'model3d' | 'tool';
 export type TextureQuality = 'none' | 'standard' | 'HD';
@@ -176,7 +215,8 @@ export function quotePriceDhb(kind: JobKind, modelId: string, opts: QuoteOptions
   if (cost === null || !Number.isFinite(cost) || cost <= 0) return null;
 
   const quantity = Math.max(1, Math.floor(opts.quantity ?? 1));
-  const retailUsd = cost * (1 + MARKUP) * quantity;
+  const markup = MARKUP_OVERRIDES[modelId] ?? MARKUP;
+  const retailUsd = cost * (1 + markup) * quantity;
 
   // Whole DHB. Rounding up keeps a batch from costing less than its parts.
   return Math.ceil(retailUsd / DHB_USD_PEG);
