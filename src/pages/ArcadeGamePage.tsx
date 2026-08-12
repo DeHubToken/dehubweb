@@ -135,7 +135,12 @@ export default function ArcadeGamePage() {
       <SEOHead
         title={`${game.title} | DeHub Arcade`}
         description={game.description}
-        image={`https://dehub.io${game.art}`}
+        // The game's own share card, not `game.art`. Two reasons: the worker
+        // serves this card to crawlers and declares it 1200x630, so the SPA
+        // must not name a different image at that size; and `art` is a WebP,
+        // which several scrapers (X among them) will not render as a preview.
+        // The capture stays the JSON-LD image, where a real screenshot belongs.
+        image={`https://dehub.io/og/arcade-${game.slug}.jpg`}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'VideoGame',
