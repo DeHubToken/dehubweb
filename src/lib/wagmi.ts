@@ -9,6 +9,7 @@
 import { http, createConfig, createConnector } from 'wagmi'
 import { injected } from 'wagmi/connectors'
 import { base, bsc, mainnet } from 'wagmi/chains'
+import { robinhood, ROBINHOOD_PUBLIC_RPC } from '@/lib/chains/robinhood'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import type { Wallet } from '@rainbow-me/rainbowkit'
 import {
@@ -117,7 +118,11 @@ const rainbowKitConnectors = connectorsForWallets(
 )
 
 export const wagmiConfig = createConfig({
-  chains: [base, bsc, mainnet],
+  // Robinhood Chain is registered even while its stream contracts are still
+  // being deployed: a wallet already sitting on 4663 should be recognised
+  // rather than reported as an unsupported network. What gates the user-facing
+  // pickers is ROBINHOOD_ENABLED in lib/chains/constants.
+  chains: [base, bsc, mainnet, robinhood],
   connectors: [
     ...rainbowKitConnectors,
     // Hidden fallback for mobile in-app browsers (Trust, MetaMask, etc.)
@@ -129,6 +134,7 @@ export const wagmiConfig = createConfig({
     [base.id]: http('https://base-rpc.publicnode.com'),
     [bsc.id]: http('https://bsc-dataseed.binance.org'),
     [mainnet.id]: http('https://ethereum-rpc.publicnode.com'),
+    [robinhood.id]: http(ROBINHOOD_PUBLIC_RPC),
   },
   // Default is 4000ms — way too aggressive. We don't watch blocks actively.
   pollingInterval: 30_000,

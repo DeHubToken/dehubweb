@@ -3,6 +3,13 @@
  */
 
 import type { ChainId } from '@/components/app/ChainSelector';
+import {
+  ROBINHOOD_CHAIN_ID,
+  ROBINHOOD_ENABLED,
+  ROBINHOOD_TOKENS,
+  DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
+  IS_DHB_LIVE_ON_ROBINHOOD,
+} from '@/lib/chains/robinhood';
 
 export const SOLANA_MAINNET_CHAIN_ID = 101 as const;
 export const SOLANA_DEVNET_CHAIN_ID = 103 as const;
@@ -45,6 +52,27 @@ export const SUPPORTED_LOCK_TOKENS: SupportedLockToken[] = [
   { symbol: 'SOL', name: 'Solana', address: 'So11111111111111111111111111111111111111112', chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 9 },
   { symbol: 'USDT', name: 'Tether', address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 6 },
   { symbol: 'USDC', name: 'USD Coin', address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 6 },
+  // Robinhood Chain. ETH is the gas token here, so it is spendable directly —
+  // the v3 controller reads the zero address as native. USDT and USDC are the
+  // bridged L1 tokens and carry 6 decimals, unlike BNB Chain where both are 18.
+  ...(ROBINHOOD_ENABLED
+    ? ([
+        { symbol: 'ETH', name: 'Ether', address: ROBINHOOD_TOKENS.ETH, chainId: ROBINHOOD_CHAIN_ID, decimals: 18 },
+        { symbol: 'WETH', name: 'Wrapped Ether', address: ROBINHOOD_TOKENS.WETH, chainId: ROBINHOOD_CHAIN_ID, decimals: 18 },
+        { symbol: 'USDT', name: 'Tether', address: ROBINHOOD_TOKENS.USDT, chainId: ROBINHOOD_CHAIN_ID, decimals: 6 },
+        { symbol: 'USDC', name: 'USD Coin', address: ROBINHOOD_TOKENS.USDC, chainId: ROBINHOOD_CHAIN_ID, decimals: 6 },
+        // DHB is listed only once it has actually been bridged.
+        ...(IS_DHB_LIVE_ON_ROBINHOOD
+          ? [{
+              symbol: 'DHB',
+              name: 'DeHub',
+              address: DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
+              chainId: ROBINHOOD_CHAIN_ID,
+              decimals: 18,
+            }]
+          : []),
+      ] as SupportedLockToken[])
+    : []),
 ];
 
 export function getLockTokensForChain(chainId: number): SupportedLockToken[] {
@@ -62,4 +90,9 @@ export function isValidEvmAddress(address: string): boolean {
 }
 
 /** EVM chains that support on-chain minting via StreamCollection */
-export const MINTING_EVM_CHAIN_IDS: ChainId[] = [8453, 56, 1];
+export const MINTING_EVM_CHAIN_IDS: ChainId[] = [
+  8453,
+  56,
+  1,
+  ...(ROBINHOOD_ENABLED ? [ROBINHOOD_CHAIN_ID] : []),
+];

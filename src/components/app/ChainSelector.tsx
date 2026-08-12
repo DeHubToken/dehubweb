@@ -13,10 +13,16 @@ import baseLogo from '@/assets/icons/base-logo.png';
 import bnbLogo from '@/assets/icons/bnb-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import solLogo from '@/assets/icons/solana-logo.png';
+import robinhoodLogo from '@/assets/icons/robinhood-chain-logo.svg';
 import { SOLANA_MAINNET_CHAIN_ID } from '@/lib/chains/constants';
+import {
+  ROBINHOOD_CHAIN_ID,
+  ROBINHOOD_EXPLORER_URL,
+  ROBINHOOD_ENABLED,
+} from '@/lib/chains/robinhood';
 
 /** EVM chains used for tips, wallet, etc. */
-export type ChainId = 8453 | 56 | 1;
+export type ChainId = 8453 | 56 | 1 | typeof ROBINHOOD_CHAIN_ID;
 
 /** Includes Solana for post minting */
 export type PostChainId = ChainId | typeof SOLANA_MAINNET_CHAIN_ID;
@@ -51,6 +57,17 @@ export const SUPPORTED_CHAINS: Chain[] = [
     icon: ethLogo,
     explorerUrl: 'https://etherscan.io',
   },
+  ...(ROBINHOOD_ENABLED
+    ? ([
+        {
+          id: ROBINHOOD_CHAIN_ID,
+          name: 'Robinhood',
+          symbol: 'ETH',
+          icon: robinhoodLogo,
+          explorerUrl: ROBINHOOD_EXPLORER_URL,
+        },
+      ] as Chain[])
+    : []),
   {
     id: SOLANA_MAINNET_CHAIN_ID,
     name: 'Solana',
