@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    /* src/lib/reserved-usernames.js is plain JS so CLOUDFLARE_WORKER_SEO.js —
+       bundled by wrangler, not vite — can import the same list the app uses.
+       It is the only .js under src/; checkJs stays off, so it is read for its
+       exports and never type-checked. */
+    "allowJs": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": [
