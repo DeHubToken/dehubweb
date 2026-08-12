@@ -14,9 +14,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * is "still alive" and then "ready".
  *
  * A game that DOES have a real loading screen of its own (King's Gambit counts
- * its figures as they land) should not be hidden behind this. The Arcade
- * player gives those a short tau and retires the panel on the frame's load
- * event, so the model only ever covers the gap before first paint.
+ * its figures as they land) should not be hidden behind this — or doubled by
+ * it. Those set `hasOwnBootScreen` in the registry and the Arcade player draws
+ * no readout at all; the game's own screen is the boot readout.
  *
  * So this models the wait instead of measuring it: an exponential approach that
  * is fastest at the start and never reaches the end on its own. Two properties
