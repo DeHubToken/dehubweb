@@ -31,6 +31,12 @@
  * interstitial — a mobile ranking signal against the very URL this exists to
  * rank. Do not convert it to a modal.
  *
+ * The HUD chrome (the two mono boxes and the QR) is rounded here even though
+ * compose.mjs draws it hard-square: this panel sits in the feed next to rounded
+ * cards, not on a standalone poster. Do NOT branch on theme to square it again
+ * for minimal/light — index.css already forces border-radius:0 on everything
+ * except [data-keep-round] under those two, so they square themselves.
+ *
  * Story structure (progress pills, 3 auto-advancing slides, cross-fade + rise)
  * mirrors dehub-mobile's screens/auth/OnboardingScreen.tsx, so first-time web
  * visitors meet the same intro as first-time app downloaders.
@@ -46,14 +52,12 @@ const DISMISS_KEY = 'dehub.homeIntroDismissed';
 /** Mobile uses 3000ms; web slides carry more text and are read, not swiped. */
 const SLIDE_MS = 5200;
 
-/** Slide copy mirrors SLIDES in dehub-mobile's OnboardingScreen.tsx. `blur` is
- *  how many TRAILING characters get motion-blurred, per compose.mjs `head()`.
+/** Slide copy mirrors SLIDES in dehub-mobile's OnboardingScreen.tsx.
  *  `sub` / `extra` are the `//snake_case` HUD row under the headline. */
 const SLIDES = [
   {
     title: 'The Social Media We',
     subtitle: 'All Deserve',
-    blur: 2,
     sub: 'never_deplatformed',
     extra: '99%_revenue',
     description:
@@ -62,7 +66,6 @@ const SLIDES = [
   {
     title: 'The App',
     subtitle: 'For Everyone',
-    blur: 2,
     sub: 'open_source',
     extra: 'no_algorithm',
     description:
@@ -71,7 +74,6 @@ const SLIDES = [
   {
     title: 'You Will Own Everything,',
     subtitle: 'And Be Happy',
-    blur: 2,
     sub: 'ownership_economy',
     extra: 'user_owned = true',
     description:
@@ -112,35 +114,11 @@ const clipText = (fill: string) => ({
 const MARKS = [[6, 16], [22, 8], [47, 12], [70, 9], [88, 18], [9, 52], [90, 48], [14, 84], [38, 90], [63, 86], [84, 80], [52, 46]] as const;
 const SEED = 4;
 
-/** Split trailing `n` chars into the two-stage motion blur compose.mjs uses.
- *
- *  Radii are em, not px. compose.mjs hard-codes blur(7px)/blur(3.5px) against a
- *  106–164px headline — roughly 0.047em / 0.024em. Those same px values at this
- *  panel's ~50px headline erase the glyphs instead of smearing them, so they are
- *  expressed relative to font-size and hold at every breakpoint. Same for the
- *  sub row: blur(5px) at its 34px default is ~0.147em. */
-const BLUR_HEAD = ['0.024em', '0.047em'];
-const BLUR_SUB = ['0.07em', '0.147em'];
-
-/** The gradient MUST be re-applied on each blurred span, not inherited. A
- *  filtered child gets its own compositing layer, so it cannot pick up the
- *  parent's background-clip:text — with the fill only on the parent the blurred
- *  tail renders as nothing at all ("ALL DESERVE" -> "ALL DES"). compose.mjs gets
- *  away with the parent-only form because resvg composites differently; in a
- *  browser it silently eats the characters. */
-function Blurred({ text, n, fill, radii = BLUR_HEAD }: { text: string; n: number; fill: string; radii?: string[] }) {
-  if (!n) return <>{text}</>;
-  const keep = text.slice(0, text.length - n);
-  const tail = text.slice(text.length - n);
-  const half = Math.ceil(tail.length / 2);
-  return (
-    <>
-      {keep}
-      <span style={{ ...clipText(fill), filter: `blur(${radii[0]})` }}>{tail.slice(0, half)}</span>
-      <span style={{ ...clipText(fill), filter: `blur(${radii[1]})`, opacity: 0.95 }}>{tail.slice(half)}</span>
-    </>
-  );
-}
+/** NO motion blur on the trailing characters. compose.mjs smears the last few
+ *  glyphs of the headline and the sub row, which works on a 106–164px still
+ *  rendered by resvg. Scaled down to this panel's ~50px headline the same effect
+ *  just reads as badly rendered text — the "py" of HAPPY looks like a font bug,
+ *  not motion. Kept deliberately out of sync with the banner kit. */
 
 export function HomeIntro() {
   const { isAuthenticated, openLoginModal } = useAuth();
@@ -263,7 +241,7 @@ export function HomeIntro() {
           </span>
           <div className="flex items-center gap-2">
             <span
-              className="hidden border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em] sm:inline-block"
+              className="hidden rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em] sm:inline-block"
               style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
             >
               <span style={{ color: 'rgba(255,255,255,.38)' }}>{'// type ='}</span> &ldquo;welcome&rdquo;
@@ -322,17 +300,17 @@ export function HomeIntro() {
               >
                 {s.title}
                 <br />
-                <Blurred text={s.subtitle} n={s.blur} fill={HEAD_FILL} />
+                {s.subtitle}
               </p>
 
-              {/* Sub row: //snake_case with blurred tail + mono extra + ✕. */}
+              {/* Sub row: //snake_case + mono extra + ✕. */}
               <div className="mt-3 flex items-baseline gap-4 sm:gap-8">
                 <span
                   className="font-exo text-base font-semibold uppercase tracking-[0.01em] sm:text-xl"
                   style={clipText(SUB_FILL)}
                 >
                   <span style={{ color: 'rgba(255,255,255,.45)', WebkitTextFillColor: 'rgba(255,255,255,.45)' }}>//</span>
-                  <Blurred text={s.sub} n={3} fill={SUB_FILL} radii={BLUR_SUB} />
+                  {s.sub}
                 </span>
                 <span className="hidden text-[12px] tracking-[0.04em] sm:inline" style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}>
                   {s.extra}
@@ -392,7 +370,7 @@ export function HomeIntro() {
         {/* Footer HUD: //dehub.io box bottom-left, QR bottom-right. */}
         <div className="mt-5 flex items-end justify-between gap-4">
           <span
-            className="border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
+            className="rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
             style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
           >
             <span style={{ color: 'rgba(255,255,255,.38)' }}>//</span>dehub.io
@@ -404,7 +382,7 @@ export function HomeIntro() {
             height={56}
             loading="lazy"
             decoding="async"
-            className="h-14 w-14 border border-white/[0.22] bg-[rgba(10,10,12,.35)] p-1.5"
+            className="h-14 w-14 rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] p-1.5"
           />
         </div>
       </div>
