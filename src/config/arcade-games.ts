@@ -121,6 +121,12 @@ export interface ArcadeGame {
   allow: string;
   /** Preflight for this engine specifically. */
   checkCapability: () => ArcadeGameCapability;
+  /**
+   * Where this game's online-multiplayer surface lives, for the game that has
+   * one. The card grows a second, quieter button; games without the field are
+   * untouched.
+   */
+  onlineHref?: string;
 }
 
 /**
@@ -202,6 +208,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // figures procedurally and plays on, so a weak GPU degrades instead of
     // failing. WebGL2 is still required — it will not start without one.
     checkCapability: () => requireHardwareWebgl("King's Gambit", true),
+    onlineHref: '/arcade/kings-gambit/online',
   },
   {
     slug: 'claude-of-duty',

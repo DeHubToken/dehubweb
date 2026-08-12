@@ -174,6 +174,7 @@ const ApkPage = React.lazy(() => import("./pages/ApkPage"));
 // and sidebars would be in the way rather than useful. Its own chunk, like the
 // theme launchers', so the iframe plumbing never rides along in a page bundle.
 const ArcadeGamePage = React.lazy(() => import("./pages/ArcadeGamePage"));
+const ArcadeChessOnlinePage = React.lazy(() => import("./pages/ArcadeChessOnlinePage"));
 
 
 
@@ -405,6 +406,12 @@ function AppContent() {
               because the game owns the viewport. The /arcade grid itself DOES
               sit in the layout (see the cached pages below). */}
           <Route path="/arcade/:slug" element={<Suspense fallback={<PageLoader />}><ArcadeGamePage /></Suspense>} />
+
+          {/* Online chess: the King's Gambit lobby and live board. Standalone
+              for the same reason as the player above — a live match owns the
+              viewport — and three segments, so it needs no ordering against
+              /arcade/:slug either. */}
+          <Route path="/arcade/kings-gambit/online" element={<Suspense fallback={<PageLoader />}><ArcadeChessOnlinePage /></Suspense>} />
 
 
 
