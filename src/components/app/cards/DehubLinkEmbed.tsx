@@ -23,6 +23,7 @@ import { CommunityLinkEmbed } from '@/components/app/communities/CommunityLinkEm
 import { CommunityInviteEmbed } from '@/components/app/communities/CommunityInviteEmbed';
 import { StoreLinkEmbed } from '@/components/app/stores/StoreLinkEmbed';
 import { EventLinkEmbed } from '@/components/app/events/EventLinkEmbed';
+import { StageLinkEmbed } from '@/components/app/stages/StageLinkEmbed';
 import { ProfileLinkEmbed } from '@/components/app/profile/ProfileLinkEmbed';
 import { SharedPostEmbed } from '@/components/app/chat/SharedPostEmbed';
 
@@ -97,6 +98,8 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
       );
     case 'event':
       return <EventLinkEmbed eventNumber={link.eventNumber!} fallback={fallback} />;
+    case 'stage':
+      return <StageLinkEmbed stageId={link.stageId!} fallback={fallback} />;
     default:
       return fallback;
   }
