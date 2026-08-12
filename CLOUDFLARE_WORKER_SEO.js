@@ -18,6 +18,11 @@
  * embedded `window.location.href` redirect pointed back to the same URL.
  */
 
+// Shared with the app (src/lib/reserved-usernames.js is plain JS so wrangler's
+// esbuild can bundle it here and vite can bundle it there). SYSTEM_ROUTES below
+// is derived from it — see the comment there.
+import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
+
 const SUPABASE_FN_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
 const SUPABASE_FUNCTION_URL = `${SUPABASE_FN_BASE}/ssr-seo`;
 const DEHUB_LOGO = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg';
@@ -1273,37 +1278,24 @@ function buildFallbackHtml(pathname, canonicalUrl) {
 </html>`;
 }
 
-const SYSTEM_ROUTES = [
-  'app', 'post', 'explore', 'notifications', 'messages', 'settings',
-  'delete-account', 'creators', 'jobs', 'features', 'skill.md',
-  '_netlify', 'favicon.ico', 'assets', 'og-image.png',
-  'radio', 'tv', 'governance', 'stake', 'leaderboard', 'music',
-  'shorts', 'videos',
-  'top-100', 'glossary', 'bridge', 'agents', 'assistant', 'buy',
-  'docs', 'prompt', 'premium', 'affiliate', 'work', 'editor', 'guides',
-  // Without this, shouldServeSSR() reads /stats as a username and the profile
-  // renderer 404s the page for every crawler.
-  'stats',
-  // Same username-misread bug, batch two: every one of these is a real public
-  // route that was 404ing to every crawler ("/connect" looked like @connect).
-  // connect/pricing/communities/stages/guide get real edge pages
-  // (MARKETING_PAGES); launchpad/events/stage stay app chrome
-  // (noindex, follow shell).
-  'connect', 'pricing', 'communities', 'stages', 'guide', 'launchpad',
-  'events', 'stage',
-  // Same class again: without this, /apk reads as the profile of a user called
-  // @apk and the download lander answers "Join @apk" to every crawler — and to
-  // every Telegram/X/Facebook unfurl, which is the whole point of the page.
-  'apk',
-  // 'blog' is reserved: a user registered that handle, and without this every
-  // /blog/<anything> minted an indexable "Join @blog" profile page.
-  'blog',
-  // Same class of bug again: without this, /arcade/kings-gambit reads as the
-  // deep path of a user called @arcade, canonicalizes to /arcade, and the
-  // profile renderer answers a "Join @arcade" page to every crawler. Each game
-  // has a real edge page below (MARKETING_PAGES).
-  'arcade',
-];
+/**
+ * First path segments that are NOT usernames. Read from the same list the app
+ * refuses to hand out at signup, so the two can no longer disagree.
+ *
+ * This used to be a hand-kept array here, and every entry below the original
+ * dozen was added reactively after a real route shipped and got read as a
+ * profile: /stats, then a batch of seven (/connect looked like @connect), then
+ * /apk (the download lander answered "Join @apk" to every unfurl), then /blog
+ * (a user had registered that handle), then /arcade. Each of those was the same
+ * bug arriving again because adding a route and reserving its name were two
+ * separate manual steps in two separate files. Now they are one list: add a
+ * top-level route, add it to src/lib/reserved-usernames.js, and both the signup
+ * guard and this renderer pick it up together.
+ */
+const SYSTEM_ROUTES = new Set([
+  ...ROUTE_SEGMENTS,
+  ...WORKER_ASSET_ROUTES,
+]);
 
 
 // `bot|crawl|spider` covers the crawlers that announce themselves. It does NOT
@@ -1356,7 +1348,7 @@ function canonicalizePath(pathname) {
   const parts = p.replace(/^\/+/, '').split('/');
   if (parts.length > 1) {
     const first = parts[0].toLowerCase().replace('@', '');
-    if (first && !SYSTEM_ROUTES.includes(first) && !first.includes('.')) {
+    if (first && !SYSTEM_ROUTES.has(first) && !first.includes('.')) {
       return `/${parts[0]}`;
     }
   }
@@ -1406,7 +1398,7 @@ function shouldServeSSR(pathname) {
   if (SSR_STATIC_ROUTES.has(trimmed) || SSR_STATIC_ROUTES.has(trimmedNoApp)) return true;
   // Always SSR for profile pages (top-level non-system routes)
   const first = pathname.replace(/^\//, '').split('/')[0].toLowerCase().replace('@', '');
-  if (first && !SYSTEM_ROUTES.includes(first) && !first.includes('.')) return true;
+  if (first && !SYSTEM_ROUTES.has(first) && !first.includes('.')) return true;
   return false;
 }
 
@@ -2223,7 +2215,7 @@ async function handleRequest(request, env) {
     const isEntityRoute =
       pathname.includes('/post/') ||
       pathname.includes('/communities/') ||
-      (firstSeg && !SYSTEM_ROUTES.includes(firstSeg) && !firstSeg.includes('.'));
+      (firstSeg && !SYSTEM_ROUTES.has(firstSeg) && !firstSeg.includes('.'));
     const fnSaysNotFound =
       response.status === 404 || response.headers.get('X-DeHub-NotFound') === '1';
     // A 404 is only honored on ENTITY routes (posts / profiles / communities,
