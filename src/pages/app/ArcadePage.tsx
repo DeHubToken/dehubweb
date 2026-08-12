@@ -72,7 +72,7 @@ function GameCard({ game }: { game: ArcadeGame }) {
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-800 px-4 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:bg-zinc-700"
             >
               <Swords className="h-3.5 w-3.5" />
-              Play online
+              Wager
             </Link>
           ) : null}
         </div>
