@@ -17,7 +17,7 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Play } from 'lucide-react';
+import { Play, Swords } from 'lucide-react';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -58,13 +58,24 @@ function GameCard({ game }: { game: ArcadeGame }) {
       <div className="flex flex-1 flex-col gap-3 p-4">
         <p className="text-xs leading-relaxed text-zinc-400">{game.description}</p>
 
-        <Link
-          to={`/arcade/${game.slug}`}
-          className="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
-        >
-          <Play className="h-3.5 w-3.5" />
-          {game.action}
-        </Link>
+        <div className="mt-auto flex flex-col gap-2">
+          <Link
+            to={`/arcade/${game.slug}`}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
+          >
+            <Play className="h-3.5 w-3.5" />
+            {game.action}
+          </Link>
+          {game.onlineHref ? (
+            <Link
+              to={game.onlineHref}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-800 px-4 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:bg-zinc-700"
+            >
+              <Swords className="h-3.5 w-3.5" />
+              Play online
+            </Link>
+          ) : null}
+        </div>
       </div>
     </div>
   );
