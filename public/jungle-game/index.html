@@ -17,12 +17,17 @@
     background: #05070a; pointer-events: none;
   }
 
-  /* VENDORED CHANGE 3 of 3 (styles) — the Escape panel. Borrows #boot's type
+  /* VENDORED CHANGE 3 of 4 (styles) — the Escape panel. Borrows #boot's type
      so it reads as part of the same quiet world rather than as browser chrome,
      and it is `display:none` until Escape asks for it, so the note above about
-     the canvas being the entire experience still holds for anyone just walking. */
+     the canvas being the entire experience still holds for anyone just walking.
+
+     The z-index is load-bearing since change 4: the touch layer is a positioned
+     element at z-index 5, and this panel comes earlier in the document, so
+     without a number of its own the stick and the buttons would be painted over
+     the top of the menu that is supposed to be covering them. */
   #esc {
-    position: fixed; inset: 0; display: none; place-items: center;
+    position: fixed; inset: 0; display: none; place-items: center; z-index: 10;
     background: rgba(5, 7, 10, .72); backdrop-filter: blur(3px);
     font: 300 13px/1.7 ui-sans-serif, system-ui, sans-serif;
     letter-spacing: .22em; text-transform: uppercase; color: #9fae93;
@@ -39,7 +44,7 @@
   #esc .hint { font-size: 11px; color: #5f6d57; }
 </style>
 <!--
-  VENDORED CHANGE 1 of 3 — the import map points at a local copy of three.
+  VENDORED CHANGE 1 of 4 — the import map points at a local copy of three.
 
   Upstream resolves `three` from jsDelivr. That is right for a repo you clone
   and serve yourself, and wrong here for three reasons: it makes a third-party
@@ -62,7 +67,7 @@
 }
 </script>
 <!--
-  VENDORED CHANGE 2 of 3 — a progress bridge to the parent frame.
+  VENDORED CHANGE 2 of 4 — a progress bridge to the parent frame.
 
   The game generates every mesh, texture and sound on the device at boot, and
   renders nothing at all until that finishes. Upstream is fine with this:
@@ -127,7 +132,7 @@
 <div id="boot">jungle trail</div>
 
 <!--
-  VENDORED CHANGE 3 of 3 — an Escape panel, so there is a way out from inside.
+  VENDORED CHANGE 3 of 4 — an Escape panel, so there is a way out from inside.
 
   Unlike the other two games, upstream has no settings or pause menu to add a
   close button to: the stylesheet above says so in as many words, and Escape
@@ -191,6 +196,116 @@
       parent.postMessage({ source: 'jungle-game', type: 'exit' }, '*');
     } catch (err) { /* a host that has gone away is not worth surfacing */ }
   });
+})();
+</script>
+
+<!--
+  VENDORED CHANGE 4 of 4 — touch controls.
+
+  Upstream is mouse-and-keyboard only, and not by omission: the walk is
+  `requestPointerLock` plus `mousemove` for the head and `keydown`/`keyup` for
+  the legs (`src/player/controller.js`), with no touch handler anywhere. A
+  phone therefore reached the end of the bake and stood in a rainforest it
+  could not move in — and the arcade's native app is a WebView, which is never
+  granted pointer lock, so a keyboard would not have rescued it either.
+
+  The shared layer that draws the stick and the buttons lives in
+  /arcade-touch/, not in here, because this directory is a straight copy of
+  upstream and a re-vendor would delete it. What is left below is only the
+  adapter: what THIS engine wants done with a thumb.
+
+  Nothing under `src/` is touched. The Walker exposes everything needed —
+  `keys` is a plain map the input loop reads every frame, and `yaw`/`pitch` are
+  plain numbers — so this drives the same fields the keyboard and mouse drive
+  rather than simulating events at them.
+-->
+<script src="/arcade-touch/touch-controls.js"></script>
+<script>
+(function () {
+  if (!window.ArcadeTouch || !window.ArcadeTouch.isTouchDevice()) return;
+
+  /* Radians per pixel dragged. The engine uses 0.0022 for a mouse; a thumb
+     travels far less distance than a mouse does for the same intent, so this is
+     most of a screen width for a ninety degree turn. */
+  var LOOK = 0.0040;
+  /* Below this the stick is a wobble, not a direction. */
+  var WALK_AT = 0.28;
+  /* The Walker has no analogue input — `_updateInput` reads binary keys and
+     normalises them — so pace comes from how far the stick is pushed instead:
+     past this it also holds Shift, which is the engine's own jog. That gets
+     two speeds out of a control the engine thinks is a keyboard. */
+  var JOG_AT = 0.82;
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+  function start(game) {
+    var walker = game.walker;
+
+    /* The canvas asks for pointer lock on every click, and a tap is a click.
+       On a phone that request either fails or, worse, succeeds and captures a
+       pointer there is no cursor for. Shadowing the method on this element
+       leaves the prototype — and every other page — alone. */
+    if (game.canvas) game.canvas.requestPointerLock = function () {};
+
+    var touch = window.ArcadeTouch.mount({
+      buttons: [
+        { id: 'jump', label: 'Jump', size: 'lg' },
+      ],
+      onLook: function (dx, dy) {
+        walker.yaw -= dx * LOOK;
+        walker.pitch = clamp(walker.pitch - dy * LOOK, -1.35, 1.35);
+      },
+      onButton: function (id, down) {
+        /* `jump()` queues one hop and the walker refuses to repeat it while
+           held, so this is press-only by design — there is no key to release. */
+        if (id === 'jump' && down) walker.jump();
+      },
+    });
+    if (!touch) return;
+
+    var k = walker.keys;
+    (function frame() {
+      requestAnimationFrame(frame);
+      var x = touch.move.x, y = touch.move.y;
+      var mag = Math.hypot(x, y);
+      if (mag < WALK_AT) {
+        k.KeyW = k.KeyS = k.KeyA = k.KeyD = k.ShiftLeft = false;
+        return;
+      }
+      /* Eight-way, because that is the shape of the input the engine has. The
+         angle is taken from the raw vector rather than from which axis is
+         larger, so a diagonal push gives a diagonal walk instead of snapping
+         to whichever cardinal happened to win. */
+      k.KeyW = y < -0.38;
+      k.KeyS = y > 0.38;
+      k.KeyA = x < -0.38;
+      k.KeyD = x > 0.38;
+      k.ShiftLeft = mag > JOG_AT;
+    })();
+
+    /* The Escape panel disables nothing in the engine, but a stick drawn over
+       an open menu is still an invitation to press something that will not
+       answer. */
+    var esc = document.getElementById('esc');
+    if (esc && window.MutationObserver) {
+      new MutationObserver(function () {
+        touch.setVisible(esc.getAttribute('data-open') !== '1');
+      }).observe(esc, { attributes: true, attributeFilter: ['data-open'] });
+    }
+  }
+
+  /* `window.__game` is assigned at the end of the module, after a bake that can
+     run tens of seconds. Same poll the readiness bridge above uses, and it
+     stops either way so a game that never boots does not leave a timer behind. */
+  var tries = 0;
+  var poll = setInterval(function () {
+    if (window.__game && window.__game.walker) {
+      clearInterval(poll);
+      start(window.__game);
+    } else if (++tries > 1200) {
+      clearInterval(poll);
+    }
+  }, 250);
 })();
 </script>
 

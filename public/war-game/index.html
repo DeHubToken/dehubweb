@@ -94,6 +94,164 @@
   </head>
   <body>
     <canvas id="game"></canvas>
+
+    <!--
+      DeHub addition, not upstream. See README.md in this directory.
+
+      Upstream is mouse-and-keyboard only. The camera is four
+      `requestPointerLock` calls and `movementX`/`movementY`; the one
+      `touchstart` listener in the bundle is a member of the gesture list that
+      unlocks the audio context, not a control. So a phone reached the end of a
+      ~48s procedural bake and stood in a level it could not look around in —
+      and the arcade's native app is a WebView, which is never granted pointer
+      lock, so a Bluetooth keyboard would not have rescued it either.
+
+      The stick, the drag surface and the buttons are the shared layer in
+      /arcade-touch/. What is below is only the adapter, and it is a PAGE
+      change rather than a source patch for the same reason the readiness
+      bridge above is: the game ships here as a minified build, so there is
+      nothing to hand-edit and a rebuild would not reproduce this.
+
+      *** THEREFORE, AS WITH THE BRIDGE ABOVE: never copy a fresh
+      dist/index.html over this file. It silently deletes both. ***
+
+      Movement goes in through the engine's GAMEPAD path, which is real,
+      complete and already wired: `_pollGamepad` reads `axes[0..3]` into
+      `stick`, and `moveVector` sums `stick.moveX/moveY` with the keyboard. A
+      synthetic pad is therefore a supported input this engine already
+      understands, rather than something simulated at it — and it survives a
+      re-vendor, because it depends on nothing more than the shape of the
+      Gamepad API.
+
+      Look and the buttons write to the input object directly. That is the one
+      place this reaches inside, and it is deliberate: `_onMouseMove` is hard
+      gated on `pointerLocked`, which can never become true here, so a
+      synthetic mouse event would be discarded. `_rawLook` is what that handler
+      would have written to and is consumed and zeroed every frame, so
+      accumulating into it is exactly a mouse delta — including honouring the
+      player's own sensitivity and invert-Y settings, which a rate-based right
+      stick would have bypassed. These are plain property names that esbuild
+      does not mangle, so they read the same in the built bundle as in source.
+    -->
+    <script src="/arcade-touch/touch-controls.js"></script>
+    <script>
+      (function () {
+        if (!window.ArcadeTouch || !window.ArcadeTouch.isTouchDevice()) return;
+
+        /* Pixels dragged map 1:1 onto mouse pixels, so the game's own
+           sensitivity slider is the tuning knob rather than a second one
+           hidden in here. */
+        var LOOK = 1.0;
+        /* Push the stick most of the way to run. An FPS wants sprint on the
+           stick rather than on a sixth button competing for the same thumb. */
+        var SPRINT_AT = 0.9;
+
+        /* The engine's own names: mouse buttons are "Mouse<n>" and keys are
+           KeyboardEvent codes, both looked up in the same `down` set. */
+        var CODES = {
+          fire: 'Mouse0',
+          ads: 'Mouse2',
+          jump: 'Space',
+          reload: 'KeyR',
+          crouch: 'KeyC',
+        };
+
+        function start(input) {
+          /* Straight into the pending sets rather than through synthetic DOM
+             events. The real handlers would fire `requestPointerLock` on every
+             touch of the fire button — a request that can only be refused here,
+             once per tap — and this ends up in exactly the same place: the sets
+             are drained into `down` at the top of the next frame.
+
+             `enabled` is checked because the real handlers check it. Without
+             that, a thumb could fire through the pause menu. */
+          function press(code, down) {
+            if (!code || !input.enabled) return;
+            if (down) input._pendingDown.add(code);
+            else input._pendingUp.add(code);
+          }
+
+          var touch = window.ArcadeTouch.mount({
+            /* First is bottom-right, under the thumb. */
+            buttons: [
+              { id: 'fire', label: 'Fire', size: 'lg' },
+              { id: 'ads', label: 'Aim' },
+              { id: 'jump', label: 'Jump' },
+              { id: 'reload', label: 'Reload' },
+              { id: 'crouch', label: 'Crouch' },
+            ],
+            onLook: function (dx, dy) {
+              if (!input.enabled || input.frozen) return;
+              input._rawLook.x += dx * LOOK;
+              input._rawLook.y += dy * LOOK;
+            },
+            onButton: function (id, down) {
+              press(CODES[id], down);
+            },
+          });
+          if (!touch) return;
+
+          /*
+           * A synthetic gamepad, built fresh on each poll.
+           *
+           * It yields to real hardware: if an actual pad is connected the list
+           * is returned untouched, so a phone with a controller paired keeps
+           * using it and the two never fight over axis 0.
+           */
+          var realGetGamepads = navigator.getGamepads && navigator.getGamepads.bind(navigator);
+          navigator.getGamepads = function () {
+            var real = [];
+            try { real = realGetGamepads ? realGetGamepads() : []; } catch (e) { real = []; }
+            for (var i = 0; i < real.length; i++) if (real[i]) return real;
+            return [{
+              id: 'DeHub Arcade touch',
+              index: 0,
+              connected: true,
+              mapping: 'standard',
+              buttons: [],
+              /* Axes 0/1 are the move stick. 2/3 are the look stick and stay at
+                 zero on purpose: look is a drag, and feeding a drag delta into
+                 an axis the engine multiplies by dt would make a flick keep
+                 turning after the finger stopped. */
+              axes: [touch.move.x, touch.move.y, 0, 0],
+              timestamp: 0,
+            }];
+          };
+
+          var sprinting = false;
+          (function frame() {
+            requestAnimationFrame(frame);
+            /* Hide the controls whenever the engine has taken input away —
+               that is the pause menu, and the menu sits above this layer. */
+            touch.setVisible(!!input.enabled);
+
+            var want = input.enabled && Math.hypot(touch.move.x, touch.move.y) > SPRINT_AT;
+            /* Edge-triggered: `down` is a set the engine holds until told
+               otherwise, so re-adding every frame would be churn, and never
+               releasing would leave the player sprinting on an idle stick. */
+            if (want !== sprinting) {
+              sprinting = want;
+              press('ShiftLeft', want);
+            }
+          })();
+        }
+
+        /* `window.__ENGINE__` is assigned after the bake and the first frames,
+           which is tens of seconds on a phone. The poll gives up eventually so
+           a game that never boots does not leave a timer running behind the
+           host's error panel. */
+        var tries = 0;
+        var poll = setInterval(function () {
+          var e = window.__ENGINE__;
+          if (e && e.input && e.input._rawLook) {
+            clearInterval(poll);
+            start(e.input);
+          } else if (++tries > 1200) {
+            clearInterval(poll);
+          }
+        }, 250);
+      })();
+    </script>
     <div id="ui"></div>
   </body>
 </html>
