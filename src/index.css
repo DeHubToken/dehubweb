@@ -952,38 +952,26 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    For pages whose content is a LIST, not a set of cards. A slab is doing real
    work behind the home feed, where every post is a discrete object; behind the
    Messages inbox it is just a second fill under rows that already read as rows.
-   The surface keeps its hook (see above) but is drawn as a 1px frame instead of
-   a filled, blurred, drop-shadowed panel — the same move the mobile app makes,
-   where the DM list is full-bleed on the screen background with hairline row
-   separators and no card at all.
+   The surface keeps its hook (see the glass block above) but paints NOTHING —
+   no fill, no ring, no radius, no shadow. The rows run edge to edge and their
+   own hairlines carry the structure, which is what the mobile app does.
 
-   On the canvas themes the frame alone is not enough: with no fill, page copy
-   sits directly over a moving background, and the text-halo rule below
-   deliberately excludes [data-page-bento] descendants (they are supposed to
-   have a dark backing). Rather than re-admit them to the halo — which would
-   give Messages a text shadow the rest of the app does not have — seat the copy
-   on a thin plane. It is roughly half the density of --glass-regular: enough to
-   hold text, far short of reading as a panel. No ring, no ambient halo.
+   This started as a 1px frame at 8px radius. The frame was still a box: on a
+   full-width column it reads as chrome drawn around content that did not need
+   containing. Removing it means there is no surface left to seat copy on, so
+   the canvas themes take the other route — the text halo, below, which is what
+   every other unwrapped page already uses. Flat surfaces are excluded from that
+   rule's exclusion list for exactly this reason: with no backing of their own
+   they belong in the same category as bare page text, not with bentos.
    -------------------------------------------------------------------------- */
-[data-bento-flat] {
-  border: 1px solid rgb(255 255 255 / 0.13);
-  border-radius: 0.5rem;
-  box-shadow: none;
-}
-
+[data-bento-flat],
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-bento-flat] {
-  background: rgb(var(--glass-tint) / 0.30) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
-  border-color: rgb(255 255 255 / 0.16) !important;
-  box-shadow: none !important;
-}
-
-/* Minimal and Light already dissolve [data-page-bento] entirely, which is the
-   same intent taken further — let them win and drop the frame too, so Messages
-   does not become the one page in those themes with a box on it. */
-html:is([data-theme="minimal"], [data-theme="light"]) [data-bento-flat]:not([data-keep-dark]) {
+  background: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 /* ==========================================================================
@@ -1395,7 +1383,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    a dark backing and stay crisp; media overlays keep their own treatment. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) #app-root main
   :is(.text-white, [class*="text-white/"], [class*="text-zinc-2"], [class*="text-zinc-3"], [class*="text-zinc-4"], [class*="text-zinc-5"], [class*="text-zinc-6"]):not(:where(
-    [data-side-panel] *, [data-page-bento] *, [data-feed-item] *, [data-glass-page] *,
+    [data-side-panel] *, [data-page-bento]:not([data-bento-flat]) *, [data-feed-item] *, [data-glass-page] *,
     [data-feed-nav] *, [data-mobile-header] *,
     [data-video-controls], [data-video-controls] *, [data-media-full] *
   )) {
