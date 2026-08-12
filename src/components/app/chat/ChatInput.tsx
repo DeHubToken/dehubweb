@@ -13,7 +13,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
 import { SmartReplyTray } from './SmartReplyTray';
-import { ReplyOrb } from './ReplyOrb';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 import {
   ATTACHMENT_ACCEPT,
@@ -81,17 +80,49 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const [showReplyTray, setShowReplyTray] = useState(false);
   const smartReplies = useSmartReplies(thread ?? [], peerName);
-  const replyOrbEnabled = !!thread && thread.length > 0;
+  // There is only something to reply TO when the other side spoke last. If the
+  // user sent the last message the drafter would be answering the user.
+  const replyOrbEnabled = !!thread && thread.length > 0 && thread[thread.length - 1].from === 'them';
 
-  const handleOrbToggle = () => {
-    if (showReplyTray) {
-      setShowReplyTray(false);
-      return;
-    }
+  const [composerFocused, setComposerFocused] = useState(false);
+
+  // Tail the tray has already opened itself for. One auto-open per incoming
+  // message: dismissing or picking must not be undone by the next click into
+  // the box, and re-focusing must not re-spend a model call.
+  const autoOpenedFor = useRef<string | null>(null);
+
+  // Read through refs so the effect below can depend on the two things that
+  // should actually retrigger it — focus and the newest message — instead of
+  // re-running on every keystroke and every render of the hook.
+  const latest = useRef({ smartReplies, message, replyOrbEnabled });
+  latest.current = { smartReplies, message, replyOrbEnabled };
+
+  /**
+   * Being in the composer to reply IS the request for suggestions — there is
+   * no button to press first. Held back only when the user has already started
+   * typing (they know what to say) or when this message has had its turn.
+   */
+  const openTrayIfDue = () => {
+    const { smartReplies: sr, message: msg, replyOrbEnabled: enabled } = latest.current;
+    if (!enabled || msg.trim()) return;
+    if (autoOpenedFor.current === sr.tailKey) return;
+    autoOpenedFor.current = sr.tailKey;
     setShowReplyTray(true);
-    // Only draft on the first open; the tray keeps whatever it already has so
-    // reopening is free. Its own orb is the redraft control.
-    if (smartReplies.status === 'idle') smartReplies.generate();
+    if (sr.status === 'idle') sr.generate();
+  };
+
+  // Fires on the click into the box, and again if a new message lands while
+  // the user is already sitting there — otherwise the tray would wait for them
+  // to click away and back before offering anything.
+  useEffect(() => {
+    if (composerFocused) openTrayIfDue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [composerFocused, smartReplies.tailKey]);
+
+  const handleDismissTray = () => {
+    // Stays dismissed for this message — autoOpenedFor is already set, so the
+    // next focus won't drag it back up.
+    setShowReplyTray(false);
   };
 
   /**
@@ -335,7 +366,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         error={smartReplies.error}
         onGenerate={smartReplies.generate}
         onPick={handlePickSuggestion}
-        onDismiss={() => setShowReplyTray(false)}
+        onDismiss={handleDismissTray}
       />
     )}
     {/* No fill: both consumers (DM + Public Chat) are surface-less now, so a
@@ -433,6 +464,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             });
           }}
           onKeyDown={handleKeyDown}
+          onFocus={() => setComposerFocused(true)}
+          onBlur={() => setComposerFocused(false)}
           className="min-h-[40px] max-h-32 resize-none bg-transparent border-none text-base md:text-sm text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
           rows={1}
         />
@@ -449,29 +482,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
         {/* Action buttons */}
         <div className="flex items-center justify-end gap-0.5 pt-1">
-          {replyOrbEnabled && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className={`h-8 w-8 mr-auto hover:bg-zinc-700 ${showReplyTray ? 'bg-white/10' : ''}`}
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={handleOrbToggle}
-                  aria-expanded={showReplyTray}
-                  aria-label="Suggested replies"
-                >
-                  <ReplyOrb
-                    state={showReplyTray && smartReplies.status === 'loading' ? 'thinking' : 'idle'}
-                    size={22}
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Suggested replies</TooltipContent>
-            </Tooltip>
-          )}
-
+          {/* No orb here. The tray raises itself when the composer takes focus,
+              and the only orb is the one at the bottom of that tray. */}
           {onTipClick && (
             <Tooltip>
               <TooltipTrigger asChild>
