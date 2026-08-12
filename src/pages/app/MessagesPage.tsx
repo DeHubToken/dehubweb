@@ -365,7 +365,9 @@ export default function MessagesPage() {
   // If Public Chat is open, show full-screen chat
   if (showPublicChat) {
     return (
-      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
+      /* No horizontal padding: the chat surfaces run to the column edges on
+         every theme. The rows and composer carry their own inner padding. */
+      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
           <PublicChat
             onBack={() => setShowPublicChat(false)}
           />
@@ -376,7 +378,9 @@ export default function MessagesPage() {
   // If a DM conversation is selected, show it
   if (selectedConversation) {
     return (
-      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
+      /* No horizontal padding: the chat surfaces run to the column edges on
+         every theme. The rows and composer carry their own inner padding. */
+      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
         <DirectMessageChat
           key={selectedConversation.id}
           conversation={selectedConversation}
@@ -388,15 +392,15 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
+    <div className="h-full pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
       <SEOHead title="Messages — Direct & Group Chat" description="Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." url="https://dehub.io/app/messages" />
       <h1 className="sr-only">DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] max-h-full`}>
-        {/* Full Width Messages Panel. A list, not a set of cards, so it is drawn
-            as a frame rather than a filled slab — see [data-bento-flat] in
-            index.css. The [data-page-bento] hook stays: the Osaka and Jungle
-            `#app-root` class nets exclude on it, and without it every
-            bg-zinc-8/9 descendant in here becomes a frosted rectangle. */}
+        {/* Full Width Messages Panel. A list, not a set of cards, so it carries
+            no surface at all — see [data-bento-flat] in index.css. The
+            [data-page-bento] hook stays: the Osaka and Jungle `#app-root` class
+            nets exclude on it, and without it every bg-zinc-8/9 descendant in
+            here becomes a frosted rectangle. */}
         <div data-page-bento data-bento-flat className="w-full h-full flex flex-col overflow-hidden">
           {/* Header */}
           <div className="p-4">
