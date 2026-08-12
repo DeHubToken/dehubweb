@@ -153,23 +153,34 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
-        /* Reply-orb layers. Kept in lockstep with the Reanimated port in
-           dehub-mobile (components/DM/ReplyOrb.tsx) — same durations, same
-           scale endpoints, so the two platforms read as one object. Every
-           layer animates transform/opacity only, so all of it runs off the
-           main thread on both. */
-        "orb-breathe": {
-          "0%, 100%": { transform: "scale(1)" },
-          "50%": { transform: "scale(1.08)" },
+        /* Reply-orb dust. Kept in lockstep with the Reanimated port in
+           dehub-mobile (components/DM/ReplyOrb.tsx).
+
+           One mote's trip around the ball. `--dust-r` is the radius of that
+           mote's latitude ring, set per element — custom properties resolve
+           against the animated element, so all thirty motes share one keyframe
+           track and differ only by that radius and a negative animation-delay
+           standing in for their starting angle.
+
+           translateX is r·sin(phase) and the opacity/scale pair is the depth
+           cue for cos(phase): a mote at the back of the ball is small and
+           faint, one at the front is full size and bright. Eight steps rather
+           than four, or the sine reads as a triangle wave and the ball looks
+           like it is sliding rather than turning. */
+        "dust-spin": {
+          "0%":    { transform: "translateX(0) scale(1)",                            opacity: "1" },
+          "12.5%": { transform: "translateX(calc(var(--dust-r) * 0.707)) scale(0.93)",  opacity: "0.88" },
+          "25%":   { transform: "translateX(var(--dust-r)) scale(0.78)",             opacity: "0.6" },
+          "37.5%": { transform: "translateX(calc(var(--dust-r) * 0.707)) scale(0.62)",  opacity: "0.32" },
+          "50%":   { transform: "translateX(0) scale(0.55)",                         opacity: "0.2" },
+          "62.5%": { transform: "translateX(calc(var(--dust-r) * -0.707)) scale(0.62)", opacity: "0.32" },
+          "75%":   { transform: "translateX(calc(var(--dust-r) * -1)) scale(0.78)",  opacity: "0.6" },
+          "87.5%": { transform: "translateX(calc(var(--dust-r) * -0.707)) scale(0.93)", opacity: "0.88" },
+          "100%":  { transform: "translateX(0) scale(1)",                            opacity: "1" },
         },
-        "orb-sonar": {
-          "0%": { transform: "scale(0.85)", opacity: "0.55" },
-          "70%": { opacity: "0" },
-          "100%": { transform: "scale(2.2)", opacity: "0" },
-        },
-        "orb-orbit": {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
+        "dust-haze": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.5" },
+          "50%": { transform: "scale(1.12)", opacity: "0.9" },
         },
       },
       animation: {
