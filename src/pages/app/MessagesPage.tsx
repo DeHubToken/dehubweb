@@ -1,7 +1,7 @@
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useState, useEffect, useRef, type CSSProperties } from 'react';
+import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Search, Plus, MessageCircle, RefreshCw, Loader2 } from 'lucide-react';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -312,6 +312,57 @@ export default function MessagesPage() {
   const hasVirtualSelected = selectedConversation &&
     (selectedConversation.id.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(selectedConversation.id));
   const isMessagesRouteActive = location.pathname === '/app/messages';
+
+  /*
+   * Back out of a chat to the conversation LIST, not out of Messages entirely.
+   *
+   * Opening a thread is component state and used to push no history entry at
+   * all, so /app/messages was a single stack entry and the device Back popped
+   * the whole route — landing the user on the home feed.
+   *
+   * The entry is carried in the SEARCH, not a route param: the pathname has to
+   * stay exactly '/app/messages' or three separate things break. PersistentPageCache
+   * matches it with strict equality, the messages route has no child route, and
+   * the 5s message poll is gated on the same literal string. Pushed through
+   * react-router rather than history.pushState so its internal index survives.
+   */
+  const navigate = useNavigate();
+  const chatEntryRef = useRef(false);
+  const chatOpen = !!selectedConversation || showPublicChat;
+  const chatParamPresent = new URLSearchParams(location.search).get('chat') === '1';
+
+  useEffect(() => {
+    if (!isMessagesRouteActive) return;
+    if (chatOpen && !chatEntryRef.current) {
+      chatEntryRef.current = true;
+      navigate('/app/messages?chat=1');
+    }
+  }, [chatOpen, isMessagesRouteActive, navigate]);
+
+  // Back was pressed: the param is gone, so close the chat rather than leave
+  // the route. This also clears a selection that would otherwise survive —
+  // MessagesPage never unmounts, so tapping Messages used to reopen the last
+  // thread instead of the list.
+  useEffect(() => {
+    if (!isMessagesRouteActive) return;
+    if (!chatParamPresent && chatEntryRef.current) {
+      chatEntryRef.current = false;
+      setSelectedConversation(null);
+      setShowPublicChat(false);
+    }
+  }, [chatParamPresent, isMessagesRouteActive]);
+
+  // The in-app arrow has to CONSUME the entry we pushed, or it is left dangling
+  // and the next Back walks straight back into the chat.
+  const closeChat = useCallback(() => {
+    if (chatEntryRef.current) {
+      chatEntryRef.current = false;
+      navigate(-1);
+      return;
+    }
+    setSelectedConversation(null);
+    setShowPublicChat(false);
+  }, [navigate]);
   useEffect(() => {
     if (!hasVirtualSelected || !isMessagesRouteActive) return;
     // Poll at 1.5s for first 30s, then 5s
@@ -369,7 +420,7 @@ export default function MessagesPage() {
          every theme. The rows and composer carry their own inner padding. */
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
           <PublicChat
-            onBack={() => setShowPublicChat(false)}
+            onBack={closeChat}
           />
       </div>
     );
@@ -385,7 +436,7 @@ export default function MessagesPage() {
           key={selectedConversation.id}
           conversation={selectedConversation}
           initialComposerText={composerPrefill?.convId === selectedConversation.id ? composerPrefill.text : undefined}
-          onBack={() => setSelectedConversation(null)}
+          onBack={closeChat}
         />
       </div>
     );
