@@ -203,7 +203,10 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                 {soldOut ? 'Sold Out' : 'Buy Now'}
               </Button>
             )}
-            <Button variant="outline" onClick={() => { onClose(); navigate(`/app/messages/${sellerAddress}`); }} className="flex-1">
+            {/* '/app/messages' has no child route — the peer is handed over in
+                navigation state, the same way every other "message this user"
+                entry point does it. A path segment here 404s. */}
+            <Button variant="outline" onClick={() => { onClose(); navigate('/app/messages', { state: { openDmWith: sellerAddress } }); }} className="flex-1">
               <MessageSquare className="w-4 h-4 mr-2" />
               Message Seller
             </Button>
