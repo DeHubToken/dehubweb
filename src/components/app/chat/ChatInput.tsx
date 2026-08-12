@@ -293,8 +293,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         onDismiss={() => setShowReplyTray(false)}
       />
     )}
-    {/* No fill: both consumers (DM + Public Chat) are flat shells now, so a
-       zinc-900 bar would float inside a hairline frame. Carrying no colour
+    {/* No fill: both consumers (DM + Public Chat) are surface-less now, so a
+       zinc-900 bar would be the only slab left on the page. Carrying no colour
        utility also puts it permanently out of reach of the Osaka/Jungle
        `#app-root` class nets, which outrank any re-declaration here. */}
     <div className="p-3 lg:pl-4 border-t border-white/[0.07]">
