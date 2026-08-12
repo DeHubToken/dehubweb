@@ -23,7 +23,7 @@ export interface StreamInfo {
 export interface MintPostParams {
   name: string;
   description: string;
-  postType: 'video' | 'feed-images' | 'feed-simple' | 'feed-file' | 'live' | 'audio';
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio';
   chainId: number;
   category: string[];
   streamInfo?: StreamInfo;

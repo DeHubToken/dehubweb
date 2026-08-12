@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X, Gem, Reply, Wand2, MessageCircleQuestion } from 'lucide-react';
+import { Image, Send, Sparkles, Loader2, X, Gem, Reply, Wand2, MessageCircleQuestion, Paperclip, FileText } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -15,6 +15,12 @@ import { VoiceRecorder } from './VoiceRecorder';
 import { SmartReplyTray } from './SmartReplyTray';
 import { ReplyOrb } from './ReplyOrb';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
+import {
+  ATTACHMENT_ACCEPT,
+  formatAttachmentSize,
+  getAttachmentLabel,
+  validateAttachment,
+} from '@/lib/attachments';
 
 interface ChatInputSendArgs {
   content: string;
@@ -62,8 +68,10 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [docFile, setDocFile] = useState<File | null>(null);
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const mention = useMention({
@@ -142,6 +150,18 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       return;
     }
 
+    if (docFile) {
+      onSendMessage({
+        content: message.trim(),
+        type: 'media',
+        mediaFile: docFile,
+      });
+      clearDoc();
+      setMessage('');
+      resetComposerHeight();
+      return;
+    }
+
     if (!message.trim()) return;
     onSendMessage({ content: message.trim(), type: 'msg' });
     setMessage('');
@@ -191,6 +211,25 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     setImageFile(file);
     setImagePreviewUrl(URL.createObjectURL(file));
     setAudioPreview(null);
+    clearDoc();
+  };
+
+  const handleDocUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    // Reset immediately so picking the same file twice in a row still fires.
+    e.target.value = '';
+    if (!file) return;
+
+    const check = validateAttachment(file);
+    if (!check.ok) {
+      toast.error(check.error);
+      return;
+    }
+
+    // One attachment per message — the upload route takes a single file.
+    setDocFile(file);
+    setAudioPreview(null);
+    clearImage();
   };
 
   const handleVoiceRecordingComplete = (blob: Blob, duration: number) => {
@@ -273,6 +312,12 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  // No object URL to revoke — a document has no preview to render.
+  const clearDoc = () => {
+    setDocFile(null);
+    if (docInputRef.current) docInputRef.current.value = '';
+  };
+
   const removeAudioPreview = () => setAudioPreview(null);
 
   const formatDuration = (seconds: number) => {
@@ -326,6 +371,28 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           <button
             onClick={clearImage}
             className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+          >
+            <X className="w-3 h-3 text-white" />
+          </button>
+        </div>
+      )}
+
+      {/* Document Preview */}
+      {docFile && (
+        <div className="mb-2 relative inline-flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg max-w-[260px]">
+          <FileText className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+          <span className="min-w-0">
+            <span className="block text-sm text-white truncate" title={docFile.name}>
+              {docFile.name}
+            </span>
+            <span className="block text-xs text-zinc-400">
+              {getAttachmentLabel(docFile.name)} · {formatAttachmentSize(docFile.size)}
+            </span>
+          </span>
+          <button
+            onClick={clearDoc}
+            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            aria-label="Remove attachment"
           >
             <X className="w-3 h-3 text-white" />
           </button>
@@ -444,6 +511,28 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             className="hidden"
           />
 
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                onClick={() => docInputRef.current?.click()}
+              >
+                <Paperclip className="w-5 h-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Attach a file</TooltipContent>
+          </Tooltip>
+          <input
+            ref={docInputRef}
+            type="file"
+            accept={ATTACHMENT_ACCEPT}
+            onChange={handleDocUpload}
+            className="hidden"
+          />
+
           <VoiceRecorder
             onRecordingComplete={handleVoiceRecordingComplete}
             disabled={sendDisabled}
@@ -514,7 +603,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             // keyboard open across sends instead of collapsing every tap.
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleSend}
-            disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !audioPreview)}
+            disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !docFile && !audioPreview)}
             title={sendDisabled ? sendDisabledReason : undefined}
           >
             {isSendingFee ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
