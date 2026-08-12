@@ -66,7 +66,7 @@ const SLIDES = [
     sub: 'open_source',
     extra: 'no_algorithm',
     description:
-      'No algorithms that favor one side of the argument.\nEveryone is amplified equally and fairly.',
+      'No algorithms that favor one side of the argument.\u00a0\nEveryone is amplified equally and fairly.',
   },
   {
     title: 'You Will Own Everything,',
