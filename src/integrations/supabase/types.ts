@@ -749,6 +749,7 @@ export type Database = {
       audio_spaces: {
         Row: {
           channel_name: string
+          cover_image_url: string | null
           created_at: string
           description: string | null
           ended_at: string | null
@@ -758,6 +759,7 @@ export type Database = {
           id: string
           listener_count: number
           recording_url: string | null
+          scheduled_at: string | null
           speaker_count: number
           started_at: string
           status: string
@@ -766,6 +768,7 @@ export type Database = {
         }
         Insert: {
           channel_name: string
+          cover_image_url?: string | null
           created_at?: string
           description?: string | null
           ended_at?: string | null
@@ -775,6 +778,7 @@ export type Database = {
           id?: string
           listener_count?: number
           recording_url?: string | null
+          scheduled_at?: string | null
           speaker_count?: number
           started_at?: string
           status?: string
@@ -783,6 +787,7 @@ export type Database = {
         }
         Update: {
           channel_name?: string
+          cover_image_url?: string | null
           created_at?: string
           description?: string | null
           ended_at?: string | null
@@ -792,6 +797,7 @@ export type Database = {
           id?: string
           listener_count?: number
           recording_url?: string | null
+          scheduled_at?: string | null
           speaker_count?: number
           started_at?: string
           status?: string
