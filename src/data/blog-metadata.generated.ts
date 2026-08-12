@@ -657,7 +657,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "reliability-perfected-9999-uptime-for-dehub-streaming---a-dehub-milestone-from-q1-2025",
     "excerpt": "A deep dive into a key Q1 2025 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-uptime-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Reliability Perfected: 99.99% Uptime for DeHub Streaming",
     "author": {
       "name": "DeHub Team"
@@ -682,7 +682,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025",
     "excerpt": "A deep dive into a key Q1 2025 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-livepeer-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers",
     "author": {
       "name": "DeHub Team"
@@ -732,7 +732,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "connect-and-converse-advanced-messaging-system-with-paidfree-dms---a-dehub-milestone-from-q1-2025",
     "excerpt": "A deep dive into a key Q1 2025 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-messaging-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Connect and Converse: Advanced Messaging System with Paid/Free DMs",
     "author": {
       "name": "DeHub Team"
@@ -757,7 +757,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb---a-dehub-milestone-from-q1-2025",
     "excerpt": "A deep dive into a key Q1 2025 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-ethereum-exit-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB",
     "author": {
       "name": "DeHub Team"
@@ -807,7 +807,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "speed-of-light-custom-cdn-achieves-sub-200ms-global-latency---a-dehub-milestone-from-q1-2025",
     "excerpt": "A deep dive into a key Q1 2025 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-cdn-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Speed of Light: Custom CDN Achieves Sub-200ms Global Latency",
     "author": {
       "name": "DeHub Team"
@@ -832,7 +832,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-future-of-infrastructure-depin-phase-1-goes-live---a-dehub-milestone-from-q4-2024",
     "excerpt": "A deep dive into a key Q4 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-depin-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: The Future of Infrastructure: DePIN Phase 1 Goes Live",
     "author": {
       "name": "DeHub Team"
@@ -857,7 +857,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "leading-the-way-dehub-agency-becomes-uk-1-with-1000-streamers---a-dehub-milestone-from-q4-2024",
     "excerpt": "A deep dive into a key Q4 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-agency-uk-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: Leading the Way: DeHub Agency Becomes UK #1 with 1,000 Streamers",
     "author": {
       "name": "DeHub Team"
@@ -908,7 +908,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-hype-is-real-last-chad-standing-teaser-hits-1m-views---a-dehub-milestone-from-q4-2024",
     "excerpt": "A deep dive into a key Q4 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-teaser-1m-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views",
     "author": {
       "name": "DeHub Team"
@@ -933,7 +933,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "revolutionizing-access-on-chain-tradable-subscriptions-launch---a-dehub-milestone-from-q4-2024",
     "excerpt": "A deep dive into a key Q4 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-subscriptions-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: Revolutionizing Access: On-Chain Tradable Subscriptions Launch",
     "author": {
       "name": "DeHub Team"
@@ -1009,7 +1009,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "faster-and-sleeker-ui-overhaul-and-200-backend-speed-boost---a-dehub-milestone-from-q3-2024",
     "excerpt": "A deep dive into a key Q3 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-ui-overhaul-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2024 update: Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost",
     "author": {
       "name": "DeHub Team"
@@ -1034,7 +1034,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "leveling-up-major-app-upgrade-earns-95-positive-feedback---a-dehub-milestone-from-q3-2024",
     "excerpt": "A deep dive into a key Q3 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-positive-feedback-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2024 update: Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
     "author": {
       "name": "DeHub Team"
@@ -1059,7 +1059,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "worldwide-creators-partnerships-spanning-15-countries---a-dehub-milestone-from-q2-2024",
     "excerpt": "A deep dive into a key Q2 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-15-countries-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Worldwide Creators: Partnerships Spanning 15 Countries",
     "author": {
       "name": "DeHub Team"
@@ -1084,7 +1084,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "entrepreneurial-spirit-co-founders-launch-tiktok-agency---a-dehub-milestone-from-q2-2024",
     "excerpt": "A deep dive into a key Q2 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-tiktok-agency-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Entrepreneurial Spirit: Co-Founders Launch TikTok Agency",
     "author": {
       "name": "DeHub Team"
@@ -1109,7 +1109,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "global-footprint-dehub-expands-middle-east-presence-via-dubai-event---a-dehub-milestone-from-q2-2024",
     "excerpt": "A deep dive into a key Q2 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-dubai-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Global Footprint: DeHub Expands Middle East Presence via Dubai Event",
     "author": {
       "name": "DeHub Team"
@@ -1134,7 +1134,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "layer-2-expansion-sdhb-lists-on-base---a-dehub-milestone-from-q2-2024",
     "excerpt": "A deep dive into a key Q2 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-base-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Layer 2 Expansion: SDHB Lists on Base",
     "author": {
       "name": "DeHub Team"
@@ -1209,7 +1209,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "fueling-growth-1m-raised-for-fansite-bj-fork---a-dehub-milestone-from-q1-2024",
     "excerpt": "A deep dive into a key Q1 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-fansite-raise-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2024 update: Fueling Growth: $1M Raised for Fan.site (BJ Fork)",
     "author": {
       "name": "DeHub Team"
@@ -1234,7 +1234,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "expanding-reach-dhb-lists-on-ethereum-mainnet---a-dehub-milestone-from-q1-2024",
     "excerpt": "A deep dive into a key Q1 2024 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-eth-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2024 update: Expanding Reach: DHB Lists on Ethereum Mainnet",
     "author": {
       "name": "DeHub Team"
@@ -1259,7 +1259,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "expanding-horizons-partner-airdrop-for-fansite-bj-fork---a-dehub-milestone-from-q3-2023",
     "excerpt": "A deep dive into a key Q3 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-partner-airdrop-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)",
     "author": {
       "name": "DeHub Team"
@@ -1309,7 +1309,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023",
     "excerpt": "A deep dive into a key Q4 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-auto-liquidity-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Smarter Liquidity: Automated Liquidity Provision on DEXs",
     "author": {
       "name": "DeHub Team"
@@ -1334,7 +1334,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023",
     "excerpt": "A deep dive into a key Q4 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-dex-policy-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Open and Clear: DEX Policy Implementation and Transparency Commitment",
     "author": {
       "name": "DeHub Team"
@@ -1359,7 +1359,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "prioritizing-principles-voluntary-delisting-from-gateio-for-decentralization---a-dehub-milestone-from-q4-2023",
     "excerpt": "A deep dive into a key Q4 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-gate-delisting-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization",
     "author": {
       "name": "DeHub Team"
@@ -1406,7 +1406,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "paving-the-way-framework-for-community-driven-forks---a-dehub-milestone-from-q3-2023",
     "excerpt": "A deep dive into a key Q3 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-fork-framework-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Paving the Way: Framework for Community-Driven Forks",
     "author": {
       "name": "DeHub Team"
@@ -1431,7 +1431,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "decentralization-in-practice-the-fansite-fork-story---a-dehub-milestone-from-q3-2023",
     "excerpt": "A deep dive into a key Q3 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-fork-story-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Decentralization in Practice: The Fan.site Fork Story",
     "author": {
       "name": "DeHub Team"
@@ -1456,7 +1456,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "supporting-growth-knowledge-transfer-to-fansite-team---a-dehub-milestone-from-q3-2023",
     "excerpt": "A deep dive into a key Q3 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-knowledge-transfer-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Supporting Growth: Knowledge Transfer to Fan.site Team",
     "author": {
       "name": "DeHub Team"
@@ -1481,7 +1481,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "protecting-innovation-patent-applications-for-streaming--watch2earn-tech---a-dehub-milestone-from-q2-2023",
     "excerpt": "A deep dive into a key Q2 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-patents-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
     "author": {
       "name": "DeHub Team"
@@ -1506,7 +1506,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "in-the-spotlight-dehub-featured-in-techcrunch-and-venturebeat---a-dehub-milestone-from-q2-2023",
     "excerpt": "A deep dive into a key Q2 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-press-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: In the Spotlight: DeHub Featured in TechCrunch and VentureBeat",
     "author": {
       "name": "DeHub Team"
@@ -1531,7 +1531,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "innovation-recognized-dehub-wins-corporate-livewire-award---a-dehub-milestone-from-q2-2023",
     "excerpt": "A deep dive into a key Q2 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-award-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: Innovation Recognized: DeHub Wins Corporate Livewire Award",
     "author": {
       "name": "DeHub Team"
@@ -1581,7 +1581,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "back-in-action-dehub-v2-trading-resumes-on-gateio---a-dehub-milestone-from-q1-2023",
     "excerpt": "A deep dive into a key Q1 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-gate-resume-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Back in Action: DeHub V2 Trading Resumes on Gate.io",
     "author": {
       "name": "DeHub Team"
@@ -1606,7 +1606,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "insights-for-creators-advanced-analytics-dashboard-development-begins---a-dehub-milestone-from-q1-2023",
     "excerpt": "A deep dive into a key Q1 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-analytics-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Insights for Creators: Advanced Analytics Dashboard Development Begins",
     "author": {
       "name": "DeHub Team"
@@ -1631,7 +1631,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023",
     "excerpt": "A deep dive into a key Q1 2023 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-tokenized-uploads-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
     "author": {
       "name": "DeHub Team"
@@ -1678,7 +1678,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022",
     "excerpt": "A deep dive into a key Q4 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-erc20-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: Stability First: Adopting Standard ERC20 Tokenomics",
     "author": {
       "name": "DeHub Team"
@@ -1703,7 +1703,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "moving-forward-successful-migration-of-25000-holders-to-v2---a-dehub-milestone-from-q4-2022",
     "excerpt": "A deep dive into a key Q4 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-v2-migration-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: Moving Forward: Successful Migration of 25,000+ Holders to V2",
     "author": {
       "name": "DeHub Team"
@@ -1728,7 +1728,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-unforeseen-navigating-a-contract-malfunction-and-v2-relaunch---a-dehub-milestone-from-q4-2022",
     "excerpt": "A deep dive into a key Q4 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-contract-malfunction-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch",
     "author": {
       "name": "DeHub Team"
@@ -1753,7 +1753,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "trust-and-transparency-on-chain-verified-raffle-mechanics---a-dehub-milestone-from-q3-2022",
     "excerpt": "A deep dive into a key Q3 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-raffle-mechanics-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Trust and Transparency: On-Chain Verified Raffle Mechanics",
     "author": {
       "name": "DeHub Team"
@@ -1778,7 +1778,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "strategic-alliances-partnering-with-real-estate-and-legal-experts---a-dehub-milestone-from-q3-2022",
     "excerpt": "A deep dive into a key Q3 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-alliances-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Strategic Alliances: Partnering with Real Estate and Legal Experts",
     "author": {
       "name": "DeHub Team"
@@ -1803,7 +1803,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "ambitious-ventures-the-palawan-real-estate-tokenization-attempt---a-dehub-milestone-from-q3-2022",
     "excerpt": "A deep dive into a key Q3 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-palawan-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Ambitious Ventures: The Palawan Real Estate Tokenization Attempt",
     "author": {
       "name": "DeHub Team"
@@ -1828,7 +1828,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022",
     "excerpt": "A deep dive into a key Q3 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-home-raffle-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Dream Big: The $1M Home Crypto Raffle by DeHub",
     "author": {
       "name": "DeHub Team"
@@ -1878,7 +1878,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "empowering-creators-dehub-nft-marketplace-with-royalties---a-dehub-milestone-from-q2-2022",
     "excerpt": "A deep dive into a key Q2 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-nft-marketplace-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Empowering Creators: DeHub NFT Marketplace with Royalties",
     "author": {
       "name": "DeHub Team"
@@ -1903,7 +1903,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "efficient-streaming-advanced-video-compression-reduces-costs---a-dehub-milestone-from-q2-2022",
     "excerpt": "A deep dive into a key Q2 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-compression-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Efficient Streaming: Advanced Video Compression Reduces Costs",
     "author": {
       "name": "DeHub Team"
@@ -1928,7 +1928,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "building-bridges-philippine-sec-registration-secured---a-dehub-milestone-from-q2-2022",
     "excerpt": "A deep dive into a key Q2 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-sec-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Building Bridges: Philippine SEC Registration Secured",
     "author": {
       "name": "DeHub Team"
@@ -1953,7 +1953,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-chads-arrive-genesis-mint-of-the-chads-nft-collection---a-dehub-milestone-from-q2-2022",
     "excerpt": "A deep dive into a key Q2 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-chads-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: The Chads Arrive: Genesis Mint of the Chads NFT Collection",
     "author": {
       "name": "DeHub Team"
@@ -1978,7 +1978,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "lights-camera-blockchain-dehubs-first-tokenized-documentary---a-dehub-milestone-from-q2-2022",
     "excerpt": "A deep dive into a key Q2 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-documentary-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Lights, Camera, Blockchain: DeHub's First Tokenized Documentary",
     "author": {
       "name": "DeHub Team"
@@ -2003,7 +2003,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "crystal-clear-dehub-stream-app-with-4k-support--high-uptime---a-dehub-milestone-from-q2-2022",
     "excerpt": "A deep dive into a key Q2 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-4k-streams-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Crystal Clear: DeHub Stream App with 4K Support & High Uptime",
     "author": {
       "name": "DeHub Team"
@@ -2028,7 +2028,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "powering-play-dehubs-custom-mobile-game-engine---a-dehub-milestone-from-q1-2022",
     "excerpt": "A deep dive into a key Q1 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-game-engine-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Powering Play: DeHub's Custom Mobile Game Engine",
     "author": {
       "name": "DeHub Team"
@@ -2053,7 +2053,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "challenge-accepted-social-features-and-friend-challenges-arrive---a-dehub-milestone-from-q1-2022",
     "excerpt": "A deep dive into a key Q1 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-challenges-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Challenge Accepted: Social Features and Friend Challenges Arrive",
     "author": {
       "name": "DeHub Team"
@@ -2078,7 +2078,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade---a-dehub-milestone-from-q1-2022",
     "excerpt": "A deep dive into a key Q1 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-leaderboards-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade",
     "author": {
       "name": "DeHub Team"
@@ -2103,7 +2103,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022",
     "excerpt": "A deep dive into a key Q1 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-5000-players-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: High Score: DeHub Gaming Hits 5,000+ Monthly Active Users",
     "author": {
       "name": "DeHub Team"
@@ -2128,7 +2128,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "level-up-dehub-arcade-launches-with-5-games--predictions---a-dehub-milestone-from-q1-2022",
     "excerpt": "A deep dive into a key Q1 2022 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-arcade-launch-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Level Up: DeHub Arcade Launches with 5 Games & Predictions",
     "author": {
       "name": "DeHub Team"
@@ -2153,7 +2153,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "strength-in-numbers-dehub-community-exceeds-8000-active-members---a-dehub-milestone-from-q4-2021",
     "excerpt": "A deep dive into a key Q4 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-8000-members-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Strength in Numbers: DeHub Community Exceeds 8,000 Active Members",
     "author": {
       "name": "DeHub Team"
@@ -2178,7 +2178,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "fair-play-provably-fair-randomization-in-dehub-games---a-dehub-milestone-from-q4-2021",
     "excerpt": "A deep dive into a key Q4 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-provably-fair-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Fair Play: Provably Fair Randomization in DeHub Games",
     "author": {
       "name": "DeHub Team"
@@ -2203,7 +2203,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "trials-and-tribulations-the-gateio-listing-agent-incident---a-dehub-milestone-from-q4-2021",
     "excerpt": "A deep dive into a key Q4 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-gate-incident-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Trials and Tribulations: The Gate.io Listing Agent Incident",
     "author": {
       "name": "DeHub Team"
@@ -2228,7 +2228,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "to-the-moon-gateio-listing-and-10m-lp-milestone---a-dehub-milestone-from-q4-2021",
     "excerpt": "A deep dive into a key Q4 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-gate-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: To the Moon: Gate.io Listing and $10M LP Milestone",
     "author": {
       "name": "DeHub Team"
@@ -2253,7 +2253,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "game-on-dehub-launches-prediction-and-raffle-games---a-dehub-milestone-from-q4-2021",
     "excerpt": "A deep dive into a key Q4 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-prediction-games-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Game On: DeHub Launches Prediction and Raffle Games",
     "author": {
       "name": "DeHub Team"
@@ -2278,7 +2278,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "global-reach-dehub-team-grows-to-15-strong---a-dehub-milestone-from-q3-2021",
     "excerpt": "A deep dive into a key Q3 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-team-15-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Global Reach: DeHub Team Grows to 15 Strong",
     "author": {
       "name": "DeHub Team"
@@ -2303,7 +2303,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "fortifying-our-walls-v1-security-hardened-with-certik-audit---a-dehub-milestone-from-q3-2021",
     "excerpt": "A deep dive into a key Q3 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-certik-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Fortifying Our Walls: V1 Security Hardened with Certik Audit",
     "author": {
       "name": "DeHub Team"
@@ -2328,7 +2328,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "rewarding-loyalty-automatic-airdrop-for-all-holders---a-dehub-milestone-from-q3-2021",
     "excerpt": "A deep dive into a key Q3 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-auto-airdrop-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Rewarding Loyalty: Automatic Airdrop for All Holders",
     "author": {
       "name": "DeHub Team"
@@ -2353,7 +2353,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "building-for-all-app-rebuild-with-react-native---a-dehub-milestone-from-q3-2021",
     "excerpt": "A deep dive into a key Q3 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-react-native-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Building for All: App Rebuild with React Native",
     "author": {
       "name": "DeHub Team"
@@ -2378,7 +2378,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "a-new-era-the-rebranding-to-dehub---a-dehub-milestone-from-q3-2021",
     "excerpt": "A deep dive into a key Q3 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-rebrand-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: A New Era: The Rebranding to DeHub",
     "author": {
       "name": "DeHub Team"
@@ -2403,7 +2403,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "navigating-challenges-addressing-a-v1-smart-contract-security-issue---a-dehub-milestone-from-q2-2021",
     "excerpt": "A deep dive into a key Q2 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-v1-security-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Navigating Challenges: Addressing a V1 Smart Contract Security Issue",
     "author": {
       "name": "DeHub Team"
@@ -2428,7 +2428,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "diving-in-first-dehub-liquidity-pools-on-pancake-swap---a-dehub-milestone-from-q2-2021",
     "excerpt": "A deep dive into a key Q2 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-pancake-pools-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Diving In: First DeHub Liquidity Pools on Pancake Swap",
     "author": {
       "name": "DeHub Team"
@@ -2453,7 +2453,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "power-to-the-people-community-governed-listings---a-dehub-milestone-from-q2-2021",
     "excerpt": "A deep dive into a key Q2 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-governed-listings-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Power to the People: Community Governed Listings",
     "author": {
       "name": "DeHub Team"
@@ -2478,7 +2478,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "early-traction-dehubs-beta-app-hits-2000-daus---a-dehub-milestone-from-q1-2021",
     "excerpt": "A deep dive into a key Q1 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-2000-daus-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Early Traction: DeHub's Beta App Hits 2,000 DAUs",
     "author": {
       "name": "DeHub Team"
@@ -2503,7 +2503,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "listening-to-our-users-50-interviews-shape-dehub---a-dehub-milestone-from-q1-2021",
     "excerpt": "A deep dive into a key Q1 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-interviews-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Listening to Our Users: 50+ Interviews Shape DeHub",
     "author": {
       "name": "DeHub Team"
@@ -2550,7 +2550,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "building-the-dream-dehubs-core-team-assembled---a-dehub-milestone-from-q1-2021",
     "excerpt": "A deep dive into a key Q1 2021 milestone for DeHub. Learn how this development shaped our ecosystem and our journey forward.",
     "content": "",
-    "bannerImage": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80",
+    "bannerImage": "/lovable-uploads/milestone-core-team-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Building the Dream: DeHub's Core Team Assembled",
     "author": {
       "name": "DeHub Team"
