@@ -1,12 +1,12 @@
 /**
- * Document attachments on `feed-file` posts.
+ * Document attachments on direct messages.
  *
  * The allowlist here mirrors `ALLOWED_DOCUMENT_TYPES` in the backend's
  * `src/cdn/cdn.service.ts`. The backend is the real gate — it re-validates every
  * upload and stores objects with `Content-Disposition: attachment` — so this copy
  * exists purely to keep the file picker honest and to fail fast with a readable
- * message instead of a 400 after a 50 MB upload. Keep the two in step: an
- * extension added here but not there is rejected at mint time.
+ * message instead of a 415 after a 50 MB upload. Keep the two in step: an
+ * extension added here but not there is rejected on upload.
  */
 
 /** Extensions the backend accepts, in the order they appear in its table. */
@@ -22,14 +22,10 @@ export const ALLOWED_ATTACHMENT_EXTENSIONS = [
 /** `accept` attribute for the file input. */
 export const ATTACHMENT_ACCEPT = ALLOWED_ATTACHMENT_EXTENSIONS.join(',');
 
-/** Matches the backend's per-file cap. */
+/** Matches the backend's DM_FILE_MAX_SIZE. */
 export const MAX_ATTACHMENT_SIZE = 50 * 1024 * 1024;
-/** Matches the backend's combined cap for one post. */
-export const MAX_ATTACHMENTS_TOTAL_SIZE = 100 * 1024 * 1024;
-/** Matches the backend's per-post file count cap. */
-export const MAX_ATTACHMENTS = 5;
 
-/** A document stored on a post, as returned by the API. */
+/** A document attached to a message, as returned by the API. */
 export interface PostAttachment {
   url: string;
   name: string;
@@ -116,47 +112,24 @@ export interface AttachmentValidationResult {
   error?: string;
 }
 
+
 /**
- * Validate a set of picked files against the same rules the backend applies, so
- * the composer can refuse them before an upload starts.
- *
- * @param existingCount files already attached to the draft
- * @param existingBytes combined size of those files
+ * Validate a picked file against the same rules the backend applies, so the
+ * composer can refuse it before an upload starts rather than after 50 MB has
+ * gone over the wire.
  */
-export function validateAttachments(
-  files: File[],
-  existingCount = 0,
-  existingBytes = 0,
-): AttachmentValidationResult {
-  if (existingCount + files.length > MAX_ATTACHMENTS) {
-    return { ok: false, error: `You can attach up to ${MAX_ATTACHMENTS} files.` };
+export function validateAttachment(file: File): AttachmentValidationResult {
+  if (!isAllowedAttachment(file.name)) {
+    return { ok: false, error: `"${file.name}" isn't a supported file type.` };
   }
-
-  for (const file of files) {
-    if (!isAllowedAttachment(file.name)) {
-      return {
-        ok: false,
-        error: `"${file.name}" isn't a supported file type.`,
-      };
-    }
-    if (file.size === 0) {
-      return { ok: false, error: `"${file.name}" is empty.` };
-    }
-    if (file.size > MAX_ATTACHMENT_SIZE) {
-      return {
-        ok: false,
-        error: `"${file.name}" is over the ${formatAttachmentSize(MAX_ATTACHMENT_SIZE)} limit.`,
-      };
-    }
+  if (file.size === 0) {
+    return { ok: false, error: `"${file.name}" is empty.` };
   }
-
-  const total = existingBytes + files.reduce((sum, f) => sum + f.size, 0);
-  if (total > MAX_ATTACHMENTS_TOTAL_SIZE) {
+  if (file.size > MAX_ATTACHMENT_SIZE) {
     return {
       ok: false,
-      error: `Attachments total ${formatAttachmentSize(total)}. The limit is ${formatAttachmentSize(MAX_ATTACHMENTS_TOTAL_SIZE)} per post.`,
+      error: `"${file.name}" is over the ${formatAttachmentSize(MAX_ATTACHMENT_SIZE)} limit.`,
     };
   }
-
   return { ok: true };
 }

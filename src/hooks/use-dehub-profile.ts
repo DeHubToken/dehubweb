@@ -356,9 +356,7 @@ export function separateUserContent(items: UnifiedFeedItem[]): {
       contentType = 'video';
     } else if (item.postType === 'feed-images') {
       contentType = 'image';
-    } else if (item.postType === 'feed-simple' || item.postType === 'feed-file') {
-      // File posts are text posts that carry attachments — same card, plus the
-      // download list underneath.
+    } else if (item.postType === 'feed-simple') {
       contentType = 'text';
     } else if (item.videoUrl) {
       // Fallback: if no postType but has videoUrl, it's a video

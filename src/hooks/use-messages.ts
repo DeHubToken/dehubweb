@@ -36,6 +36,7 @@ import {
   type DeHubUser,
   type GroupInfo,
 } from '@/lib/api/dehub';
+import { isAllowedAttachment } from '@/lib/attachments';
 import {
   emitCreateAndStart,
   emitSendMessage,
@@ -718,7 +719,15 @@ export function useSendMessage(conversationId: string) {
         content,
         msgType: msgType || 'msg',
         mediaUrls: mediaFile
-          ? [{ url: createTransientBlobUrl(mediaFile), type: msgType === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
+          ? [{
+              url: createTransientBlobUrl(mediaFile),
+              // A document has no renderable preview, so it must not be typed
+              // 'image' — the bubble would try to <img> a blob URL for a PDF.
+              type: msgType === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
+              mimeType: mediaFile.type,
+              name: mediaFile.name,
+              size: mediaFile.size,
+            }]
           : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
         voiceDuration: voiceDuration ?? null,
         isRead: false,
