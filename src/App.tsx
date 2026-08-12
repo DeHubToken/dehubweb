@@ -1,7 +1,7 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NewVersionToast } from "@/components/app/NewVersionToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { AuthenticationError } from "@/lib/api/dehub";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
@@ -275,6 +275,7 @@ if (typeof window !== "undefined") {
  */
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect } = useAuth();
+  const queryClient = useQueryClient();
   usePreloadIcons();
 
   // LoginModal mounts on first open and stays mounted afterwards so its
@@ -312,6 +313,17 @@ function AppContent() {
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
   }, [wallet]);
 
+  // Starter + daily free AI credit — claimed server-side, idempotent per UTC
+  // day, so firing on every sign-in is safe. On a grant, refresh the balance
+  // query so a mounted credit surface agrees with the toast.
+  useEffect(() => {
+    if (!wallet) return;
+    import("@/lib/ai-credit-claim")
+      .then(m => m.claimDailyAiCredit(() => {
+        queryClient.invalidateQueries({ queryKey: ['ai-credits'] });
+      }))
+      .catch(() => undefined);
+  }, [wallet, queryClient]);
 
   return (
     <>
