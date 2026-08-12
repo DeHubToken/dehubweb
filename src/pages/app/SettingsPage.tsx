@@ -90,7 +90,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser, checkUsernameAvailability } from '@/lib/api/dehub';
-import { RESERVED_USERNAMES } from '@/lib/reserved-usernames';
+import { isReservedUsername } from '@/lib/reserved-usernames';
 import { buildAvatarUrl, buildCoverUrl, bumpProfileImageVersion, deviceWidth } from '@/lib/media-url';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
@@ -460,7 +460,8 @@ function ProfileSettings() {
       return;
     }
     // Route-colliding names would make the profile unreachable at /:username.
-    if (RESERVED_USERNAMES.has(debouncedUsername)) {
+    // Checked before the availability call, which does not reject these.
+    if (isReservedUsername(debouncedUsername)) {
       setUsernameAvailable(false);
       setIsCheckingUsername(false);
       return;
@@ -497,7 +498,21 @@ function ProfileSettings() {
     !!avatarFile ||
     !!coverFile;
 
-  const canSave = hasChanges && !isCheckingUsername && usernameAvailable !== false;
+  // A changed username must be positively cleared before Save unlocks. The old
+  // gate was `usernameAvailable !== false`, which passes while it is still null
+  // — and it is null for the whole 500ms debounce window, so typing a name and
+  // hitting Save immediately submitted it with no reserved check and no
+  // availability check at all. Require the debounce to have caught up with the
+  // field (`usernameSettled`) and the answer to be an explicit `true`.
+  const usernameChanged = username !== originalValues.username;
+  const usernameSettled = debouncedUsername === username;
+  const usernameCleared =
+    !usernameChanged ||
+    (usernameSettled &&
+      !isCheckingUsername &&
+      usernameAvailable === true &&
+      !isReservedUsername(username));
+  const canSave = hasChanges && usernameCleared;
   
   const updateMutation = useMutation({
     mutationFn: async (data: UpdateProfileData) => {
@@ -646,17 +661,29 @@ function ProfileSettings() {
   
   const handleSave = () => {
     if (usernameAvailable === false) {
-      toast.error(t('settings.usernameTaken') || 'Username is already taken');
+      toast.error(
+        isReservedUsername(username)
+          ? 'This username is reserved'
+          : t('settings.usernameTaken') || 'Username is already taken'
+      );
       return;
     }
     if (isCheckingUsername) {
       toast.error('Please wait, checking username availability...');
       return;
     }
+    if (usernameChanged && isReservedUsername(username)) {
+      toast.error('This username is reserved');
+      return;
+    }
     const data: UpdateProfileData = {};
-    
+
     if (displayName) data.displayName = displayName;
-    if (username) data.username = username;
+    // Only send the username when it actually changed. It used to go on every
+    // save, which meant any user already holding a now-reserved name (the real
+    // `admin` / `explore` / `creators` / `wallet` / `blog` accounts among them)
+    // would be refused by the guard in updateProfile while editing their bio.
+    if (username && usernameChanged) data.username = username;
     if (bio) data.aboutMe = bio;
     // Always send social links (even empty strings) so they persist correctly
     data.twitterLink = twitterLink;
@@ -823,7 +850,11 @@ function ProfileSettings() {
             {!isCheckingUsername && usernameAvailable === false && (
               <>
                 <X className="w-3 h-3 text-red-500" />
-                <span className="text-red-500 text-xs">Username is already taken</span>
+                <span className="text-red-500 text-xs">
+                  {isReservedUsername(username)
+                    ? 'This username is reserved'
+                    : 'Username is already taken'}
+                </span>
               </>
             )}
             {!isCheckingUsername && usernameAvailable === null && (

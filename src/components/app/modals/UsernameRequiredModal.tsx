@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import profileIcon from '@/assets/profile-icon.png';
 
-import { RESERVED_USERNAMES } from '@/lib/reserved-usernames';
+import { isReservedUsername } from '@/lib/reserved-usernames';
 
 // Debounce helper
 function useDebounce<T>(value: T, delay: number): T {
@@ -74,7 +74,7 @@ export function UsernameRequiredModal() {
       return;
     }
 
-    if (RESERVED_USERNAMES.has(usernameToCheck)) {
+    if (isReservedUsername(usernameToCheck)) {
       setUsernameAvailable(false);
       setUsernameError('This username is reserved');
       return;
@@ -138,6 +138,11 @@ export function UsernameRequiredModal() {
 
     if (!/^[a-z0-9_]+$/.test(trimmedUsername)) {
       setError('Username can only contain letters, numbers, and underscores');
+      return;
+    }
+
+    if (isReservedUsername(trimmedUsername)) {
+      setError('This username is reserved');
       return;
     }
 
