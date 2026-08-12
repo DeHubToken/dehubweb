@@ -97,6 +97,28 @@ describe('arcade assets', () => {
       expect(existsSync(repo(game.credit.licenceFile)), game.credit.licenceFile).toBe(true);
     }
   });
+
+  it('ships a share card for the grid and for every game', () => {
+    // The card is named in three places that cannot see each other — the
+    // worker's OG_CARD_ROUTES, the page's SEOHead, and the file itself — and a
+    // missing file is invisible: the worker falls back to the shared image and
+    // the page just shares the wrong picture. So assert the file, and assert
+    // the worker still claims the route.
+    const worker = readFileSync(repo('CLOUDFLARE_WORKER_SEO.js'), 'utf8');
+    // Scoped to the Set's own body: bare 'arcade' also appears in SYSTEM_ROUTES
+    // and SSR_STATIC_ROUTES, so a file-wide search would pass while the card
+    // route was missing.
+    const ogRoutes = worker.match(/const OG_CARD_ROUTES = new Set\(\[([\s\S]*?)\]\)/)?.[1];
+    expect(ogRoutes, 'OG_CARD_ROUTES not found in the worker').toBeTruthy();
+
+    const cards = ['arcade', ...ARCADE_GAMES.map((g) => `arcade/${g.slug}`)];
+    for (const key of cards) {
+      const file = repo('public', 'og', `${key.replace(/\//g, '-')}.jpg`);
+      expect(existsSync(file), `public/og/${key.replace(/\//g, '-')}.jpg`).toBe(true);
+      expect(statSync(file).size, `${key} card is unexpectedly empty`).toBeGreaterThan(10_000);
+      expect(ogRoutes, `OG_CARD_ROUTES is missing '${key}'`).toContain(`'${key}'`);
+    }
+  });
 });
 
 describe('arcade exit bridge', () => {
