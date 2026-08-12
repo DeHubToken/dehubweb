@@ -34,13 +34,19 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Crown, Loader2, Plus, Swords, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
+import { getAccountInfo } from '@/lib/api/dehub';
+import type { DeHubUser } from '@/lib/api/dehub/types';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { setBackgroundPaused, scheduleBackgroundResume } from '@/lib/background-gate';
 import { ARCADE_SANDBOX } from '@/config/arcade-games';
 
@@ -132,29 +138,134 @@ async function invokeChess(body: Record<string, unknown>): Promise<{ match?: Che
   return data as { match?: ChessMatch; error?: string };
 }
 
+// ------------------------------------------------------------- who is who
+//
+// A lobby row is a person, not an address. Identity (name, avatar, badge
+// balance) comes from api.dehub.io's public account_info endpoint — one
+// cached query per wallet, the same enrichment pass stories and suggestions
+// already do. The RECORD comes from the chess_records view: our own finished
+// matches aggregated in the database, derived rather than stored so it can
+// never drift from the games it counts.
+
+interface ChessRecord {
+  wallet: string;
+  played: number;
+  wins: number;
+  losses: number;
+  draws: number;
+}
+
+function useChessProfiles(wallets: string[]): Record<string, DeHubUser> {
+  const results = useQueries({
+    queries: wallets.map((address) => ({
+      queryKey: ['chess-profile', address],
+      queryFn: () => getAccountInfo(address),
+      // An avatar five minutes stale is still the right avatar; the cache
+      // also serves the match view's opponent name without a second fetch.
+      staleTime: 5 * 60_000,
+      retry: 1,
+    })),
+  });
+  const map: Record<string, DeHubUser> = {};
+  results.forEach((result, index) => {
+    if (result.data) map[wallets[index]] = result.data;
+  });
+  return map;
+}
+
+function useChessRecords(wallets: string[]): Record<string, ChessRecord> {
+  const { data } = useQuery({
+    // Sorted so the same set of wallets in a different order is the same key.
+    queryKey: ['chess-records', [...wallets].sort().join(',')],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- view is newer than the generated types
+        .from('chess_records' as any)
+        .select('*')
+        .in('wallet', wallets);
+      if (error) throw error;
+      return (data || []) as unknown as ChessRecord[];
+    },
+    enabled: wallets.length > 0,
+    staleTime: 30_000,
+  });
+  const map: Record<string, ChessRecord> = {};
+  for (const row of data ?? []) map[row.wallet] = row;
+  return map;
+}
+
+function profileName(profile: DeHubUser | undefined, wallet: string | null | undefined): string {
+  return profile?.displayName || profile?.username || short(wallet);
+}
+
+function profileAvatar(profile: DeHubUser | undefined, wallet: string): string | undefined {
+  const path = profile?.avatarImageUrl || profile?.avatarUrl;
+  return path ? buildAvatarUrl(wallet, path) : undefined;
+}
+
+function recordLine(record: ChessRecord | undefined): string {
+  if (!record || record.played === 0) return 'First battle';
+  return `${record.wins}W · ${record.losses}L · ${record.draws}D`;
+}
+
+/** The other seat at a match, from one player's point of view. */
+function otherPlayer(match: ChessMatch, me: string | null): string | null {
+  if (!me) return null;
+  return match.created_by === me ? match.opponent : match.created_by;
+}
+
 // ---------------------------------------------------------------- the lobby
 
 function ChallengeRow({
   match,
+  profile,
+  record,
   mine,
   busy,
   onJoin,
   onCancel,
 }: {
   match: ChessMatch;
+  profile?: DeHubUser;
+  record?: ChessRecord;
   mine: boolean;
   busy: boolean;
   onJoin: (match: ChessMatch) => void;
   onCancel: (match: ChessMatch) => void;
 }) {
   const minutes = Math.round(match.clock_initial_ms / 60_000);
+  const name = profileName(profile, match.created_by);
+  const avatarUrl = profileAvatar(profile, match.created_by);
   return (
     <div className="flex items-center justify-between gap-3 rounded-xl bg-zinc-900 px-4 py-3 ring-1 ring-white/[0.06]">
-      <div className="min-w-0">
-        <p className="truncate text-sm font-medium text-white">{mine ? 'Your challenge' : short(match.created_by)}</p>
-        <p className="text-xs text-zinc-500">
-          {minutes} min · {match.start_fen ? "King's Gambit opening" : 'Standard'}
-        </p>
+      <div className="flex min-w-0 items-center gap-3">
+        <Avatar className="h-10 w-10 shrink-0">
+          {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
+          <AvatarFallback className="bg-zinc-800 text-sm font-medium text-white">
+            {name.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="min-w-0">
+          <p className="flex items-center gap-1.5 text-sm font-medium text-white">
+            {/* pr-3 reserves the badge's corner — same placement WhoToFollow uses. */}
+            <span className="relative min-w-0 truncate pr-3">
+              {name}
+              <BadgeIcon
+                badgeBalance={profile?.badgeBalance}
+                username={profile?.username}
+                className="absolute right-0 top-0 h-[9px] w-[9px]"
+              />
+            </span>
+            {mine ? <span className="shrink-0 text-[10px] font-normal text-zinc-500">(you)</span> : null}
+          </p>
+          <p className="truncate text-xs text-zinc-500">
+            {profile?.username ? `@${profile.username} · ` : ''}
+            {recordLine(record)}
+          </p>
+          <p className="text-xs text-zinc-500">
+            {minutes} min · {match.start_fen ? "King's Gambit opening" : 'Standard'}
+          </p>
+        </div>
       </div>
       {mine ? (
         <button
@@ -245,6 +356,25 @@ export default function ArcadeChessOnlinePage() {
     staleTime: 10_000,
   });
 
+  // Every wallet the page is currently showing a human for. The set feeds
+  // both enrichment passes; the active match's seats are included so the
+  // frame can be handed a real opponent name.
+  const lobbyWallets = useMemo(() => {
+    const set = new Set<string>();
+    for (const challenge of openChallenges) set.add(challenge.created_by);
+    if (myLiveMatch) {
+      set.add(myLiveMatch.created_by);
+      if (myLiveMatch.opponent) set.add(myLiveMatch.opponent);
+    }
+    if (match) {
+      set.add(match.created_by);
+      if (match.opponent) set.add(match.opponent);
+    }
+    return [...set];
+  }, [openChallenges, myLiveMatch, match]);
+  const profiles = useChessProfiles(lobbyWallets);
+  const records = useChessRecords(lobbyWallets);
+
   // Keep the lobby honest while it is on screen.
   useEffect(() => {
     if (inMatch) return;
@@ -253,6 +383,8 @@ export default function ArcadeChessOnlinePage() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chess_matches' }, () => {
         void queryClient.invalidateQueries({ queryKey: [OPEN_QUERY_KEY] });
         void queryClient.invalidateQueries({ queryKey: [MINE_QUERY_KEY] });
+        // Records move when a match finishes; prefix match catches every set.
+        void queryClient.invalidateQueries({ queryKey: ['chess-records'] });
       })
       .subscribe();
     return () => {
@@ -287,6 +419,14 @@ export default function ArcadeChessOnlinePage() {
       if (!wallet) return;
       const color = current.white_wallet === wallet ? 'w' : 'b';
       const opponentWallet = current.white_wallet === wallet ? current.black_wallet : current.white_wallet;
+      // Read the cache directly rather than depending on the profiles map:
+      // this callback feeds two effects, and a dependency whose identity
+      // changes on every profile load would have them resubscribing for no
+      // reason. Cache miss just means the short address — the name is nicety,
+      // the start must not wait on it.
+      const opponentProfile = opponentWallet
+        ? (queryClient.getQueryData(['chess-profile', opponentWallet]) as DeHubUser | undefined)
+        : undefined;
       const clocks = liveClock(current);
       postToFrame({
         type: 'start',
@@ -295,13 +435,13 @@ export default function ArcadeChessOnlinePage() {
         // Mid-game (a reload, a desync) the board opens from the live
         // position; fresh games open from the variant's start.
         fen: current.ply > 0 ? current.fen : current.start_fen ?? undefined,
-        opponent: short(opponentWallet),
+        opponent: profileName(opponentProfile, opponentWallet),
       });
       postToFrame({ type: 'clock', whiteMs: clocks.whiteMs, blackMs: clocks.blackMs });
       startedAtPly.current = current.ply;
       relayedPly.current = current.ply - 1;
     },
-    [postToFrame, wallet],
+    [postToFrame, queryClient, wallet],
   );
 
   // What the frame tells us. Registered for the life of the match view.
@@ -577,7 +717,12 @@ export default function ArcadeChessOnlinePage() {
                 className="mb-4 flex w-full items-center justify-between rounded-2xl bg-amber-500/10 px-5 py-4 text-left ring-1 ring-amber-500/30 transition-colors hover:bg-amber-500/15"
               >
                 <span className="text-sm font-medium text-amber-200">
-                  {myLiveMatch.status === 'active' ? 'Your battle is under way' : 'Your challenge is still open'}
+                  {myLiveMatch.status === 'active'
+                    ? `Your battle with ${profileName(
+                        profiles[otherPlayer(myLiveMatch, wallet) ?? ''],
+                        otherPlayer(myLiveMatch, wallet),
+                      )} is under way`
+                    : 'Your challenge is still open'}
                 </span>
                 <span className="text-xs font-semibold text-amber-400">Return to the board →</span>
               </button>
@@ -628,18 +773,25 @@ export default function ArcadeChessOnlinePage() {
               ) : openChallenges.length === 0 ? (
                 <p className="text-xs text-zinc-500">No one is waiting. Open a challenge and hold the board.</p>
               ) : (
-                <div className="space-y-2">
-                  {openChallenges.map((challenge) => (
-                    <ChallengeRow
-                      key={challenge.id}
-                      match={challenge}
-                      mine={challenge.created_by === wallet}
-                      busy={busy}
-                      onJoin={(target) => void joinChallenge(target)}
-                      onCancel={(target) => void cancelChallenge(target)}
-                    />
-                  ))}
-                </div>
+                // Local provider: this route lives outside AppLayout, so the
+                // app-level TooltipProvider never wraps it, and BadgeIcon's
+                // tooltip needs one.
+                <TooltipProvider>
+                  <div className="space-y-2">
+                    {openChallenges.map((challenge) => (
+                      <ChallengeRow
+                        key={challenge.id}
+                        match={challenge}
+                        profile={profiles[challenge.created_by]}
+                        record={records[challenge.created_by]}
+                        mine={challenge.created_by === wallet}
+                        busy={busy}
+                        onJoin={(target) => void joinChallenge(target)}
+                        onCancel={(target) => void cancelChallenge(target)}
+                      />
+                    ))}
+                  </div>
+                </TooltipProvider>
               )}
             </div>
           </>
