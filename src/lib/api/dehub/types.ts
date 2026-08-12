@@ -82,8 +82,6 @@ export interface DeHubNFT {
   description?: string;
   imageUrl: string;
   imageUrls?: string[];
-  /** Documents on a feed-file post. */
-  attachments?: import('@/lib/attachments').PostAttachment[];
   videoUrl?: string;
   media_url?: string;
   thumbnail_url?: string;

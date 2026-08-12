@@ -7,7 +7,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,6 +21,7 @@ import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { formatAttachmentSize, getAttachmentLabel, isAllowedAttachment } from '@/lib/attachments';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
@@ -199,7 +200,12 @@ const MessageBubble = memo(function MessageBubble({
       ? `/${message.sender.address}`
       : null;
 
-  const primaryMediaUrl = message.mediaUrls?.[0]?.url;
+  const primaryMedia = message.mediaUrls?.[0];
+  const primaryMediaUrl = primaryMedia?.url;
+  // Documents and images share msgType 'media', so the entry's own type is what
+  // separates them. Optimistic sends carry it too, so the pending bubble reads
+  // "Uploading file…" rather than promising an image that never arrives.
+  const isFileMedia = primaryMedia?.type === 'file';
 
   // A shared entity: a text message whose content contains a link to something
   // inside DeHub. Rendered as a rich, tappable card instead of a raw link.
@@ -350,10 +356,39 @@ const MessageBubble = memo(function MessageBubble({
               )
             )}
 
-            {/* Media (image) — show loading when upload pending / mediaUrls empty */}
+            {/* Media (image or document) — loading state while mediaUrls is empty */}
             {message.msgType === 'media' && (
               <div>
-                {primaryMediaUrl ? (
+                {primaryMediaUrl && isFileMedia ? (
+                  <>
+                    <a
+                      href={getMediaUrl(primaryMediaUrl)!}
+                      download={primaryMedia?.name}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 transition-colors hover:bg-white/[0.08] max-w-[280px]"
+                    >
+                      <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
+                        <FileText className="h-4 w-4 text-white" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm text-white" title={primaryMedia?.name}>
+                          {primaryMedia?.name || 'Attachment'}
+                        </span>
+                        <span className="block text-xs text-white/50">
+                          {getAttachmentLabel(primaryMedia?.name || '')}
+                          {primaryMedia?.size ? ` · ${formatAttachmentSize(primaryMedia.size)}` : ''}
+                        </span>
+                      </span>
+                      <Download className="h-4 w-4 flex-shrink-0 text-white/40 transition-colors group-hover:text-white/80" />
+                    </a>
+                    {message.content && (
+                      <p dir="auto" className="text-sm mt-1 break-words whitespace-pre-wrap text-left">
+                        {isTranslated ? translatedText : message.content}
+                      </p>
+                    )}
+                  </>
+                ) : primaryMediaUrl ? (
                   <>
                     <img
                       src={getMediaUrl(primaryMediaUrl)!}
@@ -377,7 +412,9 @@ const MessageBubble = memo(function MessageBubble({
                 ) : (
                   <div className="flex items-center gap-2 min-w-[120px] py-4 px-3 rounded-lg bg-zinc-700/50">
                     <Loader2 className="w-5 h-5 animate-spin text-zinc-400 flex-shrink-0" />
-                    <span className="text-sm text-zinc-400">Uploading image...</span>
+                    <span className="text-sm text-zinc-400">
+                      {isFileMedia ? 'Uploading file...' : 'Uploading image...'}
+                    </span>
                   </div>
                 )}
               </div>
@@ -1005,7 +1042,15 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         content,
         msgType: type || 'msg',
         mediaUrls: mediaFile
-          ? [{ url: createTransientBlobUrl(mediaFile, 5 * 60_000), type: type === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
+          ? [{
+              url: createTransientBlobUrl(mediaFile, 5 * 60_000),
+              // A document has no renderable preview, so it must not be typed
+              // 'image' here — the bubble would try to <img> a blob URL for a PDF.
+              type: type === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
+              mimeType: mediaFile.type,
+              name: mediaFile.name,
+              size: mediaFile.size,
+            }]
           : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
         voiceDuration: duration ?? null,
         isRead: false,

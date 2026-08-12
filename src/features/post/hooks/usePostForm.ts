@@ -19,7 +19,6 @@ import { connectSolanaWallet, isValidSolanaAddress } from '@/lib/solana/wallet';
 import { broadcastSolanaMint } from '@/lib/solana/mint';
 import { confirmEvmMint } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
-import { isAllowedAttachment, validateAttachments } from '@/lib/attachments';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
@@ -185,7 +184,6 @@ interface UsePostFormReturn {
     imageInputRef: React.RefObject<HTMLInputElement>;
     videoInputRef: React.RefObject<HTMLInputElement>;
     audioInputRef: React.RefObject<HTMLInputElement>;
-    documentInputRef: React.RefObject<HTMLInputElement>;
     editorRef: React.RefObject<HTMLDivElement>;
   };
 }
@@ -288,7 +286,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
-  const documentInputRef = useRef<HTMLInputElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -298,7 +295,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const hasVideo = media.some(m => m.type === 'video');
   const hasImage = media.some(m => m.type === 'image');
   const hasAudio = media.some(m => m.type === 'audio');
-  const hasDocument = media.some(m => m.type === 'file');
   const isShort = hasVideo && media.some(m => m.type === 'video' && m.duration && m.duration < 90);
   const hasMusicVideo = media.some(m => m.type === 'video' && m.isMusicVideo);
   const isLive = liveMode !== null;
@@ -307,7 +303,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const destinations: string[] = ['Home'];
     if (hasImage) destinations.push('Images');
     if (hasAudio) destinations.push('Music');
-    if (hasDocument) destinations.push('Files');
     if (hasVideo) {
       destinations.push('Videos');
       if (isShort) destinations.push('Shorts');
@@ -316,7 +311,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     if (isLive) destinations.push('Live');
     // Remove duplicate Music entries
     return [...new Set(destinations)];
-  }, [hasImage, hasAudio, hasVideo, hasDocument, isShort, hasMusicVideo, isLive]);
+  }, [hasImage, hasAudio, hasVideo, isShort, hasMusicVideo, isLive]);
 
   const destinations = getPostDestinations();
   const pollIsValid = poll !== null && poll.question.trim().length > 0 && poll.options.filter(o => o.text.trim()).length >= 2;
@@ -334,11 +329,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // Can't add images if there's already a video
     if (hasVideo) {
       toast.error('Remove the video first to add images');
-      return;
-    }
-
-    if (hasDocument) {
-      toast.error('Remove the attached files first to add images');
       return;
     }
 
@@ -360,7 +350,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
-  }, [hasVideo, hasDocument, media]);
+  }, [hasVideo, media]);
     
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -379,11 +369,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // Can't add more than 1 video
     if (hasVideo) {
       toast.error('Only 1 video allowed per post');
-      return;
-    }
-
-    if (hasDocument) {
-      toast.error('Remove the attached files first to add a video');
       return;
     }
 
@@ -482,7 +467,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     } finally {
       setIsGeneratingThumbnail(false);
     }
-  }, [hasImage, hasVideo, hasDocument, text, titleText, editorRef]);
+  }, [hasImage, hasVideo, text, titleText, editorRef]);
 
   const removeMedia = useCallback((index: number) => {
     setMedia(prev => {
@@ -495,11 +480,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, []);
 
   const processAudioFile = useCallback((file: File) => {
-    if (hasDocument) {
-      toast.error('Remove the attached files first to add audio');
-      return;
-    }
-
     const url = URL.createObjectURL(file);
 
     // Move existing text to title field when adding audio
@@ -528,72 +508,23 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         toast.success('Audio uploaded');
       }
     };
-  }, [hasImage, hasDocument, text, titleText, editorRef]);
-
-  /**
-   * Attach documents. A file post carries no other media: the backend maps one
-   * post to one postType, so mixing a PDF with a video has nowhere to go.
-   */
-  const processDocumentFiles = useCallback((files: File[]) => {
-    if (files.length === 0) return;
-
-    if (hasVideo || hasImage || hasAudio) {
-      toast.error('Remove the other media first to attach files');
-      return;
-    }
-
-    setMedia(prev => {
-      const existing = prev.filter(m => m.type === 'file');
-      const check = validateAttachments(
-        files,
-        existing.length,
-        existing.reduce((sum, m) => sum + m.file.size, 0),
-      );
-      if (!check.ok) {
-        toast.error(check.error);
-        return prev;
-      }
-      // No object URL: documents have no preview to render, and creating one
-      // here would leak — removeMedia revokes `preview` unconditionally.
-      return [...prev, ...files.map(file => ({ file, preview: '', type: 'file' as const }))];
-    });
-  }, [hasVideo, hasImage, hasAudio]);
-
-  const handleDocumentSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    processDocumentFiles(Array.from(files));
-    e.target.value = '';
-  }, [processDocumentFiles]);
+  }, [hasImage, text, titleText, editorRef]);
 
   const handleFileDrop = useCallback((files: FileList) => {
     const fileArray = Array.from(files);
-
+    
     // Separate files by type
     const imageFiles = fileArray.filter(f => f.type.startsWith('image/'));
     const videoFiles = fileArray.filter(f => f.type.startsWith('video/'));
     const audioFiles = fileArray.filter(f => f.type.startsWith('audio/'));
-    // Anything left that carries a supported document extension. Matched on the
-    // name rather than f.type because browsers report '' for plenty of these.
-    const documentFiles = fileArray.filter(
-      f => !f.type.startsWith('image/') && !f.type.startsWith('video/')
-        && !f.type.startsWith('audio/') && isAllowedAttachment(f.name),
-    );
-
-    // A dropped document only becomes a file post when it arrived alone —
-    // otherwise the media it was dropped with decides the post type.
-    if (documentFiles.length > 0 && imageFiles.length === 0 && videoFiles.length === 0 && audioFiles.length === 0) {
-      processDocumentFiles(documentFiles);
-      return;
-    }
-
+    
     // Process based on what was dropped
     if (videoFiles.length > 0) {
       processVideoFile(videoFiles[0]);
     } else if (imageFiles.length > 0) {
       processImageFiles(imageFiles);
     }
-
+    
     // Audio can be added alongside images
     if (audioFiles.length > 0 && (hasImage || imageFiles.length > 0)) {
       // Wait a tick for images to be added first
@@ -601,7 +532,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     } else if (audioFiles.length > 0 && !hasVideo && !videoFiles.length) {
       processAudioFile(audioFiles[0]);
     }
-  }, [processVideoFile, processImageFiles, processAudioFile, processDocumentFiles, hasImage, hasVideo]);
+  }, [processVideoFile, processImageFiles, processAudioFile, hasImage, hasVideo]);
 
   const addAudioToMedia = useCallback((index: number, audio: AudioFile) => {
     setMedia(prev => prev.map((m, i) => 
@@ -980,7 +911,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     
     try {
       // Determine post type based on media
-      let postType: 'video' | 'feed-images' | 'feed-simple' | 'feed-file' | 'live' | 'audio' = 'feed-simple';
+      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' = 'feed-simple';
       if (liveMode) {
         postType = 'live';
       } else if (hasVideo) {
@@ -990,8 +921,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         postType = 'audio';
       } else if (hasImage) {
         postType = 'feed-images';
-      } else if (hasDocument) {
-        postType = 'feed-file';
       }
 
       const postingOnSolana = isSolanaChain(chainId);
@@ -1680,7 +1609,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       handleFileDrop,
       removeMedia,
       handleAudioSelect,
-      handleDocumentSelect,
       addAudioToMedia,
       removeAudioFromMedia,
       toggleMusicVideo,
@@ -1717,7 +1645,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       hasVideo,
       hasImage,
       hasAudio,
-      hasDocument,
       isShort,
       destinations,
       canPost,
@@ -1726,7 +1653,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       imageInputRef,
       videoInputRef,
       audioInputRef,
-      documentInputRef,
       editorRef,
     },
   };

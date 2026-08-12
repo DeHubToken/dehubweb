@@ -65,7 +65,7 @@ export interface ReplyPreview {
   _id: string;
   content: string;
   msgType: DmMsgType;
-  mediaUrls: Array<{ url: string; type: string; mimeType: string }>;
+  mediaUrls: Array<{ url: string; type: string; mimeType: string; name?: string; size?: number }>;
   voiceDuration: number | null;
   sender: DmSender;
 }
@@ -76,7 +76,7 @@ export interface DmMessage {
   sender: DmSender;
   content: string;
   msgType: DmMsgType;
-  mediaUrls: Array<{ url: string; type: string; mimeType?: string }>;
+  mediaUrls: Array<{ url: string; type: string; mimeType?: string; name?: string; size?: number }>;
   uploadStatus?: 'pending' | 'success' | 'failed' | 'simple';
   voiceDuration: number | null;
   isRead: boolean;
