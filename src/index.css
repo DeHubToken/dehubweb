@@ -781,6 +781,60 @@ button.cursor-square-item:hover {
 }
 
 /* ==========================================================================
+   Mobile chrome — the sticky page pill rides with the header and bottom nav.
+   ==========================================================================
+   On mobile the top header and the bottom nav already slide away on a
+   scroll-down and come back on a scroll-up (use-scroll-direction). Every page
+   that isn't the home feed also carries a sticky nav pill — the
+   `[data-feed-nav-outer]` bento holding its title, tabs or search box — and
+   that one stayed pinned, so the chrome half-vanished and left the pill
+   hanging in the gap the header used to fill.
+
+   Driven from CSS off a single `data-nav-hidden` flag on <html> (written by
+   StickyNavHideSync) rather than per page: the pages keep the pill markup
+   they already have, PersistentPageCache's twenty-odd mounted pages don't
+   re-render on every direction flip, and a page added later inherits the
+   behaviour for free.
+
+   `-100% - 3rem` because the pill is `sticky top-11`: its own height alone
+   only lifts it back to the header line, and the extra 3rem clears the 2.75rem
+   offset whatever the pill's height turns out to be. Below `lg` only —
+   desktop keeps its chrome, exactly as the home feed does.
+
+   Two escapes:
+   - `[data-nav-hide='off']` for a pill that is not pinned yet. Translating a
+     pill still in normal flow drags it up over the content above it (the
+     profile header); ProfilePage sets this until its stuck sentinel fires.
+   - `[data-jungle-phase]`, whose hand-off animation owns this same transform
+     while the game takes the viewport (styles/jungle-coverage.css). Excluded
+     by selector rather than by specificity so the two can never race.
+
+   The home feed's own pill sets `transform` inline from HomePage — inline wins,
+   so its extra conditions (post overlay open, filter panel down) still hold. */
+@media (max-width: 1023.98px) {
+  [data-feed-nav-outer] {
+    transition: transform 300ms ease-in-out;
+  }
+
+  html:not([data-jungle-phase])[data-nav-hidden='true']
+    [data-feed-nav-outer]:not([data-nav-hide='off']) {
+    transform: translateY(calc(-100% - 3rem));
+  }
+
+  /* Never take a field away from someone typing in it. Explore's pill IS its
+     search box, and an on-screen keyboard opening resizes the viewport, which
+     lands as a scroll-down — enough to hide the pill mid-query.
+
+     Deliberately a separate rule rather than another `:not()` on the selector
+     above: a browser without `:has()` drops the rule it cannot parse, and this
+     way that costs the typing exemption instead of the whole feature. */
+  html:not([data-jungle-phase])[data-nav-hidden='true']
+    [data-feed-nav-outer]:has(:is(input, textarea, [contenteditable]):focus) {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
    Dim Lights — blue-light filter (works on every theme).
    A fixed warm amber sheet multiplied over the whole app, f.lux-style: the
    multiply blend crushes the blue channel (x0.16) and trims green (x0.58)
