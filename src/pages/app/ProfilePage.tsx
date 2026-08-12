@@ -546,15 +546,24 @@ export default function ProfilePage() {
             past the sticky top line the IntersectionObserver flags the pill as
             stuck. */}
         <div ref={stuckSentinelRef} aria-hidden className="h-0" />
-        {/* Anchor the tabs pill above the feed at every breakpoint, exactly like
-            desktop: sticky at the top (below the fixed mobile header on
-            mobile/tablet, top-0 on desktop) with no hide-on-scroll. The old
-            mobile transform yanked the pill up over the profile header while it
-            was still mid-flow — not yet stuck — so it jumped and vanished
-            erratically. Keeping it pinned lets the swallow clip cut content
-            continuously at the pill's top edge, matching the home feed. */}
+        {/* Anchor the tabs pill above the feed at every breakpoint: sticky at
+            the top (below the fixed mobile header on mobile/tablet, top-0 on
+            desktop), and on mobile riding away with the rest of the chrome on a
+            scroll-down like every other page's pill.
+
+            `data-nav-hide` is the gate that makes that safe here. This pill is
+            the only one in the app that starts BELOW something — the profile
+            header — so it spends the first screenful in normal flow. An earlier
+            attempt translated it unconditionally and yanked it up over that
+            header while it was still mid-flow, so it jumped and vanished
+            erratically. Opting out until the stuck sentinel fires means the
+            transform only ever applies to a pill already pinned to the top
+            line, which is the state every other page's pill is in from the
+            first pixel of scroll. Unstuck, it stays put and the swallow clip
+            keeps cutting content continuously at its top edge. */}
         <div
           data-feed-nav-outer
+          data-nav-hide={isTabsStuck ? undefined : 'off'}
           className="sticky top-11 lg:top-0 bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-2 sm:pb-3 lg:pt-2"
         >
         <div data-page-bento className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
