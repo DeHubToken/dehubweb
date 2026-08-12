@@ -117,12 +117,29 @@
 
   /* A module that throws during evaluation never assigns __game, so without
      this the parent would wait out its whole timeout on an error it could have
-     shown immediately. */
+     shown immediately.
+
+     Only errors provably raised by this page's own files are forwarded. The
+     frame is sandboxed without allow-same-origin, and wallet extensions inject
+     scripts into it anyway — MetaMask's cannot reach its extension from an
+     opaque origin and dies with an uncaught "Failed to connect to MetaMask".
+     Unfiltered, that got relayed here and the host printed a wallet error over
+     the boot bar of a game with no wallet code in it, which players read as
+     the reason it "didn't load". Extension stacks name chrome-extension://
+     URLs and cross-origin scripts throw muted errors with no filename, so
+     anchoring on this directory's URL drops both. */
+  var HERE = location.origin + location.pathname.replace(/[^/]*$/, '');
+  function ours(s) {
+    return typeof s === 'string' && s.indexOf(HERE) !== -1;
+  }
   addEventListener('error', function (e) {
-    send('error', (e && e.message) || 'script error');
+    if (!e || !ours(e.filename)) return;
+    send('error', e.message || 'script error');
   });
   addEventListener('unhandledrejection', function (e) {
-    send('error', (e && e.reason && e.reason.message) || 'load failed');
+    var reason = e && e.reason;
+    if (!reason || !ours(reason.stack)) return;
+    send('error', reason.message || 'load failed');
   });
 })();
 </script>
