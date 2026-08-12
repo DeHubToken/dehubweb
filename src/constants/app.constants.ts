@@ -35,7 +35,12 @@ import {
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
+// Order here is the order the MOBILE menu renders in, top to bottom. The
+// desktop rail lifts Home out and prepends it itself (DesktopSidebar), which
+// is why Home used to sit last in this list — harmless on desktop, but it put
+// the app's most-used destination at the bottom of a 28-item mobile sheet.
 export const NAV_ITEMS: NavItem[] = [
+  { icon: Home, label: 'Home', path: '/app' },
   { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Wand2, label: 'Prompt', path: '/prompt' },
@@ -43,9 +48,9 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
   { icon: Users, label: 'Communities', path: '/app/communities' },
   { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },
+  { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
-  { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
   { icon: CalendarDays, label: 'Events', path: '/app/events' },
@@ -63,7 +68,6 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: BarChart3, label: 'Stats', path: '/stats' },
   { icon: BookOpen, label: 'Docs', path: '/docs' },
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
-  { icon: Home, label: 'Home', path: '/app' },
 ];
 
 export const FEED_TABS: SearchTab[] = [
