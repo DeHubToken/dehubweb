@@ -3,6 +3,7 @@ import { Outlet, useLocation, useMatch } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
 import { MobileBottomNav } from './MobileBottomNav';
+import { StickyNavHideSync } from './StickyNavHideSync';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 // Direct import, NOT the '@/hooks' barrel: the barrel re-exports every hook
 // (TV player, etc.), so importing it here would drag all of them — and their
@@ -347,7 +348,10 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       </div>
       
       <MobileBottomNav />
-      
+      {/* Slides each page's sticky nav pill away with the header and bottom
+          nav — one subscription for the whole app, applied in CSS. */}
+      <StickyNavHideSync />
+
       <RadioMiniPlayer />
       <StageMiniPlayer />
       <AudioSpacesModal />
