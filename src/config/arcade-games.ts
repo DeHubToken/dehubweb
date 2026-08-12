@@ -104,6 +104,13 @@ export interface ArcadeGame {
    */
   bootTauMs: number;
   /**
+   * The game paints its own loading screen early enough that the host's boot
+   * readout only ever appears ON TOP of it — two progress bars for one boot.
+   * With this set the host draws no readout at all and the game speaks for
+   * itself; the brief black beat before its first paint is the whole cost.
+   */
+  hasOwnBootScreen?: boolean;
+  /**
    * `postMessage({ source })` value the frame uses to report readiness, when it
    * reports at all. Games with a loading screen of their own do not need one:
    * the player just reveals the frame and lets the game speak for itself.
@@ -195,10 +202,12 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // player's override. There is nothing useful to pass in.
     buildUrl: () => CHESS_URL,
     // The game has a real loading screen with a real count ("carving 3 of 6
-    // figures"), driven by actual download completions. Its own readout is
-    // better than anything modelled out here, so the host's bar is only there
-    // to cover the gap before the frame's first paint — hence the short tau.
+    // figures"), driven by actual download completions, and it paints within
+    // a couple of seconds. The host's modelled bar only ever landed on top of
+    // it — two progress readouts for one boot — so the host draws none here.
+    // tau kept for the field's shape; nothing reads it while the flag is set.
     bootTauMs: 6000,
+    hasOwnBootScreen: true,
     exitSource: 'chess-game',
     // Pointer lock is not requested: the board is driven by clicks and an orbit
     // drag, and grabbing the cursor would only make it harder to aim at a square.

@@ -41,7 +41,6 @@ import { SEOHead } from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
-import { useBootProgress } from '@/lib/game-boot-progress';
 import { setBackgroundPaused, scheduleBackgroundResume } from '@/lib/background-gate';
 import { ARCADE_SANDBOX } from '@/config/arcade-games';
 
@@ -272,8 +271,6 @@ export default function ArcadeChessOnlinePage() {
       scheduleBackgroundResume();
     };
   }, [inMatch]);
-
-  const { pct, showBoot } = useBootProgress(frameReady || !inMatch, 6000);
 
   // ------------------------------------------------------- frame messaging
   const postToFrame = useCallback((message: Record<string, unknown>) => {
@@ -511,14 +508,9 @@ export default function ArcadeChessOnlinePage() {
           allow="fullscreen; autoplay"
           sandbox={ARCADE_SANDBOX}
         />
-        {showBoot ? (
-          <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-black/85">
-            <p className="text-sm font-semibold text-white">King&apos;s Gambit</p>
-            <div className="h-1 w-56 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-white transition-[width] duration-200 ease-out" style={{ width: `${pct}%` }} />
-            </div>
-          </div>
-        ) : null}
+        {/* No host boot readout here: the game paints its own loading screen
+            (the figure count), and in online mode the waiting slate follows
+            it. A second bar on top was the thing being loaded twice. */}
         {waiting ? (
           <div className="absolute inset-x-0 bottom-8 z-20 flex justify-center">
             <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-zinc-900/95 py-2 pl-5 pr-2 ring-1 ring-white/10">

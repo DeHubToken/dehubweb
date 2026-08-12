@@ -76,8 +76,13 @@ export default function ArcadeGamePage() {
   const [fault, setFault] = useState('');
   // A failed preflight counts as "done": there is no boot to track behind the
   // "cannot play" panel, and this stops a timer running for three minutes under
-  // something that is never going to load.
-  const { pct, showBoot, dismiss } = useBootProgress(ready || !cap.ok, game?.bootTauMs ?? 10000);
+  // something that is never going to load. A game that paints its own loading
+  // screen counts as ready from the start for the same reason — the readout
+  // it suppresses must not leave a timer ticking behind it either.
+  const { pct, showBoot, dismiss } = useBootProgress(
+    ready || !cap.ok || Boolean(game?.hasOwnBootScreen),
+    game?.bootTauMs ?? 10000,
+  );
 
   // Readiness bridge, for the games that have one.
   useEffect(() => {
@@ -186,7 +191,7 @@ export default function ArcadeGamePage() {
           pointer-events-none throughout, so it never swallows input the game
           should be getting, and the explicit dismiss is there for the case
           where a game is already playable behind it. */}
-      {cap.ok && showBoot ? (
+      {cap.ok && showBoot && !game.hasOwnBootScreen ? (
         <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-black/85">
           <p className="text-sm font-semibold text-white">{game.title}</p>
           <div
