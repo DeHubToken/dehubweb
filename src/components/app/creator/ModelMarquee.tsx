@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils';
 import alibabaLogo from '@/assets/ai-logos/alibaba.png';
-import anthropicLogo from '@/assets/ai-logos/anthropic.png';
 import blackForestLabsLogo from '@/assets/ai-logos/black-forest-labs.png';
 import bytedanceLogo from '@/assets/ai-logos/bytedance.png';
 import elevenlabsLogo from '@/assets/ai-logos/elevenlabs.png';
@@ -11,10 +10,8 @@ import lumaLogo from '@/assets/ai-logos/luma.png';
 import microsoftLogo from '@/assets/ai-logos/microsoft.png';
 import minimaxLogo from '@/assets/ai-logos/minimax.png';
 import openaiLogo from '@/assets/ai-logos/openai.png';
-import pikaLogo from '@/assets/ai-logos/pika.png';
 import recraftLogo from '@/assets/ai-logos/recraft.png';
 import runwayLogo from '@/assets/ai-logos/runway.png';
-import sunoLogo from '@/assets/ai-logos/suno.png';
 
 type ModelChip = {
   name: string;
@@ -22,60 +19,70 @@ type ModelChip = {
   kind: 'Image' | 'Video' | 'Audio' | 'Text' | '3D';
 };
 
+// Every name below is copied verbatim from a constants catalog (image /
+// video / audio tools / chat / model3d), so the marquee and the pickers
+// always agree. The image, video, 3D and paid-tool entries also price
+// through ai-pricing on the server; chat bills through the assistant's own
+// credits path, and the free ElevenLabs speech task bills nothing. The
+// marquee used to advertise models the composer could not actually select —
+// Sora 2, Suno v5, Pika 2.2 — which made the page look broken the moment
+// someone went hunting for one of them.
 const MODELS: ModelChip[] = [
-  { name: 'Nano Banana', vendor: 'Google', kind: 'Image' },
-  { name: 'Gemini 3 Pro Image', vendor: 'Google', kind: 'Image' },
-  { name: 'Gemini 3.1 Flash Image', vendor: 'Google', kind: 'Image' },
-  { name: 'Gemini 2.5 Flash Image', vendor: 'Google', kind: 'Image' },
-  { name: 'Flux 1.1 Pro', vendor: 'Black Forest Labs', kind: 'Image' },
-  { name: 'Flux Dev', vendor: 'Black Forest Labs', kind: 'Image' },
-  { name: 'Flux Schnell', vendor: 'Black Forest Labs', kind: 'Image' },
-  { name: 'Ideogram 3', vendor: 'Ideogram', kind: 'Image' },
-  { name: 'Recraft V3', vendor: 'Recraft', kind: 'Image' },
-  { name: 'GPT Image 1', vendor: 'OpenAI', kind: 'Image' },
-  { name: 'Kling 2.1', vendor: 'Kling', kind: 'Video' },
-  { name: 'Kling 3.0', vendor: 'Kling', kind: 'Video' },
+  { name: 'Nano Banana Pro', vendor: 'Google', kind: 'Image' },
+  { name: 'Nano Banana 2', vendor: 'Google', kind: 'Image' },
+  { name: 'Gemini 3 Pro', vendor: 'Google', kind: 'Image' },
+  { name: 'Seedream 4.5', vendor: 'ByteDance', kind: 'Image' },
+  { name: 'FLUX.2 Pro', vendor: 'Black Forest Labs', kind: 'Image' },
+  { name: 'FLUX Kontext Max', vendor: 'Black Forest Labs', kind: 'Image' },
+  { name: 'Z-Image Turbo', vendor: 'Alibaba', kind: 'Image' },
+  { name: 'Recraft V4.1', vendor: 'Recraft', kind: 'Image' },
+  { name: 'Ideogram V3', vendor: 'Ideogram', kind: 'Image' },
+  { name: 'Qwen Image', vendor: 'Alibaba', kind: 'Image' },
+  { name: 'Grok Imagine', vendor: 'xAI', kind: 'Image' },
+  { name: 'Seedance 2.5', vendor: 'ByteDance', kind: 'Video' },
+  { name: 'Veo 3.1', vendor: 'Google', kind: 'Video' },
+  { name: 'Kling 3.0 Pro', vendor: 'Kling', kind: 'Video' },
   { name: 'Seedance 2.0', vendor: 'ByteDance', kind: 'Video' },
-  { name: 'Seedance 4K', vendor: 'ByteDance', kind: 'Video' },
-  { name: 'Veo 3', vendor: 'Google', kind: 'Video' },
-  { name: 'Veo 3 Fast', vendor: 'Google', kind: 'Video' },
-  { name: 'Sora 2', vendor: 'OpenAI', kind: 'Video' },
-  { name: 'Runway Gen-4', vendor: 'Runway', kind: 'Video' },
+  { name: 'Veo 3.1 Fast', vendor: 'Google', kind: 'Video' },
+  { name: 'Kling 2.6 Pro', vendor: 'Kling', kind: 'Video' },
+  { name: 'Runway Gen-4 Turbo', vendor: 'Runway', kind: 'Video' },
   { name: 'Luma Ray 2', vendor: 'Luma', kind: 'Video' },
-  { name: 'Pika 2.2', vendor: 'Pika', kind: 'Video' },
-  { name: 'MiniMax Hailuo 02', vendor: 'MiniMax', kind: 'Video' },
-  { name: 'Wan 2.5', vendor: 'Alibaba', kind: 'Video' },
-  { name: 'ElevenLabs v3', vendor: 'ElevenLabs', kind: 'Audio' },
-  { name: 'Suno v5', vendor: 'Suno', kind: 'Audio' },
-  { name: 'MiniMax Music', vendor: 'MiniMax', kind: 'Audio' },
-  { name: 'OpenAI TTS HD', vendor: 'OpenAI', kind: 'Audio' },
-  { name: 'Whisper Large v3', vendor: 'OpenAI', kind: 'Audio' },
-  { name: 'GPT-5.5', vendor: 'OpenAI', kind: 'Text' },
-  { name: 'GPT-5.4', vendor: 'OpenAI', kind: 'Text' },
-  { name: 'GPT-5', vendor: 'OpenAI', kind: 'Text' },
-  { name: 'Gemini 3 Flash', vendor: 'Google', kind: 'Text' },
-  { name: 'Gemini 2.5 Pro', vendor: 'Google', kind: 'Text' },
-  { name: 'Claude Sonnet 4.5', vendor: 'Anthropic', kind: 'Text' },
-  { name: 'Trellis 3D', vendor: 'Microsoft', kind: '3D' },
+  { name: 'MiniMax Hailuo 2.3', vendor: 'MiniMax', kind: 'Video' },
+  { name: 'Wan 2.6', vendor: 'Alibaba', kind: 'Video' },
+  { name: 'PixVerse V5', vendor: 'PixVerse', kind: 'Video' },
+  { name: 'LTX Video', vendor: 'Lightricks', kind: 'Video' },
+  { name: 'Eleven v3', vendor: 'ElevenLabs', kind: 'Audio' },
+  { name: 'Dia TTS', vendor: 'Nari Labs', kind: 'Audio' },
+  { name: 'ACE-Step', vendor: 'ACE Studio', kind: 'Audio' },
+  { name: 'MiniMax Music 2.0', vendor: 'MiniMax', kind: 'Audio' },
+  { name: 'Whisper', vendor: 'OpenAI', kind: 'Audio' },
+  { name: 'Gemini Pro', vendor: 'Google', kind: 'Text' },
+  { name: 'Gemini Flash', vendor: 'Google', kind: 'Text' },
+  { name: 'GPT-5 Mini', vendor: 'OpenAI', kind: 'Text' },
+  { name: 'Grok 4', vendor: 'xAI', kind: 'Text' },
+  { name: 'TRELLIS', vendor: 'Microsoft', kind: '3D' },
+  { name: 'Hunyuan3D 2.0', vendor: 'Tencent', kind: '3D' },
+  { name: 'Tripo 2.5', vendor: 'Tripo', kind: '3D' },
+  { name: 'Rodin (Hyper3D)', vendor: 'Deemos', kind: '3D' },
 ];
 
+// Vendors without an entry here (xAI, PixVerse, Lightricks, Nari Labs,
+// ACE Studio, Tencent, Tripo, Deemos) have no logo asset in ai-logos/ and
+// fall back to the letter chip in VendorLogo.
 const vendorMeta: Record<string, { logo: string; color: string }> = {
   Google: { logo: googleLogo, color: '#4285F4' },
   OpenAI: { logo: openaiLogo, color: '#10A37F' },
-  Anthropic: { logo: anthropicLogo, color: '#D97757' },
   ByteDance: { logo: bytedanceLogo, color: '#111111' },
   ElevenLabs: { logo: elevenlabsLogo, color: '#FFFFFF' },
   Alibaba: { logo: alibabaLogo, color: '#FF6A00' },
   Microsoft: { logo: microsoftLogo, color: '#00A4EF' },
   Kling: { logo: klingLogo, color: '#FF4906' },
   MiniMax: { logo: minimaxLogo, color: '#F23A5D' },
-  Suno: { logo: sunoLogo, color: '#FFFFFF' },
   'Black Forest Labs': { logo: blackForestLabsLogo, color: '#DD0031' },
   Runway: { logo: runwayLogo, color: '#00FF88' },
   Ideogram: { logo: ideogramLogo, color: '#F5A623' },
   Recraft: { logo: recraftLogo, color: '#E5484D' },
   Luma: { logo: lumaLogo, color: '#FDB813' },
-  Pika: { logo: pikaLogo, color: '#FF3366' },
 };
 
 function VendorLogo({ vendor }: { vendor: string }) {
