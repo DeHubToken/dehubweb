@@ -31,6 +31,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.builder-serve]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.chess-match]
+    verify_jwt = false
   [functions.client-logs]
     verify_jwt = false
   [functions.cmc-chart]
