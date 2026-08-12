@@ -33,6 +33,7 @@ import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
 import { StageTTS } from './StageTTS';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
+import { ScheduleStagePanel } from '@/components/app/stages/ScheduleStagePanel';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
@@ -79,6 +80,7 @@ export function AudioSpacesModal() {
   const [view, setView] = useState<View>(initialModalView);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [createMode, setCreateMode] = useState<'now' | 'later'>('now');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
   const [playingStageId, setPlayingStageId] = useState<string | null>(null);
   const [playingStageTitle, setPlayingStageTitle] = useState('');
@@ -644,6 +646,52 @@ export function AudioSpacesModal() {
           {/* ── Create View ─────────────────────────────────────────────── */}
           {view === 'create' && (
             <div className="space-y-4">
+              {/* Now / later. Title and description are shared across both
+                  modes, so switching does not throw away what was typed. */}
+              <div className="flex gap-1 p-1 rounded-xl bg-white/[0.06]">
+                {(['now', 'later'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setCreateMode(mode)}
+                    className={cn(
+                      'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-medium transition-colors',
+                      createMode === mode
+                        ? 'bg-white/15 text-white'
+                        : 'text-white/50 hover:text-white/80',
+                    )}
+                  >
+                    {mode === 'now' ? <Mic className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+                    {mode === 'now' ? 'Go live now' : 'Schedule'}
+                  </button>
+                ))}
+              </div>
+
+              {createMode === 'later' ? (
+                <>
+                  <ScheduleStagePanel
+                    title={title}
+                    setTitle={setTitle}
+                    description={description}
+                    setDescription={setDescription}
+                    onDone={() => {
+                      setTitle('');
+                      setDescription('');
+                      setCreateMode('now');
+                      setView('browse');
+                      closeModal();
+                    }}
+                  />
+                  <Button
+                    variant="ghost"
+                    onClick={() => setView('browse')}
+                    className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Back
+                  </Button>
+                </>
+              ) : (
+              <>
               <div className="space-y-2">
                 <label className="text-sm text-white/60">Stage Title *</label>
                 <Input
@@ -684,12 +732,35 @@ export function AudioSpacesModal() {
                 <ChevronLeft className="w-4 h-4 mr-1" />
                 Back
               </Button>
+              </>
+              )}
             </div>
           )}
 
           {/* ── Live View ───────────────────────────────────────────────── */}
           {(view === 'live' || currentSpace) && currentSpace && (
             <div className="space-y-4 pb-4 relative">
+
+              {/* Host's cover graphic, behind the room.
+                  Deliberately faint and heavily scrimmed: this is a listening
+                  surface with avatars, a waveform and controls stacked over it,
+                  and a graphic bright enough to admire is a graphic that makes
+                  the speaker names hard to read. Bleeds past the content box so
+                  it reads as the room's backdrop rather than a panel inside it.
+                  Only rendered when the host actually set one. */}
+              {currentSpace.cover_image_url && (
+                <div
+                  aria-hidden
+                  className="absolute -inset-x-4 -top-4 bottom-0 -z-10 overflow-hidden pointer-events-none rounded-2xl"
+                >
+                  <img
+                    src={currentSpace.cover_image_url}
+                    alt=""
+                    className="w-full h-full object-cover opacity-25"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black" />
+                </div>
+              )}
 
               {/* Stage Info - top left */}
               <div className="pb-2">

@@ -18,7 +18,10 @@ import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Radio, Clock, Users, Plus, Loader2 } from 'lucide-react';
+import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Link as LinkIcon } from 'lucide-react';
+import { format, formatDistanceToNowStrict } from 'date-fns';
+import { toast } from 'sonner';
+import { dehubLinkFor } from '@/lib/dehub-links';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { useStage } from '@/contexts/StageContext';
@@ -31,12 +34,138 @@ import { supabase } from '@/integrations/supabase/client';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
-type StagesTab = 'live' | 'recorded';
+type StagesTab = 'live' | 'upcoming' | 'recorded';
 
 const STAGES_TABS: { icon: typeof Radio; label: string; value: StagesTab }[] = [
   { icon: Radio, label: 'Live', value: 'live' },
+  { icon: CalendarDays, label: 'Upcoming', value: 'upcoming' },
   { icon: Clock, label: 'Recorded', value: 'recorded' },
 ];
+
+/**
+ * A stage that has been announced but has not started.
+ *
+ * Leads with the cover graphic when the host set one — an announcement in a
+ * grid of announcements is competing for attention, which is the whole reason
+ * the graphic exists. Without one it falls back to the same flat card the live
+ * stages use, so a stage with no art does not look broken.
+ */
+function ScheduledStageCard({
+  space,
+  isHost,
+  isBusy,
+  onStart,
+  onCancel,
+  onShare,
+}: {
+  space: AudioSpace;
+  isHost: boolean;
+  isBusy: boolean;
+  onStart: () => void;
+  onCancel: () => void;
+  onShare: () => void;
+}) {
+  const startsAt = space.scheduled_at ? new Date(space.scheduled_at) : null;
+  const isOverdue = !!startsAt && startsAt.getTime() < Date.now();
+  const avatar =
+    buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
+    buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
+  const hasCover = !!space.cover_image_url;
+
+  return (
+    <div
+      data-page-bento
+      className={cn(
+        'relative rounded-2xl overflow-hidden flex flex-col border border-transparent',
+        hasCover ? '' : 'bg-zinc-900',
+      )}
+    >
+      {hasCover && (
+        <>
+          <img
+            src={space.cover_image_url!}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50" />
+        </>
+      )}
+
+      <div className="relative p-4 flex flex-col flex-1">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
+            <CalendarDays className="w-3 h-3 text-zinc-300" />
+            <span className="text-zinc-300 text-xs font-medium">
+              {isOverdue ? 'Starting soon' : 'Upcoming'}
+            </span>
+          </div>
+          <button
+            onClick={onShare}
+            title="Copy invite link"
+            aria-label="Copy invite link"
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <LinkIcon className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
+            {avatar ? (
+              <img src={avatar} alt="" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
+                {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-zinc-500 text-[10px]">Hosted by</p>
+            <p className="text-white text-xs font-medium truncate">
+              @{space.host_username || space.host_wallet_address?.slice(0, 6)}
+            </p>
+          </div>
+        </div>
+
+        <h3 className="text-white font-semibold text-sm line-clamp-2">{space.title}</h3>
+        {startsAt && (
+          <p className="text-zinc-300 text-xs mt-1.5 flex items-center gap-1.5">
+            <CalendarDays className="w-3 h-3 shrink-0" />
+            {format(startsAt, 'EEE, MMM d · h:mm a')}
+            {!isOverdue && (
+              <span className="text-zinc-500">· in {formatDistanceToNowStrict(startsAt)}</span>
+            )}
+          </p>
+        )}
+        {space.description && (
+          <p className="text-zinc-500 text-xs mt-1 line-clamp-2">{space.description}</p>
+        )}
+
+        {isHost && (
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={onStart}
+              disabled={isBusy}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white text-black hover:bg-white/90 text-sm font-medium transition-colors disabled:opacity-60"
+            >
+              {isBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radio className="w-4 h-4" />}
+              Start now
+            </button>
+            <button
+              onClick={onCancel}
+              disabled={isBusy}
+              className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-sm transition-colors disabled:opacity-60"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function LiveStageCard({
   space,
@@ -114,12 +243,22 @@ function LiveStageCard({
 
 export default function StagesPage() {
   const [activeTab, setActiveTab] = useState<StagesTab>('live');
-  const { liveSpaces, currentSpace, joinSpace, openModal, isLoading } = useStage();
-  const { isAuthenticated } = useAuth();
+  const {
+    liveSpaces,
+    scheduledSpaces,
+    currentSpace,
+    joinSpace,
+    openModal,
+    isLoading,
+    startScheduledSpace,
+    cancelScheduledSpace,
+  } = useStage();
+  const { isAuthenticated, walletAddress } = useAuth();
   const { theme } = useAppTheme();
   // Paper themes need inked waveform bars (white bars vanish on a light card).
   const isPaper = theme === 'light' || theme === 'minimal';
   const [joiningId, setJoiningId] = useState<string | null>(null);
+  const [busyScheduledId, setBusyScheduledId] = useState<string | null>(null);
 
   const isDraggingRef = useRef(false);
   const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } =
@@ -140,6 +279,68 @@ export default function StagesPage() {
     } finally {
       setJoiningId(null);
     }
+  };
+
+  const renderUpcoming = () => {
+    if (scheduledSpaces.length === 0) {
+      return (
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+          <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
+          <h2 className="text-white font-semibold">Nothing scheduled yet</h2>
+          <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
+            Announce a stage ahead of time and it shows up here — with a card
+            people can share before you go live.
+          </p>
+          <button
+            onClick={() => openModal('create')}
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
+          >
+            <CalendarDays className="w-4 h-4" />
+            Schedule a Stage
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
+        {scheduledSpaces.map((space) => (
+          <ScheduledStageCard
+            key={space.id}
+            space={space}
+            isHost={
+              !!walletAddress &&
+              space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase()
+            }
+            isBusy={busyScheduledId === space.id}
+            onStart={async () => {
+              setBusyScheduledId(space.id);
+              try {
+                const ok = await startScheduledSpace(space.id);
+                if (ok) openModal('live');
+              } finally {
+                setBusyScheduledId(null);
+              }
+            }}
+            onCancel={async () => {
+              if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
+              setBusyScheduledId(space.id);
+              try {
+                await cancelScheduledSpace(space.id);
+              } finally {
+                setBusyScheduledId(null);
+              }
+            }}
+            onShare={() => {
+              navigator.clipboard.writeText(dehubLinkFor.stage(space.id)).then(
+                () => toast.success('Link copied'),
+                () => toast.error('Could not copy link'),
+              );
+            }}
+          />
+        ))}
+      </div>
+    );
   };
 
   const renderLive = () => {
@@ -260,9 +461,13 @@ export default function StagesPage() {
             <h2 className="font-bold text-white flex items-center gap-2">
               <BrandIcon src={stagesMicIcon} alt="" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
               Stages
-              {liveSpaces.length > 0 && (
+              {liveSpaces.length > 0 ? (
                 <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length} live)</span>
-              )}
+              ) : scheduledSpaces.length > 0 ? (
+                <span className="text-zinc-500 font-normal text-sm">
+                  ({scheduledSpaces.length} upcoming)
+                </span>
+              ) : null}
             </h2>
             <button
               onClick={() => openModal('create')}
@@ -324,7 +529,11 @@ export default function StagesPage() {
 
       {/* Content */}
       <div ref={contentRef} className="p-2 sm:p-3 pb-32">
-        {activeTab === 'live' ? renderLive() : <PastStagesList />}
+        {activeTab === 'live'
+          ? renderLive()
+          : activeTab === 'upcoming'
+            ? renderUpcoming()
+            : <PastStagesList />}
       </div>
     </div>
   );
