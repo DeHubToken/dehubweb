@@ -1,16 +1,23 @@
 /**
  * DHB Token Configuration
  * =======================
- * DeHub token configuration for Base and BNB Chain.
+ * DeHub token configuration per chain.
  */
 
 import type { ChainId } from '@/components/app/ChainSelector';
 import { supabase } from '@/integrations/supabase/client';
+import {
+  ROBINHOOD_CHAIN_ID,
+  ROBINHOOD_EXPLORER_URL,
+  ROBINHOOD_PUBLIC_RPC,
+  DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
+} from '@/lib/chains/robinhood';
 
 // Chain IDs
 export const BASE_CHAIN_ID = 8453;
 export const BNB_CHAIN_ID = 56;
 export const ETH_CHAIN_ID = 1;
+export { ROBINHOOD_CHAIN_ID };
 
 // Chain-specific configurations
 export interface ChainConfig {
@@ -40,7 +47,12 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
     explorerUrl: 'https://bscscan.com',
     dhbToken: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D', // DHB on BNB
     streamCollection: '0x1065F5922a336C75623B55D22c4a0C760efCe947',
-    streamController: '0x9f8012074d27F8596C0E5038477ACB52057BC934', // Uses same as collection on BNB
+    // Was 0x9f8012…BC934 ("uses same as collection on BNB") — that is Base's
+    // collection address and has no bytecode at all on BSC. Approvals went to
+    // a dead address and sendTip/sendFundsForPPV mined successfully while
+    // moving nothing and emitting no SendFunds, so the backend never credited
+    // the payment. The backend's own map has always had the right address.
+    streamController: '0x6e19ba22da239c46941582530c0ef61400b0e3e6',
   },
   [ETH_CHAIN_ID]: {
     chainId: ETH_CHAIN_ID,
@@ -50,6 +62,18 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
     dhbToken: '0x99BB69Ee1BbFC7706C3ebb79b21C5B698fe58EC0',
     streamCollection: '0x1065F5922a336C75623B55D22c4a0C760efCe947',
     streamController: '0x6e19ba22da239c46941582530c0ef61400b0e3e6',
+  },
+  [ROBINHOOD_CHAIN_ID]: {
+    chainId: ROBINHOOD_CHAIN_ID,
+    name: 'Robinhood',
+    rpcUrl: ROBINHOOD_PUBLIC_RPC,
+    explorerUrl: ROBINHOOD_EXPLORER_URL,
+    // Not bridged yet — see DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS. The chain
+    // stays out of the pickers until VITE_STREAM_* are set, so nothing offers
+    // a token with no code behind it.
+    dhbToken: DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
+    streamCollection: import.meta.env.VITE_STREAM_COLLECTION_ROBINHOOD || '',
+    streamController: import.meta.env.VITE_STREAM_CONTROLLER_ROBINHOOD || '',
   },
 };
 
