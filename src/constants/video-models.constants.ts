@@ -71,13 +71,26 @@ export interface VideoModel {
 export const VIDEO_GENERATION_MARKUP = 0.2; // 20% markup
 
 /**
+ * Per-model markup bands, mirroring MARKUP_OVERRIDES in ai-pricing.ts. This
+ * mirror is load-bearing, not cosmetic: VideoPaywallModal prices its confirm
+ * screen and its can-afford check from these constants, so a band applied on
+ * the server alone would show a price ~8% under the debit and wave through
+ * users the server then rejects with 402.
+ */
+export const VIDEO_MARKUP_OVERRIDES: Record<string, number> = {
+  'veo-3.1-fast': 0.3,
+  'veo-3.1': 0.3,
+};
+
+/**
  * Calculate the final cost in USD with markup
  */
 export const getVideoCostUsd = (model: VideoModel, durationSeconds?: number): number => {
+  const markup = VIDEO_MARKUP_OVERRIDES[model.id] ?? VIDEO_GENERATION_MARKUP;
   if (model.perSecondCostUsd && durationSeconds) {
-    return model.perSecondCostUsd * durationSeconds * (1 + VIDEO_GENERATION_MARKUP);
+    return model.perSecondCostUsd * durationSeconds * (1 + markup);
   }
-  return model.baseCostUsd * (1 + VIDEO_GENERATION_MARKUP);
+  return model.baseCostUsd * (1 + markup);
 };
 
 /**
@@ -326,8 +339,8 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   // fal.ai for the rest — expressed on the basis that provider bills. Where
   // billing is per second the model carries perSecondCostUsd, so a 15s render
   // is not sold at the 5s price; the Veos are flat per video on kie, so they
-  // deliberately carry no perSecondCostUsd. The shared 20% markup is applied
-  // on top by getVideoCostUsd.
+  // deliberately carry no perSecondCostUsd. The default 20% markup — or the
+  // model's VIDEO_MARKUP_OVERRIDES band — is applied on top by getVideoCostUsd.
   // ─────────────────────────────────────────────────────────────────────────
   'veo-3.1': {
     id: 'veo-3.1',
