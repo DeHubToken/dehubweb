@@ -1,11 +1,13 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PenSquare, Sparkles, LogIn, Menu } from 'lucide-react';
+import { PenSquare, Sparkles, LogIn, Menu, Search, X, CornerDownLeft } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
+import { filterNavItems, exploreSearchHref } from './nav-search';
+import { useSearchHistory } from '@/hooks/use-search-history';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
@@ -61,6 +63,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const [renderCompactLogo, setRenderCompactLogo] = useState(isCollapsed);
   const logoRevealTimerRef = useRef<number | null>(null);
 
+  // Menu search. The field is not permanent chrome: it stays out of the way
+  // until the list is actually being scrolled — i.e. until the user is hunting
+  // rather than clicking something they can already see.
+  const [navQuery, setNavQuery] = useState('');
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const { addToHistory } = useSearchHistory();
+
+  // `navQuery` and `searchFocused` are not polish here, they are required:
+  // filtering shortens the list, which drops the scroll container back to
+  // scrollTop 0, which would retract the field mid-keystroke and restore the
+  // full list — and then scrollTop is still 0, so it would sit there flickering.
+  // Once the field has content or focus it stays regardless of scroll.
+  const showSearch = navScrolled || navQuery !== '' || searchFocused;
+
   const updateIndicator = useCallback(() => {
     const panel = sidePanelRef.current;
     const active = activeItemEl;
@@ -97,6 +115,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     const panel = sidePanelRef.current;
     if (panel) observer.observe(panel);
     if (activeItemEl) observer.observe(activeItemEl);
+    // The scroll container too: revealing/retracting the search field animates
+    // its height, which slides every row without resizing any of them. Watching
+    // the container gives the indicator a per-frame re-measure for free.
+    if (scrollRef.current) observer.observe(scrollRef.current);
     return () => observer.disconnect();
   }, [activeItemEl, updateIndicator]);
 
@@ -132,10 +154,24 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    const handleScroll = () => requestAnimationFrame(updateIndicator);
+    const handleScroll = () => {
+      requestAnimationFrame(updateIndicator);
+      // Same 8px threshold the mobile header uses, so a stray wheel tick or a
+      // rubber-band does not flick the field in and out.
+      setNavScrolled(el.scrollTop > 8);
+    };
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
   }, [updateIndicator]);
+
+  // A route change re-renders the rail with a different active row; leaving a
+  // stale filter applied would hide the page the user just landed on.
+  useEffect(() => { setNavQuery(''); }, [location.pathname]);
+
+  // Collapsing hides both the field and the hand-off row (there is no room for
+  // either at 60px), so a query left behind would filter the rail down to a few
+  // icons with nothing on screen explaining why.
+  useEffect(() => { setNavQuery(''); }, [isCollapsed]);
 
   // Preload both logo variants so collapse/expand swaps are instant
   useEffect(() => {
@@ -193,13 +229,62 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     }
   };
 
-  // Filter out Assistant item - we'll render it specially as a NavLink.
-  // Home is pinned to the top of the rail wherever it sits in NAV_ITEMS — it
-  // is first in the list now, but the rail keeps owning that decision.
-  const homeItem = NAV_ITEMS.find((item) => item.path === '/app');
-  const nonHomeItems = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'Assistant');
-  const navItemsWithoutAI = homeItem ? [homeItem, ...nonHomeItems] : nonHomeItems;
+  // The rail's own running order. Home is pinned to the top wherever it sits in
+  // NAV_ITEMS (it is first in the list now, but the rail keeps owning that), and
+  // Assistant is placed directly after Communities because it renders as its own
+  // NavLink rather than a SidebarNavItem.
+  //
+  // Assistant used to be injected inside Communities' render fragment. That is
+  // fine for a fixed list and wrong for a filtered one: searching "assistant"
+  // filters Communities out, and the Assistant link would have gone with it.
+  // Keeping it as a real entry in one ordered array is what makes it findable.
+  const railItems = useMemo(() => {
+    const home = NAV_ITEMS.find((item) => item.path === '/app');
+    const rest = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'Assistant');
+    const assistant = NAV_ITEMS.find((item) => item.label === 'Assistant');
+    const ordered = home ? [home, ...rest] : [...rest];
+    if (assistant) {
+      const afterCommunities = ordered.findIndex((item) => item.label === 'Communities');
+      ordered.splice(afterCommunities >= 0 ? afterCommunities + 1 : ordered.length, 0, assistant);
+    }
+    return ordered;
+  }, []);
+
+  const visibleRailItems = useMemo(
+    () => filterNavItems(railItems, navQuery, t),
+    [railItems, navQuery, t],
+  );
   const isAIActive = location.pathname === '/app/assistant';
+
+  const runFullSearch = useCallback(() => {
+    const query = navQuery.trim();
+    if (!query) return;
+    addToHistory(query);
+    navigate(exploreSearchHref(query));
+    setNavQuery('');
+    searchInputRef.current?.blur();
+  }, [navQuery, addToHistory, navigate]);
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      runFullSearch();
+      return;
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      if (navQuery) setNavQuery('');
+      else searchInputRef.current?.blur();
+    }
+  };
+
+  // Collapsed, the field is a 36px chip the size of a nav icon — there is no
+  // room for an input. Tapping it opens the rail and lands the caret in the
+  // field that has just appeared.
+  const handleCollapsedSearchClick = () => {
+    handleToggleCollapse();
+    window.setTimeout(() => searchInputRef.current?.focus(), 80);
+  };
 
   // Get user display info for avatar
   const displayName = user?.displayName || user?.username || 'Anonymous';
@@ -296,14 +381,18 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - scrollable */}
-        <motion.div ref={sidePanelRef} data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden contain-paint">
+        <motion.div ref={sidePanelRef} data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden contain-paint flex flex-col">
           {/* Active glass overlay indicator - tracks the active item's on-screen
               position (via getBoundingClientRect, which is always current, so it
               naturally follows scrolling). Clipped at this panel's own edges —
               matching where the scrollable list visually starts/ends — so it cuts
               off at top/bottom like the text instead of floating past it, while
               still bleeding freely around each item mid-list for the shadow. */}
-          {indicatorRect.ready && (
+          {/* activeItemEl guard: filtering can take the active row out of the
+              list, and updateIndicator bails when there is nothing to measure —
+              which would otherwise leave the glass frozen over whatever row has
+              since slid into that slot. */}
+          {indicatorRect.ready && activeItemEl && (
             <motion.div
               data-sidebar-active-indicator
               className={cn(
@@ -323,49 +412,87 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             />
           )}
+          {/* Menu search — revealed by scrolling the list, retracted when it
+              returns to the top. Animated through grid-template-rows so the
+              row's own height decides the travel; no hardcoded pixel value to
+              drift when a theme changes the field's padding. */}
+          <div
+            className={cn(
+              "relative z-10 grid transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none",
+              showSearch ? "opacity-100" : "opacity-0 pointer-events-none"
+            )}
+            style={{ gridTemplateRows: showSearch ? '1fr' : '0fr' }}
+            aria-hidden={!showSearch}
+          >
+            <div className="overflow-hidden">
+              <div className={cn("p-1 pb-0", !isCollapsed && "lg:px-2.5 lg:pt-2.5")}>
+                {isCollapsed ? (
+                  <button
+                    type="button"
+                    onClick={handleCollapsedSearchClick}
+                    tabIndex={showSearch ? 0 : -1}
+                    aria-label={t('sidebar.searchMenu')}
+                    className={cn(
+                      "w-9 h-9 mx-auto rounded-xl flex items-center justify-center transition-colors",
+                      isLightTheme
+                        ? "bg-black/5 border border-black/10 hover:bg-black/10"
+                        : "bg-white/5 border border-white/10 hover:bg-white/10"
+                    )}
+                  >
+                    <Search className="w-[18px] h-[18px] text-zinc-400" />
+                  </button>
+                ) : (
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={navQuery}
+                      onChange={(e) => setNavQuery(e.target.value)}
+                      onFocus={() => setSearchFocused(true)}
+                      onBlur={() => setSearchFocused(false)}
+                      onKeyDown={handleSearchKeyDown}
+                      tabIndex={showSearch ? 0 : -1}
+                      placeholder={t('sidebar.searchMenu')}
+                      aria-label={t('sidebar.searchMenu')}
+                      className={cn(
+                        "w-full h-[38px] pl-9 pr-8 rounded-xl text-[14px] outline-none transition-colors",
+                        desktopNavTextColor,
+                        isLightTheme
+                          ? "bg-black/5 border border-black/10 placeholder:text-zinc-500 focus:border-black/25"
+                          : "bg-white/5 border border-white/10 placeholder:text-zinc-500 focus:border-white/30"
+                      )}
+                    />
+                    {navQuery && (
+                      <button
+                        type="button"
+                        onClick={() => { setNavQuery(''); searchInputRef.current?.focus(); }}
+                        aria-label={t('sidebar.clearSearch')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                      >
+                        <X className="w-[14px] h-[14px]" />
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
           <div
             ref={scrollRef}
             className={cn(
               // overscroll-contain: without it, reaching the end of the nav list
               // chains the wheel to the document and the feed scrolls out from
               // under the cursor while the user is still working the sidebar.
-              "p-1 space-y-2 flex flex-col items-center overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-invisible h-full",
+              "p-1 space-y-2 flex flex-col items-center overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-invisible flex-1 min-h-0",
               !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
             )}
           >
-          {navItemsWithoutAI.map((item) => {
-            const isHomeItem = item.path === '/app';
-            const isActive = !item.external && !item.action && (
-              isHomeItem
-                ? isHomePath(location.pathname)
-                : location.pathname.startsWith(item.path)
-            );
-            const isProfileItem = item.label === 'Profile';
-            const isNotificationsItem = item.label === 'Notifications';
-            const isCommunitiesItem = item.label === 'Communities';
-            const isMessagesItem = item.label === 'Messages';
-            const isAssistantAnchor = item.label === 'Communities';
-            const isStagesItem = item.action === 'open-stages';
-
-            return (
-              <React.Fragment key={item.label}>
-                <SidebarNavItem
-                  item={item}
-                  isActive={isActive}
-                  isHome={isHomeItem}
-                  currentPath={location.pathname}
-                  variant="desktop"
-                  collapsed={true}
-                  forceCollapsed={isCollapsed}
-                  onClick={isStagesItem ? () => openStageModal() : isProfileItem ? handleProfileClick : undefined}
-                  avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
-                  avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
-                  notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isMessagesItem ? dmUnread : undefined}
-                  layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
-                  registerActiveRef={isActive ? setActiveItemEl : undefined}
-                />
-                {isAssistantAnchor && (
+          {visibleRailItems.map((item) => {
+            if (item.label === 'Assistant') {
+              return (
                 <NavLink
+                  key={item.label}
                   ref={isAIActive ? setActiveItemEl : undefined}
                   to="/app/assistant"
                   onPointerEnter={() => preloadRoute('/app/assistant')}
@@ -379,21 +506,76 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     isAIActive ? 'font-semibold' : isLightTheme ? 'hover:font-semibold' : 'hover:bg-zinc-800/50'
                   )}
                 >
-                    <div className={cn(
-                      "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
-                      isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
-                    )}>
-                      <Sparkles className="w-5 h-5" />
-                    </div>
-                    <span className={cn("relative z-10 truncate", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.assistant')}</span>
-                  </NavLink>
-                )}
-              </React.Fragment>
+                  <div className={cn(
+                    "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+                    isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
+                  )}>
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <span className={cn("relative z-10 truncate", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.assistant')}</span>
+                </NavLink>
+              );
+            }
+
+            const isHomeItem = item.path === '/app';
+            const isActive = !item.external && !item.action && (
+              isHomeItem
+                ? isHomePath(location.pathname)
+                : location.pathname.startsWith(item.path)
+            );
+            const isProfileItem = item.label === 'Profile';
+            const isNotificationsItem = item.label === 'Notifications';
+            const isCommunitiesItem = item.label === 'Communities';
+            const isMessagesItem = item.label === 'Messages';
+            const isStagesItem = item.action === 'open-stages';
+
+            return (
+              <SidebarNavItem
+                key={item.label}
+                item={item}
+                isActive={isActive}
+                isHome={isHomeItem}
+                currentPath={location.pathname}
+                variant="desktop"
+                collapsed={true}
+                forceCollapsed={isCollapsed}
+                onClick={isStagesItem ? () => openStageModal() : isProfileItem ? handleProfileClick : undefined}
+                avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
+                avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
+                notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isMessagesItem ? dmUnread : undefined}
+                layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
+                registerActiveRef={isActive ? setActiveItemEl : undefined}
+              />
             );
           })}
+          {navQuery && visibleRailItems.length === 0 && !isCollapsed && (
+            <p className="px-2.5 py-3 text-[13px] text-zinc-500">{t('sidebar.noMenuMatches')}</p>
+          )}
           </div>
-          {/* Bottom fade overlay */}
-          <div data-sidebar-fade className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
+          {/* Hand-off. Always the last thing in the panel while a query is
+              typed, so the field is never a dead end: whatever was typed can be
+              run as a real search on Explore. */}
+          {navQuery && !isCollapsed && (
+            <button
+              type="button"
+              onClick={runFullSearch}
+              className={cn(
+                "relative z-20 flex w-full items-center gap-2.5 px-3.5 py-3 text-left text-[13px] border-t transition-colors",
+                isLightTheme
+                  ? "border-black/10 text-zinc-600 hover:text-black hover:bg-black/5"
+                  : "border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
+              )}
+            >
+              <Search className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">{t('sidebar.searchDehubFor', { query: navQuery.trim() })}</span>
+              <CornerDownLeft className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-60" />
+            </button>
+          )}
+          {/* Bottom fade overlay — suppressed while filtering, where the list is
+              short and the hand-off row marks the end instead. */}
+          {!navQuery && (
+            <div data-sidebar-fade className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
+          )}
         </motion.div>
 
         {/* Post / Login Button — w-full with no side padding so the button's box
