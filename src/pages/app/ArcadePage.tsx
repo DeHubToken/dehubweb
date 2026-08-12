@@ -83,6 +83,11 @@ export default function ArcadePage() {
       <SEOHead
         title={t('arcade.seoTitle')}
         description={t('arcade.seoDescription')}
+        // The same card CLOUDFLARE_WORKER_SEO.js serves crawlers for /arcade.
+        // Both variants must name one image: the worker declares it 1200x630,
+        // and a scraper that ran the SPA instead would inherit that claim for
+        // whatever this said.
+        image="https://dehub.io/og/arcade.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',

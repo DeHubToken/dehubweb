@@ -56,6 +56,7 @@ const OG_CARD_ROUTES = new Set([
   'top-100', 'music', 'tv',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk',
+  'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
