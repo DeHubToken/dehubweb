@@ -68,6 +68,18 @@ export const AI_PLANS: Record<string, AiPlan> = {
 export const FREE_GRANT_DHB = 1_000;
 
 /**
+ * Daily allowance: $0.40 of generation per calendar day at the peg.
+ *
+ * Unclaimed days accrue — someone who signs in once a week collects the whole
+ * week, so an occasional visitor is not punished for not opening the app
+ * daily. The accrual is capped at 30 days so a wallet that goes dormant for a
+ * year cannot mint unbounded credit on its return. Paid for out of the
+ * generation margins in ai-pricing.ts.
+ */
+export const DAILY_GRANT_DHB = 400;
+export const DAILY_ACCRUAL_CAP_DHB = 12_000;
+
+/**
  * DHB to grant for a paid invoice.
  *
  * The legacy dehub_extra / dehub_family / dehub_xl tiers are the older Premium
