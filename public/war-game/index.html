@@ -82,10 +82,21 @@
          * the host models it rather than reporting it.
          *
          * What is left is the part that could never be modelled: the moment the
-         * engine is actually up, and any error that stops it getting there. */
+         * engine is actually up, and any error that stops it getting there.
+         *
+         * Only errors raised by this page's own files are forwarded — see the
+         * matching filter in jungle-game/index.html for the full story. The
+         * short version: the frame is sandboxed without allow-same-origin,
+         * wallet extensions inject into it anyway and crash against the opaque
+         * origin, and relaying those crashes put "Fault: Script error." over
+         * the boot bar of a game that was loading fine. Extension errors carry
+         * chrome-extension:// filenames or arrive muted with none at all, so
+         * anchoring on this directory's URL drops them. */
 
+        var HERE = location.origin + location.pathname.replace(/[^/]*$/, '');
         window.addEventListener('error', function (e) {
-          send('error', (e && e.message) || 'unknown error');
+          if (!e || typeof e.filename !== 'string' || e.filename.indexOf(HERE) === -1) return;
+          send('error', e.message || 'unknown error');
         });
         send('booting', 'module queued');
       })();
