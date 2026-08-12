@@ -21,9 +21,20 @@ import type {
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+/** What the schedule form collects. */
+export interface ScheduleSpaceInput {
+  title: string;
+  description?: string;
+  /** ISO timestamp for the intended start. */
+  scheduledAt: string;
+  /** Public URL of an already-uploaded cover graphic. */
+  coverImageUrl?: string | null;
+}
+
 interface StageContextType {
   // State
   liveSpaces: AudioSpace[];
+  scheduledSpaces: AudioSpace[];
   currentSpace: AudioSpace | null;
   participants: SpaceParticipant[];
   handRequests: RaiseHandRequest[];
@@ -44,6 +55,10 @@ interface StageContextType {
 
   // Actions
   createSpace: (title: string, description?: string) => Promise<AudioSpace | null>;
+  scheduleSpace: (input: ScheduleSpaceInput) => Promise<AudioSpace | null>;
+  startScheduledSpace: (spaceId: string) => Promise<boolean>;
+  cancelScheduledSpace: (spaceId: string) => Promise<void>;
+  refreshScheduledSpaces: () => Promise<void>;
   joinSpace: (spaceId: string) => Promise<boolean>;
   leaveSpace: () => Promise<void>;
   endSpace: () => Promise<void>;
@@ -126,6 +141,37 @@ export function useLiveSpaces(): AudioSpace[] {
   return useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
 }
 
+// ─── Scheduled spaces store ─────────────────────────────────────────────────
+// Same shape as the live-spaces store above, for the same reason: the upcoming
+// shelf appears on the stages page, the music carousel and (once scheduled) any
+// card in the feed, and none of those should run their own query.
+
+let scheduledSpacesStore: AudioSpace[] = [];
+const scheduledSpacesSubscribers = new Set<() => void>();
+
+function publishScheduledSpaces(spaces: AudioSpace[]) {
+  scheduledSpacesStore = spaces;
+  scheduledSpacesSubscribers.forEach(cb => cb());
+}
+
+function subscribeScheduledSpaces(cb: () => void) {
+  scheduledSpacesSubscribers.add(cb);
+  return () => scheduledSpacesSubscribers.delete(cb);
+}
+
+/** Upcoming (scheduled) stages, soonest first. */
+export function useScheduledSpaces(): AudioSpace[] {
+  return useSyncExternalStore(subscribeScheduledSpaces, () => scheduledSpacesStore);
+}
+
+/**
+ * How long a scheduled stage stays on the upcoming shelf after its start time
+ * passes. Hosts run late, and a stage vanishing from the list at the exact
+ * minute it was due — while people are still arriving from the link — reads as
+ * the feature being broken.
+ */
+const SCHEDULED_GRACE_MS = 2 * 60 * 60 * 1000;
+
 // ─── Modal opener (subscription-free) ───────────────────────────────────────
 // Several widely-mounted components (PostActionBar renders once PER POST in
 // the feed) only ever need to OPEN the stages modal. Consuming the full stage
@@ -146,6 +192,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // Stage state
   const [liveSpaces, setLiveSpaces] = useState<AudioSpace[]>([]);
+  const [scheduledSpaces, setScheduledSpaces] = useState<AudioSpace[]>([]);
   const [currentSpace, setCurrentSpace] = useState<AudioSpace | null>(null);
   const [participants, setParticipants] = useState<SpaceParticipant[]>([]);
   const [handRequests, setHandRequests] = useState<RaiseHandRequest[]>([]);
@@ -196,6 +243,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** Avoid re-subscribing realtime on every currentSpace object change (leaveSpace depends on currentSpace). */
   const leaveSpaceRef = useRef<() => Promise<void>>(async () => {});
   const upgradeSpeakerRef = useRef<() => Promise<void>>(async () => {});
+  /** startScheduledSpace falls back to a plain rejoin, and is defined above joinSpace. */
+  const joinSpaceRef = useRef<(spaceId: string) => Promise<boolean>>(async () => false);
 
   // ─── Modal controls ──────────────────────────────────────────────────────
 
@@ -323,6 +372,32 @@ export function StageProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  /**
+   * Upcoming stages, soonest first.
+   *
+   * Stages that came and went without the host ever starting them are dropped
+   * from the list after a grace period rather than deleted — the row stays
+   * reachable by link (so a shared card still resolves) but stops occupying
+   * the upcoming shelf forever.
+   */
+  const refreshScheduledSpaces = useCallback(async () => {
+    try {
+      const cutoff = new Date(Date.now() - SCHEDULED_GRACE_MS).toISOString();
+      const { data, error } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'scheduled')
+        .gte('scheduled_at', cutoff)
+        .order('scheduled_at', { ascending: true });
+      if (error) throw error;
+      const spaces = (data as AudioSpace[]) || [];
+      setScheduledSpaces(spaces);
+      publishScheduledSpaces(spaces);
+    } catch (err) {
+      console.error('Error fetching scheduled stages:', err);
+    }
+  }, []);
+
   // ─── Agora helpers ───────────────────────────────────────────────────────
 
   const getAgoraToken = async (
@@ -429,6 +504,56 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // ─── Create stage ────────────────────────────────────────────────────────
 
+  /**
+   * Put the host on the air for a stage row that already exists.
+   *
+   * Shared by "go live now" and "start the stage I scheduled", because from
+   * the Agora side those are the same operation — the only difference is where
+   * the row goes back to if connecting fails. A stage created on the spot is
+   * dead if it never connected, so it rolls back to `ended`; a scheduled one
+   * must go back to `scheduled` or a failed start would quietly destroy an
+   * announcement people are already holding a link to.
+   */
+  const goLiveAsHost = useCallback(
+    async (space: AudioSpace, rollbackStatus: 'ended' | 'scheduled'): Promise<AudioSpace> => {
+      await supabase.from('space_participants').insert({
+        space_id: space.id,
+        wallet_address: walletAddress,
+        username: user?.username || null,
+        avatar: user?.avatarImageUrl || null,
+        role: 'host',
+        is_muted: true,
+      });
+
+      const rollback = async () => {
+        await supabase
+          .from('audio_spaces')
+          .update({ status: rollbackStatus })
+          .eq('id', space.id);
+      };
+
+      const tokenData = await getAgoraToken(space.channel_name, 'publisher');
+      if (!tokenData) {
+        await rollback();
+        throw new Error('Failed to get audio token');
+      }
+
+      const connected = await initializeAgora(tokenData, 'host');
+      if (!connected) {
+        await rollback();
+        throw new Error('Failed to connect to audio');
+      }
+
+      setCurrentSpace(space);
+      setMyRole('host');
+      hasHandledStageEndRef.current = false;
+      // Start recording (host side — captures all audio they hear)
+      startRecording(space.id);
+      return space;
+    },
+    [walletAddress, user, startRecording],
+  );
+
   const createSpace = useCallback(
     async (title: string, description?: string): Promise<AudioSpace | null> => {
       if (!walletAddress) { toast.error('Please log in first'); return null; }
@@ -453,32 +578,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .single();
         if (error) throw error;
 
-        await supabase.from('space_participants').insert({
-          space_id: space.id,
-          wallet_address: walletAddress,
-          username: user?.username || null,
-          avatar: user?.avatarImageUrl || null,
-          role: 'host',
-          is_muted: true,
-        });
-
-        const tokenData = await getAgoraToken(channelName, 'publisher');
-        if (!tokenData) {
-          await supabase.from('audio_spaces').update({ status: 'ended' }).eq('id', space.id);
-          throw new Error('Failed to get audio token');
-        }
-
-        const connected = await initializeAgora(tokenData, 'host');
-        if (!connected) {
-          await supabase.from('audio_spaces').update({ status: 'ended' }).eq('id', space.id);
-          throw new Error('Failed to connect to audio');
-        }
-
-        setCurrentSpace(space as AudioSpace);
-        setMyRole('host');
-        hasHandledStageEndRef.current = false;
-        // Start recording (host side — captures all audio they hear)
-        startRecording(space.id);
+        await goLiveAsHost(space as AudioSpace, 'ended');
         toast.success("Stage created! You're now live.");
         return space as AudioSpace;
       } catch (err) {
@@ -491,7 +591,131 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [walletAddress, user],
+    [walletAddress, user, goLiveAsHost],
+  );
+
+  // ─── Schedule a stage for later ──────────────────────────────────────────
+
+  const scheduleSpace = useCallback(
+    async (input: ScheduleSpaceInput): Promise<AudioSpace | null> => {
+      if (!walletAddress) { toast.error('Please log in first'); return null; }
+      setIsLoading(true);
+      try {
+        // The channel name is minted now and kept for the whole life of the
+        // stage, so the link handed out today is the room people walk into.
+        const channelName = `stage_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+        const { data: space, error } = await supabase
+          .from('audio_spaces')
+          .insert({
+            channel_name: channelName,
+            title: input.title,
+            description: input.description,
+            host_wallet_address: walletAddress,
+            host_username: user?.username || null,
+            host_avatar: user?.avatarImageUrl || null,
+            status: 'scheduled',
+            scheduled_at: input.scheduledAt,
+            cover_image_url: input.coverImageUrl ?? null,
+            speaker_count: 0,
+            listener_count: 0,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+
+        await refreshScheduledSpaces();
+        return space as AudioSpace;
+      } catch (err) {
+        console.error('Error scheduling stage:', err);
+        toast.error('Failed to schedule stage');
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [walletAddress, user, refreshScheduledSpaces],
+  );
+
+  /** Take a stage that was scheduled earlier live now. Host only. */
+  const startScheduledSpace = useCallback(
+    async (spaceId: string): Promise<boolean> => {
+      if (!walletAddress) { toast.error('Please log in first'); return false; }
+      setIsLoading(true);
+      try {
+        const { data: existing, error: readErr } = await supabase
+          .from('audio_spaces')
+          .select('*')
+          .eq('id', spaceId)
+          .single();
+        if (readErr || !existing) throw new Error('Stage not found');
+        if (existing.host_wallet_address !== walletAddress) {
+          toast.error('Only the host can start this stage');
+          return false;
+        }
+        if (existing.status === 'live') {
+          // Already running — treat "start" as "rejoin" rather than erroring.
+          return await joinSpaceRef.current(spaceId);
+        }
+        if (existing.status !== 'scheduled') {
+          toast.error('This stage has already ended');
+          return false;
+        }
+
+        const { data: space, error } = await supabase
+          .from('audio_spaces')
+          .update({
+            status: 'live',
+            // started_at defaulted to the moment the row was inserted, which
+            // for a scheduled stage is whenever it was announced. Stamp the
+            // real start so duration and the recorded list stay honest.
+            started_at: new Date().toISOString(),
+            speaker_count: 1,
+          })
+          .eq('id', spaceId)
+          .select()
+          .single();
+        if (error) throw error;
+
+        await goLiveAsHost(space as AudioSpace, 'scheduled');
+        await refreshScheduledSpaces();
+        toast.success("You're now live.");
+        return true;
+      } catch (err) {
+        console.error('Error starting scheduled stage:', err);
+        if (err instanceof Error && !err.message.includes('token')) {
+          toast.error('Failed to start stage');
+        }
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [walletAddress, goLiveAsHost, refreshScheduledSpaces],
+  );
+
+  /** Call off a scheduled stage. Host only; the row is removed outright. */
+  const cancelScheduledSpace = useCallback(
+    async (spaceId: string): Promise<void> => {
+      if (!walletAddress) return;
+      try {
+        const { error } = await supabase
+          .from('audio_spaces')
+          .delete()
+          .eq('id', spaceId)
+          .eq('status', 'scheduled')
+          // The delete policy compares the host wallet to this header, and the
+          // plain client never sends it — without this the row silently stays.
+          .setHeader('x-wallet-address', walletAddress.toLowerCase());
+        if (error) throw error;
+        await refreshScheduledSpaces();
+        toast.success('Stage cancelled');
+      } catch (err) {
+        console.error('Error cancelling scheduled stage:', err);
+        toast.error('Failed to cancel stage');
+      }
+    },
+    [walletAddress, refreshScheduledSpaces],
   );
 
   // ─── Join stage ──────────────────────────────────────────────────────────
@@ -507,6 +731,19 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .eq('id', spaceId)
           .single();
         if (spaceError || !space) throw new Error('Stage not found');
+
+        // A stage that is not live has no channel to join. Without this the
+        // invite link for an ended stage opened an Agora connection to an empty
+        // room and sat there looking connected; with scheduled stages it would
+        // also let anyone walk into a room before its host had started it.
+        if (space.status !== 'live') {
+          toast.error(
+            space.status === 'scheduled'
+              ? "This stage hasn't started yet"
+              : 'This stage has ended',
+          );
+          return false;
+        }
 
         // Determine role: if this user is the host, preserve host/speaker role on rejoin
         const isHost = space.host_wallet_address === walletAddress;
@@ -665,6 +902,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   leaveSpaceRef.current = leaveSpace;
   upgradeSpeakerRef.current = upgradeSpeaker;
+  joinSpaceRef.current = joinSpace;
 
   // ─── End stage (host) ────────────────────────────────────────────────────
 
@@ -1090,13 +1328,20 @@ export function StageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Live spaces: one fetch on mount + debounced refetch on realtime (avoids N requests per burst)
+  //
+  // The upcoming list rides the same channel and the same debounce. Every event
+  // that changes one can change the other — scheduling inserts a row, starting
+  // one moves it from scheduled to live — and a second subscription on the same
+  // table would just double the traffic to learn the same thing.
   useEffect(() => {
     void refreshSpaces();
+    void refreshScheduledSpaces();
     const scheduleLiveSpacesRefresh = () => {
       if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);
       liveSpacesRefreshDebounceRef.current = setTimeout(() => {
         liveSpacesRefreshDebounceRef.current = null;
         void refreshSpaces();
+        void refreshScheduledSpaces();
       }, 750);
     };
     const channel = supabase
@@ -1107,7 +1352,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);
       supabase.removeChannel(channel);
     };
-  }, [refreshSpaces]);
+  }, [refreshSpaces, refreshScheduledSpaces]);
 
   // Memoized: the provider re-renders on every participant/realtime event
   // while a space is live — an inline value object handed every consumer a
@@ -1116,6 +1361,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const contextValue = useMemo(
     () => ({
       liveSpaces,
+      scheduledSpaces,
       currentSpace,
       participants,
       handRequests,
@@ -1131,6 +1377,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
       closeModal,
       initialModalView,
       createSpace,
+      scheduleSpace,
+      startScheduledSpace,
+      cancelScheduledSpace,
+      refreshScheduledSpaces,
       joinSpace,
       leaveSpace,
       endSpace,
@@ -1145,9 +1395,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
       stopInject,
     }),
     [
-      liveSpaces, currentSpace, participants, handRequests, isLoading,
+      liveSpaces, scheduledSpaces, currentSpace, participants, handRequests, isLoading,
       isConnected, isMuted, myRole, hasRaisedHand, voiceEffect, setVoiceEffect,
       isModalOpen, openModal, closeModal, initialModalView, createSpace,
+      scheduleSpace, startScheduledSpace, cancelScheduledSpace, refreshScheduledSpaces,
       joinSpace, leaveSpace, endSpace, toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
       stopInject,
