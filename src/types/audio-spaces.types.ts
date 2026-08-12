@@ -1,5 +1,10 @@
 export type SpaceRole = 'host' | 'speaker' | 'listener';
-export type SpaceStatus = 'live' | 'ended';
+/**
+ * `scheduled` is a stage announced ahead of time — the row exists and is
+ * shareable, but nobody is in the room and no Agora channel has been opened.
+ * It becomes `live` when the host actually starts it.
+ */
+export type SpaceStatus = 'scheduled' | 'live' | 'ended';
 export type HandRequestStatus = 'pending' | 'approved' | 'rejected';
 
 export interface AudioSpace {
@@ -18,6 +23,10 @@ export interface AudioSpace {
   created_at: string;
   recording_url?: string | null;
   total_listens?: number;
+  /** Intended start time — set only on `scheduled` stages. */
+  scheduled_at?: string | null;
+  /** Optional cover graphic, backing the announcement card and the live room. */
+  cover_image_url?: string | null;
 }
 
 export interface SpaceParticipant {

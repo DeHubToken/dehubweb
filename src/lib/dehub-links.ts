@@ -32,7 +32,8 @@ export type DehubLinkKind =
   | 'communityInvite'
   | 'store'
   | 'listing'
-  | 'event';
+  | 'event'
+  | 'stage';
 
 export interface DehubLinkMatch {
   kind: DehubLinkKind;
@@ -47,6 +48,7 @@ export interface DehubLinkMatch {
   storeId?: string;
   listingId?: string;
   eventNumber?: string;
+  stageId?: string;
 }
 
 // ── Hosts ───────────────────────────────────────────────────────────────────
@@ -91,7 +93,9 @@ const RESERVED_ROOT_SEGMENTS = new Set([
 // Host-qualified URLs, with or without a scheme: dehub.io/app/post/1
 const ABSOLUTE_URL_RE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?\/[^\s<>"'`]*/gi;
 // Bare in-app paths, which can only be ours: /app/post/1
-const BARE_PATH_RE = /\/(?:app|communities)\/[^\s<>"'`]*/gi;
+// `stage` sits alongside the /app prefix rather than under it because the
+// invite route is top-level — App.tsx routes /stage/:id, not /app/stage/:id.
+const BARE_PATH_RE = /\/(?:app|communities|stage)\/[^\s<>"'`]*/gi;
 
 // A URL at the end of a sentence carries the punctuation with it.
 const TRAILING_PUNCTUATION_RE = /[.,;:!?)\]}>"']+$/;
@@ -188,6 +192,16 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
   if (isAppScoped && scoped[0] === 'events' && scoped[1]) {
     if (!/^\d+$/.test(scoped[1])) return null;
     return { ...base, kind: 'event', eventNumber: scoped[1] };
+  }
+
+  // ── /stage/:id — the invite / announcement link ──
+  //
+  // Deliberately not app-scoped: the route is top-level. Accepted either way
+  // so a hand-typed /app/stage/... still cards up rather than falling through
+  // to the profile branch.
+  if (scoped[0] === 'stage' && scoped[1]) {
+    if (!/^[a-fA-F0-9-]{8,}$/.test(scoped[1])) return null;
+    return { ...base, kind: 'stage', stageId: scoped[1] };
   }
 
   // ── /:username ──
@@ -303,6 +317,7 @@ export const dehubLinkFor = {
   listing: (storeId: string, listingId: string) =>
     `${shareOrigin()}/app/stores/${storeId}?listing=${listingId}`,
   event: (eventNumber: string | number) => `${shareOrigin()}/app/events/${eventNumber}`,
+  stage: (stageId: string) => `${shareOrigin()}/stage/${encodeURIComponent(stageId)}`,
 };
 
 /** Human label for a link kind — used by share sheets and fallback chips. */
@@ -315,5 +330,6 @@ export function dehubLinkLabel(kind: DehubLinkKind): string {
     case 'store': return 'store';
     case 'listing': return 'item';
     case 'event': return 'event';
+    case 'stage': return 'stage';
   }
 }
