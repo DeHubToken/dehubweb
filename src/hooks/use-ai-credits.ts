@@ -127,21 +127,11 @@ export function useCreditTopUp() {
   });
 }
 
-/** One-off starter allowance. Safe to call on every sign-in — it is idempotent. */
-export function useClaimFreeCredits() {
-  const { walletAddress } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: () => callCredits<{ granted?: number; alreadyClaimed?: boolean; balanceDhb: number }>(
-      { action: 'claim-free' },
-      walletAddress,
-    ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ai-credits', walletAddress] });
-    },
-  });
-}
+// The free starter + daily allowance claim deliberately does NOT live here as
+// a hook. useClaimFreeCredits did, and nothing ever mounted it — the grant
+// was unreachable for as long as it existed. The claim now rides the app
+// shell as a plain call (src/lib/ai-credit-claim.ts), so it cannot be
+// orphaned by a surface refactor again.
 
 /** Shared formatting so every credit surface reads the same. */
 export function formatDhb(amount: number): string {
