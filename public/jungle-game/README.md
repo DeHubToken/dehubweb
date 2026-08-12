@@ -23,9 +23,9 @@ matters for a 38-file, ~12k-line dependency.
 harness and 660 KB of screenshots are not needed to play the game, and they
 would ship to every visitor of the site.
 
-## The three local changes
+## The four local changes
 
-All three are in `index.html` and all are commented in place:
+All four are in `index.html` and all are commented in place:
 
 1. **The import map points at `./vendor/three.module.js`** instead of jsDelivr.
    Same build (three 0.170.0), served from this origin — no third-party request
@@ -49,14 +49,43 @@ All three are in `index.html` and all are commented in place:
    posts `{ source: 'jungle-game', type: 'exit' }` to the parent — see
    `src/lib/game-exit-request.ts`.
 
+4. **Touch controls.** Upstream is mouse-and-keyboard only, and not by
+   omission: `src/player/controller.js` is `requestPointerLock` plus
+   `mousemove` for the head and `keydown`/`keyup` for the legs, with no touch
+   handler anywhere. A phone therefore finished the bake and stood in a
+   rainforest it could not move in — and the arcade's native app is a WebView,
+   which is never granted pointer lock, so a keyboard would not have helped
+   either. The adapter here drives the fields the keyboard and mouse already
+   drive (`walker.keys`, `walker.yaw`, `walker.pitch`, `walker.jump()`) rather
+   than simulating events at them, and it shadows `canvas.requestPointerLock`
+   with a no-op so a tap does not try to capture a pointer there is no cursor
+   for. The stick and the buttons themselves are **not** in this directory —
+   see below.
+
 Nothing under `src/` is modified. Re-vendoring is therefore a straight copy:
 
 ```bash
 git clone https://github.com/StarKnightt/jungle-trail.git
 ```
 
-Then replace `src/` here with upstream's `src/`, and re-apply nothing — all three
+Then replace `src/` here with upstream's `src/`, and re-apply nothing — all four
 changes above live only in `index.html`.
+
+## The touch layer is not in here
+
+Change 4 above is only the ~60-line adapter. The stick, the drag surface, the
+buttons and their multitouch handling are shared with the war game and live in
+`public/arcade-touch/touch-controls.js`.
+
+That is deliberate, and it is because of the line above: re-vendoring this
+directory is a straight copy of upstream's `src/`, and anything of ours sitting
+inside it is one `cp -r` away from being deleted. Outside, it survives — and a
+fix to how the stick feels is made once rather than twice.
+
+**If the walker stops responding to touch after a re-vendor**, check
+`src/player/controller.js` first: the adapter depends on `keys` still being a
+plain map the input loop reads each frame, and on `yaw`/`pitch` still being
+plain numbers on the walker. Both are read directly, so a rename is silent.
 
 ## Quality
 
