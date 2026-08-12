@@ -8,8 +8,9 @@ import { preloadRoute } from '@/lib/route-preload';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
-// Map nav item labels to i18n keys
-const NAV_LABEL_KEYS: Record<string, string> = {
+// Map nav item labels to i18n keys. Exported because the menu-search filter
+// (nav-search.ts) has to match on the same translated label a row renders.
+export const NAV_LABEL_KEYS: Record<string, string> = {
   Home: 'nav.home', Explore: 'nav.explore', Prompt: 'nav.prompt', Notifications: 'nav.notifications',
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
