@@ -194,7 +194,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   };
 
   // Filter out Assistant item - we'll render it specially as a NavLink.
-  // Also pull Home out of its default position and prepend it above Profile.
+  // Home is pinned to the top of the rail wherever it sits in NAV_ITEMS — it
+  // is first in the list now, but the rail keeps owning that decision.
   const homeItem = NAV_ITEMS.find((item) => item.path === '/app');
   const nonHomeItems = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'Assistant');
   const navItemsWithoutAI = homeItem ? [homeItem, ...nonHomeItems] : nonHomeItems;
