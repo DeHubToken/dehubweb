@@ -20,26 +20,158 @@ import { bestDecentralisedSocialPlatformsPost } from './posts/bestDecentralisedS
 import { web3LiveStreamingPost } from './posts/web3LiveStreamingPost';
 import { playToEarnUkPost } from './posts/playToEarnUkPost';
 
-// Placeholder images - using a few from the provided list and cycling through them
-const unsplashBase = "https://images.unsplash.com/";
-const placeholderImages = [
-  "photo-1488590528505-98d2b5aba04b", // laptop
-  "photo-1518770660439-4636190af475", // circuit board
-  "photo-1461749280684-dccba630e2f6", // code on monitor
-  "photo-1581091226825-a6a2a5aee158", // woman with laptop
-  "photo-1526374965328-7f61d4dc18c5", // matrix code
-  "photo-1487058792275-0ad4aaf24ca7", // colorful code
-  "photo-1605810230434-7631ac76ec81", // video screens
-  "photo-1519389950473-47ba0277781c", // people with laptops
-  "photo-1498050108023-c5249f4df085"  // macbook with code
-];
-let imageIndex = 0;
-
-const getNextImage = () => {
-  const imageName = placeholderImages[imageIndex % placeholderImages.length];
-  imageIndex++;
-  return `${unsplashBase}${imageName}?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80`;
+/**
+ * Per-post banner for the milestone archive.
+ *
+ * These 64 posts are generated from bullet points below, and until now every
+ * one of them took its banner from a nine-item cycle of Unsplash stock photos.
+ * Eight unrelated milestones therefore shared one picture of a laptop, and
+ * because the banner doubles as the share image, that is what previewed in
+ * every chat and timeline the links reached.
+ *
+ * Each entry now has its own card in the house style, rendered by the banner
+ * kit's compose-milestones.mjs (which also emits this map — the slugs are
+ * generated from the titles and are 80+ characters, so nobody should retype
+ * one). Keyed by slug rather than by index, so reordering the bullets or
+ * inserting a milestone cannot silently shuffle every banner after it.
+ *
+ * A milestone with no entry falls back to the blog's own card rather than to a
+ * stock photo: wrong-but-on-brand beats somebody else's macbook.
+ */
+const MILESTONE_BANNERS: Record<string, string> = {
+  'reliability-perfected-9999-uptime-for-dehub-streaming---a-dehub-milestone-from-q1-2025':
+    '/lovable-uploads/milestone-uptime-banner.jpg',
+  'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025':
+    '/lovable-uploads/milestone-livepeer-banner.jpg',
+  'connect-and-converse-advanced-messaging-system-with-paidfree-dms---a-dehub-milestone-from-q1-2025':
+    '/lovable-uploads/milestone-messaging-banner.jpg',
+  'strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb---a-dehub-milestone-from-q1-2025':
+    '/lovable-uploads/milestone-ethereum-exit-banner.jpg',
+  'speed-of-light-custom-cdn-achieves-sub-200ms-global-latency---a-dehub-milestone-from-q1-2025':
+    '/lovable-uploads/milestone-cdn-banner.jpg',
+  'the-future-of-infrastructure-depin-phase-1-goes-live---a-dehub-milestone-from-q4-2024':
+    '/lovable-uploads/milestone-depin-banner.jpg',
+  'leading-the-way-dehub-agency-becomes-uk-1-with-1000-streamers---a-dehub-milestone-from-q4-2024':
+    '/lovable-uploads/milestone-agency-uk-banner.jpg',
+  'the-hype-is-real-last-chad-standing-teaser-hits-1m-views---a-dehub-milestone-from-q4-2024':
+    '/lovable-uploads/milestone-teaser-1m-banner.jpg',
+  'revolutionizing-access-on-chain-tradable-subscriptions-launch---a-dehub-milestone-from-q4-2024':
+    '/lovable-uploads/milestone-subscriptions-banner.jpg',
+  'faster-and-sleeker-ui-overhaul-and-200-backend-speed-boost---a-dehub-milestone-from-q3-2024':
+    '/lovable-uploads/milestone-ui-overhaul-banner.jpg',
+  'leveling-up-major-app-upgrade-earns-95-positive-feedback---a-dehub-milestone-from-q3-2024':
+    '/lovable-uploads/milestone-positive-feedback-banner.jpg',
+  'worldwide-creators-partnerships-spanning-15-countries---a-dehub-milestone-from-q2-2024':
+    '/lovable-uploads/milestone-15-countries-banner.jpg',
+  'global-footprint-dehub-expands-middle-east-presence-via-dubai-event---a-dehub-milestone-from-q2-2024':
+    '/lovable-uploads/milestone-dubai-banner.jpg',
+  'layer-2-expansion-sdhb-lists-on-base---a-dehub-milestone-from-q2-2024':
+    '/lovable-uploads/milestone-base-listing-banner.jpg',
+  'entrepreneurial-spirit-co-founders-launch-tiktok-agency---a-dehub-milestone-from-q2-2024':
+    '/lovable-uploads/milestone-tiktok-agency-banner.jpg',
+  'fueling-growth-1m-raised-for-fansite-bj-fork---a-dehub-milestone-from-q1-2024':
+    '/lovable-uploads/milestone-fansite-raise-banner.jpg',
+  'expanding-reach-dhb-lists-on-ethereum-mainnet---a-dehub-milestone-from-q1-2024':
+    '/lovable-uploads/milestone-eth-listing-banner.jpg',
+  'expanding-horizons-partner-airdrop-for-fansite-bj-fork---a-dehub-milestone-from-q3-2023':
+    '/lovable-uploads/milestone-partner-airdrop-banner.jpg',
+  'smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023':
+    '/lovable-uploads/milestone-auto-liquidity-banner.jpg',
+  'open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023':
+    '/lovable-uploads/milestone-dex-policy-banner.jpg',
+  'prioritizing-principles-voluntary-delisting-from-gateio-for-decentralization---a-dehub-milestone-from-q4-2023':
+    '/lovable-uploads/milestone-gate-delisting-banner.jpg',
+  'paving-the-way-framework-for-community-driven-forks---a-dehub-milestone-from-q3-2023':
+    '/lovable-uploads/milestone-fork-framework-banner.jpg',
+  'decentralization-in-practice-the-fansite-fork-story---a-dehub-milestone-from-q3-2023':
+    '/lovable-uploads/milestone-fork-story-banner.jpg',
+  'supporting-growth-knowledge-transfer-to-fansite-team---a-dehub-milestone-from-q3-2023':
+    '/lovable-uploads/milestone-knowledge-transfer-banner.jpg',
+  'protecting-innovation-patent-applications-for-streaming--watch2earn-tech---a-dehub-milestone-from-q2-2023':
+    '/lovable-uploads/milestone-patents-banner.jpg',
+  'in-the-spotlight-dehub-featured-in-techcrunch-and-venturebeat---a-dehub-milestone-from-q2-2023':
+    '/lovable-uploads/milestone-press-banner.jpg',
+  'innovation-recognized-dehub-wins-corporate-livewire-award---a-dehub-milestone-from-q2-2023':
+    '/lovable-uploads/milestone-award-banner.jpg',
+  'back-in-action-dehub-v2-trading-resumes-on-gateio---a-dehub-milestone-from-q1-2023':
+    '/lovable-uploads/milestone-gate-resume-banner.jpg',
+  'insights-for-creators-advanced-analytics-dashboard-development-begins---a-dehub-milestone-from-q1-2023':
+    '/lovable-uploads/milestone-analytics-banner.jpg',
+  'creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023':
+    '/lovable-uploads/milestone-tokenized-uploads-banner.jpg',
+  'stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022':
+    '/lovable-uploads/milestone-erc20-banner.jpg',
+  'moving-forward-successful-migration-of-25000-holders-to-v2---a-dehub-milestone-from-q4-2022':
+    '/lovable-uploads/milestone-v2-migration-banner.jpg',
+  'the-unforeseen-navigating-a-contract-malfunction-and-v2-relaunch---a-dehub-milestone-from-q4-2022':
+    '/lovable-uploads/milestone-contract-malfunction-banner.jpg',
+  'trust-and-transparency-on-chain-verified-raffle-mechanics---a-dehub-milestone-from-q3-2022':
+    '/lovable-uploads/milestone-raffle-mechanics-banner.jpg',
+  'strategic-alliances-partnering-with-real-estate-and-legal-experts---a-dehub-milestone-from-q3-2022':
+    '/lovable-uploads/milestone-alliances-banner.jpg',
+  'ambitious-ventures-the-palawan-real-estate-tokenization-attempt---a-dehub-milestone-from-q3-2022':
+    '/lovable-uploads/milestone-palawan-banner.jpg',
+  'dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022':
+    '/lovable-uploads/milestone-home-raffle-banner.jpg',
+  'empowering-creators-dehub-nft-marketplace-with-royalties---a-dehub-milestone-from-q2-2022':
+    '/lovable-uploads/milestone-nft-marketplace-banner.jpg',
+  'efficient-streaming-advanced-video-compression-reduces-costs---a-dehub-milestone-from-q2-2022':
+    '/lovable-uploads/milestone-compression-banner.jpg',
+  'building-bridges-philippine-sec-registration-secured---a-dehub-milestone-from-q2-2022':
+    '/lovable-uploads/milestone-sec-banner.jpg',
+  'the-chads-arrive-genesis-mint-of-the-chads-nft-collection---a-dehub-milestone-from-q2-2022':
+    '/lovable-uploads/milestone-chads-banner.jpg',
+  'lights-camera-blockchain-dehubs-first-tokenized-documentary---a-dehub-milestone-from-q2-2022':
+    '/lovable-uploads/milestone-documentary-banner.jpg',
+  'crystal-clear-dehub-stream-app-with-4k-support--high-uptime---a-dehub-milestone-from-q2-2022':
+    '/lovable-uploads/milestone-4k-streams-banner.jpg',
+  'powering-play-dehubs-custom-mobile-game-engine---a-dehub-milestone-from-q1-2022':
+    '/lovable-uploads/milestone-game-engine-banner.jpg',
+  'challenge-accepted-social-features-and-friend-challenges-arrive---a-dehub-milestone-from-q1-2022':
+    '/lovable-uploads/milestone-challenges-banner.jpg',
+  'on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade---a-dehub-milestone-from-q1-2022':
+    '/lovable-uploads/milestone-leaderboards-banner.jpg',
+  'high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022':
+    '/lovable-uploads/milestone-5000-players-banner.jpg',
+  'level-up-dehub-arcade-launches-with-5-games--predictions---a-dehub-milestone-from-q1-2022':
+    '/lovable-uploads/milestone-arcade-launch-banner.jpg',
+  'strength-in-numbers-dehub-community-exceeds-8000-active-members---a-dehub-milestone-from-q4-2021':
+    '/lovable-uploads/milestone-8000-members-banner.jpg',
+  'fair-play-provably-fair-randomization-in-dehub-games---a-dehub-milestone-from-q4-2021':
+    '/lovable-uploads/milestone-provably-fair-banner.jpg',
+  'trials-and-tribulations-the-gateio-listing-agent-incident---a-dehub-milestone-from-q4-2021':
+    '/lovable-uploads/milestone-gate-incident-banner.jpg',
+  'to-the-moon-gateio-listing-and-10m-lp-milestone---a-dehub-milestone-from-q4-2021':
+    '/lovable-uploads/milestone-gate-listing-banner.jpg',
+  'game-on-dehub-launches-prediction-and-raffle-games---a-dehub-milestone-from-q4-2021':
+    '/lovable-uploads/milestone-prediction-games-banner.jpg',
+  'global-reach-dehub-team-grows-to-15-strong---a-dehub-milestone-from-q3-2021':
+    '/lovable-uploads/milestone-team-15-banner.jpg',
+  'fortifying-our-walls-v1-security-hardened-with-certik-audit---a-dehub-milestone-from-q3-2021':
+    '/lovable-uploads/milestone-certik-banner.jpg',
+  'rewarding-loyalty-automatic-airdrop-for-all-holders---a-dehub-milestone-from-q3-2021':
+    '/lovable-uploads/milestone-auto-airdrop-banner.jpg',
+  'building-for-all-app-rebuild-with-react-native---a-dehub-milestone-from-q3-2021':
+    '/lovable-uploads/milestone-react-native-banner.jpg',
+  'a-new-era-the-rebranding-to-dehub---a-dehub-milestone-from-q3-2021':
+    '/lovable-uploads/milestone-rebrand-banner.jpg',
+  'navigating-challenges-addressing-a-v1-smart-contract-security-issue---a-dehub-milestone-from-q2-2021':
+    '/lovable-uploads/milestone-v1-security-banner.jpg',
+  'diving-in-first-dehub-liquidity-pools-on-pancake-swap---a-dehub-milestone-from-q2-2021':
+    '/lovable-uploads/milestone-pancake-pools-banner.jpg',
+  'power-to-the-people-community-governed-listings---a-dehub-milestone-from-q2-2021':
+    '/lovable-uploads/milestone-governed-listings-banner.jpg',
+  'early-traction-dehubs-beta-app-hits-2000-daus---a-dehub-milestone-from-q1-2021':
+    '/lovable-uploads/milestone-2000-daus-banner.jpg',
+  'listening-to-our-users-50-interviews-shape-dehub---a-dehub-milestone-from-q1-2021':
+    '/lovable-uploads/milestone-interviews-banner.jpg',
+  'building-the-dream-dehubs-core-team-assembled---a-dehub-milestone-from-q1-2021':
+    '/lovable-uploads/milestone-core-team-banner.jpg',
 };
+
+const MILESTONE_BANNER_FALLBACK = '/og/blog.jpg';
+
+const milestoneBanner = (slug: string) => MILESTONE_BANNERS[slug] || MILESTONE_BANNER_FALLBACK;
 
 const generateSlug = (title: string) => {
   return title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
@@ -191,7 +323,7 @@ const createPost = (
     slug,
     excerpt: excerpt,
     content: content,
-    bannerImage: getNextImage(),
+    bannerImage: milestoneBanner(slug),
     bannerImageAlt: bannerImageAlt,
     author: { name: 'DeHub Team' },
     publishedAt,
@@ -535,7 +667,10 @@ With the fundraise successfully completed, we are moving full steam ahead. An ag
 This is more than just a fundraise; it's the dawn of a new era for DeHub. We are not just building an app; we are building a decentralized powerhouse, and we are eternally grateful to our community for their unwavering trust and support on this journey.
 
 We are together, forever.`,
-    bannerImage: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&fit=crop&w=1200&h=600&q=80',
+    // The image applyPostOverrides already substitutes for this slug. It was a
+    // stock photo, so the one path that reads this post without the overrides
+    // disagreed with every path that applies them.
+    bannerImage: '/lovable-uploads/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png',
     bannerImageAlt: '$1,000,000 raise for fan.site',
     author: { name: 'DeHub Team' },
     publishedAt: new Date('2024-03-08').toISOString(),
