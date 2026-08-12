@@ -7,13 +7,14 @@
  * Pro runs is $525 of retail and $262 of provider spend, sold for £129. That
  * copy came from a competitor whose credit unit is not ours.
  *
- * These numbers are rebuilt from what we actually pay. Retail is 2x provider
- * cost, so granting more DHB than the sticker price still leaves margin:
- *
- *   grant of G dollars against price P  ->  provider cost G/2  ->  margin 1 - G/2P
- *
- * Each tier is sized off its *annual* (discounted) price, so a monthly
- * subscriber is strictly better business than the figures below suggest.
+ * These numbers are rebuilt from what we actually pay. Default retail is
+ * provider cost x1.2, with per-model bands on top (MARKUP_OVERRIDES in
+ * ai-pricing.ts), so a fully-consumed grant of G dollars costs roughly G/1.2
+ * in provider spend before banding. Whether a tier's sticker price covers
+ * that depends on the currency of the underlying Stripe price — which this
+ * file cannot see: create-checkout resolves by lookup_key and never asserts
+ * a currency. Resize the grants once that is confirmed; until then,
+ * consumption breakage is what keeps the tiers safe.
  */
 
 export interface AiPlan {
