@@ -1,4 +1,5 @@
 import { apiCall, authedUpload } from './core';
+import { isReservedUsername } from '@/lib/reserved-usernames';
 import type { DeHubUser, DeHubNFT, PaginatedResponse } from './types';
 import type { ApiCommentResponse } from './comments';
 
@@ -99,6 +100,14 @@ export interface UpdateProfileData {
 
 export async function updateProfile(data: UpdateProfileData): Promise<{ result: boolean }> {
   const formData = new FormData();
+
+  // Last gate on the client. Every username-editing surface checks this before
+  // enabling its save button, but they can only guard themselves — this covers
+  // whatever surface gets added next, and any path where a debounce has not
+  // caught up. The API accepts these names, so nothing downstream will stop it.
+  if (data.username !== undefined && isReservedUsername(data.username)) {
+    throw new Error('This username is reserved');
+  }
 
   if (data.username !== undefined) formData.append("username", data.username);
   if (data.displayName !== undefined) formData.append("displayName", data.displayName);
