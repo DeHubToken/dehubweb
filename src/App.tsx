@@ -633,8 +633,6 @@ const App = () => (
           <Sonner />
           {/* Watches /version.json for a newer deploy; renders nothing itself. */}
           <NewVersionToast />
-          {/* Engagement-gated soft-ask for browser notifications; renders nothing itself. */}
-          <NotificationsPromptToast />
           {/*
            * dehub.io has no separate landing page — `/` is the app home. The
            * old 3D "nebula" lander (Welcome To Our World hero + app-store
@@ -669,6 +667,11 @@ const App = () => (
                           <ErrorBoundary fallback={null}>
                             <ThemedBackgrounds />
                           </ErrorBoundary>
+
+                          {/* Engagement-gated soft-ask for browser
+                              notifications; renders nothing itself. Reads
+                              auth, so it must stay inside WalletProviders. */}
+                          <NotificationsPromptToast />
 
                           <AppContent />
                         </TooltipProvider>
