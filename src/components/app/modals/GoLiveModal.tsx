@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus } from 'lucide-react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus, Video, MonitorPlay } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +22,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 
+// The WebRTC broadcaster pulls in getUserMedia + peer-connection code that
+// only the camera path needs, so it loads on demand rather than riding along
+// with the modal for people who stream from OBS.
+const GoLiveBroadcaster = React.lazy(() =>
+  import('@/components/app/modals/GoLiveBroadcaster').then(m => ({ default: m.GoLiveBroadcaster }))
+);
+
 const logger = createLogger('GoLiveModal');
 
 
@@ -30,13 +37,21 @@ interface GoLiveModalProps {
   onClose: () => void;
 }
 
-type Step = 'setup' | 'ready' | 'streaming';
+type Step = 'setup' | 'ready' | 'broadcasting';
+
+/**
+ * 'camera' publishes from the browser over WHIP — no software to install, and
+ * the only option that works on a phone. 'rtmp' hands out the ingest URL and
+ * stream key for OBS and other desktop encoders.
+ */
+type StreamSource = 'camera' | 'rtmp';
 
 const MAX_CATEGORIES = 5;
 
 export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
+  const [source, setSource] = useState<StreamSource>('camera');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -97,6 +112,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
   const handleClose = () => {
     setStep('setup');
+    setSource('camera');
     setTitle('');
     setDescription('');
     setSelectedCategory('');
@@ -129,6 +145,19 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       } catch (e) {
         logger.warn('end-stream-session failed', e);
       }
+    }
+    handleClose();
+  };
+
+  /**
+   * Dismissing the drawer mid-broadcast has to run the same teardown as the
+   * End Stream button — otherwise the camera is released on unmount but the
+   * post stays flagged live on the backend with nothing feeding it.
+   */
+  const handleDismiss = () => {
+    if (step === 'broadcasting') {
+      void handleEndStream();
+      return;
     }
     handleClose();
   };
@@ -284,9 +313,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       };
 
       setStreamData(resultData);
-      setStep('ready');
-      logger.info('Stream setup ready', { streamId, tokenId });
-      toast.success('Live stream is ready!');
+      // The camera path goes straight on air; the RTMP path stops at the
+      // credentials screen so the creator can paste them into their encoder.
+      setStep(source === 'camera' ? 'broadcasting' : 'ready');
+      logger.info('Stream setup ready', { streamId, tokenId, source });
+      toast.success(source === 'camera' ? 'You are going live!' : 'Live stream is ready!');
 
       // Mark stream as live in Supabase (api.dehub.io /start fails with 404)
       const token = getAuthToken();
@@ -334,18 +365,18 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const inputClass = "w-full h-12 px-4 text-base bg-zinc-800/50 border border-white/20 rounded-xl text-white placeholder:text-zinc-500 outline-none focus:border-white/50";
 
   return (
-    <Drawer open={isOpen} onOpenChange={handleClose}>
+    <Drawer open={isOpen} onOpenChange={handleDismiss}>
       <DrawerContent glass className="max-h-[90vh] px-4 pb-8">
         <DrawerHeader className="border-b border-white/10 mb-4 relative">
           <DrawerTitle className="text-white flex items-center gap-2">
             <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-            {step === 'setup' ? 'Go Live' : 'Stream Ready'}
+            {step === 'setup' ? 'Go Live' : step === 'broadcasting' ? "You're Live" : 'Stream Ready'}
           </DrawerTitle>
           <DrawerDescription className="sr-only">
             Configure your livestream settings or get your RTMP credentials.
           </DrawerDescription>
           <button
-            onClick={handleClose}
+            onClick={handleDismiss}
             className="absolute top-1/2 -translate-y-1/2 right-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
           >
             <X className="w-4 h-4" />
@@ -355,6 +386,26 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         <div className="flex-1 overflow-y-auto px-1 custom-scrollbar">
           {step === 'setup' ? (
             <div className="space-y-4 pb-4">
+              <div className="space-y-2">
+                <label className="text-sm text-zinc-400">How do you want to stream?</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <SourceOption
+                    selected={source === 'camera'}
+                    onClick={() => setSource('camera')}
+                    icon={<Video className="w-4 h-4" />}
+                    title="Camera"
+                    subtitle="Straight from this device"
+                  />
+                  <SourceOption
+                    selected={source === 'rtmp'}
+                    onClick={() => setSource('rtmp')}
+                    icon={<MonitorPlay className="w-4 h-4" />}
+                    title="OBS / Encoder"
+                    subtitle="Get RTMP details"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <label className="text-sm text-zinc-400">Stream Title *</label>
                 <Input
@@ -406,6 +457,21 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                 )}
               </div>
             </div>
+          ) : step === 'broadcasting' ? (
+            streamData && (
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center py-16">
+                    <Loader2 className="w-6 h-6 animate-spin text-white" />
+                  </div>
+                }
+              >
+                <GoLiveBroadcaster
+                  streamKey={streamData.streamKey}
+                  onEnd={handleEndStream}
+                />
+              </Suspense>
+            )
           ) : (
             <div className="space-y-4 pb-4">
               {streamData && (
@@ -446,7 +512,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           )}
         </div>
 
-        <div className="pt-4 mt-2">
+        {/* The broadcaster owns its own controls, including End Stream. */}
+        <div className={cn('pt-4 mt-2', step === 'broadcasting' && 'hidden')}>
           {step === 'setup' ? (
             <LiquidGlassBubble2
               label={isLoading ? '' : 'Go Live'}
@@ -525,5 +592,39 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         </DrawerContent>
       </Drawer>
     </Drawer>
+  );
+}
+
+function SourceOption({
+  selected,
+  onClick,
+  icon,
+  title,
+  subtitle,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={cn(
+        'flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition-colors',
+        selected
+          ? 'border-white/40 bg-white/10'
+          : 'border-white/10 bg-zinc-800/40 hover:bg-zinc-800/70'
+      )}
+    >
+      <span className={cn('flex items-center gap-2 text-sm font-medium', selected ? 'text-white' : 'text-zinc-300')}>
+        {icon}
+        {title}
+      </span>
+      <span className="text-[11px] text-zinc-500">{subtitle}</span>
+    </button>
   );
 }
