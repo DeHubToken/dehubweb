@@ -1,5 +1,6 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NewVersionToast } from "@/components/app/NewVersionToast";
+import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { AuthenticationError } from "@/lib/api/dehub";
@@ -617,6 +618,8 @@ const App = () => (
           <Sonner />
           {/* Watches /version.json for a newer deploy; renders nothing itself. */}
           <NewVersionToast />
+          {/* Engagement-gated soft-ask for browser notifications; renders nothing itself. */}
+          <NotificationsPromptToast />
           {/*
            * dehub.io has no separate landing page — `/` is the app home. The
            * old 3D "nebula" lander (Welcome To Our World hero + app-store

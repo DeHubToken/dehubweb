@@ -11,12 +11,22 @@ import { isQuietNow } from '@/lib/quiet-hours';
 const STORAGE_KEY = 'dehub_browser_notifications';
 const LAST_SEEN_KEY = 'dehub_notifications_last_seen';
 
-function getStoredEnabled(): boolean {
+export function getStoredEnabled(): boolean {
   try {
     return localStorage.getItem(STORAGE_KEY) === 'true';
   } catch {
     return false;
   }
+}
+
+export function setStoredEnabled(enabled: boolean): void {
+  try {
+    if (enabled) {
+      localStorage.setItem(STORAGE_KEY, 'true');
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  } catch {}
 }
 
 export function getLastSeenTimestamp(): number {
@@ -40,13 +50,7 @@ export function useBrowserNotifications() {
 
   const setEnabled = useCallback((enabled: boolean) => {
     setIsEnabledState(enabled);
-    try {
-      if (enabled) {
-        localStorage.setItem(STORAGE_KEY, 'true');
-      } else {
-        localStorage.removeItem(STORAGE_KEY);
-      }
-    } catch {}
+    setStoredEnabled(enabled);
   }, []);
 
   const showNotification = useCallback((title: string, body: string, icon?: string, id?: string) => {
