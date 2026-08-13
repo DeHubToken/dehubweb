@@ -50,6 +50,8 @@ export interface PairMatched {
   sessionId: string;
   role: 'caller' | 'callee';
   peer: { username: string | null };
+  /** Repeated from `queued` — matching instantly means never seeing one. */
+  iceServers?: PairIceServer[];
 }
 
 export interface PairSignal {

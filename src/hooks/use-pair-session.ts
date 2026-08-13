@@ -235,6 +235,12 @@ export function usePairSession() {
     });
 
     const offMatched = onPairMatched(async (data) => {
+      // Prefer the servers sent with the match: matching instantly skips the
+      // queued event entirely, and building the connection with an empty list
+      // would restrict us to host candidates — fine on a LAN, broken across
+      // NAT.
+      if (data.iceServers?.length) iceServersRef.current = data.iceServers;
+
       sessionIdRef.current = data.sessionId;
       setPeerName(data.peer?.username || null);
       setMessages([]);
