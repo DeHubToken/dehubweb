@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  emitPairDequeue,
   emitPairEndSession,
   emitPairEnqueue,
   emitPairNext,
@@ -150,6 +151,10 @@ export function usePairSession() {
             relayUsed: relayRef.current,
           });
         }
+      } else if (mode === 'end') {
+        // Stopping while still waiting. Without this the server keeps us in the
+        // queue and matches us later, firing `matched` at a UI showing idle.
+        emitPairDequeue();
       }
 
       teardownPeer();
@@ -323,7 +328,9 @@ export function usePairSession() {
     };
   }, [applyPendingCandidates, bindChannel, createPeer, teardownPeer]);
 
-  // Leaving the page mid-session must not strand the other side.
+  // Leaving the page mid-session must not strand the other side. The socket is
+  // a singleton and outlives this page, so leaving while queued has to withdraw
+  // too — otherwise the server matches a page that is no longer mounted.
   useEffect(() => {
     return () => {
       const sessionId = sessionIdRef.current;
@@ -332,6 +339,8 @@ export function usePairSession() {
           connected: connectedRef.current,
           relayUsed: relayRef.current,
         });
+      } else {
+        emitPairDequeue();
       }
       sessionIdRef.current = null;
       teardownPeer();
