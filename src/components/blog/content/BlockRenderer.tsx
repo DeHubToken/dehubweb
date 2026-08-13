@@ -207,7 +207,21 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
       if (style === 'avatar') {
         return <img key={index} src={src} alt={alt} className="w-24 h-24 rounded-full object-cover my-6 mx-auto block shadow-md" />;
       }
-      return null;
+      // Default: full-width in-body figure. This used to return null, which
+      // silently deleted every non-avatar image from a post's markdown. Six
+      // shipped posts carry fourteen such images (the alpha-launch milestone
+      // alone has nine screenshots); all fourteen were authored deliberately,
+      // verified to exist under public/lovable-uploads/ (one Unsplash
+      // hotlink), and they come back with this branch.
+      return (
+        <img
+          key={index}
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className="w-full h-auto rounded-2xl my-8 shadow-md"
+        />
+      );
     }
   }
 
