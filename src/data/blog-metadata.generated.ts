@@ -8,6 +8,34 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "dehub-creator-vs-higgsfield-ai-credits",
+    "slug": "dehub-creator-vs-higgsfield-ai-credits",
+    "title": "DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
+    "excerpt": "Veo 3.1, Seedance, Kling and Nano Banana in one studio — priced per job in DHB, with credit that never expires and a free allowance that accrues instead of vanishing at midnight. Here is the honest head-to-head.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/ai-creator-studio-banner.jpg",
+    "bannerImageAlt": "DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-13T09:00:00.000Z",
+    "tags": [
+      "AI",
+      "Creator Studio",
+      "Higgsfield",
+      "AI video",
+      "Veo 3.1",
+      "Seedance",
+      "DHB token",
+      "Pricing"
+    ],
+    "readingTime": 9,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "DeHub Creator vs Higgsfield 2026: Pricing, Credits & Models Compared | DeHub",
+    "seoDescription": "DeHub Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers."
+  },
+  {
     "id": "dehub-vs-depaul-rowan-disambiguation",
     "slug": "dehub-vs-depaul-dehub-vs-rowan-dehub",
     "title": "DeHub vs DePaul DeHUB vs Rowan DEHub: Which One Are You Looking For?",
@@ -3112,32 +3140,32 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "dehub-vs-depaul-rowan-disambiguation",
-  "slug": "dehub-vs-depaul-dehub-vs-rowan-dehub",
-  "title": "DeHub vs DePaul DeHUB vs Rowan DEHub: Which One Are You Looking For?",
-  "seoTitle": "DeHub vs DePaul vs Rowan: Which One? | DeHub",
-  "seoDescription": "Three different things share the name dehub. Here is how to tell the DeHub Web3 social network apart from DePaul and Rowan university portals.",
-  "excerpt": "Searching for \"dehub\" returns three unrelated things. Here is a quick, factual guide to telling the DeHub Web3 social network apart from the DePaul and Rowan university portals.",
+  "id": "dehub-creator-vs-higgsfield-ai-credits",
+  "slug": "dehub-creator-vs-higgsfield-ai-credits",
+  "title": "DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
+  "excerpt": "Veo 3.1, Seedance, Kling and Nano Banana in one studio — priced per job in DHB, with credit that never expires and a free allowance that accrues instead of vanishing at midnight. Here is the honest head-to-head.",
   "content": "",
-  "bannerImage": "/lovable-uploads/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png",
-  "bannerImageAlt": "DeHub disambiguation: the DeHub Web3 social network at dehub.io compared with DePaul and Rowan university portals of the same name",
+  "bannerImage": "/lovable-uploads/ai-creator-studio-banner.jpg",
+  "bannerImageAlt": "DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-07-14T09:00:00.000Z",
-  "updatedAt": "2026-07-14T09:00:00.000Z",
+  "publishedAt": "2026-08-13T09:00:00.000Z",
   "tags": [
-    "DeHub",
-    "disambiguation",
-    "Web3 social network",
-    "DePaul",
-    "Rowan",
-    "decentralised social media",
-    "DHB token"
+    "AI",
+    "Creator Studio",
+    "Higgsfield",
+    "AI video",
+    "Veo 3.1",
+    "Seedance",
+    "DHB token",
+    "Pricing"
   ],
-  "readingTime": 6,
-  "featured": false,
-  "status": "published"
+  "readingTime": 9,
+  "featured": true,
+  "status": "published",
+  "seoTitle": "DeHub Creator vs Higgsfield 2026: Pricing, Credits & Models Compared | DeHub",
+  "seoDescription": "DeHub Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers."
 };
 
 export const excludedTitles: string[] = [
