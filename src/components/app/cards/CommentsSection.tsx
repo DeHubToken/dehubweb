@@ -1574,9 +1574,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 <textarea
                   ref={inputRef}
                   data-vaul-no-drag
-                  // Tagging the bot is invisible unless something says so —
-                  // this is the only discovery surface the thread has.
-                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply, or tag @assistant to ask'}
+                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Type here...'}
                   value={newComment}
                   onChange={(e) => {
                     setNewComment(e.target.value);
