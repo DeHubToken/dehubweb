@@ -141,6 +141,7 @@ const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
+const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
@@ -378,6 +379,20 @@ function AppContent() {
               <ErrorBoundary compact label="Builder preview">
                 <Suspense fallback={<PageLoader />}>
                   <BuilderPreviewPage />
+                </Suspense>
+              </ErrorBoundary>
+            }
+          />
+
+          {/* Random pairing connection test. Unlisted on purpose — no nav entry
+              and no app chrome; it exists to prove matchmaking and the WebRTC
+              path before any camera code lands. */}
+          <Route
+            path="/app/pair"
+            element={
+              <ErrorBoundary compact label="Pair test">
+                <Suspense fallback={<PageLoader />}>
+                  <PairTestPage />
                 </Suspense>
               </ErrorBoundary>
             }
