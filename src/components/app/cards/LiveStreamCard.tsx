@@ -37,15 +37,22 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { usePostTipCount } from '@/hooks/use-post-tip-count';
+// The gift drawer's send is a REAL on-chain DHB tip (StreamController.sendTip
+// via useTipPayment — wallet modules load dynamically inside tip()); the
+// /api/live gift endpoint only records it afterwards for the activity feed.
+import { useTipPayment, MIN_TIP_DHB } from '@/hooks/use-tip-payment';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 // NOTE: stream-controller reaches wallet/contract code (aa-utils → wagmi) and
 // this card is eager via HomeFeed — getDHBBalance is dynamically imported at
 // call time below so the wallet stack stays out of the entry bundle
 // (scripts/check-entry-bundle.mjs fails the build if it leaks in).
-import { fromWei } from '@/lib/contracts/dhb-token';
+import { fromWei, DHB_TOKEN } from '@/lib/contracts/dhb-token';
+import { getAuthToken } from '@/lib/api/dehub/core';
+import { supabase } from '@/integrations/supabase/client';
 import dehubCoin from '@/assets/dehub-coin.png';
-import usdcLogo from '@/assets/usdc-logo.png';
 import { createLogger } from '@/lib/logger';
 import type { LiveStream } from '@/types/feed.types';
 
@@ -82,7 +89,6 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [error, setError] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [giftAmount, setGiftAmount] = useState('');
-  const [giftCurrency, setGiftCurrency] = useState('DHB');
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -91,12 +97,26 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const videoId = `live-${stream.id}`;
 
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
-  const isStreamOwner = walletAddress && stream.creatorId && 
+  const queryClient = useQueryClient();
+  const isStreamOwner = walletAddress && stream.creatorId &&
     walletAddress.toLowerCase() === stream.creatorId.toLowerCase();
-  const { like, gift, end, isLiking, isSendingGift, isEnding } = useStreamActions();
+  const { like, gift, end, isLiking, isEnding } = useStreamActions();
+  // Every /api/live/{id}/* interaction route takes the Mongo ObjectId, never
+  // the NFT tokenId — a tokenId there is a guaranteed CastError 500.
+  const apiStreamId = stream.streamId || null;
   const { activities, isLoading: activitiesLoading } = useStreamActivities(
-    showActivityLog ? stream.id : null
+    showActivityLog && apiStreamId ? apiStreamId : null
   );
+  const { data: tipCount = 0 } = usePostTipCount(stream.id);
+
+  // stream.isLive routinely flips true AFTER mount: LivePostWithStatus merges
+  // the Supabase live flag in asynchronously, and the platform marks streams
+  // live before any ingest connects. The ended latch must follow the flip or
+  // a viewer landing in that window is stuck on "Stream ended" for a stream
+  // that is live — with the <video> never mounted, so playback can't recover.
+  useEffect(() => {
+    if (stream.isLive) setStreamEnded(false);
+  }, [stream.isLive]);
 
   // Fetch DHB balance when gift drawer opens
   useEffect(() => {
@@ -315,7 +335,11 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       hlsRef.current?.destroy();
       videoPlaybackManager.unregister(videoId);
     };
-  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry]);
+    // streamEnded is a dependency on purpose: the <video> only mounts when it
+    // is false, and when the late-isLive resync clears the latch this effect
+    // must run again on the re-render that mounts the element — the isLive
+    // flip alone fires it one render too early, against a null videoRef.
+  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry, streamEnded]);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -382,51 +406,126 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       toast.info('Stream ended, tune in live to engage');
       return;
     }
+    if (!apiStreamId) {
+      toast.error('Likes are unavailable for this stream right now');
+      return;
+    }
     try {
-      await like(stream.id);
-      setIsLiked(true);
-      toast.success('Stream liked!');
+      // The backend toggles: an already-liked address gets un-liked and the
+      // response says so — reflect that instead of always claiming a like.
+      const res = await like(apiStreamId);
+      const nowLiked = res?.isLiked !== false;
+      setIsLiked(nowLiked);
+      toast.success(nowLiked ? 'Stream liked!' : 'Like removed');
     } catch (err) {
       console.error('[LiveStream] Like failed:', err);
-      toast.error('Stream ended, tune in live to engage');
+      toast.error('Failed to like stream');
     }
-  }, [stream.id, isAuthenticated, like, stream]);
+  }, [apiStreamId, isAuthenticated, like, stream]);
 
-  const handleSendGift = useCallback(async () => {
+  // The on-chain tip path encodes the tokenId with BigInt(), so it must be
+  // the numeric NFT tokenId — the livestream-API fallback route can hand this
+  // card a 24-hex Mongo _id as stream.id, which would throw mid-flow (after
+  // a possible approval tx). Gate gifting on it instead.
+  const numericTokenId = /^\d+$/.test(stream.id) ? stream.id : undefined;
+
+  // The real payment: an on-chain DHB tip to the streamer on Base, recorded
+  // in tip_records under the NFT tokenId (feeding the post tip counter and
+  // the backend's receivedTips crediting). onSubmitted then records it on the
+  // stream itself so the activity log and GiftSent broadcast fire.
+  const { tip: sendGiftTip, isTipping: isSendingGift } = useTipPayment({
+    creatorAddress: stream.creatorId,
+    tokenId: numericTokenId,
+    onSubmitted: (txHash, amount) => {
+      queryClient.setQueryData(['post-tip-count', stream.id], (old: number | undefined) => (old || 0) + amount);
+      if (!apiStreamId || !stream.creatorId) return;
+      const payload = {
+        transactionHash: txHash,
+        tokenId: stream.id,
+        amount,
+        recipient: stream.creatorId,
+        tokenAddress: DHB_TOKEN.address,
+        timestamp: Date.now(),
+      };
+      // The backend accepts gift records only while ITS status is LIVE or
+      // PAUSED, which flips on the Livepeer ingest webhook — often seconds
+      // after this card already renders live (the platform flags streams
+      // live before ingest connects). Retry with backoff so a gift sent in
+      // that window still lands in the activity feed. The DHB itself already
+      // moved on-chain either way.
+      const record = (attempt: number) => {
+        gift(apiStreamId, payload).catch((err) => {
+          if (attempt < 3) {
+            setTimeout(() => record(attempt + 1), attempt === 1 ? 8000 : 20000);
+          } else {
+            logger.warn('Gift activity record failed after retries', err);
+          }
+        });
+      };
+      record(1);
+    },
+    onSuccess: () => {
+      setGiftAmount('');
+      setShowGiftDrawer(false);
+    },
+  });
+
+  const handleSendGift = useCallback(() => {
     if (!isAuthenticated) {
       toast.error('Sign in to send gifts');
       return;
     }
-    const amount = parseFloat(giftAmount);
-    if (!amount || amount <= 0) {
-      toast.error('Enter a valid amount');
+    if (streamEnded) {
+      toast.info('Stream ended, tune in live to engage');
       return;
     }
-    try {
-      await gift(stream.id, { amount, currency: giftCurrency });
-      toast.success(`Sent ${amount} ${giftCurrency} gift!`);
-      setGiftAmount('');
-      setShowGiftDrawer(false);
-    } catch (err) {
-      console.error('[LiveStream] Gift failed:', err);
-      toast.error('Failed to send gift');
+    if (!numericTokenId) {
+      toast.error('Gifting is unavailable for this stream');
+      return;
     }
-  }, [stream.id, isAuthenticated, gift, giftAmount, giftCurrency]);
+    const amount = parseFloat(giftAmount);
+    if (!amount || amount < MIN_TIP_DHB) {
+      toast.error(`Minimum gift is ${MIN_TIP_DHB} DHB`);
+      return;
+    }
+    // Full on-chain flow with its own progress/error toasts; onSuccess above
+    // closes the drawer.
+    sendGiftTip(amount);
+  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip]);
 
   const handleEndStream = useCallback(async () => {
     if (!isAuthenticated) return;
-    // Prefer MongoDB ObjectId (stream.streamId) over numeric tokenId (stream.id)
-    // DeHub's PATCH /api/live/{id}/settings requires a MongoDB ObjectId
-    const apiStreamId = stream.streamId || stream.id;
+    // PATCH /api/live/{id}/settings requires the Mongo ObjectId. Without it
+    // the old code fell back to the tokenId, which endLiveStream silently
+    // skips — the UI said "Stream ended" while every other surface kept the
+    // stream live. Note the PATCH plants the client-honored settings marker;
+    // the backend's own status only transitions once ingest stops and the
+    // Livepeer idle webhook fires.
+    if (!apiStreamId) {
+      toast.error('Could not end the stream from here — use the Go Live panel');
+      return;
+    }
     try {
       await end(apiStreamId);
+      // Also clear the Supabase live-session row: it is what keeps this post
+      // rendering as live for viewers whenever the API status lags or fails.
+      const token = getAuthToken();
+      const addr = walletAddress?.toLowerCase();
+      if (token && addr) {
+        supabase.functions.invoke('end-stream-session', {
+          body: { tokenId: stream.id },
+          headers: { 'x-wallet-address': addr, 'x-dehub-token': token },
+        }).then(({ error: fnError }) => {
+          if (fnError) logger.warn('end-stream-session failed (non-blocking)', fnError);
+        }).catch((e) => logger.warn('end-stream-session failed (non-blocking)', e));
+      }
       setStreamEnded(true);
       toast.success('Stream ended');
     } catch (err) {
       console.error('[LiveStream] End failed:', err);
       toast.error('Failed to end stream');
     }
-  }, [stream.id, stream.streamId, isAuthenticated, end]);
+  }, [stream.id, apiStreamId, isAuthenticated, end, walletAddress]);
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -625,6 +724,8 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           onLike={handleLike}
           likeCount={stream.likeCount}
           commentCount={stream.commentCount}
+          tipCount={tipCount}
+          onTip={() => setShowGiftDrawer(true)}
         />
         {!streamEnded && (
           <p className="font-semibold text-white text-sm">{stream.viewers} tuned in</p>
@@ -650,51 +751,32 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             </DrawerTitle>
           </DrawerHeader>
           <div className="space-y-4">
-            {/* Balance display */}
+            {/* Balance display — gifts move real DHB, so show the real balance */}
             <div className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2.5 border border-white/10">
               <span className="text-xs text-zinc-400">Your balance</span>
               <div className="flex items-center gap-1.5">
-                <img
-                  src={giftCurrency === 'DHB' ? dehubCoin : usdcLogo}
-                  alt={giftCurrency}
-                  className="w-4 h-4"
-                />
+                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
                 <span className="text-sm font-medium text-white">
-                  {balanceLoading ? '...' : giftCurrency === 'DHB' ? (dhbBalance ?? '—') : '—'}
+                  {balanceLoading ? '...' : (dhbBalance ?? '—')}
                 </span>
-                <span className="text-xs text-zinc-500">{giftCurrency}</span>
+                <span className="text-xs text-zinc-500">DHB</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Amount</label>
+              <label className="text-sm text-zinc-400">Amount (DHB)</label>
               <Input
                 type="number"
                 value={giftAmount}
                 onChange={(e) => setGiftAmount(e.target.value)}
                 placeholder="Enter amount"
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
-                min="0"
-                step="0.01"
+                min={MIN_TIP_DHB}
+                step="1"
               />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Currency</label>
-              <div className="flex gap-2">
-                {['DHB', 'USDC'].map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setGiftCurrency(c)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                      giftCurrency === c
-                        ? 'bg-white text-black'
-                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
+              <p className="text-[11px] text-zinc-500">
+                Sent on-chain to the streamer's wallet and shown in the stream activity.
+              </p>
             </div>
             <Button
               onClick={handleSendGift}
@@ -752,7 +834,9 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                     </span>
                   </div>
                   <span className="text-xs text-zinc-500 flex-shrink-0">
-                    {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
+                    {activity.timestamp && !Number.isNaN(new Date(activity.timestamp).getTime())
+                      ? formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })
+                      : ''}
                   </span>
                 </div>
               ))

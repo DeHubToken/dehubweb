@@ -201,7 +201,9 @@ export function useStreamActions() {
     if (!isAuthenticated) throw new Error('Not authenticated');
     setIsLiking(true);
     try {
-      await likeLiveStream(streamId);
+      // Returns { likes, isLiked } — the endpoint is a toggle, and callers
+      // need isLiked to report un-likes honestly.
+      return await likeLiveStream(streamId);
     } finally {
       setIsLiking(false);
     }

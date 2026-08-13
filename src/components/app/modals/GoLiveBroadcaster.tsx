@@ -79,6 +79,11 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
   const [micOn, setMicOn] = useState(true);
   const [cameraOn, setCameraOn] = useState(true);
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  // Preview mirroring keyed to what the TRACK reports, not what was requested:
+  // facingMode is an ideal constraint, so "environment" can be satisfied by a
+  // second front camera (two-webcam desktops) — which would un-mirror a
+  // still-front-facing self-view if the requested value drove the transform.
+  const [mirror, setMirror] = useState(true);
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
@@ -87,8 +92,9 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
   const streamRef = useRef<MediaStream | null>(null);
   const sessionRef = useRef<WhipSession | null>(null);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+  const flipInFlightRef = useRef(false);
 
-  useEffect(() => {
+  const probeCameras = useCallback(() => {
     navigator.mediaDevices
       ?.enumerateDevices()
       .then((devices) => {
@@ -96,12 +102,43 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
           devices.filter((d) => d.kind === 'videoinput').length > 1
         );
       })
-      .catch(() => setHasMultipleCameras(false));
+      .catch(() => undefined);
   }, []);
+
+  // The mount-time probe runs before camera permission is granted, when
+  // browsers report at most one placeholder device per kind — on a first-ever
+  // broadcast it always says "one camera", hiding the flip button on the
+  // phones it was built for. Re-probed after getUserMedia succeeds (when the
+  // answer is real) and on devicechange.
+  useEffect(() => {
+    probeCameras();
+    const md = navigator.mediaDevices;
+    if (!md?.addEventListener) return;
+    md.addEventListener('devicechange', probeCameras);
+    return () => md.removeEventListener('devicechange', probeCameras);
+  }, [probeCameras]);
 
   const releaseWakeLock = useCallback(() => {
     wakeLockRef.current?.release().catch(() => undefined);
     wakeLockRef.current = null;
+  }, []);
+
+  // The browser silently releases the lock whenever the page is hidden, but
+  // the sentinel object stays truthy — without tracking its 'release' event
+  // the visibilitychange re-acquire below would short-circuit on the stale
+  // ref and never request a new lock (the exact scenario it exists for).
+  const acquireWakeLock = useCallback(async () => {
+    try {
+      const sentinel = (await navigator.wakeLock?.request('screen')) ?? null;
+      if (sentinel) {
+        sentinel.addEventListener('release', () => {
+          if (wakeLockRef.current === sentinel) wakeLockRef.current = null;
+        });
+      }
+      wakeLockRef.current = sentinel;
+    } catch {
+      /* Unsupported or denied — streaming still works, screen may sleep. */
+    }
   }, []);
 
   const teardown = useCallback(async () => {
@@ -132,6 +169,10 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
 
         streamRef.current = stream;
         if (videoRef.current) videoRef.current.srcObject = stream;
+        setMirror(stream.getVideoTracks()[0]?.getSettings?.().facingMode !== 'environment');
+        // Permission was just granted, so enumerateDevices now returns the
+        // real device list — re-probe for the flip button.
+        probeCameras();
         setPhase('connecting');
 
         const session = await publishToWhip({
@@ -144,6 +185,11 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
             else if (state === 'failed') {
               setPhase('error');
               setErrorMessage(detail || 'The broadcast connection failed.');
+              // Unrecoverable: nothing here retries a 'failed' connection, so
+              // holding the camera, mic, and wake lock on a dead error screen
+              // is pure leak (hardware light on, phone kept awake). Stop the
+              // local capture; the End button still runs the backend teardown.
+              void teardown();
             }
           },
         });
@@ -155,11 +201,7 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
         sessionRef.current = session;
 
         // Without this a phone screen-locks mid-stream and the broadcast dies.
-        try {
-          wakeLockRef.current = (await navigator.wakeLock?.request('screen')) ?? null;
-        } catch {
-          /* Unsupported or denied — streaming still works, screen may sleep. */
-        }
+        await acquireWakeLock();
       } catch (error) {
         logger.error('Failed to start broadcast', { streamKey: !!streamKey }, error);
         if (cancelled) return;
@@ -175,23 +217,22 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
     // facingMode deliberately excluded: switching cameras swaps the track in
     // place (see flipCamera) rather than restarting the whole ingest session.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [streamKey, teardown]);
+  }, [streamKey, teardown, acquireWakeLock, probeCameras]);
 
   // Re-acquire the wake lock when the tab comes back to the foreground; the
   // browser drops it on visibility change and will not restore it itself.
+  // 'reconnecting' counts as live here: backgrounding often bumps the
+  // connection to 'disconnected', and no further visibilitychange fires once
+  // it recovers — gating on 'live' alone would never re-acquire.
   useEffect(() => {
-    const onVisibility = async () => {
+    const onVisibility = () => {
       if (document.visibilityState !== 'visible') return;
-      if (wakeLockRef.current || phase !== 'live') return;
-      try {
-        wakeLockRef.current = (await navigator.wakeLock?.request('screen')) ?? null;
-      } catch {
-        /* best effort */
-      }
+      if (wakeLockRef.current || (phase !== 'live' && phase !== 'reconnecting')) return;
+      void acquireWakeLock();
     };
     document.addEventListener('visibilitychange', onVisibility);
     return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [phase]);
+  }, [phase, acquireWakeLock]);
 
   // Closing the tab must end the stream, not strand it until Livepeer's
   // ingest timeout. pagehide fires on iOS where beforeunload does not.
@@ -226,32 +267,49 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
   };
 
   const flipCamera = async () => {
+    // Only meaningful with a live capture and session. Without these guards a
+    // press during 'Starting camera…' — or racing End Stream while getUserMedia
+    // is still prompting — orphaned the freshly acquired track: attached to
+    // nothing, stopped by nothing, camera light on until full page unload.
+    if (flipInFlightRef.current) return;
+    if (!streamRef.current || !sessionRef.current) return;
+    flipInFlightRef.current = true;
     const next = facingMode === 'user' ? 'environment' : 'user';
+    let newTrack: MediaStreamTrack | null = null;
     try {
       const replacement = await navigator.mediaDevices.getUserMedia({
         video: { ...VIDEO_CONSTRAINTS, facingMode: next },
         audio: false,
       });
-      const newTrack = replacement.getVideoTracks()[0];
+      newTrack = replacement.getVideoTracks()[0] ?? null;
       if (!newTrack) return;
+      // Re-check: teardown may have run while getUserMedia was prompting.
+      if (!streamRef.current || !sessionRef.current) return;
 
       // Swap into the live session first so viewers never see a gap, then
       // retire the old track and splice the new one into the preview stream.
-      await sessionRef.current?.replaceTrack('video', newTrack);
+      await sessionRef.current.replaceTrack('video', newTrack);
 
-      const oldTrack = streamRef.current?.getVideoTracks()[0];
-      if (oldTrack && streamRef.current) {
+      const oldTrack = streamRef.current.getVideoTracks()[0];
+      if (oldTrack) {
         streamRef.current.removeTrack(oldTrack);
         oldTrack.stop();
-        streamRef.current.addTrack(newTrack);
       }
+      streamRef.current.addTrack(newTrack);
       newTrack.enabled = cameraOn;
-      if (videoRef.current && streamRef.current) {
+      if (videoRef.current) {
         videoRef.current.srcObject = streamRef.current;
       }
+      setMirror(newTrack.getSettings?.().facingMode !== 'environment');
       setFacingMode(next);
+      newTrack = null; // adopted into the stream — must not be stopped below
     } catch (error) {
       logger.warn('Camera flip failed', error);
+    } finally {
+      // Any bail-out or throw after acquisition lands here with the track
+      // still set — stop it so the second camera doesn't stay captured.
+      newTrack?.stop();
+      flipInFlightRef.current = false;
     }
   };
 
@@ -284,7 +342,7 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
           playsInline
           className={cn(
             'h-full w-full object-cover',
-            facingMode === 'user' && 'scale-x-[-1]',
+            mirror && 'scale-x-[-1]',
             !cameraOn && 'opacity-0'
           )}
         />
@@ -312,7 +370,15 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
 
         {(phase === 'live' || phase === 'reconnecting') && (
           <div className="absolute left-3 top-3 flex items-center gap-2">
+            {/* data-live-pulse marks this as a meaningful live indicator (the
+                themes map it to their live colour and exempt it from skeleton
+                rules); data-keep-dark exempts it from the portal palette
+                washes that would fade it to a translucent tint over the video
+                — this chip renders inside the vaul drawer portal, outside
+                #app-root, where the themes' restore rules can't reach. */}
             <span
+              data-live-pulse
+              data-keep-dark
               className={cn(
                 'flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide',
                 phase === 'live'
@@ -320,7 +386,11 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
                   : 'bg-amber-500/90 text-black'
               )}
             >
+              {/* data-live-pulse on the dot itself: the theme skeleton rules
+                  match .animate-pulse per-element, so the chip's attribute
+                  does not shield this span. */}
               <span
+                data-live-pulse
                 className={cn(
                   'h-1.5 w-1.5 rounded-full bg-current',
                   phase === 'live' && 'animate-pulse'

@@ -26,7 +26,7 @@ import {
 } from '@/lib/engagement';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLayoutEffect, useEffect, useState, useRef, useCallback } from 'react';
+import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, Flag, Link2, Gem, Pencil, Trash2 } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -367,9 +367,15 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
   const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
   const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
+  const streamObj = (nft as any).stream;
+
   return {
     id: String(nft.tokenId),
     type: 'live',
+    // The Mongo ObjectId every /api/live/{id}/* route requires. Without it the
+    // card falls back to the numeric tokenId and like/gift/activities/end all
+    // 500 (or silently no-op) server-side. Same resolution as the feed mapper.
+    streamId: streamObj?._id || streamObj?.streamId || undefined,
     streamer: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
     avatar,
     title: nft.title || nft.name || 'Live Stream',
@@ -706,7 +712,14 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
         // Convert livestream data to DeHubNFT-like shape for unified rendering
         const account = (stream as any).account;
         return {
-          tokenId: (stream as any)._id || stream.streamId || id,
+          // Prefer the stream doc's own numeric NFT tokenId: downstream this
+          // becomes stream.id, which the on-chain gift path BigInt()-encodes
+          // — a hex Mongo _id there throws. The _id stays available for the
+          // /api/live/{id}/* routes via the `stream` passthrough below.
+          tokenId: (stream as any).tokenId ?? ((stream as any)._id || stream.streamId || id),
+          // Carry the raw stream doc so toLiveStream can resolve the Mongo
+          // ObjectId (stream._id) for the /api/live/{id}/* interaction routes.
+          stream,
           name: stream.title,
           title: stream.title,
           description: stream.description,
@@ -773,6 +786,15 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
   
   // Determine content type
   const contentType = post ? getContentType(post) : null;
+  // toLiveStream builds fresh playbackUrls arrays; called inline in render it
+  // handed LiveStreamCard new array identities on every page re-render, and
+  // the playback effect (keyed on urlsToTry) tore down and re-created the
+  // player each time — a guaranteed visible restart when showRelated flips
+  // ~1s after paint. Memoize on the post object instead.
+  const liveData = useMemo(
+    () => (post && getContentType(post) === 'live' ? toLiveStream(post) : null),
+    [post]
+  );
   const isAudioPost = post ? ((post as any).postType === 'audio' || (post as any).postType === 'feed-audio') : false;
   const isVideoPost = contentType === 'video' && !isAudioPost;
   const isImagePost = contentType === 'image';
@@ -843,7 +865,7 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
       case 'image':
         return <ImageCard post={toImagePost(post)} />;
       case 'live': {
-        const liveData = toLiveStream(post);
+        if (!liveData) return <NotFoundState />;
         return (
           <LivePostWithStatus liveData={liveData} post={post} />
         );
