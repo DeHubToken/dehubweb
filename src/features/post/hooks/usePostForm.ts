@@ -17,7 +17,7 @@ import { getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { isSolanaChain, findLockToken, isValidEvmAddress } from '@/lib/chains/constants';
 import { connectSolanaWallet, isValidSolanaAddress } from '@/lib/solana/wallet';
 import { broadcastSolanaMint } from '@/lib/solana/mint';
-import { confirmEvmMint } from '@/lib/api/dehub/solana';
+import { confirmEvmMint, getSolanaStatus } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -225,7 +225,27 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [chainId, setChainId] = useState<PostChainId>(BASE_CHAIN_ID as PostChainId);
+  const [chainId, setChainIdState] = useState<PostChainId>(BASE_CHAIN_ID as PostChainId);
+
+  /**
+   * Selecting Solana asks the backend whether it can mint there before the
+   * chain is committed. Without this the user only found out at mint time —
+   * after the media had already been uploaded — via "Solana minting is not
+   * enabled on the server". A status endpoint that is down or slow must not
+   * block the choice, so failures fall through to the old behaviour.
+   */
+  const setChainId = useCallback((next: PostChainId) => {
+    setChainIdState(next);
+    if (!isSolanaChain(next)) return;
+    getSolanaStatus()
+      .then((status) => {
+        if (status.mintingEnabled === false) {
+          toast.error(status.message || 'Solana posting is temporarily unavailable. Try Base or BNB instead.');
+          setChainIdState(BASE_CHAIN_ID as PostChainId);
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     // Active draft category takes priority, then saved defaults
     if (d?.selectedCategory) return d.selectedCategory;
@@ -1003,11 +1023,29 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         const ppvValue = parseFloat(ppvAmount);
         if (ppvValue > 0) {
           streamInfo.isPayPerView = true;
-          streamInfo.payPerViewTokenSymbol = ppvCurrency;
           streamInfo.payPerViewAmount = ppvValue;
-          if (ppvCurrency === 'DHB' && evmChainConfig?.dhbToken) {
-            streamInfo.payPerViewContractAddress = evmChainConfig.dhbToken;
+
+          if (postingOnSolana) {
+            // Without the mint address and chain id the post ships as "PPV, no
+            // token, no chain": mobile reads payPerViewChainId as undefined and
+            // routes the unlock to the EVM DHB path, and the backend cannot
+            // resolve a mint for /solana/build-payment. Nobody can pay it.
+            const splSymbol = ppvCurrency === 'USD' || ppvCurrency === 'DHB' ? 'SOL' : ppvCurrency;
+            const splToken = findLockToken(splSymbol, chainId);
+            if (!splToken) {
+              toast.error(`${splSymbol} is not available for PPV on Solana`);
+              setIsPosting(false);
+              return;
+            }
+            streamInfo.payPerViewTokenSymbol = splToken.symbol;
+            streamInfo.payPerViewContractAddress = splToken.address;
             streamInfo.payPerViewChainIds = [chainId];
+          } else {
+            streamInfo.payPerViewTokenSymbol = ppvCurrency;
+            if (ppvCurrency === 'DHB' && evmChainConfig?.dhbToken) {
+              streamInfo.payPerViewContractAddress = evmChainConfig.dhbToken;
+              streamInfo.payPerViewChainIds = [chainId];
+            }
           }
         }
       }

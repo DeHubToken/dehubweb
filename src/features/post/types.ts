@@ -37,7 +37,12 @@ export interface MediaFile {
   trimEnd?: number;
 }
 
-export type Currency = 'USD' | 'DHB';
+/**
+ * PPV / bounty pricing currency. USD and DHB are the EVM options; the SPL
+ * symbols are only selectable while the post's chain is Solana, where DHB
+ * does not exist.
+ */
+export type Currency = 'USD' | 'DHB' | 'SOL' | 'USDC' | 'USDT';
 
 export interface PollOption {
   id: string;
