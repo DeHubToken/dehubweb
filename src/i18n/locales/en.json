@@ -1418,7 +1418,11 @@
     "new_version_available": "New version available",
     "refresh_to_pick_up_the_latest_changes": "Refresh to pick up the latest changes.",
     "refresh": "Refresh",
-    "what_changed": "What changed"
+    "what_changed": "What changed",
+    "turn_on_desktop_notifications": "Turn on desktop notifications?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Get a heads-up about replies, tips and DMs while you're in another tab.",
+    "turn_on": "Turn on",
+    "not_now": "Not now"
   },
   "staking": {
     "title": "Staking",

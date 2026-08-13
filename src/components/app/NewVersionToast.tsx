@@ -29,20 +29,20 @@ import { startVersionWatch, type BuildVersion } from '@/lib/version-check';
  * No gap: the close button is absolutely positioned, so the content div is the
  * toast's only in-flow child and there is nothing for one to sit between.
  */
-const TOAST_CLASSES = 'flex-col items-stretch';
+export const TOAST_CLASSES = 'flex-col items-stretch';
 
 /**
  * The heading has to read as a heading against a 13px/400 description, so it is
  * sized and weighted well clear of it. Sonner's own `[data-title]` rule is
  * `:where()`-wrapped, so no `!` is needed to beat its 500 weight.
  */
-const TITLE_CLASSES = 'text-base font-bold leading-tight';
+export const TITLE_CLASSES = 'text-base font-bold leading-tight';
 
 /**
  * Sonner's title/description gap is 2px, tuned for a 13px title. Under a 16px
  * bold one the description reads as crowding it.
  */
-const CONTENT_CLASSES = 'gap-1.5';
+export const CONTENT_CLASSES = 'gap-1.5';
 
 /**
  * Both buttons borrow the feed nav's active pill (see feeds/GlassIndicator): the
@@ -56,7 +56,7 @@ const CONTENT_CLASSES = 'gap-1.5';
  * one of those to `!important` — and sonner always renders `cancel` BEFORE
  * `action`, so the two slots cannot produce Refresh-then-What-changed anyway.
  */
-const BUTTON_CLASSES = [
+export const BUTTON_CLASSES = [
   'inline-flex h-9 w-full items-center justify-center px-4',
   'rounded-xl border border-white/30',
   'bg-gradient-to-br from-white/20 via-white/10 to-white/5',
@@ -110,7 +110,7 @@ const BUTTON_CLASSES = [
  * does. The focus ring is sonner's own 2px, recoloured — its black-at-20% is
  * invisible on the glass, and with the disc gone it is the only affordance left.
  */
-const CLOSE_CLASSES = [
+export const CLOSE_CLASSES = [
   'start-auto end-2 top-2 h-7 w-7 transform-none border-0',
   '!bg-transparent !text-white/60',
   'transition-colors hover:!bg-transparent hover:!text-white',
