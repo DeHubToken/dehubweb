@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus, Video, MonitorPlay } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -65,6 +65,64 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [categorySearch, setCategorySearch] = useState('');
   const [loadingCategories, setLoadingCategories] = useState(false);
 
+  // Generation counter for the go-live sequence. handleClose bumps it, and
+  // handleStartStream re-checks after every await: without this, dismissing
+  // the drawer during the mint → poll → provision chain (15-30s) let the
+  // continuation finish against the closed modal — marking the stream live
+  // with nothing feeding it, and leaving step='broadcasting' behind so the
+  // next open of the modal silently turned the camera on.
+  const goLiveRunRef = useRef(0);
+  // Mirrors for the unmount teardown below — an unmount cleanup can't read
+  // fresh state.
+  const streamDataRef = useRef<typeof streamData>(null);
+  const walletAddressRef = useRef(walletAddress);
+  const broadcastingRef = useRef(false);
+  useEffect(() => { streamDataRef.current = streamData; }, [streamData]);
+  useEffect(() => { walletAddressRef.current = walletAddress; }, [walletAddress]);
+  useEffect(() => { broadcastingRef.current = step === 'broadcasting'; }, [step]);
+
+  // mark-stream-live is fired without awaiting; every end path must sequence
+  // its end-stream-session AFTER it settles, or a cold-started mark landing
+  // late re-upserts the row the delete just removed — leaving the post
+  // rendering live forever (the row is a pure existence check with no TTL).
+  const markLivePromiseRef = useRef<Promise<unknown> | null>(null);
+
+  const clearLiveSession = (tokenId: string) => {
+    const token = getAuthToken();
+    const addr = walletAddressRef.current?.toLowerCase();
+    if (!token || !addr) return;
+    Promise.resolve(markLivePromiseRef.current)
+      .catch(() => undefined)
+      .then(() =>
+        supabase.functions.invoke('end-stream-session', {
+          body: { tokenId },
+          headers: { 'x-wallet-address': addr, 'x-dehub-token': token },
+        })
+      )
+      .catch(() => undefined);
+  };
+
+  // Route-change unmount (browser Back, link navigation): the broadcaster's
+  // own cleanup stops the camera and the WHIP ingest, but nothing else clears
+  // the live surfaces. Note what each call really does: end-stream-session
+  // deletes the Supabase row viewers key on, endLiveStream plants the
+  // client-honored settings.status='ended' marker — the backend's own status
+  // transitions only via the Livepeer idle webhook once ingest stops, which
+  // the WHIP teardown triggers.
+  useEffect(() => () => {
+    // An unmount invalidates any in-flight go-live exactly like a dismissal:
+    // without this, navigating away mid-mint let the continuation finish and
+    // mark a stream live that no UI could ever end.
+    goLiveRunRef.current++;
+    if (!broadcastingRef.current) return;
+    const data = streamDataRef.current;
+    if (!data) return;
+    if (data.streamId) {
+      endLiveStream(data.streamId).catch(() => undefined);
+    }
+    if (data.tokenId) clearLiveSession(data.tokenId);
+  }, []);
+
   // Load saved default categories
   useEffect(() => {
     if (isOpen && !selectedCategory) {
@@ -111,6 +169,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   };
 
   const handleClose = () => {
+    // Invalidate any in-flight go-live sequence — its continuation checks
+    // this and bails instead of marking a dismissed stream live.
+    goLiveRunRef.current++;
+    toast.dismiss('golive-progress');
     setStep('setup');
     setSource('camera');
     setTitle('');
@@ -122,30 +184,24 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
   const handleEndStream = async () => {
     if (!streamData?.tokenId) return;
-    const token = getAuthToken();
-    const addr = walletAddress?.toLowerCase();
+    // The unmount teardown must not double-fire after an explicit end.
+    broadcastingRef.current = false;
 
-    // Notify DeHub backend that stream has ended via PATCH /api/live/{streamId}/settings
+    // Plant the settings.status='ended' marker. This is client-honored only
+    // (deriveIsLive reads it) — the backend's top-level status transitions
+    // via the Livepeer idle webhook once ingest actually stops.
     if (streamData.streamId) {
       try {
         await endLiveStream(streamData.streamId);
-        logger.info('Stream ended via DeHub API', { streamId: streamData.streamId });
+        logger.info('Stream end marker set', { streamId: streamData.streamId });
       } catch (e) {
         logger.warn('endLiveStream failed (non-blocking)', e);
       }
     }
 
-    // Remove from Supabase live sessions table
-    if (token && addr) {
-      try {
-        await supabase.functions.invoke('end-stream-session', {
-          body: { tokenId: streamData.tokenId },
-          headers: { 'x-wallet-address': addr, 'x-dehub-token': token },
-        });
-      } catch (e) {
-        logger.warn('end-stream-session failed', e);
-      }
-    }
+    // Remove from Supabase live sessions table (sequenced after any pending
+    // mark-stream-live so the delete cannot be overwritten by a late upsert).
+    clearLiveSession(streamData.tokenId);
     handleClose();
   };
 
@@ -170,11 +226,28 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
     setIsLoading(true);
     logger.info('User initiated "Go Live"', { title, selectedCategoriesArray });
+
+    // Bail points for a dismissal that arrives mid-sequence. Everything after
+    // a bail is skipped — critically startLiveStream / mark-stream-live / the
+    // step change — so a cancelled go-live never leaves a stream flagged live
+    // or a 'broadcasting' step armed to auto-start the camera on reopen.
+    const run = ++goLiveRunRef.current;
+    const wasDismissed = () => goLiveRunRef.current !== run;
+
+    // The camera path needs the broadcaster chunk the moment minting ends —
+    // start it downloading now, in parallel with the wallet module, instead
+    // of leaving the creator on a spinner (with the stream already flagged
+    // live) while it fetches after the fact.
+    if (source === 'camera') {
+      void import('@/components/app/modals/GoLiveBroadcaster');
+    }
+
     try {
       // Step 1: Get user's wallet address for minting
       const { getWeb3AuthSigner, mintOnChain } = await import('@/lib/contracts/stream-collection');
       const minterAddress = await getWeb3AuthSigner();
       logger.info('Minter address obtained', { minterAddress });
+      if (wasDismissed()) return;
 
       // Step 2: Mint the live post via /api/user_mint
       logger.info('Minting live post...', { title });
@@ -195,6 +268,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
       const tokenId = mintResponse.createdTokenId;
       logger.info('NFT Minted via API', { tokenId });
+      if (wasDismissed()) return;
 
       // Step 3: Execute on-chain minting transaction
       if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
@@ -221,6 +295,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       mintResult.confirmed.catch((err) => {
         logger.warn('Background mint confirmation failed', err);
       });
+
+      // Past this point the mint is on-chain either way; a dismissal still
+      // stops us short of marking anything live.
+      if (wasDismissed()) return;
 
       // Step 4: Poll /api/nft_info/{tokenId} to get stream credentials
       // Backend needs a moment to provision the stream after minting
@@ -253,8 +331,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         }
         retryCount++;
         await new Promise(r => setTimeout(r, 2000));
+        if (wasDismissed()) return;
       }
 
+      if (wasDismissed()) return;
       if (!streamKey) {
         throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
       }
@@ -286,6 +366,15 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           logger.warn('Edge Function also failed, using standard RTMP', e2);
         }
       }
+      if (wasDismissed()) return;
+
+      // The backend's /ingesturl hands back rtmp://livepeer.studio/live/… —
+      // that's the API host, not Livepeer's ingest host, and OBS pointed at
+      // it fails to connect. Normalize to the documented RTMP endpoint (the
+      // key is shown separately, so the embedded one is dropped with it).
+      if (/^rtmp:\/\/livepeer\.studio\//i.test(ingestUrl)) {
+        ingestUrl = LIVEPEER_RTMP_URL;
+      }
 
       // Step 5b: Mark stream as live via PATCH /settings
       try {
@@ -293,6 +382,12 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         logger.info('Stream marked as live via settings', { streamId });
       } catch (e) {
         logger.warn('startLiveStream (settings) failed (non-blocking)', e);
+      }
+      if (wasDismissed()) {
+        // Undo the settings marker just written — this is the only bail
+        // point past that PATCH, so the compensation lives here.
+        endLiveStream(streamId).catch(() => undefined);
+        return;
       }
 
       // Final fallback: standard Livepeer RTMP URL
@@ -302,7 +397,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       }
 
       const hlsUrl = playbackId ? `https://livepeercdn.studio/hls/${playbackId}/index.m3u8` : '';
-      
+
       const resultData = {
         tokenId,
         streamId,
@@ -319,11 +414,14 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       logger.info('Stream setup ready', { streamId, tokenId, source });
       toast.success(source === 'camera' ? 'You are going live!' : 'Live stream is ready!');
 
-      // Mark stream as live in Supabase (api.dehub.io /start fails with 404)
+      // Mark stream as live in Supabase (api.dehub.io /start fails with 404).
+      // The promise is kept so end paths can sequence their delete after it —
+      // otherwise a slow cold start here re-upserts the row an immediate end
+      // just removed.
       const token = getAuthToken();
       const addr = walletAddress || minterAddress;
       if (token && addr) {
-        supabase.functions.invoke('mark-stream-live', {
+        markLivePromiseRef.current = supabase.functions.invoke('mark-stream-live', {
           body: { tokenId, streamId },
           headers: { 'x-wallet-address': addr.toLowerCase(), 'x-dehub-token': token },
         }).then(({ error }) => {
@@ -365,7 +463,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const inputClass = "w-full h-12 px-4 text-base bg-zinc-800/50 border border-white/20 rounded-xl text-white placeholder:text-zinc-500 outline-none focus:border-white/50";
 
   return (
-    <Drawer open={isOpen} onOpenChange={handleDismiss}>
+    // Scrim-tap / drag dismissal is locked while the mint sequence runs: an
+    // accidental swipe during the 15-30s wait was cancelling a go-live the
+    // user had already paid gas for. The header X stays active as the
+    // explicit cancel.
+    <Drawer open={isOpen} onOpenChange={handleDismiss} dismissible={!isLoading}>
       <DrawerContent glass className="max-h-[90vh] px-4 pb-8">
         <DrawerHeader className="border-b border-white/10 mb-4 relative">
           <DrawerTitle className="text-white flex items-center gap-2">
@@ -459,18 +561,20 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             </div>
           ) : step === 'broadcasting' ? (
             streamData && (
-              <Suspense
-                fallback={
-                  <div className="flex items-center justify-center py-16">
-                    <Loader2 className="w-6 h-6 animate-spin text-white" />
-                  </div>
-                }
-              >
-                <GoLiveBroadcaster
-                  streamKey={streamData.streamKey}
-                  onEnd={handleEndStream}
-                />
-              </Suspense>
+              <BroadcasterBoundary onEnd={handleEndStream}>
+                <Suspense
+                  fallback={
+                    <div className="flex items-center justify-center py-16">
+                      <Loader2 className="w-6 h-6 animate-spin text-white" />
+                    </div>
+                  }
+                >
+                  <GoLiveBroadcaster
+                    streamKey={streamData.streamKey}
+                    onEnd={handleEndStream}
+                  />
+                </Suspense>
+              </BroadcasterBoundary>
             )
           ) : (
             <div className="space-y-4 pb-4">
@@ -593,6 +697,48 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       </Drawer>
     </Drawer>
   );
+}
+
+/**
+ * The broadcaster chunk loads only when the step flips to 'broadcasting' —
+ * after the mint is paid and the stream is flagged live. If that dynamic
+ * import rejects (deploy skew serving a stale chunk manifest is a documented,
+ * recurring cause here), an unguarded Suspense would crash the whole page
+ * with the stream still live and no way to end it. Catch it and keep the End
+ * Stream control reachable instead.
+ */
+class BroadcasterBoundary extends React.Component<
+  { onEnd: () => void; children: React.ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch(error: Error) {
+    logger.error('Broadcaster failed to load', {}, error);
+  }
+
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return (
+      <div className="flex flex-col items-center gap-4 py-10 px-6 text-center">
+        <p className="text-sm text-white">
+          The broadcaster failed to load, so your camera never started — but the
+          stream was already created. End it below, then refresh the page and go
+          live again.
+        </p>
+        <button
+          onClick={this.props.onEnd}
+          className="h-12 px-6 rounded-xl border border-red-500/30 bg-red-500/10 text-sm font-medium text-red-300 hover:bg-red-500/20 transition-colors"
+        >
+          End Stream
+        </button>
+      </div>
+    );
+  }
 }
 
 function SourceOption({

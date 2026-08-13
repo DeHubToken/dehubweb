@@ -1068,12 +1068,17 @@ html[data-theme='war'] :is(button, a, input, textarea, select, [role='button']):
 /* ==========================================================================
    8. SKELETONS - the first paint of every route
    ========================================================================== */
-html[data-theme='war'] .animate-pulse,
+/* [data-live-pulse] is excluded on both arms: those animations carry meaning
+   (live dots, the equaliser bars, the broadcaster badge) and several sit in
+   portalled drawers where the #app-root-scoped palette lock cannot restore
+   them - without the exclusion this rule erases them to an invisible 7%
+   square. Same convention as osaka's section 8. */
+html[data-theme='war'] .animate-pulse:not([data-live-pulse]),
 html[data-theme='war'] [class*="bg-white/[0.06]"],
 html[data-theme='war'] [class*="bg-white/[0.03]"] {
   border-radius: 0 !important;
 }
-html[data-theme='war'] .animate-pulse {
+html[data-theme='war'] .animate-pulse:not([data-live-pulse]) {
   background-color: rgb(var(--war-hud) / 0.07) !important;
   background-image: none !important;
 }

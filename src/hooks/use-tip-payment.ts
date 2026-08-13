@@ -36,6 +36,10 @@ interface UseTipPaymentOptions {
    *  rows with a comment_id are excluded from the post's tip count. */
   commentId?: string;
   onSuccess?: () => void;
+  /** Called the moment the tx is submitted, with its hash — before
+   *  confirmation. Live gifting uses this to record the tip on the stream's
+   *  activity feed without waiting out a confirmation the viewer won't. */
+  onSubmitted?: (txHash: string, amount: number) => void;
   /** Called after on-chain confirmation + DB save succeeds (background) */
   onConfirmed?: () => void;
 }
@@ -86,6 +90,7 @@ export function useTipPayment({
   tokenId,
   commentId,
   onSuccess,
+  onSubmitted,
   onConfirmed,
 }: UseTipPaymentOptions) {
   const [isTipping, setIsTipping] = useState(false);
@@ -136,6 +141,7 @@ export function useTipPayment({
 
         // Optimistic: show success immediately after tx submitted
         toast.success(dhbText(`DHB ${amount.toLocaleString()} tip sent!`), { id: 'tip-payment' });
+        onSubmitted?.(tipResult.hash, amount);
         onSuccess?.();
 
         // Background: confirm on-chain + persist decoded on-chain values to DB
@@ -180,7 +186,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, tokenId, commentId, openLoginModal, onSuccess, onConfirmed]
+    [walletAddress, creatorAddress, chainId, tokenId, commentId, openLoginModal, onSuccess, onSubmitted, onConfirmed]
   );
 
   return { tip, isTipping };
