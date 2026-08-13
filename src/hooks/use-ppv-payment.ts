@@ -18,6 +18,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { DHB_TOKEN, toWei, fromWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { confirmPPVPurchase, getPaymentConfig } from '@/lib/api/dehub/payments';
 import { markTokenUnlocked } from '@/lib/unlocked-tokens-store';
+import { isSolanaChain } from '@/lib/chains/constants';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
 
@@ -26,7 +27,11 @@ interface UsePPVPaymentOptions {
   creatorAddress?: string;
   price: number;
   currency?: string;
-  chainId?: ChainId;
+  /**
+   * The POST's chain, so this accepts Solana (101/103) as well as the EVM
+   * ChainId union — callers pass `post.chainId` straight through.
+   */
+  chainId?: ChainId | number;
   /** Optional tip in DHB — uses payment router for atomic tx when deployed (#45) */
   tipAmount?: number;
   onSuccess?: () => void;
@@ -37,10 +42,13 @@ export function usePPVPayment({
   creatorAddress,
   price,
   currency = 'DHB',
-  chainId = BASE_CHAIN_ID,
+  chainId: postChainId = BASE_CHAIN_ID,
   tipAmount = 0,
   onSuccess,
 }: UsePPVPaymentOptions) {
+  // Everything below the Solana branch in pay() is EVM-only and has already
+  // ruled out 101/103, so it can treat the post's chain as a ChainId.
+  const chainId = postChainId as ChainId;
   const [isPaying, setIsPaying] = useState(false);
   const { walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
@@ -58,6 +66,33 @@ export function usePPVPayment({
 
     if (price <= 0) {
       toast.error('Invalid PPV price');
+      return;
+    }
+
+    // Solana posts settle in SOL/SPL through the backend-built transfer, and
+    // must branch before any of the EVM plumbing below — getChainConfig(101)
+    // throws "Unsupported chain ID", which is what used to happen here.
+    if (isSolanaChain(postChainId)) {
+      setIsPaying(true);
+      try {
+        toast.loading('Sign with Phantom to unlock', { id: 'ppv-payment', duration: Infinity });
+        const { sendSolanaPayment } = await import('@/lib/solana/payment');
+        await sendSolanaPayment({ tokenId, kind: 'ppv', chainId: postChainId });
+
+        markTokenUnlocked(tokenId);
+        toast.success('Content unlocked!', { id: 'ppv-payment' });
+        queryClient.invalidateQueries({ queryKey: ['bookmarks', 'ppv'] });
+        queryClient.invalidateQueries({ queryKey: ['feed'] });
+        onSuccess?.();
+      } catch (error: unknown) {
+        console.error('[PPV] Solana payment failed:', error);
+        toast.error(
+          error instanceof Error ? error.message : 'Solana payment failed',
+          { id: 'ppv-payment' },
+        );
+      } finally {
+        setIsPaying(false);
+      }
       return;
     }
 
@@ -210,6 +245,7 @@ export function usePPVPayment({
     price,
     currency,
     chainId,
+    postChainId,
     tokenId,
     tipAmount,
     openLoginModal,
