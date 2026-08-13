@@ -88,6 +88,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.request-phone-otp]
     verify_jwt = false
+  [functions.send-admin-invite]
+    verify_jwt = false
   [functions.send-sms-hook]
     verify_jwt = false
   [functions.ssr-seo]
