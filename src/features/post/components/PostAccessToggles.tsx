@@ -123,6 +123,17 @@ export function PostAccessToggles({
   const chainLabel = getChainById(postChainId)?.name ?? 'chain';
   const solanaChain = isSolanaChain(postChainId);
 
+  // DHB does not exist on Solana, and a USD-denominated price has no mint the
+  // backend can build a transfer against — so Solana posts price PPV in the
+  // SPL tokens the chain actually supports.
+  const ppvCurrencyOptions = useMemo<Currency[]>(
+    () =>
+      solanaChain
+        ? (lockTokens.map((t) => t.symbol) as Currency[])
+        : (['USD', 'DHB'] as Currency[]),
+    [solanaChain, lockTokens],
+  );
+
   // Category state
   const [categories, setCategories] = useState<DeHubCategory[]>([]);
   const [categorySearch, setCategorySearch] = useState('');
@@ -192,7 +203,11 @@ export function PostAccessToggles({
   const handlePpvToggle = (checked: boolean) => {
     if (checked) {
       setTempPpvAmount(ppvAmount);
-      setTempPpvCurrency(ppvCurrency);
+      // Carrying DHB/USD over to a Solana post would leave the selector with
+      // nothing highlighted, so fall back to the chain's first token.
+      setTempPpvCurrency(
+        ppvCurrencyOptions.includes(ppvCurrency) ? ppvCurrency : ppvCurrencyOptions[0],
+      );
       setPpvDrawerOpen(true);
     } else {
       setIsPPV(false);
@@ -625,7 +640,7 @@ export function PostAccessToggles({
             <div className="space-y-2">
               <label className="text-sm text-white/70">{t('drawers.currency')}</label>
               <div className="flex gap-2">
-                {(['USD', 'DHB'] as Currency[]).map((cur) => (
+                {ppvCurrencyOptions.map((cur) => (
                   <button
                     key={cur}
                     type="button"

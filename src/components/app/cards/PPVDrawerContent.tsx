@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { usePPVPayment } from '@/hooks/use-ppv-payment';
-import type { ChainId } from '@/components/app/ChainSelector';
 import {
   DrawerContent,
   DrawerHeader,
@@ -46,7 +45,9 @@ export function PPVDrawerContent({
     creatorAddress,
     price,
     currency,
-    chainId: chainId as ChainId,
+    // Passed through unnarrowed: Solana posts carry 101/103 and the hook
+    // routes those to the SOL/SPL transfer path.
+    chainId,
     tipAmount,
     onSuccess: () => {
       onUnlocked?.();
