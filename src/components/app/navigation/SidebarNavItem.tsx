@@ -10,11 +10,25 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 // Map nav item labels to i18n keys. Exported because the menu-search filter
 // (nav-search.ts) has to match on the same translated label a row renders.
+//
+// A label with no entry here falls through to `t(label)`, which misses and is
+// humanised back to the label itself by parseMissingKeyHandler — so an
+// unmapped row still reads correctly in English, it just cannot be translated.
+// That is deliberate for the Arcade games in nav-search's search-only list:
+// their titles are owned by config/arcade-games.ts and are not translated
+// anywhere else in the app either.
 export const NAV_LABEL_KEYS: Record<string, string> = {
   Home: 'nav.home', Explore: 'nav.explore', Prompt: 'nav.prompt', Notifications: 'nav.notifications',
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
   'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', Governance: 'nav.governance', Communities: 'nav.communities', Events: 'nav.events', Careers: 'nav.careers', Glossary: 'nav.glossary', Guide: 'nav.guide', Stats: 'nav.stats', Arcade: 'nav.arcade',
+  // Search-only destinations (nav-search.ts). The three feed surfaces reuse the
+  // keys the feed tabs already ship, so they arrive translated for free.
+  Videos: 'feed.videos', Shorts: 'feed.shorts', Music: 'feed.music',
+  'Live TV': 'nav.liveTv', 'Buy DHB': 'nav.buyDhb', Bridge: 'nav.bridge', 'Top 100': 'nav.top100',
+  'AI Agents': 'nav.agents', Advertising: 'nav.advertising', Premium: 'nav.premium',
+  Pricing: 'nav.pricing', Creators: 'nav.creators', 'Get the App': 'nav.getTheApp',
+  'Connect AI': 'nav.connectAi',
 };
 
 interface SidebarNavItemProps {

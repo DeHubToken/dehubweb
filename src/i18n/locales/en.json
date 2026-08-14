@@ -29,7 +29,18 @@
     "communities": "Communities",
     "guide": "Guide",
     "stats": "Live stats",
-    "events": "Events"
+    "events": "Events",
+    "liveTv": "Live TV",
+    "buyDhb": "Buy DHB",
+    "bridge": "Bridge",
+    "top100": "Top 100",
+    "agents": "AI Agents",
+    "advertising": "Advertising",
+    "premium": "Premium",
+    "pricing": "Pricing",
+    "creators": "Creators",
+    "getTheApp": "Get the App",
+    "connectAi": "Connect AI"
   },
   "feed": {
     "home": "Home",
