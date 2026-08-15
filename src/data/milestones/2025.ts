@@ -180,6 +180,8 @@ Uptime is measured, and measurement is a choice. Ours covers the composite servi
 
 The standard has not changed since 2022: if a creator's stream fails, it is our failure, whatever the cause.
 
+![DeHub card reading "52 minutes a year" — what 99.99% uptime actually allows for](/lovable-uploads/inbody-fourth-nine.jpg)
+
 ### What we are not claiming
 
 That nothing will go wrong. Four nines is 52 minutes a year, not zero, and a creator who loses a stream inside those 52 minutes is not consoled by the annual figure.
@@ -382,6 +384,8 @@ dhbscan is that sequence finished. Not "we will tell you what we did", but "here
 To make trusting us optional.
 
 We would rather be checked than believed. Belief is fragile, it does not survive a bad quarter, and this project has had several. A verifiable record survives them, because it does not depend on anyone's opinion of us — including our own.
+
+![DeHub card reading "checked not believed" — dhbscan shows the bad quarters too](/lovable-uploads/inbody-dhbscan.jpg)
 
 ### The uncomfortable consequence
 
