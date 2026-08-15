@@ -456,7 +456,7 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         // this app's own origin, so without this the iframe would inherit real
         // same-origin access to storage, cookies and the parent DOM. Omitting
         // it forces an opaque origin and keeps the game sandboxed.
-        sandbox="allow-scripts allow-pointer-lock allow-fullscreen"
+        sandbox="allow-scripts allow-pointer-lock"
       />
       )}
 
