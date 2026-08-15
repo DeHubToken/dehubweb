@@ -18,6 +18,22 @@ const countdownBeginsPost: BlogPostType = {
 
     This is not just another milestone; it is THE milestone. After years of development, testing, and refinement, DeHub is about to land in the hands of millions through the world's most trusted app distribution platforms. The countdown on dehub.io represents more than just a time clock; it represents the culmination of countless hours of work, dedication, and unwavering belief in our vision.
 
+    ## Why app store approval is the hard part
+
+    Crypto applications occupy an awkward position in both stores' policies. Apple and Google each maintain specific rules covering cryptocurrency functionality, and those rules are applied by reviewers who see a great many applications that are, frankly, not legitimate. A compliant app and a non-compliant one can look similar from the outside, and the burden sits entirely with the applicant to demonstrate the difference.
+
+    A great many promising projects never clear that stage — not because they were rejected on the merits, but because the process is long, the feedback is terse, and teams give up and ship a web app instead.
+
+    ## What we changed to get here
+
+    The short version is that we stopped treating review as a formality at the end of the process and started designing for it. Wallet functionality, anything resembling an in-app purchase, how earnings are described, and what a first-time user sees before they have connected anything — every one of those has an approval dimension, and each is far cheaper to get right while building than to retrofit after a rejection.
+
+    ## What the countdown does not promise
+
+    It reflects the approval window, not our confidence. If the process runs as expected, the clock is accurate and we are live on stores when it reaches zero. If reviewers come back requiring changes, the countdown moves.
+
+    We would rather publish a date that can visibly slip than a vague quarter that quietly does. A countdown that only ever counts down is a marketing device; one that can be adjusted in public is a commitment with a cost attached.
+
     The wait is almost over. Visit dehub.io to see the countdown and be part of this historic moment. The future starts now!
   `,
   bannerImage: '/lovable-uploads/countdown-clock-banner.png',
@@ -617,6 +633,16 @@ const dubaiEventPost: BlogPostType = {
       <li><strong>April 29:</strong> Web 3 Dubai</li>
     </ul>
     
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Why the Middle East</h3>
+    <p class="mb-4 text-royal-blue/80">Three reasons, and the regulatory one comes first. The UAE spent several years building an actual framework for digital assets rather than treating the category as a problem to be contained. Having previously lost a real estate tokenisation venture in the Philippines to a regulator's position on the structure, a jurisdiction with clear published rules is worth a great deal of travel.</p>
+    <p class="mb-4 text-royal-blue/80">Second, the creator economy. The region has a large, young, mobile-first audience that did not grow up assuming Western platforms are the default. That is a far better market for a platform arguing creators should keep 90% of what they earn than one where the existing arrangements are entrenched and unquestioned.</p>
+    <p class="mb-4 text-royal-blue/80">Third, proximity. A significant share of this industry's serious conversations physically happen in Dubai, and attending is not optional if you intend to be in them.</p>
+
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Seven events in two weeks</h3>
+    <p class="mb-4 text-royal-blue/80">Running that schedule back to back was deliberate rather than merely enthusiastic. Each event draws a different crowd — Token2049 and ETH Dubai attract very different people from the World Blockchain Summit — and covering the range in one trip is the only efficient way to learn which parts of a market are real.</p>
+    <p class="mb-4 text-royal-blue/80">The value of a schedule like this is rarely the partnership signed on the day. It is discovering, across a few dozen conversations, that an assumption you had built a plan around is wrong: that the payment rail you expected people to use is not the one they use, or that a category you thought was open is already served by something you had never heard of.</p>
+    <p class="mb-4 text-royal-blue/80">We came home with several plans in worse shape than they left in, which is the correct outcome. An event where everything confirms what you already believed has usually told you nothing.</p>
+
     <p class="mt-8 font-semibold text-royal-blue">This was more than just a trip; it was a statement. DeHub is a global project, and our presence in Dubai has solidified our position in one of the world's most dynamic tech hubs. Thank you to everyone who connected with us. The future is bright, and we're just getting started!</p>
   `,
   bannerImage: '/lovable-uploads/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
@@ -657,6 +683,17 @@ const basePoolPost: BlogPostType = {
       <code class="text-sm font-mono text-middle-blue break-all">0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d</code>
     </div>
     <p class="mb-4 text-royal-blue/80">Tokens sent to this address will be automatically burned on the origin chain and re-minted for you on the Base network. No fees, no hassle.</p>
+
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Why Base, specifically</h3>
+    <p class="mb-4 text-royal-blue/80">DHB is a consumer token. It tips creators, enters arcade games and unlocks content — transactions frequently worth a few pounds. On Ethereum mainnet, the gas to perform those actions can exceed their value, and that is arithmetic rather than a user experience problem you can design around.</p>
+    <p class="mb-4 text-royal-blue/80">Base targets confirmations in the low hundreds of milliseconds and fees below a cent, which is the range where tipping someone is a normal action rather than a considered one. It also carries a very large share of all L2 activity, and Base tokens appear directly in Coinbase wallets, so users can onboard without the bridging exercise that loses ordinary people.</p>
+
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">How the bridge works</h3>
+    <p class="mb-4 text-royal-blue/80">Burn and re-mint, rather than a locked-liquidity bridge. Tokens sent to the address above are burned on the origin chain and re-minted to you on Base, so total supply is unchanged and there is no pooled collateral sitting somewhere waiting to become a target.</p>
+    <p class="mb-4 text-royal-blue/80">That choice is deliberate. A large proportion of the worst losses in this industry have come from bridges holding locked value, and the simplest way not to carry that risk is not to hold the value.</p>
+
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Please verify the address</h3>
+    <p class="mb-4 text-royal-blue/80">Any announcement telling people to send tokens somewhere is an ideal environment for impersonation, and migrations of this kind attract fake versions within hours. Check the contract on Basescan using the link above, confirm the bridging address against our official channels, and treat any variant that reaches you by direct message as fraudulent. We will never contact you first asking you to move funds.</p>
 
     <p class="mt-8 font-semibold text-royal-blue">This is just the beginning. Stay tuned for the official announcement when the Uniswap pool goes live. We're incredibly excited for this next chapter and couldn't have done it without our amazing community!</p>
   `,
@@ -729,6 +766,18 @@ const crusadersSponsorshipPost: BlogPostType = {
       <li>An advertising board in the stadium.</li>
       <li>The "Man of the Match" award will be presented as the "DeHub Man of the Match".</li>
     </ul>
+
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Why a rugby league club</h3>
+    <p class="mb-4 text-royal-blue/80">The fair question is why a Web3 platform is sponsoring a rugby side in North Wales rather than buying attention somewhere easier to measure.</p>
+    <p class="mb-4 text-royal-blue/80">The answer is that crypto advertising mostly reaches people who are already in crypto. Sponsorship budgets in this industry circulate through the same conferences, podcasts and timelines, and the audience is people who already hold tokens. DeHub is a consumer product. Growth has to come from people who have never opened a wallet.</p>
+    <p class="mb-4 text-royal-blue/80">A stadium crowd is not a crypto crowd. They are there for the rugby, they will see our name every week across two seasons whether or not they care what we do, and the association is with something local and real rather than with a token launch.</p>
+
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Why multi-year matters</h3>
+    <p class="mb-4 text-royal-blue/80">Sponsorship works through repetition. A single season is an advertisement. Multiple seasons is a relationship the club can plan around and supporters come to expect.</p>
+    <p class="mb-4 text-royal-blue/80">It also applies a small amount of pressure in a direction we welcome. A sponsor that disappears after one season was buying exposure. Committing across two means being visible through whatever the markets do in between, which is the same reasoning behind most of the long-horizon decisions on our roadmap.</p>
+
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">What we will report</h3>
+    <p class="mb-4 text-royal-blue/80">Honestly, including if it does not work. Brand sponsorship is notoriously hard to attribute and we would rather say so now than produce a flattering number later. What we can measure is awareness in the region and whether people arriving from North Wales stay — and we will publish what we find either way.</p>
 
     <p class="mt-8 font-semibold text-royal-blue">Stay tuned for more details on how we're reaching their 15,000 capacity stadium full of fans on a weekly basis!</p>
   `,
