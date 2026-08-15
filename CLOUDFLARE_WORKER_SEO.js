@@ -62,6 +62,7 @@ const OG_CARD_ROUTES = new Set([
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
+  'arcade/street-slayer',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -714,17 +715,18 @@ const MARKETING_PAGES = {
   // The Arcade. Titles and descriptions mirror the SPA's SEOHead strings so
   // the bot and human variants never diverge, and each game gets its own page
   // rather than being folded into the grid: they are separately linkable, they
-  // are what somebody actually searches for, and one shared page for three
-  // games would be a soft duplicate of all three.
+  // are what somebody actually searches for, and one shared page for all of
+  // them would be a soft duplicate of every one.
   'arcade': {
     title: 'Arcade | DeHub',
-    description: 'Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter and a rainforest walk. No install, no download, open source.',
+    description: 'Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk and a neon-street brawler. No install, no download.',
     heading: 'DeHub Arcade',
-    bodyHtml: `<p>Games that run in the browser tab. Nothing to install, nothing to buy — every one is open source and served from DeHub itself.</p>
+    bodyHtml: `<p>Games that run in the browser tab. Nothing to install, nothing to buy — three of them open source, one made for DeHub, and all four served from DeHub itself.</p>
 <ul>
 <li><a href="${APP_URL}/arcade/kings-gambit" style="color:#9f9">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
 <li><a href="${APP_URL}/arcade/claude-of-duty" style="color:#9f9">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
 <li><a href="${APP_URL}/arcade/jungle-trail" style="color:#9f9">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
+<li><a href="${APP_URL}/arcade/street-slayer" style="color:#9f9">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
 </ul>`,
   },
   'arcade/kings-gambit': {
@@ -750,6 +752,14 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
 <p>It is also hidden inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.</p>
 <p><a href="${APP_URL}/arcade/jungle-trail" style="color:#9f9">Walk the trail</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+  },
+  'arcade/street-slayer': {
+    title: 'Street Slayer | DeHub Arcade',
+    description: "Play Street Slayer on DeHub — a side-scrolling beat 'em up down a neon-lit street, with three fighters and a boss. Free, in your browser, no install.",
+    heading: "Street Slayer — A Neon-Street Beat 'Em Up",
+    bodyHtml: `<p>A side-scrolling beat 'em up down a neon-lit street: pick one of three fighters — Mike, Indi or Lerone — then punch, kick and throw your way through everything the block sends at you.</p>
+<p>The only game in the arcade that was not found: it was commissioned for DeHub and built by Studio Shook Pixel, so it exists nowhere else. Arrows or WASD to move, Z to jump, four attack keys, and a full set of on-screen controls on a touchscreen.</p>
+<p><a href="${APP_URL}/arcade/street-slayer" style="color:#9f9">Play Street Slayer</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
   },
   'guide': {
     title: 'DeHub Guide — Visual Walkthrough of the App',
