@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>STREET SLAYER</title>
+
+	<!-- Standardised web app manifest -->
+	<link rel="manifest" href="appmanifest.json" />
+
+	<!-- Allow fullscreen mode on iOS devices. (These are Apple specific meta tags.) -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="apple-touch-icon" sizes="256x256" href="icon-256.png" />
+	<meta name="HandheldFriendly" content="true" />
+
+	<!-- Chrome for Android web app tags -->
+	<meta name="mobile-web-app-capable" content="yes" />
+	<link rel="shortcut icon" sizes="256x256" href="icon-256.png" />
+
+    <!-- All margins and padding must be zero for the canvas to fill the screen. -->
+	<style type="text/css">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		html, body {
+			background: #000;
+			color: #fff;
+			overflow: hidden;
+			touch-action: none;
+			-ms-touch-action: none;
+		}
+		canvas {
+			touch-action-delay: none;
+			touch-action: none;
+			-ms-touch-action: none;
+		}
+
+		/* DeHub: the exit chip below. Top CENTRE, and that is not arbitrary —
+		   every other edge of the 854x480 layout is spoken for. Top left is the
+		   portrait and life bar, bottom left the directional pad, bottom right
+		   the six action buttons, and top right the touch pause button. The band
+		   between the life bar and that pause button is the only empty strip,
+		   and letterbox scaling centres the canvas horizontally, so viewport
+		   centre lands in it at every aspect ratio. On a tall window it lands on
+		   the black bar above the game, which is better still. */
+		#dehub-exit {
+			position: fixed;
+			top: 10px;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 10;
+			padding: 5px 14px;
+			border: 0;
+			border-radius: 999px;
+			background: rgba(0, 0, 0, 0.55);
+			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+			color: #fff;
+			font: 600 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			opacity: 0.5;
+			cursor: pointer;
+			/* The canvas swallows touch-action, so say it again here or a tap on
+			   the chip is treated as a gesture on the game underneath. */
+			touch-action: manipulation;
+			transition: opacity 150ms ease;
+		}
+		#dehub-exit:hover,
+		#dehub-exit:focus-visible {
+			opacity: 1;
+			outline: none;
+			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+		}
+    </style>
+
+
+</head>
+
+<body>
+	<div id="fb-root"></div>
+
+	<script>
+	// Issue a warning if trying to preview an exported project on disk.
+	(function(){
+		// Check for running exported on file protocol
+		if (window.location.protocol.substr(0, 4) === "file")
+		{
+			alert("Exported games won't work until you upload them. (When running on the file:/// protocol, browsers block many features from working for security reasons.)");
+		}
+	})();
+	</script>
+
+	<!-- The canvas must be inside a div called c2canvasdiv -->
+	<div id="c2canvasdiv">
+
+		<!-- The canvas the project will render to.  If you change its ID, don't forget to change the
+		ID the runtime looks for in the jQuery events above (ready() and cr_sizeCanvas()). -->
+		<canvas id="c2canvas" width="854" height="480">
+			<!-- This text is displayed if the visitor's browser does not support HTML5.
+			You can change it, but it is a good idea to link to a description of a browser
+			and provide some links to download some popular HTML5-compatible browsers. -->
+			<h1>Your browser does not appear to support HTML5.  Try upgrading your browser to the latest version.  <a href="http://www.whatbrowser.org">What is a browser?</a>
+			<br/><br/><a href="http://www.microsoft.com/windows/internet-explorer/default.aspx">Microsoft Internet Explorer</a><br/>
+			<a href="http://www.mozilla.com/firefox/">Mozilla Firefox</a><br/>
+			<a href="http://www.google.com/chrome/">Google Chrome</a><br/>
+			<a href="http://www.apple.com/safari/download/">Apple Safari</a></h1>
+		</canvas>
+
+	</div>
+
+	<!-- Pages load faster with scripts at the bottom -->
+
+	<!-- Construct 2 exported games require jQuery. -->
+	<script src="jquery-2.1.1.min.js"></script>
+
+
+
+    <!-- The runtime script.  You can rename it, but don't forget to rename the reference here as well.
+    This file will have been minified and obfuscated if you enabled "Minify script" during export. -->
+	<script src="c2runtime.js"></script>
+
+    <script>
+		// Start the Construct 2 project running on window load.
+		jQuery(document).ready(function ()
+		{
+			// Create new runtime using the c2canvas
+			cr_createRuntime("c2canvas");
+		});
+
+		// Pause and resume on page becoming visible/invisible
+		function onVisibilityChanged() {
+			if (document.hidden || document.mozHidden || document.webkitHidden || document.msHidden)
+				cr_setSuspended(true);
+			else
+				cr_setSuspended(false);
+		};
+
+		document.addEventListener("visibilitychange", onVisibilityChanged, false);
+		document.addEventListener("mozvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("msvisibilitychange", onVisibilityChanged, false);
+
+		// DeHub: upstream registers a service worker here for offline play. That
+		// cannot work in this frame and, worse, cannot fail quietly in it: the
+		// sandbox withholds allow-same-origin, so the frame has an opaque origin,
+		// and READING navigator.serviceWorker on an opaque origin THROWS a
+		// SecurityError rather than returning undefined. Upstream's guard is
+		// `if (!navigator.serviceWorker) return;`, which sits outside its own
+		// try/catch, so the throw escapes into the runtime's startup path.
+		//
+		// The runtime calls this by name if it exists (c2runtime.js:4953), so it
+		// stays defined and does nothing. sw.js, offline.js, offlineClient.js and
+		// offline.appcache are not vendored at all — see README.md.
+		window.C2_RegisterSW = function C2_RegisterSW() {};
+    </script>
+
+	<!-- ===================================================================
+	     DeHub: the way out. Not upstream, and it is a PAGE change rather
+	     than a runtime patch, so re-exporting the game does not reproduce it.
+
+	     The arcade player draws no chrome of its own: a game gets the whole
+	     viewport and is expected to offer its own close, which reaches the
+	     host by postMessage (an opaque-origin frame has no other channel).
+	     See src/config/arcade-games.ts `exitSource` and lib/game-exit-request.
+
+	     Why a button and not a key. Every key that reads as "quit" is already
+	     the game's: Esc and P both toggle its pause, R restarts the stage.
+	     Taking one would mean swallowing it before the runtime's own document
+	     listener saw it, which breaks a control the game ships with.
+	     =================================================================== -->
+	<script>
+	(function () {
+		// Gated on being embedded, so a standalone deploy — which has nothing
+		// to return to — never grows a button that does nothing.
+		if (window.parent === window)
+			return;
+
+		var chip = document.createElement("button");
+		chip.id = "dehub-exit";
+		chip.type = "button";
+		chip.textContent = "Exit";
+		chip.setAttribute("aria-label", "Leave Street Slayer and return to the arcade");
+
+		chip.addEventListener("click", function () {
+			window.parent.postMessage({ source: "street-slayer", type: "exit" }, "*");
+		});
+
+		document.body.appendChild(chip);
+	}());
+	</script>
+</body>
+</html>

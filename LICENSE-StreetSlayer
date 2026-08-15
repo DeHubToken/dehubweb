@@ -1,0 +1,29 @@
+Street Slayer
+=============
+
+Copyright (c) Studio Shook Pixel.
+
+Street Slayer is NOT open source. Unlike every other game in the DeHub arcade,
+it has no public repository and no permissive licence: it is a commissioned work,
+written by Studio Shook Pixel and delivered to DeHub as a finished build
+(project version 2.3, HTML5 export, 13 August 2026).
+
+DeHub's rights in it are whatever the commissioning agreement grants, and this
+file is a record of provenance rather than a grant to anyone else. In particular,
+this repository being public does not place the game, its code or its art under
+the repository's own licence. No permission is given here to copy, redistribute,
+modify or reuse the contents of `public/street-slayer-game/` outside DeHub.
+
+Two conditions came with the delivery, in the author's own words on the project:
+
+  "after the delivery of the game, I am not liable for any misuse"
+
+  "the client should be aware that using the names of famous individuals for
+   the characters is not permitted"
+
+The build as delivered satisfies the second: the fighters are Mike, Indi and
+Lerone, and the boss is Tubarao. Any future rename has to keep it that way.
+
+The engine is Construct 2 (Scirra Ltd). Its runtime, `c2runtime.js`, is
+redistributed under the terms Scirra grants to exported projects, and jQuery
+2.1.1, which the export bundles, is MIT — https://jquery.org/license.

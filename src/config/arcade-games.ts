@@ -52,9 +52,18 @@ import { isWeakHardware, probeGpu, readRenderer } from '@/lib/game-gpu';
 export interface ArcadeGameCredit {
   /** Upstream project name, as its authors write it. */
   name: string;
-  /** Upstream repository. */
-  url: string;
-  /** SPDX-ish short name. Every game here is MIT so far. */
+  /**
+   * Upstream repository, where there is one.
+   *
+   * Absent for a game that was commissioned rather than found: Street Slayer
+   * was written for DeHub and delivered as a build, so there is no public
+   * repository to point at and inventing a plausible one would be worse than
+   * saying nothing. `src/test/arcade.test.ts` asserts the shape when it is set.
+   */
+  url?: string;
+  /** Who wrote it, for the entries with no repository to name them. */
+  author?: string;
+  /** SPDX-ish short name, or 'Proprietary' for the commissioned one. */
   licence: string;
   /** Full licence text in the repo. The test checks this file exists. */
   licenceFile: string;
@@ -144,6 +153,8 @@ export interface ArcadeGame {
 const CHESS_URL = (import.meta.env.VITE_CHESS_GAME_URL as string | undefined) || '/chess-game/index.html';
 const WAR_URL = (import.meta.env.VITE_WAR_GAME_URL as string | undefined) || '/war-game/index.html';
 const JUNGLE_URL = (import.meta.env.VITE_JUNGLE_GAME_URL as string | undefined) || '/jungle-game/index.html';
+const SLAYER_URL =
+  (import.meta.env.VITE_STREET_SLAYER_URL as string | undefined) || '/street-slayer-game/index.html';
 
 /**
  * Shared preflight for the two engines that are WebGL2-only and heavy.
@@ -179,6 +190,40 @@ function requireHardwareWebgl(what: string, needsWebgl2: boolean): ArcadeGameCap
   }
 
   return { ok: true, reason: '', detail: gpu.renderer };
+}
+
+/**
+ * Preflight for the one engine that is not a 3D engine.
+ *
+ * Deliberately far softer than {@link requireHardwareWebgl}, and the difference
+ * is not an oversight. Construct 2 asks for WebGL and falls back to canvas2d by
+ * itself, and this is 2D sprite work at 854x480 — it plays fine on a software
+ * rasteriser, which is exactly the case the 3D games have to refuse. Blocking
+ * on a missing or slow GPU here would lock people out of a game that would have
+ * run. So the only answer that means anything is "this browser will not give
+ * any page a drawing surface at all".
+ */
+function requireCanvas(): ArcadeGameCapability {
+  // SSR / prerender: nothing to test, and a false negative here would render
+  // the "cannot play" panel into the HTML a crawler sees.
+  if (typeof document === 'undefined') return { ok: true, reason: '', detail: '' };
+
+  try {
+    if (!document.createElement('canvas').getContext('2d')) {
+      return {
+        ok: false,
+        reason: 'NO CANVAS',
+        detail:
+          'This browser is not giving any page a 2D canvas to draw on, which usually means canvas is switched off in its settings or by an extension.',
+      };
+    }
+  } catch {
+    // A browser that throws rather than returning null is not one we can say
+    // anything useful about. Let it try.
+    return { ok: true, reason: '', detail: '' };
+  }
+
+  return { ok: true, reason: '', detail: readRenderer() };
 }
 
 export const ARCADE_GAMES: ArcadeGame[] = [
@@ -299,6 +344,39 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // WebGL 1 is enough here: the engine targets r170 and does not require a
     // WebGL2 context.
     checkCapability: () => requireHardwareWebgl('The walk', false),
+  },
+  {
+    slug: 'street-slayer',
+    title: 'Street Slayer',
+    tagline: 'A neon-street brawler, made for DeHub alone.',
+    description:
+      'A side-scrolling beat ’em up down a neon-lit street: pick one of three fighters, then punch, kick and throw your way through everything the block sends at you.',
+    action: 'Fight',
+    art: '/arcade/street-slayer.webp',
+    artAlt:
+      'Three street fighters closing in on the player character outside a neon-lit shopfront in Street Slayer',
+    credit: {
+      name: 'Street Slayer',
+      // No `url`: this one was commissioned rather than found. See the interface.
+      author: 'Studio Shook Pixel',
+      licence: 'Proprietary',
+      licenceFile: 'LICENSE-StreetSlayer',
+    },
+    // Construct 2 reads nothing from the URL, and the project is fixed at
+    // 854x480 with "Letterbox scale", so it fills whatever frame it is given
+    // without being told anything. There is no quality preset to pass in.
+    buildUrl: () => SLAYER_URL,
+    // "Loader style: Percentage text" in the project settings — the engine
+    // paints its own loading screen with a real count, so the host draws none
+    // and the tau below is only kept for the field's shape.
+    bootTauMs: 8000,
+    hasOwnBootScreen: true,
+    exitSource: 'street-slayer',
+    // No pointer lock and no gamepad: the plugin list is Audio, Keyboard,
+    // Sprite, Sprite font and Touch, so asking for either would delegate a
+    // permission nothing in the frame ever requests.
+    allow: 'fullscreen; autoplay',
+    checkCapability: requireCanvas,
   },
 ];
 

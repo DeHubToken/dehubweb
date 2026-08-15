@@ -120,6 +120,30 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=604800
 
+# Street Slayer needs the same header for the same reason, but NOT the same
+# shape of rule, and the difference is the whole point of this block. The two
+# above are Vite builds, where only the module entry goes out in CORS mode, so
+# an `assets/*` rule covers it. Street Slayer is a Construct 2 export, and that
+# engine fetches EVERY one of its own files that way from an opaque origin:
+# data.js over XHR, every spritesheet with `crossOrigin = "anonymous"` (which
+# upstream's own comment marks "required for Arcade sandbox compatibility"),
+# and every .ogg over XHR on the way to decodeAudioData. Measured against this
+# build in a sandboxed frame: 122 of its 127 requests went out with
+# `Origin: null` and `Sec-Fetch-Mode: cors`. So the header belongs on the whole
+# directory. Narrowing this to a subtree does not half-break the game, it
+# black-frames it.
+#
+# One rule and not two, unlike the games above, because nothing here is
+# content-hashed — the filenames come straight out of the Construct 2 exporter
+# and a re-export reuses every one of them, index.html included. A day is the
+# compromise: repeat plays cost nothing, a re-delivered build reaches everyone
+# inside 24 hours, and no file can end up a year stale against a data.js that
+# has moved on. Do not split this into an `immutable` half; the asset names
+# would not change to go with it.
+/street-slayer-game/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400
+
 # Arcade card art. Unhashed, so the convention for everything else in /public
 # applies: CHANGE THE FILENAME when the capture changes.
 /arcade/*
