@@ -59,8 +59,15 @@ Other properties worth knowing, read from the `.capx`:
 
 ## Local changes
 
-Two, both in `index.html`, both **page** edits that a re-export will not
-reproduce. `c2runtime.js`, `data.js` and every asset are untouched.
+`c2runtime.js` and `data.js` carry **no code changes**. Everything below is
+either an edit to `index.html`, which a re-export overwrites, or a
+recompression that leaves every filename and every pixel dimension exactly as
+the exporter wrote them — so `data.js`, which addresses each sprite by sheet
+name and source rectangle, never has to know.
+
+One caveat on "as delivered": git normalises line endings, so the text files
+here are stored LF where the delivered archive had CRLF. The content is
+identical; a byte-for-byte diff against the archive is not, and cannot be.
 
 1. **The service worker registration is a no-op, and the offline set is not
    vendored.** `sw.js`, `offline.js`, `offlineClient.js` and `offline.appcache`
@@ -80,6 +87,50 @@ reproduce. `c2runtime.js`, `data.js` and every asset are untouched.
    life bar top-left, directional pad bottom-left, action buttons bottom-right,
    touch pause button top-right. `src/test/arcade.test.ts` asserts all three
    halves of that bridge.
+3. **A boot screen.** Construct 2's stock loader is a percentage in plain text
+   over `loading-logo.png`, which is the **Construct 2 engine cog**, not this
+   game — the first thing a player saw was somebody else's branding. It is
+   covered by an overlay carrying the game's own wordmark
+   (`dehub-loader-wordmark.png`, cut from `images/game_title-sheet0.png`) and a
+   bar driven by the runtime's real `loadingprogress`. The stock loader still
+   draws underneath and is simply never visible, so `loading-logo.png` stays.
+4. **A portrait guard.** The project is a fixed 854x480 landscape with its touch
+   pad and action buttons placed for that shape, and "Orientations: Any" in the
+   project settings means nothing upstream stops it being opened in portrait —
+   where letterbox scaling shrinks the whole game to an unplayable strip. The
+   overlay is advisory and dismissable: someone with orientation lock on cannot
+   rotate, and refusing them the game entirely would be worse than a small one.
+
+Both of the last two read `cr_getC2Runtime()`, a global the export already
+publishes. That is an engine handle rather than an API, so the test asserts it
+still exists after a re-vendor — and the boot screen retires itself on a 60s
+deadline regardless, so losing the handle can never leave a permanent black
+overlay on a game that is already playable.
+
+## Recompression
+
+The delivered build was 8.97 MB. It is now 6.53 MB, with no change to any
+filename or dimension:
+
+- **Every PNG through `oxipng -o max --strip safe`** — fully lossless, 10.7%.
+- **Six sheets additionally quantised to a 256-colour palette**:
+  `game_title-sheet0..3` and `game_over-sheet0..1`, 3773 KB to 2480 KB. These
+  six were chosen because they were the only large RGBA sheets *and* because
+  they measured **0.000% partial-alpha pixels**, which makes the binary-alpha
+  step of the quantise free. Do not extend this to `scenery_00-*`: it has
+  partial alpha, and it is gameplay art on screen the whole time rather than a
+  logo shown for seconds.
+- **All 58 sounds re-encoded to mono Vorbis** (q2, and q3 for the music), 1280 KB
+  to 677 KB. Mono is safe here on two counts: the game contains no panning
+  action of any kind, and the side (L−R) signal measured 16–23 dB below the
+  programme on every file tested — one of them at −inf, i.e. bit-identical
+  channels. The soundbank was effectively dual mono already.
+
+The single biggest remaining win is not compressible from here: `game_title` is
+**four 2048x2048 sheets holding ~28 frames of animated wordmark**, each sheet
+roughly 44% empty, and that is 2.4 MB of the 4.5 MB of art. Fixing it means
+repacking in Construct 2 and re-exporting, because `data.js` hard-codes the
+source rectangles.
 
 ## Controls
 
