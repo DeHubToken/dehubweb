@@ -133,8 +133,12 @@ export default function ArcadePage() {
       </div>
 
       <div ref={contentRef} className="mx-auto max-w-4xl px-2 pb-24 pt-2 sm:px-3">
-        {/* All three games share one row on desktop, so the equal-height cards
-            put every Play button on the same baseline. */}
+        {/* Three to a row on desktop, and the equal-height cards put every Play
+            button on the same baseline within a row. Deliberately not widened
+            to four when the fourth game arrived: at this max-width that leaves
+            each capture about 200px across, which is too small to read as a
+            game rather than a thumbnail. A short second row is the cheaper
+            trade. */}
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {ARCADE_GAMES.map((game) => (
             <GameCard key={game.slug} game={game} />

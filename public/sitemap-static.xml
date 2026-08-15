@@ -97,6 +97,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://dehub.io/arcade/street-slayer</loc>
+    <lastmod>2026-08-15T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://dehub.io/communities</loc>
     <lastmod>2026-08-04T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>

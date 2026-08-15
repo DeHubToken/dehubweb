@@ -30,6 +30,7 @@ const GAME_DIRS: Record<string, string> = {
   'kings-gambit': 'chess-game',
   'claude-of-duty': 'war-game',
   'jungle-trail': 'jungle-game',
+  'street-slayer': 'street-slayer-game',
 };
 
 /**
@@ -130,7 +131,13 @@ describe('arcade registry', () => {
       // Doubles as the meta description, which wants a real sentence.
       expect(game.description.length, game.slug).toBeGreaterThan(80);
       expect(game.artAlt, game.slug).toBeTruthy();
-      expect(game.credit.url, game.slug).toMatch(/^https:\/\//);
+      // `url` is optional now: Street Slayer was commissioned rather than
+      // found, so it has no public repository. What is NOT optional is being
+      // attributable — a game names either the repo it came from or the people
+      // who wrote it, and always the licence file shipped for it.
+      if (game.credit.url !== undefined) expect(game.credit.url, game.slug).toMatch(/^https:\/\//);
+      expect(Boolean(game.credit.url || game.credit.author), `${game.slug} names a source`).toBe(true);
+      expect(game.credit.licence, game.slug).toBeTruthy();
     }
   });
 });
@@ -197,6 +204,9 @@ describe('arcade exit bridge', () => {
     'claude-of-duty': 'war-game/assets',
     // Vendored as source, so the panel lives in the page itself.
     'jungle-trail': 'jungle-game/index.html',
+    // Vendored as an engine export nobody here can rebuild, so its exit is a
+    // chip added to the page rather than anything inside the bundle.
+    'street-slayer': 'street-slayer-game/index.html',
   };
 
   it('gives every game an exit source', () => {
@@ -258,6 +268,13 @@ describe('arcade readiness bridge', () => {
       for (const ref of html.matchAll(/(?:src|href)="\/([^"]+\.(?:js|css))"/g)) {
         expect(existsSync(repo('public', ref[1])), `${dir} references ${ref[1]}`).toBe(true);
       }
+      // And the same check for RELATIVE refs, which the site-absolute pattern
+      // above walks straight past. The Construct 2 export writes every one of
+      // its script tags that way, so without this its entry document was the
+      // one entry document in the arcade nothing checked.
+      for (const ref of html.matchAll(/(?:src|href)="(?!\/|https?:|data:)([^"]+\.(?:js|css))"/g)) {
+        expect(existsSync(repo('public', dir, ref[1])), `${dir} references ${ref[1]}`).toBe(true);
+      }
     }
   });
 });
@@ -287,6 +304,16 @@ describe('arcade touch controls', () => {
         `${dir} loads it as a classic script, not a module`,
       ).toBe(true);
     }
+  });
+
+  it('keeps the shared layer OUT of the game that draws its own', () => {
+    // Street Slayer ships a Touch plugin, an on-screen directional pad and six
+    // action buttons of its own, all inside the canvas. Loading the shared
+    // layer on top would stack a second set of controls over the first, and
+    // both would be live. This is the assertion that says the omission is
+    // deliberate rather than forgotten.
+    const html = readFileSync(repo('public/street-slayer-game/index.html'), 'utf8');
+    expect(html).not.toContain('/arcade-touch/');
   });
 
   it('leaves a real pointer completely alone', () => {
@@ -352,6 +379,22 @@ describe('arcade headers', () => {
       const block = headers.split(`/${dir}/assets/*`)[1] ?? '';
       expect(block.slice(0, 200), dir).toContain('Access-Control-Allow-Origin: *');
     }
+  });
+
+  it('sends it across the WHOLE Construct 2 export, not an assets/ subtree', () => {
+    // The two above are Vite builds where only the module entry is fetched in
+    // CORS mode. Construct 2 fetches everything that way from an opaque origin
+    // — data.js over XHR, every spritesheet with crossOrigin="anonymous", every
+    // .ogg on the way to decodeAudioData. Measured on this build in a sandboxed
+    // frame: 122 of 127 requests went out `Origin: null`, mode `cors`. A rule
+    // narrowed to a subtree here does not half-break the game, it black-frames
+    // it, and there is no subtree to narrow to anyway.
+    const block = headers.split('/street-slayer-game/*')[1] ?? '';
+    expect(block.slice(0, 200)).toContain('Access-Control-Allow-Origin: *');
+    // Nothing in the export is content-hashed: the filenames come out of the
+    // exporter and a re-export reuses every one, index.html included. Pinning
+    // any of it for a year would strand a re-delivered build.
+    expect(block.slice(0, 200)).not.toContain('immutable');
   });
 
   it('leaves the unhashed entry documents revalidating', () => {
