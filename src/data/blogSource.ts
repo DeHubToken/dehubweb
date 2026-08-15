@@ -773,6 +773,28 @@ Coinbase is opening its doors to countless Base tokens with integrated DEX tradi
 
 A new chapter in on-chain access is coming, and DeHub is proud to be at the forefront of this evolution. This integration will significantly lower the barrier to entry for new users and provide our existing community with unprecedented liquidity and ease of use.
 
+## Why this matters more for us than for most
+
+DHB has been an all-DEX token by choice. We delisted from Gate.io voluntarily after they ended UK support, and we have stayed off centralised order books since, on the basis that our worst experience as a project came through an intermediary we could not audit.
+
+That decision had a real cost, and the cost was access. A meaningful part of any consumer audience will not open a self-custody wallet, will not learn what a router is, and will not bridge anything anywhere. Those people were simply unreachable, and no amount of arguing that decentralised exchanges are better changed it.
+
+Coinbase's DEX integration removes that trade-off rather than reversing the decision. The token stays on-chain. The trade settles on-chain. What changes is that the person doing it can be someone who has only ever used one app.
+
+## What is actually changing, precisely
+
+Nothing about DHB. There is no new contract, no wrapped version, no custodial listing, and no arrangement between us and an exchange to be negotiated or paid for.
+
+Coinbase is opening its app to Base tokens through integrated DEX trading. DHB qualifies because it is a standard token on Base with real liquidity — which is a direct consequence of two decisions made under pressure years ago: stripping everything out of the transfer path after our contract froze, and building automated liquidity provision as an external process.
+
+Both of those looked like damage control at the time. They are the reason nothing needs to be done now.
+
+## The honest caveat
+
+This is Coinbase's rollout, not ours. We do not control the timing, the ordering, or which tokens surface when, and we would rather say that plainly than imply an arrangement that does not exist.
+
+What we can say is that when it arrives, it will not require anything from you, and it will not require anything from us.
+
 Stay tuned for more updates as we approach this exciting milestone!`,
     bannerImage: '/lovable-uploads/435d9da9-f69a-405a-92e1-73c030728cd5.png',
     bannerImageAlt: 'Base logo on a blue background, representing the Coinbase integration',
@@ -816,6 +838,28 @@ Being able to target whales and big spenders while also tailoring special deals 
 
 ### How does this prevent fraud?
 Botting becomes less profitable while activity is trackable on-chain, easily connecting bad actors & eventually curating the entire user base. Advertisers target higher ranks, leaving minimal extractable value at the bottom layer, where any remaining fraud remains. On top of that, our decentralised moderation allows more efficient illicit activity detection and prevention.
+
+### Why advertisers should care about rank
+
+The pitch to an advertiser is not "our users are verified". It is that the verification carries financial signal, and that the signal is public.
+
+Off-chain, targeting by spending power is largely inference — inferred from a postcode, a device, a browsing history, and sold on by an intermediary who will not show you the working. Bank statements are private, so nobody in the chain actually knows what anyone can afford.
+
+On-chain, holdings are visible. A 13-tier ranking derived from them is a targeting dimension no legacy ad network can offer at any price, because the underlying data does not exist in a form they can reach.
+
+That cuts both ways, which is the part we like. An advertiser can target whales, and can equally build offers for the lower tiers — discounts and entry-level deals aimed at people who would be invisible to a conventional spend-based system.
+
+### What POVR does not claim
+
+It does not eliminate fraud, and we would rather say so than pretend otherwise.
+
+Botting at scale remains possible. What changes is the economics: a bot has to hold real value to reach a rank worth advertising to, which converts fraud from a cost-free activity into a capital-intensive one. Fraud that survives that filter is concentrated at the bottom layer, where there is the least value to extract.
+
+That is a considerably weaker claim than "fraud-proof", and it is the accurate one. Any ad-tech product claiming to have eliminated invalid traffic is either new or not being straight with you.
+
+### Where it sits in the platform
+
+POVR is the mechanism behind the [90% ad revenue share on tokenised uploads](/guides/creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023). A revenue share is only meaningful if the revenue is real, and the revenue is only real if advertisers believe the audience is. Patents pending on the mechanism, as noted above.
 
 For more information on our ad revenue sharing, refer to this thread and our whitepaper below. Also, be sure to follow us for all the latest news on app features and updates.`,
     bannerImage: '/lovable-uploads/79e6faf5-f135-410b-babd-d2d8611e2d5c.png',
