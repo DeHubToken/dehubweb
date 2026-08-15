@@ -338,6 +338,7 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: Gamepad2, label: "King's Gambit", path: '/arcade/kings-gambit' },
   { icon: Gamepad2, label: 'Claude of Duty', path: '/arcade/claude-of-duty' },
   { icon: Gamepad2, label: 'Jungle Trail', path: '/arcade/jungle-trail' },
+  { icon: Gamepad2, label: 'Street Slayer', path: '/arcade/street-slayer' },
 ];
 
 // ---------------------------------------------------------------------------
