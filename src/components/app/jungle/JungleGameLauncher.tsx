@@ -453,7 +453,7 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
              without this the iframe would inherit real same-origin access to
              storage, cookies and the parent DOM. Omitting it forces an opaque
              origin. The game uses no storage APIs, so it costs nothing. */
-          sandbox="allow-scripts allow-pointer-lock allow-fullscreen"
+          sandbox="allow-scripts allow-pointer-lock"
         />
       )}
 

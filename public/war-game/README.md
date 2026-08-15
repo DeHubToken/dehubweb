@@ -128,7 +128,7 @@ a Windows path.
 
 Files here are copied verbatim into `dist/` by Vite and served from
 `/war-game/index.html` on the app's own origin. The launcher still loads it in a
-sandboxed iframe (`allow-scripts allow-pointer-lock allow-fullscreen`, with
+sandboxed iframe (`allow-scripts allow-pointer-lock`, with
 `allow-same-origin` deliberately withheld), so the game runs in an opaque origin
 and cannot reach app storage, cookies or DOM.
 
