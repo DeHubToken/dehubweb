@@ -320,5 +320,11 @@ export function getArcadeGame(slug: string | undefined): ArcadeGame | undefined 
  * `Access-Control-Allow-Origin` header or the browser drops it silently, and a
  * URL-addressed Web Worker cannot be constructed at all (which is why the
  * chess build inlines its engine).
+ *
+ * There is no `allow-fullscreen` here because the HTML spec has no such
+ * sandbox flag. Fullscreen is a permissions-policy feature and is granted per
+ * frame through the `allow` attribute, which every registry entry sets. Adding
+ * the token back grants nothing — the browser drops it and logs a parse error
+ * on every game load.
  */
-export const ARCADE_SANDBOX = 'allow-scripts allow-pointer-lock allow-fullscreen';
+export const ARCADE_SANDBOX = 'allow-scripts allow-pointer-lock';
