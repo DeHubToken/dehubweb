@@ -20,6 +20,8 @@ That is not a throwaway line. After the [contract malfunction in Q4 2022](/guide
 
 The [automated liquidity provision](/guides/smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023) built the previous quarter was the other half. Listing on a chain is trivial. Having usable depth on it is the actual work, and by early 2024 that had become a process rather than a manual effort.
 
+![DeHub card reading "gas over the tip" — mainnet fees exceeded the transactions DHB is used for](/lovable-uploads/inbody-mainnet-cost.jpg)
+
 ### The problem we walked into
 
 Ethereum mainnet fees.
@@ -384,6 +386,8 @@ An MMA-inspired battle royale — hyper-realistic, gory and gritty, built as a f
 
 It grew out of the [Chads NFT collection minted in Q2 2022](/guides/the-chads-arrive-genesis-mint-of-the-chads-nft-collection---a-dehub-milestone-from-q2-2022), which is an unusual outcome for a 2022 collection. Most did not become anything. This one became a property with a trailer that people outside the industry watched.
 
+![DeHub card reading "players first" — the Last Chad Standing teaser never mentioned the chain](/lovable-uploads/inbody-lcs-audience.jpg)
+
 ### Why the number matters
 
 Not because a million views is large in absolute terms. Because of where they came from.
@@ -453,6 +457,8 @@ The position has not changed since the agency launched: creators are where the a
 That DeHub was not dependent on its founders' full attention — which is the actual test of whether [distributing ownership across a team in 2021](/guides/global-reach-dehub-team-grows-to-15-strong---a-dehub-milestone-from-q3-2021) was real or decorative.
 
 Q4 2024 also delivered [DePIN Phase 1](/guides/the-future-of-infrastructure-depin-phase-1-goes-live---a-dehub-milestone-from-q4-2024), [on-chain tradable subscriptions](/guides/revolutionizing-access-on-chain-tradable-subscriptions-launch---a-dehub-milestone-from-q4-2024) and a [Last Chad Standing teaser that passed a million views](/guides/the-hype-is-real-last-chad-standing-teaser-hits-1m-views---a-dehub-milestone-from-q4-2024). The platform did not slow down.
+
+![DeHub card reading "exclusive is the word" — 1,000 streamers signed exclusively to the agency](/lovable-uploads/inbody-exclusive-1000.jpg)
 
 ### The number behind the number
 

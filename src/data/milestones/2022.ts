@@ -551,6 +551,8 @@ Sales did not reach the required minimum.
 
 That threshold existed for a reason: below it, the raffle cannot fairly be drawn, because the prize is worth more than the pot and completing the draw would mean funding it from somewhere other than the entries. Setting a minimum and honouring it is the difference between a raffle and a promise.
 
+![DeHub card reading "refunded in full" — the $1m house raffle missed its published minimum](/lovable-uploads/inbody-raffle-minimum.jpg)
+
 ### What we did about it
 
 Every purchase was refunded.
@@ -606,6 +608,8 @@ The Philippine SEC's position on tokenised real estate sales.
 Being accurate about this matters: our registration was legitimate and remained so. What we did not have — and could not obtain — was regulatory acceptance of the specific tokenised structure. Those are different things, and the gap between them is where this venture died.
 
 We stopped rather than pushing. Land, in a jurisdiction where the regulator has stated a position, is not a place to find out how much interpretation you can get away with.
+
+![DeHub card reading "ask the regulator" — registration is not the same as permission](/lovable-uploads/inbody-palawan.jpg)
 
 ### What it cost, and what we kept
 
@@ -766,6 +770,8 @@ That meant a new contract and [migrating more than 25,000 holders](/guides/movin
 
 It also meant deciding what the new contract should be, and we [went to plain standard ERC-20 tokenomics](/guides/stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022) with nothing clever in the transfer path at all. No tax triggers. No conditional logic between a holder and their own tokens.
 
+![DeHub card reading "no admin key" — an immutable contract cannot be patched after it fails](/lovable-uploads/inbody-contract-freeze.jpg)
+
 ### What we actually learned
 
 **Complexity in the transfer path is the risk.** Every clever tokenomic mechanism is code that runs on every transaction forever, in market conditions nobody has seen yet. The cleverness has to earn its place against that.
@@ -809,6 +815,8 @@ The fix required them to act — to move to a new contract — at the exact mome
 **No deadline that could strand anyone.** Migration windows with hard cut-offs quietly transfer the cost of your failure onto whoever was on holiday. We were not willing to do that on an incident we caused.
 
 **One route, stated plainly.** During a token incident, every additional path is an opportunity for someone to be phished. We kept it to a single documented process and repeated it rather than diversifying it.
+
+![DeHub card reading "25,000 decisions" — every holder had to act during the v2 migration](/lovable-uploads/inbody-migration-25k.jpg)
 
 ### The scam problem
 
@@ -867,6 +875,8 @@ Genuine things, and we should not pretend otherwise:
 - **Automatic liquidity growth.** Now handled deliberately, which became the [automated liquidity provision strategies](/guides/smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023) of late 2023 — outside the contract, adjustable, and unable to freeze anyone's tokens.
 - **Passive operational funding.** Replaced by explicit treasury management, which is more visible and harder to obscure. That fed directly into the [DEX policy](/guides/open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023) and [transparency reports](/guides/full-disclosure-dehubs-comprehensive-transparency-reports---a-dehub-milestone-from-q4-2023) published that year.
 - **A holding incentive.** Replaced by utility — staking, airdrops, and access — which is slower to build and does not evaporate when volume does.
+
+![DeHub card reading "nothing in the path" — v2 moved to plain standard ERC-20 tokenomics](/lovable-uploads/inbody-plain-erc20.jpg)
 
 ### What we gained
 
