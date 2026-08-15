@@ -17,6 +17,22 @@ The web app and Google Play Store apps are live but currently offer limited func
 
 If you're experiencing any log in or posting issues, rest assured we're fully aware and all will be ticking along like clockwork as soon as promotions begin.
 
+## Why we are not waiting for Apple
+
+The instinct is to hold everything until all three platforms are ready, and that instinct is what has kept this release sitting still.
+
+A simultaneous launch across Apple, Google and web is genuinely better for awareness — one moment, one message, maximum noise. It is also a plan whose date is set by whichever party is slowest, and that party is not us. Every week spent waiting is a week the web and Play Store versions exist in a limited state for no reason other than symmetry.
+
+So the sequence changes. Ship the full feature set to Google and web now, start promotions, and treat the Apple listing as its own campaign when it lands rather than as the gate everything else is queued behind.
+
+## What "limited functionality" means right now
+
+Exactly what it says: the current web and Play Store builds were staged for a coordinated launch, so parts of the app are deliberately held back rather than broken. The updates that close that gap ship in the coming days.
+
+If you are hitting login or posting problems in the meantime, they are known. They are not a sign of something deeper, and they resolve with the same release.
+
+## The reasoning behind the urgency
+
 Waiting around on markets or perfect products is no longer viable. With the rise of AI and global uncertainty, speed is paramount — moats must be built. It's time to lock in, get vocal, get active and stand when others lay, because we're here to stay.
   `,
   bannerImage: '/lovable-uploads/dev-update-jan-2026-banner.png',
