@@ -32,6 +32,42 @@ const GAME_DIRS: Record<string, string> = {
   'jungle-trail': 'jungle-game',
 };
 
+/**
+ * Every sandbox flag the HTML spec defines.
+ *
+ * A token outside this set is not a weaker grant, it is a typo — the browser
+ * drops it and logs a parse error for the whole attribute on every frame load.
+ */
+const SANDBOX_FLAGS = [
+  'allow-downloads',
+  'allow-forms',
+  'allow-modals',
+  'allow-orientation-lock',
+  'allow-pointer-lock',
+  'allow-popups',
+  'allow-popups-to-escape-sandbox',
+  'allow-presentation',
+  'allow-same-origin',
+  'allow-scripts',
+  'allow-storage-access-by-user-activation',
+  'allow-top-navigation',
+  'allow-top-navigation-by-user-activation',
+  'allow-top-navigation-to-custom-protocols',
+];
+
+/**
+ * Every `.ts`/`.tsx` file under `src/`, for checks that have to see JSX written
+ * by hand rather than the constants it should have used.
+ *
+ * `src/test` is skipped: this file's own regex literals would match themselves.
+ */
+const sourceFiles = (dir = repo('src')): string[] =>
+  readdirSync(dir).flatMap((entry) => {
+    const full = resolve(dir, entry);
+    if (statSync(full).isDirectory()) return entry === 'test' ? [] : sourceFiles(full);
+    return /\.tsx?$/.test(entry) ? [full] : [];
+  });
+
 describe('arcade registry', () => {
   it('has unique slugs', () => {
     const slugs = ARCADE_GAMES.map((g) => g.slug);
@@ -50,6 +86,34 @@ describe('arcade registry', () => {
     // would reach app storage, cookies and the parent DOM.
     expect(ARCADE_SANDBOX).not.toContain('allow-same-origin');
     expect(ARCADE_SANDBOX).toContain('allow-scripts');
+  });
+
+  it('grants only sandbox flags that exist', () => {
+    // `allow-fullscreen` sat here for months. It reads like a flag, but the
+    // spec has no such token — fullscreen is a permissions-policy feature and
+    // comes from the `allow` attribute, which every entry already sets. The
+    // only symptom was a parse error in the console on every game load, which
+    // is exactly the kind of thing nobody goes looking for.
+    for (const token of ARCADE_SANDBOX.split(/\s+/).filter(Boolean)) {
+      expect(SANDBOX_FLAGS, `ARCADE_SANDBOX: '${token}' is not a sandbox flag`).toContain(token);
+    }
+  });
+
+  it('holds hand-written frames to the same contract', () => {
+    // The jungle and war launchers spell their sandbox out in JSX instead of
+    // importing the constant, which is how one bad token survived in three
+    // places at once. Scanned at the source so any new frame is covered too,
+    // and so a launcher that later switches to ARCADE_SANDBOX just drops out
+    // of the scan rather than failing it.
+    for (const file of sourceFiles()) {
+      const where = file.slice(repo().length + 1);
+      for (const [, value] of readFileSync(file, 'utf8').matchAll(/\bsandbox="([^"]*)"/g)) {
+        for (const token of value.split(/\s+/).filter(Boolean)) {
+          expect(SANDBOX_FLAGS, `${where}: '${token}' is not a sandbox flag`).toContain(token);
+        }
+        expect(value, `${where} grants allow-same-origin`).not.toContain('allow-same-origin');
+      }
+    }
   });
 
   it('builds a frame URL under the game it belongs to', () => {

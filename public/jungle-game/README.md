@@ -103,7 +103,7 @@ viewport, integrated or software GPU) and otherwise leaves the game to start at
 
 Files here are copied verbatim into `dist/` by Vite and served from
 `/jungle-game/index.html` on the app's own origin. The launcher loads it in a
-sandboxed iframe (`allow-scripts allow-pointer-lock allow-fullscreen`) with
+sandboxed iframe (`allow-scripts allow-pointer-lock`) with
 `allow-same-origin` deliberately withheld, so the game runs in an opaque origin
 and cannot reach app storage, cookies or DOM. The game uses no storage APIs at
 all, so nothing is lost by that.
