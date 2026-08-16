@@ -129,7 +129,7 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
   ['wand', Wand2],
 ];
 
-type ThemeIconKey =
+export type ThemeIconKey =
   | 'home' | 'posts' | 'images' | 'videos' | 'subscriptions' | 'audio'
   | 'live' | 'fractions' | 'pinned' | 'search' | 'messages' | 'bookmarks'
   | 'wand' | 'communities' | 'careers' | 'features' | 'glossary'
@@ -188,10 +188,47 @@ const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
 
 const FULL_RASTER_THEMES = new Set(['hazy', 'swarms', 'winter', 'osaka', 'jungle']);
 const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
+  'home', 'posts', 'images', 'videos', 'subscriptions', 'audio', 'live',
+  'fractions', 'pinned', 'search', 'messages', 'bookmarks',
   'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
 ]);
+
+const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
+  home: Home,
+  posts: MessageSquare,
+  images: ImageIcon,
+  videos: Film,
+  subscriptions: Users,
+  audio: AudioLines,
+  live: Radio,
+  fractions: Layers,
+  pinned: Star,
+  search: Crosshair,
+  messages: Mail,
+  bookmarks: Bookmark,
+  wand: Wand2,
+  communities: Users,
+  careers: Briefcase,
+  features: Lightbulb,
+  glossary: BookOpen,
+  governance: ShieldCheck,
+  trophy: Trophy,
+  notifications: Bell,
+  settings: Settings,
+  stages: Mic,
+  assistant: Sparkles,
+  lock: Lock,
+  profile: User,
+  arcade: Gamepad2,
+  stores: Store,
+  bounties: Briefcase,
+  events: CalendarDays,
+  stats: BarChart3,
+  ads: Megaphone,
+  command: LayoutDashboard,
+};
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {
   for (const [stem, key] of THEME_ICON_KEYS) {
@@ -299,6 +336,47 @@ export function BrandIcon({ src, alt = '', className, ...imgProps }: BrandIconPr
 
   const themedSrc = resolveThemeIconAsset(src, theme) ?? src;
   return <img src={themedSrc} alt={alt} className={className} {...imgProps} />;
+}
+
+type ThemedIconProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
+  icon: ThemeIconKey;
+};
+
+/**
+ * Semantic icon for empty, error and not-found states.
+ *
+ * Unlike BrandIcon, callers name the meaning instead of importing a legacy
+ * source asset. Full raster themes receive their own artwork, the themes that
+ * deliberately keep the normal icon set use the optimized System WebP, and
+ * War keeps its tactical HUD glyph.
+ */
+export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIconProps) {
+  const { theme } = useAppTheme();
+
+  if (theme === 'war') {
+    const Glyph = THEME_KEY_GLYPHS[icon];
+    return (
+      <span
+        data-war-hud-icon
+        className={className?.replace(/\bobject-(contain|cover)\b/g, '').trim()}
+        role={alt ? 'img' : undefined}
+        aria-label={alt || undefined}
+        aria-hidden={alt ? undefined : true}
+      >
+        <Glyph strokeWidth={1.5} aria-hidden="true" />
+      </span>
+    );
+  }
+
+  const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
+  return (
+    <img
+      src={`/theme-icons/${rasterTheme}/${icon}.webp`}
+      alt={alt}
+      className={className}
+      {...imgProps}
+    />
+  );
 }
 
 export default WarHudIcon;

@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Bot, Plus, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { PageHeader } from '@/components/app/PageHeader';
 import { SEOHead } from '@/components/SEOHead';
 
@@ -158,7 +159,7 @@ export default function AgentsPage() {
   if (!walletAddress) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
-        <Bot className="w-16 h-16 text-white/20 mb-4" />
+        <ThemedIcon icon="assistant" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
         <h2 className="text-xl font-semibold text-white mb-2">{t('agents.connectToManage')}</h2>
         <p className="text-white/60">{t('agents.signInToCreate')}</p>
       </div>
@@ -264,7 +265,7 @@ export default function AgentsPage() {
           </div>
         ) : isError ? (
           <div className="text-center py-12 text-white/40">
-            <Bot className="w-12 h-12 mx-auto mb-3 opacity-50" />
+            <ThemedIcon icon="assistant" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-60" />
             <p className="mb-3">{t('agents.loadFailed', "Couldn't load agents")}</p>
             <Button
               variant="ghost"
@@ -276,7 +277,7 @@ export default function AgentsPage() {
           </div>
         ) : agents?.length === 0 ? (
           <div className="text-center py-12 text-white/40">
-            <Bot className="w-12 h-12 mx-auto mb-3 opacity-50" />
+            <ThemedIcon icon="assistant" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-60" />
             <p>{t('agents.noAgents')}</p>
           </div>
         ) : (

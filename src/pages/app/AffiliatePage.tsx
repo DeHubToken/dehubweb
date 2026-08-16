@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthGate } from "@/components/app/AuthGate";
@@ -409,7 +410,7 @@ function AffiliatesList({
           </div>
         ) : list.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
-            <Users className="w-10 h-10 text-white/25 mb-3" />
+            <ThemedIcon icon="profile" alt="" className="w-14 h-14 object-contain mb-3 opacity-60" />
             <p className="text-white/70 font-medium">
               {tab === "direct" ? "No affiliates yet" : "No secondary affiliates yet"}
             </p>
