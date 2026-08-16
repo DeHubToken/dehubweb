@@ -47,8 +47,12 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
     status: params.status || 'minted',
   };
 
+  // requiresAuth when a token exists: it makes apiCall refresh a stale token
+  // before the request — /api/feed answers a dead token with 200-anonymous
+  // (no isLiked/isSaved), not a 401, so there is no retry after the fact.
   const response = await apiCall<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }>("/api/feed", {
     params: apiParams,
+    requiresAuth: !!getAuthToken(),
   });
   
   const items = response.result || [];
@@ -68,7 +72,9 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
     params: {
       q: params.q,
       page: params.page,
-      unit: params.unit,
+      // /search's page-size param is `limit` — `unit` was ignored and every
+      // request fell back to the server default of 20.
+      limit: params.unit,
       type: params.type,
       postType: params.postType,
       address: params.address,
@@ -252,7 +258,9 @@ export async function getWatchHistory(
   address?: string
 ): Promise<{ result: DeHubNFT[] }> {
   return apiCall<{ result: DeHubNFT[] }>("/api/my_watched_nfts", {
-    params: { page, limit, ...(address && { address }) },
+    // Callers are 0-based; /my_watched_nfts is 1-based, so page 0 and page 1
+    // used to return the same first page.
+    params: { page: page + 1, limit, ...(address && { address }) },
     requiresAuth: true,
   });
 }

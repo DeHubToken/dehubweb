@@ -12,6 +12,9 @@ import { clearAllVoteCaches } from '@/lib/vote-cache';
 const LOCAL_KEYS = [
   'dehub-repost-cache',
   'comment_count_deltas',
+  // View dedup — without this, posts the previous account viewed never count
+  // a view from the next account on the same browser.
+  'dehub_viewed_posts',
 ];
 
 const SESSION_KEYS = [
