@@ -157,23 +157,20 @@ export default function StageDeepLinkPage() {
 
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           {stage.cover_image_url && (
-            <>
+            // This page is about one stage, so the graphic is shown whole
+            // rather than cropped to a card ratio: `contain` against a fixed
+            // ratio box means a square or portrait cover keeps its shape
+            // instead of losing its top and bottom to `cover`. The listing
+            // cards still crop — there the ratio has to be uniform.
+            <div className="w-full aspect-[1.91/1] max-h-[70vh] bg-black">
               <img
                 src={stage.cover_image_url}
-                alt=""
-                aria-hidden
-                className="absolute inset-0 w-full h-full object-cover"
+                alt={`Cover graphic for ${stage.title}`}
+                className="w-full h-full object-contain"
               />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
-              />
-              {/* Share-card expanse of clear art above the text — same ratio
-                  the link preview itself gets. */}
-              <div aria-hidden className="w-full aspect-[1.91/1] max-h-[420px]" />
-            </>
+            </div>
           )}
-          <div className={stage.cover_image_url ? 'relative p-6' : 'relative p-6 bg-zinc-900'}>
+          <div className="relative p-6 bg-zinc-900">
             <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10 mb-3">
               <CalendarDays className="w-3 h-3 text-zinc-300" />
               <span className="text-zinc-300 text-[11px] font-medium">
@@ -294,23 +291,20 @@ export default function StageDeepLinkPage() {
 
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           {stage.cover_image_url && (
-            <>
+            // This page is about one stage, so the graphic is shown whole
+            // rather than cropped to a card ratio: `contain` against a fixed
+            // ratio box means a square or portrait cover keeps its shape
+            // instead of losing its top and bottom to `cover`. The listing
+            // cards still crop — there the ratio has to be uniform.
+            <div className="w-full aspect-[1.91/1] max-h-[70vh] bg-black">
               <img
                 src={stage.cover_image_url}
-                alt=""
-                aria-hidden
-                className="absolute inset-0 w-full h-full object-cover"
+                alt={`Cover graphic for ${stage.title}`}
+                className="w-full h-full object-contain"
               />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
-              />
-              {/* Share-card expanse of clear art above the text — same ratio
-                  the link preview itself gets. */}
-              <div aria-hidden className="w-full aspect-[1.91/1] max-h-[420px]" />
-            </>
+            </div>
           )}
-          <div className={stage.cover_image_url ? 'relative p-6' : 'relative p-6 bg-zinc-900'}>
+          <div className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/20">
                 <span className="relative flex h-2 w-2">
