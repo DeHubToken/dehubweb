@@ -7,7 +7,8 @@
  */
 
 import { useState } from 'react';
-import { Search, Radio, Loader2 } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
@@ -129,7 +130,7 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         {/* Error State */}
         {error && !isLoading && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <Radio className="w-12 h-12 text-zinc-600 mb-4" />
+            <ThemedIcon icon="audio" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
             <h3 className="text-white font-semibold mb-2">Failed to load stations</h3>
             <p className="text-zinc-500 text-sm max-w-[280px]">
               Please check your connection and try again.
@@ -140,7 +141,7 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         {/* Empty State */}
         {!isLoading && !error && stations.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <Radio className="w-12 h-12 text-zinc-600 mb-4" />
+            <ThemedIcon icon="audio" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
             <h3 className="text-white font-semibold mb-2">
               {isSearching ? 'No stations found' : 'No stations available'}
             </h3>

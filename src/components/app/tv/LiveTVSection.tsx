@@ -7,7 +7,8 @@
  */
 
 import { useState } from 'react';
-import { Search, Tv } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -125,7 +126,7 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
       {/* Error State */}
       {error && !isLoading && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Tv className="w-12 h-12 text-zinc-600 mb-4" />
+          <ThemedIcon icon="live" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
           <h3 className="text-white font-semibold mb-2">Failed to load channels</h3>
           <p className="text-zinc-500 text-sm max-w-[280px]">
             Please check your connection and try again.
@@ -136,7 +137,7 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
       {/* Empty State */}
       {!isLoading && !error && channels.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Tv className="w-12 h-12 text-zinc-600 mb-4" />
+          <ThemedIcon icon="live" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
           <h3 className="text-white font-semibold mb-2">
             {isSearching ? 'No channels found' : 'No channels available'}
           </h3>

@@ -11,7 +11,8 @@ import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
-import { RefreshCw, Play, Filter, Eye, Loader2 } from 'lucide-react';
+import { RefreshCw, Play, Eye, Loader2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
@@ -528,9 +529,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
-        <Play className="w-8 h-8 text-zinc-500" />
-      </div>
+      <ThemedIcon icon="videos" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
       <h3 className="text-white font-semibold text-lg mb-2">No Shorts Yet</h3>
       <p className="text-zinc-400 text-sm max-w-xs mb-4">
         {isError 
@@ -549,9 +548,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const FilteredEmptyState = () => (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-        <Filter className="w-6 h-6 text-zinc-500" />
-      </div>
+      <ThemedIcon icon="search" alt="" className="w-12 h-12 object-contain mb-3 opacity-65" />
       <h3 className="text-white font-semibold mb-1">No matches</h3>
       <p className="text-zinc-400 text-sm mb-3">
         Try adjusting your filters

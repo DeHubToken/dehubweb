@@ -14,6 +14,7 @@ import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/SEOHead';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function StoreDetailPage() {
   const { storeId } = useParams<{ storeId: string }>();
@@ -55,6 +56,7 @@ export default function StoreDetailPage() {
   if (!store) {
     return (
       <div className="p-4 text-center py-20">
+        <ThemedIcon icon="stores" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
         <p className="text-muted-foreground">Store not found</p>
         <Button variant="outline" onClick={() => navigate(-1)} className="mt-4">Go Back</Button>
       </div>

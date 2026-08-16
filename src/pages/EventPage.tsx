@@ -5,6 +5,7 @@ import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
 import type { CommunityEvent } from '@/hooks/use-events';
 import { Loader2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function EventPage() {
   const { eventNumber } = useParams<{ eventNumber: string }>();
@@ -49,6 +50,7 @@ export default function EventPage() {
   if (isNaN(num) || isError || !event) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3 text-center px-4">
+        <ThemedIcon icon="events" alt="" className="w-16 h-16 object-contain opacity-75" />
         <p className="text-lg font-semibold text-foreground">Event not found</p>
         <p className="text-sm text-muted-foreground">This event may have been removed, or the link is invalid.</p>
         <button

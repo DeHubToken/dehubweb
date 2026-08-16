@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { RefreshCw, Radio, Eye, Tv, ChevronRight, Play, MicOff } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
@@ -101,9 +102,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
   // Empty state component
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
-        <RefreshCw className="w-8 h-8 text-zinc-500" />
-      </div>
+      <ThemedIcon icon="live" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
       <h3 className="text-white font-semibold text-lg mb-2">No Live Streams</h3>
       <p className="text-zinc-400 text-sm max-w-xs mb-4">
         {isError 

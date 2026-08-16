@@ -1,4 +1,4 @@
-﻿import { BrandIcon } from '@/components/app/war/WarHudIcon';
+﻿import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
@@ -2678,7 +2678,7 @@ function AssetsSettings() {
           {t('settings.fractionsOwn')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <PieChart className="w-10 h-10 text-zinc-600 mb-3" />
+          <ThemedIcon icon="fractions" alt="" className="w-14 h-14 object-contain mb-3 opacity-65" />
           <p className="text-zinc-500">{t('settings.noFractions')}</p>
         </div>
       </div>
@@ -2690,7 +2690,7 @@ function AssetsSettings() {
           {t('settings.usernamesOwn')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <AtSign className="w-10 h-10 text-zinc-600 mb-3" />
+          <ThemedIcon icon="profile" alt="" className="w-14 h-14 object-contain mb-3 opacity-65" />
           <p className="text-zinc-500">{t('settings.noUsernames')}</p>
         </div>
       </div>
@@ -2702,7 +2702,7 @@ function AssetsSettings() {
           {t('settings.offersMade')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <Handshake className="w-10 h-10 text-zinc-600 mb-3" />
+          <ThemedIcon icon="profile" alt="" className="w-14 h-14 object-contain mb-3 opacity-65" />
           <p className="text-zinc-500">{t('settings.noOffers')}</p>
         </div>
       </div>

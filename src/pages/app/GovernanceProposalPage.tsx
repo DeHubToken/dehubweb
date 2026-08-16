@@ -16,7 +16,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useRef, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowLeft, Loader2, Send, Trash2, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Loader2, Send, Trash2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { TranslatableText } from '@/components/app/TranslatableText';
@@ -107,7 +108,7 @@ export default function GovernanceProposalPage() {
   if (!proposal) {
     return (
       <div className="min-h-screen px-4 pt-6 text-center">
-        <ShieldCheck className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
+        <ThemedIcon icon="governance" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-80" />
         <h2 className="text-white font-semibold text-lg mb-1">Proposal not found</h2>
         <button onClick={() => navigate('/app/governance')} className="text-zinc-400 text-sm underline">
           Back to Governance

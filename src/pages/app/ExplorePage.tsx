@@ -1,4 +1,4 @@
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, memo, startTransition, type CSSProperties } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
@@ -1242,6 +1242,7 @@ export default function ExplorePage() {
                     </div>
                   ) : categoryFeedItems.length === 0 ? (
                     <div className="text-center py-8">
+                      <ThemedIcon icon="search" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-65" />
                       <p className="text-zinc-400">No content found in this category</p>
                     </div>
                   ) : (
