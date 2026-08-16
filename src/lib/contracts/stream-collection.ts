@@ -5,8 +5,8 @@
  * Supports Base and BNB chains with chain-specific contract addresses.
  */
 
-import { Interface } from 'ethers';
-import { writeContractAA, getWalletAddress, parseTxError, switchChain } from './aa-utils';
+import { Interface, parseUnits } from 'ethers';
+import { writeContractAA, writeBatchAA, getWalletAddress, parseTxError, switchChain, type AABatchCall } from './aa-utils';
 import { BASE_CHAIN_ID, getChainConfig } from './dhb-token';
 import { isV3Chain } from '@/lib/chains/robinhood';
 import { createLogger } from '@/lib/logger';
@@ -52,6 +52,22 @@ const streamCollectionV3Interface = new Interface(STREAM_COLLECTION_V3_ABI);
 export interface MintFee {
   recipient: string;
   value: bigint;
+}
+
+/**
+ * What minting costs the creator, as quoted by GET /api/mint_fee.
+ *
+ * Only sponsored (built-in wallet) sessions are ever quoted: an external
+ * wallet pays its own gas, so there is no cost to recover from it.
+ */
+export interface MintFeeQuote {
+  amount: number;
+  symbol: string;
+  tokenAddress: string;
+  recipient?: string;
+  chargeable: boolean;
+  decimals: number;
+  isNative: boolean;
 }
 
 // Parameters for the mint function
@@ -210,6 +226,100 @@ export async function mintOnChain(params: MintParams): Promise<{ hash: string; c
         chainName: chainConfig.name,
         contract: chainConfig.streamCollection,
       },
+      error instanceof Error ? error : undefined,
+    );
+    throw error;
+  }
+}
+
+/** Minimal ERC-20 surface — only the fee transfer is encoded here. */
+const erc20Interface = new Interface([
+  'function transfer(address to, uint256 amount) returns (bool)',
+]);
+
+/**
+ * Mint, and pay the mint fee, in a single sponsored transaction.
+ *
+ * The fee transfer and the mint go into one user operation, so the creator
+ * signs once and the collection contract needs no knowledge of fees. A DHB fee
+ * is an ERC-20 transfer out of the smart account, which needs no `approve`
+ * because the account moves its own tokens; a native fee (Robinhood Chain,
+ * where DHB is not deployed) rides as the call's value.
+ *
+ * Falls back to an unbatched mint whenever there is nothing to charge — no
+ * treasury configured, a zero quote, or a session that cannot batch. Losing
+ * the fee is always preferable to losing the post.
+ */
+export async function mintOnChainWithFee(
+  params: MintParams,
+  fee: MintFeeQuote | null,
+): Promise<{ hash: string; confirmed: Promise<string> }> {
+  const chainId = params.chainId || BASE_CHAIN_ID;
+  const chainConfig = getChainConfig(chainId);
+
+  const collectable =
+    !!fee && fee.chargeable && !!fee.recipient && fee.amount > 0;
+  if (!collectable) {
+    return mintOnChain(params);
+  }
+
+  await switchChain(chainId);
+
+  const amountWei = parseUnits(fee.amount.toFixed(fee.decimals), fee.decimals);
+  const isV3 = params.sigVersion === 3 || isV3Chain(chainId);
+
+  const mintData = isV3
+    ? streamCollectionV3Interface.encodeFunctionData('mint', [
+        BigInt(params.tokenId),
+        BigInt(params.supply || 1000),
+        params.uri || `${params.tokenId}.json`,
+        BigInt(params.deadline ?? 0),
+        params.signature,
+      ])
+    : streamCollectionInterface.encodeFunctionData('mint', [
+        BigInt(params.tokenId),
+        BigInt(params.timestamp ?? 0),
+        params.v,
+        params.r?.startsWith('0x') ? params.r : `0x${params.r}`,
+        params.s?.startsWith('0x') ? params.s : `0x${params.s}`,
+        params.fees || [],
+        BigInt(params.supply || 1000),
+        params.uri || `${params.tokenId}.json`,
+      ]);
+
+  const feeCall: AABatchCall = fee.isNative
+    ? { to: fee.recipient!, data: '0x' as `0x${string}`, value: amountWei }
+    : {
+        to: fee.tokenAddress,
+        data: erc20Interface.encodeFunctionData('transfer', [
+          fee.recipient,
+          amountWei,
+        ]) as `0x${string}`,
+      };
+
+  console.log('[StreamCollection] Minting with fee:', {
+    tokenId: String(params.tokenId),
+    fee: `${fee.amount} ${fee.symbol}`,
+    chain: chainConfig.name,
+  });
+
+  try {
+    const result = await writeBatchAA(
+      [feeCall, { to: chainConfig.streamCollection, data: mintData as `0x${string}` }],
+      { context: 'mint NFT', chainId },
+    );
+    return { hash: result.hash, confirmed: Promise.resolve(result.hash) };
+  } catch (error) {
+    // A session that cannot batch is not a failed mint — send the mint on its
+    // own rather than blocking the creator over an uncharged fee.
+    if (error instanceof Error && error.message === 'BATCH_UNSUPPORTED') {
+      console.warn('[StreamCollection] Batching unavailable — minting without charging');
+      return mintOnChain(params);
+    }
+    console.error('[StreamCollection] Mint with fee failed:', error);
+    mintChainLogger.error(
+      error instanceof Error ? error.message : String(error),
+      { tokenId: params.tokenId, chainId, chainName: chainConfig.name, withFee: true },
       error instanceof Error ? error : undefined,
     );
     throw error;

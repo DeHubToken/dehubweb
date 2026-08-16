@@ -133,4 +133,8 @@ export interface PostFormComputed {
   isShort: boolean;
   destinations: string[];
   canPost: boolean;
+  /** e.g. "17 DHB" — null while unpriced, or when minting costs nothing. */
+  mintFeeLabel: string | null;
+  /** Bounty locks tokens through the mint, so minting cannot be turned off. */
+  mintRequired: boolean;
 }

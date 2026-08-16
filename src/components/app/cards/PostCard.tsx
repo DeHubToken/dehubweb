@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
@@ -31,6 +31,7 @@ import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
+import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
@@ -95,7 +96,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
-  
+  const { mint: mintExisting, isMinting } = useMintExistingPost();
+
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
 
   const openPostInfoPage = useCallback(() => {
@@ -366,6 +368,21 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                   >
                     <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                   </button>
+                  {/* Only for posts that were published off-chain — a minted
+                      post has nothing to do here, and 'signed' is the status
+                      the backend keeps them at for life. */}
+                  {post.status === 'signed' && (
+                    <button
+                      onClick={() => {
+                        setShowOptionsDrawer(false);
+                        if (postTokenId) mintExisting(postTokenId, post.chainId);
+                      }}
+                      disabled={!postTokenId || isMinting}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                    >
+                      <Coins className="w-5 h-5" /> Mint post
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       if (!postTokenId || togglePinMutation.isPending) return;

@@ -31,6 +31,11 @@ export interface MintPostParams {
   files?: File[];
   thumbnail?: Blob;
   minterAddress: string;
+  /**
+   * Publish without minting on-chain. The post lands in feeds as soon as this
+   * call returns and the client skips the contract step entirely.
+   */
+  mintOptOut?: boolean;
 }
 
 export interface MintResponse {
@@ -68,6 +73,10 @@ export async function mintPost(
   formData.append('minter', params.minterAddress);
   console.log('[MintPost] Including minter address:', params.minterAddress);
 
+  if (params.mintOptOut) {
+    formData.append('mintOptOut', 'true');
+  }
+
   const streamInfo: StreamInfo = params.streamInfo || {
     isLockContent: false,
     isPayPerView: false,
@@ -94,6 +103,51 @@ export async function mintPost(
     // 8-minute timeout for large video files on slow mobile connections
     timeoutMs: 8 * 60 * 1000,
     unwrapResult: true,
+  });
+}
+
+export interface MintFeeQuoteResponse {
+  chainId: number;
+  amount: number;
+  symbol: string;
+  tokenAddress: string;
+  recipient?: string;
+  chargeable: boolean;
+  decimals: number;
+  isNative: boolean;
+  ttlSeconds: number;
+}
+
+/**
+ * What minting one post costs on `chainId`, in the token it is paid in.
+ *
+ * Quoted server-side and never computed here: the fee tracks live gas, and a
+ * second cost table in the client would be wrong within the hour. Returns null
+ * rather than throwing when the chain is not priced or the quote fails, since
+ * a missing quote must degrade to "mint without charging", not to a blocked
+ * post.
+ */
+export async function getMintFee(chainId: number): Promise<MintFeeQuoteResponse | null> {
+  try {
+    const res = await apiCall<any>('/api/mint_fee', { params: { chainId } });
+    return res && typeof res.amount === 'number' ? (res as MintFeeQuoteResponse) : null;
+  } catch (err) {
+    console.warn('[MintFee] Could not price a mint:', err);
+    return null;
+  }
+}
+
+/**
+ * Ask for a fresh mint signature for a post that was published off-chain.
+ *
+ * The post already has its token ID, so this returns the same shape as
+ * mintPost's signature fields and feeds straight into mintOnChain.
+ */
+export async function mintExistingPost(tokenId: number | string): Promise<MintResponse> {
+  return apiCall<MintResponse>('/api/mint_existing', {
+    method: 'POST',
+    body: { tokenId: Number(tokenId) },
+    requiresAuth: true,
   });
 }
 
