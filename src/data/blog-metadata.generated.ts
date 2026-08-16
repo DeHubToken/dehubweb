@@ -3171,12 +3171,6 @@ export const latestPostMetadata: BlogPost | undefined = {
 export const excludedTitles: string[] = [
   "Leading the Way: DeHub founder's agency Becomes UK #1 with 1,000 Streamers",
   "Fueling Growth: $1M Raised for Fan.site (BJ Fork)",
-  "Worldwide Creators: Partnerships Spanning 15 Countries",
-  "Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
-  "Smarter Liquidity: Automated Liquidity Provision on DEXs",
-  "Open and Clear: DEX Policy Implementation and Transparency Commitment",
-  "Supporting Growth: Knowledge Transfer to Fan.site Team",
-  "Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
   "In the Spotlight: DeHub Featured in TechCrunch and VentureBeat",
   "Innovation Recognized: DeHub Wins Corporate Livewire Award",
   "Interactive Streaming: On-Chain Live Streams with Animated Tips"
