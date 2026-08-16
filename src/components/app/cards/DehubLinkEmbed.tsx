@@ -99,7 +99,7 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
     case 'event':
       return <EventLinkEmbed eventNumber={link.eventNumber!} fallback={fallback} />;
     case 'stage':
-      return <StageLinkEmbed stageId={link.stageId!} fallback={fallback} />;
+      return <StageLinkEmbed stageId={link.stageId} stageShortId={link.stageShortId} fallback={fallback} />;
     default:
       return fallback;
   }
