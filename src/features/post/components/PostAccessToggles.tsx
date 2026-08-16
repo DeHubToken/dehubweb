@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users } from 'lucide-react';
+import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -55,6 +55,17 @@ interface PostAccessTogglesProps {
   hasVideoOrAudio: boolean;
   categoryDrawerOpen?: boolean;
   setCategoryDrawerOpen?: (value: boolean) => void;
+  /** Put this post on-chain. Off by default on a built-in wallet. */
+  shouldMint: boolean;
+  setShouldMint: (value: boolean) => void;
+  /** e.g. "17 DHB" — omitted while the quote is loading, or when it is free. */
+  mintFeeLabel?: string | null;
+  /**
+   * Bounty locks tokens through the mint transaction, so it cannot be set up
+   * on a post that never goes on-chain. The composer forces minting on when
+   * bounty is enabled and passes true here so the row reads as unavailable.
+   */
+  mintRequired?: boolean;
 }
 
 export function PostAccessToggles({
@@ -92,6 +103,10 @@ export function PostAccessToggles({
   hasVideoOrAudio,
   categoryDrawerOpen: categoryDrawerOpenProp,
   setCategoryDrawerOpen: setCategoryDrawerOpenProp,
+  shouldMint,
+  setShouldMint,
+  mintFeeLabel,
+  mintRequired = false,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
   const { walletAddress } = useAuth();
@@ -307,6 +322,31 @@ export function PostAccessToggles({
     <>
       <div className="relative border-t border-white/10">
         <div className="px-4 py-2 space-y-1 max-h-[140px] overflow-y-auto scrollbar-none" style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}>
+        {/* Mint post — off by default, so a first post needs no wallet at all */}
+        <label
+          className={cn(
+            'flex items-center justify-between py-0.5',
+            mintRequired ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
+          )}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <Coins className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">Mint post</span>
+            {shouldMint && mintFeeLabel && (
+              <span className="text-xs text-white/50 truncate">({mintFeeLabel})</span>
+            )}
+            {mintRequired && (
+              <span className="text-xs text-white/50 truncate">(required for bounty)</span>
+            )}
+          </div>
+          <Switch
+            checked={shouldMint}
+            onCheckedChange={setShouldMint}
+            disabled={mintRequired}
+            className="data-[state=checked]:bg-white scale-75"
+          />
+        </label>
+
         {/* Title - forced on for video/audio, toggleable for others */}
         {!hasVideoOrAudio && (
           <label className="flex items-center justify-between py-0.5 cursor-pointer">
