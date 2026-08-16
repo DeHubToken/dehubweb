@@ -42,6 +42,7 @@ import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, e
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
 import { TipModal } from '@/components/app/modals/TipModal';
+import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
@@ -171,6 +172,8 @@ interface CommentItemProps {
   comment: Comment;
   tokenId: string;
   onLike: (id: string) => void;
+  /** Own comments only: the like button opens the likers list instead. */
+  onShowLikers: (id: string) => void;
   onDislike: (id: string) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
@@ -230,7 +233,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -343,16 +346,19 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
         )}
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-4">
+            {/* You can't like your own comment — for the author this same
+                button opens the likers list instead, count included even at 0
+                so the door is visible. */}
             <button
-              onClick={() => onLike(comment.id)}
+              onClick={() => (isOwnComment ? onShowLikers(comment.id) : onLike(comment.id))}
               className={cn(
                 "flex items-center gap-1 transition-colors",
-                comment.isLiked ? "text-white" : "text-white/70 hover:text-white"
+                !isOwnComment && comment.isLiked ? "text-white" : "text-white/70 hover:text-white"
               )}
-              aria-label="Like"
+              aria-label={isOwnComment ? "See who liked" : "Like"}
             >
-              <ThumbsUp className={cn("w-4 h-4", comment.isLiked && "fill-current")} />
-              {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
+              <ThumbsUp className={cn("w-4 h-4", !isOwnComment && comment.isLiked && "fill-current")} />
+              {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
             </button>
             {/* Every comment is replyable, replies included — threads nest without limit. */}
             <button
@@ -485,6 +491,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const [newComment, setNewComment] = useState(() => loadDraft(tokenId));
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [tipComment, setTipComment] = useState<Comment | null>(null);
+  // Which of the viewer's own comments has its likers drawer open.
+  const [likersCommentId, setLikersCommentId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
   // Optimistic delete/edit overlays — applied instantly in allComments below,
@@ -815,7 +823,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     // Find current comment state
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;
-    
+
+    // Own comments can't be liked — their like button shows who liked them.
+    // CommentItem already routes there; this covers any other caller.
+    if (walletAddress && comment.address?.toLowerCase() === walletAddress.toLowerCase()) {
+      setLikersCommentId(comment.id);
+      return;
+    }
+
     const wasLiked = comment.isLiked;
     const newLikes = wasLiked ? comment.likes - 1 : comment.likes + 1;
     
@@ -1200,8 +1215,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       <CommentItem 
                         comment={comment}
                         tokenId={tokenId}
-                        onLike={handleLike} 
-                        onDislike={handleDislike} 
+                        onLike={handleLike}
+                        onShowLikers={setLikersCommentId}
+                        onDislike={handleDislike}
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onEdit={handleEditComment}
@@ -1217,6 +1233,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                           comment={reply}
                           tokenId={tokenId}
                           onLike={handleLike}
+                          onShowLikers={setLikersCommentId}
                           onDislike={handleDislike}
                           onReply={handleReply}
                           onShare={() => {}}
@@ -1400,8 +1417,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       <CommentItem 
                         comment={comment}
                         tokenId={tokenId}
-                        onLike={handleLike} 
-                        onDislike={handleDislike} 
+                        onLike={handleLike}
+                        onShowLikers={setLikersCommentId}
+                        onDislike={handleDislike}
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onEdit={handleEditComment}
@@ -1417,6 +1435,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                           comment={reply}
                           tokenId={tokenId}
                           onLike={handleLike}
+                          onShowLikers={setLikersCommentId}
                           onDislike={handleDislike}
                           onReply={handleReply}
                           onShare={() => {}}
@@ -1688,6 +1707,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           creatorName={tipComment ? (tipComment.displayName || tipComment.username) : undefined}
           tokenId={tokenId}
           commentId={tipComment?.id}
+        />
+
+        {/* Who liked one of the viewer's own comments. One drawer for the
+            whole section, aimed at whichever comment's like button was tapped. */}
+        <CommentLikersDrawer
+          open={!!likersCommentId}
+          onOpenChange={(open) => { if (!open) setLikersCommentId(null); }}
+          commentId={likersCommentId}
         />
     </motion.div>
   );
