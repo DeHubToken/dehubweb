@@ -855,8 +855,9 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
     // "not found on back-nav, fine after refresh" bug. If `post` exists, render it.
     if (!post) return <NotFoundState />;
     
-    // Handle processing posts
-    if (post.status === 'signed' || post.status === 'pending') {
+    // Handle processing posts. 'signed' is NOT transient: it is the for-life
+    // status of a post published with mint opt-out, and those must render.
+    if (post.status === 'pending') {
       return <ProcessingState />;
     }
 

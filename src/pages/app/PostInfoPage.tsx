@@ -643,8 +643,9 @@ export default function PostInfoPage() {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
   
-  // Show processing state for posts that the API returns with signed/pending status
-  const isProcessing = nftInfo?.status === 'signed' || nftInfo?.status === 'pending';
+  // Show processing state for pending posts only. 'signed' is the for-life
+  // status of a post published with mint opt-out — it must render normally.
+  const isProcessing = nftInfo?.status === 'pending';
   
   if (isProcessing) {
     return (

@@ -21,7 +21,7 @@ import {
 } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
-import { parseSoundtrackTag } from '@/hooks/use-unified-feed';
+import { parseSoundtrackTag, getFeedViewer } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
@@ -397,7 +397,9 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
   }, [blockList]);
 
   return useInfiniteQuery({
-    queryKey: ['dehub-feed', { ...searchParams, status }],
+    // Viewer in the key: without it, a page fetched anonymously (or by the
+    // previous account) is served to the next signer-in for up to gcTime.
+    queryKey: ['dehub-feed', { ...searchParams, status }, getFeedViewer()],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await searchNFTs({
         ...searchParams,
