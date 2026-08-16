@@ -2,7 +2,9 @@ import { describe, it, expect } from 'vitest';
 import {
   isUserRejection,
   isRequestAlreadyPending,
+  isRequestTimeout,
   describeWalletError,
+  WalletRequestTimeoutError,
 } from '@/lib/wallet-errors';
 
 /**
@@ -82,6 +84,21 @@ describe('isUserRejection', () => {
     expect(isUserRejection(undefined)).toBe(false);
     expect(isUserRejection(null)).toBe(false);
     expect(isUserRejection('user rejected the request')).toBe(false);
+  });
+});
+
+describe('isRequestTimeout', () => {
+  it('recognises the timeout the auth path throws', () => {
+    const err = new WalletRequestTimeoutError('signature', 60_000);
+    expect(isRequestTimeout(err)).toBe(true);
+    // A timeout is neither a decision by the user nor a queue collision.
+    expect(isUserRejection(err)).toBe(false);
+    expect(isRequestAlreadyPending(err)).toBe(false);
+  });
+
+  it('does not mistake other errors for a timeout', () => {
+    expect(isRequestTimeout({ name: 'Error', message: 'timed out' })).toBe(false);
+    expect(isRequestTimeout(undefined)).toBe(false);
   });
 });
 
