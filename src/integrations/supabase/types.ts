@@ -3257,11 +3257,17 @@ export type Database = {
           id: string
           listing_id: string
           notes: string | null
+          paid_token_amount: number | null
+          paid_token_symbol: string | null
           seller_address: string
           shipping_address: string | null
+          source: string
           status: string
+          stream_token_id: string | null
           tx_hash: string | null
           updated_at: string
+          verified_at: string | null
+          verify_error: string | null
         }
         Insert: {
           amount: number
@@ -3270,11 +3276,17 @@ export type Database = {
           id?: string
           listing_id: string
           notes?: string | null
+          paid_token_amount?: number | null
+          paid_token_symbol?: string | null
           seller_address: string
           shipping_address?: string | null
+          source?: string
           status?: string
+          stream_token_id?: string | null
           tx_hash?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verify_error?: string | null
         }
         Update: {
           amount?: number
@@ -3283,15 +3295,68 @@ export type Database = {
           id?: string
           listing_id?: string
           notes?: string | null
+          paid_token_amount?: number | null
+          paid_token_symbol?: string | null
           seller_address?: string
           shipping_address?: string | null
+          source?: string
           status?: string
+          stream_token_id?: string | null
           tx_hash?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verify_error?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "store_orders_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "store_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stream_products: {
+        Row: {
+          created_at: string
+          creator_address: string
+          id: string
+          is_pinned: boolean
+          listing_id: string
+          live_price: number | null
+          pinned_at: string | null
+          position: number
+          token_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          creator_address: string
+          id?: string
+          is_pinned?: boolean
+          listing_id: string
+          live_price?: number | null
+          pinned_at?: string | null
+          position?: number
+          token_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          creator_address?: string
+          id?: string
+          is_pinned?: boolean
+          listing_id?: string
+          live_price?: number | null
+          pinned_at?: string | null
+          position?: number
+          token_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stream_products_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "store_listings"
