@@ -223,7 +223,7 @@
               ? (localStorage.getItem("dehub_wallet") || "").toLowerCase() || null
               : null;
             window.__DEHUB_FEED__ = fetch(
-              "https://api.dehub.io/api/feed?page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=minted",
+              "https://api.dehub.io/api/feed?page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=all",
               { headers: h }
             ).then(function (r) { return r.ok ? r.json() : null; })
              .catch(function () { return null; });

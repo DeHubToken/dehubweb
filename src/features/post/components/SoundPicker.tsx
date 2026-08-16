@@ -46,7 +46,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
         page: pageParam,
         unit: 20,
         sortMode: 'new' as const,
-        status: 'minted' as const,
+        status: 'all' as const,
         ...(debouncedSearch ? { search: debouncedSearch } : {}),
       };
       const [audioRes, feedAudioRes] = await Promise.all([

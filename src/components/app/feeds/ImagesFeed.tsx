@@ -498,7 +498,7 @@ export function ImagesFeed({
     hasBounty: contentFilters.w2e || undefined,
     isLocked: contentFilters.locked || undefined,
     limit: 12,
-    status: 'minted',
+    status: 'all',
     sortBy: selectedSort.value === 'most-liked' ? 'likes' : 'createdAt',
     sortOrder: 'desc',
     followingOnly: isFollowingMode ? true : undefined,
