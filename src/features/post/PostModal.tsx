@@ -169,6 +169,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         hasVideoOrAudio={computed.hasVideo || computed.hasAudio}
         categoryDrawerOpen={categoryDrawerOpen}
         setCategoryDrawerOpen={setCategoryDrawerOpen}
+        shouldMint={state.shouldMint}
+        setShouldMint={actions.setShouldMint}
+        mintFeeLabel={computed.mintFeeLabel}
+        mintRequired={computed.mintRequired}
       />
 
       <PostActionBar

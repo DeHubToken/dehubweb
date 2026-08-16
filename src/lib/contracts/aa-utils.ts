@@ -684,6 +684,85 @@ export async function writeContractAA(
   }
 }
 
+/** One call inside a batched user operation. */
+export interface AABatchCall {
+  to: string;
+  data: Hex;
+  value?: bigint;
+}
+
+/**
+ * Send several calls as ONE sponsored transaction.
+ *
+ * A Safe smart account executes a list of calls atomically, which is what lets
+ * a mint fee ride along with the mint itself: one signature, one sponsored
+ * transaction, and no fee-aware `mint` on the collection contract. A plain
+ * ERC-20 transfer out of the account needs no `approve` either, because the
+ * account is moving its own tokens rather than being pulled from.
+ *
+ * The EIP-1193 surface cannot express this — the provider's processTransaction
+ * builds `calls` with exactly one entry — so this drops to the bundler client
+ * underneath it, in the same shape the provider uses. Both are public getters.
+ *
+ * Smart-account sessions only. An external wallet has no bundler and no batch;
+ * callers must fall back to sending the calls separately, and in practice do
+ * not need to, because external wallets pay their own gas and are not charged
+ * a fee at all.
+ */
+export async function writeBatchAA(
+  calls: AABatchCall[],
+  options?: { context?: string; chainId?: number },
+): Promise<AAWriteResult> {
+  const context = options?.context || 'send transaction';
+  if (!calls.length) throw new Error('writeBatchAA called with no calls');
+
+  const aaProvider: any =
+    (options?.chainId !== undefined ? getAAProviderForChain(options.chainId) : null) ?? getAAProvider();
+
+  const bundlerClient = aaProvider?.bundlerClient;
+  const smartAccount = aaProvider?.smartAccount;
+  if (!bundlerClient || !smartAccount) {
+    // Not a "locked wallet" case — batching is structurally unavailable here,
+    // so raising the unlock dialog would ask for a password that cannot help.
+    throw new Error('BATCH_UNSUPPORTED');
+  }
+
+  console.log('[AA] Sending batched user operation:', {
+    calls: calls.length,
+    to: calls.map(c => c.to),
+    chainId: options?.chainId,
+  });
+
+  try {
+    // Same shape as the provider's own single-call path; viem's types here are
+    // too deep to name, which is why that path casts as well.
+    const userOpHash = await bundlerClient.sendUserOperation({
+      account: smartAccount,
+      calls: calls.map(c => ({ to: c.to, value: c.value ?? BigInt(0), data: c.data })),
+    } as any);
+
+    // The bundler resolves a userOp hash to a transaction hash only once it is
+    // mined, so unlike the EOA path there is no hash to hand back before then.
+    const receiptPromise = bundlerClient
+      .waitForUserOperationReceipt({ hash: userOpHash })
+      .then((r: any) => {
+        if (!r?.success) throw new Error(r?.reason || 'User operation reverted');
+        return r.receipt.transactionHash as string;
+      });
+
+    const txHash = await receiptPromise;
+    console.log('[AA] Batched user operation confirmed:', txHash);
+
+    return {
+      hash: txHash,
+      wait: async () => ({ status: 1, hash: txHash }),
+    };
+  } catch (sendError) {
+    console.error('[AA] Batched user operation failed:', sendError);
+    throw new Error(parseTxError(sendError, context));
+  }
+}
+
 /**
  * Make a raw JSON-RPC request against the chain's public RPC (no wallet needed).
  * Used for methods that aren't plain eth_call, e.g. eth_getLogs.

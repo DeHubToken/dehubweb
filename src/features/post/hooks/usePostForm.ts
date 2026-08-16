@@ -6,7 +6,10 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
-import { mintPost, createPoll, AuthenticationError, type StreamInfo } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, AuthenticationError, type StreamInfo, type MintFeeQuoteResponse } from '@/lib/api/dehub';
+// Cheap localStorage reads, no wallet stack — safe to import statically even
+// though the mint helpers below cannot be (see the note under this import).
+import { isSmartWalletSession } from '@/lib/connection-source';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -30,6 +33,16 @@ import type { PostChainId } from '@/components/app/ChainSelector';
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
 const ACTIVE_DRAFT_KEY = 'post_active_draft';
+
+/**
+ * A fee is a price, so it reads as one: trailing zeros trimmed, and never in
+ * exponent form — a native-token fee on a cheap chain is small enough that
+ * String() would render it as "1.7e-7".
+ */
+function formatFeeAmount(amount: number): string {
+  if (amount >= 1) return amount.toFixed(2).replace(/\.?0+$/, '');
+  return amount.toFixed(8).replace(/\.?0+$/, '');
+}
 
 interface ActiveDraft {
   text: string;
@@ -160,6 +173,7 @@ interface UsePostFormReturn {
     selectedCategory: string;
     showTitle: boolean;
     titleText: string;
+    shouldMint: boolean;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -171,6 +185,7 @@ interface UsePostFormReturn {
     setChainId: (chainId: PostChainId) => void;
     setSelectedCategory: (category: string) => void;
     setShowTitle: (show: boolean) => void;
+    setShouldMint: (value: boolean) => void;
     setTitleText: (text: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
@@ -263,6 +278,63 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setShowTitle(value);
     try { localStorage.setItem('post_show_title', String(value)); } catch {}
   }, []);
+
+  /**
+   * Whether this post goes on-chain.
+   *
+   * Off by default on the built-in wallet, which is the whole point: a first
+   * post then needs no wallet, no password and no gas, and lands in the feed
+   * the moment the upload finishes. On by default for an external wallet —
+   * that user already has a wallet, it prompts for itself, and they pay their
+   * own gas, so there is nothing to spare them.
+   *
+   * The choice is remembered per browser once made either way.
+   */
+  const [shouldMint, setShouldMint] = useState(() => {
+    try {
+      const stored = localStorage.getItem('post_should_mint');
+      if (stored === 'true' || stored === 'false') return stored === 'true';
+    } catch { /* private mode — fall through to the default */ }
+    return !isSmartWalletSession();
+  });
+
+  const handleSetShouldMint = useCallback((value: boolean) => {
+    setShouldMint(value);
+    try { localStorage.setItem('post_should_mint', String(value)); } catch {}
+  }, []);
+
+  /**
+   * Bounty locks DHB through the mint transaction itself, so a post that never
+   * goes on-chain cannot carry one. Rather than let the two settings contradict
+   * each other, bounty wins and the mint row goes read-only.
+   */
+  const mintRequired = isWatch2Earn;
+  const effectiveShouldMint = shouldMint || mintRequired;
+
+  /**
+   * What the mint will cost, quoted by the server.
+   *
+   * Only sponsored sessions are charged, so an external wallet never asks.
+   * A null quote means "could not price it" and is treated as free rather than
+   * as a blocker — see mintOnChainWithFee.
+   */
+  const [mintFee, setMintFee] = useState<MintFeeQuoteResponse | null>(null);
+  useEffect(() => {
+    if (!effectiveShouldMint || !isSmartWalletSession() || isSolanaChain(chainId)) {
+      setMintFee(null);
+      return;
+    }
+    let cancelled = false;
+    getMintFee(chainId).then((quote) => {
+      if (!cancelled) setMintFee(quote);
+    });
+    return () => { cancelled = true; };
+  }, [effectiveShouldMint, chainId]);
+
+  const mintFeeLabel = mintFee?.chargeable && mintFee.amount > 0
+    ? `${formatFeeAmount(mintFee.amount)} ${mintFee.symbol}`
+    : null;
+
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
   // Auto-save active draft to localStorage whenever text fields change.
@@ -953,21 +1025,30 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       // Wallet/contract modules load on demand (see import note at top).
       const [
-        { getWeb3AuthSigner, mintOnChain },
+        { getWeb3AuthSigner, mintOnChain, mintOnChainWithFee },
         { mintWithBounty, calculateTotalBounty, getDHBBalance },
       ] = await Promise.all([
         import('@/lib/contracts/stream-collection'),
         import('@/lib/contracts/stream-controller'),
       ]);
 
-      // Wallet for minting: Solana = Phantom; EVM = Web3Auth/wagmi
+      // Publishing off-chain touches no wallet at all.
+      //
+      // getWeb3AuthSigner is getWalletAddress under another name, and on a
+      // built-in wallet it raises the unlock dialog — which is why posting has
+      // always asked for the password before anything was even uploaded. The
+      // backend takes the minter from the authenticated session and only reads
+      // the `minter` field for Solana, so an EVM post needs no address from
+      // here; the account's own address is sent for continuity of the logs.
       let minterAddress: string;
       if (postingOnSolana) {
         minterAddress = await connectSolanaWallet();
-      } else {
+      } else if (effectiveShouldMint) {
         minterAddress = await getWeb3AuthSigner();
+      } else {
+        minterAddress = user?.address || '';
       }
-      console.log('[Mint] Minter address:', minterAddress, 'chainId:', chainId);
+      console.log('[Mint] Minter address:', minterAddress, 'chainId:', chainId, 'mint:', effectiveShouldMint);
 
       const evmChainConfig = !postingOnSolana ? getChainConfig(chainId as import('@/components/app/ChainSelector').ChainId) : null;
 
@@ -1215,6 +1296,41 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const hashtagCategories = Array.from(extractedTags).map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
       const mergedCategories = [...new Set([...baseCategories, ...hashtagCategories])];
 
+      /**
+       * Can this account actually pay for the mint?
+       *
+       * Checked before the upload commits so a creator who is short of DHB
+       * publishes off-chain in one pass rather than uploading, failing at the
+       * transfer and having to start again. Coming up short is not an error:
+       * the post goes out unminted and a top-up sheet appears afterwards, from
+       * which the post can be minted later.
+       */
+      let feeForMint: MintFeeQuoteResponse | null = null;
+      let mintingThisPost = effectiveShouldMint;
+      let shortfall: MintFeeQuoteResponse | null = null;
+
+      if (mintingThisPost && !postingOnSolana && isSmartWalletSession()) {
+        feeForMint = mintFee ?? (await getMintFee(chainId));
+        if (feeForMint?.chargeable && feeForMint.amount > 0 && !feeForMint.isNative) {
+          try {
+            const balance = await getDHBBalance(
+              minterAddress,
+              chainId as import('@/components/app/ChainSelector').ChainId,
+            );
+            const needed = BigInt(Math.ceil(feeForMint.amount * 1e6)) * BigInt(1e12);
+            if (balance < needed) {
+              console.log('[Mint] Short of DHB for the mint fee — publishing off-chain');
+              shortfall = feeForMint;
+              mintingThisPost = false;
+            }
+          } catch (err) {
+            // A balance read that fails must not decide the post's fate; let
+            // the transfer itself be the judge.
+            console.warn('[Mint] Could not read DHB balance:', err);
+          }
+        }
+      }
+
       const mintResponse = await mintPost(
         {
           name: cleanTitle,
@@ -1226,6 +1342,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           files: files.length > 0 ? files : undefined,
           thumbnail,
           minterAddress,
+          mintOptOut: !mintingThisPost,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
       );
@@ -1247,7 +1364,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         );
       }
 
-      if (!isSolanaMint && (!mintResponse.v || !mintResponse.r || !mintResponse.s)) {
+      // Only the on-chain path needs a signature. A post published off-chain
+      // is complete as soon as this call returns — the backend serves it from
+      // status 'signed', which every feed already accepts.
+      if (mintingThisPost && !isSolanaMint && (!mintResponse.v || !mintResponse.r || !mintResponse.s)) {
         console.error('[Mint] Missing signature components in API response');
         throw new Error('Invalid signature data from backend - missing v, r, or s');
       }
@@ -1260,106 +1380,132 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         return;
       }
 
-      // Step 2: Execute on-chain minting
-      setUploadProgress(65);
-      toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
-      
-      // Slowly creep progress from 69→99% while waiting for chain confirmation
-      // Faster initially, then decelerates as it approaches 99%
-      let simulatedProgress = 69;
-      const progressInterval = setInterval(() => {
-        const remaining = 99 - simulatedProgress;
-        // Exponential deceleration: move a fraction of remaining distance
-        const step = remaining > 4
-          ? Math.random() * 3 + 1.5   // 1.5-4.5% per tick when far from 99
-          : Math.random() * 0.3 + 0.1; // 0.1-0.4% per tick near 95-99%
-        simulatedProgress += step;
-        if (simulatedProgress >= 99) {
-          simulatedProgress = 99;
+      // Step 2: Execute on-chain minting.
+      //
+      // Skipped wholesale when the creator turned minting off: no contract
+      // call, no signature, no wallet prompt. The post is already live, so
+      // everything after this block — the optimistic feed entry, the poll, the
+      // category counts — runs exactly the same either way.
+      let txHash: string | undefined;
+
+      if (mintingThisPost) {
+        setUploadProgress(65);
+        toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
+
+        // Slowly creep progress from 69→99% while waiting for chain confirmation
+        // Faster initially, then decelerates as it approaches 99%
+        let simulatedProgress = 69;
+        const progressInterval = setInterval(() => {
+          const remaining = 99 - simulatedProgress;
+          // Exponential deceleration: move a fraction of remaining distance
+          const step = remaining > 4
+            ? Math.random() * 3 + 1.5   // 1.5-4.5% per tick when far from 99
+            : Math.random() * 0.3 + 0.1; // 0.1-0.4% per tick near 95-99%
+          simulatedProgress += step;
+          if (simulatedProgress >= 99) {
+            simulatedProgress = 99;
+            clearInterval(progressInterval);
+          }
+          setUploadProgress(Math.round(simulatedProgress));
+        }, 1200);
+
+        let mintConfirmed: Promise<string> | undefined;
+
+        try {
+          if (isSolanaMint) {
+            toast.loading('Sign with Phantom to publish', { id: 'mint-progress', duration: Infinity });
+            const solResult = await broadcastSolanaMint({
+              transactionBase64: mintResponse.transaction!,
+              mintAddress: mintResponse.mintAddress!,
+              tokenId: mintResponse.createdTokenId,
+              chainId,
+              walletAddress: minterAddress,
+            });
+            txHash = solResult.signature;
+            if (solResult.confirmWarning) {
+              toast.warning(solResult.confirmWarning, { duration: 10000 });
+            }
+          } else if (hasBounty) {
+            toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
+            
+            txHash = await mintWithBounty({
+              tokenId: mintResponse.createdTokenId,
+              timestamp: mintResponse.timestamp!,
+              v: mintResponse.v!,
+              r: mintResponse.r!,
+              s: mintResponse.s!,
+              bountyAmount: parseFloat(w2eTotal),
+              countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
+              countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
+              chainId: chainId as import('@/components/app/ChainSelector').ChainId,
+            });
+          } else {
+            // The fee, when there is one, rides in the same user operation as
+            // the mint — one signature, one sponsored transaction. With nothing
+            // to charge this is exactly the old mintOnChain call.
+            const mintResult = await mintOnChainWithFee(
+              {
+                tokenId: mintResponse.createdTokenId,
+                timestamp: mintResponse.timestamp!,
+                v: mintResponse.v!,
+                r: mintResponse.r!,
+                s: mintResponse.s!,
+                chainId: chainId as import('@/components/app/ChainSelector').ChainId,
+              },
+              feeForMint,
+            );
+            txHash = mintResult.hash;
+            mintConfirmed = mintResult.confirmed;
+          }
+        } finally {
           clearInterval(progressInterval);
         }
-        setUploadProgress(Math.round(simulatedProgress));
-      }, 1200);
 
-      let txHash: string | undefined;
-      let mintConfirmed: Promise<string> | undefined;
-      
-      try {
-        if (isSolanaMint) {
-          toast.loading('Sign with Phantom to publish', { id: 'mint-progress', duration: Infinity });
-          const solResult = await broadcastSolanaMint({
-            transactionBase64: mintResponse.transaction!,
-            mintAddress: mintResponse.mintAddress!,
+        // Fire-and-forget: EVM confirmation + backend polling
+        if (mintConfirmed && txHash) {
+          mintConfirmed
+            .then((confirmedHash) =>
+              confirmEvmMint({
+                tokenId: mintResponse.createdTokenId,
+                txHash: confirmedHash,
+                chainId: chainId as number,
+              }),
+            )
+            .catch((err) => {
+              // Best-effort nudge only: the backend indexer picks the post up from
+              // the chain regardless, so a timed-out wait(1) or a non-2xx confirm-mint
+              // must NOT surface a user-facing error — the post has already landed and
+              // "Posted successfully" was already shown. Matches the silent sibling
+              // branch below. See usePostForm confirm-mint notes.
+              console.warn('[Mint] Background confirmation failed (post still lands):', err);
+            });
+        } else if (!isSolanaMint && txHash) {
+          confirmEvmMint({
             tokenId: mintResponse.createdTokenId,
-            chainId,
-            walletAddress: minterAddress,
-          });
-          txHash = solResult.signature;
-          if (solResult.confirmWarning) {
-            toast.warning(solResult.confirmWarning, { duration: 10000 });
-          }
-        } else if (hasBounty) {
-          toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
-          
-          txHash = await mintWithBounty({
-            tokenId: mintResponse.createdTokenId,
-            timestamp: mintResponse.timestamp!,
-            v: mintResponse.v!,
-            r: mintResponse.r!,
-            s: mintResponse.s!,
-            bountyAmount: parseFloat(w2eTotal),
-            countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
-            countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
-            chainId: chainId as import('@/components/app/ChainSelector').ChainId,
-          });
-        } else {
-          const mintResult = await mintOnChain({
-            tokenId: mintResponse.createdTokenId,
-            timestamp: mintResponse.timestamp!,
-            v: mintResponse.v!,
-            r: mintResponse.r!,
-            s: mintResponse.s!,
-            chainId: chainId as import('@/components/app/ChainSelector').ChainId,
-          });
-          txHash = mintResult.hash;
-          mintConfirmed = mintResult.confirmed;
+            txHash,
+            chainId: chainId as number,
+          }).catch((err) => console.warn('[Mint] confirm-mint queue failed:', err));
         }
-      } finally {
-        clearInterval(progressInterval);
-      }
 
-      // Fire-and-forget: EVM confirmation + backend polling
-      if (mintConfirmed && txHash) {
-        mintConfirmed
-          .then((confirmedHash) =>
-            confirmEvmMint({
-              tokenId: mintResponse.createdTokenId,
-              txHash: confirmedHash,
-              chainId: chainId as number,
-            }),
-          )
-          .catch((err) => {
-            // Best-effort nudge only: the backend indexer picks the post up from
-            // the chain regardless, so a timed-out wait(1) or a non-2xx confirm-mint
-            // must NOT surface a user-facing error — the post has already landed and
-            // "Posted successfully" was already shown. Matches the silent sibling
-            // branch below. See usePostForm confirm-mint notes.
-            console.warn('[Mint] Background confirmation failed (post still lands):', err);
-          });
-      } else if (!isSolanaMint && txHash) {
-        confirmEvmMint({
-          tokenId: mintResponse.createdTokenId,
-          txHash,
-          chainId: chainId as number,
-        }).catch((err) => console.warn('[Mint] confirm-mint queue failed:', err));
-      }
-
-      console.log('[Mint] Transaction hash:', txHash);
+        console.log('[Mint] Transaction hash:', txHash);
+      } // end of the on-chain mint
 
       setUploadProgress(100);
       toast.dismiss('mint-progress');
       toast.success('Posted successfully');
-      
+
+      // Offered after the post has landed, never in front of it: being short
+      // of DHB costs the creator the mint, not the post. A toast rather than a
+      // dialog because the composer closes on success — and because nothing
+      // here needs acknowledging.
+      if (shortfall) {
+        toast.info('Posted — but not minted', {
+          description: `Minting costs ${formatFeeAmount(shortfall.amount)} ${shortfall.symbol} and your balance is short. Top up and you can mint it from the post's menu any time.`,
+          action: { label: 'Get DHB', onClick: () => navigate('/app/buy') },
+          duration: 12000,
+        });
+      }
+
       // Create optimistic post using the real token ID so it matches the API feed item
       const optimisticId = String(mintResponse.createdTokenId);
       const username = user?.username || user?.displayName || 'You';
@@ -1584,7 +1730,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
-    refreshSession, openLoginModal, requestWalletUnlock
+    refreshSession, openLoginModal, requestWalletUnlock,
+    effectiveShouldMint, mintFee
   ]);
 
   return {
@@ -1621,6 +1768,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       selectedCategory,
       showTitle,
       titleText,
+      shouldMint,
     },
     actions: {
       setText,
@@ -1671,6 +1819,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setSelectedCategory,
       markCategorySaved: () => { categorySavedRef.current = true; },
       setShowTitle: handleSetShowTitle,
+      setShouldMint: handleSetShouldMint,
       setTitleText,
       insertEmoji,
       insertGif,
@@ -1686,6 +1835,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       isShort,
       destinations,
       canPost,
+      mintFeeLabel,
+      mintRequired,
     },
     refs: {
       imageInputRef,
