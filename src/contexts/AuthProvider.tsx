@@ -74,7 +74,7 @@ import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/pass
 import { deriveFromSecret } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
-import { isUserRejection, isRequestAlreadyPending, describeWalletError } from '@/lib/wallet-errors';
+import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
 import { getRunningBuildId, isRunningStaleBuild } from '@/lib/version-check';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 
@@ -283,6 +283,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const wagmiAuthIntentRef = useRef(false);
   const [wagmiAuthIntentState, setWagmiAuthIntentState] = useState(false);
   const wagmiAuthInProgressRef = useRef(false);
+  // When the last wagmi connect approval landed. The signature request must not
+  // go out while the wallet's connect popup is still closing — see the gap wait
+  // in completeDeHubAuthWagmi.
+  const lastWagmiConnectAtRef = useRef(0);
   const wagmiSilentReconnectAttemptedRef = useRef(false);
   // Guards double-processing of a landed Supabase session (OAuth return fires
   // both INITIAL_SESSION and SIGNED_IN).
@@ -297,6 +301,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const setWagmiAuthIntent = useCallback((value: boolean) => {
+    // A fresh attempt always gets to start. The in-progress latch exists to
+    // stop ONE gesture being processed twice (the intent toggle re-fires the
+    // effect mid-flight), but a signature promise that never settles skips the
+    // `finally` that releases it — and a ref survives closing and reopening the
+    // modal, so every later attempt was silently swallowed at the guard until
+    // the page was refreshed. A new user gesture means the old attempt is
+    // abandoned; at worst its request is still open in the wallet, and the
+    // retry then gets the -32002 "already have a request open" toast instead
+    // of nothing at all.
+    if (value) wagmiAuthInProgressRef.current = false;
     wagmiAuthIntentRef.current = value;
     // Force a genuine state change even when re-setting the same boolean —
     // handleWagmiConnect relies on this update to re-fire (React bails out of
@@ -855,6 +869,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWagmiAuthIntent(true);
       try {
         await connectAsync({ connector: injectedConnector });
+        lastWagmiConnectAtRef.current = Date.now();
       } catch (err: any) {
         const isAlreadyConnected =
           err?.name === 'ConnectorAlreadyConnectedError' ||
@@ -924,24 +939,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         : 'Your session expired — approve the signature in your wallet to stay signed in.',
     );
 
+    // The wallet's connect approval popup takes a moment to close, and a
+    // signature request fired into that window is the reliable way to get a
+    // prompt that never appears: the wallet queues it behind the closing
+    // popup and never surfaces it, the promise never settles, and the whole
+    // login sits wedged until a refresh. Give the popup time to finish
+    // closing before asking for anything else. Sized to the fresh-connect
+    // case only — a returning user whose connect happened minutes ago waits
+    // zero.
+    const POST_CONNECT_SIGN_GAP_MS = 800;
+    const sinceConnect = Date.now() - lastWagmiConnectAtRef.current;
+    if (sinceConnect >= 0 && sinceConnect < POST_CONNECT_SIGN_GAP_MS) {
+      await new Promise(r => setTimeout(r, POST_CONNECT_SIGN_GAP_MS - sinceConnect));
+    }
+
+    // Time-box the signature. When the request never settles (see the gap
+    // wait above — the popup-race case queues it invisibly), no catch and no
+    // finally ever runs, which is what used to leave isConnecting latched and
+    // the auth guard closed for the life of the page. Long enough for a
+    // hardware wallet behind MetaMask; a dismissal or rejection settles the
+    // promise and never waits this out.
+    const SIGN_TIMEOUT_MS = 60_000;
     let signature: string;
+    let signTimeoutTimer: ReturnType<typeof setTimeout> | undefined;
     try {
-      signature = await signMessageAsync({
+      const signPromise = signMessageAsync({
         message,
         account: address as `0x${string}`,
       });
+      // If the timeout wins the race this promise is orphaned, and a
+      // dismissal arriving after that must not surface as an unhandled
+      // rejection. (A signature arriving late is dropped the same way — the
+      // flow has already told the user to retry.)
+      signPromise.catch(() => {});
+      signature = await Promise.race([
+        signPromise,
+        new Promise<never>((_, reject) => {
+          signTimeoutTimer = setTimeout(
+            () => reject(new WalletRequestTimeoutError('signature', SIGN_TIMEOUT_MS)),
+            SIGN_TIMEOUT_MS,
+          );
+        }),
+      ]);
     } catch (signError: any) {
       const rejected = isUserRejection(signError);
       const alreadyPending = isRequestAlreadyPending(signError);
+      const timedOut = isRequestTimeout(signError);
       const described = describeWalletError(signError);
       // Only worth a round-trip on the branch where the answer changes what we
-      // say. A rejection is a rejection whatever build the tab is running.
-      const staleBuild = rejected ? null : await isRunningStaleBuild();
+      // say. A rejection is a rejection whatever build the tab is running, and
+      // a stale build doesn't make a wallet go quiet.
+      const staleBuild = rejected || timedOut ? null : await isRunningStaleBuild();
 
       authLogger.error('Wallet signature failed', {
         trigger,
         rejected,
         alreadyPending,
+        timedOut,
         staleBuild,
         connectorId,
         connectorName,
@@ -950,7 +1004,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ...described,
       }, signError);
 
-      if (staleBuild) {
+      if (timedOut) {
+        toast.error('Your wallet never showed the request', {
+          description: 'Open your wallet and check for a pending signature, then try again.',
+        });
+      } else if (staleBuild) {
         // The tab has been open across a deploy. Nothing the user does to the
         // wallet will help, and telling them to try again just repeats it.
         toast.error('DeHub has been updated', {
@@ -976,6 +1034,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       }
       throw signError;
+    } finally {
+      clearTimeout(signTimeoutTimer);
     }
 
     if (walletAddress && walletAddress.toLowerCase() !== authAddress.toLowerCase()) {
@@ -1601,6 +1661,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           throw retryErr;
         }
       }
+      lastWagmiConnectAtRef.current = Date.now();
       return true;
     } catch (err: any) {
       setIsConnecting(false);
