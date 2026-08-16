@@ -46,7 +46,7 @@ const STAGES_TABS: { icon: typeof Radio; label: string; value: StagesTab }[] = [
  * A stage that has been announced but has not started.
  *
  * Leads with the cover graphic when the host set one — an announcement in a
- * grid of announcements is competing for attention, which is the whole reason
+ * list of announcements is competing for attention, which is the whole reason
  * the graphic exists. Without one it falls back to the same flat card the live
  * stages use, so a stage with no art does not look broken.
  */
@@ -191,7 +191,7 @@ function LiveStageCard({
       disabled={isLoading}
       data-page-bento
       className={cn(
-        'group text-left bg-zinc-900 rounded-2xl p-4 flex flex-col transition-colors disabled:opacity-60',
+        'group w-full text-left bg-zinc-900 rounded-2xl p-4 flex flex-col transition-colors disabled:opacity-60',
         'border border-transparent hover:border-white/15',
       )}
     >
@@ -303,7 +303,7 @@ export default function StagesPage() {
     }
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
+      <div className="space-y-2 sm:space-y-3">
         {scheduledSpaces.map((space) => (
           <ScheduledStageCard
             key={space.id}
@@ -386,7 +386,7 @@ export default function StagesPage() {
     }
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
+      <div className="space-y-2 sm:space-y-3">
         {resume && (
           <LiveStageCard
             key={resume.id}
