@@ -18,7 +18,8 @@ import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from '@/components/app/stores/ShippingAddressForm';
 import { Loader2, ShoppingCart, ImageIcon, Truck, AlertTriangle, PauseCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLiveCheckout, type StreamProduct, type LiveQuote } from '@/hooks/use-stream-shopping';
+import { type StreamProduct } from '@/hooks/use-stream-shopping';
+import { useProductCheckout, type ProductQuote } from '@/hooks/use-product-checkout';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import dehubCoin from '@/assets/dehub-coin.png';
 
@@ -31,8 +32,8 @@ interface Props {
 
 export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props) {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
-  const { getQuote, buy } = useLiveCheckout(tokenId);
-  const [quote, setQuote] = useState<LiveQuote | null>(null);
+  const { getQuote, buy } = useProductCheckout(tokenId);
+  const [quote, setQuote] = useState<ProductQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useState('');
@@ -78,7 +79,7 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
       });
       onClose();
     } catch {
-      // useLiveCheckout toasts the reason; the drawer stays open so the buyer
+      // useProductCheckout toasts the reason; the drawer stays open so the buyer
       // can read it and retry without losing the shipping address they typed.
     }
   };
