@@ -22,22 +22,27 @@ import { reportContent, reportUser, getContentReportReasons, getUserReportReason
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 
-/** Fallback reasons if API call fails */
+/**
+ * Fallback reasons if the reasons API call fails. The ids must come from the
+ * server's enum — a report with an id outside it is rejected as invalid, so a
+ * made-up fallback id turns the whole modal into a dead end exactly when the
+ * reasons fetch already failed.
+ */
 const FALLBACK_CONTENT_REASONS: ReportReason[] = [
-  { id: 'spam', label: 'Spam or misleading' },
-  { id: 'harassment', label: 'Harassment or bullying' },
-  { id: 'violence', label: 'Violence or dangerous content' },
-  { id: 'nudity', label: 'Explicit sexual content' },
-  { id: 'copyright', label: 'Copyright infringement' },
-  { id: 'scam', label: 'Scam or fraud' },
+  { id: 'spam_misleading', label: 'Spam or misleading' },
+  { id: 'harassment_bullying', label: 'Harassment or bullying' },
+  { id: 'violent_content', label: 'Violence or dangerous content' },
+  { id: 'sexual_content', label: 'Explicit sexual content' },
+  { id: 'infringes_rights', label: 'Infringes my rights' },
+  { id: 'scam_fraud', label: 'Scam or fraud' },
   { id: 'other', label: 'Other' },
 ];
 
 const FALLBACK_USER_REASONS: ReportReason[] = [
   { id: 'spam', label: 'Spam account' },
-  { id: 'harassment', label: 'Harassment or bullying' },
+  { id: 'harassment_bullying', label: 'Harassment or bullying' },
   { id: 'impersonation', label: 'Impersonation' },
-  { id: 'scam', label: 'Scam or fraud' },
+  { id: 'scam_fraud', label: 'Scam or fraud' },
   { id: 'other', label: 'Other' },
 ];
 
