@@ -109,7 +109,7 @@ import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality, setLiteModePref } from '@/hooks/use-connection-quality';
 import { useAnimations } from '@/contexts/AnimationsContext';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
-import { useBrowserNotifications, requestNotificationPermission } from '@/hooks/use-browser-notifications';
+import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -1031,7 +1031,6 @@ function SupportSettings() {
 function NotificationSettings() {
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress } = useAuthContext();
-  const { isEnabled: browserNotifsEnabled, setEnabled: setBrowserNotifsEnabled } = useBrowserNotifications();
 
   // Reads the account document, which is the store the notification service
   // actually consults. See the note above getAccountNotificationPreferences —
@@ -1095,29 +1094,12 @@ function NotificationSettings() {
             defaultChecked={false}
             comingSoon
           />
-          <SettingToggle
-            icon={Bell}
-            title={t('settings.pushNotifications')}
-            description={t('settings.pushNotificationsDesc')}
-            defaultChecked={browserNotifsEnabled}
-            onCheckedChange={async (checked) => {
-              if (checked) {
-                const result = await requestNotificationPermission();
-                if (result === 'granted') {
-                  setBrowserNotifsEnabled(true);
-                  toast.success(t('settings.browserNotificationsEnabled', 'Browser notifications enabled'));
-                } else if (result === 'denied') {
-                  setBrowserNotifsEnabled(false);
-                  toast.error(t('settings.browserNotificationsDenied', 'Notifications blocked. Enable them in your browser settings.'));
-                } else {
-                  setBrowserNotifsEnabled(false);
-                  toast.error(t('settings.browserNotificationsUnsupported', 'Browser notifications are not supported'));
-                }
-              } else {
-                setBrowserNotifsEnabled(false);
-              }
-            }}
-          />
+          {/*
+            Owns the browser permission as well as the stored flag — see
+            BrowserNotificationsSetting for why a plain toggle isn't enough
+            once a reader has blocked us.
+          */}
+          <BrowserNotificationsSetting />
         </div>
       </div>
 
