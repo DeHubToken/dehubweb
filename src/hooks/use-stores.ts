@@ -230,7 +230,7 @@ export function useMyOrders(type: 'buyer' | 'seller') {
   });
 }
 
-// Orders are not written from the client. There was a useCreateOrder here that
+// Orders are not written from this client. There was a useCreateOrder here that
 // inserted tx_hash, amount and seller_address straight from the browser, under
 // a policy that only checked buyer_address matched get_request_wallet_address()
 // — which reads an unsigned header the client sets itself. Nothing verified the
@@ -238,6 +238,12 @@ export function useMyOrders(type: 'buyer' | 'seller') {
 // amount. Buying now goes through useProductCheckout, which quotes server-side
 // and has the live-checkout function read the transfer back off Base before the
 // row exists.
+//
+// The "Buyers can create orders" INSERT policy is deliberately still in place.
+// dehub-mobile's hooks/useStores.ts has its own useCreateOrder and would lose
+// checkout entirely the moment that policy is dropped. Porting mobile onto
+// live-checkout and then dropping it is what actually closes the hole; until
+// then a forged order is still insertable by anything with a wallet header.
 
 export function useUpdateOrderStatus() {
   const { walletAddress } = useAuth();
