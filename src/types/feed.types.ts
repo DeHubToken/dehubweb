@@ -50,6 +50,8 @@ export interface TextPost extends BaseFeedItem {
   views?: string;
   /** Mint status: 'minted' | 'signed' (pending) */
   status?: 'minted' | 'signed' | string;
+  /** Chain the post was created on — needed to mint one published off-chain. */
+  chainId?: number;
   stats: {
     comments: number;
     reposts: number;
