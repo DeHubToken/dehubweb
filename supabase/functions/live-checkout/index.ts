@@ -1,24 +1,26 @@
 /**
- * Live Checkout
- * =============
- * Quote + confirm for buying a product during a live stream.
+ * Checkout
+ * ========
+ * Quote + confirm for buying a store listing, on a live stream or from the
+ * marketplace. The stream is the optional part: pass a `tokenId` and the
+ * product must be attached to that stream and gets its live price; omit it and
+ * the same path runs against the listing's own price. Nothing else differs.
  *
- * The marketplace path (ListingDetailDrawer) prices in the browser and then
- * writes its own order row: it reads the DHB price from a hook, divides, sends
- * that many tokens, and inserts a store_orders row with status 'paid'. Two
- * things go wrong with that, and both get much worse on a live drop where
- * hundreds of people press Buy inside the same minute:
+ * It is named live-checkout because that is where it shipped first. Both
+ * surfaces route through one function on purpose — the marketplace drawer used
+ * to price in the browser and write its own order row, and both halves of that
+ * were wrong:
  *
- *   1. If the price feed returns 0 or fails, `priceUsd / dhbPrice` is guarded
- *      down to 0, the wallet sends ZERO DHB, and the order still lands as paid
- *      with the seller notified. A blip in one Supabase function is a free
- *      shopping spree.
- *   2. Nothing checks the chain. tx_hash, amount and seller all arrive from the
- *      client, so an order can be posted with a hash that paid someone else,
- *      paid nothing, or was already spent on a different order.
+ *   1. If the price feed returned 0 or failed, `priceUsd / dhbPrice` was
+ *      guarded down to 0, the wallet sent ZERO DHB, and the order still landed
+ *      as paid with the seller notified. A blip in one Supabase function was a
+ *      free shopping spree.
+ *   2. Nothing checked the chain. tx_hash, amount and seller all arrived from
+ *      the client, so an order could be posted with a hash that paid someone
+ *      else, paid nothing, or was already spent on a different order.
  *
- * So the live path inverts it. The server quotes the price, the buyer pays, and
- * the server reads the transfer back off Base before any row exists. The client
+ * So this inverts it. The server quotes the price, the buyer pays, and the
+ * server reads the transfer back off Base before any row exists. The client
  * never computes an amount and never writes an order.
  */
 
@@ -90,7 +92,10 @@ async function isDhbPaused(): Promise<boolean> {
   return BigInt(result) === 1n;
 }
 
-/** Price a listing the way the rail displays it: live override beats list price. */
+/**
+ * Price a listing the way its surface displays it: on a stream a live override
+ * beats the list price, in the marketplace there is no override to apply.
+ */
 async function quoteFor(
   supabase: ReturnType<typeof serviceClient>,
   tokenId: string,
@@ -106,19 +111,25 @@ async function quoteFor(
   if (listing.status !== "active") return { error: "That item is no longer for sale", status: 400 } as const;
   if (listing.stock_quantity === 0) return { error: "Sold out", status: 400 } as const;
 
-  const { data: attached } = await supabase
-    .from("stream_products")
-    .select("live_price")
-    .eq("token_id", tokenId)
-    .eq("listing_id", listingId)
-    .maybeSingle();
+  let priceUsd = Number(listing.price);
 
   // Buying "from a stream" requires the product to actually be on that stream.
   // Without this, the stream_token_id on the order would be a free-text claim
   // and live-sales attribution could be pointed at any creator's broadcast.
-  if (!attached) return { error: "That item is not on this stream", status: 404 } as const;
+  // A marketplace purchase has no stream to belong to, so it skips to the list
+  // price — that check is the only thing the tokenId changes.
+  if (tokenId) {
+    const { data: attached } = await supabase
+      .from("stream_products")
+      .select("live_price")
+      .eq("token_id", tokenId)
+      .eq("listing_id", listingId)
+      .maybeSingle();
 
-  const priceUsd = Number(attached.live_price ?? listing.price);
+    if (!attached) return { error: "That item is not on this stream", status: 404 } as const;
+    priceUsd = Number(attached.live_price ?? listing.price);
+  }
+
   if (!Number.isFinite(priceUsd) || priceUsd <= 0) {
     return { error: "This item has no valid price", status: 409 } as const;
   }
@@ -187,11 +198,13 @@ Deno.serve(async (req) => {
   }
 
   const action = String(body.action || "");
+  // Optional. Absent means the marketplace drawer, which buys the same listing
+  // through the same verification with no stream attached to it.
   const tokenId = body.tokenId == null ? "" : String(body.tokenId);
   const listingId = String(body.listingId || "");
 
-  if (!tokenId || !listingId) {
-    return jsonResponse({ error: "tokenId and listingId are required" }, 400);
+  if (!listingId) {
+    return jsonResponse({ error: "listingId is required" }, 400);
   }
 
   const supabase = serviceClient();
@@ -319,8 +332,8 @@ Deno.serve(async (req) => {
           status: stockError ? "pending_verification" : "paid",
           shipping_address: shippingAddress || null,
           notes: String(body.notes || "").trim() || null,
-          stream_token_id: tokenId,
-          source: "live",
+          stream_token_id: tokenId || null,
+          source: tokenId ? "live" : "store",
           verified_at: new Date().toISOString(),
           verify_error: stockError,
           paid_token_amount: paidDhb,

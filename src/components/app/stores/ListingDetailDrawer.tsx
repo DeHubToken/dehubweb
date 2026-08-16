@@ -2,24 +2,29 @@
  * Listing Detail Drawer
  * =====================
  * Shows full listing details with Buy Now flow.
+ *
+ * The price the buyer pays is quoted by the server when this drawer opens, and
+ * is the only price it will charge against. It used to be computed here, as
+ * `priceUsd / prices.DHB` — and `useTokenPrices` reports DHB as 0 both before
+ * its first fetch and after a failed one, so a hiccup in get-dhb-price made the
+ * amount 0, sent ZERO DHB, and still wrote an order marked paid with the seller
+ * notified. Now a missing price is a 503 that this drawer shows instead of a
+ * free item, and the order row is written by the server after it has read the
+ * transfer back off Base.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { useTokenPrices } from '@/hooks/use-token-prices';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from './ShippingAddressForm';
-import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2 } from 'lucide-react';
+import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2, PauseCircle } from 'lucide-react';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCreateOrder } from '@/hooks/use-stores';
-import { sendERC20Token } from '@/lib/wallet/send';
-import { DHB_TOKEN, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { toast } from 'sonner';
+import { useProductCheckout, type ProductQuote } from '@/hooks/use-product-checkout';
 import { useNavigate } from 'react-router-dom';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { ReviewSection } from './ReviewSection';
@@ -32,63 +37,74 @@ interface Props {
 
 export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const createOrder = useCreateOrder();
+  // No stream attached: same quote → pay → verify path the live rail uses.
+  const { getQuote, buy } = useProductCheckout(null);
   const navigate = useNavigate();
-  const [buying, setBuying] = useState(false);
+  const [quote, setQuote] = useState<ProductQuote | null>(null);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
   const [imgIdx, setImgIdx] = useState(0);
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [shareOpen, setShareOpen] = useState(false);
-  const { data: prices } = useTokenPrices();
-  const dhbPrice = prices?.DHB ?? 0;
+
+  const sellerAddress = listing?.wallet_address || listing?.stores?.wallet_address;
+  const isSelf = !!walletAddress && walletAddress.toLowerCase() === sellerAddress?.toLowerCase();
+  const soldOut = listing?.stock_quantity === 0;
+  const listingId = listing?.id as string | undefined;
+  // Quoting needs a DeHub token, so a signed-out browser would only get a 401
+  // back. They see the USD price and Buy opens the login modal; the quote
+  // fetches on its own once they are in, because this flips with it.
+  const canQuote = open && !!listingId && isAuthenticated && !isSelf && !soldOut;
+
+  // Re-quote on every open. A listing can sit in the grid for days and the peg
+  // moves, so a quote from the last time this drawer was open is not one to
+  // charge against. Skipped for the seller's own listing, which cannot be
+  // bought — the server would answer 400 and the drawer would show it as an
+  // error under a price the viewer was never going to pay.
+  useEffect(() => {
+    if (!canQuote) return;
+    let cancelled = false;
+    setQuote(null);
+    setQuoteError(null);
+    getQuote
+      .mutateAsync(listingId!)
+      .then(q => { if (!cancelled) setQuote(q); })
+      .catch((err: Error) => { if (!cancelled) setQuoteError(err.message); });
+    return () => { cancelled = true; };
+    // getQuote is a fresh mutation object each render; keying on the listing is
+    // what stops this from re-firing forever.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canQuote, listingId]);
+
   if (!listing) return null;
 
   const images = (listing.images as string[]) || [];
-  const sellerAddress = listing.wallet_address || listing.stores?.wallet_address;
-  const isSelf = walletAddress?.toLowerCase() === sellerAddress?.toLowerCase();
-  const soldOut = listing.stock_quantity === 0;
   const priceUsd = Number(listing.price);
-  const priceDhb = dhbPrice > 0 ? priceUsd / dhbPrice : 0;
-  const priceDhbCeil = Math.ceil(priceDhb);
+  const needsShipping = !listing.is_digital;
+  // Signed out, Buy is live purely to open the login modal — there is nothing
+  // to charge yet. Signed in, it needs a server quote behind it.
+  const canBuy = !isSelf && !soldOut && (
+    !isAuthenticated || (
+      !!quote &&
+      !quote.paymentsFrozen &&
+      (!needsShipping || shippingAddress.trim().length > 0) &&
+      !buy.isPending
+    )
+  );
 
   const handleBuy = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
-    if (isSelf) { toast.error("You can't buy your own listing"); return; }
-    if (soldOut) { toast.error('This item is sold out'); return; }
-    if (!listing.is_digital && !shippingAddress.trim()) { toast.error('Please enter a shipping address'); return; }
-
-    setBuying(true);
+    if (!quote) return;
     try {
-      const dhbConfig = DHB_TOKEN[BASE_CHAIN_ID];
-      if (!dhbConfig) throw new Error('DHB not configured');
-
-      toast.loading('Sending DHB payment...');
-      const result = await sendERC20Token(
-        dhbConfig.address,
-        sellerAddress,
-        String(priceDhbCeil),
-        18,
-        BASE_CHAIN_ID as any
-      );
-
-      if (!result?.hash) throw new Error('Transaction failed');
-
-      await createOrder.mutateAsync({
-        listing_id: listing.id,
-        seller_address: sellerAddress.toLowerCase(),
-        amount: priceUsd,
-        tx_hash: result.hash,
-        shipping_address: shippingAddress.trim() || undefined,
+      await buy.mutateAsync({
+        quote,
+        shippingAddress: shippingAddress.trim() || undefined,
         notes: notes.trim() || undefined,
       });
-
-      toast.dismiss();
       onClose();
-    } catch (err: any) {
-      toast.dismiss();
-      toast.error(err.message || 'Purchase failed');
-    } finally {
-      setBuying(false);
+    } catch {
+      // useProductCheckout toasts the reason; the drawer stays open so the
+      // buyer can read it and retry without retyping their shipping address.
     }
   };
 
@@ -133,8 +149,12 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Price & meta */}
           <div className="flex items-center justify-between">
             <div>
+              {/* The DHB figure only ever comes from the server's quote. While
+                  it is loading, or if pricing is down, the listing shows its
+                  USD price — which is a display value and not something the
+                  wallet can be asked to send. */}
               <span className="text-xl font-bold flex items-center gap-1.5 text-primary-foreground">
-                {dhbPrice > 0 ? (<><img src={dehubCoin} alt="DHB" className="w-5 h-5" />{priceDhbCeil.toLocaleString()}</>) : `$${priceUsd.toLocaleString()}`}
+                {quote ? (<><img src={dehubCoin} alt="DHB" className="w-5 h-5" />{quote.dhbAmount.toLocaleString()}</>) : `$${priceUsd.toLocaleString()}`}
               </span>
               <p className="text-xs text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</p>
             </div>
@@ -182,10 +202,38 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Reviews */}
           <ReviewSection listingId={listing.id} sellerAddress={sellerAddress} />
 
+          {/* Pricing state. A quote that never arrives is the case this whole
+              path exists for: no quote means no purchase, rather than a
+              purchase for nothing. */}
+          {isAuthenticated && !isSelf && !soldOut && !quote && (
+            quoteError ? (
+              <p className="text-sm text-red-400">{quoteError}</p>
+            ) : (
+              <div className="flex items-center gap-2 text-sm text-zinc-400">
+                <Loader2 className="w-4 h-4 animate-spin" /> Getting price…
+              </div>
+            )
+          )}
+
+          {/* DHB is ERC20Pausable and paused right now. Saying so beats letting
+              the wallet open, charge gas, and revert. Recomputed per quote, so
+              this disappears on its own once the token is unpaused. */}
+          {quote?.paymentsFrozen && (
+            <div className="flex gap-2.5 p-3 rounded-xl border border-amber-500/30 bg-amber-500/10">
+              <PauseCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="text-xs text-amber-200/90">
+                <p className="font-semibold text-amber-300">DHB transfers are paused</p>
+                <p className="mt-0.5">
+                  Buying is unavailable until trading resumes. Nothing has been charged.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Buy form */}
-          {!isSelf && !soldOut && (
+          {!isSelf && !soldOut && quote && !quote.paymentsFrozen && (
             <>
-              {!listing.is_digital && (
+              {needsShipping && (
                 <ShippingAddressForm onChange={setShippingAddress} />
               )}
               <div>
@@ -198,9 +246,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Actions */}
           <div className="flex gap-2">
             {!isSelf && (
-              <Button onClick={handleBuy} disabled={buying || soldOut} className="flex-1">
-                {buying ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
-                {soldOut ? 'Sold Out' : 'Buy Now'}
+              <Button onClick={handleBuy} disabled={!canBuy} className="flex-1">
+                {buy.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
+                {soldOut ? 'Sold Out' : buy.isPending ? 'Confirming payment…' : 'Buy Now'}
               </Button>
             )}
             {/* '/app/messages' has no child route — the peer is handed over in
@@ -211,6 +259,12 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
               Message Seller
             </Button>
           </div>
+
+          {buy.isPending && (
+            <p className="text-[11px] text-center text-zinc-500">
+              Don't close this — the order is written once the transfer is confirmed on Base.
+            </p>
+          )}
         </div>
       </DrawerContent>
     </Drawer>
