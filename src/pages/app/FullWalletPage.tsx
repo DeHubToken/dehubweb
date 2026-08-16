@@ -31,6 +31,8 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import { SEOHead } from '@/components/SEOHead';
 import { AiCreditCard } from '@/components/app/wallet/AiCreditCard';
+import { SellerEarningsCard } from '@/components/app/wallet/SellerEarningsCard';
+import { useSellerBalance, formatUsd } from '@/hooks/use-seller-balance';
 import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
@@ -77,6 +79,9 @@ interface GroupedToken {
 
 export default function FullWalletPage() {
   const { isAuthenticated, walletAddress } = useAuth();
+  // Card sales sitting in the 30-day hold. Server-side money, so it never
+  // reaches totalUsd — it is shown as its own labelled line.
+  const { pendingUsd: sellerPendingUsd } = useSellerBalance();
   const { isCollapsed } = useSidebarCollapse();
   const navigate = useNavigate();
   const location = useLocation();
@@ -258,6 +263,16 @@ export default function FullWalletPage() {
             <p className="text-zinc-500 text-xs mt-1">
               {t('wallet.totalWalletValue')}: ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
+            {/* Card sales still inside the 30-day hold. Deliberately NOT folded
+                into totalUsd above: that figure reduces over on-chain balances
+                the wallet can spend right now, and this money is neither on
+                chain nor spendable yet. mt-0.5 so it reads as a continuation of
+                the USD line rather than a third headline stat. */}
+            {sellerPendingUsd > 0 && (
+              <p className="text-emerald-400 text-xs mt-0.5">
+                + {formatUsd(sellerPendingUsd)} pending
+              </p>
+            )}
           </div>
           <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={handleCopy} title={walletAddress || ''}>
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -302,6 +317,10 @@ export default function FullWalletPage() {
           </motion.div>
         )}
       </div>
+
+      {/* Before AI credit: money the user has earned is more wallet-central
+          than a spending balance. Renders nothing until they have card sales. */}
+      <SellerEarningsCard />
 
       <AiCreditCard />
 

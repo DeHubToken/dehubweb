@@ -164,6 +164,9 @@ export interface StreamOrder {
   created_at: string;
   status: string;
   paid_token_amount: number | null;
+  /** 'DHB' on the crypto rail, 'USD' on the card rail. */
+  paid_token_symbol: string | null;
+  payment_method: string | null;
   store_listings: { title: string | null; images: string[] | null } | null;
 }
 

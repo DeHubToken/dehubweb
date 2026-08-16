@@ -21,6 +21,7 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { PayoutSetupCard } from './PayoutSetupCard';
 
 type StoreSubTab = 'listings' | 'orders' | 'purchases';
 
@@ -140,7 +141,16 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
             <p className="text-[10px] text-zinc-300 mt-0.5 flex items-center gap-2">
               <span>{storeListings.length} listing{storeListings.length !== 1 ? 's' : ''}</span>
               <span>·</span>
-              <span>{sellerOrders.reduce((sum: number, o: any) => sum + Number(o.amount || 0), 0).toLocaleString()} DHB earned</span>
+              {/* `amount` has been USD since the live-shopping migration, and
+                  card orders are USD too — labelling it DHB was already wrong
+                  for the crypto rail and would be doubly wrong now. Cancelled
+                  and unverified orders are not earnings. */}
+              <span>
+                ${sellerOrders
+                  .filter((o: any) => ['paid', 'shipped', 'delivered'].includes(String(o.status)))
+                  .reduce((sum: number, o: any) => sum + Number(o.amount || 0), 0)
+                  .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} earned
+              </span>
               <span>·</span>
               <span>Since {activeStore?.created_at ? new Date(activeStore.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'}</span>
             </p>
@@ -222,15 +232,22 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
       )}
 
       {subTab === 'orders' && (
-        sellerOrders.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">No orders received yet</div>
-        ) : (
-          <div className="space-y-2">
-            {sellerOrders.map((o: any) => (
-              <OrderRow key={o.id} order={o} type="seller" onUpdateStatus={(id, status) => updateOrderStatus.mutate({ id, status })} />
-            ))}
-          </div>
-        )
+        <>
+          {/* The only place a seller who has never sold anything can find
+              payout setup — the wallet's earnings card hides itself until
+              there is activity, which is exactly the wrong moment to first
+              discover you cannot accept cards. */}
+          <PayoutSetupCard />
+          {sellerOrders.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground text-sm">No orders received yet</div>
+          ) : (
+            <div className="space-y-2">
+              {sellerOrders.map((o: any) => (
+                <OrderRow key={o.id} order={o} type="seller" onUpdateStatus={(id, status) => updateOrderStatus.mutate({ id, status })} />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       {subTab === 'purchases' && (

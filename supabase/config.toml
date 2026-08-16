@@ -102,6 +102,15 @@ project_id = "aigxuutjaqsywioxjefr"
   [functions.stories-api]
     verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.store-checkout]
+    verify_jwt = false
+  # Stripe posts here with no JWT; the HMAC signature is the authentication.
+  [functions.store-payments-webhook]
+    verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.store-payouts]
+    verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
   [functions.stream-products]
     verify_jwt = false
   [functions.sync-category-log]

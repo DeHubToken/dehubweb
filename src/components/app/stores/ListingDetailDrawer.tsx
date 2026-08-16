@@ -20,11 +20,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from './ShippingAddressForm';
-import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2, PauseCircle } from 'lucide-react';
+import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2, PauseCircle, CreditCard } from 'lucide-react';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';
-import { useProductCheckout, type ProductQuote } from '@/hooks/use-product-checkout';
+import {
+  useProductCheckout, useCardCheckout,
+  type ProductQuote, type CardQuote,
+} from '@/hooks/use-product-checkout';
 import { useNavigate } from 'react-router-dom';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { ReviewSection } from './ReviewSection';
@@ -39,8 +42,10 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   // No stream attached: same quote → pay → verify path the live rail uses.
   const { getQuote, buy } = useProductCheckout(null);
+  const { getCardQuote, payByCard } = useCardCheckout(null);
   const navigate = useNavigate();
   const [quote, setQuote] = useState<ProductQuote | null>(null);
+  const [cardQuote, setCardQuote] = useState<CardQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [imgIdx, setImgIdx] = useState(0);
   const [shippingAddress, setShippingAddress] = useState('');
@@ -65,11 +70,18 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
     if (!canQuote) return;
     let cancelled = false;
     setQuote(null);
+    setCardQuote(null);
     setQuoteError(null);
     getQuote
       .mutateAsync(listingId!)
       .then(q => { if (!cancelled) setQuote(q); })
       .catch((err: Error) => { if (!cancelled) setQuoteError(err.message); });
+    // Quoted alongside, never instead: card can be unavailable while DHB is
+    // fine, and a failure here must not take the crypto button down with it.
+    getCardQuote
+      .mutateAsync(listingId!)
+      .then(q => { if (!cancelled) setCardQuote(q); })
+      .catch(() => { if (!cancelled) setCardQuote(null); });
     return () => { cancelled = true; };
     // getQuote is a fresh mutation object each render; keying on the listing is
     // what stops this from re-firing forever.
@@ -83,14 +95,30 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const needsShipping = !listing.is_digital;
   // Signed out, Buy is live purely to open the login modal — there is nothing
   // to charge yet. Signed in, it needs a server quote behind it.
+  const hasShipping = !needsShipping || shippingAddress.trim().length > 0;
   const canBuy = !isSelf && !soldOut && (
     !isAuthenticated || (
       !!quote &&
       !quote.paymentsFrozen &&
-      (!needsShipping || shippingAddress.trim().length > 0) &&
+      hasShipping &&
       !buy.isPending
     )
   );
+
+  // Independent of DHB's pause — card is the rail that still works while the
+  // token is frozen, so it must not share a gate with it.
+  const cardAvailable = !!cardQuote?.available && !isSelf && !soldOut;
+  const canPayByCard = cardAvailable && hasShipping && !payByCard.isPending;
+
+  const handleCard = () => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    if (!listingId) return;
+    payByCard.mutate({
+      listingId,
+      shippingAddress: shippingAddress.trim(),
+      notes: notes.trim() || undefined,
+    });
+  };
 
   const handleBuy = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
@@ -224,14 +252,18 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
               <div className="text-xs text-amber-200/90">
                 <p className="font-semibold text-amber-300">DHB transfers are paused</p>
                 <p className="mt-0.5">
-                  Buying is unavailable until trading resumes. Nothing has been charged.
+                  {cardAvailable
+                    ? 'Pay by card below — nothing has been charged.'
+                    : 'Buying is unavailable until trading resumes. Nothing has been charged.'}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Buy form */}
-          {!isSelf && !soldOut && quote && !quote.paymentsFrozen && (
+          {/* Buy form — shown when EITHER rail can take the money. Gating it on
+              the DHB quote alone hid the address field while card was the only
+              working option. */}
+          {!isSelf && !soldOut && ((quote && !quote.paymentsFrozen) || cardAvailable) && (
             <>
               {needsShipping && (
                 <ShippingAddressForm onChange={setShippingAddress} />
@@ -243,12 +275,29 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
             </>
           )}
 
+          {/* Card. Rendered only when the server says it is offerable — for a
+              digital good or a seller with no payout account the button is
+              absent rather than disabled with an unactionable explanation. */}
+          {cardAvailable && (
+            <Button onClick={handleCard} disabled={!canPayByCard} className="w-full">
+              {payByCard.isPending
+                ? <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                : <CreditCard className="w-4 h-4 mr-2" />}
+              {payByCard.isPending ? 'Opening checkout…' : `Pay by card · $${priceUsd.toFixed(2)}`}
+            </Button>
+          )}
+
           {/* Actions */}
           <div className="flex gap-2">
             {!isSelf && (
-              <Button onClick={handleBuy} disabled={!canBuy} className="flex-1">
+              <Button
+                onClick={handleBuy}
+                disabled={!canBuy}
+                variant={cardAvailable ? 'outline' : 'default'}
+                className="flex-1"
+              >
                 {buy.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
-                {soldOut ? 'Sold Out' : buy.isPending ? 'Confirming payment…' : 'Buy Now'}
+                {soldOut ? 'Sold Out' : buy.isPending ? 'Confirming payment…' : cardAvailable ? 'Pay with DHB' : 'Buy Now'}
               </Button>
             )}
             {/* '/app/messages' has no child route — the peer is handed over in

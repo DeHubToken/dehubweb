@@ -16,10 +16,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from '@/components/app/stores/ShippingAddressForm';
-import { Loader2, ShoppingCart, ImageIcon, Truck, AlertTriangle, PauseCircle } from 'lucide-react';
+import { Loader2, ShoppingCart, ImageIcon, Truck, AlertTriangle, PauseCircle, CreditCard } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { type StreamProduct } from '@/hooks/use-stream-shopping';
-import { useProductCheckout, type ProductQuote } from '@/hooks/use-product-checkout';
+import {
+  useProductCheckout, useCardCheckout,
+  type ProductQuote, type CardQuote,
+} from '@/hooks/use-product-checkout';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import dehubCoin from '@/assets/dehub-coin.png';
 
@@ -33,7 +36,9 @@ interface Props {
 export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props) {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { getQuote, buy } = useProductCheckout(tokenId);
+  const { getCardQuote, payByCard } = useCardCheckout(tokenId);
   const [quote, setQuote] = useState<ProductQuote | null>(null);
+  const [cardQuote, setCardQuote] = useState<CardQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useState('');
@@ -49,11 +54,19 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
     if (!open || !tokenId || !listing) return;
     let cancelled = false;
     setQuote(null);
+    setCardQuote(null);
     setQuoteError(null);
     getQuote
       .mutateAsync(listing.id)
       .then(q => { if (!cancelled) setQuote(q); })
       .catch((err: Error) => { if (!cancelled) setQuoteError(err.message); });
+    // The card rail is quoted alongside, never instead: it can be unavailable
+    // (digital goods, seller not onboarded) while DHB is fine, and a failure
+    // here must not take the crypto button down with it.
+    getCardQuote
+      .mutateAsync(listing.id)
+      .then(q => { if (!cancelled) setCardQuote(q); })
+      .catch(() => { if (!cancelled) setCardQuote(null); });
     return () => { cancelled = true; };
     // getQuote is a fresh mutation object each render; keying on the ids is
     // what stops this from re-firing forever.
@@ -61,12 +74,29 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
   }, [open, tokenId, listing?.id]);
 
   const needsShipping = listing ? !listing.is_digital : false;
+  const hasShipping = !needsShipping || shippingAddress.trim().length > 0;
   const canBuy =
     !!quote &&
     !quote.paymentsFrozen &&
     !isSelf &&
-    (!needsShipping || shippingAddress.trim().length > 0) &&
+    hasShipping &&
     !buy.isPending;
+
+  // The card rail is independent of DHB's pause. Gating both on
+  // `paymentsFrozen` was correct when crypto was the only rail; now it would
+  // hide the one payment method that still works.
+  const cardAvailable = !!cardQuote?.available && !isSelf;
+  const canPayByCard = cardAvailable && hasShipping && !payByCard.isPending;
+
+  const handleCard = () => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    if (!listing) return;
+    payByCard.mutate({
+      listingId: listing.id,
+      shippingAddress: shippingAddress.trim(),
+      notes: notes.trim() || undefined,
+    });
+  };
 
   const handleBuy = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
@@ -150,7 +180,9 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
               <div className="text-xs text-amber-200/90">
                 <p className="font-semibold text-amber-300">DHB transfers are paused</p>
                 <p className="mt-0.5">
-                  Buying is unavailable until trading resumes. Nothing has been charged.
+                  {cardAvailable
+                    ? 'Pay by card below — nothing has been charged.'
+                    : 'Buying is unavailable until trading resumes. Nothing has been charged.'}
                 </p>
               </div>
             </div>
@@ -163,7 +195,10 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
             </div>
           )}
 
-          {!isSelf && quote && !quote.paymentsFrozen && (
+          {/* The form shows whenever EITHER rail can take the money — gating it
+              on the DHB quote alone hid the address field while card was the
+              only working option. */}
+          {!isSelf && ((quote && !quote.paymentsFrozen) || cardAvailable) && (
             <>
               {needsShipping && <ShippingAddressForm onChange={setShippingAddress} />}
               <div>
@@ -178,17 +213,43 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
             </>
           )}
 
-          <Button onClick={handleBuy} disabled={!canBuy} className="w-full">
-            {buy.isPending ? (
-              <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Confirming payment…</>
-            ) : (
-              <><ShoppingCart className="w-4 h-4 mr-2" /> Buy now</>
+          <div className="space-y-2">
+            <Button onClick={handleBuy} disabled={!canBuy} className="w-full">
+              {buy.isPending ? (
+                <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Confirming payment…</>
+              ) : (
+                <><ShoppingCart className="w-4 h-4 mr-2" /> Pay with DHB</>
+              )}
+            </Button>
+
+            {/* Only rendered when the server says card is offerable. When it is
+                not — a seller with no payout account, or a digital good — the
+                button is absent rather than disabled with an explanation the
+                buyer cannot act on. */}
+            {cardAvailable && (
+              <Button
+                variant="outline"
+                onClick={handleCard}
+                disabled={!canPayByCard}
+                className="w-full"
+              >
+                {payByCard.isPending ? (
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Opening checkout…</>
+                ) : (
+                  <><CreditCard className="w-4 h-4 mr-2" /> Pay by card</>
+                )}
+              </Button>
             )}
-          </Button>
+          </div>
 
           {buy.isPending && (
             <p className="text-[11px] text-center text-zinc-500">
               Don't close this — the order is written once the transfer is confirmed on Base.
+            </p>
+          )}
+          {cardAvailable && !buy.isPending && (
+            <p className="text-[11px] text-center text-zinc-500">
+              Card payments are handled by Stripe. You'll come straight back here.
             </p>
           )}
         </div>
