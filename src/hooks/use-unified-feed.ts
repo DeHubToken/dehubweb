@@ -408,7 +408,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
 
 /**
  * True when `params` describe exactly the request the index.html boot script
- * issued (page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=minted, no
+ * issued (page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=all, no
  * other filters). Must stay in lockstep with the inline <script> in index.html.
  */
 function isBootDefaultFeedParams(params: UnifiedFeedParams): boolean {
@@ -417,7 +417,7 @@ function isBootDefaultFeedParams(params: UnifiedFeedParams): boolean {
     params.limit === 20 &&
     params.sortBy === 'createdAt' &&
     params.sortOrder === 'desc' &&
-    params.status === 'minted' &&
+    params.status === 'all' &&
     (params.postType === undefined || params.postType === 'all') &&
     !params.minter && !params.search && !params.owner && !params.category &&
     params.isPPV === undefined && params.isLocked === undefined &&

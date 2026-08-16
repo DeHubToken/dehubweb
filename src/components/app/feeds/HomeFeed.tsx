@@ -592,7 +592,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     sortBy,
     sortOrder,
     range,
-    status: 'minted' as const,
+    status: 'all' as const,
     // Single category → pass to API; multiple → fetch all, filter client-side
     category: deferredCategories.length === 1 ? deferredCategories[0] : undefined,
     isPPV: deferredContentFilters.ppv ? true : undefined,
@@ -660,7 +660,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     postType: 'video',
     sortBy: 'createdAt',
     sortOrder: 'desc',
-    status: 'minted',
+    status: 'all',
     enabled: shortsEnabled && railsEnabled,
   });
 

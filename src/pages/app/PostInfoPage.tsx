@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
 import { findCachedFeedPost } from '@/hooks/use-unified-feed';
+import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
@@ -543,14 +544,19 @@ export default function PostInfoPage() {
       (findCachedFeedPost(queryClient, postId!) as unknown as DeHubNFT | undefined),
   });
   
+  // A post published off-chain: it lives at status 'signed' for good, so there
+  // is no NFT behind it — every on-chain section below renders a placeholder
+  // instead, and the holders read is skipped (there is nothing to hold).
+  const isUnminted = nftInfo?.status === 'signed';
+
   // Fetch token holders with React Query (cached for 5 minutes)
-  const { 
-    data: holders = [], 
-    isLoading: isLoadingHolders 
+  const {
+    data: holders = [],
+    isLoading: isLoadingHolders
   } = useQuery({
     queryKey: ['token-holders', nftInfo?.tokenId, nftInfo?.chainId],
     queryFn: () => getTokenHolders(nftInfo!.tokenId, nftInfo!.chainId),
-    enabled: !!nftInfo?.tokenId && !!nftInfo?.chainId,
+    enabled: !!nftInfo?.tokenId && !!nftInfo?.chainId && nftInfo?.status === 'minted',
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes in cache
   });
@@ -561,6 +567,19 @@ export default function PostInfoPage() {
   const isOwner = nftInfo?.isOwner === true ||
     !!(walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase());
   const [showEditModal, setShowEditModal] = useState(false);
+
+  // Mint-later for a post published off-chain. On success the page's own data
+  // is refetched, which flips isUnminted and swaps the placeholder for the
+  // real on-chain sections in place.
+  const { mint: mintExisting, isMinting } = useMintExistingPost();
+  const handleMintNow = async () => {
+    if (!nftInfo?.tokenId) return;
+    const ok = await mintExisting(nftInfo.tokenId, nftInfo.chainId);
+    if (ok) {
+      queryClient.invalidateQueries({ queryKey: ['nft-info', postId] });
+      queryClient.invalidateQueries({ queryKey: ['token-holders'] });
+    }
+  };
   const shouldAutoOpenEdit = searchParams.get('edit') === '1';
 
   useEffect(() => {
@@ -785,7 +804,43 @@ export default function PostInfoPage() {
       
       <div>
         <div className="p-4 space-y-6">
-          {/* Transaction & Mint Info */}
+          {/* Transaction & Mint Info — or, for a post published off-chain, a
+              placeholder in its place. The post is real and everything social
+              about it works; only the NFT behind it does not exist yet. */}
+          {isUnminted ? (
+            <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.tokenId')}</h2>
+                  <p className="text-xl font-bold text-white">#{nftInfo.tokenId}</p>
+                </div>
+                <span className="px-2.5 py-1 text-xs font-medium rounded-lg bg-white/10 text-white/60">
+                  not minted
+                </span>
+              </div>
+              <div className="border-t border-white/10 mt-4 pt-4 flex flex-col items-center text-center py-6">
+                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-3">
+                  <Coins className="w-6 h-6 text-white/40" />
+                </div>
+                <p className="text-white/60 text-sm leading-relaxed max-w-xs">
+                  Mint this post to generate this section
+                </p>
+                <p className="text-white/40 text-xs mt-1.5 max-w-xs">
+                  Transaction, ownership and fraction details appear once the post is on-chain.
+                </p>
+                {isOwner && (
+                  <button
+                    onClick={handleMintNow}
+                    disabled={isMinting}
+                    className="mt-5 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors disabled:opacity-50 inline-flex items-center gap-2"
+                  >
+                    {isMinting && <Loader2 className="w-4 h-4 animate-spin" />}
+                    Mint post
+                  </button>
+                )}
+              </div>
+            </section>
+          ) : (
           <section className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <div>
@@ -794,15 +849,15 @@ export default function PostInfoPage() {
               </div>
               {nftInfo.status && (
                 <span className={`px-2.5 py-1 text-xs font-medium rounded-lg ${
-                  nftInfo.status === 'minted' 
-                    ? 'bg-green-500/20 text-green-400' 
+                  nftInfo.status === 'minted'
+                    ? 'bg-green-500/20 text-green-400'
                     : 'bg-yellow-500/20 text-yellow-400'
                 }`}>
                   {nftInfo.status}
                 </span>
               )}
             </div>
-            
+
             <div className="border-t border-white/10 pt-4">
               <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.mintedOn')}</h2>
               <div className="space-y-1">
@@ -810,7 +865,7 @@ export default function PostInfoPage() {
                 <p className="text-sm text-white/60">{formatTime(nftInfo.createdAt)}</p>
               </div>
             </div>
-            
+
             {nftInfo.mintTxHash && (
               <div className="border-t border-white/10 pt-4">
                 <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.transactionHash')}</h2>
@@ -841,6 +896,7 @@ export default function PostInfoPage() {
               </div>
             )}
           </section>
+          )}
 
           {/* Live Stream Info - shown for live content */}
           {((nftInfo as any).postType === 'live' || (nftInfo as any).isLive !== undefined) && (
@@ -948,10 +1004,14 @@ export default function PostInfoPage() {
             </section>
           )}
 
-          {/* Listings & Offers Tabs */}
-          <FractionMarketplace 
-            holders={holders} 
-            nftInfo={nftInfo} 
+          {/* Listings, offers and fraction ownership describe the on-chain
+              edition — for an unminted post the placeholder above stands in
+              for all of it. */}
+          {!isUnminted && (
+          <>
+          <FractionMarketplace
+            holders={holders}
+            nftInfo={nftInfo}
             truncateAddr={truncateAddr}
           />
 
@@ -1062,6 +1122,8 @@ export default function PostInfoPage() {
               )}
             </div>
           </section>
+          </>
+          )}
 
           {/* Engagement Stats */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
