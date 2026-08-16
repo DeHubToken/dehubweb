@@ -13,7 +13,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -327,6 +327,23 @@ export default function StagesPage() {
   const [joiningId, setJoiningId] = useState<string | null>(null);
   const [busyScheduledId, setBusyScheduledId] = useState<string | null>(null);
 
+  // Land on a tab that has something in it. Live wins when a room is running;
+  // with nothing live, an announced stage is the next best thing to show, and
+  // "Live" showing its empty state while Upcoming holds a stage reads as the
+  // page being empty. This defers to the visitor the moment they pick a tab
+  // themselves — including onto an empty one, which is a legitimate choice.
+  const tabChosen = useRef(false);
+  // Stable identity: useDragTabIndicator took setActiveTab directly before.
+  const chooseTab = useCallback((tab: StagesTab) => {
+    tabChosen.current = true;
+    setActiveTab(tab);
+  }, []);
+  useEffect(() => {
+    if (tabChosen.current) return;
+    if (liveSpaces.length > 0) setActiveTab('live');
+    else if (scheduledSpaces.length > 0) setActiveTab('upcoming');
+  }, [liveSpaces.length, scheduledSpaces.length]);
+
   const isDraggingRef = useRef(false);
   const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } =
     useTabIndicator(activeTab, undefined, isDraggingRef);
@@ -440,7 +457,7 @@ export default function StagesPage() {
             <div className="flex items-center justify-between px-1 mb-2">
               <h3 className="text-white font-semibold text-sm">Recorded stages</h3>
               <button
-                onClick={() => setActiveTab('recorded')}
+                onClick={() => chooseTab('recorded')}
                 className="text-zinc-400 hover:text-white text-sm transition-colors"
               >
                 See all
@@ -497,7 +514,7 @@ export default function StagesPage() {
     tabButtonPositions: tabPositions,
     tabValues: STAGES_TABS.map((t) => t.value) as StagesTab[],
     activeTab,
-    onTabChange: setActiveTab,
+    onTabChange: chooseTab,
     isDraggingRef,
   });
 
@@ -576,7 +593,7 @@ export default function StagesPage() {
                       setTabRef(tab.value)(el);
                       tabPositions.current[tab.value] = el;
                     }}
-                    onClick={() => setActiveTab(tab.value)}
+                    onClick={() => chooseTab(tab.value)}
                     className={cn(
                       'relative z-40 flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
                       isActive ? 'text-white' : 'text-zinc-400 hover:text-white',
