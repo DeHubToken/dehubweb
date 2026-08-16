@@ -74,6 +74,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.legacy-account-check]
     verify_jwt = true
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.live-checkout]
+    verify_jwt = false
   [functions.mark-stream-live]
     verify_jwt = false
   [functions.og-image]
@@ -97,6 +100,9 @@ project_id = "aigxuutjaqsywioxjefr"
   [functions.stock-quote]
     verify_jwt = false
   [functions.stories-api]
+    verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.stream-products]
     verify_jwt = false
   [functions.sync-category-log]
     verify_jwt = false
