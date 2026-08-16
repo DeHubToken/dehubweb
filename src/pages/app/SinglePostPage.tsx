@@ -48,6 +48,8 @@ import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
 import { RelatedImagesFeed } from '@/components/app/feeds/RelatedImagesFeed';
 import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import { LivePostChat } from '@/components/app/cards/LivePostChat';
+import { StreamShopRail } from '@/components/app/live/StreamShop';
+import { StreamShopManager } from '@/components/app/live/StreamShopManager';
 import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { TipModal } from '@/components/app/modals/TipModal';
@@ -1088,6 +1090,15 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           </div>
+          {/* Shop rail sits between the player and the chat: close enough to the
+              stream to read as part of it, above the chat so a busy room does
+              not push it off screen. The host sees the manager instead — they
+              are not a customer of their own broadcast. */}
+          {isLivePost && id && post && (
+            walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase()
+              ? <StreamShopManager tokenId={id} />
+              : <StreamShopRail tokenId={id} />
+          )}
           {isLivePost && id && post && (
             <LivePostChat
               streamId={id}
