@@ -16,6 +16,11 @@
  * to stand still and be a page: it shows the announcement — graphic, title,
  * when — plus a reminder bell (signed in), an add-to-calendar file (works for
  * everyone), and the host's own controls to start it.
+ *
+ * Both standing states (announcement, guest player) run their card full width
+ * at the top of the page, with an ad slot and the latest text posts
+ * (RelatedPostsFeed) below, so a shared link lands on a living page rather
+ * than a lone card in empty space.
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
@@ -35,6 +40,7 @@ import { downloadStageIcs } from '@/lib/stage-calendar';
 import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
@@ -138,7 +144,7 @@ export default function StageDeepLinkPage() {
 
   if (isScheduled && stage) {
     return (
-      <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+      <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
           title={`${stage.title} — Upcoming Stage on DeHub`}
           description={
@@ -148,7 +154,7 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full max-w-md rounded-2xl overflow-hidden border border-white/10">
+        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           {stage.cover_image_url && (
             <>
               <img
@@ -255,6 +261,8 @@ export default function StageDeepLinkPage() {
             </div>
           </div>
         </div>
+
+        <RelatedPostsFeed currentPostId={stage.id} />
       </div>
     );
   }
@@ -266,7 +274,7 @@ export default function StageDeepLinkPage() {
     const inRoom = Math.max(1, (stage.speaker_count || 1) + (stage.listener_count || 0));
 
     return (
-      <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+      <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
           title={`${stage.title} — Live on DeHub`}
           description={
@@ -276,7 +284,7 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full max-w-md rounded-2xl overflow-hidden border border-white/10">
+        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           {stage.cover_image_url && (
             <>
               <img
@@ -364,6 +372,8 @@ export default function StageDeepLinkPage() {
             </button>
           </div>
         </div>
+
+        <RelatedPostsFeed currentPostId={stage.id} />
       </div>
     );
   }
