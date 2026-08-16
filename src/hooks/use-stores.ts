@@ -230,37 +230,14 @@ export function useMyOrders(type: 'buyer' | 'seller') {
   });
 }
 
-export function useCreateOrder() {
-  const { walletAddress } = useAuth();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (params: {
-      listing_id: string;
-      seller_address: string;
-      amount: number;
-      tx_hash: string;
-      shipping_address?: string;
-      notes?: string;
-    }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
-      const { data, error } = await withWalletHeader(
-        supabase.from('store_orders').insert({
-          ...params,
-          buyer_address: walletAddress.toLowerCase(),
-        } as any).select().single(),
-        walletAddress
-      );
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['store-orders'] });
-      qc.invalidateQueries({ queryKey: ['store-listings-browse'] });
-      toast.success('Order placed successfully!');
-    },
-    onError: (e: any) => toast.error(e.message),
-  });
-}
+// Orders are not written from the client. There was a useCreateOrder here that
+// inserted tx_hash, amount and seller_address straight from the browser, under
+// a policy that only checked buyer_address matched get_request_wallet_address()
+// — which reads an unsigned header the client sets itself. Nothing verified the
+// transaction existed, went to the seller, was DHB, or was for the right
+// amount. Buying now goes through useProductCheckout, which quotes server-side
+// and has the live-checkout function read the transfer back off Base before the
+// row exists.
 
 export function useUpdateOrderStatus() {
   const { walletAddress } = useAuth();

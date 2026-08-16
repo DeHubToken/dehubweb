@@ -1,21 +1,17 @@
 /**
  * Live Shopping Hooks
  * ===================
- * The product rail attached to a live stream, and the checkout that runs
- * against it.
+ * The product rail attached to a live stream, and the creator-side management
+ * of it. Buying is in use-product-checkout, shared with the marketplace.
  *
- * Two rules hold this together, and both exist because of how the marketplace
- * path works today:
+ * The rule that holds this together: **the client never writes.**
+ * stream_products has no INSERT/UPDATE/DELETE policy; the edge function writes
+ * under the service role after checking the caller minted the stream. RLS here
+ * resolves the caller from an unsigned header, so a policy could not have told
+ * a creator from anyone else.
  *
- * - **The client never prices anything.** `live-checkout` quotes in DHB and
- *   verifies the transfer on Base before an order row exists. The USD figures
- *   here are for display; nothing derived in this file is ever signed. The
- *   store drawer divides in the browser and sends 0 DHB when the price feed
- *   returns 0 — this path cannot do that, because it never does the division.
- * - **The client never writes.** stream_products has no INSERT/UPDATE/DELETE
- *   policy; the edge function writes under the service role after checking the
- *   caller minted the stream. RLS here resolves the caller from an unsigned
- *   header, so a policy could not have told a creator from anyone else.
+ * The USD figures computed here are display only — the amount a buyer signs for
+ * is quoted server-side, never derived in the browser.
  */
 
 import { useEffect, useMemo, useRef } from 'react';
@@ -23,12 +19,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
-import { getAuthToken } from '@/lib/api/dehub/core';
+import { callFn } from '@/hooks/use-product-checkout';
 import { toast } from 'sonner';
-import { createLogger } from '@/lib/logger';
-import type { ChainId } from '@/components/app/ChainSelector';
-
-const logger = createLogger('StreamShopping');
 
 export interface StreamProduct {
   id: string;
@@ -52,46 +44,6 @@ export interface StreamProduct {
     wallet_address: string;
     shipping_info: string | null;
   } | null;
-}
-
-export interface LiveQuote {
-  listingId: string;
-  title: string;
-  priceUsd: number;
-  dhbAmount: number;
-  dhbPrice: number;
-  sellerAddress: string;
-  tokenAddress: string;
-  chainId: number;
-  isDigital: boolean;
-  stockRemaining: number | null;
-  /** DHB is ERC20Pausable and currently paused; a transfer would revert. */
-  paymentsFrozen: boolean;
-}
-
-function authHeaders(walletAddress: string | null): Record<string, string> {
-  const token = getAuthToken();
-  if (!walletAddress || !token) return {};
-  return { 'x-wallet-address': walletAddress.toLowerCase(), 'x-dehub-token': token };
-}
-
-async function callFn<T>(
-  fn: 'stream-products' | 'live-checkout',
-  body: Record<string, unknown>,
-  walletAddress: string | null,
-): Promise<T> {
-  const { data, error } = await supabase.functions.invoke(fn, {
-    body,
-    headers: authHeaders(walletAddress),
-  });
-  // A non-2xx from an edge function arrives as `error` with the body attached;
-  // surfacing the server's message beats "Edge Function returned a non-2xx".
-  if (error) {
-    const detail = (data as { error?: string })?.error;
-    throw new Error(detail || error.message || 'Request failed');
-  }
-  if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
-  return data as T;
 }
 
 /** The effective price of an attached product: live override beats list price. */
@@ -203,85 +155,6 @@ export function useStreamProductActions(tokenId: string | null) {
   });
 
   return { attach, detach, pin, unpin };
-}
-
-/**
- * Buy a product from a stream.
- *
- * quote → pay → confirm. The wallet stack is imported at call time: this hook
- * is reachable from the eager live card, and scripts/check-entry-bundle.mjs
- * fails the build if wagmi lands in the entry chunk.
- */
-export function useLiveCheckout(tokenId: string | null) {
-  const { walletAddress } = useAuth();
-  const queryClient = useQueryClient();
-
-  const getQuote = useMutation({
-    mutationFn: (listingId: string) =>
-      callFn<LiveQuote>('live-checkout', { action: 'quote', tokenId, listingId }, walletAddress),
-  });
-
-  const buy = useMutation({
-    mutationFn: async (params: {
-      quote: LiveQuote;
-      shippingAddress?: string;
-      notes?: string;
-    }) => {
-      const { quote, shippingAddress, notes } = params;
-
-      if (quote.paymentsFrozen) {
-        throw new Error('DHB transfers are paused right now, so this purchase would fail. Try again once trading resumes.');
-      }
-
-      const { sendERC20Token } = await import('@/lib/wallet/send');
-      const result = await sendERC20Token(
-        quote.tokenAddress,
-        quote.sellerAddress,
-        String(quote.dhbAmount),
-        18,
-        quote.chainId as ChainId,
-      );
-      if (!result?.hash) throw new Error('Transaction was not submitted');
-
-      // The receipt can lag the wallet's response, so a 202 means "ask again"
-      // rather than "failed". The payment is already on-chain at this point —
-      // giving up here would strand a real transfer with no order behind it.
-      let lastError = 'Could not confirm the payment';
-      for (let attempt = 0; attempt < 10; attempt++) {
-        try {
-          return await callFn<{ success: boolean; order: unknown; warning?: string }>(
-            'live-checkout',
-            {
-              action: 'confirm',
-              tokenId,
-              listingId: quote.listingId,
-              txHash: result.hash,
-              shippingAddress,
-              notes,
-            },
-            walletAddress,
-          );
-        } catch (err) {
-          lastError = (err as Error).message;
-          if (!/not found yet/i.test(lastError)) throw err;
-          await new Promise(r => setTimeout(r, 3000));
-        }
-      }
-      logger.error('confirm timed out', { hash: result.hash });
-      throw new Error(
-        `${lastError}. Your payment went through — send this transaction to the seller: ${result.hash}`,
-      );
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['stream-products', tokenId] });
-      queryClient.invalidateQueries({ queryKey: ['store-orders'] });
-      if (data.warning) toast.warning(data.warning);
-      else toast.success('Order placed');
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  return { getQuote, buy };
 }
 
 export interface StreamOrder {
