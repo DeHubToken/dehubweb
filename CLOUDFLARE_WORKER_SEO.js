@@ -56,7 +56,7 @@ const OG_CARD_ROUTES = new Set([
   'docs/brand-assets', 'docs/brand-guidelines', 'docs/donate', 'explore',
   'videos', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
   'connect', 'connect/chatgpt', 'connect/claude', 'communities',
-  'stages', 'guide', 'features', 'pricing',
+  'stages', 'guide', 'features', 'pricing', 'depin',
   'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard',
   'top-100', 'music', 'tv',
@@ -649,6 +649,19 @@ ${primaryNavHtml(`/${key}`)}
 // page. Titles and descriptions mirror each page's SPA SEOHead strings exactly
 // so the two UA variants never diverge.
 const MARKETING_PAGES = {
+  'depin': {
+    title: 'DePin | Community-Powered Media Infrastructure | DeHub',
+    description: 'DeHub DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.',
+    heading: 'DeHub DePin',
+    bodyHtml: `<p>DePin is DeHub's community-powered media infrastructure, now in development. Operators will be able to set limits for spare storage, bandwidth and compute while DeHub coordinates useful hosting, transcoding and delivery work.</p>
+<h2>Designed for nodes to go offline</h2>
+<p>Community nodes never hold the only copy. DeHub origin storage remains the source of truth, online replicas serve available segments, and playback falls back to origin automatically when peers leave.</p>
+<h2>Protected content stays encrypted</h2>
+<p>Protected media can be stored as encrypted segments. Node operators do not receive playback keys simply because they host data. Public content remains publicly viewable through DeHub.</p>
+<h2>Variable, revenue-funded rewards</h2>
+<p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future DHB settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p>
+<p>The node client is not available yet. DePin will launch in controlled phases, beginning with delivery and adaptive video infrastructure.</p>`,
+  },
   'connect': {
     title: 'Connect DeHub to your AI assistant',
     description: 'Connect ChatGPT, Claude, or any MCP-compatible assistant to DeHub with a single URL.',
@@ -1397,7 +1410,7 @@ const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|tele
 // Static marketing/app routes that need per-route OG meta (bots only).
 // Kept in sync with the STATIC_ROUTES map inside supabase/functions/ssr-seo.
 const SSR_STATIC_ROUTES = new Set([
-  'features', 'pricing', 'creator', 'editor', 'prompt', 'work',
+  'features', 'pricing', 'depin', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
   'music', 'radio', 'tv', 'glossary', 'bridge', 'agents',
   'assistant', 'creators', 'jobs',
