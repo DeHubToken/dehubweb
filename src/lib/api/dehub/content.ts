@@ -23,7 +23,7 @@ export interface StreamInfo {
 export interface MintPostParams {
   name: string;
   description: string;
-  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio';
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'feed-audio';
   chainId: number;
   category: string[];
   streamInfo?: StreamInfo;
@@ -36,6 +36,12 @@ export interface MintPostParams {
    * call returns and the client skips the contract step entirely.
    */
   mintOptOut?: boolean;
+  /**
+   * ISO date. A future date parks the token at status 'scheduled' — the server
+   * answers `scheduled: true` and the cron publishes it later; the client must
+   * then skip the chain step. A past date is ignored and the post goes out now.
+   */
+  scheduledAt?: string;
 }
 
 export interface MintResponse {
@@ -75,6 +81,10 @@ export async function mintPost(
 
   if (params.mintOptOut) {
     formData.append('mintOptOut', 'true');
+  }
+
+  if (params.scheduledAt) {
+    formData.append('scheduledAt', params.scheduledAt);
   }
 
   const streamInfo: StreamInfo = params.streamInfo || {

@@ -140,12 +140,14 @@ export function PostAccessToggles({
 
   // DHB does not exist on Solana, and a USD-denominated price has no mint the
   // backend can build a transfer against — so Solana posts price PPV in the
-  // SPL tokens the chain actually supports.
+  // SPL tokens the chain actually supports. USD is gone from EVM too: it ships
+  // with no payPerViewContractAddress, and both clients' unlock flows refuse
+  // it, so a USD paywall could never be paid.
   const ppvCurrencyOptions = useMemo<Currency[]>(
     () =>
       solanaChain
         ? (lockTokens.map((t) => t.symbol) as Currency[])
-        : (['USD', 'DHB'] as Currency[]),
+        : (['DHB'] as Currency[]),
     [solanaChain, lockTokens],
   );
 

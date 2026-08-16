@@ -30,9 +30,10 @@ export function useMintExistingPost() {
     try {
       const targetChain = (chainId || BASE_CHAIN_ID) as ChainId;
 
-      const [{ mintOnChainWithFee }, { getDHBBalance }] = await Promise.all([
+      const [{ mintOnChainWithFee }, { getDHBBalance }, { getERC20Balance }] = await Promise.all([
         import('@/lib/contracts/stream-collection'),
         import('@/lib/contracts/stream-controller'),
+        import('@/lib/contracts/aa-utils'),
       ]);
 
       // Price and affordability first: finding out after the signature has been
@@ -44,8 +45,14 @@ export function useMintExistingPost() {
         if (fee?.chargeable && fee.amount > 0 && !fee.isNative) {
           const { getWeb3AuthSigner } = await import('@/lib/contracts/stream-collection');
           const address = await getWeb3AuthSigner();
-          const balance = await getDHBBalance(address, targetChain);
-          const needed = BigInt(Math.ceil(fee.amount * 1e6)) * BigInt(1e12);
+          // Balance of the QUOTE's token at the QUOTE's decimals — hardcoding
+          // chainConfig.dhbToken at 1e18 broke any non-18-dp fee token.
+          const balance = fee.tokenAddress
+            ? await getERC20Balance(fee.tokenAddress, address, targetChain)
+            : await getDHBBalance(address, targetChain);
+          const needed =
+            (BigInt(Math.ceil(fee.amount * 1e6)) * BigInt(10) ** BigInt(fee.decimals ?? 18)) /
+            BigInt(1e6);
           if (balance < needed) {
             toast.error('Not enough DHB to mint', {
               description: `Minting this post costs ${fee.amount} ${fee.symbol}.`,
