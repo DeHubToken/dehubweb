@@ -27,6 +27,7 @@ import { build } from 'esbuild';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
+import { MILESTONE_REDIRECTS } from '../src/lib/blog-redirects.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
@@ -188,7 +189,35 @@ function mdToHtml(md) {
 
 // --------------------------------------------------------------------- emit
 const blogData = await loadBlogData();
-const posts = applyManifestDisplayOverrides(blogData.posts);
+
+// Milestone posts superseded by a hand-written article on the same event. The
+// SPA already hid them from the blog index via `excludedTitles`, but this
+// generator builds from the slug-level union of blogSource and newPosts and
+// never consulted that list — so each one was still written to blog-content/,
+// still given a sitemap row, and still served at its own URL. Orphan pages,
+// submitted to Google, duplicating the posts that replaced them.
+//
+// The edge worker 301s these to their counterpart (same map, imported below),
+// so dropping them here is what stops us submitting a URL we redirect. Six
+// further posts are excluded from the index with no counterpart to redirect
+// to; those stay in the manifest deliberately — see blog-redirects.js.
+const redirectedSlugs = new Set(Object.keys(MILESTONE_REDIRECTS));
+const kept = blogData.posts.filter((p) => !redirectedSlugs.has(p.slug));
+const droppedCount = blogData.posts.length - kept.length;
+if (droppedCount !== redirectedSlugs.size) {
+  // A slug in the map that matches no post is a typo that would otherwise fail
+  // silently: the worker would 301 a URL the generator still publishes.
+  const missing = [...redirectedSlugs].filter((s) => !blogData.posts.some((p) => p.slug === s));
+  throw new Error(`[blog-manifest] MILESTONE_REDIRECTS keys match no post: ${missing.join(', ')}`);
+}
+// Every redirect target must itself still be published, or the 301 lands on a 404.
+for (const [from, to] of Object.entries(MILESTONE_REDIRECTS)) {
+  if (!kept.some((p) => p.slug === to)) {
+    throw new Error(`[blog-manifest] redirect target missing: ${from} -> ${to}`);
+  }
+}
+
+const posts = applyManifestDisplayOverrides(kept);
 const sorted = [...posts].sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
 );

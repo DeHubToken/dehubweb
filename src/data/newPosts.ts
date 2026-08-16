@@ -140,15 +140,28 @@ const massiveWeekPost: BlogPostType = {
   seoDescription: 'DeHub celebrates a special week of milestones: official BNB Chain recognition and DApp Bay integration, First Class Agency partnership bringing 1,200+ streamers, app store submission, and unveiling a pipeline of revolutionary features including AI toolkits, games, and more.',
 };
 
+/**
+ * Milestone posts kept off the blog index because a hand-written article
+ * covers the same event. Matched on title AFTER the overrides in blogSource,
+ * which is why these read differently from the generated milestone titles.
+ *
+ * This list hides a post from the index and nothing else — the manifest
+ * generator used to publish every one of them anyway, so each was still in
+ * sitemap-static.xml and still answering at its own URL. That is now handled
+ * properly: src/lib/blog-redirects.js 301s these five to their counterpart at
+ * the edge and drops them from the manifest, so the index, the sitemap and the
+ * URL all agree.
+ *
+ * Six further titles used to sit here with no counterpart to defer to. They
+ * were hidden when the milestone archive was nine shared templates, which
+ * stopped being true when each post got its own article — so leaving them
+ * hidden only produced orphan pages: indexed, but reachable from no link on
+ * the site. They have been removed from this list and appear on /docs/blog
+ * again. See EXCLUDED_WITHOUT_COUNTERPART in src/lib/blog-redirects.js.
+ */
 export const excludedTitles = [
   'Leading the Way: DeHub founder\'s agency Becomes UK #1 with 1,000 Streamers',
   'Fueling Growth: $1M Raised for Fan.site (BJ Fork)',
-  'Worldwide Creators: Partnerships Spanning 15 Countries',
-  'Leveling Up: Major App Upgrade Earns 95% Positive Feedback',
-  'Smarter Liquidity: Automated Liquidity Provision on DEXs',
-  'Open and Clear: DEX Policy Implementation and Transparency Commitment',
-  'Supporting Growth: Knowledge Transfer to Fan.site Team',
-  'Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech',
   'In the Spotlight: DeHub Featured in TechCrunch and VentureBeat',
   'Innovation Recognized: DeHub Wins Corporate Livewire Award',
   'Interactive Streaming: On-Chain Live Streams with Animated Tips'
