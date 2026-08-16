@@ -74,9 +74,23 @@ import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/pass
 import { deriveFromSecret } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
+import { isUserRejection, isRequestAlreadyPending, describeWalletError } from '@/lib/wallet-errors';
+import { getRunningBuildId, isRunningStaleBuild } from '@/lib/version-check';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 
 const authLogger = createLogger('Auth');
+
+/**
+ * Who asked for the wallet signature.
+ *
+ * 'user' is a tap on a wallet button. 'background' is the app deciding on the
+ * user's behalf — a session refresh, or a page load that found a live connector
+ * — and it is the one that generated the support reports: an unexplained
+ * MetaMask popup appears mid-browse, dismissing it is the only sane response,
+ * and the app then announced that the user had rejected a signature they never
+ * asked for. The distinction has to reach both the copy and the log row.
+ */
+type WagmiAuthTrigger = 'user' | 'background';
 
 // Set before a Supabase OAuth redirect / email OTP so that, when the session
 // lands (possibly after a full page reload), we know to resume the wallet
@@ -260,7 +274,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [queryClient]);
 
   // Wagmi hooks
-  const { address: wagmiAddress, isConnected: isWagmiConnected } = useAccount();
+  const { address: wagmiAddress, isConnected: isWagmiConnected, connector: wagmiConnector } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { disconnect: wagmiDisconnect } = useDisconnect();
   const { connectAsync, connectors } = useConnect();
@@ -795,7 +809,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setIsConnecting(true);
           setConnectionSource('wagmi');
           writeConnectionSource('wagmi');
-          await completeDeHubAuthWagmi(wagmiAddress);
+          // `isReturningWagmiUser` reaches here with no tap behind it: a live
+          // connector plus a surviving token is enough. That is a signature
+          // request the user did not ask for, so it must not be reported as one.
+          await completeDeHubAuthWagmi(wagmiAddress, hasUserIntent ? 'user' : 'background');
           setWagmiAuthIntent(false);
           closeLoginModal();
         } catch (err) {
@@ -883,16 +900,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, connectionSource, isWagmiConnected, isLoading, isConnecting]);
 
   /**
-   * Complete DeHub auth using Wagmi (Sign Message) — unchanged.
+   * Complete DeHub auth using Wagmi (Sign Message).
+   *
+   * Every failure in here used to end at `console.error`, and `createLogger`
+   * does not patch the console — so the entire external-wallet login path wrote
+   * nothing at all to `client_error_logs`. A report of "MetaMask says I rejected
+   * the signature" could be answered only by guessing, because there was no row
+   * to read. Both failure points now log, with enough context (which connector,
+   * which provider code, which build) to tell the causes apart.
    */
-  const completeDeHubAuthWagmi = async (address: string) => {
+  const completeDeHubAuthWagmi = async (address: string, trigger: WagmiAuthTrigger = 'user') => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
     const authAddress = address.toLowerCase();
+    const connectorId = wagmiConnector?.id;
+    const connectorName = wagmiConnector?.name;
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    toast.info('Please sign the message in your wallet...');
+    toast.info(
+      trigger === 'user'
+        ? 'Please sign the message in your wallet...'
+        : 'Your session expired — approve the signature in your wallet to stay signed in.',
+    );
 
     let signature: string;
     try {
@@ -901,9 +931,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         account: address as `0x${string}`,
       });
     } catch (signError: any) {
-      console.error('[Auth] signMessageAsync failed:', signError);
-      const userRejected = signError?.code === 4001 || signError?.message?.includes('rejected');
-      toast.error(userRejected ? 'Signature rejected. Please try again.' : 'Wallet signature failed. Please try again.');
+      const rejected = isUserRejection(signError);
+      const alreadyPending = isRequestAlreadyPending(signError);
+      const described = describeWalletError(signError);
+      // Only worth a round-trip on the branch where the answer changes what we
+      // say. A rejection is a rejection whatever build the tab is running.
+      const staleBuild = rejected ? null : await isRunningStaleBuild();
+
+      authLogger.error('Wallet signature failed', {
+        trigger,
+        rejected,
+        alreadyPending,
+        staleBuild,
+        connectorId,
+        connectorName,
+        buildId: getRunningBuildId(),
+        address: authAddress,
+        ...described,
+      }, signError);
+
+      if (staleBuild) {
+        // The tab has been open across a deploy. Nothing the user does to the
+        // wallet will help, and telling them to try again just repeats it.
+        toast.error('DeHub has been updated', {
+          description: 'This tab is running an older version. Refresh, then sign in again.',
+          action: { label: 'Refresh', onClick: () => window.location.reload() },
+          duration: 12_000,
+        });
+      } else if (alreadyPending) {
+        toast.error('Your wallet already has a request open', {
+          description: 'Approve or dismiss it in your wallet, then try again.',
+        });
+      } else if (rejected) {
+        toast.error(
+          trigger === 'user'
+            ? 'Signature rejected. Please try again.'
+            : 'Signature dismissed. Sign in again whenever you are ready.',
+        );
+      } else {
+        // Explicitly NOT called a rejection any more. This is the branch that
+        // used to accuse people of declining a prompt that had failed on its own.
+        toast.error('Wallet signature failed. Please try again.', {
+          description: described.shortMessage,
+        });
+      }
       throw signError;
     }
 
@@ -912,7 +983,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const BASE_CHAIN_ID = 8453;
-    const authResponse = await authenticateWallet(authAddress, signature, timestamp, BASE_CHAIN_ID);
+    let authResponse: AuthResponse;
+    try {
+      authResponse = await authenticateWallet(authAddress, signature, timestamp, BASE_CHAIN_ID);
+    } catch (authError: any) {
+      // A signature the wallet happily produced, refused one step later. The
+      // only caller catches this into a console.error, so the whole visible
+      // result was a spinner stopping and nothing happening — no toast, no row.
+      authLogger.error('Wallet auth exchange failed', {
+        trigger,
+        connectorId,
+        connectorName,
+        buildId: getRunningBuildId(),
+        address: authAddress,
+        chainId: BASE_CHAIN_ID,
+        status: authError?.status,
+        ...describeWalletError(authError),
+      }, authError);
+      toast.error('Could not complete sign-in. Please try again.');
+      throw authError;
+    }
 
     const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
@@ -1513,13 +1603,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       return true;
     } catch (err: any) {
-      console.error('[Auth] Wallet connection failed:', err);
       setIsConnecting(false);
       setWagmiAuthIntent(false);
       restoreConnectionSource(previousSource);
 
-      const fullError = (err.message || '').toLowerCase() + ' ' + (err.cause?.message || '').toLowerCase();
-      if (fullError.includes('rejected') || fullError.includes('denied')) {
+      const rejected = isUserRejection(err);
+      authLogger.error('Wallet connection failed', {
+        wallet,
+        rejected,
+        buildId: getRunningBuildId(),
+        ...describeWalletError(err),
+      }, err);
+
+      if (rejected) {
         toast.error('Connection rejected');
       } else {
         const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet' };
@@ -1637,7 +1733,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         setConnectionSource('wagmi');
         writeConnectionSource('wagmi');
-        await completeDeHubAuthWagmi(wagmiAddress);
+        // Reached from any 401 mid-session (use-reauth-handler, usePostForm), so
+        // the wallet popup lands while the user is tipping or posting and has
+        // asked for nothing of the sort. Say why it appeared.
+        await completeDeHubAuthWagmi(wagmiAddress, 'background');
         const walletAfter = localStorage.getItem('dehub_wallet');
         if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
           await disconnect();

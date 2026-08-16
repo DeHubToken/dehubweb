@@ -72,6 +72,33 @@ async function fetchDeployedVersion(): Promise<BuildVersion | null> {
   }
 }
 
+/** The build id compiled into the bundle this tab is running. '' when unbuilt. */
+export function getRunningBuildId(): string {
+  return RUNNING_ID;
+}
+
+/**
+ * Is this tab running a build the deploy has already moved past?
+ *
+ * `null` means unanswerable — dev, no compiled id, or the manifest didn't load
+ * — and callers must treat that as "don't know" rather than "no". The watcher
+ * above asks the same question on a timer to nag about updates; this asks it on
+ * demand, at the moment something has just failed, so that a failure caused by
+ * week-old code in a long-lived tab can be named as such instead of blamed on
+ * the user. The two are deliberately independent: the watcher is one-shot per
+ * session and may have already fired and stopped.
+ */
+export async function isRunningStaleBuild(): Promise<boolean | null> {
+  if (typeof window === 'undefined') return null;
+  if (!import.meta.env.PROD) return null;
+  if (!RUNNING_ID) return null;
+
+  const deployed = await fetchDeployedVersion();
+  if (!deployed) return null;
+
+  return deployed.id !== RUNNING_ID;
+}
+
 /**
  * Starts watching for a newer deploy. `onUpdate` fires at most once, with the
  * newly deployed build's details. Returns a cleanup that stops the watch.
