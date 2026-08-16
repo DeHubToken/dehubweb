@@ -44,7 +44,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
     minter: params.creator_id,
     postType: params.postType,
     search: params.search,
-    status: params.status || 'minted',
+    status: params.status || 'all',
   };
 
   // requiresAuth when a token exists: it makes apiCall refresh a stale token

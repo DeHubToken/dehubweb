@@ -436,7 +436,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     limit: 12,
     sortBy: 'createdAt',
     sortOrder: 'desc',
-    status: 'minted',
+    status: 'all',
     category: selectedCategory || undefined,
     followingOnly: true,
     enabled: isFollowingMode,

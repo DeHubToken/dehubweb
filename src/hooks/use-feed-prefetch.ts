@@ -95,7 +95,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
     limit: 12,
     sortBy: 'createdAt',
     sortOrder: 'desc',
-    status: 'minted',
+    status: 'all',
   });
   
   // Images
@@ -103,7 +103,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
     unit: 12,
     sortMode: 'new',
     postType: 'feed-images',
-    status: 'minted',
+    status: 'all',
     page: 0,
   });
   
@@ -112,7 +112,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
     unit: 12,
     sortMode: 'new',
     postType: 'video',
-    status: 'minted',
+    status: 'all',
     page: 0,
   });
   
@@ -166,7 +166,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
       isPPV: undefined,
       hasBounty: undefined,
       isLocked: undefined,
-      status: 'minted' as const,
+      status: 'all' as const,
     };
     queryClient.setQueryData(
       // Viewer suffix must match useUnifiedFeed's key, or this seed lands on a
@@ -192,7 +192,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
       unit: 12,
       sortMode: 'new' as const,
       postType: 'feed-images' as const,
-      status: 'minted' as const,
+      status: 'all' as const,
     };
     queryClient.setQueryData(
       ['dehub-feed', imagesParams],
@@ -219,7 +219,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
       sortMode: 'new' as const,
       category: undefined,
       postType: 'video' as const,
-      status: 'minted' as const,
+      status: 'all' as const,
     };
     queryClient.setQueryData(
       ['dehub-feed', shortsParams],
