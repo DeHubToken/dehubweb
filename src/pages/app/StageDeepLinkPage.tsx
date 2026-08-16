@@ -28,7 +28,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
-import { CalendarDays, CalendarPlus, Radio, Loader2, Copy, Bell, BellRing, Headphones, Square, Users } from 'lucide-react';
+import { CalendarDays, CalendarPlus, Radio, Loader2, Share2, Bell, BellRing, Headphones, Square, Users } from 'lucide-react';
 import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
@@ -38,6 +38,7 @@ import { dehubLinkFor } from '@/lib/dehub-links';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { downloadStageIcs } from '@/lib/stage-calendar';
 import { stageUtcClock } from '@/lib/stage-time';
+import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
@@ -46,7 +47,6 @@ import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
-import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 export default function StageDeepLinkPage() {
@@ -132,13 +132,9 @@ export default function StageDeepLinkPage() {
     !!walletAddress &&
     stage?.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase();
 
-  const copyLink = () => {
-    if (!stage) return;
-    navigator.clipboard.writeText(dehubLinkFor.stage(stage)).then(
-      () => toast.success('Link copied'),
-      () => toast.error('Could not copy link'),
-    );
-  };
+  // The share sheet replaces the old copy-only button: copy link, send in a
+  // DM, or post to feed — the same options a post's share button offers.
+  const [shareOpen, setShareOpen] = useState(false);
 
   const avatar = stage
     ? buildAvatarUrl(stage.host_wallet_address || '', stage.host_avatar) ||
@@ -254,17 +250,25 @@ export default function StageDeepLinkPage() {
                 <CalendarPlus className="w-4 h-4" />
               </button>
               <button
-                onClick={copyLink}
-                aria-label="Copy invite link"
+                onClick={() => setShareOpen(true)}
+                title="Share stage"
+                aria-label="Share stage"
                 className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
               >
-                <Copy className="w-4 h-4" />
+                <Share2 className="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
 
         <RelatedPostsFeed currentPostId={stage.id} />
+
+        <ShareEntityDrawer
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          url={dehubLinkFor.stage(stage)}
+          shareTitle={stage.title}
+        />
       </div>
     );
   }
@@ -350,11 +354,12 @@ export default function StageDeepLinkPage() {
                 {listening ? 'Stop listening' : 'Listen in'}
               </button>
               <button
-                onClick={copyLink}
-                aria-label="Copy invite link"
+                onClick={() => setShareOpen(true)}
+                title="Share stage"
+                aria-label="Share stage"
                 className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
               >
-                <Copy className="w-4 h-4" />
+                <Share2 className="w-4 h-4" />
               </button>
             </div>
 
@@ -374,6 +379,13 @@ export default function StageDeepLinkPage() {
         </div>
 
         <RelatedPostsFeed currentPostId={stage.id} />
+
+        <ShareEntityDrawer
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          url={dehubLinkFor.stage(stage)}
+          shareTitle={stage.title}
+        />
       </div>
     );
   }
