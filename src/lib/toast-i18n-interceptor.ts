@@ -9,6 +9,14 @@
  * 2. Look up translation via i18n.t() — synchronous, instant, no API calls
  * 3. Show translated toast immediately (no English flash)
  * 4. Falls back to original English if key not found in locale file
+ *
+ * Step 4 has to check `i18n.exists` rather than lean on `defaultValue`. The
+ * instance sets `parseMissingKeyHandler: humanizeTranslationKey`, which wins
+ * over defaultValue and rebuilds a sentence out of the KEY — and the key was
+ * built by stripping every character outside [a-z0-9\s]. So an untranslated
+ * toast came back with its punctuation deleted: "Reminder set — you'll be
+ * notified when it starts" was shown as "Reminder set youll be notified when
+ * it starts".
  */
 
 import { toast } from 'sonner';
@@ -30,6 +38,10 @@ function normalizeToKey(msg: string): string {
  */
 function translateToast(msg: string): { text: string; wasTranslated: boolean } {
   const key = `toasts.${normalizeToKey(msg)}`;
+  // No entry for this toast: show exactly what the caller wrote. Going through
+  // t() here would hand the string to parseMissingKeyHandler and lose its
+  // punctuation (see the header note).
+  if (!i18n.exists(key)) return { text: msg, wasTranslated: false };
   const translated = i18n.t(key, { defaultValue: msg });
   return { text: translated, wasTranslated: translated !== msg };
 }
