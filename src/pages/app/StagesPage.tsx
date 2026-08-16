@@ -29,6 +29,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { PastStagesList } from '@/components/app/stages/PastStagesList';
+import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { stageUtcClock } from '@/lib/stage-time';
@@ -104,10 +105,13 @@ function ScheduledStageCard({
                 aria-label={hasReminder ? 'Remove reminder' : 'Remind me when it starts'}
                 aria-pressed={hasReminder}
                 className={cn(
-                  'w-7 h-7 rounded-lg flex items-center justify-center transition-colors disabled:opacity-60',
+                  // ui/button's default 3D glass variant at icon-chip size —
+                  // keep in sync with buttonVariants in components/ui/button.
+                  'w-7 h-7 rounded-lg flex items-center justify-center transition-all disabled:opacity-60',
+                  'bg-gradient-to-br backdrop-blur-xl border active:scale-[0.97] motion-reduce:active:scale-100',
                   hasReminder
-                    ? 'text-white bg-white/10 hover:bg-white/20'
-                    : 'text-white/40 hover:text-white hover:bg-white/10',
+                    ? 'from-white/30 via-white/15 to-white/10 border-white/40 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(255,255,255,0.15)]'
+                    : 'from-white/20 via-white/10 to-white/5 border-white/30 text-white/70 hover:text-white hover:from-white/30 hover:via-white/15 hover:to-white/10 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]',
                 )}
               >
                 {hasReminder ? <BellRing className="w-3.5 h-3.5" /> : <Bell className="w-3.5 h-3.5" />}
@@ -125,21 +129,27 @@ function ScheduledStageCard({
         </div>
 
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
-            {avatar ? (
-              <img src={avatar} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
-                {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
-              </div>
-            )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-zinc-500 text-[10px]">Hosted by</p>
-            <p className="text-white text-xs font-medium truncate">
-              @{space.host_username || space.host_wallet_address?.slice(0, 6)}
-            </p>
-          </div>
+          <StageHostLink
+            space={space}
+            avatarUrl={avatar || undefined}
+            className="group/host flex items-center gap-3 min-w-0 flex-1"
+          >
+            <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
+              {avatar ? (
+                <img src={avatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
+                  {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-zinc-500 text-[10px]">Hosted by</p>
+              <p className="text-white text-xs font-medium truncate group-hover/host:underline">
+                @{space.host_username || space.host_wallet_address?.slice(0, 6)}
+              </p>
+            </div>
+          </StageHostLink>
         </div>
 
         <h3 className="text-white font-semibold text-sm line-clamp-2">{space.title}</h3>
@@ -234,21 +244,28 @@ function LiveStageCard({
         </div>
 
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
-            {avatar ? (
-              <img src={avatar} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
-                {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
-              </div>
-            )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-zinc-500 text-[10px]">Hosted by</p>
-            <p className="text-white text-xs font-medium truncate">
-              @{space.host_username || space.host_wallet_address?.slice(0, 6)}
-            </p>
-          </div>
+          <StageHostLink
+            space={space}
+            avatarUrl={avatar || undefined}
+            nested
+            className="group/host flex items-center gap-3 min-w-0 flex-1"
+          >
+            <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
+              {avatar ? (
+                <img src={avatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
+                  {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-zinc-500 text-[10px]">Hosted by</p>
+              <p className="text-white text-xs font-medium truncate group-hover/host:underline">
+                @{space.host_username || space.host_wallet_address?.slice(0, 6)}
+              </p>
+            </div>
+          </StageHostLink>
         </div>
 
         <h3 className="text-white font-semibold text-sm line-clamp-2">{space.title}</h3>
