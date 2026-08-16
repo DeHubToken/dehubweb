@@ -74,6 +74,112 @@
 			outline: none;
 			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
 		}
+
+		/* DeHub: boot screen. Construct 2's stock loader is a percentage in
+		   plain text over `loading-logo.png` — which is the Construct 2 engine
+		   cog, not this game. That is the first thing a player sees, so it is
+		   covered with the game's own wordmark and a real bar driven by the
+		   runtime's `loadingprogress`. The stock loader keeps drawing
+		   underneath; it is simply never visible. */
+		#dehub-boot {
+			position: fixed;
+			inset: 0;
+			z-index: 20;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 26px;
+			background: #000;
+			transition: opacity 260ms ease;
+		}
+		#dehub-boot.is-done {
+			opacity: 0;
+			pointer-events: none;
+		}
+		#dehub-boot img {
+			width: min(62vw, 310px);
+			height: auto;
+			/* Pixel art. Point-sampled so the wordmark stays crisp rather than
+			   being smoothed the way the engine's own linear sampling would. */
+			image-rendering: pixelated;
+		}
+		#dehub-boot-track {
+			width: min(52vw, 260px);
+			height: 3px;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.14);
+			overflow: hidden;
+		}
+		#dehub-boot-bar {
+			height: 100%;
+			width: 0%;
+			border-radius: 999px;
+			background: #fff;
+			transition: width 180ms ease-out;
+		}
+
+		/* DeHub: portrait guard. The project is a fixed 854x480 landscape with
+		   its touch pad and action buttons placed for that shape, and letterbox
+		   scaling honours it — so in portrait the whole game shrinks to a strip
+		   across the middle with controls too small to hit. Orientation is set
+		   to "Any" in the project, so nothing upstream stops that happening.
+
+		   Advisory, not a lock: someone with orientation lock switched on
+		   cannot rotate, and refusing to let them play at all would be worse
+		   than a small game. Hence the dismiss. */
+		#dehub-rotate {
+			position: fixed;
+			inset: 0;
+			z-index: 30;
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 18px;
+			padding: 0 32px;
+			background: #000;
+			text-align: center;
+			font: 400 13px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+			color: #d4d4d8;
+		}
+		@media (orientation: portrait) and (max-width: 900px) {
+			body:not(.dehub-rotate-dismissed) #dehub-rotate { display: flex; }
+		}
+		#dehub-rotate-icon {
+			width: 40px;
+			height: 62px;
+			border: 2px solid #52525b;
+			border-radius: 7px;
+			animation: dehub-tip 2.4s ease-in-out infinite;
+		}
+		@keyframes dehub-tip {
+			0%, 40%   { transform: rotate(0deg); }
+			60%, 100% { transform: rotate(-90deg); }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			#dehub-rotate-icon { animation: none; transform: rotate(-90deg); }
+		}
+		#dehub-rotate strong {
+			display: block;
+			font-size: 15px;
+			font-weight: 600;
+			color: #fff;
+		}
+		#dehub-rotate button {
+			margin-top: 4px;
+			padding: 7px 16px;
+			border: 0;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.1);
+			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+			color: #fff;
+			font: 600 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			cursor: pointer;
+			touch-action: manipulation;
+		}
     </style>
 
 
@@ -81,6 +187,20 @@
 
 <body>
 	<div id="fb-root"></div>
+
+	<!-- DeHub: boot screen and portrait guard. Both are markup + CSS so they are
+	     up before a single byte of the engine has parsed, which is exactly when
+	     they are needed. See the style block above for why each exists. -->
+	<div id="dehub-boot">
+		<img src="dehub-loader-wordmark.png" alt="Street Slayer" />
+		<div id="dehub-boot-track"><div id="dehub-boot-bar"></div></div>
+	</div>
+
+	<div id="dehub-rotate">
+		<div id="dehub-rotate-icon"></div>
+		<p><strong>Turn your phone sideways</strong>Street Slayer is a landscape game — its controls do not fit a portrait screen.</p>
+		<button type="button" id="dehub-rotate-dismiss">Play anyway</button>
+	</div>
 
 	<script>
 	// Issue a warning if trying to preview an exported project on disk.
@@ -172,6 +292,46 @@
 	     listener saw it, which breaks a control the game ships with.
 	     =================================================================== -->
 	<script>
+	// DeHub: drive the boot screen from the runtime's own progress, and retire
+	// it when the runtime says it has finished loading.
+	//
+	// `cr_getC2Runtime` is a global the Construct 2 export already publishes, so
+	// this reads the engine's real state rather than guessing on a timer — but
+	// it IS an engine handle, so src/test/arcade.test.ts asserts it survives a
+	// re-vendor. `loadingprogress` is 0..1; `isloading` flips false when every
+	// texture and sound is in.
+	(function () {
+		var boot = document.getElementById('dehub-boot');
+		var bar = document.getElementById('dehub-boot-bar');
+		// Belt and braces: if the handle ever disappears, the screen must not
+		// sit there forever over a game that is already playable.
+		var giveUpAt = Date.now() + 60000;
+
+		function finish() {
+			boot.classList.add('is-done');
+			window.setTimeout(function () { boot.remove(); }, 400);
+		}
+
+		(function poll() {
+			var rt = (typeof cr_getC2Runtime === 'function') ? cr_getC2Runtime() : null;
+			if (rt) bar.style.width = Math.round((rt.loadingprogress || 0) * 100) + '%';
+			if ((rt && !rt.isloading) || Date.now() > giveUpAt) {
+				bar.style.width = '100%';
+				window.setTimeout(finish, 140);
+				return;
+			}
+			window.setTimeout(poll, 100);
+		}());
+	}());
+
+	// DeHub: let someone who cannot rotate play anyway.
+	(function () {
+		var b = document.getElementById('dehub-rotate-dismiss');
+		b.addEventListener('click', function () {
+			document.body.classList.add('dehub-rotate-dismissed');
+		});
+	}());
+
 	(function () {
 		// Gated on being embedded, so a standalone deploy — which has nothing
 		// to return to — never grows a button that does nothing.
