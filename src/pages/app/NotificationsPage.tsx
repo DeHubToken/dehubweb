@@ -7,7 +7,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -256,7 +256,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip', 'bounty_available', 'bounty_claimed'],
-  livestreams: ['livestream_start'],
+  livestreams: ['livestream_start', 'stage_live', 'stage_reminder'],
 };
 
 /**
@@ -305,6 +305,9 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'feature_request_comment':
     case 'governance_comment':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
+    case 'stage_live':
+    case 'stage_reminder':
+      return <Radio className="w-4 h-4 text-white/70" />;
     case 'tip':
       return <Gem className="w-4 h-4 text-white/70" />;
     case 'subscription':
@@ -501,6 +504,14 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} commented on your feature request "${title}"` : `${actorName} commented on your feature request`;
   }
+  if ((notification.type as string) === 'stage_live') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName}'s stage "${title}" is live — tap to listen in` : `${actorName} is live on a stage`;
+  }
+  if ((notification.type as string) === 'stage_reminder') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `"${title}" is starting soon` : 'A stage you set a reminder for is starting soon';
+  }
   if ((notification.type as string) === 'governance_vote') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} voted on your proposal "${title}"` : `${actorName} voted on your proposal`;
@@ -652,6 +663,13 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_comment') {
     const refId = (notification as any)._customReferenceId;
     return refId ? `/app/governance/${refId}` : '/governance';
+  }
+  if ((notification.type as string) === 'stage_live' || (notification.type as string) === 'stage_reminder') {
+    // reference_id carries the short id when the stage has one, else the uuid —
+    // route to whichever link form matches.
+    const refId = (notification as any)._customReferenceId;
+    if (!refId) return '/stages';
+    return /^\d+$/.test(refId) ? `/stages/${refId}` : `/stage/${refId}`;
   }
 
   // Comment-type notifications should auto-open comments on the post

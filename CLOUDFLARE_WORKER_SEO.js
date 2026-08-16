@@ -1218,6 +1218,78 @@ ${event.location ? `<p>${escHtml(event.location)}</p>` : ''}
   });
 }
 
+/**
+ * Host avatar as an absolute URL. audio_spaces.host_avatar stores whatever the
+ * API handed the client — usually the relative "statics/avatars/0x….png" —
+ * and avatar files are served by the CDN, not api.dehub.io (which 404s them).
+ * Mirrors the client's buildAvatarSourceUrl, minus the cache-bust it can't
+ * compute here.
+ */
+const DEHUB_CDN_BASE = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/';
+function stageHostAvatarUrl(stage) {
+  const p = stage.host_avatar || '';
+  if (!p) return null;
+  if (p.startsWith('http')) return p;
+  const path = p.startsWith('statics/') ? p.slice('statics/'.length) : p;
+  return path.includes('/') ? `${DEHUB_CDN_BASE}${path}` : null;
+}
+
+function buildStageHtml(stage) {
+  const canonicalUrl = stage.short_id != null
+    ? `${APP_URL}/stages/${stage.short_id}`
+    : `${APP_URL}/stage/${stage.id}`;
+  const host = stage.host_username ? `@${stage.host_username}` : 'a DeHub host';
+  const isLive = stage.status === 'live';
+  const isScheduled = stage.status === 'scheduled';
+  const name = stage.title || 'Live Stage';
+  const title = isScheduled
+    ? `${name} — Upcoming Stage on DeHub`
+    : isLive
+      ? `${name} — Live now on DeHub`
+      : `${name} — Stage on DeHub`;
+  const when = isScheduled && stage.scheduled_at ? new Date(stage.scheduled_at).toUTCString() : '';
+  const description = truncate(
+    stage.description ||
+      (isScheduled
+        ? `Live audio Stage hosted by ${host} on DeHub${when ? ` · ${when}` : ''}. Set a reminder or add it to your calendar.`
+        : isLive
+          ? `Live audio Stage hosted by ${host} on DeHub — listen in now, no account needed.`
+          : `A recorded audio Stage hosted by ${host} on DeHub.`),
+    200,
+  );
+  // The share image is the stage's own cover when the host set one; failing
+  // that, the host's profile picture — a face beats a generic banner.
+  const image = stage.cover_image_url || stageHostAvatarUrl(stage);
+  const startsAt = stage.scheduled_at || stage.started_at || '';
+
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image,
+    ogType: 'website',
+    // A finished stage is shareable by whoever holds the link, not crawlable.
+    noindex: stage.status === 'ended',
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/stages" style="color:#9f9">Stages</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
+<p>Hosted by ${escHtml(host)}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'BroadcastEvent',
+      name,
+      description,
+      url: canonicalUrl,
+      isLiveBroadcast: isLive,
+      ...(startsAt ? { startDate: startsAt } : {}),
+      ...(stage.ended_at ? { endDate: stage.ended_at } : {}),
+      ...(image ? { image } : {}),
+      publishedOn: { '@type': 'BroadcastService', name: 'DeHub Stages', url: `${APP_URL}/stages` },
+    },
+  });
+}
+
 function buildGuidePageHtml(slug, meta) {
   const canonicalUrl = `${APP_URL}/guides/${slug}`;
   return `<!DOCTYPE html>
@@ -2175,6 +2247,37 @@ async function handleRequest(request, env) {
       return guard(new Response(buildEventHtml(event), {
         status: 200,
         headers: event.is_private
+          ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' }
+          : blogHeaders,
+      }));
+    }
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    }));
+  }
+
+  // Stage invite links: /stages/<n> is the short share form
+  // (audio_spaces.short_id), /stage/<uuid> the original. Same PostgREST path
+  // as stores and events — anon-readable row, publishable key. The share image
+  // is the stage cover, else the host's profile picture, so every stage link
+  // unfurls with its own art rather than the generic card.
+  const stageShortMatch = cleanPath.match(/^\/stages\/(\d+)$/);
+  const stageIdMatch = cleanPath.match(/^\/stage\/([0-9a-fA-F-]{16,})$/);
+  if (stageShortMatch || stageIdMatch) {
+    const stage = await supabaseRow(
+      stageShortMatch
+        ? `audio_spaces?short_id=eq.${stageShortMatch[1]}&select=*&limit=1`
+        : `audio_spaces?id=eq.${encodeURIComponent(stageIdMatch[1])}&select=*&limit=1`,
+    );
+    if (stage) {
+      return guard(new Response(buildStageHtml(stage), {
+        status: 200,
+        headers: stage.status === 'ended'
           ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' }
           : blogHeaders,
       }));
