@@ -15,6 +15,7 @@
 
 import { useRef, useState } from 'react';
 import { format } from 'date-fns';
+import { stageUtcClock } from '@/lib/stage-time';
 import { Calendar, Loader2, ImagePlus, X, Check, Copy, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -146,7 +147,10 @@ export function ScheduleStagePanel({
           </div>
           <h3 className="text-white font-semibold">Stage scheduled</h3>
           {at && (
-            <p className="text-sm text-white/60">{format(at, 'EEEE, d MMMM · h:mm a')}</p>
+            <p className="text-sm text-white/60">
+              {format(at, 'EEEE, d MMMM · h:mm a')}
+              <span className="text-white/40"> · {stageUtcClock(at)}</span>
+            </p>
           )}
           <p className="text-xs text-white/40 max-w-[280px]">
             It's on the Upcoming shelf now. Share the link and it opens as a card
@@ -159,7 +163,7 @@ export function ScheduleStagePanel({
             // Pre-filled, not published: the composer still asks for the mint.
             openPostModal(
               at
-                ? `🎙️ ${scheduled.title} — live on Stages ${format(at, 'EEE d MMM, h:mm a')}\n\n${link}`
+                ? `🎙️ ${scheduled.title} — live on Stages ${format(at, 'EEE d MMM')}, ${stageUtcClock(at)}\n\n${link}`
                 : `🎙️ ${scheduled.title} — live on Stages\n\n${link}`,
             );
             onDone();
@@ -236,6 +240,13 @@ export function ScheduleStagePanel({
         />
         {when && !isValidTime && (
           <p className="text-xs text-red-400">Pick a time in the future.</p>
+        )}
+        {/* The input is in the host's own timezone with nothing saying so —
+            echo the UTC the audience will be told, while it can still be changed. */}
+        {when && isValidTime && (
+          <p className="text-xs text-white/40">
+            Announced as {stageUtcClock(new Date(when))}
+          </p>
         )}
       </div>
 
