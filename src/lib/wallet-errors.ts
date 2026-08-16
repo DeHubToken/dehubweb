@@ -81,6 +81,28 @@ export function isRequestAlreadyPending(error: unknown): boolean {
   return causeChain(error).some((entry) => codeOf(entry) === -32002);
 }
 
+/**
+ * Thrown by the auth path when a wallet request neither resolves nor rejects.
+ *
+ * This is the failure the other guards can never see: a signature request
+ * fired while the wallet's connect popup was still closing gets queued and
+ * never surfaced, so the promise just sits there. Nothing settles, so nothing
+ * is thrown, so nothing is logged — and every `finally` that was going to
+ * release the login state never runs. Racing the request against a timer is
+ * the only way to turn that silence into an error the flow can recover from.
+ */
+export class WalletRequestTimeoutError extends Error {
+  constructor(operation: string, afterMs: number) {
+    super(`Wallet ${operation} request went unanswered for ${Math.round(afterMs / 1000)}s`);
+    this.name = 'WalletRequestTimeoutError';
+  }
+}
+
+/** Did the wallet simply never answer? (See WalletRequestTimeoutError.) */
+export function isRequestTimeout(error: unknown): boolean {
+  return causeChain(error).some((entry) => entry.name === 'WalletRequestTimeoutError');
+}
+
 export type WalletErrorReport = {
   /** Name of the outermost error, e.g. `UserRejectedRequestError`. */
   errorName?: string;
