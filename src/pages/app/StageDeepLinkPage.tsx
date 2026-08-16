@@ -39,6 +39,8 @@ import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { downloadStageIcs } from '@/lib/stage-calendar';
 import { stageUtcClock } from '@/lib/stage-time';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
+import { StageHostLink } from '@/components/app/stages/StageHostLink';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -186,12 +188,18 @@ export default function StageDeepLinkPage() {
             )}
 
             <div className="flex items-center gap-2 mt-4">
-              <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
-                {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
-              </div>
-              <span className="text-sm text-zinc-400">
-                Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
-              </span>
+              <StageHostLink
+                space={stage}
+                avatarUrl={avatar || undefined}
+                className="group/host flex items-center gap-2 min-w-0"
+              >
+                <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
+                  {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
+                </div>
+                <span className="text-sm text-zinc-400 group-hover/host:text-white transition-colors">
+                  Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+                </span>
+              </StageHostLink>
             </div>
 
             <div className="flex gap-2 mt-5">
@@ -216,20 +224,16 @@ export default function StageDeepLinkPage() {
                   Start now
                 </button>
               ) : isAuthenticated ? (
-                <button
+                <Button
                   onClick={toggleReminder}
                   disabled={isToggling}
                   aria-pressed={hasReminder}
-                  className={cn(
-                    'flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-60',
-                    hasReminder
-                      ? 'bg-white/10 hover:bg-white/20 text-white'
-                      : 'bg-white text-black hover:bg-white/90',
-                  )}
+                  variant={hasReminder ? 'secondary' : 'default'}
+                  className="flex-1 h-auto py-2.5"
                 >
                   {hasReminder ? <BellRing className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
                   {hasReminder ? 'Reminder set' : 'Remind me'}
-                </button>
+                </Button>
               ) : (
                 <button
                   onClick={() => navigate('/app')}
@@ -305,12 +309,18 @@ export default function StageDeepLinkPage() {
             )}
 
             <div className="flex items-center gap-2 mt-4">
-              <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
-                {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
-              </div>
-              <span className="text-sm text-zinc-400">
-                Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
-              </span>
+              <StageHostLink
+                space={stage}
+                avatarUrl={avatar || undefined}
+                className="group/host flex items-center gap-2 min-w-0"
+              >
+                <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
+                  {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
+                </div>
+                <span className="text-sm text-zinc-400 group-hover/host:text-white transition-colors">
+                  Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+                </span>
+              </StageHostLink>
             </div>
 
             <div className="flex gap-2 mt-5">

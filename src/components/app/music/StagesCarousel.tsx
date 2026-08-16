@@ -11,6 +11,7 @@ import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLiveSpaces } from '@/contexts/StageContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -24,7 +25,10 @@ interface StagesCarouselProps {
 
 function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void }) {
   const totalListeners = (space.speaker_count || 1) + (space.listener_count || 0);
-  
+  const avatar =
+    buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
+    buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
+
   return (
     <button
       onClick={onClick}
@@ -42,32 +46,35 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
         </div>
       </div>
       
-      {/* Host info */}
+      {/* Host info — backlinks to the host's profile */}
       <div className="flex items-center gap-3 mb-3">
-        <div className="relative">
-          <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden">
-            {(() => {
-              const resolvedAvatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
-                || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
-              return resolvedAvatar ? (
-                <img src={resolvedAvatar} alt="" className="w-full h-full object-cover" />
+        <StageHostLink
+          space={space}
+          avatarUrl={avatar || undefined}
+          nested
+          className="group/host flex items-center gap-3 min-w-0 flex-1"
+        >
+          <div className="relative">
+            <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden">
+              {avatar ? (
+                <img src={avatar} alt="" className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
                   {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
                 </div>
-              );
-            })()}
+              )}
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-700 rounded-full flex items-center justify-center">
+              <Mic2 className="w-3 h-3 text-white" />
+            </div>
           </div>
-          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-700 rounded-full flex items-center justify-center">
-            <Mic2 className="w-3 h-3 text-white" />
+          <div className="min-w-0 flex-1">
+            <p className="text-zinc-500 text-[10px]">Hosted by</p>
+            <p className="text-white text-xs font-medium truncate group-hover/host:underline">
+              @{space.host_username || space.host_wallet_address?.slice(0, 6)}
+            </p>
           </div>
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-zinc-500 text-[10px]">Hosted by</p>
-          <p className="text-white text-xs font-medium truncate">
-            @{space.host_username || space.host_wallet_address?.slice(0, 6)}
-          </p>
-        </div>
+        </StageHostLink>
       </div>
       
       {/* Title */}
