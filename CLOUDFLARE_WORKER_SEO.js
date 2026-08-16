@@ -22,6 +22,7 @@
 // esbuild can bundle it here and vite can bundle it there). SYSTEM_ROUTES below
 // is derived from it — see the comment there.
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
+import { MILESTONE_REDIRECTS } from './src/lib/blog-redirects.js';
 
 const SUPABASE_FN_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
 const SUPABASE_FUNCTION_URL = `${SUPABASE_FN_BASE}/ssr-seo`;
@@ -1806,6 +1807,24 @@ async function handleRequest(request, env) {
   };
   const legalTarget = LEGAL_REDIRECTS[trimmedPath.toLowerCase()];
   if (legalTarget) return redirect301(`${APP_URL}${legalTarget}`);
+
+  // Milestone-archive posts superseded by a hand-written article on the same
+  // event. They were hidden from the blog index by `excludedTitles`, but the
+  // manifest generator never consulted that list — so each stayed in
+  // sitemap-static.xml and kept answering at its own URL: an orphan page,
+  // submitted to Google, reachable by no link on the site, duplicating the
+  // post that replaced it.
+  //
+  // See src/lib/blog-redirects.js. The generator reads the same map and drops
+  // these from the manifest, blog-content/, sitemap and rss, so we never
+  // submit a URL we redirect.
+  //
+  // Ahead of the SSR branches on purpose: these have to 301 for crawlers as
+  // well as browsers, or the duplicate simply stays in the index.
+  if (trimmedPath.startsWith('/guides/')) {
+    const supersededBy = MILESTONE_REDIRECTS[trimmedPath.slice('/guides/'.length)];
+    if (supersededBy) return redirect301(`${APP_URL}/guides/${supersededBy}`);
+  }
 
   // Routes the SPA answers with <Navigate> (App.tsx). Bots never run that JS,
   // so both resolved somewhere a human can never land: /radio is in
