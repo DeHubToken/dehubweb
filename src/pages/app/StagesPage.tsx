@@ -46,6 +46,17 @@ const STAGES_TABS: { icon: typeof Radio; label: string; value: StagesTab }[] = [
 ];
 
 /**
+ * Space reserved above a card's text for the cover art alone.
+ *
+ * 1.91:1 is the social share-card ratio, so the crop a host sees here is the
+ * crop their link preview gets. It is a ratio rather than a height so it holds
+ * on every screen — a fixed height turns into a letterbox strip on a wide card
+ * and swallows a narrow one. The cap stops a full-width desktop card from
+ * running to 600px of artwork before a word of text.
+ */
+const STAGE_ART_RATIO = 'w-full aspect-[1.91/1] max-h-[360px]';
+
+/**
  * A stage that has been announced but has not started.
  *
  * Leads with the cover graphic when the host set one — an announcement in a
@@ -95,7 +106,12 @@ function ScheduledStageCard({
             loading="lazy"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50" />
+          {/* Text scrim only — the art above it stays clear. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
+          />
+          <div aria-hidden className={STAGE_ART_RATIO} />
         </>
       )}
 
@@ -212,6 +228,9 @@ function LiveStageCard({
   const avatar =
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
     buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
+  // A stage started from an announcement keeps its cover, so a live room has
+  // artwork to show as often as an upcoming one does.
+  const hasCover = !!space.cover_image_url;
 
   return (
     <button
@@ -219,51 +238,71 @@ function LiveStageCard({
       disabled={isLoading}
       data-page-bento
       className={cn(
-        'group w-full text-left bg-zinc-900 rounded-2xl p-4 flex flex-col transition-colors disabled:opacity-60',
+        'group relative w-full overflow-hidden text-left rounded-2xl flex flex-col transition-colors disabled:opacity-60',
         'border border-transparent hover:border-white/15',
+        hasCover ? '' : 'bg-zinc-900',
       )}
     >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/20">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
-          </span>
-          <span className="text-red-400 text-xs font-medium">
-            {isCurrent ? 'IN THIS STAGE' : 'LIVE'}
-          </span>
-        </div>
-        <div className="flex items-center gap-1 text-zinc-400 text-xs">
-          {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Users className="w-3.5 h-3.5" />}
-          <span>{totalListeners}</span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
-          {avatar ? (
-            <img src={avatar} alt="" className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
-              {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
-            </div>
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-zinc-500 text-[10px]">Hosted by</p>
-          <p className="text-white text-xs font-medium truncate">
-            @{space.host_username || space.host_wallet_address?.slice(0, 6)}
-          </p>
-        </div>
-      </div>
-
-      <h3 className="text-white font-semibold text-sm line-clamp-2">{space.title}</h3>
-      {space.description && (
-        <p className="text-zinc-500 text-xs mt-1 line-clamp-2">{space.description}</p>
+      {hasCover && (
+        <>
+          <img
+            src={space.cover_image_url!}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
+          />
+          <div aria-hidden className={STAGE_ART_RATIO} />
+        </>
       )}
 
-      <div className="mt-3 h-10 rounded-lg overflow-hidden">
-        <LiveWaveform active barCount={60} barColor={isPaper ? '0, 0, 0' : undefined} />
+      <div className="relative p-4 flex flex-col flex-1">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/20">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+            </span>
+            <span className="text-red-400 text-xs font-medium">
+              {isCurrent ? 'IN THIS STAGE' : 'LIVE'}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 text-zinc-400 text-xs">
+            {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Users className="w-3.5 h-3.5" />}
+            <span>{totalListeners}</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
+            {avatar ? (
+              <img src={avatar} alt="" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
+                {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-zinc-500 text-[10px]">Hosted by</p>
+            <p className="text-white text-xs font-medium truncate">
+              @{space.host_username || space.host_wallet_address?.slice(0, 6)}
+            </p>
+          </div>
+        </div>
+
+        <h3 className="text-white font-semibold text-sm line-clamp-2">{space.title}</h3>
+        {space.description && (
+          <p className="text-zinc-500 text-xs mt-1 line-clamp-2">{space.description}</p>
+        )}
+
+        <div className="mt-3 h-10 rounded-lg overflow-hidden">
+          <LiveWaveform active barCount={60} barColor={isPaper ? '0, 0, 0' : undefined} />
+        </div>
       </div>
     </button>
   );

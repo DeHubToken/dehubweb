@@ -164,7 +164,13 @@ export default function StageDeepLinkPage() {
                 aria-hidden
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/60" />
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
+              />
+              {/* Share-card expanse of clear art above the text — same ratio
+                  the link preview itself gets. */}
+              <div aria-hidden className="w-full aspect-[1.91/1] max-h-[420px]" />
             </>
           )}
           <div className={stage.cover_image_url ? 'relative p-6' : 'relative p-6 bg-zinc-900'}>
@@ -295,7 +301,13 @@ export default function StageDeepLinkPage() {
                 aria-hidden
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/60" />
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
+              />
+              {/* Share-card expanse of clear art above the text — same ratio
+                  the link preview itself gets. */}
+              <div aria-hidden className="w-full aspect-[1.91/1] max-h-[420px]" />
             </>
           )}
           <div className={stage.cover_image_url ? 'relative p-6' : 'relative p-6 bg-zinc-900'}>
