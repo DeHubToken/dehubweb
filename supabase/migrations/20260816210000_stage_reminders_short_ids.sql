@@ -33,9 +33,13 @@ SET short_id = o.rn
 FROM ordered o
 WHERE a.id = o.id;
 
+-- The third argument matters on an empty table: two-arg setval marks the value
+-- as already used, so the first stage would come out as 2 and /stages/1 would
+-- never exist. is_called = false when there is nothing to renumber.
 SELECT setval(
   pg_get_serial_sequence('public.audio_spaces', 'short_id'),
-  GREATEST((SELECT COALESCE(max(short_id), 0) FROM public.audio_spaces), 1)
+  GREATEST((SELECT COALESCE(max(short_id), 0) FROM public.audio_spaces), 1),
+  EXISTS (SELECT 1 FROM public.audio_spaces)
 );
 
 ALTER TABLE public.audio_spaces

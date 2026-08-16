@@ -38,6 +38,7 @@ import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { dehubLinkFor } from '@/lib/dehub-links';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -176,7 +177,7 @@ export function AudioSpacesModal() {
 
   const handleCopyInviteLink = () => {
     if (!currentSpace) return;
-    const url = `${window.location.origin}/stage/${currentSpace.id}`;
+    const url = dehubLinkFor.stage(currentSpace);
     navigator.clipboard.writeText(url).then(() => {
       toast.success('Invite link copied!');
     }).catch(() => {
