@@ -29,6 +29,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { PastStagesList } from '@/components/app/stages/PastStagesList';
+import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { supabase } from '@/integrations/supabase/client';
@@ -165,6 +166,8 @@ function ScheduledStageCard({
         {space.description && (
           <p className="text-zinc-500 text-xs mt-1 line-clamp-2">{space.description}</p>
         )}
+
+        <StageReminderFaces spaceId={space.id} className="mt-2.5" />
 
         {isHost && (
           <div className="flex gap-2 mt-3">
