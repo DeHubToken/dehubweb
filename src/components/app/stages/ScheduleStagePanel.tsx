@@ -135,7 +135,7 @@ export function ScheduleStagePanel({
   // ── Success state ────────────────────────────────────────────────────────
 
   if (scheduled) {
-    const link = dehubLinkFor.stage(scheduled.id);
+    const link = dehubLinkFor.stage(scheduled);
     const at = scheduled.scheduled_at ? new Date(scheduled.scheduled_at) : null;
 
     return (
