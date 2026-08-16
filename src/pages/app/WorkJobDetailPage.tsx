@@ -10,6 +10,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function WorkJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -38,7 +39,12 @@ export default function WorkJobDetailPage() {
   const [showDispute, setShowDispute] = useState(false);
 
   if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">Loading…</div>;
-  if (!job) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">Job not found.</div>;
+  if (!job) return (
+    <div className="max-w-3xl mx-auto px-4 py-16 text-center text-white/60">
+      <ThemedIcon icon="bounties" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
+      Job not found.
+    </div>
+  );
 
   const me = walletAddress?.toLowerCase();
   const isPoster = me === job.poster_address.toLowerCase();

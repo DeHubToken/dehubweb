@@ -36,6 +36,7 @@ import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 import { TranscriptSection } from '@/components/app/post-info/TranscriptSection';
 import { SEOHead } from '@/components/SEOHead';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 // Visibility options configuration
 const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
@@ -723,6 +724,7 @@ export default function PostInfoPage() {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center p-8 text-center">
+          <ThemedIcon icon="posts" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
           <p className="text-white/60 mb-4">{error?.message || 'Post not found'}</p>
           <button
             onClick={() => navigate(-1)}

@@ -1,12 +1,11 @@
-import { Gift, Eye, MessageCircle, Coins } from 'lucide-react';
+import { Eye, MessageCircle, Coins } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export function W2EFeed() {
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center mb-4">
-          <Gift className="w-8 h-8 text-white" />
-        </div>
+        <ThemedIcon icon="bounties" alt="" className="w-16 h-16 object-contain mb-4" />
         <h3 className="text-xl font-semibold text-white mb-2">Bounty</h3>
         <p className="text-zinc-400 max-w-md">
           Earn rewards by watching content and engaging with creators.

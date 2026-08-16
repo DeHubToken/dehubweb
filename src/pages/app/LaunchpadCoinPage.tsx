@@ -7,6 +7,7 @@ import { useLaunchpadTrades } from '@/hooks/use-launchpad-trades';
 import { TradePanel } from '@/components/app/launchpad/TradePanel';
 import { BondingCurveProgress } from '@/components/app/launchpad/BondingCurveProgress';
 import { FeeBreakdown } from '@/components/app/launchpad/FeeBreakdown';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 function fmtUsd(n: number) {
   if (n >= 1_000_000) return `$${(n/1_000_000).toFixed(2)}M`;
@@ -23,11 +24,17 @@ export default function LaunchpadCoinPage() {
 
   if (isLoading) return <div className="p-6 text-white/60">Loading…</div>;
   if (isError) return (
-    <div className="p-6 text-center text-white/60">
+    <div className="p-6 pt-16 text-center text-white/60">
+      <ThemedIcon icon="search" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
       Couldn't load coin. <button onClick={() => refetch()} className="text-white underline">Retry</button>
     </div>
   );
-  if (!token) return <div className="p-6 text-white/60">Coin not found.</div>;
+  if (!token) return (
+    <div className="p-6 pt-16 text-center text-white/60">
+      <ThemedIcon icon="search" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
+      Coin not found.
+    </div>
+  );
 
   const target = Number(token.graduation_target_usd) || 42000;
   // Chart scale — computed once, not per bar (the old inline version spread

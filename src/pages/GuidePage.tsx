@@ -22,6 +22,7 @@ import screenshotGovernance from "@/assets/guide/governance.png";
 import screenshotCommandCentre from "@/assets/guide/command-centre.png";
 import screenshotTv from "@/assets/guide/tv.png";
 import { SEOHead } from "@/components/SEOHead";
+import { ThemedIcon } from "@/components/app/war/WarHudIcon";
 import { useFeedSwallowClip } from "@/hooks/use-feed-swallow-clip";
 
 /* ------------------------------------------------------------------ */
@@ -858,7 +859,7 @@ const GuidePage: React.FC = () => {
           {/* Empty state */}
           {isSearching && filteredSections.length === 0 && (
             <div className="bg-white/5 border border-white/10 rounded-2xl p-10 text-center">
-              <Search className="w-10 h-10 text-white/10 mx-auto mb-4" />
+              <ThemedIcon icon="search" alt="" className="w-14 h-14 object-contain mx-auto mb-4 opacity-55" />
               <p className="text-white/40 text-sm mb-2">No matching sections found.</p>
               <p className="text-white/20 text-xs">Try different keywords or browse all sections.</p>
             </div>

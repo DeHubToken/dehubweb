@@ -1,4 +1,4 @@
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -514,7 +514,7 @@ export default function MessagesPage() {
             {/* Error State */}
             {isError && (
               <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                <MessageCircle className="w-12 h-12 text-zinc-600 mb-4" />
+                <ThemedIcon icon="messages" alt="" className="w-14 h-14 object-contain mb-4 opacity-70" />
                 <p className="text-zinc-400 mb-4">{t('messages.failedToLoad')}</p>
                 <Button 
                   variant="outline" 
@@ -531,6 +531,7 @@ export default function MessagesPage() {
             {/* Empty state */}
             {!isLoading && !isError && !searchQuery.trim() && (conversations?.length ?? 0) === 0 && (
               <div className="text-center py-8 px-4">
+                <ThemedIcon icon="messages" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-60" />
                 <p className="text-zinc-500 text-sm">{t('messages.noConversationsYet', 'No conversations yet — say hi to someone')}</p>
               </div>
             )}

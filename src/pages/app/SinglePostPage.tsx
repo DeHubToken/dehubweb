@@ -27,7 +27,8 @@ import {
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo } from 'react';
-import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, Flag, Link2, Gem, Pencil, Trash2 } from 'lucide-react';
+import { Clock, ArrowLeft, Sparkles, MoreVertical, Flag, Link2, Gem, Pencil, Trash2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useTranslation as useI18n } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -432,9 +433,7 @@ function ProcessingState() {
 function NotFoundState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
-        <AlertCircle className="w-8 h-8 text-zinc-400" />
-      </div>
+      <ThemedIcon icon="posts" alt="" className="w-16 h-16 object-contain mb-4 opacity-80" />
       <h2 className="text-xl font-semibold text-white mb-2">Post Not Found</h2>
       <p className="text-zinc-400 max-w-md">
         This post may have been removed or the link is incorrect.

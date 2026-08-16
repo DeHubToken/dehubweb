@@ -5,6 +5,7 @@ import { useWorkJob, useUpdateJob, isJobEditable, isBudgetEditable } from '@/fea
 import type { WorkJob, WorkCurrency, WorkJobType, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const PLATFORMS: WorkPlatform[] = ['x', 'youtube', 'instagram', 'tiktok', 'facebook', 'reddit', 'other'];
 
@@ -67,7 +68,12 @@ export default function WorkEditPage() {
     return <div className="max-w-2xl mx-auto px-4 py-10 text-white/60">Loading…</div>;
   }
   if (!job) {
-    return <div className="max-w-2xl mx-auto px-4 py-10 text-white/60">Bounty not found.</div>;
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center text-white/60">
+        <ThemedIcon icon="bounties" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
+        Bounty not found.
+      </div>
+    );
   }
 
   const isPoster = !!walletAddress && walletAddress.toLowerCase() === job.poster_address.toLowerCase();
