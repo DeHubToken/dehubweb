@@ -1,13 +1,21 @@
 /**
- * StageDeepLinkPage - Handles /stage/:id invite links
+ * StageDeepLinkPage - Handles /stage/:id and /stages/:n invite links
  *
- * A live stage is joined straight away and the page bounces to the app, which
- * is what an invite link has always done. A *scheduled* stage has nothing to
- * join yet, so the same URL has to be able to stand still and be a page: it
- * shows the announcement — graphic, title, when — plus the host's own controls
- * to start it. Bouncing that case to /app (the old behaviour for anything
- * joinSpace refused) would make every announcement link look broken until the
- * moment it went live.
+ * One page, two URL shapes: /stage/<uuid> is the original invite link,
+ * /stages/<n> the short share form riding audio_spaces.short_id. Both resolve
+ * to the same row and render identically, so links already in the wild keep
+ * working.
+ *
+ * A live stage is joined straight away for a signed-in visitor and the page
+ * bounces to the app, which is what an invite link has always done. A
+ * signed-out visitor is NOT bounced: the link's whole promise is "come hear
+ * this", so the page becomes a listen-only player — Agora audience, no
+ * account — with the login path offered for anyone who wants a seat.
+ *
+ * A *scheduled* stage has nothing to join yet, so the same URL has to be able
+ * to stand still and be a page: it shows the announcement — graphic, title,
+ * when — plus a reminder bell (signed in), an add-to-calendar file (works for
+ * everyone), and the host's own controls to start it.
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
@@ -15,13 +23,16 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
-import { CalendarDays, Radio, Loader2, Copy } from 'lucide-react';
+import { CalendarDays, CalendarPlus, Radio, Loader2, Copy, Bell, BellRing, Headphones, Square, Users } from 'lucide-react';
 import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { dehubLinkFor } from '@/lib/dehub-links';
+import { useStageReminder } from '@/hooks/use-stage-reminders';
+import { downloadStageIcs } from '@/lib/stage-calendar';
+import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { toast } from 'sonner';
@@ -30,53 +41,65 @@ import type { AudioSpace } from '@/types/audio-spaces.types';
 export default function StageDeepLinkPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { joinSpace, currentSpace, openModal, startScheduledSpace } = useStage();
+  const {
+    joinSpace, currentSpace, openModal, startScheduledSpace,
+    guestListen, guestStopListening, guestSpace, isConnected, isLoading: stageActionBusy,
+  } = useStage();
   const { isAuthenticated, walletAddress } = useAuth();
   const joinedRef = useRef(false);
   const [starting, setStarting] = useState(false);
 
   const { data: stage, isLoading } = useQuery({
-    queryKey: ['stage-by-id', id],
+    queryKey: ['stage-by-param', id],
     enabled: !!id,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('id', id)
-        .single();
+      // The short link is all digits; anything else is the uuid form.
+      const base = supabase.from('audio_spaces').select('*');
+      const { data, error } = await (/^\d+$/.test(id!)
+        ? base.eq('short_id', Number(id))
+        : base.eq('id', id!)
+      ).single();
       if (error) throw error;
       return data as AudioSpace;
     },
   });
 
+  const { hasReminder, toggleReminder, isToggling } = useStageReminder(stage?.id);
+
+  // Stop a listen-only session when the page unmounts — for a guest, this page
+  // IS the player, and audio with no visible control is a haunting, not a
+  // feature. Tracked via ref so the unmount cleanup sees the latest state.
+  const guestActiveRef = useRef(false);
+  guestActiveRef.current = !!(stage && guestSpace?.id === stage.id);
   useEffect(() => {
-    if (!id || joinedRef.current || isLoading) return;
+    return () => {
+      if (guestActiveRef.current) void guestStopListening();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!stage || joinedRef.current || isLoading) return;
 
     // If already in this space, just open the modal
-    if (currentSpace?.id === id) {
+    if (currentSpace?.id === stage.id) {
       openModal('live');
       navigate('/app', { replace: true });
       return;
     }
 
-    // Only a live stage auto-joins. Scheduled stages render below; an ended one
-    // has nothing to join, so send it to the recorded shelf.
-    if (!stage) return;
+    // Only a live stage auto-joins, and only for someone who can hold a seat.
+    // A signed-out visitor gets the listen-only page rendered below instead of
+    // the old bounce to /app, which read as the link being broken.
     if (stage.status === 'ended') {
       navigate('/stages', { replace: true });
       return;
     }
-    if (stage.status !== 'live') return;
-
-    if (!isAuthenticated) {
-      // Not logged in — go home, modal will require auth
-      navigate('/app', { replace: true });
-      return;
-    }
+    if (stage.status !== 'live' || !isAuthenticated) return;
 
     joinedRef.current = true;
 
-    joinSpace(id)
+    joinSpace(stage.id)
       .then((success) => {
         if (success) {
           openModal('live');
@@ -89,7 +112,7 @@ export default function StageDeepLinkPage() {
         // user stuck on this spinner forever.
         navigate('/app', { replace: true });
       });
-  }, [id, isAuthenticated, stage, isLoading]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [stage, isAuthenticated, isLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isScheduled = stage?.status === 'scheduled';
   const startsAt = stage?.scheduled_at ? new Date(stage.scheduled_at) : null;
@@ -98,13 +121,22 @@ export default function StageDeepLinkPage() {
     !!walletAddress &&
     stage?.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase();
 
+  const copyLink = () => {
+    if (!stage) return;
+    navigator.clipboard.writeText(dehubLinkFor.stage(stage)).then(
+      () => toast.success('Link copied'),
+      () => toast.error('Could not copy link'),
+    );
+  };
+
+  const avatar = stage
+    ? buildAvatarUrl(stage.host_wallet_address || '', stage.host_avatar) ||
+      buildAvatarCdnFallbackUrl(stage.host_wallet_address || '')
+    : undefined;
+
   // ── Scheduled stage: the announcement, as a page ─────────────────────────
 
   if (isScheduled && stage) {
-    const avatar =
-      buildAvatarUrl(stage.host_wallet_address || '', stage.host_avatar) ||
-      buildAvatarCdnFallbackUrl(stage.host_wallet_address || '');
-
     return (
       <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
         <SEOHead
@@ -182,21 +214,39 @@ export default function StageDeepLinkPage() {
                   {starting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radio className="w-4 h-4" />}
                   Start now
                 </button>
+              ) : isAuthenticated ? (
+                <button
+                  onClick={toggleReminder}
+                  disabled={isToggling}
+                  aria-pressed={hasReminder}
+                  className={cn(
+                    'flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-60',
+                    hasReminder
+                      ? 'bg-white/10 hover:bg-white/20 text-white'
+                      : 'bg-white text-black hover:bg-white/90',
+                  )}
+                >
+                  {hasReminder ? <BellRing className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
+                  {hasReminder ? 'Reminder set' : 'Remind me'}
+                </button>
               ) : (
                 <button
-                  onClick={() => navigate('/stages')}
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
+                  onClick={() => navigate('/app')}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-sm font-medium transition-colors"
                 >
-                  Browse Stages
+                  Log in to get notified
                 </button>
               )}
               <button
-                onClick={() => {
-                  navigator.clipboard.writeText(dehubLinkFor.stage(stage.id)).then(
-                    () => toast.success('Link copied'),
-                    () => toast.error('Could not copy link'),
-                  );
-                }}
+                onClick={() => downloadStageIcs(stage)}
+                title="Add to calendar"
+                aria-label="Add to calendar"
+                className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
+              >
+                <CalendarPlus className="w-4 h-4" />
+              </button>
+              <button
+                onClick={copyLink}
                 aria-label="Copy invite link"
                 className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
               >
@@ -209,14 +259,124 @@ export default function StageDeepLinkPage() {
     );
   }
 
+  // ── Live stage, signed out: the page is the player ───────────────────────
+
+  if (stage && stage.status === 'live' && !isAuthenticated) {
+    const listening = guestSpace?.id === stage.id && isConnected;
+    const inRoom = Math.max(1, (stage.speaker_count || 1) + (stage.listener_count || 0));
+
+    return (
+      <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+        <SEOHead
+          title={`${stage.title} — Live on DeHub`}
+          description={
+            stage.description ||
+            'A live audio Stage on DeHub — listen in now, no account needed.'
+          }
+          noindex
+        />
+
+        <div className="relative w-full max-w-md rounded-2xl overflow-hidden border border-white/10">
+          {stage.cover_image_url && (
+            <>
+              <img
+                src={stage.cover_image_url}
+                alt=""
+                aria-hidden
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/60" />
+            </>
+          )}
+          <div className={stage.cover_image_url ? 'relative p-6' : 'relative p-6 bg-zinc-900'}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/20">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                </span>
+                <span className="text-red-400 text-[11px] font-medium">LIVE NOW</span>
+              </div>
+              <span className="flex items-center gap-1 text-zinc-400 text-xs">
+                <Users className="w-3.5 h-3.5" />
+                {inRoom}
+              </span>
+            </div>
+
+            <h1 className="text-white text-xl font-semibold">{stage.title}</h1>
+
+            {stage.description && (
+              <p className="text-zinc-400 text-sm mt-3">{stage.description}</p>
+            )}
+
+            <div className="flex items-center gap-2 mt-4">
+              <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
+                {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
+              </div>
+              <span className="text-sm text-zinc-400">
+                Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+              </span>
+            </div>
+
+            <div className="flex gap-2 mt-5">
+              <button
+                onClick={() => {
+                  if (listening) void guestStopListening();
+                  else void guestListen(stage.id);
+                }}
+                disabled={stageActionBusy}
+                className={cn(
+                  'flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-60',
+                  listening
+                    ? 'bg-white/10 hover:bg-white/20 text-white'
+                    : 'bg-white text-black hover:bg-white/90',
+                )}
+              >
+                {stageActionBusy ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : listening ? (
+                  <Square className="w-4 h-4" fill="currentColor" />
+                ) : (
+                  <Headphones className="w-4 h-4" />
+                )}
+                {listening ? 'Stop listening' : 'Listen in'}
+              </button>
+              <button
+                onClick={copyLink}
+                aria-label="Copy invite link"
+                className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
+              >
+                <Copy className="w-4 h-4" />
+              </button>
+            </div>
+
+            {listening && (
+              <p className="text-zinc-500 text-xs mt-3" role="status">
+                You're listening as a guest.
+              </p>
+            )}
+
+            <button
+              onClick={() => navigate('/app')}
+              className="w-full mt-3 px-4 py-2 rounded-xl text-zinc-400 hover:text-white text-xs transition-colors"
+            >
+              Log in to take the mic
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ── Live / loading ───────────────────────────────────────────────────────
 
   return (
     <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-white">
       {/* Shared invite links land here — without a title of its own, the page
           kept whatever document.title the previous route wrote. noindex to
-          match the edge (the worker noindexes /stage/*), self-canonical (a
-          cross-URL canonical alongside noindex is a mixed signal). */}
+          match the edge (the worker serves the real stage meta to crawlers),
+          self-canonical (a cross-URL canonical alongside noindex is a mixed
+          signal). */}
       <SEOHead
         title="Join a Live Stage — DeHub"
         description="You've been invited to a live audio Stage on DeHub. Join the room, listen in and take the mic on the decentralized social platform."

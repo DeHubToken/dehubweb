@@ -18,7 +18,7 @@ import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Link as LinkIcon } from 'lucide-react';
+import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Link as LinkIcon, Bell, BellRing } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { toast } from 'sonner';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -30,6 +30,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { PastStagesList } from '@/components/app/stages/PastStagesList';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { supabase } from '@/integrations/supabase/client';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -71,6 +72,9 @@ function ScheduledStageCard({
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
     buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
   const hasCover = !!space.cover_image_url;
+  const { isAuthenticated } = useAuth();
+  // The host starts the stage; a reminder is for everyone waiting on them.
+  const { hasReminder, toggleReminder, isToggling } = useStageReminder(space.id);
 
   return (
     <div
@@ -101,14 +105,33 @@ function ScheduledStageCard({
               {isOverdue ? 'Starting soon' : 'Upcoming'}
             </span>
           </div>
-          <button
-            onClick={onShare}
-            title="Copy invite link"
-            aria-label="Copy invite link"
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <LinkIcon className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-1">
+            {isAuthenticated && !isHost && (
+              <button
+                onClick={toggleReminder}
+                disabled={isToggling}
+                title={hasReminder ? 'Remove reminder' : 'Remind me when it starts'}
+                aria-label={hasReminder ? 'Remove reminder' : 'Remind me when it starts'}
+                aria-pressed={hasReminder}
+                className={cn(
+                  'w-7 h-7 rounded-lg flex items-center justify-center transition-colors disabled:opacity-60',
+                  hasReminder
+                    ? 'text-white bg-white/10 hover:bg-white/20'
+                    : 'text-white/40 hover:text-white hover:bg-white/10',
+                )}
+              >
+                {hasReminder ? <BellRing className="w-3.5 h-3.5" /> : <Bell className="w-3.5 h-3.5" />}
+              </button>
+            )}
+            <button
+              onClick={onShare}
+              title="Copy invite link"
+              aria-label="Copy invite link"
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <LinkIcon className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center gap-3 mb-3">
@@ -332,7 +355,7 @@ export default function StagesPage() {
               }
             }}
             onShare={() => {
-              navigator.clipboard.writeText(dehubLinkFor.stage(space.id)).then(
+              navigator.clipboard.writeText(dehubLinkFor.stage(space)).then(
                 () => toast.success('Link copied'),
                 () => toast.error('Could not copy link'),
               );
