@@ -550,6 +550,40 @@ export async function getPostLikers(
   });
 }
 
+export interface CommentLiker {
+  address: string;
+  username?: string | null;
+  displayName?: string | null;
+  avatarImageUrl?: string | null;
+  badgeBalance?: number;
+}
+
+export interface CommentLikersResponse {
+  result: boolean;
+  /**
+   * False for everyone but the comment's author, and then `data` is empty by
+   * design rather than because nobody liked it — same contract as post likers.
+   */
+  canViewLikers: boolean;
+  data: CommentLiker[];
+  pagination: { page: number; limit: number; totalCount: number; hasMore: boolean };
+}
+
+/**
+ * Who liked a comment — author-only, the comment-level sibling of
+ * getPostLikers. Comments only carry plain likes, so there is no reaction
+ * grouping here. Newest first.
+ */
+export async function getCommentLikers(
+  commentId: string | number,
+  page: number = 0,
+  limit: number = 50,
+): Promise<CommentLikersResponse> {
+  return apiCall<any>("/api/comment-likers", {
+    params: { commentId: String(commentId), page, limit },
+  });
+}
+
 /**
  * Quote posts that reference this token.
  *
