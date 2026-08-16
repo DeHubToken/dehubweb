@@ -8,6 +8,10 @@
  * to start it. Bouncing that case to /app (the old behaviour for anything
  * joinSpace refused) would make every announcement link look broken until the
  * moment it went live.
+ *
+ * The announcement runs full width at the top, and below it the page carries
+ * an ad slot and the latest text posts (RelatedPostsFeed), so a shared link
+ * lands on a living page rather than a lone card in empty space.
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
@@ -24,6 +28,7 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
@@ -106,7 +111,7 @@ export default function StageDeepLinkPage() {
       buildAvatarCdnFallbackUrl(stage.host_wallet_address || '');
 
     return (
-      <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+      <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
           title={`${stage.title} — Upcoming Stage on DeHub`}
           description={
@@ -116,7 +121,7 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full max-w-md rounded-2xl overflow-hidden border border-white/10">
+        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           {stage.cover_image_url && (
             <>
               <img
@@ -205,6 +210,8 @@ export default function StageDeepLinkPage() {
             </div>
           </div>
         </div>
+
+        <RelatedPostsFeed currentPostId={stage.id} />
       </div>
     );
   }
