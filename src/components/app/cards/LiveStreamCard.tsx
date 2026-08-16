@@ -22,6 +22,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
+import { StreamShopPinnedCard } from '../live/StreamShop';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -710,6 +711,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                 </div>
               </div>
             </div>
+
+            {/* The product the host has put "on air". Sits inside the player
+                container so it survives fullscreen, and above the control bar
+                so it never covers play/mute. Renders nothing until something
+                is pinned. */}
+            <StreamShopPinnedCard tokenId={stream.id} />
           </>
         )}
       </div>
