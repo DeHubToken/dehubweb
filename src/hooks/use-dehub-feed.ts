@@ -376,10 +376,10 @@ interface UseDeHubFeedOptions extends SearchNFTsParams {
 
 /**
  * Hook to fetch paginated DeHub feed content
- * By default, only shows minted (confirmed on-chain) content
+ * By default shows all published content — minted and off-chain ('signed') alike.
  */
 export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
-  const { enabled = true, status = 'minted', ...searchParams } = options;
+  const { enabled = true, status = 'all', ...searchParams } = options;
   const { isAuthenticated } = useAuth();
 
   // Fetch dynamic block list for authenticated users

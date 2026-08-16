@@ -267,7 +267,7 @@ if (typeof window !== "undefined") {
       limit: 20,
       sortBy: "createdAt",
       sortOrder: "desc",
-      status: "minted",
+      status: "all",
     }).catch(() => {});
   }
 }

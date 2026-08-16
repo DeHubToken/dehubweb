@@ -85,7 +85,7 @@ export function RelatedPostsFeed({ currentPostId }: RelatedPostsFeedProps) {
     queryFn: async ({ pageParam = 0 }) => {
       const response = await searchNFTs({
         sortMode: 'new',
-        status: 'minted',
+        status: 'all',
         postType: 'feed-simple',
         page: pageParam,
         unit: ITEMS_PER_PAGE,

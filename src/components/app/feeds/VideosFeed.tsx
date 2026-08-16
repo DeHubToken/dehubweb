@@ -563,7 +563,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     isPPV: contentFilters.ppv || undefined,
     hasBounty: contentFilters.w2e || undefined,
     isLocked: contentFilters.locked || undefined,
-    status: 'minted',
+    status: 'all',
     followingOnly: selectedSort.value === 'following' ? true : undefined,
   });
 
@@ -578,7 +578,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     postType: 'video',
     sortBy: 'createdAt',
     sortOrder: 'desc',
-    status: 'minted',
+    status: 'all',
   });
 
   useEffect(() => {

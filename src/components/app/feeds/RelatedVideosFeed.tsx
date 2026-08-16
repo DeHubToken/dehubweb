@@ -90,7 +90,7 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
     queryFn: async ({ pageParam = 0 }) => {
       const response = await searchNFTs({
         sortMode: 'new',
-        status: 'minted',
+        status: 'all',
         page: pageParam,
         unit: ITEMS_PER_PAGE,
       });
