@@ -220,7 +220,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
   const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
   const [ppvAmount, setPpvAmount] = useState(d?.ppvAmount ?? '');
-  const [ppvCurrency, setPpvCurrency] = useState<Currency>(d?.ppvCurrency ?? 'USD');
+  // DHB, not USD: a USD-priced PPV ships with no contract address, and both
+  // clients' unlock flows refuse it — a paywall nobody can pay through.
+  const [ppvCurrency, setPpvCurrency] = useState<Currency>(d?.ppvCurrency ?? 'DHB');
   const [isWatch2Earn, setIsWatch2Earn] = useState(d?.isWatch2Earn ?? false);
   const [w2eViews, setW2eViews] = useState(d?.w2eViews ?? '');
   const [w2eComments, setW2eComments] = useState(d?.w2eComments ?? '');
@@ -1003,14 +1005,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     
     try {
       // Determine post type based on media
-      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' = 'feed-simple';
+      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'feed-audio' = 'feed-simple';
       if (liveMode) {
         postType = 'live';
       } else if (hasVideo) {
         postType = 'video';
       } else if (hasAudio && !hasImage) {
-        // Standalone audio post (no images attached)
-        postType = 'audio';
+        // Standalone audio post (no images attached). 'feed-audio' is the
+        // server's canonical audio type (and the only one mobile filters on) —
+        // 'audio' was stored verbatim and split the audio catalogue in two.
+        postType = 'feed-audio';
       } else if (hasImage) {
         postType = 'feed-images';
       }
@@ -1027,9 +1031,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const [
         { getWeb3AuthSigner, mintOnChain, mintOnChainWithFee },
         { mintWithBounty, calculateTotalBounty, getDHBBalance },
+        { getERC20Balance },
       ] = await Promise.all([
         import('@/lib/contracts/stream-collection'),
         import('@/lib/contracts/stream-controller'),
+        import('@/lib/contracts/aa-utils'),
       ]);
 
       // Publishing off-chain touches no wallet at all.
@@ -1122,8 +1128,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             streamInfo.payPerViewContractAddress = splToken.address;
             streamInfo.payPerViewChainIds = [chainId];
           } else {
-            streamInfo.payPerViewTokenSymbol = ppvCurrency;
-            if (ppvCurrency === 'DHB' && evmChainConfig?.dhbToken) {
+            // EVM PPV is always DHB. Old drafts can still carry USD, which
+            // ships with no contract address and cannot be paid — coerce it.
+            streamInfo.payPerViewTokenSymbol = 'DHB';
+            if (evmChainConfig?.dhbToken) {
               streamInfo.payPerViewContractAddress = evmChainConfig.dhbToken;
               streamInfo.payPerViewChainIds = [chainId];
             }
@@ -1163,7 +1171,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       
       // Get thumbnail for video and audio posts - use stored blob if available
       let thumbnail: Blob | undefined;
-      const needsThumbnail = hasVideo || (postType === 'audio');
+      const needsThumbnail = hasVideo || (postType === 'feed-audio');
       const thumbnailSource = hasVideo ? media[0] : media.find(m => m.type === 'audio');
       
       if (needsThumbnail && thumbnailSource) {
@@ -1250,19 +1258,21 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       let postTitle = '';
       let postDescription = '';
 
-      if (postType === 'video' || postType === 'audio') {
+      if (postType === 'video' || postType === 'feed-audio') {
         // Video/Audio: use explicit title field, fallback to description as title
         if (titleText.trim()) {
-          postTitle = titleText.trim().slice(0, 100);
+          // 140 matches the input's maxLength, the edit endpoint's cap, and
+          // mobile — slicing to 100 silently lost the tail of a valid title.
+          postTitle = titleText.trim().slice(0, 140);
           postDescription = text.trim();
         } else {
           // No title provided — use description text as title, leave description empty
-          postTitle = text.trim().slice(0, 100) || ' ';
+          postTitle = text.trim().slice(0, 140) || ' ';
           postDescription = '';
         }
       } else if (showTitle && titleText.trim()) {
         // Text/Image posts with explicit title
-        postTitle = titleText.trim().slice(0, 100);
+        postTitle = titleText.trim().slice(0, 140);
         postDescription = text.trim();
       } else {
         // Image/Text posts: no title, everything goes to description
@@ -1313,12 +1323,35 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         feeForMint = mintFee ?? (await getMintFee(chainId));
         if (feeForMint?.chargeable && feeForMint.amount > 0 && !feeForMint.isNative) {
           try {
-            const balance = await getDHBBalance(
-              minterAddress,
-              chainId as import('@/components/app/ChainSelector').ChainId,
-            );
-            const needed = BigInt(Math.ceil(feeForMint.amount * 1e6)) * BigInt(1e12);
+            // Balance of the QUOTE's token at the QUOTE's decimals — reading
+            // chainConfig.dhbToken at a hardcoded 1e18 made any non-18-dp fee
+            // token look 10^12 more expensive and silently downgraded every
+            // post to off-chain.
+            const balance = feeForMint.tokenAddress
+              ? await getERC20Balance(
+                  feeForMint.tokenAddress,
+                  minterAddress,
+                  chainId as import('@/components/app/ChainSelector').ChainId,
+                )
+              : await getDHBBalance(
+                  minterAddress,
+                  chainId as import('@/components/app/ChainSelector').ChainId,
+                );
+            const needed =
+              (BigInt(Math.ceil(feeForMint.amount * 1e6)) *
+                BigInt(10) ** BigInt(feeForMint.decimals ?? 18)) /
+              BigInt(1e6);
             if (balance < needed) {
+              if (mintRequired) {
+                // A bounty post must mint — downgrading here would publish a
+                // post advertising a bounty with no tokens locked behind it.
+                toast.error(
+                  `Insufficient ${feeForMint.symbol} for the mint fee — top up to publish this bounty post.`,
+                  { id: 'mint-progress' },
+                );
+                setIsPosting(false);
+                return;
+              }
               console.log('[Mint] Short of DHB for the mint fee — publishing off-chain');
               shortfall = feeForMint;
               mintingThisPost = false;
@@ -1343,6 +1376,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           thumbnail,
           minterAddress,
           mintOptOut: !mintingThisPost,
+          scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
       );
@@ -1372,9 +1406,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         throw new Error('Invalid signature data from backend - missing v, r, or s');
       }
 
-      // Handle scheduled posts (skip on-chain minting)
-      if (scheduledDate) {
-        toast.success(`Post scheduled for ${scheduledDate.toLocaleString()}`, { id: 'mint-progress' });
+      // Scheduled: the server parked the token at status 'scheduled' and the
+      // cron publishes it later — skip the chain step entirely. Gate on the
+      // RESPONSE, not the picker: a date the server rejected (e.g. already in
+      // the past by submit time) publishes now, and claiming "scheduled"
+      // for it would be a lie.
+      if (mintResponse.scheduled) {
+        const when = mintResponse.scheduledAt ? new Date(mintResponse.scheduledAt) : scheduledDate;
+        toast.success(`Post scheduled for ${when ? when.toLocaleString() : 'later'}`, { id: 'mint-progress' });
         resetForm();
         onClose();
         return;
@@ -1640,7 +1679,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
       // Log mint failure to backend for debugging
       mintLogger.error(errorMsg, {
-        postType: hasVideo ? 'video' : hasAudio ? 'audio' : hasImage ? 'feed-images' : 'feed-simple',
+        postType: hasVideo ? 'video' : hasAudio ? 'feed-audio' : hasImage ? 'feed-images' : 'feed-simple',
         chainId,
         hadBounty: !!(isWatch2Earn && w2eTotal && w2eViews),
       }, error instanceof Error ? error : undefined);
