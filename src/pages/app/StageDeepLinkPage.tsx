@@ -40,6 +40,7 @@ import { downloadStageIcs } from '@/lib/stage-calendar';
 import { stageUtcClock } from '@/lib/stage-time';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
+import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
@@ -201,6 +202,8 @@ export default function StageDeepLinkPage() {
                 </span>
               </StageHostLink>
             </div>
+
+            <StageReminderFaces spaceId={stage.id} className="mt-3" />
 
             <div className="flex gap-2 mt-5">
               {isHost ? (
