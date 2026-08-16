@@ -3263,6 +3263,7 @@ export type Database = {
           shipping_address: string | null
           source: string
           status: string
+          payment_method: string
           stream_token_id: string | null
           tx_hash: string | null
           updated_at: string
@@ -3282,6 +3283,7 @@ export type Database = {
           shipping_address?: string | null
           source?: string
           status?: string
+          payment_method?: string
           stream_token_id?: string | null
           tx_hash?: string | null
           updated_at?: string
@@ -3301,6 +3303,7 @@ export type Database = {
           shipping_address?: string | null
           source?: string
           status?: string
+          payment_method?: string
           stream_token_id?: string | null
           tx_hash?: string | null
           updated_at?: string

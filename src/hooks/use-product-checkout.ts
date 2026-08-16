@@ -54,8 +54,26 @@ function authHeaders(walletAddress: string | null): Record<string, string> {
   return { 'x-wallet-address': walletAddress.toLowerCase(), 'x-dehub-token': token };
 }
 
+/** What the card rail can tell the buyer about a listing. */
+export interface CardQuote {
+  listingId: string;
+  title: string;
+  priceUsd: number;
+  grossCents: number;
+  available: boolean;
+  unavailableReason:
+    | 'seller_not_onboarded'
+    | 'digital_goods'
+    | 'below_minimum'
+    | 'above_maximum'
+    | 'sold_out'
+    | 'inactive'
+    | 'own_listing'
+    | null;
+}
+
 export async function callFn<T>(
-  fn: 'stream-products' | 'live-checkout',
+  fn: 'stream-products' | 'live-checkout' | 'store-checkout',
   body: Record<string, unknown>,
   walletAddress: string | null,
 ): Promise<T> {
@@ -156,4 +174,59 @@ export function useProductCheckout(tokenId: string | null) {
   });
 
   return { getQuote, buy };
+}
+
+/**
+ * The card rail, alongside `useProductCheckout`'s DHB one.
+ *
+ * Separate hook, separate edge function: the two rails answer different
+ * questions ("is this transfer on Base?" vs "did Stripe capture?") and have to
+ * keep working while the other is edited. What they share is the rule that
+ * matters — the server prices the sale and the server writes the order.
+ *
+ * There is no `confirm` here on purpose. A card payment becomes real when
+ * Stripe's webhook says so, not when the buyer's browser comes back; letting
+ * the return page settle an order would put two settlement paths on one
+ * PaymentIntent. The page polls `status` and waits.
+ */
+export function useCardCheckout(tokenId: string | null) {
+  const { walletAddress } = useAuth();
+
+  const getCardQuote = useMutation({
+    mutationFn: (listingId: string) =>
+      callFn<CardQuote>('store-checkout', { action: 'quote', tokenId, listingId }, walletAddress),
+  });
+
+  const payByCard = useMutation({
+    mutationFn: (params: { listingId: string; shippingAddress: string; notes?: string }) =>
+      callFn<{ checkoutUrl: string; sessionId: string }>(
+        'store-checkout',
+        {
+          action: 'create_session',
+          tokenId,
+          listingId: params.listingId,
+          shippingAddress: params.shippingAddress,
+          notes: params.notes,
+        },
+        walletAddress,
+      ),
+    onSuccess: (data) => {
+      // Full navigation, not window.open: a popup blocker or an in-app browser
+      // silently swallows the second, and this is the step that takes payment.
+      window.location.assign(data.checkoutUrl);
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const checkStatus = useMutation({
+    mutationFn: (sessionId: string) =>
+      callFn<{
+        status: 'created' | 'settled' | 'expired' | 'failed';
+        orderId: string | null;
+        warning: string | null;
+        amountUsd: number;
+      }>('store-checkout', { action: 'status', sessionId }, walletAddress),
+  });
+
+  return { getCardQuote, payByCard, checkStatus };
 }

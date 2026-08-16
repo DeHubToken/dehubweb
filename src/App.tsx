@@ -153,6 +153,7 @@ const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const CommunityInvitePage = React.lazy(() => import("./pages/app/CommunityInvitePage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
 const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
+const StoreCheckoutCompletePage = React.lazy(() => import("./pages/app/StoreCheckoutCompletePage"));
 const LaunchpadPage = React.lazy(() => import("./pages/app/LaunchpadPage"));
 const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreatePage"));
 const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
@@ -492,6 +493,9 @@ function AppContent() {
               <Route path="events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
               <Route path="communities" element={null} />
               <Route path="stores" element={null} />
+              {/* Above stores/:storeId — a param route would swallow the
+                  literal path and render an empty store page after payment. */}
+              <Route path="stores/checkout-complete" element={<Suspense fallback={<PageLoader />}><StoreCheckoutCompletePage /></Suspense>} />
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="ads" element={null} />
               <Route path="work" element={null} />

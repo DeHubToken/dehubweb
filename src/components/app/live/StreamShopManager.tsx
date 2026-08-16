@@ -155,11 +155,18 @@ function LiveOrders({ tokenId }: { tokenId: string | null }) {
               {formatDistanceToNow(new Date(order.created_at), { addSuffix: true })}
             </p>
           </div>
+          {/* Branch on the symbol, not on whether an amount exists. A card
+              order carries paid_token_amount = 99 with paid_token_symbol =
+              'USD'; rendering it beside the DHB coin would read as 99 DHB. */}
           <span className="flex items-center gap-1 text-xs font-semibold text-white shrink-0">
-            <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />
-            {order.paid_token_amount != null
-              ? Number(order.paid_token_amount).toLocaleString(undefined, { maximumFractionDigits: 0 })
-              : `$${Number(order.amount).toLocaleString()}`}
+            {order.paid_token_symbol === 'DHB' && order.paid_token_amount != null ? (
+              <>
+                <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />
+                {Number(order.paid_token_amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+              </>
+            ) : (
+              `$${Number(order.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            )}
           </span>
         </div>
       ))}
