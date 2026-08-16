@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
@@ -108,12 +109,19 @@ const saveDraftsLocal = (drafts: Draft[]) => {
 // Load drafts from Supabase
 const loadDraftsFromDb = async (walletAddress: string): Promise<Draft[]> => {
   try {
-    const { data, error } = await supabase
-      .from('post_drafts')
-      .select('*')
-      .eq('wallet_address', walletAddress)
-      .order('created_at', { ascending: false })
-      .limit(10);
+    // post_drafts RLS keys ENTIRELY off the x-wallet-address header — without
+    // withWalletHeader the policy compares against NULL, SELECT returns zero
+    // rows, and every write is refused. This sync was silently dead. The
+    // address is lowercased to match what mobile writes.
+    const { data, error } = await withWalletHeader(
+      supabase
+        .from('post_drafts')
+        .select('*')
+        .eq('wallet_address', walletAddress.toLowerCase())
+        .order('created_at', { ascending: false })
+        .limit(10),
+      walletAddress,
+    );
     if (error) throw error;
     if (data && data.length > 0) {
       return data.map((d: any) => ({
@@ -134,17 +142,20 @@ const loadDraftsFromDb = async (walletAddress: string): Promise<Draft[]> => {
 // Save a single draft to Supabase
 const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<string | null> => {
   try {
-    const { data, error } = await supabase
-      .from('post_drafts')
-      .insert({
-        wallet_address: walletAddress,
-        text: draft.text,
-        has_image: draft.hasImage,
-        has_video: draft.hasVideo,
-        metadata: { hasAudio: draft.hasAudio },
-      })
-      .select('id')
-      .single();
+    const { data, error } = await withWalletHeader(
+      supabase
+        .from('post_drafts')
+        .insert({
+          wallet_address: walletAddress.toLowerCase(),
+          text: draft.text,
+          has_image: draft.hasImage,
+          has_video: draft.hasVideo,
+          metadata: { hasAudio: draft.hasAudio },
+        })
+        .select('id')
+        .single(),
+      walletAddress,
+    );
     if (error) throw error;
     return data?.id || null;
   } catch (e) {
@@ -154,9 +165,12 @@ const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<strin
 };
 
 // Delete a draft from Supabase
-const deleteDraftFromDb = async (id: string) => {
+const deleteDraftFromDb = async (id: string, walletAddress: string) => {
   try {
-    await supabase.from('post_drafts').delete().eq('id', id);
+    await withWalletHeader(
+      supabase.from('post_drafts').delete().eq('id', id),
+      walletAddress,
+    );
   } catch (e) {
     console.error('Failed to delete draft from DB:', e);
   }
@@ -919,8 +933,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const updatedDrafts = drafts.filter(d => d.id !== id);
     setDrafts(updatedDrafts);
     saveDraftsLocal(updatedDrafts);
-    deleteDraftFromDb(id); // Remove from DB
-  }, [drafts]);
+    if (user?.address) deleteDraftFromDb(id, user.address); // Remove from DB
+  }, [drafts, user?.address]);
 
   // Audio recording functions
   const startRecording = useCallback(async () => {
