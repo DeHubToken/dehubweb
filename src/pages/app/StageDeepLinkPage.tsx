@@ -37,6 +37,7 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { downloadStageIcs } from '@/lib/stage-calendar';
+import { stageUtcClock } from '@/lib/stage-time';
 import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -180,6 +181,7 @@ export default function StageDeepLinkPage() {
               <p className="text-zinc-300 text-sm mt-2 flex items-center gap-1.5">
                 <CalendarDays className="w-4 h-4 shrink-0" />
                 {format(startsAt, 'EEEE, d MMMM · h:mm a')}
+                <span className="text-zinc-500">· {stageUtcClock(startsAt)}</span>
                 {!isOverdue && (
                   <span className="text-zinc-500">· in {formatDistanceToNowStrict(startsAt)}</span>
                 )}
