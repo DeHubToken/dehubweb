@@ -60,6 +60,14 @@ interface StageContextType {
   cancelScheduledSpace: (spaceId: string) => Promise<void>;
   refreshScheduledSpaces: () => Promise<void>;
   joinSpace: (spaceId: string) => Promise<boolean>;
+  /**
+   * Listen-only join for signed-out visitors landing on an invite link:
+   * Agora audience with a subscriber token, no participant row, no counts.
+   * The stage page is the player — there is no mini-player for a guest.
+   */
+  guestListen: (spaceId: string) => Promise<boolean>;
+  guestStopListening: () => Promise<void>;
+  guestSpace: AudioSpace | null;
   leaveSpace: () => Promise<void>;
   endSpace: () => Promise<void>;
   toggleMute: () => void;
@@ -194,6 +202,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const [liveSpaces, setLiveSpaces] = useState<AudioSpace[]>([]);
   const [scheduledSpaces, setScheduledSpaces] = useState<AudioSpace[]>([]);
   const [currentSpace, setCurrentSpace] = useState<AudioSpace | null>(null);
+  /** Signed-out listen-only session — mutually exclusive with currentSpace. */
+  const [guestSpace, setGuestSpace] = useState<AudioSpace | null>(null);
+  const guestSpaceRef = useRef<AudioSpace | null>(null);
+  guestSpaceRef.current = guestSpace;
   const [participants, setParticipants] = useState<SpaceParticipant[]>([]);
   const [handRequests, setHandRequests] = useState<RaiseHandRequest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -245,6 +257,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const upgradeSpeakerRef = useRef<() => Promise<void>>(async () => {});
   /** startScheduledSpace falls back to a plain rejoin, and is defined above joinSpace. */
   const joinSpaceRef = useRef<(spaceId: string) => Promise<boolean>>(async () => false);
+  /** joinSpace tears a guest session down first, and is defined above it. */
+  const guestStopListeningRef = useRef<() => Promise<void>>(async () => {});
 
   // ─── Modal controls ──────────────────────────────────────────────────────
 
@@ -723,6 +737,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const joinSpace = useCallback(
     async (spaceId: string): Promise<boolean> => {
       if (!walletAddress) { toast.error('Please log in first'); return false; }
+      // A visitor who was guest-listening and then logged in joins properly —
+      // drop the listen-only session before taking the real one.
+      if (guestSpaceRef.current) await guestStopListeningRef.current();
       setIsLoading(true);
       try {
         const { data: space, error: spaceError } = await supabase
@@ -825,6 +842,83 @@ export function StageProvider({ children }: { children: ReactNode }) {
     [walletAddress, user],
   );
 
+  // ─── Guest listening ─────────────────────────────────────────────────────
+  //
+  // A signed-out visitor holding an invite link can hear the room without an
+  // account: the agora-token function takes only a channel name (verify_jwt is
+  // off), so a subscriber token is mintable with the publishable key alone.
+  // Deliberately no DB writes — no participant row, no listener_count bump —
+  // so a guest can never strand state a wallet-scoped teardown can't reach.
+
+  const guestStopListening = useCallback(async () => {
+    const client = agoraClientRef.current;
+    agoraClientRef.current = null;
+    setGuestSpace(null);
+    setIsConnected(false);
+    if (client) {
+      try { await client.leave(); } catch { /* noop */ }
+    }
+  }, []);
+
+  const guestListen = useCallback(
+    async (spaceId: string): Promise<boolean> => {
+      // The logged-in flow owns the Agora client; never steal it mid-stage.
+      if (currentSpace) return false;
+      if (guestSpaceRef.current?.id === spaceId) return true;
+      if (guestSpaceRef.current) await guestStopListening();
+      setIsLoading(true);
+      try {
+        const { data: space, error } = await supabase
+          .from('audio_spaces')
+          .select('*')
+          .eq('id', spaceId)
+          .single();
+        if (error || !space) throw new Error('Stage not found');
+        if (space.status !== 'live') {
+          toast.error(
+            space.status === 'scheduled'
+              ? "This stage hasn't started yet"
+              : 'This stage has ended',
+          );
+          return false;
+        }
+        const tokenData = await getAgoraToken(space.channel_name, 'subscriber');
+        if (!tokenData) return false;
+        const connected = await initializeAgora(tokenData, 'listener');
+        if (!connected) return false;
+        setGuestSpace(space as AudioSpace);
+        return true;
+      } catch (err) {
+        console.error('Error joining stage as guest:', err);
+        toast.error('Failed to join stage');
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [currentSpace, guestStopListening],
+  );
+
+  // A guest has no participant row, so the normal end-of-stage teardown never
+  // reaches them — watch the row itself and drop the audio when the host ends.
+  useEffect(() => {
+    if (!guestSpace) return;
+    const channel = supabase
+      .channel(`guest_stage_${guestSpace.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'audio_spaces', filter: `id=eq.${guestSpace.id}` },
+        (payload) => {
+          if ((payload.new as { status?: string })?.status === 'ended') {
+            toast.info('This stage has ended');
+            void guestStopListening();
+          }
+        },
+      )
+      .subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [guestSpace?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ─── Leave stage ─────────────────────────────────────────────────────────
 
   const leaveSpace = useCallback(async () => {
@@ -903,6 +997,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   leaveSpaceRef.current = leaveSpace;
   upgradeSpeakerRef.current = upgradeSpeaker;
   joinSpaceRef.current = joinSpace;
+  guestStopListeningRef.current = guestStopListening;
 
   // ─── End stage (host) ────────────────────────────────────────────────────
 
@@ -1382,6 +1477,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
       cancelScheduledSpace,
       refreshScheduledSpaces,
       joinSpace,
+      guestListen,
+      guestStopListening,
+      guestSpace,
       leaveSpace,
       endSpace,
       toggleMute,
@@ -1399,7 +1497,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
       isConnected, isMuted, myRole, hasRaisedHand, voiceEffect, setVoiceEffect,
       isModalOpen, openModal, closeModal, initialModalView, createSpace,
       scheduleSpace, startScheduledSpace, cancelScheduledSpace, refreshScheduledSpaces,
-      joinSpace, leaveSpace, endSpace, toggleMute, raiseHand, lowerHand,
+      joinSpace, guestListen, guestStopListening, guestSpace, leaveSpace, endSpace,
+      toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
       stopInject,
     ],

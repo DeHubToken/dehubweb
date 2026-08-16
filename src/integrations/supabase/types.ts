@@ -760,6 +760,7 @@ export type Database = {
           listener_count: number
           recording_url: string | null
           scheduled_at: string | null
+          short_id: number | null
           speaker_count: number
           started_at: string
           status: string
@@ -779,6 +780,7 @@ export type Database = {
           listener_count?: number
           recording_url?: string | null
           scheduled_at?: string | null
+          short_id?: number | null
           speaker_count?: number
           started_at?: string
           status?: string
@@ -798,6 +800,7 @@ export type Database = {
           listener_count?: number
           recording_url?: string | null
           scheduled_at?: string | null
+          short_id?: number | null
           speaker_count?: number
           started_at?: string
           status?: string
@@ -3048,6 +3051,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "space_participants_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "audio_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stage_reminders: {
+        Row: {
+          created_at: string
+          id: string
+          pre_start_notified_at: string | null
+          space_id: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pre_start_notified_at?: string | null
+          space_id: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pre_start_notified_at?: string | null
+          space_id?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_reminders_space_id_fkey"
             columns: ["space_id"]
             isOneToOne: false
             referencedRelation: "audio_spaces"

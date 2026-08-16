@@ -239,6 +239,32 @@ describe('arcade exit bridge', () => {
       expect(gated, `${game.slug} gates the button on being embedded`).toBe(true);
     }
   });
+
+  it('keeps the boot screen pointed at engine handles that still exist', () => {
+    // Same hazard as the war adapter's `_rawLook` below: the Construct 2 build
+    // is vendored as an export nobody here can rebuild, so its boot screen
+    // reaches the engine by global name. `cr_getC2Runtime` is where the overlay
+    // reads real progress from, and a re-export that stopped publishing it
+    // would leave a black screen sitting over a game that had already loaded.
+    const html = readFileSync(repo('public/street-slayer-game/index.html'), 'utf8');
+    const runtime = readFileSync(repo('public/street-slayer-game/c2runtime.js'), 'utf8');
+
+    for (const name of ['cr_getC2Runtime', 'loadingprogress', 'isloading']) {
+      expect(html.includes(name), `boot screen reads ${name}`).toBe(true);
+      // Booleans, not toContain: a failed toContain against a 674 KB runtime
+      // would print the whole runtime.
+      expect(runtime.includes(name), `runtime still publishes ${name}`).toBe(true);
+    }
+
+    // The deadline is what makes losing that handle survivable rather than
+    // fatal — without it the overlay waits forever on a signal never coming.
+    expect(/giveUpAt/.test(html), 'boot screen retires on a deadline too').toBe(true);
+
+    // The wordmark it shows in place of the Construct 2 engine cog.
+    const mark = repo('public/street-slayer-game/dehub-loader-wordmark.png');
+    expect(existsSync(mark), 'dehub-loader-wordmark.png').toBe(true);
+    expect(statSync(mark).size).toBeGreaterThan(2_000);
+  });
 });
 
 describe('arcade readiness bridge', () => {

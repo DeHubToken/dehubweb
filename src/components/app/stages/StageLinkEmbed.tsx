@@ -28,25 +28,28 @@ import { cn } from '@/lib/utils';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 interface StageLinkEmbedProps {
-  stageId: string;
+  /** The uuid form (/stage/:id). One of the two ids must be present. */
+  stageId?: string;
+  /** The short numeric form (/stages/7). */
+  stageShortId?: string;
   fallback?: ReactNode;
 }
 
-export function StageLinkEmbed({ stageId, fallback = null }: StageLinkEmbedProps) {
+export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: StageLinkEmbedProps) {
   const navigate = useNavigate();
 
   const { data: stage, isLoading } = useQuery({
-    queryKey: ['stage-by-id', stageId],
-    enabled: !!stageId,
+    queryKey: ['stage-by-id', stageId ?? `short:${stageShortId}`],
+    enabled: !!stageId || !!stageShortId,
     // A scheduled stage's only volatile field is whether it has started, and
     // the card is cheap to be a minute stale about.
     staleTime: 60_000,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('id', stageId)
-        .single();
+      const query = supabase.from('audio_spaces').select('*');
+      const { data, error } = await (stageId
+        ? query.eq('id', stageId)
+        : query.eq('short_id', Number(stageShortId))
+      ).single();
       if (error) throw error;
       return data as AudioSpace;
     },
@@ -75,7 +78,7 @@ export function StageLinkEmbed({ stageId, fallback = null }: StageLinkEmbedProps
     <button
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/stage/${stage.id}`);
+        navigate(stage.short_id != null ? `/stages/${stage.short_id}` : `/stage/${stage.id}`);
       }}
       data-no-navigate
       className={cn(

@@ -49,6 +49,8 @@ export interface DehubLinkMatch {
   listingId?: string;
   eventNumber?: string;
   stageId?: string;
+  /** Set when the link used the short form (/stages/7) instead of the uuid. */
+  stageShortId?: string;
 }
 
 // ── Hosts ───────────────────────────────────────────────────────────────────
@@ -95,7 +97,8 @@ const ABSOLUTE_URL_RE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?\/[^
 // Bare in-app paths, which can only be ours: /app/post/1
 // `stage` sits alongside the /app prefix rather than under it because the
 // invite route is top-level — App.tsx routes /stage/:id, not /app/stage/:id.
-const BARE_PATH_RE = /\/(?:app|communities|stage)\/[^\s<>"'`]*/gi;
+// The optional `s` also admits the short share form, /stages/7.
+const BARE_PATH_RE = /\/(?:app|communities|stages?)\/[^\s<>"'`]*/gi;
 
 // A URL at the end of a sentence carries the punctuation with it.
 const TRAILING_PUNCTUATION_RE = /[.,;:!?)\]}>"']+$/;
@@ -202,6 +205,15 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
   if (scoped[0] === 'stage' && scoped[1]) {
     if (!/^[a-fA-F0-9-]{8,}$/.test(scoped[1])) return null;
     return { ...base, kind: 'stage', stageId: scoped[1] };
+  }
+
+  // ── /stages/:n — the short share form of the same link ──
+  //
+  // Only the numeric shape: bare /stages is the hub page, and anything else
+  // under it has no route.
+  if (scoped[0] === 'stages' && scoped[1]) {
+    if (!/^\d+$/.test(scoped[1])) return null;
+    return { ...base, kind: 'stage', stageShortId: scoped[1] };
   }
 
   // ── /:username ──
@@ -317,7 +329,16 @@ export const dehubLinkFor = {
   listing: (storeId: string, listingId: string) =>
     `${shareOrigin()}/app/stores/${storeId}?listing=${listingId}`,
   event: (eventNumber: string | number) => `${shareOrigin()}/app/events/${eventNumber}`,
-  stage: (stageId: string) => `${shareOrigin()}/stage/${encodeURIComponent(stageId)}`,
+  /**
+   * Prefers the short numeric form when the row carries one; the uuid form
+   * stays valid for links already in the wild.
+   */
+  stage: (stage: string | { id: string; short_id?: number | null }) => {
+    if (typeof stage === 'string') return `${shareOrigin()}/stage/${encodeURIComponent(stage)}`;
+    return stage.short_id != null
+      ? `${shareOrigin()}/stages/${stage.short_id}`
+      : `${shareOrigin()}/stage/${encodeURIComponent(stage.id)}`;
+  },
 };
 
 /** Human label for a link kind — used by share sheets and fallback chips. */
