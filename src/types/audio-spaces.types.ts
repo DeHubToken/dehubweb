@@ -9,6 +9,8 @@ export type HandRequestStatus = 'pending' | 'approved' | 'rejected';
 
 export interface AudioSpace {
   id: string;
+  /** Dense sequential number backing the short share link (/stages/7). */
+  short_id?: number | null;
   channel_name: string;
   title: string;
   description?: string | null;

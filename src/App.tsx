@@ -523,8 +523,11 @@ function AppContent() {
             <Route path="/affiliate" element={null} />
 
 
-            {/* Stage invite links */}
+            {/* Stage invite links. /stages/:id is the short numeric share form
+                (audio_spaces.short_id); the exact /stages path below still opens
+                the hub page — a param segment never matches the bare route. */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
 
             {/* Launchpad — public URL alias (hidden, no nav links) */}
             <Route path="/launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
