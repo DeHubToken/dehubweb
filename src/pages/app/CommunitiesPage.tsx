@@ -4,10 +4,10 @@
  * Shows user's communities first (owned at top), then all communities sorted by member count.
  */
 
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Plus, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { cn } from '@/lib/utils';
@@ -287,7 +287,7 @@ export default function CommunitiesPage() {
             </div>
           ) : filteredMine.length === 0 ? (
             <div className="text-center py-12">
-              <Users className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+              <ThemedIcon icon="communities" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-65" />
               <p className="text-zinc-500 text-sm">{t('communities.noCommunities')}</p>
             </div>
           ) : null}

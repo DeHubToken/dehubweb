@@ -3,7 +3,8 @@ import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
+import { ChevronLeft, Loader2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -373,9 +374,7 @@ export default function ProfilePage() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
         {isUsernameRoute && !data.isProfileError ? (
           <>
-            <div className="w-20 h-20 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-              <AtSign className="w-10 h-10 text-emerald-400" />
-            </div>
+            <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain" />
             <div className="space-y-2">
               <h2 className="text-2xl font-bold text-white">{t('profile.usernameAvailable')}</h2>
               <p className="text-zinc-400 max-w-md">
@@ -393,9 +392,7 @@ export default function ProfilePage() {
           </>
         ) : (
           <>
-            <div className="w-20 h-20 rounded-xl bg-zinc-800 flex items-center justify-center">
-              <AtSign className="w-10 h-10 text-zinc-500" />
-            </div>
+            <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain opacity-80" />
             <h2 className="text-xl font-bold text-white">{t('profile.notFound')}</h2>
             <p className="text-zinc-400 max-w-md">
               {data.isProfileError

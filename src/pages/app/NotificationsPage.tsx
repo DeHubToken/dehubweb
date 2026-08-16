@@ -1,4 +1,4 @@
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -1913,7 +1913,7 @@ export default function NotificationsPage() {
             </div>
           ) : notifications.length === 0 ? (
             <div className="p-8 flex flex-col items-center justify-center text-center">
-              <Bell className="w-12 h-12 text-zinc-600 mb-4" />
+              <ThemedIcon icon="notifications" alt="" className="w-14 h-14 object-contain mb-4 opacity-70" />
               <h3 className="text-white font-semibold text-lg mb-2">{t('notifications.noNotificationsYet')}</h3>
             </div>
           ) : (

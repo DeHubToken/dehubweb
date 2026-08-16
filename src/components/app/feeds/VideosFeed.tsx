@@ -14,7 +14,8 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye, Loader2 } from 'lucide-react';
+import { RefreshCw, Play, ChevronRight, Radio, Eye, Loader2 } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
@@ -720,9 +721,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
-        <Video className="w-8 h-8 text-zinc-500" />
-      </div>
+      <ThemedIcon icon="videos" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
       <h3 className="text-white font-semibold text-lg mb-2">No Videos Yet</h3>
       <p className="text-zinc-400 text-sm max-w-xs mb-4">
         {isError 
@@ -742,9 +741,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   // Filtered empty state (when filters return no results but API has data)
   const FilteredEmptyState = () => (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-        <Filter className="w-6 h-6 text-zinc-500" />
-      </div>
+      <ThemedIcon icon="search" alt="" className="w-12 h-12 object-contain mb-3 opacity-65" />
       <h3 className="text-white font-semibold mb-1">No matches</h3>
       <p className="text-zinc-400 text-sm mb-3">
         Try adjusting your filters

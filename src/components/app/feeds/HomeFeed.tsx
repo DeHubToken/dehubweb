@@ -15,6 +15,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
@@ -1526,9 +1527,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
-          <RefreshCw className="w-8 h-8 text-zinc-500" />
-        </div>
+        <ThemedIcon icon="home" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
         <h3 className="text-white font-semibold text-lg mb-2">{title}</h3>
         <p className="text-zinc-400 text-sm max-w-xs mb-4">{description}</p>
         <button 

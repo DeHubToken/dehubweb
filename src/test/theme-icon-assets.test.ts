@@ -25,10 +25,11 @@ describe('theme icon assets', () => {
     }
   });
 
-  it('ships the complete refreshed System page set', () => {
-    for (const key of PAGE_KEYS) {
+  it('ships the complete optimized System icon set', () => {
+    for (const key of [...PROFILE_KEYS, ...PAGE_KEYS]) {
       const file = resolve(__dirname, `../../public/theme-icons/system/${key}.webp`);
       expect(existsSync(file), `system/${key}.webp`).toBe(true);
+      expect(statSync(file).size, `system/${key}.webp is unexpectedly empty`).toBeGreaterThan(2_000);
     }
   });
 
@@ -39,6 +40,8 @@ describe('theme icon assets', () => {
       .toBe('/theme-icons/winter/notifications.webp');
     expect(resolveThemeIconAsset('/assets/home-3d-icon-abc.png', 'jungle'))
       .toBe('/theme-icons/jungle/home.webp');
+    expect(resolveThemeIconAsset('/assets/home-3d-icon-abc.png', 'system'))
+      .toBe('/theme-icons/system/home.webp');
     expect(resolveThemeIconAsset('/theme-icons/system/arcade.webp', 'osaka'))
       .toBe('/theme-icons/osaka/arcade.webp');
     expect(resolveThemeIconAsset('/theme-icons/system/bounties.webp', 'system'))

@@ -10,6 +10,7 @@ import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react'
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2, Headphones } from 'lucide-react';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -139,7 +140,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
 function EmptyState({ type }: { type: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <Music className="w-12 h-12 text-zinc-600 mb-4" />
+      <ThemedIcon icon="audio" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
       <h3 className="text-white font-semibold mb-2">No {type} yet</h3>
       <p className="text-zinc-500 text-sm max-w-[280px]">
         Music content will appear here once creators start uploading.

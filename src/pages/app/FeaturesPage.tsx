@@ -6,7 +6,7 @@
  * Feature cards use the same UI pattern as text posts (ActionBar + CommentsWrapper).
  */
 
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -1284,9 +1284,7 @@ export default function FeaturesPage() {
             </div>
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
-                <Loader2 className="w-8 h-8 text-zinc-600" />
-              </div>
+              <ThemedIcon icon="features" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
               <h3 className="text-white font-semibold mb-1">{t('features.noShippingYet', 'Nothing in progress')}</h3>
               <p className="text-zinc-500 text-sm">{t('features.shippingAppearHere', 'Requests being built will appear here.')}</p>
             </div>
@@ -1315,9 +1313,7 @@ export default function FeaturesPage() {
             </div>
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="w-8 h-8 text-zinc-600" />
-              </div>
+              <ThemedIcon icon="features" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
               <h3 className="text-white font-semibold mb-1">{t('features.noShippedYet')}</h3>
               <p className="text-zinc-500 text-sm">{t('features.shippedAppearHere')}</p>
             </div>
