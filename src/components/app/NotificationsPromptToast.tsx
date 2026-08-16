@@ -97,6 +97,13 @@ async function accept(id: string | number): Promise<void> {
   const request = requestNotificationPermission();
   toast.dismiss(id);
   const result = await request;
+  if (result === 'default') {
+    // Waved away rather than answered — Chrome's quiet prompt parks behind the
+    // address-bar bell and resolves like this if it is ignored. Nothing was
+    // decided, so downgrade the markDone() above back to a snooze.
+    writeState({ snoozedUntil: Date.now() + SNOOZE_MS });
+    return;
+  }
   if (result === 'granted') {
     setStoredEnabled(true);
     toast.success(i18n.t('settings.browserNotificationsEnabled', 'Browser notifications enabled'));

@@ -39,6 +39,7 @@ import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Switch } from '@/components/ui/switch';
+import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { FollowersListDrawer } from '@/components/app/profile';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -1723,6 +1724,20 @@ export default function NotificationsPage() {
                     </button>
                   </div>
                   
+                  {/* This Browser Section */}
+                  <div className="space-y-3 mb-6">
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
+                      {t('notifications.thisBrowser', 'This browser')}
+                    </p>
+                    {/*
+                      The rows below are account-level and follow you between
+                      devices; this one is the browser's own permission, and it
+                      is the only way back for anyone who blocked the native
+                      prompt by accident or never saw it.
+                    */}
+                    <BrowserNotificationsSetting variant="card" />
+                  </div>
+
                   {/* Notification Types Section */}
                   <div className="space-y-3">
                     <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{t('notifications.notificationTypes')}</p>
