@@ -226,12 +226,11 @@ export async function updateTokenVisibility(
   tokenId: number | string,
   visibility: TokenVisibility
 ): Promise<TokenVisibilityResponse> {
-  const visibilityToStatus: Record<TokenVisibility, number> = {
-    'public': 0,
-    'private': 1,
-    'unlisted': 2,
-  };
-
+  // The server's whole model is one boolean: the handler reads `{ id,
+  // isHidden }` and 400s anything else — the old `{ tokenId, status: 0|1|2 }`
+  // body never succeeded once. 'unlisted' has no server-side meaning either;
+  // it hides the post.
+  //
   // Routed through apiCall (was a hand-rolled fetch with a snapshotted token)
   // so an expired session refreshes and retries instead of surfacing a raw
   // "Failed to update visibility: 401".
@@ -239,8 +238,8 @@ export async function updateTokenVisibility(
     method: 'POST',
     requiresAuth: true,
     body: {
-      tokenId: Number(tokenId),
-      status: visibilityToStatus[visibility],
+      id: Number(tokenId),
+      isHidden: visibility !== 'public',
     },
   });
 }
