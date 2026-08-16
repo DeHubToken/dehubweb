@@ -18,9 +18,8 @@ import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Link as LinkIcon, Bell, BellRing } from 'lucide-react';
+import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Share2, Bell, BellRing } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
-import { toast } from 'sonner';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
@@ -28,6 +27,7 @@ import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
+import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { PastStagesList } from '@/components/app/stages/PastStagesList';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
@@ -119,11 +119,11 @@ function ScheduledStageCard({
             )}
             <button
               onClick={onShare}
-              title="Copy invite link"
-              aria-label="Copy invite link"
+              title="Share stage"
+              aria-label="Share stage"
               className="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
             >
-              <LinkIcon className="w-3.5 h-3.5" />
+              <Share2 className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -199,12 +199,14 @@ function LiveStageCard({
   isLoading,
   isPaper,
   onOpen,
+  onShare,
 }: {
   space: AudioSpace;
   isCurrent: boolean;
   isLoading: boolean;
   isPaper: boolean;
   onOpen: () => void;
+  onShare: () => void;
 }) {
   const totalListeners = Math.max(1, (space.speaker_count || 1) + (space.listener_count || 0));
   const avatar =
@@ -237,9 +239,33 @@ function LiveStageCard({
               {isCurrent ? 'IN THIS STAGE' : 'LIVE'}
             </span>
           </div>
-          <div className="flex items-center gap-1 text-zinc-400 text-xs">
-            {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Users className="w-3.5 h-3.5" />}
-            <span>{totalListeners}</span>
+          <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 text-zinc-400 text-xs">
+              {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Users className="w-3.5 h-3.5" />}
+              <span>{totalListeners}</span>
+            </div>
+            {/* The whole card is a <button>, so the share chip is a <span> —
+                same constraint as StageHostLink — and stops propagation so
+                sharing never also joins the stage. */}
+            <span
+              role="button"
+              tabIndex={0}
+              title="Share stage"
+              aria-label="Share stage"
+              onClick={(e) => {
+                e.stopPropagation();
+                onShare();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.stopPropagation();
+                  onShare();
+                }
+              }}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+            </span>
           </div>
         </div>
 
@@ -299,6 +325,10 @@ export default function StagesPage() {
   const isPaper = theme === 'light' || theme === 'minimal';
   const [joiningId, setJoiningId] = useState<string | null>(null);
   const [busyScheduledId, setBusyScheduledId] = useState<string | null>(null);
+  // One share sheet for the whole page. It cannot live inside LiveStageCard:
+  // the card is a <button>, and React events from a portal bubble through the
+  // component tree, so taps inside the drawer would also join the stage.
+  const [shareSpace, setShareSpace] = useState<AudioSpace | null>(null);
 
   // Land on a tab that has something in it. Live wins when a room is running;
   // with nothing live, an announced stage is the next best thing to show, and
@@ -388,12 +418,7 @@ export default function StagesPage() {
                 setBusyScheduledId(null);
               }
             }}
-            onShare={() => {
-              navigator.clipboard.writeText(dehubLinkFor.stage(space)).then(
-                () => toast.success('Link copied'),
-                () => toast.error('Could not copy link'),
-              );
-            }}
+            onShare={() => setShareSpace(space)}
           />
         ))}
       </div>
@@ -452,6 +477,7 @@ export default function StagesPage() {
             isLoading={joiningId === resume.id}
             isPaper={isPaper}
             onOpen={() => handleOpenLive(resume)}
+            onShare={() => setShareSpace(resume)}
           />
         )}
         {liveSpaces.map((space) => (
@@ -462,6 +488,7 @@ export default function StagesPage() {
             isLoading={joiningId === space.id || (isLoading && joiningId === space.id)}
             isPaper={isPaper}
             onOpen={() => handleOpenLive(space)}
+            onShare={() => setShareSpace(space)}
           />
         ))}
       </div>
@@ -592,6 +619,14 @@ export default function StagesPage() {
             ? renderUpcoming()
             : <PastStagesList />}
       </div>
+
+      {/* Share sheet — copy link / send in a DM / post to feed, same as posts */}
+      <ShareEntityDrawer
+        open={!!shareSpace}
+        onOpenChange={(o) => !o && setShareSpace(null)}
+        url={shareSpace ? dehubLinkFor.stage(shareSpace) : ''}
+        shareTitle={shareSpace?.title}
+      />
     </div>
   );
 }
