@@ -111,7 +111,13 @@ export async function reportContent(params: {
 }): Promise<{ success: boolean; message?: string }> {
   const response = await apiCall<any>("/api/report/content", {
     method: "POST",
-    body: params as Record<string, unknown>,
+    // The DTO's free-text field is `additionalInfo` (max 500) — `description`
+    // was silently dropped, so reporters' context never reached moderation.
+    body: {
+      tokenId: params.tokenId,
+      reason: params.reason,
+      additionalInfo: params.description || undefined,
+    },
     requiresAuth: true,
   });
   return { success: response?.success !== false, message: response?.message };
@@ -124,7 +130,12 @@ export async function reportUser(params: {
 }): Promise<{ success: boolean; message?: string }> {
   const response = await apiCall<any>("/api/report/user", {
     method: "POST",
-    body: params as Record<string, unknown>,
+    // Same `additionalInfo` contract as reportContent.
+    body: {
+      userId: params.userId,
+      reason: params.reason,
+      additionalInfo: params.description || undefined,
+    },
     requiresAuth: true,
   });
   return { success: response?.success !== false, message: response?.message };
