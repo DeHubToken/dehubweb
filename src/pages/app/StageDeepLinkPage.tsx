@@ -38,6 +38,7 @@ import { dehubLinkFor } from '@/lib/dehub-links';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { downloadStageIcs } from '@/lib/stage-calendar';
 import { stageUtcClock } from '@/lib/stage-time';
+import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -157,18 +158,7 @@ export default function StageDeepLinkPage() {
 
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           {stage.cover_image_url && (
-            // This page is about one stage, so the graphic is shown whole
-            // rather than cropped to a card ratio: `contain` against a fixed
-            // ratio box means a square or portrait cover keeps its shape
-            // instead of losing its top and bottom to `cover`. The listing
-            // cards still crop — there the ratio has to be uniform.
-            <div className="w-full aspect-[1.91/1] max-h-[70vh] bg-black">
-              <img
-                src={stage.cover_image_url}
-                alt={`Cover graphic for ${stage.title}`}
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
           )}
           <div className="relative p-6 bg-zinc-900">
             <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10 mb-3">
@@ -291,18 +281,7 @@ export default function StageDeepLinkPage() {
 
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           {stage.cover_image_url && (
-            // This page is about one stage, so the graphic is shown whole
-            // rather than cropped to a card ratio: `contain` against a fixed
-            // ratio box means a square or portrait cover keeps its shape
-            // instead of losing its top and bottom to `cover`. The listing
-            // cards still crop — there the ratio has to be uniform.
-            <div className="w-full aspect-[1.91/1] max-h-[70vh] bg-black">
-              <img
-                src={stage.cover_image_url}
-                alt={`Cover graphic for ${stage.title}`}
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
           )}
           <div className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between mb-3">
