@@ -30,6 +30,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { PastStagesList } from '@/components/app/stages/PastStagesList';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
+import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { stageUtcClock } from '@/lib/stage-time';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
@@ -46,23 +47,13 @@ const STAGES_TABS: { icon: typeof Radio; label: string; value: StagesTab }[] = [
 ];
 
 /**
- * Space reserved above a card's text for the cover art alone.
- *
- * 1.91:1 is the social share-card ratio, so the crop a host sees here is the
- * crop their link preview gets. It is a ratio rather than a height so it holds
- * on every screen — a fixed height turns into a letterbox strip on a wide card
- * and swallows a narrow one. The cap stops a full-width desktop card from
- * running to 600px of artwork before a word of text.
- */
-const STAGE_ART_RATIO = 'w-full aspect-[1.91/1] max-h-[360px]';
-
-/**
  * A stage that has been announced but has not started.
  *
  * Leads with the cover graphic when the host set one — an announcement in a
  * list of announcements is competing for attention, which is the whole reason
- * the graphic exists. Without one it falls back to the same flat card the live
- * stages use, so a stage with no art does not look broken.
+ * the graphic exists. It sits above the text rather than behind it (see
+ * StageCoverArt) so nothing is cropped away. Without a cover the card is just
+ * the text panel, so a stage with no art does not look broken.
  */
 function ScheduledStageCard({
   space,
@@ -92,28 +83,9 @@ function ScheduledStageCard({
   return (
     <div
       data-page-bento
-      className={cn(
-        'relative rounded-2xl overflow-hidden flex flex-col border border-transparent',
-        hasCover ? '' : 'bg-zinc-900',
-      )}
+      className="relative rounded-2xl overflow-hidden flex flex-col border border-transparent bg-zinc-900"
     >
-      {hasCover && (
-        <>
-          <img
-            src={space.cover_image_url!}
-            alt=""
-            aria-hidden
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          {/* Text scrim only — the art above it stays clear. */}
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
-          />
-          <div aria-hidden className={STAGE_ART_RATIO} />
-        </>
-      )}
+      {hasCover && <StageCoverArt src={space.cover_image_url!} title={space.title} />}
 
       <div className="relative p-4 flex flex-col flex-1">
         <div className="flex items-center justify-between mb-3">
@@ -239,26 +211,10 @@ function LiveStageCard({
       data-page-bento
       className={cn(
         'group relative w-full overflow-hidden text-left rounded-2xl flex flex-col transition-colors disabled:opacity-60',
-        'border border-transparent hover:border-white/15',
-        hasCover ? '' : 'bg-zinc-900',
+        'border border-transparent hover:border-white/15 bg-zinc-900',
       )}
     >
-      {hasCover && (
-        <>
-          <img
-            src={space.cover_image_url!}
-            alt=""
-            aria-hidden
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent"
-          />
-          <div aria-hidden className={STAGE_ART_RATIO} />
-        </>
-      )}
+      {hasCover && <StageCoverArt src={space.cover_image_url!} title={space.title} />}
 
       <div className="relative p-4 flex flex-col flex-1">
         <div className="flex items-center justify-between mb-3">
