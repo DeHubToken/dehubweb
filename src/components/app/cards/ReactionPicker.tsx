@@ -24,34 +24,10 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { REACTION_LIST, type PostReaction, type ReactionCounts } from '@/lib/reactions';
-
-/**
- * The colour each emoji glows in when it is the viewer's reaction, as the
- * space-separated `r g b` channels of CSS Color 4's `rgb(R G B / A)` — the
- * legacy `rgba()` form can't take space-separated channels, and a browser
- * drops the whole declaration rather than complaining.
- *
- * Taken from the dominant colour of the glyph itself, so the highlight always
- * looks like it came off the emoji rather than being painted on top of it.
- * The three yellow faces are the exception: 😢 and 😭 glow in their tear blue,
- * since a yellow bloom would make them indistinguishable from 😂 — the tear is
- * the only part of those two that carries the meaning.
- *
- * Lives here rather than in `lib/reactions`: that file is a line-for-line
- * mirror of the API's `config/reactions.ts`, and a web-only paint value has no
- * business in the copy the backend and mobile have to match.
- */
-const REACTION_GLOW: Record<PostReaction, string> = {
-  like:    '255 204 77',  // 👍 yellow hand
-  love:    '221 46 68',   // ❤️ red
-  respect: '255 204 77',  // ✊ yellow hand
-  hot:     '244 144 12',  // 🔥 flame orange
-  lol:     '255 204 77',  // 😂 yellow face
-  sad:     '93 173 236',  // 😢 tear blue
-  cry:     '93 173 236',  // 😭 tear blue
-  dislike: '255 204 77',  // 👎 yellow hand
-  poo:     '193 105 79',  // 💩 brown
-};
+// Shared with the card's like/dislike button, which wears the same colour once
+// the reaction is yours — see the table's own note on why it isn't in
+// `lib/reactions`.
+import { REACTION_GLOW } from '@/lib/reaction-glow';
 
 /** Compact tally for the corner of a 36px tray button (1500 → 1.5K). */
 function formatTally(count: number): string {
