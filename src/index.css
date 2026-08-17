@@ -2404,12 +2404,16 @@ html[data-theme="light"] [data-reaction-tray] {
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 8px 32px rgba(0, 0, 0, 0.12) !important;
 }
-html[data-theme="light"] [data-reaction-tray] [data-reaction-option]:hover,
-html[data-theme="light"] [data-reaction-tray] [data-reaction-option][data-active="true"] {
+html[data-theme="light"] [data-reaction-tray] [data-reaction-option]:hover {
   background-color: rgba(0, 0, 0, 0.07) !important;
 }
-html[data-theme="light"] [data-reaction-tray] [data-reaction-option][data-active="true"] {
-  --tw-ring-color: rgba(0, 0, 0, 0.22) !important;
+/* The viewer's own reaction is a coloured bloom now, not a disc — this rule
+   used to include [data-active="true"] and would paint an ink wash straight
+   over that bloom, which is the exact grey circle the glow replaced.
+   The ring variable moves to focus-visible, which is the only ring left on
+   these buttons and was invisible on paper (the utility sets it to white). */
+html[data-theme="light"] [data-reaction-tray] [data-reaction-option]:focus-visible {
+  --tw-ring-color: rgba(0, 0, 0, 0.35) !important;
 }
 /* Per-reaction totals: white-on-white once the tray turns to paper. The global
    `.text-white → ink` remap only catches the bare utility, not `text-white/70`,

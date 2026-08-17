@@ -25,6 +25,34 @@ import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { REACTION_LIST, type PostReaction, type ReactionCounts } from '@/lib/reactions';
 
+/**
+ * The colour each emoji glows in when it is the viewer's reaction, as the
+ * space-separated `r g b` channels of CSS Color 4's `rgb(R G B / A)` — the
+ * legacy `rgba()` form can't take space-separated channels, and a browser
+ * drops the whole declaration rather than complaining.
+ *
+ * Taken from the dominant colour of the glyph itself, so the highlight always
+ * looks like it came off the emoji rather than being painted on top of it.
+ * The three yellow faces are the exception: 😢 and 😭 glow in their tear blue,
+ * since a yellow bloom would make them indistinguishable from 😂 — the tear is
+ * the only part of those two that carries the meaning.
+ *
+ * Lives here rather than in `lib/reactions`: that file is a line-for-line
+ * mirror of the API's `config/reactions.ts`, and a web-only paint value has no
+ * business in the copy the backend and mobile have to match.
+ */
+const REACTION_GLOW: Record<PostReaction, string> = {
+  like:    '255 204 77',  // 👍 yellow hand
+  love:    '221 46 68',   // ❤️ red
+  respect: '255 204 77',  // ✊ yellow hand
+  hot:     '244 144 12',  // 🔥 flame orange
+  lol:     '255 204 77',  // 😂 yellow face
+  sad:     '93 173 236',  // 😢 tear blue
+  cry:     '93 173 236',  // 😭 tear blue
+  dislike: '255 204 77',  // 👎 yellow hand
+  poo:     '193 105 79',  // 💩 brown
+};
+
 /** Compact tally for the corner of a 36px tray button (1500 → 1.5K). */
 function formatTally(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
@@ -121,6 +149,8 @@ export function ReactionPicker({
           )}
         >
           {REACTION_LIST.map((reaction) => {
+            const isCurrent = current === reaction.key;
+            const glow = isCurrent ? REACTION_GLOW[reaction.key] : null;
             const tally = counts ? (counts[reaction.key] ?? 0) : null;
             const withTally =
               tally === null
@@ -130,13 +160,13 @@ export function ReactionPicker({
               <button
                 key={reaction.key}
                 role="menuitemradio"
-                aria-checked={current === reaction.key}
+                aria-checked={isCurrent}
                 type="button"
                 aria-label={withTally}
                 title={withTally}
                 data-reaction-option
                 data-keep-round
-                data-active={current === reaction.key ? 'true' : undefined}
+                data-active={isCurrent ? 'true' : undefined}
                 onClick={(e) => {
                   e.stopPropagation();
                   onSelect(reaction.key);
@@ -151,10 +181,27 @@ export function ReactionPicker({
                   'text-lg leading-none transition-[transform,background-color,box-shadow] duration-150 ease-out',
                   'hover:-translate-y-0.5 hover:scale-110 hover:bg-white/10 active:translate-y-0 active:scale-95',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
-                  current === reaction.key && 'bg-white/15 ring-1 ring-white/40',
                 )}
+                /* The viewer's own reaction is marked by a bloom in the
+                   emoji's own colour rather than a white disc and ring — the
+                   ring drew a hard edge around one glyph in a row of nine and
+                   read as chrome. Inline because the colour is per-reaction
+                   data, and it needs no light-theme counterpart: a colour
+                   pulled from the glyph reads on paper and on glass alike. */
+                style={
+                  glow
+                    ? {
+                        backgroundImage: `radial-gradient(circle, rgb(${glow} / 0.30) 0%, rgb(${glow} / 0.12) 45%, rgb(${glow} / 0) 72%)`,
+                      }
+                    : undefined
+                }
               >
-                <span aria-hidden="true">{reaction.emoji}</span>
+                <span
+                  aria-hidden="true"
+                  style={glow ? { filter: `drop-shadow(0 0 5px rgb(${glow} / 0.85))` } : undefined}
+                >
+                  {reaction.emoji}
+                </span>
                 {/* Total for this reaction, tucked into the corner above the
                     emoji. Absolutely positioned so a four-character "1.2K"
                     can never widen the tray — nine of those would push it off
