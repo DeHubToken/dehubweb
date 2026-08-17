@@ -12,6 +12,7 @@ import { CheckCircle, Play, Images, Ticket, Lock } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildAvatarUrl, extractAvatarPath, buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
 import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
+import { BadgedName } from '@/components/app/BadgedName';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 
 interface QuotedPostEmbedProps {
@@ -126,7 +127,13 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
               {displayName.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm font-semibold text-white truncate">{displayName}</span>
+          <BadgedName
+            badgeBalance={quotedPost.minterUser?.badgeBalance}
+            username={handle}
+            className="text-sm font-semibold text-white"
+          >
+            {displayName}
+          </BadgedName>
           <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 hidden" />
           <span className="text-xs text-zinc-500 truncate">@{handle}</span>
         </div>

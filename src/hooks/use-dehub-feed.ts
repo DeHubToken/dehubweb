@@ -192,6 +192,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     uploadedAgo: formatTimeAgo(createdAt),
     creatorId,
     creatorUsername,
+    creatorBadgeBalance: nft.minterUser?.badgeBalance,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
     myReaction: resolveMyReaction(nft),
@@ -278,6 +279,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     timeAgo: formatTimeAgo(createdAt),
     creatorId,
     creatorUsername,
+    creatorBadgeBalance: nft.minterUser?.badgeBalance,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
     myReaction: resolveMyReaction(nft),
@@ -347,6 +349,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     isLive: nft.is_live ?? true,
     creatorId,
     creatorUsername,
+    creatorBadgeBalance: nft.minterUser?.badgeBalance,
     ...(streamId ? { streamId } : {}),
   };
 }
@@ -577,6 +580,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
       : undefined,
     creatorId: stream.address || rawAccount?.address,
     creatorUsername: rawAccount?.username,
+    creatorBadgeBalance: rawAccount?.badgeBalance,
     likeCount,
   };
 }

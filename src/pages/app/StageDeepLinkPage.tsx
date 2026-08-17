@@ -42,6 +42,7 @@ import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
+import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
@@ -193,9 +194,12 @@ export default function StageDeepLinkPage() {
                 <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
                   {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
                 </div>
-                <span className="text-sm text-zinc-400 group-hover/host:text-white transition-colors">
+                <BadgedName
+                  lookupId={stage.host_username || stage.host_wallet_address}
+                  className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
+                >
                   Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
-                </span>
+                </BadgedName>
               </StageHostLink>
             </div>
 
@@ -324,9 +328,12 @@ export default function StageDeepLinkPage() {
                 <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
                   {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
                 </div>
-                <span className="text-sm text-zinc-400 group-hover/host:text-white transition-colors">
+                <BadgedName
+                  lookupId={stage.host_username || stage.host_wallet_address}
+                  className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
+                >
                   Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
-                </span>
+                </BadgedName>
               </StageHostLink>
             </div>
 

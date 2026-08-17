@@ -117,6 +117,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           isOwner: false, isUnlocked: false,
           creatorId: resolvedAddress,
           creatorUsername: post.minterUsername || creatorObj?.username,
+          creatorBadgeBalance: post.minterUser?.badgeBalance,
         }} />
       ) : postType === 'image' || postType === 'feed-images' ? (
         <ImageCard post={{
@@ -130,6 +131,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           timeAgo: formatTimeAgo(rawTimestamp),
           creatorId: resolvedAddress,
           creatorUsername: post.minterUsername || creatorObj?.username,
+          creatorBadgeBalance: post.minterUser?.badgeBalance,
           isOwner: false, isUnlocked: false,
           repostCount: (post.totalReposts || 0) + (post.quotes || 0),
         }} />
@@ -143,6 +145,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
             name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
             handle: post.minterUsername || creatorObj?.username || resolvedAddress?.slice(0, 8) || 'anon',
             avatarSeed: avatar, verified: false,
+            badgeBalance: post.minterUser?.badgeBalance,
           },
           content: post.description || post.name || '',
           stats: {

@@ -296,6 +296,8 @@ export interface LiveStream extends BaseFeedItem {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Creator's badge balance from API (avoids edge function call) */
+  creatorBadgeBalance?: number;
   /** Number of likes */
   likeCount?: number;
   /** Number of comments */

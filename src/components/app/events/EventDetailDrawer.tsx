@@ -42,7 +42,10 @@ function CreatorInfo({ event }: { event: CommunityEvent }) {
         <span className="text-xs text-zinc-400 group-hover:text-white transition-colors">
           Created by <span className="font-medium text-zinc-300 group-hover:text-white">{displayName}</span>
         </span>
-        <BadgeIcon username={handle || undefined} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />
+        <BadgeIcon
+          lookupId={handle || event.creator_wallet_address}
+          className="w-[9px] h-[9px] absolute -top-0.5 -right-0"
+        />
       </span>
     </button>
   );

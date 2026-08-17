@@ -14,6 +14,7 @@ import type { Community, CommunityMember } from '@/hooks/use-communities';
 import { usePendingCommunityMembers } from '@/hooks/use-communities';
 import { useCommunityAbilities } from '@/hooks/use-community-admin';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -57,7 +58,13 @@ function MemberRow({ member }: { member: CommunityMember }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-white text-sm font-medium truncate">{displayName}</span>
+          <BadgedName
+            badgeBalance={profile?.badgeBalance}
+            username={handle}
+            className="text-white text-sm font-medium"
+          >
+            {displayName}
+          </BadgedName>
           {roleIcon}
           {isMuted && (
             <span className="flex items-center gap-1 text-amber-400 text-[10px] px-1.5 py-0.5 rounded-md bg-amber-500/10">
