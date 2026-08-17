@@ -1,6 +1,6 @@
 export const NOTIFICATION_FILTER_LABELS = {
   all: { key: 'notifications.title', defaultLabel: 'Notifications' },
-  likes: { key: 'notifications.likes', defaultLabel: 'Likes' },
+  likes: { key: 'notifications.likes', defaultLabel: 'Reactions' },
   follows: { key: 'notifications.follows', defaultLabel: 'Follows' },
   comments: { key: 'notifications.comments', defaultLabel: 'Comments' },
   reposts: { key: 'notifications.reposts', defaultLabel: 'Reposts' },
