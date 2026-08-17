@@ -31,6 +31,24 @@ interface PostMediaPreviewProps {
 
 const MAX_DURATION = 30; // 30 seconds max
 
+/**
+ * Per-image voice-overs record fine but have never uploaded: /user_mint treats
+ * every file on a feed-images post as an image, so the audio blob was parked
+ * on the media item and silently dropped at post time. The affordance stays
+ * off until the backend can carry it — attaching an existing audio post via
+ * the sound picker (soundtrack tag) is the supported way to put sound on an
+ * image post.
+ */
+const IMAGE_AUDIO_SUPPORTED = false;
+
+/**
+ * Video filter/crop/trim settings were stored and then silently discarded —
+ * unlike images, a video cannot be re-encoded in the browser without shipping
+ * a wasm encoder, and the backend reads no trim/crop fields. Off until one of
+ * those exists; the editors themselves are kept.
+ */
+const VIDEO_EDITS_SUPPORTED = false;
+
 // Helper to check if crop is applied
 function hasCropApplied(settings?: CropSettings): boolean {
   if (!settings) return false;
@@ -528,8 +546,8 @@ export function PostMediaPreview({
                           <TooltipContent>Crop & rotate</TooltipContent>
                         </Tooltip>
                         
-                        {/* Audio controls for images */}
-                        {recordingIndex === index ? (
+                        {/* Audio controls for images — gated off, see IMAGE_AUDIO_SUPPORTED. */}
+                        {IMAGE_AUDIO_SUPPORTED && (recordingIndex === index ? (
                           <button
                             type="button"
                             onClick={(e) => { e.stopPropagation(); stopRecording(); }}
@@ -614,7 +632,7 @@ export function PostMediaPreview({
                             </TooltipTrigger>
                             <TooltipContent>Add audio</TooltipContent>
                           </Tooltip>
-                        )}
+                        ))}
                       </div>
                       
                       {/* Remove button */}
@@ -776,7 +794,9 @@ export function PostMediaPreview({
                         </button>
                       )}
                       
-                      {/* Top left: Filter + Crop + Trim buttons */}
+                      {/* Top left: Filter + Crop + Trim buttons — gated off,
+                          see VIDEO_EDITS_SUPPORTED. */}
+                      {VIDEO_EDITS_SUPPORTED && (
                       <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -792,7 +812,7 @@ export function PostMediaPreview({
                           </TooltipTrigger>
                           <TooltipContent>Edit filters</TooltipContent>
                         </Tooltip>
-                        
+
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -807,7 +827,7 @@ export function PostMediaPreview({
                           </TooltipTrigger>
                           <TooltipContent>Crop & rotate</TooltipContent>
                         </Tooltip>
-                        
+
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -825,6 +845,7 @@ export function PostMediaPreview({
                           <TooltipContent>Trim video</TooltipContent>
                         </Tooltip>
                       </div>
+                      )}
                       
                       {/* Duration badge */}
                       {m.duration && (
