@@ -4,8 +4,10 @@
  * One row per (stage, wallet): "tell me when this starts". Delivery is
  * entirely server-side — a DB trigger fans custom_notifications out the moment
  * the host takes the stage live, and a pg_cron pass catches "starting soon"
- * ten minutes ahead of scheduled_at — so the client's whole job is toggling
- * the row and reflecting whether one exists.
+ * ten minutes ahead of scheduled_at — so the client's job is toggling the row,
+ * reflecting whether one exists, and reading the set back out: the rows outlive
+ * the scheduled → live flip, which is what lets a room that has just opened
+ * show its pre-audience (see useStagePreAudience).
  *
  * DELETE on stage_reminders is gated on get_request_wallet_address(), which
  * reads the x-wallet-address header the plain client never sends — hence the
@@ -90,10 +92,16 @@ export function useStageReminder(spaceId: string | undefined) {
  * a request budget, not a display limit. The total count comes from the
  * `count: 'exact'` head on the same query, so it stays honest however many
  * rows exist beyond this window.
+ *
+ * Both consumers (the announcement facepile and the live room's pre-audience)
+ * ask for the same window so they share one fan-out: the profile queries are
+ * keyed by address, so the second surface to mount pays nothing.
  */
 const FACE_CANDIDATES = 12;
 /** Avatars actually rendered; the rest live in the count. */
 const FACES_SHOWN = 3;
+/** Pre-audience avatars in the live room — the crowd has room for all of them. */
+const PRE_AUDIENCE_SHOWN = FACE_CANDIDATES;
 
 export interface StageReminderFace {
   address: string;
@@ -103,15 +111,15 @@ export interface StageReminderFace {
 }
 
 /**
- * Who is waiting on a stage: a few faces plus the true total.
+ * Everyone who set a reminder on a stage, resolved and ranked by followers.
  *
- * Ordered by follower count because the point of the row is social proof —
- * a name you recognise is worth more than whoever happened to press the bell
- * first. Only the first FACE_CANDIDATES rows are ranked, so the faces are
- * "the biggest accounts among the earliest to remind", not a global top-N;
+ * Follower order because the point of every surface built on this is social
+ * proof — a name you recognise is worth more than whoever happened to press
+ * the bell first. Only the first FACE_CANDIDATES rows are ranked, so the faces
+ * are "the biggest accounts among the earliest to remind", not a global top-N;
  * with the counts this feature sees, the distinction is theoretical.
  */
-export function useStageReminderFaces(spaceId: string | undefined) {
+function useStageReminderRoster(spaceId: string | undefined) {
   const reminders = useQuery({
     queryKey: stageReminderKeys.facesForStage(spaceId ?? ''),
     enabled: !!spaceId,
@@ -160,15 +168,75 @@ export function useStageReminderFaces(spaceId: string | undefined) {
   // Depend on the resolved data, not the query objects — useQueries hands back
   // a fresh array identity every render.
   const resolved = profiles.map((q) => q.data);
-  const faces = useMemo(
+  const ranked = useMemo(
     () =>
       resolved
         .filter((face): face is StageReminderFace => !!face)
-        .sort((a, b) => b.followers - a.followers)
-        .slice(0, FACES_SHOWN),
+        .sort((a, b) => b.followers - a.followers),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(resolved)],
   );
 
-  return { faces, total: reminders.data?.total ?? 0 };
+  return { ranked, candidates: addresses, total: reminders.data?.total ?? 0 };
+}
+
+/** Who is waiting on an announced stage: a few faces plus the true total. */
+export function useStageReminderFaces(spaceId: string | undefined) {
+  const { ranked, total } = useStageReminderRoster(spaceId);
+  const faces = useMemo(() => ranked.slice(0, FACES_SHOWN), [ranked]);
+  return { faces, total };
+}
+
+/**
+ * The pre-audience: people who said they were coming and are not in the room
+ * yet.
+ *
+ * A stage that has just gone live is empty by definition — the host is talking
+ * to nobody for the first minute or two while the notification lands and people
+ * open it. Everyone holding a reminder already told us they intend to be there,
+ * so the crowd shows them from the moment the room opens, and each one drops
+ * out of the pre-audience the instant they actually walk in.
+ *
+ * Deliberately render-only. Writing `space_participants` rows for them instead
+ * would look identical and break three things at once: the auto-end trigger
+ * treats any row with a null `left_at` as somebody still in the room (so a
+ * stage with a pre-audience could never end empty), every headcount is
+ * recounted from those rows on join and leave (so the inflation would outlive
+ * the stage and land in the attendance figure on the recording), and a host
+ * could "invite as speaker" a wallet that has no Agora connection to promote.
+ */
+export function useStagePreAudience(
+  spaceId: string | undefined,
+  /** Wallets currently in the room, any role — pass `participants`. */
+  joinedAddresses: string[],
+) {
+  const { ranked, candidates, total } = useStageReminderRoster(spaceId);
+
+  // Callers map this out of participant state, so the array identity churns on
+  // every realtime tick; the joined *set* only changes when someone comes or
+  // goes.
+  const joinedKey = joinedAddresses.join(',').toLowerCase();
+
+  return useMemo(() => {
+    const joined = new Set(joinedKey ? joinedKey.split(',') : []);
+    const waiting = ranked
+      .filter((face) => !joined.has(face.address.toLowerCase()))
+      .slice(0, PRE_AUDIENCE_SHOWN);
+
+    // Reminder-holders who are known to have arrived leave the pre-audience
+    // entirely rather than moving to the overflow chip. Only the fetched window
+    // can be checked against the room, which is why the subtraction is scoped
+    // to it — beyond FACE_CANDIDATES we have a count and nothing else.
+    const arrived = candidates.filter((address) => joined.has(address.toLowerCase())).length;
+    const waitingTotal = Math.max(0, total - arrived);
+
+    return {
+      /** Faces to render alongside the real listeners. */
+      waiting,
+      /** Everyone still expected, including those with no face resolved. */
+      waitingTotal,
+      /** Expected but not rendered — a profile that failed, or past the window. */
+      overflow: Math.max(0, waitingTotal - waiting.length),
+    };
+  }, [ranked, candidates, total, joinedKey]);
 }
