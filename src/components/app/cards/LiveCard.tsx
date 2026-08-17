@@ -94,6 +94,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           isLive
           creatorId={stream.creatorId}
           creatorUsername={stream.creatorUsername}
+          badgeBalance={stream.creatorBadgeBalance}
         />
         <div className="flex items-center gap-2">
           <motion.button

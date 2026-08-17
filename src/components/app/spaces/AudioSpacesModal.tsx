@@ -39,6 +39,7 @@ import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { dehubLinkFor } from '@/lib/dehub-links';
+import { BadgedName } from '@/components/app/BadgedName';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -525,7 +526,9 @@ export function AudioSpacesModal() {
                                     </span>
                                   );
                                 })()}
-                                @{space.host_username || 'Anonymous'}
+                                <BadgedName lookupId={space.host_username || space.host_wallet_address}>
+                                  @{space.host_username || 'Anonymous'}
+                                </BadgedName>
                               </span>
                               {space.ended_at && (
                                 <span>
@@ -1044,7 +1047,9 @@ function StageCard({
               </span>
             );
           })()}
-          @{space.host_username || 'Anonymous'}
+          <BadgedName lookupId={space.host_username || space.host_wallet_address}>
+            @{space.host_username || 'Anonymous'}
+          </BadgedName>
         </span>
         <span className="flex items-center gap-1">
           <Users className="w-3 h-3" />

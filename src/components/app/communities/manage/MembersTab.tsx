@@ -27,6 +27,7 @@ import {
   useUnbanMember,
 } from '@/hooks/use-community-admin';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { BadgedName } from '@/components/app/BadgedName';
 import { MemberActionsDialog } from './MemberActionsDialog';
 import { AdminRightsDialog } from './AdminRightsDialog';
 
@@ -101,7 +102,14 @@ function PendingRow({
     <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.06] transition-colors">
       <Avatar url={profile?.avatarUrl} />
       <div className="flex-1 min-w-0">
-        <span className="text-white text-sm font-medium truncate block">{displayName}</span>
+        <BadgedName
+          badgeBalance={profile?.badgeBalance}
+          username={profile?.handle}
+          className="text-white text-sm font-medium"
+          wrapperClassName="flex"
+        >
+          {displayName}
+        </BadgedName>
         {profile?.handle && <span className="text-zinc-500 text-xs">{profile.handle}</span>}
       </div>
       <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -161,7 +169,13 @@ function MemberRow({
       <Avatar url={profile?.avatarUrl} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-white text-sm font-medium truncate">{displayName}</span>
+          <BadgedName
+            badgeBalance={profile?.badgeBalance}
+            username={profile?.handle}
+            className="text-white text-sm font-medium"
+          >
+            {displayName}
+          </BadgedName>
           {roleIcon}
           {member.custom_title && (
             <span className="text-xs text-zinc-400 px-1.5 py-0.5 rounded-full bg-white/[0.08] flex-shrink-0">
@@ -205,7 +219,14 @@ function BannedRow({
     <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.06] transition-colors">
       <Avatar url={profile?.avatarUrl} />
       <div className="flex-1 min-w-0">
-        <span className="text-white text-sm font-medium truncate block">{displayName}</span>
+        <BadgedName
+          badgeBalance={profile?.badgeBalance}
+          username={profile?.handle}
+          className="text-white text-sm font-medium"
+          wrapperClassName="flex"
+        >
+          {displayName}
+        </BadgedName>
         <span className="text-zinc-500 text-xs block truncate">
           {member.ban_reason
             ? t('communities.manage.bannedReasonLine', { defaultValue: 'Reason: {{reason}}', reason: member.ban_reason })

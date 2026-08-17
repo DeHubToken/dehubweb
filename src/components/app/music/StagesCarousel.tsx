@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLiveSpaces } from '@/contexts/StageContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
+import { BadgedName } from '@/components/app/BadgedName';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -70,9 +71,12 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-zinc-500 text-[10px]">Hosted by</p>
-            <p className="text-white text-xs font-medium truncate group-hover/host:underline">
+            <BadgedName
+              lookupId={space.host_username || space.host_wallet_address}
+              className="text-white text-xs font-medium group-hover/host:underline"
+            >
               @{space.host_username || space.host_wallet_address?.slice(0, 6)}
-            </p>
+            </BadgedName>
           </div>
         </StageHostLink>
       </div>

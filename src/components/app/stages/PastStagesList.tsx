@@ -22,6 +22,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
+import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
@@ -458,7 +459,9 @@ export function PastStagesList() {
                             {(space.host_username || 'A').charAt(0).toUpperCase()}
                           </span>
                         )}
-                        <span className="truncate">@{space.host_username || 'Anonymous'}</span>
+                        <BadgedName lookupId={space.host_username || space.host_wallet_address}>
+                          @{space.host_username || 'Anonymous'}
+                        </BadgedName>
                       </button>
                     </ProfileHoverCard>
                     {space.ended_at && <span>{timeAgo(space.ended_at)}</span>}

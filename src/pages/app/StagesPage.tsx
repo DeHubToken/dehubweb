@@ -30,6 +30,7 @@ import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { PastStagesList } from '@/components/app/stages/PastStagesList';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
+import { BadgedName } from '@/components/app/BadgedName';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { stageUtcClock } from '@/lib/stage-time';
@@ -145,9 +146,12 @@ function ScheduledStageCard({
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-zinc-500 text-[10px]">Hosted by</p>
-              <p className="text-white text-xs font-medium truncate group-hover/host:underline">
+              <BadgedName
+                lookupId={space.host_username || space.host_wallet_address}
+                className="text-white text-xs font-medium group-hover/host:underline"
+              >
                 @{space.host_username || space.host_wallet_address?.slice(0, 6)}
-              </p>
+              </BadgedName>
             </div>
           </StageHostLink>
         </div>
@@ -287,9 +291,12 @@ function LiveStageCard({
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-zinc-500 text-[10px]">Hosted by</p>
-              <p className="text-white text-xs font-medium truncate group-hover/host:underline">
+              <BadgedName
+                lookupId={space.host_username || space.host_wallet_address}
+                className="text-white text-xs font-medium group-hover/host:underline"
+              >
                 @{space.host_username || space.host_wallet_address?.slice(0, 6)}
-              </p>
+              </BadgedName>
             </div>
           </StageHostLink>
         </div>
