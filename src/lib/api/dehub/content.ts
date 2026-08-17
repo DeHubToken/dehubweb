@@ -1,5 +1,4 @@
 import { apiCall, authedUpload } from './core';
-import type { DeHubNFT } from './types';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -157,25 +156,6 @@ export async function mintExistingPost(tokenId: number | string): Promise<MintRe
   return apiCall<MintResponse>('/api/mint_existing', {
     method: 'POST',
     body: { tokenId: Number(tokenId) },
-    requiresAuth: true,
-  });
-}
-
-// Simple mintNFT wrapper
-export async function mintNFT(data: {
-  title: string;
-  description?: string;
-  media_url: string;
-  thumbnail_url?: string;
-  media_type: "video" | "image" | "audio";
-  category?: string;
-  tags?: string[];
-  is_ppv?: boolean;
-  ppv_price?: number;
-}): Promise<DeHubNFT> {
-  return apiCall<DeHubNFT>("/api/user_mint", {
-    method: "POST",
-    body: data,
     requiresAuth: true,
   });
 }
