@@ -89,10 +89,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       <PostContentArea
         text={state.text}
         setText={actions.setText}
-        description={state.description}
-        setDescription={actions.setDescription}
-        showDescription={state.showDescription}
-        setShowDescription={actions.setShowDescription}
         editorRef={refs.editorRef}
         media={state.media}
         onRemoveMedia={actions.removeMedia}
