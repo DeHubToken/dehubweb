@@ -1277,7 +1277,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       console.log('[Mint] Minting post:', {
         name: text.trim().slice(0, 100) || '',
-        description: description.trim(),
         postType,
         streamInfo,
         filesCount: files.length,
@@ -1802,7 +1801,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setUploadProgress(0);
     }
   }, [
-    text, description, media, isSubscribersOnly, isPPV, ppvAmount,
+    text, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
