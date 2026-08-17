@@ -281,6 +281,13 @@ const API_BACKED_TYPES = new Set([
   'video_removal', 'account_warning', 'system',
 ]);
 
+/**
+ * The circular DeHub mark, already shipped from `public/` as the favicon and the
+ * PWA icon. Stands in as the avatar for notifications that speak for the platform
+ * rather than for a person.
+ */
+const DEHUB_AVATAR_SRC = '/dehub-icon.png';
+
 /** The subset of a tab's types the API can filter on, or undefined for no server filter. */
 function apiTypesForTab(tab: NotificationTypeFilter): string[] | undefined {
   const allowed = filterTypeMap[tab];
@@ -850,6 +857,12 @@ const NotificationItem = memo(function NotificationItem({
   
    // No dicebear fallback — let AvatarFallback show the greyed-out letter
   const fallbackLetter = (enriched?.displayName || enriched?.username || notification.actorUsername || 'U').charAt(0).toUpperCase();
+
+  // Broadcasts and system notices are sent by the platform, not by a user: they
+  // carry no actor, so the letter fallback had nothing to work with and drew an
+  // empty grey circle. Those rows wear the DeHub mark instead. Anything with an
+  // actor — even one whose picture fails to load — keeps its own avatar.
+  const isPlatformNotice = !notification.actorAddress && !notification.actorUsername && !avatarUrl;
     
   const postThumbnail = notification.tokenThumbnail 
     ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `${DEHUB_CDN_BASE}${notification.tokenThumbnail}`)
@@ -1032,6 +1045,16 @@ const NotificationItem = memo(function NotificationItem({
             );
           }
           
+          // Platform announcement — no one to link to, so no <Link> wrapper.
+          if (isPlatformNotice) {
+            return (
+              <Avatar className="w-12 h-12">
+                <AvatarImage src={DEHUB_AVATAR_SRC} alt="DeHub" />
+                <AvatarFallback className="bg-zinc-900 text-white font-medium">D</AvatarFallback>
+              </Avatar>
+            );
+          }
+
           // Single avatar (default)
           return profileLink ? (
             <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
