@@ -46,7 +46,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { FeedItem } from '@/types/feed.types';
-import { REACTION_VERBS, reactionMeta, type PostReaction } from '@/lib/reactions';
+import { reactionMeta, type PostReaction } from '@/lib/reactions';
 import { getNotificationFilterLabel, type NotificationTypeFilter } from '@/lib/notification-filter-labels';
 
 // ============================================================================
@@ -560,7 +560,7 @@ function getNotificationContent(
     const count = bundle.postCount;
     switch (notification.type) {
       case 'like':
-        return tr('notifications.likedPosts', { name: actorName, count });
+        return `${actorName} reacted to ${count} of your posts`;
       case 'comment':
         return tr('notifications.commentedPosts', { name: actorName, count });
       case 'comment_reply':
@@ -582,7 +582,7 @@ function getNotificationContent(
     if (canonical.length <= 1) {
       const name = canonical[0]?.display || actorName;
       const postCount = aggCount;
-      if (typeStr === 'like') return `${name} liked ${postCount} of your posts`;
+      if (typeStr === 'like') return `${name} reacted to ${postCount} of your posts`;
       if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
       if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
     } else {
@@ -596,7 +596,7 @@ function getNotificationContent(
         </span>
       ) : othersText;
 
-      if (typeStr === 'like') return <>{first} and {othersSpan} liked your post</>;
+      if (typeStr === 'like') return <>{first} and {othersSpan} reacted to your post</>;
       if (typeStr === 'comment') return <>{first} and {othersSpan} commented on your post</>;
       if (typeStr === 'repost') return <>{first} and {othersSpan} reposted your post</>;
     }
@@ -604,14 +604,7 @@ function getNotificationContent(
 
   switch (notification.type) {
     case 'like':
-      // A plain thumbs-up keeps the translated copy. Anything else uses the
-      // reaction's own verb, which the API already put in `content` — reusing
-      // that is what keeps the two surfaces from drifting apart, and it's
-      // already localised-by-absence (there is no translation key per reaction).
-      if (notification.reaction && notification.reaction !== 'like') {
-        return notification.content || `${actorName} ${REACTION_VERBS[notification.reaction]} your post`;
-      }
-      return tr('notifications.likedPost', { name: actorName });
+      return notification.content || `${actorName} reacted to your post`;
     case 'comment':
       return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
@@ -1167,7 +1160,7 @@ const NotificationItem = memo(function NotificationItem({
         <DrawerContent data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[70vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
-              {(notification.type as string) === 'like' ? 'Liked by' : (notification.type as string) === 'repost' ? 'Reposted by' : (notification.type as string) === 'comment' ? 'Commented by' : 'Users'}
+              {(notification.type as string) === 'like' ? 'Reacted by' : (notification.type as string) === 'repost' ? 'Reposted by' : (notification.type as string) === 'comment' ? 'Commented by' : 'Users'}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
@@ -1208,7 +1201,7 @@ const NotificationItem = memo(function NotificationItem({
         <DrawerContent data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[80vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
-              {notification.type === 'like' ? 'Liked posts' : notification.type === 'comment' ? 'Commented posts' : (notification.type as string) === 'repost' ? 'Reposted posts' : 'Posts'}
+              {notification.type === 'like' ? 'Reacted posts' : notification.type === 'comment' ? 'Commented posts' : (notification.type as string) === 'repost' ? 'Reposted posts' : 'Posts'}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 overflow-y-auto max-h-[65vh] space-y-4" data-vaul-no-drag>
