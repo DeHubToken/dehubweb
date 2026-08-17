@@ -23,6 +23,8 @@ export const MEDIA_LIMITS = {
   MAX_AUDIO: 1,
   /** Maximum file size in bytes (100MB) */
   MAX_FILE_SIZE: 100 * 1024 * 1024,
+  /** Maximum audio file size in bytes — /user_mint rejects feed-audio over 10MB */
+  MAX_AUDIO_SIZE: 10 * 1024 * 1024,
   /** Maximum video duration for shorts in seconds */
   SHORTS_MAX_DURATION: 90,
 } as const;
