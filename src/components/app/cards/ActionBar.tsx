@@ -24,9 +24,8 @@ import {
   applyReactionDelta,
   isPositiveReaction,
   reactionMeta,
-  resolveTopReaction,
+  resolveLeadReaction,
   seedReactionCounts,
-  topReactions,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -597,19 +596,16 @@ export function ActionBar({
     hoverTimer.current = setTimeout(() => setPickerOpen(false), 220);
   }, [isTouchDevice]);
 
-  /** The post's most-used reaction, which leads on the card ahead of the thumb. */
-  const topReaction = resolveTopReaction(localReactionCounts);
-  /** Viewer's own reaction wins over the post's; falls back to the plain thumb. */
-  const leadReaction = myReaction ?? topReaction;
   /**
-   * Runners-up shown next to the count, so a post that is mostly 🔥 with some
-   * 😂 reads as both. like/dislike are excluded: each already has its own
-   * button and count in this row, and echoing them here would put a 👎 beside
-   * the like count of every post that has ever been disliked.
+   * The one glyph the thumbs-up wears: the viewer's own positive reaction, else
+   * the post's most-used, else null for the plain thumbs-up icon.
    */
-  const reactionSummary = topReactions(localReactionCounts, 4)
-    .filter((key) => key !== 'like' && key !== 'dislike' && key !== leadReaction)
-    .slice(0, 2);
+  const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
+  /**
+   * The viewer's own reaction, but only when it is a positive one — a 👎 or 💩
+   * is the thumbs-DOWN button's business, so this button must not announce it.
+   */
+  const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
 
   // An off-chain post shares as its own slug, never as an NFT-style URL.
   const shareUrlForPost = () =>
@@ -869,8 +865,8 @@ export function ActionBar({
           data-engaged={isLiked ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like') : undefined}
           className="flex items-center transition-colors text-white select-none touch-none"
           aria-label={
-            myReaction
-              ? `${reactionMeta(myReaction).label} — hold to change your reaction`
+            myPositiveReaction
+              ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction`
               : 'Like — hold to react'
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
@@ -879,7 +875,7 @@ export function ActionBar({
           animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          {leadReaction && leadReaction !== 'like' ? (
+          {leadReaction ? (
             <span
               /* Marks the glyph so a theme can light the reaction without also
                  lighting the count, which is a sibling span in the same row. */
@@ -893,15 +889,6 @@ export function ActionBar({
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
           )}
         </motion.button>
-        {reactionSummary.length > 0 && (
-          <span className="flex items-center -space-x-1 mr-0.5" aria-hidden="true">
-            {reactionSummary.map((key) => (
-              <span key={key} className="text-[0.7rem] leading-none">
-                {reactionMeta(key).emoji}
-              </span>
-            ))}
-          </span>
-        )}
         <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
       </span>
     </>
