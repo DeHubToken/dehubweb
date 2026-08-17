@@ -26,6 +26,7 @@ import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
+import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
 import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
@@ -116,6 +117,7 @@ interface MobileCreatorInfoProps {
   channelAvatar?: string;
   creatorUsername?: string;
   creatorId?: string;
+  badgeBalance?: number;
   tokenId?: string;
   verified?: boolean;
   onAIClick?: () => void;
@@ -140,6 +142,7 @@ function MobileCreatorInfo({
   channelAvatar,
   creatorUsername,
   creatorId,
+  badgeBalance,
   tokenId,
   verified = false,
   onAIClick,
@@ -215,7 +218,13 @@ function MobileCreatorInfo({
           )}
           <div className="flex flex-col items-start min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-white text-sm leading-tight truncate">{channel}</span>
+              <BadgedName
+                badgeBalance={badgeBalance}
+                username={creatorUsername || channel}
+                className="font-semibold text-white text-sm leading-tight"
+              >
+                {channel}
+              </BadgedName>
               {verified && (
                 <svg className="w-3.5 h-3.5 text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
@@ -1984,6 +1993,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             channelAvatar={video.channelAvatar}
             creatorUsername={video.creatorUsername}
             creatorId={video.creatorId}
+            badgeBalance={video.creatorBadgeBalance}
             verified={video.verified}
             onAIClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             onMenuClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}

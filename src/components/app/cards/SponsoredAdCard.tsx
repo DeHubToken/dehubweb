@@ -12,6 +12,7 @@ import { Megaphone, ExternalLink, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ServedAd } from '@/lib/ads/povr';
 import { useAdImpression } from '@/hooks/use-ad-serving';
+import { BadgedName } from '@/components/app/BadgedName';
 
 interface SponsoredAdCardProps {
   ad: ServedAd;
@@ -88,7 +89,13 @@ export function SponsoredAdCard({ ad, className, compact = false }: SponsoredAdC
           <Megaphone className="w-4 h-4 text-foreground/70" strokeWidth={1.75} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-foreground truncate">{ad.advertiser}</p>
+          <BadgedName
+            lookupId={ad.advertiserWallet}
+            className="text-sm font-semibold text-foreground"
+            wrapperClassName="flex"
+          >
+            {ad.advertiser}
+          </BadgedName>
           <p className="text-[11px] text-muted-foreground">Sponsored</p>
         </div>
         <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded shrink-0">AD</span>

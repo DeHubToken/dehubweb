@@ -27,6 +27,7 @@ import type { ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { cn } from '@/lib/utils';
+import { BadgedName } from '@/components/app/BadgedName';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 interface StageLinkEmbedProps {
@@ -162,9 +163,12 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             <div className="w-5 h-5 rounded-md overflow-hidden shrink-0 bg-zinc-700">
               {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
             </div>
-            <span className="text-xs text-zinc-400 truncate">
+            <BadgedName
+              lookupId={stage.host_username || stage.host_wallet_address}
+              className="text-xs text-zinc-400"
+            >
               @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
-            </span>
+            </BadgedName>
           </div>
 
           <span

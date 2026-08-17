@@ -767,6 +767,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         timeAgo,
         creatorId: pinnedPost.minter,
         creatorUsername: pinnedPost.mintername,
+        creatorBadgeBalance: (pinnedPost as any).minterUser?.badgeBalance,
         isLiked: pinnedPost.isLiked ?? false,
       };
       return { type: 'image', data: imagePost };
@@ -791,6 +792,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         uploadedAgo: timeAgo,
         creatorId: pinnedPost.minter,
         creatorUsername: pinnedPost.mintername,
+        creatorBadgeBalance: (pinnedPost as any).minterUser?.badgeBalance,
         isLiked: pinnedPost.isLiked ?? false,
         likeCount: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
         dislikeCount: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
@@ -814,6 +816,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           handle: pinnedPost.mintername || pinnedPost.minter,
           avatarSeed: avatarUrl,
           verified: false,
+          badgeBalance: (pinnedPost as any).minterUser?.badgeBalance,
         },
         content: pinnedPost.description || pinnedPost.name || '',
         createdAt: timeAgo,

@@ -166,6 +166,11 @@ export interface ServedAd {
   ctaLabel: string;
   ctaUrl: string | null;
   advertiser: string;
+  /**
+   * Advertiser's wallet, so the card can resolve their staking badge. Absent
+   * until ads-serve is redeployed — the badge simply does not draw until then.
+   */
+  advertiserWallet?: string;
   width: number | null;
   height: number | null;
   durationSeconds: number | null;

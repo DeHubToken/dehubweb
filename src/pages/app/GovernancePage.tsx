@@ -151,6 +151,7 @@ function GovernanceCard({
           contentType="post"
           creatorId={proposal.author_wallet_address}
           creatorUsername={proposal.author_username || undefined}
+          badgeLookupId={proposal.author_username || proposal.author_wallet_address}
         />
         <span className="text-zinc-500 text-[10px] shrink-0 pt-1">{formatTimeAgo(proposal.created_at, t)}</span>
       </div>

@@ -20,6 +20,7 @@ import { useCommunityMembers, type Community, type CommunityMember } from '@/hoo
 import { useCommunityAbilities, ADMIN_RIGHTS } from '@/hooks/use-community-admin';
 import { useDeHubProfile, mapUserToProfile, type ProfileData } from '@/hooks/use-dehub-profile';
 import { getAccountInfo } from '@/lib/api/dehub';
+import { BadgedName } from '@/components/app/BadgedName';
 import { AdminRightsDialog } from './AdminRightsDialog';
 
 export interface AdministratorsTabProps {
@@ -58,7 +59,13 @@ function OwnerRow({ member }: { member: CommunityMember }) {
       <Avatar url={profile?.avatarUrl} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-white font-medium text-sm truncate">{displayName}</span>
+          <BadgedName
+            badgeBalance={profile?.badgeBalance}
+            username={profile?.handle}
+            className="text-white font-medium text-sm"
+          >
+            {displayName}
+          </BadgedName>
           <Crown className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
         </div>
         <span className="text-zinc-500 text-xs">
@@ -88,7 +95,13 @@ function AdminRow({
       <Avatar url={profile?.avatarUrl} />
       <div className="flex-1 min-w-0 text-left">
         <div className="flex items-center gap-1.5">
-          <span className="text-white font-medium text-sm truncate">{displayName}</span>
+          <BadgedName
+            badgeBalance={profile?.badgeBalance}
+            username={profile?.handle}
+            className="text-white font-medium text-sm"
+          >
+            {displayName}
+          </BadgedName>
           <Shield className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
           <span className="text-zinc-500 text-xs truncate">{badge}</span>
         </div>
@@ -138,7 +151,14 @@ function CandidateRow({
     <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.06] transition-colors">
       <Avatar url={profile?.avatarUrl} />
       <div className="flex-1 min-w-0">
-        <span className="text-white font-medium text-sm truncate block">{displayName}</span>
+        <BadgedName
+          badgeBalance={profile?.badgeBalance}
+          username={profile?.handle}
+          className="text-white font-medium text-sm"
+          wrapperClassName="flex"
+        >
+          {displayName}
+        </BadgedName>
         <span className="text-zinc-500 text-xs truncate block">
           {profile?.handle || shortAddress(member.wallet_address)}
         </span>

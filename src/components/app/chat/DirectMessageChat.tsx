@@ -21,6 +21,7 @@ import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { BadgedName } from '@/components/app/BadgedName';
 import { formatAttachmentSize, getAttachmentLabel, isAllowedAttachment } from '@/lib/attachments';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
@@ -1306,7 +1307,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             </Avatar>
 
             <div>
-              <h2 className="font-semibold text-white">{displayName}</h2>
+              <h2 className="font-semibold text-white">
+                <BadgedName
+                  badgeBalance={(otherUser as any)?.badgeBalance}
+                  username={otherUser?.username}
+                >
+                  {displayName}
+                </BadgedName>
+              </h2>
               {otherUser?.username && (
                 <p className="text-xs text-zinc-500">@{otherUser.username}</p>
               )}

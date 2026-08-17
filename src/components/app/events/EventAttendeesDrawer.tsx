@@ -26,6 +26,7 @@ interface Attendee {
   username?: string;
   display_name?: string;
   avatar_url?: string;
+  badge_balance?: number;
 }
 
 interface EventAttendeesDrawerProps {
@@ -54,6 +55,7 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
             username: profile?.username || undefined,
             display_name: (profile as any)?.displayName || (profile as any)?.display_name || undefined,
             avatar_url: (profile as any)?.avatarImageUrl || (profile as any)?.avatarUrl || (profile as any)?.avatar_url || (profile as any)?.avatar || undefined,
+            badge_balance: profile?.badgeBalance,
           };
         } catch {
           return a;
@@ -146,7 +148,11 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
                 <div className="flex-1 min-w-0 text-left">
                   <div className="flex items-center gap-1">
                     <p className="text-sm font-medium text-white truncate">{displayName}</p>
-                    <BadgeIcon username={handle || undefined} className="w-3 h-3 shrink-0" />
+                    <BadgeIcon
+                      badgeBalance={a.badge_balance}
+                      username={handle || undefined}
+                      className="w-3 h-3 shrink-0"
+                    />
                   </div>
                   {handle && (
                     <p className="text-xs text-zinc-500">@{handle}</p>

@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
-import { getBadgeUrl } from '@/lib/staking-badges';
+import { useBadgeVisual } from '@/hooks/use-badge-balance';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
@@ -46,6 +46,11 @@ interface CardHeaderProps {
   tokenId?: string | number;
   /** Badge balance from API data (avoids edge function call) */
   badgeBalance?: number;
+  /**
+   * Username or wallet to resolve the badge from, for surfaces whose payload
+   * carries no balance (governance proposals, feature requests).
+   */
+  badgeLookupId?: string | null;
 }
 
 /**
@@ -72,6 +77,7 @@ export function CardHeader({
   viewCount,
   tokenId,
   badgeBalance,
+  badgeLookupId,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -82,8 +88,14 @@ export function CardHeader({
   // Use feed-provided avatar directly — no extra API call needed
   const agentFallback = getAgentAvatarFallback(creatorId);
   
-  // Use badge balance from API data directly — with username override support
-  const badgeUrl = getBadgeUrl(badgeBalance, handle || username);
+  // Use badge balance from API data directly — with username override support.
+  // Shared with the icon below so the name's right gutter can never disagree
+  // with whether a badge actually draws, including after an async lookup.
+  const { url: badgeUrl } = useBadgeVisual({
+    badgeBalance,
+    username: handle || username,
+    lookupId: badgeLookupId,
+  });
   
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
   const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http') && !imageError;
@@ -151,7 +163,7 @@ export function CardHeader({
         <div className="flex items-center gap-1.5 min-w-0">
           <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
             <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
-            <BadgeIcon badgeBalance={badgeBalance} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
+            <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
           </span>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
         </div>

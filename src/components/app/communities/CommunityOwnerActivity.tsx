@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { BadgedName } from '@/components/app/BadgedName';
 import { useNavigate } from 'react-router-dom';
 import { User, UserPlus, Check, Bell, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -112,7 +113,13 @@ function ActivityRow({ notification }: { notification: CommunityJoinNotification
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           {hasName ? (
-            <span className="text-white text-sm font-medium truncate">{displayName}</span>
+            <BadgedName
+              badgeBalance={profile?.badgeBalance}
+              username={handle}
+              className="text-white text-sm font-medium"
+            >
+              {displayName}
+            </BadgedName>
           ) : (
             <span className="h-3.5 w-28 rounded bg-white/[0.08] animate-pulse" />
           )}
