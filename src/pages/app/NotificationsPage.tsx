@@ -27,6 +27,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
+import dehubMarkWhite from '@/assets/dehub-mark-white.png';
 import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
@@ -283,11 +284,14 @@ const API_BACKED_TYPES = new Set([
 ]);
 
 /**
- * The circular DeHub mark, already shipped from `public/` as the favicon and the
- * PWA icon. Stands in as the avatar for notifications that speak for the platform
- * rather than for a person.
+ * The bare DeHub fork glyph, white on transparent — the same brand asset the
+ * connector pages use. The tile behind it is drawn here rather than baked into
+ * the artwork: `/dehub-icon.png` carries its own black *circle*, which reads as
+ * a round avatar whatever radius the container has, and nothing else on this
+ * surface is round. Every square here is a `rounded-lg` tile, so the platform
+ * mark is one too.
  */
-const DEHUB_AVATAR_SRC = '/dehub-icon.png';
+const DEHUB_MARK_SRC = dehubMarkWhite;
 
 /** The subset of a tab's types the API can filter on, or undefined for no server filter. */
 function apiTypesForTab(tab: NotificationTypeFilter): string[] | undefined {
@@ -746,6 +750,49 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   }
 }
 
+/**
+ * Where a platform announcement points. A broadcast puts the page it is about
+ * in `metadata.articleUrl` — the field mobile has always opened in its in-app
+ * browser — and the web rows read it nowhere, so every announcement since the
+ * feature shipped was inert on click. Scoped to the same three types mobile
+ * scopes it to, so nothing else changes behaviour.
+ *
+ * A dehub.io link comes back as a path so the SPA routes to it rather than
+ * reloading the entire app; anything else opens in a new tab. Only http(s)
+ * survives — the value is admin-authored, but a `javascript:` URL reaching a
+ * `window.open` is not a shape worth permitting on the strength of that.
+ */
+type AnnouncementTarget =
+  | { kind: 'internal'; path: string }
+  | { kind: 'external'; url: string };
+
+const ANNOUNCEMENT_TYPES = new Set(['system', 'video_removal', 'account_warning']);
+
+function announcementTarget(notification: DeHubNotification): AnnouncementTarget | null {
+  if (!ANNOUNCEMENT_TYPES.has(notification.type as string)) return null;
+
+  const raw = notification.metadata?.articleUrl;
+  if (typeof raw !== 'string' || !raw.trim()) return null;
+  const value = raw.trim();
+
+  // A bare path is always one of ours.
+  if (value.startsWith('/')) return { kind: 'internal', path: value };
+
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+
+  const host = url.hostname.replace(/^www\./, '');
+  if (host === 'dehub.io' || url.hostname === window.location.hostname) {
+    return { kind: 'internal', path: `${url.pathname}${url.search}${url.hash}` };
+  }
+  return { kind: 'external', url: url.href };
+}
+
 // Off-screen rows (index >= 6) get `content-visibility: auto` so the browser
 // skips their layout + paint until they scroll near the viewport — same
 // technique as offscreenCardStyle in ProfileTabContent / the home feed. The
@@ -960,6 +1007,19 @@ const NotificationItem = memo(function NotificationItem({
       return;
     }
     
+    // A platform announcement names its own destination, which no type-keyed
+    // switch can know. Checked ahead of getNavigationLink so a moderation notice
+    // carrying a link lands on the link rather than on the settings page.
+    const announcement = announcementTarget(notification);
+    if (announcement) {
+      if (announcement.kind === 'external') {
+        window.open(announcement.url, '_blank', 'noopener,noreferrer');
+      } else {
+        navigate(announcement.path);
+      }
+      return;
+    }
+
     // Navigate to appropriate destination
     const navLink = getNavigationLink(notification);
     if (navLink) {
@@ -1044,13 +1104,22 @@ const NotificationItem = memo(function NotificationItem({
             );
           }
           
-          // Platform announcement — no one to link to, so no <Link> wrapper.
+          // Platform announcement — no one to link to, so no <Link> wrapper, and
+          // no <Avatar> either: Radix would only add a fallback this can never
+          // need. The tile carries the same radius and zinc fill as the type
+          // badges beside it, so the mark sits square with the rest of the row
+          // instead of reading as somebody's round profile picture.
           if (isPlatformNotice) {
             return (
-              <Avatar className="w-12 h-12">
-                <AvatarImage src={DEHUB_AVATAR_SRC} alt="DeHub" />
-                <AvatarFallback className="bg-zinc-900 text-white font-medium">D</AvatarFallback>
-              </Avatar>
+              <div className="w-12 h-12 shrink-0 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                <img
+                  src={DEHUB_MARK_SRC}
+                  alt="DeHub"
+                  className="w-7 h-auto object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
             );
           }
 
