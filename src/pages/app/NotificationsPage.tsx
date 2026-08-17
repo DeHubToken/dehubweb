@@ -30,6 +30,7 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { stageLiveSentence, stageReminderSentence, stageNotificationPath } from '@/lib/stage-notifications';
 import { supabase } from '@/integrations/supabase/client';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { SEOHead } from '@/components/SEOHead';
@@ -516,11 +517,11 @@ function getNotificationContent(
   }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName}'s stage "${title}" is live — tap to listen in` : `${actorName} is live on a stage`;
+    return stageLiveSentence(actorName, title);
   }
   if ((notification.type as string) === 'stage_reminder') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `"${title}" is starting soon` : 'A stage you set a reminder for is starting soon';
+    return stageReminderSentence(title);
   }
   if ((notification.type as string) === 'governance_vote') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
@@ -683,11 +684,9 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     return refId ? `/app/governance/${refId}` : '/governance';
   }
   if ((notification.type as string) === 'stage_live' || (notification.type as string) === 'stage_reminder') {
-    // reference_id carries the short id when the stage has one, else the uuid —
-    // route to whichever link form matches.
-    const refId = customReferenceId(notification);
-    if (!refId) return '/stages';
-    return /^\d+$/.test(refId) ? `/stages/${refId}` : `/stage/${refId}`;
+    // Shared with the live toast and the OS notification so all three land on
+    // the same room — see lib/stage-notifications.
+    return stageNotificationPath(customReferenceId(notification));
   }
 
   // Comment-type notifications should auto-open comments on the post
