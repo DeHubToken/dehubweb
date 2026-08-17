@@ -20,7 +20,7 @@ import {
   applyReactionDelta,
   isPositiveReaction,
   reactionMeta,
-  resolveTopReaction,
+  resolveLeadReaction,
   seedReactionCounts,
   type PostReaction,
   type ReactionCounts,
@@ -500,7 +500,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, []);
   useEffect(() => cancelLongPress, [cancelLongPress]);
 
-  const leadReaction = myReaction ?? resolveTopReaction(localReactionCounts);
+  /** One glyph on the thumb: your own positive reaction, else the post's most-used. */
+  const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
+  /** A 👎 or 💩 of your own belongs to the thumbs-DOWN button, not this one. */
+  const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
 
   // Lock body scroll when viewer is open, and flag the fullscreen state so the
   // top nav bars (home tab bar z-[110], mobile header z-[60]) drop beneath the
@@ -1004,11 +1007,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myReaction ? `${reactionMeta(myReaction).label} — hold to change your reaction` : 'Like — hold to react'}
+                      aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : 'Like — hold to react'}
                       aria-haspopup="menu"
                       aria-expanded={pickerOpen}
                     >
-                      {leadReaction && leadReaction !== 'like' ? (
+                      {leadReaction ? (
                         <span className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
                           {reactionMeta(leadReaction).emoji}
                         </span>
@@ -1192,11 +1195,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myReaction ? `${reactionMeta(myReaction).label} — hold to change your reaction` : 'Like — hold to react'}
+                      aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : 'Like — hold to react'}
                       aria-haspopup="menu"
                       aria-expanded={pickerOpen}
                     >
-                      {leadReaction && leadReaction !== 'like' ? (
+                      {leadReaction ? (
                         <span className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
                           {reactionMeta(leadReaction).emoji}
                         </span>

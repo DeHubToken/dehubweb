@@ -120,15 +120,45 @@ export function asReaction(value: unknown): PostReaction | null {
 export type ReactionCounts = Partial<Record<PostReaction, number>>;
 
 /**
- * The reaction to lead with on a card: whichever has the most, ties broken by
- * POST_REACTIONS order so a tie between like and love shows like. Null when
- * nobody has reacted — callers fall back to the plain thumbs-up.
+ * The single reaction the thumbs-up button leads with on a card.
+ *
+ * One glyph, never a row of them: the button stands for the post's reaction as
+ * a whole, so it shows whichever reaction has the most — ties broken by
+ * POST_REACTIONS order, which is why a post split evenly between 👍 and ❤️
+ * still reads as a like.
+ *
+ * Two rules sit on top of the count:
+ *
+ * 1. **The viewer's own reaction wins.** Seeing your 😂 on the post you laughed
+ *    at is what tells you the reaction registered; the crowd's pick is the
+ *    fallback, not the override.
+ * 2. **Negative reactions never lead.** They belong to the thumbs-DOWN button,
+ *    and 👎 or 💩 drawn beside the *like* count reads as a rendering bug rather
+ *    than as data. A post whose only reaction is a dislike leads with the plain
+ *    thumbs-up, exactly as it did before anyone touched it, and a viewer who
+ *    pooed a post sees their 💩 on the dislike button where it belongs.
+ *
+ * Null means "draw the plain thumbs-up icon" — returned both when no positive
+ * reaction leads and when the leader is a plain like, since the icon is already
+ * that reaction's glyph and swapping in the 👍 emoji would just make one card
+ * in the feed look different from the rest.
  */
-export function resolveTopReaction(counts: ReactionCounts | null | undefined): PostReaction | null {
+export function resolveLeadReaction(
+  counts: ReactionCounts | null | undefined,
+  myReaction?: PostReaction | null,
+): PostReaction | null {
+  const own = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
+  const lead = own ?? topPositiveReaction(counts);
+  return lead && lead !== DEFAULT_POSITIVE_REACTION ? lead : null;
+}
+
+/** Most-used positive reaction, ties broken by picker order. */
+function topPositiveReaction(counts: ReactionCounts | null | undefined): PostReaction | null {
   if (!counts) return null;
   let top: PostReaction | null = null;
   let best = 0;
   for (const key of POST_REACTIONS) {
+    if (!isPositiveReaction(key)) continue;
     const value = counts[key] ?? 0;
     if (value > best) {
       best = value;
@@ -136,23 +166,6 @@ export function resolveTopReaction(counts: ReactionCounts | null | undefined): P
     }
   }
   return top;
-}
-
-/**
- * The top few reactions on a post, most-used first, for the stacked summary
- * shown next to the count. Zero-count reactions are dropped.
- */
-export function topReactions(
-  counts: ReactionCounts | null | undefined,
-  limit = 3,
-): PostReaction[] {
-  if (!counts) return [];
-  return POST_REACTIONS
-    .map((key, index) => ({ key, value: counts[key] ?? 0, index }))
-    .filter((entry) => entry.value > 0)
-    .sort((a, b) => (b.value - a.value) || (a.index - b.index))
-    .slice(0, limit)
-    .map((entry) => entry.key);
 }
 
 /**

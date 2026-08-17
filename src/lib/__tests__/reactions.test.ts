@@ -3,9 +3,8 @@ import {
   applyReactionDelta,
   asReaction,
   isPositiveReaction,
-  resolveTopReaction,
+  resolveLeadReaction,
   seedReactionCounts,
-  topReactions,
   POST_REACTIONS,
   REACTION_LIST,
 } from '@/lib/reactions';
@@ -36,26 +35,40 @@ describe('reaction taxonomy', () => {
   });
 });
 
-describe('resolveTopReaction', () => {
+describe('resolveLeadReaction', () => {
   it('picks the most-used reaction', () => {
-    expect(resolveTopReaction({ like: 3, love: 9, poo: 1 })).toBe('love');
+    expect(resolveLeadReaction({ like: 3, love: 9 })).toBe('love');
+  });
+
+  it('leads with the plain thumbs-up when likes are ahead', () => {
+    expect(resolveLeadReaction({ like: 9, love: 3, hot: 2 })).toBeNull();
   });
 
   it('breaks ties by picker order, so like beats love', () => {
-    expect(resolveTopReaction({ like: 4, love: 4 })).toBe('like');
-    expect(resolveTopReaction({ love: 4, hot: 4 })).toBe('love');
+    expect(resolveLeadReaction({ like: 4, love: 4 })).toBeNull();
+    expect(resolveLeadReaction({ love: 4, hot: 4 })).toBe('love');
+  });
+
+  it('never leads with a negative reaction — that is the thumbs-down', () => {
+    expect(resolveLeadReaction({ like: 1, poo: 9 })).toBeNull();
+    expect(resolveLeadReaction({ dislike: 4 })).toBeNull();
+    expect(resolveLeadReaction({ love: 1, dislike: 9 })).toBe('love');
+  });
+
+  it("lets the viewer's own reaction outrank the crowd's", () => {
+    expect(resolveLeadReaction({ like: 40 }, 'lol')).toBe('lol');
+    expect(resolveLeadReaction({ love: 40 }, 'like')).toBeNull();
+  });
+
+  it("ignores the viewer's own reaction when it is a negative one", () => {
+    expect(resolveLeadReaction({ hot: 3 }, 'poo')).toBe('hot');
+    expect(resolveLeadReaction({ like: 3 }, 'dislike')).toBeNull();
   });
 
   it('returns null when nobody has reacted', () => {
-    expect(resolveTopReaction({})).toBeNull();
-    expect(resolveTopReaction({ like: 0 })).toBeNull();
-    expect(resolveTopReaction(null)).toBeNull();
-  });
-});
-
-describe('topReactions', () => {
-  it('orders by count then picker order, dropping zeros', () => {
-    expect(topReactions({ like: 2, love: 5, hot: 2, cry: 0 })).toEqual(['love', 'like', 'hot']);
+    expect(resolveLeadReaction({})).toBeNull();
+    expect(resolveLeadReaction({ like: 0 })).toBeNull();
+    expect(resolveLeadReaction(null)).toBeNull();
   });
 });
 
