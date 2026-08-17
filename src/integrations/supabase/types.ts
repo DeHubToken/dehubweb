@@ -4690,6 +4690,15 @@ export type Database = {
         Args: { _community_id: string; _target: string; _until?: string }
         Returns: undefined
       }
+      community_notify_mentions: {
+        Args: {
+          _community_id: string
+          _here?: boolean
+          _mentions?: string[]
+          _message_id: string
+        }
+        Returns: number
+      }
       community_permission: {
         Args: { _community_id: string; _perm: string; _wallet: string }
         Returns: boolean
