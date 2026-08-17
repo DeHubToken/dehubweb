@@ -209,7 +209,7 @@ export async function getNotifications(
   if (response && typeof response === 'object' && 'result' in response) {
     const result = response.result;
     if (Array.isArray(result)) {
-      console.log('[Notifications] raw types from API:', result.map((n: any) => n.type));
+      console.log('[Notifications] raw types from API:', result.map((n: any) => n?.type));
       const items = result
         .filter(item => item && item._id)
         .map(normalizeNotification);
@@ -222,7 +222,7 @@ export async function getNotifications(
   }
 
   if (Array.isArray(response)) {
-    console.log('[Notifications] raw types from API:', response.map((n: any) => n.type));
+    console.log('[Notifications] raw types from API:', response.map((n: any) => n?.type));
     const items = response
       .filter(item => item && item._id)
       .map(normalizeNotification);
