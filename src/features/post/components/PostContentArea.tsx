@@ -21,10 +21,6 @@ import { ChainSelector, type PostChainId } from '@/components/app/ChainSelector'
 interface PostContentAreaProps {
   text: string;
   setText: (text: string) => void;
-  description: string;
-  setDescription: (description: string) => void;
-  showDescription: boolean;
-  setShowDescription: (show: boolean) => void;
   editorRef: React.RefObject<HTMLDivElement>;
   media: MediaFile[];
   onRemoveMedia: (index: number) => void;
@@ -108,10 +104,6 @@ function createCashtagChip(tag: string): HTMLSpanElement {
 export function PostContentArea({
   text,
   setText,
-  description,
-  setDescription,
-  showDescription,
-  setShowDescription,
   editorRef,
   media,
   onRemoveMedia,
