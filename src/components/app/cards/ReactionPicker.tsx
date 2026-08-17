@@ -176,10 +176,14 @@ export function ReactionPicker({
                   e.stopPropagation();
                   onSelect(reaction.key);
                 }}
+                /* No disc behind the emoji on hover. The lift and the 10% grow
+                   already say which one the pointer is on, and a grey circle
+                   under one glyph in a row of nine was the only chrome in a
+                   tray whose whole point is that the emoji are the interface. */
                 className={cn(
                   'group relative flex h-9 w-9 items-center justify-center rounded-full',
-                  'text-lg leading-none transition-[transform,background-color,box-shadow] duration-150 ease-out',
-                  'hover:-translate-y-0.5 hover:scale-110 hover:bg-white/10 active:translate-y-0 active:scale-95',
+                  'text-lg leading-none transition-[transform,box-shadow] duration-150 ease-out',
+                  'hover:-translate-y-0.5 hover:scale-110 active:translate-y-0 active:scale-95',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
                 )}
                 /* The viewer's own reaction is marked by a bloom in the
@@ -243,10 +247,13 @@ export function ReactionPicker({
                   e.stopPropagation();
                   onShowInfo();
                 }}
+                /* Same as the emoji beside it: lift and brighten, no disc — one
+                   circle left on the end of the tray would read as the odd
+                   one out. */
                 className={cn(
                   'group relative flex h-9 w-9 items-center justify-center rounded-full',
-                  'text-white/50 transition-[transform,background-color,color] duration-150 ease-out',
-                  'hover:-translate-y-0.5 hover:bg-white/10 hover:text-white active:translate-y-0 active:scale-95',
+                  'text-white/50 transition-[transform,color] duration-150 ease-out',
+                  'hover:-translate-y-0.5 hover:text-white active:translate-y-0 active:scale-95',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
                 )}
               >
