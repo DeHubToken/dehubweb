@@ -318,6 +318,10 @@ Deno.serve(async (req) => {
         ctaLabel: creative.cta_label || 'Learn more',
         ctaUrl: creative.cta_url || c.cta_url || null,
         advertiser: account?.company_name || `${c.wallet_address.slice(0, 6)}…${c.wallet_address.slice(-4)}`,
+        // The advertiser is a DeHub account, so the card can draw their staking
+        // badge the same way an organic post header does — it just needs to know
+        // which wallet to resolve.
+        advertiserWallet: c.wallet_address,
         width: creative.width,
         height: creative.height,
         durationSeconds: creative.duration_seconds,

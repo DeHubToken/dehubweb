@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
+import { BadgedName } from '@/components/app/BadgedName';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useStage, useLiveSpaces } from '@/contexts/StageContext';
 
@@ -314,7 +315,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                       {stage.title}
                     </p>
                     <div className="flex items-center gap-2 text-[11px] text-zinc-500">
-                      <span>@{stage.host_username || stage.host_wallet_address?.slice(0, 6)}</span>
+                      <BadgedName lookupId={stage.host_username || stage.host_wallet_address}>
+                        @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+                      </BadgedName>
                       <span className="flex items-center gap-0.5">
                         <Users className="w-3 h-3" />
                         {(stage.speaker_count || 1) + (stage.listener_count || 0)}

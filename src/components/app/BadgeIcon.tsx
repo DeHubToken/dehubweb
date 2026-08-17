@@ -3,34 +3,38 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { getBadgeName, getBadgeUrl, isBigBadge, isBigBadgeUrl } from '@/lib/staking-badges';
+import { useBadgeVisual } from '@/hooks/use-badge-balance';
 
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
   badgeBalance?: number | string | null;
   /** Username for override lookup */
   username?: string | null;
+  /**
+   * Username or wallet address to fetch the balance for, when the surrounding
+   * payload carries no badge data (stage hosts, community owners, advertisers).
+   * Ignored when `badgeBalance` or `src` is supplied.
+   */
+  lookupId?: string | null;
   /** Or pass a pre-resolved badgeUrl directly */
   src?: string | null;
   /** Extra classes (positioning, sizing) */
   className?: string;
 }
 
-export function BadgeIcon({ badgeBalance, username, src, className = 'w-[9px] h-[9px]' }: BadgeIconProps) {
+export function BadgeIcon({ badgeBalance, username, lookupId, src, className = 'w-[9px] h-[9px]' }: BadgeIconProps) {
   const navigate = useNavigate();
-  const resolvedUrl = src || getBadgeUrl(badgeBalance, username);
-  const resolvedName = getBadgeName(badgeBalance, username);
-  const big = src ? isBigBadgeUrl(src) : isBigBadge(badgeBalance, username);
+  const { url, name, big } = useBadgeVisual({ badgeBalance, username, lookupId, src });
 
-  if (!resolvedUrl) return null;
+  if (!url) return null;
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <img
           data-badge-icon
-          src={resolvedUrl}
-          alt={resolvedName || 'Badge'}
+          src={url}
+          alt={name || 'Badge'}
           width={9}
           height={9}
           loading="lazy"
@@ -44,7 +48,7 @@ export function BadgeIcon({ badgeBalance, username, src, className = 'w-[9px] h-
         />
       </TooltipTrigger>
       <TooltipContent side="top" className="text-xs capitalize">
-        {resolvedName || 'Badge'}
+        {name || 'Badge'}
       </TooltipContent>
     </Tooltip>
   );

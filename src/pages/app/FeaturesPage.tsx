@@ -302,6 +302,7 @@ function FeatureCard({
           contentType="post"
           creatorId={feature.author_wallet_address}
           creatorUsername={feature.author_username || undefined}
+          badgeLookupId={feature.author_username || feature.author_wallet_address}
           timestamp={formatTimeAgo(feature.created_at)}
         />
         {isAuthor && (

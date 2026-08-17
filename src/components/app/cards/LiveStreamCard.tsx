@@ -550,6 +550,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           isLive={stream.isLive && !streamEnded}
           creatorId={stream.creatorId}
           creatorUsername={stream.creatorUsername}
+          badgeBalance={stream.creatorBadgeBalance}
         />
         <div className="flex items-center gap-2 pr-3">
           {/* Like button */}
