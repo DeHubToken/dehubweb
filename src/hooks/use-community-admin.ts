@@ -171,7 +171,7 @@ export function useCommunityAbilities(
  * The generated Supabase types predate these functions, so the rpc() name union
  * does not include them. Everything below is the single place that widens it.
  */
-async function callRpc<T = unknown>(
+export async function callRpc<T = unknown>(
   fn: string,
   args: Record<string, unknown>,
   walletAddress: string | null | undefined,
