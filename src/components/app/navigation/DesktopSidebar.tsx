@@ -3,8 +3,9 @@ import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PenSquare, Sparkles, LogIn, Menu, Search, X, CornerDownLeft } from 'lucide-react';
+import { PenSquare, Sparkles, LogIn, LogOut, Menu, Search, X, CornerDownLeft } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants/app.constants';
+import type { NavItem } from '@/types/app.types';
 import { SidebarNavItem } from './SidebarNavItem';
 import { filterNavItems, exploreSearchHref } from './nav-search';
 import { useSearchHistory } from '@/hooks/use-search-history';
@@ -31,6 +32,18 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
 
+/**
+ * Terminates the rail's nav list. Deliberately NOT in NAV_ITEMS: that array is
+ * shared with the mobile drawer, which already ends in its own log-out control,
+ * and it is ordered — anything appended there later would land underneath this.
+ * Rendered after the map instead, so "last" is structural rather than a position
+ * in a list somebody else maintains.
+ *
+ * `action` is what makes SidebarNavItem render a button rather than a NavLink;
+ * the value is only a discriminator, since the handler is passed in.
+ */
+const LOGOUT_ITEM: NavItem = { icon: LogOut, label: 'Log out', path: '', action: 'logout' };
+
 interface DesktopSidebarProps {
   onPostClick: () => void;
 }
@@ -39,7 +52,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
+  const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature, disconnect } = useAuth();
 
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
@@ -550,6 +563,38 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           })}
           {navQuery && visibleRailItems.length === 0 && !isCollapsed && (
             <p className="px-2.5 py-3 text-[13px] text-zinc-500">{t('sidebar.noMenuMatches')}</p>
+          )}
+          {/* Always the last thing in the rail. Three conditions, each for its
+              own reason:
+
+              Only when there is a session to end — signed out, the rail's
+              primary CTA below already reads "Log in", and a Log out above it
+              would be offering to undo nothing.
+
+              Only when nothing is typed in the menu search. The list above is
+              then the filter's results, and an item that matched no query has
+              no business sitting among them; the hand-off row marks the end
+              instead, which is why the bottom fade is suppressed there too.
+
+              The trailing spacer lifts it clear of that fade — 80px of
+              near-opaque zinc, which half-erases whatever rests under it.
+              Acceptable for the last nav destination, not for the one control
+              here that ends a session. */}
+          {isAuthenticated && !navQuery && (
+            <>
+              <SidebarNavItem
+                item={LOGOUT_ITEM}
+                isActive={false}
+                isHome={false}
+                currentPath={location.pathname}
+                variant="desktop"
+                collapsed={true}
+                forceCollapsed={isCollapsed}
+                onClick={() => { void disconnect(); }}
+                layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
+              />
+              <div aria-hidden className="h-14 flex-shrink-0" />
+            </>
           )}
           </div>
           {/* Hand-off. Always the last thing in the panel while a query is
