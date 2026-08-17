@@ -140,6 +140,10 @@ export interface DeHubNFT {
   };
   isLiked?: boolean;
   isDisliked?: boolean;
+  /** The viewer's persisted reaction; absent only on anonymous responses. */
+  myReaction?: import('@/lib/reactions').PostReaction | null;
+  /** Per-reaction totals used to restore the leading emoji after a reload. */
+  reactionCounts?: import('@/lib/reactions').ReactionCounts | null;
   isSaved?: boolean;
   isOwner?: boolean;
   isUnlocked?: boolean;

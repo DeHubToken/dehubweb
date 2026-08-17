@@ -1,4 +1,4 @@
-import { apiCall } from './core';
+import { apiCall, getAuthToken } from './core';
 import type { DeHubUser, DeHubNFT } from './types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
@@ -267,6 +267,7 @@ export async function getPostReactions(
 ): Promise<PostReactionsResponse> {
   return apiCall<PostReactionsResponse>('/api/post-reactions', {
     params: { tokenId: String(tokenId) },
+    requiresAuth: !!getAuthToken(),
   });
 }
 
