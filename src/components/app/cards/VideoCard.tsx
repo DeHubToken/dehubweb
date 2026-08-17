@@ -35,6 +35,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -438,7 +439,8 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
   const normalized = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
   // DeHub links render as cards below, so the URLs come out of the copy
   // (display-only — never sent back to the API).
-  const { links: dehubLinks, displayText: description } = useDehubLinks(normalized);
+  const { links: dehubLinks, displayText: linkFreeDescription } = useDehubLinks(normalized);
+  const { refs: assetRefs, displayText: description } = useAssetRefsInText(linkFreeDescription);
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -470,6 +472,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
           />
         ) : null}
         <DehubLinkEmbeds links={dehubLinks} />
+        <AssetRefCards refs={assetRefs} />
       </>
     );
   }
@@ -490,6 +493,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
         ) : null}
       </div>
       <DehubLinkEmbeds links={dehubLinks} />
+      <AssetRefCards refs={assetRefs} />
       {needsExpansion && !isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
