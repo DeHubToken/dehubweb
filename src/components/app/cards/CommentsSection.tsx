@@ -19,7 +19,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -534,12 +534,40 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
   const MAX_VOICE_DURATION = 30;
 
-  // Fetch comments from API
-  const { data: apiComments, isLoading, error } = useQuery({
+  // Fetch comments from API. Paged: the single-page version capped every
+  // thread at its 20 newest roots with no way to read the rest.
+  const COMMENTS_PAGE_SIZE = 20;
+  const {
+    data: commentPages,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['comments', tokenId, walletAddress],
-    queryFn: () => getNFTComments(tokenId, 0, 20, walletAddress?.toLowerCase()),
+    queryFn: ({ pageParam }) =>
+      getNFTComments(tokenId, pageParam as number, COMMENTS_PAGE_SIZE, walletAddress?.toLowerCase()),
+    initialPageParam: 0,
+    // A short page is the last page — the API exposes no total.
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.length >= COMMENTS_PAGE_SIZE ? allPages.length : undefined,
     staleTime: 30000,
   });
+  const apiComments = useMemo(() => commentPages?.pages.flat(), [commentPages]);
+
+  const loadMoreRow = !isLoading && !error && hasNextPage ? (
+    <div className="flex justify-center py-3">
+      <button
+        type="button"
+        onClick={() => fetchNextPage()}
+        disabled={isFetchingNextPage}
+        className="px-4 py-1.5 text-xs text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors disabled:opacity-50"
+      >
+        {isFetchingNextPage ? 'Loading…' : 'Load more comments'}
+      </button>
+    </div>
+  ) : null;
 
   // Fetch reposters when tab is active. Follow buttons in the list use the
   // shared optimistic override store — instant flip, cross-surface consistent.
@@ -1260,6 +1288,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 )}
               </AnimatePresence>
             )}
+            {loadMoreRow}
           </div>
         )}
 
@@ -1462,6 +1491,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 )}
               </AnimatePresence>
             )}
+            {loadMoreRow}
           </div>
         )}
       </div>
