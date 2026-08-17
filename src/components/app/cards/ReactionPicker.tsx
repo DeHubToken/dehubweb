@@ -11,8 +11,10 @@
  * This is a plain absolutely-positioned element instead, so a single unbroken
  * press can open the tray and land on a reaction.
  *
- * The tray is intentionally the only place emoji appear in the chrome; the
- * frame around them stays on the monochrome glass palette.
+ * The frame around the emoji stays on the monochrome glass palette, but the
+ * colour inside it no longer stops at the tray: the card's like and dislike
+ * buttons wear the same per-reaction glow once the reaction is yours, off the
+ * table both of them now read — `lib/reaction-glow`.
  *
  * Each emoji carries its own total in the corner, so the tray doubles as the
  * public breakdown of a post — a post with 19 👍 and one ❤️ reads as exactly
