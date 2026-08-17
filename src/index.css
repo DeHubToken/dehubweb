@@ -2411,6 +2411,15 @@ html[data-theme="light"] [data-reaction-tray] [data-reaction-option][data-active
 html[data-theme="light"] [data-reaction-tray] [data-reaction-option][data-active="true"] {
   --tw-ring-color: rgba(0, 0, 0, 0.22) !important;
 }
+/* Per-reaction totals: white-on-white once the tray turns to paper. The global
+   `.text-white → ink` remap only catches the bare utility, not `text-white/70`,
+   so the corner numbers need their own flip. */
+html[data-theme="light"] [data-reaction-tray] [data-reaction-count] {
+  color: rgba(0, 0, 0, 0.62) !important;
+}
+html[data-theme="light"] [data-reaction-tray] [data-reaction-count][data-zero="true"] {
+  color: rgba(0, 0, 0, 0.28) !important;
+}
 
 @media (prefers-reduced-transparency: reduce) {
   [data-reaction-tray] {

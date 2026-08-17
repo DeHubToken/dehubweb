@@ -25,6 +25,7 @@ import {
   isPositiveReaction,
   reactionMeta,
   resolveTopReaction,
+  seedReactionCounts,
   topReactions,
   type PostReaction,
   type ReactionCounts,
@@ -177,6 +178,25 @@ interface ActionBarProps {
   utilityDesktopAnchor?: boolean;
 }
 
+/**
+ * Per-reaction totals, seeded when the post has none.
+ *
+ * Every vote cast before multi-reaction shipped is a bare boolean, so a
+ * long-lived post arrives with `likeCount: 40` and no breakdown at all. That
+ * used to be harmless — the breakdown only decided which icon led — but the
+ * tray now prints a number under every emoji, and nine zeros beside a like
+ * count of 40 reads as a bug. Attributing that history to like/dislike is
+ * exactly what those votes were, and matches the API's own first write.
+ */
+function reactionCountsOrSeed(
+  counts: ReactionCounts | null | undefined,
+  likeCount: number,
+  dislikeCount: number,
+): ReactionCounts {
+  if (counts && Object.values(counts).some((value) => (value ?? 0) > 0)) return counts;
+  return seedReactionCounts(likeCount, dislikeCount);
+}
+
 /** Format count for display (e.g., 1500 -> 1.5K) */
 function formatCount(count?: number): string {
   const value = count ?? 0;
@@ -255,7 +275,8 @@ export function ActionBar({
     cachedVote?.myReaction !== undefined ? cachedVote.myReaction : initialMyReaction,
   );
   const [localReactionCounts, setLocalReactionCounts] = useState<ReactionCounts>(
-    cachedVote?.reactionCounts ?? initialReactionCounts ?? {},
+    cachedVote?.reactionCounts ??
+      reactionCountsOrSeed(initialReactionCounts, likeCount ?? 0, dislikeCount ?? 0),
   );
   const [pickerOpen, setPickerOpen] = useState(false);
   const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
@@ -337,7 +358,7 @@ export function ActionBar({
       const cached = postId ? getVoteCache(postId) : null;
       if (cached?.reactionCounts) { setLocalReactionCounts(cached.reactionCounts); return; }
     }
-    setLocalReactionCounts(initialReactionCounts ?? {});
+    setLocalReactionCounts(reactionCountsOrSeed(initialReactionCounts, likeCount ?? 0, dislikeCount ?? 0));
   }, [initialReactionCounts]);
 
   // Propagate API-sourced like/dislike state to all feed caches
@@ -817,6 +838,7 @@ export function ActionBar({
         <ReactionPicker
           open={pickerOpen}
           current={myReaction}
+          counts={localReactionCounts}
           onSelect={handleReaction}
           onClose={() => setPickerOpen(false)}
           align="right"
