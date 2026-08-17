@@ -11,7 +11,9 @@
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { stripDehubLinkMatches } from '@/lib/dehub-links';
+import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -365,13 +367,22 @@ function FeedDescription({
     [displayTitle, displayDescription],
   );
   const { links: dehubLinks } = useDehubLinks(linkSource);
+  // Contract addresses come out here too, for the same reason and at the same
+  // stage: half a stripped address left behind by the clamp is worse than none.
+  const { refs: assetRefs } = useAssetRefsInText(linkSource);
   const linkFreeTitle = useMemo(
-    () => (dehubLinks.length ? stripDehubLinkMatches(displayTitle, dehubLinks) : displayTitle),
-    [displayTitle, dehubLinks],
+    () => stripAssetRefs(
+      dehubLinks.length ? stripDehubLinkMatches(displayTitle, dehubLinks) : displayTitle,
+      assetRefs,
+    ),
+    [displayTitle, dehubLinks, assetRefs],
   );
   const linkFreeDescription = useMemo(
-    () => (dehubLinks.length ? stripDehubLinkMatches(displayDescription, dehubLinks) : displayDescription),
-    [displayDescription, dehubLinks],
+    () => stripAssetRefs(
+      dehubLinks.length ? stripDehubLinkMatches(displayDescription, dehubLinks) : displayDescription,
+      assetRefs,
+    ),
+    [displayDescription, dehubLinks, assetRefs],
   );
 
   // Suppress duplicate: if description starts with the title text, strip it out
@@ -422,6 +433,7 @@ function FeedDescription({
         </div>
       )}
       <DehubLinkEmbeds links={dehubLinks} />
+      <AssetRefCards refs={assetRefs} />
     </div>
   );
 }

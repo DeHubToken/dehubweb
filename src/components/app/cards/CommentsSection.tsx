@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
@@ -244,7 +245,9 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
   // Comments carry links as often as posts do — a reply pointing at another
   // post, a shop item or a community deserves the same card the post got.
   const commentBody = translation.isTranslated ? translation.translatedText : comment.text;
-  const { links: commentLinks, displayText: commentDisplayText } = useDehubLinks(commentBody);
+  const { links: commentLinks, displayText: commentLinkFreeText } = useDehubLinks(commentBody);
+  const { refs: commentAssetRefs, displayText: commentDisplayText } =
+    useAssetRefsInText(commentLinkFreeText);
 
   return (
     <motion.div
@@ -328,6 +331,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               />
             )}
             <DehubLinkEmbeds links={commentLinks} />
+            <AssetRefCards refs={commentAssetRefs} />
             {comment.imageUrl && (
               <img
                 src={comment.imageUrl}
