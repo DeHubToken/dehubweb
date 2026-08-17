@@ -73,6 +73,20 @@ export interface DeHubNotification {
    * written before multi-reaction shipped (render them as a plain like).
    */
   reaction?: PostReaction;
+  /**
+   * Free-form bag the server attaches per notification type; it already rode
+   * through `normalizeNotification`'s spread, it was just never declared. The
+   * one key the UI reads is `articleUrl`, which an admin broadcast sets to the
+   * page the announcement is about — see `announcementTarget` in
+   * NotificationsPage.
+   */
+  metadata?: NotificationMetadata;
+}
+
+/** Only the keys the client reads; the server sends more. */
+export interface NotificationMetadata {
+  articleUrl?: string;
+  [key: string]: unknown;
 }
 
 interface RawNotification {
@@ -104,6 +118,7 @@ interface RawNotification {
   reaction?: PostReaction;
   amount?: number;
   currency?: string;
+  metadata?: NotificationMetadata;
 }
 
 interface NotificationsApiResponse {
