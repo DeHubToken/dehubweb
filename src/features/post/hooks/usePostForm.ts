@@ -49,8 +49,6 @@ function formatFeeAmount(amount: number): string {
 
 interface ActiveDraft {
   text: string;
-  description: string;
-  showDescription: boolean;
   titleText: string;
   showTitle: boolean;
   selectedCategory: string;
@@ -230,8 +228,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   // Form state — initialize from saved draft if available
   const [text, setText] = useState(d?.text ?? '');
-  const [description, setDescription] = useState(d?.description ?? '');
-  const [showDescription, setShowDescription] = useState(d?.showDescription ?? false);
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
   const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
@@ -364,13 +360,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   useEffect(() => {
     const persistDraft = () => {
       const draft: ActiveDraft = {
-        text, description, showDescription, titleText, showTitle,
+        text, titleText, showTitle,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
       };
       // Only save if there's meaningful content
-      const hasContent = text.trim() || description.trim() || titleText.trim() ||
+      const hasContent = text.trim() || titleText.trim() ||
         selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
       if (hasContent) {
         saveActiveDraft(draft);
@@ -384,7 +380,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // clear the timer here, never persist, or the debounce is defeated. The
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
-  }, [text, description, showDescription, titleText, showTitle,
+  }, [text, titleText, showTitle,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
@@ -878,8 +874,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   const resetForm = useCallback(() => {
     setText('');
-    setDescription('');
-    setShowDescription(false);
     setMedia([]);
     setIsSubscribersOnly(false);
     setIsPPV(false);
@@ -1820,8 +1814,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   return {
     state: {
       text,
-      description,
-      showDescription,
       media,
       isSubscribersOnly,
       isPPV,
@@ -1855,8 +1847,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     },
     actions: {
       setText,
-      setDescription,
-      setShowDescription,
       setMedia,
       setIsSubscribersOnly,
       setIsPPV,

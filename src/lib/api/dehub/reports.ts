@@ -1,75 +1,9 @@
 import { apiCall } from './core';
 
-export interface DeHubReport {
-  id: string;
-  tokenId: number;
-  reporterId: string;
-  reason: string;
-  description?: string;
-  status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
-  createdAt: string;
-  updatedAt?: string;
-}
-
-export interface ReportSubmission {
-  tokenId: number;
-  reason: string;
-  description?: string;
-}
-
 export interface ReportReason {
   id: string;
   label: string;
   description?: string;
-}
-
-export async function getAllReports(): Promise<DeHubReport[]> {
-  const response = await apiCall<{ result: DeHubReport[] } | DeHubReport[]>("/api/nft/reports", {
-    requiresAuth: true,
-  });
-  
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result || [];
-  }
-  if (Array.isArray(response)) {
-    return response;
-  }
-  return [];
-}
-
-export async function getReportsForNFT(tokenId: number | string): Promise<DeHubReport[]> {
-  const response = await apiCall<{ result: DeHubReport[] } | DeHubReport[]>(`/api/reports/${tokenId}`, {
-    requiresAuth: true,
-  });
-  
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result || [];
-  }
-  if (Array.isArray(response)) {
-    return response;
-  }
-  return [];
-}
-
-export async function submitReport(data: ReportSubmission): Promise<{ success: boolean; reportId?: string; message?: string }> {
-  try {
-    const response = await apiCall<{ success?: boolean; result?: { id: string }; message?: string; _id?: string }>("/api/nft/reports", {
-      method: "POST",
-      body: data as unknown as Record<string, unknown>,
-      requiresAuth: true,
-    });
-    
-    const reportId = response?.result?.id || response?._id;
-    
-    return { 
-      success: response?.success !== false, 
-      reportId,
-      message: response?.message || 'Report submitted successfully',
-    };
-  } catch (error: any) {
-    console.error('[submitReport] Error:', error);
-    throw error;
-  }
 }
 
 // v2 Reports API
