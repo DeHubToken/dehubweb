@@ -22,8 +22,22 @@ describe('reaction picker material', () => {
     expect(CSS).toContain('rgba(9, 9, 11, 0.68)');
     expect(CSS).toContain('html[data-theme="light"] [data-reaction-tray]');
     expect(CSS).toContain('border-radius: 1rem !important');
-    expect(CSS).toContain('[data-reaction-option][data-active="true"]');
+    expect(CSS).toContain('[data-reaction-option]:hover');
     expect(CSS).toMatch(/prefers-reduced-transparency:[^)]+\)[\s\S]*\[data-reaction-tray\]/);
+  });
+
+  it('marks the viewer\'s reaction with a bloom in the emoji\'s colour, not a ring', () => {
+    expect(PICKER).not.toMatch(/bg-white\/15 ring-1 ring-white\/40/);
+    expect(PICKER).toContain('const REACTION_GLOW: Record<PostReaction, string>');
+    expect(PICKER).toContain('backgroundImage: `radial-gradient(circle, rgb(${glow} / 0.30)');
+    expect(PICKER).toContain('filter: `drop-shadow(0 0 5px rgb(${glow} / 0.85))`');
+    // Space-separated channels only work in the `rgb(R G B / A)` form; the
+    // legacy rgba() spelling would drop the declaration outright.
+    expect(PICKER).not.toMatch(/rgba\(\$\{glow\}/);
+    // Every reaction needs a colour, or its selected state paints nothing.
+    expect(PICKER.match(/^ {2}\w+: +'\d+ \d+ \d+',/gm)).toHaveLength(9);
+    // The paper theme must not wash ink over the bloom.
+    expect(CSS).not.toMatch(/\[data-reaction-option\]\[data-active="true"\] \{\s*background-color/);
   });
 
   it('prints each reaction total in the corner, zero included', () => {
