@@ -146,7 +146,19 @@ export function useBrowserNotifications() {
     setStoredEnabled(enabled);
   }, []);
 
-  const showNotification = useCallback((title: string, body: string, icon?: string, id?: string) => {
+  /**
+   * @param onClick Where clicking the notification should take the reader.
+   *   Without one, a delivered notification is inert — clicking it does not even
+   *   raise the tab it came from, which reads as the notification being broken.
+   *   The tab is focused first so the navigation happens somewhere visible.
+   */
+  const showNotification = useCallback((
+    title: string,
+    body: string,
+    icon?: string,
+    id?: string,
+    onClick?: () => void,
+  ) => {
     // Only show when tab is not focused, permission granted, and feature enabled
     if (!document.hidden) return;
     if (!getStoredEnabled()) return;
@@ -164,6 +176,14 @@ export function useBrowserNotifications() {
         tag: id, // prevents duplicate OS-level notifications with same tag
       });
       if (id) shownRef.current.add(id);
+
+      if (onClick) {
+        notification.onclick = () => {
+          try { window.focus(); } catch {}
+          notification.close();
+          onClick();
+        };
+      }
 
       // Auto-close after 5 seconds
       setTimeout(() => notification.close(), 5000);
