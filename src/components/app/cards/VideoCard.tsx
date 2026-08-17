@@ -2067,6 +2067,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
             <ActionBar
               postId={video.id}
+              newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
               utilityDesktopAnchor
