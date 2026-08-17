@@ -25,6 +25,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
+import { reactionGlowProps } from '@/lib/reaction-glow';
 import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
@@ -504,6 +505,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
   /** A 👎 or 💩 of your own belongs to the thumbs-DOWN button, not this one. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
+  /** …which is where the other two land, and where their glow goes. */
+  const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
 
   // Lock body scroll when viewer is open, and flag the fullscreen state so the
   // top nav bars (home tab bar z-[110], mobile header z-[60]) drop beneath the
@@ -959,6 +962,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <motion.button
                     onClick={() => handleVote(false)}
                     disabled={isVoting}
+                    {...reactionGlowProps(myNegativeReaction)}
                     className="flex items-center gap-1"
                     animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                     transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1004,6 +1008,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onPointerCancel={cancelLongPress}
                       onContextMenu={(e) => e.preventDefault()}
                       disabled={isVoting}
+                      /* Same halo the tray puts on your pick — see ActionBar. */
+                      {...reactionGlowProps(myPositiveReaction)}
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1012,7 +1018,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       aria-expanded={pickerOpen}
                     >
                       {leadReaction ? (
-                        <span className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
+                        <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
                           {reactionMeta(leadReaction).emoji}
                         </span>
                       ) : (
@@ -1137,6 +1143,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <motion.button
                     onClick={() => handleVote(false)}
                     disabled={isVoting}
+                    {...reactionGlowProps(myNegativeReaction)}
                     className="flex items-center gap-1"
                     animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                     transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1192,6 +1199,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onPointerCancel={cancelLongPress}
                       onContextMenu={(e) => e.preventDefault()}
                       disabled={isVoting}
+                      /* Same halo the tray puts on your pick — see ActionBar. */
+                      {...reactionGlowProps(myPositiveReaction)}
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1200,7 +1209,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       aria-expanded={pickerOpen}
                     >
                       {leadReaction ? (
-                        <span className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
+                        <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
                           {reactionMeta(leadReaction).emoji}
                         </span>
                       ) : (
