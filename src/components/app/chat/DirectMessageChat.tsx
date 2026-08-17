@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
+import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { useTranslation } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
@@ -240,6 +241,14 @@ const MessageBubble = memo(function MessageBubble({
     // still here for anyone who wants it.
   } = useTranslation(textContent, false);
 
+  // A contract address or a $TICKER in a plain message cards up the same way it
+  // does in a post. Entity shares are left alone — they already have a card, and
+  // stacking a second one under a 280px bubble reads as a bug.
+  const { refs: dmAssetRefs, displayText: dmDisplayText } = useAssetRefsInText(
+    isPostShare ? '' : (isTranslated ? translatedText : message.content) || '',
+    1,
+  );
+
   return (
     <div
       id={`dm-msg-${message._id}`}
@@ -351,9 +360,23 @@ const MessageBubble = memo(function MessageBubble({
                   </div>
                 </div>
               ) : (
-                <p dir="auto" className="text-sm break-words whitespace-pre-wrap text-left">
-                  {isTranslated ? translatedText : message.content}
-                </p>
+                <div className={`flex flex-col gap-1.5 ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+                  {/* An address-only message strips to nothing, and an empty
+                      paragraph still takes a line inside the bubble. */}
+                  {dmDisplayText?.trim() ? (
+                    <p dir="auto" className="text-sm break-words whitespace-pre-wrap text-left">
+                      {dmDisplayText}
+                    </p>
+                  ) : null}
+                  {/* Same 280px as the entity card above, and for the same
+                      reason: the bubble is inline-block, so a w-full card has
+                      nothing definite to resolve against. */}
+                  {dmAssetRefs.length > 0 && (
+                    <div className="w-[280px] max-w-full text-left">
+                      <AssetRefCards refs={dmAssetRefs} className="mt-0" />
+                    </div>
+                  )}
+                </div>
               )
             )}
 

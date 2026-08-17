@@ -23,6 +23,7 @@ import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -153,6 +154,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   // as visible text rather than dropping it for a card that never renders.
   const bodyText = isTranslated ? translatedText : post.content;
   const { links: dehubLinks, displayText: bodyWithoutLinks } = useDehubLinks(bodyText);
+  // Same idea for market references, and in this order: the entity pass claims
+  // whole URLs first, so a dehub.io link carrying a hex id cannot also read as a
+  // contract address.
+  const { refs: assetRefs, displayText: displayBody } = useAssetRefsInText(bodyWithoutLinks);
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
@@ -436,8 +441,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             and `bodyWithoutLinks` is already its output. Left on, TranslatableText
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
-        {bodyWithoutLinks?.trim() ? (
-          <TranslatableText text={bodyWithoutLinks} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
+        {displayBody?.trim() ? (
+          <TranslatableText text={displayBody} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
         ) : null}
 
         {/* Quoted post embed (Twitter-style) */}
@@ -447,6 +452,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
         {/* DeHub entity cards — post, profile, community, invite, store, item, event */}
         <DehubLinkEmbeds links={dehubLinks} />
+
+        {/* Market cards — a contract address somebody pasted, or a $TICKER */}
+        <AssetRefCards refs={assetRefs} />
 
         {/* OG previews for outside links. Skipped when an entity card is already
             showing: two stacked cards for one line of text is noise. */}

@@ -3,13 +3,66 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+/** Instrument classes worth a card. Everything else Yahoo returns is noise. */
+const SEARCHABLE_TYPES = ['EQUITY', 'ETF', 'MUTUALFUND', 'INDEX', 'FUTURE', 'CURRENCY'];
+
+/**
+ * Ticker search for the composer's asset picker.
+ *
+ * Yahoo's search endpoint covers equities, ETFs, indices, futures and FX in one
+ * call, which is the half of the market the crypto providers cannot answer. It
+ * also returns crypto pairs (`BTC-USD`) — dropped here, because CMC and
+ * DexScreener describe those better and a duplicate row for the same asset in
+ * two spellings is worse than a missing one.
+ */
+async function searchInstruments(rawQuery: string) {
+  const q = rawQuery.replace(/^\$/, '').trim().slice(0, 24);
+  if (!q) return [];
+
+  const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=10&newsCount=0&listsCount=0`;
+
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    if (!res.ok) {
+      console.error('Yahoo Finance search error:', res.status, await res.text());
+      return [];
+    }
+    const data = await res.json();
+    const quotes: Record<string, unknown>[] = Array.isArray(data?.quotes) ? data.quotes : [];
+
+    return quotes
+      .filter((quote) => {
+        const type = String(quote.quoteType || '').toUpperCase();
+        return SEARCHABLE_TYPES.includes(type) && typeof quote.symbol === 'string';
+      })
+      .slice(0, 6)
+      .map((quote) => ({
+        symbol: String(quote.symbol).toUpperCase(),
+        name: String(quote.longname || quote.shortname || quote.symbol),
+        exchange: String(quote.exchDisp || quote.exchange || ''),
+        instrumentType: String(quote.quoteType || '').toUpperCase(),
+      }));
+  } catch (err) {
+    console.error('stock search error:', err);
+    return [];
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { symbol } = await req.json();
+    const body = await req.json();
+    const { symbol, query } = body ?? {};
+
+    if (typeof query === 'string' && query.trim()) {
+      return new Response(JSON.stringify({ results: await searchInstruments(query) }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     if (!symbol || typeof symbol !== 'string') {
       return new Response(JSON.stringify({ found: false, error: 'Missing symbol' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

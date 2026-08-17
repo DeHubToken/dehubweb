@@ -14,6 +14,9 @@ import { DraftsSheet, type Draft } from './DraftsSheet';
 import { format } from 'date-fns';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { AssetPickerDropdown } from '@/components/app/assets/AssetPickerDropdown';
+import { useAssetPicker } from '@/hooks/use-asset-picker';
+import { useAssetSearch } from '@/hooks/use-asset-ref';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { ChainSelector, type PostChainId } from '@/components/app/ChainSelector';
@@ -170,6 +173,23 @@ export function PostContentArea({
       }
     },
   });
+
+  // Ticker picker — same contract as the mention hook. The query lives here
+  // rather than in the dropdown because the arrow keys need the results too.
+  const assetPicker = useAssetPicker({
+    inputRef: editorRef,
+    onInsert: (_asset, newText) => {
+      setText(newText);
+      if (editorRef.current) {
+        editorRef.current.textContent = newText;
+        setTimeout(processLinks, 0);
+      }
+    },
+  });
+  const { data: assetResults = [], isFetching: assetsLoading } = useAssetSearch(
+    assetPicker.query,
+    assetPicker.isOpen,
+  );
 
   const charCount = text.length;
 
@@ -405,11 +425,12 @@ export function PostContentArea({
     
     // Trigger mention detection
     mention.handleInput(plainText);
-    
+    assetPicker.handleInput(plainText);
+
     // Only process links after user stops typing for 1.5s to avoid cursor jumps
     if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
     linkDebounceRef.current = setTimeout(processLinks, 1500);
-  }, [editorRef, setText, processLinks, mention]);
+  }, [editorRef, setText, processLinks, mention, assetPicker]);
 
   // Handle paste - process links immediately
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
@@ -710,6 +731,10 @@ export function PostContentArea({
                 }
               }}
               onKeyDown={(e) => {
+                // Ticker picker first: it only claims a key while its own
+                // dropdown is open, and the two cannot both be open — `@` and
+                // `$` are different triggers at the same caret.
+                if (assetPicker.handleKeyDown(e, assetResults)) return;
                 if (mention.handleKeyDown(e)) {
                   if (e.key === 'Enter' || e.key === 'Tab') {
                     e.preventDefault();
@@ -830,6 +855,17 @@ export function PostContentArea({
         onLoadDraft={onLoadDraft}
         onDeleteDraft={onDeleteDraft}
         canSave={canSaveDraft}
+      />
+
+      {/* Ticker picker — tokens and stocks for a `$` being typed */}
+      <AssetPickerDropdown
+        isOpen={assetPicker.isOpen}
+        position={assetPicker.position}
+        results={assetResults}
+        loading={assetsLoading}
+        selectedIndex={assetPicker.selectedIndex}
+        onSelectedIndexChange={assetPicker.setSelectedIndex}
+        onSelect={assetPicker.handleSelect}
       />
 
       {/* User Mention Dropdown */}
