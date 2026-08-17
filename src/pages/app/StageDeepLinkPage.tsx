@@ -337,6 +337,12 @@ export default function StageDeepLinkPage() {
               </StageHostLink>
             </div>
 
+            {/* The crowd on its way. A stage in its first minute has a
+                headcount of one, and this page is where the go-live
+                notification lands people — the reminder rows outlive the flip
+                to live, so they still answer "is anyone else coming to this". */}
+            <StageReminderFaces spaceId={stage.id} state="live" className="mt-3" />
+
             <div className="flex gap-2 mt-5">
               <button
                 onClick={() => {
