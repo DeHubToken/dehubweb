@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { getAccountInfo } from '@/lib/api/dehub';
 import { adminErrorMessage } from '@/hooks/use-community-admin';
+import { notifyCommunityMentions } from '@/lib/community-mention-notify';
 import { toast } from 'sonner';
 
 export interface CommunityChatMessage {
@@ -264,10 +265,12 @@ export function useCommunityChat(
       reactions: {},
     };
 
-    const { error } = await withWalletHeader(
+    const { data: inserted, error } = await withWalletHeader(
       supabase
         .from('community_chat_messages')
-        .insert(msg as any),
+        .insert(msg as any)
+        .select('id')
+        .single(),
       walletAddress
     );
 
@@ -277,6 +280,20 @@ export function useCommunityChat(
       // conditions -- say which one rather than a generic failure.
       toast.error(adminErrorMessage(error, 'Failed to send message'));
       throw error;
+    }
+
+    // Mentions are notified after the message is safely stored, and a failure
+    // here never surfaces as a send failure: the message is already posted and
+    // visible, so the worst case is a missing notification rather than a
+    // message the sender believes was lost.
+    const messageId = (inserted as { id?: string } | null)?.id;
+    if (messageId) {
+      void notifyCommunityMentions({
+        communityId,
+        messageId,
+        content,
+        walletAddress,
+      });
     }
   }, [communityId, walletAddress]);
 
