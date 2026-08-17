@@ -38,6 +38,7 @@ import { scrollDocumentTo } from '@/lib/document-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { useStageAlerts } from '@/hooks/use-stage-alerts';
 import { cn } from '@/lib/utils';
 // Lazy: only rendered as the post overlay when a post is opened from home —
 // a whole page's worth of code that shouldn't ride in the entry bundle.
@@ -86,6 +87,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
   const mainRef = useRef<HTMLElement | null>(null);
+
+  // "A stage you set a reminder for is starting soon / just started" — announced
+  // wherever you are in the app, so it mounts with the shell rather than on the
+  // stages page.
+  useStageAlerts();
 
   // Expose the middle panel's live bounds (the gap between the left/right
   // sidebars) as CSS vars so anything mounted outside AppLayout — the login
