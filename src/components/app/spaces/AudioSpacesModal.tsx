@@ -15,7 +15,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Volume2,
+  Loader2, Volume2, Bell,
   Link, UserPlus, Minimize2, Play, Square, Clock, Trash2, FileText,
 } from 'lucide-react';
 import { StageTranscriptDrawer } from './StageTranscriptDrawer';
@@ -38,6 +38,7 @@ import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { useStagePreAudience, type StageReminderFace } from '@/hooks/use-stage-reminders';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { BadgedName } from '@/components/app/BadgedName';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
@@ -399,6 +400,13 @@ export function AudioSpacesModal() {
 
   const speakers = participants.filter(p => p.role === 'host' || p.role === 'speaker');
   const listeners = participants.filter(p => p.role === 'listener');
+
+  // Everyone who set a reminder and hasn't walked in yet, shown in the crowd
+  // behind the real listeners so a room that just opened isn't visibly empty.
+  const { waiting, waitingTotal, overflow } = useStagePreAudience(
+    currentSpace?.id,
+    participants.map((p) => p.wallet_address),
+  );
 
   return (
     <>
@@ -825,12 +833,24 @@ export function AudioSpacesModal() {
                 </div>
               )}
 
-              {/* Listeners Section */}
-              {listeners.length > 0 && (
+              {/* Listeners Section — real listeners first, then the
+                  pre-audience: people who set a reminder on this stage and
+                  haven't arrived yet. They are dimmed and carry a bell so the
+                  room is never claiming they can hear it, and they are counted
+                  separately from the live headcount for the same reason. */}
+              {(listeners.length > 0 || waitingTotal > 0) && (
                 <div className="space-y-2">
                   <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
                     <Users className="w-4 h-4" />
                     Listeners ({listeners.length})
+                    {waitingTotal > 0 && (
+                      <span
+                        className="text-[10px] text-white/40"
+                        title={`${waitingTotal} set a reminder and ${waitingTotal === 1 ? 'is' : 'are'} expected`}
+                      >
+                        · {waitingTotal} going
+                      </span>
+                    )}
                     {myRole === 'host' && (
                       <span className="text-[10px] text-white/30 ml-1">(tap + to invite as speaker)</span>
                     )}
@@ -849,6 +869,19 @@ export function AudioSpacesModal() {
                       <div className="flex flex-col items-center gap-1">
                         <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/60">
                           +{listeners.length - 20}
+                        </div>
+                      </div>
+                    )}
+                    {waiting.map((face) => (
+                      <PreAudienceItem key={face.address} face={face} />
+                    ))}
+                    {overflow > 0 && (
+                      <div className="flex flex-col items-center gap-1">
+                        <div
+                          className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-xs text-white/40"
+                          title={`${overflow} more set a reminder`}
+                        >
+                          +{overflow}
                         </div>
                       </div>
                     )}
@@ -1188,6 +1221,43 @@ function ListenerItem({
       </div>
       <span className="text-[10px] text-white/40 truncate max-w-[60px]">
         @{participant.username || 'anon'}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * A pre-audience seat: somebody who set a reminder and hasn't arrived.
+ *
+ * Same size and place in the crowd as a listener — that is the whole point, a
+ * room with twelve faces in it reads as a room worth being in — but dimmed and
+ * bell-marked, and with no host affordances: there is nothing to invite to the
+ * mic, because there is no Agora connection behind this face.
+ */
+function PreAudienceItem({ face }: { face: StageReminderFace }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const cdnFallback = buildAvatarCdnFallbackUrl(face.address);
+  const resolved = buildAvatarUrl(face.address, face.avatarUrl) || cdnFallback;
+  const activeSrc = imgFailed ? cdnFallback : resolved;
+
+  return (
+    <div
+      className="relative flex flex-col items-center gap-1 opacity-40"
+      title={`@${face.username || 'anon'} said they're coming — not in the room yet`}
+    >
+      <div className="relative">
+        <Avatar className="w-8 h-8">
+          <AvatarImage src={activeSrc} onError={() => setImgFailed(true)} />
+          <AvatarFallback className="bg-white/10 text-white text-xs">
+            {face.username?.[0]?.toUpperCase() || '?'}
+          </AvatarFallback>
+        </Avatar>
+        <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-black/70 flex items-center justify-center border border-white/20">
+          <Bell className="w-2.5 h-2.5 text-white/70" />
+        </div>
+      </div>
+      <span className="text-[10px] text-white/40 truncate max-w-[60px]">
+        @{face.username || 'anon'}
       </span>
     </div>
   );

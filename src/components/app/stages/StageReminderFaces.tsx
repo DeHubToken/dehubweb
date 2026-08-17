@@ -1,9 +1,15 @@
 /**
- * StageReminderFaces — who is waiting on an announced stage
- * =========================================================
+ * StageReminderFaces — who is waiting on a stage
+ * ==============================================
  * A short facepile of the highest-follower accounts that set a reminder, plus
  * the total. Social proof on an announcement card: "these people are coming"
  * does more for a click than a bell icon does.
+ *
+ * Reminder rows survive the stage going live, so the same row is worth showing
+ * on a live invite link — a room in its first minute has a headcount of one and
+ * a guest arriving from the notification deserves to see the rest of the crowd
+ * on its way. Pass `state="live"` there for the wording; the live room's own
+ * crowd shows these people as seats instead (see useStagePreAudience).
  *
  * Renders nothing when nobody has reminded, so an empty announcement stays
  * clean rather than advertising that no one is interested. The same silence
@@ -19,19 +25,24 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 export function StageReminderFaces({
   spaceId,
   className,
+  state = 'upcoming',
 }: {
   spaceId: string | undefined;
   className?: string;
+  /** Wording only — "set a reminder" before the stage starts, "coming" after. */
+  state?: 'upcoming' | 'live';
 }) {
   const { faces, total } = useStageReminderFaces(spaceId);
 
   if (total === 0) return null;
 
+  const tooltip =
+    state === 'live'
+      ? `${total} ${total === 1 ? 'person said they were' : 'people said they were'} coming`
+      : `${total} ${total === 1 ? 'person has' : 'people have'} set a reminder`;
+
   return (
-    <div
-      className={cn('flex items-center gap-2', className)}
-      title={`${total} ${total === 1 ? 'person has' : 'people have'} set a reminder`}
-    >
+    <div className={cn('flex items-center gap-2', className)} title={tooltip}>
       {faces.length > 0 && (
         <div className="flex -space-x-2">
           {faces.map((face) => {
