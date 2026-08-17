@@ -471,6 +471,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         <div className="pt-1">
           <ActionBar
             postId={post.id}
+            newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
             tokenId={parseInt(post.id, 10) || undefined}
             isOwnPost={!!isOwnPost}
             utilityDesktopAnchor

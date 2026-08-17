@@ -60,6 +60,12 @@ import {
 interface ActionBarProps {
   /** Post ID for info navigation and voting */
   postId?: string;
+  /**
+   * The off-chain slug, when the post has one and is not yet minted. Share
+   * and copy-link then hand out /newpost/<n> instead of the NFT-style
+   * /app/post/<tokenId> the post hasn't earned. Omitted → old behaviour.
+   */
+  newPostSlug?: number | null;
   /** Handler for comment action */
   onComment?: () => void;
   /** Handler for share action */
@@ -179,9 +185,10 @@ function formatCount(count?: number): string {
   return value.toString();
 }
 
-export function ActionBar({ 
+export function ActionBar({
   postId,
-  onComment, 
+  newPostSlug,
+  onComment,
   onShare,
   onRepost,
   onQuote,
@@ -583,8 +590,16 @@ export function ActionBar({
     .filter((key) => key !== 'like' && key !== 'dislike' && key !== leadReaction)
     .slice(0, 2);
 
+  // An off-chain post shares as its own slug, never as an NFT-style URL.
+  const shareUrlForPost = () =>
+    newPostSlug != null
+      ? dehubLinkFor.newPost(newPostSlug)
+      : postId
+        ? dehubLinkFor.post(postId)
+        : window.location.href;
+
   const handleCopyLink = () => {
-    const url = postId ? dehubLinkFor.post(postId) : window.location.href;
+    const url = shareUrlForPost();
     navigator.clipboard.writeText(url);
     toast.success('Post URL copied to clipboard');
     // Feed copies feed the same reposts+copies share counter shown on shorts
@@ -941,7 +956,7 @@ export function ActionBar({
 
       {canSendInDm && dmShareOpen && (
         <Suspense fallback={null}>
-          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={dehubLinkFor.post(tokenId!)} />
+          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={newPostSlug != null ? dehubLinkFor.newPost(newPostSlug) : dehubLinkFor.post(tokenId!)} />
         </Suspense>
       )}
 
