@@ -760,7 +760,7 @@ export type Database = {
           listener_count: number
           recording_url: string | null
           scheduled_at: string | null
-          short_id: number
+          short_id: number | null
           speaker_count: number
           started_at: string
           status: string
@@ -780,7 +780,7 @@ export type Database = {
           listener_count?: number
           recording_url?: string | null
           scheduled_at?: string | null
-          short_id?: number
+          short_id?: number | null
           speaker_count?: number
           started_at?: string
           status?: string
@@ -800,7 +800,7 @@ export type Database = {
           listener_count?: number
           recording_url?: string | null
           scheduled_at?: string | null
-          short_id?: number
+          short_id?: number | null
           speaker_count?: number
           started_at?: string
           status?: string
@@ -1062,7 +1062,6 @@ export type Database = {
           start_fen: string | null
           status: string
           turn: string
-          wagers_settled: boolean
           white_ms: number | null
           white_wallet: string | null
           winner: string | null
@@ -1084,7 +1083,6 @@ export type Database = {
           start_fen?: string | null
           status?: string
           turn?: string
-          wagers_settled?: boolean
           white_ms?: number | null
           white_wallet?: string | null
           winner?: string | null
@@ -1106,7 +1104,6 @@ export type Database = {
           start_fen?: string | null
           status?: string
           turn?: string
-          wagers_settled?: boolean
           white_ms?: number | null
           white_wallet?: string | null
           winner?: string | null
@@ -3295,11 +3292,17 @@ export type Database = {
           id: string
           listing_id: string
           notes: string | null
+          paid_token_amount: number | null
+          paid_token_symbol: string | null
           seller_address: string
           shipping_address: string | null
+          source: string
           status: string
+          stream_token_id: string | null
           tx_hash: string | null
           updated_at: string
+          verified_at: string | null
+          verify_error: string | null
         }
         Insert: {
           amount: number
@@ -3308,11 +3311,17 @@ export type Database = {
           id?: string
           listing_id: string
           notes?: string | null
+          paid_token_amount?: number | null
+          paid_token_symbol?: string | null
           seller_address: string
           shipping_address?: string | null
+          source?: string
           status?: string
+          stream_token_id?: string | null
           tx_hash?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verify_error?: string | null
         }
         Update: {
           amount?: number
@@ -3321,15 +3330,68 @@ export type Database = {
           id?: string
           listing_id?: string
           notes?: string | null
+          paid_token_amount?: number | null
+          paid_token_symbol?: string | null
           seller_address?: string
           shipping_address?: string | null
+          source?: string
           status?: string
+          stream_token_id?: string | null
           tx_hash?: string | null
           updated_at?: string
+          verified_at?: string | null
+          verify_error?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "store_orders_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "store_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stream_products: {
+        Row: {
+          created_at: string
+          creator_address: string
+          id: string
+          is_pinned: boolean
+          listing_id: string
+          live_price: number | null
+          pinned_at: string | null
+          position: number
+          token_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          creator_address: string
+          id?: string
+          is_pinned?: boolean
+          listing_id: string
+          live_price?: number | null
+          pinned_at?: string | null
+          position?: number
+          token_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          creator_address?: string
+          id?: string
+          is_pinned?: boolean
+          listing_id?: string
+          live_price?: number | null
+          pinned_at?: string | null
+          position?: number
+          token_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stream_products_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "store_listings"
@@ -4572,15 +4634,6 @@ export type Database = {
         }
         Returns: Json
       }
-      ai_credit_claim_daily: {
-        Args: {
-          p_cap_dhb: number
-          p_daily_dhb: number
-          p_starter_dhb: number
-          p_wallet: string
-        }
-        Returns: Json
-      }
       ai_credit_grant: {
         Args: {
           p_dhb: number
@@ -4606,7 +4659,6 @@ export type Database = {
         Returns: number
       }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
-      chess_settle_wagers: { Args: { p_match_id: string }; Returns: string }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
       claim_xl_cashback_slot: {
         Args: { p_subscription_id: string; p_xl_price_id: string }
@@ -4689,15 +4741,6 @@ export type Database = {
       community_mute_member: {
         Args: { _community_id: string; _target: string; _until?: string }
         Returns: undefined
-      }
-      community_notify_mentions: {
-        Args: {
-          _community_id: string
-          _here?: boolean
-          _mentions?: string[]
-          _message_id: string
-        }
-        Returns: number
       }
       community_permission: {
         Args: { _community_id: string; _perm: string; _wallet: string }
