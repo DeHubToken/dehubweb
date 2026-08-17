@@ -983,6 +983,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <ReactionPicker
                       open={pickerOpen}
                       current={myReaction}
+                      counts={localReactionCounts}
                       onSelect={handleReaction}
                       onClose={() => setPickerOpen(false)}
                       align="right"
@@ -1170,6 +1171,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <ReactionPicker
                       open={pickerOpen}
                       current={myReaction}
+                      counts={localReactionCounts}
                       onSelect={handleReaction}
                       onClose={() => setPickerOpen(false)}
                       align="right"
