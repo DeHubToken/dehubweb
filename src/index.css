@@ -2435,6 +2435,30 @@ html[data-theme="light"] [data-reaction-tray] [data-reaction-count][data-zero="t
   }
 }
 
+/* A card's like/dislike button once the reaction on it is YOURS: the glyph
+   carries a halo in that reaction's own colour, so the card says the same
+   thing the tray said when you picked it. `--reaction-glow` arrives inline
+   from `reactionGlowProps` because the colour is per-reaction data; the paint
+   is here so themes can outrank it. Osaka does exactly that — it animates a
+   neon cycle over `[data-engaged]` glyphs, and a running animation beats a
+   normal declaration, so its cards keep their own signal.
+
+   The GLYPH, never the button: dislike renders its count as a direct child
+   <span> of the same button, and a filter on the row would halo the number
+   too. One shadow, tight and half-strength — this sits in a line of chrome on
+   a card, not on the tray's own glass panel, and anything wider reads as a
+   smudge rather than as colour. */
+[data-reaction-glow] > :is(svg, [data-engaged-glyph]) {
+  filter: drop-shadow(0 0 4px rgb(var(--reaction-glow) / 0.55));
+}
+
+/* Forced colours: the user agent's palette is the whole point, so drop it. */
+@media (forced-colors: active) {
+  [data-reaction-glow] > :is(svg, [data-engaged-glyph]) {
+    filter: none;
+  }
+}
+
 
 /* Post modal composer: white text and translucent surfaces become invisible on
    the light paper background. Force all text, placeholders, caret and toggle

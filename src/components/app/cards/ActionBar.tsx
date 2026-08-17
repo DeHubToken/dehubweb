@@ -29,6 +29,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
+import { reactionGlowProps } from '@/lib/reaction-glow';
 import { ReactionPicker } from './ReactionPicker';
 import { useAuth } from '@/contexts/AuthContext';
 import { PostUtilityButtons } from './PostUtilityButtons';
@@ -606,6 +607,8 @@ export function ActionBar({
    * is the thumbs-DOWN button's business, so this button must not announce it.
    */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
+  /** …and its counterpart, which lights the thumbs-down instead. */
+  const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
 
   // An off-chain post shares as its own slug, never as an NFT-style URL.
   const shareUrlForPost = () =>
@@ -770,6 +773,7 @@ export function ActionBar({
              weight instead) — so every engagement button carries the same
              attribute and themes style one selector. */
           data-engaged={isDisliked ? 'dislike' : undefined}
+          {...reactionGlowProps(myNegativeReaction)}
           className={cn(
             "flex items-center gap-0.5 transition-colors text-white",
             isVoting && "opacity-50"
@@ -863,6 +867,11 @@ export function ActionBar({
           /* Engaged whenever the viewer holds a POSITIVE reaction, not only a
              plain 👍 — a post the viewer loved is still a post they liked. */
           data-engaged={isLiked ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like') : undefined}
+          /* Your own reaction haloes the glyph in its own colour, the same
+             signal the tray's selected emoji wears — so the card agrees with
+             the picker you set it from, and a 👍 you cast is not just a filled
+             thumb among a row of grey ones. */
+          {...reactionGlowProps(myPositiveReaction)}
           className="flex items-center transition-colors text-white select-none touch-none"
           aria-label={
             myPositiveReaction
