@@ -973,6 +973,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         
         <ActionBar
           postId={post.id}
+          newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}
           utilityDesktopAnchor

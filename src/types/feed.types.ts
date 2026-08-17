@@ -50,6 +50,8 @@ export interface TextPost extends BaseFeedItem {
   views?: string;
   /** Mint status: 'minted' | 'signed' (pending) */
   status?: 'minted' | 'signed' | string;
+  /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
+  newPostId?: number;
   /** Chain the post was created on — needed to mint one published off-chain. */
   chainId?: number;
   stats: {
@@ -96,6 +98,8 @@ export interface VideoItem extends BaseFeedItem {
   uploadedAgo: string;
   /** Mint status: 'minted' | 'signed' (pending) */
   status?: 'minted' | 'signed' | string;
+  /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
+  newPostId?: number;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
@@ -204,6 +208,8 @@ export interface ImagePost extends BaseFeedItem {
   comments: number;
   /** Mint status: 'minted' | 'signed' (pending) */
   status?: 'minted' | 'signed' | string;
+  /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
+  newPostId?: number;
   /** Formatted view count string (e.g., "1.2K") */
   views: string;
   timeAgo: string;

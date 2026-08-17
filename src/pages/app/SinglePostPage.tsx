@@ -598,13 +598,20 @@ interface SinglePostPageProps {
    * away the position the user comes back to.
    */
   inOverlay?: boolean;
+  /**
+   * Render a specific post regardless of the route params. NewPostPage uses
+   * this to show an off-chain post AT its /newpost/<n> URL — navigating to
+   * /app/post/<tokenId> instead would swap the address bar to the NFT-style
+   * URL the slug exists to avoid.
+   */
+  overrideId?: string;
 }
 
-export default function SinglePostPage({ inOverlay = false }: SinglePostPageProps = {}) {
+export default function SinglePostPage({ inOverlay = false, overrideId }: SinglePostPageProps = {}) {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const navigate = useNavigate();
   const { t } = useI18n();
-  const id = postId || tokenId;
+  const id = overrideId || postId || tokenId;
   const location = useLocation();
   
   // Detect if opened from feed (overlay mode)
