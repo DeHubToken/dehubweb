@@ -9,12 +9,14 @@
  * date entirely and becomes a join button, because by then "when" is "now" and
  * the only useful thing the card can say is that the room is open.
  *
- * The host's cover graphic, if they set one, backs the whole card rather than
- * sitting in a banner strip above it. That is the point of the graphic — it is
- * the thing that makes the announcement look like an event in the feed — so it
- * gets a scrim heavy enough to keep white text legible over an arbitrary
- * user-supplied image, and the card falls back to the flat surface every other
- * embed uses when there is no graphic at all.
+ * The host's cover graphic, if they set one, sits above the card content at
+ * its full aspect — the same aspect-video/object-contain treatment
+ * StageCoverArt gives it on the stage page itself. It used to back the whole
+ * card as an absolutely-positioned object-cover layer, which cropped it to
+ * whatever height the text happened to make (~150px of a 16:9 graphic); art
+ * designed to announce an event was mostly invisible. With the image out from
+ * under the text there is no scrim either, and the card falls back to the
+ * flat surface every other embed uses when there is no graphic at all.
  */
 
 import { useNavigate } from 'react-router-dom';
@@ -83,26 +85,22 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
       data-no-navigate
       className={cn(
         'relative w-full mt-2 rounded-xl border border-white/[0.08] overflow-hidden text-left',
-        'transition-colors group',
-        hasCover ? 'hover:border-white/20' : 'bg-white/[0.03] hover:bg-white/[0.06]',
+        'transition-colors group bg-white/[0.03] hover:bg-white/[0.06]',
+        hasCover && 'hover:border-white/20',
       )}
     >
-      {/* Cover graphic + scrim. aria-hidden because the heading below already
-          names the stage; a decorative background repeating it is noise. */}
+      {/* Cover graphic, whole and uncropped — the same aspect-video +
+          object-contain treatment StageCoverArt uses on the stage page.
+          aria-hidden because the heading below already names the stage. */}
       {hasCover && (
-        <>
+        <div aria-hidden className="w-full aspect-video bg-black">
           <img
             src={stage.cover_image_url!}
             alt=""
-            aria-hidden
             loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/50"
-          />
-        </>
+        </div>
       )}
 
       <div className="relative p-3.5 space-y-2">

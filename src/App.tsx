@@ -139,6 +139,7 @@ const DocsSurface = React.lazy(() => import("./pages/DocsSurface"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
+const NewPostPage = React.lazy(() => import("./pages/app/NewPostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
@@ -506,6 +507,7 @@ function AppContent() {
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
               <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+              <Route path="newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
               <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
               {/* Launchpad — hidden, no nav links, reachable by URL only */}
               <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
@@ -530,6 +532,8 @@ function AppContent() {
                 the hub page — a param segment never matches the bare route. */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
             <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            {/* An off-chain post's own URL — the canonical share form is top-level. */}
+            <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
 
             {/* Launchpad — public URL alias (hidden, no nav links) */}
             <Route path="/launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>

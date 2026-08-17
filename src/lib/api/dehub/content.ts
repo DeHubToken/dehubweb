@@ -146,6 +146,29 @@ export async function getMintFee(chainId: number): Promise<MintFeeQuoteResponse 
   }
 }
 
+export interface NewPostResolution {
+  tokenId: number;
+  newPostId: number;
+  /** True once the post minted — land on /app/post/<tokenId> instead. */
+  minted: boolean;
+}
+
+/**
+ * Resolve an off-chain post slug (dehub.io/newpost/<n>) to its post.
+ *
+ * The mapping survives minting, so links shared while the post was off-chain
+ * keep working forever. Null on unknown slugs and on transport failure alike —
+ * the caller shows not-found either way.
+ */
+export async function resolveNewPost(n: number | string): Promise<NewPostResolution | null> {
+  try {
+    const res = await apiCall<any>(`/api/newpost/${encodeURIComponent(String(n))}`);
+    return res && typeof res.tokenId === 'number' ? (res as NewPostResolution) : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Ask for a fresh mint signature for a post that was published off-chain.
  *

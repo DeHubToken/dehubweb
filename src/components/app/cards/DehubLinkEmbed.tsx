@@ -14,9 +14,11 @@
  * that still goes where the link went.
  */
 
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Link2 } from 'lucide-react';
+import { resolveNewPost } from '@/lib/api/dehub';
 import type { DehubLinkMatch } from '@/lib/dehub-links';
 import { dehubLinkLabel, findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { CommunityLinkEmbed } from '@/components/app/communities/CommunityLinkEmbed';
@@ -67,11 +69,57 @@ interface DehubLinkEmbedProps {
   className?: string;
 }
 
+/** Resolves /newpost/<n> to its tokenId, then renders the ordinary post card. */
+function NewPostSlugEmbed({
+  newPostId,
+  fullWidth,
+  className,
+  fallback,
+}: {
+  newPostId: string;
+  fullWidth: boolean;
+  className?: string;
+  fallback: ReactNode;
+}) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['newpost-resolve', newPostId],
+    queryFn: () => resolveNewPost(newPostId),
+    // The slug→tokenId mapping never changes once assigned.
+    staleTime: Infinity,
+  });
+
+  if (isLoading) {
+    return <div className="mt-2 h-24 rounded-xl bg-white/[0.04] animate-pulse" />;
+  }
+  if (!data) return <>{fallback}</>;
+
+  return (
+    <SharedPostEmbed
+      tokenId={String(data.tokenId)}
+      fullWidth={fullWidth}
+      className={className}
+      fallback={fallback}
+    />
+  );
+}
+
 export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEmbedProps) {
   const fallback = <DehubLinkFallback link={link} />;
 
   switch (link.kind) {
     case 'post':
+      // The off-chain slug form carries no tokenId, and everything downstream
+      // keys on one — resolve it first, then render the same card.
+      if (!link.tokenId && link.newPostId) {
+        return (
+          <NewPostSlugEmbed
+            newPostId={link.newPostId}
+            fullWidth={!compact}
+            className={className}
+            fallback={fallback}
+          />
+        );
+      }
       return (
         <SharedPostEmbed
           tokenId={link.tokenId!}

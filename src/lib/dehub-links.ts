@@ -42,6 +42,8 @@ export interface DehubLinkMatch {
   /** In-app path (pathname + search) to navigate to, exactly as the link pointed. */
   path: string;
   tokenId?: string;
+  /** Set when a post link used the off-chain slug (/newpost/3) instead of a tokenId. */
+  newPostId?: string;
   username?: string;
   slug?: string;
   code?: string;
@@ -167,6 +169,16 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
   if (isAppScoped && (scoped[0] === 'post' || scoped[0] === 'video') && scoped[1]) {
     if (!/^\d+$/.test(scoped[1])) return null;
     return { ...base, kind: 'post', tokenId: scoped[1] };
+  }
+
+  // ── /newpost/:n — an off-chain post's own slug ──
+  //
+  // Accepted with or without the /app prefix, like /stage: the canonical
+  // share form is top-level. Cards as a post; the embed resolves the slug to
+  // its tokenId first, since everything downstream keys on that.
+  if (scoped[0] === 'newpost' && scoped[1]) {
+    if (!/^\d+$/.test(scoped[1])) return null;
+    return { ...base, kind: 'post', newPostId: scoped[1] };
   }
 
   // ── communities/join/:code (invite) — must precede the slug form ──
@@ -320,6 +332,8 @@ export function shareOrigin(): string {
 
 export const dehubLinkFor = {
   post: (tokenId: string | number) => `${shareOrigin()}/app/post/${tokenId}`,
+  /** An off-chain post's own slug — use for posts at status 'signed' with a newPostId. */
+  newPost: (n: string | number) => `${shareOrigin()}/newpost/${n}`,
   comment: (tokenId: string | number, commentId: string | number) =>
     `${shareOrigin()}/app/post/${tokenId}?comment=${encodeURIComponent(String(commentId))}`,
   profile: (username: string) => `${shareOrigin()}/${encodeURIComponent(username)}`,

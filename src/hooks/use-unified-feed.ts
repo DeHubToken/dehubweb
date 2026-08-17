@@ -245,6 +245,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     views: formatViews(resolveViewCount(item)),
     uploadedAgo: formatTimeAgo(item.createdAt),
     status: item.status,
+    newPostId: (item as any).newPostId,
     creatorId: item.minter,
     creatorUsername: item.minterUsername || item.mintername,
     creatorBadgeBalance: item.minterUser?.badgeBalance,
@@ -316,6 +317,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     views: formatViews(resolveViewCount(item)).replace(' views', ''),
     timeAgo: formatTimeAgo(item.createdAt),
     status: item.status,
+    newPostId: (item as any).newPostId,
     creatorId: item.minter,
     creatorUsername: item.minterUsername || item.mintername,
     creatorBadgeBalance: item.minterUser?.badgeBalance,
@@ -386,6 +388,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     createdAt: item.createdAt,
     views: formatViews(resolveViewCount(item)).replace(' views', ''),
     status: item.status,
+    newPostId: (item as any).newPostId,
     stats: {
       comments: item.commentCount || 0,
       reposts: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
