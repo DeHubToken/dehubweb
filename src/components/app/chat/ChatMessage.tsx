@@ -6,6 +6,7 @@ import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { ChatLinkPreviews } from './ChatLinkPreviews';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -191,9 +192,10 @@ export const ChatMessage = memo(function ChatMessage({
 
   // Community chat used to card up community links and nothing else — a store
   // item or an event dropped into a channel arrived as a bare URL.
-  const { links: chatDehubLinks, displayText: chatDisplayText } = useDehubLinks(
+  const { links: chatDehubLinks, displayText: chatLinkFreeText } = useDehubLinks(
     isTranslated ? translatedText : message.content,
   );
+  const { refs: chatAssetRefs, displayText: chatDisplayText } = useAssetRefsInText(chatLinkFreeText);
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -372,6 +374,7 @@ export const ChatMessage = memo(function ChatMessage({
                 </p>
               )}
               <DehubLinkEmbeds links={chatDehubLinks} />
+              <AssetRefCards refs={chatAssetRefs} />
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
                 {!isTooShort && (

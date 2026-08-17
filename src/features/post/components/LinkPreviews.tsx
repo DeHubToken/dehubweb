@@ -5,6 +5,7 @@ import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DehubLinkEmbed, MAX_EMBEDS_PER_MESSAGE } from '@/components/app/cards/DehubLinkEmbed';
+import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, parseDehubLink } from '@/lib/dehub-links';
 
 interface LinkPreviewsProps {
@@ -36,6 +37,11 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
       .slice(0, MAX_EMBEDS_PER_MESSAGE),
     [text, dismissedLinks],
   );
+
+  // The market cards the post will carry, shown while it is still a draft — the
+  // poster chose an asset from a dropdown, so they should see which one they got
+  // before they publish it.
+  const { refs: assetRefs } = useAssetRefsInText(text);
 
   useEffect(() => {
     // Outside links only — DeHub links get their own cards above.
@@ -87,11 +93,14 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     .filter((p): p is LinkPreviewData => !!p);
   const loadingUrls = currentUrls.filter(url => loading.has(url));
 
-  const hasContent = dehubLinks.length > 0 || visiblePreviews.length > 0 || loadingUrls.length > 0;
+  const hasContent =
+    dehubLinks.length > 0 || assetRefs.length > 0 || visiblePreviews.length > 0 || loadingUrls.length > 0;
   if (!hasContent) return null;
 
   return (
     <div className="mt-3 space-y-2">
+      <AssetRefCards refs={assetRefs} className="mt-0" />
+
       {dehubLinks.map((link) => (
         <div className="relative" key={`${link.kind}-${link.path}`}>
           <DehubLinkEmbed link={link} />
