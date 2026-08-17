@@ -29,6 +29,10 @@ export const NAV_LABEL_KEYS: Record<string, string> = {
   'AI Agents': 'nav.agents', Advertising: 'nav.advertising', Premium: 'nav.premium',
   Pricing: 'nav.pricing', Creators: 'nav.creators', 'Get the App': 'nav.getTheApp',
   'Connect AI': 'nav.connectAi',
+  // Borrows the drawer's key rather than minting a `nav.` twin: `sidebar.logOut`
+  // is already translated in all 110 locales, and the two controls should not be
+  // able to drift into saying different things.
+  'Log out': 'sidebar.logOut',
 };
 
 interface SidebarNavItemProps {
