@@ -11,6 +11,8 @@ import { mintPost, createPoll, getMintFee, AuthenticationError, type StreamInfo,
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
+import { applyEditsToImageFile } from '@/lib/filters';
+import { MEDIA_LIMITS } from '@/constants/post.constants';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -448,8 +450,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return;
     }
 
-    const filesToAdd = files.filter(f => f.type.startsWith('image/')).slice(0, availableSlots);
-    
+    const imageFiles = files.filter(f => f.type.startsWith('image/'));
+    const oversized = imageFiles.filter(f => f.size > MEDIA_LIMITS.MAX_FILE_SIZE);
+    if (oversized.length > 0) {
+      // Without this check an oversized file uploaded for minutes and died at
+      // the XHR timeout with a generic failure.
+      toast.error(`${oversized[0].name} is too large — images are capped at ${Math.round(MEDIA_LIMITS.MAX_FILE_SIZE / (1024 * 1024))}MB`);
+    }
+    const filesToAdd = imageFiles.filter(f => f.size <= MEDIA_LIMITS.MAX_FILE_SIZE).slice(0, availableSlots);
+
     if (files.length > availableSlots) {
       toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max 4)`);
     }
@@ -477,6 +486,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // Can't add more than 1 video
     if (hasVideo) {
       toast.error('Only 1 video allowed per post');
+      return;
+    }
+
+    if (file.size > MEDIA_LIMITS.MAX_FILE_SIZE) {
+      // Without this an oversized video uploaded for up to 8 minutes and died
+      // at the XHR timeout with a generic failure.
+      toast.error(`Video is too large — the cap is ${Math.round(MEDIA_LIMITS.MAX_FILE_SIZE / (1024 * 1024))}MB`);
       return;
     }
 
@@ -588,6 +604,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, []);
 
   const processAudioFile = useCallback((file: File) => {
+    if (file.size > MEDIA_LIMITS.MAX_AUDIO_SIZE) {
+      // The server rejects feed-audio over 10MB; catching it here beats
+      // uploading the whole file to learn that.
+      toast.error(`Audio is too large — the cap is ${Math.round(MEDIA_LIMITS.MAX_AUDIO_SIZE / (1024 * 1024))}MB`);
+      return;
+    }
     const url = URL.createObjectURL(file);
 
     // Move existing text to title field when adding audio
@@ -605,11 +627,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const duration = Math.round(audioEl.duration);
       
       if (hasImage) {
-        // Add audio to all images
-        setMedia(prev => prev.map(m => 
-          m.type === 'image' ? { ...m, audio: { blob: file, url, duration } } : m
-        ));
-        toast.success('Audio added to images');
+        // There is no upload path for raw audio on a feed-images post —
+        // /user_mint reads every file on one as an image, so the old
+        // "Audio added to images" parked a blob that vanished at post time.
+        URL.revokeObjectURL(url);
+        toast.info('Audio can\'t ride an image post — use the sound picker to attach an existing audio post as its soundtrack.');
       } else {
         // Standalone audio post
         setMedia(prev => [...prev, { file, preview: url, type: 'audio', duration }]);
@@ -1180,8 +1202,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         }
       }
 
-      // Get media files
-      const files = media.map(m => m.file);
+      // Get media files, baking the composer's image edits into the bytes
+      // that upload. The editors only STORE settings; without this pass the
+      // original file shipped and every filter/crop silently vanished.
+      const files = await Promise.all(
+        media.map((m) =>
+          m.type === 'image'
+            ? applyEditsToImageFile(m.file, m.filterSettings, m.cropSettings)
+            : m.file,
+        ),
+      );
       
       // Get thumbnail for video and audio posts - use stored blob if available
       let thumbnail: Blob | undefined;
