@@ -5,6 +5,7 @@ export const NOTIFICATION_FILTER_LABELS = {
   comments: { key: 'notifications.comments', defaultLabel: 'Comments' },
   reposts: { key: 'notifications.reposts', defaultLabel: 'Reposts' },
   features: { key: 'notifications.features', defaultLabel: 'Features' },
+  communities: { key: 'notifications.communities', defaultLabel: 'Communities' },
   stores: { key: 'notifications.stores', defaultLabel: 'Stores' },
   subscriptions: { key: 'notifications.subscriptions', defaultLabel: 'Subscriptions' },
   tips: { key: 'notifications.tips', defaultLabel: 'Tips' },

@@ -7,7 +7,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -233,6 +233,7 @@ const tabs: { value: NotificationTypeFilter; icon: React.ElementType }[] = [
   { value: 'comments', icon: MessageSquareText },
   { value: 'reposts', icon: Repeat2 },
   { value: 'features', icon: Lightbulb },
+  { value: 'communities', icon: UsersRound },
   { value: 'stores', icon: Store },
   { value: 'subscriptions', icon: Users },
   { value: 'tips', icon: Gem },
@@ -251,9 +252,10 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
-  comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
+  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment'],
+  communities: ['community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip', 'bounty_available', 'bounty_claimed'],
@@ -303,9 +305,16 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'comment':
     case 'comment_reply':
     case 'mention':
+    case 'community_mention':
     case 'feature_request_comment':
     case 'governance_comment':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
+    // An @here addresses the whole room, so it reads as a megaphone rather than
+    // as one more reply in the thread.
+    case 'community_here':
+      return <Megaphone className="w-4 h-4 text-white/70" />;
+    case 'community_join':
+      return <UsersRound className="w-4 h-4 text-white/70" />;
     case 'stage_live':
     case 'stage_reminder':
       return <Radio className="w-4 h-4 text-white/70" />;
@@ -656,19 +665,34 @@ function getNotificationContent(
   }
 }
 
+/** Custom notifications carry their navigation target in a non-API field. */
+function customReferenceId(notification: DeHubNotification): string | undefined {
+  return (notification as DeHubNotification & { _customReferenceId?: string })._customReferenceId;
+}
+
 function getNavigationLink(notification: DeHubNotification): string | null {
   // Handle custom notification types
   if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_comment') {
     return '/features';
   }
+  // Community notifications store the slug, so they land in the chat that
+  // raised them rather than on the communities index.
+  if (
+    (notification.type as string) === 'community_mention' ||
+    (notification.type as string) === 'community_here' ||
+    (notification.type as string) === 'community_join'
+  ) {
+    const slug = customReferenceId(notification);
+    return slug ? `/app/communities/${slug}` : '/app/communities';
+  }
   if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_comment') {
-    const refId = (notification as any)._customReferenceId;
+    const refId = customReferenceId(notification);
     return refId ? `/app/governance/${refId}` : '/governance';
   }
   if ((notification.type as string) === 'stage_live' || (notification.type as string) === 'stage_reminder') {
     // reference_id carries the short id when the stage has one, else the uuid —
     // route to whichever link form matches.
-    const refId = (notification as any)._customReferenceId;
+    const refId = customReferenceId(notification);
     if (!refId) return '/stages';
     return /^\d+$/.test(refId) ? `/stages/${refId}` : `/stage/${refId}`;
   }
