@@ -23,12 +23,18 @@ const RELEASE_API = `https://api.github.com/repos/${RELEASE_REPO}/releases/lates
 // if it never does. The API 404s while the repo has no release at all and rate
 // limits unauthenticated callers at 60/hour per visitor IP, so the button is
 // never allowed to depend on it.
-const FALLBACK_VERSION = "1.14.0";
-const FALLBACK_SIZE = "205 MB";
+const FALLBACK_VERSION = "1.14.1";
+const FALLBACK_SIZE = "194 MB";
+const FALLBACK_DATE = "17 Aug 2026";
+const FALLBACK_ISO = "2026-08-17";
 
 interface ReleaseInfo {
   version: string;
   size: string;
+  /** Human-readable, for the meta line. */
+  date: string;
+  /** The same day as `date`, in ISO form, for the structured data. */
+  iso: string;
   url: string;
 }
 
@@ -37,17 +43,37 @@ function formatSize(bytes: number): string {
   return `${Math.round(bytes / 1024 / 1024)} MB`;
 }
 
+/**
+ * A build is only trustworthy if you can see how old it is, so the release date
+ * sits on the same line as the version. GitHub stamps `published_at` in UTC and
+ * the reader may be anywhere, so the format is pinned to UTC rather than the
+ * visitor's zone — otherwise the same release reads as two different days either
+ * side of midnight.
+ */
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return FALLBACK_DATE;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(d);
+}
+
 const SHARE_TEXT = "Skip the stores — grab the latest DeHub Android build direct.";
 
 export default function ApkPage() {
   const [release, setRelease] = useState<ReleaseInfo>({
     version: FALLBACK_VERSION,
     size: FALLBACK_SIZE,
+    date: FALLBACK_DATE,
+    iso: FALLBACK_ISO,
     url: DOWNLOAD_URL,
   });
   const [copied, setCopied] = useState(false);
 
-  // Read the version, size and direct URL off the latest release so a new
+  // Read the version, size, date and direct URL off the latest release so a new
   // upload updates the page on its own. Any failure keeps the fallback.
   useEffect(() => {
     let cancelled = false;
@@ -61,6 +87,12 @@ export default function ApkPage() {
         setRelease({
           version: String(data.tag_name ?? FALLBACK_VERSION).replace(/^v/i, ""),
           size: asset?.size ? formatSize(asset.size) : FALLBACK_SIZE,
+          // `published_at` is when the release went public; `created_at` only
+          // tracks the tag, which can predate the upload by days.
+          date: data.published_at ? formatDate(data.published_at) : FALLBACK_DATE,
+          iso: data.published_at
+            ? String(data.published_at).slice(0, 10)
+            : FALLBACK_ISO,
           url: asset?.browser_download_url ?? DOWNLOAD_URL,
         });
       })
@@ -96,6 +128,8 @@ export default function ApkPage() {
     downloadUrl: DOWNLOAD_URL,
     softwareVersion: release.version,
     fileSize: release.size,
+    datePublished: release.iso,
+    dateModified: release.iso,
     applicationCategory: "SocialNetworkingApplication",
     operatingSystem: "Android 8.0 and up",
     image: OG_IMAGE,
@@ -185,7 +219,7 @@ export default function ApkPage() {
         </a>
 
         <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] font-mono text-[11px] tracking-wider text-white/45 sm:text-xs">
-          v{release.version} · {release.size} · Android 8+
+          v{release.version} · {release.size} · {release.date} · Android 8+
         </p>
         <p className="mt-1.5 max-w-[40ch] text-[11px] leading-relaxed text-white/35 sm:text-xs">
           Allow installs from your browser when Android asks.
