@@ -508,6 +508,14 @@ export interface QuotePostMintResponse {
   timestamp: number;
   quotedTokenId: number;
   isQuotePost: boolean;
+  /**
+   * This quote was already posted by an earlier send of the same
+   * `idempotencyKey` — `createdTokenId` is that quote, not a new one.
+   */
+  duplicate?: boolean;
+  /** Set with `duplicate` when that quote is on chain: no signature, so the
+   *  chain step must be skipped rather than re-run. */
+  alreadyMinted?: boolean;
 }
 
 export interface PostLiker {
@@ -606,6 +614,11 @@ export async function quotePost(params: {
   quotedTokenId: number;
   content: string;
   category?: string;
+  /**
+   * Same key on every attempt at one quote — a repeat returns the quote that
+   * already exists instead of posting it again. See MintPostParams.
+   */
+  idempotencyKey?: string;
 }): Promise<QuotePostMintResponse> {
   const { authedUpload } = await import('./core');
 
@@ -624,15 +637,25 @@ export async function quotePost(params: {
   formData.append('category', JSON.stringify(mergedCategories));
   formData.append('chainId', '8453');
   formData.append('streamInfo', JSON.stringify({}));
+  if (params.idempotencyKey) {
+    formData.append('idempotencyKey', params.idempotencyKey);
+  }
 
   const result = await authedUpload<QuotePostMintResponse>('/api/quote_post', formData, {
     unwrapResult: true,
   });
 
+  // A repeat of a quote already posted AND minted comes back deliberately
+  // without a signature — that token cannot be minted twice — so the check
+  // below would read a correct response as a broken one.
+  if (result.duplicate && result.alreadyMinted && result.createdTokenId) {
+    return result as QuotePostMintResponse;
+  }
+
   // Validate mint signature
   if (!result.r || !result.s || !result.v || !result.createdTokenId) {
     throw new Error('Invalid mint signature from backend');
   }
-  
+
   return result as QuotePostMintResponse;
 }
