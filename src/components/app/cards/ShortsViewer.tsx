@@ -149,6 +149,13 @@ const SMOOTH_TRANSITION = {
 const RESTORE_ZONE_TOP = 0.55;
 const RESTORE_ZONE_BOTTOM = 0.85;
 
+// How long a short plays untouched before the chrome clears itself. The
+// swipe-down is a deliberate act almost nobody discovers, so a short played
+// straight through kept its caption, avatar and action row over the frame for
+// its whole run. Long enough to read who posted it, short enough that the
+// video is unobstructed for most of its length.
+const AUTO_HIDE_MS = 3000;
+
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
@@ -165,6 +172,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [overlaysHidden, setOverlaysHidden] = useState(false);
+  // The same clear, reached by playing untouched for AUTO_HIDE_MS. Separate
+  // from overlaysHidden: a swipe is deliberate, so it survives a tap and never
+  // re-arms itself, and neither is true of this one.
+  const [autoHidden, setAutoHidden] = useState(false);
   const [isTimelineSeeking, setIsTimelineSeeking] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
   
@@ -649,6 +660,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       suppressVideoTapRef.current = false;
       return;
     }
+    // The auto-clear takes no restore band and swallows no tap: it was never
+    // asked for, so undoing it should not cost the viewer the play/pause they
+    // meant. The timer re-arms off the state change and clears it again.
+    setAutoHidden(false);
     // Don't show indicator during transitions
     if (isTransitioning) return;
     
@@ -767,6 +782,49 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   useEffect(() => () => {
     if (suppressVideoTapTimer.current) clearTimeout(suppressVideoTapTimer.current);
   }, []);
+
+  /**
+   * Clear the chrome once the short has played untouched for AUTO_HIDE_MS.
+   *
+   * Every condition below is a reason the viewer is *reading* rather than
+   * watching, and each both blocks the timer and restarts it when it lifts:
+   * paused, description open, seeking, a sheet or modal up, or the chrome
+   * already cleared by the swipe. Desktop is excluded because its chrome sits
+   * beside the video rather than over it.
+   */
+  useEffect(() => {
+    if (
+      !isMobile ||
+      isPaused ||
+      autoHidden ||
+      overlaysHidden ||
+      isTransitioning ||
+      isTimelineSeeking ||
+      isDescriptionExpanded ||
+      showComments ||
+      shareSheetOpen ||
+      showReportModal ||
+      showDeleteModal
+    ) {
+      return;
+    }
+    const timer = setTimeout(() => setAutoHidden(true), AUTO_HIDE_MS);
+    return () => clearTimeout(timer);
+  }, [
+    isMobile, isPaused, autoHidden, overlaysHidden, isTransitioning,
+    isTimelineSeeking, isDescriptionExpanded, showComments, shareSheetOpen,
+    showReportModal, showDeleteModal,
+  ]);
+
+  // Every short arrives with its chrome up and clears it again on its own, so
+  // a cleared frame never carries into the next one.
+  useEffect(() => {
+    setAutoHidden(false);
+  }, [currentIndex]);
+
+  // What the overlay actually reads. The gesture handlers stay keyed on
+  // `overlaysHidden` alone, so the tap-to-restore band belongs to the swipe.
+  const chromeHidden = overlaysHidden || autoHidden;
 
   const handleCopyLink = () => {
     const url = `${window.location.origin}/app/post/${currentShort.id}`;
@@ -1050,7 +1108,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               {/* Animated overlay container */}
               <motion.div
                 className="absolute inset-0 z-10 pointer-events-none"
-                animate={{ opacity: (overlaysHidden || showComments) ? 0 : 1 }}
+                animate={{ opacity: (chromeHidden || showComments) ? 0 : 1 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
               >
                 {/* Bottom gradient overlay - fades from transparent to black */}
@@ -1067,7 +1125,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Hidden chrome is opacity-0, which still takes taps — kill
                   // pointer events too so a restore tap can't hit an invisible
                   // avatar / follow button on its way in.
-                  className={cn("px-4 pointer-events-auto", (showComments || overlaysHidden) && "pointer-events-none")}
+                  className={cn("px-4 pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                 >
@@ -1122,7 +1180,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {/* Action bar — horizontal row evenly spread across the bottom,
                     matching the feed post card action bar (like at far right). */}
                 <div
-                  className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || overlaysHidden) && "pointer-events-none")}
+                  className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                 >
@@ -1345,13 +1403,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         )}
       </div>
 
-      {/* Mobile top header controls - TikTok style - animated with overlaysHidden */}
+      {/* Mobile top header controls - TikTok style - animated with chromeHidden */}
       {isMobile && (
         <motion.div
           className="pointer-events-auto"
-          animate={{ opacity: (overlaysHidden || showComments) ? 0 : 1 }}
+          animate={{ opacity: (chromeHidden || showComments) ? 0 : 1 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          style={{ pointerEvents: (overlaysHidden || showComments) ? 'none' : 'auto' }}
+          style={{ pointerEvents: (chromeHidden || showComments) ? 'none' : 'auto' }}
         >
           {/* Back button - top left */}
           <button
