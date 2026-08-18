@@ -249,6 +249,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  /**
+   * Idempotency key for the post currently being submitted, kept next to the
+   * payload it belongs to — see the `attemptSignature` block in handlePost.
+   * A ref, not state: re-sending must not wait on a render, and changing it
+   * must never re-run anything.
+   */
+  const postAttemptRef = useRef<{ signature: string; key: string } | null>(null);
   
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
@@ -873,6 +880,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, [processImageFiles]);
 
   const resetForm = useCallback(() => {
+    // Belt and braces — the signature check in handlePost already refuses to
+    // reuse this key for different content, but the post is out, so there is
+    // nothing left for it to deduplicate against.
+    postAttemptRef.current = null;
     setText('');
     setMedia([]);
     setIsSubscribersOnly(false);
@@ -1401,6 +1412,51 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         }
       }
 
+      /**
+       * The key that makes this upload safe to repeat.
+       *
+       * Keyed on the payload rather than "the composer is open", so a retry of
+       * the same post reuses it and the server hands back the post the lost
+       * attempt already created — while a post whose text or media changed at
+       * all gets a fresh key and publishes normally. Without that check, a
+       * failed attempt followed by a *different* post would have been answered
+       * with the first post and silently dropped the second.
+       *
+       * Built from `media`, the files the creator picked — NOT from `files`,
+       * which for an edited image is re-encoded per attempt by
+       * applyEditsToImageFile into a `new File(...)` whose lastModified is the
+       * moment it was made. Signing over that would mint a new key on every
+       * retry and deduplicate nothing.
+       */
+      const attemptSignature = [
+        postType,
+        chainId,
+        cleanTitle,
+        cleanDescription,
+        media
+          .map((m) =>
+            [
+              m.file.name,
+              m.file.size,
+              m.file.lastModified,
+              JSON.stringify(m.filterSettings ?? null),
+              JSON.stringify(m.cropSettings ?? null),
+            ].join(':'),
+          )
+          .join(','),
+      ].join('|');
+
+      if (postAttemptRef.current?.signature !== attemptSignature) {
+        postAttemptRef.current = {
+          signature: attemptSignature,
+          key:
+            typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+              ? crypto.randomUUID()
+              // Older Safari / non-secure contexts have no randomUUID.
+              : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`,
+        };
+      }
+
       const mintResponse = await mintPost(
         {
           name: cleanTitle,
@@ -1414,6 +1470,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           minterAddress,
           mintOptOut: !mintingThisPost,
           scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
+          idempotencyKey: postAttemptRef.current.key,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
       );
@@ -1425,9 +1482,21 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         throw new Error('Invalid response from backend - missing token ID');
       }
 
+      // A repeat of a post this composer already published: the first attempt's
+      // response was lost, not its post, and the server handed back the token
+      // that exists rather than making a second one. `alreadyMinted` means that
+      // token is on chain as well, so there is no signature in this response
+      // and nothing left to send — carry on with the chain step switched off,
+      // which also keeps the checks below from reading its absence as an error.
+      const alreadyOnChain = !!(mintResponse.duplicate && mintResponse.alreadyMinted);
+      if (alreadyOnChain) {
+        console.log('[Mint] Duplicate of an already-minted post — skipping the chain step');
+        mintingThisPost = false;
+      }
+
       const isSolanaMint = !!(mintResponse.isSolana && mintResponse.transaction && mintResponse.mintAddress);
 
-      if (postingOnSolana && !isSolanaMint) {
+      if (postingOnSolana && !isSolanaMint && !alreadyOnChain) {
         throw new Error(
           mintResponse.isSolana
             ? 'Solana mint data incomplete from server. Please try again.'
