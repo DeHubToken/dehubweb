@@ -17,8 +17,10 @@ import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2, Bell,
   Link, UserPlus, Minimize2, Play, Square, Clock, Trash2, FileText,
+  ScreenShare, ScreenShareOff,
 } from 'lucide-react';
 import { StageTranscriptDrawer } from './StageTranscriptDrawer';
+import { StageScreenShare } from './StageScreenShare';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Button } from '@/components/ui/button';
@@ -76,6 +78,11 @@ export function AudioSpacesModal() {
     inviteSpeaker,
     voiceEffect,
     setVoiceEffect,
+    screenShare,
+    isScreenSharing,
+    canScreenShare,
+    startScreenShare,
+    stopScreenShare,
   } = useStage();
   // Subscribed separately so only this modal re-renders on Agora volume ticks
   const volumeLevel = useStageVolumeLevel();
@@ -789,9 +796,24 @@ export function AudioSpacesModal() {
                 )}
               </div>
 
-              {/* Live Waveform Visualizer */}
-              <div className="w-full h-24 sm:h-32 rounded-xl bg-white/5 border border-white/10 overflow-hidden p-2">
-                <LiveWaveform active={true} barCount={80} volumeLevel={volumeLevel} />
+              {/* Shared screen — only rendered while someone is actually
+                  sharing, and it takes the room's headline slot when it is. */}
+              <StageScreenShare sharerName={currentSpace.host_username} />
+
+              {/* Live Waveform Visualizer. Shrinks out of the way behind a
+                  shared screen: the room still wants the "is anyone talking"
+                  cue, but not two competing blocks at full height. */}
+              <div
+                className={cn(
+                  'w-full rounded-xl bg-white/5 border border-white/10 overflow-hidden p-2',
+                  screenShare ? 'h-12' : 'h-24 sm:h-32',
+                )}
+              >
+                <LiveWaveform
+                  active={true}
+                  barCount={screenShare ? 40 : 80}
+                  volumeLevel={volumeLevel}
+                />
               </div>
 
               {/* Speakers Section */}
@@ -949,6 +971,24 @@ export function AudioSpacesModal() {
                   )}
                 >
                   <Hand className="w-5 h-5" />
+                </Button>
+              )}
+
+              {/* Share screen (host, desktop only — canScreenShare is false
+                  wherever getDisplayMedia isn't real, so no dead button). */}
+              {myRole === 'host' && canScreenShare && (
+                <Button
+                  onClick={() => (isScreenSharing ? void stopScreenShare() : void startScreenShare())}
+                  size="lg"
+                  className={cn(
+                    'rounded-xl w-12 h-12',
+                    isScreenSharing
+                      ? 'bg-white/20 hover:bg-white/30 text-white ring-2 ring-white/30'
+                      : 'bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 text-white',
+                  )}
+                  title={isScreenSharing ? 'Stop sharing your screen' : 'Share your screen'}
+                >
+                  {isScreenSharing ? <ScreenShareOff className="w-5 h-5" /> : <ScreenShare className="w-5 h-5" />}
                 </Button>
               )}
 
