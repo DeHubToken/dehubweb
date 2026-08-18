@@ -14,7 +14,7 @@ import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
+import { RefreshCw, Radio, ChevronRight, ArrowUp } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
@@ -59,11 +59,13 @@ import { MasonrySegment } from '@/components/app/feeds/MasonrySegment';
 
 import { 
   useUnifiedFeed, 
+  useNewPostsSignal,
   mapToVideoItem, 
   mapToImagePost, 
   mapToTextPost,
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
 import type { DeHubCategory } from '@/lib/api/dehub';
@@ -648,6 +650,38 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     postType: deferredPostType === 'all' ? undefined : deferredPostType,
     enabled: !useInterleavedFeed,
   });
+
+
+  // "N new posts" pill — only for the chronological feed, where "newer than
+  // what you're reading" is a meaningful thing to say. Under For You, Random
+  // or any of the ranked sorts, position isn't time, so the pill would be
+  // claiming something the list can't honour.
+  const newestRenderedCreatedAt = useMemo(() => {
+    const firstPage = singleFeed.data?.pages?.[0];
+    const first = firstPage?.items?.[0] as { createdAt?: string } | undefined;
+    return first?.createdAt || undefined;
+  }, [singleFeed.data]);
+
+  const { newPostCount, atCap: newPostsAtCap } = useNewPostsSignal({
+    ...commonParams,
+    postType: deferredPostType === 'all' ? undefined : deferredPostType,
+    enabled: !useInterleavedFeed && deferredSort.value === 'latest',
+    newestCreatedAt: newestRenderedCreatedAt,
+  });
+
+  const showNewPosts = useCallback(() => {
+    // Drop every page but the first before refetching, so the reader lands on
+    // a fresh top of feed rather than waiting for ten loaded pages to re-fetch
+    // in place. The list scrolls to the top either way.
+    queryClient.setQueriesData({ queryKey: ['unified-feed'] }, (old: any) =>
+      old?.pages?.length > 1
+        ? { ...old, pages: old.pages.slice(0, 1), pageParams: old.pageParams.slice(0, 1) }
+        : old
+    );
+    void singleFeed.refetch();
+    // window.scrollTo is a no-op here — body is the scrolling element.
+    scrollDocumentTo(0);
+  }, [queryClient, singleFeed]);
 
   // Classics feed no longer needed (trending removed)
   const classicsFeed = { data: undefined } as any;
@@ -1734,6 +1768,39 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           return createPortal(chipsBar, portalTarget);
         }
         return chipsBar;
+      })()}
+
+      {/* "N new posts" — the chronological feed's only cue that the timeline
+          moved on. Rendered into the sticky nav like the filter chips rather
+          than floating over the list: the feed container is clipped at the nav
+          surface's top edge under the glass themes, so anything sticky inside
+          it gets swallowed the moment the reader scrolls. */}
+      {(() => {
+        if (newPostCount <= 0) return null;
+
+        const pill = (
+          <div className={cn("flex justify-center px-1 pt-1 pb-2", portalTarget && "order-0")}>
+            <button
+              type="button"
+              onClick={showNewPosts}
+              className="inline-flex items-center gap-1.5 pl-2.5 pr-3 py-[6px] rounded-full text-xs font-semibold bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+            >
+              <ArrowUp className="w-3.5 h-3.5" />
+              <span className="leading-[1]">
+                {t('feed.newPosts', {
+                  defaultValue: '{{count}} new posts',
+                  count: newPostCount,
+                })}
+                {newPostsAtCap ? '+' : ''}
+              </span>
+            </button>
+          </div>
+        );
+
+        if (portalTarget) {
+          return createPortal(pill, portalTarget);
+        }
+        return pill;
       })()}
 
 
