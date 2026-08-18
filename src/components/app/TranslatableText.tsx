@@ -279,6 +279,87 @@ export function renderTextWithLinks(text: string): ReactNode[] {
   return parts.length > 0 ? parts : [text];
 }
 
+/**
+ * Chat variant of {@link renderTextWithLinks}: makes URLs clickable while
+ * leaving the link text itself on screen.
+ *
+ * The feed collapses a URL to a 🔗 affordance, which works there because the
+ * link arrives beside a card that already says where it goes. A message has no
+ * card. The URL *is* what the sender typed, so swallowing it leaves the
+ * recipient a bubble reading "have a look at 🔗" — nothing to read, nothing to
+ * copy, and no way to judge a link before opening it. `title` is not the answer
+ * either: these bubbles are mostly read on a touchscreen, where nothing hovers.
+ *
+ * DeHub's own links are usually carded up by the caller before they reach here
+ * (see `findDehubLinks` in the DM bubble); any that survive stripping still
+ * navigate in-app rather than through a new tab.
+ */
+export function renderChatTextWithLinks(text: string): ReactNode[] {
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+
+  // The matcher the feed already uses, so both surfaces agree on what counts as
+  // a link. It carries its own leading boundary (space/bracket/quote), which
+  // has to be handed back or the punctuation before a link is eaten with it.
+  const urlRegex = new RegExp(URL_WITH_BOUNDARY_REGEX.source, 'gi');
+
+  let match: RegExpExecArray | null;
+
+  while ((match = urlRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+
+    const { leadingBoundary, url } = splitLeadingUrlBoundary(match[0]);
+    if (leadingBoundary) {
+      parts.push(leadingBoundary);
+    }
+
+    const dehubLink = parseDehubLink(url);
+    const href = dehubLink
+      ? dehubLink.path
+      : url.match(/^https?:\/\//i)
+        ? url
+        : `https://${url}`;
+
+    parts.push(
+      <a
+        key={`chat-link-${match.index}`}
+        href={href}
+        target={dehubLink ? undefined : '_blank'}
+        rel={dehubLink ? undefined : 'noopener noreferrer'}
+        className="underline underline-offset-2 decoration-white/40 hover:decoration-white break-all transition-colors"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (dehubLink) {
+            clientNavigate(dehubLink.path);
+          } else {
+            window.open(href, '_blank', 'noopener,noreferrer');
+          }
+        }}
+        // A bubble sits inside a long-press/context-menu surface and the thread
+        // itself is drag-scrolled. Without these the gesture layer claims the
+        // pointer and the tap never reaches the anchor.
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        title={url}
+        data-no-navigate="true"
+      >
+        {url}
+      </a>,
+    );
+
+    lastIndex = urlRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : [text];
+}
+
 // Translation cache to avoid repeat API calls. Capped: entries hold full
 // translated post bodies and the map lives for the session — unbounded it
 // grows with every translated post scrolled past (same idiom as
