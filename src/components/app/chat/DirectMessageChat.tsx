@@ -15,7 +15,7 @@ import { ChatInput } from './ChatInput';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
-import { useTranslation } from '../TranslatableText';
+import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
@@ -348,7 +348,7 @@ const MessageBubble = memo(function MessageBubble({
                         ? 'bg-white/[0.11] text-white'
                         : 'border border-white/[0.16] text-zinc-100'
                     }`}>
-                      {isTranslated ? translatedText : shareCaption}
+                      {renderChatTextWithLinks(isTranslated ? translatedText : shareCaption)}
                     </p>
                   ) : null}
                   {/* The bubble is inline-block, so it has no definite width for
@@ -365,7 +365,7 @@ const MessageBubble = memo(function MessageBubble({
                       paragraph still takes a line inside the bubble. */}
                   {dmDisplayText?.trim() ? (
                     <p dir="auto" className="text-sm break-words whitespace-pre-wrap text-left">
-                      {dmDisplayText}
+                      {renderChatTextWithLinks(dmDisplayText)}
                     </p>
                   ) : null}
                   {/* Same 280px as the entity card above, and for the same
@@ -408,7 +408,7 @@ const MessageBubble = memo(function MessageBubble({
                     </a>
                     {message.content && (
                       <p dir="auto" className="text-sm mt-1 break-words whitespace-pre-wrap text-left">
-                        {isTranslated ? translatedText : message.content}
+                        {renderChatTextWithLinks(isTranslated ? translatedText : message.content)}
                       </p>
                     )}
                   </>
@@ -429,7 +429,7 @@ const MessageBubble = memo(function MessageBubble({
                         isPostShare can only be true for msgType 'msg'. */}
                     {message.content && (
                       <p dir="auto" className="text-sm mt-1 break-words whitespace-pre-wrap text-left">
-                        {isTranslated ? translatedText : message.content}
+                        {renderChatTextWithLinks(isTranslated ? translatedText : message.content)}
                       </p>
                     )}
                   </>
