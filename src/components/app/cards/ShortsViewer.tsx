@@ -19,6 +19,7 @@ import { voteOnPost, reactToPost, getNFTComments, postComment, isFollowing as ch
 import {
   applyReactionDelta,
   isPositiveReaction,
+  reactionForTap,
   reactionMeta,
   resolveLeadReaction,
   seedReactionCounts,
@@ -479,12 +480,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }
   }, [currentShort?.id, isVoting, isLiked, isDisliked, myReaction, localReactionCounts, isAuthenticated, localLikeCount, localDislikeCount]);
 
-  /** Tapping a thumb re-sends the held reaction of that polarity, which toggles it off. */
+  /**
+   * The thumb casts whichever reaction it is WEARING, so a short leading with
+   * 🔥 reacts 🔥 on a tap; re-sending a reaction you hold toggles it off.
+   * Same contract as the feed card's bar — see ActionBar.handleVote.
+   */
   const handleVote = useCallback((vote: boolean) => {
-    const holdsSamePolarity = myReaction !== null && isPositiveReaction(myReaction) === vote;
-    const target: PostReaction = holdsSamePolarity ? myReaction! : (vote ? 'like' : 'dislike');
-    return handleReaction(target);
-  }, [handleReaction, myReaction]);
+    return handleReaction(reactionForTap(vote, myReaction, localReactionCounts));
+  }, [handleReaction, myReaction, localReactionCounts]);
 
   // Hold the thumbs-up to open the reaction tray (see ActionBar for the same gesture).
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1013,7 +1016,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : 'Like — hold to react'}
+                      aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
                       aria-haspopup="menu"
                       aria-expanded={pickerOpen}
                     >
@@ -1204,7 +1207,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : 'Like — hold to react'}
+                      aria-label={myPositiveReaction ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction` : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
                       aria-haspopup="menu"
                       aria-expanded={pickerOpen}
                     >
