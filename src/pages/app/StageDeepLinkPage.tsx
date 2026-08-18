@@ -42,6 +42,7 @@ import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
+import { StageScreenShare } from '@/components/app/spaces/StageScreenShare';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -318,6 +319,12 @@ export default function StageDeepLinkPage() {
             {stage.description && (
               <p className="text-zinc-400 text-sm mt-3">{stage.description}</p>
             )}
+
+            {/* If the host is sharing a screen, a guest listening in sees it
+                too — same subscription, no account. Renders nothing until they
+                press "Listen in": there is no Agora connection to carry it
+                before that. */}
+            <StageScreenShare sharerName={stage.host_username} className="mt-4" />
 
             <div className="flex items-center gap-2 mt-4">
               <StageHostLink
