@@ -41,6 +41,13 @@ export interface MintPostParams {
    * then skip the chain step. A past date is ignored and the post goes out now.
    */
   scheduledAt?: string;
+  /**
+   * Makes this call safe to repeat. Send the same key for every attempt at ONE
+   * post and a different one per post: re-sending a key that already published
+   * returns that post (`duplicate: true`) instead of publishing a second copy.
+   * Without it the server has no way to tell a retry from a new post.
+   */
+  idempotencyKey?: string;
 }
 
 export interface MintResponse {
@@ -57,6 +64,17 @@ export interface MintResponse {
   mintAddress?: string;
   scheduled?: boolean;
   scheduledAt?: string;
+  /**
+   * This upload had already been published by an earlier send of the same
+   * `idempotencyKey`; `createdTokenId` is that existing post, not a new one.
+   */
+  duplicate?: boolean;
+  /**
+   * Set alongside `duplicate` when the existing post is on-chain already.
+   * There is no signature in the response — it cannot be minted twice — so
+   * the chain step has to be skipped.
+   */
+  alreadyMinted?: boolean;
 }
 
 export async function mintPost(
@@ -80,6 +98,10 @@ export async function mintPost(
 
   if (params.mintOptOut) {
     formData.append('mintOptOut', 'true');
+  }
+
+  if (params.idempotencyKey) {
+    formData.append('idempotencyKey', params.idempotencyKey);
   }
 
   if (params.scheduledAt) {

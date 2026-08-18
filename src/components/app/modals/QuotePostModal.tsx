@@ -33,6 +33,14 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
   const [statusText, setStatusText] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
   const creepIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  /**
+   * Idempotency key for the quote being written, kept next to the text it
+   * belongs to. Retrying the same quote re-sends the same key and the server
+   * hands back the quote the earlier attempt already created instead of
+   * posting it twice; editing the text first mints a new key, so a retry can
+   * never be answered with a quote the creator has since rewritten.
+   */
+  const attemptRef = useRef<{ signature: string; key: string } | null>(null);
   const queryClient = useQueryClient();
   const maxLength = 500;
 
@@ -65,6 +73,18 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       return;
     }
 
+    const attemptSignature = `${quotedPost.tokenId}|${content.trim()}`;
+    if (attemptRef.current?.signature !== attemptSignature) {
+      attemptRef.current = {
+        signature: attemptSignature,
+        key:
+          typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+            ? crypto.randomUUID()
+            // Older Safari / non-secure contexts have no randomUUID.
+            : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`,
+      };
+    }
+
     setIsSubmitting(true);
     setUploadProgress(0);
     try {
@@ -74,6 +94,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       const mintSig = await quotePost({
         quotedTokenId: quotedPost.tokenId,
         content: content.trim(),
+        idempotencyKey: attemptRef.current.key,
       });
 
       console.log('[QuotePost] Mint signature received:', {
@@ -81,32 +102,40 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
         v: mintSig.v,
       });
 
-      // Step 2: Execute on-chain mint transaction
-      setUploadProgress(65);
-      startCreepProgress();
-      toast.loading('Publishing to decentralized database...', { id: 'quote-mint', duration: Infinity });
+      // Step 2: Execute on-chain mint transaction.
+      //
+      // Skipped when this send was a repeat of one that already minted: the
+      // response carries no signature because that token cannot be minted a
+      // second time, and the quote is already live.
+      if (!mintSig.alreadyMinted) {
+        setUploadProgress(65);
+        startCreepProgress();
+        toast.loading('Publishing to decentralized database...', { id: 'quote-mint', duration: Infinity });
 
-      const { mintOnChain } = await import('@/lib/contracts/stream-collection');
-      const mintResult = await mintOnChain({
-        tokenId: mintSig.createdTokenId,
-        timestamp: mintSig.timestamp,
-        v: mintSig.v,
-        r: mintSig.r,
-        s: mintSig.s,
-        chainId: 8453,
-      });
+        const { mintOnChain } = await import('@/lib/contracts/stream-collection');
+        const mintResult = await mintOnChain({
+          tokenId: mintSig.createdTokenId,
+          timestamp: mintSig.timestamp,
+          v: mintSig.v,
+          r: mintSig.r,
+          s: mintSig.s,
+          chainId: 8453,
+        });
 
-      const txHash = mintResult.hash;
-      console.log('[QuotePost] Tx submitted:', txHash);
+        const txHash = mintResult.hash;
+        console.log('[QuotePost] Tx submitted:', txHash);
 
-      // Background confirmation — don't block UI
-      // Best-effort: the indexer picks the quote up from the chain regardless, so a
-      // timed-out confirmation must NOT surface a user-facing error after the quote
-      // already landed and "Quote posted!" was shown.
-      mintResult.confirmed.catch((err) => {
-        console.warn('[QuotePost] Background confirmation failed (quote still lands):', err);
-      });
+        // Background confirmation — don't block UI
+        // Best-effort: the indexer picks the quote up from the chain regardless, so a
+        // timed-out confirmation must NOT surface a user-facing error after the quote
+        // already landed and "Quote posted!" was shown.
+        mintResult.confirmed.catch((err) => {
+          console.warn('[QuotePost] Background confirmation failed (quote still lands):', err);
+        });
+      }
 
+      // The quote is out; the next one this modal writes is a new quote.
+      attemptRef.current = null;
       clearCreepInterval();
       setUploadProgress(100);
       toast.dismiss('quote-mint');
