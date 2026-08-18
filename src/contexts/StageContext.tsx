@@ -80,6 +80,36 @@ interface StageContextType {
   injectAudio: (audioBlob: Blob, source?: AudioInjectionSource) => Promise<void>;
   /** Cut off whatever soundboard/TTS clip is currently playing on the stage. */
   stopInject: () => void;
+  /** The screen currently on the room's wall, or null when nobody is sharing. */
+  screenShare: StageScreenShare | null;
+  /** True while THIS client is the one sharing. */
+  isScreenSharing: boolean;
+  /** Whether this device can capture a screen at all — see detectScreenShareSupport. */
+  canScreenShare: boolean;
+  startScreenShare: () => Promise<void>;
+  stopScreenShare: () => Promise<void>;
+}
+
+/** The one screen a room can be showing, whoever it belongs to. */
+export interface StageScreenShare {
+  /** Agora video track — our own local track while sharing, else the remote one. */
+  track: any;
+  /** Agora uid of the publisher; null for our own local track. */
+  uid: number | string | null;
+  isLocal: boolean;
+}
+
+/**
+ * Screen capture is a desktop-only affair. No mobile browser implements
+ * `getDisplayMedia` — iOS Safari has no such method at all — so the control is
+ * gated on the capability plus a fine pointer, and a mobile host never sees a
+ * button that could only fail. Watching a share is NOT gated: a phone
+ * subscribes to the video track like any other participant.
+ */
+function detectScreenShareSupport(): boolean {
+  if (typeof navigator === 'undefined' || typeof window === 'undefined') return false;
+  if (typeof navigator.mediaDevices?.getDisplayMedia !== 'function') return false;
+  return window.matchMedia?.('(pointer: fine)').matches ?? false;
 }
 
 /**
@@ -214,6 +244,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const [myRole, setMyRole] = useState<SpaceRole | null>(null);
   const [hasRaisedHand, setHasRaisedHand] = useState(false);
   const [voiceEffect, setVoiceEffectState] = useState<VoiceEffectId>('none');
+  /** Whoever's screen is currently on the wall — ours or a remote publisher's. */
+  const [screenShare, setScreenShare] = useState<StageScreenShare | null>(null);
+  const canScreenShare = useMemo(detectScreenShareSupport, []);
   const voiceEffectsHook = useVoiceEffects();
   const voiceEffectsHookRef = useRef(voiceEffectsHook);
   voiceEffectsHookRef.current = voiceEffectsHook;
@@ -225,6 +258,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   // Agora refs
   const agoraClientRef = useRef<any>(null);
   const localAudioTrackRef = useRef<any>(null);
+  /** The display capture we publish while sharing, and its optional system audio. */
+  const screenVideoTrackRef = useRef<any>(null);
+  const screenAudioTrackRef = useRef<any>(null);
 
   // Recording refs (host only)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -414,6 +450,14 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // ─── Agora helpers ───────────────────────────────────────────────────────
 
+  /**
+   * Take a remote screen off the wall, by publisher. Never touches our own
+   * share: a remote user leaving must not blank the screen we are publishing.
+   */
+  const clearRemoteScreenShare = useCallback((uid: number | string | undefined) => {
+    setScreenShare(prev => (prev && !prev.isLocal && prev.uid === uid ? null : prev));
+  }, []);
+
   const getAgoraToken = async (
     channelName: string,
     role: 'publisher' | 'subscriber',
@@ -465,11 +509,27 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
       client.on('user-published', async (remoteUser: any, mediaType: 'audio' | 'video') => {
         await client.subscribe(remoteUser, mediaType);
-        if (mediaType === 'audio') remoteUser.audioTrack?.play();
+        if (mediaType === 'audio') {
+          // One remote audio track per user even when the host publishes both a
+          // mic and a screen-audio track — the SDK mixes them before they leave.
+          remoteUser.audioTrack?.play();
+        } else if (mediaType === 'video' && remoteUser.videoTrack) {
+          // Video only ever means a screen share here; nobody publishes a camera.
+          // Agora replays this for publishers already in the room when we join,
+          // so walking in on a share picks it up without any extra handshake.
+          setScreenShare({ track: remoteUser.videoTrack, uid: remoteUser.uid, isLocal: false });
+        }
       });
 
-      client.on('user-unpublished', (_remoteUser: any) => {
-        // cleanup handled by realtime DB events
+      client.on('user-unpublished', (remoteUser: any, mediaType: 'audio' | 'video') => {
+        // Participant bookkeeping rides realtime DB events; the only thing Agora
+        // has to tell us here is that a screen went away.
+        if (mediaType === 'video') clearRemoteScreenShare(remoteUser?.uid);
+      });
+
+      // A sharer who closes the tab never gets to unpublish.
+      client.on('user-left', (remoteUser: any) => {
+        clearRemoteScreenShare(remoteUser?.uid);
       });
 
       await client.join(tokenData.appId, tokenData.channel, tokenData.token, tokenData.uid);
@@ -855,6 +915,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     agoraClientRef.current = null;
     setGuestSpace(null);
     setIsConnected(false);
+    setScreenShare(null);
     if (client) {
       try { await client.leave(); } catch { /* noop */ }
     }
@@ -932,8 +993,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
     const recorder = mediaRecorderRef.current;
     const client = agoraClientRef.current;
     const localTrack = localAudioTrackRef.current;
+    const screenVideo = screenVideoTrackRef.current;
+    const screenAudio = screenAudioTrackRef.current;
     agoraClientRef.current = null;
     localAudioTrackRef.current = null;
+    screenVideoTrackRef.current = null;
+    screenAudioTrackRef.current = null;
     mediaRecorderRef.current = null;
 
     // ── Optimistic UI reset — synchronous, so the mini-player/modal close
@@ -945,6 +1010,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     setHandRequests([]);
     setHasRaisedHand(false);
     setVoiceEffectState('none');
+    setScreenShare(null);
 
     // ── Teardown in the background (recording upload, Agora leave, DB counts).
     //    Order matters: stop/upload the recording before closing the audio graph. ──
@@ -955,6 +1021,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         }
         if (localTrack) {
           try { localTrack.stop(); localTrack.close(); } catch { /* noop */ }
+        }
+        // Closing the display capture is what drops the browser's "you are
+        // sharing" bar — leaving the channel alone would leave it up.
+        for (const track of [screenVideo, screenAudio]) {
+          if (track) { try { track.stop(); track.close(); } catch { /* noop */ } }
         }
         if (client) {
           try { await client.leave(); } catch { /* noop */ }
@@ -1111,6 +1182,96 @@ export function StageProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [isMuted, myRole, currentSpace, walletAddress]);
+
+  // ─── Screen share ────────────────────────────────────────────────────────
+  //
+  // The host publishes their display alongside the mic track they already have,
+  // and every other client picks it up through the same `user-published` path
+  // that already carries the audio — listeners stay `audience` and only ever
+  // subscribe, so nothing about their connection changes. An Agora client can
+  // publish exactly one video track, which is also the reason a room shows one
+  // screen at a time: the host's.
+
+  const stopScreenShare = useCallback(async () => {
+    const video = screenVideoTrackRef.current;
+    const audio = screenAudioTrackRef.current;
+    if (!video && !audio) return;
+    screenVideoTrackRef.current = null;
+    screenAudioTrackRef.current = null;
+    // Only clear the wall if what's on it is ours — a remote share must survive
+    // us stopping our own.
+    setScreenShare(prev => (prev?.isLocal ? null : prev));
+
+    const client = agoraClientRef.current;
+    const tracks = [video, audio].filter(Boolean);
+    if (client && tracks.length) {
+      try { await client.unpublish(tracks); } catch { /* already gone */ }
+    }
+    for (const track of tracks) {
+      try { track.stop(); track.close(); } catch { /* noop */ }
+    }
+  }, []);
+
+  const startScreenShare = useCallback(async () => {
+    if (!agoraClientRef.current) { toast.error('Not connected to a stage'); return; }
+    if (screenVideoTrackRef.current) return;
+
+    let videoTrack: any = null;
+    let audioTrack: any = null;
+    try {
+      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+      // 'auto' hands back a pair only when the sharer ticked "share tab audio"
+      // in the picker, so a plain window share stays a single track.
+      const created = await AgoraRTC.createScreenVideoTrack(
+        { encoderConfig: '1080p_1', optimizationMode: 'detail' },
+        'auto',
+      );
+      videoTrack = Array.isArray(created) ? created[0] : created;
+      audioTrack = Array.isArray(created) ? created[1] : null;
+
+      // Re-read the client: the picker is modal and the host may have left the
+      // stage while it was open.
+      const client = agoraClientRef.current;
+      if (!client) throw new Error('Left the stage before sharing started');
+
+      screenVideoTrackRef.current = videoTrack;
+      screenAudioTrackRef.current = audioTrack;
+      await client.publish([videoTrack]);
+
+      // Tab/system audio rides as a SECOND published audio track, which the SDK
+      // mixes with the mic on the way out. Deliberately NOT routed through the
+      // voice-effect graph the way TTS and the soundboard are: that graph is
+      // gated shut by the mute button, and a muted host sharing a video should
+      // still be heard. It is also outside the host-side recording for the same
+      // reason — the recorder taps the effect graph, not the channel.
+      if (audioTrack) {
+        try {
+          await client.publish([audioTrack]);
+        } catch (err) {
+          console.warn('[Stage] Screen audio publish failed — sharing video only', err);
+          screenAudioTrackRef.current = null;
+          try { audioTrack.close(); } catch { /* noop */ }
+        }
+      }
+
+      // The browser's own "Stop sharing" bar bypasses our button entirely.
+      videoTrack.on('track-ended', () => { void stopScreenShare(); });
+
+      setScreenShare({ track: videoTrack, uid: null, isLocal: true });
+    } catch (err) {
+      screenVideoTrackRef.current = null;
+      screenAudioTrackRef.current = null;
+      for (const track of [videoTrack, audioTrack]) {
+        if (track) { try { track.close(); } catch { /* noop */ } }
+      }
+      // Dismissing the picker is a normal outcome, not a failure worth a toast.
+      const code = (err as { code?: string } | null)?.code;
+      const name = (err as { name?: string } | null)?.name;
+      if (code === 'PERMISSION_DENIED' || name === 'NotAllowedError' || name === 'AbortError') return;
+      console.error('Error starting screen share:', err);
+      toast.error('Failed to share screen');
+    }
+  }, [stopScreenShare]);
 
   // ─── Raise / lower hand ──────────────────────────────────────────────────
 
@@ -1491,6 +1652,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
       refreshSpaces,
       injectAudio,
       stopInject,
+      screenShare,
+      isScreenSharing: !!screenShare?.isLocal,
+      canScreenShare,
+      startScreenShare,
+      stopScreenShare,
     }),
     [
       liveSpaces, scheduledSpaces, currentSpace, participants, handRequests, isLoading,
@@ -1500,7 +1666,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       joinSpace, guestListen, guestStopListening, guestSpace, leaveSpace, endSpace,
       toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
-      stopInject,
+      stopInject, screenShare, canScreenShare, startScreenShare, stopScreenShare,
     ],
   );
 

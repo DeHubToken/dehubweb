@@ -6,7 +6,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { Mic, MicOff, X, Maximize2, Users, Volume2 } from 'lucide-react';
+import { Mic, MicOff, X, Maximize2, Users, Volume2, ScreenShare } from 'lucide-react';
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useStage } from '@/contexts/StageContext';
@@ -22,6 +22,7 @@ export function StageMiniPlayer() {
     leaveSpace,
     endSpace,
     openModal,
+    screenShare,
   } = useStage();
 
   const dragControls = useDragControls();
@@ -99,6 +100,20 @@ export function StageMiniPlayer() {
             <Users className="w-3 h-3" />
             {totalCount}
           </span>
+          {/* The screen only exists in the full room, so the minimised player
+              says one is up rather than reading as an audio-only stage. */}
+          {screenShare && (
+            <span
+              className="flex items-center gap-1 text-white/70"
+              title={
+                screenShare.isLocal
+                  ? "You're sharing your screen"
+                  : 'A screen is being shared — expand to watch'
+              }
+            >
+              <ScreenShare className="w-3 h-3" />
+            </span>
+          )}
         </div>
 
         {/* Controls */}
