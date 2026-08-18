@@ -3,6 +3,7 @@ import {
   applyReactionDelta,
   asReaction,
   isPositiveReaction,
+  reactionForTap,
   resolveLeadReaction,
   seedReactionCounts,
   POST_REACTIONS,
@@ -69,6 +70,36 @@ describe('resolveLeadReaction', () => {
     expect(resolveLeadReaction({})).toBeNull();
     expect(resolveLeadReaction({ like: 0 })).toBeNull();
     expect(resolveLeadReaction(null)).toBeNull();
+  });
+});
+
+describe('reactionForTap', () => {
+  it('casts the reaction the thumb is wearing, not a plain like', () => {
+    expect(reactionForTap(true, null, { hot: 12, like: 3 })).toBe('hot');
+    expect(reactionForTap(true, null, { love: 2 })).toBe('love');
+  });
+
+  it('falls back to like when the thumb draws the plain icon', () => {
+    expect(reactionForTap(true, null, { like: 9, hot: 2 })).toBe('like');
+    expect(reactionForTap(true, null, {})).toBe('like');
+    expect(reactionForTap(true, null, null)).toBe('like');
+  });
+
+  it('re-sends the held reaction, which is how the server un-reacts it', () => {
+    expect(reactionForTap(true, 'lol', { hot: 40 })).toBe('lol');
+    expect(reactionForTap(true, 'like', { hot: 40 })).toBe('like');
+    expect(reactionForTap(false, 'poo', {})).toBe('poo');
+    expect(reactionForTap(false, 'dislike', {})).toBe('dislike');
+  });
+
+  it('keeps the thumbs-down a plain dislike — it never wears a glyph', () => {
+    expect(reactionForTap(false, null, { hot: 40 })).toBe('dislike');
+    expect(reactionForTap(false, 'hot', { hot: 40 })).toBe('dislike');
+  });
+
+  it('switches polarity to whatever the thumb shows', () => {
+    expect(reactionForTap(true, 'poo', { hot: 5 })).toBe('hot');
+    expect(reactionForTap(true, 'poo', { like: 5 })).toBe('like');
   });
 });
 
