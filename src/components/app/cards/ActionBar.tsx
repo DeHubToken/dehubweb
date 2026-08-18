@@ -23,6 +23,7 @@ import { voteOnPost, reactToPost } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
   isPositiveReaction,
+  reactionForTap,
   reactionMeta,
   resolveLeadReaction,
   seedReactionCounts,
@@ -515,27 +516,29 @@ export function ActionBar({
   /**
    * Tapping the thumbs-up / thumbs-down.
    *
-   * Re-sends whatever reaction of that polarity the viewer already holds, which
-   * the server reads as "toggle it off" — so tapping the thumb clears a 🔥 the
-   * same way it clears a 👍, instead of silently downgrading it to a plain like.
+   * The thumb casts whichever reaction it is WEARING: a post leading with 🔥
+   * draws a 🔥 thumb, so tapping it reacts 🔥 rather than quietly casting a 👍
+   * the viewer never picked. Tapping a reaction you already hold re-sends it,
+   * which the server reads as "toggle it off" — so the thumb clears a 🔥 the
+   * same way it clears a 👍, instead of downgrading it to a plain like.
    */
   const handleVote = useCallback((vote: boolean) => {
-    const holdsSamePolarity = myReaction !== null && isPositiveReaction(myReaction) === vote;
-    const target: PostReaction = holdsSamePolarity ? myReaction! : (vote ? 'like' : 'dislike');
-    return handleReaction(target);
-  }, [handleReaction, myReaction]);
+    return handleReaction(reactionForTap(vote, myReaction, localReactionCounts));
+  }, [handleReaction, myReaction, localReactionCounts]);
 
   // Listen for double-tap-to-like events dispatched by photo thumbnails / fullscreen viewer.
   // Instagram-style: double-tap always likes (never unlikes) and only for this post's ID.
-  const handleVoteRef = useRef(handleVote);
-  useEffect(() => { handleVoteRef.current = handleVote; }, [handleVote]);
+  // It stays a plain 👍 even on a card whose thumb leads with 🔥 — the gesture
+  // wears no glyph, so there is nothing for it to promise to cast.
+  const handleReactionRef = useRef(handleReaction);
+  useEffect(() => { handleReactionRef.current = handleReaction; }, [handleReaction]);
   useEffect(() => {
     if (!postId || !enableDoubleTapLike) return;
     const listener = (e: Event) => {
       const detail = (e as CustomEvent<DoubleTapLikeEventDetail>).detail;
       if (!detail || String(detail.postId) !== String(postId)) return;
       if (isLiked) return; // already liked — don't toggle off on double-tap
-      handleVoteRef.current(true);
+      handleReactionRef.current('like');
     };
     window.addEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
     return () => window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
@@ -876,7 +879,7 @@ export function ActionBar({
           aria-label={
             myPositiveReaction
               ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction`
-              : 'Like — hold to react'
+              : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
           aria-expanded={reactionsEnabled ? pickerOpen : undefined}

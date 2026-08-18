@@ -142,6 +142,9 @@ export type ReactionCounts = Partial<Record<PostReaction, number>>;
  * reaction leads and when the leader is a plain like, since the icon is already
  * that reaction's glyph and swapping in the 👍 emoji would just make one card
  * in the feed look different from the rest.
+ *
+ * Whatever this returns is also what a tap on the thumb casts — the glyph and
+ * the vote are one promise, kept in `reactionForTap`.
  */
 export function resolveLeadReaction(
   counts: ReactionCounts | null | undefined,
@@ -166,6 +169,34 @@ function topPositiveReaction(counts: ReactionCounts | null | undefined): PostRea
     }
   }
   return top;
+}
+
+/**
+ * The reaction a plain tap on a thumb casts.
+ *
+ * The thumbs-up wears whatever `resolveLeadReaction` picks, so a tap has to
+ * send that same reaction: a post leading with 🔥 draws a 🔥 thumb, and tapping
+ * it must react 🔥 — casting a 👍 the viewer never chose makes the button lie
+ * about what it does. The plain 👍 is only the fallback, for a thumb that is
+ * drawing the plain icon because nothing leads.
+ *
+ * Re-sending the reaction the viewer already holds is what the server reads as
+ * "remove it", so this doubles as the un-react path — tapping the thumb clears
+ * a 🔥 the same way it clears a 👍, rather than downgrading it to a like.
+ *
+ * The thumbs-DOWN never wears a glyph (negative reactions belong to it, but it
+ * always draws the plain icon), so it stays a plain dislike unless the viewer
+ * is toggling off a 💩.
+ */
+export function reactionForTap(
+  positive: boolean,
+  myReaction: PostReaction | null | undefined,
+  counts?: ReactionCounts | null,
+): PostReaction {
+  const held = myReaction ?? null;
+  if (held && isPositiveReaction(held) === positive) return held;
+  if (!positive) return DEFAULT_NEGATIVE_REACTION;
+  return resolveLeadReaction(counts, held) ?? DEFAULT_POSITIVE_REACTION;
 }
 
 /**
