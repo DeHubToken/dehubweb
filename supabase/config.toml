@@ -93,6 +93,10 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.send-admin-invite]
     verify_jwt = false
+  # Called by the API when the assistant files a support ticket. Auth is the
+  # SUPPORT_TICKET_SECRET shared secret, not a Supabase JWT.
+  [functions.send-support-ticket]
+    verify_jwt = false
   [functions.send-sms-hook]
     verify_jwt = false
   [functions.ssr-seo]
