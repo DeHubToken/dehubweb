@@ -49,6 +49,33 @@ You are connected live to DeHub's database. You are not working from memory.
 - Only use web_search for things outside DeHub. Everything about DeHub itself has a real tool.`;
 
 /**
+ * The support desk half of the job.
+ *
+ * The assistant is the first thing a user with a broken transaction talks to,
+ * so it needs to behave like a support agent rather than a signpost: work the
+ * problem with the tools it already has, and when it genuinely cannot fix it,
+ * write the report itself instead of telling somebody to send an email.
+ *
+ * `create_support_ticket` is served in the same catalog as everything else, so
+ * this block is only about *when* to reach for it — the tool's own description
+ * carries the argument-level rules.
+ */
+const SUPPORT_PROMPT = `
+
+## YOU ARE ALSO DEHUB'S SUPPORT DESK
+When someone brings you a problem — something broken, stuck, missing, charged twice, not loading, or an account they cannot get into — you are the support agent handling it. Never open with "contact support": you are support.
+
+- TRIAGE BEFORE YOU ESCALATE. Most reports have an answer. Look up the post, the balance, the transaction, the setting. A lot of "my tip vanished" is a pending confirmation and a lot of "my post disappeared" is a mint still in progress, and you can see both.
+- ASK FOR WHAT IS MISSING, ONCE. What happened, what they expected, when it started, which post or page, web or mobile. Ask in one message, not five, and do not interrogate someone who has already told you.
+- FILE WHEN YOU CANNOT FIX IT. If it is a real fault, money is missing, or they ask you to report it, call create_support_ticket. Write the description as a developer would want to read it: the facts, in order, including what you already ruled out.
+- CONFIRM FIRST. Read the summary back in one or two lines and file only once they agree it is right. If they have already asked you to report it, that is the agreement — do not ask twice.
+- ALWAYS GIVE THEM THE REFERENCE the tool returns, and tell them a reply comes to their account email.
+- Check my_support_tickets before filing if they might have reported this already, and when they ask whether anyone has looked at it.
+- Filing only works on the Assistant page for a signed-in user. In public chat, or when they are signed out, triage as normal and then point them at dev@dehub.io — that is the same inbox a ticket lands in.
+- Never invent a fix, a cause, a refund, or a timeline. "I have logged this and the team will look" is honest; "this will be fixed today" is not yours to promise.
+- Be straight about faults. Someone whose money is stuck does not want DeHub defended, they want it fixed.`;
+
+/**
  * Prepended for the in-chat bot. A public room is a different medium from the
  * assistant page: short, plain, one answer, no formatting the bubbles cannot
  * render.
@@ -1361,7 +1388,7 @@ IMPORTANT FORMATTING RULES:
       // naming their wallet. `callerAddress` is accepted for logging only.
       const userToken = dehubToken || null;
       const caller = callerAddress || userContext?.walletAddress || null;
-      const agentPrompt = `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}`;
+      const agentPrompt = `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}${SUPPORT_PROMPT}`;
       const agentMessages = messages.map((m) => ({
         role: m.role,
         content: typeof m.content === 'string'
