@@ -49,7 +49,7 @@ import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
-import { usePostLinkCopyCount, trackPostLinkCopy } from '@/hooks/use-link-copy-count';
+import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 
 interface ShortsViewerProps {
   shorts: ShortVideo[];
@@ -239,12 +239,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [showTipModal, setShowTipModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(currentShort?.id);
 
-  // Share counter = reposts + link copies, with local optimistic bumps.
-  // copiedIdsRef stops repeat copies of the same short inflating the count.
+  // Share counter = reposts + link copies.
+  //
+  // shareDelta is the optimistic bump for a repost made here, cleared when the
+  // short changes. Link copies instead carry a FLOOR and are combined with
+  // max() rather than added: a delta would be added on top of the server total
+  // again as soon as the count query refetched and already contained that same
+  // copy, whereas a floor is absorbed the moment the server catches up.
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(currentShort?.id);
+  const linkCopyFloor = useLinkCopyFloor(currentShort?.id);
+  const trackLinkCopy = useTrackPostLinkCopy();
   const [shareDelta, setShareDelta] = useState(0);
-  const copiedIdsRef = useRef<Set<string>>(new Set());
-  const displayShareCount = (currentShort?.repostCount ?? 0) + linkCopyCount + shareDelta;
+  const displayShareCount =
+    (currentShort?.repostCount ?? 0) +
+    shareDelta +
+    Math.max(linkCopyCount, linkCopyFloor);
   
   // View tracking for the current short
   const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
@@ -830,12 +839,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const url = `${window.location.origin}/app/post/${currentShort.id}`;
     navigator.clipboard.writeText(url);
     toast.success('Post URL copied to clipboard');
-    // Count the copy toward the share counter (once per short per session)
-    if (currentShort?.id && !copiedIdsRef.current.has(currentShort.id)) {
-      copiedIdsRef.current.add(currentShort.id);
-      trackPostLinkCopy(currentShort.id, walletAddress);
-      setShareDelta(prev => prev + 1);
-    }
+    // A copy is a share: it counts once per actor per post, next to reposts.
+    trackLinkCopy(currentShort?.id, walletAddress, linkCopyCount);
     setShareSheetOpen(false);
   };
 
