@@ -46,6 +46,7 @@ import { BadgedName } from '@/components/app/BadgedName';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { formatDistanceToNow } from 'date-fns';
 
 type View = 'browse' | 'create' | 'live';
@@ -637,10 +638,15 @@ export function AudioSpacesModal() {
                               if (playingStageId === space.id) {
                                 stopPastStagePlayback();
                               }
-                              if (space.recording_url) {
+                              if (space.recording_url && walletAddress) {
                                 const path = space.recording_url.split('/stage-recordings/')[1];
                                 if (path) {
-                                  await supabase.storage.from('stage-recordings').remove([decodeURIComponent(path)]);
+                                  // Through a wallet-scoped client: the bucket's DELETE policy
+                                  // now checks who owns the stage, and the Storage API has no
+                                  // per-call header to carry that on the shared one.
+                                  await walletScopedClient(walletAddress)
+                                    .storage.from('stage-recordings')
+                                    .remove([decodeURIComponent(path)]);
                                 }
                               }
                               await supabase.from('audio_spaces').delete().eq('id', space.id)
