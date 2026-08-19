@@ -391,7 +391,6 @@
     transition:.18s}
   #csDots span.on{background:var(--cyan);box-shadow:0 0 8px rgba(56,224,255,.7);
     transform:scale(1.25)}
-  #csCount{font-size:8px;letter-spacing:.24em;color:var(--dim);margin-top:10px}
 
   /* Live character tiles. ONE WebGL canvas is stretched over the rail and each
      card is drawn into its own scissor rectangle, so a roster of a hundred
@@ -818,7 +817,6 @@
       <button class="csArrow" id="csR" data-step="1" title="Next">›</button>
     </div>
     <div id="csDots"></div>
-    <div id="csCount"></div>
     <button id="csDesk">STAY AT THE DESK</button>
   </div>
 </div>
@@ -8004,16 +8002,14 @@ function buildRoster(list){
     pv.cards.push(entry);
     track.appendChild(d);
     /* Dots only while they are still countable. The roster is a folder, so it
-       can be a hundred deep — a hundred dots is a grey smear, not a control,
-       and #csCount already says how many there are. */
+       can be a hundred deep, and a hundred dots is a grey smear, not a
+       control. */
     if(list.length<=14){
       const dot=document.createElement('span');
       dot.addEventListener('click',()=>csGo(entry.i));
       dots.appendChild(dot);
     }
   }
-  const n=$('#csCount');
-  if(n)n.textContent=list.length+' CHARACTERS · DROP MORE INTO characters/';
   /* Open on whoever you already are, not on whoever happens to be first. */
   let saved='';
   try{saved=localStorage.getItem('trenchstar.avatar')||'';}catch(e){}
