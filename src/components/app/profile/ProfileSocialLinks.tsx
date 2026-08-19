@@ -1,4 +1,5 @@
 import React from 'react';
+import { normalizeSocialUrl } from '@/lib/social-links';
 
 const SOCIAL_CONFIGS = [
   {
@@ -83,10 +84,7 @@ export function ProfileSocialLinks({ customs }: ProfileSocialLinksProps) {
   return (
     <div className="flex items-center gap-1.5">
       {links.map(({ key, label, icon }) => {
-        let url = customs[key] as string;
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = `https://${url}`;
-        }
+        const url = normalizeSocialUrl(key, customs[key] as string);
         return (
           <a
             key={key}
