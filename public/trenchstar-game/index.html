@@ -2008,8 +2008,19 @@ function buildFloor(){
     floorGrp.add(mirror);
   }else{
     geo.dispose();
+    /* The fallback floor has to READ as a floor, because this is what the room
+       drops to the moment the GPU struggles — and it is a one-way trip, there
+       is nothing that ever puts the mirror back.
+         It used to be colour 0x0c1016 at metalness 0.7 with envMapIntensity
+       0.16, which is a void rather than a surface: metalness that high leaves
+       a material with no diffuse term at all, so the room's RectAreaLights had
+       nothing to land on, and the 0.16 environment cut the only other source
+       of light it had. The screens stayed lit, the ground under them went
+       black, and the whole lower half of the frame read as a hole in the
+       world. Mostly diffuse with a real environment contribution instead: it
+       is still a dark polished floor, it just exists. */
     floorGrp.add(new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),
-      new THREE.MeshStandardMaterial({color:0x0c1016,roughness:0.2,metalness:0.7,envMapIntensity:0.16})));
+      new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.34,metalness:0.22,envMapIntensity:0.95})));
   }
   const skin=new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),floorMat);
   skin.position.y=0.02;
@@ -9919,7 +9930,14 @@ function tick(t){
           bloom.strength=0;
           renderer.setPixelRatio(1);
           if(composer.setPixelRatio)composer.setPixelRatio(1);
-          composer.setSize(innerWidth,innerHeight);
+          /* viewport(), not innerWidth/innerHeight. Everything else sizes off
+             the host element, and inside the arcade's iframe the two are not
+             the same number — sizing the post chain to the window while the
+             canvas follows the host leaves the composer resolving to a
+             different shape than the thing it is blitted into. resize() then
+             early-returns because the window itself never changed, so it stays
+             wrong until something else forces a resize. */
+          composer.setSize(...viewport());
         }
         else if(FLOOR_Q==='mirror'){FLOOR_Q='plain';buildFloor();}   /* mirror goes second */
       }
