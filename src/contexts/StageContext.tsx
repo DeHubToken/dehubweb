@@ -255,6 +255,23 @@ function sameWallet(a?: string | null, b?: string | null): boolean {
 }
 
 /**
+ * The avatar to persist on a row other people will read.
+ *
+ * A profile picture that has just been picked sits in `user.avatarImageUrl` as
+ * a `blob:` URL — an optimistic preview that resolves only inside the tab that
+ * created it. Joining a stage inside that window wrote the preview to the
+ * table: one seat in the 2026-08-19 town hall is stored as
+ * `blob:https://dehub.io/9680…`, a permanently dead image for every other
+ * person in the room. Null is strictly better than a dead URL, because the
+ * readers fall back to the CDN object for the wallet.
+ */
+function persistableAvatar(url?: string | null): string | null {
+  if (!url) return null;
+  if (url.startsWith('blob:') || url.startsWith('data:')) return null;
+  return url;
+}
+
+/**
  * Recount a stage's headcounts from its participant rows.
  *
  * The cast is load-bearing and temporary. `src/integrations/supabase/types.ts`
@@ -808,7 +825,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           space_id: space.id,
           wallet_address: walletAddress,
           username: user?.username || null,
-          avatar: user?.avatarImageUrl || null,
+          avatar: persistableAvatar(user?.avatarImageUrl),
           role: 'host',
           is_muted: true,
         }),
@@ -861,7 +878,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
               description,
               host_wallet_address: walletAddress,
               host_username: user?.username || null,
-              host_avatar: user?.avatarImageUrl || null,
+              host_avatar: persistableAvatar(user?.avatarImageUrl),
               status: 'live',
               speaker_count: 1,
               listener_count: 0,
@@ -907,7 +924,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
               description: input.description,
               host_wallet_address: walletAddress,
               host_username: user?.username || null,
-              host_avatar: user?.avatarImageUrl || null,
+              host_avatar: persistableAvatar(user?.avatarImageUrl),
               status: 'scheduled',
               scheduled_at: input.scheduledAt,
               cover_image_url: input.coverImageUrl ?? null,
@@ -1075,7 +1092,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
               space_id: spaceId,
               wallet_address: walletAddress,
               username: user?.username || null,
-              avatar: user?.avatarImageUrl || null,
+              avatar: persistableAvatar(user?.avatarImageUrl),
               role: rejoiningRole,
               is_muted: true,
               left_at: null,
@@ -1517,7 +1534,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           space_id: currentSpace.id,
           wallet_address: walletAddress,
           username: user?.username || null,
-          avatar: user?.avatarImageUrl || null,
+          avatar: persistableAvatar(user?.avatarImageUrl),
           status: 'pending',
         }),
       );
