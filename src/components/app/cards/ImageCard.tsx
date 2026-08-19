@@ -50,6 +50,7 @@ import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useImageTranslation } from '@/hooks/use-image-translation';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -473,6 +474,11 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  // The options menu offers the same copy as the share sheet, so it counts the
+  // same. Shares one react-query key with the ActionBar below, so no extra
+  // request — and the bump lands on the card's own share counter.
+  const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
+  const trackLinkCopy = useTrackPostLinkCopy();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
@@ -743,6 +749,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                     const url = `${window.location.origin}/app/post/${post.id}`;
                     navigator.clipboard.writeText(url);
                     toast.success(t('postOptions.postUrlCopied'));
+                    trackLinkCopy(post.id, walletAddress, linkCopyCount);
                   }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >

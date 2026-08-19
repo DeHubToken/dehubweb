@@ -51,6 +51,7 @@ import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality } from '@/hooks/use-connection-quality';
 import { AudioVisualizer } from '../audio';
@@ -552,6 +553,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  // The options menu offers the same copy as the share sheet, so it counts the
+  // same. Shares one react-query key with the ActionBar below, so no extra
+  // request — and the bump lands on the card's own share counter.
+  const { data: linkCopyCount = 0 } = usePostLinkCopyCount(video.id);
+  const trackLinkCopy = useTrackPostLinkCopy();
   const { autoplayEnabled } = useAutoplay();
   // Slow-network / Data-Saver mode: suppress autoplay and video preloading so a
   // metered connection isn't spent fetching 50MB clips the user hasn't asked for.
@@ -1519,6 +1525,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                       const url = `${window.location.origin}/app/post/${video.id}`;
                       navigator.clipboard.writeText(url);
                       toast.success(t('postOptions.postUrlCopied'));
+                      trackLinkCopy(video.id, walletAddress, linkCopyCount);
                     }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
@@ -2204,6 +2211,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 const url = `${window.location.origin}/app/post/${video.id}`;
                 navigator.clipboard.writeText(url);
                 toast.success(t('postOptions.linkCopied'));
+                trackLinkCopy(video.id, walletAddress, linkCopyCount);
                 setShowOptionsDrawer(false);
               }}
               className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"

@@ -38,6 +38,7 @@ import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
 import { useFollow } from '@/hooks/use-follow';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
@@ -97,6 +98,11 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  // The options menu offers the same copy as the share sheet, so it counts the
+  // same. Shares one react-query key with the ActionBar below, so no extra
+  // request — and the bump lands on the card's own share counter.
+  const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
+  const trackLinkCopy = useTrackPostLinkCopy();
   const { mint: mintExisting, isMinting } = useMintExistingPost();
 
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
@@ -324,6 +330,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                   const url = `${window.location.origin}/app/post/${post.id}`;
                   navigator.clipboard.writeText(url);
                   toast.success(t('postOptions.postUrlCopied'));
+                  trackLinkCopy(post.id, walletAddress, linkCopyCount);
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
