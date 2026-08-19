@@ -21,6 +21,7 @@ import { WarLogo } from '@/components/app/war/WarLogoLazy';
 // — so it must NOT be swapped for the black mark here the way the rail does it,
 // or light mode would invert a black mark back to white.
 import dehubMark from '@/assets/dehub-logo-compact.png';
+import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   const { theme } = useAppTheme();
@@ -81,7 +82,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const handleLogoClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     if (isHomePath(pathnameRef.current)) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollDocumentToSmooth();
     } else {
       navigate('/app');
     }

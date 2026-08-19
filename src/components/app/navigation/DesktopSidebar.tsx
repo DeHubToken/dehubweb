@@ -31,6 +31,7 @@ import { preloadRoute } from '@/lib/route-preload';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
+import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 
 /**
  * Terminates the rail's nav list. Deliberately NOT in NAV_ITEMS: that array is
@@ -209,7 +210,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isHomePath(location.pathname)) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollDocumentToSmooth();
     } else {
       navigate('/app');
     }

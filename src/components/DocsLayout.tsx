@@ -15,6 +15,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { getDocsForcedTheme } from '@/lib/docs-theme';
 import dehubCoinIcon from '@/assets/dehub-coin.png';
+import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 
 // Navigation key mapping for translations
 const getMenuItems = (t: (key: string) => string) => [{
@@ -299,7 +300,7 @@ const DocsLayoutContent = () => {
     const [subPath, subHash] = path.split('#');
     if (location.pathname !== subPath) return;
     if (subHash) document.getElementById(subHash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    else window.scrollTo({ top: 0, behavior: 'smooth' });
+    else scrollDocumentToSmooth();
   };
   const toggleSubmenu = (itemTitle: string) => {
     setExpandedMenus(prev => ({

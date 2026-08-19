@@ -18,6 +18,7 @@ import { preloadPriorityPages } from '@/lib/preload-priority-pages';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import HomePage from '@/pages/app/HomePage';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -239,7 +240,7 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
   // Scroll to top for specific pages when they become active
   useEffect(() => {
     if (activeCachedPage && SCROLL_TO_TOP_PAGES.has(activeCachedPage.key)) {
-      window.scrollTo(0, 0);
+      scrollDocumentTo(0);
     }
   }, [activeCachedPage?.key]);
 

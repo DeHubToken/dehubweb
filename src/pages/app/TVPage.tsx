@@ -11,11 +11,12 @@ import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { PageHeader } from '@/components/app/PageHeader';
 import { LiveTVSection } from '@/components/app/tv';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 
 export default function TVPage() {
   const { t } = useTranslation();
   useLayoutEffect(() => {
-    window.scrollTo(0, 0);
+    scrollDocumentTo(0);
   }, []);
 
   return (

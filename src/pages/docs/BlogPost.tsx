@@ -16,6 +16,7 @@ import { raffleContent } from '@/data/raffleContent';
 import { useBlogData } from '@/hooks/useBlogData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getBlogShareImageUrl } from '@/lib/blogShareImage';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 
 // Subtle loading placeholder while the article markdown streams in — the docs
 // light background is textured, so translucent bg-muted bars (no flat paint).
@@ -44,7 +45,7 @@ const BlogPost = () => {
   }
 
   useLayoutEffect(() => {
-    window.scrollTo(0, 0);
+    scrollDocumentTo(0);
   }, [slug]);
 
   const isRafflePost = slug === 'dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022';

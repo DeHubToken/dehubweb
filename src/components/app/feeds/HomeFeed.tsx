@@ -433,7 +433,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       setSelectedCategories(prev => (
         prev.includes(categoryId) ? prev : [...prev, categoryId]
       ));
-      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      scrollDocumentTo(0);
     };
 
     window.addEventListener('category-filter-changed', handler);
