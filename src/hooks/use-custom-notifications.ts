@@ -121,6 +121,13 @@ export function useCustomUnreadCount() {
     enabled: isAuthenticated && !!walletAddress,
     staleTime: 2 * 60 * 1000,
     refetchInterval: 5 * 60 * 1000,
+    // Keep polling while the tab is hidden. useStageAlerts rides this count to
+    // raise "starting soon", and its OS-notification branch fires only when
+    // document.hidden — but with background refetch off (the TanStack v5
+    // default) the count could never rise in exactly that state, so the
+    // hidden-tab alert was unreachable by construction. One HEAD request per
+    // five minutes is what it costs.
+    refetchIntervalInBackground: true,
   });
 }
 

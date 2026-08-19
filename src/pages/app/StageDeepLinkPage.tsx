@@ -75,6 +75,16 @@ export default function StageDeepLinkPage() {
       if (error) throw error;
       return data as AudioSpace;
     },
+    // People open an announcement link early and sit on it — and this page had
+    // no way to learn the stage started. The go-live toast navigates here, but
+    // for someone already parked on the page that navigation is a no-op
+    // against a cached 'scheduled' row, so the room opened and the very people
+    // waiting on the announcement card were the last to know. Poll while the
+    // stage has not ended; once live, the fresh row triggers the auto-join /
+    // guest-player logic below on its own. 15s is one indexed single-row read
+    // against a page someone is deliberately camping on.
+    refetchInterval: (query) =>
+      query.state.data && query.state.data.status !== 'ended' ? 15_000 : false,
   });
 
   const { hasReminder, toggleReminder, isToggling } = useStageReminder(stage?.id);
