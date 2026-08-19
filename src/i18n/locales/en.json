@@ -1607,7 +1607,7 @@
   },
   "arcade": {
     "title": "Arcade",
-    "intro": "Games that run in this tab. Nothing to install, nothing to buy — three of them open source, one made for DeHub, and all four served from DeHub itself.",
+    "intro": "A collection of DeHub built and open sourced games, worlds & experiences.",
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor. No install, no download.",
     "alsoIn": "Also in the {{theme}}"
