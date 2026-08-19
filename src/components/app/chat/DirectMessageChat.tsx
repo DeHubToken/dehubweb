@@ -591,7 +591,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const bottomRef = useRef<HTMLDivElement>(null);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const [newMessageCount, setNewMessageCount] = useState(0);
-  const prevMessagesLenRef = useRef(0);
+  // The _id of the message that was last when this effect last ran, so an
+  // append can be told apart from prepended history.
+  const prevLastMessageIdRef = useRef<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isBlocked, setIsBlocked] = useState(conversation.isBlocked ?? false);
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
@@ -855,7 +857,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     if (isInitialMount.current && messages.length > 0) {
       bottomRef.current?.scrollIntoView({ behavior: 'auto' });
       isInitialMount.current = false;
-      prevMessagesLenRef.current = messages.length;
+      prevLastMessageIdRef.current = messages[messages.length - 1]?._id ?? null;
       markAsRead();
     }
   }, [messages.length, markAsRead]);
@@ -880,11 +882,23 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     };
   }, [resolvedConversationId]);
 
-  // Auto-scroll on new messages + auto-mark as read while chat is open
+  // Auto-scroll on new messages + auto-mark as read while chat is open.
+  //
+  // Keyed on the identity of the last message, not on messages.length: paging
+  // back prepends history, which grows the length too, so a length comparison
+  // counted older messages as new. Scrolling up through a long thread
+  // therefore popped a "N new messages" pill whose count climbed with every
+  // page fetched, and re-fired markAsRead on each one.
   useEffect(() => {
     if (isInitialMount.current) return;
-    const prevLen = prevMessagesLenRef.current;
-    if (messages.length > prevLen) {
+    const prevLastId = prevLastMessageIdRef.current;
+    const prevIndex = prevLastId ? messages.findIndex((m) => m._id === prevLastId) : -1;
+    // Anything after the message that used to be last is genuinely new. If the
+    // old tail is gone — a full refetch, or an optimistic id swapped for the
+    // real one — count nothing rather than guess, so the pill can't lie.
+    const appended = prevIndex === -1 ? 0 : messages.length - 1 - prevIndex;
+
+    if (appended > 0) {
       // Auto-read: user is actively viewing this chat
       markAsRead();
       const container = scrollContainerRef.current;
@@ -893,12 +907,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         if (distanceFromBottom < 150) {
           setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
         } else {
-          setNewMessageCount(prev => prev + (messages.length - prevLen));
+          setNewMessageCount(prev => prev + appended);
         }
       }
     }
-    prevMessagesLenRef.current = messages.length;
-  }, [messages.length, markAsRead]);
+    prevLastMessageIdRef.current = messages[messages.length - 1]?._id ?? null;
+  }, [messages, markAsRead]);
 
   // Keep the newest messages pinned above the on-screen keyboard. With
   // `interactive-widget=resizes-content` the layout (and this flex column)
@@ -1020,10 +1034,16 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     if (distanceFromBottom < 50) setNewMessageCount(0);
 
     if (container.scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
-      const scrollHeight = container.scrollHeight;
+      const previousHeight = container.scrollHeight;
+      const previousTop = container.scrollTop;
       fetchNextPage().then(() => {
         requestAnimationFrame(() => {
-          container.scrollTop = container.scrollHeight - scrollHeight;
+          // Restore the reading position. Prepended history grows the
+          // scrollHeight from the top, so the content the user was looking at
+          // moves down by exactly that growth. Dropping previousTop left them
+          // pinned within 100px of the top, which immediately re-fired this
+          // fetch and walked them backwards through the thread.
+          container.scrollTop = container.scrollHeight - previousHeight + previousTop;
         });
       });
     }
