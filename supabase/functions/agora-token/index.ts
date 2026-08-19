@@ -82,11 +82,16 @@ async function mayPublish(channelName: string, wallet: string): Promise<boolean>
 
   if ((stage.host_wallet_address || "").toLowerCase() === wallet) return true;
 
+  // ilike, not eq: the verified wallet arrives lowercased, but participant
+  // rows written by older mobile builds carry whatever casing the client held
+  // — a checksummed row would make its own speaker fail this check the day
+  // the gate is enforced. ilike without wildcards is exact-match,
+  // case-insensitive, which is the comparison every RLS policy here uses.
   const { data: seat } = await admin
     .from("space_participants")
     .select("role")
     .eq("space_id", stage.id)
-    .eq("wallet_address", wallet)
+    .ilike("wallet_address", wallet)
     .is("left_at", null)
     .maybeSingle();
 
@@ -126,13 +131,33 @@ serve(async (req) => {
     // Subscriber tokens stay open — that is the whole guest-listening path.
     if (wantsPublisher) {
       const mode = gateMode();
-      const auth = await requireDeHubAuth(req);
       let refusal: string | null = null;
 
-      if (!auth.ok) {
-        refusal = "no valid DeHub token";
-      } else if (!(await mayPublish(channelName, auth.wallet))) {
-        refusal = `wallet ${auth.wallet} holds no host/speaker seat`;
+      // The whole gate under one deadline. requireDeHubAuth calls
+      // api.dehub.io with no timeout of its own, which would otherwise put an
+      // unbounded upstream on the critical path of every host going live —
+      // in REPORT mode, where the gate is meant to be free. A hung check is
+      // treated as "could not evaluate": logged and waved through in report
+      // mode, refused in enforce mode (fail closed, but fast enough that the
+      // client's error handling actually runs).
+      const GATE_DEADLINE_MS = 5000;
+      try {
+        const gateCheck = (async (): Promise<string | null> => {
+          const auth = await requireDeHubAuth(req);
+          if (!auth.ok) return "no valid DeHub token";
+          if (!(await mayPublish(channelName, auth.wallet))) {
+            return `wallet ${auth.wallet} holds no host/speaker seat`;
+          }
+          return null;
+        })();
+        refusal = await Promise.race([
+          gateCheck,
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error("gate check timed out")), GATE_DEADLINE_MS),
+          ),
+        ]);
+      } catch (gateErr) {
+        refusal = `gate check failed: ${gateErr instanceof Error ? gateErr.message : gateErr}`;
       }
 
       if (refusal) {
