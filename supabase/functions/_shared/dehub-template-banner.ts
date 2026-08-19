@@ -1,11 +1,19 @@
-// DeHub "SM Template 2.0" deterministic banner renderer.
+// DeHub "SM Template 2.0" deterministic banner renderer — design language v2.
 //
 // Instead of asking a diffusion model to imitate the brand, this renders the
-// official template system directly: silk background + chrome 3D icon hero +
-// silver Exo headline (motion-blurred tail) + HUD chrome (pill logo, //dehub.io,
-// type tag, QR) — as pure SVG rasterized with resvg-wasm. The LLM only fills a
-// small validated spec (headline / subtitle / icon choice); the template itself
-// enforces the brand, so output cannot drift off-style.
+// official template system directly: silk background (with an opt-in dust/grid/
+// starfield overlay) + a chrome 3D icon hero that BLEEDS off the right and
+// bottom + an Exo headline carrying a horizontal tone+alpha sweep and a lead
+// focus ramp + HUD chrome drawn as corner brackets (pill, //dehub.io, two-line
+// type tag, QR) inside a bevelled card — as pure SVG rasterized with resvg-wasm.
+// The LLM only fills a small validated spec (headline / subtitle / icon choice);
+// the template itself enforces the brand, so output cannot drift off-style.
+//
+// This is the server-side twin of the kit's style-v2.mjs, which renders the same
+// language through headless Chrome for social/blog art. The kit is the source of
+// truth for the LOOK; when it moves, this has to be moved deliberately, because
+// the mechanisms differ (CSS masks and background-clip:text there, SVG gradients,
+// masks and filters here). Keep them in sync.
 //
 // Assets live in the repo under public/brand-kit/ and are fetched from the
 // deployed site at runtime (same origin as /lovable-uploads, which serves real
@@ -92,13 +100,25 @@ export type BannerFormat = "landscape" | "square" | "portrait";
 export interface BannerSpec {
   format: BannerFormat;
   layout: "hero" | "wordmark";
-  headline: { text: string; blurTail: number }[]; // 1-2 lines
+  /**
+   * 1-2 lines. `blurTail` is a v1 leftover: the focus ramp is now a LEAD ramp
+   * (first letters soft, sharpening rightward into the light), which is a
+   * property of the block rather than of a letter count. It is still parsed so
+   * an LLM reply that sets it stays valid, but it no longer moves any pixels.
+   */
+  headline: { text: string; blurTail: number }[];
   subtitle: string; // snake_case
   extra?: string; // small mono extra next to subtitle
   typeTag: string; // // type = "…"
   icon?: string; // manifest key
   icon2?: string;
   bg?: string; // manifest bg key; random when absent
+  /**
+   * Opt-in atmosphere over the silk (dust blobs + technical grid + starfield).
+   * Per-graphic on purpose — it flatters some backgrounds and muddies others,
+   * so it is varied rather than always-on. Derived from the seed when unset.
+   */
+  overlay?: boolean;
 }
 
 function esc(v: string): string {
@@ -150,6 +170,7 @@ function clampSpec(raw: Partial<BannerSpec>, manifest: KitManifest, format: Bann
     icon,
     icon2,
     bg,
+    overlay: typeof raw.overlay === "boolean" ? raw.overlay : undefined,
   };
 }
 
@@ -230,24 +251,176 @@ Reply with ONLY the JSON object, no markdown.`;
 }
 
 // ------------------------------------------------------------------ svg -----
+//
+// Design language v2, ported from the kit's style-v2.mjs (the source of truth for
+// the look). The kit renders through headless Chrome and can lean on CSS; this
+// twin rasterises SVG with resvg, so each rule is reimplemented rather than
+// copied — the notes below say where the mechanism had to differ.
 const DIMS: Record<BannerFormat, { W: number; H: number }> = {
   landscape: { W: 1200, H: 630 },
   square: { W: 960, H: 960 },
   portrait: { W: 864, H: 1080 },
 };
 
-function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, size: number, anchor: "start" | "middle"): string {
-  const lh = size * 0.94;
+// Same LCG as the kit, so one spec always renders the same banner — which also
+// means a retry after a transient asset fetch produces an identical image.
+function prng(seed: number): () => number {
+  let s = (seed * 16807) % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return () => (s = (s * 16807) % 2147483647) / 2147483647;
+}
+
+const n1 = (v: number) => Number(v.toFixed(1));
+
+/**
+ * Canvas metrics. `s` scales every fixed measurement off the kit's 1920×1080
+ * reference by geometric mean, so one set of numbers serves all three formats.
+ *
+ * The gutters are the part most often got wrong: ONE left gutter shared by the
+ * pill, headline and sub row, and ONE bottom line whose CENTRE (not bottom —
+ * their heights differ) is shared by the pill, //dehub.io and the QR.
+ */
+interface Frame {
+  W: number; H: number; s: number; land: boolean;
+  GUT: number; TOP: number; BASE: number; RGUT: number;
+}
+function frameOf(format: BannerFormat): Frame {
+  const { W, H } = DIMS[format];
+  const land = format === "landscape";
+  return {
+    W, H,
+    s: Math.sqrt(W * H) / Math.sqrt(1920 * 1080),
+    land,
+    GUT: W * (land ? 0.052 : 0.075),
+    TOP: H * 0.072,
+    BASE: H * 0.104,
+    RGUT: W * 0.042,
+  };
+}
+
+/**
+ * A HUD box: dark plate plus four L-shaped CORNER BRACKETS.
+ *
+ * Not a dashed rectangle and not a solid one — the middle of every edge is
+ * empty, like crop marks. A repeating dash pattern is the classic wrong answer:
+ * it reads as technical and survives a glance, but it is visibly not the brand.
+ * Arm length is FIXED rather than a percentage so every box's brackets match
+ * whatever the box measures.
+ */
+function bracketBox(x: number, y: number, w: number, h: number, s: number): string {
+  const ah = 15 * s, av = 12 * s;
+  const C = "rgba(255,255,255,0.46)";
+  const line = (x1: number, y1: number, x2: number, y2: number) =>
+    `<line x1="${n1(x1)}" y1="${n1(y1)}" x2="${n1(x2)}" y2="${n1(y2)}" stroke="${C}" stroke-width="1"/>`;
+  // Fill sits at .80 alpha deliberately: at .42 the brackets compute darker than
+  // bright chrome bleeding behind them and the box vanishes into a tonal step.
+  return `<rect x="${n1(x)}" y="${n1(y)}" width="${n1(w)}" height="${n1(h)}" fill="rgba(8,8,11,0.80)"/>` +
+    line(x, y, x + ah, y) + line(x + w - ah, y, x + w, y) +
+    line(x, y + h, x + ah, y + h) + line(x + w - ah, y + h, x + w, y + h) +
+    line(x, y, x, y + av) + line(x, y + h - av, x, y + h) +
+    line(x + w, y, x + w, y + av) + line(x + w, y + h - av, x + w, y + h);
+}
+
+/** Starfield over the silk — plain circles, no filter, so it costs almost nothing. */
+function starField(seed: number, W: number, H: number): string {
+  const r = prng(seed + 7);
+  const n = Math.round(300 * (W * H) / (1920 * 1080));
   let out = "";
-  lines.forEach((l, i) => {
-    const y = topY + size * 0.82 + i * lh;
-    const common = `font-family="Exo" font-weight="700" font-size="${size}" letter-spacing="${(-0.015 * size).toFixed(1)}" text-anchor="${anchor}"`;
-    out += `<text x="${x}" y="${y}" ${common} fill="url(#silver)">${esc(l.text)}</text>`;
-    if (l.blurTail > 0) {
-      out += `<text x="${x}" y="${y}" ${common} fill="url(#silver)" filter="url(#hblur)" mask="url(#tailfade)" opacity="0.95">${esc(l.text)}</text>`;
-    }
-  });
+  for (let i = 0; i < n; i++) {
+    out += `<circle cx="${n1(r() * W)}" cy="${n1(r() * H)}" r="${(0.35 + r() * 1.45).toFixed(2)}" fill="#ffffff" opacity="${(0.10 + r() * 0.5).toFixed(2)}"/>`;
+  }
+  for (let i = 0; i < 5; i++) {
+    const x = r() * W, y = r() * H * 0.75, L = 14 + r() * 26;
+    out += `<g opacity="${(0.30 + r() * 0.35).toFixed(2)}">` +
+      `<circle cx="${n1(x)}" cy="${n1(y)}" r="1.6" fill="#ffffff"/>` +
+      `<rect x="${n1(x - L)}" y="${n1(y)}" width="${n1(L * 2)}" height="0.9" fill="url(#flarex)"/>` +
+      `<rect x="${n1(x)}" y="${n1(y - L * 0.6)}" width="0.9" height="${n1(L * 1.2)}" fill="url(#flarey)"/></g>`;
+  }
   return out;
+}
+
+/**
+ * Blurred "dust" blobs between the silk and the grid. Drawn as soft radial
+ * gradients rather than blurred solids — a feGaussianBlur over blobs this size
+ * is exactly the kind of full-canvas filter that has blown the edge CPU slice
+ * before, and the gradient is visually indistinguishable here.
+ */
+function dustLayer(seed: number, W: number, H: number): string {
+  const r = prng(seed + 3);
+  let out = "";
+  for (let i = 0; i < 3; i++) {
+    const dw = (0.30 + r() * 0.34) * W;
+    out += `<ellipse cx="${n1(r() * W)}" cy="${n1(r() * H)}" rx="${n1(dw / 2)}" ry="${n1(dw * 0.36)}" fill="url(#dust)"/>`;
+  }
+  return out;
+}
+
+/**
+ * The v2 headline: a horizontal tone+alpha sweep with a LEAD focus ramp.
+ *
+ * Two things changed from v1. The gradient runs left-to-right instead of
+ * top-to-bottom, and it carries ALPHA as well as tone — the leading glyphs are
+ * semi-transparent (~.34) so the silk reads straight through them before they
+ * go opaque around 62%. Solid stops look flat and pasted on; the transparency
+ * is what seats the type inside the image.
+ *
+ * The ramp blurs the FIRST letters, sharpening as they move right into the
+ * light (v1 blurred the trailing letters). It is built as two full stacked
+ * copies cross-faded with masks rather than by blurring part of the text: the
+ * kit hit a silent failure doing the per-letter version in CSS, and the
+ * equivalent here — blurring a sub-range of a gradient-filled <text> — has the
+ * same problem, because the filter and the fill do not compose per-glyph.
+ *
+ * Both gradient and masks use userSpaceOnUse across the whole block, so every
+ * line shares ONE sweep. Per-element bounding boxes would restart the ramp on
+ * each line and the second line would read as a different colour.
+ */
+function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, size: number, F: Frame, uid: string, defsOut: string[]): string {
+  const { s, W, H } = F;
+  const lh = size * 0.92;
+  const maxLen = Math.max(...lines.map((l) => l.text.length), 1);
+  const blockW = maxLen * size * CHARW;
+  // Cancel Exo's left side bearing, or the headline looks indented against the
+  // pill and the sub row and the shared gutter stops reading as shared.
+  const tx = x - size * 0.085;
+  const x0 = n1(tx), x1 = n1(tx + blockW);
+  const common = `font-family="Exo" font-weight="700" font-size="${size}" letter-spacing="${(-0.022 * size).toFixed(1)}"`;
+  const rows = lines
+    .map((l, i) => `<text x="${n1(tx)}" y="${n1(topY + size * 0.82 + i * lh)}" ${common} fill="url(#hg_${uid})">${esc(l.text)}</text>`)
+    .join("");
+
+  // Emitted into the document-level <defs> rather than inline beside the text:
+  // a mid-body <defs> is legal SVG but needless risk in a renderer whose parse
+  // failure now returns a hard 503 instead of degrading.
+  defsOut.push(`
+    <linearGradient id="hg_${uid}" gradientUnits="userSpaceOnUse" x1="${x0}" y1="0" x2="${x1}" y2="0">
+      <stop offset="0" stop-color="#b2b2be" stop-opacity="0.34"/>
+      <stop offset="0.17" stop-color="#c4c4cf" stop-opacity="0.52"/>
+      <stop offset="0.38" stop-color="#dedee6" stop-opacity="0.78"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.97"/>
+      <stop offset="0.82" stop-color="#fafafd" stop-opacity="0.93"/>
+      <stop offset="1" stop-color="#c6c6d0" stop-opacity="0.64"/>
+    </linearGradient>
+    <linearGradient id="hsoft_${uid}" gradientUnits="userSpaceOnUse" x1="${x0}" y1="0" x2="${x1}" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.12" stop-color="#ffffff" stop-opacity="0.6"/>
+      <stop offset="0.28" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="hsharp_${uid}" gradientUnits="userSpaceOnUse" x1="${x0}" y1="0" x2="${x1}" y2="0">
+      <stop offset="0.03" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0.26" stop-color="#ffffff" stop-opacity="1"/>
+    </linearGradient>
+    <mask id="msoft_${uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}">
+      <rect x="0" y="0" width="${W}" height="${H}" fill="url(#hsoft_${uid})"/>
+    </mask>
+    <mask id="msharp_${uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}">
+      <rect x="0" y="0" width="${W}" height="${H}" fill="url(#hsharp_${uid})"/>
+    </mask>
+    <filter id="hramp_${uid}" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="${(5.4 * s).toFixed(2)}"/>
+    </filter>`);
+  return `<g filter="url(#hramp_${uid})" mask="url(#msoft_${uid})">${rows}</g>
+  <g mask="url(#msharp_${uid})">${rows}</g>`;
 }
 
 // Width of one Exo-700 uppercase glyph as a fraction of font-size (measured empirically).
@@ -283,7 +456,7 @@ function fitHeadline(
   }
   const maxLen = Math.max(...lines.map((l) => l.text.length), 1);
   const widthFit = colW / (maxLen * CHARW);
-  const heightFit = colH / (lines.length * 0.98);
+  const heightFit = colH / (lines.length * 0.92);
   const size = Math.max(42, Math.min(maxSize, Math.floor(Math.min(widthFit, heightFit))));
   return { lines, size };
 }
@@ -297,68 +470,105 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   const subTxt = `//${spec.subtitle}`;
   // Shrink to fit the reserved column (leave ~20% for the extra + × glyph).
   if (maxW) size = Math.min(size, fitSize(subTxt, maxW * 0.82, size, 0.58));
-  let out = `<text x="${x}" y="${y}" font-family="Exo" font-weight="500" font-size="${size}" text-anchor="${anchor}" fill="url(#silverdim)">${esc(subTxt.toUpperCase())}</text>`;
+  // -.03em, same side-bearing correction as the headline so the row starts on
+  // the shared gutter rather than a hair inside it.
+  const tx = x - size * 0.03;
+  const slashW = size * 0.58 * 2;
+  // Only exo-700 and exo-500 are loaded as static faces (a variable Exo renders
+  // thin under resvg), so the sub row stays on 500 — asking for 600 or 300 would
+  // have resvg silently substitute the nearest face.
+  const common = `font-family="Exo" font-weight="500" font-size="${size}" text-anchor="${anchor}"`;
+  // The `//` is deliberately dimmer than the word — it reads as punctuation
+  // rather than as part of the label.
+  let out = `<text x="${n1(tx)}" y="${n1(y)}" ${common} fill="rgba(255,255,255,0.42)">//</text>`;
+  out += `<text x="${n1(tx + slashW)}" y="${n1(y)}" ${common} fill="url(#subg)">${esc(spec.subtitle.toUpperCase())}</text>`;
   const approxW = subTxt.length * size * 0.58;
-  const ex = anchor === "middle" ? x + approxW / 2 + 40 : x + approxW + 44;
+  const ex = anchor === "middle" ? x + approxW / 2 + 40 : tx + approxW + 44;
   if (spec.extra) {
-    out += `<text x="${ex}" y="${y - 2}" font-family="Consolas" font-size="${Math.round(size * 0.55)}" fill="rgba(255,255,255,0.6)">${esc(spec.extra)}</text>`;
+    out += `<text x="${n1(ex)}" y="${n1(y - 2)}" font-family="Consolas" font-size="${Math.round(size * 0.55)}" letter-spacing="${(size * 0.04).toFixed(1)}" fill="rgba(255,255,255,0.72)">${esc(spec.extra)}</text>`;
   }
-  out += `<text x="${ex + (spec.extra ? spec.extra.length * size * 0.36 + 40 : 0)}" y="${y - 1}" font-family="Exo" font-weight="500" font-size="${Math.round(size * 0.78)}" fill="rgba(255,255,255,0.55)">×</text>`;
+  out += `<text x="${n1(ex + (spec.extra ? spec.extra.length * size * 0.36 + 40 : 0))}" y="${n1(y - 1)}" font-family="Exo" font-weight="500" font-size="${Math.round(size * 0.74)}" fill="rgba(255,255,255,0.5)">×</text>`;
   return out;
 }
 
-function hudChrome(spec: BannerSpec, W: number, H: number, uris: Record<string, string>, showPill = true): string {
-  const mono = (t: string) => esc(t);
+/**
+ * v2 HUD. The pill moves to the bottom-left and shares ONE baseline centre with
+ * //dehub.io and the QR; the type tag moves to the top-right and becomes two
+ * lines. Every box is corner brackets rather than a bordered rectangle.
+ *
+ * (The kit also has a `pillPos:'top'` variant for blog banners, whose cards crop
+ * bottom-anchored. Posters never crop, so this twin only needs the default.)
+ */
+function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, showPill = true): string {
+  const { W, H, s, GUT, TOP, BASE, RGUT } = F;
   const parts: string[] = [];
-  // pill logo — top-left. Suppressed on wordmark layouts (the big wordmark IS the
-  // logo, so the pill would just repeat it).
+  const mono = 'font-family="Consolas"';
+
+  // Pill — bottom-left, centred on the baseline. Suppressed on wordmark layouts
+  // (the big wordmark IS the logo, so the pill would just repeat it).
   if (showPill) {
-    const pw = 172, ph = 52;
+    const ph = 56 * s, pw = 190 * s;
+    const py = H - BASE - ph / 2;
     parts.push(
-      `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#ffffff" opacity="0.5" filter="url(#pillglow)"/>`,
-      `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#f4f4f2"/>`,
-      `<image x="${40 + 26}" y="${36 + 13}" width="${pw - 52}" height="${ph - 26}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
+      `<rect x="${n1(GUT)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#ffffff" opacity="0.42" filter="url(#pillglow)"/>`,
+      `<rect x="${n1(GUT)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#f4f4f2"/>`,
+      `<image x="${n1(GUT + 26 * s)}" y="${n1(py + 13 * s)}" width="${n1(pw - 52 * s)}" height="${n1(ph - 26 * s)}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
     );
   }
-  // type tag — top-right
-  const tag = `// type = "${spec.typeTag}"`;
-  const tw = tag.length * 10.6 + 30;
+
+  // Type tag — top-right, two lines: a dim `// type =` over the value.
+  const fs = 21 * s, padX = 18 * s, padY = 11 * s, lh = fs * 1.34;
+  const tagVal = `"${spec.typeTag}"`;
+  const tagW = Math.max(9 * fs * 0.55, tagVal.length * fs * 0.55) + padX * 2;
+  const tagH = lh * 2 + padY * 2;
+  const tagX = W - RGUT - tagW, tagY = TOP - tagH / 2;
   parts.push(
-    `<rect x="${W - 40 - tw}" y="40" width="${tw}" height="40" fill="rgba(10,10,12,0.35)" stroke="rgba(255,255,255,0.22)"/>`,
-    `<text x="${W - 40 - tw + 15}" y="66" font-family="Consolas" font-size="18" fill="rgba(255,255,255,0.66)">${mono(tag)}</text>`,
+    bracketBox(tagX, tagY, tagW, tagH, s),
+    `<text x="${n1(tagX + padX)}" y="${n1(tagY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.42)">// type =</text>`,
+    `<text x="${n1(tagX + padX)}" y="${n1(tagY + padY + lh + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.72)">${esc(tagVal)}</text>`,
   );
-  // //dehub.io — bottom-left
+
+  // //dehub.io — bottom, inset from the pill, centred on the same baseline.
+  const siteTxt = "dehub.io";
+  const siteW = (siteTxt.length + 2) * fs * 0.55 + padX * 2;
+  const siteH = lh + padY * 2;
+  const siteX = W * (F.land ? 0.475 : 0.40), siteY = H - BASE - siteH / 2;
   parts.push(
-    `<rect x="40" y="${H - 84}" width="150" height="40" fill="rgba(10,10,12,0.35)" stroke="rgba(255,255,255,0.22)"/>`,
-    `<text x="55" y="${H - 58}" font-family="Consolas" font-size="18" fill="rgba(255,255,255,0.66)">${mono("//dehub.io")}</text>`,
+    bracketBox(siteX, siteY, siteW, siteH, s),
+    `<text x="${n1(siteX + padX)}" y="${n1(siteY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.42)">//</text>`,
+    `<text x="${n1(siteX + padX + fs * 1.1)}" y="${n1(siteY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.72)">${siteTxt}</text>`,
   );
-  // QR — bottom-right
+
+  // QR — bottom-right. No border, but a dark backing plate is mandatory: the
+  // hero bleeds under it and white modules on polished chrome will not scan.
+  const qs = 84 * s, qp = 5 * s;
+  const qx = W - RGUT - qs, qy = H - BASE - qs / 2;
   parts.push(
-    `<rect x="${W - 40 - 86}" y="${H - 40 - 86}" width="86" height="86" fill="rgba(10,10,12,0.35)" stroke="rgba(255,255,255,0.22)"/>`,
-    `<image x="${W - 40 - 78}" y="${H - 40 - 78}" width="70" height="70" href="${uris.qr}" opacity="0.85"/>`,
+    `<rect x="${n1(qx)}" y="${n1(qy)}" width="${n1(qs)}" height="${n1(qs)}" fill="rgba(3,3,5,0.86)"/>`,
+    `<image x="${n1(qx + qp)}" y="${n1(qy + qp)}" width="${n1(qs - qp * 2)}" height="${n1(qs - qp * 2)}" href="${uris.qr}"/>`,
   );
   return parts.join("");
 }
 
-function marks(W: number, H: number, seed: number): string {
-  // Edge-biased only — nothing in the central band (28–74% x, 26–66% y) where the
-  // headline + hero live, so the marks never sit on top of type or the icon.
-  const pos: [number, number][] = [[6, 16], [22, 8], [80, 9], [92, 20], [8, 44], [93, 52], [12, 86], [40, 92], [66, 90], [88, 82]];
+function marks(W: number, H: number, seed: number, s: number): string {
+  // v2 positions. resvg has no glyph for U+2715, so the ✕ of the kit is a
+  // plain × here — it is the one substitution the twin makes on purpose.
+  const pos: [number, number][] = [[6, 16], [22, 8], [47, 12], [70, 9], [88, 18], [9, 52], [90, 48], [14, 84], [38, 90], [63, 86], [84, 80], [52, 46]];
   return pos.map(([px, py], i) => {
     const g = (i + seed) % 3 === 0 ? "×" : (i + seed) % 3 === 1 ? "+" : "·";
-    const o = (0.12 + ((i * 7 + seed * 13) % 10) / 50).toFixed(2);
-    return `<text x="${Math.round((px / 100) * W)}" y="${Math.round((py / 100) * H)}" font-family="Consolas" font-size="14" fill="rgba(255,255,255,${o})">${g}</text>`;
+    const o = (0.14 + ((i * 7 + seed * 13) % 10) / 45).toFixed(2);
+    return `<text x="${Math.round((px / 100) * W)}" y="${Math.round((py / 100) * H)}" font-family="Consolas" font-size="${n1(15 * s)}" fill="rgba(255,255,255,${o})">${g}</text>`;
   }).join("");
 }
 
 export async function buildSvg(spec: BannerSpec): Promise<string> {
   const manifest = await kitManifest();
-  const { W, H } = DIMS[spec.format];
+  const F = frameOf(spec.format);
+  const { W, H, s, GUT } = F;
   const bgEntry = spec.bg
     ? manifest.backgrounds.find((b) => b.key === spec.bg)!
     : manifest.backgrounds[Math.floor(Math.random() * manifest.backgrounds.length)];
   const iconEntry = manifest.icons.find((i) => i.key === spec.icon);
-  const icon2Entry = manifest.icons.find((i) => i.key === spec.icon2);
 
   const uris: Record<string, string> = {
     bg: await kitDataUri(bgEntry.file),
@@ -368,43 +578,65 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   };
   if (spec.layout === "wordmark") uris.wordmarkWhite = await kitDataUri("brand/wordmark-white.png");
   if (iconEntry) uris.icon = await kitDataUri(iconEntry.file);
-  if (icon2Entry) uris.icon2 = await kitDataUri(icon2Entry.file);
+  // `spec.icon2` is still accepted so an LLM reply that sets it stays valid, but
+  // v2 is ONE big content-matched hero that bleeds off the frame — a second
+  // floating object is exactly the clutter the prompt already warns against, so
+  // it is no longer drawn and no longer costs an asset fetch.
 
   const seed = (spec.subtitle.length * 7 + spec.headline[0].text.length * 13) % 17;
-  const inset = 14, rx = 26;
+  // Atmosphere is per-graphic. With no explicit choice, derive it from the seed
+  // so a batch varies instead of every banner wearing the same treatment.
+  const overlay = spec.overlay ?? (seed % 2 === 0);
+  const inset = 20 * s, rx = 30 * s;
   const CW = W - inset * 2, CH = H - inset * 2;
+  const g120 = 120 * s, g24 = 24 * s, dotGap = 34 * s;
 
   const defs = `
   <defs>
-    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0.04" stop-color="#ffffff"/><stop offset="0.38" stop-color="#dcdcdf"/>
-      <stop offset="0.78" stop-color="#8b8b92"/><stop offset="1" stop-color="#6f6f76"/>
+    <linearGradient id="subg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8e8e96"/><stop offset="0.6" stop-color="#e8e8ea"/><stop offset="1" stop-color="#b4b4bc"/>
     </linearGradient>
-    <linearGradient id="silverdim" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#e8e8ea"/><stop offset="1" stop-color="#9a9aa1"/>
+    <!-- Bevel: brightness SWEEPS the perimeter (bright top-left catch, falling
+         through the middle, picking up again bottom-right) so the card reads as
+         a raised slab. A flat stroke has one value all the way round. -->
+    <linearGradient id="bevel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.46"/>
+      <stop offset="0.18" stop-color="#ffffff" stop-opacity="0.20"/>
+      <stop offset="0.42" stop-color="#ffffff" stop-opacity="0.055"/>
+      <stop offset="0.58" stop-color="#ffffff" stop-opacity="0.045"/>
+      <stop offset="0.82" stop-color="#ffffff" stop-opacity="0.17"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.38"/>
     </linearGradient>
-    <linearGradient id="fadelr" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0.55" stop-color="#000000"/><stop offset="1" stop-color="#ffffff"/>
+    <linearGradient id="flarex" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="vig" cx="0.5" cy="0.45" r="0.75">
-      <stop offset="0.55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity="0.55"/>
+    <linearGradient id="flarey" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="dust" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.075"/><stop offset="0.72" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="0.5" cy="0.45" r="0.62">
+      <stop offset="0.52" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity="0.6"/>
     </radialGradient>
     <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.17"/><stop offset="0.7" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.18"/><stop offset="0.7" stop-color="#ffffff" stop-opacity="0"/>
     </radialGradient>
-    <mask id="tailfade" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-      <rect x="0" y="0" width="1" height="1" fill="url(#fadelr)"/>
-    </mask>
-    <mask id="cardmask"><rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="#ffffff"/></mask>
-    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+    <mask id="cardmask"><rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" rx="${n1(rx)}" fill="#ffffff"/></mask>
+    <pattern id="dots" width="${n1(dotGap)}" height="${n1(dotGap)}" patternUnits="userSpaceOnUse">
       <circle cx="2" cy="2" r="1.1" fill="rgba(255,255,255,0.5)"/>
+    </pattern>
+    <pattern id="gridCoarse" width="${n1(g120)}" height="${n1(g120)}" patternUnits="userSpaceOnUse">
+      <path d="M0 0H${n1(g120)}M0 0V${n1(g120)}" stroke="rgba(255,255,255,0.05)" stroke-width="1" fill="none"/>
+    </pattern>
+    <pattern id="gridFine" width="${n1(g24)}" height="${n1(g24)}" patternUnits="userSpaceOnUse">
+      <path d="M0 0H${n1(g24)}M0 0V${n1(g24)}" stroke="rgba(255,255,255,0.022)" stroke-width="1" fill="none"/>
     </pattern>
     <pattern id="grainp" width="240" height="240" patternUnits="userSpaceOnUse">
       <image href="${uris.grain}" width="240" height="240"/>
     </pattern>
-    <filter id="hblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
     <filter id="sblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="13"/></filter>
-    <filter id="pillglow" x="-60%" y="-120%" width="220%" height="340%"><feGaussianBlur stdDeviation="12"/></filter>
+    <filter id="pillglow" x="-60%" y="-120%" width="220%" height="340%"><feGaussianBlur stdDeviation="${n1(12 * s)}"/></filter>
     <filter id="iconfxBright" x="-25%" y="-25%" width="150%" height="160%">
       <feComponentTransfer><feFuncR type="linear" slope="1.55"/><feFuncG type="linear" slope="1.55"/><feFuncB type="linear" slope="1.55"/></feComponentTransfer>
     </filter>
@@ -413,13 +645,29 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     </radialGradient>
   </defs>`;
 
+  // Geometry-dependent defs (the headline sweep + focus-ramp masks) are collected
+  // here and folded into the document-level <defs> at the end.
+  const headDefs: string[] = [];
   const body: string[] = [];
   body.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#020203"/>`);
+  // Four dim marks OUTSIDE the card, at the extreme canvas corners.
+  const cm = 15 * s;
+  [[6 * s, 5 * s + cm], [W - 6 * s - cm * 0.6, 5 * s + cm], [6 * s, H - 5 * s], [W - 6 * s - cm * 0.6, H - 5 * s]]
+    .forEach(([cx, cy]) => body.push(`<text x="${n1(cx)}" y="${n1(cy)}" font-family="Consolas" font-size="${n1(cm)}" fill="rgba(255,255,255,0.30)">×</text>`));
   body.push(`<g mask="url(#cardmask)">`);
-  body.push(`<image x="${inset}" y="${inset}" width="${CW}" height="${CH}" preserveAspectRatio="xMidYMid slice" href="${uris.bg}" opacity="0.92"/>`);
-  body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#vig)"/>`);
-  body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#dots)" opacity="0.10"/>`);
-  body.push(marks(W, H, seed));
+  // Silk is the BASE; dust, grid and stars are an OVERLAY on top of it, in that
+  // order, so the texture still reads through.
+  body.push(`<rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" fill="#050506"/>`);
+  body.push(`<image x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" preserveAspectRatio="xMidYMid slice" href="${uris.bg}" opacity="0.92"/>`);
+  if (overlay) {
+    body.push(dustLayer(seed, W, H));
+    body.push(`<rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" fill="url(#gridCoarse)"/>`);
+    body.push(`<rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" fill="url(#gridFine)"/>`);
+    body.push(starField(seed, W, H));
+  }
+  body.push(`<rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" fill="url(#vig)"/>`);
+  body.push(`<rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" fill="url(#dots)" opacity="0.09"/>`);
+  body.push(marks(W, H, seed, s));
 
   // Gaussian drop-shadows on 500px+ hero layers blow the edge worker CPU budget
   // on square/portrait canvases — a gradient ellipse under the icon reads the same.
@@ -428,55 +676,67 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     `<image x="${x}" y="${y}" width="${box}" height="${box}" preserveAspectRatio="xMidYMid meet" href="${uri}"${e?.dark ? ' filter="url(#iconfxBright)"' : ""}/>`;
 
   const isWordmark = spec.layout === "wordmark";
+  const uid = `${spec.format[0]}${seed}`;
+  const subSize = 30 * s;
   if (spec.format === "landscape") {
     if (isWordmark) {
       // Brand card: the wordmark IS the logo — centered, glowing, no pill (see hud).
       body.push(`<ellipse cx="${W / 2}" cy="${H * 0.46}" rx="320" ry="190" fill="url(#glow)"/>`);
       body.push(`<image x="${W / 2 - 250}" y="${H * 0.46 - 64}" width="500" height="128" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}" filter="url(#sblur)" opacity="0.7"/>`);
       body.push(`<image x="${W / 2 - 250}" y="${H * 0.46 - 64}" width="500" height="128" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
-      body.push(subRow(spec, W / 2, H * 0.68, 30, "middle"));
+      body.push(subRow(spec, W / 2, H * 0.68, subSize, "middle"));
     } else {
-      // Hero right, headline in a reserved left column with a clean gutter.
-      const heroBox = 460;
-      const heroLeft = W - 84 - heroBox;
-      const heroCy = H / 2;
-      body.push(`<ellipse cx="${heroLeft + heroBox / 2}" cy="${heroCy}" rx="${heroBox * 0.6}" ry="${heroBox * 0.52}" fill="url(#glow)"/>`);
-      if (uris.icon) body.push(heroImg(heroLeft, heroCy - heroBox / 2, heroBox, uris.icon, iconEntry));
-      if (uris.icon2) body.push(heroImg(heroLeft + heroBox - 150, H - 150 - 180, 180, uris.icon2, icon2Entry));
-      const colW = heroLeft - 64 - 44; // gutter before hero
-      const { lines, size } = fitHeadline(spec.headline, colW, H * 0.5, 150);
-      const blockH = lines.length * size * 0.94;
-      const topY = (H - blockH) / 2 - 22;
-      body.push(headlineBlock(lines, 64, topY, size, "start"));
-      body.push(subRow(spec, 66, topY + blockH + 48, 30, "start", colW));
+      // Hero BLEEDS off the right and bottom — it is not contained in the frame.
+      // Two failure modes this geometry avoids: cutting the TOP as well (which
+      // puts bright chrome behind the type tag and washes it out), and merely
+      // kissing the right border, which reads as contained-and-nicked rather
+      // than as a deliberate crop.
+      const heroBox = W * 0.50;
+      const heroLeft = W - heroBox + W * 0.06;
+      const heroTop = H - heroBox * 0.90;
+      body.push(`<ellipse cx="${n1(heroLeft + heroBox / 2)}" cy="${n1(heroTop + heroBox / 2)}" rx="${n1(heroBox * 0.6)}" ry="${n1(heroBox * 0.52)}" fill="url(#glow)"/>`);
+      if (uris.icon) body.push(heroImg(heroLeft, heroTop, heroBox, uris.icon, iconEntry));
+      const colW = heroLeft - GUT - W * 0.03;
+      const { lines, size } = fitHeadline(spec.headline, colW, H * 0.46, H * 0.215);
+      const blockH = lines.length * size * 0.92;
+      const topY = H * 0.455 - blockH / 2;
+      body.push(headlineBlock(lines, GUT, topY, size, F, uid, headDefs));
+      body.push(subRow(spec, GUT, topY + blockH + H * 0.045, subSize, "start", colW));
     }
   } else {
-    // square / portrait: headline + sub in a clean TOP band, hero fills the bottom.
-    const heroBox = Math.min(Math.round(H * 0.5), W - 120);
-    const heroY = H - heroBox - 96;
-    body.push(`<ellipse cx="${W - 70 - heroBox / 2}" cy="${heroY + heroBox / 2}" rx="${heroBox * 0.58}" ry="${heroBox * 0.52}" fill="url(#glow)"/>`);
+    // square / portrait: headline high in a clean top band, hero low and bleeding
+    // off the bottom (and the right). Portrait needs its own hero geometry —
+    // reusing the landscape numbers puts the icon straight through the headline.
+    const heroBox = Math.min(W * 0.92, H * 0.56);
+    const heroLeft = W - heroBox + W * 0.10;
+    const heroTop = H - heroBox * 0.82;
+    body.push(`<ellipse cx="${n1(heroLeft + heroBox / 2)}" cy="${n1(heroTop + heroBox / 2)}" rx="${n1(heroBox * 0.58)}" ry="${n1(heroBox * 0.52)}" fill="url(#glow)"/>`);
     if (isWordmark && uris.wordmarkWhite) {
-      body.push(`<image x="${W / 2 - 240}" y="${heroY + heroBox / 2 - 60}" width="480" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
+      body.push(`<image x="${W / 2 - 240}" y="${n1(heroTop + heroBox * 0.3)}" width="480" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
     } else if (uris.icon) {
-      body.push(heroImg(W - 56 - heroBox, heroY, heroBox, uris.icon, iconEntry));
-      if (uris.icon2) body.push(heroImg(56, heroY + heroBox - 210, 210, uris.icon2, icon2Entry));
+      body.push(heroImg(heroLeft, heroTop, heroBox, uris.icon, iconEntry));
     }
-    const topY = 150;
-    const bandBottom = heroY - 24; // keep type clear of the hero
-    const { lines, size } = fitHeadline(spec.headline, W - 128, bandBottom - topY - 58, 150);
-    const blockH = lines.length * size * 0.94;
-    body.push(headlineBlock(lines, 64, topY, size, "start"));
-    body.push(subRow(spec, 66, topY + blockH + 46, 30, "start", W - 128));
+    const topY = H * 0.155;
+    const colW = W - GUT * 2;
+    // Keep the whole type block clear of the hero's top edge.
+    const { lines, size } = fitHeadline(spec.headline, colW, heroTop - topY - H * 0.07, H * 0.20);
+    const blockH = lines.length * size * 0.92;
+    body.push(headlineBlock(lines, GUT, topY, size, F, uid, headDefs));
+    body.push(subRow(spec, GUT, topY + blockH + H * 0.028, subSize, "start", colW));
   }
 
   if (spec.format === "landscape") {
-    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#grainp)" opacity="0.5"/>`);
+    body.push(`<rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" fill="url(#grainp)" opacity="0.5"/>`);
   }
-  body.push(hudChrome(spec, W, H, uris, !isWordmark));
+  body.push(hudChrome(spec, F, uris, !isWordmark));
+  // Lip and bevel stack LAST, above everything — a hero bleeding to the edge
+  // would otherwise paint straight over them.
+  body.push(`<rect x="${n1(inset + 1)}" y="${n1(inset + 1)}" width="${n1(CW - 2)}" height="${n1(CH - 2)}" rx="${n1(rx)}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`);
   body.push(`</g>`);
-  body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="none" stroke="rgba(255,255,255,0.06)"/>`);
+  body.push(`<rect x="${n1(inset)}" y="${n1(inset)}" width="${n1(CW)}" height="${n1(CH)}" rx="${n1(rx)}" fill="none" stroke="url(#bevel)" stroke-width="${n1(1.5 * s)}"/>`);
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${defs}${body.join("")}</svg>`;
+  const extraDefs = headDefs.length ? `<defs>${headDefs.join("")}</defs>` : "";
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${defs}${extraDefs}${body.join("")}</svg>`;
 }
 
 // ---------------------------------------------------------------- render ----
