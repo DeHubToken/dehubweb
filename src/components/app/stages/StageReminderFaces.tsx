@@ -36,6 +36,10 @@ export function StageReminderFaces({
 
   if (total === 0) return null;
 
+  // Everyone past the facepile is carried by the trailing count, so the
+  // chip reads "+4" beside ten faces rather than restating the total.
+  const hidden = Math.max(0, total - faces.length);
+
   const tooltip =
     state === 'live'
       ? `${total} ${total === 1 ? 'person said they were' : 'people said they were'} coming`
@@ -80,7 +84,8 @@ export function StageReminderFaces({
         </div>
       )}
       <span className="flex items-center gap-1 text-zinc-400 text-[11px] font-medium">
-        <Bell className="w-3 h-3 shrink-0" />+{total}
+        <Bell className="w-3 h-3 shrink-0" />
+        {hidden > 0 ? `+${hidden}` : total}
       </span>
     </div>
   );

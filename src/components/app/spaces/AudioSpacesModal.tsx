@@ -132,7 +132,11 @@ export function AudioSpacesModal() {
       if (currentSpace) {
         setView('live');
       } else {
-        setView(initialModalView);
+        // A 'live' view with no room renders nothing at all — that branch is
+        // gated on `currentSpace` — which is how a stage ending used to leave
+        // an empty black sheet sitting over the page. The stage list is
+        // always something to fall back to.
+        setView(initialModalView === 'live' ? 'browse' : initialModalView);
       }
     }
   }, [isModalOpen, initialModalView, currentSpace]);
@@ -895,7 +899,7 @@ export function AudioSpacesModal() {
                     ))}
                     {listeners.length > 20 && (
                       <div className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/60">
+                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-xs text-white/60">
                           +{listeners.length - 20}
                         </div>
                       </div>
@@ -906,7 +910,7 @@ export function AudioSpacesModal() {
                     {overflow > 0 && (
                       <div className="flex flex-col items-center gap-1">
                         <div
-                          className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-xs text-white/40"
+                          className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center text-xs text-white/40"
                           title={`${overflow} more set a reminder`}
                         >
                           +{overflow}
@@ -1173,15 +1177,20 @@ function ParticipantAvatar({
   return (
     <div className="flex flex-col items-center gap-1 group relative">
       <div className={cn(
-        "relative rounded-full p-0.5",
+        // Squircle, not a circle: the avatar itself is the app-wide rounded
+        // tile, and a circular ring around a rounded square reads as a square
+        // photo in a hoop. Outer radius is the avatar radius plus the 2px pad
+        // so the ring stays concentric with the image inside it.
+        "relative rounded-[14px] p-0.5",
         !participant.is_muted && "ring-2 ring-white/50 ring-offset-2 ring-offset-black/60",
       )}>
-        <Avatar className="w-12 h-12">
+        <Avatar className="w-12 h-12 rounded-xl">
           <AvatarImage
             src={activeSrc}
+            className="rounded-xl"
             onError={() => setImgFailed(true)}
           />
-          <AvatarFallback className="bg-white/10 text-white">
+          <AvatarFallback className="rounded-xl bg-white/10 text-white">
             {participant.username?.[0]?.toUpperCase() || '?'}
           </AvatarFallback>
         </Avatar>

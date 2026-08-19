@@ -13,12 +13,12 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Share2, Bell, BellRing } from 'lucide-react';
+import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Share2, Bell, BellRing, Mic } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { cn } from '@/lib/utils';
@@ -35,17 +35,27 @@ import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
+import { useMyStages } from '@/hooks/use-my-stages';
 import { supabase } from '@/integrations/supabase/client';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
-type StagesTab = 'live' | 'upcoming' | 'recorded';
+type StagesTab = 'live' | 'upcoming' | 'recorded' | 'hosting';
 
-const STAGES_TABS: { icon: typeof Radio; label: string; value: StagesTab }[] = [
+type StagesTabDef = { icon: typeof Radio; label: string; value: StagesTab };
+
+const STAGES_TABS: StagesTabDef[] = [
   { icon: Radio, label: 'Live', value: 'live' },
   { icon: CalendarDays, label: 'Upcoming', value: 'upcoming' },
   { icon: Clock, label: 'Recorded', value: 'recorded' },
 ];
+
+/**
+ * Only rendered for people who actually run rooms — see useMyStages. A
+ * listener has nothing to put in it, and a fourth tab that is always empty
+ * costs everyone else width on a strip that already scrolls on mobile.
+ */
+const HOSTING_TAB: StagesTabDef = { icon: Mic, label: 'Hosting', value: 'hosting' };
 
 /**
  * A stage that has been announced but has not started.
@@ -304,6 +314,11 @@ function LiveStageCard({
           <p className="text-zinc-500 text-xs mt-1 line-clamp-2">{space.description}</p>
         )}
 
+        {/* Reminder rows outlive the scheduled -> live flip, so a room in its
+            first minute can still show the crowd on its way here rather
+            than a headcount of one. */}
+        <StageReminderFaces spaceId={space.id} state="live" className="mt-2.5" />
+
         <div className="mt-3 h-10 rounded-lg overflow-hidden">
           <LiveWaveform active barCount={60} barColor={isPaper ? '0, 0, 0' : undefined} />
         </div>
@@ -335,6 +350,14 @@ export default function StagesPage() {
   // component tree, so taps inside the drawer would also join the stage.
   const [shareSpace, setShareSpace] = useState<AudioSpace | null>(null);
 
+  // Everything this wallet hosts or holds a mic on, across every status.
+  const { stages: myStages, isLoading: isLoadingMine, hasAny: isAStageHost } = useMyStages();
+  const tabs = useMemo(
+    () => (isAStageHost ? [...STAGES_TABS, HOSTING_TAB] : STAGES_TABS),
+    [isAStageHost],
+  );
+  const tabValues = useMemo(() => tabs.map((t) => t.value), [tabs]);
+
   // Land on a tab that has something in it. Live wins when a room is running;
   // with nothing live, an announced stage is the next best thing to show, and
   // "Live" showing its empty state while Upcoming holds a stage reads as the
@@ -351,6 +374,12 @@ export default function StagesPage() {
     if (liveSpaces.length > 0) setActiveTab('live');
     else if (scheduledSpaces.length > 0) setActiveTab('upcoming');
   }, [liveSpaces.length, scheduledSpaces.length]);
+
+  // Signing out (or losing the last stage) takes the Hosting tab away with
+  // it; standing on it at that moment would leave the page blank.
+  useEffect(() => {
+    if (activeTab === 'hosting' && !isAStageHost) setActiveTab('live');
+  }, [activeTab, isAStageHost]);
 
   const isDraggingRef = useRef(false);
   const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } =
@@ -500,6 +529,103 @@ export default function StagesPage() {
     );
   };
 
+  /**
+   * "Hosting" — your own rooms, in the order you care about them.
+   *
+   * Grouped by status rather than listed flat: a live room needs opening, an
+   * announced one needs starting or cancelling, and an ended one is a
+   * recording to play back. Those are three different jobs, so they get three
+   * different cards — the same ones the public tabs use.
+   */
+  const renderHosting = () => {
+    if (isLoadingMine) {
+      return (
+        <div className="space-y-2 sm:space-y-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} data-page-bento className="bg-zinc-900 rounded-2xl p-4 animate-pulse">
+              <div className="h-4 w-2/3 bg-zinc-800 rounded mb-2" />
+              <div className="h-3 w-1/3 bg-zinc-800 rounded" />
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    const mine = {
+      live: myStages.filter((s) => s.status === 'live'),
+      scheduled: myStages.filter((s) => s.status === 'scheduled'),
+      ended: myStages.filter((s) => s.status === 'ended'),
+    };
+
+    return (
+      <div className="space-y-5">
+        {mine.live.length > 0 && (
+          <div className="space-y-2 sm:space-y-3">
+            <h3 className="text-white font-semibold text-sm px-1">Live now</h3>
+            {mine.live.map((space) => (
+              <LiveStageCard
+                key={space.id}
+                space={space}
+                isCurrent={currentSpace?.id === space.id}
+                isLoading={joiningId === space.id}
+                isPaper={isPaper}
+                onOpen={() => handleOpenLive(space)}
+                onShare={() => setShareSpace(space)}
+              />
+            ))}
+          </div>
+        )}
+
+        {mine.scheduled.length > 0 && (
+          <div className="space-y-2 sm:space-y-3">
+            <h3 className="text-white font-semibold text-sm px-1">Scheduled</h3>
+            {mine.scheduled.map((space) => (
+              <ScheduledStageCard
+                key={space.id}
+                space={space}
+                isHost={
+                  !!walletAddress &&
+                  space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase()
+                }
+                isBusy={busyScheduledId === space.id}
+                onStart={async () => {
+                  setBusyScheduledId(space.id);
+                  try {
+                    const ok = await startScheduledSpace(space.id);
+                    if (ok) openModal('live');
+                  } finally {
+                    setBusyScheduledId(null);
+                  }
+                }}
+                onCancel={async () => {
+                  if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
+                  setBusyScheduledId(space.id);
+                  try {
+                    await cancelScheduledSpace(space.id);
+                  } finally {
+                    setBusyScheduledId(null);
+                  }
+                }}
+                onShare={() => setShareSpace(space)}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Past rooms go through the shared player so "Hosting" can play a
+            recording back without bouncing you to the Recorded tab. */}
+        <div className="space-y-2 sm:space-y-3">
+          <h3 className="text-white font-semibold text-sm px-1">Past</h3>
+          <PastStagesList
+            spaces={mine.ended}
+            emptyTitle="Nothing in the archive yet"
+            emptyHint="Rooms you host are recorded, and land here once they end."
+          />
+        </div>
+      </div>
+    );
+  };
+
   // Swallow the feed at the sticky nav bento's top edge under the glass themes,
   // exactly like the home feed cuts at its nav pill.
   const contentRef = useRef<HTMLDivElement>(null);
@@ -517,7 +643,7 @@ export default function StagesPage() {
     tabRect,
     tabLayerRef,
     tabButtonPositions: tabPositions,
-    tabValues: STAGES_TABS.map((t) => t.value) as StagesTab[],
+    tabValues,
     activeTab,
     onTabChange: chooseTab,
     isDraggingRef,
@@ -560,11 +686,11 @@ export default function StagesPage() {
             </h2>
             <button
               onClick={() => openModal('create')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
+              className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white transition-colors"
               title={isAuthenticated ? 'Start a stage' : 'Log in to start a stage'}
+              aria-label={isAuthenticated ? 'Start a stage' : 'Log in to start a stage'}
             >
               <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">Start</span>
             </button>
           </div>
 
@@ -589,7 +715,7 @@ export default function StagesPage() {
               className="relative z-20 flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide"
               onScroll={onTabScroll}
             >
-              {STAGES_TABS.map((tab) => {
+              {tabs.map((tab) => {
                 const isActive = activeTab === tab.value;
                 return (
                   <button
@@ -622,7 +748,9 @@ export default function StagesPage() {
           ? renderLive()
           : activeTab === 'upcoming'
             ? renderUpcoming()
-            : <PastStagesList />}
+            : activeTab === 'hosting'
+              ? renderHosting()
+              : <PastStagesList />}
       </div>
 
       {/* Share sheet — copy link / send in a DM / post to feed, same as posts */}
