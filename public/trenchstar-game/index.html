@@ -121,6 +121,18 @@
     color:var(--ink);background:#0a121b;border:1px solid rgba(56,224,255,.3);
     border-radius:3px;outline:none}
   #fpTpl:focus{border-color:var(--cyan)}
+  /* timeframe chips — hidden unless the focused screen is actually a chart */
+  #fpTfWrap{margin-top:10px;pointer-events:auto;display:none}
+  #fpTfWrap.on{display:block}
+  #fpTfWrap label{display:block;font-size:8px;letter-spacing:.3em;color:var(--dim);margin-bottom:5px}
+  #fpTf{display:flex;flex-wrap:wrap;gap:4px}
+  #fpTf .tf{pointer-events:auto;cursor:pointer;padding:4px 8px;font-size:9px;font-weight:700;
+    font-family:"Chakra Petch",sans-serif;letter-spacing:.12em;color:var(--dim);
+    background:#0a121b;border:1px solid rgba(56,224,255,.22);border-radius:3px;
+    -webkit-user-select:none;user-select:none;line-height:1}
+  #fpTf .tf:hover{color:var(--ink);border-color:rgba(56,224,255,.55)}
+  #fpTf .tf.on{color:#04121c;background:var(--cyan);border-color:var(--cyan)}
+  #fpTfAll{margin-top:7px;width:100%}
   #fpEsc{margin-top:10px;font-size:8px;letter-spacing:.3em;color:var(--dim)}
 
   /* ------------------------ bottom control cluster ------------------------
@@ -779,6 +791,8 @@
   </div>
   <div id="fpTplWrap"><label>SHOW ON THIS SCREEN</label><select id="fpTpl"></select>
     <button class="btn" id="fpReplace">⊞ REPLACE CONTENT…</button></div>
+  <div id="fpTfWrap"><label>CANDLE TIMEFRAME <span style="opacity:.5">[ ] TO STEP</span></label><div id="fpTf"></div>
+    <button class="btn" id="fpTfAll">⇉ APPLY TO EVERY CHART</button></div>
   <div id="buyBox" style="display:none">
     <label>BUY WITH ETH ON BASE</label>
     <div id="buyRow">
@@ -1195,6 +1209,123 @@ function foldSeconds(rows,ms){
     }else out.push({t,o:r.o,h:r.h,l:r.l,c:r.c,v:r.v});
   }
   return out;
+}
+
+/* ---- selectable candle timeframes -----------------------------------
+   The room only ever had two widths, and neither was a choice: the wall of
+   panels drew a ten-second tape and the big board drew minutes, because those
+   are the two the socket already maintains for free. That is the right
+   DEFAULT — "what is moving right now" on the panels, "what has it done" on
+   the board — but it is a poor answer to "show me the last week".
+   So AUTO keeps exactly what was there, and every other width is a deliberate
+   pick, per screen. Ten seconds and one minute come out of the live books at
+   no cost. Anything wider is a REST history, fetched once per pair per width,
+   shared by every screen showing it, and refreshed on a slow clock.
+   Whatever the source, the newest candle is re-opened against the live price
+   every repaint — a four-hour chart that sits perfectly still for four hours
+   reads as a dead screen, and this room is not about dead screens. */
+const TIMEFRAMES=[
+  {id:'auto',label:'AUTO',ms:0,        iv:null},
+  {id:'10s', label:'10s', ms:10000,    iv:null},   /* the live tape */
+  {id:'1m',  label:'1m',  ms:60000,    iv:null},   /* the live book */
+  {id:'5m',  label:'5m',  ms:300000,   iv:'5m'},
+  {id:'15m', label:'15m', ms:900000,   iv:'15m'},
+  {id:'1h',  label:'1h',  ms:3600000,  iv:'1h'},
+  {id:'4h',  label:'4h',  ms:14400000, iv:'4h'},
+  {id:'1d',  label:'1D',  ms:86400000, iv:'1d'},
+];
+const TF_BY_ID={};TIMEFRAMES.forEach(t=>{TF_BY_ID[t.id]=t;});
+const TF_ORDER=TIMEFRAMES.map(t=>t.id);
+
+/* One history per (pair, width), not per screen. Forty panels all switched to
+   1h is one request, not forty — which also keeps us a long way clear of the
+   weight limit that would get the whole room rate-limited off Binance. */
+const TF_CACHE=new Map();
+let tfInFlight=0;
+const TF_MAX_INFLIGHT=3;      /* a wall rebuild must not fire 40 at once */
+const tfKey=(sym,id)=>sym+'|'+id;
+/* Refresh no faster than half a candle and no faster than once every 20s; a
+   daily chart does not need a fresh copy more than a few times an hour. */
+const tfRefreshMs=ms=>clamp(ms/2,20000,300000);
+
+function tfFetch(m,tf){
+  const key=tfKey(m.sym,tf.id);
+  let e=TF_CACHE.get(key);
+  if(!e){e={rows:null,at:0,loading:false,fails:0,dead:false,sim:false};TF_CACHE.set(key,e);}
+  if(e.loading||e.dead||tfInFlight>=TF_MAX_INFLIGHT)return e;
+  const age=Date.now()-e.at;
+  if(e.rows&&age<tfRefreshMs(tf.ms))return e;
+  if(e.fails&&age<30000)return e;                 /* back off after a refusal */
+  e.loading=true;tfInFlight++;
+  const host=REST[0];
+  fget(host+'/api/v3/klines?symbol='+m.sym+'USDT&interval='+tf.iv+'&limit=200')
+    .then(k=>{
+      e.rows=k.map(x=>({t:x[0],o:+x[1],h:+x[2],l:+x[3],c:+x[4],v:+x[5]}));
+      e.at=Date.now();e.fails=0;
+    })
+    .catch(()=>{e.at=Date.now();if(++e.fails>=3)e.dead=true;})
+    .finally(()=>{e.loading=false;tfInFlight--;});
+  return e;
+}
+
+/* A simulated market has no history to fetch and only two hours of minutes to
+   fold, so anything above 15m would draw four candles and a lot of empty
+   panel. Walk one backwards from the price it is at now — once, and keep it.
+   It is a fiction either way, and a fiction that redraws itself differently
+   every repaint is far worse than one that holds still. */
+function tfSynth(m,tf){
+  const key=tfKey(m.sym,tf.id);
+  const had=TF_CACHE.get(key);
+  if(had&&had.sim&&had.rows)return had;
+  const n=140,rows=[];
+  /* wider candles travel further, by the square root of the width — which is
+     what a random walk actually does, rather than a flat guess */
+  const vol=0.006*Math.sqrt(tf.ms/SIM_CANDLE_MS);
+  let p=m.price||1;
+  const back=[p];
+  for(let i=1;i<n;i++){p=p/(1+(Math.random()-0.5)*vol);back.push(p);}
+  back.reverse();                       /* so the last close is today's price */
+  const t0=Math.floor(Date.now()/tf.ms)*tf.ms-(n-1)*tf.ms;
+  for(let i=0;i<n;i++){
+    const o=back[i],c=i+1<n?back[i+1]:(m.price||o);
+    rows.push({t:t0+i*tf.ms,o,
+      h:Math.max(o,c)*(1+Math.random()*vol*0.35),
+      l:Math.min(o,c)*(1-Math.random()*vol*0.35),c,v:rnd(10,140)});
+  }
+  const e={rows,at:Date.now(),loading:false,fails:0,dead:true,sim:true};
+  TF_CACHE.set(key,e);
+  return e;
+}
+
+/* Where a wide chart's candles come from: the exchange for a pair that is
+   actually live on it, an invention for one that is not. A pair that was
+   simulated at boot and has since gone live drops its fiction here rather
+   than carrying it for the session. */
+function tfSource(m,tf){
+  const real=m.kind==='binance'&&m.source==='BINANCE'&&!!tf.iv;
+  if(!real)return tfSynth(m,tf);
+  const key=tfKey(m.sym,tf.id),had=TF_CACHE.get(key);
+  if(had&&had.sim)TF_CACHE.delete(key);
+  return tfFetch(m,tf);
+}
+
+/* The last n candles, with the newest one re-opened against the live price.
+   Slices FIRST and works on the copy: the alternative is rebuilding a
+   200-row array on every repaint of every screen, and the cache is shared, so
+   mutating it would let one screen's live edge leak into another's history. */
+function tfView(rows,ms,px,n){
+  if(!rows||!rows.length)return [];
+  const v=rows.slice(-n);
+  if(px>0){
+    const bt=Math.floor(Date.now()/ms)*ms,last=v[v.length-1];
+    if(last.t===bt){
+      v[v.length-1]={t:last.t,o:last.o,h:Math.max(last.h,px),l:Math.min(last.l,px),c:px,v:last.v};
+    }else if(bt>last.t){
+      v.push({t:bt,o:last.c,h:Math.max(last.c,px),l:Math.min(last.c,px),c:px,v:0});
+      if(v.length>n)v.shift();
+    }
+  }
+  return v;
 }
 
 class Market{
@@ -3481,35 +3612,72 @@ function chip(ctx,x,y,txt,col){
   return w;
 }
 
-function paintCandles(s){
-  const ctx=s.ctx,w=s.cw,h=s.ch,m=s.market;
-  screenBG(ctx,w,h);
-  const big=w>600;
-  const hf=Math.round(h*(big?0.085:0.115));
-  ctx.textBaseline='alphabetic';
-  ctx.font='700 '+hf+'px "Chakra Petch"';
-  ctx.fillStyle='#fff';ctx.textAlign='left';
-  ctx.fillText(m.sym,10,hf+8);
-  const symW=ctx.measureText(m.sym).width;
-  ctx.font='600 '+Math.round(hf*0.5)+'px "Chakra Petch"';
-  ctx.fillStyle=DIM;ctx.fillText('USDT',14+symW,hf+8);
-  ctx.font='700 '+hf+'px "JetBrains Mono"';
-  ctx.fillStyle=m.dir>=0?UP:DOWN;ctx.textAlign='right';
-  ctx.fillText(fmtPrice(m.price),w-10,hf+8);
-  ctx.font='700 '+Math.round(hf*0.62)+'px "JetBrains Mono"';
-  ctx.fillStyle=m.pct24>=0?UP:DOWN;
-  ctx.fillText(fmtPct(m.pct24),w-10,hf+8+Math.round(hf*0.72));
-  ctx.textAlign='left';
-  chip(ctx,10,hf+8+Math.round(hf*0.62),m.source,m.source==='SIM'?AMBER:CYAN);
+/* A DexScreener pair never produces candles: the poller only ever hands us a
+   price, and the moment a meme slot is reassigned to a real pair its seeded
+   books are cleared outright. Bucket the tick history instead — put a trench
+   pair on a candle chart and it drew SYNCING… for ever, because there was
+   nowhere else for candles to come from. Volume is genuinely unknown here, so
+   it is zero rather than invented, and the painter skips the volume bars. */
+function samplesToCandles(m,ms){
+  const q=m.samples;
+  if(!q||q.length<4)return [];
+  const out=[];
+  for(const p of q){
+    const t=Math.floor(p.t/ms)*ms,last=out[out.length-1];
+    if(last&&last.t===t){
+      last.h=Math.max(last.h,p.p);last.l=Math.min(last.l,p.p);last.c=p.p;
+    }else out.push({t,o:last?last.c:p.p,h:p.p,l:p.p,c:p.p,v:0});
+  }
+  return out;
+}
 
-  /* The big board reads the SLOW book, the panels read the fast tape. Both
-     edges are live — the same second feeds both — but they answer different
-     questions: the wall of panels shows what is moving right now, the board
-     in the middle shows what the day has done. Measured on BTC, ten minutes
-     of seconds is 0.028% of range and draws as a flat line with a cliff in
-     it; two hours of minutes is 0.139% and draws as a chart. */
-  const N=big?110:44;
+/* Which candles this screen draws, and what to call them.
+   AUTO is the room's original behaviour and stays the default: the big board
+   reads the SLOW book, the panels read the fast tape, and a pair whose
+   ten-second buckets are mostly empty is quietly bumped to minutes. Measured
+   on BTC, ten minutes of seconds is 0.028% of range and draws as a flat line
+   with a cliff in it; two hours of minutes is 0.139% and draws as a chart.
+   Anything the viewer has picked overrides all of that. */
+function resolveBook(s,m,big,N){
+  const tf=TF_BY_ID[s.tf||'auto']||TF_BY_ID.auto;
   const slow=m.slow&&m.slow.length>20?m.slow:null;
+  if(tf.id!=='auto'){
+    if(tf.id==='10s'){
+      /* The tape is already ten seconds wide live, but a simulated market
+         ticks at two — fold it rather than drawing candles five times narrower
+         than the label on them says. A trench pair has no tape at all, so it
+         gets one built from its ticks. */
+      const src=m.candles.length>4
+        ? (m.candleMs()<tf.ms-1?foldSeconds(m.candles,tf.ms):m.candles)
+        : samplesToCandles(m,tf.ms);
+      return {view:tfView(src,tf.ms,m.price,N),label:'10s',auto:false};
+    }
+    if(tf.id==='1m'){
+      const src=m.slow&&m.slow.length>4?m.slow:samplesToCandles(m,SLOW_CANDLE_MS);
+      return {view:tfView(src,SLOW_CANDLE_MS,m.price,N),label:'1m',auto:false};
+    }
+    const e=tfSource(m,tf);
+    if(e&&e.rows&&e.rows.length>3)
+      return {view:tfView(e.rows,tf.ms,m.price,N),
+        label:tf.label+(e.sim?' SIM':''),auto:false};
+    /* History not here yet, or the exchange will not serve it. Fold the
+       minute book rather than draw nothing — two hours of minutes is
+       twenty-four five-minute candles, a real chart if a short one. Nine
+       fifteen-minute candles is not, so the fold only stands in when it makes
+       at least twenty; above that the minute book runs out and naming what is
+       missing beats a blank panel. The dot says folded, not fetched. */
+    const folded=slow?foldSeconds(slow,tf.ms):[];
+    if(folded.length>=20)
+      return {view:tfView(folded,tf.ms,m.price,N),label:tf.label+'·',auto:false};
+    return {view:[],label:tf.label,auto:false,
+      pending:e&&e.dead?'NO '+tf.label.toUpperCase()+' HISTORY'
+                       :'LOADING '+tf.label.toUpperCase()+'…'};
+  }
+  /* Same gap on AUTO: a trench pair on a candle chart has neither book, and
+     drew SYNCING… for ever before its ticks could stand in for one. */
+  if(!m.candles.length&&!slow)
+    return {view:tfView(samplesToCandles(m,LIVE_CANDLE_MS),LIVE_CANDLE_MS,m.price,N),
+      label:'10s',auto:true};
   let book=m.candles;
   if(big&&slow)book=slow;
   else if(slow&&m.candles.length>8){
@@ -3528,8 +3696,48 @@ function paintCandles(s){
     else if(!m._useSlow&&r>0.5)m._useSlow=true;
     if(m._useSlow)book=slow;
   }
-  const view=book.slice(-N);
-  if(view.length<4){ctx.fillStyle=DIM;ctx.font='600 12px "JetBrains Mono"';ctx.fillText('SYNCING…',10,h/2);scanlines(ctx,w,h);return;}
+  /* AUTO still says which width it landed on, because two panels side by side
+     can now be reading different books and would otherwise look like they
+     disagreed about the same pair. */
+  const w=book===slow?SLOW_CANDLE_MS:m.source==='SIM'?SIM_CANDLE_MS:LIVE_CANDLE_MS;
+  return {view:book.slice(-N),
+    label:w>=60000?Math.round(w/60000)+'m':Math.round(w/1000)+'s',auto:true};
+}
+
+function paintCandles(s){
+  const ctx=s.ctx,w=s.cw,h=s.ch,m=s.market;
+  screenBG(ctx,w,h);
+  const big=w>600;
+  /* Resolve the book BEFORE anything is drawn: the header carries the width
+     as a chip, and a screen that is still waiting for a history has to say
+     which one it is waiting for. */
+  const N=big?110:44;
+  const bk=resolveBook(s,m,big,N);
+  const hf=Math.round(h*(big?0.085:0.115));
+  ctx.textBaseline='alphabetic';
+  ctx.font='700 '+hf+'px "Chakra Petch"';
+  ctx.fillStyle='#fff';ctx.textAlign='left';
+  ctx.fillText(m.sym,10,hf+8);
+  const symW=ctx.measureText(m.sym).width;
+  ctx.font='600 '+Math.round(hf*0.5)+'px "Chakra Petch"';
+  ctx.fillStyle=DIM;ctx.fillText('USDT',14+symW,hf+8);
+  ctx.font='700 '+hf+'px "JetBrains Mono"';
+  ctx.fillStyle=m.dir>=0?UP:DOWN;ctx.textAlign='right';
+  ctx.fillText(fmtPrice(m.price),w-10,hf+8);
+  ctx.font='700 '+Math.round(hf*0.62)+'px "JetBrains Mono"';
+  ctx.fillStyle=m.pct24>=0?UP:DOWN;
+  ctx.fillText(fmtPct(m.pct24),w-10,hf+8+Math.round(hf*0.72));
+  ctx.textAlign='left';
+  const cy=hf+8+Math.round(hf*0.62);
+  const srcW=chip(ctx,10,cy,m.source,m.source==='SIM'?AMBER:CYAN);
+  /* Name the width on the screen itself. Once every chart can be a different
+     timeframe, a wall without labels is unreadable — two panels side by side
+     on the same pair look like they disagree. AUTO stays grey so a hand-picked
+     one reads as the deliberate choice it is. */
+  chip(ctx,10+srcW+6,cy,bk.label,bk.auto?DIM:'#a78bfa');
+
+  const view=bk.view;
+  if(view.length<4){ctx.fillStyle=DIM;ctx.font='600 12px "JetBrains Mono"';ctx.fillText(bk.pending||'SYNCING…',10,h/2);scanlines(ctx,w,h);return;}
   let lo=Infinity,hi=-Infinity,vmax=0;
   for(const k of view){lo=Math.min(lo,k.l);hi=Math.max(hi,k.h);vmax=Math.max(vmax,k.v);}
   /* FLOOR THE SCALE. Pure autoscale means the y-axis is always exactly as
@@ -3555,7 +3763,7 @@ function paintCandles(s){
   for(let i=0;i<view.length;i++){
     const k=view[i],x=x0+i*cw2+cw2/2,up=k.c>=k.o;
     ctx.fillStyle=up?'rgba(47,232,140,0.22)':'rgba(255,77,106,0.2)';
-    const vh=(k.v/vmax)*(h*0.1);
+    const vh=vmax>0?(k.v/vmax)*(h*0.1):0;   /* no volume at all -> no bars, not NaN ones */
     ctx.fillRect(x-cw2*0.32,h-8-vh,cw2*0.64,vh);
     ctx.strokeStyle=up?UP:DOWN;ctx.fillStyle=up?UP:DOWN;ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(x,Y(k.h));ctx.lineTo(x,Y(k.l));ctx.stroke();
@@ -4370,7 +4578,7 @@ function addScreen(o){
   const s={group,mesh,canvas,ctx,tex,cw,ch,w:o.w,h:o.h,paint:o.paint,market:o.market||null,
     listMode:o.listMode,label:o.label||(o.market?o.market.sym:''),
     slotId:o.slotId||('x'+Date.now()+screens.length),tpl:o.tpl||null,
-    kind:o.kind||'tpl',mediaKey:o.mediaKey||null,
+    kind:o.kind||'tpl',mediaKey:o.mediaKey||null,tf:o.tf||null,
     /* position along the wall is stored in ARC METRES, not radians — so when
        the radius changes the physical spacing survives and the wall reads as
        moving toward you instead of scrunching together */
@@ -4441,6 +4649,13 @@ let SCREEN_TPL={};
 try{SCREEN_TPL=JSON.parse(localStorage.getItem('trenchstar.screens')||'{}')||{};}catch(e){SCREEN_TPL={};}
 function saveScreenTpl(){try{localStorage.setItem('trenchstar.screens',JSON.stringify(SCREEN_TPL));}catch(e){}}
 
+/* per-slot candle timeframe, same idea and same lifetime as the template
+   above: keyed to the slot so it survives a wall rebuild, and mirrored into
+   the layout document once the wall has been hand-edited */
+let SCREEN_TF={};
+try{SCREEN_TF=JSON.parse(localStorage.getItem('trenchstar.tf')||'{}')||{};}catch(e){SCREEN_TF={};}
+function saveScreenTf(){try{localStorage.setItem('trenchstar.tf',JSON.stringify(SCREEN_TF));}catch(e){}}
+
 function applyTemplate(s,id){
   const t=TEMPLATES[id];if(!t)return false;
   s.tpl=id;s.paint=t.paint;s.every=t.every||24;s.listMode=t.listMode;
@@ -4478,7 +4693,7 @@ function defOf(s){
   return {id:s.slotId,theta:+(s.aX/Math.max(0.001,WALL.radius)).toFixed(4),
     aX:+s.aX.toFixed(3),y:+s.yPos.toFixed(3),
     w:+s.w.toFixed(3),h:+s.h.toFixed(3),kind:s.kind,tpl:s.tpl,
-    sym:s.market?s.market.sym:null,mediaKey:s.mediaKey,
+    sym:s.market?s.market.sym:null,mediaKey:s.mediaKey,tf:s.tf||null,
     url:s.siteUrl||null,stream:s.streamUrl||null,label:s.label};
 }
 function saveLayout(){
@@ -4965,7 +5180,7 @@ function buildFromDoc(){
       const m=t.market?(marketBySym(d.sym)||markets.BTC):null;
       addScreen({w:d.w,h:d.h,theta:d.aX/Math.max(0.001,WALL.radius),y:d.y,slotId:d.id,tpl:d.tpl||'candles',
         paint:t.paint,every:t.every,listMode:t.listMode,market:m,
-        label:m?m.sym:t.label});
+        label:m?m.sym:t.label,tf:d.tf||null});
     }else if((d.kind==='video'||d.kind==='radio')&&d.stream){
       const s=addScreen({w:d.w,h:d.h,theta:d.aX/Math.max(0.001,WALL.radius),y:d.y,slotId:d.id,kind:'empty',label:'LOADING'});
       mountStream(s,d.stream,d.label);
@@ -5077,6 +5292,14 @@ function buildWall(){
 }
 
 function finishWall(){
+  /* The pinned timeframe, applied for BOTH wall paths — a layout document
+     carries its own on each screen, a procedural wall reads the per-slot
+     store. Whichever built this wall, a chart comes back at the width it was
+     left at. */
+  for(const s of screens){
+    const t=SCREEN_TF[s.slotId];
+    if(!s.tf&&t&&TF_BY_ID[t])s.tf=t;
+  }
   /* Keep total repaint demand under the per-frame budget however many screens
      there are, otherwise a big wall starves the ones at the back of the queue. */
   let demand=0;for(const s of screens)if(s.kind==='tpl')demand+=1/s.every;
@@ -5783,6 +6006,7 @@ function focusOn(s){
   /* set once here, not on the HUD tick — rewriting it every 250ms would fight
      the user while the dropdown is open */
   if(s.tpl)$('#fpTpl').value=s.tpl;
+  syncTfRow();
   $('#focusPanel').classList.add('on');
   syncBuyBox();syncSiteFocus();
 }
@@ -6323,6 +6547,15 @@ addEventListener('keydown',e=>{
   if(e.key==='Delete'&&focus.screen){
     const s=focus.screen;release();
     makeGhost(s);enterCustom();saveLayout();
+    return;
+  }
+  /* [ and ] step the focused chart's timeframe. Comparing two widths means
+     going back and forth between them, and a mouse round trip to the chip row
+     each time is enough friction to stop anyone bothering. */
+  if((e.key==='['||e.key===']')&&focus.screen&&focus.screen.tpl==='candles'){
+    e.preventDefault();
+    const i=TF_ORDER.indexOf(focus.screen.tf||'auto');
+    setScreenTf(focus.screen,TF_ORDER[clamp(i+(e.key===']'?1:-1),0,TF_ORDER.length-1)]);
     return;
   }
   /* V is the body toggle; F is a second key for LEAVING one, because that is
@@ -8963,13 +9196,66 @@ function walkTick(dt,t){
       if(LAYOUT){saveLayout();}
       else{SCREEN_TPL[s.slotId]=sel.value;saveScreenTpl();}
       s.paint(s);s.tex.needsUpdate=true;
-      syncDesk();
+      syncDesk();syncTfRow();   /* the chips only belong on a chart */
     }
   });
   /* the select lives inside a pointer-events:none HUD layer, and a click on it
      would otherwise fall through to the canvas and release the camera */
   ['pointerdown','pointerup','click','wheel'].forEach(ev=>
     $('#fpTplWrap').addEventListener(ev,e=>e.stopPropagation()));
+}
+
+/* ---------------------- the timeframe chips --------------------------
+   A row of widths, not a dropdown: picking a timeframe is something you do
+   while looking at the chart and comparing, so it has to be one click and it
+   has to show the current state without being opened. */
+function setScreenTf(s,id,bulk){
+  if(!s||!TF_BY_ID[id])return;
+  if(s.kind!=='tpl'||s.tpl!=='candles')return;
+  s.tf=id==='auto'?null:id;
+  /* AUTO is the absence of a choice, so it is stored as one — otherwise the
+     wall carries a slot override forever that says "do the default", and a
+     later change to the default would never reach it. */
+  if(s.tf)SCREEN_TF[s.slotId]=s.tf; else delete SCREEN_TF[s.slotId];
+  s.next=0;s.paint(s);s.tex.needsUpdate=true;
+  if(!bulk){persistTf();syncTfRow();}
+}
+function persistTf(){
+  saveScreenTf();
+  if(LAYOUT)saveLayout();
+}
+function syncTfRow(){
+  const s=focus.screen;
+  const on=!!(s&&s.kind==='tpl'&&s.tpl==='candles');
+  $('#fpTfWrap').classList.toggle('on',on);
+  if(!on)return;
+  const cur=s.tf||'auto';
+  document.querySelectorAll('#fpTf .tf').forEach(e=>e.classList.toggle('on',e.dataset.tf===cur));
+}
+{
+  const row=$('#fpTf');
+  for(const tf of TIMEFRAMES){
+    const b=document.createElement('div');
+    b.className='tf';b.dataset.tf=tf.id;b.textContent=tf.label;
+    b.title=tf.id==='auto'
+      ? 'Let the screen choose — minutes on the big board, the live tape on the panels'
+      : 'Draw '+tf.label+' candles on this screen';
+    b.addEventListener('click',()=>setScreenTf(focus.screen,tf.id));
+    row.appendChild(b);
+  }
+  /* Forty screens is too many to set one at a time, and setting them one at a
+     time is the only reason a per-screen control would feel like a chore. */
+  $('#fpTfAll').addEventListener('click',()=>{
+    const s=focus.screen;if(!s)return;
+    const id=s.tf||'auto';
+    for(const o of screens)if(o.kind==='tpl'&&o.tpl==='candles')setScreenTf(o,id,true);
+    persistTf();syncTfRow();
+    toast('EVERY CHART IS NOW '+(TF_BY_ID[id]||{}).label);
+  });
+  /* the panel sits inside a pointer-events:none HUD layer, and a click that
+     fell through to the canvas would release the camera mid-choice */
+  ['pointerdown','pointerup','click','wheel'].forEach(ev=>
+    $('#fpTfWrap').addEventListener(ev,e=>e.stopPropagation()));
 }
 
 /* backdrop picker */
@@ -9644,6 +9930,10 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   focusOn,release,repaint:repaintAll,
   WALL,buildWall,cast,startCast,stopCast,mountCast,unmountCast,beginPlacement,attachStream,fitCast,
   stats,alerts,SOUNDS,playSound,TEMPLATES,applyTemplate,SCENES,buildBackdrop,
+  samplesToCandles,
+  /* the timeframe machinery, for the same reason as everything else here:
+     none of it is reachable from a console otherwise */
+  TIMEFRAMES,TF_BY_ID,TF_CACHE,TF_ORDER,SCREEN_TF,setScreenTf,resolveBook,tfView,tfSource,syncTfRow,
   openPicker,closePicker,makeGhost,setChart,setStat,applyMedia,
   openChartPicker,localChartRows,armApply,disarmApply,withTarget,
   get pkMode(){return pkMode;},set pkMode(v){pkMode=v;},
