@@ -33,7 +33,6 @@ import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
-import { stageUtcClock } from '@/lib/stage-time';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { supabase } from '@/integrations/supabase/client';
@@ -161,7 +160,6 @@ function ScheduledStageCard({
           <p className="text-zinc-300 text-xs mt-1.5 flex items-center gap-1.5">
             <CalendarDays className="w-3 h-3 shrink-0" />
             {format(startsAt, 'EEE, MMM d · h:mm a')}
-            <span className="text-zinc-500">· {stageUtcClock(startsAt)}</span>
             {!isOverdue && (
               <span className="text-zinc-500">· in {formatDistanceToNowStrict(startsAt)}</span>
             )}
