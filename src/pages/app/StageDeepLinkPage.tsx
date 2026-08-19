@@ -42,6 +42,7 @@ import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageScreenShare } from '@/components/app/spaces/StageScreenShare';
+import { StageChat } from '@/components/app/spaces/StageChat';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -274,6 +275,14 @@ export default function StageDeepLinkPage() {
           </div>
         </div>
 
+        {/* The room's chat, on the page a shared link lands on. Both standing
+            states get it: an announced stage can be talked about before it
+            starts, and a guest listening in with no account can at least read
+            what the room is saying — signing in is what buys a turn in it.
+            Same rows the live room writes, so nothing said here is stranded
+            on this page. */}
+        <StageChat space={stage} className="mt-4" listClassName="h-56" />
+
         <RelatedPostsFeed currentPostId={stage.id} />
 
         <ShareEntityDrawer
@@ -405,6 +414,14 @@ export default function StageDeepLinkPage() {
             </button>
           </div>
         </div>
+
+        {/* The room's chat, on the page a shared link lands on. Both standing
+            states get it: an announced stage can be talked about before it
+            starts, and a guest listening in with no account can at least read
+            what the room is saying — signing in is what buys a turn in it.
+            Same rows the live room writes, so nothing said here is stranded
+            on this page. */}
+        <StageChat space={stage} className="mt-4" listClassName="h-56" />
 
         <RelatedPostsFeed currentPostId={stage.id} />
 

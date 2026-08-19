@@ -39,6 +39,7 @@ import { ScheduleStagePanel } from '@/components/app/stages/ScheduleStagePanel';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
+import { StageChat } from './StageChat';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStagePreAudience, type StageReminderFace } from '@/hooks/use-stage-reminders';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -944,6 +945,16 @@ export function AudioSpacesModal() {
                 spaceId={currentSpace.id}
                 onAvatarReaction={setAvatarReactions}
               />
+
+              {/* The audience's own channel. Last in the room on purpose: it
+                  is the one block that grows, and everything above it — who is
+                  speaking, who is listening, the controls a host reaches for —
+                  should keep its place as the conversation runs on.
+
+                  A reaction is a wave; this is where a listener can actually
+                  say something without asking for the mic, and it is what the
+                  stage leaves behind once the audio has ended. */}
+              <StageChat space={currentSpace} listClassName="h-64" />
             </div>
           )}
         </div>

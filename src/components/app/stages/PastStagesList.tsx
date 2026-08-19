@@ -15,7 +15,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Play, Square, Users, Clock, FileText, Trash2 } from 'lucide-react';
+import { Play, Square, Users, Clock, FileText, Trash2, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { walletScopedClient } from '@/lib/supabase-wallet-client';
@@ -25,6 +25,7 @@ import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
+import { StageChat } from '@/components/app/spaces/StageChat';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { stopStageRecording } from '@/components/app/stages/StageRecordingButton';
 import { myStagesKeys } from '@/hooks/use-my-stages';
@@ -83,6 +84,9 @@ export function PastStagesList({
   const [playbackProgress, setPlaybackProgress] = useState(0);
   const [playbackTimeLeft, setPlaybackTimeLeft] = useState('');
   const [transcriptStage, setTranscriptStage] = useState<AudioSpace | null>(null);
+  /** Which recording has its comments open. One at a time: each open panel
+   *  holds a realtime subscription, and this list can run to 20 rows. */
+  const [commentsFor, setCommentsFor] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -451,7 +455,7 @@ export function PastStagesList({
             <div
               key={space.id}
               data-page-bento
-              className="bg-zinc-900 rounded-2xl p-3 flex flex-col sm:flex-row sm:items-center gap-3"
+              className="bg-zinc-900 rounded-2xl p-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3"
             >
               <div className="flex items-center gap-3 shrink-0 min-w-0 sm:max-w-[380px]">
                 <button
@@ -547,6 +551,19 @@ export function PastStagesList({
               </div>
 
               <div className="flex items-center gap-1 shrink-0 self-end sm:self-auto">
+                <button
+                  onClick={() => setCommentsFor((id) => (id === space.id ? null : space.id))}
+                  aria-expanded={commentsFor === space.id}
+                  className={cn(
+                    'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
+                    commentsFor === space.id
+                      ? 'text-white bg-zinc-800/60'
+                      : 'text-zinc-500 hover:text-white hover:bg-zinc-800/60',
+                  )}
+                  title="Comments"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                </button>
                 {space.recording_url && (
                   <button
                     onClick={() => setTranscriptStage(space)}
@@ -566,6 +583,15 @@ export function PastStagesList({
                   </button>
                 )}
               </div>
+
+              {/* The stage's chat, carried on past the stage. Anything said
+                  while it was live is already in here, so opening this reads
+                  as the room's conversation rather than an empty comment box
+                  bolted onto a recording. Mounted only while open — each one
+                  holds a realtime subscription, and this list can be long. */}
+              {commentsFor === space.id && (
+                <StageChat space={space} className="basis-full w-full" listClassName="h-52" />
+              )}
             </div>
           );
         })}
