@@ -409,7 +409,15 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // Pointer lock is not requested: looking around is a drag, and the room is
     // full of screens you click. Fullscreen and autoplay are: the wall is worth
     // the whole viewport, and the soundboard is user-triggered audio.
-    allow: 'fullscreen; autoplay',
+    //
+    // `xr-spatial-tracking` is what lets the room be entered in a headset, and
+    // it is not optional. The feature's default allowlist is `self`, so without
+    // this delegation `isSessionSupported('immersive-vr')` resolves FALSE in
+    // this frame: the game hides its own VR button when that happens, so the
+    // failure would look exactly like a machine with no headset rather than
+    // like a withheld permission. It works standalone either way, which is
+    // precisely what makes this cheap to miss.
+    allow: 'fullscreen; autoplay; xr-spatial-tracking',
     // WebGL2: the post chain runs a multisampled half-float render target,
     // which WebGL 1 cannot give it.
     checkCapability: () => requireHardwareWebgl('The floor', true),
