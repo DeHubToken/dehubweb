@@ -206,6 +206,11 @@
      scene instead of floating on top. Pointer events stay off until you focus
      the screen, otherwise the page would swallow every drag. */
   #siteLayer{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+  /* None of this reaches a headset — WebXR draws to the device, not to the
+     page — so leaving it up only means it is waiting on the monitor, lit and
+     repainting, for a player who is not looking at it. */
+  body.inVR .hud,body.inVR #ctrl,body.inVR #siteLayer,body.inVR #vig,
+  body.inVR #guide,body.inVR #joy{display:none!important}
   .siteFrame{position:absolute;top:0;left:0;transform-origin:0 0;border:0;
     background:#05080d;pointer-events:none;will-change:transform;
     opacity:0;transition:opacity .35s}
@@ -949,6 +954,9 @@
     <button class="btn" id="btnAlerts">⚡ ALERTS</button>
     <button class="btn" id="btnMove" style="display:none">↔ MOVE</button>
     <button class="btn" id="btnCast">⧉ CAST TAB</button>
+    <!-- Shown only once navigator.xr has confirmed an immersive-vr session is
+         actually available, for the same reason EXIT is hidden outside a frame. -->
+    <button class="btn" id="btnVR" style="display:none">◉ VR</button>
     <button class="btn" id="btnSet">⚙ WALL</button>
     <button class="btn" id="btnUndo" style="display:none">↶ UNDO</button>
     <button class="btn live" id="btnRestore" style="display:none">⊞ RESTORE WALL</button>
@@ -5700,6 +5708,8 @@ function frameWall(){
 
 let vpW=0,vpH=0;
 function resize(){
+  /* three owns the viewport inside a session; setSize would fight it. */
+  if(renderer.xr&&renderer.xr.isPresenting)return;
   const [w,h]=viewport();
   if(w===vpW&&h===vpH)return;
   vpW=w;vpH=h;
@@ -9649,6 +9659,183 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
 /* canvas text silently falls back until the webfonts land — redraw once they do */
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(repaintAll).catch(()=>{});
 
+/* ================================= VR =================================
+   The room needs nothing new to be worth standing in. The wall is 12.5 m out,
+   its screens are 2.6 x 1.5 m, the floor is a 17 m circle and every character
+   is scaled to 1.72 m — it was built life-sized. What a headset needs is for
+   three things this renderer does by default to STOP.
+
+   1. THE COMPOSER CANNOT COME. EffectComposer renders the scene into its own
+      full-screen target and blits it back, which is a monoscopic operation: in
+      a session it paints one eye's image across both. A presenting frame goes
+      straight to renderer.render(), and bloom and the colour grade are the
+      price. That is the right price — the alternative is not a duller room, it
+      is a broken one.
+   2. THE MIRROR FLOOR CANNOT COME EITHER. A Reflector draws the whole scene a
+      second time, measured here at 57% of a flat frame, and stereo asks for
+      that on a GPU with a fraction of a desktop's budget. It drops to the
+      plain floor on entry and is put back on exit.
+   3. THE CAMERA STOPS BEING OURS. WebXR overwrites camera.position and
+      .quaternion from the headset pose every frame, so freeCamTick, the focus
+      fly and the walk-mode chase camera would all be fighting the player's own
+      neck. The camera is parented to a rig, every one of those is skipped
+      while presenting, and the rig is what locomotion moves — which is also
+      the only way to turn somebody who is sitting in a chair.
+
+   Live web pages are the one thing that cannot follow. A `site` screen is a
+   real iframe pinned over the canvas by siteTick, and DOM never composites
+   into a headset, so those screens show the WebGL placeholder they already
+   paint underneath. The page is back the moment the session ends. */
+renderer.xr.enabled=true;
+renderer.xr.setReferenceSpaceType('local-floor');
+
+const vr={on:false,rig:new THREE.Group(),saved:null,turnCool:0,hands:[]};
+vr.rig.name='xrRig';
+scene.add(vr.rig);
+
+const VR_SPEED=2.4;         /* m/s, walking pace — speed is what makes people ill */
+const VR_TURN=Math.PI/6;    /* 30 deg SNAP; smooth yaw is the other thing that does */
+const VR_DEAD=0.15;
+
+/* Keep the player in the room and out of the desk. Same box fcAvoidDesk uses,
+   grown a little, but resolved in XZ only: at floor level you cannot step over
+   a desk, and lifting somebody's view to clear one is how you make them sick. */
+function vrClamp(p){
+  const lim=Math.max(4,WALL.radius-1.3);
+  const d=Math.hypot(p.x,p.z);
+  if(d>lim){p.x*=lim/d;p.z*=lim/d;}
+  const DX=3.7,Z0=2.8,Z1=6.7;
+  if(Math.abs(p.x)<DX&&p.z>Z0&&p.z<Z1){
+    const outX=DX-Math.abs(p.x),outZ0=p.z-Z0,outZ1=Z1-p.z;
+    const m=Math.min(outX,outZ0,outZ1);
+    if(m===outX)p.x=(p.x<0?-1:1)*DX;
+    else if(m===outZ0)p.z=Z0;
+    else p.z=Z1;
+  }
+}
+
+/* A controller you cannot see is a controller you cannot aim. Two short rays
+   and nothing else: this is a room you stand in and look at, and a full
+   pointer stack would be chrome nobody asked for. */
+function vrBuildHands(){
+  if(vr.hands.length)return;
+  const g=new THREE.BufferGeometry().setFromPoints(
+    [new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-1)]);
+  const m=new THREE.LineBasicMaterial({color:0x2fe88c,transparent:true,opacity:0.45});
+  for(let i=0;i<2;i++){
+    const c=renderer.xr.getController(i);
+    const ray=new THREE.Line(g,m);
+    ray.scale.z=1.4;
+    c.add(ray);
+    vr.rig.add(c);            /* on the rig, so locomotion carries the hands */
+    vr.hands.push(c);
+  }
+}
+
+/* Left stick moves, right stick snaps. Movement is relative to where you are
+   LOOKING rather than where the controller points: pointing one way and
+   walking another is the most reliable way to lose somebody in a room. */
+const vrQ=new THREE.Quaternion(),vrF=new THREE.Vector3(),vrR=new THREE.Vector3(),vrP=new THREE.Vector3();
+function vrTick(dt){
+  const s=renderer.xr.getSession();
+  if(!s)return;
+  let mx=0,mz=0,turn=0;
+  for(const src of s.inputSources){
+    const ax=src.gamepad&&src.gamepad.axes;
+    if(!ax)continue;
+    /* xr-standard puts the thumbstick on axes 2/3; some runtimes only fill
+       0/1, so read whichever pair is actually moving rather than assuming. */
+    const hx=(ax.length>2&&Math.abs(ax[2])>VR_DEAD)?ax[2]:(Math.abs(ax[0]||0)>VR_DEAD?ax[0]:0);
+    const hy=(ax.length>3&&Math.abs(ax[3])>VR_DEAD)?ax[3]:(Math.abs(ax[1]||0)>VR_DEAD?ax[1]:0);
+    if(src.handedness==='right')turn+=hx;
+    else{mx+=hx;mz+=hy;}
+  }
+  if(vr.turnCool>0)vr.turnCool-=dt;
+  if(Math.abs(turn)>0.7&&vr.turnCool<=0){
+    vr.rig.rotation.y-=Math.sign(turn)*VR_TURN;
+    vr.turnCool=0.25;
+  }
+  if(!mx&&!mz)return;
+  /* World-space head yaw. getCamera() carries the rig's own rotation, which is
+     what keeps this correct after a snap turn. */
+  renderer.xr.getCamera().getWorldQuaternion(vrQ);
+  vrF.set(0,0,-1).applyQuaternion(vrQ);vrF.y=0;
+  if(vrF.lengthSq()<1e-6)return;
+  vrF.normalize();
+  vrR.set(-vrF.z,0,vrF.x);
+  vrP.copy(vr.rig.position)
+     .addScaledVector(vrF,-mz*VR_SPEED*dt)
+     .addScaledVector(vrR, mx*VR_SPEED*dt);
+  vrClamp(vrP);
+  vr.rig.position.copy(vrP);
+}
+
+function vrStart(){
+  vr.on=true;
+  document.body.classList.add('inVR');
+  vr.saved={floor:FLOOR_Q,bloom:bloom.strength};
+  if(MODE==='walk')exitWalk();   /* you are in the room now; you do not also pilot a body in it */
+  /* A focus fly in flight would never reach its end — its branch is the one
+     vrTick displaces — and would still be flagged as running on the way out. */
+  fly.on=false;
+  if(FLOOR_Q==='mirror'){FLOOR_Q='plain';buildFloor();}
+  bloom.strength=0;
+  controls.enabled=false;
+  /* y=0, deliberately. local-floor puts the player's real floor at the rig's
+     origin and the headset adds their own eye height on top, so hard-coding
+     1.6 would sink short players into the desk and float tall ones over it.
+     z=2.2 stands them in front of the desk (which starts at 2.8), facing the
+     wall, which is where the flat camera looks from too. */
+  vr.rig.position.set(0,0,2.2);
+  vr.rig.rotation.set(0,0,0);
+  vr.rig.add(camera);
+  vrBuildHands();
+  $('#btnVR').textContent='◉ EXIT VR';
+}
+function vrEnd(){
+  vr.on=false;
+  document.body.classList.remove('inVR');
+  vr.rig.remove(camera);
+  const sv=vr.saved||{};
+  if(sv.bloom!==undefined)bloom.strength=sv.bloom;
+  if(sv.floor==='mirror'&&FLOOR_Q!=='mirror'){FLOOR_Q='mirror';buildFloor();}
+  controls.enabled=true;
+  /* hand the flat camera back exactly where exitWalk does */
+  camera.position.set(START_CAM.x,START_CAM.y,START_CAM.z);
+  camera.rotation.set(START_CAM.pitch,START_CAM.yaw,0,'YXZ');
+  fcSyncFromCamera();
+  setCtl();
+  setGuide(GUIDE_DESK);
+  $('#btnVR').textContent='◉ VR';
+  vpW=vpH=0;resize();           /* the session resized the canvas under us */
+}
+renderer.xr.addEventListener('sessionstart',vrStart);
+renderer.xr.addEventListener('sessionend',vrEnd);
+
+/* The button appears only once the browser has SAID it can do this. A dead
+   "VR" on a desktop with no headset is worse than no button — the same reason
+   EXIT is hidden outside an arcade frame. */
+(function vrOffer(){
+  const b=$('#btnVR');
+  if(!b||!navigator.xr||!navigator.xr.isSessionSupported)return;
+  navigator.xr.isSessionSupported('immersive-vr').then(ok=>{
+    if(!ok)return;
+    b.style.display='';
+    b.addEventListener('click',async()=>{
+      if(vr.on){const s=renderer.xr.getSession();if(s)s.end();return;}
+      try{
+        const session=await navigator.xr.requestSession('immersive-vr',
+          {optionalFeatures:['local-floor','bounded-floor','hand-tracking']});
+        await renderer.xr.setSession(session);
+      }catch(e){
+        /* requestSession rejects for reasons worth reading out: no headset
+           connected, another app holding it, or a stale user gesture. */
+        toast('VR REFUSED — '+((e&&e.message)||e));
+      }
+    });
+  }).catch(()=>{});
+})();
+
 /* ============================== main loop ============================= */
 let frame=0,lastT=performance.now();
 let fpsAcc=0,fpsN=0,slowSince=0,firstFrame=false;
@@ -9657,7 +9844,10 @@ let fpsAcc=0,fpsN=0,slowSince=0,firstFrame=false;
 function tick(t){
   const dt=Math.min((t-lastT)/1000,0.1);lastT=t;frame++;
 
-  if(fly.on){
+  /* Inside a session the pose is written by the headset every frame, so each
+     of these would be arm-wrestling the player's own neck. The rig moves. */
+  if(vr.on)vrTick(dt);
+  else if(fly.on){
     fly.t+=dt/fly.dur;
     const k=ease(clamp(fly.t,0,1));
     camera.position.lerpVectors(fly.fp,fly.tp,k);
@@ -9675,7 +9865,7 @@ function tick(t){
   walkTick(dt,t);
   hudTick();
   goRingTick(dt);
-  siteTick();          /* keep live pages pinned to their screens */
+  if(!vr.on)siteTick();  /* DOM never composites into a headset — skip the projection */
   /* grabbed screens glide toward the pointer instead of teleporting per event */
   if(edit.grab){
     const g=edit.grab,s=g.s,k=1-Math.exp(-16*dt);
@@ -9705,12 +9895,18 @@ function tick(t){
     }
   }
 
-  composer.render();
+  /* The composer is monoscopic — its full-screen blit would paint one eye
+     across both — so a presenting frame goes straight to the renderer. */
+  if(vr.on)renderer.render(scene,camera);
+  else composer.render();
   if(!firstFrame){firstFrame=true;boot.stage('paint',1);}
 
   /* auto-degrade bloom if the GPU is struggling */
   fpsAcc+=dt;fpsN++;
-  if(fpsAcc>=2){
+  /* Not while presenting: entry already took both levers (bloom off, mirror
+     off), and resizing the composer mid-session would fight three for the
+     framebuffer it is handing to the headset. */
+  if(fpsAcc>=2&&!vr.on){
     const fps=fpsN/fpsAcc;fpsAcc=0;fpsN=0;
     if(fps<28){
       slowSince++;
