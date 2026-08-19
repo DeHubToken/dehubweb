@@ -57,7 +57,7 @@ const OG_CARD_ROUTES = new Set([
   'videos', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
   'connect', 'connect/chatgpt', 'connect/claude', 'communities',
   'stages', 'guide', 'features', 'pricing', 'depin',
-  'creator', 'editor', 'prompt', 'work',
+  'builder', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard',
   'top-100', 'music', 'tv',
   'glossary', 'bridge', 'agents', 'assistant',
@@ -650,6 +650,17 @@ ${primaryNavHtml(`/${key}`)}
 // page. Titles and descriptions mirror each page's SPA SEOHead strings exactly
 // so the two UA variants never diverge.
 const MARKETING_PAGES = {
+  'builder': {
+    title: 'Builder — Build Apps with AI on DeHub',
+    description: 'Describe an app and DeHub Builder creates it live: AI-written, DeHub-hosted mini apps you can share with anyone.',
+    heading: 'DeHub Builder',
+    bodyHtml: `<p>DeHub Builder turns a sentence into a working mini app. Describe what you want; the builder writes it, hosts it on DeHub and hands you a link anyone can open — nothing to install, deploy or configure.</p>
+<h2>It stays a conversation</h2>
+<p>An app is never finished at the first attempt. Ask for another screen, a different colour or a new feature and the build updates in place, so the link you already shared shows the latest version.</p>
+<h2>Shareable by default</h2>
+<p>Finished apps render straight from a dehub.io link in any browser, which means they can be posted anywhere on DeHub or sent to somebody who has never opened it before.</p>
+<p>Building needs a free DeHub account — sign in with an email or social login and a sponsored-gas wallet is created for you. How many apps you can build at once depends on your DeHub plan.</p>`,
+  },
   'depin': {
     title: 'DePin | Community-Powered Media Infrastructure | DeHub',
     description: 'DeHub DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.',
@@ -1952,6 +1963,14 @@ async function handleRequest(request, env) {
   // handed a standalone "DeHub Radio" page by the Supabase fn — a URL that only
   // exists for bots, describing a page no human can land on. Match the router.
   if (trimmedPath.toLowerCase() === '/radio') return redirect301(`${APP_URL}/music`);
+
+  // Builder moved from /app/builder to the top-level /builder and took that URL
+  // for itself (`builder` is reserved in src/lib/reserved-usernames.js, so no
+  // account can claim the handle and shadow it). 301 the whole old space rather
+  // than only the landing page: every app the Builder has published so far was
+  // shared as /app/builder/preview/<id>, and those links have to keep resolving.
+  const builderLegacy = trimmedPath.match(/^\/app\/builder((?:\/.*)?)$/i);
+  if (builderLegacy) return redirect301(`${APP_URL}/builder${builderLegacy[1] || ''}`);
 
   const appTwin = trimmedPath.match(/^\/app\/(guides|docs\/blog)((?:\/.*)?)$/);
   if (appTwin) return redirect301(`${APP_URL}/${appTwin[1]}${appTwin[2] || ''}`);

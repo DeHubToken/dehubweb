@@ -189,6 +189,17 @@ const ArcadeChessOnlinePage = React.lazy(() => import("./pages/ArcadeChessOnline
 const PageLoader = () => <DeHubPageLoader fullScreen />;
 
 /**
+ * Builder lived at /app/builder until it took the top-level /builder URL.
+ * Direct hits are 301'd at the edge (SPA_REDIRECTS + the preview rule in
+ * CLOUDFLARE_WORKER_SEO.js); this covers in-app navigation and every
+ * already-shared /app/builder/preview/<id> link that lands client-side.
+ */
+function LegacyBuilderRedirect() {
+  const { pathname, search, hash } = useLocation();
+  return <Navigate to={`${pathname.replace('/app/builder', '/builder')}${search}${hash}`} replace />;
+}
+
+/**
  * One-time cache migration for existing testers.
  * Clears stale auth/wagmi/web3auth data after auth flow changes.
  * Bump CURRENT_CACHE_VERSION to force another clear in the future.
@@ -363,10 +374,14 @@ function AppContent() {
           </Route>
 
           {/* Builder — its own full-page surface like docs: mounted OUTSIDE
-              AppLayout so no app chrome renders, and getSurface('/app/builder')
-              plays the same panel slide-off when entering/leaving. */}
+              AppLayout so no app chrome renders, and getSurface('/builder')
+              plays the same panel slide-off when entering/leaving.
+              Top-level /builder is the canonical URL. `builder` is reserved in
+              src/lib/reserved-usernames.js, so the /:username route below can
+              never claim it — without that, the first person to register the
+              handle owns this URL and the page becomes unreachable. */}
           <Route
-            path="/app/builder"
+            path="/builder"
             element={
               <ErrorBoundary compact label="Builder">
                 <Suspense fallback={<PageLoader />}>
@@ -377,7 +392,7 @@ function AppContent() {
           />
           {/* Public, auth-free renderer for a built app — the shareable link. */}
           <Route
-            path="/app/builder/preview/:id"
+            path="/builder/preview/:id"
             element={
               <ErrorBoundary compact label="Builder preview">
                 <Suspense fallback={<PageLoader />}>
@@ -386,6 +401,9 @@ function AppContent() {
               </ErrorBoundary>
             }
           />
+          {/* Links minted while Builder lived under /app. Kept so every already
+              shared preview link keeps resolving; the edge 301s direct hits. */}
+          <Route path="/app/builder/*" element={<LegacyBuilderRedirect />} />
 
           {/* Random pairing connection test. Unlisted on purpose — no nav entry
               and no app chrome; it exists to prove matchmaking and the WebRTC

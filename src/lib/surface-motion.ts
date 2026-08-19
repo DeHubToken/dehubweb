@@ -30,14 +30,17 @@ export type Surface = 'app' | 'docs' | 'builder';
 
 /**
  * Docs and the community blog (both /docs/* and the canonical /guides/* blog
- * URLs) are the full-page "docs" surface; the Builder (/app/builder) is its own
+ * URLs) are the full-page "docs" surface; the Builder (/builder) is its own
  * full-page surface too; everything else is the app shell. Crossing ANY surface
  * boundary plays the same choreographed slide (the panels' variants are keyed
  * by label, not by destination).
  */
 export function getSurface(pathname: string): Surface {
   if (pathname.startsWith('/docs') || pathname.startsWith('/guides')) return 'docs';
-  if (pathname.startsWith('/app/builder')) return 'builder';
+  // Both spellings: /builder is canonical, /app/builder is the legacy URL that
+  // redirects to it — matching both keeps the redirect frame on the same surface
+  // instead of playing an app-shell transition on the way through.
+  if (pathname.startsWith('/builder') || pathname.startsWith('/app/builder')) return 'builder';
   return 'app';
 }
 
