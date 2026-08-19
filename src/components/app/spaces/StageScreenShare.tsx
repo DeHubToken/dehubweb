@@ -2,11 +2,11 @@
  * StageScreenShare - the screen a stage host is sharing, on everyone's wall
  * ========================================================================
  * Stages are an audio room, so the shared screen is the one visual element in
- * it: a plain 16:9 slab that appears when a share starts and disappears when it
- * stops. Rendered in the live modal for people in the room and on the invite
- * page for guests listening in signed-out — both read the same
- * `screenShare` off StageContext, which is fed by the host's local track or by
- * Agora's `user-published` for everyone else.
+ * it: a 16:9 slab, height-capped so it never eats the room, that appears when a
+ * share starts and disappears when it stops. Rendered in the live modal for
+ * people in the room and on the invite page for guests listening in signed-out
+ * — both read the same `screenShare` off StageContext, which is fed by the
+ * host's local track or by Agora's `user-published` for everyone else.
  *
  * Agora owns the `<video>` element: `track.play(container)` creates one inside
  * the div and manages its sizing. Remote tracks default to `cover`, which
@@ -30,6 +30,7 @@ export function StageScreenShare({ className, sharerName }: StageScreenShareProp
   const containerRef = useRef<HTMLDivElement>(null);
   const videoBoxRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [canFullscreen, setCanFullscreen] = useState(false);
 
   const track = screenShare?.track ?? null;
   const isLocal = !!screenShare?.isLocal;
@@ -43,7 +44,24 @@ export function StageScreenShare({ className, sharerName }: StageScreenShareProp
     } catch (err) {
       console.warn('[Stage] Could not play shared screen', err);
     }
+    // Decide the fullscreen route. iPhone Safari implements no element
+    // fullscreen at all (`fullscreenEnabled` is false) and only lets the video
+    // element itself go native — so the button is offered when either route
+    // exists and hidden when neither does, rather than sitting there doing
+    // nothing. Probed again on the next frame because the `<video>` is Agora's
+    // to create, and only the iOS route depends on it existing.
+    const probeFullscreen = () => {
+      const video = box.querySelector('video') as any;
+      setCanFullscreen(
+        !!document.fullscreenEnabled ||
+        typeof video?.webkitEnterFullscreen === 'function',
+      );
+    };
+    probeFullscreen();
+    const frame = requestAnimationFrame(probeFullscreen);
+
     return () => {
+      cancelAnimationFrame(frame);
       // stop() ends playback only. Closing the capture is the sharer's job
       // (stopScreenShare / leaveSpace) — doing it here would kill the share
       // every time the modal minimised.
@@ -66,9 +84,17 @@ export function StageScreenShare({ className, sharerName }: StageScreenShareProp
     if (!el) return;
     if (document.fullscreenElement) {
       void document.exitFullscreen().catch(() => { /* noop */ });
-    } else {
-      void el.requestFullscreen?.().catch(() => { /* noop */ });
+      return;
     }
+    if (document.fullscreenEnabled && el.requestFullscreen) {
+      void el.requestFullscreen().catch(() => { /* noop */ });
+      return;
+    }
+    // iPhone: hand the video to the native player. It brings its own Done
+    // button and fires no `fullscreenchange`, so our icon stays as-is — the
+    // system chrome is what the user is looking at by then.
+    const video = videoBoxRef.current?.querySelector('video') as any;
+    try { video?.webkitEnterFullscreen?.(); } catch { /* noop */ }
   };
 
   return (
@@ -78,7 +104,18 @@ export function StageScreenShare({ className, sharerName }: StageScreenShareProp
         'relative w-full overflow-hidden bg-black',
         // Fullscreen drops the box so the screen fills the display. Tailwind 3
         // has no `fullscreen:` variant, hence driving it off the state flag.
-        isFullscreen ? 'h-full' : 'aspect-video rounded-xl border border-white/10',
+        //
+        // `max-h-[50vh]` is load-bearing, not polish. Both hosts of this
+        // component are full-bleed — the stage drawer is `inset-x-0` at every
+        // breakpoint and the invite page has no max width — so on a 1080p
+        // desktop a plain 16:9 box computes to ~1900×1060 and swallows the
+        // whole room: speakers, waveform and all. Same story on a phone held
+        // landscape. Capping the height lets the box go wider than 16:9, and
+        // `fit: 'contain'` pillarboxes the video inside it against a black
+        // background it cannot be told apart from.
+        isFullscreen
+          ? 'h-full'
+          : 'aspect-video max-h-[50vh] rounded-xl border border-white/10',
         className,
       )}
     >
@@ -95,15 +132,18 @@ export function StageScreenShare({ className, sharerName }: StageScreenShareProp
         </span>
       </div>
 
-      <button
-        type="button"
-        onClick={toggleFullscreen}
-        title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-        aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-        className="absolute bottom-2 right-2 w-8 h-8 rounded-lg bg-black/60 backdrop-blur-sm text-white/70 hover:text-white hover:bg-black/80 flex items-center justify-center transition-colors"
-      >
-        {isFullscreen ? <Shrink className="w-4 h-4" /> : <Expand className="w-4 h-4" />}
-      </button>
+      {/* 44px hit area on touch, tighter once there's a cursor to aim with. */}
+      {canFullscreen && (
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+          className="absolute bottom-2 right-2 w-11 h-11 sm:w-9 sm:h-9 rounded-lg bg-black/60 backdrop-blur-sm text-white/70 hover:text-white hover:bg-black/80 flex items-center justify-center transition-colors"
+        >
+          {isFullscreen ? <Shrink className="w-4 h-4" /> : <Expand className="w-4 h-4" />}
+        </button>
+      )}
     </div>
   );
 }
