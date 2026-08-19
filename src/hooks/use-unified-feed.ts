@@ -727,3 +727,71 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     placeholderData: keepPreviousData,
   });
 }
+
+/** Rows pulled per head poll. Also the ceiling on the count the pill can show. */
+const NEW_POSTS_HEAD_SIZE = 20;
+
+/** How often the head is re-checked while the feed is on screen. */
+const NEW_POSTS_POLL_MS = 60_000;
+
+interface UseNewPostsSignalOptions extends Omit<UnifiedFeedParams, 'page'> {
+  /** Poll only when the feed is chronological and actually on screen. */
+  enabled?: boolean;
+  /** `createdAt` of the newest post currently rendered. */
+  newestCreatedAt?: string;
+}
+
+/**
+ * Reports how many posts newer than the ones on screen exist, so the feed can
+ * offer a "N new posts" pill instead of leaving the reader on a timeline that
+ * quietly went stale.
+ *
+ * The list query deliberately never refetches on focus — pulling the feed out
+ * from under someone mid-scroll loses their place. That's right for the list
+ * and wrong for knowing whether anything happened, so this polls the head of
+ * the same feed on its own key and renders nothing from it. The reader decides
+ * when the list moves.
+ *
+ * Comparison is on `createdAt`, not on ids: a post is visible at status
+ * `signed` before it mints and the reaper cron recycles its tokenId, so ids
+ * aren't stable enough to test identity across two fetches.
+ */
+export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
+  const { enabled = true, newestCreatedAt, ...params } = options;
+  const { walletAddress } = useAuth();
+  const viewer = walletAddress?.toLowerCase() || null;
+
+  const { data } = useQuery({
+    queryKey: ['unified-feed-head', params, viewer],
+    queryFn: () =>
+      fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer),
+    enabled: enabled && !!newestCreatedAt,
+    refetchInterval: NEW_POSTS_POLL_MS,
+    // A backgrounded tab shouldn't keep hitting the API to update a pill
+    // nobody can see.
+    refetchIntervalInBackground: false,
+    staleTime: NEW_POSTS_POLL_MS / 2,
+    gcTime: 5 * 60_000,
+    retry: 1,
+  });
+
+  return useMemo(() => {
+    const newest = newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
+    if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false };
+
+    const newer = (data.result || []).filter((item) => {
+      // Same normalisation loadUnifiedFeedPage applies, so a row missing
+      // createdAt doesn't read as epoch zero and get counted as old.
+      const raw =
+        item.createdAt || item.updatedAt || (item as any).created_at || (item as any).updated_at;
+      const stamp = raw ? Date.parse(raw) : NaN;
+      return !Number.isNaN(stamp) && stamp > newest;
+    });
+
+    return {
+      newPostCount: newer.length,
+      // Every row came back newer, so there are likely more than were fetched.
+      atCap: newer.length >= NEW_POSTS_HEAD_SIZE,
+    };
+  }, [data, newestCreatedAt]);
+}
