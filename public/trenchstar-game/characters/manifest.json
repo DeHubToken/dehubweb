@@ -1,0 +1,10 @@
+{
+  "_comment": "Arcade build. Two characters, and no file over 20 MiB — Cloudflare's per-asset limit. Lady Luck's own walk was a 19 MB 'With Skin' Mixamo download whose duplicate mesh is discarded on load anyway, so she borrows the donor rig's like everyone else. Fat Chad is not here: his mesh bakes to 27 MB even at 128px textures, because the weight is geometry and geometry cannot be decimated without unbinding the skin. xbot.glb is the donor rig every borrowed walk and idle comes from and is never playable.",
+  "characters": [
+    { "id": "peasant-girl", "name": "LADY LUCK",
+      "idleAnim": "idle-peasant-girl.fbx",
+      "leanAnim": "lean-peasant-girl.fbx" },
+    { "id": "soldier", "name": "THE ENFORCER",
+      "leanAnim": ["pushup-in.fbx", "pushup-loop.fbx", "pushup-out.fbx"] }
+  ]
+}

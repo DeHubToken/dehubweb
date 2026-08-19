@@ -155,6 +155,8 @@ const WAR_URL = (import.meta.env.VITE_WAR_GAME_URL as string | undefined) || '/w
 const JUNGLE_URL = (import.meta.env.VITE_JUNGLE_GAME_URL as string | undefined) || '/jungle-game/index.html';
 const SLAYER_URL =
   (import.meta.env.VITE_STREET_SLAYER_URL as string | undefined) || '/street-slayer-game/index.html';
+const TRENCHSTAR_URL =
+  (import.meta.env.VITE_TRENCHSTAR_URL as string | undefined) || '/trenchstar-game/index.html';
 
 /**
  * Shared preflight for the two engines that are WebGL2-only and heavy.
@@ -376,6 +378,41 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // permission nothing in the frame ever requests.
     allow: 'fullscreen; autoplay',
     checkCapability: requireCanvas,
+  },
+  {
+    slug: 'trenchstar',
+    title: 'Trenchstar',
+    tagline: 'Stand in a trading floor built out of live markets.',
+    description:
+      'A curved wall of forty live market screens wrapped around a room you can walk: real Binance candles and DexScreener pairs, rearranged into whatever wall you want to trade in front of.',
+    action: 'Take the desk',
+    art: '/arcade/trenchstar.webp',
+    artAlt:
+      'A curved wall of live candle charts and market panels around a dark trading floor in Trenchstar',
+    credit: {
+      name: 'Trenchstar',
+      url: 'https://dehub.io',
+      licence: 'MIT',
+      licenceFile: 'LICENSE-Trenchstar',
+    },
+    // No settings to pass: the room reads its own quality off the device and
+    // degrades itself while running — bloom first, then the mirror floor — so
+    // there is nothing useful to pin from out here.
+    buildUrl: () => TRENCHSTAR_URL,
+    // It draws its own boot readout with real stages (engine, markets, world,
+    // paint) and its own percentage, so the host's modelled bar would only ever
+    // sit on top of it. tau kept for the field's shape; nothing reads it while
+    // the flag is set.
+    bootTauMs: 9000,
+    hasOwnBootScreen: true,
+    exitSource: 'trenchstar',
+    // Pointer lock is not requested: looking around is a drag, and the room is
+    // full of screens you click. Fullscreen and autoplay are: the wall is worth
+    // the whole viewport, and the soundboard is user-triggered audio.
+    allow: 'fullscreen; autoplay',
+    // WebGL2: the post chain runs a multisampled half-float render target,
+    // which WebGL 1 cannot give it.
+    checkCapability: () => requireHardwareWebgl('The floor', true),
   },
 ];
 

@@ -31,6 +31,7 @@ const GAME_DIRS: Record<string, string> = {
   'claude-of-duty': 'war-game',
   'jungle-trail': 'jungle-game',
   'street-slayer': 'street-slayer-game',
+  trenchstar: 'trenchstar-game',
 };
 
 /**
@@ -207,6 +208,9 @@ describe('arcade exit bridge', () => {
     // Vendored as an engine export nobody here can rebuild, so its exit is a
     // chip added to the page rather than anything inside the bundle.
     'street-slayer': 'street-slayer-game/index.html',
+    // Vendored as source: one index.html over a vendored three.js, so the exit
+    // control lives in the page itself.
+    trenchstar: 'trenchstar-game/index.html',
   };
 
   it('gives every game an exit source', () => {

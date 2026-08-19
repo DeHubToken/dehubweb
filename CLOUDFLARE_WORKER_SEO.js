@@ -64,6 +64,7 @@ const OG_CARD_ROUTES = new Set([
   'creators', 'jobs', 'apk',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
+  'arcade/trenchstar',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -733,14 +734,15 @@ const MARKETING_PAGES = {
   // them would be a soft duplicate of every one.
   'arcade': {
     title: 'Arcade | DeHub',
-    description: 'Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk and a neon-street brawler. No install, no download.',
+    description: 'Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor. No install, no download.',
     heading: 'DeHub Arcade',
-    bodyHtml: `<p>Games that run in the browser tab. Nothing to install, nothing to buy — three of them open source, one made for DeHub, and all four served from DeHub itself.</p>
+    bodyHtml: `<p>Games that run in the browser tab. Nothing to install, nothing to buy — three of them open source, two made for DeHub, and all five served from DeHub itself.</p>
 <ul>
 <li><a href="${APP_URL}/arcade/kings-gambit" style="color:#9f9">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
 <li><a href="${APP_URL}/arcade/claude-of-duty" style="color:#9f9">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
 <li><a href="${APP_URL}/arcade/jungle-trail" style="color:#9f9">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
 <li><a href="${APP_URL}/arcade/street-slayer" style="color:#9f9">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
+<li><a href="${APP_URL}/arcade/trenchstar" style="color:#9f9">Trenchstar</a> — a trading floor you can walk, built out of forty live market screens.</li>
 </ul>`,
   },
   'arcade/kings-gambit': {
@@ -774,6 +776,14 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>A side-scrolling beat 'em up down a neon-lit street: pick one of three fighters — Mike, Indi or Lerone — then punch, kick and throw your way through everything the block sends at you.</p>
 <p>The only game in the arcade that was not found: it was commissioned for DeHub and built by Studio Shook Pixel, so it exists nowhere else. Arrows or WASD to move, Z to jump, four attack keys, and a full set of on-screen controls on a touchscreen.</p>
 <p><a href="${APP_URL}/arcade/street-slayer" style="color:#9f9">Play Street Slayer</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+  },
+  'arcade/trenchstar': {
+    title: 'Trenchstar | DeHub Arcade',
+    description: 'Stand inside Trenchstar on DeHub — a curved wall of forty live market screens you can walk, rearrange and trade in front of. Free, in your browser, no install.',
+    heading: 'Trenchstar — A Trading Floor Built Out Of Live Markets',
+    bodyHtml: `<p>A curved wall of forty live market screens wrapped around a room you can walk: real Binance candles and DexScreener pairs, a big board in the middle, and a desk with the DeHub feed on it.</p>
+<p>Drag any screen to move it, drop it on another to swap them, and put a chart, a heatmap, a live web page or your own tab on any panel. Pick a character and walk the floor, or stay at the desk and fly the camera.</p>
+<p><a href="${APP_URL}/arcade/trenchstar" style="color:#9f9">Take the desk</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
   },
   'guide': {
     title: 'DeHub Guide — Visual Walkthrough of the App',

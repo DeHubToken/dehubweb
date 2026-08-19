@@ -169,6 +169,21 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate
 
+
+# TRENCHSTAR. Same reasoning as jungle above, and for the same reason it needs
+# the whole directory rather than the entry: the page is an importmap over a
+# vendored three.js, so `vendor/three/build/three.module.js` and every addon it
+# pulls are each their own CORS fetch from the opaque origin. The .glb and .fbx
+# characters go out the same way — three's loaders fetch them with XHR, which
+# from a null origin is also CORS — so scoping this to the scripts would leave
+# a room with nobody in it.
+#
+# Revalidating, not immutable: nothing here is content-hashed, so re-vendoring
+# reuses every filename including index.html.
+/trenchstar-game/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=0, must-revalidate
+
 # Arcade card art. Unhashed, so the convention for everything else in /public
 # applies: CHANGE THE FILENAME when the capture changes.
 /arcade/*
