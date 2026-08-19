@@ -28,6 +28,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { cn } from '@/lib/utils';
 import { BadgedName } from '@/components/app/BadgedName';
+import { StageRecordingButton } from '@/components/app/stages/StageRecordingButton';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 interface StageLinkEmbedProps {
@@ -171,18 +172,26 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             </BadgedName>
           </div>
 
-          <span
-            className={cn(
-              'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium shrink-0',
-              'transition-colors',
-              isLive
-                ? 'bg-white text-black group-hover:bg-white/90'
-                : 'bg-white/10 text-white group-hover:bg-white/20',
-            )}
-          >
-            <Radio className="w-3 h-3" />
-            {isLive ? 'Join' : isEnded ? 'Listen back' : 'View stage'}
-          </span>
+          {/* An ended stage's card used to send you to /stage/:id, which
+              redirects straight to /stages — where a recording old enough to
+              be in this post may not even be in the twenty listed. So the
+              bottom-right slot plays it here instead. */}
+          {isEnded && stage.recording_url ? (
+            <StageRecordingButton spaceId={stage.id} recordingUrl={stage.recording_url} />
+          ) : (
+            <span
+              className={cn(
+                'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium shrink-0',
+                'transition-colors',
+                isLive
+                  ? 'bg-white text-black group-hover:bg-white/90'
+                  : 'bg-white/10 text-white group-hover:bg-white/20',
+              )}
+            >
+              <Radio className="w-3 h-3" />
+              {isLive ? 'Join' : isEnded ? 'Listen back' : 'View stage'}
+            </span>
+          )}
         </div>
       </div>
     </button>

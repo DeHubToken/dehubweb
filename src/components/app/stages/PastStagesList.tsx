@@ -26,6 +26,7 @@ import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { stopStageRecording } from '@/components/app/stages/StageRecordingButton';
 import { myStagesKeys } from '@/hooks/use-my-stages';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -338,6 +339,9 @@ export function PastStagesList({
         return;
       }
       pendingSeekRatioRef.current = null;
+      // The feed cards play through their own shared element, so silence that
+      // before this list takes over — otherwise two recordings talk at once.
+      stopStageRecording();
       startPlayback(space);
     },
     [playingStageId, startPlayback, stopPlayback],
