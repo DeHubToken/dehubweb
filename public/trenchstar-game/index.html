@@ -1933,16 +1933,37 @@ function lightMood(dt){
   const sum=[0,0,0],n=[0,0,0];
   for(const s of screens){
     if(s.floating||!s.market)continue;
-    const b=Math.abs(s.aX)<4?0:(s.aX<0?1:2);
-    sum[b]+=clamp(s.market.pct24,-8,8);n[b]++;
+    /* ONE bad reading used to black out the entire room, permanently.
+       A pair that has not reported a 24h change yet has pct24 undefined, and
+       clamp(undefined) is NaN. That NaN poisons the bucket's mean, which
+       makes k NaN, which lerps the lamp's COLOUR to NaN — and a colour never
+       comes back from that, because every later lerp is NaN too. From then on
+       every physically-lit material in the room shades to NaN and renders
+       black: the floor, the character, the city, the glass. The screens are
+       the one thing unaffected, because they are unlit basic materials that
+       never consult a light at all — which is exactly why the failure looked
+       like "the room disappeared but the wall is fine" and why a reload was
+       the only way out. Skip the reading instead of averaging it. */
+    const pct=Number(s.market.pct24);
+    if(!isFinite(pct))continue;
+    /* aX is NaN on a screen that has not been placed yet, and NaN fails both
+       comparisons below, so it used to fall into bucket 2 and drag one lamp
+       with it. Anything unplaced belongs in the centre. */
+    const b=!isFinite(s.aX)?0:(Math.abs(s.aX)<4?0:(s.aX<0?1:2));
+    sum[b]+=clamp(pct,-8,8);n[b]++;
   }
   for(let i=0;i<areaLights.length;i++){
     const base=LIGHT_BASE[i];if(!base)continue;
+    const L=areaLights[i];
+    /* Belt and braces: if a lamp has already been poisoned — by this, or by
+       anything added later — put it back rather than leaving somebody staring
+       at a black room until they think to reload. */
+    if(!isFinite(L.color.r)||!isFinite(L.color.g)||!isFinite(L.color.b))L.color.copy(base);
     const mean=n[i]?sum[i]/n[i]:0;
     const k=Math.min(0.5,Math.abs(mean)/8*0.5);   /* never more than half way */
     moodCol.setHex(mean>=0?0x2fe88c:0xff4d6a);
     moodMix.copy(base).lerp(moodCol,k);
-    areaLights[i].color.lerp(moodMix,0.25);       /* and ease into it */
+    L.color.lerp(moodMix,0.25);                   /* and ease into it */
   }
 }
 
