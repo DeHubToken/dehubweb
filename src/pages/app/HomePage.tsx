@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
-import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
+import { getDocumentScrollTop, scrollDocumentTo, scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { setImagesFeedScrollView, IMAGES_BACK_TO_COLLAGE_EVENT } from '@/lib/images-feed-mode';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
@@ -420,7 +420,7 @@ export default function HomePage() {
     // Scroll to top
     document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
     document.body.scrollTo({ top: 0, behavior: 'smooth' });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollDocumentToSmooth();
     
     // Simulate refresh delay then update
     setTimeout(() => {
@@ -488,7 +488,7 @@ export default function HomePage() {
       // Same tab clicked - scroll to top
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollDocumentToSmooth();
     } else {
       setEnableHomeTransition(true);
       // Auto-reset after animation completes to prevent stale transitions on page nav
@@ -534,7 +534,7 @@ export default function HomePage() {
             requestAnimationFrame(() => {
               document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
               document.body.scrollTo({ top: 0, behavior: 'smooth' });
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              scrollDocumentToSmooth();
             });
           }
           return next;

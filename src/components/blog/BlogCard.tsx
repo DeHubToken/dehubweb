@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import { BlogPost } from '@/types/blog';
 import { formatDate } from '@/utils/blogUtils';
+import { getDocumentScrollTop } from '@/lib/document-scroll';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -73,7 +74,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
 
   const handleLinkClick = () => {
     // Save current scroll position when clicking on a blog card
-    sessionStorage.setItem('blogScrollPosition', window.scrollY.toString());
+    sessionStorage.setItem('blogScrollPosition', getDocumentScrollTop().toString());
   };
 
   const getBannerImage = () => {
