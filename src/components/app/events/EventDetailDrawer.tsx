@@ -9,6 +9,8 @@ import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEventRsvp, useToggleRsvp, useDeleteEvent, useEventRsvps, useManageRsvp } from '@/hooks/use-events';
+import { useIsCommunityMember } from '@/hooks/use-communities';
+import { resolvePermission } from '@/hooks/use-community-admin';
 import type { CommunityEvent, EventRsvp } from '@/hooks/use-events';
 import { useHasPaidGate, useEventGatePayment } from '@/hooks/use-event-gate-payment';
 import { toast } from 'sonner';
@@ -102,6 +104,14 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const hasGateFee = (event?.gate_fee ?? 0) > 0;
   const isPrivate = event?.is_private ?? false;
   const isCreator = walletAddress && event?.creator_wallet_address === walletAddress.toLowerCase();
+  // Removing somebody else's event is moderation, so it follows the community
+  // manage_events right rather than authorship, and it resolves off the event's
+  // own community: this drawer opens from the events pages too, where there is
+  // no community in scope to pass one down. The RLS policy on community_events
+  // enforces the same rule server side.
+  const { data: eventCommunityRow } = useIsCommunityMember(event?.community_id ?? undefined);
+  const canModerateEvent =
+    !!isCreator || resolvePermission(null, eventCommunityRow, 'manage_events');
   const { data: hasPaid = false, isLoading: checkingPayment } = useHasPaidGate(hasGateFee ? event?.id : undefined);
   const isGated = hasGateFee && !isCreator && !hasPaid;
 
@@ -439,7 +449,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {/* Creator info + delete */}
               <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
                 <CreatorInfo event={event} />
-                {isCreator && (
+                {canModerateEvent && (
                   <div className="flex items-center gap-1">
                     <Button
                       variant="ghost"
