@@ -1,5 +1,5 @@
 /**
- * Public renderer for a Builder app — /app/builder/preview/:id
+ * Public renderer for a Builder app — /builder/preview/:id
  *
  * The raw Storage URL serves text/plain (Supabase anti-phishing), so this
  * lightweight, auth-free page fetches the app's HTML and renders it in a
