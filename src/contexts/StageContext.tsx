@@ -1192,7 +1192,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
         { event: 'UPDATE', schema: 'public', table: 'audio_spaces', filter: `id=eq.${guestSpace.id}` },
         (payload) => {
           if ((payload.new as { status?: string })?.status === 'ended') {
-            toast.info('This stage has ended');
+            toast.info('Stage ended', {
+              description: `The host ended "${guestSpace.title}".`,
+              duration: 6000,
+            });
             void guestStopListening();
           }
         },
@@ -1283,7 +1286,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
     // Optimistic: reset the UI now (leaveSpace closes instantly + tears down in
     // the background) and mark the space ended in the background too, so ending
     // never looks frozen. If the direct update fails, the DB auto-end trigger covers it.
-    toast.success('Host ended space.');
+    // The room is gone, so the sheet goes with it. Leaving under your own
+    // steam is different — that lands you back on the stage list.
+    setIsModalOpen(false);
+    toast.success('Stage ended');
     void leaveSpace();
     void signed(
       supabase
@@ -1712,8 +1718,16 @@ export function StageProvider({ children }: { children: ReactNode }) {
             if (hasHandledStageEndRef.current) return;
             hasHandledStageEndRef.current = true;
             if (myRoleRef.current !== 'host') {
-              toast.info('Host ended space.');
+              // Named and given room to be read: the room vanishing off the
+              // screen is the only other signal a listener gets.
+              toast.info('Stage ended', {
+                description: `The host ended "${updated.title}".`,
+                duration: 6000,
+              });
             }
+            // The room ended, so the sheet goes with it rather than sitting
+            // there empty — its live view has nothing left to render.
+            setIsModalOpen(false);
             void leaveSpaceRef.current();
           } else {
             setCurrentSpace(updated);

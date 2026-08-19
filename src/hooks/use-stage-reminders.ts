@@ -102,9 +102,9 @@ export function useStageReminder(spaceId: string | undefined) {
  * ask for the same window so they share one fan-out: the profile queries are
  * keyed by address, so the second surface to mount pays nothing.
  */
-const FACE_CANDIDATES = 12;
-/** Avatars actually rendered; the rest live in the count. */
-const FACES_SHOWN = 3;
+const FACE_CANDIDATES = 16;
+/** Avatars actually rendered; anyone beyond this lands in the trailing +N. */
+const FACES_SHOWN = 10;
 /** Pre-audience avatars in the live room — the crowd has room for all of them. */
 const PRE_AUDIENCE_SHOWN = FACE_CANDIDATES;
 
