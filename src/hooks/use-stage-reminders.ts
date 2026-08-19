@@ -65,7 +65,12 @@ export function useStageReminder(spaceId: string | undefined) {
       }
       const { error } = await supabase
         .from('stage_reminders')
-        .insert({ space_id: spaceId, wallet_address: walletAddress.toLowerCase() });
+        .insert({ space_id: spaceId, wallet_address: walletAddress.toLowerCase() })
+        // The same header the un-remind path above already sends. INSERT was
+        // `WITH CHECK (true)`, so a reminder could be set in anyone's name;
+        // once the policy checks the wallet, a bell press without this is
+        // refused.
+        .setHeader('x-wallet-address', walletAddress.toLowerCase());
       if (error) throw error;
       return true;
     },
