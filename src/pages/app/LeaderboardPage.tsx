@@ -11,7 +11,7 @@ import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp } from 'lucide-react';
+import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import trophyIcon from '@/assets/trophy-icon.png';
 import medal1 from '@/assets/medal-1.png';
@@ -33,6 +33,7 @@ import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
 import { supabase } from '@/integrations/supabase/client';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
+import { getAffiliateLeaderboard, type AffiliateLeaderboardEntry } from '@/lib/api/affiliate-leaderboard';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -40,15 +41,17 @@ import { SEOHead } from '@/components/SEOHead';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 
-type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
+type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers' | 'affiliates';
 
-const categories: { id: CategoryType; labelKey: string; icon: typeof Wallet; apiSort: LeaderboardSortMode }[] = [
+// `apiSort` is null for a category that is not served by /api/leaderboard.
+const categories: { id: CategoryType; labelKey: string; icon: typeof Wallet; apiSort: LeaderboardSortMode | null }[] = [
   { id: 'holdings', labelKey: 'leaderboard.holdings', icon: Wallet, apiSort: 'holdings' },
   { id: 'sentTips', labelKey: 'leaderboard.spent', icon: ArrowUpRight, apiSort: 'sentTips' },
   { id: 'receivedTips', labelKey: 'leaderboard.earned', icon: CreditCard, apiSort: 'receivedTips' },
   { id: 'followers', labelKey: 'leaderboard.followers', icon: Users, apiSort: 'followers' },
   { id: 'likes', labelKey: 'leaderboard.likes', icon: Heart, apiSort: 'likes' },
   { id: 'subscribers', labelKey: 'leaderboard.subscribers', icon: UserCheck, apiSort: 'subscribers' },
+  { id: 'affiliates', labelKey: 'leaderboard.affiliates', icon: Share2, apiSort: null },
 ];
 
 const timePeriods: { id: LeaderboardPeriod; labelKey: string }[] = [
@@ -129,6 +132,11 @@ export default function LeaderboardPage() {
   // Map category to API sort mode
   const apiSortMode = categories.find(c => c.id === category)?.apiSort || 'holdings';
 
+  // Referrals aren't in the leaderboard API, so this one category is
+  // aggregated out of Supabase instead. Everything downstream — search, the
+  // sort toggle, the row markup — works off whichever list wins below.
+  const isAffiliates = category === 'affiliates';
+
   const handleRefreshMe = useCallback(async () => {
     if (refreshCooldown || isRefreshing) return;
 
@@ -196,6 +204,22 @@ export default function LeaderboardPage() {
     // Switching period/category keeps the previous ranked list visible while
     // the new one loads, instead of dropping the page to a spinner.
     placeholderData: keepPreviousData,
+    enabled: !isAffiliates,
+  });
+
+  const {
+    data: affiliateData,
+    isLoading: affiliateLoading,
+    error: affiliateError,
+  } = useQuery({
+    queryKey: ['leaderboard', 'affiliates', timePeriod],
+    queryFn: () => getAffiliateLeaderboard(timePeriod),
+    enabled: isAffiliates,
+    staleTime: 60_000,
+    gcTime: 2 * 60 * 60 * 1000,
+    refetchOnWindowFocus: isLeaderboardRouteActive ? 'always' : false,
+    refetchInterval: isLeaderboardRouteActive ? 2 * 60_000 : false,
+    placeholderData: keepPreviousData,
   });
 
 
@@ -212,6 +236,11 @@ export default function LeaderboardPage() {
   const hasHistoricalData = data?.hasHistoricalData !== false;
 
   const getSortValue = useCallback((entry: LeaderboardEntry): number => {
+    // Affiliates rank on direct referrals and have no delta series, so this
+    // has to come before the delta branch below.
+    if (category === 'affiliates') {
+      return (entry as AffiliateLeaderboardEntry).directReferrals ?? 0;
+    }
     // For time-based periods, use delta if available
     if (isTimeDelta && entry.delta !== undefined) {
       return entry.delta;
@@ -233,13 +262,23 @@ export default function LeaderboardPage() {
   }, [isTimeDelta, category]);
 
   const entries = useMemo(() => {
-    let list = data?.result?.byWalletBalance || [];
-    
-    // Filter out wallet-only entries (no username) and blocked users
-    list = list.filter(entry => entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase()));
+    let list: LeaderboardEntry[] = isAffiliates
+      ? (affiliateData ?? [])
+      : (data?.result?.byWalletBalance || []);
 
-    // Apply manual balance overrides (All Time only)
-    if (timePeriod === 'all') {
+    // Filter out wallet-only entries (no username) and blocked users.
+    // Affiliates keep their unnamed rows: a referrer who never set a handle
+    // still brought people in, and dropping them would silently rewrite the
+    // ranks. Those rows fall back to a short address, as elsewhere.
+    list = list.filter(entry =>
+      isAffiliates
+        ? !(entry.username && blockedLeaderboardUsers.includes(entry.username.toLowerCase()))
+        : entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase())
+    );
+
+    // Apply manual balance overrides (All Time only). Holdings-only — the
+    // override is a DHB balance and would be nonsense as a referral count.
+    if (timePeriod === 'all' && !isAffiliates) {
       list = list.map(entry => {
         const override = entry.username ? balanceOverrides[entry.username.toLowerCase()] : undefined;
         if (override !== undefined) {
@@ -267,7 +306,7 @@ export default function LeaderboardPage() {
     });
     
     return list;
-  }, [data, searchQuery, category, sortDirection, timePeriod, getSortValue]);
+  }, [data, affiliateData, isAffiliates, searchQuery, category, sortDirection, timePeriod, getSortValue]);
 
   // Reset visible count when filters change
   useEffect(() => {
@@ -321,6 +360,21 @@ export default function LeaderboardPage() {
 
   const formatDisplayValue = (entry: LeaderboardEntry): string => {
     const value = getSortValue(entry);
+    if (category === 'affiliates') {
+      const affiliate = entry as AffiliateLeaderboardEntry;
+      const direct = t('leaderboard.directReferrals', {
+        defaultValue: '{{count}} direct',
+        count: affiliate.directReferrals ?? 0,
+      });
+      // Tier 2 is only meaningful once someone has it, so it stays off the row
+      // rather than showing a column of zeroes.
+      if (!affiliate.secondaryReferrals) return String(direct);
+      const secondary = t('leaderboard.secondaryReferrals', {
+        defaultValue: '{{count}} secondary',
+        count: affiliate.secondaryReferrals,
+      });
+      return String(direct) + ' · ' + String(secondary);
+    }
     if (isTimeDelta && hasHistoricalData && entry.delta !== undefined && entry.delta !== 0) {
       const prefix = value > 0 ? '+' : '';
       if (category === 'holdings' || category === 'sentTips' || category === 'receivedTips') {
@@ -335,6 +389,11 @@ export default function LeaderboardPage() {
   };
 
   const currentCategory = categories.find(c => c.id === category);
+
+  // The two sources are mutually exclusive — one query is always disabled —
+  // so the page's states just follow whichever is live.
+  const listLoading = isAffiliates ? affiliateLoading : isLoading;
+  const listError = isAffiliates ? affiliateError : error;
 
   // Swallow the ranked list at the sticky header bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
@@ -426,12 +485,12 @@ export default function LeaderboardPage() {
         )}
 
         {/* Loading State */}
-        {isLoading && (
+        {listLoading && (
           <DeHubPageLoader minHeight="40vh" />
         )}
 
         {/* Error State */}
-        {error && (
+        {listError && (
           <div className="text-center py-20">
             <ThemedIcon icon="trophy" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-65" />
             <p className="text-zinc-500">{t('leaderboard.failedToLoad')}</p>
@@ -439,7 +498,7 @@ export default function LeaderboardPage() {
         )}
 
         {/* Empty State */}
-        {!isLoading && !error && entries.length === 0 && (
+        {!listLoading && !listError && entries.length === 0 && (
           <div className="text-center py-20">
             <ThemedIcon icon="trophy" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-65" />
             <p className="text-zinc-500">
@@ -451,7 +510,7 @@ export default function LeaderboardPage() {
         )}
 
         {/* Table Rows */}
-        {!isLoading && !error && entries.length > 0 && (
+        {!listLoading && !listError && entries.length > 0 && (
           <div>
             {visibleEntries.map((entry, index) => {
               const rank = index + 1;
@@ -520,7 +579,7 @@ export default function LeaderboardPage() {
         )}
 
         {/* Infinite scroll sentinel */}
-        {!isLoading && !error && entries.length > 0 && (
+        {!listLoading && !listError && entries.length > 0 && (
           <div ref={sentinelRef} className="py-4 flex justify-center">
             {hasMore && <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />}
           </div>
