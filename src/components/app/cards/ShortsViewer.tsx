@@ -239,14 +239,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [showTipModal, setShowTipModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(currentShort?.id);
 
-  // Share counter = reposts + link copies. The floor is this session's own
-  // copies; taking max() rather than adding a delta is what stops the copy
-  // being counted twice once the refetched server total already contains it.
+  // Share counter = reposts + link copies.
+  //
+  // shareDelta is the optimistic bump for a repost made here, cleared when the
+  // short changes. Link copies instead carry a FLOOR and are combined with
+  // max() rather than added: a delta would be added on top of the server total
+  // again as soon as the count query refetched and already contained that same
+  // copy, whereas a floor is absorbed the moment the server catches up.
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(currentShort?.id);
   const linkCopyFloor = useLinkCopyFloor(currentShort?.id);
   const trackLinkCopy = useTrackPostLinkCopy();
+  const [shareDelta, setShareDelta] = useState(0);
   const displayShareCount =
-    (currentShort?.repostCount ?? 0) + Math.max(linkCopyCount, linkCopyFloor);
+    (currentShort?.repostCount ?? 0) +
+    shareDelta +
+    Math.max(linkCopyCount, linkCopyFloor);
   
   // View tracking for the current short
   const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
