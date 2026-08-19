@@ -35,6 +35,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
+import { createLogger } from '@/lib/logger';
 import { useAiCredits } from '@/hooks/use-ai-credits';
 import { SEOHead } from '@/components/SEOHead';
 import { MarkdownText } from '@/lib/markdown';
@@ -76,6 +77,8 @@ import { AiToolProcessingSkeleton } from '@/components/app/assistant/AiToolProce
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+
+const imageGenLogger = createLogger('AssistantPage.imageGen');
 
 const DEHUB_BRAND_IMAGE_MODEL: ImageModelKey = 'gemini-3.1-flash-image';
 const DEHUB_BRAND_IMAGE_KEYWORDS = [
@@ -1361,7 +1364,25 @@ export default function AssistantPage() {
       toast.success(t('assistant.imageGenerated'));
     } catch (err) {
       console.error('Image generation error:', err);
-      toast.error(t('assistant.errorImageGenFailed'));
+      // A non-2xx response (e.g. the template renderer's 503) surfaces here as
+      // a generic FunctionsHttpError — `data` is never parsed, so the server's
+      // actual `{ error, code }` body would otherwise be lost. Read it off the
+      // raw Response the client stashes on `context` so the user (and the logs)
+      // see the real reason instead of a one-size-fits-all failure toast.
+      let friendlyMessage = t('assistant.errorImageGenFailed');
+      let errorCode: string | undefined;
+      const context = (err as { context?: Response })?.context;
+      if (context && typeof context.json === 'function') {
+        try {
+          const body = await context.json();
+          if (body?.error) friendlyMessage = body.error;
+          errorCode = body?.code;
+        } catch {
+          // Non-JSON error body — fall back to the generic message.
+        }
+      }
+      imageGenLogger.error('Image generation failed', { code: errorCode, model, bannerRenderer }, err);
+      toast.error(friendlyMessage);
     } finally {
       setIsImageLoading(false);
       setPendingImageRequest(null);
