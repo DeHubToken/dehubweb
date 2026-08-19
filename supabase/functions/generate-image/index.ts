@@ -6,15 +6,14 @@ import {
 } from '../_shared/dehub-brand-composite.ts';
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
 import { chargeForJob } from '../_shared/ai-credit-guard.ts';
+// The shared list — the only one that names x-wallet-address and x-dehub-token,
+// which chargeForJob requires and the browser will not send unless the preflight
+// says they are allowed. A local copy silently drops them; see auth.ts.
+import { corsHeaders } from '../_shared/auth.ts';
 import { buildSpecFromPrompt, renderTemplateBanner, formatFromPosterSize } from '../_shared/dehub-template-banner.ts';
 import { kieKey, kieUsableUrl, kieCreateTask, kieWaitForResult } from '../_shared/kie.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-};
 
 interface ConversationMessage {
   role: 'user' | 'assistant';
