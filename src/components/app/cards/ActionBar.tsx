@@ -46,7 +46,7 @@ const ReactionInfoDrawer = lazy(() =>
 );
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { applyVoteStateToNFT } from '@/lib/engagement';
-import { trackPostLinkCopy } from '@/hooks/use-link-copy-count';
+import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
 import { DOUBLE_TAP_LIKE_EVENT, type DoubleTapLikeEventDetail } from '@/hooks/use-double-tap-like';
@@ -106,8 +106,6 @@ interface ActionBarProps {
   dislikeCount?: number;
   /** Comment count to display */
   commentCount?: number;
-  /** Share count to display */
-  shareCount?: number;
   /** Repost count to display */
   repostCount?: number;
   /** Whether the current user has already reposted this post */
@@ -226,7 +224,6 @@ export function ActionBar({
   likeCount,
   dislikeCount,
   commentCount: rawCommentCount,
-  shareCount,
   repostCount,
   isReposted: initialIsReposted = false,
   isOptimistic = false,
@@ -262,6 +259,14 @@ export function ActionBar({
   }
   
   const displayRepostCount = (repostCount ?? 0) + repostDelta;
+
+  // Share counter = reposts + link copies. The copies come from Supabase
+  // (batched to one request per feed page); the floor is this session's own
+  // copies, so the number moves on the tap rather than on the next refetch.
+  const { data: linkCopyCount = 0 } = usePostLinkCopyCount(postId);
+  const linkCopyFloor = useLinkCopyFloor(postId);
+  const displayShareCount = displayRepostCount + Math.max(linkCopyCount, linkCopyFloor);
+  const trackLinkCopy = useTrackPostLinkCopy();
   // On mount, check global vote cache for recent votes on this post
   const cachedVote = postId ? getVoteCache(postId) : null;
 
@@ -625,8 +630,8 @@ export function ActionBar({
     const url = shareUrlForPost();
     navigator.clipboard.writeText(url);
     toast.success('Post URL copied to clipboard');
-    // Feed copies feed the same reposts+copies share counter shown on shorts
-    if (postId) trackPostLinkCopy(postId, walletAddress);
+    // A copy is a share: it counts once per actor per post, next to reposts.
+    trackLinkCopy(postId, walletAddress, linkCopyCount);
     setSheetOpen(false);
   };
 
@@ -816,7 +821,7 @@ export function ActionBar({
         aria-label="Share"
       >
         <Share2 className={isReposted ? "w-[1.5213rem] h-[1.5213rem]" : "w-[1.3965rem] h-[1.3965rem]"} strokeWidth={isReposted ? 2.915 : 2} />
-        <span className="text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
+        <span className="text-xs text-zinc-400">{formatCount(displayShareCount)}</span>
       </button>
 
       <button
