@@ -1482,8 +1482,11 @@ function shouldServeSSR(pathname) {
   // `!shouldServeSSR` branch then returns the SPA shell with noindex before
   // the stage renderer is ever reached — which is why every stage link
   // unfurled as the generic homepage card.
-  if (/^\/stage\/[0-9a-fA-F-]{16,}$/.test(pathname)) return true;
-  if (/^\/stages\/\d+$/.test(pathname)) return true;
+  // Tolerant of a trailing slash: this function receives the RAW pathname
+  // (the renderer below matches cleanPath), so a $-anchor alone made
+  // /stages/1/ fall back to the homepage card while /stages/1 rendered.
+  if (/^\/stage\/[0-9a-fA-F-]{16,}\/?$/.test(pathname)) return true;
+  if (/^\/stages\/\d+\/?$/.test(pathname)) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
   // Always SSR for the blog: index + posts at both URL schemes
