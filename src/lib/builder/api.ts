@@ -74,7 +74,7 @@ export function builderStorageBase(projectId: string): string {
  */
 export function builderShareUrl(projectId: string): string {
   const origin = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
-  return `${origin}/app/builder/preview/${projectId}`;
+  return `${origin}/builder/preview/${projectId}`;
 }
 
 export type BuilderModel = "best" | "fast";

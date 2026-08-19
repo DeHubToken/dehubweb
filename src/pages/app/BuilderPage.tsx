@@ -985,7 +985,8 @@ export default function BuilderPage() {
       <SEOHead
         title="Builder — Build Apps with AI on DeHub"
         description="Describe an app and DeHub Builder creates it live: AI-written, DeHub-hosted mini apps you can share with anyone."
-        url="https://dehub.io/app/builder"
+        url="https://dehub.io/builder"
+        image="https://dehub.io/og/builder.jpg"
       />
       {view === 'home' && home}
       {view === 'chat' &&
