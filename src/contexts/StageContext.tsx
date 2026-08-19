@@ -111,15 +111,34 @@ export interface StageScreenShare {
 
 /**
  * Screen capture is a desktop-only affair. No mobile browser implements
- * `getDisplayMedia` — iOS Safari has no such method at all — so the control is
- * gated on the capability plus a fine pointer, and a mobile host never sees a
- * button that could only fail. Watching a share is NOT gated: a phone
- * subscribes to the video track like any other participant.
+ * `getDisplayMedia` — iOS Safari has no such method at all, and Chrome on
+ * Android does not ship it either — so the control is gated on the capability
+ * plus a pointing device, and a mobile host never sees a button that could
+ * only fail. Watching a share is NOT gated: a phone subscribes to the video
+ * track like any other participant.
+ *
+ * `any-pointer`, not `pointer`: a Surface with its keyboard folded back
+ * reports its *primary* pointer as coarse while still being a desktop browser
+ * that can share perfectly well. Phones and tablets are already excluded by
+ * the capability check above, so the looser query costs nothing.
  */
 function detectScreenShareSupport(): boolean {
   if (typeof navigator === 'undefined' || typeof window === 'undefined') return false;
   if (typeof navigator.mediaDevices?.getDisplayMedia !== 'function') return false;
-  return window.matchMedia?.('(pointer: fine)').matches ?? false;
+  return window.matchMedia?.('(any-pointer: fine)').matches ?? false;
+}
+
+/**
+ * Should this device take the low-resolution copy of a shared screen?
+ *
+ * A phone has no use for a 1920×1080 stream it renders into ~340 CSS pixels,
+ * and on cellular it is the difference between a stage that plays and one that
+ * stutters. Small viewports and touch devices take the small stream; anything
+ * desktop-sized keeps the full one.
+ */
+function prefersLowVideoStream(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia?.('(max-width: 1023px), (pointer: coarse)').matches ?? false;
 }
 
 /**
@@ -698,6 +717,16 @@ export function StageProvider({ children }: { children: ReactNode }) {
           // mic and a screen-audio track — the SDK mixes them before they leave.
           remoteUser.audioTrack?.play();
         } else if (mediaType === 'video' && remoteUser.videoTrack) {
+          // Take the small copy on phones and tablets. Throws when the sharer's
+          // browser refused dual-stream mode, in which case there is only the
+          // one stream to have and everyone takes it.
+          if (prefersLowVideoStream()) {
+            try {
+              await client.setRemoteVideoStreamType(remoteUser.uid, 1);
+            } catch (err) {
+              console.warn('[Stage] Low-quality screen stream unavailable', err);
+            }
+          }
           // Video only ever means a screen share here; nobody publishes a camera.
           // Agora replays this for publishers already in the room when we join,
           // so walking in on a share picks it up without any extra handshake.
@@ -1420,6 +1449,21 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
       screenVideoTrackRef.current = videoTrack;
       screenAudioTrackRef.current = audioTrack;
+
+      // Send a second, small copy of the screen so phones and weak connections
+      // have something to take. Keeping it at 1/3 of the full resolution (not
+      // the SDK's 160×120 default) both keeps shared text legible on a handset
+      // and stays clear of the ≥1/4 ratio Agora warns about. Subscribers pick
+      // the small stream by device in the `user-published` handler, and Agora
+      // additionally drops anyone to it on a poor network by default.
+      // Best-effort: a browser that refuses simulcast still publishes normally.
+      try {
+        client.setLowStreamParameter({ width: 640, height: 360, framerate: 5, bitrate: 350 });
+        await client.enableDualStream();
+      } catch (err) {
+        console.warn('[Stage] Dual-stream unavailable — everyone takes the full-size screen', err);
+      }
+
       await client.publish([videoTrack]);
 
       // Tab/system audio rides as a SECOND published audio track, which the SDK
