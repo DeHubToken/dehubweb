@@ -10,6 +10,12 @@ import { supabase } from '@/integrations/supabase/client';
 // Deliberately the narrow module and not the `@/lib/api/dehub` barrel: this
 // context is mounted app-wide, and the barrel drags the whole API surface in.
 import { getAuthToken } from '@/lib/api/dehub/core';
+import {
+  showRecordingUploading,
+  showRecordingSaved,
+  showRecordingFailed,
+  dismissRecordingToast,
+} from '@/lib/stage-recording-toast';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -473,12 +479,16 @@ export function StageProvider({ children }: { children: ReactNode }) {
     // finishes, which makes closing the tab feel natural at exactly the moment
     // it destroys the recording.
     recordingUploadInFlightRef.current = true;
+    // The unload guard's browser dialog is the last line of defence; this is
+    // the first — a corner card with the app's preloader, so the after-End
+    // wait reads as progress instead of something the host has to guess at.
+    showRecordingUploading();
 
     return new Promise<void>((resolve) => {
       recorder.onstop = async () => {
         try {
           const chunks = recordingChunksRef.current;
-          if (chunks.length === 0) { resolve(); return; }
+          if (chunks.length === 0) { dismissRecordingToast(); resolve(); return; }
 
           const blob = new Blob(chunks, { type: 'audio/webm' });
           const path = `${spaceId}/recording.webm`;
@@ -502,7 +512,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
           if (uploadErr) {
             console.error('[Stage] Upload failed:', uploadErr.message);
-            toast.error('The stage recording could not be saved.', { duration: 20_000 });
+            showRecordingFailed();
             resolve();
             return;
           }
@@ -519,6 +529,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
                 .eq('id', spaceId),
             );
             console.log('[Stage] Recording saved:', urlData.publicUrl);
+            showRecordingSaved();
 
             // Trigger transcription as soon as the recording is uploaded.
             // Pass the timeline so the edge function can label diarized speakers
@@ -530,6 +541,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           }
         } catch (err) {
           console.error('[Stage] Recording upload error:', err);
+          showRecordingFailed();
         } finally {
           recordingUploadInFlightRef.current = false;
           recordingChunksRef.current = [];
