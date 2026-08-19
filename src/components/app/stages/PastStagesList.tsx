@@ -18,6 +18,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Play, Square, Users, Clock, FileText, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
@@ -355,10 +356,15 @@ export function PastStagesList() {
     async (space: AudioSpace) => {
       if (!confirm('Delete this stage recording?')) return;
       if (playingStageId === space.id) stopPlayback();
-      if (space.recording_url) {
+      if (space.recording_url && walletAddress) {
         const path = space.recording_url.split('/stage-recordings/')[1];
         if (path) {
-          await supabase.storage.from('stage-recordings').remove([decodeURIComponent(path)]);
+          // Through a wallet-scoped client: the bucket's DELETE policy now
+          // checks who owns the stage, and the Storage API has no per-call
+          // header to carry that on the shared one.
+          await walletScopedClient(walletAddress)
+            .storage.from('stage-recordings')
+            .remove([decodeURIComponent(path)]);
         }
       }
       await supabase
