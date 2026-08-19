@@ -4,7 +4,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -184,19 +184,16 @@ export function FriendsOnStageBar() {
 }
 
 function StageBarAvatar({ wallet, avatar, username }: { wallet: string; avatar: string | null; username: string | null }) {
+  // Two rungs that cannot share a failure mode: the Cloudflare-resized URL
+  // first, the CDN object itself if that fails.
+  const [failed, setFailed] = useState(false);
   const resolved = avatar ? buildAvatarUrl(wallet, avatar) : undefined;
   const fallback = buildAvatarCdnFallbackUrl(wallet, avatar ?? undefined);
+  const activeSrc = failed ? fallback : resolved || fallback;
 
   return (
     <Avatar className="w-6 h-6 border border-black/40">
-      <AvatarImage
-        src={resolved || fallback}
-        onError={(e) => {
-          if (fallback && (e.target as HTMLImageElement).src !== fallback) {
-            (e.target as HTMLImageElement).src = fallback;
-          }
-        }}
-      />
+      {activeSrc && <AvatarImage src={activeSrc} onError={() => setFailed(true)} />}
       <AvatarFallback className="bg-white/10 text-white text-[9px]">
         {username?.[0]?.toUpperCase() || '?'}
       </AvatarFallback>

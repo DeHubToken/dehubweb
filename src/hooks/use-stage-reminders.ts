@@ -159,7 +159,11 @@ function useStageReminderRoster(spaceId: string | undefined) {
           const profile = mapUserToProfile(await getAccountInfo(address));
           return {
             address,
-            username: profile.handle || profile.name || undefined,
+            // `handle` is already `@name`, and every consumer prefixes its own
+            // `@` — the live room rendered `@@lastchad` and gave the seat an
+            // initial of "@". Bare is also what space_participants stores, so
+            // the crowd's real listeners and its pre-audience now agree.
+            username: (profile.handle || profile.name || '').replace(/^@+/, '') || undefined,
             avatarUrl: profile.avatarUrl || undefined,
             followers: profile.followers ?? 0,
           };
