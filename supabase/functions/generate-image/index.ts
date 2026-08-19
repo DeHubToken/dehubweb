@@ -39,6 +39,20 @@ interface GenerateImageRequest {
   aspectRatio?: string;
 }
 
+/**
+ * DeHub banner requests are free — the SM Template 2.0 renderer is our own code
+ * plus one small text call, not a generation anyone has to be billed for.
+ *
+ * The wrapper prices the job before the handler has picked a renderer, so both
+ * sides have to agree on what "free" means from the raw body alone, and the
+ * handler must then honour it exactly: a request that was not charged may never
+ * reach a paid model. `sourceImage` disqualifies because the template cannot
+ * edit a supplied image, so those fall through to diffusion by design.
+ */
+function isFreeTemplateRequest(body: Partial<GenerateImageRequest>): boolean {
+  return body.bannerRenderer === 'template' && !body.sourceImage;
+}
+
 // ─── fal.ai image catalogue ──────────────────────────────────────────────────
 //
 // Unlike the Gemini and Grok paths above, these models DO take a real size
@@ -353,6 +367,10 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
       throw new Error('Prompt is required');
     }
 
+    // Read before the sourceImage → logoImage promotion below mutates it, so
+    // this matches exactly what the wrapper priced from the raw body.
+    const freeTemplate = isFreeTemplateRequest({ bannerRenderer, sourceImage });
+
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     const xaiApiKey = Deno.env.get('XAI_API_KEY');
     
@@ -389,7 +407,10 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
     // Brand intent ALWAYS runs the brand pipeline. Previously we bypassed it when
     // a sourceImage was present without an explicit logoImage — that dropped every
     // brand rule and returned a generic Gemini edit of the logo. No more.
-    if (brandIntent) {
+    // `freeTemplate` also enters here: the wrapper waived the charge on the
+    // strength of the template running, so the template has to actually get its
+    // turn even when nothing in the prompt reads as brand intent.
+    if (brandIntent || freeTemplate) {
 
 
       // ── Format detection: pick the right aspect ratio from the user's wording.
@@ -445,15 +466,29 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
           }
         }
         // Reaching here is a degradation, not a routing decision: the caller
-        // asked for the deterministic banner and is about to get a diffusion
-        // scene, and be billed for the image model instead. This was a
-        // console.warn, which left the two outcomes indistinguishable in the
-        // logs — so "is the template actually serving users" had no answer.
-        console.error('[dehub-template] EXHAUSTED — degrading to scene pipeline', {
+        // asked for the deterministic banner and did not get it. Logged at
+        // error level because it used to be a console.warn, which left this
+        // indistinguishable from a healthy render — so "is the template
+        // actually serving users" had no answer in the logs.
+        console.error('[dehub-template] EXHAUSTED', {
           explicitlyRequested: bannerRenderer === 'template',
+          free: freeTemplate,
           format,
           reason: lastFailure,
         });
+        // A free request stops here. Falling through would run a paid image
+        // model on a job nobody was charged for, and would hand back a
+        // diffusion scene to someone who picked "DeHub Banner" — wrong on both
+        // counts. Charged requests keep the old degrade-to-scene behaviour.
+        if (freeTemplate) {
+          return new Response(
+            JSON.stringify({
+              error: 'The DeHub banner renderer could not draw this one. Try again, or pick a cinematic style to use the image model instead.',
+              code: 'TEMPLATE_RENDER_FAILED',
+            }),
+            { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
       }
 
       // ── DeHub brand archetype library: all strictly monochrome, all material-first,
@@ -967,13 +1002,16 @@ serve(async (req) => {
 
   // Peek at the payload to price the job. The clone leaves the original body
   // readable by the handler, so nothing below this point had to change.
-  const peek = await req.clone().json().catch(() => ({})) as { model?: string };
+  const peek = await req.clone().json().catch(() => ({})) as Partial<GenerateImageRequest>;
 
   const charged = await chargeForJob(req, {
     kind: 'image',
     modelId: peek.model || 'gemini-2.5-flash',
     actionType: 'generate-image',
     rateLimit: { limit: 60, windowMs: 60 * 60 * 1000 },
+    // DeHub banners cost nothing. Still authenticated and still rate-limited —
+    // free is a price, not an open door.
+    free: isFreeTemplateRequest(peek),
   });
   if (!charged.ok) return charged.response;
 
