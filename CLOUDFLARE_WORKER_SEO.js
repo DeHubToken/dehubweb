@@ -1476,6 +1476,14 @@ function shouldServeSSR(pathname) {
   // a shared listing unfurled as the SPA shell, i.e. as the homepage.
   if (/^\/app\/stores\/[^/]+/.test(pathname)) return true;
   if (/^\/app\/events\/\d+/.test(pathname)) return true;
+  // Stage invite links, both shapes. Needed here and not only at the renderer
+  // below: `stage` and `stages` are both reserved ROUTE_SEGMENTS, so the
+  // profile fall-through at the foot of this function rejects them, and the
+  // `!shouldServeSSR` branch then returns the SPA shell with noindex before
+  // the stage renderer is ever reached — which is why every stage link
+  // unfurled as the generic homepage card.
+  if (/^\/stage\/[0-9a-fA-F-]{16,}$/.test(pathname)) return true;
+  if (/^\/stages\/\d+$/.test(pathname)) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
   // Always SSR for the blog: index + posts at both URL schemes
