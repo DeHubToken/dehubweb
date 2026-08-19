@@ -144,6 +144,31 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=86400
 
+# Jungle Trail is framed exactly like the games above — sandboxed WITHOUT
+# allow-same-origin, so the frame has an opaque origin and its module entry is
+# fetched in CORS mode with `Origin: null`. Without a matching
+# Access-Control-Allow-Origin the browser drops the script silently: no error,
+# no console output. The host's boot readout then sits at 99% forever, because
+# the percentage is modelled on a clock and only the engine's own `ready`
+# message takes it to 100 — and that message is sent by code that never ran.
+# What stays on screen underneath is the game's own `<div id="boot">jungle
+# trail</div>`, which is the "page that just says Jungle Trail" this was
+# reported as.
+#
+# The whole directory, like Street Slayer and unlike the two Vite builds: this
+# is not a bundle. main.js is raw ES modules importing 14 more out of src/, and
+# every one of those imports is its own CORS fetch from the opaque origin. An
+# entry-only rule would load main.js and then drop everything it imports.
+#
+# Revalidating rather than immutable, and one rule rather than two, because
+# nothing here is content-hashed — re-vendoring the game is a straight copy
+# over the top that reuses every filename, index.html included. A year of
+# immutable would mean a re-vendored game never reaching anyone who has
+# already played once.
+/jungle-game/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=0, must-revalidate
+
 # Arcade card art. Unhashed, so the convention for everything else in /public
 # applies: CHANGE THE FILENAME when the capture changes.
 /arcade/*
