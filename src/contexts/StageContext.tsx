@@ -343,6 +343,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const recordingTimelineRef = useRef<Array<{
     start: number; end: number; kind: 'ai' | 'human'; source: string; label: string;
   }>>([]);
+  /** True while the finished recording is being uploaded — read by the unload guard. */
+  const recordingUploadInFlightRef = useRef(false);
 
   /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
   const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
@@ -402,6 +404,31 @@ export function StageProvider({ children }: { children: ReactNode }) {
     return () => { stageModalOpener = null; };
   }, [openModal]);
 
+  // ─── Keep a live host from silently killing their own recording ─────────
+  //
+  // Two windows where closing the tab destroys the recording with no error:
+  // while on air (the recorder's chunks exist only in page memory), and the
+  // minute or two after pressing End, when the UI has already reset but the
+  // upload is still in flight — endSpace deliberately closes the modal before
+  // the upload finishes, which makes leaving feel natural at exactly the
+  // moment it loses the file. The browser's generic leave-site prompt is the
+  // strongest signal a page is allowed to give there. Listeners and guests
+  // never hit this: the handler only arms for a recording host or a pending
+  // upload, and an armed-but-idle handler costs nothing.
+  useEffect(() => {
+    const guard = (e: BeforeUnloadEvent) => {
+      const recording =
+        mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive';
+      if (recording || recordingUploadInFlightRef.current) {
+        e.preventDefault();
+        // Required by Chrome for the dialog to actually appear.
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', guard);
+    return () => window.removeEventListener('beforeunload', guard);
+  }, []);
+
   // ─── Recording helpers (host only) ──────────────────────────────────────
 
   const startRecording = useCallback((spaceId: string) => {
@@ -440,6 +467,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
     const recorder = recorderArg ?? mediaRecorderRef.current;
     if (!recorder || recorder.state === 'inactive') return;
 
+    // Read by the beforeunload guard: from here until the finally below, a
+    // one- to two-hour recording exists ONLY as in-memory chunks and an
+    // in-flight fetch. The End flow deliberately resets the UI before this
+    // finishes, which makes closing the tab feel natural at exactly the moment
+    // it destroys the recording.
+    recordingUploadInFlightRef.current = true;
+
     return new Promise<void>((resolve) => {
       recorder.onstop = async () => {
         try {
@@ -449,12 +483,26 @@ export function StageProvider({ children }: { children: ReactNode }) {
           const blob = new Blob(chunks, { type: 'audio/webm' });
           const path = `${spaceId}/recording.webm`;
 
-          const { error: uploadErr } = await supabase.storage
-            .from('stage-recordings')
-            .upload(path, blob, { contentType: 'audio/webm', upsert: true });
+          // One retry, and a visible failure. This upload is the only copy of
+          // the stage in existence, the finally below wipes the chunks
+          // whatever happens, and until now the only trace of a failed upload
+          // was a console line nobody was looking at — the host walked away
+          // believing the recording existed. A single retry absorbs the
+          // transient blip that is the common failure here; a persistent toast
+          // covers the rest honestly.
+          let uploadErr: { message: string } | null = null;
+          for (let attempt = 0; attempt < 2; attempt++) {
+            const { error } = await supabase.storage
+              .from('stage-recordings')
+              .upload(path, blob, { contentType: 'audio/webm', upsert: true });
+            uploadErr = error;
+            if (!uploadErr) break;
+            console.warn(`[Stage] Upload attempt ${attempt + 1} failed:`, uploadErr.message);
+          }
 
           if (uploadErr) {
             console.error('[Stage] Upload failed:', uploadErr.message);
+            toast.error('The stage recording could not be saved.', { duration: 20_000 });
             resolve();
             return;
           }
@@ -483,6 +531,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         } catch (err) {
           console.error('[Stage] Recording upload error:', err);
         } finally {
+          recordingUploadInFlightRef.current = false;
           recordingChunksRef.current = [];
           recordingTimelineRef.current = [];
           recordingSpaceIdRef.current = null;
@@ -1012,6 +1061,14 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setMyRole(rejoiningRole as any);
         setHasRaisedHand(false);
         hasHandledStageEndRef.current = false;
+        // A host coming back after a refresh or a network drop is still ON AIR
+        // — but the recorder died with the old page, and the only other
+        // startRecording call is in goLiveAsHost, which a rejoin never passes
+        // through. Without this, everything said after a mid-stage refresh was
+        // silently absent from the recording and the transcript: at End,
+        // mediaRecorderRef was null and stopAndUploadRecording returned
+        // without uploading anything.
+        if (isHost) startRecording(spaceId);
         toast.success(isHost ? 'Rejoined as host!' : 'Joined the stage!');
         return true;
       } catch (err) {
@@ -1022,7 +1079,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [walletAddress, user],
+    [walletAddress, user, startRecording],
   );
 
   // ─── Guest listening ─────────────────────────────────────────────────────
@@ -1402,7 +1459,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
           status: 'pending',
         }),
       );
-      if (error) throw error;
+      // The table is UNIQUE on (space_id, wallet_address, status), and a
+      // pending row survives a disconnect while the local hasRaisedHand state
+      // does not — so a listener who dropped and rejoined got "Failed to raise
+      // hand" on every press for the rest of the stage. A duplicate pending
+      // row IS the state being asked for; treat it as success.
+      if (error && error.code !== '23505') throw error;
       setHasRaisedHand(true);
       toast.success('Hand raised! Waiting for host approval.');
     } catch (err) {
