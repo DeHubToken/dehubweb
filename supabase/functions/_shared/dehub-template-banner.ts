@@ -1,11 +1,20 @@
-// DeHub "SM Template 2.0" deterministic banner renderer.
+// DeHub "SM Template 2.0" deterministic banner renderer — v2 design language.
 //
 // Instead of asking a diffusion model to imitate the brand, this renders the
-// official template system directly: silk background + chrome 3D icon hero +
-// silver Exo headline (motion-blurred tail) + HUD chrome (pill logo, //dehub.io,
-// type tag, QR) — as pure SVG rasterized with resvg-wasm. The LLM only fills a
-// small validated spec (headline / subtitle / icon choice); the template itself
-// enforces the brand, so output cannot drift off-style.
+// official template system directly: silk background (with an optional starfield +
+// technical-grid overlay) + a chrome 3D icon hero that bleeds off the frame + an Exo
+// headline with a horizontal alpha-carrying light sweep and a leading-edge focus ramp
+// + HUD chrome in corner brackets (pill logo, //dehub.io, type tag, QR) inside a
+// bevelled card — as pure SVG rasterized with resvg-wasm. The LLM only fills a small
+// validated spec (headline / subtitle / icon choice); the template itself enforces the
+// brand, so output cannot drift off-style.
+//
+// This is the server-side twin of the local kit at C:\Users\pirac\dehub-banner-kit
+// (style-v2.mjs is the source of truth). Keep the two in sync when the look changes.
+//
+// NOTE: BannerSpec.headline[].blurTail is now vestigial. v2 blurs the LEADING glyphs
+// via a mask pair, not a trailing tail, so the value is validated but unused. It is
+// kept so existing LLM output and callers stay valid.
 //
 // Assets live in the repo under public/brand-kit/ and are fetched from the
 // deployed site at runtime (same origin as /lovable-uploads, which serves real
@@ -236,17 +245,48 @@ const DIMS: Record<BannerFormat, { W: number; H: number }> = {
   portrait: { W: 864, H: 1080 },
 };
 
+// v2 focus ramp: two full copies of each line, cross-faded by a mask — a blurred copy
+// revealed at the leading edge and a sharp copy revealed after it — so the headline
+// resolves as it moves right into the light. This replaces v1's trailing motion blur.
+// (Two stacked copies, not a partial blur, because the fill is a gradient: masking the
+// composited result is the only way to blur part of gradient-filled text.)
 function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, size: number, anchor: "start" | "middle"): string {
-  const lh = size * 0.94;
+  const lh = size * 0.92;
   let out = "";
   lines.forEach((l, i) => {
     const y = topY + size * 0.82 + i * lh;
-    const common = `font-family="Exo" font-weight="700" font-size="${size}" letter-spacing="${(-0.015 * size).toFixed(1)}" text-anchor="${anchor}"`;
-    out += `<text x="${x}" y="${y}" ${common} fill="url(#silver)">${esc(l.text)}</text>`;
-    if (l.blurTail > 0) {
-      out += `<text x="${x}" y="${y}" ${common} fill="url(#silver)" filter="url(#hblur)" mask="url(#tailfade)" opacity="0.95">${esc(l.text)}</text>`;
-    }
+    const common = `font-family="Exo" font-weight="700" font-size="${size}" letter-spacing="${(-0.022 * size).toFixed(1)}" text-anchor="${anchor}" fill="url(#silver)"`;
+    out += `<text x="${x}" y="${y}" ${common} filter="url(#hblur)" mask="url(#leadmask)">${esc(l.text)}</text>`;
+    out += `<text x="${x}" y="${y}" ${common} mask="url(#sharpmask)">${esc(l.text)}</text>`;
   });
+  return out;
+}
+
+// Four corner brackets — the DeHub HUD box treatment. NOT a dashed rectangle and NOT a
+// solid stroke: one short arm at each end of every edge, nothing across the middle.
+function brackets(x: number, y: number, w: number, h: number, arm = 15, armV = 12): string {
+  const c = "rgba(255,255,255,0.46)";
+  const L = (x1: number, y1: number, x2: number, y2: number) =>
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="1"/>`;
+  const a = Math.min(arm, w / 2 - 1), v = Math.min(armV, h / 2 - 1);
+  return [
+    L(x, y + 0.5, x + a, y + 0.5), L(x + w - a, y + 0.5, x + w, y + 0.5),
+    L(x, y + h - 0.5, x + a, y + h - 0.5), L(x + w - a, y + h - 0.5, x + w, y + h - 0.5),
+    L(x + 0.5, y, x + 0.5, y + v), L(x + 0.5, y + h - v, x + 0.5, y + h),
+    L(x + w - 0.5, y, x + w - 0.5, y + v), L(x + w - 0.5, y + h - v, x + w - 0.5, y + h),
+  ].join("");
+}
+
+// Deterministic starfield, drawn OVER the silk so the silk still reads as the base.
+function starField(W: number, H: number, seed: number): string {
+  let s = (seed * 16807) % 2147483647;
+  if (s <= 0) s += 2147483646;
+  const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const n = Math.round(300 * (W * H) / (1920 * 1080));
+  let out = "";
+  for (let i = 0; i < n; i++) {
+    out += `<circle cx="${(rnd() * W).toFixed(1)}" cy="${(rnd() * H).toFixed(1)}" r="${(0.35 + rnd() * 1.45).toFixed(2)}" fill="#ffffff" opacity="${(0.1 + rnd() * 0.5).toFixed(2)}"/>`;
+  }
   return out;
 }
 
@@ -307,35 +347,58 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   return out;
 }
 
+// v2 HUD. ONE left gutter shared by the pill and the headline; ONE bottom centre line
+// shared by the pill, the //dehub.io box and the QR (centre, not bottom — heights differ).
+// Boxes use corner brackets, never a stroked rectangle.
 function hudChrome(spec: BannerSpec, W: number, H: number, uris: Record<string, string>, showPill = true): string {
   const mono = (t: string) => esc(t);
   const parts: string[] = [];
-  // pill logo — top-left. Suppressed on wordmark layouts (the big wordmark IS the
-  // logo, so the pill would just repeat it).
+  const GUT = Math.round(W * 0.052);
+  const RGUT = Math.round(W * 0.042);
+  const TOP = Math.round(H * 0.072);
+  const BASE = Math.round(H - H * 0.104);   // bottom HUD centre line
+  const FS = Math.max(11, Math.round(W * 0.0125));
+  const box = (x: number, y: number, w: number, h: number) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="rgba(8,8,11,0.80)"/>` + brackets(x, y, w, h);
+
+  // pill — bottom-left, centred on the baseline. Suppressed on wordmark layouts (the
+  // big wordmark IS the logo, so the pill would just repeat it).
   if (showPill) {
-    const pw = 172, ph = 52;
+    const pw = Math.round(W * 0.143), ph = Math.round(H * 0.083);
+    const py = BASE - ph / 2;
     parts.push(
-      `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#ffffff" opacity="0.5" filter="url(#pillglow)"/>`,
-      `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#f4f4f2"/>`,
-      `<image x="${40 + 26}" y="${36 + 13}" width="${pw - 52}" height="${ph - 26}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
+      `<rect x="${GUT}" y="${py}" width="${pw}" height="${ph}" rx="${Math.round(ph * 0.3)}" fill="#ffffff" opacity="0.5" filter="url(#pillglow)"/>`,
+      `<rect x="${GUT}" y="${py}" width="${pw}" height="${ph}" rx="${Math.round(ph * 0.3)}" fill="#f4f4f2"/>`,
+      `<image x="${GUT + Math.round(pw * 0.15)}" y="${py + Math.round(ph * 0.25)}" width="${Math.round(pw * 0.7)}" height="${Math.round(ph * 0.5)}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
     );
   }
-  // type tag — top-right
-  const tag = `// type = "${spec.typeTag}"`;
-  const tw = tag.length * 10.6 + 30;
+
+  // type tag — top-right, on TWO lines: dim "// type =" then the value
+  const val = spec.typeTag;
+  const tw = Math.round(Math.max(9, val.length) * FS * 0.62) + 24;
+  const th = Math.round(FS * 2.7) + 16;
+  const tx = W - RGUT - tw, ty = TOP - th / 2;
   parts.push(
-    `<rect x="${W - 40 - tw}" y="40" width="${tw}" height="40" fill="rgba(10,10,12,0.35)" stroke="rgba(255,255,255,0.22)"/>`,
-    `<text x="${W - 40 - tw + 15}" y="66" font-family="Consolas" font-size="18" fill="rgba(255,255,255,0.66)">${mono(tag)}</text>`,
+    box(tx, ty, tw, th),
+    `<text x="${tx + 12}" y="${ty + FS + 8}" font-family="Consolas" font-size="${FS}" fill="rgba(255,255,255,0.42)">${mono("// type =")}</text>`,
+    `<text x="${tx + 12}" y="${ty + FS * 2.3 + 8}" font-family="Consolas" font-size="${FS}" fill="rgba(255,255,255,0.72)">${mono(val)}</text>`,
   );
-  // //dehub.io — bottom-left
+
+  // //dehub.io — on the baseline, centre-left
+  const dw = Math.round(10 * FS * 0.62) + 24, dh = Math.round(FS * 1.5) + 14;
+  const dx = Math.round(W * 0.475), dy = BASE - dh / 2;
   parts.push(
-    `<rect x="40" y="${H - 84}" width="150" height="40" fill="rgba(10,10,12,0.35)" stroke="rgba(255,255,255,0.22)"/>`,
-    `<text x="55" y="${H - 58}" font-family="Consolas" font-size="18" fill="rgba(255,255,255,0.66)">${mono("//dehub.io")}</text>`,
+    box(dx, dy, dw, dh),
+    `<text x="${dx + 12}" y="${dy + dh / 2 + FS * 0.36}" font-family="Consolas" font-size="${FS}" fill="rgba(255,255,255,0.72)">${mono("//dehub.io")}</text>`,
   );
-  // QR — bottom-right
+
+  // QR — on the baseline, right. Dark backing plate, no border: the hero bleeds under it
+  // and white modules on polished chrome do not scan.
+  const qs = Math.round(W * 0.047), pad = Math.round(qs * 0.06);
+  const qx = W - RGUT - qs, qy = BASE - qs / 2;
   parts.push(
-    `<rect x="${W - 40 - 86}" y="${H - 40 - 86}" width="86" height="86" fill="rgba(10,10,12,0.35)" stroke="rgba(255,255,255,0.22)"/>`,
-    `<image x="${W - 40 - 78}" y="${H - 40 - 78}" width="70" height="70" href="${uris.qr}" opacity="0.85"/>`,
+    `<rect x="${qx}" y="${qy}" width="${qs}" height="${qs}" fill="rgba(3,3,5,0.86)"/>`,
+    `<image x="${qx + pad}" y="${qy + pad}" width="${qs - pad * 2}" height="${qs - pad * 2}" href="${uris.qr}"/>`,
   );
   return parts.join("");
 }
@@ -376,9 +439,33 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
 
   const defs = `
   <defs>
-    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0.04" stop-color="#ffffff"/><stop offset="0.38" stop-color="#dcdcdf"/>
-      <stop offset="0.78" stop-color="#8b8b92"/><stop offset="1" stop-color="#6f6f76"/>
+    <!-- v2: the sweep is HORIZONTAL and carries ALPHA as well as tone, so the leading
+         glyphs are semi-transparent and the silk reads through them before the type
+         goes opaque as it moves into the hero's light. -->
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b2b2be" stop-opacity="0.34"/>
+      <stop offset="0.17" stop-color="#c4c4cf" stop-opacity="0.52"/>
+      <stop offset="0.38" stop-color="#dedee6" stop-opacity="0.78"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.97"/>
+      <stop offset="0.82" stop-color="#fafafd" stop-opacity="0.93"/>
+      <stop offset="1" stop-color="#c6c6d0" stop-opacity="0.64"/>
+    </linearGradient>
+    <!-- bevelled card edge: brightness sweeps the perimeter so the card reads as a
+         raised slab rather than a flat outlined rectangle -->
+    <linearGradient id="bevel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.46"/>
+      <stop offset="0.18" stop-color="#ffffff" stop-opacity="0.20"/>
+      <stop offset="0.42" stop-color="#ffffff" stop-opacity="0.055"/>
+      <stop offset="0.58" stop-color="#ffffff" stop-opacity="0.045"/>
+      <stop offset="0.82" stop-color="#ffffff" stop-opacity="0.17"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.38"/>
+    </linearGradient>
+    <!-- focus ramp: leading glyphs soft, sharpening right -->
+    <linearGradient id="fadeLead" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="0.12" stop-color="#999999"/><stop offset="0.28" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="fadeSharp" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0.03" stop-color="#000000"/><stop offset="0.26" stop-color="#ffffff"/>
     </linearGradient>
     <linearGradient id="silverdim" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#e8e8ea"/><stop offset="1" stop-color="#9a9aa1"/>
@@ -395,6 +482,18 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     <mask id="tailfade" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
       <rect x="0" y="0" width="1" height="1" fill="url(#fadelr)"/>
     </mask>
+    <mask id="leadmask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+      <rect x="0" y="0" width="1" height="1" fill="url(#fadeLead)"/>
+    </mask>
+    <mask id="sharpmask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+      <rect x="0" y="0" width="1" height="1" fill="url(#fadeSharp)"/>
+    </mask>
+    <pattern id="gridp" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M120 0 L0 0 0 120" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+    <pattern id="gridfine" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0 L0 0 0 24" fill="none" stroke="rgba(255,255,255,0.022)" stroke-width="1"/>
+    </pattern>
     <mask id="cardmask"><rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="#ffffff"/></mask>
     <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
       <circle cx="2" cy="2" r="1.1" fill="rgba(255,255,255,0.5)"/>
@@ -417,6 +516,15 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   body.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#020203"/>`);
   body.push(`<g mask="url(#cardmask)">`);
   body.push(`<image x="${inset}" y="${inset}" width="${CW}" height="${CH}" preserveAspectRatio="xMidYMid slice" href="${uris.bg}" opacity="0.92"/>`);
+  // v2 overlay: technical grid + starfield ON TOP of the silk (the silk stays the base).
+  // Opt-in per graphic so a batch does not look uniform — derived from the seed so the
+  // same spec always renders the same way.
+  const overlay = seed % 2 === 0;
+  if (overlay) {
+    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridp)"/>`);
+    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridfine)"/>`);
+    body.push(starField(W, H, seed));
+  }
   body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#vig)"/>`);
   body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#dots)" opacity="0.10"/>`);
   body.push(marks(W, H, seed));
@@ -436,24 +544,26 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
       body.push(`<image x="${W / 2 - 250}" y="${H * 0.46 - 64}" width="500" height="128" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
       body.push(subRow(spec, W / 2, H * 0.68, 30, "middle"));
     } else {
-      // Hero right, headline in a reserved left column with a clean gutter.
-      const heroBox = 460;
-      const heroLeft = W - 84 - heroBox;
-      const heroCy = H / 2;
-      body.push(`<ellipse cx="${heroLeft + heroBox / 2}" cy="${heroCy}" rx="${heroBox * 0.6}" ry="${heroBox * 0.52}" fill="url(#glow)"/>`);
-      if (uris.icon) body.push(heroImg(heroLeft, heroCy - heroBox / 2, heroBox, uris.icon, iconEntry));
-      if (uris.icon2) body.push(heroImg(heroLeft + heroBox - 150, H - 150 - 180, 180, uris.icon2, icon2Entry));
-      const colW = heroLeft - 64 - 44; // gutter before hero
-      const { lines, size } = fitHeadline(spec.headline, colW, H * 0.5, 150);
-      const blockH = lines.length * size * 0.94;
-      const topY = (H - blockH) / 2 - 22;
-      body.push(headlineBlock(lines, 64, topY, size, "start"));
-      body.push(subRow(spec, 66, topY + blockH + 48, 30, "start", colW));
+      // v2: the hero is BIG and bleeds off the right and bottom edges — it is not
+      // contained in the frame. The card mask clips it, which is what creates the bleed.
+      const GUT = Math.round(W * 0.052);
+      const heroBox = Math.round(W * 0.52);
+      const heroLeft = Math.round(W + W * 0.045 - heroBox);   // right edge past the canvas
+      const heroTop = Math.round(H + H * 0.13 - heroBox);     // bottom edge past the canvas
+      body.push(`<ellipse cx="${Math.round(W * 0.68)}" cy="${Math.round(H * 0.44)}" rx="${Math.round(W * 0.26)}" ry="${Math.round(H * 0.36)}" fill="url(#glow)"/>`);
+      if (uris.icon) body.push(heroImg(heroLeft, heroTop, heroBox, uris.icon, iconEntry));
+      const colW = heroLeft - GUT - Math.round(W * 0.03); // gutter before the hero
+      const { lines, size } = fitHeadline(spec.headline, colW, H * 0.52, Math.round(H * 0.215));
+      const blockH = lines.length * size * 0.92;
+      const topY = H * 0.455 - blockH / 2;
+      body.push(headlineBlock(lines, GUT, topY, size, "start"));
+      body.push(subRow(spec, GUT, topY + blockH + H * 0.045, 30, "start", colW));
     }
   } else {
-    // square / portrait: headline + sub in a clean TOP band, hero fills the bottom.
-    const heroBox = Math.min(Math.round(H * 0.5), W - 120);
-    const heroY = H - heroBox - 96;
+    // square / portrait: headline + sub in a clean TOP band, hero fills the bottom and
+    // bleeds off the bottom edge (v2 — the hero is never fully contained).
+    const heroBox = Math.min(Math.round(H * 0.52), W - 90);
+    const heroY = Math.round(H + H * 0.04 - heroBox);
     body.push(`<ellipse cx="${W - 70 - heroBox / 2}" cy="${heroY + heroBox / 2}" rx="${heroBox * 0.58}" ry="${heroBox * 0.52}" fill="url(#glow)"/>`);
     if (isWordmark && uris.wordmarkWhite) {
       body.push(`<image x="${W / 2 - 240}" y="${heroY + heroBox / 2 - 60}" width="480" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
@@ -474,7 +584,9 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   }
   body.push(hudChrome(spec, W, H, uris, !isWordmark));
   body.push(`</g>`);
-  body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="none" stroke="rgba(255,255,255,0.06)"/>`);
+  // v2 bevelled edge — a gradient-stroked ring, not a flat single-value border, so the
+  // card reads as a raised slab. Drawn last so a bleeding hero passes under it.
+  body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="none" stroke="url(#bevel)" stroke-width="1.5"/>`);
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${defs}${body.join("")}</svg>`;
 }
