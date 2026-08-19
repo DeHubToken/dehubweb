@@ -418,24 +418,42 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
       const useTemplate = bannerRenderer === 'template'
         || (bannerRenderer !== 'scene' && !sourceImage && !sceneKeywordHit);
       if (useTemplate && !sourceImage) {
-        try {
-          const format = bannerFormat ?? formatFromPosterSize(posterSize);
-          const spec = await buildSpecFromPrompt({
-            prompt,
-            headlineOverride: typeof requestHeadline === 'string' && requestHeadline.trim() ? requestHeadline.trim() : undefined,
-            history: conversationHistory,
-            apiKey: lovableApiKey ?? '',
-            format,
-          });
-          const templUrl = await renderTemplateBanner(spec);
-          console.log('[dehub-template] SM Template 2.0 render success', { format, icon: spec.icon, layout: spec.layout });
-          return new Response(
-            JSON.stringify({ imageUrl: templUrl, text: '', success: true }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        } catch (e) {
-          console.warn('[dehub-template] template path failed — falling back to scene pipeline:', (e as Error).message);
+        const format = bannerFormat ?? formatFromPosterSize(posterSize);
+        let lastFailure = '';
+        // Two attempts. Everything that fails here is transient by nature — a
+        // brand-kit fetch that lost a race, or a resvg render that overran the
+        // edge CPU slice — and the retry is nearly free whenever the first pass
+        // got far enough to warm the module-level asset caches.
+        for (let attempt = 1; attempt <= 2; attempt++) {
+          try {
+            const spec = await buildSpecFromPrompt({
+              prompt,
+              headlineOverride: typeof requestHeadline === 'string' && requestHeadline.trim() ? requestHeadline.trim() : undefined,
+              history: conversationHistory,
+              apiKey: lovableApiKey ?? '',
+              format,
+            });
+            const templUrl = await renderTemplateBanner(spec);
+            console.log('[dehub-template] SM Template 2.0 render success', { format, icon: spec.icon, layout: spec.layout, attempt });
+            return new Response(
+              JSON.stringify({ imageUrl: templUrl, text: '', success: true, renderer: 'template' }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          } catch (e) {
+            lastFailure = (e as Error).message;
+            console.error(`[dehub-template] render attempt ${attempt}/2 failed:`, lastFailure);
+          }
         }
+        // Reaching here is a degradation, not a routing decision: the caller
+        // asked for the deterministic banner and is about to get a diffusion
+        // scene, and be billed for the image model instead. This was a
+        // console.warn, which left the two outcomes indistinguishable in the
+        // logs — so "is the template actually serving users" had no answer.
+        console.error('[dehub-template] EXHAUSTED — degrading to scene pipeline', {
+          explicitlyRequested: bannerRenderer === 'template',
+          format,
+          reason: lastFailure,
+        });
       }
 
       // ── DeHub brand archetype library: all strictly monochrome, all material-first,
