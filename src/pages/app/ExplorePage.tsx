@@ -60,6 +60,7 @@ import { StockPriceCard } from '@/components/app/StockPriceCard';
 import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 
 const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
 const DATE_OPTIONS_RAW = ['Any time', 'Today', 'This week', 'This month', 'This year'];
@@ -1204,7 +1205,7 @@ export default function ExplorePage() {
                         key={cat.id}
                         onClick={() => {
                           setExploreCategoryId(cat.id);
-                          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+                          scrollDocumentTo(0);
                         }}
                         className={cn(
                           'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap',

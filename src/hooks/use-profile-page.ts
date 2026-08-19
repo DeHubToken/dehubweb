@@ -17,6 +17,7 @@ import { getUserComments, blockUser, unblockUser, getUserReposts, getNFTInfo } f
 import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
+import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 
 const PULL_THRESHOLD = 80;
 
@@ -365,7 +366,7 @@ export function useProfilePage() {
     if (isViewingOwnProfile) {
       clearOptimisticPosts();
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollDocumentToSmooth();
     setTimeout(() => {
       setIsRefreshing(false);
     }, 1000);

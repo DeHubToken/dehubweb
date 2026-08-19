@@ -8,11 +8,18 @@
  * pressing back from a post page. It saves scroll position continuously
  * and restores it with multiple attempts to handle lazy-loaded content.
  * 
+ *  * Reads and writes through lib/document-scroll: the scrolling element here is
+ * document.body, so window.scrollY reads 0 and window.scrollTo is a no-op.
+ * This hook used to use both, which meant it saved 0 every time and its
+ * `savedPosition > 0` guard never opened -- it had been inert since body
+ * became the scroller.
+ *
  * @module hooks/use-scroll-restoration
  */
 
 import { useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
+import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
 
 // Store scroll positions keyed by pathname - persists across component mounts
 const scrollPositions = new Map<string, number>();
@@ -47,7 +54,7 @@ export function useScrollRestoration(key?: string) {
   useEffect(() => {
     const saveScroll = () => {
       if (!isRestoringRef.current) {
-        scrollPositions.set(storageKey, window.scrollY);
+        scrollPositions.set(storageKey, getDocumentScrollTop());
       }
     };
     
@@ -78,7 +85,7 @@ export function useScrollRestoration(key?: string) {
       
       // Function to attempt scroll restoration
       const attemptScroll = () => {
-        window.scrollTo({ top: savedPosition, behavior: 'instant' });
+        scrollDocumentTo(savedPosition);
       };
       
       // Immediate attempt
@@ -122,10 +129,10 @@ export function useScrollRestoration(key?: string) {
     isBackNavigation,
     resetScroll: useCallback(() => {
       scrollPositions.delete(storageKey);
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      scrollDocumentTo(0);
     }, [storageKey]),
     saveScroll: useCallback(() => {
-      scrollPositions.set(storageKey, window.scrollY);
+      scrollPositions.set(storageKey, getDocumentScrollTop());
     }, [storageKey]),
   };
 }
