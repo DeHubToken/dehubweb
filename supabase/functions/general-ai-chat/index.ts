@@ -1366,9 +1366,19 @@ IMPORTANT FORMATTING RULES:
     // The preferred path. The model gets DeHub's tool catalog and decides for
     // itself what to look up, instead of relying on the keyword pre-fetch above
     // to have guessed right. Everything below this block stays as the fallback
-    // for attachments and any failure in the loop.
+    // for video attachments and any failure in the loop.
     const surface: AgentSurface = requestedSurface === 'chat' ? 'chat' : 'assistant';
-    const agentEligible = agentConfigured() && !hasImage && !hasVideo;
+    // Images no longer send the whole conversation down the toolless path.
+    // Opening the assistant from an image post is one of the commonest ways in —
+    // "why won't this post publish", asked while looking at the post — and it
+    // was exactly the case that got an assistant with no tools, so it could
+    // neither check the post nor raise a ticket about it. The gateway takes
+    // image parts on this path too; the fallback below already proved that.
+    //
+    // Video stays on the fallback. Its `video_url` part is only ever exercised
+    // down there, and this is not the change to find out whether the tool loop
+    // survives it.
+    const agentEligible = agentConfigured() && !hasVideo;
 
     if (agentEligible) {
       const agentModel =
@@ -1389,12 +1399,31 @@ IMPORTANT FORMATTING RULES:
       const userToken = dehubToken || null;
       const caller = callerAddress || userContext?.walletAddress || null;
       const agentPrompt = `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}${SUPPORT_PROMPT}`;
-      const agentMessages = messages.map((m) => ({
-        role: m.role,
-        content: typeof m.content === 'string'
-          ? m.content
-          : (m.content?.find((c) => c.type === 'text')?.text ?? ''),
-      }));
+      // Carry multimodal content through instead of flattening it to its text
+      // part. The old `.find(c => c.type === 'text')` quietly threw away every
+      // image a caller sent — the type signature says content may be an array of
+      // parts, and the agent loop hands `content` to the gateway untouched, so
+      // the only thing that ever dropped them was this map.
+      const agentMessages = messages.map((m, index) => {
+        const isLastUser = m.role === 'user' && index === messages.length - 1;
+
+        // The post the user is looking at, attached to the message they just
+        // typed — same shape the single-shot path builds further down.
+        if (isLastUser && hasImage) {
+          const text = typeof m.content === 'string'
+            ? m.content
+            : (m.content?.find((c) => c.type === 'text')?.text ?? '');
+          return {
+            role: m.role,
+            content: [
+              { type: 'image_url', image_url: { url: postContext!.imageUrl } },
+              { type: 'text', text },
+            ],
+          };
+        }
+
+        return { role: m.role, content: m.content };
+      });
 
       // Streaming path — the Assistant page. Tool rounds stream too, so a
       // simple question is no slower than it was before the agent existed.
