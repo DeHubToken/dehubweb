@@ -262,7 +262,6 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // figures procedurally and plays on, so a weak GPU degrades instead of
     // failing. WebGL2 is still required — it will not start without one.
     checkCapability: () => requireHardwareWebgl("King's Gambit", true),
-    onlineHref: '/arcade/kings-gambit/online',
   },
   {
     slug: 'claude-of-duty',
