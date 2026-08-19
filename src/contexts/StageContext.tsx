@@ -210,6 +210,21 @@ export function useScheduledSpaces(): AudioSpace[] {
  */
 const SCHEDULED_GRACE_MS = 2 * 60 * 60 * 1000;
 
+/**
+ * Wallet equality, the way the rest of the stack does it.
+ *
+ * Every RLS policy on a stage table compares `lower(...)`, and the deep-link
+ * page lowercases before deciding who the host is. The auth layer happens to
+ * hand this context a lowercase address today, so a raw `===` worked — but it
+ * made the host check depend on a normalisation two files away, and a row
+ * written with a checksummed address (a hand-inserted stage, an import, a
+ * future signup path) would silently lock its own host out of starting it and
+ * rejoin them as a listener.
+ */
+function sameWallet(a?: string | null, b?: string | null): boolean {
+  return !!a && !!b && a.toLowerCase() === b.toLowerCase();
+}
+
 // ─── Modal opener (subscription-free) ───────────────────────────────────────
 // Several widely-mounted components (PostActionBar renders once PER POST in
 // the feed) only ever need to OPEN the stages modal. Consuming the full stage
@@ -723,7 +738,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .eq('id', spaceId)
           .single();
         if (readErr || !existing) throw new Error('Stage not found');
-        if (existing.host_wallet_address !== walletAddress) {
+        // Compared case-insensitively, like every other host check (the deep
+        // link page, the RLS policies). The auth layer hands us a lowercase
+        // address today, but a row written by any other route with a
+        // checksummed one would otherwise lock its own host out of starting it.
+        if (!sameWallet(existing.host_wallet_address, walletAddress)) {
           toast.error('Only the host can start this stage');
           return false;
         }
@@ -823,7 +842,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         }
 
         // Determine role: if this user is the host, preserve host/speaker role on rejoin
-        const isHost = space.host_wallet_address === walletAddress;
+        const isHost = sameWallet(space.host_wallet_address, walletAddress);
 
         // Check if user already has an active participant record (e.g. was speaker before disconnect)
         const { data: existingParticipant } = await supabase
@@ -1170,15 +1189,23 @@ export function StageProvider({ children }: { children: ReactNode }) {
       // Optimistically update the local participant's is_muted in state
       if (walletAddress) {
         setParticipants(prev => prev.map(p =>
-          p.wallet_address === walletAddress ? { ...p, is_muted: newMuted } : p
+          sameWallet(p.wallet_address, walletAddress) ? { ...p, is_muted: newMuted } : p
         ));
       }
       if (currentSpace && walletAddress) {
-        supabase
+        // `void`, not bare: a postgrest builder only issues its request inside
+        // then(), so an un-awaited chain here sent nothing at all — every
+        // remote participant stayed at the is_muted: true written on join, so
+        // the room rendered everyone permanently muted and the speaking ring
+        // never appeared for anybody but yourself.
+        void supabase
           .from('space_participants')
           .update({ is_muted: newMuted })
           .eq('space_id', currentSpace.id)
-          .eq('wallet_address', walletAddress);
+          .eq('wallet_address', walletAddress)
+          .then(({ error }) => {
+            if (error) console.warn('[Stage] Failed to persist mute state:', error.message);
+          });
       }
     }
   }, [isMuted, myRole, currentSpace, walletAddress]);
@@ -1425,7 +1452,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             } else {
               setParticipants(prev => prev.map(p => p.id === updated.id ? updated : p));
               if (
-                updated.wallet_address === walletAddressRef.current &&
+                sameWallet(updated.wallet_address, walletAddressRef.current) &&
                 updated.role === 'speaker' &&
                 myRoleRef.current === 'listener'
               ) {
@@ -1453,7 +1480,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             }
           } else if (payload.eventType === 'UPDATE') {
             const updated = payload.new as RaiseHandRequest;
-            if (updated.wallet_address === walletAddressRef.current && updated.status !== 'pending') {
+            if (sameWallet(updated.wallet_address, walletAddressRef.current) && updated.status !== 'pending') {
               setHasRaisedHand(false);
             }
             if (!host) return;
