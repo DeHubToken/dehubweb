@@ -243,8 +243,42 @@ function sameWallet(a?: string | null, b?: string | null): boolean {
  * Kept in one place so that is one edit rather than five, and so the reason is
  * written down once.
  */
-function recountSpace(spaceId: string) {
-  return supabase.rpc('recount_space' as never, { p_space_id: spaceId } as never);
+async function recountSpace(spaceId: string): Promise<void> {
+  const { error } = await supabase.rpc('recount_space' as never, {
+    p_space_id: spaceId,
+  } as never);
+  if (!error) return;
+
+  // The RPC does not exist until the staged migration is applied, and shipping
+  // a client that depends on it ahead of the DB froze every headcount on the
+  // row — the error came back in the result object and nothing read it. Until
+  // the function exists, recount inline exactly the way this code did before
+  // the RPC: three queries, counts derived from the rows. The fallback runs
+  // against today's open policies; once the migration lands, the RPC answers
+  // first and this path never executes again.
+  try {
+    const { count: listeners } = await supabase
+      .from('space_participants')
+      .select('*', { count: 'exact', head: true })
+      .eq('space_id', spaceId)
+      .eq('role', 'listener')
+      .is('left_at', null);
+
+    const { count: speakers } = await supabase
+      .from('space_participants')
+      .select('*', { count: 'exact', head: true })
+      .eq('space_id', spaceId)
+      .in('role', ['host', 'speaker'])
+      .is('left_at', null);
+
+    await supabase
+      .from('audio_spaces')
+      .update({ listener_count: listeners ?? 0, speaker_count: speakers ?? 1 })
+      .eq('id', spaceId);
+  } catch (err) {
+    // A headcount is not worth failing a join or a leave over.
+    console.warn('[Stage] Headcount recount failed:', err);
+  }
 }
 
 // ─── Modal opener (subscription-free) ───────────────────────────────────────
@@ -519,13 +553,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
     channelName: string,
     role: 'publisher' | 'subscriber',
   ): Promise<AgoraTokenResponse | null> => {
-    try {
+    const requestToken = async (withIdentity: boolean): Promise<AgoraTokenResponse> => {
       // A subscriber token stays anonymous — that is what lets a signed-out
-      // visitor on an invite link hear the room. A publisher token is now
-      // gated on the caller actually holding a host/speaker seat, so identify
-      // ourselves whenever we are asking to speak. The wallet header is only a
+      // visitor on an invite link hear the room. A publisher token is gated on
+      // the caller actually holding a host/speaker seat, so identify ourselves
+      // whenever we are asking to speak. The wallet header is only a
       // cross-check; the function takes the address off the verified token.
-      const authToken = role === 'publisher' ? getAuthToken() : null;
+      const authToken = withIdentity && role === 'publisher' ? getAuthToken() : null;
       const headers =
         authToken && walletAddress
           ? { 'x-dehub-token': authToken, 'x-wallet-address': walletAddress.toLowerCase() }
@@ -542,6 +576,26 @@ export function StageProvider({ children }: { children: ReactNode }) {
         throw new Error('Agora credentials not configured');
       }
       return tokenData;
+    };
+
+    try {
+      try {
+        return await requestToken(true);
+      } catch (err) {
+        // The identity headers are only understood by the redeployed function:
+        // the previous deployment's CORS allow-list predates them, so the
+        // browser's preflight fails and the request never leaves. Shipping the
+        // headers ahead of that redeploy locked every host out of going live.
+        // One bare retry keeps the client working against either deployment —
+        // the old function never gated anything, so a token minted without
+        // identity is exactly what it would have issued anyway, and once the
+        // new function is live the first attempt succeeds and this path goes
+        // dead. It does not mask a real refusal: an enforced 403 stays a 403
+        // with or without headers.
+        if (role !== 'publisher') throw err;
+        console.warn('[Stage] Publisher token with identity failed, retrying bare:', err);
+        return await requestToken(false);
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to get audio token';
       toast.error(msg);
