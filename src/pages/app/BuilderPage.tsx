@@ -441,9 +441,24 @@ export default function BuilderPage() {
   const allowance = allowanceQuery.data;
   const buildsLeft = allowance ? Math.max(0, allowance.limit - allowance.used) : null;
 
+  // One copy, rendered by BOTH branches. The logged-out branch used to return
+  // before it, so anyone arriving at dehub.io/builder without a session got the
+  // homepage title and og: tags in their tab — on the surface most likely to be
+  // opened from a shared link. Crawlers never saw it (the edge renders its own
+  // HTML for /builder), which is why it went unnoticed.
+  const seo = (
+    <SEOHead
+      title="Builder — Build Apps with AI on DeHub"
+      description="Describe an app and DeHub Builder creates it live: AI-written, DeHub-hosted mini apps you can share with anyone."
+      url="https://dehub.io/builder"
+      image="https://dehub.io/og/builder.jpg"
+    />
+  );
+
   if (!isAuthenticated) {
     return (
       <div className="relative z-[1] min-h-[100dvh] bg-[#000]" data-builder-surface>
+        {seo}
         <button
           onClick={() => navigate('/app')}
           className="absolute top-4 right-4 z-10 w-11 h-11 rounded-full bg-[rgba(255,255,255,0.08)] text-[#fff] flex items-center justify-center"
@@ -982,12 +997,7 @@ export default function BuilderPage() {
 
   return (
     <div className="relative z-[1] min-h-[100dvh] bg-[#000]" data-builder-surface>
-      <SEOHead
-        title="Builder — Build Apps with AI on DeHub"
-        description="Describe an app and DeHub Builder creates it live: AI-written, DeHub-hosted mini apps you can share with anyone."
-        url="https://dehub.io/builder"
-        image="https://dehub.io/og/builder.jpg"
-      />
+      {seo}
       {view === 'home' && home}
       {view === 'chat' &&
         (chat || (
