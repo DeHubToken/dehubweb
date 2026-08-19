@@ -26,6 +26,7 @@ import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { myStagesKeys } from '@/hooks/use-my-stages';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
@@ -52,7 +53,22 @@ function stageDuration(space: AudioSpace): string | null {
   return m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 
-export function PastStagesList() {
+/**
+ * @param spaces  Render this exact list instead of fetching the global feed —
+ *                used by the Hosting tab, which shows only your own stages.
+ *                Omit for the Recorded tab's behaviour.
+ */
+export function PastStagesList({
+  spaces,
+  isLoading: isLoadingProp,
+  emptyTitle = 'No recorded stages yet',
+  emptyHint = 'Stages you host are recorded and show up here once they end.',
+}: {
+  spaces?: AudioSpace[];
+  isLoading?: boolean;
+  emptyTitle?: string;
+  emptyHint?: string;
+} = {}) {
   const { walletAddress } = useAuth();
   const { theme } = useAppTheme();
   const navigate = useNavigate();
@@ -82,7 +98,11 @@ export function PastStagesList() {
   const forcingDurationRef = useRef(false);
   const endTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { data: pastStages = [], isLoading: isLoadingStages } = useQuery({
+  // Caller-supplied lists switch the fetch off entirely rather than fetching
+  // and discarding: `enabled` keeps the global query from running at all on
+  // the Hosting tab.
+  const { data: fetched = [], isLoading: isFetching } = useQuery({
+    enabled: !spaces,
     queryKey: ['past-stages'],
     queryFn: async () => {
       const { data } = await supabase
@@ -96,6 +116,9 @@ export function PastStagesList() {
     // 5 min like the app default — 30s meant most tab returns refetched.
     staleTime: 5 * 60_000,
   });
+
+  const pastStages = spaces ?? fetched;
+  const isLoadingStages = spaces ? !!isLoadingProp : isFetching;
 
   const stopPlayback = useCallback(() => {
     if (endTimeoutRef.current !== null) {
@@ -373,6 +396,9 @@ export function PastStagesList() {
         .eq('id', space.id)
         .setHeader('x-wallet-address', (walletAddress || '').toLowerCase());
       queryClient.invalidateQueries({ queryKey: ['past-stages'] });
+      // The Hosting tab reads its own list, so it would keep showing a
+      // recording that no longer exists.
+      queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
       toast.success('Stage deleted');
     },
     [playingStageId, stopPlayback, walletAddress, queryClient],
@@ -397,8 +423,8 @@ export function PastStagesList() {
     return (
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
         <BrandIcon src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50 object-contain" />
-        <p className="text-white font-medium">No recorded stages yet</p>
-        <p className="text-zinc-500 text-sm mt-1">Stages you host are recorded and show up here once they end.</p>
+        <p className="text-white font-medium">{emptyTitle}</p>
+        <p className="text-zinc-500 text-sm mt-1">{emptyHint}</p>
       </div>
     );
   }
