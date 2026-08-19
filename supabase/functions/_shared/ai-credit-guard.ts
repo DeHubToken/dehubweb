@@ -23,6 +23,16 @@ export interface ChargeRequest extends QuoteOptions {
   /** Rate-limit bucket name, e.g. 'generate-image'. */
   actionType: string;
   rateLimit: RateLimit;
+  /**
+   * Waive the charge for this job — it runs on our own code rather than a
+   * metered provider, so there is nothing to bill for.
+   *
+   * Auth and the rate limit still apply: a free endpoint that skipped
+   * `guardPaidEndpoint` would be the open door this module was written to
+   * close. The caller owns the promise that a waived job cannot reach a paid
+   * provider once it is past this point.
+   */
+  free?: boolean;
 }
 
 export type ChargeResult =
@@ -42,6 +52,19 @@ export type ChargeResult =
 export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<ChargeResult> {
   const guard = await guardPaidEndpoint(req, opts.actionType, opts.rateLimit);
   if (!guard.ok) return guard;
+
+  if (opts.free) {
+    console.log('[ai-credit-guard] free job, no debit', { kind: opts.kind, modelId: opts.modelId, wallet: guard.wallet });
+    return {
+      ok: true,
+      wallet: guard.wallet,
+      priceDhb: 0,
+      jobId: crypto.randomUUID(),
+      // Nothing was taken, so there is nothing to give back. Kept as a no-op so
+      // callers can refund unconditionally on failure without checking price.
+      refund: async () => {},
+    };
+  }
 
   const priceDhb = quotePriceDhb(opts.kind, opts.modelId, {
     durationSeconds: opts.durationSeconds,
