@@ -10,14 +10,11 @@
  * are NOT interchangeable (image_url vs input_image_url vs input_image_urls), so
  * each one gets an explicit builder rather than a shared spread.
  */
-import { rateLimitByIp } from '../_shared/auth.ts';
+// corsHeaders is the shared list — the only one that names x-wallet-address and
+// x-dehub-token, which chargeForJob requires and the browser will not send
+// unless the preflight says they are allowed. A local copy silently drops them.
+import { corsHeaders, rateLimitByIp } from '../_shared/auth.ts';
 import { chargeForJob } from '../_shared/ai-credit-guard.ts';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-};
 
 type Mode = 'text-to-3d' | 'image-to-3d';
 
