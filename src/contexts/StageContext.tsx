@@ -229,6 +229,24 @@ function sameWallet(a?: string | null, b?: string | null): boolean {
   return !!a && !!b && a.toLowerCase() === b.toLowerCase();
 }
 
+/**
+ * Recount a stage's headcounts from its participant rows.
+ *
+ * The cast is load-bearing and temporary. `src/integrations/supabase/types.ts`
+ * is generated from the LIVE schema, and `recount_space()` is created by
+ * `20260819180000_stage_write_policies.sql`, which is deliberately not applied
+ * until the mobile release carrying the wallet headers is adopted — so the
+ * generated union of RPC names cannot contain it yet and tsc rejects the
+ * literal. Drop the casts once that migration is applied and Lovable
+ * regenerates the types; nothing else has to change.
+ *
+ * Kept in one place so that is one edit rather than five, and so the reason is
+ * written down once.
+ */
+function recountSpace(spaceId: string) {
+  return supabase.rpc('recount_space' as never, { p_space_id: spaceId } as never);
+}
+
 // ─── Modal opener (subscription-free) ───────────────────────────────────────
 // Several widely-mounted components (PostActionBar renders once PER POST in
 // the feed) only ever need to OPEN the stages modal. Consuming the full stage
@@ -927,7 +945,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // audio_spaces UPDATE is host-only, a listener writing these columns
         // directly is refused, and a listener arriving is exactly when the
         // count has to move. recount_space derives both numbers server-side.
-        await supabase.rpc('recount_space', { p_space_id: spaceId });
+        await recountSpace(spaceId);
 
         const agoraRole = isSpeakerRole ? 'publisher' : 'subscriber';
         const tokenData = await getAgoraToken(space.channel_name, agoraRole);
@@ -1091,7 +1109,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             .eq('wallet_address', wallet),
         );
 
-        await supabase.rpc('recount_space', { p_space_id: space.id });
+        await recountSpace(space.id);
       } catch (err) {
         console.error('Error during stage teardown:', err);
       }
@@ -1383,7 +1401,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // wallet was a listener sitting in the count, and moved both figures
         // even when it was not, so a promotion could leave the room reporting
         // a listener it did not have.
-        await supabase.rpc('recount_space', { p_space_id: currentSpace.id });
+        await recountSpace(currentSpace.id);
 
         toast.success('Speaker approved');
       } catch (err) {
@@ -1407,7 +1425,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             .eq('wallet_address', targetWallet),
         );
 
-        await supabase.rpc('recount_space', { p_space_id: currentSpace.id });
+        await recountSpace(currentSpace.id);
 
         toast.success('Speaker removed');
       } catch (err) {
@@ -1432,7 +1450,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             .eq('wallet_address', targetWallet),
         );
 
-        await supabase.rpc('recount_space', { p_space_id: currentSpace.id });
+        await recountSpace(currentSpace.id);
 
         toast.success('Invited as speaker');
       } catch (err) {
