@@ -24,7 +24,7 @@ export const ADMIN_RIGHTS = [
   { key: 'invite_users',     label: 'Invite users via link', hint: 'Create and revoke invite links' },
   { key: 'pin_messages',     label: 'Pin messages',          hint: 'Pin a message to the top of the chat' },
   { key: 'manage_events',    label: 'Manage events',         hint: 'Edit and remove community events' },
-  { key: 'add_admins',       label: 'Add new admins',        hint: 'Promote members, and demote admins they promoted' },
+  { key: 'add_admins',       label: 'Add new admins',        hint: 'Promote members to admin. Only the owner can demote one' },
   { key: 'remain_anonymous', label: 'Remain anonymous',      hint: 'Hide the admin badge on this account' },
 ] as const;
 
@@ -163,6 +163,21 @@ export function useCommunityAbilities(
       can,
     };
   }, [community, membership]);
+}
+
+/**
+ * `remain_anonymous` hides an admin's shield and custom title from the room.
+ * Moderators are exempt: someone who can act on members has to be able to see
+ * who else moderates, or the roster would disagree with the Administrators tab
+ * they are looking at in the same panel.
+ */
+export function isAdminBadgeHidden(
+  member: CommunityMember | null | undefined,
+  viewer: Pick<CommunityAbilities, 'isOwner' | 'can'>,
+): boolean {
+  if (member?.role !== 'admin') return false;
+  if (member.permissions?.remain_anonymous !== true) return false;
+  return !viewer.isOwner && !viewer.can('restrict_members') && !viewer.can('add_admins');
 }
 
 // ─── RPC plumbing ────────────────────────────────────────────────────────────

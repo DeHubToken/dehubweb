@@ -10,10 +10,11 @@ import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
 
 interface CommunityEventsProps {
   communityId: string;
-  isMember: boolean;
+  /** May file an event here at all: the community create_events right. */
+  canCreate: boolean;
 }
 
-export function CommunityEvents({ communityId, isMember }: CommunityEventsProps) {
+export function CommunityEvents({ communityId, canCreate }: CommunityEventsProps) {
   const { isAuthenticated, openLoginModal } = useAuth();
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CommunityEvent | null>(null);
@@ -29,7 +30,7 @@ export function CommunityEvents({ communityId, isMember }: CommunityEventsProps)
 
   return (
     <div className="space-y-4">
-      {isMember && (
+      {canCreate && (
         <Button onClick={handleCreate} variant="outline" size="sm" className="rounded-xl border-white/10 text-white gap-1.5">
           <Plus className="w-4 h-4" />
           Create Event

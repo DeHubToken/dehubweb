@@ -25,6 +25,12 @@ interface CommunityHeaderProps {
   canEdit: boolean;
   /** Holds any moderation right — shows the Manage entry point. */
   canManage: boolean;
+  /**
+   * Holds add_members, the member right to share the community with somebody.
+   * Only members are subject to it: a visitor has no row to restrict, and the
+   * link is public either way, so this hides the send-it-to-someone path only.
+   */
+  canInvite: boolean;
   onManage: () => void;
   isPending: boolean;
   onJoinLeave: () => void;
@@ -45,7 +51,7 @@ function formatRelativeTime(dateString: string): string {
   return `${years}y`;
 }
 
-export function CommunityHeader({ community, isMember, isPendingMember, isOwner, canEdit, canManage, onManage, isPending, onJoinLeave }: CommunityHeaderProps) {
+export function CommunityHeader({ community, isMember, isPendingMember, isOwner, canEdit, canManage, canInvite, onManage, isPending, onJoinLeave }: CommunityHeaderProps) {
   const { walletAddress } = useAuth();
   const { openPostModal } = useGlobalDropZone();
   const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -211,13 +217,15 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
                 <FileText className="w-4 h-4 text-zinc-400" />
                 {t('communities.post')}
               </button>
-              <button
-                onClick={() => setInviteOpen(true)}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
-              >
-                <Send className="w-4 h-4 text-zinc-400" />
-                {t('communities.sendInMessage', { defaultValue: 'Send Invite' })}
-              </button>
+              {canInvite && (
+                <button
+                  onClick={() => setInviteOpen(true)}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
+                >
+                  <Send className="w-4 h-4 text-zinc-400" />
+                  {t('communities.sendInMessage', { defaultValue: 'Send Invite' })}
+                </button>
+              )}
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(dehubLinkFor.community(community.slug));

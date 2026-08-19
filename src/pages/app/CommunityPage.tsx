@@ -120,6 +120,7 @@ export default function CommunityPage() {
         isOwner={abilities.isOwner}
         canEdit={abilities.can('change_info')}
         canManage={abilities.canManage}
+        canInvite={!isMember || abilities.can('add_members')}
         onManage={() => setManageOpen(true)}
         isPending={joinMutation.isPending || leaveMutation.isPending}
         onJoinLeave={handleJoinLeave}
@@ -187,7 +188,10 @@ export default function CommunityPage() {
         )}
         {visitedTabs.has('events') && (
           <div className={tab === 'events' ? '' : 'hidden'}>
-            <CommunityEvents communityId={community.id} isMember={isMember} />
+            <CommunityEvents
+              communityId={community.id}
+              canCreate={abilities.can('create_events')}
+            />
           </div>
         )}
         {visitedTabs.has('members') && (

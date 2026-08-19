@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { Community, CommunityMember } from '@/hooks/use-communities';
 import { usePendingCommunityMembers } from '@/hooks/use-communities';
-import { useCommunityAbilities } from '@/hooks/use-community-admin';
+import { useCommunityAbilities, isAdminBadgeHidden } from '@/hooks/use-community-admin';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
@@ -27,14 +27,14 @@ interface CommunityMembersProps {
 
 const PAGE_SIZE = 30;
 
-function MemberRow({ member }: { member: CommunityMember }) {
+function MemberRow({ member, anonymous }: { member: CommunityMember; anonymous: boolean }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { data: profile } = useDeHubProfile({ userId: member.wallet_address });
 
   const roleIcon = member.role === 'owner'
     ? <Crown className="w-3.5 h-3.5 text-amber-400" />
-    : member.role === 'admin'
+    : member.role === 'admin' && !anonymous
     ? <Shield className="w-3.5 h-3.5 text-blue-400" />
     : null;
 
@@ -42,7 +42,9 @@ function MemberRow({ member }: { member: CommunityMember }) {
   const handle = profile?.handle;
   const avatarUrl = profile?.avatarUrl;
   const isMuted = !!member.muted_until && new Date(member.muted_until).getTime() > Date.now();
-  const title = member.role === 'admin' ? (member.custom_title || t('communities.admin', { defaultValue: 'Admin' })) : null;
+  const title = member.role === 'admin' && !anonymous
+    ? (member.custom_title || t('communities.admin', { defaultValue: 'Admin' }))
+    : null;
 
   return (
     <button
@@ -156,7 +158,7 @@ export function CommunityMembers({ members, community, membership, onManage }: C
 
       <div className="space-y-1">
         {filtered.slice(0, visible).map(member => (
-          <MemberRow key={member.id} member={member} />
+          <MemberRow key={member.id} member={member} anonymous={isAdminBadgeHidden(member, abilities)} />
         ))}
       </div>
 
