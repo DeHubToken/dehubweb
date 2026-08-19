@@ -8,6 +8,7 @@ import { BlogAllPostsSection } from '@/components/blog/sections/BlogAllPostsSect
 import { BlogPopularTags } from '@/components/blog/sections/BlogPopularTags';
 import { useBlogData } from '@/hooks/useBlogData';
 import { useTextHighlight } from '@/hooks/useTextHighlight';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 
 const Blog = () => {
   const {
@@ -29,10 +30,10 @@ const Blog = () => {
   useLayoutEffect(() => {
     const saved = sessionStorage.getItem('blogScrollPosition');
     if (saved) {
-      window.scrollTo(0, parseInt(saved, 10));
+      scrollDocumentTo(parseInt(saved, 10));
       sessionStorage.removeItem('blogScrollPosition');
     } else {
-      window.scrollTo(0, 0);
+      scrollDocumentTo(0);
     }
   }, []);
 
@@ -44,7 +45,7 @@ const Blog = () => {
       firstRender.current = false;
       return;
     }
-    window.scrollTo(0, 0);
+    scrollDocumentTo(0);
   }, [selectedTag]);
 
   // Post search lives in the docs header search (⌘K / top-right), which
