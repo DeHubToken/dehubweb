@@ -439,26 +439,30 @@
   .cs.loading{pointer-events:none}
 
   /* ---- the DeHub preloader ----------------------------------------------
-     Only transform and opacity are animated, and both are deliberate: those
-     are the two properties a browser animates on the COMPOSITOR, off the main
-     thread. So this keeps spinning through a 50 MB FBX parse that has every
-     other moving thing on the page — including the WebGL tiles, which are
-     rAF-driven — stopped dead. A spinner that freezes with the freeze is
-     worse than none: it says "crashed" rather than "working". */
+     brand/dehub-loader.gif is the same file the app serves at
+     /dehub-loader.gif behind <DeHubLoader>, so a wait in here and a wait
+     anywhere else in DeHub are one object rather than two lookalikes. It is
+     vendored beside this file rather than hot-linked, because the game also
+     runs standalone and offline.
+
+     The pulse under it is not decoration. Only transform and opacity are
+     animated, and those are the two properties a browser animates on the
+     COMPOSITOR, off the main thread — so it keeps moving through a 43 MB FBX
+     parse that has every other moving thing on the page, including the
+     rAF-driven WebGL tiles, stopped dead. The GIF is one of the things that
+     stops: Blink ticks image animation off the document lifecycle, so a
+     blocked main thread freezes it mid-sweep. A loader that freezes with the
+     freeze says "crashed" rather than "working", so the mark carries the
+     identity and the pulse carries the proof of life. */
   .dhSpin{position:relative;display:block;width:40px;height:40px}
-  .dhSpin::before{content:'';position:absolute;inset:0;border-radius:50%;
-    border:2px solid rgba(56,224,255,.14);border-top-color:var(--cyan);
-    animation:dhSpin .9s linear infinite}
-  .dhSpin::after{content:'';position:absolute;inset:27%;
-    background:url(brand/dehub-mark-128.png) center/contain no-repeat;
-    animation:dhBreathe 1.7s ease-in-out infinite}
+  .dhSpin::after{content:'';position:absolute;inset:0;
+    background:url(brand/dehub-loader.gif) center/contain no-repeat;
+    animation:dhPulse 1.6s ease-in-out infinite}
   .dhSpin.sm{width:28px;height:28px}
   .dhSpin.lg{width:64px;height:64px}
-  .dhSpin.lg::before{border-width:3px}
-  @keyframes dhSpin{to{transform:rotate(360deg)}}
-  @keyframes dhBreathe{0%,100%{opacity:1}50%{opacity:.4}}
+  @keyframes dhPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.94);opacity:.72}}
   #bootSpin{margin-bottom:26px}
-  /* the overlay only fades out, so stop the ring rather than leave it turning
+  /* the overlay only fades out, so stop the mark rather than leave it pulsing
      forever behind an invisible layer */
   #boot.off #bootSpin{display:none}
   #csDesk{margin-top:14px;cursor:pointer;background:none;border:0;font-family:"Chakra Petch",sans-serif;
@@ -673,20 +677,21 @@
   }
 
   /* loader */
-  #boot{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;
-    align-items:center;justify-content:center;transition:opacity .9s}
+  #boot{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;transition:opacity .9s;
+    background:radial-gradient(ellipse at 50% 42%,rgba(47,232,140,.08),transparent 62%),var(--bg)}
   #boot.off{opacity:0;pointer-events:none}
   #bootLogo{font-size:34px;font-weight:700;letter-spacing:.42em;color:var(--down);text-indent:.42em;
     text-shadow:0 0 30px rgba(255,77,106,.7);animation:pulse 1.6s ease-in-out infinite}
   #bootLogo b{color:var(--up);text-shadow:0 0 30px rgba(47,232,140,.75)}
   @keyframes pulse{50%{opacity:.55}}
   #bootPct{margin-top:30px;font-size:52px;font-weight:700;line-height:1;color:#fff;
-    letter-spacing:.02em;text-shadow:0 0 26px rgba(56,224,255,.45)}
-  #bootPct small{font-size:17px;color:var(--cyan);margin-left:3px;letter-spacing:.1em}
-  #bootBar{width:320px;height:3px;background:#0e1620;margin-top:16px;overflow:hidden}
-  #bootBar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1c8bb0,var(--cyan));
-    box-shadow:0 0 14px var(--cyan)}
-  #bootStage{margin-top:11px;width:320px;font-size:9px;letter-spacing:.32em;color:var(--cyan);
+    letter-spacing:.02em;text-shadow:0 0 26px rgba(47,232,140,.45)}
+  #bootPct small{font-size:17px;color:var(--up);margin-left:3px;letter-spacing:.1em}
+  #bootBar{width:320px;height:3px;background:#0e1620;margin-top:16px;overflow:hidden;border-radius:2px}
+  #bootBar i{display:block;height:100%;width:0;border-radius:2px;
+    background:linear-gradient(90deg,rgba(47,232,140,.35),var(--up));box-shadow:0 0 14px var(--up)}
+  #bootStage{margin-top:11px;width:320px;font-size:9px;letter-spacing:.32em;color:var(--up);
     text-align:left;min-height:12px}
   #bootLines{margin-top:14px;height:96px;font-family:"JetBrains Mono",monospace;font-size:10px;
     color:var(--dim);line-height:1.9;letter-spacing:.06em;text-align:left;width:320px}
