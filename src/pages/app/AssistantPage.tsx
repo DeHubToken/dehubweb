@@ -2756,7 +2756,7 @@ export default function AssistantPage() {
                     {/* Builder launch — build a live mini-app from a prompt */}
                     <LiquidGlassBubble2
                       label="🧱 Build something"
-                      onClick={() => navigate('/app/builder')}
+                      onClick={() => navigate('/builder')}
                       width="auto"
                       height="32px"
                       className={actionBubbleClass}

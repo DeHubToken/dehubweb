@@ -105,7 +105,7 @@ const tools: Tool[] = [
     description: 'Describe an app and get it live — AI builds it, DeHub hosts it, you share the link.',
     icon: PanelsTopLeft,
     category: 'Studio',
-    action: { kind: 'navigate', to: '/app/builder' },
+    action: { kind: 'navigate', to: '/builder' },
   },
   {
     id: 'poster',
