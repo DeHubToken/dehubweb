@@ -36,7 +36,7 @@ const RIGHT_NAV_ITEMS = [
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
-  { icon: Wand2, label: 'Prompt', path: '/prompt' },
+  { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
   { icon: CalendarDays, label: 'Events', path: '/app/events' },
   { icon: Mic, label: 'Stages', path: '/stages' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
@@ -53,7 +53,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
-  { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
+  { icon: Wand2, label: 'Prompt', path: '/prompt' },
   { icon: Users, label: 'Communities', path: '/app/communities' },
 ];
 
