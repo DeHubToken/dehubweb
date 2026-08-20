@@ -731,7 +731,7 @@
      resolve), and it must send Access-Control-Allow-Origin for the game's
      origin, or the browser will fetch the .glb and then refuse to hand it to
      WebGL. -->
-<script>window.TRENCHSTAR_ASSETS='https://pub-3caa006eca7a48c58cf6e3d6ab524f1b.r2.dev/trenchstar';   /* arcade build: vendored beside this file, except Fat Chad — 41 MiB is over Cloudflare's per-asset limit, so his mesh comes from the bucket. Lookups are bucket-first with a fallback to this folder, so everything else still serves locally. */</script>
+<script>window.TRENCHSTAR_ASSETS='https://pub-3caa006eca7a48c58cf6e3d6ab524f1b.r2.dev/trenchstar';   /* arcade build: every character is vendored beside this file, Fat Chad included. His 41 MiB Mixamo FBX was not geometry — it was three 4096px maps (one of them a specular the Standard conversion throws away) on an unindexed mesh of 49,576 triangles. Re-exported with the maps at 1024 and the vertices welded, the same character is a 2 MiB GLB, so nothing here is over Cloudflare's per-asset limit any more. The bucket stays wired up as the escape hatch for anything that genuinely cannot ship in the repo: lookups are bucket-first with a fallback to this folder, so a character that is not up there costs one failed lookup and nothing else. */</script>
 <!-- three r180. Over http(s) we use the vendored copy in vendor/three: no third-party
      request, and it satisfies a script-src 'self' CSP. Opened as a bare file:// Chrome
      refuses to load ANY local ES module (opaque origin — fetch of the same path returns
