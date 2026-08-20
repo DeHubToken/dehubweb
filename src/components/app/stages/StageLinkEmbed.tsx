@@ -22,7 +22,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict, isPast } from 'date-fns';
-import { Calendar, Radio, Users, Clock } from 'lucide-react';
+import { Calendar, Radio, Users, Clock, Headphones } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -136,6 +136,15 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
               {Math.max(1, (stage.speaker_count || 1) + (stage.listener_count || 0))}
             </span>
           )}
+
+          {/* An ended stage's headcount is zero — the room emptied. What it
+              has instead is a listen count, which keeps climbing. */}
+          {isEnded && !!stage.total_listens && (
+            <span className="flex items-center gap-1 text-zinc-400 text-xs">
+              <Headphones className="w-3.5 h-3.5" />
+              {stage.total_listens}
+            </span>
+          )}
         </div>
 
         <h3 className="font-semibold text-white text-sm line-clamp-2">{stage.title}</h3>
@@ -172,10 +181,10 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             </BadgedName>
           </div>
 
-          {/* An ended stage's card used to send you to /stage/:id, which
-              redirects straight to /stages — where a recording old enough to
-              be in this post may not even be in the twenty listed. So the
-              bottom-right slot plays it here instead. */}
+          {/* The card itself now opens the stage's own page either way. This
+              slot still plays the recording in place, because the common thing
+              to want from a post about a stage that already happened is to
+              hear it, not to leave the feed. */}
           {isEnded && stage.recording_url ? (
             <StageRecordingButton
               spaceId={stage.id}

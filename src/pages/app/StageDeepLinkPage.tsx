@@ -17,10 +17,17 @@
  * when — plus a reminder bell (signed in), an add-to-calendar file (works for
  * everyone), and the host's own controls to start it.
  *
- * Both standing states (announcement, guest player) run their card full width
- * at the top of the page, with an ad slot and the latest text posts
- * (RelatedPostsFeed) below, so a shared link lands on a living page rather
- * than a lone card in empty space.
+ * An *ended* stage stands still too. It used to redirect to /stages, which
+ * quietly destroyed every stage link the moment its room closed: the
+ * announcement post someone shared last week stopped pointing at the stage and
+ * started pointing at a list of twenty recent ones. So the same card survives
+ * the end — same art, same title, same host — and gains what the stage drew:
+ * who turned up, how many have listened back, how long it ran, and the
+ * recording itself.
+ *
+ * All three standing states run their card full width at the top of the page,
+ * with an ad slot and the latest text posts (RelatedPostsFeed) below, so a
+ * shared link lands on a living page rather than a lone card in empty space.
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
@@ -28,7 +35,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
-import { CalendarDays, CalendarPlus, Radio, Loader2, Share2, Bell, BellRing, Headphones, Square, Users } from 'lucide-react';
+import { CalendarDays, CalendarPlus, Radio, Loader2, Share2, Bell, BellRing, Headphones, Square, Users, Clock, Play, FileText } from 'lucide-react';
 import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
@@ -43,8 +50,16 @@ import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageScreenShare } from '@/components/app/spaces/StageScreenShare';
 import { StageChat } from '@/components/app/spaces/StageChat';
+import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
+import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import {
+  seekStageRecording,
+  toggleStageRecording,
+  useStagePlayback,
+} from '@/lib/stage-playback';
 import { cn } from '@/lib/utils';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -89,6 +104,31 @@ export default function StageDeepLinkPage() {
 
   const { hasReminder, toggleReminder, isToggling } = useStageReminder(stage?.id);
 
+  // Who actually turned up. speaker_count/listener_count are a *live*
+  // headcount, so by the time a stage ends they read whatever the room emptied
+  // out to — usually zero. Participant rows persist instead (leaving sets
+  // left_at rather than deleting), so counting them is the only honest answer
+  // to "how many were there". Signed-out guests never get a row by design, so
+  // this counts people who held a seat.
+  const { data: attended = 0 } = useQuery({
+    queryKey: ['stage-attendance', stage?.id],
+    enabled: !!stage && stage.status === 'ended',
+    staleTime: 5 * 60_000,
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('space_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('space_id', stage!.id);
+      return count ?? 0;
+    },
+  });
+
+  const playback = useStagePlayback();
+  const { theme } = useAppTheme();
+  // Light/minimal are paper themes: white waveform bars vanish on them.
+  const isPaper = theme === 'light' || theme === 'minimal';
+  const [transcriptOpen, setTranscriptOpen] = useState(false);
+
   // Stop a listen-only session when the page unmounts — for a guest, this page
   // IS the player, and audio with no visible control is a haunting, not a
   // feature. Tracked via ref so the unmount cleanup sees the latest state.
@@ -112,12 +152,9 @@ export default function StageDeepLinkPage() {
     }
 
     // Only a live stage auto-joins, and only for someone who can hold a seat.
-    // A signed-out visitor gets the listen-only page rendered below instead of
-    // the old bounce to /app, which read as the link being broken.
-    if (stage.status === 'ended') {
-      navigate('/stages', { replace: true });
-      return;
-    }
+    // Everything else — scheduled, ended, or a signed-out visitor — gets one
+    // of the standing pages rendered below rather than a bounce elsewhere,
+    // which read as the link being broken.
     if (stage.status !== 'live' || !isAuthenticated) return;
 
     joinedRef.current = true;
@@ -284,6 +321,195 @@ export default function StageDeepLinkPage() {
         <StageChat space={stage} className="mt-4" listClassName="h-56" />
 
         <RelatedPostsFeed currentPostId={stage.id} />
+
+        <ShareEntityDrawer
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          url={dehubLinkFor.stage(stage)}
+          shareTitle={stage.title}
+        />
+      </div>
+    );
+  }
+
+  // ── Ended stage: the same card, plus what the stage drew ─────────────────
+
+  if (stage && stage.status === 'ended') {
+    const isPlaying = playback.spaceId === stage.id;
+    const endedAt = stage.ended_at ? new Date(stage.ended_at) : null;
+    const ranFor =
+      stage.started_at && stage.ended_at
+        ? Math.max(
+            1,
+            Math.round(
+              (new Date(stage.ended_at).getTime() - new Date(stage.started_at).getTime()) / 60000,
+            ),
+          )
+        : null;
+
+    return (
+      <div data-glass-page className="min-h-screen bg-black p-4">
+        <SEOHead
+          title={`${stage.title} — Stage on DeHub`}
+          description={
+            stage.description ||
+            'A past live audio Stage on DeHub — listen back to the recording.'
+          }
+          noindex
+        />
+
+        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
+          {stage.cover_image_url && (
+            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
+          )}
+          <div className="relative p-6 bg-zinc-900">
+            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10 mb-3">
+              <Clock className="w-3 h-3 text-zinc-400" />
+              <span className="text-zinc-400 text-[11px] font-medium">ENDED</span>
+            </div>
+
+            <h1 className="text-white text-xl font-semibold">{stage.title}</h1>
+
+            {endedAt && (
+              <p className="text-zinc-400 text-sm mt-2">
+                Aired {format(endedAt, 'EEEE, d MMMM · h:mm a')}
+                <span className="text-zinc-500"> · {formatDistanceToNowStrict(endedAt)} ago</span>
+              </p>
+            )}
+
+            {stage.description && (
+              <p className="text-zinc-400 text-sm mt-3">{stage.description}</p>
+            )}
+
+            {/* What the stage drew. Attendance and listens measure different
+                things and both are worth saying: one is the room, the other is
+                everyone who came to the recording afterwards. */}
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4 text-sm text-zinc-400">
+              <span className="flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-zinc-500" />
+                <span className="text-white font-medium">{attended}</span> attended
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Headphones className="w-4 h-4 text-zinc-500" />
+                <span className="text-white font-medium">{stage.total_listens ?? 0}</span> listened
+              </span>
+              {ranFor !== null && (
+                <span className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-zinc-500" />
+                  <span className="text-white font-medium">{ranFor}</span> min
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 mt-4">
+              <StageHostLink
+                space={stage}
+                avatarUrl={avatar || undefined}
+                className="group/host flex items-center gap-2 min-w-0"
+              >
+                <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
+                  {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
+                </div>
+                <BadgedName
+                  lookupId={stage.host_username || stage.host_wallet_address}
+                  className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
+                >
+                  Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+                </BadgedName>
+              </StageHostLink>
+            </div>
+
+            {stage.recording_url ? (
+              <>
+                {/* Seekable, and the bar plays from wherever it is pressed —
+                    the same shared player the Recorded tab and the feed chip
+                    drive, so pressing play here stops anything else running. */}
+                <div className="flex items-center gap-3 mt-5">
+                  <button
+                    onClick={() => toggleStageRecording(stage)}
+                    aria-label={isPlaying ? 'Stop recording' : 'Play recording'}
+                    className="shrink-0 w-11 h-11 rounded-xl bg-white text-black hover:bg-white/90 flex items-center justify-center transition-colors"
+                  >
+                    {isPlaying && playback.loading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : isPlaying ? (
+                      <Square className="w-4 h-4" fill="currentColor" />
+                    ) : (
+                      <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                    )}
+                  </button>
+                  <div
+                    className={cn(
+                      'flex items-center gap-2 flex-1 min-w-0 h-11 transition-opacity duration-300',
+                      isPlaying ? 'opacity-100' : 'opacity-40',
+                    )}
+                  >
+                    <StaticWaveform
+                      seed={stage.id}
+                      className="w-full min-w-0 h-full flex-1"
+                      animated={isPlaying}
+                      volumeLevel={isPlaying ? playback.volume : 0}
+                      color={isPaper ? 'rgba(0,0,0,0.8)' : undefined}
+                      progress={isPlaying ? playback.progress : undefined}
+                      onSeek={(pos) => seekStageRecording(stage, pos)}
+                    />
+                    {isPlaying && playback.timeLeft && (
+                      <span className="text-[10px] text-zinc-500 font-mono shrink-0 w-10 text-right">
+                        {playback.timeLeft}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={() => setTranscriptOpen(true)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
+                  >
+                    <FileText className="w-4 h-4" />
+                    Transcript
+                  </button>
+                  <button
+                    onClick={() => setShareOpen(true)}
+                    title="Share stage"
+                    aria-label="Share stage"
+                    className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex gap-2 mt-5">
+                {/* A stage can end without a recording — the host blocked the
+                    mic prompt, or the upload failed. Say so rather than
+                    offering a play button that cannot play. */}
+                <p className="flex-1 self-center text-zinc-500 text-sm">
+                  This stage wasn't recorded.
+                </p>
+                <button
+                  onClick={() => setShareOpen(true)}
+                  title="Share stage"
+                  aria-label="Share stage"
+                  className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* The room's conversation, carried on past the room. */}
+        <StageChat space={stage} className="mt-4" listClassName="h-56" />
+
+        <RelatedPostsFeed currentPostId={stage.id} />
+
+        <StageTranscriptDrawer
+          space={stage}
+          open={transcriptOpen}
+          onOpenChange={setTranscriptOpen}
+        />
 
         <ShareEntityDrawer
           open={shareOpen}

@@ -2,10 +2,8 @@
  * Stage recording play button
  * ===========================
  * Plays an ended stage's recording where the card sits, rather than sending
- * you somewhere to find it. The reason it exists: a /stage/:id link for an
- * ended stage redirects to /stages, and the recording may not even be in that
- * page's twenty most recent — so the "Listen back" chip on a months-old post
- * led nowhere useful. Now the chip is the player.
+ * you somewhere to find it — what you want from a post about a stage that
+ * already happened is usually to hear it without leaving the feed.
  *
  * The audio itself lives in lib/stage-playback, shared with the Stages modal
  * and the Recorded tab, and StageRecordingMiniPlayer draws the scrub bar and
