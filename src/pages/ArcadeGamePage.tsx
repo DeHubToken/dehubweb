@@ -26,12 +26,16 @@
  * and how the vendored builds pay for it.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Gamepad2 } from 'lucide-react';
+import { Gamepad2, Loader2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
+import { useAuth } from '@/contexts/AuthContext';
 import { useBootProgress } from '@/lib/game-boot-progress';
 import { useGameExitRequest } from '@/lib/game-exit-request';
+import { useGameRun } from '@/lib/game-run-report';
+import { formatProgress } from '@/lib/api/arcade-leaderboard';
+import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { ARCADE_SANDBOX, getArcadeGame } from '@/config/arcade-games';
 
@@ -65,6 +69,9 @@ export default function ArcadeGamePage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const game = getArcadeGame(slug);
+  const { walletAddress } = useAuth();
+  const wallet = walletAddress?.toLowerCase() ?? null;
+  const frameRef = useRef<HTMLIFrameElement>(null);
 
   // Resolved once per game. Re-running buildUrl on a render would change the
   // iframe's src and restart a boot that can take the better part of a minute.
@@ -112,6 +119,21 @@ export default function ArcadeGamePage() {
   useGameExitRequest(
     game?.exitSource,
     useCallback(() => navigate('/arcade'), [navigate]),
+  );
+
+  // The run bridge, for the games that keep a board. It opens a run on the
+  // server when the game says one has started and closes it when the game says
+  // it is over; `result` is what comes back, and drawing it is the only thing
+  // this page does with a leaderboard while a game is on screen.
+  //
+  // Gated on being signed in as well as on the preflight: a board row is keyed
+  // on a wallet, so with nobody signed in there is no row to write and no
+  // reason to spend a request per checkpoint finding that out.
+  const run = useGameRun(
+    game?.leaderboard?.runSource,
+    game?.slug ?? '',
+    frameRef,
+    cap.ok && Boolean(wallet),
   );
 
   useEffect(() => {
@@ -169,6 +191,7 @@ export default function ArcadeGamePage() {
         </div>
       ) : (
         <iframe
+          ref={frameRef}
           src={gameUrl}
           title={game.title}
           className="h-full w-full border-0"
@@ -221,6 +244,63 @@ export default function ArcadeGamePage() {
           >
             Hide this
           </button>
+        </div>
+      ) : null}
+
+      {/* The run is over. Drawn only once the server has answered, and only
+          over a game that keeps a board — it is a result, not a game-over
+          screen, and the game already has one of those underneath.
+
+          Dismissable rather than blocking: the frame is still live behind it
+          and the player may already be back on the title screen. Nothing here
+          touches the game, so closing it is the whole interaction. */}
+      {run.result ? (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/80 p-4">
+          <div className="max-h-full w-full max-w-md overflow-y-auto rounded-2xl bg-zinc-950 p-5 ring-1 ring-white/10">
+            <p className="text-[11px] font-semibold tracking-[0.25em] text-zinc-500">RUN OVER</p>
+            <p className="mt-1 text-lg font-semibold text-white">
+              {formatProgress(run.result.progress)} down the street
+            </p>
+            <p className="mt-0.5 text-xs text-zinc-400">
+              {run.result.life > 0 ? `${run.result.life} HP left` : 'No health left'}
+              {run.result.scored && run.result.rank ? ` · ranked #${run.result.rank}` : ''}
+            </p>
+            {run.result.scored ? (
+              run.result.improved ? (
+                <p className="mt-2 text-xs font-medium text-amber-300">A new personal best.</p>
+              ) : (
+                <p className="mt-2 text-xs text-zinc-500">Not past your own best — the board keeps that one.</p>
+              )
+            ) : (
+              <p className="mt-2 text-xs text-zinc-500">{run.result.reason}</p>
+            )}
+
+            <ArcadeLeaderboard slug={game.slug} wallet={wallet} limit={5} className="mt-5" />
+
+            <div className="mt-5 flex gap-2">
+              <button
+                type="button"
+                onClick={run.dismiss}
+                className="flex-1 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
+              >
+                Keep playing
+              </button>
+              <Link
+                to="/arcade"
+                className="flex-1 rounded-lg bg-zinc-800 px-4 py-2 text-center text-xs font-semibold text-zinc-200 transition-colors hover:bg-zinc-700"
+              >
+                Back to the arcade
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : run.settling ? (
+        // A beat between the run ending and the board answering. Small and in
+        // the corner: the game is still playable underneath and a full-screen
+        // spinner over a live game would be a lie about what is blocked.
+        <div className="pointer-events-none absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/70 px-3 py-1.5">
+          <Loader2 className="h-3 w-3 animate-spin text-zinc-400" />
+          <span className="text-[11px] text-zinc-400">Recording your run…</span>
         </div>
       ) : null}
     </div>

@@ -101,7 +101,29 @@ identical; a byte-for-byte diff against the archive is not, and cannot be.
    overlay is advisory and dismissable: someone with orientation lock on cannot
    rotate, and refusing them the game entirely would be worse than a small one.
 
-Both of the last two read `cr_getC2Runtime()`, a global the export already
+5. **A run bridge.** The game feeds the arcade leaderboard by posting
+   `run-start`, `run-progress` and `run-end` to the parent, carrying how far
+   down the street the camera got and how much health was left. It reads the
+   runtime — `running_layout.scrollX`, `original_width`, and `life_of_p1` out of
+   `all_global_vars` — and nothing else; the host relays to the server, and the
+   server decides what the run was worth
+   (`supabase/functions/arcade-score/index.ts`). `src/test/arcade.test.ts`
+   asserts every name it depends on still exists.
+
+   **It does not rank stages, and that is not an oversight.** The project has a
+   global called `number_of_complete_stages` that looks exactly like the metric
+   to use. It is compared in six places and set in two, both times to zero, and
+   incremented nowhere — so it is always 0, and a leaderboard built on it would
+   never have gained a single row. That is a property of this delivered build,
+   established by walking every event in `data.js` rather than by reading the
+   variable's name. If a future export fixes it, the bridge is where to change.
+
+   The reachable street is the layout width less one screen (4600 − 854), not
+   the layout width: Construct clamps the camera half a screen in at each end,
+   so `scrollX` only ever travels 427..4173, and dividing by 4600 would mean
+   nobody could ever finish.
+
+Three of the last four read `cr_getC2Runtime()`, a global the export already
 publishes. That is an engine handle rather than an API, so the test asserts it
 still exists after a re-vendor — and the boot screen retires itself on a 60s
 deadline regardless, so losing the handle can never leave a permanent black

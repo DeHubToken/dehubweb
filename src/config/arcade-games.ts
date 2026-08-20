@@ -143,6 +143,44 @@ export interface ArcadeGame {
    * untouched.
    */
   onlineHref?: string;
+  /**
+   * This game's board, for the games that are a competition.
+   *
+   * Absent for the three that are not. Jungle Trail and Trenchstar are places
+   * to be rather than things to win, and Claude of Duty generates a different
+   * world every boot, so a table of who did best in it would be comparing
+   * scores from different games. Ranking those would be inventing a
+   * competition and then asking people to lose it.
+   */
+  leaderboard?: ArcadeGameBoard;
+}
+
+/**
+ * A game's board.
+ *
+ * The two kinds differ in exactly one place — where the numbers come from —
+ * and nowhere else. `ArcadeLeaderboard` reads this and draws either.
+ */
+export interface ArcadeGameBoard {
+  /**
+   * `ladder` is a rating derived from matches the server refereed: nothing
+   * submits to it, it IS the games, counted. `run` is a board of best
+   * attempts, reported by the game as it plays and accrued against the
+   * server's own clock — see supabase/functions/arcade-score.
+   */
+  kind: 'run' | 'ladder';
+  /** Heading, and the name of the figure in the right-hand column. */
+  valueLabel: string;
+  /** One line on what the board measures and how to move up it. */
+  blurb: string;
+  /** What an empty board says. A prompt, not an apology. */
+  emptyLine: string;
+  /**
+   * `postMessage({ source })` value the frame reports its run under. Run
+   * boards only, and the same name as `exitSource` where a game has both —
+   * kept separate so a game can have one bridge without the other.
+   */
+  runSource?: string;
 }
 
 /**
@@ -304,6 +342,24 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // permission nothing in the frame ever requests.
     allow: 'fullscreen; autoplay',
     checkCapability: requireCanvas,
+    /**
+     * How far down the street, then how much health was left.
+     *
+     * Not "stages cleared", which is the metric the game looks like it has:
+     * `number_of_complete_stages` is compared in six places in the delivered
+     * build and incremented in none, so it is always 0 and a board built on it
+     * would never have had a single row. What the runtime does report
+     * truthfully is the camera across a street of known width, and
+     * `life_of_p1`, which starts at 500 and is subtracted from by every hit.
+     */
+    leaderboard: {
+      kind: 'run',
+      valueLabel: 'Furthest down the street',
+      blurb:
+        'How far you got before the street got you, and how much health you had left when you stopped. Beat your own best to move up.',
+      emptyLine: 'Nobody has made it far enough yet. Be the first.',
+      runSource: 'street-slayer',
+    },
   },
   {
     slug: 'kings-gambit',
@@ -340,6 +396,21 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // figures procedurally and plays on, so a weak GPU degrades instead of
     // failing. WebGL2 is still required — it will not start without one.
     checkCapability: () => requireHardwareWebgl("King's Gambit", true),
+    /**
+     * Elo, and only from online matches — the offline game is against an
+     * engine, which is practice rather than a result.
+     *
+     * Nothing here is submitted or stored: `chess_ladder()` replays the
+     * finished matches in order every time it is asked. See the migration for
+     * why that is the right shape and why Elo rather than points.
+     */
+    leaderboard: {
+      kind: 'ladder',
+      valueLabel: 'Rating',
+      blurb:
+        'Elo across every online match. Everyone starts at 1200; beating a stronger player is worth more than beating a weaker one, so the ladder cannot be farmed with a second wallet.',
+      emptyLine: 'No online matches have finished yet. Open a challenge.',
+    },
   },
   {
     slug: 'claude-of-duty',

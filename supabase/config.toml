@@ -21,6 +21,9 @@ project_id = "aigxuutjaqsywioxjefr"
   # platform check stays off and requireDeHubAuth does the work.
   [functions.ai-credits]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.arcade-score]
+    verify_jwt = false
   [functions.auth-email-hook]
     verify_jwt = false
   [functions.blog-share-image]
