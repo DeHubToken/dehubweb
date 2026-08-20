@@ -3133,6 +3133,69 @@ export type Database = {
           },
         ]
       }
+      stage_chat_messages: {
+        Row: {
+          avatar_url: string | null
+          badge_balance: number | null
+          content: string
+          created_at: string
+          display_name: string | null
+          id: string
+          image_url: string | null
+          message_type: string
+          reactions: Json
+          reply_to_id: string | null
+          space_id: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json
+          reply_to_id?: string | null
+          space_id: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json
+          reply_to_id?: string | null
+          space_id?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_chat_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "stage_chat_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stage_chat_messages_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "audio_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stage_reminders: {
         Row: {
           created_at: string
@@ -5049,6 +5112,7 @@ export type Database = {
         Args: { p_skill_id: string }
         Returns: undefined
       }
+      is_stage_host: { Args: { p_space_id: string }; Returns: boolean }
       move_to_dlq: {
         Args: {
           dlq_name: string
