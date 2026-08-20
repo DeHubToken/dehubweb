@@ -790,9 +790,9 @@ const MARKETING_PAGES = {
   },
   'arcade/trenchstar': {
     title: 'Trenchstar | DeHub Arcade',
-    description: 'Stand inside Trenchstar on DeHub — a curved wall of forty live market screens you can walk, rearrange and trade in front of. Free, in your browser, no install.',
+    description: 'The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.',
     heading: 'Trenchstar — A Trading Floor Built Out Of Live Markets',
-    bodyHtml: `<p>A curved wall of forty live market screens wrapped around a room you can walk: real Binance candles and DexScreener pairs, a big board in the middle, and a desk with the DeHub feed on it.</p>
+    bodyHtml: `<p>The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.</p>
 <p>Drag any screen to move it, drop it on another to swap them, and put a chart, a heatmap, a live web page or your own tab on any panel. Pick a character and walk the floor, or stay at the desk and fly the camera.</p>
 <p><a href="${APP_URL}/arcade/trenchstar" style="color:#9f9">Take the desk</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
   },
