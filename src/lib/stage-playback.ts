@@ -95,7 +95,10 @@ function publish(patch: Partial<StagePlaybackState>) {
 let audioEl: HTMLAudioElement | null = null;
 let audioCtx: AudioContext | null = null;
 let analyser: AnalyserNode | null = null;
-let freqData: Uint8Array | null = null;
+// Typed off the API rather than as a bare Uint8Array: on TS 5.7+ that
+// annotation widens the buffer to ArrayBufferLike and getByteFrequencyData
+// wants ArrayBuffer, which CI catches and an older local tsc does not.
+let freqData: Parameters<AnalyserNode["getByteFrequencyData"]>[0] | null = null;
 
 let lastVolumeAt = 0;
 let rafId = 0;
