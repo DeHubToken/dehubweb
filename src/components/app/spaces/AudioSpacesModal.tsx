@@ -40,6 +40,7 @@ import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { StageChat } from './StageChat';
+import { StageCaptionsButton, StageCaptionsOverlay } from './StageCaptions';
 import {
   seekStageRecording,
   stopStageRecording,
@@ -761,6 +762,12 @@ export function AudioSpacesModal() {
           )}
         </div>
 
+        {/* Live subtitles — sits directly above the controls so it reads as part
+            of the room chrome rather than floating over the speaker grid. */}
+        {currentSpace && (
+          <StageCaptionsOverlay spaceId={currentSpace.id} className="shrink-0 pb-2" />
+        )}
+
         {/* Anchored Controls Bar — outside ScrollArea */}
         {currentSpace && (
           <div className="shrink-0 p-3 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
@@ -814,6 +821,10 @@ export function AudioSpacesModal() {
                   {isScreenSharing ? <ScreenShareOff className="w-5 h-5" /> : <ScreenShare className="w-5 h-5" />}
                 </Button>
               )}
+
+              {/* Subtitles. Everyone gets the show/hide; a speaker also gets
+                  the switch for whether their own voice is transcribed. */}
+              <StageCaptionsButton isSpeaker={myRole === 'host' || myRole === 'speaker'} />
 
               {/* Minimize */}
               <Button

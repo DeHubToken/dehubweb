@@ -171,7 +171,14 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
   // was already playing, so tapping another pad jumps straight to it — DJ-deck.
   const playBlobOnStage = useCallback(async (blob: Blob, id: string, label?: string) => {
     try {
-      await injectAudio(blob, { kind: 'ai', source: 'soundboard', label: `Soundboard: ${label || id}` });
+      await injectAudio(blob, {
+        kind: 'ai',
+        source: 'soundboard',
+        label: `Soundboard: ${label || id}`,
+        // A sound effect has no words, but a subtitle track that goes silent
+        // through an air horn is worse than one that names it.
+        caption: `♪ ${label || id}`,
+      });
     } catch (err) {
       console.error('[Soundboard]', err);
       toast.error('Could not play on stage — stay connected as host');
