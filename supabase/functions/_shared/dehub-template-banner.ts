@@ -488,12 +488,27 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     <mask id="sharpmask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
       <rect x="0" y="0" width="1" height="1" fill="url(#fadeSharp)"/>
     </mask>
-    <pattern id="gridp" width="120" height="120" patternUnits="userSpaceOnUse">
-      <path d="M120 0 L0 0 0 120" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    <!-- NOT graph paper. A LATTICE: small dots joined into dotted runs, with a slightly
+         brighter dot at each node. Solid 1px rules read as an engineering drawing laid on
+         top of the art. Three dot fields: rows, columns, and the intersections. -->
+    <pattern id="gridrow" width="11" height="132" patternUnits="userSpaceOnUse">
+      <circle cx="0.7" cy="0.7" r="0.85" fill="#ffffff" opacity="0.115"/>
     </pattern>
-    <pattern id="gridfine" width="24" height="24" patternUnits="userSpaceOnUse">
-      <path d="M24 0 L0 0 0 24" fill="none" stroke="rgba(255,255,255,0.022)" stroke-width="1"/>
+    <pattern id="gridcol" width="132" height="11" patternUnits="userSpaceOnUse">
+      <circle cx="0.7" cy="0.7" r="0.85" fill="#ffffff" opacity="0.115"/>
     </pattern>
+    <pattern id="gridnode" width="132" height="132" patternUnits="userSpaceOnUse">
+      <circle cx="1.1" cy="1.1" r="1.35" fill="#ffffff" opacity="0.22"/>
+    </pattern>
+    <!-- rakes the lattice across the canvas so it never tiles flat: strongest at the
+         top-left catch (same light direction as the bevel), gone by the lower-right -->
+    <radialGradient id="gridfade" cx="0.12" cy="0.08" r="1.25">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.34" stop-color="#ffffff" stop-opacity="0.62"/>
+      <stop offset="0.63" stop-color="#ffffff" stop-opacity="0.20"/>
+      <stop offset="0.88" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="gridmask"><rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridfade)"/></mask>
     <mask id="cardmask"><rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="#ffffff"/></mask>
     <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
       <circle cx="2" cy="2" r="1.1" fill="rgba(255,255,255,0.5)"/>
@@ -521,8 +536,11 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   // same spec always renders the same way.
   const overlay = seed % 2 === 0;
   if (overlay) {
-    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridp)"/>`);
-    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridfine)"/>`);
+    body.push(`<g mask="url(#gridmask)">`);
+    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridrow)"/>`);
+    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridcol)"/>`);
+    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#gridnode)"/>`);
+    body.push(`</g>`);
     body.push(starField(W, H, seed));
   }
   body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#vig)"/>`);
