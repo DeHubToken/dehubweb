@@ -1865,26 +1865,68 @@ async function handleRequest(request, env) {
   // origin behind it. Covers www.dehub.io and every dehub.net host — the
   // dehub.net zone moved into this Cloudflare account when its Netlify DNS
   // died (July 2026), and these are the SEO domain-move redirects.
+  // Retired dehub.net subdomains. Each was a separate site with its own URL
+  // space, so carrying the path across lands on a dehub.io path that does not
+  // exist — and because /:username is the SPA's catch-all, every one of them
+  // resolved 200 on a "no such user" screen. That is a soft 404: Google passes
+  // no equity through it. Send each subdomain to its nearest live successor
+  // instead. A blanket redirect to "/" would be read as a soft 404 too, so the
+  // targets are real pages, checked against the SEO tables above — note /stake
+  // is absent from MARKETING_PAGES and renders homepage meta to bots, which is
+  // why staking points at the docs page that actually describes staking.
+  const RETIRED_SUBDOMAIN_TARGETS = {
+    arcade: '/arcade',
+    games: '/arcade',
+    staking: '/docs/token/stake',
+    bridge: '/bridge',
+    stream: '/videos',
+  };
+  // stream-api is not retired in the same sense: the v1 stream contracts carry
+  // https://stream-api.dehub.net/nfts/nft_metadata/<id> on-chain as their
+  // tokenURIPrefix across four chains, changeable only with a per-chain
+  // setTokenURIPrefix tx. The origin behind that DNS record is dead, so the
+  // catch-all 301 was handing wallets and marketplaces the SPA shell — 200
+  // text/html where JSON was promised, and nothing 404s so nothing flagged it.
+  // Re-point it at the live route: costs no on-chain transaction, and it starts
+  // serving real metadata the moment the backend's nft_metadata handler stops
+  // throwing (it currently answers {} or 500 — separate repo, separate fix).
+  const NFT_METADATA_PATH = /^\/nfts\/nft_metadata\/([^/]+)$/;
+
   const aliasHost = url.hostname;
   if (aliasHost === 'www.dehub.io' || aliasHost === 'dehub.net' || aliasHost.endsWith('.dehub.net')) {
     // Plain 301 WITHOUT guard(): X-Robots-Tag noindex is for mirror hosts
     // serving duplicate content, not for domain-move redirects — mixing
     // noindex with an equity-passing 301 risks suppressing the transfer.
-    let target = `${url.pathname}${url.search}`;
+    let target = `https://dehub.io${url.pathname}${url.search}`;
     if (aliasHost !== 'www.dehub.io') {
-      // Legacy dehub.net URL spaces with no dehub.io equivalent (/web/app/*,
-      // /learn — pre-Angular site chrome still in Google's index). Path-
-      // preserving 301s landed these on the SPA's not-found screen (soft-404),
-      // burning the redirect's equity. Map them to real destinations; every
-      // other path (e.g. /guides/*) keeps the path-preserving redirect.
       const p = url.pathname.replace(/\/+$/, '') || '/';
-      const legacy = p.match(/^\/web(?:\/app)?(\/.*)?$/);
-      const rest = legacy ? (legacy[1] || '/') : p;
-      if (legacy || rest === '/learn' || rest.startsWith('/learn/')) {
-        target = rest === '/learn' || rest.startsWith('/learn/') ? '/docs' : '/';
+      // The apex and its www keep the path-preserving redirect —
+      // dehub.net/<username> → dehub.io/<username> is the point of the domain
+      // move, and /guides/* etc. map one-to-one. Only the other subdomains,
+      // which never shared this URL space, get remapped.
+      const sub = (aliasHost === 'dehub.net' || aliasHost === 'www.dehub.net')
+        ? null
+        : aliasHost.slice(0, -'.dehub.net'.length);
+      const nft = sub === 'stream-api' ? p.match(NFT_METADATA_PATH) : null;
+      if (nft) {
+        const id = encodeURIComponent(nft[1].replace(/\.json$/i, ''));
+        target = `https://api.dehub.io/api/nft_metadata/${id}.json`;
+      } else if (sub !== null) {
+        target = `https://dehub.io${RETIRED_SUBDOMAIN_TARGETS[sub] || '/'}`;
+      } else {
+        // Legacy dehub.net URL spaces with no dehub.io equivalent (/web/app/*,
+        // /learn — pre-Angular site chrome still in Google's index). Path-
+        // preserving 301s landed these on the SPA's not-found screen (soft-404),
+        // burning the redirect's equity. Map them to real destinations; every
+        // other path (e.g. /guides/*) keeps the path-preserving redirect.
+        const legacy = p.match(/^\/web(?:\/app)?(\/.*)?$/);
+        const rest = legacy ? (legacy[1] || '/') : p;
+        if (legacy || rest === '/learn' || rest.startsWith('/learn/')) {
+          target = `https://dehub.io${rest === '/learn' || rest.startsWith('/learn/') ? '/docs' : '/'}`;
+        }
       }
     }
-    return new Response(null, { status: 301, headers: { Location: `https://dehub.io${target}` } });
+    return new Response(null, { status: 301, headers: { Location: target } });
   }
 
   // Plain http:// served 200 at the apex instead of upgrading — the Workers
