@@ -230,6 +230,82 @@ function requireCanvas(): ArcadeGameCapability {
 
 export const ARCADE_GAMES: ArcadeGame[] = [
   {
+    slug: 'trenchstar',
+    title: 'Trenchstar',
+    tagline: 'Stand in a trading floor built out of live markets.',
+    description:
+      'A curved wall of forty live market screens wrapped around a room you can walk: real Binance candles and DexScreener pairs, rearranged into whatever wall you want to trade in front of.',
+    action: 'Take the desk',
+    art: '/arcade/trenchstar.webp',
+    artAlt:
+      'A curved wall of live candle charts and market panels around a dark trading floor in Trenchstar',
+    credit: {
+      name: 'Trenchstar',
+      url: 'https://dehub.io',
+      licence: 'MIT',
+      licenceFile: 'LICENSE-Trenchstar',
+    },
+    // No settings to pass: the room reads its own quality off the device and
+    // degrades itself while running — bloom first, then the mirror floor — so
+    // there is nothing useful to pin from out here.
+    buildUrl: () => TRENCHSTAR_URL,
+    // It draws its own boot readout with real stages (engine, markets, world,
+    // paint) and its own percentage, so the host's modelled bar would only ever
+    // sit on top of it. tau kept for the field's shape; nothing reads it while
+    // the flag is set.
+    bootTauMs: 9000,
+    hasOwnBootScreen: true,
+    exitSource: 'trenchstar',
+    // Pointer lock is not requested: looking around is a drag, and the room is
+    // full of screens you click. Fullscreen and autoplay are: the wall is worth
+    // the whole viewport, and the soundboard is user-triggered audio.
+    //
+    // `xr-spatial-tracking` is what lets the room be entered in a headset, and
+    // it is not optional. The feature's default allowlist is `self`, so without
+    // this delegation `isSessionSupported('immersive-vr')` resolves FALSE in
+    // this frame: the game hides its own VR button when that happens, so the
+    // failure would look exactly like a machine with no headset rather than
+    // like a withheld permission. It works standalone either way, which is
+    // precisely what makes this cheap to miss.
+    allow: 'fullscreen; autoplay; xr-spatial-tracking',
+    // WebGL2: the post chain runs a multisampled half-float render target,
+    // which WebGL 1 cannot give it.
+    checkCapability: () => requireHardwareWebgl('The floor', true),
+  },
+  {
+    slug: 'street-slayer',
+    title: 'Street Slayer',
+    tagline: 'A neon-street brawler, made for DeHub alone.',
+    description:
+      'A side-scrolling beat ’em up down a neon-lit street: pick one of three fighters, then punch, kick and throw your way through everything the block sends at you.',
+    action: 'Fight',
+    art: '/arcade/street-slayer.webp',
+    artAlt:
+      'Three street fighters closing in on the player character outside a neon-lit shopfront in Street Slayer',
+    credit: {
+      name: 'Street Slayer',
+      // No `url`: this one was commissioned rather than found. See the interface.
+      author: 'Studio Shook Pixel',
+      licence: 'Proprietary',
+      licenceFile: 'LICENSE-StreetSlayer',
+    },
+    // Construct 2 reads nothing from the URL, and the project is fixed at
+    // 854x480 with "Letterbox scale", so it fills whatever frame it is given
+    // without being told anything. There is no quality preset to pass in.
+    buildUrl: () => SLAYER_URL,
+    // "Loader style: Percentage text" in the project settings — the engine
+    // paints its own loading screen with a real count, so the host draws none
+    // and the tau below is only kept for the field's shape.
+    bootTauMs: 8000,
+    hasOwnBootScreen: true,
+    exitSource: 'street-slayer',
+    // No pointer lock and no gamepad: the plugin list is Audio, Keyboard,
+    // Sprite, Sprite font and Touch, so asking for either would delegate a
+    // permission nothing in the frame ever requests.
+    allow: 'fullscreen; autoplay',
+    checkCapability: requireCanvas,
+  },
+  {
     slug: 'kings-gambit',
     title: "King's Gambit",
     tagline: 'Cinematic 3D chess. Three civilisations, one board.',
@@ -300,8 +376,8 @@ export const ARCADE_GAMES: ArcadeGame[] = [
       return `${WAR_URL}${sep}q=${q}&prewarm=0`;
     },
     // 25-60s of procedural baking with no loading UI of its own, and it renders
-    // black throughout. Without a readout that is indistinguishable from a
-    // crash, which is exactly how it was first reported.
+    // black throughout. Without a readout that is indistinguishable from a crash,
+    // which is exactly how it was first reported.
     bootTauMs: 22000,
     readySource: 'war-game',
     exitSource: 'war-game',
@@ -345,82 +421,6 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // WebGL 1 is enough here: the engine targets r170 and does not require a
     // WebGL2 context.
     checkCapability: () => requireHardwareWebgl('The walk', false),
-  },
-  {
-    slug: 'street-slayer',
-    title: 'Street Slayer',
-    tagline: 'A neon-street brawler, made for DeHub alone.',
-    description:
-      'A side-scrolling beat ’em up down a neon-lit street: pick one of three fighters, then punch, kick and throw your way through everything the block sends at you.',
-    action: 'Fight',
-    art: '/arcade/street-slayer.webp',
-    artAlt:
-      'Three street fighters closing in on the player character outside a neon-lit shopfront in Street Slayer',
-    credit: {
-      name: 'Street Slayer',
-      // No `url`: this one was commissioned rather than found. See the interface.
-      author: 'Studio Shook Pixel',
-      licence: 'Proprietary',
-      licenceFile: 'LICENSE-StreetSlayer',
-    },
-    // Construct 2 reads nothing from the URL, and the project is fixed at
-    // 854x480 with "Letterbox scale", so it fills whatever frame it is given
-    // without being told anything. There is no quality preset to pass in.
-    buildUrl: () => SLAYER_URL,
-    // "Loader style: Percentage text" in the project settings — the engine
-    // paints its own loading screen with a real count, so the host draws none
-    // and the tau below is only kept for the field's shape.
-    bootTauMs: 8000,
-    hasOwnBootScreen: true,
-    exitSource: 'street-slayer',
-    // No pointer lock and no gamepad: the plugin list is Audio, Keyboard,
-    // Sprite, Sprite font and Touch, so asking for either would delegate a
-    // permission nothing in the frame ever requests.
-    allow: 'fullscreen; autoplay',
-    checkCapability: requireCanvas,
-  },
-  {
-    slug: 'trenchstar',
-    title: 'Trenchstar',
-    tagline: 'Stand in a trading floor built out of live markets.',
-    description:
-      'A curved wall of forty live market screens wrapped around a room you can walk: real Binance candles and DexScreener pairs, rearranged into whatever wall you want to trade in front of.',
-    action: 'Take the desk',
-    art: '/arcade/trenchstar.webp',
-    artAlt:
-      'A curved wall of live candle charts and market panels around a dark trading floor in Trenchstar',
-    credit: {
-      name: 'Trenchstar',
-      url: 'https://dehub.io',
-      licence: 'MIT',
-      licenceFile: 'LICENSE-Trenchstar',
-    },
-    // No settings to pass: the room reads its own quality off the device and
-    // degrades itself while running — bloom first, then the mirror floor — so
-    // there is nothing useful to pin from out here.
-    buildUrl: () => TRENCHSTAR_URL,
-    // It draws its own boot readout with real stages (engine, markets, world,
-    // paint) and its own percentage, so the host's modelled bar would only ever
-    // sit on top of it. tau kept for the field's shape; nothing reads it while
-    // the flag is set.
-    bootTauMs: 9000,
-    hasOwnBootScreen: true,
-    exitSource: 'trenchstar',
-    // Pointer lock is not requested: looking around is a drag, and the room is
-    // full of screens you click. Fullscreen and autoplay are: the wall is worth
-    // the whole viewport, and the soundboard is user-triggered audio.
-    //
-    // `xr-spatial-tracking` is what lets the room be entered in a headset, and
-    // it is not optional. The feature's default allowlist is `self`, so without
-    // this delegation `isSessionSupported('immersive-vr')` resolves FALSE in
-    // this frame: the game hides its own VR button when that happens, so the
-    // failure would look exactly like a machine with no headset rather than
-    // like a withheld permission. It works standalone either way, which is
-    // precisely what makes this cheap to miss.
-    allow: 'fullscreen; autoplay; xr-spatial-tracking',
-    // WebGL2: the post chain runs a multisampled half-float render target,
-    // which WebGL 1 cannot give it.
-    checkCapability: () => requireHardwareWebgl('The floor', true),
   },
 ];
 
