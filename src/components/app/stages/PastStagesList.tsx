@@ -15,7 +15,16 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Play, Square, Users, Clock, FileText, Trash2, MessageSquare } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  PictureInPicture2,
+  Users,
+  Clock,
+  FileText,
+  Trash2,
+  MessageSquare,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { walletScopedClient } from '@/lib/supabase-wallet-client';
@@ -28,6 +37,8 @@ import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDr
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import {
+  closeStagePopout,
+  popOutStageRecording,
   seekStageRecording,
   stopStageRecording,
   toggleStageRecording,
@@ -95,6 +106,8 @@ export function PastStagesList({
   // dance — which is why it was the only surface with a working scrub bar.
   const {
     spaceId: playingStageId,
+    paused: playbackPaused,
+    popout: playbackPopout,
     volume: playbackVolume,
     progress: playbackProgress,
     timeLeft: playbackTimeLeft,
@@ -204,7 +217,12 @@ export function PastStagesList({
     <>
       <div className="space-y-2 sm:space-y-3">
         {pastStages.map((space) => {
-          const isPlaying = playingStageId === space.id;
+          // Loaded and playing are different states now: a paused recording
+          // keeps its place on the bar and its lit control, it just stops
+          // moving. Everything visual keys off loaded, motion off playing.
+          const isLoaded = playingStageId === space.id;
+          const isPlaying = isLoaded && !playbackPaused;
+          const isPoppedOut = isLoaded && playbackPopout;
           const isOwnStage =
             !!walletAddress &&
             !!space.host_wallet_address &&
@@ -226,16 +244,16 @@ export function PastStagesList({
                   onClick={() => togglePlay(space)}
                   className={cn(
                     'shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all',
-                    isPlaying
+                    isLoaded
                       ? 'bg-zinc-700/60 text-white'
                       : space.recording_url
                         ? 'bg-zinc-800/60 hover:bg-zinc-700/60 text-white'
                         : 'bg-zinc-800/60 text-zinc-600',
                   )}
-                  aria-label={isPlaying ? 'Stop' : 'Play recording'}
+                  aria-label={isPlaying ? 'Pause' : 'Play recording'}
                 >
                   {isPlaying ? (
-                    <Square className="w-3.5 h-3.5" fill="currentColor" />
+                    <Pause className="w-3.5 h-3.5" fill="currentColor" />
                   ) : (
                     <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
                   )}
@@ -286,7 +304,7 @@ export function PastStagesList({
               <div
                 className={cn(
                   'flex items-center gap-2 flex-1 min-w-0 h-10 transition-all duration-300',
-                  isPlaying ? 'opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]' : 'opacity-40',
+                  isLoaded ? 'opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]' : 'opacity-40',
                 )}
               >
                 <StaticWaveform
@@ -296,17 +314,17 @@ export function PastStagesList({
                   volumeLevel={isPlaying ? playbackVolume : 0}
                   color={
                     isPaper
-                      ? isPlaying
+                      ? isLoaded
                         ? 'rgba(0,0,0,0.9)'
                         : 'rgba(0,0,0,0.5)'
-                      : isPlaying
+                      : isLoaded
                         ? 'rgba(255,255,255,0.95)'
                         : undefined
                   }
-                  progress={isPlaying ? playbackProgress : undefined}
+                  progress={isLoaded ? playbackProgress : undefined}
                   onSeek={space.recording_url ? (pos) => seek(space, pos) : undefined}
                 />
-                {isPlaying && playbackTimeLeft && (
+                {isLoaded && playbackTimeLeft && (
                   <span className="text-[10px] text-zinc-500 font-mono shrink-0 w-10 text-right">
                     {playbackTimeLeft}
                   </span>
@@ -314,6 +332,24 @@ export function PastStagesList({
               </div>
 
               <div className="flex items-center gap-1 shrink-0 self-end sm:self-auto">
+                {/* The corner player, on request. It used to arrive by itself
+                    the moment anything played; popping out is what you press
+                    when you are about to leave this page and keep listening. */}
+                {space.recording_url && (
+                  <button
+                    onClick={() => (isPoppedOut ? closeStagePopout() : popOutStageRecording(space))}
+                    aria-pressed={isPoppedOut}
+                    className={cn(
+                      'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
+                      isPoppedOut
+                        ? 'text-white bg-zinc-800/60'
+                        : 'text-zinc-500 hover:text-white hover:bg-zinc-800/60',
+                    )}
+                    title={isPoppedOut ? 'Close the corner player' : 'Pop out the player'}
+                  >
+                    <PictureInPicture2 className="w-4 h-4" />
+                  </button>
+                )}
                 <button
                   onClick={() => setCommentsFor((id) => (id === space.id ? null : space.id))}
                   aria-expanded={commentsFor === space.id}

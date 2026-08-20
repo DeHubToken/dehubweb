@@ -14,7 +14,13 @@
  *
  * Audio deliberately survives the button unmounting: these controls live in
  * scrolling feeds and on a page that can be navigated away from, and
- * StageRecordingMiniPlayer is the corner player that keeps it reachable.
+ * StageRecordingMiniPlayer is the corner player that keeps it reachable — on
+ * request, from the pop-out control beside play, rather than appearing over
+ * the page every time somebody presses play in the feed.
+ *
+ * Pressing play twice pauses, it does not stop. Stopping is a separate verb
+ * with one button behind it (the corner player's X) because it drops the
+ * source and the position with it.
  *
  * ── The webm duration problem, which shapes most of this file ──
  *
@@ -49,6 +55,16 @@ export interface StagePlaybackState {
   spaceId: string | null;
   title: string;
   loading: boolean;
+  /**
+   * Loaded and held. A paused recording keeps its position, its place in the
+   * corner player and its lit control — only stopping clears those.
+   */
+  paused: boolean;
+  /**
+   * Whether the corner player is up. Opened by hand from the pop-out control
+   * beside play, never by playback starting.
+   */
+  popout: boolean;
   /** 0–1, quantized to 0.1% so identical values bail out of React. */
   progress: number;
   /** 0–1 average level, quantized to 1/50ths and sampled at ~10Hz. */
@@ -61,6 +77,8 @@ const IDLE: StagePlaybackState = {
   spaceId: null,
   title: '',
   loading: false,
+  paused: false,
+  popout: false,
   progress: 0,
   volume: 0,
   timeLeft: '',
@@ -71,16 +89,18 @@ const subscribers = new Set<(next: StagePlaybackState) => void>();
 
 function publish(patch: Partial<StagePlaybackState>) {
   const next = { ...state, ...patch };
-  if (
-    next.spaceId === state.spaceId &&
-    next.title === state.title &&
-    next.loading === state.loading &&
-    next.progress === state.progress &&
-    next.volume === state.volume &&
-    next.timeLeft === state.timeLeft
-  ) {
-    return;
+  // Every field compared, and a no-op patch costs nothing: the pump publishes
+  // on every frame, so identical values have to bail before React sees them.
+  // Written as a loop rather than a chain of &&s because a field added to the
+  // state and forgotten here would republish the world sixty times a second.
+  let changed = false;
+  for (const key of Object.keys(next) as (keyof StagePlaybackState)[]) {
+    if (next[key] !== state[key]) {
+      changed = true;
+      break;
+    }
   }
+  if (!changed) return;
   state = next;
   for (const notify of subscribers) notify(state);
 }
@@ -215,6 +235,26 @@ function resolveRealDuration() {
   }
 }
 
+/**
+ * Publish where the playhead is, once. The pump does this every frame, but a
+ * scrub while paused has no pump behind it and the waveform would otherwise
+ * sit on the old position until playback resumed.
+ */
+function publishPosition() {
+  const el = audioEl;
+  if (!el || forcingDuration) return;
+  const dur = resolveDuration();
+  if (!isFinite(dur) || dur <= 0) return;
+  const t = el.currentTime;
+  const remaining = Math.max(0, Math.ceil(dur - t));
+  const m = Math.floor(remaining / 60);
+  const s = remaining % 60;
+  publish({
+    progress: Math.round(Math.min(1, Math.max(0, t / dur)) * 1000) / 1000,
+    timeLeft: `-${m}:${s.toString().padStart(2, '0')}`,
+  });
+}
+
 function handleEnded() {
   // Ignore the synthetic `ended` thrown by the seek-to-end duration probe.
   if (forcingDuration) return;
@@ -235,8 +275,7 @@ function handleEnded() {
  * at 60fps for the length of the recording.
  */
 function pump() {
-  const el = audioEl;
-  if (!el) return;
+  if (!audioEl) return;
 
   const now = performance.now();
   if (analyser && freqData && now - lastVolumeAt >= 100) {
@@ -248,18 +287,9 @@ function pump() {
   }
 
   // While the duration probe is seeking to the end, currentTime is bogus —
-  // don't let it flash the waveform to 100%.
-  const dur = resolveDuration();
-  if (!forcingDuration && isFinite(dur) && dur > 0) {
-    const t = el.currentTime;
-    const remaining = Math.max(0, Math.ceil(dur - t));
-    const m = Math.floor(remaining / 60);
-    const s = remaining % 60;
-    publish({
-      progress: Math.round(Math.min(1, Math.max(0, t / dur)) * 1000) / 1000,
-      timeLeft: `-${m}:${s.toString().padStart(2, '0')}`,
-    });
-  }
+  // publishPosition drops those frames rather than flashing the waveform to
+  // 100%.
+  publishPosition();
   rafId = requestAnimationFrame(pump);
 }
 
@@ -326,6 +356,7 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
     spaceId: space.id,
     title: space.title || 'Stage recording',
     loading: true,
+    paused: false,
     progress: 0,
     volume: 0,
     timeLeft: '',
@@ -345,13 +376,91 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   void supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
 }
 
-/** Press the same recording twice to stop it, rather than restarting it. */
+/**
+ * Hold the audio where it is, keeping the recording loaded. Pausing is not
+ * stopping: the position, the corner player and every lit control survive it,
+ * which is the difference the corner player's close button used not to have.
+ */
+export function pauseStageRecording() {
+  if (!audioEl || !state.spaceId || state.paused) return;
+  cancelAnimationFrame(rafId);
+  audioEl.pause();
+  // Volume to zero with it, or the waveform freezes mid-bounce at whatever
+  // level the last analyser read happened to catch.
+  publish({ paused: true, volume: 0 });
+}
+
+/** Pick up where a pause left off. */
+export function resumeStageRecording() {
+  const el = audioEl;
+  if (!el || !state.spaceId || !state.paused) return;
+  // The context can be suspended again by the time this runs — a tab left in
+  // the background long enough is the usual way.
+  ensureGraph(el);
+  el.play()
+    .then(() => {
+      publish({ paused: false });
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(pump);
+    })
+    .catch(() => {
+      toast.error('That recording could not be played');
+      stopStageRecording();
+    });
+}
+
+/**
+ * Play/pause whatever is loaded, with no reference to a stage object — the
+ * corner player knows the id and nothing else.
+ */
+export function togglePauseStageRecording() {
+  if (!state.spaceId) return;
+  if (state.paused) resumeStageRecording();
+  else pauseStageRecording();
+}
+
+/**
+ * The play/pause control every surface hangs off. Pressing the recording that
+ * is already loaded holds it rather than throwing the position away — stopping
+ * outright is what the corner player's close button is for.
+ */
 export function toggleStageRecording(space: StagePlayable) {
   if (state.spaceId === space.id) {
-    stopStageRecording();
+    togglePauseStageRecording();
     return;
   }
   playStageRecording(space);
+}
+
+// ── The corner player ───────────────────────────────────────────────────────
+//
+// It used to show itself the moment anything started playing, so pressing play
+// on a card in the feed dropped a floating panel over the corner of the page
+// whether or not you were going anywhere. It is opened by hand now, from the
+// pop-out control beside play, and closed by its own X.
+
+/** Show the corner player for whatever is loaded. */
+export function openStagePopout() {
+  if (!state.spaceId) return;
+  publish({ popout: true });
+}
+
+/** Hide the corner player. Playback is untouched — the X stops as well. */
+export function closeStagePopout() {
+  publish({ popout: false });
+}
+
+/**
+ * Pop a recording out, starting it if it is not the one already loaded, so the
+ * control works from a card that has never been played.
+ */
+export function popOutStageRecording(space: StagePlayable) {
+  if (state.spaceId !== space.id) {
+    playStageRecording(space);
+    // Refused — no recording_url, and playStageRecording has already said so.
+    if (state.spaceId !== space.id) return;
+  }
+  publish({ popout: true });
 }
 
 /**
@@ -365,6 +474,9 @@ export function seekStageRecording(space: StagePlayable, position: number) {
     const dur = resolveDuration();
     if (isFinite(dur) && dur > 0) {
       audioEl.currentTime = position * dur;
+      // Nothing is pumping while paused, so the move has to be announced here
+      // or the bar snaps back until playback resumes.
+      if (state.paused) publishPosition();
       return;
     }
     pendingSeekRatio = position;
@@ -398,6 +510,7 @@ export function scrubStageRecording(position: number) {
   const dur = resolveDuration();
   if (isFinite(dur) && dur > 0) {
     audioEl.currentTime = position * dur;
+    if (state.paused) publishPosition();
   } else {
     pendingSeekRatio = position;
   }

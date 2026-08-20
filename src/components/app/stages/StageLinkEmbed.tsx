@@ -28,7 +28,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { cn } from '@/lib/utils';
 import { BadgedName } from '@/components/app/BadgedName';
-import { StageRecordingButton } from '@/components/app/stages/StageRecordingButton';
+import { StageRecordingPlayer } from '@/components/app/stages/StageRecordingPlayer';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 interface StageLinkEmbedProps {
@@ -181,19 +181,10 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             </BadgedName>
           </div>
 
-          {/* The card itself now opens the stage's own page either way. This
-              slot still plays the recording in place, because the common thing
-              to want from a post about a stage that already happened is to
-              hear it, not to leave the feed. */}
-          {isEnded && stage.recording_url ? (
-            <StageRecordingButton
-              spaceId={stage.id}
-              recordingUrl={stage.recording_url}
-              title={stage.title}
-              startedAt={stage.started_at}
-              endedAt={stage.ended_at}
-            />
-          ) : (
+          {/* A recorded stage gets the player below instead: a chip in this
+              slot has nowhere to put a scrub bar, and the whole point of a
+              post about a stage that already happened is to hear it. */}
+          {!(isEnded && stage.recording_url) && (
             <span
               className={cn(
                 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium shrink-0',
@@ -208,6 +199,19 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             </span>
           )}
         </div>
+
+        {/* The card still opens the stage's own page; this plays the recording
+            in place, seekable, with the pop-out control that carries it into
+            the corner if you want to keep listening while you scroll. */}
+        {isEnded && stage.recording_url && (
+          <StageRecordingPlayer
+            spaceId={stage.id}
+            recordingUrl={stage.recording_url}
+            title={stage.title}
+            startedAt={stage.started_at}
+            endedAt={stage.ended_at}
+          />
+        )}
       </div>
     </button>
   );
