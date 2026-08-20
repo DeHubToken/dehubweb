@@ -177,7 +177,13 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
               be in this post may not even be in the twenty listed. So the
               bottom-right slot plays it here instead. */}
           {isEnded && stage.recording_url ? (
-            <StageRecordingButton spaceId={stage.id} recordingUrl={stage.recording_url} />
+            <StageRecordingButton
+              spaceId={stage.id}
+              recordingUrl={stage.recording_url}
+              title={stage.title}
+              startedAt={stage.started_at}
+              endedAt={stage.ended_at}
+            />
           ) : (
             <span
               className={cn(

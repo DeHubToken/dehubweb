@@ -11,7 +11,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
@@ -40,6 +40,12 @@ import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { StageChat } from './StageChat';
+import {
+  seekStageRecording,
+  stopStageRecording,
+  toggleStageRecording,
+  useStagePlayback,
+} from '@/lib/stage-playback';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStagePreAudience, type StageReminderFace } from '@/hooks/use-stage-reminders';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -94,22 +100,15 @@ export function AudioSpacesModal() {
   const [description, setDescription] = useState('');
   const [createMode, setCreateMode] = useState<'now' | 'later'>('now');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
-  const [playingStageId, setPlayingStageId] = useState<string | null>(null);
-  const [playingStageTitle, setPlayingStageTitle] = useState('');
-  const [playbackVolume, setPlaybackVolume] = useState(0);
-  const [playbackProgress, setPlaybackProgress] = useState(0);
-  const [playbackTimeLeft, setPlaybackTimeLeft] = useState('');
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const rafRef = useRef<number>(0);
-  /** 0–1 seek applied on next `loadedmetadata` when starting playback */
-  const pendingSeekRatioRef = useRef<number | null>(null);
-  const estimatedDurationRef = useRef<number>(0);
-  /** Remove `durationchange` etc. from the active past-stage `<audio>` */
-  const pastStageUnsubRef = useRef<(() => void) | null>(null);
-  /** `onended` delayed reset so the waveform can show 100% briefly */
-  const pastStageEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // The recording player is app-wide now (lib/stage-playback), so this modal
+  // reads its state rather than owning it.
+  const {
+    spaceId: playingStageId,
+    title: playingStageTitle,
+    volume: playbackVolume,
+    progress: playbackProgress,
+    timeLeft: playbackTimeLeft,
+  } = useStagePlayback();
   const [transcriptStage, setTranscriptStage] = useState<AudioSpace | null>(null);
 
   // Fetch past (ended) stages for browse view
@@ -200,214 +199,17 @@ export function AudioSpacesModal() {
     });
   };
 
-  const stopPastStagePlayback = useCallback(() => {
-    if (pastStageEndTimeoutRef.current !== null) {
-      clearTimeout(pastStageEndTimeoutRef.current);
-      pastStageEndTimeoutRef.current = null;
-    }
-    pastStageUnsubRef.current?.();
-    pastStageUnsubRef.current = null;
-    cancelAnimationFrame(rafRef.current);
-    audioRef.current?.pause();
-    audioRef.current = null;
-    analyserRef.current = null;
-    pendingSeekRatioRef.current = null;
-    setPlayingStageId(null);
-    setPlayingStageTitle('');
-    setPlaybackVolume(0);
-    setPlaybackProgress(0);
-    setPlaybackTimeLeft('');
+  // Playback lives in lib/stage-playback, shared with the feed's "Listen back"
+  // chip and the Recorded tab, and drawn by the app-wide
+  // StageRecordingMiniPlayer. This modal used to carry a full copy of it —
+  // element, analyser, RAF pump, and a second floating player of its own.
+  const seekPastStage = useCallback((space: AudioSpace, position: number) => {
+    seekStageRecording(space, position);
   }, []);
 
-  const startPastStagePlayback = useCallback((space: AudioSpace) => {
-    if (!space.recording_url) return;
-
-    // webm recordings often have duration=Infinity — pre-calculate from timestamps as fallback
-    const estimatedDuration =
-      space.started_at && space.ended_at
-        ? Math.max(1, (new Date(space.ended_at).getTime() - new Date(space.started_at).getTime()) / 1000)
-        : 0;
-    estimatedDurationRef.current = estimatedDuration;
-
-    if (pastStageEndTimeoutRef.current !== null) {
-      clearTimeout(pastStageEndTimeoutRef.current);
-      pastStageEndTimeoutRef.current = null;
-    }
-    pastStageUnsubRef.current?.();
-    pastStageUnsubRef.current = null;
-
-    cancelAnimationFrame(rafRef.current);
-    audioRef.current?.pause();
-
-    const audio = new Audio(space.recording_url);
-    audio.crossOrigin = 'anonymous';
-
-    const applyPendingSeek = () => {
-      const ratio = pendingSeekRatioRef.current;
-      if (ratio === null) return;
-      let dur = audio.duration;
-      if (!isFinite(dur) || dur <= 0) {
-        try {
-          if (audio.seekable && audio.seekable.length > 0) {
-            dur = audio.seekable.end(audio.seekable.length - 1);
-          }
-        } catch {
-          /* ignore */
-        }
-      }
-      if (isFinite(dur) && dur > 0) {
-        audio.currentTime = ratio * dur;
-        pendingSeekRatioRef.current = null;
-      }
-    };
-
-    audio.addEventListener('loadedmetadata', applyPendingSeek, { once: true });
-    audio.addEventListener('canplay', applyPendingSeek, { once: true });
-
-    /** When browser finally knows duration (common for remote recordings) */
-    const onDurationChange = () => {
-      applyPendingSeek();
-      let dur = audio.duration;
-      if (!isFinite(dur) || dur <= 0) {
-        try {
-          if (audio.seekable && audio.seekable.length > 0) {
-            dur = audio.seekable.end(audio.seekable.length - 1);
-          }
-        } catch {
-          /* ignore */
-        }
-      }
-      if (isFinite(dur) && dur > 0) {
-        setPlaybackProgress(Math.min(1, Math.max(0, audio.currentTime / dur)));
-      }
-    };
-    audio.addEventListener('durationchange', onDurationChange);
-    pastStageUnsubRef.current = () => {
-      audio.removeEventListener('durationchange', onDurationChange);
-    };
-
-    audio.onended = () => {
-      cancelAnimationFrame(rafRef.current);
-      setPlaybackProgress(1);
-      setPlaybackVolume(0);
-      setPlaybackTimeLeft('-0:00');
-      pastStageEndTimeoutRef.current = setTimeout(() => {
-        pastStageEndTimeoutRef.current = null;
-        pastStageUnsubRef.current?.();
-        pastStageUnsubRef.current = null;
-        audio.pause();
-        if (audioRef.current === audio) {
-          audioRef.current = null;
-        }
-        analyserRef.current = null;
-        setPlayingStageId(null);
-        setPlayingStageTitle('');
-        setPlaybackProgress(0);
-        setPlaybackTimeLeft('');
-      }, 380);
-    };
-
-    const ctx = audioCtxRef.current || new AudioContext();
-    audioCtxRef.current = ctx;
-    void ctx.resume();
-    const source = ctx.createMediaElementSource(audio);
-    const analyser = ctx.createAnalyser();
-    analyser.fftSize = 256;
-    source.connect(analyser);
-    analyser.connect(ctx.destination);
-    analyserRef.current = analyser;
-
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-    const pump = () => {
-      analyser.getByteFrequencyData(dataArray);
-      let sum = 0;
-      for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-      setPlaybackVolume(sum / dataArray.length / 255);
-
-      let dur = audio.duration;
-      if (!isFinite(dur) || dur <= 0) {
-        try {
-          if (audio.seekable && audio.seekable.length > 0) {
-            dur = audio.seekable.end(audio.seekable.length - 1);
-          }
-        } catch {
-          /* ignore */
-        }
-      }
-      // Last resort: use timestamp-derived duration (webm duration is often Infinity)
-      if (!isFinite(dur) || dur <= 0) {
-        dur = estimatedDuration;
-      }
-      if (isFinite(dur) && dur > 0) {
-        const t = audio.currentTime;
-        const prog = Math.min(1, Math.max(0, t / dur));
-        setPlaybackProgress(prog);
-        const remaining = Math.max(0, Math.ceil(dur - t));
-        const m = Math.floor(remaining / 60);
-        const s = remaining % 60;
-        setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
-      }
-      rafRef.current = requestAnimationFrame(pump);
-    };
-
-    audio.play().then(() => {
-      rafRef.current = requestAnimationFrame(pump);
-    }).catch(() => {
-      toast.error('Could not play recording');
-      stopPastStagePlayback();
-    });
-
-    audioRef.current = audio;
-    setPlayingStageId(space.id);
-    setPlayingStageTitle(space.title);
-    setPlaybackProgress(0);
-    supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
-  }, [stopPastStagePlayback]);
-
-  const seekPastStage = useCallback(
-    (space: AudioSpace, position: number) => {
-      if (!space.recording_url) return;
-      const a = audioRef.current;
-      if (playingStageId === space.id && a) {
-        let dur = a.duration;
-        if (!isFinite(dur) || dur <= 0) {
-          try {
-            if (a.seekable && a.seekable.length > 0) {
-              dur = a.seekable.end(a.seekable.length - 1);
-            }
-          } catch {
-            /* ignore */
-          }
-        }
-        if (!isFinite(dur) || dur <= 0) {
-          dur = estimatedDurationRef.current;
-        }
-        if (isFinite(dur) && dur > 0) {
-          a.currentTime = position * dur;
-          return;
-        }
-      }
-      pendingSeekRatioRef.current = position;
-      startPastStagePlayback(space);
-    },
-    [playingStageId, startPastStagePlayback],
-  );
-
-  const togglePastStagePlay = useCallback(
-    (space: AudioSpace) => {
-      if (!space.recording_url) {
-        toast.info('Recording not available for this stage');
-        return;
-      }
-      if (playingStageId === space.id) {
-        stopPastStagePlayback();
-        return;
-      }
-      pendingSeekRatioRef.current = null;
-      startPastStagePlayback(space);
-    },
-    [playingStageId, startPastStagePlayback, stopPastStagePlayback],
-  );
+  const togglePastStagePlay = useCallback((space: AudioSpace) => {
+    toggleStageRecording(space);
+  }, []);
 
   // ─── Derived ──────────────────────────────────────────────────────────────
 
@@ -641,7 +443,7 @@ export function AudioSpacesModal() {
                               e.stopPropagation();
                               if (!confirm('Delete this stage recording?')) return;
                               if (playingStageId === space.id) {
-                                stopPastStagePlayback();
+                                stopStageRecording();
                               }
                               if (space.recording_url && walletAddress) {
                                 const path = space.recording_url.split('/stage-recordings/')[1];
@@ -1037,58 +839,6 @@ export function AudioSpacesModal() {
         )}
       </DrawerContent>
     </Drawer>
-
-      {/* Floating mini player for past stage recordings */}
-      {playingStageId && !isModalOpen && (
-        <div
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 w-[90vw] max-w-sm bg-black/80 backdrop-blur-xl border border-white/15 rounded-2xl p-3 shadow-2xl"
-          onClick={() => openModal('browse')}
-        >
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                stopPastStagePlayback();
-              }}
-              className="shrink-0 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all"
-            >
-              <Square className="w-3.5 h-3.5" fill="currentColor" />
-            </button>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white truncate">{playingStageTitle || 'Past Stage'}</p>
-              <div className="h-10 mt-0.5">
-                <StaticWaveform
-                  seed={playingStageId}
-                  className="w-full h-full"
-                  animated
-                  volumeLevel={playbackVolume}
-                  color="rgba(255,255,255,0.9)"
-                  progress={playbackProgress}
-                  onSeek={(pos) => {
-                    const audio = audioRef.current;
-                    if (!audio) return;
-                    let dur = audio.duration;
-                    if (!isFinite(dur) || dur <= 0) {
-                      try {
-                        if (audio.seekable && audio.seekable.length > 0) {
-                          dur = audio.seekable.end(audio.seekable.length - 1);
-                        }
-                      } catch { /* ignore */ }
-                    }
-                    if (isFinite(dur) && dur > 0) {
-                      audio.currentTime = pos * dur;
-                    }
-                  }}
-                />
-              </div>
-            </div>
-            {playbackTimeLeft && (
-              <span className="text-[10px] text-white/50 font-mono shrink-0">{playbackTimeLeft}</span>
-            )}
-          </div>
-        </div>
-      )}
 
       <StageTranscriptDrawer
         space={transcriptStage}

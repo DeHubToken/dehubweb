@@ -29,6 +29,7 @@ const PostModal = React.lazy(() =>
 // suite (fullscreen visualizer, station cards, …) into the always-mounted chunk.
 import { RadioMiniPlayer } from '@/components/app/radio/RadioMiniPlayer';
 import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
+import { StageRecordingMiniPlayer } from '@/components/app/stages/StageRecordingMiniPlayer';
 import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
@@ -360,6 +361,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
       <RadioMiniPlayer />
       <StageMiniPlayer />
+      <StageRecordingMiniPlayer />
       <AudioSpacesModal />
       <MinimizedAIChats />
       
