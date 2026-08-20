@@ -34,19 +34,19 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Crown, Loader2, Plus, Swords, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { profileAvatar, profileName, useWalletProfiles } from '@/hooks/use-wallet-profiles';
 import type { DeHubUser } from '@/lib/api/dehub/types';
-import { buildAvatarUrl } from '@/lib/media-url';
 import { setBackgroundPaused, scheduleBackgroundResume } from '@/lib/background-gate';
 import { ARCADE_SANDBOX } from '@/config/arcade-games';
 
@@ -98,11 +98,6 @@ interface ChessMoveRow {
   black_ms: number | null;
 }
 
-function short(wallet: string | null | undefined): string {
-  if (!wallet) return '…';
-  return `${wallet.slice(0, 6)}…${wallet.slice(-4)}`;
-}
-
 /** Remaining ms for the side to move, charged for the time since the last
  * move landed — the same arithmetic the edge function settles with. */
 function liveClock(match: ChessMatch): { whiteMs: number; blackMs: number } {
@@ -141,11 +136,14 @@ async function invokeChess(body: Record<string, unknown>): Promise<{ match?: Che
 // ------------------------------------------------------------- who is who
 //
 // A lobby row is a person, not an address. Identity (name, avatar, badge
-// balance) comes from api.dehub.io's public account_info endpoint — one
-// cached query per wallet, the same enrichment pass stories and suggestions
-// already do. The RECORD comes from the chess_records view: our own finished
-// matches aggregated in the database, derived rather than stored so it can
-// never drift from the games it counts.
+// balance) comes from api.dehub.io's public account_info endpoint through
+// `useWalletProfiles`, which the leaderboards share — a player who appears on
+// both the ladder and this lobby is fetched once.
+//
+// The RECORD comes from the chess_records view: our own finished matches
+// aggregated in the database, derived rather than stored so it can never drift
+// from the games it counts. It is the head-to-head line on a challenge, not a
+// ranking — the ladder at the foot of the page is the ranking.
 
 interface ChessRecord {
   wallet: string;
@@ -153,24 +151,6 @@ interface ChessRecord {
   wins: number;
   losses: number;
   draws: number;
-}
-
-function useChessProfiles(wallets: string[]): Record<string, DeHubUser> {
-  const results = useQueries({
-    queries: wallets.map((address) => ({
-      queryKey: ['chess-profile', address],
-      queryFn: () => getAccountInfo(address),
-      // An avatar five minutes stale is still the right avatar; the cache
-      // also serves the match view's opponent name without a second fetch.
-      staleTime: 5 * 60_000,
-      retry: 1,
-    })),
-  });
-  const map: Record<string, DeHubUser> = {};
-  results.forEach((result, index) => {
-    if (result.data) map[wallets[index]] = result.data;
-  });
-  return map;
 }
 
 function useChessRecords(wallets: string[]): Record<string, ChessRecord> {
@@ -194,14 +174,6 @@ function useChessRecords(wallets: string[]): Record<string, ChessRecord> {
   return map;
 }
 
-function profileName(profile: DeHubUser | undefined, wallet: string | null | undefined): string {
-  return profile?.displayName || profile?.username || short(wallet);
-}
-
-function profileAvatar(profile: DeHubUser | undefined, wallet: string): string | undefined {
-  const path = profile?.avatarImageUrl || profile?.avatarUrl;
-  return path ? buildAvatarUrl(wallet, path) : undefined;
-}
 
 function recordLine(record: ChessRecord | undefined): string {
   if (!record || record.played === 0) return 'First battle';
@@ -372,7 +344,7 @@ export default function ArcadeChessOnlinePage() {
     }
     return [...set];
   }, [openChallenges, myLiveMatch, match]);
-  const profiles = useChessProfiles(lobbyWallets);
+  const profiles = useWalletProfiles(lobbyWallets);
   const records = useChessRecords(lobbyWallets);
 
   // Keep the lobby honest while it is on screen.
@@ -425,7 +397,7 @@ export default function ArcadeChessOnlinePage() {
       // reason. Cache miss just means the short address — the name is nicety,
       // the start must not wait on it.
       const opponentProfile = opponentWallet
-        ? (queryClient.getQueryData(['chess-profile', opponentWallet]) as DeHubUser | undefined)
+        ? (queryClient.getQueryData(['wallet-profile', opponentWallet]) as DeHubUser | undefined)
         : undefined;
       const clocks = liveClock(current);
       postToFrame({
@@ -796,6 +768,17 @@ export default function ArcadeChessOnlinePage() {
             </div>
           </>
         )}
+
+        {/* The ladder, and deliberately OUTSIDE the sign-in gate above: it is
+            the best argument this page has for signing in, and hiding it from
+            the people who have not yet is hiding the reason to.
+
+            Its own TooltipProvider for the same reason the challenge list has
+            one — this route lives outside AppLayout, so nothing above it
+            supplies the context BadgeIcon's tooltip needs. */}
+        <TooltipProvider>
+          <ArcadeLeaderboard slug="kings-gambit" wallet={wallet} limit={10} className="mt-8" />
+        </TooltipProvider>
       </div>
     </div>
   );

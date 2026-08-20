@@ -332,6 +332,127 @@
 		});
 	}());
 
+	// DeHub: the run bridge. Not upstream, and a PAGE change like the exit chip
+	// below — re-exporting the game does not reproduce it.
+	//
+	// WHAT IT MEASURES, AND WHY NOT THE OBVIOUS THING
+	// -----------------------------------------------
+	// The project looks like it has a progression to rank: a global called
+	// `number_of_complete_stages`. It has not. That variable is COMPARED in six
+	// places and SET in two, both times to zero — nothing anywhere increments
+	// it, so it is always 0 and a leaderboard built on it would never have had
+	// a single row on it. (Established by walking every event in data.js, not
+	// by reading the variable's name.)
+	//
+	// What the runtime does report truthfully is two things:
+	//
+	//   running_layout.scrollX   the camera, across a street of known width
+	//   life_of_p1               starts at 500, subtracted from by every hit,
+	//                            added to by the one life pickup
+	//
+	// So a run is "how far down the street, and how much health was left":
+	// distance as permille of the reachable street, health as the tiebreak
+	// between the players who reach the end.
+	//
+	// Reachable street is the layout width less ONE SCREEN, not the layout
+	// width. Construct clamps the camera half a screen in at each end, so
+	// scrollX travels 427..4173 across a 4600-wide layout, and dividing by 4600
+	// would mean nobody could ever finish.
+	//
+	// The host relays these to the server, which decides what they were worth —
+	// see src/lib/game-run-report.ts and supabase/functions/arcade-score. This
+	// side reports; it does not score, and it is not trusted to.
+	//
+	// `cr_getC2Runtime` is the same engine handle the boot screen above reads,
+	// and src/test/arcade.test.ts asserts it survives a re-vendor.
+	(function () {
+		// Gated on being embedded, exactly like the exit chip: a standalone
+		// deploy has no host to report to.
+		if (window.parent === window)
+			return;
+
+		var SOURCE = "street-slayer";
+		// The one layout that IS the game. Everything else — title, character
+		// select, stage select, game over, credits — is between runs.
+		var PLAY_LAYOUT = "stage";
+		// Permille of the street between reports. Ten or so per run: often
+		// enough that the server watches the run happen, rare enough that a run
+		// is not a stream of requests.
+		var CHECKPOINT = 100;
+		var SAMPLE_MS = 500;
+
+		var running = false;
+		var baseScrollX = 0;
+		var best = 0;      // furthest reached this run, in permille
+		var reported = 0;  // what the last report carried
+		var life = 0;
+
+		function post(type) {
+			window.parent.postMessage({ source: SOURCE, type: type, progress: best, life: life }, "*");
+		}
+
+		function globalVar(rt, name) {
+			var vars = (rt && rt.all_global_vars) || [];
+			for (var i = 0; i < vars.length; i++) {
+				if (vars[i].name === name) return vars[i].data;
+			}
+			return 0;
+		}
+
+		function endRun() {
+			if (!running) return;
+			running = false;
+			post("run-end");
+		}
+
+		// So the exit chip can close the run before it closes the game: a player
+		// who walks out mid-run still gets the distance they earned.
+		window.DEHUB_END_RUN = endRun;
+
+		window.setInterval(function () {
+			var rt = (typeof cr_getC2Runtime === "function") ? cr_getC2Runtime() : null;
+			var layout = rt && rt.running_layout;
+			if (!layout) return;
+
+			if (layout.name !== PLAY_LAYOUT) {
+				endRun();
+				return;
+			}
+
+			if (!running) {
+				running = true;
+				// The camera's position on arrival, not zero: it opens half a
+				// screen in, and every run starts from wherever that is.
+				baseScrollX = layout.scrollX;
+				best = 0;
+				reported = 0;
+				life = globalVar(rt, "life_of_p1");
+				post("run-start");
+			}
+
+			life = globalVar(rt, "life_of_p1");
+
+			var street = Math.max(1, layout.width - rt.original_width);
+			var permille = Math.round(((layout.scrollX - baseScrollX) / street) * 1000);
+			// Restarting the stage with R rewinds the camera behind the start,
+			// which reads as negative here. A run's reach is the furthest it
+			// ever got, so the floor is 0 and `best` only ever climbs.
+			if (permille < 0) permille = 0;
+			if (permille > 1000) permille = 1000;
+			if (permille > best) best = permille;
+
+			if (best - reported >= CHECKPOINT) {
+				reported = best;
+				post("run-progress");
+			}
+		}, SAMPLE_MS);
+
+		// Closing the tab mid-run. Not reliable in every browser, which is why
+		// the server also expires an abandoned run on its own clock — this is
+		// the cheap path, not the guarantee.
+		window.addEventListener("pagehide", endRun);
+	}());
+
 	(function () {
 		// Gated on being embedded, so a standalone deploy — which has nothing
 		// to return to — never grows a button that does nothing.
@@ -345,6 +466,9 @@
 		chip.setAttribute("aria-label", "Leave Street Slayer and return to the arcade");
 
 		chip.addEventListener("click", function () {
+			// Close the run before closing the game, or a player who walks out
+			// at 80% of the street is recorded as never having been there.
+			if (window.DEHUB_END_RUN) window.DEHUB_END_RUN();
 			window.parent.postMessage({ source: "street-slayer", type: "exit" }, "*");
 		});
 
