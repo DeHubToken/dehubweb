@@ -1,163 +1,163 @@
 ---
 name: dehub-poster
-description: Generate DeHub-branded posters, social images, and marketing content using the official DeHub logos and brand styles. Triggers on requests like "make me a dehub poster", "dehub content", "dehub social image", "dehub announcement graphic", or any DeHub image generation request.
+description: Generate DeHub-branded posters, social images, banners and OG cards in the official "SM Template 2.0" monochrome chrome style. Triggers on requests like "make me a dehub poster", "dehub content", "dehub social image", "dehub banner", "dehub announcement graphic", or any DeHub image generation request.
 ---
 
-# DeHub Poster & Content Generator
+# DeHub Poster & Content Generator (SM Template 2.0)
 
-Use this skill whenever the user asks for a DeHub-branded image: posters, social cards, announcements, banners, thumbnails, etc.
+Use this skill whenever the user asks for a DeHub-branded image: posters, social cards, announcements, banners, blog art, OG cards, thumbnails.
 
-## Model
+**The house style is SM Template 2.0** — the same design language as the blog banners, the per-route OG cards and the @dehub_official social posts. It is a *deterministic code render*, not a diffusion picture. Read `assets/reference/sm-template-2-landscape.jpg` and `assets/reference/sm-template-2-portrait.jpg` before generating anything: that is what "on brand" means here, and every rule below exists to reproduce it.
 
-Two-step flow: generate a scene with a real physical logo-host surface, then integrate the real logo PNG into that surface so the wordmark stays pixel-perfect. This is **not** a sticker overlay workflow.
+## Two renderers — pick the right one first
 
-**Always use Nano Banana 2** (`google/gemini-3.1-flash-image`) for both steps unless the user explicitly asks for a different model. It's fast (~4s), cheap (~1¢), and — with the tight prompt scaffold in this skill — produces the right monochrome-metallic-glass look. The old habit of defaulting to GPT-image-2 is retired: it's slower, more expensive, and doesn't obey the brand palette any better than Nano Banana 2 when the prompt is tight.
+| | when | how |
+|---|---|---|
+| **`template`** — the default | any DeHub banner/poster/social/OG request with no attached image and no cinematic archetype named | server-side SM Template 2.0 render. Deterministic, **free**, seconds. |
+| **`scene`** — the exception | the user picked a cinematic archetype (Apple Keynote, A24, sci-fi key art…), attached a source image to edit, or explicitly asked for a photoreal/3D scene | Nano Banana 2 diffusion, two-step (scene → logo composite). Costs credits. |
 
-- **Step 1 (scene)** → `imagegen--generate_image` with `model: "gemini-3.1-flash-image"`.
-- **Step 2 (logo composite)** → `imagegen--edit_image` with `model` unset (routes to Nano Banana 2 automatically).
+**Default to `template`.** A vague brief ("make a DeHub poster", "announcement graphic", "content for X") is a template request — do NOT invent a cinematic monolith scene for it. The Poster Studio's `detectStyle()` already returns `dehub-template` unless the prompt names an archetype; respect that default instead of talking the user out of it.
 
-Only override the model if the user literally names another one, or if a generation fails moderation and needs a retry on a different model.
+Where it runs:
+- Server twin: `supabase/functions/_shared/dehub-template-banner.ts` (SVG + resvg-wasm, assets from `dehub.io/brand-kit/` = web copy of `public/brand-kit/`).
+- Routing: `supabase/functions/generate-image/index.ts`, the `useTemplate` line.
+- Client: `src/components/app/assistant/PosterConfigDialog.tsx` (web) / `components/Assistant/PosterConfigSheet.tsx` (mobile) → `bannerRenderer: 'template' | 'scene'`.
+- Local generator and the canonical source of the look: the banner kit's `style-v2.mjs` / `compose-social.mjs`.
 
-## Brand DNA — the "vibe" every scene must express
+Two behaviours worth knowing:
+- **Template renders are free.** `isFreeTemplateRequest(body)` = `bannerRenderer === 'template' && !sourceImage`. Never quote a credit price or push a paywall for one.
+- Because they are free, a template failure returns a hard **503 `TEMPLATE_RENDER_FAILED`** — it does *not* silently degrade to diffusion. A broken template means posters are down, not merely off-style. If a user reports "poster failed", check the edge function, not the prompt.
 
-DeHub is a **decentralized creator ecosystem** — social, media, staking, tipping, live streaming, AI tools, marketplaces, all on-chain. Mission: give creators sovereignty (own their audience, own their content, own their revenue) with an interface that feels as premium as any centralized app. Think "the Apple of Web3."
+## The design language (non-negotiable)
 
-When the user is NOT specific about what the poster should depict, invent a scene from this vocabulary — never fall back to a generic monolith or empty room. Pick one:
+Everything here is what the renderer already does. Describe it accurately when briefing the spec, and check it when reviewing output.
 
-- **Architectural** — floating obsidian pavilion, chrome monolith, cantilevered brushed-steel platform, mirrored glass amphitheatre, weightless silver ring suspended in mist
-- **Product-hero** — a smoked-glass hardware wallet on a plinth, a mercury sphere hovering over a chrome disc, a stack of translucent smoked-crystal cards, a single silver key floating in fog
-- **Landscape** — endless mirror-black lake with faint silver mist, moonlit obsidian dunes, a monochrome mountain range in cold moonlight, a chrome desert horizon
-- **Abstract** — liquid mercury frozen mid-splash, a smoked-glass helix, a ribbon of brushed steel curling through space, geometric silver shards suspended weightlessly
-- **Human presence (rare, silhouette only)** — a lone silhouetted figure in a chrome corridor, a hooded silhouette facing a floating silver monolith. Never a face, never a full character.
+**Canvas.** Black; rounded card inset ~20px; four dim mono `✕` glyphs OUTSIDE the card at the extreme canvas corners.
 
-Combine one subject with a specific material and a specific atmosphere ("mercury sphere on brushed-steel plinth in charcoal mist with cold rim light"). The result should feel like a still from a $50M sci-fi film or an Apple keynote hero shot — not a stock AI render.
+**The card edge is a BEVEL, not a border.** A flat 1px border has one value all the way round and looks pasted on. The real edge is a 1px ring whose brightness *sweeps* the perimeter — bright at the top-left catch (~46% white), falling to ~5% through the middle, picking up again to ~38% bottom-right — so the card reads as a raised slab. A softer inner lip deepens it; a wide outer drop shadow lifts it off the canvas.
 
-### Theme translation — monochrome by default, color only on explicit request
+**Background — silk is the BASE, stars/grid are an OVERLAY on it.** Layer order: silk texture → blurred dust blobs → the dotted lattice → starfield (~300 dots plus a few cross-flared stars) → vignette → dot grid → scattered `✕ + ·` marks → film grain on top. The overlay is **per-post opt-in** — vary it across a batch; silk-only must still read as the same system.
 
-Whatever theme the user names (Christmas, summer, airdrop, Halloween, Valentine's, Diwali, hackathon, birthday, launch, milestone, anything else), the visual must still be **strict monochrome metallic-glass unless the user explicitly asks for color**. Translate the theme into DeHub's material vocabulary — never into the theme's stereotypical color palette by default.
+**The lattice is dots, not graph paper.** Dotted runs with a slightly brighter dot at each node, very faint (~.115 alpha on the runs, ~.22 on the nodes). Solid 1px rules read as an engineering drawing laid over the art. And it must never tile flat — it is masked with a radial fade so it rakes across the canvas, strongest at the top-left catch, gone by the lower-right where the hero sits. A uniform-strength overlay is the giveaway that something was generated rather than composed.
 
-Examples of correct translation:
-- **Christmas** → silver frost on obsidian, chrome ornaments on brushed-steel branches, monochrome snow drifting past a smoked-glass monolith. Never red/green/gold.
-- **Summer** → chrome sun disc over a mirror-black lake, silver heat shimmer over obsidian dunes. Never orange/yellow/beach-blue.
-- **Halloween** → matte black skull carved from obsidian on a silver plinth in cold mist. Never orange/purple.
-- **Airdrop / launch** → silver capsules descending through charcoal fog, a chrome sphere splitting open to reveal mercury light. Never confetti/rainbow.
-- **Valentine's** → two mirrored chrome hearts fused, or a single obsidian heart on brushed steel. Never red/pink.
-- **Anniversary / milestone number** → the number sculpted in polished chrome or smoked glass on a monolithic plinth. Never gold.
+**Headline.** Exo 700 UPPERCASE, tracking ~-0.022em, line-height ~0.92, ~0.185–0.215 × canvas height.
+- The gradient is a **horizontal sweep**, not vertical: mid-grey at the left ramping to pure white ~65–70% across, easing to light grey at the right. The brightest type sits nearest the hero's light.
+- **The sweep carries ALPHA as well as tone** — the leading glyphs are semi-transparent (~.34 rising to 1.0 by ~62%) so the silk and light shafts read straight *through* the letters before they go opaque. That transparency is what seats the type inside the image instead of on top of it.
+- Grain is textured onto the glyphs themselves, not just the canvas.
+- **Focus ramp:** the FIRST letters are soft and sharpen as they move right into the light (`blurMode:'lead'`). `'trail'` — blurring the trailing letters — is the legacy blog-banner convention only.
+- Tight dark drop shadow plus a wide soft white bloom.
+- **Multi-line headlines share ONE sweep across the whole block.** In SVG that means `userSpaceOnUse`, not `objectBoundingBox` — per-line bounding boxes restart the ramp, so a 3-letter line and a 7-letter line each run the full grey→white→grey sweep and the two lines read as different tones.
 
-Rule of thumb: if the theme suggests a color, **replace that color with its metallic-monochrome equivalent** (gold → chrome, red → polished obsidian with silver rim, green → brushed dark steel with cool white glow, warm light → cool near-white light). If the user explicitly requests a color or colored accent, allow only that requested color as a restrained accent while keeping the DeHub logo white/near-white and the scene mostly black, silver, chrome, and glass. If in doubt, ask yourself: "would this look at home in an Apple keynote?" If no, tighten the prompt.
+**Alignment — the thing most often got wrong.**
+- ONE left gutter (~5.2% of width landscape, ~7.5% portrait) shared by the pill, the headline and the sub row. The headline needs a ~-.085em left nudge and the sub ~-.03em to cancel Exo's left side bearing; without it the type looks indented against the pill and reads as sloppy.
+- ONE bottom baseline (~10.4% of height up from the bottom) whose **centre line** is shared by the wordmark pill, the `//dehub.io` box and the QR. Centre, not bottom — their heights differ.
+- Top tag box and QR share a right gutter (~4.2%).
 
-## Design-system anchors — use when the user is vague
+**HUD chrome.**
+- **Boxes are NOT dashed rectangles. They are four CORNER BRACKETS** — one short L-shaped mark at each corner, middles of the edges completely empty, like crop marks. A repeating dash pattern is the classic wrong answer: it looks technical, it survives a glance, and it is visibly not the brand. Arm length is fixed (~15px h / 12px v at 1920), never a percentage, so every box's brackets match regardless of box size. Stroke ~46% white over a near-black fill at ~.80 alpha — at ~.42 the marks compute darker than bright chrome behind them and vanish.
+- Top-right: **two-line** tag — `// type =` dim on line 1, the value on line 2.
+- Bottom-left: solid white DEHUB wordmark pill with an outer glow.
+- Bottom-centre-left (~47%): `//dehub.io` in a bracketed box.
+- Bottom-right: QR, no border, **but on a dark backing plate** — the hero bleeds under it and white QR modules on polished chrome will not scan.
 
-DeHub ships an official design system (see `assets/reference/template-signup.png` and `assets/reference/template-affiliates.png` in this skill folder — study them before generating anything ambiguous). When the user's prompt is loose ("make a dehub poster", "announcement graphic", "some content for X"), do not invent a random monolith — pull the scene's **background, texture, and typographic furniture** directly from the design system so the output looks like it came out of the DeHub brand kit.
+**Hero.** ONE big content-matched chrome icon that **bleeds off the right and bottom edges** — it is not contained in the frame. Radial white glow behind it, deep drop shadow. Pick the icon for the CONTENT, never generic coins for a non-money topic. Two failure modes to check every time:
+- **Cut on three edges.** Oversize the hero and it also clips the TOP, putting bright chrome behind the `// type =` tag and washing it out. Bleed right + bottom only.
+- **Tangent, not bleed.** A round hero placed barely past the edge merely *kisses* the border and curves away, which reads as contained-and-nicked. Push it far enough that the edge cuts a real chord through it.
 
-**Core design-system motifs to inherit (in this priority order):**
+**STRICTLY monochrome.** Blacks, charcoals, silvers, chromes, cool off-whites, pure white. **No colour accents at all** — not a status pill, not a live-green dot, not a tinted glow. Every colour accent tried so far has been rejected. The reference renders look faintly blue in places; that is JPEG cast, not a hue. Any ambient tint must be a cool near-white under ~10% saturation.
 
-1. **Machined graphite canvas.** Near-black canvas `#0a0b0d` sitting on a deeper vignette `#060708` — always a radial vignette (`radial-gradient(120% 90% at 50% -10%, #15181e, #0a0b0d 55%, #060708)`), never flat black. This is the base of every DeHub surface.
-2. **Blueprint dot grid.** A faint white dot pattern (`rgba(255,255,255,0.05)` dots at ~28px spacing) laid over the vignette — the "digital blueprint" motif. Use as the background pattern whenever the scene doesn't already have a strong physical texture. Prompt language: `"faint blueprint dot-grid pattern at ~28px spacing, dots barely visible at 5% white opacity, laid over a deep charcoal radial vignette"`.
-3. **Embossed graphite panels.** Any framed element (a card, a plaque, a browser window) should have a graphite gradient face (`#20232a → #15171c`), a 1px translucent-white border (~10% white), and a machined edge = subtle top highlight + darker bottom recess. Corners 16px (panels), 12px (controls), 22–28px (large tiles). Never pillowy, never sharp.
-4. **Chrome / brushed-metal display type.** Big DeHub headlines are filled with a vertical brushed-metal gradient (`white 0% → #e6e9ed 38% → #9aa0a9 62% → #c4c9d0 100%`), Exo 800, UPPERCASE, wide tracking (0.04–0.06em). This is *the* DeHub display treatment — when the composition includes rendered display text, it should read as polished steel, not flat white.
-5. **`//` mono annotation stamps.** JetBrains Mono, small, uppercase or sentence case, prefixed with `//`. Used as eyebrows and metadata stamps in the corners: `// JOIN NOW`, `// type = "affiliate"`, `// dehub.io`, `// file_type = image`. This is a brand signature — sprinkle sparingly in slide/poster corners when text is welcome.
-6. **Glass over media.** When media (photo, video still, mock) appears, wrap it in a rounded panel with a 1px border and place a frosted-glass mono tag in a corner (`file_type = image`, blurred `rgba(16,18,22,0.72)` behind).
-7. **Trident U mark + wordmark.** The alternative logo (`assets/dehub-logo-alternative.png`) is the trident "U" brandmark — use it as a compact standalone icon. The primary logo (`assets/dehub-logo-primary.png`) is the full wordmark — use it for the main lockup.
-8. **QR corners.** A monochrome QR block in a slide corner is a valid DeHub motif for anything referral / share / affiliate related.
-9. **Functional color = status only.** The only colors ever allowed on top of the monochrome base are the four status signals, and only when semantically justified: live-green `#34e0a1`, warn-amber `#ffc043`, alert-red `#ff5468`, info-blue `#5b9dff`. Live-green with a glow (`0 0 12px rgba(52,224,161,0.55)`) is the classic "live now in beta" pill accent.
+**`pillPos`.** The wordmark pill defaults to bottom-left (poster/social composition). **Blog banners pass `pillPos:'top'`** — blog cards crop the banner bottom-anchored, so top elements are hidden on the card and appear only on the post page, and the pill is parked there deliberately to keep card thumbnails clean. With the pill at the top the type tag drops to the bottom-left automatically.
 
-**When the user is vague, default to one of two proven templates:**
+## Formats
 
-- **"Statement" template** (like a keynote title slide) — thin rounded outer frame on the vignette+dot-grid canvas, oversized chrome UPPERCASE headline centered or upper-left, small `// eyebrow` above it, wordmark bottom-left, `// dehub.io` chip bottom-right. Reference: `assets/reference/template-signup.png` for structure.
-- **"Media / feature" template** — split layout: left column has a live-green status pill, chrome UPPERCASE headline, one clause of body copy in muted grey; right column has a rounded embossed media panel with a glass `file_type = image` tag in the corner. Wordmark + trident bottom-left, `// type = "..."` chip bottom-right. Reference: `assets/reference/template-affiliates.png`.
+One set of fractional measurements scales to every aspect, so a format is a table row, not a redesign:
 
-Both templates share: dot-grid canvas, thin rounded outer frame (24px radius, 18px inset), chrome headline in Exo 800 uppercase, mono `//` chips in the footer corners, and the wordmark or trident in the opposite corner.
+| key | size | for |
+|---|---|---|
+| `hd` | 1920×1080 | YouTube, hero, 16:9 |
+| `og` | 1200×630 | LinkedIn, Facebook, Farcaster frame, Telegram, Discord |
+| `x` | 1200×675 | X / Twitter |
+| `ig` | 1080×1350 | Instagram feed 4:5 |
+| `story` | 1080×1920 | Story, Reel, TikTok, Shorts cover |
 
-**How to bake this into the Nano Banana 2 prompt.** When the scene brief is loose, describe the canvas + frame + dot-grid + logo-host surface in the step-1 prompt so the scene *is* a DeHub layout, not a generic monolith. Example scaffold override for a vague brief:
+Landscape = headline left / hero right. Portrait = headline left-aligned high, hero low and bleeding off the bottom. **Portrait needs its own hero geometry** — reusing landscape numbers puts the hero straight through the headline. Check the sub row clears the hero top.
 
-```
-A 16:9 DeHub marketing surface: deep charcoal radial vignette background (#0a0b0d fading to #060708 at the edges) overlaid with a faint blueprint dot-grid pattern — barely visible white dots at ~5% opacity spaced ~28px apart. A thin 1px translucent-white rounded frame (24px radius) insets 18px from the edges. Composition centered on an embossed graphite panel (graphite gradient face, 1px translucent-white border, subtle top highlight and darker bottom recess, 16px radius) that will host the DeHub wordmark. Small monospace `//` annotation stamp in the bottom-right corner reserved but currently blank. Strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only. Cinematic key light from upper-left, soft rim light, deep shadow falloff into the vignette corners. Machined, technical, Apple-keynote-meets-blueprint feel. Absolutely NO color hues, no lens flares, no neon.
-```
+The Poster Studio's dimension presets map onto these: Square → 1:1 `ig` geometry, Poster/portrait → `story`, Banner/landscape → `hd`/`og`, Story → `story`.
 
-If the user asked for `"live"`, `"beta launch"`, `"new"` framing, you may add one **live-green** pill accent (`#34e0a1` dot with soft glow) — but nothing else colored.
+## Writing the spec
 
-**Never hallucinate design-system elements.** The `//` stamps, mono chip text, and any rendered "DeHub" lettering must be added via a step-2 composite pass or via the real logo PNG — Nano Banana 2 will typo `dehub` half the time if left to render it raw. Reserve blank areas for text in step 1; drop the real logo in via `imagegen--edit_image` in step 2.
+The template is filled from a small structured spec, not a paragraph of prose. When briefing it, supply:
 
+- **Headline** — 2–5 words, uppercase, ideally two short lines. Declarative and human ("OWN THE FEED", "PAID FROM VIEW ONE"), never a feature name bolted to a verb.
+- **Sub** — one `//SNAKE_CASE_LINE` under the headline, a counter-statement or proof (`//NO_ALGORITHM_OWNS_YOU`, `//NO_THRESHOLD_TO_CROSS`). Not a sentence.
+- **Type tag** — the one-word value for `// type =` (movement, creators, stages, shipping…).
+- **Icon** — the chrome hero matched to the content.
+- **Layout** — format, `pillPos`, `overlay` on/off, `blurMode`.
+
+If the spec call fails there is a zero-AI heuristic fallback, so a dead model key does not break the template — but a lazy spec produces a bland-yet-valid banner, which is worse than a failure because it ships.
 
 ## Brand assets
 
 Logos live in this skill's `assets/` folder:
 
-- `assets/dehub-logo-primary.png` — primary wordmark (use by default)
-- `assets/dehub-logo-alternative.png` — alternative wordmark (use for variety / dense compositions)
+- `assets/dehub-logo-primary.png` — primary wordmark (default)
+- `assets/dehub-logo-alternative.png` — alternative wordmark (variety / dense compositions)
 
-Both are **white-on-transparent**. They must always appear in white (or near-white). Never recolor, gradient-fill, drop-shadow heavily, distort, paraphrase, redraw, or allow the model to invent alternate DeHub lettering.
+Both are **white-on-transparent** and must always appear white or near-white. Never recolor, gradient-fill, heavily shadow, distort, paraphrase, redraw, or let a model invent alternate DeHub lettering.
+
+The template renderer draws the wordmark from `public/brand-kit/brand/`; its icons and silk textures come from `public/brand-kit/icons/` and `public/brand-kit/bg/`. If kit assets change, `public/brand-kit` must be regenerated — the edge function fetches it over HTTP from `dehub.io/brand-kit/`.
 
 ### Production app / social share image logo rules
 
-When working inside the DeHub app codebase, **never generate, redraw, approximate, or substitute the DeHub logo**. Use the real project logo files:
+When working inside the DeHub app codebase, **never generate, redraw, approximate, or substitute the DeHub logo**. Use the real project files:
 
-- `src/assets/dehub-logo-white.png` — official full DeHub wordmark. Use this for headers, social cards, guide hero lockups, and any place where the brand name must be visible.
-- `src/assets/dehub-logo.png` / `src/assets/dehub-logo-center.png` — official standalone DeHub icon mark. Use this only for compact badges or icon slots.
-- `src/assets/dehub-logo-primary.png.asset.json` and `src/assets/dehub-logo-icon.png.asset.json` — CDN pointer versions of the official wordmark/icon when a CDN URL is needed.
+- `src/assets/dehub-logo-white.png` — official full wordmark. Headers, social cards, guide hero lockups, anywhere the brand name must be visible.
+- `src/assets/dehub-logo.png` / `src/assets/dehub-logo-center.png` — official standalone icon mark, for compact badges or icon slots only.
+- `src/assets/dehub-logo-primary.png.asset.json` and `src/assets/dehub-logo-icon.png.asset.json` — CDN pointer versions when a CDN URL is needed.
 
-For integrations, compose partner logos **beside the official DeHub assets**. For ChatGPT/OpenAI and Claude/Anthropic, use real full-color/official project logo assets such as `src/assets/ai-logos/openai.png` and `src/assets/ai-logos/anthropic.png`; do not use text-only placeholders, fake glyphs, simple colored dots, or AI-generated approximations.
+For integrations, compose partner logos **beside** the official DeHub assets. For ChatGPT/OpenAI and Claude/Anthropic use the real assets (`src/assets/ai-logos/openai.png`, `src/assets/ai-logos/anthropic.png`) — never text placeholders, fake glyphs, coloured dots, or AI approximations.
 
-If creating OG/share images for the app, build them by compositing the actual PNG assets in code or image tooling. Do not ask an image model to draw the DeHub logo — generated DeHub marks are invalid even if they look close.
+OG/share images for the app are built by compositing real PNG assets in code or by the template renderer. Do not ask an image model to draw the DeHub logo; a generated DeHub mark is invalid even when it looks close.
 
-## Brand style rules
+## The scene path (fallback only)
 
-These mirror the DeHub app design system — apply to every generated image. **Strict monochrome + metallic glass by default.** Anything else is off-brand unless the user explicitly asked for specific colors.
+Use this **only** when the user picked a cinematic archetype, attached an image, or explicitly asked for a photoreal/3D render. It costs credits and it will never match the template's chrome exactly — say so if the user expected the house style.
 
-- **Palette — strict monochrome unless explicitly overridden by the user**: deep charcoal → black backgrounds (`#000`–`#0f0f10`), silvers, chromes, brushed-steel greys, cool off-whites, pure white highlights. **NO color hues by default** — no red, no orange, no yellow, no magenta, no purple, no violet, no green, no blue, no teal. Any tinted ambient light must be a **cool near-white** (barely-there cyan-white or silver-white glow, saturation under ~10%). If a swatch would read as a color name and the user did not specifically ask for that color, it's wrong.
-- **Materials & texture**: liquid glass, frosted glass, polished chrome, brushed aluminum, obsidian, wet volcanic stone, mercury, holographic silver foil, oil-slick greyscale, smoked crystal. Every surface should have depth — reflections, refractions, subsurface scattering, subtle caustics. **Never a flat black background.** The background must have gradient falloff, atmospheric depth (soft grey mist / volumetric light), or a textured material (brushed metal, glass ripples, black marble). Flat #000 = fail.
-- **Lighting**: cinematic key light from one direction (usually upper-left or upper-right), soft rim light on subject edges, deep shadow falloff into the negative-space region. Think product photography for a $10k watch or an Apple keynote hero shot.
-- **Aesthetic reference**: Apple keynote × A24 poster × Zaha Hadid × Blade Runner 2049 interiors. Premium, restrained, expensive, decentralized-tech. Never "cyberpunk neon city" — that pulls in colored lights.
-- **Composition**: strong focal hierarchy, generous negative space, logo placed with breathing room (min 8% of canvas as clear space around it). Rule of thirds or centered symmetry — never busy edge-to-edge chaos.
-- **Typography in image** (only when text is explicitly requested): **Exo / Exo 2** (geometric technical sans, sharp uppercase, wide letter-spacing). Prompt language that reliably steers Nano Banana 2 toward Exo: `"typeset in Exo 2, geometric technical sans-serif, thin uniform strokes, sharp corners, wide letter-spacing"`. Always white or silver. Keep text minimal (1–5 words max) — Gemini's text rendering is fragile, and less text = higher chance it renders correctly. If the text still looks generic, regenerate rather than shipping it in the wrong typeface. No serifs, no script, no rounded/humanist sans. Fallbacks: Eurostile, Michroma, Rajdhani, Orbitron — never a generic default.
-- **Hard bans**: no emoji, no purple/indigo gradients, no rainbow anything, no glossy 3D blobs, no "hero with arms up", no stock-AI cliché lens flares, no red/orange energy trails, no warm sunset tones, no fire, no lava.
-- **Dimensions**: 1024×1024 square default; 1536×1024 posters/banners; 1024×1536 stories.
+**Model.** Nano Banana 2 (`google/gemini-3.1-flash-image`) for both steps unless the user names another. Step 1 (scene) → `imagegen--generate_image` with `model: "gemini-3.1-flash-image"`. Step 2 (logo composite) → `imagegen--edit_image` with `model` unset.
 
-## Logo integration — the wordmark is PART of the scene, not stuck on top
+**Scene vocabulary** — pick one subject, one material, one atmosphere; never a generic monolith or empty room:
 
-The logo must feel like a real object *in* the scene, not a sticker slapped on afterward. To achieve this, the scene must be generated with a **physical logo surface** built into the composition — a specific object designed to hold the wordmark, matched to the scene's lighting, perspective, and material. Step 2 then integrates the real logo PNG into that surface so it inherits the scene. Unless the user explicitly specifies a different scene type, the scene should be composed around this logo surface as a primary hero object — not as a small mark in a corner, not with decorative objects placed around a flat pasted logo, and not as text floating over empty space.
+- **Architectural** — floating obsidian pavilion, chrome monolith, cantilevered brushed-steel platform, mirrored glass amphitheatre, weightless silver ring in mist
+- **Product-hero** — smoked-glass hardware wallet on a plinth, mercury sphere over a chrome disc, stack of translucent smoked-crystal cards, a single silver key in fog
+- **Landscape** — mirror-black lake under silver mist, moonlit obsidian dunes, monochrome range in cold moonlight, chrome desert horizon
+- **Abstract** — liquid mercury frozen mid-splash, smoked-glass helix, a ribbon of brushed steel curling through space, silver shards suspended weightlessly
+- **Human presence (rare, silhouette only)** — a lone silhouette in a chrome corridor. Never a face, never a full character.
 
-**Logo involvement is mandatory by default.** If the user only asks for a poster/theme/message and does not describe a scene, invent a cinematic DeHub scene where the official wordmark is physically involved in the main subject: engraved across the face of a floating obsidian pavilion, milled into a brushed-steel creator key, backlit through a smoked-glass gateway, embossed into a mercury pool, or projected through charcoal mist from a chrome beacon. The logo host must be part of the architecture/product/landscape itself.
+**Theme translation — monochrome by default.** Whatever theme is named (Christmas, summer, airdrop, Halloween, Valentine's, hackathon, milestone), translate it into DeHub's *material* vocabulary, never its stereotypical palette: Christmas → silver frost on obsidian, never red/green/gold. Summer → chrome sun disc over a mirror-black lake, never orange/yellow. Halloween → matte obsidian skull on a silver plinth, never orange/purple. Airdrop → silver capsules through charcoal fog, never confetti. Valentine's → mirrored chrome hearts, never red/pink. Milestone number → sculpted in polished chrome, never gold. Rule of thumb: gold → chrome, red → obsidian with a silver rim, green → brushed dark steel with a cool white glow, warm light → cool near-white. If the user explicitly requests a colour, allow it only as a restrained accent and keep the wordmark white and the scene mostly black, silver, chrome, glass.
 
-**Zero logo hallucinations.** The scene model must never draw or approximate the DeHub logo, never write "DeHub", never add fake letters, never add extra icons, and never create placeholder glyphs. Step 1 must reserve a perfectly blank, clean logo surface. Step 2 must use the real PNG only, preserve exact letterforms/proportions, and add no other text or symbols. If the final output contains warped letters, misspellings, duplicate logos, invented symbols, or any fake DeHub-like marks, discard and regenerate.
+**The wordmark is PART of the scene, not stuck on top.** Step 1 must build a **physical logo host** into the composition — a specific object designed to hold the wordmark, matched to the scene's lighting, perspective and material — and leave its face perfectly BLANK. Step 2 composites the real PNG into that surface. Hosts: engraved into obsidian · milled into brushed steel · backlit through smoked glass · projected as light onto mist · etched into a chrome monolith face · cast as shadow on black marble · embossed on mercury · frosted into glass. A scene with no such surface is invalid — regenerate it rather than compositing onto empty space.
 
-**Pick a logo surface for every scene** (drawn from the Brand DNA scene). Examples:
+**Zero logo hallucinations.** The scene model must never draw or approximate the logo, write "DeHub", add fake letters, extra icons or placeholder glyphs. Warped letters, misspellings, duplicate logos or invented marks in the final output = discard and regenerate.
 
-- Wordmark **engraved into obsidian** — a polished obsidian slab in the scene, with a subtle recessed etched panel where the wordmark will sit
-- Wordmark **milled into brushed steel** — a brushed-aluminum plaque angled with the scene's key light
-- Wordmark **backlit through smoked glass** — a translucent glass panel with a soft internal glow
-- Wordmark **projected as light onto mist** — a volumetric holographic slab of cool-white light hanging in charcoal fog
-- Wordmark **etched into a chrome monolith face** — a mirror-chrome vertical face oriented toward camera
-- Wordmark **cast as shadow on marble** — a soft cast shadow on a slab of black marble, wordmark reads as absence of light
-- Wordmark **embossed on mercury** — a raised relief on a mercury pool's surface, catching the rim light
-- Wordmark **frosted into glass** — a frosted-glass panel where the mark reads as clear-through-frost
-
-The step-1 scene prompt must explicitly describe this surface — its material, its position, its orientation, its lighting, and the fact that its face is **currently blank** (so step 2 can place the real logo there without conflict). The scene is invalid if there is no clear physical surface for the logo to inhabit.
-
-## Default prompt scaffold
-
-Structure the prompt like this — **dense and specific, 100–160 words**. Every prompt must include: subject, materials, lighting, background texture, and an explicit **logo surface** built into the scene.
+**Scaffold** — dense and specific, 100–160 words:
 
 ```
-[SPECIFIC SUBJECT with material description — e.g. "a monolithic obsidian pavilion floating over a mirror-black lake"] rendered in strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only, unless the user explicitly requested a specific color accent. Cinematic key light from [DIRECTION] with soft rim light and deep shadow falloff. Background: [SPECIFIC textured backdrop — e.g. "volumetric charcoal mist with faint silver-white light shafts", "black marble with subtle grey veining"] — NEVER flat black.
+[SPECIFIC SUBJECT with material — e.g. "a monolithic obsidian pavilion floating over a mirror-black lake"] rendered in strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only. Cinematic key light from [DIRECTION] with soft rim light and deep shadow falloff. Background: [SPECIFIC textured backdrop — e.g. "volumetric charcoal mist with faint silver-white light shafts", "black marble with subtle grey veining"] — NEVER flat black.
 
-The scene is composed around a physical DeHub logo host. Built into the composition at [POSITION — e.g. "the centered vertical face of the pavilion"], a [LOGO SURFACE — e.g. "polished obsidian slab with a subtly recessed rectangular panel", "brushed-aluminum plaque catching the key light", "backlit smoked-glass panel with soft internal glow"] sized for a wordmark lockup roughly [SIZE — e.g. "40% of the scene width"]. This panel's face is currently perfectly BLANK and clean — do NOT draw a logo, the word DeHub, letters, glyphs, placeholder marks, icons, or text on it. Match the panel's perspective, lighting, and material to the scene so it feels physically present.
+The scene is composed around a physical DeHub logo host. Built into the composition at [POSITION], a [LOGO SURFACE — e.g. "polished obsidian slab with a subtly recessed rectangular panel", "brushed-aluminium plaque catching the key light", "backlit smoked-glass panel with soft internal glow"] sized for a wordmark lockup roughly [SIZE — e.g. "40% of the scene width"]. This panel's face is currently perfectly BLANK and clean — do NOT draw a logo, the word DeHub, letters, glyphs, placeholder marks, icons, or text on it. Match its perspective, lighting and material to the scene.
 
-Materials throughout: liquid glass, frosted crystal, polished chrome, subtle caustics, subsurface scattering. Premium product-photography feel — Apple keynote meets A24 poster. Absolutely NO color hues unless explicitly requested by the user: no red, orange, yellow, magenta, purple, green, blue, teal. Any glow must be cool near-white (saturation under 10%). No lens flares, no rainbow, no neon. Shot on Hasselblad, 85mm, f/2.8, ultra-sharp, 4k, gallery quality.
+Materials throughout: liquid glass, frosted crystal, polished chrome, subtle caustics, subsurface scattering. Premium product-photography feel — Apple keynote meets A24 poster. Absolutely NO colour hues unless explicitly requested: no red, orange, yellow, magenta, purple, green, blue, teal. Any glow must be cool near-white (saturation under 10%). No lens flares, no rainbow, no neon. Shot on Hasselblad, 85mm, f/2.8, ultra-sharp, 4k, gallery quality.
 ```
 
-The logo is NOT drawn by the scene model — it's composited in step 2 onto the blank surface the scene reserved for it.
+**Step 2 composite prompt:** name the surface and the position, ask for the wordmark to be integrated *as part of it* (engraved / milled / backlit / projected), matching perspective, surface angle, key-light direction, contact shadows, reflections and falloff; keep the mark pure white and preserve exact letterforms, proportions, spacing and aspect ratio from the PNG; no other letters, no fake marks, no duplicates, no sticker floating above the scene, nothing else in the scene altered.
 
+Typography inside a scene render: **Exo / Exo 2** only, white or silver, 1–5 words maximum — Gemini's text rendering is fragile and every extra word is another chance to typo. Prompt language that steers it: `"typeset in Exo 2, geometric technical sans-serif, thin uniform strokes, sharp corners, wide letter-spacing"`. Fallbacks Eurostile, Michroma, Rajdhani, Orbitron — never a generic default. If it renders as Arial/Inter/Helvetica, regenerate.
 
-
-
-
-
+Dimensions: 1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story.
 
 ## Official brand links
 
-Only include these on a poster if the user explicitly asks for socials, website, links, contact, or QR. Otherwise omit — a clean logo-only composition is the default.
+Include these only if the user explicitly asks for socials, website, links, contact or QR. Otherwise omit — the template already carries `//dehub.io` and the QR.
 
 - **Website**: `dehub.io`
 - **X / Twitter**: `x.com/dehub_official`
@@ -165,39 +165,44 @@ Only include these on a poster if the user explicitly asks for socials, website,
 - **Discord**: `discord.gg/dehub`
 - **Regional Telegrams**: Turkish `t.me/Dehub_Turkish` · Arabic `t.me/Dehub_Arabic` · Hindi `t.me/dehub_hindi` · China `t.me/dehub_china` · Indonesia `t.me/dehub_indonesia` · Germany `t.me/dehub_dach` · Vietnam `t.me/dehub_vietnam` · Philippines `t.me/DeHub_Philippines`
 
-Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Regular weight), small size, placed along the bottom of the composition with generous letter-spacing, no colored icons. Only include the specific links the user asked for — e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just `dehub.io`; "regional Telegrams" = only those. Never invent or shorten handles.
+Rendering rules: pure white, Exo / Exo 2 Light or Regular, small, along the bottom, generous letter-spacing, no coloured icons. Only the links actually asked for — "with socials" = X + Telegram + Discord + Website; "with website" = just `dehub.io`. Never invent or shorten handles.
 
+## Caption voice (when the image ships as a social post)
+
+The graphic is half the post. Match @dehub_official or it reads as an ad:
+
+- **No hashtags.** Zero in first-party posts; they appear only in retweeted community posts.
+- **No `$DHB` shilling.** Say "tokens", "contracts", "coin purchase". Save the cashtag for when the contract genuinely is the news. No price, TA, or moon talk, ever.
+- Sentence case. Short lines with a **blank line between nearly every sentence**. 3–5 lines typical.
+- **One leading emoji as a category badge**: 🚨 contract/urgent · 📢📣 announcement · 🎙️ Stages · ⚡️ speed/shipping · ✅ shipped · 🌌 house emoji.
+- Links are **bare paths, no protocol**, on their own final line: `dehub.io/apk`.
+- Two registers — the manifesto (anti-censorship, aphoristic, parallel triads) and the shipping log (dated, ✅-bulleted, names versions, admits friction). Pick one; don't blend.
+- Recurring lines: "open source and user owned since 2021", "censorship resistant & permissionless", "legacy social media", "Community first - Always", "creators deserve better".
+- **Reddit is exempt from all of the above** — a banner + link there gets the account buried. Text post, admit a tradeoff, ask a question, no image.
+- **Never generate a statistic.** An invented growth or user number on a real brand account is a serious error. Use verifiable lines ("since 2021") instead.
 
 ## Workflow
 
-1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous. If the user gave no scene direction, **invent one from the Brand DNA section and make the logo host the hero of that scene** — never default to a plain monolith, empty room, or pasted corner logo.
-2. Pick logo variant (primary by default), dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story), and — critical — a **logo surface** from the Logo Integration section that fits the scene.
-3. **Step 1 — Generate scene** with `imagegen--generate_image`:
-   - `model`: `"gemini-3.1-flash-image"` (Nano Banana 2). Do not switch unless the user explicitly named a different model.
-   - `prompt`: built from the scaffold above — subject + materials + lighting + textured background + **explicit blank logo surface** built into the scene (material, position, orientation, lighting). The blank surface is what makes the logo look integrated, not stuck on. Include a strict negative instruction: no logo, no "DeHub" text, no fake letters, no glyphs, no placeholder marks, no extra symbols.
-   - `target_path`: `/mnt/documents/dehub-<slug>-bg.jpg`
-   - `width` / `height`: chosen dimensions
-4. **Step 2 — Composite the logo into the scene surface** with `imagegen--edit_image`:
-   - `image_paths`: `["/mnt/documents/dehub-<slug>-bg.jpg", ".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or the alternative wordmark)
-   - `prompt`: `"The first image contains a [SURFACE — e.g. 'polished obsidian slab', 'brushed-aluminum plaque', 'backlit smoked-glass panel'] at [POSITION]. Integrate the DeHub white wordmark from the second image into that surface as if it is physically part of it — [e.g. engraved into the obsidian with subtle recessed depth, milled into the brushed aluminum, backlit through the frosted glass with soft internal glow, projected as cool-white light onto the mist]. Match the scene's perspective, surface curvature/angle, key-light direction, contact shadows, reflections, and shadow falloff so the wordmark inherits the scene's lighting and material. Keep the mark pure white / cool near-white and preserve the exact letterforms, proportions, spacing, and aspect ratio from the PNG. Do NOT redraw, paraphrase, stylize, stretch, replace, or hallucinate the typography. Do not add any other letters, fake DeHub marks, icons, text, duplicate logos, or symbols. Do not place the logo as a flat sticker floating above the scene; it must be embedded in the named physical surface. Do not alter anything else in the scene."`
-   - `target_path`: `/mnt/documents/dehub-<slug>.png`
-5. **Self-check before showing the user.** View the final image and confirm: (a) background has real texture/depth, not flat black; (b) zero color hues — only blacks, greys, silvers, whites — unless the user explicitly requested color; (c) logo reads as **part of the scene** (embedded in the named physical surface, matching perspective, inheriting scene lighting/contact shadows/reflections), not a sticker floating on top; (d) logo has no hallucinations — exact DeHub letterforms, no misspellings, no fake glyphs, no duplicate marks, no extra logos; (e) any typography is Exo-like (geometric, sharp, wide tracking) — regenerate if it looks like generic sans-serif; (f) composition feels premium and cinematic. If any fail, regenerate with a tighter prompt.
-6. Show the final image. Offer 1 quick variant if the user wants tweaks.
+1. Read the brief. Unless the user named a cinematic archetype, attached an image, or asked for photoreal — **it is a template request**. Do not offer to render a scene instead.
+2. Pick format (see the table), `pillPos`, `overlay`, and — critical — the **content-matched chrome icon**. Never generic coins for a non-money topic.
+3. Write the spec: headline (2–5 words, two short lines), `//SNAKE_CASE` sub, one-word type tag.
+4. Render. Template renders are free — no paywall, no credit quote.
+5. **Look at the output yourself before showing it.** Check, in this order: left gutter agreement (pill / headline / sub on one line); bottom baseline agreement (pill / `//dehub.io` / QR centres aligned); headline still legible where it crosses bright chrome; QR sitting on its dark plate; hero bleeding right + bottom only, not clipped at the top; corner brackets visible, not dashes; zero colour. Any failure → fix the spec and re-render.
+6. Show it. Offer one variant if they want tweaks.
+
+If the render returns 503 `TEMPLATE_RENDER_FAILED`, that is a server fault, not a bad prompt — say so plainly rather than retrying the same brief or quietly switching to paid diffusion.
 
 ## Don'ts
 
-- **Don't ever produce a flat pure-black background.** Backgrounds must have texture, gradient, atmospheric depth, or a real material (marble, brushed steel, misted glass, obsidian, mercury). Flat #000 is the #1 failure mode.
-- **Don't use any color hues unless the user explicitly asked for them.** No red, orange, yellow, magenta, purple, violet, green, blue, teal by default. Monochrome only — blacks, greys, silvers, chromes, whites. If a swatch has a nameable hue and the user did not request it, regenerate.
-- **Don't let the logo look stuck-on.** If the scene didn't include a physical surface built for the wordmark, regenerate the scene — don't try to composite onto empty space. If the composite looks like a flat sticker instead of engraved/milled/backlit/projected material, regenerate.
-- **Don't submit a lazy scene.** "Abstract dark background" or "empty room" is not a scene. Every generation must have a concrete subject drawn from the Brand DNA vocabulary.
-- **Don't ship generic-sans typography.** If rendered text on the poster looks like default Arial/Inter/Helvetica, regenerate with a tighter Exo prompt or reduce the text to 1–3 words.
-- Don't switch models away from Nano Banana 2 unless the user literally named a different one.
-- Don't let the scene model render the logo — always composite the real PNG in step 2. Reject any scene containing fake logo/text artifacts before compositing.
-- Don't recolor the logo (beyond inheriting cool scene lighting), add gradients to it, or place it on busy areas without clear space.
-- Don't skip the self-check step. Shipping an ugly image because "the tool returned it" is not acceptable.
+- **Don't reach for diffusion on a vague brief.** "Make a DeHub poster" is the template's job. Inventing a cinematic monolith scene is the single most common way to ship something off-brand and bill for it.
+- **Don't use any colour.** No status pills, no live-green dot, no neon ambient glow, no tinted light. Monochrome only — blacks, greys, silvers, chromes, whites. If a swatch has a nameable hue, it's wrong.
+- **Don't draw HUD boxes as dashed rectangles.** Four corner brackets, empty edge middles.
+- **Don't break the two alignment rules** — one left gutter, one bottom baseline through the centres of the pill, the `//dehub.io` box and the QR.
+- **Don't let the hero be contained.** It bleeds off the right and bottom. A hero that merely kisses the edge reads as a mistake.
+- **Don't put the QR on bare chrome.** It needs its dark backing plate or it will not scan.
+- **Don't ship a flat pure-black background** on the scene path. Texture, gradient, atmospheric depth, or a real material. Flat #000 is the #1 failure mode there.
+- **Don't let the logo look stuck-on** in a scene render, and never let the scene model draw it — composite the real PNG.
+- **Don't ship generic-sans typography.** If it looks like Arial/Inter/Helvetica, regenerate or cut the text to 1–3 words.
+- **Don't quote a price for a template render.** They are free by decision.
+- **Don't skip the self-check.** Shipping an ugly image because "the tool returned it" is not acceptable.
 - Don't save outputs into `src/assets/` unless the user explicitly wants the image shipped into the app.
-
-
-
-
-

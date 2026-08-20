@@ -168,11 +168,13 @@ function isDeHubBrandedImageRequest(message: string): boolean {
 }
 
 function buildDeHubBrandPrompt(userRequest: string): string {
-  return `DEHUB BRAND SYSTEM (mandatory):
+  return `DEHUB BRAND SYSTEM — "SM Template 2.0" (mandatory):
 - The attached image is the official DeHub wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
-- Palette: deep black / charcoal backgrounds, white text, subtle white-opacity accents. Never use blue.
-- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech, lots of negative space, strong focal hierarchy.
-- Typography if any: use the Exo / Exo 2 typeface family (geometric technical sans-serif) for ALL rendered text — Light/Regular for body and links, Medium/SemiBold for headings, Bold only for short display words. Pure white, generous letter-spacing. Never Inter, Poppins, DM Sans, serifs, or script. Fallbacks: Eurostile, Michroma, Rajdhani. No emoji. No generic AI clichés.
+- Palette: STRICTLY monochrome. Black and charcoal grounds, brushed-steel and polished-chrome greys, cool off-whites, pure white highlights. NO colour hues at all — no red, orange, yellow, magenta, purple, green, blue, teal — and no neon or tinted ambient glow. Any ambient tint must read as cool near-white, under 10% saturation.
+- Ground: never flat black. Silk / brushed texture with a soft radial vignette, faint starfield dust, and a very faint dotted lattice that rakes across the frame — strongest at the upper-left light catch, gone by the lower-right.
+- Hero: ONE large photoreal chrome or black-metal object matched to the subject matter, lit from the upper-left, radial white glow behind it, deep drop shadow, bleeding off the RIGHT and BOTTOM edges of the frame. Never centred and contained, never clipped at the top, never a generic coin unless the subject really is money.
+- Chrome furniture: mono "// type =" annotation stamps and a "//dehub.io" mark in the corners. Any box around them is four short CORNER BRACKETS (crop marks), never a dashed or solid rectangle.
+- Typography if any: use the Exo / Exo 2 typeface family (geometric technical sans-serif) for ALL rendered text — Light/Regular for body and links, Medium/SemiBold for headings, Bold only for short display words. Display headlines are UPPERCASE with a horizontal grey-to-white sweep across the whole block, brightest nearest the hero's light. Pure white, generous letter-spacing. Never Inter, Poppins, DM Sans, serifs, or script. Fallbacks: Eurostile, Michroma, Rajdhani. No emoji. No generic AI clichés.
 
 OFFICIAL DEHUB LINKS (render ONLY if the user explicitly asks for socials, links, website, QR, or contact info — otherwise omit entirely):
 - Website: dehub.io
