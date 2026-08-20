@@ -5521,7 +5521,7 @@ function dhChrome(ctx,w,page){
   ctx.fillText(label,w-pw/2-12,22);
   ctx.textAlign='left';
 }
-function dhPost(ctx,x,y,w,h,who,body,m){
+function dhPost(ctx,x,y,w,h,who,body,m,p){
   ctx.fillStyle='#0a121b';rr(ctx,x,y,w,h,6);ctx.fill();
   ctx.strokeStyle=FAINT;ctx.stroke();
   ctx.fillStyle='rgba(56,224,255,0.22)';
@@ -5529,7 +5529,7 @@ function dhPost(ctx,x,y,w,h,who,body,m){
   ctx.font='700 10px "Chakra Petch"';ctx.fillStyle='#fff';
   ctx.fillText(who,x+38,y+18);
   ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
-  ctx.fillText(body,x+38,y+31);
+  ctx.fillText(dhClip(ctx,body,w-50),x+38,y+31);
   /* the media block — a post on DeHub is usually a picture or a clip */
   const my=y+40,mh=h-64;
   const g=ctx.createLinearGradient(x+10,my,x+w-10,my+mh);
@@ -5537,21 +5537,30 @@ function dhPost(ctx,x,y,w,h,who,body,m){
   ctx.fillStyle=g;rr(ctx,x+10,my,w-20,mh,4);ctx.fill();
   ctx.strokeStyle='rgba(56,224,255,0.16)';ctx.stroke();
   ctx.font='700 8px "JetBrains Mono"';ctx.fillStyle=DIM;
-  ctx.fillText('♥ '+fmtBig(120+dhSeed(who,9000)),x+12,y+h-9);
+  ctx.fillText('♥ '+fmtBig(p&&isFinite(p.likes)?p.likes:120+dhSeed(who,9000)),x+12,y+h-9);
   ctx.fillStyle=UP;
-  ctx.fillText('◆ '+fmtBig(40+dhSeed(body,1400))+' DHB TIPPED',x+70,y+h-9);
+  ctx.fillText('◆ '+fmtBig(p&&isFinite(p.tips)?p.tips:40+dhSeed(body,1400))+' DHB TIPPED',x+70,y+h-9);
   if(m){
     ctx.textAlign='right';
     ctx.fillStyle=m.pct24>=0?UP:DOWN;
     ctx.fillText('$'+m.sym+' '+fmtPct(m.pct24),x+w-12,y+h-9);
     ctx.textAlign='left';
   }
+  /* A demo post has nowhere of its own to go, so it opens the feed rather
+     than a post id that was never real. */
+  hit(x,y,w,h,p?'OPEN THIS POST':'OPEN THE FEED',
+      p?()=>dhGo('/app/post/'+p.id):()=>dhGo('/app'));
 }
 function paintDhHome(ctx,w,h){
   screenBG(ctx,w,h);
   dhChrome(ctx,w,'HOME');
-  dhPost(ctx,12,46,300,150,'@shadowy_coder','shipped the new arcade build',memes[0]);
-  dhPost(ctx,12,204,300,148,'@lady_luck','the trenches are eating tonight',memes[1]);
+  hit(0,0,w,36,'OPEN DEHUB',()=>dhGo('/app'));
+  dhPullFeed();
+  const f=dhFeed.items||[],p0=f[0],p1=f[1];
+  dhPost(ctx,12,46,300,150,p0?'@'+p0.user:'@shadowy_coder',
+         p0?p0.title:'shipped the new arcade build',memes[0],p0);
+  dhPost(ctx,12,204,300,148,p1?'@'+p1.user:'@lady_luck',
+         p1?p1.title:'the trenches are eating tonight',memes[1],p1);
   /* right rail: real numbers off the same sim the wall runs on */
   const rx=324,rw=w-rx-12;
   ctx.fillStyle='#0a121b';rr(ctx,rx,46,rw,306,6);ctx.fill();
@@ -5570,6 +5579,7 @@ function paintDhHome(ctx,w,h){
     ctx.font='700 10px "JetBrains Mono"';ctx.fillStyle=m.pct24>=0?UP:DOWN;
     ctx.fillText(fmtPct(m.pct24),rx+rw-12,y+5);
     ctx.textAlign='left';
+    hit(rx+6,y-12,rw-12,28,'$'+m.sym+' ON THE WALL',()=>deskToWall(m));
   });
   scanlines(ctx,w,h);crtGlow(ctx,w,h);
 }
@@ -5594,6 +5604,10 @@ function paintDhProfile(ctx,w,h){
   ctx.fillText(addr?dhShort(addr):'NOT SIGNED IN',98,116);
   ctx.font='600 9px "JetBrains Mono"';ctx.fillStyle=addr?CYAN:AMBER;
   ctx.fillText(addr?'DEHUB MEMBER · TRENCHSTAR DESK':'CONNECT A WALLET TO SIGN IN',98,132);
+  /* Signing in is the one thing this screen can do entirely by itself — the
+     wallet lives in this document, sandbox or not. */
+  hit(8,82,w-16,62,addr?'OPEN YOUR PROFILE':'CONNECT A WALLET',
+      addr?()=>dhGo('/app/profile'):()=>connectWallet());
   /* stats — portfolio numbers are real, the social ones are the demo's */
   const stats=[['POSTS',String(12+dhSeed(addr,180))],
                ['FOLLOWERS',fmtBig(300+dhSeed(addr,9000))],
@@ -5624,6 +5638,7 @@ function paintDhProfile(ctx,w,h){
     ctx.fillStyle=gg;rr(ctx,x,228,tw,112,5);ctx.fill();
     ctx.strokeStyle=FAINT;ctx.stroke();
   }
+  hit(16,210,w-32,130,'YOUR POSTS ON DEHUB',()=>dhGo('/app/profile'));
   scanlines(ctx,w,h);crtGlow(ctx,w,h);
 }
 function paintDhUpload(ctx,w,h){
@@ -5651,6 +5666,9 @@ function paintDhUpload(ctx,w,h){
   ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
   ctx.fillText('MP4 · MOV · PNG · JPG · MP3 · WAV',166,238);
   ctx.textAlign='left';
+  /* A file picker inside a WebGL canvas would be a lie — the upload, the
+     mint and the wallet prompt all live in the app. This hands you to it. */
+  hit(16,86,300,180,'OPEN THE COMPOSER',()=>dhGo('/creator'));
   /* the form beside it */
   const fx=330,fw=w-fx-16;
   const field=(y,label,val,dim)=>{
@@ -5682,8 +5700,88 @@ function paintDhUpload(ctx,w,h){
   ctx.textAlign='center';ctx.font='700 11px "Chakra Petch"';ctx.fillStyle=CYAN;
   ctx.fillText('MINT & POST',fx+fw/2,272);
   ctx.textAlign='left';
+  hit(fx,252,fw,32,'OPEN THE COMPOSER',()=>dhGo('/creator'));
   scanlines(ctx,w,h);crtGlow(ctx,w,h);
 }
+
+/* ===================== the desk talks to DeHub =====================
+   The three monitors are the only part of this room that is not about this
+   room, and they were a painting of DeHub. They are controls now: every panel
+   that looks pressable registers a rectangle here, and a click on the glass is
+   raycast back into canvas space to find it.
+
+   WHY A postMessage AND NOT A LINK
+   -------------------------------
+   This document runs in two places with very different powers.
+     · Standalone at /trenchstar-game/ it IS dehub.io: it can call the API and
+       set its own location.
+     · Inside /app/arcade/trenchstar it is a frame sandboxed WITHOUT
+       `allow-same-origin`, which makes it an opaque origin. `window.open` is
+       gone, top navigation is gone, and every request leaves with
+       `Origin: null` — which the API's allowlist, pinned to https://dehub.io,
+       can never match. Nothing about that is an oversight: withholding the
+       flag is what keeps game code away from app storage and cookies.
+   So in a frame the desk asks the host, in the same {source,type} envelope the
+   exit and readiness bridges already use, and does the work itself when there
+   is no host. An action that can be done neither way is not offered at all. */
+const DH_ORIGIN='https://dehub.io',DH_API='https://api.dehub.io';
+const dhFramed=(()=>{try{return window.parent!==window;}catch(e){return true;}})();
+function dhSend(type,extra){
+  try{parent.postMessage(Object.assign({source:'trenchstar',type},extra||{}),'*');}catch(e){}
+}
+/* One place decides what a monitor click means, so the two hosts cannot drift.
+   The host answers `navigate` by routing; standalone we open a tab rather than
+   replace the room, because leaving costs a nine-second boot to come back. */
+function dhGo(path){
+  if(dhFramed){dhSend('navigate',{to:path});toast('DEHUB · '+path);return;}
+  const win=window.open(DH_ORIGIN+path,'_blank','noopener');
+  if(!win)location.href=DH_ORIGIN+path;
+}
+/* Real posts on the home monitor. In a frame the host fetches them — it has
+   the origin and the session; here we would get `Origin: null` back. Asked
+   once, and a miss is not an error: the painted demo posts stay, which is what
+   this screen has always shown. */
+const dhFeed={items:null,asked:false};
+function dhAdopt(rows){
+  if(!Array.isArray(rows)||!rows.length)return;
+  dhFeed.items=rows.slice(0,2).map(r=>({
+    id:r.tokenId,
+    user:r.minterUsername||r.minterDisplayName||'dehub',
+    title:r.name||r.description||'',
+    likes:+r.likes||(r.totalVotes&&+r.totalVotes.for)||0,
+    tips:+r.totalTips||+r.receivedTips||0}));
+  syncDesk();
+}
+window.addEventListener('message',e=>{
+  const d=e.data;
+  if(!d||d.source!=='dehub'||d.type!=='feed')return;
+  dhAdopt(d.items);
+});
+async function dhPullFeed(){
+  if(dhFeed.asked)return;
+  dhFeed.asked=true;
+  if(dhFramed){dhSend('feed',{limit:2});return;}
+  try{
+    const r=await fetch(DH_API+'/api/feed?page=1&limit=2',{credentials:'omit'});
+    const j=await r.json();
+    dhAdopt(j&&j.result);
+  }catch(err){}
+}
+/* A real post title is as long as somebody felt like making it; the demo's
+   were written to fit. */
+function dhClip(ctx,s,max){
+  s=String(s||'').replace(/\s+/g,' ').trim();
+  if(ctx.measureText(s).width<=max)return s;
+  while(s.length>1&&ctx.measureText(s+'…').width>max)s=s.slice(0,-1);
+  return s+'…';
+}
+
+/* Hit rectangles are collected BY the paint, not declared beside it: the paint
+   already knows where every box landed, and a second list of coordinates would
+   be wrong the first time somebody moved one. `dhHits` is the monitor being
+   painted right now — syncDesk owns it. */
+let dhHits=null;
+function hit(x,y,w,h,label,fn){if(dhHits)dhHits.push({x,y,w,h,label,fn});}
 
 /* ================================ desk ================================ */
 const deskMons=[];
@@ -5757,13 +5855,91 @@ const deskMons=[];
    pages only change when the wallet connects or the sim ticks, so 2 s is
    generous. Each paint is wrapped: a throw here would take the wall build
    down with it, and a broken monitor is not worth a broken room. */
-function syncDesk(){
-  for(const d of deskMons){
-    try{d.paint(d.ctx,DH_W,DH_H);d.tex.needsUpdate=true;}
-    catch(e){console.warn('[TRENCHSTAR] desk paint failed',e);}
+function deskPaint(d){
+  try{
+    dhHits=d.hits=[];
+    d.paint(d.ctx,DH_W,DH_H);
+    deskChrome(d);
+    d.tex.needsUpdate=true;
+  }
+  catch(e){console.warn('[TRENCHSTAR] desk paint failed',e);}
+  /* Always let go of the collector. A paint that threw halfway would otherwise
+     leave the next monitor writing its rectangles into the broken one's list,
+     and the click that follows lands on nothing. */
+  finally{dhHits=null;}
+}
+function syncDesk(){for(const d of deskMons)deskPaint(d);}
+setInterval(syncDesk,2000);
+
+/* Hover and press are drawn OVER the finished paint rather than inside it, so
+   a monitor that grows a new panel gets the highlight for free and no paint
+   function has to know what state the pointer is in. */
+function deskChrome(d){
+  const ctx=d.ctx,r=d.hover,f=d.flash;
+  if(f&&Date.now()-f.t>220)d.flash=null;
+  const lit=d.flash?d.flash.r:r;
+  if(!lit)return;
+  ctx.save();
+  ctx.fillStyle=d.flash?'rgba(56,224,255,0.22)':'rgba(56,224,255,0.10)';
+  rr(ctx,lit.x,lit.y,lit.w,lit.h,6);ctx.fill();
+  ctx.strokeStyle=d.flash?'rgba(56,224,255,0.95)':'rgba(56,224,255,0.55)';
+  ctx.lineWidth=1.5;ctx.stroke();ctx.lineWidth=1;
+  /* the label sits inside the top edge, or under it when the panel is at the
+     very top of the screen and there is no room above the fold */
+  const ly=lit.y<20?lit.y+lit.h+13:lit.y+13;
+  ctx.font='700 9px "Chakra Petch"';ctx.fillStyle=CYAN;
+  ctx.textAlign='center';
+  ctx.fillText(lit.label,Math.min(Math.max(lit.x+lit.w/2,60),DH_W-60),ly);
+  ctx.textAlign='left';
+  ctx.restore();
+}
+
+/* Where a click on the glass lands in the 640x364 the monitor is painted at.
+   The plane carries a uv, so this is one raycast and a multiply — no second
+   coordinate system to keep in step. */
+function pickDesk(e){
+  if(!deskMons.length)return null;
+  rayFromEvent(e);
+  const h=rc.intersectObjects(deskMons.map(m=>m.mesh),false)[0];
+  if(!h||!h.uv)return null;
+  const d=deskMons.find(m=>m.mesh===h.object);
+  if(!d)return null;
+  const x=h.uv.x*DH_W,y=(1-h.uv.y)*DH_H;
+  const r=(d.hits||[]).find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h)||null;
+  return {d,r};
+}
+/* Repaint only what changed. Hover fires with the pointer, and redrawing three
+   640x364 canvases per mouse move to light one rectangle is three times the
+   work for no pixels. */
+function deskHover(d,r){
+  for(const m of deskMons){
+    const want=(m===d)?r:null;
+    if(m.hover===want)continue;
+    m.hover=want;
+    deskPaint(m);
   }
 }
-setInterval(syncDesk,2000);
+function deskFire(d,r){
+  d.flash={r,t:Date.now()};
+  deskPaint(d);
+  /* the press light has to take itself off: deskChrome retires a stale flash,
+     but only when something repaints, and the slow timer is two seconds away */
+  setTimeout(()=>deskPaint(d),240);
+  playSound('blip');
+  try{r.fn();}catch(e){console.warn('[TRENCHSTAR] desk action failed',e);}
+}
+/* The trending rail on the home monitor is the one control that acts on this
+   room instead of DeHub: it puts that pair on the wall. Focus what is already
+   up there, fill an empty frame if there is one, and say so when there is not
+   — quietly doing nothing is the worst of the three. */
+function deskToWall(m){
+  const up=screens.find(s=>s.market&&s.market.sym===m.sym);
+  if(up){focusOn(up);return;}
+  const free=screens.find(s=>s.kind==='empty');
+  if(!free){toast('NO EMPTY SCREEN FOR $'+m.sym);return;}
+  setChart(free,m);
+  focusOn(free);
+}
 
 buildWall();
 
@@ -6300,6 +6476,10 @@ renderer.domElement.addEventListener('pointerdown',e=>{
     edit.suppress=true;   /* eat the coming click, or it lands on the fresh ghost and opens the picker */
     return;
   }
+  /* the desk stands between you and the wall, so it is asked first — and it
+     arms rather than fires, or a press-and-look would post you to DeHub */
+  const dk=pickDesk(e);
+  if(dk&&dk.r){edit.deskArm=dk;cancelHold();return;}
   const s=pickScreen(e);
   if(s){
     cancelHold();
@@ -6393,6 +6573,9 @@ renderer.domElement.addEventListener('pointermove',e=>{
 
   /* plain hover */
   if(e.buttons||focus.screen||fly.on||cast.placing)return;
+  const dk=pickDesk(e);
+  deskHover(dk?dk.d:null,dk?dk.r:null);
+  if(dk&&dk.r){hideAff();renderer.domElement.style.cursor='pointer';return;}
   const affHit=pickAff(e);
   if(affHit){renderer.domElement.style.cursor=affHit==='grip'?'nwse-resize':'pointer';return;}
   const s=pickScreen(e);
@@ -6404,6 +6587,16 @@ function pointerEnd(e){
   touches.delete(e.pointerId);
   cancelHold();
   edit.armS=null;
+  if(edit.deskArm){
+    const armed=edit.deskArm;edit.deskArm=null;
+    /* Fire only if the release is still over the same rectangle. A repaint
+       between press and release rebuilds the list, so identity is the label
+       and the box, never the closure. */
+    const now=edit.moved?null:pickDesk(e);
+    if(now&&now.r&&now.r.label===armed.r.label&&now.r.x===armed.r.x&&now.r.y===armed.r.y)
+      deskFire(now.d,now.r);
+    return;
+  }
   if(walk.jstick&&e.pointerId===walk.jstick.id){
     /* The stick owns the lower-left of the screen on touch, which is also
        most of the visible floor — so a quick double-tap there is read as
@@ -9957,7 +10150,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   loadAnimSource,borrowClip,liveClip,hudTick,placeAtDesk,lightMood,areaLights,LIGHT_BASE,
   pvStart,pvStop,pvRender,pvQueueAll,pvPump,pvBuild,
   csGo,csLayout,csApply,csChrome,csEase,csMeasure,pvTick,
-  syncDesk,deskMons,buildWall,
+  syncDesk,deskMons,pickDesk,deskFire,deskToWall,dhFeed,dhGo,buildWall,
   pickFloor,goToFloor,pingFloor,fly,flyTo,
   /* renderer/composer are exposed so a frame can be drawn on demand and read
      back — the only way to actually LOOK at this thing from a headless harness */

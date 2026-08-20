@@ -33,6 +33,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBootProgress } from '@/lib/game-boot-progress';
 import { useGameExitRequest } from '@/lib/game-exit-request';
+import { useGameHostBridge } from '@/lib/game-host-bridge';
 import { useGameRun } from '@/lib/game-run-report';
 import { formatProgress } from '@/lib/api/arcade-leaderboard';
 import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
@@ -120,6 +121,13 @@ export default function ArcadeGamePage() {
     game?.exitSource,
     useCallback(() => navigate('/arcade'), [navigate]),
   );
+
+  // "Take me to this post", "give me the feed" — Trenchstar's desk monitors
+  // are DeHub, and clicking one has to reach the app. The frame cannot do it
+  // itself: no allow-same-origin means no window.open, no top navigation, and
+  // an `Origin: null` the API will never answer. Paths are allowlisted and the
+  // feed goes back uncredentialed — see lib/game-host-bridge.
+  useGameHostBridge(game?.exitSource);
 
   // The run bridge, for the games that keep a board. It opens a run on the
   // server when the game says one has started and closes it when the game says
