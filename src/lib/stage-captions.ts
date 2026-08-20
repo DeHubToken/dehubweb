@@ -63,6 +63,55 @@ export const CAPTION_INTERIM_TTL_MS = 5000;
 /** Lines visible at once. Three is about two seconds of reading at conversational pace. */
 export const CAPTION_MAX_LINES = 3;
 
+// ─── Translation ─────────────────────────────────────────────────────────────
+//
+// A finalised line is translated once, server-side, into every language a
+// listener is currently reading, and the result is broadcast back on this same
+// channel. The alternative — each listener translating what it reads — would
+// have cost one call per listener per language per line; twenty-three
+// listeners on ten languages is two hundred and thirty calls for one sentence.
+//
+// Only finals are translated. Interims revise themselves every few hundred
+// milliseconds, so translating them would multiply the bill by an order of
+// magnitude to produce subtitles that rewrite themselves as you read.
+
+export const CAPTION_TRANSLATION_EVENT = 'caption-translation';
+
+export interface StageCaptionTranslation {
+  /** The utterance this belongs to — the same id the source line carried. */
+  id: string;
+  /** Language code → the line in that language. Missing codes fall back to the source. */
+  translations: Record<string, string>;
+}
+
+/**
+ * What the picker offers.
+ *
+ * Deliberately a separate list from StageTranscriptDrawer's: that one carries
+ * an `original` pseudo-entry and drives a cached, whole-transcript job, while
+ * this drives per-line work priced by how many languages are live. The
+ * server holds the same allowlist — a code that is not on both does nothing.
+ */
+export const CAPTION_LANGUAGES: Array<{ code: string; name: string }> = [
+  { code: 'en', name: 'English' },
+  { code: 'es', name: 'Español' },
+  { code: 'fr', name: 'Français' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'pt', name: 'Português' },
+  { code: 'it', name: 'Italiano' },
+  { code: 'ja', name: '日本語' },
+  { code: 'ko', name: '한국어' },
+  { code: 'zh', name: '中文' },
+  { code: 'ar', name: 'العربية' },
+  { code: 'hi', name: 'हिन्दी' },
+  { code: 'ru', name: 'Русский' },
+  { code: 'tr', name: 'Türkçe' },
+  { code: 'id', name: 'Bahasa Indonesia' },
+];
+
+/** Presence key a listener publishes when it is reading the source language. */
+export const CAPTION_SOURCE_LANGUAGE = 'source';
+
 // ─── Local echo ──────────────────────────────────────────────────────────────
 //
 // A speaker has to see their own subtitles, and the broadcast channel will not
@@ -86,6 +135,26 @@ export function onLocalCaption(listener: LocalCaptionListener): () => void {
 
 export function emitLocalCaption(spaceId: string, message: StageCaptionMessage) {
   localCaptionListeners.forEach((listener) => listener(spaceId, message));
+}
+
+/**
+ * Translations take the same local shortcut as captions do: the client that
+ * asked for them hands them straight to its own overlay, so a speaker reading
+ * along in another language is not waiting on a round trip they started.
+ */
+type LocalTranslationListener = (spaceId: string, payload: StageCaptionTranslation) => void;
+
+const localTranslationListeners = new Set<LocalTranslationListener>();
+
+export function onLocalTranslation(listener: LocalTranslationListener): () => void {
+  localTranslationListeners.add(listener);
+  return () => {
+    localTranslationListeners.delete(listener);
+  };
+}
+
+export function emitLocalTranslation(spaceId: string, payload: StageCaptionTranslation) {
+  localTranslationListeners.forEach((listener) => listener(spaceId, payload));
 }
 
 // ─── Preferences ─────────────────────────────────────────────────────────────
@@ -154,5 +223,41 @@ export function setSendCaptions(value: boolean) {
   if (sendCaptions === value) return;
   sendCaptions = value;
   writePref(SEND_KEY, value);
+  emit();
+}
+
+/**
+ * The language this viewer reads captions in, or null for the language being
+ * spoken. Stored per browser, and published over Realtime presence — which is
+ * what decides the set of languages the room actually pays to translate into.
+ */
+const LANG_KEY = 'dehub.stage.captions.lang';
+
+function readLangPref(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(LANG_KEY);
+    // Guard the stored value against a picker that has since dropped a language.
+    return raw && CAPTION_LANGUAGES.some((l) => l.code === raw) ? raw : null;
+  } catch {
+    return null;
+  }
+}
+
+let captionLanguage = readLangPref();
+
+export function useCaptionLanguage(): string | null {
+  return useSyncExternalStore(subscribe, () => captionLanguage, () => null);
+}
+
+export function setCaptionLanguage(value: string | null) {
+  if (captionLanguage === value) return;
+  captionLanguage = value;
+  try {
+    if (value) window.localStorage.setItem(LANG_KEY, value);
+    else window.localStorage.removeItem(LANG_KEY);
+  } catch {
+    /* private mode — the choice just does not survive the tab */
+  }
   emit();
 }
