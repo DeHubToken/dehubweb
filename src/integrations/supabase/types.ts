@@ -746,6 +746,78 @@ export type Database = {
         }
         Relationships: []
       }
+      arcade_runs: {
+        Row: {
+          checkpoints: number
+          flags: string[]
+          game: string
+          id: string
+          last_seen_at: string
+          life: number
+          progress: number
+          scored_at: string | null
+          started_at: string
+          status: string
+          wallet: string
+        }
+        Insert: {
+          checkpoints?: number
+          flags?: string[]
+          game: string
+          id?: string
+          last_seen_at?: string
+          life?: number
+          progress?: number
+          scored_at?: string | null
+          started_at?: string
+          status?: string
+          wallet: string
+        }
+        Update: {
+          checkpoints?: number
+          flags?: string[]
+          game?: string
+          id?: string
+          last_seen_at?: string
+          life?: number
+          progress?: number
+          scored_at?: string | null
+          started_at?: string
+          status?: string
+          wallet?: string
+        }
+        Relationships: []
+      }
+      arcade_scores: {
+        Row: {
+          achieved_at: string
+          detail: Json
+          game: string
+          runs: number
+          score: number
+          updated_at: string
+          wallet: string
+        }
+        Insert: {
+          achieved_at?: string
+          detail?: Json
+          game: string
+          runs?: number
+          score: number
+          updated_at?: string
+          wallet: string
+        }
+        Update: {
+          achieved_at?: string
+          detail?: Json
+          game?: string
+          runs?: number
+          score?: number
+          updated_at?: string
+          wallet?: string
+        }
+        Relationships: []
+      }
       audio_spaces: {
         Row: {
           channel_name: string
@@ -4671,6 +4743,18 @@ export type Database = {
         Returns: number
       }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
+      chess_ladder: {
+        Args: { p_limit?: number }
+        Returns: {
+          draws: number
+          last_played: string
+          losses: number
+          played: number
+          rating: number
+          wallet: string
+          wins: number
+        }[]
+      }
       chess_settle_wagers: { Args: { p_match_id: string }; Returns: string }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
       claim_xl_cashback_slot: {
