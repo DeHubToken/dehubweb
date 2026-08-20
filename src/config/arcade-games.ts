@@ -272,7 +272,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     title: 'Trenchstar',
     tagline: 'Stand in a trading floor built out of live markets.',
     description:
-      'A curved wall of forty live market screens wrapped around a room you can walk: real Binance candles and DexScreener pairs, rearranged into whatever wall you want to trade in front of.',
+      'The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.',
     action: 'Take the desk',
     art: '/arcade/trenchstar.webp',
     artAlt:
