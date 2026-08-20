@@ -91,6 +91,8 @@ interface StageContextType {
   injectAudio: (audioBlob: Blob, source?: AudioInjectionSource) => Promise<void>;
   /** Cut off whatever soundboard/TTS clip is currently playing on the stage. */
   stopInject: () => void;
+  /** Duck the room (0-100) so a dubbed voice can sit on top of it. */
+  setRoomVolume: (volume: number) => void;
   /** The screen currently on the room's wall, or null when nobody is sharing. */
   screenShare: StageScreenShare | null;
   /** True while THIS client is the one sharing. */
@@ -382,6 +384,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** The display capture we publish while sharing, and its optional system audio. */
   const screenVideoTrackRef = useRef<any>(null);
   const screenAudioTrackRef = useRef<any>(null);
+  /**
+   * Every remote speaker's audio track, kept so the room can be turned down.
+   *
+   * Playing a track and forgetting it was fine while nothing needed to change
+   * its level. Live dubbing does: a listener hearing a translation needs the
+   * original ducked underneath it — the interpretation-booth arrangement,
+   * where the room stays audible for laughter and timing rather than being
+   * muted into silence.
+   */
+  const remoteAudioTracksRef = useRef<Map<string | number, any>>(new Map());
+  /** Level the room should sit at, re-applied to tracks that arrive later. */
+  const roomVolumeRef = useRef(100);
 
   // Recording refs (host only)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -747,6 +761,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
           // One remote audio track per user even when the host publishes both a
           // mic and a screen-audio track — the SDK mixes them before they leave.
           remoteUser.audioTrack?.play();
+          // Remember it, and start it at whatever level the room is currently
+          // at — a speaker who joins mid-dub must not arrive at full volume.
+          if (remoteUser.audioTrack) {
+            remoteAudioTracksRef.current.set(remoteUser.uid, remoteUser.audioTrack);
+            try { remoteUser.audioTrack.setVolume(roomVolumeRef.current); } catch { /* older SDK */ }
+          }
         } else if (mediaType === 'video' && remoteUser.videoTrack) {
           // Take the small copy on phones and tablets. Throws when the sharer's
           // browser refused dual-stream mode, in which case there is only the
@@ -769,10 +789,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // Participant bookkeeping rides realtime DB events; the only thing Agora
         // has to tell us here is that a screen went away.
         if (mediaType === 'video') clearRemoteScreenShare(remoteUser?.uid);
+        if (mediaType === 'audio') remoteAudioTracksRef.current.delete(remoteUser?.uid);
       });
 
       // A sharer who closes the tab never gets to unpublish.
       client.on('user-left', (remoteUser: any) => {
+        remoteAudioTracksRef.current.delete(remoteUser?.uid);
         clearRemoteScreenShare(remoteUser?.uid);
       });
 
@@ -1861,6 +1883,22 @@ export function StageProvider({ children }: { children: ReactNode }) {
     await next;
   }, []);
 
+
+  /**
+   * Turn the room down (0-100) without muting it.
+   *
+   * Ducking rather than muting is deliberate: under a translated voice, the
+   * original still carries laughter, interruption and timing, and a listener
+   * with the room at zero loses every cue about what is actually happening.
+   * Applied to tracks present now and remembered for ones that arrive later.
+   */
+  const setRoomVolume = useCallback((volume: number) => {
+    const clamped = Math.max(0, Math.min(100, Math.round(volume)));
+    roomVolumeRef.current = clamped;
+    for (const track of remoteAudioTracksRef.current.values()) {
+      try { track?.setVolume?.(clamped); } catch { /* older SDK, or track already closed */ }
+    }
+  }, []);
   const stopInject = useCallback(() => {
     voiceEffectsHookRef.current.stopInjectedSound();
   }, []);
@@ -1958,6 +1996,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       refreshSpaces,
       injectAudio,
       stopInject,
+      setRoomVolume,
       screenShare,
       isScreenSharing: !!screenShare?.isLocal,
       canScreenShare,
@@ -1972,7 +2011,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       joinSpace, guestListen, guestStopListening, guestSpace, leaveSpace, endSpace,
       toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
-      stopInject, screenShare, canScreenShare, startScreenShare, stopScreenShare,
+      stopInject, setRoomVolume, screenShare, canScreenShare, startScreenShare, stopScreenShare,
     ],
   );
 

@@ -74,7 +74,7 @@ export const MARKUP_OVERRIDES: Record<string, number> = {
   'veo-3.1': 0.3,
 };
 
-export type JobKind = 'image' | 'video' | 'model3d' | 'tool';
+export type JobKind = 'image' | 'video' | 'model3d' | 'tool' | 'dub';
 export type TextureQuality = 'none' | 'standard' | 'HD';
 
 /**
@@ -163,6 +163,29 @@ export const TOOL_COST_USD: Record<string, number> = {
   'minimax-music': 0.165,
 };
 
+
+/**
+ * Live stage dubbing, billed per second of wall-clock listening.
+ *
+ * The unit is time, not characters, because that is what the listener buys —
+ * a minute of hearing the room in their language. Provider cost is ElevenLabs
+ * Flash v2.5 over the speech actually spoken in that minute, measured at 840
+ * characters a minute on the 19 Aug Town Hall plus ~10% expansion into most
+ * target languages.
+ *
+ * One entry, not two. An earlier draft split cloned and neutral voices at a
+ * tenth of the price, which only holds if the neutral tier runs on a different
+ * provider — and it does not. Synthesising a stock ElevenLabs voice costs what
+ * synthesising a cloned one costs, so charging less for it would be charging
+ * below cost. Which voice a stage actually uses is reported to the client for
+ * display, and changes nothing about the bill.
+ *
+ * At 60 seconds and the default markup this is 111 DHB.
+ */
+export const DUB_COST_USD: Record<string, { perSecond: number }> = {
+  'dub-live': { perSecond: 0.0925 / 60 },
+};
+
 export interface QuoteOptions {
   /** Video length in seconds, for the models that bill per second. */
   durationSeconds?: number;
@@ -178,6 +201,13 @@ export function providerCostUsd(kind: JobKind, modelId: string, opts: QuoteOptio
     case 'image': {
       const cost = IMAGE_COST_USD[modelId];
       return cost === undefined ? null : cost;
+    }
+    case 'dub': {
+      const entry = DUB_COST_USD[modelId];
+      if (!entry) return null;
+      // Always time-based: the caller buys a block of seconds, never a job.
+      const seconds = opts.durationSeconds ?? 0;
+      return seconds > 0 ? entry.perSecond * seconds : null;
     }
     case 'tool': {
       const cost = TOOL_COST_USD[modelId];

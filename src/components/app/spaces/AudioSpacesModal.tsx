@@ -861,7 +861,11 @@ export function AudioSpacesModal() {
 
               {/* Subtitles. Everyone gets the show/hide; a speaker also gets
                   the switch for whether their own voice is transcribed. */}
-              <StageCaptionsButton isSpeaker={myRole === 'host' || myRole === 'speaker'} />
+              <StageCaptionsButton
+                isSpeaker={myRole === 'host' || myRole === 'speaker'}
+                spaceId={currentSpace.id}
+                wallet={walletAddress}
+              />
 
               {/* Minimize */}
               <Button
