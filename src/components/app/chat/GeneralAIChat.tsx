@@ -86,11 +86,13 @@ function isDeHubBrandedImageRequest(message: string): boolean {
 }
 
 function buildDeHubBrandPrompt(userRequest: string): string {
-  return `DEHUB BRAND SYSTEM (mandatory):
+  return `DEHUB BRAND SYSTEM — "SM Template 2.0" (mandatory):
 - The attached image is the official DeHub wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
-- Palette: deep black / charcoal backgrounds, white text, subtle white-opacity accents. Never use blue.
-- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech, lots of negative space, strong focal hierarchy.
-- Typography if any: minimal white sans-serif only. No emoji. No generic AI clichés.
+- Palette: STRICTLY monochrome. Black and charcoal grounds, brushed-steel and polished-chrome greys, cool off-whites, pure white highlights. NO colour hues at all — no red, orange, yellow, magenta, purple, green, blue, teal — and no neon or tinted ambient glow. Any ambient tint must read as cool near-white, under 10% saturation.
+- Ground: never flat black. Silk / brushed texture with a soft radial vignette, faint starfield dust, and a very faint dotted lattice that rakes across the frame — strongest at the upper-left light catch, gone by the lower-right.
+- Hero: ONE large photoreal chrome or black-metal object matched to the subject matter, lit from the upper-left, radial white glow behind it, deep drop shadow, bleeding off the RIGHT and BOTTOM edges of the frame. Never centred and contained.
+- Chrome furniture: mono "// type =" annotation stamps and a "//dehub.io" mark in the corners. Any box around them is four short CORNER BRACKETS (crop marks), never a dashed or solid rectangle.
+- Typography if any: Exo / Exo 2 only (geometric technical sans-serif), UPPERCASE display with a horizontal grey-to-white sweep, pure white or silver, generous letter-spacing. No emoji. No generic AI clichés.
 
 USER REQUEST: ${userRequest}`;
 }
