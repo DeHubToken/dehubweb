@@ -15,6 +15,14 @@
  * It disables itself as soon as a real assistant message appears in the room,
  * so the two can never both answer. Delete this file once the API side has
  * shipped.
+ *
+ * It also refuses to answer anything but a mention from the last couple of
+ * minutes. The "already answered" set below lives in the tab and is wiped on
+ * every page load, and the room history it scans goes back months — so without
+ * an age bound, opening chat re-answers whatever the viewer's newest mention
+ * was, however old. That is not theoretical: a question from eleven days
+ * earlier came back as a fresh reply, stamped with the current time and sorted
+ * to the bottom of the room, looking like the bot had finally woken up.
  */
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -30,6 +38,15 @@ export interface AssistantReply {
   /** id of the source chat message that triggered this reply */
   sourceMessageId: string;
 }
+
+/**
+ * How recent a mention has to be before this fallback will answer it.
+ *
+ * Long enough to cover the real case — you typed it, the socket round-trip and
+ * a reload happened, the API still is not answering — and far too short to
+ * reach back into history.
+ */
+const MAX_MENTION_AGE_MS = 2 * 60 * 1000;
 
 // ---- Singleton store ----
 let replies: AssistantReply[] = [];
@@ -93,11 +110,17 @@ export function useAssistantReplyEngine(messages: SupabaseLiveChatMessage[]) {
     // — persisted, and visible to everyone rather than just the asker.
     if (messages.some((m) => isAssistantAddress(m.sender_address))) return;
 
-    // Find newest unresponded @assistant mention authored by the current user.
+    // Find newest unresponded @assistant mention authored by the current user,
+    // within the age bound — see MAX_MENTION_AGE_MS. A message with no parsable
+    // timestamp is treated as old, because the only thing worse than missing a
+    // reply is answering a question the room moved on from days ago.
+    const now = Date.now();
     const candidate = [...messages].reverse().find((m) => {
       if (respondedIds.has(m.id) || inFlightIds.has(m.id)) return false;
       if (!m.content) return false;
       if (!/@assistant\b/i.test(m.content)) return false;
+      const sentAt = Date.parse(m.created_at);
+      if (!Number.isFinite(sentAt) || now - sentAt > MAX_MENTION_AGE_MS) return false;
       return (m.sender_address || '').toLowerCase() === wallet;
     });
     if (!candidate) return;
