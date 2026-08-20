@@ -16,7 +16,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2, Bell,
-  Link, UserPlus, Minimize2, Play, Square, Clock, Trash2, FileText,
+  Link, UserPlus, Minimize2, Play, Pause, PictureInPicture2, Clock, Trash2, FileText,
   ScreenShare, ScreenShareOff,
 } from 'lucide-react';
 import { StageTranscriptDrawer } from './StageTranscriptDrawer';
@@ -42,6 +42,8 @@ import { StageReactions, type AvatarReactions } from './StageReactions';
 import { StageChat } from './StageChat';
 import { StageCaptionsButton, StageCaptionsOverlay } from './StageCaptions';
 import {
+  closeStagePopout,
+  popOutStageRecording,
   seekStageRecording,
   stopStageRecording,
   toggleStageRecording,
@@ -106,6 +108,8 @@ export function AudioSpacesModal() {
   const {
     spaceId: playingStageId,
     title: playingStageTitle,
+    paused: playbackPaused,
+    popout: playbackPopout,
     volume: playbackVolume,
     progress: playbackProgress,
     timeLeft: playbackTimeLeft,
@@ -155,6 +159,10 @@ export function AudioSpacesModal() {
   };
 
   const handleClose = () => {
+    // A recording played from this drawer and not popped out loses its only
+    // control when the drawer shuts, so it stops with it. Pop it out first and
+    // it keeps going in the corner, which is the point of that button.
+    if (playingStageId && !playbackPopout) stopStageRecording();
     if (currentSpace) {
       closeModal();
     } else {
@@ -329,8 +337,8 @@ export function AudioSpacesModal() {
                                   : "bg-white/5 text-white/20"
                             )}
                           >
-                            {playingStageId === space.id ? (
-                              <Square className="w-3.5 h-3.5" fill="currentColor" />
+                            {playingStageId === space.id && !playbackPaused ? (
+                              <Pause className="w-3.5 h-3.5" fill="currentColor" />
                             ) : (
                               <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
                             )}
@@ -423,6 +431,33 @@ export function AudioSpacesModal() {
                             <span className="block text-[10px] text-white/50 font-mono text-right mt-0.5">{playbackTimeLeft}</span>
                           )}
                         </div>
+                        {/* Pop the corner player out — this is a drawer, so
+                            listening on past the moment it closes is exactly
+                            what somebody pressing play in here tends to want.
+                            It no longer opens by itself. */}
+                        {space.recording_url && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (playingStageId === space.id && playbackPopout) closeStagePopout();
+                              else popOutStageRecording(space);
+                            }}
+                            aria-pressed={playingStageId === space.id && playbackPopout}
+                            className={cn(
+                              'shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all',
+                              playingStageId === space.id && playbackPopout
+                                ? 'text-white bg-white/10'
+                                : 'text-white/40 hover:text-white hover:bg-white/10',
+                            )}
+                            title={
+                              playingStageId === space.id && playbackPopout
+                                ? 'Close the corner player'
+                                : 'Pop out the player'
+                            }
+                          >
+                            <PictureInPicture2 className="w-4 h-4" />
+                          </button>
+                        )}
                         {/* Transcript button — visible to everyone if recording exists */}
                         {space.recording_url && (
                           <button

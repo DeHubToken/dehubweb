@@ -35,7 +35,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
-import { CalendarDays, CalendarPlus, Radio, Loader2, Share2, Bell, BellRing, Headphones, Square, Users, Clock, Play, FileText } from 'lucide-react';
+import { CalendarDays, CalendarPlus, Radio, Loader2, Share2, Bell, BellRing, Headphones, Square, Users, Clock, Play, Pause, PictureInPicture2, FileText } from 'lucide-react';
 import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
@@ -57,6 +57,8 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import {
+  closeStagePopout,
+  popOutStageRecording,
   seekStageRecording,
   toggleStageRecording,
   useStagePlayback,
@@ -336,7 +338,11 @@ export default function StageDeepLinkPage() {
   // ── Ended stage: the same card, plus what the stage drew ─────────────────
 
   if (stage && stage.status === 'ended') {
-    const isPlaying = playback.spaceId === stage.id;
+    // Loaded and playing are different states: a paused recording keeps its
+    // place on the bar and its lit controls, it just stops moving.
+    const isLoaded = playback.spaceId === stage.id;
+    const isPlaying = isLoaded && !playback.paused;
+    const isPoppedOut = isLoaded && playback.popout;
     const endedAt = stage.ended_at ? new Date(stage.ended_at) : null;
     const ranFor =
       stage.started_at && stage.ended_at
@@ -423,18 +429,20 @@ export default function StageDeepLinkPage() {
             {stage.recording_url ? (
               <>
                 {/* Seekable, and the bar plays from wherever it is pressed —
-                    the same shared player the Recorded tab and the feed chip
-                    drive, so pressing play here stops anything else running. */}
+                    the same shared player the Recorded tab and the card in the
+                    feed drive, so pressing play here stops anything else
+                    running. The control beside it lifts the audio into the
+                    corner player, which no longer appears on its own. */}
                 <div className="flex items-center gap-3 mt-5">
                   <button
                     onClick={() => toggleStageRecording(stage)}
-                    aria-label={isPlaying ? 'Stop recording' : 'Play recording'}
+                    aria-label={isPlaying ? 'Pause recording' : 'Play recording'}
                     className="shrink-0 w-11 h-11 rounded-xl bg-white text-black hover:bg-white/90 flex items-center justify-center transition-colors"
                   >
-                    {isPlaying && playback.loading ? (
+                    {isLoaded && playback.loading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : isPlaying ? (
-                      <Square className="w-4 h-4" fill="currentColor" />
+                      <Pause className="w-4 h-4" fill="currentColor" />
                     ) : (
                       <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
                     )}
@@ -442,7 +450,7 @@ export default function StageDeepLinkPage() {
                   <div
                     className={cn(
                       'flex items-center gap-2 flex-1 min-w-0 h-11 transition-opacity duration-300',
-                      isPlaying ? 'opacity-100' : 'opacity-40',
+                      isLoaded ? 'opacity-100' : 'opacity-40',
                     )}
                   >
                     <StaticWaveform
@@ -451,15 +459,29 @@ export default function StageDeepLinkPage() {
                       animated={isPlaying}
                       volumeLevel={isPlaying ? playback.volume : 0}
                       color={isPaper ? 'rgba(0,0,0,0.8)' : undefined}
-                      progress={isPlaying ? playback.progress : undefined}
+                      progress={isLoaded ? playback.progress : undefined}
                       onSeek={(pos) => seekStageRecording(stage, pos)}
                     />
-                    {isPlaying && playback.timeLeft && (
+                    {isLoaded && playback.timeLeft && (
                       <span className="text-[10px] text-zinc-500 font-mono shrink-0 w-10 text-right">
                         {playback.timeLeft}
                       </span>
                     )}
                   </div>
+                  <button
+                    onClick={() => (isPoppedOut ? closeStagePopout() : popOutStageRecording(stage))}
+                    aria-pressed={isPoppedOut}
+                    aria-label={isPoppedOut ? 'Close the corner player' : 'Pop out the player'}
+                    title={isPoppedOut ? 'Close the corner player' : 'Pop out the player'}
+                    className={cn(
+                      'shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors',
+                      isPoppedOut
+                        ? 'bg-white/20 text-white'
+                        : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white',
+                    )}
+                  >
+                    <PictureInPicture2 className="w-4 h-4" />
+                  </button>
                 </div>
 
                 <div className="flex gap-2 mt-4">
