@@ -13,7 +13,7 @@
  * unless it looked provisional first.
  */
 
-import { Captions, CaptionsOff, Check } from 'lucide-react';
+import { Captions, CaptionsOff, Check, Headphones, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useStageCaptionFeed } from '@/hooks/use-stage-captions';
+import { useStageDubbing } from '@/hooks/use-stage-dubbing';
 import {
   CAPTION_LANGUAGES,
   setCaptionLanguage,
@@ -99,13 +100,20 @@ export function StageCaptionsOverlay({ spaceId, className }: StageCaptionsOverla
 interface StageCaptionsButtonProps {
   /** Speakers get the extra switch for their own microphone; listeners have nothing to send. */
   isSpeaker: boolean;
+  /** Needed to price and buy dubbing; without it the audio section stays hidden. */
+  spaceId?: string | null;
+  /** The buyer. Dubbing is metered per minute, so it needs a wallet to charge. */
+  wallet?: string | null;
   className?: string;
 }
 
-export function StageCaptionsButton({ isSpeaker, className }: StageCaptionsButtonProps) {
+export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: StageCaptionsButtonProps) {
   const show = useShowCaptions();
   const send = useSendCaptions();
   const language = useCaptionLanguage();
+
+  const dubbing = useStageDubbing(spaceId, wallet ?? null);
+  const dubQuote = dubbing.quote;
 
   const active = CAPTION_LANGUAGES.find((l) => l.code === language);
 
@@ -166,6 +174,53 @@ export function StageCaptionsButton({ isSpeaker, className }: StageCaptionsButto
             {option.name}
           </DropdownMenuItem>
         ))}
+
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="text-xs text-muted-foreground">
+          Audio
+        </DropdownMenuLabel>
+
+        {/* Dubbing follows the subtitle language rather than offering its own
+            picker. Reading Turkish and hearing Spanish is not a thing anyone
+            wants, and two lists for one decision is two chances to get it
+            wrong — including expensively, since this one is metered. */}
+        {!language ? (
+          <DropdownMenuItem disabled className="text-xs">
+            Pick a language above to hear it dubbed
+          </DropdownMenuItem>
+        ) : dubbing.language ? (
+          <DropdownMenuItem onSelect={() => dubbing.stop()}>
+            <Volume2 className="w-4 h-4 mr-2 shrink-0 text-primary" />
+            <span className="flex-1">Stop dubbing</span>
+            <span className="ml-2 text-[10px] font-mono text-muted-foreground tabular-nums">
+              {dubbing.spentDhb} DHB
+            </span>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            disabled={dubbing.starting || !dubQuote}
+            onSelect={(event) => {
+              // Money leaves the wallet on this click. Keep the menu open so
+              // the price and the failure toast land on the same surface the
+              // decision was made on.
+              event.preventDefault();
+              void dubbing.start(language);
+            }}
+          >
+            <Headphones className="w-4 h-4 mr-2 shrink-0" />
+            <span className="flex-1">Hear it in {active?.name ?? language}</span>
+            {dubQuote && (
+              <span className="ml-2 text-[10px] font-mono text-muted-foreground tabular-nums">
+                {dubQuote.priceDhb}/min
+              </span>
+            )}
+          </DropdownMenuItem>
+        )}
+        {dubQuote && !dubQuote.clonedVoice && language && (
+          <DropdownMenuLabel className="text-[10px] font-normal text-muted-foreground pt-0">
+            Stock voice — the host has not trained theirs
+          </DropdownMenuLabel>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
