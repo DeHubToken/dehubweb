@@ -14,14 +14,19 @@
  * promises more than the game delivers is worse than no card.
  */
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Play, Swords } from 'lucide-react';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { SEOHead } from '@/components/SEOHead';
+import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
+import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
+
+/** The games that are a competition, in registry order. */
+const RANKED_GAMES = ARCADE_GAMES.filter((game) => game.leaderboard);
 
 function GameCard({ game }: { game: ArcadeGame }) {
   return (
@@ -83,6 +88,9 @@ function GameCard({ game }: { game: ArcadeGame }) {
 
 export default function ArcadePage() {
   const { t } = useTranslation();
+  const { walletAddress } = useAuth();
+  const wallet = walletAddress?.toLowerCase() ?? null;
+  const [board, setBoard] = useState(RANKED_GAMES[0]?.slug ?? '');
 
   // Swallow the grid at the sticky header bento's top edge under the glass
   // themes, the same cut the home feed makes at its nav pill.
@@ -144,6 +152,36 @@ export default function ArcadePage() {
             <GameCard key={game.slug} game={game} />
           ))}
         </div>
+
+        {/* The boards, under the games rather than above them: somebody who has
+            not played yet wants the grid, and somebody who has knows to scroll.
+
+            One switcher rather than two stacked boards. They are different
+            games measured in different units — a chess rating and a distance
+            down a street have no shared axis — so showing them side by side
+            would invite a comparison that means nothing. */}
+        {RANKED_GAMES.length > 0 ? (
+          <section data-feed-item className="mt-4 rounded-2xl bg-zinc-900/60 p-4 ring-1 ring-white/[0.06]">
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {RANKED_GAMES.map((game) => (
+                <button
+                  key={game.slug}
+                  type="button"
+                  onClick={() => setBoard(game.slug)}
+                  aria-pressed={board === game.slug}
+                  className={
+                    board === game.slug
+                      ? 'rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-black'
+                      : 'rounded-full bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:bg-zinc-700'
+                  }
+                >
+                  {game.title}
+                </button>
+              ))}
+            </div>
+            <ArcadeLeaderboard slug={board} wallet={wallet} limit={10} />
+          </section>
+        ) : null}
       </div>
     </div>
   );

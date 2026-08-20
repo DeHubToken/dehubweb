@@ -271,6 +271,76 @@ describe('arcade exit bridge', () => {
   });
 });
 
+describe('arcade run bridge', () => {
+  // A run board is worth exactly as much as the reports the game sends, and
+  // every way that bridge can break is silent: the game plays perfectly, the
+  // board just never gains a row. So each half is asserted here.
+
+  it('gives every run board a source the host can listen for', () => {
+    for (const game of ARCADE_GAMES) {
+      if (game.leaderboard?.kind !== 'run') continue;
+      expect(game.leaderboard.runSource, `${game.slug} run board needs a runSource`).toBeTruthy();
+    }
+  });
+
+  it('ships a vendored game that posts the run messages the host expects', () => {
+    for (const game of ARCADE_GAMES) {
+      const source = game.leaderboard?.runSource;
+      if (!source) continue;
+      const html = readFileSync(repo('public', GAME_DIRS[game.slug], 'index.html'), 'utf8');
+
+      for (const type of ['run-start', 'run-progress', 'run-end']) {
+        expect(html.includes(`"${type}"`) || html.includes(`'${type}'`), `${game.slug} posts ${type}`).toBe(true);
+      }
+      expect(html, `${game.slug} run bridge names its source`).toContain(source);
+      // Gated on being framed, like the exit chip: a standalone deploy has no
+      // host to report to and must not spend a timer talking to nobody.
+      expect(html.includes('window.parent'), `${game.slug} gates the bridge on being embedded`).toBe(true);
+    }
+  });
+
+  it('keeps Street Slayer measuring things the engine and the project still have', () => {
+    // The bridge reads the Construct 2 runtime by name, across a build nobody
+    // here can rebuild. Two different things can go stale and neither says so:
+    // the ENGINE handles (a re-export on a different runtime) and the PROJECT's
+    // own global (a rename in the .capx). Losing the first stops the board
+    // dead; losing the second is worse — every run then reports 0 HP forever
+    // and the board looks like it is working.
+    const html = readFileSync(repo('public/street-slayer-game/index.html'), 'utf8');
+    const runtime = readFileSync(repo('public/street-slayer-game/c2runtime.js'), 'utf8');
+    const data = readFileSync(repo('public/street-slayer-game/data.js'), 'utf8');
+
+    for (const name of ['running_layout', 'all_global_vars', 'original_width']) {
+      expect(html.includes(name), `run bridge reads ${name}`).toBe(true);
+      // Booleans, not toContain: a failed toContain against a 674 KB runtime
+      // would print the whole runtime.
+      expect(runtime.includes(name), `runtime still exposes ${name}`).toBe(true);
+    }
+
+    // The health global, declared by the project rather than the engine. `[1,`
+    // is Construct's event-variable block, so this is its declaration and not
+    // some string that happens to match.
+    expect(html.includes('life_of_p1'), 'run bridge reads life_of_p1').toBe(true);
+    expect(data.includes('[1,"life_of_p1"'), 'project still declares life_of_p1').toBe(true);
+
+    // The one layout that is the game. The bridge decides a run has started or
+    // ended by comparing against this name, so a renamed layout means either no
+    // runs at all or one run that never ends.
+    expect(data.includes('["stage",4600,480'), 'project still has the 4600px stage layout').toBe(true);
+
+    // NOT `number_of_complete_stages`. It reads like the metric to rank and it
+    // is dead in this build — compared in six places, incremented in none — so
+    // a board built on it would never gain a row. The name appears in the
+    // bridge's own comment explaining that, which is why this asserts on the
+    // READ rather than on the string: a future edit reaching for the obvious
+    // variable has to come past this.
+    expect(
+      /globalVar\(\s*rt\s*,\s*["']number_of_complete_stages["']/.test(html),
+      'run bridge does not read the dead stage counter',
+    ).toBe(false);
+  });
+});
+
 describe('arcade readiness bridge', () => {
   it('keeps the bridge in the entry document of every game that declares one', () => {
     // Regression guard, and it has already earned its place. Two of the
