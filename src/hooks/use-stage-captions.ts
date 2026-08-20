@@ -22,11 +22,17 @@ import {
   CAPTION_FINAL_TTL_MS,
   CAPTION_INTERIM_TTL_MS,
   CAPTION_MAX_LINES,
+  CAPTION_SOURCE_LANGUAGE,
+  CAPTION_TRANSLATION_EVENT,
   emitLocalCaption,
   onLocalCaption,
+  onLocalTranslation,
+  emitLocalTranslation,
+  useCaptionLanguage,
   stageCaptionChannel,
   useSendCaptions,
   type StageCaptionMessage,
+  type StageCaptionTranslation,
 } from '@/lib/stage-captions';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -120,21 +126,122 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
   const identityRef = useRef({ wallet, name });
   identityRef.current = { wallet, name };
 
+  /** Languages a listener is reading right now, from Realtime presence. */
+  const activeLanguagesRef = useRef<string[]>([]);
+  /**
+   * Lines already translated this stage, keyed `lang:text`. A host's stock
+   * intro, a repeated question and "thanks for joining" are free after the
+   * first time. Cleared wholesale rather than evicted per-entry when it grows
+   * — the point is a cheap hit rate, not a correct LRU.
+   */
+  const translationCacheRef = useRef<Map<string, string>>(new Map());
+  /** The previous finished sentence, handed to the translator as context only. */
+  const previousFinalRef = useRef('');
+  const translateRef = useRef<((message: StageCaptionMessage) => void) | null>(null);
+
   // ─── The broadcast channel ────────────────────────────────────────────────
   // Held for any speaker, not only one with transcription switched on: a TTS
   // clip is captionable whether or not the speaker's own microphone is.
+  //
+  // Presence is enabled here so this client can see which languages the room
+  // is reading. That set — not the picker — decides what gets translated, so
+  // fourteen languages on offer cost whatever two or three people chose.
   useEffect(() => {
     if (!spaceId || !isSpeaker) return;
-    const channel = supabase.channel(stageCaptionChannel(spaceId)).subscribe();
+    const channel = supabase.channel(stageCaptionChannel(spaceId), {
+      config: { presence: { key: `speaker-${Math.random().toString(36).slice(2, 10)}` } },
+    });
+    channel.on('presence', { event: 'sync' }, () => {
+      const state = channel.presenceState<{ lang?: string }>();
+      const languages = new Set<string>();
+      for (const entries of Object.values(state)) {
+        for (const entry of entries) {
+          if (entry.lang && entry.lang !== CAPTION_SOURCE_LANGUAGE) languages.add(entry.lang);
+        }
+      }
+      activeLanguagesRef.current = [...languages];
+    });
+    channel.subscribe();
     channelRef.current = channel;
     return () => {
       supabase.removeChannel(channel);
       channelRef.current = null;
+      activeLanguagesRef.current = [];
     };
   }, [spaceId, isSpeaker]);
 
   const spaceIdRef = useRef(spaceId);
   spaceIdRef.current = spaceId;
+
+  const publishTranslation = useCallback((spaceKey: string, payload: StageCaptionTranslation) => {
+    if (!Object.keys(payload.translations).length) return;
+    emitLocalTranslation(spaceKey, payload);
+    channelRef.current
+      ?.send({ type: 'broadcast', event: CAPTION_TRANSLATION_EVENT, payload })
+      .catch(() => {
+        /* the viewer falls back to the source line — better than a retry storm */
+      });
+  }, []);
+
+  /**
+   * Translate one finished line into every language the room is reading, and
+   * broadcast the result.
+   *
+   * Fire-and-forget on purpose: nothing upstream should wait on a translation,
+   * and a failure means viewers read the source line for that sentence rather
+   * than losing the caption.
+   */
+  const translate = useCallback(
+    async (message: StageCaptionMessage) => {
+      const id = spaceIdRef.current;
+      const wallet = identityRef.current.wallet;
+      const languages = activeLanguagesRef.current;
+      if (!id || !wallet || !languages.length || !message.text) return;
+
+      const cache = translationCacheRef.current;
+      const fromCache: Record<string, string> = {};
+      const missing: string[] = [];
+      for (const lang of languages) {
+        const hit = cache.get(`${lang}:${message.text}`);
+        if (hit) fromCache[lang] = hit;
+        else missing.push(lang);
+      }
+      if (!missing.length) {
+        publishTranslation(id, { id: message.id, translations: fromCache });
+        return;
+      }
+
+      try {
+        const dehubToken = await ensureFreshToken();
+        if (!dehubToken) return;
+        const { data, error } = await supabase.functions.invoke('translate-caption', {
+          body: {
+            spaceId: id,
+            lineId: message.id,
+            text: message.text,
+            // Context disambiguates pronouns and homonyms across a sentence
+            // boundary. It roughly doubles input tokens on a workload where
+            // input is already the cheap half.
+            context: previousFinalRef.current,
+            languages: missing,
+          },
+          headers: { 'x-dehub-token': dehubToken, 'x-wallet-address': wallet.toLowerCase() },
+        });
+        if (error || !data?.translations) return;
+
+        const fresh = data.translations as Record<string, string>;
+        if (cache.size > 400) cache.clear();
+        for (const [lang, text] of Object.entries(fresh)) {
+          cache.set(`${lang}:${message.text}`, text);
+        }
+        publishTranslation(id, { id: message.id, translations: { ...fromCache, ...fresh } });
+      } catch {
+        /* not deployed, offline, rate limited — viewers keep the source line */
+      }
+    },
+    [publishTranslation],
+  );
+  translateRef.current = translate;
 
   const send = useCallback((message: StageCaptionMessage) => {
     const id = spaceIdRef.current;
@@ -146,6 +253,14 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
       .catch(() => {
         /* a dropped caption is not worth a retry — the next one is 350ms away */
       });
+
+    // Finals only. An interim is rewritten every ~350ms, so translating one
+    // would cost an order of magnitude more to produce subtitles that change
+    // under the reader.
+    if (message.final && message.text) {
+      void translateRef.current?.(message);
+      previousFinalRef.current = message.text;
+    }
   }, []);
 
   const publishAi = useCallback(
@@ -409,6 +524,8 @@ export interface StageCaptionLine {
   final: boolean;
   kind: 'speech' | 'ai';
   at: number;
+  /** Language code → this line in that language. Arrives after the source line. */
+  translations?: Record<string, string>;
 }
 
 /**
@@ -418,15 +535,40 @@ export interface StageCaptionLine {
  * would make a line jump to the bottom on every interim update, so two people
  * talking at once would swap positions several times a second and neither
  * would be readable.
+ *
+ * Translations already attached to the line are carried across. They arrive on
+ * their own event, after the final that triggered them, and a later caption
+ * update for the same utterance must not drop them.
  */
 function foldCaption(lines: StageCaptionLine[], next: StageCaptionLine): StageCaptionLine[] {
   const existing = lines.findIndex((line) => line.id === next.id);
   if (existing >= 0) {
     const copy = lines.slice();
-    copy[existing] = next;
+    const prior = copy[existing];
+    copy[existing] = prior.translations
+      ? { ...next, translations: { ...prior.translations, ...next.translations } }
+      : next;
     return copy;
   }
   return [...lines, next].slice(-CAPTION_MAX_LINES);
+}
+
+/** Attach a translation to the line it belongs to, if that line is still on screen. */
+function foldTranslation(
+  lines: StageCaptionLine[],
+  payload: StageCaptionTranslation,
+): StageCaptionLine[] {
+  const index = lines.findIndex((line) => line.id === payload.id);
+  // The line already expired, or belongs to a stage we are no longer watching.
+  // Nothing to attach it to, and inventing a line for it would resurrect text
+  // the viewer has already scrolled past.
+  if (index < 0) return lines;
+  const copy = lines.slice();
+  copy[index] = {
+    ...copy[index],
+    translations: { ...copy[index].translations, ...payload.translations },
+  };
+  return copy;
 }
 
 function toLine(message: StageCaptionMessage, wallet: string): StageCaptionLine {
@@ -443,7 +585,7 @@ function toLine(message: StageCaptionMessage, wallet: string): StageCaptionLine 
 }
 
 /**
- * Subscribe to a stage's captions.
+ * Subscribe to a stage's captions, in the language this viewer chose.
  *
  * Broadcast payloads carry no verified sender, so every line off the wire is
  * checked against the stage's current host/speaker roster before it is shown.
@@ -454,14 +596,24 @@ function toLine(message: StageCaptionMessage, wallet: string): StageCaptionLine 
  * Captions this client produced arrive on the local bus instead and skip the
  * check: they never touched the network, and a client that is publishing is by
  * definition seated.
+ *
+ * The chosen language is published over Realtime presence. That is not a
+ * cosmetic detail — it is what the speakers' clients read to decide which
+ * languages to pay to translate into, so a viewer who picks Turkish is the
+ * reason Turkish gets translated, and a room where nobody picks it never
+ * spends a penny on it.
  */
 export function useStageCaptionFeed(
   spaceId: string | undefined | null,
   enabled: boolean,
 ): StageCaptionLine[] {
   const [lines, setLines] = useState<StageCaptionLine[]>([]);
+  const language = useCaptionLanguage();
   const allowedRef = useRef<Set<string>>(new Set());
   const lastRosterFetchRef = useRef(0);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const languageRef = useRef(language);
+  languageRef.current = language;
 
   const refreshRoster = useCallback(async () => {
     if (!spaceId) return;
@@ -492,8 +644,11 @@ export function useStageCaptionFeed(
 
     void refreshRoster();
 
-    const channel = supabase
-      .channel(stageCaptionChannel(spaceId))
+    const channel = supabase.channel(stageCaptionChannel(spaceId), {
+      config: { presence: { key: `viewer-${Math.random().toString(36).slice(2, 10)}` } },
+    });
+
+    channel
       .on('broadcast', { event: CAPTION_EVENT }, ({ payload }) => {
         const message = payload as StageCaptionMessage | undefined;
         if (!message?.id || typeof message.text !== 'string') return;
@@ -510,11 +665,28 @@ export function useStageCaptionFeed(
 
         setLines((prev) => foldCaption(prev, toLine(message, wallet)));
       })
-      .subscribe();
+      .on('broadcast', { event: CAPTION_TRANSLATION_EVENT }, ({ payload }) => {
+        const translation = payload as StageCaptionTranslation | undefined;
+        if (!translation?.id || !translation.translations) return;
+        // No roster check needed: a translation can only attach to a line that
+        // already passed one, and it cannot create a line of its own.
+        setLines((prev) => foldTranslation(prev, translation));
+      })
+      .subscribe((status) => {
+        if (status !== 'SUBSCRIBED') return;
+        void channel.track({ lang: languageRef.current ?? CAPTION_SOURCE_LANGUAGE });
+      });
 
-    const unsubscribeLocal = onLocalCaption((localSpaceId, message) => {
+    channelRef.current = channel;
+
+    const unsubscribeCaption = onLocalCaption((localSpaceId, message) => {
       if (localSpaceId !== spaceId || !message?.id) return;
       setLines((prev) => foldCaption(prev, toLine(message, String(message.wallet || '').toLowerCase())));
+    });
+
+    const unsubscribeTranslation = onLocalTranslation((localSpaceId, payload) => {
+      if (localSpaceId !== spaceId || !payload?.id) return;
+      setLines((prev) => foldTranslation(prev, payload));
     });
 
     const sweeper = setInterval(() => {
@@ -529,11 +701,23 @@ export function useStageCaptionFeed(
 
     return () => {
       clearInterval(sweeper);
-      unsubscribeLocal();
+      unsubscribeCaption();
+      unsubscribeTranslation();
       supabase.removeChannel(channel);
+      channelRef.current = null;
       setLines([]);
     };
   }, [spaceId, enabled, refreshRoster]);
+
+  // Re-publish the choice without tearing the subscription down. Putting
+  // `language` in the effect above would resubscribe on every change, dropping
+  // captions for the second it takes to rejoin — exactly while the viewer is
+  // looking at them.
+  useEffect(() => {
+    channelRef.current?.track({ lang: language ?? CAPTION_SOURCE_LANGUAGE }).catch(() => {
+      /* not subscribed yet — the subscribe callback tracks the current value */
+    });
+  }, [language]);
 
   return lines;
 }

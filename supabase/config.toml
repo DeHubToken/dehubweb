@@ -118,6 +118,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.sync-staking-deposits]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.translate-caption]
+    verify_jwt = false
   [functions.transcribe-stage]
     verify_jwt = false
   [functions.translate-image]

@@ -806,7 +806,9 @@ export function AudioSpacesModal() {
         {/* Anchored Controls Bar — outside ScrollArea */}
         {currentSpace && (
           <div className="shrink-0 p-3 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
-            <div className="flex items-center justify-center gap-3 max-w-md mx-auto">
+            {/* Wraps rather than overflowing: a host on a narrow phone can have
+                mute, screen share, subtitles, minimise and leave all at once. */}
+            <div className="flex flex-wrap items-center justify-center gap-3 max-w-md mx-auto">
               {/* Mute Button (speakers only) */}
               {(myRole === 'host' || myRole === 'speaker') && (
                 <Button
