@@ -20,6 +20,7 @@ import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useVoiceEffects } from '@/hooks/use-voice-effects';
+import { useStageCaptionPublisher } from '@/hooks/use-stage-captions';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import type {
   AudioSpace,
@@ -153,6 +154,13 @@ export interface AudioInjectionSource {
   source: string;
   /** Human-readable label, e.g. "AI – Aria", "Soundboard: Air Horn". */
   label: string;
+  /**
+   * The words the clip says, when they are known without transcribing it —
+   * the TTS prompt, or a soundboard sound's name. Broadcast as a caption so a
+   * clip is subtitled the instant it plays instead of a second later, and
+   * without spending a transcription on text we already had.
+   */
+  caption?: string;
 }
 
 const StageContext = createContext<StageContextType | null>(null);
@@ -390,6 +398,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
   const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
+  /**
+   * Broadcast one caption line. Assigned below, once the caption publisher is
+   * mounted; held as a ref so injectAudio can reach it without taking the
+   * publisher as a dependency and rebuilding on every caption preference flip.
+   */
+  const publishCaptionRef = useRef<((text: string, label: string) => void) | null>(null);
   /** Guard against concurrent setVoiceEffect calls */
   const isEffectSwitchingRef = useRef(false);
   /** Coalesce bursts of audio_spaces realtime events into one list fetch */
@@ -1814,6 +1828,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
       const winStart = recStart > 0 ? (Date.now() - recStart) / 1000 : 0;
 
       try {
+        // Subtitle the clip as it starts rather than when it finishes, and
+        // from the text we were handed — a TTS line does not need transcribing
+        // back out of its own audio.
+        if (injectionSource?.caption) {
+          publishCaptionRef.current?.(injectionSource.caption, injectionSource.label || 'AI voice');
+        }
         await voiceEffectsHookRef.current.injectSound(audioBlob);
       } finally {
         if (recStart > 0) {
@@ -1871,6 +1891,30 @@ export function StageProvider({ children }: { children: ReactNode }) {
       supabase.removeChannel(channel);
     };
   }, [refreshSpaces, refreshScheduledSpaces]);
+
+  // ─── Live captions ──────────────────────────────────────────────────────────
+  //
+  // Mounted here, in the provider, rather than in the room UI: a host who
+  // minimises the stage to browse the app is still talking, and their captions
+  // have to keep flowing to everyone listening. The publisher transcribes only
+  // this client's own microphone — every other speaker's words arrive as text
+  // over the broadcast channel from their own machine, which is what makes
+  // guest speakers captionable at all. They are absent from this client's
+  // audio graph by construction, exactly as they are absent from the host-side
+  // recording, so anything reading the mix could only ever subtitle the host.
+
+  /** Read at call time: an effect switch replaces the graph but keeps this stream. */
+  const getRawMicStream = useCallback(() => voiceEffectsHookRef.current.getRawStream(), []);
+
+  const captionPublisher = useStageCaptionPublisher({
+    spaceId: currentSpace?.id ?? null,
+    isSpeaker: myRole === 'host' || myRole === 'speaker',
+    isMuted,
+    wallet: walletAddress ?? null,
+    name: user?.username || 'Speaker',
+    getRawStream: getRawMicStream,
+  });
+  publishCaptionRef.current = captionPublisher.publishAi;
 
   // Memoized: the provider re-renders on every participant/realtime event
   // while a space is live — an inline value object handed every consumer a

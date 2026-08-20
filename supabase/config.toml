@@ -104,6 +104,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.ssr-seo]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.stage-caption-token]
+    verify_jwt = false
   [functions.stock-quote]
     verify_jwt = false
   [functions.stories-api]

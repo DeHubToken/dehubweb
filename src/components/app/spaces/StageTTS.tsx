@@ -173,7 +173,13 @@ export function StageTTS() {
 
       const audioBlob = await response.blob();
       const voiceLabel = voices.find((v) => v.voice_id === selectedVoice)?.name || 'TTS';
-      await injectAudio(audioBlob, { kind: 'ai', source: 'tts', label: `AI · ${voiceLabel}` });
+      await injectAudio(audioBlob, {
+        kind: 'ai',
+        source: 'tts',
+        label: `AI · ${voiceLabel}`,
+        // We typed these words — no reason to transcribe them back out of the audio.
+        caption: text.trim(),
+      });
 
       setText('');
     } catch (err) {

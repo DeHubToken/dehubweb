@@ -52,6 +52,7 @@ import { StageScreenShare } from '@/components/app/spaces/StageScreenShare';
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
+import { StageCaptionsButton, StageCaptionsOverlay } from '@/components/app/spaces/StageCaptions';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -568,6 +569,18 @@ export default function StageDeepLinkPage() {
                 press "Listen in": there is no Agora connection to carry it
                 before that. */}
             <StageScreenShare sharerName={stage.host_username} className="mt-4" />
+
+            {/* Live subtitles, for a guest with no account. Reading them needs
+                no credential and no microphone — only the realtime channel the
+                speakers are already broadcasting on. Gated on actually
+                listening: subtitles with no audio under them are a transcript
+                nobody asked for. */}
+            {listening && (
+              <div className="mt-4 flex flex-col items-center gap-2">
+                <StageCaptionsOverlay spaceId={stage.id} />
+                <StageCaptionsButton isSpeaker={false} className="w-10 h-10" />
+              </div>
+            )}
 
             <div className="flex items-center gap-2 mt-4">
               <StageHostLink

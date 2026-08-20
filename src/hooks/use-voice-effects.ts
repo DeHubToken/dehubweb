@@ -326,6 +326,19 @@ export function useVoiceEffects() {
   }, []);
 
   /**
+   * The untouched getUserMedia stream, before any effect.
+   *
+   * Live captions read this rather than the processed output: a pitch-shifted
+   * or ring-modulated voice is exactly what speech-to-text cannot handle, and
+   * the point is to subtitle what the person said, not what the room hears.
+   * It also outlives an effect switch, which tears the graph down and builds a
+   * new one around this same raw stream.
+   */
+  const getRawStream = useCallback((): MediaStream | null => {
+    return rawStreamRef.current;
+  }, []);
+
+  /**
    * Enable/disable the raw microphone feeding the effect graph.
    * Used by injectAudio to silence the mic while a soundboard/TTS clip plays
    * (so the outgoing track carries only the clip, no mic bleed) without
@@ -414,6 +427,7 @@ export function useVoiceEffects() {
     rebuildEffect,
     cleanup,
     getProcessedStream,
+    getRawStream,
     setRawMicEnabled,
     injectSound,
     stopInjectedSound,
