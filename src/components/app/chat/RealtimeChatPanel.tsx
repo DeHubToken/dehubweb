@@ -334,7 +334,23 @@ export function RealtimeChatPanel({
                             <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
                               {name}
                             </button>
-                            <BadgeIcon badgeBalance={msg.badge_balance} username={msg.username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />
+                            {/* lookupId is the fallback, and it matters here:
+                                badge_balance is stamped onto the row from the
+                                sender's own session, so a message sent before
+                                their balances resolved stores null — and a
+                                missing balance draws nothing, silently, with
+                                no way to tell it apart from "below the floor".
+                                It is ignored whenever the row did carry a
+                                balance, so this costs a request only for the
+                                messages that would otherwise show no badge at
+                                all. It also keeps an old message's badge
+                                current rather than frozen at send time. */}
+                            <BadgeIcon
+                              badgeBalance={msg.badge_balance}
+                              username={msg.username}
+                              lookupId={msg.username || msg.wallet_address}
+                              className="w-[9px] h-[9px] absolute -top-0.5 -right-0"
+                            />
                           </span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                         </span>

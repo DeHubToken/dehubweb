@@ -80,7 +80,6 @@ export function StageChat({
       canModerate={isHost}
       icon={MessageSquare}
       title={ended ? 'Comments' : 'Live chat'}
-      subtitle={messages.length > 0 ? String(messages.length) : undefined}
       emptyHint={
         ended
           ? 'No comments yet — leave the first.'
@@ -92,7 +91,7 @@ export function StageChat({
       signInLabel={ended ? 'Sign in to comment' : 'Sign in to chat'}
       error={
         unavailable
-          ? 'Chat is not switched on for Stages yet — the console names the migration to run.'
+          ? 'Chat is not available for this stage yet.'
           : null
       }
       listClassName={listClassName}
