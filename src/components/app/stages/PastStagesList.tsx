@@ -12,8 +12,8 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Play, Square, Users, Clock, FileText, Trash2, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -27,7 +27,12 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
-import { stopStageRecording } from '@/components/app/stages/StageRecordingButton';
+import {
+  seekStageRecording,
+  stopStageRecording,
+  toggleStageRecording,
+  useStagePlayback,
+} from '@/lib/stage-playback';
 import { myStagesKeys } from '@/hooks/use-my-stages';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -79,29 +84,21 @@ export function PastStagesList({
   const isPaper = theme === 'light' || theme === 'minimal';
   const queryClient = useQueryClient();
 
-  const [playingStageId, setPlayingStageId] = useState<string | null>(null);
-  const [playbackVolume, setPlaybackVolume] = useState(0);
-  const [playbackProgress, setPlaybackProgress] = useState(0);
-  const [playbackTimeLeft, setPlaybackTimeLeft] = useState('');
   const [transcriptStage, setTranscriptStage] = useState<AudioSpace | null>(null);
   /** Which recording has its comments open. One at a time: each open panel
    *  holds a realtime subscription, and this list can run to 20 rows. */
   const [commentsFor, setCommentsFor] = useState<string | null>(null);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const rafRef = useRef<number>(0);
-  const pendingSeekRatioRef = useRef<number | null>(null);
-  const estimatedDurationRef = useRef<number>(0);
-  // The browser-reported duration once we've forced it to resolve (webm from
-  // MediaRecorder reports Infinity until seeked). 0 = not yet known.
-  const realDurationRef = useRef<number>(0);
-  // True while we're seeking to the end to force duration resolution, so the
-  // resulting `ended` event doesn't tear playback down before it starts.
-  const forcingDurationRef = useRef(false);
-  const endTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Playback belongs to lib/stage-playback now, shared with the "Listen back"
+  // chip in the feed and the Stages modal. This list used to own a full copy
+  // of it — element, WebAudio graph, RAF pump and the whole webm-duration
+  // dance — which is why it was the only surface with a working scrub bar.
+  const {
+    spaceId: playingStageId,
+    volume: playbackVolume,
+    progress: playbackProgress,
+    timeLeft: playbackTimeLeft,
+  } = useStagePlayback();
 
   // Caller-supplied lists switch the fetch off entirely rather than fetching
   // and discarding: `enabled` keeps the global query from running at all on
@@ -125,250 +122,16 @@ export function PastStagesList({
   const pastStages = spaces ?? fetched;
   const isLoadingStages = spaces ? !!isLoadingProp : isFetching;
 
-  const stopPlayback = useCallback(() => {
-    if (endTimeoutRef.current !== null) {
-      clearTimeout(endTimeoutRef.current);
-      endTimeoutRef.current = null;
-    }
-    cancelAnimationFrame(rafRef.current);
-    audioRef.current?.pause();
-    audioRef.current = null;
-    // Detach the WebAudio graph — a source/analyser pair is created per play
-    // and would otherwise accumulate on the shared AudioContext forever.
-    sourceRef.current?.disconnect();
-    sourceRef.current = null;
-    analyserRef.current?.disconnect();
-    analyserRef.current = null;
-    pendingSeekRatioRef.current = null;
-    realDurationRef.current = 0;
-    forcingDurationRef.current = false;
-    setPlayingStageId(null);
-    setPlaybackVolume(0);
-    setPlaybackProgress(0);
-    setPlaybackTimeLeft('');
+  // Playback used to stop when you navigated away from /stages, because there
+  // was no mini-player for recordings and background audio would have been
+  // unstoppable. StageRecordingMiniPlayer is that player, so it no longer does.
+  const togglePlay = useCallback((space: AudioSpace) => {
+    toggleStageRecording(space);
   }, []);
 
-  // /stages lives in PersistentPageCache — stop recorded playback when the
-  // user navigates away (there's no mini-player for recordings, so background
-  // audio here would be unstoppable without returning to the page).
-  const { pathname } = useLocation();
-  const isStagesRouteActive = pathname === '/app/stages' || pathname === '/stages';
-  useEffect(() => {
-    if (!isStagesRouteActive && playingStageId) stopPlayback();
-  }, [isStagesRouteActive, playingStageId, stopPlayback]);
-
-  const startPlayback = useCallback(
-    (space: AudioSpace) => {
-      if (!space.recording_url) return;
-
-      // webm recordings often report duration=Infinity — derive from timestamps.
-      const estimatedDuration =
-        space.started_at && space.ended_at
-          ? Math.max(1, (new Date(space.ended_at).getTime() - new Date(space.started_at).getTime()) / 1000)
-          : 0;
-      estimatedDurationRef.current = estimatedDuration;
-      realDurationRef.current = 0;
-      forcingDurationRef.current = false;
-
-      if (endTimeoutRef.current !== null) {
-        clearTimeout(endTimeoutRef.current);
-        endTimeoutRef.current = null;
-      }
-      cancelAnimationFrame(rafRef.current);
-      audioRef.current?.pause();
-
-      const audio = new Audio(space.recording_url);
-      audio.crossOrigin = 'anonymous';
-
-      // webm/MediaRecorder blobs are unreliable about duration: some report
-      // Infinity, others a bogus tiny finite value (the length of the first
-      // cluster). Either way `progress = currentTime / duration` then races to
-      // 100% and the whole waveform lights up white while audio keeps playing.
-      // A finite duration is only trustworthy if it isn't wildly shorter than
-      // the started_at/ended_at estimate. We deliberately do NOT use
-      // audio.seekable.end() — for these recordings it reports only the buffered
-      // range, which is another way progress raced ahead of the audio.
-      const est = estimatedDurationRef.current;
-      const durationLooksBogus = (d: number) =>
-        !isFinite(d) || d <= 0 || (est > 5 && d < est * 0.5);
-
-      // Duration priority: the forced/real browser duration once known, then the
-      // live element duration if it's trustworthy, then the timestamp estimate.
-      const resolveDuration = (): number => {
-        if (realDurationRef.current > 0) return realDurationRef.current;
-        const dur = audio.duration;
-        if (!durationLooksBogus(dur)) return dur;
-        return estimatedDurationRef.current;
-      };
-
-      const applyPendingSeek = () => {
-        const ratio = pendingSeekRatioRef.current;
-        if (ratio === null) return;
-        const dur = resolveDuration();
-        if (isFinite(dur) && dur > 0) {
-          audio.currentTime = ratio * dur;
-          pendingSeekRatioRef.current = null;
-        }
-      };
-
-      // Seeking past the end forces the browser to compute the true duration,
-      // which it then emits. Reset to the start (or the user's pending scrub
-      // position) once it lands.
-      const resolveRealDuration = () => {
-        if (realDurationRef.current > 0) return;
-        const dur = audio.duration;
-        if (!durationLooksBogus(dur)) {
-          realDurationRef.current = dur;
-          applyPendingSeek();
-          return;
-        }
-        // Force the browser to discover the real duration.
-        const onForcedTimeUpdate = () => {
-          audio.removeEventListener('timeupdate', onForcedTimeUpdate);
-          if (isFinite(audio.duration) && audio.duration > 0) {
-            realDurationRef.current = audio.duration;
-          }
-          const ratio = pendingSeekRatioRef.current;
-          audio.currentTime =
-            ratio !== null && realDurationRef.current > 0 ? ratio * realDurationRef.current : 0;
-          pendingSeekRatioRef.current = null;
-          forcingDurationRef.current = false;
-        };
-        forcingDurationRef.current = true;
-        audio.addEventListener('timeupdate', onForcedTimeUpdate);
-        try {
-          audio.currentTime = 1e101;
-        } catch {
-          forcingDurationRef.current = false;
-          audio.removeEventListener('timeupdate', onForcedTimeUpdate);
-        }
-      };
-      audio.addEventListener('loadedmetadata', resolveRealDuration, { once: true });
-      audio.addEventListener('durationchange', () => {
-        if (realDurationRef.current === 0 && isFinite(audio.duration) && audio.duration > 0) {
-          realDurationRef.current = audio.duration;
-        }
-      });
-
-      audio.onended = () => {
-        // Ignore the synthetic `ended` from the seek-to-end duration probe.
-        if (forcingDurationRef.current) return;
-        cancelAnimationFrame(rafRef.current);
-        setPlaybackProgress(1);
-        setPlaybackVolume(0);
-        setPlaybackTimeLeft('-0:00');
-        endTimeoutRef.current = setTimeout(() => {
-          endTimeoutRef.current = null;
-          if (audioRef.current === audio) audioRef.current = null;
-          sourceRef.current?.disconnect();
-          sourceRef.current = null;
-          analyserRef.current?.disconnect();
-          analyserRef.current = null;
-          setPlayingStageId(null);
-          setPlaybackProgress(0);
-          setPlaybackTimeLeft('');
-        }, 380);
-      };
-
-      const ctx = audioCtxRef.current || new AudioContext();
-      audioCtxRef.current = ctx;
-      void ctx.resume();
-      // Previous play's graph must go before wiring a new one (see stopPlayback)
-      sourceRef.current?.disconnect();
-      analyserRef.current?.disconnect();
-      const source = ctx.createMediaElementSource(audio);
-      const analyser = ctx.createAnalyser();
-      analyser.fftSize = 256;
-      source.connect(analyser);
-      analyser.connect(ctx.destination);
-      sourceRef.current = source;
-      analyserRef.current = analyser;
-
-      // The pump RAF stays at frame rate for smooth audio analysis, but state
-      // writes are QUANTIZED (volume to 1/50ths at ~10Hz, progress to 0.1%)
-      // so React bails on identical values — the unquantized version
-      // re-rendered this whole 20-row list at 60fps for the entire playback.
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-      let lastVolumeAt = 0;
-      const pump = () => {
-        const now = performance.now();
-        if (now - lastVolumeAt >= 100) {
-          lastVolumeAt = now;
-          analyser.getByteFrequencyData(dataArray);
-          let sum = 0;
-          for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-          setPlaybackVolume(Math.round((sum / dataArray.length / 255) * 50) / 50);
-        }
-
-        // While the duration probe is seeking to the end, currentTime is bogus —
-        // don't let it flash the waveform to 100%.
-        const dur = resolveDuration();
-        if (!forcingDurationRef.current && isFinite(dur) && dur > 0) {
-          const t = audio.currentTime;
-          setPlaybackProgress(Math.round(Math.min(1, Math.max(0, t / dur)) * 1000) / 1000);
-          const remaining = Math.max(0, Math.ceil(dur - t));
-          const m = Math.floor(remaining / 60);
-          const s = remaining % 60;
-          setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
-        }
-        rafRef.current = requestAnimationFrame(pump);
-      };
-
-      audio
-        .play()
-        .then(() => {
-          rafRef.current = requestAnimationFrame(pump);
-        })
-        .catch(() => {
-          toast.error('Could not play recording');
-          stopPlayback();
-        });
-
-      audioRef.current = audio;
-      setPlayingStageId(space.id);
-      setPlaybackProgress(0);
-      supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
-    },
-    [stopPlayback],
-  );
-
-  const togglePlay = useCallback(
-    (space: AudioSpace) => {
-      if (!space.recording_url) {
-        toast.info('Recording not available for this stage');
-        return;
-      }
-      if (playingStageId === space.id) {
-        stopPlayback();
-        return;
-      }
-      pendingSeekRatioRef.current = null;
-      // The feed cards play through their own shared element, so silence that
-      // before this list takes over — otherwise two recordings talk at once.
-      stopStageRecording();
-      startPlayback(space);
-    },
-    [playingStageId, startPlayback, stopPlayback],
-  );
-
-  const seek = useCallback(
-    (space: AudioSpace, position: number) => {
-      if (!space.recording_url) return;
-      const a = audioRef.current;
-      if (playingStageId === space.id && a) {
-        let dur = realDurationRef.current;
-        if (!isFinite(dur) || dur <= 0) dur = a.duration;
-        if (!isFinite(dur) || dur <= 0) dur = estimatedDurationRef.current;
-        if (isFinite(dur) && dur > 0) {
-          a.currentTime = position * dur;
-          return;
-        }
-      }
-      pendingSeekRatioRef.current = position;
-      startPlayback(space);
-    },
-    [playingStageId, startPlayback],
-  );
+  const seek = useCallback((space: AudioSpace, position: number) => {
+    seekStageRecording(space, position);
+  }, []);
 
   // Open the host's profile — username-first, wallet-id fallback (mirrors CardHeader).
   const openHostProfile = useCallback(
@@ -386,7 +149,7 @@ export function PastStagesList({
   const handleDelete = useCallback(
     async (space: AudioSpace) => {
       if (!confirm('Delete this stage recording?')) return;
-      if (playingStageId === space.id) stopPlayback();
+      if (playingStageId === space.id) stopStageRecording();
       if (space.recording_url && walletAddress) {
         const path = space.recording_url.split('/stage-recordings/')[1];
         if (path) {
@@ -409,7 +172,7 @@ export function PastStagesList({
       queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
       toast.success('Stage deleted');
     },
-    [playingStageId, stopPlayback, walletAddress, queryClient],
+    [playingStageId, walletAddress, queryClient],
   );
 
   // Skeleton rows while the first load is in flight — without this the list
