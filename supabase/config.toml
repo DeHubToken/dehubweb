@@ -49,6 +49,12 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.dm-upload-media]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.dub-line]
+    verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.dub-session]
+    verify_jwt = false
   [functions.enhance-text]
     verify_jwt = false
   [functions.fal-ai-tools]

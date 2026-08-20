@@ -34,6 +34,12 @@ import {
   type StageCaptionMessage,
   type StageCaptionTranslation,
 } from '@/lib/stage-captions';
+import {
+  DUB_AUDIO_EVENT,
+  getDubToken,
+  useDubToken,
+  type StageDubAudio,
+} from '@/lib/stage-dub';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 const PCM_WORKLET_URL = '/dehub-caption-pcm.js';
@@ -138,6 +144,11 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
   /** The previous finished sentence, handed to the translator as context only. */
   const previousFinalRef = useRef('');
   const translateRef = useRef<((message: StageCaptionMessage) => void) | null>(null);
+  /** Entitlement tokens by language, from presence — the languages somebody is paying to HEAR. */
+  const dubTokensRef = useRef<Record<string, string>>({});
+  const dubRef = useRef<((message: StageCaptionMessage, translations: Record<string, string>) => void) | null>(null);
+  /** Audio rides its own channel: clips are orders of magnitude larger than text. */
+  const audioChannelRef = useRef<RealtimeChannel | null>(null);
 
   // ─── The broadcast channel ────────────────────────────────────────────────
   // Held for any speaker, not only one with transcription switched on: a TTS
@@ -159,11 +170,29 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
           if (entry.lang && entry.lang !== CAPTION_SOURCE_LANGUAGE) languages.add(entry.lang);
         }
       }
+      // Separately: which of those languages has a live paid block behind it.
+      const tokens: Record<string, string> = {};
+      for (const entries of Object.values(state)) {
+        for (const entry of entries) {
+          const paid = (entry as { lang?: string; dub?: string }).dub;
+          if (entry.lang && paid) tokens[entry.lang] = paid;
+        }
+      }
+      dubTokensRef.current = tokens;
       activeLanguagesRef.current = [...languages];
     });
     channel.subscribe();
     channelRef.current = channel;
+
+    // Clips are tens of kilobytes where a caption line is tens of bytes, so
+    // they get their own channel — a listener reading subtitles should not be
+    // made to receive audio it is neither paying for nor able to play.
+    const audioChannel = supabase.channel(stageCaptionChannel(spaceId) + ':audio').subscribe();
+    audioChannelRef.current = audioChannel;
     return () => {
+      supabase.removeChannel(audioChannel);
+      audioChannelRef.current = null;
+      dubTokensRef.current = {};
       supabase.removeChannel(channel);
       channelRef.current = null;
       activeLanguagesRef.current = [];
@@ -208,6 +237,7 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
       }
       if (!missing.length) {
         publishTranslation(id, { id: message.id, translations: fromCache });
+        void dubRef.current?.(message, fromCache);
         return;
       }
 
@@ -235,6 +265,7 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
           cache.set(`${lang}:${message.text}`, text);
         }
         publishTranslation(id, { id: message.id, translations: { ...fromCache, ...fresh } });
+        void dubRef.current?.(message, { ...fromCache, ...fresh });
       } catch {
         /* not deployed, offline, rate limited — viewers keep the source line */
       }
@@ -242,6 +273,55 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
     [publishTranslation],
   );
   translateRef.current = translate;
+
+
+  /**
+   * Speak a finished line in every language somebody has paid to hear.
+   *
+   * Runs after translation because it needs the translated text, and only for
+   * languages whose listener published an entitlement token — a language being
+   * *read* costs a fraction of a penny, a language being *heard* costs real
+   * DHB, so the two sets are deliberately different.
+   *
+   * Fire-and-forget: a failure means that sentence is read rather than heard,
+   * which is the free tier still working.
+   */
+  const dub = useCallback(
+    async (message: StageCaptionMessage, translations: Record<string, string>) => {
+      const spaceId = spaceIdRef.current;
+      const wallet = identityRef.current.wallet;
+      const tokens = dubTokensRef.current;
+      if (!spaceId || !wallet || !Object.keys(tokens).length) return;
+
+      const items = Object.entries(tokens)
+        .filter(([lang]) => translations[lang])
+        .map(([lang, token]) => ({ lang, text: translations[lang], token }));
+      if (!items.length) return;
+
+      try {
+        const dehubToken = await ensureFreshToken();
+        if (!dehubToken) return;
+        const { data, error } = await supabase.functions.invoke('dub-line', {
+          body: { spaceId, lineId: message.id, items },
+          headers: { 'x-dehub-token': dehubToken, 'x-wallet-address': wallet.toLowerCase() },
+        });
+        if (error || !data?.audio) return;
+
+        // One broadcast per language rather than one carrying all of them: a
+        // clip is tens of kilobytes, and four in a frame risks the size cap.
+        for (const [lang, audio] of Object.entries(data.audio as Record<string, string>)) {
+          const payload: StageDubAudio = { id: message.id, lang, audio };
+          audioChannelRef.current
+            ?.send({ type: 'broadcast', event: DUB_AUDIO_EVENT, payload })
+            .catch(() => { /* that sentence is read instead of heard */ });
+        }
+      } catch {
+        /* not deployed, offline, rate limited — subtitles carry the room */
+      }
+    },
+    [],
+  );
+  dubRef.current = dub;
 
   const send = useCallback((message: StageCaptionMessage) => {
     const id = spaceIdRef.current;
@@ -609,6 +689,7 @@ export function useStageCaptionFeed(
 ): StageCaptionLine[] {
   const [lines, setLines] = useState<StageCaptionLine[]>([]);
   const language = useCaptionLanguage();
+  const dubTokenForPresence = useDubToken();
   const allowedRef = useRef<Set<string>>(new Set());
   const lastRosterFetchRef = useRef(0);
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -674,7 +755,12 @@ export function useStageCaptionFeed(
       })
       .subscribe((status) => {
         if (status !== 'SUBSCRIBED') return;
-        void channel.track({ lang: languageRef.current ?? CAPTION_SOURCE_LANGUAGE });
+        void channel.track({
+          lang: languageRef.current ?? CAPTION_SOURCE_LANGUAGE,
+          // Present only while this listener holds a paid block. It is what
+          // authorises a speaker's client to spend on speaking this language.
+          dub: getDubToken() ?? undefined,
+        });
       });
 
     channelRef.current = channel;
@@ -714,10 +800,13 @@ export function useStageCaptionFeed(
   // captions for the second it takes to rejoin — exactly while the viewer is
   // looking at them.
   useEffect(() => {
-    channelRef.current?.track({ lang: language ?? CAPTION_SOURCE_LANGUAGE }).catch(() => {
+    channelRef.current?.track({
+      lang: language ?? CAPTION_SOURCE_LANGUAGE,
+      dub: dubTokenForPresence ?? undefined,
+    }).catch(() => {
       /* not subscribed yet — the subscribe callback tracks the current value */
     });
-  }, [language]);
+  }, [language, dubTokenForPresence]);
 
   return lines;
 }

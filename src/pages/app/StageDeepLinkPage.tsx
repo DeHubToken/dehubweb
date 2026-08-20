@@ -600,7 +600,7 @@ export default function StageDeepLinkPage() {
             {listening && (
               <div className="mt-4 flex flex-col items-center gap-2">
                 <StageCaptionsOverlay spaceId={stage.id} />
-                <StageCaptionsButton isSpeaker={false} className="w-10 h-10" />
+                <StageCaptionsButton isSpeaker={false} spaceId={stage.id} wallet={walletAddress} className="w-10 h-10" />
               </div>
             )}
 
