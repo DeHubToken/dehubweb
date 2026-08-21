@@ -1,7 +1,8 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Coins, Lock, TrendingUp, Users, Zap, Shield, ExternalLink } from 'lucide-react';
+import { Coins, Lock, TrendingUp, Users, Zap, Shield, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const TokenStake = () => {
@@ -14,10 +15,10 @@ const TokenStake = () => {
       <div>
         <div className="flex items-center space-x-4 mb-4">
           <h1 className="text-4xl font-bold text-foreground">{t('tokenStake.title')}</h1>
-          <a href="https://dehub.net/staking" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-1 text-primary hover:text-primary/80 transition-colors text-sm font-medium bg-primary/10 px-3 py-1 rounded-lg hover:bg-primary/20">
+          <Link to="/stake" className="flex items-center space-x-1 text-primary hover:text-primary/80 transition-colors text-sm font-medium bg-primary/10 px-3 py-1 rounded-lg hover:bg-primary/20">
             <span>{t('tokenStake.stakeNow')}</span>
-            <ExternalLink className="w-4 h-4" />
-          </a>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
         <p className="text-lg text-muted-foreground leading-relaxed">{t('tokenStake.introDesc')}</p>
         <p className="text-lg text-muted-foreground leading-relaxed mt-4">{t('tokenStake.introDesc2')}</p>

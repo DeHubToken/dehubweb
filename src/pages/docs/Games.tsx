@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Games = () => {
@@ -65,9 +66,9 @@ const Games = () => {
                 </div>
                 <div className="mt-6 pt-4 border-t border-border">
                   <p className="text-foreground/90 mb-3">{t('games.playArcade')}</p>
-                  <a href="https://arcade.dehub.net" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 underline font-semibold">
-                    arcade.dehub.net
-                  </a>
+                  <Link to="/arcade" className="text-primary hover:text-primary/80 underline font-semibold">
+                    dehub.io/arcade
+                  </Link>
                 </div>
 
                 {/* The titles above live on arcade.dehub.net, a separate

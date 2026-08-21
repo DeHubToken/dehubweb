@@ -62,6 +62,7 @@ const OG_CARD_ROUTES = new Set([
   'top-100', 'music', 'tv',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk',
+  'raffle', 'stake',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
   'arcade/trenchstar',
@@ -975,6 +976,28 @@ const MARKETING_PAGES = {
     heading: 'Become a DeHub Creator',
     bodyHtml: `<p>Apply for a creator account on DeHub and unlock uploads, monetization and the Creator Studio. Creators earn through pay-per-view, token-gated posts, tradable subscriptions, tips and ad-revenue sharing — all settled on-chain.</p>`,
   },
+  'stake': {
+    title: 'Stake DHB — Earn Rewards on DeHub',
+    description: 'Stake DHB from the DeHub wallet to earn a share of a revenue-funded reward pool. Positions open and settle on-chain, with no lock-in.',
+    heading: 'Stake DHB',
+    bodyHtml: `<p>Staking puts a DHB balance to work inside DeHub. Positions are opened from the platform wallet, held on-chain, and rewards accrue from a pool funded by platform activity rather than by minting new supply.</p>
+<h2>How staking works</h2>
+<p>Choose an amount and confirm the transaction; the position then appears in your wallet. Rewards accumulate per epoch and can be claimed at any time, and unstaking returns the principal in full once the position closes.</p>
+<h2>Rates are variable</h2>
+<p>The rate depends on total staked supply and on platform revenue for the period. There is no fixed APY, no minimum return and no guarantee, and staking carries the ordinary risks of holding a volatile asset.</p>`,
+  },
+  'raffle': {
+    title: 'Prize Draws — Win DHB, Hardware and NFTs on DeHub',
+    description: 'DeHub prize draws hand out DHB, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.',
+    heading: 'DeHub Prize Draws',
+    bodyHtml: `<p>Prize draws are DeHub's recurring community raffles. Each draw opens with a stated prize, a stated closing time and a stated entry route, then picks its winner from the entry list on-chain, so the result can be checked by anyone.</p>
+<h2>Earning entries</h2>
+<p>Entries come from taking part rather than from paying to play. Posting, staking DHB, playing arcade titles and joining stages all count towards a draw when it names them. Some draws also accept a DHB ticket; where they do, the ticket price and the per-wallet cap are published with the draw.</p>
+<h2>How a winner is picked</h2>
+<p>When a draw closes the entry list is snapshotted and the winning index is drawn from an on-chain source of randomness. The transaction, the snapshot and the winning entry are published together, so nobody has to take the result on trust.</p>
+<h2>Claiming a prize</h2>
+<p>Winners are notified in-app and have 14 days to claim. Token prizes settle to the winner's DeHub wallet on Base; physical prizes are arranged with the team directly. Draws are void where local law prohibits them, and DeHub staff are not eligible.</p>`,
+  },
   'jobs': {
     title: 'Careers — Join the DeHub Team',
     description: 'Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social.',
@@ -1871,16 +1894,53 @@ async function handleRequest(request, env) {
   // resolved 200 on a "no such user" screen. That is a soft 404: Google passes
   // no equity through it. Send each subdomain to its nearest live successor
   // instead. A blanket redirect to "/" would be read as a soft 404 too, so the
-  // targets are real pages, checked against the SEO tables above — note /stake
-  // is absent from MARKETING_PAGES and renders homepage meta to bots, which is
-  // why staking points at the docs page that actually describes staking.
+  // targets are real pages, checked against the SEO tables above.
+  //
+  // dapps, beta-stream and raffle are mapped here for the day their DNS comes
+  // back: all three are in the Wayback index and none of them resolves today,
+  // and the *.dehub.net route cannot fire without a proxied record on the zone.
+  // The mapping is the cheap half; the DNS record is the other half.
   const RETIRED_SUBDOMAIN_TARGETS = {
     arcade: '/arcade',
     games: '/arcade',
-    staking: '/docs/token/stake',
+    staking: '/stake',
     bridge: '/bridge',
     stream: '/videos',
+    'beta-stream': '/videos',
+    dapps: '/features',
+    raffle: '/raffle',
   };
+  // Apex paths from the pre-Angular dehub.net site with no dehub.io twin. The
+  // path-preserving 301 dropped each one on the /:username catch-all: six of
+  // them 404, and /staking and /ppv did something worse — they resolved as
+  // indexable, self-canonical "@staking" / "@ppv" profile pages, a soft 404
+  // Google keeps in the index and shows for brand queries. Every target below
+  // is a real page that renders its own meta.
+  const LEGACY_NET_PATHS = {
+    '/staking': '/stake',
+    '/claim': '/stake',
+    '/buy': '/docs/token/where-to-buy',
+    '/swap': '/docs/token/where-to-buy',
+    '/careers': '/jobs',
+    '/tournaments': '/arcade',
+    '/prize-draw': '/raffle',
+    '/ppv': '/videos',
+  };
+  // /web/* is the pre-Angular site chrome, still in Google's index. Flattening
+  // the lot onto "/" reads as a soft 404 and throws away the best links the old
+  // domain ever earned: /web/news/* are the GQ, Yahoo Finance, Entrepreneur and
+  // Investing.com write-ups, and /docs/featured-in is precisely that page.
+  // Ordered longest-prefix-first — /web/legal/careers must beat /web/legal.
+  const LEGACY_WEB_PREFIXES = [
+    ['/web/legal/privacy', '/docs/privacy'],
+    ['/web/legal/terms', '/docs/terms'],
+    ['/web/legal/careers', '/jobs'],
+    ['/web/news', '/docs/featured-in'],
+    ['/web/learn', '/docs'],
+    ['/web/shop', '/app/stores'],
+    ['/web/stream', '/videos'],
+    ['/web/game', '/arcade'],
+  ];
   // stream-api is not retired in the same sense: the v1 stream contracts carry
   // https://stream-api.dehub.net/nfts/nft_metadata/<id> on-chain as their
   // tokenURIPrefix across four chains, changeable only with a per-chain
@@ -1891,6 +1951,13 @@ async function handleRequest(request, env) {
   // serving real metadata the moment the backend's nft_metadata handler stops
   // throwing (it currently answers {} or 500 — separate repo, separate fix).
   const NFT_METADATA_PATH = /^\/nfts\/nft_metadata\/([^/]+)$/;
+  // SendGrid's link-branding, click-tracking and unsubscribe hosts are CNAMEs
+  // on this zone and they are proxied, so *.dehub.net/* swallowed them too:
+  // every tracked link in an outbound email 301'd to the homepage, which kills
+  // the CTA and every campaign's attribution with it. Pass them through to
+  // their own origin untouched — this is the one class of alias host on the
+  // zone that is not part of the domain move.
+  const MAIL_HOSTS = /^(?:\d+|em\d+|url\d+|s\d+\._domainkey)$/;
 
   const aliasHost = url.hostname;
   if (aliasHost === 'www.dehub.io' || aliasHost === 'dehub.net' || aliasHost.endsWith('.dehub.net')) {
@@ -1899,7 +1966,7 @@ async function handleRequest(request, env) {
     // noindex with an equity-passing 301 risks suppressing the transfer.
     let target = `https://dehub.io${url.pathname}${url.search}`;
     if (aliasHost !== 'www.dehub.io') {
-      const p = url.pathname.replace(/\/+$/, '') || '/';
+      const p = (url.pathname.replace(/\/+$/, '') || '/').toLowerCase();
       // The apex and its www keep the path-preserving redirect —
       // dehub.net/<username> → dehub.io/<username> is the point of the domain
       // move, and /guides/* etc. map one-to-one. Only the other subdomains,
@@ -1907,22 +1974,29 @@ async function handleRequest(request, env) {
       const sub = (aliasHost === 'dehub.net' || aliasHost === 'www.dehub.net')
         ? null
         : aliasHost.slice(0, -'.dehub.net'.length);
-      const nft = sub === 'stream-api' ? p.match(NFT_METADATA_PATH) : null;
+      // Mail hosts are not part of the domain move — hand them to their origin.
+      if (sub !== null && MAIL_HOSTS.test(sub)) return fetch(request);
+      const nft = sub === 'stream-api' ? url.pathname.replace(/\/+$/, '').match(NFT_METADATA_PATH) : null;
       if (nft) {
         const id = encodeURIComponent(nft[1].replace(/\.json$/i, ''));
         target = `https://api.dehub.io/api/nft_metadata/${id}.json`;
       } else if (sub !== null) {
         target = `https://dehub.io${RETIRED_SUBDOMAIN_TARGETS[sub] || '/'}`;
       } else {
-        // Legacy dehub.net URL spaces with no dehub.io equivalent (/web/app/*,
-        // /learn — pre-Angular site chrome still in Google's index). Path-
-        // preserving 301s landed these on the SPA's not-found screen (soft-404),
-        // burning the redirect's equity. Map them to real destinations; every
-        // other path (e.g. /guides/*) keeps the path-preserving redirect.
-        const legacy = p.match(/^\/web(?:\/app)?(\/.*)?$/);
-        const rest = legacy ? (legacy[1] || '/') : p;
-        if (legacy || rest === '/learn' || rest.startsWith('/learn/')) {
-          target = `https://dehub.io${rest === '/learn' || rest.startsWith('/learn/') ? '/docs' : '/'}`;
+        // Legacy dehub.net URL spaces with no dehub.io equivalent, each mapped
+        // to a real destination. Anything not named here (/guides/*, and every
+        // /<username>) keeps the path-preserving redirect.
+        const web = LEGACY_WEB_PREFIXES.find(([from]) => p === from || p.startsWith(`${from}/`));
+        if (web) {
+          target = `https://dehub.io${web[1]}`;
+        } else if (p === '/web' || p.startsWith('/web/')) {
+          target = 'https://dehub.io/';
+        } else if (p === '/learn' || p.startsWith('/learn/')) {
+          target = 'https://dehub.io/docs';
+        } else if (LEGACY_NET_PATHS[p]) {
+          target = `https://dehub.io${LEGACY_NET_PATHS[p]}`;
+        } else if (p === '/streams' || p.startsWith('/streams/')) {
+          target = 'https://dehub.io/videos';
         }
       }
     }
