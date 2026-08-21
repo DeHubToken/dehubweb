@@ -628,21 +628,28 @@ export const en = {
     lcsDesc: 'Hyper realistic and gory battle royale featuring top UFC stars, game developers from Ubisoft and leading memes with their own skins.',
     website: 'Website',
     releasedTitle: 'Titles Released',
-    whackTitle: 'Whack A Schifff',
-    whackDesc: 'Whack Peter Schiff on the head every time he squirms out his mole hole to rack up points while avoiding the bombs to stay alive for a limited time.',
-    gasTitle: 'Gas Guzzler',
-    gasDesc: 'Keep your ETH gas topped up while collecting dehub coins and avoiding other moon boys in their Lambos. Be sure to hit the NOS for a boost as you maximise your score in this endless driver!',
-    rocketTitle: 'Rocket Blaster',
-    rocketDesc: 'Avoid those cursed laser beams on your 100km mission back to the moon in this endless blaster',
+    releasedIntro: 'Five games run inside DeHub itself, in a browser tab. Nothing to install and '
+      + 'nothing to buy — three of them open source, two made for DeHub.',
+    chessTitle: "King's Gambit",
+    chessDesc: 'Cinematic 3D chess with an army behind every piece. Three rigged civilisations '
+      + 'march, strike and fall across a marble board in four battlegrounds, at three engine '
+      + 'strengths, with an online ladder rated on Elo.',
+    dutyTitle: 'Claude of Duty',
+    dutyDesc: 'A first person shooter that ships no art at all: every mesh, texture, weapon and '
+      + 'sound is generated on your machine while the level loads. It also hides inside the War theme.',
+    jungleTitle: 'Jungle Trail',
+    jungleDesc: 'A first person walk through a procedurally generated rainforest — a hundred '
+      + 'thousand plants, weather and a day cycle, all grown as you arrive. It also hides inside '
+      + 'the Jungle theme.',
     streetTitle: 'Street Slayer',
-    streetDesc: 'Rid the streets of the greedy banking mafia and save the club at all cost in this endless fighter that\'s free for all, yet comes with full play and earn for Lean Chad Fight Club (LCFC) holders. LCFC are our genesis NFT mint partners and the first of many coming to the DeHub ecosystem.',
-    playArcade: 'Play all these games and more at our arcade:',
-    inAppTitle: 'Games inside DeHub itself',
-    inAppDesc: 'Three open source games run in the app with nothing to install: '
-      + "King's Gambit (cinematic 3D chess), Claude of Duty (a browser shooter that generates "
-      + 'every asset on your machine as it loads) and Jungle Trail (a walk through a '
-      + 'procedurally generated rainforest). Two of them also hide inside the War and Jungle themes.',
-    inAppCta: 'Open the DeHub arcade',
+    streetDesc: 'Rid the streets of the greedy banking mafia and save the club at all cost in this '
+      + 'side scrolling beat \'em up, commissioned for DeHub and built by Studio Shook Pixel. Pick '
+      + 'one of three fighters, then punch, kick and throw your way down the block.',
+    trenchTitle: 'Trenchstar',
+    trenchDesc: 'A trading floor you can walk. Dozens of screens curve around the desk carrying '
+      + 'live feeds from Binance, Dexscreener, videos, browser tabs — anything you want on the '
+      + 'wall. It can be entered in a headset too.',
+    playArcade: 'Play them all in the DeHub arcade:',
     featuresTitle: 'Key Features',
     feature1: 'Barrier free play and win to earn',
     feature2: 'Classic arcade mini games, tournaments & top tier independent/indi games',

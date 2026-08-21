@@ -47,42 +47,40 @@ const Games = () => {
           <TabsContent value="released" className="space-y-6">
             <div className="bg-card/50 rounded-lg p-6 border border-border">
               <h3 className="text-2xl font-semibold text-foreground mb-6">{t('games.releasedTitle')}</h3>
+              <p className="text-foreground/90 mb-6">{t('games.releasedIntro')}</p>
+              {/* The five entries in `config/arcade-games.ts`, in the order the
+                  grid shows them. Deliberately not imported from that registry:
+                  it pulls in the GPU probe, and this is a docs page that never
+                  launches a game. The old arcade.dehub.net titles (Whack A
+                  Schifff, Gas Guzzler, Rocket Blaster) used to be listed here
+                  and are gone — that site is retired and 301'd to dehub.io, so
+                  every one of those names led nowhere. */}
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.whackTitle')}</h4>
-                  <p className="text-foreground/90">{t('games.whackDesc')}</p>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.gasTitle')}</h4>
-                  <p className="text-foreground/90">{t('games.gasDesc')}</p>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.rocketTitle')}</h4>
-                  <p className="text-foreground/90">{t('games.rocketDesc')}</p>
+                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.trenchTitle')}</h4>
+                  <p className="text-foreground/90">{t('games.trenchDesc')}</p>
                 </div>
                 <div>
                   <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.streetTitle')}</h4>
                   <p className="text-foreground/90">{t('games.streetDesc')}</p>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.chessTitle')}</h4>
+                  <p className="text-foreground/90">{t('games.chessDesc')}</p>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.dutyTitle')}</h4>
+                  <p className="text-foreground/90">{t('games.dutyDesc')}</p>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.jungleTitle')}</h4>
+                  <p className="text-foreground/90">{t('games.jungleDesc')}</p>
                 </div>
                 <div className="mt-6 pt-4 border-t border-border">
                   <p className="text-foreground/90 mb-3">{t('games.playArcade')}</p>
                   <Link to="/arcade" className="text-primary hover:text-primary/80 underline font-semibold">
                     dehub.io/arcade
                   </Link>
-                </div>
-
-                {/* The titles above live on arcade.dehub.net, a separate
-                    property. These three run in this app, at /arcade — a
-                    reader on this page is looking for games and would
-                    otherwise never learn they exist. Internal link, so it is
-                    a Link-shaped <a> to a same-origin route rather than a new
-                    tab. */}
-                <div className="mt-6 pt-4 border-t border-border">
-                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.inAppTitle')}</h4>
-                  <p className="text-foreground/90 mb-3">{t('games.inAppDesc')}</p>
-                  <a href="/arcade" className="text-primary hover:text-primary/80 underline font-semibold">
-                    {t('games.inAppCta')}
-                  </a>
                 </div>
               </div>
             </div>

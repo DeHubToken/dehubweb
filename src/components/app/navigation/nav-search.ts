@@ -265,6 +265,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Arcade: [
     'games', 'game', 'play', 'gaming', 'play to earn', 'p2e', 'arcade',
     "king's gambit", 'chess', 'claude of duty', 'fps', 'shooter', 'jungle trail',
+    'street slayer', 'beat em up', 'fighting', 'trenchstar', 'trading floor',
   ],
   Glossary: ['terms', 'definitions', 'dictionary', 'jargon', 'meaning', 'what is', 'acronyms'],
   Guide: ['getting started', 'how to', 'tutorial', 'onboarding', 'walkthrough', 'learn', 'help', 'new here'],
@@ -292,6 +293,8 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   "King's Gambit": ['chess', '3d chess', 'play chess', 'online chess', 'board game', 'multiplayer'],
   'Claude of Duty': ['fps', 'shooter', 'first person', 'war', 'shooting game', 'call of duty'],
   'Jungle Trail': ['walk', 'rainforest', 'jungle', 'exploration', 'first person', 'nature'],
+  'Street Slayer': ['beat em up', 'brawler', 'fighting', 'fighter', 'side scroller', 'arcade fighter'],
+  Trenchstar: ['trading floor', 'trading', 'charts', 'markets', 'binance', 'dexscreener', 'trenches', 'vr'],
 };
 
 // ---------------------------------------------------------------------------
@@ -313,7 +316,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
  * `/app/pair` are not — and its path must be a real route in `App.tsx`, because
  * nothing else checks: an unrouted path renders a row that lands on the 404.
  *
- * The three games are duplicated from `config/arcade-games.ts` on purpose. That
+ * The games are duplicated from `config/arcade-games.ts` on purpose. That
  * registry pulls in the GPU probe, and this module is imported by AppSidebar,
  * which is eager — importing it here would fold the whole arcade registry into
  * the entry chunk that `scripts/check-entry-bundle.mjs` guards. The copy is
@@ -339,6 +342,7 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: Gamepad2, label: 'Claude of Duty', path: '/arcade/claude-of-duty' },
   { icon: Gamepad2, label: 'Jungle Trail', path: '/arcade/jungle-trail' },
   { icon: Gamepad2, label: 'Street Slayer', path: '/arcade/street-slayer' },
+  { icon: Gamepad2, label: 'Trenchstar', path: '/arcade/trenchstar' },
 ];
 
 // ---------------------------------------------------------------------------
