@@ -143,7 +143,7 @@ export function usePPVPayment({
 
     try {
       const [
-        { getWalletAddress, getERC20Balance, switchChain },
+        { getWalletAddress, getERC20Balance, switchChain, waitForERC20Balance },
         { isAutoSwapSupported, getSwapQuote, applySlippage, swapETHForDHB, getNativeBalance },
         { sendFundsForPPV },
         { isPaymentRouterAvailable, unlockPPVAndTipViaRouter },
@@ -244,7 +244,15 @@ export function usePPVPayment({
 
           toast.loading(dhbText('Swapping ETH → DHB...'), { id: 'ppv-payment' });
           await swapETHForDHB(shortfallWei, ethNeeded, signerAddress);
-          dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+          // Read back with patience: a mined swap can still be invisible to
+          // whichever public RPC node answers next, and treating that as a
+          // failed swap sends someone who has already paid back to the start.
+          dhbBalance = await waitForERC20Balance(
+            chainConfig.dhbToken,
+            signerAddress,
+            amountWei,
+            chainId,
+          );
 
           if (dhbBalance < amountWei) {
             toast.error(dhbText('Swap completed but DHB balance still insufficient. Try again.'), { id: 'ppv-payment' });
