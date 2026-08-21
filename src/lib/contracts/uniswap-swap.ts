@@ -5,7 +5,7 @@
  * Supports native ETH and ERC20 tokens as input.
  */
 
-import { Interface } from 'ethers';
+import { Interface, solidityPacked } from 'ethers';
 import { writeContractAA, readContract } from './aa-utils';
 import { BASE_CHAIN_ID, CHAIN_CONFIGS, initChainRpcUrls } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
@@ -32,7 +32,16 @@ const quoterInterface = new Interface([
 
 const swapRouterInterface = new Interface([
   'function exactOutputSingle((address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 amountOut, uint256 amountInMaximum, uint160 sqrtPriceLimitX96)) external payable returns (uint256 amountIn)',
+  'function exactOutput((bytes path, address recipient, uint256 amountOut, uint256 amountInMaximum)) external payable returns (uint256 amountIn)',
   'function refundETH() external payable',
+]);
+
+// Multi-hop quoting/swapping. DHB's only pool on Base is DHB/WETH, so a holder
+// of USDC — which is most people — has no single-hop route and used to be told
+// to "acquire DHB manually". Routing through WETH gives every liquid Base token
+// a path.
+const quoterPathInterface = new Interface([
+  'function quoteExactOutput(bytes path, uint256 amountOut) external returns (uint256 amountIn, uint160[] sqrtPriceX96AfterList, uint32[] initializedTicksCrossedList, uint256 gasEstimate)',
 ]);
 
 const multicallInterface = new Interface([
@@ -249,6 +258,124 @@ export async function swapETHForDHB(
   recipient: string,
 ): Promise<{ hash: string }> {
   return swapTokenForDHB(amountOutDHB, maxETH, recipient, '0x0', 10000);
+}
+
+/**
+ * A priced way of buying an exact amount of DHB with one wallet token.
+ *
+ * `single` is a direct pool (only WETH has one). `path` hops through WETH,
+ * which is what makes stablecoin balances spendable on DHB at all.
+ */
+export type DhbBuyRoute =
+  | { kind: 'single'; tokenIn: string; amountIn: bigint; feeTier: number }
+  | { kind: 'path'; tokenIn: string; amountIn: bigint; path: string };
+
+/**
+ * Encode a Uniswap V3 exactOutput path. These run OUTPUT first, so the bytes
+ * read DHB → fee → WETH → fee → tokenIn even though the trade goes the other
+ * way. Getting this backwards is the classic exactOutput bug; the quoter uses
+ * the same encoding, so a wrong path fails at the quote and never reaches a
+ * signature.
+ */
+function encodeExactOutputPath(tokenIn: string, midFee: number, dhbFee: number): string {
+  return solidityPacked(
+    ['address', 'uint24', 'address', 'uint24', 'address'],
+    [DHB_BASE, dhbFee, WETH_BASE, midFee, tokenIn],
+  );
+}
+
+/**
+ * Cheapest route from `tokenInAddress` to an exact `amountOutDhb`, or null when
+ * the token has no liquidity path at this size.
+ *
+ * Every tier combination is quoted at once — a pool that doesn't exist reverts
+ * in eth_call, costs nothing, and simply drops out of the results.
+ */
+export async function quoteDhbPurchase(
+  amountOutDhb: bigint,
+  tokenInAddress: string,
+): Promise<DhbBuyRoute | null> {
+  await initChainRpcUrls();
+  const resolved = resolveTokenAddress(tokenInAddress);
+
+  // WETH (and native ETH, which resolves to it) trades against DHB directly.
+  if (resolved.toLowerCase() === WETH_BASE.toLowerCase()) {
+    const quote = await getSwapQuote(amountOutDhb, tokenInAddress);
+    return quote
+      ? { kind: 'single', tokenIn: tokenInAddress, amountIn: quote.amountIn, feeTier: quote.feeTier }
+      : null;
+  }
+
+  // Fee tiers for the token↔WETH leg. Stables sit at 0.05% or 0.01% on Base,
+  // volatile pairs at 0.3%/1%.
+  const MID_FEES = [500, 100, 3000, 10000] as const;
+
+  const attempts = MID_FEES.flatMap((midFee) =>
+    FEE_TIERS.map(async (dhbFee) => {
+      const path = encodeExactOutputPath(resolved, midFee, dhbFee);
+      try {
+        const amountIn = await readContract<bigint>(
+          UNISWAP_QUOTER_V2,
+          quoterPathInterface,
+          'quoteExactOutput',
+          [path, amountOutDhb],
+          BASE_CHAIN_ID,
+        );
+        return { kind: 'path' as const, tokenIn: tokenInAddress, amountIn, path };
+      } catch {
+        return null;
+      }
+    }),
+  );
+
+  const routes = (await Promise.all(attempts)).filter(
+    (r): r is Extract<DhbBuyRoute, { kind: 'path' }> => r !== null && r.amountIn > BigInt(0),
+  );
+  if (routes.length === 0) return null;
+
+  routes.sort((a, b) => (a.amountIn < b.amountIn ? -1 : 1));
+  return routes[0];
+}
+
+/**
+ * Execute a route from `quoteDhbPurchase`, buying exactly `amountOutDhb`.
+ *
+ * `maxAmountIn` is the slippage-padded ceiling; native ETH is refunded in the
+ * same transaction so an over-quote is never left in the router.
+ */
+export async function buyDhbViaRoute(
+  route: DhbBuyRoute,
+  amountOutDhb: bigint,
+  maxAmountIn: bigint,
+  recipient: string,
+): Promise<{ hash: string }> {
+  if (route.kind === 'single') {
+    return swapTokens(amountOutDhb, maxAmountIn, recipient, route.tokenIn, route.feeTier, DHB_BASE);
+  }
+
+  const deadline = BigInt(Math.floor(Date.now() / 1000) + SWAP_DEADLINE_SECONDS);
+  const swapCalldata = swapRouterInterface.encodeFunctionData('exactOutput', [{
+    path: route.path,
+    recipient,
+    amountOut: amountOutDhb,
+    amountInMaximum: maxAmountIn,
+  }]);
+
+  await ensureAllowance(route.tokenIn, recipient, maxAmountIn);
+  const result = await writeContractAA(
+    UNISWAP_SWAP_ROUTER,
+    multicallInterface,
+    'multicall',
+    [deadline, [swapCalldata]],
+    {
+      context: 'Swap token → DHB',
+      chainId: BASE_CHAIN_ID,
+    },
+  );
+
+  const receipt = await result.wait(1);
+  console.log('[Uniswap] Multi-hop swap confirmed:', receipt.hash);
+  return receipt;
 }
 
 /**

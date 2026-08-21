@@ -4,6 +4,14 @@
  * Pay-Per-View unlock via StreamController.sendFundsForPPV (#44).
  * Auto-swaps ETH → DHB on Base when balance is low.
  * Optional atomic swap + PPV + tip via DeHubPaymentRouter when deployed (#45).
+ *
+ * Running out of DHB is a step, not an error. Every shortfall used to end in a
+ * toast: the sheet stayed on "Pay 5,000 DHB", the viewer had no way to act on
+ * it from where they were standing, and the unlock they had already committed
+ * to was simply dropped. Now the gap is reported through `shortfall`, the
+ * sheet turns into a top-up step, and `pay()` is re-entrant — so the caller
+ * runs it again the moment the wallet is funded, with no second decision and
+ * no re-opening the post.
  */
 
 import { useState, useCallback } from 'react';
@@ -37,6 +45,29 @@ interface UsePPVPaymentOptions {
   onSuccess?: () => void;
 }
 
+/**
+ * An unlock that cannot be sent yet because the wallet is short of DHB.
+ *
+ * Held as state rather than thrown, because it is the one failure the viewer
+ * can fix without leaving the sheet.
+ */
+export interface PPVShortfall {
+  /** DHB the wallet still needs before the unlock can be sent. */
+  needDhb: number;
+  /** DHB held on the post's chain right now. */
+  balanceDhb: number;
+  /** The full unlock price. */
+  priceDhb: number;
+  /** The chain the post settles on. */
+  chainId: ChainId;
+  /**
+   * Whether DHB can be bought from inside the sheet. Uniswap liquidity for DHB
+   * is Base-only, so on every other chain the viewer has to bring DHB with
+   * them and the step offers funding routes instead of a swap.
+   */
+  canTopUpInApp: boolean;
+}
+
 export function usePPVPayment({
   tokenId,
   creatorAddress,
@@ -50,14 +81,21 @@ export function usePPVPayment({
   // ruled out 101/103, so it can treat the post's chain as a ChainId.
   const chainId = postChainId as ChainId;
   const [isPaying, setIsPaying] = useState(false);
+  const [shortfall, setShortfall] = useState<PPVShortfall | null>(null);
   const { walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
+
+  const clearShortfall = useCallback(() => setShortfall(null), []);
 
   const pay = useCallback(async () => {
     if (!walletAddress) {
       openLoginModal?.();
       return;
     }
+
+    // A retry after a top-up starts clean: the balance has moved, so last
+    // attempt's gap says nothing about this one.
+    setShortfall(null);
 
     if (!creatorAddress) {
       toast.error('Creator address not available');
@@ -156,42 +194,56 @@ export function usePPVPayment({
         let dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
 
         if (dhbBalance < amountWei) {
-          const shortfall = amountWei - dhbBalance;
+          const shortfallWei = amountWei - dhbBalance;
+          const balanceHuman = Number(fromWei(dhbBalance));
+          // Round up, and never to nothing: asking for the exact fractional
+          // gap can still leave the wallet a wei short of the price, and a
+          // balance that floats to exactly the price would ask to buy zero.
+          const needDhb = Math.max(1, Math.ceil(price - balanceHuman));
+
+          // Every branch from here down that cannot pay hands the gap to the
+          // sheet instead of a toast. `canTopUpInApp` is what separates "you
+          // can fix this in one tap" from "you have to bring DHB with you".
+          const raiseShortfall = (canTopUpInApp: boolean) => {
+            toast.dismiss('ppv-payment');
+            setShortfall({
+              needDhb,
+              balanceDhb: balanceHuman,
+              priceDhb: price,
+              chainId,
+              canTopUpInApp,
+            });
+            setIsPaying(false);
+          };
 
           if (!isAutoSwapSupported(chainId)) {
-            const balanceHuman = fromWei(dhbBalance);
-            toast.error(
-              dhbText(`Insufficient DHB. Need ${price} DHB but have ${balanceHuman} DHB. Auto-swap is only on Base.`),
-            );
-            setIsPaying(false);
+            raiseShortfall(false);
             return;
           }
 
           toast.loading('Getting swap quote...', { id: 'ppv-payment' });
-          const ethQuoteResult = await getSwapQuote(shortfall);
+          const ethQuoteResult = await getSwapQuote(shortfallWei);
 
+          // No quote means no DHB liquidity for this size — a top-up step
+          // offering a swap would only fail the same way a second time.
           if (!ethQuoteResult) {
-            toast.error(dhbText('Could not get swap quote. Please acquire DHB manually.'), { id: 'ppv-payment' });
-            setIsPaying(false);
+            raiseShortfall(false);
             return;
           }
 
           const ethNeeded = applySlippage(ethQuoteResult.amountIn);
           const ethBalance = await getNativeBalance(signerAddress, chainId);
 
+          // Too little ETH to cover the gap silently. The step can still get
+          // there from any other Base token in the wallet, so it opens with
+          // the swap route offered rather than closed.
           if (ethBalance < ethNeeded) {
-            toast.error(
-              dhbText(
-                `Insufficient DHB and ETH. Need ~${fromWei(ethNeeded)} ETH for auto-swap but have ${fromWei(ethBalance)} ETH.`,
-              ),
-              { id: 'ppv-payment' },
-            );
-            setIsPaying(false);
+            raiseShortfall(true);
             return;
           }
 
           toast.loading(dhbText('Swapping ETH → DHB...'), { id: 'ppv-payment' });
-          await swapETHForDHB(shortfall, ethNeeded, signerAddress);
+          await swapETHForDHB(shortfallWei, ethNeeded, signerAddress);
           dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
 
           if (dhbBalance < amountWei) {
@@ -253,5 +305,5 @@ export function usePPVPayment({
     queryClient,
   ]);
 
-  return { pay, isPaying };
+  return { pay, isPaying, shortfall, clearShortfall };
 }
