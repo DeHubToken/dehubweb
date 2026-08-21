@@ -1,6 +1,10 @@
 /**
  * Post-build guardrail: the wallet stack must never ride in the eager bundle.
  *
+ * Sibling guard: scripts/boot-path-report.mjs, run in CI. This file catches a
+ * heavy dependency arriving all at once; that one catches the boot path
+ * drifting upward a few modules at a time, which no ceiling here can see.
+ *
  * The WalletProviders React.lazy split silently regressed once (July 2026)
  * when App.tsx gained static imports of AuthContext/LoginModal, folding
  * wagmi + RainbowKit + Web3Auth (~1.5 MB gz) into the entry chunk and
