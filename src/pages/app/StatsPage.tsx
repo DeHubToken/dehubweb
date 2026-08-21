@@ -473,10 +473,10 @@ export default function StatsPage() {
             <BrandIcon src="/theme-icons/system/stats.webp" alt="" className="w-10 h-10 shrink-0 object-contain" />
             <div className="min-w-0 flex-1">
               <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">
-                {t('stats.title', 'Live stats')}
+                {t('stats.title', 'Stats')}
               </h1>
               <p className="text-xs text-zinc-500 truncate">
-                {t('stats.subtitle', 'Real visitors to dehub.io, measured at the edge')}
+                {t('stats.subtitle', 'Real-time open source intel')}
               </p>
             </div>
             {stats && (
