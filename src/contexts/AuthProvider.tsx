@@ -51,6 +51,7 @@ import {
   readLastSessionAddress,
   clearLastSession,
 } from '@/lib/connection-source';
+import { predictSafeAddress } from '@/lib/smart-account-address';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -240,7 +241,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [needsSignature] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [walletPhase, setWalletPhase] = useState<WalletPhase>('none');
-  const [supabaseUserId, setSupabaseUserId] = useState<string | null>(null);
+  // Hydrated from storage rather than left null until some login flow happens
+  // to run. This is the identity that OWNS the wallet row, and it is needed on
+  // an ordinary page load where no login is in progress: BiometricUnlockSettings
+  // renders nothing without it, exportPrivateKey and switchActiveWallet throw
+  // "Not signed in" on it, and applyAuthenticatedSession skips writing the
+  // last-session record when it is null — so a background re-sign left no trace
+  // of itself and the next page load had to start over.
+  const [supabaseUserId, setSupabaseUserId] = useState<string | null>(
+    () => localStorage.getItem('dehub_supabase_uid') ?? readLastSession()?.uid ?? null,
+  );
   const [connectionSource, setConnectionSource] = useState<'web3auth' | 'wagmi' | null>(
     readConnectionSource
   );
@@ -1101,7 +1111,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * in" would drift, and a missing line here is a half-logged-in user.
    *
    * @param supabaseUid Passed explicitly rather than read from state, because
-   *   the Supabase path runs before setSupabaseUserId has been committed.
+   *   the Supabase path runs before setSupabaseUserId has been committed. Null
+   *   is tolerated — the signing path hands over the state value, which is why
+   *   the storage fallback below exists rather than a guard.
    */
   const applyAuthenticatedSession = (
     authResponse: AuthResponse,
@@ -1109,6 +1121,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     supabaseUid: string | null,
     flow: string,
   ) => {
+    // The same three sources, in the same order, that refreshSession consults
+    // before attempting the exchange. It built that chain for the READ and then
+    // passed the raw state value here for the WRITE, so a login completed on a
+    // page load that never ran a login flow tagged nothing and recorded
+    // nothing — and the next page load had no evidence it had ever happened.
+    const uid =
+      supabaseUid ?? localStorage.getItem('dehub_supabase_uid') ?? readLastSession()?.uid ?? null;
     const normalizedUser = normalizeUser(authResponse.user, address);
     localStorage.setItem('dehub_wallet', address);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
@@ -1118,12 +1137,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // magic-link sync) can tell "still me, just refreshing" apart from
     // "someone else signed in on this browser" instead of silently keeping
     // this account's data on screen.
-    if (supabaseUid) localStorage.setItem('dehub_supabase_uid', supabaseUid);
+    if (uid) localStorage.setItem('dehub_supabase_uid', uid);
     // Unlike the uid tag, this record survives clearAuthSession on purpose
     // (see connection-source.ts): after a zombie-session cleanup or a rejected
     // refresh wipes the session keys, it is what still lets the next login for
     // this identity verify the linked address without a wallet signature.
-    if (supabaseUid) writeLastSession(supabaseUid, address);
+    if (uid) writeLastSession(uid, address);
     setConnectionSource('web3auth');
     setWalletAddress(address);
     setUser(normalizedUser);
@@ -1177,34 +1196,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const authResponse = await authenticateWithSupabaseSession(accessToken);
       const address = (authResponse.user?.address || ethAddress).toLowerCase();
-      if (!address) return false;
+      if (!address) {
+        // The exchange succeeded, so a DeHub token is already in storage, but
+        // there is no address to hang a session on. Drop the token rather than
+        // leave an authenticated API client sitting behind a logged-out UI.
+        clearAuthSession();
+        return false;
+      }
 
-      // The backend resolves the address from the linked identity — and what it
-      // links is whatever address the user last SIGNED with. For an AA-flow
-      // signature that is the Safe smart account, while user_wallets stores the
-      // EOA the seed derives to, so demanding equality with the EOA alone
-      // rejected every healthy smart-account session and sent the whole
-      // "passwordless" login to the unlock sheet (client_error_logs shows the
-      // fallback firing for every user it was meant to spare).
+      // The backend links whatever address the user last SIGNED with. On the AA
+      // flow that is the Safe smart account, while user_wallets stores the owner
+      // EOA the seed derives to — two different strings for the same person.
       //
-      // The question this guard actually has to answer is "same wallet as last
-      // time?", and session continuity answers it: the address the last
-      // completed login for this SAME Supabase identity ran under, on this
-      // browser. The EOA equality stays as the secondary accept — it is the one
-      // that matches when the link was created by an EOA-flow signature, and on
-      // a browser with no session history it is the only evidence available.
-      // When neither matches (fresh browser, or a different account's wallet),
-      // signing remains the only safe way to resolve it.
+      // The two cheap checks come first because they cost nothing. Session
+      // continuity is the strongest: the address the last completed login for
+      // this SAME Supabase identity ran under, on this browser. EOA equality is
+      // the one that matches when the link was created by an EOA-flow signature.
+      //
+      // Neither helps on a browser that has not completed a login before, which
+      // is where this was failing: EOA equality can never hold for a
+      // smart-account user, so every first login on a new browser, phone or
+      // in-app webview was rejected and sent to the wallet-password sheet. 40
+      // rejections across ~24 accounts in the five days to 2026-08-21, every one
+      // with no prior session record.
+      //
+      // So when both miss, derive the answer instead of asking the browser to
+      // remember it. A Safe's address is a pure CREATE2 function of its owner
+      // ADDRESS — no key involved — so predicting it from the stored EOA proves
+      // the linked account is the smart account of the wallet this Supabase
+      // identity owns per user_wallets, which is an RLS-scoped read keyed on the
+      // authenticated user. Checked against every account seen failing in
+      // production: 29 of 32 predicted the exact linked address, and all three
+      // that did not were stale links — two at addresses never deployed on Base,
+      // one at a Safe owned by a different key entirely. Those must keep failing
+      // closed, which is also what protects the case the backend cannot see: a
+      // wallet replaced locally and not yet re-signed with still predicts to the
+      // NEW Safe, so the OLD link is refused and signing re-establishes it.
       const lastSessionAddress = readLastSessionAddress(userId);
-      const matchesLastSession = !!lastSessionAddress && lastSessionAddress === address;
-      const matchesStoredEoa = !!ethAddress && address === ethAddress.toLowerCase();
-      if (!matchesLastSession && !matchesStoredEoa) {
+      const storedEoa = ethAddress ? ethAddress.toLowerCase() : null;
+      let matched: 'last-session' | 'stored-eoa' | 'predicted-safe' | null =
+        lastSessionAddress === address ? 'last-session' : storedEoa === address ? 'stored-eoa' : null;
+      if (!matched && storedEoa) {
+        matched = (await predictSafeAddress(storedEoa)) === address ? 'predicted-safe' : null;
+      }
+      if (!matched) {
         authLogger.warn('Supabase session maps to a different wallet — falling back to signing', {
           linked: address,
-          stored: ethAddress ? ethAddress.toLowerCase() : null,
-          // null = this browser has no completed login for this identity —
-          // expected on a fresh device; a non-null value here is a genuine
-          // wallet change and worth investigating.
+          stored: storedEoa,
+          // null = this browser has no completed login for this identity, which
+          // is now expected rather than fatal; the prediction carries it.
           lastSession: lastSessionAddress,
         });
         return false;
@@ -1215,7 +1255,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return true;
     } catch (e) {
       if (e instanceof WalletNotLinkedError) {
-        authLogger.info('No wallet linked to this login yet — signing once to link it');
+        // warn, not info: lib/logger.ts drops info before the network call, so
+        // this whole branch was invisible in client_error_logs while the
+        // rejection beside it was not — and it covers WALLET_LINK_AMBIGUOUS,
+        // which is a real fault rather than a first-login formality.
+        authLogger.warn('No wallet linked to this login yet — signing once to link it', {
+          reason: e.message,
+        });
       } else {
         authLogger.warn('Supabase session exchange unavailable, falling back to signing', {
           error: e instanceof Error ? e.message : String(e),
