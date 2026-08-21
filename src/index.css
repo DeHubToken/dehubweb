@@ -403,19 +403,34 @@ html {
    merely modest — never the overlap. Do not move these back to `sm:`/`lg:`. */
 .dehub-intro { container-type: inline-size; container-name: dehubintro; }
 
-/* Phones and narrow columns: the globe bleeds half off the right edge and is
-   dimmed, so it reads as chrome behind the copy rather than a competing object.
-   It is no longer hidden — mobile used to get no art at all. */
-.dehub-intro-hero { top: 88px; right: -30px; width: 132px; height: 132px; opacity: 0.5; }
-.dehub-intro-stage { padding-right: 74px; }
-.dehub-intro-head { font-size: 26px; }
+/* The slide stage is a grid, and a grid column will not shrink below its
+   items' min-content width — `//never_deplatformed` in the sub row is one
+   unbreakable ~190px token. Without these two rules the column simply
+   overflowed its own padding-right and slid under the hero art, so no amount
+   of reserved padding kept the copy clear of the globe on a phone. */
+.dehub-intro-stage { grid-template-columns: minmax(0, 1fr); }
+.dehub-intro-stage > * { min-width: 0; overflow-wrap: anywhere; }
+
+/* Smallest phones (~320px): the globe sits fully INSIDE the panel at the top
+   right, level with the headline. It used to bleed 30px off the right edge,
+   which read as a rendering fault rather than a design. */
+.dehub-intro-hero { top: 74px; right: 8px; width: 96px; height: 96px; opacity: 0.8; }
+.dehub-intro-stage { padding-right: 92px; }
+.dehub-intro-head { font-size: 22px; }
 .dehub-intro-wide { display: none; }
 .dehub-intro-clamp {
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
 }
 
+/* 375px-class phones upward. */
+@container dehubintro (min-width: 340px) {
+  .dehub-intro-hero { top: 76px; width: 112px; height: 112px; }
+  .dehub-intro-stage { padding-right: 108px; }
+  .dehub-intro-head { font-size: 26px; }
+}
+
 @container dehubintro (min-width: 520px) {
-  .dehub-intro-hero { top: 92px; right: 4px; width: 180px; height: 180px; opacity: 0.8; }
+  .dehub-intro-hero { top: 92px; right: 4px; width: 180px; height: 180px; opacity: 0.9; }
   .dehub-intro-stage { padding-right: 192px; }
   .dehub-intro-head { font-size: 34px; }
   .dehub-intro-wide { display: inline-block; }
