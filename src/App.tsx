@@ -169,6 +169,7 @@ import ReferralLanding from "./pages/ReferralLanding";
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
 const PricingPage = React.lazy(() => import("./pages/PricingPage"));
 const DePinPage = React.lazy(() => import("./pages/DePinPage"));
+const RafflePage = React.lazy(() => import("./pages/RafflePage"));
 const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
 const ConnectChatGPTPage = React.lazy(() => import("./pages/ConnectChatGPTPage"));
 const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
@@ -439,6 +440,10 @@ function AppContent() {
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
           <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
           <Route path="/depin" element={<Suspense fallback={<PageLoader />}><DePinPage /></Suspense>} />
+          {/* Prize draws. dehub.net/prize-draw and raffle.dehub.net both 301
+              here (CLOUDFLARE_WORKER_SEO.js), so this route is the landing for
+              every legacy raffle URL the old domain still holds in the index. */}
+          <Route path="/raffle" element={<Suspense fallback={<PageLoader />}><RafflePage /></Suspense>} />
           <Route path="/connect" element={<Suspense fallback={<PageLoader />}><ConnectPage /></Suspense>} />
           <Route path="/connect/chatgpt" element={<Suspense fallback={<PageLoader />}><ConnectChatGPTPage /></Suspense>} />
           <Route path="/connect/claude" element={<Suspense fallback={<PageLoader />}><ConnectClaudePage /></Suspense>} />
