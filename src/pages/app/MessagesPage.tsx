@@ -221,6 +221,7 @@ export default function MessagesPage() {
   // Capture navigation state into a ref immediately (before it can be cleared)
   const pendingDmRef = useRef<{ address: string; username?: string; autoSendBody?: string } | null>(null);
   const pendingAutoSendRef = useRef<{ peerAddress: string; body: string } | null>(null);
+  const pendingDraftRef = useRef<{ peerAddress: string; body: string } | null>(null);
   // Draft carried into a fee-gated chat's composer (see auto-send effect below).
   const [composerPrefill, setComposerPrefill] = useState<{ convId: string; text: string } | null>(null);
   const [pendingDmTrigger, setPendingDmTrigger] = useState(0);
@@ -230,11 +231,19 @@ export default function MessagesPage() {
   const pendingUserPromiseRef = useRef<Promise<DeHubUser | null> | null>(null);
 
   useEffect(() => {
-    const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string } | null;
+    const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string; draftBody?: string } | null;
     if (state?.openDmWith) {
       pendingDmRef.current = { address: state.openDmWith, username: state.username, autoSendBody: state.autoSendBody };
       if (state.autoSendBody) {
         pendingAutoSendRef.current = { peerAddress: state.openDmWith.toLowerCase(), body: state.autoSendBody };
+      }
+      // `draftBody` is autoSendBody's opposite number: open the chat with the
+      // message typed but NOT sent. Welcoming a new member is the case that
+      // needs it — a canned greeting fired off without the sender ever seeing
+      // it reads as a bot, and the point of the feature is that a person said
+      // hello. Mobile's `sharedText` behaves the same way.
+      if (state.draftBody) {
+        pendingDraftRef.current = { peerAddress: state.openDmWith.toLowerCase(), body: state.draftBody };
       }
       // Start the _id lookup now — if an existing conversation is found the
       // result is simply discarded.
@@ -404,6 +413,21 @@ export default function MessagesPage() {
     if (isVirtual) return; // wait for real dmId
     pendingAutoSendRef.current = null;
     emitSendMessage({ dmId, content: pending.body, type: 'msg' });
+  }, [selectedConversation]);
+
+  // Drop a queued draft into the composer once the right chat is on screen.
+  // Waits for a real dmId for the same reason the auto-send does: the prefill
+  // is keyed by conversation id, and a virtual `new_0x…` id is replaced the
+  // moment the conversation list catches up, which would take the draft with it.
+  useEffect(() => {
+    const pending = pendingDraftRef.current;
+    if (!pending || !selectedConversation) return;
+    if (selectedConversation.otherUser?.address?.toLowerCase() !== pending.peerAddress) return;
+
+    const dmId = selectedConversation.id;
+    if (dmId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(dmId)) return;
+    pendingDraftRef.current = null;
+    setComposerPrefill({ convId: dmId, text: pending.body });
   }, [selectedConversation]);
 
   // Block access for unauthenticated users

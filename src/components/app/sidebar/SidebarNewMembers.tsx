@@ -4,12 +4,15 @@
  * The fourth right-rail tab: everyone who joined in the last 30 days, newest
  * first, each with a one-tap way to say hello.
  *
- * The wave is the point of the whole feature, so it is one click and it
- * actually sends: `openDmWith` + `autoSendBody` is the same path ShareToDmModal
- * uses, so the fee flow and the "who is this person" lookup on MessagesPage are
- * already handled. Waves are remembered per device in localStorage — a server
- * round trip to render a button label would be a poor trade, and the worst case
- * of losing it is a button that says "Wave" again on a new browser.
+ * The wave is one click: `openDmWith` + `draftBody` opens the DM with a
+ * greeting typed and waiting, so the fee flow and the "who is this person"
+ * lookup on MessagesPage are already handled and the sender still gets to
+ * change the words. Deliberately NOT `autoSendBody` — an identical greeting
+ * fired off unseen is exactly the bot behaviour this feature exists to avoid.
+ *
+ * Waves are remembered per device in localStorage — a server round trip to
+ * render a button label would be a poor trade, and the worst case of losing it
+ * is a button that says "Wave" again on a new browser.
  *
  * @module components/app/sidebar/SidebarNewMembers
  */
@@ -25,7 +28,7 @@ import { joinedAgoLabel, useNewMembers, type NewMember } from '@/hooks/use-new-m
 
 const WAVED_KEY = 'dehub_waved_at';
 
-/** The message a wave sends. Short on purpose — it should read as a person, not a bot. */
+/** The greeting a wave drafts. Short on purpose — it is meant to be edited, not sent as-is. */
 const WELCOME_MESSAGE = 'Welcome to DeHub! 👋 Give me a shout if you need anything.';
 
 function readWaved(): Set<string> {
@@ -69,7 +72,7 @@ export function SidebarNewMembers() {
       state: {
         openDmWith: member.address,
         username: member.username || undefined,
-        autoSendBody: WELCOME_MESSAGE,
+        draftBody: WELCOME_MESSAGE,
       },
     });
   }, [isAuthenticated, navigate, openLoginModal]);
