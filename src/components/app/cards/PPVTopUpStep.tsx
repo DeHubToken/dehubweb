@@ -181,10 +181,17 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
     setPhase('buying');
     setError('');
     try {
-      const [{ parseTxError, waitForERC20Balance }, { buyDhbViaRoute }] = await Promise.all([
+      const [{ parseTxError, waitForERC20Balance, getERC20Balance }, { buyDhbViaRoute }] = await Promise.all([
         import('@/lib/contracts/aa-utils'),
         import('@/lib/contracts/uniswap-swap'),
       ]);
+      const dhbToken = getChainConfig(shortfall.chainId).dhbToken;
+      // Measured, not derived from the displayed price: comparing against a
+      // float turned back into wei can set a target the balance never quite
+      // reaches. Any increase at all means the swap has been seen.
+      const before = await getERC20Balance(dhbToken, addressRef.current, shortfall.chainId)
+        .catch(() => BigInt(0));
+
       try {
         await buyDhbViaRoute(pick.route, needWei, pick.maxIn, addressRef.current);
       } catch (err) {
@@ -197,9 +204,9 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
       // and one a block behind would make the unlock believe nothing arrived
       // and buy the shortfall a second time.
       await waitForERC20Balance(
-        getChainConfig(shortfall.chainId).dhbToken,
+        dhbToken,
         addressRef.current,
-        toWei(shortfall.priceDhb, 18),
+        before + BigInt(1),
         shortfall.chainId,
       );
       // Straight back into the unlock — the sheet never closes and the viewer
