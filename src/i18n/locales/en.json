@@ -1611,5 +1611,85 @@
     "seoTitle": "Arcade | DeHub",
     "seoDescription": "Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor. No install, no download.",
     "alsoIn": "Also in the {{theme}}"
+  },
+  "stats": {
+    "title": "Stats",
+    "subtitle": "Real-time open source intel",
+    "live": "Live",
+    "range": {
+      "24h": "24 hours",
+      "3d": "3 days",
+      "7d": "7 days",
+      "30d": "30 days",
+      "all": "All time"
+    },
+    "unavailable": {
+      "title": "Stats are not available right now"
+    },
+    "tile": {
+      "visitorsToday": "Visitors today",
+      "soFarToday": "so far today, UTC",
+      "peakHour": "Busiest hour",
+      "peakDay": "Busiest day",
+      "peakAtHour": "at {{when}} UTC",
+      "peakOnDay": "on {{when}}",
+      "inRange": "in this range",
+      "pageViews": "Page views",
+      "overHours": "over {{count}}h",
+      "overDay": "over 1 day",
+      "overDays": "over {{count}} days",
+      "requestsLabel": "Requests",
+      "served": "Served",
+      "requests": "{{requests}} requests"
+    },
+    "chart": {
+      "hourly": "Visitors per hour",
+      "daily": "Visitors per day",
+      "hourlyHint": "{{count}} hourly buckets, UTC",
+      "dailyHint": "unique visitors per day",
+      "empty": "No data for this window yet"
+    },
+    "countries": {
+      "title": "Top countries",
+      "windowDay": "last 24 hours",
+      "window": "last {{days}} days"
+    },
+    "browsers": {
+      "title": "Browsers",
+      "window": "by page views"
+    },
+    "edge": {
+      "title": "At the edge",
+      "windowDay": "last 24 hours",
+      "window": "last {{days}} days",
+      "cached": "Served from cache",
+      "encrypted": "Encrypted",
+      "threats": "Threats blocked"
+    },
+    "proof": {
+      "title": "Where these numbers come from",
+      "subtitle": "Measured by Cloudflare, not by this page",
+      "source": "Source",
+      "datasets": "Datasets",
+      "zone": "Zone",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Fetched at",
+      "query": "The exact query behind the chart",
+      "copied": "Copied",
+      "copy": "Copy",
+      "openEndpoint": "Open /api/stats",
+      "openRaw": "Cloudflare’s untouched reply"
+    },
+    "definitions": {
+      "title": "What the numbers mean",
+      "visitorsTerm": "Visitors",
+      "pageViewsTerm": "Page views",
+      "botsTerm": "Bots are included",
+      "totalTerm": "Range totals",
+      "peakTerm": "Busiest hour / day",
+      "resolutionTerm": "Hourly stops at 3 days",
+      "breakdownTerm": "Countries and browsers",
+      "startTerm": "History"
+    }
   }
 }
