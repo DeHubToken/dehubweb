@@ -195,8 +195,8 @@ export function HomeIntro() {
       </div>
       {/* Hero art, right. Rendered at EVERY width — phones used to get no art
           at all, which left the panel as a wall of text. On a narrow column it
-          shrinks, dims and bleeds off the right edge so it reads as chrome
-          behind the copy; sizing lives in .dehub-intro-hero (index.css), keyed
+          shrinks and dims, sitting inside the panel level with the headline;
+          sizing lives in .dehub-intro-hero (index.css), keyed
           to the panel's own width, not the viewport's. 46KB, lazy — cheap
           enough for a phone. Anchored to the headline band rather than the
           panel's vertical centre — the banner template is pure art, but this
@@ -310,7 +310,7 @@ export function HomeIntro() {
               </p>
 
               {/* Sub row: //snake_case + mono extra + ✕. */}
-              <div className="mt-3 flex items-baseline gap-4 sm:gap-8">
+              <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 sm:gap-x-8">
                 <span
                   className="font-exo text-base font-semibold uppercase tracking-[0.01em] sm:text-xl"
                   style={clipText(SUB_FILL)}
