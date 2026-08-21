@@ -17,15 +17,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { StageRadioStation } from '@/lib/stage-radio';
+import type { StageRadioLabel } from '@/lib/stage-radio';
 
 /** Three missed heartbeats. */
 const STALE_MS = 35_000;
 
 export function useStageRadioNowPlaying(
   spaceId: string | null | undefined,
-): StageRadioStation | null {
-  const [station, setStation] = useState<StageRadioStation | null>(null);
+): StageRadioLabel | null {
+  const [station, setStation] = useState<StageRadioLabel | null>(null);
   const staleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function useStageRadioNowPlaying(
     const channel = supabase
       .channel(`stage-radio:${spaceId}`)
       .on('broadcast', { event: 'now-playing' }, ({ payload }) => {
-        const next = (payload?.station as StageRadioStation | null) ?? null;
+        const next = (payload?.station as StageRadioLabel | null) ?? null;
         setStation(next);
 
         if (staleTimerRef.current) clearTimeout(staleTimerRef.current);

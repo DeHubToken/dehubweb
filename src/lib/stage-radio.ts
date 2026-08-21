@@ -8,6 +8,10 @@
  * publishable MediaStreamTrack (what the audience hears) and the host's own
  * speakers (what the host hears).
  *
+ * A station and one of the host's own uploaded clips are the same thing to
+ * everything below: a URL for the element. Only the *end* of the audio differs,
+ * which is why `ended` is reported rather than judged here.
+ *
  * Three constraints shape everything below.
  *
  * **`createMediaElementSource` can only ever be called once per element.** So
@@ -38,18 +42,36 @@
  * should not be a copy of somebody else's broadcast.
  */
 
-export type StageRadioStatus = 'idle' | 'connecting' | 'live' | 'error';
+export type StageRadioStatus = 'idle' | 'connecting' | 'live' | 'paused' | 'ended' | 'error';
 
-/** Narrow view of a radio-browser station — all a stage needs to play and name one. */
+/**
+ * Something the host can put on air: a radio-browser station, or one of their
+ * own uploaded clips. Both play down the identical path — the only thing `kind`
+ * decides is what the end of the audio means. A station falling silent is a
+ * dropped stream; a clip reaching its end is a track handing over to the next.
+ */
 export interface StageRadioStation {
   id: string;
   name: string;
   url: string;
+  kind?: 'station' | 'track';
   favicon?: string;
   country?: string;
   countrycode?: string;
   tags?: string;
   bitrate?: number;
+}
+
+/**
+ * What the room is told. The stream URL is deliberately absent: listeners need
+ * the label, not a direct line to the host's storage.
+ */
+export type StageRadioLabel = Omit<StageRadioStation, 'url'>;
+
+/** Strip the source before it goes out over the announce channel. */
+export function toRadioLabel(station: StageRadioStation): StageRadioLabel {
+  const { url: _url, ...label } = station;
+  return label;
 }
 
 let audioEl: HTMLAudioElement | null = null;
@@ -95,13 +117,14 @@ function buildGraph(): { audio: HTMLAudioElement; ctx: AudioContext } {
   src.connect(monitor);
   monitor.connect(audioContext.destination);
 
-  // A live stream has no natural end: 'ended' means the server dropped us, not
-  // that the song finished, so it reports as a failure like the rest.
+  // 'ended' is reported as-is rather than judged here: for one of the host's
+  // own clips it is the cue to play the next, and for a station it means the
+  // server dropped us. Only the caller knows which is on air.
   audio.addEventListener('playing', () => emit('live'));
   audio.addEventListener('waiting', () => emit('connecting'));
   audio.addEventListener('stalled', () => emit('connecting'));
   audio.addEventListener('error', () => emit('error', 'Stream unavailable'));
-  audio.addEventListener('ended', () => emit('error', 'Stream ended'));
+  audio.addEventListener('ended', () => emit('ended'));
 
   audioEl = audio;
   ctx = audioContext;
@@ -137,9 +160,11 @@ export function closeStageRadioTap(): void {
 }
 
 /**
- * Point the element at a station and start it.
- * Must be called from a user gesture — the AudioContext is resumed here, and a
- * context still parked when audio starts renders silence into the tap.
+ * Point the element at a station or clip and start it.
+ * The first call must come from a user gesture — the AudioContext is resumed
+ * here, and a context still parked when audio starts renders silence into the
+ * tap. Later calls need not: handing over to the next clip in a set inherits
+ * the document's activation, which is what lets a set play through unattended.
  */
 export async function playStageRadioStream(
   url: string,
@@ -157,10 +182,37 @@ export async function playStageRadioStream(
   audio.load();
   try {
     await audio.play();
-  } catch {
+  } catch (err) {
     // A rejected play() on a stream that is merely slow still fires 'playing'
-    // later, so the error listener owns the failure path rather than this catch.
+    // later, so the error listener owns the failure path — with one exception.
+    // NotAllowedError is the browser refusing to start audio at all, which
+    // fires no media error and would otherwise sit at "connecting" forever.
+    // It is the failure mode a set walking to its next clip on its own can
+    // actually hit, so it has to be reported rather than swallowed.
+    if ((err as { name?: string } | null)?.name === 'NotAllowedError') {
+      emit('error', 'The browser blocked playback — press play again');
+    }
   }
+}
+
+/**
+ * Hold the current clip where it is. Meaningful for one of the host's own
+ * tracks; a paused live station only buffers, which is why the UI offers this
+ * for tracks alone. The context stays running — the tap is still published and
+ * the room simply hears silence, so resuming does not have to re-negotiate
+ * anything with Agora.
+ */
+export function pauseStageRadioStream(): void {
+  audioEl?.pause();
+  emit('paused');
+}
+
+export async function resumeStageRadioStream(): Promise<void> {
+  if (!audioEl || !ctx) return;
+  if (ctx.state === 'suspended') {
+    try { await ctx.resume(); } catch { /* gesture-backed; best effort */ }
+  }
+  try { await audioEl.play(); } catch { /* the error listener owns the failure path */ }
 }
 
 /** Stop playback and park the graph. The tap stays open unless closed separately. */

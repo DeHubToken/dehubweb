@@ -12,7 +12,7 @@
  * a second subscription to the same topic from one client is refused.
  */
 
-import { Radio } from 'lucide-react';
+import { Music, Radio } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useStageRadioNowPlaying } from '@/hooks/use-stage-radio';
@@ -29,6 +29,8 @@ export function StageRadioNowPlaying({ spaceId, className }: StageRadioNowPlayin
 
   if (!station) return null;
 
+  const isTrack = station.kind === 'track';
+  const Mark = isTrack ? Music : Radio;
   const tags = getPrimaryTags(station.tags || '').join(', ');
   const flag = getCountryFlag(station.countrycode || '');
 
@@ -49,12 +51,12 @@ export function StageRadioNowPlaying({ spaceId, className }: StageRadioNowPlayin
             onError={() => setLogoFailed(true)}
           />
         ) : (
-          <Radio className="w-4 h-4 text-white/40" />
+          <Mark className="w-4 h-4 text-white/40" />
         )}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] uppercase tracking-wide text-white/40">On the radio</p>
+        <p className="text-[10px] uppercase tracking-wide text-white/40">{isTrack ? 'Now playing' : 'On the radio'}</p>
         <p className="text-xs font-medium text-white truncate">{station.name}</p>
         {(tags || station.country) && (
           <p className="text-[10px] text-white/40 truncate">

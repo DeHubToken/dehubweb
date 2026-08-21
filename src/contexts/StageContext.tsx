@@ -24,6 +24,9 @@ import {
   stopStageRadioStream,
   setStageRadioBroadcastLevel,
   setStageRadioMonitorLevel,
+  pauseStageRadioStream,
+  resumeStageRadioStream,
+  toRadioLabel,
 } from '@/lib/stage-radio';
 import type { StageRadioStation, StageRadioStatus } from '@/lib/stage-radio';
 import { useAuth } from '@/contexts/AuthContext';
@@ -119,8 +122,18 @@ interface StageContextType {
   radioVolume: number;
   /** Whether the host hears the radio through their own speakers. */
   radioMonitor: boolean;
-  startRadio: (station: StageRadioStation) => Promise<void>;
+  /** The set the current source belongs to, so it can be walked. Empty for a one-off. */
+  radioQueue: StageRadioStation[];
+  /**
+   * Put something on air. Pass the list it came from to make it a set: a clip
+   * that ends hands over to the next one, and skip walks it.
+   */
+  startRadio: (station: StageRadioStation, queue?: StageRadioStation[]) => Promise<void>;
   stopRadio: () => Promise<void>;
+  /** Hold the current clip. No-op for a station, which can only buffer. */
+  toggleRadioPause: () => void;
+  radioNext: () => void;
+  radioPrev: () => void;
   setRadioVolume: (volume: number) => void;
   setRadioMonitor: (enabled: boolean) => void;
 }
@@ -398,6 +411,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const [radioStatus, setRadioStatus] = useState<StageRadioStatus>('idle');
   const [radioVolume, setRadioVolumeState] = useState(80);
   const [radioMonitor, setRadioMonitorState] = useState(true);
+  /** The set the on-air source belongs to — the host's clips, in their order. */
+  const [radioQueue, setRadioQueue] = useState<StageRadioStation[]>([]);
   const voiceEffectsHook = useVoiceEffects();
   const voiceEffectsHookRef = useRef(voiceEffectsHook);
   voiceEffectsHookRef.current = voiceEffectsHook;
@@ -417,11 +432,19 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** Read by the announce heartbeat, which must not restart on every station change. */
   const radioStationRef = useRef<StageRadioStation | null>(null);
   radioStationRef.current = radioStation;
+  /** Read by the pause toggle, which only knows the button was pressed. */
+  const radioStatusRef = useRef<StageRadioStatus>(radioStatus);
+  radioStatusRef.current = radioStatus;
   /** Levels read at start time, so startRadio can stay a stable callback. */
   const radioVolumeStateRef = useRef(radioVolume);
   radioVolumeStateRef.current = radioVolume;
   const radioMonitorRef = useRef(radioMonitor);
   radioMonitorRef.current = radioMonitor;
+  /** Read when a clip ends, which happens long after startRadio's closure was built. */
+  const radioQueueRef = useRef<StageRadioStation[]>([]);
+  radioQueueRef.current = radioQueue;
+  /** startRadio calls itself to advance a set; a ref keeps it a stable callback. */
+  const startRadioRef = useRef<((station: StageRadioStation, queue?: StageRadioStation[]) => Promise<void>) | null>(null);
   /** Realtime channel the host announces the current station on. */
   const radioChannelRef = useRef<any>(null);
   /**
@@ -1360,6 +1383,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     // listening to a station with no control left on screen to stop it.
     setRadioStation(null);
     setRadioStatus('idle');
+    setRadioQueue([]);
     stopStageRadioStream();
     closeStageRadioTap();
 
@@ -1649,6 +1673,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     radioTrackRef.current = null;
     setRadioStation(null);
     setRadioStatus('idle');
+    setRadioQueue([]);
     stopStageRadioStream();
     closeStageRadioTap();
 
@@ -1661,13 +1686,38 @@ export function StageProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const startRadio = useCallback(async (station: StageRadioStation) => {
+  /**
+   * Step through the on-air set.
+   *
+   * `wrap` is on only for the automatic handover at the end of a clip: a set
+   * left to run should keep the room in music rather than dropping it into
+   * silence, while a host pressing skip past the last track should hit the end
+   * of the list and stay there. A source that is no longer in the set — its clip
+   * was deleted while it played — restarts the set from the top.
+   */
+  const advanceRadio = useCallback((from: StageRadioStation, step: 1 | -1, wrap: boolean) => {
+    const queue = radioQueueRef.current;
+    if (queue.length === 0) { void stopRadio(); return; }
+
+    const at = queue.findIndex((s) => s.id === from.id);
+    const target = at < 0 ? 0 : at + step;
+    const next = wrap ? queue[(target + queue.length) % queue.length] : queue[target];
+
+    if (!next) { void stopRadio(); return; }
+    void startRadioRef.current?.(next, queue);
+  }, [stopRadio]);
+
+  const startRadio = useCallback(async (station: StageRadioStation, queue?: StageRadioStation[]) => {
     if (!agoraClientRef.current) { toast.error('Not connected to a stage'); return; }
     if (myRoleRef.current !== 'host') { toast.error('Only the host can put the radio on air'); return; }
     if (!station.url) { toast.error('That station has no stream to play'); return; }
 
     setRadioStation(station);
     setRadioStatus('connecting');
+    // A set is only replaced when one is handed in — advancing through a queue
+    // re-enters here with the same list, and a one-off station keeps whatever
+    // was queued so the host can fall back into their clips afterwards.
+    if (queue) setRadioQueue(queue);
 
     try {
       // Only the first station of a session publishes anything. Every station
@@ -1689,6 +1739,15 @@ export function StageProvider({ children }: { children: ReactNode }) {
       setStageRadioMonitorLevel(radioMonitorRef.current ? 0.6 : 0);
 
       await playStageRadioStream(station.url, (status, message) => {
+        if (status === 'ended') {
+          // The end of the audio means opposite things for the two kinds of
+          // source. A clip finishing is the normal handover to the next one in
+          // the set; a station falling silent is a stream that dropped.
+          if (station.kind === 'track') { advanceRadio(station, 1, true); return; }
+          setRadioStatus('error');
+          toast.error(`${station.name}: stream ended`);
+          return;
+        }
         setRadioStatus(status);
         if (status === 'error') toast.error(`${station.name}: ${message || 'Stream unavailable'}`);
       });
@@ -1697,7 +1756,26 @@ export function StageProvider({ children }: { children: ReactNode }) {
       toast.error('Could not put that station on air');
       void stopRadio();
     }
-  }, [stopRadio]);
+  }, [advanceRadio, stopRadio]);
+  startRadioRef.current = startRadio;
+
+  const radioNext = useCallback(() => {
+    const current = radioStationRef.current;
+    if (current) advanceRadio(current, 1, false);
+  }, [advanceRadio]);
+
+  const radioPrev = useCallback(() => {
+    const current = radioStationRef.current;
+    if (current) advanceRadio(current, -1, false);
+  }, [advanceRadio]);
+
+  const toggleRadioPause = useCallback(() => {
+    // A live station has nothing to pause into — holding one only buffers it,
+    // and the room hears the gap on resume. Stop is the honest verb there.
+    if (radioStationRef.current?.kind !== 'track') return;
+    if (radioStatusRef.current === 'paused') void resumeStageRadioStream();
+    else pauseStageRadioStream();
+  }, []);
 
   const setRadioVolume = useCallback((volume: number) => {
     const clamped = Math.max(0, Math.min(100, Math.round(volume)));
@@ -1723,10 +1801,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
     radioChannelRef.current = channel;
 
     const announce = () => {
+      const current = radioStationRef.current;
       channel.send({
         type: 'broadcast',
         event: 'now-playing',
-        payload: { station: radioStationRef.current },
+        payload: { station: current ? toRadioLabel(current) : null },
       }).catch(() => {});
     };
 
@@ -1744,7 +1823,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     radioChannelRef.current?.send({
       type: 'broadcast',
       event: 'now-playing',
-      payload: { station: radioStation },
+      payload: { station: radioStation ? toRadioLabel(radioStation) : null },
     }).catch(() => {});
   }, [radioStation]);
 
@@ -2194,8 +2273,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
       radioStatus,
       radioVolume,
       radioMonitor,
+      radioQueue,
       startRadio,
       stopRadio,
+      toggleRadioPause,
+      radioNext,
+      radioPrev,
       setRadioVolume,
       setRadioMonitor,
     }),
@@ -2208,8 +2291,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
       toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
       stopInject, setRoomVolume, screenShare, canScreenShare, startScreenShare, stopScreenShare,
-      radioStation, radioStatus, radioVolume, radioMonitor,
-      startRadio, stopRadio, setRadioVolume, setRadioMonitor,
+      radioStation, radioStatus, radioVolume, radioMonitor, radioQueue,
+      startRadio, stopRadio, toggleRadioPause, radioNext, radioPrev,
+      setRadioVolume, setRadioMonitor,
     ],
   );
 

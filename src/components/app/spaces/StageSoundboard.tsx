@@ -101,7 +101,11 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     if (error || !data) return;
 
     const sounds: CustomSound[] = data
-      .filter(f => f.name !== '.emptyFolderPlaceholder')
+      // `id: null` is how Supabase lists a nested folder rather than a file.
+      // The host's stage radio clips live in `<wallet>/music/`, and without
+      // this that folder renders as a pad whose URL leads nowhere — and eats
+      // one of the eight slots.
+      .filter(f => f.id !== null && f.name !== '.emptyFolderPlaceholder')
       .map(f => {
         const path = `${folder}/${f.name}`;
         const { data: urlData } = supabase.storage.from('soundboard-sounds').getPublicUrl(path);
