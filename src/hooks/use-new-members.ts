@@ -16,7 +16,7 @@
  * @module hooks/use-new-members
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -36,6 +36,15 @@ const REGISTERED_KEY = 'dehub_new_member_registered';
 
 /** Once ever, per device: "you are visible as new, here is the off switch". */
 const NOTICE_KEY = 'dehub_new_member_notice_seen';
+
+/** Addresses this device has already put to the seeder — see useSeedNewMembers. */
+const SEEDED_KEY = 'dehub_new_member_seeded';
+
+/** Addresses sent per seed call. Mirrors SEED_LIMIT in the edge function. */
+const SEED_BATCH = 25;
+
+/** Remembered addresses kept before the oldest are dropped. */
+const SEEDED_CAP = 500;
 
 /**
  * How long to wait before telling someone they are on the roster.
@@ -281,4 +290,94 @@ export function useRegisterNewMember() {
       if (noticeTimer) clearTimeout(noticeTimer);
     };
   }, [isAuthenticated, walletAddress, queryClient, navigate]);
+}
+
+function readSeeded(): Set<string> {
+  try {
+    const raw = localStorage.getItem(SEEDED_KEY);
+    return new Set<string>(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set<string>();
+  }
+}
+
+function rememberSeeded(addresses: string[], current: Set<string>) {
+  const next = [...current, ...addresses];
+  try {
+    localStorage.setItem(SEEDED_KEY, JSON.stringify(next.slice(-SEEDED_CAP)));
+  } catch {
+    // Private-mode storage failure only costs a repeated check.
+  }
+}
+
+/**
+ * Point the seeder at accounts the app is already showing.
+ *
+ * Sign-in registration alone builds the roster far too slowly — it only ever
+ * learns about people who came back after the feature shipped, so a month of
+ * real joiners stays invisible behind "Nobody new this month — yet". The
+ * addresses the feed is already rendering are the one list of recently-active
+ * accounts a client can see, so they are worth asking about.
+ *
+ * Nothing here is trusted: the edge function re-reads every candidate from
+ * api.dehub.io and roster it only if that record says they joined inside the
+ * window. This hook's job is purely to keep the asking cheap — addresses
+ * already submitted from this device are never sent twice, and only one batch
+ * goes per mount.
+ */
+export function useSeedNewMembers(addresses: string[] | undefined) {
+  const { isAuthenticated, walletAddress } = useAuth();
+  const queryClient = useQueryClient();
+  const sentRef = useRef(false);
+
+  useEffect(() => {
+    if (sentRef.current) return;
+    if (!isAuthenticated || !walletAddress) return;
+    if (!addresses || addresses.length === 0) return;
+
+    const token = getAuthToken();
+    if (!token) return;
+
+    const seeded = readSeeded();
+    const self = walletAddress.toLowerCase();
+    const candidates: string[] = [];
+    for (const address of addresses) {
+      const lower = address?.toLowerCase();
+      if (!lower || lower === self || seeded.has(lower)) continue;
+      if (!/^0x[a-f0-9]{40}$/.test(lower)) continue;
+      if (candidates.includes(lower)) continue;
+      candidates.push(lower);
+      if (candidates.length >= SEED_BATCH) break;
+    }
+    if (candidates.length === 0) return;
+
+    sentRef.current = true;
+    // Remembered before the call, not after: a failed batch is not worth
+    // retrying on every feed page, and the next mount has fresh addresses.
+    rememberSeeded(candidates, seeded);
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('register-new-member', {
+          body: { candidates },
+          headers: {
+            'x-wallet-address': self,
+            'x-dehub-token': token,
+          },
+        });
+        if (cancelled || error) return;
+        if ((data as { added?: number })?.added) {
+          queryClient.invalidateQueries({ queryKey: ['new-members'] });
+        }
+      } catch (err) {
+        // Silent by design — this is a background top-up of a welcome rail.
+        console.warn('[NewMembers] seed failed:', err);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [addresses, isAuthenticated, walletAddress, queryClient]);
 }

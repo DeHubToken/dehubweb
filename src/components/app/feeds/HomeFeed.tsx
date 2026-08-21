@@ -76,6 +76,8 @@ import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
+import { NewMembersCarousel } from '@/components/app/NewMembersCarousel';
+import { useSeedNewMembers } from '@/hooks/use-new-members';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
 import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
 import { PromptFlowModal } from '@/components/app/feeds/PromptFlowModal';
@@ -982,6 +984,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return withAds;
   }, [organicItems, servedAds]);
 
+  // Who wrote what is on screen. The new-members roster otherwise only learns
+  // about people who sign in again after it shipped, so it stays empty for
+  // weeks while real joiners are posting in this very feed — the seeder checks
+  // these addresses against api.dehub.io and rosters the ones that are new.
+  const feedAuthors = useMemo(
+    () => items
+      .map((item) => (item.data as { minter?: string })?.minter)
+      .filter((address): address is string => typeof address === 'string' && address.length > 0),
+    [items],
+  );
+  useSeedNewMembers(feedAuthors);
+
   // Auto-remove optimistic posts once their real counterpart appears in the feed
   useEffect(() => {
     if (optimisticPosts.length === 0 || items.length === 0) return;
@@ -1187,6 +1201,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Live carousel insert position: 4 posts after the radio carousel
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
+  // New members: halfway between the live carousel and the leaderboard, which
+  // keeps the single-column run of carousels — follow, radio, live, new
+  // members, leaderboard — at roughly one every five posts.
+  const NEW_MEMBERS_INSERT_AFTER = LIVE_INSERT_AFTER + 5;
   // Leaderboard carousel: 10 posts after the live streams carousel
   const LEADERBOARD_INSERT_AFTER = LIVE_INSERT_AFTER + LEADERBOARD_INSERT_AFTER_LIVE_OFFSET;
 
@@ -1360,22 +1378,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
       // Generous spacing: ~16 items (3-col) or ~12 items (2-col) between each carousel
       const MIN_ITEMS_BETWEEN = colCount === 3 ? 16 : 12;
-      // First carousel after a decent chunk of content
-      const firstOffset = Math.min(afterShorts.length, MIN_ITEMS_BETWEEN);
-      const secondOffset = Math.min(afterShorts.length, firstOffset + MIN_ITEMS_BETWEEN);
-      const thirdOffset = Math.min(afterShorts.length, secondOffset + MIN_ITEMS_BETWEEN);
 
-      // Build segments: chunks of afterShorts items with full-width inserts between them
-      const splitPoints = [firstOffset, secondOffset, thirdOffset].filter((p, i, arr) => p > 0 && p < afterShorts.length && (i === 0 || p > arr[i - 1]));
-      const segments: { items: typeof afterShorts; startIndex: number }[] = [];
-      let lastSplit = 0;
-      for (const sp of splitPoints) {
-        segments.push({ items: afterShorts.slice(lastSplit, sp), startIndex: afterShortsBase + lastSplit });
-        lastSplit = sp;
-      }
-      segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
-
-      const fullWidthInserts: (ReactNode | null)[] = [
+      // The carousels this column count will interleave, in the order they
+      // appear down the feed. Follow suggestions and new members are here as
+      // well as in the single-column path: multi-column is what a desktop
+      // browser gets, and leaving them out of it is why "who to follow"
+      // vanished from the feed on every screen wide enough to split.
+      const fullWidthInserts: ReactNode[] = [
+        // Gated here as well as inside the component: an insert that renders
+        // nothing still splits the masonry run around it, and a logged-out feed
+        // should not be chopped in two for a row it will never show.
+        isAuthenticated ? <div key="who-to-follow" className="my-3"><MobileWhoToFollowCarousel /></div> : null,
         radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection /></div> : null,
         liveNowStreams.length > 0 ? (
           <div key="live-now" className="my-3 space-y-2">
@@ -1394,8 +1407,24 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             </SwipeableCarousel>
           </div>
         ) : null,
+        <div key="new-members" className="my-3"><NewMembersCarousel /></div>,
         <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
-      ];
+      ].filter(Boolean) as ReactNode[];
+
+      // One split point per insert, each MIN_ITEMS_BETWEEN further down, so the
+      // spacing stays the same however many carousels have something to show.
+      const splitPoints = fullWidthInserts
+        .map((_, i) => Math.min(afterShorts.length, (i + 1) * MIN_ITEMS_BETWEEN))
+        .filter((p, i, arr) => p > 0 && p < afterShorts.length && (i === 0 || p > arr[i - 1]));
+
+      // Build segments: chunks of afterShorts items with full-width inserts between them
+      const segments: { items: typeof afterShorts; startIndex: number }[] = [];
+      let lastSplit = 0;
+      for (const sp of splitPoints) {
+        segments.push({ items: afterShorts.slice(lastSplit, sp), startIndex: afterShortsBase + lastSplit });
+        lastSplit = sp;
+      }
+      segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
 
       return (
         <>
@@ -1448,6 +1477,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     let radioInserted = false;
     let liveInserted = false;
     let whoToFollowInserted = false;
+    let newMembersInserted = false;
 
     const flushCards = () => {
       if (currentCards.length > 0) {
@@ -1498,6 +1528,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </div>
         );
         liveInserted = true;
+      }
+
+      if ((index + 1) === NEW_MEMBERS_INSERT_AFTER && !newMembersInserted) {
+        addFullWidth(<div key={`new-members-${index}`}><NewMembersCarousel /></div>);
+        newMembersInserted = true;
       }
 
       if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {

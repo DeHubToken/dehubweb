@@ -1322,13 +1322,14 @@ export default function ExplorePage() {
                     )}
                   </div>
 
-                  {/* New members — the non-desktop home for the right rail's
-                      fourth tab, which is `hidden lg:block`. Renders nothing on
-                      desktop, or when nobody joined recently. */}
-                  <NewMembersBento />
-
                   {/* Trending Bento — same component as sidebar */}
                   <WhatsHappening showCountrySelector />
+
+                  {/* New members, last on the page: it is the one bento here
+                      whose contents change by the day, so it is worth scrolling
+                      to and worth coming back for. Renders nothing when nobody
+                      joined recently. */}
+                  <NewMembersBento />
                 </>
               )}
             </motion.div>
