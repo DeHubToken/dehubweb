@@ -2,6 +2,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NewVersionToast } from "@/components/app/NewVersionToast";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { NativeTitleTooltips } from "@/components/app/NativeTitleTooltips";
 import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { AuthenticationError } from "@/lib/api/dehub";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -706,6 +707,10 @@ const App = () => (
                               notifications; renders nothing itself. Reads
                               auth, so it must stay inside WalletProviders. */}
                           <NotificationsPromptToast />
+
+                          {/* Swaps the OS's grey `title=` tooltip for our own
+                              hover label everywhere. Renders nothing itself. */}
+                          <NativeTitleTooltips />
 
                           <AppContent />
                         </TooltipProvider>
