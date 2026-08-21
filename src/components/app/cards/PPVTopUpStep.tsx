@@ -20,7 +20,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle, ArrowRight, CreditCard, Loader2, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { BASE_CHAIN_ID, toWei } from '@/lib/contracts/dhb-token';
+import { BASE_CHAIN_ID, getChainConfig, toWei } from '@/lib/contracts/dhb-token';
 import dehubCoin from '@/assets/dehub-coin.png';
 import type { PPVShortfall } from '@/hooks/use-ppv-payment';
 import type { DhbBuyRoute } from '@/lib/contracts/uniswap-swap';
@@ -181,7 +181,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
     setPhase('buying');
     setError('');
     try {
-      const [{ parseTxError }, { buyDhbViaRoute }] = await Promise.all([
+      const [{ parseTxError, waitForERC20Balance }, { buyDhbViaRoute }] = await Promise.all([
         import('@/lib/contracts/aa-utils'),
         import('@/lib/contracts/uniswap-swap'),
       ]);
@@ -192,6 +192,16 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
         setPhase('error');
         return;
       }
+      // Let the balance actually show up before handing back. The swap is
+      // mined, but the next read goes to whichever public RPC node answers,
+      // and one a block behind would make the unlock believe nothing arrived
+      // and buy the shortfall a second time.
+      await waitForERC20Balance(
+        getChainConfig(shortfall.chainId).dhbToken,
+        addressRef.current,
+        toWei(shortfall.priceDhb, 18),
+        shortfall.chainId,
+      );
       // Straight back into the unlock — the sheet never closes and the viewer
       // never taps twice.
       onFunded();
@@ -200,7 +210,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
       setError('Top-up failed.');
       setPhase('error');
     }
-  }, [pick, needWei, onFunded]);
+  }, [pick, needWei, shortfall, onFunded]);
 
   const goTo = (path: string) => {
     onClose();
