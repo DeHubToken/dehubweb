@@ -31,12 +31,14 @@ import {
   useDubLanguage,
   type StageDubAudio,
 } from '@/lib/stage-dub';
+import { payForDubbing, readDhbBalance } from '@/lib/stage-dub-payment';
 import { stageCaptionChannel } from '@/lib/stage-captions';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface DubQuote {
   pricePerMinuteDhb: number;
-  minimumBalanceDhb: number;
+  minimumDhb: number;
+  treasury: string;
   clonedVoice: boolean;
 }
 
@@ -45,6 +47,8 @@ export interface DubBill {
   spaceId: string;
   minutes: number;
   owedDhb: number;
+  /** Where the DHB goes. Served by the function so it is never hard-coded twice. */
+  treasury: string;
 }
 
 export interface StageDubbing {
@@ -129,7 +133,12 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
 
       const used = minutesRef.current;
       if (raiseBill && used > 0 && spaceId && quote) {
-        setBill({ spaceId, minutes: used, owedDhb: used * quote.pricePerMinuteDhb });
+        setBill({
+          spaceId,
+          minutes: used,
+          owedDhb: used * quote.pricePerMinuteDhb,
+          treasury: quote.treasury,
+        });
       }
       setMinutes(0);
     },
@@ -148,7 +157,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
     if (error || !data?.token) {
       stop();
       toast.warning(
-        code === 'INSUFFICIENT_CREDITS' ? 'Dubbing stopped — not enough DHB left.' : 'Dubbing stopped.',
+        'Dubbing stopped.',
         { description: 'Subtitles are still on.' },
       );
       return;
@@ -163,6 +172,18 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
       if (!spaceId || !wallet || starting) return;
       setStarting(true);
       try {
+        // Check the wallet can cover a reasonable session before starting one.
+        // The real enforcement is that a tab cannot be closed without a
+        // transfer landing on chain — this is here so nobody discovers they
+        // are short only after listening for twenty minutes.
+        const held = await readDhbBalance();
+        if (quote && held < quote.minimumDhb) {
+          toast.error('Not enough DHB for dubbing.', {
+            description: `You need about ${quote.minimumDhb.toLocaleString()} DHB and hold ${Math.floor(held).toLocaleString()}.`,
+          });
+          return;
+        }
+
         const { data, error, code } = await callDub<{ token: string; pricePerMinuteDhb: number }>(
           { action: 'start', spaceId, language: lang },
           wallet,
@@ -173,12 +194,6 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
             code === 'UNSETTLED'
               ? 'Settle your last dubbing session first.'
               : error ?? 'Could not start dubbing.',
-            {
-              description:
-                code === 'INSUFFICIENT_CREDITS'
-                  ? `You need at least ${quote?.minimumBalanceDhb ?? 0} DHB of credit. Top up in your wallet.`
-                  : undefined,
-            },
           );
           return;
         }
@@ -216,16 +231,28 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
     if (!bill || settling) return;
     setSettling(true);
     try {
-      const { data, error } = await callDub<{ ok: boolean; minutes: number; chargedDhb: number }>(
-        { action: 'settle', spaceId: bill.spaceId },
+      // One signature, for the minutes actually heard, in the DHB the listener
+      // already holds. The chain confirms it; we do not take their word.
+      const payment = await payForDubbing(bill.owedDhb, bill.treasury);
+
+      const { data, error } = await callDub<{ ok: boolean; minutes: number; paidDhb: number }>(
+        { action: 'settle', spaceId: bill.spaceId, txHash: payment.txHash },
         wallet,
       );
+
       if (error || !data?.ok) {
-        toast.error(error ?? 'Could not settle that session.', { description: 'Nothing was charged. Try again.' });
+        // The transfer is on chain either way — never tell them to send it
+        // again, or they will pay twice for one session.
+        toast.error(error ?? 'Payment sent but not confirmed yet.', {
+          description: 'Your DHB has left your wallet. Reopen the stage to confirm it.',
+        });
         return;
       }
-      toast.success(`Paid ${data.chargedDhb} DHB for ${data.minutes} minutes of dubbing.`);
+
+      toast.success(`Paid ${data.paidDhb} DHB for ${data.minutes} minutes of dubbing.`);
       setBill(null);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Payment failed.');
     } finally {
       setSettling(false);
     }

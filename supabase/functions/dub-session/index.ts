@@ -1,26 +1,26 @@
-// Live dubbing, sold on a tab rather than a meter.
+// Live dubbing, paid for in DHB — the same token everything else in the app is
+// paid with, straight from the listener's own wallet.
 //
-// The first version debited a minute at a time. It worked and never prompted a
-// wallet, but it turned one purchase into twenty ledger rows and made "what did
-// that cost me" something you had to add up. This runs a tab instead: check the
-// listener can afford it, count the minutes on the server, and take the whole
-// amount once, on a confirmation, when the stage ends.
+// It runs a tab rather than a meter. Signing a transfer every minute is not a
+// thing you can do to someone in the middle of live audio, so the minutes are
+// counted here and the wallet is asked once, at the end: one transfer, for the
+// minutes actually listened to. That is the same shape as unlocking a PPV post
+// or sending a tip.
 //
-// What that trades away is certainty of collection — we spend on speech during
-// the stage and collect after it. Three things hold that down:
+// Because we speak before we are paid, three things bound the exposure:
 //
-//   * `start` refuses unless the wallet already holds MIN_START_MINUTES of
-//     credit, so nobody opens a tab they visibly cannot pay.
-//   * `tick` re-checks the balance every minute and refuses once it stops
-//     covering what is already owed — a wallet drained elsewhere mid-stage
-//     stops dubbing rather than running up more.
-//   * an unsettled tab blocks starting another, so exposure per wallet is
-//     bounded by one stage rather than by however many they open.
+//   * `start` refuses unless the listener's wallet already holds
+//     MIN_START_MINUTES of DHB, so nobody opens a tab they cannot pay.
+//   * minutes stop accruing past MAX_UNSETTLED_MINUTES.
+//   * an unsettled tab blocks starting another, so exposure per wallet is one
+//     stage rather than however many they open.
 //
 // Minutes are counted by `stage_dub_tick` in the database, never by the client:
-// the client is the party that would benefit from under-reporting them.
+// the client is the party that would benefit from under-reporting them. And the
+// bill is closed only against a transfer confirmed on chain — `settle` believes
+// the chain, not the caller.
 import { handleCorsPreflight, jsonResponse, serviceClient, guardPaidEndpoint } from '../_shared/auth.ts';
-import { chargeForJob } from '../_shared/ai-credit-guard.ts';
+import { verifyDhbPayment, DHB_TREASURY } from '../_shared/dhb-transfer.ts';
 import { signEntitlement } from '../_shared/dub-entitlement.ts';
 import { quotePriceDhb } from '../_shared/ai-pricing.ts';
 
@@ -28,9 +28,9 @@ const MODEL_ID = 'dub-live';
 const BLOCK_SECONDS = 60;
 const TOKEN_GRACE_MS = 15_000;
 
-/** Credit a wallet must already hold before it may open a tab. */
+/** DHB a listener must already hold before opening a tab. */
 const MIN_START_MINUTES = 10;
-/** Longest tab we let run before it has to be settled. Caps exposure per stage. */
+/** Longest tab we let run before it has to be settled. */
 const MAX_UNSETTLED_MINUTES = 180;
 
 const SUPPORTED_LANGUAGES = new Set([
@@ -61,15 +61,6 @@ async function hasClonedVoice(stageId: string): Promise<boolean> {
   return !!voice;
 }
 
-async function balanceDhb(wallet: string): Promise<number> {
-  const { data } = await serviceClient()
-    .from('ai_credits')
-    .select('balance_dhb')
-    .ilike('wallet_address', wallet)
-    .maybeSingle();
-  return Number(data?.balance_dhb ?? 0);
-}
-
 interface UnsettledTab {
   space_id: string;
   minutes: number;
@@ -98,19 +89,19 @@ Deno.serve(async (req) => {
     const language = typeof body?.language === 'string' ? body.language : '';
     const perMinute = pricePerMinute();
 
-    // A quote takes no payment and needs no wallet — it is what the listener
-    // reads before deciding, so it must never be the thing that commits them.
+    // A quote commits nothing and needs no wallet — it is what the listener
+    // reads before deciding.
     if (action === 'quote') {
       if (!spaceId) return jsonResponse({ error: 'spaceId is required' }, 400);
       return jsonResponse({
         modelId: MODEL_ID,
         pricePerMinuteDhb: perMinute,
-        minimumBalanceDhb: perMinute * MIN_START_MINUTES,
+        minimumDhb: perMinute * MIN_START_MINUTES,
+        treasury: DHB_TREASURY,
         clonedVoice: await hasClonedVoice(spaceId),
       });
     }
 
-    // Everything past here is wallet-scoped. No debit happens on start or tick.
     const guard = await guardPaidEndpoint(req, 'dub-session', {
       limit: 400,
       windowMs: 60 * 60 * 1000,
@@ -123,28 +114,16 @@ Deno.serve(async (req) => {
         return jsonResponse({ error: 'spaceId and a supported language are required' }, 400);
       }
 
-      // An unpaid tab from an earlier stage has to be cleared first. It is the
-      // only real collection lever a post-paid model has, so it is worth being
-      // firm about — and naming the stage makes settling one click.
+      // An unpaid tab has to be cleared first. It is the only real collection
+      // lever a pay-after model has, and naming the stage makes settling it
+      // one click rather than a mystery.
       const open = (await unsettled(wallet)).filter((tab) => tab.space_id !== spaceId);
       if (open.length) {
         return jsonResponse({
-          error: 'Settle your last dubbing session first.',
+          error: 'Pay for your last dubbing session first.',
           code: 'UNSETTLED',
           unsettled: open,
         }, 409);
-      }
-
-      const balance = await balanceDhb(wallet);
-      const minimum = perMinute * MIN_START_MINUTES;
-      if (balance < minimum) {
-        return jsonResponse({
-          error: `Dubbing needs at least ${minimum} DHB of credit to start.`,
-          code: 'INSUFFICIENT_CREDITS',
-          balanceDhb: balance,
-          requiredDhb: minimum,
-          pricePerMinuteDhb: perMinute,
-        }, 402);
       }
 
       const { token, expiresAt } = await mintToken(spaceId, language);
@@ -153,7 +132,7 @@ Deno.serve(async (req) => {
         expiresAt,
         minutes: 0,
         pricePerMinuteDhb: perMinute,
-        balanceDhb: balance,
+        treasury: DHB_TREASURY,
         clonedVoice: await hasClonedVoice(spaceId),
       });
     }
@@ -171,41 +150,45 @@ Deno.serve(async (req) => {
       });
       if (error) {
         if (String(error.message || '').includes('DUB_ALREADY_SETTLED')) {
-          return jsonResponse({ error: 'That session is already settled.', code: 'SETTLED' }, 409);
+          return jsonResponse({ error: 'That session is already paid.', code: 'SETTLED' }, 409);
         }
         throw error;
       }
 
       const minutes = Number(data ?? 0);
-      const owed = minutes * perMinute;
-      const balance = await balanceDhb(wallet);
-
-      // Stop the moment the balance stops covering the tab. Carrying on would
-      // be running up a bill we already know cannot be paid.
-      if (balance < owed) {
-        return jsonResponse({
-          error: 'Not enough DHB left to keep dubbing.',
-          code: 'INSUFFICIENT_CREDITS',
-          minutes,
-          owedDhb: owed,
-          balanceDhb: balance,
-        }, 402);
-      }
       if (minutes >= MAX_UNSETTLED_MINUTES) {
         return jsonResponse({
-          error: 'This dubbing session has run long enough to need settling.',
+          error: 'This dubbing session has run long enough to need paying for.',
           code: 'SETTLE_REQUIRED',
           minutes,
-          owedDhb: owed,
+          owedDhb: minutes * perMinute,
         }, 409);
       }
 
       const { token, expiresAt } = await mintToken(spaceId, language);
-      return jsonResponse({ token, expiresAt, minutes, owedDhb: owed, balanceDhb: balance });
+      return jsonResponse({ token, expiresAt, minutes, owedDhb: minutes * perMinute });
+    }
+
+    if (action === 'bill') {
+      if (!spaceId) return jsonResponse({ error: 'spaceId is required' }, 400);
+      const { data: tab } = await serviceClient()
+        .from('stage_dub_usage')
+        .select('minutes, price_dhb_per_min, settled_at')
+        .eq('space_id', spaceId)
+        .ilike('wallet_address', wallet)
+        .maybeSingle();
+      const minutes = tab?.settled_at ? 0 : Number(tab?.minutes ?? 0);
+      return jsonResponse({
+        minutes,
+        owedDhb: minutes * Number(tab?.price_dhb_per_min ?? perMinute),
+        treasury: DHB_TREASURY,
+        settled: !!tab?.settled_at,
+      });
     }
 
     if (action === 'settle') {
       if (!spaceId) return jsonResponse({ error: 'spaceId is required' }, 400);
+      const txHash = typeof body?.txHash === 'string' ? body.txHash : '';
 
       const admin = serviceClient();
       const { data: tab } = await admin
@@ -215,48 +198,43 @@ Deno.serve(async (req) => {
         .ilike('wallet_address', wallet)
         .maybeSingle();
 
-      if (!tab) return jsonResponse({ error: 'Nothing to settle.', code: 'NO_TAB' }, 404);
-      if (tab.settled_at) {
-        return jsonResponse({ ok: true, alreadySettled: true, minutes: tab.minutes, chargedDhb: 0 });
-      }
+      if (!tab) return jsonResponse({ error: 'Nothing to pay for.', code: 'NO_TAB' }, 404);
+      if (tab.settled_at) return jsonResponse({ ok: true, alreadySettled: true, minutes: tab.minutes });
 
       const minutes = Number(tab.minutes ?? 0);
-      if (minutes <= 0) {
+      const owed = minutes * Number(tab.price_dhb_per_min ?? perMinute);
+
+      // Nothing heard, nothing owed — close it without asking for a transfer.
+      if (minutes <= 0 || owed <= 0) {
         await admin.from('stage_dub_usage')
           .update({ settled_at: new Date().toISOString(), settled_ref: 'zero' })
           .eq('space_id', spaceId).ilike('wallet_address', wallet);
-        return jsonResponse({ ok: true, minutes: 0, chargedDhb: 0 });
+        return jsonResponse({ ok: true, minutes: 0, paidDhb: 0 });
       }
 
-      // One debit for the whole session, priced off the same per-minute rate
-      // the tab recorded, so a price change mid-stage cannot reprice minutes
-      // already listened to.
-      const charge = await chargeForJob(req, {
-        kind: 'dub',
-        modelId: MODEL_ID,
-        actionType: 'dub-settle',
-        rateLimit: { limit: 60, windowMs: 60 * 60 * 1000 },
-        durationSeconds: BLOCK_SECONDS * minutes,
-      });
-      if (!charge.ok) return charge.response;
+      // The chain is the authority. A caller claiming to have paid proves it
+      // with a hash, and this refuses everything it cannot confirm.
+      const payment = await verifyDhbPayment(txHash, wallet, owed);
+      if (!payment.ok) {
+        return jsonResponse({ error: payment.reason, code: 'PAYMENT_UNVERIFIED', owedDhb: owed, minutes }, 402);
+      }
 
+      // `settled_ref` is unique, so the same transfer cannot close a second
+      // tab: a replayed hash collides here rather than paying twice over.
       const { error: closeError } = await admin
         .from('stage_dub_usage')
-        .update({ settled_at: new Date().toISOString(), settled_ref: charge.jobId })
+        .update({ settled_at: new Date().toISOString(), settled_ref: payment.hash })
         .eq('space_id', spaceId)
         .ilike('wallet_address', wallet)
         .is('settled_at', null);
 
-      // Taking the money and failing to close the tab would bill them for the
-      // same minutes again. Give it back rather than leave that possible.
       if (closeError) {
-        await charge.refund();
-        console.error('[dub-session] settle close failed, refunded', closeError);
-        return jsonResponse({ error: 'Could not close that session. Nothing was charged.' }, 500);
+        console.error('[dub-session] settle close failed', closeError);
+        return jsonResponse({ error: 'That payment went through but the session did not close. Contact support rather than paying again.' }, 500);
       }
 
-      console.log(`[dub-session] settled ${wallet} ${minutes}min = ${charge.priceDhb} DHB (${spaceId})`);
-      return jsonResponse({ ok: true, minutes, chargedDhb: charge.priceDhb });
+      console.log(`[dub-session] paid ${wallet} ${minutes}min = ${owed} DHB on ${payment.chain} (${payment.hash})`);
+      return jsonResponse({ ok: true, minutes, paidDhb: owed, chain: payment.chain, txHash: payment.hash });
     }
 
     return jsonResponse({ error: `Unknown action: ${action}` }, 400);
