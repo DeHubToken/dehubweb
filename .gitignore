@@ -82,3 +82,5 @@ doc.md
 scripts/*
 !scripts/check-entry-bundle.mjs
 !scripts/generate-blog-manifest.mjs
+!scripts/boot-path-report.mjs
+!scripts/boot-path-baseline.json

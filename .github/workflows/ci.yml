@@ -53,3 +53,23 @@ jobs:
 
       - name: Typecheck node (vite.config.ts)
         run: pnpm exec tsc --noEmit -p tsconfig.node.json
+
+  boot-path:
+    name: Boot path
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # No install step: the walker reads source with node builtins only. That
+      # keeps this a ~10s job, and keeps it immune to the lockfile drift above.
+      #
+      # This is the guard the dist-based check-entry-bundle.mjs cannot be —
+      # that one catches a heavy dependency arriving; this one catches fifty
+      # small modules arriving over a fortnight, which is what actually happens.
+      - name: Boot path has not grown
+        run: node scripts/boot-path-report.mjs
