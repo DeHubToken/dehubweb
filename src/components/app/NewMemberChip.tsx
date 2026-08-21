@@ -11,7 +11,7 @@
  * @module components/app/NewMemberChip
  */
 
-import { Sparkles } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { joinedAgoLabel, useIsNewMember } from '@/hooks/use-new-members';
 
@@ -35,7 +35,7 @@ export function NewMemberChip({ address, className }: NewMemberChipProps) {
         className,
       )}
     >
-      <Sparkles className="w-3 h-3" />
+      <Star className="w-3 h-3" />
       New here
     </span>
   );

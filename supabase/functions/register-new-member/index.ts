@@ -1,28 +1,31 @@
 // register-new-member
 // ====================
-// Puts the caller on the new-members roster — or takes them off it once they
-// are no longer new. Also fills the roster in from accounts the app is already
-// showing, so it is not empty until everybody happens to sign in again.
+// Keeps `public.new_members` — the roster the app scrolls newest-joined first —
+// and fills it in from accounts the platform can already see.
 //
 // Called once per session by both clients right after sign-in. It is the ONLY
-// writer of `public.new_members`: clients have no INSERT grant on that table,
-// and the one column they can change on their own row is `opted_out`.
+// writer of that table: clients have no INSERT grant, and the one column they
+// can change on their own row is `opted_out`.
 //
 // Why a function instead of letting the client upsert its own row: `joined_at`
-// decides who wears the NEW badge and who sits at the top of a rail the whole
+// decides who wears the NEW badge and who sits at the top of a list the whole
 // platform can see. Taken from the caller it is a claim; taken from
-// api.dehub.io it is a fact.
+// api.dehub.io it is a fact. So nothing here comes from the request body —
+// there isn't one, and there is no address parameter either.
 //
-// SEED MODE (`{ candidates: [...] }`) exists because sign-in alone fills the
-// roster far too slowly: it only ever knows about people who came back after
-// the feature shipped, so a month of real joiners stays invisible while the
-// rail says "nobody new this month". A client may therefore point at addresses
-// it is already rendering — feed authors, follow suggestions — and say "check
-// these". Nothing about them is taken from the caller: the address is only a
-// question, and `joined_at`, the name, the avatar and the badge balance all
-// still come from api.dehub.io. The worst a caller can do is get a genuinely
-// new member listed a few days earlier than their next login, which is the
-// feature working, and which that member can still opt out of.
+// DISCOVERY is the other half, and the reason the roster is not empty. Sign-in
+// registration alone only ever learns about people who came back after this
+// shipped, which left every surface reading "Nobody new this month — yet" while
+// a month of real joiners sat there invisible. So each call also spends a
+// little of its time looking outward: the caller's own followers and followings
+// (already in the account record it just fetched, so free) and the authors of
+// the latest feed. Every address found is verified against
+// api.dehub.io/api/account_info before it is written, so the roster is still
+// made of facts — the discovery only decides who to ask about.
+//
+// There is no 30-day window on what gets written. The window decides what is
+// called NEW; the list itself is chronological and endless, so an account is
+// worth rostering whenever we learn of it.
 
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
@@ -38,18 +41,23 @@ const DEHUB_API = "https://api.dehub.io";
 /** How long an account counts as new. Mirrors NEW_MEMBER_WINDOW_DAYS on the clients. */
 const WINDOW_DAYS = 30;
 
-/** Addresses checked per seed call. One page of feed authors, near enough. */
-const SEED_LIMIT = 25;
+/** Unknown addresses looked up per discovery run. Each one costs an API call. */
+const LOOKUP_LIMIT = 60;
+
+/** Feed pages read per run to find recent authors. */
+const FEED_PAGES = 3;
+const FEED_PAGE_SIZE = 50;
 
 /**
- * Seed calls allowed per wallet per hour.
+ * Discovery runs allowed per wallet per hour.
  *
- * Every unknown candidate costs one api.dehub.io lookup, and most candidates
- * are old accounts that will never be rostered — so the cap is what stops a
- * busy feed turning into a lookup loop. Clients also remember what they have
- * already submitted, which keeps ordinary use far under this.
+ * One per login is the intent; the cap is what stops a client that re-registers
+ * in a loop turning into a lookup storm against api.dehub.io. Members who
+ * cannot discover anything new cost a single cheap query.
  */
-const SEED_RATE = { limit: 8, windowMs: 60 * 60 * 1000 };
+const DISCOVERY_RATE = { limit: 2, windowMs: 60 * 60 * 1000 };
+
+const ADDRESS_RE = /^0x[a-f0-9]{40}$/;
 
 interface MemberRow {
   wallet_address: string;
@@ -61,6 +69,8 @@ interface MemberRow {
   updated_at: string;
 }
 
+type Account = Record<string, unknown>;
+
 function serviceRole(): SupabaseClient {
   return createClient(
     Deno.env.get("SUPABASE_URL")!,
@@ -69,7 +79,7 @@ function serviceRole(): SupabaseClient {
 }
 
 /** The account record api.dehub.io holds for an address, or null. */
-async function fetchAccount(address: string): Promise<Record<string, unknown> | null> {
+async function fetchAccount(address: string): Promise<Account | null> {
   try {
     const res = await fetch(`${DEHUB_API}/api/account_info/${address}`);
     if (!res.ok) return null;
@@ -81,7 +91,7 @@ async function fetchAccount(address: string): Promise<Record<string, unknown> | 
 }
 
 /** The creation date on an account record, or null when it has none we trust. */
-function joinedAtOf(account: Record<string, unknown> | null): Date | null {
+function joinedAtOf(account: Account | null): Date | null {
   const raw = (account?.createdAt ?? account?.created_at) as string | undefined;
   if (!raw) return null;
   const date = new Date(raw);
@@ -89,7 +99,7 @@ function joinedAtOf(account: Record<string, unknown> | null): Date | null {
 }
 
 /** Everything the roster stores about a member, all of it from the API record. */
-function toRow(address: string, account: Record<string, unknown>, joinedAt: Date): MemberRow {
+function toRow(address: string, account: Account, joinedAt: Date): MemberRow {
   return {
     wallet_address: address,
     username: (account?.username as string) ?? null,
@@ -102,72 +112,87 @@ function toRow(address: string, account: Record<string, unknown>, joinedAt: Date
   };
 }
 
-/** Valid, deduplicated, capped. Anything else in the body is ignored. */
-async function readCandidates(req: Request): Promise<string[]> {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return [];
+/** Addresses out of a follower/following list, which may hold strings or objects. */
+function addressesFrom(value: unknown, into: Set<string>) {
+  if (!Array.isArray(value)) return;
+  for (const entry of value) {
+    const raw = typeof entry === "string"
+      ? entry
+      : (entry as { address?: string; wallet?: string })?.address ??
+        (entry as { wallet?: string })?.wallet;
+    if (typeof raw !== "string") continue;
+    const address = raw.toLowerCase();
+    if (ADDRESS_RE.test(address)) into.add(address);
   }
-  const raw = (body as { candidates?: unknown })?.candidates;
-  if (!Array.isArray(raw)) return [];
+}
 
-  const out = new Set<string>();
-  for (const entry of raw) {
-    if (typeof entry !== "string") continue;
-    const address = entry.toLowerCase();
-    if (!/^0x[a-f0-9]{40}$/.test(address)) continue;
-    out.add(address);
-    if (out.size >= SEED_LIMIT) break;
+/** The authors of the latest posts — the people currently active on the platform. */
+async function feedAuthors(into: Set<string>) {
+  for (let page = 1; page <= FEED_PAGES; page++) {
+    try {
+      const res = await fetch(
+        `${DEHUB_API}/api/feed?limit=${FEED_PAGE_SIZE}&page=${page}&sort=latest`,
+      );
+      if (!res.ok) return;
+      const body = await res.json();
+      const items = body?.result ?? body?.items ?? body;
+      if (!Array.isArray(items)) return;
+      for (const item of items) {
+        const minter = (item as { minter?: string })?.minter;
+        if (typeof minter !== "string") continue;
+        const address = minter.toLowerCase();
+        if (ADDRESS_RE.test(address)) into.add(address);
+      }
+    } catch {
+      return;
+    }
   }
-  return [...out];
 }
 
 /**
- * Check a batch of addresses and roster the ones that turn out to be new.
+ * Look up whoever we have not seen before and add them to the roster.
  *
- * Addresses already on the roster are dropped before any lookup: re-reading
- * them would cost a request to tell us what we know, and an upsert over an
- * existing row risks resetting the one field its owner controls.
+ * Addresses already rostered are dropped before any lookup: re-reading them
+ * costs a request to tell us what we know, and an upsert over an existing row
+ * risks resetting the one field its owner controls.
  */
-async function seedCandidates(
-  supabase: SupabaseClient,
-  wallet: string,
-  candidates: string[],
-): Promise<Response> {
-  const rl = await checkRateLimit(supabase, wallet, "new-member-seed", SEED_RATE);
-  if (!rl.allowed) return jsonResponse({ added: 0, checked: 0, reason: "rate-limited" });
+async function discover(supabase: SupabaseClient, caller: Account, self: string): Promise<number> {
+  const candidates = new Set<string>();
+  addressesFrom(caller?.followersList, candidates);
+  addressesFrom(caller?.followingsList, candidates);
+  await feedAuthors(candidates);
+  candidates.delete(self);
+  if (candidates.size === 0) return 0;
 
+  const all = [...candidates];
   const { data: known } = await supabase
     .from("new_members")
     .select("wallet_address")
-    .in("wallet_address", candidates);
+    .in("wallet_address", all);
 
   const rostered = new Set((known ?? []).map((r: { wallet_address: string }) => r.wallet_address));
-  const unknown = candidates.filter((a) => !rostered.has(a));
-  if (unknown.length === 0) return jsonResponse({ added: 0, checked: 0 });
+  const unknown = all.filter((a) => !rostered.has(a)).slice(0, LOOKUP_LIMIT);
+  if (unknown.length === 0) return 0;
 
-  const cutoff = Date.now() - WINDOW_DAYS * 24 * 60 * 60 * 1000;
   const rows = (await Promise.all(
     unknown.map(async (address) => {
       const account = await fetchAccount(address);
       const joinedAt = joinedAtOf(account);
-      if (!account || !joinedAt || joinedAt.getTime() < cutoff) return null;
+      if (!account || !joinedAt) return null;
       return toRow(address, account, joinedAt);
     }),
   )).filter((row): row is MemberRow => row !== null);
 
-  if (rows.length > 0) {
-    // ignoreDuplicates: a member who signed in between the read above and this
-    // write owns their row, including the opt-out this must never overwrite.
-    const { error } = await supabase
-      .from("new_members")
-      .upsert(rows, { onConflict: "wallet_address", ignoreDuplicates: true });
-    if (error) throw new Error(`Seed upsert failed: ${error.message}`);
-  }
+  if (rows.length === 0) return 0;
 
-  return jsonResponse({ added: rows.length, checked: unknown.length });
+  // ignoreDuplicates: a member who signed in between the read above and this
+  // write owns their row, including the opt-out this must never overwrite.
+  const { error } = await supabase
+    .from("new_members")
+    .upsert(rows, { onConflict: "wallet_address", ignoreDuplicates: true });
+  if (error) throw new Error(`Discovery upsert failed: ${error.message}`);
+
+  return rows.length;
 }
 
 Deno.serve(async (req) => {
@@ -182,33 +207,14 @@ Deno.serve(async (req) => {
 
     const supabase = serviceRole();
 
-    const candidates = await readCandidates(req);
-    if (candidates.length > 0) return await seedCandidates(supabase, wallet, candidates);
-
     const account = await fetchAccount(wallet);
     if (!account) return jsonResponse({ error: "Account lookup failed" }, 502);
 
     const joinedAt = joinedAtOf(account);
     if (!joinedAt) {
-      // No creation date means we cannot say how new they are, and guessing
-      // "now" would hand a NEW badge to every account on the platform.
-      return jsonResponse({ isNew: false, reason: "no-created-at" });
-    }
-
-    const cutoff = Date.now() - WINDOW_DAYS * 24 * 60 * 60 * 1000;
-
-    if (joinedAt.getTime() < cutoff) {
-      // Aged out. Drop the row so the table stays roughly the size of the
-      // window rather than growing forever — but only if they were visible.
-      // Deleting an opted-out row would silently re-expose that person the
-      // next time they signed in, which is the one outcome this feature must
-      // never produce.
-      await supabase
-        .from("new_members")
-        .delete()
-        .eq("wallet_address", wallet)
-        .eq("opted_out", false);
-      return jsonResponse({ isNew: false, joinedAt: joinedAt.toISOString() });
+      // No creation date means we cannot say when they joined, and guessing
+      // "now" would put every account on the platform at the top of the list.
+      return jsonResponse({ isListed: false, isNew: false, reason: "no-created-at" });
     }
 
     // Read before write: an upsert would reset `opted_out` to its default on
@@ -228,11 +234,25 @@ Deno.serve(async (req) => {
 
     if (error) throw new Error(`Upsert failed: ${error.message}`);
 
+    // Discovery is best-effort and must never fail a registration: the caller
+    // is already on the roster by this point, which is the part that matters.
+    let added = 0;
+    const rl = await checkRateLimit(supabase, wallet, "new-member-discovery", DISCOVERY_RATE);
+    if (rl.allowed) {
+      try {
+        added = await discover(supabase, account, wallet);
+      } catch (err) {
+        console.error("[register-new-member] discovery", err);
+      }
+    }
+
     return jsonResponse({
-      isNew: true,
+      isListed: !row.opted_out,
+      isNew: Date.now() - joinedAt.getTime() < WINDOW_DAYS * 24 * 60 * 60 * 1000,
       joinedAt: joinedAt.toISOString(),
       optedOut: row.opted_out,
       firstRegistration: !existing,
+      added,
     });
   } catch (error) {
     console.error("[register-new-member]", error);

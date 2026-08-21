@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, memo, useMemo } from 'react';
-import { SquareUserRound, Trophy, MessagesSquare, Sparkles } from 'lucide-react';
+import { SquareUserRound, Trophy, MessagesSquare, Star } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
@@ -34,7 +34,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
     if (isAuthenticated) {
       base.push({ id: 'follow', icon: SquareUserRound });
     }
-    base.push({ id: 'newMembers', icon: Sparkles });
+    base.push({ id: 'newMembers', icon: Star });
     base.push({ id: 'chat', icon: MessagesSquare });
     return base;
   }, [isAuthenticated]);
