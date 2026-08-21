@@ -2,8 +2,8 @@
 //
 // Instead of asking a diffusion model to imitate the brand, this renders the
 // official template system directly: silk background (with an opt-in dust/grid/
-// starfield overlay) + a chrome 3D icon hero that BLEEDS off the right and
-// bottom + an Exo headline carrying a horizontal tone+alpha sweep and a lead
+// starfield overlay) + a chrome 3D icon hero standing inside the frame's own
+// safe box + an Exo headline carrying a horizontal tone+alpha sweep and a lead
 // focus ramp + HUD chrome drawn as corner brackets (pill, //dehub.io, two-line
 // type tag, QR) inside a bevelled card — as pure SVG rasterized with resvg-wasm.
 // The LLM only fills a small validated spec (headline / subtitle / icon choice);
@@ -296,6 +296,34 @@ function frameOf(format: BannerFormat): Frame {
     BASE: H * 0.104,
     RGUT: W * 0.042,
   };
+}
+
+/**
+ * The hero's safe box.
+ *
+ * The hero is the graphic's SUBJECT, so it sits inside the frame. This renderer
+ * used to pin it past the right and bottom edges — the silhouette went through
+ * the card's rounded corner and what survived landed behind the QR badge, which
+ * reads as a mistake rather than as a deliberate crop. The frame owns the box
+ * instead: its right edge lands on the same right gutter as the type tag and the
+ * QR, its head clears the tag, and its feet stand on a ground line above the HUD
+ * row. The icon is drawn `meet` inside a square box, so containing the box
+ * contains the ink whatever the icon's own aspect happens to be.
+ *
+ * `centre` is the fraction of H to hang the box off (null = stand it on the
+ * ground line); `bandTop` holds it below a composition's own upper band.
+ */
+function heroBoxOf(F: Frame, maxW: number, centre: number | null, bandTop = 0): { box: number; x: number; y: number } {
+  const { W, H, s, TOP, BASE, RGUT } = F;
+  const gap = H * 0.022;
+  const tagH = 21 * s * 1.34 * 2 + 11 * s * 2;     // the two-line type tag
+  const ceil = Math.max(TOP + tagH / 2 + gap, bandTop);
+  const floor = H - BASE - (84 * s) / 2 - gap;
+  const box = Math.min(W * maxW, floor - ceil);
+  const y = centre === null
+    ? floor - box
+    : Math.min(Math.max(H * centre - box / 2, ceil), floor - box);
+  return { box, x: W - RGUT - box, y };
 }
 
 /**
@@ -686,14 +714,8 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
       body.push(`<image x="${W / 2 - 250}" y="${H * 0.46 - 64}" width="500" height="128" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
       body.push(subRow(spec, W / 2, H * 0.68, subSize, "middle"));
     } else {
-      // Hero BLEEDS off the right and bottom — it is not contained in the frame.
-      // Two failure modes this geometry avoids: cutting the TOP as well (which
-      // puts bright chrome behind the type tag and washes it out), and merely
-      // kissing the right border, which reads as contained-and-nicked rather
-      // than as a deliberate crop.
-      const heroBox = W * 0.50;
-      const heroLeft = W - heroBox + W * 0.06;
-      const heroTop = H - heroBox * 0.90;
+      // Hero on the headline's own centre line, inside the safe box.
+      const { box: heroBox, x: heroLeft, y: heroTop } = heroBoxOf(F, 0.42, 0.455);
       body.push(`<ellipse cx="${n1(heroLeft + heroBox / 2)}" cy="${n1(heroTop + heroBox / 2)}" rx="${n1(heroBox * 0.6)}" ry="${n1(heroBox * 0.52)}" fill="url(#glow)"/>`);
       if (uris.icon) body.push(heroImg(heroLeft, heroTop, heroBox, uris.icon, iconEntry));
       const colW = heroLeft - GUT - W * 0.03;
@@ -704,12 +726,11 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
       body.push(subRow(spec, GUT, topY + blockH + H * 0.045, subSize, "start", colW));
     }
   } else {
-    // square / portrait: headline high in a clean top band, hero low and bleeding
-    // off the bottom (and the right). Portrait needs its own hero geometry —
-    // reusing the landscape numbers puts the icon straight through the headline.
-    const heroBox = Math.min(W * 0.92, H * 0.56);
-    const heroLeft = W - heroBox + W * 0.10;
-    const heroTop = H - heroBox * 0.82;
+    // square / portrait: headline high in a clean top band, hero standing in the
+    // bottom one. Its own geometry, not the landscape numbers — those put the icon
+    // straight through the headline. The band starts at 44% so the type above it
+    // keeps a real height budget; the hero takes the rest, down to the ground line.
+    const { box: heroBox, x: heroLeft, y: heroTop } = heroBoxOf(F, 0.78, null, H * 0.44);
     body.push(`<ellipse cx="${n1(heroLeft + heroBox / 2)}" cy="${n1(heroTop + heroBox / 2)}" rx="${n1(heroBox * 0.58)}" ry="${n1(heroBox * 0.52)}" fill="url(#glow)"/>`);
     if (isWordmark && uris.wordmarkWhite) {
       body.push(`<image x="${W / 2 - 240}" y="${n1(heroTop + heroBox * 0.3)}" width="480" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
