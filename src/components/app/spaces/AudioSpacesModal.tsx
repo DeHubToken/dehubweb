@@ -41,6 +41,7 @@ import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { StageChat } from './StageChat';
 import { StageCaptionsButton, StageCaptionsOverlay } from './StageCaptions';
+import { dubVoiceConsentGiven, setDubVoiceConsent } from '@/lib/stage-dub-voice';
 import {
   closeStagePopout,
   popOutStageRecording,
@@ -102,6 +103,10 @@ export function AudioSpacesModal() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [createMode, setCreateMode] = useState<'now' | 'later'>('now');
+  // Defaults to on: it is the host's own voice, on their own stage, speaking
+  // their own words — but it is visible and off-able, which is what makes it
+  // a choice rather than a surprise.
+  const [dubVoice, setDubVoice] = useState(() => dubVoiceConsentGiven());
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
   // The recording player is app-wide now (lib/stage-playback), so this modal
   // reads its state rather than owning it.
@@ -582,6 +587,26 @@ export function AudioSpacesModal() {
                   maxLength={280}
                 />
               </div>
+
+              {/* Consent for the voice clone, asked once and here — the only
+                  moment the host is deciding what this stage is rather than
+                  running one. Off means international listeners still get
+                  dubbing, just in a stock voice. */}
+              <label className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.06] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={dubVoice}
+                  onChange={(e) => { setDubVoice(e.target.checked); setDubVoiceConsent(e.target.checked); }}
+                  className="mt-0.5 w-4 h-4 rounded accent-white/80 shrink-0"
+                />
+                <span className="min-w-0">
+                  <span className="block text-sm text-white">Dub me in my own voice</span>
+                  <span className="block text-xs text-white/50 mt-0.5">
+                    Listeners in other languages hear you, not a narrator. Your voice is
+                    taken from the first half-minute of this stage and reused next time.
+                  </span>
+                </span>
+              </label>
 
               <Button
                 onClick={handleCreate}

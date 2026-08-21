@@ -23,6 +23,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import { useStageCaptionFeed } from '@/hooks/use-stage-captions';
 import { useStageDubbing } from '@/hooks/use-stage-dubbing';
@@ -118,6 +128,7 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
   const active = CAPTION_LANGUAGES.find((l) => l.code === language);
 
   return (
+    <>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
@@ -193,7 +204,7 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
             <Volume2 className="w-4 h-4 mr-2 shrink-0 text-primary" />
             <span className="flex-1">Stop dubbing</span>
             <span className="ml-2 text-[10px] font-mono text-muted-foreground tabular-nums">
-              {dubbing.spentDhb} DHB
+              {dubbing.minutes} min
             </span>
           </DropdownMenuItem>
         ) : (
@@ -211,17 +222,46 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
             <span className="flex-1">Hear it in {active?.name ?? language}</span>
             {dubQuote && (
               <span className="ml-2 text-[10px] font-mono text-muted-foreground tabular-nums">
-                {dubQuote.priceDhb}/min
+                {dubQuote.pricePerMinuteDhb}/min
               </span>
             )}
           </DropdownMenuItem>
         )}
         {dubQuote && !dubQuote.clonedVoice && language && (
           <DropdownMenuLabel className="text-[10px] font-normal text-muted-foreground pt-0">
-            Stock voice — the host has not trained theirs
+            Stock voice — the host has not recorded theirs
           </DropdownMenuLabel>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
+
+      {/* The one moment money moves. Raised when listening stops, never on a
+          timer and never silently — the whole point of running a tab is that
+          the charge is a thing the listener does, not a thing that happens. */}
+      <AlertDialog open={!!dubbing.bill} onOpenChange={(open) => { if (!open) dubbing.dismissBill(); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Pay for dubbing?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You listened to{' '}
+              <span className="font-medium text-foreground tabular-nums">
+                {dubbing.bill?.minutes} minute{dubbing.bill?.minutes === 1 ? '' : 's'}
+              </span>{' '}
+              of dubbed audio. That comes to{' '}
+              <span className="font-medium text-foreground tabular-nums">{dubbing.bill?.owedDhb} DHB</span>,
+              taken from your credit — no wallet approval needed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            {/* Not paying leaves the session open, and an open session blocks
+                the next one. Saying so here beats a confusing refusal later. */}
+            <AlertDialogCancel>Not now</AlertDialogCancel>
+            <AlertDialogAction disabled={dubbing.settling} onClick={(event) => { event.preventDefault(); void dubbing.settle(); }}>
+              {dubbing.settling ? 'Paying…' : `Pay ${dubbing.bill?.owedDhb} DHB`}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
