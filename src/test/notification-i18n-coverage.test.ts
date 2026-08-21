@@ -45,4 +45,12 @@ describe('global missing translation fallback', () => {
     expect(humanizeTranslationKey('features.new_feature')).toBe('New feature');
     expect(humanizeTranslationKey('common.live-streams')).toBe('Live streams');
   });
+
+  it('keeps the English default a caller passed to t()', () => {
+    expect(humanizeTranslationKey('stats.title', 'Stats')).toBe('Stats');
+    expect(humanizeTranslationKey('stats.definitions.title', 'What the numbers mean')).toBe(
+      'What the numbers mean',
+    );
+    expect(humanizeTranslationKey('stats.title', '   ')).toBe('Title');
+  });
 });
