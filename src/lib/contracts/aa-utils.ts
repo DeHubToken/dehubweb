@@ -854,6 +854,34 @@ export async function getERC20Balance(
 }
 
 /**
+ * Read an ERC20 balance until it reaches `atLeast`, or give up.
+ *
+ * A confirmed transaction does not mean the next `eth_call` sees it: reads go
+ * through a load-balanced public RPC, and a node one block behind reports the
+ * old balance. Acting on that is worse than waiting — a swap that "didn't
+ * arrive" gets bought a second time with the user's own money. Returns the
+ * last balance read either way, so the caller still decides what to do.
+ */
+export async function waitForERC20Balance(
+  tokenAddress: string,
+  ownerAddress: string,
+  atLeast: bigint,
+  chainId?: ChainId,
+  attempts = 6,
+  delayMs = 1500,
+): Promise<bigint> {
+  let balance = BigInt(0);
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    balance = await getERC20Balance(tokenAddress, ownerAddress, chainId).catch(() => balance);
+    if (balance >= atLeast) return balance;
+    if (attempt < attempts - 1) {
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  return balance;
+}
+
+/**
  * Get ERC20 token allowance
  */
 export async function getERC20Allowance(
