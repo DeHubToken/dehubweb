@@ -43,8 +43,10 @@ export const ROUTE_SEGMENTS = [
   'auth', 'bridge', 'builder', 'communities', 'connect', 'creator', 'creators',
   'delete-account', 'depin', 'docs', 'editor', 'events', 'explore', 'features',
   'governance', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard',
-  'mcp', 'mobile-preview', 'music', 'premium', 'pricing', 'prompt', 'r',
-  'radio', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100', 'tv',
+  'mcp', 'mobile-preview', 'music', 'newpost', 'premium', 'pricing', 'prompt',
+  'r',
+  'radio', 'raffle', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100',
+  'tv',
   'videos', 'work',
 
   // --- /app children. Not top-level routes, but the worker canonicalises
