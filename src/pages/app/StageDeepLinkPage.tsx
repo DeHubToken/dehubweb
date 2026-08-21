@@ -49,6 +49,7 @@ import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageScreenShare } from '@/components/app/spaces/StageScreenShare';
+import { StageRadioNowPlaying } from '@/components/app/spaces/StageRadioNowPlaying';
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
@@ -591,6 +592,12 @@ export default function StageDeepLinkPage() {
                 press "Listen in": there is no Agora connection to carry it
                 before that. */}
             <StageScreenShare sharerName={stage.host_username} className="mt-4" />
+
+            {/* Same for a station the host has on air — the music arrives on
+                the host's own track, so only the label needs carrying, and it
+                needs no account either. Gated on listening for the same reason
+                the subtitles are: a credit for audio nobody has started. */}
+            {listening && <StageRadioNowPlaying spaceId={stage.id} className="mt-4 text-left" />}
 
             {/* Live subtitles, for a guest with no account. Reading them needs
                 no credential and no microphone — only the realtime channel the

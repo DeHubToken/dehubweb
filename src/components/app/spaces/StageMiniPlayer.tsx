@@ -6,7 +6,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { Mic, MicOff, X, Maximize2, Users, Volume2, ScreenShare } from 'lucide-react';
+import { Mic, MicOff, X, Maximize2, Users, Volume2, ScreenShare, Radio } from 'lucide-react';
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useStage } from '@/contexts/StageContext';
@@ -23,6 +23,7 @@ export function StageMiniPlayer() {
     endSpace,
     openModal,
     screenShare,
+    radioStation,
   } = useStage();
 
   const dragControls = useDragControls();
@@ -112,6 +113,17 @@ export function StageMiniPlayer() {
               }
             >
               <ScreenShare className="w-3 h-3" />
+            </span>
+          )}
+          {/* A host who minimised the room is still putting a station out to
+              everyone, with no control left on screen to stop it. Name it. */}
+          {radioStation && (
+            <span
+              className="flex items-center gap-1 text-white/70 min-w-0"
+              title={`On air: ${radioStation.name}`}
+            >
+              <Radio className="w-3 h-3 shrink-0" />
+              <span className="truncate max-w-[70px]">{radioStation.name}</span>
             </span>
           )}
         </div>
