@@ -1,6 +1,11 @@
 project_id = "aigxuutjaqsywioxjefr"
 
 [functions]
+  # Auth is an ADMIN JWT from api.dehub.io in the Authorization header, checked
+  # against GET /api/admin/me — not a Supabase JWT, so the platform check would
+  # reject every legitimate call.
+  [functions.admin-stages]
+    verify_jwt = false
   [functions.anon-views]
     verify_jwt = false
   [functions.ads-admin]
