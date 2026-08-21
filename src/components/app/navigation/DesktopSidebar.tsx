@@ -82,8 +82,14 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // rather than clicking something they can already see.
   const [navQuery, setNavQuery] = useState('');
   const [navScrolled, setNavScrolled] = useState(false);
+  const [navAtBottom, setNavAtBottom] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [bottomSearchFocused, setBottomSearchFocused] = useState(false);
+  // Which field the query was typed into. Without it a non-empty query pins
+  // both fields open at once.
+  const [queryOwner, setQueryOwner] = useState<'top' | 'bottom'>('top');
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const bottomSearchInputRef = useRef<HTMLInputElement>(null);
   const { addToHistory } = useSearchHistory();
 
   // `navQuery` and `searchFocused` are not polish here, they are required:
@@ -91,7 +97,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // scrollTop 0, which would retract the field mid-keystroke and restore the
   // full list — and then scrollTop is still 0, so it would sit there flickering.
   // Once the field has content or focus it stays regardless of scroll.
-  const showSearch = navScrolled || navQuery !== '' || searchFocused;
+  const showSearch = navScrolled || searchFocused || (navQuery !== '' && queryOwner === 'top');
+  // Mirror of the top field, revealed once the list bottoms out.
+  const showBottomSearch = navAtBottom || bottomSearchFocused || (navQuery !== '' && queryOwner === 'bottom');
 
   const updateIndicator = useCallback(() => {
     const panel = sidePanelRef.current;
@@ -173,10 +181,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       // Same 8px threshold the mobile header uses, so a stray wheel tick or a
       // rubber-band does not flick the field in and out.
       setNavScrolled(el.scrollTop > 8);
+      // Only when the list actually overflows — a filtered list short enough to
+      // fit is trivially "at the bottom" and would reveal both fields at once.
+      const overflow = el.scrollHeight - el.clientHeight;
+      setNavAtBottom(overflow > 8 && el.scrollTop >= overflow - 8);
     };
+    handleScroll();
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, [updateIndicator]);
+  }, [updateIndicator, navQuery, isCollapsed, isAuthenticated]);
 
   // A route change re-renders the rail with a different active row; leaving a
   // stale filter applied would hide the page the user just landed on.
@@ -277,6 +290,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     navigate(exploreSearchHref(query));
     setNavQuery('');
     searchInputRef.current?.blur();
+    bottomSearchInputRef.current?.blur();
   }, [navQuery, addToHistory, navigate]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -288,7 +302,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     if (e.key === 'Escape') {
       e.preventDefault();
       if (navQuery) setNavQuery('');
-      else searchInputRef.current?.blur();
+      else (e.currentTarget as HTMLInputElement).blur();
     }
   };
 
@@ -463,7 +477,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                       type="text"
                       value={navQuery}
                       onChange={(e) => setNavQuery(e.target.value)}
-                      onFocus={() => setSearchFocused(true)}
+                      onFocus={() => { setSearchFocused(true); setQueryOwner('top'); }}
                       onBlur={() => setSearchFocused(false)}
                       onKeyDown={handleSearchKeyDown}
                       tabIndex={showSearch ? 0 : -1}
@@ -594,7 +608,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 onClick={() => { void disconnect(); }}
                 layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
               />
-              <div aria-hidden className="h-14 flex-shrink-0" />
+              {/* Only while the fade is actually over the list. Once the list
+                  bottoms out the fade is gone and the bottom search field is
+                  the end of the panel, so this would be dead space. Removing it
+                  while pinned to the bottom cannot un-pin the scroll, so there
+                  is no flicker back and forth. */}
+              {!navAtBottom && <div aria-hidden className="h-14 flex-shrink-0" />}
             </>
           )}
           </div>
@@ -617,9 +636,61 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               <CornerDownLeft className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-60" />
             </button>
           )}
+          {/* Menu search, bottom mirror — revealed once the list bottoms out,
+              so the field is in reach at either end of a 28-item rail. Same
+              grid-rows collapse as the top one, and it is the last thing in the
+              panel, so there is nothing under it. */}
+          {!isCollapsed && (
+            <div
+              className={cn(
+                "relative z-20 grid transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none",
+                showBottomSearch ? "opacity-100" : "opacity-0 pointer-events-none"
+              )}
+              style={{ gridTemplateRows: showBottomSearch ? '1fr' : '0fr' }}
+              aria-hidden={!showBottomSearch}
+            >
+              <div className="overflow-hidden">
+                <div className="p-1 pt-0 lg:px-2.5 lg:pb-2.5">
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                    <input
+                      ref={bottomSearchInputRef}
+                      type="text"
+                      value={navQuery}
+                      onChange={(e) => setNavQuery(e.target.value)}
+                      onFocus={() => { setBottomSearchFocused(true); setQueryOwner('bottom'); }}
+                      onBlur={() => setBottomSearchFocused(false)}
+                      onKeyDown={handleSearchKeyDown}
+                      tabIndex={showBottomSearch ? 0 : -1}
+                      placeholder={t('sidebar.searchMenu')}
+                      aria-label={t('sidebar.searchMenu')}
+                      className={cn(
+                        "w-full h-[38px] pl-9 pr-8 rounded-xl text-[14px] outline-none transition-colors",
+                        desktopNavTextColor,
+                        isLightTheme
+                          ? "bg-black/5 border border-black/10 placeholder:text-zinc-500 focus:border-black/25"
+                          : "bg-white/5 border border-white/10 placeholder:text-zinc-500 focus:border-white/30"
+                      )}
+                    />
+                    {navQuery && (
+                      <button
+                        type="button"
+                        onClick={() => { setNavQuery(''); bottomSearchInputRef.current?.focus(); }}
+                        aria-label={t('sidebar.clearSearch')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                      >
+                        <X className="w-[14px] h-[14px]" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Bottom fade overlay — suppressed while filtering, where the list is
-              short and the hand-off row marks the end instead. */}
-          {!navQuery && (
+              short and the hand-off row marks the end instead, and at the bottom
+              of the list, where there is nothing left to hint at. */}
+          {!navQuery && !navAtBottom && (
             <div data-sidebar-fade className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
           )}
         </motion.div>
