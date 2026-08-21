@@ -2100,6 +2100,58 @@ async function handleRequest(request, env) {
     return resp;
   };
 
+  // Android App Links and Apple Universal Links association files. Three
+  // separate things go wrong if these are left to the default asset path, and
+  // all three fail silently — which is how the app links shipped broken and
+  // stayed broken with nothing anywhere returning an error.
+  //
+  //  1. `not_found_handling: "single-page-application"` (wrangler.jsonc) answers
+  //     a MISSING file with index.html at HTTP 200. Android's verifier read
+  //     21,996 bytes of the SPA shell as the statement list and rejected it,
+  //     and every probe of the URL came back 200 looking healthy.
+  //  2. apple-app-site-association has NO file extension, which iOS requires.
+  //     Wrangler's MIME lookup therefore returns null and uploads it as
+  //     "application/null" — wrangler's own signal for "send no Content-Type at
+  //     all". Google's Digital Asset Links checker and Apple's swcd both demand
+  //     application/json and reject anything else.
+  //  3. The bare /apple-app-site-association twin that older iOS probes has no
+  //     dot in it, so the static-asset skip further down never catches it and
+  //     shouldServeSSR() reads it as a USERNAME. It currently renders a profile
+  //     page to browsers and a "Not Found — DeHub" page to crawlers.
+  //
+  // Pinned in code rather than only in public/_headers because Cloudflare
+  // documents _headers as not applying when `assets.run_worker_first` is set,
+  // which wrangler.jsonc does set. The rules are in fact applied today
+  // (/version.json comes back no-store, /assets/* immutable), but an app-link
+  // contract should not rest on undocumented behaviour. The _headers stanza is
+  // kept as a second layer.
+  const APP_LINK_FILES = new Set([
+    '/.well-known/assetlinks.json',
+    '/.well-known/apple-app-site-association',
+    '/apple-app-site-association',
+  ]);
+  if (APP_LINK_FILES.has(pathname)) {
+    const asset = await env.ASSETS.fetch(new Request(new URL('/.well-known/' + pathname.split('/').pop(), url), request));
+    const assetType = (asset.headers.get('Content-Type') || '').toLowerCase();
+    // text/html means the SPA fallback answered, i.e. the file is not in the
+    // build. 404 loudly rather than hand a verifier an HTML page again.
+    if (!asset.ok || assetType.startsWith('text/html')) {
+      return new Response('Not Found', {
+        status: 404,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' },
+      });
+    }
+    const out = new Response(asset.body, asset);
+    out.headers.set('Content-Type', 'application/json');
+    // Short, unlike the year-long caches above: a certificate fingerprint or
+    // Team ID change has to reach Google's and Apple's fetchers quickly, and
+    // these files are a few hundred bytes.
+    out.headers.set('Cache-Control', 'public, max-age=300');
+    // Deliberately no X-Robots-Tag and no Vary — these are machine-read files
+    // and both verifiers are strict about what they will accept.
+    return out;
+  }
+
   // Sitemaps must be proxied HERE, not via redirect rules: a `/*` catch-all in
   // public/_redirects (which Lovable regenerates) is processed before every
   // netlify.toml rule and served these paths as SPA HTML — Google then read the
