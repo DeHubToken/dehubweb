@@ -82,7 +82,7 @@ const SLIDES = [
 ] as const;
 
 const ENTITY_COPY =
-  'DeHub is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first free, never fearing the algorithm again.';
+  'DeHub is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first view, never fearing the algorithm again.';
 
 const LINKS: { to: string; label: string }[] = [
   { to: '/guides/what-is-watch-to-earn', label: 'What is watch-to-earn?' },
