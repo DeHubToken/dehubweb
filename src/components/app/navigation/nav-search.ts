@@ -313,7 +313,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
  * `/app/pair` are not — and its path must be a real route in `App.tsx`, because
  * nothing else checks: an unrouted path renders a row that lands on the 404.
  *
- * The three games are duplicated from `config/arcade-games.ts` on purpose. That
+ * The arcade games are duplicated from `config/arcade-games.ts` on purpose. That
  * registry pulls in the GPU probe, and this module is imported by AppSidebar,
  * which is eager — importing it here would fold the whole arcade registry into
  * the entry chunk that `scripts/check-entry-bundle.mjs` guards. The copy is
@@ -339,6 +339,7 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: Gamepad2, label: 'Claude of Duty', path: '/arcade/claude-of-duty' },
   { icon: Gamepad2, label: 'Jungle Trail', path: '/arcade/jungle-trail' },
   { icon: Gamepad2, label: 'Street Slayer', path: '/arcade/street-slayer' },
+  { icon: Gamepad2, label: 'Trenchstar', path: '/arcade/trenchstar' },
 ];
 
 // ---------------------------------------------------------------------------

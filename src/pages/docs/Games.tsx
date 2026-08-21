@@ -72,7 +72,7 @@ const Games = () => {
                 </div>
 
                 {/* The titles above live on arcade.dehub.net, a separate
-                    property. These three run in this app, at /arcade — a
+                    property. These ones run in this app, at /arcade — a
                     reader on this page is looking for games and would
                     otherwise never learn they exist. Internal link, so it is
                     a Link-shaped <a> to a same-origin route rather than a new

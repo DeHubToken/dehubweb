@@ -143,7 +143,7 @@ export default function ArcadePage() {
       <div ref={contentRef} className="mx-auto max-w-4xl px-2 pb-24 pt-2 sm:px-3">
         {/* Three to a row on desktop, and the equal-height cards put every Play
             button on the same baseline within a row. Deliberately not widened
-            to four when the fourth game arrived: at this max-width that leaves
+            to four as more games arrived: at this max-width that leaves
             each capture about 200px across, which is too small to read as a
             game rather than a thumbnail. A short second row is the cheaper
             trade. */}
