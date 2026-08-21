@@ -19,6 +19,7 @@ import { ChartPiPProvider } from '@/contexts/ChartPiPContext';
 import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
 import { FloatingChartPiPOverlay } from '@/components/app/charts/FloatingChartPiPOverlay';
 import { UserFeedbackSurvey } from '@/components/app/UserFeedbackSurvey';
+import { NewMemberRegistrar } from '@/components/app/NewMemberRegistrar';
 import { ShippedFeatureNotificationModal } from '@/components/app/ShippedFeatureNotificationModal';
 // Lazy: the post composer is heavy (media handling) and only needed when the
 // user opens it — kept out of the entry bundle, preloaded on idle below.
@@ -400,6 +401,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                       <FloatingPiPOverlay />
                       <FloatingChartPiPOverlay />
                       <UserFeedbackSurvey />
+                      <NewMemberRegistrar />
                       <ShippedFeatureNotificationModal />
                     </GlobalDropZoneProvider>
                   </CoinPlacementProvider>

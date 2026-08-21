@@ -2734,6 +2734,42 @@ export type Database = {
         }
         Relationships: []
       }
+      new_members: {
+        Row: {
+          avatar_url: string | null
+          badge_balance: number | null
+          display_name: string | null
+          first_seen_at: string
+          joined_at: string
+          opted_out: boolean
+          updated_at: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          display_name?: string | null
+          first_seen_at?: string
+          joined_at: string
+          opted_out?: boolean
+          updated_at?: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          display_name?: string | null
+          first_seen_at?: string
+          joined_at?: string
+          opted_out?: boolean
+          updated_at?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       phone_otp_codes: {
         Row: {
           attempts: number
@@ -4160,31 +4196,37 @@ export type Database = {
       user_feedback_surveys: {
         Row: {
           age_range: string | null
+          answers: Json
           created_at: string
           gender: string | null
           id: string
           referral_source: string | null
           signup_experience: string | null
+          survey_version: number
           tipping_or_gifting: string | null
           wallet_address: string
         }
         Insert: {
           age_range?: string | null
+          answers?: Json
           created_at?: string
           gender?: string | null
           id?: string
           referral_source?: string | null
           signup_experience?: string | null
+          survey_version?: number
           tipping_or_gifting?: string | null
           wallet_address: string
         }
         Update: {
           age_range?: string | null
+          answers?: Json
           created_at?: string
           gender?: string | null
           id?: string
           referral_source?: string | null
           signup_experience?: string | null
+          survey_version?: number
           tipping_or_gifting?: string | null
           wallet_address?: string
         }

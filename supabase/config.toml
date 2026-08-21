@@ -96,6 +96,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.refresh-leaderboard-user]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.register-new-member]
+    verify_jwt = false
   [functions.report-broken-channel]
     verify_jwt = false
   [functions.request-phone-otp]

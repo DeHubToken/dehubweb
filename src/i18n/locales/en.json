@@ -133,6 +133,8 @@
     "privateAccount": "Private Account",
     "privateAccountDesc": "Only approved followers can see your content",
     "viewFollowRequests": "View Follow Requests",
+    "showAsNewMember": "Show me as a new member",
+    "showAsNewMemberDesc": "Lets other members see you just joined so they can welcome you. Ends automatically 30 days after you signed up.",
     "publicProfile": "Public Profile",
     "publicProfileDesc": "Make your profile visible to everyone",
     "followVisibility": "Follow Visibility",
