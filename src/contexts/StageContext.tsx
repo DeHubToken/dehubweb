@@ -19,6 +19,7 @@ import {
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { cloneHostVoiceFromStage, dubVoiceConsentGiven } from '@/lib/stage-dub-voice';
 import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import { useStageCaptionPublisher } from '@/hooks/use-stage-captions';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
@@ -425,6 +426,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // Stable refs for realtime callbacks
   const walletAddressRef = useRef(walletAddress);
+  /** The signed-in profile, read at call time by the long-lived recorder callbacks. */
+  const userRef = useRef(user);
+  userRef.current = user;
   const myRoleRef = useRef(myRole);
   const hasHandledStageEndRef = useRef(false);
   // Keep refs aligned before effects run (avoids host-only fetches seeing stale role on first mount).
@@ -528,6 +532,28 @@ export function StageProvider({ children }: { children: ReactNode }) {
       recorder.start(1000); // collect chunks every 1s
       mediaRecorderRef.current = recorder;
       console.log('[Stage] Recording started (voice-effect-processed stream)');
+
+      // ─── Voice for dubbing ──────────────────────────────────────────────
+      //
+      // A stage dubbed in a stock voice is worth less than one dubbed in the
+      // host's own, and asking them to go and train a voice first is a step
+      // most people will not take. So take it from the stage itself: thirty
+      // seconds in, lift the sample the recorder has already collected and
+      // clone from it once, in the background.
+      //
+      // Gated on the host having agreed at launch — this is their voice, and
+      // an opt-in they saw is the difference between a feature and a surprise.
+      // Once cloned it is cached in custom_voices and every later stage uses
+      // it without asking again.
+      if (dubVoiceConsentGiven()) {
+        setTimeout(() => {
+          void cloneHostVoiceFromStage(
+            recordingChunksRef.current,
+            walletAddressRef.current ?? null,
+            userRef.current?.username || 'Host',
+          );
+        }, 30_000);
+      }
     } catch (err) {
       console.warn('[Stage] Recording setup failed:', err);
     }
