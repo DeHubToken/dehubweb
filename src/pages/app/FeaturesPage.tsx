@@ -1052,8 +1052,13 @@ export default function FeaturesPage() {
     <div className="min-h-screen">
       <SEOHead title="Feature Requests & Bug Reporting — DeHub" description="Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap.", isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Features — Feature Requests, Bug Reporting & Community Roadmap</h1>
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
+      {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
+          mobile; `data-nav-hide-desktop` opts this one into the same thing on
+          desktop too (see the "Desktop chrome" block in index.css), because
+          this header is a full bento — title, search, three tabs, category
+          pills, sort tabs — and pinned it leaves barely any room for the list
+          it filters. */}
+      <div data-feed-nav-outer data-nav-hide-desktop className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">

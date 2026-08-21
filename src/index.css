@@ -893,6 +893,46 @@ button.cursor-square-item:hover {
 }
 
 /* ==========================================================================
+   Desktop chrome — opt-in, for pills too tall to keep pinned on a laptop.
+   ==========================================================================
+   The block above stops at `lg` because most pages' pills are a single row of
+   tabs, and desktop has the room. Some are a full header bento instead — the
+   feature-request board carries a title, a submit button, a search box, three
+   page tabs, category pills and sort tabs, roughly a third of a 900px-tall
+   viewport — and pinning that much chrome leaves very little feed. Those pages
+   mark their pill `data-nav-hide-desktop` and it rides the scroll on desktop
+   the way every pill already does on mobile.
+
+   Keyed on `data-scroll-hidden` (scroll direction alone), NOT `data-nav-hidden`
+   (scroll direction OR an open overlay). A centred desktop dialog scrims the
+   pill already, so folding overlays in would only add a visible slide behind
+   the backdrop each time one opened.
+
+   Plain `-100%` here, not the mobile `-100% - 3rem`: on desktop the pill pins
+   at `top-0` with no mobile header above it to clear.
+
+   `[data-nav-hide='off']` and the typing exemption carry over unchanged — the
+   latter matters more here, since a desktop pill's search box is a mouse
+   scroll away from vanishing mid-query. */
+@media (min-width: 1024px) {
+  [data-feed-nav-outer][data-nav-hide-desktop] {
+    transition: transform 300ms ease-in-out;
+  }
+
+  html:not([data-jungle-phase])[data-scroll-hidden='true']
+    [data-feed-nav-outer][data-nav-hide-desktop]:not([data-nav-hide='off']) {
+    transform: translateY(-100%);
+  }
+
+  html:not([data-jungle-phase])[data-scroll-hidden='true']
+    [data-feed-nav-outer][data-nav-hide-desktop]:has(
+      :is(input, textarea, [contenteditable]):focus
+    ) {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
    Dim Lights — blue-light filter (works on every theme).
    A fixed warm amber sheet multiplied over the whole app, f.lux-style: the
    multiply blend crushes the blue channel (x0.16) and trims green (x0.58)
