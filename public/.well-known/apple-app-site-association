@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["FU4BL8RC2L.io.dehub.mobile"],
+        "components": [
+          { "/": "/app", "comment": "App home" },
+          { "/": "/app/*", "comment": "Posts, communities, stores, events, messages, notifications, leaderboard" },
+          { "/": "/newpost/*", "comment": "Off-chain post slug" },
+          { "/": "/stage/*", "comment": "Stage invite by uuid" },
+          { "/": "/stages", "comment": "Stages hub" },
+          { "/": "/stages/*", "comment": "Stage invite by short id" }
+        ]
+      }
+    ]
+  }
+}
