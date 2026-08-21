@@ -5,7 +5,7 @@
  * Stories are uploaded to storage and expire after 24 hours.
  */
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -23,7 +23,12 @@ import { GoLiveModal } from '@/components/app/modals';
 import { openStageModal } from '@/contexts/StageContext';
 import { StoryRecorderModal, StoryViewerModal, ShimmerBorder } from '@/components/app/stories';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
-import { PostModal } from '@/features/post';
+// Lazy, and NOT through the @/features/post barrel: the composer is ~400 KB of
+// media handling, and the stories row renders on the home feed for everyone. A
+// static import here quietly undoes the same lazy boundary AppLayout sets up.
+const PostModal = lazy(() =>
+  import('@/features/post/PostModal').then(m => ({ default: m.PostModal }))
+);
 import { useStories, useUploadStory, useWatchedStories, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -307,10 +312,12 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       </AnimatePresence>
       
       {postModalMounted && (
-        <PostModal
-          isOpen={isPostModalOpen}
-          onClose={() => setIsPostModalOpen(false)}
-        />
+        <Suspense fallback={null}>
+          <PostModal
+            isOpen={isPostModalOpen}
+            onClose={() => setIsPostModalOpen(false)}
+          />
+        </Suspense>
       )}
       <div className="text-center">
         <div className="relative">
