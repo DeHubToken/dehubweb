@@ -96,6 +96,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
+import { useNewMemberSelf } from '@/hooks/use-new-members';
 import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
@@ -181,7 +182,13 @@ import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState('profile');
+  // `?tab=privacy` deep-links a tab. Anything pointing someone at one specific
+  // setting — the new-member notice toast, a support reply — otherwise lands
+  // them on Profile and leaves them hunting for it.
+  const [activeTab, setActiveTab] = useState(() => {
+    const requested = new URLSearchParams(window.location.search).get('tab');
+    return requested && tabs.some((tab) => tab.value === requested) ? requested : 'profile';
+  });
   const settingsIsDraggingRef = useRef(false);
   const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
 
@@ -1340,6 +1347,22 @@ function PrivacySettings() {
   const [goPublicModalOpen, setGoPublicModalOpen] = useState(false);
   const [goPublicBusy, setGoPublicBusy] = useState(false);
   const [pendingRequestCount, setPendingRequestCount] = useState(0);
+  const {
+    isNewMember,
+    optedOut: newMemberOptedOut,
+    isLoading: isNewMemberLoading,
+    setOptedOut: setNewMemberOptedOut,
+    isUpdating: isNewMemberUpdating,
+  } = useNewMemberSelf();
+
+  const handleNewMemberToggle = useCallback(async (checked: boolean) => {
+    try {
+      await setNewMemberOptedOut(!checked);
+      toast.success(checked ? 'Showing as a new member' : 'Hidden from new members');
+    } catch {
+      toast.error('Failed to update');
+    }
+  }, [setNewMemberOptedOut]);
 
   const handlePrivateToggle = useCallback(async (checked: boolean) => {
     if (!checked && isPrivate) {
@@ -1462,6 +1485,22 @@ function PrivacySettings() {
               </button>
               <FollowRequestsDrawer open={followRequestsOpen} onOpenChange={setFollowRequestsOpen} />
             </div>
+          )}
+          {/* Only rendered while it still does something. Outside the 30-day
+              window there is no row to update and no chip to hide, and a toggle
+              that silently changes nothing is worse than no toggle. */}
+          {isNewMember && (
+            <SettingToggle
+              icon={Sparkles}
+              title={t('settings.showAsNewMember', 'Show me as a new member')}
+              description={t(
+                'settings.showAsNewMemberDesc',
+                'Lets other members see you just joined so they can welcome you. Ends automatically 30 days after you signed up.',
+              )}
+              defaultChecked={!newMemberOptedOut}
+              onCheckedChange={handleNewMemberToggle}
+              disabled={isNewMemberUpdating || isNewMemberLoading}
+            />
           )}
           <SettingToggle
             icon={Globe}

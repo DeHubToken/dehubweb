@@ -34,6 +34,7 @@ import { cn } from '@/lib/utils';
 import { isBigBadgeUrl } from '@/lib/staking-badges';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { toast } from 'sonner';
 import { DISPLAY_WALLET_OVERRIDES, getDefaultBanner, type TabValue } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
@@ -380,6 +381,9 @@ export function ProfileHeader({
                 {profile.handle}
               </button>
               {profile.verified && <VerifiedBadge className="w-5 h-5" />}
+              {/* Temporary — gone NEW_MEMBER_WINDOW_DAYS after signup, and
+                  immediately if they switch it off in Settings › Privacy. */}
+              <NewMemberChip address={profile.walletAddress} />
               {!isViewingOwnProfile && apiProfile?.followsYou && (
                 <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
                   Follows you

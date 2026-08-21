@@ -4,6 +4,7 @@ import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
+import { NewMembersBento } from '@/components/app/NewMembersBento';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -1320,6 +1321,11 @@ export default function ExplorePage() {
                       <p className="text-zinc-500 text-sm">{t('explorePage.noRecentSearches')}</p>
                     )}
                   </div>
+
+                  {/* New members — the non-desktop home for the right rail's
+                      fourth tab, which is `hidden lg:block`. Renders nothing on
+                      desktop, or when nobody joined recently. */}
+                  <NewMembersBento />
 
                   {/* Trending Bento — same component as sidebar */}
                   <WhatsHappening showCountrySelector />

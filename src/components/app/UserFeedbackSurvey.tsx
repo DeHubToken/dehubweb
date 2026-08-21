@@ -1,8 +1,22 @@
 /**
  * User Feedback Survey
  * ====================
- * Multi-step survey modal shown once to returning users on login.
- * Stores responses in user_feedback_surveys table.
+ * Multi-step survey modal shown once per ROUND to returning users on login.
+ * Stores responses in `user_feedback_surveys`.
+ *
+ * Rounds, not one survey forever. Round 1 ran March–August 2026 and collected
+ * 89 answers to a fixed set of five questions, one table column each — which
+ * meant asking anything new needed a migration, and there was no way to tell a
+ * second round's answers from the first's.
+ *
+ * Running a new round is now: write a new QUESTIONS array, bump SURVEY_VERSION.
+ * Nothing else. The version scopes the "have they already answered?" check and
+ * the localStorage key, so everyone who did round 1 is asked round 2 exactly
+ * once, and round 1's rows stay untouched under `survey_version = 1`.
+ *
+ * Query a round with:
+ *   select answers->>'login_experience' q, count(*)
+ *   from user_feedback_surveys where survey_version = 2 group by 1 order by 2 desc;
  */
 
 import { useState, useEffect } from 'react';
@@ -11,9 +25,14 @@ import { X, ChevronRight, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 
-const SURVEY_DISMISSED_KEY = 'dehub_survey_completed';
+/** Bump to run a new round. Round 1 = the original five questions. */
+const SURVEY_VERSION = 2;
+
+/** Per-round, so a completed round 1 does not suppress round 2. */
+const SURVEY_DISMISSED_KEY = `dehub_survey_completed_v${SURVEY_VERSION}`;
 
 interface SurveyQuestion {
   key: string;
@@ -21,31 +40,40 @@ interface SurveyQuestion {
   options: string[];
 }
 
+/**
+ * Round 2 — the sign-in rebuild is live, so this round is mostly about whether
+ * it actually feels better from the outside, and where the next effort goes.
+ */
 const QUESTIONS: SurveyQuestion[] = [
   {
-    key: 'signup_experience',
-    question: 'How was the sign up process?',
-    options: ['Smooth as butter', 'Bit slow / annoying', 'Painful'],
+    key: 'login_experience',
+    question: 'How was signing in this time?',
+    options: ['Instant, no friction', 'Fine, took a moment', 'Took a few tries', 'Struggled to get in'],
   },
   {
-    key: 'referral_source',
-    question: 'Where did you hear about us?',
-    options: ['Google Ads', 'Instagram Ads', 'TikTok Ads', 'YouTube Ads', 'Influencer', 'Word of Mouth', 'Organic Online'],
+    key: 'login_method',
+    question: 'How do you usually sign in?',
+    options: ['Email', 'Google', 'Apple', 'Phone number', 'Wallet'],
   },
   {
-    key: 'gender',
-    question: 'Are you',
-    options: ['Male', 'Female'],
+    key: 'primary_device',
+    question: 'Where do you use DeHub most?',
+    options: ['Android app', 'iPhone / iPad', 'Desktop browser', 'Mobile browser'],
   },
   {
-    key: 'age_range',
-    question: 'How old are you?',
-    options: ['Under 21', '21 to 30', '30 to 40', '40 to 50', '50+'],
+    key: 'favourite_feature',
+    question: 'What keeps you coming back?',
+    options: ['The feed', 'Stages', 'Communities & chat', 'Arcade & games', 'Tipping & earning', 'Stores & shopping'],
   },
   {
-    key: 'tipping_or_gifting',
-    question: 'Do you prefer',
-    options: ['Tipping', 'Gifting'],
+    key: 'most_wanted',
+    question: 'What should we build next?',
+    options: ['Better discovery', 'More rewards', 'A faster app', 'More creators', 'Bigger arcade', 'Live shopping'],
+  },
+  {
+    key: 'would_recommend',
+    question: 'Would you recommend DeHub to a friend?',
+    options: ['Definitely', 'Probably', 'Not yet'],
   },
 ];
 
@@ -66,14 +94,23 @@ export function UserFeedbackSurvey() {
     const isNewAccount = sessionStorage.getItem('dehub_is_new_account');
     if (isNewAccount === 'true') return;
 
-    // Check DB to ensure they haven't already submitted (handles cross-device)
+    // Check DB to ensure they haven't already submitted (handles cross-device).
+    // The wallet header is required now: the read policy on this table was
+    // `USING (true)` — wallet address next to gender next to age range, legible
+    // to anyone holding the publishable key — and is now scoped to your own
+    // rows. Without the header this query returns 0 and the modal reappears on
+    // every login.
     let cancelled = false;
     (async () => {
       try {
-        const { count } = await supabase
-          .from('user_feedback_surveys')
-          .select('id', { count: 'exact', head: true })
-          .eq('wallet_address', walletAddress.toLowerCase());
+        const { count } = await withWalletHeader(
+          supabase
+            .from('user_feedback_surveys')
+            .select('id', { count: 'exact', head: true })
+            .eq('wallet_address', walletAddress.toLowerCase())
+            .eq('survey_version', SURVEY_VERSION),
+          walletAddress,
+        );
 
         if (cancelled) return;
         if (count && count > 0) {
@@ -113,14 +150,15 @@ export function UserFeedbackSurvey() {
     setSubmitting(true);
 
     try {
+      // Every round's answers go in `answers`, keyed by question. The five
+      // round-1 columns are left alone rather than reused: a column called
+      // `signup_experience` holding an answer to a differently worded question
+      // is how a dataset quietly stops meaning anything.
       const { error } = await supabase.from('user_feedback_surveys').insert({
         wallet_address: walletAddress.toLowerCase(),
-        signup_experience: answers.signup_experience || null,
-        referral_source: answers.referral_source || null,
-        gender: answers.gender || null,
-        age_range: answers.age_range || null,
-        tipping_or_gifting: answers.tipping_or_gifting || null,
-      } as any);
+        survey_version: SURVEY_VERSION,
+        answers,
+      });
 
       if (error) throw error;
 
