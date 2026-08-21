@@ -1,91 +1,92 @@
 /**
  * New Members List
  * ================
- * The shared body of every new-members surface: everyone who joined in the last
- * NEW_MEMBER_WINDOW_DAYS, newest first, each with a one-tap way to say hello.
+ * The roster as a vertical list — deliberately the same row, the same Follow
+ * button and the same infinite scroll as `WhoToFollow`, which sits one tab
+ * along. The only difference between the two panels is the ordering: this one
+ * is newest joiner first, that one is whoever the API recommends.
  *
- * One component rather than one per surface because the two that exist today —
- * the desktop right rail and the Explore bento that carries the feature to
- * every other viewport — differ only in the chrome around them. A second copy
- * of the wave would be a second place for it to drift.
+ * No header, no "just joined" strapline: the tab icon says what the panel is,
+ * and anything extra makes it read as a different kind of thing than its
+ * neighbour.
  *
- * The wave opens the DM with a greeting typed and waiting (`draftBody`), never
- * pre-sent: an identical canned message fired off unseen is the bot behaviour
- * this feature exists to avoid. Mobile's `sharedText` does the same.
- *
- * Waves are remembered per device in localStorage — a server round trip to
- * render a button label would be a poor trade, and the worst case of losing it
- * is a button that says "Wave" again on a new browser.
+ * A followed member stays on the list, unlike a used-up suggestion. This is
+ * "who joined", not "who to follow", and somebody disappearing out of a
+ * chronological order because you followed them would leave a hole in it.
  *
  * @module components/app/NewMembersList
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Star } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
-import { joinedAgoLabel, useNewMembers, type NewMember } from '@/hooks/use-new-members';
-
-const WAVED_KEY = 'dehub_waved_at';
-
-/** The greeting a wave drafts. Short on purpose — it is meant to be edited, not sent as-is. */
-const WELCOME_MESSAGE = 'Welcome to DeHub! 👋 Give me a shout if you need anything.';
-
-function readWaved(): Set<string> {
-  try {
-    const raw = localStorage.getItem(WAVED_KEY);
-    return new Set<string>(raw ? JSON.parse(raw) : []);
-  } catch {
-    return new Set<string>();
-  }
-}
-
-function rememberWave(address: string, current: Set<string>): Set<string> {
-  const next = new Set(current);
-  next.add(address.toLowerCase());
-  try {
-    localStorage.setItem(WAVED_KEY, JSON.stringify([...next]));
-  } catch {
-    // Private-mode storage failure only costs the label, not the wave.
-  }
-  return next;
-}
+import { useReauthHandler } from '@/hooks/use-reauth-handler';
+import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
+import { useNewMembers, type NewMember } from '@/hooks/use-new-members';
 
 interface NewMembersListProps {
-  limit?: number;
   /** Extra classes on the scrolling container — the only per-surface difference. */
   listClassName?: string;
 }
 
-export function NewMembersList({ limit = 30, listClassName }: NewMembersListProps) {
+export function NewMembersList({ listClassName }: NewMembersListProps) {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
-  const { data: members = [], isLoading, error } = useNewMembers(limit, walletAddress);
-  const [waved, setWaved] = useState<Set<string>>(readWaved);
+  const { handleApiError } = useReauthHandler();
+  const followOverrides = useFollowOverrides();
+  const queryClient = useQueryClient();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useNewMembers(walletAddress);
+
+  const members = useMemo(
+    () => data?.pages.flatMap((page) => page.items) ?? [],
+    [data],
+  );
+
+  const isFollowed = useCallback(
+    (member: NewMember) => followOverrides.get(member.address.toLowerCase()) === true,
+    [followOverrides],
+  );
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || isFetchingNextPage || !hasNextPage) return;
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    if (scrollHeight - scrollTop - clientHeight < 200) fetchNextPage();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScroll);
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   const openProfile = useCallback((member: NewMember) => {
     navigate(`/${member.username || member.address}`);
   }, [navigate]);
 
-  const handleWave = useCallback((e: React.MouseEvent, member: NewMember) => {
+  const handleFollow = useCallback((e: React.MouseEvent, member: NewMember) => {
     e.stopPropagation();
     if (!isAuthenticated) {
       openLoginModal();
       return;
     }
-    setWaved((prev) => rememberWave(member.address, prev));
-    navigate('/app/messages', {
-      state: {
-        openDmWith: member.address,
-        username: member.username || undefined,
-        draftBody: WELCOME_MESSAGE,
-      },
+    if (isFollowed(member)) return;
+
+    toggleFollowFor(queryClient, member.address, false, {
+      name: member.displayName,
+      onError: (err) => handleApiError(err, 'Failed to follow user'),
     });
-  }, [isAuthenticated, navigate, openLoginModal]);
+  }, [handleApiError, isAuthenticated, isFollowed, openLoginModal, queryClient]);
 
   if (isLoading) {
     return (
@@ -99,24 +100,29 @@ export function NewMembersList({ limit = 30, listClassName }: NewMembersListProp
     return (
       <div className="flex flex-col items-center justify-center py-8 px-6 text-center">
         <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-          <Sparkles className="w-6 h-6 text-zinc-500" />
+          <Star className="w-6 h-6 text-zinc-500" />
         </div>
         <p className="text-zinc-400 text-sm">
-          {error ? 'Failed to load new members' : 'Nobody new this month — yet'}
+          {error ? 'Failed to load members' : 'No members to show yet'}
         </p>
       </div>
     );
   }
 
   return (
-    <div className={cn('space-y-1', listClassName)}>
-      {members.map((member) => {
-        const hasWaved = waved.has(member.address.toLowerCase());
-        return (
+    <div className="flex flex-col h-full">
+      <div
+        ref={scrollRef}
+        className={cn(
+          'flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent',
+          listClassName,
+        )}
+      >
+        {members.map((member) => (
           <div
             key={member.address}
             onClick={() => openProfile(member)}
-            className="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer"
+            className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
           >
             <div className="flex-shrink-0">
               <Avatar className="w-10 h-10">
@@ -136,21 +142,31 @@ export function NewMembersList({ limit = 30, listClassName }: NewMembersListProp
                   className="w-[9px] h-[9px] absolute -top-0.5 right-0"
                 />
               </span>
-              <p className="text-zinc-500 text-xs truncate">joined {joinedAgoLabel(member.joinedAt)}</p>
             </div>
             <button
-              onClick={(e) => handleWave(e, member)}
+              onClick={(e) => handleFollow(e, member)}
+              disabled={isFollowed(member)}
+              data-follow-btn
               className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ${
-                hasWaved
-                  ? 'bg-white/10 text-white/40'
+                isFollowed(member)
+                  ? 'bg-white/10 text-white/40 cursor-default'
                   : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
               }`}
             >
-              {hasWaved ? 'Waved' : 'Wave 👋'}
+              {isFollowed(member) ? 'Following' : 'Follow'}
             </button>
           </div>
-        );
-      })}
+        ))}
+        {isFetchingNextPage && (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
+          </div>
+        )}
+      </div>
+
+      <div className="relative">
+        <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
+      </div>
     </div>
   );
 }

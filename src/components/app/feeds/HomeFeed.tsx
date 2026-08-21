@@ -77,7 +77,6 @@ import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { NewMembersCarousel } from '@/components/app/NewMembersCarousel';
-import { useSeedNewMembers } from '@/hooks/use-new-members';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
 import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
 import { PromptFlowModal } from '@/components/app/feeds/PromptFlowModal';
@@ -983,18 +982,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
     return withAds;
   }, [organicItems, servedAds]);
-
-  // Who wrote what is on screen. The new-members roster otherwise only learns
-  // about people who sign in again after it shipped, so it stays empty for
-  // weeks while real joiners are posting in this very feed — the seeder checks
-  // these addresses against api.dehub.io and rosters the ones that are new.
-  const feedAuthors = useMemo(
-    () => items
-      .map((item) => (item.data as { minter?: string })?.minter)
-      .filter((address): address is string => typeof address === 'string' && address.length > 0),
-    [items],
-  );
-  useSeedNewMembers(feedAuthors);
 
   // Auto-remove optimistic posts once their real counterpart appears in the feed
   useEffect(() => {
