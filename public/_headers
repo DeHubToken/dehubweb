@@ -201,6 +201,34 @@
 # CLASSIC script, and those are fetched in no-cors mode, unlike the module
 # entries above that this repo has twice been caught out by. It is here so that
 # turning it into a module later cannot quietly resurrect that bug.
+# Android App Links and Apple Universal Links association files. Both must be
+# served as application/json or the verifier rejects them silently: Google's
+# Digital Asset Links checker requires application/json and refuses redirects,
+# and Apple's swcd requires it too. A rejected file is indistinguishable from
+# no file at all — no error, no status, the deep link just opens the browser.
+#
+# assetlinks.json would get application/json from its extension anyway; it is
+# written out regardless so the pair reads as one block.
+#
+# apple-app-site-association has NO extension, and must not have one — iOS asks
+# for exactly that path. Wrangler's MIME lookup therefore returns null and the
+# file is uploaded as "application/null", which is wrangler's signal to serve it
+# with no Content-Type header at all. This rule supplies one.
+#
+# Belt and braces: CLOUDFLARE_WORKER_SEO.js pins the same Content-Type in code,
+# because Cloudflare documents _headers as NOT applying when
+# assets.run_worker_first is set — which wrangler.jsonc does set.
+#
+# Short cache, unlike everything above: a fingerprint or Team ID change has to
+# reach Google's and Apple's fetchers quickly.
+/.well-known/assetlinks.json
+  Content-Type: application/json
+  Cache-Control: public, max-age=300
+
+/.well-known/apple-app-site-association
+  Content-Type: application/json
+  Cache-Control: public, max-age=300
+
 /arcade-touch/*
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate
