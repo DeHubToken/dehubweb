@@ -390,6 +390,45 @@ html {
   to { width: 100%; }
 }
 
+/* Signed-out home welcome panel (components/app/HomeIntro.tsx) sizes itself to
+   its OWN COLUMN, not the viewport. The panel renders inside the feed column,
+   which is several hundred pixels narrower than the window once the app's rails
+   are up — so a viewport `lg:` switched the 260px hero globe on and reserved
+   276px of right padding while the column was still ~430px wide, crushing the
+   headline into the strip beside the art. Every size below is container-driven
+   instead, so the panel reads the same in a narrow column as on a phone.
+
+   Defaults are the NARROWEST layout on purpose: a browser with no @container
+   support falls back to the small globe and the small headline, which is
+   merely modest — never the overlap. Do not move these back to `sm:`/`lg:`. */
+.dehub-intro { container-type: inline-size; container-name: dehubintro; }
+
+/* Phones and narrow columns: the globe bleeds half off the right edge and is
+   dimmed, so it reads as chrome behind the copy rather than a competing object.
+   It is no longer hidden — mobile used to get no art at all. */
+.dehub-intro-hero { top: 88px; right: -30px; width: 132px; height: 132px; opacity: 0.5; }
+.dehub-intro-stage { padding-right: 74px; }
+.dehub-intro-head { font-size: 26px; }
+.dehub-intro-wide { display: none; }
+.dehub-intro-clamp {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+}
+
+@container dehubintro (min-width: 520px) {
+  .dehub-intro-hero { top: 92px; right: 4px; width: 180px; height: 180px; opacity: 0.8; }
+  .dehub-intro-stage { padding-right: 192px; }
+  .dehub-intro-head { font-size: 34px; }
+  .dehub-intro-wide { display: inline-block; }
+}
+
+@container dehubintro (min-width: 760px) {
+  .dehub-intro-hero { top: 92px; right: 8px; width: 260px; height: 240px; opacity: 1; }
+  .dehub-intro-stage { padding-right: 276px; }
+  .dehub-intro-head { font-size: 50px; }
+  .dehub-intro-clamp { display: block; overflow: visible; -webkit-line-clamp: none; }
+  .dehub-intro-readmore { display: none; }
+}
+
 /* Medal shine animation for leaderboard */
 .medal-shine-container {
   position: relative;

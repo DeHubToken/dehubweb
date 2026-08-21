@@ -168,7 +168,7 @@ export function HomeIntro() {
       aria-labelledby="dehub-intro-heading"
       onMouseEnter={() => { paused.current = true; }}
       onMouseLeave={() => { paused.current = false; }}
-      className="relative mx-2 mb-3 overflow-hidden rounded-2xl border border-white/10 bg-black sm:mx-3 lg:mx-3"
+      className="dehub-intro relative mx-2 mb-3 overflow-hidden rounded-2xl border border-white/10 bg-black sm:mx-3 lg:mx-3"
     >
       {/* --- plate: silk texture, vignette, dot grid, marks, scrim, grain --- */}
       <div
@@ -193,12 +193,16 @@ export function HomeIntro() {
           </span>
         ))}
       </div>
-      {/* Hero art, right. Desktop only: the icon is decorative and mobile has no
-          room for it, so phones never pay for the download. Anchored to the
-          headline band rather than the panel's vertical centre — the banner
-          template is pure art, but this panel carries body copy underneath and
-          a centred hero sits straight on top of it. */}
-      <div aria-hidden="true" className="pointer-events-none absolute right-2 top-[92px] hidden h-[240px] w-[260px] lg:block">
+      {/* Hero art, right. Rendered at EVERY width — phones used to get no art
+          at all, which left the panel as a wall of text. On a narrow column it
+          shrinks, dims and bleeds off the right edge so it reads as chrome
+          behind the copy; sizing lives in .dehub-intro-hero (index.css), keyed
+          to the panel's own width, not the viewport's. 46KB, lazy — cheap
+          enough for a phone. Anchored to the headline band rather than the
+          panel's vertical centre — the banner template is pure art, but this
+          panel carries body copy underneath and a centred hero sits straight
+          on top of it. */}
+      <div aria-hidden="true" className="dehub-intro-hero pointer-events-none absolute">
         <div className="absolute inset-0" style={{ background: GLOW, borderRadius: '50%' }} />
         <img
           src="/brand-kit/icons/globe-480.webp"
@@ -212,8 +216,10 @@ export function HomeIntro() {
         />
       </div>
       {/* Scrim over the hero so the left column stays readable, plus a bottom
-          fade so the art never competes with the entity paragraph. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: SCRIM }} />
+          fade so the art never competes with the entity paragraph. Now at every
+          width, because the art is at every width — this is what stops the
+          headline fighting the globe in a squeezed column. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: SCRIM }} />
       {/* All breakpoints, not just desktop: the body copy sits over the
           brightest part of the silk plate and needs the falloff to stay legible. */}
       <div
@@ -241,7 +247,7 @@ export function HomeIntro() {
           </span>
           <div className="flex items-center gap-2">
             <span
-              className="hidden rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em] sm:inline-block"
+              className="dehub-intro-wide rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
               style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
             >
               <span style={{ color: 'rgba(255,255,255,.38)' }}>{'// type ='}</span> &ldquo;welcome&rdquo;
@@ -284,7 +290,7 @@ export function HomeIntro() {
         {/* Slide stage — all three stacked in one grid cell (no CLS on rotate).
             Right padding on desktop reserves the hero's column so the headline
             never runs underneath it (compose.mjs: hero must not collide). */}
-        <div className="grid lg:pr-[272px]">
+        <div className="dehub-intro-stage grid">
           {SLIDES.map((s, i) => (
             <div
               key={s.title}
@@ -295,7 +301,7 @@ export function HomeIntro() {
               )}
             >
               <p
-                className="font-exo text-[30px] font-bold uppercase leading-[0.92] tracking-[-0.015em] sm:text-[50px]"
+                className="dehub-intro-head font-exo font-bold uppercase leading-[0.92] tracking-[-0.015em]"
                 style={{ ...clipText(HEAD_FILL), filter: 'drop-shadow(0 2px 24px rgba(255,255,255,.09))' }}
               >
                 {s.title}
@@ -312,7 +318,7 @@ export function HomeIntro() {
                   <span style={{ color: 'rgba(255,255,255,.45)', WebkitTextFillColor: 'rgba(255,255,255,.45)' }}>//</span>
                   {s.sub}
                 </span>
-                <span className="hidden text-[12px] tracking-[0.04em] sm:inline" style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}>
+                <span className="dehub-intro-wide text-[12px] tracking-[0.04em]" style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}>
                   {s.extra}
                 </span>
                 <span className="text-sm font-light" style={{ color: 'rgba(255,255,255,.55)' }}>✕</span>
@@ -345,13 +351,13 @@ export function HomeIntro() {
               clamp rather than conditional rendering — every word stays in the
               DOM in both states, matching the worker's HTML. */}
           <div className="text-[13px] leading-relaxed text-zinc-300">
-            <p className={cn(expanded ? '' : 'line-clamp-3 sm:line-clamp-none')}>{ENTITY_COPY}</p>
+            <p className={cn(expanded ? '' : 'dehub-intro-clamp')}>{ENTITY_COPY}</p>
           </div>
           {!expanded && (
             <button
               type="button"
               onClick={() => setExpanded(true)}
-              className="mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-400 hover:text-white sm:hidden"
+              className="dehub-intro-readmore mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-400 hover:text-white"
               style={{ fontFamily: MONO }}
             >
               // read_more
