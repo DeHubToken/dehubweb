@@ -97,7 +97,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // scrollTop 0, which would retract the field mid-keystroke and restore the
   // full list — and then scrollTop is still 0, so it would sit there flickering.
   // Once the field has content or focus it stays regardless of scroll.
-  const showSearch = navScrolled || searchFocused || (navQuery !== '' && queryOwner === 'top');
+  const showSearch = (navScrolled && !navAtBottom) || searchFocused || (navQuery !== '' && queryOwner === 'top');
   // Mirror of the top field, revealed once the list bottoms out.
   const showBottomSearch = navAtBottom || bottomSearchFocused || (navQuery !== '' && queryOwner === 'bottom');
 
