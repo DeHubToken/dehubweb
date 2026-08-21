@@ -1,11 +1,12 @@
 import { useState, useRef, useCallback, memo, useMemo } from 'react';
-import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
+import { SquareUserRound, Trophy, MessagesSquare, Sparkles } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
+import { SidebarNewMembers } from './SidebarNewMembers';
 import { useAuth } from '@/contexts/AuthContext';
 
-type TabType = 'leaderboard' | 'follow' | 'chat';
+type TabType = 'leaderboard' | 'follow' | 'newMembers' | 'chat';
 
 // Persist tab state across remounts so layout changes don't reset it
 let persistedTab: TabType = 'leaderboard';
@@ -20,6 +21,11 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
   // (A duplicate useLiveChatRooms/Presence pair lived here too, feeding an unused
   // onlineCount — removed for the same reason.)
   const [chatOpened, setChatOpened] = useState(persistedTab === 'chat');
+  // Same reasoning as chat: the other panels are CSS-hidden rather than
+  // unmounted, so anything mounted here queries at boot whether or not it is on
+  // screen. The new-members roster is not worth a request the feed is waiting
+  // behind.
+  const [newMembersOpened, setNewMembersOpened] = useState(persistedTab === 'newMembers');
 
   const tabs = useMemo(() => {
     const base: { id: TabType; icon: typeof SquareUserRound }[] = [
@@ -28,6 +34,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
     if (isAuthenticated) {
       base.push({ id: 'follow', icon: SquareUserRound });
     }
+    base.push({ id: 'newMembers', icon: Sparkles });
     base.push({ id: 'chat', icon: MessagesSquare });
     return base;
   }, [isAuthenticated]);
@@ -39,6 +46,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
     persistedTab = id;
     setActiveTab(() => id);
     if (id === 'chat') setChatOpened(true);
+    if (id === 'newMembers') setNewMembersOpened(true);
   }, []);
 
   return (
@@ -84,6 +92,10 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
             <WhoToFollow />
           </div>
         )}
+        {/* New members panel — mounted lazily on first open, like chat. */}
+        <div className={`h-full flex flex-col overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'newMembers' ? '' : 'hidden'}`}>
+          {newMembersOpened && <SidebarNewMembers />}
+        </div>
         {/* Chat panel — pt-3 matches the buffer above WhatsHappening's period tabs.
             Mounted lazily on first open; stays mounted after so switching away keeps state. */}
         <div className={`h-full pt-3 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'chat' ? '' : 'hidden'}`}>
