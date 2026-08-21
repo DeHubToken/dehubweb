@@ -17,6 +17,15 @@ import {
   dismissRecordingToast,
 } from '@/lib/stage-recording-toast';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import {
+  openStageRadioTap,
+  closeStageRadioTap,
+  playStageRadioStream,
+  stopStageRadioStream,
+  setStageRadioBroadcastLevel,
+  setStageRadioMonitorLevel,
+} from '@/lib/stage-radio';
+import type { StageRadioStation, StageRadioStatus } from '@/lib/stage-radio';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { cloneHostVoiceFromStage, dubVoiceConsentGiven } from '@/lib/stage-dub-voice';
@@ -102,6 +111,18 @@ interface StageContextType {
   canScreenShare: boolean;
   startScreenShare: () => Promise<void>;
   stopScreenShare: () => Promise<void>;
+  /** The station this host is putting on air, or null when the radio is off. */
+  radioStation: StageRadioStation | null;
+  /** Connection state of that stream — 'live' once audio is actually flowing. */
+  radioStatus: StageRadioStatus;
+  /** Level the room hears the radio at, 0-100. */
+  radioVolume: number;
+  /** Whether the host hears the radio through their own speakers. */
+  radioMonitor: boolean;
+  startRadio: (station: StageRadioStation) => Promise<void>;
+  stopRadio: () => Promise<void>;
+  setRadioVolume: (volume: number) => void;
+  setRadioMonitor: (enabled: boolean) => void;
 }
 
 /** The one screen a room can be showing, whoever it belongs to. */
@@ -371,6 +392,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** Whoever's screen is currently on the wall — ours or a remote publisher's. */
   const [screenShare, setScreenShare] = useState<StageScreenShare | null>(null);
   const canScreenShare = useMemo(detectScreenShareSupport, []);
+  /** The station the host currently has on air. Host-local: listeners learn of
+   *  it over the broadcast channel below, not from this state. */
+  const [radioStation, setRadioStation] = useState<StageRadioStation | null>(null);
+  const [radioStatus, setRadioStatus] = useState<StageRadioStatus>('idle');
+  const [radioVolume, setRadioVolumeState] = useState(80);
+  const [radioMonitor, setRadioMonitorState] = useState(true);
   const voiceEffectsHook = useVoiceEffects();
   const voiceEffectsHookRef = useRef(voiceEffectsHook);
   voiceEffectsHookRef.current = voiceEffectsHook;
@@ -385,6 +412,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** The display capture we publish while sharing, and its optional system audio. */
   const screenVideoTrackRef = useRef<any>(null);
   const screenAudioTrackRef = useRef<any>(null);
+  /** The Agora track carrying the radio. One per broadcast session, not per station. */
+  const radioTrackRef = useRef<any>(null);
+  /** Read by the announce heartbeat, which must not restart on every station change. */
+  const radioStationRef = useRef<StageRadioStation | null>(null);
+  radioStationRef.current = radioStation;
+  /** Levels read at start time, so startRadio can stay a stable callback. */
+  const radioVolumeStateRef = useRef(radioVolume);
+  radioVolumeStateRef.current = radioVolume;
+  const radioMonitorRef = useRef(radioMonitor);
+  radioMonitorRef.current = radioMonitor;
+  /** Realtime channel the host announces the current station on. */
+  const radioChannelRef = useRef<any>(null);
   /**
    * Every remote speaker's audio track, kept so the room can be turned down.
    *
@@ -1298,10 +1337,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
     const localTrack = localAudioTrackRef.current;
     const screenVideo = screenVideoTrackRef.current;
     const screenAudio = screenAudioTrackRef.current;
+    const radioTrack = radioTrackRef.current;
     agoraClientRef.current = null;
     localAudioTrackRef.current = null;
     screenVideoTrackRef.current = null;
     screenAudioTrackRef.current = null;
+    radioTrackRef.current = null;
     mediaRecorderRef.current = null;
 
     // ── Optimistic UI reset — synchronous, so the mini-player/modal close
@@ -1314,6 +1355,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
     setHasRaisedHand(false);
     setVoiceEffectState('none');
     setScreenShare(null);
+    // Silence the radio synchronously with the rest of the UI reset. Leaving
+    // the channel would stop the room hearing it, but the host would still be
+    // listening to a station with no control left on screen to stop it.
+    setRadioStation(null);
+    setRadioStatus('idle');
+    stopStageRadioStream();
+    closeStageRadioTap();
 
     // ── Teardown in the background (recording upload, Agora leave, DB counts).
     //    Order matters: stop/upload the recording before closing the audio graph. ──
@@ -1327,7 +1375,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         }
         // Closing the display capture is what drops the browser's "you are
         // sharing" bar — leaving the channel alone would leave it up.
-        for (const track of [screenVideo, screenAudio]) {
+        for (const track of [screenVideo, screenAudio, radioTrack]) {
           if (track) { try { track.stop(); track.close(); } catch { /* noop */ } }
         }
         if (client) {
@@ -1585,6 +1633,120 @@ export function StageProvider({ children }: { children: ReactNode }) {
       toast.error('Failed to share screen');
     }
   }, [stopScreenShare]);
+
+  // ─── Radio ───────────────────────────────────────────────────────────────
+  //
+  // The host puts a station on air and the room hears it on a second published
+  // audio track, which the SDK mixes with the mic sender-side — so every
+  // listener still sees one `audioTrack` and nothing about their subscription
+  // changes. Same transport as screen audio, and for the same reason: routing
+  // it through the voice-effect graph instead would put the music behind the
+  // mute button and let a voice-effect switch kill it mid-song. See
+  // `lib/stage-radio.ts` for the audio graph and the constraints behind it.
+
+  const stopRadio = useCallback(async () => {
+    const track = radioTrackRef.current;
+    radioTrackRef.current = null;
+    setRadioStation(null);
+    setRadioStatus('idle');
+    stopStageRadioStream();
+    closeStageRadioTap();
+
+    const client = agoraClientRef.current;
+    if (track) {
+      if (client) {
+        try { await client.unpublish([track]); } catch { /* already gone */ }
+      }
+      try { track.close(); } catch { /* noop */ }
+    }
+  }, []);
+
+  const startRadio = useCallback(async (station: StageRadioStation) => {
+    if (!agoraClientRef.current) { toast.error('Not connected to a stage'); return; }
+    if (myRoleRef.current !== 'host') { toast.error('Only the host can put the radio on air'); return; }
+    if (!station.url) { toast.error('That station has no stream to play'); return; }
+
+    setRadioStation(station);
+    setRadioStatus('connecting');
+
+    try {
+      // Only the first station of a session publishes anything. Every station
+      // after it is an `src` swap on the same element behind the same tap, so
+      // the room hears a cut, not a reconnect.
+      if (!radioTrackRef.current) {
+        const mediaStreamTrack = openStageRadioTap();
+        const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+        const track = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack });
+        // Re-read the client: importing the SDK is awaited, and the host may
+        // have left the stage while it loaded.
+        const client = agoraClientRef.current;
+        if (!client) throw new Error('Left the stage before the radio started');
+        await client.publish([track]);
+        radioTrackRef.current = track;
+      }
+
+      setStageRadioBroadcastLevel(radioVolumeStateRef.current / 100);
+      setStageRadioMonitorLevel(radioMonitorRef.current ? 0.6 : 0);
+
+      await playStageRadioStream(station.url, (status, message) => {
+        setRadioStatus(status);
+        if (status === 'error') toast.error(`${station.name}: ${message || 'Stream unavailable'}`);
+      });
+    } catch (err) {
+      console.error('[Stage] Radio start failed', err);
+      toast.error('Could not put that station on air');
+      void stopRadio();
+    }
+  }, [stopRadio]);
+
+  const setRadioVolume = useCallback((volume: number) => {
+    const clamped = Math.max(0, Math.min(100, Math.round(volume)));
+    setRadioVolumeState(clamped);
+    setStageRadioBroadcastLevel(clamped / 100);
+  }, []);
+
+  const setRadioMonitor = useCallback((enabled: boolean) => {
+    setRadioMonitorState(enabled);
+    setStageRadioMonitorLevel(enabled ? 0.6 : 0);
+  }, []);
+
+  // Tell the room what is on. A broadcast reaches only whoever is subscribed at
+  // the moment it is sent, so the station is re-sent on a heartbeat as well as
+  // on change — otherwise anyone arriving mid-song would hear music with no
+  // idea what it is. Listeners drop the label after three missed beats, which
+  // is also what covers a host whose tab dies without stopping cleanly.
+  useEffect(() => {
+    const spaceId = currentSpace?.id;
+    if (!spaceId || myRole !== 'host') return;
+
+    const channel = supabase.channel(`stage-radio:${spaceId}`);
+    radioChannelRef.current = channel;
+
+    const announce = () => {
+      channel.send({
+        type: 'broadcast',
+        event: 'now-playing',
+        payload: { station: radioStationRef.current },
+      }).catch(() => {});
+    };
+
+    channel.subscribe((status) => { if (status === 'SUBSCRIBED') announce(); });
+    const heartbeat = setInterval(announce, 10_000);
+
+    return () => {
+      clearInterval(heartbeat);
+      radioChannelRef.current = null;
+      supabase.removeChannel(channel);
+    };
+  }, [currentSpace?.id, myRole]);
+
+  useEffect(() => {
+    radioChannelRef.current?.send({
+      type: 'broadcast',
+      event: 'now-playing',
+      payload: { station: radioStation },
+    }).catch(() => {});
+  }, [radioStation]);
 
   // ─── Raise / lower hand ──────────────────────────────────────────────────
 
@@ -2028,6 +2190,14 @@ export function StageProvider({ children }: { children: ReactNode }) {
       canScreenShare,
       startScreenShare,
       stopScreenShare,
+      radioStation,
+      radioStatus,
+      radioVolume,
+      radioMonitor,
+      startRadio,
+      stopRadio,
+      setRadioVolume,
+      setRadioMonitor,
     }),
     [
       liveSpaces, scheduledSpaces, currentSpace, participants, handRequests, isLoading,
@@ -2038,6 +2208,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
       toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
       stopInject, setRoomVolume, screenShare, canScreenShare, startScreenShare, stopScreenShare,
+      radioStation, radioStatus, radioVolume, radioMonitor,
+      startRadio, stopRadio, setRadioVolume, setRadioMonitor,
     ],
   );
 

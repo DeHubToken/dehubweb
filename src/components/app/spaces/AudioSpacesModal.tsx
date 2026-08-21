@@ -33,6 +33,8 @@ import { useStage, useStageVolumeLevel } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
+import { StageRadioPanel } from './StageRadioPanel';
+import { StageRadioNowPlaying } from './StageRadioNowPlaying';
 import { StageTTS } from './StageTTS';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { ScheduleStagePanel } from '@/components/app/stages/ScheduleStagePanel';
@@ -796,6 +798,15 @@ export function AudioSpacesModal() {
                   isVisible={true}
                   onClose={() => {}}
                 />
+              )}
+
+              {/* Radio. The host gets the deck; everyone else gets the label
+                  for the music that is already arriving on the host's track,
+                  which otherwise plays with nothing on screen to name it. */}
+              {myRole === 'host' ? (
+                <StageRadioPanel />
+              ) : (
+                <StageRadioNowPlaying spaceId={currentSpace.id} />
               )}
 
               {/* Text-to-Speech — hosts and speakers */}
