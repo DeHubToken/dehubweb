@@ -10,13 +10,13 @@
  * 3. Show translated toast immediately (no English flash)
  * 4. Falls back to original English if key not found in locale file
  *
- * Step 4 has to check `i18n.exists` rather than lean on `defaultValue`. The
- * instance sets `parseMissingKeyHandler: humanizeTranslationKey`, which wins
- * over defaultValue and rebuilds a sentence out of the KEY — and the key was
- * built by stripping every character outside [a-z0-9\s]. So an untranslated
- * toast came back with its punctuation deleted: "Reminder set — you'll be
- * notified when it starts" was shown as "Reminder set youll be notified when
- * it starts".
+ * Step 4 checks `i18n.exists` rather than leaning on `defaultValue`. The
+ * instance sets `parseMissingKeyHandler: humanizeTranslationKey`; that handler
+ * now returns the caller's default when there is one, but a toast key is built
+ * by stripping every character outside [a-z0-9\s], so an explicit check keeps
+ * the original punctuation guaranteed rather than dependent on the handler:
+ * "Reminder set — you'll be notified when it starts" must not come back as
+ * "Reminder set youll be notified when it starts".
  */
 
 import { toast } from 'sonner';
