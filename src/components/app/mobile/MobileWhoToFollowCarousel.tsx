@@ -1,3 +1,19 @@
+/**
+ * Follow Suggestions Carousel
+ * ===========================
+ * The feed's "who to follow" row — accounts you do not follow yet, one tap to
+ * follow, the suggestion disappearing the moment you do.
+ *
+ * Named "Mobile" and carrying `lg:hidden` from the day it was written, on the
+ * reasoning that desktop had the right rail's follow tab. Both are gone now:
+ * the rail's panel opens on Leaderboard and gained a fourth tab, so on a
+ * desktop feed there was nothing suggesting anybody to follow at all, and the
+ * feed's multi-column path — which is what a wide window gets — never carried
+ * this row either. It runs at every width now, in both feed paths.
+ *
+ * @module components/app/mobile/MobileWhoToFollowCarousel
+ */
+
 import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
@@ -142,7 +158,7 @@ export function MobileWhoToFollowCarousel() {
 
   if (isLoading) {
     return (
-      <div className="lg:hidden py-4">
+      <div className="py-4">
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
         </div>
@@ -152,7 +168,7 @@ export function MobileWhoToFollowCarousel() {
 
   if (filteredSuggestions.length === 0) {
     return (
-      <div className="lg:hidden py-4 border-y border-zinc-800/50">
+      <div className="py-4 border-y border-zinc-800/50">
         <div className="flex flex-col items-center justify-center gap-3 py-6">
           <UserPlus className="w-5 h-5 text-zinc-500" />
           <span className="text-sm text-zinc-500">No follow suggestions yet</span>
@@ -176,7 +192,7 @@ export function MobileWhoToFollowCarousel() {
   }
 
   return (
-    <div className="lg:hidden py-4 border-y border-zinc-800/50">
+    <div className="py-4 border-y border-zinc-800/50">
       {/* Header */}
       <div className="flex items-center justify-between px-4 mb-3">
         <div className="flex items-center gap-2">
