@@ -24,6 +24,7 @@ import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 
 const BRIDGE_ADDRESS = '0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d';
 
@@ -174,6 +175,7 @@ export default function BridgePage() {
         });
         setAmount('');
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
+        invalidateSelfBadgeBalance(queryClient);
       } else {
         toast.error('Bridge failed', { description: `Transaction reverted on ${sourceChainLabel}. Your tokens were not transferred.` });
       }
@@ -188,6 +190,7 @@ export default function BridgePage() {
 
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
+    invalidateSelfBadgeBalance(queryClient);
   };
 
   return (

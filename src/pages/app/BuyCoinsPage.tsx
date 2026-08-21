@@ -30,6 +30,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { SEOHead } from '@/components/SEOHead';
 import { format } from 'date-fns';
+import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 
 const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
 
@@ -140,6 +141,9 @@ export default function BuyCoinsPage() {
   // Invalidate wallet balances helper
   const refreshWalletBalances = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
+    // Buying is the usual way someone crosses a badge threshold — draw the
+    // new tier now rather than on the next poll.
+    invalidateSelfBadgeBalance(queryClient);
   }, [queryClient]);
 
   // Poll for session status after Stripe checkout
