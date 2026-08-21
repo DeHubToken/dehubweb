@@ -14,11 +14,16 @@
  * The account lookup also returns the canonical username, which matters: the
  * override table in lib/staking-badges is keyed by username, so a surface that
  * only knows a wallet address still resolves an overridden badge.
+ *
+ * Both paths are only as fresh as `badgeBalance` on the API's account row — a
+ * denormalised sum refreshed out of band. For the signed-in user we do not
+ * have to wait for it: see use-self-badge-balance.
  */
 
 import { useQuery } from '@tanstack/react-query';
 import { getAccountInfo } from '@/lib/api/dehub/users';
 import { getBadgeName, getBadgeUrl, isBigBadge, isBigBadgeUrl } from '@/lib/staking-badges';
+import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 
 export interface ResolvedBadge {
   badgeBalance?: number;
@@ -48,12 +53,15 @@ export function useBadgeBalance(
       };
     },
     enabled: !!key && !hasProvided,
-    // Staking tiers move on the scale of days; an unknown user 404s, and
-    // retrying that on every card is pure noise.
-    staleTime: 30 * 60 * 1000,
+    // A tier can move the moment someone buys, and a badge that shows up half
+    // an hour late reads as broken. One request per unique name per minute,
+    // shared across every card drawing that name — and only for the handful
+    // of surfaces whose payload carries no balance at all.
+    staleTime: 60 * 1000,
     gcTime: 60 * 60 * 1000,
+    // An unknown user 404s; retrying that on every card is pure noise.
     retry: false,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   if (hasProvided) {
@@ -86,17 +94,28 @@ export interface BadgeVisual {
  * badge exists *before* rendering — to reserve the gutter the icon is absolutely
  * positioned into — share this hook with BadgeIcon rather than recomputing
  * `getBadgeUrl` themselves, which is what kept the two out of step.
+ *
+ * When the name being drawn is the signed-in user's own, the live on-chain
+ * balance is allowed to win — but only upward, so this can promote a badge the
+ * instant the tokens land and can never take one away.
  */
 export function useBadgeVisual({ badgeBalance, lookupId, username, src }: BadgeVisualInput): BadgeVisual {
   const numeric = typeof badgeBalance === 'string' ? parseFloat(badgeBalance) : badgeBalance;
   const looked = useBadgeBalance(src ? null : lookupId, numeric);
+  const self = useSelfBadge();
 
   if (src) {
     return { url: src, name: null, big: isBigBadgeUrl(src) };
   }
 
-  const balance = numeric ?? looked.badgeBalance;
   const nameKey = username ?? looked.username ?? lookupId;
+  // Any of the three can be the one that names me: a feed card passes a
+  // handle, a stage row passes a wallet address, a lookup resolves the
+  // canonical username after the fact.
+  const isSelf = self.isSelf(lookupId) || self.isSelf(username) || self.isSelf(looked.username);
+  const balance = isSelf
+    ? preferLiveBalance(numeric ?? looked.badgeBalance, self.balance)
+    : numeric ?? looked.badgeBalance;
 
   return {
     url: getBadgeUrl(balance, nameKey),
