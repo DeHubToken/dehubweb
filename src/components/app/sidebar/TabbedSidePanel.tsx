@@ -28,14 +28,14 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
   const [newMembersOpened, setNewMembersOpened] = useState(persistedTab === 'newMembers');
 
   const tabs = useMemo(() => {
-    const base: { id: TabType; icon: typeof SquareUserRound }[] = [
-      { id: 'leaderboard', icon: Trophy },
+    const base: { id: TabType; icon: typeof SquareUserRound; label: string }[] = [
+      { id: 'leaderboard', icon: Trophy, label: 'Balance' },
     ];
     if (isAuthenticated) {
-      base.push({ id: 'follow', icon: SquareUserRound });
+      base.push({ id: 'follow', icon: SquareUserRound, label: 'Growing' });
     }
-    base.push({ id: 'newMembers', icon: Star });
-    base.push({ id: 'chat', icon: MessagesSquare });
+    base.push({ id: 'newMembers', icon: Star, label: 'New' });
+    base.push({ id: 'chat', icon: MessagesSquare, label: 'Chat' });
     return base;
   }, [isAuthenticated]);
 
@@ -62,7 +62,8 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
             data-tab-active={effectiveTab === tab.id}
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
-              className={`relative flex-1 py-2.5 flex flex-col items-center justify-center transition-colors ${
+            aria-label={tab.label}
+              className={`group relative flex-1 py-2.5 flex flex-col items-center justify-center transition-colors ${
                 effectiveTab === tab.id
                   ? 'text-white'
                   : 'text-zinc-500 hover:text-zinc-300 [&:hover>.tab-hover-bg]:opacity-100'
@@ -74,7 +75,14 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
                 <div className="tab-hover-bg absolute inset-0 bg-gradient-to-b from-zinc-800/40 to-transparent opacity-0 transition-opacity" />
               )}
               <Icon className="w-4 h-4 relative z-10" />
-              
+              {/* Hover label — drops below the icon row, so the panel's
+                  overflow-hidden never clips it. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-1/2 top-full z-30 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md bg-zinc-800 px-2 py-1 text-[11px] font-medium leading-none text-zinc-100 opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100"
+              >
+                {tab.label}
+              </span>
             </button>
           );
         })}
