@@ -249,7 +249,7 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
               </span>{' '}
               of dubbed audio. That comes to{' '}
               <span className="font-medium text-foreground tabular-nums">{dubbing.bill?.owedDhb} DHB</span>,
-              taken from your credit — no wallet approval needed.
+              sent from your wallet in one transfer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
