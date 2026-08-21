@@ -1,0 +1,1 @@
+update public.feature_requests set status = 'shipped', updated_at = now() where id = '4e2b6fbe-1b9b-4f1a-96aa-820671b024c3';
