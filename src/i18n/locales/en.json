@@ -1624,7 +1624,9 @@
       "all": "All time"
     },
     "unavailable": {
-      "title": "Stats are not available right now"
+      "title": "Stats are not available right now",
+      "unconfigured": "The analytics endpoint has not been given its Cloudflare API token yet. Nothing is shown rather than a made-up number.",
+      "error": "We could not reach Cloudflare’s analytics API. Rather than show a stale or invented figure, this page shows nothing until the live read succeeds."
     },
     "tile": {
       "visitorsToday": "Visitors today",
@@ -1678,18 +1680,29 @@
       "copied": "Copied",
       "copy": "Copy",
       "openEndpoint": "Open /api/stats",
-      "openRaw": "Cloudflare’s untouched reply"
+      "openRaw": "Cloudflare’s untouched reply",
+      "edge": "Every request to dehub.io passes through Cloudflare before it reaches our servers. These counts are Cloudflare’s own aggregation of that traffic — the same figures our dashboard shows. They are not collected by a script in your browser, so nothing on this page can inflate them, and blocking trackers does not change them.",
+      "live": "The page reads them live. Loading /stats calls our endpoint, which queries Cloudflare’s Analytics API at that moment and caches the answer for 60 seconds.",
+      "limits": "What this shows, and what it does not: you can see that the figures come from Cloudflare’s aggregation rather than from our application code, and that the query published here is the one that runs. It is not trustless — we hold the API token, and Cloudflare offers no public read of a zone’s analytics. Anyone with their own Cloudflare zone can run the identical query against it and confirm the shape."
     },
     "definitions": {
       "title": "What the numbers mean",
       "visitorsTerm": "Visitors",
+      "visitors": "— unique IP addresses Cloudflare saw that day. Close to people, but not identical: an office on one connection counts once, and a phone moving between wifi and mobile data counts twice.",
       "pageViewsTerm": "Page views",
+      "pageViews": "— requests Cloudflare classifies as page loads, rather than images, scripts or API calls.",
       "botsTerm": "Bots are included",
+      "bots": "— these are raw edge counts, so crawlers, uptime monitors and scripted clients are in them. You can see them yourself in the browser breakdown above, where entries like “Curl” and “Unknown” are automated traffic rather than people. Filtering bots out needs a paid Cloudflare tier we do not run, and quietly subtracting an estimate would make the numbers less checkable, not more.",
       "totalTerm": "Range totals",
+      "total": "— page views and requests add up across the range. Visitor counts deliberately are not summed into a headline \"total visitors\", because someone here on Monday and Tuesday would be counted twice.",
       "peakTerm": "Busiest hour / day",
+      "peak": "— the highest unique count in any single bucket of the range, for the same reason: it is a figure Cloudflare actually measures, rather than one built by adding counts that overlap.",
       "resolutionTerm": "Hourly stops at 3 days",
+      "resolution": "— that is Cloudflare’s limit on this plan, not a choice: it refuses any hourly query wider than three days. The 24-hour and 3-day views are hourly; 7 days and longer are daily, and there is no way to draw an hourly all-time chart.",
       "breakdownTerm": "Countries and browsers",
-      "startTerm": "History"
+      "breakdown": "— these follow the range you pick, but only back {{max}} days, which is as far as the per-day breakdown is kept. On longer ranges the chart covers more time than the country list does.",
+      "startTerm": "History",
+      "start": "— \"all time\" means every day Cloudflare still retains, which today is {{days}} days starting {{date}}, the day dehub.io moved onto Cloudflare. There is no earlier edge data to show, and older days drop off as Cloudflare ages them out."
     }
   }
 }
