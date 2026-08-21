@@ -10,6 +10,7 @@ import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // of the entry bundle.
 import { UsernameRequiredModal } from "@/components/app/modals/UsernameRequiredModal";
 import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
+import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
@@ -343,6 +344,7 @@ function AppContent() {
 
   return (
     <>
+      <SelfBadgeSync />
       <UsernameRequiredModal />
       <GiveawayPrizeModal />
       {loginModalMounted && (

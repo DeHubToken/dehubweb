@@ -9,6 +9,7 @@ import { parseVisibility } from '@/hooks/use-privacy-settings';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useUserPins } from '@/hooks/use-pins';
@@ -27,6 +28,7 @@ export function useProfilePage() {
   const navigate = useNavigate();
   const userId = searchParams.get('id');
   const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const selfBadge = useSelfBadge();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [translatedBio, setTranslatedBio] = useState<string | null>(null);
@@ -169,8 +171,13 @@ export function useProfilePage() {
   const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
   const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
 
-  // Badge — use API-provided value instead of edge function
-  const badgeBalance = apiProfile?.badgeBalance;
+  // Badge — the API's stored balance, except on your own profile, where the
+  // live on-chain reading is allowed to promote you straight away rather than
+  // waiting for the backend to catch up. It can only ever raise the tier.
+  const badgeBalance = selfBadge.isSelf(apiProfile?.handle || routeUsername) ||
+    selfBadge.isSelf(apiProfile?.walletAddress)
+      ? preferLiveBalance(apiProfile?.badgeBalance, selfBadge.balance)
+      : apiProfile?.badgeBalance;
   const badgeUrl = getBadgeUrl(badgeBalance, apiProfile?.handle || routeUsername);
 
   // Content separation
