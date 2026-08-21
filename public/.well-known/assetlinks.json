@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.dehub.mobile",
+      "sha256_cert_fingerprints": [
+        "79:73:A1:8F:05:50:4F:DF:46:07:64:AC:77:6A:4C:61:A6:C7:32:98:36:4E:1F:55:E9:D0:7C:CA:24:7B:35:64"
+      ]
+    }
+  }
+]
