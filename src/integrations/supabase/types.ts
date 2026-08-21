@@ -3196,6 +3196,53 @@ export type Database = {
           },
         ]
       }
+      stage_dub_usage: {
+        Row: {
+          created_at: string
+          id: string
+          language: string
+          minutes: number
+          price_dhb_per_min: number
+          settled_at: string | null
+          settled_ref: string | null
+          space_id: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language: string
+          minutes?: number
+          price_dhb_per_min: number
+          settled_at?: string | null
+          settled_ref?: string | null
+          space_id: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language?: string
+          minutes?: number
+          price_dhb_per_min?: number
+          settled_at?: string | null
+          settled_ref?: string | null
+          space_id?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_dub_usage_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "audio_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stage_reminders: {
         Row: {
           created_at: string
@@ -5174,6 +5221,25 @@ export type Database = {
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
         Returns: number
+      }
+      stage_dub_tick: {
+        Args: {
+          p_language: string
+          p_price_per_min: number
+          p_space_id: string
+          p_start?: boolean
+          p_wallet: string
+        }
+        Returns: number
+      }
+      stage_dub_unsettled: {
+        Args: { p_wallet: string }
+        Returns: {
+          minutes: number
+          owed_dhb: number
+          price_dhb_per_min: number
+          space_id: string
+        }[]
       }
       touch_post_translation: {
         Args: { p_target_lang: string; p_text_hash: string }
