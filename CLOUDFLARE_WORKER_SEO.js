@@ -2132,16 +2132,26 @@ async function handleRequest(request, env) {
   ]);
   if (APP_LINK_FILES.has(pathname)) {
     const asset = await env.ASSETS.fetch(new Request(new URL('/.well-known/' + pathname.split('/').pop(), url), request));
-    const assetType = (asset.headers.get('Content-Type') || '').toLowerCase();
-    // text/html means the SPA fallback answered, i.e. the file is not in the
-    // build. 404 loudly rather than hand a verifier an HTML page again.
-    if (!asset.ok || assetType.startsWith('text/html')) {
+    // Parse the BODY. Checking the Content-Type header cannot work here: the
+    // public/_headers rule below pins application/json on these exact paths,
+    // and Workers Assets applies it to the SPA fallback response too — so a
+    // missing file came back as the 22 KB index.html labelled application/json,
+    // sailing past a text/html check. Measured on prod, not reasoned about.
+    //
+    // These files are a few hundred bytes, so buffering them is free, and
+    // parsing catches the whole failure class rather than one symptom of it:
+    // the SPA shell, a half-written file, a stray BOM, an editor's smart
+    // quotes. A file a verifier cannot parse is a file that is not there.
+    const body = asset.ok ? await asset.text() : null;
+    let valid = false;
+    if (body) { try { JSON.parse(body); valid = true; } catch { valid = false; } }
+    if (!valid) {
       return new Response('Not Found', {
         status: 404,
         headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' },
       });
     }
-    const out = new Response(asset.body, asset);
+    const out = new Response(body, { status: 200 });
     out.headers.set('Content-Type', 'application/json');
     // Short, unlike the year-long caches above: a certificate fingerprint or
     // Team ID change has to reach Google's and Apple's fetchers quickly, and
