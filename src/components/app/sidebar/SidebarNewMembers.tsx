@@ -1,9 +1,10 @@
 /**
  * Sidebar — New Members
  * =====================
- * The fourth right-rail tab. Chrome only; the list, the wave and the
- * remembered-wave state all live in `NewMembersList`, which the Explore bento
- * shares so the two surfaces cannot drift.
+ * The fourth right-rail tab. Chrome only, and deliberately none of it: the
+ * follow-suggestions tab beside it has no header either, and the whole point of
+ * this panel is that it is that panel ordered by arrival instead of by
+ * recommendation.
  *
  * @module components/app/sidebar/SidebarNewMembers
  */
@@ -11,16 +12,5 @@
 import { NewMembersList } from '@/components/app/NewMembersList';
 
 export function SidebarNewMembers() {
-  return (
-    <div className="flex flex-col h-full">
-      <div className="px-4 pt-3 pb-1">
-        <h3 className="text-white font-semibold text-sm">New members</h3>
-        <p className="text-zinc-500 text-xs">Just joined — say hello</p>
-      </div>
-      <NewMembersList
-        limit={30}
-        listClassName="flex-1 overflow-y-auto overflow-x-hidden pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
-      />
-    </div>
-  );
+  return <NewMembersList />;
 }

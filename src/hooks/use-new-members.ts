@@ -1,14 +1,21 @@
 /**
  * New Members
  * ===========
- * Who joined DeHub recently, so the people already here can say hello.
+ * The member roster, newest joiner first — the same shape as "who to follow"
+ * next to it, ordered by when people arrived instead of by who is suggested.
  *
- * The roster lives in Supabase (`public.new_members`) rather than being asked
- * of the DeHub API, because the API cannot answer it: `/api/users_search`
- * ignores `page`, `limit` and every sort parameter, and hands back the same ten
- * oldest accounts every time. The `register-new-member` edge function is the
- * only writer — see the migration for why `joined_at` is never taken from a
- * client.
+ * It lives in Supabase (`public.new_members`) rather than being asked of the
+ * DeHub API, because the API cannot answer it: `/api/users_search` ignores
+ * `page`, `limit` and every sort parameter, and hands back the same ten oldest
+ * accounts every time. The `register-new-member` edge function is the only
+ * writer — see the migration for why `joined_at` is never taken from a client.
+ *
+ * There is deliberately no "joined in the last 30 days" filter on the list.
+ * That filter is what made every surface read "Nobody new this month — yet":
+ * the roster only knows the people it has been told about, so a window on top
+ * of that is a window on a window. The 30-day figure still decides what is
+ * called NEW — the profile chip, and the title a surface gives itself — but the
+ * list itself simply runs newest to oldest until it runs out.
  *
  * Opting out is enforced by RLS, not here: an opted-out row is not selectable
  * by anyone but its owner, so every read below is already filtered.
@@ -16,9 +23,9 @@
  * @module hooks/use-new-members
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -31,20 +38,14 @@ export const NEW_MEMBER_WINDOW_DAYS = 30;
 
 const WINDOW_MS = NEW_MEMBER_WINDOW_DAYS * 24 * 60 * 60 * 1000;
 
+/** Rows per page of the roster. Small enough that the first screen is quick. */
+const PAGE_SIZE = 15;
+
 /** Once per tab: registering twice in a session tells us nothing new. */
 const REGISTERED_KEY = 'dehub_new_member_registered';
 
-/** Once ever, per device: "you are visible as new, here is the off switch". */
+/** Once ever, per device: "you are visible on the roster, here is the off switch". */
 const NOTICE_KEY = 'dehub_new_member_notice_seen';
-
-/** Addresses this device has already put to the seeder — see useSeedNewMembers. */
-const SEEDED_KEY = 'dehub_new_member_seeded';
-
-/** Addresses sent per seed call. Mirrors SEED_LIMIT in the edge function. */
-const SEED_BATCH = 25;
-
-/** Remembered addresses kept before the oldest are dropped. */
-const SEEDED_CAP = 500;
 
 /**
  * How long to wait before telling someone they are on the roster.
@@ -62,7 +63,7 @@ export interface NewMember {
   username: string | null;
   displayName: string;
   avatarUrl?: string;
-  /** Denormalised at registration so a rail row draws its badge with no lookup. */
+  /** Denormalised at registration so a row draws its badge with no lookup. */
   badgeBalance: number;
   joinedAt: string;
 }
@@ -99,35 +100,42 @@ export function joinedAgoLabel(joinedAt: string): string {
   return days === 1 ? 'yesterday' : `${days}d ago`;
 }
 
+/** Did this person join recently enough to count as new, rather than just latest? */
+export function isWithinNewWindow(joinedAt: string): boolean {
+  return Date.now() - new Date(joinedAt).getTime() < WINDOW_MS;
+}
+
 /**
- * The roster, newest first.
+ * The roster, newest first, a page at a time.
  *
- * `excludeAddress` keeps you off your own welcome list — seeing yourself in
- * "say hello to these people" is the kind of small wrongness that makes a
- * feature look unfinished.
+ * `excludeAddress` keeps you off your own list — seeing yourself among the
+ * people you are being invited to follow is the kind of small wrongness that
+ * makes a feature look unfinished.
  */
-export function useNewMembers(limit = 30, excludeAddress?: string | null) {
+export function useNewMembers(excludeAddress?: string | null) {
   const exclude = excludeAddress?.toLowerCase() ?? null;
 
-  return useQuery({
-    // `exclude` belongs in the key rather than in a `select`: an inline select
-    // is re-run on every render and hands back a fresh array each time, which
-    // is a new `data` identity for anything downstream to react to.
-    queryKey: ['new-members', limit, exclude],
-    queryFn: async (): Promise<NewMember[]> => {
+  return useInfiniteQuery({
+    queryKey: ['new-members', exclude],
+    queryFn: async ({ pageParam = 0 }) => {
+      const from = (pageParam as number) * PAGE_SIZE;
       const { data, error } = await supabase
         .from('new_members')
         .select('wallet_address, username, display_name, avatar_url, badge_balance, joined_at')
-        .gte('joined_at', cutoffIso())
         .order('joined_at', { ascending: false })
-        .limit(limit + 1);
+        .range(from, from + PAGE_SIZE - 1);
 
       if (error) throw error;
-      return (data || [])
-        .map(toNewMember)
-        .filter((member) => member.address.toLowerCase() !== exclude)
-        .slice(0, limit);
+      const rows = data || [];
+      return {
+        // Filtered after the page is cut, not before: dropping yourself must
+        // not shift the window and skip somebody on the next page.
+        items: rows.map(toNewMember).filter((m) => m.address.toLowerCase() !== exclude),
+        hasMore: rows.length === PAGE_SIZE,
+      };
     },
+    getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length : undefined),
+    initialPageParam: 0,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
@@ -135,6 +143,9 @@ export function useNewMembers(limit = 30, excludeAddress?: string | null) {
 
 /**
  * Is this one person new? Used by the profile chip.
+ *
+ * Keeps the 30-day cutoff the list has dropped: being on the roster means we
+ * know when you joined, which is not the same as having just joined.
  *
  * Returns false for an opted-out member without needing to know that they
  * opted out — RLS simply does not return the row.
@@ -168,8 +179,8 @@ export function useIsNewMember(address?: string | null) {
  *
  * Read with the wallet header on purpose: the SELECT policy hides opted-out
  * rows from everyone except their owner, so without the header this query
- * would report "not a new member" the moment you switched the setting off, and
- * the toggle would spring back on.
+ * would report "not listed" the moment you switched the setting off, and the
+ * toggle would spring back on.
  */
 export function useNewMemberSelf() {
   const { walletAddress } = useAuth();
@@ -211,12 +222,14 @@ export function useNewMemberSelf() {
     },
   });
 
+  // Having a row is what makes the switch worth showing, not being inside the
+  // 30-day window: the roster lists the latest members whether or not they are
+  // still "new", so somebody listed at 40 days must still be able to leave.
   const joinedAt = query.data?.joined_at ?? null;
-  const withinWindow = !!joinedAt && Date.now() - new Date(joinedAt).getTime() < WINDOW_MS;
 
   return {
-    /** True only while the setting still does something — see SettingsPage. */
-    isNewMember: withinWindow,
+    /** True whenever the setting still does something — see SettingsPage. */
+    isNewMember: !!joinedAt,
     joinedAt,
     optedOut: query.data?.opted_out ?? false,
     isLoading: query.isLoading,
@@ -232,6 +245,11 @@ export function useNewMemberSelf() {
  * cosmetic side effect, and a failure in it must never be able to interrupt a
  * login. Everything it needs is derived server-side from the DeHub token, so
  * there is nothing to pass and nothing to get wrong.
+ *
+ * The same call is what fills the rest of the roster in — the function follows
+ * the caller's own follower and following lists and the latest feed, and adds
+ * whoever it finds. There is nothing to do here for that; it is deliberately
+ * not the client's business which accounts get looked up.
  */
 export function useRegisterNewMember() {
   const { isAuthenticated, walletAddress } = useAuth();
@@ -260,17 +278,27 @@ export function useRegisterNewMember() {
         if (error) throw error;
 
         sessionStorage.setItem(REGISTERED_KEY, walletAddress.toLowerCase());
-        if (!(data as { isNew?: boolean })?.isNew) return;
 
-        queryClient.invalidateQueries({ queryKey: ['new-members'] });
-        queryClient.invalidateQueries({ queryKey: ['new-member-self', walletAddress.toLowerCase()] });
+        const result = data as { isListed?: boolean; isNew?: boolean; added?: number };
+        // Anything the call added is somebody the roster did not have a moment
+        // ago, so the list on screen is stale whether or not it added *you*.
+        if (result?.isListed || result?.added) {
+          queryClient.invalidateQueries({ queryKey: ['new-members'] });
+          queryClient.invalidateQueries({ queryKey: ['new-member-self', walletAddress.toLowerCase()] });
+        }
 
+        // `isListed`, not `isNew`: the roster carries members whether or not
+        // they are still inside the 30-day window, so the notice has to follow
+        // being *on the list* — otherwise somebody listed at 40 days is never
+        // told they are on it and never sees the way off.
+        if (!result?.isListed) return;
         if (localStorage.getItem(NOTICE_KEY)) return;
+
         noticeTimer = setTimeout(() => {
           if (cancelled) return;
           localStorage.setItem(NOTICE_KEY, 'true');
-          toast('You are showing as a new member', {
-            description: 'Other members can see you just joined, so they can say hello. Turn it off any time.',
+          toast('You are showing in New members', {
+            description: 'Other members can see when you joined, so they can say hello. Turn it off any time.',
             duration: 10_000,
             action: {
               label: 'Settings',
@@ -279,8 +307,8 @@ export function useRegisterNewMember() {
           });
         }, NOTICE_DELAY_MS);
       } catch (err) {
-        // Never surfaced: a welcome rail missing one name is not worth an error
-        // on top of someone's first login.
+        // Never surfaced: a roster missing one name is not worth an error on
+        // top of someone's first login.
         console.warn('[NewMembers] register failed:', err);
       }
     })();
@@ -290,94 +318,4 @@ export function useRegisterNewMember() {
       if (noticeTimer) clearTimeout(noticeTimer);
     };
   }, [isAuthenticated, walletAddress, queryClient, navigate]);
-}
-
-function readSeeded(): Set<string> {
-  try {
-    const raw = localStorage.getItem(SEEDED_KEY);
-    return new Set<string>(raw ? JSON.parse(raw) : []);
-  } catch {
-    return new Set<string>();
-  }
-}
-
-function rememberSeeded(addresses: string[], current: Set<string>) {
-  const next = [...current, ...addresses];
-  try {
-    localStorage.setItem(SEEDED_KEY, JSON.stringify(next.slice(-SEEDED_CAP)));
-  } catch {
-    // Private-mode storage failure only costs a repeated check.
-  }
-}
-
-/**
- * Point the seeder at accounts the app is already showing.
- *
- * Sign-in registration alone builds the roster far too slowly — it only ever
- * learns about people who came back after the feature shipped, so a month of
- * real joiners stays invisible behind "Nobody new this month — yet". The
- * addresses the feed is already rendering are the one list of recently-active
- * accounts a client can see, so they are worth asking about.
- *
- * Nothing here is trusted: the edge function re-reads every candidate from
- * api.dehub.io and roster it only if that record says they joined inside the
- * window. This hook's job is purely to keep the asking cheap — addresses
- * already submitted from this device are never sent twice, and only one batch
- * goes per mount.
- */
-export function useSeedNewMembers(addresses: string[] | undefined) {
-  const { isAuthenticated, walletAddress } = useAuth();
-  const queryClient = useQueryClient();
-  const sentRef = useRef(false);
-
-  useEffect(() => {
-    if (sentRef.current) return;
-    if (!isAuthenticated || !walletAddress) return;
-    if (!addresses || addresses.length === 0) return;
-
-    const token = getAuthToken();
-    if (!token) return;
-
-    const seeded = readSeeded();
-    const self = walletAddress.toLowerCase();
-    const candidates: string[] = [];
-    for (const address of addresses) {
-      const lower = address?.toLowerCase();
-      if (!lower || lower === self || seeded.has(lower)) continue;
-      if (!/^0x[a-f0-9]{40}$/.test(lower)) continue;
-      if (candidates.includes(lower)) continue;
-      candidates.push(lower);
-      if (candidates.length >= SEED_BATCH) break;
-    }
-    if (candidates.length === 0) return;
-
-    sentRef.current = true;
-    // Remembered before the call, not after: a failed batch is not worth
-    // retrying on every feed page, and the next mount has fresh addresses.
-    rememberSeeded(candidates, seeded);
-
-    let cancelled = false;
-    (async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke('register-new-member', {
-          body: { candidates },
-          headers: {
-            'x-wallet-address': self,
-            'x-dehub-token': token,
-          },
-        });
-        if (cancelled || error) return;
-        if ((data as { added?: number })?.added) {
-          queryClient.invalidateQueries({ queryKey: ['new-members'] });
-        }
-      } catch (err) {
-        // Silent by design — this is a background top-up of a welcome rail.
-        console.warn('[NewMembers] seed failed:', err);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [addresses, isAuthenticated, walletAddress, queryClient]);
 }
