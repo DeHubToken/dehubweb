@@ -11,12 +11,13 @@
  *
  * Running a new round is now: write a new QUESTIONS array, bump SURVEY_VERSION.
  * Nothing else. The version scopes the "have they already answered?" check and
- * the localStorage key, so everyone who did round 1 is asked round 2 exactly
- * once, and round 1's rows stay untouched under `survey_version = 1`.
+ * the localStorage key, so everyone who did a previous round is asked the new
+ * one exactly once, and earlier rounds' rows stay untouched under their own
+ * `survey_version`.
  *
  * Query a round with:
- *   select answers->>'login_experience' q, count(*)
- *   from user_feedback_surveys where survey_version = 2 group by 1 order by 2 desc;
+ *   select answers->>'join_reason' q, count(*)
+ *   from user_feedback_surveys where survey_version = 3 group by 1 order by 2 desc;
  */
 
 import { useState, useEffect } from 'react';
@@ -29,51 +30,50 @@ import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 
 /** Bump to run a new round. Round 1 = the original five questions. */
-const SURVEY_VERSION = 2;
+const SURVEY_VERSION = 3;
 
-/** Per-round, so a completed round 1 does not suppress round 2. */
+/** Per-round, so a completed earlier round does not suppress this one. */
 const SURVEY_DISMISSED_KEY = `dehub_survey_completed_v${SURVEY_VERSION}`;
 
 interface SurveyQuestion {
   key: string;
   question: string;
-  options: string[];
+  /** 'select' renders the button list; 'text' renders a free-text textarea. */
+  type: 'select' | 'text';
+  options?: string[];
+  placeholder?: string;
 }
 
 /**
- * Round 2 — the sign-in rebuild is live, so this round is mostly about whether
- * it actually feels better from the outside, and where the next effort goes.
+ * Round 3 — testimonial-gathering. The first two are free text so answers
+ * read as real quotes rather than picked options; the consent question is
+ * genuinely no-pressure, so "no" is a first-class, equally-styled answer, not
+ * a dead end — declining it still lets join_reason/favourite_thing submit.
  */
 const QUESTIONS: SurveyQuestion[] = [
   {
-    key: 'login_experience',
-    question: 'How was signing in this time?',
-    options: ['Instant, no friction', 'Fine, took a moment', 'Took a few tries', 'Struggled to get in'],
+    key: 'join_reason',
+    question: 'What made you join DeHub?',
+    type: 'text',
+    placeholder: 'In your own words…',
   },
   {
-    key: 'login_method',
-    question: 'How do you usually sign in?',
-    options: ['Email', 'Google', 'Apple', 'Phone number', 'Wallet'],
+    key: 'favourite_thing',
+    question: 'What do you like most about DeHub?',
+    type: 'text',
+    placeholder: 'In your own words…',
   },
   {
-    key: 'primary_device',
-    question: 'Where do you use DeHub most?',
-    options: ['Android app', 'iPhone / iPad', 'Desktop browser', 'Mobile browser'],
+    key: 'consent_share',
+    question: "Are you ok if we shared your name and answers above in promotional materials, tweets, etc? No pressure if not.",
+    type: 'select',
+    options: ['Yes, go ahead', 'No, keep it private'],
   },
   {
-    key: 'favourite_feature',
-    question: 'What keeps you coming back?',
-    options: ['The feed', 'Stages', 'Communities & chat', 'Arcade & games', 'Tipping & earning', 'Stores & shopping'],
-  },
-  {
-    key: 'most_wanted',
-    question: 'What should we build next?',
-    options: ['Better discovery', 'More rewards', 'A faster app', 'More creators', 'Bigger arcade', 'Live shopping'],
-  },
-  {
-    key: 'would_recommend',
-    question: 'Would you recommend DeHub to a friend?',
-    options: ['Definitely', 'Probably', 'Not yet'],
+    key: 'video_interview_interest',
+    question: 'Would you be open to a short video interview about why you joined / love DeHub, for us to share in promo videos?',
+    type: 'select',
+    options: ["Yes, I'm interested", 'No, not for me'],
   },
 ];
 
@@ -129,10 +129,10 @@ export function UserFeedbackSurvey() {
 
   const currentQuestion = QUESTIONS[step];
   const isLastStep = step === QUESTIONS.length - 1;
-  const hasAnswer = !!answers[currentQuestion?.key];
+  const hasAnswer = !!answers[currentQuestion?.key]?.trim();
 
-  const handleSelect = (option: string) => {
-    setAnswers(prev => ({ ...prev, [currentQuestion.key]: option }));
+  const handleAnswer = (value: string) => {
+    setAnswers(prev => ({ ...prev, [currentQuestion.key]: value }));
   };
 
   const handleNext = async () => {
@@ -238,25 +238,36 @@ export function UserFeedbackSurvey() {
                 <p className="text-white font-medium text-base mb-4">
                   {currentQuestion.question}
                 </p>
-                <div className="flex flex-col gap-2">
-                  {currentQuestion.options.map(option => {
-                    const isSelected = answers[currentQuestion.key] === option;
-                    return (
-                      <button
-                        key={option}
-                        onClick={() => handleSelect(option)}
-                        className={cn(
-                          "w-full text-left px-4 py-3 rounded-xl border transition-all text-sm font-medium",
-                          isSelected
-                            ? "bg-white text-black border-white"
-                            : "bg-zinc-800/50 text-zinc-300 border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600"
-                        )}
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
+                {currentQuestion.type === 'text' ? (
+                  <textarea
+                    value={answers[currentQuestion.key] ?? ''}
+                    onChange={e => handleAnswer(e.target.value)}
+                    placeholder={currentQuestion.placeholder}
+                    rows={4}
+                    autoFocus
+                    className="w-full resize-none px-4 py-3 rounded-xl border bg-zinc-800/50 text-white text-sm border-zinc-700/50 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
+                  />
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {currentQuestion.options!.map(option => {
+                      const isSelected = answers[currentQuestion.key] === option;
+                      return (
+                        <button
+                          key={option}
+                          onClick={() => handleAnswer(option)}
+                          className={cn(
+                            "w-full text-left px-4 py-3 rounded-xl border transition-all text-sm font-medium",
+                            isSelected
+                              ? "bg-white text-black border-white"
+                              : "bg-zinc-800/50 text-zinc-300 border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600"
+                          )}
+                        >
+                          {option}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
