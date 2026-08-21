@@ -34,11 +34,13 @@ export interface DubEntitlement {
 }
 
 /**
- * Buy the next block this long before the current one lapses. Long enough to
- * cover a round trip and a slow wallet lookup, short enough that a listener
- * who stops in the next few seconds has not paid for much they did not hear.
+ * How often a minute is counted, and a fresh entitlement token issued.
+ *
+ * Counting happens on the server; this is only the heartbeat that asks it to.
+ * A listener who stops between ticks is not charged for the partial minute —
+ * rounding in their favour costs pennies and removes an argument.
  */
-export const DUB_RENEW_LEAD_MS = 5000;
+export const DUB_TICK_MS = 60_000;
 
 /**
  * How far behind the room the dub may fall before we stop and refund.
