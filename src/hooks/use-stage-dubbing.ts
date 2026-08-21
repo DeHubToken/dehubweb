@@ -12,6 +12,13 @@
  *
  * The generating half lives in `use-stage-captions.ts`, hanging off the same
  * finalised-line trigger as translation.
+ *
+ * `stage-dub-payment` is imported dynamically, never at the top. This hook is
+ * reached statically from AppLayout (→ AudioSpacesModal → StageCaptions), so a
+ * top-level import pulls aa-utils, wagmi and RainbowKit into the ENTRY chunk and
+ * `scripts/check-entry-bundle.mjs` fails the build — which is what happened
+ * between #378 and #389, taking every deploy with it. Same reason
+ * `use-tip-payment` and `use-ppv-payment` reach for aa-utils behind an await.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -31,7 +38,6 @@ import {
   useDubLanguage,
   type StageDubAudio,
 } from '@/lib/stage-dub';
-import { payForDubbing, readDhbBalance } from '@/lib/stage-dub-payment';
 import { stageCaptionChannel } from '@/lib/stage-captions';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -176,6 +182,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
         // The real enforcement is that a tab cannot be closed without a
         // transfer landing on chain — this is here so nobody discovers they
         // are short only after listening for twenty minutes.
+        const { readDhbBalance } = await import('@/lib/stage-dub-payment');
         const held = await readDhbBalance();
         if (quote && held < quote.minimumDhb) {
           toast.error('Not enough DHB for dubbing.', {
@@ -233,6 +240,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
     try {
       // One signature, for the minutes actually heard, in the DHB the listener
       // already holds. The chain confirms it; we do not take their word.
+      const { payForDubbing } = await import('@/lib/stage-dub-payment');
       const payment = await payForDubbing(bill.owedDhb, bill.treasury);
 
       const { data, error } = await callDub<{ ok: boolean; minutes: number; paidDhb: number }>(
