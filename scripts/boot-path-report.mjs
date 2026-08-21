@@ -18,6 +18,16 @@
  * It reads source, not `dist`, so it needs no build and cannot wedge a deploy.
  * Run it in CI, not in the Workers build.
  *
+ * What this number is: source bytes statically reachable from the entry. It is a
+ * proxy for the entry chunk, not a measurement of it. Rollup can still split a
+ * statically-imported module out on its own — PostModal was reached statically
+ * from StoriesBar all through August and still built as its own async chunk,
+ * because AppLayout also imports it dynamically. So a rise here means "something
+ * joined the graph, go look", and check-entry-bundle.mjs stays the authority on
+ * what actually ships in the entry chunk. Over the fortnight that prompted this
+ * the two tracked each other closely: 3,565 -> 4,368 KB of source against
+ * 1,551 -> 1,825 KB of built entry.
+ *
  *   node scripts/boot-path-report.mjs            # check against the baseline
  *   node scripts/boot-path-report.mjs --update   # accept the current graph
  *
