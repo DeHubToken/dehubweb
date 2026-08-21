@@ -6,12 +6,13 @@
  * Removed Reown AppKit to stabilize the connection experience.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { Mail, Phone, Wallet, Loader2, ChevronRight } from 'lucide-react';
 import { WalletCreateStep } from '@/components/app/wallet-setup/WalletCreateStep';
 import { WalletUnlockStep } from '@/components/app/wallet-setup/WalletUnlockStep';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,7 +56,25 @@ interface LoginModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type LoginStep = 'main' | 'email' | 'email-waiting' | 'phone' | 'phone-code' | 'wallets' | 'wallet-create' | 'wallet-unlock';
+type LoginStep = 'main' | 'email' | 'email-waiting' | 'phone' | 'phone-code' | 'wallets' | 'wallet-create' | 'wallet-unlock' | 'resuming';
+
+/**
+ * Which step a login already in progress belongs on, or null when nothing is in
+ * progress and the caller should keep whatever step it is on.
+ *
+ * 'resuming' covers the gap between "the identity landed" and "we know which
+ * wallet step it needs" — a wallet lookup plus a session exchange, i.e. two
+ * network round-trips. Nothing about signing in belongs on screen during it.
+ */
+function resumingStep(
+  phase: 'none' | 'create' | 'unlock',
+  isResolving: boolean,
+): LoginStep | null {
+  if (phase === 'create') return 'wallet-create';
+  if (phase === 'unlock') return 'wallet-unlock';
+  if (isResolving) return 'resuming';
+  return null;
+}
 
 /**
  * RainbowKit context, scoped to the login flow.
@@ -88,11 +107,19 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
-    walletPhase, supabaseUserId, disconnect,
+    walletPhase, supabaseUserId, disconnect, isProcessingRedirect,
   } = useAuth();
   const { isConnected: isWagmiAlreadyConnected, address: wagmiCurrentAddress } = useAccount();
   const { t } = useTranslation();
-  const [step, setStep] = useState<LoginStep>('main');
+  // Opening step. A login that is ALREADY in flight must never land on 'main':
+  // this component mounts lazily, and the redirect-return and mid-session
+  // unlock paths mount it with the phase already decided, so a plain 'main'
+  // default painted the whole "Continue with Google / email / phone" sheet
+  // before the mirror below could swap it — the flash that reads as "it failed,
+  // sign in again" at the exact moment the user is waiting to be let in.
+  const [step, setStep] = useState<LoginStep>(
+    () => resumingStep(walletPhase, isProcessingRedirect) ?? 'main',
+  );
   const [email, setEmail] = useState('');
   const [emailCode, setEmailCode] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -110,12 +137,26 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   }, []);
 
   // Route to the wallet create/unlock step once the Supabase identity exists
-  // (after email OTP verification or an OAuth redirect return).
-  useEffect(() => {
+  // (after email OTP verification or an OAuth redirect return), and hold the
+  // preloader over the wait in between.
+  //
+  // useLayoutEffect, not useEffect: a passive effect runs AFTER the browser has
+  // painted, so on an already-mounted modal being reopened straight onto the
+  // unlock step the sign-in options got a frame on screen first. This runs
+  // before paint, so that frame never exists.
+  useLayoutEffect(() => {
     if (!open) return;
-    if (walletPhase === 'create') setStep('wallet-create');
-    else if (walletPhase === 'unlock') setStep('wallet-unlock');
-  }, [open, walletPhase]);
+    const next = resumingStep(walletPhase, isProcessingRedirect);
+    if (next) {
+      setStep(next);
+      return;
+    }
+    // The resume ended without producing a wallet step — it either failed or
+    // the session was already complete. Never strand the sheet on the loader.
+    // Any other step is left alone (React bails out on an unchanged value), so
+    // this can't yank someone out of the email or phone flow.
+    setStep((s) => (s === 'resuming' ? 'main' : s));
+  }, [open, walletPhase, isProcessingRedirect]);
 
   const handleClose = () => {
     setStep('main');
@@ -648,7 +689,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const headerContent = (
     <>
       <div className="flex items-center justify-center relative">
-        {step !== 'main' && !step.startsWith('wallet-') && (
+        {step !== 'main' && step !== 'resuming' && !step.startsWith('wallet-') && (
           <button
             onClick={() => setStep('main')}
             className="absolute left-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
@@ -672,6 +713,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // account only usable by them — is also the more accurate description.
     : step === 'wallet-create' ? t('loginModal.secureAccount', 'Secure account')
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
+    : step === 'resuming' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
 
   const bodyContent = (
@@ -688,6 +730,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         )}
         {step === 'wallet-unlock' && supabaseUserId && (
           <WalletUnlockStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} onLogout={handleWalletLogout} />
+        )}
+        {/* The site preloader carries every gap in the wallet handoff: the
+            resume itself, and a wallet step reached a beat before the identity
+            id lands (which used to render an empty sheet). Same mark as the
+            route loader, so the login flow doesn't invent its own idiom. */}
+        {(step === 'resuming' || (step.startsWith('wallet-') && !supabaseUserId)) && (
+          <DeHubPageLoader size={56} minHeight="180px" />
         )}
       </div>
       <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">

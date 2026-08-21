@@ -3718,6 +3718,17 @@ html.light [data-dehub-loader] {
   filter: invert(1);
 }
 
+/* …except inside the login sheet, which is bg-black/60 with white text on
+   EVERY theme. The invert above keys off the page theme, so on `light` it
+   turned the mark black on a black drawer — invisible exactly where the
+   handoff to the wallet step needs something to look at. Spelled out at full
+   specificity rather than relying on source order: the rule it has to beat is
+   (0,2,1). */
+html[data-theme="light"] [data-login-modal] [data-dehub-loader],
+html.light [data-login-modal] [data-dehub-loader] {
+  filter: none;
+}
+
 .dehub-loader-mark {
   animation: dehub-loader-in 200ms ease-out 250ms both;
 }

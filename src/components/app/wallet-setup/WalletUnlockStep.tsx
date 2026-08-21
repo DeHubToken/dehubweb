@@ -42,6 +42,7 @@ import {
   type PasskeyWrap,
 } from '@/lib/wallet-core/biometric-unlock';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 interface WalletUnlockStepProps {
   userId: string;
@@ -440,13 +441,20 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     );
   }
 
+  // The site preloader, not an inline spinner: this is the first thing on
+  // screen after the login sheet hands over, and changing loader idiom
+  // mid-handoff is half of what made the sequence read as a stall.
   if (probing) {
     return (
-      <div className="space-y-4">
-        <p className="text-white/50 text-sm flex items-center gap-2">
-          <Loader2 className="w-4 h-4 animate-spin shrink-0" /> Checking how to unlock your wallet…
-        </p>
-      </div>
+      <DeHubPageLoader
+        size={56}
+        minHeight="180px"
+        label="Checking how to unlock your wallet…"
+        // The loader's default caption colour is tuned for page surfaces; this
+        // sheet is always dark. A colour alpha, not an opacity utility — the
+        // mark's fade-in animates `opacity` and would win over that.
+        className="[&_span]:text-white/50"
+      />
     );
   }
 
