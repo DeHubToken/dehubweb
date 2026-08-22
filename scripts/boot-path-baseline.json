@@ -1,6 +1,6 @@
 {
-  "modules": 411,
-  "sourceBytes": 3698416,
+  "modules": 413,
+  "sourceBytes": 3711644,
   "files": [
     "src/App.tsx",
     "src/components/ErrorBoundary.tsx",
@@ -18,6 +18,7 @@
     "src/components/app/GlobalFeedNav.tsx",
     "src/components/app/HomeIntro.tsx",
     "src/components/app/LeaderboardUserAvatar.tsx",
+    "src/components/app/LoginModal.tsx",
     "src/components/app/MinimizedAIChats.tsx",
     "src/components/app/MobileBottomNav.tsx",
     "src/components/app/NativeTitleTooltips.tsx",
@@ -112,6 +113,7 @@
     "src/components/app/feeds/useScrollFadeMask.ts",
     "src/components/app/live/StreamCheckoutDrawer.tsx",
     "src/components/app/live/StreamShop.tsx",
+    "src/components/app/login/steps.ts",
     "src/components/app/mentions/UserMentionDropdown.tsx",
     "src/components/app/mentions/index.ts",
     "src/components/app/mobile/MobileWhoToFollowCarousel.tsx",
