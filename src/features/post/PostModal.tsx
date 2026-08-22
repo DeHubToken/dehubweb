@@ -7,6 +7,7 @@ import type { PollData } from './types';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
+import { PostQuotaNotice } from './components/PostQuotaNotice';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
@@ -115,7 +116,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onSaveDraft={actions.saveDraft}
         onLoadDraft={actions.loadDraft}
         onDeleteDraft={actions.deleteDraft}
-        canSaveDraft={computed.canPost}
+        canSaveDraft={computed.hasContent}
         isRecording={state.isRecording}
         recordingTime={state.recordingTime}
         onStopRecording={actions.stopRecording}
@@ -170,6 +171,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         mintFeeLabel={computed.mintFeeLabel}
         mintRequired={computed.mintRequired}
       />
+
+      <PostQuotaNotice quota={computed.dailyQuota} />
 
       <PostActionBar
         imageInputRef={refs.imageInputRef}
