@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { mintPost } from '@/lib/api/dehub/content';
+import { useDailyPostQuota } from '@/hooks/use-daily-post-quota';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
 // they are dynamically imported at go-live time to keep the wallet stack out
@@ -50,6 +51,7 @@ const MAX_CATEGORIES = 5;
 
 export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const { walletAddress } = useAuth();
+  const dailyQuota = useDailyPostQuota();
   const [step, setStep] = useState<Step>('setup');
   const [source, setSource] = useState<StreamSource>('camera');
   const [title, setTitle] = useState('');
@@ -224,6 +226,13 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       return;
     }
 
+    // A live post lands on the main feed like any other, so it spends one of
+    // today's allowance. Same rule as the composer (see lib/post-quota.ts).
+    if (dailyQuota.exhausted) {
+      toast.error(`No posts left today — your next one lands in ${dailyQuota.resetsIn}.`);
+      return;
+    }
+
     setIsLoading(true);
     logger.info('User initiated "Go Live"', { title, selectedCategoriesArray });
 
@@ -268,6 +277,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
       const tokenId = mintResponse.createdTokenId;
       logger.info('NFT Minted via API', { tokenId });
+      // One of today's posts is now spent.
+      dailyQuota.invalidate();
       if (wasDismissed()) return;
 
       // Step 3: Execute on-chain minting transaction

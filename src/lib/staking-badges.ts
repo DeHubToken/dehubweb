@@ -29,6 +29,12 @@ const BADGE_LEVELS: BadgeDef[] = [
   { name: "Meglodon", min: 50000000 },
 ];
 
+/**
+ * Tier names, lowest first. The single source of order for anything that scales
+ * an allowance by tier (see `lib/post-quota.ts`).
+ */
+export const BADGE_ORDER: string[] = BADGE_LEVELS.map((b) => b.name);
+
 /** Minimum DHB to qualify for any badge */
 const MIN_BADGE_THRESHOLD = 10000;
 
