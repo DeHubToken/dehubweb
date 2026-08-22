@@ -642,7 +642,33 @@ export function StageProvider({ children }: { children: ReactNode }) {
           const chunks = recordingChunksRef.current;
           if (chunks.length === 0) { dismissRecordingToast(); resolve(); return; }
 
-          const blob = new Blob(chunks, { type: 'audio/webm' });
+          // MediaRecorder muxes for streaming, not for filing: no Duration in
+          // Info and no Cues index. Browsers hide that by bisecting clusters,
+          // which is why web's scrub bar works — ExoPlayer does not, so on
+          // Android the recording lands with duration 0 and a dead scrubber.
+          // This is the last moment the file is still ours, so finalise it
+          // here; the container, the mime and the path are all unchanged, so
+          // the transcriber and both players see exactly what they saw before,
+          // only seekable. Loaded on demand — it runs once per stage, for
+          // hosts only, and has no business in the main bundle.
+          let blob = new Blob(chunks, { type: 'audio/webm' });
+          try {
+            const { makeWebmSeekable } = await import('@/lib/webm-seekable');
+            const finalised = await makeWebmSeekable(blob);
+            if (finalised.changed) {
+              blob = finalised.blob;
+              console.log(
+                `[Stage] Recording finalised: ${finalised.durationMs}ms, ${finalised.cuePoints} cue points`,
+              );
+            } else {
+              console.warn('[Stage] Recording uploaded as recorded:', finalised.reason);
+            }
+          } catch (err) {
+            // An unseekable recording beats no recording. Nothing this pass
+            // can go wrong with is worth failing the only upload over.
+            console.warn('[Stage] Recording finalise skipped:', err);
+          }
+
           const path = `${spaceId}/recording.webm`;
 
           // One retry, and a visible failure. This upload is the only copy of
