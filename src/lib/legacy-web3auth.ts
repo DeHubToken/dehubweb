@@ -17,7 +17,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { isMobileDevice } from "@/lib/web3auth";
 
-export type LegacyProvider = "google" | "twitter" | "discord" | "apple" | "email_passwordless";
+export type LegacyProvider = "google" | "twitter" | "discord" | "apple" | "email_passwordless" | "sms_passwordless";
 
 // sessionStorage flag: a migration login is in flight (needed to resume after
 // the mobile redirect round-trip).

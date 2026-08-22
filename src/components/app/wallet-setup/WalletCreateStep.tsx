@@ -68,7 +68,11 @@ function matchLegacyAccount(
   const byAddress = accounts.find((a) => a.ethAddress?.toLowerCase() === derivedAddress.toLowerCase());
   if (byAddress) return byAddress;
   if (provider) {
-    const wanted = provider === 'email_passwordless' ? ['email', 'email_passwordless'] : [provider];
+    const wanted = provider === 'email_passwordless'
+      ? ['email', 'email_passwordless']
+      : provider === 'sms_passwordless'
+        ? ['sms', 'sms_passwordless', 'phone']
+        : [provider];
     const byProvider = accounts.filter((a) => a.signupMethod && wanted.includes(a.signupMethod));
     if (byProvider.length === 1) return byProvider[0];
     // Ambiguous (several old accounts on the same provider) — don't guess.
@@ -179,7 +183,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       .finally(() => setMigrateBusy(null));
   }, []);
 
-  const handleLegacyLogin = async (provider: 'google' | 'twitter' | 'discord' | 'apple' | 'email_passwordless') => {
+  const handleLegacyLogin = async (provider: 'google' | 'twitter' | 'discord' | 'apple' | 'email_passwordless' | 'sms_passwordless') => {
     setError(null);
     if (provider === 'email_passwordless' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(migrateEmail)) {
       setError('Enter the email you used on your old account');
@@ -323,29 +327,36 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const oldLoginMethods = new Set(foundAccounts.map((a) => a.signupMethod).filter((m): m is string => !!m));
   const hasMultipleOldAccounts = foundAccounts.length > 1;
   const hasOldEmailLogin = oldLoginMethods.has('email') || oldLoginMethods.has('email_passwordless');
+  // SMS-era Web3Auth accounts have no email on the old key at all — the number
+  // IS the verifier id. They were unreachable until this button existed, since
+  // every other provider reconstructs a different key.
+  const hasOldSmsLogin = oldLoginMethods.has('sms') || oldLoginMethods.has('sms_passwordless') || oldLoginMethods.has('phone');
 
   const migrateProviderButton = (
-    provider: 'google' | 'twitter' | 'discord' | 'apple',
+    provider: 'google' | 'twitter' | 'discord' | 'apple' | 'sms_passwordless',
     label: string,
-  ) => (
+  ) => {
+    const isOldLogin = provider === 'sms_passwordless' ? hasOldSmsLogin : oldLoginMethods.has(provider);
+    return (
     <Button
       key={provider}
       variant="outline"
       disabled={!!migrateBusy}
       onClick={() => handleLegacyLogin(provider)}
       className={`w-full h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 ${
-        oldLoginMethods.has(provider) ? 'ring-1 ring-green-400/50 bg-white/15' : ''
+        isOldLogin ? 'ring-1 ring-green-400/50 bg-white/15' : ''
       }`}
     >
       {migrateBusy === provider ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
       {label}
-      {oldLoginMethods.has(provider) && (
+      {isOldLogin && (
         <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
           Your old login
         </span>
       )}
     </Button>
-  );
+    );
+  };
 
   // deriveFromSecret throws on a key it cannot parse, and legacy Web3Auth keys
   // are not always well-formed (leading zeros stripped to 63 hex chars, or not
@@ -406,6 +417,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const OLD_LOGIN_LABELS: Record<string, string> = {
     google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
     email: 'Email', email_passwordless: 'Email',
+    sms: 'Phone (SMS)', sms_passwordless: 'Phone (SMS)', phone: 'Phone (SMS)',
   };
 
   return (
@@ -513,6 +525,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
               {migrateProviderButton('apple', 'Old account: Apple')}
               {migrateProviderButton('twitter', 'Old account: X (Twitter)')}
               {migrateProviderButton('discord', 'Old account: Discord')}
+              {migrateProviderButton('sms_passwordless', 'Old account: Phone (SMS)')}
               <div className="space-y-1.5">
                 <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
                   Old account: Email
