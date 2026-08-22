@@ -188,21 +188,26 @@ function preloadWalletChunkPlugin() {
         // fetch on the first sign-in and saves every visitor 266 KB of boot
         // bandwidth.
         //
-        // Matched by content rather than by name: the chunk carries RainbowKit’s own
-        // build hash (en_US-Y4ZOVFV4) which moves on every upgrade. A chunk built
-        // purely from RainbowKit modules and this large is the modal UI — the wallet
-        // connectors are an order of magnitude smaller and keep their prefetch.
+        // Matched on the emitted filename, which is the one part of this observable
+        // from outside the build: RainbowKit names its locale chunks after the
+        // locale, and only the trailing hash moves on an upgrade
+        // (en_US-Y4ZOVFV4-<vite hash>). Nothing in src builds to a chunk named for
+        // a locale, so the pattern is ours alone.
+        //
+        // #413 matched on chunk.modules instead — every module in the chunk having
+        // come from RainbowKit — and skipped nothing at all on the real build, which
+        // is only visible in a Cloudflare build log nobody here can read. A rule
+        // that can be checked against the deployed HTML is worth more than a
+        // tidier one that cannot.
+        const LOCALE_CHUNK = /^assets\/[a-z]{2}_[A-Za-z0-9]{2,4}-/;
         const RAINBOWKIT_UI_MIN_BYTES = 100 * 1024;
         const isRainbowKitUiChunk = (fileName: string) => {
+          if (!LOCALE_CHUNK.test(fileName)) return false;
           const chunk = bundle[fileName];
           if (!chunk || chunk.type !== 'chunk') return false;
-          const ids = Object.keys(chunk.modules ?? {});
-          if (ids.length === 0) return false;
-          // Both spellings: pnpm’s store writes @rainbow-me+rainbowkit@x.y.z.
-          const allRainbowKit = ids.every((id: string) =>
-            /@rainbow-me[/+]rainbowkit/.test(id.replace(/\\/g, '/')),
-          );
-          return allRainbowKit && (chunk.code?.length ?? 0) >= RAINBOWKIT_UI_MIN_BYTES;
+          // Size floor so a genuinely small locale chunk keeps its prefetch — it is
+          // the merged modal UI that makes this one 266 KB, not the strings.
+          return (chunk.code?.length ?? 0) >= RAINBOWKIT_UI_MIN_BYTES;
         };
 
         const skipped = [...seen].filter(isRainbowKitUiChunk);
