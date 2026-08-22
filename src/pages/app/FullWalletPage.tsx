@@ -30,7 +30,7 @@ import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import { SEOHead } from '@/components/SEOHead';
-import { AiCreditCard } from '@/components/app/wallet/AiCreditCard';
+
 import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
@@ -303,7 +303,7 @@ export default function FullWalletPage() {
         )}
       </div>
 
-      <AiCreditCard />
+
 
       {/* Action buttons — horizontally scrollable */}
       <div className="flex gap-2 mb-4 pb-1">
