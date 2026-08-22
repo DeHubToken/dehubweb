@@ -1078,6 +1078,8 @@
     "smsInfo": "We'll send you a verification code via SMS",
     "or": "or",
     "termsNotice": "By continuing, you agree to our Terms and Privacy Policy",
+    "walletConnectedAs": "Connected",
+    "useDifferentWallet": "Use a different wallet",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
     "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
   },

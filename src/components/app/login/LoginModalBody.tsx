@@ -7,7 +7,7 @@
  * arrives behind it. See the note at the top of LoginModal.tsx.
  */
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { Mail, Phone, Wallet, Loader2 } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -16,6 +16,8 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
+import { clearWagmiStorage } from '@/lib/wagmi';
+import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import type { LoginStep } from './steps';
 import type { WalletId } from './LoginWalletsStep';
 
@@ -64,7 +66,12 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
     supabaseUserId, disconnect,
   } = useAuth();
-  const { isConnected: isWagmiAlreadyConnected, address: wagmiCurrentAddress } = useAccount();
+  const {
+    isConnected: isWagmiAlreadyConnected,
+    address: wagmiCurrentAddress,
+    connector: wagmiCurrentConnector,
+  } = useAccount();
+  const { disconnectAsync: wagmiDisconnectAsync } = useDisconnect();
   const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
@@ -193,14 +200,42 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
     }
   };
 
+  // A live connection is worth reusing only when it belongs to the wallet that
+  // was tapped. In a wallet's own in-app browser there is exactly one provider
+  // and every button reaches it through the generic injected connector, so that
+  // counts as a match too.
+  const liveConnectionIsWallet = (wallet: WalletId) =>
+    isWagmiAlreadyConnected &&
+    !!wagmiCurrentAddress &&
+    (connectorMatchesWallet(wagmiCurrentConnector, wallet) ||
+      (isWalletInAppBrowser() && wagmiCurrentConnector?.id === 'injected'));
+
+  // Drop the wallet currently attached without touching the DeHub session —
+  // `disconnect()` from the auth context is a full sign-out, which is not what
+  // someone standing at the login sheet is asking for. wagmi's disconnect also
+  // revokes the site's permission where the wallet supports it, so the next
+  // connect offers the account picker rather than silently reusing the account
+  // that was already approved.
+  const handleUseDifferentWallet = async () => {
+    setWagmiAuthIntent(false);
+    setActiveProvider(null);
+    clearWagmiStorage();
+    try {
+      await wagmiDisconnectAsync();
+    } catch { /* already gone */ }
+  };
+
   const handleWalletConnect = (wallet: WalletId, _connect: () => void) => {
     setActiveProvider(wallet);
     setWagmiAuthIntent(true);
 
-    // If wagmi is already connected (kept alive from a previous session with an expired token),
-    // don't call connect() again — the wagmiAuthIntentState change causes handleWagmiConnect
-    // to re-fire and pick up the existing connection to complete DeHub auth.
-    if (isWagmiAlreadyConnected && wagmiCurrentAddress) {
+    // A connection kept alive from a previous session (expired token, still
+    // connected) only needs the signature — the wagmiAuthIntentState change
+    // re-fires handleWagmiConnect, which picks the connection up and completes
+    // DeHub auth. This used to fire for a connection to ANY wallet, so tapping
+    // a second wallet re-signed with the first one: the popup the user had just
+    // cancelled came straight back, from the wallet they were trying to leave.
+    if (liveConnectionIsWallet(wallet)) {
       return;
     }
 
@@ -512,6 +547,9 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
           <LoginWalletsStep
             isConnecting={isConnecting}
             activeProvider={activeProvider}
+            connectedAddress={isWagmiAlreadyConnected ? wagmiCurrentAddress ?? null : null}
+            connectedWalletName={wagmiCurrentConnector?.name ?? null}
+            onUseDifferentWallet={handleUseDifferentWallet}
             onWalletConnect={handleWalletConnect}
             onWalletConnectConnect={handleWalletConnectConnect}
           />
