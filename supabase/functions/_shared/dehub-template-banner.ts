@@ -276,26 +276,34 @@ const n1 = (v: number) => Number(v.toFixed(1));
  * Canvas metrics. `s` scales every fixed measurement off the kit's 1920×1080
  * reference by geometric mean, so one set of numbers serves all three formats.
  *
- * The gutters are the part most often got wrong: ONE left gutter shared by the
- * pill, headline and sub row, and ONE bottom line whose CENTRE (not bottom —
- * their heights differ) is shared by the pill, //dehub.io and the QR.
+ * PAD is the part most often got wrong: ONE inset, all four sides, that every
+ * badge is pinned to by its own outer edge — the type tag as far from the top as
+ * from the right, the QR as far from the bottom as from the right. It is also
+ * the left gutter for the pill, headline and sub row.
+ *
+ * It has to be an absolute (s-scaled) value. The previous cut used %-of-width on
+ * the sides and %-of-height top and bottom, so the corners resolved to left 100 /
+ * right 81 / top 39 / bottom 70 on 16:9 and left 81 / right 45 / top 99 /
+ * bottom 158 on 9:16. No single number was wrong; measured against different
+ * dimensions they simply cannot agree, and the badges read as scattered rather
+ * than cornered. It also centred the bottom row on one baseline, which
+ * guarantees a different bottom distance per badge because the pill, the site
+ * box and the QR are three different heights.
+ *
+ * PAD counts from the CANVAS edge and so carries the card's own 20*s inset:
+ * the kit's badges are children of the card, and without it the twin's chrome
+ * sits a card-inset tighter than the kit's.
  */
 interface Frame {
   W: number; H: number; s: number; land: boolean;
-  GUT: number; TOP: number; BASE: number; RGUT: number;
+  PAD: number; GUT: number;
 }
 function frameOf(format: BannerFormat): Frame {
   const { W, H } = DIMS[format];
   const land = format === "landscape";
-  return {
-    W, H,
-    s: Math.sqrt(W * H) / Math.sqrt(1920 * 1080),
-    land,
-    GUT: W * (land ? 0.052 : 0.075),
-    TOP: H * 0.072,
-    BASE: H * 0.104,
-    RGUT: W * 0.042,
-  };
+  const s = Math.sqrt(W * H) / Math.sqrt(1920 * 1080);
+  const PAD = (20 + 76) * s;
+  return { W, H, s, land, PAD, GUT: PAD };
 }
 
 /**
@@ -314,16 +322,16 @@ function frameOf(format: BannerFormat): Frame {
  * ground line); `bandTop` holds it below a composition's own upper band.
  */
 function heroBoxOf(F: Frame, maxW: number, centre: number | null, bandTop = 0): { box: number; x: number; y: number } {
-  const { W, H, s, TOP, BASE, RGUT } = F;
+  const { W, H, s, PAD } = F;
   const gap = H * 0.022;
   const tagH = 21 * s * 1.34 * 2 + 11 * s * 2;     // the two-line type tag
-  const ceil = Math.max(TOP + tagH / 2 + gap, bandTop);
-  const floor = H - BASE - (84 * s) / 2 - gap;
+  const ceil = Math.max(PAD + tagH + gap, bandTop);
+  const floor = H - PAD - 84 * s - gap;
   const box = Math.min(W * maxW, floor - ceil);
   const y = centre === null
     ? floor - box
     : Math.min(Math.max(H * centre - box / 2, ceil), floor - box);
-  return { box, x: W - RGUT - box, y };
+  return { box, x: W - PAD - box, y };
 }
 
 /**
@@ -520,27 +528,33 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
 }
 
 /**
- * v2 HUD. The pill moves to the bottom-left and shares ONE baseline centre with
- * //dehub.io and the QR; the type tag moves to the top-right and becomes two
- * lines. Every box is corner brackets rather than a bordered rectangle.
+ * v2 HUD. The pill sits bottom-left, //dehub.io along the bottom and the QR
+ * bottom-right; the type tag sits top-right and is two lines. Every box is
+ * corner brackets rather than a bordered rectangle.
+ *
+ * Every badge is pinned by its own OUTER EDGE to PAD — never centred on a shared
+ * line. Centring reads as tidier and is the trap: the pill, the site box and the
+ * QR are three different heights, so one shared centre line puts each of them a
+ * different distance from the canvas edge, which is the distance the eye
+ * actually reads.
  *
  * (The kit also has a `pillPos:'top'` variant for blog banners, whose cards crop
  * bottom-anchored. Posters never crop, so this twin only needs the default.)
  */
 function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, showPill = true): string {
-  const { W, H, s, GUT, TOP, BASE, RGUT } = F;
+  const { W, H, s, PAD } = F;
   const parts: string[] = [];
   const mono = 'font-family="Consolas"';
 
-  // Pill — bottom-left, centred on the baseline. Suppressed on wordmark layouts
+  // Pill — bottom-left, flush to the inset. Suppressed on wordmark layouts
   // (the big wordmark IS the logo, so the pill would just repeat it).
   if (showPill) {
     const ph = 56 * s, pw = 190 * s;
-    const py = H - BASE - ph / 2;
+    const py = H - PAD - ph;
     parts.push(
-      `<rect x="${n1(GUT)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#ffffff" opacity="0.42" filter="url(#pillglow)"/>`,
-      `<rect x="${n1(GUT)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#f4f4f2"/>`,
-      `<image x="${n1(GUT + 26 * s)}" y="${n1(py + 13 * s)}" width="${n1(pw - 52 * s)}" height="${n1(ph - 26 * s)}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
+      `<rect x="${n1(PAD)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#ffffff" opacity="0.42" filter="url(#pillglow)"/>`,
+      `<rect x="${n1(PAD)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#f4f4f2"/>`,
+      `<image x="${n1(PAD + 26 * s)}" y="${n1(py + 13 * s)}" width="${n1(pw - 52 * s)}" height="${n1(ph - 26 * s)}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
     );
   }
 
@@ -549,18 +563,18 @@ function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, sho
   const tagVal = `"${spec.typeTag}"`;
   const tagW = Math.max(9 * fs * 0.55, tagVal.length * fs * 0.55) + padX * 2;
   const tagH = lh * 2 + padY * 2;
-  const tagX = W - RGUT - tagW, tagY = TOP - tagH / 2;
+  const tagX = W - PAD - tagW, tagY = PAD;
   parts.push(
     bracketBox(tagX, tagY, tagW, tagH, s),
     `<text x="${n1(tagX + padX)}" y="${n1(tagY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.42)">// type =</text>`,
     `<text x="${n1(tagX + padX)}" y="${n1(tagY + padY + lh + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.72)">${esc(tagVal)}</text>`,
   );
 
-  // //dehub.io — bottom, inset from the pill, centred on the same baseline.
+  // //dehub.io — bottom, inset from the pill, standing on the same floor.
   const siteTxt = "dehub.io";
   const siteW = (siteTxt.length + 2) * fs * 0.55 + padX * 2;
   const siteH = lh + padY * 2;
-  const siteX = W * (F.land ? 0.475 : 0.40), siteY = H - BASE - siteH / 2;
+  const siteX = W * (F.land ? 0.475 : 0.40), siteY = H - PAD - siteH;
   parts.push(
     bracketBox(siteX, siteY, siteW, siteH, s),
     `<text x="${n1(siteX + padX)}" y="${n1(siteY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.42)">//</text>`,
@@ -570,7 +584,7 @@ function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, sho
   // QR — bottom-right. No border, but a dark backing plate is mandatory: the
   // hero bleeds under it and white modules on polished chrome will not scan.
   const qs = 84 * s, qp = 5 * s;
-  const qx = W - RGUT - qs, qy = H - BASE - qs / 2;
+  const qx = W - PAD - qs, qy = H - PAD - qs;
   parts.push(
     `<rect x="${n1(qx)}" y="${n1(qy)}" width="${n1(qs)}" height="${n1(qs)}" fill="rgba(3,3,5,0.86)"/>`,
     `<image x="${n1(qx + qp)}" y="${n1(qy + qp)}" width="${n1(qs - qp * 2)}" height="${n1(qs - qp * 2)}" href="${uris.qr}"/>`,
