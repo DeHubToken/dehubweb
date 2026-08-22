@@ -47,6 +47,43 @@ interface SpeakerMapEntry {
   wallet?: string;
 }
 
+const AUDIO_TYPE_BY_EXT: Record<string, string> = {
+  webm: 'audio/webm',
+  aac: 'audio/aac',
+  m4a: 'audio/mp4',
+  mp4: 'audio/mp4',
+  mp3: 'audio/mpeg',
+  ogg: 'audio/ogg',
+  opus: 'audio/ogg',
+  wav: 'audio/wav',
+  flac: 'audio/flac',
+};
+
+/**
+ * Name and type the multipart file part after the bytes actually being sent.
+ *
+ * Recordings reach this bucket in more than one shape: dehubweb's MediaRecorder
+ * writes WebM/Opus, dehub-mobile uploads the raw ADTS AAC stream Agora's
+ * recorder produces, and the one hand-remuxed Town Hall sits there as M4A. This
+ * used to hardcode `recording.webm`, which labelled every one of them as WebM
+ * and only ever worked because Scribe sniffs content — nothing in its contract
+ * promises it always will, and a mislabelled part is the first thing to suspect
+ * when a transcript comes back empty.
+ */
+function describeRecording(url: string, servedType: string): { name: string; type: string } {
+  const ext = (url.split('?')[0].split('/').pop() ?? '').split('.').pop()?.toLowerCase() ?? '';
+  const byExt = AUDIO_TYPE_BY_EXT[ext];
+  if (byExt) return { name: `recording.${ext}`, type: byExt };
+
+  // No extension we recognise. Trust what storage served, and fall back to WebM
+  // only because that is what every recording predating dehub-mobile is.
+  const served = servedType.split(';')[0].trim().toLowerCase();
+  const knownExt = Object.keys(AUDIO_TYPE_BY_EXT).find((e) => AUDIO_TYPE_BY_EXT[e] === served);
+  return knownExt
+    ? { name: `recording.${knownExt}`, type: served }
+    : { name: 'recording.webm', type: 'audio/webm' };
+}
+
 function wordsToSegments(words: ScribeWord[]): Segment[] {
   const segs: Segment[] = [];
   let cur: Segment | null = null;
@@ -191,9 +228,10 @@ Deno.serve(async (req) => {
         const audioRes = await fetch(stage.recording_url!);
         if (!audioRes.ok) throw new Error(`audio fetch ${audioRes.status}`);
         const audioBlob = await audioRes.blob();
+        const audio = describeRecording(stage.recording_url!, audioBlob.type);
 
         const fd = new FormData();
-        fd.append('file', audioBlob, 'recording.webm');
+        fd.append('file', new Blob([audioBlob], { type: audio.type }), audio.name);
         fd.append('model_id', 'scribe_v2');
         fd.append('diarize', 'true');
         fd.append('tag_audio_events', 'false');
