@@ -43,7 +43,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
 };
 
 /**
@@ -53,6 +53,16 @@ const corsHeaders = {
  */
 const READ_ROLES = ["SUPER_ADMIN", "ADMIN", "MODERATOR", "VIEWER"];
 const WRITE_ROLES = ["SUPER_ADMIN", "ADMIN"];
+
+/**
+ * Editing a public-facing number is narrower than moderating a room: it is the
+ * same act as editing a post's view count in the panel, which is super admin
+ * only. Kept as its own list so widening one does not silently widen the other.
+ */
+const COUNT_ROLES = ["SUPER_ADMIN"];
+
+/** `total_listens` is an int4 column — past this a bigger number is an error, not a count. */
+const MAX_LISTENS = 1_000_000_000;
 
 interface Admin {
   id: string;
@@ -124,6 +134,12 @@ async function requireAdmin(req: Request): Promise<Admin> {
 function requireWriteRole(admin: Admin): void {
   if (!WRITE_ROLES.includes(admin.role)) {
     throw new HttpError(403, "Your role cannot change a stage");
+  }
+}
+
+function requireCountRole(admin: Admin): void {
+  if (!COUNT_ROLES.includes(admin.role)) {
+    throw new HttpError(403, "Only a super admin can change a stage's listen count");
   }
 }
 
@@ -260,6 +276,52 @@ async function forceEndStage(id: string) {
 }
 
 /**
+ * Set the listen count — the stage's view counter.
+ *
+ * `total_listens` is what the public stage page renders as "N listened" and
+ * what an ended stage's card shows in place of a headcount, so it is the
+ * number an operator means by "views" here. The live `listener_count` /
+ * `speaker_count` pair is deliberately not editable: it is derived from the
+ * participant rows by `recount_space()` and would be overwritten by the next
+ * join or leave.
+ *
+ * The write is an absolute set rather than an adjustment, matching how a
+ * post's views are edited in the panel. `increment_stage_listens()` keeps
+ * counting from whatever is stored, so a set value carries forward and real
+ * plays continue to add to it.
+ */
+// deno-lint-ignore no-explicit-any
+async function setListenCount(id: string, body: any) {
+  const value = Number(body?.totalListens);
+  if (!Number.isInteger(value) || value < 0 || value > MAX_LISTENS) {
+    throw new HttpError(
+      400,
+      `totalListens must be a whole number between 0 and ${MAX_LISTENS}`,
+    );
+  }
+
+  const stage = await findStage(id);
+  const previous = stage.total_listens ?? 0;
+  if (previous === value) {
+    return { success: true, message: "Listen count unchanged", stage, previous };
+  }
+
+  const response = await rest(`/rest/v1/audio_spaces?id=eq.${encodeURIComponent(stage.id)}`, {
+    method: "PATCH",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify({ total_listens: value }),
+  });
+  const [updated] = await response.json();
+
+  return {
+    success: true,
+    message: `Listen count set to ${value.toLocaleString("en-US")}`,
+    stage: updated || { ...stage, total_listens: value },
+    previous,
+  };
+}
+
+/**
  * Best-effort removal of the audio file itself. A recording whose object is
  * already gone (or whose URL predates the current bucket layout) must not
  * block taking the stage down, so a failure here is logged, not thrown.
@@ -339,6 +401,11 @@ serve(async (req) => {
     if (req.method === "POST" && id && action === "end") {
       requireWriteRole(admin);
       return json(await forceEndStage(id));
+    }
+    if (req.method === "PATCH" && id && !action) {
+      requireCountRole(admin);
+      const body = await req.json().catch(() => null);
+      return json(await setListenCount(id, body));
     }
     if (req.method === "DELETE" && id && action === "recording") {
       requireWriteRole(admin);
