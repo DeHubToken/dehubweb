@@ -235,8 +235,18 @@ function readUint(buf: Uint8Array, pos: number, length: number): number {
 
 // ─── Writing ───────────────────────────────────────────────────────────────
 
+/**
+ * Bytes this module allocated, so the backing store really is an ArrayBuffer.
+ *
+ * A bare `Uint8Array` is `Uint8Array<ArrayBufferLike>`, which `BlobPart` will
+ * not accept — it could be a view on a SharedArrayBuffer. Everything below
+ * returns a freshly allocated array, so saying so is a fact rather than a cast,
+ * and it is what lets the finished pieces go straight into a Blob.
+ */
+type Bytes = Uint8Array<ArrayBuffer>;
+
 /** An element ID back to its wire bytes. */
-function idBytes(id: number): Uint8Array {
+function idBytes(id: number): Bytes {
   const out: number[] = [];
   let v = id;
   while (v > 0) {
@@ -247,7 +257,7 @@ function idBytes(id: number): Uint8Array {
 }
 
 /** Minimal big-endian unsigned integer, padded out to `minLength` bytes. */
-function uintBytes(value: number, minLength = 1): Uint8Array {
+function uintBytes(value: number, minLength = 1): Bytes {
   let length = 1;
   while (length < 8 && value >= Math.pow(2, 8 * length)) length++;
   if (length < minLength) length = minLength;
@@ -261,7 +271,7 @@ function uintBytes(value: number, minLength = 1): Uint8Array {
 }
 
 /** An element size as a VINT, in the fewest bytes that will hold it. */
-function sizeBytes(value: number): Uint8Array {
+function sizeBytes(value: number): Bytes {
   let length = 1;
   while (length < 8 && value >= Math.pow(2, 7 * length) - 1) length++;
   const out = new Uint8Array(length);
@@ -274,7 +284,7 @@ function sizeBytes(value: number): Uint8Array {
   return out;
 }
 
-function concat(parts: Uint8Array[]): Uint8Array {
+function concat(parts: Uint8Array[]): Bytes {
   let total = 0;
   for (const p of parts) total += p.length;
   const out = new Uint8Array(total);
@@ -287,15 +297,15 @@ function concat(parts: Uint8Array[]): Uint8Array {
 }
 
 /** A complete element: ID, size, payload. */
-function element(id: number, payload: Uint8Array): Uint8Array {
+function element(id: number, payload: Uint8Array): Bytes {
   return concat([idBytes(id), sizeBytes(payload.length), payload]);
 }
 
-function uintElement(id: number, value: number, minLength = 1): Uint8Array {
+function uintElement(id: number, value: number, minLength = 1): Bytes {
   return element(id, uintBytes(value, minLength));
 }
 
-function floatElement(id: number, value: number): Uint8Array {
+function floatElement(id: number, value: number): Bytes {
   const payload = new Uint8Array(8);
   new DataView(payload.buffer).setFloat64(0, value, false);
   return element(id, payload);
@@ -525,7 +535,7 @@ async function finalise(input: Blob): Promise<WebmSeekableResult> {
   };
 }
 
-function seekEntry(targetId: number, position: number): Uint8Array {
+function seekEntry(targetId: number, position: number): Bytes {
   return element(ID_SEEK, concat([
     element(ID_SEEK_ID, idBytes(targetId)),
     uintElement(ID_SEEK_POSITION, position, 8),
@@ -576,7 +586,7 @@ function readFirstTrackNumber(tracksBytes: Uint8Array): number | null {
 }
 
 /** Info as it was, minus any Duration, plus the one we derived. */
-function rebuildInfo(infoBytes: Uint8Array, durationTicks: number): Uint8Array {
+function rebuildInfo(infoBytes: Uint8Array, durationTicks: number): Bytes {
   const kept: Uint8Array[] = [];
   for (const child of children(infoBytes)) {
     if (child.id === ID_DURATION) continue;
@@ -597,7 +607,7 @@ function buildCues(
   clusters: ClusterEntry[],
   trackNumber: number,
   clustersPosition: number,
-): Uint8Array {
+): Bytes {
   const points: Uint8Array[] = [];
   for (const cluster of clusters) {
     points.push(element(ID_CUE_POINT, concat([

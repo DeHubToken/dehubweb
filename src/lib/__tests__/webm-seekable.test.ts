@@ -22,14 +22,14 @@ import { makeWebmSeekable } from '@/lib/webm-seekable';
 // ─── A MediaRecorder-shaped WebM, built the way Chrome builds one ──────────
 // Unknown-size Segment, unknown-size clusters, no Duration, no Cues.
 
-function concat(parts: Uint8Array[]): Uint8Array {
+function concat(parts: Uint8Array[]): Uint8Array<ArrayBuffer> {
   const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
   let at = 0;
   for (const p of parts) { out.set(p, at); at += p.length; }
   return out;
 }
 
-function sizeVint(value: number): Uint8Array {
+function sizeVint(value: number): Uint8Array<ArrayBuffer> {
   let length = 1;
   while (length < 8 && value >= Math.pow(2, 7 * length) - 1) length++;
   const out = new Uint8Array(length);
@@ -39,7 +39,7 @@ function sizeVint(value: number): Uint8Array {
   return out;
 }
 
-function uint(value: number): Uint8Array {
+function uint(value: number): Uint8Array<ArrayBuffer> {
   let length = 1;
   while (length < 8 && value >= Math.pow(2, 8 * length)) length++;
   const out = new Uint8Array(length);
@@ -48,7 +48,7 @@ function uint(value: number): Uint8Array {
   return out;
 }
 
-const id = (...bytes: number[]) => new Uint8Array(bytes);
+const id = (...bytes: number[]): Uint8Array<ArrayBuffer> => new Uint8Array(bytes);
 const el = (elementId: Uint8Array, payload: Uint8Array) =>
   concat([elementId, sizeVint(payload.length), payload]);
 const uintEl = (elementId: Uint8Array, value: number) => el(elementId, uint(value));
@@ -85,7 +85,7 @@ const TRACKS = el(id(0x16, 0x54, 0xae, 0x6b), el(id(0xae), concat([
 ])));
 
 /** One unknown-size cluster holding `blocks` 20 ms SimpleBlocks. */
-function cluster(timecode: number, blocks: number): Uint8Array {
+function cluster(timecode: number, blocks: number): Uint8Array<ArrayBuffer> {
   const parts: Uint8Array[] = [uintEl(id(0xe7), timecode)];
   for (let i = 0; i < blocks; i++) {
     const relative = i * 20;
@@ -104,7 +104,12 @@ function cluster(timecode: number, blocks: number): Uint8Array {
   ]);
 }
 
-function recorderWebm(clusterCount: number): { bytes: Uint8Array; clusterRegion: Uint8Array } {
+interface RecorderWebm {
+  bytes: Uint8Array<ArrayBuffer>;
+  clusterRegion: Uint8Array<ArrayBuffer>;
+}
+
+function recorderWebm(clusterCount: number): RecorderWebm {
   const clusters: Uint8Array[] = [];
   for (let i = 0; i < clusterCount; i++) clusters.push(cluster(i * 1000, 50));
   const clusterRegion = concat(clusters);
@@ -114,7 +119,7 @@ function recorderWebm(clusterCount: number): { bytes: Uint8Array; clusterRegion:
   };
 }
 
-const blobOf = (bytes: Uint8Array) => new Blob([bytes], { type: 'audio/webm' });
+const blobOf = (bytes: Uint8Array<ArrayBuffer>) => new Blob([bytes], { type: 'audio/webm' });
 
 // ─── Just enough of a reader to dereference the index ──────────────────────
 
