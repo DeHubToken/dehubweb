@@ -222,9 +222,13 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
  * Get available token supply for a specific token.
  * Call this before createCheckoutSession to prevent 406 "exceeds available supply" errors.
  * Uses /api/dpay/available/tokens?token=<symbol> which returns { balance: {...} }.
+ *
+ * Pass `chainId` whenever the buyer has picked one. The gateway checks supply
+ * per chain, so summing every chain's float — which is what the nested branch
+ * below does without it — waves through a purchase the checkout then 406s.
  */
-export async function getTokenAvailableSupply(tokenSymbol: string): Promise<number> {
-  console.log('[DPay API] Checking available supply for:', tokenSymbol);
+export async function getTokenAvailableSupply(tokenSymbol: string, chainId?: number): Promise<number> {
+  console.log('[DPay API] Checking available supply for:', tokenSymbol, chainId ?? '(all chains)');
   try {
     const response = await fetch(
       `${DEHUB_API_BASE}/api/dpay/available/tokens?token=${encodeURIComponent(tokenSymbol)}`,
@@ -257,6 +261,19 @@ export async function getTokenAvailableSupply(tokenSymbol: string): Promise<numb
 
     // Nested chain structure: { balance: { "8453": { "DHB": 12345 }, "56": { "DHB": 500 } } }
     if (typeof balance === 'object' && balance !== null) {
+      // A chain was named: answer for that chain only, and treat a chain the
+      // gateway does not list as empty rather than falling through to the
+      // cross-chain total.
+      if (chainId !== undefined) {
+        const forChain = (balance as Record<string, unknown>)[String(chainId)];
+        if (typeof forChain === 'object' && forChain !== null) {
+          const sym = (forChain as Record<string, number>)[tokenSymbol]
+            ?? (forChain as Record<string, number>)[tokenSymbol.toUpperCase()];
+          return typeof sym === 'number' ? sym : 0;
+        }
+        return 0;
+      }
+
       let totalSupply = 0;
       let found = false;
       for (const chainValues of Object.values(balance)) {
@@ -275,6 +292,42 @@ export async function getTokenAvailableSupply(tokenSymbol: string): Promise<numb
     return Infinity;
   } catch {
     return Infinity; // On network error, don't block — let the checkout API decide
+  }
+}
+
+/**
+ * The signed-in buyer's staking-badge discount on the gateway.
+ *
+ * Served rather than derived. The badge balance the UI renders from is
+ * deliberately optimistic — `useSelfBadge` takes the higher of the server's
+ * figure and a live wallet read, so it can promote a tier the gateway has
+ * not seen yet — and quoting a discount the checkout would not honour is
+ * worse than quoting none. A failure here means list price, never a blocked
+ * purchase.
+ */
+export async function getBadgeDiscount(): Promise<{ tier: string | null; rate: number; badgeBalance: number }> {
+  const none = { tier: null, rate: 0, badgeBalance: 0 };
+  const token = getAuthToken();
+  if (!token) return none;
+
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/discount`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) return none;
+
+    const data = await response.json();
+    const rate = Number(data?.rate);
+    if (!Number.isFinite(rate) || rate <= 0) return none;
+
+    return {
+      tier: typeof data?.tier === 'string' ? data.tier : null,
+      rate: Math.min(rate, 0.3),
+      badgeBalance: Number(data?.badgeBalance) || 0,
+    };
+  } catch {
+    return none;
   }
 }
 

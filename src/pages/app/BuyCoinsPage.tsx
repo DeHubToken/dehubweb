@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { AuthGate } from '@/components/app/AuthGate';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
@@ -23,6 +24,7 @@ import {
   getDPayTransactions,
   getAllDPayTransactions,
   getDPayTotal,
+  getBadgeDiscount,
   type DPayToken,
   type DPayTransaction,
 } from '@/lib/api/dpay';
@@ -52,7 +54,7 @@ export default function BuyCoinsPage() {
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState('');
   const [selectedToken] = useState<DPayToken | null>(null);
-  const [selectedChainId] = useState(8453);
+  const [selectedChainId, setSelectedChainId] = useState(8453);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
 
   // Post-purchase state
@@ -111,14 +113,25 @@ export default function BuyCoinsPage() {
   // while it's the active route.
   const isBuyRouteActive = useLocation().pathname === '/app/buy';
 
-  // Pre-fetch token supply so we can validate before checkout (prevents 406)
+  // Pre-fetch token supply so we can validate before checkout (prevents 406).
+  // Scoped to the selected chain — the gateway holds a separate float on each.
   const { data: availableSupply } = useQuery({
-    queryKey: ['dpay', 'supply', 'DHB'],
-    queryFn: () => getTokenAvailableSupply('DHB'),
+    queryKey: ['dpay', 'supply', 'DHB', selectedChainId],
+    queryFn: () => getTokenAvailableSupply('DHB', selectedChainId),
     enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000,
     refetchInterval: isBuyRouteActive ? 5 * 60 * 1000 : false,
   });
+
+  // The buyer's staking-badge discount, resolved server-side so the quote
+  // here and the price the sale settles at are the same number.
+  const { data: badgeDiscount } = useQuery({
+    queryKey: ['dpay', 'badge-discount'],
+    queryFn: getBadgeDiscount,
+    enabled: isAuthenticated,
+    staleTime: 60 * 1000,
+  });
+  const discountRate = badgeDiscount?.rate ?? 0;
 
   // Fetch chain-specific price
   const { data: chainPriceData, isLoading: priceLoading } = useQuery({
@@ -289,8 +302,13 @@ export default function BuyCoinsPage() {
   const effectiveAmount = customAmount ? Number(customAmount) : selectedAmount;
   const rawPrice = priceData?.price || 0;
   // Peg DHB price at $0.001 for fiat gateway
-  const tokenPrice = symbol === 'DHB' ? 0.001 : rawPrice;
+  const listPrice = symbol === 'DHB' ? 0.001 : rawPrice;
+  // Badge holders buy below list, so the quote has to be struck at their
+  // price — the gateway prices the delivery the same way.
+  const tokenPrice = listPrice * (1 - discountRate);
   const estimatedTokens = tokenPrice > 0 ? effectiveAmount / tokenPrice : 0;
+  const tokensWithoutDiscount = listPrice > 0 ? effectiveAmount / listPrice : 0;
+  const bonusTokens = estimatedTokens - tokensWithoutDiscount;
   const isPending = checkoutMutation.isPending;
 
   const handlePurchase = () => {
@@ -349,7 +367,41 @@ export default function BuyCoinsPage() {
           <h1 className="text-xl font-bold text-white">{t('buyCoins.title')}</h1>
         </div>
 
-
+        {/* Chain Selection */}
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+          <label className="text-sm text-zinc-400 block">{t('buyCoins.network')}</label>
+          <div className="grid grid-cols-2 gap-2">
+            {CHAINS.map((chain) => {
+              const isActive = selectedChainId === chain.id;
+              return (
+                <button
+                  key={chain.id}
+                  onClick={() => setSelectedChainId(chain.id)}
+                  className={`relative py-3 rounded-xl font-medium transition-colors ${
+                    isActive ? 'text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="buy-chain-toggle"
+                      className={cn(
+                        'absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30',
+                        isLightTheme
+                          ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]'
+                          : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                      )}
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-[2] flex items-center justify-center gap-2">
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: chain.color }} />
+                    {chain.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Amount Selection */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-4">
@@ -447,6 +499,22 @@ export default function BuyCoinsPage() {
               </p>
             )}
           </div>
+
+          {/* Badge holder discount */}
+          {discountRate > 0 && (
+            <div className="flex items-center justify-between border-t border-white/5 pt-3">
+              <span className="text-zinc-400 flex items-center gap-2">
+                <BadgeIcon badgeBalance={badgeDiscount?.badgeBalance} className="w-5 h-5" />
+                {t('buyCoins.badgeDiscount', {
+                  tier: badgeDiscount?.tier ?? '',
+                  percent: Math.round(discountRate * 100),
+                })}
+              </span>
+              <span className="text-emerald-400 font-semibold">
+                +{bonusTokens.toLocaleString(undefined, { maximumFractionDigits: 0 })} DHB
+              </span>
+            </div>
+          )}
 
           {/* Available Supply */}
           {availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0 && (
