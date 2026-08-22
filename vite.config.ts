@@ -177,13 +177,52 @@ function preloadWalletChunkPlugin() {
           console.warn('[preload-wallet-chunk] WalletProviders chunk not found — no links injected');
           return html;
         }
+
+        // One part of this graph is worth fetching ahead for nobody: RainbowKit’s
+        // connect-modal UI. `WalletButton.Custom` in LoginModal is RainbowKit’s only
+        // consumer in the whole of src — there is no useConnectModal, ConnectButton
+        // or useAccountModal anywhere — so the modal itself never opens, yet Rollup
+        // merges its shared UI into whichever chunk the graph reaches first. That is
+        // the en_US locale entry, which builds at 266 KB against 37-65 KB for every
+        // other locale. The difference is the modal. Dropping the link costs one
+        // fetch on the first sign-in and saves every visitor 266 KB of boot
+        // bandwidth.
+        //
+        // Matched by content rather than by name: the chunk carries RainbowKit’s own
+        // build hash (en_US-Y4ZOVFV4) which moves on every upgrade. A chunk built
+        // purely from RainbowKit modules and this large is the modal UI — the wallet
+        // connectors are an order of magnitude smaller and keep their prefetch.
+        const RAINBOWKIT_UI_MIN_BYTES = 100 * 1024;
+        const isRainbowKitUiChunk = (fileName: string) => {
+          const chunk = bundle[fileName];
+          if (!chunk || chunk.type !== 'chunk') return false;
+          const ids = Object.keys(chunk.modules ?? {});
+          if (ids.length === 0) return false;
+          // Both spellings: pnpm’s store writes @rainbow-me+rainbowkit@x.y.z.
+          const allRainbowKit = ids.every((id: string) =>
+            /@rainbow-me[/+]rainbowkit/.test(id.replace(/\\/g, '/')),
+          );
+          return allRainbowKit && (chunk.code?.length ?? 0) >= RAINBOWKIT_UI_MIN_BYTES;
+        };
+
+        const skipped = [...seen].filter(isRainbowKitUiChunk);
+        for (const f of skipped) seen.delete(f);
+        if (skipped.length === 0) {
+          // Not fatal — the day the barrel import in lib/wagmi.ts stops dragging the
+          // modal in, this correctly matches nothing. Worth saying out loud either
+          // way, so a silent return of the 266 KB is visible in the build log.
+          console.warn('[preload-wallet-chunk] no RainbowKit UI chunk matched — check whether the connect-modal UI is being prefetched again');
+        }
         // data-prefetch-only: tells scripts/check-entry-bundle.mjs these are
         // fetch-ahead hints, NOT eagerly-executed modules — the wallet code
         // still only runs when the React.lazy boundary resolves.
         const links = [...seen]
           .map((f) => `<link rel="modulepreload" data-prefetch-only fetchpriority="low" crossorigin href="/${f}">`)
           .join('\n    ');
-        console.log(`[preload-wallet-chunk] injected ${seen.size} modulepreload links`);
+        console.log(
+          `[preload-wallet-chunk] injected ${seen.size} modulepreload links` +
+            (skipped.length ? `, skipped ${skipped.length} RainbowKit UI chunk(s): ${skipped.join(', ')}` : ''),
+        );
         return html.replace('</head>', `  ${links}\n  </head>`);
       },
     },
