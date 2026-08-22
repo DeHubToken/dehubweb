@@ -76,6 +76,7 @@ import { deriveFromSecret } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
+import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { getRunningBuildId, isRunningStaleBuild } from '@/lib/version-check';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 
@@ -286,7 +287,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Wagmi hooks
   const { address: wagmiAddress, isConnected: isWagmiConnected, connector: wagmiConnector } = useAccount();
   const { signMessageAsync } = useSignMessage();
-  const { disconnect: wagmiDisconnect } = useDisconnect();
+  const { disconnect: wagmiDisconnect, disconnectAsync: wagmiDisconnectAsync } = useDisconnect();
   const { connectAsync, connectors } = useConnect();
 
   const connectionAbortedRef = useRef(false);
@@ -298,6 +299,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // in completeDeHubAuthWagmi.
   const lastWagmiConnectAtRef = useRef(0);
   const wagmiSilentReconnectAttemptedRef = useRef(false);
+  // The address whose login signature was just turned down. Rejecting is how
+  // people back out to pick a different wallet, but the connector stays
+  // attached — and the returning-user branch in handleWagmiConnect needs no tap
+  // at all, so it re-asked the moment the state settled. Held until the next
+  // deliberate tap, so a refusal ends the attempt instead of restarting it.
+  const rejectedSignatureAddressRef = useRef<string | null>(null);
   // Guards double-processing of a landed Supabase session (OAuth return fires
   // both INITIAL_SESSION and SIGNED_IN).
   const supaLoginHandledRef = useRef(false);
@@ -320,7 +327,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // abandoned; at worst its request is still open in the wallet, and the
     // retry then gets the -32002 "already have a request open" toast instead
     // of nothing at all.
-    if (value) wagmiAuthInProgressRef.current = false;
+    if (value) {
+      wagmiAuthInProgressRef.current = false;
+      // A new tap is a new answer to the prompt they refused last time.
+      rejectedSignatureAddressRef.current = null;
+    }
     wagmiAuthIntentRef.current = value;
     // Force a genuine state change even when re-setting the same boolean —
     // handleWagmiConnect relies on this update to re-fire (React bails out of
@@ -851,7 +862,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const hasToken = !!getAuthToken() && !isTokenExpired();
         const isReturningWagmiUser = savedSource === 'wagmi' && hasToken;
 
-        if (!hasUserIntent && !isReturningWagmiUser) {
+        // A refusal only counts against the untapped path: the returning-user
+        // branch is the one that can fire on its own, and re-firing it into a
+        // wallet whose owner just said no is how one dismissal turned into a
+        // prompt that came back every time the state settled.
+        const justRefused = rejectedSignatureAddressRef.current === wagmiAddress.toLowerCase();
+
+        if (!hasUserIntent && (!isReturningWagmiUser || justRefused)) {
           return;
         }
 
@@ -871,6 +888,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setWagmiAuthIntent(false);
           setConnectionSource(savedSource);
           restoreConnectionSource(savedSource);
+          if (isUserRejection(err)) {
+            // Turning the signature down IS the cancel — the login is over, so
+            // the connection behind it goes with it. Left attached, it was
+            // picked straight back up: every later tap, including a tap on a
+            // DIFFERENT wallet, found a live connection and asked this same
+            // address to sign again. Dropping it also revokes the site's
+            // permission where the wallet supports it, so the next connect
+            // offers the account picker instead of silently reusing this one.
+            rejectedSignatureAddressRef.current = wagmiAddress.toLowerCase();
+            clearWagmiStorage();
+            try {
+              await wagmiDisconnectAsync();
+            } catch { /* already gone */ }
+          }
         } finally {
           wagmiAuthInProgressRef.current = false;
           setIsConnecting(false);
@@ -1699,15 +1730,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     writeConnectionSource('wagmi');
 
     try {
-      const walletMap: Record<string, string[]> = {
-        metamask: ['metaMaskSDK', 'io.metamask', 'metaMask'],
-        phantom: ['app.phantom', 'phantom'],
-        trust: ['trust', 'trustWallet'],
-      };
-      const ids = walletMap[wallet] || [];
-      let connector = connectors.find(c =>
-        ids.some(id => c.id === id || c.name.toLowerCase().includes(id.toLowerCase()))
-      );
+      let connector = connectors.find(c => connectorMatchesWallet(c, wallet));
 
       if (!connector && isWalletInAppBrowser()) {
         connector = connectors.find(c => c.id === 'injected');
@@ -1715,6 +1738,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (!connector) {
         throw new Error(`Connector for ${wallet} not found`);
+      }
+
+      // Another wallet is still attached. wagmi would keep it as the active
+      // connection and hand the sheet its address back, so the signature would
+      // go to the wallet the user is trying to leave — which is what made
+      // switching impossible. Drop it before opening the new one.
+      if (isWagmiConnected && wagmiConnector && wagmiConnector.uid !== connector.uid) {
+        clearWagmiStorage();
+        try {
+          await wagmiDisconnectAsync();
+        } catch { /* already gone */ }
+        await new Promise(r => setTimeout(r, 100));
       }
 
       try {
@@ -1782,6 +1817,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setWalletPhase('none');
     setSupabaseUserId(null);
     wagmiAuthInProgressRef.current = false;
+    rejectedSignatureAddressRef.current = null;
     setWagmiAuthIntent(false);
 
     disconnectDmSocket();

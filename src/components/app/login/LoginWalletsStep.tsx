@@ -49,13 +49,23 @@ export type WalletId = 'metamask' | 'phantom' | 'trust';
 interface LoginWalletsStepProps {
   isConnecting: boolean;
   activeProvider: string | null;
+  /** The wallet wagmi is holding right now, if any — shown so it can be dropped. */
+  connectedAddress?: string | null;
+  connectedWalletName?: string | null;
+  onUseDifferentWallet?: () => void;
   onWalletConnect: (wallet: WalletId, connect: () => void) => void;
   onWalletConnectConnect: (connect: () => void) => void;
 }
 
+const shortenAddress = (address: string) =>
+  `${address.slice(0, 6)}…${address.slice(-4)}`;
+
 export function LoginWalletsStep({
   isConnecting,
   activeProvider,
+  connectedAddress,
+  connectedWalletName,
+  onUseDifferentWallet,
   onWalletConnect,
   onWalletConnectConnect,
 }: LoginWalletsStepProps) {
@@ -64,6 +74,34 @@ export function LoginWalletsStep({
   return (
     <RainbowKitProvider theme={darkTheme()} modalSize="compact">
       <div className="space-y-3">
+        {/*
+          Reaching this step with a wallet already attached is normal — a
+          previous session, or an attempt whose signature went unanswered. The
+          buttons below then sign with THAT wallet, which is invisible unless we
+          say so, and the only way out used to be a page refresh.
+        */}
+        {connectedAddress && onUseDifferentWallet && (
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5">
+            <div className="min-w-0">
+              <p className="text-white/40 text-[10px] uppercase tracking-wide">
+                {t('loginModal.walletConnectedAs', 'Connected')}
+              </p>
+              <p className="text-white text-xs truncate">
+                {connectedWalletName ? `${connectedWalletName} · ` : ''}
+                {shortenAddress(connectedAddress)}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onUseDifferentWallet}
+              disabled={isConnecting}
+              className="flex-shrink-0 text-xs text-white/60 hover:text-white underline underline-offset-2 disabled:opacity-40"
+            >
+              {t('loginModal.useDifferentWallet', 'Use a different wallet')}
+            </button>
+          </div>
+        )}
+
         <WalletButton.Custom wallet="metamask">
           {({ mounted, connect }) => (
             <Button
