@@ -45,6 +45,45 @@ async function flushLogs() {
     }
 }
 
+/**
+ * Flush on the way out of the page.
+ *
+ * `supabase.functions.invoke` is an ordinary fetch, and an ordinary fetch is
+ * cancelled the instant the document goes away — so the flush wired to
+ * beforeunload has never actually delivered anything. That silently threw away
+ * the rows that matter most: the failures people escape by hitting refresh
+ * (a wallet that connects and then never asks for a signature is the whole
+ * genre) are, by definition, the ones where the tab is about to be replaced.
+ * We have been reading a table with a hole in it exactly where the bug is.
+ *
+ * `keepalive` is what lets the request outlive the document. The endpoint and
+ * auth headers are read off the live client so this cannot drift from the
+ * generated Supabase config; if either is somehow absent, fall back to the
+ * normal path rather than dropping the batch.
+ */
+function flushLogsOnExit() {
+    if (LOG_QUEUE.length === 0) return;
+
+    const fns = (supabase as unknown as { functions?: { url?: string; headers?: Record<string, string> } }).functions;
+    const url = fns?.url;
+    if (!url) {
+        flushLogs();
+        return;
+    }
+
+    const batch = LOG_QUEUE.splice(0);
+    try {
+        fetch(`${url}/client-logs`, {
+            method: 'POST',
+            keepalive: true,
+            headers: { ...(fns.headers || {}), 'Content-Type': 'application/json' },
+            body: JSON.stringify({ logs: batch }),
+        }).catch(() => { /* the page is going away; there is nobody to tell */ });
+    } catch {
+        /* ignore */
+    }
+}
+
 function ensureFlushTimer() {
     if (flushTimer) return;
     flushTimer = setInterval(flushLogs, FLUSH_INTERVAL_MS);
@@ -53,11 +92,11 @@ function ensureFlushTimer() {
     if (typeof document !== 'undefined') {
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') {
-                flushLogs();
+                flushLogsOnExit();
             }
         });
         window.addEventListener('beforeunload', () => {
-            flushLogs();
+            flushLogsOnExit();
         });
     }
 }

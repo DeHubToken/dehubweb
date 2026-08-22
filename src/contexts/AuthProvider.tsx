@@ -779,9 +779,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // While a smart-wallet login is in progress, the browser wallet may
-      // auto-reconnect from extension storage. Drop wagmi for this window.
-      if (isConnecting && connectionSource === 'web3auth') {
+      // auto-reconnect from extension storage. Drop wagmi for this window —
+      // but only when nobody asked for it.
+      //
+      // `connectionSource` here is React's copy of an optimistic tag, and
+      // connectWithWallet updates only the STORED one. So a browser still
+      // tagged 'web3auth' — from a smart-wallet session that ended without an
+      // explicit sign-out, or from a social login abandoned earlier in this
+      // page's life — reaches a deliberate MetaMask connect with isConnecting
+      // already true and this state still reading 'web3auth'. This branch then
+      // threw the just-approved connection away before the signature could be
+      // requested: the connect popup succeeded, no sign prompt ever appeared,
+      // and isConnecting stayed latched so nothing on the page could retry.
+      // Only a refresh cleared it — which is exactly the "connected, then
+      // nothing happened" report, on the browsers that switch between the two
+      // wallet kinds.
+      //
+      // An explicit intent means the wallet IS the login, not a stray
+      // reconnect, so it is never the thing to throw away.
+      if (!wagmiAuthIntentRef.current && isConnecting && connectionSource === 'web3auth') {
         if (isWagmiConnected && wagmiAddress) {
+          // Silently dropping a live connection is precisely the kind of event
+          // that leaves someone staring at a wallet that did nothing, and it
+          // wrote no row at all. One line here is the difference between
+          // reading the cause and guessing at it.
+          authLogger.warn('Dropped an auto-reconnected wallet during smart-wallet login', {
+            wagmiAddress: wagmiAddress.toLowerCase(),
+            connectorId: wagmiConnector?.id,
+            storedSource: readConnectionSource(),
+            buildId: getRunningBuildId(),
+          });
           clearWagmiStorage();
           await wagmiDisconnect();
         }
