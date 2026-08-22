@@ -17,6 +17,7 @@ import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { AppLayout } from "./components/app/AppLayout";
+import { LoginModal, prefetchLoginModal } from "@/components/app/LoginModal";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
@@ -46,11 +47,12 @@ if (typeof window !== "undefined") {
   import("./components/app/WalletProviders").catch(() => {});
 }
 
-// Login modal — lazy so RainbowKit/web3auth UI code stays in the wallet-side
-// chunks. Mounted on first open (see AppContent latch), preloaded on idle.
-const LoginModal = React.lazy(() =>
-  import("@/components/app/LoginModal").then(m => ({ default: m.LoginModal }))
-);
+// Login modal — imported eagerly, and deliberately so. The sheet has to be on
+// screen the instant "Log in" is tapped, which it cannot be if a chunk has to
+// arrive and evaluate first. Only the shell is here: LoginModal itself holds
+// the Suspense boundary for its contents, and wagmi / RainbowKit / the wallet
+// steps all stay behind it, on the wallet-side chunks where the guardrails in
+// scripts/check-entry-bundle.mjs expect them.
 
 // Decorative theme backgrounds — lazy AND theme-gated here so vendor-three
 // (~200 KB gz) never downloads unless the matching theme is active. Each
@@ -296,17 +298,15 @@ function AppContent() {
   const queryClient = useQueryClient();
   usePreloadIcons();
 
-  // LoginModal mounts on first open and stays mounted afterwards so its
-  // close animation isn't cut short. Preload its chunk on idle so the first
-  // open doesn't wait on the network.
-  const [loginModalMounted, setLoginModalMounted] = useState(false);
-  useEffect(() => {
-    if (isLoginModalOpen) setLoginModalMounted(true);
-  }, [isLoginModalOpen]);
+  // Warm the sheet's contents so the skeleton inside it stays theoretical. The
+  // timeout matters: a feed that never goes idle used to starve this
+  // altogether, which is precisely when a cold first open hurts most.
   useEffect(() => {
     const idle = (cb: () => void) =>
-      "requestIdleCallback" in window ? requestIdleCallback(cb) : setTimeout(cb, 2000);
-    idle(() => import("@/components/app/LoginModal").catch(() => {}));
+      "requestIdleCallback" in window
+        ? requestIdleCallback(cb, { timeout: 1500 })
+        : setTimeout(cb, 1500);
+    idle(() => prefetchLoginModal());
   }, []);
 
   // While the login flow is active (modal open, or a connect/redirect in
@@ -348,11 +348,13 @@ function AppContent() {
       <SelfBadgeSync />
       <UsernameRequiredModal />
       <GiveawayPrizeModal />
-      {loginModalMounted && (
-        <Suspense fallback={null}>
-          <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
-        </Suspense>
-      )}
+      {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's
+          Root out of the tree until a sheet first opens, so this renders no
+          DOM and registers no listeners until someone taps "Log in". Mounting
+          it up front is what buys the slide-up — a vaul Root created with
+          `open` already true renders at its final position with no transition,
+          which is why the sheet used to appear rather than come up. */}
+      <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
           {(loc) => (
