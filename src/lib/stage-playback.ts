@@ -533,6 +533,14 @@ export function seekStageRecording(space: StagePlayable, position: number) {
   playStageRecording(space, position);
 }
 
+/**
+ * Read the shared player's state without subscribing — for one-off seeds such
+ * as the transcript drawer starting its local rate at the engine's current one.
+ */
+export function getStagePlaybackState(): StagePlaybackState {
+  return state;
+}
+
 /** Subscribe to the shared player. */
 export function useStagePlayback(): StagePlaybackState {
   const [snapshot, setSnapshot] = useState(state);
