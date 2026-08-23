@@ -133,6 +133,7 @@ const AdminLoginPage = React.lazy(() => import("./pages/admin/AdminLoginPage"));
 const AdminUsersPage = React.lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminAdsPage = React.lazy(() => import("./pages/admin/AdminAdsPage"));
 const AdminModerationPage = React.lazy(() => import("./pages/admin/AdminModerationPage"));
+const AdminChatPage = React.lazy(() => import("./pages/admin/AdminChatPage"));
 const AdminRoute = React.lazy(() =>
   import("./components/admin/AdminRoute").then((m) => ({ default: m.AdminRoute }))
 );
@@ -436,6 +437,7 @@ function AppContent() {
             <Route path="users" element={<Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense>} />
             <Route path="ads" element={<Suspense fallback={<PageLoader />}><AdminAdsPage /></Suspense>} />
             <Route path="moderation" element={<Suspense fallback={<PageLoader />}><AdminModerationPage /></Suspense>} />
+            <Route path="chat" element={<Suspense fallback={<PageLoader />}><AdminChatPage /></Suspense>} />
           </Route>
 
           <Route path="/creators" element={<CreatorsPage />} />
