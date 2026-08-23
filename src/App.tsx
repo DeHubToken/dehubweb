@@ -132,6 +132,7 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 const AdminLoginPage = React.lazy(() => import("./pages/admin/AdminLoginPage"));
 const AdminUsersPage = React.lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminAdsPage = React.lazy(() => import("./pages/admin/AdminAdsPage"));
+const AdminModerationPage = React.lazy(() => import("./pages/admin/AdminModerationPage"));
 const AdminRoute = React.lazy(() =>
   import("./components/admin/AdminRoute").then((m) => ({ default: m.AdminRoute }))
 );
@@ -434,6 +435,7 @@ function AppContent() {
             <Route index element={<Navigate to="/admin/users" replace />} />
             <Route path="users" element={<Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense>} />
             <Route path="ads" element={<Suspense fallback={<PageLoader />}><AdminAdsPage /></Suspense>} />
+            <Route path="moderation" element={<Suspense fallback={<PageLoader />}><AdminModerationPage /></Suspense>} />
           </Route>
 
           <Route path="/creators" element={<CreatorsPage />} />
