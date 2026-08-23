@@ -60,6 +60,12 @@ project_id = "aigxuutjaqsywioxjefr"
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
   [functions.dub-session]
     verify_jwt = false
+  # Auth is the EMAIL_LINK_SERVICE_SECRET shared secret from the NestJS
+  # backend, verified in-function — not a Supabase JWT.
+  [functions.email-link-provision]
+    verify_jwt = false
+  [functions.email-link-send]
+    verify_jwt = false
   [functions.enhance-text]
     verify_jwt = false
   [functions.fal-ai-tools]
