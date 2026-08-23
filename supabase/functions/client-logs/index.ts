@@ -4,8 +4,23 @@ import { rateLimitByIp } from "../_shared/auth.ts";
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers":
-        "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+        "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime-version, x-supabase-client-runtime",
 };
+
+// metadata is caller-controlled JSONB and used to be stored exactly as sent,
+// so one crafted row could outweigh every legitimate log in the table. Serialize
+// and cap it; a truncated payload beats an unbounded column.
+const METADATA_MAX_CHARS = 4000;
+function capMetadata(metadata: Record<string, unknown> | undefined): Record<string, unknown> | null {
+    if (!metadata || typeof metadata !== "object") return null;
+    try {
+        const json = JSON.stringify(metadata);
+        if (json.length <= METADATA_MAX_CHARS) return metadata;
+        return JSON.parse(JSON.stringify({ truncated: json.slice(0, METADATA_MAX_CHARS) }));
+    } catch {
+        return null;
+    }
+}
 
 Deno.serve(async (req) => {
     if (req.method === "OPTIONS") {
@@ -50,7 +65,7 @@ Deno.serve(async (req) => {
             component: l.component ? String(l.component).slice(0, 200) : l.component,
             message: String(l.message).slice(0, 2000),
             stack_trace: l.stack_trace ? String(l.stack_trace).slice(0, 4000) : l.stack_trace,
-            metadata: l.metadata,
+            metadata: capMetadata(l.metadata),
             user_address: l.user_address,
         }));
 
