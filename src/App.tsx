@@ -567,6 +567,13 @@ function AppContent() {
             {/* An off-chain post's own URL — the canonical share form is top-level. */}
             <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
 
+            {/* Short post URLs, mirroring /stages/:n. /posts/1 opens the post;
+                /b hangs the author's own straight comments off it as a thread
+                (X-style), and /posts/1/b/<commentId> deep-links one entry. */}
+            <Route path="/posts/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+            <Route path="/posts/:postId/b" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+            <Route path="/posts/:postId/b/:commentId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+
             {/* Launchpad — public URL alias (hidden, no nav links) */}
             <Route path="/launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
               <Route path="create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />

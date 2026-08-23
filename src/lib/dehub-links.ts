@@ -42,6 +42,8 @@ export interface DehubLinkMatch {
   /** In-app path (pathname + search) to navigate to, exactly as the link pointed. */
   path: string;
   tokenId?: string;
+  /** Comment id when the link is a thread entry (/posts/1/b/55). */
+  commentId?: string;
   /** Set when a post link used the off-chain slug (/newpost/3) instead of a tokenId. */
   newPostId?: string;
   username?: string;
@@ -87,7 +89,8 @@ const RESERVED_ROOT_SEGMENTS = new Set([
   'bridge', 'communities', 'connect', 'creator', 'creators', 'delete-account',
   'docs', 'dpay', 'editor', 'events', 'explore', 'features', 'governance',
   'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'mcp', 'mobile-preview',
-  'music', 'premium', 'pricing', 'prompt', 'r', 'radio', 'robots.txt', 'shorts',
+  'music', 'premium', 'pricing', 'prompt', 'posts', 'r', 'radio', 'robots.txt',
+  'shorts',
   'sitemap.xml', 'skill.md', 'stage', 'stages', 'stake', 'stats', 'stores',
   'top-100', 'tv', 'videos', 'work',
 ]);
@@ -99,8 +102,9 @@ const ABSOLUTE_URL_RE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?\/[^
 // Bare in-app paths, which can only be ours: /app/post/1
 // `stage` sits alongside the /app prefix rather than under it because the
 // invite route is top-level — App.tsx routes /stage/:id, not /app/stage/:id.
-// The optional `s` also admits the short share form, /stages/7.
-const BARE_PATH_RE = /\/(?:app|communities|stages?)\/[^\s<>"'`]*/gi;
+// The optional `s` also admits the short share form, /stages/7. `posts` is the
+// short post/thread form for the same reason (/posts/1, /posts/1/b/9).
+const BARE_PATH_RE = /\/(?:app|communities|posts|stages?)\/[^\s<>"'`]*/gi;
 
 // A URL at the end of a sentence carries the punctuation with it.
 const TRAILING_PUNCTUATION_RE = /[.,;:!?)\]}>"']+$/;
@@ -179,6 +183,20 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
   if (scoped[0] === 'newpost' && scoped[1]) {
     if (!/^\d+$/.test(scoped[1])) return null;
     return { ...base, kind: 'post', newPostId: scoped[1] };
+  }
+
+  // ── /posts/:n — the short post form, with the optional thread tail ──
+  //
+  // /posts/1 opens the post; /posts/1/b is the author's self-reply thread;
+  // /posts/1/b/<commentId> anchors one thread entry. Deliberately not
+  // app-scoped, like /stage and /newpost. Anything after /b that isn't a
+  // numeric comment id is not ours.
+  if (scoped[0] === 'posts' && scoped[1]) {
+    if (!/^\d+$/.test(scoped[1])) return null;
+    if (scoped[2] !== undefined && scoped[2] !== 'b') return null;
+    const commentId = scoped[3];
+    if (commentId !== undefined && !/^\d+$/.test(commentId)) return null;
+    return { ...base, kind: 'post', tokenId: scoped[1], ...(commentId ? { commentId } : {}) };
   }
 
   // ── communities/join/:code (invite) — must precede the slug form ──
@@ -336,6 +354,16 @@ export const dehubLinkFor = {
   newPost: (n: string | number) => `${shareOrigin()}/newpost/${n}`,
   comment: (tokenId: string | number, commentId: string | number) =>
     `${shareOrigin()}/app/post/${tokenId}?comment=${encodeURIComponent(String(commentId))}`,
+  /** Short post form — /posts/1. */
+  postShort: (tokenId: string | number) => `${shareOrigin()}/posts/${tokenId}`,
+  /** The author thread hanging off a post — /posts/1/b. */
+  thread: (tokenId: string | number) => `${shareOrigin()}/posts/${tokenId}/b`,
+  /**
+   * One entry in the author thread — /posts/1/b/55. Used for the share link of
+   * a straight comment the post author left on their own post.
+   */
+  threadEntry: (tokenId: string | number, commentId: string | number) =>
+    `${shareOrigin()}/posts/${tokenId}/b/${encodeURIComponent(String(commentId))}`,
   profile: (username: string) => `${shareOrigin()}/${encodeURIComponent(username)}`,
   community: (slug: string) => `${shareOrigin()}/app/communities/${encodeURIComponent(slug)}`,
   communityInvite: (code: string) => `${shareOrigin()}/app/communities/join/${encodeURIComponent(code)}`,

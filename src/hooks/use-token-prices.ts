@@ -44,7 +44,8 @@ function isPriceSurface(pathname: string): boolean {
   return (
     PRICE_SURFACES.has(pathname) ||
     pathname.startsWith('/app/stores/') ||
-    pathname.startsWith('/app/post/')
+    pathname.startsWith('/app/post/') ||
+    pathname.startsWith('/posts/')
   );
 }
 

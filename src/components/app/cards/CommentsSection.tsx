@@ -39,7 +39,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes } from '@/lib/api/dehub';
+import { dehubLinkFor } from '@/lib/dehub-links';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
 import { TipModal } from '@/components/app/modals/TipModal';
@@ -50,34 +51,16 @@ import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
 import { mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
 import { UserMentionDropdown } from '@/components/app/mentions';
+import { mapApiComment, type Comment, type VoiceNote } from '@/lib/comment-mapper';
+
+// The comment data shape and its API mapper live in @/lib/comment-mapper so
+// non-component consumers can share them. Re-exported here for the surfaces
+// that already imported them from this module.
+export type { Comment, VoiceNote };
 
 // ============================================================================
 // TYPES
 // ============================================================================
-
-export interface VoiceNote {
-  url: string;
-  duration: number;
-}
-
-export interface Comment {
-  id: string;
-  username: string;
-  displayName?: string;
-  avatar?: string;
-  text: string;
-  imageUrl?: string;
-  likes: number;
-  dislikes: number;
-  timeAgo: string;
-  createdAt: Date; // For sorting
-  isLiked?: boolean;
-  isDisliked?: boolean;
-  voiceNote?: VoiceNote;
-  replyToId?: string;
-  address?: string;
-  badgeBalance?: number;
-}
 
 interface CommentsSectionProps {
   tokenId: string;
@@ -88,58 +71,14 @@ interface CommentsSectionProps {
    *  existing comments stay listed — the server refuses new ones either way
    *  (requestCommentFunc), so this is presentation, not the enforcement. */
   commentsDisabled?: boolean;
-}
-
-// formatTimeAgo is now imported from @/lib/feed-utils
-
-function mapApiComment(apiComment: ApiCommentResponse): Comment {
-  const address = apiComment.address;
-  // Use centralized utility for avatar field extraction
-  const rawAvatarPath = extractAvatarPath(apiComment.writor);
-  
-  // Build avatar URL - use buildAvatarUrl for proper CDN path resolution
-  const resolvedAvatar = address && rawAvatarPath 
-    ? buildAvatarUrl(address, rawAvatarPath) 
-    : undefined;
-  
-  // Parse createdAt for sorting - fallback to current time if parsing fails
-  const createdAt = apiComment.createdAt ? new Date(apiComment.createdAt) : new Date();
-  
-  const voiceNote = (apiComment as any).audioUrl ? {
-    url: (apiComment as any).audioUrl.startsWith('http') 
-      ? (apiComment as any).audioUrl 
-      : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${(apiComment as any).audioUrl}`,
-    duration: (apiComment as any).audioDuration || 0,
-  } : undefined;
-
-  // Resolve imageUrl (GIF comments or image comments)
-  // API may return gif in imageUrl, gifUrl, or image field
-  let commentImageUrl: string | undefined;
-  const rawImageUrl = apiComment.imageUrl || (apiComment as any).gifUrl || (apiComment as any).image || (apiComment as any).gif;
-  if (rawImageUrl) {
-    commentImageUrl = rawImageUrl.startsWith('http')
-      ? rawImageUrl
-      : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawImageUrl}`;
-  }
-  
-  return {
-    id: String(apiComment.id),
-    username: apiComment.writor?.username || 'Anonymous',
-    displayName: apiComment.writor?.displayName || undefined,
-    avatar: resolvedAvatar,
-    text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
-    imageUrl: commentImageUrl,
-    likes: apiComment.likeCount ?? 0,
-    dislikes: apiComment.dislikeCount ?? 0,
-    timeAgo: formatTimeAgo(apiComment.createdAt),
-    createdAt,
-    isLiked: apiComment.isLiked ?? false,
-    isDisliked: apiComment.isDisliked ?? false,
-    replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
-    address,
-    voiceNote,
-    badgeBalance: apiComment.writor?.badgeBalance,
-  };
+  /**
+   * Post author's wallet address. Set ONLY where the host page renders those
+   * comments itself as the author thread above the card: straight comments
+   * (top-level, no parentId) written by this address are hidden from the list
+   * here so they exist exactly once. Leave unset everywhere else — feed cards
+   * have no thread block, and hiding without showing would lose comments.
+   */
+  postAuthorAddress?: string;
 }
 
 const SORT_OPTIONS = [
@@ -189,6 +128,11 @@ interface CommentItemProps {
   /** Nesting depth: 0 = top-level, 1 = direct reply, 2 = reply-to-reply, … */
   depth?: number;
   isOwnComment?: boolean;
+  /**
+   * Straight comment by the post author on their own post — its permalink is
+   * the thread-entry sub-URL (/posts/<tokenId>/b/<id>) rather than ?comment=.
+   */
+  isThreadEntry?: boolean;
 }
 
 interface VoiceNotePlayerProps {
@@ -235,7 +179,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment, isThreadEntry }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -434,7 +378,9 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               <DropdownMenuContent align="start" data-comments-dropdown className="min-w-[160px]">
                 <DropdownMenuItem
                   onClick={() => {
-                    const url = `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
+                    const url = isThreadEntry
+                      ? dehubLinkFor.threadEntry(tokenId, comment.id)
+                      : `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
                     navigator.clipboard.writeText(url);
                     toast.success('Link copied');
                   }}
@@ -496,7 +442,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, postAuthorAddress }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
@@ -677,18 +623,31 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const childrenOf = new Map<string, Comment[]>();
     const roots: Comment[] = [];
 
+    // The author's straight comments on their own post are rendered by the host
+    // page as the author thread above the card — drop them here so they don't
+    // appear twice. Replies TO those stay listed (promoted to roots, since the
+    // parent is not in this list). Only applies when the host opted in by
+    // passing postAuthorAddress; a temp/optimistic self-comment carries the
+    // viewer address, so it jumps straight into the thread with no flash in
+    // this list either.
+    const isAuthorThreadEntry = (c: Comment) =>
+      !!postAuthorAddress &&
+      !c.replyToId &&
+      !!c.address &&
+      c.address.toLowerCase() === postAuthorAddress.toLowerCase();
+
     allComments.forEach(c => {
       const parentId = c.replyToId;
-      // A reply whose parent isn't in this page (the API returns a flat window of
-      // comments, so an ancestor can fall outside it) is promoted to a root
-      // rather than dropped — losing it would hide real replies entirely.
-      if (parentId && parentId !== c.id && byId.has(parentId)) {
-        const siblings = childrenOf.get(parentId);
-        if (siblings) siblings.push(c);
-        else childrenOf.set(parentId, [c]);
-      } else {
-        roots.push(c);
+      if (!parentId || parentId === c.id || !byId.has(parentId)) {
+        // A reply whose parent isn't in this page (the API returns a flat window of
+        // comments, so an ancestor can fall outside it) is promoted to a root
+        // rather than dropped — losing it would hide real replies entirely.
+        if (!isAuthorThreadEntry(c)) roots.push(c);
+        return;
       }
+      const siblings = childrenOf.get(parentId);
+      if (siblings) siblings.push(c);
+      else childrenOf.set(parentId, [c]);
     });
 
     // Oldest-first within a thread, so a conversation reads top to bottom.
@@ -717,13 +676,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
     // Safety net: if bad data ever produced a parent cycle, none of its members
     // would look like a root and the whole ring would disappear. Surface any
-    // comment the walk never reached as a top-level one instead of losing it.
+    // comment the walk never reached as a top-level one instead of losing it —
+    // except the author thread entries, which belong to the host page's block.
     allComments.forEach(c => {
-      if (!emitted.has(c.id)) threads.push(buildThread(c));
+      if (!emitted.has(c.id) && !isAuthorThreadEntry(c)) threads.push(buildThread(c));
     });
 
     return threads;
-  }, [allComments]);
+  }, [allComments, postAuthorAddress]);
 
   useEffect(() => {
     return () => {
@@ -1304,20 +1264,25 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(({ comment, replies }) => (
                     <div key={comment.id}>
-                      <CommentItem 
+                      <CommentItem
                         comment={comment}
                         tokenId={tokenId}
                         onLike={handleLike}
                         onShowLikers={setLikersCommentId}
                         onDislike={handleDislike}
-                        onReply={handleReply} 
-                        onShare={() => {}} 
+                        onReply={handleReply}
+                        onShare={() => {}}
                         onEdit={handleEditComment}
                         onDelete={handleDeleteComment}
                         onTip={handleTip}
                         tipTotal={commentTips?.[comment.id]}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
+                        isThreadEntry={
+                          !comment.replyToId &&
+                          !!postAuthorAddress &&
+                          comment.address?.toLowerCase() === postAuthorAddress.toLowerCase()
+                        }
                       />
                       {replies.map(({ comment: reply, depth }) => (
                         <CommentItem
@@ -1513,20 +1478,25 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(({ comment, replies }) => (
                     <div key={comment.id}>
-                      <CommentItem 
+                      <CommentItem
                         comment={comment}
                         tokenId={tokenId}
                         onLike={handleLike}
                         onShowLikers={setLikersCommentId}
                         onDislike={handleDislike}
-                        onReply={handleReply} 
-                        onShare={() => {}} 
+                        onReply={handleReply}
+                        onShare={() => {}}
                         onEdit={handleEditComment}
                         onDelete={handleDeleteComment}
                         onTip={handleTip}
                         tipTotal={commentTips?.[comment.id]}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
+                        isThreadEntry={
+                          !comment.replyToId &&
+                          !!postAuthorAddress &&
+                          comment.address?.toLowerCase() === postAuthorAddress.toLowerCase()
+                        }
                       />
                       {replies.map(({ comment: reply, depth }) => (
                         <CommentItem
