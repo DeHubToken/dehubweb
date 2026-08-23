@@ -4,6 +4,14 @@ export interface DeHubUser {
   id?: string;
   address?: string;
   wallet_address?: string;
+  /**
+   * How the account's Supabase identity was attached — 'wallet-email' when
+   * the email-link flow wrote it, absent otherwise. Server-vetted by
+   * construction (the backend only returns what its own confirm endpoint
+   * wrote), which is what lets an email login finish on a browser holding no
+   * local wallet state for the account.
+   */
+  loginLinkSource?: string | null;
   username?: string | null;
   displayName?: string | null;
   display_name?: string;

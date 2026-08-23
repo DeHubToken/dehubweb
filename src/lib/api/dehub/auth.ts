@@ -166,6 +166,60 @@ export async function authenticateWithSupabaseSession(
   return data;
 }
 
+export interface EmailLinkStatusResponse {
+  status: boolean;
+  linked: boolean;
+  /** Masked server-side (us***@example.com) — safe to render as-is. */
+  email: string | null;
+}
+
+/** Whether the signed-in account already carries an email login. */
+export async function getEmailLinkStatus(): Promise<EmailLinkStatusResponse> {
+  const { apiCall } = await import('./core');
+  return apiCall<EmailLinkStatusResponse>('/api/account/email-link/status', {
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Mail a 6-digit code that, once confirmed, lets this account sign in with
+ * that email — no wallet signature needed on future logins.
+ *
+ * Errors arrive as thrown Error instances whose message is the server's
+ * user-facing copy (cooldowns, rate limits, invalid email), so callers can
+ * toast them directly.
+ */
+export async function requestEmailLinkCode(email: string): Promise<{ status: boolean }> {
+  const { apiCall } = await import('./core');
+  return apiCall<{ status: boolean }>('/api/account/email-link/request', {
+    method: 'POST',
+    body: { email },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Verify the code and attach the email as a login route for this account.
+ *
+ * Refusals are 409s with a `code` in the body (EMAIL_IN_USE,
+ * EMAIL_ALREADY_LINKED, ACCOUNT_HAS_LOGIN_LINKED); apiCall flattens those to
+ * Error(message), which is all the UI needs to show.
+ */
+export async function confirmEmailLink(
+  email: string,
+  code: string,
+): Promise<{ status: boolean; linked: boolean; email: string | null }> {
+  const { apiCall } = await import('./core');
+  return apiCall<{ status: boolean; linked: boolean; email: string | null }>(
+    '/api/account/email-link/confirm',
+    {
+      method: 'POST',
+      body: { email, code },
+      requiresAuth: true,
+    },
+  );
+}
+
 /**
  * Refresh the access token using the stored refresh token.
  * Returns the new token data, or null if refresh failed.
