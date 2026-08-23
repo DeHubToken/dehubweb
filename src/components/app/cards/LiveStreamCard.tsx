@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
+import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -102,6 +103,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const isStreamOwner = walletAddress && stream.creatorId &&
     walletAddress.toLowerCase() === stream.creatorId.toLowerCase();
   const { like, gift, end, isLiking, isEnding } = useStreamActions();
+  const { muteAuthor } = useMuteAuthor();
   // Every /api/live/{id}/* interaction route takes the Mongo ObjectId, never
   // the NFT tokenId — a tokenId there is a guaranteed CastError 500.
   const apiStreamId = stream.streamId || null;
@@ -628,9 +630,18 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               >
                 <Flag className="w-4 h-4" /> {t('postOptions.report')}
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
-              </DropdownMenuItem>
+              {!isStreamOwner && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (!walletAddress) { openLoginModal(); return; }
+                    if (!stream.creatorId) return;
+                    muteAuthor(stream.creatorId, stream.streamer || undefined);
+                  }}
+                  className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+                >
+                  <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <EyeOff className="w-4 h-4" /> {t('postOptions.seeLessLikeThis')}
               </DropdownMenuItem>
