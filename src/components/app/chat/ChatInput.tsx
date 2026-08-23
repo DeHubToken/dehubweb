@@ -82,15 +82,6 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   const [showReplyTray, setShowReplyTray] = useState(false);
   const smartReplies = useSmartReplies(thread ?? [], peerName);
   const hasThread = !!thread && thread.length > 0;
-  // There is only something to reply TO when the other side spoke last — if the
-  // user sent the last message the drafter would be answering the user.
-  //
-  // This decides whether we SPEND A MODEL CALL. It must never also decide
-  // whether the tray mounts: it was the outer render condition once, and
-  // because the user's own message is the newest after every single send, the
-  // feature silently ceased to exist for the rest of the conversation — no
-  // panel, no orb, no empty state, nothing to press to find out why.
-  const canDraft = hasThread && thread![thread!.length - 1].from === 'them';
 
   const [composerFocused, setComposerFocused] = useState(false);
 
@@ -118,26 +109,25 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   // Read through refs so the effect below can depend on the two things that
   // should actually retrigger it — focus and the newest message — instead of
   // re-running on every keystroke and every render of the hook.
-  const latest = useRef({ smartReplies, message, canDraft, hasThread });
-  latest.current = { smartReplies, message, canDraft, hasThread };
+  const latest = useRef({ smartReplies, message, hasThread });
+  latest.current = { smartReplies, message, hasThread };
 
   /**
    * Being in the composer to reply IS the request for suggestions — there is
    * no button to press first. Held back only when the user has already started
    * typing (they know what to say) or when this message has had its turn.
    *
-   * Note this opens whenever there is a conversation at all, not only when
-   * there is something to draft. A tray that says "nothing to reply to yet" is
-   * a feature the user can see; one that declines to mount is indistinguishable
-   * from one that is broken.
+   * Note this opens whenever there is a conversation at all. The drafter
+   * handles both directions now: an incoming tail gets replies, the user's own
+   * last word gets follow-ups.
    */
   const openTrayIfDue = () => {
-    const { smartReplies: sr, message: msg, canDraft: draftable, hasThread: any } = latest.current;
+    const { smartReplies: sr, message: msg, hasThread: any } = latest.current;
     if (!any || msg.trim()) return;
     if (autoOpenedFor.current === sr.tailKey) return;
     autoOpenedFor.current = sr.tailKey;
     setShowReplyTray(true);
-    if (draftable && sr.status === 'idle') sr.generate();
+    if (sr.status === 'idle') sr.generate();
   };
 
   // Fires on the click into the box, and again if a new message lands while
@@ -153,8 +143,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   // instead, under the same once-per-message discipline as openTrayIfDue.
   useEffect(() => {
     if (!narrowViewport) return;
-    const { smartReplies: sr, canDraft: draftable, message: msg } = latest.current;
-    if (!draftable || msg.trim()) return;
+    const { smartReplies: sr, message: msg } = latest.current;
+    if (msg.trim()) return;
     if (sr.status === 'idle') sr.generate();
   }, [narrowViewport, smartReplies.tailKey]);
 
@@ -396,12 +386,11 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // 'idle' is unresolved, not empty: draftable means the call is on its way,
-  // so it reads as loading; the user spoke last and nothing will ever come.
+  // 'idle' is unresolved, not empty: the call is on its way, so it reads as
+  // loading. A failed draft keeps its chips on screen — muted, with the orb
+  // live to press again.
   const barStatus =
-    smartReplies.status === 'idle'
-      ? canDraft ? 'loading' as const : 'empty' as const
-      : smartReplies.status;
+    smartReplies.status === 'idle' ? ('loading' as const) : smartReplies.status;
   // The strip fills the band in EVERY open thread — a thread with nothing to
   // reply to still gets its quiet one-liner, because an empty band and a
   // broken feature are indistinguishable at a glance.
@@ -416,10 +405,10 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         it exists. Narrow viewports show the resting strip below instead. */}
     {!narrowViewport && showReplyTray && (
       <SmartReplyTray
-        status={canDraft ? smartReplies.status : 'empty'}
-        suggestions={canDraft ? smartReplies.suggestions : []}
+        status={smartReplies.status}
+        suggestions={smartReplies.suggestions}
         error={smartReplies.error}
-        onGenerate={() => { if (latest.current.canDraft) smartReplies.generate(); }}
+        onGenerate={() => smartReplies.generate()}
         onPick={handlePickSuggestion}
         onDismiss={handleDismissTray}
       />
@@ -682,67 +671,65 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           the mobile bottom nav vacates while a conversation is open. It exists
           to be dismissed by use: focusing the composer raises the keyboard,
           the keyboard claims this exact space, so the strip stands down on
-          focus and stays down once there is typed text. A thread with nothing
-          to draft keeps a quiet one-liner so the band never just looks dead. */}
+          focus and stays down once there is typed text. A failed draft keeps
+          its chips — muted, with the orb live for another press — because a
+          dead band and a working one must never be confusable. */}
       {showReplyBar && (
         <div className="lg:hidden px-3 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          {barStatus === 'error' || barStatus === 'empty' ? (
-            <p className="text-center text-[11px] text-zinc-500 py-2.5 truncate">
-              {barStatus === 'empty'
-                ? "Nothing to reply to yet — you sent the last message."
-                : smartReplies.error || 'Could not draft replies'}
-            </p>
-          ) : (
-            <div className="flex items-stretch gap-2">
-              {(barStatus === 'loading'
-                ? [null, null]
-                : [...smartReplies.suggestions.slice(0, 2)])
-                .map((s, i) => (
-                  <button
-                    key={s ? `${s.label}-${i}` : `strip-${i}`}
-                    type="button"
-                    disabled={!s}
-                    onClick={() => s && handlePickSuggestion(s.text)}
-                    aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                    className={`min-w-0 flex-1 min-h-[60px] rounded-2xl border p-2 text-left flex flex-col justify-between transition-colors ${
-                      s
-                        ? 'bg-white/[0.045] border-white/10 active:bg-white/[0.09]'
-                        : barStatus === 'loading'
-                        ? 'bg-white/[0.03] border-white/[0.07] cursor-default'
-                        : 'invisible'
-                    }`}
-                  >
-                    {s ? (
-                      <>
-                        <span className="self-start rounded-full bg-white/10 border border-white/15 px-1.5 text-[9px] leading-4 text-zinc-300">
-                          {s.label}
-                        </span>
-                        <span className="mt-1 text-[12px] leading-snug text-white line-clamp-2">
-                          {s.text}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="block w-full space-y-1.5">
-                        <span className="block h-2.5 w-full rounded bg-white/[0.07] animate-pulse" />
-                        <span className="block h-2.5 w-2/3 rounded bg-white/[0.07] animate-pulse" />
-                      </span>
-                    )}
-                  </button>
-                ))}
-              <div className="flex items-center justify-center shrink-0 px-0.5">
+          <div className="flex items-stretch gap-2">
+            {(barStatus === 'ready'
+              ? [...smartReplies.suggestions.slice(0, 2)]
+              : [null, null])
+              .map((s, i) => (
                 <button
+                  key={s ? `${s.label}-${i}` : `strip-${i}`}
                   type="button"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => { if (canDraft) smartReplies.generate(); }}
-                  disabled={barStatus === 'loading' || !canDraft}
-                  aria-label={barStatus === 'loading' ? 'Drafting replies' : 'Draft new replies'}
-                  className="rounded-full p-1 transition-transform active:scale-95 disabled:opacity-60"
+                  disabled={!s}
+                  onClick={() => s && handlePickSuggestion(s.text)}
+                  aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
+                  className={`min-w-0 flex-1 min-h-[60px] rounded-2xl border p-2 text-left flex flex-col justify-between transition-colors ${
+                    s
+                      ? 'bg-white/[0.045] border-white/10 active:bg-white/[0.09]'
+                      : barStatus === 'loading'
+                        ? 'bg-white/[0.03] border-white/[0.07] cursor-default'
+                        : 'bg-transparent border-white/[0.05] cursor-default'
+                  }`}
                 >
-                  <ReplyOrb state={barStatus === 'loading' ? 'thinking' : 'idle'} size={44} />
+                  {s ? (
+                    <>
+                      <span className="self-start rounded-full bg-white/10 border border-white/15 px-1.5 text-[9px] leading-4 text-zinc-300">
+                        {s.label}
+                      </span>
+                      <span className="mt-1 text-[12px] leading-snug text-white line-clamp-2">
+                        {s.text}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="block w-full space-y-1.5">
+                      <span
+                        className={`block h-2.5 w-full rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
+                      />
+                      <span
+                        className={`block h-2.5 w-2/3 rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
+                      />
+                    </span>
+                  )}
                 </button>
-              </div>
+              ))}
+            <div className="flex items-center justify-center shrink-0 px-0.5">
+              <button
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => smartReplies.generate()}
+                disabled={barStatus === 'loading'}
+                aria-label={barStatus === 'loading' ? 'Drafting replies' : 'Draft new replies'}
+                title={barStatus === 'loading' ? undefined : 'Draft replies'}
+                className="rounded-full p-1 transition-transform active:scale-95 disabled:opacity-60"
+              >
+                <ReplyOrb state={barStatus === 'loading' ? 'thinking' : 'idle'} size={44} />
+              </button>
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>
