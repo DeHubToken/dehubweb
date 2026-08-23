@@ -134,6 +134,26 @@ export function removeProfile(id: string): void {
   writeStore(readStore().filter((p) => p.id !== id));
 }
 
+/**
+ * Merge refreshed session tokens into a profile's stored stash without
+ * touching the live keys. Written for the moment a background refresh for one
+ * account lands after another account took over the live keys (second tab,
+ * add-profile staging): the rotated pair is still valid, and filing it here is
+ * what keeps that profile's chain alive — a snapshot left holding a refresh
+ * token the server already rotated gets its whole family revoked on reuse.
+ */
+export function mergeTokensIntoStoredProfile(
+  owner: { wallet: string; uid: string | null },
+  tokens: Record<string, string>,
+): void {
+  const id = owner.uid ?? `addr:${owner.wallet.toLowerCase()}`;
+  const profiles = readStore();
+  const entry = profiles.find((p) => p.id === id);
+  if (!entry?.session) return;
+  Object.assign(entry.session.tokens, tokens);
+  writeStore(profiles);
+}
+
 function readWagmiKeys(): Record<string, string> {
   const keys: Record<string, string> = {};
   try {
