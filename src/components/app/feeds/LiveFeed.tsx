@@ -7,12 +7,12 @@
  * @module components/app/feeds/LiveFeed
  */
 
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { RefreshCw, Radio, Eye, Tv, ChevronRight, Play, MicOff } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
@@ -25,6 +25,8 @@ import { getTVChannelsByCountry } from '@/lib/api/live-tv';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { openStageModal } from '@/contexts/StageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { toggleStageRecording, useStagePlayback } from '@/lib/stage-playback';
+import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 // Category images
@@ -256,45 +258,15 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
 }
 
 // Past Stages (recordings) section
+//
+// Playback goes through lib/stage-playback, the same engine as every other
+// surface — this section was the last one holding a private `new Audio()`,
+// which is why its rows kept playing after you opened a recording somewhere
+// else, and why they had no scrub bar and no speed control of their own.
+// Leaving the page stops a non-popped-out recording via the corner player's
+// route gate, exactly as it does for the other surfaces.
 function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Stop playback when the Live tab leaves the screen — this feed lives in
-  // PersistentPageCache, so without a route gate a playing recording keeps
-  // going (audibly!) behind every other page. Also release on unmount.
-  const { pathname } = useLocation();
-  const isLiveTabActive = pathname === '/' || pathname === '/app' || pathname === '/app/';
-  useEffect(() => {
-    if (!isLiveTabActive && audioRef.current) {
-      audioRef.current.pause();
-      setPlayingId(null);
-    }
-  }, [isLiveTabActive]);
-  useEffect(() => () => {
-    audioRef.current?.pause();
-    audioRef.current = null;
-  }, []);
-
-  const handlePlay = (stage: AudioSpace) => {
-    if (!stage.recording_url) return;
-
-    if (playingId === stage.id) {
-      audioRef.current?.pause();
-      setPlayingId(null);
-      return;
-    }
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-
-    const audio = new Audio(stage.recording_url);
-    audio.onended = () => setPlayingId(null);
-    audio.play();
-    audioRef.current = audio;
-    setPlayingId(stage.id);
-  };
+  const { spaceId: loadedId, paused: playbackPaused } = useStagePlayback();
 
   return (
     <div className="space-y-3">
@@ -303,44 +275,51 @@ function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
         <h2 className="font-bold text-white">Past Stages</h2>
       </div>
       <div className="space-y-2">
-        {stages.map(stage => (
-          <div key={stage.id} className="p-3 bg-white/5 rounded-xl border border-white/10">
-            <div className="flex items-center gap-3">
-              {/* Play button if recording exists */}
-              {stage.recording_url ? (
-                <button
-                  onClick={() => handlePlay(stage)}
-                  className="shrink-0 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all"
-                >
-                  {playingId === stage.id ? (
-                    <span className="flex gap-0.5">
-                      <span data-live-pulse className="w-1 h-3 bg-white rounded-full animate-pulse" />
-                      <span data-live-pulse className="w-1 h-3 bg-white rounded-full animate-pulse [animation-delay:0.15s]" />
-                      <span data-live-pulse className="w-1 h-3 bg-white rounded-full animate-pulse [animation-delay:0.3s]" />
-                    </span>
-                  ) : (
-                    <Play className="w-4 h-4 text-white ml-0.5" />
-                  )}
-                </button>
-              ) : (
-                <div className="shrink-0 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center">
-                  <MicOff className="w-4 h-4 text-white/20" />
-                </div>
-              )}
+        {stages.map(stage => {
+          const isLoaded = loadedId === stage.id;
+          const isPlaying = isLoaded && !playbackPaused;
 
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-medium text-sm truncate">{stage.title}</p>
-                <p className="text-white/50 text-xs mt-0.5">
-                  {stage.host_username || 'Anonymous'} · {stage.speaker_count || 0} speakers
-                  {stage.ended_at && ` · ${new Date(stage.ended_at).toLocaleDateString()}`}
-                </p>
-                {!stage.recording_url && (
-                  <p className="text-white/25 text-xs mt-0.5">No recording</p>
+          return (
+            <div key={stage.id} className="p-3 bg-white/5 rounded-xl border border-white/10">
+              <div className="flex items-center gap-3">
+                {/* Play button if recording exists */}
+                {stage.recording_url ? (
+                  <button
+                    onClick={() => toggleStageRecording(stage)}
+                    className="shrink-0 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all"
+                  >
+                    {isPlaying ? (
+                      <span className="flex gap-0.5">
+                        <span data-live-pulse className="w-1 h-3 bg-white rounded-full animate-pulse" />
+                        <span data-live-pulse className="w-1 h-3 bg-white rounded-full animate-pulse [animation-delay:0.15s]" />
+                        <span data-live-pulse className="w-1 h-3 bg-white rounded-full animate-pulse [animation-delay:0.3s]" />
+                      </span>
+                    ) : (
+                      <Play className="w-4 h-4 text-white ml-0.5" />
+                    )}
+                  </button>
+                ) : (
+                  <div className="shrink-0 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center">
+                    <MicOff className="w-4 h-4 text-white/20" />
+                  </div>
                 )}
+
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium text-sm truncate">{stage.title}</p>
+                  <p className="text-white/50 text-xs mt-0.5">
+                    {stage.host_username || 'Anonymous'} · {stage.speaker_count || 0} speakers
+                    {stage.ended_at && ` · ${new Date(stage.ended_at).toLocaleDateString()}`}
+                  </p>
+                  {!stage.recording_url && (
+                    <p className="text-white/25 text-xs mt-0.5">No recording</p>
+                  )}
+                </div>
+
+                {stage.recording_url && <StageRateButton />}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

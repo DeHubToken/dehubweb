@@ -30,6 +30,7 @@ import { useLocation } from 'react-router-dom';
 import { Loader2, Pause, Play, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
+import { StageRateButton } from '@/components/app/stages/StageRateButton';
 
 import {
   scrubStageRecording,
@@ -122,6 +123,8 @@ export function StageRecordingMiniPlayer() {
           {timeLeft && (
             <span className="text-[10px] text-white/50 font-mono shrink-0">{timeLeft}</span>
           )}
+
+          <StageRateButton />
         </div>
       </div>
     </div>

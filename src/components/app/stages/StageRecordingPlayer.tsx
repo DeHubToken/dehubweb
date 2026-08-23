@@ -31,6 +31,7 @@ import type { KeyboardEvent, SyntheticEvent } from 'react';
 import { Play, Pause, Loader2, PictureInPicture2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
+import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import {
   closeStagePopout,
   popOutStageRecording,
@@ -178,6 +179,9 @@ export function StageRecordingPlayer({
             {timeLeft}
           </span>
         )}
+        {/* Speed, once this is the loaded recording — idle cards stay a clean
+            play button and a bar. */}
+        {isLoaded && <StageRateButton className="w-11" />}
       </div>
 
       <span
