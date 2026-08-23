@@ -18,18 +18,20 @@ jobs:
           set -euo pipefail
           # Secret values were stored from a Windows shell and carry stray
           # carriage returns / padding — strip everything non-token.
-          CF_API_TOKEN="$(printf '%s' "$CF_API_TOKEN_RAW" | tr -d '[:space:]\r')"
-          CF_ACCOUNT_ID="$(printf '%s' "$CF_ACCOUNT_ID_RAW" | tr -d '[:space:]\r')"
+          CF_API_TOKEN="$(printf '%s' "$CF_API_TOKEN_RAW" | tr -d '[:space:]\r'"'"'"')"
           echo "token length: ${#CF_API_TOKEN}, account-id length: ${#CF_ACCOUNT_ID}"
           # Find the zone from the token's own grants rather than trusting the
           # stored id — the CLOUDFLARE_ID secret does not parse as a CF id.
-          ZONE=$(curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/zones?per_page=50" \
-            | jq -r '.result[] | select(.name == "dehub.io") | .id' | head -1)
+          RESP=$(curl -sS -w '\n%{http_code}' \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?per_page=50")
+          CODE=$(printf '%s' "$RESP" | tail -n1)
+          BODY=$(printf '%s' "$RESP" | sed '$d')
+          echo "zones api http $CODE"
+          ZONE=$(printf '%s' "$BODY" | jq -r '.result[]? | select(.name == "dehub.io") | .id' | head -1)
           if [ -z "$ZONE" ]; then
-            echo "ERROR: dehub.io zone not visible to this token"
-            curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
-              "https://api.cloudflare.com/client/v4/zones?per_page=5" | head -c 600
+            echo "ERROR: dehub.io zone not visible to this token — body follows"
+            printf '%s\n' "$BODY" | head -c 800
             exit 1
           fi
           echo "zone id: $ZONE"
