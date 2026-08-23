@@ -54,12 +54,12 @@ export function SmartReplyTray({
         <div className="min-h-[56px] flex items-center justify-center text-center px-4">
           <p className="text-xs text-zinc-500">
             {status === 'empty'
-              ? "Nothing to reply to yet — you sent the last message."
+              ? 'Nothing to reply to yet. You sent the last message.'
               : error || 'Could not draft replies'}
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="smart-reply-rail grid grid-cols-2">
           {(busy || suggestions.length === 0
             ? [null, null]
             : suggestions.slice(0, 2)
@@ -73,7 +73,9 @@ export function SmartReplyTray({
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => s && onPick(s.text)}
               aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-              className={`group min-h-[92px] rounded-2xl border p-2.5 text-left flex flex-col justify-between transition-colors ${
+              className={`group min-h-[92px] border p-2.5 text-left flex flex-col justify-between transition-colors active:scale-[0.99] ${
+                i === 0 ? 'rounded-l-2xl' : '-ml-px rounded-r-2xl'
+              } ${
                 s
                   ? 'bg-white/[0.045] border-white/10 hover:bg-white/[0.09] hover:border-white/20'
                   : 'bg-white/[0.03] border-white/[0.07] cursor-default'
@@ -102,8 +104,8 @@ export function SmartReplyTray({
         </div>
       )}
 
-      {/* Orb hangs off the bottom edge of the card row, centred on the seam. */}
-      <div className="flex justify-center -mt-4 relative z-10">
+      {/* Orb fills the circular cut-out in the joined rail. */}
+      <div className="flex justify-center -mt-6 relative z-10">
         <button
           type="button"
           onMouseDown={(e) => e.preventDefault()}
