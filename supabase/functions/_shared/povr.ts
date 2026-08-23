@@ -78,7 +78,14 @@ export interface ServeTokenPayload {
 }
 
 function signingSecret(): string {
-  return Deno.env.get('ADS_SIGNING_SECRET') || Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || 'dev-secret';
+  // Fail closed. The old 'dev-secret' fallback meant a project missing its env
+  // vars served forgeable tokens — an unlimited money printer against every
+  // campaign. Serving no ads is recoverable; forged billing is not.
+  const secret = Deno.env.get('ADS_SIGNING_SECRET') || Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  if (!secret) {
+    throw new Error('ADS_SIGNING_SECRET (or SUPABASE_SERVICE_ROLE_KEY) is not configured');
+  }
+  return secret;
 }
 
 function b64url(bytes: Uint8Array): string {
