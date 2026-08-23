@@ -31,6 +31,7 @@ import {
 import { useStreamActions } from '@/hooks/use-livestream';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { toast } from 'sonner';
 import type { LiveStream } from '@/types/feed.types';
 
@@ -50,6 +51,12 @@ export function LiveCard({ stream }: LiveCardProps) {
   // Bookmark state for the mobile/tablet three-dot menu (desktop shows this
   // in the ActionBar's left-anchored utility cluster instead).
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(stream.id);
+  const { muteAuthor } = useMuteAuthor();
+  const handleMuteStreamer = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!stream.creatorId) return;
+    muteAuthor(stream.creatorId, stream.streamer || undefined);
+  }, [walletAddress, openLoginModal, stream.creatorId, stream.streamer, muteAuthor]);
   const openPostInfoPage = useCallback(() => {
     navigate(`/app/post/${stream.id}/info`);
   }, [navigate, stream.id]);
@@ -141,7 +148,7 @@ export function LiveCard({ stream }: LiveCardProps) {
               >
                 <Flag className="w-4 h-4" /> {t('postOptions.report')}
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <DropdownMenuItem onClick={handleMuteStreamer} className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">

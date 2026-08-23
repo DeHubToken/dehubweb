@@ -13,6 +13,7 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
+import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnPost, reactToPost, getNFTComments, postComment, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
@@ -229,6 +230,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   const currentShort = shorts[currentIndex];
   const isOwnShort = !!walletAddress && currentShort?.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const { muteAuthor } = useMuteAuthor();
   // Who reacted what is the author's to see — the ⓘ in the reaction tray only
   // exists on your own shorts (and the API refuses the list to anyone else).
   const canViewReactionInfo = isOwnShort && !!currentShort?.id;
@@ -1547,7 +1549,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             )}
             {!isOwnShort && (
               <button
-                onClick={() => toast.info('Block coming soon')}
+                onClick={() => {
+                  if (!walletAddress) { openLoginModal(); return; }
+                  if (!currentShort?.creatorId) return;
+                  muteAuthor(currentShort.creatorId, currentShort.displayName || currentShort.creatorUsername || undefined);
+                }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
                 <Ban className="w-5 h-5" /> Block Creator
