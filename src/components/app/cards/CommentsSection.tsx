@@ -1199,6 +1199,23 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             </TooltipTrigger>
             <TooltipContent>{sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}</TooltipContent>
           </Tooltip>
+          {/* Collapse control for the inline expansion on feed cards. The
+              embedded shorts side panel has nothing to close, so no X there. */}
+          {!embedded && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close comments"
+                  className="py-1.5 px-3 flex items-center justify-center transition-colors rounded-xl text-zinc-400 hover:text-white"
+                >
+                  <X className="w-[17px] h-[17px]" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Close comments</TooltipContent>
+            </Tooltip>
+          )}
         </div>
 
         {/* Duplicate post action buttons removed — already shown in ActionBar above */}
