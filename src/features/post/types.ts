@@ -1,5 +1,4 @@
 import type { FilterSettings, CropSettings } from './types/filters';
-import type { DailyPostQuotaState } from '@/hooks/use-daily-post-quota';
 
 export interface AudioFile {
   blob: Blob;
@@ -130,12 +129,10 @@ export interface PostFormComputed {
   isShort: boolean;
   destinations: string[];
   canPost: boolean;
-  /** Composer has something to publish, ignoring the daily allowance. */
+  /** Composer has something to publish. */
   hasContent: boolean;
   /** e.g. "17 DHB" — null while unpriced, or when minting costs nothing. */
   mintFeeLabel: string | null;
   /** Bounty locks tokens through the mint, so minting cannot be turned off. */
   mintRequired: boolean;
-  /** Main-feed posts left today, and the badge tier that set the allowance. */
-  dailyQuota: DailyPostQuotaState;
 }
