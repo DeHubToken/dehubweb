@@ -127,6 +127,7 @@ export function patchFeedCaches(
 
             // ImagePost shape (likes field)
             if ('likes' in item && typeof item.likes === 'number') patched.likes = voteState.likeCount;
+            if ('dislikes' in item && typeof item.dislikes === 'number') patched.dislikes = voteState.dislikeCount;
 
             // Raw API item shape (dehub-feed / dehub-user-content pages hold
             // unmapped NFTs, whose counts live under totalVotes)
@@ -134,9 +135,12 @@ export function patchFeedCaches(
               patched.totalVotes = { ...item.totalVotes, for: voteState.likeCount, against: voteState.dislikeCount };
             }
 
-            // TextPost shape (stats.likes)
+            // TextPost shape (stats.likes / stats.dislikes)
             if (item.stats && typeof item.stats.likes === 'number') {
               patched.stats = { ...item.stats, likes: voteState.likeCount };
+            }
+            if (item.stats && typeof item.stats.dislikes === 'number') {
+              patched.stats = { ...(patched.stats ?? item.stats), dislikes: voteState.dislikeCount };
             }
 
             return patched;

@@ -97,6 +97,35 @@ describe('patchFeedCaches', () => {
     expect(item.stats).toEqual({ likes: 8, comments: 2 });
   });
 
+  it('maps the TextPost dislike count too (stats.dislikes)', () => {
+    const DISLIKE = { isLiked: false, isDisliked: true, likeCount: 7, dislikeCount: 3 };
+    const key = ['unified-feed', {}, 20, null];
+    queryClient.setQueryData(
+      key,
+      makeInfinite('items', [{ id: '5004', isDisliked: false, stats: { likes: 7, dislikes: 2, comments: 2 } }]),
+    );
+
+    patchFeedCaches(queryClient, '5004', DISLIKE);
+
+    const item = (queryClient.getQueryData(key) as any).pages[0].items[0];
+    expect(item.stats).toEqual({ likes: 7, dislikes: 3, comments: 2 });
+  });
+
+  it('maps the ImagePost shape (likes / dislikes numbers)', () => {
+    const DISLIKE = { isLiked: false, isDisliked: true, likeCount: 7, dislikeCount: 3 };
+    const key = ['unified-feed', {}, 20, '0xviewer'];
+    queryClient.setQueryData(
+      key,
+      makeInfinite('items', [{ id: '5004', isDisliked: false, likes: 7, dislikes: 2 }]),
+    );
+
+    patchFeedCaches(queryClient, '5004', DISLIKE);
+
+    const item = (queryClient.getQueryData(key) as any).pages[0].items[0];
+    expect(item.likes).toBe(7);
+    expect(item.dislikes).toBe(3);
+  });
+
   it('leaves unrelated queries untouched', () => {
     const unrelated = ['bookmarks', '0xviewer'];
     const value = makeInfinite('items', [{ id: '5004', isLiked: false }]);

@@ -58,6 +58,7 @@ export interface TextPost extends BaseFeedItem {
     comments: number;
     reposts: number;
     likes: number;
+    dislikes: number;
   };
   /** Whether the current user has liked this item */
   isLiked?: boolean;
@@ -203,6 +204,7 @@ export interface ImagePost extends BaseFeedItem {
   /** Post description */
   description?: string;
   likes: number;
+  dislikes?: number;
   /** @deprecated Use title/description instead */
   caption: string;
   comments: number;
@@ -315,7 +317,10 @@ export interface ShortVideo extends BaseFeedItem {
   verified: boolean;
   /** Creator's avatar URL */
   avatar?: string;
+  /** Formatted like count (e.g., "1.2K") */
   likes: string;
+  /** Raw dislike count — the shorts viewer prints it beside the thumbs-down */
+  dislikes?: number;
   thumbnail: string;
   videoUrl: string;
   description?: string;

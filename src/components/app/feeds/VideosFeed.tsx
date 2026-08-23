@@ -670,6 +670,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         verified: (item as any).minterUser?.isVerified || false,
         avatar: avatarUrl || undefined,
         likes: String(item.totalVotes?.for || 0),
+        dislikes: item.totalVotes?.against || 0,
         thumbnail: getMediaUrl(item.imageUrl) || '',
         videoUrl: item.videoUrl
           ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)

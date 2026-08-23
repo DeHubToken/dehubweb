@@ -213,6 +213,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     title,
     description,
     likes: resolveLikeCount(nft),
+    dislikes: resolveDislikeCount(nft),
     caption: description || '',
     comments: nft.commentCount || nft.comment_count || 0,
     status: nft.status,
@@ -292,6 +293,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
       likes: resolveLikeCount(nft),
+      dislikes: resolveDislikeCount(nft),
     },
     // These three used to be missing here — the video and image mappers above
     // both carry them, so only text posts lost their like/dislike/repost state

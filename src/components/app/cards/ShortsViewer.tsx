@@ -365,10 +365,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       const likes = typeof currentShort?.likes === 'string'
         ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0
         : (currentShort?.likes as unknown as number) || 0;
+      const dislikes = (currentShort as { dislikes?: number })?.dislikes ?? 0;
       setLocalLikeCount(likes);
-      setLocalDislikeCount(0);
+      setLocalDislikeCount(dislikes);
       setMyReaction(resolveMyReaction(currentShort as never));
-      setLocalReactionCounts((currentShort as never as { reactionCounts?: ReactionCounts })?.reactionCounts ?? seedReactionCounts(likes, 0));
+      setLocalReactionCounts((currentShort as never as { reactionCounts?: ReactionCounts })?.reactionCounts ?? seedReactionCounts(likes, dislikes));
     }
     setPickerOpen(false);
     setShowComments(false);

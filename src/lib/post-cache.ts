@@ -116,7 +116,7 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
     isDisliked: post.isDisliked,
     totalVotes: {
       for: post.likes || 0,
-      against: 0,
+      against: post.dislikes || 0,
     },
     commentCount: post.comments || 0,
     // Preserve the original timestamp - timeAgo is already formatted, so we need to pass createdAt
@@ -169,7 +169,7 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
     isDisliked: post.isDisliked,
     totalVotes: {
       for: post.stats.likes || 0,
-      against: 0,
+      against: post.stats.dislikes || 0,
     },
     commentCount: post.stats.comments || 0,
     totalReposts: post.stats.reposts || 0,
