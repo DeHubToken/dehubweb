@@ -21,10 +21,17 @@ jobs:
           CF_API_TOKEN="$(printf '%s' "$CF_API_TOKEN_RAW" | tr -d '[:space:]\r')"
           CF_ACCOUNT_ID="$(printf '%s' "$CF_ACCOUNT_ID_RAW" | tr -d '[:space:]\r')"
           echo "token length: ${#CF_API_TOKEN}, account-id length: ${#CF_ACCOUNT_ID}"
-          ZONE=$(curl -sSf -H "Authorization: Bearer $CF_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/zones?account.id=$CF_ACCOUNT_ID&name=dehub.io" \
-            | jq -r '.result[0].id // empty')
-          if [ -z "$ZONE" ]; then echo "ERROR: dehub.io zone not found"; exit 1; fi
+          # Find the zone from the token's own grants rather than trusting the
+          # stored id — the CLOUDFLARE_ID secret does not parse as a CF id.
+          ZONE=$(curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?per_page=50" \
+            | jq -r '.result[] | select(.name == "dehub.io") | .id' | head -1)
+          if [ -z "$ZONE" ]; then
+            echo "ERROR: dehub.io zone not visible to this token"
+            curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/zones?per_page=5" | head -c 600
+            exit 1
+          fi
           echo "zone id: $ZONE"
           echo '--- create route ---'
           curl -sSf -X POST \
