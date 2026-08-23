@@ -29,17 +29,6 @@ export class AuthenticationError extends Error {
   }
 }
 
-/**
- * The account has spent its daily main-feed post allowance. Carries the
- * server's own wording, which already names the limit and the reset time.
- */
-export class PostQuotaError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'PostQuotaError';
-  }
-}
-
 // ── Token Storage ──
 
 export const setAuthToken = (token: string | null) => {
@@ -376,12 +365,7 @@ export async function apiCall<T>(
     if (response.status === 401 || (response.status === 403 && isAuthError)) {
       throw new AuthenticationError('Session expired. Please sign in again.');
     }
-    
-    // The post allowance marks its own 429 so generic throttling is not mistaken
-    // for it; its message is written for the poster, so pass it through.
-    if (response.status === 429 && errorData.code === 'DAILY_POST_LIMIT') {
-      throw new PostQuotaError(errorData.message);
-    }
+
 
     throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
   }
@@ -524,12 +508,6 @@ export async function authedUpload<T>(
     throw new AuthenticationError("Session expired. Please sign in again.");
   }
 
-  // The daily post allowance answers 429 with a sentence written for the
-  // poster ("You have used all 3 of today's posts. More in 4h 10m."). Pass it
-  // through untouched — wrapping it in an HTTP status helps nobody.
-  if (result.status === 429 && result.code === 'DAILY_POST_LIMIT') {
-    throw new PostQuotaError(result.message);
-  }
 
   throw new Error(`Upload failed (HTTP ${result.status}): ${result.message}`);
 }

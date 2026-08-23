@@ -30,8 +30,7 @@ const BADGE_LEVELS: BadgeDef[] = [
 ];
 
 /**
- * Tier names, lowest first. The single source of order for anything that scales
- * an allowance by tier (see `lib/post-quota.ts`).
+ * Tier names, lowest first.
  */
 export const BADGE_ORDER: string[] = BADGE_LEVELS.map((b) => b.name);
 
