@@ -13,7 +13,9 @@
 DROP POLICY IF EXISTS "Allow anonymous log insertion" ON public.client_error_logs;
 
 -- The 30-day cleanup has existed since February but was never scheduled.
-DO $$
+-- Outer block uses a named tag because the cron command inside is itself
+-- dollar-quoted; identical tags would terminate this string early.
+DO $do$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'cleanup-client-error-logs') THEN
     PERFORM cron.schedule(
@@ -22,4 +24,4 @@ BEGIN
       $$SELECT public.cleanup_old_client_error_logs()$$
     );
   END IF;
-END $$;
+END $do$;
