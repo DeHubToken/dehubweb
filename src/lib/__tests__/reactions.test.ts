@@ -4,6 +4,7 @@ import {
   asReaction,
   isPositiveReaction,
   reactionForTap,
+  reconcileReactionCounts,
   resolveLeadReaction,
   seedReactionCounts,
   POST_REACTIONS,
@@ -126,9 +127,22 @@ describe('applyReactionDelta', () => {
 });
 
 describe('resolveReactionCounts', () => {
-  it('uses the API breakdown when present', () => {
+  it('uses the API breakdown when it agrees with the counts', () => {
     expect(resolveReactionCounts({ reactionCounts: { love: 4 }, totalVotes: { for: 4 } }))
       .toEqual({ love: 4 });
+  });
+
+  it('scales a drifted breakdown to fit the like count instead of contradicting the card', () => {
+    // Hand-edited totals on the backend left this split behind: the card
+    // reads 10 likes, the stored tray only accounted for 4.
+    expect(resolveReactionCounts({ reactionCounts: { like: 4 }, totalVotes: { for: 10 } }))
+      .toEqual({ like: 10 });
+  });
+
+  it('keeps the shape of a multi-reaction split when scaling', () => {
+    // 4×👍 + 1×❤️ against a headline of 10 → 8×👍 + 2×❤️, not 10×👍.
+    expect(resolveReactionCounts({ reactionCounts: { like: 4, love: 1 }, totalVotes: { for: 10 } }))
+      .toEqual({ like: 8, love: 2 });
   });
 
   it('seeds from totalVotes for posts voted on before reactions shipped', () => {
@@ -146,6 +160,32 @@ describe('resolveReactionCounts', () => {
 
   it('yields nothing for a post nobody has touched', () => {
     expect(resolveReactionCounts({})).toEqual({});
+  });
+});
+
+describe('reconcileReactionCounts', () => {
+  it('always sums back to the requested totals after rounding', () => {
+    const counts = reconcileReactionCounts(101, 7, { like: 13, love: 5, hot: 1, dislike: 2, poo: 1 });
+    const positive = (counts.like ?? 0) + (counts.love ?? 0) + (counts.hot ?? 0) +
+      (counts.respect ?? 0) + (counts.lol ?? 0) + (counts.sad ?? 0) + (counts.cry ?? 0);
+    const negative = (counts.dislike ?? 0) + (counts.poo ?? 0);
+    expect(positive).toBe(101);
+    expect(negative).toBe(7);
+  });
+
+  it('is deterministic for identical inputs', () => {
+    const a = reconcileReactionCounts(9, 2, { like: 2, respect: 1, lol: 1, poo: 3 });
+    const b = reconcileReactionCounts(9, 2, { like: 2, respect: 1, lol: 1, poo: 3 });
+    expect(a).toEqual(b);
+  });
+
+  it('zeroes a side whose rollup dropped to zero', () => {
+    expect(reconcileReactionCounts(0, 3, { like: 7, dislike: 1 })).toEqual({ dislike: 3 });
+  });
+
+  it('falls back to seeding when there is no stored split', () => {
+    expect(reconcileReactionCounts(5, 2, null)).toEqual({ like: 5, dislike: 2 });
+    expect(reconcileReactionCounts(5, 2, {})).toEqual({ like: 5, dislike: 2 });
   });
 });
 
