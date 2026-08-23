@@ -396,6 +396,14 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   // broken feature are indistinguishable at a glance.
   const showReplyBar =
     narrowViewport && hasThread && !composerFocused && !message.trim();
+  // The cut-out rim wears whatever hairline the cards currently wear, so the
+  // socket never reads brighter than the surface it is carved from.
+  const notchRimClass =
+    barStatus === 'ready'
+      ? 'border-white/10'
+      : barStatus === 'loading'
+        ? 'border-white/[0.07]'
+        : 'border-white/[0.05]';
 
   return (
     <>
@@ -676,9 +684,9 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           its chips — muted, with the orb live for another press — because a
           dead band and a working one must never be confusable. */}
       {showReplyBar && (
-        <div className="lg:hidden px-3 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          <div className="relative pb-7">
-            <div className="smart-reply-rail grid grid-cols-2 gap-2">
+        <div className="lg:hidden px-3 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
+          <div className="relative">
+            <div className="smart-reply-rail [--smart-reply-notch:26px] grid grid-cols-2 gap-2">
               {(barStatus === 'ready'
                 ? [...smartReplies.suggestions.slice(0, 2)]
                 : [null, null])
@@ -720,6 +728,14 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
                   </button>
                 ))}
             </div>
+
+            {/* Hairline tracing the cut-out: the mask that carves the notch
+                erases the cards' own border along the arc, so the rim is
+                drawn separately, sized to the seated orb's 52px socket. */}
+            <div
+              aria-hidden="true"
+              className={`pointer-events-none absolute left-1/2 bottom-0 -translate-x-1/2 w-[52px] h-[26px] rounded-t-full border-b-0 ${notchRimClass}`}
+            />
 
             <button
               type="button"
