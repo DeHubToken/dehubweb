@@ -40,6 +40,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { PLAYBACK_RATES } from '@/lib/video-preferences';
 
 /** The little a recording needs to be playable. Any AudioSpace satisfies it. */
 export interface StagePlayable {
@@ -71,6 +72,11 @@ export interface StagePlaybackState {
   volume: number;
   /** Formatted remaining time, e.g. "-3:21". Empty when unknown. */
   timeLeft: string;
+  /**
+   * Playback speed, shared by every surface and persisted between sessions —
+   * a town hall listened at 2x in the feed is still 2x from the corner player.
+   */
+  rate: number;
 }
 
 const IDLE: StagePlaybackState = {
@@ -82,6 +88,7 @@ const IDLE: StagePlaybackState = {
   progress: 0,
   volume: 0,
   timeLeft: '',
+  rate: readStoredRate(),
 };
 
 let state: StagePlaybackState = IDLE;
@@ -105,6 +112,44 @@ function publish(patch: Partial<StagePlaybackState>) {
   for (const notify of subscribers) notify(state);
 }
 
+// ── Playback speed ──────────────────────────────────────────────────────────
+//
+// One rate for the whole app, persisted between sessions. The same ladder the
+// video players cycle through — a speed learned on a video should be the one
+// the town hall picks up in the feed.
+
+const RATE_KEY = 'stage-recording-rate';
+
+function readStoredRate(): number {
+  try {
+    const n = Number(localStorage.getItem(RATE_KEY));
+    if (PLAYBACK_RATES.includes(n as (typeof PLAYBACK_RATES)[number])) return n;
+  } catch {}
+  return 1;
+}
+
+function applyRateToElement() {
+  if (audioEl) audioEl.playbackRate = state.rate;
+}
+
+/** Set the playback speed for stage recordings, now and for future plays. */
+export function setStageRecordingRate(rate: number) {
+  publish({ rate });
+  try {
+    localStorage.setItem(RATE_KEY, String(rate));
+  } catch {}
+  // Pitch stays corrected (the element default), so voices stay natural at 2x.
+  applyRateToElement();
+}
+
+/** Step through PLAYBACK_RATES and land on the new rate. */
+export function cycleStageRecordingRate(): number {
+  const idx = PLAYBACK_RATES.indexOf(state.rate as (typeof PLAYBACK_RATES)[number]);
+  const next = PLAYBACK_RATES[(idx + 1) % PLAYBACK_RATES.length];
+  setStageRecordingRate(next);
+  return next;
+}
+
 // ── The element and its analyser graph ──────────────────────────────────────
 //
 // Both are created once and reused. createMediaElementSource can only ever be
@@ -112,8 +157,7 @@ function publish(patch: Partial<StagePlaybackState>) {
 // three old implementations did, each with its own element — meant a fresh
 // source and analyser on every press, leaked onto a shared AudioContext.
 
-let audioEl: HTMLAudioElement | null = null;
-let audioCtx: AudioContext | null = null;
+let audioEl: HTMLAudioElement | null = null;let audioCtx: AudioContext | null = null;
 let analyser: AnalyserNode | null = null;
 // Typed off the API rather than as a bare Uint8Array: on TS 5.7+ that
 // annotation widens the buffer to ArrayBufferLike and getByteFrequencyData
@@ -345,6 +389,9 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   lastVolumeAt = 0;
 
   el.src = space.recording_url;
+  // A fresh source keeps a previously-set rate on the element, but reapply
+  // anyway: the preference may have changed while another recording played.
+  applyRateToElement();
   // Removed first: a play that errors before loadedmetadata leaves the
   // listener attached, and it would then fire against the next source.
   el.removeEventListener('loadedmetadata', resolveRealDuration);
@@ -397,6 +444,7 @@ export function resumeStageRecording() {
   // The context can be suspended again by the time this runs — a tab left in
   // the background long enough is the usual way.
   ensureGraph(el);
+  applyRateToElement();
   el.play()
     .then(() => {
       publish({ paused: false });
