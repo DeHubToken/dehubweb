@@ -25,8 +25,8 @@ import {
   isPositiveReaction,
   reactionForTap,
   reactionMeta,
+  reconcileReactionCounts,
   resolveLeadReaction,
-  seedReactionCounts,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -178,7 +178,7 @@ interface ActionBarProps {
 }
 
 /**
- * Per-reaction totals, seeded when the post has none.
+ * Per-reaction totals, seeded — or reconciled — against the row's counts.
  *
  * Every vote cast before multi-reaction shipped is a bare boolean, so a
  * long-lived post arrives with `likeCount: 40` and no breakdown at all. That
@@ -186,14 +186,17 @@ interface ActionBarProps {
  * tray now prints a number under every emoji, and nine zeros beside a like
  * count of 40 reads as a bug. Attributing that history to like/dislike is
  * exactly what those votes were, and matches the API's own first write.
+ *
+ * A breakdown that IS present but doesn't add up to the like count (hand-edited
+ * totals on the backend) is stretched to fit rather than served raw, so the
+ * tray never contradicts the number beside the thumb.
  */
 function reactionCountsOrSeed(
   counts: ReactionCounts | null | undefined,
   likeCount: number,
   dislikeCount: number,
 ): ReactionCounts {
-  if (counts && Object.values(counts).some((value) => (value ?? 0) > 0)) return counts;
-  return seedReactionCounts(likeCount, dislikeCount);
+  return reconcileReactionCounts(likeCount, dislikeCount, counts);
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */

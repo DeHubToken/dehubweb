@@ -22,8 +22,8 @@ import {
   isPositiveReaction,
   reactionForTap,
   reactionMeta,
+  reconcileReactionCounts,
   resolveLeadReaction,
-  seedReactionCounts,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -369,7 +369,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       setLocalLikeCount(likes);
       setLocalDislikeCount(dislikes);
       setMyReaction(resolveMyReaction(currentShort as never));
-      setLocalReactionCounts((currentShort as never as { reactionCounts?: ReactionCounts })?.reactionCounts ?? seedReactionCounts(likes, dislikes));
+      // Reconciled against the row's counts for the same reason as ActionBar:
+      // a stored split that doesn't add up to the displayed counts is scaled
+      // to fit rather than served raw.
+      setLocalReactionCounts(reconcileReactionCounts(likes, dislikes, (currentShort as never as { reactionCounts?: ReactionCounts })?.reactionCounts));
     }
     setPickerOpen(false);
     setShowComments(false);

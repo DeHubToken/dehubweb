@@ -32,6 +32,7 @@
 
 import {
   asReaction,
+  reconcileReactionCounts,
   seedReactionCounts,
   type PostReaction,
   type ReactionCounts,
@@ -162,15 +163,22 @@ export function applyVoteStateToNFT<T extends CountSource>(
 /**
  * Canonical per-reaction tally for any API-shaped post.
  *
- * Falls back to seeding from the polarity counts when the post carries no
- * `reactionCounts` — every vote cast before multi-reaction shipped is a bare
- * boolean, so a long-lived post arrives with a large `totalVotes.for` and no
- * breakdown at all. Treating that as "no reactions" would blank the summary on
- * exactly the posts with the most engagement.
+ * A stored breakdown is served scaled to the polarity counts, not raw: the
+ * card's like count comes from `totalVotes` while the tray's breakdown comes
+ * from `reactionCounts`, and rows edited by hand (the admin panel sets
+ * totals directly) can leave the split behind — a post showing 10 likes whose
+ * tray only accounted for 4. The headline count wins; see
+ * `reconcileReactionCounts`. Falls back to seeding from the polarity counts
+ * when the post carries no breakdown at all — every vote cast before
+ * multi-reaction shipped is a bare boolean, so a long-lived post arrives with
+ * a large `totalVotes.for` and no split, and treating that as "no reactions"
+ * would blank the summary on exactly the posts with the most engagement.
  */
 export function resolveReactionCounts(source: CountSource | null | undefined): ReactionCounts {
   const stored = source?.reactionCounts;
-  if (stored && Object.values(stored).some((value) => (value ?? 0) > 0)) return stored;
+  if (stored && Object.values(stored).some((value) => (value ?? 0) > 0)) {
+    return reconcileReactionCounts(resolveLikeCount(source), resolveDislikeCount(source), stored);
+  }
   return seedReactionCounts(resolveLikeCount(source), resolveDislikeCount(source));
 }
 
