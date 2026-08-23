@@ -78,7 +78,7 @@ export function ProfilesSection() {
               className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-colors ${
                 isActive
                   ? 'bg-zinc-800/60 border-white/10 cursor-default'
-                  : 'bg-zinc-800 border-transparent hover:bg-zinc-750'
+                  : 'bg-zinc-800 border-transparent hover:bg-zinc-700/60'
               }`}
             >
               <Avatar className="w-9 h-9">

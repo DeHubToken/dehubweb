@@ -261,32 +261,52 @@ export interface ProfileSwitchPlan {
 }
 
 /**
+ * Write a session stash into place: everything the outgoing account owned is
+ * wiped first — key material never crosses identities, and a half-swap must
+ * never be what an authed request reads off disk.
+ */
+function applyStash(session: StoredProfileSession | null): void {
+  lockWallet();
+  for (const key of SESSION_KEYS) localStorage.removeItem(key);
+  wipeWagmiKeys();
+  if (session) {
+    for (const [key, value] of Object.entries(session.tokens)) {
+      localStorage.setItem(key, value);
+    }
+    for (const [key, value] of Object.entries(session.wagmiKeys)) {
+      localStorage.setItem(key, value);
+    }
+  }
+  // The pending flag and its freshness twin (#444) belong to whichever flow
+  // was interrupted, never to a restored identity.
+  localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+  localStorage.removeItem('dehub_supa_login_pending_at');
+}
+
+/**
  * Stage a switch to another saved profile: snapshot the outgoing account one
  * last time, lock its wallet key away, then write the target's session keys
  * into place. Returns what AuthProvider needs to finish (re-seat Supabase,
  * rewrite the last-session record, reload); null when the target has no usable
  * stored session, in which case nothing on disk was touched.
+ *
+ * If the write itself throws midway, the outgoing account's just-refreshed
+ * snapshot is written back before returning null — disk always ends up
+ * describing exactly one whole identity.
  */
 export function beginProfileSwitch(id: string): ProfileSwitchPlan | null {
   const entry = getProfile(id);
   if (!entry?.session) return null;
 
   snapshotCurrentSession();
+  const outgoing = currentIdentity();
   switchGuarded = true;
   try {
-    // Key material never crosses identities: the vault and unlock timestamp
-    // are single-slot, so they go now rather than leaking into the target.
-    lockWallet();
-    for (const key of SESSION_KEYS) localStorage.removeItem(key);
-    wipeWagmiKeys();
-    for (const [key, value] of Object.entries(entry.session.tokens)) {
-      localStorage.setItem(key, value);
-    }
-    for (const [key, value] of Object.entries(entry.session.wagmiKeys)) {
-      localStorage.setItem(key, value);
-    }
-    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+    applyStash(entry.session);
   } catch {
+    try {
+      applyStash(outgoing ? getProfile(outgoing.id)?.session ?? null : null);
+    } catch { /* nothing more to do — next boot re-syncs from Supabase */ }
     switchGuarded = false;
     return null;
   }
@@ -299,7 +319,19 @@ export function beginProfileSwitch(id: string): ProfileSwitchPlan | null {
   };
 }
 
-/** Un-stick the guard when a staged switch fails before the reload. */
-export function cancelProfileSwitch(): void {
-  switchGuarded = false;
+/**
+ * Back out of a staged switch whose restore failed (dead refresh token,
+ * network error mid-setSession). Puts the account that was live before
+ * `beginProfileSwitch` back on disk; when there was none (switching from a
+ * signed-out state), every staged key is wiped instead — a signed-out UI must
+ * not have anyone's tokens under it. No-op when nothing was staged.
+ */
+export function abortProfileSwitch(prevId: string | null): void {
+  if (!switchGuarded) return;
+  try {
+    const prev = prevId ? getProfile(prevId) : null;
+    applyStash(prev?.session ?? null);
+  } finally {
+    switchGuarded = false;
+  }
 }
