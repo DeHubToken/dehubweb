@@ -79,7 +79,8 @@ export function useServedAds(surface: string, options: UseServedAdsOptions = {})
   const isFeedSurfaceVisible =
     normalizedPath === '/' || normalizedPath === '/app' ||
     normalizedPath === '/videos' || normalizedPath === '/shorts' ||
-    normalizedPath.startsWith('/app/post/') || normalizedPath.startsWith('/app/video/');
+    normalizedPath.startsWith('/app/post/') || normalizedPath.startsWith('/app/video/') ||
+    normalizedPath.startsWith('/posts/');
 
   return useQuery({
     queryKey: ['served-ads', surface, walletAddress?.toLowerCase() ?? 'anon', count],

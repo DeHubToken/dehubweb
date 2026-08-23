@@ -44,6 +44,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
+import { AuthorThread } from '@/components/app/cards/AuthorThread';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
 import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
 import { RelatedImagesFeed } from '@/components/app/feeds/RelatedImagesFeed';
@@ -612,12 +613,31 @@ interface SinglePostPageProps {
   overrideId?: string;
 }
 
+/**
+ * Canonical URL for a post page. The /posts/* short forms are first-class URLs
+ * now, so a visitor on /posts/1/b gets that exact URL in the meta tags rather
+ * than being forced back to /app/post/1.
+ */
+function postSeoUrl(pathname: string, id?: string): string {
+  return pathname.startsWith('/posts/')
+    ? `https://dehub.io${pathname}`
+    : `https://dehub.io/app/post/${id}`;
+}
+
 export default function SinglePostPage({ inOverlay = false, overrideId }: SinglePostPageProps = {}) {
-  const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
+  const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
   const navigate = useNavigate();
   const { t } = useI18n();
   const id = overrideId || postId || tokenId;
   const location = useLocation();
+
+  // Deep link to one comment: the thread-entry form (/posts/1/b/55) carries it
+  // as a path segment; the legacy share form (?comment=55) keeps working too.
+  const focusCommentId = commentId || new URLSearchParams(location.search).get('comment') || undefined;
+  const [highlightCommentId, setHighlightCommentId] = useState<string | undefined>(focusCommentId);
+  useEffect(() => {
+    setHighlightCommentId(focusCommentId);
+  }, [focusCommentId]);
   
   // Detect if opened from feed (overlay mode)
   const isFromFeed = !!(location.state as any)?.fromFeed;
@@ -813,6 +833,31 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
   const isImagePost = contentType === 'image';
   const isTextPost = contentType === 'post' || contentType === null;
 
+  // Deep link to a thread entry: scroll it into view once the thread has
+  // rendered, and let the highlight ring live for a few seconds. The element
+  // can lag the page by a fetch (the thread mounts with post data), so poll
+  // briefly rather than giving up after one paint.
+  useEffect(() => {
+    if (!post || !focusCommentId) return;
+    let cancelled = false;
+    const tryScroll = (attempt: number) => {
+      if (cancelled) return;
+      const el = document.querySelector(`[data-comment-id="${CSS.escape(focusCommentId)}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      if (attempt < 12) window.setTimeout(() => tryScroll(attempt + 1), 250);
+    };
+    const start = window.setTimeout(() => tryScroll(0), 150);
+    const stop = window.setTimeout(() => setHighlightCommentId(undefined), 4500);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(start);
+      window.clearTimeout(stop);
+    };
+  }, [post, focusCommentId]);
+
   // Swallow the post content at the sticky nav pill's top edge under the glass
   // themes, exactly like the home feed. Only for the standalone route: in
   // overlay mode the scroll surface is AppLayout's fixed layer, which runs its
@@ -885,7 +930,14 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
         );
       }
       default:
-        return <PostCard post={toTextPost(post)} />;
+        return (
+          <PostCard
+            post={toTextPost(post)}
+            threadSlot={
+              id ? <AuthorThread tokenId={String(id)} authorAddress={post.minter} highlightId={highlightCommentId} /> : undefined
+            }
+          />
+        );
     }
   };
 
@@ -904,14 +956,14 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
         <SEOHead
           title={videoSeoTitle}
           description={videoSeoDesc.slice(0, 155)}
-          url={`https://dehub.io/app/post/${id}`}
+          url={postSeoUrl(location.pathname, id)}
           type="article"
           jsonLd={{
             '@context': 'https://schema.org',
             '@type': 'VideoObject',
             name: videoSeoTitle,
             description: videoSeoDesc,
-            url: `https://dehub.io/app/post/${id}`,
+            url: postSeoUrl(location.pathname, id),
             ...(videoData.thumbnail && { thumbnailUrl: videoData.thumbnail }),
             ...(post.createdAt && { uploadDate: post.createdAt }),
             publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
@@ -1131,14 +1183,14 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
       <SEOHead
         title={seoTitle}
         description={seoDesc}
-        url={`https://dehub.io/app/post/${id}`}
+        url={postSeoUrl(location.pathname, id)}
         type="article"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Article',
           headline: seoTitle,
           description: seoDesc,
-          url: `https://dehub.io/app/post/${id}`,
+          url: postSeoUrl(location.pathname, id),
           ...(post?.minterDisplayName && { author: { '@type': 'Person', name: post.minterDisplayName } }),
           ...(post?.createdAt && { datePublished: post.createdAt }),
           publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },

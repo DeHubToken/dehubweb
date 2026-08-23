@@ -9,7 +9,43 @@
  * as ours.
  */
 import { describe, it, expect } from 'vitest';
-import { findDehubLinks } from '@/lib/dehub-links';
+import { findDehubLinks, parseDehubLink } from '@/lib/dehub-links';
+
+describe('findDehubLinks /posts short form', () => {
+  it('cards the bare short post link', () => {
+    const m = parseDehubLink('https://dehub.io/posts/1');
+    expect(m).not.toBeNull();
+    expect(m!.kind).toBe('post');
+    expect(m!.tokenId).toBe('1');
+  });
+
+  it('cards the thread form and keeps the path as written', () => {
+    const m = parseDehubLink('https://dehub.io/posts/1/b');
+    expect(m).not.toBeNull();
+    expect(m!.kind).toBe('post');
+    expect(m!.path).toBe('/posts/1/b');
+  });
+
+  it('carries a thread-entry comment id', () => {
+    const m = parseDehubLink('https://dehub.io/posts/1/b/55');
+    expect(m).not.toBeNull();
+    expect(m!.kind).toBe('post');
+    expect(m!.tokenId).toBe('1');
+    expect(m!.commentId).toBe('55');
+  });
+
+  it('cards a bare thread path, which can only be ours', () => {
+    const found = findDehubLinks('thread: /posts/3/b/9');
+    expect(found).toHaveLength(1);
+    expect(found[0].commentId).toBe('9');
+  });
+
+  it('rejects junk under /posts', () => {
+    expect(parseDehubLink('https://dehub.io/posts/abc')).toBeNull();
+    expect(parseDehubLink('https://dehub.io/posts/1/x')).toBeNull();
+    expect(parseDehubLink('https://dehub.io/posts/1/b/notanid')).toBeNull();
+  });
+});
 
 describe('findDehubLinks host rule', () => {
   it('cards our own links', () => {

@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState, memo, useEffect, useCallback, useRef } from 'react';
+import { useState, memo, useEffect, useCallback, useRef, type ReactNode } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -73,9 +73,16 @@ function useIsTabletOrMobile() {
 
 interface PostCardProps {
   post: TextPost;
+  /**
+   * Rendered inside the card, between the action bar and the comments — the
+   * author-thread block on the post page. Its presence also tells the comments
+   * section to hide the author's straight comments (the slot shows them).
+   * Feed cards leave it unset and behave exactly as before.
+   */
+  threadSlot?: ReactNode;
 }
 
-export const PostCard = memo(function PostCard({ post }: PostCardProps) {
+export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments);
@@ -541,6 +548,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           />
         </div>
 
+        {/* Author thread — the post page hangs the author's own straight
+            comments here, X-style, above the comments list. */}
+        {threadSlot}
+
         {/* Comments */}
         <CommentsWrapper
           open={showComments}
@@ -548,6 +559,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           tokenId={post.id}
           initialTab={commentsInitialTab}
           commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+          postAuthorAddress={threadSlot ? post.author.id : undefined}
         />
       </div>
 
