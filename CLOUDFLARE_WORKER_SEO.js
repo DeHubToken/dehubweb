@@ -1,8 +1,8 @@
 /**
  * Cloudflare Worker for DeHub Dynamic SEO/SSR
  *
- * CANONICAL implementation (the Netlify edge-function original was retired
- * with the July 2026 Cloudflare migration). Static assets come from the
+ * CANONICAL implementation (retired the previous edge-function setup when the
+ * site moved to Cloudflare in July 2026). Static assets come from the
  * ASSETS binding in wrangler.jsonc (with SPA fallback); same-origin asset
  * JSON (blog manifest/content, docs content) is read via the ASSETS binding
  * so the worker never re-enters itself.
@@ -1872,7 +1872,7 @@ async function handleRequest(request, env) {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  // Mirror hosts (*.netlify.app previews etc.) serve identical content and
+  // Mirror hosts (staging, previews, aliases) serve identical content and
   // must not index as duplicates of dehub.io.
   const isCanonicalHost = url.hostname === 'dehub.io';
   const guard = (resp) => {
@@ -1886,8 +1886,8 @@ async function handleRequest(request, env) {
   // Alias hosts → apex, path + query preserved; wrangler.jsonc routes bind
   // these hosts to this worker so the 301 is served at the edge with no
   // origin behind it. Covers www.dehub.io and every dehub.net host — the
-  // dehub.net zone moved into this Cloudflare account when its Netlify DNS
-  // died (July 2026), and these are the SEO domain-move redirects.
+  // dehub.net zone moved into this Cloudflare account in July 2026, and
+  // these are the SEO domain-move redirects.
   // Retired dehub.net subdomains. Each was a separate site with its own URL
   // space, so carrying the path across lands on a dehub.io path that does not
   // exist — and because /:username is the SPA's catch-all, every one of them
@@ -2162,12 +2162,12 @@ async function handleRequest(request, env) {
     return out;
   }
 
-  // Sitemaps must be proxied HERE, not via redirect rules: a `/*` catch-all in
-  // public/_redirects (which Lovable regenerates) is processed before every
-  // netlify.toml rule and served these paths as SPA HTML — Google then read the
-  // sitemap as an HTML page. Edge functions run before all redirect processing,
-  // so this proxy cannot be shadowed. (/sitemap-static.xml is a real file in
-  // public/ and intentionally falls through.)
+  // Sitemaps must be proxied HERE, not via redirect rules: redirect files and
+  // rules are processed ahead of static-asset fallbacks, so a broad catch-all
+  // would serve these paths as SPA HTML — Google then reads the sitemap as an
+  // HTML page. This proxy runs first at the edge and cannot be shadowed.
+  // (/sitemap-static.xml is a real file in public/ and intentionally falls
+  // through.)
   const sitemapMatch = pathname.match(/^\/sitemap(?:-(posts|profiles)-(\d+))?\.xml$/);
   if (sitemapMatch) {
     const [, kind, page] = sitemapMatch;

@@ -90,7 +90,7 @@ export const RESERVED_USERNAMES = new Set([
  * rules; the worker unions them with ROUTE_SEGMENTS.
  */
 export const WORKER_ASSET_ROUTES = [
-  '_netlify', 'assets', 'favicon.ico', 'og-image.png', 'og', 'skill.md',
+  'assets', 'favicon.ico', 'og-image.png', 'og', 'skill.md',
   'docs-content', 'blog-content', 'version.json',
 ];
 
