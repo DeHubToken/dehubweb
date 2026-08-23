@@ -2605,6 +2605,32 @@ export const blogPostsMetadata: BlogPost[] = [
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
 export const newPostsMetadata: BlogPost[] = [
   {
+    "id": "q3-development-overview",
+    "slug": "q3-development-overview",
+    "title": "Q3 Development Overview",
+    "excerpt": "Every distinct thing we shipped since July across dehubweb, dehub-mobile and dehub-stream-backend — stages, AI, ten themes, the arcade, wallets, economy, mobile parity and the plumbing underneath, with the commit next to each entry.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/q3-development-overview-banner.png",
+    "bannerImageAlt": "Q3 Development Overview - DeHub rocket banner",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-22T12:00:00.000Z",
+    "updatedAt": "2026-08-23T09:00:00.000Z",
+    "tags": [
+      "Development",
+      "Update",
+      "Q3",
+      "Shipping",
+      "2026"
+    ],
+    "readingTime": 25,
+    "featured": false,
+    "status": "published",
+    "seoTitle": "Q3 Development Overview | DeHub",
+    "seoDescription": "Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout."
+  },
+  {
     "id": "development-update-dehub-era-starts-final-updates-bug-fixes",
     "slug": "development-update-dehub-era-starts-final-updates-bug-fixes",
     "title": "Development Update: The DeHub Era Starts - Final Updates and Bug Fixes Shipping in Coming Days",
@@ -3140,32 +3166,30 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "dehub-creator-vs-higgsfield-ai-credits",
-  "slug": "dehub-creator-vs-higgsfield-ai-credits",
-  "title": "DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
-  "excerpt": "Veo 3.1, Seedance, Kling and Nano Banana in one studio — priced per job in DHB, with credit that never expires and a free allowance that accrues instead of vanishing at midnight. Here is the honest head-to-head.",
+  "id": "q3-development-overview",
+  "slug": "q3-development-overview",
+  "title": "Q3 Development Overview",
+  "excerpt": "Every distinct thing we shipped since July across dehubweb, dehub-mobile and dehub-stream-backend — stages, AI, ten themes, the arcade, wallets, economy, mobile parity and the plumbing underneath, with the commit next to each entry.",
   "content": "",
-  "bannerImage": "/lovable-uploads/ai-creator-studio-banner.jpg",
-  "bannerImageAlt": "DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live",
+  "bannerImage": "/lovable-uploads/q3-development-overview-banner.png",
+  "bannerImageAlt": "Q3 Development Overview - DeHub rocket banner",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-08-13T09:00:00.000Z",
+  "publishedAt": "2026-08-22T12:00:00.000Z",
+  "updatedAt": "2026-08-23T09:00:00.000Z",
   "tags": [
-    "AI",
-    "Creator Studio",
-    "Higgsfield",
-    "AI video",
-    "Veo 3.1",
-    "Seedance",
-    "DHB token",
-    "Pricing"
+    "Development",
+    "Update",
+    "Q3",
+    "Shipping",
+    "2026"
   ],
-  "readingTime": 9,
-  "featured": true,
+  "readingTime": 25,
+  "featured": false,
   "status": "published",
-  "seoTitle": "DeHub Creator vs Higgsfield 2026: Pricing, Credits & Models Compared | DeHub",
-  "seoDescription": "DeHub Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers."
+  "seoTitle": "Q3 Development Overview | DeHub",
+  "seoDescription": "Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout."
 };
 
 export const excludedTitles: string[] = [

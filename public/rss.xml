@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
     <webMaster>team@dehub.io (DeHub Team)</webMaster>
-    <lastBuildDate>Thu, 13 Aug 2026 09:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 22 Aug 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Q3 Development Overview</title>
+      <description>Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout.</description>
+      <link>https://dehub.io/guides/q3-development-overview</link>
+      <guid>https://dehub.io/guides/q3-development-overview</guid>
+      <pubDate>Sat, 22 Aug 2026 12:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
     <item>
       <title>DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)</title>
       <description>DeHub Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers.</description>
@@ -160,14 +168,6 @@
       <link>https://dehub.io/guides/development-update-dehub-era-starts-final-updates-bug-fixes</link>
       <guid>https://dehub.io/guides/development-update-dehub-era-starts-final-updates-bug-fixes</guid>
       <pubDate>Mon, 02 Feb 2026 14:22:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>Town Hall Overview: $200,000 Private Sale Complete, Partner TGE March, New Pools, Added LP and More!</title>
-      <description>DeHub Town Hall recap — $200,000 private sale complete, TGE timeline confirmed for March 2026, new liquidity pools, public sale mechanics, and an accelerated growth strategy.</description>
-      <link>https://dehub.io/guides/town-hall-200k-private-sale-partner-tge-march-2026</link>
-      <guid>https://dehub.io/guides/town-hall-200k-private-sale-partner-tge-march-2026</guid>
-      <pubDate>Wed, 28 Jan 2026 12:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
   </channel>
