@@ -20,6 +20,20 @@ jobs:
           # carriage returns / padding — strip everything non-token.
           CF_API_TOKEN="$(printf '%s' "$CF_API_TOKEN_RAW" | tr -d '[:space:]\r'"'"'"')"
           echo "token length: ${#CF_API_TOKEN}"
+          # Shape diagnostics without ever printing the secret itself.
+          case "$CF_API_TOKEN" in
+            Bearer*) echo "note: value carries a literal 'Bearer' prefix"; CF_API_TOKEN="${CF_API_TOKEN#Bearer }" ;;
+          esac
+          if printf '%s' "$CF_API_TOKEN" | grep -qE '^[A-Za-z0-9_-]+$'; then
+            echo "note: value is plain alnum"
+          else
+            echo "note: value contains non-token characters"
+            CF_API_TOKEN="$(printf '%s' "$CF_API_TOKEN" | tr -d '"'"'"'')"
+            echo "after quote-strip length: ${#CF_API_TOKEN}"
+          fi
+          if [ ${#CF_API_TOKEN} -ne 40 ]; then
+            echo "WARN: expected a 40-char API token, got ${#CF_API_TOKEN}"
+          fi
           # Find the zone from the token's own grants rather than trusting the
           # stored id — the CLOUDFLARE_ID secret does not parse as a CF id.
           RESP=$(curl -sS -w '\n%{http_code}' \
