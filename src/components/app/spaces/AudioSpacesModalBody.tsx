@@ -46,6 +46,7 @@ import { StageTTS } from './StageTTS';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { ScheduleStagePanel } from '@/components/app/stages/ScheduleStagePanel';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
+import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { StageChat } from './StageChat';
@@ -445,6 +446,9 @@ export function AudioSpacesModalBody() {
                             <span className="block text-[10px] text-white/50 font-mono text-right mt-0.5">{playbackTimeLeft}</span>
                           )}
                         </div>
+                        {/* Playback speed — persisted, shared with every other
+                            surface that plays a recording. */}
+                        {space.recording_url && <StageRateButton className="mr-1" />}
                         {/* Pop the corner player out — this is a drawer, so
                             listening on past the moment it closes is exactly
                             what somebody pressing play in here tends to want.

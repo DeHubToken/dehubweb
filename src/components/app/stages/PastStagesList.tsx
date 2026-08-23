@@ -35,6 +35,7 @@ import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { StageChat } from '@/components/app/spaces/StageChat';
+import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import {
   closeStagePopout,
@@ -332,6 +333,9 @@ export function PastStagesList({
               </div>
 
               <div className="flex items-center gap-1 shrink-0 self-end sm:self-auto">
+                {/* Playback speed — persisted, shared with every other surface
+                    that plays a recording. */}
+                {space.recording_url && <StageRateButton className="mr-1" />}
                 {/* The corner player, on request. It used to arrive by itself
                     the moment anything played; popping out is what you press
                     when you are about to leave this page and keep listening. */}

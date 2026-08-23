@@ -43,6 +43,9 @@ import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 import { formatTimestamp, formatTxt, formatSrt, downloadFile } from '@/lib/transcript-format';
 import { useAuth } from '@/contexts/AuthContext';
+import { PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getStagePlaybackState } from '@/lib/stage-playback';
+import { formatStageRate } from '@/components/app/stages/StageRateButton';
 
 interface Segment { speaker: string; text: string; start: number; end: number }
 interface Chapter { title: string; start: number; end: number }
@@ -253,6 +256,23 @@ function InlinePlayer({
 }) {
   const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
+  // This drawer keeps its own <audio> (the transcript follows its currentTime
+  // directly), so speed is local to it — but it reads the same persisted
+  // ladder and starts from the shared engine's last-used rate.
+  const [rate, setRate] = useState(() => getStagePlaybackState().rate);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    a.playbackRate = rate;
+  }, [rate, src]);
+
+  const cycleRate = () => {
+    setRate((r) => {
+      const idx = PLAYBACK_RATES.indexOf(r as (typeof PLAYBACK_RATES)[number]);
+      return PLAYBACK_RATES[(idx + 1) % PLAYBACK_RATES.length];
+    });
+  };
 
   useEffect(() => {
     const a = audioRef.current;
@@ -309,6 +329,21 @@ function InlinePlayer({
       <span className="text-[11px] font-mono text-white/60 tabular-nums">
         {formatTimestamp(currentTime)} / {formatTimestamp(duration)}
       </span>
+      <button
+        type="button"
+        onClick={cycleRate}
+        title={`Playback speed ${rate}x`}
+        aria-label={`Playback speed ${rate}x`}
+        className={cn(
+          'shrink-0 h-7 min-w-9 px-2 rounded-lg flex items-center justify-center',
+          'text-[10px] font-mono font-bold leading-none transition-colors',
+          rate !== 1
+            ? 'bg-white/20 text-white'
+            : 'text-white/50 hover:text-white hover:bg-white/10',
+        )}
+      >
+        {formatStageRate(rate)}x
+      </button>
     </div>
   );
 }

@@ -55,6 +55,7 @@ import { StageRadioNowPlaying } from '@/components/app/spaces/StageRadioNowPlayi
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
+import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import { StageCaptionsButton, StageCaptionsOverlay } from '@/components/app/spaces/StageCaptions';
 import { BadgedName } from '@/components/app/BadgedName';
 import { Button } from '@/components/ui/button';
@@ -504,6 +505,7 @@ export default function StageDeepLinkPage() {
                       </span>
                     )}
                   </div>
+                  <StageRateButton className="h-9" />
                   <button
                     onClick={() => (isPoppedOut ? closeStagePopout() : popOutStageRecording(stage))}
                     aria-pressed={isPoppedOut}
