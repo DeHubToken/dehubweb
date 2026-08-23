@@ -25,9 +25,15 @@ import { lockWallet } from '@/lib/smart-wallet';
 import type { ConnectionSource } from '@/lib/connection-source';
 
 export const PROFILES_CHANGED_EVENT = 'dehub:profiles-changed';
-export const PROFILES_STORAGE_KEY = 'dehub_profiles_v1';
+export const PROFILES_STORAGE_KEY = 'dehub_profiles_v2';
+
+/** v1 auto-registered every session that touched the browser — on a shared
+ * computer that turned the list into a directory of family accounts. Dropped
+ * on init; explicit adoption (the Add profile flow) is the only way in now. */
+const LEGACY_PROFILES_KEY = 'dehub_profiles_v1';
 
 const SUPA_LOGIN_PENDING_KEY = 'dehub_supa_login_pending';
+const SUPA_LOGIN_PENDING_AT_KEY = 'dehub_supa_login_pending_at';
 
 /** Everything a session owns in localStorage. Stashed and restored as a set. */
 const SESSION_KEYS = [
@@ -152,6 +158,18 @@ function wipeWagmiKeys(): void {
   } catch { /* ignore */ }
 }
 
+/** The Supabase client persists every session under one of these. */
+function wipeSupabaseStorageKeys(): void {
+  try {
+    const doomed: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && /^sb-.+-auth-token$/.test(key)) doomed.push(key);
+    }
+    doomed.forEach((key) => localStorage.removeItem(key));
+  } catch { /* ignore */ }
+}
+
 /**
  * The Supabase session from the client's own storage entry. Read directly
  * rather than via getSession() so pagehide can snapshot synchronously.
@@ -174,16 +192,27 @@ function readSupabaseSession(): StoredProfileSession['supabase'] {
 let switchGuarded = false;
 
 /**
- * Snapshot whatever account the live localStorage keys belong to into the
- * registry. No-op signed out, or while a profile switch has keys in flight.
+ * Snapshot whatever account the live localStorage keys belong to.
+ *
+ * `adopt` false (tracking): refreshes an EXISTING registry entry only —
+ * background listeners call this, so a family member's one-off login on a
+ * shared browser never joins the list uninvited. `adopt` true: creates the
+ * entry if missing — reserved for the Add profile flow, where the user has
+ * explicitly said they want this account saved here.
+ *
+ * No-op signed out, or while a profile switch has keys in flight.
  */
-export function snapshotCurrentSession(): void {
+function snapshotSession(adopt: boolean): void {
   if (switchGuarded) return;
   const identity = currentIdentity();
   // A half-established flow (cleared wallet, no token yet) is not a profile.
   let hasToken = false;
   try { hasToken = !!localStorage.getItem('dehub_token'); } catch { /* ignore */ }
   if (!identity || !hasToken) return;
+
+  const profiles = readStore();
+  const existingIndex = profiles.findIndex((p) => p.id === identity.id);
+  if (!adopt && existingIndex < 0) return;
 
   let user: CachedUser | null = null;
   let source: ConnectionSource | null = null;
@@ -199,9 +228,7 @@ export function snapshotCurrentSession(): void {
     }
   } catch { /* ignore */ }
 
-  const profiles = readStore();
   const now = Date.now();
-  const existingIndex = profiles.findIndex((p) => p.id === identity.id);
   const existing = existingIndex >= 0 ? profiles[existingIndex] : null;
 
   const entry: StoredProfile = {
@@ -236,6 +263,38 @@ export function snapshotCurrentSession(): void {
   writeStore(profiles);
 }
 
+/** Refresh the live account's registry copy, creating nothing. */
+export function snapshotCurrentSession(): void {
+  snapshotSession(false);
+}
+
+/** Record the live account as an explicitly added profile. */
+export function adoptCurrentProfile(): void {
+  snapshotSession(true);
+}
+
+/**
+ * A new login is about to overwrite the session keys with the incoming
+ * account's identity. Give the outgoing account one final snapshot, then
+ * clear every key it owned so the two identities can never blend — the vault
+ * is single-slot, and a stale `dehub_supabase_uid` makes the next refresh
+ * treat the new account as linked to the old one.
+ *
+ * `keepWagmiKeys` for flows whose own connect call just wrote the incoming
+ * wallet's wagmi storage; wiping those would sever the in-progress connection.
+ */
+export function stageIncomingIdentity(options?: { keepWagmiKeys?: boolean }): void {
+  snapshotCurrentSession();
+  lockWallet();
+  for (const key of SESSION_KEYS) localStorage.removeItem(key);
+  if (!options?.keepWagmiKeys) wipeWagmiKeys();
+  // Without this, the Supabase client's next boot hydrates the OUTGOING
+  // user's session while every DeHub key belongs to the new one.
+  wipeSupabaseStorageKeys();
+  localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+  localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+}
+
 let trackingStarted = false;
 
 /**
@@ -245,6 +304,8 @@ let trackingStarted = false;
 export function initProfileTracking(): void {
   if (trackingStarted) return;
   trackingStarted = true;
+
+  try { localStorage.removeItem(LEGACY_PROFILES_KEY); } catch { /* ignore */ }
 
   window.addEventListener('dehub:token-refreshed', () => snapshotCurrentSession());
   window.addEventListener('pagehide', () => snapshotCurrentSession());
@@ -269,6 +330,7 @@ function applyStash(session: StoredProfileSession | null): void {
   lockWallet();
   for (const key of SESSION_KEYS) localStorage.removeItem(key);
   wipeWagmiKeys();
+  wipeSupabaseStorageKeys();
   if (session) {
     for (const [key, value] of Object.entries(session.tokens)) {
       localStorage.setItem(key, value);
@@ -277,10 +339,22 @@ function applyStash(session: StoredProfileSession | null): void {
       localStorage.setItem(key, value);
     }
   }
-  // The pending flag and its freshness twin (#444) belong to whichever flow
-  // was interrupted, never to a restored identity.
+  // The pending flag and its freshness twin belong to whichever flow was
+  // interrupted, never to a restored identity.
   localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
-  localStorage.removeItem('dehub_supa_login_pending_at');
+  localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+}
+
+/**
+ * Put an explicitly added profile's last snapshot back on disk — used when an
+ * add-profile attempt is abandoned after it already displaced the live
+ * session. Returns the Supabase tokens to re-seat, or null when the profile
+ * has nothing stored (in which case disk is simply clean).
+ */
+export function applyProfileSnapshot(id: string): { supabase: StoredProfileSession['supabase'] } | null {
+  const entry = getProfile(id);
+  applyStash(entry?.session ?? null);
+  return { supabase: entry?.session?.supabase ?? null };
 }
 
 /**

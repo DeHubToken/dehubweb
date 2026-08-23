@@ -82,6 +82,9 @@ import { getRunningBuildId, isRunningStaleBuild } from '@/lib/version-check';
 import {
   initProfileTracking,
   snapshotCurrentSession,
+  adoptCurrentProfile,
+  stageIncomingIdentity,
+  applyProfileSnapshot,
   currentProfileId,
   beginProfileSwitch,
   abortProfileSwitch,
@@ -329,6 +332,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { connectAsync, connectors } = useConnect();
 
   const connectionAbortedRef = useRef(false);
+  // Set when the sheet opens with add-profile intent: the id of the account
+  // that was live at that moment. Drives two promises the sheet makes to the
+  // user — closing it mid-attempt restores this account, and completing a new
+  // login adds BOTH accounts to the device's profile list. Null otherwise, so
+  // plain logins never touch this machinery.
+  const addProfilePrevIdRef = useRef<string | null>(null);
   // Whether THIS page mount opened the sheet itself because a login resume
   // was expected at first paint. Only that case needs the watchdog below —
   // a resume started later in the page's life already has a session on its
@@ -385,10 +394,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const openLoginModal = useCallback((options?: { intent?: 'login' | 'add-profile' }) => {
     connectionAbortedRef.current = false;
     warmWalletOrigins();
-    // Whatever identity is live right now may be replaced by what happens in
-    // this sheet. Snapshot it first, so switching back stays silent even when
-    // the sheet ends in a different account.
-    snapshotCurrentSession();
+    if (options?.intent === 'add-profile') {
+      // The user is asking for a multi-account session on this device. The
+      // live account joins the list NOW — before anything in the sheet can
+      // displace it — and the ref marks the attempt so an abandoned sheet can
+      // put everything back exactly as it was.
+      const liveId = currentProfileId();
+      adoptCurrentProfile();
+      addProfilePrevIdRef.current = liveId;
+    } else {
+      snapshotCurrentSession();
+    }
     setLoginIntent(options?.intent === 'add-profile' ? 'add-profile' : 'login');
     setIsLoginModalOpen(true);
   }, []);
@@ -397,6 +413,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     connectionAbortedRef.current = true;
     setIsLoginModalOpen(false);
     setLoginIntent('login');
+    // An abandoned add-profile attempt gets undone, not just closed. If the
+    // flow already displaced the live account (teardown ran, or the exchange
+    // started writing), the previous account's snapshot goes back on disk and
+    // the page reloads into it — closing the sheet must never cost the user
+    // their session. When nothing was displaced yet, the keys still match and
+    // closing is just closing.
+    const attemptedFrom = addProfilePrevIdRef.current;
+    addProfilePrevIdRef.current = null;
+    if (attemptedFrom && currentProfileId() !== attemptedFrom) {
+      const restored = applyProfileSnapshot(attemptedFrom);
+      if (restored?.supabase) {
+        void supabase.auth
+          .setSession({ access_token: restored.supabase.access_token, refresh_token: restored.supabase.refresh_token })
+          .catch(() => {});
+      }
+      window.location.reload();
+      return;
+    }
     // Dismissing the modal abandons the login. The pending flag must go with
     // it: it was only ever removed on a COMPLETED login, so walking away at the
     // "create/unlock your wallet" step left it set forever. Every later page
@@ -1290,7 +1324,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       clearTimeout(signTimeoutTimer);
     }
 
-    if (walletAddress && walletAddress.toLowerCase() !== authAddress.toLowerCase()) {
+    // Address guard: prevent silent account switch during session refresh.
+    // An add-profile attempt is the opposite of silent — the user asked to
+    // sign in as somebody else — so the mismatch is expected there. From this
+    // line on the sheet's promise shifts: closing it restores the previous
+    // account rather than doing nothing, and staging wipes the outgoing
+    // account's keys before the exchange writes the incoming ones (the vault
+    // is single-slot, and a stale dehub_supabase_uid would mislink every
+    // later refresh). This connection's wagmi storage stays — it belongs to
+    // the wallet that just signed.
+    const attemptedFrom = addProfilePrevIdRef.current;
+    if (attemptedFrom != null) {
+      addProfilePrevIdRef.current = null;
+      stageIncomingIdentity({ keepWagmiKeys: true });
+    } else if (
+      walletAddress &&
+      walletAddress.toLowerCase() !== authAddress.toLowerCase()
+    ) {
       throw new Error('Wallet address changed during session refresh. Please sign in again.');
     }
 
@@ -1336,8 +1386,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // External-wallet accounts join this device's profile list here: they have
     // no Supabase identity, so applyAuthenticatedSession (which snapshots for
-    // every other flow) never runs on their path.
-    snapshotCurrentSession();
+    // every other flow) never runs on their path. An add-profile attempt adds
+    // the new account explicitly; any other login only refreshes what is
+    // already listed. The pending-login flags die here too — a login that
+    // COMPLETED must never leave them behind to trap the next sheet-open into
+    // a "Signing you in…" step that swallows clicks.
+    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+    localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+    if (attemptedFrom != null) adoptCurrentProfile();
+    else snapshotCurrentSession();
 
     toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
@@ -1411,9 +1468,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
 
     // Every key this profile owns is now on disk — record it on the device's
-    // profile list (and refresh its session snapshot) at the one moment all
-    // writers have finished.
-    snapshotCurrentSession();
+    // profile list at the one moment all writers have finished. An add-profile
+    // attempt adds the new account explicitly; every other login (including
+    // same-user session refreshes) only refreshes what is already listed, so
+    // a shared browser never turns into a directory of whoever once typed
+    // their email here. The pending-login flags die with the completed login —
+    // a stale one forces the next sheet onto its click-swallowing "Signing
+    // you in…" step until a watchdog lets it go.
+    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+    localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+    if (addProfilePrevIdRef.current != null) {
+      addProfilePrevIdRef.current = null;
+      adoptCurrentProfile();
+    } else {
+      snapshotCurrentSession();
+    }
 
     authLogger.info('Login success', {
       method: flow.toLowerCase(),
