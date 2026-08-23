@@ -233,3 +233,86 @@ export function seedReactionCounts(likeCount: number, dislikeCount: number): Rea
   if (dislikeCount > 0) seeded.dislike = dislikeCount;
   return seeded;
 }
+
+/** Sum of the positive side / negative side of a counts map. */
+function sumSide(counts: ReactionCounts, positive: boolean): number {
+  let total = 0;
+  for (const key of POST_REACTIONS) {
+    const value = counts[key] ?? 0;
+    if (value > 0 && isPositiveReaction(key) === positive) total += value;
+  }
+  return total;
+}
+
+/**
+ * Stretch or shrink a stored per-reaction split until its sums match the
+ * like/dislike counts the card displays.
+ *
+ * WHY THIS EXISTS HERE
+ * The two numbers on a post come from different fields — the row's count from
+ * `totalVotes`, the hover tray's breakdown from `reactionCounts`. The backend
+ * writes them together, but hand-edited totals (the admin panel) and rows
+ * from before the split existed leave them disagreeing: a post reading 10
+ * likes whose tray can only account for 4. The count people see is the one
+ * that has to be right, so the stored distribution is scaled to fit it —
+ * keeping whatever shape it had (4×👍+1×❤️ against 10 reads as 8×👍+2×❤️) —
+ * rather than showing a tray that contradicts the card.
+ *
+ * Mirrors reconcileReactionCounts in the API's config/reactions.ts, largest-
+ * remainder rounding with POST_REACTIONS order as the tiebreak so every
+ * client derives identical numbers. With no stored split at all this is just
+ * seedReactionCounts.
+ */
+export function reconcileReactionCounts(
+  likeCount: number,
+  dislikeCount: number,
+  stored?: ReactionCounts | null,
+): ReactionCounts {
+  const source: ReactionCounts = stored && typeof stored === 'object' ? stored : {};
+  const result: ReactionCounts = {};
+
+  const applySide = (positive: boolean, targetRaw: number) => {
+    const target = Math.max(0, Math.floor(Number(targetRaw) || 0));
+    if (target === 0) return;
+
+    const entries = POST_REACTIONS.filter((key) => isPositiveReaction(key) === positive)
+      .map((key) => ({ key, count: Math.max(0, Math.floor(source[key] ?? 0)) }))
+      .filter((entry) => entry.count > 0);
+
+    const sum = sumSide(source, positive);
+    if (sum === 0) {
+      // No shape to keep on this side — attribute the whole total to the
+      // side's default reaction, same rule seeding uses for legacy votes.
+      result[positive ? DEFAULT_POSITIVE_REACTION : DEFAULT_NEGATIVE_REACTION] = target;
+      return;
+    }
+    if (sum === target) {
+      // Already agrees; serve the stored numbers untouched.
+      for (const entry of entries) result[entry.key] = entry.count;
+      return;
+    }
+
+    let allocated = 0;
+    const fractional: Array<{ key: PostReaction; fraction: number }> = [];
+    for (const entry of entries) {
+      const exact = (entry.count * target) / sum;
+      const base = Math.floor(exact);
+      allocated += base;
+      result[entry.key] = base;
+      fractional.push({ key: entry.key, fraction: exact - base });
+    }
+    fractional.sort((a, b) => b.fraction - a.fraction || POST_REACTIONS.indexOf(a.key) - POST_REACTIONS.indexOf(b.key));
+    let remainder = target - allocated;
+    let index = 0;
+    while (remainder > 0) {
+      result[fractional[index % fractional.length].key] =
+        (result[fractional[index % fractional.length].key] ?? 0) + 1;
+      remainder--;
+      index++;
+    }
+  };
+
+  applySide(true, likeCount);
+  applySide(false, dislikeCount);
+  return result;
+}
