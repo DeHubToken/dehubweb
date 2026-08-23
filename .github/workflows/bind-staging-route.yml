@@ -19,7 +19,7 @@ jobs:
           # Secret values were stored from a Windows shell and carry stray
           # carriage returns / padding — strip everything non-token.
           CF_API_TOKEN="$(printf '%s' "$CF_API_TOKEN_RAW" | tr -d '[:space:]\r'"'"'"')"
-          echo "token length: ${#CF_API_TOKEN}, account-id length: ${#CF_ACCOUNT_ID}"
+          echo "token length: ${#CF_API_TOKEN}"
           # Find the zone from the token's own grants rather than trusting the
           # stored id — the CLOUDFLARE_ID secret does not parse as a CF id.
           RESP=$(curl -sS -w '\n%{http_code}' \
