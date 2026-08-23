@@ -46,6 +46,7 @@ import { useCreatePoll } from '@/hooks/use-polls';
 import { PollCard } from './PollCard';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
+import { useMuteAuthor } from '@/hooks/use-mute-author';
 import {
   Drawer,
   DrawerContent,
@@ -104,6 +105,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const { mint: mintExisting, isMinting } = useMintExistingPost();
+  const { muteAuthor, isMuting: isMutingAuthor } = useMuteAuthor();
+
+  const handleMuteAuthor = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!post.author.id) return;
+    muteAuthor(post.author.id, post.author.name || post.author.handle || undefined);
+  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle, muteAuthor]);
 
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
 
@@ -275,6 +283,16 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
       {/* AI Button and Options Drawer - positioned in header area */}
       <div className="absolute top-0 right-0 z-10 flex items-start gap-2">
+        {!isOwnPost && post.author.id && (
+          <button
+            onClick={handleMuteAuthor}
+            disabled={isMutingAuthor}
+            aria-label="Mute this account"
+            className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-50"
+          >
+            <X className="w-[23.5px] h-[23.5px]" />
+          </button>
+        )}
         <button
           onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
           className="text-zinc-400 hover:text-white transition-colors active:scale-95"
@@ -362,9 +380,14 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                   <UserCheck className="w-5 h-5" /> Following
                 </button>
               )}
-              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
-              </button>
+              {!isOwnPost && (
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); handleMuteAuthor(); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
+                </button>
+              )}
               {isOwnPost && (
                 <>
                   <div className="border-t border-white/10 my-1" />

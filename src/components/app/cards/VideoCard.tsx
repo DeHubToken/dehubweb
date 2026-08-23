@@ -60,6 +60,7 @@ import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
@@ -563,6 +564,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // metered connection isn't spent fetching 50MB clips the user hasn't asked for.
   const { liteMode } = useConnectionQuality();
   const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const { muteAuthor } = useMuteAuthor();
+  const handleMuteCreator = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!video.creatorId) return;
+    setShowOptionsDrawer(false);
+    muteAuthor(video.creatorId, video.channel || undefined);
+  }, [walletAddress, openLoginModal, video.creatorId, video.channel, muteAuthor]);
   const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
     navigate(`/app/post/${video.id}/info`);
@@ -1531,9 +1539,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   >
                     <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
                   </button>
-                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                    <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
-                  </button>
+                  {!isOwnPost && (
+                    <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                      <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
+                    </button>
+                  )}
                   {isOwnPost && (
                     <>
                       <div className="border-t border-white/10 my-1" />

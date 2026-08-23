@@ -55,6 +55,7 @@ import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
+import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
@@ -480,6 +481,13 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const { muteAuthor } = useMuteAuthor();
+  const handleMuteCreator = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!post.creatorId) return;
+    setShowOptionsDrawer(false);
+    muteAuthor(post.creatorId, post.username || undefined);
+  }, [walletAddress, openLoginModal, post.creatorId, post.username, muteAuthor]);
   const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
     navigate(`/app/post/${post.id}/info`);
@@ -755,9 +763,11 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 >
                   <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
                 </button>
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
-                </button>
+                {!isOwnPost && (
+                  <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
+                  </button>
+                )}
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <EyeOff className="w-5 h-5" /> {t('postOptions.seeLessLikeThis')}
                 </button>
