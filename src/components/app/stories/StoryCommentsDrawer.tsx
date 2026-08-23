@@ -17,6 +17,7 @@ import { useMention } from '@/hooks/use-mention';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useStoryComments, type StoryComment } from '@/hooks/use-story-comments';
+import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
 import {
@@ -75,6 +76,7 @@ function CommentItem({ comment, currentWallet, onDelete, onUserPress }: CommentI
           >
             {comment.username || `${comment.wallet_address.slice(0, 6)}...`}
           </button>
+          <NewMemberChip address={comment.wallet_address} />
           <span className="text-zinc-500 text-xs">
             {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
           </span>
