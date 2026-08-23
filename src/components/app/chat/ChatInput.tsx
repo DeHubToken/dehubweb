@@ -417,7 +417,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
        zinc-900 bar would be the only slab left on the page. Carrying no colour
        utility also puts it permanently out of reach of the Osaka/Jungle
        `#app-root` class nets, which outrank any re-declaration here. */}
-    <div className="p-3 lg:pl-4 border-t border-white/[0.07]">
+    <div className="shrink-0 p-3 lg:pl-4 border-t border-white/[0.07]">
       {/* Reply preview */}
       {replyTo && (
         <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg border-l-2 border-white/30">
@@ -677,8 +677,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           dead band and a working one must never be confusable. */}
       {showReplyBar && (
         <div className="lg:hidden px-3 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          <div className="relative pb-5">
-            <div className="smart-reply-rail grid grid-cols-2">
+          <div className="relative pb-7">
+            <div className="smart-reply-rail grid grid-cols-2 gap-2">
               {(barStatus === 'ready'
                 ? [...smartReplies.suggestions.slice(0, 2)]
                 : [null, null])
@@ -690,9 +690,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => s && handlePickSuggestion(s.text)}
                     aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                    className={`group min-w-0 min-h-[68px] border p-2.5 text-left flex flex-col justify-between transition-colors active:scale-[0.99] ${
-                      i === 0 ? 'rounded-l-2xl' : '-ml-px rounded-r-2xl'
-                    } ${
+                    className={`group min-w-0 min-h-[124px] rounded-2xl border p-3 text-left flex flex-col justify-between transition-[transform,background-color,border-color] duration-150 ease-out hover:border-white/25 hover:bg-white/[0.075] active:translate-y-px active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/45 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${
                       s
                         ? 'bg-white/[0.045] border-white/10 active:bg-white/[0.09]'
                         : barStatus === 'loading'
@@ -705,7 +703,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
                         <span className="text-[9px] uppercase tracking-[0.08em] leading-4 text-zinc-400 group-active:text-white">
                           {s.label}
                         </span>
-                        <span className="mt-1 text-[12px] font-medium leading-snug text-white line-clamp-2">
+                        <span className="mt-2 text-[13px] font-medium leading-snug text-white line-clamp-4">
                           {s.text}
                         </span>
                       </>
@@ -730,7 +728,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
               disabled={barStatus === 'loading'}
               aria-label={barStatus === 'loading' ? 'Drafting replies' : 'Draft new replies'}
               title={barStatus === 'loading' ? undefined : 'Draft replies'}
-              className="absolute left-1/2 bottom-0 z-10 -translate-x-1/2 rounded-full p-1 transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 disabled:hover:scale-100"
+              className="absolute left-1/2 bottom-0 z-10 -translate-x-1/2 rounded-full p-1 transition-transform hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/45 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:opacity-60 disabled:hover:scale-100"
             >
               <ReplyOrb state={barStatus === 'loading' ? 'thinking' : 'idle'} size={44} />
             </button>
