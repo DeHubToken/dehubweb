@@ -1834,19 +1834,22 @@ export default function AssistantPage() {
       
       // Log error details to backend for diagnostics
       try {
-        await supabase.from('client_error_logs').insert({
-          level: 'error',
-          message: `Assistant error [${errorCode}]: ${error?.message || 'Unknown error'}`,
-          component: 'AssistantPage',
-          metadata: {
-            userMessage: currentInput?.substring(0, 100),
-            model: selectedChatModel,
-            errorCode,
-            statusCode,
-            errorName: error?.name,
-            errorStack: error?.stack?.substring(0, 500),
+        await supabase.functions.invoke('client-logs', {
+          body: {
+            logs: [{
+              level: 'error',
+              message: `Assistant error [${errorCode}]: ${error?.message || 'Unknown error'}`,
+              component: 'AssistantPage',
+              metadata: {
+                userMessage: currentInput?.substring(0, 100),
+                model: selectedChatModel,
+                errorCode,
+                statusCode,
+                errorName: error?.name,
+                errorStack: error?.stack?.substring(0, 500),
+              },
+            }],
           },
-          user_address: null,
         });
       } catch (logErr) {
         console.warn('[Assistant] Failed to log error:', logErr);

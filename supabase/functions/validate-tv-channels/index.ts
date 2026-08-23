@@ -232,13 +232,20 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Auth check
+    // Auth check. A validation run fetches multi-megabyte playlists and probes
+    // every stream, so it must not be startable by strangers: the old magic
+    // header value ("x-validate-trigger: run") let anyone on the internet kick
+    // one off. An external scheduler that cannot hold the service key can set
+    // VALIDATE_TRIGGER_SECRET and send that in the same header; with the env
+    // var unset the service key (or admin_key body field) is the only way in.
     const authHeader = req.headers.get("authorization") || "";
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
     const hasValidAuth = authHeader.includes(serviceKey);
-    const triggerKey = req.headers.get("x-validate-trigger");
+    const triggerSecret = Deno.env.get("VALIDATE_TRIGGER_SECRET") || "";
+    const triggerHeader = req.headers.get("x-validate-trigger") || "";
+    const hasValidTrigger = triggerSecret !== "" && triggerHeader === triggerSecret;
 
-    if (!hasValidAuth && triggerKey !== "run") {
+    if (!hasValidAuth && !hasValidTrigger) {
       let body: Record<string, unknown> = {};
       if (req.method === "POST") {
         body = await req.json().catch(() => ({}));

@@ -107,9 +107,20 @@ export function serviceClient(): SupabaseClient {
   );
 }
 
-/** Best-effort client IP for rate-limiting anonymous endpoints. */
+/**
+ * Best-effort client IP for rate-limiting anonymous endpoints.
+ *
+ * The FIRST x-forwarded-for entry is whatever the caller chose to send, so a
+ * script could rotate fake IPs in that header and skip every per-IP limit.
+ * Proxies APPEND their view of the peer address, so the last entry is the one
+ * our own edge actually observed; x-real-ip carries the same value when set.
+ */
 export function callerIp(req: Request): string {
-  return (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
+  const hops = (req.headers.get("x-forwarded-for") || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return hops[hops.length - 1] || req.headers.get("x-real-ip")?.trim() || "unknown";
 }
 
 export interface RateLimit {
