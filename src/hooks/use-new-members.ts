@@ -142,36 +142,63 @@ export function useNewMembers(excludeAddress?: string | null) {
 }
 
 /**
- * Is this one person new? Used by the profile chip.
+ * Everyone inside the 30-day window, in one request.
  *
- * Keeps the 30-day cutoff the list has dropped: being on the roster means we
- * know when you joined, which is not the same as having just joined.
+ * The chip used to answer "is this one person new" with a per-address query,
+ * which was fine on a profile and ruinous on a feed: twenty cards meant twenty
+ * requests for data one query already covers. This reads the whole window once
+ * — small by construction, since only recent joiners are in it — and every
+ * surface checks the map locally. Opted-out rows stay invisible here exactly
+ * as they are everywhere else: RLS does not return them.
+ *
+ * PostgREST caps a single response at 1000 rows; if a month ever onboards more
+ * than that, the oldest of them (the ones nearest graduating anyway) would stop
+ * showing the chip until then.
+ */
+export function useNewMemberSet(): {
+  members: Map<string, string>;
+  isLoading: boolean;
+} {
+  const query = useQuery({
+    queryKey: ['new-member-set'],
+    queryFn: async (): Promise<Map<string, string>> => {
+      const { data, error } = await supabase
+        .from('new_members')
+        .select('wallet_address, joined_at')
+        .gte('joined_at', cutoffIso());
+
+      if (error) throw error;
+      const map = new Map<string, string>();
+      for (const row of data || []) {
+        map.set((row.wallet_address as string).toLowerCase(), row.joined_at as string);
+      }
+      return map;
+    },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: true,
+  });
+
+  return { members: query.data ?? EMPTY_MEMBER_SET, isLoading: query.isLoading };
+}
+
+const EMPTY_MEMBER_SET: Map<string, string> = new Map();
+
+/**
+ * Is this one person new? Now a local lookup in the shared window set, so the
+ * profile chip and every feed surface read the same answer from the same
+ * request. Keeps the 30-day cutoff the list has dropped: being on the roster
+ * means we know when you joined, which is not the same as having just joined.
  *
  * Returns false for an opted-out member without needing to know that they
  * opted out — RLS simply does not return the row.
  */
 export function useIsNewMember(address?: string | null) {
-  const query = useQuery({
-    queryKey: ['new-member', address?.toLowerCase()],
-    queryFn: async (): Promise<string | null> => {
-      const { data, error } = await supabase
-        .from('new_members')
-        .select('joined_at')
-        .eq('wallet_address', address!.toLowerCase())
-        .gte('joined_at', cutoffIso())
-        .maybeSingle();
-
-      if (error) throw error;
-      return data?.joined_at ?? null;
-    },
-    enabled: !!address,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-    // An unknown address is a normal answer here, not a fault worth retrying.
-    retry: false,
-  });
-
-  return { isNew: !!query.data, joinedAt: query.data ?? null, isLoading: query.isLoading };
+  const { members, isLoading } = useNewMemberSet();
+  const key = address?.toLowerCase() ?? null;
+  const joinedAt = (key && members.get(key)) || null;
+  return { isNew: !!joinedAt, joinedAt, isLoading };
 }
 
 /**
@@ -218,7 +245,9 @@ export function useNewMemberSelf() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['new-member-self', address] });
       queryClient.invalidateQueries({ queryKey: ['new-members'] });
-      if (address) queryClient.invalidateQueries({ queryKey: ['new-member', address] });
+      // The set feeds every chip in the app — profile included — so flipping
+      // the switch has to drop it, or the old answer lingers for ten minutes.
+      queryClient.invalidateQueries({ queryKey: ['new-member-set'] });
     },
   });
 

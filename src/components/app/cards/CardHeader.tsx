@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { useAuth } from '@/contexts/AuthContext';
@@ -178,6 +179,7 @@ export function CardHeader({
                 <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
               </>
             )}
+            <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
           </div>
         )}
       </button>
