@@ -100,6 +100,7 @@ import { useNewMemberSelf } from '@/hooks/use-new-members';
 import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
+import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
@@ -1680,6 +1681,7 @@ function PrivacySettings() {
             />}
           />
           <BiometricUnlockSettings />
+          <EmailSignInSettings />
           <WalletRecoveryTools />
         </div>
       </div>

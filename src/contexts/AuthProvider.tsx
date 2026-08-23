@@ -50,6 +50,7 @@ import {
   readLastSession,
   readLastSessionAddress,
   clearLastSession,
+  type ConnectionSource,
 } from '@/lib/connection-source';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
@@ -607,6 +608,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         setWalletPhase('unlock');
       } else {
+        // No wallet row is two very different situations wearing the same
+        // result: a brand-new social signup with nothing linked yet, and a
+        // wallet-first (external-wallet) account signing in through an email
+        // link attached from settings. The exchange tells them apart — its
+        // success proves the backend holds a vetted link for THIS identity,
+        // so finish the login right here. Routing to 'create' instead would
+        // start generating a second wallet and silently split the account.
+        if (await completeLoginWithoutUnlock(userId, '')) {
+          return;
+        }
         setWalletPhase('create');
       }
     } catch (e) {
@@ -1356,6 +1367,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     address: string,
     supabaseUid: string | null,
     flow: string,
+    // 'web3auth' for every smart-wallet session. The one exception is a login
+    // that arrived through an email link on an account with no built-in
+    // wallet: its signatures will come from an external wallet via wagmi, so
+    // tagging it 'web3auth' would route signing into unlock prompts for a
+    // vault that does not exist.
+    source: ConnectionSource = 'web3auth',
   ) => {
     // The same three sources, in the same order, that refreshSession consults
     // before attempting the exchange. It built that chain for the READ and then
@@ -1367,7 +1384,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const normalizedUser = normalizeUser(authResponse.user, address);
     localStorage.setItem('dehub_wallet', address);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-    writeConnectionSource('web3auth');
+    writeConnectionSource(source);
     // Tag this DeHub session with the Supabase identity that produced it, so
     // a LATER sign-in as a DIFFERENT Supabase user (e.g. via the cross-device
     // magic-link sync) can tell "still me, just refreshing" apart from
@@ -1379,7 +1396,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // refresh wipes the session keys, it is what still lets the next login for
     // this identity verify the linked address without a wallet signature.
     if (uid) writeLastSession(uid, address);
-    setConnectionSource('web3auth');
+    setConnectionSource(source);
     setWalletAddress(address);
     setUser(normalizedUser);
 
@@ -1473,6 +1490,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // closed, which is also what protects the case the backend cannot see: a
       // wallet replaced locally and not yet re-signed with still predicts to the
       // NEW Safe, so the OLD link is refused and signing re-establishes it.
+      // An email-link login carries its proof with it: the backend only puts
+      // loginLinkSource:'wallet-email' on a link its own confirm endpoint
+      // wrote after a wallet-signed session, so the linked address needs no
+      // local corroboration — and on a browser that has never held this
+      // account's wallet there is nothing local to corroborate with anyway.
+      const serverLinkedEmail = authResponse.user?.loginLinkSource === 'wallet-email';
       const lastSessionAddress = readLastSessionAddress(userId);
       const storedEoa = ethAddress ? ethAddress.toLowerCase() : null;
       let matched: 'last-session' | 'stored-eoa' | 'predicted-safe' | null =
@@ -1480,7 +1503,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!matched && storedEoa) {
         matched = (await predictSafeAddress(storedEoa)) === address ? 'predicted-safe' : null;
       }
-      if (!matched) {
+      if (!matched && !serverLinkedEmail) {
         authLogger.warn('Supabase session maps to a different wallet — falling back to signing', {
           linked: address,
           stored: storedEoa,
@@ -1491,7 +1514,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return false;
       }
 
-      applyAuthenticatedSession(authResponse, address, userId, 'SUPABASE');
+      applyAuthenticatedSession(
+        authResponse,
+        address,
+        userId,
+        'SUPABASE',
+        // No built-in wallet behind this account: future signatures come from
+        // an external wallet via wagmi, not from vault unlocks.
+        serverLinkedEmail && !ethAddress ? 'wagmi' : 'web3auth',
+      );
       closeLoginModal();
       return true;
     } catch (e) {
