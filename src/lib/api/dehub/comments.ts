@@ -14,6 +14,8 @@ export interface ApiCommentResponse {
   updatedAt: string;
   likeCount?: number;
   isLiked?: boolean;
+  dislikeCount?: number;
+  isDisliked?: boolean;
   writor: {
     username: string;
     displayName?: string;

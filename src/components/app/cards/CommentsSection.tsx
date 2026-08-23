@@ -130,10 +130,11 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
     imageUrl: commentImageUrl,
     likes: apiComment.likeCount ?? 0,
-    dislikes: 0,
+    dislikes: apiComment.dislikeCount ?? 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
     createdAt,
     isLiked: apiComment.isLiked ?? false,
+    isDisliked: apiComment.isDisliked ?? false,
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
     address,
     voiceNote,
@@ -364,6 +365,19 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               <ThumbsUp className={cn("w-4 h-4", !isOwnComment && comment.isLiked && "fill-current")} />
               {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
             </button>
+            {/* Downvote a comment — the count shows once someone has actually
+                disliked. The server swaps polarity with like, one vote per viewer. */}
+            <button
+              onClick={() => onDislike(comment.id)}
+              className={cn(
+                "flex items-center gap-1 transition-colors",
+                comment.isDisliked ? "text-white" : "text-white/70 hover:text-white"
+              )}
+              aria-label="Dislike"
+            >
+              <ThumbsDown className={cn("w-4 h-4", comment.isDisliked && "fill-current")} />
+              {comment.dislikes > 0 && <span className="text-xs">{comment.dislikes}</span>}
+            </button>
             {/* Every comment is replyable, replies included — threads nest without limit. */}
             <button
               onClick={() => onReply(comment.id)}
@@ -503,8 +517,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // reverted if the server call fails.
   const [deletedCommentIds, setDeletedCommentIds] = useState<Set<string>>(new Set());
   const [editOverrides, setEditOverrides] = useState<Map<string, string>>(new Map());
-  // Track like/dislike state overrides for optimistic updates
-  const [likeOverrides, setLikeOverrides] = useState<Map<string, { isLiked: boolean; isDisliked: boolean; likes: number }>>(new Map());
+  // Track like/dislike state overrides for optimistic updates. Every field is
+  // optional so a like tap never clobbers a dislike count it didn't touch.
+  const [likeOverrides, setLikeOverrides] = useState<Map<string, { isLiked?: boolean; isDisliked?: boolean; likes?: number; dislikes?: number }>>(new Map());
   
   // Voice note recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -864,8 +879,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
 
     const wasLiked = comment.isLiked;
-    const newLikes = wasLiked ? comment.likes - 1 : comment.likes + 1;
-    
+    const wasDisliked = comment.isDisliked ?? false;
+    const newLikes = wasLiked ? Math.max(0, comment.likes - 1) : comment.likes + 1;
+    // The server swaps polarity — liking removes this viewer's dislike.
+    const newDislikes = wasDisliked ? Math.max(0, comment.dislikes - 1) : comment.dislikes;
+
     // Optimistic update using overrides
     setLikeOverrides(prev => {
       const next = new Map(prev);
@@ -873,10 +891,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         isLiked: !wasLiked,
         isDisliked: false,
         likes: newLikes,
+        dislikes: newDislikes,
       });
       return next;
     });
-    
+
     try {
       const result = await toggleCommentLike({ commentId });
       // Update override with server-confirmed state
@@ -887,6 +906,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             isLiked: result.isLiked,
             isDisliked: false,
             likes: result.likeCount ?? newLikes,
+            dislikes: newDislikes,
           });
           return next;
         });
@@ -911,20 +931,36 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;
 
-    const wasDisliked = comment.isDisliked;
+    const wasDisliked = comment.isDisliked ?? false;
+    const wasLiked = comment.isLiked ?? false;
+    const newDislikes = wasDisliked ? Math.max(0, comment.dislikes - 1) : comment.dislikes + 1;
+    // A dislike replaces a like — same one-vote-per-viewer rule as posts.
+    const newLikes = wasLiked && !wasDisliked ? Math.max(0, comment.likes - 1) : comment.likes;
+
     // Optimistic update
     setLikeOverrides(prev => {
       const next = new Map(prev);
       next.set(commentId, {
         isLiked: false,
         isDisliked: !wasDisliked,
-        likes: comment.isLiked ? comment.likes - 1 : comment.likes,
+        likes: newLikes,
+        dislikes: newDislikes,
       });
       return next;
     });
 
     try {
-      await toggleCommentDislike({ commentId });
+      const result = await toggleCommentDislike({ commentId });
+      setLikeOverrides(prev => {
+        const next = new Map(prev);
+        next.set(commentId, {
+          isLiked: false,
+          isDisliked: result.disliked,
+          likes: newLikes,
+          dislikes: result.dislikes ?? newDislikes,
+        });
+        return next;
+      });
     } catch {
       // Revert on error
       setLikeOverrides(prev => {
