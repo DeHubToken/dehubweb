@@ -29,6 +29,12 @@ interface CommentsWrapperProps {
   immersive?: boolean;
   /** Creator turned replies off — swaps the composer for a notice. */
   commentsDisabled?: boolean;
+  /**
+   * Post author's wallet address. Forwarded to CommentsSection, which hides the
+   * author's straight comments from the list — pass it only when the host page
+   * renders those comments itself (the author thread on the post page).
+   */
+  postAuthorAddress?: string;
 }
 
 function useIsTabletOrMobile() {
@@ -124,7 +130,7 @@ function useWheelChaining(enabled: boolean) {
   return ref;
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, postAuthorAddress }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
   const { isCollapsed } = useSidebarCollapse();
@@ -157,6 +163,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
               onClose={() => onOpenChange(false)}
               initialTab={initialTab}
               commentsDisabled={commentsDisabled}
+              postAuthorAddress={postAuthorAddress}
             />
           </div>
         </DrawerContent>
@@ -203,6 +210,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
               onClose={() => onOpenChange(false)}
               initialTab={initialTab}
               commentsDisabled={commentsDisabled}
+              postAuthorAddress={postAuthorAddress}
             />
           </div>
         </motion.div>
