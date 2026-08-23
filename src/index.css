@@ -160,17 +160,22 @@ All colors MUST be HSL.
   }
 
   /* A single two-action surface with a real circular cut-out for the reply
-     orb. Alpha-only fills keep the rail transparent across animated themes. */
+     orb. Alpha-only fills keep the rail transparent across animated themes.
+     The notch radius is a variable so each consumer can seat its orb exactly
+     (mobile: 26px = a 52px socket for the 52px button; desktop keeps 29px).
+     The carved arc erases the cards' own border, so consumers draw the rim
+     separately — see the rim element in ChatInput's resting rail. */
   .smart-reply-rail {
+    --smart-reply-notch: 29px;
     -webkit-mask-image: radial-gradient(
-      circle 29px at 50% 100%,
-      transparent 28px,
-      black 29px
+      circle var(--smart-reply-notch) at 50% 100%,
+      transparent calc(var(--smart-reply-notch) - 1px),
+      black var(--smart-reply-notch)
     );
     mask-image: radial-gradient(
-      circle 29px at 50% 100%,
-      transparent 28px,
-      black 29px
+      circle var(--smart-reply-notch) at 50% 100%,
+      transparent calc(var(--smart-reply-notch) - 1px),
+      black var(--smart-reply-notch)
     );
   }
 

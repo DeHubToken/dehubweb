@@ -856,7 +856,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   // Emit markAsRead (socket) + scroll on initial load
   useEffect(() => {
     if (isInitialMount.current && messages.length > 0) {
-      bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+      // Scroll ONLY this container — scrollIntoView scrolls every ancestor,
+      // dragging the page itself down and parking dead space under composer.
+      const container = scrollContainerRef.current;
+      if (container) container.scrollTop = container.scrollHeight;
       isInitialMount.current = false;
       prevLastMessageIdRef.current = messages[messages.length - 1]?._id ?? null;
       markAsRead();
@@ -906,7 +909,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       if (container) {
         const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
         if (distanceFromBottom < 150) {
-          setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+          // Container-scoped, like every other pin here — never the page.
+          setTimeout(() => container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' }), 50);
         } else {
           setNewMessageCount(prev => prev + appended);
         }
@@ -1051,7 +1055,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Container-scoped — scrollIntoView would drag the page down with it.
+    const container = scrollContainerRef.current;
+    if (container) container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     setNewMessageCount(0);
   };
 
