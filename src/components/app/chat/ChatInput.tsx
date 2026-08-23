@@ -667,7 +667,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         </div>
       </div>
 
-      {/* Narrow-viewport resting strip: chip — orb — chip, filling the band
+      {/* Narrow-viewport resting rail: two joined replies with the orb seated
+          in a circular cut-out at their centre seam. It fills the band
           the mobile bottom nav vacates while a conversation is open. It exists
           to be dismissed by use: focusing the composer raises the keyboard,
           the keyboard claims this exact space, so the strip stands down on
@@ -676,59 +677,63 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           dead band and a working one must never be confusable. */}
       {showReplyBar && (
         <div className="lg:hidden px-3 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          <div className="flex items-stretch gap-2">
-            {(barStatus === 'ready'
-              ? [...smartReplies.suggestions.slice(0, 2)]
-              : [null, null])
-              .map((s, i) => (
-                <button
-                  key={s ? `${s.label}-${i}` : `strip-${i}`}
-                  type="button"
-                  disabled={!s}
-                  onClick={() => s && handlePickSuggestion(s.text)}
-                  aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                  className={`min-w-0 flex-1 min-h-[60px] rounded-2xl border p-2 text-left flex flex-col justify-between transition-colors ${
-                    s
-                      ? 'bg-white/[0.045] border-white/10 active:bg-white/[0.09]'
-                      : barStatus === 'loading'
-                        ? 'bg-white/[0.03] border-white/[0.07] cursor-default'
-                        : 'bg-transparent border-white/[0.05] cursor-default'
-                  }`}
-                >
-                  {s ? (
-                    <>
-                      <span className="self-start rounded-full bg-white/10 border border-white/15 px-1.5 text-[9px] leading-4 text-zinc-300">
-                        {s.label}
+          <div className="relative pb-5">
+            <div className="smart-reply-rail grid grid-cols-2">
+              {(barStatus === 'ready'
+                ? [...smartReplies.suggestions.slice(0, 2)]
+                : [null, null])
+                .map((s, i) => (
+                  <button
+                    key={s ? `${s.label}-${i}` : `strip-${i}`}
+                    type="button"
+                    disabled={!s}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => s && handlePickSuggestion(s.text)}
+                    aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
+                    className={`group min-w-0 min-h-[68px] border p-2.5 text-left flex flex-col justify-between transition-colors active:scale-[0.99] ${
+                      i === 0 ? 'rounded-l-2xl' : '-ml-px rounded-r-2xl'
+                    } ${
+                      s
+                        ? 'bg-white/[0.045] border-white/10 active:bg-white/[0.09]'
+                        : barStatus === 'loading'
+                          ? 'bg-white/[0.03] border-white/[0.07] cursor-default'
+                          : 'bg-transparent border-white/[0.05] cursor-default'
+                    }`}
+                  >
+                    {s ? (
+                      <>
+                        <span className="text-[9px] uppercase tracking-[0.08em] leading-4 text-zinc-400 group-active:text-white">
+                          {s.label}
+                        </span>
+                        <span className="mt-1 text-[12px] font-medium leading-snug text-white line-clamp-2">
+                          {s.text}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="block w-full space-y-1.5">
+                        <span
+                          className={`block h-2.5 w-full rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
+                        />
+                        <span
+                          className={`block h-2.5 w-2/3 rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
+                        />
                       </span>
-                      <span className="mt-1 text-[12px] leading-snug text-white line-clamp-2">
-                        {s.text}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="block w-full space-y-1.5">
-                      <span
-                        className={`block h-2.5 w-full rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
-                      />
-                      <span
-                        className={`block h-2.5 w-2/3 rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
-                      />
-                    </span>
-                  )}
-                </button>
-              ))}
-            <div className="flex items-center justify-center shrink-0 px-0.5">
-              <button
-                type="button"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => smartReplies.generate()}
-                disabled={barStatus === 'loading'}
-                aria-label={barStatus === 'loading' ? 'Drafting replies' : 'Draft new replies'}
-                title={barStatus === 'loading' ? undefined : 'Draft replies'}
-                className="rounded-full p-1 transition-transform active:scale-95 disabled:opacity-60"
-              >
-                <ReplyOrb state={barStatus === 'loading' ? 'thinking' : 'idle'} size={44} />
-              </button>
+                    )}
+                  </button>
+                ))}
             </div>
+
+            <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => smartReplies.generate()}
+              disabled={barStatus === 'loading'}
+              aria-label={barStatus === 'loading' ? 'Drafting replies' : 'Draft new replies'}
+              title={barStatus === 'loading' ? undefined : 'Draft replies'}
+              className="absolute left-1/2 bottom-0 z-10 -translate-x-1/2 rounded-full p-1 transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 disabled:hover:scale-100"
+            >
+              <ReplyOrb state={barStatus === 'loading' ? 'thinking' : 'idle'} size={44} />
+            </button>
           </div>
         </div>
       )}
