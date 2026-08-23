@@ -17,6 +17,9 @@ vi.mock('@/integrations/supabase/client', () => ({
 import { lockWallet } from '@/lib/smart-wallet';
 import {
   PROFILES_STORAGE_KEY,
+  adoptCurrentProfile,
+  applyProfileSnapshot,
+  stageIncomingIdentity,
   listProfiles,
   getProfile,
   currentProfileId,
@@ -64,9 +67,9 @@ afterEach(() => {
 });
 
 describe('snapshotCurrentSession', () => {
-  it('records the live account with its session keys', () => {
+  it('records an explicitly adopted account with its session keys', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     const profiles = listProfiles();
     expect(profiles).toHaveLength(1);
@@ -81,9 +84,30 @@ describe('snapshotCurrentSession', () => {
     });
   });
 
+  it('never adds an uninvited account — tracking refreshes, adoption creates', () => {
+    // Someone signs in once on a shared browser without ever using Add
+    // profile. Background tracking sees them constantly; the list must not.
+    seedAccountA();
+    snapshotCurrentSession();
+    expect(listProfiles()).toHaveLength(0);
+
+    localStorage.setItem('dehub_token', 'tok-a-rotated');
+    snapshotCurrentSession();
+    expect(listProfiles()).toHaveLength(0);
+
+    // The moment the user says "save this one", it lands — and later tracking
+    // keeps its session fresh.
+    adoptCurrentProfile();
+    localStorage.setItem('dehub_token', 'tok-a-rotated-again');
+    snapshotCurrentSession();
+    const profiles = listProfiles();
+    expect(profiles).toHaveLength(1);
+    expect(profiles[0].session?.tokens['dehub_token']).toBe('tok-a-rotated-again');
+  });
+
   it('keys wallet-only accounts by address when there is no Supabase uid', () => {
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     expect(currentProfileId()).toBe(`addr:${ADDR_B}`);
     expect(getProfile(`addr:${ADDR_B}`)?.session?.tokens['dehub_token']).toBe('tok-b');
@@ -92,15 +116,15 @@ describe('snapshotCurrentSession', () => {
   it('ignores a half-established flow with a wallet but no token', () => {
     localStorage.setItem('dehub_wallet', ADDR_A);
     localStorage.removeItem('dehub_token');
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     expect(listProfiles()).toHaveLength(0);
   });
 
   it('updates the existing entry rather than duplicating it', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     localStorage.setItem('dehub_token', 'tok-a-rotated');
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     const profiles = listProfiles();
     expect(profiles).toHaveLength(1);
@@ -111,9 +135,9 @@ describe('snapshotCurrentSession', () => {
 describe('switching', () => {
   it('restores the target account and locks the outgoing wallet key away', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     expect(listProfiles()).toHaveLength(2);
 
     const plan = beginProfileSwitch('uid-a');
@@ -138,7 +162,7 @@ describe('switching', () => {
 
   it('returns null for an unknown or session-less profile without touching disk', () => {
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     expect(beginProfileSwitch('uid-a')).toBeNull();
     expect(lockWallet).not.toHaveBeenCalled();
@@ -147,7 +171,7 @@ describe('switching', () => {
 
   it('returns null when the stored profile has lost its session', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     const store = JSON.parse(localStorage.getItem(PROFILES_STORAGE_KEY)!);
     store[0].session = null;
     localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(store));
@@ -158,9 +182,9 @@ describe('switching', () => {
 
   it('does not snapshot over a staged switch', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     beginProfileSwitch('uid-a');
     // Keys on disk now belong to A mid-handoff; tracking must leave them alone.
@@ -172,9 +196,9 @@ describe('switching', () => {
 
   it('rolls back to the outgoing account when a staged switch aborts', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     // Capture who is live BEFORE staging, exactly as switchToProfile does.
     const prevId = currentProfileId();
@@ -196,9 +220,9 @@ describe('switching', () => {
 
   it('wipes staged keys instead of restoring when there was no live account', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     // Switching from a signed-out state: nothing to roll back to.
     beginProfileSwitch('uid-a');
@@ -212,7 +236,7 @@ describe('switching', () => {
 
   it('ignores an abort when no switch was staged', () => {
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     localStorage.setItem('dehub_token', 'tok-live');
 
     abortProfileSwitch('uid-a');
@@ -224,13 +248,70 @@ describe('switching', () => {
 describe('removeProfile', () => {
   it('drops only the removed entry', () => {
     seedAccountA();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
     seedAccountB();
-    snapshotCurrentSession();
+    adoptCurrentProfile();
 
     removeProfile('uid-a');
 
     const ids = listProfiles().map((p) => p.id);
     expect(ids).toEqual([`addr:${ADDR_B}`]);
+  });
+});
+
+describe('stageIncomingIdentity', () => {
+  it('clears the outgoing session but keeps the in-flight wagmi connection when asked', () => {
+    seedAccountA();
+    adoptCurrentProfile();
+
+    stageIncomingIdentity({ keepWagmiKeys: true });
+
+    // The outgoing account's keys are gone — the exchange writes fresh ones…
+    expect(localStorage.getItem('dehub_token')).toBeNull();
+    expect(localStorage.getItem('dehub_wallet')).toBeNull();
+    expect(localStorage.getItem('dehub_supabase_uid')).toBeNull();
+    expect(localStorage.getItem(SB_KEY)).toBeNull();
+    // …its wallet key is locked away…
+    expect(lockWallet).toHaveBeenCalled();
+    // …but the wagmi storage the just-connected MetaMask wrote survives.
+    expect(localStorage.getItem('wagmi.connected')).toBe('1');
+    // And the pending-login flags cannot outlive their flow.
+    localStorage.setItem('dehub_supa_login_pending', '1');
+    localStorage.setItem('dehub_supa_login_pending_at', String(Date.now()));
+    stageIncomingIdentity({ keepWagmiKeys: true });
+    expect(localStorage.getItem('dehub_supa_login_pending')).toBeNull();
+    expect(localStorage.getItem('dehub_supa_login_pending_at')).toBeNull();
+  });
+
+  it('wipes wagmi storage too when the incoming identity has none of its own', () => {
+    seedAccountA();
+    adoptCurrentProfile();
+
+    stageIncomingIdentity();
+
+    expect(localStorage.getItem('wagmi.connected')).toBeNull();
+    expect(localStorage.getItem('wagmi.connector')).toBeNull();
+    expect(localStorage.getItem('dehub_token')).toBeNull();
+  });
+
+  it('snapshots the outgoing account so an abandoned attempt can restore it', () => {
+    seedAccountA();
+    adoptCurrentProfile();
+
+    stageIncomingIdentity({ keepWagmiKeys: true });
+
+    const restored = applyProfileSnapshot('uid-a');
+    expect(restored?.supabase).toEqual({ access_token: 'sa-now', refresh_token: 'sr-now' });
+    expect(localStorage.getItem('dehub_token')).toBe('tok-a');
+    expect(localStorage.getItem('wagmi.connected')).toBe('1');
+  });
+
+  it('leaves disk clean when restoring a profile that never existed', () => {
+    seedAccountA();
+
+    const restored = applyProfileSnapshot('uid-ghost');
+
+    expect(restored?.supabase).toBeNull();
+    expect(localStorage.getItem('dehub_token')).toBeNull();
   });
 });
