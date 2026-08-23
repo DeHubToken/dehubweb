@@ -10,6 +10,11 @@
  * to anyone who doesn't own the post. So an empty `data` is ambiguous on its
  * own — always read `canViewLikers` before rendering "no reactions yet".
  *
+ * NEGATIVE REACTIONS ARE ANONYMOUS
+ * The server never sends person rows for dislike/poo — not even to the author.
+ * Those groups are skipped here rather than rendered as bare count headers;
+ * their tallies still show on the post's own buttons.
+ *
  * WHY A DRAWER CLIPPED TO THE MIDDLE COLUMN
  * Same trick as LoginModal: `--app-main-left` / `--app-main-width` pin the
  * sheet to the feed column on desktop so it reads as part of the post rather
@@ -24,7 +29,7 @@ import { Loader2 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getPostLikers, type PostLiker } from '@/lib/api/dehub';
-import { REACTION_LIST, type PostReaction } from '@/lib/reactions';
+import { NEGATIVE_REACTIONS, REACTION_LIST, type PostReaction } from '@/lib/reactions';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { cn } from '@/lib/utils';
 
@@ -85,12 +90,18 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
       if (bucket) bucket.push(row);
       else byReaction.set(key, [row]);
     });
-    return REACTION_LIST.map((meta) => ({
-      meta,
-      // The tally covers the whole post; `people` is only what has loaded.
-      total: firstPage?.reactionCounts?.[meta.key] ?? byReaction.get(meta.key)?.length ?? 0,
-      people: byReaction.get(meta.key) ?? [],
-    })).filter((group) => group.total > 0 || group.people.length > 0);
+    return REACTION_LIST
+      // Negative reactions are anonymous — the server never sends their
+      // person rows, so they could only render as a bare count header here.
+      // Their tallies still show on the post's own buttons.
+      .filter((meta) => !NEGATIVE_REACTIONS.includes(meta.key))
+      .map((meta) => ({
+        meta,
+        // The tally covers the whole post; `people` is only what has loaded.
+        total: firstPage?.reactionCounts?.[meta.key] ?? byReaction.get(meta.key)?.length ?? 0,
+        people: byReaction.get(meta.key) ?? [],
+      }))
+      .filter((group) => group.total > 0 || group.people.length > 0);
   }, [rows, firstPage]);
 
   const goToProfile = (person: PostLiker) => {
