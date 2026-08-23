@@ -99,6 +99,26 @@ type WagmiAuthTrigger = 'user' | 'background';
 // login flow instead of ignoring a stray Supabase session.
 const SUPA_LOGIN_PENDING_KEY = 'dehub_supa_login_pending';
 
+// Written alongside the pending flag when a social/email login navigates the
+// browser away. On return, flag + fresh timestamp together mean "a login
+// resume should be on screen RIGHT NOW" — so the sheet is open from the very
+// first paint and the user never sees the public feed flash past before the
+// wallet step appears. Without the timestamp, a flag left over from an
+// abandoned attempt would reopen the sheet on every visit forever.
+const SUPA_LOGIN_PENDING_AT_KEY = 'dehub_supa_login_pending_at';
+const PENDING_LOGIN_FRESH_MS = 2 * 60 * 1000;
+
+function isSocialLoginResumeExpected(): boolean {
+  try {
+    if (localStorage.getItem(SUPA_LOGIN_PENDING_KEY) !== '1') return false;
+    const at = Number(localStorage.getItem(SUPA_LOGIN_PENDING_AT_KEY));
+    if (!Number.isFinite(at) || at <= 0) return false;
+    return Date.now() - at < PENDING_LOGIN_FRESH_MS;
+  } catch {
+    return false;
+  }
+}
+
 // Warm DNS for WalletConnect back-ends the instant the user shows login intent.
 let walletOriginsWarmed = false;
 function warmWalletOrigins() {
@@ -237,10 +257,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [isProcessingRedirect, setIsProcessingRedirect] = useState(false);
+  // Initialised from the pending-login freshness window rather than left
+  // false: a browser coming back from an OAuth redirect or magic link must
+  // spend its first frame showing the login sheet ("Signing you in…"), not
+  // the bare feed it is about to leave again. The SIGNED_IN listener below
+  // drives this flag through the actual resume; the watchdog effect releases
+  // it if no session ever lands.
+  const [isProcessingRedirect, setIsProcessingRedirect] = useState(isSocialLoginResumeExpected);
   const [requiresUsername, setRequiresUsername] = useState(false);
   const [needsSignature] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(isSocialLoginResumeExpected);
   const [walletPhase, setWalletPhase] = useState<WalletPhase>('none');
   // Hydrated from storage rather than left null until some login flow happens
   // to run. This is the identity that OWNS the wallet row, and it is needed on
@@ -291,6 +317,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { connectAsync, connectors } = useConnect();
 
   const connectionAbortedRef = useRef(false);
+  // Whether THIS page mount opened the sheet itself because a login resume
+  // was expected at first paint. Only that case needs the watchdog below —
+  // a resume started later in the page's life already has a session on its
+  // way and an audience that tapped something recently.
+  const resumeOpenedAtBootRef = useRef(isSocialLoginResumeExpected());
   const wagmiAuthIntentRef = useRef(false);
   const [wagmiAuthIntentState, setWagmiAuthIntentState] = useState(false);
   const wagmiAuthInProgressRef = useRef(false);
@@ -355,6 +386,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // that an untagged session counts as a different identity) would tear down
     // a perfectly healthy session the user never asked to end.
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+    // The freshness twin goes with it, so a sheet dismissed mid-resume can't
+    // combine with a later stray flag into a surprise reopen.
+    localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
     // The phase has to go too. LoginModal mirrors it into local step state on a
     // dependency change, so a phase left at 'unlock' after a dismissal both
     // reopens unrelated "Sign in" taps straight onto the unlock step and, worse,
@@ -408,6 +442,85 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
       .catch(() => openLoginModal());
   }, [supabaseUserId, openLoginModal]);
+
+  /**
+   * Produce the login signature WITHOUT any UI, using only key material that
+   * is already legitimately available.
+   *
+   * This is what keeps the wallet password strictly contextual. The Supabase
+   * exchange covers most logins with zero key material at all; when it cannot
+   * run — identity not linked yet, endpoint switched off, a stale link — some
+   * signature is genuinely required to establish the DeHub session, and THIS
+   * is the last chance to produce one silently: a vault unlock still inside
+   * its auto-lock window rehydrates without asking anything, and personal_sign
+   * with that provider is local computation. Only when this returns false does
+   * the login route to the password step.
+   *
+   * Safety: the restored key must provably belong to THIS identity's wallet
+   * row before anything is signed or stored. After an identity switch the
+   * local cache is deliberately cleared, which disables the vault's own
+   * address check — so the signer address is matched against the row's EOA
+   * and its predicted Safe here, and any disagreement aborts toward the
+   * unlock step rather than risk linking the wrong wallet.
+   */
+  const finishLoginWithLiveUnlock = async (
+    userId: string,
+    ethAddress: string,
+  ): Promise<boolean> => {
+    try {
+      if (!ethAddress) return false;
+      const eoaProvider = await restoreWalletSession();
+      if (!eoaProvider) return false;
+
+      let signingProvider: any = eoaProvider;
+      try {
+        const aaProvider = await setupAAProvider();
+        if (aaProvider) {
+          setAAProvider(aaProvider);
+          signingProvider = aaProvider;
+        }
+      } catch (e) {
+        console.warn('[Auth] AA setup failed, falling back to EOA:', e);
+      }
+
+      const accounts: string[] = await signingProvider.request({ method: 'eth_accounts' });
+      const signerAddress = accounts?.[0]?.toLowerCase();
+      const allowed = new Set([ethAddress.toLowerCase()]);
+      try {
+        allowed.add((await predictSafeAddress(ethAddress)).toLowerCase());
+      } catch { /* prediction is best-effort */ }
+      if (!signerAddress || !allowed.has(signerAddress)) {
+        authLogger.warn('Restored key does not match this identity\'s wallet — not signing', {
+          signerAddress,
+        });
+        return false;
+      }
+
+      const timestamp = Math.floor(Date.now() / 1000);
+      const { address, signature } = await signWithProvider(
+        signingProvider,
+        new Date(timestamp * 1000),
+        'SMART-RESUME',
+      );
+      const meta = await getSupabaseAuthMeta();
+      toast.loading('Signing in...', { id: 'auth-smart-wallet' });
+      const authResponse = await authenticateWallet(address, signature, timestamp, 8453, meta);
+      applyAuthenticatedSession(authResponse, address, userId, 'SMART-RESUME');
+      toast.success(
+        authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!',
+        { id: 'auth-smart-wallet' },
+      );
+      closeLoginModal();
+      return true;
+    } catch (e) {
+      // Locked vault, address mismatch, network failure — all land here and
+      // fall back to the unlock step, exactly as before this existed.
+      authLogger.warn('Silent login signature unavailable — routing to wallet unlock', {
+        reason: e instanceof Error ? e.message : String(e),
+      });
+      return false;
+    }
+  };
 
   /**
    * After a Supabase session exists: look up the wallet row and route the
@@ -467,7 +580,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (await completeLoginWithoutUnlock(userId, existing.ethAddress)) {
           return;
         }
-        // Exchange unavailable (identity not linked yet, endpoint off, offline).
+        // Exchange unavailable (identity not linked yet, endpoint off,
+        // offline, stale link). Before routing to any password UI: a signature
+        // may still be producible silently from a vault unlock inside its
+        // auto-lock window. The password step is the LAST resort, reached only
+        // when nothing else can establish the session.
+        if (await finishLoginWithLiveUnlock(userId, existing.ethAddress)) {
+          return;
+        }
         setWalletPhase('unlock');
       } else {
         setWalletPhase('create');
@@ -630,6 +750,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const sameIdentity = !!cachedUid && cachedUid === session.user.id;
       if (sameIdentity && getAuthToken() && !isTokenExpired() && localStorage.getItem('dehub_wallet')) {
         localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+        localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+        // Release a sheet this page mount opened for the expected resume:
+        // nothing is left to wait for, and an open "Signing you in…" over an
+        // already-valid session would just sit there until the watchdog.
+        if (resumeOpenedAtBootRef.current) {
+          resumeOpenedAtBootRef.current = false;
+          setIsProcessingRedirect(false);
+          closeLoginModal();
+        }
         return;
       }
       // A different (or unknown) identity just signed in — proceedToWalletPhase
@@ -638,6 +767,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // the "address changed" guard in signAndAuthenticateSmartWallet.
       supaLoginHandledRef.current = true;
       setIsProcessingRedirect(true);
+      // Resumes that start mid-session — the magic-link confirm page
+      // navigating into /app, a cross-device broadcast — have no sheet up,
+      // because nothing navigated away from THIS tab. Put it up now so the
+      // wallet handoff happens inside the sheet instead of popping onto it
+      // after the feed has already rendered. On a redirect return this is a
+      // no-op: first paint already opened it.
+      openLoginModal();
       // Defer so this runs outside the auth-state callback (supabase-js
       // deadlocks if you call its own APIs synchronously inside the callback).
       setTimeout(() => {
@@ -648,7 +784,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }, 0);
     });
     return () => sub.subscription.unsubscribe();
-  }, [proceedToWalletPhase]);
+  }, [proceedToWalletPhase, openLoginModal, closeLoginModal]);
+
+  // A resume expected at first paint must not hold the loader forever. If no
+  // session lands within a generous window — consent abandoned, provider
+  // error, the user closed Google's tab — release it so the sheet falls back
+  // to the sign-in options instead of spinning eternally.
+  useEffect(() => {
+    if (!isProcessingRedirect || !resumeOpenedAtBootRef.current) return;
+    const t = setTimeout(() => {
+      // A resume that IS actively running gets to finish; only a silent one
+      // is abandoned here.
+      if (supaLoginHandledRef.current) return;
+      resumeOpenedAtBootRef.current = false;
+      localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+      localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+      setIsProcessingRedirect(false);
+    }, 12000);
+    return () => clearTimeout(t);
+  }, [isProcessingRedirect]);
 
   // Mid-session unlock requests — a post, tip or stream attempted with the key
   // no longer in memory. Raised by aa-utils when no signing provider exists.
@@ -1456,6 +1610,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signAndAuthenticateSmartWallet(toastId);
       setWalletPhase('none');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+      localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
       closeLoginModal();
     } catch (err: any) {
       console.error('[Auth] Smart-wallet login failed:', err);
@@ -1485,6 +1640,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setConnectionSource('web3auth');
     writeConnectionSource('web3auth');
     localStorage.setItem(SUPA_LOGIN_PENDING_KEY, '1');
+    localStorage.setItem(SUPA_LOGIN_PENDING_AT_KEY, String(Date.now()));
 
     try {
       // Avoid wagmi competing for browser wallet state during the flow.
@@ -1522,6 +1678,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setConnectionSource('web3auth');
     writeConnectionSource('web3auth');
     localStorage.setItem(SUPA_LOGIN_PENDING_KEY, '1');
+    localStorage.setItem(SUPA_LOGIN_PENDING_AT_KEY, String(Date.now()));
 
     // Generate a per-request nonce for cross-device sync. The initiating
     // device (this one) subscribes to a realtime channel keyed by the nonce
@@ -1631,7 +1788,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       const uid = data?.session?.user?.id ?? data?.user?.id;
       if (!uid) throw new Error('Verification failed. Please try again.');
-      await proceedToWalletPhase(uid);
+      // Hold "Signing you in…" over the sheet while the wallet row lookup and
+      // session exchange run, rather than leaving the code form frozen.
+      setIsProcessingRedirect(true);
+      try {
+        await proceedToWalletPhase(uid);
+      } finally {
+        setIsProcessingRedirect(false);
+      }
     } catch (error: any) {
       console.error('OTP verification error:', error);
       throw new Error(error?.message || 'Invalid code. Please try again.');
@@ -1706,7 +1870,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       const uid = sessionData?.session?.user?.id;
       if (sessionError || !uid) throw new Error(sessionError?.message || 'Verification failed. Please try again.');
-      await proceedToWalletPhase(uid);
+      // Same as the email path: hold "Signing you in…" over the round trips.
+      setIsProcessingRedirect(true);
+      try {
+        await proceedToWalletPhase(uid);
+      } finally {
+        setIsProcessingRedirect(false);
+      }
     } catch (error: any) {
       console.error('Phone OTP verification error:', error);
       throw new Error(error?.message || 'Invalid code. Please try again.');
@@ -1807,6 +1977,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // so a later login can skip the wallet signature (see connection-source.ts).
     clearLastSession();
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+    localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
     clearEngagementCaches();
 
     setWalletAddress(null);
