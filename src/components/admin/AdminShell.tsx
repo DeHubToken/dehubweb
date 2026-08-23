@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LogOut, Users, Megaphone } from 'lucide-react';
+import { LogOut, Users, Megaphone, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAdminAuth } from '@/hooks/use-admin-auth';
 import { SEOHead } from '@/components/SEOHead';
@@ -40,6 +40,13 @@ export function AdminShell({ title, children }: AdminShellProps) {
             >
               <Megaphone className="w-3.5 h-3.5" />
               Ads
+            </Link>
+            <Link
+              to="/admin/moderation"
+              className="inline-flex items-center gap-1.5 text-xs text-white/60 hover:text-white px-2 py-1.5 rounded-lg hover:bg-white/5"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Moderation
             </Link>
             <Button
               variant="ghost"

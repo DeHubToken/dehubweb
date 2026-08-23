@@ -205,3 +205,118 @@ export async function listAdminUsers(
     })}`,
   );
 }
+
+// ── Reports & moderation ─────────────────────────────────────────────────────
+
+export type AdminReportStatus = 'pending' | 'reviewed' | 'action_taken' | 'dismissed';
+
+export interface AdminReportUserRef {
+  address?: string;
+  username?: string;
+  displayName?: string;
+  avatarImageUrl?: string;
+}
+
+export interface AdminReportAdminRef {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  role: string;
+}
+
+export interface AdminReportedToken {
+  tokenId: number;
+  name?: string;
+  image?: string;
+  postType?: string;
+  status?: string;
+  minter?: string;
+  owner?: string;
+}
+
+export interface AdminContentReportItem {
+  _id: string;
+  tokenId: number;
+  reason?: string;
+  additionalInfo?: string;
+  description?: string;
+  status: AdminReportStatus;
+  reviewedAt?: string;
+  createdAt: string;
+  reporter?: AdminReportUserRef;
+  token?: AdminReportedToken;
+  reviewedByAdmin?: AdminReportAdminRef;
+}
+
+export interface AdminTargetUserRef extends AdminReportUserRef {
+  isBanned?: boolean;
+  bannedAt?: string;
+  bannedReason?: string;
+}
+
+export interface AdminUserReportItem {
+  _id: string;
+  reason: string;
+  additionalInfo?: string;
+  status: AdminReportStatus;
+  reviewedAt?: string;
+  createdAt: string;
+  reporter?: AdminReportUserRef;
+  targetUser?: AdminTargetUserRef;
+  reviewedByAdmin?: AdminReportAdminRef;
+}
+
+export interface AdminReportStatusSummary {
+  pending: number;
+  reviewed: number;
+  action_taken: number;
+  dismissed: number;
+}
+
+export interface AdminContentReportsListResponse {
+  page: number;
+  limit: number;
+  total: number;
+  summary: AdminReportStatusSummary;
+  items: AdminContentReportItem[];
+}
+
+export interface AdminUserReportsListResponse {
+  page: number;
+  limit: number;
+  total: number;
+  summary: AdminReportStatusSummary;
+  items: AdminUserReportItem[];
+}
+
+export type AdminReportsKind = 'content' | 'users';
+
+export interface ListAdminReportsParams {
+  page?: number;
+  limit?: number;
+  status?: 'all' | AdminReportStatus;
+}
+
+export async function listAdminContentReports(
+  params: ListAdminReportsParams = {},
+): Promise<AdminContentReportsListResponse> {
+  return adminFetch<AdminContentReportsListResponse>(
+    `/api/admin/reports/content${buildQuery({
+      page: params.page,
+      limit: params.limit,
+      status: params.status === 'all' ? undefined : params.status,
+    })}`,
+  );
+}
+
+export async function listAdminUserReports(
+  params: ListAdminReportsParams = {},
+): Promise<AdminUserReportsListResponse> {
+  return adminFetch<AdminUserReportsListResponse>(
+    `/api/admin/reports/users${buildQuery({
+      page: params.page,
+      limit: params.limit,
+      status: params.status === 'all' ? undefined : params.status,
+    })}`,
+  );
+}
