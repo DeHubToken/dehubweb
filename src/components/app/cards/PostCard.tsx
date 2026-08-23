@@ -283,16 +283,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
       {/* AI Button and Options Drawer - positioned in header area */}
       <div className="absolute top-0 right-0 z-10 flex items-start gap-2">
-        {!isOwnPost && post.author.id && (
-          <button
-            onClick={handleMuteAuthor}
-            disabled={isMutingAuthor}
-            aria-label="Mute this account"
-            className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-50"
-          >
-            <X className="w-[23.5px] h-[23.5px]" />
-          </button>
-        )}
         <button
           onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
           className="text-zinc-400 hover:text-white transition-colors active:scale-95"
@@ -459,6 +449,17 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             </div>
           </DrawerContent>
         </Drawer>
+
+        {!isOwnPost && post.author.id && (
+          <button
+            onClick={handleMuteAuthor}
+            disabled={isMutingAuthor}
+            aria-label="Mute this account"
+            className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-50 -mr-0.5"
+          >
+            <X className="w-[23.5px] h-[23.5px]" />
+          </button>
+        )}
       </div>
 
       {/* Content */}
