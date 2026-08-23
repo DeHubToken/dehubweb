@@ -734,6 +734,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         verified: (item as any).minterUser?.isVerified || false,
         avatar: avatarUrl || undefined,
         likes: String(item.totalVotes?.for || 0),
+        dislikes: item.totalVotes?.against || 0,
         thumbnail: getMediaUrl(item.imageUrl) || '',
         videoUrl: item.videoUrl
           ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
@@ -796,6 +797,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         title: pinnedPost.name,
         description: pinnedPost.description,
         likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        dislikes: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
         caption: pinnedPost.description || pinnedPost.name || '',
         comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
         views: formatViews(views),
@@ -860,6 +862,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
           reposts: (pinnedPost.totalReposts || pinnedPost.reposts || 0) + (pinnedPost.quotes || 0),
           likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+          dislikes: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
         },
       };
       return { type: 'post', data: textPost };

@@ -527,6 +527,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             myReaction={post.myReaction}
             reactionCounts={post.reactionCounts}
             likeCount={post.stats.likes}
+            dislikeCount={post.stats.dislikes}
             commentCount={post.stats.comments}
             repostCount={post.stats.reposts}
             isReposted={post.isReposted}
