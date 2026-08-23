@@ -23,6 +23,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { lockWallet } from '@/lib/smart-wallet';
 import type { ConnectionSource } from '@/lib/connection-source';
+import { getProfileAllowance, MAX_PROFILES_CEILING, type ProfileAllowance } from '@/lib/profile-limits';
 
 export const PROFILES_CHANGED_EVENT = 'dehub:profiles-changed';
 export const PROFILES_STORAGE_KEY = 'dehub_profiles_v2';
@@ -51,7 +52,13 @@ const SESSION_KEYS = [
 /** Same prefixes wagmi.ts clears on disconnect — kept in step with it. */
 const WAGMI_PREFIXES = ['wagmi', '@appkit', '@w3m', 'wc@', 'WCM@', 'W3M'];
 
-const MAX_PROFILES = 8;
+/**
+ * How many profiles may be saved is a staking-badge allowance, not a constant
+ * (see lib/profile-limits.ts). This is only the storage backstop — the tier
+ * ladder can never exceed it, so a list longer than this came from a corrupted
+ * store rather than from a legitimate device.
+ */
+const MAX_PROFILES = MAX_PROFILES_CEILING;
 
 export interface StoredProfileSession {
   /** The live values of SESSION_KEYS at snapshot time (missing keys omitted). */
@@ -70,6 +77,12 @@ export interface StoredProfile {
   name: string | null;
   username: string | null;
   avatarPath: string | null;
+  /**
+   * DHB badge balance as of the last snapshot — what prices the device's
+   * profile allowance. Absent on rows written before the allowance existed;
+   * they read as "no badge" until their next snapshot fills it in.
+   */
+  badgeBalance?: number | null;
   source: ConnectionSource | null;
   addedAt: number;
   lastActiveAt: number;
@@ -104,6 +117,7 @@ interface CachedUser {
   avatarImageUrl?: string;
   avatarUrl?: string;
   avatar_url?: string;
+  badgeBalance?: number | string;
 }
 
 /** Who the live localStorage keys belong to right now, or null signed-out. */
@@ -124,6 +138,35 @@ export function currentProfileId(): string | null {
 
 export function listProfiles(): StoredProfile[] {
   return readStore().sort((a, b) => b.lastActiveAt - a.lastActiveAt);
+}
+
+function parseBadgeBalance(value: number | string | null | undefined): number | null {
+  const numeric = typeof value === 'string' ? parseFloat(value) : value;
+  return typeof numeric === 'number' && Number.isFinite(numeric) ? numeric : null;
+}
+
+/**
+ * The device's profile allowance, from the best badge tier saved on it.
+ *
+ * `liveBadgeBalance` is the live self balance where a caller has it — the
+ * cached copy on a profile row lags a stake by up to the badge query's window,
+ * and someone who has just staked their way into a tier should be able to use
+ * the slot it buys immediately. Like every other badge surface, live only ever
+ * promotes.
+ */
+export function profileAllowance(
+  profiles: StoredProfile[] = readStore(),
+  liveBadgeBalance?: number,
+): ProfileAllowance {
+  return getProfileAllowance([
+    ...profiles.map((p) => ({ badgeBalance: p.badgeBalance, username: p.username })),
+    ...(liveBadgeBalance === undefined ? [] : [{ badgeBalance: liveBadgeBalance }]),
+  ]);
+}
+
+/** True when another account can still be saved on this device. */
+export function canAddProfile(profiles: StoredProfile[] = readStore(), liveBadgeBalance?: number): boolean {
+  return profiles.length < profileAllowance(profiles, liveBadgeBalance).maxProfiles;
 }
 
 export function getProfile(id: string): StoredProfile | null {
@@ -220,19 +263,28 @@ let switchGuarded = false;
  * entry if missing — reserved for the Add profile flow, where the user has
  * explicitly said they want this account saved here.
  *
- * No-op signed out, or while a profile switch has keys in flight.
+ * No-op signed out, or while a profile switch has keys in flight. Returns
+ * false when an adoption was refused because the device is at its badge
+ * allowance — the caller has UI to answer that with.
  */
-function snapshotSession(adopt: boolean): void {
-  if (switchGuarded) return;
+function snapshotSession(adopt: boolean): boolean {
+  if (switchGuarded) return false;
   const identity = currentIdentity();
   // A half-established flow (cleared wallet, no token yet) is not a profile.
   let hasToken = false;
   try { hasToken = !!localStorage.getItem('dehub_token'); } catch { /* ignore */ }
-  if (!identity || !hasToken) return;
+  if (!identity || !hasToken) return false;
 
   const profiles = readStore();
   const existingIndex = profiles.findIndex((p) => p.id === identity.id);
-  if (!adopt && existingIndex < 0) return;
+  if (!adopt && existingIndex < 0) return false;
+
+  // Adding a NEW profile is what the allowance gates; refreshing a row that is
+  // already saved never is, or a tier drop would start silently starving the
+  // snapshots that keep the other profiles switchable.
+  if (adopt && existingIndex < 0 && profiles.length >= profileAllowance(profiles).maxProfiles) {
+    return false;
+  }
 
   let user: CachedUser | null = null;
   let source: ConnectionSource | null = null;
@@ -258,6 +310,7 @@ function snapshotSession(adopt: boolean): void {
     name: user?.displayName || user?.display_name || user?.username || null,
     username: user?.username ?? null,
     avatarPath: user?.avatarImageUrl || user?.avatarUrl || user?.avatar_url || null,
+    badgeBalance: parseBadgeBalance(user?.badgeBalance) ?? existing?.badgeBalance ?? null,
     source,
     addedAt: existing?.addedAt ?? now,
     lastActiveAt: now,
@@ -271,7 +324,8 @@ function snapshotSession(adopt: boolean): void {
   if (existingIndex >= 0) profiles[existingIndex] = entry;
   else profiles.push(entry);
 
-  // Bound the list, never dropping whoever is live right now.
+  // Storage backstop only — the allowance above is what a user ever meets.
+  // Never drops whoever is live right now.
   while (profiles.length > MAX_PROFILES) {
     const oldest = [...profiles]
       .sort((a, b) => a.lastActiveAt - b.lastActiveAt)
@@ -281,6 +335,7 @@ function snapshotSession(adopt: boolean): void {
   }
 
   writeStore(profiles);
+  return true;
 }
 
 /** Refresh the live account's registry copy, creating nothing. */
@@ -288,9 +343,15 @@ export function snapshotCurrentSession(): void {
   snapshotSession(false);
 }
 
-/** Record the live account as an explicitly added profile. */
-export function adoptCurrentProfile(): void {
-  snapshotSession(true);
+/**
+ * Record the live account as an explicitly added profile.
+ *
+ * False means the device is already at its badge allowance and the account was
+ * NOT saved — the caller must say so rather than let the user believe a
+ * profile was added.
+ */
+export function adoptCurrentProfile(): boolean {
+  return snapshotSession(true);
 }
 
 /**
