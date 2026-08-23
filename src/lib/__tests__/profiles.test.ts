@@ -23,7 +23,7 @@ import {
   removeProfile,
   snapshotCurrentSession,
   beginProfileSwitch,
-  cancelProfileSwitch,
+  abortProfileSwitch,
 } from '@/lib/profiles';
 
 const SB_KEY = 'sb-testproject-auth-token';
@@ -59,8 +59,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  // Un-stick the in-switch guard a staged switch leaves behind.
-  cancelProfileSwitch();
+  // Un-stage any switch the test left behind (no-op when none was staged).
+  abortProfileSwitch(null);
 });
 
 describe('snapshotCurrentSession', () => {
@@ -168,6 +168,56 @@ describe('switching', () => {
 
     const b = getProfile(`addr:${ADDR_B}`);
     expect(b?.session?.tokens['dehub_token']).toBe('tok-b');
+  });
+
+  it('rolls back to the outgoing account when a staged switch aborts', () => {
+    seedAccountA();
+    snapshotCurrentSession();
+    seedAccountB();
+    snapshotCurrentSession();
+
+    // Capture who is live BEFORE staging, exactly as switchToProfile does.
+    const prevId = currentProfileId();
+    beginProfileSwitch('uid-a');
+    expect(localStorage.getItem('dehub_token')).toBe('tok-a');
+
+    // setSession threw: disk goes back to whoever was live before the swap.
+    abortProfileSwitch(prevId);
+
+    expect(localStorage.getItem('dehub_token')).toBe('tok-b');
+    expect(localStorage.getItem('dehub_refresh_token')).toBe('rtok-b');
+    expect(localStorage.getItem('dehub_wallet')?.toLowerCase()).toBe(ADDR_B);
+    expect(localStorage.getItem('wagmi.connector')).toBe('metaMask');
+    expect(localStorage.getItem('wagmi.connected')).toBeNull();
+    // And tracking resumes — the guard is cleared.
+    snapshotCurrentSession();
+    expect(getProfile(`addr:${ADDR_B}`)?.session?.tokens['dehub_token']).toBe('tok-b');
+  });
+
+  it('wipes staged keys instead of restoring when there was no live account', () => {
+    seedAccountA();
+    snapshotCurrentSession();
+    seedAccountB();
+    snapshotCurrentSession();
+
+    // Switching from a signed-out state: nothing to roll back to.
+    beginProfileSwitch('uid-a');
+    abortProfileSwitch(null);
+
+    expect(localStorage.getItem('dehub_token')).toBeNull();
+    expect(localStorage.getItem('dehub_wallet')).toBeNull();
+    expect(localStorage.getItem('wagmi.connected')).toBeNull();
+    expect(localStorage.getItem('wagmi.connector')).toBeNull();
+  });
+
+  it('ignores an abort when no switch was staged', () => {
+    seedAccountB();
+    snapshotCurrentSession();
+    localStorage.setItem('dehub_token', 'tok-live');
+
+    abortProfileSwitch('uid-a');
+
+    expect(localStorage.getItem('dehub_token')).toBe('tok-live');
   });
 });
 

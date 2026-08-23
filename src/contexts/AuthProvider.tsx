@@ -84,7 +84,7 @@ import {
   snapshotCurrentSession,
   currentProfileId,
   beginProfileSwitch,
-  cancelProfileSwitch,
+  abortProfileSwitch,
   removeProfile,
 } from '@/lib/profiles';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
@@ -2092,6 +2092,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const switchToProfile = async (id: string) => {
     if (!id || id === currentProfileId()) return;
+    // Remember who was live before the swap: if the restore fails, disk has
+    // to go back to them — an authed request must never read a half-switched
+    // identity, and the app keeps running while the sheet opens.
+    const prevId = currentProfileId();
     const plan = beginProfileSwitch(id);
     if (!plan) {
       openLoginModal({ intent: 'add-profile' });
@@ -2110,7 +2114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       window.location.reload();
     } catch (e) {
       console.warn('[Auth] Profile switch failed to restore its session:', e);
-      cancelProfileSwitch();
+      abortProfileSwitch(prevId);
       openLoginModal({ intent: 'add-profile' });
     }
   };
