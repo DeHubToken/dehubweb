@@ -944,15 +944,33 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return filteredItems.map(mapItem);
   }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value]);
 
-  // Final items to render with creator diversity limiting
+  // Final organic items before filtering
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
+
+  // One post per author on the home feed. Posting itself is unlimited; this
+  // only decides who represents whom: the first item an author holds in the
+  // list stands for them (newest under Latest, top-ranked under the other
+  // sorts). Items with no identifiable author pass through untouched.
+  const onePerAuthorItems = useMemo(() => {
+    const seenAuthors = new Set<string>();
+    return rawItems.filter(item => {
+      const d = item.data as any;
+      const raw = item.type === 'post' ? d?.author?.id : d?.creatorId;
+      if (raw == null) return true;
+      const authorId = String(raw).trim().toLowerCase();
+      if (!authorId) return true;
+      if (seenAuthors.has(authorId)) return false;
+      seenAuthors.add(authorId);
+      return true;
+    });
+  }, [rawItems]);
 
   // Client-side multi-category filtering (when >1 category selected, API returns all)
   const organicItems = useMemo(() => {
     const deletedIds = getDeletedPostIds();
     let filtered = deletedIds.size > 0
-      ? rawItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
-      : rawItems;
+      ? onePerAuthorItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
+      : onePerAuthorItems;
     if (selectedCategories.length <= 1) return filtered; // 0 = all, 1 = API-filtered
     const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
     return filtered.filter(item => {
@@ -960,7 +978,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (!itemCats.length) return false;
       return itemCats.some(c => catSet.has(String(c).toLowerCase()));
     });
-  }, [rawItems, selectedCategories]);
+  }, [onePerAuthorItems, selectedCategories]);
 
   // Served POVR ads spliced in after every AD_INSERT_INTERVAL organic items.
   // Ad serving failures return [] so the feed is never blocked by ads.

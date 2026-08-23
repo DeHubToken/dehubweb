@@ -7,7 +7,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
-import { mintPost, createPoll, getMintFee, AuthenticationError, PostQuotaError, type StreamInfo, type MintFeeQuoteResponse } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, AuthenticationError, type StreamInfo, type MintFeeQuoteResponse } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -26,7 +26,6 @@ import { broadcastSolanaMint } from '@/lib/solana/mint';
 import { confirmEvmMint, getSolanaStatus } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
-import { useDailyPostQuota } from '@/hooks/use-daily-post-quota';
 import { useAuth } from '@/contexts/AuthContext';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
@@ -222,7 +221,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
-  const dailyQuota = useDailyPostQuota();
 
   // Restore active draft from localStorage
   const savedDraft = useRef(loadActiveDraft());
@@ -433,9 +431,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   // Enough in the composer to publish or save. Drafts key off this, so running
   // out of posts for the day still leaves the draft path open.
   const hasContent = Boolean((text.trim() || media.length > 0 || isLive || pollIsValid) && !isGeneratingThumbnail);
-  // The daily allowance is part of "can this post go out", so the button follows
-  // it too — the toast in handlePost is the backstop, not the only signal.
-  const canPost = hasContent && !dailyQuota.exhausted;
+  const canPost = hasContent;
 
   // Actions
   const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1049,19 +1045,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return;
     }
 
-    // Daily main-feed allowance. A count that failed to load leaves `exhausted`
-    // false on purpose — the server is the authority, and a flaky read must
-    // never be what stops someone posting.
-    const publishingLater = !!scheduledDate && scheduledDate.getTime() > Date.now();
-    if (dailyQuota.exhausted && !publishingLater) {
-      toast.error(
-        dailyQuota.allowance.postsPerDay === 1
-          ? `That is your post for today. The next one unlocks in ${dailyQuota.resetsIn} — stake DHB for a ${dailyQuota.allowance.nextTierName} badge to post more.`
-          : `You have used all ${dailyQuota.allowance.postsPerDay} of today's posts. More in ${dailyQuota.resetsIn}.`,
-      );
-      return;
-    }
-
     setIsPosting(true);
     
     try {
@@ -1658,8 +1641,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setUploadProgress(100);
       toast.dismiss('mint-progress');
       toast.success('Posted successfully');
-      // One of today's posts is now spent; re-read the count for the next open.
-      dailyQuota.invalidate();
 
       // Offered after the post has landed, never in front of it: being short
       // of DHB costs the creator the mint, not the post. A toast rather than a
@@ -1887,11 +1868,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             duration: 10000,
           });
         }
-      } else if (error instanceof PostQuotaError) {
-        // The server has the last word on the allowance — say what it said,
-        // and re-read the count so the composer agrees from here on.
-        toast.error(error.message, { duration: 8000 });
-        dailyQuota.invalidate();
       } else {
         toast.error(`Post failed: ${errorMsg}`);
       }
@@ -1906,7 +1882,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
     refreshSession, openLoginModal, requestWalletUnlock,
-    effectiveShouldMint, mintFee, dailyQuota
+    effectiveShouldMint, mintFee
   ]);
 
   return {
@@ -2007,7 +1983,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       destinations,
       canPost,
       hasContent,
-      dailyQuota,
       mintFeeLabel,
       mintRequired,
     },
