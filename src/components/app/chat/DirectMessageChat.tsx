@@ -1185,7 +1185,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
           toast.error('Session expired', {
             id: 'dm-fee-send',
             description: 'Please sign in again to send this message',
-            action: { label: 'Sign in', onClick: openLoginModal },
+            action: { label: 'Sign in', onClick: () => openLoginModal() },
             duration: 10000,
           });
         } else if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {

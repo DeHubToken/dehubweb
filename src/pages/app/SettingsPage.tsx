@@ -101,6 +101,7 @@ import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hook
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
+import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
@@ -211,7 +212,9 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     try {
-      await disconnect();
+      // Explicit sign-out forgets this account on the device; other saved
+      // profiles remain switchable from the Profiles list above.
+      await disconnect({ forgetProfile: true });
       toast.success(t('settings.loggedOut'));
     } catch {
       toast.error(t('settings.logoutFailed'));
@@ -736,6 +739,9 @@ function ProfileSettings() {
           )}
         />
       </div>
+
+      {/* Other accounts saved on this browser — switch or add without signing out */}
+      <ProfilesSection />
 
       {/* Cover Image */}
       <div 

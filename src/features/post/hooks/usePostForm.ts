@@ -1864,7 +1864,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         // are still on screen, which is how this turned into support tickets.
         toast.error('Please sign in again to post', {
           description: 'Your draft is still here.',
-          action: { label: 'Sign in', onClick: openLoginModal },
+          action: { label: 'Sign in', onClick: () => openLoginModal() },
           duration: 10000,
         });
       } else if (error instanceof AuthenticationError) {
@@ -1883,7 +1883,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         } else {
           toast.error('Please sign in again to post', {
             description: 'Your draft is still here.',
-            action: { label: 'Sign in', onClick: openLoginModal },
+            action: { label: 'Sign in', onClick: () => openLoginModal() },
             duration: 10000,
           });
         }
