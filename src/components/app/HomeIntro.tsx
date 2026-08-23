@@ -333,7 +333,7 @@ export function HomeIntro() {
             every other CTA in the product. The earlier solid white/black pair
             was invented here and matched nothing else. */}
         <div className="mt-6 flex flex-wrap items-center gap-2">
-          <Button type="button" variant="glass" size="lg" onClick={openLoginModal}>
+          <Button type="button" variant="glass" size="lg" onClick={() => openLoginModal()}>
             Join DeHub
           </Button>
           <Button asChild variant="outline" size="lg">

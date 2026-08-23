@@ -383,7 +383,7 @@ export function EventChat({ eventId }: EventChatProps) {
         </div>
       ) : (
         <div className="px-1 py-3">
-          <button onClick={openLoginModal} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-sm hover:text-white transition-colors">
+          <button onClick={() => openLoginModal()} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-sm hover:text-white transition-colors">
             <LogIn className="w-4 h-4" />
             Log in to chat
           </button>

@@ -73,7 +73,7 @@ function LoginBodySkeleton() {
 }
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { walletPhase, isProcessingRedirect } = useAuth();
+  const { walletPhase, isProcessingRedirect, loginIntent } = useAuth();
   const { t } = useTranslation();
 
   // Opening step. A login that is ALREADY in flight must never land on 'main':
@@ -123,7 +123,14 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     onOpenChange(false);
   }, [onOpenChange]);
 
-  const titleText = step === 'main' ? t('loginModal.title')
+  // Opened from Settings → Profile → Add profile while already signed in.
+  // Retitled so the sheet reads as "adding another account" rather than
+  // implying the current one just got signed out — it didn't.
+  const titleText = step === 'main' ? (
+      loginIntent === 'add-profile'
+        ? t('loginModal.addProfileTitle', 'Add a profile')
+        : t('loginModal.title')
+    )
     : step === 'email' ? t('loginModal.continueEmail')
     : step === 'email-waiting' ? t('loginModal.checkYourEmail', 'Check your email')
     : step === 'phone' ? t('loginModal.continuePhone', 'Continue with phone')

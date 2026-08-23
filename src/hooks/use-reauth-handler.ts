@@ -47,7 +47,7 @@ export function useReauthHandler() {
         description: 'Please sign in again to continue',
         action: {
           label: 'Sign in',
-          onClick: openLoginModal,
+          onClick: () => openLoginModal(),
         },
         duration: 8000,
       });

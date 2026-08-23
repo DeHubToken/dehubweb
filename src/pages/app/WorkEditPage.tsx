@@ -89,7 +89,7 @@ export default function WorkEditPage() {
         </p>
         <div className="flex gap-2">
           {!walletAddress && (
-            <button onClick={openLoginModal} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">
+            <button onClick={() => openLoginModal()} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">
               Sign in
             </button>
           )}
