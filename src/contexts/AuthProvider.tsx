@@ -78,6 +78,14 @@ import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { getRunningBuildId, isRunningStaleBuild } from '@/lib/version-check';
+import {
+  initProfileTracking,
+  snapshotCurrentSession,
+  currentProfileId,
+  beginProfileSwitch,
+  cancelProfileSwitch,
+  removeProfile,
+} from '@/lib/profiles';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 
 const authLogger = createLogger('Auth');
@@ -267,6 +275,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [requiresUsername, setRequiresUsername] = useState(false);
   const [needsSignature] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(isSocialLoginResumeExpected);
+  // Why the sheet is open — plain sign-in, or adding/switching a profile from
+  // Settings while already signed in. Only changes the sheet's title.
+  const [loginIntent, setLoginIntent] = useState<'login' | 'add-profile'>('login');
   const [walletPhase, setWalletPhase] = useState<WalletPhase>('none');
   // Hydrated from storage rather than left null until some login flow happens
   // to run. This is the identity that OWNS the wallet row, and it is needed on
@@ -370,15 +381,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setWagmiAuthIntentState(prev => (prev === value ? !prev : value));
   }, []);
 
-  const openLoginModal = useCallback(() => {
+  const openLoginModal = useCallback((options?: { intent?: 'login' | 'add-profile' }) => {
     connectionAbortedRef.current = false;
     warmWalletOrigins();
+    // Whatever identity is live right now may be replaced by what happens in
+    // this sheet. Snapshot it first, so switching back stays silent even when
+    // the sheet ends in a different account.
+    snapshotCurrentSession();
+    setLoginIntent(options?.intent === 'add-profile' ? 'add-profile' : 'login');
     setIsLoginModalOpen(true);
   }, []);
 
   const closeLoginModal = useCallback(() => {
     connectionAbortedRef.current = true;
     setIsLoginModalOpen(false);
+    setLoginIntent('login');
     // Dismissing the modal abandons the login. The pending flag must go with
     // it: it was only ever removed on a COMPLETED login, so walking away at the
     // "create/unlock your wallet" step left it set forever. Every later page
@@ -606,6 +623,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Check for existing DeHub session on mount
   useEffect(() => {
+    // Keep this device's profile snapshots fresh (token refreshes, pagehide).
+    initProfileTracking();
     const init = async () => {
       try {
         const token = getAuthToken();
@@ -1304,6 +1323,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
 
+    // External-wallet accounts join this device's profile list here: they have
+    // no Supabase identity, so applyAuthenticatedSession (which snapshots for
+    // every other flow) never runs on their path.
+    snapshotCurrentSession();
+
     toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
@@ -1368,6 +1392,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
+
+    // Every key this profile owns is now on disk — record it on the device's
+    // profile list (and refresh its session snapshot) at the one moment all
+    // writers have finished.
+    snapshotCurrentSession();
 
     authLogger.info('Login success', {
       method: flow.toLowerCase(),
@@ -1964,9 +1993,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const disconnect = async () => {
+  const disconnect = async (options?: { forgetProfile?: boolean }) => {
     // Best-effort server-side token revocation (fire-and-forget)
     logoutFromServer().catch(() => {});
+
+    // Read the identity off storage before any of it is cleared below, so an
+    // explicit sign-out can drop that account from this device's profile list.
+    const forgetId = options?.forgetProfile ? currentProfileId() : null;
 
     // Clean up local state FIRST for immediate UI feedback
     clearAuthSession();
@@ -1979,6 +2012,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
     clearEngagementCaches();
+    // "Log out" means this browser forgets the session — its stored profile
+    // snapshot (now-dead tokens) goes with it. Other saved profiles stay.
+    if (forgetId) removeProfile(forgetId);
 
     setWalletAddress(null);
     setUser(null);
@@ -2011,6 +2047,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error('Disconnect provider error (non-blocking):', error);
+    }
+  };
+
+  /**
+   * Become another profile saved on this device. Silent when its session can
+   * be restored from the snapshot; otherwise the sign-in sheet opens (titled
+   * "Add a profile") and completing it lands on that account.
+   *
+   * The switch finishes with a reload: too much state hangs off these keys —
+   * the DM socket, the wallet vault, per-account caches — for an in-place swap
+   * to be trustworthy, and boot already knows how to hydrate a set of keys.
+   */
+  const switchToProfile = async (id: string) => {
+    if (!id || id === currentProfileId()) return;
+    const plan = beginProfileSwitch(id);
+    if (!plan) {
+      openLoginModal({ intent: 'add-profile' });
+      return;
+    }
+    try {
+      if (plan.supabase) {
+        // Re-seats AND persists the stored session; a stale access token is
+        // refreshed here against its still-unused refresh token.
+        await supabase.auth.setSession({
+          access_token: plan.supabase.access_token,
+          refresh_token: plan.supabase.refresh_token,
+        });
+      }
+      if (plan.uid) writeLastSession(plan.uid, plan.address);
+      window.location.reload();
+    } catch (e) {
+      console.warn('[Auth] Profile switch failed to restore its session:', e);
+      cancelProfileSwitch();
+      openLoginModal({ intent: 'add-profile' });
     }
   };
 
@@ -2154,6 +2224,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     exportPrivateKey,
     exportPrivateKeyWithBiometrics,
     switchActiveWallet,
+    switchToProfile,
     disconnect,
     refreshUser,
     refreshSession,
@@ -2243,6 +2314,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     walletPhase,
     supabaseUserId,
     isLoginModalOpen,
+    loginIntent,
     ...stableCallbacks,
   }), [
     user,
@@ -2257,6 +2329,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     walletPhase,
     supabaseUserId,
     isLoginModalOpen,
+    loginIntent,
     stableCallbacks,
   ]);
 

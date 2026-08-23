@@ -65,7 +65,14 @@ export interface AuthContextType {
   exportPrivateKeyWithBiometrics: () => Promise<string>;
   /** Replace the active wallet with a different old account's key. */
   switchActiveWallet: (secret: string, password: string) => Promise<void>;
-  disconnect: () => Promise<void>;
+  /**
+   * Become another profile saved on this device (Settings → Profile →
+   * Profiles). Silent when that account's session can be restored from its
+   * stored snapshot; otherwise opens the sign-in sheet for it. Resolves by
+   * reloading the page, so it does not return in the normal case.
+   */
+  switchToProfile: (id: string) => Promise<void>;
+  disconnect: (options?: { forgetProfile?: boolean }) => Promise<void>;
   refreshUser: () => Promise<void>;
   patchUser: (patch: Partial<DeHubUser>) => void;
   /**
@@ -79,7 +86,13 @@ export interface AuthContextType {
   setWagmiAuthIntent: (value: boolean) => void;
   // Login modal state
   isLoginModalOpen: boolean;
-  openLoginModal: () => void;
+  /**
+   * Why the sheet is open. 'add-profile' — opened from the Profiles UI while
+   * already signed in — retitles it, so the sheet doesn't read as "you were
+   * logged out" to somebody who wasn't.
+   */
+  loginIntent: 'login' | 'add-profile';
+  openLoginModal: (options?: { intent?: 'login' | 'add-profile' }) => void;
   closeLoginModal: () => void;
   /**
    * Ask for the wallet password now, for built-in-wallet sessions whose key is
