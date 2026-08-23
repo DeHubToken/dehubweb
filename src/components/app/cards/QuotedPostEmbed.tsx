@@ -13,6 +13,7 @@ import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildAvatarUrl, extractAvatarPath, buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
 import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { BadgedName } from '@/components/app/BadgedName';
+import { NewMemberChip } from '@/components/app/NewMemberChip';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 
 interface QuotedPostEmbedProps {
@@ -134,6 +135,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
           >
             {displayName}
           </BadgedName>
+          <NewMemberChip address={avatarAddress || undefined} />
           <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 hidden" />
           <span className="text-xs text-zinc-500 truncate">@{handle}</span>
         </div>

@@ -37,6 +37,7 @@ import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetR
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { BadgedName } from '@/components/app/BadgedName';
+import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
@@ -280,6 +281,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               {shownName}
             </BadgedName>
           </button>
+          <NewMemberChip address={comment.address} />
           {/* The bot comments under a normal account, so without this it is
               indistinguishable from a user who picked the handle. */}
           {isAssistantAddress(comment.address) && (
@@ -1395,7 +1397,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <span className="font-semibold text-white text-sm truncate block">{displayName}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-white text-sm truncate">{displayName}</span>
+                          <NewMemberChip address={post.minter || post.minterUser?.address} />
+                        </div>
                         {preview && <span className="text-zinc-400 text-xs line-clamp-2 mt-0.5">{preview}</span>}
                       </div>
                     </button>
@@ -1447,7 +1452,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <span className="font-semibold text-white text-sm truncate block">{displayName}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-white text-sm truncate">{displayName}</span>
+                          <NewMemberChip address={user.address} />
+                        </div>
                         {user.username && (
                           <span className="text-zinc-500 text-xs truncate block">@{user.username.replace('@', '')}</span>
                         )}

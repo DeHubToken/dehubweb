@@ -23,6 +23,7 @@ import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings,
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { BadgedName } from '@/components/app/BadgedName';
+import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { formatAttachmentSize, getAttachmentLabel, isAllowedAttachment } from '@/lib/attachments';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
@@ -1358,9 +1359,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
                   {displayName}
                 </BadgedName>
               </h2>
-              {otherUser?.username && (
-                <p className="text-xs text-zinc-500">@{otherUser.username}</p>
-              )}
+              <div className="flex items-center gap-1.5">
+                {otherUser?.username && (
+                  <p className="text-xs text-zinc-500">@{otherUser.username}</p>
+                )}
+                <NewMemberChip address={otherUser?.address} />
+              </div>
             </div>
           </Link>
         </div>

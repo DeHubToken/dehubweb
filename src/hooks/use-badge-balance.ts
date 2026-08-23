@@ -29,6 +29,12 @@ export interface ResolvedBadge {
   badgeBalance?: number;
   /** Canonical username, for the override table. */
   username?: string;
+  /**
+   * Wallet address, for surfaces that only knew a name but need one — the new
+   * member chip checks membership by address. Free: it rides the account row
+   * this query already fetched.
+   */
+  address?: string;
 }
 
 /** Normalise a username or address into a stable cache key. */
@@ -50,6 +56,7 @@ export function useBadgeBalance(
       return {
         badgeBalance: user?.badgeBalance,
         username: user?.username || undefined,
+        address: user?.address || user?.wallet_address || undefined,
       };
     },
     enabled: !!key && !hasProvided,

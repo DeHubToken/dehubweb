@@ -14,6 +14,7 @@ import { CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getAccountInfo } from '@/lib/api/dehub/users';
@@ -240,6 +241,9 @@ export function ProfileHoverCard({
                   @{profile.username.replace('@', '')}
                 </p>
               )}
+              <div className="mt-1.5">
+                <NewMemberChip address={profile.address} />
+              </div>
             </button>
 
             {/* Bio */}
