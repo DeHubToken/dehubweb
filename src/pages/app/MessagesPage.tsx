@@ -139,11 +139,18 @@ function ConversationItem({
 export default function MessagesPage() {
   const { t } = useTranslation();
   const location = useLocation();
+  const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
+  const [showPublicChat, setShowPublicChat] = useState(false);
+  // A conversation open on mobile reclaims the bottom-nav zone as well as the
+  // header zone: the reply strip (orb flanked by two drafts) lives in that
+  // band until the composer takes focus and the keyboard takes it instead.
+  const chatOpen = !!selectedConversation || showPublicChat;
   // While the on-screen keyboard is up the mobile bottom nav hides, so chat
   // surfaces reclaim its reserved 76px — only the 44px top bar remains and
   // the screen splits between messages and composer.
   const keyboardOpen = useKeyboardOpen();
-  const mobileChatHeight = keyboardOpen ? 'h-[calc(100dvh-44px)]' : 'h-[calc(100dvh-120px)]';
+  const mobileChatHeight =
+    keyboardOpen || chatOpen ? 'h-[calc(100dvh-44px)]' : 'h-[calc(100dvh-120px)]';
   // dvh only tracks the keyboard on Android (interactive-widget) — iOS keeps
   // the layout viewport full-size and just covers it. Sizing to the measured
   // visual viewport keeps the composer above the keyboard on both. On iOS,
@@ -159,8 +166,6 @@ export default function MessagesPage() {
       ? { position: 'fixed', top: vvOffsetTop, left: 0, right: 0, height: vvHeight, zIndex: 40, background: '#000' }
       : { height: vvHeight - 44 }
     : undefined;
-  const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
-  const [showPublicChat, setShowPublicChat] = useState(false);
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -337,7 +342,6 @@ export default function MessagesPage() {
    */
   const navigate = useNavigate();
   const chatEntryRef = useRef(false);
-  const chatOpen = !!selectedConversation || showPublicChat;
   const chatParamPresent = new URLSearchParams(location.search).get('chat') === '1';
 
   useEffect(() => {

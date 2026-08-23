@@ -13,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
 import { SmartReplyTray } from './SmartReplyTray';
+import { ReplyOrb } from './ReplyOrb';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 import {
   ATTACHMENT_ACCEPT,
@@ -93,6 +94,11 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const [composerFocused, setComposerFocused] = useState(false);
 
+  // Touch devices get the resting strip under the composer instead of the
+  // focus-raised tray: the orb and two drafts sit in the space the mobile
+  // bottom nav vacates, and stand down the moment the keyboard comes up.
+  const [isTouch] = useState(() => window.matchMedia('(pointer: coarse)').matches);
+
   // Tail the tray has already opened itself for. One auto-open per incoming
   // message: dismissing must not be undone by the next click into the box, and
   // re-focusing must not re-spend a model call. A new message changes the key,
@@ -126,11 +132,21 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   // Fires on the click into the box, and again if a new message lands while
   // the user is already sitting there — otherwise the tray would wait for them
-  // to click away and back before offering anything.
+  // to click away and back before offering anything. Touch layouts never raise
+  // a tray on focus; their drafts are spent by the tail effect below.
   useEffect(() => {
-    if (composerFocused) openTrayIfDue();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [composerFocused, smartReplies.tailKey]);
+    if (!isTouch && composerFocused) openTrayIfDue();
+  }, [isTouch, composerFocused, smartReplies.tailKey]);
+
+  // The resting strip is already on screen, so waiting for a focus pass to
+  // draft would be pointless — spend the call when the thread tail changes
+  // instead, under the same once-per-message discipline as openTrayIfDue.
+  useEffect(() => {
+    if (!isTouch) return;
+    const { smartReplies: sr, canDraft: draftable, message: msg } = latest.current;
+    if (!draftable || msg.trim()) return;
+    if (sr.status === 'idle') sr.generate();
+  }, [isTouch, smartReplies.tailKey]);
 
   const handleDismissTray = () => {
     // Stays dismissed for this message — autoOpenedFor is already set, so the
@@ -370,12 +386,22 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // 'idle' is unresolved, not empty: draftable means the call is on its way,
+  // so it reads as loading; the user spoke last and nothing will ever come.
+  const barStatus =
+    smartReplies.status === 'idle'
+      ? canDraft ? 'loading' as const : 'empty' as const
+      : smartReplies.status;
+  const showReplyBar =
+    isTouch && hasThread && !composerFocused && !message.trim() && barStatus !== 'empty';
+
   return (
     <>
-    {/* Mounts on showReplyTray alone. Whether there is anything to draft is a
-        question the tray ANSWERS — as its own empty line, with the orb still
-        there to press — not one that decides whether it exists. */}
-    {showReplyTray && (
+    {/* Mounts on showReplyTray alone — pointer devices only. Whether there is
+        anything to draft is a question the tray ANSWERS — as its own empty
+        line, with the orb still there to press — not one that decides whether
+        it exists. Touch devices show the resting strip below instead. */}
+    {!isTouch && showReplyTray && (
       <SmartReplyTray
         status={canDraft ? smartReplies.status : 'empty'}
         suggestions={canDraft ? smartReplies.suggestions : []}
@@ -638,6 +664,72 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           </Button>
         </div>
       </div>
+
+      {/* Touch resting strip: chip — orb — chip, filling the band the mobile
+          bottom nav vacates while a conversation is open. It exists to be
+          dismissed by use: focusing the composer raises the keyboard, the
+          keyboard claims this exact space, so the strip stands down on focus
+          and stays down once there is typed text. An empty state (the user
+          sent the last message) renders nothing — filler would be noise. */}
+      {showReplyBar && (
+        <div className="lg:hidden px-3 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+          {barStatus === 'error' ? (
+            <p className="text-center text-[11px] text-zinc-500 py-2.5 truncate">
+              {smartReplies.error || 'Could not draft replies'}
+            </p>
+          ) : (
+            <div className="flex items-stretch gap-2">
+              {(barStatus === 'loading'
+                ? [null, null]
+                : [...smartReplies.suggestions.slice(0, 2)])
+                .map((s, i) => (
+                  <button
+                    key={s ? `${s.label}-${i}` : `strip-${i}`}
+                    type="button"
+                    disabled={!s}
+                    onClick={() => s && handlePickSuggestion(s.text)}
+                    aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
+                    className={`min-w-0 flex-1 min-h-[60px] rounded-2xl border p-2 text-left flex flex-col justify-between transition-colors ${
+                      s
+                        ? 'bg-white/[0.045] border-white/10 active:bg-white/[0.09]'
+                        : barStatus === 'loading'
+                        ? 'bg-white/[0.03] border-white/[0.07] cursor-default'
+                        : 'invisible'
+                    }`}
+                  >
+                    {s ? (
+                      <>
+                        <span className="self-start rounded-full bg-white/10 border border-white/15 px-1.5 text-[9px] leading-4 text-zinc-300">
+                          {s.label}
+                        </span>
+                        <span className="mt-1 text-[12px] leading-snug text-white line-clamp-2">
+                          {s.text}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="block w-full space-y-1.5">
+                        <span className="block h-2.5 w-full rounded bg-white/[0.07] animate-pulse" />
+                        <span className="block h-2.5 w-2/3 rounded bg-white/[0.07] animate-pulse" />
+                      </span>
+                    )}
+                  </button>
+                ))}
+              <div className="flex items-center justify-center shrink-0 px-0.5">
+                <button
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => { if (canDraft) smartReplies.generate(); }}
+                  disabled={barStatus === 'loading' || !canDraft}
+                  aria-label={barStatus === 'loading' ? 'Drafting replies' : 'Draft new replies'}
+                  className="rounded-full p-1 transition-transform active:scale-95 disabled:opacity-60"
+                >
+                  <ReplyOrb state={barStatus === 'loading' ? 'thinking' : 'idle'} size={44} />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
     </>
   );
