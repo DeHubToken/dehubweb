@@ -20,12 +20,13 @@ type Status = 'idle' | 'loading' | 'ready' | 'empty' | 'error';
 /**
  * Drafts replies to the newest incoming message.
  *
- * Never fires on mount. The composer calls generate() when it raises the tray,
- * which is at most once per incoming message — suggestions are a paid call on a
- * surface that receives unsolicited traffic, so anyone who can DM the user must
- * not be able to spend against the rate limit just by typing. The guard in
- * generate() is the backstop: a thread the user spoke last in never costs a
- * request, whichever surface asks.
+ * The composer spends the call either when it raises the tray (pointer
+ * devices) or when the resting strip under the composer needs chips to show
+ * (touch) — at most once per incoming message either way. Suggestions are a
+ * paid call on a surface that receives unsolicited traffic, so anyone who can
+ * DM the user must not be able to spend against the rate limit just by
+ * typing. The guard in generate() is the backstop: a thread the user spoke
+ * last in never costs a request, whichever surface asks.
  */
 export function useSmartReplies(thread: SmartReplyTurn[], peerName?: string) {
   const [status, setStatus] = useState<Status>('idle');
