@@ -446,7 +446,7 @@ export default function MessagesPage() {
     return (
       /* No horizontal padding: the chat surfaces run to the column edges on
          every theme. The rows and composer carry their own inner padding. */
-      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
+      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden`}>
           <PublicChat
             onBack={closeChat}
           />
@@ -459,7 +459,7 @@ export default function MessagesPage() {
     return (
       /* No horizontal padding: the chat surfaces run to the column edges on
          every theme. The rows and composer carry their own inner padding. */
-      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
+      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden`}>
         <DirectMessageChat
           key={selectedConversation.id}
           conversation={selectedConversation}

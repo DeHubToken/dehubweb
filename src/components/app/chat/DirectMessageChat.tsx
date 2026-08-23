@@ -1514,7 +1514,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
           ref={scrollContainerRef}
           onScroll={handleScroll}
           onPointerDown={dismissKeyboard}
-          className="flex-1 overflow-y-auto px-4"
+          className="flex-1 min-h-0 overflow-y-auto px-4"
         >
           {isFetchingNextPage && (
             <div className="flex justify-center py-4">
