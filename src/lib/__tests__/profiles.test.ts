@@ -27,6 +27,8 @@ import {
   snapshotCurrentSession,
   beginProfileSwitch,
   abortProfileSwitch,
+  profileAllowance,
+  canAddProfile,
 } from '@/lib/profiles';
 
 const SB_KEY = 'sb-testproject-auth-token';
@@ -313,5 +315,88 @@ describe('stageIncomingIdentity', () => {
 
     expect(restored?.supabase).toBeNull();
     expect(localStorage.getItem('dehub_token')).toBeNull();
+  });
+});
+
+describe('badge-tier profile allowance', () => {
+  function seedAccount(n: number, badgeBalance?: number): void {
+    for (const key of Object.keys(localStorage)) {
+      if (key !== PROFILES_STORAGE_KEY) localStorage.removeItem(key);
+    }
+    localStorage.setItem('dehub_token', `tok-${n}`);
+    localStorage.setItem('dehub_wallet', `0x${String(n).repeat(40).slice(0, 40)}`);
+    localStorage.setItem('dehub_supabase_uid', `uid-${n}`);
+    localStorage.setItem(
+      'dehub_user',
+      JSON.stringify({ username: `user${n}`, ...(badgeBalance === undefined ? {} : { badgeBalance }) }),
+    );
+  }
+
+  it('keeps two profiles with no badge anywhere on the device', () => {
+    seedAccount(1);
+    expect(adoptCurrentProfile()).toBe(true);
+    seedAccount(2);
+    expect(adoptCurrentProfile()).toBe(true);
+
+    expect(profileAllowance().maxProfiles).toBe(2);
+    expect(canAddProfile()).toBe(false);
+
+    seedAccount(3);
+    expect(adoptCurrentProfile()).toBe(false);
+    expect(listProfiles()).toHaveLength(2);
+  });
+
+  it('adds a slot per badge tier, priced off the best badge saved', () => {
+    // Crab is the first tier (10k DHB) — one extra slot, so three.
+    seedAccount(1, 10_000);
+    adoptCurrentProfile();
+    seedAccount(2);
+    adoptCurrentProfile();
+
+    const allowance = profileAllowance();
+    expect(allowance.maxProfiles).toBe(3);
+    expect(allowance.tierName).toBe('Crab');
+    expect(allowance.nextTierProfiles).toBe(4);
+
+    seedAccount(3);
+    expect(adoptCurrentProfile()).toBe(true);
+    seedAccount(4);
+    expect(adoptCurrentProfile()).toBe(false);
+  });
+
+  it('gives the top tier fifteen and names no tier beyond it', () => {
+    seedAccount(1, 50_000_000);
+    adoptCurrentProfile();
+
+    const allowance = profileAllowance();
+    expect(allowance.maxProfiles).toBe(15);
+    expect(allowance.tierName).toBe('Meglodon');
+    expect(allowance.nextTierName).toBeNull();
+  });
+
+  it('refreshes a profile already saved even when the list is full', () => {
+    seedAccount(1);
+    adoptCurrentProfile();
+    seedAccount(2);
+    adoptCurrentProfile();
+
+    // Back to the first account, now with a new display name.
+    seedAccount(1);
+    localStorage.setItem('dehub_user', JSON.stringify({ username: 'user1', displayName: 'Renamed' }));
+    snapshotCurrentSession();
+
+    expect(listProfiles()).toHaveLength(2);
+    expect(getProfile('uid-1')?.name).toBe('Renamed');
+  });
+
+  it('lets a live balance promote the allowance before a snapshot catches up', () => {
+    seedAccount(1);
+    adoptCurrentProfile();
+    seedAccount(2);
+    adoptCurrentProfile();
+
+    expect(canAddProfile()).toBe(false);
+    // Just staked into Crab; the cached rows still read as no badge.
+    expect(canAddProfile(listProfiles(), 10_000)).toBe(true);
   });
 });

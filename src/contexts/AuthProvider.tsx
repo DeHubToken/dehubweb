@@ -86,6 +86,8 @@ import {
   stageIncomingIdentity,
   applyProfileSnapshot,
   currentProfileId,
+  listProfiles,
+  profileAllowance,
   beginProfileSwitch,
   abortProfileSwitch,
   removeProfile,
@@ -401,6 +403,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // put everything back exactly as it was.
       const liveId = currentProfileId();
       adoptCurrentProfile();
+
+      // How many profiles fit is a staking-badge allowance. Refuse BEFORE the
+      // sheet opens: the add-profile flow takes the live session down on its
+      // way through, so discovering the limit at the end would mean signing
+      // somebody out of an account they cannot then save.
+      const saved = listProfiles();
+      const allowance = profileAllowance(saved);
+      if (saved.length >= allowance.maxProfiles) {
+        toast.error(`You can keep ${allowance.maxProfiles} profiles on this device`, {
+          description: allowance.nextTierName
+            ? `${allowance.tierName} tier holds ${allowance.maxProfiles}. Stake for ${allowance.nextTierName} to add another.`
+            : 'Remove one from Settings → Profile to add a different account.',
+          duration: 8000,
+        });
+        return;
+      }
       addProfilePrevIdRef.current = liveId;
     } else {
       snapshotCurrentSession();
@@ -424,9 +442,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (attemptedFrom && currentProfileId() !== attemptedFrom) {
       const restored = applyProfileSnapshot(attemptedFrom);
       if (restored?.supabase) {
-        void supabase.auth
-          .setSession({ access_token: restored.supabase.access_token, refresh_token: restored.supabase.refresh_token })
-          .catch(() => {});
+        // Awaited, exactly as switchToProfile awaits it. setSession persists
+        // after at least one turn — and refreshes over the network first when
+        // the stored access token has expired — so reloading straight into it
+        // can land on a browser holding the restored account's DeHub keys with
+        // no Supabase session under them. Worse, a refresh cut off mid-flight
+        // has already rotated the pair server-side, which kills the stored
+        // refresh token this profile switches back with.
+        void (async () => {
+          try {
+            await Promise.race([
+              supabase.auth.setSession({
+                access_token: restored.supabase!.access_token,
+                refresh_token: restored.supabase!.refresh_token,
+              }),
+              new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error('Supabase session restore timed out')), 10_000),
+              ),
+            ]);
+          } catch (e) {
+            console.warn('[Auth] Restoring the previous profile lost its Supabase session:', e);
+          }
+          window.location.reload();
+        })();
+        return;
       }
       window.location.reload();
       return;
@@ -1335,7 +1374,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // the wallet that just signed.
     const attemptedFrom = addProfilePrevIdRef.current;
     if (attemptedFrom != null) {
-      addProfilePrevIdRef.current = null;
+      // The ref stays armed across the exchange. Clearing it here left the
+      // window between "the outgoing account's keys are wiped" and "the
+      // incoming account's are written" with no way back: an exchange that
+      // 500s, or a network that drops, ended with nothing signed in on disk
+      // and closeLoginModal no longer able to put the previous account back.
+      // It is cleared once this login has actually landed, below.
       stageIncomingIdentity({ keepWagmiKeys: true });
     } else if (
       walletAddress &&
@@ -1393,8 +1437,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // a "Signing you in…" step that swallows clicks.
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
-    if (attemptedFrom != null) adoptCurrentProfile();
-    else snapshotCurrentSession();
+    if (attemptedFrom != null) {
+      addProfilePrevIdRef.current = null;
+      adoptCurrentProfile();
+    } else {
+      snapshotCurrentSession();
+    }
 
     toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
