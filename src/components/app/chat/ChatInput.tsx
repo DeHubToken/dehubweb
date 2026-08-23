@@ -94,10 +94,20 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const [composerFocused, setComposerFocused] = useState(false);
 
-  // Touch devices get the resting strip under the composer instead of the
+  // Below tablet width the resting strip under the composer replaces the
   // focus-raised tray: the orb and two drafts sit in the space the mobile
   // bottom nav vacates, and stand down the moment the keyboard comes up.
-  const [isTouch] = useState(() => window.matchMedia('(pointer: coarse)').matches);
+  // Gated on VIEWPORT, not pointer type — a desktop window narrowed to phone
+  // width has the same layout and the same dead band, so it gets the strip.
+  const [narrowViewport, setNarrowViewport] = useState(
+    () => window.matchMedia('(max-width: 1023px)').matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const onChange = () => setNarrowViewport(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   // Tail the tray has already opened itself for. One auto-open per incoming
   // message: dismissing must not be undone by the next click into the box, and
@@ -132,21 +142,21 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   // Fires on the click into the box, and again if a new message lands while
   // the user is already sitting there — otherwise the tray would wait for them
-  // to click away and back before offering anything. Touch layouts never raise
-  // a tray on focus; their drafts are spent by the tail effect below.
+  // to click away and back before offering anything. Narrow layouts never
+  // raise a tray on focus; their drafts are spent by the tail effect below.
   useEffect(() => {
-    if (!isTouch && composerFocused) openTrayIfDue();
-  }, [isTouch, composerFocused, smartReplies.tailKey]);
+    if (!narrowViewport && composerFocused) openTrayIfDue();
+  }, [narrowViewport, composerFocused, smartReplies.tailKey]);
 
   // The resting strip is already on screen, so waiting for a focus pass to
   // draft would be pointless — spend the call when the thread tail changes
   // instead, under the same once-per-message discipline as openTrayIfDue.
   useEffect(() => {
-    if (!isTouch) return;
+    if (!narrowViewport) return;
     const { smartReplies: sr, canDraft: draftable, message: msg } = latest.current;
     if (!draftable || msg.trim()) return;
     if (sr.status === 'idle') sr.generate();
-  }, [isTouch, smartReplies.tailKey]);
+  }, [narrowViewport, smartReplies.tailKey]);
 
   const handleDismissTray = () => {
     // Stays dismissed for this message — autoOpenedFor is already set, so the
@@ -392,16 +402,19 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     smartReplies.status === 'idle'
       ? canDraft ? 'loading' as const : 'empty' as const
       : smartReplies.status;
+  // The strip fills the band in EVERY open thread — a thread with nothing to
+  // reply to still gets its quiet one-liner, because an empty band and a
+  // broken feature are indistinguishable at a glance.
   const showReplyBar =
-    isTouch && hasThread && !composerFocused && !message.trim() && barStatus !== 'empty';
+    narrowViewport && hasThread && !composerFocused && !message.trim();
 
   return (
     <>
-    {/* Mounts on showReplyTray alone — pointer devices only. Whether there is
+    {/* Mounts on showReplyTray alone — wide screens only. Whether there is
         anything to draft is a question the tray ANSWERS — as its own empty
         line, with the orb still there to press — not one that decides whether
-        it exists. Touch devices show the resting strip below instead. */}
-    {!isTouch && showReplyTray && (
+        it exists. Narrow viewports show the resting strip below instead. */}
+    {!narrowViewport && showReplyTray && (
       <SmartReplyTray
         status={canDraft ? smartReplies.status : 'empty'}
         suggestions={canDraft ? smartReplies.suggestions : []}
@@ -665,17 +678,19 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         </div>
       </div>
 
-      {/* Touch resting strip: chip — orb — chip, filling the band the mobile
-          bottom nav vacates while a conversation is open. It exists to be
-          dismissed by use: focusing the composer raises the keyboard, the
-          keyboard claims this exact space, so the strip stands down on focus
-          and stays down once there is typed text. An empty state (the user
-          sent the last message) renders nothing — filler would be noise. */}
+      {/* Narrow-viewport resting strip: chip — orb — chip, filling the band
+          the mobile bottom nav vacates while a conversation is open. It exists
+          to be dismissed by use: focusing the composer raises the keyboard,
+          the keyboard claims this exact space, so the strip stands down on
+          focus and stays down once there is typed text. A thread with nothing
+          to draft keeps a quiet one-liner so the band never just looks dead. */}
       {showReplyBar && (
         <div className="lg:hidden px-3 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          {barStatus === 'error' ? (
+          {barStatus === 'error' || barStatus === 'empty' ? (
             <p className="text-center text-[11px] text-zinc-500 py-2.5 truncate">
-              {smartReplies.error || 'Could not draft replies'}
+              {barStatus === 'empty'
+                ? "Nothing to reply to yet — you sent the last message."
+                : smartReplies.error || 'Could not draft replies'}
             </p>
           ) : (
             <div className="flex items-stretch gap-2">
