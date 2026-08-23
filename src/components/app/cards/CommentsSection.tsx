@@ -36,8 +36,7 @@ import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLink
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
-import { getBadgeUrl } from '@/lib/staking-badges';
-import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { BadgedName } from '@/components/app/BadgedName';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
@@ -240,7 +239,6 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
   const translation = useTranslation(comment.text || '');
-  const badgeUrl = getBadgeUrl(comment.badgeBalance, comment.username);
   const shownName = comment.displayName || comment.username;
 
   // Comments carry links as often as posts do — a reply pointing at another
@@ -270,10 +268,17 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
             onClick={() => onUserPress(comment.username)}
             className="inline-flex items-center gap-1 hover:underline"
           >
-            <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
-              <span className="font-semibold text-white text-sm truncate max-w-[120px] leading-tight">{shownName}</span>
-              <BadgeIcon badgeBalance={comment.badgeBalance} username={comment.username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
-            </span>
+            {/* BadgedName shares one badge resolution between the gutter and
+                the icon — recomputing getBadgeUrl here left the name's right
+                padding out of step with the icon when the viewer's own live
+                balance promoted a badge the comment payload didn't carry. */}
+            <BadgedName
+              badgeBalance={comment.badgeBalance}
+              username={comment.username}
+              className="font-semibold text-white text-sm max-w-[120px] leading-tight"
+            >
+              {shownName}
+            </BadgedName>
           </button>
           {/* The bot comments under a normal account, so without this it is
               indistinguishable from a user who picked the handle. */}
