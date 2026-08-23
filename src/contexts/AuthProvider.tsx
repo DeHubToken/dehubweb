@@ -2174,10 +2174,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (plan.supabase) {
         // Re-seats AND persists the stored session; a stale access token is
         // refreshed here against its still-unused refresh token.
-        await supabase.auth.setSession({
-          access_token: plan.supabase.access_token,
-          refresh_token: plan.supabase.refresh_token,
-        });
+        //
+        // Raced against a timeout because a hung re-seat would never reach the
+        // reload below: switchGuarded stays true, every snapshot listener is
+        // blocked from then on, and the registry quietly goes stale while the
+        // live account keeps rotating its refresh token — the next switch
+        // would then submit a dead one and get both sessions revoked. A late
+        // completion after abort is tolerated: abortProfileSwitch has already
+        // wiped Supabase storage as part of restoring the previous account,
+        // and a straggling persist can only be corrected by the next login or
+        // switch, which wipe it again.
+        await Promise.race([
+          supabase.auth.setSession({
+            access_token: plan.supabase.access_token,
+            refresh_token: plan.supabase.refresh_token,
+          }),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('Supabase session restore timed out')), 10_000),
+          ),
+        ]);
       }
       if (plan.uid) writeLastSession(plan.uid, plan.address);
       window.location.reload();

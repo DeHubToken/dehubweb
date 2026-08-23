@@ -138,6 +138,56 @@ export type TokenRefreshOutcome =
 let refreshInFlight: Promise<TokenRefreshOutcome> | null = null;
 
 /**
+ * Who owns the live session keys right now. Deliberately local and cheap —
+ * consulted around every refresh, so it must not drag in the profiles module.
+ */
+function readSessionOwner(): { wallet: string; uid: string | null } | null {
+  try {
+    const wallet = localStorage.getItem('dehub_wallet');
+    if (!wallet) return null;
+    return { wallet, uid: localStorage.getItem('dehub_supabase_uid') };
+  } catch {
+    return null;
+  }
+}
+
+function sameSessionOwner(
+  owner: ReturnType<typeof readSessionOwner>,
+): boolean {
+  const now = readSessionOwner();
+  if (!owner || !now) return owner === now;
+  return now.wallet === owner.wallet && now.uid === owner.uid;
+}
+
+/**
+ * File a refresh response into the stored profile it belongs to, when the live
+ * keys have moved to someone else. Loaded lazily: importing profiles.ts here
+ * statically would put the whole supabase/smart-wallet graph inside the API
+ * core's init path for the sake of a branch that fires once in a blue moon.
+ */
+async function stashTokensForProfile(
+  owner: NonNullable<ReturnType<typeof readSessionOwner>>,
+  tokens: TokenRefreshResult,
+): Promise<void> {
+  try {
+    const { mergeTokensIntoStoredProfile } = await import('@/lib/profiles');
+    const patched: Record<string, string> = {
+      dehub_token: tokens.accessToken,
+      ...(tokens.refreshToken ? { dehub_refresh_token: tokens.refreshToken } : {}),
+      ...(tokens.expiresIn
+        ? { dehub_token_expires_at: String(Date.now() + tokens.expiresIn * 1000) }
+        : {}),
+    };
+    mergeTokensIntoStoredProfile(owner, patched);
+  } catch (e) {
+    // Nowhere to file them (profile never adopted, storage unavailable). The
+    // pair is dropped, never written over the new owner's keys — a dropped
+    // rotation just means that profile re-authenticates on next use.
+    console.warn('[Auth] Rotated tokens could not be filed to their profile:', e);
+  }
+}
+
+/**
  * Build an abort signal that fires after `ms`.
  *
  * AbortSignal.timeout() is missing in Safari < 16, older Firefox, and jsdom.
@@ -172,6 +222,16 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
   // this user. Listeners (AuthProvider) use this to refetch those caches.
   const wasExpired = isTokenExpired() || !getAuthToken();
 
+  // Who owns the live keys while this refresh is in flight. The response lands
+  // an unknown time later — long enough for another tab to switch profiles, or
+  // for an add-profile flow to stage the incoming identity and wipe these very
+  // keys (stageIncomingIdentity). Writing the rotated pair blindly then would
+  // graft this account's tokens onto whoever owns disk by then: every later
+  // authed call sends account A's token under B's identity, fails, and the
+  // cleanup paths sign everybody out. The owner check below routes the pair to
+  // its rightful stash instead.
+  const ownerAtStart = readSessionOwner();
+
   refreshInFlight = (async (): Promise<TokenRefreshOutcome> => {
     // Without a timeout, a stalled request never settles, and the
     // single-flight promise above never resolves — every subsequent
@@ -193,7 +253,12 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
         // it the same as a 401 would silently log the user out on a blip.
         if (response.status === 401) {
           console.warn('[Auth] Refresh token rejected (401), clearing session');
-          clearAuthSession();
+          // Only wipe when these keys still belong to whoever started the
+          // refresh. A revoke landing after a profile switch must not take
+          // the incoming account's fresh keys down with it.
+          if (sameSessionOwner(ownerAtStart)) {
+            clearAuthSession();
+          }
           return { ok: false, reason: 'revoked' };
         }
         console.warn('[Auth] Token refresh failed (non-401, treating as transient):', response.status);
@@ -206,15 +271,29 @@ export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome>
         return { ok: false, reason: 'malformed' };
       }
 
-      setAuthToken(data.accessToken);
-      if (data.refreshToken) setRefreshToken(data.refreshToken);
-      if (data.expiresIn) setTokenExpiresAt(data.expiresIn);
+      const tokens: TokenRefreshResult = data;
+      const ownerStillLive = sameSessionOwner(ownerAtStart);
+      if (ownerStillLive) {
+        setAuthToken(data.accessToken);
+        if (data.refreshToken) setRefreshToken(data.refreshToken);
+        if (data.expiresIn) setTokenExpiresAt(data.expiresIn);
+      } else {
+        // The live keys moved on while this refresh was in flight (another
+        // tab switched profiles, or an add-profile flow staged the incoming
+        // identity). The rotated pair is still good — for the account it was
+        // minted to. File it into THAT account's stored profile so switching
+        // back restores a chain the server still honours; writing it to the
+        // live keys instead would blend two identities.
+        await stashTokensForProfile(ownerAtStart, tokens);
+      }
 
-      try {
-        window.dispatchEvent(new CustomEvent('dehub:token-refreshed', { detail: { wasExpired } }));
-      } catch { /* SSR / test env — no window */ }
+      if (ownerStillLive) {
+        try {
+          window.dispatchEvent(new CustomEvent('dehub:token-refreshed', { detail: { wasExpired } }));
+        } catch { /* SSR / test env — no window */ }
+      }
 
-      return { ok: true, tokens: data as TokenRefreshResult };
+      return { ok: true, tokens };
     } catch (e) {
       // AbortError (the 10s timeout above), TypeError (offline, DNS, CORS) —
       // none of these are evidence that the refresh token is invalid.
