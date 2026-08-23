@@ -60,12 +60,18 @@ function renderThread(turns: Turn[], peerName?: string): string {
     const who = t.from === 'me' ? 'ME' : (t.name || peerName || 'THEM').toUpperCase();
     return `${who}: ${t.text}`;
   });
+  // When ME holds the last word there is nothing to answer, so the drafts
+  // become follow-ups that move things along instead of a reply to oneself.
+  const ask =
+    turns[turns.length - 1]?.from === 'me'
+      ? 'I sent the most recent message and have not heard back yet. Draft two short follow-ups I could send next that move the conversation forward — do not repeat or rephrase my last message.'
+      : 'Draft two replies I could send next.';
   return [
     '<conversation>',
     ...lines,
     '</conversation>',
     '',
-    'Draft two replies I could send next.',
+    ask,
   ].join('\n');
 }
 
@@ -102,15 +108,6 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ error: 'Nothing to reply to yet' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
-    }
-
-    // Only worth suggesting when the ball is in the user's court. A thread
-    // whose last word is the user's own would produce a reply to themselves.
-    if (turns[turns.length - 1].from === 'me') {
-      return new Response(
-        JSON.stringify({ suggestions: [], reason: 'awaiting-reply' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
