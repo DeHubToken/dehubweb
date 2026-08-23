@@ -28,6 +28,7 @@ import {
   PasskeyUnsupportedError,
 } from '@/lib/wallet-core/biometric-unlock';
 import { saveWallet } from '@/lib/wallet-core/store';
+import { normalisePhoneHint } from '@/lib/wallet-core/phone-hint';
 import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
@@ -96,6 +97,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   // real account, if a shared login was used). Resets on every new retrieval.
   const [addressConfirmed, setAddressConfirmed] = useState(false);
   const [migrateEmail, setMigrateEmail] = useState('');
+  const [migratePhone, setMigratePhone] = useState('');
   const [migrateBusy, setMigrateBusy] = useState<string | null>(null);
   // Which OLD login method was actually used for the retrieval in progress.
   // This — not the derived address — is how we identify which legacy account
@@ -189,13 +191,24 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       setError('Enter the email you used on your old account');
       return;
     }
+    // SMS identifies the account BY the hint, so a wrong shape silently returns
+    // a different key rather than failing — refuse to send one we had to guess.
+    let phoneHint: string | undefined;
+    if (provider === 'sms_passwordless') {
+      const normalised = normalisePhoneHint(migratePhone);
+      if (!normalised) {
+        setError('Enter your number with the country code, e.g. +34 659265340');
+        return;
+      }
+      phoneHint = normalised;
+    }
     setMigrateBusy(provider);
     try { sessionStorage.setItem(MIGRATE_PROVIDER_KEY, provider); } catch { /* ignore */ }
     try {
       const { startLegacyMigration } = await import('@/lib/legacy-web3auth');
       const key = await startLegacyMigration(
         provider,
-        provider === 'email_passwordless' ? migrateEmail : undefined,
+        provider === 'email_passwordless' ? migrateEmail : phoneHint,
       );
       setAddressConfirmed(false);
       setMigrateProvider(provider);
@@ -333,10 +346,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const hasOldSmsLogin = oldLoginMethods.has('sms') || oldLoginMethods.has('sms_passwordless') || oldLoginMethods.has('phone');
 
   const migrateProviderButton = (
-    provider: 'google' | 'twitter' | 'discord' | 'apple' | 'sms_passwordless',
+    provider: 'google' | 'twitter' | 'discord' | 'apple',
     label: string,
   ) => {
-    const isOldLogin = provider === 'sms_passwordless' ? hasOldSmsLogin : oldLoginMethods.has(provider);
+    const isOldLogin = oldLoginMethods.has(provider);
     return (
     <Button
       key={provider}
@@ -525,7 +538,41 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
               {migrateProviderButton('apple', 'Old account: Apple')}
               {migrateProviderButton('twitter', 'Old account: X (Twitter)')}
               {migrateProviderButton('discord', 'Old account: Discord')}
-              {migrateProviderButton('sms_passwordless', 'Old account: Phone (SMS)')}
+              <div className="space-y-1.5">
+                <p className={`text-xs px-1 ${hasOldSmsLogin ? 'text-green-300' : 'text-white/50'}`}>
+                  Old account: Phone (SMS)
+                  {hasOldSmsLogin && (
+                    <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
+                      Your old login
+                    </span>
+                  )}
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    type="tel"
+                    inputMode="tel"
+                    placeholder="+34 659265340"
+                    value={migratePhone}
+                    onChange={(e) => setMigratePhone(e.target.value)}
+                    className={`${inputClass} h-11 flex-1 ${hasOldSmsLogin ? 'ring-1 ring-green-400/50' : ''}`}
+                  />
+                  <Button
+                    variant="outline"
+                    disabled={!!migrateBusy || !migratePhone}
+                    onClick={() => handleLegacyLogin('sms_passwordless')}
+                    className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
+                  >
+                    {migrateBusy === 'sms_passwordless'
+                      ? <Loader2 className="w-4 h-4 animate-spin" />
+                      : <ArrowDownToLine className="w-4 h-4" />}
+                  </Button>
+                </div>
+                {hasOldSmsLogin && (
+                  <p className="text-[11px] text-white/40 px-1">
+                    Include the country code — it must be the same number the old account was created with.
+                  </p>
+                )}
+              </div>
               <div className="space-y-1.5">
                 <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
                   Old account: Email
