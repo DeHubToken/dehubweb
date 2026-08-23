@@ -13,7 +13,7 @@
  */
 
 import { useState, Suspense, lazy, type ReactNode } from 'react';
-import { Link2, MessageSquarePlus, Send, Share2 } from 'lucide-react';
+import { Link2, MessageSquarePlus, Repeat2, Send, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
@@ -35,6 +35,17 @@ interface ShareEntityDrawerProps {
    * belongs to one (a community's own feed, for instance).
    */
   postCategory?: string;
+  /**
+   * One-tap repost: puts the thing into the poster's own feed with no composer.
+   * Offered where a repost makes sense on its own — a stage link posted to the
+   * feed renders as the full interactive card, so there is nothing to write.
+   * Sits directly above "Share to feed", which is its quote-post counterpart:
+   * same destination, but you add your words.
+   */
+  repost?: {
+    detail?: string;
+    onRepost: () => Promise<void> | void;
+  };
 }
 
 function ShareAction({
@@ -69,9 +80,11 @@ export function ShareEntityDrawer({
   url,
   shareTitle,
   postCategory,
+  repost,
 }: ShareEntityDrawerProps) {
   const { openPostModal } = useGlobalDropZone();
   const [dmOpen, setDmOpen] = useState(false);
+  const [reposting, setReposting] = useState(false);
 
   const link = parseDehubLink(url);
   const noun = link ? dehubLinkLabel(link.kind) : 'link';
@@ -93,6 +106,17 @@ export function ShareEntityDrawer({
       onOpenChange(false);
     } catch {
       // Dismissing the OS sheet rejects; nothing to report.
+    }
+  };
+
+  const handleRepost = async () => {
+    if (!repost || reposting) return;
+    setReposting(true);
+    try {
+      await repost.onRepost();
+      onOpenChange(false);
+    } finally {
+      setReposting(false);
     }
   };
 
@@ -121,6 +145,14 @@ export function ShareEntityDrawer({
                 setTimeout(() => setDmOpen(true), 250);
               }}
             />
+            {repost && (
+              <ShareAction
+                icon={<Repeat2 className={reposting ? 'w-5 h-5 text-zinc-300 animate-pulse' : 'w-5 h-5 text-zinc-300'} />}
+                label="Repost"
+                detail={repost.detail ?? 'Send it to your followers as-is'}
+                onClick={handleRepost}
+              />
+            )}
             <ShareAction
               icon={<MessageSquarePlus className="w-5 h-5 text-zinc-300" />}
               label="Share to feed"

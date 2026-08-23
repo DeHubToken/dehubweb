@@ -31,11 +31,13 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { CalendarDays, CalendarPlus, Radio, Loader2, Share2, Bell, BellRing, Headphones, Square, Users, Clock, Play, Pause, PictureInPicture2, FileText } from 'lucide-react';
+import { toast } from 'sonner';
+import { mintPost } from '@/lib/api/dehub';
 import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
@@ -77,7 +79,7 @@ export default function StageDeepLinkPage() {
     joinSpace, currentSpace, openModal, startScheduledSpace,
     guestListen, guestStopListening, guestSpace, isConnected, isLoading: stageActionBusy,
   } = useStage();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const joinedRef = useRef(false);
   const [starting, setStarting] = useState(false);
 
@@ -186,8 +188,40 @@ export default function StageDeepLinkPage() {
     stage?.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase();
 
   // The share sheet replaces the old copy-only button: copy link, send in a
-  // DM, or post to feed — the same options a post's share button offers.
+  // DM, or post it to the feed — the same options a post's share button offers.
   const [shareOpen, setShareOpen] = useState(false);
+
+  /**
+   * Repost: one tap puts the stage into the poster's own feed, no composer.
+   * It is an off-chain feed-simple post whose body is the stage link, which is
+   * exactly what "Share to feed" publishes — minus the words — so it reuses
+   * the composer's own endpoint and lands as the full interactive stage card
+   * in every feed. No new backend, and nothing to notify anybody about.
+   */
+  const handleRepostStage = useCallback(async () => {
+    if (!stage) return;
+    if (!isAuthenticated || !walletAddress) {
+      openLoginModal();
+      throw new Error('signed out');
+    }
+    try {
+      const res = await mintPost({
+        name: (stage.title || 'Stage').slice(0, 100),
+        description: dehubLinkFor.stage(stage),
+        postType: 'feed-simple',
+        chainId: 8453,
+        category: ['General'],
+        minterAddress: walletAddress,
+        mintOptOut: true,
+        idempotencyKey: crypto.randomUUID(),
+      });
+      if (!res.createdTokenId) throw new Error('missing createdTokenId');
+      toast.success('Reposted to your feed');
+    } catch (err) {
+      toast.error('Failed to repost');
+      throw err;
+    }
+  }, [stage, isAuthenticated, walletAddress, openLoginModal]);
 
   const avatar = stage
     ? buildAvatarUrl(stage.host_wallet_address || '', stage.host_avatar) ||
@@ -331,6 +365,7 @@ export default function StageDeepLinkPage() {
           onOpenChange={setShareOpen}
           url={dehubLinkFor.stage(stage)}
           shareTitle={stage.title}
+          repost={{ detail: 'Post this stage to your feed as-is', onRepost: handleRepostStage }}
         />
       </div>
     );
@@ -540,6 +575,7 @@ export default function StageDeepLinkPage() {
           onOpenChange={setShareOpen}
           url={dehubLinkFor.stage(stage)}
           shareTitle={stage.title}
+          repost={{ detail: 'Post this stage to your feed as-is', onRepost: handleRepostStage }}
         />
       </div>
     );
@@ -698,6 +734,7 @@ export default function StageDeepLinkPage() {
           onOpenChange={setShareOpen}
           url={dehubLinkFor.stage(stage)}
           shareTitle={stage.title}
+          repost={{ detail: 'Post this stage to your feed as-is', onRepost: handleRepostStage }}
         />
       </div>
     );
