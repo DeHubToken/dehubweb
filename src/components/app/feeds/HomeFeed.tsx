@@ -42,7 +42,8 @@ import {
   type DateFilterOption, 
   type ContentTypeFilters, 
   type PostTypeFilterValue 
-} from '@/lib/feed-utils';
+  } from '@/lib/feed-utils';
+  import { getPostAllowanceForBadge } from '@/lib/post-quota';
 import { resolveViewCount } from '@/lib/engagement';
 
 // Card components
@@ -950,30 +951,44 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Final organic items before filtering
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
 
-  // One post per author on the home feed. Posting itself is unlimited; this
-  // only decides who represents whom: the first item an author holds in the
-  // list stands for them (newest under Latest, top-ranked under the other
-  // sorts). Items with no identifiable author pass through untouched.
-  const onePerAuthorItems = useMemo(() => {
-    const seenAuthors = new Set<string>();
+  // Tiered home-feed visibility. Posting is unlimited, profiles show
+  // everything, and followers keep seeing all of it — but the general home
+  // feed carries only each author's first `postsPerDay` posts per UTC day,
+  // where the allowance comes from the AUTHOR's own badge tier (1 with no
+  // badge, +1 per tier; see lib/post-quota.ts). Under Latest sort the kept
+  // items are the day's newest; under ranked sorts they are the day's
+  // top-ranked. Items with no identifiable author pass through untouched.
+  const tierCappedItems = useMemo(() => {
+    if (deferredSort.value === 'following') return rawItems;
+    const seen = new Map<string, number>();
     return rawItems.filter(item => {
       const d = item.data as any;
-      const raw = item.type === 'post' ? d?.author?.id : d?.creatorId;
+      const isText = item.type === 'post';
+      const raw = isText ? d?.author?.id : d?.creatorId;
       if (raw == null) return true;
       const authorId = String(raw).trim().toLowerCase();
       if (!authorId) return true;
-      if (seenAuthors.has(authorId)) return false;
-      seenAuthors.add(authorId);
+      const allowance = getPostAllowanceForBadge(
+        isText ? d?.author?.badgeBalance : d?.creatorBadgeBalance,
+        isText ? d?.author?.handle : d?.creatorUsername,
+      ).postsPerDay;
+      const created = new Date(d?.createdAt ?? '');
+      // Bucket by UTC day so yesterday's slots are never spent on today's posts.
+      const day = Number.isFinite(created.getTime()) ? created.toISOString().slice(0, 10) : 'unknown';
+      const key = `${authorId}|${day}`;
+      const count = seen.get(key) ?? 0;
+      if (count >= allowance) return false;
+      seen.set(key, count + 1);
       return true;
     });
-  }, [rawItems]);
+  }, [rawItems, deferredSort.value]);
 
   // Client-side multi-category filtering (when >1 category selected, API returns all)
   const organicItems = useMemo(() => {
     const deletedIds = getDeletedPostIds();
     let filtered = deletedIds.size > 0
-      ? onePerAuthorItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
-      : onePerAuthorItems;
+      ? tierCappedItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
+      : tierCappedItems;
     if (selectedCategories.length <= 1) return filtered; // 0 = all, 1 = API-filtered
     const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
     return filtered.filter(item => {
@@ -981,7 +996,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (!itemCats.length) return false;
       return itemCats.some(c => catSet.has(String(c).toLowerCase()));
     });
-  }, [onePerAuthorItems, selectedCategories]);
+  }, [tierCappedItems, selectedCategories]);
 
   // Served POVR ads spliced in after every AD_INSERT_INTERVAL organic items.
   // Ad serving failures return [] so the feed is never blocked by ads.
