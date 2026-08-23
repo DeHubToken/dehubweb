@@ -3,6 +3,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const SUPA_LOGIN_PENDING_KEY = "dehub_supa_login_pending";
+// Freshness twin of the pending flag (see AuthProvider): lets a page that
+// reloads mid-login recognise "a resume should be on screen right now" and
+// open the login sheet from first paint instead of flashing the feed.
+const SUPA_LOGIN_PENDING_AT_KEY = "dehub_supa_login_pending_at";
 
 /**
  * Reduce an untrusted `?next=` value to a path that is definitely on our own
@@ -86,6 +90,7 @@ export default function AuthConfirm() {
       // state listener) — SIGNED_IN only fires proceedToWalletPhase when the
       // pending flag is set.
       try { localStorage.setItem(SUPA_LOGIN_PENDING_KEY, "1"); } catch { /* ignore */ }
+      try { localStorage.setItem(SUPA_LOGIN_PENDING_AT_KEY, String(Date.now())); } catch { /* ignore */ }
 
       const { data, error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash,
