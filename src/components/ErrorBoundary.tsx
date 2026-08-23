@@ -41,20 +41,26 @@ function reportError(error: Error, errorInfo: ErrorInfo, label?: string): void {
   if (reportedErrors.has(signature)) return;
   reportedErrors.add(signature);
 
+  // Through the client-logs endpoint, not a direct table insert — the anon-key
+  // INSERT policy on client_error_logs is going away, and the endpoint is where
+  // the size caps and rate limiting live.
   import('@/integrations/supabase/client')
     .then(({ supabase }) =>
-      supabase.from('client_error_logs').insert({
-        level: 'error',
-        message: `${error.name || 'Error'}: ${error.message || 'Unknown error'}`.slice(0, 500),
-        component: label ? `ErrorBoundary/${label}` : 'ErrorBoundary',
-        stack_trace: error.stack?.slice(0, 2000) ?? null,
-        metadata: {
-          path: window.location.pathname,
-          isChunkError: isChunkLoadError(error),
-          componentStack: errorInfo.componentStack?.slice(0, 1000),
-          userAgent: navigator.userAgent,
+      supabase.functions.invoke('client-logs', {
+        body: {
+          logs: [{
+            level: 'error',
+            message: `${error.name || 'Error'}: ${error.message || 'Unknown error'}`.slice(0, 500),
+            component: label ? `ErrorBoundary/${label}` : 'ErrorBoundary',
+            stack_trace: error.stack?.slice(0, 2000) ?? undefined,
+            metadata: {
+              path: window.location.pathname,
+              isChunkError: isChunkLoadError(error),
+              componentStack: errorInfo.componentStack?.slice(0, 1000),
+              userAgent: navigator.userAgent,
+            },
+          }],
         },
-        user_address: null,
       }),
     )
     .catch(() => {

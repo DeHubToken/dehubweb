@@ -27,6 +27,7 @@ import {
   signServeToken,
   tierForBalance,
 } from '../_shared/povr.ts';
+import { rateLimitByIp } from '../_shared/auth.ts';
 
 interface ServeRequest {
   viewerWallet?: string;
@@ -51,6 +52,12 @@ interface Targeting {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: adsCorsHeaders });
+
+  // Every call mints signed billing tokens, so an unguarded loop here is a
+  // token harvester. A real viewer sees a handful of ads per hour; this cap is
+  // orders of magnitude above that and only bites scripted traffic.
+  const limited = await rateLimitByIp(req, 'ads-serve', { limit: 120, windowMs: 60 * 60 * 1000 });
+  if (limited) return limited;
 
   try {
     const body = (await req.json().catch(() => ({}))) as ServeRequest;
