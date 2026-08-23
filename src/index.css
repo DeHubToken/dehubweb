@@ -159,6 +159,21 @@ All colors MUST be HSL.
     display: none;
   }
 
+  /* A single two-action surface with a real circular cut-out for the reply
+     orb. Alpha-only fills keep the rail transparent across animated themes. */
+  .smart-reply-rail {
+    -webkit-mask-image: radial-gradient(
+      circle 29px at 50% 100%,
+      transparent 28px,
+      black 29px
+    );
+    mask-image: radial-gradient(
+      circle 29px at 50% 100%,
+      transparent 28px,
+      black 29px
+    );
+  }
+
   /* Docs brand surface: monochrome liquid-glass panel (frosted-glass web
      approximation). Rides the theme HSL tokens so it adapts to every theme;
      falls back to a solid card when transparency is reduced. */
