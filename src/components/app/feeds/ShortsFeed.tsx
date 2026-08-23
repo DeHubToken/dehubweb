@@ -142,6 +142,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     verified: nft.creator?.is_verified || false,
     avatar: avatarUrl || undefined,
     likes: String(nft.totalVotes?.for || nft.like_count || 0),
+    dislikes: nft.totalVotes?.against || nft.dislike_count || 0,
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
     description: nft.description || nft.name || nft.title || '',

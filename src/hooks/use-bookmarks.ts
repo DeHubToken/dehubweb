@@ -90,6 +90,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     title: nft.name || nft.title,
     description: nft.description,
     likes: nft.totalVotes?.for || nft.like_count || 0,
+    dislikes: nft.totalVotes?.against || nft.dislike_count || 0,
     caption: nft.description || nft.name || '',
     comments: nft.commentCount || nft.comment_count || 0,
     views: formatViews(resolveViewCount(nft)).replace(' views', ''),
@@ -139,6 +140,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
       likes: nft.totalVotes?.for || nft.like_count || 0,
+      dislikes: nft.totalVotes?.against || nft.dislike_count || 0,
     },
   };
 }

@@ -701,6 +701,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
           caption: post.description || '', likes: post.totalVotes?.for || 0,
+          dislikes: post.totalVotes?.against || 0,
           comments: post.commentCount || 0, views: formatViews(resolveViewCount(post)).replace(' views', ''),
           timeAgo: formatTimeAgo(rawTimestamp),
           creatorId: resolvedAddress,
@@ -724,6 +725,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
             comments: post.commentCount || 0,
             reposts: (post.totalReposts || 0) + (post.quotes || 0),
             likes: post.totalVotes?.for || 0,
+            dislikes: post.totalVotes?.against || 0,
           },
         }} />
       )}

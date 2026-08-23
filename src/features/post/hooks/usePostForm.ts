@@ -1701,6 +1701,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           title: titleText.trim() || text.trim().split('\n')[0] || '',
           description: text.trim(),
           likes: 0,
+          dislikes: 0,
           caption: text.trim(),
           comments: 0,
           views: '0',
@@ -1733,6 +1734,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             comments: 0,
             reposts: 0,
             likes: 0,
+            dislikes: 0,
           },
           isOptimistic: true,
         };
