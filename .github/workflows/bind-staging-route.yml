@@ -1,0 +1,33 @@
+name: Bind staging.dehub.io to the edge worker
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bind-route:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add the workers route
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ID }}
+        run: |
+          set -euo pipefail
+          ZONE=$(curl -sSf -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?account.id=$CF_ACCOUNT_ID&name=dehub.io" \
+            | jq -r '.result[0].id // empty')
+          if [ -z "$ZONE" ]; then echo "ERROR: dehub.io zone not found"; exit 1; fi
+          echo "zone id: $ZONE"
+          echo '--- create route ---'
+          curl -sSf -X POST \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"pattern":"staging.dehub.io/*","script":"dehub-migration"}' \
+            "https://api.cloudflare.com/client/v4/zones/$ZONE/workers/routes"
+          echo
+          echo '--- routes now on the zone ---'
+          curl -sSf -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones/$ZONE/workers/routes"

@@ -6,9 +6,13 @@
   // the dead origins behind their DNS records are never contacted. The apex
   // stays on its dashboard-configured custom domain; this is additive.
   // dehub.net (+ all subdomains) = SEO domain-move redirects, served here
-  // since the zone moved to Cloudflare (Netlify DNS deleted July 2026).
+  // since the zone moved to Cloudflare (July 2026).
+  // staging.dehub.io = the pre-release mirror. Same assets as the apex; the
+  // worker's host guard stamps every response noindex so staging can never
+  // outrank production.
   "routes": [
     { "pattern": "www.dehub.io/*", "zone_name": "dehub.io" },
+    { "pattern": "staging.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "dehub.net/*", "zone_name": "dehub.net" },
     { "pattern": "*.dehub.net/*", "zone_name": "dehub.net" }
   ],
