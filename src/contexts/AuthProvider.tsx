@@ -2286,7 +2286,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
           toast.error('Session expired', {
             description: 'Please sign in again to continue',
-            action: { label: 'Sign in', onClick: stableCallbacks.openLoginModal },
+            action: { label: 'Sign in', onClick: () => stableCallbacks.openLoginModal() },
             duration: 8000,
           });
         }

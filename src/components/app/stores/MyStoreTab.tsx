@@ -66,7 +66,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
     return (
       <div className="text-center py-16">
         <p className="text-muted-foreground text-sm mb-4">Sign in to manage your store</p>
-        <Button onClick={openLoginModal}>Sign In</Button>
+        <Button onClick={() => openLoginModal()}>Sign In</Button>
       </div>
     );
   }
