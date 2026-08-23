@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LogOut, Users, Megaphone, ShieldCheck } from 'lucide-react';
+import { LogOut, Users, Megaphone, ShieldCheck, MessagesSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAdminAuth } from '@/hooks/use-admin-auth';
 import { SEOHead } from '@/components/SEOHead';
@@ -47,6 +47,13 @@ export function AdminShell({ title, children }: AdminShellProps) {
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               Moderation
+            </Link>
+            <Link
+              to="/admin/chat"
+              className="inline-flex items-center gap-1.5 text-xs text-white/60 hover:text-white px-2 py-1.5 rounded-lg hover:bg-white/5"
+            >
+              <MessagesSquare className="w-3.5 h-3.5" />
+              Chat
             </Link>
             <Button
               variant="ghost"

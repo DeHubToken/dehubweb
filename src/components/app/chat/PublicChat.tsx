@@ -9,7 +9,8 @@ import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
-import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, uploadChatImage, uploadLiveChatVoice, type LiveChatRoom } from '@/lib/api/dehub';
+import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, deleteLiveChatMessage, uploadChatImage, uploadLiveChatVoice, type LiveChatRoom } from '@/lib/api/dehub';
+import { getAdminToken, banAdminChatUser, unbanAdminChatUser, deleteAdminChatMessage } from '@/lib/api/dehub';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -108,15 +109,21 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // selectedRoom must be declared before isModerator useMemo (which uses it)
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
 
-  // Determine if current user is a moderator.
+  // Determine moderation rights. Room moderators come from the room's list.
+  // On top of those, anyone signed into the admin panel in this browser holds
+  // full moderation over the chat — the admin API enforces it server side, and
+  // their actions route through /api/admin/livechat/* instead of the room-mod
+  // endpoints, which only know the moderator list.
   // Fallback to selectedRoom.moderators when roomDetails hasn't loaded yet.
-  const isModerator = useMemo(() => {
+  const isAdminSession = !!getAdminToken();
+  const isRoomModerator = useMemo(() => {
     if (!walletAddress) return false;
     const mods = roomDetails?.moderators || selectedRoom?.moderators || [];
     return mods.some(
       (mod: string) => mod.toLowerCase() === walletAddress.toLowerCase()
     );
   }, [walletAddress, roomDetails, selectedRoom]);
+  const isModerator = isRoomModerator || isAdminSession;
 
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
@@ -221,34 +228,58 @@ export function PublicChat({ onBack }: PublicChatProps) {
   };
 
   const handleBanUser = useCallback(async (userId: string, userName: string) => {
-    if (!selectedRoomId || !isAuthenticated) {
+    if (!isAuthenticated) {
       toast.error('Sign in to moderate');
       return;
     }
     try {
-      await banLiveChatUser(selectedRoomId, userId);
+      if (isAdminSession) {
+        await banAdminChatUser(userId);
+      } else {
+        if (!selectedRoomId) throw new Error('No room selected');
+        await banLiveChatUser(selectedRoomId, userId);
+      }
       toast.success(`${userName} has been banned`);
       refetch();
     } catch (err) {
       console.error('[PublicChat] Ban failed:', err);
-      toast.error('Failed to ban user');
+      toast.error(err instanceof Error ? err.message : 'Failed to ban user');
     }
-  }, [selectedRoomId, isAuthenticated, refetch]);
+  }, [selectedRoomId, isAuthenticated, isAdminSession, refetch]);
 
   const handleUnbanUser = useCallback(async (userId: string, userName: string) => {
-    if (!selectedRoomId || !isAuthenticated) {
+    if (!isAuthenticated) {
       toast.error('Sign in to moderate');
       return;
     }
     try {
-      await unbanLiveChatUser(selectedRoomId, userId);
+      if (isAdminSession) {
+        await unbanAdminChatUser(userId);
+      } else {
+        if (!selectedRoomId) throw new Error('No room selected');
+        await unbanLiveChatUser(selectedRoomId, userId);
+      }
       toast.success(`${userName} has been unbanned`);
       refetch();
     } catch (err) {
       console.error('[PublicChat] Unban failed:', err);
-      toast.error('Failed to unban user');
+      toast.error(err instanceof Error ? err.message : 'Failed to unban user');
     }
-  }, [selectedRoomId, isAuthenticated, refetch]);
+  }, [selectedRoomId, isAuthenticated, isAdminSession, refetch]);
+
+  const handleDeleteMessage = useCallback(async (messageId: string) => {
+    try {
+      if (isAdminSession) {
+        await deleteAdminChatMessage(messageId);
+      } else {
+        await deleteLiveChatMessage(messageId);
+      }
+      refetch();
+    } catch (err) {
+      console.error('[PublicChat] Delete failed:', err);
+      toast.error(err instanceof Error ? err.message : 'Failed to delete message');
+    }
+  }, [isAdminSession, refetch]);
 
   // Merge list-level room data with the richer single-room details
   const enrichedRoom = roomDetails || selectedRoom;
@@ -324,7 +355,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
             </TooltipTrigger>
             <TooltipContent>{t('publicChat.searchMessages')}</TooltipContent>
           </Tooltip>
-          {isModerator && (
+          {isRoomModerator && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -339,7 +370,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
               <TooltipContent>Create new room</TooltipContent>
             </Tooltip>
           )}
-          {isModerator && (
+          {isRoomModerator && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -454,14 +485,15 @@ export function PublicChat({ onBack }: PublicChatProps) {
                   replyToName={message.replyTo?.senderName}
                 />
               ) : (
-              <ChatMessage 
-                key={message.id} 
+              <ChatMessage
+                key={message.id}
                 message={message}
                 showActions={isModerator}
                 moderators={roomDetails?.moderators}
                 currentUserAddress={walletAddress || undefined}
                 onBan={handleBanUser}
                 onUnban={handleUnbanUser}
+                onDelete={handleDeleteMessage}
                 onReact={addReaction}
                 onRemoveReaction={removeReaction}
                 onReply={isAuthenticated ? handleReply : undefined}

@@ -241,23 +241,23 @@ export async function sendLiveChatMessage(
   };
 }
 
-// Keep these for potential future use but they target global endpoints now
+// Mod endpoints — the signed-in user must be on the room's moderator list.
 export async function pinLiveChatMessage(_roomId: string, messageId: string): Promise<void> {
-  await apiCall(`/api/livechat/messages/${messageId}/pin`, {
+  await apiCall(`/api/livechat/mod/pin/${messageId}`, {
     method: 'POST',
     requiresAuth: true,
   });
 }
 
 export async function unpinLiveChatMessage(_roomId: string, messageId: string): Promise<void> {
-  await apiCall(`/api/livechat/messages/${messageId}/pin`, {
+  await apiCall(`/api/livechat/mod/pin/${messageId}`, {
     method: 'DELETE',
     requiresAuth: true,
   });
 }
 
 export async function banLiveChatUser(_roomId: string, userAddress: string): Promise<void> {
-  await apiCall('/api/livechat/ban', {
+  await apiCall('/api/livechat/mod/ban', {
     method: 'POST',
     body: { address: userAddress.toLowerCase() },
     requiresAuth: true,
@@ -265,7 +265,14 @@ export async function banLiveChatUser(_roomId: string, userAddress: string): Pro
 }
 
 export async function unbanLiveChatUser(_roomId: string, userAddress: string): Promise<void> {
-  await apiCall(`/api/livechat/ban/${userAddress.toLowerCase()}`, {
+  await apiCall(`/api/livechat/mod/ban/${userAddress.toLowerCase()}`, {
+    method: 'DELETE',
+    requiresAuth: true,
+  });
+}
+
+export async function deleteLiveChatMessage(messageId: string): Promise<void> {
+  await apiCall(`/api/livechat/mod/message/${messageId}`, {
     method: 'DELETE',
     requiresAuth: true,
   });

@@ -320,3 +320,178 @@ export async function listAdminUserReports(
     })}`,
   );
 }
+
+// ── Live chat (the community chat room) ──────────────────────────────────────
+
+export interface AdminChatUserRef {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarUrl?: string;
+  isModerator?: boolean;
+  isBanned?: boolean;
+  followers?: number;
+  followings?: number;
+  badgeBalance?: number;
+  accountCreatedAt?: string;
+}
+
+export interface AdminChatRoomInfo {
+  roomId: string;
+  name?: string;
+  description?: string;
+  activeUsers?: number;
+  messageCount?: number;
+  slowMode?: boolean;
+  slowModeSeconds?: number;
+  minStakeRequired?: number;
+  moderators: string[];
+  bannedUsers?: string[];
+  lastMessageAt?: string;
+}
+
+export interface AdminChatOverview {
+  room: AdminChatRoomInfo;
+  moderators: AdminChatUserRef[];
+  bannedUsers: AdminChatUserRef[];
+  onlineCount: number;
+  onlineAddresses: string[];
+}
+
+export type AdminChatMessageType = 'text' | 'media' | 'gif' | 'system' | 'audio';
+
+export interface AdminChatMessage {
+  id: string;
+  roomId: string;
+  sender: AdminChatUserRef;
+  content: string;
+  messageType: AdminChatMessageType;
+  imageUrl?: string;
+  audioUrl?: string;
+  audioDuration?: number;
+  replyTo?: { id: string; content: string; senderAddress: string; senderUsername?: string };
+  reactions?: Record<string, string[]>;
+  isPinned: boolean;
+  isDeleted: boolean;
+  deletedBy?: string;
+  deletedAt?: string;
+  createdAt: string;
+}
+
+export interface AdminChatMessagesResponse {
+  messages: AdminChatMessage[];
+  hasMore: boolean;
+  totalCount: number;
+}
+
+export interface ListAdminChatMessagesParams {
+  before?: string;
+  after?: string;
+  limit?: number;
+  senderAddress?: string;
+  includeDeleted?: boolean;
+}
+
+export interface AdminChatParticipant {
+  user: AdminChatUserRef;
+  messageCount: number;
+  lastMessageAt: string;
+  isOnline: boolean;
+  isModerator: boolean;
+  isBanned: boolean;
+}
+
+export interface AdminChatParticipantsResponse {
+  participants: AdminChatParticipant[];
+  total: number;
+  page: number;
+  pages: number;
+}
+
+export interface ListAdminChatParticipantsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  filter?: 'all' | 'online' | 'banned' | 'moderators';
+}
+
+export async function getAdminChatOverview(): Promise<AdminChatOverview> {
+  return adminFetch<AdminChatOverview>('/api/admin/livechat');
+}
+
+export async function updateAdminChatSettings(settings: {
+  slowMode?: boolean;
+  slowModeSeconds?: number;
+  minStakeRequired?: number;
+}): Promise<AdminChatRoomInfo> {
+  return adminFetch<AdminChatRoomInfo>('/api/admin/livechat/settings', {
+    method: 'PATCH',
+    body: JSON.stringify(settings),
+  });
+}
+
+export async function addAdminChatModerator(address: string): Promise<void> {
+  await adminFetch('/api/admin/livechat/moderators', {
+    method: 'POST',
+    body: JSON.stringify({ address: address.toLowerCase() }),
+  });
+}
+
+export async function removeAdminChatModerator(address: string): Promise<void> {
+  await adminFetch(`/api/admin/livechat/moderators/${address.toLowerCase()}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function banAdminChatUser(address: string): Promise<void> {
+  await adminFetch('/api/admin/livechat/ban', {
+    method: 'POST',
+    body: JSON.stringify({ address: address.toLowerCase() }),
+  });
+}
+
+export async function unbanAdminChatUser(address: string): Promise<void> {
+  await adminFetch(`/api/admin/livechat/ban/${address.toLowerCase()}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function listAdminChatParticipants(
+  params: ListAdminChatParticipantsParams = {},
+): Promise<AdminChatParticipantsResponse> {
+  return adminFetch<AdminChatParticipantsResponse>(
+    `/api/admin/livechat/participants${buildQuery({
+      page: params.page,
+      limit: params.limit,
+      search: params.search,
+      filter: params.filter && params.filter !== 'all' ? params.filter : undefined,
+    })}`,
+  );
+}
+
+export async function listAdminChatMessages(
+  params: ListAdminChatMessagesParams = {},
+): Promise<AdminChatMessagesResponse> {
+  return adminFetch<AdminChatMessagesResponse>(
+    `/api/admin/livechat/messages${buildQuery({
+      before: params.before,
+      after: params.after,
+      limit: params.limit,
+      senderAddress: params.senderAddress,
+      includeDeleted:
+        params.includeDeleted === undefined ? undefined : String(params.includeDeleted),
+    })}`,
+  );
+}
+
+export async function deleteAdminChatMessage(messageId: string): Promise<void> {
+  await adminFetch(`/api/admin/livechat/messages/${messageId}`, { method: 'DELETE' });
+}
+
+export async function pinAdminChatMessage(messageId: string): Promise<void> {
+  await adminFetch(`/api/admin/livechat/pin/${messageId}`, { method: 'POST' });
+}
+
+export async function unpinAdminChatMessage(messageId: string): Promise<void> {
+  await adminFetch(`/api/admin/livechat/pin/${messageId}`, { method: 'DELETE' });
+}

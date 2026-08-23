@@ -1,5 +1,5 @@
 import { useState, useCallback, memo } from 'react';
-import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, X } from 'lucide-react';
+import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -79,6 +79,7 @@ interface ChatMessageProps {
   currentUserAddress?: string;
   onBan?: (userId: string, userName: string) => void;
   onUnban?: (userId: string, userName: string) => void;
+  onDelete?: (messageId: string) => void;
   onReact?: (messageId: string, emoji: string) => void;
   onRemoveReaction?: (messageId: string, emoji: string) => void;
   onReply?: (message: Message) => void;
@@ -174,6 +175,7 @@ export const ChatMessage = memo(function ChatMessage({
   currentUserAddress,
   onBan,
   onUnban,
+  onDelete,
   onReact,
   onRemoveReaction,
   onReply,
@@ -344,6 +346,15 @@ export const ChatMessage = memo(function ChatMessage({
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[140px]">
+                  {onDelete && (
+                    <DropdownMenuItem
+                      onClick={() => onDelete(message.id)}
+                      className="text-red-400 rounded-lg cursor-pointer focus:bg-transparent focus:text-red-300 gap-2"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete Message
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     onClick={() => onBan?.(message.userId, message.userName)}
                     className="text-red-400 rounded-lg cursor-pointer focus:bg-transparent focus:text-red-300 gap-2"
