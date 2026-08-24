@@ -241,6 +241,23 @@
           // (isLiked…), which the SPA would cache as "this user liked nothing".
           // __DEHUB_FEED_VIEWER__ records whose engagement state this response
           // describes so the SPA refuses to adopt it for anyone else.
+          // The welcome panel's silk plate. It is a CSS background set from an
+          // inline style in HomeIntro, so the preload scanner cannot see it —
+          // it is only discovered once React has rendered and styles resolve,
+          // which is why the panel sat as an empty box while the sidebars (text
+          // and inline SVG, zero requests) painted immediately. Hinting it here
+          // puts it on the wire at parse time instead. Root only: that is the
+          // one route the panel renders on.
+          // Not via hint() above: that helper sets only rel/href, and a
+          // rel="preload" without an `as` is ignored by the browser (and warns).
+          if (p === "/") {
+            var plate = document.createElement("link");
+            plate.rel = "preload";
+            plate.as = "image";
+            plate.href = "/brand-kit/bg/bg-16.jpg";
+            document.head.appendChild(plate);
+          }
+
           if (p === "/" || p === "/app" || p === "/app/") {
             var h = { "Accept": "application/json", "Content-Type": "application/json" };
             var t = localStorage.getItem("dehub_token");
