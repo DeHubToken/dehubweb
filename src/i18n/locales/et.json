@@ -27,7 +27,20 @@
     "events": "Sündmused",
     "prompt": "Kohanda",
     "communities": "Kogukonnad",
-    "staking": "Panustamine"
+    "staking": "Panustamine",
+    "arcade": "Arcade",
+    "stats": "Reaalajas statistika",
+    "liveTv": "Otse-TV",
+    "buyDhb": "Osta DHB-d",
+    "bridge": "Sild",
+    "top100": "Top 100",
+    "agents": "AI-agendid",
+    "advertising": "Reklaam",
+    "premium": "Premium",
+    "pricing": "Hinnad",
+    "creators": "Loojad",
+    "getTheApp": "Hangi rakendus",
+    "connectAi": "Ühenda AI"
   },
   "feed": {
     "home": "Avaleht",
@@ -35,7 +48,9 @@
     "images": "Pildid",
     "shorts": "Lühivideod",
     "music": "Muusika",
-    "live": "Otse"
+    "live": "Otse",
+    "newPosts_one": "{{count}} uus postitus",
+    "newPosts_other": "{{count}} uut postitust"
   },
   "explore": {
     "all": "Kõik",
@@ -242,7 +257,58 @@
     "hazy": "Udused ööd",
     "save": "Salvesta",
     "saving": "Salvestamine...",
-    "swarms": "Parved"
+    "swarms": "Parved",
+    "profiles": "Profiilid",
+    "profilesDesc": "Sellesse seadmesse salvestatud kontod",
+    "addProfile": "Lisa profiil",
+    "profileActive": "Aktiivne",
+    "profileSignedOut": "vahetamiseks logi sisse",
+    "profileRemove": "Eemalda profiil",
+    "profilesUsed": "{{used}} / {{max}} kasutusel",
+    "profilesNextTier": "Tase {{tier}} hoiab {{count}}",
+    "profilesFullTier": "Panusta {{tier}} märgi nimel, et hoida {{count}} profiili",
+    "profilesFull": "Eemalda profiil, et lisada teine konto",
+    "browserNotifications": "Brauseri teavitused",
+    "browserNotificationsDesc": "Saad teada vastustest, jootrahadest ja sõnumitest ka siis, kui oled teisel vahekaardil",
+    "browserNotificationsOnDesc": "Vastused, jootrahad ja sõnumid ilmuvad ka siis, kui oled teisel vahekaardil",
+    "browserNotificationsDismissed": "Teavitussoov jäeti kõrvale — proovi lülitit uuesti",
+    "browserNotificationsBlocked": "Sinu brauser on need blokeerinud",
+    "browserNotificationsBlockedTitle": "See brauser blokeerib teavitused",
+    "browserNotificationsBlockedNote": "Ainult sinu brauser saab selle tagasi võtta — pärast blokeerimist ei saa DeHub enam küsida.",
+    "browserNotificationsBlockedPending": "Sinu soov on salvestatud — see lülitub ise sisse kohe, kui brauser lubab.",
+    "browserNotificationsUnblockChromium": "Klõpsa aadressiriba vasakul oleval ikoonil → Saidi seaded → sea Teavitused väärtusele Luba ja laadi see leht uuesti.",
+    "browserNotificationsUnblockFirefox": "Klõpsa aadressiriba vasakul oleval tabalukul, kustuta „Blokeeritud“ Teavituste vastuvõtmise juurest ja laadi see leht uuesti.",
+    "browserNotificationsUnblockSafari": "Menüüribal: Safari → Seaded → Veebisaidid → Teavitused, seejärel sea see sait väärtusele Luba.",
+    "browserNotificationsUnblockGeneric": "Ava brauseri saidiseaded selle lehe jaoks, sea Teavitused väärtusele Luba ja laadi uuesti.",
+    "browserNotificationsIosHint": "iPhone ja iPad lubavad seda alles siis, kui DeHub on avakuval — puuduta Jaga ja seejärel „Lisa avakuvale“.",
+    "browserNotificationsTest": "Saada testteavitus",
+    "browserNotificationsTestSent": "Testteavitus saadetud",
+    "browserNotificationsTestBody": "DeHubi teavitus näeb välja selline.",
+    "showAsNewMember": "Näita mind uue liikmena",
+    "showAsNewMemberDesc": "Laseb teistel liikmetel näha, et sa just liitusid, et nad saaksid sind tervitada. Lõpeb automaatselt 30 päeva pärast registreerimist.",
+    "defaultProfileTab": "Profiili vaikevahekaart",
+    "defaultProfileTabDesc": "Vali, millist vahekaarti külastajad sinu profiilil esimesena näevad",
+    "lavalamp": "Laavalamp",
+    "war": "Sõda",
+    "osaka": "Osaka",
+    "jungle": "Džungel",
+    "themeColor": "Teema värv",
+    "themeColorDesc": "Vali sellele teemale oma värv",
+    "themeColorReset": "Lähtesta",
+    "themeColorWhite": "Valge",
+    "themeColorBlack": "Must",
+    "themeColorRainbow": "Vikerkaar",
+    "themeColorBrand": "Bränd",
+    "themeColorBrandDesc": "Kasuta oma profiilipildi värve",
+    "themeColorBrandNoAvatar": "Lisa profiilipilt, et kasutada brändivärve",
+    "themeColorBrandFailed": "Sinu profiilipildilt ei õnnestunud värve lugeda",
+    "dimLights": "Tumenda tuled",
+    "dimLightsDesc": "Vähendab sinise valguse mõju",
+    "matureContent": "Näita täiskasvanute sisu",
+    "matureContentDesc": "Lisab su voogudesse täiskasvanute ja jõhkra sisuga postitused ning eemaldab hoiatuse nendelt, mida juba näed. Vaikimisi väljas.",
+    "noNewMessages": "Uusi vestlusi ei võta vastu",
+    "noNewMessagesDesc": "Säilita olemasolevad vestlused, kuid keegi uus ei saa alustada",
+    "dmNoNewHelp": "Olemasolevad vestlused töötavad edasi; keegi uus ei saa alustada"
   },
   "common": {
     "save": "Salvesta",
@@ -256,7 +322,8 @@
     "translating": "Tõlkimine...",
     "close": "Sulge",
     "loadingMore": "Laaditakse rohkem...",
-    "loadMore": "Laadi rohkem"
+    "loadMore": "Laadi rohkem",
+    "tryAgain": "Proovi uuesti"
   },
   "tip": {
     "title": "Saada jootraha",
@@ -724,7 +791,11 @@
     "postRemoved": "Sinu postitus eemaldati",
     "newNotification": "Uus teade",
     "oneOther": "1 teine",
-    "nOthers": "{{count}} teist"
+    "nOthers": "{{count}} teist",
+    "thisBrowser": "See brauser",
+    "features": "Funktsioonid",
+    "communities": "Kogukonnad",
+    "stores": "Poed"
   },
   "leaderboard": {
     "title": "Edetabel",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Oled lisatud! Jääk: {{balance}} DHB",
     "balanceTooLow": "Jääk liiga madal ({{balance}} DHB)",
     "refreshFailed": "Midagi läks valesti",
-    "noWalletAddress": "Rahakoti aadressi ei leitud"
+    "noWalletAddress": "Rahakoti aadressi ei leitud",
+    "affiliates": "Partnerid",
+    "directReferrals_one": "{{count}} otsest",
+    "directReferrals_other": "{{count}} otsest",
+    "secondaryReferrals_one": "{{count}} kaudset",
+    "secondaryReferrals_other": "{{count}} kaudset"
   },
   "explorePage": {
     "searchPlaceholder": "Otsi inimesi, postitusi või sisu...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Planeeritud",
     "statusInProgress": "Töös",
     "statusCompleted": "Lõpetatud",
-    "statusDeclined": "Tagasi lükatud"
+    "statusDeclined": "Tagasi lükatud",
+    "shipping": "Valmimas",
+    "noShippingYet": "Midagi pole töös",
+    "shippingAppearHere": "Ehitamisel olevad soovid ilmuvad siia."
   },
   "auth": {
     "loginRequired": "Sisselogimine nõutav"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Ostu alustamine ebaõnnestus",
     "redirectingOnramp": "Suunamine rambile...",
     "onrampCreated": "Rambi seanss loodud",
-    "failedOnramp": "Rambi alustamine ebaõnnestus"
+    "failedOnramp": "Rambi alustamine ebaõnnestus",
+    "badgeDiscount": "{{tier}} omanik — {{percent}}% soodsam"
   },
   "agents": {
     "title": "AI agendid",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agent kustutatud",
     "failedCreate": "Agendi loomine ebaõnnestus",
     "failedDelete": "Agendi kustutamine ebaõnnestus",
-    "apiKeyCopied": "API võti kopeeritud lõikelauale"
+    "apiKeyCopied": "API võti kopeeritud lõikelauale",
+    "connectorUrl": "Konnektori URL",
+    "connectorUrlCopied": "Konnektori URL kopeeritud",
+    "connectorUrlHelp": "Lisa see Claude'is või ChatGPT-s kohandatud MCP-konnektorina. See autendib selle agendina, seega kohtle seda nagu API-võtit.",
+    "agentWallet": "Agendi rahakott (Base)",
+    "walletCopied": "Rahakoti aadress kopeeritud",
+    "agentWalletHelp": "Saada siia väike kogus Base'i ETH-d, enne kui agent postitab — avaldamine mintib ahelas ja agent maksab ise gaasi. Kommenteerimine, hääletamine ja jälgimine gaasi ei nõua."
   },
   "hero": {
     "title": "Tere Tulemast",
@@ -1005,7 +1091,10 @@
     "or": "või",
     "termsNotice": "Jätkates nõustud meie teenustingimuste ja privaatsuspoliitikaga",
     "walletInfoDesktop": "Ühenda rahakott turvaliseks sisselogimiseks",
-    "walletInfoMobile": "MetaMask, Trust ja Phantom avavad oma rakenduse otse. Rabby kasutab WalletConnect'i."
+    "walletInfoMobile": "MetaMask, Trust ja Phantom avavad oma rakenduse otse. Rabby kasutab WalletConnect'i.",
+    "addProfileTitle": "Lisa profiil",
+    "walletConnectedAs": "Ühendatud",
+    "useDifferentWallet": "Kasuta teist rahakotti"
   },
   "careers": {
     "title": "Karjäär DeHubis",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Peagi — piirkondlikud trendid on teel!",
     "post": "Postita",
     "logOut": "Logi välja",
-    "logIn": "Logi sisse"
+    "logIn": "Logi sisse",
+    "searchMenu": "Otsi menüüst",
+    "clearSearch": "Tühjenda otsing",
+    "noMenuMatches": "Menüüs ei vasta midagi",
+    "searchDehubFor": "Otsi DeHubist „{{query}}“"
   },
   "postInfo": {
     "title": "Postituse info",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Saadaval on uus versioon",
     "refresh_to_pick_up_the_latest_changes": "Värskenda viimaste muudatuste pealevõtmiseks.",
     "refresh": "Värskenda",
-    "what_changed": "Mis muutus"
+    "what_changed": "Mis muutus",
+    "turn_on_desktop_notifications": "Kas lülitada töölauateated sisse?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Saad teada vastustest, jootrahadest ja sõnumitest ka siis, kui oled teisel vahekaardil.",
+    "turn_on": "Lülita sisse",
+    "not_now": "Mitte praegu"
   },
   "prompt": {
     "seoTitle": "Kohandage oma voogu — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Millal",
     "whyStake": "Miks teha sissemakse?",
     "yourStaked": "Sinu sissemakstud"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Kogumik mänge, maailmu ja elamusi, mille DeHub on ehitanud ja avatud lähtekoodiga välja andnud.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Mängi otse brauseris DeHubis — filmilik 3D-male, protseduuriliselt loodud tulistamismäng, jalutuskäik vihmametsas, neoonvalguses tänavakaklus ja läbikäidav kauplemissaal. Ilma paigalduseta, ilma allalaadimiseta.",
+    "alsoIn": "Olemas ka teemas {{theme}}"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Avatud lähtekoodiga teave reaalajas",
+    "live": "Otse",
+    "range": {
+      "24h": "24 tundi",
+      "3d": "3 päeva",
+      "7d": "7 päeva",
+      "30d": "30 päeva",
+      "all": "Kogu aeg"
+    },
+    "unavailable": {
+      "title": "Statistika pole praegu saadaval",
+      "unconfigured": "Analüütika lõpp-punkt pole veel oma Cloudflare'i API-luba saanud. Väljamõeldud numbri asemel ei näidata midagi.",
+      "error": "Me ei jõudnud Cloudflare'i analüütika API-ni. Selle asemel et näidata vananenud või välja mõeldud numbrit, ei näita see leht midagi, kuni otselugemine õnnestub."
+    },
+    "tile": {
+      "visitorsToday": "Külastajaid täna",
+      "soFarToday": "tänase seisuga, UTC",
+      "peakHour": "Kõige tihedam tund",
+      "peakDay": "Kõige tihedam päev",
+      "peakAtHour": "kell {{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "selles vahemikus",
+      "pageViews": "Lehevaatamised",
+      "overHours": "{{count}} tunni jooksul",
+      "overDay": "1 päeva jooksul",
+      "overDays": "{{count}} päeva jooksul",
+      "requestsLabel": "Päringud",
+      "served": "Serveeritud",
+      "requests": "{{requests}} päringut"
+    },
+    "chart": {
+      "hourly": "Külastajaid tunnis",
+      "daily": "Külastajaid päevas",
+      "hourlyHint": "{{count}} tunnist vahemikku, UTC",
+      "dailyHint": "unikaalseid külastajaid päevas",
+      "empty": "Selle perioodi kohta pole veel andmeid"
+    },
+    "countries": {
+      "title": "Peamised riigid",
+      "windowDay": "viimased 24 tundi",
+      "window": "viimased {{days}} päeva"
+    },
+    "browsers": {
+      "title": "Brauserid",
+      "window": "lehevaatamiste järgi"
+    },
+    "edge": {
+      "title": "Serva peal",
+      "windowDay": "viimased 24 tundi",
+      "window": "viimased {{days}} päeva",
+      "cached": "Serveeritud vahemälust",
+      "encrypted": "Krüptitud",
+      "threats": "Blokeeritud ohud"
+    },
+    "proof": {
+      "title": "Kust need numbrid tulevad",
+      "subtitle": "Mõõdab Cloudflare, mitte see leht",
+      "source": "Allikas",
+      "datasets": "Andmestikud",
+      "zone": "Tsoon",
+      "ray": "Cloudflare'i ray ID",
+      "fetched": "Toodud kell",
+      "query": "Graafiku taga olev täpne päring",
+      "copied": "Kopeeritud",
+      "copy": "Kopeeri",
+      "openEndpoint": "Ava /api/stats",
+      "openRaw": "Cloudflare'i puutumata vastus",
+      "edge": "Iga päring dehub.io-le läbib Cloudflare'i, enne kui see meie serveriteni jõuab. Need loendused on Cloudflare'i enda koondis sellest liiklusest — samad numbrid, mida meie töölaud näitab. Neid ei kogu sinu brauseris töötav skript, seega ei saa miski sellel lehel neid paisutada ja jälgijate blokeerimine neid ei muuda.",
+      "live": "Leht loeb neid otse. /stats laadimine kutsub meie lõpp-punkti, mis pärib sel hetkel Cloudflare'i Analytics API-t ja hoiab vastust 60 sekundit vahemälus.",
+      "limits": "Mida see näitab ja mida mitte: näed, et numbrid tulevad Cloudflare'i koondisest, mitte meie rakenduse koodist, ja et siin avaldatud päring on see, mis käivitub. Usaldusvaba see ei ole — API-luba on meil ja Cloudflare ei paku tsooni analüütika avalikku lugemist. Igaüks, kellel on oma Cloudflare'i tsoon, saab sama päringu käivitada ja kuju kinnitada."
+    },
+    "definitions": {
+      "title": "Mida numbrid tähendavad",
+      "visitorsTerm": "Külastajad",
+      "visitors": "— unikaalsed IP-aadressid, mida Cloudflare sel päeval nägi. Lähedal inimeste arvule, kuid mitte sama: üht ühendust kasutav kontor loetakse üks kord ja wifi ning mobiilse andmeside vahel liikuv telefon kaks korda.",
+      "pageViewsTerm": "Lehevaatamised",
+      "pageViews": "— päringud, mida Cloudflare liigitab lehe laadimisteks, mitte piltideks, skriptideks või API-kutseteks.",
+      "botsTerm": "Robotid on sees",
+      "bots": "— need on toored loendused serva peal, seega on sees ka roomajad, saadavuse jälgijad ja skriptitud kliendid. Näed neid ise ülal olevas brauserijaotuses, kus kirjed nagu „Curl“ ja „Teadmata“ on automaatne liiklus, mitte inimesed. Robotite väljafiltreerimine nõuab tasulist Cloudflare'i paketti, mida meil pole, ja hinnangu vaikne mahaarvamine muudaks numbrid vähem kontrollitavaks, mitte rohkem.",
+      "totalTerm": "Vahemiku kogusummad",
+      "total": "— lehevaatamised ja päringud liidetakse üle vahemiku. Külastajate arve teadlikult ei liideta „külastajate koguarvuks“, sest keegi, kes käis siin esmaspäeval ja teisipäeval, loetaks kaks korda.",
+      "peakTerm": "Kõige tihedam tund / päev",
+      "peak": "— vahemiku ükskõik millise üksiku lõigu suurim unikaalne arv, samal põhjusel: see on number, mida Cloudflare tegelikult mõõdab, mitte kattuvate loenduste liitmisest kokku pandud.",
+      "resolutionTerm": "Tunniandmed lõppevad 3 päevaga",
+      "resolution": "— see on Cloudflare'i piir selles paketis, mitte meie valik: ta keeldub igast tunnipäringust, mis on laiem kui kolm päeva. 24 tunni ja 3 päeva vaated on tunnipõhised; 7 päeva ja pikemad on päevapõhised ning kogu aja tunnigraafikut ei saa joonistada.",
+      "breakdownTerm": "Riigid ja brauserid",
+      "breakdown": "— need järgivad valitud vahemikku, kuid ainult {{max}} päeva tagasi, nii kaua päevast jaotust hoitakse. Pikemate vahemike puhul katab graafik rohkem aega kui riikide nimekiri.",
+      "startTerm": "Ajalugu",
+      "start": "— „kogu aeg“ tähendab iga päeva, mida Cloudflare veel säilitab, täna {{days}} päeva alates {{date}}, päevast, mil dehub.io kolis Cloudflare'i. Varasemaid servaandmeid pole näidata ja vanad päevad kaovad, kui Cloudflare need aegunuks loeb."
+    }
   }
 }

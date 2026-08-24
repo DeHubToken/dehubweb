@@ -27,7 +27,20 @@
     "events": "Իրադարձություններ",
     "prompt": "Հրահանգ",
     "communities": "Համայնքներ",
-    "staking": "Ստեյքինգ"
+    "staking": "Ստեյքինգ",
+    "arcade": "Արկադ",
+    "stats": "Ուղիղ վիճակագրություն",
+    "liveTv": "Ուղիղ հեռուստատեսություն",
+    "buyDhb": "Գնել DHB",
+    "bridge": "Կամուրջ",
+    "top100": "Լավագույն 100",
+    "agents": "ԱԲ գործակալներ",
+    "advertising": "Գովազդ",
+    "premium": "Պրեմիում",
+    "pricing": "Գներ",
+    "creators": "Ստեղծողներ",
+    "getTheApp": "Ներբեռնել հավելվածը",
+    "connectAi": "Միացնել ԱԲ-ն"
   },
   "feed": {
     "home": "Գլხավոdelays",
@@ -35,7 +48,9 @@
     "images": "Nkarer",
     "shorts": "Karts",
     "music": "Erazhshtoutyun",
-    "live": "Ouvaghits"
+    "live": "Ouvaghits",
+    "newPosts_one": "{{count}} նոր գրառում",
+    "newPosts_other": "{{count}} նոր գրառում"
   },
   "explore": {
     "all": "Bolaor",
@@ -242,7 +257,58 @@
     "hazy": "Մշուշոտ գիշերներ",
     "save": "Պահպանել",
     "saving": "Պահպանվում է...",
-    "swarms": "Պարսեր"
+    "swarms": "Պարսեր",
+    "profiles": "Պրոֆիլներ",
+    "profilesDesc": "Այս սարքում պահված հաշիվներ",
+    "addProfile": "Ավելացնել պրոֆիլ",
+    "profileActive": "Ակտիվ",
+    "profileSignedOut": "մուտք գործեք փոխելու համար",
+    "profileRemove": "Հեռացնել պրոֆիլը",
+    "profilesUsed": "Օգտագործված է {{used}} / {{max}}",
+    "profilesNextTier": "{{tier}} մակարդակը պահում է {{count}}",
+    "profilesFullTier": "Ստեյքինգ արեք {{tier}} կրծքանշանի համար՝ {{count}} պրոֆիլ պահելու համար",
+    "profilesFull": "Հեռացրեք պրոֆիլ՝ այլ հաշիվ ավելացնելու համար",
+    "browserNotifications": "Դիտարկիչի ծանուցումներ",
+    "browserNotificationsDesc": "Իմացեք պատասխանների, թեյավճարների և հաղորդագրությունների մասին, երբ այլ ներդիրում եք",
+    "browserNotificationsOnDesc": "Պատասխանները, թեյավճարները և հաղորդագրությունները հայտնվում են, երբ այլ ներդիրում եք",
+    "browserNotificationsDismissed": "Ծանուցման հարցումը մերժվեց — կրկին փորձեք անջատիչը",
+    "browserNotificationsBlocked": "Արգելափակվել են ձեր դիտարկիչի կողմից",
+    "browserNotificationsBlockedTitle": "Այս դիտարկիչն արգելափակում է ծանուցումները",
+    "browserNotificationsBlockedNote": "Միայն ձեր դիտարկիչը կարող է սա հետ շրջել — արգելափակվելուց հետո DeHub-ը չի կարող նորից հարցնել։",
+    "browserNotificationsBlockedPending": "Ձեր հարցումը պահպանվել է — այն ինքն իրեն կմիանա, հենց դիտարկիչը թույլ տա։",
+    "browserNotificationsUnblockChromium": "Սեղմեք հասցեագոտու ձախ մասի պատկերակին → Կայքի կարգավորումներ → Ծանուցումները դրեք «Թույլատրել» և վերաբեռնեք էջը։",
+    "browserNotificationsUnblockFirefox": "Սեղմեք հասցեագոտու ձախ մասի կողպեքին, մաքրեք «Արգելափակված»-ը «Ստանալ ծանուցումներ»-ի կողքին և վերաբեռնեք էջը։",
+    "browserNotificationsUnblockSafari": "Ընտրացանկի գոտում՝ Safari → Կարգավորումներ → Կայքեր → Ծանուցումներ, ապա այս կայքը դրեք «Թույլատրել»։",
+    "browserNotificationsUnblockGeneric": "Բացեք դիտարկիչի կայքի կարգավորումներն այս էջի համար, Ծանուցումները դրեք «Թույլատրել» և վերաբեռնեք։",
+    "browserNotificationsIosHint": "iPhone-ը և iPad-ը թույլ են տալիս սա միայն այն դեպքում, երբ DeHub-ը գլխավոր էկրանին է — հպեք «Կիսվել», ապա «Ավելացնել գլխավոր էկրանին»։",
+    "browserNotificationsTest": "Ուղարկել փորձնական ծանուցում",
+    "browserNotificationsTestSent": "Փորձնական ծանուցումն ուղարկվեց",
+    "browserNotificationsTestBody": "Ահա այսպիսին է DeHub-ի ծանուցումը։",
+    "showAsNewMember": "Ցույց տալ ինձ որպես նոր անդամ",
+    "showAsNewMemberDesc": "Թույլ է տալիս մյուս անդամներին տեսնել, որ նոր եք միացել, որպեսզի ողջունեն ձեզ։ Ավտոմատ ավարտվում է գրանցումից 30 օր հետո։",
+    "defaultProfileTab": "Պրոֆիլի կանխադրված ներդիր",
+    "defaultProfileTabDesc": "Ընտրեք, թե որ ներդիրն են այցելուներն առաջինը տեսնում ձեր պրոֆիլում",
+    "lavalamp": "Լավայի լամպ",
+    "war": "Պատերազմ",
+    "osaka": "Օսակա",
+    "jungle": "Ջունգլի",
+    "themeColor": "Թեմայի գույն",
+    "themeColorDesc": "Ընտրեք սեփական գույն այս թեմայի համար",
+    "themeColorReset": "Վերականգնել",
+    "themeColorWhite": "Սպիտակ",
+    "themeColorBlack": "Սև",
+    "themeColorRainbow": "Ծիածան",
+    "themeColorBrand": "Բրենդ",
+    "themeColorBrandDesc": "Օգտագործել ձեր պրոֆիլի նկարի գույները",
+    "themeColorBrandNoAvatar": "Ավելացրեք պրոֆիլի նկար՝ բրենդի գույներն օգտագործելու համար",
+    "themeColorBrandFailed": "Չհաջողվեց կարդալ գույները ձեր պրոֆիլի նկարից",
+    "dimLights": "Խամրեցնել լույսերը",
+    "dimLightsDesc": "Նվազեցնում է կապույտ լույսի ազդեցությունը",
+    "matureContent": "Ցուցադրել չափահասների բովանդակություն",
+    "matureContentDesc": "Ձեր հոսքերում ներառում է չափահասների և կոպիտ գրառումները և հեռացնում նախազգուշացումն արդեն տեսածներից։ Կանխադրված՝ անջատված է։",
+    "noNewMessages": "Նոր զրույցներ չեն ընդունվում",
+    "noNewMessagesDesc": "Պահեք ձեր առկա զրույցները, բայց նոր մարդը չի կարող սկսել",
+    "dmNoNewHelp": "Առկա զրույցները շարունակում են աշխատել. նոր մարդը չի կարող սկսել"
   },
   "common": {
     "save": "Pahpanel",
@@ -256,7 +322,8 @@
     "translating": "Targmanvoum e...",
     "close": "Phakel",
     "loadingMore": "Bernvoum e avelin...",
-    "loadMore": "Bernel avelin"
+    "loadMore": "Bernel avelin",
+    "tryAgain": "Կրկին փորձել"
   },
   "postOptions": {
     "options": "Entrankhner",
@@ -663,7 +730,10 @@
     "statusPlanned": "Tsragirvaats",
     "statusInProgress": "Gortsouneutyunn e",
     "statusCompleted": "Avartevaats",
-    "statusDeclined": "Merzhvaats"
+    "statusDeclined": "Merzhvaats",
+    "shipping": "Կառուցվում է",
+    "noShippingYet": "Ոչինչ ընթացքի մեջ չէ",
+    "shippingAppearHere": "Կառուցվող հարցումները կհայտնվեն այստեղ։"
   },
   "auth": {
     "loginRequired": "Moutq pahanjvoum e"
@@ -758,7 +828,11 @@
     "postRemoved": "Dzer groume heratselvaats e",
     "newNotification": "Nor tsanoutsagroum",
     "oneOther": "1 ourishe",
-    "nOthers": "{{count}} ourishner"
+    "nOthers": "{{count}} ourishner",
+    "thisBrowser": "Այս դիտարկիչը",
+    "features": "Հնարավորություններ",
+    "communities": "Համայնքներ",
+    "stores": "Խանութներ"
   },
   "messages": {
     "title": "Haghordagrotyunner",
@@ -803,7 +877,12 @@
     "addedToLeaderboard": "Douq avelatsvaats eq! Hashvekshir: {{balance}} DHB",
     "balanceTooLow": "Hashvekshire shaht tsatr e ({{balance}} DHB)",
     "refreshFailed": "Inch-vor ban aybn gnatsa",
-    "noWalletAddress": "Drami hasce chen gnvaats"
+    "noWalletAddress": "Drami hasce chen gnvaats",
+    "affiliates": "Գործընկերներ",
+    "directReferrals_one": "{{count}} ուղղակի",
+    "directReferrals_other": "{{count}} ուղղակի",
+    "secondaryReferrals_one": "{{count}} անուղղակի",
+    "secondaryReferrals_other": "{{count}} անուղղակի"
   },
   "explorePage": {
     "searchPlaceholder": "Voronel mardkanits, groumerits kam bovalandakoutyunits...",
@@ -919,7 +998,8 @@
     "failedPurchase": "Chehaghordagrvats sksel gnouyme",
     "redirectingOnramp": "Verapahqvoum e ramp...",
     "onrampCreated": "Ramp hovanavor steghtsvaats",
-    "failedOnramp": "Chehaghordagrvats sksel ramp"
+    "failedOnramp": "Chehaghordagrvats sksel ramp",
+    "badgeDiscount": "{{tier}} կրող — {{percent}}% զեղչ"
   },
   "agents": {
     "title": "AI Gortsakalner",
@@ -949,7 +1029,13 @@
     "agentDeleted": "Gortsakale jnchvaats e",
     "failedCreate": "Chehaghordagrvats steghtsagortsel gortsakal",
     "failedDelete": "Chehaghordagrvats jnchel gortsakal",
-    "apiKeyCopied": "API banaline patchervaats e"
+    "apiKeyCopied": "API banaline patchervaats e",
+    "connectorUrl": "Միակցիչի URL",
+    "connectorUrlCopied": "Միակցիչի URL-ը պատճենվեց",
+    "connectorUrlHelp": "Ավելացրեք սա որպես հատուկ MCP միակցիչ Claude-ում կամ ChatGPT-ում։ Այն նույնականացվում է որպես այս գործակալ, ուստի վերաբերվեք դրան ինչպես API բանալիին։",
+    "agentWallet": "Գործակալի դրամապանակ (Base)",
+    "walletCopied": "Դրամապանակի հասցեն պատճենվեց",
+    "agentWalletHelp": "Գործակալի հրապարակելուց առաջ այստեղ ուղարկեք փոքր քանակությամբ ETH Base ցանցում — հրապարակումը շղթայում ստեղծում է գրառում, և գործակալն ինքն է վճարում գազը։ Մեկնաբանելը, քվեարկելը և հետևելը գազ չեն պահանջում։"
   },
   "hero": {
     "title": "Baree Galoost",
@@ -997,7 +1083,10 @@
     "or": "kam",
     "termsNotice": "Sharunakelev douq hamadzaynoum eq mer Tsaroutyunn Paymanerov ev Gaghtniqoutyunn Qaghaqakanoutyunov",
     "walletInfoDesktop": "Kapaktsrek dzer drameritsne anvtang mouqtq gortselou hamar",
-    "walletInfoMobile": "MetaMask, Trust ev Phantom ouvaghitsoren kibatsen irents havelvaadse. Rabby-n kovgortsi WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust ev Phantom ouvaghitsoren kibatsen irents havelvaadse. Rabby-n kovgortsi WalletConnect.",
+    "addProfileTitle": "Ավելացնել պրոֆիլ",
+    "walletConnectedAs": "Միացված է",
+    "useDifferentWallet": "Օգտագործել այլ դրամապանակ"
   },
   "careers": {
     "title": "Ashkhatanqner DeHub-oom",
@@ -1121,7 +1210,11 @@
     "comingSoon": "Shudov — taratsashrjanayin trendery chanaporhin en!",
     "post": "Hratarakel",
     "logOut": "Yelq",
-    "logIn": "Mutq"
+    "logIn": "Mutq",
+    "searchMenu": "Որոնել ընտրացանկում",
+    "clearSearch": "Մաքրել որոնումը",
+    "noMenuMatches": "Ընտրացանկում ոչինչ չի համապատասխանում",
+    "searchDehubFor": "Որոնել «{{query}}» DeHub-ում"
   },
   "postInfo": {
     "title": "Գdelaysայթի տdelaysdelays",
@@ -1371,7 +1464,11 @@
     "new_version_available": "Հասանելի է նոր տարբերակը",
     "refresh_to_pick_up_the_latest_changes": "Թարմացրեք ՝ վերջին փոփոխությունները վերցնելու համար ։",
     "refresh": "Թարմացնել",
-    "what_changed": "Ինչ է փոխվել"
+    "what_changed": "Ինչ է փոխվել",
+    "turn_on_desktop_notifications": "Միացնե՞լ աշխատասեղանի ծանուցումները։",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Իմացեք պատասխանների, թեյավճարների և հաղորդագրությունների մասին, երբ այլ ներդիրում եք։",
+    "turn_on": "Միացնել",
+    "not_now": "Ոչ հիմա"
   },
   "prompt": {
     "seoTitle": "Ստեղծեք Ձեր լրահոսը — DeHub",
@@ -1525,5 +1622,105 @@
     "sending": "Ուղարկվում է...",
     "title": "Ուղարկել թեյավճար",
     "toCreator": "Թեյավճար {{name}}-ին"
+  },
+  "arcade": {
+    "title": "Արկադ",
+    "intro": "DeHub-ի կառուցած և բաց կոդով հրապարակած խաղերի, աշխարհների ու փորձառությունների հավաքածու։",
+    "seoTitle": "Արկադ | DeHub",
+    "seoDescription": "Խաղացեք ուղիղ ձեր դիտարկիչում DeHub-ում — կինեմատոգրաֆիկ 3D շախմատ, ընթացակարգային ձևով ստեղծված հրաձգային խաղ, զբոսանք արևադարձային անտառում, նեոնային փողոցային կռիվ և առևտրային դահլիճ, որով կարելի է քայլել։ Առանց տեղադրման, առանց ներբեռնման։",
+    "alsoIn": "Կա նաև {{theme}} թեմայում"
+  },
+  "stats": {
+    "title": "Վիճակագրություն",
+    "subtitle": "Իրական ժամանակի բաց կոդով տվյալներ",
+    "live": "Ուղիղ",
+    "range": {
+      "24h": "24 ժամ",
+      "3d": "3 օր",
+      "7d": "7 օր",
+      "30d": "30 օր",
+      "all": "Ամբողջ ժամանակը"
+    },
+    "unavailable": {
+      "title": "Վիճակագրությունը հիմա հասանելի չէ",
+      "unconfigured": "Վերլուծական վերջնակետին դեռ չի տրվել իր Cloudflare API թոքենը։ Հորինված թվի փոխարեն ոչինչ չի ցուցադրվում։",
+      "error": "Չհաջողվեց կապվել Cloudflare-ի վերլուծական API-ի հետ։ Հնացած կամ հորինված թիվ ցույց տալու փոխարեն այս էջը ոչինչ չի ցուցադրում, մինչև ուղիղ ընթերցումը հաջողվի։"
+    },
+    "tile": {
+      "visitorsToday": "Այցելուներ այսօր",
+      "soFarToday": "այսօր առայժմ, UTC",
+      "peakHour": "Ամենազբաղված ժամը",
+      "peakDay": "Ամենազբաղված օրը",
+      "peakAtHour": "{{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "այս միջակայքում",
+      "pageViews": "Էջադիտումներ",
+      "overHours": "{{count}} ժամում",
+      "overDay": "1 օրում",
+      "overDays": "{{count}} օրում",
+      "requestsLabel": "Հարցումներ",
+      "served": "Մատուցվել է",
+      "requests": "{{requests}} հարցում"
+    },
+    "chart": {
+      "hourly": "Այցելուներ ժամում",
+      "daily": "Այցելուներ օրական",
+      "hourlyHint": "{{count}} ժամային միջակայք, UTC",
+      "dailyHint": "եզակի այցելուներ օրական",
+      "empty": "Այս ժամանակահատվածի համար դեռ տվյալներ չկան"
+    },
+    "countries": {
+      "title": "Առաջատար երկրներ",
+      "windowDay": "վերջին 24 ժամը",
+      "window": "վերջին {{days}} օրը"
+    },
+    "browsers": {
+      "title": "Դիտարկիչներ",
+      "window": "ըստ էջադիտումների"
+    },
+    "edge": {
+      "title": "Ցանցի եզրին",
+      "windowDay": "վերջին 24 ժամը",
+      "window": "վերջին {{days}} օրը",
+      "cached": "Մատուցվել է քեշից",
+      "encrypted": "Գաղտնագրված",
+      "threats": "Արգելափակված սպառնալիքներ"
+    },
+    "proof": {
+      "title": "Որտեղից են գալիս այս թվերը",
+      "subtitle": "Չափվում է Cloudflare-ի, ոչ թե այս էջի կողմից",
+      "source": "Աղբյուր",
+      "datasets": "Տվյալների հավաքածուներ",
+      "zone": "Գոտի",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Ստացվել է",
+      "query": "Գծապատկերի հետևում գտնվող ճշգրիտ հարցումը",
+      "copied": "Պատճենվեց",
+      "copy": "Պատճենել",
+      "openEndpoint": "Բացել /api/stats",
+      "openRaw": "Cloudflare-ի անփոփոխ պատասխանը",
+      "edge": "dehub.io ուղղված յուրաքանչյուր հարցում անցնում է Cloudflare-ով, նախքան մեր սերվերներին հասնելը։ Այս հաշվարկներն այդ երթևեկության Cloudflare-ի սեփական ամփոփումն են՝ նույն թվերը, որ ցույց է տալիս մեր վահանակը։ Դրանք չեն հավաքվում ձեր դիտարկիչի սկրիպտով, ուստի այս էջում ոչինչ չի կարող դրանք ուռճացնել, և հետագծիչներն արգելափակելը դրանք չի փոխում։",
+      "live": "Էջը կարդում է դրանք ուղիղ։ /stats-ի բեռնումը կանչում է մեր վերջնակետը, որն այդ պահին հարցում է անում Cloudflare-ի Analytics API-ին և պատասխանը քեշավորում 60 վայրկյան։",
+      "limits": "Ինչ է սա ցույց տալիս և ինչ՝ ոչ. տեսնում եք, որ թվերը գալիս են Cloudflare-ի ամփոփումից, ոչ թե մեր հավելվածի կոդից, և որ այստեղ հրապարակված հարցումն այն է, որ կատարվում է։ Սա անվստահելի-ապացուցելի չէ — API թոքենը մեզ մոտ է, և Cloudflare-ը գոտու վերլուծության հանրային ընթերցում չի առաջարկում։ Ցանկացած ոք, ով ունի իր Cloudflare գոտին, կարող է կատարել նույն հարցումը և հաստատել կառուցվածքը։"
+    },
+    "definitions": {
+      "title": "Ի՞նչ են նշանակում այս թվերը",
+      "visitorsTerm": "Այցելուներ",
+      "visitors": "— եզակի IP հասցեներ, որոնք Cloudflare-ը տեսել է այդ օրը։ Մոտ է մարդկանց թվին, բայց նույնը չէ. մեկ միացումով գրասենյակը հաշվվում է մեկ անգամ, իսկ Wi-Fi-ից բջջային տվյալների անցնող հեռախոսը՝ երկու։",
+      "pageViewsTerm": "Էջադիտումներ",
+      "pageViews": "— հարցումներ, որոնք Cloudflare-ը դասակարգում է որպես էջի բեռնումներ, ոչ թե պատկերներ, սկրիպտներ կամ API կանչեր։",
+      "botsTerm": "Բոտերը ներառված են",
+      "bots": "— սրանք ցանցի եզրին կատարված չմշակված հաշվարկներ են, ուստի դրանց մեջ են նաև որոնողական ռոբոտները, հասանելիության մոնիտորները և սկրիպտավորված հաճախորդները։ Դրանք կարող եք տեսնել վերևի դիտարկիչների բաշխման մեջ, որտեղ «Curl» և «Անհայտ» գրառումներն ավտոմատ երթևեկություն են, ոչ թե մարդիկ։ Բոտերը զտելու համար պետք է Cloudflare-ի վճարովի փաթեթ, որը մենք չունենք, իսկ գնահատականը լուռ հանելը թվերը կդարձներ պակաս ստուգելի, ոչ թե ավելի։",
+      "totalTerm": "Միջակայքի ընդհանուրները",
+      "total": "— էջադիտումներն ու հարցումները գումարվում են ամբողջ միջակայքում։ Այցելուների թիվը դիտավորյալ չի գումարվում «ընդհանուր այցելուներ»-ի, քանի որ երկուշաբթի և երեքշաբթի եղածը կհաշվվեր երկու անգամ։",
+      "peakTerm": "Ամենազբաղված ժամը / օրը",
+      "peak": "— միջակայքի ցանկացած մեկ հատվածի ամենաբարձր եզակի թիվը, նույն պատճառով՝ սա թիվ է, որը Cloudflare-ն իրոք չափում է, ոչ թե համընկնող հաշվարկների գումարից կառուցված։",
+      "resolutionTerm": "Ժամային տվյալները կանգ են առնում 3 օրում",
+      "resolution": "— սա Cloudflare-ի սահմանափակումն է այս փաթեթում, ոչ թե մեր ընտրությունը. այն մերժում է երեք օրից լայն ցանկացած ժամային հարցում։ 24 ժամվա և 3 օրվա տեսքերը ժամային են. 7 օր և ավելին՝ օրական, և ամբողջ ժամանակահատվածի ժամային գծապատկեր գծելու հնարավորություն չկա։",
+      "breakdownTerm": "Երկրներ և դիտարկիչներ",
+      "breakdown": "— դրանք հետևում են ձեր ընտրած միջակայքին, բայց միայն մինչև {{max}} օր հետ, քանի որ օրական բաշխումն այդքան է պահվում։ Ավելի երկար միջակայքերում գծապատկերն ընդգրկում է ավելի շատ ժամանակ, քան երկրների ցանկը։",
+      "startTerm": "Պատմություն",
+      "start": "— «ամբողջ ժամանակը» նշանակում է յուրաքանչյուր օր, որը Cloudflare-ը դեռ պահում է, այսօր՝ {{days}} օր սկսած {{date}}-ից, երբ dehub.io-ն տեղափոխվեց Cloudflare։ Ավելի վաղ եզրային տվյալներ ցուցադրելու համար չկան, և հին օրերը դուրս են գալիս, երբ Cloudflare-ը դրանք հնացնում է։"
+    }
   }
 }

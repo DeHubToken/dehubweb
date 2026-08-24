@@ -27,7 +27,20 @@
     "events": "Pasākumi",
     "prompt": "Prompt",
     "communities": "Kopienas",
-    "staking": "Steikings"
+    "staking": "Steikings",
+    "arcade": "Arcade",
+    "stats": "Tiešraides statistika",
+    "liveTv": "Tiešraides TV",
+    "buyDhb": "Pirkt DHB",
+    "bridge": "Tilts",
+    "top100": "Top 100",
+    "agents": "MI aģenti",
+    "advertising": "Reklāma",
+    "premium": "Premium",
+    "pricing": "Cenas",
+    "creators": "Veidotāji",
+    "getTheApp": "Lejupielādēt lietotni",
+    "connectAi": "Savienot MI"
   },
   "feed": {
     "home": "Sākums",
@@ -35,7 +48,9 @@
     "images": "Attēli",
     "shorts": "Īsvideo",
     "music": "Mūzika",
-    "live": "Tiešraide"
+    "live": "Tiešraide",
+    "newPosts_one": "{{count}} jauns ieraksts",
+    "newPosts_other": "{{count}} jauni ieraksti"
   },
   "explore": {
     "all": "Visi",
@@ -242,7 +257,58 @@
     "hazy": "Miglainās naktis",
     "save": "Saglabāt",
     "saving": "Saglabā...",
-    "swarms": "Spieti"
+    "swarms": "Spieti",
+    "profiles": "Profili",
+    "profilesDesc": "Šajā ierīcē saglabātie konti",
+    "addProfile": "Pievienot profilu",
+    "profileActive": "Aktīvs",
+    "profileSignedOut": "piesakieties, lai pārslēgtu",
+    "profileRemove": "Noņemt profilu",
+    "profilesUsed": "Izmantoti {{used}} no {{max}}",
+    "profilesNextTier": "{{tier}} līmenis patur {{count}}",
+    "profilesFullTier": "Veiciet stakingu {{tier}} nozīmītei, lai paturētu {{count}} profilus",
+    "profilesFull": "Noņemiet profilu, lai pievienotu citu kontu",
+    "browserNotifications": "Pārlūka paziņojumi",
+    "browserNotificationsDesc": "Uzzini par atbildēm, dzeramnaudām un ziņām, kamēr esi citā cilnē",
+    "browserNotificationsOnDesc": "Atbildes, dzeramnaudas un ziņas parādās, kamēr esat citā cilnē",
+    "browserNotificationsDismissed": "Paziņojumu pieprasījums noraidīts — mēģiniet slēdzi vēlreiz",
+    "browserNotificationsBlocked": "Bloķējis jūsu pārlūks",
+    "browserNotificationsBlockedTitle": "Šis pārlūks bloķē paziņojumus",
+    "browserNotificationsBlockedNote": "To var atsaukt tikai jūsu pārlūks — pēc bloķēšanas DeHub vairs nevar jautāt.",
+    "browserNotificationsBlockedPending": "Jūsu pieprasījums ir saglabāts — tas ieslēgsies pats, tiklīdz pārlūks atļaus.",
+    "browserNotificationsUnblockChromium": "Noklikšķiniet uz ikonas adreses joslas kreisajā pusē → Vietnes iestatījumi → iestatiet Paziņojumus uz Atļaut un pārlādējiet šo lapu.",
+    "browserNotificationsUnblockFirefox": "Noklikšķiniet uz slēdzenes adreses joslas kreisajā pusē, notīriet “Bloķēts” blakus Saņemt paziņojumus un pārlādējiet šo lapu.",
+    "browserNotificationsUnblockSafari": "Izvēlņu joslā: Safari → Iestatījumi → Vietnes → Paziņojumi, tad iestatiet šo vietni uz Atļaut.",
+    "browserNotificationsUnblockGeneric": "Atveriet pārlūka vietnes iestatījumus šai lapai, iestatiet Paziņojumus uz Atļaut un pārlādējiet.",
+    "browserNotificationsIosHint": "iPhone un iPad to atļauj tikai tad, kad DeHub ir sākuma ekrānā — pieskarieties Kopīgot un tad “Pievienot sākuma ekrānam”.",
+    "browserNotificationsTest": "Nosūtīt pārbaudes paziņojumu",
+    "browserNotificationsTestSent": "Pārbaudes paziņojums nosūtīts",
+    "browserNotificationsTestBody": "Lūk, kā izskatās DeHub paziņojums.",
+    "showAsNewMember": "Rādīt mani kā jaunu dalībnieku",
+    "showAsNewMemberDesc": "Ļauj citiem dalībniekiem redzēt, ka tikko pievienojāties, lai viņi varētu jūs sveikt. Automātiski beidzas 30 dienas pēc reģistrēšanās.",
+    "defaultProfileTab": "Noklusējuma profila cilne",
+    "defaultProfileTabDesc": "Izvēlieties, kuru cilni apmeklētāji jūsu profilā redz vispirms",
+    "lavalamp": "Lavas lampa",
+    "war": "Karš",
+    "osaka": "Osaka",
+    "jungle": "Džungļi",
+    "themeColor": "Motīva krāsa",
+    "themeColorDesc": "Izvēlieties šim motīvam savu krāsu",
+    "themeColorReset": "Atiestatīt",
+    "themeColorWhite": "Balts",
+    "themeColorBlack": "Melns",
+    "themeColorRainbow": "Varavīksne",
+    "themeColorBrand": "Zīmols",
+    "themeColorBrandDesc": "Izmantot profila attēla krāsas",
+    "themeColorBrandNoAvatar": "Pievienojiet profila attēlu, lai izmantotu zīmola krāsas",
+    "themeColorBrandFailed": "Neizdevās nolasīt krāsas no jūsu profila attēla",
+    "dimLights": "Aptumšot gaismu",
+    "dimLightsDesc": "Samazina zilās gaismas iedarbību",
+    "matureContent": "Rādīt pieaugušo saturu",
+    "matureContentDesc": "Iekļauj jūsu plūsmās pieaugušo un skarbu saturu un noņem brīdinājumu tiem, ko jau redzat. Pēc noklusējuma izslēgts.",
+    "noNewMessages": "Nekādu jaunu sarunu",
+    "noNewMessagesDesc": "Saglabājiet esošās sarakstes, bet neviens jauns nevar sākt",
+    "dmNoNewHelp": "Esošās sarakstes turpina darboties; neviens jauns nevar sākt"
   },
   "common": {
     "save": "Saglabāt",
@@ -256,7 +322,8 @@
     "translating": "Tulkošana...",
     "close": "Aizvērt",
     "loadingMore": "Ielādē vairāk...",
-    "loadMore": "Ielādēt vairāk"
+    "loadMore": "Ielādēt vairāk",
+    "tryAgain": "Mēģināt vēlreiz"
   },
   "tip": {
     "title": "Sūtīt dzeramnaudu",
@@ -724,7 +791,11 @@
     "postRemoved": "Jūsu ieraksts tika noņemts",
     "newNotification": "Jauns paziņojums",
     "oneOther": "1 cits",
-    "nOthers": "{{count}} citi"
+    "nOthers": "{{count}} citi",
+    "thisBrowser": "Šis pārlūks",
+    "features": "Funkcijas",
+    "communities": "Kopienas",
+    "stores": "Veikali"
   },
   "leaderboard": {
     "title": "Līderu tabula",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Esat pievienots! Atlikums: {{balance}} DHB",
     "balanceTooLow": "Atlikums pārāk zems ({{balance}} DHB)",
     "refreshFailed": "Kaut kas neizdevās",
-    "noWalletAddress": "Maka adrese nav atrasta"
+    "noWalletAddress": "Maka adrese nav atrasta",
+    "affiliates": "Partneri",
+    "directReferrals_one": "{{count}} tiešie",
+    "directReferrals_other": "{{count}} tiešie",
+    "secondaryReferrals_one": "{{count}} netiešie",
+    "secondaryReferrals_other": "{{count}} netiešie"
   },
   "explorePage": {
     "searchPlaceholder": "Meklēt cilvēkus, ierakstus vai saturu...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Plānots",
     "statusInProgress": "Izstrādē",
     "statusCompleted": "Pabeigts",
-    "statusDeclined": "Noraidīts"
+    "statusDeclined": "Noraidīts",
+    "shipping": "Top",
+    "noShippingYet": "Nekas nenotiek",
+    "shippingAppearHere": "Pieprasījumi, pie kuriem strādā, parādīsies šeit."
   },
   "auth": {
     "loginRequired": "Nepieciešama pieteikšanās"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Pirkuma sākšana neizdevās",
     "redirectingOnramp": "Pāradresēšana uz rampu...",
     "onrampCreated": "Rampas sesija izveidota",
-    "failedOnramp": "Rampas sākšana neizdevās"
+    "failedOnramp": "Rampas sākšana neizdevās",
+    "badgeDiscount": "{{tier}} īpašniekam — {{percent}}% atlaide"
   },
   "agents": {
     "title": "MI aģenti",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Aģents dzēsts",
     "failedCreate": "Aģenta izveide neizdevās",
     "failedDelete": "Aģenta dzēšana neizdevās",
-    "apiKeyCopied": "API atslēga nokopēta starpliktuvē"
+    "apiKeyCopied": "API atslēga nokopēta starpliktuvē",
+    "connectorUrl": "Savienotāja URL",
+    "connectorUrlCopied": "Savienotāja URL nokopēts",
+    "connectorUrlHelp": "Pievienojiet to kā pielāgotu MCP savienotāju Claude vai ChatGPT. Tas autentificējas kā šis aģents, tāpēc izturieties pret to kā pret API atslēgu.",
+    "agentWallet": "Aģenta maks (Base)",
+    "walletCopied": "Maka adrese nokopēta",
+    "agentWalletHelp": "Nosūtiet šeit nelielu daudzumu ETH Base tīklā, pirms aģents publicē — publicēšana kaļ ķēdē, un aģents pats maksā gāzi. Komentāriem, balsojumiem un sekošanai gāze nav vajadzīga."
   },
   "hero": {
     "title": "Laipni Lūdzam",
@@ -1005,7 +1091,10 @@
     "or": "vai",
     "termsNotice": "Turpinot jūs piekrītat mūsu Pakalpojumu noteikumiem un Privātuma politikai",
     "walletInfoDesktop": "Pieslēdziet maku drošai pieteikšanai",
-    "walletInfoMobile": "MetaMask, Trust un Phantom atvērs savu lietotni tieši. Rabby izmantos WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust un Phantom atvērs savu lietotni tieši. Rabby izmantos WalletConnect.",
+    "addProfileTitle": "Pievienot profilu",
+    "walletConnectedAs": "Savienots",
+    "useDifferentWallet": "Izmantot citu maku"
   },
   "careers": {
     "title": "Karjera DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Drīzumā — reģionālās tendences ir ceļā!",
     "post": "Publicēt",
     "logOut": "Iziet",
-    "logIn": "Ieiet"
+    "logIn": "Ieiet",
+    "searchMenu": "Meklēt izvēlnē",
+    "clearSearch": "Notīrīt meklēšanu",
+    "noMenuMatches": "Izvēlnē nekas nesakrīt",
+    "searchDehubFor": "Meklēt “{{query}}” vietnē DeHub"
   },
   "postInfo": {
     "title": "Ieraksta informācija",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Pieejama jauna versija",
     "refresh_to_pick_up_the_latest_changes": "Atsvaidziniet, lai skatītu jaunākās izmaiņas.",
     "refresh": "Atsvaidzināt",
-    "what_changed": "Kas mainījās"
+    "what_changed": "Kas mainījās",
+    "turn_on_desktop_notifications": "Vai ieslēgt darbvirsmas paziņojumus?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Uzzini par atbildēm, dzeramnaudām un ziņām, kamēr esi citā cilnē.",
+    "turn_on": "Ieslēgt",
+    "not_now": "Ne tagad"
   },
   "prompt": {
     "seoTitle": "Virziet savu plūsmu — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Kad",
     "whyStake": "Kāpēc noguldīt?",
     "yourStaked": "Jūsu noguldījums"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Spēļu, pasauļu un pieredžu kolekcija, ko DeHub izveidojis un atvēris kā atklātā koda projektu.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Spēlējiet tieši pārlūkā DeHub vietnē — kinematogrāfisks 3D šahs, procedurāli ģenerēts šāvējs, pastaiga lietus mežā, neona ielas kautiņš un tirdzniecības zāle, pa kuru var staigāt. Bez instalēšanas, bez lejupielādes.",
+    "alsoIn": "Pieejams arī tēmā {{theme}}"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Atklātā koda dati reāllaikā",
+    "live": "Tiešraidē",
+    "range": {
+      "24h": "24 stundas",
+      "3d": "3 dienas",
+      "7d": "7 dienas",
+      "30d": "30 dienas",
+      "all": "Viss laiks"
+    },
+    "unavailable": {
+      "title": "Statistika pašlaik nav pieejama",
+      "unconfigured": "Analītikas galapunktam vēl nav piešķirta Cloudflare API pilnvara. Izdomāta skaitļa vietā netiek rādīts nekas.",
+      "error": "Neizdevās sasniegt Cloudflare analītikas API. Tā vietā, lai rādītu novecojušu vai izdomātu skaitli, šī lapa nerāda neko, kamēr tiešraides nolasīšana neizdodas."
+    },
+    "tile": {
+      "visitorsToday": "Apmeklētāji šodien",
+      "soFarToday": "šodien līdz šim, UTC",
+      "peakHour": "Noslogotākā stunda",
+      "peakDay": "Noslogotākā diena",
+      "peakAtHour": "plkst. {{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "šajā diapazonā",
+      "pageViews": "Lapu skatījumi",
+      "overHours": "{{count}} stundās",
+      "overDay": "1 dienā",
+      "overDays": "{{count}} dienās",
+      "requestsLabel": "Pieprasījumi",
+      "served": "Apkalpoti",
+      "requests": "{{requests}} pieprasījumi"
+    },
+    "chart": {
+      "hourly": "Apmeklētāji stundā",
+      "daily": "Apmeklētāji dienā",
+      "hourlyHint": "{{count}} stundu intervāli, UTC",
+      "dailyHint": "unikālie apmeklētāji dienā",
+      "empty": "Šim periodam vēl nav datu"
+    },
+    "countries": {
+      "title": "Populārākās valstis",
+      "windowDay": "pēdējās 24 stundas",
+      "window": "pēdējās {{days}} dienas"
+    },
+    "browsers": {
+      "title": "Pārlūki",
+      "window": "pēc lapu skatījumiem"
+    },
+    "edge": {
+      "title": "Tīkla malā",
+      "windowDay": "pēdējās 24 stundas",
+      "window": "pēdējās {{days}} dienas",
+      "cached": "Piegādāts no kešatmiņas",
+      "encrypted": "Šifrēts",
+      "threats": "Bloķētie draudi"
+    },
+    "proof": {
+      "title": "No kurienes nāk šie skaitļi",
+      "subtitle": "Mēra Cloudflare, nevis šī lapa",
+      "source": "Avots",
+      "datasets": "Datu kopas",
+      "zone": "Zona",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Iegūts plkst.",
+      "query": "Precīzais vaicājums aiz diagrammas",
+      "copied": "Nokopēts",
+      "copy": "Kopēt",
+      "openEndpoint": "Atvērt /api/stats",
+      "openRaw": "Cloudflare neaizskartā atbilde",
+      "edge": "Katrs pieprasījums uz dehub.io iet caur Cloudflare, pirms sasniedz mūsu serverus. Šie skaitījumi ir paša Cloudflare šīs datplūsmas apkopojums — tie paši skaitļi, ko rāda mūsu panelis. Tos nevāc skripts jūsu pārlūkā, tāpēc nekas šajā lapā tos nevar uzpūst, un izsekotāju bloķēšana tos nemaina.",
+      "live": "Lapa nolasa tos tiešraidē. /stats ielāde izsauc mūsu galapunktu, kas tajā brīdī vaicā Cloudflare Analytics API un kešo atbildi 60 sekundes.",
+      "limits": "Ko tas parāda un ko ne: redzat, ka skaitļi nāk no Cloudflare apkopojuma, nevis no mūsu lietotnes koda, un ka šeit publicētais vaicājums ir tas, kas tiek izpildīts. Tas nav bez uzticēšanās — API pilnvara ir pie mums, un Cloudflare nepiedāvā publisku zonas analītikas lasīšanu. Ikviens, kam ir sava Cloudflare zona, var izpildīt to pašu vaicājumu un apstiprināt tā formu."
+    },
+    "definitions": {
+      "title": "Ko nozīmē šie skaitļi",
+      "visitorsTerm": "Apmeklētāji",
+      "visitors": "— unikālās IP adreses, ko Cloudflare redzēja tajā dienā. Tuvu cilvēku skaitam, bet ne tas pats: birojs ar vienu savienojumu tiek skaitīts vienreiz, bet telefons, kas pārslēdzas starp wifi un mobilajiem datiem, — divreiz.",
+      "pageViewsTerm": "Lapu skatījumi",
+      "pageViews": "— pieprasījumi, ko Cloudflare klasificē kā lapu ielādes, nevis attēlus, skriptus vai API izsaukumus.",
+      "botsTerm": "Boti ir ieskaitīti",
+      "bots": "— tie ir neapstrādāti skaitījumi tīkla malā, tāpēc tajos ir arī rāpuļprogrammas, pieejamības uzraugi un skriptēti klienti. Tos varat redzēt paši pārlūku sadalījumā augstāk, kur ieraksti kā “Curl” un “Nezināms” ir automatizēta datplūsma, nevis cilvēki. Botu izfiltrēšanai nepieciešams maksas Cloudflare plāns, kāda mums nav, un klusa aplēses atņemšana padarītu skaitļus mazāk pārbaudāmus, nevis vairāk.",
+      "totalTerm": "Diapazona kopsummas",
+      "total": "— lapu skatījumi un pieprasījumi tiek saskaitīti visā diapazonā. Apmeklētāju skaits apzināti netiek saskaitīts “kopējā apmeklētāju skaitā”, jo kāds, kas šeit bija pirmdien un otrdien, tiktu ieskaitīts divreiz.",
+      "peakTerm": "Noslogotākā stunda / diena",
+      "peak": "— augstākais unikālais skaits jebkurā vienā diapazona intervālā, tā paša iemesla dēļ: tas ir skaitlis, ko Cloudflare patiešām mēra, nevis izveidots, saskaitot pārklājošos skaitījumus.",
+      "resolutionTerm": "Stundu dati beidzas pie 3 dienām",
+      "resolution": "— tas ir Cloudflare ierobežojums šajā plānā, nevis mūsu izvēle: tas noraida jebkuru stundas vaicājumu, kas plašāks par trim dienām. 24 stundu un 3 dienu skati ir pa stundām; 7 dienas un ilgāk ir pa dienām, un stundu diagrammu par visu laiku uzzīmēt nav iespējams.",
+      "breakdownTerm": "Valstis un pārlūki",
+      "breakdown": "— tie seko izvēlētajam diapazonam, bet tikai {{max}} dienas atpakaļ, tik ilgi tiek glabāts dienas sadalījums. Garākos diapazonos diagramma aptver vairāk laika nekā valstu saraksts.",
+      "startTerm": "Vēsture",
+      "start": "— “viss laiks” nozīmē katru dienu, ko Cloudflare vēl saglabā, šodien {{days}} dienas kopš {{date}}, dienas, kad dehub.io pārgāja uz Cloudflare. Agrāku malas datu nav, un vecākas dienas izkrīt, kad Cloudflare tām beidzas glabāšanas termiņš."
+    }
   }
 }

@@ -27,7 +27,20 @@
     "events": "Események",
     "prompt": "Ösztönzés",
     "communities": "Közösségek",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Élő statisztika",
+    "liveTv": "Élő TV",
+    "buyDhb": "DHB vásárlása",
+    "bridge": "Híd",
+    "top100": "Top 100",
+    "agents": "MI-ügynökök",
+    "advertising": "Hirdetés",
+    "premium": "Prémium",
+    "pricing": "Árak",
+    "creators": "Alkotók",
+    "getTheApp": "Töltsd le az appot",
+    "connectAi": "MI csatlakoztatása"
   },
   "feed": {
     "home": "Kezdőlap",
@@ -35,7 +48,9 @@
     "images": "Képek",
     "shorts": "Shorts",
     "music": "Zene",
-    "live": "Élő"
+    "live": "Élő",
+    "newPosts_one": "{{count}} új bejegyzés",
+    "newPosts_other": "{{count}} új bejegyzés"
   },
   "explore": {
     "all": "Összes",
@@ -242,7 +257,58 @@
     "hazy": "Ködös éjszakák",
     "save": "Mentés",
     "saving": "Mentés...",
-    "swarms": "Rajok"
+    "swarms": "Rajok",
+    "profiles": "Profilok",
+    "profilesDesc": "Ezen az eszközön mentett fiókok",
+    "addProfile": "Profil hozzáadása",
+    "profileActive": "Aktív",
+    "profileSignedOut": "jelentkezz be a váltáshoz",
+    "profileRemove": "Profil eltávolítása",
+    "profilesUsed": "{{used}} / {{max}} használatban",
+    "profilesNextTier": "A(z) {{tier}} szint {{count}} profilt tart meg",
+    "profilesFullTier": "Stakelj {{tier}} jelvényért, hogy {{count}} profilod maradhasson",
+    "profilesFull": "Távolíts el egy profilt másik fiók hozzáadásához",
+    "browserNotifications": "Böngészőértesítések",
+    "browserNotificationsDesc": "Értesülj a válaszokról, borravalókról és üzenetekről, miközben másik lapon vagy",
+    "browserNotificationsOnDesc": "Válaszok, borravalók és üzenetek jelennek meg, miközben másik lapon vagy",
+    "browserNotificationsDismissed": "Az értesítési kérés elutasítva — próbáld újra a kapcsolót",
+    "browserNotificationsBlocked": "A böngésződ letiltotta",
+    "browserNotificationsBlockedTitle": "Ez a böngésző letiltja az értesítéseket",
+    "browserNotificationsBlockedNote": "Csak a böngésződ vonhatja vissza — ha egyszer letiltottad, a DeHub nem kérdezhet újra.",
+    "browserNotificationsBlockedPending": "A kérésed elmentve — magától bekapcsol, amint a böngésződ engedi.",
+    "browserNotificationsUnblockChromium": "Kattints a címsor bal oldalán lévő ikonra → Webhely beállításai → állítsd az Értesítéseket Engedélyezésre, majd töltsd újra az oldalt.",
+    "browserNotificationsUnblockFirefox": "Kattints a címsor bal oldalán lévő lakatra, töröld a „Letiltva” állapotot az Értesítések fogadása mellett, majd töltsd újra az oldalt.",
+    "browserNotificationsUnblockSafari": "A menüsorban: Safari → Beállítások → Webhelyek → Értesítések, majd állítsd ezt a webhelyet Engedélyezésre.",
+    "browserNotificationsUnblockGeneric": "Nyisd meg a böngésződ webhelybeállításait ehhez az oldalhoz, állítsd az Értesítéseket Engedélyezésre, majd tölts újra.",
+    "browserNotificationsIosHint": "Az iPhone és az iPad csak akkor engedi, ha a DeHub a kezdőképernyőn van — koppints a Megosztásra, majd a „Hozzáadás a kezdőképernyőhöz” lehetőségre.",
+    "browserNotificationsTest": "Tesztértesítés küldése",
+    "browserNotificationsTestSent": "Tesztértesítés elküldve",
+    "browserNotificationsTestBody": "Így néz ki egy DeHub-értesítés.",
+    "showAsNewMember": "Mutass új tagként",
+    "showAsNewMemberDesc": "Hagyja, hogy a többi tag lássa, most csatlakoztál, és köszönthessenek. A regisztráció után 30 nappal automatikusan lejár.",
+    "defaultProfileTab": "Alapértelmezett profillap",
+    "defaultProfileTabDesc": "Válaszd ki, melyik lapot lássák először a látogatók a profilodon",
+    "lavalamp": "Lávalámpa",
+    "war": "Háború",
+    "osaka": "Oszaka",
+    "jungle": "Dzsungel",
+    "themeColor": "Téma színe",
+    "themeColorDesc": "Válassz egyéni színt ehhez a témához",
+    "themeColorReset": "Visszaállítás",
+    "themeColorWhite": "Fehér",
+    "themeColorBlack": "Fekete",
+    "themeColorRainbow": "Szivárvány",
+    "themeColorBrand": "Márka",
+    "themeColorBrandDesc": "A profilképed színeinek használata",
+    "themeColorBrandNoAvatar": "Adj hozzá profilképet a márkaszínek használatához",
+    "themeColorBrandFailed": "Nem sikerült színeket kiolvasni a profilképedből",
+    "dimLights": "Fények tompítása",
+    "dimLightsDesc": "Csökkenti a kék fény terhelését",
+    "matureContent": "Felnőtt tartalom megjelenítése",
+    "matureContentDesc": "Felnőtt és durva bejegyzéseket is behoz a hírfolyamaidba, és leveszi a figyelmeztetést azokról, amelyeket már látsz. Alapból ki van kapcsolva.",
+    "noNewMessages": "Nincs új beszélgetés",
+    "noNewMessagesDesc": "Tartsd meg a meglévő beszélgetéseidet, de új ember ne indíthasson egyet sem",
+    "dmNoNewHelp": "A meglévő beszélgetések működnek tovább; új ember nem indíthat egyet sem"
   },
   "common": {
     "save": "Mentés",
@@ -256,7 +322,8 @@
     "translating": "Fordítás...",
     "close": "Bezárás",
     "loadingMore": "Több betöltése...",
-    "loadMore": "Több betöltése"
+    "loadMore": "Több betöltése",
+    "tryAgain": "Újra"
   },
   "drawers": {
     "ppvTitle": "Fizetés megtekintésenként",
@@ -698,7 +765,11 @@
     "postRemoved": "Bejegyzése eltávolításra került",
     "newNotification": "Új értesítés",
     "oneOther": "1 másik",
-    "nOthers": "{{count}} másik"
+    "nOthers": "{{count}} másik",
+    "thisBrowser": "Ez a böngésző",
+    "features": "Funkciók",
+    "communities": "Közösségek",
+    "stores": "Boltok"
   },
   "leaderboard": {
     "title": "Ranglista",
@@ -727,7 +798,12 @@
     "addedToLeaderboard": "Hozzáadva! Egyenleg: {{balance}} DHB",
     "balanceTooLow": "Egyenleg túl alacsony ({{balance}} DHB)",
     "refreshFailed": "Hiba történt",
-    "noWalletAddress": "Pénztárca cím nem elérhető"
+    "noWalletAddress": "Pénztárca cím nem elérhető",
+    "affiliates": "Partnerek",
+    "directReferrals_one": "{{count}} közvetlen",
+    "directReferrals_other": "{{count}} közvetlen",
+    "secondaryReferrals_one": "{{count}} közvetett",
+    "secondaryReferrals_other": "{{count}} közvetett"
   },
   "features": {
     "title": "Funkciókérések",
@@ -766,7 +842,10 @@
     "statusPlanned": "Tervezett",
     "statusInProgress": "Folyamatban",
     "statusCompleted": "Kész",
-    "statusDeclined": "Elutasítva"
+    "statusDeclined": "Elutasítva",
+    "shipping": "Készül",
+    "noShippingYet": "Semmi sincs folyamatban",
+    "shippingAppearHere": "Az épülő kérések itt jelennek meg."
   },
   "profile": {
     "back": "Vissza",
@@ -836,7 +915,8 @@
     "failedPurchase": "Vásárlás indítása sikertelen",
     "redirectingOnramp": "Átirányítás...",
     "onrampCreated": "Munkamenet létrehozva",
-    "failedOnramp": "Indítás sikertelen"
+    "failedOnramp": "Indítás sikertelen",
+    "badgeDiscount": "{{tier}} tulajdonos — {{percent}}% kedvezmény"
   },
   "agents": {
     "title": "AI ügynökök",
@@ -866,7 +946,13 @@
     "agentDeleted": "Ügynök törölve",
     "failedCreate": "Létrehozás sikertelen",
     "failedDelete": "Törlés sikertelen",
-    "apiKeyCopied": "API kulcs másolva"
+    "apiKeyCopied": "API kulcs másolva",
+    "connectorUrl": "Csatlakozó URL",
+    "connectorUrlCopied": "Csatlakozó URL másolva",
+    "connectorUrlHelp": "Add hozzá egyéni MCP-csatlakozóként a Claude-ban vagy a ChatGPT-ben. Ennek az ügynöknek a nevében hitelesít, ezért kezeld úgy, mint az API-kulcsot.",
+    "agentWallet": "Ügynök tárcája (Base)",
+    "walletCopied": "Tárcacím másolva",
+    "agentWalletHelp": "Küldj ide egy kevés Base ETH-t, mielőtt az ügynök posztol — a közzététel a láncon mintel, és az ügynök maga fizeti a gázdíjat. A hozzászólás, szavazás és követés nem igényel gázt."
   },
   "hero": {
     "title": "Üdvözöljük",
@@ -1009,7 +1095,10 @@
     "or": "vagy",
     "termsNotice": "A folytatással elfogadja a szolgáltatási feltételeket és az adatvédelmi szabályzatot",
     "walletInfoDesktop": "Csatlakoztassa pénztárcáját a biztonságos bejelentkezéshez",
-    "walletInfoMobile": "A MetaMask, Trust és Phantom saját alkalmazásukban nyílnak meg. A Rabby WalletConnect-et használ."
+    "walletInfoMobile": "A MetaMask, Trust és Phantom saját alkalmazásukban nyílnak meg. A Rabby WalletConnect-et használ.",
+    "addProfileTitle": "Profil hozzáadása",
+    "walletConnectedAs": "Csatlakoztatva",
+    "useDifferentWallet": "Másik tárca használata"
   },
   "careers": {
     "title": "Karrier a DeHub-nál",
@@ -1133,7 +1222,11 @@
     "comingSoon": "Hamarosan — a regionális trendek úton vannak!",
     "post": "Bejegyzés",
     "logOut": "Kijelentkezés",
-    "logIn": "Bejelentkezés"
+    "logIn": "Bejelentkezés",
+    "searchMenu": "Keresés a menüben",
+    "clearSearch": "Keresés törlése",
+    "noMenuMatches": "Semmi sem egyezik a menüben",
+    "searchDehubFor": "„{{query}}” keresése a DeHubon"
   },
   "postInfo": {
     "title": "Bejegyzés infó",
@@ -1383,7 +1476,11 @@
     "new_version_available": "Új verzió érhető el",
     "refresh_to_pick_up_the_latest_changes": "Frissíts a legújabb módosításokért.",
     "refresh": "Frissítés",
-    "what_changed": "Mi változott?"
+    "what_changed": "Mi változott?",
+    "turn_on_desktop_notifications": "Bekapcsolod az asztali értesítéseket?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Értesülj a válaszokról, borravalókról és üzenetekről, miközben másik lapon vagy.",
+    "turn_on": "Bekapcsolás",
+    "not_now": "Most nem"
   },
   "prompt": {
     "seoTitle": "Ösztönözd a hírfolyamodat — DeHub",
@@ -1529,5 +1626,105 @@
     "when": "Mikor",
     "whyStake": "Miért fizess be?",
     "yourStaked": "Saját befizetésed"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "DeHub által épített és nyílt forráskódúvá tett játékok, világok és élmények gyűjteménye.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Játssz a böngésződben a DeHubon — filmes 3D sakk, procedurálisan generált lövölde, esőerdei séta, neonos utcai verekedés és bejárható kereskedőterem. Nincs telepítés, nincs letöltés.",
+    "alsoIn": "A(z) {{theme}} témában is"
+  },
+  "stats": {
+    "title": "Statisztika",
+    "subtitle": "Valós idejű, nyílt forrású adatok",
+    "live": "Élő",
+    "range": {
+      "24h": "24 óra",
+      "3d": "3 nap",
+      "7d": "7 nap",
+      "30d": "30 nap",
+      "all": "Teljes időszak"
+    },
+    "unavailable": {
+      "title": "A statisztika most nem érhető el",
+      "unconfigured": "Az analitikai végpont még nem kapta meg a Cloudflare API-tokenjét. Kitalált szám helyett inkább semmit nem mutatunk.",
+      "error": "Nem értük el a Cloudflare analitikai API-ját. Ahelyett, hogy elavult vagy kitalált számot mutatna, ez az oldal semmit sem mutat, amíg az élő lekérés nem sikerül."
+    },
+    "tile": {
+      "visitorsToday": "Mai látogatók",
+      "soFarToday": "ma eddig, UTC szerint",
+      "peakHour": "Legforgalmasabb óra",
+      "peakDay": "Legforgalmasabb nap",
+      "peakAtHour": "{{when}} UTC-kor",
+      "peakOnDay": "ekkor: {{when}}",
+      "inRange": "ebben a tartományban",
+      "pageViews": "Oldalmegtekintések",
+      "overHours": "{{count}} óra alatt",
+      "overDay": "1 nap alatt",
+      "overDays": "{{count}} nap alatt",
+      "requestsLabel": "Kérések",
+      "served": "Kiszolgálva",
+      "requests": "{{requests}} kérés"
+    },
+    "chart": {
+      "hourly": "Látogatók óránként",
+      "daily": "Látogatók naponta",
+      "hourlyHint": "{{count}} órás sáv, UTC szerint",
+      "dailyHint": "egyedi látogatók naponta",
+      "empty": "Ehhez az időszakhoz még nincs adat"
+    },
+    "countries": {
+      "title": "Vezető országok",
+      "windowDay": "utolsó 24 óra",
+      "window": "utolsó {{days}} nap"
+    },
+    "browsers": {
+      "title": "Böngészők",
+      "window": "oldalmegtekintések szerint"
+    },
+    "edge": {
+      "title": "Az edge-en",
+      "windowDay": "utolsó 24 óra",
+      "window": "utolsó {{days}} nap",
+      "cached": "Gyorsítótárból kiszolgálva",
+      "encrypted": "Titkosítva",
+      "threats": "Blokkolt fenyegetések"
+    },
+    "proof": {
+      "title": "Honnan jönnek ezek a számok",
+      "subtitle": "A Cloudflare méri, nem ez az oldal",
+      "source": "Forrás",
+      "datasets": "Adatkészletek",
+      "zone": "Zóna",
+      "ray": "Cloudflare ray azonosító",
+      "fetched": "Lekérve",
+      "query": "A diagram mögötti pontos lekérdezés",
+      "copied": "Másolva",
+      "copy": "Másolás",
+      "openEndpoint": "/api/stats megnyitása",
+      "openRaw": "A Cloudflare érintetlen válasza",
+      "edge": "A dehub.io felé küldött minden kérés átmegy a Cloudflare-en, mielőtt elérné a szervereinket. Ezek a számok a Cloudflare saját összesítései erről a forgalomról — ugyanazok, amiket a vezérlőpultunk mutat. Nem a böngésződben futó szkript gyűjti őket, tehát semmi ezen az oldalon nem tudja felfújni őket, és a nyomkövetők blokkolása sem változtat rajtuk.",
+      "live": "Az oldal élőben olvassa őket. A /stats betöltése meghívja a végpontunkat, ami abban a pillanatban lekérdezi a Cloudflare Analytics API-ját, és 60 másodpercre gyorsítótárazza a választ.",
+      "limits": "Mit mutat és mit nem: látod, hogy a számok a Cloudflare összesítéséből származnak, nem az alkalmazásunk kódjából, és hogy az itt közzétett lekérdezés az, ami fut. Nem bizalommentes — az API-token nálunk van, és a Cloudflare nem kínál nyilvános olvasást egy zóna analitikájára. Akinek saját Cloudflare-zónája van, lefuttathatja ugyanezt a lekérdezést, és ellenőrizheti a szerkezetét."
+    },
+    "definitions": {
+      "title": "Mit jelentenek a számok",
+      "visitorsTerm": "Látogatók",
+      "visitors": "— egyedi IP-címek, amelyeket a Cloudflare aznap látott. Közel áll az emberek számához, de nem azonos vele: egy iroda egy kapcsolaton egyszer számít, egy wifi és mobilnet között váltó telefon kétszer.",
+      "pageViewsTerm": "Oldalmegtekintések",
+      "pageViews": "— olyan kérések, amelyeket a Cloudflare oldalbetöltésnek minősít, nem képnek, szkriptnek vagy API-hívásnak.",
+      "botsTerm": "A botok is benne vannak",
+      "bots": "— ezek nyers edge-számlálók, tehát a bejárók, elérhetőségfigyelők és szkriptelt kliensek is benne vannak. A fenti böngészőbontásban magad is látod: az olyan bejegyzések, mint a „Curl” és az „Ismeretlen”, automatizált forgalom, nem emberek. A botok kiszűréséhez fizetős Cloudflare-csomag kellene, ami nincs nálunk, és egy becslés csendes levonása kevésbé ellenőrizhetővé tenné a számokat, nem inkább.",
+      "totalTerm": "Tartomány összesítései",
+      "total": "— az oldalmegtekintések és a kérések összeadódnak a tartományon. A látogatószámokat szándékosan nem adjuk össze „összes látogató” értékké, mert aki hétfőn és kedden is itt járt, kétszer számítana.",
+      "peakTerm": "Legforgalmasabb óra / nap",
+      "peak": "— a tartomány bármely egyetlen sávjának legmagasabb egyedi értéke, ugyanabból az okból: ez olyan szám, amit a Cloudflare valóban mér, nem átfedő számok összeadásából épül.",
+      "resolutionTerm": "Az órás adat 3 napnál megáll",
+      "resolution": "— ez a Cloudflare korlátja ezen a csomagon, nem a mi döntésünk: minden három napnál szélesebb órás lekérdezést elutasít. A 24 órás és 3 napos nézet órás; a 7 naptól felfelé napi, és nincs mód órás diagramot rajzolni a teljes időszakra.",
+      "breakdownTerm": "Országok és böngészők",
+      "breakdown": "— ezek a választott tartományt követik, de csak {{max}} napra visszamenőleg, mert a napi bontás eddig őrződik meg. Hosszabb tartományoknál a diagram több időt fog át, mint az országlista.",
+      "startTerm": "Előzmények",
+      "start": "— a „teljes időszak” minden olyan napot jelent, amit a Cloudflare még őriz, ma {{days}} nap {{date}} óta, amikor a dehub.io átkerült a Cloudflare-re. Korábbi edge-adat nincs, a régebbi napok pedig eltűnnek, ahogy a Cloudflare kiöregíti őket."
+    }
   }
 }

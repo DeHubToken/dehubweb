@@ -27,7 +27,20 @@
     "events": "אירועים",
     "prompt": "הגדרה",
     "communities": "קהילות",
-    "staking": "סטייקינג"
+    "staking": "סטייקינג",
+    "arcade": "ארקייד",
+    "stats": "סטטיסטיקה חיה",
+    "liveTv": "טלוויזיה בשידור חי",
+    "buyDhb": "קניית DHB",
+    "bridge": "גשר",
+    "top100": "100 המובילים",
+    "agents": "סוכני AI",
+    "advertising": "פרסום",
+    "premium": "פרימיום",
+    "pricing": "תמחור",
+    "creators": "יוצרים",
+    "getTheApp": "הורדת האפליקציה",
+    "connectAi": "חיבור AI"
   },
   "feed": {
     "home": "דף הבית",
@@ -35,7 +48,9 @@
     "images": "תמונות",
     "shorts": "קצרים",
     "music": "מוזיקה",
-    "live": "שידור חי"
+    "live": "שידור חי",
+    "newPosts_one": "פוסט חדש {{count}}",
+    "newPosts_other": "{{count}} פוסטים חדשים"
   },
   "explore": {
     "all": "הכל",
@@ -242,7 +257,58 @@
     "hazy": "לילות ערפיליים",
     "save": "שמור",
     "saving": "שומר...",
-    "swarms": "נחילים"
+    "swarms": "נחילים",
+    "profiles": "פרופילים",
+    "profilesDesc": "חשבונות שנשמרו במכשיר הזה",
+    "addProfile": "הוספת פרופיל",
+    "profileActive": "פעיל",
+    "profileSignedOut": "התחברו כדי להחליף",
+    "profileRemove": "הסרת פרופיל",
+    "profilesUsed": "{{used}} מתוך {{max}} בשימוש",
+    "profilesNextTier": "דרגת {{tier}} שומרת {{count}}",
+    "profilesFullTier": "בצעו סטייקינג לתג {{tier}} כדי לשמור {{count}} פרופילים",
+    "profilesFull": "הסירו פרופיל כדי להוסיף חשבון אחר",
+    "browserNotifications": "התראות דפדפן",
+    "browserNotificationsDesc": "קבלו התראה על תגובות, טיפים והודעות גם כשאתם בלשונית אחרת",
+    "browserNotificationsOnDesc": "תגובות, טיפים והודעות קופצים גם כשאתם בלשונית אחרת",
+    "browserNotificationsDismissed": "בקשת ההתראה נדחתה — נסו שוב את המתג",
+    "browserNotificationsBlocked": "נחסמו על ידי הדפדפן שלך",
+    "browserNotificationsBlockedTitle": "הדפדפן הזה חוסם התראות",
+    "browserNotificationsBlockedNote": "רק הדפדפן שלך יכול לבטל את זה — אחרי חסימה DeHub לא יכולה לבקש שוב.",
+    "browserNotificationsBlockedPending": "הבקשה שלך נשמרה — זה יידלק מעצמו ברגע שהדפדפן יאפשר.",
+    "browserNotificationsUnblockChromium": "לחצו על הסמל משמאל לשורת הכתובת ← הגדרות אתר ← הגדירו התראות ל\"אפשר\" וטענו מחדש את הדף.",
+    "browserNotificationsUnblockFirefox": "לחצו על המנעול משמאל לשורת הכתובת, נקו את \"נחסם\" ליד קבלת התראות וטענו מחדש את הדף.",
+    "browserNotificationsUnblockSafari": "בשורת התפריטים: Safari ← הגדרות ← אתרים ← התראות, ואז הגדירו את האתר הזה ל\"אפשר\".",
+    "browserNotificationsUnblockGeneric": "פתחו את הגדרות האתר בדפדפן עבור הדף הזה, הגדירו התראות ל\"אפשר\" וטענו מחדש.",
+    "browserNotificationsIosHint": "iPhone ו-iPad מאפשרים זאת רק אחרי ש-DeHub נמצאת במסך הבית — הקישו שיתוף ואז \"הוספה למסך הבית\".",
+    "browserNotificationsTest": "שליחת התראת בדיקה",
+    "browserNotificationsTestSent": "התראת בדיקה נשלחה",
+    "browserNotificationsTestBody": "כך נראית התראה של DeHub.",
+    "showAsNewMember": "הצג אותי כחבר חדש",
+    "showAsNewMemberDesc": "מאפשר לחברים אחרים לראות שהצטרפת עכשיו כדי שיוכלו לקבל את פניך. מסתיים אוטומטית 30 יום אחרי ההרשמה.",
+    "defaultProfileTab": "לשונית ברירת המחדל בפרופיל",
+    "defaultProfileTabDesc": "בחרו איזו לשונית מבקרים רואים ראשונה בפרופיל שלכם",
+    "lavalamp": "מנורת לבה",
+    "war": "מלחמה",
+    "osaka": "אוסקה",
+    "jungle": "ג'ונגל",
+    "themeColor": "צבע ערכת נושא",
+    "themeColorDesc": "בחרו צבע מותאם לערכת הנושא הזו",
+    "themeColorReset": "איפוס",
+    "themeColorWhite": "לבן",
+    "themeColorBlack": "שחור",
+    "themeColorRainbow": "קשת בענן",
+    "themeColorBrand": "מותג",
+    "themeColorBrandDesc": "שימוש בצבעי תמונת הפרופיל שלך",
+    "themeColorBrandNoAvatar": "הוסיפו תמונת פרופיל כדי להשתמש בצבעי המותג",
+    "themeColorBrandFailed": "לא הצלחנו לקרוא צבעים מתמונת הפרופיל שלך",
+    "dimLights": "עמעום תאורה",
+    "dimLightsDesc": "מפחית חשיפה לאור כחול",
+    "matureContent": "הצגת תוכן למבוגרים",
+    "matureContentDesc": "מכניס פוסטים למבוגרים ותוכן קשה לפידים שלך, ומוריד את האזהרה מאלה שאתה כבר רואה. כבוי כברירת מחדל.",
+    "noNewMessages": "בלי שיחות חדשות",
+    "noNewMessagesDesc": "שמרו על השיחות הקיימות, אבל אף אחד חדש לא יוכל לפתוח שיחה",
+    "dmNoNewHelp": "שיחות קיימות ממשיכות לפעול; אף אחד חדש לא יכול לפתוח שיחה"
   },
   "common": {
     "save": "שמור",
@@ -256,7 +322,8 @@
     "translating": "מתרגם...",
     "close": "סגור",
     "loadingMore": "טוען עוד...",
-    "loadMore": "טען עוד"
+    "loadMore": "טען עוד",
+    "tryAgain": "נסו שוב"
   },
   "drawers": {
     "ppvTitle": "תוכן בתשלום",
@@ -698,7 +765,11 @@
     "postRemoved": "הפוסט שלך הוסר",
     "newNotification": "התראה חדשה",
     "oneOther": "אחד אחר",
-    "nOthers": "{{count}} אחרים"
+    "nOthers": "{{count}} אחרים",
+    "thisBrowser": "הדפדפן הזה",
+    "features": "תכונות",
+    "communities": "קהילות",
+    "stores": "חנויות"
   },
   "leaderboard": {
     "title": "טבלת מובילים",
@@ -727,7 +798,12 @@
     "addedToLeaderboard": "נוסף! יתרה: {{balance}} DHB",
     "balanceTooLow": "יתרה נמוכה מדי ({{balance}} DHB)",
     "refreshFailed": "אירעה שגיאה",
-    "noWalletAddress": "כתובת ארנק לא זמינה"
+    "noWalletAddress": "כתובת ארנק לא זמינה",
+    "affiliates": "שותפים",
+    "directReferrals_one": "{{count}} ישירים",
+    "directReferrals_other": "{{count}} ישירים",
+    "secondaryReferrals_one": "{{count}} עקיפים",
+    "secondaryReferrals_other": "{{count}} עקיפים"
   },
   "features": {
     "title": "בקשות תכונות",
@@ -766,7 +842,10 @@
     "statusPlanned": "מתוכנן",
     "statusInProgress": "בביצוע",
     "statusCompleted": "הושלם",
-    "statusDeclined": "נדחה"
+    "statusDeclined": "נדחה",
+    "shipping": "בבנייה",
+    "noShippingYet": "אין כלום בעבודה",
+    "shippingAppearHere": "בקשות שנמצאות בפיתוח יופיעו כאן."
   },
   "profile": {
     "back": "חזור",
@@ -836,7 +915,8 @@
     "failedPurchase": "יצירת הרכישה נכשלה",
     "redirectingOnramp": "מפנה...",
     "onrampCreated": "ההפעלה נוצרה",
-    "failedOnramp": "ההפעלה נכשלה"
+    "failedOnramp": "ההפעלה נכשלה",
+    "badgeDiscount": "מחזיק {{tier}} — {{percent}}% הנחה"
   },
   "agents": {
     "title": "סוכני AI",
@@ -866,7 +946,13 @@
     "agentDeleted": "הסוכן נמחק",
     "failedCreate": "היצירה נכשלה",
     "failedDelete": "המחיקה נכשלה",
-    "apiKeyCopied": "מפתח ה-API הועתק"
+    "apiKeyCopied": "מפתח ה-API הועתק",
+    "connectorUrl": "כתובת המחבר",
+    "connectorUrlCopied": "כתובת המחבר הועתקה",
+    "connectorUrlHelp": "הוסיפו את זה כמחבר MCP מותאם ב-Claude או ב-ChatGPT. הוא מאמת בזהות הסוכן הזה, אז התייחסו אליו כמו למפתח API.",
+    "agentWallet": "ארנק הסוכן (Base)",
+    "walletCopied": "כתובת הארנק הועתקה",
+    "agentWalletHelp": "שלחו לכאן סכום קטן של ETH ברשת Base לפני שהסוכן מפרסם — הפרסום מטביע על השרשרת והסוכן משלם את הגז שלו. תגובות, הצבעות ומעקב אינם דורשים גז."
   },
   "hero": {
     "title": "ברוכים הבאים",
@@ -1009,7 +1095,10 @@
     "or": "או",
     "termsNotice": "בהמשך אתה מסכים לתנאי השירות ומדיניות הפרטיות",
     "walletInfoDesktop": "חבר את הארנק שלך להתחברות מאובטחת",
-    "walletInfoMobile": "MetaMask ו-Trust ו-Phantom נפתחים באפליקציה שלהם. Rabby משתמש ב-WalletConnect."
+    "walletInfoMobile": "MetaMask ו-Trust ו-Phantom נפתחים באפליקציה שלהם. Rabby משתמש ב-WalletConnect.",
+    "addProfileTitle": "הוספת פרופיל",
+    "walletConnectedAs": "מחובר",
+    "useDifferentWallet": "שימוש בארנק אחר"
   },
   "careers": {
     "title": "קריירה ב-DeHub",
@@ -1133,7 +1222,11 @@
     "comingSoon": "בקרוב — מגמות אזוריות בדרך!",
     "post": "פרסם",
     "logOut": "התנתק",
-    "logIn": "התחבר"
+    "logIn": "התחבר",
+    "searchMenu": "חיפוש בתפריט",
+    "clearSearch": "ניקוי החיפוש",
+    "noMenuMatches": "אין התאמה בתפריט",
+    "searchDehubFor": "חיפוש \"{{query}}\" ב-DeHub"
   },
   "postInfo": {
     "title": "מידע על הפוסט",
@@ -1383,7 +1476,11 @@
     "new_version_available": "גרסה חדשה זמינה",
     "refresh_to_pick_up_the_latest_changes": "יש לרענן כדי לאסוף את השינויים האחרונים.",
     "refresh": "רענון",
-    "what_changed": "מה השתנה"
+    "what_changed": "מה השתנה",
+    "turn_on_desktop_notifications": "להפעיל התראות שולחן עבודה?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "קבלו התראה על תגובות, טיפים והודעות גם כשאתם בלשונית אחרת.",
+    "turn_on": "הפעלה",
+    "not_now": "לא עכשיו"
   },
   "prompt": {
     "seoTitle": "הגדר את הפיד שלך — DeHub",
@@ -1529,5 +1626,105 @@
     "when": "מתי",
     "whyStake": "למה להפקיד?",
     "yourStaked": "ההפקדה שלך"
+  },
+  "arcade": {
+    "title": "ארקייד",
+    "intro": "אוסף משחקים, עולמות וחוויות ש-DeHub בנתה ושחררה בקוד פתוח.",
+    "seoTitle": "ארקייד | DeHub",
+    "seoDescription": "שחקו בדפדפן ב-DeHub — שחמט תלת־ממדי קולנועי, משחק ירי שנוצר פרוצדורלית, טיול ביער גשם, קרב רחוב בניאון ורצפת מסחר שאפשר להסתובב בה. בלי התקנה, בלי הורדה.",
+    "alsoIn": "קיים גם ב{{theme}}"
+  },
+  "stats": {
+    "title": "סטטיסטיקה",
+    "subtitle": "מודיעין קוד פתוח בזמן אמת",
+    "live": "חי",
+    "range": {
+      "24h": "24 שעות",
+      "3d": "3 ימים",
+      "7d": "7 ימים",
+      "30d": "30 יום",
+      "all": "כל הזמן"
+    },
+    "unavailable": {
+      "title": "הסטטיסטיקה לא זמינה כרגע",
+      "unconfigured": "נקודת הקצה של האנליטיקה עדיין לא קיבלה את אסימון ה-API של Cloudflare. לא מוצג כלום במקום מספר מומצא.",
+      "error": "לא הצלחנו להגיע ל-API האנליטיקה של Cloudflare. במקום להציג מספר ישן או מומצא, הדף הזה לא מציג כלום עד שהקריאה החיה תצליח."
+    },
+    "tile": {
+      "visitorsToday": "מבקרים היום",
+      "soFarToday": "עד כה היום, לפי UTC",
+      "peakHour": "השעה העמוסה ביותר",
+      "peakDay": "היום העמוס ביותר",
+      "peakAtHour": "בשעה {{when}} UTC",
+      "peakOnDay": "בתאריך {{when}}",
+      "inRange": "בטווח הזה",
+      "pageViews": "צפיות בדפים",
+      "overHours": "לאורך {{count}} שעות",
+      "overDay": "לאורך יום אחד",
+      "overDays": "לאורך {{count}} ימים",
+      "requestsLabel": "בקשות",
+      "served": "הוגשו",
+      "requests": "{{requests}} בקשות"
+    },
+    "chart": {
+      "hourly": "מבקרים לשעה",
+      "daily": "מבקרים ליום",
+      "hourlyHint": "{{count}} מקטעים שעתיים, לפי UTC",
+      "dailyHint": "מבקרים ייחודיים ליום",
+      "empty": "אין עדיין נתונים לטווח הזה"
+    },
+    "countries": {
+      "title": "המדינות המובילות",
+      "windowDay": "24 השעות האחרונות",
+      "window": "{{days}} הימים האחרונים"
+    },
+    "browsers": {
+      "title": "דפדפנים",
+      "window": "לפי צפיות בדפים"
+    },
+    "edge": {
+      "title": "בקצה",
+      "windowDay": "24 השעות האחרונות",
+      "window": "{{days}} הימים האחרונים",
+      "cached": "הוגש מהמטמון",
+      "encrypted": "מוצפן",
+      "threats": "איומים שנחסמו"
+    },
+    "proof": {
+      "title": "מאיפה המספרים האלה מגיעים",
+      "subtitle": "נמדד על ידי Cloudflare, לא על ידי הדף הזה",
+      "source": "מקור",
+      "datasets": "מאגרי נתונים",
+      "zone": "אזור",
+      "ray": "מזהה ray של Cloudflare",
+      "fetched": "נשלף בשעה",
+      "query": "השאילתה המדויקת שמאחורי הגרף",
+      "copied": "הועתק",
+      "copy": "העתקה",
+      "openEndpoint": "פתיחת ‎/api/stats",
+      "openRaw": "התשובה הגולמית של Cloudflare",
+      "edge": "כל בקשה ל-dehub.io עוברת דרך Cloudflare לפני שהיא מגיעה לשרתים שלנו. הספירות האלה הן הצבירה של Cloudflare עצמה לאותה תעבורה — אותם מספרים שלוח הבקרה שלנו מציג. הן לא נאספות על ידי סקריפט בדפדפן שלכם, ולכן שום דבר בדף הזה לא יכול לנפח אותן, וחסימת עוקבים לא משנה אותן.",
+      "live": "הדף קורא אותם בזמן אמת. טעינת ‎/stats קוראת לנקודת הקצה שלנו, שמתשאלת את Analytics API של Cloudflare באותו רגע ושומרת את התשובה במטמון ל-60 שניות.",
+      "limits": "מה זה מראה ומה לא: אפשר לראות שהמספרים מגיעים מהצבירה של Cloudflare ולא מקוד האפליקציה שלנו, ושהשאילתה שפורסמה כאן היא זו שרצה. זה לא נטול אמון — אסימון ה-API אצלנו, ו-Cloudflare לא מציעה קריאה ציבורית לנתוני אזור. כל מי שיש לו אזור Cloudflare משלו יכול להריץ את אותה שאילתה ולאמת את המבנה."
+    },
+    "definitions": {
+      "title": "מה המספרים אומרים",
+      "visitorsTerm": "מבקרים",
+      "visitors": "— כתובות IP ייחודיות ש-Cloudflare ראתה באותו יום. קרוב למספר אנשים, אבל לא זהה: משרד על חיבור אחד נספר פעם אחת, וטלפון שעובר בין וויי-פיי לרשת סלולרית נספר פעמיים.",
+      "pageViewsTerm": "צפיות בדפים",
+      "pageViews": "— בקשות ש-Cloudflare מסווגת כטעינות דף, ולא תמונות, סקריפטים או קריאות API.",
+      "botsTerm": "בוטים כלולים",
+      "bots": "— אלה ספירות גולמיות בקצה, ולכן זחלנים, מנטרי זמינות ולקוחות אוטומטיים כלולים בהן. אפשר לראות אותם בעצמכם בפילוח הדפדפנים למעלה, שם רשומות כמו \"Curl\" ו\"לא ידוע\" הן תעבורה אוטומטית ולא אנשים. סינון בוטים דורש מסלול Cloudflare בתשלום שאין לנו, והחסרה שקטה של הערכה רק תהפוך את המספרים לפחות ניתנים לבדיקה.",
+      "totalTerm": "סיכומי הטווח",
+      "total": "— צפיות בדפים ובקשות מצטברות לאורך הטווח. מספרי המבקרים במכוון אינם מחוברים ל\"סך מבקרים\", כי מי שהיה כאן ביום שני וביום שלישי היה נספר פעמיים.",
+      "peakTerm": "השעה / היום העמוסים ביותר",
+      "peak": "— הספירה הייחודית הגבוהה ביותר במקטע בודד בטווח, מאותה סיבה: זהו נתון ש-Cloudflare באמת מודדת, ולא נתון שנבנה מחיבור ספירות חופפות.",
+      "resolutionTerm": "נתונים שעתיים נעצרים ב-3 ימים",
+      "resolution": "— זו מגבלת Cloudflare במסלול הזה, לא בחירה שלנו: היא דוחה כל שאילתה שעתית רחבה משלושה ימים. תצוגות 24 שעות ו-3 ימים הן שעתיות; 7 ימים ומעלה הן יומיות, ואין דרך לצייר גרף שעתי לכל התקופה.",
+      "breakdownTerm": "מדינות ודפדפנים",
+      "breakdown": "— אלה עוקבים אחרי הטווח שתבחרו, אבל רק עד {{max}} ימים אחורה, כי כך נשמר הפילוח היומי. בטווחים ארוכים יותר הגרף מכסה יותר זמן מרשימת המדינות.",
+      "startTerm": "היסטוריה",
+      "start": "— \"כל הזמן\" פירושו כל יום ש-Cloudflare עדיין שומרת, כיום {{days}} ימים החל מ-{{date}}, היום שבו dehub.io עברה ל-Cloudflare. אין נתוני קצה מוקדמים יותר להציג, וימים ישנים נושרים כש-Cloudflare מיישנת אותם."
+    }
   }
 }

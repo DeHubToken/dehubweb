@@ -27,7 +27,20 @@
     "events": "Ngjarje",
     "prompt": "Kërkesa",
     "communities": "Komunitetet",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statistika të drejtpërdrejta",
+    "liveTv": "TV drejtpërdrejt",
+    "buyDhb": "Bli DHB",
+    "bridge": "Ura",
+    "top100": "Top 100",
+    "agents": "Agjentë IA",
+    "advertising": "Reklamim",
+    "premium": "Premium",
+    "pricing": "Çmimet",
+    "creators": "Krijues",
+    "getTheApp": "Merr aplikacionin",
+    "connectAi": "Lidh IA-në"
   },
   "feed": {
     "home": "Kryefaqja",
@@ -35,7 +48,9 @@
     "images": "Imazhe",
     "shorts": "Shkurtimëtra",
     "music": "Muzikë",
-    "live": "Live"
+    "live": "Live",
+    "newPosts_one": "{{count}} postim i ri",
+    "newPosts_other": "{{count}} postime të reja"
   },
   "explore": {
     "all": "Të gjitha",
@@ -242,7 +257,58 @@
     "hazy": "Netë të Mjegullta",
     "save": "Ruaj",
     "saving": "Duke ruajtur...",
-    "swarms": "Tufa"
+    "swarms": "Tufa",
+    "profiles": "Profile",
+    "profilesDesc": "Llogari të ruajtura në këtë pajisje",
+    "addProfile": "Shto profil",
+    "profileActive": "Aktiv",
+    "profileSignedOut": "hyr për të ndërruar",
+    "profileRemove": "Hiq profilin",
+    "profilesUsed": "{{used}} nga {{max}} të përdorura",
+    "profilesNextTier": "Niveli {{tier}} mban {{count}}",
+    "profilesFullTier": "Bëj staking për një distinktiv {{tier}} që të mbash {{count}} profile",
+    "profilesFull": "Hiq një profil për të shtuar një llogari tjetër",
+    "browserNotifications": "Njoftimet e shfletuesit",
+    "browserNotificationsDesc": "Merrni njoftim për përgjigjet, bakshishet dhe mesazhet ndërsa jeni në një skedë tjetër",
+    "browserNotificationsOnDesc": "Përgjigjet, bakshishet dhe mesazhet shfaqen ndërsa je në një skedë tjetër",
+    "browserNotificationsDismissed": "Kërkesa për njoftime u hoq — provo sërish çelësin",
+    "browserNotificationsBlocked": "Bllokuar nga shfletuesi yt",
+    "browserNotificationsBlockedTitle": "Ky shfletues po bllokon njoftimet",
+    "browserNotificationsBlockedNote": "Vetëm shfletuesi yt mund ta zhbëjë këtë — pasi bllokohet, DeHub nuk mund të pyesë sërish.",
+    "browserNotificationsBlockedPending": "Kërkesa jote u ruajt — do të ndizet vetë sapo shfletuesi ta lejojë.",
+    "browserNotificationsUnblockChromium": "Kliko ikonën në të majtë të shiritit të adresës → Cilësimet e faqes → vendos Njoftimet në Lejo dhe ringarko këtë faqe.",
+    "browserNotificationsUnblockFirefox": "Kliko dryn në të majtë të shiritit të adresës, hiq „Bllokuar” pranë Merr njoftime dhe ringarko këtë faqe.",
+    "browserNotificationsUnblockSafari": "Në shiritin e menysë: Safari → Cilësimet → Faqet e internetit → Njoftimet, pastaj vendos këtë faqe në Lejo.",
+    "browserNotificationsUnblockGeneric": "Hap cilësimet e faqes në shfletues për këtë faqe, vendos Njoftimet në Lejo dhe ringarko.",
+    "browserNotificationsIosHint": "iPhone dhe iPad e lejojnë vetëm kur DeHub është në ekranin bazë — prek Shpërnda, pastaj „Shto në ekranin bazë”.",
+    "browserNotificationsTest": "Dërgo një njoftim prove",
+    "browserNotificationsTestSent": "Njoftimi i provës u dërgua",
+    "browserNotificationsTestBody": "Kështu duket një njoftim i DeHub.",
+    "showAsNewMember": "Më shfaq si anëtar i ri",
+    "showAsNewMemberDesc": "Lejon anëtarët e tjerë të shohin se sapo je bashkuar që të të mirëpresin. Përfundon automatikisht 30 ditë pas regjistrimit.",
+    "defaultProfileTab": "Skeda e parazgjedhur e profilit",
+    "defaultProfileTabDesc": "Zgjidh cilën skedë shohin të parën vizitorët në profilin tënd",
+    "lavalamp": "Llambë llave",
+    "war": "Luftë",
+    "osaka": "Osaka",
+    "jungle": "Xhungla",
+    "themeColor": "Ngjyra e temës",
+    "themeColorDesc": "Zgjidh një ngjyrë të personalizuar për këtë temë",
+    "themeColorReset": "Rivendos",
+    "themeColorWhite": "E bardhë",
+    "themeColorBlack": "E zezë",
+    "themeColorRainbow": "Ylber",
+    "themeColorBrand": "Marka",
+    "themeColorBrandDesc": "Përdor ngjyrat e fotos sate të profilit",
+    "themeColorBrandNoAvatar": "Shto një foto profili për të përdorur ngjyrat e markës",
+    "themeColorBrandFailed": "Nuk u lexuan dot ngjyrat nga fotoja jote e profilit",
+    "dimLights": "Zbeh dritat",
+    "dimLightsDesc": "Ul ekspozimin ndaj dritës blu",
+    "matureContent": "Shfaq përmbajtje për të rritur",
+    "matureContentDesc": "Përfshin në rrjedhat e tua postime për të rritur dhe të ashpra dhe heq paralajmërimin nga ato që i sheh tashmë. Fikur si parazgjedhje.",
+    "noNewMessages": "Asnjë bisedë e re",
+    "noNewMessagesDesc": "Ruaj bisedat ekzistuese, por askush i ri nuk mund të nisë një",
+    "dmNoNewHelp": "Bisedat ekzistuese vazhdojnë të punojnë; askush i ri nuk mund të nisë një"
   },
   "common": {
     "save": "Ruaj",
@@ -256,7 +322,8 @@
     "translating": "Po përkthehet...",
     "close": "Mbyll",
     "loadingMore": "Po ngarkohen më shumë...",
-    "loadMore": "Ngarko më shumë"
+    "loadMore": "Ngarko më shumë",
+    "tryAgain": "Provo sërish"
   },
   "tip": {
     "title": "Dërgo Bakshish",
@@ -724,7 +791,11 @@
     "postRemoved": "Postimi juaj u hoq",
     "newNotification": "Njoftim i ri",
     "oneOther": "1 tjetër",
-    "nOthers": "{{count}} të tjerë"
+    "nOthers": "{{count}} të tjerë",
+    "thisBrowser": "Ky shfletues",
+    "features": "Veçori",
+    "communities": "Komunitete",
+    "stores": "Dyqane"
   },
   "leaderboard": {
     "title": "Tabela e Liderëve",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Jeni shtuar! Bilanci: {{balance}} DHB",
     "balanceTooLow": "Bilanci shumë i ulët ({{balance}} DHB)",
     "refreshFailed": "Diçka shkoi keq",
-    "noWalletAddress": "Nuk u gjet adresë portofoli"
+    "noWalletAddress": "Nuk u gjet adresë portofoli",
+    "affiliates": "Partnerë",
+    "directReferrals_one": "{{count}} të drejtpërdrejtë",
+    "directReferrals_other": "{{count}} të drejtpërdrejtë",
+    "secondaryReferrals_one": "{{count}} të tërthortë",
+    "secondaryReferrals_other": "{{count}} të tërthortë"
   },
   "explorePage": {
     "searchPlaceholder": "Kërkoni për njerëz, postime, ose përmbajtje...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Planifikuar",
     "statusInProgress": "Në Progres",
     "statusCompleted": "Përfunduar",
-    "statusDeclined": "Refuzuar"
+    "statusDeclined": "Refuzuar",
+    "shipping": "Në ndërtim",
+    "noShippingYet": "Asgjë në punë",
+    "shippingAppearHere": "Kërkesat që po ndërtohen do të shfaqen këtu."
   },
   "auth": {
     "loginRequired": "Kërkohet hyrja"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Dështoi fillimi i blerjes",
     "redirectingOnramp": "Po ridrejtohet te onramp...",
     "onrampCreated": "Sesioni onramp u krijua",
-    "failedOnramp": "Dështoi fillimi i onramp"
+    "failedOnramp": "Dështoi fillimi i onramp",
+    "badgeDiscount": "Mbajtës {{tier}} — {{percent}}% zbritje"
   },
   "agents": {
     "title": "Agjentët AI",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agjenti u fshi",
     "failedCreate": "Dështoi krijimi i agjentit",
     "failedDelete": "Dështoi fshirja e agjentit",
-    "apiKeyCopied": "Çelësi API u kopjua në clipboard"
+    "apiKeyCopied": "Çelësi API u kopjua në clipboard",
+    "connectorUrl": "URL-ja e lidhësit",
+    "connectorUrlCopied": "URL-ja e lidhësit u kopjua",
+    "connectorUrlHelp": "Shtoje si lidhës MCP të personalizuar në Claude ose ChatGPT. Vërtetohet si ky agjent, prandaj trajtoje si çelësin e API-t.",
+    "agentWallet": "Portofoli i agjentit (Base)",
+    "walletCopied": "Adresa e portofolit u kopjua",
+    "agentWalletHelp": "Dërgo këtu një sasi të vogël ETH në Base para se agjenti të postojë — publikimi krijon një token në zinxhir dhe agjenti paguan vetë gazin. Komentet, votat dhe ndjekjet nuk kërkojnë gaz."
   },
   "hero": {
     "title": "Mirë Se Vini",
@@ -1005,7 +1091,10 @@
     "or": "ose",
     "termsNotice": "Duke vazhduar, ju pranoni Kushtet e Shërbimit dhe Politikën e Privatësisë sonë",
     "walletInfoDesktop": "Lidhni portofolin tuaj për të hyrë në mënyrë të sigurt",
-    "walletInfoMobile": "MetaMask, Trust & Phantom do të hapin aplikacionin e tyre drejtpërdrejt. Rabby do të përdorë WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom do të hapin aplikacionin e tyre drejtpërdrejt. Rabby do të përdorë WalletConnect.",
+    "addProfileTitle": "Shto profil",
+    "walletConnectedAs": "I lidhur",
+    "useDifferentWallet": "Përdor një portofol tjetër"
   },
   "careers": {
     "title": "Karriera në DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Së shpejti — trendet rajonale janë në rrugë!",
     "post": "Publiko",
     "logOut": "Dil",
-    "logIn": "Hyr"
+    "logIn": "Hyr",
+    "searchMenu": "Kërko në meny",
+    "clearSearch": "Pastro kërkimin",
+    "noMenuMatches": "Asgjë në meny nuk përputhet",
+    "searchDehubFor": "Kërko „{{query}}” në DeHub"
   },
   "postInfo": {
     "title": "Informacione për postimin",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Versioni i ri i disponueshëm",
     "refresh_to_pick_up_the_latest_changes": "Përditëso për të marrë ndryshimet më të fundit.",
     "refresh": "Përditëso",
-    "what_changed": "Çfarë ndryshoi"
+    "what_changed": "Çfarë ndryshoi",
+    "turn_on_desktop_notifications": "Të aktivizohen njoftimet e desktopit?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Merrni njoftim për përgjigjet, bakshishet dhe mesazhet ndërsa jeni në një skedë tjetër.",
+    "turn_on": "Aktivizo",
+    "not_now": "Jo tani"
   },
   "prompt": {
     "seoTitle": "Kërkesa jote — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Kur",
     "whyStake": "Pse të depozitosh?",
     "yourStaked": "Depozita jote"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Një koleksion lojërash, botësh dhe përvojash që DeHub i ndërtoi dhe i çeli si burim i hapur.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Luaj drejtpërdrejt në shfletues në DeHub — shah 3D kinematografik, një lojë qitjeje e gjeneruar në mënyrë procedurale, një shëtitje në pyllin tropikal, një përleshje rruge me neon dhe një sallë tregtimi ku mund të ecësh. Pa instalim, pa shkarkim.",
+    "alsoIn": "Gjendet edhe te {{theme}}"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Të dhëna me burim të hapur në kohë reale",
+    "live": "Drejtpërdrejt",
+    "range": {
+      "24h": "24 orë",
+      "3d": "3 ditë",
+      "7d": "7 ditë",
+      "30d": "30 ditë",
+      "all": "Gjithë koha"
+    },
+    "unavailable": {
+      "title": "Statistikat nuk janë të disponueshme tani",
+      "unconfigured": "Pikëmbarimit analitik ende nuk i është dhënë shenja e API-t të Cloudflare. Nuk shfaqet asgjë në vend të një numri të sajuar.",
+      "error": "Nuk arritëm te API-ja analitike e Cloudflare. Në vend që të tregojë një shifër të vjetruar ose të sajuar, kjo faqe nuk tregon asgjë derisa leximi i drejtpërdrejtë të kalojë."
+    },
+    "tile": {
+      "visitorsToday": "Vizitorë sot",
+      "soFarToday": "sot deri tani, UTC",
+      "peakHour": "Ora më e ngarkuar",
+      "peakDay": "Dita më e ngarkuar",
+      "peakAtHour": "në {{when}} UTC",
+      "peakOnDay": "më {{when}}",
+      "inRange": "në këtë interval",
+      "pageViews": "Shikime faqesh",
+      "overHours": "gjatë {{count}} orëve",
+      "overDay": "gjatë 1 dite",
+      "overDays": "gjatë {{count}} ditëve",
+      "requestsLabel": "Kërkesa",
+      "served": "Shërbyer",
+      "requests": "{{requests}} kërkesa"
+    },
+    "chart": {
+      "hourly": "Vizitorë në orë",
+      "daily": "Vizitorë në ditë",
+      "hourlyHint": "{{count}} intervale orare, UTC",
+      "dailyHint": "vizitorë unikë në ditë",
+      "empty": "Ende nuk ka të dhëna për këtë periudhë"
+    },
+    "countries": {
+      "title": "Vendet kryesore",
+      "windowDay": "24 orët e fundit",
+      "window": "{{days}} ditët e fundit"
+    },
+    "browsers": {
+      "title": "Shfletues",
+      "window": "sipas shikimeve të faqeve"
+    },
+    "edge": {
+      "title": "Në skaj",
+      "windowDay": "24 orët e fundit",
+      "window": "{{days}} ditët e fundit",
+      "cached": "Shërbyer nga cache-i",
+      "encrypted": "I enkriptuar",
+      "threats": "Kërcënime të bllokuara"
+    },
+    "proof": {
+      "title": "Nga vijnë këto shifra",
+      "subtitle": "Matur nga Cloudflare, jo nga kjo faqe",
+      "source": "Burimi",
+      "datasets": "Bashkësi të dhënash",
+      "zone": "Zona",
+      "ray": "ID-ja ray e Cloudflare",
+      "fetched": "Marrë më",
+      "query": "Pyetja e saktë pas grafikut",
+      "copied": "U kopjua",
+      "copy": "Kopjo",
+      "openEndpoint": "Hap /api/stats",
+      "openRaw": "Përgjigja e paprekur e Cloudflare",
+      "edge": "Çdo kërkesë drejt dehub.io kalon nëpër Cloudflare para se të arrijë te serverët tanë. Këto numërime janë grumbullimi i vetë Cloudflare i atij trafiku — të njëjtat shifra që tregon paneli ynë. Nuk i mbledh ndonjë skript në shfletuesin tënd, prandaj asgjë në këtë faqe nuk mund t'i fryjë, dhe bllokimi i gjurmuesve nuk i ndryshon.",
+      "live": "Faqja i lexon drejtpërdrejt. Ngarkimi i /stats thërret pikëmbarimin tonë, i cili në atë çast pyet Analytics API-n e Cloudflare dhe e ruan përgjigjen për 60 sekonda.",
+      "limits": "Çfarë tregon kjo dhe çfarë jo: e sheh që shifrat vijnë nga grumbullimi i Cloudflare e jo nga kodi i aplikacionit tonë, dhe se pyetja e publikuar këtu është ajo që ekzekutohet. Nuk është pa besim — shenjën e API-t e mbajmë ne, dhe Cloudflare nuk ofron lexim publik të analitikës së një zone. Kushdo me zonën e vet Cloudflare mund ta ekzekutojë të njëjtën pyetje dhe ta konfirmojë formën."
+    },
+    "definitions": {
+      "title": "Çfarë kuptimi kanë shifrat",
+      "visitorsTerm": "Vizitorë",
+      "visitors": "— adresa IP unike që Cloudflare pa atë ditë. Afër numrit të njerëzve, por jo e njëjta gjë: një zyrë me një lidhje numërohet një herë, kurse një telefon që kalon mes wifi-t dhe të dhënave celulare numërohet dy herë.",
+      "pageViewsTerm": "Shikime faqesh",
+      "pageViews": "— kërkesa që Cloudflare i klasifikon si ngarkime faqesh, jo imazhe, skripta apo thirrje API.",
+      "botsTerm": "Botët janë përfshirë",
+      "bots": "— këto janë numërime të papërpunuara në skaj, prandaj brenda janë edhe zvarritësit, monitoruesit e disponueshmërisë dhe klientët e skriptuar. I sheh vetë te ndarja sipas shfletuesve më lart, ku zërat si „Curl” dhe „E panjohur” janë trafik i automatizuar e jo njerëz. Filtrimi i botëve kërkon një plan me pagesë të Cloudflare që ne nuk e kemi, dhe zbritja e heshtur e një vlerësimi do t'i bënte shifrat më pak të verifikueshme, jo më shumë.",
+      "totalTerm": "Totalet e intervalit",
+      "total": "— shikimet e faqeve dhe kërkesat mblidhen përgjatë intervalit. Numri i vizitorëve qëllimisht nuk mblidhet në një „total vizitorësh”, sepse dikush që ishte këtu të hënën dhe të martën do të numërohej dy herë.",
+      "peakTerm": "Ora / dita më e ngarkuar",
+      "peak": "— numri më i lartë unik në ndonjë interval të vetëm të periudhës, për të njëjtën arsye: është një shifër që Cloudflare e mat vërtet, jo e ndërtuar duke mbledhur numërime që mbivendosen.",
+      "resolutionTerm": "Të dhënat orare ndalen te 3 ditë",
+      "resolution": "— ky është kufiri i Cloudflare në këtë plan, jo zgjedhje e jona: refuzon çdo pyetje orare më të gjerë se tri ditë. Pamjet 24-orëshe dhe 3-ditore janë orare; 7 ditë e lart janë ditore dhe nuk ka mënyrë të vizatohet një grafik orar për gjithë kohën.",
+      "breakdownTerm": "Vendet dhe shfletuesit",
+      "breakdown": "— ndjekin intervalin që zgjedh, por vetëm deri {{max}} ditë prapa, aq mbahet ndarja ditore. Në intervale më të gjata grafiku mbulon më shumë kohë se lista e vendeve.",
+      "startTerm": "Historiku",
+      "start": "— „gjithë koha” do të thotë çdo ditë që Cloudflare ende ruan, sot {{days}} ditë duke nisur nga {{date}}, dita kur dehub.io kaloi te Cloudflare. Nuk ka të dhëna më të hershme skaji për t'u shfaqur, dhe ditët e vjetra bien ndërsa Cloudflare i skadon."
+    }
   }
 }
