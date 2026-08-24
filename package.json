@@ -11,6 +11,8 @@
     "lint": "eslint .",
     "check:db": "node scripts/check-supabase-drift.mjs",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:agora": "node scripts/test-agora-credentials.mjs"
   },
   "dependencies": {
