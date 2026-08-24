@@ -59,6 +59,23 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
   };
 }
 
+/**
+ * The room-management surface is switched off because its API does not exist.
+ *
+ * The header buttons this gates open CreateTopicRoomModal and
+ * RoomSettingsModal, whose submits call POST /api/livechat/rooms/topic,
+ * PATCH /api/livechat/settings and POST /api/livechat/moderators — all three
+ * 404 in production (the livechat controller serves /room, /messages,
+ * /online, /status and the /mod/* moderation routes, nothing else). #462
+ * repointed ban/unban/pin at routes that exist and stopped there, so every
+ * room moderator has been looking at two buttons that submit into nothing.
+ *
+ * Flip this to true the day the backend grows those routes — the modals and
+ * their API bindings are kept, not deleted, because they are the spec for
+ * that work.
+ */
+const ROOM_MANAGEMENT_ENABLED = false;
+
 export function PublicChat({ onBack }: PublicChatProps) {
   const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -355,7 +372,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
             </TooltipTrigger>
             <TooltipContent>{t('publicChat.searchMessages')}</TooltipContent>
           </Tooltip>
-          {isRoomModerator && (
+          {ROOM_MANAGEMENT_ENABLED && isRoomModerator && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -370,7 +387,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
               <TooltipContent>Create new room</TooltipContent>
             </Tooltip>
           )}
-          {isRoomModerator && (
+          {ROOM_MANAGEMENT_ENABLED && isRoomModerator && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
