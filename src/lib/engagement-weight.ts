@@ -9,12 +9,17 @@
  * reaction and still counts as one unique viewer — the badge only changes what
  * that one is worth.
  *
- * **The server is the authority.** This exists so an optimistic count moves by
- * the right amount instead of by one and then snapping, which is the same
- * reason `useSelfBadge` exists at all. `/request_vote` and `/request_reaction`
- * both return the `weight` they actually applied; a caller that can reconcile
- * should prefer that number over this one, because the server prices from the
- * account's EARNED balance and this side cannot see the earned/lent split.
+ * **A lent badge carries its weight**, so this reads the same `badgeBalance`
+ * that draws the badge — no earned/lent split to model. Influence is what
+ * delegation lends; the API prices from the same rendered number.
+ *
+ * **The server is still the authority.** This exists so an optimistic count
+ * moves by the right amount instead of by one and then snapping, which is the
+ * same reason `useSelfBadge` exists at all. `/request_vote` and
+ * `/request_reaction` both return the `weight` they actually applied; a caller
+ * that can reconcile should prefer that number, because this side can be a
+ * beat ahead of the account row (the live wallet read promotes early) or
+ * carrying a username override the API does not honour.
  *
  * Keep in step with `dehub-stream-backend/src/badge/engagement-weight.ts` and
  * `dehub-mobile/libs/engagement-weight.ts`. It is the same ladder as

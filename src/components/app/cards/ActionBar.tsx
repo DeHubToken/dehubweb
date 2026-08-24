@@ -433,8 +433,9 @@ export function ActionBar({
 
     // The whole optimistic result for a given weight. Written as a function of
     // the weight because the server's answer carries the weight it actually
-    // applied, and that can differ from the one guessed here — it prices from
-    // the earned badge, which this side cannot see.
+    // applied, and that can differ from the one guessed here — the live wallet
+    // read promotes a tier early, and a username override draws a badge the
+    // API does not honour.
     const countsAt = (weight: number) => {
       let like = localLikeCount;
       let dislike = localDislikeCount;
@@ -510,9 +511,9 @@ export function ActionBar({
             : await reactToPost({ tokenId: numericId, reaction });
 
         // Settle on the weight the server actually applied. Only differs when
-        // this side guessed a heavier badge than the account has earned (a lent
-        // one, say) — but leaving it would park a wrong count in the vote cache
-        // for as long as the cache outlives the refetch.
+        // this side is a beat ahead of the account row — but leaving it would
+        // park a wrong count in the vote cache for as long as the cache
+        // outlives the refetch.
         const applied = typeof response?.weight === 'number' ? response.weight : voteWeight;
         if (!hasExternalHandler && applied !== voteWeight) {
           const settled = countsAt(applied);
