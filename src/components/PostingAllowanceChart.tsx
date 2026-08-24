@@ -129,7 +129,11 @@ const PostingAllowanceChart = () => (
 
       <p className="text-xs text-muted-foreground mt-4 font-exo">
         Badge tier is your DHB held plus staked on BNB Chain and Base — the same balance your badge
-        is drawn from. Allowances reset at 00:00 UTC. A gigabyte here is 1,024 MB.
+        is drawn from. The ladder is priced in dollars, so the DHB figures above are what each tier
+        costs at the $0.001 sale price and the requirement falls as DHB appreciates; a tier you have
+        already earned is never taken back by the price. A badge lent to you by a patron shows on
+        your profile but does not raise your posting allowance — that comes from what you hold
+        yourself. Allowances reset at 00:00 UTC, and a gigabyte here is 1,024 MB.
       </p>
     </CardContent>
   </Card>

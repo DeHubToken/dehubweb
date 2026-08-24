@@ -118,7 +118,7 @@ export const en = {
     allowanceCounts3: 'Quote posts count exactly like the post they are: a quote with a video attached spends data.',
     allowanceCounts4: 'Overage is pro-rata, not rounded up to a whole gigabyte. If 200 MB of an upload runs past your allowance, you pay for 200 MB.',
     allowanceCounts5: 'Reposts, comments, reactions, tips and messages cost nothing and never touch the allowance.',
-    allowanceBadgeNote: 'A badge moves both halves at once — a bigger free allowance and a lower price on anything past it. The discount is the same ladder badge holders already get when buying DHB, from 5% at Crab to 30% at Megalodon, so there is one answer to what a badge is worth.',
+    allowanceBadgeNote: 'A badge moves both halves at once — a bigger free allowance and a lower price on anything past it. The discount is the same ladder badge holders already get when buying DHB, from 5% at Crab to 30% at Megalodon, so there is one answer to what a badge is worth. Your allowance comes from the badge you earned: a tier lent to you by a patron shows on your profile, but it does not hand you their posting allowance.',
     tokenisedTitle: 'Tokenised Content & Fractionalised Ownership',
     tokenisedSubtitle: 'Revolutionary ERC-1155 Content Tokenisation',
     tokenisedDesc: 'Every upload and livestream on DeHub automatically mints an ERC-1155 NFT fractionalised into exactly 1,000 pieces. Creators have complete control over how many fractions to sell or keep, creating a novel monetisation model where fans can invest in content they believe will succeed - essentially "betting" on the future of potential stars through a revolutionary form of fan tokens.',
