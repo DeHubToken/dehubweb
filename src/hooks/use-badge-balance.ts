@@ -22,11 +22,21 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { getAccountInfo } from '@/lib/api/dehub/users';
-import { getBadgeName, getBadgeUrl, isBigBadge, isBigBadgeUrl } from '@/lib/staking-badges';
+import {
+  getBadgeName,
+  getBadgeUrl,
+  isBigBadge,
+  isBigBadgeUrl,
+  parseBadgeLock,
+  type BadgeLock,
+} from '@/lib/staking-badges';
+import { useBadgeScale } from '@/hooks/use-badge-scale';
 import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 
 export interface ResolvedBadge {
   badgeBalance?: number;
+  /** The tier this user has grandfathered, when the account row carries one. */
+  badgeLock?: BadgeLock | null;
   /** Canonical username, for the override table. */
   username?: string;
   /**
@@ -55,6 +65,7 @@ export function useBadgeBalance(
       const user = await getAccountInfo(key);
       return {
         badgeBalance: user?.badgeBalance,
+        badgeLock: parseBadgeLock(user?.badgeLock),
         username: user?.username || undefined,
         address: user?.address || user?.wallet_address || undefined,
       };
@@ -83,6 +94,8 @@ export interface BadgeVisualInput {
   lookupId?: string | null;
   /** Username for the override table. */
   username?: string | null;
+  /** The holder's grandfathered tier, when the payload carries one. */
+  badgeLock?: BadgeLock | null;
   /** Pre-resolved image, skips resolution entirely. */
   src?: string | null;
 }
@@ -105,11 +118,16 @@ export interface BadgeVisual {
  * When the name being drawn is the signed-in user's own, the live on-chain
  * balance is allowed to win — but only upward, so this can promote a badge the
  * instant the tokens land and can never take one away.
+ *
+ * The ladder itself is priced in dollars, so the DHB a tier costs depends on
+ * the token price: `useBadgeScale` supplies that, and a holder's `badgeLock`
+ * keeps the tier they already earned when the ladder moves under them.
  */
-export function useBadgeVisual({ badgeBalance, lookupId, username, src }: BadgeVisualInput): BadgeVisual {
+export function useBadgeVisual({ badgeBalance, lookupId, username, badgeLock, src }: BadgeVisualInput): BadgeVisual {
   const numeric = typeof badgeBalance === 'string' ? parseFloat(badgeBalance) : badgeBalance;
   const looked = useBadgeBalance(src ? null : lookupId, numeric);
   const self = useSelfBadge();
+  const scale = useBadgeScale();
 
   if (src) {
     return { url: src, name: null, big: isBigBadgeUrl(src) };
@@ -123,10 +141,14 @@ export function useBadgeVisual({ badgeBalance, lookupId, username, src }: BadgeV
   const balance = isSelf
     ? preferLiveBalance(numeric ?? looked.badgeBalance, self.balance)
     : numeric ?? looked.badgeBalance;
+  // Prop first (the payload knows), then the lookup, then — for my own name —
+  // the account row I am already signed in with.
+  const lock = parseBadgeLock(badgeLock) ?? looked.badgeLock ?? (isSelf ? self.lock : null) ?? null;
+  const context = { scale, lock };
 
   return {
-    url: getBadgeUrl(balance, nameKey),
-    name: getBadgeName(balance, nameKey),
-    big: isBigBadge(balance, nameKey),
+    url: getBadgeUrl(balance, nameKey, context),
+    name: getBadgeName(balance, nameKey, context),
+    big: isBigBadge(balance, nameKey, context),
   };
 }
