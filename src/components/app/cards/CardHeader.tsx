@@ -167,6 +167,7 @@ export function CardHeader({
             <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
           </span>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
+          <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
         </div>
         {(formattedHandle || timestamp) && (
           <div className="flex items-center gap-1 min-w-0">
@@ -179,7 +180,6 @@ export function CardHeader({
                 <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
               </>
             )}
-            <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
           </div>
         )}
       </button>

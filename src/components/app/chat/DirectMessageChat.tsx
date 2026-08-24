@@ -1357,20 +1357,18 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             </Avatar>
 
             <div>
-              <h2 className="font-semibold text-white">
+              <h2 className="font-semibold text-white flex items-center gap-1.5">
                 <BadgedName
                   badgeBalance={(otherUser as any)?.badgeBalance}
                   username={otherUser?.username}
                 >
                   {displayName}
                 </BadgedName>
-              </h2>
-              <div className="flex items-center gap-1.5">
-                {otherUser?.username && (
-                  <p className="text-xs text-zinc-500">@{otherUser.username}</p>
-                )}
                 <NewMemberChip address={otherUser?.address} />
-              </div>
+              </h2>
+              {otherUser?.username && (
+                <p className="text-xs text-zinc-500">@{otherUser.username}</p>
+              )}
             </div>
           </Link>
         </div>
