@@ -48,11 +48,34 @@ Deno.serve(async (req) => {
     return json(401, { error: 'Unauthorized' })
   }
 
-  const doToken = Deno.env.get('digitalocean')
-  if (!doToken) {
+  // Sanitize before use. Secrets pasted from a Windows shell arrive wearing
+  // stray whitespace, carriage returns or their own quotes — the repo's
+  // cloudflare_apitoken was exactly this, 51 characters of non-token material
+  // that Cloudflare refused with "Invalid format for Authorization header".
+  const rawToken = Deno.env.get('digitalocean')
+  if (!rawToken) {
     console.error('digitalocean secret not configured')
     return json(500, { error: 'DO token not configured' })
   }
+  const doToken = rawToken
+    .trim()
+    .replace(/^["']+|["']+$/g, '')
+    .replace(/^Bearer\s+/i, '')
+    .replace(/[\r\n]/g, '')
+
+  /**
+   * Shape of the stored token for a 401 diagnosis — everything about it
+   * EXCEPT its value. `dop_v1_` prefixes a DO personal access token; a Spaces
+   * access key is ~20 upper-case characters and cannot call the DO API at all,
+   * which is the likeliest mix-up for a secret simply named "digitalocean".
+   */
+  const tokenShape = () => ({
+    length: doToken.length,
+    rawLength: rawToken.length,
+    looksLikeApiToken: /^dop_v1_[0-9a-f]{64}$/.test(doToken),
+    looksLikeSpacesKey: /^[A-Z0-9]{18,24}$/.test(doToken),
+    hadWrapping: rawToken !== doToken,
+  })
 
   let files: string[] = ['*']
   try {
@@ -83,7 +106,12 @@ Deno.serve(async (req) => {
   if (!listRes.ok) {
     const detail = await listRes.text().catch(() => '')
     console.error('DO endpoint list failed', listRes.status, detail.slice(0, 300))
-    return json(502, { error: 'Could not list CDN endpoints', status: listRes.status })
+    return json(502, {
+      error: 'Could not list CDN endpoints',
+      status: listRes.status,
+      // On a 401 the caller needs to know WHAT is stored without seeing it.
+      ...(listRes.status === 401 && { tokenShape: tokenShape() }),
+    })
   }
   const listBody = await listRes.json()
   const endpoints: Array<{ id: string; origin: string; endpoint: string }> =
