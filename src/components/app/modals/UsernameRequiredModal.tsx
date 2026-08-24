@@ -56,7 +56,9 @@ export function UsernameRequiredModal() {
 
   // Check username availability
   const checkUsername = useCallback(async (usernameToCheck: string) => {
-    if (!usernameToCheck || usernameToCheck.length < 3) {
+    // No minimum length. The API has never had one — 43 accounts already hold
+    // names shorter than three characters — and short handles are wanted.
+    if (!usernameToCheck) {
       setUsernameAvailable(null);
       setUsernameError(null);
       return;
@@ -126,18 +128,15 @@ export function UsernameRequiredModal() {
       return;
     }
 
-    if (trimmedUsername.length < 3) {
-      setError('Username must be at least 3 characters');
-      return;
-    }
-
     if (trimmedUsername.length > 30) {
       setError('Username must be 30 characters or less');
       return;
     }
 
-    if (!/^[a-z0-9_]+$/.test(trimmedUsername)) {
-      setError('Username can only contain letters, numbers, and underscores');
+    // Hyphens included: the API has always accepted them, and rejecting them
+    // here made the two sides disagree about which names are even legal.
+    if (!/^[a-z0-9_-]+$/.test(trimmedUsername)) {
+      setError('Username can only contain letters, numbers, hyphens and underscores');
       return;
     }
 
@@ -216,7 +215,7 @@ export function UsernameRequiredModal() {
     }
   };
 
-  const canSubmit = username.trim().length >= 3 && 
+  const canSubmit = username.trim().length >= 1 &&
                     displayName.trim().length > 0 && 
                     usernameAvailable === true && 
                     !isCheckingUsername;
@@ -280,7 +279,7 @@ export function UsernameRequiredModal() {
               <p className="text-xs text-green-400">Username is available!</p>
             ) : (
               <p className="text-xs text-zinc-500">
-                Letters, numbers, and underscores only. 3-30 characters.
+                Letters, numbers, hyphens and underscores. Up to 30 characters.
               </p>
             )}
           </div>
