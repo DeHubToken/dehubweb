@@ -2,11 +2,18 @@
  * How many profiles one browser may keep signed in at once, from the DHB
  * staking badge tier.
  *
- * Two with no badge, and one more for every tier above it — so the ladder runs
- * 2 (no badge) → 3 (Crab) → … → 15 (Meglodon), in the same order as
- * `BADGE_LEVELS` in `lib/staking-badges.ts`. Adding a tier there adds a slot
- * here automatically; do not hand-write the numbers. Same shape, and the same
- * rule, as the daily post allowance in `lib/post-quota.ts`.
+ * The ladder is not a formula any more. It ran 2 (no badge) → 3 (Crab) → … →
+ * 15 (Meglodon), one slot per tier, which made the top of the ladder worth
+ * about as much as the middle. It now opens up sharply at the top and leaves
+ * the bottom exactly where it was:
+ *
+ *   no badge            2      Cobra … Great White Shark   10
+ *   Crab                3      Blue Whale                  25
+ *   Lobster             4      Meglodon                    50
+ *   Piranha             5
+ *   Tortoise            6
+ *
+ * Nobody loses a slot: every rung is at or above what it allowed before.
  *
  * The limit is read from the BEST tier on the device, not from whichever
  * profile happens to be active. A device's profiles belong to one person, and
@@ -20,10 +27,46 @@ import { getBadgeName, BADGE_ORDER } from '@/lib/staking-badges';
 export const BASELINE_PROFILES = 2;
 
 /**
+ * Profiles each tier unlocks, by name rather than by position so that
+ * reordering `BADGE_LEVELS` cannot silently renumber the ladder.
+ *
+ * A tier missing from here inherits the nearest one below it, so adding a rung
+ * to `BADGE_LEVELS` is never a crash and never a downgrade — it just does not
+ * grant anything until it is given a number here.
+ */
+const PROFILES_BY_TIER: Record<string, number> = {
+  Crab: 3,
+  Lobster: 4,
+  Piranha: 5,
+  Tortoise: 6,
+  Cobra: 10,
+  Octopus: 10,
+  Crocodite: 10,
+  Dolphin: 10,
+  'Tiger Shark': 10,
+  'Killer Whale': 10,
+  'Great White Shark': 10,
+  'Blue Whale': 25,
+  Meglodon: 50,
+};
+
+/** Profiles at a tier index, walking down to the nearest tier that names one. */
+function profilesForIndex(index: number): number {
+  for (let i = Math.min(index, BADGE_ORDER.length - 1); i >= 0; i--) {
+    const slots = PROFILES_BY_TIER[BADGE_ORDER[i]];
+    if (slots !== undefined) return slots;
+  }
+  return BASELINE_PROFILES;
+}
+
+/**
  * Storage backstop, independent of the tier maths: the most any tier can
  * unlock. Nothing but a corrupted list should ever reach it.
  */
-export const MAX_PROFILES_CEILING = BASELINE_PROFILES + BADGE_ORDER.length;
+export const MAX_PROFILES_CEILING = Object.values(PROFILES_BY_TIER).reduce(
+  (top, slots) => Math.max(top, slots),
+  BASELINE_PROFILES,
+);
 
 export interface ProfileAllowance {
   /** Profiles that may be saved on this device at once. */
@@ -37,14 +80,19 @@ export interface ProfileAllowance {
 }
 
 function allowanceForIndex(index: number): ProfileAllowance {
-  const maxProfiles = BASELINE_PROFILES + index + 1;
-  const nextTierName = BADGE_ORDER[index + 1] ?? null;
+  const maxProfiles = index < 0 ? BASELINE_PROFILES : profilesForIndex(index);
+  // The next rung WORTH climbing, not simply the next one along: seven tiers
+  // in the middle all allow ten, and "Octopus tier keeps 10" printed under a
+  // line that already says 10 reads as a bug rather than as an offer.
+  let next = index + 1;
+  while (next < BADGE_ORDER.length && profilesForIndex(next) <= maxProfiles) next++;
+  const nextTierName = BADGE_ORDER[next] ?? null;
   return {
     maxProfiles,
     tierName: BADGE_ORDER[index] ?? 'Starter',
     isBaseline: index < 0,
     nextTierName,
-    nextTierProfiles: nextTierName ? maxProfiles + 1 : null,
+    nextTierProfiles: nextTierName ? profilesForIndex(next) : null,
   };
 }
 
@@ -61,6 +109,7 @@ function tierIndex(holder: BadgeHolder): number {
 
 /** The allowance for a whole device: the best tier any saved profile holds. */
 export function getProfileAllowance(holders: BadgeHolder[]): ProfileAllowance {
-  // index -1 (nobody holds a badge) lands on the baseline; every tier adds one.
+  // index -1 (nobody holds a badge) lands on the baseline; every tier reads
+  // its own rung off the table.
   return allowanceForIndex(holders.reduce((best, h) => Math.max(best, tierIndex(h)), -1));
 }
