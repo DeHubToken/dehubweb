@@ -361,9 +361,13 @@ export function ProfileHeader({
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className={`relative inline-flex items-baseline${badgeUrl ? ' pr-3.5' : ''}`}>
+                <span className={`group relative inline-flex items-baseline${badgeUrl ? ' pr-3.5' : ''}`}>
                   <h2 className="text-xl font-bold text-white">{profile.name}</h2>
                   <BadgeIcon src={badgeUrl} className="w-[10px] h-[10px] absolute -top-0.5 right-0" />
+                  {/* A lent badge draws like any other badge everywhere else
+                      on the site. Hovering the name it sits on is the one
+                      place that says whose badge it is. */}
+                  <BadgePatronChip lookupId={profile.walletAddress} />
                 </span>
               </div>
               {profile.customs && (
@@ -385,9 +389,6 @@ export function ProfileHeader({
               {/* Temporary — gone NEW_MEMBER_WINDOW_DAYS after signup, and
                   immediately if they switch it off in Settings › Privacy. */}
               <NewMemberChip address={profile.walletAddress} />
-              {/* A lent badge draws like any other badge everywhere else on
-                  the site; this is the one place that says whose it is. */}
-              <BadgePatronChip lookupId={profile.walletAddress} />
               {!isViewingOwnProfile && apiProfile?.followsYou && (
                 <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
                   Follows you
