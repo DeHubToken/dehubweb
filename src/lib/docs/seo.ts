@@ -22,9 +22,9 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   dapps: {
     title: "The DeHub dApp — Complete Feature Guide",
     description:
-      "Every DeHub feature in one guide: feeds, shorts, stories, communities, stages, TV and radio, wallet, bounty hunting, stores, AI toolkits, encryption and DePIN.",
+      "Every DeHub feature in one guide: feeds, shorts, stories, the daily posting allowance, communities, stages, TV and radio, wallet, bounty hunting, stores, AI toolkits, encryption and DePIN.",
     keywords:
-      "DeHub dApp, web3 social app, decentralized social features, watch2earn, pay-per-view, live streaming, audio stages, creator wallet, DHB token, bounty hunting, end-to-end encryption, DePIN, AI toolkits",
+      "DeHub dApp, web3 social app, decentralized social features, posting allowance, daily post limit, watch2earn, pay-per-view, live streaming, audio stages, creator wallet, DHB token, bounty hunting, end-to-end encryption, DePIN, AI toolkits",
   },
   games: {
     title: "Games — DeHub Docs",
