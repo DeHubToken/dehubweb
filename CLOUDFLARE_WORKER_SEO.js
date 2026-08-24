@@ -279,6 +279,36 @@ async function getDocsContent(request, env, route) {
   return content;
 }
 
+/**
+ * FAQPage markup for /docs/faq, so the answers can win a rich result.
+ *
+ * Built by pairing each `<h2>` with the `<p>` that follows it in the docs
+ * content — the same question/answer pairs the page renders, rather than a
+ * second hand-maintained copy that would drift the moment a question is added.
+ * It has to live here and not in the React page: react-helmet's client output
+ * never reaches a crawler, and every JSON-LD block dehub.io actually serves
+ * comes from this worker.
+ *
+ * Returns '' when the shape is not a Q/A list, so a content change can only
+ * cost the rich result, never emit malformed markup.
+ */
+function faqJsonLd(contentHtml) {
+  if (!contentHtml) return '';
+  const strip = (s) => s.replace(/<[^>]+>/g, '').trim();
+  const pairs = [];
+  const re = /<h2>([\s\S]*?)<\/h2>\s*<p>([\s\S]*?)<\/p>/g;
+  let m;
+  while ((m = re.exec(contentHtml)) !== null) {
+    const name = strip(m[1]);
+    const text = strip(m[2]);
+    if (name && text) pairs.push({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } });
+  }
+  if (pairs.length < 3) return '';
+  return `\n<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pairs,
+  })}</script>`;
+}
+
 function buildDocsHtml(route, meta, contentHtml) {
   const canonicalUrl = `${APP_URL}/docs/${route}`;
   const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a href="${canonicalUrl}">Open this page in the DeHub docs</a>.</p>`;
@@ -302,7 +332,7 @@ ${shareMetaTags(`docs/${route}`, meta.title)}
   '@context': 'https://schema.org', '@type': 'TechArticle',
   headline: meta.title, description: meta.description,
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
-})}</script>
+})}</script>${route === 'faq' ? faqJsonLd(contentHtml) : ''}
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/docs" style="color:#9f9">Docs</a></p>
