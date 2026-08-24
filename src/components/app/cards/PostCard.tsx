@@ -17,6 +17,7 @@ import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, G
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
+import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
@@ -121,6 +122,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle, muteAuthor]);
 
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
+
+  // The warning is for whoever is looking at the screen, so it covers the
+  // author's own post too.
+  const matureGate = useMatureGate(post.contentRating);
 
   const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
@@ -471,6 +476,16 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
 
       {/* Content */}
       <div className="pt-3 space-y-2">
+        {/* A text post's body is its content, so the warning covers the text
+            and its embeds. Metadata and the action bar stay below it, so the
+            post can still be reported or opened without being read first. */}
+        {matureGate.isGated ? (
+        <MatureContentGate
+          onReveal={matureGate.reveal}
+          description="The creator marked this post as adult or graphic."
+        />
+        ) : (
+        <>
         {/* Title */}
         {post.title && (
           <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
@@ -497,6 +512,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         {/* OG previews for outside links. Skipped when an entity card is already
             showing: two stacked cards for one line of text is noise. */}
         {post.content && dehubLinks.length === 0 && <FeedLinkPreviews text={post.content} />}
+        </>
+        )}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
@@ -691,6 +708,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         currentTitle={post.rawName ?? post.title ?? ''}
         currentDescription={post.rawDescription ?? post.content ?? ''}
         currentCategories={post.categories ?? []}
+        currentContentRating={post.contentRating}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, post.id, edited);
         }}
