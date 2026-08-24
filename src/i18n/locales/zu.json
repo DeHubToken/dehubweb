@@ -27,7 +27,20 @@
     "events": "Imicimbi",
     "prompt": "Yenza",
     "communities": "Imiphakathi",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "I-Arcade",
+    "stats": "Izibalo ezibukhoma",
+    "liveTv": "I-TV ebukhoma",
+    "buyDhb": "Thenga i-DHB",
+    "bridge": "Ibhuloho",
+    "top100": "Abangu-100 abaphezulu",
+    "agents": "Ama-ejenti e-AI",
+    "advertising": "Ukukhangisa",
+    "premium": "I-Premium",
+    "pricing": "Amanani",
+    "creators": "Abadali",
+    "getTheApp": "Thola uhlelo",
+    "connectAi": "Xhuma i-AI"
   },
   "feed": {
     "home": "Ekhaya",
@@ -35,7 +48,9 @@
     "images": "Zithombe",
     "shorts": "Okufushane",
     "music": "Umculo",
-    "live": "Bukhoma"
+    "live": "Bukhoma",
+    "newPosts_one": "{{count}} okuthunyelwe okusha",
+    "newPosts_other": "{{count}} okuthunyelwe okusha"
   },
   "explore": {
     "all": "Konke",
@@ -242,7 +257,58 @@
     "hazy": "Ubusuku Obufiphele",
     "save": "Londoloza",
     "saving": "Iyalondoloza...",
-    "swarms": "Imihlambi"
+    "swarms": "Imihlambi",
+    "profiles": "Amaphrofayela",
+    "profilesDesc": "Ama-akhawunti alondolozwe kule divayisi",
+    "addProfile": "Engeza iphrofayela",
+    "profileActive": "Kuyasebenza",
+    "profileSignedOut": "ngena ukuze ushintshe",
+    "profileRemove": "Susa iphrofayela",
+    "profilesUsed": "{{used}} kwangu-{{max}} kusetshenzisiwe",
+    "profilesNextTier": "Izinga le-{{tier}} ligcina {{count}}",
+    "profilesFullTier": "Yenza i-staking ukuze uthole ibheji le-{{tier}} bese ugcina amaphrofayela angu-{{count}}",
+    "profilesFull": "Susa iphrofayela eyodwa ukuze wengeze elinye i-akhawunti",
+    "browserNotifications": "Izaziso zesiphequluli",
+    "browserNotificationsDesc": "Thola isaziso ngezimpendulo, amathiphu nemiyalezo ngenkathi ukwelinye ithebhu",
+    "browserNotificationsOnDesc": "Izimpendulo, amathiphu nemiyalezo kuyavela ngenkathi ukwelinye ithebhu",
+    "browserNotificationsDismissed": "Isicelo sesaziso sisusiwe — zama ushintsho futhi",
+    "browserNotificationsBlocked": "Zivinjelwe isiphequluli sakho",
+    "browserNotificationsBlockedTitle": "Lesi siphequluli sivimba izaziso",
+    "browserNotificationsBlockedNote": "Isiphequluli sakho kuphela esingakuhlehlisa lokhu — uma sekuvinjelwe, i-DeHub ayikwazi ukubuza futhi.",
+    "browserNotificationsBlockedPending": "Isicelo sakho silondoloziwe — sizovuleka sodwa lapho isiphequluli sakho sivuma.",
+    "browserNotificationsUnblockChromium": "Chofoza isithonjana esingakwesobunxele sebha yekheli → Izilungiselelo zesayithi → misa Izaziso ku-Vumela, bese uphinde ulayishe leli khasi.",
+    "browserNotificationsUnblockFirefox": "Chofoza ingidi esingakwesobunxele sebha yekheli, susa u-\"Kuvinjelwe\" eduze kwe-Thola Izaziso, bese uphinde ulayishe leli khasi.",
+    "browserNotificationsUnblockSafari": "Kubha yemenyu: Safari → Izilungiselelo → Amawebhusayithi → Izaziso, bese umisa leli sayithi ku-Vumela.",
+    "browserNotificationsUnblockGeneric": "Vula izilungiselelo zesayithi zesiphequluli sakho kuleli khasi, misa Izaziso ku-Vumela, bese ulayisha futhi.",
+    "browserNotificationsIosHint": "I-iPhone ne-iPad zikuvumela kuphela uma i-DeHub isesikrinini sasekhaya — thepha Yabelana, bese \"Engeza esikrinini sasekhaya\".",
+    "browserNotificationsTest": "Thumela isaziso sokuhlola",
+    "browserNotificationsTestSent": "Isaziso sokuhlola sithunyelwe",
+    "browserNotificationsTestBody": "Isaziso se-DeHub sibukeka kanjena.",
+    "showAsNewMember": "Ngibonise njengelungu elisha",
+    "showAsNewMemberDesc": "Kuvumela amanye amalungu ukuthi abone ukuthi usanda kujoyina ukuze akwamukele. Kuphela ngokuzenzakalela ezinsukwini ezingu-30 emva kokubhalisa.",
+    "defaultProfileTab": "Ithebhu yephrofayela ezenzakalelayo",
+    "defaultProfileTabDesc": "Khetha ukuthi iyiphi ithebhu izivakashi ezizoyibona kuqala kuphrofayela yakho",
+    "lavalamp": "Isibani se-lava",
+    "war": "Impi",
+    "osaka": "I-Osaka",
+    "jungle": "Ihlathi",
+    "themeColor": "Umbala wetimu",
+    "themeColorDesc": "Khetha umbala wakho kule timu",
+    "themeColorReset": "Setha kabusha",
+    "themeColorWhite": "Mhlophe",
+    "themeColorBlack": "Mnyama",
+    "themeColorRainbow": "Uthingo lwenkosikazi",
+    "themeColorBrand": "Umkhiqizo",
+    "themeColorBrandDesc": "Sebenzisa imibala yesithombe sakho sephrofayela",
+    "themeColorBrandNoAvatar": "Engeza isithombe sephrofayela ukuze usebenzise imibala yoMkhiqizo",
+    "themeColorBrandFailed": "Ayikwazanga ukufunda imibala esithombeni sakho sephrofayela",
+    "dimLights": "Fiphaza izibani",
+    "dimLightsDesc": "Kunciphisa ukuchayeka ekukhanyeni okuluhlaza",
+    "matureContent": "Bonisa okuqukethwe kwabadala",
+    "matureContentDesc": "Kufaka okuthunyelwe kwabadala nokushaqisayo kumafidi akho, futhi kususa isexwayiso kulokho osukubona. Kuvaliwe ngokuzenzakalela.",
+    "noNewMessages": "Azikho izingxoxo ezintsha",
+    "noNewMessagesDesc": "Gcina izingxoxo zakho ezikhona, kodwa akekho omusha ongaqala eyodwa",
+    "dmNoNewHelp": "Izingxoxo ezikhona ziyaqhubeka; akekho omusha ongaqala eyodwa"
   },
   "common": {
     "save": "Gcina",
@@ -256,7 +322,8 @@
     "translating": "Iyahumusha...",
     "close": "Vala",
     "loadingMore": "Ilayisha okwengeziwe...",
-    "loadMore": "Layisha okwengeziwe"
+    "loadMore": "Layisha okwengeziwe",
+    "tryAgain": "Zama futhi"
   },
   "tip": {
     "title": "Thumela Ithiphu",
@@ -787,7 +854,11 @@
     "postRemoved": "Okuthunyelwe kwakho kususiwe",
     "newNotification": "Isaziso esisha",
     "oneOther": "omunye omu-1",
-    "nOthers": "abanye abangu-{{count}}"
+    "nOthers": "abanye abangu-{{count}}",
+    "thisBrowser": "Lesi siphequluli",
+    "features": "Izici",
+    "communities": "Imiphakathi",
+    "stores": "Izitolo"
   },
   "leaderboard": {
     "title": "Bhodi Yabaholi",
@@ -816,7 +887,12 @@
     "addedToLeaderboard": "Wengeziwe! Ibhalansi: {{balance}} DHB",
     "balanceTooLow": "Ibhalansi iphansi kakhulu ({{balance}} DHB)",
     "refreshFailed": "Kukhona okungahambanga kahle",
-    "noWalletAddress": "Alikho ikheli lesikhwama elitholakalayo"
+    "noWalletAddress": "Alikho ikheli lesikhwama elitholakalayo",
+    "affiliates": "Ozakwethu",
+    "directReferrals_one": "{{count}} okuqondile",
+    "directReferrals_other": "{{count}} okuqondile",
+    "secondaryReferrals_one": "{{count}} okungaqondile",
+    "secondaryReferrals_other": "{{count}} okungaqondile"
   },
   "features": {
     "title": "Zicelo Zezici",
@@ -855,7 +931,10 @@
     "statusPlanned": "Kuhlelwe",
     "statusInProgress": "Kuyaqhubeka",
     "statusCompleted": "Kuqediwe",
-    "statusDeclined": "Kwenqatshiwe"
+    "statusDeclined": "Kwenqatshiwe",
+    "shipping": "Kuyakhiwa",
+    "noShippingYet": "Akukho okuqhubekayo",
+    "shippingAppearHere": "Izicelo ezisakhiwa zizovela lapha."
   },
   "auth": {
     "loginRequired": "Ukungena kuyadingeka"
@@ -928,7 +1007,8 @@
     "failedPurchase": "Kuhlulekile ukuqala ukuthenga",
     "redirectingOnramp": "Iqondisa endleleni...",
     "onrampCreated": "Iseshini yendlela idalwe",
-    "failedOnramp": "Kuhlulekile ukuqala indlela"
+    "failedOnramp": "Kuhlulekile ukuqala indlela",
+    "badgeDiscount": "Umnikazi we-{{tier}} — isaphulelo se-{{percent}}%"
   },
   "agents": {
     "title": "Ejensi ye-AI",
@@ -958,7 +1038,13 @@
     "agentDeleted": "I-ejensi isusiwe",
     "failedCreate": "Kuhlulekile ukudala i-ejensi",
     "failedDelete": "Kuhlulekile ukususa i-ejensi",
-    "apiKeyCopied": "Ukhiye we-API ukopishiwe"
+    "apiKeyCopied": "Ukhiye we-API ukopishiwe",
+    "connectorUrl": "I-URL yesixhumanisi",
+    "connectorUrlCopied": "I-URL yesixhumanisi ikopishiwe",
+    "connectorUrlHelp": "Yengeza lokhu njengesixhumanisi se-MCP esizenzakalelayo ku-Claude noma ku-ChatGPT. Sifakazela njengale ejenti, ngakho siphathe njengokhiye we-API.",
+    "agentWallet": "Isikhwama se-ejenti (Base)",
+    "walletCopied": "Ikheli lesikhwama likopishiwe",
+    "agentWalletHelp": "Thumela imali encane ye-ETH ku-Base lapha ngaphambi kokuba i-ejenti iposte — ukushicilela kwenza i-mint ku-chain futhi i-ejenti ikhokha igesi yayo. Ukuphawula, ukuvota nokulandela akudingi gesi."
   },
   "hero": {
     "title": "Siyakwamukela",
@@ -1006,7 +1092,10 @@
     "or": "noma",
     "termsNotice": "Ngokuqhubeka, uyavuma Imigomo Yethu Yokusebenza Nenqubomgomo Yobumfihlo",
     "walletInfoDesktop": "Xhuma isikhwama sakho ukuze ungene ngokuphephile",
-    "walletInfoMobile": "MetaMask, Trust ne-Phantom bazovula uhlelo lwabo ngqo. Rabby izosebenzisa i-WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust ne-Phantom bazovula uhlelo lwabo ngqo. Rabby izosebenzisa i-WalletConnect.",
+    "addProfileTitle": "Engeza iphrofayela",
+    "walletConnectedAs": "Kuxhunyiwe",
+    "useDifferentWallet": "Sebenzisa esinye isikhwama"
   },
   "careers": {
     "title": "Imisebenzi ku-DeHub",
@@ -1160,7 +1249,11 @@
     "comingSoon": "Kuyeza maduze — ama-trends esifunda asendleleni!",
     "post": "Thumela",
     "logOut": "Phuma",
-    "logIn": "Ngena"
+    "logIn": "Ngena",
+    "searchMenu": "Sesha kumenyu",
+    "clearSearch": "Sula usesho",
+    "noMenuMatches": "Akukho okufanayo kumenyu",
+    "searchDehubFor": "Sesha \"{{query}}\" ku-DeHub"
   },
   "postInfo": {
     "title": "Ulwazi Lokuthunyelwe",
@@ -1410,7 +1503,11 @@
     "new_version_available": "Uhlobo olusha olutholakalayo",
     "refresh_to_pick_up_the_latest_changes": "Vuselela ukuze uthole izinguquko zakamuva.",
     "refresh": "Vuselela",
-    "what_changed": "Yini eshintshile"
+    "what_changed": "Yini eshintshile",
+    "turn_on_desktop_notifications": "Uvule izaziso zedeskithophu?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Thola isaziso ngezimpendulo, amathiphu nemiyalezo ngenkathi ukwelinye ithebhu.",
+    "turn_on": "Vula",
+    "not_now": "Hhayi manje"
   },
   "prompt": {
     "seoTitle": "Yenza i-feed yakho — DeHub",
@@ -1556,5 +1653,105 @@
     "when": "Nini",
     "whyStake": "Kungani Ufaka Idiphozithi?",
     "yourStaked": "Okufakiwe Kwakho"
+  },
+  "arcade": {
+    "title": "I-Arcade",
+    "intro": "Iqoqo lemidlalo, imihlaba nezipiliyoni ezakhiwe futhi zavulwa umthombo yi-DeHub.",
+    "seoTitle": "I-Arcade | DeHub",
+    "seoDescription": "Dlala ngqo kusiphequluli sakho ku-DeHub — i-chess ye-3D enjengefilimu, umdlalo wokudubula owakhiwe ngokwezinqubo, ukuhamba ehlathini lemvula, ukulwa emgwaqweni kwe-neon nephansi lokuhweba ongahamba kulo. Akukho ukufaka, akukho ukulanda.",
+    "alsoIn": "Kukhona nakwi-{{theme}}"
+  },
+  "stats": {
+    "title": "Izibalo",
+    "subtitle": "Ulwazi lomthombo ovulekile ngesikhathi sangempela",
+    "live": "Bukhoma",
+    "range": {
+      "24h": "amahora angu-24",
+      "3d": "izinsuku ezingu-3",
+      "7d": "izinsuku ezingu-7",
+      "30d": "izinsuku ezingu-30",
+      "all": "Isikhathi sonke"
+    },
+    "unavailable": {
+      "title": "Izibalo azitholakali okwamanje",
+      "unconfigured": "Indawo yokugcina yokuhlaziya ayikanikwa ithokheni yayo ye-Cloudflare API. Akukho okuboniswayo esikhundleni senani eliqanjiwe.",
+      "error": "Asikwazanga ukufinyelela i-API yokuhlaziya ye-Cloudflare. Kunokuba ibonise inani elidala noma eliqanjiwe, leli khasi alibonisi lutho kuze kuphumelele ukufunda bukhoma."
+    },
+    "tile": {
+      "visitorsToday": "Izivakashi namuhla",
+      "soFarToday": "kuze kube manje namuhla, i-UTC",
+      "peakHour": "Ihora elimatasa kakhulu",
+      "peakDay": "Usuku olumatasa kakhulu",
+      "peakAtHour": "ngo-{{when}} UTC",
+      "peakOnDay": "ngo-{{when}}",
+      "inRange": "kuleli banga",
+      "pageViews": "Ukubukwa kwamakhasi",
+      "overHours": "ngamahora angu-{{count}}",
+      "overDay": "ngosuku olu-1",
+      "overDays": "ngezinsuku ezingu-{{count}}",
+      "requestsLabel": "Izicelo",
+      "served": "Zilethiwe",
+      "requests": "izicelo ezingu-{{requests}}"
+    },
+    "chart": {
+      "hourly": "Izivakashi ngehora",
+      "daily": "Izivakashi ngosuku",
+      "hourlyHint": "{{count}} izikhathi zamahora, i-UTC",
+      "dailyHint": "izivakashi ezihlukile ngosuku",
+      "empty": "Ayikho idatha yale nkathi okwamanje"
+    },
+    "countries": {
+      "title": "Amazwe aphezulu",
+      "windowDay": "amahora angu-24 edlule",
+      "window": "izinsuku ezingu-{{days}} ezedlule"
+    },
+    "browsers": {
+      "title": "Iziphequluli",
+      "window": "ngokubukwa kwamakhasi"
+    },
+    "edge": {
+      "title": "Emaphethelweni",
+      "windowDay": "amahora angu-24 edlule",
+      "window": "izinsuku ezingu-{{days}} ezedlule",
+      "cached": "Ilethwe kusuka ku-cache",
+      "encrypted": "Kubethelwe",
+      "threats": "Izinsongo ezivinjiwe"
+    },
+    "proof": {
+      "title": "Lapho lezi zibalo zivela khona",
+      "subtitle": "Kulinganiswe yi-Cloudflare, hhayi yileli khasi",
+      "source": "Umthombo",
+      "datasets": "Amasethi edatha",
+      "zone": "Indawo",
+      "ray": "I-Cloudflare ray ID",
+      "fetched": "Ilandwe ngo-",
+      "query": "Umbuzo oqondile ongemuva kweshadi",
+      "copied": "Kukopishiwe",
+      "copy": "Kopisha",
+      "openEndpoint": "Vula i-/api/stats",
+      "openRaw": "Impendulo ye-Cloudflare engathintwanga",
+      "edge": "Sonke isicelo esiya ku-dehub.io sidlula ku-Cloudflare ngaphambi kokuba sifike kuma-server ethu. Lezi zibalo ziwukuhlanganiswa kwe-Cloudflare ngokwayo kwaleyo thrafikhi — amanani afanayo abonisa ideshibhodi yethu. Aziqoqwa umbhalo esipheqululini sakho, ngakho akukho lutho kuleli khasi olungawakhulisa, futhi ukuvimba abalandeli akuwashintshi.",
+      "live": "Ikhasi liwafunda bukhoma. Ukulayisha i-/stats kubiza indawo yethu yokugcina, ebuza i-Analytics API ye-Cloudflare ngaleso sikhathi bese igcina impendulo imizuzwana engu-60.",
+      "limits": "Okuboniswa yilokhu nokungaboniswa: ungabona ukuthi amanani avela ekuhlanganisweni kwe-Cloudflare hhayi kukhodi yohlelo lwethu, nokuthi umbuzo oshicilelwe lapha yiwona osebenzayo. Akuyona into engadingi ukwethemba — ithokheni ye-API sinayo, futhi i-Cloudflare ayinikezi ukufunda komphakathi kokuhlaziya kwendawo. Noma ubani onendawo yakhe ye-Cloudflare angasebenzisa umbuzo ofanayo futhi aqinisekise isakhiwo sawo."
+    },
+    "definitions": {
+      "title": "Okushiwo yilezi zibalo",
+      "visitorsTerm": "Izivakashi",
+      "visitors": "— amakheli e-IP ahlukile i-Cloudflare eyawabona ngalolo suku. Kusondele kubantu, kodwa akufani: ihhovisi elikuxhumano olulodwa libalwa kanye, futhi ifoni eshintsha phakathi kwe-wifi nedatha yeselula ibalwa kabili.",
+      "pageViewsTerm": "Ukubukwa kwamakhasi",
+      "pageViews": "— izicelo i-Cloudflare eziqoqa njengokulayishwa kwamakhasi, hhayi izithombe, imibhalo noma amakholi we-API.",
+      "botsTerm": "Ama-bot afakiwe",
+      "bots": "— lezi yizibalo ezingahluziwe emaphethelweni, ngakho ama-crawler, abaqaphi bokusebenza namaklayenti anemibhalo akufakiwe. Ungazibona wena kubunjalo besiphequluli ngenhla, lapho okufakiwe okufana no-\"Curl\" no-\"Akwaziwa\" kuyithrafikhi ezenzakalelayo hhayi abantu. Ukuhlunga ama-bot kudinga uhlelo lwe-Cloudflare olukhokhelwayo esingenalo, futhi ukususa isilinganiso buthule kwenza izibalo zingahloleki kalula, hhayi kangcono.",
+      "totalTerm": "Amasamba ebanga",
+      "total": "— ukubukwa kwamakhasi nezicelo kuyahlanganiswa kulo lonke ibanga. Izibalo zezivakashi azihlanganiswa ngamabomu zibe \"yisamba sezivakashi\", ngoba umuntu obelapha ngoMsombuluko nangoLwesibili ubezobalwa kabili.",
+      "peakTerm": "Ihora / usuku olumatasa kakhulu",
+      "peak": "— inani eliphakeme kunawo wonke elihlukile kunoma yisiphi isikhathi esisodwa sebanga, ngesizathu esifanayo: yinani i-Cloudflare eyilinganisa ngempela, hhayi elakhiwe ngokuhlanganisa izibalo ezigqagqanayo.",
+      "resolutionTerm": "Idatha yamahora imisa ezinsukwini ezingu-3",
+      "resolution": "— lona umkhawulo we-Cloudflare kulolu hlelo, hhayi ukukhetha kwethu: yenqaba noma yimuphi umbuzo wamahora obanzi kunezinsuku ezintathu. Ukubuka kwamahora angu-24 nezinsuku ezingu-3 kungokwamahora; izinsuku ezingu-7 nangaphezulu kungokwansuku zonke, futhi ayikho indlela yokudweba ishadi lamahora lesikhathi sonke.",
+      "breakdownTerm": "Amazwe neziphequluli",
+      "breakdown": "— alandela ibanga olikhethayo, kodwa kuphela izinsuku ezingu-{{max}} emuva, ngoba yilapho ukuhlukaniswa kwansuku zonke kugcinwa khona. Emabangeni amade ishadi limboza isikhathi esingaphezu kohlu lwamazwe.",
+      "startTerm": "Umlando",
+      "start": "— \"isikhathi sonke\" kusho usuku ngalunye i-Cloudflare esalugcinile, namuhla izinsuku ezingu-{{days}} kusukela ngo-{{date}}, usuku i-dehub.io eyathuthela ngalo ku-Cloudflare. Ayikho idatha yasemaphethelweni yangaphambili engaboniswa, futhi izinsuku ezindala ziyawa njengoba i-Cloudflare izenza zibe ndala."
+    }
   }
 }

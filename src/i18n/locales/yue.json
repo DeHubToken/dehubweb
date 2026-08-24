@@ -27,7 +27,20 @@
     "events": "Events",
     "prompt": "提示",
     "communities": "社群",
-    "staking": "質押"
+    "staking": "質押",
+    "arcade": "街機",
+    "stats": "即時統計",
+    "liveTv": "直播電視",
+    "buyDhb": "買 DHB",
+    "bridge": "跨鏈橋",
+    "top100": "百大榜",
+    "agents": "AI 代理",
+    "advertising": "廣告",
+    "premium": "高級版",
+    "pricing": "定價",
+    "creators": "創作者",
+    "getTheApp": "下載應用程式",
+    "connectAi": "連接 AI"
   },
   "feed": {
     "home": "主頁",
@@ -35,7 +48,9 @@
     "images": "圖片",
     "shorts": "短片",
     "music": "音樂",
-    "live": "直播"
+    "live": "直播",
+    "newPosts_one": "{{count}} 個新帖",
+    "newPosts_other": "{{count}} 個新帖"
   },
   "explore": {
     "all": "全部",
@@ -242,7 +257,58 @@
     "hazy": "朦朧夜",
     "save": "儲存",
     "saving": "儲存緊...",
-    "swarms": "蜂群"
+    "swarms": "蜂群",
+    "profiles": "檔案",
+    "profilesDesc": "儲存喺呢部裝置嘅帳戶",
+    "addProfile": "加個檔案",
+    "profileActive": "使用中",
+    "profileSignedOut": "登入先可以切換",
+    "profileRemove": "移除檔案",
+    "profilesUsed": "已用 {{used}}/{{max}}",
+    "profilesNextTier": "{{tier}} 等級可以保留 {{count}} 個",
+    "profilesFullTier": "質押攞 {{tier}} 徽章就可以保留 {{count}} 個檔案",
+    "profilesFull": "移除一個檔案先可以加另一個帳戶",
+    "browserNotifications": "瀏覽器通知",
+    "browserNotificationsDesc": "就算你喺第二個分頁，都可以即刻知道回覆、打賞同私訊",
+    "browserNotificationsOnDesc": "就算你喺第二個分頁，回覆、打賞同私訊都會彈出嚟",
+    "browserNotificationsDismissed": "通知請求已忽略——再試吓個掣",
+    "browserNotificationsBlocked": "俾你嘅瀏覽器封鎖咗",
+    "browserNotificationsBlockedTitle": "呢個瀏覽器封鎖緊通知",
+    "browserNotificationsBlockedNote": "只有你嘅瀏覽器先可以撤銷——一旦封鎖咗，DeHub 就唔可以再問。",
+    "browserNotificationsBlockedPending": "你嘅請求已經儲存——瀏覽器一允許，佢就會自己開。",
+    "browserNotificationsUnblockChromium": "㩒網址列左邊嘅圖示 → 網站設定 → 將通知設做「允許」，再重新載入呢一頁。",
+    "browserNotificationsUnblockFirefox": "㩒網址列左邊嘅鎖頭，清除「接收通知」旁邊嘅「已封鎖」，再重新載入呢一頁。",
+    "browserNotificationsUnblockSafari": "喺選單列：Safari → 設定 → 網站 → 通知，然後將呢個網站設做「允許」。",
+    "browserNotificationsUnblockGeneric": "喺瀏覽器打開呢一頁嘅網站設定，將通知設做「允許」，再重新載入。",
+    "browserNotificationsIosHint": "iPhone 同 iPad 要 DeHub 加咗落主畫面先允許——㩒「分享」，再揀「加到主畫面」。",
+    "browserNotificationsTest": "發送測試通知",
+    "browserNotificationsTestSent": "已發送測試通知",
+    "browserNotificationsTestBody": "DeHub 嘅通知就係咁樣。",
+    "showAsNewMember": "將我顯示為新成員",
+    "showAsNewMemberDesc": "等其他成員睇到你啱啱加入，方便佢哋歡迎你。註冊 30 日之後自動結束。",
+    "defaultProfileTab": "預設檔案分頁",
+    "defaultProfileTabDesc": "揀訪客喺你檔案上最先睇到邊個分頁",
+    "lavalamp": "熔岩燈",
+    "war": "戰爭",
+    "osaka": "大阪",
+    "jungle": "叢林",
+    "themeColor": "主題顏色",
+    "themeColorDesc": "為呢個主題揀個自訂顏色",
+    "themeColorReset": "重設",
+    "themeColorWhite": "白色",
+    "themeColorBlack": "黑色",
+    "themeColorRainbow": "彩虹",
+    "themeColorBrand": "品牌",
+    "themeColorBrandDesc": "用你頭像嘅顏色",
+    "themeColorBrandNoAvatar": "加張頭像先可以用品牌配色",
+    "themeColorBrandFailed": "讀唔到你頭像嘅顏色",
+    "dimLights": "調暗燈光",
+    "dimLightsDesc": "減少藍光接觸",
+    "matureContent": "顯示成人內容",
+    "matureContentDesc": "喺你嘅動態加入成人同血腥帖文，並且移走你已經睇到嗰啲嘅警告。預設關閉。",
+    "noNewMessages": "唔收新對話",
+    "noNewMessagesDesc": "保留你現有嘅對話，但新人開唔到新對話",
+    "dmNoNewHelp": "現有嘅對話照樣用得；新人開唔到新對話"
   },
   "common": {
     "save": "儲存",
@@ -256,7 +322,8 @@
     "translating": "翻譯緊...",
     "close": "關閉",
     "loadingMore": "載入更多緊...",
-    "loadMore": "載入更多"
+    "loadMore": "載入更多",
+    "tryAgain": "再試一次"
   },
   "tip": {
     "title": "送禮物",
@@ -724,7 +791,11 @@
     "postRemoved": "你嘅帖文已被移除",
     "newNotification": "新通知",
     "oneOther": "1位其他人",
-    "nOthers": "{{count}}位其他人"
+    "nOthers": "{{count}}位其他人",
+    "thisBrowser": "呢個瀏覽器",
+    "features": "功能",
+    "communities": "社群",
+    "stores": "店舖"
   },
   "leaderboard": {
     "title": "排行榜",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "你已加入！餘額：{{balance}} DHB",
     "balanceTooLow": "餘額太低（{{balance}} DHB）",
     "refreshFailed": "出錯喇",
-    "noWalletAddress": "搵唔到錢包地址"
+    "noWalletAddress": "搵唔到錢包地址",
+    "affiliates": "推廣夥伴",
+    "directReferrals_one": "直接 {{count}} 人",
+    "directReferrals_other": "直接 {{count}} 人",
+    "secondaryReferrals_one": "間接 {{count}} 人",
+    "secondaryReferrals_other": "間接 {{count}} 人"
   },
   "explorePage": {
     "searchPlaceholder": "搜尋用戶、帖文或內容...",
@@ -854,7 +930,10 @@
     "statusPlanned": "已規劃",
     "statusInProgress": "進行中",
     "statusCompleted": "已完成",
-    "statusDeclined": "已拒絕"
+    "statusDeclined": "已拒絕",
+    "shipping": "開發中",
+    "noShippingYet": "冇嘢喺度做緊",
+    "shippingAppearHere": "開發緊嘅需求會喺呢度出現。"
   },
   "auth": {
     "loginRequired": "需要登入"
@@ -927,7 +1006,8 @@
     "failedPurchase": "建立購買失敗",
     "redirectingOnramp": "跳轉到入金緊...",
     "onrampCreated": "入金會話已建立",
-    "failedOnramp": "建立入金失敗"
+    "failedOnramp": "建立入金失敗",
+    "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣"
   },
   "agents": {
     "title": "AI代理",
@@ -957,7 +1037,13 @@
     "agentDeleted": "代理已刪除",
     "failedCreate": "建立代理失敗",
     "failedDelete": "刪除代理失敗",
-    "apiKeyCopied": "API密鑰已複製到剪貼簿"
+    "apiKeyCopied": "API密鑰已複製到剪貼簿",
+    "connectorUrl": "連接器 URL",
+    "connectorUrlCopied": "已複製連接器 URL",
+    "connectorUrlHelp": "喺 Claude 或者 ChatGPT 加佢做自訂 MCP 連接器。佢以呢個代理嘅身分驗證，所以當係 API 金鑰咁保管。",
+    "agentWallet": "代理錢包（Base）",
+    "walletCopied": "已複製錢包地址",
+    "agentWalletHelp": "喺代理發帖之前，先轉少少 Base ETH 過嚟——發布會喺鏈上鑄造，代理自己付 gas。留言、投票同關注唔使 gas。"
   },
   "hero": {
     "title": "歡迎嚟到",
@@ -1005,7 +1091,10 @@
     "or": "或者",
     "termsNotice": "繼續即代表你同意服務條款同私隱政策",
     "walletInfoDesktop": "連接錢包嚟安全登入",
-    "walletInfoMobile": "直接開啟MetaMask、Trust同Phantom應用程式。Rabby使用WalletConnect。"
+    "walletInfoMobile": "直接開啟MetaMask、Trust同Phantom應用程式。Rabby使用WalletConnect。",
+    "addProfileTitle": "加個檔案",
+    "walletConnectedAs": "已連接",
+    "useDifferentWallet": "用第二個錢包"
   },
   "careers": {
     "title": "加入DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "就快嚟喇——地區趨勢就快上線！",
     "post": "發佈",
     "logOut": "登出",
-    "logIn": "登入"
+    "logIn": "登入",
+    "searchMenu": "搜尋選單",
+    "clearSearch": "清除搜尋",
+    "noMenuMatches": "選單入面冇匹配項",
+    "searchDehubFor": "喺 DeHub 搜尋「{{query}}」"
   },
   "postInfo": {
     "title": "帖子資訊",
@@ -1379,7 +1472,11 @@
     "new_version_available": "有新版本",
     "refresh_to_pick_up_the_latest_changes": "重新整理就可以攞到最新嘅變更。",
     "refresh": "刷新",
-    "what_changed": "有咩改變咗"
+    "what_changed": "有咩改變咗",
+    "turn_on_desktop_notifications": "開啟桌面通知？",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "就算你喺第二個分頁，都可以即刻知道回覆、打賞同私訊。",
+    "turn_on": "開啟",
+    "not_now": "而家唔使"
   },
   "prompt": {
     "seoTitle": "提示你的訂閱 — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "時間",
     "whyStake": "點解要存入？",
     "yourStaked": "你嘅存款"
+  },
+  "arcade": {
+    "title": "街機",
+    "intro": "DeHub 自己開發並開源嘅遊戲、世界同體驗合集。",
+    "seoTitle": "街機 | DeHub",
+    "seoDescription": "喺 DeHub 用瀏覽器就玩得——電影感 3D 國際象棋、程序生成射擊遊戲、雨林漫步、霓虹街頭格鬥，仲有可以行嚟行去嘅交易大堂。唔使安裝，唔使下載。",
+    "alsoIn": "{{theme}} 都有"
+  },
+  "stats": {
+    "title": "統計",
+    "subtitle": "即時開源情報",
+    "live": "直播",
+    "range": {
+      "24h": "24 小時",
+      "3d": "3 日",
+      "7d": "7 日",
+      "30d": "30 日",
+      "all": "全部時間"
+    },
+    "unavailable": {
+      "title": "統計數據暫時未能提供",
+      "unconfigured": "分析端點仲未設定 Cloudflare API 權杖。與其作個數字出嚟，不如咩都唔顯示。",
+      "error": "我哋連唔到 Cloudflare 嘅分析 API。與其顯示過時或者作出嚟嘅數字，呢一頁喺即時讀取成功之前咩都唔顯示。"
+    },
+    "tile": {
+      "visitorsToday": "今日訪客",
+      "soFarToday": "今日到目前為止，UTC",
+      "peakHour": "最繁忙嘅一個鐘",
+      "peakDay": "最繁忙嘅一日",
+      "peakAtHour": "喺 {{when}} UTC",
+      "peakOnDay": "喺 {{when}}",
+      "inRange": "喺呢個範圍內",
+      "pageViews": "頁面瀏覽量",
+      "overHours": "{{count}} 小時內",
+      "overDay": "1 日內",
+      "overDays": "{{count}} 日內",
+      "requestsLabel": "請求",
+      "served": "已提供",
+      "requests": "{{requests}} 次請求"
+    },
+    "chart": {
+      "hourly": "每小時訪客",
+      "daily": "每日訪客",
+      "hourlyHint": "{{count}} 個小時區間，UTC",
+      "dailyHint": "每日獨立訪客",
+      "empty": "呢段時間仲未有數據"
+    },
+    "countries": {
+      "title": "主要國家/地區",
+      "windowDay": "最近 24 小時",
+      "window": "最近 {{days}} 日"
+    },
+    "browsers": {
+      "title": "瀏覽器",
+      "window": "按頁面瀏覽量"
+    },
+    "edge": {
+      "title": "喺邊緣節點",
+      "windowDay": "最近 24 小時",
+      "window": "最近 {{days}} 日",
+      "cached": "由快取提供",
+      "encrypted": "已加密",
+      "threats": "已攔截威脅"
+    },
+    "proof": {
+      "title": "呢啲數字由邊度嚟",
+      "subtitle": "由 Cloudflare 量度，唔係呢一頁",
+      "source": "來源",
+      "datasets": "數據集",
+      "zone": "區域",
+      "ray": "Cloudflare ray ID",
+      "fetched": "擷取於",
+      "query": "圖表背後嘅確實查詢",
+      "copied": "已複製",
+      "copy": "複製",
+      "openEndpoint": "開啟 /api/stats",
+      "openRaw": "Cloudflare 未經處理嘅回應",
+      "edge": "每一個去 dehub.io 嘅請求，喺去到我哋伺服器之前都會經過 Cloudflare。呢啲計數係 Cloudflare 自己對嗰啲流量嘅彙總——同我哋控制台顯示嘅數字一樣。唔係由你瀏覽器入面嘅腳本收集，所以呢一頁嘅任何嘢都谷唔大佢哋，封鎖追蹤器亦唔會改變佢哋。",
+      "live": "呢一頁係即時讀取嘅。載入 /stats 會呼叫我哋嘅端點，佢會喺嗰一刻查詢 Cloudflare 嘅 Analytics API，並將回應快取 60 秒。",
+      "limits": "呢樣證明到咩、證明唔到咩：你可以見到數字係嚟自 Cloudflare 嘅彙總，唔係我哋嘅應用程式碼，而且喺呢度公開嘅查詢就係實際執行嗰條。佢唔係無需信任嘅——API 權杖喺我哋手上，而 Cloudflare 亦唔提供公開讀取某個區域嘅分析數據。任何人有自己嘅 Cloudflare 區域，都可以執行同一條查詢，核對佢嘅結構。"
+    },
+    "definitions": {
+      "title": "呢啲數字係咩意思",
+      "visitorsTerm": "訪客",
+      "visitors": "——Cloudflare 嗰日見到嘅獨立 IP 地址。接近真人數量，但唔係一樣：共用一條線嘅辦公室計一次，而喺 Wi-Fi 同流動數據之間切換嘅手機計兩次。",
+      "pageViewsTerm": "頁面瀏覽量",
+      "pageViews": "——Cloudflare 判定為頁面載入嘅請求，唔係圖片、腳本或者 API 呼叫。",
+      "botsTerm": "包括機器人",
+      "bots": "——呢啲係邊緣節點嘅原始計數，所以爬蟲、可用性監察同腳本客戶端都計埋。你可以喺上面嘅瀏覽器分佈自己睇，「Curl」同「未知」呢類項目係自動流量，唔係真人。要過濾機器人就要用我哋冇訂閱嘅 Cloudflare 收費方案，而靜靜雞減走一個估算只會令數字更難核實，唔會更容易。",
+      "totalTerm": "範圍合計",
+      "total": "——頁面瀏覽量同請求數會喺範圍內累加。訪客數特登唔會加埋成為「訪客總數」，因為星期一同星期二都嚟過嘅人會計兩次。",
+      "peakTerm": "最繁忙嘅小時／日子",
+      "peak": "——範圍內任何一個區間最高嘅獨立計數，原因一樣：呢個係 Cloudflare 實際量度嘅數字，唔係將重疊嘅計數加埋整出嚟。",
+      "resolutionTerm": "小時級數據去到 3 日就停",
+      "resolution": "——呢個係呢個方案下 Cloudflare 嘅限制，唔係我哋揀嘅：任何超過三日嘅小時級查詢都會俾佢拒絕。24 小時同 3 日檢視係小時級；7 日或以上係逐日，冇辦法畫全時段嘅小時級圖表。",
+      "breakdownTerm": "國家同瀏覽器",
+      "breakdown": "——佢哋跟你揀嘅範圍，但最多只可以回溯 {{max}} 日，因為每日分佈只保留咁耐。範圍長啲嘅時候，圖表覆蓋嘅時間會比國家清單長。",
+      "startTerm": "歷史",
+      "start": "——「全部時間」係指 Cloudflare 仲保留緊嘅每一日，今日即係由 dehub.io 搬去 Cloudflare 嗰日 {{date}} 起計 {{days}} 日。之前冇邊緣數據可以顯示，舊嘅日子亦會隨住 Cloudflare 過期而消失。"
+    }
   }
 }

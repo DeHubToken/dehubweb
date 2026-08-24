@@ -27,7 +27,20 @@
     "events": "Acara",
     "prompt": "Pituduh",
     "communities": "Komunitas",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statistik langsung",
+    "liveTv": "TV Langsung",
+    "buyDhb": "Tuku DHB",
+    "bridge": "Jembatan",
+    "top100": "100 Ndhuwur",
+    "agents": "Agen AI",
+    "advertising": "Iklan",
+    "premium": "Premium",
+    "pricing": "Rega",
+    "creators": "Kreator",
+    "getTheApp": "Njupuk aplikasi",
+    "connectAi": "Nyambungake AI"
   },
   "feed": {
     "home": "Beranda",
@@ -35,7 +48,9 @@
     "images": "Gambar",
     "shorts": "Cekak",
     "music": "Musik",
-    "live": "Langsung"
+    "live": "Langsung",
+    "newPosts_one": "{{count}} kiriman anyar",
+    "newPosts_other": "{{count}} kiriman anyar"
   },
   "explore": {
     "all": "Kabeh",
@@ -242,7 +257,58 @@
     "hazy": "Hazy Nights",
     "save": "Simpen",
     "saving": "Nyimpen...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Profil",
+    "profilesDesc": "Akun sing disimpen ing piranti iki",
+    "addProfile": "Tambah profil",
+    "profileActive": "Aktif",
+    "profileSignedOut": "mlebu kanggo ngganti",
+    "profileRemove": "Busak profil",
+    "profilesUsed": "{{used}} saka {{max}} dienggo",
+    "profilesNextTier": "Tingkat {{tier}} nyimpen {{count}}",
+    "profilesFullTier": "Stake kanggo lencana {{tier}} supaya bisa nyimpen {{count}} profil",
+    "profilesFull": "Busak siji profil kanggo nambah akun liya",
+    "browserNotifications": "Kabar panjelajah",
+    "browserNotificationsDesc": "Ngerti bab wangsulan, tip lan DM nalika sampeyan ana ing tab liya",
+    "browserNotificationsOnDesc": "Wangsulan, tip, lan DM muncul nalika sampeyan ana ing tab liya",
+    "browserNotificationsDismissed": "Panjaluk kabar wis ditolak — coba maneh saklare",
+    "browserNotificationsBlocked": "Diblokir dening panjelajahmu",
+    "browserNotificationsBlockedTitle": "Panjelajah iki mblokir kabar",
+    "browserNotificationsBlockedNote": "Mung panjelajahmu sing bisa mbatalake iki — sawise diblokir, DeHub ora bisa takon maneh.",
+    "browserNotificationsBlockedPending": "Panjalukmu wis disimpen — iki bakal urip dhewe nalika panjelajahmu ngidini.",
+    "browserNotificationsUnblockChromium": "Klik ikon ing sisih kiwa kolom alamat → Setelan situs → setel Kabar dadi Ijinake, banjur muat maneh kaca iki.",
+    "browserNotificationsUnblockFirefox": "Klik gembok ing sisih kiwa kolom alamat, busak \"Diblokir\" ing sandhinge Nampa Kabar, banjur muat maneh kaca iki.",
+    "browserNotificationsUnblockSafari": "Ing kolom menu: Safari → Setelan → Situs Web → Kabar, banjur setel situs iki dadi Ijinake.",
+    "browserNotificationsUnblockGeneric": "Bukak setelan situs panjelajahmu kanggo kaca iki, setel Kabar dadi Ijinake, banjur muat maneh.",
+    "browserNotificationsIosHint": "iPhone lan iPad mung ngidini iki sawise DeHub ana ing Layar Utama — tutul Bagi, banjur \"Tambah menyang Layar Utama\".",
+    "browserNotificationsTest": "Kirim kabar tes",
+    "browserNotificationsTestSent": "Kabar tes wis dikirim",
+    "browserNotificationsTestBody": "Kaya ngene tampilan kabar DeHub.",
+    "showAsNewMember": "Tampilake aku minangka anggota anyar",
+    "showAsNewMemberDesc": "Ngidini anggota liya ndeleng yen sampeyan lagi wae gabung supaya padha bisa nampani. Rampung otomatis 30 dina sawise sampeyan ndhaftar.",
+    "defaultProfileTab": "Tab profil gawan",
+    "defaultProfileTabDesc": "Pilih tab endi sing dideleng dhisik dening tamu ing profilmu",
+    "lavalamp": "Lampu lava",
+    "war": "Perang",
+    "osaka": "Osaka",
+    "jungle": "Alas",
+    "themeColor": "Warna tema",
+    "themeColorDesc": "Pilih warna dhewe kanggo tema iki",
+    "themeColorReset": "Balekake",
+    "themeColorWhite": "Putih",
+    "themeColorBlack": "Ireng",
+    "themeColorRainbow": "Kluwung",
+    "themeColorBrand": "Merek",
+    "themeColorBrandDesc": "Nganggo warna foto profilmu",
+    "themeColorBrandNoAvatar": "Tambah foto profil kanggo nganggo warna Merek",
+    "themeColorBrandFailed": "Ora bisa maca warna saka foto profilmu",
+    "dimLights": "Ngremehake cahya",
+    "dimLightsDesc": "Ngurangi paparan cahya biru",
+    "matureContent": "Tampilake isi diwasa",
+    "matureContentDesc": "Nglebokake kiriman diwasa lan kasar ing feedmu, lan mbusak pènget saka sing wis sampeyan deleng. Mati kanthi gawan.",
+    "noNewMessages": "Ora ana obrolan anyar",
+    "noNewMessagesDesc": "Simpen obrolanmu sing wis ana, nanging ora ana wong anyar sing bisa miwiti",
+    "dmNoNewHelp": "Obrolan sing wis ana tetep mlaku; ora ana wong anyar sing bisa miwiti"
   },
   "common": {
     "save": "Simpen",
@@ -256,7 +322,8 @@
     "translating": "Nerjemahake...",
     "close": "Tutup",
     "loadingMore": "Ngemot luwih akeh...",
-    "loadMore": "Muat Luwih Akeh"
+    "loadMore": "Muat Luwih Akeh",
+    "tryAgain": "Coba maneh"
   },
   "tip": {
     "title": "Kirim Hadiah",
@@ -724,7 +791,11 @@
     "postRemoved": "Kirimanmu wis dibusak",
     "newNotification": "Notifikasi Anyar",
     "oneOther": "1 liyane",
-    "nOthers": "{{count}} liyane"
+    "nOthers": "{{count}} liyane",
+    "thisBrowser": "Panjelajah iki",
+    "features": "Fitur",
+    "communities": "Komunitas",
+    "stores": "Toko"
   },
   "leaderboard": {
     "title": "Papan Peringkat",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Kowe wis ditambahake! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo kurang ({{balance}} DHB)",
     "refreshFailed": "Ana kesalahan",
-    "noWalletAddress": "Ora nemokake alamat dompet"
+    "noWalletAddress": "Ora nemokake alamat dompet",
+    "affiliates": "Afiliasi",
+    "directReferrals_one": "{{count}} langsung",
+    "directReferrals_other": "{{count}} langsung",
+    "secondaryReferrals_one": "{{count}} ora langsung",
+    "secondaryReferrals_other": "{{count}} ora langsung"
   },
   "explorePage": {
     "searchPlaceholder": "Goleki wong, kiriman, utawa konten...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Direncanakake",
     "statusInProgress": "Lagi Dikerjake",
     "statusCompleted": "Rampung",
-    "statusDeclined": "Ditolak"
+    "statusDeclined": "Ditolak",
+    "shipping": "Lagi digawe",
+    "noShippingYet": "Ora ana sing lagi digarap",
+    "shippingAppearHere": "Panjaluk sing lagi digawe bakal katon ing kene."
   },
   "auth": {
     "loginRequired": "Kudu Mlebu"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Gagal gawe pembelian",
     "redirectingOnramp": "Ngarahake menyang onramp...",
     "onrampCreated": "Sesi onramp wis digawe",
-    "failedOnramp": "Gagal gawe onramp"
+    "failedOnramp": "Gagal gawe onramp",
+    "badgeDiscount": "Sing nyekel {{tier}} — diskon {{percent}}%"
   },
   "agents": {
     "title": "Agen AI",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agen wis dibusak",
     "failedCreate": "Gagal gawe agen",
     "failedDelete": "Gagal mbusak agen",
-    "apiKeyCopied": "Kunci API wis dikopi menyang clipboard"
+    "apiKeyCopied": "Kunci API wis dikopi menyang clipboard",
+    "connectorUrl": "URL konektor",
+    "connectorUrlCopied": "URL konektor wis disalin",
+    "connectorUrlHelp": "Tambahake iki minangka konektor MCP khusus ing Claude utawa ChatGPT. Iki mlebu minangka agen iki, dadi rumaten kaya kunci API.",
+    "agentWallet": "Dompet agen (Base)",
+    "walletCopied": "Alamat dompet wis disalin",
+    "agentWalletHelp": "Kirim ETH sethithik ing jaringan Base mrene sadurunge agen ngeposake — nerbitake bakal mint ing rantai lan agen mbayar gase dhewe. Komentar, swara, lan ngetutake ora butuh gas."
   },
   "hero": {
     "title": "Sugeng Rawuh",
@@ -1005,7 +1091,10 @@
     "or": "utawa",
     "termsNotice": "Kanthi nglanjutake, kowe setuju karo Ketentuan Layanan lan Kebijakan Privasi",
     "walletInfoDesktop": "Sambungake dompet kanggo mlebu kanthi aman",
-    "walletInfoMobile": "Langsung mbukak aplikasi MetaMask, Trust & Phantom. Rabby nggunakake WalletConnect."
+    "walletInfoMobile": "Langsung mbukak aplikasi MetaMask, Trust & Phantom. Rabby nggunakake WalletConnect.",
+    "addProfileTitle": "Tambah profil",
+    "walletConnectedAs": "Nyambung",
+    "useDifferentWallet": "Nganggo dompet liya"
   },
   "careers": {
     "title": "Gabung DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Bakal teka — tren wilayah lagi dalan!",
     "post": "Kirim",
     "logOut": "Metu",
-    "logIn": "Mlebu"
+    "logIn": "Mlebu",
+    "searchMenu": "Golek ing menu",
+    "clearSearch": "Resiki panggolekan",
+    "noMenuMatches": "Ora ana sing cocog ing menu",
+    "searchDehubFor": "Golek \"{{query}}\" ing DeHub"
   },
   "postInfo": {
     "title": "Info Postingan",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Versi anyar kasedhiya",
     "refresh_to_pick_up_the_latest_changes": "Segarake kanggo njupuk owah-owahan paling anyar.",
     "refresh": "Nyegarke",
-    "what_changed": "Apa sing owah"
+    "what_changed": "Apa sing owah",
+    "turn_on_desktop_notifications": "Uripake pambiwara desktop?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Ngerti bab wangsulan, tip lan DM nalika sampeyan ana ing tab liya.",
+    "turn_on": "Uripake",
+    "not_now": "Ora saiki"
   },
   "prompt": {
     "seoTitle": "Wenehi feed sampeyan — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Kapan",
     "whyStake": "Ngapa Nyetor?",
     "yourStaked": "Setoranmu"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Kumpulan game, jagad, lan pengalaman sing digawe lan dibukak sumbere dening DeHub.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Dolanan langsung ing panjelajahmu ing DeHub — catur 3D kaya film, game tembak-tembakan sing digawe kanthi prosedural, mlaku-mlaku ing alas udan, gelut dalanan neon, lan lantai dagang sing bisa dilakoni. Ora perlu instal, ora perlu ngundhuh.",
+    "alsoIn": "Ana uga ing {{theme}}"
+  },
+  "stats": {
+    "title": "Statistik",
+    "subtitle": "Informasi sumber terbuka wektu nyata",
+    "live": "Langsung",
+    "range": {
+      "24h": "24 jam",
+      "3d": "3 dina",
+      "7d": "7 dina",
+      "30d": "30 dina",
+      "all": "Kabeh wektu"
+    },
+    "unavailable": {
+      "title": "Statistik ora kasedhiya saiki",
+      "unconfigured": "Endpoint analitik durung diwenehi token API Cloudflare. Ora ana sing ditampilake tinimbang angka karangan.",
+      "error": "Kita ora bisa nggayuh API analitik Cloudflare. Tinimbang nampilake angka lawas utawa karangan, kaca iki ora nampilake apa-apa nganti maca langsung kasil."
+    },
+    "tile": {
+      "visitorsToday": "Tamu dina iki",
+      "soFarToday": "nganti saiki dina iki, UTC",
+      "peakHour": "Jam paling rame",
+      "peakDay": "Dina paling rame",
+      "peakAtHour": "jam {{when}} UTC",
+      "peakOnDay": "tanggal {{when}}",
+      "inRange": "ing rentang iki",
+      "pageViews": "Tampilan kaca",
+      "overHours": "sajrone {{count}} jam",
+      "overDay": "sajrone 1 dina",
+      "overDays": "sajrone {{count}} dina",
+      "requestsLabel": "Panjaluk",
+      "served": "Diladeni",
+      "requests": "{{requests}} panjaluk"
+    },
+    "chart": {
+      "hourly": "Tamu saben jam",
+      "daily": "Tamu saben dina",
+      "hourlyHint": "{{count}} interval jam, UTC",
+      "dailyHint": "tamu unik saben dina",
+      "empty": "Durung ana data kanggo periode iki"
+    },
+    "countries": {
+      "title": "Negara ndhuwur",
+      "windowDay": "24 jam pungkasan",
+      "window": "{{days}} dina pungkasan"
+    },
+    "browsers": {
+      "title": "Panjelajah",
+      "window": "miturut tampilan kaca"
+    },
+    "edge": {
+      "title": "Ing pinggir jaringan",
+      "windowDay": "24 jam pungkasan",
+      "window": "{{days}} dina pungkasan",
+      "cached": "Diladeni saka cache",
+      "encrypted": "Dienkripsi",
+      "threats": "Ancaman sing diblokir"
+    },
+    "proof": {
+      "title": "Saka ngendi angka-angka iki",
+      "subtitle": "Diukur dening Cloudflare, dudu dening kaca iki",
+      "source": "Sumber",
+      "datasets": "Kumpulan data",
+      "zone": "Zona",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Dijupuk jam",
+      "query": "Pitakon persis ing mburi grafik",
+      "copied": "Wis disalin",
+      "copy": "Salin",
+      "openEndpoint": "Bukak /api/stats",
+      "openRaw": "Jawaban Cloudflare sing ora diowahi",
+      "edge": "Saben panjaluk menyang dehub.io ngliwati Cloudflare sadurunge tekan server kita. Cacahan iki minangka agregasi Cloudflare dhewe saka lalu lintas kasebut — angka sing padha karo sing ditampilake dasbor kita. Iki ora diklumpukake dening skrip ing panjelajahmu, dadi ora ana ing kaca iki sing bisa nggedhekake, lan mblokir pelacak ora ngganti.",
+      "live": "Kaca iki maca kanthi langsung. Ngemot /stats bakal ngundang endpoint kita, sing ing wektu iku takon Analytics API Cloudflare lan nyimpen jawaban sajrone 60 detik.",
+      "limits": "Apa sing ditampilake lan sing ora: sampeyan bisa ndeleng yen angkane teka saka agregasi Cloudflare lan dudu saka kode aplikasi kita, lan pitakon sing diterbitake ing kene iku sing mlaku. Iki dudu tanpa kapercayan — token API ana ing kita, lan Cloudflare ora nyedhiyakake maca umum kanggo analitik zona. Sapa wae sing duwe zona Cloudflare dhewe bisa nglakokake pitakon sing padha lan mesthekake bentuke."
+    },
+    "definitions": {
+      "title": "Apa tegese angka-angka iki",
+      "visitorsTerm": "Tamu",
+      "visitors": "— alamat IP unik sing dideleng Cloudflare ing dina iku. Cedhak karo cacah wong, nanging ora padha: kantor ing siji sambungan diétung sepisan, lan telpon sing ganti antarane wifi lan data seluler diétung kaping pindho.",
+      "pageViewsTerm": "Tampilan kaca",
+      "pageViews": "— panjaluk sing diklasifikasekake Cloudflare minangka pamuatan kaca, dudu gambar, skrip, utawa panggilan API.",
+      "botsTerm": "Bot melu diétung",
+      "bots": "— iki cacahan mentah ing pinggir jaringan, dadi crawler, monitor uptime, lan klien skrip melu kalebu. Sampeyan bisa ndeleng dhewe ing rincian panjelajah ing ndhuwur, ing ngendi entri kaya \"Curl\" lan \"Ora dingerteni\" iku lalu lintas otomatis dudu manungsa. Nyaring bot butuh paket Cloudflare mbayar sing ora duwe, lan ngurangi prakiraan kanthi meneng bakal nggawe angkane kurang bisa dipriksa, dudu luwih.",
+      "totalTerm": "Total rentang",
+      "total": "— tampilan kaca lan panjaluk ditambahake ing sakabehe rentang. Cacah tamu sengaja ora ditambahake dadi \"total tamu\", amarga wong sing teka dina Senin lan Selasa bakal diétung kaping pindho.",
+      "peakTerm": "Jam / dina paling rame",
+      "peak": "— cacahan unik paling dhuwur ing salah siji interval rentang, kanthi alesan sing padha: iku angka sing pancen diukur Cloudflare, dudu sing digawe kanthi nambahake cacahan sing tumpang tindih.",
+      "resolutionTerm": "Data saben jam mandheg ing 3 dina",
+      "resolution": "— iku watesan Cloudflare ing paket iki, dudu pilihan: dheweke nolak saben pitakon jam sing luwih amba tinimbang telung dina. Tampilan 24 jam lan 3 dina iku saben jam; 7 dina lan luwih iku saben dina, lan ora ana cara nggambar grafik saben jam kanggo kabeh wektu.",
+      "breakdownTerm": "Negara lan panjelajah",
+      "breakdown": "— iki ngetutake rentang sing sampeyan pilih, nanging mung nganti {{max}} dina mburi, semono suwene rincian saben dina disimpen. Ing rentang sing luwih dawa, grafike nyakup wektu luwih akeh tinimbang dhaptar negara.",
+      "startTerm": "Riwayat",
+      "start": "— \"kabeh wektu\" tegese saben dina sing isih disimpen Cloudflare, saiki {{days}} dina wiwit {{date}}, dina nalika dehub.io pindhah menyang Cloudflare. Ora ana data pinggir sing luwih lawas kanggo ditampilake, lan dina lawas ilang nalika Cloudflare nggawe kadaluwarsa."
+    }
   }
 }

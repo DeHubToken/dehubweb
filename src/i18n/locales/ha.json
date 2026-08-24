@@ -27,7 +27,20 @@
     "events": "Abubuwan",
     "prompt": "Fadakarwa",
     "communities": "Al'ummomi",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Kididdiga kai tsaye",
+    "liveTv": "TV kai tsaye",
+    "buyDhb": "Sayi DHB",
+    "bridge": "Gada",
+    "top100": "Mafi kyawun 100",
+    "agents": "Wakilan AI",
+    "advertising": "Talla",
+    "premium": "Premium",
+    "pricing": "Farashi",
+    "creators": "Masu ƙirƙira",
+    "getTheApp": "Sauke manhajar",
+    "connectAi": "Haɗa AI"
   },
   "feed": {
     "home": "Gida",
@@ -35,7 +48,9 @@
     "images": "Hotuna",
     "shorts": "Gajerun bidiyo",
     "music": "Kiɗa",
-    "live": "Kai tsaye"
+    "live": "Kai tsaye",
+    "newPosts_one": "Sabon saƙo {{count}}",
+    "newPosts_other": "Sabbin saƙonni {{count}}"
   },
   "explore": {
     "all": "Duka",
@@ -242,7 +257,58 @@
     "hazy": "Dararen Hazo",
     "save": "Ajiye",
     "saving": "Ana ajiyewa...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Bayanan martaba",
+    "profilesDesc": "Asusun da aka adana a wannan na'urar",
+    "addProfile": "Ƙara bayanan martaba",
+    "profileActive": "Yana aiki",
+    "profileSignedOut": "shiga don canjawa",
+    "profileRemove": "Cire bayanan martaba",
+    "profilesUsed": "An yi amfani da {{used}} daga {{max}}",
+    "profilesNextTier": "Matakin {{tier}} yana riƙe {{count}}",
+    "profilesFullTier": "Yi staking don lambar {{tier}} don riƙe bayanan martaba {{count}}",
+    "profilesFull": "Cire bayanan martaba ɗaya don ƙara wani asusu",
+    "browserNotifications": "Sanarwar burauza",
+    "browserNotificationsDesc": "Sami sanarwa kan amsoshi, kyaututtuka da saƙonni yayin da kake wani shafi",
+    "browserNotificationsOnDesc": "Amsoshi, kyaututtuka da saƙonni suna bayyana yayin da kake wani shafi",
+    "browserNotificationsDismissed": "An yi watsi da buƙatar sanarwa — sake gwada maɓallin",
+    "browserNotificationsBlocked": "Burauzarka ta toshe su",
+    "browserNotificationsBlockedTitle": "Wannan burauzar tana toshe sanarwa",
+    "browserNotificationsBlockedNote": "Burauzarka kaɗai ce za ta iya warware wannan — bayan an toshe, DeHub ba zai iya sake tambaya ba.",
+    "browserNotificationsBlockedPending": "An adana buƙatarka — za ta kunna da kanta da zarar burauzarka ta yarda.",
+    "browserNotificationsUnblockChromium": "Danna gunkin da ke hagun sandar adireshi → Saitunan shafi → saita Sanarwa zuwa Yarda, sannan sake loda wannan shafin.",
+    "browserNotificationsUnblockFirefox": "Danna kulle da ke hagun sandar adireshi, share \"An toshe\" kusa da Karɓar Sanarwa, sannan sake loda wannan shafin.",
+    "browserNotificationsUnblockSafari": "A sandar menu: Safari → Saituna → Gidajen yanar gizo → Sanarwa, sannan saita wannan shafin zuwa Yarda.",
+    "browserNotificationsUnblockGeneric": "Buɗe saitunan shafi na burauzarka don wannan shafin, saita Sanarwa zuwa Yarda, sannan sake loda.",
+    "browserNotificationsIosHint": "iPhone da iPad suna yarda da wannan ne kawai bayan DeHub ya kasance a Allon Farko — danna Raba, sannan \"Ƙara zuwa Allon Farko\".",
+    "browserNotificationsTest": "Aika sanarwar gwaji",
+    "browserNotificationsTestSent": "An aika sanarwar gwaji",
+    "browserNotificationsTestBody": "Haka sanarwar DeHub take.",
+    "showAsNewMember": "Nuna ni a matsayin sabon memba",
+    "showAsNewMemberDesc": "Yana barin sauran mambobi su ga cewa kai sabo ne domin su marabce ka. Yana ƙarewa da kansa kwana 30 bayan ka yi rijista.",
+    "defaultProfileTab": "Shafin bayanan martaba na asali",
+    "defaultProfileTabDesc": "Zaɓi wane shafi baƙi za su fara gani a bayanan martabarka",
+    "lavalamp": "Fitilar lava",
+    "war": "Yaƙi",
+    "osaka": "Osaka",
+    "jungle": "Daji",
+    "themeColor": "Launin jigo",
+    "themeColorDesc": "Zaɓi launi na musamman don wannan jigon",
+    "themeColorReset": "Sake saita",
+    "themeColorWhite": "Fari",
+    "themeColorBlack": "Baƙi",
+    "themeColorRainbow": "Bakan gizo",
+    "themeColorBrand": "Alama",
+    "themeColorBrandDesc": "Yi amfani da launukan hoton bayanan martabarka",
+    "themeColorBrandNoAvatar": "Ƙara hoton bayanan martaba don amfani da launukan Alama",
+    "themeColorBrandFailed": "Ba a iya karanta launuka daga hoton bayanan martabarka ba",
+    "dimLights": "Rage haske",
+    "dimLightsDesc": "Yana rage fallasa ga hasken shuɗi",
+    "matureContent": "Nuna abun cikin manya",
+    "matureContentDesc": "Yana haɗa saƙonnin manya da masu tsanani cikin fidin ka, kuma yana cire gargaɗi daga waɗanda ka riga ka gani. An kashe shi ta asali.",
+    "noNewMessages": "Babu sababbin tattaunawa",
+    "noNewMessagesDesc": "Ka riƙe tattaunawarka ta yanzu, amma sabon mutum ba zai iya fara ɗaya ba",
+    "dmNoNewHelp": "Tattaunawar da ake ciki tana ci gaba; sabon mutum ba zai iya fara ɗaya ba"
   },
   "common": {
     "save": "Ajiye",
@@ -256,7 +322,8 @@
     "translating": "Ana fassara...",
     "close": "Rufe",
     "loadingMore": "Ana ɗora ƙari...",
-    "loadMore": "Ɗora ƙari"
+    "loadMore": "Ɗora ƙari",
+    "tryAgain": "Sake gwadawa"
   },
   "tip": {
     "title": "Aika Kyauta",
@@ -786,7 +853,11 @@
     "postRemoved": "An cire rubutunka",
     "newNotification": "Sabuwar sanarwa",
     "oneOther": "1 daban",
-    "nOthers": "{{count}} dabam"
+    "nOthers": "{{count}} dabam",
+    "thisBrowser": "Wannan burauzar",
+    "features": "Fasaloli",
+    "communities": "Al'ummomi",
+    "stores": "Shaguna"
   },
   "leaderboard": {
     "title": "Jadawalin Matsayi",
@@ -815,7 +886,12 @@
     "addedToLeaderboard": "An ƙara ka! Ma'auni: {{balance}} DHB",
     "balanceTooLow": "Ma'auni ya yi ƙasa ({{balance}} DHB)",
     "refreshFailed": "Wani abu ya yi kuskure",
-    "noWalletAddress": "Ba a sami adireshin walat ba"
+    "noWalletAddress": "Ba a sami adireshin walat ba",
+    "affiliates": "Abokan haɗin gwiwa",
+    "directReferrals_one": "{{count}} kai tsaye",
+    "directReferrals_other": "{{count}} kai tsaye",
+    "secondaryReferrals_one": "{{count}} na biyu",
+    "secondaryReferrals_other": "{{count}} na biyu"
   },
   "features": {
     "title": "Buƙatun Fasaloli",
@@ -854,7 +930,10 @@
     "statusPlanned": "An tsara",
     "statusInProgress": "Ana aiki",
     "statusCompleted": "An kammala",
-    "statusDeclined": "An ƙi"
+    "statusDeclined": "An ƙi",
+    "shipping": "Ana ginawa",
+    "noShippingYet": "Babu abin da ake yi",
+    "shippingAppearHere": "Buƙatun da ake ginawa za su bayyana nan."
   },
   "auth": {
     "loginRequired": "Ana buƙatar shiga"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Ba a iya fara siye ba",
     "redirectingOnramp": "Ana tura zuwa hanyar...",
     "onrampCreated": "An ƙirƙiri zaman hanyar",
-    "failedOnramp": "Ba a iya fara hanyar ba"
+    "failedOnramp": "Ba a iya fara hanyar ba",
+    "badgeDiscount": "Mai riƙe da {{tier}} — rangwamen {{percent}}%"
   },
   "agents": {
     "title": "Wakilan AI",
@@ -957,7 +1037,13 @@
     "agentDeleted": "An share wakili",
     "failedCreate": "Ba a iya ƙirƙirar wakili ba",
     "failedDelete": "Ba a iya share wakili ba",
-    "apiKeyCopied": "An kwafi makullin API"
+    "apiKeyCopied": "An kwafi makullin API",
+    "connectorUrl": "URL ɗin haɗi",
+    "connectorUrlCopied": "An kwafi URL ɗin haɗi",
+    "connectorUrlHelp": "Ƙara wannan a matsayin haɗin MCP na musamman a Claude ko ChatGPT. Yana tantancewa a matsayin wannan wakilin, don haka ka kula da shi kamar makullin API.",
+    "agentWallet": "Walat na wakili (Base)",
+    "walletCopied": "An kwafi adireshin walat",
+    "agentWalletHelp": "Aika ɗan kuɗin ETH kaɗan a kan Base nan kafin wakilin ya wallafa — wallafawa yana yin mint a kan sarkar kuma wakilin yana biyan gas ɗin kansa. Sharhi, kuri'a da bibiya ba sa buƙatar gas."
   },
   "hero": {
     "title": "Barka Da Zuwa",
@@ -1005,7 +1091,10 @@
     "or": "ko",
     "termsNotice": "Idan ka ci gaba, ka yarda da Sharuɗɗanmu na Sabis da Manufar Sirri",
     "walletInfoDesktop": "Haɗa wallet ɗinka don shiga cikin aminci",
-    "walletInfoMobile": "MetaMask, Trust & Phantom za su buɗe app ɗinsu kai tsaye. Rabby zai yi amfani da WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom za su buɗe app ɗinsu kai tsaye. Rabby zai yi amfani da WalletConnect.",
+    "addProfileTitle": "Ƙara bayanan martaba",
+    "walletConnectedAs": "An haɗa",
+    "useDifferentWallet": "Yi amfani da wata walat"
   },
   "careers": {
     "title": "Ayyuka a DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Ba da jimawa ba — yanayin yanki suna zuwa!",
     "post": "Buga",
     "logOut": "Fita",
-    "logIn": "Shiga"
+    "logIn": "Shiga",
+    "searchMenu": "Nemi a menu",
+    "clearSearch": "Share bincike",
+    "noMenuMatches": "Babu abin da ya dace a menu",
+    "searchDehubFor": "Nemi \"{{query}}\" a DeHub"
   },
   "postInfo": {
     "title": "Bayanan bugu",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Sabon sigar samuwa",
     "refresh_to_pick_up_the_latest_changes": "Sabunta don ɗaukar sabbin canje-canje.",
     "refresh": "Sabuntawa",
-    "what_changed": "Abin da ya canza"
+    "what_changed": "Abin da ya canza",
+    "turn_on_desktop_notifications": "A kunna sanarwar kwamfuta?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Sami sanarwa kan amsoshi, kyaututtuka da saƙonni yayin da kake wani shafi.",
+    "turn_on": "Kunna",
+    "not_now": "Ba yanzu ba"
   },
   "prompt": {
     "seoTitle": "Fadakar da abincinka - DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Yaushe",
     "whyStake": "Me Ya Sa Za Ka Yi Ajiya?",
     "yourStaked": "Ajiyarka"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Tarin wasanni, duniyoyi da abubuwan ji da DeHub ya gina kuma ya buɗe tushensa.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Yi wasa kai tsaye a burauzarka a DeHub — dara 3D mai salon fim, wasan harbi da aka ƙirƙira ta hanyar tsari, yawo cikin dajin ruwan sama, faɗan titi mai fitilun neon da falon ciniki da za ka iya yawo a ciki. Babu shigarwa, babu saukewa.",
+    "alsoIn": "Akwai kuma a cikin {{theme}}"
+  },
+  "stats": {
+    "title": "Kididdiga",
+    "subtitle": "Bayanan buɗaɗɗen tushe na ainihin lokaci",
+    "live": "Kai tsaye",
+    "range": {
+      "24h": "awanni 24",
+      "3d": "kwanaki 3",
+      "7d": "kwanaki 7",
+      "30d": "kwanaki 30",
+      "all": "Dukan lokacin"
+    },
+    "unavailable": {
+      "title": "Kididdiga ba ta samuwa yanzu",
+      "unconfigured": "Ba a ba wa ƙarshen binciken alamar API na Cloudflare ba tukuna. Ba a nuna komai maimakon lamba ƙirƙirarriya.",
+      "error": "Ba mu iya isa ga API ɗin binciken Cloudflare ba. Maimakon nuna lamba tsohuwa ko ƙirƙirarriya, wannan shafin ba ya nuna komai har sai karatun kai tsaye ya yi nasara."
+    },
+    "tile": {
+      "visitorsToday": "Baƙi yau",
+      "soFarToday": "har yanzu yau, UTC",
+      "peakHour": "Awa mafi cunkoso",
+      "peakDay": "Rana mafi cunkoso",
+      "peakAtHour": "da ƙarfe {{when}} UTC",
+      "peakOnDay": "a {{when}}",
+      "inRange": "a wannan kewayon",
+      "pageViews": "Kallon shafuka",
+      "overHours": "cikin awanni {{count}}",
+      "overDay": "cikin rana 1",
+      "overDays": "cikin kwanaki {{count}}",
+      "requestsLabel": "Buƙatu",
+      "served": "An bayar",
+      "requests": "buƙatu {{requests}}"
+    },
+    "chart": {
+      "hourly": "Baƙi kowace awa",
+      "daily": "Baƙi kowace rana",
+      "hourlyHint": "Tazarar awa {{count}}, UTC",
+      "dailyHint": "baƙi na musamman kowace rana",
+      "empty": "Har yanzu babu bayanai don wannan lokacin"
+    },
+    "countries": {
+      "title": "Manyan ƙasashe",
+      "windowDay": "awanni 24 da suka wuce",
+      "window": "kwanaki {{days}} da suka wuce"
+    },
+    "browsers": {
+      "title": "Burauza",
+      "window": "bisa kallon shafuka"
+    },
+    "edge": {
+      "title": "A gefen hanyar sadarwa",
+      "windowDay": "awanni 24 da suka wuce",
+      "window": "kwanaki {{days}} da suka wuce",
+      "cached": "An bayar daga cache",
+      "encrypted": "An ɓoye",
+      "threats": "An toshe barazana"
+    },
+    "proof": {
+      "title": "Daga ina waɗannan lambobin suka fito",
+      "subtitle": "Cloudflare ne ya auna, ba wannan shafin ba",
+      "source": "Tushe",
+      "datasets": "Tarin bayanai",
+      "zone": "Yanki",
+      "ray": "Cloudflare ray ID",
+      "fetched": "An samo da ƙarfe",
+      "query": "Ainihin tambayar da ke bayan jadawalin",
+      "copied": "An kwafa",
+      "copy": "Kwafi",
+      "openEndpoint": "Buɗe /api/stats",
+      "openRaw": "Amsar Cloudflare kamar yadda take",
+      "edge": "Kowace buƙata zuwa dehub.io tana wucewa ta Cloudflare kafin ta isa sabobinmu. Waɗannan ƙididdiga tarin Cloudflare ne na wannan zirga-zirgar — lambobi ɗaya da dashboard ɗinmu ke nunawa. Ba rubutun shiri a burauzarka ne ke tara su ba, don haka babu abin da ke wannan shafin da zai iya kumbura su, kuma toshe masu bin sawu ba ya canza su.",
+      "live": "Shafin yana karanta su kai tsaye. Loda /stats yana kiran ƙarshen mu, wanda a lokacin yake tambayar Analytics API na Cloudflare kuma yana ajiye amsar na daƙiƙa 60.",
+      "limits": "Abin da wannan ke nunawa da wanda ba ya nunawa: za ka ga cewa lambobin sun fito daga tarin Cloudflare ba daga lambar manhajarmu ba, kuma tambayar da aka buga nan ita ce wadda ke gudana. Ba ba tare da amana ba ce — mu ne muke da alamar API, kuma Cloudflare ba ya bayar da karatun jama'a na binciken yanki. Duk wanda ke da yankin Cloudflare nasa zai iya gudanar da tambaya ɗaya kuma ya tabbatar da tsarinta."
+    },
+    "definitions": {
+      "title": "Ma'anar waɗannan lambobin",
+      "visitorsTerm": "Baƙi",
+      "visitors": "— adireshin IP na musamman da Cloudflare ya gani a wannan ranar. Kusa da adadin mutane, amma ba ɗaya ba: ofis a kan haɗi ɗaya ana ƙidaya shi sau ɗaya, kuma waya da ke sauyawa tsakanin wifi da bayanan salula ana ƙidaya ta sau biyu.",
+      "pageViewsTerm": "Kallon shafuka",
+      "pageViews": "— buƙatun da Cloudflare ke rarrabawa a matsayin lodin shafuka, ba hotuna, rubutun shirye-shirye ko kiran API ba.",
+      "botsTerm": "An haɗa bots",
+      "bots": "— waɗannan ƙididdiga ne na ɗanye a gefen hanyar sadarwa, don haka masu rarrafe, masu sa ido kan aiki da abokan ciniki na rubutu suna cikinsu. Za ka gan su da kanka a rarrabuwar burauza da ke sama, inda shigarwa kamar \"Curl\" da \"Ba a sani ba\" zirga-zirga ce ta atomatik ba mutane ba. Tace bots yana buƙatar tsarin Cloudflare mai biya wanda ba mu da shi, kuma cire ƙiyasi a shiru zai sa lambobin su zama masu wuyar tabbatarwa, ba masu sauƙi ba.",
+      "totalTerm": "Jimillar kewayo",
+      "total": "— kallon shafuka da buƙatu suna taruwa a duk kewayon. Ba a tara adadin baƙi da gangan zuwa \"jimillar baƙi\" ba, domin wanda ya zo Litinin da Talata za a ƙidaya shi sau biyu.",
+      "peakTerm": "Awa / rana mafi cunkoso",
+      "peak": "— mafi girman ƙidaya na musamman a kowane tazara ɗaya na kewayon, saboda dalili ɗaya: lamba ce da Cloudflare ke aunawa da gaske, ba wadda aka gina ta hanyar tara ƙididdiga masu haɗuwa ba.",
+      "resolutionTerm": "Bayanan awa suna tsayawa a kwanaki 3",
+      "resolution": "— wannan iyakar Cloudflare ce a wannan tsarin, ba zaɓinmu ba: yana ƙin duk tambayar awa da ta wuce kwanaki uku. Kallon awanni 24 da kwanaki 3 na awa ne; kwanaki 7 zuwa sama na yau da kullum ne, kuma babu yadda za a zana jadawalin awa na dukan lokacin.",
+      "breakdownTerm": "Ƙasashe da burauza",
+      "breakdown": "— suna bin kewayon da ka zaɓa, amma har kwanaki {{max}} baya kawai, domin haka ake ajiye rarrabuwar yau da kullum. A kewayo mafi tsayi, jadawalin yana rufe lokaci fiye da jerin ƙasashe.",
+      "startTerm": "Tarihi",
+      "start": "— \"dukan lokacin\" na nufin kowace rana da Cloudflare ke ajiyewa har yanzu, yau kwanaki {{days}} tun {{date}}, ranar da dehub.io ya koma Cloudflare. Babu bayanan gefe na baya da za a nuna, kuma tsofaffin kwanaki suna faɗuwa yayin da Cloudflare ke ƙare musu lokaci."
+    }
   }
 }
