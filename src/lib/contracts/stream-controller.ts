@@ -69,6 +69,8 @@ export interface MintWithBountyParams {
   v: number;
   r: string;
   s: string;
+  /** URI suffix from the mint API — carries the post's text on chain. */
+  uri?: string;
   bountyAmount: number; // Human-readable DHB amount per person
   countOfViewers: number;
   countOfCommentors: number;
@@ -386,7 +388,7 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
   const v = params.v;
   const r = params.r.startsWith('0x') ? params.r : `0x${params.r}`;
   const s = params.s.startsWith('0x') ? params.s : `0x${params.s}`;
-  const uri = `/${params.tokenId}.json`;
+  const uri = params.uri ?? `/${params.tokenId}.json`;
   const bountyAmountWei = toWei(params.bountyAmount, DHB_TOKEN.decimals);
   
   console.log('[StreamController] Calling mintWithBounty:', {

@@ -284,6 +284,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         v: mintResponse.v,
         r: mintResponse.r,
         s: mintResponse.s,
+        uri: mintResponse.uri,
         chainId: BASE_CHAIN_ID,
       });
 

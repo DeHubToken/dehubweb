@@ -66,6 +66,12 @@ export interface MintResponse {
   s?: string;
   v?: number;
   timestamp?: number;
+  /**
+   * The URI suffix to mint, carrying the post's text and its keccak hash as
+   * query params so the words themselves are recorded on chain. Falls back
+   * to the plain `{tokenId}.json` client-side when absent.
+   */
+  uri?: string;
   /** Solana mint fields */
   isSolana?: boolean;
   transaction?: string;
