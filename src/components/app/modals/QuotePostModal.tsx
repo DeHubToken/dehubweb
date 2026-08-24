@@ -119,6 +119,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
           v: mintSig.v,
           r: mintSig.r,
           s: mintSig.s,
+          uri: mintSig.uri,
           chainId: 8453,
         });
 

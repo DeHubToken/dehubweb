@@ -74,6 +74,7 @@ export function useMintExistingPost() {
           v: sig.v,
           r: sig.r,
           s: sig.s,
+          uri: sig.uri,
           chainId: targetChain,
         },
         fee,
