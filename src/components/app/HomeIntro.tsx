@@ -214,7 +214,12 @@ export function HomeIntro() {
           alt=""
           width={480}
           height={471}
-          loading="lazy"
+          /* NOT loading="lazy". This panel is the first thing on the signed-out
+             home page, so the hero is always above the fold — lazy told the
+             browser to defer the largest piece of the only card on screen, and
+             the sidebars (text + inline SVG, zero requests) beat it every time.
+             Deferring an above-the-fold image delays the thing it decorates. */
+          fetchPriority="high"
           decoding="async"
           className="absolute inset-0 h-full w-full object-contain"
           style={{ filter: 'drop-shadow(0 34px 60px rgba(0,0,0,.85))' }}
