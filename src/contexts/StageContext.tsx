@@ -652,11 +652,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
           // only seekable. Loaded on demand — it runs once per stage, for
           // hosts only, and has no business in the main bundle.
           let blob = new Blob(chunks, { type: 'audio/webm' });
+          let clientFinalised = false;
           try {
             const { makeWebmSeekable } = await import('@/lib/webm-seekable');
             const finalised = await makeWebmSeekable(blob);
             if (finalised.changed) {
               blob = finalised.blob;
+              clientFinalised = true;
               console.log(
                 `[Stage] Recording finalised: ${finalised.durationMs}ms, ${finalised.cuePoints} cue points`,
               );
@@ -713,9 +715,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
             // Pass the timeline so the edge function can label diarized speakers
             // (host vs AI/TTS/soundboard) instead of "Speaker 1/2".
             const timeline = recordingTimelineRef.current.slice();
+            // The finalise above fails open on purpose — an unseekable
+            // recording beats no recording — which leaves nothing to catch a
+            // file that slipped through unindexed (a host on a stale cached
+            // bundle is the likely way). When that happens, hand the upload to
+            // finalize-stage-recording, which repairs it server-side and chains
+            // into transcription itself. When the client pass worked there is
+            // nothing left to do, so go straight to the transcriber rather than
+            // pay a pointless 20 MB round trip to be told so.
+            const next = clientFinalised ? 'transcribe-stage' : 'finalize-stage-recording';
             supabase.functions
-              .invoke('transcribe-stage', { body: { stageId: spaceId, timeline } })
-              .catch((err) => console.warn('[Stage] Transcription trigger failed:', err));
+              .invoke(next, { body: { stageId: spaceId, timeline } })
+              .catch((err) => console.warn(`[Stage] ${next} trigger failed:`, err));
           }
         } catch (err) {
           console.error('[Stage] Recording upload error:', err);
