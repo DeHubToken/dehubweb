@@ -303,6 +303,15 @@ export const excludedTitles: string[] = ${ser(blogData.excludedTitles)};
 //     ===-fenced section headers. Split it into per-route JSON so the edge fn
 //     can serve real documentation text to bots instead of the SPA shell
 //     (11 sitemap docs URLs were presenting as homepage duplicates).
+//
+//     HEADS UP: that .txt no longer exists in the repo, so this whole block is
+//     currently a no-op and public/docs-content/*.json is maintained BY HAND
+//     against src/i18n/en.ts. It drifts silently when it is not — /docs/dapps
+//     was serving crawlers 1,309 words of a page that had grown to ~6,000,
+//     missing Stages, communities, the wallet, bounties and the allowance
+//     entirely, because the copy moved on and the snapshot did not. If you
+//     change a docs page, change the matching JSON in the same PR, or restore
+//     the .txt source and let this run again.
 const DOCS_SECTION_TO_ROUTE = {
   'OVERVIEW': 'overview',
   "D'APP - A COMPLETE ECOSYSTEM": 'dapps',
