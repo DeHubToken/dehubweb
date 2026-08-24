@@ -151,11 +151,23 @@ export function HomeIntro() {
      can disagree with this one (a token that expires between the two, a
      dismissal in another tab). Whichever way they diverge, this component
      mounting means React is live and the splash has no business still being
-     up. rAF defers to after the panel's own paint, so the cross-fade reveals
-     something rather than swapping to a blank frame. */
+     up.
+
+     rAF is the PREFERRED trigger, not the only one: it fires after the panel's
+     own paint, so the cross-fade reveals something rather than swapping to a
+     blank frame. But a hidden tab never paints, so rAF never fires there —
+     open dehub.io in a background tab and the hand-off would wait out the 12s
+     backstop in index.html, then show the splash over an app that finished
+     loading ten seconds ago. Measured on dehub.io with visibilityState
+     "hidden": rAF did not fire, setTimeout did. So the two race, and whichever
+     lands first dismisses; dismissBootShell is idempotent. */
   useEffect(() => {
-    const id = requestAnimationFrame(() => dismissBootShell());
-    return () => cancelAnimationFrame(id);
+    const raf = requestAnimationFrame(() => dismissBootShell());
+    const timer = window.setTimeout(() => dismissBootShell(), 100);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
