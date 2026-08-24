@@ -238,7 +238,7 @@ export const en = {
     badgeDelegationB4: 'Reversible at any time:',
     badgeDelegationB4Desc: 'Take a slot back and the tier returns to you. Your own staking, fee tier and locked badge are untouched by anything you lend.',
     badgeDelegationB5: 'Status, not entitlements:',
-    badgeDelegationB5Desc: 'A lent badge is what the platform shows and what the room sees. Everything priced off a badge — your fee tier, your DHB purchase discount, your daily posting allowance and your own delegation slots — is still read from the stake you hold yourself.',
+    badgeDelegationB5Desc: 'A lent badge is what the platform shows, and it carries the weight that goes with the tier — a view or a reaction from it counts at the tier it was lent. What it does not carry is anything priced in money: your fee tier, your DHB purchase discount, your daily posting allowance and your own delegation slots are all still read from the stake you hold yourself.',
     tipTitle: 'Tip Your Favourites',
     tipDesc1: "Our Integrated tipping services across all uploads and live streams only come with a 10% fee, compared to the usual 60% charged by the likes of TikTok and other industry leaders while also having the ability to vote on video cancellations putting the power back into the viewer's hands.",
     tipDesc2: 'Tips received for creators and tips given by viewers are logged in separate leaderboards along with viewer counts and subscribers that determine shares in ad revenue. Stakeholders of DeHub tokens receive their proportionate shares of overall protocol profit.',
