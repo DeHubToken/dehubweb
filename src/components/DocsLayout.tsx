@@ -86,6 +86,12 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.tocAi'),
       path: '/docs/dapps#ai-suite'
     }, {
+      title: t('dapp.tocStudio'),
+      path: '/docs/dapps#creator-studio'
+    }, {
+      title: t('dapp.tocArcade'),
+      path: '/docs/dapps#arcade'
+    }, {
       title: t('dapp.tocEncryption'),
       path: '/docs/dapps#encryption'
     }, {
@@ -110,8 +116,14 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.tocThemes'),
       path: '/docs/dapps#themes'
     }, {
+      title: t('dapp.tocSettings'),
+      path: '/docs/dapps#settings'
+    }, {
       title: t('dapp.tocApps'),
       path: '/docs/dapps#get-the-app'
+    }, {
+      title: t('dapp.tocMore'),
+      path: '/docs/dapps#more'
     }]
   }, {
     title: t('nav.games'),
