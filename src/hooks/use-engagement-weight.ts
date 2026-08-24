@@ -10,9 +10,13 @@
  * comes from module state, which `useBadgeScale` publishes once per sync — so
  * this costs nothing on a feed of two hundred cards.
  *
- * **Advisory, not authoritative.** The server prices the weight off the
- * account's EARNED balance and this side cannot see the earned/lent split, so a
- * borrowed badge reads heavier here than it counts there. `/request_vote` and
+ * A lent badge counts for what it draws, so `badgeBalance` — the number every
+ * badge here already resolves from — is the right one to price off; the API
+ * prices from the same rendered figure.
+ *
+ * **Advisory, not authoritative.** The live wallet read promotes early, and a
+ * username override draws a badge the API does not honour, so this can read a
+ * beat ahead of what the server will apply. `/request_vote` and
  * `/request_reaction` both return the weight they actually applied; settle
  * against that rather than trusting this number after the fact.
  */
