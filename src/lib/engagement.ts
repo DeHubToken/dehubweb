@@ -33,6 +33,7 @@
 import {
   asReaction,
   reconcileReactionCounts,
+  sameReactionCounts,
   seedReactionCounts,
   type PostReaction,
   type ReactionCounts,
@@ -177,7 +178,17 @@ export function applyVoteStateToNFT<T extends CountSource>(
 export function resolveReactionCounts(source: CountSource | null | undefined): ReactionCounts {
   const stored = source?.reactionCounts;
   if (stored && Object.values(stored).some((value) => (value ?? 0) > 0)) {
-    return reconcileReactionCounts(resolveLikeCount(source), resolveDislikeCount(source), stored);
+    const reconciled = reconcileReactionCounts(
+      resolveLikeCount(source),
+      resolveDislikeCount(source),
+      stored,
+    );
+    // Hand back the post's OWN object when the reconcile changed nothing, so
+    // repeated calls on the same post are referentially stable. A fresh object
+    // each time makes every memo downstream of a card's counts miss, and the
+    // server-side split now agrees with the headline on every row — so the
+    // no-op case is the normal one, not a rare optimisation.
+    return sameReactionCounts(reconciled, stored) ? stored : reconciled;
   }
   return seedReactionCounts(resolveLikeCount(source), resolveDislikeCount(source));
 }

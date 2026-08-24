@@ -234,14 +234,10 @@ export function seedReactionCounts(likeCount: number, dislikeCount: number): Rea
   return seeded;
 }
 
-/** Sum of the positive side / negative side of a counts map. */
-function sumSide(counts: ReactionCounts, positive: boolean): number {
-  let total = 0;
-  for (const key of POST_REACTIONS) {
-    const value = counts[key] ?? 0;
-    if (value > 0 && isPositiveReaction(key) === positive) total += value;
-  }
-  return total;
+/** True when two counts maps hold the same non-zero entries. */
+export function sameReactionCounts(a: ReactionCounts, b: ReactionCounts): boolean {
+  const keys = POST_REACTIONS.filter((key) => (a[key] ?? 0) > 0 || (b[key] ?? 0) > 0);
+  return keys.every((key) => (a[key] ?? 0) === (b[key] ?? 0));
 }
 
 /**
@@ -279,7 +275,15 @@ export function reconcileReactionCounts(
       .map((key) => ({ key, count: Math.max(0, Math.floor(source[key] ?? 0)) }))
       .filter((entry) => entry.count > 0);
 
-    const sum = sumSide(source, positive);
+    // Sum the FLOORED entries, not the raw stored values. Summing raw values
+    // meant a fractional count like `{ like: 0.5 }` produced sum = 0.5, which
+    // is neither 0 nor the target — so both early branches were skipped while
+    // `entries` was empty (0.5 floors to 0 and is filtered out). The loop then
+    // evaluated `fractional[0 % 0]`, i.e. `fractional[NaN]`, and threw
+    // `Cannot read properties of undefined` during render. Flooring first is
+    // also exactly what the API's copy does, so all three agree on this input
+    // instead of two of them crashing.
+    const sum = entries.reduce((total, entry) => total + entry.count, 0);
     if (sum === 0) {
       // No shape to keep on this side — attribute the whole total to the
       // side's default reaction, same rule seeding uses for legacy votes.
