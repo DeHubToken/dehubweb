@@ -198,9 +198,19 @@ export async function authenticateWithSupabaseSession(
 
 export interface EmailLinkStatusResponse {
   status: boolean;
+  /** True only for a link this flow wrote — the kind that can be removed. */
   linked: boolean;
   /** Masked server-side (us***@example.com) — safe to render as-is. */
   email: string | null;
+  /**
+   * Whether attaching an email can succeed at all. False for an account whose
+   * Supabase identity came from a social signup: it already signs in without a
+   * wallet, and confirm would refuse a second link with
+   * ACCOUNT_HAS_LOGIN_LINKED. Absent on servers older than that field.
+   */
+  canLink?: boolean;
+  /** 'wallet-email' for a link from this flow, 'other' for a social signup. */
+  source?: 'wallet-email' | 'other' | null;
 }
 
 /** Whether the signed-in account already carries an email login. */
@@ -248,6 +258,22 @@ export async function confirmEmailLink(
       requiresAuth: true,
     },
   );
+}
+
+/**
+ * Detach the email login again, so that address can no longer sign this
+ * account in.
+ *
+ * Only removes a link this flow attached. An account whose Supabase identity
+ * came from a social signup is refused with LOGIN_NOT_REMOVABLE — that link is
+ * its only way back in.
+ */
+export async function unlinkEmailLogin(): Promise<{ status: boolean; linked: boolean }> {
+  const { apiCall } = await import('./core');
+  return apiCall<{ status: boolean; linked: boolean }>('/api/account/email-link', {
+    method: 'DELETE',
+    requiresAuth: true,
+  });
 }
 
 /**

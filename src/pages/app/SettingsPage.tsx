@@ -748,6 +748,13 @@ function ProfileSettings() {
       {/* Other accounts saved on this browser — switch or add without signing out */}
       <ProfilesSection />
 
+      {/* How you get back in. This sat under Privacy > Account security, where
+          nobody found it — it belongs beside the account itself. */}
+      <div>
+        <h3 className="font-medium text-white mb-4">{t('settings.signIn', 'Sign-in')}</h3>
+        <EmailSignInSettings />
+      </div>
+
       {/* Cover Image */}
       <div 
         className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group"
@@ -1685,7 +1692,6 @@ function PrivacySettings() {
             />}
           />
           <BiometricUnlockSettings />
-          <EmailSignInSettings />
           <WalletRecoveryTools />
         </div>
       </div>
