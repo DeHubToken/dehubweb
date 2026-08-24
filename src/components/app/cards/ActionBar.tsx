@@ -33,6 +33,7 @@ import {
 import { reactionGlowProps } from '@/lib/reaction-glow';
 import { ReactionPicker } from './ReactionPicker';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import { PostUtilityButtons } from './PostUtilityButtons';
 import { dehubLinkFor } from '@/lib/dehub-links';
 // Lazy so the DM/socket graph doesn't ride in the feed chunk — only loads when a user shares.
@@ -116,7 +117,14 @@ interface ActionBarProps {
   onLike?: () => void;
   /** Handler for dislike action (overrides default voteOnPost) */
   onDislike?: () => void;
-  /** Vote weight multiplier for optimistic count updates (default: 1) */
+  /**
+   * Vote weight multiplier for optimistic count updates.
+   *
+   * Omitted on a post: the viewer's own badge weight is used, because that is
+   * what the server will apply (1 with no badge, 2 at Crab, up to 14 at
+   * Meglodon). Governance passes its own weight — a different ladder, on a
+   * different table — and keeps overriding this.
+   */
   voteWeight?: number;
   /** Tip count to display next to repost */
   tipCount?: number;
@@ -230,7 +238,7 @@ export function ActionBar({
   repostCount,
   isReposted: initialIsReposted = false,
   isOptimistic = false,
-  voteWeight = 1,
+  voteWeight: voteWeightProp,
   tipCount,
   onTip,
   onSeeEngagements,
@@ -245,6 +253,12 @@ export function ActionBar({
   hideUtility = false,
   utilityDesktopAnchor = false,
 }: ActionBarProps) {
+  // What one reaction from this viewer counts for. A badge multiplies the
+  // reaction they already have; it never buys them a second one, so this only
+  // ever scales the count, never the number of votes cast.
+  const selfWeight = useEngagementWeight();
+  const voteWeight = voteWeightProp ?? selfWeight;
+
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
   const commentCount = (rawCommentCount ?? 0) + commentCountDelta;
@@ -417,16 +431,31 @@ export function ActionBar({
     const nextPositive = next ? isPositiveReaction(next) : false;
     const nextNegative = next ? !nextPositive : false;
 
-    let newLikeCount = localLikeCount;
-    let newDislikeCount = localDislikeCount;
-    if (wasPositive && !nextPositive) newLikeCount = Math.max(0, newLikeCount - voteWeight);
-    if (!wasPositive && nextPositive) newLikeCount += voteWeight;
-    if (wasNegative && !nextNegative) newDislikeCount = Math.max(0, newDislikeCount - voteWeight);
-    if (!wasNegative && nextNegative) newDislikeCount += voteWeight;
+    // The whole optimistic result for a given weight. Written as a function of
+    // the weight because the server's answer carries the weight it actually
+    // applied, and that can differ from the one guessed here — it prices from
+    // the earned badge, which this side cannot see.
+    const countsAt = (weight: number) => {
+      let like = localLikeCount;
+      let dislike = localDislikeCount;
+      if (wasPositive && !nextPositive) like = Math.max(0, like - weight);
+      if (!wasPositive && nextPositive) like += weight;
+      if (wasNegative && !nextNegative) dislike = Math.max(0, dislike - weight);
+      if (!wasNegative && nextNegative) dislike += weight;
+      return {
+        likeCount: like,
+        dislikeCount: dislike,
+        reactionCounts: applyReactionDelta(localReactionCounts, previous, next, weight),
+      };
+    };
+
+    const optimistic = countsAt(voteWeight);
+    let newLikeCount = optimistic.likeCount;
+    let newDislikeCount = optimistic.dislikeCount;
 
     const newLiked = nextPositive;
     const newDisliked = nextNegative;
-    const newReactionCounts = applyReactionDelta(localReactionCounts, previous, next);
+    const newReactionCounts = optimistic.reactionCounts;
 
     setIsVoting(true);
     setPickerOpen(false);
@@ -475,10 +504,33 @@ export function ActionBar({
         }
         // Plain like/dislike keeps using the long-lived vote endpoint; anything
         // else needs the reaction one. Same row either way on the server.
-        if (reaction === 'like' || reaction === 'dislike') {
-          await voteOnPost({ tokenId: numericId, voteType: reaction === 'like' ? 'for' : 'against' });
-        } else {
-          await reactToPost({ tokenId: numericId, reaction });
+        const response =
+          reaction === 'like' || reaction === 'dislike'
+            ? await voteOnPost({ tokenId: numericId, voteType: reaction === 'like' ? 'for' : 'against' })
+            : await reactToPost({ tokenId: numericId, reaction });
+
+        // Settle on the weight the server actually applied. Only differs when
+        // this side guessed a heavier badge than the account has earned (a lent
+        // one, say) — but leaving it would park a wrong count in the vote cache
+        // for as long as the cache outlives the refetch.
+        const applied = typeof response?.weight === 'number' ? response.weight : voteWeight;
+        if (!hasExternalHandler && applied !== voteWeight) {
+          const settled = countsAt(applied);
+          setLocalLikeCount(settled.likeCount);
+          setLocalDislikeCount(settled.dislikeCount);
+          setLocalReactionCounts(settled.reactionCounts);
+          const settledState = {
+            isLiked: newLiked,
+            isDisliked: newDisliked,
+            myReaction: next,
+            ...settled,
+          };
+          setVoteCache(postId, settledState);
+          patchFeedCaches(queryClient, postId, settledState);
+          queryClient.setQueriesData<any>(
+            { queryKey: ['single-post', postId] },
+            (old: any) => (old ? applyVoteStateToNFT(old, settledState) : old),
+          );
         }
       }
       // After a successful reaction, softly invalidate feeds so fresh

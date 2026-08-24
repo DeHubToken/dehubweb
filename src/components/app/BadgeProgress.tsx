@@ -27,6 +27,7 @@ import {
   getBadgeStanding,
   type BadgeLock,
 } from '@/lib/staking-badges';
+import { engagementWeightForBadge, formatEngagementWeight } from '@/lib/engagement-weight';
 import { useBadgeLadderPrice, useBadgeScale } from '@/hooks/use-badge-scale';
 import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 import { AuthContext } from '@/contexts/AuthContext';
@@ -89,6 +90,7 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
 
   const percent = Math.round(standing.progress * 100);
   const nextThresholdUsd = standing.nextTier ? BADGE_USD_TARGETS[standing.nextTier] : null;
+  const weight = engagementWeightForBadge(standing.tier);
 
   return (
     <div
@@ -160,6 +162,16 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
           {standing.nextTier
             ? `${formatDhb(standing.remaining)} DHB to ${standing.nextTier}`
             : 'Every tier unlocked'}
+        </span>
+      </div>
+
+      {/* What the tier actually does, beyond drawing a picture. */}
+      <div className="mt-3 flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
+        <span className="font-mono text-sm text-white shrink-0">{formatEngagementWeight(weight)}</span>
+        <span className="text-[11px] leading-snug text-white/55">
+          {standing.tier
+            ? `Every view you give and every reaction you leave counts ${formatEngagementWeight(weight)}. Still one reaction — it is just worth more.`
+            : 'Views and reactions count once. A badge multiplies that — ×2 at Crab, up to ×14 at Meglodon.'}
         </span>
       </div>
 

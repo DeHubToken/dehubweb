@@ -75,7 +75,10 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
   const firstPage = data?.pages?.[0];
   const canView = firstPage?.canViewLikers !== false;
   const rows = useMemo(() => data?.pages.flatMap((page) => page.data ?? []) ?? [], [data]);
-  const totalCount = firstPage?.pagination?.totalCount ?? 0;
+  // The weighted total, not the row count: a badge holder's reaction counts for
+  // more than one, and the per-reaction group totals below are weighted too, so
+  // a header on the row count would not add up to the groups under it.
+  const totalCount = firstPage?.weightedTotalCount ?? firstPage?.pagination?.totalCount ?? 0;
 
   /**
    * Group into taxonomy order. The server already sorts rows this way, so the

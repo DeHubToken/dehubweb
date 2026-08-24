@@ -15,6 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnPost, reactToPost, getNFTComments, postComment, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
 import {
@@ -227,6 +228,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
+  // What one reaction from this viewer counts for — their badge multiplier.
+  const voteWeight = useEngagementWeight();
 
   const currentShort = shorts[currentIndex];
   const isOwnShort = !!walletAddress && currentShort?.creatorId?.toLowerCase() === walletAddress.toLowerCase();
@@ -419,6 +422,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
    *
    * Counts track POLARITY, so swapping like → love moves only
    * `reactionCounts` — see the same reasoning in ActionBar.handleReaction.
+   *
+   * The viewer's badge decides what their one reaction counts for, so the
+   * optimistic move here is by that weight rather than by one.
    */
   const handleReaction = useCallback(async (reaction: PostReaction) => {
     const tokenId = String(currentShort?.id);
@@ -439,16 +445,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const nextPositive = next ? isPositiveReaction(next) : false;
     const nextNegative = next ? !nextPositive : false;
 
+    // One reaction, counted for the reactor's badge weight — the same number
+    // the server will move both rollups by.
     let likeDelta = 0;
     let dislikeDelta = 0;
-    if (wasPositive && !nextPositive) likeDelta = -1;
-    if (!wasPositive && nextPositive) likeDelta = 1;
-    if (wasNegative && !nextNegative) dislikeDelta = -1;
-    if (!wasNegative && nextNegative) dislikeDelta = 1;
+    if (wasPositive && !nextPositive) likeDelta = -voteWeight;
+    if (!wasPositive && nextPositive) likeDelta = voteWeight;
+    if (wasNegative && !nextNegative) dislikeDelta = -voteWeight;
+    if (!wasNegative && nextNegative) dislikeDelta = voteWeight;
 
     const newLiked = nextPositive;
     const newDisliked = nextNegative;
-    const newReactionCounts = applyReactionDelta(localReactionCounts, previous, next);
+    const newReactionCounts = applyReactionDelta(localReactionCounts, previous, next, voteWeight);
 
     setIsVoting(true);
     setPickerOpen(false);
@@ -504,7 +512,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     } finally {
       setIsVoting(false);
     }
-  }, [currentShort?.id, isVoting, isLiked, isDisliked, myReaction, localReactionCounts, isAuthenticated, localLikeCount, localDislikeCount]);
+  }, [currentShort?.id, isVoting, isLiked, isDisliked, myReaction, localReactionCounts, isAuthenticated, localLikeCount, localDislikeCount, voteWeight]);
 
   /**
    * The thumb casts whichever reaction it is WEARING, so a short leading with

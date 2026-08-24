@@ -10,6 +10,11 @@ export interface VoteResponse {
     for: number;
     against: number;
   };
+  /**
+   * What the vote counted for — the voter's badge weight, 1 with no badge up
+   * to 14 at Meglodon. Absent from an older API; treat that as 1.
+   */
+  weight?: number;
 }
 
 export interface ReactionResponse {
@@ -22,6 +27,12 @@ export interface ReactionResponse {
   /** The reaction now in force — null when the request toggled it off. */
   currentReaction: PostReaction | null;
   previousReaction: PostReaction | null;
+  /**
+   * What the reaction counted for — the reactor's badge weight, 1 with no badge
+   * up to 14 at Meglodon. It is a multiplier on the one reaction they hold, not
+   * a second reaction. Absent from an older API; treat that as 1.
+   */
+  weight?: number;
 }
 
 export interface PostReactionsResponse {
@@ -541,6 +552,13 @@ export interface PostLikersResponse {
   data: PostLiker[];
   /** Per-reaction totals for the whole post; null unless you own it. */
   reactionCounts: ReactionCounts | null;
+  /**
+   * The positive total the card shows — reactions counted at their reactors'
+   * badge weight. `pagination.totalCount` is the number of PEOPLE behind it
+   * (it paginates the rows), so the two differ once a badge holder reacts and
+   * a headline must use this one. Absent from an older API.
+   */
+  weightedTotalCount?: number;
   pagination: { page: number; limit: number; totalCount: number; hasMore: boolean };
 }
 
