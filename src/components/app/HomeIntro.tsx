@@ -240,7 +240,13 @@ export function HomeIntro() {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.16] mix-blend-overlay"
-        style={{ backgroundImage: 'url(/brand-kit/brand/grain.png)', backgroundSize: '240px 240px' }}
+        /* -web.webp, not the kit's grain.png: that one is a 240x240 32-bit PNG
+           of pure noise — the worst case for any codec — at 43 KB, for a
+           texture drawn at 0.16 opacity under mix-blend-overlay. A 120 tile in
+           WebP is 10.7 KB and, at that opacity, indistinguishable; it also
+           repeats less visibly. The PNG stays put for the poster kit, which
+           renders at print size and does want the full-resolution grain. */
+        style={{ backgroundImage: 'url(/brand-kit/brand/grain-web.webp)', backgroundSize: '120px 120px' }}
       />
       {/* Card inset frame — ~14px, faint 1px white border. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-[10px] rounded-[14px] border border-white/[0.10] sm:inset-[14px]" />
@@ -253,7 +259,12 @@ export function HomeIntro() {
             className="inline-flex items-center rounded-[14px] bg-[#f4f4f2] px-4 py-2"
             style={{ boxShadow: '0 0 34px rgba(255,255,255,.38), 0 0 90px rgba(255,255,255,.14)' }}
           >
-            <img src="/brand-kit/brand/wordmark-black.png" alt="DeHub" width={74} height={18} className="h-[18px] w-auto" />
+            {/* -web.webp: the kit's wordmark-black.png is 1752x417 for a logo
+                drawn 18px tall — a 23x linear oversample, 45 KB. This is 222x53
+                (3x, covering every DPR that exists) at 3 KB. The PNG stays: it
+                is byte-identical to /brand/wordmark-black.png, which the brand
+                assets page offers as a download. */}
+            <img src="/brand-kit/brand/wordmark-black-web.webp" alt="DeHub" width={74} height={18} className="h-[18px] w-auto" />
           </span>
           <div className="flex items-center gap-2">
             <span
