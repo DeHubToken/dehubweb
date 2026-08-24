@@ -235,15 +235,13 @@ export function ProfileHoverCard({
                   />
                 </span>
                 {profile.verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 ml-1" />}
+                <NewMemberChip address={profile.address} className="ml-1" />
               </div>
               {profile.username && (
                 <p className="text-white/60 text-xs mt-0.5">
                   @{profile.username.replace('@', '')}
                 </p>
               )}
-              <div className="mt-1.5">
-                <NewMemberChip address={profile.address} />
-              </div>
             </button>
 
             {/* Bio */}

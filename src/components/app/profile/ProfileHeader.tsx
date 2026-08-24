@@ -369,6 +369,9 @@ export function ProfileHeader({
                       place that says whose badge it is. */}
                   <BadgePatronChip lookupId={profile.walletAddress} />
                 </span>
+                {/* Temporary — gone NEW_MEMBER_WINDOW_DAYS after signup, and
+                    immediately if they switch it off in Settings › Privacy. */}
+                <NewMemberChip address={profile.walletAddress} />
               </div>
               {profile.customs && (
                 <ProfileSocialLinks customs={profile.customs} />
@@ -386,9 +389,6 @@ export function ProfileHeader({
                 {profile.handle}
               </button>
               {profile.verified && <VerifiedBadge className="w-5 h-5" />}
-              {/* Temporary — gone NEW_MEMBER_WINDOW_DAYS after signup, and
-                  immediately if they switch it off in Settings › Privacy. */}
-              <NewMemberChip address={profile.walletAddress} />
               {!isViewingOwnProfile && apiProfile?.followsYou && (
                 <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
                   Follows you
