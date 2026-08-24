@@ -52,9 +52,12 @@ Deno.serve(async (req) => {
   // stray whitespace, carriage returns or their own quotes — the repo's
   // cloudflare_apitoken was exactly this, 51 characters of non-token material
   // that Cloudflare refused with "Invalid format for Authorization header".
-  const rawToken = Deno.env.get('digitalocean')
+  // DIGITAL_OCEAN is the live token (added 2026-08-24 after the original was
+  // found revoked); `digitalocean` is the dead one, kept as a fallback only so
+  // deleting it later cannot break this function.
+  const rawToken = Deno.env.get('DIGITAL_OCEAN') ?? Deno.env.get('digitalocean')
   if (!rawToken) {
-    console.error('digitalocean secret not configured')
+    console.error('Neither DIGITAL_OCEAN nor digitalocean secret is configured')
     return json(500, { error: 'DO token not configured' })
   }
   const doToken = rawToken
