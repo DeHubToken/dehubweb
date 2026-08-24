@@ -306,12 +306,30 @@
          visitor stares at a flat --boot-bg rectangle for the whole window.
          Everything below is inline, so it paints on the FIRST round-trip.
 
-         It is a fixed full-viewport overlay, NOT in flow. The real panel
-         (components/app/HomeIntro.tsx) lives inside the feed column, below a
-         sticky tab bar, inside the app shell — reproducing that position
-         without the app's layout is not possible, and getting it wrong trades
-         the paint win for a layout shift at hand-off. Out of flow, there is
-         nothing to shift.
+         POSITION: the card lands where the real one lands. The overlay
+         reproduces the app shell's STRUCTURE — sidebar rail, main column, a
+         spacer the height of the sticky tab bar — and lets flow compute the
+         card's box, exactly as the app does. It deliberately does NOT hard-code
+         the resulting left/top: those are four different numbers across the
+         mobile / sm / lg / collapsed branches, and a derived number rots
+         silently the first time someone changes a padding.
+
+         Note the app itself refuses to compute this: --app-main-left and
+         --app-main-width are published by a ResizeObserver on <main>
+         (AppLayout.tsx) because measuring is the only reliable answer once the
+         tree exists. At boot the tree does not exist, so the inputs are
+         mirrored here instead — the same three that the app reads:
+
+           - the rail's 60px / 231px width, and that it is lg-only
+             (navigation/DesktopSidebar.tsx)
+           - the row's mx-auto and 80rem cap, dropped to 100% when the sidebar
+             is collapsed on a home-feed route (AppLayout.tsx)
+           - the sticky tab bar's top-11/lg:top-0 offset and its padding around
+             35px buttons, and that it is hidden when collapsed (HomePage.tsx)
+
+         src/test/boot-shell-geometry.test.ts pins every one of those against
+         the file it came from, so a change there fails the build rather than
+         quietly sliding the boot card off the real one.
 
          It is also aria-hidden and carries NO unique copy: every word here is
          duplicated verbatim by HomeIntro (and by HOME_INTRO_HTML in
@@ -327,13 +345,27 @@
          sharpen from a compositor-only opacity fade on .bs-plate::after once
          the real silk texture has decoded. Opacity is free; filter is not. */
       #boot-shell {
-        position: fixed; inset: 0; z-index: 60;
-        display: flex; align-items: center; justify-content: center;
-        padding: 16px;
+        position: fixed; inset: 0; z-index: 60; overflow: hidden;
         background-color: var(--boot-bg, #000);
         opacity: 1; transition: opacity 420ms ease;
       }
       #boot-shell.bs-gone { opacity: 0; pointer-events: none; }
+
+      /* --- app-shell skeleton (mirrors AppLayout's flex row) --- */
+      /* max-width: 80rem + mx-auto. The collapsed-on-home branch widens it to
+         100%, same condition AppLayout applies. */
+      #boot-shell .bs-row { display: flex; width: 100%; max-width: 80rem; margin: 0 auto; }
+      #boot-shell[data-collapsed="true"] .bs-row { max-width: 100%; }
+      /* `hidden lg:flex` + `w-[60px]` / `lg:w-[231px]`. Rendered as an empty
+         column: the shell only needs the rail's WIDTH to place the main column,
+         and drawing a fake sidebar that then swaps for the real one would be a
+         second thing to keep in sync. */
+      #boot-shell .bs-rail { display: none; flex: none; }
+      /* `flex-1 min-w-0 w-full pt-11 lg:pt-0` */
+      #boot-shell .bs-main { flex: 1 1 auto; min-width: 0; width: 100%; padding-top: 44px; }
+      /* The sticky tab bar's box: 35px buttons inside pt-1 pb-2 (sm:pb-3,
+         lg:pt-2). Reserved as a spacer, not drawn — see .bs-rail. */
+      #boot-shell .bs-tabs { height: 47px; }
       /* Soft theme-tinted wash. Deliberately gradients rather than a blurred
          bitmap: same diffuse look, no asset to fetch and no filter to run. */
       #boot-shell .bs-bg {
@@ -342,10 +374,14 @@
           radial-gradient(60% 55% at 50% 32%, rgba(255,255,255,.10), transparent 70%),
           radial-gradient(90% 80% at 50% 120%, rgba(255,255,255,.05), transparent 70%);
       }
+      /* HomeIntro's own box: `mx-2 mb-3 rounded-2xl border border-white/10
+         bg-black sm:mx-3 lg:mx-3`. No max-width — the panel fills its column,
+         which is the whole point of placing it in a reproduced column. */
       #boot-shell .bs-card {
-        position: relative; width: 100%; max-width: 720px;
+        position: relative; margin: 0 8px 12px;
         border-radius: 16px; border: 1px solid rgba(255,255,255,.10);
         background: #000; overflow: hidden;
+        container-type: inline-size; container-name: bootcard;
       }
       #boot-shell .bs-plate { position: absolute; inset: 0; }
       #boot-shell .bs-plate::before {
@@ -407,7 +443,28 @@
       }
       #boot-shell .bs-desc { margin-top: 12px; max-width: 32rem; font-size: 14px; line-height: 1.6; color: rgba(255,255,255,.55); }
       #boot-shell .bs-foot { margin-top: 24px; }
-      @media (min-width: 760px) {
+      /* Tailwind `sm:` — HomeIntro goes mx-3, the tab bar's pb-2 becomes pb-3. */
+      @media (min-width: 640px) {
+        #boot-shell .bs-card { margin: 0 12px 12px; }
+        #boot-shell .bs-tabs { height: 51px; }
+      }
+      /* Tailwind `lg:` — the desktop rail appears, <main> loses its pt-11 (the
+         mobile header goes away), and the tab bar takes lg:pt-2. When the rail
+         is collapsed the app swaps the tab bar for GlobalFeedNav
+         (`isCollapsed && "lg:hidden"` on HomePage's bar), so the spacer goes
+         with it and the rail narrows to 60px. */
+      @media (min-width: 1024px) {
+        #boot-shell .bs-rail { display: block; width: 231px; }
+        #boot-shell .bs-main { padding-top: 0; }
+        #boot-shell .bs-tabs { height: 55px; }
+        #boot-shell[data-collapsed="true"] .bs-rail { width: 60px; }
+        #boot-shell[data-collapsed="true"] .bs-tabs { display: none; }
+      }
+      /* The card's own internal breakpoints stay keyed to the CARD's width, not
+         the viewport's — HomeIntro uses @container for exactly this reason (a
+         viewport `lg:` fires while the feed column is still ~430px wide and
+         crushes the headline). Same threshold, same effect. */
+      @container bootcard (min-width: 760px) {
         #boot-shell .bs-inner { padding: 28px 32px; }
         #boot-shell .bs-head { font-size: 50px; }
         #boot-shell .bs-frame { inset: 14px; }
@@ -494,8 +551,14 @@
           var el = document.createElement("div");
           el.id = "boot-shell";
           el.setAttribute("aria-hidden", "true");
+          // Same key and default as SidebarCollapseContext. Collapse is a
+          // desktop-only feature there, so the CSS only acts on this at lg —
+          // reading it here regardless keeps the two in one place.
+          el.dataset.collapsed = localStorage.getItem("sidebar-collapsed") === "true" ? "true" : "false";
           el.innerHTML =
             '<div class="bs-bg"></div>' +
+            '<div class="bs-row"><div class="bs-rail"></div><div class="bs-main">' +
+            '<div class="bs-tabs"></div>' +
             '<div class="bs-card">' +
               '<div class="bs-plate" id="bs-plate"></div>' +
               '<div class="bs-veil"></div>' +
@@ -510,7 +573,7 @@
                   'and create free from censorship or platform manipulation.</p>' +
                 '<div class="bs-foot"><span class="bs-mono"><span class="bs-slash">//</span>dehub.io</span></div>' +
               '</div>' +
-            '</div>';
+            '</div></div></div>';
           document.body.appendChild(el);
 
           // The sharpen. Decoded off-thread; the gradient plate underneath is
