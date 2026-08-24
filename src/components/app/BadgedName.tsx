@@ -16,6 +16,7 @@
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
+import type { BadgeLock } from '@/lib/staking-badges';
 
 interface BadgedNameProps {
   /** The name text. */
@@ -25,6 +26,12 @@ interface BadgedNameProps {
   lookupId?: string | null;
   /** Username for the badge override table. */
   username?: string | null;
+  /**
+   * The holder's grandfathered tier, when the payload carries one. Pass it
+   * alongside `badgeBalance` — a provided balance skips the account lookup, so
+   * without this the badge falls back to the live ladder for that name.
+   */
+  badgeLock?: BadgeLock | null;
   /** Classes for the name itself (font, colour, truncation). */
   className?: string;
   /** Classes for the wrapper (layout, max-width). */
@@ -36,10 +43,11 @@ export function BadgedName({
   badgeBalance,
   lookupId,
   username,
+  badgeLock,
   className,
   wrapperClassName,
 }: BadgedNameProps) {
-  const { url } = useBadgeVisual({ badgeBalance, lookupId, username });
+  const { url } = useBadgeVisual({ badgeBalance, lookupId, username, badgeLock });
 
   return (
     <span
@@ -56,6 +64,7 @@ export function BadgedName({
         badgeBalance={badgeBalance}
         lookupId={lookupId}
         username={username}
+        badgeLock={badgeLock}
         className="w-[9px] h-[9px] absolute -top-0.5 right-0"
       />
     </span>

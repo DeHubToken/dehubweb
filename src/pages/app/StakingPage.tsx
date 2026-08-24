@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Interface, parseUnits } from 'ethers';
 import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy } from 'lucide-react';
-import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, useIsStakeRouteActive, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
@@ -587,6 +587,10 @@ export default function StakingPage() {
         <StatCard icon={DollarSign} label={t('staking.totalValueLocked')} value={statsLoading || (statsError && !stats) ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-white/20" delay={0.05} />
         <StatCard icon={TrendingUp} label={t('staking.estApy')} value={`${ESTIMATED_APY}%`} subtitle={t('staking.variableRate')} accent="bg-white/20" delay={0.1} />
       </div>
+
+      {/* Badge ladder — the reason most people are on this page. Sits above the
+          stake box so the number they are about to type has a target. */}
+      <BadgeProgress className="mb-6" />
 
       {/* Multi-chain notice */}
       {userData?.hasBothChains && (
