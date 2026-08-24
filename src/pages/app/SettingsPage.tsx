@@ -467,8 +467,10 @@ function ProfileSettings() {
       setIsCheckingUsername(false);
       return;
     }
-    if (debouncedUsername.length < 3) {
-      setUsernameAvailable(null);
+    // No minimum length — the API has never enforced one and short handles are
+    // wanted. The 30-character ceiling is the only length rule.
+    if (debouncedUsername.length > 30) {
+      setUsernameAvailable(false);
       setIsCheckingUsername(false);
       return;
     }
