@@ -45,19 +45,19 @@ const sections: GuideSection[] = [
     screenshot: screenshotLanding,
     title: "Getting Started",
     icon: LogIn,
-    intro: "DeHub supports two ways to sign in: social login via Web3Auth (email, Google, X, etc.) or connecting an external wallet like MetaMask. Social-login users get a smart account — the platform covers all gas fees. External-wallet users need to hold gas on the relevant chain.",
+    intro: "There are five ways into DeHub and none of them need you to already own a wallet: Google, Apple, a code sent to your email, a code sent by SMS, or an existing wallet you connect. Everything except the wallet route creates a non-custodial wallet for you in the background — you hold the keys, and DeHub sponsors the gas so you can post, tip and collect without ever buying a native token.",
     steps: [
-      "Visit dehub.io and click 'Launch App' or navigate to /app.",
-      "Choose 'Sign In' — you'll see social login options (Google, X, Email, etc.) and a 'Connect Wallet' option for external wallets.",
-      "If using social login, complete the sign-in flow. A smart account is created for you automatically.",
-      "If connecting an external wallet, approve the connection in your wallet extension or mobile app.",
-      "After signing in, you'll be prompted to set a username. This is required to interact on the platform.",
-      "You're in! Explore the feed, set up your profile, and start posting."
+      "Visit dehub.io — the home feed is the front page, so you can look around before signing in.",
+      "Click 'Sign In'. You'll see Google and Apple, fields for an email address or a phone number, and 'Connect Wallet' for an existing one.",
+      "With Google or Apple, complete the provider's flow. With email or SMS, enter the code that arrives.",
+      "A wallet is created and secured for you on first sign-in. Connecting your own wallet instead means one signature to prove the address.",
+      "Pick a username. It is what people see and it doubles as your dehub.io/<username> profile link.",
+      "You're in. Explore the feed, set up your profile, and start posting."
     ],
     tips: [
-      "Social-login users never pay gas — DeHub covers it via account abstraction.",
-      "External-wallet users need gas on the chain they're interacting with.",
-      "You can copy your wallet address from the sidebar or your profile page."
+      "Social, email and SMS sign-ins never pay gas — DeHub sponsors it. Connected wallets pay their own ETH or BNB.",
+      "Coming back to a legacy DeHub account? Sign in with the email or phone number it used and the migration finds it for you.",
+      "You can keep several accounts on one device and switch between them in Settings → Profile."
     ]
   },
   {
@@ -353,6 +353,134 @@ const sections: GuideSection[] = [
     ]
   },
   {
+    id: "posting-allowance",
+    title: "Your Daily Posting Allowance",
+    icon: PenSquare,
+    intro: "Posting is free every day up to an allowance that scales with your staking badge. Everybody starts with ten text posts and one gigabyte of video, images and audio per day. Go past either one and the rest of that day is paid for in DHB — only on the part that runs over.",
+    steps: [
+      "Post as normal. Inside the allowance nothing is charged and nothing is asked of you.",
+      "Text posts and media are separate pools, so a day spent uploading video still leaves all ten text posts free.",
+      "When a post would run over, the app prices it first and checks your wallet can cover it before anything uploads.",
+      "The post publishes exactly as it would inside the allowance — publishing never waits on a payment.",
+      "Then you approve one transfer for that post only, settled on whichever of Base or BNB Chain holds enough DHB.",
+      "Both pools reset at midnight UTC."
+    ],
+    tips: [
+      "Overage is pro-rata: 200 MB past your allowance costs 200 MB, not a whole gigabyte.",
+      "Reposts, comments, reactions, tips and messages cost nothing and never touch the allowance.",
+      "Decline the payment and the post stays up — the amount just blocks your next paid post until it is settled. Tomorrow's free allowance is always yours.",
+      "A staking badge raises the free allowance and lowers the price of anything past it."
+    ]
+  },
+  {
+    id: "reactions-and-safety",
+    title: "Reactions, Muting & Mature Content",
+    icon: ThumbsUp,
+    intro: "There are nine reactions behind the like button, and a set of controls for deciding what you see and who can reach you.",
+    steps: [
+      "Hold the thumbs-up on any post to open the reaction tray: like, love, respect, hot, lol, sad, cry, dislike and poo.",
+      "The seven positive ones count towards the post's like total; dislike and poo count against it.",
+      "Your reaction is weighted by your staking badge, so a badge holder's reaction moves the count further than one vote.",
+      "Tap the X in a post's header to mute its author — they drop out of your feed straight away.",
+      "Creators mark their own posts as mature while composing them; those posts stay off the public home feed.",
+      "To see mature posts everywhere, turn on 'Show mature content' in Settings."
+    ],
+    tips: [
+      "A mature post is still fully visible on the creator's profile and to the people who follow them.",
+      "Blocking from a profile goes further than muting and cuts off messaging too.",
+      "The reaction tray shows who reacted and with what, so you can see the room rather than just a number."
+    ]
+  },
+  {
+    id: "stages",
+    title: "Stages (Live Audio Rooms)",
+    icon: MessageCircle,
+    intro: "Stages are live audio rooms built into DeHub. A host opens a room, brings speakers up, and anyone can drop in to listen from the Stages page or a shared link.",
+    steps: [
+      "Open 'Stages' in the sidebar to see what is live now and what is scheduled.",
+      "Tap a live stage to join as a listener, or set a reminder on a scheduled one and get told when it starts.",
+      "Start your own from the same page — you can go live straight from the browser, with no OBS or stream key.",
+      "As host, bring speakers on stage, mute or remove them, share your screen, and drive the soundboard.",
+      "Listeners send live reactions and talk in the room chat without coming on stage.",
+      "Every stage records, and the recording plays back afterwards from the card it appears on."
+    ],
+    tips: [
+      "Live subtitles caption each speaker and translate into whatever language you are reading in.",
+      "Live dubbing can speak the room aloud in the host's own cloned voice, billed by the minute in DHB.",
+      "Hosts can put a radio station on air or play their own music clips between conversations.",
+      "A mini-player keeps the room going in the corner while you browse the rest of the app."
+    ]
+  },
+  {
+    id: "communities",
+    title: "Communities & Events",
+    icon: Landmark,
+    intro: "Communities are member-run spaces with their own feed, members and activity. Events add time-bound programming on top of them.",
+    steps: [
+      "Open 'Communities' in the sidebar and browse the public ones.",
+      "Join in one tap. New activity shows as an unread badge in the navigation.",
+      "Post, discuss, run polls and tip inside a community's own feed.",
+      "Community owners moderate their own space and can grant admin rights to others.",
+      "Open 'Events' for scheduled programming, with a full page per event you can follow along with live."
+    ],
+    tips: [
+      "Community chat supports @mentions and @here, so a post can reach the room.",
+      "An invite link lets you bring people straight into a community."
+    ]
+  },
+  {
+    id: "arcade",
+    title: "Arcade",
+    icon: Trophy,
+    intro: "Five games run inside DeHub in a browser tab — nothing to install, nothing to buy.",
+    steps: [
+      "Open 'Arcade' in the sidebar.",
+      "Pick a game: King's Gambit (3D chess with an online Elo ladder), Claude of Duty (a shooter that generates its own art as it loads), Jungle Trail (a procedural rainforest walk), Street Slayer (a beat 'em up made for DeHub) or Trenchstar (a walkable trading floor).",
+      "Play in the tab. King's Gambit and Street Slayer keep leaderboards.",
+      "Trenchstar also runs in a VR headset through WebXR."
+    ],
+    tips: [
+      "Two of them hide inside the appearance themes — set the app to War for Claude of Duty, or Jungle for Jungle Trail.",
+      "Every game has its own share card, so a link to one unfurls properly wherever you post it."
+    ]
+  },
+  {
+    id: "bounties-stores",
+    title: "Bounties & Stores",
+    icon: ShoppingCart,
+    intro: "Two ways to turn the platform into income: post or claim a bounty, or open a storefront and sell to your audience.",
+    steps: [
+      "Open 'Bounties' to browse open work, filtered by category or currency.",
+      "Claim one, do the work, and submit it to collect the reward — anyone can be a hunter, no application needed.",
+      "Post your own bounty with a brief and a reward in DHB or USDC. It goes into escrow the moment you post it.",
+      "Open 'Stores' to set up a storefront with its own page, branding and listings.",
+      "Products are priced and settled in DHB through the built-in wallet, with no external checkout."
+    ],
+    tips: [
+      "Bounties are organised into Social Media, Clipping and Contracts.",
+      "A dispute flow settles disagreements over delivery, so escrow always resolves fairly.",
+      "Creators use bounties to grow a community — shares, clips and reactions are all valid tasks."
+    ]
+  },
+  {
+    id: "creator-studio",
+    title: "Creator Studio & Editor",
+    icon: PenSquare,
+    intro: "Creator Studio generates images, video, music, voice and 3D models from a prompt, and hands them to an editor — including a full multi-track video editor that runs in the browser.",
+    steps: [
+      "Open Creator Studio and describe what you want made.",
+      "The server quotes the cost before the job runs, so you see what it costs before you spend it.",
+      "Renders continue in a shared queue while you carry on browsing the app.",
+      "Arrange the results in the Canva-style editor, or open the video editor for a real timeline with cutting, layering and export.",
+      "Drop the finished piece straight into a post, a short or a store listing."
+    ],
+    tips: [
+      "A free stock asset library sits alongside the Studio for anything you would rather not generate.",
+      "Generation runs on AI credits, denominated in DHB, which every account accrues daily.",
+      "Heavier users can take an Ultra, Team or Scale plan for a monthly credit allowance instead."
+    ]
+  },
+  {
     id: "buying-dhb",
     screenshot: screenshotCommandCentre,
     title: "Buying DHB",
@@ -418,17 +546,17 @@ const sections: GuideSection[] = [
     screenshot: screenshotHomeFeed,
     title: "Post Info & Fractions",
     icon: BookOpen,
-    intro: "Every post on DeHub is minted as an NFT split into 100 fractions. The Post Info page shows on-chain data, engagement stats, ownership breakdown, and lets you trade fractions of any post.",
+    intro: "A minted post is an NFT split into 1,000 fractions. The Post Info page shows on-chain data, engagement stats, ownership breakdown, and lets you trade fractions of any post — on an unminted post it offers to mint instead.",
     steps: [
       "Tap the 'ⓘ' icon on any post to open its Post Info page.",
       "At the top you'll see the Token ID (unique on-chain identifier) and the transaction hash — click the hash to view it on the block explorer.",
       "Below that, engagement stats show total likes, dislikes, views, comments, and tips received.",
-      "The Holders section shows a progress bar of how many of the 100 fractions the creator still owns, plus a list of all fraction holders with their balances and percentages.",
+      "The Holders section shows a progress bar of how many of the 1,000 fractions the creator still owns, plus a list of all fraction holders with their balances and percentages.",
       "If the post is pay-per-view (PPV), you'll see the price, currency, and how many users have purchased access.",
       "Post owners can change visibility (Public, Unlisted, or Private) and edit the title/description directly from this page.",
     ],
     tips: [
-      "Every post starts with the creator holding all 100 fractions (100% ownership).",
+      "A freshly minted post starts with the creator holding all 1,000 fractions (100% ownership).",
       "The transaction hash links to BaseScan or BscScan depending on the chain.",
       "Unlisted posts don't appear in feeds but can still be accessed via direct link.",
     ]
@@ -480,20 +608,20 @@ const sections: GuideSection[] = [
     screenshot: screenshotHomeFeed,
     title: "Minting Posts (Creating NFTs)",
     icon: PenSquare,
-    intro: "When you create a post on DeHub, it's automatically minted as an NFT on the blockchain. You don't need to do anything special — every post is an NFT.",
+    intro: "Minting is optional. A post publishes off-chain the moment you send it — no wallet, no signature, no gas — and you can mint it as an NFT whenever you want, either as you compose it or later from the post itself.",
     steps: [
       "Click the 'Post' button in the sidebar (desktop) or the + button (mobile).",
       "Write your text, attach media (images, videos, audio), and add categories.",
-      "Click 'Post' to publish — your content is immediately minted as an NFT on the Base blockchain.",
-      "Each minted post gets a unique Token ID and a transaction hash you can verify on-chain.",
-      "You automatically receive all 100 fractions (100% ownership) of your newly minted post.",
-      "View your post's on-chain details anytime by tapping the 'ⓘ' icon on the post."
+      "Leave 'Mint post' off to publish off-chain, or switch it on to mint as you publish.",
+      "Publishing never waits on the chain: the post appears in the feed either way.",
+      "To mint later, open the post's 'ⓘ' info page and use the Mint action there.",
+      "Once minted, the post gets a Token ID and a transaction hash you can verify on-chain, and you hold all 1,000 fractions of it."
     ],
     tips: [
-      "Social-login users pay zero gas — DeHub sponsors all minting fees.",
-      "External-wallet users need ETH on Base for gas.",
-      "Once minted, the on-chain record is permanent even if the post is later deleted from the feed.",
-      "You can change your post's visibility after minting (Public, Unlisted, or Private)."
+      "Social, email and SMS sign-ins pay zero gas — DeHub sponsors minting fees.",
+      "External-wallet users need ETH on Base or BNB on BNB Chain for gas.",
+      "Minting is what makes a post tradeable and royalty-bearing. An unminted post still earns tips and views.",
+      "The on-chain record is permanent once minted, even if the post is later deleted from the feed."
     ]
   },
   {
