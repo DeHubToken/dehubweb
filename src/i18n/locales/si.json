@@ -27,7 +27,20 @@
     "events": "සිදුවීම්",
     "prompt": "ප්‍රොම්ප්ට්",
     "communities": "ප්‍රජාවන්",
-    "staking": "ස්ටේකින්"
+    "staking": "ස්ටේකින්",
+    "arcade": "ආකේඩ්",
+    "stats": "සජීවී සංඛ්‍යාලේඛන",
+    "liveTv": "සජීවී රූපවාහිනී",
+    "buyDhb": "DHB මිලදී ගන්න",
+    "bridge": "පාලම",
+    "top100": "ඉහළම 100",
+    "agents": "AI නියෝජිතයන්",
+    "advertising": "වෙළඳ ප්‍රචාරණය",
+    "premium": "ප්‍රීමියම්",
+    "pricing": "මිල ගණන්",
+    "creators": "නිර්මාණකරුවන්",
+    "getTheApp": "යෙදුම ලබා ගන්න",
+    "connectAi": "AI සම්බන්ධ කරන්න"
   },
   "feed": {
     "home": "මුල් පිටුව",
@@ -35,7 +48,9 @@
     "images": "පින්තූර",
     "shorts": "ෂෝර්ට්ස්",
     "music": "සංගීතය",
-    "live": "සජීවී"
+    "live": "සජීවී",
+    "newPosts_one": "නව පළකිරීම් {{count}}",
+    "newPosts_other": "නව පළකිරීම් {{count}}"
   },
   "explore": {
     "all": "සියල්ල",
@@ -242,7 +257,58 @@
     "hazy": "මීදුම් රාත්‍රී",
     "save": "සුරකින්න",
     "saving": "සුරකිමින්...",
-    "swarms": "රංචු"
+    "swarms": "රංචු",
+    "profiles": "පැතිකඩ",
+    "profilesDesc": "මෙම උපාංගයේ සුරැකි ගිණුම්",
+    "addProfile": "පැතිකඩක් එක් කරන්න",
+    "profileActive": "ක්‍රියාකාරී",
+    "profileSignedOut": "මාරු කිරීමට පිවිසෙන්න",
+    "profileRemove": "පැතිකඩ ඉවත් කරන්න",
+    "profilesUsed": "{{max}} න් {{used}} භාවිත කර ඇත",
+    "profilesNextTier": "{{tier}} මට්ටම {{count}} තබාගනී",
+    "profilesFullTier": "පැතිකඩ {{count}} තබාගැනීමට {{tier}} ලාංඡනය සඳහා ස්ටේක් කරන්න",
+    "profilesFull": "වෙනත් ගිණුමක් එක් කිරීමට පැතිකඩක් ඉවත් කරන්න",
+    "browserNotifications": "බ්‍රව්සර දැනුම්දීම්",
+    "browserNotificationsDesc": "ඔබ වෙනත් ටැබයක සිටියදීත් පිළිතුරු, ත්‍යාග සහ පණිවිඩ ගැන දැනගන්න",
+    "browserNotificationsOnDesc": "ඔබ වෙනත් ටැබයක සිටියදී පිළිතුරු, ත්‍යාග සහ පණිවිඩ දිස්වේ",
+    "browserNotificationsDismissed": "දැනුම්දීම් ඉල්ලීම ඉවත් කරන ලදී — ස්විචය නැවත උත්සාහ කරන්න",
+    "browserNotificationsBlocked": "ඔබේ බ්‍රව්සරය මගින් අවහිර කර ඇත",
+    "browserNotificationsBlockedTitle": "මෙම බ්‍රව්සරය දැනුම්දීම් අවහිර කරයි",
+    "browserNotificationsBlockedNote": "මෙය ආපසු හැරවිය හැක්කේ ඔබේ බ්‍රව්සරයට පමණි — වරක් අවහිර වූ පසු DeHub හට නැවත ඉල්ලිය නොහැක.",
+    "browserNotificationsBlockedPending": "ඔබේ ඉල්ලීම සුරැකිණි — බ්‍රව්සරය අවසර දුන් සැණින් එය තනිවම ක්‍රියාත්මක වේ.",
+    "browserNotificationsUnblockChromium": "ලිපින තීරුවේ වම් පස ඇති අයිකනය ක්ලික් කරන්න → අඩවි සැකසුම් → දැනුම්දීම් \"ඉඩ දෙන්න\" ලෙස සකසා මෙම පිටුව නැවත පූරණය කරන්න.",
+    "browserNotificationsUnblockFirefox": "ලිපින තීරුවේ වම් පස ඇති අගුල ක්ලික් කර, දැනුම්දීම් ලබාගැනීම අසල ඇති \"අවහිර කර ඇත\" ඉවත් කර, මෙම පිටුව නැවත පූරණය කරන්න.",
+    "browserNotificationsUnblockSafari": "මෙනු තීරුවේ: Safari → සැකසුම් → වෙබ් අඩවි → දැනුම්දීම්, ඉන්පසු මෙම අඩවිය \"ඉඩ දෙන්න\" ලෙස සකසන්න.",
+    "browserNotificationsUnblockGeneric": "මෙම පිටුව සඳහා ඔබේ බ්‍රව්සරයේ අඩවි සැකසුම් විවෘත කර, දැනුම්දීම් \"ඉඩ දෙන්න\" ලෙස සකසා නැවත පූරණය කරන්න.",
+    "browserNotificationsIosHint": "DeHub මුල් තිරයේ තිබේ නම් පමණක් iPhone සහ iPad මෙයට ඉඩ දෙයි — බෙදාගන්න තට්ටු කර, ඉන්පසු \"මුල් තිරයට එක් කරන්න\".",
+    "browserNotificationsTest": "පරීක්ෂණ දැනුම්දීමක් යවන්න",
+    "browserNotificationsTestSent": "පරීක්ෂණ දැනුම්දීම යවන ලදී",
+    "browserNotificationsTestBody": "DeHub දැනුම්දීමක් පෙනෙන්නේ මෙහෙමයි.",
+    "showAsNewMember": "මාව නව සාමාජිකයෙකු ලෙස පෙන්වන්න",
+    "showAsNewMemberDesc": "ඔබ දැන් සම්බන්ධ වූ බව අනෙක් සාමාජිකයන්ට පෙනී ඔවුන්ට ඔබව පිළිගැනීමට ඉඩ දෙයි. ලියාපදිංචි වී දින 30කින් ස්වයංක්‍රීයව අවසන් වේ.",
+    "defaultProfileTab": "පෙරනිමි පැතිකඩ ටැබය",
+    "defaultProfileTabDesc": "ඔබේ පැතිකඩේ අමුත්තන් මුලින්ම දකින ටැබය තෝරන්න",
+    "lavalamp": "ලාවා ලාම්පුව",
+    "war": "යුද්ධය",
+    "osaka": "ඔසාකා",
+    "jungle": "වනාන්තරය",
+    "themeColor": "තේමා වර්ණය",
+    "themeColorDesc": "මෙම තේමාව සඳහා අභිරුචි වර්ණයක් තෝරන්න",
+    "themeColorReset": "යළි සකසන්න",
+    "themeColorWhite": "සුදු",
+    "themeColorBlack": "කළු",
+    "themeColorRainbow": "දේදුන්න",
+    "themeColorBrand": "වෙළඳ නාමය",
+    "themeColorBrandDesc": "ඔබේ පැතිකඩ පින්තූරයේ වර්ණ භාවිත කරන්න",
+    "themeColorBrandNoAvatar": "වෙළඳ නාම වර්ණ භාවිත කිරීමට පැතිකඩ පින්තූරයක් එක් කරන්න",
+    "themeColorBrandFailed": "ඔබේ පැතිකඩ පින්තූරයෙන් වර්ණ කියවිය නොහැකි විය",
+    "dimLights": "ආලෝකය අඩු කරන්න",
+    "dimLightsDesc": "නිල් ආලෝකයට නිරාවරණය අඩු කරයි",
+    "matureContent": "වැඩිහිටි අන්තර්ගතය පෙන්වන්න",
+    "matureContentDesc": "ඔබේ පෝෂකවලට වැඩිහිටි සහ දරුණු පළකිරීම් ඇතුළත් කරන අතර ඔබ දැනටමත් දකින ඒවායින් අනතුරු ඇඟවීම ඉවත් කරයි. පෙරනිමියෙන් අක්‍රියයි.",
+    "noNewMessages": "නව සංවාද නොවේ",
+    "noNewMessagesDesc": "ඔබේ පවතින සංවාද තබාගන්න, නමුත් අලුත් කිසිවෙකුට ආරම්භ කළ නොහැක",
+    "dmNoNewHelp": "පවතින සංවාද දිගටම ක්‍රියා කරයි; අලුත් කිසිවෙකුට ආරම්භ කළ නොහැක"
   },
   "common": {
     "save": "සුරකින්න",
@@ -256,7 +322,8 @@
     "translating": "පරිවර්තනය වෙමින්...",
     "close": "වසන්න",
     "loadingMore": "තවත් පූරණය වෙමින්...",
-    "loadMore": "තවත් පූරණය"
+    "loadMore": "තවත් පූරණය",
+    "tryAgain": "නැවත උත්සාහ කරන්න"
   },
   "tip": {
     "title": "ටිප් එවන්න",
@@ -737,7 +804,11 @@
     "postRemoved": "ඔබේ පළ කිරීම ඉවත් කරන ලදි",
     "newNotification": "නව දැනුම්දීමක්",
     "oneOther": "තවත් 1 ක්",
-    "nOthers": "තවත් {{count}} ක්"
+    "nOthers": "තවත් {{count}} ක්",
+    "thisBrowser": "මෙම බ්‍රව්සරය",
+    "features": "විශේෂාංග",
+    "communities": "ප්‍රජාවන්",
+    "stores": "වෙළඳසැල්"
   },
   "leaderboard": {
     "title": "ශ්‍රේණිගත කිරීම",
@@ -766,7 +837,12 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "affiliates": "අනුබද්ධිතයන්",
+    "directReferrals_one": "සෘජු {{count}}",
+    "directReferrals_other": "සෘජු {{count}}",
+    "secondaryReferrals_one": "වක්‍ර {{count}}",
+    "secondaryReferrals_other": "වක්‍ර {{count}}"
   },
   "explorePage": {
     "searchPlaceholder": "පුද්ගලයන්, පළකිරීම් හෝ අන්තර්ගතය සොයන්න...",
@@ -867,7 +943,10 @@
     "statusPlanned": "Planned",
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
-    "statusDeclined": "Declined"
+    "statusDeclined": "Declined",
+    "shipping": "තැනෙමින්",
+    "noShippingYet": "කිසිවක් ක්‍රියාත්මක නොවේ",
+    "shippingAppearHere": "තැනෙන ඉල්ලීම් මෙහි දිස්වේ."
   },
   "auth": {
     "loginRequired": "පිවිසීම අවශ්‍යයි"
@@ -1024,7 +1103,10 @@
     "sendingCode": "Sending code...",
     "smsInfo": "We'll send you a verification code via SMS",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
-    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.",
+    "addProfileTitle": "පැතිකඩක් එක් කරන්න",
+    "walletConnectedAs": "සම්බන්ධයි",
+    "useDifferentWallet": "වෙනත් පසුම්බියක් භාවිත කරන්න"
   },
   "careers": {
     "title": "DeHub හි රැකියා",
@@ -1125,7 +1207,8 @@
     "failedPurchase": "Failed to start purchase",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "failedOnramp": "Failed to start onramp"
+    "failedOnramp": "Failed to start onramp",
+    "badgeDiscount": "{{tier}} හිමිකරු — {{percent}}% වට්ටමක්"
   },
   "agents": {
     "title": "AI නියෝජිත",
@@ -1155,7 +1238,13 @@
     "agentDeleted": "Agent deleted",
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
-    "apiKeyCopied": "API key copied to clipboard"
+    "apiKeyCopied": "API key copied to clipboard",
+    "connectorUrl": "සම්බන්ධක URL",
+    "connectorUrlCopied": "සම්බන්ධක URL පිටපත් විය",
+    "connectorUrlHelp": "මෙය Claude හෝ ChatGPT තුළ අභිරුචි MCP සම්බන්ධකයක් ලෙස එක් කරන්න. එය මෙම නියෝජිතයා ලෙස සත්‍යාපනය වන නිසා API යතුරක් ලෙස සලකන්න.",
+    "agentWallet": "නියෝජිත මුදල් පසුම්බිය (Base)",
+    "walletCopied": "පසුම්බි ලිපිනය පිටපත් විය",
+    "agentWalletHelp": "නියෝජිතයා පළ කිරීමට පෙර මෙතැනට Base මත ස්වල්ප ETH ප්‍රමාණයක් යවන්න — පළ කිරීම දාමයේ මින්ට් කරන අතර නියෝජිතයා තමන්ගේ ගෑස් ගෙවයි. අදහස්, ඡන්ද සහ අනුගමනය සඳහා ගෑස් අවශ්‍ය නැත."
   },
   "sidebar": {
     "talkOfTheTown": "නගරයේ කතාව",
@@ -1169,7 +1258,11 @@
     "comingSoon": "ඉක්මනින් — ප්‍රාදේශීය ප්‍රවණතා පැමිණෙමින්!",
     "post": "පළ කරන්න",
     "logOut": "ඉවත් වන්න",
-    "logIn": "පිවිසෙන්න"
+    "logIn": "පිවිසෙන්න",
+    "searchMenu": "මෙනුවේ සොයන්න",
+    "clearSearch": "සෙවීම හිස් කරන්න",
+    "noMenuMatches": "මෙනුවේ කිසිවක් නොගැළපේ",
+    "searchDehubFor": "DeHub හි \"{{query}}\" සොයන්න"
   },
   "postInfo": {
     "title": "පළ කිරීමේ තොරතුරු",
@@ -1419,7 +1512,11 @@
     "new_version_available": "නව අනුවාදය තිබේ",
     "refresh_to_pick_up_the_latest_changes": "නවතම වෙනස්කම් ලබා ගැනීමට නැවුම් කරන්න.",
     "refresh": "නැවුම් කරන්න",
-    "what_changed": "වෙනස් වූ දේ"
+    "what_changed": "වෙනස් වූ දේ",
+    "turn_on_desktop_notifications": "ඩෙස්ක්ටොප් දැනුම්දීම් ක්‍රියාත්මක කරන්නද?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "ඔබ වෙනත් ටැබයක සිටියදීත් පිළිතුරු, ත්‍යාග සහ පණිවිඩ ගැන දැනගන්න.",
+    "turn_on": "ක්‍රියාත්මක කරන්න",
+    "not_now": "දැන් නොවේ"
   },
   "prompt": {
     "seoTitle": "ඔබේ සංග්‍රහය ආරම්භ කරන්න — DeHub",
@@ -1565,5 +1662,105 @@
     "when": "කවදාද",
     "whyStake": "තැන්පත් කරන්නේ ඇයි?",
     "yourStaked": "ඔබේ තැන්පතුව"
+  },
+  "arcade": {
+    "title": "ආකේඩ්",
+    "intro": "DeHub විසින් තනා විවෘත මූලාශ්‍ර කළ ක්‍රීඩා, ලෝක සහ අත්දැකීම් එකතුවක්.",
+    "seoTitle": "ආකේඩ් | DeHub",
+    "seoDescription": "DeHub හි ඔබේ බ්‍රව්සරයේම සෙල්ලම් කරන්න — සිනමාත්මක 3D චෙස්, ක්‍රියාවලිගතව උත්පාදනය වන වෙඩික්කරු ක්‍රීඩාවක්, වැසි වනාන්තර ඇවිදීමක්, නියොන් වීදි සටනක් සහ ඇවිද යා හැකි වෙළඳ ශාලාවක්. ස්ථාපනයක් නැත, බාගැනීමක් නැත.",
+    "alsoIn": "{{theme}} හිද තිබේ"
+  },
+  "stats": {
+    "title": "සංඛ්‍යාලේඛන",
+    "subtitle": "තත්‍ය කාලීන විවෘත මූලාශ්‍ර තොරතුරු",
+    "live": "සජීවී",
+    "range": {
+      "24h": "පැය 24",
+      "3d": "දින 3",
+      "7d": "දින 7",
+      "30d": "දින 30",
+      "all": "සම්පූර්ණ කාලය"
+    },
+    "unavailable": {
+      "title": "සංඛ්‍යාලේඛන දැන් ලබාගත නොහැක",
+      "unconfigured": "විශ්ලේෂණ අන්ත ලක්ෂ්‍යයට තවම එහි Cloudflare API ටෝකනය ලබා දී නැත. නිර්මිත සංඛ්‍යාවක් වෙනුවට කිසිවක් නොපෙන්වයි.",
+      "error": "Cloudflare හි විශ්ලේෂණ API වෙත ළඟා විය නොහැකි විය. පැරණි හෝ නිර්මිත සංඛ්‍යාවක් පෙන්වනවා වෙනුවට, සජීවී කියවීම සාර්ථක වන තුරු මෙම පිටුව කිසිවක් නොපෙන්වයි."
+    },
+    "tile": {
+      "visitorsToday": "අද අමුත්තන්",
+      "soFarToday": "අද මේ දක්වා, UTC",
+      "peakHour": "කාර්යබහුලම පැය",
+      "peakDay": "කාර්යබහුලම දිනය",
+      "peakAtHour": "{{when}} UTC ට",
+      "peakOnDay": "{{when}} දින",
+      "inRange": "මෙම පරාසය තුළ",
+      "pageViews": "පිටු නැරඹීම්",
+      "overHours": "පැය {{count}}ක් තුළ",
+      "overDay": "දින 1ක් තුළ",
+      "overDays": "දින {{count}}ක් තුළ",
+      "requestsLabel": "ඉල්ලීම්",
+      "served": "සපයන ලදී",
+      "requests": "ඉල්ලීම් {{requests}}"
+    },
+    "chart": {
+      "hourly": "පැයකට අමුත්තන්",
+      "daily": "දිනකට අමුත්තන්",
+      "hourlyHint": "පැය {{count}}ක කොටස්, UTC",
+      "dailyHint": "දිනකට අනන්‍ය අමුත්තන්",
+      "empty": "මෙම කාලය සඳහා තවම දත්ත නැත"
+    },
+    "countries": {
+      "title": "ප්‍රමුඛ රටවල්",
+      "windowDay": "පසුගිය පැය 24",
+      "window": "පසුගිය දින {{days}}"
+    },
+    "browsers": {
+      "title": "බ්‍රව්සර",
+      "window": "පිටු නැරඹීම් අනුව"
+    },
+    "edge": {
+      "title": "දාරයේ",
+      "windowDay": "පසුගිය පැය 24",
+      "window": "පසුගිය දින {{days}}",
+      "cached": "කෑෂයෙන් සැපයිණි",
+      "encrypted": "සංකේතාත්මකයි",
+      "threats": "අවහිර කළ තර්ජන"
+    },
+    "proof": {
+      "title": "මෙම සංඛ්‍යා පැමිණෙන්නේ කොහෙන්ද",
+      "subtitle": "Cloudflare විසින් මනිනු ලැබේ, මෙම පිටුව නොවේ",
+      "source": "මූලාශ්‍රය",
+      "datasets": "දත්ත කට්ටල",
+      "zone": "කලාපය",
+      "ray": "Cloudflare ray ID",
+      "fetched": "ලබාගත්තේ",
+      "query": "ප්‍රස්තාරය පිටුපස ඇති නිශ්චිත විමසුම",
+      "copied": "පිටපත් විය",
+      "copy": "පිටපත් කරන්න",
+      "openEndpoint": "/api/stats විවෘත කරන්න",
+      "openRaw": "Cloudflare හි ස්පර්ශ නොකළ පිළිතුර",
+      "edge": "dehub.io වෙත එන සෑම ඉල්ලීමක්ම අපගේ සේවාදායකයන් වෙත ළඟා වීමට පෙර Cloudflare හරහා යයි. මෙම ගණන් එම තදබදයේ Cloudflare හි ම එකතුවයි — අපගේ උපකරණ පුවරුව පෙන්වන එකම සංඛ්‍යා. ඒවා ඔබේ බ්‍රව්සරයේ ස්ක්‍රිප්ටයකින් රැස් නොකරන නිසා මෙම පිටුවේ කිසිවකට ඒවා පිම්බිය නොහැක, ට්‍රැකර් අවහිර කිරීමෙන් ඒවා වෙනස් නොවේ.",
+      "live": "පිටුව ඒවා සජීවීව කියවයි. /stats පූරණය කිරීමෙන් අපගේ අන්ත ලක්ෂ්‍යය කැඳවෙන අතර එය එම මොහොතේ Cloudflare හි Analytics API විමසා පිළිතුර තත්පර 60ක් කෑෂ් කරයි.",
+      "limits": "මෙය පෙන්වන දේ සහ නොපෙන්වන දේ: සංඛ්‍යා අපගේ යෙදුම් කේතයෙන් නොව Cloudflare හි එකතුවෙන් එන බවත්, මෙහි ප්‍රකාශිත විමසුමම ක්‍රියාත්මක වන බවත් ඔබට පෙනේ. එය විශ්වාසය අවශ්‍ය නොවන එකක් නොවේ — API ටෝකනය අප සතුය, Cloudflare කලාපයක විශ්ලේෂණ ප්‍රසිද්ධියේ කියවීමට ඉඩ නොදේ. තමන්ගේම Cloudflare කලාපයක් ඇති ඕනෑම කෙනෙකුට එම විමසුමම ධාවනය කර එහි ආකෘතිය තහවුරු කළ හැක."
+    },
+    "definitions": {
+      "title": "සංඛ්‍යාවලින් අදහස් වන්නේ කුමක්ද",
+      "visitorsTerm": "අමුත්තන්",
+      "visitors": "— එදින Cloudflare දුටු අනන්‍ය IP ලිපින. මිනිසුන්ට ආසන්නයි, නමුත් සමාන නොවේ: එක් සම්බන්ධතාවක් මත ඇති කාර්යාලයක් එක් වරක් ගණන් වේ, wifi සහ ජංගම දත්ත අතර මාරු වන දුරකථනයක් දෙවරක්.",
+      "pageViewsTerm": "පිටු නැරඹීම්",
+      "pageViews": "— Cloudflare විසින් රූප, ස්ක්‍රිප්ට් හෝ API ඇමතුම් නොව පිටු පූරණයන් ලෙස වර්ග කරන ඉල්ලීම්.",
+      "botsTerm": "බොට් ඇතුළත් වේ",
+      "bots": "— මේවා දාරයේ අමු ගණන් වන නිසා ක්‍රෝලර්, ක්‍රියාකාරීත්ව නිරීක්ෂක සහ ස්ක්‍රිප්ට් සේවාදායකයන්ද ඒවා තුළ ඇත. ඉහත බ්‍රව්සර බෙදීමේ ඔබටම දැකිය හැක — \"Curl\" සහ \"නොදනී\" වැනි ඇතුළත් කිරීම් මිනිසුන් නොව ස්වයංක්‍රීය තදබදයයි. බොට් පෙරීමට අප සතුව නැති ගෙවන Cloudflare සැලැස්මක් අවශ්‍යයි, ඇස්තමේන්තුවක් නිහඬව අඩු කිරීමෙන් සංඛ්‍යා වඩාත් පරීක්ෂා කළ හැකි නොව අඩුවෙන් පරීක්ෂා කළ හැකි වේ.",
+      "totalTerm": "පරාස එකතුව",
+      "total": "— පිටු නැරඹීම් සහ ඉල්ලීම් පරාසය පුරා එකතු වේ. අමුත්තන් ගණන හිතාමතාම \"මුළු අමුත්තන්\" ලෙස එකතු නොකරයි, මන්ද සඳුදා සහ අඟහරුවාදා පැමිණි අයෙකු දෙවරක් ගණන් වන බැවිනි.",
+      "peakTerm": "කාර්යබහුලම පැය / දිනය",
+      "peak": "— එම හේතුවම නිසා, පරාසයේ ඕනෑම එක් කොටසක ඉහළම අනන්‍ය ගණන: එය Cloudflare සැබවින්ම මනින සංඛ්‍යාවක් මිස අතිච්ඡාදනය වන ගණන් එකතු කර සාදන ලද එකක් නොවේ.",
+      "resolutionTerm": "පැය දත්ත දින 3කින් නවතී",
+      "resolution": "— එය මෙම සැලැස්මේ Cloudflare හි සීමාවයි, අපගේ තේරීමක් නොවේ: දින තුනකට වඩා පළල් ඕනෑම පැය විමසුමක් එය ප්‍රතික්ෂේප කරයි. පැය 24 සහ දින 3 දසුන් පැය අනුවයි; දින 7 සහ ඊට වැඩි දෛනිකයි, සම්පූර්ණ කාලය සඳහා පැය ප්‍රස්තාරයක් අඳින්නට ක්‍රමයක් නැත.",
+      "breakdownTerm": "රටවල් සහ බ්‍රව්සර",
+      "breakdown": "— ඒවා ඔබ තෝරන පරාසය අනුගමනය කරයි, නමුත් දින {{max}}ක් පමණක් පසුපසට, දෛනික බෙදීම තබාගන්නේ එතරම් නිසා. දිගු පරාසවලදී ප්‍රස්තාරය රටවල් ලැයිස්තුවට වඩා වැඩි කාලයක් ආවරණය කරයි.",
+      "startTerm": "ඉතිහාසය",
+      "start": "— \"සම්පූර්ණ කාලය\" යනු Cloudflare තවමත් තබාගෙන ඇති සෑම දිනයක්ම, අද වන විට dehub.io Cloudflare වෙත මාරු වූ {{date}} සිට දින {{days}}. ඊට පෙර දාර දත්ත නැත, Cloudflare පැරණි දින කල් ඉකුත් කරන විට ඒවා ඉවත් වේ."
+    }
   }
 }

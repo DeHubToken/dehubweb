@@ -27,7 +27,20 @@
     "events": "Hetsika",
     "prompt": "Ampodio",
     "communities": "Vondrom-piarahamonina",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Antontan'isa mivantana",
+    "liveTv": "Fahitalavitra mivantana",
+    "buyDhb": "Hividy DHB",
+    "bridge": "Tetezana",
+    "top100": "Top 100",
+    "agents": "Solontena AI",
+    "advertising": "Dokambarotra",
+    "premium": "Premium",
+    "pricing": "Vidiny",
+    "creators": "Mpamorona",
+    "getTheApp": "Alaivo ny fampiharana",
+    "connectAi": "Ampifandraiso ny AI"
   },
   "feed": {
     "home": "Fandraisana",
@@ -35,7 +48,9 @@
     "images": "Sary",
     "shorts": "Fohy",
     "music": "Mozika",
-    "live": "Mivantana"
+    "live": "Mivantana",
+    "newPosts_one": "lahatsoratra vaovao {{count}}",
+    "newPosts_other": "lahatsoratra vaovao {{count}}"
   },
   "explore": {
     "all": "Rehetra",
@@ -242,7 +257,58 @@
     "hazy": "Alina Manjavozavo",
     "save": "Tehirizo",
     "saving": "Eo am-pitahirizana...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Mombamomba",
+    "profilesDesc": "Kaonty voatahiry amin'ity fitaovana ity",
+    "addProfile": "Hanampy mombamomba",
+    "profileActive": "Miasa",
+    "profileSignedOut": "midira mba hanova",
+    "profileRemove": "Esory ny mombamomba",
+    "profilesUsed": "{{used}} amin'ny {{max}} no ampiasaina",
+    "profilesNextTier": "Ny ambaratonga {{tier}} dia mitazona {{count}}",
+    "profilesFullTier": "Manaova staking ho an'ny mari-pankasitrahana {{tier}} mba hitazonana mombamomba {{count}}",
+    "profilesFull": "Esory ny mombamomba iray mba hanampiana kaonty hafa",
+    "browserNotifications": "Fampandrenesan'ny mpitety",
+    "browserNotificationsDesc": "Mahazoa fampandrenesana momba ny valiny, tolotra sy hafatra rehefa ao amin'ny vakizoro hafa ianao",
+    "browserNotificationsOnDesc": "Miseho ny valiny, tolotra sy hafatra rehefa ao amin'ny vakizoro hafa ianao",
+    "browserNotificationsDismissed": "Nolavina ny fangatahana fampandrenesana — andramo indray ny fanovana",
+    "browserNotificationsBlocked": "Nosakanan'ny mpitety tranonkalanao",
+    "browserNotificationsBlockedTitle": "Manakana ny fampandrenesana ity mpitety ity",
+    "browserNotificationsBlockedNote": "Ny mpitety tranonkalanao ihany no afaka manafoana izany — rehefa voasakana dia tsy afaka manontany intsony ny DeHub.",
+    "browserNotificationsBlockedPending": "Voatahiry ny fangatahanao — hirehitra ho azy izy raha vantany vao mamela ny mpitety tranonkalanao.",
+    "browserNotificationsUnblockChromium": "Tsindrio ny kisary eo ankavian'ny tsipika adiresy → Fikirakirana tranonkala → apetraho amin'ny Avela ny Fampandrenesana, avy eo avereno alaina ity pejy ity.",
+    "browserNotificationsUnblockFirefox": "Tsindrio ny hidin-trano eo ankavian'ny tsipika adiresy, esory ny \"Voasakana\" eo akaikin'ny Mandray fampandrenesana, avy eo avereno alaina ity pejy ity.",
+    "browserNotificationsUnblockSafari": "Ao amin'ny tsipika safidy: Safari → Fikirakirana → Tranonkala → Fampandrenesana, avy eo apetraho amin'ny Avela ity tranonkala ity.",
+    "browserNotificationsUnblockGeneric": "Sokafy ny fikirakirana tranonkala ao amin'ny mpitety ho an'ity pejy ity, apetraho amin'ny Avela ny Fampandrenesana, avy eo avereno alaina.",
+    "browserNotificationsIosHint": "Ny iPhone sy iPad dia tsy mamela izany raha tsy efa ao amin'ny efijery fandraisana ny DeHub — tsindrio Zarao, avy eo \"Ampidiro amin'ny efijery fandraisana\".",
+    "browserNotificationsTest": "Andefaso fampandrenesana andrana",
+    "browserNotificationsTestSent": "Nalefa ny fampandrenesana andrana",
+    "browserNotificationsTestBody": "Toy izao ny endriky ny fampandrenesan'ny DeHub.",
+    "showAsNewMember": "Asehoy aho ho mpikambana vaovao",
+    "showAsNewMemberDesc": "Mamela ny mpikambana hafa hahita fa vao niditra ianao mba hahafahan'izy ireo miarahaba anao. Mifarana ho azy 30 andro aorian'ny fisoratanao anarana.",
+    "defaultProfileTab": "Vakizoro mombamomba mahazatra",
+    "defaultProfileTabDesc": "Fidio hoe vakizoro inona no hitan'ny mpitsidika voalohany ao amin'ny mombamomba anao",
+    "lavalamp": "Jiro lava",
+    "war": "Ady",
+    "osaka": "Osaka",
+    "jungle": "Ala",
+    "themeColor": "Lokon'ny lohahevitra",
+    "themeColorDesc": "Fidio loko manokana ho an'ity lohahevitra ity",
+    "themeColorReset": "Averina",
+    "themeColorWhite": "Fotsy",
+    "themeColorBlack": "Mainty",
+    "themeColorRainbow": "Avana",
+    "themeColorBrand": "Marika",
+    "themeColorBrandDesc": "Ampiasao ny lokon'ny sarinao",
+    "themeColorBrandNoAvatar": "Ampidiro sary mombamomba mba hampiasana ny lokon'ny Marika",
+    "themeColorBrandFailed": "Tsy afaka namaky loko avy amin'ny sarinao",
+    "dimLights": "Ahenao ny hazavana",
+    "dimLightsDesc": "Mampihena ny fiantraikan'ny hazavana manga",
+    "matureContent": "Asehoy ny votoaty ho an'ny olon-dehibe",
+    "matureContentDesc": "Mampiditra lahatsoratra ho an'ny olon-dehibe sy mahery vaika ao amin'ny fantsonao, ary manala ny fampitandremana amin'ireo efa hitanao. Vonoina araka ny mahazatra.",
+    "noNewMessages": "Tsy misy resaka vaovao",
+    "noNewMessagesDesc": "Tazomy ireo resaka efa misy, fa tsy afaka manomboka ny olona vaovao",
+    "dmNoNewHelp": "Mitohy miasa ireo resaka efa misy; tsy afaka manomboka ny olona vaovao"
   },
   "common": {
     "save": "Tehirizo",
@@ -256,7 +322,8 @@
     "translating": "Mandika teny...",
     "close": "Hidio",
     "loadingMore": "Mampiditra betsaka kokoa...",
-    "loadMore": "Ampidiro betsaka kokoa"
+    "loadMore": "Ampidiro betsaka kokoa",
+    "tryAgain": "Andramo indray"
   },
   "tip": {
     "title": "Handefa fanomezana",
@@ -697,7 +764,11 @@
     "postRemoved": "Ny lahatsoratrao dia nesorina",
     "newNotification": "Fampandrenesana vaovao",
     "oneOther": "1 hafa",
-    "nOthers": "{{count}} hafa"
+    "nOthers": "{{count}} hafa",
+    "thisBrowser": "Ity mpitety tranonkala ity",
+    "features": "Endri-javatra",
+    "communities": "Vondrom-piarahamonina",
+    "stores": "Fivarotana"
   },
   "leaderboard": {
     "title": "Lisitry ny tsara indrindra",
@@ -726,7 +797,12 @@
     "addedToLeaderboard": "Voasoratra ianao! Vola: {{balance}} DHB",
     "balanceTooLow": "Vola kely loatra ({{balance}} DHB)",
     "refreshFailed": "Nisy hadisoana",
-    "noWalletAddress": "Tsy nahitana adiresy kitapom-bola"
+    "noWalletAddress": "Tsy nahitana adiresy kitapom-bola",
+    "affiliates": "Mpiara-miasa",
+    "directReferrals_one": "{{count}} mivantana",
+    "directReferrals_other": "{{count}} mivantana",
+    "secondaryReferrals_one": "{{count}} an-kolaka",
+    "secondaryReferrals_other": "{{count}} an-kolaka"
   },
   "explorePage": {
     "searchPlaceholder": "Hikaroka olona, lahatsoratra na atiny...",
@@ -827,7 +903,10 @@
     "statusPlanned": "Voaomana",
     "statusInProgress": "Mandeha",
     "statusCompleted": "Vita",
-    "statusDeclined": "Nolavina"
+    "statusDeclined": "Nolavina",
+    "shipping": "Amboarina",
+    "noShippingYet": "Tsy misy zavatra atao",
+    "shippingAppearHere": "Hiseho eto ireo fangatahana amboarina."
   },
   "auth": {
     "loginRequired": "Ilaina ny fidirana"
@@ -900,7 +979,8 @@
     "failedPurchase": "Tsy nahomby ny fanombohana fividianana",
     "redirectingOnramp": "Mitodika any amin'ny onramp...",
     "onrampCreated": "Latabatra onramp voaforona",
-    "failedOnramp": "Tsy nahomby ny fanombohana onramp"
+    "failedOnramp": "Tsy nahomby ny fanombohana onramp",
+    "badgeDiscount": "Tompona {{tier}} — fihenam-bidy {{percent}}%"
   },
   "agents": {
     "title": "Agent AI",
@@ -930,7 +1010,13 @@
     "agentDeleted": "Agent voafafa",
     "failedCreate": "Tsy nahomby ny famoronana agent",
     "failedDelete": "Tsy nahomby ny famafana agent",
-    "apiKeyCopied": "Lakilen'ny API voatahiry"
+    "apiKeyCopied": "Lakilen'ny API voatahiry",
+    "connectorUrl": "URL an'ny mpampifandray",
+    "connectorUrlCopied": "Voadika ny URL an'ny mpampifandray",
+    "connectorUrlHelp": "Ampidiro izany ho mpampifandray MCP manokana ao amin'ny Claude na ChatGPT. Manamarina ho toy ity solontena ity izy, ka ataovy toy ny lakilen'ny API.",
+    "agentWallet": "Kitapom-bolan'ny solontena (Base)",
+    "walletCopied": "Voadika ny adiresin'ny kitapom-bola",
+    "agentWalletHelp": "Andefaso ETH kely eto amin'ny Base alohan'ny handefasan'ny solontena lahatsoratra — ny famoahana dia manamboatra marika ao anaty rojo ary ny solontena no mandoa ny saran-tsolika. Ny fanehoan-kevitra, ny fifidianana ary ny fanarahana dia tsy mila saran-tsolika."
   },
   "hero": {
     "title": "Tongasoa Eto",
@@ -978,7 +1064,10 @@
     "or": "na",
     "termsNotice": "Amin'ny fitohizana dia ekenao ny Fepetra sy ny Politikam-piainana manokana",
     "walletInfoDesktop": "Ampifandraiso ny kitapom-bolanao mba hiditra amim-piarovana",
-    "walletInfoMobile": "MetaMask, Trust & Phantom dia hanokatra ny app mivantana. Rabby dia hampiasa WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom dia hanokatra ny app mivantana. Rabby dia hampiasa WalletConnect.",
+    "addProfileTitle": "Hanampy mombamomba",
+    "walletConnectedAs": "Mifandray",
+    "useDifferentWallet": "Mampiasa kitapom-bola hafa"
   },
   "careers": {
     "title": "Asa ao amin'i DeHub",
@@ -1102,7 +1191,11 @@
     "comingSoon": "Ho avy tsy ho ela — ny fironana eo an-toerana dia efa eo an-dalana!",
     "post": "Alefa",
     "logOut": "Hiala",
-    "logIn": "Hiditra"
+    "logIn": "Hiditra",
+    "searchMenu": "Karohy ao amin'ny safidy",
+    "clearSearch": "Fafao ny fikarohana",
+    "noMenuMatches": "Tsy misy mifanaraka ao amin'ny safidy",
+    "searchDehubFor": "Karohy \"{{query}}\" ao amin'ny DeHub"
   },
   "postInfo": {
     "title": "Fampahalalana momba ny lahatsoratra",
@@ -1352,7 +1445,11 @@
     "new_version_available": "Endrika vaovao azo ampiasaina",
     "refresh_to_pick_up_the_latest_changes": "Azonao atao ny manova fotoana vitsivitsy amin'ity politika ity.",
     "refresh": "Avereno zahana",
-    "what_changed": "Ny niova"
+    "what_changed": "Ny niova",
+    "turn_on_desktop_notifications": "Alefa ny fampandrenesana amin'ny solosaina?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Mahazoa fampandrenesana momba ny valiny, tolotra sy hafatra rehefa ao amin'ny vakizoro hafa ianao.",
+    "turn_on": "Alefaso",
+    "not_now": "Tsy izao"
   },
   "aiChat": {
     "title": "Assistant",
@@ -1624,5 +1721,105 @@
     "when": "Oviana",
     "whyStake": "Nahoana no mametraka?",
     "yourStaked": "Ny napetrakao"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Fanangonana lalao, tontolo ary traikefa naorin'ny DeHub sy navoakany ho loharano misokatra.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Milalao mivantana ao amin'ny mpitety tranonkalanao ao amin'ny DeHub — echecs 3D toy ny sarimihetsika, lalao mitifitra noforonina ho azy, dia fitsangatsanganana anaty ala mando, ady an-dalambe neon ary efitrano varotra azo diavina. Tsy misy fametrahana, tsy misy fisintonana.",
+    "alsoIn": "Misy ao amin'ny {{theme}} koa"
+  },
+  "stats": {
+    "title": "Antontan'isa",
+    "subtitle": "Vaovao loharano misokatra amin'ny fotoana tena izy",
+    "live": "Mivantana",
+    "range": {
+      "24h": "24 ora",
+      "3d": "3 andro",
+      "7d": "7 andro",
+      "30d": "30 andro",
+      "all": "Fotoana rehetra"
+    },
+    "unavailable": {
+      "title": "Tsy misy antontan'isa amin'izao fotoana izao",
+      "unconfigured": "Mbola tsy nomena ny tokena API Cloudflare ny endpoint fanadihadiana. Tsy misy aseho fa tsy isa noforonina.",
+      "error": "Tsy afaka nahatratra ny API fanadihadiana an'ny Cloudflare izahay. Fa tsy maneho isa efa lany andro na noforonina, dia tsy maneho na inona na inona ity pejy ity mandra-pahombiazan'ny famakiana mivantana."
+    },
+    "tile": {
+      "visitorsToday": "Mpitsidika androany",
+      "soFarToday": "androany hatramin'izao, UTC",
+      "peakHour": "Ora be mpitsidika indrindra",
+      "peakDay": "Andro be mpitsidika indrindra",
+      "peakAtHour": "tamin'ny {{when}} UTC",
+      "peakOnDay": "tamin'ny {{when}}",
+      "inRange": "amin'ity elanelana ity",
+      "pageViews": "Fijerena pejy",
+      "overHours": "mandritra ny {{count}} ora",
+      "overDay": "mandritra ny 1 andro",
+      "overDays": "mandritra ny {{count}} andro",
+      "requestsLabel": "Fangatahana",
+      "served": "Nomena",
+      "requests": "fangatahana {{requests}}"
+    },
+    "chart": {
+      "hourly": "Mpitsidika isan'ora",
+      "daily": "Mpitsidika isan'andro",
+      "hourlyHint": "Fizarana ora {{count}}, UTC",
+      "dailyHint": "mpitsidika tsy mitovy isan'andro",
+      "empty": "Mbola tsy misy angona ho an'ity vanim-potoana ity"
+    },
+    "countries": {
+      "title": "Firenena voalohany",
+      "windowDay": "24 ora lasa",
+      "window": "{{days}} andro lasa"
+    },
+    "browsers": {
+      "title": "Mpitety tranonkala",
+      "window": "araka ny fijerena pejy"
+    },
+    "edge": {
+      "title": "Eo amin'ny sisiny",
+      "windowDay": "24 ora lasa",
+      "window": "{{days}} andro lasa",
+      "cached": "Nalefa avy amin'ny cache",
+      "encrypted": "Voafono",
+      "threats": "Loza voasakana"
+    },
+    "proof": {
+      "title": "Avy aiza ireo isa ireo",
+      "subtitle": "Nomarihin'ny Cloudflare, fa tsy nataon'ity pejy ity",
+      "source": "Loharano",
+      "datasets": "Angom-baovao",
+      "zone": "Zone",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Nalaina tamin'ny",
+      "query": "Ny fanontaniana marina ao ambadiky ny sary",
+      "copied": "Voadika",
+      "copy": "Adikao",
+      "openEndpoint": "Sokafy ny /api/stats",
+      "openRaw": "Ny valin'ny Cloudflare tsy novaina",
+      "edge": "Ny fangatahana rehetra mankany amin'ny dehub.io dia mandalo ny Cloudflare alohan'ny hahatongavany amin'ny serivisintsika. Ireo isa ireo dia fanangonan'ny Cloudflare ihany ny fifamoivoizana — ireo isa mitovy asehon'ny tabilaontsika. Tsy angonin'ny script ao amin'ny mpitety tranonkalanao izy ireo, ka tsy misy na inona na inona amin'ity pejy ity afaka mampitombo azy, ary tsy manova azy ny fanakanana ny mpanara-dia.",
+      "live": "Mamaky azy ireo mivantana ny pejy. Ny fampidirana ny /stats dia miantso ny endpointay, izay manontany ny Analytics API an'ny Cloudflare amin'io fotoana io ary mitahiry ny valiny mandritra ny 60 segondra.",
+      "limits": "Izay asehon'izany sy izay tsy asehony: hitanao fa avy amin'ny fanangonan'ny Cloudflare ireo isa fa tsy avy amin'ny kaodin'ny fampiharantsika, ary ny fanontaniana navoaka eto no mandeha. Tsy tsy mila fitokisana izany — ao aminay ny tokena API, ary tsy manome famakiana ho an'ny besinimaro ny Cloudflare momba ny fanadihadiana zone. Izay manana zone Cloudflare azy manokana dia afaka mampandeha ny fanontaniana mitovy ka manamarina ny endriny."
+    },
+    "definitions": {
+      "title": "Ny dikan'ireo isa ireo",
+      "visitorsTerm": "Mpitsidika",
+      "visitors": "— adiresy IP tsy mitovy hitan'ny Cloudflare tamin'io andro io. Manakaiky ny olona, saingy tsy mitovy: birao amin'ny fifandraisana iray dia isaina indray mandeha, ary finday miova eo amin'ny wifi sy ny angona finday dia isaina indroa.",
+      "pageViewsTerm": "Fijerena pejy",
+      "pageViews": "— fangatahana izay sokajian'ny Cloudflare ho fampidirana pejy, fa tsy sary, script na antso API.",
+      "botsTerm": "Tafiditra ny bot",
+      "bots": "— isa manta eo amin'ny sisiny ireo, ka tafiditra ao ny crawler, ny mpanara-maso fiasana ary ny mpanjifa script. Hitanao izany ao amin'ny fizarana mpitety etsy ambony, izay misy fidirana toy ny \"Curl\" sy \"Tsy fantatra\" izay fifamoivoizana mandeha ho azy fa tsy olona. Ny fanavahana ny bot dia mitaky drafitra Cloudflare andoavam-bola izay tsy ananantsika, ary ny fanesorana tombantombana mangina dia hanao ny isa ho sarotra hamarinina kokoa fa tsy mora kokoa.",
+      "totalTerm": "Totalin'ny elanelana",
+      "total": "— mitambatra manerana ny elanelana ny fijerena pejy sy ny fangatahana. Tsy atambatra ho \"totalin'ny mpitsidika\" ny isan'ny mpitsidika satria olona iray tonga ny alatsinainy sy talata dia hisaina indroa.",
+      "peakTerm": "Ora / andro be mpitsidika indrindra",
+      "peak": "— ny isa tokana ambony indrindra amin'ny fizarana iray amin'ny elanelana, noho ny antony mitovy: isa tena refesin'ny Cloudflare izy io, fa tsy naorina tamin'ny fampiana isa mifanindry.",
+      "resolutionTerm": "Mijanona amin'ny 3 andro ny angona isan'ora",
+      "resolution": "— fetran'ny Cloudflare amin'ity drafitra ity izany, fa tsy safidinay: mandà ny fanontaniana isan'ora mihoatra ny telo andro izy. Ny fijery 24 ora sy 3 andro dia isan'ora; ny 7 andro no miakatra dia isan'andro, ary tsy misy fomba hanaovana sary isan'ora ho an'ny fotoana rehetra.",
+      "breakdownTerm": "Firenena sy mpitety",
+      "breakdown": "— manaraka ny elanelana nofidianao izy ireo, saingy {{max}} andro any aoriana ihany, satria hatreo no itehirizana ny fizarana isan'andro. Amin'ny elanelana lava kokoa dia mandrakotra fotoana bebe kokoa noho ny lisitry ny firenena ny sary.",
+      "startTerm": "Tantara",
+      "start": "— ny \"fotoana rehetra\" dia midika hoe ny andro rehetra mbola tehirizin'ny Cloudflare, androany {{days}} andro nanomboka ny {{date}}, ny andro nifindran'ny dehub.io tany Cloudflare. Tsy misy angona sisiny taloha hasehoina, ary milatsaka ireo andro taloha rehefa esorin'ny Cloudflare."
+    }
   }
 }

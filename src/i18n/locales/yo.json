@@ -27,7 +27,20 @@
     "events": "Awọn iṣẹlẹ",
     "prompt": "Ohun tí o fẹ́ kà",
     "communities": "Àwọn Àwùjọ",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Ìṣirò tààrà",
+    "liveTv": "TV Tààrà",
+    "buyDhb": "Ra DHB",
+    "bridge": "Afárá",
+    "top100": "Àwọn 100 Gíga",
+    "agents": "Àwọn aṣojú AI",
+    "advertising": "Ìpolówó",
+    "premium": "Premium",
+    "pricing": "Iye owó",
+    "creators": "Àwọn olùdásílẹ̀",
+    "getTheApp": "Gba app náà",
+    "connectAi": "So AI pọ̀"
   },
   "feed": {
     "home": "Ilé",
@@ -35,7 +48,9 @@
     "images": "Àwòrán",
     "shorts": "Fídíò kúkúrú",
     "music": "Orin",
-    "live": "Lásìkò"
+    "live": "Lásìkò",
+    "newPosts_one": "Ìfìwéránṣẹ́ tuntun {{count}}",
+    "newPosts_other": "Àwọn ìfìwéránṣẹ́ tuntun {{count}}"
   },
   "explore": {
     "all": "Gbogbo",
@@ -242,7 +257,58 @@
     "hazy": "Òru Kùrukùru",
     "save": "Fi pamọ́",
     "saving": "Ó ń fi pamọ́...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Àwọn profáìlì",
+    "profilesDesc": "Àwọn àkáǹtì tí a fipamọ́ sórí ẹ̀rọ yìí",
+    "addProfile": "Fi profáìlì kún",
+    "profileActive": "Ń ṣiṣẹ́",
+    "profileSignedOut": "wọlé láti yípadà",
+    "profileRemove": "Yọ profáìlì kúrò",
+    "profilesUsed": "{{used}} nínú {{max}} tí a lò",
+    "profilesNextTier": "Ipele {{tier}} ń pa {{count}} mọ́",
+    "profilesFullTier": "Ṣe staking fún àmì {{tier}} kí o lè pa profáìlì {{count}} mọ́",
+    "profilesFull": "Yọ profáìlì kan kúrò kí o lè fi àkáǹtì mìíràn kún",
+    "browserNotifications": "Ìfitónilétí aṣàwákiri",
+    "browserNotificationsDesc": "Gba ìròyìn nípa àwọn èsì, ẹ̀bùn àti ìránṣẹ́ nígbà tí o wà nínú táàbù mìíràn",
+    "browserNotificationsOnDesc": "Àwọn èsì, ẹ̀bùn àti ìránṣẹ́ máa ń farahàn nígbà tí o wà nínú táàbù mìíràn",
+    "browserNotificationsDismissed": "A ti kọ ìbéèrè ìfitónilétí sílẹ̀ — tún gbìyànjú ìdábùú náà",
+    "browserNotificationsBlocked": "Aṣàwákiri rẹ ti dí i lọ́wọ́",
+    "browserNotificationsBlockedTitle": "Aṣàwákiri yìí ń dí àwọn ìfitónilétí lọ́wọ́",
+    "browserNotificationsBlockedNote": "Aṣàwákiri rẹ nìkan ni ó lè yí èyí padà — lẹ́yìn ìdínà, DeHub kò lè béèrè mọ́.",
+    "browserNotificationsBlockedPending": "A ti fi ìbéèrè rẹ pamọ́ — yóò tàn fúnra rẹ̀ kété tí aṣàwákiri rẹ bá yọ̀ǹda.",
+    "browserNotificationsUnblockChromium": "Tẹ àmì tí ó wà ní òsì ọ̀pá àdírẹ́sì → Ètò ojú-òpó → fi Ìfitónilétí sí Yọ̀ǹda, lẹ́yìn náà tún ojú-ìwé yìí kó.",
+    "browserNotificationsUnblockFirefox": "Tẹ agádágodo tí ó wà ní òsì ọ̀pá àdírẹ́sì, pa \"Tí a dí\" rẹ́ lẹ́gbẹ̀ẹ́ Gba Ìfitónilétí, lẹ́yìn náà tún ojú-ìwé yìí kó.",
+    "browserNotificationsUnblockSafari": "Nínú ọ̀pá àkójọ: Safari → Ètò → Àwọn ojú-òpó → Ìfitónilétí, lẹ́yìn náà fi ojú-òpó yìí sí Yọ̀ǹda.",
+    "browserNotificationsUnblockGeneric": "Ṣí ètò ojú-òpó aṣàwákiri rẹ fún ojú-ìwé yìí, fi Ìfitónilétí sí Yọ̀ǹda, lẹ́yìn náà tún kó.",
+    "browserNotificationsIosHint": "iPhone àti iPad yọ̀ǹda èyí kìkì lẹ́yìn tí DeHub bá wà lórí Ojú-ìwé Ilé — tẹ Pín, lẹ́yìn náà \"Fi kún Ojú-ìwé Ilé\".",
+    "browserNotificationsTest": "Fi ìfitónilétí ìdánwò ránṣẹ́",
+    "browserNotificationsTestSent": "A ti fi ìfitónilétí ìdánwò ránṣẹ́",
+    "browserNotificationsTestBody": "Báyìí ni ìfitónilétí DeHub ṣe rí.",
+    "showAsNewMember": "Fi mí hàn gẹ́gẹ́ bí ọmọ ẹgbẹ́ tuntun",
+    "showAsNewMemberDesc": "Ó jẹ́ kí àwọn ọmọ ẹgbẹ́ mìíràn rí i pé o ṣẹ̀ṣẹ̀ dara pọ̀ kí wọ́n lè kí ọ. Ó parí fúnra rẹ̀ ní ọjọ́ 30 lẹ́yìn tí o forúkọsílẹ̀.",
+    "defaultProfileTab": "Táàbù profáìlì àbùdá",
+    "defaultProfileTabDesc": "Yan táàbù tí àwọn àlejò yóò kọ́kọ́ rí lórí profáìlì rẹ",
+    "lavalamp": "Àtùpà lava",
+    "war": "Ogun",
+    "osaka": "Osaka",
+    "jungle": "Igbó",
+    "themeColor": "Àwọ̀ àkòrí",
+    "themeColorDesc": "Yan àwọ̀ àkànṣe fún àkòrí yìí",
+    "themeColorReset": "Tún ṣe",
+    "themeColorWhite": "Funfun",
+    "themeColorBlack": "Dúdú",
+    "themeColorRainbow": "Òṣùmàrè",
+    "themeColorBrand": "Àmì-ọjà",
+    "themeColorBrandDesc": "Lo àwọn àwọ̀ àwòrán profáìlì rẹ",
+    "themeColorBrandNoAvatar": "Fi àwòrán profáìlì kún kí o lè lo àwọn àwọ̀ Àmì-ọjà",
+    "themeColorBrandFailed": "A kò lè ka àwọn àwọ̀ láti àwòrán profáìlì rẹ",
+    "dimLights": "Dín ìmọ́lẹ̀ kù",
+    "dimLightsDesc": "Ó dín ìfarahàn sí ìmọ́lẹ̀ búlúù kù",
+    "matureContent": "Fi àkóónú àgbàlagbà hàn",
+    "matureContentDesc": "Ó fi àwọn ìfìwéránṣẹ́ àgbàlagbà àti líle kún àwọn ìṣàn rẹ, ó sì yọ ìkìlọ̀ kúrò lára àwọn tí o ti ń rí. Ó pa lọ́nà àbùdá.",
+    "noNewMessages": "Kò sí ìjíròrò tuntun",
+    "noNewMessagesDesc": "Pa àwọn ìjíròrò rẹ tí ó wà mọ́, ṣùgbọ́n ẹnìkan tuntun kò lè bẹ̀rẹ̀ ọ̀kan",
+    "dmNoNewHelp": "Àwọn ìjíròrò tí ó wà ń bá a lọ; ẹnìkan tuntun kò lè bẹ̀rẹ̀ ọ̀kan"
   },
   "common": {
     "save": "Fipamọ́",
@@ -256,7 +322,8 @@
     "translating": "Ó ń túmọ̀...",
     "close": "Pàdé",
     "loadingMore": "Ó ń rù síi...",
-    "loadMore": "Rù síi"
+    "loadMore": "Rù síi",
+    "tryAgain": "Gbìyànjú lẹ́ẹ̀kansí"
   },
   "tip": {
     "title": "Fi Ẹ̀bùn Ránṣẹ́",
@@ -787,7 +854,11 @@
     "postRemoved": "A ti yọ àròkọ rẹ kúrò",
     "newNotification": "Ìwífúnni tuntun",
     "oneOther": "1 mìíràn",
-    "nOthers": "{{count}} mìíràn"
+    "nOthers": "{{count}} mìíràn",
+    "thisBrowser": "Aṣàwákiri yìí",
+    "features": "Àwọn ẹ̀ya ara",
+    "communities": "Àwùjọ",
+    "stores": "Àwọn ilé ìtajà"
   },
   "leaderboard": {
     "title": "Àtòjọ Ìpò",
@@ -816,7 +887,12 @@
     "addedToLeaderboard": "A ti ṣàfikún ọ! Ìwọ̀ntúnwọ̀nsí: {{balance}} DHB",
     "balanceTooLow": "Ìwọ̀ntúnwọ̀nsí kéré jù ({{balance}} DHB)",
     "refreshFailed": "Nǹkan kan kò tọ́",
-    "noWalletAddress": "A kò rí àdírẹ́sì àpò owó"
+    "noWalletAddress": "A kò rí àdírẹ́sì àpò owó",
+    "affiliates": "Alábàáṣepọ̀",
+    "directReferrals_one": "{{count}} tààrà",
+    "directReferrals_other": "{{count}} tààrà",
+    "secondaryReferrals_one": "{{count}} tí kì í ṣe tààrà",
+    "secondaryReferrals_other": "{{count}} tí kì í ṣe tààrà"
   },
   "features": {
     "title": "Àwọn Ìbéèrè Ẹ̀yà",
@@ -855,7 +931,10 @@
     "statusPlanned": "Tí A Gbèrò",
     "statusInProgress": "Ń Lọ Lọ́wọ́",
     "statusCompleted": "Ti Parí",
-    "statusDeclined": "A Kọ̀"
+    "statusDeclined": "A Kọ̀",
+    "shipping": "Ń kọ́",
+    "noShippingYet": "Kò sí ohunkóhun tí ń lọ lọ́wọ́",
+    "shippingAppearHere": "Àwọn ìbéèrè tí a ń kọ́ yóò farahàn níbí."
   },
   "auth": {
     "loginRequired": "Wíwọlé ni a nílò"
@@ -928,7 +1007,8 @@
     "failedPurchase": "Kò le bẹ̀rẹ̀ rírà",
     "redirectingOnramp": "Ó ń darí lọ sí ọ̀nà...",
     "onrampCreated": "A ti ṣẹ̀dá àkókò ọ̀nà",
-    "failedOnramp": "Kò le bẹ̀rẹ̀ ọ̀nà"
+    "failedOnramp": "Kò le bẹ̀rẹ̀ ọ̀nà",
+    "badgeDiscount": "Olùní {{tier}} — ẹ̀dínwó {{percent}}%"
   },
   "agents": {
     "title": "Àwọn Aṣojú AI",
@@ -958,7 +1038,13 @@
     "agentDeleted": "A ti pa aṣojú rẹ́",
     "failedCreate": "Kò le ṣẹ̀dá aṣojú",
     "failedDelete": "Kò le pa aṣojú rẹ́",
-    "apiKeyCopied": "A ti dàkọ kọ́kọ́rọ́ API"
+    "apiKeyCopied": "A ti dàkọ kọ́kọ́rọ́ API",
+    "connectorUrl": "URL asopọ̀",
+    "connectorUrlCopied": "A ti ṣe ẹ̀dà URL asopọ̀",
+    "connectorUrlHelp": "Fi èyí kún gẹ́gẹ́ bí asopọ̀ MCP àkànṣe nínú Claude tàbí ChatGPT. Ó máa ń fọwọ́sí gẹ́gẹ́ bí aṣojú yìí, nítorí náà tọ́jú rẹ̀ bí kọ́kọ́rọ́ API.",
+    "agentWallet": "Àpò owó aṣojú (Base)",
+    "walletCopied": "A ti ṣe ẹ̀dà àdírẹ́sì àpò owó",
+    "agentWalletHelp": "Fi ETH díẹ̀ ránṣẹ́ sí ibí lórí Base kí aṣojú tó fi ìfìwéránṣẹ́ sílẹ̀ — ìtẹ̀jáde máa ń mint lórí ẹ̀wọ̀n, aṣojú sì máa ń san gas tirẹ̀. Ọ̀rọ̀ àsọyé, ìdìbò àti títẹ̀lé kò nílò gas."
   },
   "hero": {
     "title": "Ẹ Kú Àbọ̀ Sí",
@@ -1006,7 +1092,10 @@
     "or": "tàbí",
     "termsNotice": "Nípa títẹ̀síwájú, o fara mọ́ Àwọn Òfin Iṣẹ́ àti Ìlànà Ìpamọ́ wa",
     "walletInfoDesktop": "So wallet rẹ láti wọlé lọ́nà ààbò",
-    "walletInfoMobile": "MetaMask, Trust àti Phantom yóò ṣí app wọn tààrà. Rabby yóò lo WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust àti Phantom yóò ṣí app wọn tààrà. Rabby yóò lo WalletConnect.",
+    "addProfileTitle": "Fi profáìlì kún",
+    "walletConnectedAs": "Ti sopọ̀",
+    "useDifferentWallet": "Lo àpò owó mìíràn"
   },
   "careers": {
     "title": "Iṣẹ́ ní DeHub",
@@ -1130,7 +1219,11 @@
     "comingSoon": "Ó ń bọ̀ láìpẹ́ — àwọn trend àdúgbò ń bọ̀!",
     "post": "Firánṣẹ́",
     "logOut": "Jáde",
-    "logIn": "Wọlé"
+    "logIn": "Wọlé",
+    "searchMenu": "Wá nínú àkójọ",
+    "clearSearch": "Pa àwárí rẹ́",
+    "noMenuMatches": "Kò sí ohun tí ó bá a mu nínú àkójọ",
+    "searchDehubFor": "Wá \"{{query}}\" lórí DeHub"
   },
   "postInfo": {
     "title": "Ìwífún nípa àkọsílẹ̀",
@@ -1380,7 +1473,11 @@
     "new_version_available": "Ẹya tuntun ti o wa",
     "refresh_to_pick_up_the_latest_changes": "Tútù láti gba àwọn àtúnṣe tuntun.",
     "refresh": "Ìmúpadàbọ̀sípò",
-    "what_changed": "Ohun tí ó yí padà"
+    "what_changed": "Ohun tí ó yí padà",
+    "turn_on_desktop_notifications": "Ṣé kí a tan àwọn ìfitónilétí kọ̀mpútà?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Gba ìròyìn nípa àwọn èsì, ẹ̀bùn àti ìránṣẹ́ nígbà tí o wà nínú táàbù mìíràn.",
+    "turn_on": "Tan án",
+    "not_now": "Kì í ṣe nísinsìnyí"
   },
   "prompt": {
     "seoTitle": "Se ohun tí o fẹ́ kà — DeHub",
@@ -1526,5 +1623,105 @@
     "when": "Àkókò",
     "whyStake": "Ìdí Tí O Fi Máa Fi Pamọ́",
     "yourStaked": "Ìfipamọ́ Rẹ"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Àkójọ àwọn eré, ayé àti ìrírí tí DeHub kọ́ tí ó sì tú kóòdù rẹ̀ sílẹ̀.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Ṣeré tààrà nínú aṣàwákiri rẹ lórí DeHub — chess 3D bí fíìmù, eré ìbọn tí a dá sílẹ̀ ní ọ̀nà ìlànà, ìrìn nínú igbó òjò, ìjà òpópónà neon àti ilẹ̀ ìṣòwò tí o lè rìn kiri. Kò sí fífi sórí ẹ̀rọ, kò sí ìgbàsílẹ̀.",
+    "alsoIn": "Ó tún wà nínú {{theme}}"
+  },
+  "stats": {
+    "title": "Ìṣirò",
+    "subtitle": "Ìwífún orísun ṣíṣí ní àkókò gidi",
+    "live": "Tààrà",
+    "range": {
+      "24h": "wákàtí 24",
+      "3d": "ọjọ́ 3",
+      "7d": "ọjọ́ 7",
+      "30d": "ọjọ́ 30",
+      "all": "Gbogbo àkókò"
+    },
+    "unavailable": {
+      "title": "Ìṣirò kò sí ní àkókò yìí",
+      "unconfigured": "A kò tíì fún ẹnu ọ̀nà ìtúpalẹ̀ ní àmì API Cloudflare rẹ̀. A kò fi ohunkóhun hàn dípò nọ́mbà àdápa.",
+      "error": "A kò lè dé API ìtúpalẹ̀ ti Cloudflare. Dípò kí a fi nọ́mbà àtijọ́ tàbí àdápa hàn, ojú-ìwé yìí kò fi ohunkóhun hàn títí kíkà tààrà yóò fi ṣàṣeyọrí."
+    },
+    "tile": {
+      "visitorsToday": "Àwọn àlejò lónìí",
+      "soFarToday": "títí di ìsinsìnyí lónìí, UTC",
+      "peakHour": "Wákàtí tí ó kún jùlọ",
+      "peakDay": "Ọjọ́ tí ó kún jùlọ",
+      "peakAtHour": "ní {{when}} UTC",
+      "peakOnDay": "ní {{when}}",
+      "inRange": "nínú àkókò yìí",
+      "pageViews": "Ìwòye ojú-ìwé",
+      "overHours": "ní wákàtí {{count}}",
+      "overDay": "ní ọjọ́ 1",
+      "overDays": "ní ọjọ́ {{count}}",
+      "requestsLabel": "Àwọn ìbéèrè",
+      "served": "A pèsè",
+      "requests": "ìbéèrè {{requests}}"
+    },
+    "chart": {
+      "hourly": "Àwọn àlejò lọ́nà wákàtí",
+      "daily": "Àwọn àlejò lójúmọ́",
+      "hourlyHint": "Àwọn àárín wákàtí {{count}}, UTC",
+      "dailyHint": "àwọn àlejò aláìlẹ́gbẹ́ lójúmọ́",
+      "empty": "Kò sí data fún àkókò yìí síbẹ̀"
+    },
+    "countries": {
+      "title": "Àwọn orílẹ̀-èdè gíga",
+      "windowDay": "wákàtí 24 sẹ́yìn",
+      "window": "ọjọ́ {{days}} sẹ́yìn"
+    },
+    "browsers": {
+      "title": "Àwọn aṣàwákiri",
+      "window": "gẹ́gẹ́ bí ìwòye ojú-ìwé"
+    },
+    "edge": {
+      "title": "Ní etí ìsopọ̀",
+      "windowDay": "wákàtí 24 sẹ́yìn",
+      "window": "ọjọ́ {{days}} sẹ́yìn",
+      "cached": "A pèsè láti cache",
+      "encrypted": "A ti fi ẹ̀rọ ìpamọ́ dáàbò bò ó",
+      "threats": "Àwọn ewu tí a dí"
+    },
+    "proof": {
+      "title": "Ibi tí àwọn nọ́mbà wọ̀nyí ti wá",
+      "subtitle": "Cloudflare ni ó wọ̀n, kì í ṣe ojú-ìwé yìí",
+      "source": "Orísun",
+      "datasets": "Àwọn àkójọ data",
+      "zone": "Agbègbè",
+      "ray": "Cloudflare ray ID",
+      "fetched": "A gbà ní",
+      "query": "Ìbéèrè gangan tí ó wà lẹ́yìn chart náà",
+      "copied": "A ti ṣe ẹ̀dà",
+      "copy": "Ṣe ẹ̀dà",
+      "openEndpoint": "Ṣí /api/stats",
+      "openRaw": "Èsì Cloudflare tí a kò fọwọ́ kàn",
+      "edge": "Gbogbo ìbéèrè sí dehub.io ń gba Cloudflare kọjá kí ó tó dé àwọn sáà wa. Àwọn ìṣirò wọ̀nyí jẹ́ àkópọ̀ Cloudflare fúnra rẹ̀ ti ìrìnàjò náà — àwọn nọ́mbà kan náà tí dashboard wa ń fihàn. Kì í ṣe script nínú aṣàwákiri rẹ ni ó ń kó wọn jọ, nítorí náà kò sí ohunkóhun lórí ojú-ìwé yìí tí ó lè fẹ̀ wọ́n, dídí àwọn olùtọpa kò sì yí wọn padà.",
+      "live": "Ojú-ìwé náà ń kà wọ́n tààrà. Kíkó /stats ń pe ẹnu ọ̀nà wa, tí ó ń béèrè Analytics API ti Cloudflare ní àkókò yẹn tí ó sì ń pa èsì mọ́ fún ìṣẹ́jú àáyá 60.",
+      "limits": "Ohun tí èyí fihàn àti èyí tí kò fihàn: o lè rí i pé àwọn nọ́mbà náà wá láti àkópọ̀ Cloudflare kì í ṣe láti kóòdù ohun èlò wa, àti pé ìbéèrè tí a tẹ̀ jáde níbí ni èyí tí ń ṣiṣẹ́. Kì í ṣe àìnígbẹ́kẹ̀lé — àmì API wà lọ́wọ́ wa, Cloudflare kò sì pèsè kíkà gbogbogbò ti ìtúpalẹ̀ agbègbè kan. Ẹnikẹ́ni tí ó ní agbègbè Cloudflare tirẹ̀ lè ṣiṣẹ́ ìbéèrè kan náà kí ó sì fọwọ́sí ìrísí rẹ̀."
+    },
+    "definitions": {
+      "title": "Ohun tí àwọn nọ́mbà náà túmọ̀ sí",
+      "visitorsTerm": "Àwọn àlejò",
+      "visitors": "— àwọn àdírẹ́sì IP aláìlẹ́gbẹ́ tí Cloudflare rí ní ọjọ́ náà. Ó sún mọ́ ènìyàn, ṣùgbọ́n kì í ṣe ohun kan náà: ọ́fíìsì kan lórí ìsopọ̀ kan ni a ń kà lẹ́ẹ̀kan, tẹlifóònù tí ó ń yí láàrin wifi àti data alágbèéká ni a ń kà lẹ́ẹ̀mejì.",
+      "pageViewsTerm": "Ìwòye ojú-ìwé",
+      "pageViews": "— àwọn ìbéèrè tí Cloudflare pín gẹ́gẹ́ bí ìkójọ ojú-ìwé, kì í ṣe àwòrán, script tàbí ìpè API.",
+      "botsTerm": "A ti ka àwọn bot mọ́ ọn",
+      "bots": "— ìwọ̀nyí jẹ́ ìṣirò àìtọ́jú ní etí ìsopọ̀, nítorí náà àwọn crawler, olùṣàkíyèsí iṣẹ́ àti àwọn oníbàárà tí a kọ pẹ̀lú script wà nínú wọn. O lè rí wọn fúnra rẹ nínú ìpínyà aṣàwákiri lókè, níbi tí àwọn àkọsílẹ̀ bíi \"Curl\" àti \"Àìmọ̀\" jẹ́ ìrìnàjò aládàáṣiṣẹ́ kì í ṣe ènìyàn. Sísẹ́ àwọn bot nílò ètò Cloudflare tí a ń san owó fún tí a kò ní, kí a sì yọ ìdíwọ̀n kúrò ní ìdákẹ́jẹ́ yóò mú kí àwọn nọ́mbà má ṣe é ṣàyẹ̀wò dáadáa, kì í ṣe kí ó rọrùn sí i.",
+      "totalTerm": "Àpapọ̀ àkókò",
+      "total": "— ìwòye ojú-ìwé àti ìbéèrè ń kóra jọ ní gbogbo àkókò náà. A kò ka àwọn àlejò papọ̀ sí \"àpapọ̀ àlejò\" ní mọ̀ọ́mọ̀, nítorí ẹni tí ó wá ní Ajé àti Ìṣẹ́gun yóò jẹ́ kíkà lẹ́ẹ̀mejì.",
+      "peakTerm": "Wákàtí / ọjọ́ tí ó kún jùlọ",
+      "peak": "— iye aláìlẹ́gbẹ́ tí ó ga jùlọ nínú àárín kan ṣoṣo ti àkókò náà, fún ìdí kan náà: nọ́mbà ni tí Cloudflare ń wọ̀n ní ti gidi, kì í ṣe èyí tí a kọ́ láti inú àpapọ̀ ìṣirò tí ó ń bò ara wọn.",
+      "resolutionTerm": "Data wákàtí dúró ní ọjọ́ 3",
+      "resolution": "— ìdíwọ̀n Cloudflare ni èyí lórí ètò yìí, kì í ṣe àṣàyàn wa: ó ń kọ gbogbo ìbéèrè wákàtí tí ó ju ọjọ́ mẹ́ta lọ. Ìwòye wákàtí 24 àti ọjọ́ 3 jẹ́ ti wákàtí; ọjọ́ 7 sókè jẹ́ ti ojoojúmọ́, kò sì sí ọ̀nà láti ya chart wákàtí fún gbogbo àkókò.",
+      "breakdownTerm": "Àwọn orílẹ̀-èdè àti aṣàwákiri",
+      "breakdown": "— wọ́n ń tẹ̀lé àkókò tí o yàn, ṣùgbọ́n ọjọ́ {{max}} sẹ́yìn nìkan, níwọ̀n bí a ti ń pa ìpínyà ojoojúmọ́ mọ́. Ní àkókò gígùn, chart náà ń bo àkókò tí ó pọ̀ ju àkójọ orílẹ̀-èdè lọ.",
+      "startTerm": "Ìtàn",
+      "start": "— \"gbogbo àkókò\" túmọ̀ sí gbogbo ọjọ́ tí Cloudflare ṣì ń pa mọ́, lónìí ọjọ́ {{days}} láti {{date}}, ọjọ́ tí dehub.io kó lọ sí Cloudflare. Kò sí data etí ìsopọ̀ tí ó ti kọjá láti fihàn, àwọn ọjọ́ àtijọ́ sì ń ṣubú bí Cloudflare ṣe ń mú wọn dàgbà."
+    }
   }
 }

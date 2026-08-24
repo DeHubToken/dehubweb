@@ -27,7 +27,20 @@
     "events": "Taateewwan",
     "prompt": "Kakaasi",
     "communities": "Hawaasota",
-    "staking": "Kuusuu"
+    "staking": "Kuusuu",
+    "arcade": "Arcade",
+    "stats": "Istaatistiksii kallattii",
+    "liveTv": "TV kallattii",
+    "buyDhb": "DHB bitadhu",
+    "bridge": "Riqicha",
+    "top100": "Top 100",
+    "agents": "Bakka bu'oota AI",
+    "advertising": "Beeksisa",
+    "premium": "Premium",
+    "pricing": "Gatii",
+    "creators": "Uumtota",
+    "getTheApp": "Aappilikeeshinii argadhu",
+    "connectAi": "AI walqunnamsiisi"
   },
   "feed": {
     "home": "Mana",
@@ -35,7 +48,9 @@
     "images": "Suuraalee",
     "shorts": "Gabaabduu",
     "music": "Muuziqaa",
-    "live": "Kallattii"
+    "live": "Kallattii",
+    "newPosts_one": "Maxxansa haaraa {{count}}",
+    "newPosts_other": "Maxxansa haaraa {{count}}"
   },
   "explore": {
     "all": "Hundaa",
@@ -242,7 +257,58 @@
     "hazy": "Halkan Hurrii",
     "save": "Olkaa'i",
     "saving": "Olkaa'aa jira...",
-    "swarms": "Tuutota"
+    "swarms": "Tuutota",
+    "profiles": "Profaayiloota",
+    "profilesDesc": "Herregoota meeshaa kana irratti kuufaman",
+    "addProfile": "Profaayilii dabali",
+    "profileActive": "Hojiirra jira",
+    "profileSignedOut": "jijjiiruuf seeni",
+    "profileRemove": "Profaayilii haqi",
+    "profilesUsed": "{{max}} keessaa {{used}} fayyadamameera",
+    "profilesNextTier": "Sadarkaan {{tier}} {{count}} qabata",
+    "profilesFullTier": "{{count}} profaayilii qabachuuf badhaasa {{tier}} irratti stake godhi",
+    "profilesFull": "Herrega biraa dabaluuf profaayilii tokko haqi",
+    "browserNotifications": "Beeksisa browserii",
+    "browserNotificationsDesc": "Tab biraa irra osoo jirtuu deebii, kennaa fi ergaa waa'ee beeksisa argadhu",
+    "browserNotificationsOnDesc": "Deebiin, kennaan fi ergaan tab biraa irra osoo jirtuu ni mul'atu.",
+    "browserNotificationsDismissed": "Gaaffiin beeksisaa haqameera — irra deebi'ii geengoo yaali",
+    "browserNotificationsBlocked": "Browserii keetiin ugguramaniiru",
+    "browserNotificationsBlockedTitle": "Browseriin kun beeksisa uggura",
+    "browserNotificationsBlockedNote": "Kana kan deebisuu danda'u browserii kee qofa — erga uggurameen booda DeHub deebi'ee gaafachuu hin danda'u.",
+    "browserNotificationsBlockedPending": "Gaaffiin kee ol kaa'ameera — browseriin kee yeroo hayyametti ofumaan banama.",
+    "browserNotificationsUnblockChromium": "Ikoonii bitaa gabatee teessoo irra jiru cuqaasi → Qindaa'ina saayitii → Beeksisa \"Hayyami\" irra kaa'i, sana booda fuula kana irra deebi'ii fe'i.",
+    "browserNotificationsUnblockFirefox": "Furtuu bitaa gabatee teessoo irra jiru cuqaasi, \"Ugguramaa\" kan Beeksisa Fudhachuu bira jiru haqi, sana booda fuula kana irra deebi'ii fe'i.",
+    "browserNotificationsUnblockSafari": "Gabatee menuu irratti: Safari → Qindaa'ina → Marsariitiiwwan → Beeksisa, sana booda saayitii kana \"Hayyami\" irra kaa'i.",
+    "browserNotificationsUnblockGeneric": "Qindaa'ina saayitii browserii keetii fuula kanaaf bani, Beeksisa \"Hayyami\" irra kaa'i, sana booda irra deebi'ii fe'i.",
+    "browserNotificationsIosHint": "iPhone fi iPad kana kan hayyaman DeHub Iskiriinii Manaa irra yoo jiraate qofa — Qooduu tuqi, itti aansuun \"Iskiriinii Manaatti dabali\".",
+    "browserNotificationsTest": "Beeksisa yaalii ergi",
+    "browserNotificationsTestSent": "Beeksisni yaalii ergameera",
+    "browserNotificationsTestBody": "Beeksisni DeHub akkas fakkaata.",
+    "showAsNewMember": "Akka miseensa haaraatti na agarsiisi",
+    "showAsNewMemberDesc": "Miseensonni biroo akka ati amma makamte akka arganii si simatan taasisa. Erga galmooftee guyyaa 30 booda ofumaan dhaabata.",
+    "defaultProfileTab": "Tab profaayilii durtii",
+    "defaultProfileTabDesc": "Daawwattoonni profaayilii kee irratti tab kam jalqaba akka arganu filadhu",
+    "lavalamp": "Ibsaa lava",
+    "war": "Waraana",
+    "osaka": "Osaka",
+    "jungle": "Bosona",
+    "themeColor": "Halluu mata duree",
+    "themeColorDesc": "Mata duree kanaaf halluu mataa keetii filadhu",
+    "themeColorReset": "Haaromsi",
+    "themeColorWhite": "Adii",
+    "themeColorBlack": "Gurraacha",
+    "themeColorRainbow": "Sabbata Waaqaa",
+    "themeColorBrand": "Maqaa daldalaa",
+    "themeColorBrandDesc": "Halluuwwan suuraa profaayilii keetii fayyadami",
+    "themeColorBrandNoAvatar": "Halluuwwan maqaa daldalaa fayyadamuuf suuraa profaayilii dabali",
+    "themeColorBrandFailed": "Suuraa profaayilii kee irraa halluuwwan dubbisuun hin danda'amne",
+    "dimLights": "Ifa gadi buusi",
+    "dimLightsDesc": "Saaxilamuu ifa cuquliisaa ni hir'isa",
+    "matureContent": "Qabiyyee ga'eessotaa agarsiisi",
+    "matureContentDesc": "Maxxansa ga'eessotaa fi kan hamaa feed kee keessatti dabala, kanneen ati duraan argitu irraa akeekkachiisa ni haqa. Durtiin cufaadha.",
+    "noNewMessages": "Haasaa haaraa hin jiru",
+    "noNewMessagesDesc": "Haasawwan kee jiran eegi, garuu namni haaraan tokko jalqabuu hin danda'u",
+    "dmNoNewHelp": "Haasawwan jiran itti fufu; namni haaraan tokko jalqabuu hin danda'u"
   },
   "common": {
     "save": "Olchi",
@@ -256,7 +322,8 @@
     "translating": "Hiikaa jira...",
     "close": "Cufi",
     "loadingMore": "Loading more...",
-    "loadMore": "Dabalataa fe'i"
+    "loadMore": "Dabalataa fe'i",
+    "tryAgain": "Irra deebi'ii yaali"
   },
   "tip": {
     "title": "Tiippii Ergi",
@@ -737,7 +804,11 @@
     "andOthersLikedCommentPreview": "{{first}} and {{others}} liked your comment: \"{{preview}}\"",
     "postRemoved": "Your post was removed",
     "oneOther": "1 other",
-    "nOthers": "{{count}} others"
+    "nOthers": "{{count}} others",
+    "thisBrowser": "Browserii kana",
+    "features": "Amaloota",
+    "communities": "Hawaasota",
+    "stores": "Suuqiiwwan"
   },
   "leaderboard": {
     "title": "Sadarkaa",
@@ -766,7 +837,12 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "affiliates": "Michoota",
+    "directReferrals_one": "{{count}} kallattiin",
+    "directReferrals_other": "{{count}} kallattiin",
+    "secondaryReferrals_one": "{{count}} al-kallattiin",
+    "secondaryReferrals_other": "{{count}} al-kallattiin"
   },
   "explorePage": {
     "searchPlaceholder": "Namoota, barreeffamoota yookaan qabiyyee barbaadi...",
@@ -867,7 +943,10 @@
     "statusPlanned": "Planned",
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
-    "statusDeclined": "Declined"
+    "statusDeclined": "Declined",
+    "shipping": "Ijaaramaa jira",
+    "noShippingYet": "Wanti hojjetamaa jiru hin jiru",
+    "shippingAppearHere": "Gaaffiiwwan ijaaramaa jiran asirratti mul'atu."
   },
   "auth": {
     "loginRequired": "Seeninuun barbaachisa"
@@ -1034,7 +1113,10 @@
     "sendingCode": "Sending code...",
     "smsInfo": "We'll send you a verification code via SMS",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
-    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.",
+    "addProfileTitle": "Profaayilii dabali",
+    "walletConnectedAs": "Walqunnameera",
+    "useDifferentWallet": "Boorsaa biraa fayyadami"
   },
   "careers": {
     "title": "Hojii DeHub-tti",
@@ -1135,7 +1217,8 @@
     "failedPurchase": "Failed to start purchase",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "failedOnramp": "Failed to start onramp"
+    "failedOnramp": "Failed to start onramp",
+    "badgeDiscount": "Qabataa {{tier}} — hir'isa {{percent}}%"
   },
   "agents": {
     "title": "Eejentii AI",
@@ -1165,7 +1248,13 @@
     "agentDeleted": "Agent deleted",
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
-    "apiKeyCopied": "API key copied to clipboard"
+    "apiKeyCopied": "API key copied to clipboard",
+    "connectorUrl": "URL walqunnamsiisaa",
+    "connectorUrlCopied": "URL walqunnamsiisaa garagalfameera",
+    "connectorUrlHelp": "Kana Claude ykn ChatGPT keessatti akka walqunnamsiisaa MCP mataa keetiitti dabali. Akka bakka bu'aa kanaatti mirkaneeffama, kanaafuu akka furtuu API tti ilaali.",
+    "agentWallet": "Boorsaa bakka bu'aa (Base)",
+    "walletCopied": "Teessoon boorsaa garagalfameera",
+    "agentWalletHelp": "Bakka bu'aan sun osoo hin maxxansin dura ETH xiqqoo Base irratti as ergi — maxxansuun chain irratti mint godha, bakka bu'aan immoo gaasii ofii isaa kaffala. Yaada kennuun, sagalee kennuun fi hordofuun gaasii hin barbaachisan."
   },
   "sidebar": {
     "talkOfTheTown": "Dubbii Magaalaa",
@@ -1179,7 +1268,11 @@
     "comingSoon": "Dhihotti — kallattiinitti naannolee karaa irra jiran!",
     "post": "Maxxansi",
     "logOut": "Ba'i",
-    "logIn": "Seeni"
+    "logIn": "Seeni",
+    "searchMenu": "Menuu keessa barbaadi",
+    "clearSearch": "Barbaacha haqi",
+    "noMenuMatches": "Menuu keessatti wanti walsimu hin jiru",
+    "searchDehubFor": "DeHub irraa \"{{query}}\" barbaadi"
   },
   "postInfo": {
     "title": "Odeeffannoo maxxansaa",
@@ -1429,7 +1522,11 @@
     "new_version_available": "Version haaraan ni argama",
     "refresh_to_pick_up_the_latest_changes": "Jijjiirama haaraa fudhachuuf haaromsi.",
     "refresh": "Haaromsi",
-    "what_changed": "Maaltu jijjiirame"
+    "what_changed": "Maaltu jijjiirame",
+    "turn_on_desktop_notifications": "Beeksisa deskitoopii banuu?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Tab biraa irra osoo jirtuu deebii, kennaa fi ergaa waa'ee beeksisa argadhu.",
+    "turn_on": "Banii",
+    "not_now": "Amma miti"
   },
   "prompt": {
     "seoTitle": "Nyaata keessan kakaasi — DeHub",
@@ -1575,5 +1672,105 @@
     "when": "Yoom",
     "whyStake": "Maaliif Kuusuu?",
     "yourStaked": "Kuufama Kee"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Taphoota, addunyaalee fi muuxannoowwan DeHub ijaaree madda banaa godhe walitti qabame.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "DeHub irratti browser kee keessatti taphadhu — chess 3D fiilmii fakkaatu, tapha rasaasaa karaa tartiibaan uumamu, bosona rooba keessa deemuu, lola daandii neon fi galma daldalaa keessa deemamu. Osoo hin fe'in, osoo hin buufatin.",
+    "alsoIn": "{{theme}} keessattis jira"
+  },
+  "stats": {
+    "title": "Istaatistiksii",
+    "subtitle": "Odeeffannoo madda banaa yeroo dhugaa",
+    "live": "Kallattii",
+    "range": {
+      "24h": "sa'aatii 24",
+      "3d": "guyyoota 3",
+      "7d": "guyyoota 7",
+      "30d": "guyyoota 30",
+      "all": "Yeroo guutuu"
+    },
+    "unavailable": {
+      "title": "Istaatistiksiin amma hin argamu",
+      "unconfigured": "Endpointii xiinxalaatiif tokeeniin API Cloudflare ammayyuu hin kennamne. Lakkoofsa uumame mannaa homaa hin agarsiifamu.",
+      "error": "API xiinxala Cloudflare bira ga'uu hin dandeenye. Lakkoofsa dulloome ykn kan uumame agarsiisuu mannaa, fuulli kun hanga dubbisni kallattii milkaa'utti waanuma tokkollee hin agarsiisu."
+    },
+    "tile": {
+      "visitorsToday": "Daawwattoota har'aa",
+      "soFarToday": "har'a hanga ammaatti, UTC",
+      "peakHour": "Sa'aatii baay'ee hojii qabu",
+      "peakDay": "Guyyaa baay'ee hojii qabu",
+      "peakAtHour": "{{when}} UTC irratti",
+      "peakOnDay": "{{when}} irratti",
+      "inRange": "hangii kana keessatti",
+      "pageViews": "Ilaalcha fuulaa",
+      "overHours": "sa'aatii {{count}} keessatti",
+      "overDay": "guyyaa 1 keessatti",
+      "overDays": "guyyoota {{count}} keessatti",
+      "requestsLabel": "Gaaffiiwwan",
+      "served": "Dhiyaatan",
+      "requests": "gaaffii {{requests}}"
+    },
+    "chart": {
+      "hourly": "Sa'aatiitti daawwattoota",
+      "daily": "Guyyaatti daawwattoota",
+      "hourlyHint": "Yeroowwan sa'aatii {{count}}, UTC",
+      "dailyHint": "guyyaatti daawwattoota adda ta'an",
+      "empty": "Yeroo kanaaf deetaan ammatti hin jiru"
+    },
+    "countries": {
+      "title": "Biyyoota ol'aanoo",
+      "windowDay": "sa'aatii 24 darban",
+      "window": "guyyoota {{days}} darban"
+    },
+    "browsers": {
+      "title": "Browseroota",
+      "window": "ilaalcha fuulaatiin"
+    },
+    "edge": {
+      "title": "Qarqara irratti",
+      "windowDay": "sa'aatii 24 darban",
+      "window": "guyyoota {{days}} darban",
+      "cached": "Kaashii irraa dhiyaate",
+      "encrypted": "Icciteessame",
+      "threats": "Sodaawwan ugguraman"
+    },
+    "proof": {
+      "title": "Lakkoofsonni kun eessaa dhufu",
+      "subtitle": "Cloudflare'n safarame, fuula kanaan miti",
+      "source": "Madda",
+      "datasets": "Kuusaa deetaa",
+      "zone": "Zoonii",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Argame yeroo",
+      "query": "Gaaffii sirrii chartii duuba jiru",
+      "copied": "Garagalfameera",
+      "copy": "Garagalchi",
+      "openEndpoint": "/api/stats bani",
+      "openRaw": "Deebii Cloudflare kan hin tuqamne",
+      "edge": "Gaaffiin dehub.io dhaqqabu hundi seervarii keenya bira osoo hin ga'in dura Cloudflare keessa darba. Lakkoofsonni kun walitti qabama Cloudflare mataa isaa kan tiraafikii sanaa — lakkoofsota daashboordiin keenya agarsiisu walfakkaatu. Iskiriiptiin browserii kee keessa jiru isaan hin walitti qabu, kanaaf wanti fuula kana irra jiru tokkoyyuu isaan bal'isuu hin danda'u, hordoftoota uggurris isaan hin jijjiiru.",
+      "live": "Fuulli kallattiin isaan dubbisa. /stats fe'uun endpointii keenya waama, innis yeroo sanatti Analytics API Cloudflare gaafatee deebii sekondii 60f kaasha godha.",
+      "limits": "Kun maal akka agarsiisu fi maal akka hin agarsiifne: lakkoofsonni koodii aappilikeeshinii keenyaa osoo hin taane walitti qabama Cloudflare irraa akka dhufan, akkasumas gaaffiin as maxxanfame isa hojjetu ta'uu argita. Amantaa malee miti — tokeenii API nu bira jira, Cloudflare immoo xiinxala zoonii tokkoo uummataaf dubbisuu hin kennu. Namni zoonii Cloudflare mataa isaa qabu kamiyyuu gaaffii walfakkaataa fiigsee bocasaa mirkaneessuu danda'a."
+    },
+    "definitions": {
+      "title": "Lakkoofsonni kun maal jechuudha",
+      "visitorsTerm": "Daawwattoota",
+      "visitors": "— teessoowwan IP adda ta'an Cloudflare guyyaa sana arge. Namootatti dhiyaata, garuu walfakkaataa miti: waajjirri walqunnamtii tokko irra jiru al tokko lakkaa'ama, bilbilli wifi fi deetaa mobaayilii gidduu jijjiiramu immoo yeroo lama.",
+      "pageViewsTerm": "Ilaalcha fuulaa",
+      "pageViews": "— gaaffiiwwan Cloudflare akka fe'umsa fuulaatti ramadu, suuraa, iskiriiptii ykn waamicha API osoo hin taane.",
+      "botsTerm": "Bootonni dabalamaniiru",
+      "bots": "— kunneen lakkoofsa qulqulluu qarqara irratti argaman waan ta'aniif crawler, to'attoota hojii fi maamiltoota iskiriiptii isaan keessa jiru. Ofii kee hiruu browserii armaan olii keessatti argita, achitti galmeewwan akka \"Curl\" fi \"Hin beekamne\" tiraafikii ofumaan hojjetu malee namoota miti. Bootota calaluun karoora Cloudflare kaffalamaa nuti hin qabne barbaada, tilmaama callisanii hir'isuun immoo lakkoofsota mirkaneessuuf salphaa osoo hin taane rakkisaa taasisa.",
+      "totalTerm": "Waliigala hangii",
+      "total": "— ilaalchi fuulaa fi gaaffiiwwan hangii guutuu keessatti walitti ida'amu. Lakkoofsi daawwattootaa beekumsaan \"waliigala daawwattootaa\" tti hin ida'amu, sababiin isaas namni Wiixata fi Kibxata as ture yeroo lama lakkaa'ama.",
+      "peakTerm": "Sa'aatii / guyyaa baay'ee hojii qabu",
+      "peak": "— sababuma walfakkaataadhaan, hangii keessatti yeroo tokko keessatti lakkoofsa adda ta'e ol'aanaa: kun lakkoofsa Cloudflare dhugaadhaan safaru malee lakkoofsota walirra bu'an walitti dabaluun kan ijaarame miti.",
+      "resolutionTerm": "Deetaan sa'aatii guyyaa 3 irratti dhaabata",
+      "resolution": "— kun daangaa Cloudflare karoora kana irratti malee filannoo keenya miti: gaaffii sa'aatii guyyaa sadii caalu kamiyyuu ni dida. Mul'annoon sa'aatii 24 fi guyyaa 3 sa'aatiidhaan; guyyaa 7 fi isaa ol guyyaadhaan, chartii sa'aatii yeroo guutuu kaasuun karaan hin jiru.",
+      "breakdownTerm": "Biyyoota fi browseroota",
+      "breakdown": "— hangii ati filatte hordofu, garuu guyyoota {{max}} duubatti qofa, hiruun guyyaa hanguma sanatti waan kuufamuuf. Hangii dheeraa keessatti chartiin tarree biyyootaa caalaa yeroo dheeraa haguuga.",
+      "startTerm": "Seenaa",
+      "start": "— \"yeroo guutuu\" jechuun guyyaa Cloudflare ammayyuu qabatee jiru hunda, har'a guyyoota {{days}} {{date}} irraa jalqabee, guyyaa dehub.io gara Cloudflare deeme. Deetaan qarqaraa isa duraa agarsiisuuf hin jiru, guyyoonni durii immoo yeroo Cloudflare isaan dulloomsu ni bad'u."
+    }
   }
 }

@@ -27,7 +27,20 @@
     "events": "Events",
     "prompt": "提示",
     "communities": "社区",
-    "staking": "质押"
+    "staking": "质押",
+    "arcade": "街机",
+    "stats": "实时统计",
+    "liveTv": "直播电视",
+    "buyDhb": "买 DHB",
+    "bridge": "跨链桥",
+    "top100": "百强榜",
+    "agents": "AI 代理",
+    "advertising": "广告",
+    "premium": "高级版",
+    "pricing": "定价",
+    "creators": "创作者",
+    "getTheApp": "下载应用",
+    "connectAi": "连接 AI"
   },
   "feed": {
     "home": "主页",
@@ -35,7 +48,9 @@
     "images": "图片",
     "shorts": "短片",
     "music": "音乐",
-    "live": "直播"
+    "live": "直播",
+    "newPosts_one": "{{count}} 条新帖",
+    "newPosts_other": "{{count}} 条新帖"
   },
   "explore": {
     "all": "全部",
@@ -242,7 +257,58 @@
     "hazy": "朦胧夜",
     "save": "保存",
     "saving": "保存中...",
-    "swarms": "蜂群"
+    "swarms": "蜂群",
+    "profiles": "档案",
+    "profilesDesc": "存勒搿只设备浪个账号",
+    "addProfile": "添个档案",
+    "profileActive": "用当中",
+    "profileSignedOut": "登录才好切换",
+    "profileRemove": "移脱档案",
+    "profilesUsed": "已经用脱 {{used}}/{{max}}",
+    "profilesNextTier": "{{tier}} 等级好留 {{count}} 只",
+    "profilesFullTier": "质押拿 {{tier}} 徽章就好留 {{count}} 只档案",
+    "profilesFull": "移脱一只档案才好添别个账号",
+    "browserNotifications": "浏览器通知",
+    "browserNotificationsDesc": "侬勒别个标签页浪向个辰光也能第一时间晓得回复、打赏搭私信",
+    "browserNotificationsOnDesc": "侬勒别个标签页浪向个辰光，回复、打赏搭私信会得跳出来",
+    "browserNotificationsDismissed": "通知请求已经忽略——再试试搿只开关",
+    "browserNotificationsBlocked": "畀侬个浏览器挡牢了",
+    "browserNotificationsBlockedTitle": "搿只浏览器勒挡通知",
+    "browserNotificationsBlockedNote": "只有侬个浏览器好撤销——一旦挡牢，DeHub 就勿好再问了。",
+    "browserNotificationsBlockedPending": "侬个请求已经存好——浏览器一允许，伊就会自家开。",
+    "browserNotificationsUnblockChromium": "点地址栏左首个图标 → 网站设置 → 拿通知设成「允许」，再重新加载搿页。",
+    "browserNotificationsUnblockFirefox": "点地址栏左首个锁头，清脱「接收通知」旁边个「已阻止」，再重新加载搿页。",
+    "browserNotificationsUnblockSafari": "勒菜单栏：Safari → 设置 → 网站 → 通知，然后拿搿只网站设成「允许」。",
+    "browserNotificationsUnblockGeneric": "勒浏览器里向打开搿页个网站设置，拿通知设成「允许」，再重新加载。",
+    "browserNotificationsIosHint": "iPhone 搭 iPad 要 DeHub 加到主屏幕才允许——点「分享」，再拣「添加到主屏幕」。",
+    "browserNotificationsTest": "发个测试通知",
+    "browserNotificationsTestSent": "测试通知已经发好",
+    "browserNotificationsTestBody": "DeHub 个通知就是搿能个。",
+    "showAsNewMember": "拿我显示成新成员",
+    "showAsNewMemberDesc": "让别个成员看着侬刚刚加入，方便伊拉欢迎侬。注册 30 天之后自家结束。",
+    "defaultProfileTab": "默认档案标签",
+    "defaultProfileTabDesc": "拣访客勒侬个主页浪先看着啥个标签",
+    "lavalamp": "熔岩灯",
+    "war": "战争",
+    "osaka": "大阪",
+    "jungle": "丛林",
+    "themeColor": "主题颜色",
+    "themeColorDesc": "帮搿只主题拣只自定义颜色",
+    "themeColorReset": "重置",
+    "themeColorWhite": "白色",
+    "themeColorBlack": "黑色",
+    "themeColorRainbow": "彩虹",
+    "themeColorBrand": "品牌",
+    "themeColorBrandDesc": "用侬头像个颜色",
+    "themeColorBrandNoAvatar": "加张头像才好用品牌配色",
+    "themeColorBrandFailed": "读勿出侬头像个颜色",
+    "dimLights": "调暗灯光",
+    "dimLightsDesc": "减少蓝光接触",
+    "matureContent": "显示成人内容",
+    "matureContentDesc": "勒侬个信息流里向加进成人搭血腥帖子，并且拿侬已经看着个上头个警告去脱。默认关牢。",
+    "noNewMessages": "勿收新会话",
+    "noNewMessagesDesc": "留牢侬现有个会话，不过新人开勿了新会话",
+    "dmNoNewHelp": "现有个会话照旧好用；新人开勿了新会话"
   },
   "common": {
     "save": "保存",
@@ -256,7 +322,8 @@
     "translating": "翻译中...",
     "close": "关闭",
     "loadingMore": "加载更多中...",
-    "loadMore": "加载更多"
+    "loadMore": "加载更多",
+    "tryAgain": "再试一趟"
   },
   "tip": {
     "title": "送礼物",
@@ -724,7 +791,11 @@
     "postRemoved": "侬个帖子已被移除",
     "newNotification": "新通知",
     "oneOther": "1位其他人",
-    "nOthers": "{{count}}位其他人"
+    "nOthers": "{{count}}位其他人",
+    "thisBrowser": "搿只浏览器",
+    "features": "功能",
+    "communities": "社区",
+    "stores": "店铺"
   },
   "leaderboard": {
     "title": "排行榜",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "侬已加入！余额：{{balance}} DHB",
     "balanceTooLow": "余额太低（{{balance}} DHB）",
     "refreshFailed": "出错了",
-    "noWalletAddress": "搜弗到钱包地址"
+    "noWalletAddress": "搜弗到钱包地址",
+    "affiliates": "推广伙伴",
+    "directReferrals_one": "直接 {{count}} 人",
+    "directReferrals_other": "直接 {{count}} 人",
+    "secondaryReferrals_one": "间接 {{count}} 人",
+    "secondaryReferrals_other": "间接 {{count}} 人"
   },
   "explorePage": {
     "searchPlaceholder": "搜索用户、帖子或内容...",
@@ -854,7 +930,10 @@
     "statusPlanned": "已规划",
     "statusInProgress": "进行中",
     "statusCompleted": "已完成",
-    "statusDeclined": "已拒绝"
+    "statusDeclined": "已拒绝",
+    "shipping": "开发当中",
+    "noShippingYet": "呒没啥勒做",
+    "shippingAppearHere": "勒开发个需求会得勒搿搭出现。"
   },
   "auth": {
     "loginRequired": "需要登录"
@@ -927,7 +1006,8 @@
     "failedPurchase": "创建购买失败",
     "redirectingOnramp": "跳转到入金中...",
     "onrampCreated": "入金会话已创建",
-    "failedOnramp": "创建入金失败"
+    "failedOnramp": "创建入金失败",
+    "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣"
   },
   "agents": {
     "title": "AI代理",
@@ -957,7 +1037,13 @@
     "agentDeleted": "代理已删除",
     "failedCreate": "创建代理失败",
     "failedDelete": "删除代理失败",
-    "apiKeyCopied": "API密钥已复制到剪贴板"
+    "apiKeyCopied": "API密钥已复制到剪贴板",
+    "connectorUrl": "连接器 URL",
+    "connectorUrlCopied": "连接器 URL 已经拷贝好",
+    "connectorUrlHelp": "勒 Claude 或者 ChatGPT 里向加伊做自定义 MCP 连接器。伊是拿搿只代理个身份认证个，所以要当作 API 密钥来保管。",
+    "agentWallet": "代理钱包（Base）",
+    "walletCopied": "钱包地址已经拷贝好",
+    "agentWalletHelp": "代理发帖之前，先转点儿 Base ETH 到搿搭——发布会勒链浪铸造，代理自家付 gas。评论、投票搭关注勿要 gas。"
   },
   "hero": {
     "title": "欢迎来到",
@@ -1005,7 +1091,10 @@
     "or": "或者",
     "termsNotice": "继续即代表侬同意服务条款搭隐私政策",
     "walletInfoDesktop": "连接钱包来安全登录",
-    "walletInfoMobile": "直接打开MetaMask、Trust搭Phantom应用程序。Rabby用WalletConnect。"
+    "walletInfoMobile": "直接打开MetaMask、Trust搭Phantom应用程序。Rabby用WalletConnect。",
+    "addProfileTitle": "添个档案",
+    "walletConnectedAs": "已经连牢",
+    "useDifferentWallet": "用别个钱包"
   },
   "careers": {
     "title": "加入DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "马上来了——地区趋势快上线了！",
     "post": "发布",
     "logOut": "退出",
-    "logIn": "登录"
+    "logIn": "登录",
+    "searchMenu": "搜索菜单",
+    "clearSearch": "清脱搜索",
+    "noMenuMatches": "菜单里向呒没匹配个",
+    "searchDehubFor": "勒 DeHub 里向搜「{{query}}」"
   },
   "postInfo": {
     "title": "帖子信息",
@@ -1379,7 +1472,11 @@
     "new_version_available": "新版本可用",
     "refresh_to_pick_up_the_latest_changes": "刷新来获取最新的更改。",
     "refresh": "刷新",
-    "what_changed": "什么改变了"
+    "what_changed": "什么改变了",
+    "turn_on_desktop_notifications": "打开桌面通知？",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "侬勒别个标签页浪向个辰光也能第一时间晓得回复、打赏搭私信。",
+    "turn_on": "打开",
+    "not_now": "暂勿要"
   },
   "prompt": {
     "seoTitle": "提示侬嗰信息 — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "几时",
     "whyStake": "为啥要存入？",
     "yourStaked": "侬个存入量"
+  },
+  "arcade": {
+    "title": "街机",
+    "intro": "DeHub 自家做好并且开源个游戏、世界搭体验个合集。",
+    "seoTitle": "街机 | DeHub",
+    "seoDescription": "勒 DeHub 用浏览器就好白相——电影感个 3D 国际象棋、程序生成个射击游戏、雨林散步、霓虹街头打架，还有好走来走去个交易大厅。勿要安装，勿要下载。",
+    "alsoIn": "{{theme}} 里向也有"
+  },
+  "stats": {
+    "title": "统计",
+    "subtitle": "实时开源情报",
+    "live": "直播",
+    "range": {
+      "24h": "24 小时",
+      "3d": "3 天",
+      "7d": "7 天",
+      "30d": "30 天",
+      "all": "全部时间"
+    },
+    "unavailable": {
+      "title": "统计数据暂时用勿了",
+      "unconfigured": "分析端点还呒没配置 Cloudflare API 令牌。与其编只数字出来，勿如啥全勿显示。",
+      "error": "阿拉连勿着 Cloudflare 个分析 API。与其显示过时或者编出来个数字，搿页勒实时读取成功之前啥全勿显示。"
+    },
+    "tile": {
+      "visitorsToday": "今朝访客",
+      "soFarToday": "今朝到搿歇为止，UTC",
+      "peakHour": "最忙个一只钟头",
+      "peakDay": "最忙个一日",
+      "peakAtHour": "勒 {{when}} UTC",
+      "peakOnDay": "勒 {{when}}",
+      "inRange": "勒搿只范围里向",
+      "pageViews": "页面浏览量",
+      "overHours": "{{count}} 小时内",
+      "overDay": "1 天内",
+      "overDays": "{{count}} 天内",
+      "requestsLabel": "请求",
+      "served": "已提供",
+      "requests": "{{requests}} 次请求"
+    },
+    "chart": {
+      "hourly": "每小时访客",
+      "daily": "每日访客",
+      "hourlyHint": "{{count}} 只小时区间，UTC",
+      "dailyHint": "每日独立访客",
+      "empty": "搿段辰光还呒没数据"
+    },
+    "countries": {
+      "title": "主要国家/地区",
+      "windowDay": "最近 24 小时",
+      "window": "最近 {{days}} 天"
+    },
+    "browsers": {
+      "title": "浏览器",
+      "window": "按页面浏览量"
+    },
+    "edge": {
+      "title": "勒边缘节点",
+      "windowDay": "最近 24 小时",
+      "window": "最近 {{days}} 天",
+      "cached": "从缓存提供",
+      "encrypted": "已加密",
+      "threats": "已拦截威胁"
+    },
+    "proof": {
+      "title": "搿些数字从啥地方来",
+      "subtitle": "由 Cloudflare 测量，勿是搿页",
+      "source": "来源",
+      "datasets": "数据集",
+      "zone": "区域",
+      "ray": "Cloudflare ray ID",
+      "fetched": "获取时间",
+      "query": "图表背后个确切查询",
+      "copied": "已拷贝",
+      "copy": "拷贝",
+      "openEndpoint": "打开 /api/stats",
+      "openRaw": "Cloudflare 未经处理个回应",
+      "edge": "每一只去 dehub.io 个请求，勒到阿拉服务器之前全部会经过 Cloudflare。搿些计数是 Cloudflare 自家对搿些流量个汇总——搭阿拉控制台显示个数字一样。勿是畀侬浏览器里向个脚本收集个，所以搿页浪个啥物事全部撑勿大伊拉，屏蔽跟踪器也勿会改变伊拉。",
+      "live": "搿页是实时读取个。加载 /stats 会调用阿拉个端点，伊会勒搿只辰光查询 Cloudflare 个 Analytics API，并且拿回应缓存 60 秒。",
+      "limits": "搿只证明得啥、证明勿了啥：侬好看着数字是从 Cloudflare 个汇总来个，勿是从阿拉个应用代码来个，而且勒搿搭公开个查询就是实际跑个搿条。伊勿是无需信任个——API 令牌勒阿拉手浪，而 Cloudflare 也勿提供公开读取某只区域个分析数据。啥人有自家个 Cloudflare 区域，全部好跑同一条查询，核对伊个结构。"
+    },
+    "definitions": {
+      "title": "搿些数字啥个意思",
+      "visitorsTerm": "访客",
+      "visitors": "——Cloudflare 搿日看着个独立 IP 地址。接近真人数量，不过勿一样：共用一根线个办公室算一趟，而勒 Wi-Fi 搭移动数据之间切换个手机算两趟。",
+      "pageViewsTerm": "页面浏览量",
+      "pageViews": "——Cloudflare 判定为页面加载个请求，勿是图片、脚本或者 API 调用。",
+      "botsTerm": "包括机器人",
+      "bots": "——搿些是边缘节点个原始计数，所以爬虫、可用性监控搭脚本客户端全部算勒里向。侬好勒上头个浏览器分布里自家看，「Curl」搭「未知」搿种条目是自动流量，勿是真人。要过滤机器人就要用阿拉呒没订个 Cloudflare 收费方案，而悄悄减脱一只估算只会让数字更难核实，勿会更容易。",
+      "totalTerm": "范围合计",
+      "total": "——页面浏览量搭请求数会勒范围里向累加。访客数特为勿加起来做「访客总数」，因为礼拜一搭礼拜二全来过个人会算两趟。",
+      "peakTerm": "最忙个小时／日脚",
+      "peak": "——范围里向任何一只区间最高个独立计数，理由一样：搿只是 Cloudflare 实际测量个数字，勿是拿重叠个计数加起来做出来个。",
+      "resolutionTerm": "小时级数据到 3 天就停",
+      "resolution": "——搿只是搿只方案下 Cloudflare 个限制，勿是阿拉拣个：任何超过三天个小时级查询全部会畀伊拒绝。24 小时搭 3 天视图是小时级；7 天或者以上是按日，呒没办法画全时段个小时级图表。",
+      "breakdownTerm": "国家搭浏览器",
+      "breakdown": "——伊拉跟牢侬拣个范围，不过最多只好回溯 {{max}} 天，因为每日分布只保留搿能长。范围长点个辰光，图表覆盖个辰光会比国家列表长。",
+      "startTerm": "历史",
+      "start": "——「全部时间」是指 Cloudflare 还留牢个每一日，今朝就是从 dehub.io 搬到 Cloudflare 搿日 {{date}} 起算 {{days}} 天。前头呒没边缘数据好显示，老个日脚也会跟牢 Cloudflare 过期而消失。"
+    }
   }
 }

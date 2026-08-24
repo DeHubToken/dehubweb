@@ -27,7 +27,20 @@
     "events": "Ngā Kaupapa",
     "prompt": "Whakahau",
     "communities": "Ngā Hapori",
-    "staking": "Tāpui Moni"
+    "staking": "Tāpui Moni",
+    "arcade": "Arcade",
+    "stats": "Tatauranga ora",
+    "liveTv": "Pouaka whakaata ora",
+    "buyDhb": "Hokona he DHB",
+    "bridge": "Piriti",
+    "top100": "Toa 100",
+    "agents": "Ngā māngai AI",
+    "advertising": "Pānui whakatairanga",
+    "premium": "Premium",
+    "pricing": "Utu",
+    "creators": "Ngā kaihanga",
+    "getTheApp": "Tikina te taupānga",
+    "connectAi": "Honoa te AI"
   },
   "feed": {
     "home": "Kāinga",
@@ -35,7 +48,9 @@
     "images": "Whakaahua",
     "shorts": "Poto",
     "music": "Waiata",
-    "live": "Ora"
+    "live": "Ora",
+    "newPosts_one": "{{count}} pānui hou",
+    "newPosts_other": "{{count}} pānui hou"
   },
   "explore": {
     "all": "Katoa",
@@ -242,7 +257,58 @@
     "hazy": "Pō Kohu",
     "save": "Tiaki",
     "saving": "E tiaki ana...",
-    "swarms": "Ngā Pōkai"
+    "swarms": "Ngā Pōkai",
+    "profiles": "Ngā kōtaha",
+    "profilesDesc": "Ngā pūkete kua tiakina ki tēnei pūrere",
+    "addProfile": "Tāpiri kōtaha",
+    "profileActive": "Kaha",
+    "profileSignedOut": "takiuru kia huri",
+    "profileRemove": "Tangohia te kōtaha",
+    "profilesUsed": "{{used}} o te {{max}} kua whakamahia",
+    "profilesNextTier": "Ka pupuri te taumata {{tier}} i te {{count}}",
+    "profilesFullTier": "Whakanōhia kia whiwhi tohu {{tier}} kia mau ai i a koe ngā kōtaha {{count}}",
+    "profilesFull": "Tangohia tētahi kōtaha kia taea ai te tāpiri i tētahi atu pūkete",
+    "browserNotifications": "Whakamōhiotanga pūtirotiro",
+    "browserNotificationsDesc": "Kia mōhio koe ki ngā whakautu, koha me ngā karere i a koe kei tētahi atu ripa",
+    "browserNotificationsOnDesc": "Ka puta ngā whakautu, koha me ngā karere i a koe kei tētahi atu ripa",
+    "browserNotificationsDismissed": "Kua whakakorea te tono whakamōhiotanga — ngana anō ki te pana",
+    "browserNotificationsBlocked": "Kua ārai e tō pūtirotiro",
+    "browserNotificationsBlockedTitle": "Kei te ārai tēnei pūtirotiro i ngā whakamōhiotanga",
+    "browserNotificationsBlockedNote": "Ko tō pūtirotiro anake ka taea te whakakore — ka mutu te ārai, kāore e taea e DeHub te pātai anō.",
+    "browserNotificationsBlockedPending": "Kua tiakina tō tono — ka huri mai anō ia ina whakaaetia e tō pūtirotiro.",
+    "browserNotificationsUnblockChromium": "Pāwhiritia te ata ki te taha mauī o te pae wāhitau → Tautuhinga pae → whakaritea ngā Whakamōhiotanga ki te Whakaae, kātahi utaina anō tēnei whārangi.",
+    "browserNotificationsUnblockFirefox": "Pāwhiritia te raka ki te taha mauī o te pae wāhitau, mukua te \"Kua ārai\" i te taha o Whiwhi Whakamōhiotanga, kātahi utaina anō tēnei whārangi.",
+    "browserNotificationsUnblockSafari": "I te pae tahua: Safari → Tautuhinga → Paetukutuku → Whakamōhiotanga, kātahi whakaritea tēnei pae ki te Whakaae.",
+    "browserNotificationsUnblockGeneric": "Whakatuwherahia ngā tautuhinga pae o tō pūtirotiro mō tēnei whārangi, whakaritea ngā Whakamōhiotanga ki te Whakaae, kātahi utaina anō.",
+    "browserNotificationsIosHint": "Ka whakaae anake a iPhone me iPad ina kei tō mata kāinga a DeHub — pāwhiritia Tuari, kātahi \"Tāpiri ki te Mata Kāinga\".",
+    "browserNotificationsTest": "Tukuna he whakamōhiotanga whakamātau",
+    "browserNotificationsTestSent": "Kua tukuna te whakamōhiotanga whakamātau",
+    "browserNotificationsTestBody": "Koinei te āhua o te whakamōhiotanga DeHub.",
+    "showAsNewMember": "Whakaatuhia ahau hei mema hou",
+    "showAsNewMemberDesc": "Ka kite ētahi atu mema kua uru hou mai koe kia āhei ai rātou ki te mihi ki a koe. Ka mutu aunoa i te 30 rā i muri i tō rēhitatanga.",
+    "defaultProfileTab": "Ripa kōtaha taunoa",
+    "defaultProfileTabDesc": "Tīpakohia ko tēhea ripa ka kite tuatahi ngā manuhiri i tō kōtaha",
+    "lavalamp": "Rama rangitoto",
+    "war": "Pakanga",
+    "osaka": "Osaka",
+    "jungle": "Ngahere",
+    "themeColor": "Tae kaupapa",
+    "themeColorDesc": "Tīpakohia he tae whaiaro mō tēnei kaupapa",
+    "themeColorReset": "Tautuhi anō",
+    "themeColorWhite": "Mā",
+    "themeColorBlack": "Pango",
+    "themeColorRainbow": "Āniwaniwa",
+    "themeColorBrand": "Waitohu",
+    "themeColorBrandDesc": "Whakamahia ngā tae o tō whakaahua kōtaha",
+    "themeColorBrandNoAvatar": "Tāpirihia he whakaahua kōtaha kia whakamahi ai i ngā tae Waitohu",
+    "themeColorBrandFailed": "Kāore i taea te pānui i ngā tae mai i tō whakaahua kōtaha",
+    "dimLights": "Whakapōuritia ngā rama",
+    "dimLightsDesc": "Ka whakaiti i te aro ki te rama kikorangi",
+    "matureContent": "Whakaatuhia ngā ihirangi pakeke",
+    "matureContentDesc": "Ka whakauru i ngā pānui pakeke me ngā mea kino ki ō whāngai, ka tango hoki i te whakatūpato mai i ērā kua kitea kētia e koe. Ka weto i te taunoa.",
+    "noNewMessages": "Kāore he kōrero hou",
+    "noNewMessagesDesc": "Puritia ō kōrero o mua, engari kāore e taea e tētahi tangata hou te tīmata",
+    "dmNoNewHelp": "Ka mahi tonu ngā kōrero o mua; kāore e taea e tētahi tangata hou te tīmata"
   },
   "common": {
     "save": "Tiaki",
@@ -256,7 +322,8 @@
     "translating": "Whakamāori ana...",
     "close": "Kati",
     "loadingMore": "Uta ana anō...",
-    "loadMore": "Utaina anō"
+    "loadMore": "Utaina anō",
+    "tryAgain": "Ngana anō"
   },
   "tip": {
     "title": "Tukuna koha",
@@ -724,7 +791,11 @@
     "postRemoved": "Kua tangohia tō pānui",
     "newNotification": "Whakamōhio hou",
     "oneOther": "1 anō",
-    "nOthers": "{{count}} anō"
+    "nOthers": "{{count}} anō",
+    "thisBrowser": "Tēnei pūtirotiro",
+    "features": "Ngā āhuatanga",
+    "communities": "Ngā hapori",
+    "stores": "Ngā toa"
   },
   "leaderboard": {
     "title": "Rārangi Rangatira",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Kua tāpiritia koe! Toenga: {{balance}} DHB",
     "balanceTooLow": "Toenga iti rawa ({{balance}} DHB)",
     "refreshFailed": "I hapa tētahi mea",
-    "noWalletAddress": "Kāore i kitea te wāhitau pūkoro moni"
+    "noWalletAddress": "Kāore i kitea te wāhitau pūkoro moni",
+    "affiliates": "Ngā hoa",
+    "directReferrals_one": "{{count}} tōtika",
+    "directReferrals_other": "{{count}} tōtika",
+    "secondaryReferrals_one": "{{count}} tuarua",
+    "secondaryReferrals_other": "{{count}} tuarua"
   },
   "explorePage": {
     "searchPlaceholder": "Rapu tāngata, pānui, ihirangi rānei...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Kua whakamaheretia",
     "statusInProgress": "Kei te haere",
     "statusCompleted": "Kua oti",
-    "statusDeclined": "Kua whakahēngia"
+    "statusDeclined": "Kua whakahēngia",
+    "shipping": "Kei te hangaia",
+    "noShippingYet": "Kāore he mahi kei te haere",
+    "shippingAppearHere": "Ka puta ki konei ngā tono e hangaia ana."
   },
   "auth": {
     "loginRequired": "Me takiuru"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Kāore i taea te tīmata hoko",
     "redirectingOnramp": "Whakawhiti ana ki te rampa...",
     "onrampCreated": "Kua hangaia te hōtaka rampa",
-    "failedOnramp": "Kāore i taea te tīmata rampa"
+    "failedOnramp": "Kāore i taea te tīmata rampa",
+    "badgeDiscount": "Kaipupuri {{tier}} — {{percent}}% te whakahekenga"
   },
   "agents": {
     "title": "Kaihautū MI",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Kua mukua te kaihautū",
     "failedCreate": "Kāore i taea te hanga kaihautū",
     "failedDelete": "Kāore i taea te muku kaihautū",
-    "apiKeyCopied": "Kua tāruatia te kī API ki te papatopenga"
+    "apiKeyCopied": "Kua tāruatia te kī API ki te papatopenga",
+    "connectorUrl": "URL hono",
+    "connectorUrlCopied": "Kua tāruatia te URL hono",
+    "connectorUrlHelp": "Tāpirihia tēnei hei hono MCP whaiaro i roto i a Claude, i a ChatGPT rānei. Ka whakamana ia hei māngai nei, nō reira tiakina pēnei i te kī API.",
+    "agentWallet": "Pūkoro māngai (Base)",
+    "walletCopied": "Kua tāruatia te wāhitau pūkoro",
+    "agentWalletHelp": "Tukuna he ETH iti ki Base ki konei i mua i te pānui a te māngai — mā te whakaputa ka waihanga ki runga i te mekameka, ā, mā te māngai anō e utu tana hinu. Ko te tākupu, te pōti me te whai kāore he hinu e hiahiatia ana."
   },
   "hero": {
     "title": "Nau Mai Haere Mai",
@@ -1005,7 +1091,10 @@
     "or": "rānei",
     "termsNotice": "Mā te haere tonu ka whakaae koe ki ā mātou Ture Ratonga me te Kaupapahere Tūmataiti",
     "walletInfoDesktop": "Honoa pūkoro moni hei takiuru haumaru",
-    "walletInfoMobile": "Ka whakatuwhera a MetaMask, Trust me Phantom i ā rātou taupānga tika. Ka whakamahi a Rabby i te WalletConnect."
+    "walletInfoMobile": "Ka whakatuwhera a MetaMask, Trust me Phantom i ā rātou taupānga tika. Ka whakamahi a Rabby i te WalletConnect.",
+    "addProfileTitle": "Tāpiri kōtaha",
+    "walletConnectedAs": "Kua hono",
+    "useDifferentWallet": "Whakamahia tētahi atu pūkoro"
   },
   "careers": {
     "title": "Mahi i DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Ka tae mai — ngā ia ā-rohe kei te ara mai!",
     "post": "Tuku",
     "logOut": "Takiputa",
-    "logIn": "Takiuru"
+    "logIn": "Takiuru",
+    "searchMenu": "Rapua i te tahua",
+    "clearSearch": "Whakakāhoretia te rapu",
+    "noMenuMatches": "Kāore he mea e ōrite ana i te tahua",
+    "searchDehubFor": "Rapua \"{{query}}\" i DeHub"
   },
   "postInfo": {
     "title": "Mōhiohio pou",
@@ -1379,7 +1472,11 @@
     "new_version_available": "He putanga hou e wātea ana",
     "refresh_to_pick_up_the_latest_changes": "Whakahoutia ki te tango i nga huringa hou.",
     "refresh": "Whakahoutia",
-    "what_changed": "He aha te huringa"
+    "what_changed": "He aha te huringa",
+    "turn_on_desktop_notifications": "Me whakahohe ngā pānui pouaka?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Kia mōhio koe ki ngā whakautu, koha me ngā karere i a koe kei tētahi atu ripa.",
+    "turn_on": "Whakahohea",
+    "not_now": "Kaua i tēnei wā"
   },
   "prompt": {
     "seoTitle": "Whakahauhia to whangai — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Āhea",
     "whyStake": "He aha ai te Tāpui?",
     "yourStaked": "Tāu Kua Tāpuia"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "He kohinga kēmu, ao me ngā wheako i hangaia, i whakapuaretia hoki e DeHub.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Tākarohia i tō pūtirotiro i runga i DeHub — he chess 3D āhua kiriata, he kēmu pūpuhi i hangaia ā-tukanga, he hīkoi i te ngahere ua, he whawhai tiriti neon me tētahi papa hokohoko e taea ana te hīkoi. Kāore he tāuta, kāore he tikiake.",
+    "alsoIn": "Kei roto anō i te {{theme}}"
+  },
+  "stats": {
+    "title": "Tatauranga",
+    "subtitle": "Mōhiohio puna tuwhera ā-wā tūturu",
+    "live": "Ora",
+    "range": {
+      "24h": "24 haora",
+      "3d": "3 rā",
+      "7d": "7 rā",
+      "30d": "30 rā",
+      "all": "Wā katoa"
+    },
+    "unavailable": {
+      "title": "Kāore ngā tatauranga e wātea ana i tēnei wā",
+      "unconfigured": "Kāore anō kia hoatu ki te pito wetewete tōna tohu API Cloudflare. Kāore he mea e whakaatuhia ana, hei whakakapi i tētahi tau pohewa.",
+      "error": "Kāore i taea e mātou te toro ki te API wetewete a Cloudflare. Hei whakakapi i te whakaatu i tētahi tau tawhito, tau pohewa rānei, kāore tēnei whārangi e whakaatu i tētahi mea kia angitu rā anō te pānui ora."
+    },
+    "tile": {
+      "visitorsToday": "Manuhiri i tēnei rā",
+      "soFarToday": "i tēnei rā tae noa ki nāianei, UTC",
+      "peakHour": "Te haora tino pukumahi",
+      "peakDay": "Te rā tino pukumahi",
+      "peakAtHour": "i te {{when}} UTC",
+      "peakOnDay": "i te {{when}}",
+      "inRange": "i tēnei whānuitanga",
+      "pageViews": "Tirohanga whārangi",
+      "overHours": "i ngā haora {{count}}",
+      "overDay": "i te 1 rā",
+      "overDays": "i ngā rā {{count}}",
+      "requestsLabel": "Ngā tono",
+      "served": "Kua tukuna",
+      "requests": "{{requests}} ngā tono"
+    },
+    "chart": {
+      "hourly": "Manuhiri ia haora",
+      "daily": "Manuhiri ia rā",
+      "hourlyHint": "{{count}} ngā wāhanga haora, UTC",
+      "dailyHint": "manuhiri motuhake ia rā",
+      "empty": "Kāore anō he raraunga mō tēnei wā"
+    },
+    "countries": {
+      "title": "Ngā whenua matua",
+      "windowDay": "ngā haora 24 kua hipa",
+      "window": "ngā rā {{days}} kua hipa"
+    },
+    "browsers": {
+      "title": "Ngā pūtirotiro",
+      "window": "mā ngā tirohanga whārangi"
+    },
+    "edge": {
+      "title": "I te tapa",
+      "windowDay": "ngā haora 24 kua hipa",
+      "window": "ngā rā {{days}} kua hipa",
+      "cached": "I tukuna mai i te keteroki",
+      "encrypted": "Kua whakamunatia",
+      "threats": "Ngā whakatuma i āraia"
+    },
+    "proof": {
+      "title": "Nō hea ēnei tau",
+      "subtitle": "Nā Cloudflare i ine, ehara nā tēnei whārangi",
+      "source": "Puna",
+      "datasets": "Ngā huinga raraunga",
+      "zone": "Rohe",
+      "ray": "Cloudflare ray ID",
+      "fetched": "I tīkina i te",
+      "query": "Te uiui tika kei muri i te tūtohi",
+      "copied": "Kua tāruatia",
+      "copy": "Tāruatia",
+      "openEndpoint": "Whakatuwherahia /api/stats",
+      "openRaw": "Te whakautu a Cloudflare kāore i pāngia",
+      "edge": "Ka haere ia tono ki dehub.io mā Cloudflare i mua i tōna taenga ki ā mātou tūmau. Ko ēnei tatauranga te whakahiatotanga a Cloudflare anō o taua waka — ko ngā tau ōrite e whakaatuhia ana e tā mātou papatohu. Ehara i te tuhinga i tō pūtirotiro e kohi ana, nō reira kāore he mea i tēnei whārangi e taea ai te whakanui, ā, kāore te ārai kaiwhaiwhai e whakarerekē ana.",
+      "live": "Ka pānui ora te whārangi i a rātou. Mā te uta i te /stats ka karangatia tā mātou pito, ka uiui atu ki te Analytics API a Cloudflare i taua wā tonu, ka penapena i te whakautu mō te 60 hēkona.",
+      "limits": "He aha tā tēnei e whakaatu ai, he aha tāna kāore: ka kite koe ka puta ngā tau mai i te whakahiatotanga a Cloudflare, ehara i tā mātou waehere taupānga, ā, ko te uiui i whakaputaina i konei ko te mea e rere ana. Ehara i te mea kāore he whakawhirinaki — kei a mātou te tohu API, ā, kāore a Cloudflare e tuku pānui tūmatanui mō ngā wetewete o tētahi rohe. Ko te tangata e whai rohe Cloudflare ana ka taea e ia te whakahaere i te uiui ōrite me te whakaū i tōna āhua."
+    },
+    "definitions": {
+      "title": "He aha te tikanga o ēnei tau",
+      "visitorsTerm": "Manuhiri",
+      "visitors": "— ngā wāhitau IP motuhake i kitea e Cloudflare i taua rā. E tata ana ki te tangata, engari ehara i te mea ōrite: ka tatauria kotahi te tari kei runga i te hononga kotahi, ā, ka tatauria rua te waea e huri ana i waenga i te wifi me te raraunga pūkoro.",
+      "pageViewsTerm": "Tirohanga whārangi",
+      "pageViews": "— ngā tono e whakarōpūtia ana e Cloudflare hei utanga whārangi, ehara i te whakaahua, tuhinga, karanga API rānei.",
+      "botsTerm": "Kua whakauruhia ngā pūrehe",
+      "bots": "— he tatauranga mata ēnei i te tapa, nō reira kei roto ngā kaikawe, ngā aroturuki wāhi mahi me ngā kiritaki tuhinga. Ka kite koe i a rātou i te wehewehenga pūtirotiro i runga ake nei, kei reira ngā tāurunga pēnā i \"Curl\" me \"Kāore i te mōhiotia\" he waka aunoa, ehara i te tangata. Hei tātari i ngā pūrehe me whai mahere Cloudflare utu kāore i a mātou, ā, ki te tangohia puku he whakatau tata ka iti ake te taea o ngā tau te tirotiro, kaua e nui ake.",
+      "totalTerm": "Ngā tapeke o te whānuitanga",
+      "total": "— ka tāpiritia ngā tirohanga whārangi me ngā tono puta noa i te whānuitanga. Kāore ngā tatauranga manuhiri e tāpiritia ana ki te \"tapeke manuhiri\", nā te mea ko te tangata i konei i te Rāhina me te Rātū ka taua rua.",
+      "peakTerm": "Te haora / rā tino pukumahi",
+      "peak": "— ko te tatauranga motuhake teitei rawa i tētahi wāhanga kotahi o te whānuitanga, mō te take ōrite: he tau e inea tūturutia ana e Cloudflare, ehara i te mea i hangaia mā te tāpiri i ngā tatauranga e taupatupatu ana.",
+      "resolutionTerm": "Ka mutu ngā raraunga ā-haora i te 3 rā",
+      "resolution": "— koinā te tepe a Cloudflare i tēnei mahere, ehara i te kōwhiringa: ka whakakāhoretia e ia ngā uiui ā-haora nui ake i te toru rā. He ā-haora ngā tirohanga 24 haora me te 3 rā; he ā-rā te 7 rā me te roa ake, ā, kāore he huarahi hei tā tūtohi ā-haora mō te wā katoa.",
+      "breakdownTerm": "Ngā whenua me ngā pūtirotiro",
+      "breakdown": "— ka whai ēnei i te whānuitanga i tīpakohia e koe, engari ki ngā rā {{max}} anake ki muri, koirā te roa e puritia ai te wehewehenga ia rā. I ngā whānuitanga roa ake ka kapi te tūtohi i te wā nui ake i te rārangi whenua.",
+      "startTerm": "Hītori",
+      "start": "— ko te \"wā katoa\" te tikanga ko ia rā e puritia tonutia ana e Cloudflare, i tēnei rā ko ngā rā {{days}} mai i te {{date}}, te rā i neke ai a dehub.io ki Cloudflare. Kāore he raraunga tapa o mua hei whakaatu, ā, ka taka ngā rā tawhito i te wā e whakakoroheketia ana e Cloudflare."
+    }
   }
 }
