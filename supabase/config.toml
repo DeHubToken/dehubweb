@@ -40,6 +40,10 @@ project_id = "aigxuutjaqsywioxjefr"
   [functions.builder-serve]
     verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  # Auth is the CDN_PURGE_SERVICE_SECRET shared secret from the NestJS
+  # backend, verified in-function — not a Supabase JWT.
+  [functions.cdn-purge]
+    verify_jwt = false
   [functions.chess-match]
     verify_jwt = false
   [functions.client-logs]
