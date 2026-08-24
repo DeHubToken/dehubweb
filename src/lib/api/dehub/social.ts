@@ -517,6 +517,8 @@ export interface QuotePostMintResponse {
   v: number;
   createdTokenId: string;
   timestamp: number;
+  /** URI suffix to mint — carries the quote text and its hash on chain. */
+  uri?: string;
   quotedTokenId: number;
   isQuotePost: boolean;
   /**
