@@ -76,6 +76,43 @@ describe('auto-translate', () => {
     expect(screen.getByText(POST)).toBeInTheDocument();
   });
 
+  it('does not auto-translate a short Latin post', async () => {
+    await renderTranslatable('nice');
+
+    // Give the queue every chance to run. A word of Latin script cannot be
+    // told apart from the reader's own language, so asking is how a post ends
+    // up "translated" into junk or into itself.
+    await new Promise((r) => setTimeout(r, 50));
+    expect(invoke).not.toHaveBeenCalled();
+    expect(screen.getByText('nice')).toBeInTheDocument();
+  });
+
+  it('still auto-translates a short post in another script', async () => {
+    const JAPANESE = 'かわいい';
+    invoke.mockResolvedValue({ data: { translatedText: 'cute', detectedLanguage: { language: 'ja' } }, error: null });
+    await renderTranslatable(JAPANESE);
+
+    await waitFor(() => expect(invoke).toHaveBeenCalled());
+    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: JAPANESE, targetLang: 'es' } });
+  });
+
+  it('discards a response that is an API error message, not a translation', async () => {
+    invoke.mockResolvedValue({
+      data: { translatedText: 'MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY' },
+      error: null,
+    });
+    await renderTranslatable();
+
+    await waitFor(() => expect(invoke).toHaveBeenCalled());
+    // The prose must never render and must not be cached for later either —
+    // a second mount asks again rather than replaying the poison.
+    expect(screen.getByText(POST)).toBeInTheDocument();
+    // Nothing was cached, so a second mount asks again rather than replaying
+    // the poison.
+    await renderTranslatable();
+    await waitFor(() => expect(invoke).toHaveBeenCalledTimes(2));
+  });
+
   it('sends one request when several components show the same text', async () => {
     const { TranslatableText } = await import('@/components/app/TranslatableText');
     render(

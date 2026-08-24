@@ -245,6 +245,42 @@ function isSameLanguageRefusal(data: {
   return haystack.toUpperCase().includes('TWO DISTINCT LANGUAGES');
 }
 
+// Provider junk that arrives dressed as a successful translation.
+//
+// MyMemory's free tier answers some queries — short ones above all — out of its
+// shared translation memory, which holds API boilerplate other integrations once
+// fed it. A post comes back "translated" into MYMEMORY WARNING prose or an
+// INVALID LANGUAGE PAIR complaint, passes every status check because
+// responseStatus is 200, and older versions of this function cached it as a
+// settled answer: permanent in the shared table, and re-persisted by every
+// client that saw it. Matched against provider output AND cache reads, so rows
+// poisoned before this guard existed are discarded on sight and overwritten by
+// the next honest generation instead of being served forever.
+const TRANSLATION_JUNK_PATTERN =
+  /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID LANGUAGE PAIR|UNSUPPORTED LANGUAGE|API KEY|PLEASE CONTACT|INTERNAL SERVER|SERVICE UNAVAILABLE/i;
+
+function looksLikeTranslationJunk(input: string, output: string): boolean {
+  if (TRANSLATION_JUNK_PATTERN.test(output)) return true;
+
+  // The junk has more shapes than any list. A reply to a word or two that is
+  // several times longer than its question and shouted in caps is an API
+  // complaint, not a translation of it — no honest rendering of "nice" is a
+  // paragraph of capital letters. Scoped tight so a legitimately shouty long
+  // post is never touched; the cost of a miss here is one wasted paid call.
+  const trimmedInput = input.trim();
+  if (trimmedInput.length <= 30 && trimmedInput.split(/\s+/).length <= 3) {
+    const trimmedOutput = output.trim();
+    if (
+      trimmedOutput.length > trimmedInput.length * 2 &&
+      trimmedOutput === trimmedOutput.toUpperCase() &&
+      /[A-Z]{4}/.test(trimmedOutput)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Cheap same-language probe for text MyMemory will not translate.
  *
@@ -340,6 +376,14 @@ async function translateWithMyMemory(
     // Check for quota exceeded or error messages in the response
     if (!translatedText || translatedText.includes('MYMEMORY WARNING') || translatedText.includes('PLEASE CONTACT')) {
       console.log('MyMemory quota exceeded or error in response');
+      return null;
+    }
+
+    // A 200 with error prose in translatedText is how the shared translation
+    // memory answers short queries. Refuse it here and it can never reach
+    // either cache.
+    if (looksLikeTranslationJunk(text, translatedText)) {
+      console.log('MyMemory returned API boilerplate as the translation, falling back');
       return null;
     }
     
@@ -749,16 +793,22 @@ serve(async (req) => {
       );
     }
 
-    // L2: shared table
+    // L2: shared table. A row written before the junk guard existed can hold
+    // error prose; serving it would re-poison every client cache on each hit.
+    // Discard and fall through — the provider result upserts over the bad row.
     const textHash = await getTextHash(text);
     const persisted = await readCachedTranslation(textHash, targetLang);
     if (persisted) {
-      console.log('Translation cache hit (L2)');
-      rememberInIsolate(cacheKey, persisted);
-      return new Response(
-        JSON.stringify({ ...persisted, cached: true }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      if (looksLikeTranslationJunk(text, persisted.translatedText ?? '')) {
+        console.log('Translation cache hit (L2) was poisoned, regenerating');
+      } else {
+        console.log('Translation cache hit (L2)');
+        rememberInIsolate(cacheKey, persisted);
+        return new Response(
+          JSON.stringify({ ...persisted, cached: true }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     // Try MyMemory first (most reliable free option)
