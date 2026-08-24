@@ -54,26 +54,37 @@ beyond the reach of any single host or takedown request.
 - Unified home feed with Home, Videos, Images, Shorts, Music, and Live tabs
 - Long-form video (HLS streaming) and vertical Shorts
 - Music feed and player
-- Live streaming, plus Stages (live audio spaces with real-time voice and transcription)
+- Live streaming, plus Stages: live audio rooms with a host soundboard, screen share,
+  recordings, real-time subtitles translated per listener, and live dubbing in the host's
+  own cloned voice
 - Stories, Communities, Profiles, Notifications, Explore/Search, and Bookmarks
-- Direct messages with media, plus voice/video calls
+- Direct messages with media and files, smart reply suggestions, plus voice/video calls
+- Nine reactions weighted by the reactor's staking badge, threaded comments, and creator-set
+  mature-content ratings that keep marked posts off public discovery
+- Automatic translation of posts, comments and live stage captions into 100+ languages
+- Ten appearance themes, two of which hide a playable game
 
 **Web3 & finance**
 - Built-in wallet: balances, send/receive, buy, and cross-chain bridging
-- Token swaps and staking with reward badges
+- Token swaps and staking with reward badges, priced in dollars against the live DHB price
+  and lendable to other accounts one delegation slot per tier climbed
+- A daily posting allowance that scales with your badge, with DHB charged pro-rata on overage
 - Governance proposals and voting
 - Leaderboards and market data
-- Tokenized posts / watch-to-earn, fractional ownership, and tokenized subscriptions
+- Tokenized posts / watch-to-earn, fractional ownership, and tokenized subscriptions —
+  minting is optional, so a post can publish off-chain and be minted later
 
 **Creator & AI**
 - In-browser video editor with a timeline, multi-track editing, and export
 - AI assistant plus generation tools for images, video, music, and voice
-- AI agents and MCP connectors to bring DeHub into ChatGPT and Claude
+- AI agents, a no-code app Builder, and MCP connectors to bring DeHub into ChatGPT and Claude
+- An arcade of five browser games shipped in this repo — King's Gambit, Claude of Duty,
+  Jungle Trail, Street Slayer and Trenchstar (which also runs in a WebXR headset)
 
 **Marketplace & commerce**
 - Self-serve advertising platform with campaign management
 - Affiliate/referral program with attribution
-- On-chain freelance work board with escrow and dispute arbitration
+- Bounty Hunting: a native task board with escrow and dispute arbitration, paid in DHB or USDC
 - Stores, events, and a premium subscription tier
 
 ## Tech stack
