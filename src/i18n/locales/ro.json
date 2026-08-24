@@ -27,7 +27,20 @@
     "events": "Evenimente",
     "prompt": "Configurează",
     "communities": "Comunități",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statistici live",
+    "liveTv": "TV live",
+    "buyDhb": "Cumpără DHB",
+    "bridge": "Bridge",
+    "top100": "Top 100",
+    "agents": "Agenți AI",
+    "advertising": "Publicitate",
+    "premium": "Premium",
+    "pricing": "Prețuri",
+    "creators": "Creatori",
+    "getTheApp": "Descarcă aplicația",
+    "connectAi": "Conectează AI"
   },
   "footer": {
     "about": "Despre noi",
@@ -250,7 +263,11 @@
     "new_version_available": "Este disponibilă o versiune nouă",
     "refresh_to_pick_up_the_latest_changes": "Reîmprospătează pentru a prelua cele mai recente modificări.",
     "refresh": "Reîmprospătează",
-    "what_changed": "Ce s-a schimbat"
+    "what_changed": "Ce s-a schimbat",
+    "turn_on_desktop_notifications": "Activezi notificările de pe desktop?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Află despre răspunsuri, bacșișuri și mesaje cât timp ești în altă filă.",
+    "turn_on": "Activează",
+    "not_now": "Nu acum"
   },
   "feed": {
     "home": "Acasă",
@@ -258,7 +275,9 @@
     "images": "Imagini",
     "shorts": "Shorts",
     "music": "Muzică",
-    "live": "Live"
+    "live": "Live",
+    "newPosts_one": "{{count}} postare nouă",
+    "newPosts_other": "{{count}} postări noi"
   },
   "explore": {
     "all": "All",
@@ -465,7 +484,58 @@
     "hazy": "Nopți în ceață",
     "save": "Salvează",
     "saving": "Se salvează...",
-    "swarms": "Roiuri"
+    "swarms": "Roiuri",
+    "profiles": "Profiluri",
+    "profilesDesc": "Conturi salvate pe acest dispozitiv",
+    "addProfile": "Adaugă profil",
+    "profileActive": "Activ",
+    "profileSignedOut": "autentifică-te pentru a schimba",
+    "profileRemove": "Elimină profilul",
+    "profilesUsed": "{{used}} din {{max}} folosite",
+    "profilesNextTier": "Nivelul {{tier}} păstrează {{count}}",
+    "profilesFullTier": "Fă staking pentru o insignă {{tier}} ca să păstrezi {{count}} profiluri",
+    "profilesFull": "Elimină un profil pentru a adăuga alt cont",
+    "browserNotifications": "Notificări din browser",
+    "browserNotificationsDesc": "Află despre răspunsuri, bacșișuri și mesaje cât timp ești în altă filă",
+    "browserNotificationsOnDesc": "Răspunsurile, bacșișurile și mesajele apar cât timp ești în altă filă",
+    "browserNotificationsDismissed": "Cerere de notificare respinsă — încearcă din nou comutatorul",
+    "browserNotificationsBlocked": "Blocate de browserul tău",
+    "browserNotificationsBlockedTitle": "Acest browser blochează notificările",
+    "browserNotificationsBlockedNote": "Doar browserul tău poate anula asta — după blocare, DeHub nu mai poate întreba.",
+    "browserNotificationsBlockedPending": "Cererea ta e salvată — se va activa singură imediat ce browserul permite.",
+    "browserNotificationsUnblockChromium": "Dă clic pe pictograma din stânga barei de adrese → Setări site → pune Notificări pe Permite, apoi reîncarcă pagina.",
+    "browserNotificationsUnblockFirefox": "Dă clic pe lacătul din stânga barei de adrese, șterge „Blocat” de lângă Primire notificări, apoi reîncarcă pagina.",
+    "browserNotificationsUnblockSafari": "În bara de meniu: Safari → Setări → Site-uri web → Notificări, apoi pune acest site pe Permite.",
+    "browserNotificationsUnblockGeneric": "Deschide setările de site ale browserului pentru această pagină, pune Notificări pe Permite, apoi reîncarcă.",
+    "browserNotificationsIosHint": "iPhone și iPad permit asta doar după ce DeHub e pe ecranul principal — apasă Partajare, apoi „Adaugă pe ecranul principal”.",
+    "browserNotificationsTest": "Trimite o notificare de test",
+    "browserNotificationsTestSent": "Notificare de test trimisă",
+    "browserNotificationsTestBody": "Așa arată o notificare DeHub.",
+    "showAsNewMember": "Arată-mă ca membru nou",
+    "showAsNewMemberDesc": "Le arată celorlalți membri că tocmai ai venit, ca să te poată întâmpina. Se încheie automat la 30 de zile după înscriere.",
+    "defaultProfileTab": "Fila implicită a profilului",
+    "defaultProfileTabDesc": "Alege ce filă văd prima vizitatorii pe profilul tău",
+    "lavalamp": "Lampă cu lavă",
+    "war": "Război",
+    "osaka": "Osaka",
+    "jungle": "Junglă",
+    "themeColor": "Culoarea temei",
+    "themeColorDesc": "Alege o culoare personalizată pentru această temă",
+    "themeColorReset": "Resetează",
+    "themeColorWhite": "Alb",
+    "themeColorBlack": "Negru",
+    "themeColorRainbow": "Curcubeu",
+    "themeColorBrand": "Brand",
+    "themeColorBrandDesc": "Folosește culorile pozei tale de profil",
+    "themeColorBrandNoAvatar": "Adaugă o poză de profil ca să folosești culorile de brand",
+    "themeColorBrandFailed": "Nu am putut citi culorile din poza ta de profil",
+    "dimLights": "Estompează luminile",
+    "dimLightsDesc": "Reduce expunerea la lumina albastră",
+    "matureContent": "Arată conținut pentru adulți",
+    "matureContentDesc": "Include în fluxurile tale postări pentru adulți și explicite și scoate avertismentul de pe cele pe care le vezi deja. Dezactivat implicit.",
+    "noNewMessages": "Fără conversații noi",
+    "noNewMessagesDesc": "Păstrează conversațiile existente, dar nimeni nou nu poate începe una",
+    "dmNoNewHelp": "Conversațiile existente merg mai departe; nimeni nou nu poate începe una"
   },
   "common": {
     "save": "Salvează",
@@ -479,7 +549,8 @@
     "translating": "Se traduce...",
     "close": "Închide",
     "loadingMore": "Se încarcă mai multe...",
-    "loadMore": "Încarcă mai multe"
+    "loadMore": "Încarcă mai multe",
+    "tryAgain": "Încearcă din nou"
   },
   "postOptions": {
     "options": "Opțiuni",
@@ -886,7 +957,10 @@
     "statusPlanned": "Planned",
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
-    "statusDeclined": "Declined"
+    "statusDeclined": "Declined",
+    "shipping": "În lucru",
+    "noShippingYet": "Nimic în lucru",
+    "shippingAppearHere": "Cererile aflate în dezvoltare vor apărea aici."
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -981,7 +1055,11 @@
     "postRemoved": "Postarea ta a fost eliminată",
     "newNotification": "Notificare nouă",
     "oneOther": "încă 1 persoană",
-    "nOthers": "alte {{count}} persoane"
+    "nOthers": "alte {{count}} persoane",
+    "thisBrowser": "Acest browser",
+    "features": "Funcții",
+    "communities": "Comunități",
+    "stores": "Magazine"
   },
   "messages": {
     "title": "Messages",
@@ -1026,7 +1104,12 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "affiliates": "Afiliați",
+    "directReferrals_one": "{{count}} directe",
+    "directReferrals_other": "{{count}} directe",
+    "secondaryReferrals_one": "{{count}} secundare",
+    "secondaryReferrals_other": "{{count}} secundare"
   },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
@@ -1142,7 +1225,8 @@
     "failedPurchase": "Failed to start purchase",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "failedOnramp": "Failed to start onramp"
+    "failedOnramp": "Failed to start onramp",
+    "badgeDiscount": "Deținător {{tier}} — {{percent}}% reducere"
   },
   "agents": {
     "title": "AI Agents",
@@ -1172,7 +1256,13 @@
     "agentDeleted": "Agent deleted",
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
-    "apiKeyCopied": "API key copied to clipboard"
+    "apiKeyCopied": "API key copied to clipboard",
+    "connectorUrl": "URL conector",
+    "connectorUrlCopied": "URL conector copiat",
+    "connectorUrlHelp": "Adaugă-l ca conector MCP personalizat în Claude sau ChatGPT. Se autentifică drept acest agent, deci tratează-l ca pe cheia API.",
+    "agentWallet": "Portofelul agentului (Base)",
+    "walletCopied": "Adresa portofelului a fost copiată",
+    "agentWalletHelp": "Trimite aici o sumă mică de ETH pe Base înainte ca agentul să publice — publicarea creează un token on-chain, iar agentul își plătește singur gazul. Comentariile, voturile și urmăririle nu costă gaz."
   },
   "hero": {
     "title": "Bine Ați Venit",
@@ -1220,7 +1310,10 @@
     "or": "or",
     "termsNotice": "By continuing, you agree to our Terms and Privacy Policy",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
-    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.",
+    "addProfileTitle": "Adaugă un profil",
+    "walletConnectedAs": "Conectat",
+    "useDifferentWallet": "Folosește alt portofel"
   },
   "careers": {
     "title": "Careers at DeHub",
@@ -1344,7 +1437,11 @@
     "comingSoon": "În curând — tendințele regionale sunt pe drum!",
     "post": "Publică",
     "logOut": "Log out",
-    "logIn": "Log in"
+    "logIn": "Log in",
+    "searchMenu": "Caută în meniu",
+    "clearSearch": "Șterge căutarea",
+    "noMenuMatches": "Nimic din meniu nu se potrivește",
+    "searchDehubFor": "Caută „{{query}}” pe DeHub"
   },
   "postInfo": {
     "title": "Post Info",
@@ -1539,5 +1636,105 @@
     "sending": "Se trimite...",
     "title": "Trimite bacșiș",
     "toCreator": "Dă bacșiș lui {{name}}"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "O colecție de jocuri, lumi și experiențe construite de DeHub și publicate open source.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Joacă direct în browser pe DeHub — șah 3D cinematic, un shooter generat procedural, o plimbare prin pădurea tropicală, o bătaie de stradă în neon și un ring de tranzacționare prin care te poți plimba. Fără instalare, fără descărcare.",
+    "alsoIn": "Există și în {{theme}}"
+  },
+  "stats": {
+    "title": "Statistici",
+    "subtitle": "Informații open source în timp real",
+    "live": "Live",
+    "range": {
+      "24h": "24 de ore",
+      "3d": "3 zile",
+      "7d": "7 zile",
+      "30d": "30 de zile",
+      "all": "Toată perioada"
+    },
+    "unavailable": {
+      "title": "Statisticile nu sunt disponibile acum",
+      "unconfigured": "Endpointului de analiză nu i s-a dat încă tokenul API Cloudflare. Nu se afișează nimic în locul unui număr inventat.",
+      "error": "Nu am putut contacta API-ul de analiză Cloudflare. În loc să arate o cifră veche sau inventată, pagina nu arată nimic până când citirea live reușește."
+    },
+    "tile": {
+      "visitorsToday": "Vizitatori azi",
+      "soFarToday": "până acum azi, UTC",
+      "peakHour": "Cea mai aglomerată oră",
+      "peakDay": "Cea mai aglomerată zi",
+      "peakAtHour": "la {{when}} UTC",
+      "peakOnDay": "pe {{when}}",
+      "inRange": "în acest interval",
+      "pageViews": "Afișări de pagină",
+      "overHours": "în {{count}} h",
+      "overDay": "în 1 zi",
+      "overDays": "în {{count}} zile",
+      "requestsLabel": "Cereri",
+      "served": "Servite",
+      "requests": "{{requests}} cereri"
+    },
+    "chart": {
+      "hourly": "Vizitatori pe oră",
+      "daily": "Vizitatori pe zi",
+      "hourlyHint": "{{count}} intervale orare, UTC",
+      "dailyHint": "vizitatori unici pe zi",
+      "empty": "Încă nu există date pentru acest interval"
+    },
+    "countries": {
+      "title": "Țări de top",
+      "windowDay": "ultimele 24 de ore",
+      "window": "ultimele {{days}} zile"
+    },
+    "browsers": {
+      "title": "Browsere",
+      "window": "după afișări de pagină"
+    },
+    "edge": {
+      "title": "La margine",
+      "windowDay": "ultimele 24 de ore",
+      "window": "ultimele {{days}} zile",
+      "cached": "Servit din cache",
+      "encrypted": "Criptat",
+      "threats": "Amenințări blocate"
+    },
+    "proof": {
+      "title": "De unde vin aceste cifre",
+      "subtitle": "Măsurat de Cloudflare, nu de această pagină",
+      "source": "Sursă",
+      "datasets": "Seturi de date",
+      "zone": "Zonă",
+      "ray": "ID ray Cloudflare",
+      "fetched": "Preluat la",
+      "query": "Interogarea exactă din spatele graficului",
+      "copied": "Copiat",
+      "copy": "Copiază",
+      "openEndpoint": "Deschide /api/stats",
+      "openRaw": "Răspunsul neatins al Cloudflare",
+      "edge": "Fiecare cerere către dehub.io trece prin Cloudflare înainte să ajungă la serverele noastre. Aceste numărători sunt agregarea proprie a Cloudflare pentru acel trafic — aceleași cifre pe care le arată panoul nostru. Nu sunt colectate de un script din browserul tău, deci nimic din această pagină nu le poate umfla, iar blocarea trackerelor nu le schimbă.",
+      "live": "Pagina le citește live. Încărcarea /stats apelează endpointul nostru, care interoghează în acel moment Analytics API de la Cloudflare și pune răspunsul în cache 60 de secunde.",
+      "limits": "Ce arată și ce nu: vezi că cifrele vin din agregarea Cloudflare și nu din codul aplicației noastre, și că interogarea publicată aici e chiar cea care rulează. Nu e trustless — tokenul API e la noi, iar Cloudflare nu oferă citire publică a analizelor unei zone. Oricine are propria zonă Cloudflare poate rula aceeași interogare și confirma forma."
+    },
+    "definitions": {
+      "title": "Ce înseamnă cifrele",
+      "visitorsTerm": "Vizitatori",
+      "visitors": "— adrese IP unice pe care Cloudflare le-a văzut în ziua respectivă. Aproape de numărul de oameni, dar nu identic: un birou pe o singură conexiune se numără o dată, iar un telefon care trece de la wifi la date mobile se numără de două ori.",
+      "pageViewsTerm": "Afișări de pagină",
+      "pageViews": "— cereri pe care Cloudflare le clasifică drept încărcări de pagină, nu imagini, scripturi sau apeluri API.",
+      "botsTerm": "Boții sunt incluși",
+      "bots": "— acestea sunt numărători brute la margine, deci includ crawlere, monitoare de disponibilitate și clienți automatizați. Le vezi singur în defalcarea pe browsere de mai sus, unde intrări precum „Curl” și „Necunoscut” sunt trafic automat, nu oameni. Filtrarea boților cere un plan Cloudflare cu plată pe care nu îl avem, iar scăderea tacită a unei estimări ar face cifrele mai greu de verificat, nu mai ușor.",
+      "totalTerm": "Totaluri pe interval",
+      "total": "— afișările de pagină și cererile se adună pe tot intervalul. Vizitatorii nu se adună intenționat într-un „total vizitatori”, pentru că cineva care a fost aici luni și marți ar fi numărat de două ori.",
+      "peakTerm": "Cea mai aglomerată oră / zi",
+      "peak": "— cel mai mare număr unic dintr-un singur interval, din același motiv: e o cifră pe care Cloudflare chiar o măsoară, nu una construită prin adunarea unor numărători care se suprapun.",
+      "resolutionTerm": "Datele orare se opresc la 3 zile",
+      "resolution": "— asta e limita Cloudflare pe acest plan, nu o alegere: refuză orice interogare orară mai lată de trei zile. Vizualizările de 24 de ore și 3 zile sunt orare; de la 7 zile în sus sunt zilnice și nu se poate desena un grafic orar pentru toată perioada.",
+      "breakdownTerm": "Țări și browsere",
+      "breakdown": "— urmează intervalul ales, dar doar până la {{max}} zile în urmă, atât se păstrează defalcarea zilnică. La intervale mai lungi, graficul acoperă mai mult timp decât lista de țări.",
+      "startTerm": "Istoric",
+      "start": "— „toată perioada” înseamnă fiecare zi pe care Cloudflare o mai păstrează, azi {{days}} zile începând cu {{date}}, ziua în care dehub.io a trecut pe Cloudflare. Nu există date de margine mai vechi, iar zilele vechi dispar pe măsură ce Cloudflare le expiră."
+    }
   }
 }

@@ -27,7 +27,20 @@
     "events": "Udalosti",
     "prompt": "Prompt",
     "communities": "Komunity",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Živé štatistiky",
+    "liveTv": "Živá TV",
+    "buyDhb": "Kúpiť DHB",
+    "bridge": "Most",
+    "top100": "Top 100",
+    "agents": "AI agenti",
+    "advertising": "Reklama",
+    "premium": "Premium",
+    "pricing": "Cenník",
+    "creators": "Tvorcovia",
+    "getTheApp": "Stiahnuť aplikáciu",
+    "connectAi": "Pripojiť AI"
   },
   "feed": {
     "home": "Domov",
@@ -35,7 +48,9 @@
     "images": "Obrázky",
     "shorts": "Krátke videá",
     "music": "Hudba",
-    "live": "Naživo"
+    "live": "Naživo",
+    "newPosts_one": "{{count}} nový príspevok",
+    "newPosts_other": "{{count}} nových príspevkov"
   },
   "explore": {
     "all": "Všetko",
@@ -316,7 +331,58 @@
     "hazy": "Hmlisté noci",
     "save": "Uložiť",
     "saving": "Ukladá sa...",
-    "swarms": "Roje"
+    "swarms": "Roje",
+    "profiles": "Profily",
+    "profilesDesc": "Účty uložené v tomto zariadení",
+    "addProfile": "Pridať profil",
+    "profileActive": "Aktívny",
+    "profileSignedOut": "prihlás sa na prepnutie",
+    "profileRemove": "Odstrániť profil",
+    "profilesUsed": "Použité {{used}} z {{max}}",
+    "profilesNextTier": "Úroveň {{tier}} udrží {{count}}",
+    "profilesFullTier": "Stakni na odznak {{tier}}, aby si si udržal {{count}} profilov",
+    "profilesFull": "Odstráň profil, ak chceš pridať iný účet",
+    "browserNotifications": "Upozornenia prehliadača",
+    "browserNotificationsDesc": "Dozvieš sa o odpovediach, prepitnom a správach, aj keď si na inej karte",
+    "browserNotificationsOnDesc": "Odpovede, prepitné a správy vyskočia, aj keď si na inej karte",
+    "browserNotificationsDismissed": "Požiadavka na upozornenia zamietnutá — skús prepínač znova",
+    "browserNotificationsBlocked": "Zablokované tvojím prehliadačom",
+    "browserNotificationsBlockedTitle": "Tento prehliadač blokuje upozornenia",
+    "browserNotificationsBlockedNote": "Vrátiť to späť dokáže len tvoj prehliadač — po zablokovaní sa DeHub už nemôže opýtať.",
+    "browserNotificationsBlockedPending": "Tvoja požiadavka je uložená — zapne sa sama, hneď ako to prehliadač povolí.",
+    "browserNotificationsUnblockChromium": "Klikni na ikonu vľavo od adresného riadka → Nastavenia stránky → nastav Upozornenia na Povoliť a znova načítaj túto stránku.",
+    "browserNotificationsUnblockFirefox": "Klikni na zámok vľavo od adresného riadka, zmaž „Zablokované“ pri Prijímať upozornenia a znova načítaj túto stránku.",
+    "browserNotificationsUnblockSafari": "V paneli ponuky: Safari → Nastavenia → Webové stránky → Upozornenia, potom nastav túto stránku na Povoliť.",
+    "browserNotificationsUnblockGeneric": "Otvor nastavenia stránky v prehliadači pre túto stránku, nastav Upozornenia na Povoliť a znova načítaj.",
+    "browserNotificationsIosHint": "iPhone a iPad to povolia až vtedy, keď je DeHub na ploche — klepni na Zdieľať a potom „Pridať na plochu“.",
+    "browserNotificationsTest": "Poslať testovacie upozornenie",
+    "browserNotificationsTestSent": "Testovacie upozornenie odoslané",
+    "browserNotificationsTestBody": "Takto vyzerá upozornenie z DeHubu.",
+    "showAsNewMember": "Zobraziť ma ako nového člena",
+    "showAsNewMemberDesc": "Ostatní členovia uvidia, že si práve pribudol, a môžu ťa privítať. Automaticky sa skončí 30 dní po registrácii.",
+    "defaultProfileTab": "Predvolená karta profilu",
+    "defaultProfileTabDesc": "Vyber, ktorú kartu uvidia návštevníci na tvojom profile ako prvú",
+    "lavalamp": "Lávová lampa",
+    "war": "Vojna",
+    "osaka": "Osaka",
+    "jungle": "Džungľa",
+    "themeColor": "Farba témy",
+    "themeColorDesc": "Vyber vlastnú farbu pre túto tému",
+    "themeColorReset": "Obnoviť",
+    "themeColorWhite": "Biela",
+    "themeColorBlack": "Čierna",
+    "themeColorRainbow": "Dúha",
+    "themeColorBrand": "Značka",
+    "themeColorBrandDesc": "Použiť farby tvojej profilovej fotky",
+    "themeColorBrandNoAvatar": "Pridaj profilovú fotku, aby si mohol použiť farby značky",
+    "themeColorBrandFailed": "Nepodarilo sa načítať farby z tvojej profilovej fotky",
+    "dimLights": "Stlmiť svetlá",
+    "dimLightsDesc": "Znižuje vystavenie modrému svetlu",
+    "matureContent": "Zobrazovať obsah pre dospelých",
+    "matureContentDesc": "Zaradí do tvojich zdrojov príspevky pre dospelých a drsný obsah a odstráni varovanie z tých, ktoré už vidíš. Predvolene vypnuté.",
+    "noNewMessages": "Žiadne nové konverzácie",
+    "noNewMessagesDesc": "Ponechaj si existujúce konverzácie, ale nikto nový nezačne novú",
+    "dmNoNewHelp": "Existujúce konverzácie fungujú ďalej; nikto nový nemôže začať novú"
   },
   "notifications": {
     "title": "Upozornenia",
@@ -376,7 +442,11 @@
     "postRemoved": "Váš príspevok bol odstránený",
     "newNotification": "Nové upozornenie",
     "oneOther": "1 ďalší",
-    "nOthers": "{{count}} ďalších"
+    "nOthers": "{{count}} ďalších",
+    "thisBrowser": "Tento prehliadač",
+    "features": "Funkcie",
+    "communities": "Komunity",
+    "stores": "Obchody"
   },
   "messages": {
     "title": "Správy",
@@ -489,7 +559,12 @@
     "addedToLeaderboard": "Boli ste pridaní! Zostatok: {{balance}} DHB",
     "balanceTooLow": "Zostatok je príliš nízky ({{balance}} DHB)",
     "refreshFailed": "Niečo sa pokazilo",
-    "noWalletAddress": "Nenašla sa žiadna adresa peňaženky"
+    "noWalletAddress": "Nenašla sa žiadna adresa peňaženky",
+    "affiliates": "Partneri",
+    "directReferrals_one": "{{count}} priamych",
+    "directReferrals_other": "{{count}} priamych",
+    "secondaryReferrals_one": "{{count}} nepriamych",
+    "secondaryReferrals_other": "{{count}} nepriamych"
   },
   "assistant": {
     "title": "AI Asistent",
@@ -744,7 +819,8 @@
     "showOriginal": "Zobraziť originál",
     "translating": "Prekladá sa...",
     "loadingMore": "Načítava sa viac...",
-    "loadMore": "Načítať viac"
+    "loadMore": "Načítať viac",
+    "tryAgain": "Skúsiť znova"
   },
   "featureRequests": {
     "title": "Požiadavky na funkcie",
@@ -832,7 +908,10 @@
     "or": "alebo",
     "termsNotice": "Pokračovaním súhlasíte s podmienkami služby a zásadami ochrany súkromia",
     "walletInfoDesktop": "Pripojte peňaženku pre bezpečné prihlásenie",
-    "walletInfoMobile": "MetaMask, Trust a Phantom otvoria svoju aplikáciu. Rabby použije WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust a Phantom otvoria svoju aplikáciu. Rabby použije WalletConnect.",
+    "addProfileTitle": "Pridať profil",
+    "walletConnectedAs": "Pripojené",
+    "useDifferentWallet": "Použiť inú peňaženku"
   },
   "sidebar": {
     "talkOfTheTown": "Téma dňa",
@@ -846,7 +925,11 @@
     "comingSoon": "Čoskoro — regionálne trendy sú na ceste!",
     "post": "Pridať príspevok",
     "logOut": "Odhlásiť sa",
-    "logIn": "Prihlásiť sa"
+    "logIn": "Prihlásiť sa",
+    "searchMenu": "Hľadať v ponuke",
+    "clearSearch": "Vymazať hľadanie",
+    "noMenuMatches": "Nič v ponuke nezodpovedá",
+    "searchDehubFor": "Hľadať „{{query}}“ na DeHube"
   },
   "postInfo": {
     "title": "Informácie o príspevku",
@@ -1204,7 +1287,11 @@
     "new_version_available": "Nová verzia k dispozícii",
     "refresh_to_pick_up_the_latest_changes": "Obnovte a vyzdvihnite najnovšie zmeny.",
     "refresh": "Obnoviť",
-    "what_changed": "Čo sa zmenilo"
+    "what_changed": "Čo sa zmenilo",
+    "turn_on_desktop_notifications": "Zapnúť upozornenia na ploche?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dozviete sa o odpovediach, prepitnom a správach, aj keď ste na inej karte.",
+    "turn_on": "Zapnúť",
+    "not_now": "Teraz nie"
   },
   "postOptions": {
     "options": "Možnosti",
@@ -1380,7 +1467,10 @@
     "statusPlanned": "Naplánované",
     "statusInProgress": "Prebieha",
     "statusCompleted": "Dokončené",
-    "statusDeclined": "Zamietnuté"
+    "statusDeclined": "Zamietnuté",
+    "shipping": "Vo výrobe",
+    "noShippingYet": "Nič sa nerobí",
+    "shippingAppearHere": "Požiadavky, na ktorých sa pracuje, sa zobrazia tu."
   },
   "auth": {
     "loginRequired": "Vyžaduje sa prihlásenie"
@@ -1488,7 +1578,8 @@
     "failedPurchase": "Nepodarilo sa spustiť nákup",
     "redirectingOnramp": "Presmerovanie na onramp...",
     "onrampCreated": "Onramp relácia vytvorená",
-    "failedOnramp": "Nepodarilo sa spustiť onramp"
+    "failedOnramp": "Nepodarilo sa spustiť onramp",
+    "badgeDiscount": "Držiteľ {{tier}} — zľava {{percent}} %"
   },
   "agents": {
     "title": "AI agenti",
@@ -1518,7 +1609,13 @@
     "agentDeleted": "Agent vymazaný",
     "failedCreate": "Nepodarilo sa vytvoriť agenta",
     "failedDelete": "Nepodarilo sa vymazať agenta",
-    "apiKeyCopied": "API kľúč skopírovaný do schránky"
+    "apiKeyCopied": "API kľúč skopírovaný do schránky",
+    "connectorUrl": "URL konektora",
+    "connectorUrlCopied": "URL konektora skopírované",
+    "connectorUrlHelp": "Pridaj to ako vlastný MCP konektor v Claude alebo ChatGPT. Autentifikuje sa ako tento agent, takže s ním zaobchádzaj ako s API kľúčom.",
+    "agentWallet": "Peňaženka agenta (Base)",
+    "walletCopied": "Adresa peňaženky skopírovaná",
+    "agentWalletHelp": "Pošli sem malé množstvo ETH na sieti Base skôr, než agent zverejní príspevok — publikovanie mintuje on-chain a agent si platí vlastný gas. Komentovanie, hlasovanie a sledovanie gas nepotrebujú."
   },
   "hero": {
     "title": "Vitajte V",
@@ -1699,5 +1796,105 @@
     "sending": "Odosiela sa...",
     "title": "Poslať prepitné",
     "toCreator": "Prepitné pre {{name}}"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Zbierka hier, svetov a zážitkov, ktoré DeHub postavil a uvoľnil ako open source.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Hraj priamo v prehliadači na DeHube — filmový 3D šach, procedurálne generovaná strieľačka, prechádzka dažďovým pralesom, neónová pouličná bitka a obchodná sála, po ktorej sa dá chodiť. Bez inštalácie, bez sťahovania.",
+    "alsoIn": "Nájdeš aj v {{theme}}"
+  },
+  "stats": {
+    "title": "Štatistiky",
+    "subtitle": "Otvorené dáta v reálnom čase",
+    "live": "Naživo",
+    "range": {
+      "24h": "24 hodín",
+      "3d": "3 dni",
+      "7d": "7 dní",
+      "30d": "30 dní",
+      "all": "Celé obdobie"
+    },
+    "unavailable": {
+      "title": "Štatistiky teraz nie sú dostupné",
+      "unconfigured": "Analytický endpoint zatiaľ nedostal svoj API token Cloudflare. Namiesto vymysleného čísla sa nezobrazuje nič.",
+      "error": "Nepodarilo sa nám spojiť s analytickým API Cloudflare. Namiesto zastaraného alebo vymysleného čísla táto stránka neukáže nič, kým živé načítanie neprejde."
+    },
+    "tile": {
+      "visitorsToday": "Návštevníci dnes",
+      "soFarToday": "dnes doteraz, UTC",
+      "peakHour": "Najrušnejšia hodina",
+      "peakDay": "Najrušnejší deň",
+      "peakAtHour": "o {{when}} UTC",
+      "peakOnDay": "dňa {{when}}",
+      "inRange": "v tomto rozsahu",
+      "pageViews": "Zobrazenia stránok",
+      "overHours": "za {{count}} h",
+      "overDay": "za 1 deň",
+      "overDays": "za {{count}} dní",
+      "requestsLabel": "Požiadavky",
+      "served": "Doručené",
+      "requests": "{{requests}} požiadaviek"
+    },
+    "chart": {
+      "hourly": "Návštevníci za hodinu",
+      "daily": "Návštevníci za deň",
+      "hourlyHint": "{{count}} hodinových intervalov, UTC",
+      "dailyHint": "jedineční návštevníci za deň",
+      "empty": "Pre toto obdobie zatiaľ nie sú údaje"
+    },
+    "countries": {
+      "title": "Najčastejšie krajiny",
+      "windowDay": "posledných 24 hodín",
+      "window": "posledných {{days}} dní"
+    },
+    "browsers": {
+      "title": "Prehliadače",
+      "window": "podľa zobrazení stránok"
+    },
+    "edge": {
+      "title": "Na okraji siete",
+      "windowDay": "posledných 24 hodín",
+      "window": "posledných {{days}} dní",
+      "cached": "Doručené z vyrovnávacej pamäte",
+      "encrypted": "Šifrované",
+      "threats": "Zablokované hrozby"
+    },
+    "proof": {
+      "title": "Odkiaľ tieto čísla pochádzajú",
+      "subtitle": "Meria Cloudflare, nie táto stránka",
+      "source": "Zdroj",
+      "datasets": "Množiny údajov",
+      "zone": "Zóna",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Načítané o",
+      "query": "Presný dopyt za grafom",
+      "copied": "Skopírované",
+      "copy": "Kopírovať",
+      "openEndpoint": "Otvoriť /api/stats",
+      "openRaw": "Nedotknutá odpoveď Cloudflare",
+      "edge": "Každá požiadavka na dehub.io prechádza cez Cloudflare skôr, než dorazí na naše servery. Tieto počty sú vlastná agregácia tejto prevádzky od Cloudflare — tie isté čísla, aké ukazuje náš panel. Nezbiera ich skript v tvojom prehliadači, takže nič na tejto stránke ich nedokáže nafúknuť a blokovanie sledovačov ich nezmení.",
+      "live": "Stránka ich číta naživo. Načítanie /stats zavolá náš endpoint, ktorý sa v tej chvíli opýta Analytics API Cloudflare a odpoveď uloží na 60 sekúnd do vyrovnávacej pamäte.",
+      "limits": "Čo to ukazuje a čo nie: vidíš, že čísla pochádzajú z agregácie Cloudflare, nie z kódu našej aplikácie, a že tu zverejnený dopyt je ten, ktorý beží. Nie je to bez dôvery — API token máme my a Cloudflare neponúka verejné čítanie analytiky zóny. Ktokoľvek s vlastnou zónou Cloudflare môže spustiť ten istý dopyt a overiť si tvar."
+    },
+    "definitions": {
+      "title": "Čo tie čísla znamenajú",
+      "visitorsTerm": "Návštevníci",
+      "visitors": "— jedinečné IP adresy, ktoré Cloudflare v ten deň videl. Blízko počtu ľudí, ale nie to isté: kancelária na jednom pripojení sa počíta raz a telefón prepínajúci medzi wifi a mobilnými dátami dvakrát.",
+      "pageViewsTerm": "Zobrazenia stránok",
+      "pageViews": "— požiadavky, ktoré Cloudflare klasifikuje ako načítania stránky, nie obrázky, skripty či volania API.",
+      "botsTerm": "Boti sú započítaní",
+      "bots": "— sú to surové počty na okraji siete, takže sú v nich aj prehľadávače, monitory dostupnosti a skriptované klienty. Vidíš ich sám v rozdelení podľa prehliadačov vyššie, kde položky ako „Curl“ a „Neznáme“ sú automatická prevádzka, nie ľudia. Filtrovanie botov vyžaduje platený plán Cloudflare, ktorý nemáme, a tiché odpočítanie odhadu by čísla urobilo menej overiteľnými, nie viac.",
+      "totalTerm": "Súčty rozsahu",
+      "total": "— zobrazenia stránok a požiadavky sa v rozsahu sčítavajú. Počty návštevníkov zámerne nesčítavame do „celkového počtu návštevníkov“, lebo kto tu bol v pondelok aj v utorok, by sa počítal dvakrát.",
+      "peakTerm": "Najrušnejšia hodina / deň",
+      "peak": "— najvyšší jedinečný počet v ktoromkoľvek jednom intervale rozsahu, z rovnakého dôvodu: je to číslo, ktoré Cloudflare naozaj meria, nie číslo poskladané zo sčítania prekrývajúcich sa počtov.",
+      "resolutionTerm": "Hodinové údaje končia na 3 dňoch",
+      "resolution": "— to je limit Cloudflare v tomto pláne, nie naše rozhodnutie: odmietne každý hodinový dopyt širší ako tri dni. Zobrazenia 24 hodín a 3 dni sú hodinové; 7 dní a viac je denné a hodinový graf za celé obdobie sa nakresliť nedá.",
+      "breakdownTerm": "Krajiny a prehliadače",
+      "breakdown": "— riadia sa zvoleným rozsahom, ale len {{max}} dní dozadu, dovtedy sa uchováva denné rozdelenie. Pri dlhších rozsahoch graf pokrýva viac času než zoznam krajín.",
+      "startTerm": "História",
+      "start": "— „celé obdobie“ znamená každý deň, ktorý si Cloudflare ešte drží, dnes {{days}} dní od {{date}}, dňa, keď dehub.io prešiel na Cloudflare. Staršie údaje z okraja siete neexistujú a staré dni vypadávajú, ako im Cloudflare vyprší platnosť."
+    }
   }
 }

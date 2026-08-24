@@ -27,7 +27,20 @@
     "events": "Evenemang",
     "prompt": "Styr",
     "communities": "Communities",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Live-statistik",
+    "liveTv": "Live-TV",
+    "buyDhb": "Köp DHB",
+    "bridge": "Bridge",
+    "top100": "Topp 100",
+    "agents": "AI-agenter",
+    "advertising": "Annonsering",
+    "premium": "Premium",
+    "pricing": "Priser",
+    "creators": "Kreatörer",
+    "getTheApp": "Hämta appen",
+    "connectAi": "Anslut AI"
   },
   "feed": {
     "home": "Hem",
@@ -35,7 +48,9 @@
     "images": "Bilder",
     "shorts": "Shorts",
     "music": "Musik",
-    "live": "Live"
+    "live": "Live",
+    "newPosts_one": "{{count}} nytt inlägg",
+    "newPosts_other": "{{count}} nya inlägg"
   },
   "explore": {
     "all": "Alla",
@@ -242,7 +257,58 @@
     "hazy": "Disiga nätter",
     "save": "Spara",
     "saving": "Sparar...",
-    "swarms": "Svärmar"
+    "swarms": "Svärmar",
+    "profiles": "Profiler",
+    "profilesDesc": "Konton sparade på den här enheten",
+    "addProfile": "Lägg till profil",
+    "profileActive": "Aktiv",
+    "profileSignedOut": "logga in för att byta",
+    "profileRemove": "Ta bort profil",
+    "profilesUsed": "{{used}} av {{max}} används",
+    "profilesNextTier": "Nivån {{tier}} behåller {{count}}",
+    "profilesFullTier": "Staka för en {{tier}}-bricka och behåll {{count}} profiler",
+    "profilesFull": "Ta bort en profil för att lägga till ett annat konto",
+    "browserNotifications": "Webbläsaraviseringar",
+    "browserNotificationsDesc": "Få veta om svar, tips och DM medan du är i en annan flik",
+    "browserNotificationsOnDesc": "Svar, tips och DM dyker upp medan du är i en annan flik",
+    "browserNotificationsDismissed": "Aviseringsförfrågan avfärdad — prova reglaget igen",
+    "browserNotificationsBlocked": "Blockerade av din webbläsare",
+    "browserNotificationsBlockedTitle": "Den här webbläsaren blockerar aviseringar",
+    "browserNotificationsBlockedNote": "Bara din webbläsare kan ångra det här — när det väl är blockerat kan DeHub inte fråga igen.",
+    "browserNotificationsBlockedPending": "Din förfrågan är sparad — den slås på av sig själv så snart webbläsaren tillåter det.",
+    "browserNotificationsUnblockChromium": "Klicka på ikonen till vänster om adressfältet → Webbplatsinställningar → sätt Aviseringar till Tillåt och ladda om sidan.",
+    "browserNotificationsUnblockFirefox": "Klicka på hänglåset till vänster om adressfältet, ta bort ”Blockerad” bredvid Ta emot aviseringar och ladda om sidan.",
+    "browserNotificationsUnblockSafari": "I menyraden: Safari → Inställningar → Webbplatser → Aviseringar, sätt sedan den här webbplatsen till Tillåt.",
+    "browserNotificationsUnblockGeneric": "Öppna webbläsarens webbplatsinställningar för den här sidan, sätt Aviseringar till Tillåt och ladda om.",
+    "browserNotificationsIosHint": "iPhone och iPad tillåter det först när DeHub finns på hemskärmen — tryck på Dela och sedan ”Lägg till på hemskärmen”.",
+    "browserNotificationsTest": "Skicka en testavisering",
+    "browserNotificationsTestSent": "Testavisering skickad",
+    "browserNotificationsTestBody": "Så här ser en DeHub-avisering ut.",
+    "showAsNewMember": "Visa mig som ny medlem",
+    "showAsNewMemberDesc": "Låter andra medlemmar se att du precis kommit hit så att de kan välkomna dig. Slutar automatiskt 30 dagar efter att du registrerade dig.",
+    "defaultProfileTab": "Standardflik på profilen",
+    "defaultProfileTabDesc": "Välj vilken flik besökare ser först på din profil",
+    "lavalamp": "Lavalampa",
+    "war": "Krig",
+    "osaka": "Osaka",
+    "jungle": "Djungel",
+    "themeColor": "Temafärg",
+    "themeColorDesc": "Välj en egen färg till det här temat",
+    "themeColorReset": "Återställ",
+    "themeColorWhite": "Vit",
+    "themeColorBlack": "Svart",
+    "themeColorRainbow": "Regnbåge",
+    "themeColorBrand": "Varumärke",
+    "themeColorBrandDesc": "Använd färgerna i din profilbild",
+    "themeColorBrandNoAvatar": "Lägg till en profilbild för att använda varumärkesfärger",
+    "themeColorBrandFailed": "Kunde inte läsa färger från din profilbild",
+    "dimLights": "Dämpa ljuset",
+    "dimLightsDesc": "Minskar exponeringen för blått ljus",
+    "matureContent": "Visa vuxeninnehåll",
+    "matureContentDesc": "Tar med vuxet och grafiskt innehåll i dina flöden och tar bort varningen från det du redan ser. Avstängt som standard.",
+    "noNewMessages": "Inga nya konversationer",
+    "noNewMessagesDesc": "Behåll dina befintliga trådar, men ingen ny kan starta en",
+    "dmNoNewHelp": "Befintliga trådar fungerar vidare; ingen ny kan starta en"
   },
   "common": {
     "save": "Spara",
@@ -256,7 +322,8 @@
     "translating": "Översätter...",
     "close": "Stäng",
     "loadingMore": "Laddar fler...",
-    "loadMore": "Ladda fler"
+    "loadMore": "Ladda fler",
+    "tryAgain": "Försök igen"
   },
   "drawers": {
     "ppvTitle": "Betala per visning",
@@ -698,7 +765,11 @@
     "postRemoved": "Ditt inlägg togs bort",
     "newNotification": "Ny avisering",
     "oneOther": "1 annan",
-    "nOthers": "{{count}} andra"
+    "nOthers": "{{count}} andra",
+    "thisBrowser": "Den här webbläsaren",
+    "features": "Funktioner",
+    "communities": "Communityn",
+    "stores": "Butiker"
   },
   "leaderboard": {
     "title": "Topplista",
@@ -727,7 +798,12 @@
     "addedToLeaderboard": "Tillagd! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldot för lågt ({{balance}} DHB)",
     "refreshFailed": "Ett fel uppstod",
-    "noWalletAddress": "Ingen plånboksadress tillgänglig"
+    "noWalletAddress": "Ingen plånboksadress tillgänglig",
+    "affiliates": "Partners",
+    "directReferrals_one": "{{count}} direkta",
+    "directReferrals_other": "{{count}} direkta",
+    "secondaryReferrals_one": "{{count}} indirekta",
+    "secondaryReferrals_other": "{{count}} indirekta"
   },
   "features": {
     "title": "Funktionsförfrågningar",
@@ -766,7 +842,10 @@
     "statusPlanned": "Planerad",
     "statusInProgress": "Pågår",
     "statusCompleted": "Slutförd",
-    "statusDeclined": "Avvisad"
+    "statusDeclined": "Avvisad",
+    "shipping": "Byggs nu",
+    "noShippingYet": "Inget pågår",
+    "shippingAppearHere": "Förfrågningar som byggs dyker upp här."
   },
   "profile": {
     "back": "Tillbaka",
@@ -836,7 +915,8 @@
     "failedPurchase": "Kunde inte starta köp",
     "redirectingOnramp": "Omdirigerar...",
     "onrampCreated": "Session skapad",
-    "failedOnramp": "Kunde inte starta"
+    "failedOnramp": "Kunde inte starta",
+    "badgeDiscount": "{{tier}}-innehavare — {{percent}} % rabatt"
   },
   "agents": {
     "title": "AI-agenter",
@@ -866,7 +946,13 @@
     "agentDeleted": "Agent raderad",
     "failedCreate": "Skapandet misslyckades",
     "failedDelete": "Raderingen misslyckades",
-    "apiKeyCopied": "API-nyckel kopierad"
+    "apiKeyCopied": "API-nyckel kopierad",
+    "connectorUrl": "Anslutnings-URL",
+    "connectorUrlCopied": "Anslutnings-URL kopierad",
+    "connectorUrlHelp": "Lägg till den som en egen MCP-anslutning i Claude eller ChatGPT. Den autentiserar som den här agenten, så behandla den som API-nyckeln.",
+    "agentWallet": "Agentens plånbok (Base)",
+    "walletCopied": "Plånboksadress kopierad",
+    "agentWalletHelp": "Skicka en liten mängd ETH på Base hit innan agenten postar — publicering mintar on-chain och agenten betalar sin egen gas. Kommentarer, röster och följningar kräver ingen gas."
   },
   "hero": {
     "title": "Välkommen Till",
@@ -1009,7 +1095,10 @@
     "or": "eller",
     "termsNotice": "Genom att fortsätta godkänner du användarvillkoren och integritetspolicyn",
     "walletInfoDesktop": "Anslut din plånbok för säker inloggning",
-    "walletInfoMobile": "MetaMask och Trust och Phantom öppnas i sina appar. Rabby använder WalletConnect."
+    "walletInfoMobile": "MetaMask och Trust och Phantom öppnas i sina appar. Rabby använder WalletConnect.",
+    "addProfileTitle": "Lägg till profil",
+    "walletConnectedAs": "Ansluten",
+    "useDifferentWallet": "Använd en annan plånbok"
   },
   "careers": {
     "title": "Karriär på DeHub",
@@ -1133,7 +1222,11 @@
     "comingSoon": "Kommer snart — regionala trender är på väg!",
     "post": "Publicera",
     "logOut": "Logga ut",
-    "logIn": "Logga in"
+    "logIn": "Logga in",
+    "searchMenu": "Sök i menyn",
+    "clearSearch": "Rensa sökningen",
+    "noMenuMatches": "Inget i menyn matchar",
+    "searchDehubFor": "Sök efter ”{{query}}” på DeHub"
   },
   "postInfo": {
     "title": "Inläggsinfo",
@@ -1383,7 +1476,11 @@
     "new_version_available": "Ny version tillgänglig",
     "refresh_to_pick_up_the_latest_changes": "Uppdatera för att hämta de senaste ändringarna.",
     "refresh": "Uppdatera",
-    "what_changed": "Vad har ändrats"
+    "what_changed": "Vad har ändrats",
+    "turn_on_desktop_notifications": "Vill du slå på skrivbordsaviseringar?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Få veta om svar, tips och DM medan du är i en annan flik.",
+    "turn_on": "Slå på",
+    "not_now": "Inte nu"
   },
   "prompt": {
     "seoTitle": "Styr ditt flöde — DeHub",
@@ -1529,5 +1626,105 @@
     "when": "När",
     "whyStake": "Varför sätta in?",
     "yourStaked": "Din insättning"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "En samling spel, världar och upplevelser som DeHub byggt och öppnat källkoden till.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Spela direkt i webbläsaren på DeHub — filmiskt 3D-schack, en procedurgenererad shooter, en promenad i regnskogen, ett neonfärgat gatuslagsmål och ett handelsgolv du kan gå omkring på. Ingen installation, ingen nedladdning.",
+    "alsoIn": "Finns även i {{theme}}"
+  },
+  "stats": {
+    "title": "Statistik",
+    "subtitle": "Öppen underrättelse i realtid",
+    "live": "Live",
+    "range": {
+      "24h": "24 timmar",
+      "3d": "3 dagar",
+      "7d": "7 dagar",
+      "30d": "30 dagar",
+      "all": "Hela tiden"
+    },
+    "unavailable": {
+      "title": "Statistiken är inte tillgänglig just nu",
+      "unconfigured": "Analys-endpointen har ännu inte fått sin Cloudflare-API-token. Inget visas i stället för ett påhittat tal.",
+      "error": "Vi nådde inte Cloudflares analys-API. I stället för att visa en gammal eller påhittad siffra visar den här sidan ingenting förrän liveavläsningen lyckas."
+    },
+    "tile": {
+      "visitorsToday": "Besökare i dag",
+      "soFarToday": "hittills i dag, UTC",
+      "peakHour": "Mest trafikerade timmen",
+      "peakDay": "Mest trafikerade dagen",
+      "peakAtHour": "kl. {{when}} UTC",
+      "peakOnDay": "den {{when}}",
+      "inRange": "i det här intervallet",
+      "pageViews": "Sidvisningar",
+      "overHours": "över {{count}} h",
+      "overDay": "över 1 dag",
+      "overDays": "över {{count}} dagar",
+      "requestsLabel": "Förfrågningar",
+      "served": "Levererade",
+      "requests": "{{requests}} förfrågningar"
+    },
+    "chart": {
+      "hourly": "Besökare per timme",
+      "daily": "Besökare per dag",
+      "hourlyHint": "{{count}} timintervall, UTC",
+      "dailyHint": "unika besökare per dag",
+      "empty": "Ingen data för den här perioden ännu"
+    },
+    "countries": {
+      "title": "Toppländer",
+      "windowDay": "senaste 24 timmarna",
+      "window": "senaste {{days}} dagarna"
+    },
+    "browsers": {
+      "title": "Webbläsare",
+      "window": "efter sidvisningar"
+    },
+    "edge": {
+      "title": "Vid kanten",
+      "windowDay": "senaste 24 timmarna",
+      "window": "senaste {{days}} dagarna",
+      "cached": "Levererat från cache",
+      "encrypted": "Krypterat",
+      "threats": "Blockerade hot"
+    },
+    "proof": {
+      "title": "Var de här siffrorna kommer ifrån",
+      "subtitle": "Mätt av Cloudflare, inte av den här sidan",
+      "source": "Källa",
+      "datasets": "Datauppsättningar",
+      "zone": "Zon",
+      "ray": "Cloudflare ray-ID",
+      "fetched": "Hämtat kl.",
+      "query": "Den exakta frågan bakom diagrammet",
+      "copied": "Kopierat",
+      "copy": "Kopiera",
+      "openEndpoint": "Öppna /api/stats",
+      "openRaw": "Cloudflares orörda svar",
+      "edge": "Varje förfrågan till dehub.io passerar Cloudflare innan den når våra servrar. De här räkningarna är Cloudflares egen sammanställning av trafiken — samma siffror som vår panel visar. De samlas inte in av ett skript i din webbläsare, så inget på den här sidan kan blåsa upp dem, och att blockera spårare ändrar dem inte.",
+      "live": "Sidan läser dem live. Att ladda /stats anropar vår endpoint, som frågar Cloudflares Analytics API i det ögonblicket och cachar svaret i 60 sekunder.",
+      "limits": "Vad det här visar och inte: du ser att siffrorna kommer från Cloudflares sammanställning och inte från vår applikationskod, och att frågan som publiceras här är den som körs. Det är inte tillitslöst — vi håller API-token, och Cloudflare erbjuder ingen offentlig läsning av en zons statistik. Den som har en egen Cloudflare-zon kan köra samma fråga och bekräfta formen."
+    },
+    "definitions": {
+      "title": "Vad siffrorna betyder",
+      "visitorsTerm": "Besökare",
+      "visitors": "— unika IP-adresser Cloudflare såg den dagen. Nära antalet människor, men inte samma sak: ett kontor på en uppkoppling räknas en gång, och en telefon som växlar mellan wifi och mobildata räknas två gånger.",
+      "pageViewsTerm": "Sidvisningar",
+      "pageViews": "— förfrågningar som Cloudflare klassar som sidladdningar, inte bilder, skript eller API-anrop.",
+      "botsTerm": "Bottar räknas in",
+      "bots": "— det här är råa räkningar vid kanten, så sökrobotar, drifttidsövervakare och skriptade klienter finns med. Du ser dem själv i webbläsarfördelningen ovan, där poster som ”Curl” och ”Okänd” är automatiserad trafik och inte människor. Att filtrera bort bottar kräver en betald Cloudflare-plan som vi inte har, och att tyst dra bort en uppskattning skulle göra siffrorna mindre kontrollerbara, inte mer.",
+      "totalTerm": "Summor för intervallet",
+      "total": "— sidvisningar och förfrågningar summeras över intervallet. Besökarantal summeras medvetet inte till ett ”totalt antal besökare”, eftersom någon som var här på måndag och tisdag skulle räknas två gånger.",
+      "peakTerm": "Mest trafikerad timme / dag",
+      "peak": "— det högsta unika värdet i något enskilt intervall, av samma skäl: det är en siffra Cloudflare faktiskt mäter, inte en byggd av överlappande räkningar.",
+      "resolutionTerm": "Timdata slutar vid 3 dagar",
+      "resolution": "— det är Cloudflares gräns på den här planen, inte ett val: den nekar varje timfråga bredare än tre dagar. Vyerna 24 timmar och 3 dagar är per timme; 7 dagar och längre är per dag, och det går inte att rita ett timdiagram över hela tiden.",
+      "breakdownTerm": "Länder och webbläsare",
+      "breakdown": "— de följer intervallet du väljer, men bara {{max}} dagar bakåt, så länge sparas dagsfördelningen. Vid längre intervall täcker diagrammet mer tid än landslistan.",
+      "startTerm": "Historik",
+      "start": "— ”hela tiden” betyder varje dag Cloudflare fortfarande sparar, i dag {{days}} dagar från {{date}}, dagen då dehub.io flyttade till Cloudflare. Det finns ingen tidigare kantdata att visa, och äldre dagar faller bort när Cloudflare låter dem gå ut."
+    }
   }
 }

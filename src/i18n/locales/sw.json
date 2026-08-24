@@ -27,7 +27,20 @@
     "events": "Matukio",
     "prompt": "Ishara",
     "communities": "Jumuiya",
-    "staking": "Uwekaji Amana"
+    "staking": "Uwekaji Amana",
+    "arcade": "Arcade",
+    "stats": "Takwimu za moja kwa moja",
+    "liveTv": "TV ya Moja kwa Moja",
+    "buyDhb": "Nunua DHB",
+    "bridge": "Daraja",
+    "top100": "Bora 100",
+    "agents": "Mawakala wa AI",
+    "advertising": "Matangazo",
+    "premium": "Premium",
+    "pricing": "Bei",
+    "creators": "Waundaji",
+    "getTheApp": "Pata Programu",
+    "connectAi": "Unganisha AI"
   },
   "feed": {
     "home": "Nyumbani",
@@ -35,7 +48,9 @@
     "images": "Picha",
     "shorts": "Fupi",
     "music": "Muziki",
-    "live": "Moja kwa Moja"
+    "live": "Moja kwa Moja",
+    "newPosts_one": "Chapisho {{count}} jipya",
+    "newPosts_other": "Machapisho {{count}} mapya"
   },
   "explore": {
     "all": "Zote",
@@ -242,7 +257,58 @@
     "hazy": "Usiku wa Ukungu",
     "save": "Hifadhi",
     "saving": "Inahifadhi...",
-    "swarms": "Makundi"
+    "swarms": "Makundi",
+    "profiles": "Wasifu",
+    "profilesDesc": "Akaunti zilizohifadhiwa kwenye kifaa hiki",
+    "addProfile": "Ongeza wasifu",
+    "profileActive": "Inatumika",
+    "profileSignedOut": "ingia ili kubadilisha",
+    "profileRemove": "Ondoa wasifu",
+    "profilesUsed": "{{used}} kati ya {{max}} zimetumika",
+    "profilesNextTier": "Kiwango cha {{tier}} huhifadhi {{count}}",
+    "profilesFullTier": "Weka dau kwa beji ya {{tier}} ili kuhifadhi wasifu {{count}}",
+    "profilesFull": "Ondoa wasifu mmoja ili kuongeza akaunti nyingine",
+    "browserNotifications": "Arifa za kivinjari",
+    "browserNotificationsDesc": "Pata taarifa kuhusu majibu, bakshishi na jumbe ukiwa kwenye kichupo kingine",
+    "browserNotificationsOnDesc": "Majibu, bakshishi na jumbe hujitokeza ukiwa kwenye kichupo kingine",
+    "browserNotificationsDismissed": "Ombi la arifa limeondolewa — jaribu swichi tena",
+    "browserNotificationsBlocked": "Zimezuiwa na kivinjari chako",
+    "browserNotificationsBlockedTitle": "Kivinjari hiki kinazuia arifa",
+    "browserNotificationsBlockedNote": "Kivinjari chako pekee kinaweza kubatilisha hili — DeHub haiwezi kuuliza tena baada ya kuzuiwa.",
+    "browserNotificationsBlockedPending": "Ombi lako limehifadhiwa — litawaka lenyewe mara kivinjari chako kitakaporuhusu.",
+    "browserNotificationsUnblockChromium": "Bofya aikoni upande wa kushoto wa upau wa anwani → Mipangilio ya tovuti → weka Arifa kuwa Ruhusu, kisha pakia upya ukurasa huu.",
+    "browserNotificationsUnblockFirefox": "Bofya kufuli upande wa kushoto wa upau wa anwani, ondoa \"Imezuiwa\" karibu na Pokea Arifa, kisha pakia upya ukurasa huu.",
+    "browserNotificationsUnblockSafari": "Kwenye upau wa menyu: Safari → Mipangilio → Tovuti → Arifa, kisha weka tovuti hii kuwa Ruhusu.",
+    "browserNotificationsUnblockGeneric": "Fungua mipangilio ya tovuti ya kivinjari chako kwa ukurasa huu, weka Arifa kuwa Ruhusu, kisha pakia upya.",
+    "browserNotificationsIosHint": "iPhone na iPad huruhusu hili tu baada ya DeHub kuwa kwenye Skrini ya Kwanza — gusa Shiriki, kisha \"Ongeza kwenye Skrini ya Kwanza\".",
+    "browserNotificationsTest": "Tuma arifa ya majaribio",
+    "browserNotificationsTestSent": "Arifa ya majaribio imetumwa",
+    "browserNotificationsTestBody": "Hivi ndivyo arifa ya DeHub inavyoonekana.",
+    "showAsNewMember": "Nionyeshe kama mwanachama mpya",
+    "showAsNewMemberDesc": "Huwawezesha wanachama wengine kuona kwamba umejiunga hivi punde ili wakukaribishe. Huisha kiotomatiki siku 30 baada ya kujisajili.",
+    "defaultProfileTab": "Kichupo chaguo-msingi cha wasifu",
+    "defaultProfileTabDesc": "Chagua kichupo ambacho wageni huona kwanza kwenye wasifu wako",
+    "lavalamp": "Taa ya Lava",
+    "war": "Vita",
+    "osaka": "Osaka",
+    "jungle": "Msitu",
+    "themeColor": "Rangi ya Mandhari",
+    "themeColorDesc": "Chagua rangi maalum kwa mandhari haya",
+    "themeColorReset": "Weka upya",
+    "themeColorWhite": "Nyeupe",
+    "themeColorBlack": "Nyeusi",
+    "themeColorRainbow": "Upinde wa mvua",
+    "themeColorBrand": "Chapa",
+    "themeColorBrandDesc": "Tumia rangi za picha yako ya wasifu",
+    "themeColorBrandNoAvatar": "Ongeza picha ya wasifu ili kutumia rangi za Chapa",
+    "themeColorBrandFailed": "Haikuweza kusoma rangi kutoka picha yako ya wasifu",
+    "dimLights": "Punguza Mwanga",
+    "dimLightsDesc": "Hupunguza mwangaza wa buluu",
+    "matureContent": "Onyesha Maudhui ya Watu Wazima",
+    "matureContentDesc": "Huingiza machapisho ya watu wazima na yenye picha kali kwenye milisho yako, na huondoa onyo kwenye yale unayoona tayari. Imezimwa kwa chaguo-msingi.",
+    "noNewMessages": "Hakuna mazungumzo mapya",
+    "noNewMessagesDesc": "Weka mazungumzo yako yaliyopo, lakini hakuna mtu mpya anayeweza kuanzisha",
+    "dmNoNewHelp": "Mazungumzo yaliyopo yanaendelea; hakuna mtu mpya anayeweza kuanzisha"
   },
   "common": {
     "save": "Hifadhi",
@@ -256,7 +322,8 @@
     "translating": "Inatafsiri...",
     "close": "Funga",
     "loadingMore": "Inapakia zaidi...",
-    "loadMore": "Pakia zaidi"
+    "loadMore": "Pakia zaidi",
+    "tryAgain": "Jaribu Tena"
   },
   "tip": {
     "title": "Tuma Kidokezo",
@@ -787,7 +854,11 @@
     "postRemoved": "Chapisho lako limeondolewa",
     "newNotification": "Arifa mpya",
     "oneOther": "1 mwingine",
-    "nOthers": "{{count}} wengine"
+    "nOthers": "{{count}} wengine",
+    "thisBrowser": "Kivinjari hiki",
+    "features": "Vipengele",
+    "communities": "Jumuiya",
+    "stores": "Maduka"
   },
   "leaderboard": {
     "title": "Ubao wa Viongozi",
@@ -816,7 +887,12 @@
     "addedToLeaderboard": "Umeongezwa! Salio: {{balance}} DHB",
     "balanceTooLow": "Salio ni dogo sana ({{balance}} DHB)",
     "refreshFailed": "Kitu kimeharibika",
-    "noWalletAddress": "Hakuna anwani ya pochi iliyopatikana"
+    "noWalletAddress": "Hakuna anwani ya pochi iliyopatikana",
+    "affiliates": "Washirika",
+    "directReferrals_one": "{{count}} wa moja kwa moja",
+    "directReferrals_other": "{{count}} wa moja kwa moja",
+    "secondaryReferrals_one": "{{count}} wa pili",
+    "secondaryReferrals_other": "{{count}} wa pili"
   },
   "features": {
     "title": "Maombi ya Vipengele",
@@ -855,7 +931,10 @@
     "statusPlanned": "Imepangwa",
     "statusInProgress": "Inaendelea",
     "statusCompleted": "Imekamilika",
-    "statusDeclined": "Imekataliwa"
+    "statusDeclined": "Imekataliwa",
+    "shipping": "Kinatengenezwa",
+    "noShippingYet": "Hakuna kinachoendelea",
+    "shippingAppearHere": "Maombi yanayotengenezwa yataonekana hapa."
   },
   "auth": {
     "loginRequired": "Kuingia kunahitajika"
@@ -928,7 +1007,8 @@
     "failedPurchase": "Imeshindwa kuanza ununuzi",
     "redirectingOnramp": "Inaelekeza kwa njia...",
     "onrampCreated": "Kipindi cha njia kimeundwa",
-    "failedOnramp": "Imeshindwa kuanza njia"
+    "failedOnramp": "Imeshindwa kuanza njia",
+    "badgeDiscount": "Mmiliki wa {{tier}} — punguzo la {{percent}}%"
   },
   "agents": {
     "title": "Mawakala wa AI",
@@ -958,7 +1038,13 @@
     "agentDeleted": "Wakala amefutwa",
     "failedCreate": "Imeshindwa kuunda wakala",
     "failedDelete": "Imeshindwa kufuta wakala",
-    "apiKeyCopied": "Ufunguo wa API umenakiliwa"
+    "apiKeyCopied": "Ufunguo wa API umenakiliwa",
+    "connectorUrl": "URL ya kiunganishi",
+    "connectorUrlCopied": "URL ya kiunganishi imenakiliwa",
+    "connectorUrlHelp": "Ongeza hii kama kiunganishi maalum cha MCP katika Claude au ChatGPT. Kinathibitisha kama wakala huyu, kwa hivyo kichukulie kama ufunguo wa API.",
+    "agentWallet": "Pochi la wakala (Base)",
+    "walletCopied": "Anwani ya pochi imenakiliwa",
+    "agentWalletHelp": "Tuma kiasi kidogo cha ETH kwenye Base hapa kabla wakala hajachapisha — kuchapisha hutengeneza rekodi kwenye mnyororo na wakala hulipa gesi yake mwenyewe. Kutoa maoni, kupiga kura na kufuata hakuhitaji gesi."
   },
   "hero": {
     "title": "Karibu Katika",
@@ -1006,7 +1092,10 @@
     "or": "au",
     "termsNotice": "Kwa kuendelea, unakubali Masharti yetu ya Huduma na Sera ya Faragha",
     "walletInfoDesktop": "Unganisha pochi yako ili uingie kwa usalama",
-    "walletInfoMobile": "MetaMask, Trust na Phantom zitafungua programu yao moja kwa moja. Rabby itatumia WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust na Phantom zitafungua programu yao moja kwa moja. Rabby itatumia WalletConnect.",
+    "addProfileTitle": "Ongeza wasifu",
+    "walletConnectedAs": "Imeunganishwa",
+    "useDifferentWallet": "Tumia pochi nyingine"
   },
   "careers": {
     "title": "Kazi katika DeHub",
@@ -1130,7 +1219,11 @@
     "comingSoon": "Inakuja hivi karibuni — mitindo ya eneo inakuja!",
     "post": "Chapisha",
     "logOut": "Toka",
-    "logIn": "Ingia"
+    "logIn": "Ingia",
+    "searchMenu": "Tafuta kwenye menyu",
+    "clearSearch": "Futa utafutaji",
+    "noMenuMatches": "Hakuna kinacholingana kwenye menyu",
+    "searchDehubFor": "Tafuta \"{{query}}\" kwenye DeHub"
   },
   "postInfo": {
     "title": "Taarifa ya chapisho",
@@ -1380,7 +1473,11 @@
     "new_version_available": "Toleo jipya linapatikana",
     "refresh_to_pick_up_the_latest_changes": "Fungua upya ili uchukue mabadiliko ya hivi karibuni.",
     "refresh": "Onyesha upya",
-    "what_changed": "Kilichobadilika"
+    "what_changed": "Kilichobadilika",
+    "turn_on_desktop_notifications": "Uwashe arifa za kompyuta?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Pata taarifa kuhusu majibu, bakshishi na jumbe ukiwa kwenye kichupo kingine.",
+    "turn_on": "Washa",
+    "not_now": "Si sasa"
   },
   "prompt": {
     "seoTitle": "Weka ishara kwenye malisho yako — DeHub",
@@ -1526,5 +1623,105 @@
     "when": "Lini",
     "whyStake": "Kwa Nini Kuweka Amana?",
     "yourStaked": "Amana Yako"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Mkusanyiko wa michezo, ulimwengu na matukio yaliyojengwa na DeHub na kufunguliwa kama chanzo huria.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Cheza kwenye kivinjari chako kwenye DeHub — chess ya 3D yenye mvuto wa filamu, mchezo wa kupiga risasi uliotengenezwa kiotomatiki, matembezi msituni, pambano la mtaani la neon na sakafu ya biashara unayoweza kutembea. Hakuna kusakinisha, hakuna kupakua.",
+    "alsoIn": "Ipo pia katika {{theme}}"
+  },
+  "stats": {
+    "title": "Takwimu",
+    "subtitle": "Taarifa huria kwa wakati halisi",
+    "live": "Moja kwa moja",
+    "range": {
+      "24h": "saa 24",
+      "3d": "siku 3",
+      "7d": "siku 7",
+      "30d": "siku 30",
+      "all": "Muda wote"
+    },
+    "unavailable": {
+      "title": "Takwimu hazipatikani kwa sasa",
+      "unconfigured": "Mwisho wa uchanganuzi bado haujapewa tokeni yake ya API ya Cloudflare. Hakuna kinachoonyeshwa badala ya namba ya kubuni.",
+      "error": "Hatukuweza kufikia API ya uchanganuzi ya Cloudflare. Badala ya kuonyesha takwimu kuukuu au ya kubuni, ukurasa huu hauonyeshi chochote hadi usomaji wa moja kwa moja ufaulu."
+    },
+    "tile": {
+      "visitorsToday": "Wageni leo",
+      "soFarToday": "hadi sasa leo, UTC",
+      "peakHour": "Saa yenye shughuli nyingi",
+      "peakDay": "Siku yenye shughuli nyingi",
+      "peakAtHour": "saa {{when}} UTC",
+      "peakOnDay": "tarehe {{when}}",
+      "inRange": "katika kipindi hiki",
+      "pageViews": "Mionekano ya kurasa",
+      "overHours": "kwa saa {{count}}",
+      "overDay": "kwa siku 1",
+      "overDays": "kwa siku {{count}}",
+      "requestsLabel": "Maombi",
+      "served": "Yametolewa",
+      "requests": "maombi {{requests}}"
+    },
+    "chart": {
+      "hourly": "Wageni kwa saa",
+      "daily": "Wageni kwa siku",
+      "hourlyHint": "Vipindi {{count}} vya saa, UTC",
+      "dailyHint": "wageni wa kipekee kwa siku",
+      "empty": "Bado hakuna data kwa kipindi hiki"
+    },
+    "countries": {
+      "title": "Nchi zinazoongoza",
+      "windowDay": "saa 24 zilizopita",
+      "window": "siku {{days}} zilizopita"
+    },
+    "browsers": {
+      "title": "Vivinjari",
+      "window": "kwa mionekano ya kurasa"
+    },
+    "edge": {
+      "title": "Ukingoni",
+      "windowDay": "saa 24 zilizopita",
+      "window": "siku {{days}} zilizopita",
+      "cached": "Imetolewa kutoka akiba",
+      "encrypted": "Imesimbwa",
+      "threats": "Vitisho vilivyozuiwa"
+    },
+    "proof": {
+      "title": "Takwimu hizi zinatoka wapi",
+      "subtitle": "Imepimwa na Cloudflare, si na ukurasa huu",
+      "source": "Chanzo",
+      "datasets": "Seti za data",
+      "zone": "Eneo",
+      "ray": "Kitambulisho cha ray cha Cloudflare",
+      "fetched": "Zimechukuliwa saa",
+      "query": "Swali kamili nyuma ya chati",
+      "copied": "Imenakiliwa",
+      "copy": "Nakili",
+      "openEndpoint": "Fungua /api/stats",
+      "openRaw": "Jibu la Cloudflare kama lilivyo",
+      "edge": "Kila ombi kwenda dehub.io hupitia Cloudflare kabla ya kufika seva zetu. Hesabu hizi ni mkusanyiko wa Cloudflare wenyewe wa trafiki hiyo — takwimu zilezile dashibodi yetu inaonyesha. Hazikusanywi na hati iliyo kwenye kivinjari chako, kwa hiyo hakuna kilicho kwenye ukurasa huu kinachoweza kuzikuza, na kuzuia vifuatiliaji hakubadilishi.",
+      "live": "Ukurasa huu huzisoma moja kwa moja. Kupakia /stats huita mwisho wetu, ambao huuliza Analytics API ya Cloudflare wakati huo na kuhifadhi jibu kwa sekunde 60.",
+      "limits": "Kinachoonyeshwa na kisichoonyeshwa: unaweza kuona kwamba takwimu zinatoka kwenye mkusanyiko wa Cloudflare na si kwenye msimbo wa programu yetu, na kwamba swali lililochapishwa hapa ndilo linaloendeshwa. Si bila kuamini — tokeni ya API iko kwetu, na Cloudflare haitoi usomaji wa hadhara wa uchanganuzi wa eneo. Yeyote mwenye eneo lake la Cloudflare anaweza kuendesha swali lilelile na kuthibitisha muundo wake."
+    },
+    "definitions": {
+      "title": "Maana ya takwimu hizi",
+      "visitorsTerm": "Wageni",
+      "visitors": "— anwani za IP za kipekee ambazo Cloudflare iliona siku hiyo. Karibu na idadi ya watu, lakini si sawa: ofisi moja kwenye muunganisho mmoja huhesabiwa mara moja, na simu inayohama kati ya wifi na data ya simu huhesabiwa mara mbili.",
+      "pageViewsTerm": "Mionekano ya kurasa",
+      "pageViews": "— maombi ambayo Cloudflare huyaainisha kama upakiaji wa kurasa, si picha, hati au miito ya API.",
+      "botsTerm": "Roboti zimejumuishwa",
+      "bots": "— hizi ni hesabu ghafi za ukingoni, kwa hiyo watambaaji, vifuatiliaji vya upatikanaji na wateja wa hati wamo ndani yake. Unaweza kuziona mwenyewe katika mchanganuo wa vivinjari hapo juu, ambapo vipengee kama \"Curl\" na \"Haijulikani\" ni trafiki ya kiotomatiki si watu. Kuchuja roboti kunahitaji mpango wa Cloudflare wa kulipia ambao hatuutumii, na kutoa makadirio kimya kimya kungefanya takwimu zisikaguliwe kwa urahisi zaidi, si kidogo.",
+      "totalTerm": "Jumla za kipindi",
+      "total": "— mionekano ya kurasa na maombi hujumlishwa katika kipindi chote. Idadi ya wageni kwa makusudi haijumlishwi kuwa \"jumla ya wageni\", kwa sababu mtu aliyekuwa hapa Jumatatu na Jumanne angehesabiwa mara mbili.",
+      "peakTerm": "Saa / siku yenye shughuli nyingi",
+      "peak": "— hesabu ya juu zaidi ya kipekee katika kipindi kimoja cha muda uliochaguliwa, kwa sababu ile ile: ni takwimu ambayo Cloudflare hupima kweli, si iliyojengwa kwa kujumlisha hesabu zinazoingiliana.",
+      "resolutionTerm": "Data ya kila saa huishia siku 3",
+      "resolution": "— hiyo ni kikomo cha Cloudflare kwenye mpango huu, si chaguo: hukataa swali lolote la kila saa lenye zaidi ya siku tatu. Mionekano ya saa 24 na siku 3 ni ya kila saa; siku 7 na zaidi ni ya kila siku, na hakuna njia ya kuchora chati ya kila saa kwa muda wote.",
+      "breakdownTerm": "Nchi na vivinjari",
+      "breakdown": "— hizi hufuata kipindi unachochagua, lakini tu hadi siku {{max}} nyuma, ndipo mchanganuo wa kila siku unapohifadhiwa. Katika vipindi virefu chati hufunika muda mrefu kuliko orodha ya nchi.",
+      "startTerm": "Historia",
+      "start": "— \"muda wote\" maana yake ni kila siku ambayo Cloudflare bado inahifadhi, leo ni siku {{days}} kuanzia {{date}}, siku ambayo dehub.io ilihamia Cloudflare. Hakuna data ya awali ya ukingoni ya kuonyesha, na siku za zamani hupotea Cloudflare inapozizeesha."
+    }
   }
 }

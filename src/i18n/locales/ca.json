@@ -27,7 +27,20 @@
     "events": "Esdeveniments",
     "prompt": "Demana",
     "communities": "Comunitats",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Estadístiques en directe",
+    "liveTv": "TV en directe",
+    "buyDhb": "Compra DHB",
+    "bridge": "Pont",
+    "top100": "Top 100",
+    "agents": "Agents d'IA",
+    "advertising": "Publicitat",
+    "premium": "Premium",
+    "pricing": "Preus",
+    "creators": "Creadors",
+    "getTheApp": "Descarrega l'app",
+    "connectAi": "Connecta la IA"
   },
   "feed": {
     "home": "Inici",
@@ -35,7 +48,9 @@
     "images": "Imatges",
     "shorts": "Curts",
     "music": "Música",
-    "live": "En directe"
+    "live": "En directe",
+    "newPosts_one": "{{count}} publicació nova",
+    "newPosts_other": "{{count}} publicacions noves"
   },
   "explore": {
     "all": "Tot",
@@ -242,7 +257,58 @@
     "hazy": "Nits Boiroses",
     "save": "Desa",
     "saving": "Desant...",
-    "swarms": "Eixams"
+    "swarms": "Eixams",
+    "profiles": "Perfils",
+    "profilesDesc": "Comptes desats en aquest dispositiu",
+    "addProfile": "Afegeix perfil",
+    "profileActive": "Actiu",
+    "profileSignedOut": "inicia la sessió per canviar",
+    "profileRemove": "Elimina el perfil",
+    "profilesUsed": "{{used}} de {{max}} en ús",
+    "profilesNextTier": "El nivell {{tier}} en conserva {{count}}",
+    "profilesFullTier": "Fes staking per a una insígnia {{tier}} i conserva {{count}} perfils",
+    "profilesFull": "Elimina un perfil per afegir un altre compte",
+    "browserNotifications": "Notificacions del navegador",
+    "browserNotificationsDesc": "Assabenta't de respostes, propines i missatges mentre ets en una altra pestanya",
+    "browserNotificationsOnDesc": "Respostes, propines i missatges apareixen mentre ets en una altra pestanya",
+    "browserNotificationsDismissed": "Sol·licitud de notificació descartada: torna a provar l'interruptor",
+    "browserNotificationsBlocked": "Bloquejades pel teu navegador",
+    "browserNotificationsBlockedTitle": "Aquest navegador bloqueja les notificacions",
+    "browserNotificationsBlockedNote": "Només el teu navegador ho pot desfer: un cop bloquejat, DeHub no pot tornar a demanar-ho.",
+    "browserNotificationsBlockedPending": "La teva sol·licitud s'ha desat: s'activarà sola quan el navegador ho permeti.",
+    "browserNotificationsUnblockChromium": "Fes clic a la icona de l'esquerra de la barra d'adreces → Configuració del lloc → posa Notificacions a Permet i torna a carregar la pàgina.",
+    "browserNotificationsUnblockFirefox": "Fes clic al cadenat de l'esquerra de la barra d'adreces, esborra el «Bloquejat» del costat de Rebre notificacions i torna a carregar la pàgina.",
+    "browserNotificationsUnblockSafari": "A la barra de menú: Safari → Configuració → Llocs web → Notificacions, i posa aquest lloc a Permet.",
+    "browserNotificationsUnblockGeneric": "Obre la configuració del lloc del navegador per a aquesta pàgina, posa Notificacions a Permet i torna a carregar.",
+    "browserNotificationsIosHint": "L'iPhone i l'iPad només ho permeten quan DeHub és a la pantalla d'inici: toca Comparteix i després «Afegeix a la pantalla d'inici».",
+    "browserNotificationsTest": "Envia una notificació de prova",
+    "browserNotificationsTestSent": "Notificació de prova enviada",
+    "browserNotificationsTestBody": "Així es veu una notificació de DeHub.",
+    "showAsNewMember": "Mostra'm com a membre nou",
+    "showAsNewMemberDesc": "Permet que altres membres vegin que acabes d'arribar per donar-te la benvinguda. Acaba automàticament 30 dies després de registrar-te.",
+    "defaultProfileTab": "Pestanya de perfil per defecte",
+    "defaultProfileTabDesc": "Tria quina pestanya veuen primer els visitants al teu perfil",
+    "lavalamp": "Llum de lava",
+    "war": "Guerra",
+    "osaka": "Osaka",
+    "jungle": "Jungla",
+    "themeColor": "Color del tema",
+    "themeColorDesc": "Tria un color personalitzat per a aquest tema",
+    "themeColorReset": "Restableix",
+    "themeColorWhite": "Blanc",
+    "themeColorBlack": "Negre",
+    "themeColorRainbow": "Arc de Sant Martí",
+    "themeColorBrand": "Marca",
+    "themeColorBrandDesc": "Fes servir els colors de la teva foto de perfil",
+    "themeColorBrandNoAvatar": "Afegeix una foto de perfil per fer servir els colors de marca",
+    "themeColorBrandFailed": "No s'han pogut llegir els colors de la teva foto de perfil",
+    "dimLights": "Atenua els llums",
+    "dimLightsDesc": "Redueix l'exposició a la llum blava",
+    "matureContent": "Mostra contingut per a adults",
+    "matureContentDesc": "Inclou publicacions per a adults i explícites als teus canals i treu l'avís de les que ja veus. Desactivat per defecte.",
+    "noNewMessages": "Cap conversa nova",
+    "noNewMessagesDesc": "Conserva els teus fils existents, però ningú de nou en pot començar cap",
+    "dmNoNewHelp": "Els fils existents continuen funcionant; ningú de nou en pot començar cap"
   },
   "common": {
     "save": "Desar",
@@ -256,7 +322,8 @@
     "translating": "Traduint...",
     "close": "Tancar",
     "loadingMore": "Carregant més...",
-    "loadMore": "Carregar més"
+    "loadMore": "Carregar més",
+    "tryAgain": "Torna-ho a provar"
   },
   "tip": {
     "title": "Enviar propina",
@@ -724,7 +791,11 @@
     "postRemoved": "La teva publicació ha estat eliminada",
     "newNotification": "Nova notificació",
     "oneOther": "1 altre",
-    "nOthers": "{{count}} altres"
+    "nOthers": "{{count}} altres",
+    "thisBrowser": "Aquest navegador",
+    "features": "Funcions",
+    "communities": "Comunitats",
+    "stores": "Botigues"
   },
   "leaderboard": {
     "title": "Classificació",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Has estat afegit! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo massa baix ({{balance}} DHB)",
     "refreshFailed": "Alguna cosa ha anat malament",
-    "noWalletAddress": "No s'ha trobat adreça de cartera"
+    "noWalletAddress": "No s'ha trobat adreça de cartera",
+    "affiliates": "Afiliats",
+    "directReferrals_one": "{{count}} directes",
+    "directReferrals_other": "{{count}} directes",
+    "secondaryReferrals_one": "{{count}} secundaris",
+    "secondaryReferrals_other": "{{count}} secundaris"
   },
   "explorePage": {
     "searchPlaceholder": "Cercar persones, publicacions o contingut...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Planificat",
     "statusInProgress": "En progrés",
     "statusCompleted": "Completat",
-    "statusDeclined": "Rebutjat"
+    "statusDeclined": "Rebutjat",
+    "shipping": "En desenvolupament",
+    "noShippingYet": "Res en curs",
+    "shippingAppearHere": "Les sol·licituds que s'estan construint apareixeran aquí."
   },
   "auth": {
     "loginRequired": "Cal iniciar sessió"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Error en iniciar la compra",
     "redirectingOnramp": "Redirigint a la rampa...",
     "onrampCreated": "Sessió de rampa creada",
-    "failedOnramp": "Error en iniciar la rampa"
+    "failedOnramp": "Error en iniciar la rampa",
+    "badgeDiscount": "Titular {{tier}} — {{percent}}% de descompte"
   },
   "agents": {
     "title": "Agents IA",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agent eliminat",
     "failedCreate": "Error en crear l'agent",
     "failedDelete": "Error en eliminar l'agent",
-    "apiKeyCopied": "Clau API copiada al porta-retalls"
+    "apiKeyCopied": "Clau API copiada al porta-retalls",
+    "connectorUrl": "URL del connector",
+    "connectorUrlCopied": "URL del connector copiada",
+    "connectorUrlHelp": "Afegeix-ho com a connector MCP personalitzat a Claude o ChatGPT. S'autentica com aquest agent, així que tracta'l com la clau d'API.",
+    "agentWallet": "Cartera de l'agent (Base)",
+    "walletCopied": "Adreça de la cartera copiada",
+    "agentWalletHelp": "Envia aquí una petita quantitat d'ETH a Base abans que l'agent publiqui: publicar encunya on-chain i l'agent paga el seu propi gas. Comentar, votar i seguir no necessiten gas."
   },
   "hero": {
     "title": "Benvinguts Al",
@@ -1005,7 +1091,10 @@
     "or": "o",
     "termsNotice": "En continuar, acceptes els nostres Termes de Servei i Política de Privacitat",
     "walletInfoDesktop": "Connecta la teva cartera per iniciar sessió de forma segura",
-    "walletInfoMobile": "MetaMask, Trust & Phantom obriran la seva app directament. Rabby utilitzarà WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom obriran la seva app directament. Rabby utilitzarà WalletConnect.",
+    "addProfileTitle": "Afegeix un perfil",
+    "walletConnectedAs": "Connectat",
+    "useDifferentWallet": "Fes servir una altra cartera"
   },
   "careers": {
     "title": "Carreres a DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Properament — les tendències regionals estan en camí!",
     "post": "Publica",
     "logOut": "Tanca sessió",
-    "logIn": "Inicia sessió"
+    "logIn": "Inicia sessió",
+    "searchMenu": "Cerca al menú",
+    "clearSearch": "Neteja la cerca",
+    "noMenuMatches": "Res del menú no coincideix",
+    "searchDehubFor": "Cerca «{{query}}» a DeHub"
   },
   "postInfo": {
     "title": "Informació de la publicació",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Nova versió disponible",
     "refresh_to_pick_up_the_latest_changes": "Actualitza per rebre els canvis més recents.",
     "refresh": "Actualitza",
-    "what_changed": "Què ha canviat?"
+    "what_changed": "Què ha canviat?",
+    "turn_on_desktop_notifications": "Vols activar les notificacions de l'escriptori?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Assabenta't de respostes, propines i missatges mentre ets en una altra pestanya.",
+    "turn_on": "Activa",
+    "not_now": "Ara no"
   },
   "prompt": {
     "seoTitle": "Demana al teu feed — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Quan",
     "whyStake": "Per què dipositar?",
     "yourStaked": "El teu dipòsit"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Una col·lecció de jocs, mons i experiències que DeHub ha construït i alliberat com a codi obert.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Juga directament al navegador a DeHub: escacs 3D cinematogràfics, un shooter generat proceduralment, un passeig per la selva tropical, una baralla de carrer de neó i un parquet de negociació per on pots caminar. Sense instal·lar, sense descarregar.",
+    "alsoIn": "També hi és a {{theme}}"
+  },
+  "stats": {
+    "title": "Estadístiques",
+    "subtitle": "Intel·ligència de codi obert en temps real",
+    "live": "En directe",
+    "range": {
+      "24h": "24 hores",
+      "3d": "3 dies",
+      "7d": "7 dies",
+      "30d": "30 dies",
+      "all": "Tot el període"
+    },
+    "unavailable": {
+      "title": "Les estadístiques no estan disponibles ara mateix",
+      "unconfigured": "A l'endpoint d'analítiques encara no se li ha donat el token d'API de Cloudflare. No es mostra res en comptes d'un número inventat.",
+      "error": "No hem pogut contactar amb l'API d'analítiques de Cloudflare. En comptes de mostrar una xifra obsoleta o inventada, aquesta pàgina no mostra res fins que la lectura en directe funcioni."
+    },
+    "tile": {
+      "visitorsToday": "Visitants avui",
+      "soFarToday": "fins ara avui, UTC",
+      "peakHour": "Hora amb més activitat",
+      "peakDay": "Dia amb més activitat",
+      "peakAtHour": "a les {{when}} UTC",
+      "peakOnDay": "el {{when}}",
+      "inRange": "en aquest interval",
+      "pageViews": "Pàgines vistes",
+      "overHours": "en {{count}} h",
+      "overDay": "en 1 dia",
+      "overDays": "en {{count}} dies",
+      "requestsLabel": "Sol·licituds",
+      "served": "Servides",
+      "requests": "{{requests}} sol·licituds"
+    },
+    "chart": {
+      "hourly": "Visitants per hora",
+      "daily": "Visitants per dia",
+      "hourlyHint": "{{count}} intervals horaris, UTC",
+      "dailyHint": "visitants únics per dia",
+      "empty": "Encara no hi ha dades per a aquest període"
+    },
+    "countries": {
+      "title": "Països principals",
+      "windowDay": "últimes 24 hores",
+      "window": "últims {{days}} dies"
+    },
+    "browsers": {
+      "title": "Navegadors",
+      "window": "per pàgines vistes"
+    },
+    "edge": {
+      "title": "A la vora",
+      "windowDay": "últimes 24 hores",
+      "window": "últims {{days}} dies",
+      "cached": "Servit des de la memòria cau",
+      "encrypted": "Encriptat",
+      "threats": "Amenaces bloquejades"
+    },
+    "proof": {
+      "title": "D'on surten aquestes xifres",
+      "subtitle": "Mesurat per Cloudflare, no per aquesta pàgina",
+      "source": "Font",
+      "datasets": "Conjunts de dades",
+      "zone": "Zona",
+      "ray": "ID de ray de Cloudflare",
+      "fetched": "Obtingut a les",
+      "query": "La consulta exacta darrere del gràfic",
+      "copied": "Copiat",
+      "copy": "Copia",
+      "openEndpoint": "Obre /api/stats",
+      "openRaw": "La resposta intacta de Cloudflare",
+      "edge": "Cada sol·licitud a dehub.io passa per Cloudflare abans d'arribar als nostres servidors. Aquests recomptes són l'agregació del mateix Cloudflare d'aquest trànsit: les mateixes xifres que mostra el nostre tauler. No els recull cap script del teu navegador, així que res d'aquesta pàgina no els pot inflar, i bloquejar rastrejadors no els canvia.",
+      "live": "La pàgina les llegeix en directe. Carregar /stats crida el nostre endpoint, que en aquell moment consulta l'Analytics API de Cloudflare i desa la resposta a la memòria cau 60 segons.",
+      "limits": "Què demostra això i què no: pots veure que les xifres vénen de l'agregació de Cloudflare i no del codi de la nostra aplicació, i que la consulta publicada aquí és la que s'executa. No és sense confiança: el token d'API el tenim nosaltres i Cloudflare no ofereix cap lectura pública de les analítiques d'una zona. Qualsevol amb la seva pròpia zona de Cloudflare pot executar la mateixa consulta i confirmar-ne la forma."
+    },
+    "definitions": {
+      "title": "Què volen dir les xifres",
+      "visitorsTerm": "Visitants",
+      "visitors": "— adreces IP úniques que Cloudflare va veure aquell dia. Proper a les persones, però no idèntic: una oficina amb una sola connexió compta una vegada, i un mòbil que passa del wifi a les dades compta dues.",
+      "pageViewsTerm": "Pàgines vistes",
+      "pageViews": "— sol·licituds que Cloudflare classifica com a càrregues de pàgina, i no imatges, scripts o crides a l'API.",
+      "botsTerm": "Els bots hi són inclosos",
+      "bots": "— són recomptes bruts a la vora, així que inclouen rastrejadors, monitors de disponibilitat i clients automatitzats. Els pots veure tu mateix al desglossament de navegadors de dalt, on entrades com «Curl» i «Desconegut» són trànsit automatitzat i no persones. Filtrar els bots requereix un pla de pagament de Cloudflare que no tenim, i restar en silenci una estimació faria els números menys comprovables, no més.",
+      "totalTerm": "Totals de l'interval",
+      "total": "— les pàgines vistes i les sol·licituds se sumen al llarg de l'interval. Els visitants deliberadament no se sumen en un «total de visitants», perquè algú que va ser aquí dilluns i dimarts es comptaria dues vegades.",
+      "peakTerm": "Hora / dia amb més activitat",
+      "peak": "— el recompte únic més alt en qualsevol interval del període, pel mateix motiu: és una xifra que Cloudflare mesura de debò, no una construïda sumant recomptes que se superposen.",
+      "resolutionTerm": "L'horari s'atura als 3 dies",
+      "resolution": "— és el límit de Cloudflare en aquest pla, no una tria: rebutja qualsevol consulta horària de més de tres dies. Les vistes de 24 hores i 3 dies són horàries; 7 dies i més són diàries, i no hi ha manera de dibuixar un gràfic horari de tot el període.",
+      "breakdownTerm": "Països i navegadors",
+      "breakdown": "— segueixen l'interval que triïs, però només fins a {{max}} dies enrere, que és fins on es guarda el desglossament diari. En intervals més llargs el gràfic cobreix més temps que la llista de països.",
+      "startTerm": "Historial",
+      "start": "— «tot el període» vol dir cada dia que Cloudflare encara conserva, avui {{days}} dies a partir del {{date}}, el dia que dehub.io va passar a Cloudflare. No hi ha dades de vora anteriors per mostrar, i els dies antics van caient a mesura que Cloudflare els caduca."
+    }
   }
 }
