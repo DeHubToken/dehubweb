@@ -83,6 +83,8 @@ const Dapp = () => {
     { id: 'stores', label: t('dapp.storesTitle') },
     { id: 'affiliate', label: t('dapp.affiliateTitle') },
     { id: 'ai-suite', label: t('dapp.tocAi') },
+    { id: 'creator-studio', label: t('dapp.tocStudio') },
+    { id: 'arcade', label: t('dapp.tocArcade') },
     { id: 'encryption', label: t('dapp.tocEncryption') },
     { id: 'depin', label: t('dapp.tocDepin') },
     { id: 'advertising', label: t('dapp.tocAds') },
@@ -90,7 +92,9 @@ const Dapp = () => {
     { id: 'connect', label: t('dapp.tocConnect') },
     { id: 'notifications', label: t('dapp.tocNotifications') },
     { id: 'themes', label: t('dapp.tocThemes') },
+    { id: 'settings', label: t('dapp.tocSettings') },
     { id: 'get-the-app', label: t('dapp.tocApps') },
+    { id: 'more', label: t('dapp.tocMore') },
   ];
 
   // Scroll-spy for the on-this-page bar. IntersectionObserver rather than a
@@ -876,6 +880,11 @@ const Dapp = () => {
                 <li>{t('dapp.anti3')}</li>
               </ul>
             </div>
+          </div>
+
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold text-foreground mb-3 font-exo">{t('dapp.govLiveTitle')}</h3>
+            <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.govLiveDesc')}</p>
           </div>
 
           <div className="mt-8">
@@ -1717,6 +1726,35 @@ const Dapp = () => {
           </div>
         </section>
 
+        <section id="creator-studio" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Video className="w-8 h-8" />
+            {t('dapp.studioTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.studioDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.studioDesc2')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.studioB1')}</strong> {t('dapp.studioB1Desc')}</li>
+            <li><strong>{t('dapp.studioB2')}</strong> {t('dapp.studioB2Desc')}</li>
+            <li><strong>{t('dapp.studioB3')}</strong> {t('dapp.studioB3Desc')}</li>
+            <li><strong>{t('dapp.studioB4')}</strong> {t('dapp.studioB4Desc')}</li>
+          </ul>
+        </section>
+
+        <section id="arcade" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Zap className="w-8 h-8" />
+            {t('dapp.arcadeTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.arcadeDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.arcadeDesc2')}</p>
+          <p className="text-foreground/80 font-exo">
+            <Link to="/docs/games" className="text-primary hover:underline inline-flex items-center gap-1">
+              {t('dapp.arcadeLink')} <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+          </p>
+        </section>
+
         <section id="encryption" className="scroll-mt-32">
           {/* Folded in from /docs/e2e-encryption */}
           <E2EEncryption />
@@ -1766,6 +1804,19 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.themesDesc2')}</p>
         </section>
 
+        <section id="settings" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.settingsTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.settingsDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.settingsB1')}</strong> {t('dapp.settingsB1Desc')}</li>
+            <li><strong>{t('dapp.settingsB2')}</strong> {t('dapp.settingsB2Desc')}</li>
+            <li><strong>{t('dapp.settingsB3')}</strong> {t('dapp.settingsB3Desc')}</li>
+            <li><strong>{t('dapp.settingsB4')}</strong> {t('dapp.settingsB4Desc')}</li>
+            <li><strong>{t('dapp.settingsB5')}</strong> {t('dapp.settingsB5Desc')}</li>
+            <li><strong>{t('dapp.settingsB6')}</strong> {t('dapp.settingsB6Desc')}</li>
+          </ul>
+        </section>
+
         <section id="get-the-app" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.appsTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.appsDesc')}</p>
@@ -1773,6 +1824,21 @@ const Dapp = () => {
             <li><strong>{t('dapp.appsB1')}</strong> {t('dapp.appsB1Desc')}</li>
             <li><strong>{t('dapp.appsB2')}</strong> {t('dapp.appsB2Desc')}</li>
             <li><strong>{t('dapp.appsB3')}</strong> {t('dapp.appsB3Desc')}</li>
+          </ul>
+        </section>
+
+        <section id="more" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.moreTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.moreDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.moreB1')}</strong> {t('dapp.moreB1Desc')}</li>
+            <li><strong>{t('dapp.moreB2')}</strong> {t('dapp.moreB2Desc')}</li>
+            <li><strong>{t('dapp.moreB3')}</strong> {t('dapp.moreB3Desc')}</li>
+            <li><strong>{t('dapp.moreB4')}</strong> {t('dapp.moreB4Desc')}</li>
+            <li><strong>{t('dapp.moreB5')}</strong> {t('dapp.moreB5Desc')}</li>
+            <li><strong>{t('dapp.moreB6')}</strong> {t('dapp.moreB6Desc')}</li>
+            <li><strong>{t('dapp.moreB7')}</strong> {t('dapp.moreB7Desc')}</li>
+            <li><strong>{t('dapp.moreB8')}</strong> {t('dapp.moreB8Desc')}</li>
           </ul>
         </section>
       </div>
