@@ -103,6 +103,7 @@ import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlo
 import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
+import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
 import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
@@ -2689,6 +2690,10 @@ function AssetsSettings() {
           </span>
         </div>
       </div>
+
+      {/* Badge delegation — a badge is bought with DHB, so it belongs with the
+          rest of what DHB buys rather than off in Profile. */}
+      <BadgeDelegationSection />
 
       {/* Wallet Drawer */}
       <Drawer open={walletDrawerOpen} onOpenChange={setWalletDrawerOpen}>
