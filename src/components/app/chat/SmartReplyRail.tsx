@@ -18,10 +18,14 @@ import type { SmartReplySuggestion } from '@/hooks/use-smart-replies';
  * drifted off the orb every time.
  */
 const ORB = 44;
-/** Orb box plus its seating ring — the diameter of the cut-out. */
-const SOCKET = 52;
-/** Cut-out radius: the socket is a full circle centred on the rail's bottom
- *  edge, so only its top half is carved out of the cards. */
+/** Orb box plus its seating ring — the diameter of the cut-out. Sized so the
+ *  arc hugs the dust ball (37px across at ORB 44) rather than leaving it
+ *  floating in a wide black hole. */
+const SOCKET = 48;
+/** Cut-out radius. The orb's centre sits ON the rail's bottom edge, which is
+ *  also the centre of the mask circle, so the hole is concentric with the ball
+ *  and the ball's lower half hangs below the rail. Seating it any higher puts
+ *  the cards' seam straight through the middle of the orb. */
 const NOTCH = SOCKET / 2;
 /** Cards carry `pb-7` — 28px, written literally in the class strings below so
  *  Tailwind can see it. It has to stay ≥ NOTCH: the mask erases card CONTENT
@@ -89,7 +93,7 @@ export function SmartReplyRail({
         {notice ? (
           <div className="smart-reply-rail" style={notchVar}>
             <div
-              className={`min-h-[108px] flex items-center justify-center rounded-2xl border border-white/[0.07] bg-white/[0.025] px-6 pt-3 pb-7 text-center`}
+              className={`min-h-[108px] lg:min-h-[92px] flex items-center justify-center rounded-2xl border border-white/[0.07] bg-white/[0.025] px-6 pt-3 pb-7 text-center`}
             >
               <p className="text-xs leading-snug text-zinc-500">{notice}</p>
             </div>
@@ -106,7 +110,7 @@ export function SmartReplyRail({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => s && onPick(s.text)}
                 aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                className={`group min-w-0 min-h-[108px] flex flex-col border p-3 pb-7 text-left transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
+                className={`group min-w-0 min-h-[108px] lg:min-h-[92px] flex flex-col border p-3 pb-7 text-left transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
                   i === 0 ? 'rounded-l-2xl pr-2.5' : '-ml-px rounded-r-2xl pl-2.5 pr-8'
                 } ${
                   s
@@ -159,7 +163,16 @@ export function SmartReplyRail({
           />
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center">
+        {/* Dropped by the notch radius so the orb's centre lands on the rail's
+            bottom edge — the same point the mask circle is centred on. The
+            offset is inline rather than a `-bottom-6` utility because it is
+            derived from NOTCH, and a hand-written twin is exactly how the two
+            drifted apart last time. The consumer's bottom padding holds the
+            overhang; see ChatInput. */}
+        <div
+          className="pointer-events-none absolute inset-x-0 flex justify-center"
+          style={{ bottom: -NOTCH }}
+        >
           <button
             type="button"
             onMouseDown={(e) => e.preventDefault()}
