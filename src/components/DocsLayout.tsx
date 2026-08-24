@@ -38,6 +38,9 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('nav.overview'),
       path: '/docs/dapps'
     }, {
+      title: t('dapp.tocAccounts'),
+      path: '/docs/dapps#accounts'
+    }, {
       title: t('dapp.tocFeeds'),
       path: '/docs/dapps#feeds'
     }, {
@@ -100,6 +103,15 @@ const getMenuItems = (t: (key: string) => string) => [{
     }, {
       title: t('dapp.tocFees'),
       path: '/docs/dapps#fees'
+    }, {
+      title: t('dapp.tocNotifications'),
+      path: '/docs/dapps#notifications'
+    }, {
+      title: t('dapp.tocThemes'),
+      path: '/docs/dapps#themes'
+    }, {
+      title: t('dapp.tocApps'),
+      path: '/docs/dapps#get-the-app'
     }]
   }, {
     title: t('nav.games'),
