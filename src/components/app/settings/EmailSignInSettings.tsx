@@ -119,9 +119,14 @@ export function EmailSignInSettings() {
                 email: status?.email ?? '',
               })
             : foreignLogin
-              ? t('settings.emailSignInExisting', 'You already sign in with {{email}}', {
-                  email: status?.email ?? '',
-                })
+              ? status?.email
+                ? t('settings.emailSignInExisting', 'You already sign in with {{email}}', {
+                    email: status.email,
+                  })
+                : t(
+                    'settings.emailSignInExistingUnknown',
+                    'This account already signs in without a wallet.',
+                  )
               : t(
                   'settings.emailSignInDesc',
                   'Attach an email address to sign in without your wallet.',
