@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import SEO from '@/components/SEO';
@@ -10,19 +9,10 @@ const FAQ = () => {
 
   const faqKeys = Array.from({ length: 30 }, (_, i) => i + 1);
 
-  // FAQPage markup, so the answers can win a rich result rather than sitting
-  // inside an accordion no crawler opens. Built from the same keys the page
-  // renders, so a new question can never appear in one and not the other.
-  const faqStructuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    'mainEntity': faqKeys.map((i) => ({
-      '@type': 'Question',
-      'name': t(`faq.q${i}`),
-      'acceptedAnswer': { '@type': 'Answer', 'text': t(`faq.a${i}`) },
-    })),
-  };
-
+  // The FAQPage markup for this route is emitted by the edge worker
+  // (`faqJsonLd` in CLOUDFLARE_WORKER_SEO.js), not from here: react-helmet's
+  // client-side output never reaches a crawler, and every JSON-LD block
+  // dehub.io serves comes from the worker's prerendered head.
   return (
     <>
       <SEO
@@ -30,9 +20,6 @@ const FAQ = () => {
         description={t('faq.subtitle')}
         url="/docs/faq"
       />
-      <Helmet>
-        <script type="application/ld+json">{JSON.stringify(faqStructuredData)}</script>
-      </Helmet>
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
           <h1 className="text-4xl font-bold text-foreground mb-4">{t('faq.title')}</h1>
