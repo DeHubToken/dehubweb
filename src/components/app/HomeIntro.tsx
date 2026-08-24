@@ -46,12 +46,9 @@ import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { dismissBootShell } from '@/lib/boot-shell';
 import { cn } from '@/lib/utils';
 
 const DISMISS_KEY = 'dehub.homeIntroDismissed';
-/** Memo for index.html's boot-shell gate — see the effect that writes it. */
-const SHOW_KEY = 'dehub.showIntro';
 /** Mobile uses 3000ms; web slides carry more text and are read, not swiped. */
 const SLIDE_MS = 5200;
 
@@ -147,46 +144,6 @@ export function HomeIntro() {
   const paused = useRef(false);
 
   const show = !(isAuthenticated || dismissed);
-
-  /* Hand off from index.html's boot shell. Deliberately NOT gated on `show`:
-     the shell's own predicate is read from localStorage at parse time, so it
-     can disagree with this one (a token that expires between the two, a
-     dismissal in another tab). Whichever way they diverge, this component
-     mounting means React is live and the splash has no business still being
-     up.
-
-     rAF is the PREFERRED trigger, not the only one: it fires after the panel's
-     own paint, so the cross-fade reveals something rather than swapping to a
-     blank frame. But a hidden tab never paints, so rAF never fires there —
-     open dehub.io in a background tab and the hand-off would wait out the 12s
-     backstop in index.html, then show the splash over an app that finished
-     loading ten seconds ago. Measured on dehub.io with visibilityState
-     "hidden": rAF did not fire, setTimeout did. So the two race, and whichever
-     lands first dismisses; dismissBootShell is idempotent. */
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => dismissBootShell());
-    const timer = window.setTimeout(() => dismissBootShell(), 100);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
-    };
-  }, []);
-
-  /* Tell the boot shell what we decided, so the NEXT load doesn't have to
-     guess. The shell's gate runs at parse time off localStorage, and it cannot
-     re-derive `show` — `isAuthenticated` resolves from a Supabase session the
-     shell can't read synchronously, which is why signed-in visitors saw the
-     panel flash before React tore it down. Recording the answer here turns
-     that into a one-load-only problem on a brand-new device, and the shell's
-     own sb-*-auth-token check covers even that. Written on every change, not
-     just on mount: dismissing the panel must take effect on the next load. */
-  useEffect(() => {
-    try {
-      localStorage.setItem(SHOW_KEY, show ? '1' : '0');
-    } catch {
-      /* the memo is an optimisation; the gate has two other checks */
-    }
-  }, [show]);
 
   useEffect(() => {
     if (!show) return;
