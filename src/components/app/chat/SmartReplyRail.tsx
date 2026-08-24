@@ -23,10 +23,10 @@ const SOCKET = 52;
 /** Cut-out radius: the socket is a full circle centred on the rail's bottom
  *  edge, so only its top half is carved out of the cards. */
 const NOTCH = SOCKET / 2;
-/** Card padding under the text. Must clear the notch — the mask erases card
- *  CONTENT inside the arc, not just the fill, so text closer than this to the
- *  bottom edge is silently eaten at the seam. */
-const CARD_PAD_BOTTOM = 'pb-7';
+/** Cards carry `pb-7` — 28px, written literally in the class strings below so
+ *  Tailwind can see it. It has to stay ≥ NOTCH: the mask erases card CONTENT
+ *  inside the arc, not just the fill, so text any closer to the bottom edge is
+ *  silently eaten at the seam. */
 
 export type SmartReplyRailStatus = 'idle' | 'loading' | 'ready' | 'empty' | 'error';
 
@@ -89,7 +89,7 @@ export function SmartReplyRail({
         {notice ? (
           <div className="smart-reply-rail" style={notchVar}>
             <div
-              className={`min-h-[108px] flex items-center justify-center rounded-2xl border border-white/[0.07] bg-white/[0.025] px-6 pt-3 ${CARD_PAD_BOTTOM} text-center`}
+              className={`min-h-[108px] flex items-center justify-center rounded-2xl border border-white/[0.07] bg-white/[0.025] px-6 pt-3 pb-7 text-center`}
             >
               <p className="text-xs leading-snug text-zinc-500">{notice}</p>
             </div>
@@ -106,7 +106,7 @@ export function SmartReplyRail({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => s && onPick(s.text)}
                 aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                className={`group min-w-0 min-h-[108px] flex flex-col border p-3 ${CARD_PAD_BOTTOM} text-left transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
+                className={`group min-w-0 min-h-[108px] flex flex-col border p-3 pb-7 text-left transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
                   i === 0 ? 'rounded-l-2xl pr-2.5' : '-ml-px rounded-r-2xl pl-2.5 pr-8'
                 } ${
                   s
