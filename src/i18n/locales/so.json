@@ -27,7 +27,20 @@
     "events": "Dhacdooyinka",
     "prompt": "Dejiso",
     "communities": "Bulshooyinka",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Tirakoob toos ah",
+    "liveTv": "TV Toos ah",
+    "buyDhb": "Iibso DHB",
+    "bridge": "Buundo",
+    "top100": "Ugu Sarreeya 100",
+    "agents": "Wakiilada AI",
+    "advertising": "Xayeysiis",
+    "premium": "Premium",
+    "pricing": "Qiimaha",
+    "creators": "Hal-abuurayaal",
+    "getTheApp": "Soo deji abka",
+    "connectAi": "Ku xir AI"
   },
   "feed": {
     "home": "Guriga",
@@ -35,7 +48,9 @@
     "images": "Sawirrada",
     "shorts": "Gaagaaban",
     "music": "Muusig",
-    "live": "Toos"
+    "live": "Toos",
+    "newPosts_one": "{{count}} qoraal cusub",
+    "newPosts_other": "{{count}} qoraal cusub"
   },
   "explore": {
     "all": "Dhammaan",
@@ -242,7 +257,58 @@
     "hazy": "Habeenno Ciiryaan ah",
     "save": "Keydi",
     "saving": "Waa la keydinayaa...",
-    "swarms": "Raxan"
+    "swarms": "Raxan",
+    "profiles": "Profilada",
+    "profilesDesc": "Akoonnada lagu keydiyay qalabkan",
+    "addProfile": "Ku dar profile",
+    "profileActive": "Firfircoon",
+    "profileSignedOut": "gal si aad u beddesho",
+    "profileRemove": "Ka saar profilka",
+    "profilesUsed": "{{used}} ka mid ah {{max}} ayaa la isticmaalay",
+    "profilesNextTier": "Heerka {{tier}} wuxuu hayaa {{count}}",
+    "profilesFullTier": "Stake u samee astaanta {{tier}} si aad u haysato {{count}} profile",
+    "profilesFull": "Ka saar hal profile si aad ugu darto akoon kale",
+    "browserNotifications": "Ogeysiisyada browserka",
+    "browserNotificationsDesc": "Hel ogeysiis ku saabsan jawaabaha, tabaruca iyo fariimaha inta aad ku jirto tab kale",
+    "browserNotificationsOnDesc": "Jawaabaha, tabaruca iyo fariimaha ayaa soo muuqda inta aad ku jirto tab kale",
+    "browserNotificationsDismissed": "Codsiga ogeysiiska waa la iska diiday — mar kale isku day furaha",
+    "browserNotificationsBlocked": "Waxaa xannibay browserkaaga",
+    "browserNotificationsBlockedTitle": "Browserkan wuxuu xannibayaa ogeysiisyada",
+    "browserNotificationsBlockedNote": "Kaliya browserkaaga ayaa beddeli kara — marka la xannibo, DeHub mar dambe ma weydiin karo.",
+    "browserNotificationsBlockedPending": "Codsigaaga waa la keydiyay — wuxuu isagu shidmi doonaa marka browserkaagu oggolaado.",
+    "browserNotificationsUnblockChromium": "Guji astaanta ku taal bidixda barta cinwaanka → Dejinta goobta → Ogeysiisyada u dhig Oggolow, ka dibna dib u soo rar boggan.",
+    "browserNotificationsUnblockFirefox": "Guji quful ku yaal bidixda barta cinwaanka, tirtir \"La xannibay\" ee ku ag yaal Hel Ogeysiis, ka dibna dib u soo rar boggan.",
+    "browserNotificationsUnblockSafari": "Barta liiska: Safari → Dejinta → Goobaha internetka → Ogeysiisyada, ka dibna goobtan u dhig Oggolow.",
+    "browserNotificationsUnblockGeneric": "Fur dejinta goobta ee browserkaaga boggan, Ogeysiisyada u dhig Oggolow, ka dibna dib u soo rar.",
+    "browserNotificationsIosHint": "iPhone iyo iPad waxay oggolaadaan kaliya marka DeHub uu ku jiro Shaashadda Guriga — taabo Wadaag, ka dibna \"Ku dar Shaashadda Guriga\".",
+    "browserNotificationsTest": "Dir ogeysiis tijaabo ah",
+    "browserNotificationsTestSent": "Ogeysiiska tijaabada waa la diray",
+    "browserNotificationsTestBody": "Sidan ayuu u eg yahay ogeysiiska DeHub.",
+    "showAsNewMember": "I muuji xubin cusub ahaan",
+    "showAsNewMemberDesc": "Waxay u oggolaanaysaa xubnaha kale inay arkaan inaad hadda ku biirtay si ay kuu soo dhoweeyaan. Waxay iska joogsataa 30 maalmood ka dib markaad is-diiwaangeliso.",
+    "defaultProfileTab": "Tabka profilka caadiga ah",
+    "defaultProfileTabDesc": "Dooro tabka ay booqdayaashu marka hore arkaan profilkaaga",
+    "lavalamp": "Nalka lava",
+    "war": "Dagaal",
+    "osaka": "Osaka",
+    "jungle": "Kayn",
+    "themeColor": "Midabka mawduuca",
+    "themeColorDesc": "Dooro midab gaar ah mawduucan",
+    "themeColorReset": "Dib u deji",
+    "themeColorWhite": "Caddaan",
+    "themeColorBlack": "Madow",
+    "themeColorRainbow": "Qaanso roobaad",
+    "themeColorBrand": "Astaanta",
+    "themeColorBrandDesc": "Isticmaal midabada sawirka profilkaaga",
+    "themeColorBrandNoAvatar": "Ku dar sawir profile si aad u isticmaasho midabada Astaanta",
+    "themeColorBrandFailed": "Lagama akhrin karin midabada sawirka profilkaaga",
+    "dimLights": "Iftiinka yaree",
+    "dimLightsDesc": "Wuxuu yareeyaa iftiinka buluuga ah",
+    "matureContent": "Muuji waxyaabaha dadka waaweyn",
+    "matureContentDesc": "Wuxuu ku darayaa qoraallada dadka waaweyn iyo kuwa daran feedhadaada, wuxuuna ka saarayaa digniinta kuwa aad hore u aragtay. Sida caadiga ah waa demin.",
+    "noNewMessages": "Wax wadahadal cusub ah ma jiro",
+    "noNewMessagesDesc": "Hayso wadahadaladaada jira, laakiin qof cusub mid ma bilaabi karo",
+    "dmNoNewHelp": "Wadahadalada jira way sii shaqeeyaan; qof cusub mid ma bilaabi karo"
   },
   "common": {
     "save": "Kaydi",
@@ -256,7 +322,8 @@
     "translating": "Waa la turjumayaa...",
     "close": "Xir",
     "loadingMore": "Wax kale waa la soo dejinayaa...",
-    "loadMore": "Wax kale soo dejiso"
+    "loadMore": "Wax kale soo dejiso",
+    "tryAgain": "Isku day mar kale"
   },
   "tip": {
     "title": "Dir Bakhshiish",
@@ -724,7 +791,11 @@
     "postRemoved": "Qoraalkaaga waa la saaray",
     "newNotification": "Ogeysiis cusub",
     "oneOther": "1 kale",
-    "nOthers": "{{count}} kale"
+    "nOthers": "{{count}} kale",
+    "thisBrowser": "Browserkan",
+    "features": "Astaamo",
+    "communities": "Bulshooyin",
+    "stores": "Dukaamo"
   },
   "leaderboard": {
     "title": "Hogaamiyaha",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Waa lagu daray! Miisaan: {{balance}} DHB",
     "balanceTooLow": "Miisaanku aad u yar yahay ({{balance}} DHB)",
     "refreshFailed": "Wax baa qaldamay",
-    "noWalletAddress": "Cinwaanka jeebka lama helin"
+    "noWalletAddress": "Cinwaanka jeebka lama helin",
+    "affiliates": "Iskaashiyayaal",
+    "directReferrals_one": "{{count}} toos ah",
+    "directReferrals_other": "{{count}} toos ah",
+    "secondaryReferrals_one": "{{count}} dadban",
+    "secondaryReferrals_other": "{{count}} dadban"
   },
   "explorePage": {
     "searchPlaceholder": "Raadi dadka, qoraallada, ama nuxurka...",
@@ -854,7 +930,10 @@
     "statusPlanned": "La Qorsheeyay",
     "statusInProgress": "Waa La Wadaa",
     "statusCompleted": "Waa La Dhammeeyay",
-    "statusDeclined": "Waa La Diiday"
+    "statusDeclined": "Waa La Diiday",
+    "shipping": "Waa la dhisayaa",
+    "noShippingYet": "Waxba socda ma jiraan",
+    "shippingAppearHere": "Codsiyada la dhisayo halkan ayay ka soo muuqan doonaan."
   },
   "auth": {
     "loginRequired": "Soo galitaan waa loo baahan yahay"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Bilaawidda iibsashadu wuu fashilmay",
     "redirectingOnramp": "Waxaa loo jiheynayaa onramp-ka...",
     "onrampCreated": "Marxaladda onramp-ka waa la sameeyay",
-    "failedOnramp": "Bilaawidda onramp-ku wuu fashilmay"
+    "failedOnramp": "Bilaawidda onramp-ku wuu fashilmay",
+    "badgeDiscount": "Haystaha {{tier}} — {{percent}}% qiimo dhimis"
   },
   "agents": {
     "title": "Wakiilada AI",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Wakiilka waa la tirtiray",
     "failedCreate": "Sameynta wakiilku wuu fashilmay",
     "failedDelete": "Tirtiridda wakiilku wuu fashilmay",
-    "apiKeyCopied": "Furaha API waa lagu nuqulay clipboard-ka"
+    "apiKeyCopied": "Furaha API waa lagu nuqulay clipboard-ka",
+    "connectorUrl": "URL-ka isku xirka",
+    "connectorUrlCopied": "URL-ka isku xirka waa la koobiyeeyay",
+    "connectorUrlHelp": "Ku dar kan sida isku xire MCP gaar ah Claude ama ChatGPT. Wuxuu isu aqoonsadaa wakiilkan, sidaas darteed u dhaqan sida furaha API.",
+    "agentWallet": "Boorsada wakiilka (Base)",
+    "walletCopied": "Cinwaanka boorsada waa la koobiyeeyay",
+    "agentWalletHelp": "Halkan u soo dir wax yar oo ETH ah shabakadda Base ka hor inta wakiilku aanu wax dhigin — daabacaadu waxay mint ku samaysaa silsiladda, wakiilkuna wuxuu bixiyaa gaaskiisa. Faallo, cod iyo raacid gaas uma baahna."
   },
   "hero": {
     "title": "Ku Soo Dhawoow",
@@ -1005,7 +1091,10 @@
     "or": "ama",
     "termsNotice": "Adiga oo sii wadaya, waxaad ku heshiisaa Shuruudaha Adeegga iyo Xeerka Gaarsiinimada",
     "walletInfoDesktop": "Ku xir jeebkaaga si aad si ammaan ah u soo gasho",
-    "walletInfoMobile": "MetaMask, Trust iyo Phantom waxay si toos ah u furi doonaan app-kooda. Rabby wuxuu isticmaali doonaa WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust iyo Phantom waxay si toos ah u furi doonaan app-kooda. Rabby wuxuu isticmaali doonaa WalletConnect.",
+    "addProfileTitle": "Ku dar profile",
+    "walletConnectedAs": "Waa la isku xiray",
+    "useDifferentWallet": "Isticmaal boorso kale"
   },
   "careers": {
     "title": "Shaqooyinka DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Dhawaan — trendiyada gobolka waa soo socotaa!",
     "post": "Dhaji",
     "logOut": "Ka bax",
-    "logIn": "Gal"
+    "logIn": "Gal",
+    "searchMenu": "Ka raadi liiska",
+    "clearSearch": "Nadiifi raadinta",
+    "noMenuMatches": "Waxba liiska kuma jiraan oo u dhigma",
+    "searchDehubFor": "Ka raadi \"{{query}}\" DeHub"
   },
   "postInfo": {
     "title": "Macluumaadka qoraalka",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Nooca cusub ee la heli karo",
     "refresh_to_pick_up_the_latest_changes": "Dib u cusboonaysii si aad u qaadato isbeddellada ugu dambeeyay.",
     "refresh": "Dib u cusboonaysii",
-    "what_changed": "Maxaa is badalay"
+    "what_changed": "Maxaa is badalay",
+    "turn_on_desktop_notifications": "Ma shidaa ogeysiisyada deskiga?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Hel ogeysiis ku saabsan jawaabaha, tabaruca iyo fariimaha inta aad ku jirto tab kale.",
+    "turn_on": "Shid",
+    "not_now": "Hadda maya"
   },
   "prompt": {
     "seoTitle": "Dejiso waxaad rabo — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Goorma",
     "whyStake": "Maxaad u Dhiganaysaa?",
     "yourStaked": "Dhigaalkaaga"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Ururin ciyaaro, adduunyo iyo waayo-aragnimo uu DeHub dhisay oo uu ka dhigay il furan.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Ku ciyaar browserkaaga DeHub — chess 3D oo filim u eg, ciyaar rasaas oo si nidaamsan loo abuuray, socod kaynta roobka, dagaal waddo neon ah iyo qol ganacsi oo la mari karo. Wax rakibaad ah ma jiro, wax soo dejin ah ma jiro.",
+    "alsoIn": "Sidoo kale wuxuu ku jiraa {{theme}}"
+  },
+  "stats": {
+    "title": "Tirakoob",
+    "subtitle": "Xog furan oo waqti dhab ah",
+    "live": "Toos ah",
+    "range": {
+      "24h": "24 saacadood",
+      "3d": "3 maalmood",
+      "7d": "7 maalmood",
+      "30d": "30 maalmood",
+      "all": "Waqtiga oo dhan"
+    },
+    "unavailable": {
+      "title": "Tirakoobku hadda ma diyaar aha",
+      "unconfigured": "Dhamaadka falanqaynta weli lama siin calaamaddiisa API ee Cloudflare. Waxba lama tuso halkii tiro la abuuray.",
+      "error": "Ma aannaan gaari karin API-ga falanqaynta ee Cloudflare. Halkii aan tusi lahayn tiro duugoobay ama la abuuray, boggani waxba ma tuso ilaa akhriska tooska ah uu guulaysto."
+    },
+    "tile": {
+      "visitorsToday": "Booqdayaasha maanta",
+      "soFarToday": "maanta ilaa hadda, UTC",
+      "peakHour": "Saacadda ugu mashquulsan",
+      "peakDay": "Maalinta ugu mashquulsan",
+      "peakAtHour": "{{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "xilligan",
+      "pageViews": "Muuqaalada bogga",
+      "overHours": "{{count}} saacadood gudahood",
+      "overDay": "1 maalin gudaheed",
+      "overDays": "{{count}} maalmood gudahood",
+      "requestsLabel": "Codsiyo",
+      "served": "La bixiyay",
+      "requests": "{{requests}} codsi"
+    },
+    "chart": {
+      "hourly": "Booqdayaal saacaddii",
+      "daily": "Booqdayaal maalintii",
+      "hourlyHint": "{{count}} qeybood saacadeed, UTC",
+      "dailyHint": "booqdayaal gaar ah maalintii",
+      "empty": "Weli xog ma jirto muddadan"
+    },
+    "countries": {
+      "title": "Wadamada ugu sarreeya",
+      "windowDay": "24 saacadood ee la soo dhaafay",
+      "window": "{{days}} maalmood ee la soo dhaafay"
+    },
+    "browsers": {
+      "title": "Browserada",
+      "window": "sida muuqaalada bogga"
+    },
+    "edge": {
+      "title": "Cidhifka",
+      "windowDay": "24 saacadood ee la soo dhaafay",
+      "window": "{{days}} maalmood ee la soo dhaafay",
+      "cached": "Laga bixiyay kaydka",
+      "encrypted": "Sir ah",
+      "threats": "Khataraha la xannibay"
+    },
+    "proof": {
+      "title": "Halka tirooyinkani ka yimaadeen",
+      "subtitle": "Waxaa cabbiray Cloudflare, ee ma aha boggan",
+      "source": "Isha",
+      "datasets": "Xog-ururineed",
+      "zone": "Aag",
+      "ray": "Cloudflare ray ID",
+      "fetched": "La soo qaatay",
+      "query": "Weydiinta saxda ah ee shaxda ka dambaysa",
+      "copied": "La koobiyeeyay",
+      "copy": "Koobiyee",
+      "openEndpoint": "Fur /api/stats",
+      "openRaw": "Jawaabta Cloudflare ee aan la taaban",
+      "edge": "Codsi kasta oo dehub.io u socda wuxuu maraa Cloudflare ka hor inta uusan gaarin server-yadeenna. Tirooyinkani waa isu-geynta Cloudflare ee taraafikaas — tirooyinka isku mid ah ee dashboard-keennu muujiyo. Ma aha qoraal browserkaaga ku jira oo ururiya, sidaas darteed waxba boggan kuma jiraan oo kordhin kara, xannibaadda raad-raacayaashuna ma beddesho.",
+      "live": "Boggu si toos ah ayuu u akhriyaa. Soo dejinta /stats waxay wacaysaa dhamaadkayaga, kaas oo daqiiqaddaas weydiiya Analytics API ee Cloudflare oo jawaabta kaydiya 60 ilbiriqsi.",
+      "limits": "Waxa uu tusinayo iyo waxa uusan tusinayn: waxaad arki kartaa in tirooyinku ka yimaadeen isu-geynta Cloudflare ee ma aha koodhka barnaamijkeenna, iyo in weydiinta halkan lagu daabacay ay tahay tii socota. Ma aha mid aan kalsooni u baahnayn — calaamadda API annaga ayaa haysanna, Cloudflare-na ma bixiyo akhris dadweyne oo falanqaynta aag. Qof kasta oo leh aaggiisa Cloudflare wuxuu socodsiin karaa weydiin la mid ah wuxuuna xaqiijin karaa qaabkeeda."
+    },
+    "definitions": {
+      "title": "Waxa tirooyinku ka dhigan yihiin",
+      "visitorsTerm": "Booqdayaal",
+      "visitors": "— cinwaannada IP gaarka ah ee Cloudflare arkay maalintaas. Way u dhow tahay dadka, laakiin isku mid ma aha: xafiis hal xiriir ku shaqeeya hal mar ayaa la tiriyaa, telefoon isku beddelaya wifi iyo xogta taleefanka laba jeer.",
+      "pageViewsTerm": "Muuqaalada bogga",
+      "pageViews": "— codsiyada Cloudflare u kala saaro inay yihiin soo dejinta bogga, ee ma aha sawirro, qoraallo ama wicitaanno API.",
+      "botsTerm": "Bots way ku jiraan",
+      "bots": "— kuwani waa tirooyin ceyriin ah oo cidhifka ah, sidaas darteed crawlers, kormeerayaasha shaqaynta iyo macaamiisha qoraalka ayaa ku jira. Waxaad ku arki kartaa qeybinta browserada ee kore, halkaas oo qoraallada sida \"Curl\" iyo \"Lama garanayo\" ay yihiin taraafik otomaatig ah oo aan dad ahayn. Sifaynta bots waxay u baahan tahay qorshe Cloudflare oo la bixiyo oo aanan lahayn, oo si aamusan qiyaas laga jaro waxay tirooyinka ka dhigi lahayd kuwo aan la hubin karin, ma aha kuwo la hubin karo.",
+      "totalTerm": "Wadarta xilliga",
+      "total": "— muuqaalada bogga iyo codsiyada waa lagu wada xisaabiyaa xilliga. Tirada booqdayaasha si ula kac ah looma isku darin \"wadarta booqdayaasha\", maxaa yeelay qofka joogay Isniinta iyo Talaadada laba jeer ayaa la tirin lahaa.",
+      "peakTerm": "Saacadda / maalinta ugu mashquulsan",
+      "peak": "— tirada gaarka ah ee ugu badan hal qeybood oo xilliga ah, sabab la mid ah: waa tiro Cloudflare dhab ahaan cabbiro, ee ma aha mid laga dhisay isku darka tirooyin isku dhafan.",
+      "resolutionTerm": "Xogta saacadeed waxay joogsanaysaa 3 maalmood",
+      "resolution": "— kaasi waa xadka Cloudflare qorshahan, ma aha doorasho: wuxuu diidaa wax kasta oo weydiin saacadeed ah oo ka ballaaran saddex maalmood. Muuqaalada 24 saacadood iyo 3 maalmood waa saacadeed; 7 maalmood iyo ka badan waa maalinle, mana jirto hab lagu sawiro shaxda saacadeed ee waqtiga oo dhan.",
+      "breakdownTerm": "Wadamada iyo browserada",
+      "breakdown": "— waxay raacaan xilliga aad dooratay, laakiin kaliya ilaa {{max}} maalmood dib, intaas ayaa la kaydiyaa qeybinta maalinlaha ah. Xilliyada dhaadheer shaxdu waxay daboolaysaa waqti ka badan liiska wadamada.",
+      "startTerm": "Taariikh",
+      "start": "— \"waqtiga oo dhan\" waxaa loola jeedaa maalin kasta oo Cloudflare weli hayo, maanta waa {{days}} maalmood laga bilaabo {{date}}, maalintii dehub.io u guuray Cloudflare. Ma jiraan xog cidhif ah oo hore oo la tuso, maalmaha duugoobayna way baaba'aan marka Cloudflare uu duugeeyo."
+    }
   }
 }
