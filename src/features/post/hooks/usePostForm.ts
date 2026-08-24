@@ -7,7 +7,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
-import { mintPost, createPoll, getMintFee, AuthenticationError, type StreamInfo, type MintFeeQuoteResponse } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type StreamInfo, type MintFeeQuoteResponse, type PostQuotaStatus } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -45,6 +45,23 @@ const ACTIVE_DRAFT_KEY = 'post_active_draft';
 function formatFeeAmount(amount: number): string {
   if (amount >= 1) return amount.toFixed(2).replace(/\.?0+$/, '');
   return amount.toFixed(8).replace(/\.?0+$/, '');
+}
+
+/**
+ * Bytes as MB or GB, for the daily allowance counter.
+ *
+ * 1024-based, matching the server's definition of a gigabyte — a 1000-based
+ * reading here would show "953 MB of 1 GB used" at the exact moment the
+ * server started charging.
+ *
+ * Its own three lines rather than the editor's `formatBytes`: that module
+ * statically imports all thirteen badge images through `staking-badges`, and
+ * usePostForm reaches eager UI where the entry-bundle check would fail.
+ */
+function formatDataSize(bytes: number): string {
+  const GB = 1024 * 1024 * 1024;
+  if (bytes >= GB) return `${(bytes / GB).toFixed(bytes >= 10 * GB ? 0 : 1)} GB`;
+  return `${Math.round(bytes / (1024 * 1024))} MB`;
 }
 
 interface ActiveDraft {
@@ -356,6 +373,37 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     ? `${formatFeeAmount(mintFee.amount)} ${mintFee.symbol}`
     : null;
 
+  /**
+   * Today's free posting allowance, and what is left of it.
+   *
+   * Read once when the composer opens and refreshed after a post lands, so
+   * the counter in the action bar is honest without asking the server on
+   * every keystroke. Null means "could not read it" and shows nothing —
+   * never a zero, which would read as "you are out".
+   */
+  const [postQuota, setPostQuota] = useState<PostQuotaStatus | null>(null);
+  const refreshPostQuota = useCallback(() => {
+    getPostQuota().then(setPostQuota);
+  }, []);
+  useEffect(() => {
+    if (!user?.address) {
+      setPostQuota(null);
+      return;
+    }
+    let cancelled = false;
+    // A payment whose settle call was lost last session is re-sent here,
+    // before the allowance is read — otherwise the creator would be told
+    // they still owe for a post they have already paid for.
+    import('@/lib/post-quota-settle')
+      .then((m) => m.flushPendingSettlements())
+      .catch(() => {})
+      .then(() => getPostQuota())
+      .then((quota) => {
+        if (!cancelled) setPostQuota(quota);
+      });
+    return () => { cancelled = true; };
+  }, [user?.address]);
+
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
   // Auto-save active draft to localStorage whenever text fields change.
@@ -411,6 +459,33 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const isShort = hasVideo && media.some(m => m.type === 'video' && m.duration && m.duration < 90);
   const hasMusicVideo = media.some(m => m.type === 'video' && m.isMusicVideo);
   const isLive = liveMode !== null;
+
+  /**
+   * The one line the composer shows about today's allowance.
+   *
+   * Follows what is actually attached, because text posts and media draw on
+   * separate pools — telling someone with a video queued how many text posts
+   * they have left would be answering a question they did not ask.
+   *
+   * Null when there is nothing to say: no quota read, or charging switched
+   * off server-side. Never a zero, which reads as "you are out" when it
+   * really means "we do not know".
+   */
+  const postQuotaLabel = (() => {
+    if (!postQuota?.chargingEnabled) return null;
+
+    if (hasVideo || hasImage || hasAudio || isLive) {
+      const left = Math.max(0, postQuota.mediaBytesPerDay - postQuota.mediaBytesUsed);
+      return left > 0
+        ? `${formatDataSize(left)} of ${formatDataSize(postQuota.mediaBytesPerDay)} left today`
+        : `${postQuota.dhbPerGb.toLocaleString()} DHB/GB — today's data used`;
+    }
+
+    const left = Math.max(0, postQuota.textPostsPerDay - postQuota.textPostsUsed);
+    return left > 0
+      ? `${left} of ${postQuota.textPostsPerDay} free posts left today`
+      : `${postQuota.dhbPerTextPost.toLocaleString()} DHB per post — today's free posts used`;
+  })();
 
   const getPostDestinations = useCallback(() => {
     const destinations: string[] = ['Home'];
@@ -1416,6 +1491,42 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       /**
+       * Does this post fit in today's free allowance, and if not, can it be
+       * paid for?
+       *
+       * Asked before the upload starts. The server checks the same thing
+       * again and is the authority — this exists so that being short of DHB
+       * costs a moment rather than a gigabyte of upload, and so the message
+       * says what is actually wrong instead of surfacing a bare 402.
+       *
+       * A quote that could not be fetched lets the post through. Losing a
+       * post to a failed price check would be the worse bug.
+       */
+      const uploadBytes =
+        files.reduce((sum, f) => sum + (f?.size || 0), 0) + (thumbnail?.size || 0);
+      const quotaCost = await quotePostCharge(postType, uploadBytes);
+
+      if (quotaCost?.chargeable && quotaCost.amountDhb > 0) {
+        const { readDhbBalance } = await import('@/lib/dhb-payment');
+        const held = await readDhbBalance();
+        const owed = quotaCost.amountDhb + (postQuota?.outstandingDhb ?? 0);
+
+        if (held < owed) {
+          toast.error(dhbText(`You've used today's free posting allowance`), {
+            id: 'mint-progress',
+            description: dhbText(
+              `This post costs ${owed.toLocaleString()} DHB and you hold ${Math.floor(held).toLocaleString()}. Top up, or it's free again tomorrow.`,
+            ),
+            action: { label: 'Get DHB', onClick: () => navigate('/app/buy') },
+            duration: 12000,
+          });
+          setIsPosting(false);
+          setUploadProgress(0);
+          return;
+        }
+      }
+
+      /**
        * The key that makes this upload safe to repeat.
        *
        * Keyed on the payload rather than "the composer is open", so a retry of
@@ -1642,6 +1753,68 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.dismiss('mint-progress');
       toast.success('Posted successfully');
 
+      /**
+       * The bill, for a post that went past the free allowance.
+       *
+       * Fired after the post has landed and deliberately not awaited. The
+       * post is published either way, so holding the composer open on a
+       * wallet prompt would make a paid post feel like it might still fail —
+       * and the creator already saw this price before they uploaded.
+       *
+       * Declining leaves the bill open, which is exactly what blocks the
+       * NEXT paid post. That is the collection lever, not an oversight.
+       */
+      const quotaBill = mintResponse.quota;
+      if (quotaBill?.amountDhb && quotaBill.recipient) {
+        const owed = quotaBill.amountDhb;
+        const treasury = quotaBill.recipient;
+        void (async () => {
+          try {
+            const { payDhb } = await import('@/lib/dhb-payment');
+            const { settleWithRetry } = await import('@/lib/post-quota-settle');
+            toast.loading(dhbText(`Paying ${owed.toLocaleString()} DHB for this post`), {
+              id: 'post-quota-pay',
+              duration: Infinity,
+            });
+            const payment = await payDhb(owed, treasury, {
+              context: 'Post allowance',
+              expectedSigner: user?.address,
+              shortfallMessage: (amount, has) =>
+                `This post costs ${amount.toLocaleString()} DHB and you hold ${has.toLocaleString()}.`,
+            });
+            const settled = await settleWithRetry(payment.txHash, payment.chainId);
+            if (settled) {
+              toast.success(dhbText(`Paid ${owed.toLocaleString()} DHB for this post`), {
+                id: 'post-quota-pay',
+                duration: 6000,
+              });
+            } else {
+              // The DHB has left the wallet. Never offer a retry here — the
+              // transfer is the part that cannot be repeated safely, and the
+              // hash is stashed and re-sent on its own.
+              toast.info('Payment sent — still confirming', {
+                id: 'post-quota-pay',
+                description: 'Your DHB has been transferred. We will finish confirming it shortly.',
+                duration: 10000,
+              });
+            }
+          } catch (err) {
+            toast.error('This post is unpaid', {
+              id: 'post-quota-pay',
+              description:
+                err instanceof Error
+                  ? err.message
+                  : 'The DHB transfer did not complete. You will be asked again before your next paid post.',
+              duration: 12000,
+            });
+          } finally {
+            refreshPostQuota();
+          }
+        })();
+      } else {
+        refreshPostQuota();
+      }
+
       // Offered after the post has landed, never in front of it: being short
       // of DHB costs the creator the mint, not the post. A toast rather than a
       // dialog because the composer closes on success — and because nothing
@@ -1821,7 +1994,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         errorMsg.toLowerCase().includes('gas required exceeds allowance')
       );
 
-      if (isGasFunds && connectionSource === 'wagmi') {
+      if (error instanceof PaymentRequiredError) {
+        // The allowance turned this post down. The server writes this sentence
+        // for the creator, so it is shown verbatim — and the only useful next
+        // step is DHB, not "try again".
+        toast.error(dhbText("You've used today's free posting allowance"), {
+          description: dhbText(error.message),
+          action: { label: 'Get DHB', onClick: () => navigate('/app/buy') },
+          duration: 12000,
+        });
+        refreshPostQuota();
+      } else if (isGasFunds && connectionSource === 'wagmi') {
         const gasName = chainId === 56 ? 'BNB' : 'ETH';
         const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
         toast.error(`Post failed: Insufficient ${gasName} for gas on ${chainName}. Add ${gasName} to your wallet and try again.`);
@@ -1987,6 +2170,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       hasContent,
       mintFeeLabel,
       mintRequired,
+      postQuota,
+      postQuotaLabel,
     },
     refs: {
       imageInputRef,

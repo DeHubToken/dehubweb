@@ -75,6 +75,20 @@ export interface MintResponse {
    * the chain step has to be skipped.
    */
   alreadyMinted?: boolean;
+  /**
+   * This post went past the daily free allowance and has been billed.
+   *
+   * Present only when there is something to pay. The post is already
+   * published either way — this is the bill for it, and it stays open until
+   * the DHB transfer is settled.
+   */
+  quota?: {
+    chargeId: string;
+    amountDhb: number;
+    kind: "text" | "media";
+    tier: string | null;
+    recipient?: string | null;
+  };
 }
 
 export async function mintPost(
@@ -276,5 +290,108 @@ export async function updateTokenVisibility(
       id: Number(tokenId),
       isHidden: visibility !== 'public',
     },
+  });
+}
+
+/**
+ * Daily posting allowance
+ * =======================
+ * Everyone gets ten text posts and a gigabyte of media a day; a staking badge
+ * buys more of both and a discount on whatever runs over. All of it is quoted
+ * by the server — the ladder is a table on the backend and a second copy here
+ * would be wrong the first time it moved.
+ */
+export interface PostQuotaStatus {
+  /** UTC day the allowance resets on, `YYYY-MM-DD`. */
+  day: string;
+  /** Badge tier name, or null below the badge floor. */
+  tier: string | null;
+  badgeBalance: number;
+  textPostsUsed: number;
+  textPostsPerDay: number;
+  mediaBytesUsed: number;
+  mediaBytesPerDay: number;
+  dhbPerTextPost: number;
+  dhbPerGb: number;
+  discountRate: number;
+  /** DHB owed from posts already published. */
+  outstandingDhb: number;
+  /** True once that debt is old enough to block the next paid post. */
+  blocked: boolean;
+  recipient?: string;
+  /** False when no treasury is configured — posting is free regardless of usage. */
+  chargingEnabled: boolean;
+  dhbTokens: { chainId: number; tokenAddress: string }[];
+  dhbUsdPeg: number;
+}
+
+export interface PostQuotaCost {
+  chargeable: boolean;
+  kind: 'text' | 'media';
+  amountDhb: number;
+  chargedUnits: number;
+  /** Text posts, or bytes, still free today. */
+  remainingFree: number;
+}
+
+/** Today's allowance and what is left of it. Null on any failure — see below. */
+export async function getPostQuota(): Promise<PostQuotaStatus | null> {
+  try {
+    const res = await apiCall<any>('/api/post_quota', { requiresAuth: true });
+    return res && typeof res.textPostsPerDay === 'number' ? (res as PostQuotaStatus) : null;
+  } catch (err) {
+    console.warn('[PostQuota] Could not read the allowance:', err);
+    return null;
+  }
+}
+
+/**
+ * What this specific post would cost, given what has been posted today.
+ *
+ * Null rather than throwing on failure, and every caller treats null as "post
+ * it": the server checks the same thing again before storing anything, so a
+ * quote that could not be fetched must not be what blocks a post.
+ */
+export async function quotePostCharge(
+  postType: string,
+  bytes: number,
+): Promise<PostQuotaCost | null> {
+  try {
+    const res = await apiCall<any>('/api/post_quota/quote', {
+      method: 'POST',
+      requiresAuth: true,
+      body: { postType, bytes },
+    });
+    return res && typeof res.amountDhb === 'number' ? (res as PostQuotaCost) : null;
+  } catch (err) {
+    console.warn('[PostQuota] Could not price this post:', err);
+    return null;
+  }
+}
+
+export interface PostQuotaSettlement {
+  settled: boolean;
+  /** The transfer has not been mined yet — call again in a moment. */
+  pending?: boolean;
+  appliedDhb: number;
+  outstandingDhb: number;
+}
+
+/**
+ * Hand the backend the DHB transfer that pays for an over-allowance post.
+ *
+ * Throws, unlike its neighbours: by the time this is called the creator's DHB
+ * has already left their wallet, so a failure here is something they need to
+ * be told about rather than something to swallow. Safe to repeat — the hash
+ * is claimed once server-side.
+ */
+export async function settlePostCharge(
+  txHash: string,
+  chainId: number,
+): Promise<PostQuotaSettlement> {
+  return apiCall<PostQuotaSettlement>('/api/post_quota/settle', {
+    method: 'POST',
+    requiresAuth: true,
+    body: { txHash, chainId },
   });
 }

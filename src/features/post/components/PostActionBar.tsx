@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2 } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -47,6 +47,10 @@ interface PostActionBarProps {
   onClearSound?: () => void;
   onTogglePoll?: () => void;
   hasPoll?: boolean;
+  /** e.g. "7 of 10 free posts left today". Null hides the row entirely. */
+  postQuotaLabel?: string | null;
+  /** True once today's allowance is spent and the next post costs DHB. */
+  postQuotaExhausted?: boolean;
 }
 
 export function PostActionBar({
@@ -81,6 +85,8 @@ export function PostActionBar({
   onClearSound,
   onTogglePoll,
   hasPoll,
+  postQuotaLabel,
+  postQuotaExhausted,
 }: PostActionBarProps) {
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
@@ -264,6 +270,29 @@ export function PostActionBar({
             >
               <X className="w-3.5 h-3.5 text-white/50" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Daily posting allowance. Quiet while there is headroom; it only
+          speaks up once the next post starts costing DHB. */}
+      {postQuotaLabel && !showUploadBar && (
+        <div className="px-4 py-1.5 border-t border-white/10">
+          <div className="flex items-center gap-2">
+            <Gauge
+              className={cn(
+                'w-3.5 h-3.5 flex-shrink-0',
+                postQuotaExhausted ? 'text-white/70' : 'text-white/40',
+              )}
+            />
+            <span
+              className={cn(
+                'text-xs truncate',
+                postQuotaExhausted ? 'text-white/80' : 'text-white/50',
+              )}
+            >
+              {postQuotaLabel}
+            </span>
           </div>
         </div>
       )}

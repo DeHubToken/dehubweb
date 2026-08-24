@@ -213,6 +213,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onCloseModal={handleClose}
         onTogglePoll={handleTogglePoll}
         hasPoll={!!state.poll}
+        postQuotaLabel={computed.postQuotaLabel}
+        postQuotaExhausted={
+          !!computed.postQuota?.chargingEnabled &&
+          (computed.hasVideo || computed.hasImage || computed.hasAudio
+            ? computed.postQuota.mediaBytesUsed >= computed.postQuota.mediaBytesPerDay
+            : computed.postQuota.textPostsUsed >= computed.postQuota.textPostsPerDay)
+        }
       />
     </>
   );

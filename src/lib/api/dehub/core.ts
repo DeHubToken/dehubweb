@@ -29,6 +29,20 @@ export class AuthenticationError extends Error {
   }
 }
 
+/**
+ * The server refused because something has to be paid for first.
+ *
+ * Today that is only the daily posting allowance. Its own class so callers can
+ * show the server's sentence as-is instead of pattern-matching an HTTP status
+ * out of an error string.
+ */
+export class PaymentRequiredError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'PaymentRequiredError';
+  }
+}
+
 // ── Token Storage ──
 
 export const setAuthToken = (token: string | null) => {
@@ -587,6 +601,13 @@ export async function authedUpload<T>(
     throw new AuthenticationError("Session expired. Please sign in again.");
   }
 
+  // 402 is the daily posting allowance refusing an upload it cannot bill for.
+  // Its message is written for the creator ("This post needs 2,000 DHB and you
+  // hold 500"), so it is carried through intact rather than wrapped in an HTTP
+  // status the person reading it cannot act on.
+  if (result.status === 402) {
+    throw new PaymentRequiredError(result.message || "This post needs DHB you do not have.");
+  }
 
   throw new Error(`Upload failed (HTTP ${result.status}): ${result.message}`);
 }
