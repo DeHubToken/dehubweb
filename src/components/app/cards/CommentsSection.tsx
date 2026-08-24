@@ -1086,7 +1086,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       if (mentionsAssistant(newComment)) armAssistantReply();
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
-      toast.error('Failed to post comment');
+      // The server's own words when it has them — a refusal explains itself
+      // ("comments are turned off", a link that cannot be posted) and a
+      // generic failure message would leave the author guessing.
+      toast.error(err instanceof Error && err.message ? err.message : 'Failed to post comment');
       console.error('Comment error:', err);
     } finally {
       setIsSubmitting(false);
