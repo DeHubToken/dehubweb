@@ -127,6 +127,10 @@ const HOME_TITLE_LEGACY = 'DeHub — Open Source, User Owned & Censorship Resist
 // contested string (DePaul's student portal, deHUB Access, Rowan's DEHub), and
 // entity establishment has to happen in crawlable body copy.
 const HOME_INTRO_LINKS = [
+  // Docs lead, guides follow — see the LINKS comment in HomeIntro.tsx. Both
+  // lists must stay identical; this is the copy crawlers actually get.
+  ['/docs/overview', 'DeHub overview'],
+  ['/docs/faq', 'Frequently asked questions'],
   ['/guides/what-is-watch-to-earn', 'What is watch-to-earn?'],
   ['/guides/tokenized-subscriptions-explained', 'Tokenised subscriptions'],
   ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming'],
