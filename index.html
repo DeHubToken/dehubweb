@@ -436,11 +436,30 @@
          parser reaches this line immediately after the head, so it is as early
          as an inline script can usefully be.
 
-         The predicate mirrors HomeIntro's `show` exactly — root path, not
-         signed in, not previously dismissed — because a boot shell that
-         promises a panel the app then declines to render is a flash of content
-         for nothing. Token liveness is tested the same way the feed-prefetch
-         script above tests it (an expired token is not a session).
+         The predicate has to agree with HomeIntro's `show`, or the shell
+         promises a panel the app then declines to render — which is exactly
+         what a signed-in visitor reported as a flash on first load.
+
+         `dehub_token` alone is NOT that signal. It is the wallet/API token;
+         a visitor signed in through Supabase has no `dehub_token` at all, so
+         the first version of this gate read them as signed out, painted the
+         shell, and then tore it down the moment React resolved the real
+         session. Hence three checks rather than one:
+
+         1. dehub.showIntro — what HomeIntro concluded on the PREVIOUS load of
+            this route, written from its own `show`. This is the general fix:
+            whatever makes the panel hide, the gate learns it rather than
+            trying to re-derive it from storage the app owns.
+         2. any sb-*-auth-token key — covers the first load on a new device,
+            where there is no memo yet but a Supabase session already exists.
+            Matched by shape, not by name: the project ref is a build-time
+            value and brokeredPreviewStorage may relocate the key.
+         3. dehub_token liveness, tested the way the feed-prefetch script
+            above tests it (an expired token is not a session).
+
+         All three are cheap and all three are skip-conditions, so the shell
+         only paints when nothing at all suggests a returning or signed-in
+         visitor. A true first-time visitor trips none of them.
 
          Bots are skipped: Googlebot renders, and a full-viewport overlay in a
          rendered snapshot is what the intrusive-interstitial signal is looking
@@ -459,6 +478,15 @@
           if (location.pathname !== "/") return;
           if (/bot|crawl|spider|lighthouse|headlesschrome|google-inspectiontool/i.test(navigator.userAgent)) return;
           if (localStorage.getItem("dehub.homeIntroDismissed") === "1") return;
+          // What HomeIntro concluded last time it ran on this route.
+          if (localStorage.getItem("dehub.showIntro") === "0") return;
+          // A Supabase session, under whatever key this build stores it.
+          for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            // No trailing anchor: supabase-js chunks a large session across
+            // `…-auth-token.0`, `.1`, and an anchored test would miss those.
+            if (k && /^sb-.*-auth-token/.test(k) && localStorage.getItem(k)) return;
+          }
           var tk = localStorage.getItem("dehub_token");
           var tkExp = parseInt(localStorage.getItem("dehub_token_expires_at") || "0", 10);
           if (tk && (!tkExp || Date.now() < tkExp)) return; // signed in — no welcome panel
