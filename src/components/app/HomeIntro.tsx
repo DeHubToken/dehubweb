@@ -84,7 +84,16 @@ const SLIDES = [
 const ENTITY_COPY =
   'DeHub is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first view, never fearing the algorithm again.';
 
+/* Docs lead, guides follow. The two /docs entries at the front are the pages
+   that answer "what is this" outright — the guides are all downstream of that
+   question, so leading with a feature explainer asked a visitor to care about
+   watch-to-earn before knowing what DeHub is. /docs/faq also emits FAQPage
+   JSON-LD at the edge (faqJsonLd in CLOUDFLARE_WORKER_SEO.js), so a home-page
+   link into it is worth more than another sibling guide.
+   Keep in sync with HOME_INTRO_LINKS in CLOUDFLARE_WORKER_SEO.js. */
 const LINKS: { to: string; label: string }[] = [
+  { to: '/docs/overview', label: 'DeHub overview' },
+  { to: '/docs/faq', label: 'Frequently asked questions' },
   { to: '/guides/what-is-watch-to-earn', label: 'What is watch-to-earn?' },
   { to: '/guides/tokenized-subscriptions-explained', label: 'Tokenised subscriptions' },
   { to: '/guides/web3-live-streaming-decentralised-twitch-alternative', label: 'Web3 live streaming' },
