@@ -440,9 +440,15 @@ html {
    `right` here must clear the card's own decorative inset frame (the
    `inset-[10px] ... sm:inset-[14px]` border drawn in HomeIntro.tsx) or the
    globe visually pokes past that inner border line — reads as "a bit too far
-   right" even though it's no longer past the card's actual edge. */
-.dehub-intro-hero { top: 74px; right: 16px; width: 96px; height: 96px; opacity: 0.8; }
-.dehub-intro-stage { padding-right: 100px; }
+   right" even though it's no longer past the card's actual edge.
+
+   16/18px only just cleared that frame — 6px and 4px of daylight, which still
+   read as crowded against the border. Now 30/34px, i.e. a consistent 20px gap
+   inside the frame line at every size. Each `padding-right` below moved by the
+   same delta, so the headline keeps its existing clearance from the art rather
+   than gaining a gap on one side and losing it on the other. */
+.dehub-intro-hero { top: 74px; right: 30px; width: 96px; height: 96px; opacity: 0.8; }
+.dehub-intro-stage { padding-right: 114px; }
 .dehub-intro-head { font-size: 22px; }
 .dehub-intro-wide { display: none; }
 .dehub-intro-clamp {
@@ -452,20 +458,20 @@ html {
 /* 375px-class phones upward. */
 @container dehubintro (min-width: 340px) {
   .dehub-intro-hero { top: 76px; width: 112px; height: 112px; }
-  .dehub-intro-stage { padding-right: 116px; }
+  .dehub-intro-stage { padding-right: 130px; }
   .dehub-intro-head { font-size: 26px; }
 }
 
 @container dehubintro (min-width: 520px) {
-  .dehub-intro-hero { top: 92px; right: 18px; width: 180px; height: 180px; opacity: 0.9; }
-  .dehub-intro-stage { padding-right: 206px; }
+  .dehub-intro-hero { top: 92px; right: 34px; width: 180px; height: 180px; opacity: 0.9; }
+  .dehub-intro-stage { padding-right: 222px; }
   .dehub-intro-head { font-size: 34px; }
   .dehub-intro-wide { display: inline-block; }
 }
 
 @container dehubintro (min-width: 760px) {
-  .dehub-intro-hero { top: 92px; right: 18px; width: 260px; height: 240px; opacity: 1; }
-  .dehub-intro-stage { padding-right: 286px; }
+  .dehub-intro-hero { top: 92px; right: 34px; width: 260px; height: 240px; opacity: 1; }
+  .dehub-intro-stage { padding-right: 302px; }
   .dehub-intro-head { font-size: 50px; }
   .dehub-intro-clamp { display: block; overflow: visible; -webkit-line-clamp: none; }
   .dehub-intro-readmore { display: none; }
