@@ -190,7 +190,11 @@ const DocsHome = () => {
                 <span className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">{t('home.latestFromBlog')}</span>
               </div>
               <Link to={`/guides/${latestPost.slug}`} className="w-full block">
-                <img src={bannerImage} alt={bannerImageAlt} loading="lazy" decoding="async" className="w-full aspect-video object-cover rounded-xl hover:opacity-95 transition-opacity cursor-pointer" />
+                {/* 40/21 is the banner art's own ratio (1200x630). aspect-video is 16:9, and
+                    object-cover on the wider art cropped ~3% off each side — enough to slice
+                    through the badges that sit in the banner's corners. Blog cards crop the
+                    same art vertically, which is why they look right and this did not. */}
+                <img src={bannerImage} alt={bannerImageAlt} loading="lazy" decoding="async" className="w-full aspect-[40/21] object-cover rounded-xl hover:opacity-95 transition-opacity cursor-pointer" />
               </Link>
               <div className="text-center">
                 <div className="mb-4">
