@@ -1,12 +1,10 @@
 {
-  "_comment": "Arcade build. Everything here is vendored beside the game EXCEPT Fat Chad: his mesh is 41 MiB, and still ~27 MiB baked at 128px textures, because the weight is geometry and geometry cannot be decimated without unbinding the skin. That is over Cloudflare's per-asset limit, so he cannot ship in the repo and is served from the R2 bucket instead — which is what TRENCHSTAR_ASSETS points at in index.html. Model URLs resolve bucket-first and fall back to this folder, so every other character is still served from here and only ever costs one failed lookup. Lady Luck's own walk was a 19 MB 'With Skin' Mixamo download whose duplicate mesh is discarded on load anyway, so she borrows the donor rig's like everyone else. xbot.glb is the donor rig every borrowed walk and idle comes from and is never playable.",
+  "_comment": "Arcade build. Every character on this roster is vendored beside the game, Fat Chad included: his 41 MiB Mixamo FBX was three 4096px maps on an unindexed mesh, not geometry, so re-exported at 1024px with the vertices welded he is a 2 MiB GLB and inside Cloudflare's per-asset limit. Model URLs still resolve bucket-first and fall back to this folder — TRENCHSTAR_ASSETS in index.html points at the bucket — so anything not up there costs one failed lookup and nothing else. Lady Luck's own walk was a 19 MB 'With Skin' Mixamo download whose duplicate mesh is discarded on load anyway, so she borrows the donor rig's like everyone else. xbot.glb and soldier.glb are the donor rigs every borrowed walk and idle comes from: deliberately off this roster, never playable, and both files stay here regardless.",
   "characters": [
     { "id": "peasant-girl", "name": "LADY LUCK",
       "idleAnim": "idle-peasant-girl.fbx",
       "leanAnim": "lean-peasant-girl.fbx" },
     { "id": "fat-chad", "name": "FAT CHAD", "tag": "STILL HITS THE FLOOR",
-      "leanAnim": ["pushup-in.fbx", "pushup-loop.fbx", "pushup-out.fbx"] },
-    { "id": "soldier", "name": "THE ENFORCER",
       "leanAnim": ["pushup-in.fbx", "pushup-loop.fbx", "pushup-out.fbx"] }
   ]
 }

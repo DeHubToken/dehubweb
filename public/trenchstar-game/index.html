@@ -7658,34 +7658,35 @@ moveBtn.addEventListener('click',beginPlacement);
 syncCastUI();
 
 /* ============================ walk the floor ==========================
-   Third-person mode: pick one of the four traders and walk the room. Rigged
+   Third-person mode: pick a character off the roster and walk the room. Rigged
    GLBs play their clips; unrigged ones get a procedural gait so the feature
    works before the rigs land. */
 let MODE='desk';
 function setCtl(){
   controls.enabled=MODE==='desk'&&!focus.screen&&!edit.grab&&!fly.on;
 }
-/* Fallback roster, used only when characters/manifest.json cannot be read.
-   xbot is deliberately NOT on it: it is the donor rig every character borrows
-   a walk or an idle from, not something anyone should have to play as. The
-   four branded traders ship a botched retarget — one 22-bone skeleton carrying
-   two naming conventions (Spine, Spine1 AND Spine02) with no rest pose in the
-   node transforms — so their upper bodies tear apart under any clip. That
-   cannot be repaired in code; the meshes have to be re-rigged and re-exported. */
-const CHARACTERS=[
-  {id:'soldier',            name:'THE ENFORCER',        tag:'IDLE · WALK · RUN'},
-  /* Only characters whose own walk was checked ON SCREEN go on this list.
-     Two downloaded models are deliberately left off, though both are still in
-     characters/ if you want to look:
-       michelle.glb — ships a samba and no walk. Lending it xbot's walk failed:
+/* Fallback roster, used only when characters/manifest.json cannot be read, so
+   it mirrors the manifest: Lady Luck and Fat Chad, nobody else.
+   Everything in characters/ that is NOT on it, and why:
+     xbot.glb, soldier.glb — the two donor rigs every character borrows a walk
+                      or an idle from. Off the roster on purpose, never
+                      playable, and the files must stay put regardless.
+     the four branded traders — shadowy-super-coder, iced-out-max, hoodrat,
+                      baby-face-killa. They ship a botched retarget: one
+                      22-bone skeleton carrying two naming conventions (Spine,
+                      Spine1 AND Spine02) with no rest pose in the node
+                      transforms, so their upper bodies tear apart under any
+                      clip. That cannot be repaired in code; the meshes have to
+                      be re-rigged and re-exported.
+     michelle.glb — ships a samba and no walk. Lending it xbot's walk failed:
                       two rigs can both use mixamorig* names and still not bind,
                       and a half-bound clip mangles the mesh.
-       robot.glb    — has walk and idle, but renders with its head detached
-                      from the body mid-stride. */
-  {id:'shadowy-super-coder',name:'SHADOWY SUPER CODER',tag:'MOVES MARKETS, LEAVES NO NAME'},
-  {id:'iced-out-max',       name:'ICED OUT MAX',        tag:'PORTFOLIO ON HIS NECK'},
-  {id:'hoodrat',            name:'HOODRAT',             tag:'TRENCH-NATIVE'},
-  {id:'baby-face-killa',    name:'BABY FACE KILLA',     tag:'SMILES AT LIQUIDATIONS'}
+     robot.glb    — has walk and idle, but renders with its head detached
+                      from the body mid-stride.
+   Only characters whose walk was checked ON SCREEN go on this list. */
+const CHARACTERS=[
+  {id:'peasant-girl',       name:'LADY LUCK',           tag:'MIXAMO RIG'},
+  {id:'fat-chad',           name:'FAT CHAD',            tag:'STILL HITS THE FLOOR'}
 ];
 /* Chrome blocks fetch() of a local .glb from a file:// page. Say so, loudly,
    with the exact fix — rather than a click that does nothing. */
