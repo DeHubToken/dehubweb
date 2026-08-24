@@ -159,22 +159,41 @@ All colors MUST be HSL.
     display: none;
   }
 
-  /* A single two-action surface with a real circular cut-out for the reply
-     orb. Alpha-only fills keep the rail transparent across animated themes.
-     SmartReplyRail owns the radius and passes it in as --smart-reply-notch;
-     the fallback here only matters if something renders the class bare.
-     The arc erases whatever it crosses — the cards' border AND their text —
-     so the rim is drawn as a separate element and card content is padded
-     clear of it. See SmartReplyRail.tsx, which is the only consumer. */
-  .smart-reply-rail {
-    --smart-reply-notch: 26px;
+  /* The two stacked reply cards each carry a circular bite out of the edge
+     facing the orb, so the orb nests in one hole formed by both halves.
+     Alpha-only fills keep the cards transparent across animated themes.
+
+     The mask circle is centred on the GAP between the cards, which is why the
+     offset is half a gap past each card's own edge. SmartReplyRail owns both
+     numbers and passes them in; the fallbacks here only matter if something
+     renders the classes bare. The arc erases whatever it crosses — the card's
+     border AND its text — so card padding has to clear the bite. See
+     SmartReplyRail.tsx, the only consumer. */
+  .smart-reply-notch-b,
+  .smart-reply-notch-t {
+    --smart-reply-notch: 24px;
+    --smart-reply-gap: 14px;
+  }
+  .smart-reply-notch-b {
     -webkit-mask-image: radial-gradient(
-      circle var(--smart-reply-notch) at 50% 100%,
+      circle var(--smart-reply-notch) at 50% calc(100% + var(--smart-reply-gap)),
       transparent calc(var(--smart-reply-notch) - 1px),
       black var(--smart-reply-notch)
     );
     mask-image: radial-gradient(
-      circle var(--smart-reply-notch) at 50% 100%,
+      circle var(--smart-reply-notch) at 50% calc(100% + var(--smart-reply-gap)),
+      transparent calc(var(--smart-reply-notch) - 1px),
+      black var(--smart-reply-notch)
+    );
+  }
+  .smart-reply-notch-t {
+    -webkit-mask-image: radial-gradient(
+      circle var(--smart-reply-notch) at 50% calc(0px - var(--smart-reply-gap)),
+      transparent calc(var(--smart-reply-notch) - 1px),
+      black var(--smart-reply-notch)
+    );
+    mask-image: radial-gradient(
+      circle var(--smart-reply-notch) at 50% calc(0px - var(--smart-reply-gap)),
       transparent calc(var(--smart-reply-notch) - 1px),
       black var(--smart-reply-notch)
     );
