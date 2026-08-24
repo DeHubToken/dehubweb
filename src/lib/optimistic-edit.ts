@@ -28,6 +28,9 @@ function normalizeEditedPost(edited: EditPostResult) {
     // For video/image cards that use `name` and `description` directly
     name: edited.name,
     description: edited.description,
+    // Patched in so the content warning appears (or clears) on the card the
+    // creator just edited, without waiting for a refetch.
+    contentRating: edited.contentRating,
   };
 }
 

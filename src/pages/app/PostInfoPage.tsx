@@ -1290,6 +1290,7 @@ export default function PostInfoPage() {
           currentTitle={nftInfo.title || nftInfo.name || ''}
           currentDescription={nftInfo.description || ''}
           currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}
+          currentContentRating={nftInfo.contentRating}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, nftInfo.tokenId, edited);
           }}

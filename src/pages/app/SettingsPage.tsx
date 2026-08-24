@@ -15,6 +15,7 @@ import {
   Shield, 
   Palette, 
   Eye,
+  EyeOff,
   Camera,
   Link2,
   Mail,
@@ -27,7 +28,6 @@ import {
   Lock,
   MessageCircle,
   Filter,
-  AlertTriangle,
   Repeat2,
   Sun,
   Monitor,
@@ -94,6 +94,7 @@ import { isReservedUsername } from '@/lib/reserved-usernames';
 import { buildAvatarUrl, buildCoverUrl, bumpProfileImageVersion, deviceWidth } from '@/lib/media-url';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
+import { useMatureContent } from '@/hooks/use-mature-content';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useNewMemberSelf } from '@/hooks/use-new-members';
@@ -2387,27 +2388,10 @@ function ContentSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.contentFiltering')}</h3>
         <div className="space-y-4">
-          <SettingToggle
-            icon={Filter}
-            title={t('settings.filterExplicit')}
-            description={t('settings.filterExplicitDesc')}
-            defaultChecked={false}
-            comingSoon
-          />
-          <SettingToggle
-            icon={Eye}
-            title={t('settings.showSensitive')}
-            description={t('settings.showSensitiveDesc')}
-            defaultChecked={false}
-            comingSoon
-          />
-          <SettingToggle
-            icon={AlertTriangle}
-            title={t('settings.enableContentWarnings')}
-            description={t('settings.enableContentWarningsDesc')}
-            defaultChecked={false}
-            comingSoon
-          />
+          {/* One real switch replaces three that only ever said "coming soon".
+              "Filter explicit content" and "Content warnings" were the same
+              setting worded twice, and are what this one does when it is off. */}
+          <MatureContentToggle />
         </div>
       </div>
 
@@ -2541,6 +2525,38 @@ function SettingToggle({
         onCheckedChange={comingSoon ? () => toast.info(t('settings.comingSoon', 'Coming soon')) : onCheckedChange}
         disabled={disabled}
       />}
+    />
+  );
+}
+
+/**
+ * Mature content: the only account-level content filter that does anything.
+ *
+ * Off, the public feeds are filtered server-side and a mature post served
+ * anywhere else (a profile, the Following feed, a shared link) renders behind
+ * a content warning. On, both stop.
+ *
+ * New i18n keys rather than the existing settings.showSensitive pair: that
+ * one's copy — "display content warnings for sensitive posts" — describes the
+ * opposite of what this switch does when it is on, and it is already
+ * translated that way into every locale.
+ */
+function MatureContentToggle() {
+  const { t } = useTranslation();
+  const { isAuthenticated } = useAuthContext();
+  const { showMatureContent, setShowMatureContent, isSaving } = useMatureContent();
+
+  return (
+    <SettingToggle
+      icon={EyeOff}
+      title={t('settings.matureContent', 'Show Mature Content')}
+      description={t(
+        'settings.matureContentDesc',
+        'Include adult and graphic posts in your feeds, and drop the warning on ones you already see. Off by default.',
+      )}
+      defaultChecked={showMatureContent}
+      onCheckedChange={setShowMatureContent}
+      disabled={!isAuthenticated || isSaving}
     />
   );
 }

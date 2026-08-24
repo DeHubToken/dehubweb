@@ -14,6 +14,7 @@ import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extra
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -78,6 +79,8 @@ export interface UnifiedFeedItem {
   postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
   status?: string;
   category?: string[];
+  /** Absent means safe — see ContentRating. */
+  contentRating?: ContentRating;
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
   views: number;
   /** Every viewer, signed in or not. The count to display. */
@@ -274,6 +277,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    contentRating: item.contentRating,
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
     liveIsActive: item.stream?.isActive,
@@ -344,6 +348,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    contentRating: item.contentRating,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
   };
@@ -404,6 +409,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    contentRating: item.contentRating,
   };
 }
 

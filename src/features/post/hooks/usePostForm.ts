@@ -68,6 +68,8 @@ interface ActiveDraft {
   text: string;
   titleText: string;
   showTitle: boolean;
+  /** Absent on drafts saved before ratings existed, which read as safe. */
+  isMature?: boolean;
   selectedCategory: string;
   isSubscribersOnly: boolean;
   isPPV: boolean;
@@ -205,6 +207,7 @@ interface UsePostFormReturn {
     showTitle: boolean;
     titleText: string;
     shouldMint: boolean;
+    isMature: boolean;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -217,6 +220,7 @@ interface UsePostFormReturn {
     setSelectedCategory: (category: string) => void;
     setShowTitle: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
+    setIsMature: (value: boolean) => void;
     setTitleText: (text: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
@@ -342,6 +346,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, []);
 
   /**
+   * The creator's own content rating.
+   *
+   * Deliberately NOT remembered between posts, unlike the mint and title
+   * toggles: a sticky "mature" would keep marking safe posts long after the
+   * one that needed it, and a sticky "safe" is worse — it makes the declaration
+   * something you forget rather than something you make.
+   */
+  const [isMature, setIsMature] = useState(d?.isMature === true);
+
+  /**
    * Bounty locks DHB through the mint transaction itself, so a post that never
    * goes on-chain cannot carry one. Rather than let the two settings contradict
    * each other, bounty wins and the mint row goes read-only.
@@ -415,7 +429,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   useEffect(() => {
     const persistDraft = () => {
       const draft: ActiveDraft = {
-        text, titleText, showTitle,
+        text, titleText, showTitle, isMature,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
@@ -435,7 +449,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // clear the timer here, never persist, or the debounce is defeated. The
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
-  }, [text, titleText, showTitle,
+  }, [text, titleText, showTitle, isMature,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
@@ -1585,6 +1599,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           mintOptOut: !mintingThisPost,
           scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
+          contentRating: isMature ? 'mature' : undefined,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
       );
@@ -2067,7 +2082,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
     refreshSession, openLoginModal, requestWalletUnlock,
-    effectiveShouldMint, mintFee
+    effectiveShouldMint, mintFee, isMature
   ]);
 
   return {
@@ -2103,6 +2118,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       showTitle,
       titleText,
       shouldMint,
+      isMature,
     },
     actions: {
       setText,
@@ -2152,6 +2168,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       markCategorySaved: () => { categorySavedRef.current = true; },
       setShowTitle: handleSetShowTitle,
       setShouldMint: handleSetShouldMint,
+      setIsMature,
       setTitleText,
       insertEmoji,
       insertGif,
