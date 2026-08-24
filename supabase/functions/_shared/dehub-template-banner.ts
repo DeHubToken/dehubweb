@@ -4,7 +4,7 @@
 // official template system directly: silk background (with an opt-in dust/grid/
 // starfield overlay) + a chrome 3D icon hero standing inside the frame's own
 // safe box + an Exo headline carrying a horizontal tone+alpha sweep and a lead
-// focus ramp + HUD chrome drawn as corner brackets (pill, //dehub.io, two-line
+// focus ramp + HUD chrome drawn as corner brackets (pill, //dehub.io, one-line
 // type tag, QR) inside a bevelled card — as pure SVG rasterized with resvg-wasm.
 // The LLM only fills a small validated spec (headline / subtitle / icon choice);
 // the template itself enforces the brand, so output cannot drift off-style.
@@ -296,14 +296,17 @@ const n1 = (v: number) => Number(v.toFixed(1));
  */
 interface Frame {
   W: number; H: number; s: number; land: boolean;
-  PAD: number; GUT: number;
+  PAD: number; GUT: number; HERO_R: number;
 }
 function frameOf(format: BannerFormat): Frame {
   const { W, H } = DIMS[format];
   const land = format === "landscape";
   const s = Math.sqrt(W * H) / Math.sqrt(1920 * 1080);
   const PAD = (20 + 76) * s;
-  return { W, H, s, land, PAD, GUT: PAD };
+  // The art's own inset: TWICE the chrome's margin, still measured from the canvas, so the
+  // card's 20*s is counted once and only the 76*s margin doubles.
+  const HERO_R = (20 + 76 * 2) * s;
+  return { W, H, s, land, PAD, GUT: PAD, HERO_R };
 }
 
 /**
@@ -313,25 +316,30 @@ function frameOf(format: BannerFormat): Frame {
  * used to pin it past the right and bottom edges — the silhouette went through
  * the card's rounded corner and what survived landed behind the QR badge, which
  * reads as a mistake rather than as a deliberate crop. The frame owns the box
- * instead: its right edge lands on the same right gutter as the type tag and the
- * QR, its head clears the tag, and its feet stand on a ground line above the HUD
- * row. The icon is drawn `meet` inside a square box, so containing the box
+ * instead: it stands on its OWN right inset (HERO_R, twice the chrome's margin),
+ * its head clears the tag, and its feet stand on a ground line above the HUD row.
+ * The art does not share the chrome's inset and must not: the icons' ink runs
+ * edge to edge, so a 450px slab of bright chrome ends up flush with the frame
+ * while the badges beside it are 40px chips — same distance, completely
+ * different optical weight, and the big object reads as falling off the card.
+ * The icon is drawn `meet` inside a square box, so containing the box
  * contains the ink whatever the icon's own aspect happens to be.
  *
  * `centre` is the fraction of H to hang the box off (null = stand it on the
  * ground line); `bandTop` holds it below a composition's own upper band.
  */
 function heroBoxOf(F: Frame, maxW: number, centre: number | null, bandTop = 0): { box: number; x: number; y: number } {
-  const { W, H, s, PAD } = F;
+  const { W, H, s, PAD, HERO_R } = F;
   const gap = H * 0.022;
-  const tagH = 21 * s * 1.34 * 2 + 11 * s * 2;     // the two-line type tag
+  const tagH = 21 * s * 1.34 + 11 * s * 2;         // the one-line type tag
   const ceil = Math.max(PAD + tagH + gap, bandTop);
   const floor = H - PAD - 84 * s - gap;
   const box = Math.min(W * maxW, floor - ceil);
   const y = centre === null
     ? floor - box
     : Math.min(Math.max(H * centre - box / 2, ceil), floor - box);
-  return { box, x: W - PAD - box, y };
+  // The art stands on its OWN right inset, twice the chrome's — see the note on heroBoxOf.
+  return { box, x: W - HERO_R - box, y };
 }
 
 /**
@@ -558,16 +566,19 @@ function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, sho
     );
   }
 
-  // Type tag — top-right, two lines: a dim `// type =` over the value.
+  // Type tag — top-right, ONE line: a dim `// type =` then the value. Two lines made it a
+  // block where every other badge is a chip, and being the tallest thing in the corner it
+  // also pushed the hero's ceiling down. The value is unquoted, as in the kit.
   const fs = 21 * s, padX = 18 * s, padY = 11 * s, lh = fs * 1.34;
-  const tagVal = `"${spec.typeTag}"`;
-  const tagW = Math.max(9 * fs * 0.55, tagVal.length * fs * 0.55) + padX * 2;
-  const tagH = lh * 2 + padY * 2;
+  const label = "// type = ";
+  const tagVal = spec.typeTag;
+  const tagW = (label.length + tagVal.length) * fs * 0.55 + padX * 2;
+  const tagH = lh + padY * 2;
   const tagX = W - PAD - tagW, tagY = PAD;
   parts.push(
     bracketBox(tagX, tagY, tagW, tagH, s),
     `<text x="${n1(tagX + padX)}" y="${n1(tagY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.42)">// type =</text>`,
-    `<text x="${n1(tagX + padX)}" y="${n1(tagY + padY + lh + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.72)">${esc(tagVal)}</text>`,
+    `<text x="${n1(tagX + padX + label.length * fs * 0.55)}" y="${n1(tagY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.72)">${esc(tagVal)}</text>`,
   );
 
   // //dehub.io — bottom, inset from the pill, standing on the same floor.
@@ -692,10 +703,10 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   const headDefs: string[] = [];
   const body: string[] = [];
   body.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#020203"/>`);
-  // Four dim marks OUTSIDE the card, at the extreme canvas corners.
-  const cm = 15 * s;
-  [[6 * s, 5 * s + cm], [W - 6 * s - cm * 0.6, 5 * s + cm], [6 * s, H - 5 * s], [W - 6 * s - cm * 0.6, H - 5 * s]]
-    .forEach(([cx, cy]) => body.push(`<text x="${n1(cx)}" y="${n1(cy)}" font-family="Consolas" font-size="${n1(cm)}" fill="rgba(255,255,255,0.30)">×</text>`));
+  // Nothing outside the card. There used to be four dim × marks in the canvas margin at the
+  // extreme corners; too small to read as a mark and too near the edge to read as deliberate,
+  // they just looked like specks on the print. The HUD boxes' corner brackets carry that
+  // crop-mark language where it belongs.
   body.push(`<g mask="url(#cardmask)">`);
   // Silk is the BASE; dust, grid and stars are an OVERLAY on top of it, in that
   // order, so the texture still reads through.
