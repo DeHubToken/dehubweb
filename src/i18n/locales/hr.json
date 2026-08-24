@@ -27,7 +27,20 @@
     "events": "Događaji",
     "prompt": "Potakni",
     "communities": "Zajednice",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statistika uživo",
+    "liveTv": "TV uživo",
+    "buyDhb": "Kupi DHB",
+    "bridge": "Most",
+    "top100": "Top 100",
+    "agents": "AI agenti",
+    "advertising": "Oglašavanje",
+    "premium": "Premium",
+    "pricing": "Cijene",
+    "creators": "Kreatori",
+    "getTheApp": "Preuzmi aplikaciju",
+    "connectAi": "Poveži AI"
   },
   "feed": {
     "home": "Početna",
@@ -35,7 +48,9 @@
     "images": "Slike",
     "shorts": "Kratki",
     "music": "Glazba",
-    "live": "Uživo"
+    "live": "Uživo",
+    "newPosts_one": "{{count}} nova objava",
+    "newPosts_other": "{{count}} novih objava"
   },
   "explore": {
     "all": "Sve",
@@ -242,7 +257,58 @@
     "hazy": "Maglovite noći",
     "save": "Spremi",
     "saving": "Spremanje...",
-    "swarms": "Rojevi"
+    "swarms": "Rojevi",
+    "profiles": "Profili",
+    "profilesDesc": "Računi spremljeni na ovom uređaju",
+    "addProfile": "Dodaj profil",
+    "profileActive": "Aktivan",
+    "profileSignedOut": "prijavite se za prebacivanje",
+    "profileRemove": "Ukloni profil",
+    "profilesUsed": "Iskorišteno {{used}} od {{max}}",
+    "profilesNextTier": "Razina {{tier}} zadržava {{count}}",
+    "profilesFullTier": "Stakajte za značku {{tier}} da zadržite {{count}} profila",
+    "profilesFull": "Uklonite profil da biste dodali drugi račun",
+    "browserNotifications": "Obavijesti preglednika",
+    "browserNotificationsDesc": "Saznajte za odgovore, napojnice i poruke dok ste u drugoj kartici",
+    "browserNotificationsOnDesc": "Odgovori, napojnice i poruke iskaču dok ste u drugoj kartici",
+    "browserNotificationsDismissed": "Zahtjev za obavijesti odbačen — pokušajte ponovno s prekidačem",
+    "browserNotificationsBlocked": "Blokirao ih je vaš preglednik",
+    "browserNotificationsBlockedTitle": "Ovaj preglednik blokira obavijesti",
+    "browserNotificationsBlockedNote": "Samo vaš preglednik može to poništiti — nakon blokade DeHub više ne može pitati.",
+    "browserNotificationsBlockedPending": "Vaš je zahtjev spremljen — uključit će se sam čim preglednik dopusti.",
+    "browserNotificationsUnblockChromium": "Kliknite ikonu lijevo od adresne trake → Postavke web-mjesta → postavite Obavijesti na Dopusti i ponovno učitajte stranicu.",
+    "browserNotificationsUnblockFirefox": "Kliknite lokot lijevo od adresne trake, uklonite „Blokirano” pored Primanje obavijesti i ponovno učitajte stranicu.",
+    "browserNotificationsUnblockSafari": "U traci izbornika: Safari → Postavke → Web-mjesta → Obavijesti, zatim postavite ovo web-mjesto na Dopusti.",
+    "browserNotificationsUnblockGeneric": "Otvorite postavke web-mjesta u pregledniku za ovu stranicu, postavite Obavijesti na Dopusti i ponovno učitajte.",
+    "browserNotificationsIosHint": "iPhone i iPad to dopuštaju tek kad je DeHub na početnom zaslonu — dodirnite Podijeli, zatim „Dodaj na početni zaslon”.",
+    "browserNotificationsTest": "Pošalji probnu obavijest",
+    "browserNotificationsTestSent": "Probna obavijest poslana",
+    "browserNotificationsTestBody": "Ovako izgleda DeHub obavijest.",
+    "showAsNewMember": "Prikaži me kao novog člana",
+    "showAsNewMemberDesc": "Omogućuje drugim članovima da vide da ste tek stigli kako bi vas mogli pozdraviti. Automatski završava 30 dana nakon registracije.",
+    "defaultProfileTab": "Zadana kartica profila",
+    "defaultProfileTabDesc": "Odaberite koju karticu posjetitelji prvo vide na vašem profilu",
+    "lavalamp": "Lava lampa",
+    "war": "Rat",
+    "osaka": "Osaka",
+    "jungle": "Džungla",
+    "themeColor": "Boja teme",
+    "themeColorDesc": "Odaberite prilagođenu boju za ovu temu",
+    "themeColorReset": "Poništi",
+    "themeColorWhite": "Bijela",
+    "themeColorBlack": "Crna",
+    "themeColorRainbow": "Duga",
+    "themeColorBrand": "Brend",
+    "themeColorBrandDesc": "Koristi boje tvoje profilne slike",
+    "themeColorBrandNoAvatar": "Dodajte profilnu sliku da biste koristili boje brenda",
+    "themeColorBrandFailed": "Nije bilo moguće očitati boje s vaše profilne slike",
+    "dimLights": "Prigušite svjetla",
+    "dimLightsDesc": "Smanjuje izloženost plavom svjetlu",
+    "matureContent": "Prikaži sadržaj za odrasle",
+    "matureContentDesc": "Uključuje u vaše feedove objave za odrasle i grub sadržaj te uklanja upozorenje s onih koje već vidite. Prema zadanom isključeno.",
+    "noNewMessages": "Bez novih razgovora",
+    "noNewMessagesDesc": "Zadržite postojeće razgovore, ali nitko novi ne može započeti",
+    "dmNoNewHelp": "Postojeći razgovori i dalje rade; nitko novi ne može započeti"
   },
   "common": {
     "save": "Spremi",
@@ -256,7 +322,8 @@
     "translating": "Prevođenje...",
     "close": "Zatvori",
     "loadingMore": "Učitavanje...",
-    "loadMore": "Učitaj više"
+    "loadMore": "Učitaj više",
+    "tryAgain": "Pokušaj ponovno"
   },
   "tip": {
     "title": "Pošalji napojnicu",
@@ -724,7 +791,11 @@
     "postRemoved": "Vaša objava je uklonjena",
     "newNotification": "Nova obavijest",
     "oneOther": "1 drugi",
-    "nOthers": "{{count}} drugih"
+    "nOthers": "{{count}} drugih",
+    "thisBrowser": "Ovaj preglednik",
+    "features": "Značajke",
+    "communities": "Zajednice",
+    "stores": "Trgovine"
   },
   "leaderboard": {
     "title": "Ljestvice",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Dodani ste! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo prenizak ({{balance}} DHB)",
     "refreshFailed": "Nešto je pošlo po krivu",
-    "noWalletAddress": "Adresa novčanika nije pronađena"
+    "noWalletAddress": "Adresa novčanika nije pronađena",
+    "affiliates": "Partneri",
+    "directReferrals_one": "{{count}} izravnih",
+    "directReferrals_other": "{{count}} izravnih",
+    "secondaryReferrals_one": "{{count}} neizravnih",
+    "secondaryReferrals_other": "{{count}} neizravnih"
   },
   "explorePage": {
     "searchPlaceholder": "Pretraži ljude, objave ili sadržaj...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Planirano",
     "statusInProgress": "U tijeku",
     "statusCompleted": "Dovršeno",
-    "statusDeclined": "Odbijeno"
+    "statusDeclined": "Odbijeno",
+    "shipping": "U izradi",
+    "noShippingYet": "Ništa nije u izradi",
+    "shippingAppearHere": "Zahtjevi koji se izrađuju pojavit će se ovdje."
   },
   "auth": {
     "loginRequired": "Potrebna prijava"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Pokretanje kupnje nije uspjelo",
     "redirectingOnramp": "Preusmjeravanje na pristupnik...",
     "onrampCreated": "Sesija pristupnika stvorena",
-    "failedOnramp": "Pokretanje pristupnika nije uspjelo"
+    "failedOnramp": "Pokretanje pristupnika nije uspjelo",
+    "badgeDiscount": "Vlasnik {{tier}} — {{percent}} % popusta"
   },
   "agents": {
     "title": "AI Agenti",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agent obrisan",
     "failedCreate": "Stvaranje agenta nije uspjelo",
     "failedDelete": "Brisanje agenta nije uspjelo",
-    "apiKeyCopied": "API ključ kopiran u međuspremnik"
+    "apiKeyCopied": "API ključ kopiran u međuspremnik",
+    "connectorUrl": "URL konektora",
+    "connectorUrlCopied": "URL konektora kopiran",
+    "connectorUrlHelp": "Dodajte ovo kao prilagođeni MCP konektor u Claudeu ili ChatGPT-u. Autentificira se kao ovaj agent, pa se prema njemu odnosite kao prema API ključu.",
+    "agentWallet": "Novčanik agenta (Base)",
+    "walletCopied": "Adresa novčanika kopirana",
+    "agentWalletHelp": "Pošaljite ovdje malu količinu ETH-a na Baseu prije nego što agent objavi — objava se kuje na lancu i agent sam plaća gas. Komentari, glasovi i praćenja ne traže gas."
   },
   "hero": {
     "title": "Dobrodošli U",
@@ -1005,7 +1091,10 @@
     "or": "ili",
     "termsNotice": "Nastavkom se slažete s našim Uvjetima korištenja i Politikom privatnosti",
     "walletInfoDesktop": "Povežite novčanik za sigurnu prijavu",
-    "walletInfoMobile": "MetaMask, Trust i Phantom će otvoriti svoju aplikaciju izravno. Rabby će koristiti WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust i Phantom će otvoriti svoju aplikaciju izravno. Rabby će koristiti WalletConnect.",
+    "addProfileTitle": "Dodaj profil",
+    "walletConnectedAs": "Povezano",
+    "useDifferentWallet": "Koristi drugi novčanik"
   },
   "careers": {
     "title": "Karijere u DeHubu",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Uskoro — regionalni trendovi su na putu!",
     "post": "Objavi",
     "logOut": "Odjava",
-    "logIn": "Prijava"
+    "logIn": "Prijava",
+    "searchMenu": "Pretraži izbornik",
+    "clearSearch": "Očisti pretragu",
+    "noMenuMatches": "Ništa u izborniku ne odgovara",
+    "searchDehubFor": "Pretraži „{{query}}” na DeHubu"
   },
   "postInfo": {
     "title": "Informacije o objavi",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Dostupna je nova verzija",
     "refresh_to_pick_up_the_latest_changes": "Osvježi za preuzimanje najnovijih promjena.",
     "refresh": "Osvježi",
-    "what_changed": "Što se promijenilo"
+    "what_changed": "Što se promijenilo",
+    "turn_on_desktop_notifications": "Uključiti obavijesti na radnoj površini?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Saznajte za odgovore, napojnice i poruke dok ste u drugoj kartici.",
+    "turn_on": "Uključi",
+    "not_now": "Ne sada"
   },
   "prompt": {
     "seoTitle": "Potaknite svoj feed — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Kada",
     "whyStake": "Zašto uložiti?",
     "yourStaked": "Vaš ulog"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Zbirka igara, svjetova i doživljaja koje je DeHub izgradio i objavio kao otvoreni kod.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Igrajte izravno u pregledniku na DeHubu — filmski 3D šah, proceduralno generirana pucačina, šetnja kišnom šumom, neonska ulična tučnjava i burzovni parket kojim možete hodati. Bez instalacije, bez preuzimanja.",
+    "alsoIn": "Postoji i u temi {{theme}}"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Otvoreni podaci u stvarnom vremenu",
+    "live": "Uživo",
+    "range": {
+      "24h": "24 sata",
+      "3d": "3 dana",
+      "7d": "7 dana",
+      "30d": "30 dana",
+      "all": "Cijelo razdoblje"
+    },
+    "unavailable": {
+      "title": "Statistika trenutačno nije dostupna",
+      "unconfigured": "Analitičkoj krajnjoj točki još nije dan Cloudflare API token. Umjesto izmišljene brojke ne prikazuje se ništa.",
+      "error": "Nismo uspjeli doći do Cloudflareova analitičkog API-ja. Umjesto da prikaže zastarjelu ili izmišljenu brojku, ova stranica ne prikazuje ništa dok očitanje uživo ne uspije."
+    },
+    "tile": {
+      "visitorsToday": "Posjetitelji danas",
+      "soFarToday": "danas do sada, UTC",
+      "peakHour": "Najprometniji sat",
+      "peakDay": "Najprometniji dan",
+      "peakAtHour": "u {{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "u ovom rasponu",
+      "pageViews": "Pregledi stranica",
+      "overHours": "kroz {{count}} h",
+      "overDay": "kroz 1 dan",
+      "overDays": "kroz {{count}} dana",
+      "requestsLabel": "Zahtjevi",
+      "served": "Posluženo",
+      "requests": "{{requests}} zahtjeva"
+    },
+    "chart": {
+      "hourly": "Posjetitelja na sat",
+      "daily": "Posjetitelja dnevno",
+      "hourlyHint": "{{count}} satnih intervala, UTC",
+      "dailyHint": "jedinstvenih posjetitelja dnevno",
+      "empty": "Za ovo razdoblje još nema podataka"
+    },
+    "countries": {
+      "title": "Vodeće zemlje",
+      "windowDay": "zadnja 24 sata",
+      "window": "zadnjih {{days}} dana"
+    },
+    "browsers": {
+      "title": "Preglednici",
+      "window": "prema pregledima stranica"
+    },
+    "edge": {
+      "title": "Na rubu mreže",
+      "windowDay": "zadnja 24 sata",
+      "window": "zadnjih {{days}} dana",
+      "cached": "Posluženo iz predmemorije",
+      "encrypted": "Šifrirano",
+      "threats": "Blokirane prijetnje"
+    },
+    "proof": {
+      "title": "Odakle dolaze ove brojke",
+      "subtitle": "Mjeri Cloudflare, a ne ova stranica",
+      "source": "Izvor",
+      "datasets": "Skupovi podataka",
+      "zone": "Zona",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Dohvaćeno u",
+      "query": "Točan upit iza grafikona",
+      "copied": "Kopirano",
+      "copy": "Kopiraj",
+      "openEndpoint": "Otvori /api/stats",
+      "openRaw": "Netaknuti Cloudflareov odgovor",
+      "edge": "Svaki zahtjev prema dehub.io prolazi kroz Cloudflare prije nego što dođe do naših poslužitelja. Ovi brojevi su Cloudflareova vlastita agregacija tog prometa — iste brojke koje prikazuje naša nadzorna ploča. Ne prikuplja ih skripta u vašem pregledniku, pa ih ništa na ovoj stranici ne može napuhati, a blokiranje pratitelja ih ne mijenja.",
+      "live": "Stranica ih čita uživo. Učitavanje /stats poziva našu krajnju točku, koja u tom trenutku upita Cloudflareov Analytics API i sprema odgovor u predmemoriju 60 sekundi.",
+      "limits": "Što ovo pokazuje, a što ne: vidite da brojke dolaze iz Cloudflareove agregacije, a ne iz koda naše aplikacije, i da je upit objavljen ovdje onaj koji se izvršava. Nije bez povjerenja — API token je kod nas, a Cloudflare ne nudi javno čitanje analitike zone. Svatko tko ima vlastitu Cloudflare zonu može pokrenuti isti upit i potvrditi oblik."
+    },
+    "definitions": {
+      "title": "Što brojke znače",
+      "visitorsTerm": "Posjetitelji",
+      "visitors": "— jedinstvene IP adrese koje je Cloudflare vidio tog dana. Blizu broju ljudi, ali nije isto: ured na jednoj vezi broji se jednom, a telefon koji prelazi s wifija na mobilne podatke dvaput.",
+      "pageViewsTerm": "Pregledi stranica",
+      "pageViews": "— zahtjevi koje Cloudflare svrstava u učitavanja stranica, a ne slike, skripte ili API pozive.",
+      "botsTerm": "Botovi su uključeni",
+      "bots": "— ovo su sirovi brojevi na rubu mreže, pa su u njima i pretraživači, nadzornici dostupnosti i skriptirani klijenti. Možete ih sami vidjeti u raščlambi po preglednicima iznad, gdje su stavke poput „Curl” i „Nepoznato” automatizirani promet, a ne ljudi. Filtriranje botova traži plaćeni Cloudflare plan koji nemamo, a tiho oduzimanje procjene učinilo bi brojke manje provjerljivima, a ne više.",
+      "totalTerm": "Zbrojevi raspona",
+      "total": "— pregledi stranica i zahtjevi zbrajaju se kroz raspon. Broj posjetitelja namjerno se ne zbraja u „ukupan broj posjetitelja”, jer bi netko tko je bio ovdje u ponedjeljak i utorak bio brojan dvaput.",
+      "peakTerm": "Najprometniji sat / dan",
+      "peak": "— najviši jedinstveni broj u bilo kojem pojedinačnom intervalu raspona, iz istog razloga: to je brojka koju Cloudflare doista mjeri, a ne sastavljena zbrajanjem preklapajućih brojeva.",
+      "resolutionTerm": "Satni podaci staju na 3 dana",
+      "resolution": "— to je Cloudflareovo ograničenje na ovom planu, a ne naš izbor: odbija svaki satni upit širi od tri dana. Prikazi od 24 sata i 3 dana su satni; 7 dana i više su dnevni i ne postoji način da se nacrta satni grafikon za cijelo razdoblje.",
+      "breakdownTerm": "Zemlje i preglednici",
+      "breakdown": "— prate raspon koji odaberete, ali samo {{max}} dana unatrag, koliko se čuva dnevna raščlamba. Na duljim rasponima grafikon pokriva više vremena nego popis zemalja.",
+      "startTerm": "Povijest",
+      "start": "— „cijelo razdoblje” znači svaki dan koji Cloudflare još čuva, danas {{days}} dana od {{date}}, dana kada je dehub.io prešao na Cloudflare. Starijih rubnih podataka nema, a stari dani otpadaju kako im Cloudflare istječe rok."
+    }
   }
 }

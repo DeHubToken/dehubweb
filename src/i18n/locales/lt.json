@@ -27,7 +27,20 @@
     "events": "Renginiai",
     "prompt": "Valdymas",
     "communities": "Bendruomenės",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statistika realiu laiku",
+    "liveTv": "Tiesioginė TV",
+    "buyDhb": "Pirkti DHB",
+    "bridge": "Tiltas",
+    "top100": "Top 100",
+    "agents": "DI agentai",
+    "advertising": "Reklama",
+    "premium": "Premium",
+    "pricing": "Kainos",
+    "creators": "Kūrėjai",
+    "getTheApp": "Atsisiųsti programėlę",
+    "connectAi": "Prijungti DI"
   },
   "feed": {
     "home": "Pradžia",
@@ -35,7 +48,9 @@
     "images": "Nuotraukos",
     "shorts": "Trumpieji",
     "music": "Muzika",
-    "live": "Tiesiogiai"
+    "live": "Tiesiogiai",
+    "newPosts_one": "{{count}} naujas įrašas",
+    "newPosts_other": "{{count}} nauji įrašai"
   },
   "explore": {
     "all": "Visi",
@@ -242,7 +257,58 @@
     "hazy": "Miglotos naktys",
     "save": "Išsaugoti",
     "saving": "Išsaugoma...",
-    "swarms": "Spiečiai"
+    "swarms": "Spiečiai",
+    "profiles": "Profiliai",
+    "profilesDesc": "Šiame įrenginyje išsaugotos paskyros",
+    "addProfile": "Pridėti profilį",
+    "profileActive": "Aktyvus",
+    "profileSignedOut": "prisijunkite, kad perjungtumėte",
+    "profileRemove": "Pašalinti profilį",
+    "profilesUsed": "Naudojama {{used}} iš {{max}}",
+    "profilesNextTier": "{{tier}} lygis išlaiko {{count}}",
+    "profilesFullTier": "Statykite dėl {{tier}} ženklelio, kad išlaikytumėte {{count}} profilių",
+    "profilesFull": "Pašalinkite profilį, kad pridėtumėte kitą paskyrą",
+    "browserNotifications": "Naršyklės pranešimai",
+    "browserNotificationsDesc": "Sužinokite apie atsakymus, arbatpinigius ir žinutes, kol esate kitoje kortelėje",
+    "browserNotificationsOnDesc": "Atsakymai, arbatpinigiai ir žinutės iššoka, kol esate kitoje kortelėje",
+    "browserNotificationsDismissed": "Pranešimų prašymas atmestas — pabandykite jungiklį dar kartą",
+    "browserNotificationsBlocked": "Užblokavo jūsų naršyklė",
+    "browserNotificationsBlockedTitle": "Ši naršyklė blokuoja pranešimus",
+    "browserNotificationsBlockedNote": "Tai atšaukti gali tik jūsų naršyklė — užblokavus DeHub nebegali klausti iš naujo.",
+    "browserNotificationsBlockedPending": "Jūsų prašymas išsaugotas — jis įsijungs pats, kai tik naršyklė leis.",
+    "browserNotificationsUnblockChromium": "Spustelėkite piktogramą adreso juostos kairėje → Svetainės nustatymai → nustatykite Pranešimus į Leisti ir iš naujo įkelkite šį puslapį.",
+    "browserNotificationsUnblockFirefox": "Spustelėkite spynelę adreso juostos kairėje, panaikinkite „Užblokuota“ prie Gauti pranešimus ir iš naujo įkelkite šį puslapį.",
+    "browserNotificationsUnblockSafari": "Meniu juostoje: Safari → Nustatymai → Svetainės → Pranešimai, tada nustatykite šią svetainę į Leisti.",
+    "browserNotificationsUnblockGeneric": "Atidarykite naršyklės svetainės nustatymus šiam puslapiui, nustatykite Pranešimus į Leisti ir įkelkite iš naujo.",
+    "browserNotificationsIosHint": "iPhone ir iPad tai leidžia tik tada, kai DeHub yra pradžios ekrane — bakstelėkite Bendrinti, tada „Įtraukti į pradžios ekraną“.",
+    "browserNotificationsTest": "Siųsti bandomąjį pranešimą",
+    "browserNotificationsTestSent": "Bandomasis pranešimas išsiųstas",
+    "browserNotificationsTestBody": "Štai kaip atrodo DeHub pranešimas.",
+    "showAsNewMember": "Rodyti mane kaip naują narį",
+    "showAsNewMemberDesc": "Leidžia kitiems nariams matyti, kad ką tik prisijungėte, kad galėtų pasveikinti. Automatiškai baigiasi praėjus 30 dienų po registracijos.",
+    "defaultProfileTab": "Numatytoji profilio kortelė",
+    "defaultProfileTabDesc": "Pasirinkite, kurią kortelę lankytojai jūsų profilyje mato pirmiausia",
+    "lavalamp": "Lavos lempa",
+    "war": "Karas",
+    "osaka": "Osaka",
+    "jungle": "Džiunglės",
+    "themeColor": "Temos spalva",
+    "themeColorDesc": "Pasirinkite šiai temai savo spalvą",
+    "themeColorReset": "Atstatyti",
+    "themeColorWhite": "Balta",
+    "themeColorBlack": "Juoda",
+    "themeColorRainbow": "Vaivorykštė",
+    "themeColorBrand": "Prekės ženklas",
+    "themeColorBrandDesc": "Naudoti profilio nuotraukos spalvas",
+    "themeColorBrandNoAvatar": "Pridėkite profilio nuotrauką, kad naudotumėte prekės ženklo spalvas",
+    "themeColorBrandFailed": "Nepavyko nuskaityti spalvų iš jūsų profilio nuotraukos",
+    "dimLights": "Pritemdyti šviesas",
+    "dimLightsDesc": "Sumažina mėlynos šviesos poveikį",
+    "matureContent": "Rodyti suaugusiesiems skirtą turinį",
+    "matureContentDesc": "Įtraukia į jūsų srautus suaugusiesiems skirtus ir žiaurius įrašus bei nuima įspėjimą nuo tų, kuriuos jau matote. Pagal numatymą išjungta.",
+    "noNewMessages": "Jokių naujų pokalbių",
+    "noNewMessagesDesc": "Išsaugokite esamus pokalbius, bet naujas žmogus pradėti negalės",
+    "dmNoNewHelp": "Esami pokalbiai veikia toliau; naujas žmogus pradėti negali"
   },
   "common": {
     "save": "Saugoti",
@@ -256,7 +322,8 @@
     "translating": "Verčiama...",
     "close": "Uždaryti",
     "loadingMore": "Kraunama daugiau...",
-    "loadMore": "Įkelti daugiau"
+    "loadMore": "Įkelti daugiau",
+    "tryAgain": "Bandyti dar kartą"
   },
   "tip": {
     "title": "Siųsti arbatpinigius",
@@ -724,7 +791,11 @@
     "postRemoved": "Jūsų įrašas buvo pašalintas",
     "newNotification": "Naujas pranešimas",
     "oneOther": "1 kitas",
-    "nOthers": "{{count}} kitų"
+    "nOthers": "{{count}} kitų",
+    "thisBrowser": "Ši naršyklė",
+    "features": "Funkcijos",
+    "communities": "Bendruomenės",
+    "stores": "Parduotuvės"
   },
   "leaderboard": {
     "title": "Lyderių lentelė",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Buvote pridėtas! Likutis: {{balance}} DHB",
     "balanceTooLow": "Likutis per mažas ({{balance}} DHB)",
     "refreshFailed": "Kažkas nepavyko",
-    "noWalletAddress": "Piniginės adresas nerastas"
+    "noWalletAddress": "Piniginės adresas nerastas",
+    "affiliates": "Partneriai",
+    "directReferrals_one": "{{count}} tiesioginių",
+    "directReferrals_other": "{{count}} tiesioginių",
+    "secondaryReferrals_one": "{{count}} netiesioginių",
+    "secondaryReferrals_other": "{{count}} netiesioginių"
   },
   "explorePage": {
     "searchPlaceholder": "Ieškoti žmonių, įrašų ar turinio...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Planuojama",
     "statusInProgress": "Vykdoma",
     "statusCompleted": "Užbaigta",
-    "statusDeclined": "Atmesta"
+    "statusDeclined": "Atmesta",
+    "shipping": "Kuriama",
+    "noShippingYet": "Nieko nevykdoma",
+    "shippingAppearHere": "Čia atsiras pageidavimai, kurie jau kuriami."
   },
   "auth": {
     "loginRequired": "Reikia prisijungti"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Nepavyko pradėti pirkimo",
     "redirectingOnramp": "Nukreipiama į rampą...",
     "onrampCreated": "Rampos sesija sukurta",
-    "failedOnramp": "Nepavyko pradėti rampos"
+    "failedOnramp": "Nepavyko pradėti rampos",
+    "badgeDiscount": "{{tier}} turėtojui — {{percent}} % nuolaida"
   },
   "agents": {
     "title": "DI agentai",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agentas ištrintas",
     "failedCreate": "Nepavyko sukurti agento",
     "failedDelete": "Nepavyko ištrinti agento",
-    "apiKeyCopied": "API raktas nukopijuotas į iškarpinę"
+    "apiKeyCopied": "API raktas nukopijuotas į iškarpinę",
+    "connectorUrl": "Jungties URL",
+    "connectorUrlCopied": "Jungties URL nukopijuotas",
+    "connectorUrlHelp": "Pridėkite tai kaip pasirinktinę MCP jungtį Claude arba ChatGPT. Ji autentifikuojasi kaip šis agentas, tad elkitės su ja kaip su API raktu.",
+    "agentWallet": "Agento piniginė (Base)",
+    "walletCopied": "Piniginės adresas nukopijuotas",
+    "agentWalletHelp": "Prieš agentui paskelbiant įrašą, atsiųskite čia šiek tiek ETH Base tinkle — paskelbimas nukaldinamas grandinėje, o agentas pats moka dujas. Komentarams, balsavimui ir sekimui dujų nereikia."
   },
   "hero": {
     "title": "Sveiki Atvykę",
@@ -1005,7 +1091,10 @@
     "or": "arba",
     "termsNotice": "Tęsdami sutinkate su mūsų Paslaugų sąlygomis ir Privatumo politika",
     "walletInfoDesktop": "Prijunkite piniginę, kad prisijungtumėte saugiai",
-    "walletInfoMobile": "MetaMask, Trust ir Phantom atidarys savo programėlę tiesiogiai. Rabby naudos WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust ir Phantom atidarys savo programėlę tiesiogiai. Rabby naudos WalletConnect.",
+    "addProfileTitle": "Pridėti profilį",
+    "walletConnectedAs": "Prisijungta",
+    "useDifferentWallet": "Naudoti kitą piniginę"
   },
   "careers": {
     "title": "Karjera DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Netrukus — regioninės tendencijos jau pakeliui!",
     "post": "Skelbti",
     "logOut": "Atsijungti",
-    "logIn": "Prisijungti"
+    "logIn": "Prisijungti",
+    "searchMenu": "Ieškoti meniu",
+    "clearSearch": "Išvalyti paiešką",
+    "noMenuMatches": "Meniu niekas neatitinka",
+    "searchDehubFor": "Ieškoti „{{query}}“ DeHub svetainėje"
   },
   "postInfo": {
     "title": "Įrašo informacija",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Yra nauja versija",
     "refresh_to_pick_up_the_latest_changes": "Atnaujinkite, kad gautumėte naujausius pakeitimus.",
     "refresh": "Atnaujinti",
-    "what_changed": "Kas pasikeitė"
+    "what_changed": "Kas pasikeitė",
+    "turn_on_desktop_notifications": "Įjungti darbalaukio pranešimus?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Sužinokite apie atsakymus, arbatpinigius ir žinutes, kol esate kitoje kortelėje.",
+    "turn_on": "Įjungti",
+    "not_now": "Ne dabar"
   },
   "prompt": {
     "seoTitle": "Valdykite savo informacijos srautą („feed“) – DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Kada",
     "whyStake": "Kodėl verta įnešti?",
     "yourStaked": "Jūsų įnešta"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Žaidimų, pasaulių ir patirčių rinkinys, kurį DeHub sukūrė ir atvėrė kaip atvirąjį kodą.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Žaiskite naršyklėje DeHub svetainėje — kinematografiški 3D šachmatai, procedūriškai generuojamas šaudymo žaidimas, pasivaikščiojimas atogrąžų miške, neoninės gatvės muštynės ir vaikščiojama prekybos salė. Nereikia diegti, nereikia atsisiųsti.",
+    "alsoIn": "Yra ir temoje {{theme}}"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Atvirojo kodo duomenys realiu laiku",
+    "live": "Tiesiogiai",
+    "range": {
+      "24h": "24 valandos",
+      "3d": "3 dienos",
+      "7d": "7 dienos",
+      "30d": "30 dienų",
+      "all": "Visas laikas"
+    },
+    "unavailable": {
+      "title": "Statistika šiuo metu neprieinama",
+      "unconfigured": "Analitikos galiniam taškui dar nesuteiktas Cloudflare API prieigos raktas. Vietoj išgalvoto skaičiaus nerodoma nieko.",
+      "error": "Nepavyko pasiekti Cloudflare analitikos API. Užuot rodęs pasenusį ar išgalvotą skaičių, šis puslapis nerodo nieko, kol tiesioginis nuskaitymas nepavyks."
+    },
+    "tile": {
+      "visitorsToday": "Lankytojų šiandien",
+      "soFarToday": "šiandien iki šiol, UTC",
+      "peakHour": "Judriausia valanda",
+      "peakDay": "Judriausia diena",
+      "peakAtHour": "{{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "šiame intervale",
+      "pageViews": "Puslapių peržiūros",
+      "overHours": "per {{count}} val.",
+      "overDay": "per 1 dieną",
+      "overDays": "per {{count}} dienų",
+      "requestsLabel": "Užklausos",
+      "served": "Pateikta",
+      "requests": "{{requests}} užklausų"
+    },
+    "chart": {
+      "hourly": "Lankytojų per valandą",
+      "daily": "Lankytojų per dieną",
+      "hourlyHint": "{{count}} valandų intervalų, UTC",
+      "dailyHint": "unikalių lankytojų per dieną",
+      "empty": "Šiam laikotarpiui duomenų dar nėra"
+    },
+    "countries": {
+      "title": "Populiariausios šalys",
+      "windowDay": "paskutinės 24 valandos",
+      "window": "paskutinės {{days}} dienos"
+    },
+    "browsers": {
+      "title": "Naršyklės",
+      "window": "pagal puslapių peržiūras"
+    },
+    "edge": {
+      "title": "Tinklo pakraštyje",
+      "windowDay": "paskutinės 24 valandos",
+      "window": "paskutinės {{days}} dienos",
+      "cached": "Pateikta iš podėlio",
+      "encrypted": "Užšifruota",
+      "threats": "Užblokuotos grėsmės"
+    },
+    "proof": {
+      "title": "Iš kur šie skaičiai",
+      "subtitle": "Matuoja Cloudflare, o ne šis puslapis",
+      "source": "Šaltinis",
+      "datasets": "Duomenų rinkiniai",
+      "zone": "Zona",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Gauta",
+      "query": "Tiksli užklausa, esanti už diagramos",
+      "copied": "Nukopijuota",
+      "copy": "Kopijuoti",
+      "openEndpoint": "Atidaryti /api/stats",
+      "openRaw": "Nepakeistas Cloudflare atsakymas",
+      "edge": "Kiekviena užklausa į dehub.io eina per Cloudflare, prieš pasiekdama mūsų serverius. Šie skaičiai yra paties Cloudflare to srauto suvestinė — tie patys skaičiai, kuriuos rodo mūsų skydelis. Jų nerenka scenarijus jūsų naršyklėje, tad niekas šiame puslapyje jų išpūsti negali, o sekiklių blokavimas jų nekeičia.",
+      "live": "Puslapis skaito juos tiesiogiai. Įkėlus /stats iškviečiamas mūsų galinis taškas, kuris tą akimirką kreipiasi į Cloudflare Analytics API ir 60 sekundžių saugo atsakymą podėlyje.",
+      "limits": "Ką tai rodo ir ko ne: matote, kad skaičiai ateina iš Cloudflare suvestinės, o ne iš mūsų programos kodo, ir kad čia paskelbta užklausa yra ta, kuri vykdoma. Tai nėra be pasitikėjimo — API prieigos raktas yra pas mus, o Cloudflare nesiūlo viešo zonos analitikos skaitymo. Kiekvienas, turintis savo Cloudflare zoną, gali paleisti tą pačią užklausą ir patvirtinti jos formą."
+    },
+    "definitions": {
+      "title": "Ką reiškia šie skaičiai",
+      "visitorsTerm": "Lankytojai",
+      "visitors": "— unikalūs IP adresai, kuriuos Cloudflare matė tą dieną. Artima žmonių skaičiui, bet ne tas pat: biuras su vienu ryšiu skaičiuojamas kartą, o telefonas, kaitaliojantis tarp wifi ir mobiliųjų duomenų, — du kartus.",
+      "pageViewsTerm": "Puslapių peržiūros",
+      "pageViews": "— užklausos, kurias Cloudflare priskiria puslapių įkėlimams, o ne paveikslėliams, scenarijams ar API iškvietimams.",
+      "botsTerm": "Botai įskaičiuoti",
+      "bots": "— tai neapdoroti skaičiavimai tinklo pakraštyje, tad į juos patenka ir naršyklės robotai, veikimo stebėtojai bei scenarijais valdomi klientai. Juos galite pamatyti patys naršyklių suvestinėje aukščiau, kur įrašai kaip „Curl“ ir „Nežinoma“ yra automatinis srautas, o ne žmonės. Botams atfiltruoti reikia mokamo Cloudflare plano, kurio neturime, o tyliai atimti spėjimą reikštų padaryti skaičius mažiau patikrinamus, o ne labiau.",
+      "totalTerm": "Intervalo sumos",
+      "total": "— puslapių peržiūros ir užklausos sumuojamos per visą intervalą. Lankytojų skaičiai sąmoningai nesumuojami į „bendrą lankytojų skaičių“, nes tas, kuris čia buvo pirmadienį ir antradienį, būtų suskaičiuotas du kartus.",
+      "peakTerm": "Judriausia valanda / diena",
+      "peak": "— didžiausias unikalus skaičius bet kuriame viename intervalo segmente, dėl tos pačios priežasties: tai skaičius, kurį Cloudflare iš tikrųjų matuoja, o ne sudėtas iš persidengiančių skaičiavimų.",
+      "resolutionTerm": "Valandiniai duomenys baigiasi ties 3 dienomis",
+      "resolution": "— tai Cloudflare riba šiame plane, ne mūsų pasirinkimas: jis atmeta bet kokią valandinę užklausą, platesnę nei trys dienos. 24 valandų ir 3 dienų rodiniai yra valandiniai; 7 dienos ir daugiau — dieniniai, o valandinės viso laikotarpio diagramos nubrėžti neįmanoma.",
+      "breakdownTerm": "Šalys ir naršyklės",
+      "breakdown": "— jie seka pasirinktą intervalą, bet tik iki {{max}} dienų atgal, tiek saugoma dienos suvestinė. Ilgesniuose intervaluose diagrama apima daugiau laiko nei šalių sąrašas.",
+      "startTerm": "Istorija",
+      "start": "— „visas laikas“ reiškia kiekvieną dieną, kurią Cloudflare vis dar saugo, šiandien {{days}} dienų nuo {{date}}, kai dehub.io persikėlė į Cloudflare. Ankstesnių pakraščio duomenų nėra, o senesnės dienos dingsta, kai Cloudflare jas pašalina."
+    }
   }
 }

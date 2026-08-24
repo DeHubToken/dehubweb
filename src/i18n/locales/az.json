@@ -27,7 +27,20 @@
     "events": "Tədbirlər",
     "prompt": "Tənzimlə",
     "communities": "İcmalar",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Canlı statistika",
+    "liveTv": "Canlı TV",
+    "buyDhb": "DHB al",
+    "bridge": "Körpü",
+    "top100": "İlk 100",
+    "agents": "Süni intellekt agentləri",
+    "advertising": "Reklam",
+    "premium": "Premium",
+    "pricing": "Qiymətlər",
+    "creators": "Yaradıcılar",
+    "getTheApp": "Tətbiqi yüklə",
+    "connectAi": "Süni intellekti qoş"
   },
   "feed": {
     "home": "Ana səhifə",
@@ -35,7 +48,9 @@
     "images": "Şəkillər",
     "shorts": "Qısalar",
     "music": "Musiqi",
-    "live": "Canlı"
+    "live": "Canlı",
+    "newPosts_one": "{{count}} yeni paylaşım",
+    "newPosts_other": "{{count}} yeni paylaşım"
   },
   "explore": {
     "all": "Hamısı",
@@ -242,7 +257,58 @@
     "hazy": "Dumanlı gecələr",
     "save": "Yadda saxla",
     "saving": "Yadda saxlanılır...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Profillər",
+    "profilesDesc": "Bu cihazda saxlanılan hesablar",
+    "addProfile": "Profil əlavə et",
+    "profileActive": "Aktiv",
+    "profileSignedOut": "dəyişmək üçün daxil olun",
+    "profileRemove": "Profili sil",
+    "profilesUsed": "{{max}} -dan {{used}} istifadə olunub",
+    "profilesNextTier": "{{tier}} səviyyəsi {{count}} saxlayır",
+    "profilesFullTier": "{{count}} profil saxlamaq üçün {{tier}} nişanı naminə stake edin",
+    "profilesFull": "Başqa hesab əlavə etmək üçün bir profili silin",
+    "browserNotifications": "Brauzer bildirişləri",
+    "browserNotificationsDesc": "Başqa vərəqdə olarkən cavablar, bəxşişlər və mesajlar barədə xəbər tutun",
+    "browserNotificationsOnDesc": "Başqa vərəqdə olarkən cavablar, bəxşişlər və mesajlar görünür",
+    "browserNotificationsDismissed": "Bildiriş sorğusu ləğv edildi — açarı yenidən sınayın",
+    "browserNotificationsBlocked": "Brauzeriniz tərəfindən bloklanıb",
+    "browserNotificationsBlockedTitle": "Bu brauzer bildirişləri bloklayır",
+    "browserNotificationsBlockedNote": "Bunu yalnız brauzeriniz geri qaytara bilər — bloklandıqdan sonra DeHub yenidən soruşa bilməz.",
+    "browserNotificationsBlockedPending": "Sorğunuz saxlanıldı — brauzeriniz icazə verən kimi özü işə düşəcək.",
+    "browserNotificationsUnblockChromium": "Ünvan sətrinin solundakı ikonaya klikləyin → Sayt parametrləri → Bildirişləri «İcazə ver» olaraq təyin edin və səhifəni yenidən yükləyin.",
+    "browserNotificationsUnblockFirefox": "Ünvan sətrinin solundakı kilidə klikləyin, «Bildiriş al» yanındakı «Bloklanıb» qeydini silin və səhifəni yenidən yükləyin.",
+    "browserNotificationsUnblockSafari": "Menyu sətrində: Safari → Parametrlər → Veb saytlar → Bildirişlər, sonra bu saytı «İcazə ver» olaraq təyin edin.",
+    "browserNotificationsUnblockGeneric": "Brauzerinizdə bu səhifə üçün sayt parametrlərini açın, Bildirişləri «İcazə ver» olaraq təyin edin və yenidən yükləyin.",
+    "browserNotificationsIosHint": "iPhone və iPad buna yalnız DeHub Ana Ekranda olduqda icazə verir — Paylaş düyməsinə, sonra «Ana Ekrana əlavə et» düyməsinə toxunun.",
+    "browserNotificationsTest": "Sınaq bildirişi göndər",
+    "browserNotificationsTestSent": "Sınaq bildirişi göndərildi",
+    "browserNotificationsTestBody": "DeHub bildirişi belə görünür.",
+    "showAsNewMember": "Məni yeni üzv kimi göstər",
+    "showAsNewMemberDesc": "Digər üzvlərin yeni qoşulduğunuzu görüb sizi qarşılamasına imkan verir. Qeydiyyatdan 30 gün sonra avtomatik bitir.",
+    "defaultProfileTab": "Standart profil vərəqi",
+    "defaultProfileTabDesc": "Ziyarətçilərin profilinizdə ilk hansı vərəqi görəcəyini seçin",
+    "lavalamp": "Lava lampası",
+    "war": "Müharibə",
+    "osaka": "Osaka",
+    "jungle": "Cəngəllik",
+    "themeColor": "Mövzu rəngi",
+    "themeColorDesc": "Bu mövzu üçün fərdi rəng seçin",
+    "themeColorReset": "Sıfırla",
+    "themeColorWhite": "Ağ",
+    "themeColorBlack": "Qara",
+    "themeColorRainbow": "Göy qurşağı",
+    "themeColorBrand": "Brend",
+    "themeColorBrandDesc": "Profil şəklinizin rənglərini istifadə edin",
+    "themeColorBrandNoAvatar": "Brend rənglərini istifadə etmək üçün profil şəkli əlavə edin",
+    "themeColorBrandFailed": "Profil şəklinizdən rənglər oxuna bilmədi",
+    "dimLights": "İşıqları söndür",
+    "dimLightsDesc": "Mavi işığa məruz qalmanı azaldır",
+    "matureContent": "Yetkinlər üçün məzmunu göstər",
+    "matureContentDesc": "Lentlərinizə yetkinlər üçün və kəskin paylaşımları daxil edir, artıq gördüklərinizdən xəbərdarlığı silir. Standart olaraq sönülüdür.",
+    "noNewMessages": "Yeni söhbət yoxdur",
+    "noNewMessagesDesc": "Mövcud söhbətlərinizi saxlayın, amma yeni heç kim başlaya bilməsin",
+    "dmNoNewHelp": "Mövcud söhbətlər işləməyə davam edir; yeni heç kim başlaya bilmir"
   },
   "common": {
     "save": "Saxla",
@@ -256,7 +322,8 @@
     "translating": "Tərcümə olunur...",
     "close": "Bağla",
     "loadingMore": "Daha çox yüklənir...",
-    "loadMore": "Daha çox yüklə"
+    "loadMore": "Daha çox yüklə",
+    "tryAgain": "Yenidən cəhd et"
   },
   "tip": {
     "title": "Bəxşiş Göndər",
@@ -724,7 +791,11 @@
     "postRemoved": "Paylaşımınız silindi",
     "newNotification": "Yeni bildiriş",
     "oneOther": "1 başqası",
-    "nOthers": "{{count}} başqası"
+    "nOthers": "{{count}} başqası",
+    "thisBrowser": "Bu brauzer",
+    "features": "Xüsusiyyətlər",
+    "communities": "İcmalar",
+    "stores": "Mağazalar"
   },
   "leaderboard": {
     "title": "Lider Lövhəsi",
@@ -753,7 +824,12 @@
     "addedToLeaderboard": "Əlavə edildiniz! Balans: {{balance}} DHB",
     "balanceTooLow": "Balans çox aşağıdır ({{balance}} DHB)",
     "refreshFailed": "Xəta baş verdi",
-    "noWalletAddress": "Cüzdan ünvanı tapılmadı"
+    "noWalletAddress": "Cüzdan ünvanı tapılmadı",
+    "affiliates": "Tərəfdaşlar",
+    "directReferrals_one": "{{count}} birbaşa",
+    "directReferrals_other": "{{count}} birbaşa",
+    "secondaryReferrals_one": "{{count}} dolayı",
+    "secondaryReferrals_other": "{{count}} dolayı"
   },
   "explorePage": {
     "searchPlaceholder": "İnsanlar, paylaşımlar və ya məzmun axtar...",
@@ -854,7 +930,10 @@
     "statusPlanned": "Planlaşdırılıb",
     "statusInProgress": "Davam Edir",
     "statusCompleted": "Tamamlandı",
-    "statusDeclined": "Rədd Edildi"
+    "statusDeclined": "Rədd Edildi",
+    "shipping": "Hazırlanır",
+    "noShippingYet": "Davam edən heç nə yoxdur",
+    "shippingAppearHere": "Hazırlanan sorğular burada görünəcək."
   },
   "auth": {
     "loginRequired": "Daxil olmaq lazımdır"
@@ -927,7 +1006,8 @@
     "failedPurchase": "Satın almanı başlatmaq uğursuz oldu",
     "redirectingOnramp": "Onramp-a yönləndirilir...",
     "onrampCreated": "Onramp seansı yaradıldı",
-    "failedOnramp": "Onramp başlatmaq uğursuz oldu"
+    "failedOnramp": "Onramp başlatmaq uğursuz oldu",
+    "badgeDiscount": "{{tier}} sahibi — {{percent}}% endirim"
   },
   "agents": {
     "title": "AI Agentləri",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agent silindi",
     "failedCreate": "Agent yaratmaq uğursuz oldu",
     "failedDelete": "Agenti silmək uğursuz oldu",
-    "apiKeyCopied": "API açarı buferə kopyalandı"
+    "apiKeyCopied": "API açarı buferə kopyalandı",
+    "connectorUrl": "Konnektor URL-i",
+    "connectorUrlCopied": "Konnektor URL-i kopyalandı",
+    "connectorUrlHelp": "Bunu Claude və ya ChatGPT-də fərdi MCP konnektoru kimi əlavə edin. O, bu agent kimi identifikasiya olunur, ona görə API açarı kimi qoruyun.",
+    "agentWallet": "Agent pulqabı (Base)",
+    "walletCopied": "Pulqabı ünvanı kopyalandı",
+    "agentWalletHelp": "Agent paylaşım etməzdən əvvəl bura az miqdarda Base ETH göndərin — dərc etmək zəncirdə mint edir və agent öz qazını özü ödəyir. Şərh, səs və izləmə üçün qaz lazım deyil."
   },
   "hero": {
     "title": "Dünyamıza",
@@ -1005,7 +1091,10 @@
     "or": "və ya",
     "termsNotice": "Davam etməklə Xidmət Şərtlərimiz və Məxfilik Siyasətimizlə razılaşırsınız",
     "walletInfoDesktop": "Təhlükəsiz daxil olmaq üçün cüzdanınızı qoşun",
-    "walletInfoMobile": "MetaMask, Trust və Phantom öz tətbiqlərini birbaşa açacaq. Rabby WalletConnect istifadə edəcək."
+    "walletInfoMobile": "MetaMask, Trust və Phantom öz tətbiqlərini birbaşa açacaq. Rabby WalletConnect istifadə edəcək.",
+    "addProfileTitle": "Profil əlavə et",
+    "walletConnectedAs": "Qoşulub",
+    "useDifferentWallet": "Başqa pulqabı istifadə et"
   },
   "careers": {
     "title": "DeHub-da Karyera",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Tezliklə — regional trendlər yoldadır!",
     "post": "Paylaş",
     "logOut": "Çıxış",
-    "logIn": "Giriş"
+    "logIn": "Giriş",
+    "searchMenu": "Menyuda axtar",
+    "clearSearch": "Axtarışı təmizlə",
+    "noMenuMatches": "Menyuda uyğun heç nə yoxdur",
+    "searchDehubFor": "DeHub-da «{{query}}» axtar"
   },
   "postInfo": {
     "title": "Paylaşım məlumatı",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Yeni versiya mövcuddur",
     "refresh_to_pick_up_the_latest_changes": "Ən son dəyişiklikləri almaq üçün yeniləyin.",
     "refresh": "Yenilə",
-    "what_changed": "Nə dəyişdi?"
+    "what_changed": "Nə dəyişdi?",
+    "turn_on_desktop_notifications": "Masaüstü bildirişləri açılsın?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Başqa vərəqdə olarkən cavablar, bəxşişlər və mesajlar barədə xəbər tutun.",
+    "turn_on": "Aç",
+    "not_now": "İndi yox"
   },
   "prompt": {
     "seoTitle": "DeHub-da lentinizi tənzimləyin — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Nə vaxt",
     "whyStake": "Niyə depozit?",
     "yourStaked": "Sizin depozitiniz"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "DeHub-ın qurduğu və açıq mənbə etdiyi oyunlar, dünyalar və təcrübələr toplusu.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "DeHub-da birbaşa brauzerinizdə oynayın — kinematik 3D şahmat, prosedurla yaradılan atıcı oyun, yağış meşəsində gəzinti, neon küçə davası və gəzilə bilən ticarət zalı. Quraşdırma yoxdur, endirmə yoxdur.",
+    "alsoIn": "{{theme}} mövzusunda da var"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Real vaxt açıq mənbə məlumatları",
+    "live": "Canlı",
+    "range": {
+      "24h": "24 saat",
+      "3d": "3 gün",
+      "7d": "7 gün",
+      "30d": "30 gün",
+      "all": "Bütün dövr"
+    },
+    "unavailable": {
+      "title": "Statistika hazırda əlçatan deyil",
+      "unconfigured": "Analitika son nöqtəsinə hələ Cloudflare API tokeni verilməyib. Uydurma rəqəm əvəzinə heç nə göstərilmir.",
+      "error": "Cloudflare-in analitika API-sinə çata bilmədik. Köhnə və ya uydurma rəqəm göstərmək əvəzinə, bu səhifə canlı oxu uğurlu olana qədər heç nə göstərmir."
+    },
+    "tile": {
+      "visitorsToday": "Bugünkü ziyarətçilər",
+      "soFarToday": "bu gün indiyədək, UTC",
+      "peakHour": "Ən sıx saat",
+      "peakDay": "Ən sıx gün",
+      "peakAtHour": "{{when}} UTC-də",
+      "peakOnDay": "{{when}} tarixində",
+      "inRange": "bu aralıqda",
+      "pageViews": "Səhifə baxışları",
+      "overHours": "{{count}} saatda",
+      "overDay": "1 gündə",
+      "overDays": "{{count}} gündə",
+      "requestsLabel": "Sorğular",
+      "served": "Verilib",
+      "requests": "{{requests}} sorğu"
+    },
+    "chart": {
+      "hourly": "Saatlıq ziyarətçi",
+      "daily": "Gündəlik ziyarətçi",
+      "hourlyHint": "{{count}} saatlıq interval, UTC",
+      "dailyHint": "gündəlik unikal ziyarətçi",
+      "empty": "Bu dövr üçün hələ məlumat yoxdur"
+    },
+    "countries": {
+      "title": "Aparıcı ölkələr",
+      "windowDay": "son 24 saat",
+      "window": "son {{days}} gün"
+    },
+    "browsers": {
+      "title": "Brauzerlər",
+      "window": "səhifə baxışlarına görə"
+    },
+    "edge": {
+      "title": "Kənar şəbəkədə",
+      "windowDay": "son 24 saat",
+      "window": "son {{days}} gün",
+      "cached": "Keşdən verilib",
+      "encrypted": "Şifrələnib",
+      "threats": "Bloklanan təhdidlər"
+    },
+    "proof": {
+      "title": "Bu rəqəmlər haradan gəlir",
+      "subtitle": "Bu səhifə deyil, Cloudflare ölçür",
+      "source": "Mənbə",
+      "datasets": "Məlumat dəstləri",
+      "zone": "Zona",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Alınma vaxtı",
+      "query": "Diaqramın arxasındakı dəqiq sorğu",
+      "copied": "Kopyalandı",
+      "copy": "Kopyala",
+      "openEndpoint": "/api/stats aç",
+      "openRaw": "Cloudflare-in toxunulmamış cavabı",
+      "edge": "dehub.io-ya gələn hər sorğu serverlərimizə çatmazdan əvvəl Cloudflare-dən keçir. Bu saylar həmin trafikin Cloudflare-in öz toplamıdır — panelimizin göstərdiyi eyni rəqəmlər. Onları brauzerinizdəki skript toplamır, ona görə bu səhifədə heç nə onları şişirdə bilməz və izləyiciləri bloklamaq onları dəyişmir.",
+      "live": "Səhifə onları canlı oxuyur. /stats yükləndikdə son nöqtəmiz çağırılır, o an Cloudflare Analytics API-yə sorğu verir və cavabı 60 saniyə keşləyir.",
+      "limits": "Bunun göstərdiyi və göstərmədiyi: rəqəmlərin tətbiq kodumuzdan deyil, Cloudflare toplamasından gəldiyini və burada dərc olunan sorğunun işləyən sorğu olduğunu görə bilərsiniz. Bu, etimadsız-yoxlanıla bilən deyil — API tokeni bizdədir və Cloudflare zonanın analitikasına ictimai oxu təklif etmir. Öz Cloudflare zonası olan hər kəs eyni sorğunu işlədib formanı təsdiqləyə bilər."
+    },
+    "definitions": {
+      "title": "Bu rəqəmlər nə deməkdir",
+      "visitorsTerm": "Ziyarətçilər",
+      "visitors": "— Cloudflare-in həmin gün gördüyü unikal IP ünvanları. İnsan sayına yaxındır, amma eyni deyil: bir bağlantıdakı ofis bir dəfə, wifi ilə mobil data arasında keçən telefon iki dəfə sayılır.",
+      "pageViewsTerm": "Səhifə baxışları",
+      "pageViews": "— Cloudflare-in şəkil, skript və ya API çağırışı deyil, səhifə yüklənməsi kimi təsnif etdiyi sorğular.",
+      "botsTerm": "Botlar daxildir",
+      "bots": "— bunlar kənar şəbəkədəki xam saylardır, ona görə içərisində crawler-lər, işləmə monitorları və skript müştəriləri də var. Onları yuxarıdakı brauzer bölgüsündə özünüz görə bilərsiniz; «Curl» və «Naməlum» kimi yazılar insan deyil, avtomatik trafikdir. Botları süzmək üçün bizdə olmayan ödənişli Cloudflare planı lazımdır və təxmini rəqəmi səssizcə çıxmaq rəqəmləri daha az yoxlanıla bilən edərdi, daha çox yox.",
+      "totalTerm": "Aralıq cəmləri",
+      "total": "— səhifə baxışları və sorğular aralıq boyunca toplanır. Ziyarətçi sayları bilərəkdən «ümumi ziyarətçi»yə toplanmır, çünki bazar ertəsi və çərşənbə axşamı gələn iki dəfə sayılardı.",
+      "peakTerm": "Ən sıx saat / gün",
+      "peak": "— eyni səbəbdən, aralığın hər hansı bir intervalındakı ən yüksək unikal say: bu, Cloudflare-in həqiqətən ölçdüyü rəqəmdir, üst-üstə düşən sayların toplanmasından qurulmuş rəqəm deyil.",
+      "resolutionTerm": "Saatlıq məlumat 3 gündə bitir",
+      "resolution": "— bu, seçim deyil, bu plandakı Cloudflare limitidir: üç gündən geniş hər saatlıq sorğunu rədd edir. 24 saatlıq və 3 günlük görünüşlər saatlıqdır; 7 gün və daha çoxu gündəlikdir və bütün dövr üçün saatlıq diaqram çəkməyin yolu yoxdur.",
+      "breakdownTerm": "Ölkələr və brauzerlər",
+      "breakdown": "— seçdiyiniz aralığı izləyir, amma yalnız {{max}} gün geriyə, gündəlik bölgü bu qədər saxlanılır. Daha uzun aralıqlarda diaqram ölkə siyahısından daha çox vaxtı əhatə edir.",
+      "startTerm": "Tarixçə",
+      "start": "— «bütün dövr» Cloudflare-in hələ saxladığı hər günü bildirir, bu gün dehub.io-nun Cloudflare-ə keçdiyi {{date}} tarixindən {{days}} gün. Daha əvvəlki kənar məlumat yoxdur və köhnə günlər Cloudflare onların müddətini bitirdikcə düşür."
+    }
   }
 }

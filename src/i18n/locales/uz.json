@@ -27,7 +27,20 @@
     "events": "Tadbirlar",
     "prompt": "Sozlash",
     "communities": "Jamoalar",
-    "staking": "Steyking"
+    "staking": "Steyking",
+    "arcade": "Arcade",
+    "stats": "Jonli statistika",
+    "liveTv": "Jonli TV",
+    "buyDhb": "DHB sotib olish",
+    "bridge": "Ko'prik",
+    "top100": "Top 100",
+    "agents": "SI agentlari",
+    "advertising": "Reklama",
+    "premium": "Premium",
+    "pricing": "Narxlar",
+    "creators": "Ijodkorlar",
+    "getTheApp": "Ilovani yuklab olish",
+    "connectAi": "SI ulash"
   },
   "feed": {
     "home": "Bosh sahifa",
@@ -35,7 +48,9 @@
     "images": "Rasmlar",
     "shorts": "Shorts",
     "music": "Musiqa",
-    "live": "Jonli"
+    "live": "Jonli",
+    "newPosts_one": "{{count}} ta yangi post",
+    "newPosts_other": "{{count}} ta yangi post"
   },
   "explore": {
     "all": "Hammasi",
@@ -242,7 +257,58 @@
     "hazy": "Tumanli tunlar",
     "save": "Saqlash",
     "saving": "Saqlanmoqda...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Profillar",
+    "profilesDesc": "Ushbu qurilmada saqlangan hisoblar",
+    "addProfile": "Profil qo'shish",
+    "profileActive": "Faol",
+    "profileSignedOut": "almashtirish uchun kiring",
+    "profileRemove": "Profilni o'chirish",
+    "profilesUsed": "{{max}} dan {{used}} ta ishlatilgan",
+    "profilesNextTier": "{{tier}} darajasi {{count}} ta saqlaydi",
+    "profilesFullTier": "{{count}} ta profilni saqlash uchun {{tier}} nishoni yo'lida stake qiling",
+    "profilesFull": "Boshqa hisob qo'shish uchun bitta profilni o'chiring",
+    "browserNotifications": "Brauzer bildirishnomalari",
+    "browserNotificationsDesc": "Boshqa varaqda bo'lsangiz ham javoblar, choychaqa va xabarlar haqida bilib turing",
+    "browserNotificationsOnDesc": "Boshqa varaqda bo'lsangiz ham javoblar, choychaqa va xabarlar chiqadi",
+    "browserNotificationsDismissed": "Bildirishnoma so'rovi rad etildi — tugmani yana sinab ko'ring",
+    "browserNotificationsBlocked": "Brauzeringiz tomonidan bloklangan",
+    "browserNotificationsBlockedTitle": "Bu brauzer bildirishnomalarni bloklamoqda",
+    "browserNotificationsBlockedNote": "Buni faqat brauzeringiz bekor qila oladi — bloklangandan keyin DeHub qayta so'ray olmaydi.",
+    "browserNotificationsBlockedPending": "So'rovingiz saqlandi — brauzeringiz ruxsat bergan zahoti u o'zi yoqiladi.",
+    "browserNotificationsUnblockChromium": "Manzil satrining chap tomonidagi belgini bosing → Sayt sozlamalari → Bildirishnomalarni «Ruxsat berish»ga qo'ying va sahifani qayta yuklang.",
+    "browserNotificationsUnblockFirefox": "Manzil satrining chap tomonidagi qulfni bosing, «Bildirishnoma olish» yonidagi «Bloklangan»ni o'chiring va sahifani qayta yuklang.",
+    "browserNotificationsUnblockSafari": "Menyu satrida: Safari → Sozlamalar → Veb-saytlar → Bildirishnomalar, so'ng bu saytni «Ruxsat berish»ga qo'ying.",
+    "browserNotificationsUnblockGeneric": "Brauzeringizda shu sahifa uchun sayt sozlamalarini oching, Bildirishnomalarni «Ruxsat berish»ga qo'ying va qayta yuklang.",
+    "browserNotificationsIosHint": "iPhone va iPad bunga faqat DeHub Bosh ekranda bo'lganda ruxsat beradi — Ulashish tugmasini, so'ng «Bosh ekranga qo'shish»ni bosing.",
+    "browserNotificationsTest": "Sinov bildirishnomasi yuborish",
+    "browserNotificationsTestSent": "Sinov bildirishnomasi yuborildi",
+    "browserNotificationsTestBody": "DeHub bildirishnomasi mana shunday ko'rinadi.",
+    "showAsNewMember": "Meni yangi a'zo sifatida ko'rsat",
+    "showAsNewMemberDesc": "Boshqa a'zolar endigina qo'shilganingizni ko'rib, sizni kutib olishlariga imkon beradi. Ro'yxatdan o'tganingizdan 30 kun keyin avtomatik tugaydi.",
+    "defaultProfileTab": "Standart profil varag'i",
+    "defaultProfileTabDesc": "Tashrif buyuruvchilar profilingizda birinchi qaysi varaqni ko'rishini tanlang",
+    "lavalamp": "Lava chirog'i",
+    "war": "Urush",
+    "osaka": "Osaka",
+    "jungle": "Jangal",
+    "themeColor": "Mavzu rangi",
+    "themeColorDesc": "Bu mavzu uchun o'zingiz rang tanlang",
+    "themeColorReset": "Tiklash",
+    "themeColorWhite": "Oq",
+    "themeColorBlack": "Qora",
+    "themeColorRainbow": "Kamalak",
+    "themeColorBrand": "Brend",
+    "themeColorBrandDesc": "Profil rasmingiz ranglaridan foydalanish",
+    "themeColorBrandNoAvatar": "Brend ranglaridan foydalanish uchun profil rasmi qo'shing",
+    "themeColorBrandFailed": "Profil rasmingizdan ranglarni o'qib bo'lmadi",
+    "dimLights": "Yorug'likni pasaytirish",
+    "dimLightsDesc": "Ko'k nur ta'sirini kamaytiradi",
+    "matureContent": "Kattalar uchun kontentni ko'rsatish",
+    "matureContentDesc": "Lentalaringizga kattalar uchun va qattiq postlarni qo'shadi hamda allaqachon ko'rayotganlaringizdan ogohlantirishni olib tashlaydi. Sukut bo'yicha o'chirilgan.",
+    "noNewMessages": "Yangi suhbatlar yo'q",
+    "noNewMessagesDesc": "Mavjud suhbatlaringizni saqlang, lekin yangi odam boshlay olmaydi",
+    "dmNoNewHelp": "Mavjud suhbatlar ishlashda davom etadi; yangi odam boshlay olmaydi"
   },
   "common": {
     "save": "Saqlash",
@@ -256,7 +322,8 @@
     "translating": "Tarjima qilinmoqda...",
     "close": "Yopish",
     "loadingMore": "Koʻproq yuklanmoqda...",
-    "loadMore": "Koʻproq yuklash"
+    "loadMore": "Koʻproq yuklash",
+    "tryAgain": "Qayta urinish"
   },
   "tip": {
     "title": "Tip yuborish",
@@ -704,7 +771,11 @@
     "postRemoved": "Postingiz oʻchirildi",
     "newNotification": "Yangi bildirishnoma",
     "oneOther": "1 boshqa",
-    "nOthers": "{{count}} boshqa"
+    "nOthers": "{{count}} boshqa",
+    "thisBrowser": "Ushbu brauzer",
+    "features": "Imkoniyatlar",
+    "communities": "Hamjamiyatlar",
+    "stores": "Do'konlar"
   },
   "leaderboard": {
     "title": "Reyting",
@@ -733,7 +804,12 @@
     "addedToLeaderboard": "Qoʻshildi! Balans: {{balance}} DHB",
     "balanceTooLow": "Balans juda past ({{balance}} DHB)",
     "refreshFailed": "Nimadir xato ketdi",
-    "noWalletAddress": "Hamyon manzili topilmadi"
+    "noWalletAddress": "Hamyon manzili topilmadi",
+    "affiliates": "Hamkorlar",
+    "directReferrals_one": "{{count}} ta bevosita",
+    "directReferrals_other": "{{count}} ta bevosita",
+    "secondaryReferrals_one": "{{count}} ta bilvosita",
+    "secondaryReferrals_other": "{{count}} ta bilvosita"
   },
   "explorePage": {
     "searchPlaceholder": "Odamlar, postlar yoki kontent qidirish...",
@@ -834,7 +910,10 @@
     "statusPlanned": "Rejalashtirilgan",
     "statusInProgress": "Jarayonda",
     "statusCompleted": "Yakunlangan",
-    "statusDeclined": "Rad etilgan"
+    "statusDeclined": "Rad etilgan",
+    "shipping": "Qurilmoqda",
+    "noShippingYet": "Hech nima ustida ishlanmayapti",
+    "shippingAppearHere": "Qurilayotgan so'rovlar shu yerda ko'rinadi."
   },
   "auth": {
     "loginRequired": "Avtorizatsiya kerak"
@@ -907,7 +986,8 @@
     "failedPurchase": "Xaridni boshlash amalga oshmadi",
     "redirectingOnramp": "Onrampga yoʻnaltirilmoqda...",
     "onrampCreated": "Onramp seansi yaratildi",
-    "failedOnramp": "Onrampni boshlash amalga oshmadi"
+    "failedOnramp": "Onrampni boshlash amalga oshmadi",
+    "badgeDiscount": "{{tier}} egasi — {{percent}}% chegirma"
   },
   "agents": {
     "title": "AI Agent",
@@ -937,7 +1017,13 @@
     "agentDeleted": "Agent oʻchirildi",
     "failedCreate": "Agent yaratish amalga oshmadi",
     "failedDelete": "Agentni oʻchirish amalga oshmadi",
-    "apiKeyCopied": "API kaliti nusxalandi"
+    "apiKeyCopied": "API kaliti nusxalandi",
+    "connectorUrl": "Konnektor URL manzili",
+    "connectorUrlCopied": "Konnektor URL manzili nusxalandi",
+    "connectorUrlHelp": "Buni Claude yoki ChatGPT'ga maxsus MCP konnektori sifatida qo'shing. U shu agent sifatida autentifikatsiyadan o'tadi, shuning uchun unga API kaliti kabi munosabatda bo'ling.",
+    "agentWallet": "Agent hamyoni (Base)",
+    "walletCopied": "Hamyon manzili nusxalandi",
+    "agentWalletHelp": "Agent post joylashdan oldin bu yerga Base tarmog'ida ozgina ETH yuboring — nashr qilish zanjirda mint qiladi va agent o'z gazini o'zi to'laydi. Izoh, ovoz va obuna gaz talab qilmaydi."
   },
   "hero": {
     "title": "Dunyomizga",
@@ -985,7 +1071,10 @@
     "or": "Yoki",
     "termsNotice": "Davom etish bilan xizmat shartlari va maxfiylik siyosatiga rozilik bildirasiz",
     "walletInfoDesktop": "Xavfsiz kirish uchun hamyonni ulang",
-    "walletInfoMobile": "MetaMask, Trust va Phantom toʻgʻridan-toʻgʻri ilovani ochadi. Rabby WalletConnect dan foydalanadi."
+    "walletInfoMobile": "MetaMask, Trust va Phantom toʻgʻridan-toʻgʻri ilovani ochadi. Rabby WalletConnect dan foydalanadi.",
+    "addProfileTitle": "Profil qo'shish",
+    "walletConnectedAs": "Ulangan",
+    "useDifferentWallet": "Boshqa hamyondan foydalanish"
   },
   "careers": {
     "title": "DeHub da karyera",
@@ -1146,7 +1235,11 @@
     "comingSoon": "Tez orada — mintaqaviy trendlar yo'lda!",
     "post": "Joylash",
     "logOut": "Chiqish",
-    "logIn": "Kirish"
+    "logIn": "Kirish",
+    "searchMenu": "Menyudan qidirish",
+    "clearSearch": "Qidiruvni tozalash",
+    "noMenuMatches": "Menyuda hech nima mos kelmadi",
+    "searchDehubFor": "DeHub'da «{{query}}» ni qidirish"
   },
   "postInfo": {
     "title": "Post ma'lumoti",
@@ -1396,7 +1489,11 @@
     "new_version_available": "Yangi versiya mavjud",
     "refresh_to_pick_up_the_latest_changes": "So'nggi o'zgarishlarni ko'rish uchun yangilang.",
     "refresh": "Yangilash",
-    "what_changed": "Nima o'zgardi"
+    "what_changed": "Nima o'zgardi",
+    "turn_on_desktop_notifications": "Ish stoli bildirishnomalari yoqilsinmi?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Boshqa varaqda bo'lsangiz ham javoblar, choychaqa va xabarlar haqida bilib turing.",
+    "turn_on": "Yoqish",
+    "not_now": "Hozir emas"
   },
   "bookmarks": {
     "title": "Your Bookmarks",
@@ -1580,5 +1677,105 @@
     "when": "Qachon",
     "whyStake": "Nega depozit qo'yish kerak?",
     "yourStaked": "Sizning depozitingiz"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "DeHub qurgan va ochiq kod qilib chiqargan o'yinlar, olamlar va tajribalar to'plami.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "DeHub'da to'g'ridan-to'g'ri brauzeringizda o'ynang — kinematografik 3D shaxmat, protsedura asosida yaratilgan otishma, yomg'ir o'rmonida sayr, neonli ko'cha jangi va yurib chiqiladigan savdo zali. O'rnatish shart emas, yuklab olish shart emas.",
+    "alsoIn": "{{theme}} mavzusida ham bor"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Real vaqtda ochiq manba ma'lumotlari",
+    "live": "Jonli",
+    "range": {
+      "24h": "24 soat",
+      "3d": "3 kun",
+      "7d": "7 kun",
+      "30d": "30 kun",
+      "all": "Butun davr"
+    },
+    "unavailable": {
+      "title": "Statistika hozir mavjud emas",
+      "unconfigured": "Tahlil oxirgi nuqtasiga hali Cloudflare API tokeni berilmagan. O'ylab topilgan raqam o'rniga hech nima ko'rsatilmaydi.",
+      "error": "Cloudflare tahlil API'siga ulana olmadik. Eskirgan yoki o'ylab topilgan raqam ko'rsatish o'rniga, bu sahifa jonli o'qish muvaffaqiyatli bo'lguncha hech nima ko'rsatmaydi."
+    },
+    "tile": {
+      "visitorsToday": "Bugungi tashrif buyuruvchilar",
+      "soFarToday": "bugun hozirgacha, UTC",
+      "peakHour": "Eng band soat",
+      "peakDay": "Eng band kun",
+      "peakAtHour": "{{when}} UTC da",
+      "peakOnDay": "{{when}} da",
+      "inRange": "shu oraliqda",
+      "pageViews": "Sahifa ko'rishlari",
+      "overHours": "{{count}} soatda",
+      "overDay": "1 kunda",
+      "overDays": "{{count}} kunda",
+      "requestsLabel": "So'rovlar",
+      "served": "Berildi",
+      "requests": "{{requests}} ta so'rov"
+    },
+    "chart": {
+      "hourly": "Soatlik tashrif buyuruvchilar",
+      "daily": "Kunlik tashrif buyuruvchilar",
+      "hourlyHint": "{{count}} ta soatlik oraliq, UTC",
+      "dailyHint": "kunlik noyob tashrif buyuruvchilar",
+      "empty": "Bu davr uchun hali ma'lumot yo'q"
+    },
+    "countries": {
+      "title": "Yetakchi davlatlar",
+      "windowDay": "so'nggi 24 soat",
+      "window": "so'nggi {{days}} kun"
+    },
+    "browsers": {
+      "title": "Brauzerlar",
+      "window": "sahifa ko'rishlari bo'yicha"
+    },
+    "edge": {
+      "title": "Chekkada",
+      "windowDay": "so'nggi 24 soat",
+      "window": "so'nggi {{days}} kun",
+      "cached": "Keshdan berildi",
+      "encrypted": "Shifrlangan",
+      "threats": "Bloklangan tahdidlar"
+    },
+    "proof": {
+      "title": "Bu raqamlar qayerdan keladi",
+      "subtitle": "Bu sahifa emas, Cloudflare o'lchaydi",
+      "source": "Manba",
+      "datasets": "Ma'lumotlar to'plamlari",
+      "zone": "Zona",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Olingan vaqti",
+      "query": "Diagramma ortidagi aniq so'rov",
+      "copied": "Nusxalandi",
+      "copy": "Nusxalash",
+      "openEndpoint": "/api/stats ni ochish",
+      "openRaw": "Cloudflare'ning tegilmagan javobi",
+      "edge": "dehub.io'ga kelgan har bir so'rov serverlarimizga yetib borishdan oldin Cloudflare orqali o'tadi. Bu hisoblar o'sha trafikning Cloudflare'ning o'z yig'masi — boshqaruv panelimiz ko'rsatadigan raqamlarning aynan o'zi. Ularni brauzeringizdagi skript yig'maydi, shuning uchun bu sahifadagi hech nima ularni shishira olmaydi va kuzatuvchilarni bloklash ularni o'zgartirmaydi.",
+      "live": "Sahifa ularni jonli o'qiydi. /stats yuklanishi bizning oxirgi nuqtamizni chaqiradi, u o'sha zahoti Cloudflare Analytics API'ga so'rov yuboradi va javobni 60 soniya keshlaydi.",
+      "limits": "Bu nimani ko'rsatadi va nimani yo'q: raqamlar ilovamiz kodidan emas, Cloudflare yig'masidan kelishini va bu yerda e'lon qilingan so'rov aynan ishlaydigan so'rov ekanini ko'rasiz. Bu ishonchsiz-tekshiriluvchi emas — API tokeni bizda va Cloudflare zona tahlilini ommaviy o'qishga bermaydi. O'z Cloudflare zonasi bor har kim xuddi shu so'rovni ishga tushirib, shaklini tasdiqlashi mumkin."
+    },
+    "definitions": {
+      "title": "Bu raqamlar nimani bildiradi",
+      "visitorsTerm": "Tashrif buyuruvchilar",
+      "visitors": "— Cloudflare o'sha kuni ko'rgan noyob IP manzillar. Odamlar soniga yaqin, lekin bir xil emas: bitta ulanishdagi ofis bir marta, wifi va mobil internet o'rtasida almashadigan telefon ikki marta sanaladi.",
+      "pageViewsTerm": "Sahifa ko'rishlari",
+      "pageViews": "— Cloudflare rasm, skript yoki API chaqiruvi emas, sahifa yuklanishi deb tasniflagan so'rovlar.",
+      "botsTerm": "Botlar ham hisobga olingan",
+      "bots": "— bular chekkadagi xom hisoblar, shuning uchun ularda krawlerlar, ishlash monitorlari va skriptli mijozlar ham bor. Ularni yuqoridagi brauzerlar taqsimotida o'zingiz ko'rasiz: «Curl» va «Noma'lum» kabi yozuvlar odam emas, avtomatik trafik. Botlarni filtrlash uchun bizda yo'q pullik Cloudflare tarifi kerak, taxminni jimgina ayirish esa raqamlarni kamroq tekshiriladigan qiladi, ko'proq emas.",
+      "totalTerm": "Oraliq jamlari",
+      "total": "— sahifa ko'rishlari va so'rovlar oraliq bo'ylab qo'shiladi. Tashrif buyuruvchilar soni ataylab «jami tashrif buyuruvchilar»ga qo'shilmaydi, chunki dushanba va seshanba kelgan odam ikki marta sanalardi.",
+      "peakTerm": "Eng band soat / kun",
+      "peak": "— xuddi shu sababdan, oraliqning istalgan bitta bo'lagidagi eng yuqori noyob son: bu Cloudflare haqiqatan o'lchaydigan raqam, bir-birini qoplaydigan hisoblarni qo'shib yasalgan emas.",
+      "resolutionTerm": "Soatlik ma'lumot 3 kunda tugaydi",
+      "resolution": "— bu bizning tanlovimiz emas, shu tarifdagi Cloudflare cheklovi: uch kundan kengroq har qanday soatlik so'rovni rad etadi. 24 soatlik va 3 kunlik ko'rinishlar soatlik; 7 kun va undan uzuni kunlik va butun davr uchun soatlik diagramma chizishning iloji yo'q.",
+      "breakdownTerm": "Davlatlar va brauzerlar",
+      "breakdown": "— ular siz tanlagan oraliqqa ergashadi, lekin faqat {{max}} kun orqaga: kunlik taqsimot shuncha saqlanadi. Uzunroq oraliqlarda diagramma davlatlar ro'yxatidan ko'proq vaqtni qamrab oladi.",
+      "startTerm": "Tarix",
+      "start": "— «butun davr» Cloudflare hali saqlab turgan har bir kunni bildiradi, bugun dehub.io Cloudflare'ga o'tgan {{date}} dan boshlab {{days}} kun. Undan oldingi chekka ma'lumot yo'q va eski kunlar Cloudflare ularni eskirtirgani sari yo'qoladi."
+    }
   }
 }

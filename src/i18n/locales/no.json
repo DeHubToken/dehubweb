@@ -27,7 +27,20 @@
     "events": "Arrangementer",
     "prompt": "Fremlegg",
     "communities": "Fellesskap",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Sanntidsstatistikk",
+    "liveTv": "Direkte-TV",
+    "buyDhb": "Kjøp DHB",
+    "bridge": "Bridge",
+    "top100": "Topp 100",
+    "agents": "KI-agenter",
+    "advertising": "Annonsering",
+    "premium": "Premium",
+    "pricing": "Priser",
+    "creators": "Skapere",
+    "getTheApp": "Last ned appen",
+    "connectAi": "Koble til KI"
   },
   "feed": {
     "home": "Hjem",
@@ -35,7 +48,9 @@
     "images": "Bilder",
     "shorts": "Shorts",
     "music": "Musikk",
-    "live": "Direkte"
+    "live": "Direkte",
+    "newPosts_one": "{{count}} nytt innlegg",
+    "newPosts_other": "{{count}} nye innlegg"
   },
   "explore": {
     "all": "Alle",
@@ -242,7 +257,58 @@
     "hazy": "Disige netter",
     "save": "Lagre",
     "saving": "Lagrer...",
-    "swarms": "Svermer"
+    "swarms": "Svermer",
+    "profiles": "Profiler",
+    "profilesDesc": "Kontoer lagret på denne enheten",
+    "addProfile": "Legg til profil",
+    "profileActive": "Aktiv",
+    "profileSignedOut": "logg inn for å bytte",
+    "profileRemove": "Fjern profil",
+    "profilesUsed": "{{used}} av {{max}} i bruk",
+    "profilesNextTier": "{{tier}}-nivået beholder {{count}}",
+    "profilesFullTier": "Stake for et {{tier}}-merke for å beholde {{count}} profiler",
+    "profilesFull": "Fjern en profil for å legge til en annen konto",
+    "browserNotifications": "Nettleservarsler",
+    "browserNotificationsDesc": "Få beskjed om svar, tips og DM-er mens du er i en annen fane",
+    "browserNotificationsOnDesc": "Svar, tips og DM-er dukker opp mens du er i en annen fane",
+    "browserNotificationsDismissed": "Varselforespørsel avvist — prøv bryteren igjen",
+    "browserNotificationsBlocked": "Blokkert av nettleseren din",
+    "browserNotificationsBlockedTitle": "Denne nettleseren blokkerer varsler",
+    "browserNotificationsBlockedNote": "Bare nettleseren din kan angre dette — når det først er blokkert, kan ikke DeHub spørre igjen.",
+    "browserNotificationsBlockedPending": "Forespørselen din er lagret — den slår seg på av seg selv så snart nettleseren tillater det.",
+    "browserNotificationsUnblockChromium": "Klikk på ikonet til venstre for adresselinjen → Nettstedinnstillinger → sett Varsler til Tillat, og last siden på nytt.",
+    "browserNotificationsUnblockFirefox": "Klikk på hengelåsen til venstre for adresselinjen, fjern «Blokkert» ved siden av Motta varsler, og last siden på nytt.",
+    "browserNotificationsUnblockSafari": "I menylinjen: Safari → Innstillinger → Nettsteder → Varsler, og sett så dette nettstedet til Tillat.",
+    "browserNotificationsUnblockGeneric": "Åpne nettleserens nettstedinnstillinger for denne siden, sett Varsler til Tillat, og last på nytt.",
+    "browserNotificationsIosHint": "iPhone og iPad tillater dette først når DeHub ligger på hjemskjermen — trykk Del og deretter «Legg til på hjemskjerm».",
+    "browserNotificationsTest": "Send et testvarsel",
+    "browserNotificationsTestSent": "Testvarsel sendt",
+    "browserNotificationsTestBody": "Slik ser et DeHub-varsel ut.",
+    "showAsNewMember": "Vis meg som nytt medlem",
+    "showAsNewMemberDesc": "Lar andre medlemmer se at du nettopp kom, så de kan ønske deg velkommen. Slutter automatisk 30 dager etter at du registrerte deg.",
+    "defaultProfileTab": "Standardfane på profilen",
+    "defaultProfileTabDesc": "Velg hvilken fane besøkende ser først på profilen din",
+    "lavalamp": "Lavalampe",
+    "war": "Krig",
+    "osaka": "Osaka",
+    "jungle": "Jungel",
+    "themeColor": "Temafarge",
+    "themeColorDesc": "Velg en egen farge til dette temaet",
+    "themeColorReset": "Tilbakestill",
+    "themeColorWhite": "Hvit",
+    "themeColorBlack": "Svart",
+    "themeColorRainbow": "Regnbue",
+    "themeColorBrand": "Merkevare",
+    "themeColorBrandDesc": "Bruk fargene fra profilbildet ditt",
+    "themeColorBrandNoAvatar": "Legg til et profilbilde for å bruke merkevarefarger",
+    "themeColorBrandFailed": "Klarte ikke å lese farger fra profilbildet ditt",
+    "dimLights": "Demp lyset",
+    "dimLightsDesc": "Reduserer eksponering for blått lys",
+    "matureContent": "Vis voksent innhold",
+    "matureContentDesc": "Tar med voksent og grafisk innhold i strømmene dine, og fjerner advarselen fra det du allerede ser. Av som standard.",
+    "noNewMessages": "Ingen nye samtaler",
+    "noNewMessagesDesc": "Behold de eksisterende samtalene dine, men ingen ny kan starte en",
+    "dmNoNewHelp": "Eksisterende samtaler fungerer videre; ingen ny kan starte en"
   },
   "common": {
     "save": "Lagre",
@@ -256,7 +322,8 @@
     "translating": "Oversetter...",
     "close": "Lukk",
     "loadingMore": "Laster mer...",
-    "loadMore": "Last mer"
+    "loadMore": "Last mer",
+    "tryAgain": "Prøv igjen"
   },
   "postOptions": {
     "options": "Alternativer",
@@ -663,7 +730,10 @@
     "statusPlanned": "Planlagt",
     "statusInProgress": "Pågår",
     "statusCompleted": "Fullført",
-    "statusDeclined": "Avslått"
+    "statusDeclined": "Avslått",
+    "shipping": "Under arbeid",
+    "noShippingYet": "Ingenting på gang",
+    "shippingAppearHere": "Forespørsler som bygges, dukker opp her."
   },
   "auth": {
     "loginRequired": "Innlogging påkrevd"
@@ -758,7 +828,11 @@
     "postRemoved": "Innlegget ditt ble fjernet",
     "newNotification": "Nytt varsel",
     "oneOther": "1 annen",
-    "nOthers": "{{count}} andre"
+    "nOthers": "{{count}} andre",
+    "thisBrowser": "Denne nettleseren",
+    "features": "Funksjoner",
+    "communities": "Fellesskap",
+    "stores": "Butikker"
   },
   "messages": {
     "title": "Meldinger",
@@ -803,7 +877,12 @@
     "addedToLeaderboard": "Du er lagt til! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo for lav ({{balance}} DHB)",
     "refreshFailed": "Noe gikk galt",
-    "noWalletAddress": "Ingen lommebokadresse funnet"
+    "noWalletAddress": "Ingen lommebokadresse funnet",
+    "affiliates": "Partnere",
+    "directReferrals_one": "{{count}} direkte",
+    "directReferrals_other": "{{count}} direkte",
+    "secondaryReferrals_one": "{{count}} indirekte",
+    "secondaryReferrals_other": "{{count}} indirekte"
   },
   "explorePage": {
     "searchPlaceholder": "Søk etter folk, innlegg eller innhold...",
@@ -919,7 +998,8 @@
     "failedPurchase": "Kunne ikke starte kjøp",
     "redirectingOnramp": "Omdirigerer til rampe...",
     "onrampCreated": "Rampe-økt opprettet",
-    "failedOnramp": "Kunne ikke starte rampe"
+    "failedOnramp": "Kunne ikke starte rampe",
+    "badgeDiscount": "{{tier}}-innehaver — {{percent}} % rabatt"
   },
   "agents": {
     "title": "AI-agenter",
@@ -949,7 +1029,13 @@
     "agentDeleted": "Agent slettet",
     "failedCreate": "Kunne ikke opprette agent",
     "failedDelete": "Kunne ikke slette agent",
-    "apiKeyCopied": "API-nøkkel kopiert til utklippstavle"
+    "apiKeyCopied": "API-nøkkel kopiert til utklippstavle",
+    "connectorUrl": "Connector-URL",
+    "connectorUrlCopied": "Connector-URL kopiert",
+    "connectorUrlHelp": "Legg den til som en egendefinert MCP-connector i Claude eller ChatGPT. Den autentiseres som denne agenten, så behandle den som API-nøkkelen.",
+    "agentWallet": "Agentens lommebok (Base)",
+    "walletCopied": "Lommebokadresse kopiert",
+    "agentWalletHelp": "Send en liten mengde ETH på Base hit før agenten publiserer — publisering minter on-chain, og agenten betaler sin egen gass. Kommentarer, stemmer og følginger krever ingen gass."
   },
   "hero": {
     "title": "Velkommen Til",
@@ -997,7 +1083,10 @@
     "or": "eller",
     "termsNotice": "Ved å fortsette godtar du våre tjenestevilkår og personvernpolicy",
     "walletInfoDesktop": "Koble til lommeboken din for sikker innlogging",
-    "walletInfoMobile": "MetaMask, Trust og Phantom åpner appen sin direkte. Rabby bruker WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust og Phantom åpner appen sin direkte. Rabby bruker WalletConnect.",
+    "addProfileTitle": "Legg til profil",
+    "walletConnectedAs": "Tilkoblet",
+    "useDifferentWallet": "Bruk en annen lommebok"
   },
   "careers": {
     "title": "Karriere hos DeHub",
@@ -1121,7 +1210,11 @@
     "comingSoon": "Kommer snart — regionale trender er på vei!",
     "post": "Publiser",
     "logOut": "Logg ut",
-    "logIn": "Logg inn"
+    "logIn": "Logg inn",
+    "searchMenu": "Søk i menyen",
+    "clearSearch": "Tøm søket",
+    "noMenuMatches": "Ingenting i menyen samsvarer",
+    "searchDehubFor": "Søk etter «{{query}}» på DeHub"
   },
   "postInfo": {
     "title": "Innleggsinformasjon",
@@ -1371,7 +1464,11 @@
     "new_version_available": "Ny versjon tilgjengelig",
     "refresh_to_pick_up_the_latest_changes": "Oppdater for å få med deg de siste endringene.",
     "refresh": "Oppdater",
-    "what_changed": "Hva som endret seg"
+    "what_changed": "Hva som endret seg",
+    "turn_on_desktop_notifications": "Vil du slå på skrivebordsvarsler?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Få beskjed om svar, tips og DM-er mens du er i en annen fane.",
+    "turn_on": "Slå på",
+    "not_now": "Ikke nå"
   },
   "prompt": {
     "seoTitle": "Be om feeden din — DeHub",
@@ -1525,5 +1622,105 @@
     "sending": "Sender...",
     "title": "Send tips",
     "toCreator": "Tips {{name}}"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "En samling spill, verdener og opplevelser som DeHub har bygd og gjort til åpen kildekode.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Spill rett i nettleseren på DeHub — filmatisk 3D-sjakk, en prosedyregenerert skytespill, en tur i regnskogen, en neonfarget gateslåsskamp og et handelsgulv du kan gå rundt på. Ingen installasjon, ingen nedlasting.",
+    "alsoIn": "Finnes også i {{theme}}"
+  },
+  "stats": {
+    "title": "Statistikk",
+    "subtitle": "Åpen etterretning i sanntid",
+    "live": "Direkte",
+    "range": {
+      "24h": "24 timer",
+      "3d": "3 dager",
+      "7d": "7 dager",
+      "30d": "30 dager",
+      "all": "Hele perioden"
+    },
+    "unavailable": {
+      "title": "Statistikken er ikke tilgjengelig akkurat nå",
+      "unconfigured": "Analyse-endepunktet har ennå ikke fått sitt Cloudflare-API-token. Ingenting vises i stedet for et oppdiktet tall.",
+      "error": "Vi fikk ikke kontakt med Cloudflares analyse-API. I stedet for å vise et utdatert eller oppdiktet tall viser denne siden ingenting før direkteavlesningen lykkes."
+    },
+    "tile": {
+      "visitorsToday": "Besøkende i dag",
+      "soFarToday": "hittil i dag, UTC",
+      "peakHour": "Travleste time",
+      "peakDay": "Travleste dag",
+      "peakAtHour": "kl. {{when}} UTC",
+      "peakOnDay": "den {{when}}",
+      "inRange": "i dette området",
+      "pageViews": "Sidevisninger",
+      "overHours": "over {{count}} t",
+      "overDay": "over 1 dag",
+      "overDays": "over {{count}} dager",
+      "requestsLabel": "Forespørsler",
+      "served": "Levert",
+      "requests": "{{requests}} forespørsler"
+    },
+    "chart": {
+      "hourly": "Besøkende per time",
+      "daily": "Besøkende per dag",
+      "hourlyHint": "{{count}} timeintervaller, UTC",
+      "dailyHint": "unike besøkende per dag",
+      "empty": "Ingen data for denne perioden ennå"
+    },
+    "countries": {
+      "title": "Toppland",
+      "windowDay": "siste 24 timer",
+      "window": "siste {{days}} dager"
+    },
+    "browsers": {
+      "title": "Nettlesere",
+      "window": "etter sidevisninger"
+    },
+    "edge": {
+      "title": "I kanten",
+      "windowDay": "siste 24 timer",
+      "window": "siste {{days}} dager",
+      "cached": "Levert fra hurtiglager",
+      "encrypted": "Kryptert",
+      "threats": "Blokkerte trusler"
+    },
+    "proof": {
+      "title": "Hvor disse tallene kommer fra",
+      "subtitle": "Målt av Cloudflare, ikke av denne siden",
+      "source": "Kilde",
+      "datasets": "Datasett",
+      "zone": "Sone",
+      "ray": "Cloudflare ray-ID",
+      "fetched": "Hentet kl.",
+      "query": "Den nøyaktige spørringen bak grafen",
+      "copied": "Kopiert",
+      "copy": "Kopier",
+      "openEndpoint": "Åpne /api/stats",
+      "openRaw": "Cloudflares urørte svar",
+      "edge": "Hver forespørsel til dehub.io går gjennom Cloudflare før den når serverne våre. Disse tellingene er Cloudflares egen sammenstilling av trafikken — de samme tallene dashbordet vårt viser. De samles ikke inn av et skript i nettleseren din, så ingenting på denne siden kan blåse dem opp, og å blokkere sporere endrer dem ikke.",
+      "live": "Siden leser dem direkte. Å laste /stats kaller endepunktet vårt, som i det øyeblikket spør Cloudflares Analytics API og mellomlagrer svaret i 60 sekunder.",
+      "limits": "Hva dette viser og ikke: du ser at tallene kommer fra Cloudflares sammenstilling og ikke fra applikasjonskoden vår, og at spørringen som er publisert her, er den som kjører. Det er ikke tillitsfritt — API-tokenet er hos oss, og Cloudflare tilbyr ingen offentlig lesing av en sones statistikk. Alle med egen Cloudflare-sone kan kjøre samme spørring og bekrefte formen."
+    },
+    "definitions": {
+      "title": "Hva tallene betyr",
+      "visitorsTerm": "Besøkende",
+      "visitors": "— unike IP-adresser Cloudflare så den dagen. Nær antall mennesker, men ikke det samme: et kontor på én tilkobling telles én gang, og en telefon som veksler mellom wifi og mobildata telles to ganger.",
+      "pageViewsTerm": "Sidevisninger",
+      "pageViews": "— forespørsler som Cloudflare klassifiserer som sideinnlastinger, ikke bilder, skript eller API-kall.",
+      "botsTerm": "Bots er inkludert",
+      "bots": "— dette er rå tellinger i kanten, så crawlere, oppetidsovervåkere og skriptede klienter er med. Du kan se dem selv i nettleserfordelingen over, der oppføringer som «Curl» og «Ukjent» er automatisert trafikk og ikke mennesker. Å filtrere bort bots krever en betalt Cloudflare-plan vi ikke har, og å trekke fra et anslag i det stille ville gjøre tallene mindre etterprøvbare, ikke mer.",
+      "totalTerm": "Totaler for området",
+      "total": "— sidevisninger og forespørsler summeres over området. Besøkstall summeres bevisst ikke til et «totalt antall besøkende», fordi noen som var her mandag og tirsdag ville telle to ganger.",
+      "peakTerm": "Travleste time / dag",
+      "peak": "— den høyeste unike tellingen i ett enkelt intervall, av samme grunn: det er et tall Cloudflare faktisk måler, ikke bygd av overlappende tellinger.",
+      "resolutionTerm": "Timedata stopper ved 3 dager",
+      "resolution": "— det er Cloudflares grense på denne planen, ikke et valg: den avviser enhver timespørring bredere enn tre dager. Visningene 24 timer og 3 dager er per time; 7 dager og lengre er per dag, og det går ikke å tegne en timegraf for hele perioden.",
+      "breakdownTerm": "Land og nettlesere",
+      "breakdown": "— de følger området du velger, men bare {{max}} dager bakover, så lenge lagres dagsfordelingen. Ved lengre områder dekker grafen mer tid enn landlisten.",
+      "startTerm": "Historikk",
+      "start": "— «hele perioden» betyr hver dag Cloudflare fortsatt beholder, i dag {{days}} dager fra {{date}}, dagen dehub.io flyttet til Cloudflare. Det finnes ingen eldre kantdata å vise, og gamle dager faller bort etter hvert som Cloudflare lar dem utløpe."
+    }
   }
 }

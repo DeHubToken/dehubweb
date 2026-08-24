@@ -27,7 +27,20 @@
     "events": "Acara",
     "prompt": "Gesaan",
     "communities": "Komuniti",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statistik langsung",
+    "liveTv": "TV Langsung",
+    "buyDhb": "Beli DHB",
+    "bridge": "Bridge",
+    "top100": "Top 100",
+    "agents": "Ejen AI",
+    "advertising": "Pengiklanan",
+    "premium": "Premium",
+    "pricing": "Harga",
+    "creators": "Pencipta",
+    "getTheApp": "Dapatkan Apl",
+    "connectAi": "Sambung AI"
   },
   "common": {
     "yes": "Ya",
@@ -519,7 +532,11 @@
     "new_version_available": "Versi baharu tersedia",
     "refresh_to_pick_up_the_latest_changes": "Muat semula untuk mengambil perubahan terkini.",
     "refresh": "Muat semula",
-    "what_changed": "Apa yang berubah"
+    "what_changed": "Apa yang berubah",
+    "turn_on_desktop_notifications": "Hidupkan pemberitahuan desktop?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dapat pemberitahuan tentang balasan, tip dan DM semasa anda di tab lain.",
+    "turn_on": "Hidupkan",
+    "not_now": "Bukan sekarang"
   },
   "feed": {
     "home": "Laman Utama",
@@ -527,7 +544,9 @@
     "images": "Imej",
     "shorts": "Shorts",
     "music": "Muzik",
-    "live": "Langsung"
+    "live": "Langsung",
+    "newPosts_one": "{{count}} siaran baharu",
+    "newPosts_other": "{{count}} siaran baharu"
   },
   "explore": {
     "all": "All",
@@ -734,7 +753,58 @@
     "hazy": "Malam Berkabus",
     "save": "Simpan",
     "saving": "Menyimpan...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Profil",
+    "profilesDesc": "Akaun yang disimpan pada peranti ini",
+    "addProfile": "Tambah profil",
+    "profileActive": "Aktif",
+    "profileSignedOut": "log masuk untuk bertukar",
+    "profileRemove": "Buang profil",
+    "profilesUsed": "{{used}} daripada {{max}} digunakan",
+    "profilesNextTier": "Peringkat {{tier}} menyimpan {{count}}",
+    "profilesFullTier": "Stake untuk lencana {{tier}} bagi menyimpan {{count}} profil",
+    "profilesFull": "Buang satu profil untuk menambah akaun lain",
+    "browserNotifications": "Pemberitahuan pelayar",
+    "browserNotificationsDesc": "Dapat pemberitahuan tentang balasan, tip dan DM semasa anda di tab lain",
+    "browserNotificationsOnDesc": "Balasan, tip dan DM muncul semasa anda di tab lain",
+    "browserNotificationsDismissed": "Permintaan pemberitahuan ditutup — cuba suisnya sekali lagi",
+    "browserNotificationsBlocked": "Disekat oleh pelayar anda",
+    "browserNotificationsBlockedTitle": "Pelayar ini menyekat pemberitahuan",
+    "browserNotificationsBlockedNote": "Hanya pelayar anda boleh membatalkannya — DeHub tidak boleh bertanya lagi selepas disekat.",
+    "browserNotificationsBlockedPending": "Permintaan anda disimpan — ia akan hidup sendiri sebaik pelayar anda membenarkan.",
+    "browserNotificationsUnblockChromium": "Klik ikon di kiri bar alamat → Tetapan tapak → tetapkan Pemberitahuan kepada Benarkan, kemudian muat semula halaman ini.",
+    "browserNotificationsUnblockFirefox": "Klik mangga di kiri bar alamat, kosongkan \"Disekat\" di sebelah Terima Pemberitahuan, kemudian muat semula halaman ini.",
+    "browserNotificationsUnblockSafari": "Pada bar menu: Safari → Tetapan → Tapak Web → Pemberitahuan, kemudian tetapkan tapak ini kepada Benarkan.",
+    "browserNotificationsUnblockGeneric": "Buka tetapan tapak pelayar anda untuk halaman ini, tetapkan Pemberitahuan kepada Benarkan, kemudian muat semula.",
+    "browserNotificationsIosHint": "iPhone dan iPad hanya membenarkannya selepas DeHub berada di Skrin Utama — ketik Kongsi, kemudian \"Tambah ke Skrin Utama\".",
+    "browserNotificationsTest": "Hantar pemberitahuan ujian",
+    "browserNotificationsTestSent": "Pemberitahuan ujian dihantar",
+    "browserNotificationsTestBody": "Beginilah rupa pemberitahuan DeHub.",
+    "showAsNewMember": "Tunjukkan saya sebagai ahli baharu",
+    "showAsNewMemberDesc": "Membolehkan ahli lain melihat anda baru menyertai supaya mereka boleh mengalu-alukan anda. Tamat secara automatik 30 hari selepas anda mendaftar.",
+    "defaultProfileTab": "Tab profil lalai",
+    "defaultProfileTabDesc": "Pilih tab yang pelawat lihat dahulu pada profil anda",
+    "lavalamp": "Lampu Lava",
+    "war": "Perang",
+    "osaka": "Osaka",
+    "jungle": "Rimba",
+    "themeColor": "Warna Tema",
+    "themeColorDesc": "Pilih warna tersuai untuk tema ini",
+    "themeColorReset": "Tetap semula",
+    "themeColorWhite": "Putih",
+    "themeColorBlack": "Hitam",
+    "themeColorRainbow": "Pelangi",
+    "themeColorBrand": "Jenama",
+    "themeColorBrandDesc": "Guna warna gambar profil anda",
+    "themeColorBrandNoAvatar": "Tambah gambar profil untuk menggunakan warna Jenama",
+    "themeColorBrandFailed": "Tidak dapat membaca warna daripada gambar profil anda",
+    "dimLights": "Malapkan Cahaya",
+    "dimLightsDesc": "Mengurangkan pendedahan cahaya biru",
+    "matureContent": "Tunjukkan Kandungan Dewasa",
+    "matureContentDesc": "Memasukkan siaran dewasa dan grafik ke dalam suapan anda, dan membuang amaran pada yang sudah anda lihat. Dimatikan secara lalai.",
+    "noNewMessages": "Tiada perbualan baharu",
+    "noNewMessagesDesc": "Kekalkan perbualan sedia ada, tetapi tiada orang baharu boleh memulakannya",
+    "dmNoNewHelp": "Perbualan sedia ada terus berfungsi; tiada orang baharu boleh memulakannya"
   },
   "postOptions": {
     "options": "Pilihan",
@@ -1141,7 +1211,10 @@
     "statusPlanned": "Planned",
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
-    "statusDeclined": "Declined"
+    "statusDeclined": "Declined",
+    "shipping": "Sedang dibina",
+    "noShippingYet": "Tiada yang sedang dibuat",
+    "shippingAppearHere": "Permintaan yang sedang dibina akan muncul di sini."
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -1236,7 +1309,11 @@
     "postRemoved": "Hantaran anda telah dibuang",
     "newNotification": "Pemberitahuan baharu",
     "oneOther": "1 yang lain",
-    "nOthers": "{{count}} yang lain"
+    "nOthers": "{{count}} yang lain",
+    "thisBrowser": "Pelayar ini",
+    "features": "Ciri",
+    "communities": "Komuniti",
+    "stores": "Kedai"
   },
   "messages": {
     "title": "Messages",
@@ -1281,7 +1358,12 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "affiliates": "Afiliat",
+    "directReferrals_one": "{{count}} terus",
+    "directReferrals_other": "{{count}} terus",
+    "secondaryReferrals_one": "{{count}} sekunder",
+    "secondaryReferrals_other": "{{count}} sekunder"
   },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
@@ -1397,7 +1479,8 @@
     "failedPurchase": "Failed to start purchase",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "failedOnramp": "Failed to start onramp"
+    "failedOnramp": "Failed to start onramp",
+    "badgeDiscount": "Pemegang {{tier}} — diskaun {{percent}}%"
   },
   "agents": {
     "title": "AI Agents",
@@ -1427,7 +1510,13 @@
     "agentDeleted": "Agent deleted",
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
-    "apiKeyCopied": "API key copied to clipboard"
+    "apiKeyCopied": "API key copied to clipboard",
+    "connectorUrl": "URL penyambung",
+    "connectorUrlCopied": "URL penyambung disalin",
+    "connectorUrlHelp": "Tambah ini sebagai penyambung MCP tersuai dalam Claude atau ChatGPT. Ia mengesahkan sebagai ejen ini, jadi anggap seperti kunci API.",
+    "agentWallet": "Dompet ejen (Base)",
+    "walletCopied": "Alamat dompet disalin",
+    "agentWalletHelp": "Hantar sedikit ETH di rangkaian Base ke sini sebelum ejen menyiarkan — penerbitan akan mint atas rantai dan ejen membayar gasnya sendiri. Komen, undi dan ikut tidak memerlukan gas."
   },
   "hero": {
     "title": "Selamat Datang",
@@ -1475,7 +1564,10 @@
     "or": "or",
     "termsNotice": "By continuing, you agree to our Terms and Privacy Policy",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
-    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.",
+    "addProfileTitle": "Tambah profil",
+    "walletConnectedAs": "Disambung",
+    "useDifferentWallet": "Guna dompet lain"
   },
   "careers": {
     "title": "Careers at DeHub",
@@ -1599,7 +1691,11 @@
     "comingSoon": "Akan datang — trend serantau sedang dalam perjalanan!",
     "post": "Post",
     "logOut": "Log out",
-    "logIn": "Log in"
+    "logIn": "Log in",
+    "searchMenu": "Cari dalam menu",
+    "clearSearch": "Kosongkan carian",
+    "noMenuMatches": "Tiada yang sepadan dalam menu",
+    "searchDehubFor": "Cari \"{{query}}\" di DeHub"
   },
   "postInfo": {
     "title": "Post Info",
@@ -1794,5 +1890,105 @@
     "sending": "Menghantar...",
     "title": "Hantar Tip",
     "toCreator": "Tip {{name}}"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Koleksi permainan, dunia dan pengalaman yang dibina dan disumber terbuka oleh DeHub.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Main terus dalam pelayar di DeHub — catur 3D sinematik, penembak yang dijana secara prosedural, jalan-jalan di hutan hujan, pergaduhan jalanan neon dan lantai dagangan yang boleh dijelajah. Tiada pemasangan, tiada muat turun.",
+    "alsoIn": "Ada juga dalam {{theme}}"
+  },
+  "stats": {
+    "title": "Statistik",
+    "subtitle": "Maklumat sumber terbuka masa nyata",
+    "live": "Langsung",
+    "range": {
+      "24h": "24 jam",
+      "3d": "3 hari",
+      "7d": "7 hari",
+      "30d": "30 hari",
+      "all": "Sepanjang masa"
+    },
+    "unavailable": {
+      "title": "Statistik tidak tersedia buat masa ini",
+      "unconfigured": "Titik akhir analitik belum diberikan token API Cloudflare-nya. Tiada apa ditunjukkan berbanding nombor rekaan.",
+      "error": "Kami tidak dapat menghubungi API analitik Cloudflare. Daripada menunjukkan angka lapuk atau rekaan, halaman ini tidak menunjukkan apa-apa sehingga bacaan langsung berjaya."
+    },
+    "tile": {
+      "visitorsToday": "Pelawat hari ini",
+      "soFarToday": "setakat ini hari ini, UTC",
+      "peakHour": "Jam paling sibuk",
+      "peakDay": "Hari paling sibuk",
+      "peakAtHour": "pada {{when}} UTC",
+      "peakOnDay": "pada {{when}}",
+      "inRange": "dalam julat ini",
+      "pageViews": "Paparan halaman",
+      "overHours": "sepanjang {{count}} jam",
+      "overDay": "sepanjang 1 hari",
+      "overDays": "sepanjang {{count}} hari",
+      "requestsLabel": "Permintaan",
+      "served": "Dihidangkan",
+      "requests": "{{requests}} permintaan"
+    },
+    "chart": {
+      "hourly": "Pelawat sejam",
+      "daily": "Pelawat sehari",
+      "hourlyHint": "{{count}} selang sejam, UTC",
+      "dailyHint": "pelawat unik sehari",
+      "empty": "Belum ada data untuk tempoh ini"
+    },
+    "countries": {
+      "title": "Negara teratas",
+      "windowDay": "24 jam lepas",
+      "window": "{{days}} hari lepas"
+    },
+    "browsers": {
+      "title": "Pelayar",
+      "window": "mengikut paparan halaman"
+    },
+    "edge": {
+      "title": "Di pinggir rangkaian",
+      "windowDay": "24 jam lepas",
+      "window": "{{days}} hari lepas",
+      "cached": "Dihidangkan daripada cache",
+      "encrypted": "Disulitkan",
+      "threats": "Ancaman disekat"
+    },
+    "proof": {
+      "title": "Dari mana angka ini datang",
+      "subtitle": "Diukur oleh Cloudflare, bukan oleh halaman ini",
+      "source": "Sumber",
+      "datasets": "Set data",
+      "zone": "Zon",
+      "ray": "ID ray Cloudflare",
+      "fetched": "Diambil pada",
+      "query": "Pertanyaan tepat di sebalik carta",
+      "copied": "Disalin",
+      "copy": "Salin",
+      "openEndpoint": "Buka /api/stats",
+      "openRaw": "Balasan asal Cloudflare",
+      "edge": "Setiap permintaan ke dehub.io melalui Cloudflare sebelum sampai ke pelayan kami. Kiraan ini ialah pengagregatan Cloudflare sendiri terhadap trafik itu — angka yang sama seperti yang papan pemuka kami tunjukkan. Ia tidak dikumpul oleh skrip dalam pelayar anda, jadi tiada apa pada halaman ini boleh membesarkannya, dan menyekat penjejak tidak mengubahnya.",
+      "live": "Halaman ini membacanya secara langsung. Memuatkan /stats memanggil titik akhir kami, yang menanyakan Analytics API Cloudflare pada saat itu dan menyimpan jawapannya selama 60 saat.",
+      "limits": "Apa yang ini tunjukkan dan tidak: anda boleh lihat angka datang daripada pengagregatan Cloudflare dan bukan daripada kod aplikasi kami, dan pertanyaan yang diterbitkan di sini ialah yang benar-benar berjalan. Ia bukan tanpa kepercayaan — token API ada pada kami, dan Cloudflare tidak menawarkan bacaan awam bagi analitik sesuatu zon. Sesiapa yang mempunyai zon Cloudflare sendiri boleh menjalankan pertanyaan yang sama dan mengesahkan bentuknya."
+    },
+    "definitions": {
+      "title": "Maksud angka-angka ini",
+      "visitorsTerm": "Pelawat",
+      "visitors": "— alamat IP unik yang Cloudflare lihat pada hari itu. Hampir dengan bilangan orang, tetapi tidak sama: satu pejabat pada satu sambungan dikira sekali, dan telefon yang bertukar antara wifi dan data mudah alih dikira dua kali.",
+      "pageViewsTerm": "Paparan halaman",
+      "pageViews": "— permintaan yang Cloudflare kelaskan sebagai muatan halaman, bukan imej, skrip atau panggilan API.",
+      "botsTerm": "Bot turut dikira",
+      "bots": "— ini kiraan mentah di pinggir rangkaian, jadi perangkak, pemantau masa aktif dan klien berskrip turut termasuk. Anda boleh melihatnya sendiri dalam pecahan pelayar di atas, di mana entri seperti \"Curl\" dan \"Tidak diketahui\" ialah trafik automatik, bukan orang. Menapis bot memerlukan pelan Cloudflare berbayar yang kami tidak guna, dan menolak anggaran secara senyap hanya menjadikan angka lebih sukar disemak.",
+      "totalTerm": "Jumlah julat",
+      "total": "— paparan halaman dan permintaan dijumlahkan sepanjang julat. Kiraan pelawat sengaja tidak dijumlahkan menjadi \"jumlah pelawat\", kerana orang yang hadir pada Isnin dan Selasa akan dikira dua kali.",
+      "peakTerm": "Jam / hari paling sibuk",
+      "peak": "— kiraan unik tertinggi dalam mana-mana satu selang julat, atas sebab yang sama: ia angka yang Cloudflare benar-benar ukur, bukan angka yang dibina dengan menjumlahkan kiraan bertindih.",
+      "resolutionTerm": "Data sejam berhenti pada 3 hari",
+      "resolution": "— itu had Cloudflare pada pelan ini, bukan pilihan kami: ia menolak sebarang pertanyaan sejam yang melebihi tiga hari. Paparan 24 jam dan 3 hari adalah sejam; 7 hari ke atas adalah harian, dan tiada cara melukis carta sejam untuk sepanjang masa.",
+      "breakdownTerm": "Negara dan pelayar",
+      "breakdown": "— ia mengikut julat yang anda pilih, tetapi hanya sehingga {{max}} hari ke belakang, sejauh itulah pecahan harian disimpan. Pada julat lebih panjang, carta meliputi tempoh lebih lama daripada senarai negara.",
+      "startTerm": "Sejarah",
+      "start": "— \"sepanjang masa\" bermaksud setiap hari yang Cloudflare masih simpan, hari ini {{days}} hari bermula {{date}}, hari dehub.io berpindah ke Cloudflare. Tiada data pinggir lebih awal untuk ditunjukkan, dan hari lama gugur apabila Cloudflare meluputkannya."
+    }
   }
 }

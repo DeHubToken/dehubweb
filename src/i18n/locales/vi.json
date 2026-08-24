@@ -27,7 +27,20 @@
     "events": "Sự kiện",
     "prompt": "Lời nhắc",
     "communities": "Cộng đồng",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Thống kê trực tiếp",
+    "liveTv": "TV trực tiếp",
+    "buyDhb": "Mua DHB",
+    "bridge": "Cầu nối",
+    "top100": "Top 100",
+    "agents": "Tác nhân AI",
+    "advertising": "Quảng cáo",
+    "premium": "Premium",
+    "pricing": "Bảng giá",
+    "creators": "Nhà sáng tạo",
+    "getTheApp": "Tải ứng dụng",
+    "connectAi": "Kết nối AI"
   },
   "common": {
     "yes": "Có",
@@ -55,7 +68,8 @@
     "showOriginal": "Show original",
     "translating": "Translating...",
     "loadingMore": "Loading more...",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "tryAgain": "Thử lại"
   },
   "glossary": {
     "title": "Bảng thuật ngữ",
@@ -339,7 +353,11 @@
     "new_version_available": "Đã có phiên bản mới",
     "refresh_to_pick_up_the_latest_changes": "Làm mới để nhận các thay đổi mới nhất.",
     "refresh": "Làm mới",
-    "what_changed": "Điều gì đã thay đổi"
+    "what_changed": "Điều gì đã thay đổi",
+    "turn_on_desktop_notifications": "Bật thông báo trên máy tính?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Nhận thông báo về phản hồi, tiền tip và tin nhắn khi bạn đang ở tab khác.",
+    "turn_on": "Bật",
+    "not_now": "Để sau"
   },
   "feed": {
     "home": "Home",
@@ -347,7 +365,9 @@
     "images": "Images",
     "shorts": "Shorts",
     "music": "Music",
-    "live": "Live"
+    "live": "Live",
+    "newPosts_one": "{{count}} bài đăng mới",
+    "newPosts_other": "{{count}} bài đăng mới"
   },
   "explore": {
     "all": "All",
@@ -554,7 +574,58 @@
     "hazy": "Đêm mờ sương",
     "save": "Lưu",
     "saving": "Đang lưu...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Hồ sơ",
+    "profilesDesc": "Tài khoản đã lưu trên thiết bị này",
+    "addProfile": "Thêm hồ sơ",
+    "profileActive": "Đang dùng",
+    "profileSignedOut": "đăng nhập để chuyển",
+    "profileRemove": "Xóa hồ sơ",
+    "profilesUsed": "Đã dùng {{used}}/{{max}}",
+    "profilesNextTier": "Hạng {{tier}} giữ được {{count}}",
+    "profilesFullTier": "Stake để có huy hiệu {{tier}} và giữ {{count}} hồ sơ",
+    "profilesFull": "Xóa một hồ sơ để thêm tài khoản khác",
+    "browserNotifications": "Thông báo trình duyệt",
+    "browserNotificationsDesc": "Nhận thông báo về phản hồi, tiền tip và tin nhắn khi bạn đang ở tab khác",
+    "browserNotificationsOnDesc": "Phản hồi, tiền tip và tin nhắn hiện lên khi bạn đang ở tab khác",
+    "browserNotificationsDismissed": "Đã bỏ qua yêu cầu thông báo — hãy thử lại công tắc",
+    "browserNotificationsBlocked": "Bị trình duyệt của bạn chặn",
+    "browserNotificationsBlockedTitle": "Trình duyệt này đang chặn thông báo",
+    "browserNotificationsBlockedNote": "Chỉ trình duyệt của bạn mới hoàn tác được — DeHub không thể hỏi lại sau khi đã bị chặn.",
+    "browserNotificationsBlockedPending": "Yêu cầu của bạn đã được lưu — nó sẽ tự bật ngay khi trình duyệt cho phép.",
+    "browserNotificationsUnblockChromium": "Nhấp biểu tượng bên trái thanh địa chỉ → Cài đặt trang → đặt Thông báo thành Cho phép, rồi tải lại trang này.",
+    "browserNotificationsUnblockFirefox": "Nhấp ổ khóa bên trái thanh địa chỉ, xóa mục \"Đã chặn\" cạnh Nhận thông báo, rồi tải lại trang này.",
+    "browserNotificationsUnblockSafari": "Trên thanh menu: Safari → Cài đặt → Trang web → Thông báo, rồi đặt trang này thành Cho phép.",
+    "browserNotificationsUnblockGeneric": "Mở cài đặt trang của trình duyệt cho trang này, đặt Thông báo thành Cho phép, rồi tải lại.",
+    "browserNotificationsIosHint": "iPhone và iPad chỉ cho phép sau khi DeHub nằm trên Màn hình chính — chạm Chia sẻ, rồi \"Thêm vào MH chính\".",
+    "browserNotificationsTest": "Gửi thông báo thử",
+    "browserNotificationsTestSent": "Đã gửi thông báo thử",
+    "browserNotificationsTestBody": "Thông báo của DeHub trông như thế này.",
+    "showAsNewMember": "Hiện tôi là thành viên mới",
+    "showAsNewMemberDesc": "Cho các thành viên khác thấy bạn vừa tham gia để họ chào đón bạn. Tự kết thúc sau 30 ngày kể từ khi đăng ký.",
+    "defaultProfileTab": "Tab hồ sơ mặc định",
+    "defaultProfileTabDesc": "Chọn tab mà khách xem đầu tiên trên hồ sơ của bạn",
+    "lavalamp": "Đèn dung nham",
+    "war": "Chiến tranh",
+    "osaka": "Osaka",
+    "jungle": "Rừng rậm",
+    "themeColor": "Màu chủ đề",
+    "themeColorDesc": "Chọn màu riêng cho chủ đề này",
+    "themeColorReset": "Đặt lại",
+    "themeColorWhite": "Trắng",
+    "themeColorBlack": "Đen",
+    "themeColorRainbow": "Cầu vồng",
+    "themeColorBrand": "Thương hiệu",
+    "themeColorBrandDesc": "Dùng màu từ ảnh đại diện của bạn",
+    "themeColorBrandNoAvatar": "Thêm ảnh đại diện để dùng màu Thương hiệu",
+    "themeColorBrandFailed": "Không đọc được màu từ ảnh đại diện của bạn",
+    "dimLights": "Giảm sáng",
+    "dimLightsDesc": "Giảm tiếp xúc với ánh sáng xanh",
+    "matureContent": "Hiện nội dung người lớn",
+    "matureContentDesc": "Đưa bài đăng người lớn và bạo lực vào bảng tin của bạn, và bỏ cảnh báo trên những bài bạn đã thấy. Mặc định tắt.",
+    "noNewMessages": "Không nhận trò chuyện mới",
+    "noNewMessagesDesc": "Giữ các cuộc trò chuyện hiện có, nhưng không ai mới bắt đầu được",
+    "dmNoNewHelp": "Các cuộc trò chuyện hiện có vẫn hoạt động; không ai mới bắt đầu được"
   },
   "postOptions": {
     "options": "Options",
@@ -961,7 +1032,10 @@
     "statusPlanned": "Planned",
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
-    "statusDeclined": "Declined"
+    "statusDeclined": "Declined",
+    "shipping": "Đang triển khai",
+    "noShippingYet": "Chưa có gì đang làm",
+    "shippingAppearHere": "Các yêu cầu đang được xây dựng sẽ hiện ở đây."
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -1056,7 +1130,11 @@
     "postRemoved": "Bài đăng của bạn đã bị gỡ",
     "newNotification": "Thông báo mới",
     "oneOther": "1 người khác",
-    "nOthers": "{{count}} người khác"
+    "nOthers": "{{count}} người khác",
+    "thisBrowser": "Trình duyệt này",
+    "features": "Tính năng",
+    "communities": "Cộng đồng",
+    "stores": "Cửa hàng"
   },
   "messages": {
     "title": "Messages",
@@ -1101,7 +1179,12 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "affiliates": "Đối tác",
+    "directReferrals_one": "{{count}} trực tiếp",
+    "directReferrals_other": "{{count}} trực tiếp",
+    "secondaryReferrals_one": "{{count}} gián tiếp",
+    "secondaryReferrals_other": "{{count}} gián tiếp"
   },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
@@ -1217,7 +1300,8 @@
     "failedPurchase": "Failed to start purchase",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "failedOnramp": "Failed to start onramp"
+    "failedOnramp": "Failed to start onramp",
+    "badgeDiscount": "Chủ sở hữu {{tier}} — giảm {{percent}}%"
   },
   "agents": {
     "title": "AI Agents",
@@ -1247,7 +1331,13 @@
     "agentDeleted": "Agent deleted",
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
-    "apiKeyCopied": "API key copied to clipboard"
+    "apiKeyCopied": "API key copied to clipboard",
+    "connectorUrl": "URL trình kết nối",
+    "connectorUrlCopied": "Đã sao chép URL trình kết nối",
+    "connectorUrlHelp": "Thêm mục này làm trình kết nối MCP tùy chỉnh trong Claude hoặc ChatGPT. Nó xác thực với tư cách tác nhân này, nên hãy coi như khóa API.",
+    "agentWallet": "Ví của tác nhân (Base)",
+    "walletCopied": "Đã sao chép địa chỉ ví",
+    "agentWalletHelp": "Gửi một lượng nhỏ ETH trên Base vào đây trước khi tác nhân đăng bài — việc đăng sẽ mint on-chain và tác nhân tự trả phí gas. Bình luận, bỏ phiếu và theo dõi không tốn gas."
   },
   "hero": {
     "title": "Chào Mừng Đến",
@@ -1295,7 +1385,10 @@
     "or": "or",
     "termsNotice": "By continuing, you agree to our Terms and Privacy Policy",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
-    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.",
+    "addProfileTitle": "Thêm hồ sơ",
+    "walletConnectedAs": "Đã kết nối",
+    "useDifferentWallet": "Dùng ví khác"
   },
   "careers": {
     "title": "Careers at DeHub",
@@ -1419,7 +1512,11 @@
     "comingSoon": "Sắp ra mắt — xu hướng khu vực đang đến!",
     "post": "Đăng",
     "logOut": "Log out",
-    "logIn": "Log in"
+    "logIn": "Log in",
+    "searchMenu": "Tìm trong menu",
+    "clearSearch": "Xóa tìm kiếm",
+    "noMenuMatches": "Không có mục nào trong menu khớp",
+    "searchDehubFor": "Tìm \"{{query}}\" trên DeHub"
   },
   "postInfo": {
     "title": "Post Info",
@@ -1614,5 +1711,105 @@
     "sending": "Đang gửi...",
     "title": "Gửi tiền tip",
     "toCreator": "Tip cho {{name}}"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Tuyển tập trò chơi, thế giới và trải nghiệm do DeHub xây dựng và mở mã nguồn.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Chơi ngay trên trình duyệt tại DeHub — cờ vua 3D điện ảnh, game bắn súng sinh theo thuật toán, chuyến dạo rừng mưa, màn ẩu đả đường phố neon và sàn giao dịch có thể đi bộ. Không cài đặt, không tải về.",
+    "alsoIn": "Cũng có trong {{theme}}"
+  },
+  "stats": {
+    "title": "Thống kê",
+    "subtitle": "Thông tin nguồn mở theo thời gian thực",
+    "live": "Trực tiếp",
+    "range": {
+      "24h": "24 giờ",
+      "3d": "3 ngày",
+      "7d": "7 ngày",
+      "30d": "30 ngày",
+      "all": "Toàn bộ thời gian"
+    },
+    "unavailable": {
+      "title": "Hiện chưa xem được thống kê",
+      "unconfigured": "Điểm cuối phân tích chưa được cấp token API Cloudflare. Không hiện gì còn hơn hiện một con số bịa.",
+      "error": "Chúng tôi không kết nối được với API phân tích của Cloudflare. Thay vì hiện một con số cũ hay bịa ra, trang này không hiện gì cho đến khi đọc trực tiếp thành công."
+    },
+    "tile": {
+      "visitorsToday": "Khách truy cập hôm nay",
+      "soFarToday": "tính đến hiện tại hôm nay, giờ UTC",
+      "peakHour": "Giờ bận nhất",
+      "peakDay": "Ngày bận nhất",
+      "peakAtHour": "lúc {{when}} UTC",
+      "peakOnDay": "vào {{when}}",
+      "inRange": "trong khoảng này",
+      "pageViews": "Lượt xem trang",
+      "overHours": "trong {{count}} giờ",
+      "overDay": "trong 1 ngày",
+      "overDays": "trong {{count}} ngày",
+      "requestsLabel": "Yêu cầu",
+      "served": "Đã phục vụ",
+      "requests": "{{requests}} yêu cầu"
+    },
+    "chart": {
+      "hourly": "Khách truy cập mỗi giờ",
+      "daily": "Khách truy cập mỗi ngày",
+      "hourlyHint": "{{count}} khung giờ, giờ UTC",
+      "dailyHint": "khách truy cập duy nhất mỗi ngày",
+      "empty": "Chưa có dữ liệu cho khoảng thời gian này"
+    },
+    "countries": {
+      "title": "Quốc gia hàng đầu",
+      "windowDay": "24 giờ qua",
+      "window": "{{days}} ngày qua"
+    },
+    "browsers": {
+      "title": "Trình duyệt",
+      "window": "theo lượt xem trang"
+    },
+    "edge": {
+      "title": "Tại biên",
+      "windowDay": "24 giờ qua",
+      "window": "{{days}} ngày qua",
+      "cached": "Phục vụ từ bộ nhớ đệm",
+      "encrypted": "Đã mã hóa",
+      "threats": "Mối đe dọa đã chặn"
+    },
+    "proof": {
+      "title": "Những con số này từ đâu ra",
+      "subtitle": "Do Cloudflare đo, không phải trang này",
+      "source": "Nguồn",
+      "datasets": "Bộ dữ liệu",
+      "zone": "Vùng",
+      "ray": "Mã ray Cloudflare",
+      "fetched": "Lấy lúc",
+      "query": "Truy vấn chính xác đằng sau biểu đồ",
+      "copied": "Đã sao chép",
+      "copy": "Sao chép",
+      "openEndpoint": "Mở /api/stats",
+      "openRaw": "Phản hồi nguyên bản của Cloudflare",
+      "edge": "Mọi yêu cầu đến dehub.io đều đi qua Cloudflare trước khi tới máy chủ của chúng tôi. Những con số này là bản tổng hợp của chính Cloudflare về lưu lượng đó — đúng các con số bảng điều khiển của chúng tôi hiển thị. Chúng không do một tập lệnh trong trình duyệt bạn thu thập, nên không gì trên trang này thổi phồng được, và chặn trình theo dõi cũng không làm thay đổi.",
+      "live": "Trang này đọc trực tiếp. Mở /stats sẽ gọi điểm cuối của chúng tôi, nơi truy vấn Analytics API của Cloudflare ngay lúc đó và lưu đệm câu trả lời trong 60 giây.",
+      "limits": "Điều này chứng minh và không chứng minh được gì: bạn thấy được các con số đến từ bản tổng hợp của Cloudflare chứ không từ mã ứng dụng của chúng tôi, và truy vấn công bố ở đây đúng là truy vấn đang chạy. Nó không phi tín nhiệm — token API nằm ở chỗ chúng tôi, và Cloudflare không cho đọc công khai số liệu của một vùng. Ai có vùng Cloudflare riêng đều có thể chạy đúng truy vấn đó và xác nhận cấu trúc."
+    },
+    "definitions": {
+      "title": "Ý nghĩa của các con số",
+      "visitorsTerm": "Khách truy cập",
+      "visitors": "— các địa chỉ IP duy nhất Cloudflare thấy trong ngày đó. Gần với số người nhưng không giống hệt: một văn phòng dùng chung một đường truyền tính là một, còn điện thoại chuyển giữa wifi và dữ liệu di động tính là hai.",
+      "pageViewsTerm": "Lượt xem trang",
+      "pageViews": "— các yêu cầu mà Cloudflare xếp là tải trang, không phải hình ảnh, tập lệnh hay lệnh gọi API.",
+      "botsTerm": "Bao gồm cả bot",
+      "bots": "— đây là số đếm thô ở biên, nên có cả trình thu thập dữ liệu, bộ giám sát tình trạng hoạt động và ứng dụng chạy tự động. Bạn có thể tự thấy trong phần phân tích trình duyệt phía trên, nơi các mục như \"Curl\" và \"Không rõ\" là lưu lượng tự động chứ không phải con người. Lọc bot cần gói Cloudflare trả phí mà chúng tôi không dùng, và lặng lẽ trừ đi một con số ước tính chỉ khiến các số liệu khó kiểm chứng hơn.",
+      "totalTerm": "Tổng theo khoảng",
+      "total": "— lượt xem trang và yêu cầu được cộng dồn theo khoảng thời gian. Số khách truy cập cố tình không được cộng thành \"tổng khách truy cập\", vì người ghé cả thứ Hai và thứ Ba sẽ bị đếm hai lần.",
+      "peakTerm": "Giờ / ngày bận nhất",
+      "peak": "— số duy nhất cao nhất trong một khung bất kỳ của khoảng thời gian, cũng vì lý do đó: đây là con số Cloudflare thực sự đo, không phải con số ghép từ các phép đếm chồng lấn.",
+      "resolutionTerm": "Dữ liệu theo giờ dừng ở 3 ngày",
+      "resolution": "— đó là giới hạn của Cloudflare ở gói này, không phải lựa chọn của chúng tôi: nó từ chối mọi truy vấn theo giờ rộng hơn ba ngày. Chế độ xem 24 giờ và 3 ngày là theo giờ; từ 7 ngày trở lên là theo ngày, và không có cách nào vẽ biểu đồ theo giờ cho toàn bộ thời gian.",
+      "breakdownTerm": "Quốc gia và trình duyệt",
+      "breakdown": "— chúng theo khoảng thời gian bạn chọn, nhưng chỉ lùi tối đa {{max}} ngày, vì phân tích theo ngày chỉ được lưu đến đó. Với khoảng dài hơn, biểu đồ bao phủ nhiều thời gian hơn danh sách quốc gia.",
+      "startTerm": "Lịch sử",
+      "start": "— \"toàn bộ thời gian\" nghĩa là mọi ngày Cloudflare còn lưu, hiện là {{days}} ngày tính từ {{date}}, ngày dehub.io chuyển sang Cloudflare. Không có dữ liệu biên nào sớm hơn để hiển thị, và những ngày cũ rơi dần khi Cloudflare hết hạn lưu."
+    }
   }
 }

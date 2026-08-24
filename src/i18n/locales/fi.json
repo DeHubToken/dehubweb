@@ -27,7 +27,20 @@
     "events": "Tapahtumat",
     "prompt": "Ohjaa",
     "communities": "Yhteisöt",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Reaaliaikaiset tilastot",
+    "liveTv": "Suora TV",
+    "buyDhb": "Osta DHB:tä",
+    "bridge": "Silta",
+    "top100": "Top 100",
+    "agents": "Tekoälyagentit",
+    "advertising": "Mainonta",
+    "premium": "Premium",
+    "pricing": "Hinnoittelu",
+    "creators": "Tekijät",
+    "getTheApp": "Hanki sovellus",
+    "connectAi": "Yhdistä tekoäly"
   },
   "feed": {
     "home": "Koti",
@@ -35,7 +48,9 @@
     "images": "Kuvat",
     "shorts": "Lyhyet",
     "music": "Musiikki",
-    "live": "Suora"
+    "live": "Suora",
+    "newPosts_one": "{{count}} uusi julkaisu",
+    "newPosts_other": "{{count}} uutta julkaisua"
   },
   "explore": {
     "all": "Kaikki",
@@ -242,7 +257,58 @@
     "hazy": "Usvaiset yöt",
     "save": "Tallenna",
     "saving": "Tallennetaan...",
-    "swarms": "Parvet"
+    "swarms": "Parvet",
+    "profiles": "Profiilit",
+    "profilesDesc": "Tälle laitteelle tallennetut tilit",
+    "addProfile": "Lisää profiili",
+    "profileActive": "Aktiivinen",
+    "profileSignedOut": "kirjaudu sisään vaihtaaksesi",
+    "profileRemove": "Poista profiili",
+    "profilesUsed": "{{used}} / {{max}} käytössä",
+    "profilesNextTier": "Taso {{tier}} pitää {{count}}",
+    "profilesFullTier": "Stakea {{tier}}-merkin saadaksesi pitää {{count}} profiilia",
+    "profilesFull": "Poista profiili, jos haluat lisätä toisen tilin",
+    "browserNotifications": "Selainilmoitukset",
+    "browserNotificationsDesc": "Saat tiedon vastauksista, tipeistä ja viesteistä, vaikka olisit toisella välilehdellä",
+    "browserNotificationsOnDesc": "Vastaukset, tipit ja viestit ponnahtavat esiin, vaikka olisit toisella välilehdellä",
+    "browserNotificationsDismissed": "Ilmoituspyyntö hylättiin — kokeile kytkintä uudelleen",
+    "browserNotificationsBlocked": "Selaimesi on estänyt ne",
+    "browserNotificationsBlockedTitle": "Tämä selain estää ilmoitukset",
+    "browserNotificationsBlockedNote": "Vain selaimesi voi perua tämän — eston jälkeen DeHub ei voi kysyä uudelleen.",
+    "browserNotificationsBlockedPending": "Pyyntösi on tallennettu — tämä kytkeytyy itsestään päälle heti kun selain sallii sen.",
+    "browserNotificationsUnblockChromium": "Napsauta osoiterivin vasemmalla olevaa kuvaketta → Sivuston asetukset → aseta Ilmoitukset tilaan Salli ja lataa sivu uudelleen.",
+    "browserNotificationsUnblockFirefox": "Napsauta osoiterivin vasemmalla olevaa lukkoa, poista ”Estetty” kohdasta Vastaanota ilmoituksia ja lataa sivu uudelleen.",
+    "browserNotificationsUnblockSafari": "Valikkorivillä: Safari → Asetukset → Verkkosivustot → Ilmoitukset, ja aseta tämä sivusto tilaan Salli.",
+    "browserNotificationsUnblockGeneric": "Avaa selaimen sivustoasetukset tälle sivulle, aseta Ilmoitukset tilaan Salli ja lataa uudelleen.",
+    "browserNotificationsIosHint": "iPhone ja iPad sallivat tämän vasta kun DeHub on aloitusnäytöllä — napauta Jaa ja sitten ”Lisää Koti-valikkoon”.",
+    "browserNotificationsTest": "Lähetä testi-ilmoitus",
+    "browserNotificationsTestSent": "Testi-ilmoitus lähetetty",
+    "browserNotificationsTestBody": "Tältä DeHubin ilmoitus näyttää.",
+    "showAsNewMember": "Näytä minut uutena jäsenenä",
+    "showAsNewMemberDesc": "Antaa muiden jäsenten nähdä, että liityit juuri, jotta he voivat toivottaa sinut tervetulleeksi. Päättyy automaattisesti 30 päivää rekisteröitymisen jälkeen.",
+    "defaultProfileTab": "Profiilin oletusvälilehti",
+    "defaultProfileTabDesc": "Valitse, minkä välilehden kävijät näkevät ensin profiilissasi",
+    "lavalamp": "Laavalamppu",
+    "war": "Sota",
+    "osaka": "Osaka",
+    "jungle": "Viidakko",
+    "themeColor": "Teeman väri",
+    "themeColorDesc": "Valitse tälle teemalle oma väri",
+    "themeColorReset": "Palauta",
+    "themeColorWhite": "Valkoinen",
+    "themeColorBlack": "Musta",
+    "themeColorRainbow": "Sateenkaari",
+    "themeColorBrand": "Brändi",
+    "themeColorBrandDesc": "Käytä profiilikuvasi värejä",
+    "themeColorBrandNoAvatar": "Lisää profiilikuva käyttääksesi brändivärejä",
+    "themeColorBrandFailed": "Profiilikuvastasi ei saatu luettua värejä",
+    "dimLights": "Himmennä valot",
+    "dimLightsDesc": "Vähentää sinisen valon määrää",
+    "matureContent": "Näytä aikuissisältö",
+    "matureContentDesc": "Ottaa aikuis- ja rankan sisällön mukaan syötteisiisi ja poistaa varoituksen niistä, jotka jo näet. Oletuksena pois päältä.",
+    "noNewMessages": "Ei uusia keskusteluja",
+    "noNewMessagesDesc": "Säilytä nykyiset keskustelusi, mutta kukaan uusi ei voi aloittaa",
+    "dmNoNewHelp": "Olemassa olevat keskustelut jatkuvat; kukaan uusi ei voi aloittaa"
   },
   "common": {
     "save": "Tallenna",
@@ -256,7 +322,8 @@
     "translating": "Käännetään...",
     "close": "Sulje",
     "loadingMore": "Ladataan lisää...",
-    "loadMore": "Lataa lisää"
+    "loadMore": "Lataa lisää",
+    "tryAgain": "Yritä uudelleen"
   },
   "postOptions": {
     "options": "Vaihtoehdot",
@@ -663,7 +730,10 @@
     "statusPlanned": "Suunniteltu",
     "statusInProgress": "Käynnissä",
     "statusCompleted": "Valmis",
-    "statusDeclined": "Hylätty"
+    "statusDeclined": "Hylätty",
+    "shipping": "Työn alla",
+    "noShippingYet": "Mitään ei ole työn alla",
+    "shippingAppearHere": "Rakenteilla olevat pyynnöt näkyvät täällä."
   },
   "auth": {
     "loginRequired": "Kirjautuminen vaaditaan"
@@ -758,7 +828,11 @@
     "postRemoved": "Julkaisusi poistettiin",
     "newNotification": "Uusi ilmoitus",
     "oneOther": "1 muu",
-    "nOthers": "{{count}} muuta"
+    "nOthers": "{{count}} muuta",
+    "thisBrowser": "Tämä selain",
+    "features": "Ominaisuudet",
+    "communities": "Yhteisöt",
+    "stores": "Kaupat"
   },
   "messages": {
     "title": "Viestit",
@@ -803,7 +877,12 @@
     "addedToLeaderboard": "Sinut on lisätty! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo liian pieni ({{balance}} DHB)",
     "refreshFailed": "Jokin meni pieleen",
-    "noWalletAddress": "Lompakko-osoitetta ei löytynyt"
+    "noWalletAddress": "Lompakko-osoitetta ei löytynyt",
+    "affiliates": "Kumppanit",
+    "directReferrals_one": "{{count}} suoraa",
+    "directReferrals_other": "{{count}} suoraa",
+    "secondaryReferrals_one": "{{count}} välillistä",
+    "secondaryReferrals_other": "{{count}} välillistä"
   },
   "explorePage": {
     "searchPlaceholder": "Etsi ihmisiä, julkaisuja tai sisältöä...",
@@ -919,7 +998,8 @@
     "failedPurchase": "Oston aloitus epäonnistui",
     "redirectingOnramp": "Ohjataan ramppiin...",
     "onrampCreated": "Ramppi-istunto luotu",
-    "failedOnramp": "Rampin aloitus epäonnistui"
+    "failedOnramp": "Rampin aloitus epäonnistui",
+    "badgeDiscount": "{{tier}}-haltija — {{percent}} % alennus"
   },
   "agents": {
     "title": "Tekoälyagentit",
@@ -949,7 +1029,13 @@
     "agentDeleted": "Agentti poistettu",
     "failedCreate": "Agentin luonti epäonnistui",
     "failedDelete": "Agentin poisto epäonnistui",
-    "apiKeyCopied": "API-avain kopioitu leikepöydälle"
+    "apiKeyCopied": "API-avain kopioitu leikepöydälle",
+    "connectorUrl": "Liittimen URL",
+    "connectorUrlCopied": "Liittimen URL kopioitu",
+    "connectorUrlHelp": "Lisää tämä mukautettuna MCP-liittimenä Claudeen tai ChatGPT:hen. Se tunnistautuu tänä agenttina, joten käsittele sitä kuin API-avainta.",
+    "agentWallet": "Agentin lompakko (Base)",
+    "walletCopied": "Lompakko-osoite kopioitu",
+    "agentWalletHelp": "Lähetä tänne pieni määrä Base-ETH:ta ennen kuin agentti julkaisee — julkaisu mintataan ketjuun ja agentti maksaa oman kaasunsa. Kommentointi, äänestäminen ja seuraaminen eivät vaadi kaasua."
   },
   "hero": {
     "title": "Tervetuloa",
@@ -997,7 +1083,10 @@
     "or": "tai",
     "termsNotice": "Jatkamalla hyväksyt käyttöehtomme ja tietosuojakäytäntömme",
     "walletInfoDesktop": "Yhdistä lompakkosi kirjautuaksesi turvallisesti",
-    "walletInfoMobile": "MetaMask, Trust ja Phantom avaavat sovelluksensa suoraan. Rabby käyttää WalletConnectia."
+    "walletInfoMobile": "MetaMask, Trust ja Phantom avaavat sovelluksensa suoraan. Rabby käyttää WalletConnectia.",
+    "addProfileTitle": "Lisää profiili",
+    "walletConnectedAs": "Yhdistetty",
+    "useDifferentWallet": "Käytä toista lompakkoa"
   },
   "careers": {
     "title": "Urat DeHubissa",
@@ -1121,7 +1210,11 @@
     "comingSoon": "Tulossa pian — alueelliset trendit ovat tulossa!",
     "post": "Julkaise",
     "logOut": "Kirjaudu ulos",
-    "logIn": "Kirjaudu sisään"
+    "logIn": "Kirjaudu sisään",
+    "searchMenu": "Hae valikosta",
+    "clearSearch": "Tyhjennä haku",
+    "noMenuMatches": "Mikään valikossa ei täsmää",
+    "searchDehubFor": "Hae DeHubista ”{{query}}”"
   },
   "postInfo": {
     "title": "Julkaisun tiedot",
@@ -1371,7 +1464,11 @@
     "new_version_available": "Uusi versio saatavilla",
     "refresh_to_pick_up_the_latest_changes": "Päivitä noutaaksesi viimeisimmät muutokset.",
     "refresh": "Päivitä",
-    "what_changed": "Mikä muuttui"
+    "what_changed": "Mikä muuttui",
+    "turn_on_desktop_notifications": "Otetaanko työpöytäilmoitukset käyttöön?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Saat tiedon vastauksista, tipeistä ja viesteistä, vaikka olisit toisella välilehdellä.",
+    "turn_on": "Ota käyttöön",
+    "not_now": "Ei nyt"
   },
   "prompt": {
     "seoTitle": "Ohjaa syötteesi – DeHub",
@@ -1525,5 +1622,105 @@
     "sending": "Lähetetään...",
     "title": "Lähetä tippi",
     "toCreator": "Tippaa käyttäjää {{name}}"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Kokoelma pelejä, maailmoja ja kokemuksia, jotka DeHub on rakentanut ja avannut lähdekoodiltaan.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Pelaa suoraan selaimessa DeHubissa — elokuvamainen 3D-shakki, proseduraalisesti luotu räiskintä, sademetsäkävely, neonvalojen katutappelu ja kävelykelpoinen kaupankäyntisali. Ei asennusta, ei latausta.",
+    "alsoIn": "Löytyy myös teemasta {{theme}}"
+  },
+  "stats": {
+    "title": "Tilastot",
+    "subtitle": "Reaaliaikaista avointa tietoa",
+    "live": "Livenä",
+    "range": {
+      "24h": "24 tuntia",
+      "3d": "3 päivää",
+      "7d": "7 päivää",
+      "30d": "30 päivää",
+      "all": "Koko aika"
+    },
+    "unavailable": {
+      "title": "Tilastot eivät ole juuri nyt saatavilla",
+      "unconfigured": "Analytiikkapäätepiste ei ole vielä saanut Cloudflaren API-tokeniaan. Mitään ei näytetä keksityn luvun sijaan.",
+      "error": "Emme saaneet yhteyttä Cloudflaren analytiikka-API:in. Sen sijaan että näyttäisi vanhentuneen tai keksityn luvun, tämä sivu ei näytä mitään ennen kuin livelukema onnistuu."
+    },
+    "tile": {
+      "visitorsToday": "Kävijöitä tänään",
+      "soFarToday": "tähän mennessä tänään, UTC",
+      "peakHour": "Vilkkain tunti",
+      "peakDay": "Vilkkain päivä",
+      "peakAtHour": "klo {{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "tällä aikavälillä",
+      "pageViews": "Sivunäytöt",
+      "overHours": "{{count}} tunnin aikana",
+      "overDay": "1 päivän aikana",
+      "overDays": "{{count}} päivän aikana",
+      "requestsLabel": "Pyynnöt",
+      "served": "Toimitettu",
+      "requests": "{{requests}} pyyntöä"
+    },
+    "chart": {
+      "hourly": "Kävijöitä tunnissa",
+      "daily": "Kävijöitä päivässä",
+      "hourlyHint": "{{count}} tunnin jaksoa, UTC",
+      "dailyHint": "yksilöllisiä kävijöitä päivässä",
+      "empty": "Tälle jaksolle ei ole vielä tietoja"
+    },
+    "countries": {
+      "title": "Kärkimaat",
+      "windowDay": "viimeiset 24 tuntia",
+      "window": "viimeiset {{days}} päivää"
+    },
+    "browsers": {
+      "title": "Selaimet",
+      "window": "sivunäyttöjen mukaan"
+    },
+    "edge": {
+      "title": "Reunalla",
+      "windowDay": "viimeiset 24 tuntia",
+      "window": "viimeiset {{days}} päivää",
+      "cached": "Tarjoiltu välimuistista",
+      "encrypted": "Salattu",
+      "threats": "Estetyt uhat"
+    },
+    "proof": {
+      "title": "Mistä nämä luvut tulevat",
+      "subtitle": "Mitannut Cloudflare, ei tämä sivu",
+      "source": "Lähde",
+      "datasets": "Tietojoukot",
+      "zone": "Vyöhyke",
+      "ray": "Cloudflaren ray-tunnus",
+      "fetched": "Haettu klo",
+      "query": "Kaavion takana oleva täsmällinen kysely",
+      "copied": "Kopioitu",
+      "copy": "Kopioi",
+      "openEndpoint": "Avaa /api/stats",
+      "openRaw": "Cloudflaren koskematon vastaus",
+      "edge": "Jokainen pyyntö dehub.io:hon kulkee Cloudflaren läpi ennen kuin se saavuttaa palvelimemme. Nämä luvut ovat Cloudflaren oma koonti tuosta liikenteestä — samat luvut, jotka kojelautamme näyttää. Niitä ei kerää selaimessasi oleva skripti, joten mikään tällä sivulla ei voi paisuttaa niitä, eikä seurantaesto muuta niitä.",
+      "live": "Sivu lukee ne livenä. /stats-sivun lataus kutsuu päätepistettämme, joka kysyy Cloudflaren Analytics API:lta juuri sillä hetkellä ja pitää vastauksen välimuistissa 60 sekuntia.",
+      "limits": "Mitä tämä osoittaa ja mitä ei: näet, että luvut tulevat Cloudflaren koonnista eivätkä sovelluskoodistamme, ja että tässä julkaistu kysely on se, joka ajetaan. Se ei ole luottamusvapaa — API-token on meillä, eikä Cloudflare tarjoa julkista lukuoikeutta vyöhykkeen analytiikkaan. Kuka tahansa, jolla on oma Cloudflare-vyöhyke, voi ajaa saman kyselyn ja varmistaa muodon."
+    },
+    "definitions": {
+      "title": "Mitä luvut tarkoittavat",
+      "visitorsTerm": "Kävijät",
+      "visitors": "— yksilölliset IP-osoitteet, jotka Cloudflare näki sinä päivänä. Lähellä ihmisten määrää, mutta ei sama: yhdellä yhteydellä oleva toimisto lasketaan kerran, ja wifin ja mobiilidatan välillä vaihtava puhelin kahdesti.",
+      "pageViewsTerm": "Sivunäytöt",
+      "pageViews": "— pyynnöt, jotka Cloudflare luokittelee sivulatauksiksi eikä kuviksi, skripteiksi tai API-kutsuiksi.",
+      "botsTerm": "Botit ovat mukana",
+      "bots": "— nämä ovat raakoja laskuja reunalla, joten mukana ovat myös indeksointirobotit, käytettävyysvalvojat ja skriptatut asiakkaat. Näet ne itse yllä olevasta selainerittelystä, jossa merkinnät kuten ”Curl” ja ”Tuntematon” ovat automaattista liikennettä eivätkä ihmisiä. Bottien suodattaminen vaatisi maksullisen Cloudflare-tason, jota meillä ei ole, ja arvion hiljainen vähentäminen tekisi luvuista vähemmän tarkistettavia, ei enemmän.",
+      "totalTerm": "Aikavälin summat",
+      "total": "— sivunäytöt ja pyynnöt lasketaan yhteen koko aikavälillä. Kävijämääriä ei tarkoituksella lasketa yhteen ”kävijöiden kokonaismääräksi”, koska maanantaina ja tiistaina käynyt laskettaisiin kahdesti.",
+      "peakTerm": "Vilkkain tunti / päivä",
+      "peak": "— korkein yksilöllinen luku yhdessä aikavälin jaksossa, samasta syystä: se on luku, jonka Cloudflare todella mittaa, ei päällekkäisiä laskuja yhteen laskemalla rakennettu.",
+      "resolutionTerm": "Tuntitiedot loppuvat 3 päivään",
+      "resolution": "— tämä on Cloudflaren raja tällä tasolla, ei valinta: se hylkää jokaisen tuntikyselyn, joka on yli kolme päivää leveä. 24 tunnin ja 3 päivän näkymät ovat tuntikohtaisia; 7 päivää ja pidemmät ovat päiväkohtaisia, eikä koko ajanjakson tuntikaaviota voi piirtää.",
+      "breakdownTerm": "Maat ja selaimet",
+      "breakdown": "— nämä seuraavat valitsemaasi aikaväliä, mutta vain {{max}} päivää taaksepäin, sillä päiväkohtainen erittely säilytetään sen verran. Pidemmillä aikaväleillä kaavio kattaa enemmän aikaa kuin maalista.",
+      "startTerm": "Historia",
+      "start": "— ”koko aika” tarkoittaa jokaista päivää, jonka Cloudflare vielä säilyttää, tänään {{days}} päivää alkaen {{date}}, jolloin dehub.io siirtyi Cloudflareen. Aiempaa reunadataa ei ole näytettäväksi, ja vanhat päivät putoavat pois Cloudflaren vanhentaessa niitä."
+    }
   }
 }

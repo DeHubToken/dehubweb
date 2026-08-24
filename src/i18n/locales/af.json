@@ -27,7 +27,20 @@
     "events": "Geleenthede",
     "prompt": "Stel saam",
     "communities": "Gemeenskappe",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Regstreekse statistiek",
+    "liveTv": "Regstreekse TV",
+    "buyDhb": "Koop DHB",
+    "bridge": "Brug",
+    "top100": "Top 100",
+    "agents": "KI-agente",
+    "advertising": "Advertensies",
+    "premium": "Premium",
+    "pricing": "Pryse",
+    "creators": "Skeppers",
+    "getTheApp": "Kry die app",
+    "connectAi": "Koppel KI"
   },
   "home": {
     "title": "Volhoubare Web3-infrastruktuur",
@@ -134,7 +147,12 @@
     "addedToLeaderboard": "You've been added! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance too low ({{balance}} DHB)",
     "refreshFailed": "Something went wrong",
-    "noWalletAddress": "No wallet address found"
+    "noWalletAddress": "No wallet address found",
+    "affiliates": "Vennote",
+    "directReferrals_one": "{{count}} direk",
+    "directReferrals_other": "{{count}} direk",
+    "secondaryReferrals_one": "{{count}} indirek",
+    "secondaryReferrals_other": "{{count}} indirek"
   },
   "notifications": {
     "title": "Kennisgewings",
@@ -189,7 +207,11 @@
     "postRemoved": "Jou plasing is verwyder",
     "newNotification": "Nuwe kennisgewing",
     "oneOther": "1 ander",
-    "nOthers": "{{count}} ander"
+    "nOthers": "{{count}} ander",
+    "thisBrowser": "Hierdie blaaier",
+    "features": "Kenmerke",
+    "communities": "Gemeenskappe",
+    "stores": "Winkels"
   },
   "profile": {
     "editProfile": "Wysig profiel",
@@ -413,7 +435,58 @@
     "hazy": "Newelige Nagte",
     "save": "Stoor",
     "saving": "Stoor tans...",
-    "swarms": "Swerms"
+    "swarms": "Swerms",
+    "profiles": "Profiele",
+    "profilesDesc": "Rekeninge wat op hierdie toestel gestoor is",
+    "addProfile": "Voeg profiel by",
+    "profileActive": "Aktief",
+    "profileSignedOut": "meld aan om te wissel",
+    "profileRemove": "Verwyder profiel",
+    "profilesUsed": "{{used}} van {{max}} gebruik",
+    "profilesNextTier": "Die {{tier}}-vlak hou {{count}}",
+    "profilesFullTier": "Staak vir 'n {{tier}}-kenteken om {{count}} profiele te hou",
+    "profilesFull": "Verwyder 'n profiel om 'n ander rekening by te voeg",
+    "browserNotifications": "Blaaierkennisgewings",
+    "browserNotificationsDesc": "Kry 'n wenk oor antwoorde, fooitjies en DM's terwyl jy op 'n ander oortjie is",
+    "browserNotificationsOnDesc": "Antwoorde, fooitjies en DM's verskyn terwyl jy op 'n ander oortjie is",
+    "browserNotificationsDismissed": "Kennisgewingversoek weggeklik — probeer die skakelaar weer",
+    "browserNotificationsBlocked": "Deur jou blaaier geblokkeer",
+    "browserNotificationsBlockedTitle": "Hierdie blaaier blokkeer kennisgewings",
+    "browserNotificationsBlockedNote": "Net jou blaaier kan dit ongedaan maak — sodra dit geblokkeer is, kan DeHub nie weer vra nie.",
+    "browserNotificationsBlockedPending": "Jou versoek is gestoor — dit skakel self aan sodra jou blaaier dit toelaat.",
+    "browserNotificationsUnblockChromium": "Klik op die ikoon links van die adresbalk → Werfinstellings → stel Kennisgewings op Laat toe en herlaai hierdie bladsy.",
+    "browserNotificationsUnblockFirefox": "Klik op die slot links van die adresbalk, vee die “Geblokkeer” langs Ontvang kennisgewings uit en herlaai hierdie bladsy.",
+    "browserNotificationsUnblockSafari": "In die kieslysbalk: Safari → Instellings → Webwerwe → Kennisgewings, en stel hierdie werf dan op Laat toe.",
+    "browserNotificationsUnblockGeneric": "Maak jou blaaier se werfinstellings vir hierdie bladsy oop, stel Kennisgewings op Laat toe en herlaai.",
+    "browserNotificationsIosHint": "iPhone en iPad laat dit eers toe sodra DeHub op jou tuisskerm is — tik Deel en dan “Voeg by tuisskerm”.",
+    "browserNotificationsTest": "Stuur 'n toetskennisgewing",
+    "browserNotificationsTestSent": "Toetskennisgewing gestuur",
+    "browserNotificationsTestBody": "Só lyk 'n DeHub-kennisgewing.",
+    "showAsNewMember": "Wys my as 'n nuwe lid",
+    "showAsNewMemberDesc": "Laat ander lede sien dat jy pas aangesluit het sodat hulle jou kan verwelkom. Eindig outomaties 30 dae ná jy geregistreer het.",
+    "defaultProfileTab": "Verstek profieloortjie",
+    "defaultProfileTabDesc": "Kies watter oortjie besoekers eerste op jou profiel sien",
+    "lavalamp": "Lawalamp",
+    "war": "Oorlog",
+    "osaka": "Osaka",
+    "jungle": "Oerwoud",
+    "themeColor": "Temakleur",
+    "themeColorDesc": "Kies 'n eie kleur vir hierdie tema",
+    "themeColorReset": "Herstel",
+    "themeColorWhite": "Wit",
+    "themeColorBlack": "Swart",
+    "themeColorRainbow": "Reënboog",
+    "themeColorBrand": "Handelsmerk",
+    "themeColorBrandDesc": "Gebruik die kleure van jou profielfoto",
+    "themeColorBrandNoAvatar": "Voeg 'n profielfoto by om handelsmerkkleure te gebruik",
+    "themeColorBrandFailed": "Kon nie kleure uit jou profielfoto lees nie",
+    "dimLights": "Demp die ligte",
+    "dimLightsDesc": "Verminder blootstelling aan blou lig",
+    "matureContent": "Wys volwasse inhoud",
+    "matureContentDesc": "Sluit volwasse en grafiese plasings by jou strome in, en haal die waarskuwing af van dié wat jy reeds sien. Standaard af.",
+    "noNewMessages": "Geen nuwe gesprekke nie",
+    "noNewMessagesDesc": "Hou jou bestaande gesprekke, maar niemand nuut kan een begin nie",
+    "dmNoNewHelp": "Bestaande gesprekke werk voort; niemand nuut kan een begin nie"
   },
   "wallet": {
     "title": "Beursie",
@@ -929,7 +1002,11 @@
     "new_version_available": "Nuwe weergawe beskikbaar",
     "refresh_to_pick_up_the_latest_changes": "Verfris om die nuutste veranderinge op te tel.",
     "refresh": "Verfris",
-    "what_changed": "Wat het verander"
+    "what_changed": "Wat het verander",
+    "turn_on_desktop_notifications": "Skakel rekenaarkennisgewings aan?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Kry 'n wenk oor antwoorde, fooitjies en DM's terwyl jy op 'n ander oortjie is.",
+    "turn_on": "Skakel aan",
+    "not_now": "Nie nou nie"
   },
   "feed": {
     "home": "Tuis",
@@ -937,7 +1014,9 @@
     "images": "Prente",
     "shorts": "Shorts",
     "music": "Musiek",
-    "live": "Regstreeks"
+    "live": "Regstreeks",
+    "newPosts_one": "{{count}} nuwe plasing",
+    "newPosts_other": "{{count}} nuwe plasings"
   },
   "explore": {
     "all": "All",
@@ -960,7 +1039,8 @@
     "translating": "Vertaal tans...",
     "close": "Maak toe",
     "loadingMore": "Laai tans meer...",
-    "loadMore": "Laai meer"
+    "loadMore": "Laai meer",
+    "tryAgain": "Probeer weer"
   },
   "postOptions": {
     "options": "Opsies",
@@ -1209,7 +1289,10 @@
     "statusPlanned": "Planned",
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
-    "statusDeclined": "Declined"
+    "statusDeclined": "Declined",
+    "shipping": "Word gebou",
+    "noShippingYet": "Niks aan die gang nie",
+    "shippingAppearHere": "Versoeke wat gebou word, verskyn hier."
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -1364,7 +1447,8 @@
     "failedPurchase": "Failed to start purchase",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "failedOnramp": "Failed to start onramp"
+    "failedOnramp": "Failed to start onramp",
+    "badgeDiscount": "{{tier}}-houer — {{percent}}% afslag"
   },
   "agents": {
     "title": "AI Agents",
@@ -1394,7 +1478,13 @@
     "agentDeleted": "Agent deleted",
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
-    "apiKeyCopied": "API key copied to clipboard"
+    "apiKeyCopied": "API key copied to clipboard",
+    "connectorUrl": "Verbinder-URL",
+    "connectorUrlCopied": "Verbinder-URL gekopieer",
+    "connectorUrlHelp": "Voeg dit as 'n eie MCP-verbinder in Claude of ChatGPT by. Dit verifieer as hierdie agent, so hanteer dit soos die API-sleutel.",
+    "agentWallet": "Agent se beursie (Base)",
+    "walletCopied": "Beursie-adres gekopieer",
+    "agentWalletHelp": "Stuur 'n klein bedrag ETH op Base hierheen voordat die agent plaas — publiseer mint op die ketting en die agent betaal sy eie gas. Kommentaar, stemme en volg kos geen gas nie."
   },
   "hero": {
     "title": "Welkom By",
@@ -1442,7 +1532,10 @@
     "or": "or",
     "termsNotice": "By continuing, you agree to our Terms and Privacy Policy",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
-    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.",
+    "addProfileTitle": "Voeg profiel by",
+    "walletConnectedAs": "Gekoppel",
+    "useDifferentWallet": "Gebruik 'n ander beursie"
   },
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
@@ -1456,7 +1549,11 @@
     "comingSoon": "Binnekort — streekstendense is op pad!",
     "post": "Post",
     "logOut": "Log out",
-    "logIn": "Log in"
+    "logIn": "Log in",
+    "searchMenu": "Soek in die kieslys",
+    "clearSearch": "Vee soektog uit",
+    "noMenuMatches": "Niks in die kieslys pas nie",
+    "searchDehubFor": "Soek “{{query}}” op DeHub"
   },
   "postInfo": {
     "title": "Post Info",
@@ -1651,5 +1748,105 @@
     "sending": "Stuur tans...",
     "title": "Stuur Fooitjie",
     "toCreator": "Gee {{name}} 'n fooitjie"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "'n Versameling speletjies, wêrelde en ervarings wat DeHub gebou en oopbron gemaak het.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Speel reguit in jou blaaier op DeHub — filmiese 3D-skaak, 'n prosedureel gegenereerde skietspel, 'n stap deur die reënwoud, 'n neon-straatbakleiery en 'n handelsvloer waar jy kan rondloop. Geen installasie, geen aflaai nie.",
+    "alsoIn": "Kom ook in {{theme}} voor"
+  },
+  "stats": {
+    "title": "Statistiek",
+    "subtitle": "Intydse oopbron-inligting",
+    "live": "Regstreeks",
+    "range": {
+      "24h": "24 uur",
+      "3d": "3 dae",
+      "7d": "7 dae",
+      "30d": "30 dae",
+      "all": "Die hele tyd"
+    },
+    "unavailable": {
+      "title": "Statistiek is nou nie beskikbaar nie",
+      "unconfigured": "Die analise-eindpunt het nog nie sy Cloudflare-API-token gekry nie. Niks word gewys nie eerder as 'n versinde getal.",
+      "error": "Ons kon nie Cloudflare se analise-API bereik nie. In plaas daarvan om 'n verouderde of versinde syfer te wys, wys hierdie bladsy niks totdat die regstreekse lees slaag nie."
+    },
+    "tile": {
+      "visitorsToday": "Besoekers vandag",
+      "soFarToday": "tot dusver vandag, UTC",
+      "peakHour": "Besigste uur",
+      "peakDay": "Besigste dag",
+      "peakAtHour": "om {{when}} UTC",
+      "peakOnDay": "op {{when}}",
+      "inRange": "in hierdie reeks",
+      "pageViews": "Bladsyaansigte",
+      "overHours": "oor {{count}} u",
+      "overDay": "oor 1 dag",
+      "overDays": "oor {{count}} dae",
+      "requestsLabel": "Versoeke",
+      "served": "Bedien",
+      "requests": "{{requests}} versoeke"
+    },
+    "chart": {
+      "hourly": "Besoekers per uur",
+      "daily": "Besoekers per dag",
+      "hourlyHint": "{{count}} uurblokke, UTC",
+      "dailyHint": "unieke besoekers per dag",
+      "empty": "Nog geen data vir hierdie tydperk nie"
+    },
+    "countries": {
+      "title": "Topslande",
+      "windowDay": "laaste 24 uur",
+      "window": "laaste {{days}} dae"
+    },
+    "browsers": {
+      "title": "Blaaiers",
+      "window": "volgens bladsyaansigte"
+    },
+    "edge": {
+      "title": "By die rand",
+      "windowDay": "laaste 24 uur",
+      "window": "laaste {{days}} dae",
+      "cached": "Uit die kas bedien",
+      "encrypted": "Geënkripteer",
+      "threats": "Geblokkeerde bedreigings"
+    },
+    "proof": {
+      "title": "Waar hierdie syfers vandaan kom",
+      "subtitle": "Deur Cloudflare gemeet, nie deur hierdie bladsy nie",
+      "source": "Bron",
+      "datasets": "Datastelle",
+      "zone": "Sone",
+      "ray": "Cloudflare ray-ID",
+      "fetched": "Gehaal om",
+      "query": "Die presiese navraag agter die grafiek",
+      "copied": "Gekopieer",
+      "copy": "Kopieer",
+      "openEndpoint": "Maak /api/stats oop",
+      "openRaw": "Cloudflare se onaangeraakte antwoord",
+      "edge": "Elke versoek na dehub.io gaan deur Cloudflare voordat dit ons bedieners bereik. Hierdie tellings is Cloudflare se eie samevoeging van daardie verkeer — dieselfde syfers wat ons paneelbord wys. Dit word nie deur 'n skrif in jou blaaier ingesamel nie, so niks op hierdie bladsy kan dit opblaas nie, en om spoorders te blokkeer verander dit nie.",
+      "live": "Die bladsy lees dit regstreeks. Om /stats te laai, roep ons eindpunt aan, wat op daardie oomblik Cloudflare se Analytics API bevraag en die antwoord 60 sekondes lank kas.",
+      "limits": "Wat dit wys en wat nie: jy kan sien dat die syfers uit Cloudflare se samevoeging kom en nie uit ons toepassingskode nie, en dat die navraag wat hier gepubliseer word dié is wat loop. Dit is nie vertrouensvry nie — ons hou die API-token, en Cloudflare bied geen openbare lees van 'n sone se analise nie. Enigiemand met hul eie Cloudflare-sone kan dieselfde navraag loop en die vorm bevestig."
+    },
+    "definitions": {
+      "title": "Wat die syfers beteken",
+      "visitorsTerm": "Besoekers",
+      "visitors": "— unieke IP-adresse wat Cloudflare daardie dag gesien het. Naby aan mense, maar nie dieselfde nie: 'n kantoor op een verbinding tel een keer, en 'n foon wat tussen wifi en mobiele data wissel, tel twee keer.",
+      "pageViewsTerm": "Bladsyaansigte",
+      "pageViews": "— versoeke wat Cloudflare as bladsylaaiings klassifiseer, nie beelde, skrifte of API-oproepe nie.",
+      "botsTerm": "Bots is ingesluit",
+      "bots": "— dit is rou tellings by die rand, so kruipers, beskikbaarheidsmonitors en geskrifkliënte is ook in. Jy kan hulle self in die blaaieruiteensetting hierbo sien, waar inskrywings soos “Curl” en “Onbekend” outomatiese verkeer is en nie mense nie. Om bots uit te filter verg 'n betaalde Cloudflare-plan wat ons nie het nie, en om stilweg 'n skatting af te trek sou die syfers minder kontroleerbaar maak, nie meer nie.",
+      "totalTerm": "Reekstotale",
+      "total": "— bladsyaansigte en versoeke tel oor die reeks op. Besoekergetalle word doelbewus nie tot 'n “totale besoekers” opgetel nie, want iemand wat Maandag en Dinsdag hier was, sou twee keer tel.",
+      "peakTerm": "Besigste uur / dag",
+      "peak": "— die hoogste unieke telling in enige enkele blok van die reeks, om dieselfde rede: dit is 'n syfer wat Cloudflare werklik meet, nie een wat uit oorvleuelende tellings opgetel is nie.",
+      "resolutionTerm": "Uurdata hou op by 3 dae",
+      "resolution": "— dit is Cloudflare se limiet op hierdie plan, nie 'n keuse nie: dit weier enige uurnavraag wyer as drie dae. Die 24-uur- en 3-dae-aansigte is per uur; 7 dae en langer is daagliks, en daar is geen manier om 'n uurgrafiek vir die hele tydperk te teken nie.",
+      "breakdownTerm": "Lande en blaaiers",
+      "breakdown": "— dit volg die reeks wat jy kies, maar net {{max}} dae terug, want so lank word die daaglikse uiteensetting bewaar. By langer reekse dek die grafiek meer tyd as die landelys.",
+      "startTerm": "Geskiedenis",
+      "start": "— “die hele tyd” beteken elke dag wat Cloudflare nog bewaar, vandag {{days}} dae vanaf {{date}}, die dag toe dehub.io na Cloudflare geskuif het. Daar is geen vroeër randdata om te wys nie, en ouer dae val weg soos Cloudflare hulle laat verval."
+    }
   }
 }
