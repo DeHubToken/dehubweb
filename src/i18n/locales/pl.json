@@ -27,7 +27,20 @@
     "events": "Wydarzenia",
     "prompt": "Wybierz tematy",
     "communities": "Społeczności",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statystyki na żywo",
+    "liveTv": "Telewizja na żywo",
+    "buyDhb": "Kup DHB",
+    "bridge": "Most",
+    "top100": "Top 100",
+    "agents": "Agenci AI",
+    "advertising": "Reklama",
+    "premium": "Premium",
+    "pricing": "Cennik",
+    "creators": "Twórcy",
+    "getTheApp": "Pobierz aplikację",
+    "connectAi": "Podłącz AI"
   },
   "feed": {
     "home": "Strona główna",
@@ -35,7 +48,9 @@
     "images": "Zdjęcia",
     "shorts": "Krótkie",
     "music": "Muzyka",
-    "live": "Na żywo"
+    "live": "Na żywo",
+    "newPosts_one": "{{count}} nowy post",
+    "newPosts_other": "{{count}} nowych postów"
   },
   "explore": {
     "all": "Wszystko",
@@ -242,7 +257,58 @@
     "hazy": "Mgliste noce",
     "save": "Zapisz",
     "saving": "Zapisywanie...",
-    "swarms": "Roje"
+    "swarms": "Roje",
+    "profiles": "Profile",
+    "profilesDesc": "Konta zapisane na tym urządzeniu",
+    "addProfile": "Dodaj profil",
+    "profileActive": "Aktywny",
+    "profileSignedOut": "zaloguj się, aby przełączyć",
+    "profileRemove": "Usuń profil",
+    "profilesUsed": "Wykorzystano {{used}} z {{max}}",
+    "profilesNextTier": "Poziom {{tier}} zachowuje {{count}}",
+    "profilesFullTier": "Zastakuj, by zdobyć odznakę {{tier}} i zachować {{count}} profili",
+    "profilesFull": "Usuń profil, aby dodać inne konto",
+    "browserNotifications": "Powiadomienia przeglądarki",
+    "browserNotificationsDesc": "Dowiedz się o odpowiedziach, napiwkach i wiadomościach, gdy jesteś w innej karcie",
+    "browserNotificationsOnDesc": "Odpowiedzi, napiwki i wiadomości pojawiają się, gdy jesteś w innej karcie",
+    "browserNotificationsDismissed": "Prośba o powiadomienia odrzucona — spróbuj przełącznika ponownie",
+    "browserNotificationsBlocked": "Zablokowane przez przeglądarkę",
+    "browserNotificationsBlockedTitle": "Ta przeglądarka blokuje powiadomienia",
+    "browserNotificationsBlockedNote": "Tylko Twoja przeglądarka może to cofnąć — DeHub nie może zapytać ponownie po zablokowaniu.",
+    "browserNotificationsBlockedPending": "Twoja prośba jest zapisana — włączy się sama, gdy tylko przeglądarka na to pozwoli.",
+    "browserNotificationsUnblockChromium": "Kliknij ikonę po lewej stronie paska adresu → Ustawienia witryny → ustaw Powiadomienia na Zezwalaj i odśwież tę stronę.",
+    "browserNotificationsUnblockFirefox": "Kliknij kłódkę po lewej stronie paska adresu, usuń „Zablokowane\" obok Odbieranie powiadomień i odśwież tę stronę.",
+    "browserNotificationsUnblockSafari": "Na pasku menu: Safari → Ustawienia → Witryny → Powiadomienia, a potem ustaw tę witrynę na Zezwalaj.",
+    "browserNotificationsUnblockGeneric": "Otwórz ustawienia witryny w przeglądarce dla tej strony, ustaw Powiadomienia na Zezwalaj i odśwież.",
+    "browserNotificationsIosHint": "iPhone i iPad pozwalają na to dopiero, gdy DeHub jest na ekranie głównym — dotknij Udostępnij, a potem „Do ekranu głównego\".",
+    "browserNotificationsTest": "Wyślij powiadomienie testowe",
+    "browserNotificationsTestSent": "Wysłano powiadomienie testowe",
+    "browserNotificationsTestBody": "Tak wygląda powiadomienie z DeHub.",
+    "showAsNewMember": "Pokazuj mnie jako nowego członka",
+    "showAsNewMemberDesc": "Pozwala innym zobaczyć, że dopiero dołączyłeś, żeby mogli Cię powitać. Kończy się automatycznie 30 dni po rejestracji.",
+    "defaultProfileTab": "Domyślna zakładka profilu",
+    "defaultProfileTabDesc": "Wybierz, którą zakładkę odwiedzający zobaczą najpierw na Twoim profilu",
+    "lavalamp": "Lampa lawowa",
+    "war": "Wojna",
+    "osaka": "Osaka",
+    "jungle": "Dżungla",
+    "themeColor": "Kolor motywu",
+    "themeColorDesc": "Wybierz własny kolor dla tego motywu",
+    "themeColorReset": "Resetuj",
+    "themeColorWhite": "Biały",
+    "themeColorBlack": "Czarny",
+    "themeColorRainbow": "Tęcza",
+    "themeColorBrand": "Marka",
+    "themeColorBrandDesc": "Użyj kolorów ze zdjęcia profilowego",
+    "themeColorBrandNoAvatar": "Dodaj zdjęcie profilowe, aby użyć kolorów marki",
+    "themeColorBrandFailed": "Nie udało się odczytać kolorów ze zdjęcia profilowego",
+    "dimLights": "Przyciemnij światła",
+    "dimLightsDesc": "Ogranicza ekspozycję na niebieskie światło",
+    "matureContent": "Pokazuj treści dla dorosłych",
+    "matureContentDesc": "Włącza do Twoich kanałów posty dla dorosłych i drastyczne oraz usuwa ostrzeżenie z tych, które już widzisz. Domyślnie wyłączone.",
+    "noNewMessages": "Brak nowych rozmów",
+    "noNewMessagesDesc": "Zachowaj istniejące rozmowy, ale nikt nowy nie może zacząć nowej",
+    "dmNoNewHelp": "Istniejące rozmowy nadal działają; nikt nowy nie może zacząć rozmowy"
   },
   "common": {
     "save": "Zapisz",
@@ -256,7 +322,8 @@
     "translating": "Tłumaczenie...",
     "close": "Zamknij",
     "loadingMore": "Ładowanie więcej...",
-    "loadMore": "Załaduj więcej"
+    "loadMore": "Załaduj więcej",
+    "tryAgain": "Spróbuj ponownie"
   },
   "glossary": {
     "title": "Słownik",
@@ -533,7 +600,11 @@
     "new_version_available": "Dostępna nowa wersja",
     "refresh_to_pick_up_the_latest_changes": "Odśwież, aby zobaczyć najnowsze zmiany.",
     "refresh": "Odśwież",
-    "what_changed": "Co się zmieniło"
+    "what_changed": "Co się zmieniło",
+    "turn_on_desktop_notifications": "Włączyć powiadomienia na pulpicie?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dowiedz się o odpowiedziach, napiwkach i wiadomościach, gdy jesteś w innej karcie.",
+    "turn_on": "Włącz",
+    "not_now": "Nie teraz"
   },
   "postOptions": {
     "options": "Opcje",
@@ -940,7 +1011,10 @@
     "statusPlanned": "Zaplanowana",
     "statusInProgress": "W trakcie",
     "statusCompleted": "Ukończona",
-    "statusDeclined": "Odrzucona"
+    "statusDeclined": "Odrzucona",
+    "shipping": "W realizacji",
+    "noShippingYet": "Nic w toku",
+    "shippingAppearHere": "Zgłoszenia, nad którymi trwają prace, pojawią się tutaj."
   },
   "auth": {
     "loginRequired": "Wymagane logowanie"
@@ -1035,7 +1109,11 @@
     "postRemoved": "Twój post został usunięty",
     "newNotification": "Nowe powiadomienie",
     "oneOther": "1 inny",
-    "nOthers": "{{count}} innych"
+    "nOthers": "{{count}} innych",
+    "thisBrowser": "Ta przeglądarka",
+    "features": "Funkcje",
+    "communities": "Społeczności",
+    "stores": "Sklepy"
   },
   "messages": {
     "title": "Wiadomości",
@@ -1080,7 +1158,12 @@
     "addedToLeaderboard": "Zostałeś dodany! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo zbyt niskie ({{balance}} DHB)",
     "refreshFailed": "Coś poszło nie tak",
-    "noWalletAddress": "Nie znaleziono adresu portfela"
+    "noWalletAddress": "Nie znaleziono adresu portfela",
+    "affiliates": "Partnerzy",
+    "directReferrals_one": "{{count}} bezpośrednich",
+    "directReferrals_other": "{{count}} bezpośrednich",
+    "secondaryReferrals_one": "{{count}} pośrednich",
+    "secondaryReferrals_other": "{{count}} pośrednich"
   },
   "explorePage": {
     "searchPlaceholder": "Szukaj ludzi, postów lub treści...",
@@ -1196,7 +1279,8 @@
     "failedPurchase": "Nie udało się rozpocząć zakupu",
     "redirectingOnramp": "Przekierowywanie do rampy...",
     "onrampCreated": "Sesja rampy utworzona",
-    "failedOnramp": "Nie udało się uruchomić rampy"
+    "failedOnramp": "Nie udało się uruchomić rampy",
+    "badgeDiscount": "Posiadacz {{tier}} — {{percent}}% taniej"
   },
   "agents": {
     "title": "Agenci AI",
@@ -1226,7 +1310,13 @@
     "agentDeleted": "Agent usunięty",
     "failedCreate": "Nie udało się utworzyć agenta",
     "failedDelete": "Nie udało się usunąć agenta",
-    "apiKeyCopied": "Klucz API skopiowany do schowka"
+    "apiKeyCopied": "Klucz API skopiowany do schowka",
+    "connectorUrl": "Adres URL konektora",
+    "connectorUrlCopied": "Skopiowano adres URL konektora",
+    "connectorUrlHelp": "Dodaj to jako własny konektor MCP w Claude lub ChatGPT. Uwierzytelnia się jako ten agent, więc traktuj go jak klucz API.",
+    "agentWallet": "Portfel agenta (Base)",
+    "walletCopied": "Skopiowano adres portfela",
+    "agentWalletHelp": "Wyślij tu niewielką ilość ETH na Base, zanim agent opublikuje post — publikowanie mintuje on-chain, a agent płaci własny gaz. Komentowanie, głosowanie i obserwowanie nie wymagają gazu."
   },
   "hero": {
     "title": "Witaj W",
@@ -1274,7 +1364,10 @@
     "or": "lub",
     "termsNotice": "Kontynuując, akceptujesz nasze Warunki Usługi i Politykę Prywatności",
     "walletInfoDesktop": "Połącz portfel, aby bezpiecznie się zalogować",
-    "walletInfoMobile": "MetaMask, Trust i Phantom otworzą swoją aplikację bezpośrednio. Rabby użyje WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust i Phantom otworzą swoją aplikację bezpośrednio. Rabby użyje WalletConnect.",
+    "addProfileTitle": "Dodaj profil",
+    "walletConnectedAs": "Połączono",
+    "useDifferentWallet": "Użyj innego portfela"
   },
   "careers": {
     "title": "Kariera w DeHub",
@@ -1398,7 +1491,11 @@
     "comingSoon": "Wkrótce — regionalne trendy są w drodze!",
     "post": "Opublikuj",
     "logOut": "Wyloguj się",
-    "logIn": "Zaloguj się"
+    "logIn": "Zaloguj się",
+    "searchMenu": "Szukaj w menu",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "noMenuMatches": "Nic w menu nie pasuje",
+    "searchDehubFor": "Szukaj „{{query}}\" w DeHub"
   },
   "postInfo": {
     "title": "Informacje o poście",
@@ -1593,5 +1690,105 @@
     "sending": "Wysyłanie...",
     "title": "Wyślij napiwek",
     "toCreator": "Daj napiwek {{name}}"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Zbiór gier, światów i doświadczeń zbudowanych i udostępnionych jako open source przez DeHub.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Graj w przeglądarce na DeHub — filmowe szachy 3D, proceduralnie generowana strzelanka, spacer po lesie deszczowym, neonowa bijatyka uliczna i parkiet giełdowy do zwiedzania. Bez instalacji, bez pobierania.",
+    "alsoIn": "Także w {{theme}}"
+  },
+  "stats": {
+    "title": "Statystyki",
+    "subtitle": "Otwartoźródłowe dane w czasie rzeczywistym",
+    "live": "Na żywo",
+    "range": {
+      "24h": "24 godziny",
+      "3d": "3 dni",
+      "7d": "7 dni",
+      "30d": "30 dni",
+      "all": "Cały okres"
+    },
+    "unavailable": {
+      "title": "Statystyki są teraz niedostępne",
+      "unconfigured": "Endpoint analityki nie dostał jeszcze tokenu API Cloudflare. Zamiast wymyślonej liczby nie pokazujemy nic.",
+      "error": "Nie udało się połączyć z API analityki Cloudflare. Zamiast pokazywać nieaktualną lub zmyśloną wartość, ta strona nie pokazuje nic, dopóki odczyt na żywo się nie powiedzie."
+    },
+    "tile": {
+      "visitorsToday": "Odwiedzający dzisiaj",
+      "soFarToday": "dotychczas dzisiaj, UTC",
+      "peakHour": "Najbardziej ruchliwa godzina",
+      "peakDay": "Najbardziej ruchliwy dzień",
+      "peakAtHour": "o {{when}} UTC",
+      "peakOnDay": "w {{when}}",
+      "inRange": "w tym zakresie",
+      "pageViews": "Odsłony",
+      "overHours": "przez {{count}} godz.",
+      "overDay": "przez 1 dzień",
+      "overDays": "przez {{count}} dni",
+      "requestsLabel": "Żądania",
+      "served": "Obsłużone",
+      "requests": "{{requests}} żądań"
+    },
+    "chart": {
+      "hourly": "Odwiedzający na godzinę",
+      "daily": "Odwiedzający dziennie",
+      "hourlyHint": "{{count}} przedziałów godzinowych, UTC",
+      "dailyHint": "unikalni odwiedzający dziennie",
+      "empty": "Brak danych dla tego okresu"
+    },
+    "countries": {
+      "title": "Najczęstsze kraje",
+      "windowDay": "ostatnie 24 godziny",
+      "window": "ostatnie {{days}} dni"
+    },
+    "browsers": {
+      "title": "Przeglądarki",
+      "window": "wg odsłon"
+    },
+    "edge": {
+      "title": "Na brzegu sieci",
+      "windowDay": "ostatnie 24 godziny",
+      "window": "ostatnie {{days}} dni",
+      "cached": "Zwrócone z pamięci podręcznej",
+      "encrypted": "Szyfrowane",
+      "threats": "Zablokowane zagrożenia"
+    },
+    "proof": {
+      "title": "Skąd biorą się te liczby",
+      "subtitle": "Mierzone przez Cloudflare, nie przez tę stronę",
+      "source": "Źródło",
+      "datasets": "Zbiory danych",
+      "zone": "Strefa",
+      "ray": "Identyfikator ray Cloudflare",
+      "fetched": "Pobrano o",
+      "query": "Dokładne zapytanie stojące za wykresem",
+      "copied": "Skopiowano",
+      "copy": "Kopiuj",
+      "openEndpoint": "Otwórz /api/stats",
+      "openRaw": "Nietknięta odpowiedź Cloudflare",
+      "edge": "Każde żądanie do dehub.io przechodzi przez Cloudflare, zanim dotrze do naszych serwerów. Te liczniki to własna agregacja tego ruchu przez Cloudflare — te same wartości, które pokazuje nasz panel. Nie zbiera ich skrypt w Twojej przeglądarce, więc nic na tej stronie nie może ich zawyżyć, a blokowanie trackerów ich nie zmienia.",
+      "live": "Strona czyta je na żywo. Wczytanie /stats wywołuje nasz endpoint, który w tym momencie odpytuje Analytics API Cloudflare i buforuje odpowiedź na 60 sekund.",
+      "limits": "Co to pokazuje, a czego nie: widać, że liczby pochodzą z agregacji Cloudflare, a nie z kodu naszej aplikacji, i że opublikowane tu zapytanie jest tym, które faktycznie działa. To nie jest bezzaufaniowe — token API mamy my, a Cloudflare nie udostępnia publicznego odczytu analityki strefy. Każdy, kto ma własną strefę Cloudflare, może uruchomić identyczne zapytanie i potwierdzić jego kształt."
+    },
+    "definitions": {
+      "title": "Co oznaczają te liczby",
+      "visitorsTerm": "Odwiedzający",
+      "visitors": "— unikalne adresy IP, które Cloudflare zobaczył tego dnia. Blisko liczby osób, ale nie to samo: biuro na jednym łączu liczy się raz, a telefon przełączający się między wi-fi a siecią komórkową dwa razy.",
+      "pageViewsTerm": "Odsłony",
+      "pageViews": "— żądania, które Cloudflare klasyfikuje jako wczytania strony, a nie obrazy, skrypty czy wywołania API.",
+      "botsTerm": "Boty są wliczone",
+      "bots": "— to surowe liczniki z edge, więc mieszczą się w nich roboty indeksujące, monitory dostępności i klienci skryptowe. Widać je w rozbiciu na przeglądarki powyżej, gdzie pozycje takie jak „Curl\" i „Nieznane\" to ruch automatyczny, a nie ludzie. Odfiltrowanie botów wymaga płatnego planu Cloudflare, którego nie mamy, a ciche odejmowanie szacunku uczyniłoby liczby mniej sprawdzalnymi, nie bardziej.",
+      "totalTerm": "Sumy zakresu",
+      "total": "— odsłony i żądania sumują się w całym zakresie. Liczb odwiedzających celowo nie sumujemy w „łączną liczbę odwiedzających\", bo ktoś obecny w poniedziałek i wtorek zostałby policzony dwa razy.",
+      "peakTerm": "Najbardziej ruchliwa godzina / dzień",
+      "peak": "— najwyższa liczba unikalnych w pojedynczym przedziale zakresu, z tego samego powodu: to wartość, którą Cloudflare faktycznie mierzy, a nie zbudowana z sumowania nakładających się liczników.",
+      "resolutionTerm": "Godzinowe kończy się na 3 dniach",
+      "resolution": "— to limit Cloudflare w tym planie, nie nasz wybór: odrzuca każde zapytanie godzinowe szersze niż trzy dni. Widoki 24-godzinny i 3-dniowy są godzinowe; 7 dni i dłużej są dzienne i nie da się narysować godzinowego wykresu za cały okres.",
+      "breakdownTerm": "Kraje i przeglądarki",
+      "breakdown": "— podążają za wybranym zakresem, ale tylko do {{max}} dni wstecz, bo tyle przechowywane jest rozbicie dzienne. Przy dłuższych zakresach wykres obejmuje więcej czasu niż lista krajów.",
+      "startTerm": "Historia",
+      "start": "— „cały okres\" oznacza każdy dzień, który Cloudflare wciąż przechowuje, dziś {{days}} dni od {{date}}, dnia przeniesienia dehub.io na Cloudflare. Wcześniejszych danych z edge nie ma, a starsze dni znikają, gdy Cloudflare je wygasza."
+    }
   }
 }

@@ -27,7 +27,20 @@
     "events": "فعاليات",
     "prompt": "موجه",
     "communities": "المجتمعات",
-    "staking": "الرهن"
+    "staking": "الرهن",
+    "arcade": "الأركيد",
+    "stats": "إحصاءات مباشرة",
+    "liveTv": "تلفزيون مباشر",
+    "buyDhb": "شراء DHB",
+    "bridge": "الجسر",
+    "top100": "أفضل 100",
+    "agents": "وكلاء الذكاء الاصطناعي",
+    "advertising": "الإعلانات",
+    "premium": "بريميوم",
+    "pricing": "الأسعار",
+    "creators": "المبدعون",
+    "getTheApp": "حمّل التطبيق",
+    "connectAi": "ربط الذكاء الاصطناعي"
   },
   "feed": {
     "home": "الرئيسية",
@@ -35,7 +48,9 @@
     "images": "صور",
     "shorts": "مقاطع قصيرة",
     "music": "موسيقى",
-    "live": "بث مباشر"
+    "live": "بث مباشر",
+    "newPosts_one": "{{count}} منشور جديد",
+    "newPosts_other": "{{count}} منشور جديد"
   },
   "explore": {
     "all": "الكل",
@@ -242,7 +257,58 @@
     "hazy": "ليالٍ ضبابية",
     "save": "حفظ",
     "saving": "جارٍ الحفظ...",
-    "swarms": "الأسراب"
+    "swarms": "الأسراب",
+    "profiles": "الملفات الشخصية",
+    "profilesDesc": "الحسابات المحفوظة على هذا الجهاز",
+    "addProfile": "إضافة ملف شخصي",
+    "profileActive": "نشط",
+    "profileSignedOut": "سجّل الدخول للتبديل",
+    "profileRemove": "إزالة الملف الشخصي",
+    "profilesUsed": "{{used}} من {{max}} مستخدمة",
+    "profilesNextTier": "مستوى {{tier}} يحتفظ بـ {{count}}",
+    "profilesFullTier": "اربط رهانًا للحصول على شارة {{tier}} والاحتفاظ بـ {{count}} ملفات شخصية",
+    "profilesFull": "أزل ملفًا شخصيًا لإضافة حساب آخر",
+    "browserNotifications": "إشعارات المتصفح",
+    "browserNotificationsDesc": "اعرف بالردود والإكراميات والرسائل الخاصة وأنت في تبويب آخر",
+    "browserNotificationsOnDesc": "تظهر الردود والإكراميات والرسائل الخاصة وأنت في تبويب آخر",
+    "browserNotificationsDismissed": "تم تجاهل طلب الإشعارات — جرّب المفتاح مرة أخرى",
+    "browserNotificationsBlocked": "محظورة من متصفحك",
+    "browserNotificationsBlockedTitle": "هذا المتصفح يحظر الإشعارات",
+    "browserNotificationsBlockedNote": "متصفحك وحده يستطيع التراجع عن هذا — لا تستطيع DeHub أن تطلب مجددًا بعد الحظر.",
+    "browserNotificationsBlockedPending": "تم حفظ طلبك — سيُفعَّل تلقائيًا فور سماح متصفحك بذلك.",
+    "browserNotificationsUnblockChromium": "انقر على الأيقونة يسار شريط العنوان ← إعدادات الموقع ← اضبط الإشعارات على السماح، ثم أعد تحميل الصفحة.",
+    "browserNotificationsUnblockFirefox": "انقر على القفل يسار شريط العنوان، وامسح «محظور» بجوار تلقي الإشعارات، ثم أعد تحميل الصفحة.",
+    "browserNotificationsUnblockSafari": "من شريط القوائم: Safari ← الإعدادات ← المواقع ← الإشعارات، ثم اضبط هذا الموقع على السماح.",
+    "browserNotificationsUnblockGeneric": "افتح إعدادات الموقع في متصفحك لهذه الصفحة واضبط الإشعارات على السماح، ثم أعد التحميل.",
+    "browserNotificationsIosHint": "لا يسمح iPhone وiPad بذلك إلا بعد إضافة DeHub إلى الشاشة الرئيسية — اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».",
+    "browserNotificationsTest": "إرسال إشعار تجريبي",
+    "browserNotificationsTestSent": "تم إرسال الإشعار التجريبي",
+    "browserNotificationsTestBody": "هكذا يبدو إشعار DeHub.",
+    "showAsNewMember": "اعرضني كعضو جديد",
+    "showAsNewMemberDesc": "يتيح للأعضاء الآخرين رؤية أنك انضممت للتو كي يرحبوا بك. ينتهي تلقائيًا بعد 30 يومًا من التسجيل.",
+    "defaultProfileTab": "تبويب الملف الشخصي الافتراضي",
+    "defaultProfileTabDesc": "اختر التبويب الذي يراه الزوار أولًا في ملفك الشخصي",
+    "lavalamp": "مصباح الحمم",
+    "war": "حرب",
+    "osaka": "أوساكا",
+    "jungle": "الأدغال",
+    "themeColor": "لون السمة",
+    "themeColorDesc": "اختر لونًا مخصصًا لهذه السمة",
+    "themeColorReset": "إعادة تعيين",
+    "themeColorWhite": "أبيض",
+    "themeColorBlack": "أسود",
+    "themeColorRainbow": "قوس قزح",
+    "themeColorBrand": "العلامة",
+    "themeColorBrandDesc": "استخدام ألوان صورتك الشخصية",
+    "themeColorBrandNoAvatar": "أضف صورة شخصية لاستخدام ألوان العلامة",
+    "themeColorBrandFailed": "تعذّرت قراءة الألوان من صورتك الشخصية",
+    "dimLights": "خفض الإضاءة",
+    "dimLightsDesc": "يقلل التعرض للضوء الأزرق",
+    "matureContent": "عرض المحتوى للبالغين",
+    "matureContentDesc": "يُدرج منشورات البالغين والمحتوى الصادم في خلاصاتك، ويزيل التحذير عن التي تراها بالفعل. معطّل افتراضيًا.",
+    "noNewMessages": "لا محادثات جديدة",
+    "noNewMessagesDesc": "احتفظ بمحادثاتك القائمة، لكن لا يستطيع أحد جديد بدء محادثة",
+    "dmNoNewHelp": "المحادثات القائمة تستمر؛ لا يستطيع أحد جديد بدء محادثة"
   },
   "common": {
     "save": "حفظ",
@@ -256,7 +322,8 @@
     "translating": "جاري الترجمة...",
     "close": "إغلاق",
     "loadingMore": "جارٍ تحميل المزيد...",
-    "loadMore": "تحميل المزيد"
+    "loadMore": "تحميل المزيد",
+    "tryAgain": "أعد المحاولة"
   },
   "drawers": {
     "ppvTitle": "محتوى الدفع لكل مشاهدة",
@@ -698,7 +765,11 @@
     "postRemoved": "تم حذف منشورك",
     "newNotification": "إشعار جديد",
     "oneOther": "1 آخر",
-    "nOthers": "{{count}} آخرين"
+    "nOthers": "{{count}} آخرين",
+    "thisBrowser": "هذا المتصفح",
+    "features": "الميزات",
+    "communities": "المجتمعات",
+    "stores": "المتاجر"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",
@@ -727,7 +798,12 @@
     "addedToLeaderboard": "تمت إضافتك! الرصيد: {{balance}} DHB",
     "balanceTooLow": "الرصيد منخفض جداً ({{balance}} DHB)",
     "refreshFailed": "حدث خطأ",
-    "noWalletAddress": "لم يتم العثور على عنوان محفظة"
+    "noWalletAddress": "لم يتم العثور على عنوان محفظة",
+    "affiliates": "الشركاء",
+    "directReferrals_one": "{{count}} مباشر",
+    "directReferrals_other": "{{count}} مباشر",
+    "secondaryReferrals_one": "{{count}} غير مباشر",
+    "secondaryReferrals_other": "{{count}} غير مباشر"
   },
   "features": {
     "title": "طلبات الميزات",
@@ -766,7 +842,10 @@
     "statusPlanned": "مخطط",
     "statusInProgress": "قيد التنفيذ",
     "statusCompleted": "مكتمل",
-    "statusDeclined": "مرفوض"
+    "statusDeclined": "مرفوض",
+    "shipping": "قيد التنفيذ",
+    "noShippingYet": "لا شيء قيد التنفيذ",
+    "shippingAppearHere": "ستظهر هنا الطلبات التي يجري بناؤها."
   },
   "profile": {
     "back": "رجوع",
@@ -836,7 +915,8 @@
     "failedPurchase": "فشل بدء الشراء",
     "redirectingOnramp": "جارٍ التحويل...",
     "onrampCreated": "تم إنشاء الجلسة",
-    "failedOnramp": "فشل البدء"
+    "failedOnramp": "فشل البدء",
+    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%"
   },
   "agents": {
     "title": "وكلاء AI",
@@ -866,7 +946,13 @@
     "agentDeleted": "تم حذف الوكيل",
     "failedCreate": "فشل الإنشاء",
     "failedDelete": "فشل الحذف",
-    "apiKeyCopied": "تم نسخ مفتاح API"
+    "apiKeyCopied": "تم نسخ مفتاح API",
+    "connectorUrl": "رابط الموصّل",
+    "connectorUrlCopied": "تم نسخ رابط الموصّل",
+    "connectorUrlHelp": "أضف هذا كموصّل MCP مخصص في Claude أو ChatGPT. يصادق باسم هذا الوكيل، لذا تعامل معه كأنه مفتاح الـ API.",
+    "agentWallet": "محفظة الوكيل (Base)",
+    "walletCopied": "تم نسخ عنوان المحفظة",
+    "agentWalletHelp": "أرسل مبلغًا صغيرًا من ETH على شبكة Base إلى هنا قبل أن ينشر الوكيل — النشر يسكّ على السلسلة والوكيل يدفع رسوم الغاز بنفسه. التعليق والتصويت والمتابعة لا تحتاج غازًا."
   },
   "hero": {
     "title": "مرحباً بكم",
@@ -1009,7 +1095,10 @@
     "or": "أو",
     "termsNotice": "بالمتابعة، فإنك توافق على شروط الخدمة وسياسة الخصوصية",
     "walletInfoDesktop": "اربط محفظتك لتسجيل الدخول بأمان",
-    "walletInfoMobile": "MetaMask وTrust وPhantom ستفتح تطبيقها مباشرة. Rabby سيستخدم WalletConnect."
+    "walletInfoMobile": "MetaMask وTrust وPhantom ستفتح تطبيقها مباشرة. Rabby سيستخدم WalletConnect.",
+    "addProfileTitle": "إضافة ملف شخصي",
+    "walletConnectedAs": "متصل",
+    "useDifferentWallet": "استخدام محفظة أخرى"
   },
   "careers": {
     "title": "وظائف في DeHub",
@@ -1133,7 +1222,11 @@
     "comingSoon": "قريبًا — الاتجاهات الإقليمية في الطريق!",
     "post": "نشر",
     "logOut": "تسجيل خروج",
-    "logIn": "تسجيل دخول"
+    "logIn": "تسجيل دخول",
+    "searchMenu": "بحث في القائمة",
+    "clearSearch": "مسح البحث",
+    "noMenuMatches": "لا شيء في القائمة يطابق",
+    "searchDehubFor": "ابحث في DeHub عن «{{query}}»"
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -1383,7 +1476,11 @@
     "new_version_available": "الإصدار الجديد متاح",
     "refresh_to_pick_up_the_latest_changes": "حدِّث لاستلام أحدث التغييرات.",
     "refresh": "تحديث",
-    "what_changed": "ما الذي تغير"
+    "what_changed": "ما الذي تغير",
+    "turn_on_desktop_notifications": "تفعيل إشعارات سطح المكتب؟",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "اعرف بالردود والإكراميات والرسائل الخاصة وأنت في تبويب آخر.",
+    "turn_on": "تفعيل",
+    "not_now": "ليس الآن"
   },
   "prompt": {
     "seoTitle": "وجّه موجزك — DeHub",
@@ -1529,5 +1626,105 @@
     "when": "متى",
     "whyStake": "لماذا الإيداع؟",
     "yourStaked": "إيداعك"
+  },
+  "arcade": {
+    "title": "الأركيد",
+    "intro": "مجموعة من الألعاب والعوالم والتجارب التي بنتها DeHub وأتاحتها مفتوحة المصدر.",
+    "seoTitle": "الأركيد | DeHub",
+    "seoDescription": "العب في متصفحك على DeHub — شطرنج ثلاثي الأبعاد سينمائي، ولعبة إطلاق نار مولّدة إجرائيًا، ونزهة في الغابة المطيرة، وقتال شوارع بالنيون، وقاعة تداول يمكن التجول فيها. بلا تثبيت وبلا تنزيل.",
+    "alsoIn": "موجودة أيضًا في {{theme}}"
+  },
+  "stats": {
+    "title": "الإحصاءات",
+    "subtitle": "معلومات مفتوحة المصدر في الوقت الحقيقي",
+    "live": "مباشر",
+    "range": {
+      "24h": "24 ساعة",
+      "3d": "3 أيام",
+      "7d": "7 أيام",
+      "30d": "30 يومًا",
+      "all": "كل الفترة"
+    },
+    "unavailable": {
+      "title": "الإحصاءات غير متاحة الآن",
+      "unconfigured": "لم يُمنح مسار التحليلات رمز Cloudflare API بعد. لا يُعرض شيء بدلًا من رقم مختلق.",
+      "error": "تعذّر الوصول إلى واجهة تحليلات Cloudflare. بدلًا من عرض رقم قديم أو مختلق، لا تعرض هذه الصفحة شيئًا حتى تنجح القراءة المباشرة."
+    },
+    "tile": {
+      "visitorsToday": "زوار اليوم",
+      "soFarToday": "حتى الآن اليوم، بتوقيت UTC",
+      "peakHour": "أكثر ساعة ازدحامًا",
+      "peakDay": "أكثر يوم ازدحامًا",
+      "peakAtHour": "عند {{when}} UTC",
+      "peakOnDay": "في {{when}}",
+      "inRange": "في هذا النطاق",
+      "pageViews": "مشاهدات الصفحات",
+      "overHours": "خلال {{count}} ساعة",
+      "overDay": "خلال يوم واحد",
+      "overDays": "خلال {{count}} يومًا",
+      "requestsLabel": "الطلبات",
+      "served": "تم تقديمها",
+      "requests": "{{requests}} طلب"
+    },
+    "chart": {
+      "hourly": "الزوار كل ساعة",
+      "daily": "الزوار يوميًا",
+      "hourlyHint": "{{count}} فترة بالساعة، بتوقيت UTC",
+      "dailyHint": "زوار فريدون يوميًا",
+      "empty": "لا توجد بيانات لهذه الفترة بعد"
+    },
+    "countries": {
+      "title": "أهم الدول",
+      "windowDay": "آخر 24 ساعة",
+      "window": "آخر {{days}} يومًا"
+    },
+    "browsers": {
+      "title": "المتصفحات",
+      "window": "حسب مشاهدات الصفحات"
+    },
+    "edge": {
+      "title": "عند الحافة",
+      "windowDay": "آخر 24 ساعة",
+      "window": "آخر {{days}} يومًا",
+      "cached": "مُقدَّم من الذاكرة المؤقتة",
+      "encrypted": "مُشفَّر",
+      "threats": "تهديدات محظورة"
+    },
+    "proof": {
+      "title": "من أين تأتي هذه الأرقام",
+      "subtitle": "مقاسة بواسطة Cloudflare لا بواسطة هذه الصفحة",
+      "source": "المصدر",
+      "datasets": "مجموعات البيانات",
+      "zone": "النطاق",
+      "ray": "معرّف ray من Cloudflare",
+      "fetched": "تم الجلب في",
+      "query": "الاستعلام الدقيق خلف الرسم البياني",
+      "copied": "تم النسخ",
+      "copy": "نسخ",
+      "openEndpoint": "فتح ‎/api/stats",
+      "openRaw": "رد Cloudflare كما هو",
+      "edge": "كل طلب إلى dehub.io يمر عبر Cloudflare قبل أن يصل إلى خوادمنا. هذه الأعداد هي تجميع Cloudflare نفسها لتلك الحركة — الأرقام ذاتها التي تعرضها لوحتنا. لا يجمعها سكربت في متصفحك، لذا لا شيء في هذه الصفحة يستطيع تضخيمها، وحجب المتعقبات لا يغيرها.",
+      "live": "الصفحة تقرأها مباشرة. تحميل ‎/stats يستدعي نقطة النهاية لدينا، التي تستعلم من Cloudflare Analytics API في تلك اللحظة وتخزّن الرد مؤقتًا 60 ثانية.",
+      "limits": "ما يُظهره هذا وما لا يُظهره: يمكنك أن ترى أن الأرقام تأتي من تجميع Cloudflare لا من شيفرة تطبيقنا، وأن الاستعلام المنشور هنا هو ما يُنفَّذ فعلًا. ليس بلا ثقة — نحن نملك رمز الـ API، وCloudflare لا تتيح قراءة عامة لتحليلات نطاق ما. من يملك نطاق Cloudflare خاصًا به يمكنه تشغيل الاستعلام نفسه والتأكد من شكله."
+    },
+    "definitions": {
+      "title": "ماذا تعني الأرقام",
+      "visitorsTerm": "الزوار",
+      "visitors": "— عناوين IP فريدة رأتها Cloudflare ذلك اليوم. قريبة من عدد الأشخاص لكنها ليست مطابقة: مكتب على اتصال واحد يُحسب مرة، وهاتف ينتقل بين الواي فاي وبيانات الجوال يُحسب مرتين.",
+      "pageViewsTerm": "مشاهدات الصفحات",
+      "pageViews": "— الطلبات التي تصنّفها Cloudflare كتحميلات صفحات، لا صورًا أو سكربتات أو استدعاءات API.",
+      "botsTerm": "البوتات محتسبة",
+      "bots": "— هذه أعداد خام من الحافة، لذا تشمل الزواحف ومراقبات التشغيل والعملاء الآليين. يمكنك رؤيتها بنفسك في توزيع المتصفحات أعلاه، حيث تمثل مدخلات مثل «Curl» و«غير معروف» حركة آلية لا أشخاصًا. تصفية البوتات تتطلب خطة Cloudflare مدفوعة لا نستخدمها، وطرح تقدير في صمت سيجعل الأرقام أقل قابلية للتحقق لا أكثر.",
+      "totalTerm": "إجماليات النطاق",
+      "total": "— مشاهدات الصفحات والطلبات تُجمع عبر النطاق. أعداد الزوار لا تُجمع عمدًا في «إجمالي الزوار»، لأن من زار الاثنين والثلاثاء سيُحسب مرتين.",
+      "peakTerm": "أكثر ساعة / يوم ازدحامًا",
+      "peak": "— أعلى عدد فريد في أي فترة واحدة من النطاق، للسبب نفسه: إنه رقم تقيسه Cloudflare فعلًا، لا رقم مبني على جمع أعداد متداخلة.",
+      "resolutionTerm": "البيانات بالساعة تتوقف عند 3 أيام",
+      "resolution": "— هذا حد Cloudflare في هذه الخطة، وليس اختيارًا: ترفض أي استعلام بالساعة يتجاوز ثلاثة أيام. عرضا 24 ساعة و3 أيام بالساعة؛ و7 أيام فأكثر باليوم، ولا سبيل لرسم مخطط بالساعة لكل الفترة.",
+      "breakdownTerm": "الدول والمتصفحات",
+      "breakdown": "— تتبع النطاق الذي تختاره، لكن حتى {{max}} يومًا فقط للخلف، وهو حد الاحتفاظ بالتوزيع اليومي. في النطاقات الأطول يغطي الرسم البياني وقتًا أطول من قائمة الدول.",
+      "startTerm": "السجل",
+      "start": "— «كل الفترة» تعني كل يوم ما زالت Cloudflare تحتفظ به، وهو اليوم {{days}} يومًا بدءًا من {{date}}، يوم انتقال dehub.io إلى Cloudflare. لا توجد بيانات حافة أقدم لعرضها، والأيام القديمة تتساقط مع انتهاء مدة احتفاظ Cloudflare بها."
+    }
   }
 }

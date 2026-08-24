@@ -27,7 +27,20 @@
     "events": "活动",
     "prompt": "提示",
     "communities": "社区",
-    "staking": "质押"
+    "staking": "质押",
+    "arcade": "街机",
+    "stats": "实时统计",
+    "liveTv": "直播电视",
+    "buyDhb": "购买 DHB",
+    "bridge": "跨链桥",
+    "top100": "百强榜",
+    "agents": "AI 代理",
+    "advertising": "广告",
+    "premium": "高级版",
+    "pricing": "定价",
+    "creators": "创作者",
+    "getTheApp": "下载应用",
+    "connectAi": "连接 AI"
   },
   "feed": {
     "home": "首页",
@@ -35,7 +48,9 @@
     "images": "图片",
     "shorts": "短视频",
     "music": "音乐",
-    "live": "直播"
+    "live": "直播",
+    "newPosts_one": "{{count}} 条新帖",
+    "newPosts_other": "{{count}} 条新帖"
   },
   "explore": {
     "all": "全部",
@@ -242,7 +257,58 @@
     "hazy": "朦胧之夜",
     "save": "保存",
     "saving": "保存中...",
-    "swarms": "蜂群"
+    "swarms": "蜂群",
+    "profiles": "档案",
+    "profilesDesc": "保存在此设备上的账号",
+    "addProfile": "添加档案",
+    "profileActive": "使用中",
+    "profileSignedOut": "登录以切换",
+    "profileRemove": "移除档案",
+    "profilesUsed": "已使用 {{used}}/{{max}}",
+    "profilesNextTier": "{{tier}} 等级可保留 {{count}} 个",
+    "profilesFullTier": "质押获得 {{tier}} 徽章即可保留 {{count}} 个档案",
+    "profilesFull": "移除一个档案以添加其他账号",
+    "browserNotifications": "浏览器通知",
+    "browserNotificationsDesc": "在其他标签页时也能第一时间收到回复、打赏和私信提醒",
+    "browserNotificationsOnDesc": "在其他标签页时，回复、打赏和私信会弹出提醒",
+    "browserNotificationsDismissed": "通知请求已忽略——请再试一次开关",
+    "browserNotificationsBlocked": "已被你的浏览器阻止",
+    "browserNotificationsBlockedTitle": "此浏览器正在阻止通知",
+    "browserNotificationsBlockedNote": "只有你的浏览器能撤销——一旦被阻止，DeHub 就无法再次请求。",
+    "browserNotificationsBlockedPending": "你的请求已保存——浏览器一旦允许，它就会自动开启。",
+    "browserNotificationsUnblockChromium": "点击地址栏左侧图标 → 网站设置 → 将\"通知\"设为\"允许\"，然后重新加载本页。",
+    "browserNotificationsUnblockFirefox": "点击地址栏左侧的锁形图标，清除\"接收通知\"旁的\"已阻止\"，然后重新加载本页。",
+    "browserNotificationsUnblockSafari": "在菜单栏中：Safari → 设置 → 网站 → 通知，然后把本站设为\"允许\"。",
+    "browserNotificationsUnblockGeneric": "在浏览器中打开本页的网站设置，把通知设为允许，然后重新加载。",
+    "browserNotificationsIosHint": "iPhone 和 iPad 需要先把 DeHub 添加到主屏幕才允许——点按\"分享\"，然后选择\"添加到主屏幕\"。",
+    "browserNotificationsTest": "发送测试通知",
+    "browserNotificationsTestSent": "测试通知已发送",
+    "browserNotificationsTestBody": "DeHub 的通知就是这个样子。",
+    "showAsNewMember": "把我显示为新成员",
+    "showAsNewMemberDesc": "让其他成员看到你刚加入，方便他们欢迎你。注册 30 天后自动结束。",
+    "defaultProfileTab": "默认档案标签",
+    "defaultProfileTabDesc": "选择访客在你的主页上首先看到哪个标签",
+    "lavalamp": "熔岩灯",
+    "war": "战争",
+    "osaka": "大阪",
+    "jungle": "丛林",
+    "themeColor": "主题颜色",
+    "themeColorDesc": "为此主题挑选自定义颜色",
+    "themeColorReset": "重置",
+    "themeColorWhite": "白色",
+    "themeColorBlack": "黑色",
+    "themeColorRainbow": "彩虹",
+    "themeColorBrand": "品牌",
+    "themeColorBrandDesc": "使用你头像的颜色",
+    "themeColorBrandNoAvatar": "添加头像后才能使用品牌配色",
+    "themeColorBrandFailed": "无法从你的头像读取颜色",
+    "dimLights": "调暗灯光",
+    "dimLightsDesc": "减少蓝光暴露",
+    "matureContent": "显示成人内容",
+    "matureContentDesc": "在你的信息流中包含成人和血腥内容，并去掉你已看到内容上的警告。默认关闭。",
+    "noNewMessages": "不接收新会话",
+    "noNewMessagesDesc": "保留现有会话，但新的人无法发起会话",
+    "dmNoNewHelp": "现有会话继续可用；新的人无法发起会话"
   },
   "common": {
     "save": "保存",
@@ -256,7 +322,8 @@
     "translating": "翻译中...",
     "close": "关闭",
     "loadingMore": "加载更多...",
-    "loadMore": "加载更多"
+    "loadMore": "加载更多",
+    "tryAgain": "重试"
   },
   "drawers": {
     "ppvTitle": "付费观看内容",
@@ -789,7 +856,11 @@
     "postRemoved": "你的帖子已被移除",
     "newNotification": "新通知",
     "oneOther": "1位其他人",
-    "nOthers": "{{count}}位其他人"
+    "nOthers": "{{count}}位其他人",
+    "thisBrowser": "此浏览器",
+    "features": "功能",
+    "communities": "社区",
+    "stores": "店铺"
   },
   "leaderboard": {
     "title": "排行榜",
@@ -818,7 +889,12 @@
     "addedToLeaderboard": "已添加！余额：{{balance}} DHB",
     "balanceTooLow": "余额太低 ({{balance}} DHB)",
     "refreshFailed": "出了点问题",
-    "noWalletAddress": "未找到钱包地址"
+    "noWalletAddress": "未找到钱包地址",
+    "affiliates": "推广伙伴",
+    "directReferrals_one": "直接 {{count}} 人",
+    "directReferrals_other": "直接 {{count}} 人",
+    "secondaryReferrals_one": "间接 {{count}} 人",
+    "secondaryReferrals_other": "间接 {{count}} 人"
   },
   "features": {
     "title": "功能请求",
@@ -857,7 +933,10 @@
     "statusPlanned": "已计划",
     "statusInProgress": "进行中",
     "statusCompleted": "已完成",
-    "statusDeclined": "已拒绝"
+    "statusDeclined": "已拒绝",
+    "shipping": "开发中",
+    "noShippingYet": "暂无进行中的内容",
+    "shippingAppearHere": "正在开发的需求会显示在这里。"
   },
   "messages": {
     "title": "消息",
@@ -927,7 +1006,8 @@
     "failedPurchase": "购买失败",
     "redirectingOnramp": "正在跳转...",
     "onrampCreated": "入金会话已创建",
-    "failedOnramp": "入金失败"
+    "failedOnramp": "入金失败",
+    "badgeDiscount": "{{tier}} 持有者 — {{percent}}% 折扣"
   },
   "agents": {
     "title": "AI代理",
@@ -957,7 +1037,13 @@
     "agentDeleted": "代理已删除",
     "failedCreate": "创建失败",
     "failedDelete": "删除失败",
-    "apiKeyCopied": "API密钥已复制"
+    "apiKeyCopied": "API密钥已复制",
+    "connectorUrl": "连接器 URL",
+    "connectorUrlCopied": "连接器 URL 已复制",
+    "connectorUrlHelp": "把它作为自定义 MCP 连接器添加到 Claude 或 ChatGPT。它以该代理身份进行认证，请像对待 API 密钥一样保管。",
+    "agentWallet": "代理钱包（Base）",
+    "walletCopied": "钱包地址已复制",
+    "agentWalletHelp": "在代理发帖前往这里转入少量 Base ETH——发布会在链上铸造，代理自行支付 gas。评论、投票和关注不需要 gas。"
   },
   "hero": {
     "title": "欢迎来到",
@@ -1009,7 +1095,10 @@
     "or": "或",
     "termsNotice": "继续即表示您同意我们的服务条款和隐私政策",
     "walletInfoDesktop": "连接您的钱包以安全登录",
-    "walletInfoMobile": "MetaMask、Trust 和 Phantom 将直接打开其应用。Rabby 将使用 WalletConnect。"
+    "walletInfoMobile": "MetaMask、Trust 和 Phantom 将直接打开其应用。Rabby 将使用 WalletConnect。",
+    "addProfileTitle": "添加档案",
+    "walletConnectedAs": "已连接",
+    "useDifferentWallet": "使用其他钱包"
   },
   "careers": {
     "title": "DeHub 招聘",
@@ -1133,7 +1222,11 @@
     "comingSoon": "即将推出 — 区域趋势正在路上！",
     "post": "发布",
     "logOut": "退出登录",
-    "logIn": "登录"
+    "logIn": "登录",
+    "searchMenu": "搜索菜单",
+    "clearSearch": "清除搜索",
+    "noMenuMatches": "菜单中没有匹配项",
+    "searchDehubFor": "在 DeHub 中搜索\"{{query}}\""
   },
   "postInfo": {
     "title": "帖子信息",
@@ -1383,7 +1476,11 @@
     "new_version_available": "有新版本可用",
     "refresh_to_pick_up_the_latest_changes": "刷新以获取最新更改。",
     "refresh": "刷新",
-    "what_changed": "发生了什么变化"
+    "what_changed": "发生了什么变化",
+    "turn_on_desktop_notifications": "开启桌面通知？",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "在其他标签页时也能第一时间收到回复、打赏和私信提醒。",
+    "turn_on": "开启",
+    "not_now": "暂不"
   },
   "prompt": {
     "seoTitle": "提示你的内容 — DeHub",
@@ -1529,5 +1626,105 @@
     "when": "时间",
     "whyStake": "为什么存入？",
     "yourStaked": "您的存入量"
+  },
+  "arcade": {
+    "title": "街机",
+    "intro": "DeHub 自研并开源的游戏、世界与体验合集。",
+    "seoTitle": "街机 | DeHub",
+    "seoDescription": "在 DeHub 用浏览器直接玩——电影感 3D 国际象棋、程序生成射击游戏、雨林漫步、霓虹街头格斗，以及可以走动的交易大厅。无需安装，无需下载。",
+    "alsoIn": "{{theme}} 中也有"
+  },
+  "stats": {
+    "title": "统计",
+    "subtitle": "实时开源情报",
+    "live": "实时",
+    "range": {
+      "24h": "24 小时",
+      "3d": "3 天",
+      "7d": "7 天",
+      "30d": "30 天",
+      "all": "全部时间"
+    },
+    "unavailable": {
+      "title": "统计数据当前不可用",
+      "unconfigured": "分析端点尚未配置 Cloudflare API 令牌。与其编造数字，不如什么都不显示。",
+      "error": "我们无法连接 Cloudflare 的分析 API。与其显示过时或编造的数字，本页面在实时读取成功前不显示任何内容。"
+    },
+    "tile": {
+      "visitorsToday": "今日访客",
+      "soFarToday": "今天截至目前，UTC",
+      "peakHour": "最繁忙的小时",
+      "peakDay": "最繁忙的一天",
+      "peakAtHour": "{{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "在此范围内",
+      "pageViews": "页面浏览量",
+      "overHours": "{{count}} 小时内",
+      "overDay": "1 天内",
+      "overDays": "{{count}} 天内",
+      "requestsLabel": "请求",
+      "served": "已提供",
+      "requests": "{{requests}} 次请求"
+    },
+    "chart": {
+      "hourly": "每小时访客",
+      "daily": "每日访客",
+      "hourlyHint": "{{count}} 个小时区间，UTC",
+      "dailyHint": "每日独立访客",
+      "empty": "此时间范围暂无数据"
+    },
+    "countries": {
+      "title": "主要国家/地区",
+      "windowDay": "最近 24 小时",
+      "window": "最近 {{days}} 天"
+    },
+    "browsers": {
+      "title": "浏览器",
+      "window": "按页面浏览量"
+    },
+    "edge": {
+      "title": "在边缘节点",
+      "windowDay": "最近 24 小时",
+      "window": "最近 {{days}} 天",
+      "cached": "自缓存提供",
+      "encrypted": "已加密",
+      "threats": "已拦截威胁"
+    },
+    "proof": {
+      "title": "这些数字从何而来",
+      "subtitle": "由 Cloudflare 测量，而非本页面",
+      "source": "来源",
+      "datasets": "数据集",
+      "zone": "区域",
+      "ray": "Cloudflare ray ID",
+      "fetched": "获取于",
+      "query": "图表背后的确切查询",
+      "copied": "已复制",
+      "copy": "复制",
+      "openEndpoint": "打开 /api/stats",
+      "openRaw": "Cloudflare 未经处理的响应",
+      "edge": "对 dehub.io 的每个请求在到达我们的服务器之前都会经过 Cloudflare。这些计数是 Cloudflare 对该流量的自有聚合——与我们控制台显示的数字相同。它们不是由你浏览器中的脚本采集的，因此本页面上的任何内容都无法抬高它们，屏蔽跟踪器也不会改变它们。",
+      "live": "本页面实时读取。加载 /stats 会调用我们的端点，它在那一刻查询 Cloudflare Analytics API，并将结果缓存 60 秒。",
+      "limits": "它能证明什么、不能证明什么：你可以看到这些数字来自 Cloudflare 的聚合而非我们的应用代码，而且此处公布的查询就是实际运行的查询。它并非无需信任——API 令牌在我们手里，而 Cloudflare 也不提供对某个区域分析数据的公开读取。任何拥有自己 Cloudflare 区域的人都可以运行相同的查询并核对其结构。"
+    },
+    "definitions": {
+      "title": "这些数字的含义",
+      "visitorsTerm": "访客",
+      "visitors": "——Cloudflare 当天看到的独立 IP 地址。接近真人数量，但并不相同：共用一条线路的办公室算一次，而在 Wi-Fi 和移动数据间切换的手机算两次。",
+      "pageViewsTerm": "页面浏览量",
+      "pageViews": "——Cloudflare 判定为页面加载的请求，而非图片、脚本或 API 调用。",
+      "botsTerm": "包含机器人",
+      "bots": "——这些是边缘节点的原始计数，因此包含爬虫、可用性监控和脚本客户端。你可以在上方的浏览器分布里自行查看，其中\"Curl\"和\"未知\"等条目是自动化流量而非真人。过滤机器人需要我们并未订阅的 Cloudflare 付费方案，而悄悄减去一个估算值只会让数字更难核实，而不是更容易。",
+      "totalTerm": "范围合计",
+      "total": "——页面浏览量和请求数会在范围内累加。访客数刻意不汇总成\"访客总数\"，因为周一和周二都来过的人会被算两次。",
+      "peakTerm": "最繁忙的小时/日期",
+      "peak": "——范围内任一区间中最高的独立计数，原因相同：这是 Cloudflare 实际测量的数值，而不是把互相重叠的计数相加得出的。",
+      "resolutionTerm": "小时级数据止于 3 天",
+      "resolution": "——这是该方案下 Cloudflare 的限制，而非我们的选择：任何超过三天的小时级查询都会被拒绝。24 小时和 3 天视图为小时级；7 天及以上为按日，无法绘制全时段的小时级图表。",
+      "breakdownTerm": "国家与浏览器",
+      "breakdown": "——它们跟随你选择的范围，但最多只能回溯 {{max}} 天，这是按日分布的保留上限。范围更长时，图表覆盖的时间会比国家列表更长。",
+      "startTerm": "历史",
+      "start": "——\"全部时间\"指 Cloudflare 仍然保留的每一天，目前为自 {{date}}（dehub.io 迁到 Cloudflare 的那天）起的 {{days}} 天。此前没有边缘数据可展示，较早的日期也会随着 Cloudflare 过期而消失。"
+    }
   }
 }

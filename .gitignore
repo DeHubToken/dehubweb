@@ -83,3 +83,4 @@ scripts/*
 !scripts/generate-blog-manifest.mjs
 !scripts/boot-path-report.mjs
 !scripts/boot-path-baseline.json
+!scripts/i18n-coverage.mjs

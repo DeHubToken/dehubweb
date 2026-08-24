@@ -27,7 +27,20 @@
     "events": "Evenementen",
     "prompt": "Prompt",
     "communities": "Community's",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Live statistieken",
+    "liveTv": "Live-tv",
+    "buyDhb": "DHB kopen",
+    "bridge": "Bridge",
+    "top100": "Top 100",
+    "agents": "AI-agents",
+    "advertising": "Adverteren",
+    "premium": "Premium",
+    "pricing": "Prijzen",
+    "creators": "Creators",
+    "getTheApp": "Download de app",
+    "connectAi": "AI verbinden"
   },
   "feed": {
     "home": "Home",
@@ -35,7 +48,9 @@
     "images": "Afbeeldingen",
     "shorts": "Shorts",
     "music": "Muziek",
-    "live": "Live"
+    "live": "Live",
+    "newPosts_one": "{{count}} nieuw bericht",
+    "newPosts_other": "{{count}} nieuwe berichten"
   },
   "explore": {
     "all": "Alles",
@@ -242,7 +257,58 @@
     "hazy": "Nevelige Nachten",
     "save": "Opslaan",
     "saving": "Opslaan...",
-    "swarms": "Zwermen"
+    "swarms": "Zwermen",
+    "profiles": "Profielen",
+    "profilesDesc": "Accounts opgeslagen op dit apparaat",
+    "addProfile": "Profiel toevoegen",
+    "profileActive": "Actief",
+    "profileSignedOut": "log in om te wisselen",
+    "profileRemove": "Profiel verwijderen",
+    "profilesUsed": "{{used}} van {{max}} gebruikt",
+    "profilesNextTier": "Niveau {{tier}} houdt er {{count}}",
+    "profilesFullTier": "Stake voor een {{tier}}-badge om {{count}} profielen te houden",
+    "profilesFull": "Verwijder een profiel om een ander account toe te voegen",
+    "browserNotifications": "Browsermeldingen",
+    "browserNotificationsDesc": "Krijg een seintje bij reacties, tips en DM's terwijl je op een ander tabblad zit",
+    "browserNotificationsOnDesc": "Reacties, tips en DM's verschijnen terwijl je op een ander tabblad zit",
+    "browserNotificationsDismissed": "Meldingsverzoek genegeerd — probeer de schakelaar opnieuw",
+    "browserNotificationsBlocked": "Geblokkeerd door je browser",
+    "browserNotificationsBlockedTitle": "Deze browser blokkeert meldingen",
+    "browserNotificationsBlockedNote": "Alleen je browser kan dit ongedaan maken — DeHub kan het niet opnieuw vragen zodra het geblokkeerd is.",
+    "browserNotificationsBlockedPending": "Je verzoek is bewaard — dit gaat vanzelf aan zodra je browser het toestaat.",
+    "browserNotificationsUnblockChromium": "Klik op het icoon links in de adresbalk → Site-instellingen → zet Meldingen op Toestaan en herlaad deze pagina.",
+    "browserNotificationsUnblockFirefox": "Klik op het slotje links in de adresbalk, wis het \"Geblokkeerd\" naast Meldingen ontvangen en herlaad deze pagina.",
+    "browserNotificationsUnblockSafari": "In de menubalk: Safari → Instellingen → Websites → Meldingen, en zet deze site op Toestaan.",
+    "browserNotificationsUnblockGeneric": "Open de site-instellingen van je browser voor deze pagina, zet Meldingen op Toestaan en herlaad.",
+    "browserNotificationsIosHint": "iPhone en iPad staan dit pas toe als DeHub op je beginscherm staat — tik op Delen en dan op \"Zet op beginscherm\".",
+    "browserNotificationsTest": "Testmelding sturen",
+    "browserNotificationsTestSent": "Testmelding verstuurd",
+    "browserNotificationsTestBody": "Zo ziet een DeHub-melding eruit.",
+    "showAsNewMember": "Toon mij als nieuw lid",
+    "showAsNewMemberDesc": "Laat andere leden zien dat je er net bij bent, zodat ze je kunnen verwelkomen. Stopt automatisch 30 dagen na je aanmelding.",
+    "defaultProfileTab": "Standaard profieltabblad",
+    "defaultProfileTabDesc": "Kies welk tabblad bezoekers als eerste zien op je profiel",
+    "lavalamp": "Lavalamp",
+    "war": "Oorlog",
+    "osaka": "Osaka",
+    "jungle": "Jungle",
+    "themeColor": "Themakleur",
+    "themeColorDesc": "Kies een eigen kleur voor dit thema",
+    "themeColorReset": "Herstellen",
+    "themeColorWhite": "Wit",
+    "themeColorBlack": "Zwart",
+    "themeColorRainbow": "Regenboog",
+    "themeColorBrand": "Merk",
+    "themeColorBrandDesc": "Kleuren van je profielfoto gebruiken",
+    "themeColorBrandNoAvatar": "Voeg een profielfoto toe om Merkkleuren te gebruiken",
+    "themeColorBrandFailed": "Kon de kleuren van je profielfoto niet lezen",
+    "dimLights": "Licht dimmen",
+    "dimLightsDesc": "Vermindert blootstelling aan blauw licht",
+    "matureContent": "Content voor volwassenen tonen",
+    "matureContentDesc": "Neemt berichten voor volwassenen en expliciete berichten op in je feeds, en haalt de waarschuwing weg bij berichten die je al ziet. Standaard uit.",
+    "noNewMessages": "Geen nieuwe gesprekken",
+    "noNewMessagesDesc": "Houd je bestaande gesprekken, maar niemand nieuws kan er een starten",
+    "dmNoNewHelp": "Bestaande gesprekken blijven werken; niemand nieuws kan er een starten"
   },
   "common": {
     "allRightsReserved": "Alle rechten voorbehouden",
@@ -453,7 +519,8 @@
     "showOriginal": "Origineel tonen",
     "translating": "Vertalen...",
     "loadingMore": "Meer laden...",
-    "loadMore": "Meer laden"
+    "loadMore": "Meer laden",
+    "tryAgain": "Opnieuw proberen"
   },
   "home": {
     "title": "Home",
@@ -726,7 +793,11 @@
     "new_version_available": "Nieuwe versie beschikbaar",
     "refresh_to_pick_up_the_latest_changes": "Vernieuw om de laatste wijzigingen op te halen.",
     "refresh": "Vernieuwen",
-    "what_changed": "Wat is er veranderd"
+    "what_changed": "Wat is er veranderd",
+    "turn_on_desktop_notifications": "Bureaubladmeldingen aanzetten?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Krijg een seintje bij reacties, tips en DM's terwijl je op een ander tabblad zit.",
+    "turn_on": "Aanzetten",
+    "not_now": "Niet nu"
   },
   "postOptions": {
     "options": "Opties",
@@ -1133,7 +1204,10 @@
     "statusPlanned": "Gepland",
     "statusInProgress": "In uitvoering",
     "statusCompleted": "Voltooid",
-    "statusDeclined": "Afgewezen"
+    "statusDeclined": "Afgewezen",
+    "shipping": "In uitvoering",
+    "noShippingYet": "Niets onderweg",
+    "shippingAppearHere": "Verzoeken die gebouwd worden verschijnen hier."
   },
   "auth": {
     "loginRequired": "Inloggen vereist"
@@ -1228,7 +1302,11 @@
     "postRemoved": "Je bericht is verwijderd",
     "newNotification": "Nieuwe melding",
     "oneOther": "1 andere",
-    "nOthers": "{{count}} anderen"
+    "nOthers": "{{count}} anderen",
+    "thisBrowser": "Deze browser",
+    "features": "Functies",
+    "communities": "Community's",
+    "stores": "Winkels"
   },
   "messages": {
     "title": "Berichten",
@@ -1273,7 +1351,12 @@
     "addedToLeaderboard": "Je bent toegevoegd! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo te laag ({{balance}} DHB)",
     "refreshFailed": "Er ging iets mis",
-    "noWalletAddress": "Geen portemonnee-adres gevonden"
+    "noWalletAddress": "Geen portemonnee-adres gevonden",
+    "affiliates": "Affiliates",
+    "directReferrals_one": "{{count}} direct",
+    "directReferrals_other": "{{count}} direct",
+    "secondaryReferrals_one": "{{count}} secundair",
+    "secondaryReferrals_other": "{{count}} secundair"
   },
   "explorePage": {
     "searchPlaceholder": "Zoek mensen, berichten of inhoud...",
@@ -1389,7 +1472,8 @@
     "failedPurchase": "Aankoop starten mislukt",
     "redirectingOnramp": "Doorsturen naar onramp...",
     "onrampCreated": "Onramp-sessie aangemaakt",
-    "failedOnramp": "Onramp starten mislukt"
+    "failedOnramp": "Onramp starten mislukt",
+    "badgeDiscount": "{{tier}}-houder — {{percent}}% korting"
   },
   "agents": {
     "title": "AI Agenten",
@@ -1419,7 +1503,13 @@
     "agentDeleted": "Agent verwijderd",
     "failedCreate": "Agent aanmaken mislukt",
     "failedDelete": "Agent verwijderen mislukt",
-    "apiKeyCopied": "API-sleutel gekopieerd naar klembord"
+    "apiKeyCopied": "API-sleutel gekopieerd naar klembord",
+    "connectorUrl": "Connector-URL",
+    "connectorUrlCopied": "Connector-URL gekopieerd",
+    "connectorUrlHelp": "Voeg dit toe als eigen MCP-connector in Claude of ChatGPT. Het authenticeert als deze agent, dus behandel het als de API-sleutel.",
+    "agentWallet": "Agent-wallet (Base)",
+    "walletCopied": "Walletadres gekopieerd",
+    "agentWalletHelp": "Stuur hier een klein bedrag aan Base-ETH heen voordat de agent post — publiceren mint on-chain en de agent betaalt zijn eigen gas. Reageren, stemmen en volgen kosten geen gas."
   },
   "hero": {
     "title": "Welkom In",
@@ -1467,7 +1557,10 @@
     "or": "of",
     "termsNotice": "Door verder te gaan, ga je akkoord met onze Servicevoorwaarden en Privacybeleid",
     "walletInfoDesktop": "Verbind je wallet om veilig in te loggen",
-    "walletInfoMobile": "MetaMask, Trust en Phantom openen hun app direct. Rabby gebruikt WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust en Phantom openen hun app direct. Rabby gebruikt WalletConnect.",
+    "addProfileTitle": "Profiel toevoegen",
+    "walletConnectedAs": "Verbonden",
+    "useDifferentWallet": "Een andere wallet gebruiken"
   },
   "careers": {
     "title": "Vacatures bij DeHub",
@@ -1591,7 +1684,11 @@
     "comingSoon": "Binnenkort beschikbaar — regionale trends zijn onderweg!",
     "post": "Plaatsen",
     "logOut": "Uitloggen",
-    "logIn": "Inloggen"
+    "logIn": "Inloggen",
+    "searchMenu": "Menu doorzoeken",
+    "clearSearch": "Zoekopdracht wissen",
+    "noMenuMatches": "Niets in het menu komt overeen",
+    "searchDehubFor": "Zoek op DeHub naar \"{{query}}\""
   },
   "postInfo": {
     "title": "Berichtinfo",
@@ -1786,5 +1883,105 @@
     "sending": "Versturen...",
     "title": "Fooi versturen",
     "toCreator": "Geef {{name}} een fooi"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Een verzameling games, werelden en ervaringen die DeHub heeft gebouwd en opensource heeft gemaakt.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Speel games in je browser op DeHub — filmisch 3D-schaken, een procedureel gegenereerde shooter, een wandeling door het regenwoud, een neonstraatgevecht en een beloopbare handelsvloer. Geen installatie, geen download.",
+    "alsoIn": "Ook in {{theme}}"
+  },
+  "stats": {
+    "title": "Statistieken",
+    "subtitle": "Realtime opensource-inzicht",
+    "live": "Live",
+    "range": {
+      "24h": "24 uur",
+      "3d": "3 dagen",
+      "7d": "7 dagen",
+      "30d": "30 dagen",
+      "all": "Alle tijd"
+    },
+    "unavailable": {
+      "title": "Statistieken zijn nu niet beschikbaar",
+      "unconfigured": "Het analytics-endpoint heeft zijn Cloudflare-API-token nog niet gekregen. Er wordt niets getoond in plaats van een verzonnen getal.",
+      "error": "We konden Cloudflares analytics-API niet bereiken. In plaats van een verouderd of verzonnen cijfer te tonen, laat deze pagina niets zien tot de live uitlezing lukt."
+    },
+    "tile": {
+      "visitorsToday": "Bezoekers vandaag",
+      "soFarToday": "tot nu toe vandaag, UTC",
+      "peakHour": "Drukste uur",
+      "peakDay": "Drukste dag",
+      "peakAtHour": "om {{when}} UTC",
+      "peakOnDay": "op {{when}}",
+      "inRange": "in dit bereik",
+      "pageViews": "Paginaweergaven",
+      "overHours": "over {{count}} u",
+      "overDay": "over 1 dag",
+      "overDays": "over {{count}} dagen",
+      "requestsLabel": "Verzoeken",
+      "served": "Geleverd",
+      "requests": "{{requests}} verzoeken"
+    },
+    "chart": {
+      "hourly": "Bezoekers per uur",
+      "daily": "Bezoekers per dag",
+      "hourlyHint": "{{count}} uurintervallen, UTC",
+      "dailyHint": "unieke bezoekers per dag",
+      "empty": "Nog geen gegevens voor dit venster"
+    },
+    "countries": {
+      "title": "Belangrijkste landen",
+      "windowDay": "laatste 24 uur",
+      "window": "laatste {{days}} dagen"
+    },
+    "browsers": {
+      "title": "Browsers",
+      "window": "op paginaweergaven"
+    },
+    "edge": {
+      "title": "Aan de edge",
+      "windowDay": "laatste 24 uur",
+      "window": "laatste {{days}} dagen",
+      "cached": "Uit cache geleverd",
+      "encrypted": "Versleuteld",
+      "threats": "Bedreigingen geblokkeerd"
+    },
+    "proof": {
+      "title": "Waar deze cijfers vandaan komen",
+      "subtitle": "Gemeten door Cloudflare, niet door deze pagina",
+      "source": "Bron",
+      "datasets": "Datasets",
+      "zone": "Zone",
+      "ray": "Cloudflare-ray-ID",
+      "fetched": "Opgehaald om",
+      "query": "De exacte query achter de grafiek",
+      "copied": "Gekopieerd",
+      "copy": "Kopiëren",
+      "openEndpoint": "/api/stats openen",
+      "openRaw": "Cloudflares onbewerkte antwoord",
+      "edge": "Elk verzoek aan dehub.io gaat door Cloudflare voordat het onze servers bereikt. Deze tellingen zijn Cloudflares eigen aggregatie van dat verkeer — dezelfde cijfers die ons dashboard toont. Ze worden niet verzameld door een script in je browser, dus niets op deze pagina kan ze opblazen, en trackers blokkeren verandert er niets aan.",
+      "live": "De pagina leest ze live. Bij het laden van /stats roept de pagina ons endpoint aan, dat op dat moment Cloudflares Analytics API bevraagt en het antwoord 60 seconden cachet.",
+      "limits": "Wat dit wel en niet laat zien: je kunt zien dat de cijfers uit Cloudflares aggregatie komen en niet uit onze applicatiecode, en dat de hier gepubliceerde query degene is die draait. Trustless is het niet — wij houden het API-token en Cloudflare biedt geen publieke leesmogelijkheid op de analytics van een zone. Iedereen met een eigen Cloudflare-zone kan dezelfde query erop draaien en de vorm bevestigen."
+    },
+    "definitions": {
+      "title": "Wat de cijfers betekenen",
+      "visitorsTerm": "Bezoekers",
+      "visitors": "— unieke IP-adressen die Cloudflare die dag zag. Dicht bij mensen, maar niet hetzelfde: een kantoor op één verbinding telt één keer, en een telefoon die wisselt tussen wifi en mobiele data telt twee keer.",
+      "pageViewsTerm": "Paginaweergaven",
+      "pageViews": "— verzoeken die Cloudflare classificeert als paginaladingen, in plaats van afbeeldingen, scripts of API-aanroepen.",
+      "botsTerm": "Bots zijn meegeteld",
+      "bots": "— dit zijn ruwe edge-tellingen, dus crawlers, uptimemonitors en scriptmatige clients zitten erin. Je ziet ze zelf in de browseruitsplitsing hierboven, waar items als \"Curl\" en \"Onbekend\" geautomatiseerd verkeer zijn en geen mensen. Bots eruit filteren vereist een betaald Cloudflare-abonnement dat wij niet hebben, en stilletjes een schatting aftrekken zou de cijfers minder controleerbaar maken, niet meer.",
+      "totalTerm": "Totalen over het bereik",
+      "total": "— paginaweergaven en verzoeken tellen op over het bereik. Bezoekersaantallen worden bewust niet opgeteld tot een \"totaal aantal bezoekers\", want iemand die hier maandag en dinsdag was zou dubbel geteld worden.",
+      "peakTerm": "Drukste uur / dag",
+      "peak": "— de hoogste unieke telling in één enkel interval van het bereik, om dezelfde reden: het is een cijfer dat Cloudflare echt meet, niet een dat is opgebouwd door overlappende tellingen op te tellen.",
+      "resolutionTerm": "Per uur stopt bij 3 dagen",
+      "resolution": "— dat is Cloudflares limiet op dit abonnement, geen keuze: het weigert elke uurquery die breder is dan drie dagen. De weergaven van 24 uur en 3 dagen zijn per uur; 7 dagen en langer zijn per dag, en een grafiek per uur over alle tijd is niet te maken.",
+      "breakdownTerm": "Landen en browsers",
+      "breakdown": "— deze volgen het bereik dat je kiest, maar slechts tot {{max}} dagen terug, zo ver wordt de dagelijkse uitsplitsing bewaard. Bij langere bereiken beslaat de grafiek meer tijd dan de landenlijst.",
+      "startTerm": "Geschiedenis",
+      "start": "— \"alle tijd\" betekent elke dag die Cloudflare nog bewaart, vandaag {{days}} dagen vanaf {{date}}, de dag dat dehub.io naar Cloudflare verhuisde. Er zijn geen eerdere edge-gegevens om te tonen, en oudere dagen vallen af naarmate Cloudflare ze laat verlopen."
+    }
   }
 }

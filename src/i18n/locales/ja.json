@@ -27,7 +27,20 @@
     "events": "イベント",
     "prompt": "プロンプト",
     "communities": "コミュニティ",
-    "staking": "ステーキング"
+    "staking": "ステーキング",
+    "arcade": "アーケード",
+    "stats": "ライブ統計",
+    "liveTv": "ライブ TV",
+    "buyDhb": "DHB を購入",
+    "bridge": "ブリッジ",
+    "top100": "トップ 100",
+    "agents": "AI エージェント",
+    "advertising": "広告",
+    "premium": "プレミアム",
+    "pricing": "料金",
+    "creators": "クリエイター",
+    "getTheApp": "アプリを入手",
+    "connectAi": "AI を接続"
   },
   "feed": {
     "home": "ホーム",
@@ -35,7 +48,9 @@
     "images": "画像",
     "shorts": "ショート",
     "music": "音楽",
-    "live": "ライブ"
+    "live": "ライブ",
+    "newPosts_one": "新着投稿 {{count}} 件",
+    "newPosts_other": "新着投稿 {{count}} 件"
   },
   "explore": {
     "all": "すべて",
@@ -242,7 +257,58 @@
     "hazy": "ヘイジーナイツ",
     "save": "保存",
     "saving": "保存中...",
-    "swarms": "スウォーム"
+    "swarms": "スウォーム",
+    "profiles": "プロフィール",
+    "profilesDesc": "この端末に保存されたアカウント",
+    "addProfile": "プロフィールを追加",
+    "profileActive": "アクティブ",
+    "profileSignedOut": "切り替えるにはログイン",
+    "profileRemove": "プロフィールを削除",
+    "profilesUsed": "{{max}} 件中 {{used}} 件使用中",
+    "profilesNextTier": "{{tier}} ティアは {{count}} 件まで",
+    "profilesFullTier": "{{tier}} バッジ用にステークして {{count}} 件のプロフィールを維持",
+    "profilesFull": "別のアカウントを追加するにはプロフィールを削除してください",
+    "browserNotifications": "ブラウザ通知",
+    "browserNotificationsDesc": "別のタブにいる間も、返信・チップ・DM をお知らせします",
+    "browserNotificationsOnDesc": "別のタブにいる間も返信・チップ・DM がポップアップします",
+    "browserNotificationsDismissed": "通知リクエストが閉じられました。もう一度スイッチを試してください",
+    "browserNotificationsBlocked": "ブラウザによってブロックされています",
+    "browserNotificationsBlockedTitle": "このブラウザは通知をブロックしています",
+    "browserNotificationsBlockedNote": "これを取り消せるのはブラウザだけです。一度ブロックされると DeHub から再度お願いすることはできません。",
+    "browserNotificationsBlockedPending": "リクエストは保存されました。ブラウザが許可した時点で自動的にオンになります。",
+    "browserNotificationsUnblockChromium": "アドレスバー左のアイコンをクリック → サイトの設定 → 通知を「許可」にして、このページを再読み込みしてください。",
+    "browserNotificationsUnblockFirefox": "アドレスバー左の鍵アイコンをクリックし、「通知の受信」の横の「ブロック中」を解除してから、このページを再読み込みしてください。",
+    "browserNotificationsUnblockSafari": "メニューバーから Safari → 設定 → Web サイト → 通知 と進み、このサイトを「許可」にしてください。",
+    "browserNotificationsUnblockGeneric": "ブラウザでこのページのサイト設定を開き、通知を「許可」にして再読み込みしてください。",
+    "browserNotificationsIosHint": "iPhone と iPad では DeHub をホーム画面に追加してからでないと許可できません。共有をタップして「ホーム画面に追加」を選んでください。",
+    "browserNotificationsTest": "テスト通知を送る",
+    "browserNotificationsTestSent": "テスト通知を送信しました",
+    "browserNotificationsTestBody": "DeHub の通知はこのように表示されます。",
+    "showAsNewMember": "新メンバーとして表示する",
+    "showAsNewMemberDesc": "参加したばかりであることを他のメンバーに見せて歓迎してもらえます。登録から 30 日後に自動で終了します。",
+    "defaultProfileTab": "既定のプロフィールタブ",
+    "defaultProfileTabDesc": "訪問者がプロフィールで最初に見るタブを選びます",
+    "lavalamp": "ラバランプ",
+    "war": "ウォー",
+    "osaka": "大阪",
+    "jungle": "ジャングル",
+    "themeColor": "テーマカラー",
+    "themeColorDesc": "このテーマのカスタムカラーを選びます",
+    "themeColorReset": "リセット",
+    "themeColorWhite": "ホワイト",
+    "themeColorBlack": "ブラック",
+    "themeColorRainbow": "レインボー",
+    "themeColorBrand": "ブランド",
+    "themeColorBrandDesc": "プロフィール画像の色を使う",
+    "themeColorBrandNoAvatar": "ブランドカラーを使うにはプロフィール画像を追加してください",
+    "themeColorBrandFailed": "プロフィール画像から色を読み取れませんでした",
+    "dimLights": "ライトを暗くする",
+    "dimLightsDesc": "ブルーライトを軽減します",
+    "matureContent": "成人向けコンテンツを表示",
+    "matureContentDesc": "成人向け・過激な投稿をフィードに含め、すでに表示されているものの警告を外します。既定はオフです。",
+    "noNewMessages": "新しい会話を受け付けない",
+    "noNewMessagesDesc": "既存のスレッドは残りますが、新しい相手は開始できません",
+    "dmNoNewHelp": "既存のスレッドはそのまま使えますが、新しい相手は開始できません"
   },
   "common": {
     "save": "保存",
@@ -256,7 +322,8 @@
     "translating": "翻訳中...",
     "close": "閉じる",
     "loadingMore": "読み込み中...",
-    "loadMore": "もっと読み込む"
+    "loadMore": "もっと読み込む",
+    "tryAgain": "再試行"
   },
   "postOptions": {
     "options": "オプション",
@@ -789,7 +856,11 @@
     "postRemoved": "あなたの投稿が削除されました",
     "newNotification": "新しい通知",
     "oneOther": "1人の他のユーザー",
-    "nOthers": "{{count}}人の他のユーザー"
+    "nOthers": "{{count}}人の他のユーザー",
+    "thisBrowser": "このブラウザ",
+    "features": "機能",
+    "communities": "コミュニティ",
+    "stores": "ストア"
   },
   "leaderboard": {
     "title": "ランキング",
@@ -818,7 +889,12 @@
     "addedToLeaderboard": "追加されました！残高：{{balance}} DHB",
     "balanceTooLow": "残高が低すぎます ({{balance}} DHB)",
     "refreshFailed": "エラーが発生しました",
-    "noWalletAddress": "ウォレットアドレスが見つかりません"
+    "noWalletAddress": "ウォレットアドレスが見つかりません",
+    "affiliates": "アフィリエイト",
+    "directReferrals_one": "直接 {{count}} 人",
+    "directReferrals_other": "直接 {{count}} 人",
+    "secondaryReferrals_one": "間接 {{count}} 人",
+    "secondaryReferrals_other": "間接 {{count}} 人"
   },
   "features": {
     "title": "機能リクエスト",
@@ -857,7 +933,10 @@
     "statusPlanned": "計画中",
     "statusInProgress": "進行中",
     "statusCompleted": "完了",
-    "statusDeclined": "却下"
+    "statusDeclined": "却下",
+    "shipping": "開発中",
+    "noShippingYet": "進行中のものはありません",
+    "shippingAppearHere": "制作中のリクエストがここに表示されます。"
   },
   "messages": {
     "title": "メッセージ",
@@ -927,7 +1006,8 @@
     "failedPurchase": "購入失敗",
     "redirectingOnramp": "リダイレクト中...",
     "onrampCreated": "入金セッション作成",
-    "failedOnramp": "入金失敗"
+    "failedOnramp": "入金失敗",
+    "badgeDiscount": "{{tier}} 保有者 — {{percent}}% オフ"
   },
   "agents": {
     "title": "AIエージェント",
@@ -957,7 +1037,13 @@
     "agentDeleted": "エージェントが削除されました",
     "failedCreate": "作成に失敗",
     "failedDelete": "削除に失敗",
-    "apiKeyCopied": "APIキーがコピーされました"
+    "apiKeyCopied": "APIキーがコピーされました",
+    "connectorUrl": "コネクター URL",
+    "connectorUrlCopied": "コネクター URL をコピーしました",
+    "connectorUrlHelp": "Claude や ChatGPT にカスタム MCP コネクターとして追加してください。このエージェントとして認証されるため、API キーと同じ扱いにしてください。",
+    "agentWallet": "エージェントウォレット（Base）",
+    "walletCopied": "ウォレットアドレスをコピーしました",
+    "agentWalletHelp": "エージェントが投稿する前に、少額の Base ETH をここへ送ってください。公開はオンチェーンでミントするため、ガス代はエージェント自身が払います。コメント・投票・フォローにガス代はかかりません。"
   },
   "hero": {
     "title": "私たちの世界へ",
@@ -1007,7 +1093,10 @@
     "or": "または",
     "termsNotice": "続行することで、利用規約とプライバシーポリシーに同意したことになります",
     "walletInfoDesktop": "ウォレットを接続して安全にサインイン",
-    "walletInfoMobile": "MetaMask、Trust、Phantom はアプリを直接開きます。Rabby は WalletConnect を使用します。"
+    "walletInfoMobile": "MetaMask、Trust、Phantom はアプリを直接開きます。Rabby は WalletConnect を使用します。",
+    "addProfileTitle": "プロフィールを追加",
+    "walletConnectedAs": "接続済み",
+    "useDifferentWallet": "別のウォレットを使う"
   },
   "careers": {
     "title": "DeHub で働く",
@@ -1131,7 +1220,11 @@
     "comingSoon": "近日公開 — 地域別トレンドは準備中です！",
     "post": "投稿",
     "logOut": "ログアウト",
-    "logIn": "ログイン"
+    "logIn": "ログイン",
+    "searchMenu": "メニューを検索",
+    "clearSearch": "検索をクリア",
+    "noMenuMatches": "メニューに一致するものがありません",
+    "searchDehubFor": "DeHub で「{{query}}」を検索"
   },
   "postInfo": {
     "title": "投稿情報",
@@ -1381,7 +1474,11 @@
     "new_version_available": "新しいバージョンがあります",
     "refresh_to_pick_up_the_latest_changes": "更新すると最新の変更が反映されます。",
     "refresh": "更新",
-    "what_changed": "変更点"
+    "what_changed": "変更点",
+    "turn_on_desktop_notifications": "デスクトップ通知をオンにしますか？",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "別のタブにいる間も、返信・チップ・DM をお知らせします。",
+    "turn_on": "オンにする",
+    "not_now": "後で"
   },
   "prompt": {
     "seoTitle": "フィードをプロンプト — DeHub",
@@ -1527,5 +1624,105 @@
     "when": "日時",
     "whyStake": "なぜ預け入れる？",
     "yourStaked": "あなたの預け入れ額"
+  },
+  "arcade": {
+    "title": "アーケード",
+    "intro": "DeHub が制作しオープンソース化したゲーム・ワールド・体験のコレクション。",
+    "seoTitle": "アーケード | DeHub",
+    "seoDescription": "DeHub ならブラウザで遊べます — シネマティックな 3D チェス、プロシージャル生成のシューター、熱帯雨林の散策、ネオン街のストリートファイト、歩き回れるトレーディングフロア。インストールもダウンロードも不要。",
+    "alsoIn": "{{theme}} にもあります"
+  },
+  "stats": {
+    "title": "統計",
+    "subtitle": "リアルタイムのオープンソース情報",
+    "live": "ライブ",
+    "range": {
+      "24h": "24 時間",
+      "3d": "3 日",
+      "7d": "7 日",
+      "30d": "30 日",
+      "all": "全期間"
+    },
+    "unavailable": {
+      "title": "統計は現在利用できません",
+      "unconfigured": "分析エンドポイントにはまだ Cloudflare API トークンが設定されていません。作った数字ではなく、何も表示していません。",
+      "error": "Cloudflare の分析 API に接続できませんでした。古い数字や作った数字を表示するのではなく、ライブ取得が成功するまで何も表示しません。"
+    },
+    "tile": {
+      "visitorsToday": "本日の訪問者",
+      "soFarToday": "本日ここまで、UTC",
+      "peakHour": "最も忙しい時間",
+      "peakDay": "最も忙しい日",
+      "peakAtHour": "{{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "この期間",
+      "pageViews": "ページビュー",
+      "overHours": "{{count}} 時間あたり",
+      "overDay": "1 日あたり",
+      "overDays": "{{count}} 日あたり",
+      "requestsLabel": "リクエスト",
+      "served": "配信済み",
+      "requests": "{{requests}} リクエスト"
+    },
+    "chart": {
+      "hourly": "1 時間あたりの訪問者",
+      "daily": "1 日あたりの訪問者",
+      "hourlyHint": "{{count}} 時間分のバケット、UTC",
+      "dailyHint": "1 日あたりのユニーク訪問者",
+      "empty": "この期間のデータはまだありません"
+    },
+    "countries": {
+      "title": "上位の国",
+      "windowDay": "過去 24 時間",
+      "window": "過去 {{days}} 日間"
+    },
+    "browsers": {
+      "title": "ブラウザ",
+      "window": "ページビュー順"
+    },
+    "edge": {
+      "title": "エッジで",
+      "windowDay": "過去 24 時間",
+      "window": "過去 {{days}} 日間",
+      "cached": "キャッシュから配信",
+      "encrypted": "暗号化",
+      "threats": "ブロックした脅威"
+    },
+    "proof": {
+      "title": "これらの数字の出どころ",
+      "subtitle": "このページではなく Cloudflare による計測",
+      "source": "ソース",
+      "datasets": "データセット",
+      "zone": "ゾーン",
+      "ray": "Cloudflare レイ ID",
+      "fetched": "取得時刻",
+      "query": "グラフの裏にある実際のクエリ",
+      "copied": "コピーしました",
+      "copy": "コピー",
+      "openEndpoint": "/api/stats を開く",
+      "openRaw": "Cloudflare の無加工の応答",
+      "edge": "dehub.io へのすべてのリクエストは、当社のサーバーに届く前に Cloudflare を通過します。これらのカウントはそのトラフィックを Cloudflare 自身が集計したもので、当社のダッシュボードに表示される数字と同じです。ブラウザ内のスクリプトが収集しているわけではないので、このページの何かが数字を水増しすることはできず、トラッカーをブロックしても数字は変わりません。",
+      "live": "このページはライブで読み取ります。/stats を開くと当社のエンドポイントが呼ばれ、その時点で Cloudflare の Analytics API に問い合わせ、応答を 60 秒間キャッシュします。",
+      "limits": "これで分かること、分からないこと。数字が当社のアプリケーションコードではなく Cloudflare の集計から来ていること、そしてここに公開されたクエリが実際に実行されているものであることは確認できます。トラストレスではありません。API トークンは当社が保持しており、Cloudflare はゾーンの分析データを公開読み取りできるようにはしていません。自分の Cloudflare ゾーンを持つ人なら同じクエリを実行して形を確認できます。"
+    },
+    "definitions": {
+      "title": "数字の意味",
+      "visitorsTerm": "訪問者",
+      "visitors": "— その日 Cloudflare が確認したユニーク IP アドレスです。人数に近いものの同一ではありません。1 回線のオフィスは 1 とカウントされ、Wi-Fi とモバイル回線を行き来する端末は 2 とカウントされます。",
+      "pageViewsTerm": "ページビュー",
+      "pageViews": "— Cloudflare が画像・スクリプト・API 呼び出しではなくページ読み込みと分類したリクエストです。",
+      "botsTerm": "ボットも含まれます",
+      "bots": "— これはエッジの生カウントなので、クローラー・稼働監視・スクリプトによるクライアントも含まれます。上のブラウザ内訳で自分で確認できます。「Curl」や「不明」といった項目は人ではなく自動トラフィックです。ボットを除外するには当社が契約していない Cloudflare の有料プランが必要で、推定値を黙って差し引けば数字は検証しにくくなるだけです。",
+      "totalTerm": "期間の合計",
+      "total": "— ページビューとリクエストは期間内で合算されます。訪問者数は意図的に「合計訪問者」としてまとめていません。月曜と火曜に来た人が二重に数えられてしまうからです。",
+      "peakTerm": "最も忙しい時間 / 日",
+      "peak": "— 期間内のいずれか 1 バケットにおける最大ユニーク数です。理由は同じで、重複するカウントを足し合わせた数字ではなく、Cloudflare が実際に測定した数字だからです。",
+      "resolutionTerm": "時間単位は 3 日まで",
+      "resolution": "— これはこのプランでの Cloudflare の制限であり、こちらの選択ではありません。3 日を超える時間単位のクエリは拒否されます。24 時間と 3 日のビューは時間単位、7 日以上は日単位で、全期間の時間単位グラフを描く方法はありません。",
+      "breakdownTerm": "国とブラウザ",
+      "breakdown": "— 選択した期間に従いますが、さかのぼれるのは {{max}} 日までです。日別内訳が保持される限界がそこだからです。長い期間ではグラフのほうが国別リストより広い時間を表します。",
+      "startTerm": "履歴",
+      "start": "— 「全期間」とは Cloudflare がまだ保持しているすべての日を指し、現時点では dehub.io が Cloudflare へ移行した {{date}} から {{days}} 日間です。それ以前のエッジデータはなく、古い日は Cloudflare の保持期間切れとともに消えていきます。"
+    }
   }
 }

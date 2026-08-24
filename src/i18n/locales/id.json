@@ -27,7 +27,20 @@
     "events": "Acara",
     "prompt": "Prompt",
     "communities": "Komunitas",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statistik langsung",
+    "liveTv": "TV Langsung",
+    "buyDhb": "Beli DHB",
+    "bridge": "Bridge",
+    "top100": "Top 100",
+    "agents": "Agen AI",
+    "advertising": "Iklan",
+    "premium": "Premium",
+    "pricing": "Harga",
+    "creators": "Kreator",
+    "getTheApp": "Dapatkan Aplikasi",
+    "connectAi": "Hubungkan AI"
   },
   "feed": {
     "home": "Beranda",
@@ -35,7 +48,9 @@
     "images": "Gambar",
     "shorts": "Shorts",
     "music": "Musik",
-    "live": "Siaran Langsung"
+    "live": "Siaran Langsung",
+    "newPosts_one": "{{count}} postingan baru",
+    "newPosts_other": "{{count}} postingan baru"
   },
   "explore": {
     "all": "Semua",
@@ -242,7 +257,58 @@
     "hazy": "Hazy Nights",
     "save": "Simpan",
     "saving": "Menyimpan...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Profil",
+    "profilesDesc": "Akun yang tersimpan di perangkat ini",
+    "addProfile": "Tambah profil",
+    "profileActive": "Aktif",
+    "profileSignedOut": "masuk untuk beralih",
+    "profileRemove": "Hapus profil",
+    "profilesUsed": "{{used}} dari {{max}} terpakai",
+    "profilesNextTier": "Tingkat {{tier}} menyimpan {{count}}",
+    "profilesFullTier": "Stake untuk lencana {{tier}} agar bisa menyimpan {{count}} profil",
+    "profilesFull": "Hapus satu profil untuk menambahkan akun lain",
+    "browserNotifications": "Notifikasi browser",
+    "browserNotificationsDesc": "Dapat pemberitahuan soal balasan, tip, dan DM saat Anda berada di tab lain",
+    "browserNotificationsOnDesc": "Balasan, tip, dan DM muncul saat Anda berada di tab lain",
+    "browserNotificationsDismissed": "Permintaan notifikasi ditutup — coba sakelarnya lagi",
+    "browserNotificationsBlocked": "Diblokir oleh browser Anda",
+    "browserNotificationsBlockedTitle": "Browser ini memblokir notifikasi",
+    "browserNotificationsBlockedNote": "Hanya browser Anda yang bisa membatalkannya — DeHub tidak bisa meminta lagi setelah diblokir.",
+    "browserNotificationsBlockedPending": "Permintaan Anda tersimpan — ini akan menyala sendiri begitu browser Anda mengizinkan.",
+    "browserNotificationsUnblockChromium": "Klik ikon di kiri bilah alamat → Setelan situs → atur Notifikasi ke Izinkan, lalu muat ulang halaman ini.",
+    "browserNotificationsUnblockFirefox": "Klik gembok di kiri bilah alamat, hapus \"Diblokir\" di samping Terima Notifikasi, lalu muat ulang halaman ini.",
+    "browserNotificationsUnblockSafari": "Di bilah menu: Safari → Pengaturan → Situs Web → Notifikasi, lalu atur situs ini ke Izinkan.",
+    "browserNotificationsUnblockGeneric": "Buka setelan situs browser Anda untuk halaman ini, atur Notifikasi ke Izinkan, lalu muat ulang.",
+    "browserNotificationsIosHint": "iPhone dan iPad hanya mengizinkannya setelah DeHub ada di Layar Utama — ketuk Bagikan, lalu \"Tambah ke Layar Utama\".",
+    "browserNotificationsTest": "Kirim notifikasi uji",
+    "browserNotificationsTestSent": "Notifikasi uji terkirim",
+    "browserNotificationsTestBody": "Begitulah tampilan notifikasi DeHub.",
+    "showAsNewMember": "Tampilkan saya sebagai anggota baru",
+    "showAsNewMemberDesc": "Membuat anggota lain melihat Anda baru bergabung sehingga bisa menyambut. Berakhir otomatis 30 hari setelah Anda mendaftar.",
+    "defaultProfileTab": "Tab profil bawaan",
+    "defaultProfileTabDesc": "Pilih tab mana yang pertama dilihat pengunjung di profil Anda",
+    "lavalamp": "Lampu Lava",
+    "war": "Perang",
+    "osaka": "Osaka",
+    "jungle": "Rimba",
+    "themeColor": "Warna Tema",
+    "themeColorDesc": "Pilih warna khusus untuk tema ini",
+    "themeColorReset": "Atur ulang",
+    "themeColorWhite": "Putih",
+    "themeColorBlack": "Hitam",
+    "themeColorRainbow": "Pelangi",
+    "themeColorBrand": "Merek",
+    "themeColorBrandDesc": "Gunakan warna foto profil Anda",
+    "themeColorBrandNoAvatar": "Tambahkan foto profil untuk memakai warna Merek",
+    "themeColorBrandFailed": "Tidak bisa membaca warna dari foto profil Anda",
+    "dimLights": "Redupkan Cahaya",
+    "dimLightsDesc": "Mengurangi paparan cahaya biru",
+    "matureContent": "Tampilkan Konten Dewasa",
+    "matureContentDesc": "Menyertakan postingan dewasa dan grafis di feed Anda, dan menghapus peringatan pada yang sudah Anda lihat. Bawaannya nonaktif.",
+    "noNewMessages": "Tidak ada percakapan baru",
+    "noNewMessagesDesc": "Simpan percakapan yang ada, tetapi tidak ada orang baru yang bisa memulai",
+    "dmNoNewHelp": "Percakapan yang ada tetap berjalan; tidak ada orang baru yang bisa memulai"
   },
   "common": {
     "save": "Simpan",
@@ -256,7 +322,8 @@
     "translating": "Menerjemahkan...",
     "close": "Tutup",
     "loadingMore": "Memuat lebih banyak...",
-    "loadMore": "Muat lebih banyak"
+    "loadMore": "Muat lebih banyak",
+    "tryAgain": "Coba Lagi"
   },
   "drawers": {
     "ppvTitle": "Konten Bayar-Per-Tayang",
@@ -789,7 +856,11 @@
     "postRemoved": "Postingan Anda telah dihapus",
     "newNotification": "Notifikasi baru",
     "oneOther": "1 lainnya",
-    "nOthers": "{{count}} lainnya"
+    "nOthers": "{{count}} lainnya",
+    "thisBrowser": "Browser ini",
+    "features": "Fitur",
+    "communities": "Komunitas",
+    "stores": "Toko"
   },
   "leaderboard": {
     "title": "Papan Peringkat",
@@ -818,7 +889,12 @@
     "addedToLeaderboard": "Anda telah ditambahkan! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo terlalu rendah ({{balance}} DHB)",
     "refreshFailed": "Terjadi kesalahan",
-    "noWalletAddress": "Alamat dompet tidak ditemukan"
+    "noWalletAddress": "Alamat dompet tidak ditemukan",
+    "affiliates": "Afiliasi",
+    "directReferrals_one": "{{count}} langsung",
+    "directReferrals_other": "{{count}} langsung",
+    "secondaryReferrals_one": "{{count}} sekunder",
+    "secondaryReferrals_other": "{{count}} sekunder"
   },
   "features": {
     "title": "Permintaan Fitur",
@@ -857,7 +933,10 @@
     "statusPlanned": "Direncanakan",
     "statusInProgress": "Sedang Dikerjakan",
     "statusCompleted": "Selesai",
-    "statusDeclined": "Ditolak"
+    "statusDeclined": "Ditolak",
+    "shipping": "Sedang dikerjakan",
+    "noShippingYet": "Tidak ada yang sedang dikerjakan",
+    "shippingAppearHere": "Permintaan yang sedang dibangun akan muncul di sini."
   },
   "messages": {
     "title": "Pesan",
@@ -927,7 +1006,8 @@
     "failedPurchase": "Gagal memulai pembelian",
     "redirectingOnramp": "Mengalihkan ke onramp...",
     "onrampCreated": "Sesi onramp dibuat",
-    "failedOnramp": "Gagal memulai onramp"
+    "failedOnramp": "Gagal memulai onramp",
+    "badgeDiscount": "Pemegang {{tier}} — diskon {{percent}}%"
   },
   "agents": {
     "title": "Agen AI",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agen dihapus",
     "failedCreate": "Gagal membuat agen",
     "failedDelete": "Gagal menghapus agen",
-    "apiKeyCopied": "Kunci API disalin ke clipboard"
+    "apiKeyCopied": "Kunci API disalin ke clipboard",
+    "connectorUrl": "URL konektor",
+    "connectorUrlCopied": "URL konektor disalin",
+    "connectorUrlHelp": "Tambahkan ini sebagai konektor MCP khusus di Claude atau ChatGPT. Ia terautentikasi sebagai agen ini, jadi perlakukan seperti kunci API.",
+    "agentWallet": "Dompet agen (Base)",
+    "walletCopied": "Alamat dompet disalin",
+    "agentWalletHelp": "Kirim sedikit ETH di jaringan Base ke sini sebelum agen memposting — memublikasikan akan mencetak on-chain dan agen membayar gasnya sendiri. Berkomentar, memberi suara, dan mengikuti tidak butuh gas."
   },
   "hero": {
     "title": "Selamat Datang",
@@ -1005,7 +1091,10 @@
     "or": "atau",
     "termsNotice": "Dengan melanjutkan, Anda menyetujui Ketentuan Layanan dan Kebijakan Privasi kami",
     "walletInfoDesktop": "Hubungkan dompet Anda untuk masuk dengan aman",
-    "walletInfoMobile": "MetaMask, Trust & Phantom akan membuka aplikasinya langsung. Rabby akan menggunakan WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom akan membuka aplikasinya langsung. Rabby akan menggunakan WalletConnect.",
+    "addProfileTitle": "Tambah profil",
+    "walletConnectedAs": "Terhubung",
+    "useDifferentWallet": "Gunakan dompet lain"
   },
   "careers": {
     "title": "Karir di DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Segera hadir — tren regional sedang dalam perjalanan!",
     "post": "Posting",
     "logOut": "Keluar",
-    "logIn": "Masuk"
+    "logIn": "Masuk",
+    "searchMenu": "Cari di menu",
+    "clearSearch": "Bersihkan pencarian",
+    "noMenuMatches": "Tidak ada yang cocok di menu",
+    "searchDehubFor": "Cari \"{{query}}\" di DeHub"
   },
   "postInfo": {
     "title": "Info Postingan",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Versi baru tersedia",
     "refresh_to_pick_up_the_latest_changes": "Segarkan untuk mengambil perubahan terbaru.",
     "refresh": "Segarkan",
-    "what_changed": "Apa yang berubah"
+    "what_changed": "Apa yang berubah",
+    "turn_on_desktop_notifications": "Aktifkan notifikasi desktop?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dapat pemberitahuan soal balasan, tip, dan DM saat Anda berada di tab lain.",
+    "turn_on": "Aktifkan",
+    "not_now": "Nanti saja"
   },
   "prompt": {
     "seoTitle": "Prompt feed Anda — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Kapan",
     "whyStake": "Mengapa Menyetor?",
     "yourStaked": "Setoran Anda"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Kumpulan game, dunia, dan pengalaman yang dibangun dan dibuka sumbernya oleh DeHub.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Main langsung di browser di DeHub — catur 3D sinematik, penembak yang dihasilkan secara prosedural, jalan-jalan di hutan hujan, perkelahian jalanan neon, dan lantai bursa yang bisa dijelajahi. Tanpa instal, tanpa unduh.",
+    "alsoIn": "Ada juga di {{theme}}"
+  },
+  "stats": {
+    "title": "Statistik",
+    "subtitle": "Intel sumber terbuka waktu nyata",
+    "live": "Langsung",
+    "range": {
+      "24h": "24 jam",
+      "3d": "3 hari",
+      "7d": "7 hari",
+      "30d": "30 hari",
+      "all": "Sepanjang waktu"
+    },
+    "unavailable": {
+      "title": "Statistik sedang tidak tersedia",
+      "unconfigured": "Endpoint analitik belum diberi token API Cloudflare-nya. Tidak ada yang ditampilkan, alih-alih angka karangan.",
+      "error": "Kami tidak bisa menghubungi API analitik Cloudflare. Daripada menampilkan angka basi atau karangan, halaman ini tidak menampilkan apa pun sampai pembacaan langsung berhasil."
+    },
+    "tile": {
+      "visitorsToday": "Pengunjung hari ini",
+      "soFarToday": "sejauh ini hari ini, UTC",
+      "peakHour": "Jam tersibuk",
+      "peakDay": "Hari tersibuk",
+      "peakAtHour": "pada {{when}} UTC",
+      "peakOnDay": "pada {{when}}",
+      "inRange": "dalam rentang ini",
+      "pageViews": "Tampilan halaman",
+      "overHours": "selama {{count}} jam",
+      "overDay": "selama 1 hari",
+      "overDays": "selama {{count}} hari",
+      "requestsLabel": "Permintaan",
+      "served": "Disajikan",
+      "requests": "{{requests}} permintaan"
+    },
+    "chart": {
+      "hourly": "Pengunjung per jam",
+      "daily": "Pengunjung per hari",
+      "hourlyHint": "{{count}} interval per jam, UTC",
+      "dailyHint": "pengunjung unik per hari",
+      "empty": "Belum ada data untuk rentang ini"
+    },
+    "countries": {
+      "title": "Negara teratas",
+      "windowDay": "24 jam terakhir",
+      "window": "{{days}} hari terakhir"
+    },
+    "browsers": {
+      "title": "Browser",
+      "window": "menurut tampilan halaman"
+    },
+    "edge": {
+      "title": "Di edge",
+      "windowDay": "24 jam terakhir",
+      "window": "{{days}} hari terakhir",
+      "cached": "Disajikan dari cache",
+      "encrypted": "Terenkripsi",
+      "threats": "Ancaman diblokir"
+    },
+    "proof": {
+      "title": "Dari mana angka-angka ini berasal",
+      "subtitle": "Diukur oleh Cloudflare, bukan oleh halaman ini",
+      "source": "Sumber",
+      "datasets": "Kumpulan data",
+      "zone": "Zona",
+      "ray": "ID ray Cloudflare",
+      "fetched": "Diambil pada",
+      "query": "Kueri persis di balik grafik",
+      "copied": "Disalin",
+      "copy": "Salin",
+      "openEndpoint": "Buka /api/stats",
+      "openRaw": "Balasan mentah dari Cloudflare",
+      "edge": "Setiap permintaan ke dehub.io melewati Cloudflare sebelum mencapai server kami. Hitungan ini adalah agregasi Cloudflare sendiri atas lalu lintas tersebut — angka yang sama dengan yang ditampilkan dasbor kami. Angka ini tidak dikumpulkan oleh skrip di browser Anda, jadi tidak ada yang di halaman ini bisa menggelembungkannya, dan memblokir pelacak tidak mengubahnya.",
+      "live": "Halaman ini membacanya secara langsung. Memuat /stats memanggil endpoint kami, yang saat itu juga menanyakan Analytics API Cloudflare dan menyimpan jawabannya selama 60 detik.",
+      "limits": "Apa yang ini tunjukkan dan tidak: Anda bisa melihat bahwa angkanya berasal dari agregasi Cloudflare, bukan dari kode aplikasi kami, dan bahwa kueri yang diterbitkan di sini memang yang dijalankan. Ini bukan trustless — token API ada pada kami, dan Cloudflare tidak menyediakan pembacaan publik atas analitik sebuah zona. Siapa pun yang punya zona Cloudflare sendiri bisa menjalankan kueri yang sama dan memastikan bentuknya."
+    },
+    "definitions": {
+      "title": "Arti angka-angka ini",
+      "visitorsTerm": "Pengunjung",
+      "visitors": "— alamat IP unik yang dilihat Cloudflare pada hari itu. Mendekati jumlah orang, tetapi tidak sama: satu kantor dengan satu koneksi terhitung sekali, dan ponsel yang berpindah antara wifi dan data seluler terhitung dua kali.",
+      "pageViewsTerm": "Tampilan halaman",
+      "pageViews": "— permintaan yang diklasifikasikan Cloudflare sebagai pemuatan halaman, bukan gambar, skrip, atau panggilan API.",
+      "botsTerm": "Bot ikut dihitung",
+      "bots": "— ini hitungan mentah dari edge, jadi crawler, monitor uptime, dan klien skrip ikut terhitung. Anda bisa melihatnya sendiri di rincian browser di atas, di mana entri seperti \"Curl\" dan \"Tidak diketahui\" adalah lalu lintas otomatis, bukan orang. Menyaring bot butuh paket Cloudflare berbayar yang tidak kami pakai, dan diam-diam mengurangi perkiraan justru membuat angkanya lebih sulit diperiksa, bukan lebih mudah.",
+      "totalTerm": "Total rentang",
+      "total": "— tampilan halaman dan permintaan dijumlahkan sepanjang rentang. Jumlah pengunjung sengaja tidak dijumlahkan menjadi \"total pengunjung\", karena orang yang datang Senin dan Selasa akan terhitung dua kali.",
+      "peakTerm": "Jam / hari tersibuk",
+      "peak": "— hitungan unik tertinggi dalam satu interval mana pun pada rentang tersebut, dengan alasan yang sama: itu angka yang benar-benar diukur Cloudflare, bukan hasil menjumlahkan hitungan yang saling tumpang tindih.",
+      "resolutionTerm": "Data per jam berhenti di 3 hari",
+      "resolution": "— itu batas Cloudflare pada paket ini, bukan pilihan kami: kueri per jam yang lebih lebar dari tiga hari akan ditolak. Tampilan 24 jam dan 3 hari bersifat per jam; 7 hari ke atas bersifat harian, dan tidak ada cara membuat grafik per jam untuk seluruh waktu.",
+      "breakdownTerm": "Negara dan browser",
+      "breakdown": "— ini mengikuti rentang yang Anda pilih, tetapi hanya sampai {{max}} hari ke belakang, sejauh itulah rincian harian disimpan. Pada rentang yang lebih panjang, grafiknya mencakup waktu lebih lama daripada daftar negara.",
+      "startTerm": "Riwayat",
+      "start": "— \"seluruh waktu\" berarti setiap hari yang masih disimpan Cloudflare, hari ini {{days}} hari mulai {{date}}, hari dehub.io pindah ke Cloudflare. Tidak ada data edge yang lebih lama untuk ditampilkan, dan hari-hari lama hilang seiring Cloudflare mengedaluwarsakannya."
+    }
   }
 }

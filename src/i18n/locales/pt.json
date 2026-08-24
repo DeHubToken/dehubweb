@@ -27,7 +27,20 @@
     "events": "Eventos",
     "prompt": "Prompt",
     "communities": "Comunidades",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Estatísticas ao vivo",
+    "liveTv": "TV ao vivo",
+    "buyDhb": "Comprar DHB",
+    "bridge": "Ponte",
+    "top100": "Top 100",
+    "agents": "Agentes de IA",
+    "advertising": "Publicidade",
+    "premium": "Premium",
+    "pricing": "Preços",
+    "creators": "Criadores",
+    "getTheApp": "Baixar o app",
+    "connectAi": "Conectar IA"
   },
   "feed": {
     "home": "Início",
@@ -35,7 +48,9 @@
     "images": "Imagens",
     "shorts": "Curtas",
     "music": "Música",
-    "live": "Ao vivo"
+    "live": "Ao vivo",
+    "newPosts_one": "{{count}} nova publicação",
+    "newPosts_other": "{{count}} novas publicações"
   },
   "explore": {
     "all": "Tudo",
@@ -242,7 +257,58 @@
     "hazy": "Noites Nebulosas",
     "save": "Salvar",
     "saving": "Salvando...",
-    "swarms": "Enxames"
+    "swarms": "Enxames",
+    "profiles": "Perfis",
+    "profilesDesc": "Contas guardadas neste dispositivo",
+    "addProfile": "Adicionar perfil",
+    "profileActive": "Ativo",
+    "profileSignedOut": "inicie sessão para trocar",
+    "profileRemove": "Remover perfil",
+    "profilesUsed": "{{used}} de {{max}} usados",
+    "profilesNextTier": "O nível {{tier}} mantém {{count}}",
+    "profilesFullTier": "Faça staking para um emblema {{tier}} e mantenha {{count}} perfis",
+    "profilesFull": "Remova um perfil para adicionar outra conta",
+    "browserNotifications": "Notificações do navegador",
+    "browserNotificationsDesc": "Fique a saber de respostas, gorjetas e mensagens enquanto está noutro separador",
+    "browserNotificationsOnDesc": "Respostas, gorjetas e mensagens aparecem enquanto está noutro separador",
+    "browserNotificationsDismissed": "Pedido de notificação dispensado — tente o interruptor de novo",
+    "browserNotificationsBlocked": "Bloqueadas pelo seu navegador",
+    "browserNotificationsBlockedTitle": "Este navegador está a bloquear notificações",
+    "browserNotificationsBlockedNote": "Só o seu navegador pode desfazer isto — a DeHub não pode perguntar de novo depois de bloqueada.",
+    "browserNotificationsBlockedPending": "O seu pedido ficou guardado — isto liga-se sozinho assim que o navegador permitir.",
+    "browserNotificationsUnblockChromium": "Clique no ícone à esquerda da barra de endereço → Definições do site → coloque Notificações em Permitir e recarregue esta página.",
+    "browserNotificationsUnblockFirefox": "Clique no cadeado à esquerda da barra de endereço, limpe o «Bloqueado» ao lado de Receber notificações e recarregue esta página.",
+    "browserNotificationsUnblockSafari": "Na barra de menus: Safari → Definições → Sites → Notificações, e depois coloque este site em Permitir.",
+    "browserNotificationsUnblockGeneric": "Abra as definições de site do seu navegador para esta página, coloque Notificações em Permitir e recarregue.",
+    "browserNotificationsIosHint": "O iPhone e o iPad só permitem isto quando a DeHub estiver no ecrã principal — toque em Partilhar e depois em «Adicionar ao ecrã principal».",
+    "browserNotificationsTest": "Enviar uma notificação de teste",
+    "browserNotificationsTestSent": "Notificação de teste enviada",
+    "browserNotificationsTestBody": "É assim que uma notificação da DeHub aparece.",
+    "showAsNewMember": "Mostrar-me como membro novo",
+    "showAsNewMemberDesc": "Deixa os outros membros verem que acabou de chegar para lhe darem as boas-vindas. Termina automaticamente 30 dias após o registo.",
+    "defaultProfileTab": "Separador de perfil padrão",
+    "defaultProfileTabDesc": "Escolha que separador os visitantes veem primeiro no seu perfil",
+    "lavalamp": "Lâmpada de lava",
+    "war": "Guerra",
+    "osaka": "Osaka",
+    "jungle": "Selva",
+    "themeColor": "Cor do tema",
+    "themeColorDesc": "Escolha uma cor personalizada para este tema",
+    "themeColorReset": "Repor",
+    "themeColorWhite": "Branco",
+    "themeColorBlack": "Preto",
+    "themeColorRainbow": "Arco-íris",
+    "themeColorBrand": "Marca",
+    "themeColorBrandDesc": "Usar as cores da sua foto de perfil",
+    "themeColorBrandNoAvatar": "Adicione uma foto de perfil para usar as cores da Marca",
+    "themeColorBrandFailed": "Não foi possível ler as cores da sua foto de perfil",
+    "dimLights": "Diminuir luzes",
+    "dimLightsDesc": "Reduz a exposição à luz azul",
+    "matureContent": "Mostrar conteúdo adulto",
+    "matureContentDesc": "Inclui publicações adultas e explícitas nos seus feeds e retira o aviso das que já vê. Desativado por predefinição.",
+    "noNewMessages": "Sem novas conversas",
+    "noNewMessagesDesc": "Mantenha as conversas existentes, mas ninguém novo pode iniciar uma",
+    "dmNoNewHelp": "As conversas existentes continuam a funcionar; ninguém novo pode iniciar uma"
   },
   "common": {
     "save": "Salvar",
@@ -256,7 +322,8 @@
     "translating": "Traduzindo...",
     "close": "Fechar",
     "loadingMore": "Carregando mais...",
-    "loadMore": "Carregar mais"
+    "loadMore": "Carregar mais",
+    "tryAgain": "Tentar novamente"
   },
   "drawers": {
     "ppvTitle": "Conteúdo Pay-Per-View",
@@ -789,7 +856,11 @@
     "postRemoved": "Seu post foi removido",
     "newNotification": "Nova notificação",
     "oneOther": "1 outro",
-    "nOthers": "{{count}} outros"
+    "nOthers": "{{count}} outros",
+    "thisBrowser": "Este navegador",
+    "features": "Funcionalidades",
+    "communities": "Comunidades",
+    "stores": "Lojas"
   },
   "leaderboard": {
     "title": "Classificação",
@@ -818,7 +889,12 @@
     "addedToLeaderboard": "Você foi adicionado! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo muito baixo ({{balance}} DHB)",
     "refreshFailed": "Algo deu errado",
-    "noWalletAddress": "Endereço não encontrado"
+    "noWalletAddress": "Endereço não encontrado",
+    "affiliates": "Afiliados",
+    "directReferrals_one": "{{count}} diretos",
+    "directReferrals_other": "{{count}} diretos",
+    "secondaryReferrals_one": "{{count}} secundários",
+    "secondaryReferrals_other": "{{count}} secundários"
   },
   "features": {
     "title": "Solicitações de recursos",
@@ -857,7 +933,10 @@
     "statusPlanned": "Planejada",
     "statusInProgress": "Em andamento",
     "statusCompleted": "Concluída",
-    "statusDeclined": "Recusada"
+    "statusDeclined": "Recusada",
+    "shipping": "Em desenvolvimento",
+    "noShippingYet": "Nada em andamento",
+    "shippingAppearHere": "Os pedidos em construção vão aparecer aqui."
   },
   "messages": {
     "title": "Mensagens",
@@ -927,7 +1006,8 @@
     "failedPurchase": "Falha na compra",
     "redirectingOnramp": "Redirecionando...",
     "onrampCreated": "Sessão criada",
-    "failedOnramp": "Falha na rampa"
+    "failedOnramp": "Falha na rampa",
+    "badgeDiscount": "Titular {{tier}} — {{percent}}% de desconto"
   },
   "agents": {
     "title": "Agentes IA",
@@ -957,7 +1037,13 @@
     "agentDeleted": "Agente excluído",
     "failedCreate": "Falha ao criar",
     "failedDelete": "Falha ao excluir",
-    "apiKeyCopied": "Chave API copiada"
+    "apiKeyCopied": "Chave API copiada",
+    "connectorUrl": "URL do conector",
+    "connectorUrlCopied": "URL do conector copiada",
+    "connectorUrlHelp": "Adicione isto como conector MCP personalizado no Claude ou no ChatGPT. Ele autentica-se como este agente, portanto trate-o como a chave de API.",
+    "agentWallet": "Carteira do agente (Base)",
+    "walletCopied": "Endereço da carteira copiado",
+    "agentWalletHelp": "Envie uma pequena quantia de ETH na Base para cá antes de o agente publicar — publicar faz cunhagem on-chain e o agente paga o próprio gas. Comentar, votar e seguir não precisam de gas."
   },
   "hero": {
     "title": "Bem-vindo Ao",
@@ -1009,7 +1095,10 @@
     "or": "ou",
     "termsNotice": "Ao continuar, você concorda com nossos Termos de Serviço e Política de Privacidade",
     "walletInfoDesktop": "Conecte sua carteira para entrar com segurança",
-    "walletInfoMobile": "MetaMask, Trust e Phantom abrirão o app diretamente. Rabby usará WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust e Phantom abrirão o app diretamente. Rabby usará WalletConnect.",
+    "addProfileTitle": "Adicionar um perfil",
+    "walletConnectedAs": "Conectado",
+    "useDifferentWallet": "Usar outra carteira"
   },
   "careers": {
     "title": "Carreiras no DeHub",
@@ -1133,7 +1222,11 @@
     "comingSoon": "Em breve — tendências regionais estão a caminho!",
     "post": "Publicar",
     "logOut": "Sair",
-    "logIn": "Entrar"
+    "logIn": "Entrar",
+    "searchMenu": "Pesquisar no menu",
+    "clearSearch": "Limpar pesquisa",
+    "noMenuMatches": "Nada no menu corresponde",
+    "searchDehubFor": "Pesquisar «{{query}}» na DeHub"
   },
   "postInfo": {
     "title": "Info do Post",
@@ -1383,7 +1476,11 @@
     "new_version_available": "Nova versão disponível",
     "refresh_to_pick_up_the_latest_changes": "Atualize para recolher as alterações mais recentes.",
     "refresh": "Recarregar",
-    "what_changed": "O que mudou"
+    "what_changed": "O que mudou",
+    "turn_on_desktop_notifications": "Ativar as notificações no computador?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Fique a saber de respostas, gorjetas e mensagens enquanto está noutro separador.",
+    "turn_on": "Ativar",
+    "not_now": "Agora não"
   },
   "prompt": {
     "seoTitle": "Solicite seu feed — DeHub",
@@ -1529,5 +1626,105 @@
     "when": "Quando",
     "whyStake": "Por que Depositar?",
     "yourStaked": "Seu Depósito"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Uma coleção de jogos, mundos e experiências criados e abertos em código aberto pela DeHub.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Jogue no seu navegador na DeHub — xadrez 3D cinematográfico, um shooter gerado proceduralmente, um passeio pela floresta tropical, uma briga de rua em néon e um pregão para percorrer. Sem instalar, sem baixar.",
+    "alsoIn": "Também no {{theme}}"
+  },
+  "stats": {
+    "title": "Estatísticas",
+    "subtitle": "Informação open source em tempo real",
+    "live": "Ao vivo",
+    "range": {
+      "24h": "24 horas",
+      "3d": "3 dias",
+      "7d": "7 dias",
+      "30d": "30 dias",
+      "all": "Todo o histórico"
+    },
+    "unavailable": {
+      "title": "As estatísticas não estão disponíveis neste momento",
+      "unconfigured": "Ao endpoint de analítica ainda não foi dado o token de API da Cloudflare. Não se mostra nada em vez de um número inventado.",
+      "error": "Não conseguimos aceder à API de analítica da Cloudflare. Em vez de mostrar um valor desatualizado ou inventado, esta página não mostra nada até a leitura ao vivo funcionar."
+    },
+    "tile": {
+      "visitorsToday": "Visitantes hoje",
+      "soFarToday": "até agora hoje, UTC",
+      "peakHour": "Hora mais movimentada",
+      "peakDay": "Dia mais movimentado",
+      "peakAtHour": "às {{when}} UTC",
+      "peakOnDay": "em {{when}}",
+      "inRange": "neste intervalo",
+      "pageViews": "Páginas vistas",
+      "overHours": "em {{count}} h",
+      "overDay": "em 1 dia",
+      "overDays": "em {{count}} dias",
+      "requestsLabel": "Pedidos",
+      "served": "Servidos",
+      "requests": "{{requests}} pedidos"
+    },
+    "chart": {
+      "hourly": "Visitantes por hora",
+      "daily": "Visitantes por dia",
+      "hourlyHint": "{{count}} intervalos horários, UTC",
+      "dailyHint": "visitantes únicos por dia",
+      "empty": "Ainda não há dados para este período"
+    },
+    "countries": {
+      "title": "Principais países",
+      "windowDay": "últimas 24 horas",
+      "window": "últimos {{days}} dias"
+    },
+    "browsers": {
+      "title": "Navegadores",
+      "window": "por páginas vistas"
+    },
+    "edge": {
+      "title": "Na edge",
+      "windowDay": "últimas 24 horas",
+      "window": "últimos {{days}} dias",
+      "cached": "Servido a partir da cache",
+      "encrypted": "Encriptado",
+      "threats": "Ameaças bloqueadas"
+    },
+    "proof": {
+      "title": "De onde vêm estes números",
+      "subtitle": "Medido pela Cloudflare, não por esta página",
+      "source": "Fonte",
+      "datasets": "Conjuntos de dados",
+      "zone": "Zona",
+      "ray": "ID de ray da Cloudflare",
+      "fetched": "Obtido às",
+      "query": "A consulta exata por trás do gráfico",
+      "copied": "Copiado",
+      "copy": "Copiar",
+      "openEndpoint": "Abrir /api/stats",
+      "openRaw": "A resposta intacta da Cloudflare",
+      "edge": "Cada pedido a dehub.io passa pela Cloudflare antes de chegar aos nossos servidores. Estas contagens são a agregação da própria Cloudflare desse tráfego — os mesmos valores que o nosso painel mostra. Não são recolhidos por um script no seu navegador, por isso nada nesta página os pode inflacionar, e bloquear rastreadores não os altera.",
+      "live": "A página lê-os ao vivo. Carregar /stats chama o nosso endpoint, que consulta a API de Analytics da Cloudflare nesse momento e guarda a resposta em cache durante 60 segundos.",
+      "limits": "O que isto mostra e o que não mostra: dá para ver que os valores vêm da agregação da Cloudflare e não do código da nossa aplicação, e que a consulta aqui publicada é a que corre. Não é sem confiança — nós detemos o token de API e a Cloudflare não oferece leitura pública da analítica de uma zona. Quem tiver a sua própria zona Cloudflare pode correr a consulta idêntica e confirmar o formato."
+    },
+    "definitions": {
+      "title": "O que os números significam",
+      "visitorsTerm": "Visitantes",
+      "visitors": "— endereços IP únicos que a Cloudflare viu nesse dia. Perto de pessoas, mas não igual: um escritório numa só ligação conta uma vez, e um telemóvel que passa de wi-fi para dados conta duas.",
+      "pageViewsTerm": "Páginas vistas",
+      "pageViews": "— pedidos que a Cloudflare classifica como carregamentos de página, e não imagens, scripts ou chamadas de API.",
+      "botsTerm": "Os bots estão incluídos",
+      "bots": "— são contagens brutas da edge, por isso incluem rastreadores, monitores de disponibilidade e clientes automatizados. Pode vê-los na divisão por navegador acima, onde entradas como «Curl» e «Desconhecido» são tráfego automatizado e não pessoas. Filtrar bots exige um plano pago da Cloudflare que não temos, e subtrair uma estimativa em silêncio tornaria os números menos verificáveis, não mais.",
+      "totalTerm": "Totais do intervalo",
+      "total": "— páginas vistas e pedidos somam-se ao longo do intervalo. As contagens de visitantes deliberadamente não são somadas num «total de visitantes», porque alguém que esteve aqui na segunda e na terça seria contado duas vezes.",
+      "peakTerm": "Hora / dia mais movimentado",
+      "peak": "— a maior contagem única em qualquer intervalo do período, pela mesma razão: é um valor que a Cloudflare mede de facto, e não um construído somando contagens que se sobrepõem.",
+      "resolutionTerm": "O horário para aos 3 dias",
+      "resolution": "— é o limite da Cloudflare neste plano, não uma escolha: recusa qualquer consulta horária com mais de três dias. As vistas de 24 horas e 3 dias são horárias; 7 dias ou mais são diárias, e não há forma de desenhar um gráfico horário de todo o histórico.",
+      "breakdownTerm": "Países e navegadores",
+      "breakdown": "— seguem o intervalo que escolher, mas apenas até {{max}} dias atrás, que é até onde a divisão diária é guardada. Em intervalos maiores o gráfico cobre mais tempo do que a lista de países.",
+      "startTerm": "Histórico",
+      "start": "— «todo o histórico» significa cada dia que a Cloudflare ainda guarda, hoje {{days}} dias a começar em {{date}}, o dia em que dehub.io passou para a Cloudflare. Não há dados de edge anteriores para mostrar, e os dias antigos caem à medida que a Cloudflare os expira."
+    }
   }
 }

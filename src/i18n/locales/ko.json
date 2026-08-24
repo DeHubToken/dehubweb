@@ -27,7 +27,20 @@
     "events": "이벤트",
     "prompt": "프롬프트",
     "communities": "커뮤니티",
-    "staking": "스테이킹"
+    "staking": "스테이킹",
+    "arcade": "아케이드",
+    "stats": "실시간 통계",
+    "liveTv": "라이브 TV",
+    "buyDhb": "DHB 구매",
+    "bridge": "브리지",
+    "top100": "톱 100",
+    "agents": "AI 에이전트",
+    "advertising": "광고",
+    "premium": "프리미엄",
+    "pricing": "요금제",
+    "creators": "크리에이터",
+    "getTheApp": "앱 받기",
+    "connectAi": "AI 연결"
   },
   "feed": {
     "home": "홈",
@@ -35,7 +48,9 @@
     "images": "이미지",
     "shorts": "쇼츠",
     "music": "음악",
-    "live": "라이브"
+    "live": "라이브",
+    "newPosts_one": "새 게시물 {{count}}개",
+    "newPosts_other": "새 게시물 {{count}}개"
   },
   "explore": {
     "all": "전체",
@@ -242,7 +257,58 @@
     "hazy": "헤이지 나이트",
     "save": "저장",
     "saving": "저장 중...",
-    "swarms": "스웜"
+    "swarms": "스웜",
+    "profiles": "프로필",
+    "profilesDesc": "이 기기에 저장된 계정",
+    "addProfile": "프로필 추가",
+    "profileActive": "활성",
+    "profileSignedOut": "전환하려면 로그인하세요",
+    "profileRemove": "프로필 삭제",
+    "profilesUsed": "{{max}}개 중 {{used}}개 사용",
+    "profilesNextTier": "{{tier}} 등급은 {{count}}개 유지",
+    "profilesFullTier": "{{tier}} 배지를 위해 스테이킹하면 프로필 {{count}}개를 유지할 수 있습니다",
+    "profilesFull": "다른 계정을 추가하려면 프로필을 삭제하세요",
+    "browserNotifications": "브라우저 알림",
+    "browserNotificationsDesc": "다른 탭에 있어도 답글, 팁, DM을 바로 알려드립니다",
+    "browserNotificationsOnDesc": "다른 탭에 있어도 답글, 팁, DM이 팝업으로 표시됩니다",
+    "browserNotificationsDismissed": "알림 요청을 닫았습니다. 스위치를 다시 눌러 보세요",
+    "browserNotificationsBlocked": "브라우저에서 차단됨",
+    "browserNotificationsBlockedTitle": "이 브라우저가 알림을 차단하고 있습니다",
+    "browserNotificationsBlockedNote": "브라우저에서만 되돌릴 수 있습니다. 한 번 차단되면 DeHub가 다시 요청할 수 없습니다.",
+    "browserNotificationsBlockedPending": "요청이 저장되었습니다. 브라우저가 허용하는 즉시 자동으로 켜집니다.",
+    "browserNotificationsUnblockChromium": "주소창 왼쪽 아이콘 클릭 → 사이트 설정 → 알림을 허용으로 바꾼 뒤 이 페이지를 새로고침하세요.",
+    "browserNotificationsUnblockFirefox": "주소창 왼쪽 자물쇠를 클릭해 '알림 받기' 옆의 \"차단됨\"을 지운 뒤 이 페이지를 새로고침하세요.",
+    "browserNotificationsUnblockSafari": "메뉴 막대에서 Safari → 설정 → 웹사이트 → 알림으로 이동한 뒤 이 사이트를 허용으로 설정하세요.",
+    "browserNotificationsUnblockGeneric": "브라우저에서 이 페이지의 사이트 설정을 열고 알림을 허용으로 바꾼 뒤 새로고침하세요.",
+    "browserNotificationsIosHint": "iPhone과 iPad에서는 DeHub를 홈 화면에 추가해야 허용됩니다. 공유를 누른 뒤 \"홈 화면에 추가\"를 선택하세요.",
+    "browserNotificationsTest": "테스트 알림 보내기",
+    "browserNotificationsTestSent": "테스트 알림을 보냈습니다",
+    "browserNotificationsTestBody": "DeHub 알림은 이렇게 표시됩니다.",
+    "showAsNewMember": "신규 회원으로 표시",
+    "showAsNewMemberDesc": "다른 회원들이 방금 가입한 것을 보고 환영할 수 있게 합니다. 가입 30일 후 자동으로 종료됩니다.",
+    "defaultProfileTab": "기본 프로필 탭",
+    "defaultProfileTabDesc": "방문자가 프로필에서 가장 먼저 보게 될 탭을 선택하세요",
+    "lavalamp": "라바 램프",
+    "war": "워",
+    "osaka": "오사카",
+    "jungle": "정글",
+    "themeColor": "테마 색상",
+    "themeColorDesc": "이 테마에 사용할 색상을 직접 고르세요",
+    "themeColorReset": "초기화",
+    "themeColorWhite": "흰색",
+    "themeColorBlack": "검정",
+    "themeColorRainbow": "무지개",
+    "themeColorBrand": "브랜드",
+    "themeColorBrandDesc": "프로필 사진의 색상 사용",
+    "themeColorBrandNoAvatar": "브랜드 색상을 쓰려면 프로필 사진을 추가하세요",
+    "themeColorBrandFailed": "프로필 사진에서 색상을 읽을 수 없습니다",
+    "dimLights": "조명 어둡게",
+    "dimLightsDesc": "청색광 노출을 줄입니다",
+    "matureContent": "성인 콘텐츠 표시",
+    "matureContentDesc": "성인용·수위 높은 게시물을 피드에 포함하고 이미 보이는 게시물의 경고를 없앱니다. 기본값은 꺼짐입니다.",
+    "noNewMessages": "새 대화 받지 않기",
+    "noNewMessagesDesc": "기존 대화는 유지하되 새로운 사람은 대화를 시작할 수 없습니다",
+    "dmNoNewHelp": "기존 대화는 계속 이용할 수 있지만 새로운 사람은 대화를 시작할 수 없습니다"
   },
   "common": {
     "save": "저장",
@@ -256,7 +322,8 @@
     "translating": "번역 중...",
     "close": "닫기",
     "loadingMore": "더 불러오는 중...",
-    "loadMore": "더 보기"
+    "loadMore": "더 보기",
+    "tryAgain": "다시 시도"
   },
   "drawers": {
     "ppvTitle": "유료 콘텐츠",
@@ -698,7 +765,11 @@
     "postRemoved": "게시물이 삭제됨",
     "newNotification": "새 알림",
     "oneOther": "1명",
-    "nOthers": "{{count}}명"
+    "nOthers": "{{count}}명",
+    "thisBrowser": "이 브라우저",
+    "features": "기능",
+    "communities": "커뮤니티",
+    "stores": "스토어"
   },
   "leaderboard": {
     "title": "리더보드",
@@ -727,7 +798,12 @@
     "addedToLeaderboard": "추가됨! 잔액: {{balance}} DHB",
     "balanceTooLow": "잔액 부족 ({{balance}} DHB)",
     "refreshFailed": "오류 발생",
-    "noWalletAddress": "지갑 주소 없음"
+    "noWalletAddress": "지갑 주소 없음",
+    "affiliates": "제휴",
+    "directReferrals_one": "직접 {{count}}명",
+    "directReferrals_other": "직접 {{count}}명",
+    "secondaryReferrals_one": "간접 {{count}}명",
+    "secondaryReferrals_other": "간접 {{count}}명"
   },
   "features": {
     "title": "기능 요청",
@@ -766,7 +842,10 @@
     "statusPlanned": "계획됨",
     "statusInProgress": "진행 중",
     "statusCompleted": "완료",
-    "statusDeclined": "거절됨"
+    "statusDeclined": "거절됨",
+    "shipping": "개발 중",
+    "noShippingYet": "진행 중인 항목 없음",
+    "shippingAppearHere": "개발 중인 요청이 여기에 표시됩니다."
   },
   "messages": {
     "title": "메시지",
@@ -836,7 +915,8 @@
     "failedPurchase": "구매 실패",
     "redirectingOnramp": "리디렉션 중...",
     "onrampCreated": "입금 세션 생성됨",
-    "failedOnramp": "입금 실패"
+    "failedOnramp": "입금 실패",
+    "badgeDiscount": "{{tier}} 보유자 — {{percent}}% 할인"
   },
   "agents": {
     "title": "AI 에이전트",
@@ -866,7 +946,13 @@
     "agentDeleted": "에이전트 삭제됨",
     "failedCreate": "생성 실패",
     "failedDelete": "삭제 실패",
-    "apiKeyCopied": "API 키 복사됨"
+    "apiKeyCopied": "API 키 복사됨",
+    "connectorUrl": "커넥터 URL",
+    "connectorUrlCopied": "커넥터 URL이 복사되었습니다",
+    "connectorUrlHelp": "Claude 또는 ChatGPT에 사용자 지정 MCP 커넥터로 추가하세요. 이 에이전트로 인증되므로 API 키처럼 다루세요.",
+    "agentWallet": "에이전트 지갑 (Base)",
+    "walletCopied": "지갑 주소가 복사되었습니다",
+    "agentWalletHelp": "에이전트가 게시하기 전에 여기로 소량의 Base ETH를 보내세요. 게시는 온체인 민팅이므로 에이전트가 직접 가스비를 냅니다. 댓글, 투표, 팔로우에는 가스비가 들지 않습니다."
   },
   "hero": {
     "title": "우리의 세계에",
@@ -1009,7 +1095,10 @@
     "or": "또는",
     "termsNotice": "계속하면 이용약관 및 개인정보 처리방침에 동의하게 됩니다",
     "walletInfoDesktop": "지갑을 연결하여 안전하게 로그인하세요",
-    "walletInfoMobile": "MetaMask, Trust, Phantom은 앱을 직접 엽니다. Rabby는 WalletConnect를 사용합니다."
+    "walletInfoMobile": "MetaMask, Trust, Phantom은 앱을 직접 엽니다. Rabby는 WalletConnect를 사용합니다.",
+    "addProfileTitle": "프로필 추가",
+    "walletConnectedAs": "연결됨",
+    "useDifferentWallet": "다른 지갑 사용"
   },
   "careers": {
     "title": "DeHub 채용",
@@ -1133,7 +1222,11 @@
     "comingSoon": "곧 출시 — 지역별 트렌드가 준비 중입니다!",
     "post": "게시",
     "logOut": "로그아웃",
-    "logIn": "로그인"
+    "logIn": "로그인",
+    "searchMenu": "메뉴 검색",
+    "clearSearch": "검색 지우기",
+    "noMenuMatches": "메뉴에 일치하는 항목이 없습니다",
+    "searchDehubFor": "DeHub에서 \"{{query}}\" 검색"
   },
   "postInfo": {
     "title": "게시물 정보",
@@ -1383,7 +1476,11 @@
     "new_version_available": "새 버전 사용 가능",
     "refresh_to_pick_up_the_latest_changes": "최신 변경 사항을 확인하려면 새로 고침하세요.",
     "refresh": "새로 고침",
-    "what_changed": "변경된 사항"
+    "what_changed": "변경된 사항",
+    "turn_on_desktop_notifications": "데스크톱 알림을 켤까요?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "다른 탭에 있어도 답글, 팁, DM을 바로 알려드립니다.",
+    "turn_on": "켜기",
+    "not_now": "나중에"
   },
   "prompt": {
     "seoTitle": "피드에 메시지 보내기 — DeHub",
@@ -1529,5 +1626,105 @@
     "when": "시점",
     "whyStake": "왜 예치하나요?",
     "yourStaked": "내 예치량"
+  },
+  "arcade": {
+    "title": "아케이드",
+    "intro": "DeHub가 만들어 오픈소스로 공개한 게임, 월드, 경험 모음입니다.",
+    "seoTitle": "아케이드 | DeHub",
+    "seoDescription": "DeHub에서 브라우저로 바로 즐기세요 — 시네마틱 3D 체스, 절차적으로 생성되는 슈터, 열대우림 산책, 네온 거리 격투, 걸어 다닐 수 있는 트레이딩 플로어. 설치도 다운로드도 필요 없습니다.",
+    "alsoIn": "{{theme}}에도 있습니다"
+  },
+  "stats": {
+    "title": "통계",
+    "subtitle": "실시간 오픈소스 인텔",
+    "live": "라이브",
+    "range": {
+      "24h": "24시간",
+      "3d": "3일",
+      "7d": "7일",
+      "30d": "30일",
+      "all": "전체 기간"
+    },
+    "unavailable": {
+      "title": "지금은 통계를 볼 수 없습니다",
+      "unconfigured": "분석 엔드포인트에 아직 Cloudflare API 토큰이 설정되지 않았습니다. 지어낸 숫자 대신 아무것도 표시하지 않습니다.",
+      "error": "Cloudflare 분석 API에 연결할 수 없습니다. 오래되거나 지어낸 수치를 보여주는 대신, 실시간 조회가 성공할 때까지 이 페이지는 아무것도 표시하지 않습니다."
+    },
+    "tile": {
+      "visitorsToday": "오늘 방문자",
+      "soFarToday": "오늘 현재까지, UTC",
+      "peakHour": "가장 붐빈 시간",
+      "peakDay": "가장 붐빈 날",
+      "peakAtHour": "{{when}} UTC",
+      "peakOnDay": "{{when}}",
+      "inRange": "이 기간 동안",
+      "pageViews": "페이지뷰",
+      "overHours": "{{count}}시간 동안",
+      "overDay": "1일 동안",
+      "overDays": "{{count}}일 동안",
+      "requestsLabel": "요청",
+      "served": "제공됨",
+      "requests": "요청 {{requests}}건"
+    },
+    "chart": {
+      "hourly": "시간별 방문자",
+      "daily": "일별 방문자",
+      "hourlyHint": "{{count}}개 시간 구간, UTC",
+      "dailyHint": "일별 순 방문자",
+      "empty": "이 기간의 데이터가 아직 없습니다"
+    },
+    "countries": {
+      "title": "상위 국가",
+      "windowDay": "최근 24시간",
+      "window": "최근 {{days}}일"
+    },
+    "browsers": {
+      "title": "브라우저",
+      "window": "페이지뷰 기준"
+    },
+    "edge": {
+      "title": "엣지에서",
+      "windowDay": "최근 24시간",
+      "window": "최근 {{days}}일",
+      "cached": "캐시에서 제공",
+      "encrypted": "암호화됨",
+      "threats": "차단된 위협"
+    },
+    "proof": {
+      "title": "이 수치의 출처",
+      "subtitle": "이 페이지가 아니라 Cloudflare가 측정",
+      "source": "출처",
+      "datasets": "데이터셋",
+      "zone": "영역",
+      "ray": "Cloudflare 레이 ID",
+      "fetched": "가져온 시각",
+      "query": "차트 뒤의 실제 쿼리",
+      "copied": "복사됨",
+      "copy": "복사",
+      "openEndpoint": "/api/stats 열기",
+      "openRaw": "Cloudflare의 가공되지 않은 응답",
+      "edge": "dehub.io로 오는 모든 요청은 저희 서버에 닿기 전에 Cloudflare를 거칩니다. 이 수치는 그 트래픽에 대한 Cloudflare 자체 집계로, 저희 대시보드에 표시되는 것과 같은 값입니다. 브라우저 안의 스크립트가 수집하는 것이 아니므로 이 페이지의 어떤 것도 수치를 부풀릴 수 없고, 트래커를 차단해도 값은 달라지지 않습니다.",
+      "live": "페이지는 실시간으로 읽어 옵니다. /stats를 열면 저희 엔드포인트가 호출되고, 그 시점에 Cloudflare Analytics API를 조회한 뒤 응답을 60초 동안 캐시합니다.",
+      "limits": "이것이 보여주는 것과 보여주지 않는 것: 수치가 저희 애플리케이션 코드가 아니라 Cloudflare 집계에서 나온다는 점, 그리고 여기 공개된 쿼리가 실제로 실행되는 쿼리라는 점은 확인할 수 있습니다. 트러스트리스는 아닙니다. API 토큰은 저희가 갖고 있고 Cloudflare는 영역 분석을 공개 조회로 제공하지 않습니다. 자기 Cloudflare 영역이 있는 사람은 동일한 쿼리를 실행해 형태를 확인할 수 있습니다."
+    },
+    "definitions": {
+      "title": "숫자의 의미",
+      "visitorsTerm": "방문자",
+      "visitors": "— 그날 Cloudflare가 확인한 순 IP 주소입니다. 사람 수에 가깝지만 같지는 않습니다. 한 회선을 쓰는 사무실은 1로, Wi-Fi와 모바일 데이터를 오가는 휴대폰은 2로 계산됩니다.",
+      "pageViewsTerm": "페이지뷰",
+      "pageViews": "— Cloudflare가 이미지, 스크립트, API 호출이 아니라 페이지 로드로 분류한 요청입니다.",
+      "botsTerm": "봇도 포함됩니다",
+      "bots": "— 엣지에서 집계한 원시 수치라 크롤러, 가동 모니터, 스크립트 클라이언트가 모두 포함됩니다. 위의 브라우저 분포에서 직접 확인할 수 있는데, \"Curl\"이나 \"알 수 없음\" 같은 항목은 사람이 아니라 자동화된 트래픽입니다. 봇을 걸러내려면 저희가 쓰지 않는 Cloudflare 유료 요금제가 필요하고, 추정치를 조용히 빼면 수치는 더 검증하기 어려워질 뿐입니다.",
+      "totalTerm": "기간 합계",
+      "total": "— 페이지뷰와 요청은 기간 전체로 합산됩니다. 방문자 수는 일부러 \"총 방문자\"로 합치지 않습니다. 월요일과 화요일에 온 사람이 두 번 계산되기 때문입니다.",
+      "peakTerm": "가장 붐빈 시간 / 날짜",
+      "peak": "— 같은 이유로, 기간 내 단일 구간에서 가장 높은 순 방문자 수입니다. 겹치는 수치를 더해 만든 값이 아니라 Cloudflare가 실제로 측정한 값이기 때문입니다.",
+      "resolutionTerm": "시간 단위는 3일까지",
+      "resolution": "— 이는 선택이 아니라 이 요금제에서의 Cloudflare 제한입니다. 3일을 넘는 시간 단위 쿼리는 거부됩니다. 24시간과 3일 보기는 시간 단위이고 7일 이상은 일 단위이며, 전체 기간을 시간 단위 차트로 그릴 방법은 없습니다.",
+      "breakdownTerm": "국가와 브라우저",
+      "breakdown": "— 선택한 기간을 따르지만 최대 {{max}}일 전까지만 가능합니다. 일별 분포가 그만큼만 보관되기 때문입니다. 더 긴 기간에서는 차트가 국가 목록보다 넓은 기간을 다룹니다.",
+      "startTerm": "기록",
+      "start": "— \"전체 기간\"은 Cloudflare가 아직 보관 중인 모든 날을 뜻하며, 오늘 기준으로 dehub.io가 Cloudflare로 옮긴 {{date}}부터 {{days}}일입니다. 그 이전의 엣지 데이터는 없고, 오래된 날짜는 Cloudflare가 만료시키면서 사라집니다."
+    }
   }
 }
