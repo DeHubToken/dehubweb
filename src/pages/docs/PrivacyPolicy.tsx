@@ -43,6 +43,10 @@ const PrivacyPolicy = () => {
 
       <Section title={t('privacyPolicy.dataCollection')}>
         <div className="space-y-3">
+          <h3 className="font-semibold text-foreground">{t('privacyPolicy.whatWeDoCollect')}</h3>
+          <ItemList items={Array.from({ length: 6 }, (_, i) => t(`privacyPolicy.doCollectItem${i + 1}`))} />
+        </div>
+        <div className="space-y-3">
           <h3 className="font-semibold text-foreground">{t('privacyPolicy.whatWeDontCollect')}</h3>
           <ItemList items={Array.from({ length: 6 }, (_, i) => t(`privacyPolicy.dontCollectItem${i + 1}`))} />
         </div>
@@ -77,6 +81,11 @@ const PrivacyPolicy = () => {
           <li><strong>{t('privacyPolicy.thirdPartyItem1Prefix')}</strong> {t('privacyPolicy.thirdPartyItem1')}</li>
           <li><strong>{t('privacyPolicy.thirdPartyItem2Prefix')}</strong> {t('privacyPolicy.thirdPartyItem2')}</li>
           <li><strong>{t('privacyPolicy.thirdPartyItem3Prefix')}</strong> {t('privacyPolicy.thirdPartyItem3')}</li>
+          <li><strong>{t('privacyPolicy.thirdPartyItem4Prefix')}</strong> {t('privacyPolicy.thirdPartyItem4')}</li>
+          <li><strong>{t('privacyPolicy.thirdPartyItem5Prefix')}</strong> {t('privacyPolicy.thirdPartyItem5')}</li>
+          <li><strong>{t('privacyPolicy.thirdPartyItem6Prefix')}</strong> {t('privacyPolicy.thirdPartyItem6')}</li>
+          <li><strong>{t('privacyPolicy.thirdPartyItem7Prefix')}</strong> {t('privacyPolicy.thirdPartyItem7')}</li>
+          <li><strong>{t('privacyPolicy.thirdPartyItem8Prefix')}</strong> {t('privacyPolicy.thirdPartyItem8')}</li>
         </ul>
         <p className="mt-3">{t('privacyPolicy.thirdPartyNote')}</p>
       </Section>
