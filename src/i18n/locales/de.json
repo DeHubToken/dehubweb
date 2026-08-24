@@ -27,7 +27,20 @@
     "events": "Veranstaltungen",
     "prompt": "Eingabeaufforderung",
     "communities": "Communities",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Live-Statistiken",
+    "liveTv": "Live-TV",
+    "buyDhb": "DHB kaufen",
+    "bridge": "Bridge",
+    "top100": "Top 100",
+    "agents": "KI-Agenten",
+    "advertising": "Werbung",
+    "premium": "Premium",
+    "pricing": "Preise",
+    "creators": "Creator",
+    "getTheApp": "App holen",
+    "connectAi": "KI verbinden"
   },
   "feed": {
     "home": "Startseite",
@@ -35,7 +48,9 @@
     "images": "Bilder",
     "shorts": "Kurzvideos",
     "music": "Musik",
-    "live": "Live"
+    "live": "Live",
+    "newPosts_one": "{{count}} neuer Beitrag",
+    "newPosts_other": "{{count}} neue Beiträge"
   },
   "explore": {
     "all": "Alles",
@@ -242,7 +257,58 @@
     "hazy": "Dunstige Nächte",
     "save": "Speichern",
     "saving": "Wird gespeichert...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Profile",
+    "profilesDesc": "Auf diesem Gerät gespeicherte Konten",
+    "addProfile": "Profil hinzufügen",
+    "profileActive": "Aktiv",
+    "profileSignedOut": "zum Wechseln anmelden",
+    "profileRemove": "Profil entfernen",
+    "profilesUsed": "{{used}} von {{max}} genutzt",
+    "profilesNextTier": "Stufe {{tier}} behält {{count}}",
+    "profilesFullTier": "Stake für ein {{tier}}-Abzeichen, um {{count}} Profile zu behalten",
+    "profilesFull": "Entferne ein Profil, um ein anderes Konto hinzuzufügen",
+    "browserNotifications": "Browser-Benachrichtigungen",
+    "browserNotificationsDesc": "Erfahre von Antworten, Tips und DMs, während du in einem anderen Tab bist",
+    "browserNotificationsOnDesc": "Antworten, Tips und DMs erscheinen, während du in einem anderen Tab bist",
+    "browserNotificationsDismissed": "Benachrichtigungsanfrage verworfen – versuch den Schalter noch einmal",
+    "browserNotificationsBlocked": "Von deinem Browser blockiert",
+    "browserNotificationsBlockedTitle": "Dieser Browser blockiert Benachrichtigungen",
+    "browserNotificationsBlockedNote": "Nur dein Browser kann das rückgängig machen – DeHub kann nicht erneut fragen, sobald es blockiert ist.",
+    "browserNotificationsBlockedPending": "Deine Anfrage ist gespeichert – das schaltet sich selbst ein, sobald dein Browser es erlaubt.",
+    "browserNotificationsUnblockChromium": "Klicke auf das Symbol links in der Adressleiste → Website-Einstellungen → setze Benachrichtigungen auf Zulassen und lade die Seite neu.",
+    "browserNotificationsUnblockFirefox": "Klicke auf das Schloss links in der Adressleiste, entferne das „Blockiert\" neben Benachrichtigungen empfangen und lade die Seite neu.",
+    "browserNotificationsUnblockSafari": "In der Menüleiste: Safari → Einstellungen → Websites → Benachrichtigungen, dann diese Seite auf Erlauben setzen.",
+    "browserNotificationsUnblockGeneric": "Öffne die Website-Einstellungen deines Browsers für diese Seite, setze Benachrichtigungen auf Zulassen und lade neu.",
+    "browserNotificationsIosHint": "iPhone und iPad erlauben das erst, wenn DeHub auf deinem Home-Bildschirm liegt – tippe auf Teilen und dann „Zum Home-Bildschirm\".",
+    "browserNotificationsTest": "Testbenachrichtigung senden",
+    "browserNotificationsTestSent": "Testbenachrichtigung gesendet",
+    "browserNotificationsTestBody": "So sieht eine DeHub-Benachrichtigung aus.",
+    "showAsNewMember": "Mich als neues Mitglied anzeigen",
+    "showAsNewMemberDesc": "Zeigt anderen Mitgliedern, dass du gerade dazugekommen bist, damit sie dich begrüßen können. Endet automatisch 30 Tage nach deiner Anmeldung.",
+    "defaultProfileTab": "Standard-Profiltab",
+    "defaultProfileTabDesc": "Wähle, welchen Tab Besucher auf deinem Profil zuerst sehen",
+    "lavalamp": "Lavalampe",
+    "war": "Krieg",
+    "osaka": "Osaka",
+    "jungle": "Dschungel",
+    "themeColor": "Themenfarbe",
+    "themeColorDesc": "Wähle eine eigene Farbe für dieses Thema",
+    "themeColorReset": "Zurücksetzen",
+    "themeColorWhite": "Weiß",
+    "themeColorBlack": "Schwarz",
+    "themeColorRainbow": "Regenbogen",
+    "themeColorBrand": "Marke",
+    "themeColorBrandDesc": "Farben deines Profilbilds verwenden",
+    "themeColorBrandNoAvatar": "Füge ein Profilbild hinzu, um Markenfarben zu nutzen",
+    "themeColorBrandFailed": "Farben deines Profilbilds konnten nicht gelesen werden",
+    "dimLights": "Licht dimmen",
+    "dimLightsDesc": "Reduziert die Blaulichtbelastung",
+    "matureContent": "Nicht jugendfreie Inhalte zeigen",
+    "matureContentDesc": "Nimmt Beiträge für Erwachsene und drastische Inhalte in deine Feeds auf und entfernt die Warnung bei denen, die du schon siehst. Standardmäßig aus.",
+    "noNewMessages": "Keine neuen Unterhaltungen",
+    "noNewMessagesDesc": "Behalte deine bestehenden Unterhaltungen, aber niemand Neues kann eine starten",
+    "dmNoNewHelp": "Bestehende Unterhaltungen laufen weiter; niemand Neues kann eine starten"
   },
   "common": {
     "save": "Speichern",
@@ -256,7 +322,8 @@
     "translating": "Übersetzen...",
     "close": "Schließen",
     "loadingMore": "Mehr laden...",
-    "loadMore": "Mehr laden"
+    "loadMore": "Mehr laden",
+    "tryAgain": "Erneut versuchen"
   },
   "postOptions": {
     "options": "Optionen",
@@ -663,7 +730,10 @@
     "statusPlanned": "Geplant",
     "statusInProgress": "In Arbeit",
     "statusCompleted": "Abgeschlossen",
-    "statusDeclined": "Abgelehnt"
+    "statusDeclined": "Abgelehnt",
+    "shipping": "In Umsetzung",
+    "noShippingYet": "Nichts in Arbeit",
+    "shippingAppearHere": "Anfragen, die gerade gebaut werden, erscheinen hier."
   },
   "auth": {
     "loginRequired": "Anmeldung erforderlich"
@@ -758,7 +828,11 @@
     "postRemoved": "Dein Beitrag wurde entfernt",
     "newNotification": "Neue Benachrichtigung",
     "oneOther": "1 anderer",
-    "nOthers": "{{count}} andere"
+    "nOthers": "{{count}} andere",
+    "thisBrowser": "Dieser Browser",
+    "features": "Funktionen",
+    "communities": "Communitys",
+    "stores": "Shops"
   },
   "messages": {
     "title": "Nachrichten",
@@ -803,7 +877,12 @@
     "addedToLeaderboard": "Du wurdest hinzugefügt! Saldo: {{balance}} DHB",
     "balanceTooLow": "Saldo zu niedrig ({{balance}} DHB)",
     "refreshFailed": "Etwas ist schiefgelaufen",
-    "noWalletAddress": "Keine Wallet-Adresse gefunden"
+    "noWalletAddress": "Keine Wallet-Adresse gefunden",
+    "affiliates": "Affiliates",
+    "directReferrals_one": "{{count}} direkt",
+    "directReferrals_other": "{{count}} direkt",
+    "secondaryReferrals_one": "{{count}} sekundär",
+    "secondaryReferrals_other": "{{count}} sekundär"
   },
   "explorePage": {
     "searchPlaceholder": "Personen, Beiträge oder Inhalte suchen...",
@@ -919,7 +998,8 @@
     "failedPurchase": "Kauf fehlgeschlagen",
     "redirectingOnramp": "Weiterleitung zur Rampe...",
     "onrampCreated": "Rampe-Sitzung erstellt",
-    "failedOnramp": "Rampe fehlgeschlagen"
+    "failedOnramp": "Rampe fehlgeschlagen",
+    "badgeDiscount": "{{tier}}-Inhaber – {{percent}} % Rabatt"
   },
   "agents": {
     "title": "KI-Agenten",
@@ -949,7 +1029,13 @@
     "agentDeleted": "Agent gelöscht",
     "failedCreate": "Erstellung fehlgeschlagen",
     "failedDelete": "Löschung fehlgeschlagen",
-    "apiKeyCopied": "API-Schlüssel kopiert"
+    "apiKeyCopied": "API-Schlüssel kopiert",
+    "connectorUrl": "Connector-URL",
+    "connectorUrlCopied": "Connector-URL kopiert",
+    "connectorUrlHelp": "Füge sie als eigenen MCP-Connector in Claude oder ChatGPT hinzu. Sie authentifiziert sich als dieser Agent, behandle sie also wie den API-Schlüssel.",
+    "agentWallet": "Agent-Wallet (Base)",
+    "walletCopied": "Wallet-Adresse kopiert",
+    "agentWalletHelp": "Sende hier einen kleinen Betrag Base-ETH, bevor der Agent postet – Veröffentlichen prägt on-chain und der Agent zahlt sein eigenes Gas. Kommentieren, Abstimmen und Folgen brauchen kein Gas."
   },
   "hero": {
     "title": "Willkommen In",
@@ -997,7 +1083,10 @@
     "or": "oder",
     "termsNotice": "Durch Fortfahren stimmst du unseren Nutzungsbedingungen und Datenschutzrichtlinien zu",
     "walletInfoDesktop": "Verbinde dein Wallet, um dich sicher anzumelden",
-    "walletInfoMobile": "MetaMask, Trust & Phantom öffnen ihre App direkt. Rabby nutzt WalletConnect."
+    "walletInfoMobile": "MetaMask, Trust & Phantom öffnen ihre App direkt. Rabby nutzt WalletConnect.",
+    "addProfileTitle": "Profil hinzufügen",
+    "walletConnectedAs": "Verbunden",
+    "useDifferentWallet": "Anderes Wallet verwenden"
   },
   "careers": {
     "title": "Karriere bei DeHub",
@@ -1129,7 +1218,11 @@
     "comingSoon": "Bald verfügbar — regionale Trends sind unterwegs!",
     "post": "Posten",
     "logOut": "Abmelden",
-    "logIn": "Anmelden"
+    "logIn": "Anmelden",
+    "searchMenu": "Menü durchsuchen",
+    "clearSearch": "Suche löschen",
+    "noMenuMatches": "Nichts im Menü passt",
+    "searchDehubFor": "DeHub nach „{{query}}\" durchsuchen"
   },
   "postInfo": {
     "title": "Beitragsinfo",
@@ -1379,7 +1472,11 @@
     "new_version_available": "Neue Version verfügbar",
     "refresh_to_pick_up_the_latest_changes": "Aktualisieren, um die neuesten Änderungen abzurufen.",
     "refresh": "Aktualisieren",
-    "what_changed": "Was sich geändert hat"
+    "what_changed": "Was sich geändert hat",
+    "turn_on_desktop_notifications": "Desktop-Benachrichtigungen einschalten?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Erfahre von Antworten, Tips und DMs, während du in einem anderen Tab bist.",
+    "turn_on": "Einschalten",
+    "not_now": "Jetzt nicht"
   },
   "prompt": {
     "seoTitle": "Deinen Feed anstoßen — DeHub",
@@ -1525,5 +1622,105 @@
     "when": "Wann",
     "whyStake": "Warum einzahlen?",
     "yourStaked": "Deine Einzahlung"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Eine Sammlung von Spielen, Welten und Erlebnissen, die DeHub gebaut und als Open Source veröffentlicht hat.",
+    "seoTitle": "Arcade | DeHub",
+    "seoDescription": "Spiele im Browser auf DeHub – filmisches 3D-Schach, ein prozedural erzeugter Shooter, ein Regenwaldspaziergang, eine Neon-Straßenprügelei und ein begehbarer Handelssaal. Keine Installation, kein Download.",
+    "alsoIn": "Auch im {{theme}}"
+  },
+  "stats": {
+    "title": "Statistiken",
+    "subtitle": "Open-Source-Zahlen in Echtzeit",
+    "live": "Live",
+    "range": {
+      "24h": "24 Stunden",
+      "3d": "3 Tage",
+      "7d": "7 Tage",
+      "30d": "30 Tage",
+      "all": "Gesamte Zeit"
+    },
+    "unavailable": {
+      "title": "Statistiken sind gerade nicht verfügbar",
+      "unconfigured": "Der Analytics-Endpunkt hat sein Cloudflare-API-Token noch nicht bekommen. Es wird nichts gezeigt statt einer erfundenen Zahl.",
+      "error": "Wir konnten Cloudflares Analytics-API nicht erreichen. Statt eine veraltete oder erfundene Zahl zu zeigen, zeigt diese Seite nichts, bis der Live-Abruf klappt."
+    },
+    "tile": {
+      "visitorsToday": "Besucher heute",
+      "soFarToday": "bisher heute, UTC",
+      "peakHour": "Stärkste Stunde",
+      "peakDay": "Stärkster Tag",
+      "peakAtHour": "um {{when}} UTC",
+      "peakOnDay": "am {{when}}",
+      "inRange": "in diesem Zeitraum",
+      "pageViews": "Seitenaufrufe",
+      "overHours": "über {{count}} Std.",
+      "overDay": "über 1 Tag",
+      "overDays": "über {{count}} Tage",
+      "requestsLabel": "Anfragen",
+      "served": "Ausgeliefert",
+      "requests": "{{requests}} Anfragen"
+    },
+    "chart": {
+      "hourly": "Besucher pro Stunde",
+      "daily": "Besucher pro Tag",
+      "hourlyHint": "{{count}} Stundenintervalle, UTC",
+      "dailyHint": "eindeutige Besucher pro Tag",
+      "empty": "Noch keine Daten für diesen Zeitraum"
+    },
+    "countries": {
+      "title": "Top-Länder",
+      "windowDay": "letzte 24 Stunden",
+      "window": "letzte {{days}} Tage"
+    },
+    "browsers": {
+      "title": "Browser",
+      "window": "nach Seitenaufrufen"
+    },
+    "edge": {
+      "title": "An der Edge",
+      "windowDay": "letzte 24 Stunden",
+      "window": "letzte {{days}} Tage",
+      "cached": "Aus dem Cache ausgeliefert",
+      "encrypted": "Verschlüsselt",
+      "threats": "Bedrohungen blockiert"
+    },
+    "proof": {
+      "title": "Woher diese Zahlen kommen",
+      "subtitle": "Von Cloudflare gemessen, nicht von dieser Seite",
+      "source": "Quelle",
+      "datasets": "Datensätze",
+      "zone": "Zone",
+      "ray": "Cloudflare-Ray-ID",
+      "fetched": "Abgerufen um",
+      "query": "Die exakte Abfrage hinter dem Diagramm",
+      "copied": "Kopiert",
+      "copy": "Kopieren",
+      "openEndpoint": "/api/stats öffnen",
+      "openRaw": "Cloudflares unveränderte Antwort",
+      "edge": "Jede Anfrage an dehub.io läuft über Cloudflare, bevor sie unsere Server erreicht. Diese Zählungen sind Cloudflares eigene Aggregation dieses Traffics – dieselben Zahlen, die unser Dashboard zeigt. Sie werden nicht von einem Skript in deinem Browser erhoben, also kann nichts auf dieser Seite sie aufblähen, und Tracker zu blockieren ändert sie nicht.",
+      "live": "Die Seite liest sie live. Beim Laden von /stats ruft sie unseren Endpunkt auf, der in dem Moment Cloudflares Analytics-API abfragt und die Antwort 60 Sekunden zwischenspeichert.",
+      "limits": "Was das zeigt und was nicht: Du kannst sehen, dass die Zahlen aus Cloudflares Aggregation stammen und nicht aus unserem Anwendungscode, und dass die hier veröffentlichte Abfrage die ist, die läuft. Vertrauensfrei ist das nicht – wir halten das API-Token, und Cloudflare bietet keinen öffentlichen Lesezugriff auf die Analytik einer Zone. Wer eine eigene Cloudflare-Zone hat, kann dieselbe Abfrage dagegen laufen lassen und die Form bestätigen."
+    },
+    "definitions": {
+      "title": "Was die Zahlen bedeuten",
+      "visitorsTerm": "Besucher",
+      "visitors": "– eindeutige IP-Adressen, die Cloudflare an dem Tag gesehen hat. Nahe an Personen, aber nicht dasselbe: ein Büro an einem Anschluss zählt einmal, ein Handy, das zwischen WLAN und Mobilfunk wechselt, zählt zweimal.",
+      "pageViewsTerm": "Seitenaufrufe",
+      "pageViews": "– Anfragen, die Cloudflare als Seitenaufrufe einstuft, nicht als Bilder, Skripte oder API-Aufrufe.",
+      "botsTerm": "Bots sind enthalten",
+      "bots": "– das sind rohe Edge-Zählungen, also stecken Crawler, Uptime-Monitore und automatisierte Clients mit drin. Du siehst sie selbst in der Browser-Aufschlüsselung oben, wo Einträge wie „Curl\" und „Unbekannt\" automatisierter Traffic sind statt Menschen. Bots herauszufiltern braucht einen kostenpflichtigen Cloudflare-Tarif, den wir nicht haben, und eine Schätzung stillschweigend abzuziehen würde die Zahlen weniger überprüfbar machen, nicht mehr.",
+      "totalTerm": "Summen im Zeitraum",
+      "total": "– Seitenaufrufe und Anfragen werden über den Zeitraum summiert. Besucherzahlen werden bewusst nicht zu einer „Gesamtbesucher\"-Zahl addiert, denn wer am Montag und am Dienstag hier war, würde doppelt zählen.",
+      "peakTerm": "Stärkste Stunde / stärkster Tag",
+      "peak": "– der höchste eindeutige Wert in einem einzelnen Intervall des Zeitraums, aus demselben Grund: eine Zahl, die Cloudflare tatsächlich misst, statt einer aus überlappenden Zählungen addierten.",
+      "resolutionTerm": "Stündlich endet bei 3 Tagen",
+      "resolution": "– das ist Cloudflares Grenze in diesem Tarif, keine Entscheidung: stündliche Abfragen über drei Tage hinaus werden abgelehnt. Die 24-Stunden- und 3-Tage-Ansichten sind stündlich; 7 Tage und länger sind täglich, und ein stündliches Diagramm über die gesamte Zeit lässt sich nicht zeichnen.",
+      "breakdownTerm": "Länder und Browser",
+      "breakdown": "– sie folgen dem gewählten Zeitraum, aber nur {{max}} Tage zurück, so weit wird die Tagesaufschlüsselung aufbewahrt. Bei längeren Zeiträumen deckt das Diagramm mehr Zeit ab als die Länderliste.",
+      "startTerm": "Verlauf",
+      "start": "– „gesamte Zeit\" heißt jeder Tag, den Cloudflare noch vorhält, heute {{days}} Tage ab {{date}}, dem Tag, an dem dehub.io auf Cloudflare umgezogen ist. Frühere Edge-Daten gibt es nicht, und ältere Tage fallen weg, sobald Cloudflare sie verfallen lässt."
+    }
   }
 }
