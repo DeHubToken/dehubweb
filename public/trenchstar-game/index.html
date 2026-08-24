@@ -717,23 +717,65 @@
     #ctrl{bottom:6px}
   }
 
-  /* loader */
+  /* loader
+     ------
+     Everything that MOVES on this screen animates transform or opacity and
+     nothing else. Those are the two properties Chrome runs on the compositor,
+     so the glow keeps breathing and the sheen keeps travelling through a
+     multi-second FBX parse that has stopped every rAF-driven thing on the
+     page — the same reason .dhSpin is built the way it is. A keyframed
+     text-shadow or width would repaint on the main thread and freeze at
+     exactly the moment somebody is staring at it wondering if it has died. */
   #boot{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;
     align-items:center;justify-content:center;transition:opacity .9s;
     background:radial-gradient(ellipse at 50% 42%,rgba(47,232,140,.08),transparent 62%),var(--bg)}
+  /* CRT scanlines, the same grain the wall screens are painted with. Static:
+     scrolling them would cost a full-screen repaint per frame for a texture
+     nobody consciously sees. */
+  #boot::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
   #boot.off{opacity:0;pointer-events:none}
+  /* The glow behind the readout. A blurred disc that breathes on transform
+     and opacity, so the light keeps moving even when the thread does not. */
+  #bootGlow{position:absolute;left:50%;top:50%;width:520px;height:520px;
+    margin:-260px 0 0 -260px;pointer-events:none;border-radius:50%;
+    background:radial-gradient(circle,rgba(47,232,140,.22),rgba(47,232,140,.06) 42%,transparent 68%);
+    animation:bootBreathe 3.4s ease-in-out infinite;will-change:transform,opacity}
+  @keyframes bootBreathe{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.08);opacity:1}}
+  #boot>*:not(#bootGlow){position:relative;z-index:1}
   #bootLogo{font-size:34px;font-weight:700;letter-spacing:.42em;color:var(--down);text-indent:.42em;
     text-shadow:0 0 30px rgba(255,77,106,.7);animation:pulse 1.6s ease-in-out infinite}
   #bootLogo b{color:var(--up);text-shadow:0 0 30px rgba(47,232,140,.75)}
   @keyframes pulse{50%{opacity:.55}}
-  #bootPct{margin-top:30px;font-size:52px;font-weight:700;line-height:1;color:#fff;
-    letter-spacing:.02em;text-shadow:0 0 26px rgba(47,232,140,.45)}
-  #bootPct small{font-size:17px;color:var(--up);margin-left:3px;letter-spacing:.1em}
-  #bootBar{width:320px;height:3px;background:#0e1620;margin-top:16px;overflow:hidden;border-radius:2px}
-  #bootBar i{display:block;height:100%;width:0;border-radius:2px;
-    background:linear-gradient(90deg,rgba(47,232,140,.35),var(--up));box-shadow:0 0 14px var(--up)}
-  #bootStage{margin-top:11px;width:320px;font-size:9px;letter-spacing:.32em;color:var(--up);
+  /* Tabular figures: without them every digit change shifts the number's
+     width and the whole readout twitches on its way to 100. */
+  #bootPct{margin-top:28px;font-size:62px;font-weight:700;line-height:1;color:#fff;
+    letter-spacing:.02em;font-variant-numeric:tabular-nums;
+    text-shadow:0 0 38px rgba(47,232,140,.55),0 0 9px rgba(47,232,140,.35)}
+  #bootPct small{font-size:19px;color:var(--up);margin-left:4px;letter-spacing:.1em;
+    text-shadow:0 0 16px rgba(47,232,140,.6)}
+  #bootBar{position:relative;width:340px;height:4px;background:#0e1620;margin-top:18px;
+    overflow:hidden;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(47,232,140,.12)}
+  #bootBar i{display:block;height:100%;width:0;border-radius:3px;transition:width .16s linear;
+    background:linear-gradient(90deg,rgba(47,232,140,.3),var(--up));
+    box-shadow:0 0 16px var(--up),0 0 4px var(--up)}
+  /* A sheen travelling the whole track, so the bar reads as alive even while
+     the number is only trickling and nothing real has arrived. */
+  #bootBar::after{content:'';position:absolute;top:0;bottom:0;left:0;width:34%;
+    pointer-events:none;transform:translateX(-140%);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+    animation:bootSheen 2.2s linear infinite;will-change:transform;opacity:.55}
+  @keyframes bootSheen{to{transform:translateX(400%)}}
+  /* One last flare as the room takes over. */
+  #boot.done #bootGlow{animation:none;opacity:0;transform:scale(1.55);
+    transition:transform .55s ease-out,opacity .55s ease-out}
+  #bootStage{margin-top:11px;width:340px;font-size:9px;letter-spacing:.32em;color:var(--up);
     text-align:left;min-height:12px}
+  /* A terminal caret, so the stage line is a machine still working rather
+     than a label that was printed once. Opacity only. */
+  #bootStage::after{content:'_';margin-left:3px;animation:bootCaret 1.05s steps(1) infinite}
+  @keyframes bootCaret{50%{opacity:0}}
+  #boot.failed #bootStage::after{animation:none;opacity:0}
   #bootLines{margin-top:14px;height:96px;font-family:"JetBrains Mono",monospace;font-size:10px;
     color:var(--dim);line-height:1.9;letter-spacing:.06em;text-align:left;width:320px}
   #bootLines .ok{color:var(--up)}
@@ -1011,6 +1053,7 @@
 </div>
 
 <div id="boot">
+  <div id="bootGlow"></div>
   <div class="dhSpin lg" id="bootSpin"></div>
   <div id="bootLogo">TRENCH<b>STAR</b></div>
   <div id="bootPct" class="mono">0<small>%</small></div>
@@ -1067,24 +1110,74 @@ window.TSBoot = (function () {
     linesEl.innerHTML += LABEL[key].toLowerCase().padEnd(24, '.') +
       ' <span class="ok">OK</span> <span class="ms">' + ms + 'ms</span><br>';
   }
+  // THE NUMBER NEVER STANDS STILL, AND NEVER JUMPS.
+  //
+  // It used to ease straight at whatever the stages reported, so a slow
+  // connection parked it on one number for seconds at a time — which is the
+  // exact shape of a loader that looks crashed. It counts now: one number at
+  // a time, quickly when the real work is ahead of it, and still climbing
+  // when nothing at all is arriving. 99 is as far as a trickle can go; only
+  // the room actually being up spends the last number.
+  //
+  // The dwell is picked off how far behind the truth the display is, so a fast
+  // machine still boots fast — it just counts its way there instead of
+  // teleporting.
+  var IDLE_DWELL = 250;         // nothing arriving: a number every quarter second
+  var TRICKLE_CEIL = 99;        // the truth is the only thing that finishes this
+  var NICE = 69;
+  var NICE_HOLD = Math.round(IDLE_DWELL * 6.9);   // ~1.7s. It would be rude not to.
+  var nextAt = 0;
+  var TICK = 32;                // how often paint() runs; the scheduling floor
+  function dwell(gap, done) {
+    if (shown === NICE) return NICE_HOLD;
+    // The room is already up and waiting behind this panel: count it in and
+    // get out of the way. The easing below is for a loader still guessing.
+    if (done) return 8;
+    if (gap > 45) return 6;
+    if (gap > 25) return 14;
+    if (gap > 10) return 30;
+    if (gap > 3) return 70;
+    if (gap > 0) return 120;
+    return IDLE_DWELL;
+  }
   function paint() {
     if (dead || !pctEl) return;
-    var t = target();
-    shown += (t - shown) * 0.18;
-    if (t - shown < 0.4) shown = t;
-    pctEl.innerHTML = Math.floor(shown) + '<small>%</small>';
+    var now = Date.now(), t = target();
+    var top = t >= 100 ? 100 : TRICKLE_CEIL;
+    if (!nextAt) nextAt = now;
+    // Several numbers can fall due inside one 32ms tick when the real work is
+    // far ahead. Capped, so a tab that was backgrounded for a minute comes
+    // back and counts a handful rather than four hundred.
+    // Everything due before the NEXT tick lands in this one. Without that the
+    // 32ms interval quietly becomes the floor — one number a tick, so a room
+    // that is already built still takes four seconds to count itself in — and
+    // a dwell shorter than a tick would mean nothing at all.
+    for (var n = 0; n < 10 && shown < top && nextAt <= now + TICK; n++) {
+      shown++;
+      nextAt += dwell(t - shown, t >= 100);
+      // Backgrounded for a while: rejoin the clock rather than counting the
+      // whole gap out ten at a tick.
+      if (nextAt < now - 400) nextAt = now;
+    }
+    pctEl.innerHTML = shown + '<small>%</small>';
     barEl.style.width = shown + '%';
     stageEl.textContent = LABEL[current()];
-    if (shown >= 99.6 && t >= 100) finish();
+    if (shown >= 100) finish();
   }
   var finished = false;
   function finish() {
     if (finished) return; finished = true;
     pctEl.innerHTML = '100<small>%</small>'; barEl.style.width = '100%';
+    if (bootEl) bootEl.classList.add('done');
     setTimeout(function () { if (bootEl) bootEl.classList.add('off'); }, 260);
   }
 
   var api = {
+    /* What the readout is showing against what is actually done, so the
+       trickle can be measured rather than watched. */
+    debug: function () {
+      return { shown: shown, target: target(), stage: current(), nextAt: nextAt, nice: NICE_HOLD };
+    },
     stage: function (key, f) {
       if (dead || !(key in frac)) return;
       frac[key] = Math.max(frac[key], Math.min(1, f));
