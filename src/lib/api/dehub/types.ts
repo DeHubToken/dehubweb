@@ -1,3 +1,19 @@
+/**
+ * Where a post is allowed to appear.
+ *
+ * - `safe` — anywhere. Also what an absent value means, on every post made
+ *   before ratings existed.
+ * - `mature` — adult or graphic. Off the public home, shorts, search and
+ *   suggestion feeds; still on the creator's profile, in the Following feed
+ *   and behind its own link, where clients put a content warning over it.
+ *   A viewer who turns on "show mature content" gets it in the public feeds
+ *   too, unwarned.
+ * - `blocked` — a moderation verdict. Served nowhere, so clients never see it.
+ * - `pending` — uploaded but not yet rated. Reserved for automated
+ *   classification; nothing produces it yet.
+ */
+export type ContentRating = 'safe' | 'mature' | 'blocked' | 'pending';
+
 // Types based on DeHub API response (supports both API field naming conventions)
 export interface DeHubUser {
   _id?: string;
@@ -42,6 +58,8 @@ export interface DeHubUser {
   isPending?: boolean;
   isFollowRequestPending?: boolean;
   isPrivate?: boolean;
+  /** This viewer asked to be served mature posts in the public feeds. */
+  showMatureContent?: boolean;
   youBlocked?: boolean;
   blockedYou?: boolean;
   isBlocked?: boolean;
@@ -196,6 +214,8 @@ export interface DeHubNFT {
   // Moderation / visibility
   isHidden?: boolean;
   isDeleted?: boolean;
+  /** Absent means safe — the API stores nothing for the default. */
+  contentRating?: ContentRating;
   /** Creator turned replies off. Existing comments remain readable; only new
    *  ones are refused, server-side in requestCommentFunc. */
   commentsDisabled?: boolean;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins } from 'lucide-react';
+import { Lock, Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -52,6 +52,9 @@ interface PostAccessTogglesProps {
   markCategorySaved?: () => void;
   showTitle: boolean;
   setShowTitle: (value: boolean) => void;
+  /** Marks the post adult or graphic — see the row's copy for what that costs. */
+  isMature: boolean;
+  setIsMature: (value: boolean) => void;
   hasVideoOrAudio: boolean;
   categoryDrawerOpen?: boolean;
   setCategoryDrawerOpen?: (value: boolean) => void;
@@ -100,6 +103,8 @@ export function PostAccessToggles({
   markCategorySaved,
   showTitle,
   setShowTitle,
+  isMature,
+  setIsMature,
   hasVideoOrAudio,
   categoryDrawerOpen: categoryDrawerOpenProp,
   setCategoryDrawerOpen: setCategoryDrawerOpenProp,
@@ -347,6 +352,20 @@ export function PostAccessToggles({
             disabled={mintRequired}
             className="data-[state=checked]:bg-white scale-75"
           />
+        </label>
+
+        {/* Mature content — the creator's own declaration. Marking it keeps the
+            post off the public feeds; it still reaches followers, the profile
+            and anyone with the link. */}
+        <label className="flex items-center justify-between py-0.5 cursor-pointer">
+          <div className="flex items-center gap-2 min-w-0">
+            <EyeOff className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">Mature content</span>
+            {isMature && (
+              <span className="text-xs text-white/50 truncate">(not shown on the public feed)</span>
+            )}
+          </div>
+          <Switch checked={isMature} onCheckedChange={setIsMature} className="data-[state=checked]:bg-white scale-75" />
         </label>
 
         {/* Title - forced on for video/audio, toggleable for others */}

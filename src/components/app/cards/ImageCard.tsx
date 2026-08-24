@@ -26,6 +26,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
+import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
@@ -507,6 +508,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const isW2E = (post.isW2E || false) && !canBypassGating;
   const isLocked = (post.isLocked || false) && !canBypassGating;
   const isComboLocked = isPPV && isLocked;
+  // Independent of the monetisation gates above: a post can be both mature and
+  // pay-per-view, and the creator's own post is warned about too — the warning
+  // is for whoever is looking at the screen.
+  const matureGate = useMatureGate(post.contentRating);
   // PPV/Lock badges are redundant with the centered overlay, so only show bounty here
   const hasBadges = isW2E;
 
@@ -832,7 +837,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
       <div className="relative">
-        {isComboLocked ? (
+        {/* Mature warning sits outermost: revealing it falls through to
+            whatever gate the post actually has (PPV, holdings), rather than
+            replacing it. */}
+        {matureGate.isGated ? (
+          <MatureContentGate preview={images[0]} onReveal={matureGate.reveal} />
+        ) : isComboLocked ? (
           <>
             {/* Combo PPV + Holdings Locked: blurred image with dual icons */}
             <div className="relative rounded-2xl overflow-hidden">
@@ -1132,6 +1142,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         currentTitle={post.title ?? ''}
         currentDescription={editDescription}
         currentCategories={post.categories ?? []}
+        currentContentRating={post.contentRating}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, post.id, edited);
         }}

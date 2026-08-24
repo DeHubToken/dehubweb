@@ -26,6 +26,7 @@ import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
+import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
 import { PollCard } from './PollCard';
@@ -872,7 +873,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const isBountyLocked = false; // W2E content is free to watch; bounty rewards first X viewers/commenters
   const isHoldingsLocked = !!video.isLocked && !canBypassGating;
   const isComboLocked = isPPVLocked && isHoldingsLocked;
-  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked;
+  // Independent of the monetisation gates above: a post can be both mature and
+  // pay-per-view, and the creator's own post is warned about too — the warning
+  // is for whoever is looking at the screen.
+  const matureGate = useMatureGate(video.contentRating);
+  // Folded into isContentGated so the warning gets the behaviour a locked post
+  // already has: no autoplay, no controls, no poster fallback painted over it.
+  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || matureGate.isGated;
 
 
   const handlePlayClick = useCallback(() => {
@@ -1614,8 +1621,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
-        {/* Combo PPV + Holdings Locked */}
-        {isComboLocked ? (
+        {/* Mature warning sits outermost: revealing it falls through to
+            whatever gate the post actually has, rather than replacing it. */}
+        {matureGate.isGated ? (
+          <MatureContentGate
+            preview={thumbnail}
+            onReveal={matureGate.reveal}
+            className="w-full h-full rounded-lg [&>img]:h-full [&>img]:max-h-none"
+          />
+        ) : /* Combo PPV + Holdings Locked */ isComboLocked ? (
           <>
             <img src={thumbnail} alt={video.title} className="w-full h-full object-cover rounded-lg" loading="lazy" />
             <div 
@@ -2284,6 +2298,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         currentTitle={video.title}
         currentDescription={video.description ?? ''}
         currentCategories={video.categories ?? []}
+        currentContentRating={video.contentRating}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, video.id, edited);
         }}
