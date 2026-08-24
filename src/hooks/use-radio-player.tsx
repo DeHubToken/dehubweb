@@ -19,6 +19,14 @@ import {
 import type { RadioStation } from '@/lib/api/radio-browser';
 import { registerStationClick } from '@/lib/api/radio-browser';
 import { toast } from '@/hooks/use-toast';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+} from '@/lib/media-session';
+
+/** Identity this provider uses to hold the OS media session. */
+const MEDIA_SESSION_OWNER = 'radio-player';
 
 // ============================================================================
 // TYPES
@@ -262,6 +270,43 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
       error: null,
     }));
   }, [suspendAudioContext]);
+
+  /**
+   * Mirror the tuned station onto the OS media session.
+   *
+   * Driven from state rather than poked at from inside play/pause/stop,
+   * because the station can also change from a station list, a deep link or
+   * an error handler, and every one of those has to reach the lock screen too.
+   *
+   * No seek handlers and no position: a stream has no duration, and offering
+   * a scrub bar the station cannot honour is worse than offering none.
+   */
+  useEffect(() => {
+    const station = state.currentStation;
+    if (!station) {
+      releaseMediaSession(MEDIA_SESSION_OWNER);
+      return;
+    }
+
+    claimMediaSession(
+      MEDIA_SESSION_OWNER,
+      {
+        title: station.name,
+        artist: station.country || 'Live radio',
+        album: 'DeHub Radio',
+        artwork: station.favicon || null,
+      },
+      { play: resume, pause, stop },
+    );
+  }, [state.currentStation, resume, pause, stop]);
+
+  useEffect(() => {
+    setMediaSessionPlaying(MEDIA_SESSION_OWNER, state.isPlaying);
+  }, [state.isPlaying]);
+
+  // Provider teardown. Without this a full-page navigation can leave the OS
+  // holding a station that no longer has an audio element behind it.
+  useEffect(() => () => releaseMediaSession(MEDIA_SESSION_OWNER), []);
   
   const setVolume = useCallback((volume: number) => {
     const clampedVolume = Math.max(0, Math.min(1, volume));

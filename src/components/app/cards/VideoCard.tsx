@@ -67,6 +67,12 @@ import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
 import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+  setMediaSessionPosition,
+} from '@/lib/media-session';
+import {
   Drawer,
   DrawerContent,
   DrawerHeader,
@@ -1074,6 +1080,46 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
   }, []);
 
+  /**
+   * Hold the OS media session while this card is actually audible.
+   *
+   * The `!isMuted` half is the important one. A feed autoplays videos muted,
+   * so claiming on `isPlaying` alone would mean every card scrolled past
+   * silently seizes the lock screen — and pressing pause on your headphones
+   * would stop a muted thumbnail somewhere on screen instead of the radio
+   * station you are listening to. Only a video with sound gets to own it.
+   */
+  useEffect(() => {
+    if (!isPlaying || isMuted) {
+      releaseMediaSession(instanceId);
+      return;
+    }
+
+    claimMediaSession(
+      instanceId,
+      {
+        title: video.title || 'DeHub video',
+        artist: video.channel || 'DeHub',
+        artwork: thumbnail || null,
+      },
+      {
+        // handlePlayClick toggles, which is exactly what both actions want.
+        play: handlePlayClick,
+        pause: handlePlayClick,
+        seekbackward: (offset) => seekBy(-offset),
+        seekforward: (offset) => seekBy(offset),
+        seekto: (time) => {
+          if (videoRef.current) videoRef.current.currentTime = time;
+        },
+      },
+    );
+    setMediaSessionPlaying(instanceId, true);
+  }, [isPlaying, isMuted, instanceId, video.title, video.channel, thumbnail, handlePlayClick, seekBy]);
+
+  // A card unmounting mid-play — scrolled out of the virtualised feed, or the
+  // route changed — must not leave the OS holding a dead session.
+  useEffect(() => () => releaseMediaSession(instanceId), [instanceId]);
+
   const handleVideoEnded = useCallback(() => {
     // Ads always loop — never stop
     if ((video.isAd || isLooping) && videoRef.current) {
@@ -1128,13 +1174,18 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       const ct = videoRef.current.currentTime;
       const dur = videoRef.current.duration;
       setCurrentTime(ct);
-      
+
       // Track video view progress (fires view when threshold met)
       if (dur > 0) {
         trackView(ct, dur);
       }
+
+      // Drives the OS progress bar. A no-op unless this card currently owns
+      // the media session, and it drops non-finite durations rather than
+      // throwing — a live HLS source reports Infinity here.
+      setMediaSessionPosition(instanceId, ct, dur, videoRef.current.playbackRate);
     }
-  }, [trackView]);
+  }, [trackView, instanceId]);
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {

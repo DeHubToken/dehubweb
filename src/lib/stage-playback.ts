@@ -41,6 +41,19 @@ import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { PLAYBACK_RATES } from '@/lib/video-preferences';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+  setMediaSessionPosition,
+} from '@/lib/media-session';
+
+/**
+ * Identity this engine uses to hold the OS media session. One string because
+ * there is one `<audio>`: whichever recording is loaded is the one the lock
+ * screen controls.
+ */
+const MEDIA_SESSION_OWNER = 'stage-playback';
 
 /** The little a recording needs to be playable. Any AudioSpace satisfies it. */
 export interface StagePlayable {
@@ -297,6 +310,10 @@ function publishPosition() {
     progress: Math.round(Math.min(1, Math.max(0, t / dur)) * 1000) / 1000,
     timeLeft: `-${m}:${s.toString().padStart(2, '0')}`,
   });
+  // Feeds the OS progress bar. `dur` here is the resolved duration, not
+  // `el.duration` — for a MediaRecorder webm the raw value is Infinity or the
+  // first cluster's length, and handing either to setPositionState throws.
+  setMediaSessionPosition(MEDIA_SESSION_OWNER, t, dur, state.rate);
 }
 
 function handleEnded() {
@@ -357,6 +374,9 @@ export function stopStageRecording() {
   forcingDuration = false;
   pendingSeekRatio = null;
   publish(IDLE);
+  // Releasing checks ownership, so stopping a recording after the radio has
+  // taken the session over leaves the radio's lock screen intact.
+  releaseMediaSession(MEDIA_SESSION_OWNER);
 }
 
 /**
@@ -409,6 +429,27 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
     timeLeft: '',
   });
 
+  // Claimed before play() rather than after it resolves: on a phone the lock
+  // screen and the notification shade are the only controls the listener has
+  // once they leave the tab, and a claim that waits for the promise leaves a
+  // gap where backgrounding the browser kills the audio outright.
+  claimMediaSession(
+    MEDIA_SESSION_OWNER,
+    { title: space.title || 'Stage recording', artist: 'DeHub Stages' },
+    {
+      play: resumeStageRecording,
+      pause: pauseStageRecording,
+      stop: stopStageRecording,
+      seekbackward: (offset) => nudgeStageRecording(-offset),
+      seekforward: (offset) => nudgeStageRecording(offset),
+      seekto: (time) => {
+        const dur = resolveDuration();
+        if (isFinite(dur) && dur > 0) scrubStageRecording(time / dur);
+      },
+    },
+  );
+  setMediaSessionPlaying(MEDIA_SESSION_OWNER, true);
+
   el.play()
     .then(() => {
       publish({ loading: false });
@@ -435,6 +476,23 @@ export function pauseStageRecording() {
   // Volume to zero with it, or the waveform freezes mid-bounce at whatever
   // level the last analyser read happened to catch.
   publish({ paused: true, volume: 0 });
+  setMediaSessionPlaying(MEDIA_SESSION_OWNER, false);
+}
+
+/**
+ * Move the playhead by a number of seconds, clamped to the recording.
+ *
+ * Exists for the OS seek buttons, which hand over an offset rather than a
+ * destination. Expressed against the resolved duration for the same reason
+ * everything else here is — `el.duration` cannot be trusted on these files.
+ */
+export function nudgeStageRecording(seconds: number) {
+  const el = audioEl;
+  if (!el || !state.spaceId) return;
+  const dur = resolveDuration();
+  if (!isFinite(dur) || dur <= 0) return;
+  el.currentTime = Math.min(dur, Math.max(0, el.currentTime + seconds));
+  if (state.paused) publishPosition();
 }
 
 /** Pick up where a pause left off. */
@@ -448,6 +506,7 @@ export function resumeStageRecording() {
   el.play()
     .then(() => {
       publish({ paused: false });
+      setMediaSessionPlaying(MEDIA_SESSION_OWNER, true);
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(pump);
     })
