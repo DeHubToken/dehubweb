@@ -12,8 +12,7 @@ import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
-import { SmartReplyTray } from './SmartReplyTray';
-import { ReplyOrb } from './ReplyOrb';
+import { SmartReplyRail } from './SmartReplyRail';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 import {
   ATTACHMENT_ACCEPT,
@@ -79,15 +78,16 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     onMentionInsert: (_user, newText) => setMessage(newText),
   });
 
-  const [showReplyTray, setShowReplyTray] = useState(false);
+  const [railDismissed, setRailDismissed] = useState(false);
   const smartReplies = useSmartReplies(thread ?? [], peerName);
   const hasThread = !!thread && thread.length > 0;
 
   const [composerFocused, setComposerFocused] = useState(false);
 
-  // Below tablet width the resting strip under the composer replaces the
-  // focus-raised tray: the orb and two drafts sit in the space the mobile
-  // bottom nav vacates, and stand down the moment the keyboard comes up.
+  // Where the rail hangs is the ONLY thing the viewport decides now: below the
+  // composer on phones, where it fills the band the bottom nav vacates, and as
+  // its own band above the composer on wide screens, where nothing else wants
+  // the space. Same rail, same drafting, both sides of the breakpoint.
   // Gated on VIEWPORT, not pointer type — a desktop window narrowed to phone
   // width has the same layout and the same dead band, so it gets the strip.
   const [narrowViewport, setNarrowViewport] = useState(
@@ -100,59 +100,45 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  // Tail the tray has already opened itself for. One auto-open per incoming
-  // message: dismissing must not be undone by the next click into the box, and
-  // re-focusing must not re-spend a model call. A new message changes the key,
-  // which re-arms it on its own.
-  const autoOpenedFor = useRef<string | null>(null);
+  // Thread tail a draft has already been spent on. One model call per message,
+  // whichever side sent it: re-rendering, re-focusing and re-showing the rail
+  // must never re-spend it. A new message changes the key, which re-arms it.
+  const draftedFor = useRef<string | null>(null);
 
-  // Read through refs so the effect below can depend on the two things that
-  // should actually retrigger it — focus and the newest message — instead of
-  // re-running on every keystroke and every render of the hook.
+  // Read through refs so the effect below can depend on the one thing that
+  // should actually retrigger it — the newest message — instead of re-running
+  // on every keystroke and every render of the hook.
   const latest = useRef({ smartReplies, message, hasThread });
   latest.current = { smartReplies, message, hasThread };
 
   /**
-   * Being in the composer to reply IS the request for suggestions — there is
-   * no button to press first. Held back only when the user has already started
-   * typing (they know what to say) or when this message has had its turn.
+   * The rail is on screen with a socket and two empty slots, so waiting for a
+   * focus pass before drafting would leave it showing nothing in the one
+   * moment it is being looked at. Spend the call when the thread tail changes
+   * instead — held back only when the user has already started typing, because
+   * then they know what to say.
    *
-   * Note this opens whenever there is a conversation at all. The drafter
-   * handles both directions now: an incoming tail gets replies, the user's own
-   * last word gets follow-ups.
+   * The drafter handles both directions: an incoming tail gets replies, the
+   * user's own last word gets follow-ups.
    */
-  const openTrayIfDue = () => {
-    const { smartReplies: sr, message: msg, hasThread: any } = latest.current;
-    if (!any || msg.trim()) return;
-    if (autoOpenedFor.current === sr.tailKey) return;
-    autoOpenedFor.current = sr.tailKey;
-    setShowReplyTray(true);
-    if (sr.status === 'idle') sr.generate();
-  };
-
-  // Fires on the click into the box, and again if a new message lands while
-  // the user is already sitting there — otherwise the tray would wait for them
-  // to click away and back before offering anything. Narrow layouts never
-  // raise a tray on focus; their drafts are spent by the tail effect below.
   useEffect(() => {
-    if (!narrowViewport && composerFocused) openTrayIfDue();
-  }, [narrowViewport, composerFocused, smartReplies.tailKey]);
-
-  // The resting strip is already on screen, so waiting for a focus pass to
-  // draft would be pointless — spend the call when the thread tail changes
-  // instead, under the same once-per-message discipline as openTrayIfDue.
-  useEffect(() => {
-    if (!narrowViewport) return;
+    if (!hasThread) return;
     const { smartReplies: sr, message: msg } = latest.current;
     if (msg.trim()) return;
+    if (draftedFor.current === sr.tailKey) return;
+    draftedFor.current = sr.tailKey;
     if (sr.status === 'idle') sr.generate();
-  }, [narrowViewport, smartReplies.tailKey]);
+  }, [hasThread, smartReplies.tailKey]);
 
-  const handleDismissTray = () => {
-    // Stays dismissed for this message — autoOpenedFor is already set, so the
-    // next focus won't drag it back up.
-    setShowReplyTray(false);
-  };
+  // A new message re-arms a dismissed rail. Dismissing is "not for this
+  // message", not "never again" — the alternative is a feature the user can
+  // switch off by accident and never find again, since there is no orb
+  // anywhere else to press.
+  useEffect(() => {
+    setRailDismissed(false);
+  }, [smartReplies.tailKey]);
+
+  const handleDismissRail = () => setRailDismissed(true);
 
   /**
    * Drop a suggestion into the composer rather than sending it. The user still
@@ -161,7 +147,6 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
    */
   const handlePickSuggestion = (text: string) => {
     setMessage(prev => (prev.trim() ? `${prev.trimEnd()} ${text}` : text));
-    setShowReplyTray(false);
     requestAnimationFrame(() => {
       const t = textareaRef.current;
       if (!t) return;
@@ -182,9 +167,10 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const handleSend = () => {
     if (sendDisabled || isSendingFee) return;
-    // Whatever is in the tray was drafted against a thread that no longer ends
-    // where it did, so it goes away with the send.
-    setShowReplyTray(false);
+    // Whatever is on the rail was drafted against a thread that no longer ends
+    // where it did, so it goes down with the send and comes back up on the
+    // next tail — as follow-ups, since the user now holds the last word.
+    setRailDismissed(true);
     if (audioPreview) {
       onSendMessage({
         content: '',
@@ -386,39 +372,32 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // 'idle' is unresolved, not empty: the call is on its way, so it reads as
-  // loading. A failed draft keeps its chips on screen — muted, with the orb
-  // live to press again.
-  const barStatus =
-    smartReplies.status === 'idle' ? ('loading' as const) : smartReplies.status;
-  // The strip fills the band in EVERY open thread — a thread with nothing to
-  // reply to still gets its quiet one-liner, because an empty band and a
-  // broken feature are indistinguishable at a glance.
-  const showReplyBar =
-    narrowViewport && hasThread && !composerFocused && !message.trim();
-  // The cut-out rim wears whatever hairline the cards currently wear, so the
-  // socket never reads brighter than the surface it is carved from.
-  const notchRimClass =
-    barStatus === 'ready'
-      ? 'border-white/10'
-      : barStatus === 'loading'
-        ? 'border-white/[0.07]'
-        : 'border-white/[0.05]';
+  // The rail is up in EVERY open thread — a thread with nothing to reply to
+  // still gets its quiet one-liner, because an empty band and a broken feature
+  // are indistinguishable at a glance. It stands down while there is typed
+  // text, and on phones while the composer holds focus: the keyboard claims
+  // exactly the band it sits in.
+  const showRail =
+    hasThread && !railDismissed && !message.trim() && (!narrowViewport || !composerFocused);
+
+  const railProps = {
+    status: smartReplies.status,
+    suggestions: smartReplies.suggestions,
+    error: smartReplies.error,
+    onGenerate: () => smartReplies.generate(),
+    onPick: handlePickSuggestion,
+    onDismiss: handleDismissRail,
+  };
 
   return (
     <>
-    {/* Mounts on showReplyTray alone — wide screens only. Whether there is
-        anything to draft is a question the tray ANSWERS — as its own empty
-        line, with the orb still there to press — not one that decides whether
-        it exists. Narrow viewports show the resting strip below instead. */}
-    {!narrowViewport && showReplyTray && (
-      <SmartReplyTray
-        status={smartReplies.status}
-        suggestions={smartReplies.suggestions}
-        error={smartReplies.error}
-        onGenerate={() => smartReplies.generate()}
-        onPick={handlePickSuggestion}
-        onDismiss={handleDismissTray}
+    {/* Wide layouts: the rail is a band of its own above the composer, where
+        nothing is competing for the space. Phones get the same rail under the
+        composer instead — see the strip at the foot of this file. */}
+    {showRail && !narrowViewport && (
+      <SmartReplyRail
+        {...railProps}
+        className="hidden lg:block pl-4 pr-3 pt-2.5 pb-3 border-t border-white/[0.07]"
       />
     )}
     {/* No fill: both consumers (DM + Public Chat) are surface-less now, so a
@@ -532,10 +511,15 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           onClose={mention.handleClose}
         />
 
-        {/* Action buttons */}
-        <div className="flex items-center justify-end gap-0.5 pt-1">
-          {/* No orb here. The tray raises itself when the composer takes focus,
-              and the only orb is the one at the bottom of that tray. */}
+        {/* Action buttons. Spread across the full width on touch layouts —
+            bunched into the right corner they were a cramped huddle of 32px
+            targets directly over the reply rail, and the thumb that reaches
+            the send button cannot reach the first of them. Wide layouts keep
+            the conventional right-hand cluster, where a row of icons stretched
+            across 700px would read as unrelated controls. */}
+        <div className="flex items-center justify-between gap-0.5 pt-1 lg:justify-end">
+          {/* No orb here. The rail carries the only orb: one control, in one
+              place, on every surface. */}
           {onTipClick && (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -675,81 +659,16 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         </div>
       </div>
 
-      {/* Narrow-viewport resting rail: two joined replies with the orb seated
-          in a circular cut-out at their centre seam. It fills the band
-          the mobile bottom nav vacates while a conversation is open. It exists
-          to be dismissed by use: focusing the composer raises the keyboard,
-          the keyboard claims this exact space, so the strip stands down on
-          focus and stays down once there is typed text. A failed draft keeps
-          its chips — muted, with the orb live for another press — because a
-          dead band and a working one must never be confusable. */}
-      {showReplyBar && (
-        <div className="lg:hidden px-3 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
-          <div className="relative">
-            <div className="smart-reply-rail [--smart-reply-notch:26px] grid grid-cols-2 gap-2">
-              {(barStatus === 'ready'
-                ? [...smartReplies.suggestions.slice(0, 2)]
-                : [null, null])
-                .map((s, i) => (
-                  <button
-                    key={s ? `${s.label}-${i}` : `strip-${i}`}
-                    type="button"
-                    disabled={!s}
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => s && handlePickSuggestion(s.text)}
-                    aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                    className={`group min-w-0 min-h-[124px] rounded-2xl border p-3 text-left flex flex-col justify-between transition-[transform,background-color,border-color] duration-150 ease-out hover:border-white/25 hover:bg-white/[0.075] active:translate-y-px active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/45 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${
-                      s
-                        ? 'bg-white/[0.045] border-white/10 active:bg-white/[0.09]'
-                        : barStatus === 'loading'
-                          ? 'bg-white/[0.03] border-white/[0.07] cursor-default'
-                          : 'bg-transparent border-white/[0.05] cursor-default'
-                    }`}
-                  >
-                    {s ? (
-                      <>
-                        <span className="text-[9px] uppercase tracking-[0.08em] leading-4 text-zinc-400 group-active:text-white">
-                          {s.label}
-                        </span>
-                        <span className="mt-2 text-[13px] font-medium leading-snug text-white line-clamp-4">
-                          {s.text}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="block w-full space-y-1.5">
-                        <span
-                          className={`block h-2.5 w-full rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
-                        />
-                        <span
-                          className={`block h-2.5 w-2/3 rounded bg-white/[0.07] ${barStatus === 'loading' ? 'animate-pulse' : ''}`}
-                        />
-                      </span>
-                    )}
-                  </button>
-                ))}
-            </div>
-
-            {/* Hairline tracing the cut-out: the mask that carves the notch
-                erases the cards' own border along the arc, so the rim is
-                drawn separately, sized to the seated orb's 52px socket. */}
-            <div
-              aria-hidden="true"
-              className={`pointer-events-none absolute left-1/2 bottom-0 -translate-x-1/2 w-[52px] h-[26px] rounded-t-full border-b-0 ${notchRimClass}`}
-            />
-
-            <button
-              type="button"
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => smartReplies.generate()}
-              disabled={barStatus === 'loading'}
-              aria-label={barStatus === 'loading' ? 'Drafting replies' : 'Draft new replies'}
-              title={barStatus === 'loading' ? undefined : 'Draft replies'}
-              className="absolute left-1/2 bottom-0 z-10 -translate-x-1/2 rounded-full p-1 transition-transform hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/45 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:opacity-60 disabled:hover:scale-100"
-            >
-              <ReplyOrb state={barStatus === 'loading' ? 'thinking' : 'idle'} size={44} />
-            </button>
-          </div>
-        </div>
+      {/* Phones and tablets: the same rail, under the composer, filling the
+          band the bottom nav vacates while a conversation is open. It exists
+          to be dismissed by use — focusing the composer raises the keyboard,
+          the keyboard claims this exact space, so the rail stands down on
+          focus and stays down once there is typed text. */}
+      {showRail && narrowViewport && (
+        <SmartReplyRail
+          {...railProps}
+          className="lg:hidden pt-2 pb-[max(0.25rem,env(safe-area-inset-bottom))]"
+        />
       )}
     </div>
     </>
