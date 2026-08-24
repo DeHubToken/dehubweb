@@ -295,6 +295,126 @@
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { height: 100%; width: 100%; background-color: var(--boot-bg, #000); color: var(--boot-fg, #fff); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
       #root { height: 100%; min-height: 100dvh; background-color: var(--boot-bg, #000); }
+
+      /* --- Boot shell ---------------------------------------------------
+         The signed-out welcome card, painted at parse time with ZERO
+         JavaScript beyond the ~40-line inserter in <body>.
+
+         WHY THIS EXISTS: #root is empty until the entry chunk (~1.7 MB) plus
+         the boot batch (~2.9 MB) has downloaded, parsed and executed. React
+         IS behind that wall, so no React component can paint before it — the
+         visitor stares at a flat --boot-bg rectangle for the whole window.
+         Everything below is inline, so it paints on the FIRST round-trip.
+
+         It is a fixed full-viewport overlay, NOT in flow. The real panel
+         (components/app/HomeIntro.tsx) lives inside the feed column, below a
+         sticky tab bar, inside the app shell — reproducing that position
+         without the app's layout is not possible, and getting it wrong trades
+         the paint win for a layout shift at hand-off. Out of flow, there is
+         nothing to shift.
+
+         It is also aria-hidden and carries NO unique copy: every word here is
+         duplicated verbatim by HomeIntro (and by HOME_INTRO_HTML in
+         CLOUDFLARE_WORKER_SEO.js for crawlers), so this is decorative chrome
+         with no SEO surface of its own and nothing for a screen reader to
+         announce twice. Do not put anything here that isn't also in those
+         two, or the three fall out of sync.
+
+         NO filter: blur(). The obvious build of "blurry, then sharp" animates
+         a full-viewport filter over a canvas already running fbm/particle
+         shaders — the exact GPU load lib/background-gate.ts exists to avoid.
+         The soft look comes from gradients (nothing to sharpen) and the
+         sharpen from a compositor-only opacity fade on .bs-plate::after once
+         the real silk texture has decoded. Opacity is free; filter is not. */
+      #boot-shell {
+        position: fixed; inset: 0; z-index: 60;
+        display: flex; align-items: center; justify-content: center;
+        padding: 16px;
+        background-color: var(--boot-bg, #000);
+        opacity: 1; transition: opacity 420ms ease;
+      }
+      #boot-shell.bs-gone { opacity: 0; pointer-events: none; }
+      /* Soft theme-tinted wash. Deliberately gradients rather than a blurred
+         bitmap: same diffuse look, no asset to fetch and no filter to run. */
+      #boot-shell .bs-bg {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(60% 55% at 50% 32%, rgba(255,255,255,.10), transparent 70%),
+          radial-gradient(90% 80% at 50% 120%, rgba(255,255,255,.05), transparent 70%);
+      }
+      #boot-shell .bs-card {
+        position: relative; width: 100%; max-width: 720px;
+        border-radius: 16px; border: 1px solid rgba(255,255,255,.10);
+        background: #000; overflow: hidden;
+      }
+      #boot-shell .bs-plate { position: absolute; inset: 0; }
+      #boot-shell .bs-plate::before {
+        content: ""; position: absolute; inset: 0;
+        background:
+          radial-gradient(120% 130% at 50% 40%, rgba(60,60,68,.55) 0%, transparent 42%),
+          radial-gradient(120% 130% at 50% 40%, transparent 40%, rgba(0,0,0,.72) 100%),
+          linear-gradient(160deg, #24242a 0%, #121216 55%, #000 100%);
+      }
+      /* The "unblur": the real silk plate, faded in on decode. */
+      #boot-shell .bs-plate::after {
+        content: ""; position: absolute; inset: 0;
+        background: url(/brand-kit/bg/bg-16.jpg) center / cover;
+        opacity: 0; transition: opacity 600ms ease;
+      }
+      #boot-shell .bs-plate.bs-ready::after { opacity: .9; }
+      #boot-shell .bs-veil {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(120% 130% at 50% 40%, transparent 40%, rgba(0,0,0,.72) 100%),
+          linear-gradient(90deg, rgba(0,0,0,.74) 0%, rgba(0,0,0,.6) 32%, rgba(0,0,0,.12) 58%, transparent 72%);
+      }
+      #boot-shell .bs-frame {
+        position: absolute; inset: 10px; border-radius: 12px;
+        border: 1px solid rgba(255,255,255,.10);
+      }
+      #boot-shell .bs-inner { position: relative; padding: 20px; }
+      #boot-shell .bs-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+      /* Text, not /brand-kit/brand/wordmark-black.png — that PNG is 45 KB and
+         a boot shell that waits on a 45 KB image is not a boot shell. The real
+         wordmark arrives with HomeIntro. */
+      #boot-shell .bs-word {
+        display: inline-flex; align-items: center; height: 34px; padding: 0 16px;
+        border-radius: 12px; background: #f4f4f2; color: #09090b;
+        font-weight: 800; font-size: 15px; letter-spacing: .02em;
+        box-shadow: 0 0 34px rgba(255,255,255,.38), 0 0 90px rgba(255,255,255,.14);
+      }
+      #boot-shell .bs-mono {
+        font-family: "Cascadia Mono", Consolas, "DejaVu Sans Mono", Menlo, monospace;
+        font-size: 13px; letter-spacing: .02em; color: rgba(255,255,255,.66);
+        border: 1px solid rgba(255,255,255,.22); border-radius: 10px;
+        background: rgba(10,10,12,.35); padding: 6px 12px; white-space: nowrap;
+      }
+      #boot-shell .bs-slash { color: rgba(255,255,255,.38); }
+      #boot-shell .bs-pills { display: flex; gap: 6px; margin-bottom: 16px; }
+      #boot-shell .bs-pills i { display: block; width: 47px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.25); }
+      #boot-shell .bs-pills i.on { background: #fff; }
+      #boot-shell .bs-head {
+        font-family: Exo, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 700; text-transform: uppercase; line-height: .92; letter-spacing: -.015em;
+        font-size: 26px;
+        background-image: linear-gradient(180deg, #fff 4%, #dcdcdf 38%, #8b8b92 78%, #6f6f76 100%);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      #boot-shell .bs-sub {
+        margin-top: 12px;
+        font-family: Exo, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 600; text-transform: uppercase; font-size: 16px; color: #c8c8cd;
+      }
+      #boot-shell .bs-desc { margin-top: 12px; max-width: 32rem; font-size: 14px; line-height: 1.6; color: rgba(255,255,255,.55); }
+      #boot-shell .bs-foot { margin-top: 24px; }
+      @media (min-width: 760px) {
+        #boot-shell .bs-inner { padding: 28px 32px; }
+        #boot-shell .bs-head { font-size: 50px; }
+        #boot-shell .bs-frame { inset: 14px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-shell, #boot-shell .bs-plate::after { transition: none; }
+      }
     </style>
   
   
@@ -308,6 +428,93 @@
 
   <body>
     <div id="root"></div>
+    <!-- Boot shell inserter. Styles and rationale live in the critical CSS
+         block above; this only decides WHETHER to show it and guarantees it
+         goes away.
+
+         Runs here rather than in <head> because it needs document.body — the
+         parser reaches this line immediately after the head, so it is as early
+         as an inline script can usefully be.
+
+         The predicate mirrors HomeIntro's `show` exactly — root path, not
+         signed in, not previously dismissed — because a boot shell that
+         promises a panel the app then declines to render is a flash of content
+         for nothing. Token liveness is tested the same way the feed-prefetch
+         script above tests it (an expired token is not a session).
+
+         Bots are skipped: Googlebot renders, and a full-viewport overlay in a
+         rendered snapshot is what the intrusive-interstitial signal is looking
+         for. Crawlers already get HOME_INTRO_HTML from the worker, so they
+         lose nothing.
+
+         REMOVAL is belt and braces. HomeIntro calls dismissBootShell() when
+         the real panel mounts (lib/boot-shell.ts), which is the honest signal.
+         The timeout below is the guarantee for every path that never gets
+         there — a failed lazy chunk, a thrown ErrorBoundary, a route that
+         redirects — because a splash that can outlive the app is a bricked
+         page, not a slow one. -->
+    <script>
+      (function () {
+        try {
+          if (location.pathname !== "/") return;
+          if (/bot|crawl|spider|lighthouse|headlesschrome|google-inspectiontool/i.test(navigator.userAgent)) return;
+          if (localStorage.getItem("dehub.homeIntroDismissed") === "1") return;
+          var tk = localStorage.getItem("dehub_token");
+          var tkExp = parseInt(localStorage.getItem("dehub_token_expires_at") || "0", 10);
+          if (tk && (!tkExp || Date.now() < tkExp)) return; // signed in — no welcome panel
+
+          var el = document.createElement("div");
+          el.id = "boot-shell";
+          el.setAttribute("aria-hidden", "true");
+          el.innerHTML =
+            '<div class="bs-bg"></div>' +
+            '<div class="bs-card">' +
+              '<div class="bs-plate" id="bs-plate"></div>' +
+              '<div class="bs-veil"></div>' +
+              '<div class="bs-frame"></div>' +
+              '<div class="bs-inner">' +
+                '<div class="bs-top"><span class="bs-word">DEHUB</span>' +
+                  '<span class="bs-mono"><span class="bs-slash">// type =</span> “welcome”</span></div>' +
+                '<div class="bs-pills"><i class="on"></i><i></i><i></i></div>' +
+                '<p class="bs-head">The Social Media We<br>All Deserve</p>' +
+                '<div class="bs-sub"><span class="bs-slash">//</span>never_deplatformed</div>' +
+                '<p class="bs-desc">Instantly monetize, never get deplatformed, keep up to 99% of revenue ' +
+                  'and create free from censorship or platform manipulation.</p>' +
+                '<div class="bs-foot"><span class="bs-mono"><span class="bs-slash">//</span>dehub.io</span></div>' +
+              '</div>' +
+            '</div>';
+          document.body.appendChild(el);
+
+          // The sharpen. Decoded off-thread; the gradient plate underneath is
+          // already a complete picture, so if this never arrives nothing is
+          // missing — it just stays soft.
+          var img = new Image();
+          img.decoding = "async";
+          img.onload = function () {
+            var p = document.getElementById("bs-plate");
+            if (p) p.classList.add("bs-ready");
+          };
+          img.src = "/brand-kit/bg/bg-16.jpg";
+
+          // Defined HERE, not in the bundle, so the shell can always remove
+          // itself even if the bundle never arrives. lib/boot-shell.ts is a
+          // thin caller of this.
+          var timer = setTimeout(function () { window.__dehubDismissBootShell(); }, 12000);
+          window.__dehubDismissBootShell = function () {
+            clearTimeout(timer);
+            var n = document.getElementById("boot-shell");
+            if (!n || n.classList.contains("bs-gone")) return;
+            n.classList.add("bs-gone");
+            var kill = function () { if (n.parentNode) n.parentNode.removeChild(n); };
+            n.addEventListener("transitionend", kill, { once: true });
+            // transitionend never fires under prefers-reduced-motion (no
+            // transition to end) or on a background tab, and a shell left in
+            // the DOM at opacity 0 still eats nothing but is dead weight.
+            setTimeout(kill, 600);
+          };
+        } catch (e) { /* never block boot */ }
+      })();
+    </script>
     <!-- No-JS fallback. The app is client-rendered, so anything that fetches
          this page without executing JS previously saw an empty <div id="root">
          and nothing else. The Cloudflare worker only prerenders for UAs matching

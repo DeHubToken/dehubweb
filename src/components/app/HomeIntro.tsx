@@ -46,6 +46,7 @@ import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { dismissBootShell } from '@/lib/boot-shell';
 import { cn } from '@/lib/utils';
 
 const DISMISS_KEY = 'dehub.homeIntroDismissed';
@@ -135,6 +136,18 @@ export function HomeIntro() {
   const paused = useRef(false);
 
   const show = !(isAuthenticated || dismissed);
+
+  /* Hand off from index.html's boot shell. Deliberately NOT gated on `show`:
+     the shell's own predicate is read from localStorage at parse time, so it
+     can disagree with this one (a token that expires between the two, a
+     dismissal in another tab). Whichever way they diverge, this component
+     mounting means React is live and the splash has no business still being
+     up. rAF defers to after the panel's own paint, so the cross-fade reveals
+     something rather than swapping to a blank frame. */
+  useEffect(() => {
+    const id = requestAnimationFrame(() => dismissBootShell());
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     if (!show) return;
