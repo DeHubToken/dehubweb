@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useUpdatePlan } from '@/hooks/use-subscriptions';
-import { type SubscriptionPlan } from '@/lib/api/dehub';
+import { type SubscriptionPlan, planPrice, isPlanPublished } from '@/lib/api/dehub';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 interface EditPlanModalProps {
@@ -19,34 +19,52 @@ interface EditPlanModalProps {
   plan: SubscriptionPlan;
 }
 
+/**
+ * Whole months, lifetime = 0 — the same list the create dialog offers.
+ *
+ * This file used to measure duration in *days* (7/30/90/365) while creation
+ * measured it in months (1/3/6/12) and the API stored 999 for lifetime. Three
+ * units for one field: opening this dialog on a 1-month plan showed no preset
+ * selected, and saving wrote `duration: 30` — a plan the contract rejects.
+ */
 const DURATION_PRESETS = [
-  { label: '1 Week', days: 7 },
-  { label: '1 Month', days: 30 },
-  { label: '3 Months', days: 90 },
-  { label: '1 Year', days: 365 },
-  { label: 'Lifetime', days: 0 },
+  { label: '1 Month', months: 1 },
+  { label: '3 Months', months: 3 },
+  { label: '6 Months', months: 6 },
+  { label: '1 Year', months: 12 },
+  { label: 'Lifetime', months: 0 },
 ];
+
+/** Legacy lifetime value, so an existing 999 plan still lights up "Lifetime". */
+function toPresetMonths(duration: number): number {
+  return duration === 999 ? 0 : duration;
+}
 
 export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) {
   const [name, setName] = useState(plan.name);
   const [description, setDescription] = useState(plan.description || '');
-  const [price, setPrice] = useState(String(plan.price));
-  const [duration, setDuration] = useState(plan.duration);
+  // `plan.price` is only populated for plans the API has flattened; the price
+  // otherwise lives inside `chains`. `String(undefined)` put the literal text
+  // "undefined" in the price box.
+  const [price, setPrice] = useState(String(planPrice(plan) ?? ''));
+  const [duration, setDuration] = useState(toPresetMonths(plan.duration));
   const [benefits, setBenefits] = useState<string[]>(plan.benefits?.length ? plan.benefits : ['']);
-  const [isActive, setIsActive] = useState(plan.isActive !== false);
 
   const updatePlanMutation = useUpdatePlan();
-  const planId = plan._id || plan.id || '';
+  const planId = plan.id || plan._id || '';
+  const published = isPlanPublished(plan);
 
   // Sync form when plan prop changes
   useEffect(() => {
     setName(plan.name);
     setDescription(plan.description || '');
-    setPrice(String(plan.price));
-    setDuration(plan.duration);
+    setPrice(String(planPrice(plan) ?? ''));
+    setDuration(toPresetMonths(plan.duration));
     setBenefits(plan.benefits?.length ? plan.benefits : ['']);
-    setIsActive(plan.isActive !== false);
   }, [plan]);
+
+  const priceChanged = parseFloat(price) !== planPrice(plan);
+  const durationChanged = duration !== toPresetMonths(plan.duration);
 
   const handleAddBenefit = () => {
     setBenefits([...benefits, '']);
@@ -69,29 +87,19 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
     const filteredBenefits = benefits.filter(b => b.trim());
 
     await updatePlanMutation.mutateAsync({
-      planId,
+      planId: String(planId),
       data: {
         name: name.trim(),
         description: description.trim() || undefined,
         price: parseFloat(price),
-        currency: 'DHB',
         duration,
-        benefits: filteredBenefits.length > 0 ? filteredBenefits : undefined,
-        isActive,
+        // Always sent, including empty. `undefined` means "leave alone" to the
+        // API, so a creator who deleted every benefit saw them all come back.
+        benefits: filteredBenefits,
       },
     });
 
     onOpenChange(false);
-  };
-
-  const handleToggleActive = async () => {
-    if (!planId) return;
-    const newActive = !isActive;
-    setIsActive(newActive);
-    await updatePlanMutation.mutateAsync({
-      planId,
-      data: { isActive: newActive },
-    });
   };
 
   const isValid = name.trim() && price && parseFloat(price) > 0;
@@ -162,13 +170,13 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
               <Clock className="w-3.5 h-3.5" />
               Duration
             </label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {DURATION_PRESETS.map((preset) => (
                 <button
-                  key={preset.days}
-                  onClick={() => setDuration(preset.days)}
+                  key={preset.months}
+                  onClick={() => setDuration(preset.months)}
                   className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                    duration === preset.days
+                    duration === preset.months
                       ? 'bg-white/20 border-white/30 text-white'
                       : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10'
                   } border`}
@@ -218,25 +226,19 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
             </div>
           </div>
 
-          {/* Active toggle */}
-          <div className="flex items-center justify-between rounded-xl bg-white/5 border border-white/10 p-3">
-            <div>
-              <p className="text-sm text-white font-medium">Plan Active</p>
-              <p className="text-xs text-zinc-500">Deactivated plans can't be purchased</p>
+          {/* The "Plan Active" toggle that used to sit here wrote an `isActive`
+              field the API has never had and the Plans schema does not define,
+              so it silently did nothing. Whether a plan can be bought is
+              decided on chain — which is what this says instead. */}
+          {published && (priceChanged || durationChanged) && (
+            <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-3">
+              <p className="text-xs text-amber-200/90">
+                Changing the {priceChanged && durationChanged ? 'price and duration' : priceChanged ? 'price' : 'duration'}{' '}
+                takes this plan off sale until you publish it again — buyers are charged
+                what the chain holds, not what's shown here.
+              </p>
             </div>
-            <button
-              onClick={handleToggleActive}
-              className={`w-11 h-6 rounded-full transition-colors relative ${
-                isActive ? 'bg-green-500' : 'bg-zinc-600'
-              }`}
-            >
-              <span
-                className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-                  isActive ? 'left-[22px]' : 'left-0.5'
-                }`}
-              />
-            </button>
-          </div>
+          )}
 
           {/* Submit */}
           <Button

@@ -800,6 +800,32 @@ export async function readContract<T>(
 }
 
 /**
+ * As `readContract`, but hands back every return value rather than the first.
+ *
+ * Needed for getters that return a struct as a flat tuple — `readContract`
+ * silently drops everything after `[0]`, which for a six-field plan record
+ * means you get the id and none of the price.
+ */
+export async function readContractAll<T extends readonly unknown[]>(
+  contractAddress: string,
+  contractInterface: Interface,
+  functionName: string,
+  args: unknown[] = [],
+  chainId?: ChainId
+): Promise<T> {
+  await initChainRpcUrls();
+  const data = contractInterface.encodeFunctionData(functionName, args);
+  const rpcUrl = getRpcUrl(chainId);
+
+  const result = await publicRpcCall(rpcUrl, 'eth_call', [
+    { to: contractAddress, data },
+    'latest',
+  ]);
+
+  return contractInterface.decodeFunctionResult(functionName, result) as unknown as T;
+}
+
+/**
  * Check if the DHB token is currently paused on-chain.
  * Returns false if the call fails (safe default — don't block UI on RPC errors).
  */

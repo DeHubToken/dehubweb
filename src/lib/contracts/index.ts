@@ -8,6 +8,7 @@
 export {
   writeContractAA,
   readContract,
+  readContractAll,
   getWalletAddress,
   isSmartAccountSession,
   approveERC20,
@@ -55,6 +56,29 @@ export {
   mintWithBounty,
   type MintWithBountyParams,
 } from './stream-controller';
+
+// Creator subscriptions (on-chain plans + purchases)
+export {
+  SUBSCRIPTION_CONTRACTS,
+  SUBSCRIPTION_ABI,
+  LIFETIME_DURATION,
+  MAX_DURATION_MONTHS,
+  isSubscriptionChain,
+  getSubscriptionContract,
+  normaliseDuration,
+  formatDuration,
+  readOnChainPlan,
+  readOnChainSubscription,
+  quoteSubscriptionFee,
+  getSubscriptionCost,
+  publishPlanOnChain,
+  buySubscriptionOnChain,
+  type OnChainPlan,
+  type OnChainSubscription,
+  type SubscriptionCost,
+  type PublishPlanParams,
+  type BuySubscriptionParams,
+} from './subscription';
 
 // Uniswap V3 Auto-Swap (Base)
 export {
