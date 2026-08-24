@@ -19,6 +19,7 @@ import {
   DrawerDescription,
 } from '@/components/ui/drawer';
 import { editPost } from '@/lib/api/dehub';
+import type { ContentRating } from '@/lib/api/dehub/types';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -27,6 +28,7 @@ export interface EditPostResult {
   description: string;
   categories: string[];
   commentsDisabled: boolean;
+  contentRating: ContentRating;
 }
 
 interface EditPostModalProps {
@@ -37,6 +39,7 @@ interface EditPostModalProps {
   currentDescription?: string;
   currentCategories?: string[];
   currentCommentsDisabled?: boolean;
+  currentContentRating?: ContentRating;
   onSuccess?: (edited: EditPostResult) => void;
 }
 
@@ -48,6 +51,7 @@ export function EditPostModal({
   currentDescription = '',
   currentCategories = [],
   currentCommentsDisabled = false,
+  currentContentRating,
   onSuccess,
 }: EditPostModalProps) {
   const [name, setName] = useState(currentTitle);
@@ -55,6 +59,7 @@ export function EditPostModal({
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState<string[]>(currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
+  const [isMature, setIsMature] = useState(currentContentRating === 'mature');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Sync with props when modal opens
@@ -64,9 +69,10 @@ export function EditPostModal({
       setDescription(currentDescription);
       setCategories(currentCategories);
       setCommentsDisabled(currentCommentsDisabled);
+      setIsMature(currentContentRating === 'mature');
       setCategoryInput('');
     }
-  }, [open, currentTitle, currentDescription, currentCategories, currentCommentsDisabled]);
+  }, [open, currentTitle, currentDescription, currentCategories, currentCommentsDisabled, currentContentRating]);
 
   const handleAddCategory = () => {
     const trimmed = categoryInput.trim();
@@ -86,6 +92,10 @@ export function EditPostModal({
     if (description.trim() !== currentDescription) params.description = description.trim();
     if (JSON.stringify(categories) !== JSON.stringify(currentCategories)) params.category = categories;
     if (commentsDisabled !== currentCommentsDisabled) params.commentsDisabled = commentsDisabled;
+    const nextRating: ContentRating = isMature ? 'mature' : 'safe';
+    // The API stores nothing for a safe post, so an unrated one arrives as
+    // undefined — compare against the rating it means rather than the field.
+    if (nextRating !== (currentContentRating ?? 'safe')) params.contentRating = nextRating;
 
     if (Object.keys(params).length === 0) {
       toast.message('No changes to save');
@@ -106,7 +116,7 @@ export function EditPostModal({
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled });
+        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled, contentRating: nextRating });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');
@@ -243,6 +253,43 @@ export function EditPostModal({
                   className={cn(
                     'absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform',
                     commentsDisabled ? 'translate-x-0.5' : 'translate-x-[22px]'
+                  )}
+                />
+              </span>
+            </button>
+          </div>
+
+          {/* Mature content */}
+          <div>
+            <label className="text-zinc-400 text-sm mb-2 block">Content rating</label>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isMature}
+              onClick={() => setIsMature((v) => !v)}
+              className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors text-left"
+            >
+              <span className="min-w-0">
+                <span className="block text-white text-sm font-medium">
+                  {isMature ? 'Marked mature' : 'Mark as mature'}
+                </span>
+                <span className="block text-zinc-500 text-xs mt-0.5">
+                  {isMature
+                    ? 'Kept off the public feed. Followers, your profile and the link still work.'
+                    : 'For adult or graphic posts. Turning this on takes it off the public feed.'}
+                </span>
+              </span>
+              <span
+                className={cn(
+                  'relative shrink-0 w-11 h-6 rounded-full transition-colors',
+                  isMature ? 'bg-amber-500/80' : 'bg-zinc-700'
+                )}
+              >
+                <span
+                  data-keep-white
+                  className={cn(
+                    'absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform',
+                    isMature ? 'translate-x-[22px]' : 'translate-x-0.5'
                   )}
                 />
               </span>

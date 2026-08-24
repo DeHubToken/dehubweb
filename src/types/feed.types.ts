@@ -9,6 +9,7 @@
 
 import type { User } from './app.types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
+import type { ContentRating } from '@/lib/api/dehub/types';
 
 /**
  * Content type badge variants for universal card headers
@@ -31,6 +32,16 @@ export interface BaseFeedItem {
   createdAt?: string;
   /** Whether this is an optimistic (processing) post not yet minted */
   isOptimistic?: boolean;
+  /**
+   * Where the post is allowed to appear. Absent means safe, which is every
+   * post made before ratings existed.
+   *
+   * The public feeds are already filtered on this server-side; what the cards
+   * do with it is put a content warning over a 'mature' post on the surfaces
+   * where one is still served on purpose — a profile, the Following feed, a
+   * shared link.
+   */
+  contentRating?: ContentRating;
 }
 
 /**

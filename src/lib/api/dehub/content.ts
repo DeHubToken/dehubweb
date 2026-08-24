@@ -1,4 +1,5 @@
 import { apiCall, authedUpload } from './core';
+import type { ContentRating } from './types';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -48,6 +49,13 @@ export interface MintPostParams {
    * Without it the server has no way to tell a retry from a new post.
    */
   idempotencyKey?: string;
+  /**
+   * 'mature' marks the post adult or graphic. It then reaches the creator's
+   * followers, their profile and anyone with the link, but stays off the
+   * public home, shorts, search and suggestion feeds — unless a viewer has
+   * turned mature content on in their own settings. Omitted means safe.
+   */
+  contentRating?: ContentRating;
 }
 
 export interface MintResponse {
@@ -120,6 +128,12 @@ export async function mintPost(
 
   if (params.scheduledAt) {
     formData.append('scheduledAt', params.scheduledAt);
+  }
+
+  // Only sent when it is 'mature': the server treats an absent rating as safe
+  // and deliberately stores nothing for it.
+  if (params.contentRating === 'mature') {
+    formData.append('contentRating', 'mature');
   }
 
   const streamInfo: StreamInfo = params.streamInfo || {
@@ -228,6 +242,8 @@ export interface EditPostParams {
   /** true turns replies off. Existing comments are kept and stay readable —
    *  only new ones are refused — so re-enabling restores the thread intact. */
   commentsDisabled?: boolean;
+  /** Re-rate a published post. Refused with 403 once a moderator has rated it. */
+  contentRating?: ContentRating;
 }
 
 export interface EditPostResponse {
@@ -237,6 +253,7 @@ export interface EditPostResponse {
     name?: string;
     description?: string;
     category?: string[];
+    contentRating?: ContentRating;
   };
 }
 

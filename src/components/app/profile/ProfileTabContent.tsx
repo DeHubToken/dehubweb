@@ -678,7 +678,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
     <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
       {(postType === 'video' || postType === 'audio' || postType === 'feed-audio') ? (
         <VideoCard video={{
-          id: String(post.tokenId), type: 'video',
+          id: String(post.tokenId), type: 'video', contentRating: post.contentRating,
           thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           videoUrl: buildVideoUrl(post.tokenId),
           title: post.title || post.name || '',
@@ -695,7 +695,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
         }} />
       ) : postType === 'image' || postType === 'feed-images' ? (
         <ImageCard post={{
-          id: String(post.tokenId), type: 'image',
+          id: String(post.tokenId), type: 'image', contentRating: post.contentRating,
           username: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
           verified: false, avatar,
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
@@ -711,7 +711,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
         }} />
       ) : (
         <PostCard post={{
-          id: String(post.tokenId), type: 'post',
+          id: String(post.tokenId), type: 'post', contentRating: post.contentRating,
           createdAt: rawTimestamp || '',
           views: formatViews(resolveViewCount(post)).replace(' views', ''),
           author: {

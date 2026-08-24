@@ -37,6 +37,11 @@ export interface ProfileData {
   isPending?: boolean;
   /** Whether this account is private (requires follow approval) */
   isPrivate?: boolean;
+  /**
+   * This viewer asked to be served mature posts. Only meaningful on your own
+   * profile — it is a viewing preference, not something about the account.
+   */
+  showMatureContent?: boolean;
   /** Whether the current viewer has blocked this user */
   youBlocked?: boolean;
   /** Whether this user has blocked the current viewer */
@@ -122,6 +127,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followsYou: user.followsYou,
     isPending: user.isPending ?? user.isFollowRequestPending,
     isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
+    showMatureContent: user.showMatureContent === true,
     youBlocked: user.youBlocked ?? false,
     blockedYou: user.blockedYou ?? false,
     followersList,

@@ -819,6 +819,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       const videoItem: VideoItem = {
         id,
         type: 'video',
+        contentRating: pinnedPost.contentRating,
         thumbnail,
         videoUrl,
         duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
@@ -848,6 +849,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       const textPost: TextPost = {
         id,
         type: 'post',
+        contentRating: pinnedPost.contentRating,
         author: {
           id: pinnedPost.minter,
           name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
