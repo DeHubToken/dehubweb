@@ -93,7 +93,9 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
         description: description.trim() || undefined,
         price: parseFloat(price),
         duration,
-        benefits: filteredBenefits.length > 0 ? filteredBenefits : undefined,
+        // Always sent, including empty. `undefined` means "leave alone" to the
+        // API, so a creator who deleted every benefit saw them all come back.
+        benefits: filteredBenefits,
       },
     });
 
