@@ -1606,7 +1606,45 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     refetch,
   });
 
-  // Boot shell removal is now handled by AppLayout on mount, not gated on feed data.
+  /* Frost the app shell while page 1 is in flight, so the welcome panel reads
+     as arriving first and the rest of the app resolves in behind it. The sheet
+     itself is CSS (`html[data-feed-loading] #app-root::after` in index.css);
+     this only publishes the state, the way DocsSurface publishes docsOpen.
+
+     Three states, not two: "on" while loading, "off" to run the unblur
+     transition, then the attribute is REMOVED once that transition has ended.
+     Leaving it on would keep a full-viewport backdrop-filter composited for the
+     rest of the session — the sheet has to stop existing, not just go clear. */
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isLoadingState) {
+      root.dataset.feedLoading = 'on';
+      return;
+    }
+    // Nothing to unblur if we never frosted — a warm cache resolves page 1
+    // before first paint, and starting at "off" would flash a sheet in.
+    if (!root.dataset.feedLoading) return;
+    root.dataset.feedLoading = 'off';
+    const done = window.setTimeout(() => {
+      delete root.dataset.feedLoading;
+    }, 800); // just past the 700ms transition in index.css
+    return () => window.clearTimeout(done);
+  }, [isLoadingState]);
+
+  /* Never frost forever. isLoadingState stays true for the whole auto-retry
+     ladder, so an offline or stalled page-1 would otherwise leave the app
+     permanently blurred — including the error state the user needs to read.
+     Same defence as the rails gate's own 4s timer above. */
+  useEffect(() => {
+    const bail = window.setTimeout(() => {
+      const root = document.documentElement;
+      if (root.dataset.feedLoading === 'on') root.dataset.feedLoading = 'off';
+    }, 3000);
+    return () => {
+      window.clearTimeout(bail);
+      delete document.documentElement.dataset.feedLoading;
+    };
+  }, []);
 
   const EmptyState = () => {
     // Custom message for Following feed
