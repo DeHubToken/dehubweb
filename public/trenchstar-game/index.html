@@ -367,6 +367,31 @@
   @media (max-width:620px){.sr .lq{display:none}}
   #srEmpty{padding:16px 14px;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--dim)}
 
+  /* writing a post at the desk. A real textarea rather than keystrokes painted
+     onto the monitor: an IME, a phone keyboard, select-all and paste are all
+     things a canvas would have to reinvent badly, and the global key handler
+     already stands down for INPUT/TEXTAREA so typing never drives the walk. */
+  #dhWrite{position:fixed;inset:0;z-index:16;display:none;align-items:center;justify-content:center;
+    background:rgba(2,5,9,.78);backdrop-filter:blur(6px)}
+  #dhWrite.on{display:flex}
+  #dwBox{position:relative;width:min(560px,calc(100vw - 28px));padding:22px 22px 16px;
+    background:rgba(7,13,20,.96);
+    border:1px solid rgba(56,224,255,.4);border-radius:6px;text-align:center}
+  #dwBox h3{font-size:15px;letter-spacing:.4em;color:#fff;margin-bottom:3px}
+  #dwBox p{font-size:9px;letter-spacing:.24em;color:var(--dim);margin-bottom:15px}
+  #dwText{display:block;width:100%;height:140px;resize:none;box-sizing:border-box;
+    padding:11px 12px;background:#060b12;color:#dbe9f4;
+    border:1px solid rgba(56,224,255,.28);border-radius:5px;
+    font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.55}
+  #dwText:focus{outline:none;border-color:var(--cyan)}
+  #dwFoot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  #dwCount{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim)}
+  #dwGo{padding:9px 20px;background:rgba(56,224,255,.16);border:1px solid var(--cyan);
+    border-radius:5px;color:var(--cyan);font-family:"Chakra Petch",sans-serif;
+    font-weight:700;font-size:11px;letter-spacing:.22em;cursor:pointer;transition:.15s}
+  #dwGo:hover{background:rgba(56,224,255,.3)}
+  #dwGo[disabled]{opacity:.35;pointer-events:none}
+
   /* character select */
   #charSel{position:fixed;inset:0;z-index:16;display:none;align-items:center;justify-content:center;
     background:rgba(2,5,9,.78);backdrop-filter:blur(6px)}
@@ -832,6 +857,16 @@
     </div>
     <div id="csDots"></div>
     <button id="csDesk">STAY AT THE DESK</button>
+  </div>
+</div>
+<div id="dhWrite">
+  <div id="dwBox">
+    <div class="panelX boxX" data-close="write" title="Close">✕</div>
+    <h3>POST TO DEHUB</h3>
+    <p>WRITTEN HERE · SENT FROM THE APP, WHERE YOUR WALLET SIGNS IT</p>
+    <textarea id="dwText" maxlength="500" spellcheck="false"
+      placeholder="say something to the trenches…"></textarea>
+    <div id="dwFoot"><span id="dwCount">0 / 500</span><button id="dwGo">POST IT</button></div>
   </div>
 </div>
 <div id="joy"><div id="joyNub"></div></div>
@@ -5524,18 +5559,50 @@ function dhChrome(ctx,w,page){
 function dhPost(ctx,x,y,w,h,who,body,m,p){
   ctx.fillStyle='#0a121b';rr(ctx,x,y,w,h,6);ctx.fill();
   ctx.strokeStyle=FAINT;ctx.stroke();
-  ctx.fillStyle='rgba(56,224,255,0.22)';
-  ctx.beginPath();ctx.arc(x+20,y+20,11,0,6.3);ctx.fill();
+  /* The poster's real avatar once it has arrived; the flat disc until then,
+     so a card never waits on a picture to be readable. */
+  const av=p?dhArt('av'+p.id,p.avatar):null;
+  if(av){
+    ctx.save();ctx.beginPath();ctx.arc(x+20,y+20,11,0,6.3);ctx.clip();
+    ctx.drawImage(av,x+9,y+9,22,22);ctx.restore();
+    ctx.strokeStyle='rgba(56,224,255,0.35)';
+    ctx.beginPath();ctx.arc(x+20,y+20,11,0,6.3);ctx.stroke();
+  }else{
+    ctx.fillStyle='rgba(56,224,255,0.22)';
+    ctx.beginPath();ctx.arc(x+20,y+20,11,0,6.3);ctx.fill();
+  }
   ctx.font='700 10px "Chakra Petch"';ctx.fillStyle='#fff';
   ctx.fillText(who,x+38,y+18);
   ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
   ctx.fillText(dhClip(ctx,body,w-50),x+38,y+31);
   /* the media block — a post on DeHub is usually a picture or a clip */
   const my=y+40,mh=h-64;
-  const g=ctx.createLinearGradient(x+10,my,x+w-10,my+mh);
-  g.addColorStop(0,'rgba(56,224,255,0.10)');g.addColorStop(1,'rgba(232,121,249,0.10)');
-  ctx.fillStyle=g;rr(ctx,x+10,my,w-20,mh,4);ctx.fill();
-  ctx.strokeStyle='rgba(56,224,255,0.16)';ctx.stroke();
+  const pic=p?dhArt('im'+p.id,p.img):null;
+  if(pic){
+    dhCover(ctx,pic,x+10,my,w-20,mh,4);
+  }else{
+    const g=ctx.createLinearGradient(x+10,my,x+w-10,my+mh);
+    g.addColorStop(0,'rgba(56,224,255,0.10)');g.addColorStop(1,'rgba(232,121,249,0.10)');
+    ctx.fillStyle=g;rr(ctx,x+10,my,w-20,mh,4);ctx.fill();
+  }
+  ctx.strokeStyle='rgba(56,224,255,0.16)';rr(ctx,x+10,my,w-20,mh,4);ctx.stroke();
+  /* A still frame of a video is still a video, and on a feed that is most of
+     them — say so rather than letting it read as a photograph. */
+  if(p&&/video|short|live/i.test(p.kind||'')){
+    ctx.fillStyle='rgba(2,5,9,0.72)';rr(ctx,x+16,my+6,34,14,7);ctx.fill();
+    ctx.font='700 8px "Chakra Petch"';ctx.fillStyle=CYAN;ctx.textAlign='center';
+    ctx.fillText('▶',x+24,my+16);
+    ctx.fillStyle=INK;ctx.fillText('CLIP',x+39,my+16);
+    ctx.textAlign='left';
+  }
+  if(p&&p.views>0){
+    ctx.font='700 8px "JetBrains Mono"';ctx.textAlign='right';
+    ctx.fillStyle='rgba(2,5,9,0.72)';
+    const vt=fmtBig(p.views)+' VIEWS',vw=ctx.measureText(vt).width+12;
+    rr(ctx,x+w-16-vw,my+mh-20,vw,14,7);ctx.fill();
+    ctx.fillStyle=DIM;ctx.fillText(vt,x+w-22,my+mh-10);
+    ctx.textAlign='left';
+  }
   ctx.font='700 8px "JetBrains Mono"';ctx.fillStyle=DIM;
   ctx.fillText('♥ '+fmtBig(p&&isFinite(p.likes)?p.likes:120+dhSeed(who,9000)),x+12,y+h-9);
   ctx.fillStyle=UP;
@@ -5555,12 +5622,12 @@ function paintDhHome(ctx,w,h){
   screenBG(ctx,w,h);
   dhChrome(ctx,w,'HOME');
   hit(0,0,w,36,'OPEN DEHUB',()=>dhGo('/app'));
-  dhPullFeed();
-  const f=dhFeed.items||[],p0=f[0],p1=f[1];
+  dhPull();
+  const f=dhData.posts||[],p0=f[0],p1=f[1];
   dhPost(ctx,12,46,300,150,p0?'@'+p0.user:'@shadowy_coder',
-         p0?p0.title:'shipped the new arcade build',memes[0],p0);
+         p0?p0.text:'shipped the new arcade build',memes[0],p0);
   dhPost(ctx,12,204,300,148,p1?'@'+p1.user:'@lady_luck',
-         p1?p1.title:'the trenches are eating tonight',memes[1],p1);
+         p1?p1.text:'the trenches are eating tonight',memes[1],p1);
   /* right rail: real numbers off the same sim the wall runs on */
   const rx=324,rw=w-rx-12;
   ctx.fillStyle='#0a121b';rr(ctx,rx,46,rw,306,6);ctx.fill();
@@ -5591,26 +5658,42 @@ function paintDhProfile(ctx,w,h){
   const g=ctx.createLinearGradient(0,36,w,110);
   g.addColorStop(0,'rgba(56,224,255,0.18)');g.addColorStop(1,'rgba(232,121,249,0.16)');
   ctx.fillStyle=g;ctx.fillRect(0,36,w,74);
+  /* The DeHub account, not the wallet: `me` is whoever the app is signed in
+     as, which is the profile this screen is of. The in-room wallet is a
+     separate thing and only the portfolio numbers below come from it. */
+  dhPull();
+  const me=dhData.me;
+  const signed=!!(me||addr);
   /* avatar */
   ctx.fillStyle='#060a10';ctx.beginPath();ctx.arc(56,112,30,0,6.3);ctx.fill();
   ctx.strokeStyle=CYAN;ctx.lineWidth=2;ctx.stroke();ctx.lineWidth=1;
-  ctx.fillStyle=addr?'rgba(56,224,255,0.28)':'rgba(122,152,176,0.18)';
-  ctx.beginPath();ctx.arc(56,112,26,0,6.3);ctx.fill();
-  ctx.textAlign='center';ctx.font='700 20px "Chakra Petch"';ctx.fillStyle='#fff';
-  ctx.fillText(addr?addr.slice(2,4).toUpperCase():'?',56,119);
-  ctx.textAlign='left';
+  const mine=me?dhArt('me',me.avatar):null;
+  if(mine){
+    ctx.save();ctx.beginPath();ctx.arc(56,112,26,0,6.3);ctx.clip();
+    ctx.drawImage(mine,30,86,52,52);ctx.restore();
+  }else{
+    ctx.fillStyle=signed?'rgba(56,224,255,0.28)':'rgba(122,152,176,0.18)';
+    ctx.beginPath();ctx.arc(56,112,26,0,6.3);ctx.fill();
+    ctx.textAlign='center';ctx.font='700 20px "Chakra Petch"';ctx.fillStyle='#fff';
+    ctx.fillText(me&&me.name?me.name.slice(0,1).toUpperCase()
+                 :(addr?addr.slice(2,4).toUpperCase():'?'),56,119);
+    ctx.textAlign='left';
+  }
   /* identity */
   ctx.font='700 17px "Chakra Petch"';ctx.fillStyle='#fff';
-  ctx.fillText(addr?dhShort(addr):'NOT SIGNED IN',98,116);
-  ctx.font='600 9px "JetBrains Mono"';ctx.fillStyle=addr?CYAN:AMBER;
-  ctx.fillText(addr?'DEHUB MEMBER · TRENCHSTAR DESK':'CONNECT A WALLET TO SIGN IN',98,132);
+  ctx.fillText(dhClip(ctx,me&&me.name?me.name:(addr?dhShort(addr):'NOT SIGNED IN'),w-120),98,116);
+  ctx.font='600 9px "JetBrains Mono"';ctx.fillStyle=signed?CYAN:AMBER;
+  ctx.fillText(me&&me.handle?'@'+me.handle+(me.badge?' · '+fmtBig(me.badge)+' DHB STAKED':'')
+               :(signed?'DEHUB MEMBER · TRENCHSTAR DESK':'CONNECT A WALLET TO SIGN IN'),98,132);
   /* Signing in is the one thing this screen can do entirely by itself — the
      wallet lives in this document, sandbox or not. */
-  hit(8,82,w-16,62,addr?'OPEN YOUR PROFILE':'CONNECT A WALLET',
-      addr?()=>dhGo('/app/profile'):()=>connectWallet());
-  /* stats — portfolio numbers are real, the social ones are the demo's */
-  const stats=[['POSTS',String(12+dhSeed(addr,180))],
-               ['FOLLOWERS',fmtBig(300+dhSeed(addr,9000))],
+  hit(8,82,w-16,62,signed?'OPEN YOUR PROFILE':'CONNECT A WALLET',
+      signed?()=>dhGo('/app/profile'):()=>connectWallet());
+  /* stats — the social ones off your real account, the portfolio off the
+     wallet in this room. They can disagree: the app can be signed in while
+     the room's own wallet is not, and each number says where it came from. */
+  const stats=[['POSTS',me?fmtBig(me.posts):'—'],
+               ['FOLLOWERS',me?fmtBig(me.followers):'—'],
                ['PORTFOLIO',addr?'$'+fmtBig(wallet.usd||0):'—'],
                /* pnl24 is a DOLLAR delta, not a percent — refreshWallet
                   computes usd-minus-usd. Running it through fmtPct drew a
@@ -5627,80 +5710,91 @@ function paintDhProfile(ctx,w,h){
     ctx.fillText(s[0],x,186);
   });
   ctx.strokeStyle=FAINT;ctx.beginPath();ctx.moveTo(16,198.5);ctx.lineTo(w-16,198.5);ctx.stroke();
-  /* their grid */
+  /* their grid — the four most recent things you actually posted */
   ctx.font='700 9px "Chakra Petch"';ctx.fillStyle='#fff';
   ctx.fillText('POSTS',16,216);
+  const tiles=dhData.mine||[];
   for(let i=0;i<4;i++){
-    const tw=(w-32-3*10)/4,x=16+i*(tw+10);
-    const gg=ctx.createLinearGradient(x,228,x+tw,340);
-    gg.addColorStop(0,'rgba(56,224,255,'+(0.16-i*0.02)+')');
-    gg.addColorStop(1,'rgba(232,121,249,'+(0.14-i*0.02)+')');
-    ctx.fillStyle=gg;rr(ctx,x,228,tw,112,5);ctx.fill();
-    ctx.strokeStyle=FAINT;ctx.stroke();
+    const tw=(w-32-3*10)/4,x=16+i*(tw+10),t=tiles[i];
+    const art=t?dhArt('t'+t.id,t.img):null;
+    if(art){
+      dhCover(ctx,art,x,228,tw,112,5);
+    }else{
+      const gg=ctx.createLinearGradient(x,228,x+tw,340);
+      gg.addColorStop(0,'rgba(56,224,255,'+(0.16-i*0.02)+')');
+      gg.addColorStop(1,'rgba(232,121,249,'+(0.14-i*0.02)+')');
+      ctx.fillStyle=gg;rr(ctx,x,228,tw,112,5);ctx.fill();
+    }
+    ctx.strokeStyle=FAINT;rr(ctx,x,228,tw,112,5);ctx.stroke();
+    /* Each tile is its own post, so each one opens ITS post rather than all
+       four opening the same profile. */
+    if(t)hit(x,228,tw,112,'OPEN THIS POST',()=>dhGo('/app/post/'+t.id));
   }
-  hit(16,210,w-32,130,'YOUR POSTS ON DEHUB',()=>dhGo('/app/profile'));
+  if(!tiles.length)hit(16,210,w-32,130,'YOUR POSTS ON DEHUB',()=>dhGo('/app/profile'));
   scanlines(ctx,w,h);crtGlow(ctx,w,h);
 }
 function paintDhUpload(ctx,w,h){
   screenBG(ctx,w,h);
   dhChrome(ctx,w,'UPLOAD');
+  dhPull();
+  const me=dhData.me,draft=dhDraft.text;
   ctx.font='700 13px "Chakra Petch"';ctx.fillStyle='#fff';
   ctx.fillText('NEW POST',16,60);
   ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
-  ctx.fillText('MINTS ON POST · THE FILE GOES UP FIRST',16,74);
-  /* dropzone */
+  ctx.fillText(me&&me.handle?('POSTING AS @'+me.handle).toUpperCase()
+               :'TYPE IT HERE · THE APP SIGNS AND POSTS IT',16,74);
+  /* The draft, as you typed it. This screen used to be a drawing of a form
+     with a dropzone that could never take a file: a file picker inside a
+     WebGL canvas is a lie, and so is a text field that cannot be typed in. */
+  ctx.fillStyle=draft?'rgba(56,224,255,0.07)':'rgba(56,224,255,0.04)';
+  rr(ctx,16,86,300,180,8);ctx.fill();
   ctx.save();
-  ctx.setLineDash([7,6]);
-  ctx.strokeStyle='rgba(56,224,255,0.45)';
+  if(!draft)ctx.setLineDash([7,6]);
+  ctx.strokeStyle=draft?'rgba(56,224,255,0.65)':'rgba(56,224,255,0.4)';
   rr(ctx,16,86,300,180,8);ctx.stroke();
   ctx.restore();
-  ctx.fillStyle='rgba(56,224,255,0.05)';rr(ctx,16,86,300,180,8);ctx.fill();
-  ctx.strokeStyle=CYAN;ctx.lineWidth=2;
-  ctx.beginPath();
-  ctx.moveTo(166,196);ctx.lineTo(166,146);
-  ctx.moveTo(148,164);ctx.lineTo(166,146);ctx.lineTo(184,164);
-  ctx.stroke();ctx.lineWidth=1;
-  ctx.textAlign='center';
-  ctx.font='700 10px "Chakra Petch"';ctx.fillStyle=INK;
-  ctx.fillText('DRAG A FILE, OR CLICK TO BROWSE',166,222);
-  ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
-  ctx.fillText('MP4 · MOV · PNG · JPG · MP3 · WAV',166,238);
-  ctx.textAlign='left';
-  /* A file picker inside a WebGL canvas would be a lie — the upload, the
-     mint and the wallet prompt all live in the app. This hands you to it. */
-  hit(16,86,300,180,'OPEN THE COMPOSER',()=>dhGo('/creator'));
-  /* the form beside it */
+  if(draft){
+    ctx.font='600 11px "JetBrains Mono"';ctx.fillStyle=INK;
+    const lines=dhWrap(ctx,draft,276,9);
+    lines.forEach((ln,i)=>ctx.fillText(ln,30,112+i*17));
+    ctx.font='700 8px "JetBrains Mono"';ctx.fillStyle=DIM;
+    ctx.textAlign='right';
+    ctx.fillText(draft.length+' / 500',304,256);
+    ctx.textAlign='left';
+  }else{
+    ctx.textAlign='center';
+    ctx.font='700 11px "Chakra Petch"';ctx.fillStyle=INK;
+    ctx.fillText('CLICK TO WRITE A POST',166,170);
+    ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
+    ctx.fillText('UP TO 500 CHARACTERS',166,188);
+    ctx.textAlign='left';
+  }
+  hit(16,86,300,180,draft?'EDIT THIS POST':'WRITE A POST',()=>dhWriteOpen());
+  /* what happens to it, beside it */
   const fx=330,fw=w-fx-16;
-  const field=(y,label,val,dim)=>{
-    ctx.font='600 8px "Chakra Petch"';ctx.fillStyle=DIM;ctx.fillText(label,fx,y);
-    ctx.fillStyle='#0a121b';rr(ctx,fx,y+6,fw,26,4);ctx.fill();
-    ctx.strokeStyle=FAINT;ctx.stroke();
-    ctx.font='600 9px "JetBrains Mono"';ctx.fillStyle=dim?DIM:INK;
-    ctx.fillText(val,fx+9,y+23);
+  const step=(y,n,label,note)=>{
+    ctx.font='700 9px "Chakra Petch"';ctx.fillStyle=CYAN;
+    ctx.fillText(n,fx,y);
+    ctx.fillStyle='#fff';ctx.fillText(label,fx+16,y);
+    ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
+    ctx.fillText(dhClip(ctx,note,fw-16),fx+16,y+13);
   };
-  field(60,'TITLE','Untitled post',true);
-  field(104,'DESCRIPTION','Say something…',true);
-  field(148,'PRICE (DHB)','0 · FREE TO VIEW');
-  ctx.font='600 8px "Chakra Petch"';ctx.fillStyle=DIM;ctx.fillText('VISIBILITY',fx,204);
-  const pill=(x,y,label,on)=>{
-    ctx.font='700 8px "Chakra Petch"';
-    const pw=ctx.measureText(label).width+18;
-    ctx.fillStyle=on?'rgba(56,224,255,0.16)':'rgba(122,152,176,0.08)';
-    rr(ctx,x,y,pw,18,9);ctx.fill();
-    ctx.strokeStyle=on?'rgba(56,224,255,0.55)':FAINT;ctx.stroke();
-    ctx.fillStyle=on?CYAN:DIM;ctx.textAlign='center';
-    ctx.fillText(label,x+pw/2,y+12);ctx.textAlign='left';
-    return pw;
-  };
-  const p1=pill(fx,210,'PUBLIC',true);
-  pill(fx+p1+8,210,'FOLLOWERS',false);
+  ctx.font='600 8px "Chakra Petch"';ctx.fillStyle=DIM;
+  ctx.fillText('HOW THIS LEAVES THE ROOM',fx,60);
+  step(84,'1','WRITE IT HERE','at the desk, without leaving');
+  step(126,'2','THE APP OPENS','over the room, with it in the box');
+  step(168,'3','YOU PRESS POST','your wallet signs it there, not here');
+  ctx.font='600 8px "JetBrains Mono"';ctx.fillStyle=DIM;
+  ctx.fillText(dhClip(ctx,'The game never holds your keys.',fw),fx,212);
   /* the button */
-  ctx.fillStyle='rgba(56,224,255,0.16)';rr(ctx,fx,252,fw,32,6);ctx.fill();
-  ctx.strokeStyle=CYAN;ctx.stroke();
-  ctx.textAlign='center';ctx.font='700 11px "Chakra Petch"';ctx.fillStyle=CYAN;
-  ctx.fillText('MINT & POST',fx+fw/2,272);
+  const live=!!draft.trim();
+  ctx.fillStyle=live?'rgba(56,224,255,0.22)':'rgba(122,152,176,0.08)';
+  rr(ctx,fx,252,fw,32,6);ctx.fill();
+  ctx.strokeStyle=live?CYAN:FAINT;ctx.stroke();
+  ctx.textAlign='center';ctx.font='700 11px "Chakra Petch"';ctx.fillStyle=live?CYAN:DIM;
+  ctx.fillText(live?'POST IT':'NOTHING TO POST YET',fx+fw/2,272);
   ctx.textAlign='left';
-  hit(fx,252,fw,32,'OPEN THE COMPOSER',()=>dhGo('/creator'));
+  hit(fx,252,fw,32,live?'POST IT ON DEHUB':'WRITE A POST',()=>dhDraftSend());
   scanlines(ctx,w,h);crtGlow(ctx,w,h);
 }
 
@@ -5737,35 +5831,143 @@ function dhGo(path){
   const win=window.open(DH_ORIGIN+path,'_blank','noopener');
   if(!win)location.href=DH_ORIGIN+path;
 }
-/* Real posts on the home monitor. In a frame the host fetches them — it has
-   the origin and the session; here we would get `Origin: null` back. Asked
-   once, and a miss is not an error: the painted demo posts stay, which is what
-   this screen has always shown. */
-const dhFeed={items:null,asked:false};
-function dhAdopt(rows){
-  if(!Array.isArray(rows)||!rows.length)return;
-  dhFeed.items=rows.slice(0,2).map(r=>({
-    id:r.tokenId,
+/* ------------------------ real DeHub on the desk ---------------------
+   The three monitors were a painting of DeHub with two live numbers dropped
+   into it. They are DeHub now: the newest posts with their real pictures, the
+   account you are signed in as, and the last four things you posted.
+
+   WHO FETCHES IT
+   In a frame, the host — `Origin: null` is not on the API's allowlist. The
+   pictures need it even more than the JSON does: a monitor is a canvas
+   uploaded as a WebGL texture, and drawing an image the server did not
+   CORS-approve TAINTS that canvas, at which point the upload throws and all
+   three screens go black. The CDN answers `Origin: null` with no
+   Access-Control-Allow-Origin and the image transform in front of it sends
+   none at all, so there is no origin the frame can ask. The host inlines them
+   as data: URLs instead, which taint nothing.
+   Standalone this document IS dehub.io, so it fetches its own and builds its
+   own transform URLs — same-origin, and drawable as they stand.
+
+   Belt and braces on the taint: crossOrigin is set on anything that is not a
+   data: URL before src is assigned, so an image the CDN will not approve
+   FAILS TO LOAD rather than quietly poisoning the desk. */
+const DH_CDN='https://dehubcdn.ams3.cdn.digitaloceanspaces.com/';
+/* Slow on purpose. A trading floor whose feed froze at whatever was on it
+   when you walked in is a painting again — but this is a screen on a desk in
+   a room, not the feed itself, and it is not worth a request a second. */
+const DH_REFRESH=90000;
+const dhData={posts:null,me:null,mine:null,at:0,busy:false,failed:0};
+/* What you typed at the desk, waiting to be posted. */
+const dhDraft={text:''};
+function dhApiUrl(path,w){
+  if(!path)return '';
+  const abs=/^https?:/.test(path)?path:DH_CDN+path;
+  if(abs.indexOf(DH_CDN)!==0)return abs;
+  /* The Cloudflare transform: 4 KB for a card thumbnail instead of 180 KB of
+     original, and it lives on every hostname in the zone, so addressing it at
+     our own origin is what keeps it same-origin. */
+  return location.origin+'/cdn-cgi/image/format=auto,quality=80,width='+w+'/'+abs;
+}
+function dhCard(r){
+  return {id:r.tokenId,
     user:r.minterUsername||r.minterDisplayName||'dehub',
-    title:r.name||r.description||'',
-    likes:+r.likes||(r.totalVotes&&+r.totalVotes.for)||0,
-    tips:+r.totalTips||+r.receivedTips||0}));
-  syncDesk();
+    name:r.minterDisplayName||r.minterUsername||'dehub',
+    text:r.name||r.description||'',
+    /* The scalar `likes` on a feed row is not the vote count — totalVotes.for
+       is the number the post page itself shows. */
+    likes:(r.totalVotes&&+r.totalVotes.for)||+r.likes||0,
+    tips:+r.totalTips||+r.receivedTips||0,
+    views:+r.totalViews||+r.views||0,
+    kind:r.postType||'',
+    img:dhApiUrl(r.imageUrl,360),
+    avatar:dhApiUrl(r.minterAvatarUrl,64)};
+}
+/* Pictures, by the slot that draws them rather than by URL: a data: URL is
+   the whole image, and a Map keyed on one holds every thumbnail twice. */
+const dhPix=new Map();
+function dhArt(key,src){
+  if(!src)return null;
+  const had=dhPix.get(key);
+  if(had&&had.src===src)return had.ok?had.img:null;
+  const rec={img:new Image(),src,ok:false};
+  if(!/^data:/.test(src))rec.img.crossOrigin='anonymous';
+  rec.img.onload=()=>{rec.ok=true;syncDesk();};
+  rec.img.onerror=()=>{rec.ok=false;};
+  dhPix.set(key,rec);
+  rec.img.src=src;
+  /* Bounded: every refresh brings new ids, and the desk only ever draws ten
+     pictures at once. */
+  if(dhPix.size>24)dhPix.delete(dhPix.keys().next().value);
+  return null;
+}
+/* Fill a box with an image the way every feed does — cover, centred, cropped
+   to the box rather than squashed into it. */
+function dhCover(ctx,img,x,y,w,h,rad){
+  const iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height;
+  if(!iw||!ih)return;
+  const s=Math.max(w/iw,h/ih),dw=iw*s,dh=ih*s;
+  ctx.save();rr(ctx,x,y,w,h,rad||4);ctx.clip();
+  ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
+  ctx.restore();
 }
 window.addEventListener('message',e=>{
   const d=e.data;
-  if(!d||d.source!=='dehub'||d.type!=='feed')return;
-  dhAdopt(d.items);
+  if(!d||d.source!=='dehub')return;
+  if(d.type!=='desk')return;
+  if(Array.isArray(d.posts)&&d.posts.length)dhData.posts=d.posts.slice(0,4);
+  dhData.me=d.me||null;
+  dhData.mine=Array.isArray(d.mine)?d.mine.slice(0,4):null;
+  dhData.busy=false;dhData.failed=0;dhData.at=Date.now();
+  syncDesk();
 });
-async function dhPullFeed(){
-  if(dhFeed.asked)return;
-  dhFeed.asked=true;
-  if(dhFramed){dhSend('feed',{limit:2});return;}
+function dhPull(force){
+  const now=Date.now();
+  if(dhData.busy)return;
+  if(!force&&dhData.at&&now-dhData.at<DH_REFRESH)return;
+  /* A host that never answers must not be asked again every frame. */
+  if(dhData.failed&&now-dhData.at<Math.min(DH_REFRESH,4000*dhData.failed))return;
+  dhData.busy=true;
+  if(dhFramed){
+    dhSend('desk',{limit:4});
+    /* No reply is a miss, not a hang. */
+    setTimeout(()=>{if(dhData.busy){dhData.busy=false;dhData.failed++;dhData.at=Date.now();}},12000);
+    return;
+  }
+  dhPullLocal();
+}
+async function dhGet(path){
   try{
-    const r=await fetch(DH_API+'/api/feed?page=1&limit=2',{credentials:'omit'});
-    const j=await r.json();
-    dhAdopt(j&&j.result);
-  }catch(err){}
+    const r=await fetch(DH_API+path,{credentials:'omit'});
+    if(!r.ok)return null;
+    return await r.json();
+  }catch(err){return null;}
+}
+async function dhPullLocal(){
+  const addr=wallet&&wallet.addr?wallet.addr.toLowerCase():'';
+  try{
+    const [feed,acct,mine]=await Promise.all([
+      dhGet('/api/feed?page=1&limit=4'),
+      addr?dhGet('/api/account_info/'+addr):null,
+      addr?dhGet('/api/feed?page=1&limit=4&minter='+addr):null]);
+    const rows=feed&&Array.isArray(feed.result)?feed.result:[];
+    if(rows.length)dhData.posts=rows.map(dhCard);
+    const u=acct&&(acct.result||acct);
+    dhData.me=u&&(u.username||u.address)?{
+      handle:u.username||'',
+      name:u.displayName||u.username||'',
+      followers:+u.followers||0,
+      following:+u.followings||0,
+      posts:+u.uploads||0,
+      likes:+u.likes||0,
+      tips:+u.receivedTips||0,
+      badge:+u.badgeBalance||0,
+      avatar:dhApiUrl(u.avatarImageUrl,64)}:null;
+    dhData.mine=mine&&Array.isArray(mine.result)
+      ?mine.result.map(r=>({id:r.tokenId,img:dhApiUrl(r.imageUrl,192)})):null;
+    if(!rows.length)dhData.failed++;else dhData.failed=0;
+  }catch(err){dhData.failed++;}
+  dhData.busy=false;dhData.at=Date.now();
+  syncDesk();
 }
 /* A real post title is as long as somebody felt like making it; the demo's
    were written to fit. */
@@ -5774,6 +5976,83 @@ function dhClip(ctx,s,max){
   if(ctx.measureText(s).width<=max)return s;
   while(s.length>1&&ctx.measureText(s+'…').width>max)s=s.slice(0,-1);
   return s+'…';
+}
+/* The same job over several lines, for the draft on the composer monitor.
+   Paragraphs are kept — somebody who pressed return meant it — and a word
+   longer than the box is broken rather than allowed to run off the edge. */
+function dhWrap(ctx,text,max,maxLines){
+  const lines=[];
+  let over=false;
+  for(const para of String(text||'').split(/\r?\n/)){
+    if(lines.length>=maxLines){over=true;break;}
+    const words=para.replace(/[ \t]+/g,' ').trim().split(' ');
+    let cur='';
+    for(let wd of words){
+      while(ctx.measureText(wd).width>max&&wd.length>1){
+        let cut=wd.length;
+        while(cut>1&&ctx.measureText(wd.slice(0,cut)).width>max)cut--;
+        if(cur){lines.push(cur);cur='';}
+        if(lines.length>=maxLines){over=true;break;}
+        lines.push(wd.slice(0,cut));
+        wd=wd.slice(cut);
+      }
+      if(over)break;
+      const next=cur?cur+' '+wd:wd;
+      if(ctx.measureText(next).width<=max){cur=next;continue;}
+      if(cur)lines.push(cur);
+      cur=wd;
+      if(lines.length>=maxLines){over=true;break;}
+    }
+    if(over)break;
+    if(cur){
+      if(lines.length>=maxLines){over=true;break;}
+      lines.push(cur);
+    }
+  }
+  if(lines.length>maxLines){lines.length=maxLines;over=true;}
+  if(over&&lines.length)lines[lines.length-1]=dhClip(ctx,lines[lines.length-1]+' …',max);
+  return lines;
+}
+
+/* ------------------------- writing one at the desk -------------------
+   A real textarea over the room. The monitor shows what is in it as you
+   type, so the screen on the desk is the draft rather than a picture of a
+   form, but the typing itself happens in the DOM where an IME, a phone
+   keyboard and paste all work. */
+function dhWriteOpen(){
+  const box=$('#dhWrite'),ta=$('#dwText');
+  if(!box||!ta)return;
+  ta.value=dhDraft.text;
+  box.classList.add('on');
+  dhWriteSync();
+  /* after the panel is up, or the focus lands on a hidden element */
+  setTimeout(()=>{try{ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);}catch(e){}},30);
+}
+function dhWriteClose(){const b=$('#dhWrite');if(b)b.classList.remove('on');}
+function dhWriteSync(){
+  const ta=$('#dwText');if(!ta)return;
+  dhDraft.text=ta.value;
+  const c=$('#dwCount');if(c)c.textContent=ta.value.length+' / 500';
+  const go=$('#dwGo');if(go)go.disabled=!ta.value.trim();
+  deskRepaint(paintDhUpload);
+}
+/* Out through the bridge, and never posted from in here. Posting needs the
+   wallet, the signature and the daily allowance, all of which live in the
+   app; handing a sandboxed frame the session to save one click is not a
+   trade worth making. Framed, the host opens the REAL composer over the room
+   with this in the box. Standalone the app is a tab away, so the draft is
+   left where it will pick it up — same origin, not a URL. */
+function dhDraftSend(){
+  const t=dhDraft.text.trim();
+  if(!t){dhWriteOpen();return;}
+  if(dhFramed){dhSend('compose',{text:t});toast('DEHUB · COMPOSER');}
+  else{
+    try{localStorage.setItem('dehub.compose.draft',JSON.stringify({text:t,at:Date.now()}));}catch(e){}
+    dhGo('/app');
+  }
+  dhDraft.text='';
+  const ta=$('#dwText');if(ta)ta.value='';
+  dhWriteClose();syncDesk();
 }
 
 /* Hit rectangles are collected BY the paint, not declared beside it: the paint
@@ -5869,6 +6148,10 @@ function deskPaint(d){
   finally{dhHits=null;}
 }
 function syncDesk(){for(const d of deskMons)deskPaint(d);}
+/* One monitor, when only one of them changed. A keystroke in the composer
+   redraws the composer; redrawing all three canvases and re-uploading three
+   textures per character typed is three times the work for no pixels. */
+function deskRepaint(paint){for(const d of deskMons)if(d.paint===paint)deskPaint(d);}
 setInterval(syncDesk,2000);
 
 /* Hover and press are drawn OVER the finished paint rather than inside it, so
@@ -10081,12 +10364,27 @@ function closeOverlay(name){
   else if(name==='picker')closePicker();
   else if(name==='search')closeSearch();
   else if(name==='chars')$('#charSel').classList.remove('on');
+  else if(name==='write')dhWriteClose();
   else if(name==='focus')release();
 }
 document.querySelectorAll('[data-close]').forEach(b=>{
   b.addEventListener('click',e=>{e.stopPropagation();closeOverlay(b.dataset.close);});
   b.addEventListener('pointerdown',e=>e.stopPropagation());
 });
+{
+  const box=$('#dhWrite'),ta=$('#dwText'),go=$('#dwGo');
+  if(ta){
+    ta.addEventListener('input',dhWriteSync);
+    ta.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){e.preventDefault();dhWriteClose();}
+      /* the shortcut every composer has */
+      else if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();dhDraftSend();}
+    });
+  }
+  if(go)go.addEventListener('click',dhDraftSend);
+  /* the dimmed backdrop dismisses it, like every other modal here */
+  if(box)box.addEventListener('click',e=>{if(e.target===box)dhWriteClose();});
+}
 
 $('#sndTest').addEventListener('click',()=>playSound($('#aSnd').value));
 $('#aAdd').addEventListener('click',()=>{
@@ -10151,7 +10449,11 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   loadAnimSource,borrowClip,liveClip,hudTick,placeAtDesk,lightMood,areaLights,LIGHT_BASE,
   pvStart,pvStop,pvRender,pvQueueAll,pvPump,pvBuild,
   csGo,csLayout,csApply,csChrome,csEase,csMeasure,pvTick,
-  syncDesk,deskMons,pickDesk,deskFire,deskToWall,dhFeed,dhGo,buildWall,
+  syncDesk,deskMons,pickDesk,deskFire,deskToWall,dhGo,buildWall,
+  /* the desk's DeHub data and its composer, exposed so a change here can be
+     asserted on without a screenshot: dhData holds what the app sent back,
+     dhPix the pictures it drew, and dhDraft what is typed but not yet posted */
+  dhData,dhPull,dhPix,dhDraft,dhWriteOpen,dhWriteClose,dhDraftSend,
   pickFloor,goToFloor,pingFloor,fly,flyTo,
   /* renderer/composer are exposed so a frame can be drawn on demand and read
      back — the only way to actually LOOK at this thing from a headless harness */
