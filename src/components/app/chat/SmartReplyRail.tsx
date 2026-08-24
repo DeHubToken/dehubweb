@@ -4,29 +4,25 @@ import { ReplyOrb } from './ReplyOrb';
 import type { SmartReplySuggestion } from '@/hooks/use-smart-replies';
 
 /**
- * Two drafted replies, one per line, with the orb centred in the gap between
- * them. The same rail on every surface — phone, tablet and desktop — so the
- * feature reads as one thing wherever it is met.
+ * Two drafted replies side by side, with the orb seated in a circular cut-out
+ * at the centre of the rail. The same rail on every surface — phone, tablet
+ * and desktop — so the feature reads as one thing wherever it is met.
  *
  * GEOMETRY IS SHARED WITH MOBILE. dehub-mobile's components/DM/SmartReplyTray
- * is the React Native twin: same socket, same notch, same gap. Change one,
- * change the other.
+ * is the React Native twin: same socket, same notch, same card rhythm. Change
+ * one, change the other.
  *
- * Four numbers and nothing else. Every attempt at this rail that sized the
- * cut-out, the ring and the orb separately ended up with the ring off the orb
- * or the orb off the hole.
+ * Three sizes and nothing else, because every attempt at this rail that sized
+ * the cut-out, the ring and the orb separately ended up with one off the other.
  */
 const ORB = 44;
 /** The orb's own box: a hairline circle that IS the socket ring, so the ring
  *  cannot drift off the orb — it is the same element. */
 const SOCKET = 48;
-/** Cut-out radius. The mask circle is centred on the GAP between the two
- *  cards, so each card is bitten NOTCH - GAP/2 deep at the edge facing the
- *  orb, and the orb nests in a hole formed by both halves. */
+/** Cut-out radius. The hole is a full circle at the CENTRE of the rail, and
+ *  the orb centres itself on the same point, so the two are concentric by
+ *  construction. */
 const NOTCH = SOCKET / 2;
-/** Space between the stacked cards. Wide enough that the bite is shallower
- *  than the cards' own padding, so no text is ever eaten by the arc. */
-const GAP = 28;
 
 export type SmartReplyRailStatus = 'idle' | 'loading' | 'ready' | 'empty' | 'error';
 
@@ -67,7 +63,9 @@ export function SmartReplyRail({
         : null;
 
   // Always exactly two slots. The drafter can come back with one usable
-  // suggestion, and a single card would leave the orb centred on nothing.
+  // suggestion, and a lone card in a two-column rail leaves the cut-out under
+  // its outer edge — which is precisely what "the orb isn't centred" looks
+  // like on the devices where it happens.
   const slots: (SmartReplySuggestion | null)[] =
     status === 'ready' ? [suggestions[0] ?? null, suggestions[1] ?? null] : [null, null];
 
@@ -79,10 +77,7 @@ export function SmartReplyRail({
       ? 'border-white/[0.07]'
       : 'border-white/10';
 
-  const notchVars = {
-    '--smart-reply-notch': `${NOTCH}px`,
-    '--smart-reply-gap': `${GAP / 2}px`,
-  } as CSSProperties;
+  const notchVar = { '--smart-reply-notch': `${NOTCH}px` } as CSSProperties;
 
   // Its border is the socket ring. Scaling on hover would lift the ring out of
   // the hole it traces, so hover lightens the hairline instead.
@@ -107,17 +102,15 @@ export function SmartReplyRail({
     <div className={className} role="group" aria-label="Suggested replies">
       <div className="relative">
         {notice ? (
+          // No cut-out to sit in, so the orb goes under the line instead of
+          // punching a hole through the middle of it.
           <div className="flex flex-col items-center gap-3 py-2">
             <p className="px-8 text-center text-xs leading-snug text-zinc-500">{notice}</p>
             {orbButton}
           </div>
         ) : (
           <>
-            {/* grid-rows-2 rather than a flex column: 1fr rows are EQUAL, so
-                the container's centre is the gap's centre, which is what the
-                orb below centres itself on. With auto heights a longer first
-                suggestion would slide the orb off the seam. */}
-            <div className="grid grid-rows-2" style={{ gap: GAP }}>
+            <div className="smart-reply-rail grid grid-cols-2" style={notchVar}>
               {slots.map((s, i) => (
                 <button
                   key={s ? `${s.label}-${i}` : `slot-${i}`}
@@ -128,9 +121,11 @@ export function SmartReplyRail({
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => s && onPick(s.text)}
                   aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                  style={notchVars}
-                  className={`group flex min-h-[76px] min-w-0 flex-col justify-center rounded-2xl border px-4 py-3 text-left transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
-                    i === 0 ? 'smart-reply-notch-b pr-9' : 'smart-reply-notch-t'
+                  className={`group min-w-0 min-h-[108px] lg:min-h-[92px] flex flex-col justify-center border py-3 text-left transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
+                    // The cut-out bites a notch radius into the edge each card
+                    // turns to the orb, and the mask erases card CONTENT, not
+                    // just fill — so the inner padding has to clear it.
+                    i === 0 ? 'rounded-l-2xl pl-3 pr-7' : '-ml-px rounded-r-2xl pl-7 pr-8'
                   } ${
                     s
                       ? 'bg-white/[0.045] border-white/10 hover:bg-white/[0.085] hover:border-white/20 active:bg-white/[0.11] cursor-pointer'
@@ -144,7 +139,7 @@ export function SmartReplyRail({
                       <span className="text-[9px] uppercase tracking-[0.1em] leading-4 text-zinc-500 transition-colors group-hover:text-zinc-300">
                         {s.label}
                       </span>
-                      <span className="mt-1 text-[13px] leading-[1.35] text-white line-clamp-2">
+                      <span className="mt-1.5 text-[13px] leading-[1.35] text-white line-clamp-3">
                         {s.text}
                       </span>
                     </>
@@ -153,12 +148,12 @@ export function SmartReplyRail({
                       <span
                         className={`block h-2 w-16 rounded-full bg-white/[0.07] ${busy ? 'animate-pulse' : ''}`}
                       />
-                      <span className="mt-2.5 block w-full space-y-1.5">
+                      <span className="mt-3 block w-full space-y-1.5">
                         <span
                           className={`block h-2.5 w-full rounded bg-white/[0.07] ${busy ? 'animate-pulse' : ''}`}
                         />
                         <span
-                          className={`block h-2.5 w-1/2 rounded bg-white/[0.07] ${busy ? 'animate-pulse' : ''}`}
+                          className={`block h-2.5 w-2/3 rounded bg-white/[0.07] ${busy ? 'animate-pulse' : ''}`}
                         />
                       </span>
                     </>
@@ -167,8 +162,9 @@ export function SmartReplyRail({
               ))}
             </div>
 
-            {/* Centred on both axes by one full-size flex row — no percentage
-                offsets anywhere in the path, on either platform. */}
+            {/* Centred on both axes by one full-size flex row — the same point
+                the mask circle is centred on, and no percentage offset
+                anywhere in the path, on either platform. */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
               {orbButton}
             </div>
