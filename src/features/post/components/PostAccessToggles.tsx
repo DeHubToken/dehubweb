@@ -354,20 +354,6 @@ export function PostAccessToggles({
           />
         </label>
 
-        {/* Mature content — the creator's own declaration. Marking it keeps the
-            post off the public feeds; it still reaches followers, the profile
-            and anyone with the link. */}
-        <label className="flex items-center justify-between py-0.5 cursor-pointer">
-          <div className="flex items-center gap-2 min-w-0">
-            <EyeOff className="w-4 h-4 text-white shrink-0" />
-            <span className="text-sm text-white">Mature content</span>
-            {isMature && (
-              <span className="text-xs text-white/50 truncate">(not shown on the public feed)</span>
-            )}
-          </div>
-          <Switch checked={isMature} onCheckedChange={setIsMature} className="data-[state=checked]:bg-white scale-75" />
-        </label>
-
         {/* Title - forced on for video/audio, toggleable for others */}
         {!hasVideoOrAudio && (
           <label className="flex items-center justify-between py-0.5 cursor-pointer">
@@ -516,6 +502,25 @@ export function PostAccessToggles({
             )}
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
+        </label>
+
+        {/* Mature content — the creator's own declaration. Marking it keeps the
+            post off the public feeds; it still reaches followers, the profile
+            and anyone with the link.
+
+            Last row on purpose. It is the only switch here that costs a
+            creator reach on a post they believe is fine, and it used to sit
+            second, inside a 140px strip people scroll with a thumb — one
+            mis-tap and the post never reaches the public feed. */}
+        <label className="flex items-center justify-between py-0.5 cursor-pointer">
+          <div className="flex items-center gap-2 min-w-0">
+            <EyeOff className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">Mature content</span>
+            {isMature && (
+              <span className="text-xs text-white/50 truncate">(not shown on the public feed)</span>
+            )}
+          </div>
+          <Switch checked={isMature} onCheckedChange={setIsMature} className="data-[state=checked]:bg-white scale-75" />
         </label>
         </div>
       </div>
