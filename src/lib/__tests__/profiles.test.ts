@@ -364,14 +364,27 @@ describe('badge-tier profile allowance', () => {
     expect(adoptCurrentProfile()).toBe(false);
   });
 
-  it('gives the top tier fifteen and names no tier beyond it', () => {
+  it('gives the top tier fifty and names no tier beyond it', () => {
     seedAccount(1, 50_000_000);
     adoptCurrentProfile();
 
     const allowance = profileAllowance();
-    expect(allowance.maxProfiles).toBe(15);
+    expect(allowance.maxProfiles).toBe(50);
     expect(allowance.tierName).toBe('Meglodon');
     expect(allowance.nextTierName).toBeNull();
+  });
+
+  it('names the next tier that is actually worth more, not the next one along', () => {
+    // Cobra through Great White Shark all keep ten, so the offer under a
+    // Cobra badge is Blue Whale's twenty-five — not "Octopus keeps 10".
+    seedAccount(1, 250_000);
+    adoptCurrentProfile();
+
+    const allowance = profileAllowance();
+    expect(allowance.maxProfiles).toBe(10);
+    expect(allowance.tierName).toBe('Cobra');
+    expect(allowance.nextTierName).toBe('Blue Whale');
+    expect(allowance.nextTierProfiles).toBe(25);
   });
 
   it('refreshes a profile already saved even when the list is full', () => {
