@@ -1,6 +1,7 @@
 import { DEHUB_API_BASE, setAuthToken, setRefreshToken, setTokenExpiresAt, getRefreshToken, getAuthToken, refreshTokenShared, refreshTokenSharedDetailed } from './core';
 import type { TokenRefreshOutcome } from './core';
 import type { AuthResponse } from './types';
+import { deviceHeaders } from '@/lib/device-id';
 
 export interface UsernameCheckResponse {
   status: boolean;
@@ -86,6 +87,9 @@ export async function authenticateWallet(
   const headers = {
     "Content-Type": "application/json",
     "Accept": "application/json",
+    // The server records the device only at login, so these have to be here
+    // rather than on the shared request helper.
+    ...deviceHeaders(),
   };
 
   // DeHub API only exposes /api/web/auth (doc.md). /api/auth returns 404.
@@ -159,6 +163,7 @@ export async function authenticateWithSupabaseSession(
       // Sent as a header rather than in the body so it does not land in request
       // logs that record bodies.
       Authorization: `Bearer ${supabaseAccessToken}`,
+      ...deviceHeaders(),
     },
     body: JSON.stringify({}),
   });
