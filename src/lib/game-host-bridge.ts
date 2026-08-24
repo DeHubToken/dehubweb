@@ -18,12 +18,14 @@
  *   { source: '<game id>', type: 'navigate', to: '/app/post/2008' }
  *   { source: '<game id>', type: 'feed', limit: 2 }
  *   { source: '<game id>', type: 'desk', limit: 4 }
+ *   { source: '<game id>', type: 'post', text: 'gm', key: '…' }
  *   { source: '<game id>', type: 'compose', text: 'gm' }
  *
  * and the replies, which are the only things this side ever sends:
  *
  *   { source: 'dehub', type: 'feed', items: [...] }        // raw rows
  *   { source: 'dehub', type: 'desk', posts, me, mine }     // painted straight
+ *   { source: 'dehub', type: 'posted', ok, id?, reason? }
  *
  * WHY `desk` WHEN `feed` ALREADY EXISTS
  * -------------------------------------
@@ -49,11 +51,13 @@
  * an anonymous visitor can read, so what crosses into the frame is public
  * either way. Untrusted code gets the public internet, not the session.
  *
- * That rule is also why `compose` carries text and nothing else. The frame
- * cannot post — posting needs the wallet, the signature and the quota, none of
- * which it is getting. It hands over what you typed and the REAL composer
- * opens on top of the game with it in the box, where you are the one who
- * presses Post.
+ * `post` is the one thing here that WRITES, and it is deliberately narrow: a
+ * free text post, published off-chain, for the wallet this side is signed in
+ * as, with an idempotency key so a retry cannot double-post. Anything with a
+ * price on it, and any failure at all, falls through to `compose` instead —
+ * the real composer opens on top of the game with the text in it, where the
+ * cost is shown and the wallet is a tap away. The frame never gets the
+ * session, the token or the ability to spend anything.
  *
  * `source` is checked on arrival exactly as the exit bridge checks it: any
  * frame on the page can post to us, and opaque frames all post with
@@ -66,6 +70,10 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEHUB_API_BASE } from '@/lib/api/dehub/core';
+import { mintPost, quotePostCharge } from '@/lib/api/dehub';
+// Chain-config constants only — the same light import usePostForm takes, and
+// deliberately not the contract helpers beside them.
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { buildAvatarUrl, buildImageUrl, extractAvatarPath } from '@/lib/media-url';
 
 export interface GameHostMessage {
@@ -74,6 +82,8 @@ export interface GameHostMessage {
   to?: string;
   limit?: number;
   text?: string;
+  /** Idempotency key for `post`, so a retry cannot publish twice. */
+  key?: string;
 }
 
 /** One feed post, painted onto a monitor exactly as it arrives. */
@@ -322,8 +332,72 @@ function cleanCompose(text: unknown): string {
 }
 
 /**
- * Honour `navigate`, `feed`, `desk` and `compose` from the game identified by
- * `source`.
+ * Post what was typed at the desk, without taking anybody out of the room.
+ *
+ * A free text post is the whole of what this path does, and that is on
+ * purpose. The composer's own flow is not one call — it prices the post
+ * against today's allowance, settles DHB when the allowance is gone, and
+ * optionally mints on-chain. Reimplementing that here would be a second
+ * pipeline to keep in step with the first, and the day they drifted the game
+ * would be posting on terms nobody agreed to.
+ *
+ * So the split is: free and simple happens here, silently, and anything with
+ * a price on it opens the REAL composer with the text already in it, where
+ * the cost is shown and the wallet is a tap away. Same for a stale session —
+ * the composer can re-auth, this cannot.
+ *
+ * `mintOptOut` because there is no wallet in this path to sign a mint with:
+ * the post lands in feeds as an off-chain post, which is exactly what the
+ * composer does when minting is off.
+ */
+async function relayPost(
+  to: MessageEventSource | null,
+  text: string,
+  key: string,
+  address: string | null | undefined,
+  toComposer: (text: string) => void,
+): Promise<void> {
+  const say = (ok: boolean, extra: Record<string, unknown> = {}) => {
+    if (to) (to as Window).postMessage({ source: 'dehub', type: 'posted', ok, ...extra }, '*');
+  };
+  if (!text) return say(false, { reason: 'empty' });
+  if (!address) return say(false, { reason: 'signin' });
+
+  // Null means the quote could not be fetched, which every caller treats as
+  // "post it" — the server checks the same thing again before storing.
+  const cost = await quotePostCharge('feed-simple', 0);
+  if (cost?.chargeable) {
+    toComposer(text);
+    return say(false, { reason: 'charge' });
+  }
+
+  try {
+    const res = await mintPost({
+      // What the composer sends for a text post with no title: the body is
+      // the description and the title is a single space.
+      name: ' ',
+      description: text,
+      postType: 'feed-simple',
+      chainId: BASE_CHAIN_ID,
+      category: [],
+      minterAddress: address,
+      mintOptOut: true,
+      // Makes a retry safe: the same key returns the post it already made
+      // rather than publishing a second copy.
+      idempotencyKey: key,
+    });
+    say(true, { id: res?.createdTokenId ?? '' });
+  } catch {
+    // Payment required, a dead session, a server that said no — all of them
+    // are things the composer can show and the game cannot.
+    toComposer(text);
+    say(false, { reason: 'composer' });
+  }
+}
+
+/**
+ * Honour `navigate`, `feed`, `desk`, `compose` and `post` from the game
+ * identified by `source`.
  *
  * Pass `undefined` for `source` to listen for nothing — the caller may not
  * know which game it is hosting yet.
@@ -374,6 +448,20 @@ export function useGameHostBridge(source: string | undefined, options?: GameHost
         if (tooSoon('compose')) return;
         const text = cleanCompose(data.text);
         opts.current?.onCompose?.(text);
+        return;
+      }
+
+      if (data.type === 'post') {
+        if (tooSoon('post')) return;
+        const text = cleanCompose(data.text);
+        const key = typeof data.key === 'string' ? data.key.slice(0, 64) : '';
+        void relayPost(
+          event.source,
+          text,
+          key,
+          opts.current?.address,
+          (t) => opts.current?.onCompose?.(t),
+        );
       }
     };
 
