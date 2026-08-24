@@ -358,8 +358,13 @@ export function HomeIntro() {
           <Button type="button" variant="glass" size="lg" onClick={() => openLoginModal()}>
             Join DeHub
           </Button>
+          {/* Secondary CTA points at the docs home, not /guide. Relabelled with
+              it: a button promising a "tour" that lands on documentation is a
+              broken promise, and the honest label is the cheap half of the
+              change. Temporary — restoring /guide means restoring both the
+              href and the label here and in CLOUDFLARE_WORKER_SEO.js. */}
           <Button asChild variant="outline" size="lg">
-            <Link to="/guide">Take the tour</Link>
+            <Link to="/docs">Read the docs</Link>
           </Button>
         </div>
 
