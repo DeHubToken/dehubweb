@@ -400,10 +400,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     {showRail && !narrowViewport && (
       <SmartReplyRail
         {...railProps}
-        // pb-8 is the orb's overhang (half a 48px socket) plus a little air:
-        // the orb is seated ON the rail's bottom edge, so its lower half needs
-        // room under the cards or it collides with the composer.
-        className="hidden lg:block pl-4 pr-3 pt-2.5 pb-8 border-t border-white/[0.07]"
+        className="hidden lg:block pl-4 pr-3 pt-2.5 pb-3 border-t border-white/[0.07]"
       />
     )}
     {/* No fill: both consumers (DM + Public Chat) are surface-less now, so a
@@ -673,8 +670,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       {showRail && narrowViewport && (
         <SmartReplyRail
           {...railProps}
-          // At least the orb's overhang, more where the home indicator wants it.
-          className="lg:hidden pt-2 pb-[max(2rem,env(safe-area-inset-bottom))]"
+          className="lg:hidden pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
         />
       )}
     </div>
