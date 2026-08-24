@@ -26,7 +26,7 @@
  * and how the vendored builds pay for it.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Gamepad2, Loader2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
@@ -50,6 +50,18 @@ import { ARCADE_SANDBOX, getArcadeGame } from '@/config/arcade-games';
  * the cap retires it regardless, well past the slowest boot measured.
  */
 const BOOT_CAP_MS = 180000;
+
+/**
+ * The real composer, opened over the game when a game asks for it.
+ *
+ * Lazy for the same reason every other mount of it is: PostModal reaches
+ * usePostForm, which reaches the wallet and contract stack. A player who never
+ * touches Trenchstar's desk must not pay for that in the arcade bundle —
+ * scripts/check-entry-bundle.mjs fails the build if it leaks in.
+ */
+const PostModal = React.lazy(() =>
+  import('@/features/post/PostModal').then((m) => ({ default: m.PostModal })),
+);
 
 function NotInTheArcade({ slug }: { slug: string | undefined }) {
   return (
@@ -122,12 +134,28 @@ export default function ArcadeGamePage() {
     useCallback(() => navigate('/arcade'), [navigate]),
   );
 
-  // "Take me to this post", "give me the feed" — Trenchstar's desk monitors
-  // are DeHub, and clicking one has to reach the app. The frame cannot do it
-  // itself: no allow-same-origin means no window.open, no top navigation, and
-  // an `Origin: null` the API will never answer. Paths are allowlisted and the
-  // feed goes back uncredentialed — see lib/game-host-bridge.
-  useGameHostBridge(game?.exitSource);
+  // "Take me to this post", "give me the feed", "here is what I typed" —
+  // Trenchstar's desk monitors are DeHub, and neither the data nor the click
+  // can reach the app from inside the frame: no allow-same-origin means no
+  // window.open, no top navigation, and an `Origin: null` the API will never
+  // answer. Paths are allowlisted, every fetch goes out uncredentialed, and a
+  // composed post opens the REAL composer rather than being posted for the
+  // frame — see lib/game-host-bridge.
+  const [draft, setDraft] = useState<string | null>(null);
+  // Mounted on first use and left mounted, so the close animation has
+  // something to play on — the same shape AppLayout uses.
+  const [composerMounted, setComposerMounted] = useState(false);
+  const openComposer = useCallback((text: string) => {
+    setComposerMounted(true);
+    // A space rather than '' when the game sends nothing: PostModal only
+    // resets and applies `initialText` when it is truthy, and an empty draft
+    // still has to arrive at an empty composer rather than yesterday's.
+    setDraft(text || ' ');
+  }, []);
+  useGameHostBridge(
+    game?.exitSource,
+    useMemo(() => ({ address: wallet, onCompose: openComposer }), [wallet, openComposer]),
+  );
 
   // The run bridge, for the games that keep a board. It opens a run on the
   // server when the game says one has started and closes it when the game says
@@ -310,6 +338,19 @@ export default function ArcadeGamePage() {
           <Loader2 className="h-3 w-3 animate-spin text-zinc-400" />
           <span className="text-[11px] text-zinc-400">Recording your run…</span>
         </div>
+      ) : null}
+
+      {/* Written at the desk, posted from here. The game types the words; the
+          wallet, the signature and the quota all stay on this side, which is
+          the only reason the frame can be allowed to start a post at all. */}
+      {composerMounted ? (
+        <Suspense fallback={null}>
+          <PostModal
+            isOpen={draft !== null}
+            onClose={() => setDraft(null)}
+            initialText={draft ?? undefined}
+          />
+        </Suspense>
       ) : null}
     </div>
   );
