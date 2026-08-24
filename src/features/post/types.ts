@@ -1,3 +1,4 @@
+import type { PostQuotaStatus } from '@/lib/api/dehub';
 import type { FilterSettings, CropSettings } from './types/filters';
 
 export interface AudioFile {
@@ -135,4 +136,8 @@ export interface PostFormComputed {
   mintFeeLabel: string | null;
   /** Bounty locks tokens through the mint, so minting cannot be turned off. */
   mintRequired: boolean;
+  /** Today’s free posting allowance and what is left of it. Null when unread. */
+  postQuota: PostQuotaStatus | null;
+  /** e.g. "7 of 10 free posts left today". Null when there is nothing to say. */
+  postQuotaLabel: string | null;
 }
