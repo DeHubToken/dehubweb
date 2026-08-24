@@ -471,6 +471,62 @@ html {
   .dehub-intro-readmore { display: none; }
 }
 
+/* Frost the app shell while the home feed's first page is still loading, so the
+   welcome panel reads as arriving first and everything else resolves in behind
+   it. `data-feed-loading` is stamped on <html> by HomeFeed — "on" while page 1
+   is in flight, "off" for the unblur, then removed entirely so the sheet costs
+   nothing for the rest of the session.
+
+   ONE fixed pseudo-element with backdrop-filter, not `filter` on the things
+   being blurred. Three reasons `filter` on siblings was wrong:
+     - it cannot reach most of what has to blur — the theme canvas renders
+       outside #app-root (App.tsx), as do both sidebars, the mobile header and
+       the bottom nav, so it would mean editing four or five files;
+     - `filter` rasterises each element's own box, so the blur bleeds to
+       transparent at every edge — a soft rectangle per block, not a frosted
+       app. backdrop-filter samples the composited backdrop and has no edges;
+     - on the feed container specifically it would collide with the runtime
+       clip-path useFeedSwallowClip writes onto that exact node under the glass
+       themes, and make it a containing block for its fixed descendants.
+
+   #app-root::after in particular: it is otherwise unused (html::after is taken
+   by dim-lights below, body::after by the light-theme grain), a position:fixed
+   descendant of #app-root is proven viewport-anchored today by the post overlay
+   pair in AppLayout, and hosting it inside <main> would trap it in the
+   transform the jungle game phase puts there. Same shape as the dim-lights
+   sheet, for the same reason its comment gives. */
+html[data-feed-loading] #app-root::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  /* Above the home sticky tab bar (z-110, HomePage) — the highest thing on the
+     route that should frost. Deliberately below the 200 tier, so the login
+     modal and the image viewer stay sharp if one is somehow already open. */
+  z-index: 120;
+  pointer-events: none; /* never swallow a click on the app underneath */
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  opacity: 1;
+  transition: backdrop-filter 700ms ease, -webkit-backdrop-filter 700ms ease, opacity 700ms ease;
+}
+/* The unblur. Radius AND opacity: the radius is the effect asked for, the
+   opacity fade covers browsers that decline to interpolate backdrop-filter. */
+html[data-feed-loading="off"] #app-root::after {
+  backdrop-filter: blur(0px) saturate(100%);
+  -webkit-backdrop-filter: blur(0px) saturate(100%);
+  opacity: 0;
+}
+/* Lift the welcome panel out of the sheet's backdrop so it alone stays sharp.
+   It is already position:relative and already a stacking context (its
+   container-type above), so a bare z-index sticks. SCOPED to the blur window
+   on purpose — left on permanently, 121 would outrank the sticky tab bar and
+   the panel would slide over it on scroll. */
+html[data-feed-loading] .dehub-intro { z-index: 121; }
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-feed-loading] #app-root::after { transition: none; }
+}
+
 /* Medal shine animation for leaderboard */
 .medal-shine-container {
   position: relative;
