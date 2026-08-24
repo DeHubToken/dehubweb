@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import BadgeFlowchart from '../../components/BadgeFlowchart';
 import TippingFlowchart from '../../components/TippingFlowchart';
+import PostingAllowanceChart from '../../components/PostingAllowanceChart';
 // Folded in from their former standalone pages (/docs/depin, /docs/e2e-encryption,
 // /docs/ai-toolkits) so the whole dApp lives on one page. Those slugs now redirect
 // to the matching anchor below.
@@ -9,7 +10,7 @@ import DePIN from './DePIN';
 import E2EEncryption from './E2EEncryption';
 import AIToolkits from './AIToolkits';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard } from 'lucide-react';
+import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard, Gauge } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
@@ -60,6 +61,7 @@ const Dapp = () => {
     { id: 'getting-started', label: t('dapp.tocIntro') },
     { id: 'feeds', label: t('dapp.tocFeeds') },
     { id: 'uploading', label: t('dapp.tocUploading') },
+    { id: 'posting-allowance', label: t('dapp.tocAllowance') },
     { id: 'tokenised-uploads', label: t('dapp.tocTokenised') },
     { id: 'profile', label: t('dapp.tocProfile') },
     { id: 'top-up', label: t('dapp.tocTopUp') },
@@ -289,6 +291,90 @@ const Dapp = () => {
             <li><strong>{t('dapp.labelEarn')}</strong> {t('dapp.uploadEarn')}</li>
             <li><strong>{t('dapp.labelSubscribers')}</strong> {t('dapp.uploadSubscribers')}</li>
           </ul>
+        </section>
+
+        <section id="posting-allowance" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Gauge className="w-8 h-8" />
+            {t('dapp.allowanceTitle')}
+          </h2>
+
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.allowanceIntro')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.allowanceIntro2')}</p>
+
+          <div className="my-6">
+            <PostingAllowanceChart />
+          </div>
+
+          <div className="docs-glass p-6 rounded-lg mb-6">
+            <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.allowanceHowTitle')}</h3>
+            <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.allowanceHowDesc')}</p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3 mb-6">
+            <Card className="docs-glass">
+              <CardHeader>
+                <CardTitle className="text-foreground font-exo text-base flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-xs font-semibold flex-shrink-0">1</span>
+                  {t('dapp.allowanceStep1Title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground font-exo leading-relaxed">{t('dapp.allowanceStep1')}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="docs-glass">
+              <CardHeader>
+                <CardTitle className="text-foreground font-exo text-base flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-xs font-semibold flex-shrink-0">2</span>
+                  {t('dapp.allowanceStep2Title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground font-exo leading-relaxed">{t('dapp.allowanceStep2')}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="docs-glass">
+              <CardHeader>
+                <CardTitle className="text-foreground font-exo text-base flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-xs font-semibold flex-shrink-0">3</span>
+                  {t('dapp.allowanceStep3Title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground font-exo leading-relaxed">{t('dapp.allowanceStep3')}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="docs-glass">
+              <CardHeader>
+                <CardTitle className="text-foreground font-exo">{t('dapp.allowanceCountsTitle')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-sm text-muted-foreground space-y-2 font-exo">
+                  <li>• {t('dapp.allowanceCounts1')}</li>
+                  <li>• {t('dapp.allowanceCounts2')}</li>
+                  <li>• {t('dapp.allowanceCounts3')}</li>
+                  <li>• {t('dapp.allowanceCounts4')}</li>
+                  <li>• {t('dapp.allowanceCounts5')}</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="docs-glass">
+              <CardHeader>
+                <CardTitle className="text-foreground font-exo">{t('dapp.allowanceUnpaidTitle')}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground font-exo leading-relaxed">{t('dapp.allowanceUnpaidDesc')}</p>
+                <p className="text-sm text-muted-foreground font-exo leading-relaxed">{t('dapp.allowanceBadgeNote')}</p>
+              </CardContent>
+            </Card>
+          </div>
         </section>
 
         <section id="tokenised-uploads" className="scroll-mt-32">

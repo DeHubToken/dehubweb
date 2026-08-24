@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle, Calendar } from 'lucide-react';
+import { CheckCircle, Calendar, FileText, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface QuarterData {
@@ -100,6 +101,7 @@ const Roadmap = () => {
       value: '2026', label: '26+', yearTitle: t('roadmap.y2026'),
       quarters: [
         { id: 'q1q2-2026', title: t('roadmap.q1q2_2026'), items: t('roadmap.q1q2_2026_items') as unknown as string[], status: 'inProgress' },
+        { id: 'q3-2026', title: t('roadmap.q3_2026'), items: t('roadmap.q3_2026_items') as unknown as string[], status: 'completed' },
         { id: 'q2q4-2026', title: t('roadmap.q2q4_2026'), items: t('roadmap.q2q4_2026_items') as unknown as string[], status: 'planned' },
       ],
     },
@@ -111,6 +113,28 @@ const Roadmap = () => {
         <h1 className="text-4xl font-bold text-foreground mb-4">{t('roadmap.title')}</h1>
         <p className="text-lg text-muted-foreground leading-relaxed">{t('roadmap.subtitle')}</p>
       </div>
+
+      {/* The roadmap is quarter-level by design. The development overview is
+          where the detail lives — every distinct change with its commit — so
+          this points at it rather than restating a quarter's work in bullets. */}
+      <Card className="docs-glass">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2 text-xl text-foreground">
+            <FileText className="w-5 h-5" />
+            <span>{t('roadmap.latestUpdate')}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground leading-relaxed">{t('roadmap.latestUpdateDesc')}</p>
+          <Link
+            to="/guides/q3-development-overview"
+            className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
+          >
+            {t('roadmap.latestUpdateCta')}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </CardContent>
+      </Card>
 
       <Tabs value={selectedYear} onValueChange={setSelectedYear} className="w-full">
         <TabsList className="grid w-full grid-cols-6">
