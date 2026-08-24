@@ -57,6 +57,21 @@ export interface EditCommentResponse {
   comment: CommentResponse;
 }
 
+/**
+ * Refusals from the comment endpoints arrive as `{result: false, error}` with
+ * HTTP 200 — "comments are turned off for this post", "over 500 characters",
+ * and now a link the scanner will not allow. Nothing read any of it: `result`
+ * was handed back as though it were the created comment, so a refused comment
+ * looked posted until the next refetch quietly removed it, and the reason was
+ * never shown to anybody.
+ */
+function assertCommentAccepted(response: unknown, fallback = 'Could not post comment'): void {
+  if (response && typeof response === 'object' && (response as { result?: unknown }).result === false) {
+    const message = (response as { error?: string }).error;
+    throw new Error(message || fallback);
+  }
+}
+
 export async function getNFTComments(
   tokenId: string,
   page: number = 0,
@@ -93,6 +108,7 @@ export async function postComment(tokenId: string, content: string, replyToId?: 
   });
 
   console.log('[postComment] ← response:', result);
+  assertCommentAccepted(result);
   return result;
 }
 
@@ -110,6 +126,7 @@ export async function addComment(params: {
     },
     requiresAuth: true,
   });
+  assertCommentAccepted(response);
   if (response && typeof response === 'object' && 'result' in response) {
     return response.result;
   }
@@ -132,6 +149,7 @@ export async function addCommentWithImage(params: {
     },
     requiresAuth: true,
   });
+  assertCommentAccepted(response);
   if (response && typeof response === 'object' && 'result' in response) {
     return response.result;
   }
@@ -150,6 +168,7 @@ export async function editComment(params: {
     },
     requiresAuth: true,
   });
+  assertCommentAccepted(response);
   if (response && typeof response === 'object' && 'result' in response) {
     return response.result;
   }
@@ -185,7 +204,9 @@ export async function addVoiceComment(params: {
     url.searchParams.set('commentId', params.parentId);
   }
 
-  return authedUpload<VoiceCommentResponse>(`${url.pathname}${url.search}`, formData);
+  const response = await authedUpload<VoiceCommentResponse>(`${url.pathname}${url.search}`, formData);
+  assertCommentAccepted(response);
+  return response;
 }
 
 export async function addGifComment(params: {
@@ -204,6 +225,7 @@ export async function addGifComment(params: {
     },
     requiresAuth: true,
   });
+  assertCommentAccepted(response);
   if (response && typeof response === 'object' && 'result' in response) {
     return response.result;
   }
