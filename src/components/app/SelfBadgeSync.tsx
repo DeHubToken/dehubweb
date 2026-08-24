@@ -11,21 +11,28 @@
  * `user.badgeBalance` rather than the badge itself — they follow the server on
  * purpose, so all this does is stop them waiting for the next sign-in to
  * notice. The badge itself does not wait for that round trip.
+ *
+ * It also owns the ladder scale (`useBadgeLadderSync`), for the same reason:
+ * tiers are pegged in dollars, so every badge on screen needs the DHB price,
+ * and exactly one component should be the thing that asks for it.
  */
 
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
-import { getBadgeName } from '@/lib/staking-badges';
+import { useBadgeLadderSync } from '@/hooks/use-badge-scale';
+import { getBadgeName, parseBadgeLock } from '@/lib/staking-badges';
 
 export function SelfBadgeSync() {
   const { user, refreshUser } = useAuth();
   const queryClient = useQueryClient();
   const live = useSelfBadgeBalance();
+  const scale = useBadgeLadderSync();
 
   const stored = user?.badgeBalance;
   const username = user?.username ?? null;
+  const lockKey = user?.badgeLock ? `${user.badgeLock.tier}:${user.badgeLock.requirement}` : '';
 
   // Both are re-created on every AuthProvider render; holding them in refs
   // keeps this effect keyed on the tier and nothing else.
@@ -40,8 +47,9 @@ export function SelfBadgeSync() {
   useEffect(() => {
     if (live === undefined) return;
 
-    const liveTier = getBadgeName(live, username);
-    if (liveTier === getBadgeName(stored, username)) return;
+    const context = { scale, lock: parseBadgeLock(user?.badgeLock) };
+    const liveTier = getBadgeName(live, username, context);
+    if (liveTier === getBadgeName(stored, username, context)) return;
     if (liveTier === reconciled.current) return;
     reconciled.current = liveTier;
 
@@ -49,7 +57,10 @@ export function SelfBadgeSync() {
     // Other people's names may be drawing a balance fetched before this
     // moment; the cheap ones are worth re-reading now that a tier moved.
     clientRef.current.invalidateQueries({ queryKey: ['badge-balance'] });
-  }, [live, stored, username]);
+    // `user.badgeLock` is read through `lockKey` so a new object identity from
+    // an AuthProvider render cannot re-run this on its own.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [live, stored, username, scale, lockKey]);
 
   return null;
 }

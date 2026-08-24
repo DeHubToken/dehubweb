@@ -30,6 +30,7 @@ import { useContext, useMemo } from 'react';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
 import { AuthContext } from '@/contexts/AuthContext';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from '@/lib/contracts/dhb-token';
+import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 import type { DeHubUser } from '@/lib/api/dehub';
 
 /** The chains whose DHB the API counts toward a badge. Must match the backend. */
@@ -113,6 +114,12 @@ export interface SelfBadge {
   username: string;
   /** Live badge balance, or undefined until it has been read. */
   balance?: number;
+  /**
+   * The tier the signed-in user has grandfathered, from their account row.
+   * Feed payloads carry a balance but not a lock, so my own badge would be
+   * re-derived from the live ladder on every card without this.
+   */
+  lock: BadgeLock | null;
   /** True when `identifier` (username or address) names the signed-in user. */
   isSelf: (identifier?: string | null) => boolean;
 }
@@ -141,11 +148,13 @@ export function useSelfBadge(): SelfBadge {
 
   const staked = useMemo(() => stakedFromUser(user), [user]);
   const balance = typeof data === 'number' && Number.isFinite(data) ? data + staked : undefined;
+  const lock = useMemo(() => parseBadgeLock(user?.badgeLock), [user?.badgeLock]);
 
   return {
     address,
     username,
     balance,
+    lock,
     isSelf: (identifier?: string | null) => {
       if (balance === undefined) return false;
       const id = normaliseId(identifier);

@@ -4,6 +4,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
+import type { BadgeLock } from '@/lib/staking-badges';
 
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
@@ -16,15 +17,21 @@ interface BadgeIconProps {
    * Ignored when `badgeBalance` or `src` is supplied.
    */
   lookupId?: string | null;
+  /**
+   * The holder's grandfathered tier, when the payload carries one. A provided
+   * `badgeBalance` skips the account lookup, so a feed card has to pass this
+   * for the badge to reflect a tier the live ladder no longer grants.
+   */
+  badgeLock?: BadgeLock | null;
   /** Or pass a pre-resolved badgeUrl directly */
   src?: string | null;
   /** Extra classes (positioning, sizing) */
   className?: string;
 }
 
-export function BadgeIcon({ badgeBalance, username, lookupId, src, className = 'w-[9px] h-[9px]' }: BadgeIconProps) {
+export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[9px] h-[9px]' }: BadgeIconProps) {
   const navigate = useNavigate();
-  const { url, name, big } = useBadgeVisual({ badgeBalance, username, lookupId, src });
+  const { url, name, big } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
 
   if (!url) return null;
 

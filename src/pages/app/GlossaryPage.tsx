@@ -13,7 +13,8 @@ import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import glossaryIcon from '@/assets/glossary-icon.png';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
-import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
+import { badgeImage, badgeThresholds } from '@/lib/staking-badges';
+import { useBadgeScale } from '@/hooks/use-badge-scale';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
@@ -86,6 +87,9 @@ export default function GlossaryPage() {
   const location = useLocation();
   const iconSize = 18;
   const [searchQuery, setSearchQuery] = useState('');
+  // Tier requirements are pegged in dollars, so quote today's ladder rather
+  // than the numbers the table was originally written with.
+  const badgeLadder = badgeThresholds(useBadgeScale());
 
   // Swallow the glossary sections at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
@@ -213,11 +217,11 @@ export default function GlossaryPage() {
       id: 'badges',
       title: t('glossary.sections.badges', 'Badges & Ranking'),
       entries: [
-        { icon: <CheckCircle2 size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc', 'Badges displayed next to your username based on your total DHB holdings (wallet + staked). There are 13 tiers — the more DHB you hold, the higher your badge rank. Higher tiers grant more governance voting power and lower platform fees.') },
-        ...BADGE_LEVELS.map((b, i) => {
-          const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
+        { icon: <CheckCircle2 size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc', 'Badges displayed next to your username based on your total DHB holdings (wallet + staked). There are 13 tiers — the more DHB you hold, the higher your badge rank. Higher tiers grant more governance voting power and lower platform fees. Tiers are priced in dollars, so the DHB each one costs falls as DHB rises — and once you have earned a tier you keep it for as long as you hold what it cost you, whatever the price does afterwards.') },
+        ...badgeLadder.map((b, i) => {
+          const fee = i === badgeLadder.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
           return {
-            icon: <img src={getBadgeUrl(b.min) || ''} alt={b.name} className="w-6 h-6 brightness-0 invert" />,
+            icon: <img src={badgeImage(b.name) || ''} alt={b.name} className="w-6 h-6 brightness-0 invert" />,
             title: b.name,
             description: `Requires ${b.min.toLocaleString()} DHB · ${fee}% platform fee`,
           };

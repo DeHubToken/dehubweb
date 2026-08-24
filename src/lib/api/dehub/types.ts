@@ -60,6 +60,12 @@ export interface DeHubUser {
   online?: boolean;
   staked?: number;
   badgeBalance?: number;
+  /**
+   * The tier this holder has already earned and the DHB it cost them.
+   * Written by the API; keeps a badge from being taken back when the token
+   * price moves the ladder under them. See lib/staking-badges.
+   */
+  badgeLock?: { tier: string; requirement: number } | null;
   createdAt?: string;
   created_at?: string;
   lastLoginTimestamp?: number;

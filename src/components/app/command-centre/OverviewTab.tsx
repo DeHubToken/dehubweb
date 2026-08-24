@@ -1,3 +1,4 @@
+import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { BalanceCard } from './BalanceCard';
 import { IncomeChart } from './IncomeChart';
 import { EngagementChart } from './EngagementChart';
@@ -15,6 +16,9 @@ export function OverviewTab() {
         <BalanceCard />
         <IncomeChart />
       </div>
+
+      {/* Badge ladder — sits under the balance it is derived from. */}
+      <BadgeProgress />
 
       {/* Engagement Analytics (#14) */}
       <EngagementChart />
