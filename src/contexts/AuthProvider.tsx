@@ -123,6 +123,28 @@ const SUPA_LOGIN_PENDING_KEY = 'dehub_supa_login_pending';
 const SUPA_LOGIN_PENDING_AT_KEY = 'dehub_supa_login_pending_at';
 const PENDING_LOGIN_FRESH_MS = 2 * 60 * 1000;
 
+/**
+ * Show the API's explanation for a refused wallet signup, if that is what this
+ * error is. Returns whether it handled the error.
+ *
+ * Shared because `authenticateWallet` has three call sites and they used to
+ * treat this three different ways — one said "try again" (the one thing that
+ * cannot work), one showed a generic title, and the silent-resume path
+ * swallowed it and sent the person to a password prompt for an account the
+ * server had just refused to create. The wallet is empty and will still be
+ * empty next time, so every path has to say the same thing: here is why, and
+ * here are the doors that do work.
+ */
+function reportWalletSignupBlocked(error: unknown): boolean {
+  if (!(error instanceof WalletSignupBlockedError)) return false;
+  toast.error('This wallet cannot open a new account', {
+    id: 'wallet-signup-blocked',
+    description: error.message,
+    duration: 15000,
+  });
+  return true;
+}
+
 function isSocialLoginResumeExpected(): boolean {
   try {
     if (localStorage.getItem(SUPA_LOGIN_PENDING_KEY) !== '1') return false;
@@ -605,6 +627,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       closeLoginModal();
       return true;
     } catch (e) {
+      // A refused signup is not a reason to ask for a password. The server has
+      // said this wallet cannot open an account; the unlock step would prompt
+      // for a vault password that cannot change that answer, so tell the person
+      // why and stop rather than degrading into a dead end.
+      if (reportWalletSignupBlocked(e)) throw e;
       // Locked vault, address mismatch, network failure — all land here and
       // fall back to the unlock step, exactly as before this existed.
       authLogger.warn('Silent login signature unavailable — routing to wallet unlock', {
@@ -1407,16 +1434,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         status: authError?.status,
         ...describeWalletError(authError),
       }, authError);
-      if (authError instanceof WalletSignupBlockedError) {
-        // "Try again" is the one thing that cannot work here — the wallet is
-        // empty and will stay empty. Say what the API said, and leave it up
-        // long enough to read, since the way out is the other buttons on this
-        // sheet rather than another attempt.
-        toast.error('This wallet cannot open a new account', {
-          description: authError.message,
-          duration: 15000,
-        });
-      } else {
+      if (!reportWalletSignupBlocked(authError)) {
         toast.error('Could not complete sign-in. Please try again.');
       }
       throw authError;
@@ -1803,7 +1821,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       closeLoginModal();
     } catch (err: any) {
       console.error('[Auth] Smart-wallet login failed:', err);
-      toast.error(err?.message || 'Authentication failed', { id: toastId });
+      // Same wording as every other path — the generic title here read as a
+      // transient failure over a message explaining a permanent one.
+      if (!reportWalletSignupBlocked(err)) {
+        toast.error(err?.message || 'Authentication failed', { id: toastId });
+      }
       throw err;
     } finally {
       setIsConnecting(false);
