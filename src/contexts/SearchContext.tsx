@@ -421,6 +421,15 @@ const createSearchIndex = (): SearchIndex[] => {
       type: 'section',
       keywords: ['social', 'messaging', 'chat', 'groups', 'channels', 'feed', 'posts', 'sharing', 'community']
     },
+    {
+      id: 'posting-allowance',
+      title: 'Daily posting allowance',
+      content: 'How many posts you get per day for free, daily upload limit, posting limits, how much it costs to post more, paying for posts in DHB, badge tier allowance, upload data cap',
+      path: '/docs/dapps#posting-allowance',
+      category: 'Main',
+      type: 'section',
+      keywords: ['posting allowance', 'daily limit', 'post limit', 'upload limit', 'quota', 'how many posts', 'cost to post', 'posting fee', 'gigabyte', 'overage', 'dhb', 'badge']
+    },
     ...createBlogIndex()
   ];
 };

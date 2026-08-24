@@ -44,6 +44,9 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.tocUploading'),
       path: '/docs/dapps#uploading'
     }, {
+      title: t('dapp.tocAllowance'),
+      path: '/docs/dapps#posting-allowance'
+    }, {
       title: t('dapp.tocTokenised'),
       path: '/docs/dapps#tokenised-uploads'
     }, {
