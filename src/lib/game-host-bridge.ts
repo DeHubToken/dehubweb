@@ -74,7 +74,7 @@ import { mintPost, quotePostCharge } from '@/lib/api/dehub';
 // Chain-config constants only — the same light import usePostForm takes, and
 // deliberately not the contract helpers beside them.
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { buildAvatarUrl, buildImageUrl, extractAvatarPath } from '@/lib/media-url';
+import { buildAvatarUrl, buildFeedImageUrls, buildImageUrl, extractAvatarPath } from '@/lib/media-url';
 
 export interface GameHostMessage {
   source?: string;
@@ -212,6 +212,20 @@ function num(value: unknown): number {
 
 type FeedRow = Record<string, any>;
 
+/**
+ * A post's picture, from whichever of the two fields carries it.
+ *
+ * `feed-images` posts — most of the feed — have no `imageUrl` at all, only
+ * `imageUrls: ["nfts/images/2149-1.jpg"]`, and only the filename in that is
+ * true: the object lives under `feed-images/` and the path as given is a 403.
+ * buildFeedImageUrls is what already knows this, so the two fields go through
+ * the two builders rather than one guess covering both.
+ */
+function postImage(row: FeedRow, width: number): string | undefined {
+  if (row.imageUrl) return buildImageUrl(row.tokenId, row.imageUrl, width) || undefined;
+  return buildFeedImageUrls(row.imageUrls, width)?.[0];
+}
+
 async function feedRows(limit: number, minter?: string): Promise<FeedRow[]> {
   const params: Record<string, string> = { page: '1', limit: String(limit) };
   if (minter) params.minter = minter;
@@ -222,7 +236,7 @@ async function feedRows(limit: number, minter?: string): Promise<FeedRow[]> {
 async function toCard(row: FeedRow): Promise<DeskCard> {
   const minter = typeof row.minter === 'string' ? row.minter : '';
   const [img, avatar] = await Promise.all([
-    inlineImage(buildImageUrl(row.tokenId, row.imageUrl, CARD_WIDTH)),
+    inlineImage(postImage(row, CARD_WIDTH)),
     inlineImage(buildAvatarUrl(minter, extractAvatarPath(row), AVATAR_WIDTH)),
   ]);
   return {
@@ -275,7 +289,7 @@ async function relayDesk(
     Promise.all(
       mineRows.map(async (row) => ({
         id: num(row.tokenId),
-        img: await inlineImage(buildImageUrl(row.tokenId, row.imageUrl, TILE_WIDTH)),
+        img: await inlineImage(postImage(row, TILE_WIDTH)),
       })),
     ),
     user ? inlineImage(buildAvatarUrl(wallet, extractAvatarPath(user), AVATAR_WIDTH)) : undefined,

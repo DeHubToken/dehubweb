@@ -756,7 +756,7 @@
      resolve), and it must send Access-Control-Allow-Origin for the game's
      origin, or the browser will fetch the .glb and then refuse to hand it to
      WebGL. -->
-<script>window.TRENCHSTAR_ASSETS='https://pub-3caa006eca7a48c58cf6e3d6ab524f1b.r2.dev/trenchstar';   /* arcade build: every character is vendored beside this file, Fat Chad included. His 41 MiB Mixamo FBX was not geometry — it was three 4096px maps (one of them a specular the Standard conversion throws away) on an unindexed mesh of 49,576 triangles. Re-exported with the maps at 1024 and the vertices welded, the same character is a 2 MiB GLB, so nothing here is over Cloudflare's per-asset limit any more. The bucket stays wired up as the escape hatch for anything that genuinely cannot ship in the repo: lookups are bucket-first with a fallback to this folder, so a character that is not up there costs one failed lookup and nothing else. */</script>
+    background:linear-gradient(90deg,rgba(47,232,140,.35),var(--up));box-shadow:0 0 14px var(--up)}
 <!-- three r180. Over http(s) we use the vendored copy in vendor/three: no third-party
      request, and it satisfies a script-src 'self' CSP. Opened as a bare file:// Chrome
      refuses to load ANY local ES module (opaque origin — fetch of the same path returns
@@ -5874,6 +5874,18 @@ function dhApiUrl(path,w){
      our own origin is what keeps it same-origin. */
   return location.origin+'/cdn-cgi/image/format=auto,quality=80,width='+w+'/'+abs;
 }
+/* A post's picture is in one of two places, and the second one lies about
+   where it lives. A `feed-images` post — which is most of the feed — carries
+   no `imageUrl` at all, just `imageUrls:["nfts/images/2149-1.jpg"]`, and only
+   the FILENAME in that is true: the object is under `feed-images/`, and
+   asking the CDN for the path as given is a 403. */
+function dhPostImg(r,w){
+  if(r&&r.imageUrl)return dhApiUrl(r.imageUrl,w);
+  const a=r&&Array.isArray(r.imageUrls)?r.imageUrls[0]:'';
+  if(!a)return '';
+  if(/^https?:/.test(a))return dhApiUrl(a,w);
+  return dhApiUrl('feed-images/'+a.split('/').pop(),w);
+}
 function dhCard(r){
   return {id:r.tokenId,
     user:r.minterUsername||r.minterDisplayName||'dehub',
@@ -5885,7 +5897,7 @@ function dhCard(r){
     tips:+r.totalTips||+r.receivedTips||0,
     views:+r.totalViews||+r.views||0,
     kind:r.postType||'',
-    img:dhApiUrl(r.imageUrl,360),
+    img:dhPostImg(r,360),
     avatar:dhApiUrl(r.minterAvatarUrl,64)};
 }
 /* Pictures, by the slot that draws them rather than by URL: a data: URL is
@@ -5970,7 +5982,7 @@ async function dhPullLocal(){
       badge:+u.badgeBalance||0,
       avatar:dhApiUrl(u.avatarImageUrl,64)}:null;
     dhData.mine=mine&&Array.isArray(mine.result)
-      ?mine.result.map(r=>({id:r.tokenId,img:dhApiUrl(r.imageUrl,192)})):null;
+      ?mine.result.map(r=>({id:r.tokenId,img:dhPostImg(r,192)})):null;
     if(!rows.length)dhData.failed++;else dhData.failed=0;
   }catch(err){dhData.failed++;}
   dhData.busy=false;dhData.at=Date.now();
@@ -10535,7 +10547,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   /* the desk's DeHub data and its composer, exposed so a change here can be
      asserted on without a screenshot: dhData holds what the app sent back,
      dhPix the pictures it drew, and dhDraft what is typed but not yet posted */
-  dhData,dhPull,dhPix,dhDraft,dhWriteOpen,dhWriteClose,dhDraftSend,dhPosted,deskAction,
+  dhData,dhPull,dhPix,dhDraft,dhPostImg,dhWriteOpen,dhWriteClose,dhDraftSend,dhPosted,deskAction,
   pickFloor,goToFloor,pingFloor,fly,flyTo,
   /* renderer/composer are exposed so a frame can be drawn on demand and read
      back — the only way to actually LOOK at this thing from a headless harness */
