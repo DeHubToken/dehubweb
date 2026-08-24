@@ -127,7 +127,10 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     if (msg.trim()) return;
     if (draftedFor.current === sr.tailKey) return;
     draftedFor.current = sr.tailKey;
-    if (sr.status === 'idle') sr.generate();
+    // 'error' as well as 'idle': the hook only rewinds itself to idle when a
+    // SUCCESSFUL draft goes stale, so a single failure would otherwise leave
+    // the rail showing that failure for every message after it.
+    if (sr.status === 'idle' || sr.status === 'error') sr.generate();
   }, [hasThread, smartReplies.tailKey]);
 
   // A new message re-arms a dismissed rail. Dismissing is "not for this
