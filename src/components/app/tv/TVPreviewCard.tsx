@@ -18,6 +18,11 @@ import type Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+} from '@/lib/media-session';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('TVPreviewCard');
@@ -237,31 +242,36 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     const video = videoRef.current;
     if (!video) return;
 
-    const onEnterPiP = () => {
-      setIsInPiP(true);
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
+    // Same arbitration as TVChannelCard: claim on the way into PiP, hand it
+    // back on the way out, and never clear a session another player has since
+    // taken over. Mute rides next/previous track because a live stream has no
+    // tracks to skip and those are the only spare buttons PiP offers.
+    const claimForPiP = (handler: () => void) => {
+      claimMediaSession(
+        cardId,
+        {
           title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
           artist: 'DeHub TV',
-        });
-        const muteHandler = () => {
-          toggleMuteProgrammatic();
-          navigator.mediaSession.metadata = new MediaMetadata({
-            title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
-            artist: 'DeHub TV',
-          });
-        };
-        navigator.mediaSession.setActionHandler('nexttrack', muteHandler);
-        navigator.mediaSession.setActionHandler('previoustrack', muteHandler);
-      }
+          artwork: channel.logo || null,
+        },
+        { nexttrack: handler, previoustrack: handler },
+      );
+      setMediaSessionPlaying(cardId, true);
+    };
+
+    const muteHandler = () => {
+      toggleMuteProgrammatic();
+      claimForPiP(muteHandler);
+    };
+
+    const onEnterPiP = () => {
+      setIsInPiP(true);
+      claimForPiP(muteHandler);
     };
 
     const onLeavePiP = () => {
       setIsInPiP(false);
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.setActionHandler('nexttrack', null);
-        navigator.mediaSession.setActionHandler('previoustrack', null);
-      }
+      releaseMediaSession(cardId);
     };
 
     video.addEventListener('enterpictureinpicture', onEnterPiP);
@@ -269,8 +279,10 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     return () => {
       video.removeEventListener('enterpictureinpicture', onEnterPiP);
       video.removeEventListener('leavepictureinpicture', onLeavePiP);
+      // Unmounting straight out of PiP never fires leavepictureinpicture.
+      releaseMediaSession(cardId);
     };
-  }, [channel.name, toggleMuteProgrammatic]);
+  }, [channel.name, channel.logo, cardId, toggleMuteProgrammatic]);
 
   const handleFullscreen = (e: React.MouseEvent) => {
     e.stopPropagation();
