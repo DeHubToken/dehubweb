@@ -51,6 +51,34 @@
           if (!(s > 0)) s = 50;
           s = Math.min(100, s);
           d.style.setProperty('--dim-lights-opacity', (0.12 + 0.6 * (s / 100)).toFixed(3));
+
+          // Frost the app shell from the FIRST painted frame (the sheet itself
+          // is html[data-feed-loading] #app-root::after, in index.css), so the
+          // welcome panel is the only thing that ever reads as sharp and
+          // everything else — skeletons, spinners, the sidebars, the theme
+          // canvas — resolves in behind it.
+          //
+          // This must be set HERE, not from React. The first attempt drove it
+          // off the home feed's isLoadingState, which is usually ALREADY FALSE
+          // by the time HomeFeed first renders: the boot prefetch below starts
+          // page 1 at parse time and use-unified-feed adopts it, and the
+          // persisted query cache restores synchronously. So the frost almost
+          // never appeared, and when it did the skeletons had already painted
+          // sharp before React got there — the wrong order, which is the whole
+          // point of the effect.
+          //
+          // HomeFeed clears it (to "off", then removes it) once page 1 has
+          // resolved; the timer below is the guarantee for every path that
+          // never reaches HomeFeed at all — a failed chunk, a thrown boundary,
+          // a redirect — because an app left permanently frosted is worse than
+          // one that never frosted.
+          if (location.pathname === '/') {
+            d.dataset.feedLoading = 'on';
+            setTimeout(function () {
+              if (d.dataset.feedLoading === 'on') d.dataset.feedLoading = 'off';
+              setTimeout(function () { delete d.dataset.feedLoading; }, 800);
+            }, 5000);
+          }
         } catch (e) { /* never block boot */ }
       })();
     </script>

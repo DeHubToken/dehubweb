@@ -133,10 +133,6 @@ const HOME_INTRO_LINKS = [
   ['/docs/faq', 'Frequently asked questions'],
   ['/guides/what-is-watch-to-earn', 'What is watch-to-earn?'],
   ['/guides/tokenized-subscriptions-explained', 'Tokenised subscriptions'],
-  ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming'],
-  ['/guides/decentralised-social-media-explained-uk', 'Decentralised social media'],
-  ['/docs/token/overview', 'The DHB currency'],
-  ['/guides/what-is-dehub', 'What is DeHub?'],
 ];
 
 // Story slides — mirror SLIDES in src/components/app/HomeIntro.tsx, which in
