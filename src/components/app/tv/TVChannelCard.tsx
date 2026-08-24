@@ -21,6 +21,11 @@ import type Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+} from '@/lib/media-session';
 import { TVChat } from './TVChat';
 import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { createLogger } from '@/lib/logger';
@@ -295,32 +300,41 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     const video = videoRef.current;
     if (!video) return;
 
-    const onEnterPiP = () => {
-      setIsInPiP(true);
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
+    // Routed through lib/media-session rather than poking navigator directly,
+    // so a channel popped into PiP takes the session from the radio or a stage
+    // recording properly — and, more to the point, gives it back on the way out
+    // instead of clearing whatever claimed it in the meantime.
+    //
+    // The mute toggle still rides next/previous track. A live stream has no
+    // tracks to skip, and those two are the only buttons the PiP window offers
+    // beyond play/pause, so they are the only place a mute control can go.
+    const claimForPiP = (handler: () => void) => {
+      claimMediaSession(
+        cardId,
+        {
           title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
           artist: 'DeHub TV',
-        });
-        const muteHandler = () => {
-          toggleMuteProgrammatic();
-          // Update metadata to reflect mute state
-          navigator.mediaSession.metadata = new MediaMetadata({
-            title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
-            artist: 'DeHub TV',
-          });
-        };
-        navigator.mediaSession.setActionHandler('nexttrack', muteHandler);
-        navigator.mediaSession.setActionHandler('previoustrack', muteHandler);
-      }
+          artwork: channel.logo || null,
+        },
+        { nexttrack: handler, previoustrack: handler },
+      );
+      setMediaSessionPlaying(cardId, true);
+    };
+
+    const muteHandler = () => {
+      toggleMuteProgrammatic();
+      // Re-claim to redraw the title, which is carrying the mute state.
+      claimForPiP(muteHandler);
+    };
+
+    const onEnterPiP = () => {
+      setIsInPiP(true);
+      claimForPiP(muteHandler);
     };
 
     const onLeavePiP = () => {
       setIsInPiP(false);
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.setActionHandler('nexttrack', null);
-        navigator.mediaSession.setActionHandler('previoustrack', null);
-      }
+      releaseMediaSession(cardId);
     };
 
     video.addEventListener('enterpictureinpicture', onEnterPiP);
@@ -328,8 +342,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     return () => {
       video.removeEventListener('enterpictureinpicture', onEnterPiP);
       video.removeEventListener('leavepictureinpicture', onLeavePiP);
+      // Unmounting straight out of PiP never fires leavepictureinpicture.
+      releaseMediaSession(cardId);
     };
-  }, [channel.name, toggleMuteProgrammatic]);
+  }, [channel.name, channel.logo, cardId, toggleMuteProgrammatic]);
 
   const handleFullscreen = (e: React.MouseEvent) => {
     e.stopPropagation();
