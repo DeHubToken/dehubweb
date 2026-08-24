@@ -54,6 +54,30 @@ jobs:
       - name: Typecheck node (vite.config.ts)
         run: pnpm exec tsc --noEmit -p tsconfig.node.json
 
+  stage-remux:
+    name: Stage remux
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 22 for --experimental-strip-types: the code under test is the
+      # Deno edge function's TypeScript, run here unmodified.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No install step, like boot-path below: the test builds its own WebM and
+      # ADTS fixtures and imports the function's modules directly.
+      #
+      # Worth a job of its own because nothing else here can see this code:
+      # tsconfig.app.json covers `src` only, so supabase/functions is neither
+      # typechecked nor linted. It is also the kind of code that fails quietly
+      # — a wrong byte offset yields a file that uploads happily and simply
+      # will not seek, which is the bug the function exists to fix.
+      - name: Container surgery still lands its offsets
+        run: node --experimental-strip-types supabase/functions/finalize-stage-recording/remux.test.ts
+
   boot-path:
     name: Boot path
     runs-on: ubuntu-latest
