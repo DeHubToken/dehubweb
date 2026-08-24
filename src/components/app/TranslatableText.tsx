@@ -443,6 +443,19 @@ function isNoOpTranslation(translated: string, original: string): boolean {
   return translated.trim() === original.trim();
 }
 
+// Provider junk that arrives dressed as a successful translation: MyMemory
+// answers some short queries out of its shared translation memory with API
+// boilerplate somebody else once fed it, and older server versions cached that
+// prose as the post's "translation" — permanently, on both sides. Anything
+// matching this is refused wherever it surfaces: fresh from the network, out of
+// this device's persisted cache, and (server-side) out of the shared table.
+const TRANSLATION_GARBAGE_REGEX =
+  /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID LANGUAGE PAIR|UNSUPPORTED LANGUAGE|API KEY|PLEASE CONTACT|INTERNAL SERVER|SERVICE UNAVAILABLE/i;
+
+function looksLikeTranslationGarbage(translated: string): boolean {
+  return TRANSLATION_GARBAGE_REGEX.test(translated);
+}
+
 // ============================================================================
 // Auto-translate scheduling
 //
@@ -548,8 +561,17 @@ function requestTranslation(text: string, targetLang: string): Promise<Translate
   return request;
 }
 
-// Minimum text length for AI detection (avoid detecting single words)
+// Auto-translate skips Latin-script bodies shorter than this. Language cannot
+// be guessed from a word or two of Latin script — "no" is Portuguese, Italian
+// and English, "nice" could be anything — so a short post translated at all is
+// as likely to be "translated" out of its own language into it, and the only
+// honest answer is to leave it alone until asked. Non-Latin scripts are exempt:
+// kana, hangul, Arabic and friends identify themselves on sight.
 const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
+
+function skipsAutoTranslate(text: string): boolean {
+  return text.trim().length < MIN_TEXT_LENGTH_FOR_DETECTION && !detectNonLatinScript(text);
+}
 
 // Detect if text contains non-Latin scripts (instant, no API needed)
 function detectNonLatinScript(text: string): string | null {
@@ -696,14 +718,21 @@ export function useTranslation(text: string, auto: boolean = true) {
 
     if (translationCache.has(cacheKey)) {
       const cached = translationCache.get(cacheKey)!;
-      if (isNoOpTranslation(cached.translated, text)) {
+      // Poison from before the garbage guard existed must not outlive this
+      // session: drop it here and the next persist writes it out of
+      // localStorage too, then fall through to ask the server afresh.
+      if (looksLikeTranslationGarbage(cached.translated)) {
+        translationCache.delete(cacheKey);
+        schedulePersist();
+      } else if (isNoOpTranslation(cached.translated, text)) {
         setSourceLang(cached.sourceLang);
         return;
+      } else {
+        setTranslatedText(cached.translated);
+        setSourceLang(cached.sourceLang);
+        setIsTranslated(true);
+        return;
       }
-      setTranslatedText(cached.translated);
-      setSourceLang(cached.sourceLang);
-      setIsTranslated(true);
-      return;
     }
 
     inFlightRef.current = true;
@@ -722,6 +751,16 @@ export function useTranslation(text: string, auto: boolean = true) {
 
       const translated = data.translatedText;
       const detected = data.detectedLanguage?.language || 'unknown';
+
+      // An error message is not a translation of anything. Refuse it without
+      // caching — the next attempt may reach a provider that answers honestly.
+      if (looksLikeTranslationGarbage(translated)) {
+        console.error('[Translate] Provider returned an error message, discarding');
+        if (!mountedRef.current) return;
+        setError('Translation unavailable');
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
 
       // Cache either way — a post already in the reader's language is a settled
       // answer, and not storing it means auto-translate asks again on every
@@ -788,6 +827,11 @@ export function useTranslation(text: string, auto: boolean = true) {
     if (!auto) return;
     if (!autoTranslateEnabled()) return;
     if (isTooShort) return;
+    // A word or two of Latin script cannot be told apart from the reader's own
+    // language, so auto-translating it is as likely wrong as right — and it is
+    // the exact shape of query that pulls junk out of a shared translation
+    // memory. The translate control stays; only the unasked-for pass skips.
+    if (skipsAutoTranslate(text)) return;
 
     const key = `${text}-${userLang}`;
     if (autoDoneRef.current === key) return;
