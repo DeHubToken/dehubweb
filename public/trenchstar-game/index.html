@@ -5886,6 +5886,20 @@ function dhPostImg(r,w){
   if(/^https?:/.test(a))return dhApiUrl(a,w);
   return dhApiUrl('feed-images/'+a.split('/').pop(),w);
 }
+/* An avatar path arrives in three shapes and only one of them is a CDN key.
+   The feed sends `statics/avatars/0x….octet-stream`, and the CDN 403s on the
+   `statics/` prefix; account_info sends the same path already stripped; and an
+   api.dehub.io URL is not an avatar host at all — it 404s, the object is on
+   the CDN. Strip to the key and let dhApiUrl do the rest. */
+function dhAvatarUrl(p,w){
+  if(!p)return '';
+  if(/^data:|^blob:/.test(p))return p;
+  const api=p.match(/^https?:\/\/[^/]*api\.dehub\.io\/(?:statics\/)?([^?]+)/);
+  let path=api?api[1]:p;
+  if(!api&&/^https?:/.test(path))return dhApiUrl(path,w);
+  if(path.indexOf('statics/')===0)path=path.slice(8);
+  return dhApiUrl(path,w);
+}
 function dhCard(r){
   return {id:r.tokenId,
     user:r.minterUsername||r.minterDisplayName||'dehub',
@@ -5898,7 +5912,7 @@ function dhCard(r){
     views:+r.totalViews||+r.views||0,
     kind:r.postType||'',
     img:dhPostImg(r,360),
-    avatar:dhApiUrl(r.minterAvatarUrl,64)};
+    avatar:dhAvatarUrl(r.minterAvatarUrl,64)};
 }
 /* Pictures, by the slot that draws them rather than by URL: a data: URL is
    the whole image, and a Map keyed on one holds every thumbnail twice. */
@@ -5980,7 +5994,7 @@ async function dhPullLocal(){
       likes:+u.likes||0,
       tips:+u.receivedTips||0,
       badge:+u.badgeBalance||0,
-      avatar:dhApiUrl(u.avatarImageUrl,64)}:null;
+      avatar:dhAvatarUrl(u.avatarImageUrl,64)}:null;
     dhData.mine=mine&&Array.isArray(mine.result)
       ?mine.result.map(r=>({id:r.tokenId,img:dhPostImg(r,192)})):null;
     if(!rows.length)dhData.failed++;else dhData.failed=0;
@@ -10547,7 +10561,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   /* the desk's DeHub data and its composer, exposed so a change here can be
      asserted on without a screenshot: dhData holds what the app sent back,
      dhPix the pictures it drew, and dhDraft what is typed but not yet posted */
-  dhData,dhPull,dhPix,dhDraft,dhPostImg,dhWriteOpen,dhWriteClose,dhDraftSend,dhPosted,deskAction,
+  dhData,dhPull,dhPix,dhDraft,dhPostImg,dhAvatarUrl,dhWriteOpen,dhWriteClose,dhDraftSend,dhPosted,deskAction,
   pickFloor,goToFloor,pingFloor,fly,flyTo,
   /* renderer/composer are exposed so a frame can be drawn on demand and read
      back — the only way to actually LOOK at this thing from a headless harness */
