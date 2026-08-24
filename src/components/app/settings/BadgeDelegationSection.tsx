@@ -7,9 +7,8 @@
  * What the panel has to make obvious, because none of it is guessable:
  *
  * - You get **one slot per rung climbed**, not one slot flat.
- * - You hand out the tier **below** yours, never your own. Someone reading
- *   "Killer Whale · 10 slots" will otherwise expect to be handing out Killer
- *   Whales, and the first grant would be a surprise.
+ * - What you hand out is **your own tier** — the person you lend to wears the
+ *   badge you wear.
  * - A returned slot is not free straight away.
  *
  * A lent badge draws identically to an earned one everywhere else on the site,
@@ -110,25 +109,14 @@ export function BadgeDelegationSection() {
             <span className="text-white">
               {data.slots} slot{data.slots === 1 ? '' : 's'}
             </span>
-            , {slotsFree} free. A slot lends another account{' '}
-            {data.grantableTier ? (
-              <span className="text-white">the {data.grantableTier} badge</span>
-            ) : (
-              'a badge'
-            )}{' '}
-            — one tier below your own. Take it back whenever you like; the slot frees up a day later.
+            , {slotsFree} free. Each one lends another account{' '}
+            <span className="text-white">your own {data.grantableTier ?? data.ownTier} badge</span> —
+            they wear what you wear. Take it back whenever you like; the slot frees up a day later.
           </>
         ) : (
           <>Delegation slots come with a staking badge. Stake DHB to earn one.</>
         )}
       </p>
-
-      {data.ownTier && !data.grantableTier ? (
-        <p className="rounded-xl bg-zinc-800 p-3 text-sm text-zinc-500">
-          A delegation grants the tier below yours, and there is nothing below Crab. The next rung up
-          lends a Crab badge.
-        </p>
-      ) : null}
 
       {data.grantableTier ? (
         <form onSubmit={submit} className="flex gap-2">

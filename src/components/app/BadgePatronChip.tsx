@@ -1,29 +1,31 @@
 /**
  * Badge Patron Chip
  * =================
- * "Lent by @someone", beside a name whose badge was delegated rather than
- * earned.
+ * "Lent by @someone", revealed on hover over a badge that was delegated rather
+ * than earned.
  *
  * A lent badge draws identically to an earned one everywhere on the site —
- * that is deliberate, it is the same influence — so this chip is the one place
- * that says where it came from. Two things follow from putting it here and
- * nowhere else: a delegation becomes something to show off and recruit into
- * rather than something to hide, and there is an audit trail when somebody
- * starts handing badges to spam accounts.
+ * that is deliberate, it is the same influence — so this is the one place that
+ * says where it came from, and it stays out of the way until asked. Two things
+ * still follow from it existing: a delegation is something to show off rather
+ * than hide, and there is a trail when somebody starts handing badges to spam
+ * accounts.
+ *
+ * **Render it inside a `group relative` parent**, alongside the thing being
+ * explained — the badge, or the name the badge sits on. It positions itself
+ * above that parent and appears on `group-hover`.
  *
  * Renders nothing for the overwhelming majority of accounts, whose badge is
- * their own. One cached lookup per account, shared across every chip on a
- * page, so a profile costs one request and a feed costs none it was not
- * already making.
+ * their own. One cached lookup per account, shared across every instance on a
+ * page.
  *
  * @module components/app/BadgePatronChip
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import { fetchBadgePatron } from '@/lib/api/dehub/badges';
 import { badgeImage } from '@/lib/staking-badges';
 import { cn } from '@/lib/utils';
+import { fetchBadgePatron } from '@/lib/api/dehub/badges';
 
 interface BadgePatronChipProps {
   /** Username or wallet address of the account being drawn. */
@@ -49,31 +51,26 @@ export function BadgePatronChip({ lookupId, className }: BadgePatronChipProps) {
   const { grantor, tier } = data;
   const handle = grantor.username || grantor.displayName || null;
   const src = badgeImage(tier);
+  const who = handle ? `@${handle}` : 'another holder';
 
-  const label = (
-    <>
+  return (
+    <span
+      // `title` rather than a link: this is a hover affordance, and a tooltip
+      // you have to hover to see is not somewhere to put a click target. It
+      // also gives touch and screen readers the one thing worth having here,
+      // which `group-hover` alone would never reach.
+      title={`This ${tier} badge was lent by ${who}`}
+      role="note"
+      className={cn(
+        'pointer-events-none absolute bottom-full left-0 z-20 mb-1 flex items-center gap-1',
+        'whitespace-nowrap rounded-md border border-white/15 bg-zinc-900/95 px-2 py-0.5',
+        'text-xs text-white opacity-0 shadow-lg backdrop-blur-sm transition-opacity duration-150',
+        'group-hover:opacity-100',
+        className,
+      )}
+    >
       {src ? <img src={src} alt="" className="size-3 shrink-0" /> : null}
-      <span>Lent by {handle ? `@${handle}` : 'another holder'}</span>
-    </>
-  );
-
-  const classes = cn(
-    'inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-white/15',
-    'bg-white/10 px-2 py-0.5 text-xs text-white',
-    className,
-  );
-
-  const title = `This ${tier} badge was lent by ${handle ? `@${handle}` : 'another holder'}`;
-
-  // Not every grantor has a username to route to; those get a plain chip
-  // rather than a link to a page that would 404.
-  return handle ? (
-    <Link to={`/${handle}`} title={title} className={cn(classes, 'transition-colors hover:bg-white/20')}>
-      {label}
-    </Link>
-  ) : (
-    <span title={title} className={classes}>
-      {label}
+      Lent by {who}
     </span>
   );
 }
