@@ -101,18 +101,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // Mirror of the top field, revealed once the list bottoms out.
   const showBottomSearch = navAtBottom || bottomSearchFocused || (navQuery !== '' && queryOwner === 'bottom');
 
+  // Measured in the list's own content coordinates (offsetLeft/offsetTop
+  // against the scroll container), not in viewport coordinates. The indicator
+  // renders inside the scroller, so content coordinates make it ride with its
+  // row for free — nothing to recompute per frame, nothing to lag behind.
+  // Viewport coordinates re-targeted the spring on every scroll event, so the
+  // glass slid off its row under the wheel and sprang back onto it afterwards.
   const updateIndicator = useCallback(() => {
-    const panel = sidePanelRef.current;
+    const scroller = scrollRef.current;
     const active = activeItemEl;
-    if (!panel || !active) return;
-    const panelRect = panel.getBoundingClientRect();
-    const activeRect = active.getBoundingClientRect();
+    if (!scroller || !active) return;
     setIndicatorRect((prev) => {
       const next = {
-        x: activeRect.left - panelRect.left,
-        y: activeRect.top - panelRect.top,
-        width: activeRect.width,
-        height: activeRect.height,
+        x: active.offsetLeft,
+        y: active.offsetTop,
+        width: active.offsetWidth,
+        height: active.offsetHeight,
         ready: true,
       };
       if (prev.ready && prev.x === next.x && prev.y === next.y && prev.width === next.width && prev.height === next.height) {
@@ -122,7 +126,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     });
   }, [activeItemEl]);
 
-  useEffect(() => { updateIndicator(); }, [updateIndicator, isCollapsed]);
+  // navQuery/isAuthenticated: filtering the list, or gaining/losing the
+  // signed-in rows, moves the active row without resizing it or the container,
+  // so neither the ResizeObserver below nor the scroll handler would notice.
+  useEffect(() => { updateIndicator(); }, [updateIndicator, isCollapsed, navQuery, isAuthenticated]);
 
   // Collapse/expand runs as 500ms CSS transitions (aside width/padding, the
   // layout row's max-width), so the one-shot measurement above captures
@@ -137,9 +144,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     const panel = sidePanelRef.current;
     if (panel) observer.observe(panel);
     if (activeItemEl) observer.observe(activeItemEl);
-    // The scroll container too: revealing/retracting the search field animates
-    // its height, which slides every row without resizing any of them. Watching
-    // the container gives the indicator a per-frame re-measure for free.
+    // The scroll container too: it is what the offsets are measured against,
+    // and its width drives every row's width in stretch mode.
     if (scrollRef.current) observer.observe(scrollRef.current);
     return () => observer.disconnect();
   }, [activeItemEl, updateIndicator]);
@@ -177,7 +183,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     const el = scrollRef.current;
     if (!el) return;
     const handleScroll = () => {
-      requestAnimationFrame(updateIndicator);
+      // No indicator re-measure here: its position is a content coordinate, so
+      // scrolling the list moves it and the row it sits on by the same amount.
       // Same 8px threshold the mobile header uses, so a stray wheel tick or a
       // rubber-band does not flick the field in and out.
       setNavScrolled(el.scrollTop > 8);
@@ -189,7 +196,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     handleScroll();
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, [updateIndicator, navQuery, isCollapsed, isAuthenticated]);
+  }, [navQuery, isCollapsed, isAuthenticated]);
 
   // A route change re-renders the rail with a different active row; leaving a
   // stale filter applied would hide the page the user just landed on.
@@ -410,36 +417,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
         {/* Navigation Bento - scrollable */}
         <motion.div ref={sidePanelRef} data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden contain-paint flex flex-col">
-          {/* Active glass overlay indicator - tracks the active item's on-screen
-              position (via getBoundingClientRect, which is always current, so it
-              naturally follows scrolling). Clipped at this panel's own edges —
-              matching where the scrollable list visually starts/ends — so it cuts
-              off at top/bottom like the text instead of floating past it, while
-              still bleeding freely around each item mid-list for the shadow. */}
-          {/* activeItemEl guard: filtering can take the active row out of the
-              list, and updateIndicator bails when there is nothing to measure —
-              which would otherwise leave the glass frozen over whatever row has
-              since slid into that slot. */}
-          {indicatorRect.ready && activeItemEl && (
-            <motion.div
-              data-sidebar-active-indicator
-              className={cn(
-                "pointer-events-none absolute z-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
-                isLightTheme
-                  ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(255,255,255,0.06)]"
-                  : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
-                isCollapsed ? 'rounded-xl' : 'rounded-2xl'
-              )}
-              initial={false}
-              animate={{
-                x: indicatorRect.x,
-                y: indicatorRect.y,
-                width: indicatorRect.width,
-                height: indicatorRect.height,
-              }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            />
-          )}
           {/* Menu search — revealed by scrolling the list, retracted when it
               returns to the top. Animated through grid-template-rows so the
               row's own height decides the travel; no hardcoded pixel value to
@@ -512,10 +489,50 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               // overscroll-contain: without it, reaching the end of the nav list
               // chains the wheel to the document and the feed scrolls out from
               // under the cursor while the user is still working the sidebar.
-              "p-1 space-y-2 flex flex-col items-center overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-invisible flex-1 min-h-0",
-              !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
+              // relative: the containing block the active-row glass below is
+              // positioned against, and the offsetParent its coordinates are
+              // measured from. The two have to be the same box.
+              "relative p-1 flex flex-col overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-invisible flex-1 min-h-0",
+              !isCollapsed && "lg:p-2.5"
             )}
           >
+          {/* Active glass overlay indicator — an absolute child of the scroll
+              container, so it is laid out in the list's own scrollable content
+              and rides its row exactly, with no per-frame JS in the scroll path
+              and no spring chasing a moving target. The container's overflow
+              clips it at the list's real edges, so it can no longer float up
+              over the menu-search field or down past the last row; mid-list it
+              still bleeds freely around its item for the shadow. */}
+          {/* activeItemEl guard: filtering can take the active row out of the
+              list, and updateIndicator bails when there is nothing to measure —
+              which would otherwise leave the glass frozen over whatever row has
+              since slid into that slot. */}
+          {indicatorRect.ready && activeItemEl && (
+            <motion.div
+              data-sidebar-active-indicator
+              className={cn(
+                "pointer-events-none absolute left-0 top-0 z-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+                isLightTheme
+                  ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(255,255,255,0.06)]"
+                  : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
+                isCollapsed ? 'rounded-xl' : 'rounded-2xl'
+              )}
+              initial={false}
+              animate={{
+                x: indicatorRect.x,
+                y: indicatorRect.y,
+                width: indicatorRect.width,
+                height: indicatorRect.height,
+              }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            />
+          )}
+          {/* Rows live one level in, so `space-y` never lands a stray margin on
+              the absolutely-positioned glass above. */}
+          <div className={cn(
+            "flex flex-col space-y-2 items-center",
+            !isCollapsed && "lg:space-y-[2px] lg:items-stretch"
+          )}>
           {visibleRailItems.map((item) => {
             if (item.label === 'Assistant') {
               return (
@@ -616,6 +633,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               {!navAtBottom && <div aria-hidden className="h-14 flex-shrink-0" />}
             </>
           )}
+          </div>
           </div>
           {/* Hand-off. Always the last thing in the panel while a query is
               typed, so the field is never a dead end: whatever was typed can be
