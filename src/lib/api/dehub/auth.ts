@@ -11,6 +11,28 @@ export interface UsernameCheckResponse {
   error?: boolean;
 }
 
+/** The API's code for a wallet signup turned away by the on-chain history gate. */
+export const WALLET_SIGNUP_BLOCKED_CODE = 'WALLET_SIGNUP_REQUIRES_HISTORY';
+
+/**
+ * Thrown when a brand-new account is refused because the wallet has no history
+ * on any supported chain — the anti-bot gate the API added in stream-backend
+ * #128. Signing again cannot fix it, and neither can waiting: the person has to
+ * either fund the wallet or come in through Google/Apple/email/phone.
+ *
+ * It is a distinct type because the generic path tells the user to "try again",
+ * which is the one piece of advice guaranteed not to work here, and because it
+ * drops the API's own explanation — the only place the alternatives are named.
+ */
+export class WalletSignupBlockedError extends Error {
+  constructor(
+    message = 'To create an account with a wallet, that wallet needs some history on-chain — a balance, or a transaction it has sent before.',
+  ) {
+    super(message);
+    this.name = 'WalletSignupBlockedError';
+  }
+}
+
 export interface Web3AuthMeta {
   typeOfLogin?: string;
   verifier?: string;
@@ -75,6 +97,9 @@ export async function authenticateWallet(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    if (errorData.code === WALLET_SIGNUP_BLOCKED_CODE) {
+      throw new WalletSignupBlockedError(errorData.message || errorData.error_message);
+    }
     throw new Error(errorData.message || errorData.error || "Authentication failed");
   }
 

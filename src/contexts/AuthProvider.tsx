@@ -26,6 +26,7 @@ import {
   authenticateWallet,
   authenticateWithSupabaseSession,
   WalletNotLinkedError,
+  WalletSignupBlockedError,
   getAccountInfo,
   getAuthToken,
   getRefreshToken,
@@ -1406,7 +1407,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         status: authError?.status,
         ...describeWalletError(authError),
       }, authError);
-      toast.error('Could not complete sign-in. Please try again.');
+      if (authError instanceof WalletSignupBlockedError) {
+        // "Try again" is the one thing that cannot work here — the wallet is
+        // empty and will stay empty. Say what the API said, and leave it up
+        // long enough to read, since the way out is the other buttons on this
+        // sheet rather than another attempt.
+        toast.error('This wallet cannot open a new account', {
+          description: authError.message,
+          duration: 15000,
+        });
+      } else {
+        toast.error('Could not complete sign-in. Please try again.');
+      }
       throw authError;
     }
 
