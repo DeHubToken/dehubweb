@@ -153,7 +153,7 @@ const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-a
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
 <p>DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
-<p><a href="${APP_URL}/guide" style="color:#9f9">Take the tour</a></p>
+<p><a href="${APP_URL}/docs" style="color:#9f9">Read the docs</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
   HOME_INTRO_LINKS.map(([href, label]) =>
     `<li style="margin:6px 0"><a href="${APP_URL}${href}" style="color:#9f9">${label}</a></li>`
