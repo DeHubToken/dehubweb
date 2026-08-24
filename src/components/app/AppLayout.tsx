@@ -69,7 +69,38 @@ const POST_LAYER_WIDTH = 'var(--app-main-width, 100%)';
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText, initialCategory, clearInitialCategory } = useGlobalDropZone();
+  const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText, initialCategory, clearInitialCategory, openPostModal } = useGlobalDropZone();
+
+  // A post written somewhere on this origin that has no composer of its own —
+  // today that is Trenchstar opened straight at /trenchstar-game/, where the
+  // game IS dehub.io but is not this React app and so cannot reach the modal.
+  // It leaves the draft here and sends the tab to /app.
+  //
+  // In the ARCADE the same desk goes through the postMessage bridge instead:
+  // that frame is an opaque origin, so it has no localStorage of ours to
+  // write to, which is the whole reason the bridge exists.
+  //
+  // Only a fresh handoff counts. A draft that has sat in storage since some
+  // other day must not ambush somebody with a composer they did not ask for.
+  useEffect(() => {
+    const KEY = 'dehub.compose.draft';
+    let raw: string | null = null;
+    try {
+      raw = localStorage.getItem(KEY);
+      if (raw) localStorage.removeItem(KEY);
+    } catch {
+      return;
+    }
+    if (!raw) return;
+    try {
+      const draft = JSON.parse(raw) as { text?: unknown; at?: unknown };
+      const text = typeof draft?.text === 'string' ? draft.text.slice(0, 500).trim() : '';
+      const at = typeof draft?.at === 'number' ? draft.at : 0;
+      if (text && Date.now() - at < 120_000) openPostModal(text);
+    } catch {
+      // Unparseable is nothing to act on, and it has already been cleared.
+    }
+  }, [openPostModal]);
 
   // PostModal mounts on first open, then stays mounted so its close animation
   // isn't cut short. Both lazy chunks (composer + post overlay) preload on
