@@ -1606,35 +1606,52 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     refetch,
   });
 
-  /* Frost the app shell while page 1 is in flight, so the welcome panel reads
-     as arriving first and the rest of the app resolves in behind it. The sheet
-     itself is CSS (`html[data-feed-loading] #app-root::after` in index.css);
-     this only publishes the state, the way DocsSurface publishes docsOpen.
+  /* Lift the frost that index.html put up at parse time. The sheet is CSS
+     (`html[data-feed-loading] #app-root::after`); this only publishes state,
+     the way DocsSurface publishes docsOpen.
 
-     Three states, not two: "on" while loading, "off" to run the unblur
-     transition, then the attribute is REMOVED once that transition has ended.
-     Leaving it on would keep a full-viewport backdrop-filter composited for the
-     rest of the session — the sheet has to stop existing, not just go clear. */
+     This effect does NOT raise the frost — index.html does, before React
+     exists. Driving it from here was the bug: `isLoadingState` is usually
+     already false on the first render (the boot prefetch in index.html starts
+     page 1 at parse time and use-unified-feed adopts it, and the persisted
+     query cache restores synchronously), so the frost mostly never appeared,
+     and the skeletons painted sharp before React arrived.
+
+     MIN_FROST_MS is a floor, not a delay: without it a warm load resolves page
+     1 before the panel has been on screen long enough to register, and the
+     whole effect flickers past. performance.now() is milliseconds since
+     navigation start, so this reads "hold the frost until the page is at least
+     this old", and costs nothing when the app took longer than that anyway.
+
+     Three states, not two: "on", "off" to run the transition, then the
+     attribute is REMOVED — a full-viewport backdrop-filter has to stop
+     existing, not just go clear. */
   useEffect(() => {
     const root = document.documentElement;
     if (isLoadingState) {
       root.dataset.feedLoading = 'on';
       return;
     }
-    // Nothing to unblur if we never frosted — a warm cache resolves page 1
-    // before first paint, and starting at "off" would flash a sheet in.
     if (!root.dataset.feedLoading) return;
-    root.dataset.feedLoading = 'off';
-    const done = window.setTimeout(() => {
-      delete root.dataset.feedLoading;
-    }, 800); // just past the 700ms transition in index.css
-    return () => window.clearTimeout(done);
+    const MIN_FROST_MS = 900;
+    let remove: number | undefined;
+    const lift = window.setTimeout(() => {
+      root.dataset.feedLoading = 'off';
+      remove = window.setTimeout(() => {
+        delete root.dataset.feedLoading;
+      }, 800); // just past the 700ms transition in index.css
+    }, Math.max(0, MIN_FROST_MS - performance.now()));
+    return () => {
+      window.clearTimeout(lift);
+      if (remove !== undefined) window.clearTimeout(remove);
+    };
   }, [isLoadingState]);
 
   /* Never frost forever. isLoadingState stays true for the whole auto-retry
      ladder, so an offline or stalled page-1 would otherwise leave the app
      permanently blurred — including the error state the user needs to read.
-     Same defence as the rails gate's own 4s timer above. */
+     index.html carries its own 5s backstop for the case where this component
+     never mounts at all; this is the earlier one for when it does. */
   useEffect(() => {
     const bail = window.setTimeout(() => {
       const root = document.documentElement;

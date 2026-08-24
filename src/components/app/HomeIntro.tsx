@@ -96,10 +96,6 @@ const LINKS: { to: string; label: string }[] = [
   { to: '/docs/faq', label: 'Frequently asked questions' },
   { to: '/guides/what-is-watch-to-earn', label: 'What is watch-to-earn?' },
   { to: '/guides/tokenized-subscriptions-explained', label: 'Tokenised subscriptions' },
-  { to: '/guides/web3-live-streaming-decentralised-twitch-alternative', label: 'Web3 live streaming' },
-  { to: '/guides/decentralised-social-media-explained-uk', label: 'Decentralised social media' },
-  { to: '/docs/token/overview', label: 'The DHB currency' },
-  { to: '/guides/what-is-dehub', label: 'What is DeHub?' },
 ];
 
 /* --- design tokens, lifted verbatim from kit/compose.mjs ------------------ */
