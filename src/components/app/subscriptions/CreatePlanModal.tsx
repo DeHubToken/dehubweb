@@ -10,13 +10,25 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useCreatePlan } from '@/hooks/use-subscriptions';
+import { getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID, isSubscriptionChain } from '@/lib/contracts';
+import type { ChainId } from '@/components/app/ChainSelector';
 import dehubCoin from '@/assets/dehub-coin.png';
+import baseLogo from '@/assets/icons/base-logo.png';
+import bnbLogo from '@/assets/icons/bnb-logo.png';
 
 interface CreatePlanModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
+/**
+ * Durations are whole months, and **lifetime is 0**.
+ *
+ * Not a stylistic choice — the contract reverts with "Duration should be
+ * between 0 to 12 (0 for lifetime)" on anything else, so the old 6-month=6,
+ * lifetime=0 list was half right and the API's lifetime=999 was unbuyable.
+ * The `tier` alongside is only a label; the API keys plans by duration.
+ */
 const DURATION_PRESETS = [
   { label: '1 Month', months: 1, tier: 1 },
   { label: '3 Months', months: 3, tier: 2 },
@@ -25,11 +37,10 @@ const DURATION_PRESETS = [
   { label: 'Lifetime', months: 0, tier: 5 },
 ];
 
-// DHB token addresses per chain
-const DHB_TOKENS: Record<number, string> = {
-  8453: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', // Base
-  56: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D',   // BSC
-};
+const CHAIN_OPTIONS: { chainId: ChainId; label: string; icon: string }[] = [
+  { chainId: BASE_CHAIN_ID as ChainId, label: 'Base', icon: baseLogo },
+  { chainId: BNB_CHAIN_ID as ChainId, label: 'BNB', icon: bnbLogo },
+];
 
 const CACHE_KEY = 'create_plan_draft';
 
@@ -39,6 +50,7 @@ interface PlanDraft {
   price: string;
   duration: number;
   tier: number;
+  chainId: number;
   benefits: string[];
 }
 
@@ -64,14 +76,15 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
   const [price, setPrice] = useState(draft?.price ?? '');
   const [duration, setDuration] = useState(draft?.duration ?? 1);
   const [tier, setTier] = useState(draft?.tier ?? 1);
+  const [chainId, setChainId] = useState<ChainId>((draft?.chainId as ChainId) ?? (BASE_CHAIN_ID as ChainId));
   const [benefits, setBenefits] = useState<string[]>(draft?.benefits ?? ['']);
-  
+
   const createPlanMutation = useCreatePlan();
 
   // Auto-save draft on changes
   useEffect(() => {
-    saveDraft({ name, description, price, duration, tier, benefits });
-  }, [name, description, price, duration, tier, benefits]);
+    saveDraft({ name, description, price, duration, tier, chainId, benefits });
+  }, [name, description, price, duration, tier, chainId, benefits]);
 
   const handleAddBenefit = () => {
     setBenefits([...benefits, '']);
@@ -90,19 +103,21 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
   const handleSubmit = async () => {
     if (!name.trim()) return;
     if (!price || parseFloat(price) <= 0) return;
+    if (!isSubscriptionChain(chainId)) return;
 
     const filteredBenefits = benefits.filter(b => b.trim());
-    
+
     try {
-      const priceNum = parseFloat(price);
       await createPlanMutation.mutateAsync({
         name: name.trim(),
         description: description.trim() || undefined,
         duration,
         tier,
         benefits: filteredBenefits.length > 0 ? filteredBenefits : undefined,
+        // The token is pinned to that chain's DHB — the API rejects anything
+        // else, because the contract will charge in whatever it is handed.
         chains: [
-          { chainId: 8453, token: DHB_TOKENS[8453], price: priceNum },
+          { chainId, token: getChainConfig(chainId).dhbToken, price: parseFloat(price) },
         ],
       });
 
@@ -121,6 +136,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
   };
 
   const isValid = name.trim() && price && parseFloat(price) > 0;
+  const busy = createPlanMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -180,6 +196,30 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
                 <span className="text-sm text-zinc-400">DHB</span>
               </div>
             </div>
+            <p className="text-xs text-zinc-500 mt-1.5">
+              You receive this in full. Subscribers pay a platform fee on top.
+            </p>
+          </div>
+
+          {/* Chain */}
+          <div>
+            <label className="text-sm text-zinc-400 mb-1.5 block">Chain</label>
+            <div className="grid grid-cols-2 gap-2">
+              {CHAIN_OPTIONS.map((option) => (
+                <button
+                  key={option.chainId}
+                  onClick={() => setChainId(option.chainId)}
+                  className={`flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
+                    chainId === option.chainId
+                      ? 'bg-white/20 border-white/30 text-white'
+                      : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10'
+                  }`}
+                >
+                  <img src={option.icon} alt="" className="w-4 h-4 rounded-full" />
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Duration */}
@@ -188,7 +228,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
               <Clock className="w-3.5 h-3.5" />
               Duration
             </label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {DURATION_PRESETS.map((preset) => (
                 <button
                   key={preset.months}
@@ -203,6 +243,9 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
                 </button>
               ))}
             </div>
+            <p className="text-xs text-zinc-500 mt-1.5">
+              One plan per duration — the chain stores plans by creator and duration.
+            </p>
           </div>
 
           {/* Benefits */}
@@ -247,24 +290,27 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
           {/* Submit */}
           <button
             onClick={handleSubmit}
-            disabled={!isValid || createPlanMutation.isPending}
+            disabled={!isValid || busy}
             className="relative group w-full overflow-hidden rounded-2xl border border-white/30 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] px-4 py-3 text-white font-semibold text-sm transition-all hover:from-white/25 hover:via-white/15 hover:to-white/10 disabled:opacity-40 disabled:pointer-events-none"
           >
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
             <span className="relative z-10 flex items-center justify-center gap-2">
-              {createPlanMutation.isPending ? (
+              {busy ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating...
+                  {createPlanMutation.stageLabel || 'Creating...'}
                 </>
               ) : (
                 <>
                   <Star className="w-4 h-4" />
-                  Create Plan
+                  Create &amp; Publish
                 </>
               )}
             </span>
           </button>
+          <p className="text-xs text-zinc-500 text-center">
+            Publishing is an on-chain transaction — you'll be asked to confirm it in your wallet.
+          </p>
         </div>
       </DialogContent>
     </Dialog>

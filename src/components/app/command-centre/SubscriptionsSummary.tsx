@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMySubscriptions, useCreatorPlans } from '@/hooks/use-subscriptions';
-import { isPast } from 'date-fns';
+import { isLiveSubscription, monthlySpend } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
 
 const cardClass = "rounded-2xl p-5 max-h-[420px] overflow-y-auto bg-zinc-900 border border-zinc-800";
@@ -18,15 +18,8 @@ export function SubscriptionsSummary() {
 
   const isLoading = subsLoading || plansLoading;
 
-  const activeSubscriptions = subscriptions.filter(
-    (s) => s.isActive && !isPast(new Date(s.endDate))
-  );
-
-  const totalMonthlySpend = activeSubscriptions.reduce((sum, sub) => {
-    const price = sub.plan?.price || 0;
-    const duration = sub.plan?.duration || 30;
-    return sum + (price / duration) * 30;
-  }, 0);
+  const activeSubscriptions = subscriptions.filter(isLiveSubscription);
+  const totalMonthlySpend = monthlySpend(activeSubscriptions);
 
   if (!isAuthenticated) {
     return (

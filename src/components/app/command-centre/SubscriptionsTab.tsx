@@ -4,29 +4,46 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMySubscriptions, useCreatorPlans } from '@/hooks/use-subscriptions';
-import { getMediaUrl, type Subscription } from '@/lib/api/dehub';
+import {
+  planPrice,
+  isLiveSubscription,
+  monthlySpend,
+  type Subscription,
+  type SubscriptionPlan,
+} from '@/lib/api/dehub';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { format, isPast, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 const cardClass = "rounded-2xl p-5 bg-zinc-900 border border-zinc-800";
 
-function formatDuration(days: number): string {
-  if (days === 7) return '1 week';
-  if (days === 30) return '1 month';
-  if (days === 90) return '3 months';
-  if (days === 365) return '1 year';
-  return `${days} days`;
+/**
+ * Every date in this table came out of the API as `undefined` before the
+ * response shapes were fixed, and `format(new Date(undefined))` throws
+ * `RangeError: Invalid time value` — which took the whole Command Centre tab
+ * down with it rather than showing a dash. The guards stay: an unconfirmed
+ * purchase legitimately has no start date yet.
+ */
+function toDate(value: string | undefined): Date | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function safeFormat(value: string | undefined, pattern: string): string {
+  const date = toDate(value);
+  return date ? format(date, pattern) : '—';
 }
 
 function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
-  const isExpired = isPast(new Date(sub.endDate));
-  const daysLeft = differenceInDays(new Date(sub.endDate), new Date());
+  const endDate = toDate(sub.endDate);
+  const isExpired = endDate ? isPast(endDate) : false;
+  const daysLeft = endDate ? differenceInDays(endDate, new Date()) : 0;
   const planName = sub.plan?.name || 'Plan';
-  const planPrice = sub.plan?.price;
-  const planDuration = sub.plan?.duration;
-  const creatorShort = sub.creatorAddress
-    ? `${sub.creatorAddress.slice(0, 6)}...${sub.creatorAddress.slice(-4)}`
+  const price = planPrice(sub.plan || ({} as SubscriptionPlan));
+  const creatorAddress = sub.creatorAddress || sub.plan?.address;
+  const creatorShort = creatorAddress
+    ? `${creatorAddress.slice(0, 6)}...${creatorAddress.slice(-4)}`
     : 'Unknown';
 
   return (
@@ -51,9 +68,9 @@ function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
         </div>
       </td>
       <td className="py-4">
-        {planPrice !== undefined ? (
+        {price !== undefined ? (
           <span className="flex items-center gap-1 text-white text-sm">
-            {planPrice}
+            {price.toLocaleString(undefined, { maximumFractionDigits: 4 })}
             <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
           </span>
         ) : (
@@ -61,9 +78,9 @@ function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
         )}
       </td>
       <td className="py-4 text-sm">
-        <p>{format(new Date(sub.startDate), 'dd MMM yy')}</p>
+        <p>{safeFormat(sub.startDate, 'dd MMM yy')}</p>
         <p className="text-zinc-600">to</p>
-        <p>{format(new Date(sub.endDate), 'dd MMM yy')}</p>
+        <p>{sub.isLifetime ? 'never' : safeFormat(sub.endDate, 'dd MMM yy')}</p>
       </td>
       <td className="py-4">
         {isExpired ? (
@@ -78,7 +95,7 @@ function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
         {!isExpired && sub.isActive ? (
           <span className="text-zinc-400 flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            {daysLeft}d left
+            {sub.isLifetime ? 'lifetime' : `${daysLeft}d left`}
           </span>
         ) : (
           <span className="text-zinc-600">—</span>
@@ -96,15 +113,8 @@ export function SubscriptionsTab() {
   const tableHeaderBorder = "border-b border-zinc-800";
   const tableDivider = "divide-y divide-zinc-800";
 
-  const activeSubscriptions = subscriptions.filter(s => s.isActive && !isPast(new Date(s.endDate)));
-  const expiredSubscriptions = subscriptions.filter(s => !s.isActive || isPast(new Date(s.endDate)));
-
-  const totalMonthlySpend = activeSubscriptions.reduce((sum, sub) => {
-    const price = sub.plan?.price || 0;
-    const duration = sub.plan?.duration || 30;
-    // Normalize to monthly cost
-    return sum + (price / duration) * 30;
-  }, 0);
+  const activeSubscriptions = subscriptions.filter(isLiveSubscription);
+  const totalMonthlySpend = monthlySpend(activeSubscriptions);
 
   const isLoading = isLoadingSubs || isLoadingPlans;
 
