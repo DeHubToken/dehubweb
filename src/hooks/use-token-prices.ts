@@ -32,7 +32,7 @@ async function fetchTokenPrices(extraTokens?: { address: string; symbol: string 
 const STATIC_PRICE_DEFAULTS: TokenPrices = { DHB: 0, ETH: 0, BNB: 0, USDT: 1, USDC: 1, BTC: 0, WETH: 0, WBNB: 0 };
 
 /** Routes that actually display live token prices (wallet, staking, buy, stores). */
-const PRICE_SURFACES = new Set(['/app/wallet', '/app/stake', '/stake', '/app/buy', '/app/stores']);
+const PRICE_SURFACES = new Set(['/app/wallet', '/app/stake', '/stake', '/app/buy', '/app/stores', '/app/fractions']);
 
 /**
  * True when the active route renders live USD prices. Store detail pages count,

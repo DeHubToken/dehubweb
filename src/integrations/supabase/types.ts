@@ -2196,8 +2196,13 @@ export type Database = {
         Row: {
           chain_id: number
           created_at: string
+          creator_address: string | null
+          creator_username: string | null
           filled_quantity: number
           id: string
+          post_image_url: string | null
+          post_title: string | null
+          post_type: string | null
           price_per_fraction: number
           quantity: number
           seller_address: string
@@ -2208,8 +2213,13 @@ export type Database = {
         Insert: {
           chain_id?: number
           created_at?: string
+          creator_address?: string | null
+          creator_username?: string | null
           filled_quantity?: number
           id?: string
+          post_image_url?: string | null
+          post_title?: string | null
+          post_type?: string | null
           price_per_fraction: number
           quantity: number
           seller_address: string
@@ -2220,8 +2230,13 @@ export type Database = {
         Update: {
           chain_id?: number
           created_at?: string
+          creator_address?: string | null
+          creator_username?: string | null
           filled_quantity?: number
           id?: string
+          post_image_url?: string | null
+          post_title?: string | null
+          post_type?: string | null
           price_per_fraction?: number
           quantity?: number
           seller_address?: string
@@ -2289,43 +2304,64 @@ export type Database = {
           buyer_address: string
           chain_id: number
           created_at: string
+          delivered_at: string | null
+          delivery_tx_hash: string | null
           id: string
           listing_id: string | null
           offer_id: string | null
+          paid_at: string | null
           price_per_fraction: number
           quantity: number
           seller_address: string
+          settle_by: string | null
+          settled_at: string | null
+          status: string
           token_id: string
           total_dhb: number
           tx_hash: string | null
+          verified_at: string | null
         }
         Insert: {
           buyer_address: string
           chain_id?: number
           created_at?: string
+          delivered_at?: string | null
+          delivery_tx_hash?: string | null
           id?: string
           listing_id?: string | null
           offer_id?: string | null
+          paid_at?: string | null
           price_per_fraction: number
           quantity: number
           seller_address: string
+          settle_by?: string | null
+          settled_at?: string | null
+          status?: string
           token_id: string
           total_dhb: number
           tx_hash?: string | null
+          verified_at?: string | null
         }
         Update: {
           buyer_address?: string
           chain_id?: number
           created_at?: string
+          delivered_at?: string | null
+          delivery_tx_hash?: string | null
           id?: string
           listing_id?: string | null
           offer_id?: string | null
+          paid_at?: string | null
           price_per_fraction?: number
           quantity?: number
           seller_address?: string
+          settle_by?: string | null
+          settled_at?: string | null
+          status?: string
           token_id?: string
           total_dhb?: number
           tx_hash?: string | null
+          verified_at?: string | null
         }
         Relationships: [
           {
@@ -4821,6 +4857,18 @@ export type Database = {
         }
         Relationships: []
       }
+      fraction_seller_stats: {
+        Row: {
+          avg_settle_seconds: number | null
+          fractions_sold: number | null
+          open_trades: number | null
+          overdue_trades: number | null
+          seller_address: string | null
+          settled_trades: number | null
+          total_trades: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       ads_estimate_audience: { Args: { p_targeting: Json }; Returns: Json }
@@ -5262,6 +5310,14 @@ export type Database = {
       }
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
+        Returns: number
+      }
+      release_fraction_listing: {
+        Args: { p_listing_id: string; p_quantity: number }
+        Returns: undefined
+      }
+      reserve_fraction_listing: {
+        Args: { p_listing_id: string; p_quantity: number }
         Returns: number
       }
       stage_dub_tick: {

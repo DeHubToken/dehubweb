@@ -280,6 +280,57 @@ export async function getTokenHolders(
 }
 
 /**
+ * How many fractions of one token does one wallet hold?
+ *
+ * getTokenHolders answers "who holds this" by scanning 500k blocks of transfer
+ * events and then batching a balanceOf per address it finds — 15 seconds in the
+ * bad case, and it caches for five minutes because of it. Every selling surface
+ * only needs one number for one wallet, which is a single eth_call, so this
+ * exists rather than making the sell drawer wait on a log sweep or trust a
+ * five-minute-old cache to cap what someone is allowed to list.
+ *
+ * Returns null when the read fails, which callers must treat as "unknown" —
+ * a failed balance read is not a zero balance.
+ */
+export async function getFractionBalance(
+  address: string | null | undefined,
+  tokenId: number | string | null | undefined,
+  chainId: number = 8453,
+): Promise<number | null> {
+  const contractAddress = DEHUB_CONTRACTS[chainId];
+  if (!address || tokenId === null || tokenId === undefined || !contractAddress) return null;
+
+  try {
+    const endpoints = await getRpcEndpoints();
+    const client = createPublicClient({
+      chain: chainId === 8453 ? base : bsc,
+      transport: http(chainId === 8453 ? endpoints.base : endpoints.bsc),
+    });
+
+    const result = await client.call({
+      to: contractAddress,
+      data: encodeFunctionData({
+        abi: BALANCE_OF_ABI,
+        functionName: 'balanceOf',
+        args: [address as Address, BigInt(tokenId)],
+      }),
+    });
+    if (!result.data) return null;
+
+    return Number(
+      decodeFunctionResult({
+        abi: BALANCE_OF_ABI,
+        functionName: 'balanceOf',
+        data: result.data as Hex,
+      }) as bigint,
+    );
+  } catch (error) {
+    console.warn('[TokenHolders] balance read failed', error);
+    return null;
+  }
+}
+
+/**
  * Truncate address for display
  */
 export function truncateAddress(address: string): string {

@@ -15,6 +15,10 @@ const DESTINATION_RULES: Array<{ terms: RegExp; path: string }> = [
   { terms: /\b(bridge|bridging)\b/i, path: '/app/bridge' },
   { terms: /\bwallets?\b/i, path: '/app/wallet' },
   { terms: /\b(communities|community)\b/i, path: '/app/communities' },
+  // Before the stores rule: "fraction marketplace" matches both, and the
+  // fraction market is not the stores one. The board's "Fractions page
+  // functional" row has been marked shipped since July pointing at nothing.
+  { terms: /\bfractions?\b/i, path: '/app/fractions' },
   { terms: /\b(stores?|marketplace|listings?)\b/i, path: '/app/stores' },
   { terms: /\bleaderboards?\b/i, path: '/app/leaderboard' },
   { terms: /\b(api|endpoint)\b/i, path: '/docs/endpoints' },
