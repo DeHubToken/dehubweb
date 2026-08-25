@@ -20,12 +20,18 @@ const DEHUB_API_BASE = (Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io'
 const SERVICE_SECRET = Deno.env.get('ASSISTANT_SERVICE_SECRET') || '';
 export const GATEWAY_URL = 'https://ai.gateway.lovable.dev/v1/chat/completions';
 
-export type AgentSurface = 'chat' | 'assistant';
+/**
+ * `admin` is godmode's assistant. It is authenticated as an admin rather than
+ * as a wallet, and its catalog reads across the platform, the source history
+ * and the server log — so it is the one surface that must be asked for by name
+ * and never fallen into by default.
+ */
+export type AgentSurface = 'chat' | 'assistant' | 'admin';
 
 export interface ToolCatalogEntry {
   name: string;
   description: string;
-  scope: 'public' | 'self';
+  scope: 'public' | 'self' | 'admin';
   parameters: { type: 'object'; properties: Record<string, unknown>; required?: string[] };
 }
 
@@ -58,6 +64,14 @@ export interface AgentOptions {
    * API decides who is asking.
    */
   userToken: string | null;
+  /**
+   * On the `admin` surface only: the short-lived, assistant-only token the API
+   * minted for the admin who asked. Not their panel session — that never leaves
+   * `api.dehub.io`. The API verifies this on the way back in and decides which
+   * tools that admin's role may reach, so it is required for the admin catalog
+   * to contain anything at all.
+   */
+  adminToken?: string | null;
   model: string;
   lovableApiKey: string;
   perplexityKey?: string;
@@ -81,18 +95,30 @@ export function agentConfigured(): boolean {
   return !!SERVICE_SECRET;
 }
 
-export async function fetchToolCatalog(surface: AgentSurface): Promise<ToolCatalogEntry[]> {
-  const cached = catalogCache.get(surface);
+export async function fetchToolCatalog(
+  surface: AgentSurface,
+  adminToken?: string | null,
+): Promise<ToolCatalogEntry[]> {
+  // The admin catalog is cut to the asking admin's role, so caching it per
+  // surface would serve a super admin's tool list — the server log, the source
+  // tree, the audit trail — to the next moderator who asked. Admin traffic is
+  // a handful of questions a day; the cache buys nothing worth that.
+  const cacheable = surface !== 'admin';
+
+  const cached = cacheable ? catalogCache.get(surface) : undefined;
   if (cached && Date.now() - cached.fetchedAt < CATALOG_TTL_MS) return cached.tools;
 
   const res = await fetch(`${DEHUB_API_BASE}/assistant/tools?surface=${surface}`, {
-    headers: { 'x-assistant-secret': SERVICE_SECRET },
+    headers: {
+      'x-assistant-secret': SERVICE_SECRET,
+      ...(adminToken && { 'x-admin-token': adminToken }),
+    },
   });
   if (!res.ok) throw new Error(`Tool catalog fetch failed: ${res.status}`);
 
   const body = await res.json();
   const tools: ToolCatalogEntry[] = body?.tools || [];
-  catalogCache.set(surface, { tools, fetchedAt: Date.now() });
+  if (cacheable) catalogCache.set(surface, { tools, fetchedAt: Date.now() });
   return tools;
 }
 
@@ -122,6 +148,7 @@ export async function executeDeHubTool(
   args: Record<string, unknown>,
   userToken: string | null,
   surface: AgentSurface,
+  adminToken?: string | null,
 ): Promise<unknown> {
   const res = await fetch(`${DEHUB_API_BASE}/assistant/tool`, {
     method: 'POST',
@@ -131,6 +158,9 @@ export async function executeDeHubTool(
       // The API verifies this and derives the caller from it. Absent or
       // expired means the request is treated as signed out.
       ...(userToken && { 'x-dehub-token': userToken }),
+      // Same idea one surface over: the API verifies this and decides which of
+      // the admin tools this admin's role is allowed to run.
+      ...(adminToken && { 'x-admin-token': adminToken }),
     },
     body: JSON.stringify({ tool: name, args, surface }),
   });
@@ -177,15 +207,19 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     systemPrompt,
     surface,
     userToken,
+    adminToken,
     model,
     lovableApiKey,
     perplexityKey,
-    maxRounds = surface === 'chat' ? 3 : 5,
+    // An admin question is a chain, not a lookup: reports spiked, so what
+    // shipped, so what does that commit do, so what is the log saying. Five
+    // rounds runs out halfway through that and the answer arrives half-derived.
+    maxRounds = surface === 'chat' ? 3 : surface === 'admin' ? 9 : 5,
     maxTokens = surface === 'chat' ? 700 : 3000,
-    timeoutMs = surface === 'chat' ? 20_000 : 60_000,
+    timeoutMs = surface === 'chat' ? 20_000 : surface === 'admin' ? 120_000 : 60_000,
   } = opts;
 
-  const catalog = await fetchToolCatalog(surface);
+  const catalog = await fetchToolCatalog(surface, adminToken);
   const allTools = [...catalog, WEB_SEARCH_TOOL];
   const toolSchemas = allTools.map((t) => ({
     type: 'function' as const,
@@ -261,7 +295,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
           output =
             name === 'web_search'
               ? await executeWebSearch(String(args.query || ''), perplexityKey)
-              : await executeDeHubTool(name, args, userToken, surface);
+              : await executeDeHubTool(name, args, userToken, surface, adminToken);
         } catch (err) {
           output = { error: err instanceof Error ? err.message : 'Tool threw' };
         }

@@ -45,12 +45,17 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
     systemPrompt,
     surface,
     userToken,
+    adminToken,
     model,
     lovableApiKey,
     perplexityKey,
-    maxRounds = 5,
+    // Godmode asks chains rather than lookups — what shipped, what did it
+    // change, what has the log said since — so it gets more rounds and longer
+    // to spend them. It is also streaming, so the wait is visible rather than
+    // silent: the `__tool` frames name each lookup as it happens.
+    maxRounds = surface === 'admin' ? 9 : 5,
     maxTokens = 3000,
-    timeoutMs = 90_000,
+    timeoutMs = surface === 'admin' ? 150_000 : 90_000,
   } = opts;
 
   const encoder = new TextEncoder();
@@ -71,7 +76,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
       let fullText = '';
 
       try {
-        const catalog = await fetchToolCatalog(surface);
+        const catalog = await fetchToolCatalog(surface, adminToken);
         const toolSchemas = [...catalog, WEB_SEARCH_TOOL].map((t) => ({
           type: 'function' as const,
           function: { name: t.name, description: t.description, parameters: t.parameters },
@@ -187,7 +192,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
                 output =
                   c.name === 'web_search'
                     ? await executeWebSearch(String(args.query || ''), perplexityKey)
-                    : await executeDeHubTool(c.name, args, userToken, surface);
+                    : await executeDeHubTool(c.name, args, userToken, surface, adminToken);
               } catch (err) {
                 output = { error: err instanceof Error ? err.message : 'Tool threw' };
               }
