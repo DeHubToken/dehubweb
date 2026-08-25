@@ -47,7 +47,7 @@ export const ROUTE_SEGMENTS = [
   'prompt', 'r',
   'radio', 'raffle', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100',
   'tv',
-  'videos', 'work',
+  'usernames', 'videos', 'work',
 
   // --- /app children. Not top-level routes, but the worker canonicalises
   // /app/<x> onto /<x>, so they resolve into the same space. Several were

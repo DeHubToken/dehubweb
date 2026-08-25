@@ -110,6 +110,8 @@ const PRELOADERS: Record<string, Preloader | Preloader[]> = {
   ],
   '/app/affiliate': () => import('@/pages/app/AffiliatePage'),
   '/affiliate': () => import('@/pages/app/AffiliatePage'),
+  '/app/usernames': () => import('@/pages/app/UsernamesPage'),
+  '/usernames': () => import('@/pages/app/UsernamesPage'),
   '/app/top-100': () => import('@/pages/app/Top100CryptosPage'),
   '/app/ads': () => import('@/pages/app/AdsPage'),
   '/premium': () => import('@/pages/Premium'),
