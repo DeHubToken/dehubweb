@@ -7,7 +7,8 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send } from 'lucide-react';
+import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -844,6 +845,14 @@ const NotificationItem = memo(function NotificationItem({
   // use-custom-notifications); for a fraction row it is the post's token id.
   const customReferenceId = (notification as { _customReferenceId?: string })._customReferenceId;
 
+  // A decision someone can disagree with, as opposed to something that merely
+  // happened. Matches the two types notifyModerationAction sends.
+  const isModerationDecision =
+    (notification.type as string) === 'video_removal' ||
+    (notification.type as string) === 'account_warning';
+  const [showAppealDrawer, setShowAppealDrawer] = useState(false);
+  const [appealRef, setAppealRef] = useState<string | null>(null);
+
   const isFollowRequest = (notification.type as string) === 'follow_request' ||
     (notification.type as string) === 'followRequest' ||
     (notification.type as string) === 'follow-request' ||
@@ -1235,6 +1244,35 @@ const NotificationItem = memo(function NotificationItem({
           }`}>
             {followRequestAction === 'accepted' ? '✓ Accepted' : '✗ Rejected'}
           </span>
+        )}
+
+        {/* A moderation decision is the one notification a reader may actually
+            disagree with. The line it used to end with asked them to email
+            support; this files it against the decision itself. */}
+        {isModerationDecision && !appealRef && (
+          <div className="flex items-center gap-1.5 mt-2" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setShowAppealDrawer(true)}
+              className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors"
+            >
+              <Scale className="w-3 h-3" />
+              Appeal
+            </button>
+          </div>
+        )}
+        {isModerationDecision && appealRef && (
+          <span className="text-xs font-medium mt-2 inline-block px-2 py-1 rounded-lg text-zinc-400 bg-zinc-800/50">
+            Appeal sent · {appealRef}
+          </span>
+        )}
+        {isModerationDecision && (
+          <AppealDrawer
+            open={showAppealDrawer}
+            onOpenChange={setShowAppealDrawer}
+            notificationId={notification.id}
+            subject={notification.tokenTitle ? `"${notification.tokenTitle}"` : undefined}
+            onFiled={setAppealRef}
+          />
         )}
       </div>
 
