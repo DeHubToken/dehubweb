@@ -7,12 +7,13 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { NotificationSettleAction } from '@/components/app/fractions/NotificationSettleAction';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   useNotifications, 
@@ -258,7 +259,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment'],
   communities: ['community_mention', 'community_here', 'community_join'],
-  stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased'],
+  stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip', 'bounty_available', 'bounty_claimed'],
   livestreams: ['livestream_start', 'stage_live', 'stage_reminder'],
@@ -361,7 +362,13 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'fraction_offer':
     case 'fraction_offer_accepted':
     case 'fraction_offer_rejected':
+    case 'fraction_settled':
       return <Store className="w-4 h-4 text-white/70" />;
+    // The two that carry an obligation get their own glyph: these are the rows
+    // with a deadline on them, and they should not read as one more Store note.
+    case 'fraction_sold':
+    case 'fraction_delivered':
+      return <Send className="w-4 h-4 text-white/70" />;
     default:
       return <Bell className="w-4 h-4 text-white/70" />;
   }
@@ -833,7 +840,11 @@ const NotificationItem = memo(function NotificationItem({
   const [followRequestAction, setFollowRequestAction] = useState<'accepted' | 'rejected' | null>(null);
   const [followRequestLoading, setFollowRequestLoading] = useState<'accept' | 'reject' | null>(null);
 
-  const isFollowRequest = (notification.type as string) === 'follow_request' || 
+  // Supabase-backed rows carry their reference id here (see
+  // use-custom-notifications); for a fraction row it is the post's token id.
+  const customReferenceId = (notification as { _customReferenceId?: string })._customReferenceId;
+
+  const isFollowRequest = (notification.type as string) === 'follow_request' ||
     (notification.type as string) === 'followRequest' ||
     (notification.type as string) === 'follow-request' ||
     ((notification.type as string) === 'following' && notification.content?.toLowerCase().includes('requested'));
@@ -1189,6 +1200,13 @@ const NotificationItem = memo(function NotificationItem({
         <p className="text-xs text-zinc-500 mt-1">
           {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
         </p>
+
+        {/* Settle a fraction trade from the notification that told you about it.
+            Renders nothing unless this wallet actually owes the leg. */}
+        <NotificationSettleAction
+          type={notification.type as string}
+          tokenId={customReferenceId}
+        />
 
         {/* Follow request accept/reject buttons — inline under text on mobile */}
         {isFollowRequest && !followRequestAction && (
