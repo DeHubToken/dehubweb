@@ -18,7 +18,6 @@ import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
-import { scheduleLocalCacheSweep } from "@/lib/local-cache-sweep";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
 import { LoginModal, prefetchLoginModal } from "@/components/app/LoginModal";
@@ -237,11 +236,22 @@ function migrateStaleCacheOnce() {
 }
 if (typeof window !== 'undefined') {
   migrateStaleCacheOnce();
-  // Separate from the migration above, which is a one-shot keyed on a version
-  // number. This runs every boot and is about SIZE: the per-profile and per-DM
-  // caches write one key each and never delete any, and when the shared 5 MB
-  // quota fills the failure is silent — the newest write is the one dropped.
-  scheduleLocalCacheSweep();
+  /*
+   * Separate from the migration above, which is a one-shot keyed on a version
+   * number. This runs every boot and is about SIZE: the per-profile and per-DM
+   * caches write one key each and never delete any, and when the shared 5 MB
+   * quota fills the failure is silent — the newest write is the one dropped.
+   *
+   * Imported dynamically and run on idle: nothing on screen waits for it, so
+   * it has no business in the entry bundle (scripts/boot-path-report.mjs).
+   */
+  const runSweep = () => {
+    import("@/lib/local-cache-sweep").then(m => m.sweepLocalCaches()).catch(() => {});
+  };
+  const ric = (window as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void })
+    .requestIdleCallback;
+  if (ric) ric(runSweep, { timeout: 5000 });
+  else setTimeout(runSweep, 3000);
 }
 
 const queryClient = new QueryClient({

@@ -94,11 +94,3 @@ export function sweepLocalCaches(): void {
   }
 }
 
-/** Run the sweep off the critical boot path. */
-export function scheduleLocalCacheSweep(): void {
-  if (typeof window === 'undefined') return;
-  const ric = (window as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void })
-    .requestIdleCallback;
-  if (ric) ric(() => sweepLocalCaches(), { timeout: 5000 });
-  else setTimeout(sweepLocalCaches, 3000);
-}
