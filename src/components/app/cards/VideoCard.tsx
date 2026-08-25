@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil } from 'lucide-react';
@@ -552,6 +553,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(video.id);
+  // In this account's watch history — one shared query behind every card.
+  const isWatchedVideo = useIsWatchedVideo(video.id);
   const [isPlaying, setIsPlaying] = useState(false);
   const isPlayingRef = useRef(false);
   // Tracks the latest IntersectionObserver visibility so an async play() that
@@ -2016,6 +2019,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Error state - show thumbnail naturally, toast on click */}
         </>}
+
+        {/* Watched marker — the video is in this account's watch history, i.e.
+            it was actually played, not merely scrolled past. Hidden the moment
+            playback starts, so it never sits over the picture being watched. */}
+        {isWatchedVideo && !isPlaying && !isFullscreen && (
+          <div className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-[10px] font-medium text-white/80 pointer-events-none">
+            <Eye className="w-3 h-3" />
+            {t('feed.watched', 'Watched')}
+          </div>
+        )}
 
         {/* Duration badge for gated content - always visible on locked thumbnails */}
         {isContentGated && video.duration && (
