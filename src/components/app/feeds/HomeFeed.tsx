@@ -69,7 +69,7 @@ import { useDeHubStoryUsers, useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, map
 import { scrollDocumentTo } from '@/lib/document-scroll';
 import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
-import { useBoostSlot } from '@/hooks/use-superpowers';
+import { useBoostSlot, useJoinCrewBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
@@ -800,6 +800,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     selectedCategories.length === 0;
 
   const { data: boostSlot } = useBoostSlot(isDefaultHomeView);
+
+  // Whether this viewer could put a boost behind a Crew Boost they are shown.
+  // `status.powers` is the authority for what is built and unlocked; the
+  // allowance is what says whether they have one spare right now.
+  const { data: superpowerStatus } = useSuperpowers(!!walletAddress);
+  const joinCrew = useJoinCrewBoost();
+  const canJoinCrew =
+    !!superpowerStatus?.tier &&
+    superpowerStatus.boostsLeft > 0 &&
+    !!superpowerStatus.powers.some(p => p.key === 'crew_boost' && p.available);
 
   // An explicit ?post= link always wins. Somebody following a shared link came
   // for that post, and quietly showing them an advert instead would be the
@@ -1999,6 +2009,41 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                       <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
                         {t('superpowers.boostedLabel')}
                       </span>
+                      {/*
+                        Backing a Crew Boost, offered exactly where one is being
+                        served rather than on a page nobody visits — the moment
+                        you are looking at the post is the moment the question
+                        makes sense.
+
+                        Only for a crew boost, only to somebody with a badge of
+                        their own, and never on your own: the copy says minutes,
+                        not reach, because minutes are what pool. The leader's
+                        tier still decides how often the slot is dealt.
+                      */}
+                      {boostSlot?.power === 'crew_boost' &&
+                        canJoinCrew &&
+                        boostSlot.booster?.toLowerCase() !== walletAddress?.toLowerCase() && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              joinCrew.mutate(boostSlot.bookingId, {
+                                onSuccess: booking =>
+                                  toast.success(
+                                    t('superpowers.crewJoined', {
+                                      minutes: booking.minutes,
+                                      defaultValue: `Backed — it now runs ${booking.minutes} minutes`,
+                                    }),
+                                  ),
+                                onError: (error: any) =>
+                                  toast.error(error?.message || t('superpowers.boostFailed')),
+                              })
+                            }
+                            disabled={joinCrew.isPending}
+                            className="ml-auto text-[11px] uppercase tracking-wider text-muted-foreground hover:text-white disabled:opacity-40 transition-colors"
+                          >
+                            {t('superpowers.backThis', { defaultValue: 'Back this' })}
+                          </button>
+                        )}
                     </div>
                   )}
                   {renderMasonryGrid([renderFeedItem(pinnedItem, -1)], [pinnedItem])}
