@@ -60,8 +60,6 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
       ? 'July 11, 2022'
       : formatDate(post.publishedAt);
 
-  const isRafflePost = post.slug === 'dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022';
-  const raffleBanner = '/lovable-uploads/729af303-1246-44ed-a598-005275581b6c.png';
   
   const isCoinbasePost = post.slug === 'dhb-tradable-on-coinbase-soon';
   const coinbaseBanner = '/lovable-uploads/c238e114-80c3-42ac-9e7a-d4617111466c.png';
@@ -78,7 +76,6 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
   };
 
   const getBannerImage = () => {
-    if (isRafflePost) return raffleBanner;
     if (isCoinbasePost) return coinbaseBanner;
     if (isLivepeerPost) return livepeerBanner;
     if (isAgencyPost) return agencyBanner;

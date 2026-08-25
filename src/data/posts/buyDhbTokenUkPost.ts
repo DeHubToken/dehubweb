@@ -15,7 +15,7 @@ This article is information, not financial advice. Nothing here is a recommendat
 
 ## What is the DHB token?
 
-$DHB is the native utility token of [DeHub, the decentralised social network](/guides/what-is-dehub) built by DeLabs Ltd, a United Kingdom company. DeHub is an open-source, user-owned, censorship-resistant social platform for creators and communities, and DHB is the unit that powers the economic layer sitting underneath it.
+$DHB is the native utility token of [DeHub, the decentralised social network](/guides/what-is-dehub), an independent DAO governed on-chain by its token holders. DeHub is an open-source, user-owned, censorship-resistant social platform for creators and communities, and DHB is the unit that powers the economic layer sitting underneath it.
 
 Unlike a token that exists only to be traded, DHB has jobs to do inside a live product. The point of buying it, for most people, is to use it, not simply to hold it.
 

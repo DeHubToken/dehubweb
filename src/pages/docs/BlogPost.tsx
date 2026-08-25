@@ -12,7 +12,6 @@ import { BlogPostFooter } from '@/components/blog/BlogPostFooter';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { BreadcrumbNavigation } from '@/components/blog/BreadcrumbNavigation';
 import { OptimizedImage } from '@/components/OptimizedImage';
-import { raffleContent } from '@/data/raffleContent';
 import { useBlogData } from '@/hooks/useBlogData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getBlogShareImageUrl } from '@/lib/blogShareImage';
@@ -48,7 +47,6 @@ const BlogPost = () => {
     scrollDocumentTo(0);
   }, [slug]);
 
-  const isRafflePost = slug === 'dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022';
 
   // Article bodies are no longer bundled — post metadata renders instantly
   // from src/data/blog-metadata.generated.ts while the RAW MARKDOWN (`md`
@@ -61,7 +59,7 @@ const BlogPost = () => {
     refetch: refetchBody,
   } = useQuery({
     queryKey: ['blog-body', slug],
-    enabled: !!post && !isRafflePost,
+    enabled: !!post,
     staleTime: Infinity,
     queryFn: async () => {
       const res = await fetch(`/blog-content/${encodeURIComponent(post!.slug)}.json`);
@@ -88,9 +86,8 @@ const BlogPost = () => {
     );
   }
 
-  const raffleBanner = '/lovable-uploads/729af303-1246-44ed-a598-005275581b6c.png';
-  const bannerImage = isRafflePost ? raffleBanner : post.bannerImage;
-  const content = isRafflePost ? raffleContent : fetchedBody;
+  const bannerImage = post.bannerImage;
+  const content = fetchedBody;
 
   // Canonical URL for a blog post is now `/guides/<slug>`. The legacy
   // `/docs/blog/<slug>` route still resolves the same content for

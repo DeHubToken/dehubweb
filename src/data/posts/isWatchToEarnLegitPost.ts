@@ -69,7 +69,7 @@ Run any service, including ours, through these questions before you commit. If i
 - **Where does the reward money come from?** You should be able to name the source: ads, subscriptions, creator revenue.
 - **Is it on-chain and verifiable?** Can you see the token, the contract and transactions on a public explorer?
 - **Is there a real product underneath?** Would people use the app even if it paid nothing? Rewards should sit on top of genuine value.
-- **Who is behind it?** A named team and a registered company beat anonymous founders.
+- **Who is behind it?** A named team and a public, verifiable track record beat anonymous founders.
 - **How hard is it to leave?** Reasonable minimums, no surprise exit fees, and a token you can actually sell.
 - **Are the earnings claims hedged?** Honest platforms say "you might earn a little". Scams promise fixed returns.
 
@@ -81,7 +81,7 @@ You do not buy anything to start. There is no NFT gate, no starter pack, no mini
 
 The $DHB token that rewards flow in lives on Base, an Ethereum Layer 2, with contracts also on BNB Chain and Polygon. It is tradable on decentralised exchanges and on Coinbase, and it is listed on CoinGecko and CoinMarketCap, so there is a real market to cash out into rather than a withdrawal wall. Crucially, the rewards sit on top of a working social platform: tokenised uploads, on-chain tradable subscriptions, live streaming on Livepeer that has scaled to 50,000-plus concurrent viewers, a play-to-earn arcade and end-to-end encrypted messaging. People use it because it is a good app; the earning is the bonus. That is the order you want.
 
-DeHub is run by DeLabs Ltd, a United Kingdom company, co-founded by Mike Hales and Indi Jay Cammish. That is a named team and a registered entity, which is exactly what the checklist above asks you to look for. For a direct feature-by-feature comparison against the better-known names, read [DeHub vs Cheelee, Theta and XCAD](/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn).
+DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish and governed on-chain by its token holders. That is a named team and a public, checkable governance record, which is exactly what the checklist above asks you to look for. For a direct feature-by-feature comparison against the better-known names, read [DeHub vs Cheelee, Theta and XCAD](/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn).
 
 Want to test the checklist against a real platform? Open [the DeHub app](https://dehub.io/app) and see how far you get before anyone asks you to spend anything. The answer is: all the way.
 

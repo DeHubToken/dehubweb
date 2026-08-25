@@ -899,7 +899,6 @@ export const fr = {
     ],
     q3_2022: 'T3 2022',
     q3_2022_items: [
-      'Incorporation de DeLabs LTD avec structure juridique et conformité appropriées',
       'Acquisition d\'une maison de 1 000 000$ pour la plus grande tombola crypto jamais réalisée (15 000+ participants)',
       'Obtention de procurations pour plusieurs îles et bande côtière à Palawan d\'une valeur de plus de 15 000 000$',
       'Établissement de partenariats avec des cabinets immobiliers et juridiques',
