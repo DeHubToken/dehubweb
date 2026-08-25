@@ -400,6 +400,46 @@ export interface AdsTopUpQuote {
   minTopupUsd: number;
 }
 
+const DHB_BASE_TOKEN = '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c';
+
+/** Default when ad_config can't be read — matches the function's own default. */
+const DEFAULT_MIN_TOPUP_USD = 25;
+
+/**
+ * ads-topup's price ladder, run from the browser: DexScreener first,
+ * CoinGecko second, exactly as the function does it.
+ *
+ * This is the standby, not the source of truth. Edge functions here only go
+ * live when Lovable's agent redeploys them — merging does nothing — so a
+ * client that could only ask the function would have its top-up button dead
+ * from the moment this ships until somebody runs a build turn. Reading the
+ * same two sources in the same order keeps the quote and the credit on the
+ * same number in the meantime.
+ */
+async function fetchDhbCreditPrice(): Promise<number | null> {
+  try {
+    const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${DHB_BASE_TOKEN}`, {
+      headers: { Accept: 'application/json' },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const price = parseFloat(data?.pairs?.[0]?.priceUsd);
+      if (Number.isFinite(price) && price > 0) return price;
+    }
+  } catch { /* fall through */ }
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=dehub&vs_currencies=usd', {
+      headers: { Accept: 'application/json' },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const price = Number(data?.dehub?.usd);
+      if (Number.isFinite(price) && price > 0) return price;
+    }
+  } catch { /* fall through */ }
+  return null;
+}
+
 /**
  * The price ads-topup would credit at, straight from the function that does
  * the crediting.
@@ -416,12 +456,19 @@ export function useAdsTopUpQuote(enabled = true) {
     staleTime: 60_000,
     retry: 1,
     queryFn: async (): Promise<AdsTopUpQuote> => {
-      const { data, error } = await supabase.functions.invoke('ads-topup', { body: { quote: true } });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-      const price = Number(data?.dhbPriceUsd);
-      if (!Number.isFinite(price) || price <= 0) throw new Error('DHB price unavailable');
-      return { dhbPriceUsd: price, minTopupUsd: Number(data?.minTopupUsd ?? 25) };
+      try {
+        const { data, error } = await supabase.functions.invoke('ads-topup', { body: { quote: true } });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        const price = Number(data?.dhbPriceUsd);
+        if (Number.isFinite(price) && price > 0) {
+          return { dhbPriceUsd: price, minTopupUsd: Number(data?.minTopupUsd ?? DEFAULT_MIN_TOPUP_USD) };
+        }
+      } catch { /* fall through to the direct read */ }
+
+      const price = await fetchDhbCreditPrice();
+      if (!price) throw new Error('DHB price unavailable');
+      return { dhbPriceUsd: price, minTopupUsd: DEFAULT_MIN_TOPUP_USD };
     },
   });
 }
