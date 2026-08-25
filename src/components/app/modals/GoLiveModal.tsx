@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
-import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus, Video, MonitorPlay } from 'lucide-react';
+import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus, Video, MonitorPlay, ScreenShare } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,8 +23,8 @@ import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 
 // The WebRTC broadcaster pulls in getUserMedia + peer-connection code that
-// only the camera path needs, so it loads on demand rather than riding along
-// with the modal for people who stream from OBS.
+// only the browser capture paths need, so it loads on demand rather than
+// riding along with the modal for people who stream from OBS.
 const GoLiveBroadcaster = React.lazy(() =>
   import('@/components/app/modals/GoLiveBroadcaster').then(m => ({ default: m.GoLiveBroadcaster }))
 );
@@ -40,11 +40,32 @@ interface GoLiveModalProps {
 type Step = 'setup' | 'ready' | 'broadcasting';
 
 /**
- * 'camera' publishes from the browser over WHIP — no software to install, and
- * the only option that works on a phone. 'rtmp' hands out the ingest URL and
- * stream key for OBS and other desktop encoders.
+ * 'camera' and 'screen' both publish from the browser over WHIP — no software
+ * to install. 'camera' is the only one that works on a phone; 'screen' shares
+ * a desktop, window or tab (with its audio) and is what a game or a walkthrough
+ * wants. 'rtmp' hands out the ingest URL and stream key for OBS and other
+ * desktop encoders, which is now only needed for scenes, overlays and capture
+ * cards.
  */
-type StreamSource = 'camera' | 'rtmp';
+type StreamSource = 'camera' | 'screen' | 'rtmp';
+
+/**
+ * Screen capture is a desktop capability: getDisplayMedia is undefined on iOS
+ * and on Android Chrome, so the option is feature-detected rather than guessed
+ * from a viewport width. Kept inline instead of imported from the broadcaster —
+ * that module is deliberately lazy and importing a constant would drag the
+ * whole WebRTC chunk into this one.
+ */
+const canShareScreen =
+  typeof navigator !== 'undefined' &&
+  typeof navigator.mediaDevices?.getDisplayMedia === 'function';
+
+/** Matches the broadcaster's own screen constraints: 1080p keeps text legible. */
+const SCREEN_CONSTRAINTS: MediaTrackConstraints = {
+  width: { ideal: 1920 },
+  height: { ideal: 1080 },
+  frameRate: { ideal: 30 },
+};
 
 const MAX_CATEGORIES = 5;
 
@@ -58,6 +79,18 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  // The display capture taken at click time (see handleStartStream), handed to
+  // the broadcaster once the mint lands. Mirrored in a ref because every
+  // bail-out — dismissal, unmount, a failed mint — has to release it, and those
+  // run outside the render cycle. The ref is cleared the moment the broadcaster
+  // adopts the capture, so a later bail never stops a live share.
+  const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
+  const pendingScreenRef = useRef<MediaStream | null>(null);
+
+  const releasePendingScreen = () => {
+    pendingScreenRef.current?.getTracks().forEach((t) => t.stop());
+    pendingScreenRef.current = null;
+  };
 
   // Category drawer state
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
@@ -114,6 +147,9 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // without this, navigating away mid-mint let the continuation finish and
     // mark a stream live that no UI could ever end.
     goLiveRunRef.current++;
+    // A capture taken for a go-live that never reached the broadcaster would
+    // otherwise keep the browser's "sharing your screen" bar up for good.
+    releasePendingScreen();
     if (!broadcastingRef.current) return;
     const data = streamDataRef.current;
     if (!data) return;
@@ -173,12 +209,16 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // this and bails instead of marking a dismissed stream live.
     goLiveRunRef.current++;
     toast.dismiss('golive-progress');
+    releasePendingScreen();
     setStep('setup');
     setSource('camera');
     setTitle('');
     setDescription('');
     setSelectedCategory('');
     setStreamData(null);
+    // The broadcaster stops the tracks it adopted in its own teardown; this
+    // only drops the reference so a reopened modal starts from a clean slate.
+    setScreenStream(null);
     onClose();
   };
 
@@ -224,21 +264,45 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       return;
     }
 
+    // The screen picker has to open from THIS click. getDisplayMedia requires
+    // transient user activation, and the mint that follows runs 15-30s — long
+    // past the window — so a broadcaster asking for it on mount is refused
+    // outright. Doing it first also makes a cancelled picker free: no mint, no
+    // gas, no stream to tear down.
+    if (source === 'screen') {
+      try {
+        const capture = await navigator.mediaDevices.getDisplayMedia({
+          video: SCREEN_CONSTRAINTS,
+          audio: true,
+        });
+        pendingScreenRef.current = capture;
+      } catch (error) {
+        logger.info('Screen picker dismissed', error);
+        toast.error('Screen sharing was cancelled.');
+        return;
+      }
+    }
+
     setIsLoading(true);
-    logger.info('User initiated "Go Live"', { title, selectedCategoriesArray });
+    logger.info('User initiated "Go Live"', { title, source, selectedCategoriesArray });
 
     // Bail points for a dismissal that arrives mid-sequence. Everything after
     // a bail is skipped — critically startLiveStream / mark-stream-live / the
     // step change — so a cancelled go-live never leaves a stream flagged live
     // or a 'broadcasting' step armed to auto-start the camera on reopen.
+    // Releasing the capture here covers every one of those exits at once.
     const run = ++goLiveRunRef.current;
-    const wasDismissed = () => goLiveRunRef.current !== run;
+    const wasDismissed = () => {
+      if (goLiveRunRef.current === run) return false;
+      releasePendingScreen();
+      return true;
+    };
 
-    // The camera path needs the broadcaster chunk the moment minting ends —
+    // The browser paths need the broadcaster chunk the moment minting ends —
     // start it downloading now, in parallel with the wallet module, instead
     // of leaving the creator on a spinner (with the stream already flagged
     // live) while it fetches after the fact.
-    if (source === 'camera') {
+    if (source !== 'rtmp') {
       void import('@/components/app/modals/GoLiveBroadcaster');
     }
 
@@ -409,11 +473,15 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       };
 
       setStreamData(resultData);
-      // The camera path goes straight on air; the RTMP path stops at the
+      // Hand the capture over: from here the broadcaster owns stopping it, so
+      // the ref is cleared and the bail-out paths leave it alone.
+      setScreenStream(pendingScreenRef.current);
+      pendingScreenRef.current = null;
+      // The browser paths go straight on air; the RTMP path stops at the
       // credentials screen so the creator can paste them into their encoder.
-      setStep(source === 'camera' ? 'broadcasting' : 'ready');
+      setStep(source !== 'rtmp' ? 'broadcasting' : 'ready');
       logger.info('Stream setup ready', { streamId, tokenId, source });
-      toast.success(source === 'camera' ? 'You are going live!' : 'Live stream is ready!');
+      toast.success(source !== 'rtmp' ? 'You are going live!' : 'Live stream is ready!');
 
       // Mark stream as live in Supabase (api.dehub.io /start fails with 404).
       // The promise is kept so end paths can sequence their delete after it —
@@ -431,6 +499,9 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       }
     } catch (error) {
       toast.dismiss('golive-progress');
+      // A failed mint leaves the creator staring at a "sharing your screen"
+      // bar for a stream that never happened.
+      releasePendingScreen();
       logger.error('Failed to start stream', { title, selectedCategory }, error);
       
       const errorMsg = error instanceof Error ? error.message : '';
@@ -491,7 +562,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             <div className="space-y-4 pb-4">
               <div className="space-y-2">
                 <label className="text-sm text-zinc-400">How do you want to stream?</label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className={cn('grid gap-2', canShareScreen ? 'grid-cols-3' : 'grid-cols-2')}>
                   <SourceOption
                     selected={source === 'camera'}
                     onClick={() => setSource('camera')}
@@ -499,6 +570,15 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                     title="Camera"
                     subtitle="Straight from this device"
                   />
+                  {canShareScreen && (
+                    <SourceOption
+                      selected={source === 'screen'}
+                      onClick={() => setSource('screen')}
+                      icon={<ScreenShare className="w-4 h-4" />}
+                      title="Screen"
+                      subtitle="Share a game, app or tab"
+                    />
+                  )}
                   <SourceOption
                     selected={source === 'rtmp'}
                     onClick={() => setSource('rtmp')}
@@ -507,6 +587,12 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                     subtitle="Get RTMP details"
                   />
                 </div>
+                {source === 'screen' && (
+                  <p className="text-[11px] text-zinc-500">
+                    You'll pick the screen, window or tab next — then it goes live
+                    with your mic and the tab's own sound.
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -572,6 +658,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                 >
                   <GoLiveBroadcaster
                     streamKey={streamData.streamKey}
+                    initialScreenStream={screenStream}
                     onEnd={handleEndStream}
                   />
                 </Suspense>
@@ -727,7 +814,7 @@ class BroadcasterBoundary extends React.Component<
     return (
       <div className="flex flex-col items-center gap-4 py-10 px-6 text-center">
         <p className="text-sm text-white">
-          The broadcaster failed to load, so your camera never started — but the
+          The broadcaster failed to load, so nothing was ever captured — but the
           stream was already created. End it below, then refresh the page and go
           live again.
         </p>
