@@ -29,6 +29,13 @@ export interface DeHubUser {
    */
   loginLinkSource?: string | null;
   username?: string | null;
+  /**
+   * A verified ENS name, e.g. `mal.eth`, proved at /api/ens/link. Present only
+   * when the account has one; never client-writable through /update_profile.
+   */
+  ensName?: string | null;
+  /** When that name was last proven against Ethereum. */
+  ensVerifiedAt?: string | null;
   displayName?: string | null;
   display_name?: string;
   bio?: string;
