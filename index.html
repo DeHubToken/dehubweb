@@ -72,12 +72,17 @@
           // never reaches HomeFeed at all — a failed chunk, a thrown boundary,
           // a redirect — because an app left permanently frosted is worse than
           // one that never frosted.
+          // 12s, well clear of HomeFeed's own 3s hold + 8s bail. This is the
+          // last-resort unfreeze for a bundle that never arrives, NOT part of
+          // the normal timing — set it too close and it starts cutting the
+          // intended hold short on a slow connection, which is exactly the case
+          // it was meant to protect.
           if (location.pathname === '/') {
             d.dataset.feedLoading = 'on';
             setTimeout(function () {
               if (d.dataset.feedLoading === 'on') d.dataset.feedLoading = 'off';
-              setTimeout(function () { delete d.dataset.feedLoading; }, 800);
-            }, 5000);
+              setTimeout(function () { delete d.dataset.feedLoading; }, 1300);
+            }, 12000);
           }
         } catch (e) { /* never block boot */ }
       })();
