@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import {
   ChevronLeft, Loader2, Pause, Play, Plus, Rocket, Trash2, Archive,
-  Upload, PencilLine, AlertTriangle, ImageIcon, Film, Type,
+  Upload, PencilLine, AlertTriangle, ImageIcon, Film, Type, Wallet,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -24,10 +24,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import {
-  useAdCampaign, useAdCampaigns, useAdCreatives, useCampaignStats,
+  useAdAccount, useAdCampaign, useAdCampaigns, useAdCreatives, useCampaignStats,
   useCreateCreative, useDeleteCampaign, useDeleteCreative, useUpdateCampaign,
   uploadAdMedia,
 } from '@/hooks/use-ads';
+import { AdTopUpModal } from '@/components/app/ads/AdTopUpModal';
 import { StatusPill } from '@/components/app/ads/AdsOverviewTab';
 import { TargetingEditor } from '@/components/app/ads/TargetingEditor';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
@@ -111,11 +112,20 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const { data: campaign, isLoading } = useAdCampaign(id);
   const { data: creatives = [] } = useAdCreatives(id);
   const { data: stats = [] } = useCampaignStats(id);
+  const { data: account, isLoading: loadingAccount } = useAdAccount();
   const updateCampaign = useUpdateCampaign();
   const deleteCampaign = useDeleteCampaign();
   const [editingTargeting, setEditingTargeting] = useState(false);
   const [targetingDraft, setTargetingDraft] = useState<AdTargeting | null>(null);
   const [addingCreative, setAddingCreative] = useState(false);
+  const [topUpOpen, setTopUpOpen] = useState(false);
+  /** Status change parked behind a top-up: applied as soon as money lands. */
+  const [pendingStatus, setPendingStatus] = useState<{ status: string; message: string } | null>(null);
+
+  const balanceUsd = Number(account?.balance_usd ?? 0);
+  // Unknown is not the same as empty — a still-loading account must not make a
+  // funded advertiser's buttons say "Fund &".
+  const unfunded = !loadingAccount && balanceUsd <= 0;
 
   const totals = useMemo(() => {
     let impressions = 0, clicks = 0, spend = 0;
@@ -152,9 +162,28 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const setStatus = (status: string, successMsg: string) =>
     updateCampaign.mutate({ id, status }, { onSuccess: () => toast.success(successMsg) });
 
+  /**
+   * Anything that puts a campaign back on the road to serving needs money
+   * behind it — ads-serve drops every candidate whose advertiser balance is
+   * zero, without telling anyone. Rather than let that happen quietly, the
+   * top-up opens here and the status change goes through the moment it clears.
+   */
+  const setStatusFunded = (status: string, successMsg: string) => {
+    if (unfunded) {
+      setPendingStatus({ status, message: successMsg });
+      setTopUpOpen(true);
+      return;
+    }
+    setStatus(status, successMsg);
+  };
+
   const actions: Array<{ label: string; icon: typeof Play; onClick: () => void; danger?: boolean }> = [];
   if (campaign.status === 'draft') {
-    actions.push({ label: 'Submit for review', icon: Rocket, onClick: () => setStatus('pending_review', 'Submitted for review') });
+    actions.push({
+      label: unfunded ? 'Fund & submit' : 'Submit for review',
+      icon: unfunded ? Wallet : Rocket,
+      onClick: () => setStatusFunded('pending_review', 'Submitted for review'),
+    });
     actions.push({
       label: 'Delete', icon: Trash2, danger: true,
       onClick: () => deleteCampaign.mutate(id, { onSuccess: () => { toast.success('Draft deleted'); onBack(); } }),
@@ -164,13 +193,21 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
     actions.push({ label: 'Withdraw to draft', icon: PencilLine, onClick: () => setStatus('draft', 'Moved back to draft') });
   }
   if (campaign.status === 'rejected') {
-    actions.push({ label: 'Resubmit', icon: Rocket, onClick: () => setStatus('pending_review', 'Resubmitted for review') });
+    actions.push({
+      label: unfunded ? 'Fund & resubmit' : 'Resubmit',
+      icon: unfunded ? Wallet : Rocket,
+      onClick: () => setStatusFunded('pending_review', 'Resubmitted for review'),
+    });
   }
   if (campaign.status === 'active') {
     actions.push({ label: 'Pause', icon: Pause, onClick: () => setStatus('paused', 'Campaign paused') });
   }
   if (campaign.status === 'paused') {
-    actions.push({ label: 'Resume', icon: Play, onClick: () => setStatus('active', 'Campaign resumed') });
+    actions.push({
+      label: unfunded ? 'Fund & resume' : 'Resume',
+      icon: unfunded ? Wallet : Play,
+      onClick: () => setStatusFunded('active', 'Campaign resumed'),
+    });
     actions.push({ label: 'Archive', icon: Archive, onClick: () => setStatus('archived', 'Campaign archived') });
   }
   if (campaign.status === 'completed') {
@@ -211,6 +248,24 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {campaign.status === 'rejected' && campaign.review_note && (
         <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400 flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" /> {campaign.review_note}
+        </div>
+      )}
+
+      {/* An approved campaign on an empty balance is simply skipped by the ad
+          server. Say so where the advertiser is looking at it. */}
+      {unfunded && (campaign.status === 'active' || campaign.status === 'pending_review') && (
+        <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2 text-sm text-yellow-500">
+            <Wallet className="w-4 h-4 shrink-0" />
+            <span>
+              {campaign.status === 'active'
+                ? 'Not serving — your ads balance is $0.'
+                : 'Your ads balance is $0 — this campaign won’t serve once approved.'}
+            </span>
+          </div>
+          <Button size="sm" variant="glass" onClick={() => setTopUpOpen(true)}>
+            Top up
+          </Button>
         </div>
       )}
 
@@ -323,6 +378,16 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
           </div>
         )}
       </div>
+
+      <AdTopUpModal
+        open={topUpOpen}
+        onOpenChange={(o) => { setTopUpOpen(o); if (!o) setPendingStatus(null); }}
+        suggestedUsd={Math.max(25, Math.ceil(Number(campaign.daily_budget_usd)))}
+        onCredited={() => {
+          if (pendingStatus) setStatus(pendingStatus.status, pendingStatus.message);
+          setPendingStatus(null);
+        }}
+      />
     </div>
   );
 }

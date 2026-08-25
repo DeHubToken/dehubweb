@@ -393,6 +393,39 @@ export function useAdPayments() {
   });
 }
 
+export interface AdsTopUpQuote {
+  /** The DHB price the credit will actually be struck at. */
+  dhbPriceUsd: number;
+  /** Minimum USD value a transfer must carry to be credited at all. */
+  minTopupUsd: number;
+}
+
+/**
+ * The price ads-topup would credit at, straight from the function that does
+ * the crediting.
+ *
+ * Sizing a top-up off get-dhb-price instead is the bug this replaces: that
+ * endpoint pins DHB at $0.001 for display, crediting uses the live market
+ * price, and the gap between them meant a $25 top-up arrived worth ~$14 and
+ * was refused by the minimum — after the DHB had left the wallet.
+ */
+export function useAdsTopUpQuote(enabled = true) {
+  return useQuery({
+    queryKey: ['ads', 'topup-quote'],
+    enabled,
+    staleTime: 60_000,
+    retry: 1,
+    queryFn: async (): Promise<AdsTopUpQuote> => {
+      const { data, error } = await supabase.functions.invoke('ads-topup', { body: { quote: true } });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      const price = Number(data?.dhbPriceUsd);
+      if (!Number.isFinite(price) || price <= 0) throw new Error('DHB price unavailable');
+      return { dhbPriceUsd: price, minTopupUsd: Number(data?.minTopupUsd ?? 25) };
+    },
+  });
+}
+
 /** Verify an on-chain DHB transfer & credit the ad account. */
 export function useTopUpCredit() {
   const { walletAddress } = useAuth();

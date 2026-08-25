@@ -332,6 +332,68 @@ export async function getBadgeDiscount(): Promise<{ tier: string | null; rate: n
 }
 
 /**
+ * The gateway refuses a checkout when its own gas float on the buying chain
+ * sits at or below `minGas`, which is 0.01 native on every chain. It answers
+ * 406 "low gas" from middleware that runs before auth, so the buyer sees a
+ * failure with no explanation after they have already committed to buying.
+ */
+export const GATEWAY_MIN_GAS = 0.01;
+
+/**
+ * Native gas the fiat gateway holds, keyed by chain id. Unauthenticated, one
+ * call, and the only honest way to know whether a card purchase can complete
+ * — the buy page's own quote says nothing about it.
+ */
+export async function getGatewayGasByChain(): Promise<Record<string, number>> {
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/available/gas`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) return {};
+    const data = await response.json();
+    const balance = data?.balance ?? data?.result?.balance ?? {};
+    if (typeof balance !== 'object' || balance === null) return {};
+    const out: Record<string, number> = {};
+    for (const [chain, value] of Object.entries(balance)) {
+      if (typeof value === 'number') out[chain] = value;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+export interface GatewayReadiness {
+  ok: boolean;
+  /** Why a card purchase cannot complete right now. */
+  reason?: 'low_gas' | 'no_supply';
+  /** DHB the gateway can still deliver on this chain. */
+  supply: number;
+  /** Native gas the gateway holds on this chain. */
+  gas: number;
+}
+
+/**
+ * Whether the fiat gateway can deliver `tokens` DHB on `chainId` right now.
+ *
+ * Checked before a card option is offered rather than after it fails: an
+ * unfunded gateway 406s every checkout, and an advertiser who has already
+ * clicked "pay by card" deserves to be sent down the route that works instead
+ * of into a Stripe tab that ends in an error.
+ */
+export async function checkGatewayCanDeliver(chainId: number, tokens: number): Promise<GatewayReadiness> {
+  const [gasByChain, supply] = await Promise.all([
+    getGatewayGasByChain(),
+    getTokenAvailableSupply('DHB', chainId),
+  ]);
+  const gas = gasByChain[String(chainId)] ?? 0;
+  if (gas <= GATEWAY_MIN_GAS) return { ok: false, reason: 'low_gas', supply, gas };
+  if (supply < tokens) return { ok: false, reason: 'no_supply', supply, gas };
+  return { ok: true, supply, gas };
+}
+
+/**
  * Get available gas tokens
  */
 export async function getAvailableGasTokens(): Promise<DPayToken[]> {

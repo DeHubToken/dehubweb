@@ -8,6 +8,10 @@
  * on Base or BNB. USD value locked at the live DHB price. Idempotent per tx
  * hash (ads_topup_credit raises TX_ALREADY_CREDITED on replays).
  *
+ * Also answers `{ quote: true }` with the price it would credit at and the
+ * configured minimum, so the client sizes a transfer against the number that
+ * settles it rather than against a display price.
+ *
  * Forgery note: crediting is intrinsically safe — credit always goes to the
  * account of the wallet that SENT the on-chain transfer, so submitting
  * someone else's tx hash only credits them, not you.
@@ -93,8 +97,32 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: adsCorsHeaders });
 
   try {
-    const { txHash } = await req.json();
+    const { txHash, quote } = await req.json();
     const wallet = (req.headers.get('x-wallet-address') || '').toLowerCase();
+
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+    );
+
+    // ---- quote mode --------------------------------------------------------
+    // The client used to size a top-up off get-dhb-price, which pins DHB at
+    // $0.001. Crediting happens at the live market price, so a $25 top-up
+    // quoted at the peg arrived here worth well under the $25 minimum and was
+    // refused — after the DHB had already left the advertiser's wallet. The
+    // quote and the credit have to come from one number, so they come from
+    // here.
+    if (quote === true) {
+      const price = await getDhbPriceUsd();
+      if (!price) return jsonResponse({ error: 'DHB price unavailable, try again shortly' }, 503);
+      const { data: cfg } = await supabase.from('ad_config').select('value').eq('key', 'min_topup_usd').maybeSingle();
+      return jsonResponse({
+        ok: true,
+        dhbPriceUsd: price,
+        minTopupUsd: Number(cfg?.value ?? 25),
+        treasury: TREASURY,
+      });
+    }
 
     if (!wallet || !/^0x[a-f0-9]{40}$/.test(wallet)) {
       return jsonResponse({ error: 'wallet address required' }, 400);
@@ -149,11 +177,6 @@ Deno.serve(async (req) => {
     if (!price) return jsonResponse({ error: 'DHB price unavailable, try again shortly' }, 503);
 
     const usdValue = Math.round(dhbAmount * price * 1e6) / 1e6;
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-    );
 
     // Minimum top-up guard (config-driven).
     const { data: cfg } = await supabase.from('ad_config').select('value').eq('key', 'min_topup_usd').maybeSingle();

@@ -16,17 +16,20 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Upload, ImageIcon, Film, Type, ChevronLeft, ChevronRight, Rocket, Save } from 'lucide-react';
+import { Loader2, Upload, ImageIcon, Film, Type, ChevronLeft, ChevronRight, Rocket, Save, Wallet } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import {
+  useAdAccount,
   useCreateCampaign,
   useCreateCreative,
   useEnsureAdAccount,
   useAudienceEstimate,
+  useUpdateCampaign,
   uploadAdMedia,
 } from '@/hooks/use-ads';
+import { AdTopUpPanel } from '@/components/app/ads/AdTopUpPanel';
 import { TargetingEditor } from '@/components/app/ads/TargetingEditor';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import {
@@ -73,10 +76,27 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
 
   const [submitting, setSubmitting] = useState(false);
 
+  /**
+   * A campaign submitted on an empty balance is approved and then never
+   * served — ads-serve drops every candidate whose advertiser has
+   * balance_usd <= 0, silently. So the wizard holds the finished campaign as
+   * a draft, funds the account in place, and submits it for review once the
+   * money is there. Nothing the advertiser typed is lost either way.
+   */
+  const [fundingCampaignId, setFundingCampaignId] = useState<string | null>(null);
+  const [funding, setFunding] = useState(false);
+
   const createCampaign = useCreateCampaign();
   const createCreative = useCreateCreative();
+  const updateCampaign = useUpdateCampaign();
   const ensureAccount = useEnsureAdAccount();
+  const { data: account, isLoading: loadingAccount } = useAdAccount();
   const { data: estimate } = useAudienceEstimate(targeting, open && step >= 1);
+
+  const balanceUsd = Number(account?.balance_usd ?? 0);
+  // Unknown is not the same as empty — don't send a funded advertiser to a
+  // top-up because their account row hasn't come back yet.
+  const unfunded = !loadingAccount && balanceUsd <= 0;
 
   const previewAd: ServedAd = useMemo(() => ({
     serveId: 'preview',
@@ -148,10 +168,21 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
     setMediaUrl(null); setThumbnailUrl(null); setHeadline(''); setBodyText('');
     setCtaLabel('Learn more'); setCtaUrl(''); setTargeting({});
     setDailyBudget(250); setTotalBudget(2500); setDurationDays(14); setFrequencyCap(4);
+    setFundingCampaignId(null);
+  };
+
+  const finish = (campaignId: string, message: string) => {
+    toast.success(message);
+    onOpenChange(false);
+    onCreated?.(campaignId);
+    reset();
   };
 
   const submit = async (asDraft: boolean) => {
     if (!walletAddress) { toast.error('Connect a wallet first'); return; }
+    // Hold it as a draft while we fund, then flip it to review — a campaign
+    // that reaches moderation unfunded gets approved into silence.
+    const holdForFunding = !asDraft && unfunded;
     setSubmitting(true);
     try {
       await ensureAccount.mutateAsync(undefined);
@@ -159,7 +190,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
       const campaign = await createCampaign.mutateAsync({
         name: name.trim(),
         objective,
-        status: asDraft ? 'draft' : 'pending_review',
+        status: asDraft || holdForFunding ? 'draft' : 'pending_review',
         daily_budget_usd: dailyBudget,
         total_budget_usd: totalBudget,
         end_at: endAt,
@@ -177,10 +208,12 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
         cta_label: ctaLabel.trim() || 'Learn more',
         cta_url: ctaUrl.trim() || null,
       });
-      toast.success(asDraft ? 'Campaign saved as draft' : 'Campaign submitted for review');
-      onOpenChange(false);
-      onCreated?.(campaign.id);
-      reset();
+
+      if (holdForFunding) {
+        setFundingCampaignId(campaign.id);
+        return;
+      }
+      finish(campaign.id, asDraft ? 'Campaign saved as draft' : 'Campaign submitted for review');
     } catch {
       /* hooks already toast */
     } finally {
@@ -188,18 +221,48 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
     }
   };
 
+  /** Balance landed — send the held campaign straight on to review. */
+  const submitFunded = async () => {
+    const id = fundingCampaignId;
+    if (!id) return;
+    setSubmitting(true);
+    try {
+      await updateCampaign.mutateAsync({ id, status: 'pending_review' });
+      finish(id, 'Balance topped up — campaign submitted for review');
+    } catch {
+      /* hooks already toast; the campaign is still a draft they can submit */
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (!submitting) onOpenChange(o); }}>
+    <Dialog open={open} onOpenChange={(o) => { if (!submitting && !funding) onOpenChange(o); }}>
       <DialogContent className="max-w-3xl max-h-[88vh] overflow-y-auto bg-black/70 backdrop-blur-[24px] border border-white/10">
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-2">
-            <Rocket className="w-5 h-5" />
-            New campaign
+            {fundingCampaignId ? <Wallet className="w-5 h-5" /> : <Rocket className="w-5 h-5" />}
+            {fundingCampaignId ? 'Fund your campaign' : 'New campaign'}
           </DialogTitle>
           <DialogDescription className="text-zinc-400">
-            Step {step + 1} of {STEPS.length} — {STEPS[step]}
+            {fundingCampaignId
+              ? 'Your campaign is saved. Add balance and it goes to review — nothing to redo.'
+              : `Step ${step + 1} of ${STEPS.length} — ${STEPS[step]}`}
           </DialogDescription>
         </DialogHeader>
+
+        {fundingCampaignId ? (
+          <div className="max-w-md w-full mx-auto py-2">
+            <AdTopUpPanel
+              suggestedUsd={Math.max(25, Math.ceil(dailyBudget))}
+              onBusyChange={setFunding}
+              cancelLabel="Leave as draft"
+              onCancel={() => finish(fundingCampaignId, 'Saved as draft — top up and submit it from Campaigns')}
+              onCredited={submitFunded}
+            />
+          </div>
+        ) : (
+        <>
 
         {/* Step indicator */}
         <div className="flex items-center gap-1.5">
@@ -409,6 +472,11 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
                 <p className="text-zinc-400">Duration: <span className="text-white">{durationDays} days</span> · Cap: <span className="text-white">{frequencyCap}/day</span></p>
                 <p className="text-zinc-400">Audience: <span className="text-white">{formatCompact(estimate?.audience ?? 0)} tracked wallets</span></p>
                 <p className="text-zinc-400">Tiers: <span className="text-white">{(targeting.tiers ?? []).length ? (targeting.tiers ?? []).join(', ') : 'All'}</span></p>
+                <p className="text-zinc-400">
+                  Ads balance:{' '}
+                  <span className={unfunded ? 'text-yellow-500' : 'text-white'}>{formatUsd(balanceUsd)}</span>
+                  {unfunded && <span className="text-yellow-500"> — you'll top up next</span>}
+                </p>
                 <p className="text-[11px] text-zinc-500 pt-2">
                   Ads go live after moderation approves both campaign and creative, and only while your ads balance stays funded. You pay per verified viewable impression at the viewer's tier CPM.
                 </p>
@@ -451,11 +519,13 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
               </Button>
               <Button variant="glass" disabled={submitting} onClick={() => submit(false)}>
                 {submitting ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Rocket className="w-4 h-4 mr-1.5" />}
-                Submit for review
+                {unfunded ? 'Fund & submit' : 'Submit for review'}
               </Button>
             </div>
           )}
         </div>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   );

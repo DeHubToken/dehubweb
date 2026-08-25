@@ -6,10 +6,11 @@
  * and quick campaign access. All real data — nothing simulated.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { Wallet, Eye, MousePointerClick, DollarSign, Rocket, Plus, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AdTopUpModal } from '@/components/app/ads/AdTopUpModal';
 import { useAdAccount, useAdCampaigns, useAllCampaignStats } from '@/hooks/use-ads';
 import { CAMPAIGN_STATUS_LABELS, formatCompact, formatUsd, type AdCampaign } from '@/lib/ads/povr';
 import { cn } from '@/lib/utils';
@@ -39,9 +40,18 @@ interface AdsOverviewTabProps {
 }
 
 export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: AdsOverviewTabProps) {
-  const { data: account } = useAdAccount();
+  const { data: account, isLoading: loadingAccount } = useAdAccount();
   const { data: campaigns = [], isLoading } = useAdCampaigns();
   const { data: stats = [] } = useAllCampaignStats(campaigns.map((c) => c.id));
+  const [topUpOpen, setTopUpOpen] = useState(false);
+
+  // An unfunded account is not an error anywhere — ads-serve just skips its
+  // campaigns — so the portal has to be the thing that says it out loud.
+  const waitingOnMoney = campaigns.filter((c) => c.status === 'active' || c.status === 'pending_review');
+  const unfunded = !loadingAccount && Number(account?.balance_usd ?? 0) <= 0 && waitingOnMoney.length > 0;
+  const suggestedUsd = waitingOnMoney.length
+    ? Math.max(25, Math.ceil(Math.min(...waitingOnMoney.map((c) => Number(c.daily_budget_usd) || 25))))
+    : 25;
 
   const kpis = useMemo(() => {
     let impressions = 0, clicks = 0, spend = 0;
@@ -82,6 +92,25 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
 
   return (
     <div className="space-y-4">
+      {unfunded && (
+        <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-4 flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2.5">
+            <Wallet className="w-4 h-4 text-yellow-500 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-yellow-500">
+                {waitingOnMoney.length === 1 ? 'Your campaign is not serving' : `${waitingOnMoney.length} campaigns are not serving`}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Ads only serve while the balance is above $0. Top up and delivery starts on the next request.
+              </p>
+            </div>
+          </div>
+          <Button variant="glass" size="sm" onClick={() => setTopUpOpen(true)}>
+            <Plus className="w-4 h-4 mr-1.5" /> Top up
+          </Button>
+        </div>
+      )}
+
       {/* Balance + KPI tiles */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         <button
@@ -169,6 +198,8 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
           </div>
         )}
       </div>
+
+      <AdTopUpModal open={topUpOpen} onOpenChange={setTopUpOpen} suggestedUsd={suggestedUsd} />
     </div>
   );
 }
