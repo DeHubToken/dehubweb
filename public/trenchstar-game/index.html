@@ -1067,13 +1067,15 @@
      reached, and it has to survive the module failing to load at all. -->
 <script>
 window.TSBoot = (function () {
-  var W = { engine: 40, world: 15, markets: 35, trenches: 5, paint: 5 };
+  // `avatars` is the picker's first open, paid here instead of on the click.
+  var W = { engine: 34, world: 13, markets: 28, trenches: 4, paint: 4, avatars: 17 };
   var LABEL = {
     engine: 'LOADING ENGINE', world: 'BUILDING THE LAIR', markets: 'LINKING MARKET FEED',
-    trenches: 'SCANNING THE TRENCHES', paint: 'POWERING THE WALL'
+    trenches: 'SCANNING THE TRENCHES', paint: 'POWERING THE WALL',
+    avatars: 'WAKING THE TRADERS'
   };
-  var ORDER = ['engine', 'world', 'markets', 'trenches', 'paint'];
-  var frac = { engine: 0, world: 0, markets: 0, trenches: 0, paint: 0 };
+  var ORDER = ['engine', 'world', 'markets', 'trenches', 'paint', 'avatars'];
+  var frac = { engine: 0, world: 0, markets: 0, trenches: 0, paint: 0, avatars: 0 };
   var logged = {}, t0 = Date.now(), shown = 0, dead = false;
   var pctEl, barEl, stageEl, linesEl, failEl, bootEl;
 
@@ -1102,7 +1104,7 @@ window.TSBoot = (function () {
   }
   function current() {
     for (var i = 0; i < ORDER.length; i++) if (frac[ORDER[i]] < 1) return ORDER[i];
-    return 'paint';
+    return ORDER[ORDER.length - 1];
   }
   function line(key) {
     if (logged[key] || !linesEl) return; logged[key] = 1;
@@ -1214,9 +1216,14 @@ window.TSBoot = (function () {
   setInterval(pollEngine, 120);
 
   // Never strand the loader on the last stage. If the world built and the feeds
-  // answered, the room is up whether or not the first-frame ping arrived.
+  // answered, the room is up whether or not the first-frame ping arrived — and
+  // a character still baking is not a reason to keep somebody out of a room
+  // that is already rendering behind the panel. The warm carries on in the
+  // background; only the stage is called done.
   setTimeout(function () {
-    if (frac.engine >= 1 && frac.world >= 1) { api.stage('markets', 1); api.stage('trenches', 1); api.stage('paint', 1); }
+    if (frac.engine >= 1 && frac.world >= 1) {
+      api.stage('markets', 1); api.stage('trenches', 1); api.stage('paint', 1); api.stage('avatars', 1);
+    }
   }, 10000);
 
   // The module never even started: bad vendor/ copy, or file:// with no internet
@@ -9356,6 +9363,46 @@ async function bakePreview(id,meta){
   if(glb)pvWrite(PREVIEW_KEY(id),glb);
   return {model,clip};
 }
+/* ---------------- warm the roster on the loading screen ----------------
+   Opening the picker on a cold browser is the most expensive click in this
+   room: previewSource pulls the whole character, reduces it to a 128px bake
+   and writes that to IndexedDB, which is seconds of main-thread parse per
+   character. This spends that time on the LOADING SCREEN, where somebody is
+   already waiting, rather than adding it to a button press — and it is a
+   first-run cost only, because every visit after this one reads the bake.
+
+   Three things keep it honest:
+   - it starts on the FIRST FRAME, so the room is already rendering behind the
+     panel rather than queueing behind a parse;
+   - the model is disposed the moment the bake is written — the point is the
+     bytes in IndexedDB, not holding two characters in memory all session;
+   - the boot's own ten-second net force-completes this stage, so a character
+     that will not load delays the room by seconds at most and then goes back
+     to being the picker's problem, exactly as it was before. */
+let warmed=false;
+async function warmAvatars(){
+  if(warmed)return;warmed=true;
+  try{
+    await rosterReady;
+    const list=CHARACTERS.slice(0,4);
+    if(!list.length){boot.stage('avatars',1);return;}
+    let done=0;
+    for(const c of list){
+      try{
+        /* Capped per character. An IndexedDB that will not open — a delete
+           left pending by another tab is enough — leaves pvRead waiting
+           forever, and one wedged character must not mean the rest of the
+           roster is never warmed. */
+        const src=await Promise.race([
+          previewSource(c.id,c),
+          new Promise(r=>setTimeout(()=>r(null),20000))]);
+        if(src&&src.model)pvDispose(src.model);
+      }catch(e){}
+      boot.stage('avatars',++done/list.length);
+    }
+  }catch(e){}
+  boot.stage('avatars',1);
+}
 async function previewSource(id,meta){
   /* 1. a preview that shipped with the roster.
      Probed ONCE. Until the folder exists this is a miss for every character
@@ -10720,7 +10767,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
      a headless pane — so the frame has to be drivable by hand. */
   pv,savePreviews,previewSource,bakePreview,setGuide,buildRoster,innerArc,setSticky,toast,
   loadAnimSource,borrowClip,liveClip,hudTick,placeAtDesk,lightMood,areaLights,LIGHT_BASE,
-  pvStart,pvStop,pvRender,pvQueueAll,pvPump,pvBuild,
+  pvStart,pvStop,pvRender,pvQueueAll,pvPump,pvBuild,warmAvatars,previewSource,
   csGo,csLayout,csApply,csChrome,csEase,csMeasure,pvTick,
   syncDesk,deskMons,pickDesk,deskFire,deskToWall,dhGo,buildWall,
   /* the desk's DeHub data and its composer, exposed so a change here can be
@@ -10986,7 +11033,7 @@ function tick(t){
      across both — so a presenting frame goes straight to the renderer. */
   if(vr.on)renderer.render(scene,camera);
   else composer.render();
-  if(!firstFrame){firstFrame=true;boot.stage('paint',1);}
+  if(!firstFrame){firstFrame=true;boot.stage('paint',1);warmAvatars();}
 
   /* auto-degrade bloom if the GPU is struggling */
   fpsAcc+=dt;fpsN++;
