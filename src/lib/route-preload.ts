@@ -73,6 +73,12 @@ const PRELOADERS: Record<string, Preloader | Preloader[]> = {
     () => import('@/pages/app/StoresPage'),
     () => import('@/pages/app/StoreDetailPage'),
   ],
+  // The post info page is the fraction market's other half — a listing card
+  // links straight to it, and its panel is the same components.
+  '/app/fractions': [
+    () => import('@/pages/app/FractionsPage'),
+    () => import('@/pages/app/PostInfoPage'),
+  ],
   '/app/work': [
     () => import('@/pages/app/WorkPage'),
     () => import('@/pages/app/WorkJobDetailPage'),

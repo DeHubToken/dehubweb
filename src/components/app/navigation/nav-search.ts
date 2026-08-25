@@ -259,6 +259,13 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Affiliate: ['referral', 'referrals', 'refer', 'invite', 'commission', 'partner', 'share link'],
   Careers: ['jobs', 'hiring', 'vacancies', 'work with us', 'apply', 'recruitment', 'roles'],
   Stores: ['shop', 'store', 'marketplace', 'merch', 'buy', 'sell', 'products', 'ecommerce', 'orders'],
+  // Nobody types "fractions" — they type what they are trying to do with them.
+  // "shares" and "ownership" are how the docs and the marketing copy describe
+  // the same thing, so both have to land here.
+  Fractions: [
+    'fraction', 'shares', 'ownership', 'own a post', 'invest', 'stake in a post',
+    'tokenised', 'nft', 'erc1155', 'trade', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
+  ],
   // The example that started this: nobody looking for a game types "arcade".
   // The individual games are here as well as being rows of their own, so a
   // half-remembered title finds the grid even when it does not find the game.

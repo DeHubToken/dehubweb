@@ -29,7 +29,7 @@ import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { TabValue } from './ProfileConstants';
 import type { ApiCommentResponse } from '@/lib/api/dehub/comments';
 
-import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
+import { ProfileFractionsPanel } from '@/components/app/fractions/ProfileFractionsPanel';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
 import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
 import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
@@ -336,7 +336,7 @@ export function ProfileTabContent({
 
       {/* FRACTIONS TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="fractions">
-        <ProfileEmptyState iconSrc={fractions3dIcon} iconAlt="Fractions" title="No fractions yet" subtitle="Fraction holdings will appear here" />
+        <ProfileFractionsPanel profileAddress={profileAddress} />
       </TabPanel>
 
       {/* PINNED TAB (#17) */}

@@ -59,9 +59,9 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
       setQuantity('');
       setPrice('');
       onSuccess?.();
-    } catch (err: any) {
+    } catch (err) {
       console.error('Make offer error:', err);
-      toast.error(err?.message || 'Failed to submit offer');
+      toast.error((err as Error)?.message || 'Failed to submit offer');
     } finally {
       setIsSubmitting(false);
     }
