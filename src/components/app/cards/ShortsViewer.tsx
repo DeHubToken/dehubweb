@@ -48,7 +48,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
-import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
+import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
@@ -233,6 +233,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   const currentShort = shorts[currentIndex];
   const isOwnShort = !!walletAddress && currentShort?.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+
+  // Swiping to another creator picks up that creator's pinned rate, the same
+  // way opening one of their videos does. Creators with none keep the global.
+  useEffect(() => {
+    setPlaybackRate(getPlaybackRateFor(currentShort?.creatorId));
+  }, [currentShort?.creatorId]);
   const { muteAuthor } = useMuteAuthor();
   // Who reacted what is the author's to see — the ⓘ in the reaction tray only
   // exists on your own shorts (and the API refuses the list to anyone else).
@@ -1446,7 +1452,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
                 const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
                 setPlaybackRate(nextRate);
-                vpSetPlaybackRate(nextRate);
+                vpSetPlaybackRate(nextRate, currentShort?.creatorId);
               }}
               className="h-10 min-w-[40px] px-1.5 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
               aria-label="Playback speed"

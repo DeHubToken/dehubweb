@@ -51,7 +51,7 @@ import { LiveEndedMedia } from './LiveEndedMedia';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
+import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
@@ -600,7 +600,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [volume, setVolume] = useState(() => getVideoPreferences().volume);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
-  const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
+  // This creator's own rate if they have one, otherwise the global default.
+  const [playbackRate, setPlaybackRate] = useState(() => getPlaybackRateFor(video.creatorId));
   const [isLooping, setIsLooping] = useState(() => getVideoPreferences().isLooping);
   const [isFocused, setIsFocused] = useState(false);
   // Written by useHandoffVideo, which owns the element rather than React — the
@@ -1141,9 +1142,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
     const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
     setPlaybackRate(nextRate);
-    vpSetPlaybackRate(nextRate);
+    // Pins the rate to this creator as well as moving the global default, so
+    // the next video of theirs starts here without freezing everyone else.
+    vpSetPlaybackRate(nextRate, video.creatorId);
     if (videoRef.current) videoRef.current.playbackRate = nextRate;
-  }, [playbackRate]);
+  }, [playbackRate, video.creatorId]);
 
   const toggleLoop = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1153,17 +1156,20 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     });
   }, []);
 
-  // Listen for preference changes from other players
+  // Listen for preference changes from other players. Resolved per creator,
+  // not read straight off the event: a rate someone set on another channel
+  // must not overwrite the rate pinned to this one.
   useEffect(() => {
     const handler = (e: Event) => {
       const prefs = (e as CustomEvent).detail;
-      setPlaybackRate(prefs.playbackRate);
+      const rate = getPlaybackRateFor(video.creatorId);
+      setPlaybackRate(rate);
       setIsLooping(prefs.isLooping);
-      if (videoRef.current) videoRef.current.playbackRate = prefs.playbackRate;
+      if (videoRef.current) videoRef.current.playbackRate = rate;
     };
     window.addEventListener('video-prefs-changed', handler);
     return () => window.removeEventListener('video-prefs-changed', handler);
-  }, []);
+  }, [video.creatorId]);
 
   const handleVideoError = useCallback(() => {
     console.error('Video error:', video.videoUrl, videoRef.current?.error?.message || 'Unknown error');
@@ -1220,6 +1226,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   useEffect(() => {
     if (!ownsVideoElement) videoPlaybackManager.stop(instanceId);
   }, [ownsVideoElement, instanceId]);
+
+  // The <video> element is shared between cards, so it arrives carrying
+  // whatever rate the last card left on it. Re-stamp this card's rate on every
+  // claim, or a channel pinned to 2× would keep playing the next one at 2×.
+  useEffect(() => {
+    if (ownsVideoElement && videoRef.current) videoRef.current.playbackRate = playbackRate;
+  }, [ownsVideoElement, playbackRate]);
 
   const handleSeek = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
