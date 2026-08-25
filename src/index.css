@@ -1384,6 +1384,22 @@ html[data-theme="system"] [data-feed-nav] {
     inset 0 0 0 1px rgb(255 255 255 / 0.08),
     0 8px 32px rgb(0 0 0 / 0.30) !important;
 }
+/* Mobile: the feed nav is the first bento a user sees, so the glass blur is
+/* Mobile: the feed nav is the first bento a user sees, so the glass blur is
+   unnecessary and adds rendering cost. Keep the tint/shadow so it still reads
+   as a raised surface. */
+@media (max-width: 1023px) {
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="system"]) [data-feed-nav] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="system"]) [data-feed-nav] [data-glass-indicator] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
 /* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
    canvas themes. Without this the opaque black header lets a post's top edge
    pop as a hard bright sliver above the pill during a momentum-scroll clip lag;

@@ -52,6 +52,15 @@ export interface WhipSession {
 export interface PublishOptions {
   streamKey: string;
   stream: MediaStream;
+  /**
+   * Full WHIP endpoint. Given, it is used verbatim; otherwise the Livepeer
+   * base is joined with the stream key. The self-hosted ingest addresses a
+   * stream by its PUBLIC playbackId, so the URL cannot be derived from the
+   * key the way Livepeer's can.
+   */
+  endpoint?: string;
+  /** Publish credential, sent as a bearer token. See live-ingest.ts. */
+  token?: string;
   onStateChange?: (state: WhipState, detail?: string) => void;
 }
 
@@ -95,6 +104,8 @@ function preferH264(transceiver: RTCRtpTransceiver): void {
 export async function publishToWhip({
   streamKey,
   stream,
+  endpoint: endpointOverride,
+  token,
   onStateChange,
 }: PublishOptions): Promise<WhipSession> {
   if (!streamKey) throw new Error('A stream key is required to go live.');
@@ -198,12 +209,16 @@ export async function publishToWhip({
     await pc.setLocalDescription(offer);
     await waitForIceGathering(pc);
 
-    const endpoint = `${WHIP_BASE_URL.replace(/\/$/, '')}/${streamKey}`;
+    const endpoint =
+      endpointOverride || `${WHIP_BASE_URL.replace(/\/$/, '')}/${streamKey}`;
     logger.info('Posting WHIP offer', { endpoint });
 
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/sdp' },
+      headers: {
+        'Content-Type': 'application/sdp',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
       body: pc.localDescription?.sdp ?? '',
     });
 

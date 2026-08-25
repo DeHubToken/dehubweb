@@ -2,18 +2,28 @@
  * Stages Carousel for Music Feed
  * ===============================
  * Displays live audio stages in a horizontal carousel.
- * 
+ *
+ * Nothing live is the usual state, and an empty "start a stage" prompt made
+ * the whole section read as dead. So with no live rooms the carousel falls
+ * back to recorded ones — the same PastStageCard the /stages page shows,
+ * carrying its own inline player, so the section is something to listen to
+ * rather than an advert for a feature nobody is using. The create prompt is
+ * only what's left when there is no audio at all.
+ *
  * @module components/app/music/StagesCarousel
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useLiveSpaces } from '@/contexts/StageContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
+import { PastStageCard } from '@/components/app/stages/PastStageCard';
 import { BadgedName } from '@/components/app/BadgedName';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
@@ -105,6 +115,26 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   // covers insert/update/end within ~1s).
   const liveSpaces = useLiveSpaces();
 
+  // Recorded rooms, fetched only once we know there is nothing live to show
+  // instead. Shares the ['past-stages'] key with the /stages page, so opening
+  // "See all" from here does not refetch what this carousel already has.
+  const { data: pastSpaces = [] } = useQuery({
+    queryKey: ['past-stages'],
+    enabled: liveSpaces.length === 0,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'ended')
+        .order('ended_at', { ascending: false })
+        .limit(20);
+      return (data as AudioSpace[]) || [];
+    },
+    staleTime: 5 * 60_000,
+  });
+
+  const showPast = liveSpaces.length === 0 && pastSpaces.length > 0;
+
   return (
     <div>
       {/* Header */}
@@ -112,9 +142,11 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
         <h2 className="font-bold text-white flex items-center gap-2">
           <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />
           Stages
-          {liveSpaces.length > 0 && (
+          {liveSpaces.length > 0 ? (
             <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length})</span>
-          )}
+          ) : showPast ? (
+            <span className="text-zinc-500 font-normal text-sm">Recorded</span>
+          ) : null}
         </h2>
         <button 
           onClick={onOpenStages}
@@ -125,7 +157,19 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       </div>
       
       {/* Carousel */}
-      {liveSpaces.length === 0 ? (
+      {showPast ? (
+        <div className="relative">
+          <SwipeableCarousel fadeEdges className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+            {pastSpaces.slice(0, 10).map((space) => (
+              <PastStageCard
+                key={space.id}
+                space={space}
+                className="flex-shrink-0 w-[260px] self-start"
+              />
+            ))}
+          </SwipeableCarousel>
+        </div>
+      ) : liveSpaces.length === 0 ? (
         <button
           onClick={onOpenStages}
           className="w-full flex items-center gap-3 p-4 bg-zinc-800/60 border border-dashed border-white/10 rounded-2xl hover:border-white/20 hover:bg-zinc-800/80 transition-all group"

@@ -76,6 +76,48 @@ When someone brings you a problem — something broken, stuck, missing, charged 
 - Be straight about faults. Someone whose money is stuck does not want DeHub defended, they want it fixed.`;
 
 /**
+ * The whole prompt for godmode's assistant.
+ *
+ * Replaces the consumer persona rather than adding to it. The audience is a
+ * DeHub admin looking at a broken thing, and almost every instruction the
+ * consumer prompt carries — the identity rules, the marketing framing, the
+ * texting-a-friend register — is wrong for that: an admin asking why a post
+ * vanished wants the evidence and the gap in it, not warmth.
+ *
+ * The support-desk block is deliberately absent too. Filing a ticket is a
+ * `self` tool on the assistant surface; here there is no user account to file
+ * for, and telling the model to reach for a tool it was never given is how you
+ * get an apology instead of an answer.
+ */
+const ADMIN_SURFACE_PROMPT = (admin: { displayName?: string; role?: string } | null) => `You are the DeHub admin assistant, inside godmode.dehub.io. You are talking to ${admin?.displayName || 'a DeHub admin'}${admin?.role ? ` (role: ${admin.role})` : ''}.
+
+## WHAT YOU ARE FOR
+Admins come to you with "why". Why is this post off the feed, why is this user complaining, what changed before the reports started, did that fix actually ship. Answering those means joining up three separate records, and you are the only thing on this platform that can read all three:
+
+- **the platform database** — accounts, posts, reports, tickets, transactions, and the admin audit log of who did what;
+- **the source history on GitHub** — commits, diffs, pull request descriptions, and CI/deploy runs across the web app, the API, this panel and the mobile app;
+- **the running API server** — its live log, its uptime, and which integrations are configured at all.
+
+## HOW TO WORK
+- FOLLOW THE THREAD. One lookup is rarely the answer. Reports spiked at three, so what merged before three, so what did that change touch, so what has the log said since. Keep going until you can state a cause or state plainly that you cannot.
+- LEAD WITH THE ANSWER, then the evidence under it. An admin is mid-incident. Timestamps, ids, commit shas, PR numbers and usernames — the specifics are the point.
+- SEPARATE WHAT YOU KNOW FROM WHAT YOU INFER. "The post was hidden by dev@dehub.io at 14:02" is a fact. "Which is probably why the creator is complaining" is an inference, and must read as one.
+- NEVER INVENT A CAUSE. If the evidence stops short, say where it stopped. "Nothing in the audit log touched this account, so the restriction predates the log or was set directly in the database" is a real answer. A plausible story is not.
+- MERGED IS NOT SHIPPED. On DeHub a green pull request routinely deploys nothing: the API deploys only if its test job passed, the web app and this panel publish through Lovable rather than Actions, and Supabase edge functions ship through neither. Check the workflow runs before telling anyone a fix is live, and say so when you cannot confirm it.
+- CHECK THE HUMAN CAUSE FIRST. Most "why did this happen" has an admin behind it, not a bug. The audit log is cheap; read it before blaming a deploy.
+- AN UNSET SETTING LOOKS EXACTLY LIKE WORKING CODE. If a feature appears to do nothing at all rather than doing it badly, check the config status before reading any code.
+
+## WHAT YOU CANNOT DO
+You can read everything above and change none of it. You cannot ban, hide, delete, edit, refund, deploy or commit — those stay in the panel where the action is attributed to the admin who took it. If someone asks you to do one, tell them which page does it.
+
+You also only see what their role already reaches. If a tool refuses on their permissions, say so plainly and name what it needs; never route around it or answer from somewhere else.
+
+## FORMAT
+Markdown. Short paragraphs and tight lists. Put a number, an id or a timestamp in wherever you have one — an admin will go and check it.
+
+`;
+
+/**
  * Prepended for the in-chat bot. A public room is a different medium from the
  * assistant page: short, plain, one answer, no formatting the bubbles cannot
  * render.
@@ -186,7 +228,7 @@ const OTHER_USER_KEYWORDS = [
 
 // Keywords about DeHub - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
-  'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
+  'dehub', 'dhb', '$dhb', 'token', 'dao', 'futurov', 'ftv',
   'malik', 'mal.eth', 'mike hales', 'indi', 'bailey',
   'first class', 'w2e', 'watch2earn', 'watch to earn',
   'depin', 'node', 'staking', 'governance',
@@ -855,7 +897,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false, surface: requestedSurface = 'assistant', callerAddress, maxReplyChars } = await req.json() as {
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false, surface: requestedSurface = 'assistant', callerAddress, maxReplyChars, adminToken, adminContext } = await req.json() as {
       messages: Message[];
       style?: string;
       postContext?: PostContext;
@@ -893,6 +935,17 @@ serve(async (req) => {
         }>;
       };
       dehubToken?: string;
+      /**
+       * Admin surface only, and only ever set by the DeHub API talking to
+       * itself — never by a browser. The short-lived, assistant-only token the
+       * API minted, which it verifies again when the tool calls come back. The
+       * admin's own panel session does not travel; this function is publicly
+       * callable and answers a wildcard CORS policy, which is no place for a
+       * credential that can ban people.
+       */
+      adminToken?: string;
+      /** Who to address, and what their role is. Display only. */
+      adminContext?: { displayName?: string; role?: string; capabilities?: string[] };
       stream?: boolean;
     };
 
@@ -1082,7 +1135,7 @@ serve(async (req) => {
 - NEVER mention Google, Perplexity, OpenAI, Anthropic, Claude, GPT, Gemini, Bard, or any other AI company/model
 - NEVER say you were "trained by", "created by", or "developed by" any external company
 - If asked about your technology, say: "I run on DeHub's proprietary multi-model AI infrastructure"
-- If asked who made you, say: "I was built by the DeHub team at DeLabs LTD"
+- If asked who made you, say: "I was built by the DeHub community — DeHub is an independent DAO"
 - Your ONLY identity is DeHub AI - no other affiliations
 
 ## About DeHub
@@ -1092,8 +1145,8 @@ DeHub is a censorship-resistant, blockchain-powered platform where:
 - No fear of censorship or demonetisation
 - Direct creator-to-fan relationships without corporate gatekeepers
 
-## Company & Team
-DeHub is developed by **DeLabs LTD**, a UK-registered Web3 development company.
+## Governance & Team
+DeHub is an independent DAO. No company owns, operates or controls it — the protocol, the platform and the treasury are governed on-chain by DHB holders through the DeHub governance protocol, which is live in the app. Development is done by independent contributors and studios the DAO engages, and any of them can be replaced by a governance vote.
 
 ### Co-Founders:
 
@@ -1367,7 +1420,17 @@ IMPORTANT FORMATTING RULES:
     // itself what to look up, instead of relying on the keyword pre-fetch above
     // to have guessed right. Everything below this block stays as the fallback
     // for video attachments and any failure in the loop.
-    const surface: AgentSurface = requestedSurface === 'chat' ? 'chat' : 'assistant';
+    // `admin` has to be asked for by name and, because it is only ever reached
+    // through the API's own proxy, proved with the service secret. A browser
+    // that posts {surface:'admin'} straight at this function gets the ordinary
+    // assistant — and would get an empty admin catalog anyway, since the tools
+    // are cut by an admin token this side cannot mint.
+    const surface: AgentSurface =
+      requestedSurface === 'chat'
+        ? 'chat'
+        : requestedSurface === 'admin' && isServiceCall
+          ? 'admin'
+          : 'assistant';
     // Images no longer send the whole conversation down the toolless path.
     // Opening the assistant from an image post is one of the commonest ways in —
     // "why won't this post publish", asked while looking at the post — and it
@@ -1380,10 +1443,29 @@ IMPORTANT FORMATTING RULES:
     // survives it.
     const agentEligible = agentConfigured() && !hasVideo;
 
+    // Godmode has no useful fallback. The single-shot path below answers as the
+    // consumer assistant from no data at all, and a confident answer with
+    // nothing behind it is worse than an error to somebody mid-incident.
+    if (surface === 'admin' && !agentEligible) {
+      return new Response(
+        JSON.stringify({
+          error: 'The admin assistant is not configured on this server.',
+          errorCode: 'AGENT_UNAVAILABLE',
+        }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
     if (agentEligible) {
       const agentModel =
         surface === 'chat'
           ? 'google/gemini-2.5-flash'
+          // Godmode always gets the strongest model regardless of what the
+          // picker says. These are multi-hop questions over diffs, log lines
+          // and audit rows, answered under an incident — the cheap model
+          // reaches a confident wrong cause, which is the worst outcome here.
+          : surface === 'admin'
+          ? 'google/gemini-2.5-pro'
           : isAutoMode
             ? 'google/gemini-2.5-pro'
             : effectiveModel === 'gpt-5-mini'
@@ -1398,7 +1480,13 @@ IMPORTANT FORMATTING RULES:
       // naming their wallet. `callerAddress` is accepted for logging only.
       const userToken = dehubToken || null;
       const caller = callerAddress || userContext?.walletAddress || null;
-      const agentPrompt = `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}${SUPPORT_PROMPT}`;
+      // Godmode replaces the consumer prompt rather than extending it: no
+      // persona, no marketing, no support desk it has no tool for. It keeps
+      // the platform context, which is the same set of facts either way.
+      const agentPrompt =
+        surface === 'admin'
+          ? `${ADMIN_SURFACE_PROMPT(adminContext ?? null)}${platformContext}${TOOL_USE_PROMPT}`
+          : `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}${SUPPORT_PROMPT}`;
       // Carry multimodal content through instead of flattening it to its text
       // part. The old `.find(c => c.type === 'text')` quietly threw away every
       // image a caller sent — the type signature says content may be an array of
@@ -1434,6 +1522,7 @@ IMPORTANT FORMATTING RULES:
           systemPrompt: agentPrompt,
           surface,
           userToken,
+          adminToken: adminToken || null,
           model: agentModel,
           lovableApiKey,
           perplexityKey: perplexityKey || undefined,
@@ -1468,6 +1557,7 @@ IMPORTANT FORMATTING RULES:
           systemPrompt: agentPrompt,
           surface,
           userToken,
+          adminToken: adminToken || null,
           model: agentModel,
           lovableApiKey,
           perplexityKey: perplexityKey || undefined,

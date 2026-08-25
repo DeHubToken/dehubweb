@@ -85,7 +85,7 @@ The uncomfortable truth is that "play to earn games that actually pay" is a smal
 - **The withdrawal test.** Can real players withdraw real value today? Search for recent, dated reports of successful cash-outs, not launch-day hype.
 - **The transparency test.** Is the token real and traceable on a public chain and listed on aggregators like CoinGecko or CoinMarketCap? DeHub's $DHB is on Base with contracts also on BNB Chain and Polygon, listed on both aggregators and tradable on Coinbase, which is the kind of verifiability you want.
 - **The pressure test.** Urgency, guaranteed returns, "send tokens to activate", and referral-only earning are all red flags. No honest game promises income.
-- **The team test.** Named, accountable people beat anonymous founders. DeHub is built by DeLabs Ltd, a United Kingdom company, co-founded by Mike Hales and Indi Jay Cammish.
+- **The team test.** Named, accountable people beat anonymous founders. DeHub is an independent DAO co-founded by Mike Hales and Indi Jay Cammish, with treasury and protocol decisions taken on-chain and in public.
 
 For a deeper account of what separates a working model from a Ponzi in disguise, our wider [DeHub decentralised social network](/guides/what-is-dehub) hub connects the arcade to the rest of the ecosystem, so you can see the earning is not the whole product.
 

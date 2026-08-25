@@ -899,7 +899,6 @@ export const gsw = {
     ],
     q3_2022: 'Q3 2022',
     q3_2022_items: [
-      'DeLabs LTD mit Rächtstruktur gründet',
       '1\'000\'000$-Huus für grössti Krypto-Lotterie chauft',
       'Vollmacht für mehreri Insle und Küstestrife in Palawan gsicheret',
       'Partnerschäfte mit Immobilie- und Rächtsfirme',

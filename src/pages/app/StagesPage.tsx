@@ -14,6 +14,7 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -29,6 +30,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { PastStagesList } from '@/components/app/stages/PastStagesList';
+import { PastStageCard } from '@/components/app/stages/PastStageCard';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
@@ -350,6 +352,27 @@ export default function StagesPage() {
   // component tree, so taps inside the drawer would also join the stage.
   const [shareSpace, setShareSpace] = useState<AudioSpace | null>(null);
 
+  // Feeds the Live tab's empty state — a few recent recordings to show in
+  // place of the live grid when nothing is running. Same ['past-stages']
+  // query PastStagesList uses, so switching to the Recorded tab doesn't
+  // re-fetch. Only enabled once we know there's nothing live to show instead.
+  const hasLiveNow =
+    liveSpaces.length > 0 || (!!currentSpace && !liveSpaces.some((s) => s.id === currentSpace.id));
+  const { data: recentPastStages = [] } = useQuery({
+    queryKey: ['past-stages'],
+    enabled: activeTab === 'live' && !hasLiveNow,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'ended')
+        .order('ended_at', { ascending: false })
+        .limit(20);
+      return (data as AudioSpace[]) || [];
+    },
+    staleTime: 5 * 60_000,
+  });
+
   // Everything this wallet hosts or holds a mic on, across every status.
   const { stages: myStages, isLoading: isLoadingMine, hasAny: isAStageHost } = useMyStages();
   const tabs = useMemo(
@@ -485,18 +508,24 @@ export default function StagesPage() {
             </button>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between px-1 mb-2">
-              <h3 className="text-white font-semibold text-sm">Recorded stages</h3>
-              <button
-                onClick={() => chooseTab('recorded')}
-                className="text-zinc-400 hover:text-white text-sm transition-colors"
-              >
-                See all
-              </button>
+          {recentPastStages.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between px-1 mb-2">
+                <h3 className="text-white font-semibold text-sm">Past Stages</h3>
+                <button
+                  onClick={() => chooseTab('recorded')}
+                  className="text-zinc-400 hover:text-white text-sm transition-colors"
+                >
+                  See all
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
+                {recentPastStages.slice(0, 6).map((space) => (
+                  <PastStageCard key={space.id} space={space} />
+                ))}
+              </div>
             </div>
-            <PastStagesList />
-          </div>
+          )}
         </div>
       );
     }

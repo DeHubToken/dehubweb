@@ -24,7 +24,7 @@ import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2, Bell,
   Link, UserPlus, Minimize2, Play, Pause, PictureInPicture2, Clock, Trash2, FileText,
-  ScreenShare, ScreenShareOff,
+  ScreenShare, ScreenShareOff, Crown,
 } from 'lucide-react';
 import { StageTranscriptDrawer } from './StageTranscriptDrawer';
 import { StageScreenShare } from './StageScreenShare';
@@ -67,6 +67,7 @@ import { BadgedName } from '@/components/app/BadgedName';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -213,6 +214,37 @@ export function AudioSpacesModalBody() {
     }
   };
 
+  /**
+   * Spend a Front Row on the stage being hosted right now.
+   *
+   * The button is shown only to a host holding the power, but the server is
+   * still the authority: it re-reads the stage out of Supabase and refuses one
+   * that has ended or that the caller does not host.
+   */
+  // Front Row is the Blue Whale rung: the stage you host tops the rail.
+  // `status.powers` decides whether this account has it — the badge the
+  // client draws from a live wallet read deliberately over-reports.
+  const { data: superpowerStatus } = useSuperpowers(!!currentSpace);
+  const bookFrontRow = useBookBoost();
+  const canFrontRow =
+    myRole === 'host' &&
+    !!currentSpace?.id &&
+    !!superpowerStatus?.powers.some(p => p.key === 'front_row' && p.unlocked && p.available) &&
+    (superpowerStatus?.boostsLeft ?? 0) > 0;
+
+  const handleFrontRow = () => {
+    if (!currentSpace?.id) return;
+    bookFrontRow.mutate(
+      { tokenId: 0, power: 'front_row', stageId: currentSpace.id },
+      {
+        onSuccess: booking =>
+          toast.success(`Front row for ${booking.minutes} minutes`),
+        // The server writes these for a person to read.
+        onError: (error: any) => toast.error(error?.message || 'Could not take the front row'),
+      },
+    );
+  };
+
   const handleCopyInviteLink = () => {
     if (!currentSpace) return;
     const url = dehubLinkFor.stage(currentSpace);
@@ -269,6 +301,25 @@ export function AudioSpacesModalBody() {
           </DrawerHeader>
         ) : (
           <div className="absolute top-3 right-3 z-10 flex items-center gap-1">
+            {/*
+              Front Row, offered to the host of a live stage and nobody else —
+              which is also the only account the server will accept one from.
+              Here rather than on the SuperPowers page because a stage is a
+              live thing: the moment worth buying the top of the rail is while
+              the room is running, not from a settings screen afterwards.
+            */}
+            {canFrontRow && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleFrontRow}
+                disabled={bookFrontRow.isPending}
+                className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+                title="Front Row — top of the stages rail"
+              >
+                <Crown className="w-4 h-4" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"

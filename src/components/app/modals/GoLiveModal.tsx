@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { mintPost } from '@/lib/api/dehub/content';
+import { mintPost, getPostQuota, type PostQuotaStatus } from '@/lib/api/dehub/content';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
 // they are dynamically imported at go-live time to keep the wallet stack out
@@ -21,6 +21,7 @@ import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
+import { hlsUrlFor } from '@/lib/live-ingest';
 
 // The WebRTC broadcaster pulls in getUserMedia + peer-connection code that
 // only the browser capture paths need, so it loads on demand rather than
@@ -69,6 +70,18 @@ const SCREEN_CONSTRAINTS: MediaTrackConstraints = {
 
 const MAX_CATEGORIES = 5;
 
+/**
+ * 1024-based, matching the server's pool math — a 1000-based reading would
+ * announce a smaller budget than the backend actually honours. Local rather
+ * than lib/editor/quota's formatBytes, which drags all thirteen badge images
+ * into whatever imports it and fails the entry-bundle check.
+ */
+function formatGb(bytes: number): string {
+  const gb = bytes / (1024 * 1024 * 1024);
+  if (gb >= 1) return `${gb % 1 === 0 ? gb : gb.toFixed(1)} GB`;
+  return `${Math.max(1, Math.round(bytes / (1024 * 1024)))} MB`;
+}
+
 export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
@@ -77,7 +90,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string } | null>(null);
+  const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   // The display capture taken at click time (see handleStartStream), handed to
   // the broadcaster once the mint lands. Mirrored in a ref because every
@@ -158,6 +171,28 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     }
     if (data.tokenId) clearLiveSession(data.tokenId);
   }, []);
+
+  // What today's allowance still permits as a replay. Replays draw from the
+  // same daily media pool uploads do, and the backend truncates the recording
+  // to whatever is left — so the ceiling is shown HERE, before going live,
+  // rather than discovered as a mysteriously short replay afterwards.
+  const [quota, setQuota] = useState<PostQuotaStatus | null>(null);
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    getPostQuota().then((q) => {
+      if (!cancelled) setQuota(q);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
+
+  const replayBudget = useMemo(() => {
+    if (!quota) return null;
+    const remaining = Math.max(0, quota.mediaBytesPerDay - quota.mediaBytesUsed);
+    return { remaining, tier: quota.tier };
+  }, [quota]);
 
   // Load saved default categories
   useEffect(() => {
@@ -372,6 +407,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       let streamKey = '';
       let streamId = '';
       let playbackId = '';
+      let provider = '';
       let retryCount = 0;
       const MAX_RETRIES = 8;
 
@@ -383,6 +419,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           if (stream?.streamKey) {
             streamKey = stream.streamKey;
             playbackId = stream.playbackId || '';
+            provider = ((stream as Record<string, unknown>).provider as string) || '';
             // Try to get the MongoDB ObjectId from stream (needed for some API calls)
             const streamObj = stream as Record<string, unknown>;
             streamId = (streamObj._id as string) || (streamObj.id as string) || stream.streamId || tokenId;
@@ -455,18 +492,23 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         return;
       }
 
-      // Final fallback: standard Livepeer RTMP URL
-      if (!ingestUrl) {
+      // Final fallback: standard Livepeer RTMP URL. Only Livepeer's — a
+      // self-hosted stream publishes to its own host, and handing its
+      // creator Livepeer's endpoint would send them somewhere that will
+      // never accept their key.
+      if (!ingestUrl && provider !== 'mediamtx') {
         ingestUrl = LIVEPEER_RTMP_URL;
         logger.info('Using standard Livepeer RTMP ingest URL');
       }
 
-      const hlsUrl = playbackId ? `https://livepeercdn.studio/hls/${playbackId}/index.m3u8` : '';
+      const hlsUrl = hlsUrlFor({ provider, playbackId }) || '';
 
       const resultData = {
         tokenId,
         streamId,
         streamKey,
+        playbackId,
+        provider,
         ingestUrl,
         playbackUrl: playbackUrl || `https://dehub.io/app/post/${tokenId}`,
         hlsUrl,
@@ -593,6 +635,24 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                     with your mic and the tab's own sound.
                   </p>
                 )}
+                {replayBudget && (
+                  replayBudget.remaining <= 0 ? (
+                    <p className="text-[11px] text-amber-400/90">
+                      You've used today's upload allowance, so this stream won't
+                      keep a replay. The allowance resets at midnight UTC.
+                    </p>
+                  ) : replayBudget.tier == null ? (
+                    <p className="text-[11px] text-amber-400/90">
+                      Free accounts keep the first {formatGb(replayBudget.remaining)} of
+                      a stream as a replay — staking badges raises the limit.
+                    </p>
+                  ) : (
+                    <p className="text-[11px] text-zinc-500">
+                      Up to {formatGb(replayBudget.remaining)} of this stream is kept
+                      as a replay ({replayBudget.tier} daily allowance).
+                    </p>
+                  )
+                )}
               </div>
 
               <div className="space-y-2">
@@ -658,6 +718,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                 >
                   <GoLiveBroadcaster
                     streamKey={streamData.streamKey}
+                    playbackId={streamData.playbackId}
+                    provider={streamData.provider}
                     initialScreenStream={screenStream}
                     streamId={streamData.streamId}
                     onEnd={handleEndStream}

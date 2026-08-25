@@ -167,9 +167,9 @@ export function BrowseTab() {
 
       {/* Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="space-y-2.5">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-40 rounded-xl bg-white/5 animate-pulse" />
+            <div key={i} className="h-[88px] rounded-xl bg-white/5 animate-pulse" />
           ))}
         </div>
       ) : listings.length === 0 ? (
@@ -177,7 +177,7 @@ export function BrowseTab() {
           {debouncedSearch ? 'No handles for sale match that.' : 'No handles are for sale yet.'}
         </div>
       ) : (
-        <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 ${isFetching ? 'opacity-60' : ''}`}>
+        <div className={`space-y-2.5 ${isFetching ? "opacity-60" : ""}`}>
           {listings.map(listing => (
             <UsernameCard key={listing.id} listing={listing} onClick={() => setSelected(listing)} />
           ))}

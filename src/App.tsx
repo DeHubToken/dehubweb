@@ -15,6 +15,7 @@ import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
+import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
@@ -131,14 +132,6 @@ const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
-const AdminLoginPage = React.lazy(() => import("./pages/admin/AdminLoginPage"));
-const AdminUsersPage = React.lazy(() => import("./pages/admin/AdminUsersPage"));
-const AdminAdsPage = React.lazy(() => import("./pages/admin/AdminAdsPage"));
-const AdminModerationPage = React.lazy(() => import("./pages/admin/AdminModerationPage"));
-const AdminChatPage = React.lazy(() => import("./pages/admin/AdminChatPage"));
-const AdminRoute = React.lazy(() =>
-  import("./components/admin/AdminRoute").then((m) => ({ default: m.AdminRoute }))
-);
 // One persistent docs/blog surface for both /docs/* and the canonical
 // /guides/<slug> blog posts — providers + sidebar mount ONCE and stay mounted
 // across the /docs ↔ /guides boundary (see DocsSurface + the shared parent
@@ -171,6 +164,7 @@ const SuperPowersPage = React.lazy(() => import("./pages/app/SuperPowersPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkEditPage = React.lazy(() => import("./pages/app/WorkEditPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
+const BountyLegacyRedirect = React.lazy(() => import("./pages/app/BountyLegacyRedirect"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 // Eager import — the referral lander is a new user's first touch of DeHub and
 // must paint instantly; it renders outside WalletProviders (see App below) so
@@ -185,6 +179,7 @@ const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
 const ConnectChatGPTPage = React.lazy(() => import("./pages/ConnectChatGPTPage"));
 const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
 const ApkPage = React.lazy(() => import("./pages/ApkPage"));
+const AdminManualPage = React.lazy(() => import("./pages/AdminManualPage"));
 // The arcade player is a standalone full-viewport surface (no AppLayout): the
 // games take the whole window and two of them take the pointer, so the header
 // and sidebars would be in the way rather than useful. Its own chunk, like the
@@ -304,6 +299,8 @@ function AppContent() {
   const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect } = useAuth();
   const queryClient = useQueryClient();
   usePreloadIcons();
+  // A pushed notification focuses this tab and posts where it wanted to go.
+  useNotificationClickRouting();
 
   // Warm the sheet's contents so the skeleton inside it stays theoretical. The
   // timeout matters: a feed that never goes idle used to starve this
@@ -447,15 +444,14 @@ function AppContent() {
           <Route path="/delete-account" element={<DeleteAccount />} />
           <Route path="/auth/confirm" element={<Suspense fallback={<PageLoader />}><AuthConfirm /></Suspense>} />
 
-          {/* Admin panel — email/password auth, separate from user wallet session */}
-          <Route path="/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />
-          <Route path="/admin" element={<Suspense fallback={<PageLoader />}><AdminRoute /></Suspense>}>
-            <Route index element={<Navigate to="/admin/users" replace />} />
-            <Route path="users" element={<Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense>} />
-            <Route path="ads" element={<Suspense fallback={<PageLoader />}><AdminAdsPage /></Suspense>} />
-            <Route path="moderation" element={<Suspense fallback={<PageLoader />}><AdminModerationPage /></Suspense>} />
-            <Route path="chat" element={<Suspense fallback={<PageLoader />}><AdminChatPage /></Suspense>} />
-          </Route>
+          {/*
+            /admin used to live here — a second admin frontend on the public
+            site, sharing the real admin API token behind a route guard whose
+            entire body was "does a token exist". No role check, no verification.
+            Every page it carried is now on godmode.dehub.io, including the ads
+            review queue, which moved there last because it was the only one
+            without an equivalent. Nothing links here and nothing should.
+          */}
 
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
@@ -479,6 +475,12 @@ function AppContent() {
               single non-scrolling screen that owns the viewport, and it is
               reached from outside the app far more often than from inside it. */}
           <Route path="/apk" element={<Suspense fallback={<PageLoader />}><ApkPage /></Suspense>} />
+
+          {/* The moderation handbook, published. Standalone for the same reason
+              as /apk — it owns the viewport and is reached from outside the app
+              far more often than from inside it. The same document is served to
+              moderators at godmode.dehub.io/manual. */}
+          <Route path="/admin-manual" element={<Suspense fallback={<PageLoader />}><AdminManualPage /></Suspense>} />
 
           {/* Arcade player. Two segments, so it outranks the /:username
               catch-all inside AppLayout below and never has to be ordered
@@ -562,12 +564,18 @@ function AppContent() {
               <Route path="stores" element={null} />
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="usernames" element={null} />
+              <Route path="accounts" element={null} />
               <Route path="ads" element={null} />
               <Route path="work" element={null} />
               <Route path="work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
               <Route path="work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
-              <Route path="work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
-              <Route path="work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+              {/* A bounty's own URL is /bounty/<n> (work_jobs.job_number). The
+                  /work/<uuid> pair below is the pre-numbers share form and
+                  only redirects — see BountyLegacyRedirect. */}
+              <Route path="bounty/:jobKey" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+              <Route path="bounty/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+              <Route path="work/:jobKey" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect /></Suspense>} />
+              <Route path="work/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect suffix="/edit" /></Suspense>} />
 
               <Route path="communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
@@ -586,8 +594,14 @@ function AppContent() {
             <Route path="/work" element={null} />
             <Route path="/work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
             <Route path="/work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
-            <Route path="/work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
-            <Route path="/work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+            <Route path="/work/:jobKey" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect /></Suspense>} />
+            <Route path="/work/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect suffix="/edit" /></Suspense>} />
+
+            {/* Canonical bounty URLs. `bounty` is reserved in
+                src/lib/reserved-usernames.js so no account can claim the
+                handle and shadow this space. */}
+            <Route path="/bounty/:jobKey" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+            <Route path="/bounty/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
 
             {/* /affiliate alias (page itself is rendered by PersistentPageCache) */}
             <Route path="/affiliate" element={null} />
@@ -595,6 +609,9 @@ function AppContent() {
             {/* /usernames alias — the canonical form the worker links and
                 sitemaps, so the SPA has to answer it too. */}
             <Route path="/usernames" element={null} />
+
+            {/* /accounts alias — same shape as /usernames above. */}
+            <Route path="/accounts" element={null} />
 
 
             {/* Stage invite links. /stages/:id is the short numeric share form

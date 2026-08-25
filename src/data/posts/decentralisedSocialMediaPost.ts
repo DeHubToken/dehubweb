@@ -101,7 +101,7 @@ Concretely, DeHub gives creators several native ways to earn:
 - **Up to 90% ad-revenue share** flowing back to the ecosystem, rather than the platform keeping the majority.
 - **A play-to-earn arcade** including the flagship MMA battle royale **Last Chad Standing**, plus live streaming on Livepeer that has scaled to more than 50,000 concurrent viewers, complete with on-chain animated tips.
 
-Underneath, the fundamentals match the rest of the category: content minted on-chain at upload, a chronological and transparent feed with no opaque algorithm, open-source end-to-end encrypted messaging, and that DePIN-backed custom CDN for speed. The ecosystem token is **$DHB**, primarily on Base (an Ethereum Layer 2) with contracts also on BNB Chain and Polygon. DeHub is built by DeLabs Ltd, a UK company, whose co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency, so the team understands the creator economy from the inside.
+Underneath, the fundamentals match the rest of the category: content minted on-chain at upload, a chronological and transparent feed with no opaque algorithm, open-source end-to-end encrypted messaging, and that DePIN-backed custom CDN for speed. The ecosystem token is **$DHB**, primarily on Base (an Ethereum Layer 2) with contracts also on BNB Chain and Polygon. DeHub is an independent DAO governed by its token holders, and its co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency, so the team understands the creator economy from the inside.
 
 For British creators specifically, the pull is straightforward: keep ownership of your audience and get paid natively for the attention you already command. If you are weighing up a move from a mainstream short-video app, our [UK creator's guide to leaving TikTok](/guides/uk-creators-guide-leaving-tiktok) covers the practical steps.
 
@@ -135,7 +135,7 @@ On federated networks, rarely, as they are mostly not built to pay creators. On 
 
 ### Is DeHub the same as DePaul or Rowan University's DeHub?
 
-No. DeHub at dehub.io is a Web3 social network built by DeLabs Ltd, a UK company. It is unrelated to DePaul University's "DeHUB" student portal at dehub.depaul.edu and to Rowan University's "DEHub" digital engineering hub. The names sound alike but the projects are entirely separate.
+No. DeHub at dehub.io is a Web3 social network run as an independent DAO. It is unrelated to DePaul University's "DeHUB" student portal at dehub.depaul.edu and to Rowan University's "DEHub" digital engineering hub. The names sound alike but the projects are entirely separate.
 `,
   bannerImage: '/lovable-uploads/decentralised-social-media-explained-uk-banner.png',
   bannerImageAlt: 'Illustration of a decentralised social media network with user-owned nodes connected across an open protocol',

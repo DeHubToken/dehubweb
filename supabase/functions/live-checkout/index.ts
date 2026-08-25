@@ -173,7 +173,6 @@ async function dhbPrice(): Promise<number | null> {
 interface TxReceipt {
   status: string;
   logs: Array<{ address: string; topics: string[]; data: string }>;
-  from: string;
 }
 
 /** Left-pad-stripped topic → 0x-address. */
@@ -264,15 +263,18 @@ Deno.serve(async (req) => {
         return jsonResponse({ error: "That transaction failed on-chain" }, 400);
       }
 
-      // The payer must be the person claiming the order, or anyone could
-      // harvest a stranger's transfer and have the goods shipped to them.
-      if (String(receipt.from).toLowerCase() !== buyer) {
-        return jsonResponse({ error: "That transaction was not sent from your wallet" }, 403);
-      }
-
-      // Find a DHB Transfer to the seller in this transaction. Reading logs
-      // rather than the call data means a transfer routed through a contract
-      // still counts, and a transfer of some other token never does.
+      // Find a DHB Transfer from the buyer to the seller in this transaction.
+      //
+      // The payer is read off the Transfer event's `from`, never the
+      // transaction's. A DeHub account is a smart wallet, so `tx.from` is the
+      // bundler that relayed the userOp — asserting on it rejects every
+      // sponsored payment while accepting nothing the log check does not.
+      // The `topics[1] !== buyer` line below is the real payer check, and it
+      // is the stronger one: it is what stops someone harvesting a stranger's
+      // transfer and having the goods shipped to them.
+      //
+      // Reading logs rather than call data also means a transfer routed
+      // through a contract still counts, and some other token never does.
       const minUnits = BigInt(
         Math.floor(quote.dhbAmount * UNDERPAY_TOLERANCE * 10 ** 6),
       ) * 10n ** BigInt(DHB_DECIMALS - 6);

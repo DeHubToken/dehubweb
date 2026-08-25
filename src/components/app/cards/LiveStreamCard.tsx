@@ -37,8 +37,10 @@ import {
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 // The WHEP subscriber pulls in peer-connection code and loads on demand at
 // attach time (see the playback effect) — a static import here would put it
-// on the boot path, since this card is eager via HomeFeed.
-import { playbackIdFromHlsUrl } from '@/lib/livepeer/playback-id';
+// on the boot path, since this card is eager via HomeFeed. live-ingest is
+// safe to import statically for the same reason: it is pure URL arithmetic
+// with no imports of its own.
+import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
@@ -100,10 +102,11 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const hasPlaybackUrl = urlsToTry.length > 0;
   // The WebRTC route reuses the id already embedded in the HLS URL, so nothing
   // new has to be threaded through the feed mappers to reach it.
-  const whepPlaybackId = useMemo(
-    () => (stream.isLive ? playbackIdFromHlsUrl(urlsToTry[0]) : null),
+  const whepSource = useMemo(
+    () => (stream.isLive ? liveSourceFromHlsUrl(urlsToTry[0]) : null),
     [stream.isLive, urlsToTry]
   );
+  const whepPlaybackId = whepSource?.playbackId ?? null;
   const [transport, setTransport] = useState<'whep' | 'hls'>(
     typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
   );
@@ -212,6 +215,10 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         if (cancelled) return;
         session = await subscribeToWhep({
           playbackId: whepPlaybackId,
+          endpoint: whepEndpointFor({
+            provider: whepSource?.provider,
+            playbackId: whepPlaybackId,
+          }),
           onStateChange: (state, detail) => {
             if (cancelled) return;
             if (state === 'playing') setError(null);
@@ -781,8 +788,18 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               preload="metadata"
               {...{"webkit-playsinline": ""}}
             />
-            <span className="absolute top-3 left-3 rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white">
-              REPLAY
+            {/* PARTIAL when the capture was cut to the creator's daily
+                allowance — presenting the opening stretch as the whole
+                broadcast would be a lie viewers notice mid-video. */}
+            <span
+              className="absolute top-3 left-3 rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white"
+              title={
+                stream.replayTruncated
+                  ? 'Only the start of this stream was kept — the replay hit the creator’s daily limit'
+                  : undefined
+              }
+            >
+              {stream.replayTruncated ? 'PARTIAL REPLAY' : 'REPLAY'}
             </span>
           </>
         ) : streamEnded ? (

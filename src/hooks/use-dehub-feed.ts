@@ -24,9 +24,10 @@ import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { parseSoundtrackTag, getFeedViewer } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
-import { extractReplayUrl } from '@/lib/live-replay';
+import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
+import { hlsUrlFor, liveProviderOf, liveThumbnailFor } from '@/lib/live-ingest';
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -352,6 +353,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     creatorUsername,
     creatorBadgeBalance: nft.minterUser?.badgeBalance,
     replayUrl: extractReplayUrl(nft.stream),
+    replayTruncated: isReplayTruncated(nft.stream),
     ...(streamId ? { streamId } : {}),
   };
 }
@@ -541,9 +543,8 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
   const rawAccount = (stream as any).account || stream.streamer;
   const rawThumbnail = (stream as any).thumbnail || stream.thumbnailUrl;
   const playbackId = (stream as any).playbackId;
-  const livepeerThumb = playbackId
-    ? `https://livepeercdn.studio/hls/${playbackId}/thumbnail.jpg`
-    : null;
+  const livepeerThumb = liveThumbnailFor(stream as any) ?? null;
+  const hlsUrl = hlsUrlFor(stream as any);
   const thumbnail = rawThumbnail
     ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}${rawThumbnail.replace(/^\//, '')}`)
     : livepeerThumb ?? FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
@@ -573,18 +574,21 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     thumbnail,
     tags: [],
     isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || (stream.status as string) === 'active' || !!(stream as any).streamKey,
-    playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
-    playbackUrls: (stream as any).playbackId
-      ? [
-          `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8`,
-          `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8`,
-        ]
-      : undefined,
+    playbackUrl: stream.playbackUrl || hlsUrl,
+    // The .com host is Livepeer's deprecated CDN, kept as a second chance for
+    // that provider only; a self-hosted stream is served from one host and a
+    // fabricated alternate would just 404 twice.
+    playbackUrls: !hlsUrl
+      ? undefined
+      : liveProviderOf(stream as any) === 'mediamtx'
+        ? [hlsUrl]
+        : [hlsUrl, `https://livepeercdn.com/hls/${playbackId}/index.m3u8`],
     creatorId: stream.address || rawAccount?.address,
     creatorUsername: rawAccount?.username,
     creatorBadgeBalance: rawAccount?.badgeBalance,
     likeCount,
     replayUrl: extractReplayUrl(stream),
+    replayTruncated: isReplayTruncated(stream),
   };
 }
 

@@ -85,13 +85,24 @@ Deno.serve(async (req) => {
     /* ── 1. retries ─────────────────────────────────────────────────────── */
     const { data: unfinished } = await db
       .from('transcripts')
-      .select('source_kind, source_ref, status, attempts, last_attempt_at')
+      .select('source_kind, source_ref, status, attempts, last_attempt_at, created_at')
       .in('status', ['pending', 'processing', 'failed'])
       .order('last_attempt_at', { ascending: true, nullsFirst: true })
       .limit(budget * 3);
 
+    /**
+     * Retries get at most a third of the run.
+     *
+     * Without a cap this pass takes the whole budget as soon as there are
+     * enough unfinished rows, and the platform stops gaining coverage: ten
+     * posts whose transcoding had failed upstream were eating ten of twelve
+     * slots on every pass, so the back catalogue crawled while the sweeper
+     * looked busy. Retries matter, but never more than new work.
+     */
+    const retryBudget = Math.max(1, Math.floor(budget / 3));
+
     for (const row of unfinished ?? []) {
-      if (queued.length >= budget) break;
+      if (queued.length >= retryBudget) break;
       if (!isRetryable(row as any)) continue;
       queued.push({ kind: row.source_kind, ref: row.source_ref, reason: `retry:${row.status}` });
     }
@@ -124,7 +135,13 @@ Deno.serve(async (req) => {
 
     /* ── 3. video and audio posts ───────────────────────────────────────── */
     const startPage = Math.max(1, Number(body?.page ?? 1));
-    const pages = backfill ? Math.max(1, Math.min(Number(body?.pages ?? 1), 10)) : 1;
+    /**
+     * An ordinary sweep walks deeper when the front of the feed is already
+     * covered, so the back catalogue drains on its own rather than needing
+     * somebody to drive `backfill` by hand. The budget still caps the run —
+     * these are extra pages to *look* at, not extra work to start.
+     */
+    const pages = backfill ? Math.max(1, Math.min(Number(body?.pages ?? 1), 10)) : 6;
 
     for (const postType of ['video', 'audio', 'feed-audio']) {
       for (let p = startPage; p < startPage + pages; p++) {

@@ -30,6 +30,7 @@ import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { ProposalVerdictLabel, verdictOf } from '@/components/app/governance/ProposalVerdict';
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -127,6 +128,7 @@ export default function GovernanceProposalPage() {
   const againstPct = 100 - forPct;
 
   const { weight: userWeight } = getVoteWeight(userBadgeBalance, usernameVal);
+  const verdict = verdictOf(proposal);
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 max-w-2xl mx-auto">
@@ -153,7 +155,15 @@ export default function GovernanceProposalPage() {
             creatorUsername={proposal.author_username || undefined}
             badgeLookupId={proposal.author_username || proposal.author_wallet_address}
           />
-          <span className="text-zinc-500 text-[10px] shrink-0 pt-1">{formatTimeAgo(proposal.created_at, t)}</span>
+          <div className="flex items-center gap-1.5 shrink-0 pt-1">
+            {verdict && (
+              <>
+                <ProposalVerdictLabel verdict={verdict} />
+                <span className="text-zinc-500 text-[10px]">·</span>
+              </>
+            )}
+            <span className="text-zinc-500 text-[10px]">{formatTimeAgo(proposal.created_at, t)}</span>
+          </div>
         </div>
 
         <TranslatableText text={proposal.title} className="text-white font-semibold text-base leading-tight mb-2" as="h1" hideControls />
@@ -168,8 +178,8 @@ export default function GovernanceProposalPage() {
           <div className="h-1.5 rounded-full bg-white/5 overflow-hidden flex">
             {total > 0 ? (
               <>
-                <div className="bg-emerald-500 rounded-l-full transition-all duration-300" style={{ width: `${forPct}%` }} />
-                <div className="bg-red-500 rounded-r-full transition-all duration-300" style={{ width: `${againstPct}%` }} />
+                <div data-keep-dark className="bg-emerald-500 rounded-l-full transition-all duration-300" style={{ width: `${forPct}%` }} />
+                <div data-keep-dark className="bg-red-500 rounded-r-full transition-all duration-300" style={{ width: `${againstPct}%` }} />
               </>
             ) : (
               <div className="bg-white/10 w-full rounded-full" />
@@ -189,7 +199,7 @@ export default function GovernanceProposalPage() {
           dislikeCount={proposal.dislike_count ?? 0}
           commentCount={proposal.comment_count}
           voteWeight={userWeight}
-          disabled={voteMutation.isPending}
+          disabled={voteMutation.isPending || !!verdict}
         />
       </div>
 

@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useAdminDisputes, useAdminResolveDispute } from '@/features/work/hooks/use-work';
 import type { WorkCurrency, WorkJob } from '@/features/work/types';
+import { bountyPath } from '@/features/work/seo';
 
 type DisputeRow = {
   id: string;
@@ -53,7 +54,7 @@ export default function WorkDisputesPage() {
           <div key={k} className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 mb-4">
             <div className="flex items-start justify-between gap-3 mb-3">
               <div>
-                <Link to={`/work/${d.job_id}`} className="text-lg font-semibold text-white hover:underline inline-flex items-center gap-1">
+                <Link to={j ? bountyPath(j) : `/work/${d.job_id}`} className="text-lg font-semibold text-white hover:underline inline-flex items-center gap-1">
                   {j?.title || 'Untitled'} <ExternalLink className="w-3.5 h-3.5" />
                 </Link>
                 <div className="text-[11px] text-white/40 mt-0.5">

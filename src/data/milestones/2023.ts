@@ -258,7 +258,7 @@ The specific mechanisms we built — how watch-to-earn is measured and settled, 
 
 **Defensive priority.** The realistic risk to a small company is not that someone copies you. It is that a much larger company independently patents something you already built, and then asserts it against you. Establishing priority is protection against being locked out of your own work.
 
-**It is what an operating company does.** DeHub sits inside a real corporate structure — [DeLabs LTD was incorporated](/guides/official-standing-delabs-ltd-incorporated---a-dehub-milestone-from-q3-2022) in 2022 with proper compliance, and we hold real registrations. Intellectual property is part of that, and partners and investors ask about it.
+**It is what a serious project does.** DeHub holds real registrations and takes the obligations that come with them seriously. Intellectual property is part of that, and partners and investors ask about it.
 
 **Watch-to-earn was novel enough to be worth it.** By 2023 there was a genuine body of implementation behind it, and it was being widely imitated with varying degrees of honesty. Establishing what we had actually built, and when, had value.
 
@@ -438,7 +438,7 @@ Projects work for years to get a centralised listing. Leaving one by choice is u
 
 Gate.io ended UK support.
 
-That is the specific event, and it matters because a UK-registered project with a large UK community does not have a functioning relationship with an exchange its own users cannot access. Alongside it, our multi-million dollar liquidity pool had been drained by arbitrage bots and other questionable activity for years, which forced a broader decision about where DHB should trade at all.
+That is the specific event, and it matters because a UK-founded project with a large UK community does not have a functioning relationship with an exchange its own users cannot access. Alongside it, our multi-million dollar liquidity pool had been drained by arbitrage bots and other questionable activity for years, which forced a broader decision about where DHB should trade at all.
 
 ### The practical reason first
 

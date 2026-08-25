@@ -19,6 +19,7 @@
 
 import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import { isQuietNow } from '@/lib/quiet-hours';
+import { subscribeToWebPush, unsubscribeFromWebPush } from '@/lib/web-push';
 
 const STORAGE_KEY = 'dehub_browser_notifications';
 const LAST_SEEN_KEY = 'dehub_notifications_last_seen';
@@ -144,6 +145,17 @@ export function useBrowserNotifications() {
 
   const setEnabled = useCallback((enabled: boolean) => {
     setStoredEnabled(enabled);
+
+    // Subscribe the browser itself, not just this tab. `new Notification()`
+    // needs the page open, so without this the switch only ever worked while
+    // DeHub was on screen — which is the opposite of what a notification is
+    // for. Fire-and-forget: web push either works or it does not, and either
+    // way the in-tab path above is unaffected.
+    if (enabled) {
+      void subscribeToWebPush();
+    } else {
+      void unsubscribeFromWebPush();
+    }
   }, []);
 
   /**

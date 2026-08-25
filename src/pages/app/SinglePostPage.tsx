@@ -39,7 +39,7 @@ import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
-import { extractReplayUrl } from '@/lib/live-replay';
+import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -70,6 +70,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
+import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
 
 /**
  * Detect content type from API response
@@ -334,8 +335,7 @@ function buildLivePlaybackUrl(nft: DeHubNFT): string | undefined {
 
   const playbackId = stream?.playbackId;
   if (playbackId) {
-    const primary = `${LIVEPEER_CDN_BASES[0]}/hls/${playbackId}/index.m3u8`;
-    return primary;
+    return hlsUrlFor(stream);
   }
   return fromApi;
 }
@@ -345,7 +345,13 @@ function buildLivePlaybackUrls(nft: DeHubNFT): string[] {
   const stream = (nft as any).stream;
   const playbackId = stream?.playbackId;
   if (!playbackId) return [];
-  return LIVEPEER_CDN_BASES.map(base => `${base}/hls/${playbackId}/index.m3u8`);
+  // Only Livepeer has a second CDN to fall back to; a self-hosted stream is
+  // served from one host and a fabricated alternate would just 404 twice.
+  const primary = hlsUrlFor(stream);
+  if (!primary) return [];
+  return liveProviderOf(stream) === 'mediamtx'
+    ? [primary]
+    : [primary, `${LIVEPEER_CDN_BASES[1]}/hls/${playbackId}/index.m3u8`];
 }
 
 /**
@@ -405,6 +411,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     playbackUrl: buildLivePlaybackUrl(nft),
     playbackUrls: buildLivePlaybackUrls(nft),
     replayUrl: extractReplayUrl(streamObj),
+    replayTruncated: isReplayTruncated(streamObj),
   };
 }
 
@@ -764,8 +771,8 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
           description: stream.description,
           postType: 'live',
           isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || stream.status === 'active' || !!(stream as any).streamKey,
-          videoUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
-          playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+          videoUrl: stream.playbackUrl || hlsUrlFor(stream as any),
+          playbackUrl: stream.playbackUrl || hlsUrlFor(stream as any),
           imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
           views: stream.viewerCount || (stream as any).totalViews || 0,
           totalVotes: { for: stream.likeCount || (stream as any).likes || 0, against: 0 },
