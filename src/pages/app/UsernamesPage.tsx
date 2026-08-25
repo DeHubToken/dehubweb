@@ -43,10 +43,15 @@ export default function UsernamesPage() {
         jsonLd={JSON_LD}
       />
 
-      {/* Sticky nav pill */}
+      {/* Sticky nav pill.
+          No max-width here or on the content below: the listings are
+          full-width rows, so the page fills the middle column the way Explore
+          and Music do. max-w-4xl left ~150px of dead space either side at
+          desktop widths, which is what made the listings read as a small blob
+          in the middle of an empty page. */}
       <div
         data-feed-nav-outer
-        className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-4xl mx-auto"
+        className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2"
       >
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
@@ -82,8 +87,14 @@ export default function UsernamesPage() {
         </div>
       </div>
 
-      <div ref={contentRef} className="w-full max-w-4xl mx-auto px-2 sm:px-3 pt-3 pb-6 space-y-4">
-        {tab === 'browse' ? <BrowseTab /> : <SellTab />}
+      <div ref={contentRef} className="w-full px-2 sm:px-3 pt-3 pb-6 space-y-4">
+        {/* Browse fills the column; Sell is a form, and a text input stretched
+            across a wide desktop column is unreadable, so it keeps a measure. */}
+        {tab === 'browse' ? <BrowseTab /> : (
+          <div className="max-w-2xl">
+            <SellTab />
+          </div>
+        )}
       </div>
     </div>
   );
