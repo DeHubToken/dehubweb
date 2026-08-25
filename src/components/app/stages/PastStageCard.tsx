@@ -22,7 +22,7 @@ import { StageRecordingPlayer } from '@/components/app/stages/StageRecordingPlay
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
-export function PastStageCard({ space }: { space: AudioSpace }) {
+export function PastStageCard({ space, className }: { space: AudioSpace; className?: string }) {
   const navigate = useNavigate();
   const avatar =
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
@@ -39,6 +39,7 @@ export function PastStageCard({ space }: { space: AudioSpace }) {
         'relative w-full rounded-xl border border-white/[0.08] overflow-hidden text-left',
         'transition-colors group bg-white/[0.03] hover:bg-white/[0.06]',
         hasCover && 'hover:border-white/20',
+        className,
       )}
     >
       {hasCover && <StageCoverArt src={space.cover_image_url!} title={space.title} />}
