@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -493,6 +493,25 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
                 </TooltipTrigger>
                 <TooltipContent>{translation.isTranslated ? 'Show original' : 'Translate'}</TooltipContent>
               </Tooltip>
+            )}
+            {/* Views on the comment itself, recorded by the observer below
+                when the row scrolls into a reader's viewport.
+
+                Not a button, and last in the group on purpose: it is the one
+                static figure in a row of actions, so it gets no hover state
+                and no cursor change, and sitting between two tappable icons
+                would have made it read as a third.
+
+                Hidden at 0 — which is what a comment posted seconds ago and
+                not yet seen by anyone else reads as. */}
+            {comment.views > 0 && (
+              <span
+                className="flex items-center gap-1 text-white/70"
+                aria-label={`${comment.views} views`}
+              >
+                <Eye className="w-4 h-4" />
+                <span className="text-xs">{formatCount(comment.views)}</span>
+              </span>
             )}
           </div>
         </div>
@@ -1141,6 +1160,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       text: newComment,
       likes: 0,
       dislikes: 0,
+      // Nobody has scrolled past a comment that does not exist on the server
+      // yet; the real count arrives with the refetch.
+      views: 0,
       timeAgo: 'Just now',
       createdAt: new Date(),
       voiceNote: voiceNote || undefined,

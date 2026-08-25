@@ -24,6 +24,14 @@ export interface Comment {
   imageUrl?: string;
   likes: number;
   dislikes: number;
+  /**
+   * Times this comment has scrolled into a reader's viewport.
+   *
+   * A plain counter on the comment row, not the post's view count: it has no
+   * denormalised sum behind it and no per-viewer ledger, so it is an
+   * impression figure and reads a little high compared with a post's.
+   */
+  views: number;
   timeAgo: string;
   createdAt: Date; // For sorting
   isLiked?: boolean;
@@ -74,6 +82,7 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     imageUrl: commentImageUrl,
     likes: apiComment.likeCount ?? 0,
     dislikes: apiComment.dislikeCount ?? 0,
+    views: apiComment.views ?? 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
     createdAt,
     isLiked: apiComment.isLiked ?? false,
