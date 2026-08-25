@@ -526,6 +526,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
           onSendMessage={handleSendMessage}
           replyTo={replyTo}
           onCancelReply={handleCancelReply}
+          draftKey={selectedRoomId ? `room:${selectedRoomId}` : null}
         />
       </div>
 

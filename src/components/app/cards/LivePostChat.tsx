@@ -11,6 +11,7 @@ import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw, Pin, X 
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { useDraft } from '@/hooks/use-draft';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
@@ -100,7 +101,9 @@ interface LivePostChatProps {
 }
 
 export function LivePostChat({ streamId, isOffline = false, isHost = false }: LivePostChatProps) {
-  const [newMessage, setNewMessage] = useState('');
+  // The card unmounts every time the post scrolls out of the feed, so without
+  // this a line typed under a stream is gone the moment you look away.
+  const [newMessage, setNewMessage] = useDraft(streamId ? `live:${streamId}` : null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);

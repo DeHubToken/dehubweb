@@ -15,6 +15,7 @@ import { ChatInput } from './ChatInput';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
+import { conversationIdentity } from '@/lib/conversation-identity';
 import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
@@ -547,6 +548,40 @@ function MessagesSkeleton() {
   );
 }
 
+/**
+ * The per-message fee banner has to paint before the API answers or it flashes
+ * in half a second after the composer. It is a *hint*, so it expires: the other
+ * side can raise, drop or waive their fee at any time, and an entry with no
+ * clock on it kept showing the old number for as long as the browser lived.
+ */
+const DM_FEE_CACHE_TTL = 6 * 60 * 60 * 1000;
+
+function readCachedDmFee(key: string): DmFee | null {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { v?: number; t?: number; fee?: DmFee };
+    // Pre-TTL entries were the bare DmFee. Drop them rather than trust them.
+    if (parsed?.v !== 1 || typeof parsed.t !== 'number' || !parsed.fee) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    if (Date.now() - parsed.t > DM_FEE_CACHE_TTL) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return parsed.fee;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedDmFee(key: string, fee: DmFee): void {
+  try {
+    localStorage.setItem(key, JSON.stringify({ v: 1, t: Date.now(), fee }));
+  } catch { /* quota — the banner just waits for the API */ }
+}
+
 function useDmPin(conversationId: string, address: string | undefined, conversation: DeHubConversation) {
   const serverPinned = conversation.pinnedMessages?.length
     ? conversation.pinnedMessages[conversation.pinnedMessages.length - 1]
@@ -608,12 +643,20 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
-  const dmFeeCacheKey = `dehub-dm-fee-${conversation.id}`;
+  /**
+   * Stable for the life of the thread. Keyed on conversation.id this wrote to
+   * "…-new_0x<addr>" for the first few seconds of a brand new chat and to the
+   * ObjectId ever after, so the entry it saved could never be read back — one
+   * orphaned key per person you ever messaged.
+   */
+  const draftScope = conversationIdentity(conversation);
+  const dmFeeCacheKey = `dehub-dm-fee-${draftScope}`;
   const [dmFee, setDmFeeRaw] = useState<DmFee | null>(() => {
-    try {
-      const cached = localStorage.getItem(dmFeeCacheKey);
-      if (cached) return JSON.parse(cached) as DmFee;
-    } catch {}
+    // A fee the other side has since changed must not be believed forever —
+    // the cache is here to paint the banner before the API answers, not to
+    // replace it.
+    const cached = readCachedDmFee(dmFeeCacheKey);
+    if (cached) return cached;
     if (conversation.dmFee) return conversation.dmFee;
     // Detect fee immediately from otherUser search data so banner shows before any API call
     const otherRaw = (conversation.otherUser || conversation.participants?.[0]) as any;
@@ -626,9 +669,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const setDmFee: React.Dispatch<React.SetStateAction<DmFee | null>> = (valOrFn) => {
     setDmFeeRaw(prev => {
       const next = typeof valOrFn === 'function' ? (valOrFn as (p: DmFee | null) => DmFee | null)(prev) : valOrFn;
-      if (next) {
-        try { localStorage.setItem(dmFeeCacheKey, JSON.stringify(next)); } catch {}
-      }
+      if (next) writeCachedDmFee(dmFeeCacheKey, next);
       return next;
     });
   };
@@ -1639,6 +1680,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       {/* Chat Input — always shown, disabled send when insufficient balance */}
       <ChatInput
         initialText={initialComposerText}
+        draftKey={draftScope}
         thread={smartReplyThread}
         peerName={displayName}
         onSendMessage={handleSendMessage}
