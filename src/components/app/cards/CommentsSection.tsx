@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback, createContext, useContext } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -35,11 +35,12 @@ import { TranslatableText, useTranslation } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { AudioVisualizer } from '../audio';
+import { checkImpersonation } from '@/lib/impersonation';
 import { useAuth } from '@/contexts/AuthContext';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
@@ -179,12 +180,32 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
+/**
+ * Who wrote the post these comments are on. Provided once by the section and
+ * read by every CommentItem, so the impersonation check does not have to be
+ * threaded through three render sites and a reply recursion.
+ */
+const PostCreatorContext = createContext<{
+  address?: string | null;
+  displayName?: string | null;
+  username?: string | null;
+} | null>(null);
+
 function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment, isThreadEntry }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
   const translation = useTranslation(comment.text || '');
   const shownName = comment.displayName || comment.username;
+
+  // Creator on one side, name-wearer on the other. Both chips are about the
+  // same question a reader is asking — is this really them — so they live
+  // next to the name rather than anywhere cleverer.
+  const postCreator = useContext(PostCreatorContext);
+  const { isCreator, isImpersonating } = checkImpersonation(
+    { address: comment.address, displayName: comment.displayName, username: comment.username },
+    postCreator,
+  );
 
   // Comments carry links as often as posts do — a reply pointing at another
   // post, a shop item or a community deserves the same card the post got.
@@ -225,6 +246,21 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               {shownName}
             </BadgedName>
           </button>
+          {isCreator && (
+            <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
+              Creator
+            </span>
+          )}
+          {/* Same name, different account. Said plainly, and never by hiding
+              the comment — the reader decides, this only removes the doubt. */}
+          {isImpersonating && (
+            <span
+              title="This account is not the creator of this post"
+              className="px-1.5 py-0.5 rounded-md bg-red-500/15 border border-red-500/30 text-[10px] font-semibold text-red-300 leading-none flex-shrink-0"
+            >
+              Not the creator
+            </span>
+          )}
           <NewMemberChip address={comment.address} />
           {/* The bot comments under a normal account, so without this it is
               indistinguishable from a user who picked the handle. */}
@@ -448,6 +484,26 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const { user, isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   
+  // Who the post belongs to, for the Creator / Not-the-creator chips. Shares
+  // the ['nft-info', tokenId] cache the rest of the app already fills, so on a
+  // post page this is a cache read rather than a request.
+  const { data: postInfo } = useQuery({
+    queryKey: ['nft-info', tokenId],
+    queryFn: () => getNFTInfo(tokenId),
+    enabled: !!tokenId,
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
+  const postCreator = useMemo(() => {
+    const address = postInfo?.minter || postAuthorAddress;
+    if (!address) return null;
+    return {
+      address,
+      displayName: postInfo?.minterDisplayName,
+      username: postInfo?.minterUsername || (postInfo as { mintername?: string } | undefined)?.mintername,
+    };
+  }, [postInfo, postAuthorAddress]);
+
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>(initialTab ?? 'replies');
   // The mount-time initial value alone doesn't cover a section that's already
   // open: tapping the like count while comments are expanded changes initialTab
@@ -1113,6 +1169,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   });
 
   return (
+    <PostCreatorContext.Provider value={postCreator}>
     <motion.div
       data-comments-section
       initial={{ opacity: 0 }}
@@ -1790,5 +1847,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           commentId={likersCommentId}
         />
     </motion.div>
+    </PostCreatorContext.Provider>
   );
 }
