@@ -64,12 +64,33 @@ const anonHeaders = {
   Authorization: `Bearer ${SUPABASE_KEY}`,
 };
 
+/**
+ * fetch, with "could not reach the function at all" folded into the same
+ * unavailable state as an explicit 404.
+ *
+ * Supabase's 404 for an undeployed function carries no CORS headers, so the
+ * browser rejects it at the preflight and fetch REJECTS rather than resolving
+ * — a bare `res.status === 404` check is unreachable in a real browser until
+ * the function exists. Same trap as film-reviews (#581).
+ */
+async function reach(input: string, init?: RequestInit): Promise<Response> {
+  let res: Response;
+  try {
+    res = await fetch(input, init);
+  } catch {
+    throw new SegmentsUnavailableError();
+  }
+  // Still checked, for the case where something between us and the function
+  // answers with CORS headers and a 404 — an edge rule, a proxy, a rename.
+  if (res.status === 404) throw new SegmentsUnavailableError();
+  return res;
+}
+
 export async function fetchVideoSegments(tokenId: string | number): Promise<VideoSegment[]> {
-  const res = await fetch(`${FN_URL}?token_id=${encodeURIComponent(String(tokenId))}`, {
+  const res = await reach(`${FN_URL}?token_id=${encodeURIComponent(String(tokenId))}`, {
     headers: anonHeaders,
   });
 
-  if (res.status === 404) throw new SegmentsUnavailableError();
   if (!res.ok) throw new Error(`Could not load segments (${res.status})`);
 
   const data = await res.json();
@@ -86,13 +107,11 @@ async function post(body: Record<string, unknown>): Promise<any> {
   const token = getAuthToken();
   if (!token) throw new Error('Sign in first.');
 
-  const res = await fetch(FN_URL, {
+  const res = await reach(FN_URL, {
     method: 'POST',
     headers: { ...anonHeaders, 'Content-Type': 'application/json', 'x-dehub-token': token },
     body: JSON.stringify(body),
   });
-
-  if (res.status === 404) throw new SegmentsUnavailableError();
 
   const data = await res.json().catch(() => null);
   if (!res.ok) throw new Error(data?.error ?? `Request failed (${res.status})`);
