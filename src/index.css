@@ -477,11 +477,17 @@ html {
   .dehub-intro-readmore { display: none; }
 }
 
-/* Frost the app shell while the home feed's first page is still loading, so the
-   welcome panel reads as arriving first and everything else resolves in behind
-   it. `data-feed-loading` is stamped on <html> by HomeFeed — "on" while page 1
-   is in flight, "off" for the unblur, then removed entirely so the sheet costs
-   nothing for the rest of the session.
+/* Frost the app shell so the welcome panel is the one thing in focus while
+   everything else sits behind it. `data-feed-loading` is stamped on <html> by
+   the boot script in index.html — "on" from parse time, "off" on the visitor's
+   first scroll/click/key, then removed entirely so the sheet costs nothing for
+   the rest of the session.
+
+   The whole lifecycle lives in index.html, not in React. It has to go up before
+   the bundle (or the boot skeleton and the rails paint sharp first), and it
+   comes down on intent rather than on a timer — a timer either cuts a reader
+   off mid-sentence or makes an impatient one wait. Any input at all clears it,
+   so nobody can be trapped behind it.
 
    ONE fixed pseudo-element with backdrop-filter, not `filter` on the things
    being blurred. Three reasons `filter` on siblings was wrong:
