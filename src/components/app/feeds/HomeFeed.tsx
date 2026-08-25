@@ -76,6 +76,7 @@ import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from
 import { useAuth } from '@/contexts/AuthContext';
 import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useFollowGroupList } from '@/lib/follow-groups';
+import { AD_INTERVALS, useAdLoad } from '@/lib/ad-load';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -105,8 +106,6 @@ const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
-/** A served (paid) ad card is spliced in after every N organic items. */
-const AD_INSERT_INTERVAL = 8;
 
 /** Default home sort is chronological latest; "For You" remains available as a filter option. */
 const DEFAULT_HOME_SORT = SORT_OPTIONS.find(o => o.value === 'latest') || SORT_OPTIONS[0];
@@ -513,6 +512,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // to what comes back; the infinite-scroll loader stays on screen while a
   // narrow group thins the page, which is what keeps pulling more.
   const followGroups = useFollowGroupList();
+  const adInterval = AD_INTERVALS[useAdLoad()];
   const [activeFollowGroupId, setActiveFollowGroupId] = usePersistedFeedFilter<string | null>('home', 'followGroup', null);
   const followGroupMembers = useMemo(() => {
     const group = followGroups.find(g => g.id === activeFollowGroupId);
@@ -1049,7 +1049,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
   }, [tierCappedItems, selectedCategories, hideWatched, watchedIds, isGroupFiltered, followGroupMembers]);
 
-  // Served POVR ads spliced in after every AD_INSERT_INTERVAL organic items.
+  // Served POVR ads spliced in after every `adInterval` organic items — eight
+  // by default, sixteen for a reader who asked for fewer (Settings → Content).
   // Ad serving failures return [] so the feed is never blocked by ads.
   const { data: servedAds = [] } = useServedAds('home', {
     count: 4,
@@ -1057,18 +1058,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     enabled: organicItems.length > 0,
   });
   const items = useMemo((): FeedItemType[] => {
-    if (servedAds.length === 0 || organicItems.length < AD_INSERT_INTERVAL) return organicItems;
+    if (servedAds.length === 0 || organicItems.length < adInterval) return organicItems;
     const withAds: FeedItemType[] = [];
     let adIdx = 0;
     organicItems.forEach((item, i) => {
       withAds.push(item);
-      if ((i + 1) % AD_INSERT_INTERVAL === 0 && adIdx < servedAds.length) {
+      if ((i + 1) % adInterval === 0 && adIdx < servedAds.length) {
         withAds.push({ type: 'ad', data: servedAds[adIdx] });
         adIdx++;
       }
     });
     return withAds;
-  }, [organicItems, servedAds]);
+  }, [organicItems, servedAds, adInterval]);
 
   // Auto-remove optimistic posts once their real counterpart appears in the feed
   useEffect(() => {

@@ -19,9 +19,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRates, setCreatorPlaybackRates } from '@/lib/video-preferences';
 import { sanitiseGroups, useFollowGroupList, writeGroups } from '@/lib/follow-groups';
+import { DEFAULT_AD_LOAD, normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
 
 const PREF_KEY = 'videoChannelSpeeds';
 const GROUPS_KEY = 'followGroups';
+const AD_LOAD_KEY = 'adLoad';
 const EMPTY: Record<string, number> = {};
 
 /**
@@ -38,8 +40,18 @@ function useFollowGroupSync() {
   useSyncedPreference(GROUPS_KEY, groups, apply, []);
 }
 
+/** Ad load is one string; same inbound-only shape as the groups above. */
+function useAdLoadSync() {
+  const adLoad = useAdLoad();
+  const apply = useCallback((value: unknown) => {
+    writeAdLoad(normaliseAdLoad(value));
+  }, []);
+  useSyncedPreference(AD_LOAD_KEY, adLoad, apply, DEFAULT_AD_LOAD);
+}
+
 export function ViewingPreferencesSync() {
   useFollowGroupSync();
+  useAdLoadSync();
   const [rates, setRates] = useState<Record<string, number>>(() => getCreatorPlaybackRates());
 
   // What the server last handed us. A server-applied map re-fires the same
