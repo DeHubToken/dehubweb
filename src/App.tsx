@@ -165,6 +165,7 @@ const LaunchpadPage = React.lazy(() => import("./pages/app/LaunchpadPage"));
 const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreatePage"));
 const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
 const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
+const SuperPowersPage = React.lazy(() => import("./pages/app/SuperPowersPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkEditPage = React.lazy(() => import("./pages/app/WorkEditPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
@@ -521,6 +522,7 @@ function AppContent() {
               <Route path="governance" element={null} />
               <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
               <Route path="stake" element={null} />
+              <Route path="superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />
               <Route path="bridge" element={null} />
               <Route path="top-100" element={null} />
               <Route path="jobs" element={null} />

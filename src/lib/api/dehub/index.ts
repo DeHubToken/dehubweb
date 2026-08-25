@@ -33,3 +33,4 @@ export * from './polls';
 export * from './og-image';
 export * from './solana';
 export * from './admin';
+export * from './superpowers';

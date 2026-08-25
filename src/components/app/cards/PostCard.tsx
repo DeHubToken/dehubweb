@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef, type ReactNode } from '
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
@@ -32,6 +32,7 @@ import { buildPostShareImage } from '@/lib/build-post-share-image';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { EditPostModal } from '../modals/EditPostModal';
+import { BoostModal } from '../modals/BoostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -92,6 +93,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showBoostModal, setShowBoostModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
@@ -405,6 +407,17 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                   >
                     <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                   </button>
+                  {/* Boost. Shown to every owner rather than only to badge
+                      holders: the modal explains what a badge buys and links to
+                      staking, which is worth more than hiding the row from the
+                      people who have not staked yet. */}
+                  <button
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                    disabled={!postTokenId}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                  >
+                    <Rocket className="w-5 h-5" /> {t('postOptions.boostPost')}
+                  </button>
                   {/* Only for posts that were published off-chain — a minted
                       post has nothing to do here, and 'signed' is the status
                       the backend keeps them at for life. */}
@@ -712,6 +725,14 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, post.id, edited);
         }}
+      />
+
+      {/* Boost Modal */}
+      <BoostModal
+        open={showBoostModal}
+        onOpenChange={setShowBoostModal}
+        tokenId={postTokenId}
+        postTitle={post.rawName ?? post.title ?? post.content ?? ''}
       />
 
       {/* Quote Post Modal */}
