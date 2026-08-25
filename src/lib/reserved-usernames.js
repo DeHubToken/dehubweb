@@ -39,7 +39,7 @@
  */
 export const ROUTE_SEGMENTS = [
   // --- SPA top-level routes (src/App.tsx) ---
-  'admin', 'affiliate', 'agents', 'apk', 'app', 'arcade', 'assistant',
+  'admin', 'admin-manual', 'affiliate', 'agents', 'apk', 'app', 'arcade', 'assistant',
   'auth', 'bounty', 'bridge', 'builder', 'cinema', 'communities', 'connect', 'creator', 'creators',
   'delete-account', 'depin', 'docs', 'editor', 'events', 'explore', 'features',
   'governance', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard',
