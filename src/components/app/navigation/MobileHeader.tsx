@@ -15,6 +15,7 @@ import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
+import { warmLoginSheet } from '@/components/app/LoginModal';
 // The centred slot is narrow, so this bar wears the bare mark rather than the
 // wordmark. Same asset the collapsed desktop rail uses; it is a white PNG, and
 // the light theme's `header … img[alt="dehub"]` rule inverts it to ink on paper
@@ -125,6 +126,13 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
     }
   }, [isAuthenticated, openLoginModal]);
 
+  // This button IS the login entry when signed out (rendered only then), so
+  // touch-start warms the login sheet — first-open mount dance and body chunk
+  // land before the tap completes, and the drawer swings up on the same frame.
+  const warmSheetForLogin = useCallback(() => {
+    if (!isAuthenticated) warmLoginSheet();
+  }, [isAuthenticated]);
+
   const handleBackClick = useCallback(() => {
     if (navType === 'POP') {
       navigate('/app');
@@ -181,6 +189,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         ) : (
           <button
             onClick={handleMenuClick}
+            onPointerDown={warmSheetForLogin}
             className="p-2 rounded-lg transition-colors -ml-2"
             aria-label="Log in"
           >

@@ -17,6 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
+import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
 import { LoginModal, prefetchLoginModal } from "@/components/app/LoginModal";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
@@ -320,9 +321,20 @@ function AppContent() {
   // matching the login drawer's position — instead of the full viewport.
   // See --app-main-center-x, measured in AppLayout, and the matching
   // [data-login-active] rule in index.css.
+  //
+  // The same condition drives the background render gate: openLoginModal
+  // pauses the WebGL backgrounds synchronously at tap time; here it stays
+  // paused for as long as any part of the flow is in flight, and once
+  // everything has gone quiet the resume is deferred past the sheet's exit
+  // animation (see scheduleBackgroundResume).
   useEffect(() => {
     const active = isLoginModalOpen || isConnecting || isProcessingRedirect;
     document.documentElement.toggleAttribute('data-login-active', active);
+    if (active) {
+      setBackgroundPaused(true);
+    } else {
+      scheduleBackgroundResume();
+    }
   }, [isLoginModalOpen, isConnecting, isProcessingRedirect]);
 
   // Capture ?ref=CODE / ?aff=CODE on first load (first-touch wins, 90-day cookie).
