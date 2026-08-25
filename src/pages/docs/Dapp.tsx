@@ -1473,7 +1473,7 @@ const Dapp = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.trendJackerDesc')}</p>
+                    <p className="text-muted-foreground font-exo">{t('dapp.trendJackerDesc2')}</p>
                   </CardContent>
                 </Card>
 
