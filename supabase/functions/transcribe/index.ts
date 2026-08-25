@@ -280,7 +280,7 @@ async function runJob(target: Target, mediaUrl: string, timeline: TimelineWindow
     // every "already done" check passed and nothing could ever re-run them.
     const isEmpty = result.segments.length === 0 || !result.fullText.trim();
 
-    await db.from('transcripts').update({
+    const { error: writeError } = await db.from('transcripts').update({
       status: isEmpty ? 'empty' : 'ready',
       provider: result.provider,
       model: result.model,
@@ -288,11 +288,16 @@ async function runJob(target: Target, mediaUrl: string, timeline: TimelineWindow
       segments: result.segments,
       full_text: result.fullText,
       vtt: isEmpty ? null : buildVtt(result.segments),
-      duration_seconds: result.durationSeconds ?? undefined,
+      ...(result.durationSeconds === null
+        ? {}
+        : { duration_seconds: Math.round(result.durationSeconds) }),
       speaker_map: result.speakerMap ?? {},
       summary_status: isEmpty ? 'skipped' : 'processing',
       error: null,
     }).eq('source_kind', target.kind).eq('source_ref', target.ref);
+    // Transcribing and then failing to store it is the worst outcome
+    // available: it costs the money and leaves nothing behind. Say so.
+    if (writeError) throw new Error(`could not store the transcript: ${writeError.message}`);
 
     if (!isEmpty) {
       // Fire and forget. A missing summary is a cosmetic loss; failing the
@@ -358,46 +363,58 @@ Deno.serve(async (req) => {
       throw e;
     }
 
+    /**
+     * Claim the row, and say so out loud if the write does not land.
+     *
+     * Every one of these used to be a bare `await` with the error discarded.
+     * A rejected write then read as a successful start — the caller got
+     * "processing" and no row ever appeared — which is the same class of
+     * silent failure this whole change exists to remove.
+     */
+    const claim = async (patch: Record<string, unknown>) => {
+      const { error } = await db.from('transcripts').upsert({
+        source_kind: target.kind,
+        source_ref: target.ref,
+        ...patch,
+      }, { onConflict: 'source_kind,source_ref' });
+      if (error) throw new Error(`could not write the transcript row: ${error.message}`);
+    };
+
     // "Not yet" is not "no". A post asked for seconds after upload is still
     // transcoding; the sweeper will come back for it, and the attempt counter
     // is deliberately not touched so waiting never burns a retry.
     if (media.notReady || !media.url) {
-      await db.from('transcripts').upsert({
-        source_kind: target.kind,
-        source_ref: target.ref,
+      await claim({
         status: 'pending',
         visibility: media.visibility,
-        duration_seconds: media.durationSeconds,
+        duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
         error: media.notReady ?? 'no media yet',
-      }, { onConflict: 'source_kind,source_ref' });
+      });
       return json({ status: 'pending', reason: media.notReady ?? 'no media yet' }, 202);
     }
 
     const reach = await mediaIsReachable(media.url);
     if (!reach.ok) {
-      await db.from('transcripts').upsert({
-        source_kind: target.kind,
-        source_ref: target.ref,
+      await claim({
         status: 'pending',
         visibility: media.visibility,
-        duration_seconds: media.durationSeconds,
+        duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
         error: `media not reachable yet (${reach.status})`,
-      }, { onConflict: 'source_kind,source_ref' });
+      });
       return json({ status: 'pending', reason: `media ${reach.status}` }, 202);
     }
 
     const attempts = (existing as any)?.attempts ?? 0;
-    await db.from('transcripts').upsert({
-      source_kind: target.kind,
-      source_ref: target.ref,
+    await claim({
       status: 'processing',
       visibility: media.visibility,
-      duration_seconds: media.durationSeconds,
+      // The API reports fractional seconds and the column is an integer.
+      duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
       attempts: attempts + 1,
       last_attempt_at: new Date().toISOString(),
-      speaker_timeline: target.kind === 'stage' ? timeline : undefined,
+      ...(target.kind === 'stage' ? { speaker_timeline: timeline } : {}),
       error: null,
-    }, { onConflict: 'source_kind,source_ref' });
+    });
 
     const work = runJob(target, media.url, timeline);
     // @ts-ignore EdgeRuntime is provided by Supabase
