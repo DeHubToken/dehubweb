@@ -1,4 +1,4 @@
-﻿import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+﻿import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
@@ -113,7 +113,6 @@ import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNo
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
-import settingsIcon from '@/assets/icons/settings-icon.png';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import { useTranslation } from 'react-i18next';
@@ -241,7 +240,7 @@ export default function SettingsPage() {
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <BrandIcon src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
+            <ThemedIcon icon="settings" alt="Settings" className="w-10 h-10 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('settings.title')}</h1>
               <p className="text-zinc-500 text-sm">{t('settings.manageAccount')}</p>

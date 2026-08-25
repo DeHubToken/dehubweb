@@ -8,7 +8,7 @@ import { CreateEventDrawer } from '@/components/app/events/CreateEventDrawer';
 import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
 import { SEOHead } from '@/components/SEOHead';
 import { cn } from '@/lib/utils';
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 type Filter = 'upcoming' | 'past' | 'my';
 
@@ -46,7 +46,7 @@ export default function EventsPage() {
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-2xl mx-auto">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <h1 className="text-xl font-bold text-white mb-3 flex items-center gap-3">
-            <BrandIcon src="/theme-icons/system/events.webp" alt="" className="w-10 h-10 shrink-0 object-contain" />
+            <ThemedIcon icon="events" alt="" className="w-10 h-10 shrink-0 object-contain" />
             Events
           </h1>
 
