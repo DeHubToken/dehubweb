@@ -232,8 +232,10 @@ export default function ArcadeGamePage() {
           title={game.title}
           className="h-full w-full border-0"
           allow={game.allow}
-          // allow-same-origin is deliberately withheld — see ARCADE_SANDBOX.
-          sandbox={ARCADE_SANDBOX}
+          // allow-same-origin is deliberately withheld for everything vendored
+          // from outside — see ARCADE_SANDBOX. A game written in this repo may
+          // name its own; exactly one does, and the test holds that line.
+          sandbox={game.sandbox ?? ARCADE_SANDBOX}
           // For a game with no readiness bridge, the document's own load event
           // is the hand-off: those games have real loading screens of their
           // own, driven by real download counts, and that beats anything this
