@@ -35,7 +35,7 @@ import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
-import { ProposalVerdictPill, verdictOf, type ProposalVerdict } from '@/components/app/governance/ProposalVerdict';
+import { ProposalVerdictLabel, verdictOf, type ProposalVerdict } from '@/components/app/governance/ProposalVerdict';
 import {
   useGovernanceProposals,
   useCompletedProposals,
@@ -158,7 +158,12 @@ function GovernanceCard({
           badgeLookupId={proposal.author_username || proposal.author_wallet_address}
         />
         <div className="flex items-center gap-1.5 shrink-0 pt-1">
-          {verdict && <ProposalVerdictPill verdict={verdict} />}
+          {verdict && (
+            <>
+              <ProposalVerdictLabel verdict={verdict} />
+              <span className="text-zinc-500 text-[10px]">·</span>
+            </>
+          )}
           <span className="text-zinc-500 text-[10px]">{formatTimeAgo(proposal.created_at, t)}</span>
         </div>
       </div>
@@ -747,7 +752,7 @@ export default function GovernancePage() {
               <CheckCircle2 className="w-3.5 h-3.5" />
               {t('governance.passed')}
               {passedCount > 0 && (
-                <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">{passedCount}</span>
+                <span className="text-[10px] text-white font-semibold">{passedCount}</span>
               )}
             </button>
             <button
@@ -761,7 +766,7 @@ export default function GovernancePage() {
               <X className="w-3.5 h-3.5" />
               {t('governance.rejected')}
               {rejectedCount > 0 && (
-                <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">{rejectedCount}</span>
+                <span className="text-[10px] text-white font-semibold">{rejectedCount}</span>
               )}
             </button>
           </div>
