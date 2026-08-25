@@ -75,10 +75,22 @@ async function callFraction<T>(
     body,
     headers: authHeaders(walletAddress),
   });
-  // A non-2xx from an edge function arrives as `error` with the body attached;
-  // surfacing the server's message beats "Edge Function returned a non-2xx".
+  // On a non-2xx, supabase-js sets `data` to null and hands you a
+  // FunctionsHttpError whose message is the literal string "Edge Function
+  // returned a non-2xx status code" — the response body is on `error.context`,
+  // which is an unread Response. Reading `data` for the server's message
+  // therefore found nothing and every failure in the whole fraction market
+  // surfaced that string instead of the reason.
   if (error) {
-    const detail = (data as { error?: string })?.error;
+    const context = (error as { context?: Response }).context;
+    let detail: string | undefined;
+    if (context) {
+      try {
+        detail = (await context.json())?.error;
+      } catch {
+        // Body was not JSON — fall through to the generic message.
+      }
+    }
     throw new Error(detail || error.message || 'Request failed');
   }
   if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);

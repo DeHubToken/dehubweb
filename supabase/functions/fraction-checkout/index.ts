@@ -32,7 +32,9 @@
 import {
   handleCorsPreflight,
   jsonResponse,
+  rateLimitByIp,
   requireDeHubAuth,
+  resolveDeHubAddress,
   serviceClient,
 } from "../_shared/auth.ts";
 
@@ -351,10 +353,6 @@ Deno.serve(async (req) => {
   if (preflight) return preflight;
   if (req.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
 
-  const auth = await requireDeHubAuth(req);
-  if (!auth.ok) return auth.response;
-  const wallet = auth.wallet;
-
   let body: Record<string, unknown>;
   try {
     body = await req.json();
@@ -363,6 +361,39 @@ Deno.serve(async (req) => {
   }
 
   const action = String(body.action || "");
+
+  // ── Who is asking ───────────────────────────────────────────────────────
+  //
+  // Everything that moves value needs a verified token. A quote does not: the
+  // listing row, the seller's live balance and whether DHB is paused are all
+  // public, and the browse grid is a public page. Gating it anyway meant a
+  // signed-out visitor clicking any card got a 401 before the browser had a
+  // price to show — on the one screen whose whole job is to sell things.
+  //
+  // A token is still read when one is sent, but only so a seller is told they
+  // are looking at their own listing. Nothing in this branch spends, writes or
+  // discloses anything keyed on that address, so an expired token degrades to
+  // anonymous rather than to an error, and "" never equals a real address.
+  let wallet: string;
+  if (action === "quote") {
+    // A quote costs two eth_calls against our own RPC key and the drawer
+    // re-quotes on every slider move, so the anonymous door gets a per-IP
+    // ceiling. checkRateLimit fails open, which is the right way round: a
+    // limiter that cannot reach its table must not close the market.
+    const limited = await rateLimitByIp(req, "fraction-quote", {
+      limit: 600,
+      windowMs: 60 * 60 * 1000,
+    });
+    if (limited) return limited;
+
+    const token = req.headers.get("x-dehub-token") || "";
+    wallet = (token ? await resolveDeHubAddress(token) : null) || "";
+  } else {
+    const auth = await requireDeHubAuth(req);
+    if (!auth.ok) return auth.response;
+    wallet = auth.wallet;
+  }
+
   const supabase = serviceClient();
 
   try {
