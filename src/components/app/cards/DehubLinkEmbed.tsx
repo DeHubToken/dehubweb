@@ -14,7 +14,7 @@
  * that still goes where the link went.
  */
 
-import { useMemo, type ReactNode } from 'react';
+import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Link2 } from 'lucide-react';
@@ -28,7 +28,17 @@ import { EventLinkEmbed } from '@/components/app/events/EventLinkEmbed';
 import { StageLinkEmbed } from '@/components/app/stages/StageLinkEmbed';
 import { ProfileLinkEmbed } from '@/components/app/profile/ProfileLinkEmbed';
 import { SharedPostEmbed } from '@/components/app/chat/SharedPostEmbed';
-import { FilmLinkEmbed } from '@/components/cinema/FilmLinkEmbed';
+
+/**
+ * Lazy, unlike its siblings. This switchboard is on the boot path — every feed
+ * card renders through it — and a static import pulls the whole /cinema data
+ * stack (API client, hooks, the 32-country locale table) into the entry bundle
+ * for the very large majority of sessions that never see a film link. The
+ * guardrail in scripts/check-entry-bundle.mjs fails the build over it.
+ */
+const FilmLinkEmbed = lazy(() =>
+  import('@/components/cinema/FilmLinkEmbed').then((m) => ({ default: m.FilmLinkEmbed }))
+);
 
 /**
  * What a card renders when its entity could not be loaded: the link, still
@@ -150,7 +160,14 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
     case 'stage':
       return <StageLinkEmbed stageId={link.stageId} stageShortId={link.stageShortId} fallback={fallback} />;
     case 'film':
-      return <FilmLinkEmbed link={link} compact={compact} className={className} fallback={fallback} />;
+      // fallback={null}, not the chip: the chip is what renders when the title
+      // fails to LOAD, and flashing it for one frame on every film link while
+      // the chunk arrives reads as the card failing and then correcting itself.
+      return (
+        <Suspense fallback={null}>
+          <FilmLinkEmbed link={link} compact={compact} className={className} fallback={fallback} />
+        </Suspense>
+      );
     default:
       return fallback;
   }
