@@ -270,6 +270,14 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   // Nobody hunting a handle types "usernames" — they type the thing they want
   // to change, which is their @name, or the thing they want to do with it.
   Usernames: ['username', 'handle', 'handles', 'name', 'names', '@', 'change my name', 'buy a name', 'sell my name', 'vanity', 'domain'],
+  // Sibling of Usernames — that one sells the handle, this one sells the whole
+  // account with its followers and history. People search for the outcome
+  // ("buy an account with followers"), not the noun.
+  Accounts: [
+    'account', 'accounts', 'buy account', 'sell account', 'sell my account',
+    'account marketplace', 'aged account', 'followers', 'buy followers',
+    'take over an account', 'transfer account', 'profile for sale',
+  ],
   // The example that started this: nobody looking for a game types "arcade".
   // The individual games are here as well as being rows of their own, so a
   // half-remembered title finds the grid even when it does not find the game.
