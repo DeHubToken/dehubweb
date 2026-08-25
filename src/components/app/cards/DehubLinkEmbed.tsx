@@ -28,6 +28,7 @@ import { EventLinkEmbed } from '@/components/app/events/EventLinkEmbed';
 import { StageLinkEmbed } from '@/components/app/stages/StageLinkEmbed';
 import { ProfileLinkEmbed } from '@/components/app/profile/ProfileLinkEmbed';
 import { SharedPostEmbed } from '@/components/app/chat/SharedPostEmbed';
+import { FilmLinkEmbed } from '@/components/cinema/FilmLinkEmbed';
 
 /**
  * What a card renders when its entity could not be loaded: the link, still
@@ -148,6 +149,8 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
       return <EventLinkEmbed eventNumber={link.eventNumber!} fallback={fallback} />;
     case 'stage':
       return <StageLinkEmbed stageId={link.stageId} stageShortId={link.stageShortId} fallback={fallback} />;
+    case 'film':
+      return <FilmLinkEmbed link={link} compact={compact} className={className} fallback={fallback} />;
     default:
       return fallback;
   }
