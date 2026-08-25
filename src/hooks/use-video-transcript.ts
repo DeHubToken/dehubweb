@@ -1,50 +1,36 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+/**
+ * Video adapter over the shared transcript hook.
+ *
+ * Kept as its own file because a video is addressed by token id everywhere in
+ * the app, and callers should not have to remember that the store keys on
+ * `(kind, ref)` strings. Everything else — reading, following, starting — is
+ * `use-transcript`.
+ */
+import {
+  useTranscript,
+  useTranscriptTranslation,
+  type TranscriptRecord,
+  type TranscriptSegment,
+} from './use-transcript';
 
-export interface TranscriptSegment {
-  start: number;
-  end: number;
-  text: string;
-}
-export interface TranscriptRow {
-  token_id: number;
-  status: 'absent' | 'pending' | 'processing' | 'ready' | 'failed';
-  transcript: { segments: TranscriptSegment[]; full_text: string } | null;
-  duration_seconds: number | null;
-  chunks_total: number;
-  chunks_done: number;
-  error: string | null;
-  vtt_original?: string | null;
-  source_lang?: string | null;
-}
-
-async function callTranscribe(tokenId: number, action: 'status' | 'start'): Promise<TranscriptRow> {
-  const { data, error } = await supabase.functions.invoke('transcribe-video', {
-    body: { tokenId, action },
-  });
-  if (error) throw error;
-  return data as TranscriptRow;
-}
+export type { TranscriptSegment, TranscriptRecord };
 
 export function useVideoTranscript(tokenId: number | null, enabled = true) {
-  const qc = useQueryClient();
-  const key = ['video-transcript', tokenId];
+  return useTranscript('video', tokenId ? String(tokenId) : null, enabled);
+}
 
-  const query = useQuery<TranscriptRow>({
-    queryKey: key,
-    queryFn: () => callTranscribe(tokenId!, 'status'),
-    enabled: !!tokenId && enabled,
-    refetchInterval: (q) => {
-      const s = (q.state.data as TranscriptRow | undefined)?.status;
-      return s === 'processing' || s === 'pending' ? 3000 : false;
-    },
-    staleTime: 30_000,
-  });
-
-  const start = useMutation({
-    mutationFn: () => callTranscribe(tokenId!, 'start'),
-    onSuccess: (row) => qc.setQueryData(key, row),
-  });
-
-  return { ...query, start };
+/** Translated subtitle lines for a video, from the shared translation cache.
+ *  A language another viewer already asked for costs a row read. */
+export function useTranslatedSegments(
+  transcriptId: string | null,
+  lang: string,
+  enabled: boolean,
+) {
+  const { translation, request, isFetching } = useTranscriptTranslation(transcriptId, lang, enabled);
+  return {
+    segments: translation?.status === 'ready' ? translation.segments : null,
+    status: translation?.status ?? null,
+    isFetching,
+    request,
+  };
 }
