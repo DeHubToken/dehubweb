@@ -107,7 +107,7 @@ const OG_CARD_ROUTES = new Set([
   'affiliate', 'premium', 'governance', 'leaderboard',
   'top-100', 'music', 'tv', 'cinema',
   'glossary', 'bridge', 'agents', 'assistant',
-  'creators', 'jobs', 'apk',
+  'creators', 'jobs', 'apk', 'admin-manual',
   'raffle', 'stake', 'usernames',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
@@ -904,6 +904,31 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>Skip the stores and get the latest version of DeHub right here — straight from us, no store account and no waiting on a review queue.</p>
 <p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk" style="color:#9f9">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
 <p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile" style="color:#9f9">on Google Play</a>.</p>`,
+  },
+
+  // The moderation handbook, published. The page itself is an iframe around a
+  // static document, so a crawler running no JS sees an empty shell — the copy
+  // below is the only thing a search result or an unfurl will ever carry, and
+  // it is deliberately the three golden rules rather than a summary of the
+  // page, because those are the part anyone linking to it is arguing about.
+  'admin-manual': {
+    title: 'The DeHub Moderation Handbook',
+    description: 'The rules our moderators work to, published in full. Only malicious actors get banned, adult content is marked mature rather than deleted, and everything else is left to the community.',
+    heading: 'The DeHub Moderation Handbook',
+    jsonLdType: 'TechArticle',
+    jsonLdExtra: {
+      inLanguage: 'en',
+      isAccessibleForFree: true,
+      about: 'Content moderation policy',
+    },
+    bodyHtml: `<p>DeHub is community owned and community run, so the rules its moderators work to are not an internal document. This is the handbook they read and sign before they can moderate anything, published in full.</p>
+<p>Three golden rules outrank everything else in it:</p>
+<ol>
+<li>Only malicious actors get banned — people gaming the system or scamming users. Being disliked, wrong or unpopular is not a ban.</li>
+<li>Adult or extreme content is marked mature, not deleted. It stays on the creator's profile; it just does not greet a stranger on the home page.</li>
+<li>The only thing deleted without hesitation is child sexual abuse material. Everything else is left to community moderation.</li>
+</ol>
+<p><a href="${APP_URL}/admin-manual" style="color:#9f9">Read the full handbook</a>.</p>`,
   },
 
   // The rest of SSR_STATIC_ROUTES, moved here from the Supabase fn's own
