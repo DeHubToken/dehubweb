@@ -4627,6 +4627,7 @@ export type Database = {
           fund_tx_hash: string | null
           funded_amount: number
           id: string
+          job_number: number
           job_type: Database["public"]["Enums"]["work_job_type"]
           max_units: number
           onchain_job_id: number | null
@@ -4656,6 +4657,7 @@ export type Database = {
           fund_tx_hash?: string | null
           funded_amount?: number
           id?: string
+          job_number?: number
           job_type: Database["public"]["Enums"]["work_job_type"]
           max_units?: number
           onchain_job_id?: number | null
@@ -4685,6 +4687,7 @@ export type Database = {
           fund_tx_hash?: string | null
           funded_amount?: number
           id?: string
+          job_number?: number
           job_type?: Database["public"]["Enums"]["work_job_type"]
           max_units?: number
           onchain_job_id?: number | null
