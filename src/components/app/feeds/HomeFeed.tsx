@@ -14,7 +14,7 @@ import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Radio, ChevronRight, ArrowUp } from 'lucide-react';
+import { RefreshCw, Radio, ChevronRight, ArrowUp, Rocket } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
@@ -69,6 +69,7 @@ import { useDeHubStoryUsers, useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, map
 import { scrollDocumentTo } from '@/lib/document-scroll';
 import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
+import { useBoostSlot } from '@/hooks/use-superpowers';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
@@ -762,11 +763,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     staleTime: 10 * 60 * 1000,
   });
 
-  // Fetch pinned post if provided
+  // The boost slot. A badge holder spends an allowance to put one of their
+  // posts here for a window; when several are running the server deals one
+  // weighted by tier, so what arrives is this viewer's draw rather than "the"
+  // boosted post. It renders through the pinned-post machinery below because
+  // that is the same job — one post, above the feed, filtered out of the run.
+  const { data: boostSlot } = useBoostSlot();
+
+  // An explicit ?post= link always wins. Somebody following a shared link came
+  // for that post, and quietly showing them an advert instead would be the
+  // worst possible read of the intent.
+  const boostedPostId = boostSlot ? String(boostSlot.tokenId) : undefined;
+  const featuredPostId = pinnedPostId ?? boostedPostId;
+  const isBoosted = !pinnedPostId && !!boostedPostId;
+
+  // Fetch the featured post — pinned by link, or dealt from the boost slot
   const { data: pinnedPost, isLoading: isPinnedLoading } = useQuery({
-    queryKey: ['pinned-post', pinnedPostId],
-    queryFn: () => getNFTInfo(pinnedPostId!),
-    enabled: !!pinnedPostId,
+    queryKey: ['pinned-post', featuredPostId],
+    queryFn: () => getNFTInfo(featuredPostId!),
+    enabled: !!featuredPostId,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -886,7 +901,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     
     // Filter out pinned post from all feeds
     const filterPinned = (items: any[]) => 
-      pinnedPostId ? items.filter(item => String(item.tokenId) !== String(pinnedPostId)) : items;
+      featuredPostId ? items.filter(item => String(item.tokenId) !== String(featuredPostId)) : items;
     
     const filteredVideos = filterPinned(allVideos);
     const filteredImages = filterPinned(allImages);
@@ -911,7 +926,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           return { type: 'post' as const, data: item.data };
       }
     });
-  }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, pinnedPostId]);
+  }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, featuredPostId]);
 
   // ============================================================================
   // SINGLE FEED ITEMS (when post type filter is active OR global sort mode)
@@ -923,8 +938,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     let allItems = singleFeed.data.pages.flatMap(page => page.items || []);
     
     // Filter out pinned post
-    const filteredItems = pinnedPostId 
-      ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
+    const filteredItems = featuredPostId 
+      ? allItems.filter(item => String(item.tokenId) !== String(featuredPostId))
       : allItems;
     
     // Map to feed item types
@@ -948,7 +963,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     };
     
     return filteredItems.map(mapItem);
-  }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value]);
+  }, [useInterleavedFeed, singleFeed.data, featuredPostId, selectedSort.value]);
 
   // Final organic items before filtering
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
@@ -1957,9 +1972,24 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 </div>
               )}
               
-              {/* Render pinned post */}
+              {/* Render the featured post — pinned by link, or boosted */}
               {pinnedItem && (
                 <div className="mb-3">
+                  {/*
+                    A boosted post says so. Not a legal point, a product one:
+                    the feed's whole pitch is that engagement decides reach, and
+                    an unlabelled paid slot at position zero makes that untrue.
+                    Labelled, it stays true — this is somebody spending a badge,
+                    and the label is what says so.
+                  */}
+                  {isBoosted && (
+                    <div className="flex items-center gap-1.5 px-1 pb-1.5">
+                      <Rocket className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                        {t('superpowers.boostedLabel')}
+                      </span>
+                    </div>
+                  )}
                   {renderMasonryGrid([renderFeedItem(pinnedItem, -1)], [pinnedItem])}
                 </div>
               )}
