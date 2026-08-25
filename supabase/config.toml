@@ -106,6 +106,10 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.get-web3auth-config]
     verify_jwt = false
+  # Public catalogue proxy for /cinema. No user context — it exists to keep the
+  # JustWatch partner token server-side and to add CORS the upstream lacks.
+  [functions.justwatch]
+    verify_jwt = false
   [functions.legacy-account-check]
     verify_jwt = true
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
