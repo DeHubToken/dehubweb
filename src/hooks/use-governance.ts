@@ -1,15 +1,27 @@
 /**
  * Governance Hook
  * ===============
- * Data fetching and mutations for the governance proposal board.
- * Uses Supabase directly with weighted voting based on badge tier.
+ * Data fetching and mutations for the governance proposal board. Reads come
+ * straight from Supabase; writes do not.
+ *
+ * Votes and proposals used to be written directly to PostgREST, with the
+ * vote's badge weight computed here and sent up as a number. The table's RLS
+ * authenticated those writes against the caller's own `x-wallet-address`
+ * header, so both the voter and the weight were whatever the request said they
+ * were. Both now go through edge functions that resolve the wallet from a
+ * verified DeHub token and derive the weight server-side from the badge
+ * balance the API holds. What `getVoteWeight` returns here is a preview of
+ * that answer, for the panel that tells someone what their vote is worth.
  */
 
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { getBadgeName, BADGE_LEVELS } from '@/lib/staking-badges';
+import { getBadgeName, BADGE_LEVELS, type BadgeContext } from '@/lib/staking-badges';
+import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
+import { useBadgeScale } from '@/hooks/use-badge-scale';
+import { dehubAuthHeaders } from '@/lib/ai-invoke';
 import { escapeFilterValue } from '@/lib/postgrest-filter';
 import { Interface } from 'ethers';
 import {
@@ -44,6 +56,8 @@ export interface GovernanceProposal {
   comment_count: number;
   created_at: string;
   updated_at: string;
+  /** When voting closes. Null on the rows that predate the seven-day window. */
+  voting_ends_at: string | null;
 }
 
 /**
@@ -66,15 +80,74 @@ const BADGE_VOTE_WEIGHT: Record<string, number> = {
   "Meglodon": 13,
 };
 
-export function getVoteWeight(badgeBalance: number | undefined | null, username?: string | null): { weight: number; badgeName: string | null } {
-  const badgeName = getBadgeName(badgeBalance, username);
+/**
+ * The weight a badge balance votes with.
+ *
+ * `context` carries the ladder scale and the holder's grandfathered tier, and
+ * both matter here: without the lock this returns the tier the live ladder
+ * gives them, which can be lower than the badge they are shown everywhere else
+ * on the site. The server resolves the same three inputs, so passing them
+ * keeps the number on screen equal to the number that gets recorded.
+ */
+export function getVoteWeight(
+  badgeBalance: number | undefined | null,
+  username?: string | null,
+  context?: BadgeContext,
+): { weight: number; badgeName: string | null } {
+  const badgeName = getBadgeName(badgeBalance, username, context);
   if (!badgeName) return { weight: 0, badgeName: null };
   return { weight: BADGE_VOTE_WEIGHT[badgeName] || 1, badgeName };
+}
+
+/**
+ * The signed-in user's own vote weight, resolved the way the server will.
+ *
+ * The account row's `badgeBalance` lags the chain, so a fresh buyer would be
+ * told they cannot vote while the badge next to their name says otherwise;
+ * `preferLiveBalance` promotes them the moment the tokens land, and the lock
+ * and scale come from the same place every other badge on the page reads.
+ */
+export function useSelfVoteWeight(): { weight: number; badgeName: string | null } {
+  const { user } = useAuth();
+  const self = useSelfBadge();
+  const scale = useBadgeScale();
+  const balance = preferLiveBalance(user?.badgeBalance as number | undefined, self.balance);
+  return getVoteWeight(balance, user?.username, { scale, lock: self.lock });
 }
 
 export { BADGE_VOTE_WEIGHT };
 
 const PAGE_SIZE = 15;
+
+/**
+ * Call a governance edge function and surface the reason it refused.
+ *
+ * On a non-2xx, supabase-js nulls `data` and throws a FunctionsHttpError whose
+ * message is the literal "Edge Function returned a non-2xx status code" — the
+ * server's message is on `error.context`, an unread Response. Every refusal
+ * here is one a voter needs to read ("voting has closed", "you need a badge"),
+ * so it is worth unwrapping rather than showing that string.
+ */
+async function callGovernance<T>(name: string, body: Record<string, unknown>): Promise<T> {
+  const { data, error } = await supabase.functions.invoke(name, {
+    body,
+    headers: dehubAuthHeaders(),
+  });
+  if (error) {
+    const context = (error as { context?: Response }).context;
+    let detail: string | undefined;
+    if (context) {
+      try {
+        detail = (await context.json())?.error;
+      } catch {
+        // Body was not JSON — fall through to the generic message.
+      }
+    }
+    throw new Error(detail || error.message || 'Request failed');
+  }
+  if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+  return data as T;
+}
 
 export function useGovernanceProposals(sort: GovernanceSort, search: string) {
   return useInfiniteQuery({
@@ -173,7 +246,7 @@ const GOVERNANCE_PROPOSAL_FEE = 10000; // DHB per proposal
 
 export function useSubmitGovernanceProposal() {
   const queryClient = useQueryClient();
-  const { walletAddress, user } = useAuth();
+  const { walletAddress } = useAuth();
 
   return useMutation({
     mutationFn: async ({ title, description }: { title: string; description: string }) => {
@@ -203,24 +276,19 @@ export function useSubmitGovernanceProposal() {
         { context: 'Governance proposal fee', chainId: BASE_CHAIN_ID }
       );
 
-      await txResult.wait(1);
+      const receipt = await txResult.wait(1);
       toast.dismiss('governance-proposal-fee');
 
-      // ── Record proposal in DB ──────────────────────────────
-      const { data, error } = await supabase
-        .from('governance_proposals')
-        .insert({
-          title: title.trim(),
-          description: description.trim(),
-          author_wallet_address: walletAddress.toLowerCase(),
-          author_username: user?.username || null,
-          author_avatar: user?.avatarImageUrl || null,
-        })
-        .select()
-        .single()
-        .setHeader('x-wallet-address', walletAddress.toLowerCase());
-      if (error) throw error;
-      return data;
+      // ── Record proposal, once the chain agrees the fee was paid ──
+      // The row is written by the edge function, not from here: the insert
+      // this replaced had no idea a fee existed, so posting straight to
+      // PostgREST created a free proposal.
+      const result = await callGovernance<{ proposal: GovernanceProposal }>('governance-proposal', {
+        title: title.trim(),
+        description: description.trim(),
+        txHash: receipt?.hash || txResult.hash,
+      });
+      return result.proposal;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });
@@ -240,7 +308,7 @@ export function useVoteGovernanceProposal() {
   const { walletAddress } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ proposalId, voteType, currentVote, voteWeight, badgeName }: {
+    mutationFn: async ({ proposalId, voteType, voteWeight }: {
       proposalId: string;
       voteType: 1 | -1;
       currentVote: number | undefined;
@@ -250,36 +318,19 @@ export function useVoteGovernanceProposal() {
       if (!walletAddress) throw new Error('Not authenticated');
       if (voteWeight === 0) throw new Error('You must hold tokens to vote');
 
-      const wallet = walletAddress.toLowerCase();
-
-      if (currentVote === voteType) {
-        // Remove vote
-        const { error } = await supabase
-          .from('governance_votes')
-          .delete()
-          .eq('proposal_id', proposalId)
-          .eq('wallet_address', wallet)
-          .setHeader('x-wallet-address', wallet);
-        if (error) throw error;
-        return { action: 'removed' as const };
-      } else {
-        // ── Record vote in DB ──────────────────────────────────
-        const { error } = await supabase
-          .from('governance_votes')
-          .upsert(
-            {
-              proposal_id: proposalId,
-              wallet_address: wallet,
-              vote_type: voteType,
-              vote_weight: voteWeight,
-              badge_name: badgeName,
-            },
-            { onConflict: 'proposal_id,wallet_address' }
-          )
-          .setHeader('x-wallet-address', wallet);
-        if (error) throw error;
-        return { action: 'voted' as const };
-      }
+      // Three things are deliberately not sent: the weight, the badge name and
+      // whether this click is a withdrawal. The function reads the badge
+      // balance for the wallet its token belongs to and decides the first two;
+      // it compares against the stored vote to decide the third. Deciding the
+      // toggle here meant reading `currentVote`, which is a render old — the
+      // old code read it from the props in the mutation and from the cache in
+      // the optimistic update, so the two could disagree and a withdrawal
+      // would land as a re-vote. `voteWeight` stays in the arguments only
+      // because the optimistic update needs a number to move the bar by.
+      return callGovernance<{ action: 'voted' | 'removed'; weight: number; badgeName: string | null }>(
+        'governance-vote',
+        { proposalId, voteType },
+      );
     },
     onMutate: async ({ proposalId, voteType, voteWeight }) => {
       await queryClient.cancelQueries({ queryKey: ['governance-proposals'] });

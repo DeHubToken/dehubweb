@@ -35,7 +35,7 @@ import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
-import { ProposalVerdictLabel, verdictOf, type ProposalVerdict } from '@/components/app/governance/ProposalVerdict';
+import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed, type ProposalVerdict } from '@/components/app/governance/ProposalVerdict';
 import {
   useGovernanceProposals,
   useCompletedProposals,
@@ -43,7 +43,7 @@ import {
   useTotalGovernanceCount,
   useSubmitGovernanceProposal,
   useVoteGovernanceProposal,
-  getVoteWeight,
+  useSelfVoteWeight,
   BADGE_VOTE_WEIGHT,
   type GovernanceSort,
   type GovernanceProposal,
@@ -136,9 +136,15 @@ function GovernanceCard({
     );
   };
 
-  // Show user's vote weight
-  const { weight: userWeight, badgeName: userBadge } = getVoteWeight(userBadgeBalance, username);
+  // Show user's vote weight — resolved the way the server will resolve it,
+  // lock and ladder scale included, so the number on the button is the number
+  // that gets recorded.
+  const { weight: userWeight, badgeName: userBadge } = useSelfVoteWeight();
   const badgeImageUrl = getBadgeUrl(userBadgeBalance, username);
+  const timeLeft = votingTimeLeft(proposal, t);
+  // The window can run out before the cron pass flips the row, so the buttons
+  // read the clock rather than only the status.
+  const votingClosed = isVotingClosed(proposal);
 
   return (
     <div
@@ -161,6 +167,12 @@ function GovernanceCard({
           {verdict && (
             <>
               <ProposalVerdictLabel verdict={verdict} />
+              <span className="text-zinc-500 text-[10px]">·</span>
+            </>
+          )}
+          {timeLeft && (
+            <>
+              <span className="text-white text-[10px] font-semibold">{timeLeft}</span>
               <span className="text-zinc-500 text-[10px]">·</span>
             </>
           )}
@@ -215,7 +227,7 @@ function GovernanceCard({
             dislikeCount={proposal.dislike_count ?? 0}
             commentCount={proposal.comment_count}
             voteWeight={userWeight}
-            disabled={voteDisabled || !!verdict}
+            disabled={voteDisabled || votingClosed}
           />
         </div>
 
@@ -541,7 +553,7 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 // ──────────────────────────────────────────────────
 function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | undefined; username: string | null | undefined }) {
   const { t } = useTranslation();
-  const { weight, badgeName } = getVoteWeight(badgeBalance, username);
+  const { weight, badgeName } = useSelfVoteWeight();
   const badgeImageUrl = getBadgeUrl(badgeBalance, username);
   const [showTiers, setShowTiers] = useState(false);
 
@@ -623,20 +635,21 @@ export default function GovernancePage() {
   const userBadgeBalance = user?.badgeBalance as number | undefined;
   const username = user?.username;
 
+  const { weight: selfWeight, badgeName: selfBadge } = useSelfVoteWeight();
+
   const handleVote = useCallback(
     (proposalId: string, voteType: 1 | -1, currentVote: number | undefined) => {
       if (!isAuthenticated) {
         openLoginModal();
         return;
       }
-      const { weight, badgeName } = getVoteWeight(userBadgeBalance, username);
-      if (weight === 0) {
+      if (selfWeight === 0) {
         toast.error(t('governance.mustHoldTokens'));
         return;
       }
-      voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: weight, badgeName });
+      voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: selfWeight, badgeName: selfBadge });
     },
-    [isAuthenticated, openLoginModal, voteMutation, userBadgeBalance, username, t]
+    [isAuthenticated, openLoginModal, voteMutation, selfWeight, selfBadge, t]
   );
 
   // Drag-to-swipe for governance page tabs indicator
