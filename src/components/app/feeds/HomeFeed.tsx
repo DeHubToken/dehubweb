@@ -174,10 +174,6 @@ interface FilterSectionProps {
   onPostTypeSelect: (v: PostTypeFilterValue) => void;
   contentFilters: ContentTypeFilters;
   onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
-  /** Watch-history filter — offered only to signed-in readers. */
-  hideWatched: boolean;
-  onHideWatchedToggle: () => void;
-  canHideWatched: boolean;
   onReset: () => void;
 }
 
@@ -194,9 +190,6 @@ function SortFilterSection({
   onPostTypeSelect,
   contentFilters,
   onContentFilterToggle,
-  hideWatched,
-  onHideWatchedToggle,
-  canHideWatched,
   onReset,
 }: FilterSectionProps) {
   const { t } = useI18n();
@@ -302,24 +295,6 @@ function SortFilterSection({
           />
         </div>
       </div>
-
-      {/* Already watched. Videos only — a watch record on an image or text
-          post just means it sat on screen for two seconds, which is not the
-          same claim at all (see hooks/use-watched-videos.ts). */}
-      {canHideWatched && (
-        <div className="flex flex-col gap-2">
-          <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.watching', 'Watching')}</span>
-          <div className="relative">
-            <GlassFilterRow
-              items={[{ key: 'hide-watched' as const, label: t('filters.hideWatched', 'Hide watched') }]}
-              activeKeys={hideWatched ? ['hide-watched' as const] : []}
-              onSelect={onHideWatchedToggle}
-              borderRadius="0.75rem"
-              buttonClassName="px-3 py-2 rounded-xl text-sm"
-            />
-          </div>
-        </div>
-      )}
 
       {/* Reset filters - bottom right. z-50 keeps it above the scroll rows
           (z-40), which overlap it and otherwise swallow the tap. */}
@@ -511,8 +486,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
 
   const { walletAddress, isAuthenticated } = useAuth();
-  // Standing preference, so localStorage rather than the session filter store.
-  const [hideWatched, setHideWatched] = useHideWatched();
+  // Set in Settings → Content, read here. A standing viewing preference, not a
+  // per-visit filter, so it lives in localStorage and not the filter store.
+  const [hideWatched] = useHideWatched();
   const { watchedIds } = useWatchedVideoIds(hideWatched);
   const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
 
@@ -1816,16 +1792,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 }}
                 contentFilters={optimisticContentFilters}
                 onContentFilterToggle={toggleContentFilter}
-                hideWatched={hideWatched}
-                onHideWatchedToggle={() => setHideWatched(!hideWatched)}
-                canHideWatched={isAuthenticated}
                 onReset={() => {
                   setSelectedSort(DEFAULT_HOME_SORT);
                   setSelectedCategories([]);
                   setSelectedDate(DATE_FILTER_OPTIONS[0]);
                   setSelectedPostType('all');
                   resetContentFilters();
-                  setHideWatched(false);
                 }}
               />
             </div>

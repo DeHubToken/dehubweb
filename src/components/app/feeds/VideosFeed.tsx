@@ -14,7 +14,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Play, ChevronRight, Radio, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { RefreshCw, Play, ChevronRight, Radio, Eye, Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
@@ -458,9 +458,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
   // Hide watched sticks across sessions (localStorage, not the session-scoped
   // filter store) — it is a standing preference, not a filter you set once.
-  const [hideWatched, setHideWatched] = useHideWatched();
+  // Owned by Settings → Content, not by this panel: it is a standing viewing
+  // preference rather than a filter you set for one visit.
+  const [hideWatched] = useHideWatched();
   const { watchedIds } = useWatchedVideoIds(hideWatched);
-  const activeFilterClass = useActiveFilterClass();
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
@@ -521,8 +522,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     setSelectedDuration(DURATION_FILTERS[0]);
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
     resetContentFilters();
-    setHideWatched(false);
-  }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, resetContentFilters, setHideWatched, beginFilterTransition]);
+  }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
 
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
@@ -709,7 +709,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }, [scrollFeed.data]);
 
   // Check if any client-side filters are active
-  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked || hideWatched;
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
@@ -835,29 +835,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   </div>
                 </div>
               </div>
-              {/* Already watched. Signed out there is no history to hide by, so
-                  the row is not offered at all. */}
-              {isAuthenticated && (
-                <div className="flex flex-col gap-2">
-                  <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.watching', 'Watching')}</span>
-                  <div className="relative">
-                    <div className="flex gap-1.5 pl-1 pr-6 py-1">
-                      <button
-                        data-feed-filter-button
-                        data-active={hideWatched ? 'true' : undefined}
-                        onClick={() => setHideWatched(!hideWatched)}
-                        className={cn(
-                          'flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                          hideWatched ? activeFilterClass : INACTIVE_FILTER_CLASS
-                        )}
-                      >
-                        <EyeOff className="w-3.5 h-3.5" />
-                        {t('filters.hideWatched', 'Hide watched')}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
               {/* Reset filters - bottom right */}
               <button
                 onClick={resetAllFilters}
