@@ -5,12 +5,22 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useTrendingTopic } from './use-superpowers';
 
 export type TopicPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
 
 export interface CategoryCount {
   name: string;
   post_count: number;
+  /**
+   * True when a badge holder paid a Trend Jacker to put this here.
+   *
+   * The row must be LABELLED wherever it renders. The list's whole pitch is
+   * that it reflects what people are posting about, and an unlabelled paid
+   * entry at position one makes that untrue — the same argument the boosted
+   * post in the feed carries.
+   */
+  boosted?: boolean;
 }
 
 const EXCLUDED_CATEGORIES = new Set(['general', '', '-', 'other']);
@@ -154,7 +164,41 @@ async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): P
   return withTopTenPlaceholders(computed);
 }
 
+/**
+ * Put the paid category first, keeping its real count.
+ *
+ * Done HERE rather than in the list component, because two surfaces render
+ * this — the desktop rail and the Explore page — and a holder who bought the
+ * top of the list should get it on both rather than on whichever one
+ * remembered.
+ *
+ * Its **real** count is kept, never inflated. A trend that says 3 posts and
+ * sits at number one is honest about what was bought: the position, not the
+ * popularity. If the category has nothing in this window it still shows,
+ * at zero, which is the truth for that window.
+ *
+ * A placeholder row is dropped to make space rather than a real one, so
+ * jacking never pushes an organically trending category off the list until
+ * the list is genuinely full.
+ */
+function withBoosted(items: CategoryCount[], boosted: string | null | undefined): CategoryCount[] {
+  const name = normalizeCategoryName(boosted);
+  if (!name) return items;
+
+  const existing = items.find((c) => c.name === name);
+  const rest = items.filter((c) => c.name !== name);
+
+  // Drop one trailing placeholder if there is one, so the list keeps its
+  // length rather than growing by a row on some periods and not others.
+  const lastPlaceholder = rest.map((c) => c.name).lastIndexOf('-');
+  if (lastPlaceholder >= 0) rest.splice(lastPlaceholder, 1);
+
+  return [{ name, post_count: existing?.post_count ?? 0, boosted: true }, ...rest];
+}
+
 export function useTrendingCategories(period: TopicPeriod = 'all') {
+  const { data: jacked } = useTrendingTopic();
+
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories', period],
     queryFn: () => fetchTrendingCategories(period),
@@ -163,6 +207,9 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     placeholderData: (prev) => prev,
+    // `select` rather than a useMemo over `data`, so every consumer of this
+    // hook gets the same spliced list without each having to remember.
+    select: (items) => withBoosted(items, jacked?.category),
   });
 }
 
@@ -170,6 +217,8 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
  * Fetch ALL categories (no top-10 limit) for infinite scroll in the "all" period
  */
 export function useAllTrendingCategories() {
+  const { data: jacked } = useTrendingTopic();
+
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories-all-unlimited'],
     queryFn: () => fetchTrendingCategories('all', true),
@@ -177,5 +226,6 @@ export function useAllTrendingCategories() {
     gcTime: 30 * 60_000,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
+    select: (items) => withBoosted(items, jacked?.category),
   });
 }

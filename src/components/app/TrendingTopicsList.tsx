@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, Loader2 } from 'lucide-react';
+import { LayoutGrid, Loader2, Rocket } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
@@ -195,6 +195,18 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
                       <span className="text-sm text-zinc-200 truncate transition-colors">
                         {cat.name}
                       </span>
+                      {/*
+                        A jacked category says so. The list's pitch is that it
+                        reflects what people are posting about, and an
+                        unlabelled paid entry at position one makes that
+                        untrue — the same argument the boosted post carries in
+                        the feed. The count beside it stays real, so the row is
+                        honest about what was bought: the position, not the
+                        popularity.
+                      */}
+                      {cat.boosted && (
+                        <Rocket className="w-3 h-3 text-zinc-500 shrink-0" aria-label="Boosted" />
+                      )}
                     </div>
                     <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
                       {isPlaceholder ? '-' : `${cat.post_count} ${cat.post_count === 1 ? 'post' : 'posts'}`}

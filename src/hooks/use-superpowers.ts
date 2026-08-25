@@ -25,6 +25,7 @@ import {
   cancelBoost,
   fetchBoostSlot,
   fetchFrontRow,
+  fetchTrendingTopic,
   joinCrewBoost,
   fetchSuperpowerStatus,
   fetchSuperpowerTiers,
@@ -100,6 +101,25 @@ export function useSuperpowerLadder() {
  * Never gated on being signed in — a stage is public, and most of the
  * audience on a shared link is signed out.
  */
+/**
+ * The category holding the trending slot, or null.
+ *
+ * Same cache window as the boost slot and the front row, and for the same
+ * reason: the server deals a fresh weighted draw on every call, so the window
+ * on this side IS the rotation.
+ */
+export function useTrendingTopic() {
+  return useQuery({
+    queryKey: ['superpowers', 'trending-topic'],
+    queryFn: fetchTrendingTopic,
+    staleTime: SLOT_ROTATION_MS,
+    gcTime: SLOT_ROTATION_MS,
+    refetchOnWindowFocus: false,
+    // The trending list renders perfectly well without it.
+    retry: false,
+  });
+}
+
 export function useFrontRow() {
   return useQuery({
     queryKey: ['superpowers', 'front-row'],
@@ -160,6 +180,7 @@ export function useBookBoost() {
       targetTiers,
       commentId,
       stageId,
+      category,
     }: {
       tokenId: number;
       power?: SuperPowerKey;
@@ -172,8 +193,16 @@ export function useBookBoost() {
       commentId?: string;
       /** front_row: a Stage you host. */
       stageId?: string;
+      /** trend_jacker: a category you already post in. */
+      category?: string;
     }) =>
-      bookBoost(tokenId, power, startAt, { targetAccount, targetTiers, commentId, stageId }),
+      bookBoost(tokenId, power, startAt, {
+        targetAccount,
+        targetTiers,
+        commentId,
+        stageId,
+        category,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['superpowers', 'status'] });
       // So the holder can see their own boost land, rather than waiting out
