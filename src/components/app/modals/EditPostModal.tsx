@@ -5,8 +5,8 @@
  * Only visible to the post creator (minter).
  */
 
-import { useState, useEffect } from 'react';
-import { Pencil, Loader2, X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Pencil, Loader2, X, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,7 +18,7 @@ import {
   DrawerTitle,
   DrawerDescription,
 } from '@/components/ui/drawer';
-import { editPost } from '@/lib/api/dehub';
+import { editPost, replaceVideoFile } from '@/lib/api/dehub';
 import type { ContentRating } from '@/lib/api/dehub/types';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -40,6 +40,8 @@ interface EditPostModalProps {
   currentCategories?: string[];
   currentCommentsDisabled?: boolean;
   currentContentRating?: ContentRating;
+  /** The post has a video file to swap. False for text and image posts, which have none. */
+  canReplaceVideo?: boolean;
   onSuccess?: (edited: EditPostResult) => void;
 }
 
@@ -52,6 +54,7 @@ export function EditPostModal({
   currentCategories = [],
   currentCommentsDisabled = false,
   currentContentRating,
+  canReplaceVideo = false,
   onSuccess,
 }: EditPostModalProps) {
   const [name, setName] = useState(currentTitle);
@@ -61,6 +64,24 @@ export function EditPostModal({
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
   const [isMature, setIsMature] = useState(currentContentRating === 'mature');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  const [isReplacing, setIsReplacing] = useState(false);
+  const [replaceProgress, setReplaceProgress] = useState(0);
+
+  const handleReplaceVideo = async (file: File) => {
+    setIsReplacing(true);
+    setReplaceProgress(0);
+    try {
+      await replaceVideoFile(tokenId, file, { onProgress: setReplaceProgress });
+      toast.success('New file uploaded — it will swap in once it finishes processing');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Could not replace that file';
+      toast.error(message);
+    } finally {
+      setIsReplacing(false);
+      setReplaceProgress(0);
+    }
+  };
 
   // Sync with props when modal opens
   useEffect(() => {
@@ -295,6 +316,46 @@ export function EditPostModal({
               </span>
             </button>
           </div>
+
+          {/* Replace the file. Only for posts that have one — a text or image
+              post has nothing to swap, and the server refuses those anyway. */}
+          {canReplaceVideo && (
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-zinc-300">Video file</Label>
+              <input
+                ref={videoInputRef}
+                type="file"
+                accept="video/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = '';
+                  if (file) void handleReplaceVideo(file);
+                }}
+              />
+              <button
+                type="button"
+                disabled={isReplacing || isSubmitting}
+                onClick={() => videoInputRef.current?.click()}
+                className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors text-left disabled:opacity-60"
+              >
+                <span className="min-w-0">
+                  <span className="block text-white text-sm font-medium">
+                    {isReplacing ? `Uploading… ${replaceProgress}%` : 'Replace video file'}
+                  </span>
+                  <span className="block text-zinc-500 text-xs mt-0.5">
+                    Keeps this post's link, views and comments. The old file plays until the new
+                    one finishes processing.
+                  </span>
+                </span>
+                {isReplacing ? (
+                  <Loader2 className="w-5 h-5 shrink-0 text-zinc-400 animate-spin" />
+                ) : (
+                  <Upload className="w-5 h-5 shrink-0 text-zinc-400" />
+                )}
+              </button>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex gap-3 pt-2">
