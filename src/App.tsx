@@ -550,6 +550,7 @@ function AppContent() {
               <Route path="stores" element={null} />
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="usernames" element={null} />
+              <Route path="accounts" element={null} />
               <Route path="ads" element={null} />
               <Route path="work" element={null} />
               <Route path="work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
@@ -583,6 +584,9 @@ function AppContent() {
             {/* /usernames alias — the canonical form the worker links and
                 sitemaps, so the SPA has to answer it too. */}
             <Route path="/usernames" element={null} />
+
+            {/* /accounts alias — same shape as /usernames above. */}
+            <Route path="/accounts" element={null} />
 
 
             {/* Stage invite links. /stages/:id is the short numeric share form

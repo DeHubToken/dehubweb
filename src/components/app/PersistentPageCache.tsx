@@ -61,6 +61,7 @@ const EventsPage = lazyWithRetry(() => import('@/pages/app/EventsPage'));
 const StoresPage = lazyWithRetry(() => import('@/pages/app/StoresPage'));
 const FractionsPage = lazyWithRetry(() => import('@/pages/app/FractionsPage'));
 const UsernamesPage = lazyWithRetry(() => import('@/pages/app/UsernamesPage'));
+const AccountsPage = lazyWithRetry(() => import('@/pages/app/AccountsPage'));
 const WorkPage = lazyWithRetry(() => import('@/pages/app/WorkPage'));
 const AffiliatePage = lazyWithRetry(() => import('@/pages/app/AffiliatePage'));
 const AdsPage = lazyWithRetry(() => import('@/pages/app/AdsPage'));
@@ -109,6 +110,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'stores', path: '/app/stores', component: StoresPage, skeleton: GenericPageSkeleton },
   { key: 'fractions', path: '/app/fractions', component: FractionsPage, skeleton: GridSkeleton },
   { key: 'usernames', path: ['/app/usernames', '/usernames'], component: UsernamesPage, skeleton: GridSkeleton },
+  { key: 'accounts', path: ['/app/accounts', '/accounts'], component: AccountsPage, skeleton: GridSkeleton },
   { key: 'work', path: ['/app/work', '/work'], component: WorkPage, skeleton: GenericPageSkeleton },
   { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
   { key: 'ads', path: '/app/ads', component: AdsPage, skeleton: GenericPageSkeleton },

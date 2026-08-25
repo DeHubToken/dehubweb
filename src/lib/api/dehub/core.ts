@@ -460,7 +460,14 @@ export async function apiCall<T>(
     }
 
 
-    throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
+    // Carry the HTTP status so callers that must branch on it (the account
+    // marketplace claim treats a 409 as "retry to resume", not as failure)
+    // can, without pattern-matching the message text.
+    const apiError = new Error(errorData.message || errorData.error || `API error: ${response.status}`) as Error & {
+      httpStatus?: number;
+    };
+    apiError.httpStatus = response.status;
+    throw apiError;
   }
 
   return response.json();
