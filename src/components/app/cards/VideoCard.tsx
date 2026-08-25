@@ -2475,6 +2475,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       <EditPostModal
         open={showEditModal}
         onOpenChange={setShowEditModal}
+        canReplaceVideo={!video.isAudio}
         tokenId={video.id}
         currentTitle={video.title}
         currentDescription={video.description ?? ''}
