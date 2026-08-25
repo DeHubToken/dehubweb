@@ -121,7 +121,7 @@ export function SmartReplyRail({
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => s && onPick(s.text)}
                   aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
-                  className={`group min-w-0 min-h-[108px] lg:min-h-[92px] flex flex-col justify-center border py-3 text-left transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
+                  className={`group min-w-0 min-h-[108px] lg:min-h-[92px] flex flex-col items-center justify-center border py-3 text-center transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
                     // The cut-out bites a notch radius into the edge each card
                     // turns to the orb, and the mask erases card CONTENT, not
                     // just fill — so the inner padding has to clear it.
@@ -136,10 +136,16 @@ export function SmartReplyRail({
                 >
                   {s ? (
                     <>
-                      <span className="text-[9px] uppercase tracking-[0.1em] leading-4 text-zinc-500 transition-colors group-hover:text-zinc-300">
+                      {/* Both cards must present the same content height, or
+                          justify-center drops one card's label a few pixels
+                          below the other's. The label is one line, always, and
+                          the body reserves its full two lines whether it needs
+                          them or not — so the two rows line up by geometry
+                          rather than by luck of the drafted text length. */}
+                      <span className="w-full truncate text-[9px] uppercase tracking-[0.1em] leading-4 text-zinc-500 transition-colors group-hover:text-zinc-300">
                         {s.label}
                       </span>
-                      <span className="mt-1.5 text-[13px] leading-[1.35] text-white line-clamp-3">
+                      <span className="mt-1.5 h-[35px] w-full text-[13px] leading-[1.35] text-white line-clamp-2">
                         {s.text}
                       </span>
                     </>
