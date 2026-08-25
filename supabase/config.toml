@@ -80,6 +80,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.fetch-link-preview]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.fraction-checkout]
+    verify_jwt = false
   [functions.general-ai-chat]
     verify_jwt = false
   [functions.generate-3d]
