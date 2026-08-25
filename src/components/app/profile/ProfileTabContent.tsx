@@ -40,6 +40,12 @@ import lock3dIcon from '@/assets/lock-3d.png';
 import home3dIcon from '@/assets/icons/home-3d-icon.png';
 import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
 
+/** Empty-state copy when the channel toolbar's sort/search is what emptied the tab. */
+const NO_MATCHES_COPY = {
+  title: 'Nothing matches',
+  subtitle: 'Try a different search, or clear it to see everything',
+} as const;
+
 // Height estimates for off-screen cards so content-visibility can reserve
 // scroll space without measuring — mirrors the home feed (HomeFeed.tsx).
 const CV_INTRINSIC = { post: '320px', image: '640px', video: '520px' } as const;
@@ -142,6 +148,8 @@ interface ProfileTabContentProps {
   isFollowing: boolean;
   isPending: boolean;
   isViewingOwnProfile: boolean | undefined;
+  /** A sort or search from the channel toolbar is narrowing what's shown. */
+  isContentFiltered?: boolean;
   // Optimistic
   optimisticPosts: OptimisticPost[];
   // Subscriptions
@@ -171,6 +179,7 @@ export function ProfileTabContent({
   isFollowing,
   isPending,
   isViewingOwnProfile,
+  isContentFiltered = false,
   optimisticPosts,
   isLoadingPlans,
   hasPlans,
@@ -240,6 +249,7 @@ export function ProfileTabContent({
           isViewingOwnProfile={isViewingOwnProfile}
           optimisticPosts={optimisticPosts}
           isLoading={showLoading}
+          isContentFiltered={isContentFiltered}
         />
       </TabPanel>
 
@@ -247,7 +257,8 @@ export function ProfileTabContent({
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="posts">
         <PostsTabPanel
           PROFILE_POSTS={PROFILE_POSTS}
-          allComments={allComments}
+          allComments={isContentFiltered ? [] : allComments}
+          isContentFiltered={isContentFiltered}
           isLoadingComments={isLoadingComments}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
@@ -262,7 +273,9 @@ export function ProfileTabContent({
       {/* IMAGES TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="images">
         {showLoading ? null : PROFILE_IMAGES.length === 0 ? (
-          <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
+          isContentFiltered
+            ? <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
         ) : PROFILE_IMAGES.length >= 4 ? (
           <ProfileImageGrid images={PROFILE_IMAGES} />
         ) : (
@@ -279,7 +292,9 @@ export function ProfileTabContent({
       {/* VIDEOS TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="videos">
         {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
-          <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />
+          isContentFiltered
+            ? <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />
         ) : (
           <div className="space-y-3">
             {ALL_PROFILE_VIDEOS.map((video, index) => (
@@ -350,17 +365,21 @@ function HomeTabPanel({
   isViewingOwnProfile,
   optimisticPosts,
   isLoading,
+  isContentFiltered = false,
 }: {
   ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean }>;
   isViewingOwnProfile: boolean | undefined;
   optimisticPosts: OptimisticPost[];
   isLoading: boolean;
+  isContentFiltered?: boolean;
 }) {
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
-  
+
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
     if (isLoading) return null;
-    return <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title="No posts yet" subtitle="Content will appear here when posted" />;
+    return isContentFiltered
+      ? <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" {...NO_MATCHES_COPY} />
+      : <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title="No posts yet" subtitle="Content will appear here when posted" />;
   }
   
   const filteredOptimisticPosts = isViewingOwnProfile 
@@ -422,6 +441,7 @@ function PostsTabPanel({
   isViewingOwnProfile,
   profileAddress,
   isLoadingContent,
+  isContentFiltered = false,
 }: {
   PROFILE_POSTS: TextPost[];
   allComments: ApiCommentResponse[];
@@ -433,6 +453,7 @@ function PostsTabPanel({
   isViewingOwnProfile: boolean | undefined;
   profileAddress: string;
   isLoadingContent: boolean;
+  isContentFiltered?: boolean;
 }) {
   const { t } = useTranslation();
   // Collect unique tokenIds from comments to batch-fetch parent posts
@@ -469,14 +490,20 @@ function PostsTabPanel({
       ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
       ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
     ];
+    // Under a toolbar sort or search the posts arrive already ordered by the
+    // server (and comments are excluded — they are not this creator's posts,
+    // and "most viewed" means nothing for a reply), so leave the order alone.
+    if (isContentFiltered) return items;
     items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return items;
-  }, [PROFILE_POSTS, allComments]);
+  }, [PROFILE_POSTS, allComments, isContentFiltered]);
 
   const isLoadingAll = isLoadingComments && allComments.length === 0;
 
   if (mergedItems.length === 0 && !isLoadingAll && !isLoadingContent) {
-    return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No posts, comments, or replies yet" subtitle="They will appear here" />;
+    return isContentFiltered
+      ? <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" {...NO_MATCHES_COPY} />
+      : <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No posts, comments, or replies yet" subtitle="They will appear here" />;
   }
 
   return (

@@ -3,7 +3,8 @@ import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart, Pin } from 'lucide-react';
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile, useDeHubUserContent, separateUserContent } from '@/hooks/use-dehub-profile';
+import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileSortMode } from '@/hooks/use-dehub-profile';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { parseVisibility } from '@/hooks/use-privacy-settings';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -91,6 +92,22 @@ export function useProfilePage() {
   const lookupIsAddress = !!(lookupUserId && /^0x[a-fA-F0-9]{40}$/i.test(lookupUserId));
   const contentUserId = apiProfile?.walletAddress ?? (lookupIsAddress ? lookupUserId : undefined);
 
+  // Sort + search over this creator's own content. Both are server-side
+  // (/api/feed takes sortBy/sortOrder/search alongside minter) — sorting only
+  // the pages already downloaded would put the oldest *loaded* post first
+  // rather than the creator's actual first upload.
+  const [contentSort, setContentSort] = useState<ProfileSortMode>('newest');
+  const [contentSearch, setContentSearch] = useState('');
+  const debouncedContentSearch = useDebouncedValue(contentSearch, 350);
+  const isContentFiltered = contentSort !== 'newest' || !!debouncedContentSearch.trim();
+
+  // Reset the toolbar when the visitor moves to another profile — a query
+  // typed on one channel has no meaning on the next.
+  useEffect(() => {
+    setContentSort('newest');
+    setContentSearch('');
+  }, [routeUsername, userId]);
+
   // Fetch user content — small first page for fast initial paint, then auto-fetch rest
   const {
     data: userContentData,
@@ -102,6 +119,8 @@ export function useProfilePage() {
     userId: contentUserId,
     viewerAddress: currentWalletAddress || undefined,
     enabled: !!contentUserId,
+    sortMode: contentSort,
+    search: debouncedContentSearch,
   });
 
   // Prefetch ONLY page 2 in the background after first paint. The old
@@ -188,11 +207,33 @@ export function useProfilePage() {
     const allNFTs = userContentData.pages.flatMap(page => page.data || []);
     const separated = separateUserContent(allNFTs);
 
+    // The server's own order, by tokenId. Once a sort other than "newest" is
+    // running, that order IS the answer — the mapped card types carry views as
+    // a formatted string ("1.2K"), so they cannot be re-sorted client-side.
+    const serverRank = new Map<string, number>();
+    allNFTs.forEach((nft: { tokenId?: number | string }, i) => {
+      if (nft?.tokenId !== undefined) serverRank.set(String(nft.tokenId), i);
+    });
+
     const unified: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }> = [
       ...separated.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
       ...separated.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
       ...separated.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
     ];
+
+    // A sorted or searched view is a view of what this creator posted, so
+    // reposts stay out of it: they are somebody else's post, they arrive from
+    // a separate always-newest-first endpoint, and no server rank exists to
+    // place them under "most viewed".
+    if (isContentFiltered) {
+      unified.sort((a, b) => (serverRank.get(a.data.id) ?? 0) - (serverRank.get(b.data.id) ?? 0));
+      return {
+        PROFILE_POSTS: separated.posts,
+        PROFILE_IMAGES: separated.images,
+        ALL_PROFILE_VIDEOS: separated.videos,
+        ALL_CONTENT: unified,
+      };
+    }
 
     // Merge reposts into the unified feed
     if (repostsData?.length) {
@@ -225,7 +266,7 @@ export function useProfilePage() {
       ALL_PROFILE_VIDEOS: separated.videos,
       ALL_CONTENT: unified,
     };
-  }, [userContentData, repostsData]);
+  }, [userContentData, repostsData, isContentFiltered]);
 
   // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
   const [commentCountEnabled, setCommentCountEnabled] = useState(false);
@@ -417,6 +458,12 @@ export function useProfilePage() {
     fetchNextContentPage,
     hasNextContentPage,
     isFetchingNextContentPage,
+    // Channel toolbar
+    contentSort,
+    setContentSort,
+    contentSearch,
+    setContentSearch,
+    isContentFiltered,
     // Subscriptions
     plans,
     isLoadingPlans,
