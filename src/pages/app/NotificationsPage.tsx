@@ -1,4 +1,4 @@
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -26,7 +26,6 @@ import { useCustomNotifications, useCustomUnreadCount, useMarkCustomNotification
 import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
-import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import dehubMarkWhite from '@/assets/dehub-mark-white.png';
 import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -1753,7 +1752,7 @@ export default function NotificationsPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <BrandIcon src={notificationsIcon} alt={activeTabLabel} className="w-9 h-9 object-contain" />
+              <ThemedIcon icon="notifications" alt={activeTabLabel} className="w-9 h-9 object-contain" />
               <h1 className="font-bold text-white text-lg" aria-live="polite">{activeTabLabel}</h1>
               {totalUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
