@@ -79,6 +79,11 @@ const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/function
 // crawlers downloaded the React shell where a PNG should be and drew no image.
 const SHARE_IMAGE = `${APP_URL}/og/dehub-social-share.png`;
 
+/** Search Console property ownership. Must stay identical to the tag in
+ *  index.html — the two are the same claim served to different user agents,
+ *  and Google removes access to a property it can no longer verify. */
+const GOOGLE_SITE_VERIFICATION = 'fCbsM2lCr6JdQuMh1uHAHwzbLC1OoXzvK-VKFnkbZnQ';
+
 
 // Per-route share cards, rendered from the banner kit into public/og/ and
 // served by the ASSETS binding. Key = the canonical route path without its
@@ -1596,7 +1601,7 @@ function buildFallbackHtml(pathname, canonicalUrl) {
   <meta charset="UTF-8">
   <title>${title}</title>
   <meta name="description" content="${description}">
-  <meta property="og:type" content="website">
+${canonicalizePath(pathname) === '/' ? `  <meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}">\n` : ''}  <meta property="og:type" content="website">
   <meta property="og:url" content="${url}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
@@ -3012,6 +3017,18 @@ async function handleRequest(request, env) {
     if (pathname === '/') {
       // Bot and browser titles must not diverge; align to the SPA title.
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
+      // Search Console ownership. The tag lives in index.html, which only
+      // browsers ever receive — every bot UA gets this rendered HTML instead,
+      // and it had no tag at all. Verification survives today purely because
+      // Google's checker announces itself as `Google-Site-Verification/1.0`,
+      // which matches nothing in BOT_UA_PATTERN and so falls through to the
+      // SPA shell. Anything that re-checks as Googlebot sees an unverified
+      // site and access to the property goes away quietly — and URL Inspection
+      // (Google-InspectionTool) already renders this HTML, so the tag is
+      // missing from the one view used to debug indexing.
+      if (!html.includes('google-site-verification')) {
+        html = html.replace('</head>', `<meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}"></head>`);
+      }
       // Entity repair on the deployed fn's Organization JSON-LD: its only
       // sameAs pointed at a dead account, so Google couldn't reconcile the
       // brand's real properties into one entity.
