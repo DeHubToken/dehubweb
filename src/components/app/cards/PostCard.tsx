@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState, memo, useEffect, useCallback, useRef, type ReactNode } from 'react';
+import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type ReactNode } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -32,7 +32,6 @@ import { buildPostShareImage } from '@/lib/build-post-share-image';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { EditPostModal } from '../modals/EditPostModal';
-import { BoostModal } from '../modals/BoostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -57,6 +56,20 @@ import {
   wasDrawerJustDismissed,
 } from '@/components/ui/drawer';
 import type { TextPost } from '@/types/feed.types';
+
+/**
+ * Lazy, and only mounted while open.
+ *
+ * PostCard is on the boot path — it is the feed — so a static import here puts
+ * the boost sheet and everything it reaches (use-superpowers and the
+ * superpowers API, ~20 KB together) into the entry bundle for every session,
+ * to serve a drawer that opens behind two taps on the post options menu.
+ * scripts/check-entry-bundle.mjs fails the build once enough of these
+ * accumulate, which is what happened.
+ */
+const BoostModal = lazy(() =>
+  import('../modals/BoostModal').then((m) => ({ default: m.BoostModal }))
+);
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
 function useIsTabletOrMobile() {
@@ -727,13 +740,18 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         }}
       />
 
-      {/* Boost Modal */}
-      <BoostModal
-        open={showBoostModal}
-        onOpenChange={setShowBoostModal}
-        tokenId={postTokenId}
-        postTitle={post.rawName ?? post.title ?? post.content ?? ''}
-      />
+      {/* Boost Modal — mounted only while open, so the chunk is fetched on the
+          tap that opens it rather than with the feed. */}
+      {showBoostModal && (
+        <Suspense fallback={null}>
+          <BoostModal
+            open={showBoostModal}
+            onOpenChange={setShowBoostModal}
+            tokenId={postTokenId}
+            postTitle={post.rawName ?? post.title ?? post.content ?? ''}
+          />
+        </Suspense>
+      )}
 
       {/* Quote Post Modal */}
       <QuotePostModal
