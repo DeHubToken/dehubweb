@@ -29,6 +29,7 @@ import { AutoplayVideo } from '@/components/app/AutoplayVideo';
 
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useAuth } from '@/contexts/AuthContext';
+import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
@@ -455,6 +456,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('videos', 'category', null);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
+  // Hide watched sticks across sessions (localStorage, not the session-scoped
+  // filter store) — it is a standing preference, not a filter you set once.
+  // Owned by Settings → Content, not by this panel: it is a standing viewing
+  // preference rather than a filter you set for one visit.
+  const [hideWatched] = useHideWatched();
+  const { watchedIds } = useWatchedVideoIds(hideWatched);
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
@@ -598,34 +605,45 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return allFeedItems.map((item, index) => mapToVideoItem(item, index));
   }, [allFeedItems]);
 
-  // Apply client-side duration filter
+  // Apply client-side duration + watched filters
   const videos = useMemo((): VideoItem[] => {
+    let filtered = allVideos;
+
     // Duration filter
     if (selectedDuration.max !== Infinity || selectedDuration.min !== 0) {
-      return allVideos.filter(video => {
+      filtered = filtered.filter(video => {
         const secs = parseDurationToSeconds(video.duration);
         return secs >= selectedDuration.min && secs < selectedDuration.max;
       });
     }
-    
-    return allVideos;
-  }, [allVideos, selectedDuration]);
+
+    // Already-played videos. Client-side because the feed API has no notion of
+    // who watched what — the watch history is its own endpoint.
+    if (hideWatched && watchedIds.size > 0) {
+      filtered = filtered.filter(video => !watchedIds.has(String(video.id)));
+    }
+
+    return filtered;
+  }, [allVideos, selectedDuration, hideWatched, watchedIds]);
 
   // Auto-fetch more pages when duration filter reduces visible items below threshold
   const MIN_VISIBLE_VIDEOS = 8;
   const MAX_AUTO_FETCH_ATTEMPTS = 5;
   const autoFetchAttempts = useRef(0);
 
-  // Reset auto-fetch attempts when duration filter changes
+  // Reset auto-fetch attempts when a client-side filter changes
   useEffect(() => {
     autoFetchAttempts.current = 0;
-  }, [selectedDuration]);
+  }, [selectedDuration, hideWatched]);
 
   useEffect(() => {
     const isDurationFilterActive = selectedDuration.min !== 0 || selectedDuration.max !== Infinity;
-    
+    // Hiding watched thins a page the same way a duration filter does, so it
+    // needs the same top-up or the feed can come back looking empty.
+    const isClientFilterActive = isDurationFilterActive || (hideWatched && watchedIds.size > 0);
+
     if (
-      isDurationFilterActive &&
+      isClientFilterActive &&
       videos.length < MIN_VISIBLE_VIDEOS &&
       hasNextPage &&
       autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS &&
@@ -638,14 +656,14 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     }
     
     // Reset attempts when filter is removed
-    if (!isDurationFilterActive) {
+    if (!isClientFilterActive) {
       autoFetchAttempts.current = 0;
     }
-  }, [videos.length, selectedDuration, hasNextPage, isFetchingNextPage, isApiLoading, fetchNextPage]);
+  }, [videos.length, selectedDuration, hideWatched, watchedIds, hasNextPage, isFetchingNextPage, isApiLoading, fetchNextPage]);
 
   // Check if we're auto-fetching to fill the view
-  const isAutoFetching = 
-    (selectedDuration.min !== 0 || selectedDuration.max !== Infinity) &&
+  const isAutoFetching =
+    (selectedDuration.min !== 0 || selectedDuration.max !== Infinity || (hideWatched && watchedIds.size > 0)) &&
     videos.length < MIN_VISIBLE_VIDEOS &&
     (isFetchingNextPage || (hasNextPage && autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS));
 

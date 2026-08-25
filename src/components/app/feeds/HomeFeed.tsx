@@ -74,6 +74,7 @@ import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -485,6 +486,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
 
   const { walletAddress, isAuthenticated } = useAuth();
+  // Set in Settings → Content, read here. A standing viewing preference, not a
+  // per-visit filter, so it lives in localStorage and not the filter store.
+  const [hideWatched] = useHideWatched();
+  const { watchedIds } = useWatchedVideoIds(hideWatched);
   const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
 
   // Fetch story users from API
@@ -1006,6 +1011,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     let filtered = deletedIds.size > 0
       ? tierCappedItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
       : tierCappedItems;
+    // Videos this account has already played. Only video items are dropped —
+    // the watch record on an image or a text post means "was on screen", not
+    // "was watched".
+    if (hideWatched && watchedIds.size > 0) {
+      filtered = filtered.filter(item =>
+        item.type !== 'video' || !watchedIds.has(String((item.data as any)?.id))
+      );
+    }
     if (selectedCategories.length <= 1) return filtered; // 0 = all, 1 = API-filtered
     const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
     return filtered.filter(item => {
@@ -1013,7 +1026,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (!itemCats.length) return false;
       return itemCats.some(c => catSet.has(String(c).toLowerCase()));
     });
-  }, [tierCappedItems, selectedCategories]);
+  }, [tierCappedItems, selectedCategories, hideWatched, watchedIds]);
 
   // Served POVR ads spliced in after every AD_INSERT_INTERVAL organic items.
   // Ad serving failures return [] so the feed is never blocked by ads.
