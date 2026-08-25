@@ -53,10 +53,10 @@
           d.style.setProperty('--dim-lights-opacity', (0.12 + 0.6 * (s / 100)).toFixed(3));
 
           // Frost the app shell from the FIRST painted frame (the sheet itself
-          // is html[data-feed-loading] #app-root::after, in index.css), so the
+          // is html[data-feed-loading] #root::after, in index.css), so the
           // welcome panel is the only thing that ever reads as sharp and
-          // everything else — skeletons, spinners, the sidebars, the theme
-          // canvas — resolves in behind it.
+          // everything else — the boot skeleton, the sidebars, the theme
+          // canvas — sits behind it out of focus.
           //
           // This must be set HERE, not from React. The first attempt drove it
           // off the home feed's isLoadingState, which is usually ALREADY FALSE
@@ -67,22 +67,28 @@
           // sharp before React got there — the wrong order, which is the whole
           // point of the effect.
           //
-          // HomeFeed clears it (to "off", then removes it) once page 1 has
-          // resolved; the timer below is the guarantee for every path that
-          // never reaches HomeFeed at all — a failed chunk, a thrown boundary,
-          // a redirect — because an app left permanently frosted is worse than
-          // one that never frosted.
-          // 12s, well clear of HomeFeed's own 3s hold + 8s bail. This is the
-          // last-resort unfreeze for a bundle that never arrives, NOT part of
-          // the normal timing — set it too close and it starts cutting the
-          // intended hold short on a slow connection, which is exactly the case
-          // it was meant to protect.
+          // IT LIFTS ON INTENT, NOT ON A TIMER. The frost is what makes the
+          // visitor read the welcome panel rather than the feed behind it, so
+          // it holds for as long as they are still reading and gets out of the
+          // way the moment they do anything — scroll, click, key, wheel, touch.
+          // There is deliberately no time limit: a timer either cuts a reader
+          // off mid-sentence or makes an impatient visitor wait, and any input
+          // at all clears this, so it can never trap anyone.
           if (location.pathname === '/') {
             d.dataset.feedLoading = 'on';
-            setTimeout(function () {
-              if (d.dataset.feedLoading === 'on') d.dataset.feedLoading = 'off';
+            var unfrost = function () {
+              if (d.dataset.feedLoading !== 'on') return;
+              d.dataset.feedLoading = 'off';
+              // Past the 1.2s transition in index.css; the sheet is a
+              // full-viewport backdrop-filter, so it has to stop existing
+              // rather than merely go clear.
               setTimeout(function () { delete d.dataset.feedLoading; }, 1300);
-            }, 12000);
+            };
+            // `scroll` needs the capture phase: the app scrolls <body>, not
+            // window, and a scroll event on an element does not bubble.
+            ['scroll', 'wheel', 'touchmove', 'pointerdown', 'keydown'].forEach(function (ev) {
+              window.addEventListener(ev, unfrost, { once: true, passive: true, capture: true });
+            });
           }
         } catch (e) { /* never block boot */ }
       })();
@@ -345,6 +351,53 @@
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { height: 100%; width: 100%; background-color: var(--boot-bg, #000); color: var(--boot-fg, #fff); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
       #root { height: 100%; min-height: 100dvh; background-color: var(--boot-bg, #000); }
+
+      /* --- Boot skeleton ------------------------------------------------
+         The three-column app shell, painted at parse time with no JavaScript,
+         so the FIRST frame is already a complete-looking page. Without it the
+         middle column is empty until React mounts while the rails arrive with
+         the bundle, and the page reads as "a panel is missing" and then jumps
+         to filled.
+
+         It lives INSIDE #root, which is what removes it: createRoot() clears
+         its container on the first render, so React swaps the skeleton for the
+         real tree in one commit with no hand-off code to get wrong. Nothing
+         here is ever seen by a screen reader or a crawler — it is empty divs.
+
+         Sizes mirror the real shell so the swap does not shift: rail widths
+         from navigation/DesktopSidebar (60/231px, lg-only), the right rail from
+         PageSkeletons' own HomeRightSidebarSkeleton (w-72/xl:w-80), the 80rem
+         cap and mx-auto from AppLayout, and the tab-bar block from HomePage's
+         sticky bar (35px buttons inside pt-1 pb-2 / sm:pb-3 / lg:pt-2).
+
+         It sits under the frost sheet (#root::after, z-120) with no z-index of
+         its own, so it is blurred like everything else while the welcome panel
+         above it stays sharp. */
+      .bskel { display: flex; width: 100%; max-width: 80rem; margin: 0 auto; }
+      .bskel-rail, .bskel-rrail { display: none; flex: none; }
+      .bskel-main { flex: 1 1 auto; min-width: 0; width: 100%; padding-top: 44px; }
+      .bskel-tabs { height: 35px; margin: 4px 8px 8px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
+      .bskel-card { height: 300px; margin: 0 8px 12px; border-radius: 16px;
+                    background: var(--bskel, rgba(255,255,255,.06));
+                    border: 1px solid var(--bskel-b, rgba(255,255,255,.08)); }
+      .bskel-post { height: 180px; margin: 0 8px 12px; border-radius: 16px; background: var(--bskel, rgba(255,255,255,.06)); }
+      @media (min-width: 640px) {
+        .bskel-tabs { margin: 4px 12px 12px; }
+        .bskel-card, .bskel-post { margin: 0 12px 12px; }
+      }
+      @media (min-width: 1024px) {
+        .bskel-rail { display: block; width: 231px; }
+        .bskel-rrail { display: block; width: 288px; }
+        .bskel-main { padding-top: 0; }
+        .bskel-tabs { margin-top: 8px; }
+        .bskel-card { height: 360px; }
+      }
+      @media (min-width: 1280px) { .bskel-rrail { width: 320px; } }
+      @media (min-width: 1536px) { .bskel-rrail { width: 352px; } } /* 2xl:w-88 */
+      /* The light theme needs dark blocks, not white ones. data-theme is
+         already on <html> by this point — the script at the top of <head>
+         sets it synchronously, before this stylesheet is even matched. */
+      html[data-theme="light"] { --bskel: rgba(0,0,0,.07); --bskel-b: rgba(0,0,0,.10); }
     </style>
   
   
@@ -357,7 +410,21 @@
 </head>
 
   <body>
-    <div id="root"></div>
+    <!-- Boot skeleton — see the .bskel rules in the critical CSS above.
+         Inside #root on purpose: createRoot() clears its container on first
+         render, so React replaces this in the same commit that paints the app.
+         aria-hidden because it is decorative scaffolding; the no-JS fallback
+         below is what non-rendering fetchers get. -->
+    <div id="root"><div class="bskel" aria-hidden="true">
+      <div class="bskel-rail"></div>
+      <div class="bskel-main">
+        <div class="bskel-tabs"></div>
+        <div class="bskel-card"></div>
+        <div class="bskel-post"></div>
+        <div class="bskel-post"></div>
+      </div>
+      <div class="bskel-rrail"></div>
+    </div></div>
     <!-- No-JS fallback. The app is client-rendered, so anything that fetches
          this page without executing JS previously saw an empty <div id="root">
          and nothing else. The Cloudflare worker only prerenders for UAs matching
