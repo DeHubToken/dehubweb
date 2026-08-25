@@ -663,9 +663,29 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
       {/* Video Player or Stream Ended State */}
       <div ref={containerRef} data-media-full className={`aspect-video bg-black relative rounded-lg overflow-hidden${isFullscreen ? ' fixed inset-0 z-[9999] !aspect-auto w-screen h-screen rounded-none' : ''}`}>
-        {streamEnded ? (
-          /* Past live: show the stream's cover image if there is one,
-             otherwise a staticy TV screen — never an empty black frame. */
+        {streamEnded && stream.replayUrl ? (
+          /* The broadcast is over but the recording was captured: play that
+             instead of the tombstone. A plain mp4 off our own CDN, so no
+             hls.js and no retry ladder — native controls are the whole
+             player. */
+          <>
+            <video
+              className="w-full h-full object-contain"
+              src={stream.replayUrl}
+              poster={stream.thumbnail || undefined}
+              controls
+              playsInline
+              preload="metadata"
+              {...{"webkit-playsinline": ""}}
+            />
+            <span className="absolute top-3 left-3 rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white">
+              REPLAY
+            </span>
+          </>
+        ) : streamEnded ? (
+          /* Past live with nothing recorded: show the stream's cover image if
+             there is one, otherwise a staticy TV screen — never an empty
+             black frame. */
           <LiveEndedMedia thumbnail={stream.thumbnail} label="Stream ended" rounded="rounded-none" />
         ) : (
           <>
