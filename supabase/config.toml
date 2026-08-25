@@ -6,6 +6,10 @@ project_id = "aigxuutjaqsywioxjefr"
   # reject every legitimate call.
   [functions.admin-stages]
     verify_jwt = false
+  # Same bridge as admin-stages: an admin JWT from api.dehub.io, re-verified
+  # against GET /api/admin/me. Not a Supabase JWT.
+  [functions.admin-transcripts]
+    verify_jwt = false
   [functions.anon-views]
     verify_jwt = false
   [functions.ads-admin]
