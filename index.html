@@ -111,20 +111,37 @@
 
               // DOWNWARD scroll only. Reading the panel is the point, so moving
               // up or sideways must not clear it.
-              // Read all three scroll roots: this app scrolls <body>, so
-              // window.scrollY alone is not reliable here.
-              var scrollY = function () {
-                return window.scrollY || d.scrollTop || document.body.scrollTop || 0;
+              //
+              // MUST be null-safe on document.body. This script runs during
+              // <head> parse, where document.body is still null — reading
+              // `document.body.scrollTop` there threw a TypeError, the outer
+              // try/catch swallowed it, and every line below (i.e. all of the
+              // listeners) never ran. The frost went up and could never come
+              // down. It looked fine in a test harness that passed a stub body
+              // object; only a null one reproduces it.
+              //
+              // Measured on dehub.io: <body> is the scroller (overflow-y:auto,
+              // scrollHeight 12419 vs clientHeight 720) while <html> does not
+              // scroll at all, so window.scrollY and documentElement.scrollTop
+              // both stay 0 forever and body.scrollTop is the only real value.
+              var scrollTopNow = function () {
+                var b = document.body;
+                return window.scrollY || d.scrollTop || (b ? b.scrollTop : 0) || 0;
               };
-              var lastY = scrollY();
+              var lastY = 0; // nothing is scrolled at parse time
               var onScroll = function () {
-                var y = scrollY();
+                var y = scrollTopNow();
                 if (y > lastY) unfrost();
                 lastY = y;
               };
               // Capture phase: a scroll event on an element does not bubble, so
               // a listener on window never sees <body> scrolling without it.
               window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+              // And directly on the scroller once it exists, so the unfrost does
+              // not hinge on that capture-phase subtlety being right.
+              document.addEventListener('DOMContentLoaded', function () {
+                if (document.body) document.body.addEventListener('scroll', onScroll, { passive: true });
+              }, { once: true });
               // Wheel-down covers the gesture before any scrolling has actually
               // happened — a trackpad flick on a page still settling fires wheel
               // first, and the two agree on direction.
@@ -417,7 +434,16 @@
          its own, so it is blurred like everything else while the welcome panel
          above it stays sharp. */
       .bskel { display: flex; width: 100%; max-width: 80rem; margin: 0 auto; }
-      .bskel-rail, .bskel-rrail { display: none; flex: none; }
+      /* The rails must be DRAWN, not merely reserved. They shipped as empty
+         width-only spacers, so the first frame was middle blocks floating in
+         two blank gutters — and the "side panel skeletons" a visitor actually
+         saw were React's real sidebars arriving later, by which time this
+         skeleton had already been cleared. That is the gap that read as the
+         middle loading out of step with the sides. */
+      .bskel-rail, .bskel-rrail { display: none; flex: none; padding: 8px; }
+      .bskel-navrow { height: 40px; margin-bottom: 6px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
+      .bskel-panel { height: 150px; margin-bottom: 12px; border-radius: 16px; background: var(--bskel, rgba(255,255,255,.06)); }
+      .bskel-search { height: 36px; margin-bottom: 12px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
       .bskel-main { flex: 1 1 auto; min-width: 0; width: 100%; padding-top: 44px; }
       .bskel-tabs { height: 35px; margin: 4px 8px 8px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
       .bskel-card { height: 300px; margin: 0 8px 12px; border-radius: 16px;
@@ -459,14 +485,22 @@
          aria-hidden because it is decorative scaffolding; the no-JS fallback
          below is what non-rendering fetchers get. -->
     <div id="root"><div class="bskel" aria-hidden="true">
-      <div class="bskel-rail"></div>
+      <div class="bskel-rail">
+        <div class="bskel-navrow"></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div>
+        <div class="bskel-navrow"></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div>
+        <div class="bskel-navrow"></div><div class="bskel-navrow"></div>
+      </div>
       <div class="bskel-main">
         <div class="bskel-tabs"></div>
         <div class="bskel-card"></div>
         <div class="bskel-post"></div>
         <div class="bskel-post"></div>
       </div>
-      <div class="bskel-rrail"></div>
+      <div class="bskel-rrail">
+        <div class="bskel-search"></div>
+        <div class="bskel-panel"></div>
+        <div class="bskel-panel"></div>
+      </div>
     </div></div>
     <!-- No-JS fallback. The app is client-rendered, so anything that fetches
          this page without executing JS previously saw an empty <div id="root">
