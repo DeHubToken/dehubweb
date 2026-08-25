@@ -244,12 +244,27 @@ export function useDeHubProfileByUsername(username?: string, enabled = true) {
   return useDeHubProfile({ username, enabled: enabled && !!username });
 }
 
+/** Orderings a visitor can put a creator's own content in. */
+export type ProfileSortMode = 'newest' | 'oldest' | 'views' | 'likes';
+
+/** What /api/feed wants for each mode. `asc` flips the whole sort rule server-side. */
+export const PROFILE_SORT_PARAMS: Record<ProfileSortMode, { sortBy: string; sortOrder: 'asc' | 'desc' }> = {
+  newest: { sortBy: 'createdAt', sortOrder: 'desc' },
+  oldest: { sortBy: 'createdAt', sortOrder: 'asc' },
+  views: { sortBy: 'views', sortOrder: 'desc' },
+  likes: { sortBy: 'likes', sortOrder: 'desc' },
+};
+
 interface UseDeHubUserContentOptions {
   userId?: string;
   /** @deprecated Viewer context is now extracted from JWT Bearer token */
   viewerAddress?: string;
   enabled?: boolean;
   limit?: number;
+  /** Ordering for this creator's posts. Defaults to newest first. */
+  sortMode?: ProfileSortMode;
+  /** Free text, matched server-side against a post's title and description. */
+  search?: string;
 }
 
 /**
@@ -257,9 +272,17 @@ interface UseDeHubUserContentOptions {
  * Uses the /api/feed endpoint with minter filter for reliable content fetching
  * Pass viewerAddress to get isLiked/isSaved state for the logged-in user
  */
-export function useDeHubUserContent({ userId, viewerAddress, enabled = true, limit = 15 }: UseDeHubUserContentOptions = {}) {
+export function useDeHubUserContent({
+  userId,
+  viewerAddress,
+  enabled = true,
+  limit = 15,
+  sortMode = 'newest',
+  search = '',
+}: UseDeHubUserContentOptions = {}) {
+  const trimmedSearch = search.trim();
   return useInfiniteQuery({
-    queryKey: ['dehub-user-content', userId, viewerAddress],
+    queryKey: ['dehub-user-content', userId, viewerAddress, sortMode, trimmedSearch],
     queryFn: async ({ pageParam = 1 }) => {
       if (!userId) throw new Error('User ID (wallet address) is required');
       
@@ -268,8 +291,10 @@ export function useDeHubUserContent({ userId, viewerAddress, enabled = true, lim
       url.searchParams.set('page', String(pageParam));
       url.searchParams.set('limit', String(limit));
       url.searchParams.set('minter', userId);
-      url.searchParams.set('sortBy', 'createdAt');
-      url.searchParams.set('sortOrder', 'desc');
+      const { sortBy, sortOrder } = PROFILE_SORT_PARAMS[sortMode] ?? PROFILE_SORT_PARAMS.newest;
+      url.searchParams.set('sortBy', sortBy);
+      url.searchParams.set('sortOrder', sortOrder);
+      if (trimmedSearch) url.searchParams.set('search', trimmedSearch);
       // Show all confirmed and pending content on profiles
       url.searchParams.set('status', 'all');
       // address param is deprecated - viewer context comes from JWT token
