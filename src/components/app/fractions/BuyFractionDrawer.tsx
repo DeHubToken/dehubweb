@@ -41,7 +41,7 @@ interface BuyFractionDrawerProps {
 }
 
 export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: BuyFractionDrawerProps) {
-  const { walletAddress } = useAuth();
+  const { walletAddress, openLoginModal } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [quote, setQuote] = useState<FractionQuote | null>(null);
   const { getQuote, buy } = useFractionPurchase();
@@ -80,8 +80,11 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
   const displayTotal = quote?.dhbAmount ?? quantity * listing.price_per_fraction;
 
   const handleBuy = async () => {
+    // Signed out is a normal state on this page — the quote is public so the
+    // price is already on screen. Open the login modal rather than scolding
+    // someone with a toast for not being logged in yet.
     if (!walletAddress) {
-      toast.error('Sign in to buy fractions');
+      openLoginModal();
       return;
     }
     if (!quote) return;
@@ -218,6 +221,8 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
               <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Paying…</>
             ) : isMine ? (
               'This is your own listing'
+            ) : !walletAddress ? (
+              'Sign in to buy'
             ) : (
               <>
                 <ShoppingCart className="w-4 h-4 mr-2" />
