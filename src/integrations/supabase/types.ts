@@ -4029,6 +4029,123 @@ export type Database = {
         }
         Relationships: []
       }
+      transcript_translations: {
+        Row: {
+          chapters: Json
+          created_at: string
+          error: string | null
+          id: string
+          language: string
+          segments: Json
+          status: string
+          summary: string | null
+          transcript_id: string
+          updated_at: string
+        }
+        Insert: {
+          chapters?: Json
+          created_at?: string
+          error?: string | null
+          id?: string
+          language: string
+          segments?: Json
+          status?: string
+          summary?: string | null
+          transcript_id: string
+          updated_at?: string
+        }
+        Update: {
+          chapters?: Json
+          created_at?: string
+          error?: string | null
+          id?: string
+          language?: string
+          segments?: Json
+          status?: string
+          summary?: string | null
+          transcript_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transcripts: {
+        Row: {
+          attempts: number
+          chapters: Json
+          created_at: string
+          duration_seconds: number | null
+          error: string | null
+          full_text: string | null
+          id: string
+          last_attempt_at: string | null
+          model: string | null
+          provider: string | null
+          segments: Json
+          source_kind: string
+          source_lang: string | null
+          source_ref: string
+          speaker_map: Json
+          speaker_overrides: Json
+          speaker_timeline: Json
+          status: string
+          summary: string | null
+          summary_status: string
+          updated_at: string
+          visibility: string
+          vtt: string | null
+        }
+        Insert: {
+          attempts?: number
+          chapters?: Json
+          created_at?: string
+          duration_seconds?: number | null
+          error?: string | null
+          full_text?: string | null
+          id?: string
+          last_attempt_at?: string | null
+          model?: string | null
+          provider?: string | null
+          segments?: Json
+          source_kind: string
+          source_lang?: string | null
+          source_ref: string
+          speaker_map?: Json
+          speaker_overrides?: Json
+          speaker_timeline?: Json
+          status?: string
+          summary?: string | null
+          summary_status?: string
+          updated_at?: string
+          visibility?: string
+          vtt?: string | null
+        }
+        Update: {
+          attempts?: number
+          chapters?: Json
+          created_at?: string
+          duration_seconds?: number | null
+          error?: string | null
+          full_text?: string | null
+          id?: string
+          last_attempt_at?: string | null
+          model?: string | null
+          provider?: string | null
+          segments?: Json
+          source_kind?: string
+          source_lang?: string | null
+          source_ref?: string
+          speaker_map?: Json
+          speaker_overrides?: Json
+          speaker_timeline?: Json
+          status?: string
+          summary?: string | null
+          summary_status?: string
+          updated_at?: string
+          visibility?: string
+          vtt?: string | null
+        }
+        Relationships: []
+      }
       translation_spend_daily: {
         Row: {
           day: string
