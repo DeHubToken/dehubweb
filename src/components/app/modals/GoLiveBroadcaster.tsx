@@ -1,13 +1,14 @@
 /**
  * Go Live Broadcaster
  * ===================
- * The camera surface for browser-native livestreaming: grabs the webcam,
- * publishes it to Livepeer over WHIP, and gives the creator the controls they
- * need while live. This is what removes the OBS requirement — the RTMP
- * credentials path still exists beside it for anyone running a real encoder.
+ * The capture surface for browser-native livestreaming: grabs the webcam or a
+ * screen share, publishes it to Livepeer over WHIP, and gives the creator the
+ * controls they need while live. This is what removes the OBS requirement —
+ * the RTMP credentials path still exists beside it for anyone running a real
+ * encoder.
  *
  * Loaded dynamically by GoLiveModal so the WebRTC code only reaches people who
- * actually pick the camera option.
+ * actually pick one of the browser capture options.
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -17,6 +18,8 @@ import {
   Video,
   VideoOff,
   SwitchCamera,
+  ScreenShare,
+  ScreenShareOff,
   Loader2,
   AlertTriangle,
   Radio,
@@ -29,16 +32,36 @@ const logger = createLogger('GoLiveBroadcaster');
 
 interface GoLiveBroadcasterProps {
   streamKey: string;
+  /**
+   * A display capture taken in the modal, from the click that started go-live.
+   * getDisplayMedia needs transient user activation and the mint that follows
+   * runs 15-30s, so the picker cannot be opened from here on mount — a screen
+   * broadcast has to arrive already captured. Null for a camera broadcast.
+   */
+  initialScreenStream?: MediaStream | null;
   /** Fired when the creator ends the broadcast; the parent runs API teardown. */
   onEnd: () => void;
 }
 
-type Phase = 'camera' | 'connecting' | 'live' | 'reconnecting' | 'error';
+type Phase = 'starting' | 'connecting' | 'live' | 'reconnecting' | 'error';
+type CaptureMode = 'camera' | 'screen';
 
 /** 720p is the sweet spot: 1080p routinely exceeds a phone's upstream. */
 const VIDEO_CONSTRAINTS: MediaTrackConstraints = {
   width: { ideal: 1280 },
   height: { ideal: 720 },
+  frameRate: { ideal: 30 },
+};
+
+/**
+ * Screens ask for 1080p where the camera asks for 720p: a downscaled desktop
+ * turns small text into mush, and the whole point of this path is showing a
+ * game, a chart or an editor. WebRTC drops the bitrate on its own when the
+ * uplink can't hold it, so the ceiling costs nothing on a weak connection.
+ */
+const SCREEN_CONSTRAINTS: MediaTrackConstraints = {
+  width: { ideal: 1920 },
+  height: { ideal: 1080 },
   frameRate: { ideal: 30 },
 };
 
@@ -73,17 +96,69 @@ function describeMediaError(error: unknown): string {
   }
 }
 
-export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) {
-  const [phase, setPhase] = useState<Phase>('camera');
+interface AudioMix {
+  ctx: AudioContext;
+  track: MediaStreamTrack;
+}
+
+/**
+ * WHIP publishes ONE audio track, but a screen share brings the tab's own
+ * audio along beside the mic — and a game stream with no game audio is not a
+ * game stream. Web Audio is the only way to sum two live tracks in a browser.
+ *
+ * Nothing here touches the mic's `enabled` flag: a disabled MediaStreamTrack
+ * feeds silence into its source node, so the existing mute button goes on
+ * working on the mic track while the system audio keeps flowing.
+ */
+function mixAudio(tracks: MediaStreamTrack[]): AudioMix | null {
+  const Ctor =
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!Ctor || tracks.length < 2) return null;
+
+  try {
+    const ctx = new Ctor();
+    const destination = ctx.createMediaStreamDestination();
+    tracks.forEach((track) => {
+      ctx.createMediaStreamSource(new MediaStream([track])).connect(destination);
+    });
+    // Built after an await rather than inside the click, so the autoplay
+    // policy can hand back a suspended context — which emits pure silence.
+    void ctx.resume().catch(() => undefined);
+
+    const track = destination.stream.getAudioTracks()[0] ?? null;
+    if (!track) {
+      void ctx.close().catch(() => undefined);
+      return null;
+    }
+    return { ctx, track };
+  } catch (error) {
+    logger.warn('Audio mixing failed; publishing the microphone alone', error);
+    return null;
+  }
+}
+
+export function GoLiveBroadcaster({
+  streamKey,
+  initialScreenStream = null,
+  onEnd,
+}: GoLiveBroadcasterProps) {
+  const [phase, setPhase] = useState<Phase>('starting');
   const [errorMessage, setErrorMessage] = useState('');
   const [micOn, setMicOn] = useState(true);
-  const [cameraOn, setCameraOn] = useState(true);
+  const [hasMic, setHasMic] = useState(true);
+  const [videoOn, setVideoOn] = useState(true);
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  // Seeded from the prop so the first paint already reads as a screen share
+  // (no mirrored self-view frame, no "Starting camera…" on a desktop capture).
+  const [captureMode, setCaptureMode] = useState<CaptureMode>(
+    initialScreenStream ? 'screen' : 'camera'
+  );
   // Preview mirroring keyed to what the TRACK reports, not what was requested:
   // facingMode is an ideal constraint, so "environment" can be satisfied by a
   // second front camera (two-webcam desktops) — which would un-mirror a
   // still-front-facing self-view if the requested value drove the transform.
-  const [mirror, setMirror] = useState(true);
+  const [mirror, setMirror] = useState(!initialScreenStream);
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
@@ -92,7 +167,24 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
   const streamRef = useRef<MediaStream | null>(null);
   const sessionRef = useRef<WhipSession | null>(null);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
-  const flipInFlightRef = useRef(false);
+  // One lock for every video-source change — flip, share, unshare. Two of them
+  // interleaving would swap tracks out from under each other and orphan a
+  // capture (hardware light on, attached to nothing).
+  const videoSwapRef = useRef(false);
+  const micTrackRef = useRef<MediaStreamTrack | null>(null);
+  const screenStreamRef = useRef<MediaStream | null>(null);
+  const audioMixRef = useRef<AudioMix | null>(null);
+  // The handed-over capture is consumed exactly once, on mount.
+  const initialScreenRef = useRef<MediaStream | null>(initialScreenStream);
+  // Mirrors for the async swap paths, which run long after their closures were
+  // created and must not act on a stale toggle.
+  const videoOnRef = useRef(true);
+  const facingModeRef = useRef<'user' | 'environment'>('user');
+  useEffect(() => { videoOnRef.current = videoOn; }, [videoOn]);
+  useEffect(() => { facingModeRef.current = facingMode; }, [facingMode]);
+
+  /** Feature detection, not a device check: undefined on iOS and on Android. */
+  const canShareScreen = typeof navigator?.mediaDevices?.getDisplayMedia === 'function';
 
   const probeCameras = useCallback(() => {
     navigator.mediaDevices
@@ -147,9 +239,189 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
     sessionRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
+    // The mic and the screen capture are held outside the published stream
+    // (mixing replaces the published audio track with a synthesised one), so
+    // they need retiring by hand or the hardware light stays on.
+    micTrackRef.current?.stop();
+    micTrackRef.current = null;
+    screenStreamRef.current?.getTracks().forEach((t) => t.stop());
+    screenStreamRef.current = null;
+    audioMixRef.current?.track.stop();
+    void audioMixRef.current?.ctx.close().catch(() => undefined);
+    audioMixRef.current = null;
   }, [releaseWakeLock]);
 
-  // Start the camera, then open the ingest session. Every await below
+  /** Acquired on its own for the screen path, where a denial is survivable. */
+  const acquireMic = useCallback(async (): Promise<MediaStreamTrack | null> => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: AUDIO_CONSTRAINTS });
+      return stream.getAudioTracks()[0] ?? null;
+    } catch (error) {
+      logger.warn('Microphone unavailable; broadcasting without it', error);
+      return null;
+    }
+  }, []);
+
+  /**
+   * Rebuilds the published audio from the sources that exist right now and
+   * swaps it into the live session — mic alone, system audio alone, or the two
+   * summed. Runs on every screen-share transition.
+   *
+   * Note the ceiling: WHIP only ever has the senders it was opened with, so a
+   * broadcast that started with no audio at all (screen share, mic denied,
+   * silent capture) cannot grow one later without a renegotiation.
+   */
+  const applySystemAudio = useCallback(async (systemTrack: MediaStreamTrack | null) => {
+    const previous = audioMixRef.current;
+    const mic = micTrackRef.current;
+
+    const mix = systemTrack && mic ? mixAudio([mic, systemTrack]) : null;
+    audioMixRef.current = mix;
+    const next = mix?.track ?? mic ?? systemTrack ?? null;
+
+    await sessionRef.current?.replaceTrack('audio', next);
+
+    // Keep the preview stream honest — teardown stops what it holds.
+    const stream = streamRef.current;
+    if (stream) {
+      stream.getAudioTracks().forEach((t) => stream.removeTrack(t));
+      if (next) stream.addTrack(next);
+    }
+
+    // Only ever retires a synthesised mix; the mic and the system track are
+    // owned by their capture and stopped with it.
+    if (previous) {
+      previous.track.stop();
+      void previous.ctx.close().catch(() => undefined);
+    }
+  }, []);
+
+  /** Puts `track` on air and into the preview, retiring what it replaces. */
+  const swapVideoTrack = useCallback(async (track: MediaStreamTrack): Promise<boolean> => {
+    const stream = streamRef.current;
+    const session = sessionRef.current;
+    if (!stream || !session) return false;
+
+    // Into the live session first so viewers never see a gap, then retire the
+    // old track and splice the new one into the preview.
+    await session.replaceTrack('video', track);
+
+    const old = stream.getVideoTracks()[0];
+    if (old) {
+      stream.removeTrack(old);
+      old.stop();
+    }
+    stream.addTrack(track);
+    track.enabled = videoOnRef.current;
+    if (videoRef.current) videoRef.current.srcObject = stream;
+    return true;
+  }, []);
+
+  const releaseScreenCapture = useCallback(() => {
+    screenStreamRef.current?.getTracks().forEach((t) => t.stop());
+    screenStreamRef.current = null;
+  }, []);
+
+  /**
+   * Back to the webcam. Also the landing point for the browser's own "Stop
+   * sharing" bar, which ends the track behind our back — so a machine with no
+   * webcam has to degrade to a blanked sender rather than a frozen desktop
+   * frame the creator can't see they're still publishing.
+   */
+  const stopScreenShare = useCallback(async () => {
+    if (videoSwapRef.current) return;
+    if (!streamRef.current || !sessionRef.current) return;
+    videoSwapRef.current = true;
+
+    let camera: MediaStreamTrack | null = null;
+    try {
+      const capture = await navigator.mediaDevices
+        .getUserMedia({
+          video: { ...VIDEO_CONSTRAINTS, facingMode: facingModeRef.current },
+          audio: false,
+        })
+        .catch(() => null);
+      camera = capture?.getVideoTracks()[0] ?? null;
+
+      // Teardown may have run while getUserMedia was prompting.
+      if (!streamRef.current || !sessionRef.current) return;
+
+      if (camera) {
+        if (!(await swapVideoTrack(camera))) return;
+        setMirror(camera.getSettings?.().facingMode !== 'environment');
+        camera = null; // adopted into the stream — must not be stopped below
+      } else {
+        logger.warn('No camera to fall back to after screen sharing stopped');
+        await sessionRef.current.replaceTrack('video', null);
+        setVideoOn(false);
+      }
+
+      await applySystemAudio(null);
+      releaseScreenCapture();
+      setCaptureMode('camera');
+    } catch (error) {
+      logger.warn('Returning to the camera failed', error);
+    } finally {
+      camera?.stop();
+      videoSwapRef.current = false;
+    }
+  }, [swapVideoTrack, applySystemAudio, releaseScreenCapture]);
+
+  /** Ends the share when the creator uses the browser's own stop-sharing bar. */
+  const watchForShareStop = useCallback(
+    (track: MediaStreamTrack) => {
+      track.addEventListener('ended', () => {
+        logger.info('Screen share ended from the browser bar');
+        void stopScreenShare();
+      });
+    },
+    [stopScreenShare]
+  );
+
+  /**
+   * Opens the picker and puts the chosen screen, window or tab on air. Safe to
+   * call from the control bar because the click is its own user activation —
+   * unlike mount, which is minutes past the one that started go-live.
+   */
+  const startScreenShare = useCallback(async () => {
+    if (videoSwapRef.current) return;
+    if (!streamRef.current || !sessionRef.current) return;
+    videoSwapRef.current = true;
+
+    let display: MediaStream | null = null;
+    try {
+      display = await navigator.mediaDevices.getDisplayMedia({
+        video: SCREEN_CONSTRAINTS,
+        audio: true,
+      });
+      const track = display.getVideoTracks()[0] ?? null;
+      if (!track) return;
+
+      // Teardown, or an End Stream, may have run while the picker was open.
+      if (!streamRef.current || !sessionRef.current) return;
+      // Sharing implies showing: without this the swap would inherit a paused
+      // video toggle and publish a black frame the controls claim is live.
+      videoOnRef.current = true;
+      if (!(await swapVideoTrack(track))) return;
+
+      screenStreamRef.current = display;
+      watchForShareStop(track);
+      await applySystemAudio(display.getAudioTracks()[0] ?? null);
+
+      setMirror(false);
+      setVideoOn(true);
+      setCaptureMode('screen');
+      display = null; // adopted — must not be stopped below
+    } catch (error) {
+      // Dismissing the picker throws NotAllowedError; that is a normal "no".
+      logger.info('Screen share not started', error);
+    } finally {
+      display?.getTracks().forEach((t) => t.stop());
+      videoSwapRef.current = false;
+    }
+  }, [swapVideoTrack, applySystemAudio, watchForShareStop]);
+
+  // Start the capture, then open the ingest session. Every await below
   // re-checks `cancelled`, so an unmount mid-negotiation cleans up whatever
   // had been acquired by that point instead of stranding a live session.
   useEffect(() => {
@@ -157,22 +429,64 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
 
     (async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { ...VIDEO_CONSTRAINTS, facingMode },
-          audio: AUDIO_CONSTRAINTS,
-        });
+        const handed = initialScreenRef.current;
+        // readyState guards the window between the modal's picker and this
+        // mount: 15-30s of minting, during which the creator can hit the
+        // browser's stop-sharing bar. A dead track means fall back to camera.
+        const screenTrack =
+          handed?.getVideoTracks().find((t) => t.readyState === 'live') ?? null;
 
-        if (cancelled) {
-          stream.getTracks().forEach((t) => t.stop());
-          return;
+        let videoTrack: MediaStreamTrack | null = null;
+        let micTrack: MediaStreamTrack | null = null;
+        let systemAudio: MediaStreamTrack | null = null;
+
+        if (screenTrack) {
+          screenStreamRef.current = handed;
+          videoTrack = screenTrack;
+          systemAudio = handed?.getAudioTracks()[0] ?? null;
+          // A denied mic must not sink a screen share — the tab's own audio is
+          // often the whole point. The camera path has no such fallback.
+          micTrack = await acquireMic();
+          if (cancelled) {
+            micTrack?.stop();
+            return;
+          }
+          setCaptureMode('screen');
+          setMirror(false);
+        } else {
+          if (handed) handed.getTracks().forEach((t) => t.stop());
+          const capture = await navigator.mediaDevices.getUserMedia({
+            video: { ...VIDEO_CONSTRAINTS, facingMode },
+            audio: AUDIO_CONSTRAINTS,
+          });
+          if (cancelled) {
+            capture.getTracks().forEach((t) => t.stop());
+            return;
+          }
+          videoTrack = capture.getVideoTracks()[0] ?? null;
+          micTrack = capture.getAudioTracks()[0] ?? null;
+          setCaptureMode('camera');
+          setMirror(videoTrack?.getSettings?.().facingMode !== 'environment');
+          // Permission was just granted, so enumerateDevices now returns the
+          // real device list — re-probe for the flip button.
+          probeCameras();
         }
+
+        micTrackRef.current = micTrack;
+        setHasMic(!!micTrack);
+        setMicOn(!!micTrack);
+
+        const mix = systemAudio && micTrack ? mixAudio([micTrack, systemAudio]) : null;
+        audioMixRef.current = mix;
+
+        const stream = new MediaStream();
+        if (videoTrack) stream.addTrack(videoTrack);
+        const audioTrack = mix?.track ?? micTrack ?? systemAudio;
+        if (audioTrack) stream.addTrack(audioTrack);
 
         streamRef.current = stream;
         if (videoRef.current) videoRef.current.srcObject = stream;
-        setMirror(stream.getVideoTracks()[0]?.getSettings?.().facingMode !== 'environment');
-        // Permission was just granted, so enumerateDevices now returns the
-        // real device list — re-probe for the flip button.
-        probeCameras();
+        if (screenTrack) watchForShareStop(screenTrack);
         setPhase('connecting');
 
         const session = await publishToWhip({
@@ -217,7 +531,7 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
     // facingMode deliberately excluded: switching cameras swaps the track in
     // place (see flipCamera) rather than restarting the whole ingest session.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [streamKey, teardown, acquireWakeLock, probeCameras]);
+  }, [streamKey, teardown, acquireWakeLock, acquireMic, probeCameras, watchForShareStop]);
 
   // Re-acquire the wake lock when the tab comes back to the foreground; the
   // browser drops it on visibility change and will not restore it itself.
@@ -240,6 +554,8 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
     const onPageHide = () => {
       void sessionRef.current?.stop();
       streamRef.current?.getTracks().forEach((t) => t.stop());
+      micTrackRef.current?.stop();
+      screenStreamRef.current?.getTracks().forEach((t) => t.stop());
     };
     window.addEventListener('pagehide', onPageHide);
     return () => window.removeEventListener('pagehide', onPageHide);
@@ -253,17 +569,19 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
   }, [phase]);
 
   const toggleMic = () => {
-    const track = streamRef.current?.getAudioTracks()[0];
+    // The mic track, not the published one: with system audio mixed in, the
+    // published track carries the game too and muting it would silence both.
+    const track = micTrackRef.current;
     if (!track) return;
     track.enabled = !track.enabled;
     setMicOn(track.enabled);
   };
 
-  const toggleCamera = () => {
+  const toggleVideo = () => {
     const track = streamRef.current?.getVideoTracks()[0];
     if (!track) return;
     track.enabled = !track.enabled;
-    setCameraOn(track.enabled);
+    setVideoOn(track.enabled);
   };
 
   const flipCamera = async () => {
@@ -271,9 +589,9 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
     // press during 'Starting camera…' — or racing End Stream while getUserMedia
     // is still prompting — orphaned the freshly acquired track: attached to
     // nothing, stopped by nothing, camera light on until full page unload.
-    if (flipInFlightRef.current) return;
+    if (videoSwapRef.current) return;
     if (!streamRef.current || !sessionRef.current) return;
-    flipInFlightRef.current = true;
+    videoSwapRef.current = true;
     const next = facingMode === 'user' ? 'environment' : 'user';
     let newTrack: MediaStreamTrack | null = null;
     try {
@@ -286,20 +604,7 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
       // Re-check: teardown may have run while getUserMedia was prompting.
       if (!streamRef.current || !sessionRef.current) return;
 
-      // Swap into the live session first so viewers never see a gap, then
-      // retire the old track and splice the new one into the preview stream.
-      await sessionRef.current.replaceTrack('video', newTrack);
-
-      const oldTrack = streamRef.current.getVideoTracks()[0];
-      if (oldTrack) {
-        streamRef.current.removeTrack(oldTrack);
-        oldTrack.stop();
-      }
-      streamRef.current.addTrack(newTrack);
-      newTrack.enabled = cameraOn;
-      if (videoRef.current) {
-        videoRef.current.srcObject = streamRef.current;
-      }
+      if (!(await swapVideoTrack(newTrack))) return;
       setMirror(newTrack.getSettings?.().facingMode !== 'environment');
       setFacingMode(next);
       newTrack = null; // adopted into the stream — must not be stopped below
@@ -309,7 +614,7 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
       // Any bail-out or throw after acquisition lands here with the track
       // still set — stop it so the second camera doesn't stay captured.
       newTrack?.stop();
-      flipInFlightRef.current = false;
+      videoSwapRef.current = false;
     }
   };
 
@@ -319,9 +624,13 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
     onEnd();
   };
 
+  const isScreen = captureMode === 'screen';
+
   const statusLabel =
-    phase === 'camera'
-      ? 'Starting camera…'
+    phase === 'starting'
+      ? isScreen
+        ? 'Starting screen share…'
+        : 'Starting camera…'
       : phase === 'connecting'
         ? 'Connecting…'
         : phase === 'reconnecting'
@@ -334,27 +643,30 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
     <div className="space-y-4 pb-4">
       <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black">
         {/* muted + playsInline: iOS Safari refuses to autoplay otherwise, and
-            without playsInline it hijacks the video into fullscreen. */}
+            without playsInline it hijacks the video into fullscreen.
+            object-contain for a screen share — cover crops a 16:10 desktop's
+            edges off, which is where the taskbar and the chat window live. */}
         <video
           ref={videoRef}
           autoPlay
           muted
           playsInline
           className={cn(
-            'h-full w-full object-cover',
+            'h-full w-full',
+            isScreen ? 'object-contain' : 'object-cover',
             mirror && 'scale-x-[-1]',
-            !cameraOn && 'opacity-0'
+            !videoOn && 'opacity-0'
           )}
         />
 
-        {!cameraOn && phase !== 'error' && (
+        {!videoOn && phase !== 'error' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-500">
             <VideoOff className="h-8 w-8" />
-            <span className="text-xs">Camera off</span>
+            <span className="text-xs">{isScreen ? 'Screen paused' : 'Camera off'}</span>
           </div>
         )}
 
-        {(phase === 'camera' || phase === 'connecting') && (
+        {(phase === 'starting' || phase === 'connecting') && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60">
             <Loader2 className="h-7 w-7 animate-spin text-white" />
             <span className="text-sm text-white">{statusLabel}</span>
@@ -403,32 +715,68 @@ export function GoLiveBroadcaster({ streamKey, onEnd }: GoLiveBroadcasterProps) 
             </span>
           </div>
         )}
+
+        {isScreen && phase !== 'error' && (
+          <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[11px] text-white">
+            <ScreenShare className="h-3 w-3" />
+            Sharing screen
+          </span>
+        )}
       </div>
 
       <div className="flex items-center justify-center gap-3">
         <ControlButton
           active={micOn}
           onClick={toggleMic}
-          disabled={phase === 'error'}
-          label={micOn ? 'Mute microphone' : 'Unmute microphone'}
+          disabled={phase === 'error' || !hasMic}
+          label={
+            !hasMic
+              ? 'No microphone available'
+              : micOn
+                ? 'Mute microphone'
+                : 'Unmute microphone'
+          }
         >
-          {micOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+          {micOn && hasMic ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
         </ControlButton>
 
         <ControlButton
-          active={cameraOn}
-          onClick={toggleCamera}
+          active={videoOn}
+          onClick={toggleVideo}
           disabled={phase === 'error'}
-          label={cameraOn ? 'Turn camera off' : 'Turn camera on'}
+          label={
+            videoOn
+              ? isScreen
+                ? 'Pause the screen share'
+                : 'Turn camera off'
+              : isScreen
+                ? 'Resume the screen share'
+                : 'Turn camera on'
+          }
         >
-          {cameraOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
+          {videoOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
         </ControlButton>
 
-        {hasMultipleCameras && (
+        {canShareScreen && (
+          <ControlButton
+            active={!isScreen}
+            onClick={isScreen ? stopScreenShare : startScreenShare}
+            disabled={phase === 'error'}
+            label={isScreen ? 'Stop sharing and go back to camera' : 'Share your screen'}
+          >
+            {isScreen ? (
+              <ScreenShareOff className="h-5 w-5" />
+            ) : (
+              <ScreenShare className="h-5 w-5" />
+            )}
+          </ControlButton>
+        )}
+
+        {hasMultipleCameras && !isScreen && (
           <ControlButton
             active
             onClick={flipCamera}
-            disabled={phase === 'error' || !cameraOn}
+            disabled={phase === 'error' || !videoOn}
             label="Switch camera"
           >
             <SwitchCamera className="h-5 w-5" />
