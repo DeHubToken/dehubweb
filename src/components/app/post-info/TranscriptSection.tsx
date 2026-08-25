@@ -11,9 +11,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   ChevronDown, ChevronUp, FileText, Loader2, Copy, Download,
-  RefreshCw, Search, X, Sparkles, ListTree,
+  RefreshCw, Search, X, Sparkles, ListTree, Pencil, Check, ThumbsUp, ThumbsDown,
 } from 'lucide-react';
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
+import type { TranscriptSegment } from '@/hooks/use-transcript';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  applyCorrections,
+  useCorrectionActions,
+  useTranscriptCorrections,
+  type TranscriptCorrection,
+} from '@/hooks/use-transcript-corrections';
 import { supabase } from '@/integrations/supabase/client';
 import { formatTimestamp, formatSrt, downloadFile } from '@/lib/transcript-format';
 import { toast } from 'sonner';
@@ -39,6 +47,159 @@ function Highlight({ text, query }: { text: string; query: string }) {
   );
 }
 
+/**
+ * One transcript line, plus the community-caption affordances: the fix that
+ * has been accepted for it, the ones still waiting on a second opinion, and
+ * the pencil that submits your own.
+ *
+ * Auto-captions mangle accents, cross-talk, names and jargon, and the person
+ * who can hear the difference is usually a viewer rather than the uploader.
+ */
+function TranscriptLine({
+  segment,
+  index,
+  query,
+  onSeek,
+  transcriptId,
+  isCorrected,
+  suggestions,
+}: {
+  segment: TranscriptSegment;
+  index: number;
+  query: string;
+  onSeek?: (seconds: number) => void;
+  transcriptId: string | null;
+  isCorrected: boolean;
+  suggestions: TranscriptCorrection[];
+}) {
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
+  const { submit, vote, remove } = useCorrectionActions(transcriptId);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState(segment.text);
+
+  const startEditing = () => {
+    if (!isAuthenticated) return openLoginModal();
+    setDraft(segment.text);
+    setIsEditing(true);
+  };
+
+  return (
+    <div className="group/line flex gap-3 items-start">
+      <button
+        type="button"
+        onClick={() => {
+          if (onSeek) return onSeek(segment.start);
+          navigator.clipboard.writeText(formatTimestamp(segment.start));
+          toast.success(`Copied ${formatTimestamp(segment.start)}`);
+        }}
+        className="shrink-0 text-white/50 font-mono text-xs pt-0.5 hover:text-white"
+      >
+        {formatTimestamp(segment.start)}
+      </button>
+
+      <div className="flex-1 min-w-0">
+        {isEditing ? (
+          <div className="flex items-center gap-2">
+            <Input
+              autoFocus
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setIsEditing(false);
+                if (e.key !== 'Enter' || !draft.trim()) return;
+                submit.mutate(
+                  { segmentIndex: index, text: draft.trim(), originalText: segment.text },
+                  { onSuccess: () => setIsEditing(false) },
+                );
+              }}
+              maxLength={500}
+              className="h-8 bg-white/5 border-white/15 text-white text-sm"
+            />
+            <button
+              type="button"
+              disabled={!draft.trim() || submit.isPending}
+              onClick={() => submit.mutate(
+                { segmentIndex: index, text: draft.trim(), originalText: segment.text },
+                { onSuccess: () => setIsEditing(false) },
+              )}
+              className="shrink-0 p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-40"
+              aria-label="Submit correction"
+            >
+              {submit.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="shrink-0 p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10"
+              aria-label="Cancel"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ) : (
+          <p className="text-white/90 leading-relaxed">
+            <Highlight text={segment.text} query={query} />
+            {isCorrected && (
+              <span className="ml-1.5 text-[10px] text-white/40 align-middle" title="Corrected by viewers">
+                fixed
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={startEditing}
+              aria-label="Suggest a correction for this line"
+              className="ml-1.5 align-middle p-1 rounded text-white/0 group-hover/line:text-white/40 hover:!text-white focus:text-white/70 transition-colors"
+            >
+              <Pencil className="w-3 h-3" />
+            </button>
+          </p>
+        )}
+
+        {/* Fixes waiting on one more viewer to agree. */}
+        {suggestions.map((suggestion) => {
+          const isMine = !!walletAddress && suggestion.address.toLowerCase() === walletAddress.toLowerCase();
+          return (
+            <div key={suggestion.id} className="mt-1 flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-2 py-1">
+              <p className="flex-1 min-w-0 text-xs text-white/70 truncate">
+                Suggested: {suggestion.text}
+              </p>
+              {isMine ? (
+                <button
+                  type="button"
+                  onClick={() => remove.mutate(suggestion.id)}
+                  className="shrink-0 p-1 rounded text-white/50 hover:text-red-400"
+                  aria-label="Withdraw your suggestion"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => isAuthenticated ? vote.mutate({ correctionId: suggestion.id, value: 1 }) : openLoginModal()}
+                    className="shrink-0 p-1 rounded text-white/50 hover:text-white"
+                    aria-label="This correction is right"
+                  >
+                    <ThumbsUp className="w-3 h-3" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => isAuthenticated ? vote.mutate({ correctionId: suggestion.id, value: -1 }) : openLoginModal()}
+                    className="shrink-0 p-1 rounded text-white/50 hover:text-white"
+                    aria-label="This correction is wrong"
+                  >
+                    <ThumbsDown className="w-3 h-3" />
+                  </button>
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 interface Props {
   tokenId: number;
   durationSeconds?: number;
@@ -54,10 +215,22 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
   const { transcript, status, inFlight, canRetry, start, isLoading } =
     useVideoTranscript(tokenId, open);
 
-  const segments = transcript?.segments ?? [];
+  const rawSegments = transcript?.segments ?? [];
   const chapters = transcript?.chapters ?? [];
-  const fullText = transcript?.full_text ?? '';
   const overview = transcript?.summary ?? null;
+
+  // Viewer corrections. Accepted ones replace the line everywhere below —
+  // reading, searching, copying and the SRT export — because a corrected
+  // caption that only shows in one of those is a caption people stop trusting.
+  const { accepted, suggested } = useTranscriptCorrections(
+    transcript?.id ?? null,
+    open && status === 'ready',
+  );
+  const segments = useMemo(() => applyCorrections(rawSegments, accepted), [rawSegments, accepted]);
+  const fullText = useMemo(
+    () => (accepted.size ? segments.map((s) => s.text).join(' ') : transcript?.full_text ?? ''),
+    [accepted.size, segments, transcript?.full_text],
+  );
 
   // The sweeper's transcribe run kicks the summariser itself. This is the
   // catch-up for rows written before that existed, and it asks once.
@@ -88,9 +261,12 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
     );
   };
 
+  // Indexed, not just filtered: a correction is keyed on the line's position
+  // in the transcript, and a search would otherwise renumber every line.
   const filtered = useMemo(() => {
+    const indexed = segments.map((segment, index) => ({ segment, index }));
     const q = query.trim().toLowerCase();
-    return q ? segments.filter((s) => s.text.toLowerCase().includes(q)) : segments;
+    return q ? indexed.filter(({ segment }) => segment.text.toLowerCase().includes(q)) : indexed;
   }, [segments, query]);
 
   const q = query.trim();
@@ -245,23 +421,17 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
                 {filtered.length === 0 ? (
                   <p className="text-white/50 text-sm py-4 text-center">No matches found</p>
                 ) : (
-                  filtered.map((s, i) => (
-                    <div key={i} className="flex gap-3 items-start">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onSeek) return onSeek(s.start);
-                          navigator.clipboard.writeText(formatTimestamp(s.start));
-                          toast.success(`Copied ${formatTimestamp(s.start)}`);
-                        }}
-                        className="shrink-0 text-white/50 font-mono text-xs pt-0.5 hover:text-white"
-                      >
-                        {formatTimestamp(s.start)}
-                      </button>
-                      <p className="text-white/90 leading-relaxed">
-                        <Highlight text={s.text} query={q} />
-                      </p>
-                    </div>
+                  filtered.map(({ segment: s, index }) => (
+                    <TranscriptLine
+                      key={index}
+                      segment={s}
+                      index={index}
+                      query={q}
+                      onSeek={onSeek}
+                      transcriptId={transcript?.id ?? null}
+                      isCorrected={accepted.has(index)}
+                      suggestions={suggested.get(index) ?? []}
+                    />
                   ))
                 )}
               </div>
