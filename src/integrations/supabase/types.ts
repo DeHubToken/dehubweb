@@ -3347,102 +3347,6 @@ export type Database = {
           },
         ]
       }
-      stage_transcript_translations: {
-        Row: {
-          chapters: Json
-          created_at: string
-          error: string | null
-          id: string
-          language: string
-          segments: Json
-          stage_id: string
-          status: string
-          summary: string | null
-          updated_at: string
-        }
-        Insert: {
-          chapters?: Json
-          created_at?: string
-          error?: string | null
-          id?: string
-          language: string
-          segments?: Json
-          stage_id: string
-          status?: string
-          summary?: string | null
-          updated_at?: string
-        }
-        Update: {
-          chapters?: Json
-          created_at?: string
-          error?: string | null
-          id?: string
-          language?: string
-          segments?: Json
-          stage_id?: string
-          status?: string
-          summary?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      stage_transcripts: {
-        Row: {
-          chapters: Json
-          created_at: string
-          error: string | null
-          full_text: string | null
-          id: string
-          privacy: string
-          segments: Json
-          source_language: string | null
-          speaker_map: Json
-          speaker_overrides: Json
-          speaker_timeline: Json
-          stage_id: string
-          status: string
-          summary: string | null
-          summary_status: string
-          updated_at: string
-        }
-        Insert: {
-          chapters?: Json
-          created_at?: string
-          error?: string | null
-          full_text?: string | null
-          id?: string
-          privacy?: string
-          segments?: Json
-          source_language?: string | null
-          speaker_map?: Json
-          speaker_overrides?: Json
-          speaker_timeline?: Json
-          stage_id: string
-          status?: string
-          summary?: string | null
-          summary_status?: string
-          updated_at?: string
-        }
-        Update: {
-          chapters?: Json
-          created_at?: string
-          error?: string | null
-          full_text?: string | null
-          id?: string
-          privacy?: string
-          segments?: Json
-          source_language?: string | null
-          speaker_map?: Json
-          speaker_overrides?: Json
-          speaker_timeline?: Json
-          stage_id?: string
-          status?: string
-          summary?: string | null
-          summary_status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       staking_records: {
         Row: {
           action: string
@@ -4066,7 +3970,22 @@ export type Database = {
           transcript_id?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "transcript_translations_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "stage_transcripts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transcript_translations_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "transcripts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transcripts: {
         Row: {
@@ -4080,6 +3999,7 @@ export type Database = {
           last_attempt_at: string | null
           model: string | null
           provider: string | null
+          search_tsv: unknown
           segments: Json
           source_kind: string
           source_lang: string | null
@@ -4105,6 +4025,7 @@ export type Database = {
           last_attempt_at?: string | null
           model?: string | null
           provider?: string | null
+          search_tsv?: unknown
           segments?: Json
           source_kind: string
           source_lang?: string | null
@@ -4130,6 +4051,7 @@ export type Database = {
           last_attempt_at?: string | null
           model?: string | null
           provider?: string | null
+          search_tsv?: unknown
           segments?: Json
           source_kind?: string
           source_lang?: string | null
@@ -4574,57 +4496,6 @@ export type Database = {
         }
         Relationships: []
       }
-      video_transcripts: {
-        Row: {
-          chunks_done: number | null
-          chunks_total: number | null
-          created_at: string
-          duration_seconds: number | null
-          error: string | null
-          model: string | null
-          overview: string | null
-          source_lang: string | null
-          status: string
-          token_id: number
-          transcript: Json | null
-          translations: Json
-          updated_at: string
-          vtt_original: string | null
-        }
-        Insert: {
-          chunks_done?: number | null
-          chunks_total?: number | null
-          created_at?: string
-          duration_seconds?: number | null
-          error?: string | null
-          model?: string | null
-          overview?: string | null
-          source_lang?: string | null
-          status?: string
-          token_id: number
-          transcript?: Json | null
-          translations?: Json
-          updated_at?: string
-          vtt_original?: string | null
-        }
-        Update: {
-          chunks_done?: number | null
-          chunks_total?: number | null
-          created_at?: string
-          duration_seconds?: number | null
-          error?: string | null
-          model?: string | null
-          overview?: string | null
-          source_lang?: string | null
-          status?: string
-          token_id?: number
-          transcript?: Json | null
-          translations?: Json
-          updated_at?: string
-          vtt_original?: string | null
-        }
-        Relationships: []
-      }
       winter_wonderland_results: {
         Row: {
           created_at: string
@@ -4983,6 +4854,129 @@ export type Database = {
           seller_address: string | null
           settled_trades: number | null
           total_trades: number | null
+        }
+        Relationships: []
+      }
+      stage_transcript_translations: {
+        Row: {
+          chapters: Json | null
+          created_at: string | null
+          error: string | null
+          id: string | null
+          language: string | null
+          segments: Json | null
+          stage_id: string | null
+          status: string | null
+          summary: string | null
+          updated_at: string | null
+        }
+        Relationships: []
+      }
+      stage_transcripts: {
+        Row: {
+          chapters: Json | null
+          created_at: string | null
+          error: string | null
+          full_text: string | null
+          id: string | null
+          privacy: string | null
+          segments: Json | null
+          source_language: string | null
+          speaker_map: Json | null
+          speaker_overrides: Json | null
+          speaker_timeline: Json | null
+          stage_id: string | null
+          status: string | null
+          summary: string | null
+          summary_status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          chapters?: Json | null
+          created_at?: string | null
+          error?: string | null
+          full_text?: string | null
+          id?: string | null
+          privacy?: string | null
+          segments?: Json | null
+          source_language?: string | null
+          speaker_map?: Json | null
+          speaker_overrides?: Json | null
+          speaker_timeline?: Json | null
+          stage_id?: never
+          status?: string | null
+          summary?: string | null
+          summary_status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          chapters?: Json | null
+          created_at?: string | null
+          error?: string | null
+          full_text?: string | null
+          id?: string | null
+          privacy?: string | null
+          segments?: Json | null
+          source_language?: string | null
+          speaker_map?: Json | null
+          speaker_overrides?: Json | null
+          speaker_timeline?: Json | null
+          stage_id?: never
+          status?: string | null
+          summary?: string | null
+          summary_status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      video_transcripts: {
+        Row: {
+          chunks_done: number | null
+          chunks_total: number | null
+          created_at: string | null
+          duration_seconds: number | null
+          error: string | null
+          model: string | null
+          overview: string | null
+          source_lang: string | null
+          status: string | null
+          token_id: number | null
+          transcript: Json | null
+          translations: Json | null
+          updated_at: string | null
+          vtt_original: string | null
+        }
+        Insert: {
+          chunks_done?: never
+          chunks_total?: never
+          created_at?: string | null
+          duration_seconds?: number | null
+          error?: string | null
+          model?: string | null
+          overview?: string | null
+          source_lang?: string | null
+          status?: string | null
+          token_id?: never
+          transcript?: never
+          translations?: never
+          updated_at?: string | null
+          vtt_original?: string | null
+        }
+        Update: {
+          chunks_done?: never
+          chunks_total?: never
+          created_at?: string | null
+          duration_seconds?: number | null
+          error?: string | null
+          model?: string | null
+          overview?: string | null
+          source_lang?: string | null
+          status?: string | null
+          token_id?: never
+          transcript?: never
+          translations?: never
+          updated_at?: string | null
+          vtt_original?: string | null
         }
         Relationships: []
       }
