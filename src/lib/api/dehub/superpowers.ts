@@ -78,6 +78,8 @@ export interface SuperPowerBooking {
   status: 'active' | 'completed' | 'cancelled';
   /** The stage a Front Row is lifting. Null for every other power. */
   stageId?: string | null;
+  /** The category a Trend Jacker is lifting. Null for every other power. */
+  category?: string | null;
   /** Who else has put a boost behind this one, for a Crew Boost. */
   contributors?: { address: string; tier: string; minutes: number }[];
   /**
@@ -135,6 +137,28 @@ export interface SuperPowerLadder {
   cycleEndsAt: string;
   tiers: SuperPowerTierRow[];
   powers: SuperPowerInfo[];
+}
+
+/** The category holding the trending slot, or null when nothing is running. */
+export interface TrendingTopic {
+  category: string;
+  bookingId: string;
+  tier: string;
+  endsAt: string;
+}
+
+/**
+ * Which category was paid onto the trending list right now.
+ *
+ * Public. Its own read rather than part of `/superpowers/slot` — that one
+ * deals a POST and this a category name, and the list it lands on is not in
+ * the DeHub API at all: it is computed in the browser from Supabase.
+ */
+export async function fetchTrendingTopic(): Promise<TrendingTopic | null> {
+  const response = await apiCall<{ result: TrendingTopic | null }>(
+    '/api/superpowers/trending-topic',
+  );
+  return response?.result ?? null;
 }
 
 /** The stage holding the front row, or null when nothing is running. */
@@ -232,6 +256,8 @@ export async function bookBoost(
     commentId?: string;
     /** `front_row` — a Stage you host, live or scheduled. */
     stageId?: string;
+    /** `trend_jacker` — a category you already post in. */
+    category?: string;
   },
 ): Promise<SuperPowerBooking> {
   const body: Record<string, unknown> = { tokenId, power };
@@ -240,6 +266,7 @@ export async function bookBoost(
   if (aim?.targetTiers?.length) body.targetTiers = aim.targetTiers;
   if (aim?.commentId) body.commentId = aim.commentId;
   if (aim?.stageId) body.stageId = aim.stageId;
+  if (aim?.category) body.category = aim.category;
 
   const response = await apiCall<{ result: SuperPowerBooking }>('/api/superpowers/boost', {
     method: 'POST',
