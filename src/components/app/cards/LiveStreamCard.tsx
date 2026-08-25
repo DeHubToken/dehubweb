@@ -35,6 +35,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+// The WHEP subscriber pulls in peer-connection code and loads on demand at
+// attach time (see the playback effect) — a static import here would put it
+// on the boot path, since this card is eager via HomeFeed.
+import { playbackIdFromHlsUrl } from '@/lib/livepeer/playback-id';
+import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useAuth } from '@/contexts/AuthContext';
@@ -59,6 +64,13 @@ import { createLogger } from '@/lib/logger';
 import type { LiveStream } from '@/types/feed.types';
 
 const logger = createLogger('LiveStreamCard');
+
+/**
+ * How long a negotiated WebRTC session gets to actually deliver a frame.
+ * The nasty case is not an error — it is a session that connects cleanly and
+ * plays nothing, which has no event to listen for.
+ */
+const WHEP_START_TIMEOUT_MS = 6000;
 
 interface LiveStreamCardProps {
   stream: LiveStream;
@@ -86,6 +98,15 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     ...(stream.playbackUrls || []).filter((u): u is string => !!u && u !== stream.playbackUrl),
   ].filter((u): u is string => !!u && u.includes('.m3u8')), [stream.playbackUrl, stream.playbackUrls]);
   const hasPlaybackUrl = urlsToTry.length > 0;
+  // The WebRTC route reuses the id already embedded in the HLS URL, so nothing
+  // new has to be threaded through the feed mappers to reach it.
+  const whepPlaybackId = useMemo(
+    () => (stream.isLive ? playbackIdFromHlsUrl(urlsToTry[0]) : null),
+    [stream.isLive, urlsToTry]
+  );
+  const [transport, setTransport] = useState<'whep' | 'hls'>(
+    typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
+  );
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
   const [error, setError] = useState<string | null>(null);
@@ -96,6 +117,8 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
+  /** One WebRTC attempt per card: once it fails, HLS keeps the element. */
+  const whepFailedRef = useRef(false);
   const videoId = `live-${stream.id}`;
 
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -121,6 +144,13 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     if (stream.isLive) setStreamEnded(false);
   }, [stream.isLive]);
 
+  // Same flip, second consequence: the WebRTC id only exists once the card
+  // knows the stream is live, which is usually a beat after mount. Take the
+  // fast path when it appears — unless it has already been tried and failed.
+  useEffect(() => {
+    if (whepPlaybackId && !whepFailedRef.current) setTransport('whep');
+  }, [whepPlaybackId]);
+
   // Fetch DHB balance when gift drawer opens
   useEffect(() => {
     if (!showGiftDrawer || !walletAddress) return;
@@ -143,7 +173,80 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     return () => { cancelled = true; };
   }, [showGiftDrawer, walletAddress]);
 
+  /**
+   * WebRTC first, HLS second.
+   *
+   * HLS is a playlist of finished segments, so a viewer sits 10-20 seconds
+   * behind the broadcaster — long enough that a tip or a question lands on a
+   * host who has moved on. WHEP plays the same playbackId over WebRTC at about
+   * a second. It is not universal (no nearby node, a UDP-hostile network, a
+   * stream that never went live), so a failure or a silent connect falls
+   * straight back to the ladder below rather than leaving a black frame.
+   */
   useEffect(() => {
+    if (transport !== 'whep' || streamEnded || !whepPlaybackId) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+    let session: WhepSubscription | null = null;
+
+    const fallBack = (reason: string) => {
+      if (cancelled) return;
+      logger.info('Falling back to HLS', { reason, streamId: stream.id });
+      // Latched: without it the promote-on-live effect below would flip the
+      // transport straight back and the two would trade the element forever.
+      whepFailedRef.current = true;
+      setTransport('hls');
+    };
+
+    // A session that negotiates but never delivers media is the worst case:
+    // no error to catch and nothing on screen. Give it a few seconds, then go.
+    const timer = setTimeout(() => {
+      if (!cancelled && !video.videoWidth) fallBack('no frames');
+    }, WHEP_START_TIMEOUT_MS);
+
+    (async () => {
+      try {
+        const { subscribeToWhep } = await import('@/lib/livepeer/whep');
+        if (cancelled) return;
+        session = await subscribeToWhep({
+          playbackId: whepPlaybackId,
+          onStateChange: (state, detail) => {
+            if (cancelled) return;
+            if (state === 'playing') setError(null);
+            else if (state === 'reconnecting') setError('Reconnecting…');
+            else if (state === 'failed') fallBack(detail || 'connection failed');
+          },
+        });
+        if (cancelled) {
+          await session.stop();
+          return;
+        }
+        video.srcObject = session.stream;
+        await video.play().catch(() => undefined);
+        videoPlaybackManager.register(videoId, () => {
+          video.pause();
+          setIsPlaying(false);
+        });
+      } catch (e) {
+        fallBack((e as Error)?.message || 'subscribe failed');
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      videoPlaybackManager.unregister(videoId);
+      void session?.stop();
+      // Leaving a dead srcObject attached stops the HLS path from ever
+      // getting a picture onto this element.
+      if (video.srcObject) video.srcObject = null;
+    };
+  }, [transport, whepPlaybackId, streamEnded, videoId, stream.id]);
+
+  useEffect(() => {
+    if (transport !== 'hls') return;
     const video = videoRef.current;
     const shouldAttemptPlayback = stream.isLive || hasPlaybackUrl;
     if (!video || !shouldAttemptPlayback || urlsToTry.length === 0) return;
@@ -342,7 +445,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     // is false, and when the late-isLive resync clears the latch this effect
     // must run again on the re-render that mounts the element — the isLive
     // flip alone fires it one render too early, against a null videoRef.
-  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry, streamEnded]);
+  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry, streamEnded, transport]);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;

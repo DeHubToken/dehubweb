@@ -22,26 +22,13 @@
  */
 
 import { createLogger } from '@/lib/logger';
+import { ICE_SERVERS, waitForIceGathering, resolveSessionResource } from './ice';
 
 const logger = createLogger('WHIP');
 
 /** Overridable so a self-hosted catalyst can be pointed at without a rebuild. */
 const WHIP_BASE_URL =
   import.meta.env.VITE_LIVEPEER_WHIP_URL || 'https://livepeer.studio/webrtc';
-
-/**
- * Non-trickle ICE: the spec allows trickling via PATCH, but Livepeer accepts a
- * complete offer and that avoids a second round trip. Gathering usually
- * finishes in a few hundred ms; this cap stops a network that never reports
- * `complete` (some corporate NATs, some mobile stacks) from hanging go-live
- * forever. Whatever candidates exist at the cap are good enough to connect.
- */
-const ICE_GATHERING_TIMEOUT_MS = 3000;
-
-const ICE_SERVERS: RTCIceServer[] = [
-  { urls: 'stun:stun.l.google.com:19302' },
-  { urls: 'stun:stun.cloudflare.com:3478' },
-];
 
 export type WhipState =
   | 'connecting'
@@ -66,31 +53,6 @@ export interface PublishOptions {
   streamKey: string;
   stream: MediaStream;
   onStateChange?: (state: WhipState, detail?: string) => void;
-}
-
-/** Resolves once ICE gathering completes, or once the cap elapses. */
-function waitForIceGathering(pc: RTCPeerConnection): Promise<void> {
-  if (pc.iceGatheringState === 'complete') return Promise.resolve();
-
-  return new Promise((resolve) => {
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      pc.removeEventListener('icegatheringstatechange', onChange);
-      clearTimeout(timer);
-      resolve();
-    };
-    const onChange = () => {
-      if (pc.iceGatheringState === 'complete') finish();
-    };
-
-    pc.addEventListener('icegatheringstatechange', onChange);
-    const timer = setTimeout(() => {
-      logger.warn('ICE gathering timed out, publishing candidates gathered so far');
-      finish();
-    }, ICE_GATHERING_TIMEOUT_MS);
-  });
 }
 
 /**
@@ -256,10 +218,8 @@ export async function publishToWhip({
 
     // Resolve against response.url so a relative Location lands on the
     // regional catalyst we were redirected to, not on livepeer.studio.
-    const location = response.headers.get('Location');
-    if (location) {
-      resourceUrl = new URL(location, response.url).toString();
-    } else {
+    resourceUrl = resolveSessionResource(response);
+    if (!resourceUrl) {
       // Without a resource URL we cannot DELETE; closing the peer connection
       // still ends the broadcast, Livepeer just reclaims it on its own timer.
       logger.warn('WHIP response had no Location header; teardown will rely on ICE timeout');
