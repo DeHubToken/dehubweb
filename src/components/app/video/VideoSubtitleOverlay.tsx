@@ -25,6 +25,7 @@ import {
   useTranslatedSegments,
   type TranscriptSegment,
 } from '@/hooks/use-video-transcript';
+import { applyCorrections, useTranscriptCorrections } from '@/hooks/use-transcript-corrections';
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
@@ -131,13 +132,22 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     void requestTranslation();
   }, [enabled, isReady, normalizedLang, translationStatus, requestTranslation]);
 
+  // Viewer corrections to the original-language lines. Only fetched once
+  // captions are actually wanted, and only applied to the original: a
+  // correction is a fix to what was said, and the translations were made from
+  // the uncorrected text.
+  const { accepted: acceptedCorrections } = useTranscriptCorrections(
+    transcript?.id ?? null,
+    wantTranscript && isReady,
+  );
+
   const activeSegments: TranscriptSegment[] = useMemo(() => {
     if (!isReady) return [];
     const base = (normalizedLang === 'original' || !translatedSegments)
-      ? (transcript?.segments ?? [])
+      ? applyCorrections(transcript?.segments ?? [], acceptedCorrections)
       : translatedSegments;
     return splitSegmentsIntoLines(base, 38);
-  }, [isReady, normalizedLang, translatedSegments, transcript]);
+  }, [isReady, normalizedLang, translatedSegments, transcript, acceptedCorrections]);
 
   // ── Native <track> mounting for original-language captions ──
   // When VTT is available and user picked original, mount a native track
@@ -156,7 +166,12 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     };
   }, [vttBlobUrl]);
 
-  const useNativeTrack = enabled && normalizedLang === 'original' && !!vttBlobUrl;
+  // The native track is built from the stored VTT, which predates any
+  // correction — so once a line has been fixed, fall back to the JS renderer
+  // that reads the corrected segments. Captions people fixed have to be the
+  // captions people see.
+  const useNativeTrack =
+    enabled && normalizedLang === 'original' && !!vttBlobUrl && acceptedCorrections.size === 0;
 
   useEffect(() => {
     const v = videoRef.current;
