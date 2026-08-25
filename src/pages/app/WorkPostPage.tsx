@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageSquare, Scissors, Briefcase } from 'lucide-react';
 import { useCreateJob } from '@/features/work/hooks/use-work';
+import { bountyPath } from '@/features/work/seo';
 import type { WorkJobType, WorkCurrency, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
@@ -49,7 +50,7 @@ export default function WorkPostPage() {
         max_units: jobType === 'contract' ? 1 : unitsNum,
         deadline: deadline || undefined,
       });
-      navigate(`/work/${job.id}`);
+      navigate(bountyPath(job));
     } catch { /* toast already shown */ }
   };
 

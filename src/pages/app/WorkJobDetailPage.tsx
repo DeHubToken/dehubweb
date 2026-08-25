@@ -10,13 +10,18 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { bountyPath, bountyTitle, bountyDescription, bountyUrl, isBountyIndexable } from '@/features/work/seo';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function WorkJobDetailPage() {
-  const { jobId } = useParams<{ jobId: string }>();
+  // Either shape of bounty URL lands here: /bounty/<n> (canonical) or the
+  // legacy /work/<uuid>. useWorkJob resolves both; everything downstream keys
+  // off the row's real uuid, which is what the child tables' job_id holds.
+  const { jobKey } = useParams<{ jobKey: string }>();
   const navigate = useNavigate();
   const { walletAddress, openLoginModal } = useAuth();
-  const { data: job, isLoading } = useWorkJob(jobId);
+  const { data: job, isLoading } = useWorkJob(jobKey);
+  const jobId = job?.id;
   const { data: applications = [] } = useJobApplications(jobId);
   const { data: submissions = [] } = useJobSubmissions(jobId);
   const { data: reviews = [] } = useJobReviews(jobId);
@@ -58,7 +63,15 @@ export default function WorkJobDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <SEOHead title={`${job.title} — DeHub Bounties`} description={(job.description || 'Open bounty on DeHub.').slice(0, 155)} url={`https://dehub.io/work/${job.id}`} />
+      {/* Same title, description, canonical and indexability the edge worker
+          serves crawlers for this URL — see src/features/work/seo.ts. */}
+      <SEOHead
+        title={bountyTitle(job)}
+        description={bountyDescription(job)}
+        url={bountyUrl(job)}
+        image={job.cover_image_url || 'https://dehub.io/og/work.jpg'}
+        noindex={!isBountyIndexable(job)}
+      />
       <button onClick={() => navigate('/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
@@ -80,7 +93,7 @@ export default function WorkJobDetailPage() {
           </div>
           {isPoster && isJobEditable(job) && (
             <button
-              onClick={() => navigate(`/work/${job.id}/edit`)}
+              onClick={() => navigate(`${bountyPath(job)}/edit`)}
               className="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-medium inline-flex items-center gap-1.5 transition-colors"
             >
               <Pencil className="w-3 h-3" /> Edit
