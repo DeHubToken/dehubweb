@@ -2616,7 +2616,7 @@ export const newPostsMetadata: BlogPost[] = [
       "name": "DeHub Team"
     },
     "publishedAt": "2026-08-22T12:00:00.000Z",
-    "updatedAt": "2026-08-23T09:00:00.000Z",
+    "updatedAt": "2026-08-24T12:00:00.000Z",
     "tags": [
       "Development",
       "Update",
@@ -3177,7 +3177,7 @@ export const latestPostMetadata: BlogPost | undefined = {
     "name": "DeHub Team"
   },
   "publishedAt": "2026-08-22T12:00:00.000Z",
-  "updatedAt": "2026-08-23T09:00:00.000Z",
+  "updatedAt": "2026-08-24T12:00:00.000Z",
   "tags": [
     "Development",
     "Update",
