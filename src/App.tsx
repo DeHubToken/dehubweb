@@ -130,14 +130,6 @@ const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
-const AdminLoginPage = React.lazy(() => import("./pages/admin/AdminLoginPage"));
-const AdminUsersPage = React.lazy(() => import("./pages/admin/AdminUsersPage"));
-const AdminAdsPage = React.lazy(() => import("./pages/admin/AdminAdsPage"));
-const AdminModerationPage = React.lazy(() => import("./pages/admin/AdminModerationPage"));
-const AdminChatPage = React.lazy(() => import("./pages/admin/AdminChatPage"));
-const AdminRoute = React.lazy(() =>
-  import("./components/admin/AdminRoute").then((m) => ({ default: m.AdminRoute }))
-);
 // One persistent docs/blog surface for both /docs/* and the canonical
 // /guides/<slug> blog posts — providers + sidebar mount ONCE and stay mounted
 // across the /docs ↔ /guides boundary (see DocsSurface + the shared parent
@@ -435,15 +427,14 @@ function AppContent() {
           <Route path="/delete-account" element={<DeleteAccount />} />
           <Route path="/auth/confirm" element={<Suspense fallback={<PageLoader />}><AuthConfirm /></Suspense>} />
 
-          {/* Admin panel — email/password auth, separate from user wallet session */}
-          <Route path="/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />
-          <Route path="/admin" element={<Suspense fallback={<PageLoader />}><AdminRoute /></Suspense>}>
-            <Route index element={<Navigate to="/admin/users" replace />} />
-            <Route path="users" element={<Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense>} />
-            <Route path="ads" element={<Suspense fallback={<PageLoader />}><AdminAdsPage /></Suspense>} />
-            <Route path="moderation" element={<Suspense fallback={<PageLoader />}><AdminModerationPage /></Suspense>} />
-            <Route path="chat" element={<Suspense fallback={<PageLoader />}><AdminChatPage /></Suspense>} />
-          </Route>
+          {/*
+            /admin used to live here — a second admin frontend on the public
+            site, sharing the real admin API token behind a route guard whose
+            entire body was "does a token exist". No role check, no verification.
+            Every page it carried is now on godmode.dehub.io, including the ads
+            review queue, which moved there last because it was the only one
+            without an equivalent. Nothing links here and nothing should.
+          */}
 
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />

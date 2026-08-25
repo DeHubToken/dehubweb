@@ -23,10 +23,19 @@ const DEHUB_API_BASE = 'https://api.dehub.io';
 const MAX_FOLLOWER_PAGES = 50; // 50 x 100 = 5k followers per creator cap
 const FOLLOWER_PAGE_SIZE = 100;
 
+/**
+ * Approving an ad spends someone's budget and puts a stranger's creative in the
+ * feed, so this asks for admin, not merely "some admin role".
+ *
+ * The probe is `GET /api/admin` — the admin roster — which the DeHub API
+ * restricts to SUPER_ADMIN and ADMIN. It used to probe `/api/admin/users`,
+ * which moderators and (at the time) viewers could also reach, so anyone with a
+ * moderation login could approve campaigns.
+ */
 async function isAdmin(authHeader: string | null): Promise<boolean> {
   if (!authHeader?.startsWith('Bearer ')) return false;
   try {
-    const res = await fetch(`${DEHUB_API_BASE}/api/admin/users?page=1&limit=1`, {
+    const res = await fetch(`${DEHUB_API_BASE}/api/admin?page=1&limit=1`, {
       headers: { Authorization: authHeader },
     });
     return res.ok;
