@@ -62,7 +62,7 @@ const OG_CARD_ROUTES = new Set([
   'top-100', 'music', 'tv',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk',
-  'raffle', 'stake',
+  'raffle', 'stake', 'usernames',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
   'arcade/trenchstar',
@@ -927,6 +927,16 @@ const MARKETING_PAGES = {
 <li><strong>Fixed-price contracts</strong> — hire creators for logos, video, translation and community work.</li>
 </ul>`,
   },
+  'usernames': {
+    title: 'Username Marketplace — Buy & Sell DeHub Handles for DHB',
+    description: 'Browse DeHub usernames for sale and buy one with DHB. Short, numeric and original handles, transferred on-chain the moment payment clears — or list your own.',
+    heading: 'DeHub Username Marketplace',
+    bodyHtml: `<p>Every DeHub profile lives at <strong>dehub.io/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in DHB, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
+<h2>Buying a handle</h2>
+<p>The asking price is quoted by DeHub, not by the browser, and the payment goes wallet-to-wallet — DeHub takes no cut and never holds your funds. Search a name you want and DeHub also tells you whether it is simply unclaimed, in which case you can take it for free instead of buying it.</p>
+<h2>Selling yours</h2>
+<p>You can list the handle you are currently using, at any price in DHB. You choose the name you move to before listing, so the swap is instant and settled the moment a buyer pays. Your posts, followers and wallet stay exactly where they are — only the handle moves.</p>`,
+  },
   'affiliate': {
     title: 'DeHub Affiliate — Earn 20% Revenue Share',
     description: 'Refer creators to DeHub and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.',
@@ -1488,6 +1498,10 @@ const SSR_STATIC_ROUTES = new Set([
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
   'music', 'radio', 'tv', 'glossary', 'bridge', 'agents',
   'assistant', 'creators', 'jobs',
+  // Same reason as 'arcade' below: /app/usernames and /usernames are the same
+  // page, and without this the /app twin self-canonicalizes and indexes as a
+  // duplicate. Rendered from MARKETING_PAGES, never proxied to the fn.
+  'usernames',
   // Listed for canonicalizePath, not for the Supabase fn: /app/arcade is a
   // real SPA route and without this it self-canonicalizes, indexing as a
   // duplicate of /arcade. The page itself is rendered from MARKETING_PAGES,
