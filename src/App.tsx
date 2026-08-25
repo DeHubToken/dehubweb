@@ -18,6 +18,7 @@ import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
+import { scheduleLocalCacheSweep } from "@/lib/local-cache-sweep";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
 import { LoginModal, prefetchLoginModal } from "@/components/app/LoginModal";
@@ -236,6 +237,11 @@ function migrateStaleCacheOnce() {
 }
 if (typeof window !== 'undefined') {
   migrateStaleCacheOnce();
+  // Separate from the migration above, which is a one-shot keyed on a version
+  // number. This runs every boot and is about SIZE: the per-profile and per-DM
+  // caches write one key each and never delete any, and when the shared 5 MB
+  // quota fills the failure is silent — the newest write is the one dropped.
+  scheduleLocalCacheSweep();
 }
 
 const queryClient = new QueryClient({

@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { useDraft } from '@/hooks/use-draft';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -54,16 +55,25 @@ interface ChatInputProps {
   thread?: SmartReplyTurn[];
   /** Who the user is talking to — labels the other side for the drafter. */
   peerName?: string;
+  /**
+   * Scope this composer's text is saved under, so a half-typed message survives
+   * closing the thread, a reload, or the tab being shut. MUST be stable for the
+   * life of the conversation — pass the peer, never the conversation id, which
+   * changes under you the first time you message someone (see
+   * lib/conversation-identity). Omit it and the composer behaves as before.
+   */
+  draftKey?: string | null;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, replyTo, onCancelReply, initialText, thread, peerName }: ChatInputProps) {
-  const [message, setMessage] = useState(initialText ?? '');
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, replyTo, onCancelReply, initialText, thread, peerName, draftKey }: ChatInputProps) {
+  const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
   // in an effect once the conversation resolves) — adopt it only while the
-  // composer is still empty so we never clobber text the user typed.
+  // composer is still empty so we never clobber text the user typed, or a
+  // draft they left here days ago.
   useEffect(() => {
     if (initialText) setMessage(prev => (prev ? prev : initialText));
-  }, [initialText]);
+  }, [initialText, setMessage]);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);

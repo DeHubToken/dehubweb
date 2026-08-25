@@ -78,6 +78,7 @@ export function StageChat({
       // the obvious reason, and on an ended one because the comments outlive
       // the stage and nobody else can clean them up.
       canModerate={isHost}
+      draftKey={`stage:${space.id}`}
       icon={MessageSquare}
       title={ended ? 'Comments' : 'Live chat'}
       emptyHint={

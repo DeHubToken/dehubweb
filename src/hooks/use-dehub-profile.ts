@@ -165,17 +165,38 @@ interface UseDeHubProfileOptions {
  * Pass address to get isFollowing/followsYou status
  */
 const PROFILE_CACHE_PREFIX = 'dehub-profile-cache:';
+/**
+ * A week. This entry exists to paint a name and avatar before the API answers,
+ * not to be the source of truth for either. Stamping it is also what lets the
+ * boot sweep evict it — unstamped, one key per profile ever opened accumulated
+ * forever in a quota shared with auth, wallet and drafts. See lib/local-cache-sweep.
+ */
+const PROFILE_CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
 
 function readProfileCache(key: string): ProfileData | undefined {
+  if (!key) return undefined;
   try {
     const raw = localStorage.getItem(PROFILE_CACHE_PREFIX + key);
-    return raw ? (JSON.parse(raw) as ProfileData) : undefined;
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw) as { v?: number; t?: number; data?: ProfileData };
+    // Pre-TTL entries were the bare ProfileData, with no way to tell how old
+    // they are. Drop rather than trust; the query below refetches immediately.
+    if (parsed?.v !== 1 || typeof parsed.t !== 'number' || !parsed.data) {
+      localStorage.removeItem(PROFILE_CACHE_PREFIX + key);
+      return undefined;
+    }
+    if (Date.now() - parsed.t > PROFILE_CACHE_TTL) {
+      localStorage.removeItem(PROFILE_CACHE_PREFIX + key);
+      return undefined;
+    }
+    return parsed.data;
   } catch { return undefined; }
 }
 
 function writeProfileCache(key: string, data: ProfileData): void {
+  if (!key) return;
   try {
-    localStorage.setItem(PROFILE_CACHE_PREFIX + key, JSON.stringify(data));
+    localStorage.setItem(PROFILE_CACHE_PREFIX + key, JSON.stringify({ v: 1, t: Date.now(), data }));
   } catch { /* quota exceeded — ignore */ }
 }
 
