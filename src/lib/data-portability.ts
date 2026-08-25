@@ -30,9 +30,10 @@ import {
 } from '@/lib/api/dehub';
 import { readGroups, sanitiseGroups, writeGroups, type FollowGroup } from '@/lib/follow-groups';
 import { getCreatorPlaybackRates, setCreatorPlaybackRates } from '@/lib/video-preferences';
+import { collectArchive, type ArchiveStep, type DeHubArchive } from '@/lib/data-archive';
 
 export const EXPORT_FORMAT = 'dehub-export';
-export const EXPORT_VERSION = 1;
+export const EXPORT_VERSION = 2;
 
 /** Page sizes and ceilings — an export is a snapshot, not a database dump. */
 const PAGE = 100;
@@ -71,6 +72,12 @@ export interface DeHubDataExport {
     hideWatched: boolean;
     channelSpeeds: Record<string, number>;
   };
+  /**
+   * Everything the account holds that no import can absorb — profile, posts,
+   * comments, messages, notifications, transactions. Written from version 2
+   * on; absent from any file made before it, which is why it is optional.
+   */
+  archive?: DeHubArchive;
 }
 
 export interface ImportPlan {
@@ -165,14 +172,18 @@ function readHideWatched(): boolean {
   }
 }
 
-export async function buildExport(account: ExportedAccount): Promise<DeHubDataExport> {
+export async function buildExport(
+  account: ExportedAccount,
+  onStep?: ArchiveStep,
+): Promise<DeHubDataExport> {
   const address = lower(account.address);
   // Independent reads — one slow endpoint should not serialise the rest.
-  const [following, blocked, savedPosts, bookmarkFolders] = await Promise.all([
+  const [following, blocked, savedPosts, bookmarkFolders, archive] = await Promise.all([
     collectFollowing(address).catch(() => []),
     collectBlocked().catch(() => []),
     collectSaved().catch(() => []),
     collectFolders().catch(() => []),
+    collectArchive(address, onStep),
   ]);
 
   return {
@@ -189,6 +200,7 @@ export async function buildExport(account: ExportedAccount): Promise<DeHubDataEx
       hideWatched: readHideWatched(),
       channelSpeeds: getCreatorPlaybackRates(),
     },
+    archive,
   };
 }
 
@@ -230,6 +242,9 @@ export function parseExport(raw: string): DeHubDataExport {
       hideWatched: parsed.preferences?.hideWatched === true,
       channelSpeeds: parsed.preferences?.channelSpeeds ?? {},
     },
+    // Read-only baggage: the import touches none of it, but round-tripping a
+    // file must not quietly strip the half the user actually asked for.
+    archive: parsed.archive ?? undefined,
   };
 }
 

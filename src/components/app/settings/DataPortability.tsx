@@ -49,30 +49,52 @@ export function DataPortability() {
   const [isApplying, setIsApplying] = useState(false);
   const [plan, setPlan] = useState<ImportPlan | null>(null);
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [exportStep, setExportStep] = useState<{ done: number; total: number } | null>(null);
 
   const address = user?.address || walletAddress || '';
 
   const handleExport = async () => {
     if (!address) return;
     setIsExporting(true);
+    setExportStep(null);
     try {
-      const data = await buildExport({
-        address,
-        username: user?.username,
-        displayName: (user as { displayName?: string } | null)?.displayName,
-      });
+      const data = await buildExport(
+        {
+          address,
+          username: user?.username,
+          displayName: (user as { displayName?: string } | null)?.displayName,
+        },
+        (done, total) => setExportStep({ done, total }),
+      );
       downloadExport(data);
       toast.success(
-        t('settings.exportReady', 'Your data is downloading — {{count}} accounts followed, {{saved}} saved posts.', {
-          count: data.following.length,
-          saved: data.savedPosts.length,
-        }),
+        t(
+          'settings.exportReady2',
+          'Your data is downloading — {{posts}} posts, {{comments}} comments, {{messages}} messages, {{count}} accounts followed.',
+          {
+            count: data.following.length,
+            posts: data.archive?.posts.length ?? 0,
+            comments: data.archive?.comments.length ?? 0,
+            messages: data.archive?.conversations.reduce((sum, convo) => sum + convo.messages.length, 0) ?? 0,
+          },
+        ),
       );
+      // A partial export is still worth having, but the user has to know it is
+      // partial — silently shipping eleven of twelve sections is the failure.
+      const missing = data.archive?.meta.failed ?? [];
+      if (missing.length > 0) {
+        toast.info(
+          t('settings.exportPartial', 'These sections could not be read and are missing: {{sections}}.', {
+            sections: missing.join(', '),
+          }),
+        );
+      }
     } catch (error) {
       console.error('[export]', error);
       toast.error(t('settings.exportFailed', 'Could not build your export. Try again.'));
     } finally {
       setIsExporting(false);
+      setExportStep(null);
     }
   };
 
@@ -129,10 +151,14 @@ export function DataPortability() {
       <SettingsRow
         icon={<Download />}
         title={t('settings.extractData')}
-        description={t(
-          'settings.extractDataDesc2',
-          'Download who you follow, your blocks, saved posts, bookmark folders, follow groups and playback settings as one file.',
-        )}
+        description={
+          isExporting && exportStep
+            ? t('settings.exportStep', 'Collecting your data — {{done}} of {{total}} sections…', exportStep)
+            : t(
+                'settings.extractDataDesc3',
+                'Download everything on this account as one file: your profile, posts, comments, messages, notifications, transactions, follows, blocks, saved posts, folders and settings.',
+              )
+        }
         action={
           <Button
             variant="outline"
