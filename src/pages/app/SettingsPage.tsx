@@ -110,6 +110,7 @@ import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hook
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettings';
+import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
@@ -761,6 +762,13 @@ function ProfileSettings() {
       <div>
         <h3 className="font-medium text-white mb-4">{t('settings.signIn', 'Sign-in')}</h3>
         <EmailSignInSettings />
+      </div>
+
+      {/* An ENS name is an alias for the profile URL, not a rename, so it sits
+          with identity rather than with sign-in. */}
+      <div>
+        <h3 className="font-medium text-white mb-4">{t('settings.ensSection', 'ENS')}</h3>
+        <EnsHandleSettings />
       </div>
 
       {/* Cover Image */}
