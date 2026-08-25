@@ -6,6 +6,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';
+import { warmLoginSheet } from '@/components/app/LoginModal';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import wandUrl from '@/assets/wand.png';
@@ -98,16 +99,20 @@ export default function PromptLanding() {
           />
         </button>
         {!isAuthenticated && (
-          <LiquidGlassBubble2
-            label={isConnecting ? t('nav.connecting') : needsSignature ? t('nav.signMessage') : t('nav.login')}
-            onClick={() => openLoginModal()}
-            // 110px fitted "Log in" but not the actual label, which is
-            // "Log in / Sign up", so it wrapped to two lines. Sized for the
-            // longest of the three states this button shows.
-            width="152px"
-            height="40px"
-            disabled={isConnecting}
-          />
+          // The wrapper span carries the warm handlers — LiquidGlassBubble2
+          // forwards only onClick, and the events bubble up to here.
+          <span onPointerDown={warmLoginSheet} onMouseEnter={warmLoginSheet}>
+            <LiquidGlassBubble2
+              label={isConnecting ? t('nav.connecting') : needsSignature ? t('nav.signMessage') : t('nav.login')}
+              onClick={() => openLoginModal()}
+              // 110px fitted "Log in" but not the actual label, which is
+              // "Log in / Sign up", so it wrapped to two lines. Sized for the
+              // longest of the three states this button shows.
+              width="152px"
+              height="40px"
+              disabled={isConnecting}
+            />
+          </span>
         )}
       </div>
 

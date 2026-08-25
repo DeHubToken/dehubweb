@@ -32,6 +32,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
+import { warmLoginSheet } from '@/components/app/LoginModal';
 
 /**
  * Terminates the rail's nav list. Deliberately NOT in NAV_ITEMS: that array is
@@ -261,6 +262,13 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       setShowAuthPrompt(true);
       return;
     }
+  };
+
+  // Hover / touch-start on the logged-out CTA warms the login sheet — its
+  // first-open mount dance and body chunk land in the hover gap, so the tap
+  // itself starts the slide-up on the same frame.
+  const warmSheetForLogin = () => {
+    if (!isAuthenticated) warmLoginSheet();
   };
 
   // The rail's own running order. Home is pinned to the top wherever it sits in
@@ -730,6 +738,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               isCollapsed ? "w-full h-[44px] p-[7px]" : "w-full"
             )}
             onClick={handlePostClick}
+            onPointerDown={warmSheetForLogin}
+            onMouseEnter={warmSheetForLogin}
             disabled={isConnecting}
           >
             <div className={cn(

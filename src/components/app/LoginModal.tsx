@@ -25,7 +25,7 @@ import React, { Suspense, useCallback, useEffect, useLayoutEffect, useState } fr
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { type LoginStep, resumingStep } from '@/components/app/login/steps';
@@ -41,6 +41,18 @@ const LoginModalBody = React.lazy(() =>
  */
 export function prefetchLoginModal(): void {
   void import('@/components/app/login/LoginModalBody').catch(() => {});
+}
+
+/**
+ * Call from a login entry point's hover / pointerdown — BEFORE the click. Two
+ * things get done in the gap where they cost nothing visible: this drawer's
+ * first-open mount dance (dormant→mounting→live) runs early, and the body
+ * chunk starts arriving if the idle prefetch was starved. Both are idempotent;
+ * once live the sheet behaves exactly as any reopened sheet does.
+ */
+export function warmLoginSheet(): void {
+  warmDeferredSheets();
+  prefetchLoginModal();
 }
 
 interface LoginModalProps {
@@ -158,7 +170,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // viewport. Falls back to full-viewport when those vars are unset (e.g.
   // routes without the app shell/sidebars).
   return (
-    <Drawer open={open} onOpenChange={handleClose}>
+    <Drawer open={open} onOpenChange={handleClose} warmable>
       <DrawerContent
         data-login-modal
         hideHandle
