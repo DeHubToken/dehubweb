@@ -15,6 +15,7 @@ import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
+import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { AppLayout } from "./components/app/AppLayout";
@@ -295,6 +296,8 @@ function AppContent() {
   const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect } = useAuth();
   const queryClient = useQueryClient();
   usePreloadIcons();
+  // A pushed notification focuses this tab and posts where it wanted to go.
+  useNotificationClickRouting();
 
   // Warm the sheet's contents so the skeleton inside it stays theoretical. The
   // timeout matters: a feed that never goes idle used to starve this
