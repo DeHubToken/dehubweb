@@ -56,13 +56,35 @@ const anonHeaders = {
   Authorization: `Bearer ${SUPABASE_KEY}`,
 };
 
+/**
+ * fetch, with "could not reach the function at all" folded into the same
+ * unavailable state as an explicit 404.
+ *
+ * Supabase's 404 for an undeployed function carries no CORS headers, so the
+ * browser rejects it at the preflight and fetch REJECTS rather than resolving
+ * — every `res.status === 404` check below is unreachable in a real browser
+ * until the function exists. Checking the status looked correct, typechecked,
+ * and only the console showed why it never fired.
+ */
+async function reach(input: string, init?: RequestInit): Promise<Response> {
+  let res: Response;
+  try {
+    res = await fetch(input, init);
+  } catch {
+    throw new FilmReviewsUnavailableError();
+  }
+  // Still checked, for the case where something between us and the function
+  // answers with CORS headers and a 404 — an edge rule, a proxy, a rename.
+  if (res.status === 404) throw new FilmReviewsUnavailableError();
+  return res;
+}
+
 export async function fetchFilmReviews(
   justwatchId: string,
   objectType: ObjectType,
 ): Promise<FilmReviewsResponse> {
-  const res = await fetch(target(justwatchId, objectType), { headers: anonHeaders });
+  const res = await reach(target(justwatchId, objectType), { headers: anonHeaders });
 
-  if (res.status === 404) throw new FilmReviewsUnavailableError();
   if (!res.ok) throw new Error(`Could not load reviews (${res.status})`);
 
   return res.json();
@@ -83,7 +105,7 @@ export async function saveFilmReview(input: SaveFilmReviewInput): Promise<FilmRe
   const token = getAuthToken();
   if (!token) throw new Error('Sign in to leave a review.');
 
-  const res = await fetch(target(input.justwatchId, input.objectType), {
+  const res = await reach(target(input.justwatchId, input.objectType), {
     method: 'POST',
     headers: {
       ...anonHeaders,
@@ -99,7 +121,6 @@ export async function saveFilmReview(input: SaveFilmReviewInput): Promise<FilmRe
     }),
   });
 
-  if (res.status === 404) throw new FilmReviewsUnavailableError();
 
   const data = await res.json().catch(() => null);
   if (!res.ok) throw new Error(data?.error ?? `Could not save your review (${res.status})`);
@@ -114,12 +135,11 @@ export async function deleteFilmReview(
   const token = getAuthToken();
   if (!token) throw new Error('Sign in to manage your review.');
 
-  const res = await fetch(target(justwatchId, objectType), {
+  const res = await reach(target(justwatchId, objectType), {
     method: 'DELETE',
     headers: { ...anonHeaders, 'x-dehub-token': token },
   });
 
-  if (res.status === 404) throw new FilmReviewsUnavailableError();
   if (!res.ok) {
     const data = await res.json().catch(() => null);
     throw new Error(data?.error ?? `Could not remove your review (${res.status})`);

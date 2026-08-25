@@ -68,3 +68,55 @@ describe('justwatch client — not-configured mapping', () => {
     await expect(fetchProviders('en_GB')).resolves.toEqual({ configured: true, providers });
   });
 });
+
+/**
+ * The case the tests above missed.
+ *
+ * They mocked fetch as RESOLVING with a 404, which is not what a browser does.
+ * Supabase's 404 for an undeployed function carries no CORS headers, so the
+ * preflight fails and fetch REJECTS — the status is never observed, and every
+ * `res.status === 404` branch is dead code until the function exists. The suite
+ * was green, the typecheck was clean, and the page still showed a live search
+ * box that answered "Nothing found" for every query.
+ */
+describe('justwatch client — unreachable, not merely 404', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('treats a rejected fetch as NotConfigured', () => {
+    // What a CORS-blocked preflight actually produces.
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+
+    return expect(fetchProviders('en_GB')).rejects.toBeInstanceOf(
+      JustWatchNotConfiguredError,
+    );
+  });
+
+  it('treats a rejected search the same way', () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+
+    return expect(searchTitles('dune', 'en_GB')).rejects.toBeInstanceOf(
+      JustWatchNotConfiguredError,
+    );
+  });
+});
+
+describe('film-reviews client — unreachable', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('treats a rejected fetch as Unavailable, so the section hides instead of looking empty', async () => {
+    const { fetchFilmReviews, FilmReviewsUnavailableError } = await import('../api/film-reviews');
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+
+    await expect(fetchFilmReviews('12345', 'movie')).rejects.toBeInstanceOf(
+      FilmReviewsUnavailableError,
+    );
+  });
+});
