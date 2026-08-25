@@ -175,3 +175,59 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') self.skipWaiting();
 });
+
+// ── Push ────────────────────────────────────────────────────────────────────
+// The whole point of a service worker for notifications: this runs with every
+// tab closed, which is the difference between a notification and a thing you
+// find later in the app.
+//
+// The payload is written by the backend (buildWebPushPayload) and is
+// deliberately small — a push payload is capped at 4 KB once encrypted, and
+// everything except the deep link is re-fetchable the moment the tab opens.
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    // A push with no body, or a body that is not ours, still means something
+    // happened — showing a generic line beats showing nothing, and on Chrome
+    // a push event that displays no notification eventually costs the site
+    // its permission.
+    payload = {};
+  }
+
+  const title = payload.title || 'DeHub';
+  const options = {
+    body: payload.body || 'Something happened on DeHub',
+    icon: payload.icon || '/icon-192.png',
+    badge: '/icon-192.png',
+    // Same tag replaces rather than stacks, so ten likes on one post are one
+    // line in the tray instead of ten.
+    tag: payload.tag || 'dehub',
+    data: { url: payload.url || '/app/notifications' },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// Focus an open tab rather than opening a second copy of the app — a reader
+// with DeHub already open does not want two of it, and the tab they have is
+// the one holding their scroll position and their session.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = (event.notification.data && event.notification.data.url) || '/app/notifications';
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) {
+          // navigate() is not on every browser's WindowClient; focusing and
+          // letting the page route itself is the version that works everywhere.
+          client.postMessage({ type: 'dehub:notification-click', url: target });
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(target);
+    })
+  );
+});
