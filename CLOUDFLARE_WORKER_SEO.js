@@ -2477,6 +2477,23 @@ async function handleRequest(request, env) {
     }));
   }
 
+  // A single title, /cinema/<film|series>/<id>. sectionKey is the whole path,
+  // so these match no table and would fall through to the generic handling —
+  // which means a film link shared to Twitter or Discord unfurls with no card
+  // at all, and the share button exists precisely to produce those links.
+  //
+  // They serve the Cinema page's own HTML and canonicalize onto /cinema. Per
+  // title metadata would be better and is not possible yet: the titles live
+  // behind the JustWatch partner API, which needs a token the worker does not
+  // have. Revisit when that is provisioned — the shape to copy is the stores
+  // branch below, which reads PostgREST directly.
+  if (/^cinema\/(film|series)\/\d+$/.test(sectionKey) && Object.hasOwn(MARKETING_PAGES, 'cinema')) {
+    return guard(new Response(buildMarketingHtml('cinema', MARKETING_PAGES['cinema']), {
+      status: 200,
+      headers: blogHeaders,
+    }));
+  }
+
   // Edge-rendered marketing pages — never proxied to the Supabase fn (its
   // STATIC_ROUTES allowlist predates these routes and 404s them).
   if (Object.hasOwn(MARKETING_PAGES, sectionKey)) {

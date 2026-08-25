@@ -33,7 +33,8 @@ export type DehubLinkKind =
   | 'store'
   | 'listing'
   | 'event'
-  | 'stage';
+  | 'stage'
+  | 'film';
 
 export interface DehubLinkMatch {
   kind: DehubLinkKind;
@@ -55,6 +56,10 @@ export interface DehubLinkMatch {
   stageId?: string;
   /** Set when the link used the short form (/stages/7) instead of the uuid. */
   stageShortId?: string;
+  /** JustWatch id of a /cinema title. */
+  filmId?: string;
+  /** Which catalogue the id belongs to — the offers endpoint needs both. */
+  filmObjectType?: 'movie' | 'show';
 }
 
 // ── Hosts ───────────────────────────────────────────────────────────────────
@@ -86,7 +91,7 @@ function isDehubHost(host: string): boolean {
  */
 const RESERVED_ROOT_SEGMENTS = new Set([
   'app', 'admin', 'affiliate', 'agents', 'arcade', 'assistant', 'auth', 'blog',
-  'bridge', 'communities', 'connect', 'creator', 'creators', 'delete-account',
+  'bridge', 'cinema', 'communities', 'connect', 'creator', 'creators', 'delete-account',
   'docs', 'dpay', 'editor', 'events', 'explore', 'features', 'governance',
   'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'mcp', 'mobile-preview',
   'music', 'premium', 'pricing', 'prompt', 'posts', 'r', 'radio', 'robots.txt',
@@ -246,6 +251,23 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
     return { ...base, kind: 'stage', stageShortId: scoped[1] };
   }
 
+  // ── /cinema/:type/:id — one film or series ──
+  //
+  // Top-level, like /stage. The type segment is part of the URL rather than a
+  // lookup because the offers endpoint is keyed by object_type as well as id:
+  // without it the card cannot fetch what it is pointing at. Bare /cinema is
+  // the search page and carries nothing to card, so it stays a plain link.
+  if (scoped[0] === 'cinema' && scoped[1] && scoped[2]) {
+    if (scoped[1] !== 'film' && scoped[1] !== 'series') return null;
+    if (!/^\d+$/.test(scoped[2])) return null;
+    return {
+      ...base,
+      kind: 'film',
+      filmObjectType: scoped[1] === 'series' ? 'show' : 'movie',
+      filmId: scoped[2],
+    };
+  }
+
   // ── /:username ──
   //
   // Host-qualified links only. A bare "/foo" in a sentence is far more likely
@@ -381,6 +403,12 @@ export const dehubLinkFor = {
       ? `${shareOrigin()}/stages/${stage.short_id}`
       : `${shareOrigin()}/stage/${encodeURIComponent(stage.id)}`;
   },
+  /**
+   * One title on /cinema. `film`/`series` rather than the API's
+   * `movie`/`show` because this ends up in a URL people read.
+   */
+  film: (objectType: 'movie' | 'show', id: string | number) =>
+    `${shareOrigin()}/cinema/${objectType === 'show' ? 'series' : 'film'}/${encodeURIComponent(String(id))}`,
 };
 
 /** Human label for a link kind — used by share sheets and fallback chips. */
@@ -394,5 +422,6 @@ export function dehubLinkLabel(kind: DehubLinkKind): string {
     case 'listing': return 'item';
     case 'event': return 'event';
     case 'stage': return 'stage';
+    case 'film': return 'title';
   }
 }
