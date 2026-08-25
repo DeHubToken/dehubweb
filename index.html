@@ -67,28 +67,71 @@
           // sharp before React got there — the wrong order, which is the whole
           // point of the effect.
           //
-          // IT LIFTS ON INTENT, NOT ON A TIMER. The frost is what makes the
-          // visitor read the welcome panel rather than the feed behind it, so
-          // it holds for as long as they are still reading and gets out of the
-          // way the moment they do anything — scroll, click, key, wheel, touch.
-          // There is deliberately no time limit: a timer either cuts a reader
-          // off mid-sentence or makes an impatient visitor wait, and any input
-          // at all clears this, so it can never trap anyone.
+          // FIRST VISIT ONLY, and it lifts on SCROLLING DOWN — never on a
+          // timer. The frost exists to point a brand-new visitor at the welcome
+          // panel; it has no job for anyone who has already seen it, so it is
+          // skipped for a returning visitor, for anyone signed in, and for
+          // anyone who has dismissed the panel. Those are the same conditions
+          // under which HomeIntro itself declines to render, plus the
+          // seen-it-once flag set below.
+          //
+          // `dehub_token` alone is NOT a signed-in test: it is the wallet/API
+          // token, and a visitor authenticated through Supabase has none. That
+          // mistake shipped once and made the panel flash for every Supabase
+          // user, so the sb-* session is checked by SHAPE across all keys — the
+          // project ref is a build-time value, the key can be relocated, and
+          // supabase-js chunks a large session across `.0`/`.1`.
           if (location.pathname === '/') {
-            d.dataset.feedLoading = 'on';
-            var unfrost = function () {
-              if (d.dataset.feedLoading !== 'on') return;
-              d.dataset.feedLoading = 'off';
-              // Past the 1.2s transition in index.css; the sheet is a
-              // full-viewport backdrop-filter, so it has to stop existing
-              // rather than merely go clear.
-              setTimeout(function () { delete d.dataset.feedLoading; }, 1300);
-            };
-            // `scroll` needs the capture phase: the app scrolls <body>, not
-            // window, and a scroll event on an element does not bubble.
-            ['scroll', 'wheel', 'touchmove', 'pointerdown', 'keydown'].forEach(function (ev) {
-              window.addEventListener(ev, unfrost, { once: true, passive: true, capture: true });
-            });
+            var skip = localStorage.getItem('dehub.introFrostSeen') === '1'
+                    || localStorage.getItem('dehub.homeIntroDismissed') === '1';
+            if (!skip) {
+              for (var fi = 0; fi < localStorage.length; fi++) {
+                var fk = localStorage.key(fi);
+                if (fk && /^sb-.*-auth-token/.test(fk) && localStorage.getItem(fk)) { skip = true; break; }
+              }
+            }
+            if (!skip) {
+              var ftk = localStorage.getItem('dehub_token');
+              var fex = parseInt(localStorage.getItem('dehub_token_expires_at') || '0', 10);
+              skip = !!ftk && (!fex || Date.now() < fex);
+            }
+
+            if (!skip) {
+              d.dataset.feedLoading = 'on';
+              try { localStorage.setItem('dehub.introFrostSeen', '1'); } catch (e2) { /* one repeat is fine */ }
+
+              var unfrost = function () {
+                if (d.dataset.feedLoading !== 'on') return;
+                d.dataset.feedLoading = 'off';
+                // Past the 1.2s transition in index.css; the sheet is a
+                // full-viewport backdrop-filter, so it has to stop existing
+                // rather than merely go clear.
+                setTimeout(function () { delete d.dataset.feedLoading; }, 1300);
+              };
+
+              // DOWNWARD scroll only. Reading the panel is the point, so moving
+              // up or sideways must not clear it.
+              // Read all three scroll roots: this app scrolls <body>, so
+              // window.scrollY alone is not reliable here.
+              var scrollY = function () {
+                return window.scrollY || d.scrollTop || document.body.scrollTop || 0;
+              };
+              var lastY = scrollY();
+              var onScroll = function () {
+                var y = scrollY();
+                if (y > lastY) unfrost();
+                lastY = y;
+              };
+              // Capture phase: a scroll event on an element does not bubble, so
+              // a listener on window never sees <body> scrolling without it.
+              window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+              // Wheel-down covers the gesture before any scrolling has actually
+              // happened — a trackpad flick on a page still settling fires wheel
+              // first, and the two agree on direction.
+              window.addEventListener('wheel', function (e) {
+                if (e.deltaY > 0) unfrost();
+              }, { passive: true, capture: true });
+            }
           }
         } catch (e) { /* never block boot */ }
       })();
