@@ -35,6 +35,7 @@ import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
+import { ProposalVerdictPill, verdictOf, type ProposalVerdict } from '@/components/app/governance/ProposalVerdict';
 import {
   useGovernanceProposals,
   useCompletedProposals,
@@ -75,6 +76,7 @@ function GovernanceCard({
   voteDisabled,
   userBadgeBalance,
   username,
+  verdict,
 }: {
   proposal: GovernanceProposal;
   currentVote: number | undefined;
@@ -82,6 +84,8 @@ function GovernanceCard({
   voteDisabled: boolean;
   userBadgeBalance: number | undefined;
   username: string | null | undefined;
+  /** Set on a decided proposal: shows the verdict pill and locks voting. */
+  verdict?: ProposalVerdict;
 }) {
   const { t } = useTranslation();
   const [showComments, setShowComments] = useState(false);
@@ -153,7 +157,10 @@ function GovernanceCard({
           creatorUsername={proposal.author_username || undefined}
           badgeLookupId={proposal.author_username || proposal.author_wallet_address}
         />
-        <span className="text-zinc-500 text-[10px] shrink-0 pt-1">{formatTimeAgo(proposal.created_at, t)}</span>
+        <div className="flex items-center gap-1.5 shrink-0 pt-1">
+          {verdict && <ProposalVerdictPill verdict={verdict} />}
+          <span className="text-zinc-500 text-[10px]">{formatTimeAgo(proposal.created_at, t)}</span>
+        </div>
       </div>
 
       <SharedTranslationProvider>
@@ -203,7 +210,7 @@ function GovernanceCard({
             dislikeCount={proposal.dislike_count ?? 0}
             commentCount={proposal.comment_count}
             voteWeight={userWeight}
-            disabled={voteDisabled}
+            disabled={voteDisabled || !!verdict}
           />
         </div>
 
@@ -501,55 +508,6 @@ function GovernanceSkeletons() {
 }
 
 // ──────────────────────────────────────────────────
-// Completed Proposal Card
-// ──────────────────────────────────────────────────
-function CompletedCard({ proposal }: { proposal: GovernanceProposal }) {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [expanded, setExpanded] = useState(false);
-  const isPassed = proposal.status === 'passed' || (proposal.status === 'completed' && proposal.like_count > proposal.dislike_count);
-
-  return (
-    <div
-      className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 flex gap-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
-      onClick={() => navigate(`/app/governance/${proposal.id}`)}
-    >
-      <div className="flex flex-col items-center justify-center min-w-[40px]">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isPassed ? 'bg-emerald-500/15' : 'bg-red-500/15'}`}>
-          {isPassed
-            ? <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            : <X className="w-4 h-4 text-red-400" />
-          }
-        </div>
-      </div>
-
-      <SharedTranslationProvider>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start gap-2 mb-1.5">
-            <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
-            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${
-              isPassed ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
-            }`}>
-              {isPassed ? t('governance.passed') : t('governance.rejected')}
-            </span>
-          </div>
-
-          <TranslatableText text={proposal.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" hideControls />
-
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-zinc-500 text-[11px]">{formatTimeAgo(proposal.updated_at, t)}</span>
-            <span className="text-zinc-500 text-[11px]">·</span>
-            <span className="text-zinc-500 text-[11px]">{t('governance.weightedVotesFor', { count: proposal.like_count })}</span>
-            <span className="text-zinc-500 text-[11px]">·</span>
-            <ProposalTranslateButton />
-          </div>
-        </div>
-      </SharedTranslationProvider>
-    </div>
-  );
-}
-
-// ──────────────────────────────────────────────────
 // Infinite Scroll Sentinel
 // ──────────────────────────────────────────────────
 function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () => void; isFetching: boolean }) {
@@ -698,8 +656,8 @@ export default function GovernancePage() {
   };
 
   const { data: totalCount = proposals.length } = useTotalGovernanceCount();
-  const passedProposals = useMemo(() => (completedProposals ?? []).filter(p => p.status === 'passed' || (p.status === 'completed' && p.like_count > p.dislike_count)), [completedProposals]);
-  const rejectedProposals = useMemo(() => (completedProposals ?? []).filter(p => p.status === 'rejected' || (p.status === 'completed' && p.like_count <= p.dislike_count)), [completedProposals]);
+  const passedProposals = useMemo(() => (completedProposals ?? []).filter(p => verdictOf(p) === 'passed'), [completedProposals]);
+  const rejectedProposals = useMemo(() => (completedProposals ?? []).filter(p => verdictOf(p) === 'rejected'), [completedProposals]);
   const passedCount = passedProposals.length;
   const rejectedCount = rejectedProposals.length;
 
@@ -895,7 +853,16 @@ export default function GovernancePage() {
           ) : passedProposals.length > 0 ? (
             <div className="space-y-3">
               {passedProposals.map((proposal) => (
-                <CompletedCard key={proposal.id} proposal={proposal} />
+                <GovernanceCard
+                  key={proposal.id}
+                  proposal={proposal}
+                  currentVote={userVotes?.[proposal.id]?.type}
+                  onVote={handleVote}
+                  voteDisabled
+                  userBadgeBalance={userBadgeBalance}
+                  username={username}
+                  verdict="passed"
+                />
               ))}
             </div>
           ) : (
@@ -916,7 +883,16 @@ export default function GovernancePage() {
           ) : rejectedProposals.length > 0 ? (
             <div className="space-y-3">
               {rejectedProposals.map((proposal) => (
-                <CompletedCard key={proposal.id} proposal={proposal} />
+                <GovernanceCard
+                  key={proposal.id}
+                  proposal={proposal}
+                  currentVote={userVotes?.[proposal.id]?.type}
+                  onVote={handleVote}
+                  voteDisabled
+                  userBadgeBalance={userBadgeBalance}
+                  username={username}
+                  verdict="rejected"
+                />
               ))}
             </div>
           ) : (
