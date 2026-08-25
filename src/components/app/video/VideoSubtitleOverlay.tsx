@@ -7,9 +7,12 @@
  * numeric tokenId. The overlay no-ops when tokenId is missing.
  *
  * - CC button toggles subtitles on/off (persisted in localStorage).
- * - Dropdown lets the user pick any language; translations are AI-generated
- *   on demand and cached server-side via the translate-transcript function.
- * - If no transcript exists yet, tapping the button kicks off transcription.
+ * - Dropdown lets the user pick any language; a language nobody has asked for
+ *   yet is translated once and cached in `transcript_translations`, so every
+ *   viewer after the first reads a row.
+ * - Transcripts are produced by the sweeper, not by this button. Tapping it on
+ *   a video the sweeper has not reached yet still starts one, which is why the
+ *   attempt budget is respected here rather than spinning forever.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
@@ -17,8 +20,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { useVideoTranscript, type TranscriptSegment } from '@/hooks/use-video-transcript';
-import { useTranslatedSegments } from '@/hooks/use-video-subtitles';
+import {
+  useVideoTranscript,
+  useTranslatedSegments,
+  type TranscriptSegment,
+} from '@/hooks/use-video-transcript';
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
@@ -81,12 +87,15 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   // Only fetch transcript once user has shown intent (open popover or enabled subs)
   const wantTranscript = enabled || open;
 
-  const { data: transcript, status, start, isLoading: transcriptLoading } =
+  const { transcript, status: rowStatus, inFlight, canRetry, start, isLoading: transcriptLoading } =
     useVideoTranscript(numericId || null, !!numericId && wantTranscript);
 
-  const isReady = transcript?.status === 'ready';
-  const isWorking =
-    transcript?.status === 'pending' || transcript?.status === 'processing';
+  const isReady = rowStatus === 'ready';
+  const isWorking = inFlight;
+  // A run that finished with nothing said, and one that gave up. Both used to
+  // be stored as 'ready', so the button sat switched on over silence.
+  const isEmpty = rowStatus === 'empty';
+  const isFailed = rowStatus === 'failed';
 
   // Treat english variants as "original" — the underlying transcripts are
   // produced in the spoken language (usually English) so translating en→en
@@ -103,16 +112,29 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     return l;
   }, [lang, sourceLang]);
 
-  const { data: translatedSegments, isFetching: translating } = useTranslatedSegments(
-    numericId || null,
+  const {
+    segments: translatedSegments,
+    status: translationStatus,
+    isFetching: translating,
+    request: requestTranslation,
+  } = useTranslatedSegments(
+    transcript?.id ?? null,
     normalizedLang,
     !!numericId && enabled && isReady && normalizedLang !== 'original',
   );
 
+  // Only ask for a language nobody has cached. Everyone after the first viewer
+  // of that language reads the row the first one paid for.
+  useEffect(() => {
+    if (!enabled || !isReady || normalizedLang === 'original') return;
+    if (translationStatus === 'ready' || translationStatus === 'processing') return;
+    void requestTranslation();
+  }, [enabled, isReady, normalizedLang, translationStatus, requestTranslation]);
+
   const activeSegments: TranscriptSegment[] = useMemo(() => {
     if (!isReady) return [];
     const base = (normalizedLang === 'original' || !translatedSegments)
-      ? (transcript?.transcript?.segments ?? [])
+      ? (transcript?.segments ?? [])
       : translatedSegments;
     return splitSegmentsIntoLines(base, 38);
   }, [isReady, normalizedLang, translatedSegments, transcript]);
@@ -121,12 +143,12 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   // When VTT is available and user picked original, mount a native track
   // on the <video> element — the browser handles perfect timestamp sync.
   const vttBlobUrl = useMemo(() => {
-    const vtt = transcript?.vtt_original;
+    const vtt = transcript?.vtt;
     if (!vtt) return null;
     const rechunked = rechunkVtt(vtt, 38);
     const blob = new Blob([rechunked], { type: 'text/vtt' });
     return URL.createObjectURL(blob);
-  }, [transcript?.vtt_original]);
+  }, [transcript?.vtt]);
 
   useEffect(() => {
     return () => {
@@ -259,8 +281,9 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isReady && !isWorking) {
-      // Kick off transcription
-      start.mutate();
+      // Nothing to switch on yet. Asking again is only worth it while the run
+      // has attempts left — an exhausted one would just spin the spinner.
+      if (canRetry) start.mutate({});
       setEnabled(true);
       return;
     }
@@ -314,6 +337,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         sizePx={sizePx}
         isReady={isReady}
         isWorking={isWorking}
+        isEmpty={isEmpty}
+        isFailed={isFailed}
         langLabel={langLabel}
         query={query}
         setQuery={setQuery}
@@ -341,6 +366,8 @@ interface SubtitleMenuProps {
   sizePx: number;
   isReady: boolean;
   isWorking: boolean;
+  isEmpty: boolean;
+  isFailed: boolean;
   langLabel: string;
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
@@ -353,7 +380,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
   const {
     open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
-    isReady, isWorking, langLabel, query, setQuery, filteredLangs, lang, setLang,
+    isReady, isWorking, isEmpty, isFailed, langLabel, query, setQuery, filteredLangs, lang, setLang,
   } = props;
   const isTouch = useIsTouchDevice();
 
@@ -421,7 +448,13 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       </div>
       {!isReady && (
         <p className="text-[11px] text-white/50">
-          {isWorking ? 'Generating transcript…' : 'No transcript yet. Toggle on to generate.'}
+          {isWorking
+            ? 'Generating subtitles…'
+            : isEmpty
+            ? 'No speech found in this video.'
+            : isFailed
+            ? 'Subtitles could not be generated.'
+            : 'Subtitles are being prepared.'}
         </p>
       )}
       {isReady && (
