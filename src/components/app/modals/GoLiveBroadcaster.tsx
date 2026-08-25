@@ -22,6 +22,8 @@ import {
   ScreenShareOff,
   PictureInPicture2,
   Move,
+  Wand2,
+  Music,
   Loader2,
   AlertTriangle,
   Radio,
@@ -34,6 +36,10 @@ import {
   type BubbleCorner,
   type CameraBubble,
 } from '@/lib/livepeer/compositor';
+import { useVoiceEffects } from '@/hooks/use-voice-effects';
+import type { VoiceEffectId } from '@/constants/voice-effects.constants';
+import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
+import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('GoLiveBroadcaster');
@@ -172,6 +178,11 @@ export function GoLiveBroadcaster({
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
+  // Only one drawer of extras at a time — the broadcast preview is the point
+  // of this panel and two open boards would push it off a laptop screen.
+  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'sounds'>('none');
+  const [effect, setEffect] = useState<VoiceEffectId>('none');
+  const [switchingEffect, setSwitchingEffect] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -181,8 +192,15 @@ export function GoLiveBroadcaster({
   // interleaving would swap tracks out from under each other and orphan a
   // capture (hardware light on, attached to nothing).
   const videoSwapRef = useRef(false);
+  // micTrackRef is what gets PUBLISHED: the output of the voice-effect graph,
+  // not the microphone itself. The raw capture is kept beside it because it is
+  // the thing that must be stopped to release the hardware, and the thing the
+  // mute button disables (muting the published track would take the soundboard
+  // down with it).
   const micTrackRef = useRef<MediaStreamTrack | null>(null);
+  const rawMicStreamRef = useRef<MediaStream | null>(null);
   const screenStreamRef = useRef<MediaStream | null>(null);
+  const systemAudioRef = useRef<MediaStreamTrack | null>(null);
   const audioMixRef = useRef<AudioMix | null>(null);
   // The canvas composite and the webcam it draws, held apart from the published
   // stream: while the bubble is on, what goes out is the canvas, and both the
@@ -200,6 +218,20 @@ export function GoLiveBroadcaster({
 
   /** Feature detection, not a device check: undefined on iOS and on Android. */
   const canShareScreen = typeof navigator?.mediaDevices?.getDisplayMedia === 'function';
+
+  // The Stages voice-effect graph, reused as-is: mic → effect chain →
+  // MediaStreamDestination. The broadcast publishes that destination rather
+  // than the microphone, which is what lets effects switch and soundboard
+  // clips mix in without the WHIP session noticing.
+  const {
+    processStream,
+    rebuildEffect,
+    cleanup: cleanupVoice,
+    setRawMicEnabled,
+    injectSound,
+    stopInjectedSound,
+    getProcessedStream,
+  } = useVoiceEffects();
 
   const probeCameras = useCallback(() => {
     navigator.mediaDevices
@@ -268,23 +300,53 @@ export function GoLiveBroadcaster({
     // they need retiring by hand or the hardware light stays on.
     micTrackRef.current?.stop();
     micTrackRef.current = null;
+    // cleanupVoice closes the effect graph's context but never touches the
+    // capture feeding it — the hardware is released here or not at all.
+    cleanupVoice();
+    rawMicStreamRef.current?.getTracks().forEach((t) => t.stop());
+    rawMicStreamRef.current = null;
     screenStreamRef.current?.getTracks().forEach((t) => t.stop());
     screenStreamRef.current = null;
+    systemAudioRef.current = null;
     audioMixRef.current?.track.stop();
     void audioMixRef.current?.ctx.close().catch(() => undefined);
     audioMixRef.current = null;
-  }, [releaseWakeLock, releaseBubble]);
+  }, [releaseWakeLock, releaseBubble, cleanupVoice]);
 
-  /** Acquired on its own for the screen path, where a denial is survivable. */
-  const acquireMic = useCallback(async (): Promise<MediaStreamTrack | null> => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: AUDIO_CONSTRAINTS });
-      return stream.getAudioTracks()[0] ?? null;
-    } catch (error) {
-      logger.warn('Microphone unavailable; broadcasting without it', error);
-      return null;
-    }
-  }, []);
+  /**
+   * Captures the mic and runs it through the voice-effect graph. What comes
+   * back is the graph's output — the track that gets published — and it is
+   * also the destination the soundboard mixes clips into, which is why a
+   * sound effect is heard by viewers even while the host is muted.
+   *
+   * A graph failure is survivable: fall back to the bare capture and lose the
+   * effects rather than the broadcast.
+   */
+  const acquireMic = useCallback(
+    async (existing?: MediaStream | null): Promise<MediaStreamTrack | null> => {
+      // The camera path already prompted for audio alongside video and passes
+      // that capture in; the screen path has to ask for the mic on its own.
+      let raw = existing ?? null;
+      if (!raw) {
+        try {
+          raw = await navigator.mediaDevices.getUserMedia({ audio: AUDIO_CONSTRAINTS });
+        } catch (error) {
+          logger.warn('Microphone unavailable; broadcasting without it', error);
+          return null;
+        }
+      }
+      if (!raw.getAudioTracks().length) return null;
+      rawMicStreamRef.current = raw;
+
+      try {
+        return await processStream(raw, 'none');
+      } catch (error) {
+        logger.warn('Voice effect graph failed; publishing the raw microphone', error);
+        return raw.getAudioTracks()[0] ?? null;
+      }
+    },
+    [processStream]
+  );
 
   /**
    * Rebuilds the published audio from the sources that exist right now and
@@ -298,6 +360,9 @@ export function GoLiveBroadcaster({
   const applySystemAudio = useCallback(async (systemTrack: MediaStreamTrack | null) => {
     const previous = audioMixRef.current;
     const mic = micTrackRef.current;
+    // Remembered so a voice-effect switch, which produces a brand-new mic
+    // track, can rebuild the same mix without being handed the share again.
+    systemAudioRef.current = systemTrack;
 
     const mix = systemTrack && mic ? mixAudio([mic, systemTrack]) : null;
     audioMixRef.current = mix;
@@ -576,7 +641,15 @@ export function GoLiveBroadcaster({
             return;
           }
           videoTrack = capture.getVideoTracks()[0] ?? null;
-          micTrack = capture.getAudioTracks()[0] ?? null;
+          // One prompt covers both permissions, so the audio half is handed
+          // straight to the effect graph rather than captured a second time.
+          const rawAudio = capture.getAudioTracks()[0] ?? null;
+          micTrack = rawAudio ? await acquireMic(new MediaStream([rawAudio])) : null;
+          if (cancelled) {
+            capture.getTracks().forEach((t) => t.stop());
+            micTrack?.stop();
+            return;
+          }
           setCaptureMode('camera');
           setMirror(videoTrack?.getSettings?.().facingMode !== 'environment');
           // Permission was just granted, so enumerateDevices now returns the
@@ -585,6 +658,7 @@ export function GoLiveBroadcaster({
         }
 
         micTrackRef.current = micTrack;
+        systemAudioRef.current = systemAudio;
         setHasMic(!!micTrack);
         setMicOn(!!micTrack);
 
@@ -681,13 +755,58 @@ export function GoLiveBroadcaster({
   }, [phase]);
 
   const toggleMic = () => {
-    // The mic track, not the published one: with system audio mixed in, the
-    // published track carries the game too and muting it would silence both.
-    const track = micTrackRef.current;
-    if (!track) return;
-    track.enabled = !track.enabled;
-    setMicOn(track.enabled);
+    // Muting happens at the RAW capture, upstream of the effect graph — never
+    // on the published track. The published track is the graph's output, which
+    // also carries soundboard clips and, when a screen is shared, the system
+    // audio; disabling it would take all of that off air with the voice.
+    if (!rawMicStreamRef.current) return;
+    const next = !micOn;
+    setRawMicEnabled(next);
+    setMicOn(next);
   };
+
+  /**
+   * Voice effects rebuild the graph on a fresh AudioContext rather than
+   * re-patching the live one, because the pitch effects need the phase-vocoder
+   * worklet loaded at build time — switching in place silently drops to the
+   * warbly delay-line shifter. A rebuild yields a NEW output track, so the
+   * published audio has to be rebuilt around it too.
+   */
+  const changeEffect = async (id: VoiceEffectId) => {
+    if (switchingEffect || id === effect) return;
+    setSwitchingEffect(true);
+    const previous = effect;
+    setEffect(id);
+    try {
+      const track = await rebuildEffect(id);
+      if (!track) {
+        setEffect(previous);
+        return;
+      }
+      micTrackRef.current = track;
+      // The rebuild reuses the same raw capture, which keeps its enabled flag,
+      // so a muted host stays muted across a switch.
+      await applySystemAudio(systemAudioRef.current);
+    } catch (error) {
+      logger.warn('Voice effect switch failed', error);
+      setEffect(previous);
+    } finally {
+      setSwitchingEffect(false);
+    }
+  };
+
+  /**
+   * Soundboard clips ride the published track — see SoundboardPanel. Without a
+   * graph (mic denied, or the fallback to the bare capture) injectSound is a
+   * no-op, so this fails loudly instead of lighting a pad that plays nothing.
+   */
+  const playClip = useCallback(
+    async (blob: Blob) => {
+      if (!getProcessedStream()) throw new Error('No voice graph to mix into');
+      await injectSound(blob);
+    },
+    [injectSound, getProcessedStream]
+  );
 
   const toggleVideo = () => {
     const track = streamRef.current?.getVideoTracks()[0];
@@ -918,7 +1037,50 @@ export function GoLiveBroadcaster({
             <SwitchCamera className="h-5 w-5" />
           </ControlButton>
         )}
+
+        <ControlButton
+          active={openPanel !== 'voice'}
+          onClick={() => setOpenPanel((p) => (p === 'voice' ? 'none' : 'voice'))}
+          disabled={phase === 'error' || !hasMic}
+          label={hasMic ? 'Voice effects' : 'Voice effects need a microphone'}
+        >
+          <Wand2 className="h-5 w-5" />
+        </ControlButton>
+
+        <ControlButton
+          active={openPanel !== 'sounds'}
+          onClick={() => setOpenPanel((p) => (p === 'sounds' ? 'none' : 'sounds'))}
+          disabled={phase === 'error' || !hasMic}
+          label={hasMic ? 'Soundboard' : 'The soundboard needs a microphone'}
+        >
+          <Music className="h-5 w-5" />
+        </ControlButton>
       </div>
+
+      {openPanel === 'voice' && (
+        <div
+          className={cn(
+            'rounded-xl border border-white/10 bg-white/5 p-3',
+            switchingEffect && 'pointer-events-none opacity-60'
+          )}
+        >
+          <VoiceEffectSelector activeEffect={effect} onSelect={(id) => void changeEffect(id)} />
+          <p className="mt-2 text-[11px] text-zinc-500">
+            Viewers hear the effect; your own captions and transcripts still read
+            the unprocessed microphone.
+          </p>
+        </div>
+      )}
+
+      {/* Kept mounted while hidden so the custom-sound list and the volume the
+          host set survive closing the board mid-broadcast. */}
+      <SoundboardPanel
+        isVisible={openPanel === 'sounds'}
+        onClose={() => setOpenPanel('none')}
+        playClip={playClip}
+        stopClip={stopInjectedSound}
+        errorMessage="Could not play that — your microphone feed is not running"
+      />
 
       <button
         onClick={handleEnd}
