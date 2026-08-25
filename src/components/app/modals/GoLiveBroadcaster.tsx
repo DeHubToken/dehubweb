@@ -47,6 +47,7 @@ import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
 import { getLiveStream } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
 import { createLogger } from '@/lib/logger';
+import { whipEndpointFor } from '@/lib/live-ingest';
 
 // The chat is a heavy component (mentions, voice notes, realtime) and most
 // broadcasts never open it, so it stays out of the broadcaster chunk.
@@ -68,6 +69,13 @@ const CONSOLE_POLL_MS = 15_000;
 
 interface GoLiveBroadcasterProps {
   streamKey: string;
+  /**
+   * Which ingest this stream lives on, and its public id. The self-hosted
+   * path addresses a stream by playbackId and sends the key as a credential,
+   * so the key alone is no longer enough to build the endpoint.
+   */
+  playbackId?: string;
+  provider?: string;
   /**
    * A display capture taken in the modal, from the click that started go-live.
    * getDisplayMedia needs transient user activation and the mint that follows
@@ -182,6 +190,8 @@ function mixAudio(tracks: MediaStreamTrack[]): AudioMix | null {
 
 export function GoLiveBroadcaster({
   streamKey,
+  playbackId,
+  provider,
   initialScreenStream = null,
   streamId,
   onEnd,
@@ -723,6 +733,7 @@ export function GoLiveBroadcaster({
         const session = await publishToWhip({
           streamKey,
           stream,
+          ...whipEndpointFor({ provider, playbackId, streamKey }),
           onStateChange: (state: WhipState, detail) => {
             if (cancelled) return;
             if (state === 'live') setPhase('live');

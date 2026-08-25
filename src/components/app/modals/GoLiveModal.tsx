@@ -21,6 +21,7 @@ import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
+import { hlsUrlFor } from '@/lib/live-ingest';
 
 // The WebRTC broadcaster pulls in getUserMedia + peer-connection code that
 // only the browser capture paths need, so it loads on demand rather than
@@ -89,7 +90,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string } | null>(null);
+  const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   // The display capture taken at click time (see handleStartStream), handed to
   // the broadcaster once the mint lands. Mirrored in a ref because every
@@ -406,6 +407,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       let streamKey = '';
       let streamId = '';
       let playbackId = '';
+      let provider = '';
       let retryCount = 0;
       const MAX_RETRIES = 8;
 
@@ -417,6 +419,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           if (stream?.streamKey) {
             streamKey = stream.streamKey;
             playbackId = stream.playbackId || '';
+            provider = ((stream as Record<string, unknown>).provider as string) || '';
             // Try to get the MongoDB ObjectId from stream (needed for some API calls)
             const streamObj = stream as Record<string, unknown>;
             streamId = (streamObj._id as string) || (streamObj.id as string) || stream.streamId || tokenId;
@@ -489,18 +492,23 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         return;
       }
 
-      // Final fallback: standard Livepeer RTMP URL
-      if (!ingestUrl) {
+      // Final fallback: standard Livepeer RTMP URL. Only Livepeer's — a
+      // self-hosted stream publishes to its own host, and handing its
+      // creator Livepeer's endpoint would send them somewhere that will
+      // never accept their key.
+      if (!ingestUrl && provider !== 'mediamtx') {
         ingestUrl = LIVEPEER_RTMP_URL;
         logger.info('Using standard Livepeer RTMP ingest URL');
       }
 
-      const hlsUrl = playbackId ? `https://livepeercdn.studio/hls/${playbackId}/index.m3u8` : '';
+      const hlsUrl = hlsUrlFor({ provider, playbackId }) || '';
 
       const resultData = {
         tokenId,
         streamId,
         streamKey,
+        playbackId,
+        provider,
         ingestUrl,
         playbackUrl: playbackUrl || `https://dehub.io/app/post/${tokenId}`,
         hlsUrl,
@@ -710,6 +718,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                 >
                   <GoLiveBroadcaster
                     streamKey={streamData.streamKey}
+                    playbackId={streamData.playbackId}
+                    provider={streamData.provider}
                     initialScreenStream={screenStream}
                     streamId={streamData.streamId}
                     onEnd={handleEndStream}
