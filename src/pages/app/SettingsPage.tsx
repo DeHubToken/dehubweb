@@ -96,6 +96,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useMatureContent } from '@/hooks/use-mature-content';
 import { useHideWatched } from '@/hooks/use-watched-videos';
+import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useNewMemberSelf } from '@/hooks/use-new-members';
@@ -2409,6 +2410,7 @@ function ContentSettings() {
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.playback', 'Playback')}</h3>
         <div className="space-y-4">
           <HideWatchedToggle />
+          <ChannelSpeedRow />
         </div>
       </div>
 
@@ -2606,6 +2608,54 @@ function HideWatchedToggle() {
       defaultChecked={hideWatched}
       onCheckedChange={setHideWatched}
       disabled={!isAuthenticated}
+    />
+  );
+}
+
+/**
+ * Per-channel playback speed, and the only way to undo it.
+ *
+ * Changing speed on a video pins that speed to its creator (see
+ * lib/video-preferences.ts), which is what makes 1.5× on one channel and 1×
+ * on another stick. That is invisible once set, so the count and a reset live
+ * here. localStorage, so it is per device — the same reason the rest of the
+ * playback preferences are.
+ */
+function ChannelSpeedRow() {
+  const { t } = useTranslation();
+  const [count, setCount] = useState(() => getCreatorPlaybackRateCount());
+
+  // The count changes from the players, which announce writes on this event.
+  useEffect(() => {
+    const handler = () => setCount(getCreatorPlaybackRateCount());
+    window.addEventListener('video-prefs-changed', handler);
+    return () => window.removeEventListener('video-prefs-changed', handler);
+  }, []);
+
+  return (
+    <SettingsRow
+      icon={<Gauge />}
+      title={t('settings.channelSpeed', 'Playback speed per channel')}
+      description={
+        count === 0
+          ? t('settings.channelSpeedNone', 'Change the speed while watching someone and it stays that way for their videos.')
+          : t('settings.channelSpeedCount', '{{count}} channel(s) play at their own speed.', { count })
+      }
+      action={
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={count === 0}
+          onClick={() => {
+            clearCreatorPlaybackRates();
+            setCount(0);
+            toast.success(t('settings.channelSpeedCleared', 'Channel speeds reset'));
+          }}
+          className="text-zinc-400 hover:text-white disabled:opacity-40"
+        >
+          {t('settings.reset', 'Reset')}
+        </Button>
+      }
     />
   );
 }
