@@ -483,11 +483,13 @@ html {
    first scroll/click/key, then removed entirely so the sheet costs nothing for
    the rest of the session.
 
-   The whole lifecycle lives in index.html, not in React. It has to go up before
-   the bundle (or the boot skeleton and the rails paint sharp first), and it
-   comes down on intent rather than on a timer — a timer either cuts a reader
-   off mid-sentence or makes an impatient one wait. Any input at all clears it,
-   so nobody can be trapped behind it.
+   The whole lifecycle lives in index.html, not in React: it has to go up before
+   the bundle, or the boot skeleton and the rails paint sharp first.
+
+   It is a FIRST-VISIT device — it points a brand-new visitor at the welcome
+   panel and has no job for anyone else, so index.html skips it entirely for a
+   returning visitor, for anyone signed in, and for anyone who has dismissed the
+   panel. It comes down on the first DOWNWARD scroll, never on a timer.
 
    ONE fixed pseudo-element with backdrop-filter, not `filter` on the things
    being blurred. Three reasons `filter` on siblings was wrong:
