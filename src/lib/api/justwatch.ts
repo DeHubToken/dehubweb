@@ -88,20 +88,34 @@ export class JustWatchNotConfiguredError extends Error {
 
 async function call<T>(params: Record<string, string>): Promise<T> {
   const search = new URLSearchParams(params);
-  const res = await fetch(`${FN_URL}?${search}`, {
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-    },
-  });
+
+  let res: Response;
+  try {
+    res = await fetch(`${FN_URL}?${search}`, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+      },
+    });
+  } catch {
+    // Never reached the function at all. The important case is the one that
+    // looks like a bug and is not: Supabase's 404 for an undeployed function
+    // carries NO CORS headers, so the browser rejects it at the PREFLIGHT and
+    // fetch throws here — the `res.status === 404` branch below never runs.
+    // Checking the status was the obvious fix and it is unreachable in a real
+    // browser; only the console shows why.
+    //
+    // Offline and DNS failures land here too and get the same answer. That is
+    // the right trade: "not live yet" is a better lie to an offline visitor
+    // than "nothing found" is to everyone during the deploy window, and once
+    // the function is deployed it answers with CORS headers and this stops
+    // being reachable for that reason at all.
+    throw new JustWatchNotConfiguredError();
+  }
 
   if (!res.ok) {
-    // Supabase answers 404 NOT_FOUND for a function that was never deployed.
-    // Edge functions do not ship with the web deploy, so between merging
-    // /cinema and running that deploy this is the live response — and to a
-    // visitor it means exactly what a missing token means: not live yet.
-    // Without this the page kept its full search UI and answered "Nothing
-    // found for <query>", which reads as "this film does not exist".
+    // Kept for the case where something between us and the function answers
+    // with CORS headers and a 404 — an edge rule, a proxy, a renamed function.
     if (res.status === 404) throw new JustWatchNotConfiguredError();
     throw new Error(`JustWatch request failed (${res.status})`);
   }
