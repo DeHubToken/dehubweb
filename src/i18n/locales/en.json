@@ -1762,6 +1762,11 @@
     "liveUntil": "live until {{time}}",
     "seenCount": "{{count}} seen",
     "finishedCount": "{{count}} finished this cycle, seen {{seen}} times",
-    "loadFailed": "Could not load your SuperPowers just now. Try again in a moment."
+    "loadFailed": "Could not load your SuperPowers just now. Try again in a moment.",
+    "spent": "{{power}} running for {{minutes}} minutes",
+    "spendFor": "{{power}} for {{minutes}} minutes",
+    "aimAtAccount": "Whose followers should see it?",
+    "aimPlaceholder": "Username or wallet address",
+    "aimAtTiers": "Which badge tiers should see it?"
   }
 }

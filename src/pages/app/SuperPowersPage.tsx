@@ -139,9 +139,20 @@ export default function SuperPowersPage() {
                 {liveBookings.map(booking => (
                   <div key={booking.id} className="flex items-center gap-3 text-sm">
                     <Clock className={cn('w-4 h-4 shrink-0', booking.live ? 'text-green-400' : 'text-zinc-500')} />
-                    <Link to={`/app/post/${booking.tokenId}`} className="text-white hover:underline truncate">
-                      #{booking.tokenId}
-                    </Link>
+                    {/* A Golden Hour acts on the whole account, so it has no
+                        post to link to — `/app/post/null` would 404. */}
+                    {booking.tokenId != null ? (
+                      <Link
+                        to={`/app/post/${booking.tokenId}`}
+                        className="text-white hover:underline truncate"
+                      >
+                        #{booking.tokenId}
+                      </Link>
+                    ) : (
+                      <span className="text-white truncate">
+                        {status?.powers.find(p => p.key === booking.power)?.label ?? booking.power}
+                      </span>
+                    )}
                     <span className="text-zinc-500 text-[12px] shrink-0">
                       {booking.live
                         ? t('superpowers.liveUntil', {
