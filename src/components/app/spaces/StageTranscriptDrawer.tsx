@@ -5,7 +5,8 @@
  * Includes:
  *  - Inline audio player (click any segment timestamp / chapter chip to seek)
  *  - AI summary + chapter chips (generated server-side by summarize-transcript)
- *  - On-demand translation (cached in stage_transcript_translations)
+ *  - On-demand translation (cached in transcript_translations, shared with
+ *    every other reader of this stage and with the video subtitle path)
  *  - Search filter, copy / download .txt / .srt, share quote
  *  - Host-only: speaker rename + privacy toggle (public / members / private)
  *  - Quote-as-post on text selection (prefills composer with deep-link)
@@ -65,7 +66,9 @@ interface SpeakerOverride {
 interface StageTranscript {
   id: string;
   stage_id: string;
-  status: 'pending' | 'processing' | 'ready' | 'failed';
+  /** 'empty' is a finished run that found no speech — distinct from 'ready'
+   *  so it can be retried and does not render as a blank transcript. */
+  status: 'pending' | 'processing' | 'ready' | 'empty' | 'failed';
   source_language: string | null;
   full_text: string | null;
   segments: Segment[];
@@ -75,6 +78,7 @@ interface StageTranscript {
   chapters: Chapter[] | null;
   summary_status: 'pending' | 'processing' | 'ready' | 'failed';
   privacy: 'public' | 'members' | 'private';
+  attempts?: number;
   error: string | null;
 }
 
@@ -377,10 +381,18 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
       return s === 'processing' || s === 'pending' ? 4000 : false;
     },
     queryFn: async () => {
+      // Stage and video transcripts share one table now. The columns are
+      // aliased back to the names this drawer has always used, so only the
+      // query moved.
       const { data, error } = await supabase
-        .from('stage_transcripts')
-        .select('*')
-        .eq('stage_id', stageId!)
+        .from('transcripts')
+        .select(
+          'id, stage_id:source_ref, status, source_language:source_lang, full_text, segments, ' +
+          'speaker_map, speaker_overrides, summary, chapters, summary_status, ' +
+          'privacy:visibility, attempts, error',
+        )
+        .eq('source_kind', 'stage')
+        .eq('source_ref', stageId!)
         .maybeSingle();
       if (error) throw error;
       return (data as unknown as StageTranscript) || null;
@@ -388,18 +400,20 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   });
 
   /* ────── translation (when language !== 'original') ────── */
+  const transcriptId = transcript?.id ?? null;
+
   const { data: translation } = useQuery<Translation | null>({
-    queryKey: ['stage-transcript-translation', stageId, language],
-    enabled: open && !!stageId && language !== 'original' && transcript?.status === 'ready',
+    queryKey: ['stage-transcript-translation', transcriptId, language],
+    enabled: open && !!transcriptId && language !== 'original' && transcript?.status === 'ready',
     refetchInterval: (q) => {
       const s = (q.state.data as Translation | null)?.status;
       return s === 'processing' ? 3000 : false;
     },
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('stage_transcript_translations')
+        .from('transcript_translations')
         .select('status, segments, summary, chapters, error')
-        .eq('stage_id', stageId!)
+        .eq('transcript_id', transcriptId!)
         .eq('language', language)
         .maybeSingle();
       if (error) throw error;
@@ -407,16 +421,17 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     },
   });
 
-  // Trigger translation if not cached
+  // Ask for a language nobody has cached. One that somebody already paid for
+  // is a row read — the cache is shared with every other reader of this stage.
   useEffect(() => {
-    if (!open || !stageId || language === 'original') return;
+    if (!open || !transcriptId || language === 'original') return;
     if (transcript?.status !== 'ready') return;
     if (translation === undefined) return;
     if (translation && (translation.status === 'ready' || translation.status === 'processing')) return;
-    supabase.functions.invoke('translate-transcript', { body: { stageId, language } })
-      .then(() => queryClient.invalidateQueries({ queryKey: ['stage-transcript-translation', stageId, language] }))
+    supabase.functions.invoke('translate-transcript', { body: { transcriptId, lang: language } })
+      .then(() => queryClient.invalidateQueries({ queryKey: ['stage-transcript-translation', transcriptId, language] }))
       .catch(() => {});
-  }, [open, stageId, language, transcript?.status, translation, queryClient]);
+  }, [open, transcriptId, language, transcript?.status, translation, queryClient]);
 
   /* ────── realtime ────── */
   useEffect(() => {
@@ -424,20 +439,20 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     const ch = supabase
       .channel(`stage-transcript-${stageId}`)
       .on('postgres_changes', {
-        event: '*', schema: 'public', table: 'stage_transcripts',
-        filter: `stage_id=eq.${stageId}`,
+        event: '*', schema: 'public', table: 'transcripts',
+        filter: `source_ref=eq.${stageId}`,
       }, () => {
         queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
       })
       .on('postgres_changes', {
-        event: '*', schema: 'public', table: 'stage_transcript_translations',
-        filter: `stage_id=eq.${stageId}`,
+        event: '*', schema: 'public', table: 'transcript_translations',
+        filter: `transcript_id=eq.${transcriptId ?? stageId}`,
       }, () => {
-        queryClient.invalidateQueries({ queryKey: ['stage-transcript-translation', stageId] });
+        queryClient.invalidateQueries({ queryKey: ['stage-transcript-translation', transcriptId] });
       })
       .subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [open, stageId, queryClient]);
+  }, [open, stageId, transcriptId, queryClient]);
 
   /* ────── audio current time tracking ────── */
   useEffect(() => {
@@ -452,8 +467,8 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     if (!stageId) return;
     setRequesting(true);
     try {
-      const { error } = await supabase.functions.invoke('transcribe-stage', {
-        body: { stageId, force },
+      const { error } = await supabase.functions.invoke('transcribe', {
+        body: { kind: 'stage', ref: stageId, action: 'start', force },
       });
       if (error) throw error;
       if (!silent) toast.success('Transcribing — this may take a moment');
@@ -466,12 +481,15 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     }
   };
 
-  // Auto-trigger transcription on open + legacy upgrade
+  // Auto-trigger transcription on open + legacy upgrade.
+  // The sweeper reaches every ended stage on its own now, so this is only the
+  // impatient path for somebody who opened the drawer first. It stops asking
+  // once the run has spent its attempts, rather than re-firing on every open.
   useEffect(() => {
     if (!open || !stageId || !space?.recording_url) return;
     if (transcript === undefined) return;
     if (!transcript || transcript.status === 'failed') {
-      handleTranscribe(true, false);
+      if (!transcript || (transcript.attempts ?? 0) < 5) handleTranscribe(true, false);
       return;
     }
     const hasMap = transcript.speaker_map && Object.keys(transcript.speaker_map).length > 0;
@@ -595,9 +613,10 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     if (username) next[renamingFor] = { username };
     else delete next[renamingFor];
     const { error } = await supabase
-      .from('stage_transcripts')
+      .from('transcripts')
       .update({ speaker_overrides: next as never })
-      .eq('stage_id', stageId!);
+      .eq('source_kind', 'stage')
+      .eq('source_ref', stageId!);
     if (error) toast.error('Could not save: ' + error.message);
     else toast.success('Speaker updated');
     setRenamingFor(null);
@@ -608,9 +627,10 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   const setPrivacy = async (next: 'public' | 'members' | 'private') => {
     if (!stageId) return;
     const { error } = await supabase
-      .from('stage_transcripts')
-      .update({ privacy: next })
-      .eq('stage_id', stageId);
+      .from('transcripts')
+      .update({ visibility: next })
+      .eq('source_kind', 'stage')
+      .eq('source_ref', stageId);
     if (error) toast.error('Could not update privacy');
     else toast.success(`Transcript is now ${next}`);
     queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
@@ -675,9 +695,14 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
               <FileText className="w-10 h-10 mx-auto mb-2 opacity-40" />
               <p>No recording available for this stage.</p>
             </div>
-          ) : !transcript || status === 'pending' || status === 'failed' ? (
+          ) : !transcript || status === 'pending' || status === 'failed' || status === 'empty' ? (
             <div className="text-center text-white/60 py-12 space-y-4">
-              {status === 'failed' ? (
+              {status === 'empty' ? (
+                <>
+                  <FileText className="w-10 h-10 mx-auto opacity-40" />
+                  <p>Nobody spoke in this recording, so there is nothing to transcribe.</p>
+                </>
+              ) : status === 'failed' ? (
                 <>
                   <Sparkles className="w-10 h-10 mx-auto opacity-50" />
                   <p>Transcript unavailable{transcript?.error ? `: ${transcript.error}` : ''}</p>
