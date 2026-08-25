@@ -12,9 +12,12 @@
  * quietly delete half the feed for scrolling past it, so the set is filtered
  * to `postType=video` server-side and the marker is a video-card thing.
  *
- * The preference is localStorage, not the account: it is a per-device viewing
- * habit, and the backend has no column for it — a named account setting has to
- * be whitelisted server-side or it is silently dropped on write.
+ * The preference follows the account. localStorage holds it for instant paint
+ * and for signed-out readers; `useSyncedPreference` mirrors it into the
+ * wallet's preference blob, so switching it on here has it on when you open
+ * DeHub on your phone. (The DeHub backend is not the store — a named account
+ * setting there has to be whitelisted server-side or the write is silently
+ * dropped; the Supabase preference blob has no such gate.)
  *
  * @module hooks/use-watched-videos
  */
@@ -23,6 +26,7 @@ import { useCallback, useSyncExternalStore } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getWatchHistory } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 
 const HIDE_WATCHED_KEY = 'feed-hide-watched';
 const HIDE_WATCHED_EVENT = 'hide-watched-changed';
@@ -53,6 +57,15 @@ function subscribeHideWatched(onChange: () => void) {
   };
 }
 
+function writeHideWatched(value: boolean) {
+  try {
+    localStorage.setItem(HIDE_WATCHED_KEY, String(value));
+  } catch {
+    // Private mode / storage full — the toggle still applies for this render.
+  }
+  window.dispatchEvent(new CustomEvent(HIDE_WATCHED_EVENT));
+}
+
 /**
  * The "hide watched" preference, shared by every feed that reads it.
  * Signed-out readers always get `false` — there is no history to hide by.
@@ -61,14 +74,16 @@ export function useHideWatched(): [boolean, (value: boolean) => void] {
   const { isAuthenticated } = useAuth();
   const stored = useSyncExternalStore(subscribeHideWatched, readHideWatched, () => false);
 
-  const setHideWatched = useCallback((value: boolean) => {
-    try {
-      localStorage.setItem(HIDE_WATCHED_KEY, String(value));
-    } catch {
-      // Private mode / storage full — the toggle still applies for this render.
-    }
-    window.dispatchEvent(new CustomEvent(HIDE_WATCHED_EVENT));
+  // Server → local. Older blobs may hold the string form, hence the coercion.
+  const apply = useCallback((value: unknown) => {
+    writeHideWatched(value === true || value === 'true');
   }, []);
+  const { push } = useSyncedPreference('hideWatched', stored, apply, false);
+
+  const setHideWatched = useCallback((value: boolean) => {
+    writeHideWatched(value);
+    push(value);
+  }, [push]);
 
   return [isAuthenticated && stored, setHideWatched];
 }
