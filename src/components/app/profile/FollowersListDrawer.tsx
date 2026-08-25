@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X, Clock } from 'lucide-react';
+import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X, Clock, FolderPlus } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,6 +18,7 @@ import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
+import { useFollowGroups, MAX_GROUPS, MAX_GROUP_NAME } from '@/hooks/use-follow-groups';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -98,6 +99,16 @@ export function FollowersListDrawer({
   const [hasMore, setHasMore] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [totalCount, setTotalCount] = useState<number | null>(null);
+
+  // Group assignment — only on your own Following list; there is nothing to
+  // file on someone else's, and none of it is visible to them either way.
+  const canGroup =
+    title === 'Following' &&
+    !!currentUserAddress &&
+    profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
+  const { groups, createGroup, toggleMember } = useFollowGroups();
+  const [groupingAddress, setGroupingAddress] = useState<string | null>(null);
+  const [newGroupName, setNewGroupName] = useState('');
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -490,8 +501,8 @@ export function FollowersListDrawer({
           ) : (
             <div className="space-y-2">
               {displayUsers.map((user) => (
+                <div key={user.address}>
                 <button
-                  key={user.address}
                   onClick={() => handleUserClick(user)}
                   className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
                 >
@@ -524,6 +535,35 @@ export function FollowersListDrawer({
                       )}
                     </div>
                   </div>
+
+                  {/* Group filing. Sits before the follow button so the
+                      destructive-ish action stays where the thumb expects it. */}
+                  {canGroup && !isCurrentUser(user.address) && (
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Add ${user.displayName || user.username || 'user'} to a group`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setGroupingAddress(prev => (prev === user.address ? null : user.address));
+                        setNewGroupName('');
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key !== 'Enter' && e.key !== ' ') return;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setGroupingAddress(prev => (prev === user.address ? null : user.address));
+                      }}
+                      className={cn(
+                        'shrink-0 flex items-center justify-center w-9 h-9 rounded-lg transition-colors cursor-pointer',
+                        groups.some(g => g.members.includes(user.address.toLowerCase()))
+                          ? 'bg-white/15 text-white'
+                          : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white',
+                      )}
+                    >
+                      <FolderPlus className="w-4 h-4" />
+                    </span>
+                  )}
 
                   {/* Follow/Unfollow button - hide for self */}
                   {!isCurrentUser(user.address) && (
@@ -560,6 +600,63 @@ export function FollowersListDrawer({
                     </Button>
                   )}
                 </button>
+
+                {/* Group picker, inline under the row. Deliberately not a
+                    nested drawer: a vaul Root inside an open Root fights the
+                    parent for focus and drag. */}
+                {canGroup && groupingAddress === user.address && (
+                  <div className="mt-1 rounded-xl border border-white/10 bg-white/[0.04] p-3 space-y-2">
+                    {groups.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {groups.map((group) => {
+                          const isMember = group.members.includes(user.address.toLowerCase());
+                          return (
+                            <button
+                              key={group.id}
+                              onClick={() => toggleMember(group.id, user.address)}
+                              className={cn(
+                                'px-2.5 py-1 rounded-lg text-xs font-medium transition-colors',
+                                isMember
+                                  ? 'bg-white/20 text-white border border-white/30'
+                                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700',
+                              )}
+                            >
+                              {group.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newGroupName}
+                        onChange={(e) => setNewGroupName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key !== 'Enter') return;
+                          if (createGroup(newGroupName, user.address)) setNewGroupName('');
+                        }}
+                        maxLength={MAX_GROUP_NAME}
+                        placeholder={groups.length >= MAX_GROUPS ? 'Group limit reached' : 'New group name'}
+                        disabled={groups.length >= MAX_GROUPS}
+                        className="flex-1 h-8 px-2.5 rounded-lg bg-zinc-800 border border-zinc-700 text-sm text-white placeholder-zinc-500 focus:border-zinc-500 focus:outline-none disabled:opacity-50"
+                      />
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        disabled={!newGroupName.trim() || groups.length >= MAX_GROUPS}
+                        onClick={() => { if (createGroup(newGroupName, user.address)) setNewGroupName(''); }}
+                        className="h-8 shrink-0 rounded-lg bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
+                      >
+                        Create
+                      </Button>
+                    </div>
+                    <p className="text-[11px] text-zinc-500">
+                      Groups filter your Following feed. Only you can see them.
+                    </p>
+                  </div>
+                )}
+                </div>
               ))}
 
               {/* Loading more spinner */}
