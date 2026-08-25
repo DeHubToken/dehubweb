@@ -1617,15 +1617,20 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
      query cache restores synchronously), so the frost mostly never appeared,
      and the skeletons painted sharp before React arrived.
 
-     MIN_FROST_MS is a floor, not a delay: without it a warm load resolves page
-     1 before the panel has been on screen long enough to register, and the
-     whole effect flickers past. performance.now() is milliseconds since
-     navigation start, so this reads "hold the frost until the page is at least
-     this old", and costs nothing when the app took longer than that anyway.
+     HOLD_MS is measured from when this component MOUNTS — i.e. from when the
+     welcome panel appears — not from navigation start. performance.now() was
+     wrong for this: it counts from the first byte, so most of it was spent
+     downloading the bundle, and the frost was already most of the way through
+     its budget by the time anything was on screen. Timing it from mount is what
+     makes "about three seconds of the panel being visible" actually mean that,
+     on a fast connection and a slow one alike.
 
      Three states, not two: "on", "off" to run the transition, then the
      attribute is REMOVED — a full-viewport backdrop-filter has to stop
      existing, not just go clear. */
+  const frostSinceRef = useRef<number | null>(null);
+  if (frostSinceRef.current === null) frostSinceRef.current = Date.now();
+
   useEffect(() => {
     const root = document.documentElement;
     if (isLoadingState) {
@@ -1633,14 +1638,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       return;
     }
     if (!root.dataset.feedLoading) return;
-    const MIN_FROST_MS = 900;
+    const HOLD_MS = 3000;
+    const elapsed = Date.now() - (frostSinceRef.current ?? Date.now());
     let remove: number | undefined;
     const lift = window.setTimeout(() => {
       root.dataset.feedLoading = 'off';
       remove = window.setTimeout(() => {
         delete root.dataset.feedLoading;
-      }, 800); // just past the 700ms transition in index.css
-    }, Math.max(0, MIN_FROST_MS - performance.now()));
+      }, 1300); // just past the 1200ms transition in index.css
+    }, Math.max(0, HOLD_MS - elapsed));
     return () => {
       window.clearTimeout(lift);
       if (remove !== undefined) window.clearTimeout(remove);
@@ -1650,13 +1656,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   /* Never frost forever. isLoadingState stays true for the whole auto-retry
      ladder, so an offline or stalled page-1 would otherwise leave the app
      permanently blurred — including the error state the user needs to read.
-     index.html carries its own 5s backstop for the case where this component
-     never mounts at all; this is the earlier one for when it does. */
+     index.html carries its own backstop for the case where this component never
+     mounts at all; this is the earlier one for when it does.
+
+     Must sit clear of HOLD_MS above, or the two race and the bail cuts the
+     intended hold short — that is why this is 8s and not the 3s it was when the
+     hold was 900ms. */
   useEffect(() => {
     const bail = window.setTimeout(() => {
       const root = document.documentElement;
       if (root.dataset.feedLoading === 'on') root.dataset.feedLoading = 'off';
-    }, 3000);
+    }, 8000);
     return () => {
       window.clearTimeout(bail);
       delete document.documentElement.dataset.feedLoading;
