@@ -513,7 +513,10 @@ html[data-feed-loading] #app-root::after {
   backdrop-filter: blur(20px) saturate(130%);
   -webkit-backdrop-filter: blur(20px) saturate(130%);
   opacity: 1;
-  transition: backdrop-filter 700ms ease, -webkit-backdrop-filter 700ms ease, opacity 700ms ease;
+  /* 1.2s, not 700ms: the unblur is the moment the app resolves, and at 700ms it
+     read as a snap rather than a focus pull. Paired with the 3s hold in
+     HomeFeed — change one and the other's cleanup timer needs to move with it. */
+  transition: backdrop-filter 1200ms ease, -webkit-backdrop-filter 1200ms ease, opacity 1200ms ease;
 }
 /* The unblur. Radius AND opacity: the radius is the effect asked for, the
    opacity fade covers browsers that decline to interpolate backdrop-filter. */
@@ -522,12 +525,13 @@ html[data-feed-loading="off"] #app-root::after {
   -webkit-backdrop-filter: blur(0px) saturate(100%);
   opacity: 0;
 }
-/* Lift the welcome panel out of the sheet's backdrop so it alone stays sharp.
-   It is already position:relative and already a stacking context (its
-   container-type above), so a bare z-index sticks. SCOPED to the blur window
-   on purpose — left on permanently, 121 would outrank the sticky tab bar and
-   the panel would slide over it on scroll. */
-html[data-feed-loading] .dehub-intro { z-index: 121; }
+/* The welcome panel is frosted WITH everything else, not held above the sheet.
+   It used to carry a z-index that lifted it out of the sheet's backdrop so it
+   alone stayed sharp — but the panel's own art arrives over the network, so on
+   first paint that produced a sharp, half-empty box sitting in the middle of an
+   otherwise frosted app: it read as a missing panel rather than a loading one.
+   Frosting it too makes the first frame uniform — the whole shell is one
+   out-of-focus surface — and the panel simply comes into focus with the rest. */
 
 @media (prefers-reduced-motion: reduce) {
   html[data-feed-loading] #app-root::after { transition: none; }
