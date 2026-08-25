@@ -23,7 +23,21 @@ export function json(body: unknown, status = 200): Response {
   });
 }
 
-export const DEHUB_API_BASE = Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io';
+/**
+ * The DeHub REST API, ORIGIN ONLY — paths below add their own `/api`.
+ *
+ * Deliberately not `DEHUB_API_BASE`: that secret is already set on this
+ * project to `https://api.dehub.io/api`, because `assistant-agent.ts` appends
+ * bare paths like `/assistant/tools` to it. Reading it here produced
+ * `/api/api/nft_info/…`, which 404s — so every post lookup answered "post not
+ * found" and the sweeper's feed pass came back empty.
+ *
+ * A trailing slash or a trailing `/api` on the override is stripped rather
+ * than trusted, because that is the exact mistake this comment exists about.
+ */
+export const DEHUB_API_BASE = (Deno.env.get('DEHUB_PUBLIC_API_BASE') || 'https://api.dehub.io')
+  .replace(/\/+$/, '')
+  .replace(/\/api$/, '');
 export const DEHUB_CDN_BASE = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/';
 
 export type SourceKind = 'video' | 'stage' | 'live' | 'audio';
@@ -208,14 +222,16 @@ function visibilityForPost(post: any): Visibility {
 }
 
 async function fetchPost(tokenId: string): Promise<any> {
-  const res = await fetch(`${DEHUB_API_BASE}/api/nft_info/${tokenId}`, {
-    headers: { Accept: 'application/json' },
-  });
-  if (res.status === 404) throw new TargetError(404, 'post not found');
-  if (!res.ok) throw new TargetError(502, `nft_info ${res.status}`);
+  const url = `${DEHUB_API_BASE}/api/nft_info/${tokenId}`;
+  const res = await fetch(url, { headers: { Accept: 'application/json' } });
+  // Name the URL. A misconfigured base answers 404 for every post, which is
+  // indistinguishable from "that post does not exist" unless the message says
+  // where it looked.
+  if (res.status === 404) throw new TargetError(404, `post not found (${url})`);
+  if (!res.ok) throw new TargetError(502, `nft_info ${res.status} (${url})`);
   const body = await res.json();
   const post = body?.result ?? body;
-  if (!post || !post.tokenId) throw new TargetError(404, 'post not found');
+  if (!post || !post.tokenId) throw new TargetError(404, `post not found (${url})`);
   return post;
 }
 
@@ -245,7 +261,20 @@ export async function resolveMedia(
     return { url: stage.recording_url, visibility: 'public', durationSeconds: null };
   }
 
-  const post = await fetchPost(target.ref);
+  // A post lookup that fails for any reason other than "no such post" is a
+  // wait, not a verdict. Guessing the CDN path and carrying on would be worse
+  // than useless here: `visibility` comes from the post, so a transcript
+  // written without it would default to public and republish the words of a
+  // paid or mature one.
+  let post: any;
+  try {
+    post = await fetchPost(target.ref);
+  } catch (e) {
+    if (e instanceof TargetError && e.status !== 404) {
+      return { url: '', visibility: 'private', durationSeconds: null, notReady: e.message };
+    }
+    throw e;
+  }
   const visibility = visibilityForPost(post);
   const duration = Number(post?.videoDuration ?? post?.audioDuration ?? 0) || null;
 
