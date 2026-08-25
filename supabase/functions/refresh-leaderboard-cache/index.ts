@@ -513,7 +513,8 @@ async function computeSnapshotDelta(
           }
         } else {
           currentVal = getEntryValue(entry);
-          // API enriched entries already have staking added (line ~789)
+          // API entries already include staking — the API derives the pool
+          // position from the chain, so adding it again would double it.
         }
         // Only add DB staking if current value came from raw on-chain (not from snapshot/API which already includes it)
         if (snapshotStakedCurrent && currentFromOnChain) {
@@ -790,21 +791,19 @@ Deno.serve(async (req) => {
         }
       }
 
-      // ── Add net staked from DB (new unified staking, transfer-based) ──
-      const netStakedMap = await fetchNetStakedMap(supabase);
-      let stakingAdjustments = 0;
-      for (const entry of enriched) {
-        const addr = entry.account.toLowerCase();
-        const netStaked = netStakedMap.get(addr);
-        if (netStaked && netStaked > 0) {
-          entry.total += netStaked;
-          entry.badgeBalance = entry.total;
-          stakingAdjustments++;
-        }
-      }
-      if (stakingAdjustments > 0) {
-        console.log(`[staking] Applied DB staking adjustments to ${stakingAdjustments} wallets`);
-      }
+      // ── Transfer-based staking now arrives in the API total ──
+      //
+      // This used to add net `staking_records` on top, because the DeHub API
+      // counted only wallet balances and the legacy BNB contract, so anyone who
+      // staked into the transfer-based pool dropped off the board. The API
+      // derives that position from the chain itself now
+      // (dehub-stream-backend PR #206), so adding it here as well counts every
+      // staker twice.
+      //
+      // The period deltas below still add it, and still should: those compare
+      // against raw on-chain reads and historical snapshots, neither of which
+      // has ever known about the pool. `fetchNetStakedMap` is kept for them.
+      console.log("[staking] Pool stake comes from the API total; no adjustment applied here");
 
       enriched.sort((a, b) => b.total - a.total);
 
