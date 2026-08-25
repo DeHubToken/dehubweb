@@ -96,6 +96,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useMatureContent } from '@/hooks/use-mature-content';
 import { useHideWatched } from '@/hooks/use-watched-videos';
+import { DataPortability } from '@/components/app/settings/DataPortability';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
@@ -1704,19 +1705,9 @@ function PrivacySettings() {
       {/* Extract Data */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.yourData')}</h3>
-        <SettingsRow
-          icon={<Download />}
-          title={t('settings.extractData')}
-          description={t('settings.extractDataDesc')}
-          action={<Button
-            variant="outline" 
-            size="sm" 
-            className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
-            onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
-          >
-            {t('settings.download')}
-          </Button>}
-        />
+        <div className="space-y-4">
+          <DataPortability />
+        </div>
       </div>
 
       {/* Blocked Users */}
