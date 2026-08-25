@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select';
 import { TitleCard } from '@/components/cinema/TitleCard';
 import { OfferPanel } from '@/components/cinema/OfferPanel';
+import { FilmReviews } from '@/components/cinema/FilmReviews';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import {
   useJustWatchOffers,
@@ -306,6 +307,12 @@ export default function CinemaPage() {
                         providers={providers.data?.providers ?? []}
                         locale={locale}
                         isLoading={offers.isPending || offers.isFetching}
+                      />
+
+                      <FilmReviews
+                        justwatchId={filmId}
+                        objectType={openObjectType}
+                        title={openTitle}
                       />
                     </div>
                   ) : (
