@@ -659,6 +659,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   <GoLiveBroadcaster
                     streamKey={streamData.streamKey}
                     initialScreenStream={screenStream}
+                    streamId={streamData.streamId}
                     onEnd={handleEndStream}
                   />
                 </Suspense>

@@ -11,7 +11,7 @@
  * actually pick one of the browser capture options.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import {
   Mic,
   MicOff,
@@ -23,6 +23,10 @@ import {
   PictureInPicture2,
   Move,
   Wand2,
+  MessageSquare,
+  Users,
+  Heart,
+  Gift,
   Music,
   Loader2,
   AlertTriangle,
@@ -40,9 +44,27 @@ import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
+import { getLiveStream } from '@/lib/api/dehub/livestream';
+import { useQuery } from '@tanstack/react-query';
 import { createLogger } from '@/lib/logger';
 
+// The chat is a heavy component (mentions, voice notes, realtime) and most
+// broadcasts never open it, so it stays out of the broadcaster chunk.
+const LivePostChat = lazy(() =>
+  import('@/components/app/cards/LivePostChat').then((m) => ({ default: m.LivePostChat }))
+);
+
 const logger = createLogger('GoLiveBroadcaster');
+
+/**
+ * How often the console asks the API for viewers, likes and tips.
+ *
+ * Deliberately unhurried: these are glanceable numbers on a panel the host has
+ * open for an hour, and the alternative — the activity log — always returns
+ * the OLDEST hundred entries ascending, so it freezes on a busy stream and
+ * cannot be used as a live feed.
+ */
+const CONSOLE_POLL_MS = 15_000;
 
 interface GoLiveBroadcasterProps {
   streamKey: string;
@@ -53,6 +75,12 @@ interface GoLiveBroadcasterProps {
    * broadcast has to arrive already captured. Null for a camera broadcast.
    */
   initialScreenStream?: MediaStream | null;
+  /**
+   * The Mongo ObjectId of the stream — what every /api/live/{id}/* route
+   * takes, and never the NFT tokenId. Without it the console has no counts to
+   * show and the chat has nothing to key on.
+   */
+  streamId?: string;
   /** Fired when the creator ends the broadcast; the parent runs API teardown. */
   onEnd: () => void;
 }
@@ -155,6 +183,7 @@ function mixAudio(tracks: MediaStreamTrack[]): AudioMix | null {
 export function GoLiveBroadcaster({
   streamKey,
   initialScreenStream = null,
+  streamId,
   onEnd,
 }: GoLiveBroadcasterProps) {
   const [phase, setPhase] = useState<Phase>('starting');
@@ -180,7 +209,7 @@ export function GoLiveBroadcaster({
   const [isEnding, setIsEnding] = useState(false);
   // Only one drawer of extras at a time — the broadcast preview is the point
   // of this panel and two open boards would push it off a laptop screen.
-  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'sounds'>('none');
+  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'sounds' | 'chat'>('none');
   const [effect, setEffect] = useState<VoiceEffectId>('none');
   const [switchingEffect, setSwitchingEffect] = useState(false);
 
@@ -218,6 +247,22 @@ export function GoLiveBroadcaster({
 
   /** Feature detection, not a device check: undefined on iOS and on Android. */
   const canShareScreen = typeof navigator?.mediaDevices?.getDisplayMedia === 'function';
+
+  /**
+   * The room, from the host's side: who is watching, what they have given.
+   * Until now the only way to see any of it was to open the post in a second
+   * tab, which is also the only place the chat lived.
+   */
+  const { data: console_ } = useQuery({
+    queryKey: ['broadcast-console', streamId],
+    queryFn: () => getLiveStream(streamId as string),
+    enabled: !!streamId && (phase === 'live' || phase === 'reconnecting'),
+    refetchInterval: CONSOLE_POLL_MS,
+    staleTime: CONSOLE_POLL_MS,
+  });
+  const room = console_?.result as
+    | { totalViews?: number; peakViewers?: number; likes?: number; totalTips?: number }
+    | undefined;
 
   // The Stages voice-effect graph, reused as-is: mic → effect chain →
   // MediaStreamDestination. The broadcast publishes that destination rather
@@ -1055,7 +1100,54 @@ export function GoLiveBroadcaster({
         >
           <Music className="h-5 w-5" />
         </ControlButton>
+
+        {streamId && (
+          <ControlButton
+            active={openPanel !== 'chat'}
+            onClick={() => setOpenPanel((p) => (p === 'chat' ? 'none' : 'chat'))}
+            disabled={phase === 'error'}
+            label="Live chat"
+          >
+            <MessageSquare className="h-5 w-5" />
+          </ControlButton>
+        )}
       </div>
+
+      {/* The room, at a glance. Only once media is flowing — before that every
+          number is zero and reads as a failure rather than a fresh start. */}
+      {streamId && (phase === 'live' || phase === 'reconnecting') && (
+        <div className="flex items-center justify-center gap-4 text-[11px] text-zinc-400">
+          <span className="flex items-center gap-1.5">
+            <Users className="h-3.5 w-3.5" />
+            {room?.peakViewers ?? room?.totalViews ?? 0} watching
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Heart className="h-3.5 w-3.5" />
+            {room?.likes ?? 0}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Gift className="h-3.5 w-3.5" />
+            {room?.totalTips ?? 0} DHB
+          </span>
+        </div>
+      )}
+
+      {openPanel === 'chat' && streamId && (
+        <div className="max-h-[45vh] overflow-hidden rounded-xl border border-white/10">
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center py-10">
+                <Loader2 className="h-5 w-5 animate-spin text-white/60" />
+              </div>
+            }
+          >
+            {/* isHost: the same panel viewers see on the post page, plus the
+                host's pin control. One global livechat room backs both, so
+                what shows here is exactly what the audience is reading. */}
+            <LivePostChat streamId={streamId} isHost />
+          </Suspense>
+        </div>
+      )}
 
       {openPanel === 'voice' && (
         <div
