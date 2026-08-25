@@ -266,6 +266,9 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
     'fraction', 'shares', 'ownership', 'own a post', 'invest', 'stake in a post',
     'tokenised', 'nft', 'erc1155', 'trade', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
   ],
+  // Nobody hunting a handle types "usernames" — they type the thing they want
+  // to change, which is their @name, or the thing they want to do with it.
+  Usernames: ['username', 'handle', 'handles', 'name', 'names', '@', 'change my name', 'buy a name', 'sell my name', 'vanity', 'domain'],
   // The example that started this: nobody looking for a game types "arcade".
   // The individual games are here as well as being rows of their own, so a
   // half-remembered title finds the grid even when it does not find the game.

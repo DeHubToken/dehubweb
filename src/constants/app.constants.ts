@@ -1,4 +1,5 @@
 import {
+  AtSign,
   Store,
   Home,
   Search,
@@ -64,6 +65,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: PieChart, label: 'Fractions', path: '/app/fractions' },
+  { icon: AtSign, label: 'Usernames', path: '/usernames' },
   { icon: Wand2, label: 'Prompt', path: '/prompt' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Map, label: 'Guide', path: '/guide' },
