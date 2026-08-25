@@ -255,12 +255,13 @@ export async function getLikedPosts(
 export async function getWatchHistory(
   page: number = 0,
   limit: number = 20,
-  address?: string
+  address?: string,
+  postType?: string
 ): Promise<{ result: DeHubNFT[] }> {
   return apiCall<{ result: DeHubNFT[] }>("/api/my_watched_nfts", {
     // Callers are 0-based; /my_watched_nfts is 1-based, so page 0 and page 1
     // used to return the same first page.
-    params: { page: page + 1, limit, ...(address && { address }) },
+    params: { page: page + 1, limit, ...(address && { address }), ...(postType && { postType }) },
     requiresAuth: true,
   });
 }

@@ -95,6 +95,7 @@ import { buildAvatarUrl, buildCoverUrl, bumpProfileImageVersion, deviceWidth } f
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useMatureContent } from '@/hooks/use-mature-content';
+import { useHideWatched } from '@/hooks/use-watched-videos';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useNewMemberSelf } from '@/hooks/use-new-members';
@@ -2403,6 +2404,14 @@ function ContentSettings() {
         </div>
       </div>
 
+      {/* Playback */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.playback', 'Playback')}</h3>
+        <div className="space-y-4">
+          <HideWatchedToggle />
+        </div>
+      </div>
+
 
 
 
@@ -2565,6 +2574,38 @@ function MatureContentToggle() {
       defaultChecked={showMatureContent}
       onCheckedChange={setShowMatureContent}
       disabled={!isAuthenticated || isSaving}
+    />
+  );
+}
+
+/**
+ * Hide watched: drops videos already in this account's watch history out of
+ * the home and video feeds. Off by default — nothing disappears until it is
+ * deliberately turned on.
+ *
+ * Videos only, and signed-in only: a watch record on an image or text post
+ * means it sat on screen for two seconds, not that it was watched, and signed
+ * out there is no history to read at all (see hooks/use-watched-videos.ts).
+ *
+ * localStorage, not the account, because a named account setting has to be
+ * whitelisted server-side or the write is silently dropped.
+ */
+function HideWatchedToggle() {
+  const { t } = useTranslation();
+  const { isAuthenticated } = useAuthContext();
+  const [hideWatched, setHideWatched] = useHideWatched();
+
+  return (
+    <SettingToggle
+      icon={EyeOff}
+      title={t('settings.hideWatched', 'Hide watched videos')}
+      description={t(
+        'settings.hideWatchedDesc',
+        'Keep videos you have already played out of your feeds. Watched videos stay marked either way. Off by default.',
+      )}
+      defaultChecked={hideWatched}
+      onCheckedChange={setHideWatched}
+      disabled={!isAuthenticated}
     />
   );
 }
