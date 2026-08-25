@@ -781,8 +781,18 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               preload="metadata"
               {...{"webkit-playsinline": ""}}
             />
-            <span className="absolute top-3 left-3 rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white">
-              REPLAY
+            {/* PARTIAL when the capture was cut to the creator's daily
+                allowance — presenting the opening stretch as the whole
+                broadcast would be a lie viewers notice mid-video. */}
+            <span
+              className="absolute top-3 left-3 rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white"
+              title={
+                stream.replayTruncated
+                  ? 'Only the start of this stream was kept — the replay hit the creator’s daily limit'
+                  : undefined
+              }
+            >
+              {stream.replayTruncated ? 'PARTIAL REPLAY' : 'REPLAY'}
             </span>
           </>
         ) : streamEnded ? (

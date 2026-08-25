@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { mintPost } from '@/lib/api/dehub/content';
+import { mintPost, getPostQuota, type PostQuotaStatus } from '@/lib/api/dehub/content';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
 // they are dynamically imported at go-live time to keep the wallet stack out
@@ -68,6 +68,18 @@ const SCREEN_CONSTRAINTS: MediaTrackConstraints = {
 };
 
 const MAX_CATEGORIES = 5;
+
+/**
+ * 1024-based, matching the server's pool math — a 1000-based reading would
+ * announce a smaller budget than the backend actually honours. Local rather
+ * than lib/editor/quota's formatBytes, which drags all thirteen badge images
+ * into whatever imports it and fails the entry-bundle check.
+ */
+function formatGb(bytes: number): string {
+  const gb = bytes / (1024 * 1024 * 1024);
+  if (gb >= 1) return `${gb % 1 === 0 ? gb : gb.toFixed(1)} GB`;
+  return `${Math.max(1, Math.round(bytes / (1024 * 1024)))} MB`;
+}
 
 export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const { walletAddress } = useAuth();
@@ -158,6 +170,28 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     }
     if (data.tokenId) clearLiveSession(data.tokenId);
   }, []);
+
+  // What today's allowance still permits as a replay. Replays draw from the
+  // same daily media pool uploads do, and the backend truncates the recording
+  // to whatever is left — so the ceiling is shown HERE, before going live,
+  // rather than discovered as a mysteriously short replay afterwards.
+  const [quota, setQuota] = useState<PostQuotaStatus | null>(null);
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    getPostQuota().then((q) => {
+      if (!cancelled) setQuota(q);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
+
+  const replayBudget = useMemo(() => {
+    if (!quota) return null;
+    const remaining = Math.max(0, quota.mediaBytesPerDay - quota.mediaBytesUsed);
+    return { remaining, tier: quota.tier };
+  }, [quota]);
 
   // Load saved default categories
   useEffect(() => {
@@ -592,6 +626,24 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                     You'll pick the screen, window or tab next — then it goes live
                     with your mic and the tab's own sound.
                   </p>
+                )}
+                {replayBudget && (
+                  replayBudget.remaining <= 0 ? (
+                    <p className="text-[11px] text-amber-400/90">
+                      You've used today's upload allowance, so this stream won't
+                      keep a replay. The allowance resets at midnight UTC.
+                    </p>
+                  ) : replayBudget.tier == null ? (
+                    <p className="text-[11px] text-amber-400/90">
+                      Free accounts keep the first {formatGb(replayBudget.remaining)} of
+                      a stream as a replay — staking badges raises the limit.
+                    </p>
+                  ) : (
+                    <p className="text-[11px] text-zinc-500">
+                      Up to {formatGb(replayBudget.remaining)} of this stream is kept
+                      as a replay ({replayBudget.tier} daily allowance).
+                    </p>
+                  )
                 )}
               </div>
 

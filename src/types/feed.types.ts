@@ -312,6 +312,8 @@ export interface LiveStream extends BaseFeedItem {
    * something watchable.
    */
   replayUrl?: string;
+  /** True when the replay is only the opening stretch of the broadcast. */
+  replayTruncated?: boolean;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
