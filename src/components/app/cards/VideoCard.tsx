@@ -26,7 +26,8 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil , Rocket } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil, Rocket } from 'lucide-react';
+import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -560,6 +561,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showBoostModal, setShowBoostModal] = useState(false);
+
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   // Two flags, not one: mounting a vaul Root that is already open renders it
   // at its final position with no transition, so the drawer mounts closed and
@@ -580,6 +582,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  // Deep Current is the one power spent on somebody ELSE's post, so it is
+  // the one row that belongs in this half of the menu. `status.powers` is
+  // the authority for whether this account has it — the badge the client
+  // draws from a live wallet read deliberately over-reports.
+  const { data: superpowerStatus } = useSuperpowers(!!walletAddress);
+  const canGiftBoost = !!superpowerStatus?.powers.some(
+    p => p.key === 'deep_current' && p.unlocked && p.available,
+  );
   // The options menu offers the same copy as the share sheet, so it counts the
   // same. Shares one react-query key with the ActionBar below, so no extra
   // request — and the bump lands on the card's own share counter.
@@ -1680,6 +1690,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   {!isOwnPost && (
                     <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                       <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
+                    </button>
+                  )}
+                  {!isOwnPost && canGiftBoost && (
+                    <button
+                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                      disabled={!videoTokenId}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                    >
+                      <Gift className="w-5 h-5" /> {t('postOptions.giftBoost', { defaultValue: 'Gift a boost' })}
                     </button>
                   )}
                   {isOwnPost && (

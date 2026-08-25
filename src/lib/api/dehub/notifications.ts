@@ -29,6 +29,7 @@ export type NotificationType =
   | 'fraction_purchased'
   | 'video_milestone'
   | 'livestream_start'
+  | 'signal_flare'
   | 'video_removal'
   | 'account_warning'
   | 'system';
@@ -158,6 +159,8 @@ function normalizeNotificationType(rawType: string): NotificationType {
     'videoMilestone': 'video_milestone',
     'video-milestone': 'video_milestone',
     'livestreamStart': 'livestream_start',
+    'signalFlare': 'signal_flare',
+    'signal-flare': 'signal_flare',
     'livestream-start': 'livestream_start',
     'videoRemoval': 'video_removal',
     'video-removal': 'video_removal',

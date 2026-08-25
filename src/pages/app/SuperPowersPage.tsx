@@ -113,13 +113,30 @@ export default function SuperPowersPage() {
                   })}
                 </p>
               </div>
-              <div className="text-right shrink-0">
-                <span className="block text-2xl font-semibold text-white tabular-nums">
-                  {status.boostsLeft}
-                </span>
-                <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
-                  {t('superpowers.left')}
-                </span>
+              {/* Two numbers, because there are two allowances. A Signal
+                  Flare is paid for out of a second pot the same size as the
+                  boost one, so one figure covering both tells an Octopus who
+                  has spent their boosts that they have no flares either — and
+                  takes away the power they climbed a rung for. */}
+              <div className="flex items-start gap-5 shrink-0">
+                <div className="text-right">
+                  <span className="block text-2xl font-semibold text-white tabular-nums">
+                    {status.boostsLeft}
+                  </span>
+                  <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
+                    {t('superpowers.left')}
+                  </span>
+                </div>
+                {status.signalsLeft !== undefined && (
+                  <div className="text-right">
+                    <span className="block text-2xl font-semibold text-white tabular-nums">
+                      {status.signalsLeft}
+                    </span>
+                    <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
+                      {t('superpowers.flaresLeft', { defaultValue: 'flares' })}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -146,7 +163,15 @@ export default function SuperPowersPage() {
                         to={`/app/post/${booking.tokenId}`}
                         className="text-white hover:underline truncate"
                       >
-                        #{booking.tokenId}
+                        {/* A Deep Current lands on somebody else's post, so the
+                            bare id would show the holder a number they do not
+                            recognise as theirs. */}
+                        {booking.power === 'deep_current'
+                          ? t('superpowers.giftedTo', {
+                              id: booking.tokenId,
+                              defaultValue: `gift → #${booking.tokenId}`,
+                            })
+                          : `#${booking.tokenId}`}
                       </Link>
                     ) : (
                       <span className="text-white truncate">

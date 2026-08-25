@@ -27,12 +27,25 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { getNFTInfo } from '@/lib/api/dehub';
-import { Loader2, Rocket, History, Lock, Shield, Crosshair, Target, Check } from 'lucide-react';
+import {
+  Loader2,
+  Rocket,
+  History,
+  Lock,
+  Shield,
+  Crosshair,
+  Target,
+  Check,
+  Siren,
+  Radio,
+  Gift,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 import { badgeImage } from '@/lib/staking-badges';
 import {
   useBookBoost,
@@ -52,14 +65,18 @@ interface BoostModalProps {
 const ICONS: Partial<Record<SuperPowerKey, typeof Rocket>> = {
   boost: Rocket,
   second_wind: History,
+  timeline_bomber: Radio,
+  signal_flare: Siren,
   flak_jacket: Shield,
   precision_strike: Crosshair,
   harpoon: Target,
+  deep_current: Gift,
 };
 
 export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModalProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { walletAddress } = useAuth();
   const { data: status, isLoading, isError } = useSuperpowers(open);
   const { data: ladder } = useSuperpowerLadder();
   const bookBoost = useBookBoost();
@@ -79,9 +96,20 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
     staleTime: 5 * 60 * 1000,
   });
 
+  // Whether this post is the viewer's own decides which HALF of the ladder is
+  // spendable on it: a gift only lands on somebody else's, everything else
+  // only on your own. Left undefined until the author is known, so a slow
+  // lookup shows the full list rather than the wrong half of it.
+  const isOwnPost = useMemo(() => {
+    const author = postInfo?.minter?.toLowerCase();
+    const me = walletAddress?.toLowerCase();
+    if (!author || !me) return undefined;
+    return author === me;
+  }, [postInfo?.minter, walletAddress]);
+
   const powers = useMemo(
-    () => spendablePowers(status, postInfo?.createdAt),
-    [status, postInfo?.createdAt],
+    () => spendablePowers(status, postInfo?.createdAt, isOwnPost),
+    [status, postInfo?.createdAt, isOwnPost],
   );
 
   // Default to the first one they can actually spend, so the common case is
@@ -298,8 +326,12 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
             >
               {bookBoost.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
-              ) : status.boostsLeft < 1 ? (
-                t('superpowers.noBoostsLeft')
+              ) : !active?.enabled && active?.blockedReason ? (
+                // The reason the chosen power cannot be spent, rather than a
+                // flat "no boosts left" that is wrong for a Signal Flare — it
+                // is paid for out of a second allowance, so a holder with no
+                // boosts may still have flares.
+                active.blockedReason
               ) : (
                 t('superpowers.spendFor', {
                   power: active?.label ?? '',

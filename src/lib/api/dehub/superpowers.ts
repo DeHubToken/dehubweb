@@ -76,6 +76,13 @@ export interface SuperPowerBooking {
   /** Tier at booking time, frozen — not necessarily the tier worn now. */
   tier: string;
   status: 'active' | 'completed' | 'cancelled';
+  /**
+   * Whose post it landed on.
+   *
+   * The holder's own address for every power but Deep Current, which is a
+   * gift. Optional for the same deploy-skew reason as the flare counters.
+   */
+  beneficiary?: string;
   /** Times this boost has been dealt to a viewer. */
   served: number;
   live: boolean;
@@ -93,6 +100,17 @@ export interface SuperPowerStatus {
   boostsPerCycle: number;
   boostsUsed: number;
   boostsLeft: number;
+  /**
+   * The Signal Flare pot — a SECOND allowance the same size as the boost one,
+   * spent independently.
+   *
+   * Optional because a client can be newer than the API it is talking to, and
+   * the fallback has to be the boost count rather than zero: showing an
+   * Octopus "no flares left" on a deploy skew takes the power away.
+   */
+  signalsPerCycle?: number;
+  signalsUsed?: number;
+  signalsLeft?: number;
   minutesPerBoost: number;
   /** Share of the slot when several boosts run at once. */
   slotWeight: number;
