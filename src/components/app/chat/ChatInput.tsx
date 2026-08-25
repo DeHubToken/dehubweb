@@ -400,7 +400,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     {showRail && !narrowViewport && (
       <SmartReplyRail
         {...railProps}
-        className="hidden lg:block pl-4 pr-3 pt-2.5 pb-3 border-t border-white/[0.07]"
+        className="hidden lg:block pl-4 pr-3 pt-2.5 pb-3"
       />
     )}
     {/* No fill: both consumers (DM + Public Chat) are surface-less now, so a
