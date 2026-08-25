@@ -10,7 +10,6 @@ import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, deleteLiveChatMessage, uploadChatImage, uploadLiveChatVoice, type LiveChatRoom } from '@/lib/api/dehub';
-import { getAdminToken, banAdminChatUser, unbanAdminChatUser, deleteAdminChatMessage } from '@/lib/api/dehub';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -127,12 +126,16 @@ export function PublicChat({ onBack }: PublicChatProps) {
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
 
   // Determine moderation rights. Room moderators come from the room's list.
-  // On top of those, anyone signed into the admin panel in this browser holds
-  // full moderation over the chat — the admin API enforces it server side, and
-  // their actions route through /api/admin/livechat/* instead of the room-mod
-  // endpoints, which only know the moderator list.
+  // Room moderators only. There used to be a second path here: anyone holding a
+  // DeHub admin token in this browser got full moderation, routed through
+  // /api/admin/livechat/*. That is why a token with god-mode over the whole
+  // platform lived in localStorage on the public site, reachable by any XSS on
+  // dehub.io — for a convenience that the admin panel already does better, and
+  // now audits.
+  //
+  // Admins moderate chat from godmode.dehub.io → Global Chat. Room moderators
+  // are unaffected.
   // Fallback to selectedRoom.moderators when roomDetails hasn't loaded yet.
-  const isAdminSession = !!getAdminToken();
   const isRoomModerator = useMemo(() => {
     if (!walletAddress) return false;
     const mods = roomDetails?.moderators || selectedRoom?.moderators || [];
@@ -140,7 +143,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       (mod: string) => mod.toLowerCase() === walletAddress.toLowerCase()
     );
   }, [walletAddress, roomDetails, selectedRoom]);
-  const isModerator = isRoomModerator || isAdminSession;
+  const isModerator = isRoomModerator;
 
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
@@ -250,19 +253,15 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return;
     }
     try {
-      if (isAdminSession) {
-        await banAdminChatUser(userId);
-      } else {
-        if (!selectedRoomId) throw new Error('No room selected');
-        await banLiveChatUser(selectedRoomId, userId);
-      }
+      if (!selectedRoomId) throw new Error('No room selected');
+      await banLiveChatUser(selectedRoomId, userId);
       toast.success(`${userName} has been banned`);
       refetch();
     } catch (err) {
       console.error('[PublicChat] Ban failed:', err);
       toast.error(err instanceof Error ? err.message : 'Failed to ban user');
     }
-  }, [selectedRoomId, isAuthenticated, isAdminSession, refetch]);
+  }, [selectedRoomId, isAuthenticated, refetch]);
 
   const handleUnbanUser = useCallback(async (userId: string, userName: string) => {
     if (!isAuthenticated) {
@@ -270,33 +269,25 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return;
     }
     try {
-      if (isAdminSession) {
-        await unbanAdminChatUser(userId);
-      } else {
-        if (!selectedRoomId) throw new Error('No room selected');
-        await unbanLiveChatUser(selectedRoomId, userId);
-      }
+      if (!selectedRoomId) throw new Error('No room selected');
+      await unbanLiveChatUser(selectedRoomId, userId);
       toast.success(`${userName} has been unbanned`);
       refetch();
     } catch (err) {
       console.error('[PublicChat] Unban failed:', err);
       toast.error(err instanceof Error ? err.message : 'Failed to unban user');
     }
-  }, [selectedRoomId, isAuthenticated, isAdminSession, refetch]);
+  }, [selectedRoomId, isAuthenticated, refetch]);
 
   const handleDeleteMessage = useCallback(async (messageId: string) => {
     try {
-      if (isAdminSession) {
-        await deleteAdminChatMessage(messageId);
-      } else {
-        await deleteLiveChatMessage(messageId);
-      }
+      await deleteLiveChatMessage(messageId);
       refetch();
     } catch (err) {
       console.error('[PublicChat] Delete failed:', err);
       toast.error(err instanceof Error ? err.message : 'Failed to delete message');
     }
-  }, [isAdminSession, refetch]);
+  }, [refetch]);
 
   // Merge list-level room data with the richer single-room details
   const enrichedRoom = roomDetails || selectedRoom;
