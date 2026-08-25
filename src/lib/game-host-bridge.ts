@@ -103,6 +103,8 @@ export interface DeskCard {
 
 /** Whoever is signed in on THIS side. Public profile fields only. */
 export interface DeskMe {
+  /** Their public wallet address — what the room values a portfolio from. */
+  address: string;
   handle: string;
   name: string;
   followers: number;
@@ -297,6 +299,12 @@ async function relayDesk(
 
   const me: DeskMe | null = user
     ? {
+        // The public address of the account THIS side is signed in as, so the
+        // room can value the right bag without asking anybody to connect a
+        // wallet a second time. It is a public key, it is on every post they
+        // have ever made, and it buys the frame nothing on its own — reading
+        // a balance from it is something any visitor can do.
+        address: wallet,
         handle: user.username || '',
         name: user.displayName || user.username || '',
         followers: num(user.followers),

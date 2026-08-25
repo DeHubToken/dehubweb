@@ -798,7 +798,7 @@
      resolve), and it must send Access-Control-Allow-Origin for the game's
      origin, or the browser will fetch the .glb and then refuse to hand it to
      WebGL. -->
-    background:linear-gradient(90deg,rgba(47,232,140,.35),var(--up));box-shadow:0 0 14px var(--up)}
+     nobody consciously sees. */
 <!-- three r180. Over http(s) we use the vendored copy in vendor/three: no third-party
      request, and it satisfies a script-src 'self' CSP. Opened as a bare file:// Chrome
      refuses to load ANY local ES module (opaque origin — fetch of the same path returns
@@ -1810,16 +1810,26 @@ function watchedTokens(){
     if(m.tokenAddr&&m.chain==='base')out.set(m.tokenAddr.toLowerCase(),m);
   return out;
 }
+/* WHOSE BAG THE ROOM IS VALUING.
+   The wallet connected in here if there is one, and otherwise the account the
+   app is signed in as — nobody should have to connect a second time to see
+   their own PnL on their own desk. Reading a balance needs no keys and no
+   provider: rpc() falls back to a public endpoint, so an address is enough.
+   Signing anything still needs wallet.addr, which this deliberately is not. */
+function watchAddr(){
+  return wallet.addr||(dhData.me&&dhData.me.address)||'';
+}
 async function refreshWallet(){
-  if(!wallet.addr){wallet.assets=[];wallet.usd=0;return;}
+  const who=watchAddr();
+  if(!who){wallet.assets=[];wallet.usd=0;return;}
   try{
-    const nativeHex=await rpc('eth_getBalance',[wallet.addr,'latest']);
+    const nativeHex=await rpc('eth_getBalance',[who,'latest']);
     const eth=Number(hexToBig(nativeHex))/1e18;
     const toks=[...watchedTokens().keys()].slice(0,25);
     const bals=await Promise.all(toks.map(async a=>{
       try{
         const [b,d]=await Promise.all([
-          ethCall(a,SEL.balanceOf+encAddr(wallet.addr)),
+          ethCall(a,SEL.balanceOf+encAddr(who)),
           ethCall(a,SEL.decimals)]);
         const dec=Number(hexToBig(d))||18;
         return {addr:a,qty:Number(hexToBig(b))/Math.pow(10,dec),dec};
@@ -1876,7 +1886,7 @@ function snapshotWallet(){
     wallet.pnlReal=old?wallet.usd-old.usd:null;
   }catch(e){}
 }
-setInterval(()=>{if(wallet.addr)refreshWallet();},45000);
+setInterval(()=>{if(watchAddr())refreshWallet();},45000);
 
 /* ============================== swap =================================
    Quote, then SIMULATE, then ask, then send. The simulation is the safety
@@ -5445,7 +5455,19 @@ function finishWall(){
    A big volumetric number hanging in the air above the ticker. Number only —
    no label, no units of explanation. Built from stacked additive planes so it
    reads as projected light rather than a flat sprite. */
-const pnlCv=document.createElement('canvas');pnlCv.width=1024;pnlCv.height=256;
+/* The DeHub mark, for the coin struck under the number. crossOrigin because
+   in the arcade this document is an opaque origin, so its OWN assets are
+   cross-origin to it — public/_headers sends Access-Control-Allow-Origin for
+   this directory, and without the attribute the draw would taint the canvas
+   and the hologram's texture upload would throw. */
+const coinMark=new Image();
+let coinReady=false;
+coinMark.crossOrigin='anonymous';
+coinMark.onload=()=>{coinReady=true;};
+coinMark.src='brand/dehub-mark-128.png';
+/* 1024x384, not 1024x256: the number keeps the top two thirds and the coin
+   row lives underneath it. */
+const pnlCv=document.createElement('canvas');pnlCv.width=1024;pnlCv.height=384;
 const pnlCtx=pnlCv.getContext('2d');
 const pnlTex=new THREE.CanvasTexture(pnlCv);
 pnlTex.colorSpace=THREE.SRGBColorSpace;
@@ -5454,7 +5476,7 @@ const pnlGroup=new THREE.Group();scene.add(pnlGroup);
 const PNL_LAYERS=5;
 {
   for(let i=0;i<PNL_LAYERS;i++){
-    const m=new THREE.Mesh(new THREE.PlaneGeometry(9,2.25),
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(9,3.375),
       new THREE.MeshBasicMaterial({map:pnlTex,transparent:true,
         blending:THREE.AdditiveBlending,depthWrite:false,depthTest:false,
         opacity:i===0?0.85:0.20-i*0.03}));
@@ -5464,22 +5486,68 @@ const PNL_LAYERS=5;
   }
 }
 let pnlShown=0;
+/* A struck gold coin: a lit face, a rim, and the DeHub mark punched into it.
+   Drawn rather than shipped as an asset — at this size an image would be one
+   more thing to load, and the coin has to sit inside an ADDITIVE hologram, so
+   it is painted at the brightness the projection needs. */
+function drawCoin(ctx,cx,cy,r){
+  const g=ctx.createRadialGradient(cx-r*0.35,cy-r*0.42,r*0.08,cx,cy,r);
+  g.addColorStop(0,'#fff4cf');
+  g.addColorStop(0.42,'#f3c44f');
+  g.addColorStop(1,'#a8721a');
+  ctx.beginPath();ctx.arc(cx,cy,r,0,6.3);
+  ctx.fillStyle=g;ctx.fill();
+  ctx.lineWidth=Math.max(1.5,r*0.1);
+  ctx.strokeStyle='#ffe9a3';ctx.stroke();
+  ctx.lineWidth=1;
+  if(coinReady){
+    /* the mark, clipped to the face so a stray edge cannot spill over the rim */
+    ctx.save();
+    ctx.beginPath();ctx.arc(cx,cy,r*0.74,0,6.3);ctx.clip();
+    ctx.globalAlpha=0.9;
+    ctx.drawImage(coinMark,cx-r*0.62,cy-r*0.62,r*1.24,r*1.24);
+    ctx.restore();
+    ctx.globalAlpha=1;
+  }
+}
+/* The coin row: what this account holds, under what it made today. Drawn only
+   when there is a real number — an empty DHB line under the PnL would be one
+   more thing on this screen that is not true. */
+function paintPnlCoin(ctx,w){
+  const bal=dhData.me&&isFinite(dhData.me.badge)?dhData.me.badge:0;
+  if(!bal)return;
+  const y=300,r=34;
+  const label=fmtBig(bal)+' DHB';
+  ctx.font='700 62px "Chakra Petch"';
+  const tw=ctx.measureText(label).width;
+  const total=r*2+18+tw;
+  const cx=w/2-total/2+r;
+  drawCoin(ctx,cx,y,r);
+  ctx.textAlign='left';ctx.textBaseline='middle';
+  ctx.shadowColor='#f3c44f';ctx.shadowBlur=34;
+  ctx.fillStyle='#ffe9a3';
+  ctx.fillText(label,cx+r+18,y+2);
+  ctx.shadowBlur=0;
+  ctx.textAlign='center';
+}
 function paintPnl(v){
   const ctx=pnlCtx,w=pnlCv.width,h=pnlCv.height;
   ctx.clearRect(0,0,w,h);
   const up=v>=0;
   const col=up?'#4dffa6':'#ff5c7a';
   const txt=(up?'+$':'-$')+fmtBig(Math.abs(v));
+  const my=128;                       /* the number keeps the place it had */
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.font='700 150px "Chakra Petch"';
   /* chromatic split, like a mis-converged projector */
   ctx.globalAlpha=0.5;
-  ctx.fillStyle=up?'#00ffd0':'#ff2f6a';ctx.fillText(txt,w/2-4,h/2);
-  ctx.fillStyle=up?'#7dff6b':'#ff9a5c';ctx.fillText(txt,w/2+4,h/2);
+  ctx.fillStyle=up?'#00ffd0':'#ff2f6a';ctx.fillText(txt,w/2-4,my);
+  ctx.fillStyle=up?'#7dff6b':'#ff9a5c';ctx.fillText(txt,w/2+4,my);
   ctx.globalAlpha=1;
   ctx.shadowColor=col;ctx.shadowBlur=52;
-  ctx.fillStyle='#ffffff';ctx.fillText(txt,w/2,h/2);
+  ctx.fillStyle='#ffffff';ctx.fillText(txt,w/2,my);
   ctx.shadowBlur=0;
+  paintPnlCoin(ctx,w);
   /* interlace so it reads as a projection, not a decal */
   ctx.globalCompositeOperation='destination-out';
   ctx.fillStyle='rgba(0,0,0,0.5)';
@@ -5491,12 +5559,16 @@ function placePnl(){
   const wallScreens=screens.filter(s=>!s.floating);
   let top=WALL.baseY,R=WALL.radius;
   for(const s of wallScreens)top=Math.max(top,s.yPos+s.h/2);
-  pnlGroup.position.set(0,top+2.35,-(R-1.2));
-  pnlGroup.lookAt(0,top+2.35,0);
+  /* The plane grew downward to make room for the coin row, so the group drops
+     by half that growth and the NUMBER stays exactly where it always hung. */
+  const y=top+2.35-0.5625;
+  pnlGroup.position.set(0,y,-(R-1.2));
+  pnlGroup.lookAt(0,y,0);
 }
 function pnlTick(dt,t){
-  /* real money once a wallet is connected; the paper book is only the fallback */
-  const target=wallet.addr
+  /* Real money once there is an account to value — connected in here or
+     signed in on DeHub. The paper book is only the fallback. */
+  const target=watchAddr()
     ? (wallet.pnlReal!=null?wallet.pnlReal:wallet.pnl24)
     : paperPnl();
   pnlShown=lerp(pnlShown,target,Math.min(1,dt*2.2));
