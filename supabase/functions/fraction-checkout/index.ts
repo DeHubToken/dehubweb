@@ -193,7 +193,6 @@ async function fractionBalance(
 
 interface TxReceipt {
   status: string;
-  from: string;
   logs: Array<{ address: string; topics: string[]; data: string }>;
 }
 
@@ -215,16 +214,20 @@ type ReceiptCheck =
   | { ok: false; error: string; status: number; retryable?: boolean };
 
 /**
- * Fetch a receipt and assert it succeeded and came from the expected wallet.
+ * Fetch a receipt and assert it succeeded.
  *
- * The sender check is what stops someone harvesting a stranger's transfer:
- * without it, any transaction hash that happens to contain a matching transfer
- * could be claimed by whoever submitted it first.
+ * Deliberately no check on `receipt.from`. A DeHub account is a smart wallet,
+ * so `tx.from` is the bundler that relayed the userOp, not the person acting —
+ * asserting on it rejects every sponsored transaction. Every caller below
+ * follows this with `dhbPaid` or `fractionsDelivered`, which pin the acting
+ * wallet to the *event's* `from`. That is the stronger check and the one that
+ * really stops someone harvesting a stranger's transfer: a hash that merely
+ * contains a matching transfer still fails it unless the wallet claiming it is
+ * the one the log says moved the tokens.
  */
 async function loadReceipt(
   chainId: number,
   txHash: string,
-  expectedSender: string,
 ): Promise<ReceiptCheck> {
   const receipt = await rpc<TxReceipt>(chainId, "eth_getTransactionReceipt", [txHash]);
   if (!receipt) {
@@ -233,9 +236,6 @@ async function loadReceipt(
   }
   if (BigInt(receipt.status) !== 1n) {
     return { ok: false, error: "That transaction failed on-chain", status: 400 };
-  }
-  if (String(receipt.from).toLowerCase() !== expectedSender) {
-    return { ok: false, error: "That transaction was not sent from your wallet", status: 403 };
   }
   return { ok: true, receipt };
 }
@@ -595,7 +595,7 @@ Deno.serve(async (req) => {
       const seller = String(listing.seller_address).toLowerCase();
       if (seller === wallet) return jsonResponse({ error: "You can't buy your own listing" }, 400);
 
-      const check = await loadReceipt(chainId, txHash, wallet);
+      const check = await loadReceipt(chainId, txHash);
       if (!check.ok) {
         return jsonResponse(
           { error: check.error, retryable: check.retryable },
@@ -703,7 +703,7 @@ Deno.serve(async (req) => {
 
       const chainId = Number(trade.chain_id) || 8453;
       const buyer = String(trade.buyer_address).toLowerCase();
-      const check = await loadReceipt(chainId, txHash, wallet);
+      const check = await loadReceipt(chainId, txHash);
       if (!check.ok) {
         return jsonResponse({ error: check.error, retryable: check.retryable }, check.status);
       }
@@ -767,7 +767,7 @@ Deno.serve(async (req) => {
       }
 
       const chainId = Number(offer.chain_id) || 8453;
-      const check = await loadReceipt(chainId, txHash, wallet);
+      const check = await loadReceipt(chainId, txHash);
       if (!check.ok) {
         return jsonResponse({ error: check.error, retryable: check.retryable }, check.status);
       }
@@ -880,7 +880,7 @@ Deno.serve(async (req) => {
 
       const chainId = Number(trade.chain_id) || 8453;
       const seller = String(trade.seller_address).toLowerCase();
-      const check = await loadReceipt(chainId, txHash, wallet);
+      const check = await loadReceipt(chainId, txHash);
       if (!check.ok) {
         return jsonResponse({ error: check.error, retryable: check.retryable }, check.status);
       }
