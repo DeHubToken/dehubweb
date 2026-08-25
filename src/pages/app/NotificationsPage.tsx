@@ -8,7 +8,8 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale, Siren
+} from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -281,7 +282,7 @@ const API_BACKED_TYPES = new Set([
   'tip', 'bounty_available', 'bounty_claimed',
   'subscription', 'ppv_purchase',
   'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased',
-  'livestream_start', 'video_milestone',
+  'livestream_start', 'signal_flare', 'video_milestone',
   'video_removal', 'account_warning', 'system',
 ]);
 
@@ -352,6 +353,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'livestream_start':
       return <Zap className="w-4 h-4 text-white/70" />;
+    case 'signal_flare':
+      return <Siren className="w-4 h-4 text-white/70" />;
     case 'video_removal':
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
@@ -750,6 +753,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
           ? `/${notification.actorUsername}` 
           : '/app/command-centre';
     case 'livestream_start':
+    case 'signal_flare':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
     case 'video_removal':
       return '/app/settings';
