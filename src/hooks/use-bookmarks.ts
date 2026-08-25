@@ -9,7 +9,7 @@ import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
-export type BookmarkType = 'all' | 'liked' | 'history' | 'recent' | 'ppv' | 'images' | 'videos' | 'text';
+export type BookmarkType = 'all' | 'liked' | 'history' | 'folders' | 'recent' | 'ppv' | 'images' | 'videos' | 'text';
 
 const PAGE_SIZE = 20;
 
@@ -180,7 +180,9 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 1,
-    enabled: isAuthenticated && type !== 'liked' && type !== 'history' && type !== 'ppv',
+    // 'folders' is served by BookmarkFoldersPanel off its own endpoint — this
+    // query would otherwise fetch the whole saved list behind an unused tab.
+    enabled: isAuthenticated && type !== 'liked' && type !== 'history' && type !== 'ppv' && type !== 'folders',
     staleTime: 2 * 60 * 1000,
   });
 

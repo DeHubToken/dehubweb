@@ -4,8 +4,9 @@ import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket, Trash2 } from 'lucide-react';
+import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket, Trash2, FolderOpen } from 'lucide-react';
 import { BookmarksEmptyContent } from '@/components/app/bookmarks/BookmarksEmptyContent';
+import { BookmarkFoldersPanel } from '@/components/app/bookmarks/BookmarkFoldersPanel';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -24,6 +25,7 @@ const tabKeys = [
   { labelKey: 'bookmarks.all', value: 'all' as BookmarkType, icon: LayoutGrid },
   { labelKey: 'bookmarks.liked', value: 'liked' as BookmarkType, icon: ThumbsUp },
   { labelKey: 'bookmarks.history', value: 'history' as BookmarkType, icon: History },
+  { labelKey: 'bookmarks.folders', value: 'folders' as BookmarkType, icon: FolderOpen },
   { labelKey: 'bookmarks.recent', value: 'recent' as BookmarkType, icon: Clock },
   { labelKey: 'bookmarks.paidPpv', value: 'ppv' as BookmarkType, icon: Ticket },
   { labelKey: 'bookmarks.images', value: 'images' as BookmarkType, icon: Image },
@@ -240,7 +242,11 @@ export default function BookmarksPage() {
 
       {/* Content Area */}
       <div ref={bookmarksContentRef} className="px-2 pb-2 sm:px-3 sm:pb-3">
-      {isLoading ? (
+      {activeTab === 'folders' ? (
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+          <BookmarkFoldersPanel />
+        </div>
+      ) : isLoading ? (
         <BookmarksSkeleton />
       ) : isError ? (
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
