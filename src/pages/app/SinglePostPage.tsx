@@ -39,6 +39,7 @@ import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
+import { extractReplayUrl } from '@/lib/live-replay';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -403,6 +404,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     commentCount: nft.commentCount || nft.comment_count || 0,
     playbackUrl: buildLivePlaybackUrl(nft),
     playbackUrls: buildLivePlaybackUrls(nft),
+    replayUrl: extractReplayUrl(streamObj),
   };
 }
 

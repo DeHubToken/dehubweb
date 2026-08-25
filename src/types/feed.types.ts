@@ -305,6 +305,13 @@ export interface LiveStream extends BaseFeedItem {
   playbackUrl?: string;
   /** Fallback URLs to try if primary fails (e.g. alternate Livepeer CDN) */
   playbackUrls?: string[];
+  /**
+   * The recorded replay, once the backend has moved it off Livepeer into our
+   * own bucket. A plain mp4, not HLS — set only when the capture is `ready`,
+   * so its presence is what turns an ended stream from a dead card into
+   * something watchable.
+   */
+  replayUrl?: string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
