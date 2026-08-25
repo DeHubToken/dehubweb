@@ -59,7 +59,7 @@ const OG_CARD_ROUTES = new Set([
   'stages', 'guide', 'features', 'pricing', 'depin',
   'builder', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard',
-  'top-100', 'music', 'tv',
+  'top-100', 'music', 'tv', 'cinema',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk',
   'raffle', 'stake', 'usernames',
@@ -984,6 +984,16 @@ const MARKETING_PAGES = {
     description: 'Watch free live TV channels from around the world on DeHub. News, sports, entertainment and more — streamed in the browser, no subscription needed.',
     heading: 'DeHub TV',
     bodyHtml: `<p>DeHub TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in DHB straight from the player.</p>`,
+  },
+  // Title and description are copied verbatim from CinemaPage's SEOHead — see
+  // the note above MARKETING_PAGES about the two UA variants never diverging.
+  'cinema': {
+    title: 'Cinema | Where to Stream, Rent or Buy Any Film | DeHub',
+    description: 'Find out where to stream, rent or buy any film or series, with live prices for your country. DeHub Cinema covers every major service in 140+ countries.',
+    heading: 'DeHub Cinema',
+    bodyHtml: `<p>Search any film or series and DeHub Cinema shows every legal way to watch it where you are — what it streams on, what a rental costs, and what it costs to own. Prices come back in your own currency.</p>
+<h2>Rights are per country</h2>
+<p>The same film can be included with a subscription in one country, a paid rental in another, and unavailable in a third. Cinema asks per territory rather than showing one global answer, so switching country re-checks availability and price.</p>`,
   },
   'glossary': {
     title: 'Glossary — Icons, Features & Web3 Terms',
