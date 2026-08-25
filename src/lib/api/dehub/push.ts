@@ -84,16 +84,43 @@ export function buildPrefPatch(key: NotificationKey, value: boolean): Partial<Pu
   return { [cat]: { [key]: value } } as Partial<PushPreferences>;
 }
 
+export interface WebPushSubscriptionPayload {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+}
+
 export async function registerPushToken(params: {
   token: string;
   deviceId: string;
   platform: 'ios' | 'android' | 'web';
+  deviceName?: string;
+  /** Web only — the payload is encrypted to these keys, so an endpoint alone is useless. */
+  webSubscription?: WebPushSubscriptionPayload;
 }): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>("/api/push/token", {
     method: "POST",
     body: { ...params },
     requiresAuth: true,
   });
+}
+
+/**
+ * The key a browser needs before it can subscribe.
+ *
+ * Unauthenticated by design, and an empty string is a real answer: it means
+ * this deployment has no VAPID keys, so web push is off and the caller should
+ * stay on in-tab notifications rather than showing a broken switch.
+ */
+export async function getVapidPublicKey(): Promise<string> {
+  try {
+    const response = await apiCall<{ publicKey?: string; configured?: boolean }>(
+      "/api/push/vapid-public-key",
+    );
+    return response?.publicKey ?? '';
+  } catch {
+    // An older API has no such route. Same meaning as no key: no web push.
+    return '';
+  }
 }
 
 export async function unregisterPushToken(deviceId: string): Promise<{ result: boolean }> {
