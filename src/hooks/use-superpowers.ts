@@ -109,11 +109,17 @@ export function useBookBoost() {
       tokenId,
       power = 'boost',
       startAt,
+      targetAccount,
+      targetTiers,
     }: {
       tokenId: number;
       power?: SuperPowerKey;
       startAt?: string;
-    }) => bookBoost(tokenId, power, startAt),
+      /** precision_strike: whose followers to reach. */
+      targetAccount?: string;
+      /** harpoon: badge tier NAMES to aim at. */
+      targetTiers?: string[];
+    }) => bookBoost(tokenId, power, startAt, { targetAccount, targetTiers }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['superpowers', 'status'] });
       // So the holder can see their own boost land, rather than waiting out
@@ -148,4 +154,72 @@ export function powerForPostAge(createdAt: string | Date | undefined): SuperPowe
   const age = Date.now() - new Date(createdAt).getTime();
   if (!Number.isFinite(age) || age < 0) return 'boost';
   return age > 7 * 24 * 60 * 60 * 1000 ? 'second_wind' : 'boost';
+}
+
+/** What a power needs from the holder before it can be spent. */
+export type PowerTargeting = 'none' | 'account' | 'tiers';
+
+export interface SpendablePower {
+  key: SuperPowerKey;
+  label: string;
+  summary: string;
+  /** What the holder must supply — an account to aim at, or badge tiers. */
+  targeting: PowerTargeting;
+  /** False when the tier does not reach it, or it is not built yet. */
+  enabled: boolean;
+  /** Why it is disabled, written for the holder. Empty when enabled. */
+  blockedReason: string;
+}
+
+/**
+ * Every power this holder could spend on this post, in ladder order.
+ *
+ * Replaces the age-derived either/or the sheet started with. That was right
+ * while Boost and Second Wind were the only two — they split one job by age —
+ * but there are six now, and four of them have nothing to do with age. A
+ * chooser that infers the power from the post silently hides the rest.
+ *
+ * The age rule survives where it belongs: Boost and Second Wind are still
+ * mutually exclusive, and only the one that suits the post is offered, because
+ * the server refuses the other and the two cost the same boost.
+ *
+ * `status.powers` is the authority for what is unlocked and what is built —
+ * never a table on this side. The client draws a badge from a live wallet read
+ * that deliberately over-reports, so a local answer would offer powers the
+ * server will refuse.
+ */
+export function spendablePowers(
+  status: SuperPowerStatus | null | undefined,
+  postCreatedAt: string | Date | undefined,
+): SpendablePower[] {
+  if (!status) return [];
+
+  const ageChoice = powerForPostAge(postCreatedAt);
+  const TARGETING: Partial<Record<SuperPowerKey, PowerTargeting>> = {
+    precision_strike: 'account',
+    harpoon: 'tiers',
+  };
+
+  return status.powers
+    .filter(p => {
+      if (!p.available) return false;
+      // Golden Hour acts on the account, not this post — it belongs on the
+      // SuperPowers page rather than in a post's sheet.
+      if (p.key === 'golden_hour') return false;
+      // Only the age-appropriate half of the Boost/Second Wind pair.
+      if (p.key === 'boost' || p.key === 'second_wind') return p.key === ageChoice;
+      return true;
+    })
+    .map(p => ({
+      key: p.key,
+      label: p.label,
+      summary: p.summary,
+      targeting: TARGETING[p.key] ?? 'none',
+      enabled: !!p.unlocked && status.boostsLeft > 0,
+      blockedReason: !p.unlocked
+        ? `Unlocks at ${p.tier}`
+        : status.boostsLeft < 1
+          ? 'No boosts left this cycle'
+          : '',
+    }));
 }

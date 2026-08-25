@@ -64,7 +64,11 @@ export interface SuperPowerInfo {
 
 export interface SuperPowerBooking {
   id: string;
-  tokenId: number;
+  /**
+   * Null for a power that does not act on a post — a Golden Hour acts on the
+   * whole account. Check before linking to `/app/post/`.
+   */
+  tokenId: number | null;
   power: SuperPowerKey;
   startsAt: string;
   endsAt: string;
@@ -161,10 +165,21 @@ export async function bookBoost(
   tokenId: number,
   power: SuperPowerKey = 'boost',
   startAt?: string,
+  aim?: {
+    /** `precision_strike` — the account whose followers to reach. */
+    targetAccount?: string;
+    /** `harpoon` — badge tier NAMES, never balances. The ladder is dollar-pegged. */
+    targetTiers?: string[];
+  },
 ): Promise<SuperPowerBooking> {
+  const body: Record<string, unknown> = { tokenId, power };
+  if (startAt) body.startAt = startAt;
+  if (aim?.targetAccount) body.targetAccount = aim.targetAccount;
+  if (aim?.targetTiers?.length) body.targetTiers = aim.targetTiers;
+
   const response = await apiCall<{ result: SuperPowerBooking }>('/api/superpowers/boost', {
     method: 'POST',
-    body: startAt ? { tokenId, power, startAt } : { tokenId, power },
+    body,
     requiresAuth: true,
   });
   return response.result;
