@@ -68,6 +68,7 @@ import {
   Film,
   Paintbrush,
   Gauge,
+  Megaphone,
   LifeBuoy,
   Trash2,
 } from 'lucide-react';
@@ -97,6 +98,8 @@ import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useMatureContent } from '@/hooks/use-mature-content';
 import { useHideWatched } from '@/hooks/use-watched-videos';
 import { DataPortability } from '@/components/app/settings/DataPortability';
+import { normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
+import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
@@ -2402,6 +2405,7 @@ function ContentSettings() {
         <div className="space-y-4">
           <HideWatchedToggle />
           <ChannelSpeedRow />
+          <AdLoadRow />
         </div>
       </div>
 
@@ -2649,6 +2653,40 @@ function ChannelSpeedRow() {
           {t('settings.reset', 'Reset')}
         </Button>
       }
+    />
+  );
+}
+
+/**
+ * Ad load: how often a sponsored post lands in the home feed. Standard is one
+ * every eight, Fewer halves it. There is no "none" — the line about creators
+ * is not decoration, it is the reason the option stops where it does.
+ */
+function AdLoadRow() {
+  const { t } = useTranslation();
+  const adLoad = useAdLoad();
+  // The blob is applied by ViewingPreferencesSync; this only pushes the write,
+  // so the choice reaches the account's other devices.
+  const prefs = useUserPreferences();
+
+  return (
+    <SettingsRow
+      icon={<Megaphone />}
+      title={t('settings.adLoad', 'Ads in your feed')}
+      description={t('settings.adLoadDesc', 'Ads pay the creators you watch. Fewer means half as many in the feed.')}
+      action={<SettingDrawerSelect
+        value={adLoad}
+        onValueChange={(value) => {
+          const next = normaliseAdLoad(value);
+          writeAdLoad(next);
+          prefs?.setPref('adLoad', next);
+        }}
+        title={t('settings.adLoad', 'Ads in your feed')}
+        options={[
+          { value: 'standard', label: t('settings.adLoadStandard', 'Standard'), description: t('settings.adLoadStandardDesc', 'One sponsored post every eight') },
+          { value: 'fewer', label: t('settings.adLoadFewer', 'Fewer'), description: t('settings.adLoadFewerDesc', 'One every sixteen') },
+        ]}
+      />}
     />
   );
 }
