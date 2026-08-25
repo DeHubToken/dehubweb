@@ -81,10 +81,11 @@ serve(async (req) => {
     }
 
     // ── Write ───────────────────────────────────────────────────────────────
-    // Everything that writes is a POST, including removal. The shared CORS
-    // headers allow GET, POST and OPTIONS only, so a DELETE would never make
-    // it past the preflight — it fails in the browser and works in curl, which
-    // is the worst way for a bug to present.
+    // Everything that writes is a POST, including removal: one authenticated
+    // entry point that reads the intent off the body, rather than a method per
+    // verb. The shared CORS headers allowed GET, POST and OPTIONS only when
+    // this was written, which forced the shape; they allow DELETE now, but
+    // there is nothing to gain from splitting it back apart.
     if (req.method === "POST") {
       const auth = await requireDeHubAuth(req);
       if (!auth.ok) return auth.response;
