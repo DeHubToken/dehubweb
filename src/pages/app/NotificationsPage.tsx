@@ -658,16 +658,6 @@ function getNotificationContent(
       return tr('notifications.postMilestone');
     case 'livestream_start':
       return tr('notifications.startedStreaming', { name: actorName });
-    case 'signal_flare':
-      // The server writes the whole sentence for this one, title included, so
-      // the fallback only has to cover a row that arrived without content.
-      return (
-        notification.content ||
-        tr('notifications.sentSignalFlare', {
-          name: actorName,
-          defaultValue: `${actorName} sent up a Signal Flare`,
-        })
-      );
     case 'comment_like': {
       const commentPreview = (notification as any).commentPreview;
       const count = (notification as any).aggregatedCount || 1;
