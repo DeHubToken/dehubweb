@@ -35,7 +35,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { subscribeToWhep, playbackIdFromHlsUrl } from '@/lib/livepeer/whep';
+// The WHEP subscriber pulls in peer-connection code and loads on demand at
+// attach time (see the playback effect) — a static import here would put it
+// on the boot path, since this card is eager via HomeFeed.
+import { playbackIdFromHlsUrl } from '@/lib/livepeer/playback-id';
+import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useAuth } from '@/contexts/AuthContext';
@@ -185,7 +189,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     if (!video) return;
 
     let cancelled = false;
-    let session: Awaited<ReturnType<typeof subscribeToWhep>> | null = null;
+    let session: WhepSubscription | null = null;
 
     const fallBack = (reason: string) => {
       if (cancelled) return;
@@ -204,6 +208,8 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
     (async () => {
       try {
+        const { subscribeToWhep } = await import('@/lib/livepeer/whep');
+        if (cancelled) return;
         session = await subscribeToWhep({
           playbackId: whepPlaybackId,
           onStateChange: (state, detail) => {

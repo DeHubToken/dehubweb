@@ -42,12 +42,8 @@ export interface SubscribeOptions {
   onStateChange?: (state: WhepState, detail?: string) => void;
 }
 
-/** Pulls the playback id out of a Livepeer HLS URL, so nothing new has to be plumbed. */
-export function playbackIdFromHlsUrl(url: string | undefined): string | null {
-  if (!url) return null;
-  const match = /\/hls\/([^/?#]+)\//.exec(url);
-  return match?.[1] ?? null;
-}
+/** Re-exported so callers that already import this module keep one import. */
+export { playbackIdFromHlsUrl } from './playback-id';
 
 export async function subscribeToWhep({
   playbackId,
