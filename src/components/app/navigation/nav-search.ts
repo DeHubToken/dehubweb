@@ -254,6 +254,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Stages: ['audio', 'spaces', 'live audio', 'talk', 'voice', 'mic', 'podcast', 'rooms'],
   'Feature Requests': ['feedback', 'suggestions', 'ideas', 'request a feature', 'roadmap', 'vote', 'wishlist'],
   Staking: ['stake', 'apy', 'apr', 'yield', 'rewards', 'earn', 'vault', 'lock', 'pool'],
+  SuperPowers: ['boost', 'boosts', 'second wind', 'promote', 'amplify', 'reach', 'top of feed', 'badge perks', 'powers'],
   Governance: ['vote', 'voting', 'votes', 'proposals', 'dao', 'poll', 'ballot', 'referendum'],
   Bounties: ['work', 'jobs', 'tasks', 'gigs', 'freelance', 'hire', 'earn', 'escrow', 'contracts'],
   Affiliate: ['referral', 'referrals', 'refer', 'invite', 'commission', 'partner', 'share link'],

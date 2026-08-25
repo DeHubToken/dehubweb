@@ -17,7 +17,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil , Rocket } from 'lucide-react';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -38,6 +38,7 @@ import { ReportModal } from '../modals/ReportModal';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { EditPostModal } from '../modals/EditPostModal';
+import { BoostModal } from '../modals/BoostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
@@ -453,6 +454,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showBoostModal, setShowBoostModal] = useState(false);
   // caption holds the raw API description including any [soundtrack:...] tag
   // that `description` strips for display — edit the raw text so saving
   // doesn't silently drop the post's soundtrack.
@@ -790,6 +792,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
                       <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                    </button>
+                    {/* Boost. Offered to every owner rather than only to badge holders:
+                        the sheet explains what a badge buys and links to staking, which is
+                        worth more than hiding the row from the people who have not staked. */}
+                    <button
+                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                      disabled={!postTokenId}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                    >
+                      <Rocket className="w-5 h-5" /> {t('postOptions.boostPost')}
                     </button>
                     <button
                       onClick={() => {
@@ -1135,6 +1147,13 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
       />
 
       {/* Edit Post Modal */}
+      <BoostModal
+        open={showBoostModal}
+        onOpenChange={setShowBoostModal}
+        tokenId={postTokenId}
+        postTitle={post.title ?? post.caption ?? ''}
+      />
+
       <EditPostModal
         open={showEditModal}
         onOpenChange={setShowEditModal}

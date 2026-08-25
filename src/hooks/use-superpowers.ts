@@ -45,13 +45,16 @@ function useIsAuthed(): boolean {
 }
 
 /** This account's tier, allowance and bookings. Null while signed out. */
-export function useSuperpowers() {
+export function useSuperpowers(enabled = true) {
   const isAuthenticated = useIsAuthed();
 
   return useQuery<SuperPowerStatus | null>({
     queryKey: ['superpowers', 'status'],
     queryFn: () => fetchSuperpowerStatus(),
-    enabled: isAuthenticated,
+    // Callers that mount many copies (the boost sheet lives on every feed
+    // card) pass their own open/closed state; without it each mount is an
+    // observer that refetches the moment the stale window has passed.
+    enabled: isAuthenticated && enabled,
     staleTime: 30 * 1000,
     // An account with no badge gets a legitimate, well-formed answer here
     // (tier null, nothing granted), so a failure is a real failure — but it
@@ -74,9 +77,15 @@ export function useSuperpowerLadder() {
 /**
  * The boosted post for this viewer, or null when nothing is running.
  *
- * `enabled` is unconditional: a signed-out viewer sees boosts too. That is most
- * of the audience on a shared link, and a boost that only reaches signed-in
- * users is worth a fraction of what the holder was promised.
+ * Deliberately not gated on being signed in — a signed-out viewer sees boosts
+ * too. That is most of the audience on a shared link, and a boost that only
+ * reaches signed-in users is worth a fraction of what the holder was promised.
+ *
+ * `enabled` is the caller's own "is this the surface a boost belongs on"
+ * decision: the home feed passes false once the viewer has narrowed the feed,
+ * because the slot renders above the list and is untouched by the filters, so
+ * on Following it would put a paid post from somebody they do not follow at the
+ * top of a feed they narrowed to people they do.
  */
 export function useBoostSlot(enabled = true) {
   return useQuery({
@@ -139,11 +148,4 @@ export function powerForPostAge(createdAt: string | Date | undefined): SuperPowe
   const age = Date.now() - new Date(createdAt).getTime();
   if (!Number.isFinite(age) || age < 0) return 'boost';
   return age > 7 * 24 * 60 * 60 * 1000 ? 'second_wind' : 'boost';
-}
-
-/** True when this account's tier reaches a power and the power is built. */
-export function canSpend(status: SuperPowerStatus | null | undefined, key: SuperPowerKey): boolean {
-  if (!status) return false;
-  const power = status.powers.find(p => p.key === key);
-  return !!power?.unlocked && !!power?.available && status.boostsLeft > 0;
 }

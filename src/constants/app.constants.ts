@@ -34,6 +34,7 @@ import {
   BarChart3,
   Gamepad2,
   PieChart,
+  Rocket,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -59,6 +60,9 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
   { icon: Vault, label: 'Staking', path: '/app/stake' },
+  // Directly under Staking, because it is what staking buys. Without an entry
+  // here a holder who has already staked has no route to the page at all.
+  { icon: Rocket, label: 'SuperPowers', path: '/app/superpowers' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Briefcase, label: 'Bounties', path: '/work' },
   { icon: Users, label: 'Affiliate', path: '/affiliate' },
