@@ -495,13 +495,22 @@ html {
        clip-path useFeedSwallowClip writes onto that exact node under the glass
        themes, and make it a containing block for its fixed descendants.
 
-   #app-root::after in particular: it is otherwise unused (html::after is taken
-   by dim-lights below, body::after by the light-theme grain), a position:fixed
-   descendant of #app-root is proven viewport-anchored today by the post overlay
-   pair in AppLayout, and hosting it inside <main> would trap it in the
-   transform the jungle game phase puts there. Same shape as the dim-lights
-   sheet, for the same reason its comment gives. */
-html[data-feed-loading] #app-root::after {
+   #root::after, NOT #app-root::after. This is load-bearing. #app-root is
+   AppLayout's own div, and AppLayout is rendered INSIDE the App-level
+   `<Suspense fallback={<PageLoader />}>` — so while that fallback is up,
+   #app-root does not exist, the sheet has nothing to hang on, and the loader
+   and sidebar skeletons paint SHARP before the frost ever appears. That was
+   the visible flash. #root is in index.html's static markup, so it is there
+   from parse time and the sheet is up before React renders anything.
+
+   Every html/body pseudo-element is already claimed — html::after by
+   dim-lights, body::after by the light-theme grain, html::before and
+   body::before by the war theme — so #root is also the only free root-ish
+   hook. Nothing sets transform/filter/opacity/isolation on it (the only #root
+   rules anywhere are background-color and sizing), so it creates no stacking
+   context and this pseudo-element competes directly in the root one, which is
+   what lets the welcome panel sit above it below. */
+html[data-feed-loading] #root::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -520,21 +529,22 @@ html[data-feed-loading] #app-root::after {
 }
 /* The unblur. Radius AND opacity: the radius is the effect asked for, the
    opacity fade covers browsers that decline to interpolate backdrop-filter. */
-html[data-feed-loading="off"] #app-root::after {
+html[data-feed-loading="off"] #root::after {
   backdrop-filter: blur(0px) saturate(100%);
   -webkit-backdrop-filter: blur(0px) saturate(100%);
   opacity: 0;
 }
-/* The welcome panel is frosted WITH everything else, not held above the sheet.
-   It used to carry a z-index that lifted it out of the sheet's backdrop so it
-   alone stayed sharp — but the panel's own art arrives over the network, so on
-   first paint that produced a sharp, half-empty box sitting in the middle of an
-   otherwise frosted app: it read as a missing panel rather than a loading one.
-   Frosting it too makes the first frame uniform — the whole shell is one
-   out-of-focus surface — and the panel simply comes into focus with the rest. */
+/* Lift the welcome panel out of the sheet's backdrop so it alone stays sharp —
+   the whole point of the effect is that the bento is the one thing in focus
+   while the shell resolves around it.
+   It is already position:relative and already a stacking context (its
+   container-type above), so a bare z-index sticks. SCOPED to the frost window
+   on purpose: left on permanently, 121 would outrank the sticky tab bar (110)
+   and the panel would slide over it on scroll. */
+html[data-feed-loading] .dehub-intro { z-index: 121; }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-feed-loading] #app-root::after { transition: none; }
+  html[data-feed-loading] #root::after { transition: none; }
 }
 
 /* Medal shine animation for leaderboard */
