@@ -8,7 +8,7 @@ import { useGovernanceProposal } from '@/hooks/use-governance-proposal';
 import {
   useGovernanceUserVotes,
   useVoteGovernanceProposal,
-  getVoteWeight,
+  useSelfVoteWeight,
   type GovernanceProposal,
 } from '@/hooks/use-governance';
 import { useGovernanceComments, useSubmitGovernanceComment, useDeleteGovernanceComment } from '@/hooks/use-governance-comments';
@@ -30,7 +30,7 @@ import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
-import { ProposalVerdictLabel, verdictOf } from '@/components/app/governance/ProposalVerdict';
+import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed } from '@/components/app/governance/ProposalVerdict';
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -51,15 +51,14 @@ export default function GovernanceProposalPage() {
   const { proposalId } = useParams<{ proposalId: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { isAuthenticated, openLoginModal, walletAddress, user } = useAuth();
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const isMobile = useIsMobile();
 
   const { data: proposal, isLoading } = useGovernanceProposal(proposalId);
   const { data: userVotes } = useGovernanceUserVotes();
   const voteMutation = useVoteGovernanceProposal();
 
-  const userBadgeBalance = user?.badgeBalance as number | undefined;
-  const usernameVal = user?.username;
+  const { weight: userWeight, badgeName: userBadge } = useSelfVoteWeight();
 
   // Comments — always visible on detail page
   const { data: comments, isLoading: commentsLoading } = useGovernanceComments(proposalId ?? null);
@@ -83,11 +82,10 @@ export default function GovernanceProposalPage() {
     (voteType: 1 | -1) => {
       if (!isAuthenticated) { openLoginModal(); return; }
       if (!proposalId) return;
-      const { weight, badgeName } = getVoteWeight(userBadgeBalance, usernameVal);
-      if (weight === 0) { toast.error(t('governance.mustHoldTokens')); return; }
-      voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: weight, badgeName });
+      if (userWeight === 0) { toast.error(t('governance.mustHoldTokens')); return; }
+      voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: userWeight, badgeName: userBadge });
     },
-    [isAuthenticated, openLoginModal, proposalId, currentVote, voteMutation, userBadgeBalance, usernameVal, t]
+    [isAuthenticated, openLoginModal, proposalId, currentVote, voteMutation, userWeight, userBadge, t]
   );
 
   const handleSubmitComment = (e: React.FormEvent) => {
@@ -127,8 +125,8 @@ export default function GovernanceProposalPage() {
   const forPct = total > 0 ? Math.round(((proposal.like_count ?? 0) / total) * 100) : 50;
   const againstPct = 100 - forPct;
 
-  const { weight: userWeight } = getVoteWeight(userBadgeBalance, usernameVal);
   const verdict = verdictOf(proposal);
+  const timeLeft = votingTimeLeft(proposal, t);
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 max-w-2xl mx-auto">
@@ -159,6 +157,12 @@ export default function GovernanceProposalPage() {
             {verdict && (
               <>
                 <ProposalVerdictLabel verdict={verdict} />
+                <span className="text-zinc-500 text-[10px]">·</span>
+              </>
+            )}
+            {timeLeft && (
+              <>
+                <span className="text-white text-[10px] font-semibold">{timeLeft}</span>
                 <span className="text-zinc-500 text-[10px]">·</span>
               </>
             )}
@@ -199,7 +203,7 @@ export default function GovernanceProposalPage() {
           dislikeCount={proposal.dislike_count ?? 0}
           commentCount={proposal.comment_count}
           voteWeight={userWeight}
-          disabled={voteMutation.isPending || !!verdict}
+          disabled={voteMutation.isPending || isVotingClosed(proposal)}
         />
       </div>
 

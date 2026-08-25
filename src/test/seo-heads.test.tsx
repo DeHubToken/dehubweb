@@ -136,7 +136,7 @@ vi.mock('@/hooks/use-global-drop-zone', () => ({
 vi.mock('@/hooks/use-governance', () => ({
   useGovernanceUserVotes: () => ({ data: {} }),
   useVoteGovernanceProposal: () => ({ mutate: vi.fn() }),
-  getVoteWeight: () => 1,
+  useSelfVoteWeight: () => ({ weight: 1, badgeName: 'Crab' }),
 }));
 vi.mock('@/hooks/use-governance-proposal', () => ({
   useGovernanceProposal: () => ({ data: null, isLoading: false }),
