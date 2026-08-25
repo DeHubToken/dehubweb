@@ -1761,6 +1761,7 @@
     "unlocksAt": "{{power}} unlocks at {{tier}}",
     "liveUntil": "live until {{time}}",
     "seenCount": "{{count}} seen",
-    "finishedCount": "{{count}} finished this cycle, seen {{seen}} times"
+    "finishedCount": "{{count}} finished this cycle, seen {{seen}} times",
+    "loadFailed": "Could not load your SuperPowers just now. Try again in a moment."
   }
 }

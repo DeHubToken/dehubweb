@@ -25,7 +25,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { getBadgeUrl } from '@/lib/staking-badges';
+import { badgeImage } from '@/lib/staking-badges';
 import { useCancelBoost, useSuperpowerLadder, useSuperpowers } from '@/hooks/use-superpowers';
 
 /** Total slot minutes a tier holds per cycle — the number worth comparing. */
@@ -42,7 +42,7 @@ function formatMinutes(total: number): string {
 
 export default function SuperPowersPage() {
   const { t } = useTranslation();
-  const { data: status, isLoading: loadingStatus } = useSuperpowers();
+  const { data: status, isLoading: loadingStatus, isError } = useSuperpowers();
   const { data: ladder, isLoading: loadingLadder } = useSuperpowerLadder();
   const cancelBoost = useCancelBoost();
 
@@ -58,6 +58,7 @@ export default function SuperPowersPage() {
 
   const liveBookings = status?.bookings.filter(b => b.status === 'active') ?? [];
   const spentBookings = status?.bookings.filter(b => b.status === 'completed') ?? [];
+  const badgeArt = badgeImage(status?.tier);
 
   return (
     <>
@@ -94,7 +95,14 @@ export default function SuperPowersPage() {
         ) : status?.tier ? (
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
             <div className="flex items-center gap-3">
-              <img src={getBadgeUrl(status.badgeBalance) ?? ''} alt={status.tier} className="w-11 h-11 shrink-0" />
+              {/* `badgeImage(status.tier)`, not `getBadgeUrl(balance)`: the server already
+                  resolved the tier WITH the grandfathering lock, and re-deriving it
+                  from the balance alone drops that — a locked holder would see art
+                  a rung below the tier they are actually spending at. And a null
+                  never becomes src="", which requests the page again. */}
+              {badgeArt && (
+                <img src={badgeArt} alt={status.tier} className="w-11 h-11 shrink-0" />
+              )}
               <div className="min-w-0 flex-1">
                 <p className="text-white font-medium">{status.tier}</p>
                 <p className="text-[12px] text-zinc-400">
@@ -182,6 +190,14 @@ export default function SuperPowersPage() {
                 })}
               </p>
             )}
+          </section>
+        ) : isError ? (
+          // A failed request is not the same as no badge. Telling a Meglodon
+          // to go and stake because the API blipped is worse than saying
+          // nothing — and the ladder below still renders from the public
+          // endpoint, so the page is not empty.
+          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
+            <p className="text-white text-sm">{t('superpowers.loadFailed')}</p>
           </section>
         ) : (
           // No badge — the page's real audience. Say what it costs and where.

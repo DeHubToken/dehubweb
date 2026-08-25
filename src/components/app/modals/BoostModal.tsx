@@ -41,7 +41,10 @@ interface BoostModalProps {
 
 export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModalProps) {
   const { t } = useTranslation();
-  const { data: status, isLoading } = useSuperpowers();
+  // Gated on `open`: this modal is mounted by every PostCard in the feed, so
+  // an ungated query meant a fresh observer per card and a GET /superpowers
+  // every time one mounted past the stale window — while the sheet was shut.
+  const { data: status, isLoading, isError } = useSuperpowers(open);
   const bookBoost = useBookBoost();
   const navigate = useNavigate();
 
@@ -109,6 +112,12 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
         {isLoading ? (
           <div className="flex justify-center py-10">
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
+          </div>
+        ) : isError ? (
+          // A failed request is not the same as no badge. Telling a Meglodon
+          // to go and stake because Mongo blipped is worse than saying nothing.
+          <div className="flex flex-col gap-3 py-6 text-center">
+            <p className="text-white text-sm">{t('superpowers.loadFailed')}</p>
           </div>
         ) : !status?.tier ? (
           // No badge at all. Not an error — an invitation, with the one thing
