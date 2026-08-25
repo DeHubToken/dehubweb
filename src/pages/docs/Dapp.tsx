@@ -1485,7 +1485,7 @@ const Dapp = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground font-exo">{t('dapp.timelineBomberDesc')}</p>
+                    <p className="text-muted-foreground font-exo">{t('dapp.timelineBomberDesc2')}</p>
                   </CardContent>
                 </Card>
 
@@ -1514,7 +1514,7 @@ const Dapp = () => {
                 </Card>
               </div>
 
-              <p className="text-muted-foreground font-exo">{t('dapp.superPowersMore')}</p>
+              <p className="text-muted-foreground font-exo">{t('dapp.superPowersMore2')}</p>
 
               <Link
                 to="/app/superpowers"
