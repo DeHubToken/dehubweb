@@ -18,11 +18,28 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRates, setCreatorPlaybackRates } from '@/lib/video-preferences';
+import { sanitiseGroups, useFollowGroupList, writeGroups } from '@/lib/follow-groups';
 
 const PREF_KEY = 'videoChannelSpeeds';
+const GROUPS_KEY = 'followGroups';
 const EMPTY: Record<string, number> = {};
 
+/**
+ * Follow groups are edited through use-follow-groups (which pushes its own
+ * writes) and read by the home feed. Only the inbound half needs a permanent
+ * home, and this is it — the editor is not always mounted, and a group made on
+ * the desktop should be there when the phone opens the Following feed.
+ */
+function useFollowGroupSync() {
+  const groups = useFollowGroupList();
+  const apply = useCallback((value: unknown) => {
+    writeGroups(sanitiseGroups(value));
+  }, []);
+  useSyncedPreference(GROUPS_KEY, groups, apply, []);
+}
+
 export function ViewingPreferencesSync() {
+  useFollowGroupSync();
   const [rates, setRates] = useState<Record<string, number>>(() => getCreatorPlaybackRates());
 
   // What the server last handed us. A server-applied map re-fires the same

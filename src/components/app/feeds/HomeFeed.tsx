@@ -75,7 +75,7 @@ import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-b
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
-import { useFollowGroups } from '@/hooks/use-follow-groups';
+import { useFollowGroupList } from '@/lib/follow-groups';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -512,7 +512,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // whole follow list and nothing in between, so the group filter is applied
   // to what comes back; the infinite-scroll loader stays on screen while a
   // narrow group thins the page, which is what keeps pulling more.
-  const { groups: followGroups } = useFollowGroups();
+  const followGroups = useFollowGroupList();
   const [activeFollowGroupId, setActiveFollowGroupId] = usePersistedFeedFilter<string | null>('home', 'followGroup', null);
   const followGroupMembers = useMemo(() => {
     const group = followGroups.find(g => g.id === activeFollowGroupId);
