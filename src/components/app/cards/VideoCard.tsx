@@ -26,7 +26,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil , Rocket } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -52,6 +52,7 @@ import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { EditPostModal } from '../modals/EditPostModal';
+import { BoostModal } from '../modals/BoostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
@@ -558,6 +559,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showBoostModal, setShowBoostModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   // Two flags, not one: mounting a vaul Root that is already open renders it
   // at its final position with no transition, so the drawer mounts closed and
@@ -1689,6 +1691,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                       >
                         <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                       </button>
+                      {/* Boost. Offered to every owner rather than only to badge holders:
+                          the sheet explains what a badge buys and links to staking, which is
+                          worth more than hiding the row from the people who have not staked. */}
+                      <button
+                        onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                        disabled={!videoTokenId}
+                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                      >
+                        <Rocket className="w-5 h-5" /> {t('postOptions.boostPost')}
+                      </button>
                       <button
                         onClick={() => {
                           if (!videoTokenId || togglePinMutation.isPending) return;
@@ -2453,6 +2465,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       />
 
       {/* Edit Post Modal */}
+      <BoostModal
+        open={showBoostModal}
+        onOpenChange={setShowBoostModal}
+        tokenId={videoTokenId}
+        postTitle={video.title ?? video.description ?? ''}
+      />
+
       <EditPostModal
         open={showEditModal}
         onOpenChange={setShowEditModal}

@@ -10,7 +10,7 @@ import DePIN from './DePIN';
 import E2EEncryption from './E2EEncryption';
 import AIToolkits from './AIToolkits';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard, Gauge } from 'lucide-react';
+import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard, Gauge, Rocket, History, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
@@ -1436,7 +1436,35 @@ const Dapp = () => {
             <div className="space-y-6">
               <p className="text-lg text-muted-foreground leading-relaxed font-exo">{t('dapp.superPowersDesc')}</p>
               
+              {/* The two that are built lead, and say so. The page previously
+                  listed only the four unbuilt targeting powers, numbered 1–4
+                  as though they were the whole ladder and the first rungs of
+                  it — they are rungs 4, 5, 8 and 9 of thirteen. */}
               <div className="grid gap-6 md:grid-cols-2">
+                <Card className="border-border hover:border-primary/40 transition-colors">
+                  <CardHeader>
+                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
+                      <Rocket className="w-5 h-5" />
+                      {t('dapp.boostPower')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground font-exo">{t('dapp.boostPowerDesc')}</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border hover:border-primary/40 transition-colors">
+                  <CardHeader>
+                    <CardTitle className="text-foreground font-exo flex items-center gap-2">
+                      <History className="w-5 h-5" />
+                      {t('dapp.secondWindPower')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground font-exo">{t('dapp.secondWindPowerDesc')}</p>
+                  </CardContent>
+                </Card>
+
                 <Card className="border-border hover:border-primary/40 transition-colors">
                   <CardHeader>
                     <CardTitle className="text-foreground font-exo flex items-center gap-2">
@@ -1485,6 +1513,16 @@ const Dapp = () => {
                   </CardContent>
                 </Card>
               </div>
+
+              <p className="text-muted-foreground font-exo">{t('dapp.superPowersMore')}</p>
+
+              <Link
+                to="/app/superpowers"
+                className="inline-flex items-center gap-2 text-foreground font-exo underline underline-offset-4"
+              >
+                {t('dapp.superPowersLink')}
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
           </section>
 

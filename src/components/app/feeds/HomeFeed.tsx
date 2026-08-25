@@ -786,7 +786,20 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // weighted by tier, so what arrives is this viewer's draw rather than "the"
   // boosted post. It renders through the pinned-post machinery below because
   // that is the same job — one post, above the feed, filtered out of the run.
-  const { data: boostSlot } = useBoostSlot();
+  // The boost slot belongs on the unfiltered home feed only.
+  //
+  // It renders in its own block above the list, so it is untouched by the
+  // sort, the category filter, the post-type filter and hide-watched. On
+  // "Following" that means the first thing in a feed the viewer narrowed to
+  // people they follow is a paid post from somebody they do not — which reads
+  // as the filter being broken rather than as a boost. Mobile gates it the
+  // same way, to the main mixed feed.
+  const isDefaultHomeView =
+    selectedSort.value === DEFAULT_HOME_SORT.value &&
+    selectedPostType === 'all' &&
+    selectedCategories.length === 0;
+
+  const { data: boostSlot } = useBoostSlot(isDefaultHomeView);
 
   // An explicit ?post= link always wins. Somebody following a shared link came
   // for that post, and quietly showing them an advert instead would be the
@@ -823,6 +836,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       const imagePost: ImagePost = {
         id,
         type: 'image',
+        // Load-bearing, not housekeeping. `ImageCard` gates an adult image
+        // behind `useMatureGate(post.contentRating)`, and an undefined rating
+        // reads as safe — so dropping it here paints a mature image unblurred
+        // at the top of the feed for a viewer who never opted in. The video
+        // and text branches below carry it; this one did not.
+        contentRating: pinnedPost.contentRating,
         username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
         verified: false,
         avatar,
@@ -1944,7 +1963,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             </div>
           )}
 
-          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
+          {/*
+            `pinnedItem` counts as content only when the viewer asked for it.
+            A boost does not: if every feed query has failed, showing the paid
+            post alone and nothing else turns an outage into a page that is
+            just an advert, with no sign anything went wrong and no retry.
+          */}
+          {items.length === 0 && !(pinnedItem && !isBoosted) && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
