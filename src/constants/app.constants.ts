@@ -70,6 +70,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: PieChart, label: 'Fractions', path: '/app/fractions' },
   { icon: AtSign, label: 'Usernames', path: '/usernames' },
+  { icon: Users, label: 'Accounts', path: '/accounts' },
   { icon: Wand2, label: 'Prompt', path: '/prompt' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Map, label: 'Guide', path: '/guide' },
