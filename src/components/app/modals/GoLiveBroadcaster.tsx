@@ -20,12 +20,20 @@ import {
   SwitchCamera,
   ScreenShare,
   ScreenShareOff,
+  PictureInPicture2,
+  Move,
   Loader2,
   AlertTriangle,
   Radio,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { publishToWhip, type WhipSession, type WhipState } from '@/lib/livepeer/whip';
+import {
+  composeCameraBubble,
+  BUBBLE_CORNERS,
+  type BubbleCorner,
+  type CameraBubble,
+} from '@/lib/livepeer/compositor';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('GoLiveBroadcaster');
@@ -159,6 +167,8 @@ export function GoLiveBroadcaster({
   // second front camera (two-webcam desktops) — which would un-mirror a
   // still-front-facing self-view if the requested value drove the transform.
   const [mirror, setMirror] = useState(!initialScreenStream);
+  const [bubbleOn, setBubbleOn] = useState(false);
+  const [bubbleCorner, setBubbleCorner] = useState<BubbleCorner>('bottom-right');
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
@@ -174,6 +184,11 @@ export function GoLiveBroadcaster({
   const micTrackRef = useRef<MediaStreamTrack | null>(null);
   const screenStreamRef = useRef<MediaStream | null>(null);
   const audioMixRef = useRef<AudioMix | null>(null);
+  // The canvas composite and the webcam it draws, held apart from the published
+  // stream: while the bubble is on, what goes out is the canvas, and both the
+  // screen track and this camera are sources rather than senders.
+  const bubbleRef = useRef<CameraBubble | null>(null);
+  const bubbleCameraRef = useRef<MediaStreamTrack | null>(null);
   // The handed-over capture is consumed exactly once, on mount.
   const initialScreenRef = useRef<MediaStream | null>(initialScreenStream);
   // Mirrors for the async swap paths, which run long after their closures were
@@ -233,8 +248,17 @@ export function GoLiveBroadcaster({
     }
   }, []);
 
+  /** Retires the composite and the webcam feeding it. Other inputs survive. */
+  const releaseBubble = useCallback(() => {
+    bubbleRef.current?.stop();
+    bubbleRef.current = null;
+    bubbleCameraRef.current?.stop();
+    bubbleCameraRef.current = null;
+  }, []);
+
   const teardown = useCallback(async () => {
     releaseWakeLock();
+    releaseBubble();
     await sessionRef.current?.stop();
     sessionRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -249,7 +273,7 @@ export function GoLiveBroadcaster({
     audioMixRef.current?.track.stop();
     void audioMixRef.current?.ctx.close().catch(() => undefined);
     audioMixRef.current = null;
-  }, [releaseWakeLock]);
+  }, [releaseWakeLock, releaseBubble]);
 
   /** Acquired on its own for the screen path, where a denial is survivable. */
   const acquireMic = useCallback(async (): Promise<MediaStreamTrack | null> => {
@@ -296,26 +320,36 @@ export function GoLiveBroadcaster({
     }
   }, []);
 
-  /** Puts `track` on air and into the preview, retiring what it replaces. */
-  const swapVideoTrack = useCallback(async (track: MediaStreamTrack): Promise<boolean> => {
-    const stream = streamRef.current;
-    const session = sessionRef.current;
-    if (!stream || !session) return false;
+  /**
+   * Puts `track` on air and into the preview, retiring what it replaces.
+   *
+   * `stopPrevious` is off exactly once: switching the camera bubble on swaps
+   * the canvas composite in while the screen track it is drawing from stays
+   * live. Stopping it there would blank the very source being composited.
+   */
+  const swapVideoTrack = useCallback(
+    async (track: MediaStreamTrack, stopPrevious = true): Promise<boolean> => {
+      const stream = streamRef.current;
+      const session = sessionRef.current;
+      if (!stream || !session) return false;
 
-    // Into the live session first so viewers never see a gap, then retire the
-    // old track and splice the new one into the preview.
-    await session.replaceTrack('video', track);
+      // Into the live session first so viewers never see a gap, then retire the
+      // old track and splice the new one into the preview.
+      await session.replaceTrack('video', track);
 
-    const old = stream.getVideoTracks()[0];
-    if (old) {
-      stream.removeTrack(old);
-      old.stop();
-    }
-    stream.addTrack(track);
-    track.enabled = videoOnRef.current;
-    if (videoRef.current) videoRef.current.srcObject = stream;
-    return true;
-  }, []);
+      const old = stream.getVideoTracks()[0];
+      if (old) {
+        stream.removeTrack(old);
+        if (stopPrevious) old.stop();
+      }
+      stream.addTrack(track);
+      track.enabled = videoOnRef.current;
+      if (videoRef.current) videoRef.current.srcObject = stream;
+      return true;
+    },
+    []
+  );
+
 
   const releaseScreenCapture = useCallback(() => {
     screenStreamRef.current?.getTracks().forEach((t) => t.stop());
@@ -335,13 +369,21 @@ export function GoLiveBroadcaster({
 
     let camera: MediaStreamTrack | null = null;
     try {
-      const capture = await navigator.mediaDevices
-        .getUserMedia({
-          video: { ...VIDEO_CONSTRAINTS, facingMode: facingModeRef.current },
-          audio: false,
-        })
-        .catch(() => null);
-      camera = capture?.getVideoTracks()[0] ?? null;
+      // A live camera bubble is already holding a webcam. Promote it to the
+      // full frame rather than prompting for a second one and leaving the
+      // first running — claiming it here also keeps releaseBubble off it.
+      const promoted = bubbleCameraRef.current;
+      bubbleCameraRef.current = null;
+
+      const capture = promoted
+        ? null
+        : await navigator.mediaDevices
+            .getUserMedia({
+              video: { ...VIDEO_CONSTRAINTS, facingMode: facingModeRef.current },
+              audio: false,
+            })
+            .catch(() => null);
+      camera = promoted ?? capture?.getVideoTracks()[0] ?? null;
 
       // Teardown may have run while getUserMedia was prompting.
       if (!streamRef.current || !sessionRef.current) return;
@@ -356,6 +398,8 @@ export function GoLiveBroadcaster({
         setVideoOn(false);
       }
 
+      releaseBubble();
+      setBubbleOn(false);
       await applySystemAudio(null);
       releaseScreenCapture();
       setCaptureMode('camera');
@@ -365,7 +409,7 @@ export function GoLiveBroadcaster({
       camera?.stop();
       videoSwapRef.current = false;
     }
-  }, [swapVideoTrack, applySystemAudio, releaseScreenCapture]);
+  }, [swapVideoTrack, applySystemAudio, releaseScreenCapture, releaseBubble]);
 
   /** Ends the share when the creator uses the browser's own stop-sharing bar. */
   const watchForShareStop = useCallback(
@@ -420,6 +464,74 @@ export function GoLiveBroadcaster({
       videoSwapRef.current = false;
     }
   }, [swapVideoTrack, applySystemAudio, watchForShareStop]);
+
+  /**
+   * The camera bubble: your face in the corner of the share, which is the
+   * layout every game stream uses. WebRTC carries one video track per sender,
+   * so the two captures are drawn into a canvas and the canvas is what gets
+   * published — see lib/livepeer/compositor for the frame pump.
+   */
+  const toggleCameraBubble = useCallback(async () => {
+    if (videoSwapRef.current) return;
+    const screenTrack = screenStreamRef.current?.getVideoTracks()[0] ?? null;
+    if (!streamRef.current || !sessionRef.current || !screenTrack) return;
+    videoSwapRef.current = true;
+
+    let camera: MediaStreamTrack | null = null;
+    try {
+      if (bubbleRef.current) {
+        // Back to the bare share. The screen track has been running underneath
+        // the composite the whole time, so it goes straight back on air.
+        if (!(await swapVideoTrack(screenTrack))) return;
+        releaseBubble();
+        setBubbleOn(false);
+        return;
+      }
+
+      const capture = await navigator.mediaDevices
+        .getUserMedia({
+          video: { ...VIDEO_CONSTRAINTS, facingMode: facingModeRef.current },
+          audio: false,
+        })
+        .catch(() => null);
+      camera = capture?.getVideoTracks()[0] ?? null;
+      if (!camera) {
+        logger.warn('No camera available for the bubble');
+        return;
+      }
+      if (!streamRef.current || !sessionRef.current) return;
+
+      const bubble = await composeCameraBubble({
+        screen: screenTrack,
+        camera,
+        corner: bubbleCorner,
+      });
+      // stopPrevious is false here and nowhere else: the outgoing screen track
+      // is the composite's own source and must keep running.
+      if (!(await swapVideoTrack(bubble.track, false))) {
+        bubble.stop();
+        return;
+      }
+
+      bubbleRef.current = bubble;
+      bubbleCameraRef.current = camera;
+      camera = null; // owned by the bubble now
+      setBubbleOn(true);
+    } catch (error) {
+      logger.warn('Camera bubble failed', error);
+    } finally {
+      camera?.stop();
+      videoSwapRef.current = false;
+    }
+  }, [swapVideoTrack, releaseBubble, bubbleCorner]);
+
+  const cycleBubbleCorner = useCallback(() => {
+    const next =
+      BUBBLE_CORNERS[(BUBBLE_CORNERS.indexOf(bubbleCorner) + 1) % BUBBLE_CORNERS.length];
+    setBubbleCorner(next);
+    // Applied straight to the running composite; the state is only for the UI.
+    bubbleRef.current?.setCorner(next);
+  }, [bubbleCorner]);
 
   // Start the capture, then open the ingest session. Every await below
   // re-checks `cancelled`, so an unmount mid-negotiation cleans up whatever
@@ -769,6 +881,30 @@ export function GoLiveBroadcaster({
             ) : (
               <ScreenShare className="h-5 w-5" />
             )}
+          </ControlButton>
+        )}
+
+        {isScreen && (
+          <ControlButton
+            // Same convention as the share button: the tinted state is the
+            // one you click to switch off, not an error.
+            active={!bubbleOn}
+            onClick={toggleCameraBubble}
+            disabled={phase === 'error'}
+            label={bubbleOn ? 'Hide your camera bubble' : 'Show your camera in the corner'}
+          >
+            <PictureInPicture2 className="h-5 w-5" />
+          </ControlButton>
+        )}
+
+        {isScreen && bubbleOn && (
+          <ControlButton
+            active
+            onClick={cycleBubbleCorner}
+            disabled={phase === 'error'}
+            label="Move the camera bubble to another corner"
+          >
+            <Move className="h-5 w-5" />
           </ControlButton>
         )}
 
