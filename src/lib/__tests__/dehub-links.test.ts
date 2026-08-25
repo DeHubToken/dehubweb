@@ -95,3 +95,52 @@ describe('findDehubLinks host rule', () => {
     expect(findDehubLinks(undefined)).toEqual([]);
   });
 });
+
+/**
+ * /cinema links.
+ *
+ * Two things are being pinned here. The first is that a title cards up at all
+ * — the share button builds these URLs, and a link that does not parse posts
+ * as bare blue text.
+ *
+ * The second is the collision that shipped with the route: /cinema was missing
+ * from RESERVED_ROOT_SEGMENTS, so `dehub.io/cinema` pasted into a post parsed
+ * as a PROFILE link for a user called "cinema" and carded up as somebody's
+ * profile. Every top-level route has to be in that list; this is the test that
+ * remembers why.
+ */
+describe('findDehubLinks /cinema', () => {
+  it('cards a film', () => {
+    const m = parseDehubLink('https://dehub.io/cinema/film/12345');
+    expect(m).not.toBeNull();
+    expect(m!.kind).toBe('film');
+    expect(m!.filmId).toBe('12345');
+    expect(m!.filmObjectType).toBe('movie');
+  });
+
+  it('maps the readable "series" segment onto the API object type', () => {
+    // The URL says series because people read it; the offers endpoint wants
+    // 'show'. Getting this backwards fetches the wrong catalogue and the card
+    // silently falls back to a chip.
+    const m = parseDehubLink('https://dehub.io/cinema/series/678');
+    expect(m!.kind).toBe('film');
+    expect(m!.filmObjectType).toBe('show');
+  });
+
+  it('does not read the hub page as a profile called "cinema"', () => {
+    const m = parseDehubLink('https://dehub.io/cinema');
+    expect(m).toBeNull();
+  });
+
+  it('rejects a type segment that is not film or series', () => {
+    expect(parseDehubLink('https://dehub.io/cinema/documentary/12')).toBeNull();
+  });
+
+  it('rejects a non-numeric id', () => {
+    expect(parseDehubLink('https://dehub.io/cinema/film/dune')).toBeNull();
+  });
+
+  it('does not card a foreign host through the cinema path', () => {
+    expect(parseDehubLink('https://evil.example/cinema/film/1')).toBeNull();
+  });
+});

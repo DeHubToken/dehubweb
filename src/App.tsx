@@ -455,6 +455,9 @@ function AppContent() {
           <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
           <Route path="/depin" element={<Suspense fallback={<PageLoader />}><DePinPage /></Suspense>} />
           <Route path="/cinema" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />
+          {/* One title. Same page — the open film is URL state so it can be
+              shared, carded and indexed; see the note in CinemaPage. */}
+          <Route path="/cinema/:filmType/:filmId" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />
           {/* Prize draws. dehub.net/prize-draw and raffle.dehub.net both 301
               here (CLOUDFLARE_WORKER_SEO.js), so this route is the landing for
               every legacy raffle URL the old domain still holds in the index. */}
