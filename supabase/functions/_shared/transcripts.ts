@@ -323,11 +323,47 @@ export function retryDelayMs(attempts: number): number {
   return (mins[Math.min(attempts, mins.length - 1)] ?? 120) * 60 * 1000;
 }
 
-export function isRetryable(row: { status: string; attempts: number; last_attempt_at: string | null }): boolean {
+/**
+ * How long to leave a row that is waiting on media alone.
+ *
+ * A 'pending' row deliberately does not burn an attempt — waiting for a
+ * transcode is not a failed try. But that left `attempts` at 0 forever, so
+ * `retryDelayMs(0)` re-queued every waiting row every two minutes, for good.
+ * Ten posts whose transcoding had genuinely failed were taking ten of the
+ * sweeper's twelve slots on every pass and would have done so for ever.
+ *
+ * So a waiting row backs off on its own age instead: minutes at first, because
+ * a fresh upload really is about to land, then hours, and after a day it stops
+ * being asked about at all. A post that has said "transcoding failed" for an
+ * hour is not going to fix itself in the next two minutes.
+ */
+export const WAIT_GIVE_UP_MS = 24 * 60 * 60 * 1000;
+
+export function waitDelayMs(ageMs: number): number {
+  if (ageMs < 10 * 60 * 1000) return 2 * 60 * 1000;   // first 10 min: every 2
+  if (ageMs < 60 * 60 * 1000) return 15 * 60 * 1000;  // first hour: every 15
+  return 4 * 60 * 60 * 1000;                          // after that: every 4 h
+}
+
+export function isRetryable(row: {
+  status: string;
+  attempts: number;
+  last_attempt_at: string | null;
+  created_at?: string | null;
+}): boolean {
   if (row.attempts >= MAX_ATTEMPTS) return false;
   const last = row.last_attempt_at ? Date.parse(row.last_attempt_at) : 0;
-  const age = Date.now() - last;
-  if (row.status === 'processing') return age > STALE_PROCESSING_MS;
-  if (row.status === 'failed' || row.status === 'pending') return age > retryDelayMs(row.attempts);
+  const since = Date.now() - last;
+
+  if (row.status === 'processing') return since > STALE_PROCESSING_MS;
+
+  if (row.status === 'pending') {
+    const born = row.created_at ? Date.parse(row.created_at) : Date.now();
+    const age = Date.now() - born;
+    if (age > WAIT_GIVE_UP_MS) return false;
+    return since > waitDelayMs(age);
+  }
+
+  if (row.status === 'failed') return since > retryDelayMs(row.attempts);
   return false;
 }

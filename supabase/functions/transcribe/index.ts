@@ -388,6 +388,9 @@ Deno.serve(async (req) => {
         status: 'pending',
         visibility: media.visibility,
         duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
+        // Stamped but attempts untouched: waiting is not a failed try, and the
+        // backoff needs something to measure from or it re-queues every pass.
+        last_attempt_at: new Date().toISOString(),
         error: media.notReady ?? 'no media yet',
       });
       return json({ status: 'pending', reason: media.notReady ?? 'no media yet' }, 202);
@@ -399,6 +402,7 @@ Deno.serve(async (req) => {
         status: 'pending',
         visibility: media.visibility,
         duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
+        last_attempt_at: new Date().toISOString(),
         error: `media not reachable yet (${reach.status})`,
       });
       return json({ status: 'pending', reason: `media ${reach.status}` }, 202);
