@@ -421,7 +421,7 @@ We keep both posts in this archive because the pair is the actual lesson. Regist
 
 **Being registered is not the same as being permitted.** The question that matters is not "are we allowed to operate" but "is this specific structure allowed", and the second one has to be asked explicitly and early, of the regulator, in writing.
 
-**Doing it properly still beats not doing it.** [DeLabs LTD was incorporated](/guides/official-standing-delabs-ltd-incorporated---a-dehub-milestone-from-q3-2022) the following quarter, and the pattern held: a real company, real registrations, real obligations. The Palawan venture failed on its merits, in the open, rather than collapsing into a legal problem — which is a meaningfully better way to lose.
+**Doing it properly still beats not doing it.** The regulatory work carried on regardless, and the pattern held: real registrations, real obligations, everything on the record. The Palawan venture failed on its merits, in the open, rather than collapsing into a legal problem â which is a meaningfully better way to lose.
 
 ### Why this is worth reading if you are building something similar
 
@@ -669,7 +669,7 @@ They meant we found out before, rather than after.
 
 The Palawan venture ended as a project we stopped. It did not end as an enforcement action, an unwind, or a set of obligations to people who had bought into a structure that could not be delivered. Given how ambitious that attempt was and how badly it could have gone, ending cleanly is a materially different outcome from ending in the other direction.
 
-The same instinct produced [DeLabs LTD](/guides/official-standing-delabs-ltd-incorporated---a-dehub-milestone-from-q3-2022) in the same quarter — a properly incorporated entity with a real structure and real compliance obligations, rather than the loose arrangements a lot of projects were still operating under in 2022.
+The same instinct shaped everything else set up that quarter â real structures carrying real compliance obligations, rather than the loose arrangements a lot of projects were still operating under in 2022.
 
 ### The general rule
 

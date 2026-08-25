@@ -61,7 +61,7 @@ In other words, where Cheelee gives you a feed to scroll and XCAD gives you a re
 
 ### The company behind it
 
-DeHub is built by DeLabs Ltd, a United Kingdom company, with the project founded in 2021 and the UK entity incorporated in 2022. Its co-founders, Mike Hales and Indi Jay Cammish, also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency, and DeHub sponsors the North Wales Crusaders rugby league club. That is a concrete, checkable corporate footprint, which matters when the category is full of anonymous teams. Do not confuse this DeHub with DePaul University's "DeHUB" student portal or Rowan University's "DEHub" digital engineering hub; they are unrelated projects that happen to share a name.
+DeHub is an independent DAO, founded as a project in 2021 and governed on-chain by DHB holders through a live governance protocol. Its co-founders, Mike Hales and Indi Jay Cammish, also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency, and DeHub sponsors the North Wales Crusaders rugby league club. That is a named team and a public, checkable governance record, which matters when the category is full of anonymous teams. Do not confuse this DeHub with DePaul University's "DeHUB" student portal or Rowan University's "DEHub" digital engineering hub; they are unrelated projects that happen to share a name.
 
 ## Which is the best watch to earn app for you?
 

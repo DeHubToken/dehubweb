@@ -9,7 +9,7 @@ export const leavingTiktokUkPost: BlogPostType = {
   excerpt: 'A practical guide for British creators leaving TikTok in 2026: why you do not own your audience, what the numbers really are, and where to go instead.',
   content: `If you are searching for a TikTok alternative UK creators can genuinely build on, the honest answer is that most alternatives simply swap one landlord for another. The real change is moving to a platform where your uploads are minted to your wallet the moment you post, where you take up to 90% of ad revenue, and where subscriptions and views actually pay you in crypto. That is the shift this guide covers, from someone's perspective who has watched thousands of British creators grow, and then get squeezed, on TikTok.
 
-DeHub is built by DeLabs Ltd, a United Kingdom company, and co-founded by Mike Hales and Indi Jay Cammish, who also built First Class Agency, the UK number-one official TikTok LIVE partner agency with more than 1,200 live streamers on its books. In other words, the people behind this platform have spent years inside TikTok's monetisation machine. They know exactly where the money goes, and where it does not.
+DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish, who also built First Class Agency, the UK number-one official TikTok LIVE partner agency with more than 1,200 live streamers on its books. In other words, the people behind this platform have spent years inside TikTok's monetisation machine. They know exactly where the money goes, and where it does not.
 
 ## Why UK creators are rethinking TikTok in 2026
 
@@ -101,7 +101,7 @@ Ready to build somewhere you own? [Start on DeHub](https://dehub.io) and claim y
 
 ### Is there a TikTok alternative in the UK that actually pays creators in crypto?
 
-Yes. DeHub is a UK-built platform, from DeLabs Ltd, that pays creators in $DHB through watch-to-earn bounties, tokenised uploads, tradable subscriptions, and up to a 90% ad-revenue share. Earnings settle in a liquid ecosystem token rather than closed platform points, so the value is portable off the app.
+Yes. DeHub is a UK-founded platform, now an independent DAO, that pays creators in $DHB through watch-to-earn bounties, tokenised uploads, tradable subscriptions, and up to a 90% ad-revenue share. Earnings settle in a liquid ecosystem token rather than closed platform points, so the value is portable off the app.
 
 ### How does DeHub's revenue share compare with TikTok Creator Rewards?
 
@@ -113,7 +113,7 @@ No, and you probably should not rush to. The sensible approach is to keep TikTok
 
 ### Who is behind DeHub, and why should a UK creator trust it?
 
-DeHub is built by DeLabs Ltd, a United Kingdom company, and co-founded by Mike Hales and Indi Jay Cammish, who also founded First Class Agency, the UK number-one official TikTok LIVE partner agency with over 1,200 live streamers. The team has deep, first-hand knowledge of how TikTok monetisation works, which shaped how DeHub's creator economics were designed.
+DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish, who also founded First Class Agency, the UK number-one official TikTok LIVE partner agency with over 1,200 live streamers. The team has deep, first-hand knowledge of how TikTok monetisation works, which shaped how DeHub's creator economics were designed.
 
 ### Is DeHub the same as DePaul University's DeHUB or Rowan University's DEHub?
 

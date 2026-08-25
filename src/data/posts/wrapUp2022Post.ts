@@ -97,17 +97,11 @@ export const wrapUp2022Post: BlogPostType = {
         <img src="/lovable-uploads/55751848-fa12-432a-a72e-a17ca857c52b.png" alt="Whack A Schiff - DeHub Arcade game" class="w-full h-auto" />
       </div>
       
-      <p><strong>June 29:</strong> DeLabs LTD is registered in the UK and given registration 14204474. Office opened up in Waterlooville with a BDM team focussed on B2B and B2C.</p>
-      
-      <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/3344f555-a2a0-4689-ba25-135971361905.png" alt="DeLabs LTD Certificate of Incorporation" class="w-full h-auto" />
-      </div>
-      
       <p><strong>July 14:</strong> Way of the Warrior Episode 2 featuring Jorge Masvidal and Brad Pickett released to rave reviews and expecting retweets from the legend Gamebred himself prior to facing technical difficulties with our stake to access d'app. This also played a role in DeHub's transformation to a free public streaming app where anyone can view content. We are working closely with all past partners to bring this to life.</p>
       
       <p><strong>July 8:</strong> The team attend Binance's 5th birthday celebrations in Paris and connect with key members of the Binance ecosystem.</p>
       
-      <p><strong>July 25:</strong> DeLabs LTD acquired $1,000,000 UK home and put it up for raffle on DeHub's provably fair and random NFT raffle protocol. This was covered by a number of KOLs and publishers including bitcoin.com across multiple platforms and sales started well yet ROI became unsustainable and the home is currently renting privately and is likely to be sold on the market followed by refunds to ticket holders. The NFT will still possess utility nonetheless and revenue raised from the property will be reinvested back into the protocol.</p>
+      <p><strong>July 25:</strong> A $1,000,000 UK home was acquired and put up for raffle on DeHub's provably fair and random NFT raffle protocol. This was covered by a number of KOLs and publishers including bitcoin.com across multiple platforms and sales started well yet ROI became unsustainable and the home is currently renting privately and is likely to be sold on the market followed by refunds to ticket holders. The NFT will still possess utility nonetheless and revenue raised from the property will be reinvested back into the protocol.</p>
       
       <p><strong>August 10:</strong> First tax halving commenced and reducing the protocol's transaction tax from 12% to 6% much to the approval of the community.</p>
       

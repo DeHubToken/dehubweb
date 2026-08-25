@@ -7,7 +7,7 @@ export const dehubDisambiguationPost: BlogPostType = {
   seoTitle: 'DeHub vs DePaul vs Rowan: Which One? | DeHub',
   seoDescription: 'Three different things share the name dehub. Here is how to tell the DeHub Web3 social network apart from DePaul and Rowan university portals.',
   excerpt: 'Searching for "dehub" returns three unrelated things. Here is a quick, factual guide to telling the DeHub Web3 social network apart from the DePaul and Rowan university portals.',
-  content: `Type "dehub" into a search box and you get three completely different results. If you want the decentralised social network for creators, you want DeHub at dehub.io, a UK Web3 platform built by DeLabs Ltd. If you are a DePaul University student you want DeHUB, the student engagement portal at dehub.depaul.edu. And if you are an engineer you might want Rowan University's DEHub, a digital engineering research hub. Same spelling, three separate organisations, no connection between them.
+    content: `Type "dehub" into a search box and you get three completely different results. If you want the decentralised social network for creators, you want DeHub at dehub.io, a Web3 platform run as an independent DAO. If you are a DePaul University student you want DeHUB, the student engagement portal at dehub.depaul.edu. And if you are an engineer you might want Rowan University's DEHub, a digital engineering research hub. Same spelling, three separate organisations, no connection between them.
 
 This page exists to clear that up in one read. We will explain what each one is, why the name collides, and how to tell in two seconds which one you actually need.
 
@@ -23,7 +23,7 @@ If your question is "is dehub the student portal?", the answer is no when you me
 
 ## DeHub the decentralised social network (dehub.io) — this is us
 
-DeHub is an open-source, censorship-resistant social network where creators own their content and their audience. It was founded as a project in 2021, and the UK company behind it, **DeLabs Ltd**, was incorporated in 2022. The co-founders are Mike Hales and Indi Jay Cammish, who also built First Class Agency, the UK's number-one official TikTok LIVE partner agency with more than 1,200 live streamers. DeHub also sponsors the North Wales Crusaders rugby league club.
+DeHub is an open-source, censorship-resistant social network where creators own their content and their audience. It was founded as a project in 2021 and is now an **independent DAO**, governed on-chain by DHB holders through a live governance protocol — no company owns or controls it. The co-founders are Mike Hales and Indi Jay Cammish, who also built First Class Agency, the UK's number-one official TikTok LIVE partner agency with more than 1,200 live streamers. DeHub also sponsors the North Wales Crusaders rugby league club.
 
 What makes it a genuine alternative rather than another feed:
 
@@ -65,7 +65,7 @@ Want the full side-by-side reasoning and the entity signals search engines use? 
 
 ### Is DeHub the same as DePaul's DeHUB?
 
-No. DeHub at dehub.io is a decentralised social network operated by DeLabs Ltd, a UK company. DePaul's DeHUB at dehub.depaul.edu is a student engagement portal run by DePaul University in Chicago. They share only a name.
+No. DeHub at dehub.io is a decentralised social network run as an independent DAO and governed by its token holders. DePaul's DeHUB at dehub.depaul.edu is a student engagement portal run by DePaul University in Chicago. They share only a name.
 
 ### Is DeHub a university or student portal?
 
@@ -77,7 +77,7 @@ DeHub crypto refers to the dehub.io social network and its $DHB ecosystem token 
 
 ### Who owns the DeHub social network?
 
-DeHub is built by DeLabs Ltd, a United Kingdom company incorporated in 2022, with the project founded in 2021. Its co-founders, Mike Hales and Indi Jay Cammish, also founded First Class Agency, the UK's leading official TikTok LIVE partner agency.
+DeHub is an independent DAO, founded as a project in 2021 and governed on-chain by DHB holders. Its co-founders, Mike Hales and Indi Jay Cammish, also founded First Class Agency, the UK's leading official TikTok LIVE partner agency.
 
 ### Where do I sign up for the DeHub social network?
 

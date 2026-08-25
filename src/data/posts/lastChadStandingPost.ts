@@ -39,7 +39,7 @@ Plenty of projects slap "play-to-earn" on a combat game. Very few have founders 
 
 That matters for two reasons. First, they understand combat sports and live entertainment as a business, not as a marketing theme, which is exactly the muscle you need to secure fighter licensing and build something fans recognise. Second, they understand audiences at scale, how to attract creators, keep them and reward attention, which is the connective tissue between a game and a social platform. DeHub also sponsors the **North Wales Crusaders** rugby league club, so the sporting connection runs through the whole operation rather than being confined to one title.
 
-The company itself is **DeLabs Ltd**, a United Kingdom company; the project was founded in 2021 with the UK entity incorporated in 2022. This is not an anonymous team behind a pseudonymous contract, and for anyone weighing up whether a crypto game is worth their time, a named UK company with a real track record is a meaningful signal.
+DeHub itself is an **independent DAO**: the project was founded in 2021 and its governance protocol is live, with proposals and voting settled on-chain. This is not an anonymous team behind a pseudonymous contract, and for anyone weighing up whether a crypto game is worth their time, named founders and a public governance record are a meaningful signal.
 
 ## Where Last Chad Standing fits in the DeHub ecosystem
 

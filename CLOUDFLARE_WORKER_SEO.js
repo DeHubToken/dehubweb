@@ -22,7 +22,7 @@
 // esbuild can bundle it here and vite can bundle it there). SYSTEM_ROUTES below
 // is derived from it — see the comment there.
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
-import { MILESTONE_REDIRECTS } from './src/lib/blog-redirects.js';
+import { MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
 
 /**
  * `/mal.eth` — a verified ENS handle standing in for a username.
@@ -2152,6 +2152,10 @@ async function handleRequest(request, env) {
   if (trimmedPath.startsWith('/guides/')) {
     const supersededBy = MILESTONE_REDIRECTS[trimmedPath.slice('/guides/'.length)];
     if (supersededBy) return redirect301(`${APP_URL}/guides/${supersededBy}`);
+    // Retired guides have no counterpart under /guides/, so their target is an
+    // absolute app path — see RETIRED_GUIDES in src/lib/blog-redirects.js.
+    const retiredTo = RETIRED_GUIDES[trimmedPath.slice('/guides/'.length)];
+    if (retiredTo) return redirect301(`${APP_URL}${retiredTo}`);
   }
 
   // Routes the SPA answers with <Navigate> (App.tsx). Bots never run that JS,
