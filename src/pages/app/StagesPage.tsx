@@ -511,7 +511,7 @@ export default function StagesPage() {
           {recentPastStages.length > 0 && (
             <div>
               <div className="flex items-center justify-between px-1 mb-2">
-                <h3 className="text-white font-semibold text-sm">Recorded stages</h3>
+                <h3 className="text-white font-semibold text-sm">Past Stages</h3>
                 <button
                   onClick={() => chooseTab('recorded')}
                   className="text-zinc-400 hover:text-white text-sm transition-colors"
