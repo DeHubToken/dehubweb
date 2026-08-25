@@ -52,7 +52,7 @@ export const ROUTE_SEGMENTS = [
   // --- /app children. Not top-level routes, but the worker canonicalises
   // /app/<x> onto /<x>, so they resolve into the same space. Several were
   // already in the worker's list for exactly this reason. ---
-  'ads', 'bookmarks', 'buy', 'command-centre', 'glossary', 'messages',
+  'ads', 'bookmarks', 'buy', 'command-centre', 'fractions', 'glossary', 'messages',
   'notifications', 'post', 'profile', 'settings', 'stores', 'video', 'wallet',
 
   // --- Edge-only surfaces: served by the worker, never reach the router ---

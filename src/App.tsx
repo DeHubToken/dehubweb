@@ -531,6 +531,7 @@ function AppContent() {
               <Route path="events" element={null} />
               <Route path="events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
               <Route path="communities" element={null} />
+              <Route path="fractions" element={null} />
               <Route path="stores" element={null} />
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="ads" element={null} />
