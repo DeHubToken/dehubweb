@@ -24,7 +24,7 @@ import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { parseSoundtrackTag, getFeedViewer } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
-import { extractReplayUrl } from '@/lib/live-replay';
+import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -352,6 +352,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     creatorUsername,
     creatorBadgeBalance: nft.minterUser?.badgeBalance,
     replayUrl: extractReplayUrl(nft.stream),
+    replayTruncated: isReplayTruncated(nft.stream),
     ...(streamId ? { streamId } : {}),
   };
 }
@@ -585,6 +586,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     creatorBadgeBalance: rawAccount?.badgeBalance,
     likeCount,
     replayUrl: extractReplayUrl(stream),
+    replayTruncated: isReplayTruncated(stream),
   };
 }
 
