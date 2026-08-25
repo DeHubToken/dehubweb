@@ -41,11 +41,15 @@ import { resolveViewCount } from '@/lib/engagement';
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
+import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
 import { ProfileSkeleton } from '@/components/app/profile/ProfileSkeleton';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
 import { parseDefaultProfileTab, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
+
+/** Tabs served by the creator's own /api/feed content query. */
+const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
 
 /**
  * Wraps tab content and remembers the max height ever rendered.
@@ -622,6 +626,24 @@ export default function ProfilePage() {
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
         <div ref={profileContentRef}>
+        {/* Sort + search, on the four tabs actually backed by this creator's
+            content. The other tabs (plans, live, fractions, pinned) come from
+            their own endpoints and the toolbar would do nothing there. */}
+        {CONTENT_BACKED_TABS.includes(activeTab) && (
+          <ProfileContentToolbar
+            sort={data.contentSort}
+            onSortChange={data.setContentSort}
+            search={data.contentSearch}
+            onSearchChange={data.setContentSearch}
+            resultCount={
+              activeTab === 'posts' ? data.PROFILE_POSTS.length
+                : activeTab === 'images' ? data.PROFILE_IMAGES.length
+                : activeTab === 'videos' ? data.ALL_PROFILE_VIDEOS.length
+                : data.ALL_CONTENT.length
+            }
+            isLoading={data.isLoadingContent}
+          />
+        )}
         <StableHeightContainer activeTab={activeTab}>
             <ProfileTabContent
               activeTab={activeTab}
@@ -639,6 +661,7 @@ export default function ProfilePage() {
               isFollowing={data.isFollowing}
               isPending={data.isPending}
               isViewingOwnProfile={data.isViewingOwnProfile}
+              isContentFiltered={data.isContentFiltered}
               optimisticPosts={data.optimisticPosts}
               isLoadingPlans={data.isLoadingPlans}
               hasPlans={data.hasPlans}
