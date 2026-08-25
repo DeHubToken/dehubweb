@@ -1,4 +1,4 @@
-import { Bookmark, ThumbsUp, History, Clock, Image, Video, FileText, Ticket } from 'lucide-react';
+import { Bookmark, ThumbsUp, History, Clock, Image, Video, FileText, Ticket, FolderOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { BookmarkType } from '@/hooks/use-bookmarks';
 
@@ -6,6 +6,9 @@ const tabConfig: Record<BookmarkType, { icon: typeof Bookmark; colorClass: strin
   all:     { icon: Bookmark,  colorClass: 'text-zinc-400',    bgClass: 'bg-zinc-800',        titleKey: 'bookmarks.noBookmarksYet',  descKey: 'bookmarks.startSaving' },
   liked:   { icon: ThumbsUp,  colorClass: 'text-pink-400',    bgClass: 'bg-pink-500/10',     titleKey: 'bookmarks.noLikedYet',      descKey: 'bookmarks.likedStartSaving' },
   history: { icon: History,   colorClass: 'text-blue-400',    bgClass: 'bg-blue-500/10',     titleKey: 'bookmarks.noHistoryYet',    descKey: 'bookmarks.historyStartSaving' },
+  // Folders render their own empty state inside BookmarkFoldersPanel; this
+  // entry exists because the tab list is typed by BookmarkType.
+  folders: { icon: FolderOpen, colorClass: 'text-zinc-400',   bgClass: 'bg-zinc-800',        titleKey: 'bookmarks.noBookmarksYet',  descKey: 'bookmarks.startSaving' },
   recent:  { icon: Clock,     colorClass: 'text-amber-400',   bgClass: 'bg-amber-500/10',    titleKey: 'bookmarks.noRecentYet',     descKey: 'bookmarks.recentStartSaving' },
   ppv:     { icon: Ticket,    colorClass: 'text-emerald-400', bgClass: 'bg-emerald-500/10',  titleKey: 'bookmarks.noPpvYet',        descKey: 'bookmarks.ppvStartSaving' },
   images:  { icon: Image,     colorClass: 'text-purple-400',  bgClass: 'bg-purple-500/10',   titleKey: 'bookmarks.noImagesYet',     descKey: 'bookmarks.imagesStartSaving' },
