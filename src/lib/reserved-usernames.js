@@ -47,7 +47,7 @@ export const ROUTE_SEGMENTS = [
   'prompt', 'r',
   'radio', 'raffle', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100',
   'tv',
-  'usernames', 'videos', 'work',
+  'accounts', 'usernames', 'videos', 'work',
 
   // --- /app children. Not top-level routes, but the worker canonicalises
   // /app/<x> onto /<x>, so they resolve into the same space. Several were
@@ -72,7 +72,8 @@ export const ROUTE_SEGMENTS = [
  * unfurls. Blocking new claims is the whole intent.
  */
 export const RESERVED_VANITY_NAMES = [
-  'about', 'account', 'accounts', 'api', 'billing', 'contact', 'dehub',
+  // 'accounts' moved to ROUTE_SEGMENTS when the account marketplace shipped.
+  'about', 'account', 'api', 'billing', 'contact', 'dehub',
   'help', 'home', 'login', 'logout', 'me', 'moderator', 'official',
   'register', 'root', 'security', 'signin', 'signup', 'staff', 'status',
   'support', 'system', 'team', 'undefined', 'null',
