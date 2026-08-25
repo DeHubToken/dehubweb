@@ -76,11 +76,12 @@ export interface JustWatchProvider {
   monetizationTypes: string[];
 }
 
-/** Thrown when the partner token is not yet provisioned. Callers render the
+/** Thrown when the feature is not live yet — either the partner token is not
+ *  provisioned, or the edge function has not been deployed. Callers render the
  *  pre-launch state rather than an error. */
 export class JustWatchNotConfiguredError extends Error {
   constructor() {
-    super('JustWatch partner token is not configured');
+    super('JustWatch is not configured');
     this.name = 'JustWatchNotConfiguredError';
   }
 }
@@ -95,6 +96,13 @@ async function call<T>(params: Record<string, string>): Promise<T> {
   });
 
   if (!res.ok) {
+    // Supabase answers 404 NOT_FOUND for a function that was never deployed.
+    // Edge functions do not ship with the web deploy, so between merging
+    // /cinema and running that deploy this is the live response — and to a
+    // visitor it means exactly what a missing token means: not live yet.
+    // Without this the page kept its full search UI and answered "Nothing
+    // found for <query>", which reads as "this film does not exist".
+    if (res.status === 404) throw new JustWatchNotConfiguredError();
     throw new Error(`JustWatch request failed (${res.status})`);
   }
 
