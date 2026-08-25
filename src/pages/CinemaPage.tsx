@@ -123,7 +123,11 @@ export default function CinemaPage() {
         jsonLd={jsonLd}
       />
 
-      <main className="min-h-screen bg-black px-4 pb-24 pt-16 sm:px-6 lg:px-10">
+      {/* No min-h-screen and no background of its own: this renders inside
+          AppLayout, which owns the page frame, the scroller and the themed
+          backdrop. Painting black here would punch a hole through every
+          non-default theme. */}
+      <main className="px-4 pb-24 pt-6 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-6xl">
           <header className="max-w-3xl">
             <div className="flex items-center gap-2 text-zinc-500">
