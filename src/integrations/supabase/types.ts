@@ -3933,6 +3933,92 @@ export type Database = {
         }
         Relationships: []
       }
+      transcript_correction_votes: {
+        Row: {
+          address: string
+          correction_id: string
+          created_at: string
+          vote: number
+        }
+        Insert: {
+          address: string
+          correction_id: string
+          created_at?: string
+          vote: number
+        }
+        Update: {
+          address?: string
+          correction_id?: string
+          created_at?: string
+          vote?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transcript_correction_votes_correction_id_fkey"
+            columns: ["correction_id"]
+            isOneToOne: false
+            referencedRelation: "transcript_corrections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transcript_corrections: {
+        Row: {
+          address: string
+          created_at: string
+          id: string
+          original_text: string
+          segment_index: number
+          status: string
+          text: string
+          transcript_id: string
+          updated_at: string
+          votes_down: number
+          votes_up: number
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          id?: string
+          original_text: string
+          segment_index: number
+          status?: string
+          text: string
+          transcript_id: string
+          updated_at?: string
+          votes_down?: number
+          votes_up?: number
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          id?: string
+          original_text?: string
+          segment_index?: number
+          status?: string
+          text?: string
+          transcript_id?: string
+          updated_at?: string
+          votes_down?: number
+          votes_up?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transcript_corrections_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "stage_transcripts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transcript_corrections_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "transcripts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transcript_translations: {
         Row: {
           chapters: Json
@@ -4493,6 +4579,77 @@ export type Database = {
           salt?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      video_segment_votes: {
+        Row: {
+          address: string
+          created_at: string
+          segment_id: string
+          vote: number
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          segment_id: string
+          vote: number
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          segment_id?: string
+          vote?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_segment_votes_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "video_segments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_segments: {
+        Row: {
+          address: string
+          category: string
+          created_at: string
+          end_seconds: number
+          id: string
+          start_seconds: number
+          status: string
+          token_id: number
+          updated_at: string
+          votes_down: number
+          votes_up: number
+        }
+        Insert: {
+          address: string
+          category: string
+          created_at?: string
+          end_seconds: number
+          id?: string
+          start_seconds: number
+          status?: string
+          token_id: number
+          updated_at?: string
+          votes_down?: number
+          votes_up?: number
+        }
+        Update: {
+          address?: string
+          category?: string
+          created_at?: string
+          end_seconds?: number
+          id?: string
+          start_seconds?: number
+          status?: string
+          token_id?: number
+          updated_at?: string
+          votes_down?: number
+          votes_up?: number
         }
         Relationships: []
       }
