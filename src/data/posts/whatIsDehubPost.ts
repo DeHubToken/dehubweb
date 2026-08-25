@@ -16,7 +16,7 @@ Our mission is simple: **give creators and their communities ownership of the pl
 
 ## Who's behind DeHub
 
-DeHub isn't an anonymous token with a whitepaper and a promise. It's a shipping product built by a team of **gamers, streamers and entertainment entrepreneurs**, and operated by **DeLabs Ltd**, a UK-incorporated company with a real legal and compliance structure.
+DeHub isn't an anonymous token with a whitepaper and a promise. It's a shipping product built by a team of **gamers, streamers and entertainment entrepreneurs**, and run as an **independent DAO** — governed on-chain by DHB holders, with no company owning or controlling it.
 
 The team came together in **2021**, assembled a core group of developers, and grew to more than a dozen people across three time zones within the first year. What matters most about how we started: DeHub shipped a **fully built app before it ever launched a token.** There was no venture round and no private presale funding development — the only fundraising was community liquidity generation on BNB, and from day one the community itself voted on the chain, the price, the supply and the exchange listings. That "product first, community-owned" DNA is still exactly how the project runs today.
 
@@ -66,7 +66,7 @@ The 2026 roadmap builds on the same user-owned foundation: an AI toolkit for cre
 ## A quick history
 
 - **2021** — launched by a team of social media, gaming and entertainment entrepreneurs; rebranded to DeHub; the community voted on chain, price, supply and listing from day one, and the beta app passed 2,000 daily active users.
-- **2022** — UK entity DeLabs Ltd incorporated; marketplace, streaming and staking dapps shipped; V2 token migration completed for 25,000+ holders; recognised as Most Innovative Company at the UK's Corporate LiveWire awards.
+- **2022** — marketplace, streaming and staking dapps shipped; V2 token migration completed for 25,000+ holders; recognised as Most Innovative Company at the UK's Corporate LiveWire awards.
 - **2023–2024** — creator economy tooling (90% ad revenue share, POVR ad tech), DePIN phase 1, on-chain tradable subscriptions, and the move to Base L2.
 - **2025–2026** — live streaming with animated tips, E2EE messaging, a custom CDN with sub-200ms latency, the Google Play launch, and the full web app at dehub.io.
 
@@ -81,7 +81,7 @@ The name collides with a few unrelated things — worth clearing up:
 ## Frequently asked questions
 
 ### Who is behind DeHub?
-DeHub is built by a team of gamers, streamers and entertainment entrepreneurs and operated by DeLabs Ltd, a UK-incorporated company. The project started in 2021, shipped a working app before launching any token, and has been community-governed from the start.
+DeHub is built by a team of gamers, streamers and entertainment entrepreneurs and run as an independent DAO. The project started in 2021, shipped a working app before launching any token, and has been community-governed from the start.
 
 ### Is DeHub free to use?
 Yes. Browsing, posting and streaming are free. A wallet is created for you behind the scenes — you can bring your own, but you don't need to know anything about crypto to start. Gas is sponsored for social, email and SMS signups.

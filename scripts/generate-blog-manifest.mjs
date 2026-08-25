@@ -27,7 +27,7 @@ import { build } from 'esbuild';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
-import { MILESTONE_REDIRECTS } from '../src/lib/blog-redirects.js';
+import { MILESTONE_REDIRECTS, RETIRED_GUIDES } from '../src/lib/blog-redirects.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
@@ -214,6 +214,15 @@ if (droppedCount !== redirectedSlugs.size) {
 for (const [from, to] of Object.entries(MILESTONE_REDIRECTS)) {
   if (!kept.some((p) => p.slug === to)) {
     throw new Error(`[blog-manifest] redirect target missing: ${from} -> ${to}`);
+  }
+}
+
+// Retired guides: the post is deleted from source and the edge worker 301s its
+// URL to an app page. If one is ever re-added, the 301 would swallow it — the
+// exact orphan the milestone map exists to prevent — so fail the build loudly.
+for (const from of Object.keys(RETIRED_GUIDES)) {
+  if (blogData.posts.some((p) => p.slug === from)) {
+    throw new Error(`[blog-manifest] retired guide is published again: ${from}`);
   }
 }
 

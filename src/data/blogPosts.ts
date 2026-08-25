@@ -334,7 +334,6 @@ export const blogPosts: BlogPost[] = [
   createPost("Q2 2022", 2022, 2, 4, "Implemented advanced video compression reducing bandwidth costs by 60%", "Efficient Streaming: Advanced Video Compression Reduces Costs"),
   createPost("Q2 2022", 2022, 2, 5, "Built NFT marketplace with royalty distribution system", "Empowering Creators: DeHub NFT Marketplace with Royalties"),
   // Q3 2022
-  createPost("Q3 2022", 2022, 3, 0, "Incorporated DeLabs LTD with proper legal structure and compliance", "Official Standing: DeLabs LTD Incorporated"),
   createPost("Q3 2022", 2022, 3, 1, "Acquired $1,000,000 home for largest crypto raffle ever (15,000+ participants)", "Dream Big: The $1M Home Crypto Raffle by DeHub"),
   createPost("Q3 2022", 2022, 3, 2, "Secured power of attorney for multiple islands and sea front strip in Palawan worth over $15,000,000 in an attempt to tokenise sales but failed due to regulatory challenges from the Philippine SEC", "Ambitious Ventures: The Palawan Real Estate Tokenization Attempt"),
   createPost("Q3 2022", 2022, 3, 3, "Established partnerships with real estate and legal firms", "Strategic Alliances: Partnering with Real Estate and Legal Experts"),

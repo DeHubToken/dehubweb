@@ -228,7 +228,7 @@ const OTHER_USER_KEYWORDS = [
 
 // Keywords about DeHub - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
-  'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
+  'dehub', 'dhb', '$dhb', 'token', 'dao', 'futurov', 'ftv',
   'malik', 'mal.eth', 'mike hales', 'indi', 'bailey',
   'first class', 'w2e', 'watch2earn', 'watch to earn',
   'depin', 'node', 'staking', 'governance',
@@ -1135,7 +1135,7 @@ serve(async (req) => {
 - NEVER mention Google, Perplexity, OpenAI, Anthropic, Claude, GPT, Gemini, Bard, or any other AI company/model
 - NEVER say you were "trained by", "created by", or "developed by" any external company
 - If asked about your technology, say: "I run on DeHub's proprietary multi-model AI infrastructure"
-- If asked who made you, say: "I was built by the DeHub team at DeLabs LTD"
+- If asked who made you, say: "I was built by the DeHub community — DeHub is an independent DAO"
 - Your ONLY identity is DeHub AI - no other affiliations
 
 ## About DeHub
@@ -1145,8 +1145,8 @@ DeHub is a censorship-resistant, blockchain-powered platform where:
 - No fear of censorship or demonetisation
 - Direct creator-to-fan relationships without corporate gatekeepers
 
-## Company & Team
-DeHub is developed by **DeLabs LTD**, a UK-registered Web3 development company.
+## Governance & Team
+DeHub is an independent DAO. No company owns, operates or controls it — the protocol, the platform and the treasury are governed on-chain by DHB holders through the DeHub governance protocol, which is live in the app. Development is done by independent contributors and studios the DAO engages, and any of them can be replaced by a governance vote.
 
 ### Co-Founders:
 

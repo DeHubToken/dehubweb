@@ -74,7 +74,7 @@ When you are ready, you can jump straight into the games and the feed at the [De
 
 ## Why DeHub is a sensible UK starting point
 
-Two things make DeHub a practical home base for a British player. First, it is built by a UK company: DeHub is run by DeLabs Ltd, a United Kingdom company, whose co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency. That is a team that understands the UK creator economy from the inside, and the project sponsors the North Wales Crusaders rugby league club.
+Two things make DeHub a practical home base for a British player. First, it was built in the UK: DeHub is an independent DAO whose co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency. That is a team that understands the UK creator economy from the inside, and the project sponsors the North Wales Crusaders rugby league club.
 
 Second, play-to-earn here is not bolted onto a shell. It sits inside a full platform: a chronological, transparent feed with no opaque algorithm, tokenised uploads, on-chain tradable subscriptions with resale royalties, up to 90% ad-revenue share to the ecosystem, and live streaming on Livepeer that has scaled to 50,000-plus concurrent viewers. The games are one way to earn among several, which means your effort is not hostage to a single token's fortunes.
 
@@ -96,7 +96,7 @@ There is no dedicated gaming tax. HMRC applies its existing crypto-asset rules: 
 
 ### What is the best play-to-earn game for UK players?
 
-The best fit is one with no forced upfront spend and a genuinely tradable token. DeHub's [Last Chad Standing](/guides/last-chad-standing-mma-battle-royale-play-to-earn) MMA battle royale and its play-to-earn arcade meet both tests and, being built by a UK company, keep rewards on-chain in $DHB rather than in a locked in-game currency. Start with the no-cost options and prove the payout loop before spending anything.
+The best fit is one with no forced upfront spend and a genuinely tradable token. DeHub's [Last Chad Standing](/guides/last-chad-standing-mma-battle-royale-play-to-earn) MMA battle royale and its play-to-earn arcade meet both tests and, being built by a UK team, keep rewards on-chain in $DHB rather than in a locked in-game currency. Start with the no-cost options and prove the payout loop before spending anything.
 
 ### Can I play-to-earn without spending any money?
 

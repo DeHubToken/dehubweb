@@ -89,3 +89,25 @@ export const EXCLUDED_WITHOUT_COUNTERPART = [
   'supporting-growth-knowledge-transfer-to-fansite-team---a-dehub-milestone-from-q3-2023',
   'protecting-innovation-patent-applications-for-streaming--watch2earn-tech---a-dehub-milestone-from-q2-2023',
 ];
+
+/**
+ * Guides that are gone for good, and where a reader should land instead.
+ * =====================================================================
+ * Unlike MILESTONE_REDIRECTS these have no surviving counterpart under
+ * /guides/ — the post was retired rather than replaced, so the target is an
+ * absolute app path instead of a slug.
+ *
+ * Both consumers read this map:
+ *
+ *   CLOUDFLARE_WORKER_SEO.js            301s /guides/<from> -> <to>
+ *   scripts/generate-blog-manifest.mjs  asserts <from> is no longer published,
+ *                                       so a re-added post can never sit behind
+ *                                       a 301 the way the milestone orphans did
+ *
+ * The DeLabs incorporation milestone is retired because DeHub is an
+ * independent DAO governed by its token holders, not a company subsidiary;
+ * governance is the page that answers the question the old post was asked for.
+ */
+export const RETIRED_GUIDES = {
+  'official-standing-delabs-ltd-incorporated---a-dehub-milestone-from-q3-2022': '/docs/token/governance',
+};
