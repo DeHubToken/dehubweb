@@ -6,6 +6,7 @@
  */
 
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore, ReactNode } from 'react';
+import { useFrontRow } from '@/hooks/use-superpowers';
 import { supabase } from '@/integrations/supabase/client';
 // Deliberately the narrow module and not the `@/lib/api/dehub` barrel: this
 // context is mounted app-wide, and the barrel drags the whole API surface in.
@@ -248,9 +249,30 @@ function subscribeLiveSpaces(cb: () => void) {
   return () => liveSpacesSubscribers.delete(cb);
 }
 
-/** Live audio spaces list, shared from StageProvider's single fetch+realtime. */
+/**
+ * Live audio spaces list, shared from StageProvider's single fetch+realtime.
+ *
+ * The Front Row sort lives HERE rather than in each rail, and that is the
+ * point: the carousel, What's Happening, the friends bar and the stages modal
+ * all read this one store, so a holder who bought the top of the rail gets it
+ * on every surface instead of on whichever one remembered to implement it.
+ *
+ * Ordering only. Nothing is added to or removed from the list, so a client
+ * that cannot reach the endpoint shows exactly what it showed before.
+ */
 export function useLiveSpaces(): AudioSpace[] {
-  return useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
+  const spaces = useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
+  const { data: frontRow } = useFrontRow();
+
+  return useMemo(() => {
+    const id = frontRow?.stageId;
+    if (!id || spaces.length < 2) return spaces;
+    const index = spaces.findIndex(space => space?.id === id);
+    // Already first, or the stage is not in this list at all — a Front Row
+    // bought on a scheduled stage that has not started yet, for instance.
+    if (index < 1) return spaces;
+    return [spaces[index], ...spaces.slice(0, index), ...spaces.slice(index + 1)];
+  }, [spaces, frontRow?.stageId]);
 }
 
 // ─── Scheduled spaces store ─────────────────────────────────────────────────

@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -37,6 +37,7 @@ import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetR
 import { AudioVisualizer } from '../audio';
 import { checkImpersonation } from '@/lib/impersonation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -130,6 +131,14 @@ interface CommentItemProps {
   depth?: number;
   isOwnComment?: boolean;
   /**
+   * Spend a Comment Anchor on this comment, or undefined when it cannot be.
+   *
+   * Undefined for a comment that is not yours, on a thread that IS yours, or
+   * for an account that has not reached Piranha — the same three refusals the
+   * server applies, resolved once by the section rather than by every row.
+   */
+  onAnchor?: (commentId: string) => void;
+  /**
    * Straight comment by the post author on their own post — its permalink is
    * the thread-entry sub-URL (/posts/<tokenId>/b/<id>) rather than ?comment=.
    */
@@ -191,7 +200,7 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment, isThreadEntry }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment, isThreadEntry, onAnchor }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -384,6 +393,24 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               <Gem className="w-4 h-4" />
               {(tipTotal ?? 0) > 0 && <span className="text-xs">{formatCount(tipTotal!)}</span>}
             </button>
+            {/*
+              Comment Anchor — holding your own comment at the top of somebody
+              else's thread. Beside Edit and Delete because it is the same kind
+              of thing: something only the comment's author can do to it.
+
+              A top-level comment only. A reply is anchored inside a subtree
+              nobody sorts, so buying the top of it buys nothing.
+            */}
+            {isOwnComment && !isEditing && !isReply && onAnchor && (
+              <button
+                onClick={() => onAnchor(comment.id)}
+                className="text-white hover:text-zinc-400 transition-colors"
+                aria-label="Anchor this comment to the top"
+                title="Anchor to the top of this thread"
+              >
+                <Anchor className="w-4 h-4" />
+              </button>
+            )}
             {isOwnComment && !isEditing && (
               <>
                 <button
@@ -879,6 +906,41 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     });
   }, [groupedComments, searchQuery, sortBy]);
 
+  /**
+   * Comment Anchor — the Piranha rung.
+   *
+   * The three conditions are resolved once here rather than in every row, and
+   * they mirror the server's exactly: the account has to hold the power, the
+   * comment has to be theirs (checked per row), and the THREAD has to belong
+   * to somebody else. On your own post a pin is already yours, free and
+   * permanent, so offering a paid fifteen-minute version of it would be
+   * selling somebody something they own.
+   */
+  const { data: superpowerStatus } = useSuperpowers(!!walletAddress);
+  const anchorComment = useBookBoost();
+  const isOwnThread =
+    !!walletAddress &&
+    !!(postInfo?.minter || postAuthorAddress) &&
+    (postInfo?.minter || postAuthorAddress)!.toLowerCase() === walletAddress.toLowerCase();
+  const canAnchor =
+    !isOwnThread &&
+    !!superpowerStatus?.powers.some(
+      p => p.key === 'comment_anchor' && p.unlocked && p.available,
+    ) &&
+    (superpowerStatus?.boostsLeft ?? 0) > 0;
+
+  const handleAnchor = (commentId: string) => {
+    anchorComment.mutate(
+      { tokenId: 0, power: 'comment_anchor', commentId },
+      {
+        onSuccess: booking =>
+          toast.success(`Anchored to the top for ${booking.minutes} minutes`),
+        // The server writes these sentences for a person to read.
+        onError: (error: any) => toast.error(error?.message || 'Could not anchor that comment'),
+      },
+    );
+  };
+
   const handleUserPress = useCallback((username: string) => {
     onClose();
     navigate(`/${username}`);
@@ -1338,6 +1400,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         tipTotal={commentTips?.[comment.id]}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
+                        onAnchor={canAnchor ? handleAnchor : undefined}
                         isThreadEntry={
                           !comment.replyToId &&
                           !!postAuthorAddress &&
@@ -1552,6 +1615,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         tipTotal={commentTips?.[comment.id]}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
+                        onAnchor={canAnchor ? handleAnchor : undefined}
                         isThreadEntry={
                           !comment.replyToId &&
                           !!postAuthorAddress &&
