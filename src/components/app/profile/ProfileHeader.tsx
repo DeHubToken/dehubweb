@@ -389,6 +389,22 @@ export function ProfileHeader({
                 {profile.handle}
               </button>
               {profile.verified && <VerifiedBadge className="w-5 h-5" />}
+              {profile.ensName && (
+                /* Beside the handle, never instead of it: the username is what
+                   this account is called, while the .eth name is a claim on
+                   something that can be sold or left to expire. Copying gives
+                   the .eth URL because that is the one worth showing off. */
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`https://dehub.io/${profile.ensName}`);
+                    toast.success('ENS profile URL copied to clipboard');
+                  }}
+                  title={`Verified ENS name — dehub.io/${profile.ensName}`}
+                  className="rounded-md bg-zinc-800 px-2 py-0.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white"
+                >
+                  {profile.ensName}
+                </button>
+              )}
               {!isViewingOwnProfile && apiProfile?.followsYou && (
                 <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
                   Follows you

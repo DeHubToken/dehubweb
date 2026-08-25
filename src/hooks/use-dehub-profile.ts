@@ -20,6 +20,16 @@ export interface ProfileData {
   id: string;
   name: string;
   handle: string;
+  /**
+   * A verified ENS name this account holds, e.g. `mal.eth`.
+   *
+   * Deliberately alongside `handle` rather than replacing it. The username is
+   * what the account is called and cannot vanish; an ENS name is a claim on
+   * something that lives on Ethereum and can be sold or left to expire, and a
+   * profile that reads as renamed the day a name lapses would be worse than
+   * one that shows both.
+   */
+  ensName?: string;
   verified: boolean;
   bio: string;
   avatarUrl?: string;
@@ -114,6 +124,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     id: user._id || user.id || '',
     name: user.displayName || user.display_name || user.username || 'Unknown User',
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
+    ensName: user.ensName || undefined,
     verified: user.isVerified || user.is_verified || false,
     bio: user.bio || user.aboutMe || '',
     avatarUrl,
