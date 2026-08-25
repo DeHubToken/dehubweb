@@ -135,6 +135,12 @@ export interface ArcadeGame {
   exitSource?: string;
   /** Extra `allow` permissions beyond the baseline. */
   allow: string;
+  /**
+   * Sandbox for this frame. Absent means ARCADE_SANDBOX, which is what every
+   * vendored game gets and must keep. Set only for a game written in this
+   * repository — see FIRST_PARTY_SANDBOX.
+   */
+  sandbox?: string;
   /** Preflight for this engine specifically. */
   checkCapability: () => ArcadeGameCapability;
   /**
@@ -266,6 +272,51 @@ function requireCanvas(): ArcadeGameCapability {
   return { ok: true, reason: '', detail: readRenderer() };
 }
 
+
+/**
+ * Baseline sandbox for every arcade frame.
+ *
+ * `allow-same-origin` is deliberately absent, and must stay absent. Every game
+ * here is third-party code served from this app's own origin, so granting it
+ * would hand that code real access to app storage, cookies and the parent DOM.
+ * Withholding it forces an opaque origin instead.
+ *
+ * Two consequences worth knowing before touching this, both learned the hard
+ * way and both documented in the vendoring READMEs: a module `<script>` entry
+ * in an opaque-origin frame is fetched with `Origin: null` and needs an
+ * `Access-Control-Allow-Origin` header or the browser drops it silently, and a
+ * URL-addressed Web Worker cannot be constructed at all (which is why the
+ * chess build inlines its engine).
+ *
+ * There is no `allow-fullscreen` here because the HTML spec has no such
+ * sandbox flag. Fullscreen is a permissions-policy feature and is granted per
+ * frame through the `allow` attribute, which every registry entry sets. Adding
+ * the token back grants nothing — the browser drops it and logs a parse error
+ * on every game load.
+ */
+export const ARCADE_SANDBOX = 'allow-scripts allow-pointer-lock';
+
+/**
+ * The sandbox for a game WE wrote, in this repository.
+ *
+ * The baseline above exists because the arcade hosts third-party engines. That
+ * is not what Trenchstar is: it is ours, it lives in `public/`, it is reviewed
+ * in the same pull requests as the app, and the identical file already runs
+ * with full same-origin powers at https://dehub.io/trenchstar-game/. Denying it
+ * in the frame denies it nothing it cannot already do one URL along — it only
+ * decides whether the desk works.
+ *
+ * And the desk needs it. Its three monitors are the real DeHub pages, framed:
+ * the feed, your profile, and the composer. `dehub.io` answers with
+ * `X-Frame-Options: SAMEORIGIN`, which an opaque-origin parent can never
+ * satisfy, so without this token all three refuse to load and the room is back
+ * to painting a picture of the app instead of running it.
+ *
+ * This is the ONE game that gets it, and `src/test/arcade.test.ts` asserts
+ * that. Anything vendored from outside stays on the baseline.
+ */
+export const FIRST_PARTY_SANDBOX = `${ARCADE_SANDBOX} allow-same-origin`;
+
 export const ARCADE_GAMES: ArcadeGame[] = [
   {
     slug: 'trenchstar',
@@ -306,6 +357,10 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // like a withheld permission. It works standalone either way, which is
     // precisely what makes this cheap to miss.
     allow: 'fullscreen; autoplay; xr-spatial-tracking',
+    // Ours, in this repo, and the only frame that gets same-origin — the desk
+    // monitors are the real DeHub pages and dehub.io answers SAMEORIGIN, which
+    // an opaque parent can never satisfy. See FIRST_PARTY_SANDBOX.
+    sandbox: FIRST_PARTY_SANDBOX,
     // WebGL2: the post chain runs a multisampled half-float render target,
     // which WebGL 1 cannot give it.
     checkCapability: () => requireHardwareWebgl('The floor', true),
@@ -498,26 +553,3 @@ export const ARCADE_GAMES: ArcadeGame[] = [
 export function getArcadeGame(slug: string | undefined): ArcadeGame | undefined {
   return ARCADE_GAMES.find((game) => game.slug === slug);
 }
-
-/**
- * Baseline sandbox for every arcade frame.
- *
- * `allow-same-origin` is deliberately absent, and must stay absent. Every game
- * here is third-party code served from this app's own origin, so granting it
- * would hand that code real access to app storage, cookies and the parent DOM.
- * Withholding it forces an opaque origin instead.
- *
- * Two consequences worth knowing before touching this, both learned the hard
- * way and both documented in the vendoring READMEs: a module `<script>` entry
- * in an opaque-origin frame is fetched with `Origin: null` and needs an
- * `Access-Control-Allow-Origin` header or the browser drops it silently, and a
- * URL-addressed Web Worker cannot be constructed at all (which is why the
- * chess build inlines its engine).
- *
- * There is no `allow-fullscreen` here because the HTML spec has no such
- * sandbox flag. Fullscreen is a permissions-policy feature and is granted per
- * frame through the `allow` attribute, which every registry entry sets. Adding
- * the token back grants nothing — the browser drops it and logs a parse error
- * on every game load.
- */
-export const ARCADE_SANDBOX = 'allow-scripts allow-pointer-lock';

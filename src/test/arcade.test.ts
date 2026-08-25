@@ -90,6 +90,26 @@ describe('arcade registry', () => {
     expect(ARCADE_SANDBOX).toContain('allow-scripts');
   });
 
+  it('grants same-origin to first-party games only, and names them', () => {
+    // Trenchstar is ours, in this repo, and its desk monitors ARE the real
+    // DeHub pages — dehub.io answers SAMEORIGIN, which an opaque parent can
+    // never satisfy. It gets the token; a game vendored from outside must
+    // never appear on this list without that same argument being true.
+    const sameOrigin = ARCADE_GAMES.filter((g) => (g.sandbox ?? '').includes('allow-same-origin'));
+    expect(sameOrigin.map((g) => g.slug)).toEqual(['trenchstar']);
+    // And everyone else stays on the baseline, explicitly.
+    for (const game of ARCADE_GAMES) {
+      if (game.slug === 'trenchstar') continue;
+      expect(game.sandbox ?? ARCADE_SANDBOX, game.slug).not.toContain('allow-same-origin');
+    }
+    // A per-game sandbox is still a sandbox: every token in one has to exist.
+    for (const game of ARCADE_GAMES) {
+      for (const token of (game.sandbox ?? '').split(/\s+/).filter(Boolean)) {
+        expect(SANDBOX_FLAGS, `${game.slug}: '${token}' is not a sandbox flag`).toContain(token);
+      }
+    }
+  });
+
   it('grants only sandbox flags that exist', () => {
     // `allow-fullscreen` sat here for months. It reads like a flag, but the
     // spec has no such token — fullscreen is a permissions-policy feature and

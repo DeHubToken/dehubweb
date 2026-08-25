@@ -146,6 +146,7 @@ const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const NewPostPage = React.lazy(() => import("./pages/app/NewPostPage"));
+const UploadPage = React.lazy(() => import("./pages/app/UploadPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
@@ -501,6 +502,8 @@ function AppContent() {
               
               <Route path="explore" element={null} />
               <Route path="profile" element={null} />
+              {/* The composer as a page, so it has an address to frame — see pages/app/UploadPage. */}
+              <Route path="upload" element={<Suspense fallback={null}><UploadPage /></Suspense>} />
               <Route path="notifications" element={null} />
               <Route path="messages" element={null} />
               <Route path="assistant" element={null} />
