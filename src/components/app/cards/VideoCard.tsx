@@ -9,12 +9,21 @@
  * ```
  */
 
-import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
+import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense } from 'react';
 import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
+import { useSkipSegments } from '@/lib/skip-segments';
+import { useVideoSegments, segmentAt } from '@/hooks/use-video-segments';
+import { SEGMENT_LABELS } from '@/lib/api/video-segments';
+// Lazy: a drawer opened from a menu has no business in the bytes parsed
+// before first paint. Prefetched when the options drawer opens, so the chunk
+// is warm by the time it is asked for and the sheet still slides up.
+const SegmentMarkerDrawer = lazy(() =>
+  import('./SegmentMarkerDrawer').then(m => ({ default: m.SegmentMarkerDrawer })),
+);
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil } from 'lucide-react';
@@ -550,6 +559,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
+  // Two flags, not one: mounting a vaul Root that is already open renders it
+  // at its final position with no transition, so the drawer mounts closed and
+  // opens on the next frame.
+  const [segmentDrawerMounted, setSegmentDrawerMounted] = useState(false);
+  const [showSegmentDrawer, setShowSegmentDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(video.id);
@@ -1178,6 +1192,49 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     setIsPlaying(false);
   }, [video.videoUrl]);
 
+  // ── Sponsor / intro skipping ──────────────────────────────────────────────
+  // Only fetched when the viewer has skipping on: otherwise this would be a
+  // request per video card in a feed, for a feature most readers leave off.
+  const skipSegmentsOn = useSkipSegments();
+  const { segments: skipSegments } = useVideoSegments(video.id, skipSegmentsOn && mediaAttached);
+  // Segments already jumped in this session, so undoing a skip does not put
+  // the viewer straight back into the same jump on the next timeupdate.
+  const skippedRef = useRef<Set<string>>(new Set());
+
+  // Open on the frame after the mount, so the sheet slides up rather than
+  // appearing. Closing leaves it mounted — a second open should animate too.
+  useEffect(() => {
+    if (!segmentDrawerMounted) return;
+    const frame = requestAnimationFrame(() => setShowSegmentDrawer(true));
+    return () => cancelAnimationFrame(frame);
+  }, [segmentDrawerMounted]);
+
+  // Warm the chunk while the options drawer is up, so the tap that opens the
+  // sheet is not also the tap that downloads it.
+  useEffect(() => {
+    if (showOptionsDrawer) void import('./SegmentMarkerDrawer');
+  }, [showOptionsDrawer]);
+
+  const maybeSkipSegment = useCallback((currentTime: number) => {
+    if (!skipSegmentsOn || !skipSegments.length || !videoRef.current) return;
+    const segment = segmentAt(skipSegments, currentTime);
+    if (!segment || skippedRef.current.has(segment.id)) return;
+
+    skippedRef.current.add(segment.id);
+    const resumeAt = currentTime;
+    videoRef.current.currentTime = segment.end_seconds;
+
+    toast(`${SEGMENT_LABELS[segment.category]} skipped`, {
+      action: {
+        label: 'Undo',
+        onClick: () => {
+          if (videoRef.current) videoRef.current.currentTime = resumeAt;
+        },
+      },
+      duration: 4000,
+    });
+  }, [skipSegmentsOn, skipSegments]);
+
   const handleTimeUpdate = useCallback(() => {
     if (videoRef.current) {
       const ct = videoRef.current.currentTime;
@@ -1189,12 +1246,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         trackView(ct, dur);
       }
 
+      // Crowdsourced sponsor reads and intros, if the viewer asked for them to
+      // be skipped. Guarded on isPlaying: a seek while paused would otherwise
+      // teleport the scrubber out from under the thumb.
+      maybeSkipSegment(ct);
+
       // Drives the OS progress bar. A no-op unless this card currently owns
       // the media session, and it drops non-finite durations rather than
       // throwing — a live HLS source reports Infinity here.
       setMediaSessionPosition(instanceId, ct, dur, videoRef.current.playbackRate);
     }
-  }, [trackView, instanceId]);
+  }, [trackView, instanceId, maybeSkipSegment]);
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {
@@ -2253,6 +2315,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         contentType="video"
       />
 
+      {/* Skippable sections — reads the player's clock live, so marking a
+          sponsor read is two taps while it plays underneath. Mounted only once
+          it has been asked for; the chunk is prefetched when the options
+          drawer opens. */}
+      {segmentDrawerMounted && (
+        <Suspense fallback={null}>
+          <SegmentMarkerDrawer
+            open={showSegmentDrawer}
+            onOpenChange={setShowSegmentDrawer}
+            tokenId={video.id}
+            getCurrentTime={() => videoRef.current?.currentTime ?? 0}
+          />
+        </Suspense>
+      )}
+
       {/* Options Drawer for immersive mode */}
       <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
         <DrawerContent glass className="px-4 pb-6">
@@ -2293,6 +2370,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
               <Clock className="w-5 h-5" /> {t('postOptions.watchList')}
             </button>
+            {!video.isAudio && (
+              <button
+                onClick={() => { setShowOptionsDrawer(false); setSegmentDrawerMounted(true); }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <FastForward className="w-5 h-5" /> {t('postOptions.markSection', 'Skippable sections')}
+              </button>
+            )}
             <button 
               onClick={() => {
                 setShowOptionsDrawer(false);
