@@ -20,14 +20,10 @@ import { useOpenTrades, type FractionTrade } from '@/hooks/use-fraction-marketpl
 import { useSettleTrade } from '@/hooks/use-fraction-checkout';
 import { useAuth } from '@/contexts/AuthContext';
 import { truncateAddress } from '@/lib/api/token-holders';
+import { getChainConfig } from '@/lib/contracts/dhb-token';
+import type { ChainId } from '@/components/app/ChainSelector';
 import { cn } from '@/lib/utils';
 import dehubCoin from '@/assets/dehub-coin.png';
-
-/** DHB address per chain, for the buyer's payment leg. */
-const DHB_BY_CHAIN: Record<number, string> = {
-  8453: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
-  56: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D',
-};
 
 /** "3h left", "overdue by 2h" — the deadline is the whole point of the row. */
 function deadlineLabel(settleBy: string | null): { text: string; overdue: boolean } {
@@ -171,7 +167,10 @@ export function SettlementRail({ tokenId, className }: SettlementRailProps) {
           onAction={() =>
             pay.mutate({
               trade,
-              tokenAddress: DHB_BY_CHAIN[trade.chain_id] || DHB_BY_CHAIN[8453],
+              // The chain decides the DHB address. Copying Base's onto BNB is
+              // the exact mistake that made fraction transfers mine
+              // successfully while moving nothing.
+              tokenAddress: getChainConfig((trade.chain_id || 8453) as ChainId).dhbToken,
             })
           }
         />
