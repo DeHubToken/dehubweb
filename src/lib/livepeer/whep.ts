@@ -39,6 +39,12 @@ export interface WhepSubscription {
 
 export interface SubscribeOptions {
   playbackId: string;
+  /**
+   * Full WHEP endpoint. Given, it is used verbatim. The self-hosted ingest
+   * puts the stream name in the path and the verb in a suffix, which no
+   * amount of base-URL juggling can reach from the Livepeer shape.
+   */
+  endpoint?: string;
   onStateChange?: (state: WhepState, detail?: string) => void;
 }
 
@@ -47,6 +53,7 @@ export { playbackIdFromHlsUrl } from './playback-id';
 
 export async function subscribeToWhep({
   playbackId,
+  endpoint: endpointOverride,
   onStateChange,
 }: SubscribeOptions): Promise<WhepSubscription> {
   if (!playbackId) throw new Error('A playback id is required to subscribe.');
@@ -112,7 +119,8 @@ export async function subscribeToWhep({
     await pc.setLocalDescription(offer);
     await waitForIceGathering(pc);
 
-    const endpoint = `${WHEP_BASE_URL.replace(/\/$/, '')}/${playbackId}`;
+    const endpoint =
+      endpointOverride || `${WHEP_BASE_URL.replace(/\/$/, '')}/${playbackId}`;
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/sdp' },
