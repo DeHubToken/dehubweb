@@ -274,6 +274,39 @@ export async function editPost(
   });
 }
 
+export interface ReplaceVideoResponse {
+  result: boolean;
+  data?: { tokenId: number; status: string; message?: string };
+}
+
+/**
+ * Swap the file behind a post, keeping the post.
+ *
+ * The server writes the replacement to the same storage key, so the URL, the
+ * views, the comments and every link already shared survive — which is the
+ * whole point, and also why the old file can sit in a viewer's own browser
+ * cache afterwards.
+ *
+ * Multipart, so it goes through authedUpload rather than apiCall: a video is
+ * far too big to JSON-encode, and this is the path that reports progress and
+ * survives a token expiring mid-upload.
+ */
+export async function replaceVideoFile(
+  tokenId: number | string,
+  video: File,
+  options: { thumbnail?: File | null; onProgress?: (percent: number) => void } = {},
+): Promise<ReplaceVideoResponse> {
+  const formData = new FormData();
+  // Field order is the contract: the server reads files[0] as the video and
+  // files[1] as the optional poster frame, exactly as the mint path does.
+  formData.append("video", video);
+  if (options.thumbnail) formData.append("thumbnail", options.thumbnail);
+
+  return authedUpload<ReplaceVideoResponse>(`/api/nft/${tokenId}/video`, formData, {
+    onProgress: options.onProgress,
+  });
+}
+
 export async function deletePost(tokenId: number | string): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>(`/api/nft/${tokenId}`, {
     method: "DELETE",
