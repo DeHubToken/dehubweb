@@ -163,6 +163,7 @@ const SuperPowersPage = React.lazy(() => import("./pages/app/SuperPowersPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkEditPage = React.lazy(() => import("./pages/app/WorkEditPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
+const BountyLegacyRedirect = React.lazy(() => import("./pages/app/BountyLegacyRedirect"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 // Eager import — the referral lander is a new user's first touch of DeHub and
 // must paint instantly; it renders outside WalletProviders (see App below) so
@@ -549,8 +550,13 @@ function AppContent() {
               <Route path="work" element={null} />
               <Route path="work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
               <Route path="work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
-              <Route path="work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
-              <Route path="work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+              {/* A bounty's own URL is /bounty/<n> (work_jobs.job_number). The
+                  /work/<uuid> pair below is the pre-numbers share form and
+                  only redirects — see BountyLegacyRedirect. */}
+              <Route path="bounty/:jobKey" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+              <Route path="bounty/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+              <Route path="work/:jobKey" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect /></Suspense>} />
+              <Route path="work/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect suffix="/edit" /></Suspense>} />
 
               <Route path="communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
@@ -569,8 +575,14 @@ function AppContent() {
             <Route path="/work" element={null} />
             <Route path="/work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
             <Route path="/work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
-            <Route path="/work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
-            <Route path="/work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+            <Route path="/work/:jobKey" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect /></Suspense>} />
+            <Route path="/work/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect suffix="/edit" /></Suspense>} />
+
+            {/* Canonical bounty URLs. `bounty` is reserved in
+                src/lib/reserved-usernames.js so no account can claim the
+                handle and shadow this space. */}
+            <Route path="/bounty/:jobKey" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+            <Route path="/bounty/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
 
             {/* /affiliate alias (page itself is rendered by PersistentPageCache) */}
             <Route path="/affiliate" element={null} />
