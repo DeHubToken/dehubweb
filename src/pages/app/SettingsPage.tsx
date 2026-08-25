@@ -69,6 +69,7 @@ import {
   Paintbrush,
   Gauge,
   Megaphone,
+  FastForward,
   LifeBuoy,
   Trash2,
 } from 'lucide-react';
@@ -99,6 +100,7 @@ import { useMatureContent } from '@/hooks/use-mature-content';
 import { useHideWatched } from '@/hooks/use-watched-videos';
 import { DataPortability } from '@/components/app/settings/DataPortability';
 import { normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
+import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
@@ -2404,6 +2406,7 @@ function ContentSettings() {
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.playback', 'Playback')}</h3>
         <div className="space-y-4">
           <HideWatchedToggle />
+          <SkipSegmentsToggle />
           <ChannelSpeedRow />
           <AdLoadRow />
         </div>
@@ -2662,6 +2665,36 @@ function ChannelSpeedRow() {
  * every eight, Fewer halves it. There is no "none" — the line about creators
  * is not decoration, it is the reason the option stops where it does.
  */
+/**
+ * Sponsor / intro skipping, off by default.
+ *
+ * Skipping a sponsor read is a decision about someone else's income, so it is
+ * one the viewer makes deliberately rather than one they find has been made
+ * for them. The sections themselves are crowdsourced — anyone can mark one
+ * from a video's options menu, and every skip offers an undo.
+ */
+function SkipSegmentsToggle() {
+  const { t } = useTranslation();
+  const skipSegments = useSkipSegments();
+  const prefs = useUserPreferences();
+
+  return (
+    <SettingToggle
+      icon={FastForward}
+      title={t('settings.skipSegments', 'Skip sponsors and intros')}
+      description={t(
+        'settings.skipSegmentsDesc',
+        'Jump past sections other viewers have marked as sponsor reads, intros or outros. Every skip can be undone. Off by default.',
+      )}
+      defaultChecked={skipSegments}
+      onCheckedChange={(checked) => {
+        writeSkipSegments(checked);
+        prefs?.setPref('skipVideoSegments', checked);
+      }}
+    />
+  );
+}
+
 function AdLoadRow() {
   const { t } = useTranslation();
   const adLoad = useAdLoad();

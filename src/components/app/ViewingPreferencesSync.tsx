@@ -20,10 +20,12 @@ import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRates, setCreatorPlaybackRates } from '@/lib/video-preferences';
 import { sanitiseGroups, useFollowGroupList, writeGroups } from '@/lib/follow-groups';
 import { DEFAULT_AD_LOAD, normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
+import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
 
 const PREF_KEY = 'videoChannelSpeeds';
 const GROUPS_KEY = 'followGroups';
 const AD_LOAD_KEY = 'adLoad';
+const SKIP_SEGMENTS_KEY = 'skipVideoSegments';
 const EMPTY: Record<string, number> = {};
 
 /**
@@ -49,9 +51,19 @@ function useAdLoadSync() {
   useSyncedPreference(AD_LOAD_KEY, adLoad, apply, DEFAULT_AD_LOAD);
 }
 
+/** Sponsor skipping is one boolean; inbound only, like the two above. */
+function useSkipSegmentsSync() {
+  const skipSegments = useSkipSegments();
+  const apply = useCallback((value: unknown) => {
+    writeSkipSegments(value === true || value === 'true');
+  }, []);
+  useSyncedPreference(SKIP_SEGMENTS_KEY, skipSegments, apply, false);
+}
+
 export function ViewingPreferencesSync() {
   useFollowGroupSync();
   useAdLoadSync();
+  useSkipSegmentsSync();
   const [rates, setRates] = useState<Record<string, number>>(() => getCreatorPlaybackRates());
 
   // What the server last handed us. A server-applied map re-fires the same
