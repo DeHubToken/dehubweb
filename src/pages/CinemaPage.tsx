@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Search, Loader2, Clapperboard } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Search, Loader2, Clapperboard, Share2, ArrowLeft } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import {
   Select,
@@ -10,7 +11,8 @@ import {
 } from '@/components/ui/select';
 import { TitleCard } from '@/components/cinema/TitleCard';
 import { OfferPanel } from '@/components/cinema/OfferPanel';
-import { JustWatchAttribution } from '@/components/cinema/JustWatchAttribution';
+import { FilmReviews } from '@/components/cinema/FilmReviews';
+import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import {
   useJustWatchOffers,
   useJustWatchProviders,
@@ -23,7 +25,8 @@ import {
   localeLabel,
   rememberLocale,
 } from '@/lib/cinema-locales';
-import type { JustWatchTitle, ObjectType } from '@/lib/api/justwatch';
+import { dehubLinkFor } from '@/lib/dehub-links';
+import type { ObjectType } from '@/lib/api/justwatch';
 
 const pageDescription =
   'Find out where to stream, rent or buy any film or series, with live prices for your country. DeHub Cinema covers every major service in 140+ countries.';
@@ -40,31 +43,48 @@ function useDebounced<T>(value: T, delay: number): T {
 }
 
 export default function CinemaPage() {
+  const navigate = useNavigate();
+  // The open title lives in the URL, not in state. It has to: a film with no
+  // address of its own cannot be shared, linked, carded or indexed, and every
+  // one of those is the point of the share button below.
+  const { filmType, filmId } = useParams<{ filmType?: string; filmId?: string }>();
+  const openObjectType: ObjectType = filmType === 'series' ? 'show' : 'movie';
+
   const [query, setQuery] = useState('');
-  const [objectType, setObjectType] = useState<ObjectType>('movie');
+  const [searchType, setSearchType] = useState<ObjectType>('movie');
   const [locale, setLocale] = useState(() => detectLocale());
-  const [selected, setSelected] = useState<JustWatchTitle | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const debouncedQuery = useDebounced(query, 350);
 
-  const search = useJustWatchSearch(debouncedQuery, locale, objectType);
+  const search = useJustWatchSearch(debouncedQuery, locale, searchType);
   const providers = useJustWatchProviders(locale);
-  const offers = useJustWatchOffers(selected?.justwatchId ?? null, locale, objectType);
-
-  // A title selected in one country is still the same film in the next, so the
-  // selection survives a country change and just re-resolves its offers. It
-  // does not survive switching between films and series, where the result set
-  // is a different catalogue entirely.
-  useEffect(() => {
-    setSelected(null);
-  }, [objectType]);
+  const offers = useJustWatchOffers(filmId ?? null, locale, openObjectType);
 
   const notConfigured =
     search.error instanceof JustWatchNotConfiguredError ||
-    providers.error instanceof JustWatchNotConfiguredError;
+    providers.error instanceof JustWatchNotConfiguredError ||
+    offers.error instanceof JustWatchNotConfiguredError;
 
   const results = search.data?.results ?? [];
   const current = localeLabel(locale);
+  const openTitle = offers.data?.title ?? null;
+
+  // A title's page keeps its own tab title and share card. Falls back to the
+  // hub's copy while the fetch is in flight so the tab never reads "undefined".
+  const seo = openTitle
+    ? {
+        title: `${openTitle.title}${openTitle.year ? ` (${openTitle.year})` : ''} — Where to Watch | DeHub`,
+        description:
+          openTitle.shortDescription ??
+          `Where to stream, rent or buy ${openTitle.title} in ${current.country} and 140+ other countries.`,
+        url: `https://dehub.io/cinema/${filmType}/${filmId}`,
+      }
+    : {
+        title: 'Cinema | Where to Stream, Rent or Buy Any Film | DeHub',
+        description: pageDescription,
+        url: 'https://dehub.io/cinema',
+      };
 
   const jsonLd = useMemo(
     () => ({
@@ -91,13 +111,15 @@ export default function CinemaPage() {
     [],
   );
 
+  const shareUrl = filmId ? dehubLinkFor.film(openObjectType, filmId) : '';
+
   return (
     <>
       <SEOHead
-        title="Cinema | Where to Stream, Rent or Buy Any Film | DeHub"
-        description={pageDescription}
+        title={seo.title}
+        description={seo.description}
         image="https://dehub.io/og/cinema.jpg"
-        url="https://dehub.io/cinema"
+        url={seo.url}
         jsonLd={jsonLd}
       />
 
@@ -139,8 +161,8 @@ export default function CinemaPage() {
                     type="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder={objectType === 'movie' ? 'Search films…' : 'Search series…'}
-                    aria-label={objectType === 'movie' ? 'Search films' : 'Search series'}
+                    placeholder={searchType === 'movie' ? 'Search films…' : 'Search series…'}
+                    aria-label={searchType === 'movie' ? 'Search films' : 'Search series'}
                     className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] pl-10 pr-4 text-sm text-white placeholder:text-zinc-600 focus:border-white/30 focus:outline-none"
                   />
                 </div>
@@ -154,10 +176,10 @@ export default function CinemaPage() {
                     <button
                       key={type}
                       type="button"
-                      onClick={() => setObjectType(type)}
-                      aria-pressed={objectType === type}
+                      onClick={() => setSearchType(type)}
+                      aria-pressed={searchType === type}
                       className={`h-full rounded-lg px-4 text-sm transition-colors ${
-                        objectType === type
+                        searchType === type
                           ? 'bg-white text-black'
                           : 'text-zinc-400 hover:text-white'
                       }`}
@@ -213,16 +235,28 @@ export default function CinemaPage() {
                     </div>
                   )}
 
-                  {!search.isFetching && debouncedQuery.trim().length >= 2 && results.length === 0 && (
-                    <p className="text-sm text-zinc-500">
-                      Nothing found for “{debouncedQuery}”. Check the spelling, or try
-                      the original-language title.
+                  {/* An errored search is not an empty one. Saying "nothing
+                      found" when the request failed reads as "that film does
+                      not exist", which sends people away rather than back. */}
+                  {!search.isFetching && search.isError && (
+                    <p className="text-sm text-zinc-400">
+                      Search is unavailable right now. Try again in a moment.
                     </p>
                   )}
 
-                  {debouncedQuery.trim().length < 2 && (
+                  {!search.isFetching &&
+                    !search.isError &&
+                    debouncedQuery.trim().length >= 2 &&
+                    results.length === 0 && (
+                      <p className="text-sm text-zinc-500">
+                        Nothing found for “{debouncedQuery}”. Check the spelling, or
+                        try the original-language title.
+                      </p>
+                    )}
+
+                  {debouncedQuery.trim().length < 2 && !search.isError && (
                     <p className="text-sm text-zinc-600">
-                      Start typing to search {objectType === 'movie' ? 'films' : 'series'}.
+                      Start typing to search {searchType === 'movie' ? 'films' : 'series'}.
                     </p>
                   )}
 
@@ -232,8 +266,12 @@ export default function CinemaPage() {
                         <li key={`${title.justwatchId}-${title.title}`}>
                           <TitleCard
                             title={title}
-                            selected={selected?.justwatchId === title.justwatchId}
-                            onSelect={() => setSelected(title)}
+                            selected={String(title.justwatchId) === filmId}
+                            onSelect={() =>
+                              navigate(
+                                `/cinema/${searchType === 'show' ? 'series' : 'film'}/${title.justwatchId}`,
+                              )
+                            }
                           />
                         </li>
                       ))}
@@ -242,19 +280,46 @@ export default function CinemaPage() {
                 </section>
 
                 <aside aria-label="Where to watch" className="lg:sticky lg:top-16 lg:self-start">
-                  {selected ? (
-                    <OfferPanel
-                      detail={offers.data?.title}
-                      providers={providers.data?.providers ?? []}
-                      locale={locale}
-                      isLoading={offers.isPending || offers.isFetching}
-                    />
+                  {filmId ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <button
+                          type="button"
+                          onClick={() => navigate('/cinema')}
+                          className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-white"
+                        >
+                          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                          Back to search
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setShareOpen(true)}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/5"
+                        >
+                          <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
+                          Share
+                        </button>
+                      </div>
+
+                      <OfferPanel
+                        detail={openTitle}
+                        providers={providers.data?.providers ?? []}
+                        locale={locale}
+                        isLoading={offers.isPending || offers.isFetching}
+                      />
+
+                      <FilmReviews
+                        justwatchId={filmId}
+                        objectType={openObjectType}
+                        title={openTitle}
+                      />
+                    </div>
                   ) : (
                     <div className="rounded-xl border border-white/10 p-6">
                       <p className="text-sm text-zinc-500">
                         Pick a title to see every way to watch it in {current.country}.
                       </p>
-                      <JustWatchAttribution href="https://www.justwatch.com" className="mt-4" />
                     </div>
                   )}
                 </aside>
@@ -263,6 +328,15 @@ export default function CinemaPage() {
           )}
         </div>
       </main>
+
+      {filmId && (
+        <ShareEntityDrawer
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          url={shareUrl}
+          shareTitle={openTitle ? `${openTitle.title} — where to watch` : 'Where to watch'}
+        />
+      )}
     </>
   );
 }
