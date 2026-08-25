@@ -101,6 +101,27 @@ export function clearCreatorPlaybackRates() {
   save({ ...prefs, ratesByCreator: {} });
 }
 
+/** The whole map, for the account sync to push. */
+export function getCreatorPlaybackRates(): Record<string, number> {
+  return { ...getVideoPreferences().ratesByCreator };
+}
+
+/**
+ * Replace the map wholesale — what the account sync applies on sign-in, so a
+ * device adopts the channels tuned on another one. Server wins: a rate this
+ * device set while signed out is not merged back in, or a channel deliberately
+ * reset elsewhere would keep coming back.
+ */
+export function setCreatorPlaybackRates(rates: Record<string, number>) {
+  const clean: Record<string, number> = {};
+  for (const [creator, rate] of Object.entries(rates ?? {})) {
+    const key = normaliseCreator(creator);
+    if (key && typeof rate === 'number' && rate > 0) clean[key] = rate;
+  }
+  const prefs = getVideoPreferences();
+  save({ ...prefs, ratesByCreator: clean });
+}
+
 function normaliseCreator(creatorId?: string | null): string | null {
   const key = (creatorId ?? '').trim().toLowerCase();
   return key || null;

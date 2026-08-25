@@ -12,6 +12,7 @@ import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 import { UsernameRequiredModal } from "@/components/app/modals/UsernameRequiredModal";
 import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
+import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
@@ -350,6 +351,7 @@ function AppContent() {
   return (
     <>
       <SelfBadgeSync />
+      <ViewingPreferencesSync />
       <UsernameRequiredModal />
       <GiveawayPrizeModal />
       {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's
