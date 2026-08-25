@@ -80,10 +80,13 @@ export function useGovernanceProposals(sort: GovernanceSort, search: string) {
   return useInfiniteQuery({
     queryKey: ['governance-proposals', sort, search],
     queryFn: async ({ pageParam = 0 }) => {
+      // Only proposals still open to a vote. `neq('completed')` used to leave
+      // passed/rejected ones here too, so a decided proposal showed in both
+      // this tab and its verdict tab.
       let query = supabase
         .from('governance_proposals')
         .select('*')
-        .neq('status', 'completed');
+        .eq('status', 'open');
 
       if (search.trim()) {
         const pattern = escapeFilterValue(`%${search.trim()}%`);
