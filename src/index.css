@@ -1383,6 +1383,8 @@ html[data-theme="system"] [data-feed-nav] {
   box-shadow:
     inset 0 0 0 1px rgb(255 255 255 / 0.08),
     0 8px 32px rgb(0 0 0 / 0.30) !important;
+}
+/* Mobile: the feed nav is the first bento a user sees, so the glass blur is
 /* Mobile: the feed nav is the first bento a user sees, so the glass blur is
    unnecessary and adds rendering cost. Keep the tint/shadow so it still reads
    as a raised surface. */
