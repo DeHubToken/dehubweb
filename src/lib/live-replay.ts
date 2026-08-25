@@ -13,6 +13,8 @@
 interface RecordingRecord {
   status?: string;
   url?: string;
+  /** Set when the capture was cut down to the creator's daily allowance. */
+  truncated?: boolean;
 }
 
 /**
@@ -24,4 +26,13 @@ export function extractReplayUrl(stream: unknown): string | undefined {
   const recording = (stream as { recording?: RecordingRecord })?.recording;
   if (!recording || recording.status !== 'ready') return undefined;
   return recording.url || undefined;
+}
+
+/**
+ * Whether the stored replay is only the opening stretch of the broadcast —
+ * the card labels it PARTIAL rather than presenting a cut as the whole show.
+ */
+export function isReplayTruncated(stream: unknown): boolean {
+  const recording = (stream as { recording?: RecordingRecord })?.recording;
+  return recording?.status === 'ready' && !!recording.truncated;
 }
