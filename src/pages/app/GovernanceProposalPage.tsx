@@ -30,7 +30,7 @@ import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
-import { ProposalVerdictPill, verdictOf } from '@/components/app/governance/ProposalVerdict';
+import { ProposalVerdictLabel, verdictOf } from '@/components/app/governance/ProposalVerdict';
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -156,7 +156,12 @@ export default function GovernanceProposalPage() {
             badgeLookupId={proposal.author_username || proposal.author_wallet_address}
           />
           <div className="flex items-center gap-1.5 shrink-0 pt-1">
-            {verdict && <ProposalVerdictPill verdict={verdict} />}
+            {verdict && (
+              <>
+                <ProposalVerdictLabel verdict={verdict} />
+                <span className="text-zinc-500 text-[10px]">·</span>
+              </>
+            )}
             <span className="text-zinc-500 text-[10px]">{formatTimeAgo(proposal.created_at, t)}</span>
           </div>
         </div>
