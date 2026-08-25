@@ -75,6 +75,7 @@ import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-b
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
+import { useFollowGroupList } from '@/lib/follow-groups';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -506,6 +507,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // "Following" mode is handled server-side via followingOnly=true API param
   const isFollowingMode = selectedSort.value === 'following';
+
+  // Follow groups narrow that further. The feed API takes one `minter` or the
+  // whole follow list and nothing in between, so the group filter is applied
+  // to what comes back; the infinite-scroll loader stays on screen while a
+  // narrow group thins the page, which is what keeps pulling more.
+  const followGroups = useFollowGroupList();
+  const [activeFollowGroupId, setActiveFollowGroupId] = usePersistedFeedFilter<string | null>('home', 'followGroup', null);
+  const followGroupMembers = useMemo(() => {
+    const group = followGroups.find(g => g.id === activeFollowGroupId);
+    return new Set(group?.members ?? []);
+  }, [followGroups, activeFollowGroupId]);
+  const isGroupFiltered = isFollowingMode && !!activeFollowGroupId && followGroupMembers.size > 0;
 
 
   // Prompt flow modal state
@@ -1019,6 +1032,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         item.type !== 'video' || !watchedIds.has(String((item.data as any)?.id))
       );
     }
+    // One follow group instead of everyone you follow.
+    if (isGroupFiltered) {
+      filtered = filtered.filter(item => {
+        const d = item.data as any;
+        const raw = item.type === 'post' ? d?.author?.id : d?.creatorId;
+        return !!raw && followGroupMembers.has(String(raw).toLowerCase());
+      });
+    }
     if (selectedCategories.length <= 1) return filtered; // 0 = all, 1 = API-filtered
     const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
     return filtered.filter(item => {
@@ -1026,7 +1047,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (!itemCats.length) return false;
       return itemCats.some(c => catSet.has(String(c).toLowerCase()));
     });
-  }, [tierCappedItems, selectedCategories, hideWatched, watchedIds]);
+  }, [tierCappedItems, selectedCategories, hideWatched, watchedIds, isGroupFiltered, followGroupMembers]);
 
   // Served POVR ads spliced in after every AD_INSERT_INTERVAL organic items.
   // Ad serving failures return [] so the feed is never blocked by ads.
@@ -1903,6 +1924,24 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
       {/* Friends on Stage notification */}
       <FriendsOnStageBar />
+
+          {/* Follow groups. Only in Following mode, and only once there is a
+              group to pick — an empty row would be a permanent nudge to use a
+              feature most readers do not want. Filed from the Following list. */}
+          {isFollowingMode && followGroups.length > 0 && (
+            <div className="px-1 pb-2">
+              <GlassFilterRow
+                items={[
+                  { key: 'all', label: t('filters.everyone', 'Everyone') },
+                  ...followGroups.map(g => ({ key: g.id, label: g.name })),
+                ]}
+                activeKey={activeFollowGroupId ?? 'all'}
+                onSelect={(key) => setActiveFollowGroupId(key === 'all' ? null : key)}
+                borderRadius="0.75rem"
+                buttonClassName="px-3 py-1.5 rounded-xl text-xs"
+              />
+            </div>
+          )}
 
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
