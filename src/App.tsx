@@ -454,10 +454,6 @@ function AppContent() {
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
           <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
           <Route path="/depin" element={<Suspense fallback={<PageLoader />}><DePinPage /></Suspense>} />
-          <Route path="/cinema" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />
-          {/* One title. Same page — the open film is URL state so it can be
-              shared, carded and indexed; see the note in CinemaPage. */}
-          <Route path="/cinema/:filmType/:filmId" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />
           {/* Prize draws. dehub.net/prize-draw and raffle.dehub.net both 301
               here (CLOUDFLARE_WORKER_SEO.js), so this route is the landing for
               every legacy raffle URL the old domain still holds in the index. */}
@@ -497,6 +493,18 @@ function AppContent() {
             <Route path="/communities" element={null} />
             <Route path="/communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
             <Route path="/communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
+
+            {/* Cinema sits INSIDE the layout, unlike the marketing pages it
+                shipped beside. It shares to the feed and it collects reviews,
+                so it needs the app's provider stack — ShareEntityDrawer calls
+                useGlobalDropZone, which only exists under AppLayout, and it is
+                AppLayout that renders the composer that "share to feed" opens.
+                Standalone, opening a title threw straight to the error
+                boundary. */}
+            <Route path="/cinema" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />
+            {/* One title. Same page — the open film is URL state so it can be
+                shared, carded and indexed; see the note in CinemaPage. */}
+            <Route path="/cinema/:filmType/:filmId" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />
 
             {/* dehub.io root IS the home feed — rendered in place, no redirect.
                 Same cached HomePage as /app (see PersistentPageCache home paths). */}
