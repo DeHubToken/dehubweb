@@ -24,6 +24,47 @@
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
 import { MILESTONE_REDIRECTS } from './src/lib/blog-redirects.js';
 
+/**
+ * `/mal.eth` — a verified ENS handle standing in for a username.
+ *
+ * Every "is this a profile?" test in this file used to reject any first
+ * segment containing a dot, and rightly: a dot almost always means a file, and
+ * SSR-ing `/favicon.ico` as a profile would have been absurd. But that made a
+ * `.eth` handle unshareable — `dehub.io/mal.eth` returned the SPA shell, so a
+ * crawler saw the generic homepage card where a profile should be, while
+ * `dehub.io/mal` rendered correctly. That was measured against production, not
+ * guessed.
+ *
+ * So the dot test now has one carve-out, and it is deliberately the whole of
+ * it: `.eth` is a namespace nothing in `public/` uses and nothing ever will.
+ * Any other extension keeps the old behaviour untouched.
+ *
+ * Deliberately loose about what precedes the suffix. ENS names may be
+ * non-ASCII, and by the time a name reaches here it is percent-encoded — a
+ * charset regex would reject exactly the names that most need the SSR path.
+ * A name nobody holds still 404s, because the profile branch checks the API.
+ */
+export function isEnsHandle(segment) {
+  return typeof segment === 'string' && segment.length > 4 && segment.toLowerCase().endsWith('.eth');
+}
+
+/** The first path segment, normalised the way the profile tests want it. */
+export function firstSegmentOf(pathname) {
+  return pathname.replace(/^\/+/, '').split('/')[0].toLowerCase().replace('@', '');
+}
+
+/**
+ * True when a first segment can be a profile: not a route, not a file.
+ *
+ * Exported alongside the two above so the contract is tested rather than
+ * restated — four separate places in this file decide "is this a profile?",
+ * and they drifted apart once already.
+ */
+export function couldBeProfileSegment(segment, systemRoutes) {
+  if (!segment || systemRoutes.has(segment)) return false;
+  return !segment.includes('.') || isEnsHandle(segment);
+}
+
 const SUPABASE_FN_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
 const SUPABASE_FUNCTION_URL = `${SUPABASE_FN_BASE}/ssr-seo`;
 const DEHUB_LOGO = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg';
@@ -1543,7 +1584,7 @@ function canonicalizePath(pathname) {
   const parts = p.replace(/^\/+/, '').split('/');
   if (parts.length > 1) {
     const first = parts[0].toLowerCase().replace('@', '');
-    if (first && !SYSTEM_ROUTES.has(first) && !first.includes('.')) {
+    if (couldBeProfileSegment(first, SYSTEM_ROUTES)) {
       return `/${parts[0]}`;
     }
   }
@@ -1602,9 +1643,9 @@ function shouldServeSSR(pathname) {
   const trimmed = pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
   const trimmedNoApp = trimmed.replace(/^app\//, '');
   if (SSR_STATIC_ROUTES.has(trimmed) || SSR_STATIC_ROUTES.has(trimmedNoApp)) return true;
-  // Always SSR for profile pages (top-level non-system routes)
-  const first = pathname.replace(/^\//, '').split('/')[0].toLowerCase().replace('@', '');
-  if (first && !SYSTEM_ROUTES.has(first) && !first.includes('.')) return true;
+  // Always SSR for profile pages (top-level non-system routes), including a
+  // verified `.eth` handle — see isEnsHandle.
+  if (couldBeProfileSegment(firstSegmentOf(pathname), SYSTEM_ROUTES)) return true;
   return false;
 }
 
@@ -2286,9 +2327,14 @@ async function handleRequest(request, env) {
     return resp;
   }
 
-  // Skip static assets immediately
+  // Skip static assets immediately.
+  //
+  // This is the gate that actually decided `dehub.io/mal.eth` was a file: it
+  // runs before shouldServeSSR, so a dotted path never reached the profile
+  // branch at all. A `.eth` first segment is exempted here and nowhere deeper,
+  // so every other extension still short-circuits exactly as it did.
   if (pathname.startsWith('/_') ||
-      (pathname.includes('.') && !pathname.includes('/post/'))) {
+      (pathname.includes('.') && !pathname.includes('/post/') && !isEnsHandle(firstSegmentOf(pathname)))) {
     return guardNext();
   }
 
@@ -2646,11 +2692,10 @@ async function handleRequest(request, env) {
     // whose title matches NOT_FOUND_TITLES — title-sniffing those 404'd live
     // pages (this is exactly what killed /guides/best-web3-social-media-dapps).
     // A future fn deploy can signal explicitly via X-DeHub-NotFound: 1.
-    const firstSeg = pathname.replace(/^\//, '').split('/')[0].toLowerCase().replace('@', '');
     const isEntityRoute =
       pathname.includes('/post/') ||
       pathname.includes('/communities/') ||
-      (firstSeg && !SYSTEM_ROUTES.has(firstSeg) && !firstSeg.includes('.'));
+      couldBeProfileSegment(firstSegmentOf(pathname), SYSTEM_ROUTES);
     const fnSaysNotFound =
       response.status === 404 || response.headers.get('X-DeHub-NotFound') === '1';
     // A 404 is only honored on ENTITY routes (posts / profiles / communities,
@@ -2775,11 +2820,14 @@ async function handleRequest(request, env) {
             const links = items.map((p) => {
               const t = escHtml(String(p.name).slice(0, 90));
               const authorName = escHtml(p.minterDisplayName || p.mintername || p.minterUsername || '');
-              // Dotted usernames can't be SSR'd (the static-asset skip and the
-              // profile matcher both exclude paths containing '.') — linking
-              // them creates crawl paths that dead-end at the SPA shell.
+              // Dotted handles other than `.eth` can't be SSR'd (the
+              // static-asset skip excludes them) — linking one creates a crawl
+              // path that dead-ends at the SPA shell. This field carries a
+              // username, which cannot contain a dot at all, so in practice it
+              // only ever drops junk; the check tracks couldBeProfileSegment so
+              // the two cannot drift into disagreeing.
               const authorUserRaw = String(p.minterUsername || p.mintername || '').replace(/[^A-Za-z0-9_.-]/g, '');
-              const authorUser = authorUserRaw.includes('.') ? '' : authorUserRaw;
+              const authorUser = couldBeProfileSegment(authorUserRaw.toLowerCase(), SYSTEM_ROUTES) ? authorUserRaw : '';
               return `<li style="margin:6px 0"><a href="${APP_URL}/app/post/${p.tokenId}" style="color:#9f9">${t}</a>${authorUser ? ` by <a href="${APP_URL}/${authorUser}" style="color:#aaa">${authorName}</a>` : ''}</li>`;
             }).join('');
             html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Latest on DeHub</h2><ul style="list-style:none;padding:0">${links}</ul></section></body>`);
