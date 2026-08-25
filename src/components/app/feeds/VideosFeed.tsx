@@ -14,7 +14,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Play, ChevronRight, Radio, Eye, Loader2 } from 'lucide-react';
+import { RefreshCw, Play, ChevronRight, Radio, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
@@ -29,6 +29,7 @@ import { AutoplayVideo } from '@/components/app/AutoplayVideo';
 
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useAuth } from '@/contexts/AuthContext';
+import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
@@ -455,6 +456,11 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('videos', 'category', null);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
+  // Hide watched sticks across sessions (localStorage, not the session-scoped
+  // filter store) — it is a standing preference, not a filter you set once.
+  const [hideWatched, setHideWatched] = useHideWatched();
+  const { watchedIds } = useWatchedVideoIds(hideWatched);
+  const activeFilterClass = useActiveFilterClass();
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
@@ -515,7 +521,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     setSelectedDuration(DURATION_FILTERS[0]);
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
     resetContentFilters();
-  }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
+    setHideWatched(false);
+  }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, resetContentFilters, setHideWatched, beginFilterTransition]);
 
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
@@ -598,34 +605,45 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return allFeedItems.map((item, index) => mapToVideoItem(item, index));
   }, [allFeedItems]);
 
-  // Apply client-side duration filter
+  // Apply client-side duration + watched filters
   const videos = useMemo((): VideoItem[] => {
+    let filtered = allVideos;
+
     // Duration filter
     if (selectedDuration.max !== Infinity || selectedDuration.min !== 0) {
-      return allVideos.filter(video => {
+      filtered = filtered.filter(video => {
         const secs = parseDurationToSeconds(video.duration);
         return secs >= selectedDuration.min && secs < selectedDuration.max;
       });
     }
-    
-    return allVideos;
-  }, [allVideos, selectedDuration]);
+
+    // Already-played videos. Client-side because the feed API has no notion of
+    // who watched what — the watch history is its own endpoint.
+    if (hideWatched && watchedIds.size > 0) {
+      filtered = filtered.filter(video => !watchedIds.has(String(video.id)));
+    }
+
+    return filtered;
+  }, [allVideos, selectedDuration, hideWatched, watchedIds]);
 
   // Auto-fetch more pages when duration filter reduces visible items below threshold
   const MIN_VISIBLE_VIDEOS = 8;
   const MAX_AUTO_FETCH_ATTEMPTS = 5;
   const autoFetchAttempts = useRef(0);
 
-  // Reset auto-fetch attempts when duration filter changes
+  // Reset auto-fetch attempts when a client-side filter changes
   useEffect(() => {
     autoFetchAttempts.current = 0;
-  }, [selectedDuration]);
+  }, [selectedDuration, hideWatched]);
 
   useEffect(() => {
     const isDurationFilterActive = selectedDuration.min !== 0 || selectedDuration.max !== Infinity;
-    
+    // Hiding watched thins a page the same way a duration filter does, so it
+    // needs the same top-up or the feed can come back looking empty.
+    const isClientFilterActive = isDurationFilterActive || (hideWatched && watchedIds.size > 0);
+
     if (
-      isDurationFilterActive &&
+      isClientFilterActive &&
       videos.length < MIN_VISIBLE_VIDEOS &&
       hasNextPage &&
       autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS &&
@@ -638,14 +656,14 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     }
     
     // Reset attempts when filter is removed
-    if (!isDurationFilterActive) {
+    if (!isClientFilterActive) {
       autoFetchAttempts.current = 0;
     }
-  }, [videos.length, selectedDuration, hasNextPage, isFetchingNextPage, isApiLoading, fetchNextPage]);
+  }, [videos.length, selectedDuration, hideWatched, watchedIds, hasNextPage, isFetchingNextPage, isApiLoading, fetchNextPage]);
 
   // Check if we're auto-fetching to fill the view
-  const isAutoFetching = 
-    (selectedDuration.min !== 0 || selectedDuration.max !== Infinity) &&
+  const isAutoFetching =
+    (selectedDuration.min !== 0 || selectedDuration.max !== Infinity || (hideWatched && watchedIds.size > 0)) &&
     videos.length < MIN_VISIBLE_VIDEOS &&
     (isFetchingNextPage || (hasNextPage && autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS));
 
@@ -691,7 +709,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }, [scrollFeed.data]);
 
   // Check if any client-side filters are active
-  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked || hideWatched;
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
@@ -817,6 +835,29 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   </div>
                 </div>
               </div>
+              {/* Already watched. Signed out there is no history to hide by, so
+                  the row is not offered at all. */}
+              {isAuthenticated && (
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.watching', 'Watching')}</span>
+                  <div className="relative">
+                    <div className="flex gap-1.5 pl-1 pr-6 py-1">
+                      <button
+                        data-feed-filter-button
+                        data-active={hideWatched ? 'true' : undefined}
+                        onClick={() => setHideWatched(!hideWatched)}
+                        className={cn(
+                          'flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                          hideWatched ? activeFilterClass : INACTIVE_FILTER_CLASS
+                        )}
+                      >
+                        <EyeOff className="w-3.5 h-3.5" />
+                        {t('filters.hideWatched', 'Hide watched')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
               {/* Reset filters - bottom right */}
               <button
                 onClick={resetAllFilters}

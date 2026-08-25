@@ -74,6 +74,7 @@ import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -173,6 +174,10 @@ interface FilterSectionProps {
   onPostTypeSelect: (v: PostTypeFilterValue) => void;
   contentFilters: ContentTypeFilters;
   onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
+  /** Watch-history filter — offered only to signed-in readers. */
+  hideWatched: boolean;
+  onHideWatchedToggle: () => void;
+  canHideWatched: boolean;
   onReset: () => void;
 }
 
@@ -189,6 +194,9 @@ function SortFilterSection({
   onPostTypeSelect,
   contentFilters,
   onContentFilterToggle,
+  hideWatched,
+  onHideWatchedToggle,
+  canHideWatched,
   onReset,
 }: FilterSectionProps) {
   const { t } = useI18n();
@@ -294,6 +302,24 @@ function SortFilterSection({
           />
         </div>
       </div>
+
+      {/* Already watched. Videos only — a watch record on an image or text
+          post just means it sat on screen for two seconds, which is not the
+          same claim at all (see hooks/use-watched-videos.ts). */}
+      {canHideWatched && (
+        <div className="flex flex-col gap-2">
+          <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.watching', 'Watching')}</span>
+          <div className="relative">
+            <GlassFilterRow
+              items={[{ key: 'hide-watched' as const, label: t('filters.hideWatched', 'Hide watched') }]}
+              activeKeys={hideWatched ? ['hide-watched' as const] : []}
+              onSelect={onHideWatchedToggle}
+              borderRadius="0.75rem"
+              buttonClassName="px-3 py-2 rounded-xl text-sm"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Reset filters - bottom right. z-50 keeps it above the scroll rows
           (z-40), which overlap it and otherwise swallow the tap. */}
@@ -485,6 +511,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
 
   const { walletAddress, isAuthenticated } = useAuth();
+  // Standing preference, so localStorage rather than the session filter store.
+  const [hideWatched, setHideWatched] = useHideWatched();
+  const { watchedIds } = useWatchedVideoIds(hideWatched);
   const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
 
   // Fetch story users from API
@@ -1006,6 +1035,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     let filtered = deletedIds.size > 0
       ? tierCappedItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
       : tierCappedItems;
+    // Videos this account has already played. Only video items are dropped —
+    // the watch record on an image or a text post means "was on screen", not
+    // "was watched".
+    if (hideWatched && watchedIds.size > 0) {
+      filtered = filtered.filter(item =>
+        item.type !== 'video' || !watchedIds.has(String((item.data as any)?.id))
+      );
+    }
     if (selectedCategories.length <= 1) return filtered; // 0 = all, 1 = API-filtered
     const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
     return filtered.filter(item => {
@@ -1013,7 +1050,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (!itemCats.length) return false;
       return itemCats.some(c => catSet.has(String(c).toLowerCase()));
     });
-  }, [tierCappedItems, selectedCategories]);
+  }, [tierCappedItems, selectedCategories, hideWatched, watchedIds]);
 
   // Served POVR ads spliced in after every AD_INSERT_INTERVAL organic items.
   // Ad serving failures return [] so the feed is never blocked by ads.
@@ -1779,12 +1816,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 }}
                 contentFilters={optimisticContentFilters}
                 onContentFilterToggle={toggleContentFilter}
+                hideWatched={hideWatched}
+                onHideWatchedToggle={() => setHideWatched(!hideWatched)}
+                canHideWatched={isAuthenticated}
                 onReset={() => {
                   setSelectedSort(DEFAULT_HOME_SORT);
                   setSelectedCategories([]);
                   setSelectedDate(DATE_FILTER_OPTIONS[0]);
                   setSelectedPostType('all');
                   resetContentFilters();
+                  setHideWatched(false);
                 }}
               />
             </div>
