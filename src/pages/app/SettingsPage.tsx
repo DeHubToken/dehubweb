@@ -2589,7 +2589,9 @@ function MatureContentToggle() {
  * means it sat on screen for two seconds, not that it was watched, and signed
  * out there is no history to read at all (see hooks/use-watched-videos.ts).
  *
- * localStorage, not the account, because a named account setting has to be
+ * Kept in the wallet's preference blob, so it follows the account to another
+ * device; localStorage mirrors it for instant paint and for signed-out
+ * readers. Not the DeHub account row — a named setting there has to be
  * whitelisted server-side or the write is silently dropped.
  */
 function HideWatchedToggle() {
@@ -2618,8 +2620,8 @@ function HideWatchedToggle() {
  * Changing speed on a video pins that speed to its creator (see
  * lib/video-preferences.ts), which is what makes 1.5× on one channel and 1×
  * on another stick. That is invisible once set, so the count and a reset live
- * here. localStorage, so it is per device — the same reason the rest of the
- * playback preferences are.
+ * here. The map rides the wallet's preference blob (ViewingPreferencesSync),
+ * so the channels tuned on one device are tuned on the next.
  */
 function ChannelSpeedRow() {
   const { t } = useTranslation();
