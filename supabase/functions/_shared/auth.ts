@@ -12,7 +12,12 @@ export const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  // DELETE and PATCH are listed because functions here use them, and a browser
+  // will not send a non-safelisted method the preflight omits — it fails in
+  // the browser and works in curl, the worst way for a bug to present.
+  // Listing a method grants nothing: each function still branches on
+  // req.method and 405s anything it does not handle.
+  "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
 };
 
 /** Returns a preflight response for OPTIONS requests, or null to continue. */
