@@ -7,7 +7,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Interface, parseUnits } from 'ethers';
-import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy } from 'lucide-react';
+import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, useIsStakeRouteActive, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -947,14 +948,21 @@ export default function StakingPage() {
             </p>
           </div>
 
-          {/* Super Powers */}
-          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-            <h3 className="text-sm font-semibold text-white">{t('staking.superPowers')}</h3>
+          {/* Super Powers — this card has advertised the feature since it was
+              written and had nowhere to send anybody. It does now. */}
+          <Link
+            to="/app/superpowers"
+            className="block break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2 hover:border-white/25 transition-colors"
+          >
+            <h3 className="text-sm font-semibold text-white flex items-center gap-1.5">
+              {t('staking.superPowers')}
+              <ChevronRight className="w-3.5 h-3.5 text-white/40" />
+            </h3>
             <ul className="space-y-1.5 text-xs text-white/50">
               <li>• {t('staking.trendingBoosts')}</li>
               <li>• {t('staking.timelineExposure')}</li>
             </ul>
-          </div>
+          </Link>
 
           {/* Increased Limits */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">

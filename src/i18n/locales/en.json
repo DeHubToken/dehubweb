@@ -351,7 +351,8 @@
     "activityLog": "Activity Log",
     "endStream": "End Stream",
     "linkCopied": "Link copied to clipboard",
-    "postUrlCopied": "Post URL copied to clipboard"
+    "postUrlCopied": "Post URL copied to clipboard",
+    "boostPost": "Boost post"
   },
   "filters": {
     "sort": "Sort",
@@ -1722,5 +1723,43 @@
       "startTerm": "History",
       "start": "— \"all time\" means every day Cloudflare still retains, which today is {{days}} days starting {{date}}, the day dehub.io moved onto Cloudflare. There is no earlier edge data to show, and older days drop off as Cloudflare ages them out."
     }
+  },
+  "superpowers": {
+    "title": "SuperPowers",
+    "intro": "A badge buys more than the art beside your name. Every fortnight it grants boosts — each one puts a post in the slot at the top of the home feed. Thirteen tiers, thirteen powers, one unlock per rung.",
+    "boost": "Boost",
+    "secondWind": "Second Wind",
+    "boostedLabel": "Boosted",
+    "boostExplainer": "Puts this post in the slot at the top of the home feed for your window.",
+    "secondWindExplainer": "This post is over a week old. Second Wind sends it back to the top of the feed.",
+    "shareOfVoice": "The boost slot rotates. When several boosts are running, viewers are dealt one weighted by badge tier — a higher tier is shown more often, and everybody gets the window they were granted.",
+    "needBadge": "SuperPowers need a staking badge. Stake DHB to unlock them.",
+    "noBadgeYet": "You have no badge yet, so no boosts. Staking DHB unlocks the ladder below.",
+    "stakeDhb": "Stake DHB",
+    "minutes": "minutes",
+    "left": "left",
+    "queued": "queued",
+    "comingSoon": "coming soon",
+    "noBoostsLeft": "No boosts left this cycle",
+    "boostFailed": "Could not boost that post",
+    "cancelFailed": "Could not cancel that boost",
+    "cancelledRefunded": "Boost cancelled and returned to your allowance",
+    "cancelledSpent": "Boost cancelled. It had already started, so it stays spent.",
+    "powersHeading": "The thirteen powers",
+    "ladderHeading": "What each tier grants",
+    "colTier": "Tier",
+    "colBoosts": "Boosts",
+    "colEach": "Each",
+    "colTotal": "Per cycle",
+    "boostsLeft": "{{left}} of {{total}} boosts left",
+    "refills": "refills {{date}}",
+    "refillsOn": "Refills on {{date}} — the same moment for everybody.",
+    "grantLine": "{{boosts}} × {{minutes}} minutes a cycle",
+    "boostBooked": "Boosted for {{minutes}} minutes",
+    "boostForMinutes": "Boost for {{minutes}} minutes",
+    "unlocksAt": "{{power}} unlocks at {{tier}}",
+    "liveUntil": "live until {{time}}",
+    "seenCount": "{{count}} seen",
+    "finishedCount": "{{count}} finished this cycle, seen {{seen}} times"
   }
 }
