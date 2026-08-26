@@ -61,6 +61,7 @@ import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
+import { isHoldGated } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,
@@ -522,7 +523,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
   const isPPV = (post.isPPV || false) && !canBypassGating;
   const isW2E = (post.isW2E || false) && !canBypassGating;
-  const isLocked = (post.isLocked || false) && !canBypassGating;
+  const isLocked = isHoldGated(post.isLocked, post.lockedPrice) && !canBypassGating;
   const isComboLocked = isPPV && isLocked;
   // Independent of the monetisation gates above: a post can be both mature and
   // pay-per-view, and the creator's own post is warned about too — the warning
@@ -1306,6 +1307,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <VerifyUnlockButton
                   requiredAmount={post.lockedPrice}
                   currency={post.lockedCurrency || 'DHB'}
+                  tokenAddress={post.lockedTokenAddress}
+                  chainId={post.lockedChainId}
                   onUnlocked={() => {
                     setShowLockedDrawer(false);
                     setLocallyUnlocked(true);

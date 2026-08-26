@@ -104,6 +104,8 @@ export interface UnifiedFeedItem {
     isLockContent: boolean;
     lockContentAmount?: number;
     lockContentTokenSymbol?: string;
+    lockContentContractAddress?: string;
+    lockContentChainIds?: number[];
     isPayPerView: boolean;
     payPerViewAmount?: number;
     isAddBounty: boolean;
@@ -267,6 +269,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     isLocked,
     lockedPrice: item.streamInfo?.lockContentAmount,
     lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
+    lockedTokenAddress: item.streamInfo?.lockContentContractAddress,
+    lockedChainId: item.streamInfo?.lockContentChainIds?.[0],
     bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
     bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
     bountyAmount: item.streamInfo?.addBountyAmount,
@@ -339,6 +343,8 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isLocked: item.streamInfo?.isLockContent ?? false,
     lockedPrice: item.streamInfo?.lockContentAmount,
     lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
+    lockedTokenAddress: item.streamInfo?.lockContentContractAddress,
+    lockedChainId: item.streamInfo?.lockContentChainIds?.[0],
     bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
     bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
     bountyAmount: item.streamInfo?.addBountyAmount,
@@ -414,6 +420,8 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     isLocked: item.streamInfo?.isLockContent ?? false,
     lockedPrice: item.streamInfo?.lockContentAmount,
     lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
+    lockedTokenAddress: item.streamInfo?.lockContentContractAddress,
+    lockedChainId: item.streamInfo?.lockContentChainIds?.[0],
     isOwner: item.isOwner ?? false,
     isUnlocked: item.isUnlocked ?? false,
   };

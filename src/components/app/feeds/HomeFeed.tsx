@@ -900,7 +900,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         commentCount: pinnedPost.commentCount || pinnedPost.comment_count || 0,
         isPPV: pinnedPost.is_ppv ?? false,
         isW2E: pinnedPost.is_w2e ?? false,
-        isLocked: pinnedPost.is_locked ?? false,
+        isLocked: pinnedPost.is_locked ?? (pinnedPost as any).streamInfo?.isLockContent ?? false,
+        lockedPrice: (pinnedPost as any).locked_price ?? (pinnedPost as any).streamInfo?.lockContentAmount,
+        lockedCurrency: (pinnedPost as any).locked_currency ?? (pinnedPost as any).streamInfo?.lockContentTokenSymbol ?? 'DHB',
+        lockedTokenAddress: (pinnedPost as any).streamInfo?.lockContentContractAddress,
+        lockedChainId: (pinnedPost as any).streamInfo?.lockContentChainIds?.[0],
       };
       return { type: 'video', data: videoItem };
     } else {
