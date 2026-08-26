@@ -24,6 +24,12 @@ interface VideoSlideProps {
   playbackRate?: number;
   onTimeUpdate?: (currentTime: number, duration: number) => void;
   onTap?: () => void;
+  /**
+   * Reverses `onTap` silently. Supplying it is what lets the first tap act
+   * immediately instead of waiting 260ms to see whether a second is coming —
+   * see useTapGestures.
+   */
+  onTapUndo?: () => void;
   onSeekStart?: () => void;
   onSeekEnd?: () => void;
   showPlayIndicator?: 'play' | 'pause' | null;
@@ -57,6 +63,7 @@ export const VideoSlide = memo(function VideoSlide({
   playbackRate = 1,
   onTimeUpdate,
   onTap,
+  onTapUndo,
   onSeekStart,
   onSeekEnd,
   showPlayIndicator,
@@ -111,7 +118,12 @@ export const VideoSlide = memo(function VideoSlide({
    */
   const tapGestures = useTapGestures({
     postId: short.id,
+    // Play/pause is a toggle, so it can fire on the first tap and be toggled
+    // straight back if a second one turns up — no 260ms wait to find out. The
+    // video never visibly pauses on a double tap, and tap-to-pause stays as
+    // instant as it was before the ladder existed.
     onSingleTap: () => onTap?.(),
+    onUndoSingleTap: () => (onTapUndo ?? onTap)?.(),
     disabled: allowFullscreen,
   });
 
