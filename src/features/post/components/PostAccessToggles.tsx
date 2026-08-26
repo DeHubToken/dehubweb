@@ -18,8 +18,14 @@ import {
 import { isValidSolanaAddress } from '@/lib/solana/wallet';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { getChainById } from '@/components/app/ChainSelector';
+import { useNavigate } from 'react-router-dom';
+import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
+import { Star } from 'lucide-react';
 
 interface PostAccessTogglesProps {
+  /** Gate this post behind the creator's own subscription plans. */
+  isSubscribersOnly: boolean;
+  setIsSubscribersOnly: (value: boolean) => void;
   isPPV: boolean;
   setIsPPV: (value: boolean) => void;
   ppvAmount: string;
@@ -70,6 +76,8 @@ interface PostAccessTogglesProps {
 }
 
 export function PostAccessToggles({
+  isSubscribersOnly,
+  setIsSubscribersOnly,
   isPPV,
   setIsPPV,
   ppvAmount,
@@ -111,6 +119,10 @@ export function PostAccessToggles({
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
   const { walletAddress } = useAuth();
+  const navigate = useNavigate();
+  // The gate is the creator's own plans, so with none there is nothing to gate
+  // on and the row stays off — see the comment on the switch.
+  const { hasPlans, isLoading: plansLoading } = useCreatorPlansLite(walletAddress);
   const { data: userCommunities = [] } = useUserCommunities();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
@@ -451,10 +463,45 @@ export function PostAccessToggles({
           </div>
         )}
 
-        {/* A "Subscribers" switch used to sit here. Nothing on the post model
-            records a subscriber gate, so it wrote a hold gate with no amount —
-            a lock badge over an empty unlock sheet on a body the API served in
-            full. Token gating below does the same job with a number attached. */}
+        {/* Subscribers — EVM only.
+            This is NOT token gating: it sends the creator's plan ids on the
+            post, and the feed pipeline opens it for whoever holds an active
+            subscription to one of them. Token gating below asks a different
+            question (own N of a token), which any stranger can satisfy.
+
+            Disabled with no plans, on purpose. The switch used to write a DHB
+            lock with no amount when there was nothing real to write, and that
+            shipped posts gated against nothing. No plans, no gate. */}
+        {!solanaChain && (
+        <label
+          className={cn(
+            'flex items-center justify-between py-0.5',
+            hasPlans ? 'cursor-pointer' : 'cursor-default',
+          )}
+        >
+          <div className="flex items-center gap-2">
+            <Star className="w-4 h-4 text-white" />
+            <span className={cn('text-sm', hasPlans ? 'text-white' : 'text-white/40')}>
+              Subscribers
+            </span>
+            {!plansLoading && !hasPlans && (
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); navigate('/app/profile?tab=subscribers'); }}
+                className="text-xs text-white/50 underline underline-offset-2 hover:text-white"
+              >
+                Create a plan first
+              </button>
+            )}
+          </div>
+          <Switch
+            checked={isSubscribersOnly}
+            onCheckedChange={setIsSubscribersOnly}
+            disabled={!hasPlans}
+            className="data-[state=checked]:bg-white scale-75 disabled:opacity-40"
+          />
+        </label>
+        )}
 
         {/* PPV */}
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handlePpvToggle(!isPPV)}>

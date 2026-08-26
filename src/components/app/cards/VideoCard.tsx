@@ -29,7 +29,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil, Rocket } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil, Rocket, Star } from 'lucide-react';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
@@ -74,7 +74,12 @@ import { AudioVisualizer } from '../audio';
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
-import { isHoldGated } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
+
+/** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
+const SubscriberGateDrawer = lazy(() =>
+  import('./SubscriberGateDrawer').then((m) => ({ default: m.SubscriberGateDrawer }))
+);
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
@@ -846,7 +851,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice)) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
             const vid = videoRef.current;
             if (vid) {
               // Fast fling race: the media-attach state may not have
@@ -876,7 +881,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 setIsLoading(false);
               });
             }
-          } else if (entry.isIntersecting && !isPlayingRef.current && !video.videoUrl && video.soundtrackUrl && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice))) {
+          } else if (entry.isIntersecting && !isPlayingRef.current && !video.videoUrl && video.soundtrackUrl && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false))) {
             // Auto-play soundtrack for image posts with attached sound
             isPlayingRef.current = true;
             setIsPlaying(true);
@@ -894,7 +899,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
     };
-  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.videoUrl]);
+  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl]);
 
   // Show controls briefly after any user interaction, then auto-hide
   const showControlsBriefly = useCallback(() => {
@@ -913,11 +918,18 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const [locallyUnlocked, setLocallyUnlocked] = useState(false);
+  const [locallySubscribed, setLocallySubscribed] = useState(false);
+  const [showSubDrawer, setShowSubDrawer] = useState(false);
   const storedUnlocked = isTokenUnlocked(video.id);
   const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked || locallyUnlocked || storedUnlocked);
   const isPPVLocked = !!video.isPPV && !canBypassGating;
   const isBountyLocked = false; // W2E content is free to watch; bounty rewards first X viewers/commenters
   const isHoldingsLocked = isHoldGated(video.isLocked, video.lockedPrice) && !canBypassGating;
+  // A separate gate: subscribe to this creator, rather than own a token.
+  const isSubGated = isSubscriberGated(video.subscriberPlans, !!isOwnPost || !!video.isOwner || locallySubscribed);
+  const cheapestPlan = video.subscriberPlans?.length
+    ? video.subscriberPlans.reduce((a, b) => (Number(b.price) < Number(a.price) ? b : a))
+    : undefined;
   const isComboLocked = isPPVLocked && isHoldingsLocked;
   // Independent of the monetisation gates above: a post can be both mature and
   // pay-per-view, and the creator's own post is warned about too — the warning
@@ -925,7 +937,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const matureGate = useMatureGate(video.contentRating);
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
-  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || matureGate.isGated;
+  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
 
 
   const handlePlayClick = useCallback(() => {
@@ -1805,10 +1817,36 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               
             </div>
           </>
+        ) : isSubGated ? (
+          <>
+            {/* Subscriber gate — subscribe to this creator. Not the holdings
+                gate below, which anyone can satisfy by buying tokens. */}
+            <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
+              onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
+              onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                const start = (e.currentTarget as any)._touchStart;
+                if (!start) return;
+                const touch = e.changedTouches[0];
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowSubDrawer(true); }
+              }}
+            >
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                <Star className="h-7 w-7 text-white" />
+              </div>
+              <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
+              <p className="text-white/70 text-xs">
+                {cheapestPlan ? `Subscribe from ${formatCompact(Number(cheapestPlan.price))} DHB` : `Subscribe to ${video.channel}`}
+              </p>
+            </div>
+          </>
         ) : isHoldingsLocked ? (
           <>
             <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
-            <div 
+            <div
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
@@ -2580,6 +2618,27 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </LiquidGlassBubble>
               </div>
             </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Subscriber sheet — a different gate to the holdings one below. */}
+      {isSubGated && (
+        <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
+              <SubscriberGateDrawer
+                creatorAddress={video.creatorId || ""}
+                creatorName={video.channel}
+                previewPlans={video.subscriberPlans}
+                onSubscribed={() => {
+                  setLocallySubscribed(true);
+                  setShowSubDrawer(false);
+                  queryClient.invalidateQueries({ queryKey: ["unified-feed"] });
+                  queryClient.invalidateQueries({ queryKey: ["dehub-feed"] });
+                }}
+              />
+            </Suspense>
           </DrawerContent>
         </Drawer>
       )}

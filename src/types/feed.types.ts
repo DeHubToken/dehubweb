@@ -10,6 +10,7 @@
 import type { User } from './app.types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 import type { ContentRating } from '@/lib/api/dehub/types';
+import type { SubscriberPlan } from '@/lib/content-gate';
 
 /**
  * Content type badge variants for universal card headers
@@ -103,6 +104,11 @@ export interface TextPost extends BaseFeedItem {
   lockedTokenAddress?: string;
   /** Locked: chain the hold token lives on. Absent means Base. */
   lockedChainId?: number;
+  /**
+   * The creator's subscription plans that unlock this post. Empty or absent
+   * means the post is not subscriber-gated — see lib/content-gate.
+   */
+  subscriberPlans?: SubscriberPlan[];
   /** Whether the current viewer is the content owner */
   isOwner?: boolean;
   /** Whether the content has been unlocked for the current viewer (purchased/earned) */
@@ -172,6 +178,11 @@ export interface VideoItem extends BaseFeedItem {
   lockedTokenAddress?: string;
   /** Locked: chain the hold token lives on. Absent means Base. */
   lockedChainId?: number;
+  /**
+   * The creator's subscription plans that unlock this post. Empty or absent
+   * means the post is not subscriber-gated — see lib/content-gate.
+   */
+  subscriberPlans?: SubscriberPlan[];
   /** Bounty: number of viewers to reward */
   bountyViews?: number;
   /** Bounty: number of commenters to reward */
@@ -284,6 +295,11 @@ export interface ImagePost extends BaseFeedItem {
   lockedTokenAddress?: string;
   /** Locked: chain the hold token lives on. Absent means Base. */
   lockedChainId?: number;
+  /**
+   * The creator's subscription plans that unlock this post. Empty or absent
+   * means the post is not subscriber-gated — see lib/content-gate.
+   */
+  subscriberPlans?: SubscriberPlan[];
   /** Bounty: number of viewers to reward */
   bountyViews?: number;
   /** Bounty: number of commenters to reward */
