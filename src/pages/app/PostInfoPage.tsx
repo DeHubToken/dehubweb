@@ -153,7 +153,11 @@ export default function PostInfoPage() {
   const ppvCurrency = nftInfo?.ppv_currency || 'DHB';
   const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPV ? postId : undefined);
 
-  // Fetch tips for this specific post from tip_records
+  // Fetch tips for this specific post from tip_records. Floored against the
+  // backend's own totalTips: tip_records is only ever written by a client
+  // after it confirms its own send, so a tip whose confirmation step failed
+  // to persist (see read-tip-transaction.ts) silently never lands a row here
+  // — the backend's total doesn't have that gap.
   const { data: postTipTotal = 0 } = useQuery({
     queryKey: ['post-tips', postId],
     queryFn: async () => {
@@ -161,8 +165,8 @@ export default function PostInfoPage() {
         .from('tip_records')
         .select('amount')
         .eq('token_id', postId!);
-      if (error || !data) return 0;
-      return data.reduce((sum, r) => sum + Number(r.amount), 0);
+      const recorded = (error || !data) ? 0 : data.reduce((sum, r) => sum + Number(r.amount), 0);
+      return Math.max(recorded, nftInfo?.totalTips ?? 0);
     },
     enabled: !!postId,
     staleTime: 2 * 60 * 1000,

@@ -473,7 +473,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const [pollMultiple, setPollMultiple] = useState(false);
   const [pollExpiry, setPollExpiry] = useState('');
   const createPollMutation = useCreatePoll();
-  const { data: tipCount = 0 } = usePostTipCount(post.id);
+  const { data: tipCount = 0 } = usePostTipCount(post.id, post.totalTips);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();

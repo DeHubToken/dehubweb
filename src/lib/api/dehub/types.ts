@@ -146,6 +146,10 @@ export interface DeHubNFT {
   commentCount?: number;
   comment_count?: number;
   totalVotes?: { for?: number; against?: number };
+  /** Backend-computed total DHB tipped on this post — authoritative, unlike the
+   *  client-side tip_records tally (see usePostTipCount), which can undercount
+   *  if a tip's post-send confirmation step failed to persist. */
+  totalTips?: number;
   likes?: number;
   dislikes?: number;
   like_count?: number;
