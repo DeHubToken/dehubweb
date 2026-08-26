@@ -380,10 +380,15 @@ export default function MessagesPage() {
   }, [chatParamPresent, isMessagesRouteActive]);
 
   // The in-app arrow has to CONSUME the entry we pushed, or it is left dangling
-  // and the next Back walks straight back into the chat.
+  // and the next Back walks straight back into the chat. Don't clear the ref
+  // here — navigate(-1)'s popstate is async, so clearing it early loses the
+  // race with the effect above: it'd see chatEntryRef already false, skip
+  // clearing the selection, and the push effect would immediately re-push
+  // '?chat=1' since chatOpen was still true — undoing the back nav and
+  // forcing a second tap. Leave it true and let that effect reset it once
+  // the URL actually changes.
   const closeChat = useCallback(() => {
     if (chatEntryRef.current) {
-      chatEntryRef.current = false;
       navigate(-1);
       return;
     }
