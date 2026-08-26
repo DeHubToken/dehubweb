@@ -12,10 +12,10 @@
  * every open — a listing can sit in the grid for days and the seller can
  * reprice it. Nothing here computes an amount.
  *
- * There is no network picker. The payment rides the chain the wallet is already
- * on, falling back to Base, so the drawer only reports which one that is —
- * still worth saying out loud before somebody spends, but not a decision to
- * hand them.
+ * There is no network picker. The payment goes out on whichever chain the
+ * buyer's DHB is actually sitting on, Base first, so the drawer only reports
+ * which one that is — still worth saying out loud before somebody spends, but
+ * not a decision to hand them.
  */
 
 import { useEffect, useState } from 'react';
@@ -25,7 +25,8 @@ import { ArrowRight, Loader2, ShieldCheck, Share2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { useAuth } from '@/contexts/AuthContext';
-import { resolvePayChain, useBuyUsername } from '@/hooks/use-username-market';
+import { useBuyUsername } from '@/hooks/use-username-market';
+import { usePayChain } from '@/hooks/use-pay-chain';
 import { SUPPORTED_CHAINS } from '@/components/app/ChainSelector';
 import type { UsernameListing, UsernameQuote } from '@/lib/api/dehub/username-market';
 
@@ -37,10 +38,11 @@ interface Props {
 
 export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const { getQuote, buy, stage, walletChainId } = useBuyUsername();
+  const { getQuote, buy, stage } = useBuyUsername();
   const [quote, setQuote] = useState<UsernameQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const payChain = usePayChain(quote?.priceDhb, quote?.chains.map(c => c.chainId));
 
   const isOwn = !!walletAddress && walletAddress.toLowerCase() === listing?.seller.address.toLowerCase();
   const listingId = listing?.id;
@@ -67,8 +69,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
   if (!listing) return null;
 
   const busy = stage === 'paying' || stage === 'confirming';
-  const payChainId = resolvePayChain(walletChainId, quote?.chains);
-  const payChain = SUPPORTED_CHAINS.find(c => c.id === payChainId);
+  const payChainMeta = SUPPORTED_CHAINS.find(c => c.id === payChain?.chainId);
 
   const handleBuy = async () => {
     if (!isAuthenticated) return openLoginModal();
@@ -125,10 +126,12 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
             )}
 
             {/* Network — reported, not chosen. */}
-            {quote && payChain && (
+            {payChainMeta && (
               <p className="text-xs text-zinc-500 flex items-center gap-2">
-                <img src={payChain.icon} alt="" className="w-4 h-4 rounded-full" />
-                Paying with DHB on {payChain.name}
+                <img src={payChainMeta.icon} alt="" className="w-4 h-4 rounded-full" />
+                {payChain?.covered
+                  ? `Paying with DHB on ${payChainMeta.name}`
+                  : `You are short of DHB — this will be paid on ${payChainMeta.name}`}
               </p>
             )}
 

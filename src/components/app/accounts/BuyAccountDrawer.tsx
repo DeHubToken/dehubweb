@@ -13,6 +13,10 @@
  * The price is quoted by the server when the drawer opens and re-quoted on
  * every open — a listing can sit in the list for days and the seller can
  * reprice it. Nothing here computes an amount.
+ *
+ * There is no network picker either. The payment goes out on whichever chain
+ * the buyer's DHB is actually sitting on, Base first, so the drawer only
+ * reports which one that is.
  */
 
 import { useEffect, useState } from 'react';
@@ -26,7 +30,8 @@ import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBuyAccount, useCheckReceiveAddress } from '@/hooks/use-account-market';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import { SUPPORTED_CHAINS, type ChainId } from '@/components/app/ChainSelector';
+import { usePayChain } from '@/hooks/use-pay-chain';
+import { SUPPORTED_CHAINS } from '@/components/app/ChainSelector';
 import { accountSince, compactCount } from './AccountCard';
 import type { AccountListing, AccountQuote, ReceiveCheck } from '@/lib/api/dehub/account-market';
 
@@ -44,11 +49,11 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
   const checkReceive = useCheckReceiveAddress();
   const [quote, setQuote] = useState<AccountQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
-  const [chainId, setChainId] = useState<ChainId>(8453);
   const [shareOpen, setShareOpen] = useState(false);
   const [deliverToSelf, setDeliverToSelf] = useState(false);
   const [receiveAddress, setReceiveAddress] = useState('');
   const [check, setCheck] = useState<ReceiveCheck | null>(null);
+  const payChain = usePayChain(quote?.priceDhb, quote?.chains.map(c => c.chainId));
 
   const isOwn = !!walletAddress && walletAddress.toLowerCase() === listing?.seller.address.toLowerCase();
   const listingId = listing?.id;
@@ -103,9 +108,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
   if (!listing) return null;
 
   const busy = stage === 'paying' || stage === 'confirming';
-  const payableChains = SUPPORTED_CHAINS.filter(c =>
-    (quote?.chains || []).some(q => q.chainId === c.id),
-  );
+  const payChainMeta = SUPPORTED_CHAINS.find(c => c.id === payChain?.chainId);
   const since = accountSince(listing.seller.accountCreatedAt);
 
   const usingSelf = deliverToSelf && !!quote?.selfReceivable;
@@ -122,7 +125,6 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
     const result = await buy
       .mutateAsync({
         quote,
-        chainId,
         receiveAddress: usingSelf ? undefined : debouncedAddress,
       })
       .catch(() => null);
@@ -222,28 +224,14 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
               </div>
             )}
 
-            {/* Network */}
-            {payableChains.length > 1 && (
-              <div>
-                <p className="text-xs text-zinc-500 mb-2">Pay with DHB on</p>
-                <div className="flex gap-2">
-                  {payableChains.map(chain => (
-                    <button
-                      key={chain.id}
-                      disabled={busy}
-                      onClick={() => setChainId(chain.id as ChainId)}
-                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors disabled:opacity-50 ${
-                        chainId === chain.id
-                          ? 'border-white/60 bg-white/10 text-white'
-                          : 'border-white/10 bg-white/5 text-zinc-400'
-                      }`}
-                    >
-                      <img src={chain.icon} alt="" className="w-4 h-4" />
-                      {chain.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {/* Network — reported, not chosen. */}
+            {payChainMeta && (
+              <p className="text-xs text-zinc-500 flex items-center gap-2">
+                <img src={payChainMeta.icon} alt="" className="w-4 h-4 rounded-full" />
+                {payChain?.covered
+                  ? `Paying with DHB on ${payChainMeta.name}`
+                  : `You are short of DHB — this will be paid on ${payChainMeta.name}`}
+              </p>
             )}
 
             {quoteError && (
