@@ -81,7 +81,10 @@
           // user, so the sb-* session is checked by SHAPE across all keys — the
           // project ref is a build-time value, the key can be relocated, and
           // supabase-js chunks a large session across `.0`/`.1`.
-          if (location.pathname === '/') {
+          // Desktop only — the blur read as an unexplained delay on mobile
+          // first load with no payoff. 767px matches the mobile breakpoint
+          // used elsewhere in index.css.
+          if (location.pathname === '/' && window.innerWidth > 767) {
             var skip = localStorage.getItem('dehub.introFrostSeen') === '1'
                     || localStorage.getItem('dehub.homeIntroDismissed') === '1';
             if (!skip) {
