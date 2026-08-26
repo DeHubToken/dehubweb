@@ -54,6 +54,12 @@ interface VideoSlideProps {
    * a new caller has to opt in deliberately.
    */
   allowFullscreen?: boolean;
+  /**
+   * Fade the slide's own chrome out with the viewer's. The fullscreen control
+   * lives here but sits in the same row as the viewer's mute button, so the two
+   * have to clear together or the row half-disappears.
+   */
+  chromeHidden?: boolean;
 }
 
 export const VideoSlide = memo(function VideoSlide({
@@ -70,6 +76,7 @@ export const VideoSlide = memo(function VideoSlide({
   letterbox = false,
   preload,
   allowFullscreen = false,
+  chromeHidden = false,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
@@ -461,9 +468,17 @@ export const VideoSlide = memo(function VideoSlide({
             toggleFullscreen();
           }}
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-          className="absolute top-3 right-3 z-30 h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+          // `right-[3.75rem]` parks this immediately left of the viewer's mute
+          // button (w-10 at right-3, so it ends 3.25rem in) with a 0.5rem gap.
+          // Both used to sit at `top-3 right-3` in separate stacking parents,
+          // so this one covered the mute button exactly and the pair read as a
+          // single control. Sizes match for the same reason.
+          className={cn(
+            "absolute top-3 right-[3.75rem] z-30 h-10 w-10 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 transition-opacity duration-300",
+            chromeHidden && "opacity-0 pointer-events-none",
+          )}
         >
-          {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+          {isFullscreen ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />}
         </button>
       )}
 
