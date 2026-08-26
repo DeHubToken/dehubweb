@@ -48,6 +48,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
+import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -239,6 +240,45 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const wheelAccumRef = useRef(0);
   const wheelSettleTimer = useRef<ReturnType<typeof setTimeout>>();
   const isMobile = useIsMobile();
+
+  /**
+   * Immersive fullscreen (desktop).
+   *
+   * The element that goes fullscreen is the VIDEO CONTAINER, not the <video>
+   * and not a slide: everything the viewer needs — mute, the action bar, the
+   * creator block, the seek strip — is inside that container, and only what
+   * lives inside the fullscreened element paints in the top layer. Fullscreening
+   * anything smaller returns a bare video with every control stranded on the
+   * hidden page below.
+   *
+   * The hook is handed NO video on purpose. Given one it prefers
+   * `video.webkitEnterFullscreen()`, the single path that cannot carry chrome
+   * (iOS fullscreens the media element itself, controls and all replaced by the
+   * system player). Fullscreen here is desktop-only, so the container path is
+   * the only one that should ever run.
+   */
+  const fullscreenTargetRef = useRef<HTMLDivElement>(null);
+  const noVideoRef = useRef<HTMLVideoElement>(null);
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(noVideoRef, fullscreenTargetRef, {
+    // Unlike a slide, this container has no transformed ancestor — the
+    // carousel's translateY is a *descendant* of it — so the simulated
+    // fallback's `fixed inset-0` resolves against the viewport and lands
+    // correctly. WebViews that fake the Fullscreen API get immersive mode too
+    // rather than a dead button.
+    allowSimulated: true,
+  });
+
+  /**
+   * Radix portals every modal and drawer to <body>, which is *outside* the
+   * fullscreened element — in the top layer nothing else on the page paints, so
+   * a tip sheet opened from fullscreen would be perfectly invisible. Drop out
+   * first and open it over the normal viewer.
+   */
+  const leaveFullscreenThen = useCallback((open: () => void) => {
+    if (isFullscreen) toggleFullscreen();
+    open();
+  }, [isFullscreen, toggleFullscreen]);
+
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   // What one reaction from this viewer counts for — their badge multiplier.
@@ -711,7 +751,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return;
       if (e.key === 'ArrowDown' || e.key === 'j') goToNext();
       else if (e.key === 'ArrowUp' || e.key === 'k') goToPrev();
-      else if (e.key === 'Escape') onClose();
+      else if (e.key === 'Escape') {
+        // Esc steps back one level, it does not close everything: from
+        // fullscreen it returns to the windowed viewer. Browsers normally
+        // swallow the key themselves to exit native fullscreen, so in practice
+        // this branch covers the simulated path and the race where both fire.
+        if (isFullscreen) toggleFullscreen();
+        else onClose();
+      }
+      else if (e.key === 'f') toggleFullscreen();
       else if (e.key === 'm') setIsMuted(prev => !prev);
       else if (e.key === ' ') {
         e.preventDefault();
@@ -721,7 +769,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToNext, goToPrev, onClose]);
+  }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen]);
 
   // Handle drag for visual feedback during swipe
   const handleDrag = useCallback((_: any, info: PanInfo) => {
@@ -1050,8 +1098,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         
         {/* Left Side - Desktop Only: prev/next navigation. The action buttons
             now live in a horizontal bar across the bottom of the video (feed
-            post card style) instead of a side panel. */}
-        {!isMobile && (
+            post card style) instead of a side panel.
+            Dropped in fullscreen: it is a sibling of the fullscreened container,
+            so it could not paint there anyway, and the immersive view carries
+            its own pair over the video. */}
+        {!isMobile && !isFullscreen && (
           <div className="w-[60px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-3">
             <button
               onClick={goToPrev}
@@ -1075,12 +1126,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             On mobile, when comments are open it shrinks to the top half so the
             comments panel below can take the bottom half (Instagram-style split). */}
         <motion.div
+          ref={fullscreenTargetRef}
           data-media-full
           className={cn(
             "relative overflow-hidden",
             isMobile
               ? "w-full shrink-0 bg-black"
-              : "shrink-0 h-[calc(100vh-80px)] max-h-[640px] aspect-[9/16] w-auto bg-zinc-900 rounded-none md:rounded-2xl"
+              : isFullscreen
+                // Native fullscreen already forces width/height/max-* to fill
+                // the screen with `!important` UA rules, so these classes are
+                // really for the simulated path — but they also drop the 9:16
+                // lock, which is the point: a landscape short stops being
+                // letterboxed inside a phone-shaped box and runs the full width
+                // of the display.
+                ? "fixed inset-0 z-[70] w-screen h-screen max-h-none rounded-none bg-black"
+                : "shrink-0 h-[calc(100vh-80px)] max-h-[640px] aspect-[9/16] w-auto bg-zinc-900 rounded-none md:rounded-2xl"
           )}
           animate={isMobile ? { height: showComments ? '42%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
@@ -1134,10 +1194,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
                       letterbox={!isMobile}
-                      // Desktop only: this viewer is already `fixed inset-0` on
-                      // mobile, so the short fills the screen there and a
-                      // fullscreen control would do nothing visible.
-                      allowFullscreen={!isMobile}
+                      // The button sits on the video, but the thing that goes
+                      // fullscreen is this viewer's container — that is what
+                      // carries the mute button, the action bar and the creator
+                      // block into the top layer with it. Desktop only: the
+                      // viewer is already `fixed inset-0` on mobile, so a
+                      // fullscreen control there would do nothing visible.
+                      isFullscreen={isFullscreen}
+                      onToggleFullscreen={isMobile || !isActive ? undefined : toggleFullscreen}
                       // Its fullscreen control shares the top-right row with
                       // the mute button below, so the two clear together.
                       chromeHidden={!isMobile && chromeHidden}
@@ -1178,12 +1242,47 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
               <div
                 className={cn(
-                  "absolute inset-x-0 bottom-0 z-10 pb-4 pointer-events-none transition-opacity duration-300",
+                  "absolute inset-x-0 bottom-0 z-10 pb-4 pointer-events-none transition-[opacity,padding] duration-300",
                   chromeHidden && "opacity-0",
+                  // Keep the bar clear of the comments rail, or its right-hand
+                  // half (share, comments, like) ends up underneath it.
+                  isFullscreen && showComments && "pr-[420px]",
                 )}
               >
-                {/* Bottom gradient so the bar reads over bright video */}
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                {/* Bottom gradient so the bar reads over bright video. Taller in
+                    fullscreen, where the creator block sits above the bar. */}
+                <div className={cn(
+                  "absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent",
+                  isFullscreen ? "h-72" : "h-24",
+                )} />
+
+                {/* Creator + description, fullscreen only. Windowed, both live
+                    in the right-hand panel; fullscreen drops that panel, and a
+                    short with no author on it is just a clip. */}
+                {isFullscreen && (
+                  <div className={cn(
+                    "relative px-4 pb-3 max-w-3xl",
+                    chromeHidden ? "pointer-events-none" : "pointer-events-auto",
+                  )}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <button onClick={() => handleNavigateToProfile()} className="flex-shrink-0">
+                        <Avatar className="w-11 h-11 rounded-xl border-2 border-white/20" key={currentShort.avatar || currentShort.id}>
+                          <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                          <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                      </button>
+                      <button onClick={() => handleNavigateToProfile()} className="flex flex-col items-start text-left min-w-0">
+                        {currentShort.displayName && (
+                          <span className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</span>
+                        )}
+                        <span className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
+                      </button>
+                    </div>
+                    {currentShort.description && (
+                      <ExpandableDescription text={currentShort.description} />
+                    )}
+                  </div>
+                )}
 
                 <div
                   className={cn(
@@ -1199,7 +1298,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
                   {/* Tip */}
                   <button
-                    onClick={() => setShowTipModal(true)}
+                    onClick={() => leaveFullscreenThen(() => setShowTipModal(true))}
                     className="flex items-center gap-1"
                     aria-label="Tip"
                   >
@@ -1226,13 +1325,26 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
                   {/* Share */}
                   <button
-                    onClick={() => setShareSheetOpen(true)}
+                    onClick={() => leaveFullscreenThen(() => setShareSheetOpen(true))}
                     className="flex items-center gap-1"
                     aria-label="Share"
                   >
                     <Share2 className="w-5 h-5 text-white drop-shadow-lg" />
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(displayShareCount)}</span>
                   </button>
+
+                  {/* Comments, fullscreen only — windowed, the panel beside the
+                      video already holds them, and that panel is gone here. */}
+                  {isFullscreen && (
+                    <button
+                      onClick={() => { setCommentsInitialTab('replies'); setShowComments(v => !v); }}
+                      className="flex items-center gap-1"
+                      aria-label="Comments"
+                    >
+                      <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
+                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
+                    </button>
+                  )}
 
                   {/* Like — furthest right, like feed cards */}
                   <span className="relative flex items-center">
@@ -1281,6 +1393,85 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   </span>
                 </div>
               </div>
+            </>
+          )}
+
+          {/* Fullscreen-only chrome. Everything below is a CHILD of the
+              container that goes fullscreen — the side panels and the close
+              button are siblings of it, so they cannot paint in the top layer
+              and the immersive view has to carry its own. */}
+          {!isMobile && isFullscreen && (
+            <>
+              {/* Prev / next over the video, replacing the side column. Wheel,
+                  arrow keys and j/k all still work; this is the visible one.
+                  Left, not right: the comments rail comes in from the right and
+                  would sit straight on top of them. */}
+              <div
+                className={cn(
+                  "absolute left-3 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-3 transition-opacity duration-300",
+                  chromeHidden && "opacity-0 pointer-events-none",
+                )}
+              >
+                <button
+                  onClick={goToPrev}
+                  disabled={currentIndex === 0}
+                  className="w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors"
+                  aria-label="Previous short"
+                >
+                  <ChevronUp className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  onClick={goToNext}
+                  disabled={currentIndex === shorts.length - 1}
+                  className="w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors"
+                  aria-label="Next short"
+                >
+                  <ChevronDown className="w-5 h-5 text-white" />
+                </button>
+              </div>
+
+              {/* Comments as a rail over the video rather than beside it.
+                  `data-shorts-scrollable` is what stops the window-level wheel
+                  handler from turning a scroll through the thread into a jump
+                  to the next short. */}
+              <AnimatePresence>
+                {showComments && currentShort?.id && (
+                  <motion.div
+                    key="fullscreen-comments"
+                    data-shorts-scrollable
+                    initial={{ x: '100%', opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: '100%', opacity: 0 }}
+                    transition={SMOOTH_TRANSITION}
+                    // Starts below the top control row on purpose: run it to
+                    // `top-0` and it covers the mute and fullscreen buttons, so
+                    // the only way back out of fullscreen is the Esc key.
+                    className="absolute top-16 right-0 bottom-0 z-30 w-full max-w-[420px] flex flex-col bg-black/60 backdrop-blur-[24px] border-l border-t border-white/[0.08] rounded-tl-2xl overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 border-b border-white/[0.08]">
+                      <span className="text-white font-semibold text-sm">Comments</span>
+                      <button
+                        onClick={() => setShowComments(false)}
+                        className="w-8 h-8 rounded-lg bg-white/[0.08] hover:bg-white/15 flex items-center justify-center transition-colors"
+                        aria-label="Close comments"
+                      >
+                        <X className="w-4 h-4 text-white/70" />
+                      </button>
+                    </div>
+                    <div
+                      className="flex-1 min-h-0 px-1 [&>div]:h-full [&>div]:min-h-0 [&>div]:max-h-none [&>div]:mt-0 [&>div]:p-0"
+                      style={{ overscrollBehavior: 'contain' }}
+                    >
+                      <CommentsSection
+                        tokenId={currentShort.id}
+                        onClose={() => setShowComments(false)}
+                        initialTab={commentsInitialTab}
+                        embedded
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </>
           )}
 
@@ -1517,8 +1708,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           </AnimatePresence>
         )}
 
-        {/* Right Side Panel - Desktop Only: Creator info and comments */}
-        {!isMobile && (
+        {/* Right Side Panel - Desktop Only: Creator info and comments.
+            Fullscreen drops it — it is a sibling of the fullscreened container
+            and could not paint there — and moves both onto the video instead. */}
+        {!isMobile && !isFullscreen && (
           <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
             {/* Creator Info - Top */}
             <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
