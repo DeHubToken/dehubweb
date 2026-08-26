@@ -535,7 +535,8 @@
     "activityLog": "활동 로그",
     "endStream": "방송 종료",
     "linkCopied": "링크 복사됨",
-    "postUrlCopied": "게시물 URL 복사됨"
+    "postUrlCopied": "게시물 URL 복사됨",
+    "boostPost": "게시물 부스트"
   },
   "filters": {
     "sort": "정렬",
@@ -711,7 +712,8 @@
     "ppvStartSaving": "좋아하는 크리에이터의 유료(Pay-Per-View) 콘텐츠를 구매하면 여기에 표시됩니다.",
     "recentStartSaving": "가장 최근에 북마크한 게시물이 여기에 표시됩니다.",
     "textStartSaving": "텍스트 전용 게시물을 북마크하면 여기에 표시됩니다.",
-    "videosStartSaving": "동영상이 포함된 게시물을 북마크하면 여기에 모입니다."
+    "videosStartSaving": "동영상이 포함된 게시물을 북마크하면 여기에 모입니다.",
+    "folders": "폴더"
   },
   "notifications": {
     "title": "알림",
@@ -1726,5 +1728,49 @@
       "startTerm": "기록",
       "start": "— \"전체 기간\"은 Cloudflare가 아직 보관 중인 모든 날을 뜻하며, 오늘 기준으로 dehub.io가 Cloudflare로 옮긴 {{date}}부터 {{days}}일입니다. 그 이전의 엣지 데이터는 없고, 오래된 날짜는 Cloudflare가 만료시키면서 사라집니다."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "누구의 팔로워에게 보여줄까요?",
+    "aimAtTiers": "어떤 배지 등급에 보여줄까요?",
+    "aimPlaceholder": "사용자 이름 또는 지갑 주소",
+    "boost": "부스트",
+    "boostBooked": "{{minutes}}분 동안 부스트됨",
+    "boostExplainer": "회원님의 시간대 동안 이 게시물을 홈 피드 맨 위 자리에 올립니다.",
+    "boostFailed": "그 게시물을 부스트하지 못했습니다",
+    "boostForMinutes": "{{minutes}}분 동안 부스트",
+    "boostedLabel": "부스트됨",
+    "boostsLeft": "부스트 {{total}}회 중 {{left}}회 남음",
+    "cancelFailed": "그 부스트를 취소하지 못했습니다",
+    "cancelledRefunded": "부스트를 취소하고 사용 가능 횟수로 돌려놓았습니다",
+    "cancelledSpent": "부스트를 취소했습니다. 이미 시작되어 사용한 것으로 남습니다.",
+    "colBoosts": "부스트",
+    "colEach": "각각",
+    "colTier": "등급",
+    "colTotal": "주기당",
+    "comingSoon": "곧 제공",
+    "finishedCount": "이번 주기에 {{count}}회 종료, {{seen}}회 노출",
+    "grantLine": "주기당 {{boosts}}회 × {{minutes}}분",
+    "intro": "배지는 이름 옆 그림만 사는 것이 아닙니다. 2주마다 부스트를 지급하며, 한 번마다 게시물을 홈 피드 맨 위 자리에 올립니다. 13개 등급, 13가지 능력, 한 단계에 하나씩 해제됩니다.",
+    "ladderHeading": "각 등급이 주는 것",
+    "left": "남음",
+    "liveUntil": "{{time}}까지 노출",
+    "loadFailed": "지금은 SuperPowers를 불러오지 못했습니다. 잠시 후 다시 시도하세요.",
+    "minutes": "분",
+    "needBadge": "SuperPowers에는 스테이킹 배지가 필요합니다. DHB를 스테이킹해 해제하세요.",
+    "noBadgeYet": "아직 배지가 없어 부스트도 없습니다. DHB를 스테이킹하면 아래 사다리가 열립니다.",
+    "noBoostsLeft": "이번 주기에 남은 부스트가 없습니다",
+    "powersHeading": "열세 가지 능력",
+    "queued": "대기 중",
+    "refills": "{{date}}에 충전",
+    "refillsOn": "{{date}}에 충전됩니다 — 모두에게 같은 시각입니다.",
+    "secondWind": "세컨드 윈드",
+    "secondWindExplainer": "이 게시물은 일주일이 넘었습니다. 세컨드 윈드가 피드 맨 위로 되돌려 보냅니다.",
+    "seenCount": "{{count}}회 노출",
+    "shareOfVoice": "부스트 자리는 순환합니다. 여러 부스트가 동시에 진행되면 보는 사람마다 배지 등급으로 가중된 하나가 배정됩니다 — 등급이 높을수록 더 자주 노출되고, 모두가 부여받은 시간대를 얻습니다.",
+    "spendFor": "{{power}} {{minutes}}분",
+    "spent": "{{power}}이(가) {{minutes}}분 동안 진행 중",
+    "stakeDhb": "DHB 스테이킹",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}}은(는) {{tier}}에서 해제됩니다"
   }
 }
