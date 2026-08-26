@@ -19,8 +19,6 @@ const PostModal = React.lazy(() =>
 );
 import { useAuth } from '@/contexts/AuthContext';
 import { openStageModal } from '@/contexts/StageContext';
-import { ChainSelector, type ChainId } from './ChainSelector';
-import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 
 interface AppSidebarProps {
@@ -62,14 +60,6 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   useEffect(() => {
     if (isPostModalOpen) setPostModalMounted(true);
   }, [isPostModalOpen]);
-  const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
-    const stored = localStorage.getItem('preferred-chain-id');
-    return stored ? (Number(stored) as ChainId) : (BASE_CHAIN_ID as ChainId);
-  });
-  const handleChainChange = useCallback((id: ChainId) => {
-    setSelectedChainId(id);
-    localStorage.setItem('preferred-chain-id', String(id));
-  }, []);
   const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
 
   const mobileNavContent = (
@@ -166,11 +156,6 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
             </div>
           </LiquidGlassBubble>
           <div className="flex items-center justify-center gap-3">
-            <ChainSelector
-              selectedChainId={selectedChainId}
-              onChainChange={handleChainChange}
-              variant="icon"
-            />
             <button
               onClick={() => { onToggle(); disconnect(); }}
               className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
