@@ -40,6 +40,7 @@ import { isAllowedAttachment } from '@/lib/attachments';
 import {
   emitCreateAndStart,
   emitSendMessage,
+  waitForDmSocket,
   emitReadReceipt,
   onDmSendMessage,
   onEditMessage,
@@ -657,7 +658,18 @@ export function useSendMessage(conversationId: string) {
         });
       }
 
-      // Real conversation: emit via socket (fire and forget)
+      /*
+       * Confirm the socket is up BEFORE emitting. socket.io's emit does not
+       * throw on a dead client, so without this the mutation always "succeeded":
+       * the optimistic bubble stayed on screen looking delivered, onError never
+       * ran, and the composer had already been cleared. The message was gone
+       * with nothing shown anywhere. Throwing here is what makes the existing
+       * rollback and the caller's toast reachable at all.
+       */
+      await waitForDmSocket();
+
+      // Real conversation: emit via socket. The server echoes `sendMessage`
+      // back, and that echo is what reconciles the optimistic entry below.
       const payload: SendMessagePayload = {
         dmId: resolvedId,
         content,
