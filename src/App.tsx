@@ -164,6 +164,7 @@ const SuperPowersPage = React.lazy(() => import("./pages/app/SuperPowersPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkEditPage = React.lazy(() => import("./pages/app/WorkEditPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
+const WorkHistoryPage = React.lazy(() => import("./pages/app/WorkHistoryPage"));
 const BountyLegacyRedirect = React.lazy(() => import("./pages/app/BountyLegacyRedirect"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 // Eager import — the referral lander is a new user's first touch of DeHub and
@@ -585,6 +586,7 @@ function AppContent() {
               <Route path="work" element={null} />
               <Route path="work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
               <Route path="work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
+              <Route path="work/history" element={<Suspense fallback={<PageLoader />}><WorkHistoryPage /></Suspense>} />
               {/* A bounty's own URL is /bounty/<n> (work_jobs.job_number). The
                   /work/<uuid> pair below is the pre-numbers share form and
                   only redirects — see BountyLegacyRedirect. */}
@@ -610,6 +612,7 @@ function AppContent() {
             <Route path="/work" element={null} />
             <Route path="/work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
             <Route path="/work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
+            <Route path="/work/history" element={<Suspense fallback={<PageLoader />}><WorkHistoryPage /></Suspense>} />
             <Route path="/work/:jobKey" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect /></Suspense>} />
             <Route path="/work/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect suffix="/edit" /></Suspense>} />
 
