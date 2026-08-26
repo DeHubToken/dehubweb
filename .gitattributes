@@ -1,0 +1,5 @@
+# Normalize line endings to LF for every text file, regardless of what OS or
+# editor last touched it. Without this, a Windows checkout can flip an entire
+# file to CRLF with no real content change, and git reports it as a full
+# rewrite — every line inserted and deleted — which is what happened here.
+* text=auto eol=lf
