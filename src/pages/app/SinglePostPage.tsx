@@ -324,6 +324,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     isReposted: nft.isReposted ?? false,
     isQuotePost: !!nft.isQuotePost,
     quotedPost: nft.quotedPost || null,
+    communityAlertPending: (nft as any).communityAlertStatus === 'pending',
   };
 }
 

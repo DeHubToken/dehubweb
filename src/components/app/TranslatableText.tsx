@@ -84,6 +84,8 @@ interface TranslatableTextProps {
    * own, so the call site must provide the manual trigger.
    */
   auto?: boolean;
+  /** Post's link was flagged by the Community Alert threshold — border it like a highlighter instead of the plain 🔗 chip. */
+  flagged?: boolean;
 }
 
 /**
@@ -120,7 +122,14 @@ function EmailCopyInline({ email }: { email: string }) {
 /**
  * Renders text with URLs replaced by clickable link emojis and @mentions as profile links
  */
-export function renderTextWithLinks(text: string): ReactNode[] {
+export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }): ReactNode[] {
+  const flaggedLinkProps = opts?.flagged
+    ? {
+        className:
+          'inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10 border-2 border-red-500/80 rounded-md px-1 bg-red-500/10',
+        titleSuffix: ' — flagged by the community as a possible scam, pending review',
+      }
+    : null;
   const parts: ReactNode[] = [];
   let lastIndex = 0;
   
@@ -227,7 +236,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           <a
             key={`dehub-${dehubLink.path}-${match.index}`}
             href={dehubLink.path}
-            className="inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10"
+            className={flaggedLinkProps?.className ?? "inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10"}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -235,7 +244,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
             }}
             onPointerDown={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
-            title={url}
+            title={flaggedLinkProps ? `${url}${flaggedLinkProps.titleSuffix}` : url}
             data-no-navigate="true"
           >
             🔗
@@ -252,7 +261,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10"
+          className={flaggedLinkProps?.className ?? "inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10"}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -260,7 +269,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           }}
           onPointerDown={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
-          title={url}
+          title={flaggedLinkProps ? `${url}${flaggedLinkProps.titleSuffix}` : url}
           data-no-navigate="true"
         >
           🔗
@@ -870,6 +879,7 @@ export function TranslatableText({
   as: Component = 'span',
   hideControls = false,
   auto = true,
+  flagged = false,
 }: TranslatableTextProps) {
   const sharedCtx = useContext(SharedTranslationContext);
   const {
@@ -930,7 +940,7 @@ export function TranslatableText({
       key={isTranslated ? 'translated' : 'original'}
       className={cn("whitespace-pre-wrap animate-in fade-in duration-150", className)}
     >
-      {renderTextWithLinks(isTranslated ? translatedText : text)}
+      {renderTextWithLinks(isTranslated ? translatedText : text, { flagged })}
     </Component>
   );
 }
