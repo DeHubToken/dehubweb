@@ -54,6 +54,7 @@ import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
 import { mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { mapApiComment, type Comment, type VoiceNote } from '@/lib/comment-mapper';
+import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so
 // non-component consumers can share them. Re-exported here for the surfaces
@@ -588,6 +589,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
   const [commentImage, setCommentImage] = useState<File | null>(null);
   const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
+  // A GIF is already hosted (GIPHY), so unlike commentImage it needs no
+  // upload step — just the URL, carried straight through to comment_image.
+  const [commentGifUrl, setCommentGifUrl] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isInputExpanded, setIsInputExpanded] = useState(false);
@@ -866,6 +870,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       toast.error('Image must be under 10MB');
       return;
     }
+    setCommentGifUrl(null);
     setCommentImage(file);
     setCommentImagePreview(URL.createObjectURL(file));
   };
@@ -878,6 +883,21 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     setCommentImagePreview(null);
     if (imageInputRef.current) imageInputRef.current.value = '';
   };
+
+  const handleCommentEmojiSelect = (emoji: string) => {
+    const newVal = newComment + emoji;
+    setNewComment(newVal);
+    mention.handleInput(newVal, newVal.length);
+    inputRef.current?.focus();
+  };
+
+  const handleCommentGifSelect = (gifUrl: string) => {
+    removeCommentImage();
+    setCommentGifUrl(gifUrl);
+    setIsInputExpanded(true);
+  };
+
+  const removeCommentGif = () => setCommentGifUrl(null);
 
   const togglePreviewPlayback = () => {
     if (!voiceNote) return;
@@ -1139,7 +1159,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   };
 
   const handlePostComment = useCallback(async () => {
-    if ((!newComment.trim() && !voiceNote && !commentImage) || isSubmitting) return;
+    if ((!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl) || isSubmitting) return;
     
     if (!isAuthenticated || !user) {
       toast.error('Please log in to comment');
@@ -1173,11 +1193,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     setOptimisticComments(prev => [tempComment, ...prev]);
     const replyTarget = replyTo;
     const imageFile = commentImage;
+    const gifUrl = commentGifUrl;
     clearDraft(tokenId, replyTo?.id);
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
     removeCommentImage();
+    removeCommentGif();
     setIsInputExpanded(false);
     // Reset textarea inline height set by auto-resize
     if (inputRef.current) {
@@ -1198,6 +1220,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           tokenId: parseInt(tokenId, 10),
           audioFile: audioBlob,
           content: newComment || undefined,
+          parentId: replyTarget?.id,
+        });
+      } else if (gifUrl) {
+        // Already hosted on GIPHY's CDN — no upload step needed.
+        await addCommentWithImage({
+          tokenId: parseInt(tokenId, 10),
+          content: newComment,
+          imageUrl: gifUrl,
           parentId: replyTarget?.id,
         });
       } else if (imageFile) {
@@ -1234,9 +1264,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     } finally {
       setIsSubmitting(false);
     }
-  }, [newComment, voiceNote, commentImage, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply]);
+  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply]);
 
-  const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
+  const canPost = (newComment.trim() || voiceNote || commentImage || commentGifUrl) && !isSubmitting;
 
   // Drag-to-swipe for comments tab indicator (after all hooks)
   type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'search';
@@ -1763,6 +1793,24 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             </div>
           )}
 
+          {/* GIF preview */}
+          {commentGifUrl && (
+            <div className="mb-3 relative inline-block">
+              <img
+                src={commentGifUrl}
+                alt="GIF attachment"
+                className="max-h-32 rounded-xl object-cover"
+              />
+              <button
+                onClick={removeCommentGif}
+                data-keep-dark
+                className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-lg flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
           {/* Hidden file input */}
           <input
             ref={imageInputRef}
@@ -1818,7 +1866,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   onFocus={() => setIsInputExpanded(true)}
                   onBlur={() => {
                     // Collapse only if empty and no attachments
-                    if (!newComment.trim() && !voiceNote && !commentImage && !replyTo) {
+                    if (!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl && !replyTo) {
                       setTimeout(() => {
                         setIsInputExpanded(false);
                         if (inputRef.current) inputRef.current.style.height = '';
@@ -1888,6 +1936,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   >
                     <ImagePlus className="w-4 h-4" />
                   </button>
+                  <EmojiGifPicker
+                    onEmojiSelect={handleCommentEmojiSelect}
+                    onGifSelect={handleCommentGifSelect}
+                  />
                   {!voiceNote && (
                     <button
                       onClick={startRecording}
