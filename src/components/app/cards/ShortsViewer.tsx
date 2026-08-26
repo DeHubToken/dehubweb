@@ -14,7 +14,7 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
-import { useMuteAuthor } from '@/hooks/use-mute-author';
+import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -252,7 +252,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   useEffect(() => {
     setPlaybackRate(getPlaybackRateFor(currentShort?.creatorId));
   }, [currentShort?.creatorId]);
-  const { muteAuthor } = useMuteAuthor();
+  const { blockAuthor } = useBlockAuthor();
   // Who reacted what is the author's to see — the ⓘ in the reaction tray only
   // exists on your own shorts (and the API refuses the list to anyone else).
   const canViewReactionInfo = isOwnShort && !!currentShort?.id;
@@ -1734,7 +1734,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 onClick={() => {
                   if (!walletAddress) { openLoginModal(); return; }
                   if (!currentShort?.creatorId) return;
-                  muteAuthor(currentShort.creatorId, currentShort.displayName || currentShort.creatorUsername || undefined);
+                  blockAuthor(currentShort.creatorId, currentShort.displayName || currentShort.creatorUsername || undefined);
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >

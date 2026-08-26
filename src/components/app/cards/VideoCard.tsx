@@ -82,6 +82,7 @@ const SubscriberGateDrawer = lazy(() =>
 );
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
@@ -615,7 +616,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // metered connection isn't spent fetching 50MB clips the user hasn't asked for.
   const { liteMode } = useConnectionQuality();
   const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const { blockAuthor } = useBlockAuthor();
   const { muteAuthor } = useMuteAuthor();
+  const handleBlockCreator = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!video.creatorId) return;
+    setShowOptionsDrawer(false);
+    blockAuthor(video.creatorId, video.channel || undefined);
+  }, [walletAddress, openLoginModal, video.creatorId, video.channel, blockAuthor]);
   const handleMuteCreator = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
     if (!video.creatorId) return;
@@ -1660,6 +1668,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   </button>
                   {!isOwnPost && (
                     <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                      <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
+                    </button>
+                  )}
+                  {!isOwnPost && (
+                    <button onClick={handleBlockCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                       <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
                     </button>
                   )}
