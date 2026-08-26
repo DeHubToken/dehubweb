@@ -22,7 +22,10 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { GoLiveModal } from '@/components/app/modals';
 import { openStageModal } from '@/contexts/StageContext';
 import { StoryRecorderModal, StoryViewerModal, ShimmerBorder } from '@/components/app/stories';
-import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
+// Lazy for the same reason as the other call sites — see ShortsFeed.
+const ShortsViewer = lazy(() =>
+  import('@/components/app/cards/ShortsViewer').then(m => ({ default: m.ShortsViewer })),
+);
 // Lazy, and NOT through the @/features/post barrel: the composer is ~400 KB of
 // media handling, and the stories row renders on the home feed for everyone. A
 // static import here quietly undoes the same lazy boundary AppLayout sets up.
@@ -301,15 +304,17 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       )}
       
       {/* Shorts Viewer - opens when transitioning from stories */}
-      <AnimatePresence>
-        {isShortsViewerOpen && shorts.length > 0 && (
-          <ShortsViewer
-            shorts={shorts}
-            initialIndex={0}
-            onClose={() => setIsShortsViewerOpen(false)}
-          />
-        )}
-      </AnimatePresence>
+      <Suspense fallback={null}>
+        <AnimatePresence>
+          {isShortsViewerOpen && shorts.length > 0 && (
+            <ShortsViewer
+              shorts={shorts}
+              initialIndex={0}
+              onClose={() => setIsShortsViewerOpen(false)}
+            />
+          )}
+        </AnimatePresence>
+      </Suspense>
       
       {postModalMounted && (
         <Suspense fallback={null}>
