@@ -172,6 +172,8 @@ export interface DeHubNFT {
     isLockContent?: boolean;
     lockContentAmount?: number;
     lockContentTokenSymbol?: string;
+    lockContentContractAddress?: string;
+    lockContentChainIds?: number[];
     isPayPerView?: boolean;
     payPerViewAmount?: number;
     isAddBounty?: boolean;

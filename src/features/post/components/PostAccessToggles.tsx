@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Lock, Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins } from 'lucide-react';
+import { Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -20,8 +20,6 @@ import type { PostChainId } from '@/components/app/ChainSelector';
 import { getChainById } from '@/components/app/ChainSelector';
 
 interface PostAccessTogglesProps {
-  isSubscribersOnly: boolean;
-  setIsSubscribersOnly: (value: boolean) => void;
   isPPV: boolean;
   setIsPPV: (value: boolean) => void;
   ppvAmount: string;
@@ -72,8 +70,6 @@ interface PostAccessTogglesProps {
 }
 
 export function PostAccessToggles({
-  isSubscribersOnly,
-  setIsSubscribersOnly,
   isPPV,
   setIsPPV,
   ppvAmount,
@@ -455,16 +451,10 @@ export function PostAccessToggles({
           </div>
         )}
 
-        {/* Subscribers — EVM only */}
-        {!solanaChain && (
-        <label className="flex items-center justify-between py-0.5 cursor-pointer">
-          <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-white" />
-            <span className="text-sm text-white">Subscribers</span>
-          </div>
-          <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-white scale-75" />
-        </label>
-        )}
+        {/* A "Subscribers" switch used to sit here. Nothing on the post model
+            records a subscriber gate, so it wrote a hold gate with no amount —
+            a lock badge over an empty unlock sheet on a body the API served in
+            full. Token gating below does the same job with a number attached. */}
 
         {/* PPV */}
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handlePpvToggle(!isPPV)}>

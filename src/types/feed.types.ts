@@ -99,6 +99,10 @@ export interface TextPost extends BaseFeedItem {
   lockedPrice?: number;
   /** Locked: currency (DHB, USDC) */
   lockedCurrency?: string;
+  /** Locked: ERC-20 the hold is measured in. Absent means DHB. */
+  lockedTokenAddress?: string;
+  /** Locked: chain the hold token lives on. Absent means Base. */
+  lockedChainId?: number;
   /** Whether the current viewer is the content owner */
   isOwner?: boolean;
   /** Whether the content has been unlocked for the current viewer (purchased/earned) */
@@ -164,6 +168,10 @@ export interface VideoItem extends BaseFeedItem {
   lockedPrice?: number;
   /** Locked: currency (DHB, USDC) */
   lockedCurrency?: string;
+  /** Locked: ERC-20 the hold is measured in. Absent means DHB. */
+  lockedTokenAddress?: string;
+  /** Locked: chain the hold token lives on. Absent means Base. */
+  lockedChainId?: number;
   /** Bounty: number of viewers to reward */
   bountyViews?: number;
   /** Bounty: number of commenters to reward */
@@ -272,6 +280,10 @@ export interface ImagePost extends BaseFeedItem {
   lockedPrice?: number;
   /** Locked: currency (DHB, USDC) */
   lockedCurrency?: string;
+  /** Locked: ERC-20 the hold is measured in. Absent means DHB. */
+  lockedTokenAddress?: string;
+  /** Locked: chain the hold token lives on. Absent means Base. */
+  lockedChainId?: number;
   /** Bounty: number of viewers to reward */
   bountyViews?: number;
   /** Bounty: number of commenters to reward */

@@ -71,7 +71,6 @@ interface ActiveDraft {
   /** Absent on drafts saved before ratings existed, which read as safe. */
   isMature?: boolean;
   selectedCategory: string;
-  isSubscribersOnly: boolean;
   isPPV: boolean;
   ppvAmount: string;
   ppvCurrency: Currency;
@@ -250,7 +249,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   // Form state — initialize from saved draft if available
   const [text, setText] = useState(d?.text ?? '');
   const [media, setMedia] = useState<MediaFile[]>([]);
-  const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
   const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
   const [ppvAmount, setPpvAmount] = useState(d?.ppvAmount ?? '');
   // DHB, not USD: a USD-priced PPV ships with no contract address, and both
@@ -430,13 +428,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const persistDraft = () => {
       const draft: ActiveDraft = {
         text, titleText, showTitle, isMature,
-        selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+        selectedCategory, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
       };
       // Only save if there's meaningful content
       const hasContent = text.trim() || titleText.trim() ||
-        selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
+        selectedCategory || isPPV || isWatch2Earn || isTokenGated;
       if (hasContent) {
         saveActiveDraft(draft);
       } else {
@@ -450,7 +448,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
   }, [text, titleText, showTitle, isMature,
-    selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+    selectedCategory, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
 
@@ -978,7 +976,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     postAttemptRef.current = null;
     setText('');
     setMedia([]);
-    setIsSubscribersOnly(false);
     setIsPPV(false);
     setPpvAmount('');
     setPpvCurrency('USD');
@@ -1154,8 +1151,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       const postingOnSolana = isSolanaChain(chainId);
 
-      if (postingOnSolana && (isWatch2Earn || isSubscribersOnly)) {
-        toast.error('Bounty and subscribers are not available on Solana');
+      if (postingOnSolana && isWatch2Earn) {
+        toast.error('Bounty is not available on Solana');
         setIsPosting(false);
         return;
       }
@@ -1198,8 +1195,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         isAddBounty: false,
       };
 
-      const applyLockContent = (contract: string, symbol: string, lockChainId: number) => {
+      /**
+       * A hold gate is only ever written together with its amount. isLockContent
+       * without lockContentAmount is a condition nobody can satisfy and nobody
+       * can fail: readers show a lock badge over an unlock sheet with no button
+       * in it, while the API serves the body in full regardless.
+       */
+      const applyLockContent = (contract: string, symbol: string, lockChainId: number, amount: number) => {
         streamInfo.isLockContent = true;
+        streamInfo.lockContentAmount = amount;
         streamInfo.lockContentContractAddress = contract;
         streamInfo.lockContentTokenSymbol = symbol;
         streamInfo.lockContentChainIds = [lockChainId];
@@ -1231,12 +1235,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             setIsPosting(false);
             return;
           }
-          applyLockContent(contract, symbol, chainId);
-          streamInfo.lockContentAmount = amount;
+          applyLockContent(contract, symbol, chainId, amount);
         }
-      } else if (isSubscribersOnly && evmChainConfig?.dhbToken) {
-        applyLockContent(evmChainConfig.dhbToken, 'DHB', chainId);
       }
+      // The "Subscribers" switch used to sit here and call applyLockContent with
+      // no amount. There is no subscriber field on the post model for it to gate
+      // on, so it compiled to an amount-less hold gate — every post made with it
+      // is locked against nothing. Token gating above is the working equivalent
+      // and it asks for an amount.
 
       // PPV settings
       if (isPPV && ppvAmount) {
@@ -2078,7 +2084,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setUploadProgress(0);
     }
   }, [
-    text, media, isSubscribersOnly, isPPV, ppvAmount,
+    text, media, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
@@ -2091,7 +2097,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     state: {
       text,
       media,
-      isSubscribersOnly,
       isPPV,
       ppvAmount,
       ppvCurrency,
@@ -2125,7 +2130,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     actions: {
       setText,
       setMedia,
-      setIsSubscribersOnly,
       setIsPPV,
       setPpvAmount,
       setPpvCurrency,
