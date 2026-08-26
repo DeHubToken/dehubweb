@@ -87,6 +87,8 @@ export interface TextPost extends BaseFeedItem {
   quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
   /** Post categories */
   categories?: string[];
+  /** Community Alert tripped — border the link in the text, don't outline the whole card. */
+  communityAlertPending?: boolean;
 }
 
 /**

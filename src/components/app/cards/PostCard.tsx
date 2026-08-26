@@ -533,14 +533,14 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         <>
         {/* Title */}
         {post.title && (
-          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
         )}
         {/* auto={false}: the useTranslation above owns this post's translation
             and `bodyWithoutLinks` is already its output. Left on, TranslatableText
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText text={displayBody} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
+          <TranslatableText text={displayBody} className="text-white/90 text-sm sm:text-base" as="p" auto={false} flagged={post.communityAlertPending} />
         ) : null}
 
         {/* Quoted post embed (Twitter-style) */}
