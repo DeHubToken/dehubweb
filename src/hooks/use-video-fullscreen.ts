@@ -21,9 +21,42 @@ import type { RefObject } from 'react';
  * `document.fullscreenElement` is null, the caller pins its container with
  * `fixed inset-0 z-[9999]`. That is the only thing that works in a WebView.
  */
+/**
+ * Whether a real, native fullscreen is reachable in this browser.
+ *
+ * Callers that refuse the simulated fallback use this to decide whether to draw
+ * a control at all — a button that provably cannot do anything is worse than no
+ * button. Feature-detected off the prototype so it can be called during render,
+ * before any ref is attached.
+ */
+export function canNativeFullscreen(): boolean {
+  if (typeof document === 'undefined') return false;
+  return !!(
+    document.fullscreenEnabled ||
+    (document as any).webkitFullscreenEnabled ||
+    typeof (HTMLVideoElement.prototype as any).webkitEnterFullscreen === 'function'
+  );
+}
+
+export interface VideoFullscreenOptions {
+  /**
+   * Whether the caller can actually paint a simulated fullscreen.
+   *
+   * It pins the container with `fixed inset-0`, and **a transformed ancestor
+   * makes `fixed` resolve against that ancestor instead of the viewport**. The
+   * shorts carousel animates every slide with `translateY`, so a pinned slide
+   * would be laid out inside the moving wrapper and land somewhere arbitrary.
+   * Those callers pass `false` and get nothing rather than something broken —
+   * native fullscreen puts the element in the top layer, where no ancestor
+   * transform applies, so the real path is unaffected either way.
+   */
+  allowSimulated?: boolean;
+}
+
 export function useVideoFullscreen(
   videoRef: RefObject<HTMLVideoElement | null>,
   containerRef: RefObject<HTMLElement | null>,
+  { allowSimulated = true }: VideoFullscreenOptions = {},
 ) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -85,6 +118,7 @@ export function useVideoFullscreen(
 
     if (containerEl) {
       const activateSimulated = () => {
+        if (!allowSimulated) return;
         if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
           setIsFullscreen(true);
         }
@@ -104,8 +138,8 @@ export function useVideoFullscreen(
       }
     }
 
-    setIsFullscreen(true);
-  }, [isFullscreen, videoRef, containerRef]);
+    if (allowSimulated) setIsFullscreen(true);
+  }, [isFullscreen, videoRef, containerRef, allowSimulated]);
 
   return { isFullscreen, toggleFullscreen, setIsFullscreen };
 }
