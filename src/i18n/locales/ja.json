@@ -343,7 +343,8 @@
     "activityLog": "アクティビティログ",
     "endStream": "配信を終了",
     "linkCopied": "リンクがコピーされました",
-    "postUrlCopied": "投稿URLがコピーされました"
+    "postUrlCopied": "投稿URLがコピーされました",
+    "boostPost": "投稿をブースト"
   },
   "filters": {
     "sort": "並べ替え",
@@ -802,7 +803,8 @@
     "ppvStartSaving": "お気に入りのクリエイターのペイ・パー・ビューコンテンツを購入すると、ここに表示されます。",
     "recentStartSaving": "最近ブックマークした投稿がここに表示されます。",
     "textStartSaving": "テキストのみの投稿をブックマークすると、ここに表示されます。",
-    "videosStartSaving": "動画付きの投稿をブックマークすると、ここに集まります。"
+    "videosStartSaving": "動画付きの投稿をブックマークすると、ここに集まります。",
+    "folders": "フォルダ"
   },
   "notifications": {
     "title": "通知",
@@ -1724,5 +1726,49 @@
       "startTerm": "履歴",
       "start": "— 「全期間」とは Cloudflare がまだ保持しているすべての日を指し、現時点では dehub.io が Cloudflare へ移行した {{date}} から {{days}} 日間です。それ以前のエッジデータはなく、古い日は Cloudflare の保持期間切れとともに消えていきます。"
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "誰のフォロワーに見せますか？",
+    "aimAtTiers": "どのバッジ階層に見せますか？",
+    "aimPlaceholder": "ユーザー名またはウォレットアドレス",
+    "boost": "ブースト",
+    "boostBooked": "{{minutes}}分間ブースト中",
+    "boostExplainer": "あなたの時間枠のあいだ、この投稿をホームフィード最上部の枠に置きます。",
+    "boostFailed": "その投稿をブーストできませんでした",
+    "boostForMinutes": "{{minutes}}分間ブースト",
+    "boostedLabel": "ブースト済み",
+    "boostsLeft": "ブーストは残り{{total}}回中{{left}}回",
+    "cancelFailed": "そのブーストをキャンセルできませんでした",
+    "cancelledRefunded": "ブーストをキャンセルし、残り回数に戻しました",
+    "cancelledSpent": "ブーストをキャンセルしました。すでに開始していたため、消費扱いのままです。",
+    "colBoosts": "ブースト",
+    "colEach": "各回",
+    "colTier": "階層",
+    "colTotal": "サイクルあたり",
+    "comingSoon": "近日公開",
+    "finishedCount": "今サイクルで{{count}}件終了、{{seen}}回表示",
+    "grantLine": "1サイクルあたり{{boosts}}回 × {{minutes}}分",
+    "intro": "バッジは名前の横の絵だけを買うものではありません。2週間ごとにブーストが付与され、そのたびに投稿をホームフィード最上部の枠へ置けます。13階層、13の力、1段ごとに1つ解放。",
+    "ladderHeading": "各階層で得られるもの",
+    "left": "残り",
+    "liveUntil": "{{time}}まで公開中",
+    "loadFailed": "ただいまスーパーパワーを読み込めませんでした。少し経ってからお試しください。",
+    "minutes": "分",
+    "needBadge": "スーパーパワーにはステーキングバッジが必要です。DHBをステークして解放してください。",
+    "noBadgeYet": "まだバッジがないためブーストもありません。DHBをステークすると下のはしごが解放されます。",
+    "noBoostsLeft": "今サイクルのブーストは残っていません",
+    "powersHeading": "13の力",
+    "queued": "待機中",
+    "refills": "{{date}}に補充",
+    "refillsOn": "{{date}}に補充されます — 全員同じタイミングです。",
+    "secondWind": "セカンドウインド",
+    "secondWindExplainer": "この投稿は1週間以上前のものです。セカンドウインドがフィード最上部へ戻します。",
+    "seenCount": "{{count}}回表示",
+    "shareOfVoice": "ブースト枠は入れ替わります。複数のブーストが動いているとき、閲覧者にはバッジ階層で重み付けされた1つが配られます。階層が高いほど表示は多くなり、誰もが付与された時間枠を得られます。",
+    "spendFor": "{{power}}を{{minutes}}分",
+    "spent": "{{power}}が{{minutes}}分間実行中",
+    "stakeDhb": "DHBをステーク",
+    "title": "スーパーパワー",
+    "unlocksAt": "{{power}}は{{tier}}で解放されます"
   }
 }
