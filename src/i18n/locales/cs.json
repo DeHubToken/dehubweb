@@ -535,7 +535,8 @@
     "activityLog": "Protokol aktivit",
     "endStream": "Ukončit vysílání",
     "linkCopied": "Odkaz zkopírován",
-    "postUrlCopied": "Odkaz na příspěvek zkopírován"
+    "postUrlCopied": "Odkaz na příspěvek zkopírován",
+    "boostPost": "Zvýraznit příspěvek"
   },
   "filters": {
     "sort": "Řadit",
@@ -711,7 +712,8 @@
     "noVideosYet": "Zatím žádná uložená videa",
     "videosStartSaving": "Přidej si do záložek příspěvky s videem a budou se shromažďovat tady.",
     "noTextYet": "Zatím žádné uložené textové příspěvky",
-    "textStartSaving": "Přidej si do záložek čistě textové příspěvky a objeví se tady."
+    "textStartSaving": "Přidej si do záložek čistě textové příspěvky a objeví se tady.",
+    "folders": "Složky"
   },
   "notifications": {
     "title": "Oznámení",
@@ -1708,5 +1710,49 @@
       "startTerm": "Historie",
       "start": "— „celé období“ znamená každý den, který si Cloudflare ještě drží, dnes {{days}} dní od {{date}}, dne, kdy dehub.io přešel na Cloudflare. Starší data z okraje sítě neexistují a staré dny vypadávají, jak jim Cloudflare vyprší platnost."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Čí sledující ho mají vidět?",
+    "aimAtTiers": "Které úrovně odznaku ho mají vidět?",
+    "aimPlaceholder": "Uživatelské jméno nebo adresa peněženky",
+    "boost": "Zvýraznit",
+    "boostBooked": "Zvýrazněno na {{minutes}} minut",
+    "boostExplainer": "Umístí tento příspěvek po dobu tvého okna na místo úplně nahoře v hlavním kanálu.",
+    "boostFailed": "Ten příspěvek se nepodařilo zvýraznit",
+    "boostForMinutes": "Zvýraznit na {{minutes}} minut",
+    "boostedLabel": "Zvýrazněno",
+    "boostsLeft": "Zbývá {{left}} z {{total}} zvýraznění",
+    "cancelFailed": "To zvýraznění se nepodařilo zrušit",
+    "cancelledRefunded": "Zvýraznění zrušeno a vráceno do tvého limitu",
+    "cancelledSpent": "Zvýraznění zrušeno. Už začalo, takže zůstává spotřebované.",
+    "colBoosts": "Zvýraznění",
+    "colEach": "Každé",
+    "colTier": "Úroveň",
+    "colTotal": "Za cyklus",
+    "comingSoon": "už brzy",
+    "finishedCount": "{{count}} dokončeno v tomto cyklu, zobrazeno {{seen}}krát",
+    "grantLine": "{{boosts}} × {{minutes}} minut za cyklus",
+    "intro": "Odznak kupuje víc než obrázek vedle tvého jména. Každých čtrnáct dní uděluje zvýraznění — každé umístí příspěvek na místo úplně nahoře v hlavním kanálu. Třináct úrovní, třináct schopností, jedno odemčení na příčku.",
+    "ladderHeading": "Co která úroveň dává",
+    "left": "zbývá",
+    "liveUntil": "běží do {{time}}",
+    "loadFailed": "Tvoje SuperPowers se teď nepodařilo načíst. Zkus to za chvíli.",
+    "minutes": "minut",
+    "needBadge": "SuperPowers vyžadují stakovací odznak. Odemkni je stakováním DHB.",
+    "noBadgeYet": "Zatím nemáš odznak, takže ani zvýraznění. Stakování DHB odemyká žebřík níže.",
+    "noBoostsLeft": "V tomto cyklu už nezbývají žádná zvýraznění",
+    "powersHeading": "Třináct schopností",
+    "queued": "ve frontě",
+    "refills": "doplní se {{date}}",
+    "refillsOn": "Doplní se {{date}} — pro všechny ve stejný okamžik.",
+    "secondWind": "Druhý dech",
+    "secondWindExplainer": "Tento příspěvek je starší než týden. Druhý dech ho pošle zpátky na vrchol kanálu.",
+    "seenCount": "{{count}} zobrazení",
+    "shareOfVoice": "Místo pro zvýraznění rotuje. Když běží několik zvýraznění, každému divákovi se přidělí jedno vážené podle úrovně odznaku — vyšší úroveň se zobrazuje častěji a každý dostane okno, které mu bylo uděleno.",
+    "spendFor": "{{power}} na {{minutes}} minut",
+    "spent": "{{power}} běží {{minutes}} minut",
+    "stakeDhb": "Stakovat DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} se odemyká na úrovni {{tier}}"
   }
 }
