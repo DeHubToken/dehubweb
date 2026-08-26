@@ -4084,33 +4084,45 @@ SETTINGS SEARCH REVEAL
 ================================================================================
 The flash left on the row a settings-search hit sends you to. Search used to
 switch tab and stop there, which on a long tab meant hunting for the row whose
-name you had just typed. Monochrome by design — a white ring on the app's zinc
-surfaces, not an accent colour.
+name you had just typed. Monochrome by design — ink, not an accent colour, on whatever
+surface the theme is painting.
 
 box-shadow rather than an outline or a wrapper element: it paints outside the
 border box, so a row can glow with room around it without moving anything else
 on the page. Kept in sync with FLASH_MS in src/lib/settings-search.ts.
 */
+/*
+Themes are dark bar one: the flash is white on every surface except the paper
+of `light`, where white on near-white would be no flash at all. One variable,
+overridden there, rather than a second animation.
+*/
+:root {
+  --settings-reveal-ink: 255, 255, 255;
+}
+html[data-theme="light"] {
+  --settings-reveal-ink: 26, 26, 26;
+}
+
 @keyframes settings-reveal-flash {
   0% {
-    background-color: rgba(255, 255, 255, 0);
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 0 rgba(255, 255, 255, 0);
+    background-color: rgba(var(--settings-reveal-ink), 0);
+    box-shadow: 0 0 0 0 rgba(var(--settings-reveal-ink), 0), 0 0 0 0 rgba(var(--settings-reveal-ink), 0);
   }
   12% {
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 26px 10px rgba(255, 255, 255, 0.16);
+    background-color: rgba(var(--settings-reveal-ink), 0.1);
+    box-shadow: 0 0 0 8px rgba(var(--settings-reveal-ink), 0.1), 0 0 26px 10px rgba(var(--settings-reveal-ink), 0.16);
   }
   38% {
-    background-color: rgba(255, 255, 255, 0.04);
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.04), 0 0 18px 8px rgba(255, 255, 255, 0.06);
+    background-color: rgba(var(--settings-reveal-ink), 0.04);
+    box-shadow: 0 0 0 8px rgba(var(--settings-reveal-ink), 0.04), 0 0 18px 8px rgba(var(--settings-reveal-ink), 0.06);
   }
   60% {
-    background-color: rgba(255, 255, 255, 0.09);
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.09), 0 0 24px 10px rgba(255, 255, 255, 0.14);
+    background-color: rgba(var(--settings-reveal-ink), 0.09);
+    box-shadow: 0 0 0 8px rgba(var(--settings-reveal-ink), 0.09), 0 0 24px 10px rgba(var(--settings-reveal-ink), 0.14);
   }
   100% {
-    background-color: rgba(255, 255, 255, 0);
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0), 0 0 0 0 rgba(255, 255, 255, 0);
+    background-color: rgba(var(--settings-reveal-ink), 0);
+    box-shadow: 0 0 0 8px rgba(var(--settings-reveal-ink), 0), 0 0 0 0 rgba(var(--settings-reveal-ink), 0);
   }
 }
 
@@ -4119,12 +4131,12 @@ on the page. Kept in sync with FLASH_MS in src/lib/settings-search.ts.
 @keyframes settings-reveal-hold {
   0%,
   80% {
-    background-color: rgba(255, 255, 255, 0.09);
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.09);
+    background-color: rgba(var(--settings-reveal-ink), 0.09);
+    box-shadow: 0 0 0 8px rgba(var(--settings-reveal-ink), 0.09);
   }
   100% {
-    background-color: rgba(255, 255, 255, 0);
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+    background-color: rgba(var(--settings-reveal-ink), 0);
+    box-shadow: 0 0 0 8px rgba(var(--settings-reveal-ink), 0);
   }
 }
 
