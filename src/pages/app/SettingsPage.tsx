@@ -184,6 +184,77 @@ const tabs = [
   { icon: LifeBuoy, value: 'support', label: 'settings.support' },
 ];
 
+/**
+ * Flat index of the named sub-sections inside each settings tab, used by the
+ * search bar below. It's a static list rather than a live DOM scan because
+ * every tab except the one you're on isn't mounted, so there's nothing to
+ * search in the others. Selecting a hit switches to its tab — there's no
+ * scroll anchor per row, so it lands you on the tab, not the exact row.
+ */
+const SEARCH_INDEX: { tab: string; label: string }[] = [
+  { tab: 'profile', label: 'Profile Picture' },
+  { tab: 'profile', label: 'Social Links' },
+  { tab: 'profile', label: 'Sign-in' },
+  { tab: 'profile', label: 'ENS' },
+  { tab: 'profile', label: 'Badge delegation' },
+  { tab: 'notifications', label: 'Email Notifications' },
+  { tab: 'notifications', label: 'Likes' },
+  { tab: 'notifications', label: 'Comments' },
+  { tab: 'notifications', label: 'New Followers' },
+  { tab: 'notifications', label: 'Monetization' },
+  { tab: 'notifications', label: 'Content & Platform' },
+  { tab: 'notifications', label: 'Chat' },
+  { tab: 'notifications', label: 'Quiet Hours' },
+  { tab: 'privacy', label: 'Private Account' },
+  { tab: 'privacy', label: 'Show me as a new member' },
+  { tab: 'privacy', label: 'Public Profile' },
+  { tab: 'privacy', label: 'Follow Visibility' },
+  { tab: 'privacy', label: 'Search Engine Indexing' },
+  { tab: 'privacy', label: 'Default Post Visibility' },
+  { tab: 'privacy', label: 'Who can message you' },
+  { tab: 'privacy', label: 'Message fee' },
+  { tab: 'privacy', label: 'Do not disturb' },
+  { tab: 'privacy', label: 'Two-Factor Auth' },
+  { tab: 'privacy', label: 'Wallet unlock prompt' },
+  { tab: 'privacy', label: 'Your Data' },
+  { tab: 'privacy', label: 'Geo-blocking' },
+  { tab: 'appearance', label: 'Dim Lights' },
+  { tab: 'appearance', label: 'Auto-play' },
+  { tab: 'appearance', label: 'Data Saver' },
+  { tab: 'appearance', label: 'Show Animations' },
+  { tab: 'appearance', label: 'Shorts' },
+  { tab: 'appearance', label: 'Theme' },
+  { tab: 'appearance', label: 'Language' },
+  { tab: 'appearance', label: 'Feed Layout' },
+  { tab: 'appearance', label: 'Default Profile Tab' },
+  { tab: 'appearance', label: 'Media' },
+  { tab: 'content', label: 'Default Post Visibility' },
+  { tab: 'content', label: 'Auto-Save Drafts' },
+  { tab: 'content', label: 'Content Filtering' },
+  { tab: 'content', label: 'Playback' },
+  { tab: 'content', label: 'Show Mature Content' },
+  { tab: 'content', label: 'Hide Watched Videos' },
+  { tab: 'content', label: 'Playback Speed Per Channel' },
+  { tab: 'content', label: 'Skip Sponsors And Intros' },
+  { tab: 'content', label: 'Ads In Your Feed' },
+  { tab: 'messages', label: 'Allow Direct Messages' },
+  { tab: 'messages', label: 'Message Fee' },
+  { tab: 'messages', label: 'Do Not Disturb' },
+  { tab: 'messages', label: 'Message Notifications' },
+  { tab: 'messages', label: 'Read Receipts' },
+  { tab: 'messages', label: 'End-to-End Encryption' },
+  { tab: 'messages', label: 'Filter Message Requests' },
+  { tab: 'messages', label: 'Storage' },
+  { tab: 'messages', label: 'Quick Actions' },
+  { tab: 'assets', label: 'Gas Fees' },
+  { tab: 'assets', label: 'Fractions' },
+  { tab: 'assets', label: 'Owned Usernames' },
+  { tab: 'assets', label: 'Offers Made' },
+  { tab: 'skills', label: 'Skills' },
+  { tab: 'characters', label: 'Characters' },
+  { tab: 'support', label: 'Report a Bug' },
+];
+
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
 import { CharactersLibrary } from '@/components/app/characters/CharactersLibrary';
 
@@ -221,6 +292,14 @@ export default function SettingsPage() {
   useFeedSwallowClip(settingsContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
 
   const { t } = useTranslation();
+
+  const [settingsSearch, setSettingsSearch] = useState('');
+  const [settingsSearchFocused, setSettingsSearchFocused] = useState(false);
+  const settingsSearchResults = useMemo(() => {
+    const query = settingsSearch.trim().toLowerCase();
+    if (!query) return [];
+    return SEARCH_INDEX.filter((item) => item.label.toLowerCase().includes(query)).slice(0, 8);
+  }, [settingsSearch]);
 
   const handleLogout = async () => {
     try {
@@ -283,6 +362,41 @@ export default function SettingsPage() {
               <span className="hidden sm:inline text-sm font-medium">{t('settings.logOut')}</span>
             </button>
           </div>
+        </div>
+
+        {/* Search across settings — jumps to the tab a match lives in. */}
+        <div className="relative mb-4">
+          <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            value={settingsSearch}
+            onChange={(e) => setSettingsSearch(e.target.value)}
+            onFocus={() => setSettingsSearchFocused(true)}
+            onBlur={() => setTimeout(() => setSettingsSearchFocused(false), 150)}
+            placeholder={t('settings.searchPlaceholder', 'Search settings')}
+            className="pl-9 bg-white/5 border-white/10"
+          />
+          {settingsSearchFocused && settingsSearch.trim() && (
+            <div className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
+              {settingsSearchResults.length > 0 ? (
+                settingsSearchResults.map((result, i) => (
+                  <button
+                    key={`${result.tab}-${result.label}-${i}`}
+                    type="button"
+                    onClick={() => {
+                      setActiveTab(result.tab);
+                      setSettingsSearch('');
+                    }}
+                    className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-white/5 transition-colors"
+                  >
+                    <span className="text-white text-sm">{result.label}</span>
+                    <span className="text-zinc-500 text-xs">{t(TAB_KEYS[result.tab] ?? '', tabs.find((tb) => tb.value === result.tab)?.value)}</span>
+                  </button>
+                ))
+              ) : (
+                <div className="px-4 py-3 text-zinc-500 text-sm">{t('settings.noSearchResults', 'No matching settings')}</div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Tab Icons */}
@@ -988,6 +1102,10 @@ function ProfileSettings() {
           <h3 className="font-medium text-white mb-4">{t('settings.ensSection', 'ENS')}</h3>
           <EnsHandleSettings />
         </div>
+
+        {/* Badge delegation — a badge is a profile-facing thing (who holds
+            what tier, who lent it), so it lives here rather than in Assets. */}
+        <BadgeDelegationSection />
 
         {/* Other accounts saved on this browser, and the control that adds one
             — last, because adding a profile leaves this page. */}
@@ -2882,10 +3000,6 @@ function AssetsSettings() {
           </span>
         </div>
       </div>
-
-      {/* Badge delegation — a badge is bought with DHB, so it belongs with the
-          rest of what DHB buys rather than off in Profile. */}
-      <BadgeDelegationSection />
 
       {/* Wallet Drawer */}
       <Drawer open={walletDrawerOpen} onOpenChange={setWalletDrawerOpen}>
