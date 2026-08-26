@@ -194,6 +194,10 @@ const getMenuItems = (t: (key: string) => string) => [{
     path: '/docs/privacy',
     iconComponent: Lock
   }, {
+    title: t('nav.communityGuidelines'),
+    path: '/docs/guidelines',
+    iconComponent: ShieldCheck
+  }, {
     title: t('nav.contact'),
     path: '/docs/contact',
     iconComponent: Phone,
