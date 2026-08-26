@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
-import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { useVideoFullscreen, canNativeFullscreen } from '@/hooks/use-video-fullscreen';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -65,8 +65,20 @@ export const VideoSlide = memo(function VideoSlide({
   const progressBarRef = useRef<HTMLDivElement>(null);
   // The slide frame, not the <video>: fullscreening the frame carries the seek
   // strip and the play indicator into fullscreen with it.
+  //
+  // `allowSimulated: false` because the carousel animates every slide with
+  // `translateY`, and a transformed ancestor makes the `fixed inset-0` that
+  // simulated fullscreen relies on resolve against that wrapper rather than the
+  // viewport — it would land somewhere arbitrary. Native fullscreen promotes the
+  // element to the top layer, where no ancestor transform applies, so the real
+  // path still works; only the fake one is refused.
   const frameRef = useRef<HTMLDivElement>(null);
-  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, frameRef);
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, frameRef, {
+    allowSimulated: false,
+  });
+  // With the simulated fallback refused, a browser without native fullscreen has
+  // no path at all — so draw no control rather than a dead one.
+  const canFullscreen = canNativeFullscreen();
 
   /**
    * Tap handling on the video area.
@@ -93,7 +105,8 @@ export const VideoSlide = memo(function VideoSlide({
       const relativeX = (e.clientX - rect.left) / rect.width;
       const inCentre = relativeX >= 0.375 && relativeX <= 0.625;
 
-      if (!inCentre) {
+      // No fullscreen to reach means no second tap to wait for.
+      if (!inCentre || !canFullscreen) {
         onTap?.();
         return;
       }
@@ -113,7 +126,7 @@ export const VideoSlide = memo(function VideoSlide({
         onTap?.();
       }, 300);
     },
-    [onTap, toggleFullscreen],
+    [onTap, toggleFullscreen, canFullscreen],
   );
 
   // Handle video metadata load to detect aspect ratio
@@ -335,24 +348,14 @@ export const VideoSlide = memo(function VideoSlide({
   // For a true 9:16 short this fills edge-to-edge, so the glass fill stays hidden.
   const fitWhole = letterbox || videoAspect !== 'portrait';
 
-  // Simulated fullscreen: `isFullscreen` with no native fullscreen element means
-  // the environment refused the API (WebViews do this silently), so the frame
-  // pins itself instead. See hooks/use-video-fullscreen.
-  const simulatedFullscreen =
-    isFullscreen &&
-    typeof document !== 'undefined' &&
-    !document.fullscreenElement &&
-    !(document as any).webkitFullscreenElement;
-
+  // No simulated-fullscreen branch here on purpose: `allowSimulated: false`
+  // means this frame only ever enters *native* fullscreen, where the Fullscreen
+  // API's UA stylesheet pins it with `position: fixed !important; inset: 0
+  // !important` from the top layer. That outranks these classes and is immune to
+  // the carousel's ancestor transform, so `absolute inset-0` stays correct in
+  // both states.
   return (
-    <div
-      ref={frameRef}
-      className={cn(
-        'bg-black',
-        simulatedFullscreen ? 'fixed inset-0 z-[9999]' : 'absolute inset-0',
-      )}
-      style={{ willChange: 'transform' }}
-    >
+    <div ref={frameRef} className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass fill behind letterboxed / non-portrait videos */}
       {fitWhole && thumbnail && (
         <>
@@ -406,7 +409,7 @@ export const VideoSlide = memo(function VideoSlide({
           neighbouring slides mounted, and a column of stacked buttons would all
           sit at the same screen position. `data-no-swipe` keeps a press on it
           from being read as the start of a navigation drag. */}
-      {isActive && (
+      {isActive && canFullscreen && (
         <button
           type="button"
           data-no-swipe

@@ -123,6 +123,44 @@ describe('useVideoFullscreen', () => {
     expect(result.current.isFullscreen).toBe(true);
   });
 
+  it('refuses to fake fullscreen when the caller cannot paint one', async () => {
+    // The shorts carousel translateY's every slide, and a transformed ancestor
+    // makes the `fixed inset-0` simulated fullscreen relies on resolve against
+    // that wrapper instead of the viewport. Landing somewhere arbitrary is worse
+    // than doing nothing, so those callers opt out.
+    vi.useFakeTimers();
+    const container = document.createElement('div');
+    (container as any).requestFullscreen = vi.fn(() => Promise.resolve());
+    const { videoRef, containerRef } = refs(container);
+
+    const { result } = renderHook(() =>
+      useVideoFullscreen(videoRef, containerRef, { allowSimulated: false }),
+    );
+    act(() => result.current.toggleFullscreen());
+    await act(async () => {
+      vi.advanceTimersByTime(300);
+    });
+
+    expect(result.current.isFullscreen).toBe(false);
+    vi.useRealTimers();
+  });
+
+  it('still tries the real API when the simulated fallback is refused', () => {
+    // Opting out must not disable fullscreen itself — native fullscreen goes to
+    // the top layer, where no ancestor transform applies.
+    const container = document.createElement('div');
+    const request = vi.fn(() => Promise.resolve());
+    (container as any).requestFullscreen = request;
+    const { videoRef, containerRef } = refs(container);
+
+    const { result } = renderHook(() =>
+      useVideoFullscreen(videoRef, containerRef, { allowSimulated: false }),
+    );
+    act(() => result.current.toggleFullscreen());
+
+    expect(request).toHaveBeenCalledTimes(1);
+  });
+
   it('leaves simulated fullscreen without calling exitFullscreen', () => {
     // There is no native state to exit, and calling exitFullscreen here throws
     // in some browsers.
@@ -159,9 +197,24 @@ describe('the two players share one fullscreen implementation', () => {
   it('routes both players through the shared hook', () => {
     // The iOS and WebView fallbacks are subtle enough that a second copy would
     // drift. Neither file should re-implement the raw API.
-    expect(SLIDE).toContain('useVideoFullscreen(videoRef, frameRef)');
+    expect(SLIDE).toContain('useVideoFullscreen(videoRef, frameRef, {');
     expect(CARD).toContain('useVideoFullscreen(videoRef, containerRef)');
     expect(CARD).not.toContain('webkitEnterFullscreen');
+  });
+
+  it('draws no fullscreen control when there is no native path to it', () => {
+    // With the simulated fallback refused, a button that provably cannot do
+    // anything is worse than no button.
+    expect(SLIDE).toContain('allowSimulated: false');
+    expect(SLIDE).toContain('{isActive && canFullscreen && (');
+  });
+
+  it('keeps the slide frame absolutely positioned in both states', () => {
+    // The carousel transforms each slide, so a `fixed` frame would resolve
+    // against the wrapper. Native fullscreen pins it from the top layer with
+    // `!important` UA styles instead, which no ancestor transform affects.
+    expect(SLIDE).toContain('className="absolute inset-0 bg-black"');
+    expect(SLIDE).not.toContain('fixed inset-0 z-[9999]');
   });
 
   it('charges the double-tap delay only to the centre band', () => {
@@ -169,6 +222,6 @@ describe('the two players share one fullscreen implementation', () => {
     // to see whether a second one is coming would make the whole player feel
     // laggy, so only the centre — the only place a double-tap does anything —
     // pays it.
-    expect(SLIDE).toMatch(/if \(!inCentre\) \{\s*onTap\?\.\(\);\s*return;\s*\}/);
+    expect(SLIDE).toMatch(/if \(!inCentre \|\| !canFullscreen\) \{\s*onTap\?\.\(\);\s*return;\s*\}/);
   });
 });
