@@ -53,7 +53,12 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
     // change, what has the log said since — so it gets more rounds and longer
     // to spend them. It is also streaming, so the wait is visible rather than
     // silent: the `__tool` frames name each lookup as it happens.
-    maxRounds = surface === 'admin' ? 9 : 5,
+    //
+    // Six elsewhere rather than five since the source tools landed. The last
+    // round withholds tools, so five left four to work in, and a question about
+    // how something works spends two of them before it has read anything:
+    // search, then read what the search found.
+    maxRounds = surface === 'admin' ? 9 : 6,
     maxTokens = 3000,
     timeoutMs = surface === 'admin' ? 150_000 : 90_000,
   } = opts;

@@ -31,7 +31,13 @@ export type AgentSurface = 'chat' | 'assistant' | 'admin';
 export interface ToolCatalogEntry {
   name: string;
   description: string;
-  scope: 'public' | 'self' | 'admin';
+  /**
+   * What the tool reads, as the API describes it. Nothing here branches on it —
+   * the API decides what each surface is offered and the catalog it returns is
+   * already cut — so this exists to stay truthful about what arrives.
+   * `code` reads DeHub's own source and no user data at all.
+   */
+  scope: 'public' | 'self' | 'code' | 'admin';
   parameters: { type: 'object'; properties: Record<string, unknown>; required?: string[] };
 }
 
@@ -214,7 +220,10 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     // An admin question is a chain, not a lookup: reports spiked, so what
     // shipped, so what does that commit do, so what is the log saying. Five
     // rounds runs out halfway through that and the answer arrives half-derived.
-    maxRounds = surface === 'chat' ? 3 : surface === 'admin' ? 9 : 5,
+    // The Assistant page gained a version of the same problem with the source
+    // tools — search, then read what the search found, before it has learned
+    // anything — and the final round withholds tools, so five left it four.
+    maxRounds = surface === 'chat' ? 3 : surface === 'admin' ? 9 : 6,
     maxTokens = surface === 'chat' ? 700 : 3000,
     timeoutMs = surface === 'chat' ? 20_000 : surface === 'admin' ? 120_000 : 60_000,
   } = opts;
