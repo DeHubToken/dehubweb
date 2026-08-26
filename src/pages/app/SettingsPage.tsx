@@ -1750,7 +1750,7 @@ function PrivacySettings() {
           <SettingsRow
             icon={<img src={dehubCoin} alt="" />}
             title={t('settings.messageFee', 'Message fee')}
-            description={t('settings.messageFeeDesc', 'Require a minimum token amount')}
+            description={t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}
             action={<div className="flex items-center gap-2">
               <Input
                 type="number"
@@ -1768,7 +1768,7 @@ function PrivacySettings() {
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
-              <span className="text-zinc-400 text-sm">{"\n"}</span>
+              <span className="text-zinc-400 text-sm">DHB</span>
               {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
                 <Button
                   size="sm"
