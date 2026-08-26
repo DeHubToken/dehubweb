@@ -27,7 +27,20 @@
     "events": "Çalakî",
     "prompt": "پرۆمۆت",
     "communities": "Civak",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Arcade",
+    "stats": "Statîstîkên Zindî",
+    "liveTv": "TV ya Zindî",
+    "buyDhb": "DHB Bikire",
+    "bridge": "Bridge",
+    "top100": "Ya Jorîn 100",
+    "agents": "Ajanên AI",
+    "advertising": "Reklam",
+    "premium": "Premium",
+    "pricing": "Biha",
+    "creators": "Afirîner",
+    "getTheApp": "Sepanê Bistîne",
+    "connectAi": "AI Girêde"
   },
   "feed": {
     "home": "Mal",
@@ -35,7 +48,9 @@
     "images": "Wêne",
     "shorts": "Kurt",
     "music": "Muzîk",
-    "live": "Zindî"
+    "live": "Zindî",
+    "newPosts_one": "{{count}} şandiya nû",
+    "newPosts_other": "{{count}} şandiyên nû"
   },
   "explore": {
     "all": "Hemû",
@@ -242,7 +257,58 @@
     "hazy": "Şevên Mijî",
     "save": "Tomar bike",
     "saving": "Tê tomarkirin...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Profîl",
+    "profilesDesc": "Hesabên li ser vê amûrê hatine tomarkirin",
+    "addProfile": "Profîlê Zêde Bike",
+    "profileActive": "Çalak",
+    "profileSignedOut": "ji bo guherînê têkeve",
+    "profileRemove": "Profîlê Rake",
+    "profilesUsed": "{{used}} ji {{max}} hatiye bikaranîn",
+    "profilesNextTier": "Asta {{tier}} {{count}} diparêze",
+    "profilesFullTier": "Ji bo parastina {{count}} profîlan ji bo nîşana {{tier}} deyne",
+    "profilesFull": "Ji bo zêdekirina hesabeke din profîlekê rake",
+    "browserNotifications": "Agahdariyên Gerokê",
+    "browserNotificationsDesc": "Dema tu li tabeke din î jî, agahdariya bersiv, bexşîş û peyamên taybet bistîne",
+    "browserNotificationsOnDesc": "Dema tu li tabeke din î jî, bersiv, bexşîş û peyamên taybet derdikevin",
+    "browserNotificationsDismissed": "Daxwaza agahdariyê hate paşguhkirin — pêlê dîsa biceribîne",
+    "browserNotificationsBlocked": "Ji aliyê geroka te ve hatiye astengkirin",
+    "browserNotificationsBlockedTitle": "Ev gerok agahdariyan asteng dike",
+    "browserNotificationsBlockedNote": "Tenê geroka te dikare vê vegerîne — DeHub carekê were astengkirin nikare dîsa bipirse.",
+    "browserNotificationsBlockedPending": "Daxwaza te hate tomarkirin — ev di kêliya ku geroka te destûrê bide de bixweber vedibe.",
+    "browserNotificationsUnblockChromium": "Li îkona milê çepê yê darika navnîşanê bitikîne → Mîhengên malperê → Agahdariyan bike Destûr, paşê vê rûpelê ji nû ve bar bike.",
+    "browserNotificationsUnblockFirefox": "Li qufilê milê çepê yê darika navnîşanê bitikîne, li tenişta Wergirtina Agahdariyan \"Astengkirî\" pak bike, paşê vê rûpelê ji nû ve bar bike.",
+    "browserNotificationsUnblockSafari": "Di darika menûyê de: Safari → Settings → Websites → Notifications, paşê vê malperê bike Destûr.",
+    "browserNotificationsUnblockGeneric": "Ji bo vê rûpelê mîhengên malperê yên geroka xwe veke û Agahdariyan bike Destûr, paşê ji nû ve bar bike.",
+    "browserNotificationsIosHint": "iPhone û iPad tenê dema ku DeHub li Ekrana Malê ya te be destûrê didin — li Parvekirinê bitikîne, paşê \"Li Ekrana Malê Zêde Bike\" hilbijêre.",
+    "browserNotificationsTest": "Agahdariyeke ceribandinê bişîne",
+    "browserNotificationsTestSent": "Agahdariya ceribandinê hate şandin",
+    "browserNotificationsTestBody": "Agahdariya DeHub bi vî awayî xuya dike.",
+    "showAsNewMember": "Min wek endamekî nû nîşan bide",
+    "showAsNewMemberDesc": "Dihêle endamên din bibînin ku tu nû beşdar bûyî da ku bi xêr hatî bêjin. 30 roj piştî tomarkirinê bixweber diqede.",
+    "defaultProfileTab": "Taba profîla xwerû",
+    "defaultProfileTabDesc": "Hilbijêre bê serdanker di profîla te de pêşî kîjan tabê dibînin",
+    "lavalamp": "Lava Lamp",
+    "war": "War",
+    "osaka": "Osaka",
+    "jungle": "Jungle",
+    "themeColor": "Rengê Temayê",
+    "themeColorDesc": "Ji bo vê temayê rengekî taybet hilbijêre",
+    "themeColorReset": "Vegerîne",
+    "themeColorWhite": "Spî",
+    "themeColorBlack": "Reş",
+    "themeColorRainbow": "Keskesor",
+    "themeColorBrand": "Marka",
+    "themeColorBrandDesc": "Rengên wêneyê profîla xwe bikar bîne",
+    "themeColorBrandNoAvatar": "Ji bo bikaranîna rengên Marka wêneyekî profîlê zêde bike",
+    "themeColorBrandFailed": "Rengên ji wêneyê profîlê nehatin xwendin",
+    "dimLights": "Ronahiyê Kêm Bike",
+    "dimLightsDesc": "Bandora ronahiya şîn kêm dike",
+    "matureContent": "Naveroka Mezinan Nîşan Bide",
+    "matureContentDesc": "Şandiyên mezinan û tund têxe nav feedên xwe, û hişyariyê ji yên ku jixwe dibînî rake. Bi awayê xwerû girtî ye.",
+    "noNewMessages": "Tu axaftinên nû tune",
+    "noNewMessagesDesc": "Peyamên xwe yên heyî bihêle, lê tu kesê nû nikare yekî nû bide destpêkirin",
+    "dmNoNewHelp": "Peyamên heyî berdewam dixebitin; tu kesê nû nikare yekî nû bide destpêkirin"
   },
   "common": {
     "save": "Tomar bike",
@@ -256,7 +322,8 @@
     "translating": "Tê wergerandin...",
     "close": "Bigire",
     "loadingMore": "Zêdetir tê barkirin...",
-    "loadMore": "Zêdetir bar bike"
+    "loadMore": "Zêdetir bar bike",
+    "tryAgain": "Dîsa Biceribîne"
   },
   "tip": {
     "title": "Bexşîş Bişîne",
@@ -284,7 +351,8 @@
     "activityLog": "Têketina Çalakiyê",
     "endStream": "Weşana Zindî biqedîne",
     "linkCopied": "Girêdan hat kopîkirin",
-    "postUrlCopied": "URL-ya şandiyê hat kopîkirin"
+    "postUrlCopied": "URL-ya şandiyê hat kopîkirin",
+    "boostPost": "Şandiyê Boost Bike"
   },
   "filters": {
     "sort": "Rêzkirin",
@@ -670,7 +738,8 @@
     "ppvStartSaving": "Naveroka Pay-Per-View ji afirînerên xwe yên bijare bikire da ku li vir xuya bibe.",
     "recentStartSaving": "Şandiyên te yên ku herî dawî hatine nîşankirin dê li vir xuya bibin.",
     "textStartSaving": "Şandiyên tenê-nivîs nîşan bike û ew ê li vir xuya bibin.",
-    "videosStartSaving": "Şandiyên bi vîdyo nîşan bike û ew ê li vir bên berhevkirin."
+    "videosStartSaving": "Şandiyên bi vîdyo nîşan bike û ew ê li vir bên berhevkirin.",
+    "folders": "Peldank"
   },
   "notifications": {
     "title": "Agahdarî",
@@ -724,7 +793,11 @@
     "postRemoved": "Şandiya te hate rakirin",
     "newNotification": "Agahdariya nû",
     "oneOther": "1 yê din",
-    "nOthers": "{{count}} yên din"
+    "nOthers": "{{count}} yên din",
+    "thisBrowser": "Ev Gerok",
+    "features": "Taybetmendî",
+    "communities": "Civak",
+    "stores": "Dikan"
   },
   "leaderboard": {
     "title": "Pêşengtî",
@@ -753,7 +826,12 @@
     "addedToLeaderboard": "Hûn hatin zêdekirin! Balance: {{balance}} DHB",
     "balanceTooLow": "Balance pir kêm e ({{balance}} DHB)",
     "refreshFailed": "Tiştek xelet çû",
-    "noWalletAddress": "Navnîşana berîkê nehat dîtin"
+    "noWalletAddress": "Navnîşana berîkê nehat dîtin",
+    "affiliates": "Hevkar",
+    "directReferrals_one": "{{count}} rasterast",
+    "directReferrals_other": "{{count}} rasterast",
+    "secondaryReferrals_one": "{{count}} duyemîn",
+    "secondaryReferrals_other": "{{count}} duyemîn"
   },
   "explorePage": {
     "searchPlaceholder": "Li kes, şandin, an naverokê bigerin...",
@@ -854,7 +932,10 @@
     "statusPlanned": "Plankirî",
     "statusInProgress": "Di Pêvajoyê de",
     "statusCompleted": "Qediyaye",
-    "statusDeclined": "Red bû"
+    "statusDeclined": "Red bû",
+    "shipping": "Tê Çêkirin",
+    "noShippingYet": "Tiştek di pêşketinê de tune",
+    "shippingAppearHere": "Daxwazên ku tên çêkirin dê li vir xuya bibin."
   },
   "auth": {
     "loginRequired": "Têketin pêwîst e"
@@ -927,7 +1008,8 @@
     "failedPurchase": "Destpêkirina kirinê têkçû",
     "redirectingOnramp": "Ber bi onramp-ê ve tê veguheztin...",
     "onrampCreated": "Danişîna onramp hate çêkirin",
-    "failedOnramp": "Destpêkirina onramp têkçû"
+    "failedOnramp": "Destpêkirina onramp têkçû",
+    "badgeDiscount": "Xwedanê {{tier}} — %{{percent}} daxistin"
   },
   "agents": {
     "title": "Ajanên AI",
@@ -957,7 +1039,13 @@
     "agentDeleted": "Ajan hate jêbirin",
     "failedCreate": "Afirandina ajanê têkçû",
     "failedDelete": "Jêbirina ajanê têkçû",
-    "apiKeyCopied": "Mifteya API li panoyê hat kopîkirin"
+    "apiKeyCopied": "Mifteya API li panoyê hat kopîkirin",
+    "connectorUrl": "URL-a Girêdanê",
+    "connectorUrlCopied": "URL-a girêdanê hate kopîkirin",
+    "connectorUrlHelp": "Vê wek girêdaneke MCP ya taybet li Claude an ChatGPT zêde bike. Ew wek vî ajanî tê piştrastkirin, ji ber vê wê wek mifteya API bihesibîne.",
+    "agentWallet": "Cizdana ajanê (Base)",
+    "walletCopied": "Navnîşana cizdanê hate kopîkirin",
+    "agentWalletHelp": "Berî ku ajan biweşîne, mîqdareke piçûk a Base ETH li vir bişîne — weşandin li ser zincîrê tê çêkirin (mint) û ajan gaza xwe bi xwe dide. Şîrovekirin, dengdan û şopandin hewceyî gazê nînin."
   },
   "hero": {
     "title": "Bi Xêr Hatin",
@@ -1005,7 +1093,10 @@
     "or": "an",
     "termsNotice": "Bi dewamkirinê, hûn bi Şert û Mercên Karûbarê me û Polîtîkaya Nepeniyê razî dibin",
     "walletInfoDesktop": "Berîka xwe girêbidin ku bi ewlehî têkevin",
-    "walletInfoMobile": "MetaMask, Trust û Phantom dê serlêdana xwe rasterast vekin. Rabby dê WalletConnect bikar bîne."
+    "walletInfoMobile": "MetaMask, Trust û Phantom dê serlêdana xwe rasterast vekin. Rabby dê WalletConnect bikar bîne.",
+    "addProfileTitle": "Profîlekê Zêde Bike",
+    "walletConnectedAs": "Girêdayî",
+    "useDifferentWallet": "Cizdaneke Din Bikar Bîne"
   },
   "careers": {
     "title": "Karên li DeHub",
@@ -1129,7 +1220,11 @@
     "comingSoon": "Zû tê — trendên herêmî di rê de ne!",
     "post": "Weşîne",
     "logOut": "Derkeve",
-    "logIn": "Têkeve"
+    "logIn": "Têkeve",
+    "searchMenu": "Li menuyê bigere",
+    "clearSearch": "Lêgerînê pak bike",
+    "noMenuMatches": "Tiştek di menuyê de li hev nake",
+    "searchDehubFor": "Li DeHub li \"{{query}}\" bigere"
   },
   "postInfo": {
     "title": "Agahiya postê",
@@ -1378,7 +1473,12 @@
     "waiting_for_confirmation": "Li benda pesendkirinê...",
     "new_version_available": "Guhertoya nû heye",
     "refresh_to_pick_up_the_latest_changes": "Ji bo dîtina guhertinên herî dawî, wêneyê nûve bike.",
-    "what_changed": "Çi guherî"
+    "what_changed": "Çi guherî",
+    "refresh": "Nû Bike",
+    "turn_on_desktop_notifications": "Agahdariyên sermaseyê bên vekirin?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Dema di tabeke din de yî jî ji bersiv, bexşîş û peyaman agahdar bibe.",
+    "turn_on": "Veke",
+    "not_now": "Niha na"
   },
   "prompt": {
     "seoTitle": "فیدەکەت پرۆمۆت بکە — DeHub",
@@ -1524,5 +1624,149 @@
     "when": "Kengî",
     "whyStake": "Çima Danîn?",
     "yourStaked": "Danîna Te"
+  },
+  "arcade": {
+    "title": "Arcade",
+    "intro": "Berhevokek lîstik, dinya an ezmûnên ku ji aliyê DeHub ve hatine çêkirin û wek çavkaniyeke vekirî hatine parvekirin.",
+    "seoTitle": "Arcade",
+    "seoDescription": "Li ser DeHub di geroka xwe de lîstikan bileyîze — kişikeke sînemayî ya 3D, tîroreke bi awayekî prosedûral hatî çêkirin, meşeke di daristana baranê de, şerekî li ser kolaneke neonî û qata bazirganiyê ya meşînok. Ne saz kirin, ne dakêşan.",
+    "alsoIn": "Herwiha li {{theme}}"
+  },
+  "stats": {
+    "title": "Statîstîk",
+    "subtitle": "Agahiya çavkaniya vekirî ya rast-dem",
+    "live": "Zindî",
+    "range": {
+      "24h": "24 saet",
+      "3d": "3 roj",
+      "7d": "7 roj",
+      "30d": "30 roj",
+      "all": "Hemû Dem"
+    },
+    "unavailable": {
+      "title": "Statîstîk niha ne berdest in",
+      "unconfigured": "Endpointa analîzan hîn mifteya xwe ya API ya Cloudflare wernegirtiye. Li şûna jimareyeke çêkirî tiştek nayê nîşandan.",
+      "error": "Em nekarîn bigihîjin API-ya analîzên Cloudflare. Li şûna nîşandana jimareyeke kevin an çêkirî, ev rûpel heta ku xwendina zindî serkeftî be tiştekî nîşan nade."
+    },
+    "tile": {
+      "visitorsToday": "Serdankerên Îro",
+      "soFarToday": "heta niha îro, UTC",
+      "peakHour": "Saeta Herî Mijûl",
+      "peakDay": "Roja Herî Mijûl",
+      "peakAtHour": "di {{when}} UTC de",
+      "peakOnDay": "di {{when}} de",
+      "inRange": "di vê navberê de",
+      "pageViews": "Temaşekirina Rûpelan",
+      "overHours": "di {{count}} saetan de",
+      "overDay": "di 1 rojê de",
+      "overDays": "di {{count}} rojan de",
+      "requestsLabel": "Daxwaz",
+      "served": "Hate Pêşkêşkirin",
+      "requests": "{{requests}} daxwaz"
+    },
+    "chart": {
+      "hourly": "Serdankerên saetê",
+      "daily": "Serdankerên rojane",
+      "hourlyHint": "{{count}} beşên saetî, UTC",
+      "dailyHint": "serdankerên yekta yên rojane",
+      "empty": "Ji bo vê demê hîn dane tune"
+    },
+    "countries": {
+      "title": "Welatên Jorîn",
+      "windowDay": "24 saetên dawî",
+      "window": "{{days}} rojên dawî"
+    },
+    "browsers": {
+      "title": "Gerok",
+      "window": "li gorî temaşekirina rûpelan"
+    },
+    "edge": {
+      "title": "Li Kêlekê",
+      "windowDay": "24 saetên dawî",
+      "window": "{{days}} rojên dawî",
+      "cached": "Ji cache hate pêşkêşkirin",
+      "encrypted": "Şîfrekirî",
+      "threats": "Metirsî hatin astengkirin"
+    },
+    "proof": {
+      "title": "Ev jimare ji ku tên",
+      "subtitle": "Ji aliyê Cloudflare ve hatiye pîvandin, ne ji vê rûpelê",
+      "source": "Çavkanî",
+      "datasets": "Danesetên",
+      "zone": "Herêm",
+      "ray": "Ray ID ya Cloudflare",
+      "fetched": "Hate Anîn di",
+      "query": "Pirsa rast a li pişt grafîkê",
+      "copied": "Hate Kopîkirin",
+      "copy": "Kopî Bike",
+      "openEndpoint": "/api/stats Veke",
+      "openRaw": "Bersiva Cloudflare ya Nedestwerdankirî",
+      "edge": "Her daxwaza ji bo dehub.io berî ku bigihîje serverên me di nav Cloudflare re derbas dibe. Ev jimare kombûna xwerû ya Cloudflare ya wê trafîkê ye — heman jimareyên ku panela me nîşan dide. Ew ji aliyê skrîpteke di geroka te de nayên berhevkirin, ji ber vê tu tişt li ser vê rûpelê nikare wan mezin bike, û astengkirina şopîneran wan naguherîne.",
+      "live": "Rûpel wan bi zindîtî dixwîne. Barkirina /stats endpointa me vedixwîne, ku di wê kêliyê de API-ya Analytics a Cloudflare dipirse û bersivê 60 saniyeyan cache dike.",
+      "limits": "Ev çi nîşan dide, û çi nake: tu dikarî bibînî ku jimare ji kombûna Cloudflare tên ne ji koda sepana me, û pirsa ku li vir hatiye weşandin heman ya ku dixebite ye. Ev bêbawerî nine — mifteya API li ba me ye, û Cloudflare xwendina gelemperî ya analîzên herêmekê pêşkêş nake. Her kesê bi herêma xwe ya Cloudflare dikare heman pirsê li dijî wê bixebitîne û şeklê piştrast bike."
+    },
+    "definitions": {
+      "title": "Jimare çi tê wateyê",
+      "visitorsTerm": "Serdanker",
+      "visitors": "— navnîşanên IP yên yekta ku Cloudflare wê rojê dît. Nêzîkî mirovan e, lê ne wek hev: nivîsgehek li ser girêdaneke yek carekê tê jimartin, û telefonek di navbera wîfî û daneya mobîl de tevdigere du caran tê jimartin.",
+      "pageViewsTerm": "Temaşekirina Rûpelan",
+      "pageViews": "— daxwazên ku Cloudflare wek barkirina rûpelan dabeş dike, ne wêne, skrîpt an bangên API.",
+      "botsTerm": "Bot jî tê de ne",
+      "bots": "— ev jimareyên xam ên kêlekê ne, ji ber vê crawler, çavdêrên demjimêrê û kirêteyên bi skrîpt jî tê de ne. Tu dikarî bi xwe di dabeşkirina gerokê ya jorîn de wan bibînî, li wir têketinên mîna \"Curl\" û \"Unknown\" trafîka bixweber in ne mirov. Ji bo derxistina botan astek Cloudflare ya bi pere pêwîst e ku em nadin xebitandin, û bêdengî kêmkirina texmînekê dê jimaran kêm-kontrolker bike, ne zêde.",
+      "totalTerm": "Tevahiya Navberê",
+      "total": "— temaşekirina rûpelan û daxwaz li seranserê navberê tên kombûn. Jimarên serdankeran bi zanebûn nayên kombûn di sernaveke \"tevahiya serdankeran\" de, ji ber ku kesekî ku Duşem û Sêşem li vir bû dê du caran bihata jimartin.",
+      "peakTerm": "Saet / Roja Herî Mijûl",
+      "peak": "— hejmara herî bilind a yekta ya di her beşekî navberê de, ji heman sedemê ve: ev jimareyeke ku Cloudflare bi rastî pîvaye, ne ya ku bi kombûna hejmarên hevpoşî hatiye çêkirin.",
+      "resolutionTerm": "Saetî heta 3 Rojan Radiweste",
+      "resolution": "— ev sînorê Cloudflare ye li ser vê planê, ne hilbijartinek: ew her pirsa saetî ya ji sê rojan berfirehtir red dike. Dîmenên 24-saet û 3-roj saetî ne; 7 roj û zêdetir rojane ne, û tu rê tune ku grafîkeke saetî ya hemû-demê were xêzkirin.",
+      "breakdownTerm": "Welat û Gerok",
+      "breakdown": "— ev li gorî navbera ku tu hilbijêrî ne, lê tenê heta {{max}} rojên paşve, ji ber ku dabeşkirina rojane tenê heta wê radeyê tê parastin. Li navberên dirêjtir grafîk demeke ji lîsteya welatan zêdetir vedigire.",
+      "startTerm": "Dîrok",
+      "start": "— \"hemû dem\" tê wateya her rojê ku Cloudflare hê jî diparêze, ku îro {{days}} roj e, ji {{date}} dest pê dike, roja ku dehub.io çû ser Cloudflare. Tu daneyên kêlekê yên berê tune ku werin nîşandan, û rojên kevintir wek Cloudflare temenê wan mezin dike, dadikevin."
+    }
+  },
+  "superpowers": {
+    "aimAtAccount": "Şopînerên kê divê wê bibînin?",
+    "aimAtTiers": "Kîjan astên nîşanê divê wê bibînin?",
+    "aimPlaceholder": "Navê bikarhêner an navnîşana cizdanê",
+    "boost": "Boost",
+    "boostBooked": "Ji bo {{minutes}} deqîqeyan hate boost kirin",
+    "boostExplainer": "Vê şandiyê ji bo dema te ya diyarkirî datîne cihê li jora feeda malê.",
+    "boostFailed": "Nikaribû wê şandiyê boost bike",
+    "boostForMinutes": "Ji bo {{minutes}} deqîqeyan boost bike",
+    "boostedLabel": "Boost Bûye",
+    "boostsLeft": "{{left}} ji {{total}} boostan maye",
+    "cancelFailed": "Nikaribû wê boostê betal bike",
+    "cancelledRefunded": "Boost hate betalkirin û li sedika te vegeriya",
+    "cancelledSpent": "Boost hate betalkirin. Ew jixwe dest pê kiribû, ji ber vê wek xerckirî dimîne.",
+    "colBoosts": "Boost",
+    "colEach": "Her yek",
+    "colTier": "Ast",
+    "colTotal": "Di her dewrê de",
+    "comingSoon": "zûtirîn tê",
+    "finishedCount": "{{count}} di vî dewrê de qediya, {{seen}} caran hate dîtin",
+    "grantLine": "{{boosts}} × {{minutes}} deqîqe di her dewrê de",
+    "intro": "Nîşanek ji wêneya li tenişta navê te zêdetir tiştekî pêşkêş dike. Her du hefteyan carekê boostan pêşkêş dike — her yek şandiyekê datîne cihê li jora feeda malê. Sêzdeh ast, sêzdeh hêz, di her pileyê de tiştek nû vedibe.",
+    "ladderHeading": "Her ast çi pêşkêş dike",
+    "left": "maye",
+    "liveUntil": "heta {{time}} zindî ye",
+    "loadFailed": "SuperPowersên te niha nehatin barkirin. Piştî kêliyekê dîsa biceribîne.",
+    "minutes": "deqîqe",
+    "needBadge": "SuperPowers nîşana danînê pêwîst dike. Ji bo vekirina wan DHB deyne.",
+    "noBadgeYet": "Hîn nîşana te tune, ji ber vê tu boost tune. Danîna DHB pileya li jêr vedike.",
+    "noBoostsLeft": "Di vî dewrê de tu boost namîne",
+    "powersHeading": "Sêzdeh Hêz",
+    "queued": "di rêzê de",
+    "refills": "di {{date}} de dîsa tije dibe",
+    "refillsOn": "Di {{date}} de dîsa tije dibe — ji bo her kesî heman kêlî.",
+    "secondWind": "Bayê Duyem",
+    "secondWindExplainer": "Ev şandî ji hefteyekê kevintir e. Bayê Duyem wê dîsa dişîne jora feedê.",
+    "seenCount": "{{count}} hate dîtin",
+    "shareOfVoice": "Cihê boostê digere. Dema çend boost bi hev re dixebitin, ji temaşevanan re yek li gorî asta nîşanê tê nîşandan — asta bilindtir zêdetir tê nîşandan, û her kes dema ku jê re hatiye dayîn distîne.",
+    "spendFor": "{{power}} ji bo {{minutes}} deqîqeyan",
+    "spent": "{{power}} ji bo {{minutes}} deqîqeyan dixebite",
+    "stakeDhb": "DHB Deyne",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} li {{tier}} vedibe"
   }
 }

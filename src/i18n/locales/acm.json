@@ -27,7 +27,20 @@
     "events": "Events",
     "prompt": "اطلب",
     "communities": "المجتمعات",
-    "staking": "الرهن"
+    "staking": "الرهن",
+    "arcade": "الأركيد",
+    "stats": "إحصائيات مباشرة",
+    "liveTv": "تلفزيون مباشر",
+    "buyDhb": "اشتري DHB",
+    "bridge": "الجسر",
+    "top100": "أفضل 100",
+    "agents": "وكلاء AI",
+    "advertising": "الإعلانات",
+    "premium": "بريميوم",
+    "pricing": "الأسعار",
+    "creators": "المبدعين",
+    "getTheApp": "حمّل التطبيق",
+    "connectAi": "ربط AI"
   },
   "feed": {
     "home": "البيت",
@@ -35,7 +48,9 @@
     "images": "صور",
     "shorts": "فيديوهات قصيرة",
     "music": "موسيقى",
-    "live": "بث مباشر"
+    "live": "بث مباشر",
+    "newPosts_one": "{{count}} منشور جديد",
+    "newPosts_other": "{{count}} منشورات جديدة"
   },
   "explore": {
     "all": "الكل",
@@ -242,7 +257,58 @@
     "hazy": "ليالي ضبابية",
     "save": "احفظ",
     "saving": "دا نحفظ...",
-    "swarms": "الأسراب"
+    "swarms": "الأسراب",
+    "profiles": "البروفايلات",
+    "profilesDesc": "حسابات انحفظت بهذا الجهاز",
+    "addProfile": "زيد بروفايل",
+    "profileActive": "نشط",
+    "profileSignedOut": "سجل دخول حتى تبدل",
+    "profileRemove": "احذف البروفايل",
+    "profilesUsed": "استخدمت {{used}} من {{max}}",
+    "profilesNextTier": "مستوى {{tier}} يحتفظ بـ{{count}}",
+    "profilesFullTier": "ايدع حتى تحصل شارة {{tier}} وتحتفظ بـ{{count}} بروفايلات",
+    "profilesFull": "احذف بروفايل حتى تزيد حساب ثاني",
+    "browserNotifications": "إشعارات المتصفح",
+    "browserNotificationsDesc": "خذ تنبيه عن الردود والبقشيش والرسائل الخاصة وانت بتاب ثاني",
+    "browserNotificationsOnDesc": "الردود والبقشيش والرسائل الخاصة تطلع وانت بتاب ثاني",
+    "browserNotificationsDismissed": "طلب الإشعار انرفض — جرب المفتاح مرة ثانية",
+    "browserNotificationsBlocked": "موقوفة من متصفحك",
+    "browserNotificationsBlockedTitle": "هذا المتصفح يوقف الإشعارات",
+    "browserNotificationsBlockedNote": "بس متصفحك يكدر يرجع هذا — DeHub ما يكدر يسأل مرة ثانية بعد ما توقف.",
+    "browserNotificationsBlockedPending": "طلبك انحفظ — هذا يشتغل لحاله بس متصفحك يسمح.",
+    "browserNotificationsUnblockChromium": "دز على الأيقونة يسار شريط العنوان → إعدادات الموقع → خلي الإشعارات على السماح، وبعدين حدّث هذي الصفحة.",
+    "browserNotificationsUnblockFirefox": "دز على القفل يسار شريط العنوان، امسح \"موقوف\" جنب استلام الإشعارات، وبعدين حدّث هذي الصفحة.",
+    "browserNotificationsUnblockSafari": "بشريط القوائم: Safari → الإعدادات → المواقع → الإشعارات، وبعدين خلي هذا الموقع على السماح.",
+    "browserNotificationsUnblockGeneric": "افتح إعدادات الموقع مال متصفحك لهذي الصفحة وخلي الإشعارات على السماح، وبعدين حدّث.",
+    "browserNotificationsIosHint": "آيفون وآيباد بس يسمحون بهذا لمن DeHub يكون بالشاشة الرئيسية — دز على مشاركة، وبعدين \"إضافة للشاشة الرئيسية\".",
+    "browserNotificationsTest": "ابعث إشعار تجريبي",
+    "browserNotificationsTestSent": "الإشعار التجريبي انبعث",
+    "browserNotificationsTestBody": "هيچي يبين إشعار DeHub.",
+    "showAsNewMember": "اعرضني كعضو جديد",
+    "showAsNewMemberDesc": "يخلي باقي الأعضاء يشوفون إنك هسه انضميت حتى يرحبون بيك. ينتهي أوتوماتيك بعد 30 يوم من التسجيل.",
+    "defaultProfileTab": "التاب الافتراضي بالبروفايل",
+    "defaultProfileTabDesc": "اختار شنو التاب اللي الزوار يشوفونه أول ببروفايلك",
+    "lavalamp": "لمبة الحمم",
+    "war": "الحرب",
+    "osaka": "أوساكا",
+    "jungle": "الأدغال",
+    "themeColor": "لون الثيم",
+    "themeColorDesc": "اختار لون مخصص لهذا الثيم",
+    "themeColorReset": "ارجع للأصل",
+    "themeColorWhite": "أبيض",
+    "themeColorBlack": "أسود",
+    "themeColorRainbow": "قوس قزح",
+    "themeColorBrand": "البراند",
+    "themeColorBrandDesc": "استخدم ألوان صورة بروفايلك",
+    "themeColorBrandNoAvatar": "زيد صورة بروفايل حتى تستخدم ألوان البراند",
+    "themeColorBrandFailed": "ماكدرنا نقرا الألوان من صورة بروفايلك",
+    "dimLights": "خفّف الأضواء",
+    "dimLightsDesc": "يقلل التعرض للضوء الأزرق",
+    "matureContent": "اعرض محتوى الكبار",
+    "matureContentDesc": "زيد منشورات الكبار والقاسية بالفيدز مالتك، وشيل التحذير من اللي تشوفه من قبل. مطفي بشكل افتراضي.",
+    "noNewMessages": "ماكو محادثات جديدة",
+    "noNewMessagesDesc": "خلي محادثاتك الموجودة، بس محد جديد يكدر يبدي وحدة",
+    "dmNoNewHelp": "المحادثات الموجودة تضل تشتغل؛ محد جديد يكدر يبدي وحدة"
   },
   "common": {
     "save": "حفظ",
@@ -256,7 +322,8 @@
     "translating": "يترجم...",
     "close": "إغلاق",
     "loadingMore": "يحمّل أكثر...",
-    "loadMore": "حمّل أكثر"
+    "loadMore": "حمّل أكثر",
+    "tryAgain": "جرب مرة ثانية"
   },
   "tip": {
     "title": "أرسل إكرامية",
@@ -284,7 +351,8 @@
     "activityLog": "سجل النشاط",
     "endStream": "أنهِ البث",
     "linkCopied": "انسخ الرابط للحافظة",
-    "postUrlCopied": "انسخ رابط المنشور للحافظة"
+    "postUrlCopied": "انسخ رابط المنشور للحافظة",
+    "boostPost": "عزّز المنشور"
   },
   "filters": {
     "sort": "ترتيب",
@@ -670,7 +738,8 @@
     "ppvStartSaving": "اشتري محتوى الدفع مقابل المشاهدة من صنّاع المحتوى المفضلين عندك حتى يظهر هنا.",
     "recentStartSaving": "آخر المنشورات اللي حفظتها راح تظهر هنا.",
     "textStartSaving": "احفظ المنشورات النصية بس وراح تظهر هنا.",
-    "videosStartSaving": "احفظ المنشورات اللي بيها فيديوهات وراح تنجمع هنا."
+    "videosStartSaving": "احفظ المنشورات اللي بيها فيديوهات وراح تنجمع هنا.",
+    "folders": "المجلدات"
   },
   "notifications": {
     "title": "الإشعارات",
@@ -724,7 +793,11 @@
     "postRemoved": "منشورك انحذف",
     "newNotification": "إشعار جديد",
     "oneOther": "١ ثاني",
-    "nOthers": "{{count}} ثانيين"
+    "nOthers": "{{count}} ثانيين",
+    "thisBrowser": "هذا المتصفح",
+    "features": "الميزات",
+    "communities": "المجتمعات",
+    "stores": "المتاجر"
   },
   "leaderboard": {
     "title": "لوحة المتصدرين",
@@ -753,7 +826,12 @@
     "addedToLeaderboard": "انضفت! الرصيد: {{balance}} DHB",
     "balanceTooLow": "الرصيد قليل ({{balance}} DHB)",
     "refreshFailed": "صار شي غلط",
-    "noWalletAddress": "ما لقينا عنوان محفظة"
+    "noWalletAddress": "ما لقينا عنوان محفظة",
+    "affiliates": "الشركاء",
+    "directReferrals_one": "{{count}} مباشر",
+    "directReferrals_other": "{{count}} مباشر",
+    "secondaryReferrals_one": "{{count}} ثانوي",
+    "secondaryReferrals_other": "{{count}} ثانوي"
   },
   "explorePage": {
     "searchPlaceholder": "ابحث عن ناس أو منشورات أو محتوى...",
@@ -854,7 +932,10 @@
     "statusPlanned": "مخطط",
     "statusInProgress": "قيد التنفيذ",
     "statusCompleted": "مكتمل",
-    "statusDeclined": "مرفوض"
+    "statusDeclined": "مرفوض",
+    "shipping": "يتشحن",
+    "noShippingYet": "ماكو شي شغال",
+    "shippingAppearHere": "الطلبات اللي تنبني راح تظهر هنا."
   },
   "auth": {
     "loginRequired": "مطلوب تسجيل دخول"
@@ -927,7 +1008,8 @@
     "failedPurchase": "فشل بدء الشراء",
     "redirectingOnramp": "يحولك للشراء...",
     "onrampCreated": "جلسة الشراء انشأت",
-    "failedOnramp": "فشل بدء الشراء"
+    "failedOnramp": "فشل بدء الشراء",
+    "badgeDiscount": "حامل {{tier}} — خصم {{percent}}%"
   },
   "agents": {
     "title": "وكلاء الذكاء الاصطناعي",
@@ -957,7 +1039,13 @@
     "agentDeleted": "الوكيل انحذف",
     "failedCreate": "فشل إنشاء الوكيل",
     "failedDelete": "فشل حذف الوكيل",
-    "apiKeyCopied": "مفتاح API انسخ للحافظة"
+    "apiKeyCopied": "مفتاح API انسخ للحافظة",
+    "connectorUrl": "رابط الموصل",
+    "connectorUrlCopied": "رابط الموصل انسخ",
+    "connectorUrlHelp": "زيد هذا كموصل MCP مخصص بـClaude أو ChatGPT. يتحقق كهذا الوكيل، فعامله مثل مفتاح الـAPI.",
+    "agentWallet": "محفظة الوكيل (Base)",
+    "walletCopied": "عنوان المحفظة انسخ",
+    "agentWalletHelp": "ابعث مبلغ صغير من Base ETH هنا قبل ما الوكيل ينشر — النشر يسك على السلسلة والوكيل يدفع الغاز مال نفسه. التعليق والتصويت والمتابعة ما تحتاج غاز."
   },
   "hero": {
     "title": "أهلاً وسهلاً",
@@ -1005,7 +1093,10 @@
     "or": "أو",
     "termsNotice": "بالمتابعة، توافق على شروط الخدمة وسياسة الخصوصية",
     "walletInfoDesktop": "وصّل محفظتك عشان تسجل دخول بأمان",
-    "walletInfoMobile": "ميتاماسك وترست وفانتوم بيفتحون تطبيقهم مباشرة. رابي بيستخدم WalletConnect."
+    "walletInfoMobile": "ميتاماسك وترست وفانتوم بيفتحون تطبيقهم مباشرة. رابي بيستخدم WalletConnect.",
+    "addProfileTitle": "زيد بروفايل",
+    "walletConnectedAs": "متصل",
+    "useDifferentWallet": "استخدم محفظة ثانية"
   },
   "careers": {
     "title": "وظائف في DeHub",
@@ -1129,7 +1220,11 @@
     "comingSoon": "قريباً — الاتجاهات الإقليمية في الطريق!",
     "post": "انشر",
     "logOut": "تسجيل خروج",
-    "logIn": "تسجيل دخول"
+    "logIn": "تسجيل دخول",
+    "searchMenu": "دوّر بالقائمة",
+    "clearSearch": "امحي البحث",
+    "noMenuMatches": "ماكو شي بالقائمة يطابق",
+    "searchDehubFor": "دوّر على \"{{query}}\" بـDeHub"
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -1375,7 +1470,15 @@
     "unstake_failed": "السحب ما نجح",
     "unstake_request_removed": "انشال طلب السحب مالتك.",
     "unstake_request_submitted": "انبعث طلب السحب! ✅",
-    "waiting_for_confirmation": "ننتظر التأكيد..."
+    "waiting_for_confirmation": "ننتظر التأكيد...",
+    "new_version_available": "نسخة جديدة متوفرة",
+    "refresh_to_pick_up_the_latest_changes": "حدّث حتى تحصل آخر التغييرات.",
+    "refresh": "حدّث",
+    "what_changed": "شنو تغير",
+    "turn_on_desktop_notifications": "نشغّل تنبيهات سطح المكتب؟",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "اعرف بالردود والإكراميات والرسائل وانت بتبويب ثاني.",
+    "turn_on": "شغّلها",
+    "not_now": "مو هسه"
   },
   "prompt": {
     "seoTitle": "اطلب محتواك — DeHub",
@@ -1521,5 +1624,149 @@
     "when": "شوكت",
     "whyStake": "ليش تودع؟",
     "yourStaked": "إيداعك"
+  },
+  "arcade": {
+    "title": "الأركيد",
+    "intro": "مجموعة ألعاب وعوالم وتجارب سواها DeHub وفتح مصدرها.",
+    "seoTitle": "الأركيد",
+    "seoDescription": "العب ألعاب بالمتصفح على DeHub — شطرنج ثلاثي الأبعاد سينمائي، شوتر مولّد إجرائياً، مشي بغابة مطيرة، عراك شارع نيون، وأرضية تداول تكدر تمشي بيها. بلا تنصيب، بلا تحميل.",
+    "alsoIn": "بعد بـ{{theme}}"
+  },
+  "stats": {
+    "title": "الإحصائيات",
+    "subtitle": "استخبارات مفتوحة المصدر بالوقت الحقيقي",
+    "live": "مباشر",
+    "range": {
+      "24h": "24 ساعة",
+      "3d": "3 أيام",
+      "7d": "7 أيام",
+      "30d": "30 يوم",
+      "all": "كل الوكت"
+    },
+    "unavailable": {
+      "title": "الإحصائيات مو متوفرة هسه",
+      "unconfigured": "نقطة نهاية التحليلات بعدها ما انعطت توكن الـAPI مالها من Cloudflare. ماكو شي يظهر بدل رقم مختلق.",
+      "error": "ماكدرنا نوصل لـAnalytics API مال Cloudflare. بدل ما نعرض رقم قديم أو مختلق، هذي الصفحة ما تعرض شي لين القراءة المباشرة تنجح."
+    },
+    "tile": {
+      "visitorsToday": "زوار اليوم",
+      "soFarToday": "لحد هسه اليوم، UTC",
+      "peakHour": "أكثر ساعة ازدحام",
+      "peakDay": "أكثر يوم ازدحام",
+      "peakAtHour": "بـ{{when}} UTC",
+      "peakOnDay": "بـ{{when}}",
+      "inRange": "بهذا المدى",
+      "pageViews": "مشاهدات الصفحة",
+      "overHours": "على مدى {{count}} ساعة",
+      "overDay": "على مدى يوم وحد",
+      "overDays": "على مدى {{count}} أيام",
+      "requestsLabel": "الطلبات",
+      "served": "انقدم",
+      "requests": "{{requests}} طلب"
+    },
+    "chart": {
+      "hourly": "الزوار بالساعة",
+      "daily": "الزوار باليوم",
+      "hourlyHint": "{{count}} فترة بالساعة، UTC",
+      "dailyHint": "زوار فريدين باليوم",
+      "empty": "بعد ماكو بيانات لهذي الفترة"
+    },
+    "countries": {
+      "title": "أفضل الدول",
+      "windowDay": "آخر 24 ساعة",
+      "window": "آخر {{days}} أيام"
+    },
+    "browsers": {
+      "title": "المتصفحات",
+      "window": "حسب مشاهدات الصفحة"
+    },
+    "edge": {
+      "title": "عند الحافة",
+      "windowDay": "آخر 24 ساعة",
+      "window": "آخر {{days}} أيام",
+      "cached": "انقدم من الكاش",
+      "encrypted": "مشفر",
+      "threats": "تهديدات انوقفت"
+    },
+    "proof": {
+      "title": "من وين جاية هذي الأرقام",
+      "subtitle": "يقاس من Cloudflare، مو من هذي الصفحة",
+      "source": "المصدر",
+      "datasets": "مجموعات البيانات",
+      "zone": "المنطقة",
+      "ray": "معرف Ray مال Cloudflare",
+      "fetched": "انجلبت بـ",
+      "query": "الاستعلام بالضبط وراء المخطط",
+      "copied": "انسخ",
+      "copy": "انسخ",
+      "openEndpoint": "افتح /api/stats",
+      "openRaw": "رد Cloudflare بدون تعديل",
+      "edge": "كل طلب لـdehub.io يمر عبر Cloudflare قبل ما يوصل لسيرفراتنا. هذي الأعداد هي تجميع Cloudflare نفسه لهذي الحركة — نفس الأرقام اللي لوحة التحكم مالتنا تعرضها. ما تنجمع بسكربت بمتصفحك، فماكو شي بهذي الصفحة يكدر ينفخها، وحظر المتعقبات ما يغيرها.",
+      "live": "الصفحة تقراهم مباشرة. تحميل /stats يستدعي نقطة النهاية مالتنا، اللي تستعلم Analytics API مال Cloudflare بتلك اللحظة وتخزن الجواب بالكاش لـ60 ثانية.",
+      "limits": "شنو تعرضه هذي الصفحة، وشنو ما تعرضه: تكدر تشوف إن الأرقام جاية من تجميع Cloudflare مو من كود التطبيق مالتنا، وإن الاستعلام المنشور هنا هو نفسه اللي يشتغل. مو بلا ثقة — احنا نحتفظ بتوكن الـAPI، وCloudflare ما يعطي قراءة عامة لتحليلات أي منطقة. أي واحد عنده منطقة Cloudflare مالته يكدر يشغل نفس الاستعلام عليها ويتأكد من الشكل."
+    },
+    "definitions": {
+      "title": "شنو تعني الأرقام",
+      "visitorsTerm": "الزوار",
+      "visitors": "— عناوين IP فريدة Cloudflare شافها ذاك اليوم. قريبة من عدد الناس، بس مو نفس الشي: مكتب باتصال وحد ينعد مرة وحدة، وموبايل يتنقل بين الواي فاي والبيانات ينعد مرتين.",
+      "pageViewsTerm": "مشاهدات الصفحة",
+      "pageViews": "— طلبات Cloudflare يصنفها كتحميل صفحات، مو صور أو سكربتات أو نداءات API.",
+      "botsTerm": "البوتات مضمنة",
+      "bots": "— هذوله أعداد خام من الحافة (edge)، فيدخل بيهم الزواحف ومراقبات وقت التشغيل والعملاء المبرمجين. تكدر تشوفهم بنفسك بتفصيل المتصفح فوك، وين مدخلات مثل \"Curl\" و\"Unknown\" حركة آلية مو بشر. فلترة البوتات تحتاج مستوى Cloudflare مدفوع احنا ما نشغله، وطرح تقدير بهدوء يخلي الأرقام أصعب بالتحقق، مو أسهل.",
+      "totalTerm": "مجاميع المدى",
+      "total": "— مشاهدات الصفحة والطلبات تتجمع عبر المدى. أعداد الزوار عمداً ما تنجمع بعنوان \"مجموع الزوار\"، لأن واحد كان هنا يوم الإثنين والثلاثاء راح ينعد مرتين.",
+      "peakTerm": "أكثر ساعة / يوم ازدحام",
+      "peak": "— أعلى عدد فريد بأي فترة وحدة من المدى، لنفس السبب: هذا رقم Cloudflare فعلاً يقيسه، مو رقم مبني من جمع أعداد متداخلة.",
+      "resolutionTerm": "بالساعة يوقف عند 3 أيام",
+      "resolution": "— هذا حد Cloudflare بهذي الخطة، مو خيار: يرفض أي استعلام بالساعة أوسع من ثلاث أيام. عرض الـ24 ساعة والـ3 أيام بالساعة؛ 7 أيام وأكثر يومي، وماكو طريقة ترسم مخطط بالساعة لكل الوكت.",
+      "breakdownTerm": "الدول والمتصفحات",
+      "breakdown": "— هذوله يتبعون المدة اللي تختارها، بس بس لين {{max}} يوم للخلف، وهذا أقصى شي التفصيل اليومي ينحفظ. بالمديات الأطول المخطط يغطي وكت أكثر من قائمة الدول.",
+      "startTerm": "التاريخ",
+      "start": "— \"كل الوكت\" يعني كل يوم Cloudflare بعده يحتفظ بيه، اليوم هذا {{days}} يوم يبدون من {{date}}، اليوم اللي dehub.io انتقل بيه لـCloudflare. ماكو بيانات حافة أقدم نعرضها، والأيام الأقدم تنطرح لمن Cloudflare يعتقهم."
+    }
+  },
+  "superpowers": {
+    "aimAtAccount": "متابعين منو المفروض يشوفونه؟",
+    "aimAtTiers": "شنو مستويات الشارة المفروض تشوفه؟",
+    "aimPlaceholder": "اسم المستخدم أو عنوان المحفظة",
+    "boost": "عزّز",
+    "boostBooked": "معزز لـ{{minutes}} دقيقة",
+    "boostExplainer": "يحط هذا المنشور بالمكان اللي فوق بالفيد الرئيسي طول المدة مالتك.",
+    "boostFailed": "ماكدرنا نعزز هذا المنشور",
+    "boostForMinutes": "عزّز لـ{{minutes}} دقيقة",
+    "boostedLabel": "معزز",
+    "boostsLeft": "باقي {{left}} من {{total}} تعزيزات",
+    "cancelFailed": "ماكدرنا نلغي هذا التعزيز",
+    "cancelledRefunded": "التعزيز انلغى ورجع لرصيدك",
+    "cancelledSpent": "التعزيز انلغى. كان بدأ من قبل، فيبقى مصروف.",
+    "colBoosts": "التعزيزات",
+    "colEach": "وحدة",
+    "colTier": "المستوى",
+    "colTotal": "بكل دورة",
+    "comingSoon": "جاي قريب",
+    "finishedCount": "{{count}} خلصت هذي الدورة، انشافت {{seen}} مرة",
+    "grantLine": "{{boosts}} × {{minutes}} دقيقة بكل دورة",
+    "intro": "الشارة تشتري أكثر من الرسمة اللي جنب اسمك. كل أسبوعين تمنح تعزيزات — كل وحدة تحط منشور بالمكان اللي فوق بالفيد الرئيسي. ثلطعش مستوى، ثلطعش قوة، فتح وحدة بكل درجة.",
+    "ladderHeading": "شنو يمنح كل مستوى",
+    "left": "باقي",
+    "liveUntil": "شغال لين {{time}}",
+    "loadFailed": "ماكدرنا نحمّل SuperPowers مالتك هسه. جرب مرة ثانية بعد شوية.",
+    "minutes": "دقايق",
+    "needBadge": "SuperPowers تحتاج شارة إيداع. ايدع DHB حتى تفتحها.",
+    "noBadgeYet": "بعد ماعندك شارة، فبعد ماكو تعزيزات. إيداع DHB يفتح السلم اللي تحت.",
+    "noBoostsLeft": "ماكو تعزيزات باقية هذي الدورة",
+    "powersHeading": "الثلطعش قوة",
+    "queued": "بالطابور",
+    "refills": "تتعبى من جديد {{date}}",
+    "refillsOn": "تتعبى من جديد بـ{{date}} — نفس اللحظة لأي واحد.",
+    "secondWind": "نفس ثاني",
+    "secondWindExplainer": "هذا المنشور عمره أكثر من أسبوع. نفس ثاني يرجعه لفوك الفيد.",
+    "seenCount": "{{count}} انشاف",
+    "shareOfVoice": "مكان التعزيز يتبدل. لمن يكون أكثر من تعزيز شغال، كل واحد يتفرج يتعطى له وحد موزون حسب مستوى الشارة — المستوى الأعلى يبين أكثر، وكلشي ياخذ الوكت اللي انعطى له.",
+    "spendFor": "{{power}} لـ{{minutes}} دقيقة",
+    "spent": "{{power}} شغالة لـ{{minutes}} دقيقة",
+    "stakeDhb": "ايدع DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} تنفتح عند {{tier}}"
   }
 }

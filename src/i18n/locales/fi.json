@@ -343,7 +343,8 @@
     "activityLog": "Toimintaloki",
     "endStream": "Lopeta lähetys",
     "linkCopied": "Linkki kopioitu leikepöydälle",
-    "postUrlCopied": "Julkaisun URL kopioitu"
+    "postUrlCopied": "Julkaisun URL kopioitu",
+    "boostPost": "Nosta postaus"
   },
   "filters": {
     "sort": "Lajittele",
@@ -774,7 +775,8 @@
     "ppvStartSaving": "Osta Pay-Per-View-sisältöä suosikkisisällöntuottajiltasi, niin se näkyy täällä.",
     "recentStartSaving": "Viimeksi kirjanmerkkeihin lisäämäsi julkaisut näkyvät täällä.",
     "textStartSaving": "Lisää pelkkää tekstiä sisältäviä julkaisuja kirjanmerkkeihin, niin ne näkyvät täällä.",
-    "videosStartSaving": "Lisää videoita sisältäviä julkaisuja kirjanmerkkeihin, niin ne kootaan tänne."
+    "videosStartSaving": "Lisää videoita sisältäviä julkaisuja kirjanmerkkeihin, niin ne kootaan tänne.",
+    "folders": "Kansiot"
   },
   "notifications": {
     "title": "Ilmoitukset",
@@ -1722,5 +1724,49 @@
       "startTerm": "Historia",
       "start": "— ”koko aika” tarkoittaa jokaista päivää, jonka Cloudflare vielä säilyttää, tänään {{days}} päivää alkaen {{date}}, jolloin dehub.io siirtyi Cloudflareen. Aiempaa reunadataa ei ole näytettäväksi, ja vanhat päivät putoavat pois Cloudflaren vanhentaessa niitä."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kenen seuraajien pitäisi nähdä se?",
+    "aimAtTiers": "Minkä merkkitasojen pitäisi nähdä se?",
+    "aimPlaceholder": "Käyttäjänimi tai lompakko-osoite",
+    "boost": "Nosta",
+    "boostBooked": "Nostettu {{minutes}} minuutiksi",
+    "boostExplainer": "Nostaa tämän postauksen kotisyötteen kärkipaikalle valitsemaksesi ajaksi.",
+    "boostFailed": "Postausta ei voitu nostaa",
+    "boostForMinutes": "Nosta {{minutes}} minuutiksi",
+    "boostedLabel": "Nostettu",
+    "boostsLeft": "{{left}}/{{total}} nostoa jäljellä",
+    "cancelFailed": "Nostoa ei voitu perua",
+    "cancelledRefunded": "Nosto peruttu ja palautettu kiintiöösi",
+    "cancelledSpent": "Nosto peruttu. Se oli jo alkanut, joten se pysyy käytettynä.",
+    "colBoosts": "Nostot",
+    "colEach": "Kukin",
+    "colTier": "Taso",
+    "colTotal": "Per jakso",
+    "comingSoon": "tulossa pian",
+    "finishedCount": "{{count}} päättynyt tällä jaksolla, nähty {{seen}} kertaa",
+    "grantLine": "{{boosts}} × {{minutes}} minuuttia per jakso",
+    "intro": "Merkki ostaa muutakin kuin kuvakkeen nimesi vierestä. Se myöntää joka toinen viikko nostoja — jokainen nostaa yhden postauksen kotisyötteen kärkipaikalle. Kolmetoista tasoa, kolmetoista voimaa — yksi avautuu jokaisella portaalla.",
+    "ladderHeading": "Mitä kukin taso myöntää",
+    "left": "jäljellä",
+    "liveUntil": "käynnissä {{time}} asti",
+    "loadFailed": "SuperPowersejasi ei voitu ladata juuri nyt. Yritä hetken päästä uudelleen.",
+    "minutes": "minuuttia",
+    "needBadge": "SuperPowers vaatii talletusmerkin. Talleta DHB:tä avataksesi ne.",
+    "noBadgeYet": "Sinulla ei ole vielä merkkiä, joten et saa nostoja. DHB:n tallettaminen avaa alla olevan tikapuun.",
+    "noBoostsLeft": "Ei nostoja jäljellä tällä jaksolla",
+    "powersHeading": "Kolmetoista voimaa",
+    "queued": "jonossa",
+    "refills": "täyttyy {{date}}",
+    "refillsOn": "Täyttyy {{date}} — sama hetki kaikille.",
+    "secondWind": "Second Wind",
+    "secondWindExplainer": "Tämä postaus on yli viikon vanha. Second Wind nostaa sen takaisin syötteen kärkeen.",
+    "seenCount": "{{count}} nähty",
+    "shareOfVoice": "Kärkipaikka kiertää. Kun useita nostoja on käynnissä, katsojille arvotaan yksi merkkitason painottamana — korkeampi taso näkyy useammin, ja jokainen saa sen ajan, joka hänelle myönnettiin.",
+    "spendFor": "{{power}} {{minutes}} minuutiksi",
+    "spent": "{{power}} käynnissä {{minutes}} minuuttia",
+    "stakeDhb": "Talleta DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} avautuu tasolla {{tier}}"
   }
 }

@@ -351,7 +351,8 @@
     "activityLog": "Regjistri i Aktivitetit",
     "endStream": "Përfundo Transmetimin",
     "linkCopied": "Lidhja u kopjua në clipboard",
-    "postUrlCopied": "URL e postimit u kopjua në clipboard"
+    "postUrlCopied": "URL e postimit u kopjua në clipboard",
+    "boostPost": "Nxit postimin"
   },
   "filters": {
     "sort": "Rendit",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Bli përmbajtje Pay-Per-View nga krijuesit e tu të preferuar që ajo të shfaqet këtu.",
     "recentStartSaving": "Postimet e tua të shënuara së fundmi do të shfaqen këtu.",
     "textStartSaving": "Shëno postime vetëm me tekst dhe ato do të shfaqen këtu.",
-    "videosStartSaving": "Shëno postime me video dhe ato do të mblidhen këtu."
+    "videosStartSaving": "Shëno postime me video dhe ato do të mblidhen këtu.",
+    "folders": "Dosjet"
   },
   "notifications": {
     "title": "Njoftimet",
@@ -1722,5 +1724,49 @@
       "startTerm": "Historiku",
       "start": "— „gjithë koha” do të thotë çdo ditë që Cloudflare ende ruan, sot {{days}} ditë duke nisur nga {{date}}, dita kur dehub.io kaloi te Cloudflare. Nuk ka të dhëna më të hershme skaji për t'u shfaqur, dhe ditët e vjetra bien ndërsa Cloudflare i skadon."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Ndjekësit e kujt duhet ta shohin?",
+    "aimAtTiers": "Cilat nivele distinktivi duhet ta shohin?",
+    "aimPlaceholder": "Emri i përdoruesit ose adresa e portofolit",
+    "boost": "Nxitje",
+    "boostBooked": "Nxitur për {{minutes}} minuta",
+    "boostExplainer": "Vendos këtë postim në vendin në krye të rrjedhës kryesore për periudhën tënde.",
+    "boostFailed": "Nuk u nxit dot ai postim",
+    "boostForMinutes": "Nxit për {{minutes}} minuta",
+    "boostedLabel": "I nxitur",
+    "boostsLeft": "{{left}} nga {{total}} nxitje mbeten",
+    "cancelFailed": "Ajo nxitje nuk u anulua dot",
+    "cancelledRefunded": "Nxitja u anulua dhe u kthye te kuota jote",
+    "cancelledSpent": "Nxitja u anulua. Kishte nisur tashmë, prandaj mbetet e shpenzuar.",
+    "colBoosts": "Nxitje",
+    "colEach": "Secila",
+    "colTier": "Niveli",
+    "colTotal": "Për cikël",
+    "comingSoon": "së shpejti",
+    "finishedCount": "{{count}} përfunduar këtë cikël, parë {{seen}} herë",
+    "grantLine": "{{boosts}} × {{minutes}} minuta për cikël",
+    "intro": "Një distinktiv blen më shumë se artin pranë emrit tënd. Çdo dy javë jep nxitje — secila vendos një postim në vendin në krye të rrjedhës kryesore. Trembëdhjetë nivele, trembëdhjetë fuqi, një zhbllokim për çdo shkallë.",
+    "ladderHeading": "Çfarë jep secili nivel",
+    "left": "mbetur",
+    "liveUntil": "drejtpërdrejt deri në {{time}}",
+    "loadFailed": "SuperPowers e tua nuk u ngarkuan dot tani. Provo sërish pas pak.",
+    "minutes": "minuta",
+    "needBadge": "SuperPowers kërkojnë një distinktiv depozite. Depozito DHB për t'i zhbllokuar.",
+    "noBadgeYet": "Nuk ke ende asnjë distinktiv, prandaj asnjë nxitje. Depozitimi i DHB-së zhbllokon shkallën më poshtë.",
+    "noBoostsLeft": "Nuk kanë mbetur nxitje këtë cikël",
+    "powersHeading": "Trembëdhjetë fuqitë",
+    "queued": "në radhë",
+    "refills": "mbushet përsëri më {{date}}",
+    "refillsOn": "Mbushet përsëri më {{date}} — në të njëjtin moment për të gjithë.",
+    "secondWind": "Fryma e Dytë",
+    "secondWindExplainer": "Ky postim është më i vjetër se një javë. Fryma e Dytë e dërgon përsëri në krye të rrjedhës.",
+    "seenCount": "{{count}} parë",
+    "shareOfVoice": "Vendi i nxitjes rrotullohet. Kur po funksionojnë disa nxitje njëkohësisht, shikuesve u jepet një e peshuar sipas nivelit të distinktivit — një nivel më i lartë shfaqet më shpesh, dhe secili merr periudhën që iu caktua.",
+    "spendFor": "{{power}} për {{minutes}} minuta",
+    "spent": "{{power}} po funksionon për {{minutes}} minuta",
+    "stakeDhb": "Depozito DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} zhbllokohet në nivelin {{tier}}"
   }
 }

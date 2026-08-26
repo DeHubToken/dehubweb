@@ -351,7 +351,8 @@
     "activityLog": "Aktivitātes žurnāls",
     "endStream": "Beigt tiešraidi",
     "linkCopied": "Saite nokopēta starpliktuvē",
-    "postUrlCopied": "Ieraksta URL nokopēts starpliktuvē"
+    "postUrlCopied": "Ieraksta URL nokopēts starpliktuvē",
+    "boostPost": "Pastiprināt ierakstu"
   },
   "filters": {
     "sort": "Kārtot",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Iegādājieties Pay-Per-View saturu no saviem iecienītajiem satura veidotājiem, lai tas parādītos šeit.",
     "recentStartSaving": "Jūsu pēdējie grāmatzīmēm pievienotie ieraksti parādīsies šeit.",
     "textStartSaving": "Pievienojiet grāmatzīmēm tikai teksta ierakstus, un tie parādīsies šeit.",
-    "videosStartSaving": "Pievienojiet grāmatzīmēm ierakstus ar video, un tie tiks apkopoti šeit."
+    "videosStartSaving": "Pievienojiet grāmatzīmēm ierakstus ar video, un tie tiks apkopoti šeit.",
+    "folders": "Mapes"
   },
   "notifications": {
     "title": "Paziņojumi",
@@ -1722,5 +1724,49 @@
       "startTerm": "Vēsture",
       "start": "— “viss laiks” nozīmē katru dienu, ko Cloudflare vēl saglabā, šodien {{days}} dienas kopš {{date}}, dienas, kad dehub.io pārgāja uz Cloudflare. Agrāku malas datu nav, un vecākas dienas izkrīt, kad Cloudflare tām beidzas glabāšanas termiņš."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kuru sekotājiem tas jāredz?",
+    "aimAtTiers": "Kuriem nozīmīšu līmeņiem tas jāredz?",
+    "aimPlaceholder": "Lietotājvārds vai maka adrese",
+    "boost": "Pastiprināt",
+    "boostBooked": "Pastiprināts uz {{minutes}} minūtēm",
+    "boostExplainer": "Novieto šo ierakstu sākuma plūsmas augšējā vietā uz tev piešķirto laiku.",
+    "boostFailed": "Neizdevās pastiprināt šo ierakstu",
+    "boostForMinutes": "Pastiprināt uz {{minutes}} minūtēm",
+    "boostedLabel": "Pastiprināts",
+    "boostsLeft": "Atlikuši {{left}} no {{total}} pastiprinājumiem",
+    "cancelFailed": "Neizdevās atcelt šo pastiprinājumu",
+    "cancelledRefunded": "Pastiprinājums atcelts un atgriezts tavā limitā",
+    "cancelledSpent": "Pastiprinājums atcelts. Tas jau bija sācies, tāpēc paliek izmantots.",
+    "colBoosts": "Pastiprinājumi",
+    "colEach": "Katrs",
+    "colTier": "Līmenis",
+    "colTotal": "Par ciklu",
+    "comingSoon": "drīzumā",
+    "finishedCount": "{{count}} pabeigti šajā ciklā, skatīti {{seen}} reizes",
+    "grantLine": "{{boosts}} × {{minutes}} minūtes ciklā",
+    "intro": "Nozīmīte nopērk vairāk nekā tikai ikonu blakus tavam vārdam. Ik pēc divām nedēļām tā piešķir pastiprinājumus — katrs no tiem uz brīdi paceļ ierakstu sākuma plūsmas augšgalā. Trīspadsmit līmeņi, trīspadsmit spējas — pa vienai katrā pakāpienā.",
+    "ladderHeading": "Ko piešķir katrs līmenis",
+    "left": "atlicis",
+    "liveUntil": "aktīvs līdz {{time}}",
+    "loadFailed": "Neizdevās ielādēt tavas SuperSpējas. Mēģini vēlreiz pēc brīža.",
+    "minutes": "minūtes",
+    "needBadge": "SuperSpējām nepieciešama iemaksas nozīmīte. Iemaksā DHB, lai tās atslēgtu.",
+    "noBadgeYet": "Tev vēl nav nozīmītes, tāpēc nav arī pastiprinājumu. DHB iemaksāšana atslēdz zemāk redzamo kāpni.",
+    "noBoostsLeft": "Šajā ciklā vairs nav pastiprinājumu",
+    "powersHeading": "Trīspadsmit spējas",
+    "queued": "rindā",
+    "refills": "atjaunojas {{date}}",
+    "refillsOn": "Atjaunojas {{date}} — visiem vienā un tajā pašā brīdī.",
+    "secondWind": "Otrā elpa",
+    "secondWindExplainer": "Šim ierakstam ir vairāk nekā nedēļa. Otrā elpa to atkal paceļ plūsmas augšgalā.",
+    "seenCount": "{{count}} skatījumi",
+    "shareOfVoice": "Pastiprinājuma vieta mainās pēc rotācijas. Kad vienlaikus darbojas vairāki pastiprinājumi, skatītājiem tiek rādīts viens no tiem, izvēlēts pēc nozīmītes līmeņa svara — augstāks līmenis tiek rādīts biežāk, un katrs saņem tieši to laiku, kas viņam piešķirts.",
+    "spendFor": "{{power}} uz {{minutes}} minūtēm",
+    "spent": "{{power}} darbojas {{minutes}} minūtes",
+    "stakeDhb": "Iemaksā DHB",
+    "title": "SuperSpējas",
+    "unlocksAt": "{{power}} atslēdzas līmenī {{tier}}"
   }
 }

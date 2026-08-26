@@ -351,7 +351,8 @@
     "activityLog": "Tarihin ayyuka",
     "endStream": "Ƙare watsa",
     "linkCopied": "An kwafi hanyar haɗi",
-    "postUrlCopied": "An kwafi URL na rubutu"
+    "postUrlCopied": "An kwafi URL na rubutu",
+    "boostPost": "Ƙarfafa sakon"
   },
   "filters": {
     "sort": "Tsara",
@@ -799,7 +800,8 @@
     "ppvStartSaving": "Saya abun cikin Pay-Per-View daga masu ƙirƙirar da ka fi so don ya bayyana a nan.",
     "recentStartSaving": "Wallafe-wallafen da ka yi wa alamar shafi kwanan nan za su bayyana a nan.",
     "textStartSaving": "Yi alamar shafi a wallafe-wallafen rubutu kawai, za su bayyana a nan.",
-    "videosStartSaving": "Yi alamar shafi a wallafe-wallafen da ke da bidiyo, za a tattara su a nan."
+    "videosStartSaving": "Yi alamar shafi a wallafe-wallafen da ke da bidiyo, za a tattara su a nan.",
+    "folders": "Fayiloli"
   },
   "notifications": {
     "title": "Sanarwa",
@@ -1722,5 +1724,49 @@
       "startTerm": "Tarihi",
       "start": "— \"dukan lokacin\" na nufin kowace rana da Cloudflare ke ajiyewa har yanzu, yau kwanaki {{days}} tun {{date}}, ranar da dehub.io ya koma Cloudflare. Babu bayanan gefe na baya da za a nuna, kuma tsofaffin kwanaki suna faɗuwa yayin da Cloudflare ke ƙare musu lokaci."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Mabiyan wanene ya kamata su gan shi?",
+    "aimAtTiers": "Waɗanne matakan lamba ya kamata su gan shi?",
+    "aimPlaceholder": "Sunan mai amfani ko adireshin walat",
+    "boost": "Ƙarfafa",
+    "boostBooked": "An ƙarfafa na tsawon minti {{minutes}}",
+    "boostExplainer": "Yana sanya wannan sakon a wurin da ke saman shafin gida na tsawon lokacin da aka baka.",
+    "boostFailed": "An kasa ƙarfafa wannan sakon",
+    "boostForMinutes": "Ƙarfafa na tsawon minti {{minutes}}",
+    "boostedLabel": "An ƙarfafa",
+    "boostsLeft": "{{left}} daga cikin {{total}} ƙarfafawa sun rage",
+    "cancelFailed": "An kasa soke wannan ƙarfafawar",
+    "cancelledRefunded": "An soke ƙarfafawar kuma an mayar da ita ga adadinka",
+    "cancelledSpent": "An soke ƙarfafawar. Ta riga ta fara, don haka ta zama an kashe ta.",
+    "colBoosts": "Ƙarfafawa",
+    "colEach": "Kowanne",
+    "colTier": "Mataki",
+    "colTotal": "Kowane zagaye",
+    "comingSoon": "zai zo nan ba da jimawa ba",
+    "finishedCount": "An gama {{count}} a wannan zagayen, an gani sau {{seen}}",
+    "grantLine": "Ƙarfafawa {{boosts}} × minti {{minutes}} a kowane zagaye",
+    "intro": "Lamba tana saya fiye da zanen da ke gefen sunanka. Kowane makonni biyu tana bayar da ƙarfafawa — kowace tana sanya sako a wurin da ke saman shafin gida. Matakai goma sha uku, ƙarfi goma sha uku, buɗewa ɗaya a kowane mataki.",
+    "ladderHeading": "Abin da kowane mataki ke bayarwa",
+    "left": "sun rage",
+    "liveUntil": "yana raye har zuwa {{time}}",
+    "loadFailed": "An kasa loda SuperPowers ɗinka a yanzu. Sake gwadawa bayan ɗan lokaci.",
+    "minutes": "mintuna",
+    "needBadge": "SuperPowers na buƙatar lamba ta ajiya. Ajiye DHB domin buɗe su.",
+    "noBadgeYet": "Ba ka da lamba tukuna, don haka babu ƙarfafawa. Ajiye DHB yana buɗe matakan da ke ƙasa.",
+    "noBoostsLeft": "Babu ƙarfafawa da suka rage a wannan zagayen",
+    "powersHeading": "Ƙarfi goma sha uku",
+    "queued": "a jere",
+    "refills": "yana cika {{date}}",
+    "refillsOn": "Yana cika a {{date}} — a lokaci ɗaya ga kowa.",
+    "secondWind": "Numfashi na Biyu",
+    "secondWindExplainer": "Wannan sakon ya wuce mako guda. Numfashi na Biyu yana mayar da shi saman shafin.",
+    "seenCount": "an gani {{count}}",
+    "shareOfVoice": "Wurin ƙarfafawar yana juyawa. Idan ana gudanar da ƙarfafawa da yawa a lokaci guda, ana rarraba wa masu kallo bisa nauyin matakin lamba — mafi girman mataki yana bayyana sau da yawa, kuma kowa yana samun lokacin da aka baka.",
+    "spendFor": "{{power}} na tsawon minti {{minutes}}",
+    "spent": "{{power}} yana gudana na tsawon minti {{minutes}}",
+    "stakeDhb": "Ajiye DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} yana buɗewa a {{tier}}"
   }
 }

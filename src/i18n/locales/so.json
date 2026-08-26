@@ -351,7 +351,8 @@
     "activityLog": "Diiwaanka Howlgallada",
     "endStream": "Dhamaystir Tooska",
     "linkCopied": "Xiriirka waa la nuqulay",
-    "postUrlCopied": "URL-ka qoraalka waa la nuqulay"
+    "postUrlCopied": "URL-ka qoraalka waa la nuqulay",
+    "boostPost": "Boost garee qoraalka"
   },
   "filters": {
     "sort": "Kala sooc",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Iibso waxyaabaha lacagta lagu daawado (Pay-Per-View) ee abuurayaasha aad jeceshahay si ay halkan uga soo muuqdaan.",
     "recentStartSaving": "Qoraallada aad ugu dambeyntii calaamadeysay ayaa halkan ka soo muuqan doona.",
     "textStartSaving": "Calaamadee qoraallada qoraal-kaliya ah, halkan ayay ka soo muuqan doonaan.",
-    "videosStartSaving": "Calaamadee qoraallada fiidiyowyada leh, halkan ayaa lagu soo ururin doonaa."
+    "videosStartSaving": "Calaamadee qoraallada fiidiyowyada leh, halkan ayaa lagu soo ururin doonaa.",
+    "folders": "Foolarada"
   },
   "notifications": {
     "title": "Ogeysiisyo",
@@ -1722,5 +1724,49 @@
       "startTerm": "Taariikh",
       "start": "— \"waqtiga oo dhan\" waxaa loola jeedaa maalin kasta oo Cloudflare weli hayo, maanta waa {{days}} maalmood laga bilaabo {{date}}, maalintii dehub.io u guuray Cloudflare. Ma jiraan xog cidhif ah oo hore oo la tuso, maalmaha duugoobayna way baaba'aan marka Cloudflare uu duugeeyo."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Yaa raacayaashiisu ay tahay inay arkaan?",
+    "aimAtTiers": "Heerarka calaamadda ee ay tahay inay arkaan?",
+    "aimPlaceholder": "Magaca isticmaalaha ama cinwaanka boorsada",
+    "boost": "Boost",
+    "boostBooked": "La boost gareeyay {{minutes}} daqiiqo",
+    "boostExplainer": "Wuxuu boostkan geliyaa booska sare ee bogga hore muddadaada.",
+    "boostFailed": "Boostka lama gelin karin qoraalkaas",
+    "boostForMinutes": "Boost garee {{minutes}} daqiiqo",
+    "boostedLabel": "La boost gareeyay",
+    "boostsLeft": "{{left}} ee {{total}} boost ayaa hadhay",
+    "cancelFailed": "Boostkaas lama joojin karin",
+    "cancelledRefunded": "Boostka waa la joojiyay oo waxaa lagu celiyay xadkaaga",
+    "cancelledSpent": "Boostka waa la joojiyay. Mar hore ayuu bilaabmay, sidaas darteed wuu sii jiraa isagoo la isticmaalay.",
+    "colBoosts": "Boostyada",
+    "colEach": "Mid kasta",
+    "colTier": "Heer",
+    "colTotal": "Wareeg kasta",
+    "comingSoon": "dhawaan ayay imanaysaa",
+    "finishedCount": "{{count}} ayaa dhammaaday wareeggan, {{seen}} jeer la arkay",
+    "grantLine": "{{boosts}} × {{minutes}} daqiiqo wareeg kasta",
+    "intro": "Calaamaddu waxay ku iibisaa wax ka badan sawirka magacaaga ku xigga. Laba toddobaad kasta wuxuu siiyaa boostyo — mid kasta wuxuu boostka geliyaa booska sare ee bogga hore. Saddex iyo toban heer, saddex iyo toban awood, mid la furo heer kasta.",
+    "ladderHeading": "Waxa heer kastaa siiyo",
+    "left": "hadhay",
+    "liveUntil": "toos ilaa {{time}}",
+    "loadFailed": "SuperPowers-kaaga lama soo rari karin hadda. Isku day mar kale wax yar ka dib.",
+    "minutes": "daqiiqo",
+    "needBadge": "SuperPowers waxay u baahan yihiin calaamad la dhigay. Dhig DHB si aad u furto.",
+    "noBadgeYet": "Weli calaamad ma haysatid, sidaas darteed boost ma jiro. DHB dhigidu wuxuu furayaa jaranjarada hoose.",
+    "noBoostsLeft": "Wareeggan boost ma hadhin",
+    "powersHeading": "Saddex iyo tobanka awood",
+    "queued": "safka",
+    "refills": "wuxuu dib u buuxinayaa {{date}}",
+    "refillsOn": "Wuxuu dib u buuxinayaa {{date}} — waqti isku mid ah qof kasta.",
+    "secondWind": "Neefta Labaad",
+    "secondWindExplainer": "Boostani wuxuu ka weyn yahay toddobaad. Neefta Labaad wuxuu ku celiyaa booska sare ee feedka.",
+    "seenCount": "{{count}} la arkay",
+    "shareOfVoice": "Booska boostku wuu wareegaa. Marka boostyo dhowr ah ay socdaan, daawadayaasha waxaa la siiyaa mid miisaan lagu qoondeeyay heerka calaamadda — heer sare ayaa badanaa la muujiyaa, oo qof kastaana wuxuu helaa muddadii loo qoondeeyay.",
+    "spendFor": "Bixi {{power}} {{minutes}} daqiiqo",
+    "spent": "{{power}} wuu socdaa {{minutes}} daqiiqo",
+    "stakeDhb": "Dhig DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} wuxuu ku furmaa {{tier}}"
   }
 }

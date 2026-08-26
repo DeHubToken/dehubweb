@@ -343,7 +343,8 @@
     "activityLog": "Aktivitetslogg",
     "endStream": "Avslutt sending",
     "linkCopied": "Lenke kopiert til utklippstavle",
-    "postUrlCopied": "Innleggs-URL kopiert"
+    "postUrlCopied": "Innleggs-URL kopiert",
+    "boostPost": "Boost innlegg"
   },
   "filters": {
     "sort": "Sorter",
@@ -774,7 +775,8 @@
     "ppvStartSaving": "Kjøp Pay-Per-View-innhold fra favorittskaperne dine, så vises det her.",
     "recentStartSaving": "De sist bokmerkede innleggene dine vises her.",
     "textStartSaving": "Bokmerk innlegg med bare tekst, så vises de her.",
-    "videosStartSaving": "Bokmerk innlegg med videoer, så samles de her."
+    "videosStartSaving": "Bokmerk innlegg med videoer, så samles de her.",
+    "folders": "Mapper"
   },
   "notifications": {
     "title": "Varsler",
@@ -1722,5 +1724,49 @@
       "startTerm": "Historikk",
       "start": "— «hele perioden» betyr hver dag Cloudflare fortsatt beholder, i dag {{days}} dager fra {{date}}, dagen dehub.io flyttet til Cloudflare. Det finnes ingen eldre kantdata å vise, og gamle dager faller bort etter hvert som Cloudflare lar dem utløpe."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Hvem sine følgere skal se det?",
+    "aimAtTiers": "Hvilke merkenivåer skal se det?",
+    "aimPlaceholder": "Brukernavn eller lommebokadresse",
+    "boost": "Boost",
+    "boostBooked": "Boostet i {{minutes}} minutter",
+    "boostExplainer": "Setter dette innlegget i slotten øverst i hjemmefeeden i vinduet ditt.",
+    "boostFailed": "Kunne ikke booste det innlegget",
+    "boostForMinutes": "Boost i {{minutes}} minutter",
+    "boostedLabel": "Boostet",
+    "boostsLeft": "{{left}} av {{total}} boost igjen",
+    "cancelFailed": "Kunne ikke avbryte den boosten",
+    "cancelledRefunded": "Boost avbrutt og lagt tilbake i tildelingen din",
+    "cancelledSpent": "Boost avbrutt. Den hadde allerede startet, så den forblir brukt.",
+    "colBoosts": "Boost",
+    "colEach": "Hver",
+    "colTier": "Nivå",
+    "colTotal": "Per syklus",
+    "comingSoon": "kommer snart",
+    "finishedCount": "{{count}} fullført denne syklusen, sett {{seen}} ganger",
+    "grantLine": "{{boosts}} × {{minutes}} minutter per syklus",
+    "intro": "Et merke kjøper mer enn ikonet ved siden av navnet ditt. Hver fjortende dag gir det boost — hver av dem setter et innlegg i slotten øverst i hjemmefeeden. Tretten nivåer, tretten krefter, én opplåsing per trinn.",
+    "ladderHeading": "Hva hvert nivå gir",
+    "left": "igjen",
+    "liveUntil": "aktiv til {{time}}",
+    "loadFailed": "Kunne ikke laste SuperPowers akkurat nå. Prøv igjen om litt.",
+    "minutes": "minutter",
+    "needBadge": "SuperPowers krever et innskuddsmerke. Sett inn DHB for å låse dem opp.",
+    "noBadgeYet": "Du har ikke noe merke ennå, så ingen boost. Å sette inn DHB låser opp stigen under.",
+    "noBoostsLeft": "Ingen boost igjen denne syklusen",
+    "powersHeading": "De tretten kreftene",
+    "queued": "i kø",
+    "refills": "fylles på {{date}}",
+    "refillsOn": "Fylles på {{date}} — samme øyeblikk for alle.",
+    "secondWind": "Second Wind",
+    "secondWindExplainer": "Dette innlegget er over en uke gammelt. Second Wind sender det tilbake til toppen av feeden.",
+    "seenCount": "{{count}} sett",
+    "shareOfVoice": "Boost-slotten roterer. Når flere boost kjører samtidig, får seerne én vektet etter merkenivå — et høyere nivå vises oftere, og alle får vinduet de fikk tildelt.",
+    "spendFor": "{{power}} i {{minutes}} minutter",
+    "spent": "{{power}} kjører i {{minutes}} minutter",
+    "stakeDhb": "Sett inn DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} låses opp ved {{tier}}"
   }
 }

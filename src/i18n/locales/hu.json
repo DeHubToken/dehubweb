@@ -535,7 +535,8 @@
     "activityLog": "Tevékenységnapló",
     "endStream": "Adás befejezése",
     "linkCopied": "Link másolva",
-    "postUrlCopied": "Bejegyzés linkje másolva"
+    "postUrlCopied": "Bejegyzés linkje másolva",
+    "boostPost": "Bejegyzés kiemelése"
   },
   "filters": {
     "sort": "Rendezés",
@@ -711,7 +712,8 @@
     "ppvStartSaving": "Vásárolj Pay-Per-View tartalmat kedvenc alkotóidtól, és itt jelenik meg.",
     "recentStartSaving": "A legutóbb könyvjelzőbe mentett bejegyzéseid itt jelennek meg.",
     "textStartSaving": "Mentsd könyvjelzőbe a csak szöveges bejegyzéseket, és itt jelennek meg.",
-    "videosStartSaving": "Mentsd könyvjelzőbe a videós bejegyzéseket, és itt gyűlnek majd össze."
+    "videosStartSaving": "Mentsd könyvjelzőbe a videós bejegyzéseket, és itt gyűlnek majd össze.",
+    "folders": "Mappák"
   },
   "notifications": {
     "title": "Értesítések",
@@ -1726,5 +1728,49 @@
       "startTerm": "Előzmények",
       "start": "— a „teljes időszak” minden olyan napot jelent, amit a Cloudflare még őriz, ma {{days}} nap {{date}} óta, amikor a dehub.io átkerült a Cloudflare-re. Korábbi edge-adat nincs, a régebbi napok pedig eltűnnek, ahogy a Cloudflare kiöregíti őket."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kinek a követői lássák?",
+    "aimAtTiers": "Mely jelvényszintek lássák?",
+    "aimPlaceholder": "Felhasználónév vagy tárcacím",
+    "boost": "Kiemelés",
+    "boostBooked": "{{minutes}} percre kiemelve",
+    "boostExplainer": "A kiemelés idejére a kezdőlap hírfolyam tetején lévő helyre teszi ezt a bejegyzést.",
+    "boostFailed": "Nem sikerült kiemelni a bejegyzést",
+    "boostForMinutes": "Kiemelés {{minutes}} percre",
+    "boostedLabel": "Kiemelve",
+    "boostsLeft": "{{left}}/{{total}} kiemelés maradt",
+    "cancelFailed": "Nem sikerült visszavonni a kiemelést",
+    "cancelledRefunded": "A kiemelés visszavonva, visszakerült a keretedbe",
+    "cancelledSpent": "A kiemelés visszavonva. Már elindult, így elszámoltnak marad.",
+    "colBoosts": "Kiemelések",
+    "colEach": "Egyenként",
+    "colTier": "Szint",
+    "colTotal": "Ciklusonként",
+    "comingSoon": "hamarosan",
+    "finishedCount": "{{count}} fejeződött be ebben a ciklusban, {{seen}} alkalommal látták",
+    "grantLine": "{{boosts}} × {{minutes}} perc ciklusonként",
+    "intro": "A jelvény többet ad, mint a név melletti díszítést. Kéthetente kiemeléseket biztosít — mindegyik a kezdőlap hírfolyam tetején lévő helyre teszi a bejegyzésedet. Tizenhárom szint, tizenhárom képesség, fokozatonként egy feloldás.",
+    "ladderHeading": "Mit kapsz az egyes szinteken",
+    "left": "maradt",
+    "liveUntil": "{{time}}-ig aktív",
+    "loadFailed": "Most nem sikerült betölteni a SuperPowers adataidat. Próbáld újra egy pillanat múlva.",
+    "minutes": "perc",
+    "needBadge": "A SuperPowers használatához staking-jelvény kell. Stakelj DHB-t, hogy feloldd őket.",
+    "noBadgeYet": "Még nincs jelvényed, így kiemelés sincs. A DHB stakelése feloldja az alábbi létrát.",
+    "noBoostsLeft": "Nincs több kiemelésed ebben a ciklusban",
+    "powersHeading": "A tizenhárom képesség",
+    "queued": "Sorban",
+    "refills": "megújulás: {{date}}",
+    "refillsOn": "{{date}}-kor újul meg — mindenkinél ugyanabban a pillanatban.",
+    "secondWind": "Második levegő",
+    "secondWindExplainer": "Ez a bejegyzés egy hétnél régebbi. A Második levegő visszaküldi a hírfolyam tetejére.",
+    "seenCount": "{{count}} megtekintés",
+    "shareOfVoice": "A kiemelt hely körforgásban van. Amikor több kiemelés is fut egyszerre, a nézők jelvényszint szerint súlyozva kapják meg az egyiket — a magasabb szint gyakrabban jelenik meg, és mindenki megkapja a neki járó időablakot.",
+    "spendFor": "{{power}} {{minutes}} percre",
+    "spent": "{{power}} fut {{minutes}} percig",
+    "stakeDhb": "DHB stakelése",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} a(z) {{tier}} szinten oldódik fel"
   }
 }
