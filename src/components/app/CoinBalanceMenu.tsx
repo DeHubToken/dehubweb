@@ -15,7 +15,6 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
-import { ChainSelector, type ChainId, type PostChainId } from './ChainSelector';
 
 /**
  * Shown at the top of the wallet menu whenever the built-in wallet's key is not
@@ -91,7 +90,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
-  const [selectedChainId, setSelectedChainId] = useState<PostChainId>(8453);
 
   const formattedWalletAddress = useMemo(() => {
     if (!walletAddress) return null;
@@ -183,19 +181,12 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const mainMenuContent = (
     <div className="space-y-1">
-      {/* Balance display with chain selector */}
+      {/* Balance display */}
       <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
         {/* DeHub Coin Balance */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src={dehubCoin} alt="coins" className="w-5 h-5" />
-            <span className="text-white font-semibold">{formatBalance(balance)}</span>
-          </div>
-          <ChainSelector
-            selectedChainId={selectedChainId}
-            onChainChange={setSelectedChainId}
-            variant="icon"
-          />
+        <div className="flex items-center gap-2">
+          <img src={dehubCoin} alt="coins" className="w-5 h-5" />
+          <span className="text-white font-semibold">{formatBalance(balance)}</span>
         </div>
         {/* USD Balance with USDC logo */}
         <div className="flex items-center gap-2">

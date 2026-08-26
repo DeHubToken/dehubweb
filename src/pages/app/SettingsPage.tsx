@@ -132,8 +132,6 @@ import { useUserLanguage } from '@/hooks/use-user-language';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { ChainSelector, type ChainId } from '@/components/app/ChainSelector';
-import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
 const TAB_KEYS: Record<string, string> = {
   profile: 'settings.profile',
@@ -221,14 +219,6 @@ export default function SettingsPage() {
   // the glass themes, exactly like the bento feed pages (Notifications/Music).
   const settingsContentRef = useRef<HTMLDivElement>(null);
   const { theme, setTheme } = useAppTheme();
-  const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
-    const stored = localStorage.getItem('preferred-chain-id');
-    return stored ? (Number(stored) as ChainId) : (BASE_CHAIN_ID as ChainId);
-  });
-  const handleChainChange = useCallback((id: ChainId) => {
-    setSelectedChainId(id);
-    localStorage.setItem('preferred-chain-id', String(id));
-  }, []);
   const { isAuthenticated, disconnect } = useAuth();
   useFeedSwallowClip(settingsContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
 
@@ -311,11 +301,6 @@ export default function SettingsPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <ChainSelector
-              selectedChainId={selectedChainId}
-              onChainChange={handleChainChange}
-              variant="icon"
-            />
             <button
               onClick={handleLogout}
               className="flex items-center justify-center gap-2 px-3 h-10 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white"
