@@ -1464,6 +1464,30 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.9)) drop-shadow(0 2px 5px rgb(0 0 0 / 0.75));
 }
 
+/* Mobile bottom nav pill + toasts — the SAME smoked glass as the top bar
+   above, because they are the same material and were drifting badly.
+   Both ship their tint from the component instead of the glass tokens: the
+   pill hardcodes `bg-zinc-900/10` (a 10% smoke — five and a half times
+   thinner than the top bar's 0.55) and the sonner toast hardcodes
+   `bg-white/10`, a WHITE wash carrying white text. Over dark canvas both
+   just about survive; the moment a white photo or a light post scrolls
+   under them the backdrop wins outright — the pill's icons and the toast's
+   copy sit white-on-white and vanish. The blur is not the problem, the
+   tint is: a backdrop-filter cannot darken anything, it only defocuses.
+   Same values as [data-mobile-header][data-scrolled="true"] — if that
+   recipe changes, change it here too.
+   Scoped to the six themes that inherit the raw component tint. Osaka,
+   jungle and war are excluded on purpose: each already paints both
+   surfaces at 0.72–0.9 in its own sheet, and those load after this file. */
+html:is([data-theme="system"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-bottom-nav] > nav,
+html:is([data-theme="system"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-sonner-toaster] [data-sonner-toast] {
+  /* `system` never joins the canvas-theme block that defines --glass-tint,
+     so the fallback is what actually paints there. Both resolve to zinc-950. */
+  background: rgb(var(--glass-tint, 9 9 11) / 0.55) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+}
+
 /* Full-screen page wrappers that shipped opaque black (creators application,
    post info, stage deep-link) — let the canvas through; their inner cards are
    already glass. */
