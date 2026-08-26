@@ -61,6 +61,13 @@ describe('Osaka media frames do not letterbox narrow images', () => {
     expect(LIVE_CARD).toMatch(/data-media-full className=\{`aspect-video bg-black/);
     // The Shorts viewer's scrim and its video column, in that order.
     expect(SHORTS).toMatch(/data-media-full[\s\S]{0,160}?isMobile \? "bg-black" :/);
-    expect(SHORTS).toMatch(/data-media-full[\s\S]{0,260}?bg-zinc-900/);
+    // The column has three arms now — mobile, windowed desktop, and the
+    // immersive fullscreen one — and every arm has to ship a fill of its own.
+    // Miss one and Osaka's `:not([class*='bg-'])` guard makes that state
+    // transparent, which in fullscreen means the page showing through the video.
+    const column = SHORTS.slice(SHORTS.indexOf('ref={fullscreenTargetRef}'), SHORTS.indexOf('Draggable carousel container'));
+    expect(column).toMatch(/isMobile\s*\n?\s*\? "w-full shrink-0 bg-black"/);
+    expect(column).toMatch(/isFullscreen[\s\S]*?rounded-none bg-black"/);
+    expect(column).toMatch(/bg-zinc-900/);
   });
 });

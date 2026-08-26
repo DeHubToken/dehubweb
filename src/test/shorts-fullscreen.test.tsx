@@ -201,25 +201,87 @@ describe('the two players share one fullscreen implementation', () => {
   it('routes both players through the shared hook', () => {
     // The iOS and WebView fallbacks are subtle enough that a second copy would
     // drift. Neither file should re-implement the raw API.
-    expect(SLIDE).toContain('useVideoFullscreen(videoRef, frameRef, {');
+    expect(VIEWER).toContain('useVideoFullscreen(noVideoRef, fullscreenTargetRef, {');
     expect(CARD).toContain('useVideoFullscreen(videoRef, containerRef)');
     expect(CARD).not.toContain('webkitEnterFullscreen');
   });
 
-  it('draws no fullscreen control when there is no native path to it', () => {
-    // With the simulated fallback refused, a button that provably cannot do
-    // anything is worse than no button.
-    expect(SLIDE).toContain('allowSimulated: false');
-    expect(SLIDE).toContain('{isActive && canFullscreen && (');
+  it('fullscreens the container that holds the chrome, not the slide', () => {
+    // Only what lives inside the fullscreened element paints in the top layer.
+    // The slide used to fullscreen itself, which handed back a bare video: the
+    // mute button, the action bar and the creator block are all siblings of the
+    // carousel, one level up, and stayed behind on the hidden page.
+    expect(VIEWER).toContain('ref={fullscreenTargetRef}');
+    expect(SLIDE).not.toContain('useVideoFullscreen');
+    // …and the chrome is inside that same container, below its opening tag and
+    // above its close.
+    const container = VIEWER.slice(VIEWER.indexOf('ref={fullscreenTargetRef}'));
+    expect(container.indexOf("aria-label={isMuted ? 'Unmute' : 'Mute'}")).toBeGreaterThan(-1);
+    expect(container.indexOf('{/* Creator + description, fullscreen only.')).toBeGreaterThan(-1);
   });
 
-  it('offers fullscreen on desktop only', () => {
+  it('hands the hook no video, so it cannot take the iOS path', () => {
+    // Given a video the hook prefers `webkitEnterFullscreen()`, which replaces
+    // the page with the system player — the one path that provably cannot carry
+    // the action bar with it.
+    expect(VIEWER).toMatch(/const noVideoRef = useRef<HTMLVideoElement>\(null\)/);
+  });
+
+  it('lets the container fake fullscreen where the API lies', () => {
+    // The refusal was a property of the SLIDE — the carousel translateY's it,
+    // and a transformed ancestor makes `fixed inset-0` resolve against that
+    // wrapper. The container is above that transform, so the fallback lands on
+    // the viewport and a WebView gets immersive mode instead of a dead button.
+    expect(VIEWER).toContain('allowSimulated: true');
+    expect(SLIDE).not.toContain('allowSimulated');
+  });
+
+  it('drops the 9:16 lock in fullscreen so landscape runs full width', () => {
+    // The windowed viewer is a phone-shaped box. Keeping that box in fullscreen
+    // would letterbox a sideways video into a column down the middle of a
+    // 16:9 display, which is the opposite of immersive.
+    expect(VIEWER).toMatch(/isFullscreen[\s\S]{0,600}?"fixed inset-0 z-\[70\] w-screen h-screen max-h-none rounded-none bg-black"/);
+  });
+
+  it('offers fullscreen on desktop only, and only for the active slide', () => {
     // The viewer is `fixed inset-0` on mobile, so a short already fills the
-    // screen there — a fullscreen button would visibly do nothing, and the
-    // centre double-tap would tax tap-to-pause by 300ms for no gain.
-    expect(SLIDE).toContain('const canFullscreen = allowFullscreen && canNativeFullscreen()');
-    expect(SLIDE).toMatch(/allowFullscreen = false,/);
-    expect(VIEWER).toContain('allowFullscreen={!isMobile}');
+    // screen there — a fullscreen button would visibly do nothing. Neighbouring
+    // slides stay mounted, so every one of them would draw a button at the same
+    // screen position.
+    expect(SLIDE).toContain('const canFullscreen = !!onToggleFullscreen');
+    expect(VIEWER).toContain('onToggleFullscreen={isMobile || !isActive ? undefined : toggleFullscreen}');
+  });
+
+  it('does not take the button away when the short is paused', () => {
+    // `isActive` reaches the slide as `isActive && !isPaused`, so gating the
+    // button on it again made pausing hide the control.
+    expect(SLIDE).toContain('{canFullscreen && (');
+    expect(SLIDE).not.toContain('{isActive && canFullscreen && (');
+  });
+
+  it('drops the side panels in fullscreen instead of stranding them', () => {
+    // Both are siblings of the fullscreened container, so they cannot paint in
+    // the top layer. Left mounted they are dead tab stops behind the video.
+    expect(VIEWER.match(/\{!isMobile && !isFullscreen && \(/g) ?? []).toHaveLength(2);
+  });
+
+  it('moves comments onto the video when the panel beside it is gone', () => {
+    expect(VIEWER).toContain('key="fullscreen-comments"');
+    // The window-level wheel handler navigates shorts unless the target opts
+    // out, so without this a scroll through the thread jumps to the next video.
+    expect(VIEWER).toMatch(/key="fullscreen-comments"[\s\S]{0,200}?data-shorts-scrollable/);
+  });
+
+  it('leaves fullscreen before opening a portalled modal', () => {
+    // Radix portals to <body>, outside the fullscreen element — a tip or share
+    // sheet opened from fullscreen would be completely invisible.
+    expect(VIEWER).toContain('const leaveFullscreenThen = useCallback');
+    expect(VIEWER).toContain('leaveFullscreenThen(() => setShowTipModal(true))');
+    expect(VIEWER).toContain('leaveFullscreenThen(() => setShareSheetOpen(true))');
+  });
+
+  it('makes Escape step back one level rather than close everything', () => {
+    expect(VIEWER).toMatch(/if \(isFullscreen\) toggleFullscreen\(\);\s*\n\s*else onClose\(\);/);
   });
 
   it('keeps the slide frame absolutely positioned in both states', () => {
@@ -246,12 +308,5 @@ describe('the two players share one fullscreen implementation', () => {
     // spread, so desktop and mobile ran different gesture code.
     expect(SLIDE).not.toMatch(/allowFullscreen \? \{\} : tapGestures/);
     expect(SLIDE).not.toMatch(/onClick=\{allowFullscreen \?/);
-  });
-
-  it('still gates the fullscreen BUTTON on desktop', () => {
-    // Only the gesture moved. The button is still desktop-only, because a
-    // short already fills a phone screen.
-    expect(SLIDE).toContain('const canFullscreen = allowFullscreen && canNativeFullscreen()');
-    expect(SLIDE).toContain('{isActive && canFullscreen && (');
   });
 });
