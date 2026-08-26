@@ -113,6 +113,7 @@ import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettin
 import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
+import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
 import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
@@ -753,23 +754,6 @@ function ProfileSettings() {
         />
       </div>
 
-      {/* Other accounts saved on this browser — switch or add without signing out */}
-      <ProfilesSection />
-
-      {/* How you get back in. This sat under Privacy > Account security, where
-          nobody found it — it belongs beside the account itself. */}
-      <div>
-        <h3 className="font-medium text-white mb-4">{t('settings.signIn', 'Sign-in')}</h3>
-        <EmailSignInSettings />
-      </div>
-
-      {/* An ENS name is an alias for the profile URL, not a rename, so it sits
-          with identity rather than with sign-in. */}
-      <div>
-        <h3 className="font-medium text-white mb-4">{t('settings.ensSection', 'ENS')}</h3>
-        <EnsHandleSettings />
-      </div>
-
       {/* Cover Image */}
       <div 
         className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group"
@@ -915,10 +899,22 @@ function ProfileSettings() {
         />
       </div>
 
-      {/* Social Links */}
+      {/* Links */}
       <div>
-        <h3 className="font-medium text-white mb-4">{t('settings.socialLinks')}</h3>
-        <div className="space-y-5">
+        <h3 className="font-medium text-white mb-4">{t('settings.links', 'Links')}</h3>
+        {/* Identity and sign-in are links off this profile too — the ENS name is
+            an alias for its URL and the email is how you get back into it — so
+            they live here rather than in three separate one-row sections. */}
+        <CollapsibleStack>
+          <ProfilesSection />
+          <div>
+            <h4 className="text-sm text-zinc-400 mb-2">{t('settings.signIn', 'Sign-in')}</h4>
+            <EmailSignInSettings />
+          </div>
+          <div>
+            <h4 className="text-sm text-zinc-400 mb-2">{t('settings.ensSection', 'ENS')}</h4>
+            <EnsHandleSettings />
+          </div>
           <SocialLinkInput 
             label="X (Twitter)" 
             placeholder="https://x.com/username"
@@ -985,7 +981,7 @@ function ProfileSettings() {
               </svg>
             }
           />
-        </div>
+        </CollapsibleStack>
       </div>
 
     </div>
