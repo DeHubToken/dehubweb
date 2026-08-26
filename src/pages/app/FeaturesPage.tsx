@@ -8,6 +8,7 @@
 
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useFormDraft } from '@/hooks/use-form-draft';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useSearchParams } from 'react-router-dom';
@@ -611,6 +612,23 @@ function SubmitFeatureDrawer({
     }
   }, [open, initialCategory]);
 
+  /*
+   * A bug report is the longest thing most people ever type into DeHub, and it
+   * was held in a drawer that empties on reload. Only the written fields are
+   * kept: `category` is owned by whoever opened the drawer (the effect above
+   * resets it every time, so a restored value would be overwritten anyway), and
+   * attachments are File handles, which do not survive serialisation.
+   */
+  const draft = useFormDraft(
+    'feature-request',
+    { title, description, deviceDetails },
+    (saved) => {
+      if (saved.title) setTitle(saved.title);
+      if (saved.description) setDescription(saved.description);
+      if (saved.deviceDetails) setDeviceDetails(saved.deviceDetails);
+    },
+  );
+
   const submitMutation = useSubmitFeatureRequest();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -696,6 +714,8 @@ function SubmitFeatureDrawer({
           setDeviceDetails('');
           setCategory('new_feature');
           clearAttachments();
+          // Filed — the draft of it must not reopen pre-filled and get sent twice.
+          draft.clear();
           onOpenChange(false);
         },
       }
