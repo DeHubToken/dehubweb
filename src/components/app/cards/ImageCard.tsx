@@ -17,7 +17,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil, Rocket, Star } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil, Rocket, Star } from 'lucide-react';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
@@ -59,6 +59,7 @@ import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
+import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
 import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
@@ -504,7 +505,14 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const { blockAuthor } = useBlockAuthor();
   const { muteAuthor } = useMuteAuthor();
+  const handleBlockCreator = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!post.creatorId) return;
+    setShowOptionsDrawer(false);
+    blockAuthor(post.creatorId, post.username || undefined);
+  }, [walletAddress, openLoginModal, post.creatorId, post.username, blockAuthor]);
   const handleMuteCreator = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
     if (!post.creatorId) return;
@@ -799,6 +807,11 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 </button>
                 {!isOwnPost && (
                   <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
+                  </button>
+                )}
+                {!isOwnPost && (
+                  <button onClick={handleBlockCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                     <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
                   </button>
                 )}

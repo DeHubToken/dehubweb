@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type Re
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket, Gift, Lock, Star } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Bookmark, Pin, Pencil, Coins, Rocket, Gift, Lock, Star } from 'lucide-react';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -48,6 +48,7 @@ import { useCreatePoll } from '@/hooks/use-polls';
 import { PollCard } from './PollCard';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
+import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
@@ -155,7 +156,14 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   // No `isMuting` any more: the only control that used it was the ✕ removed
   // from the header, and the options menu closes on click rather than
   // disabling itself.
+  const { blockAuthor } = useBlockAuthor();
   const { muteAuthor } = useMuteAuthor();
+
+  const handleBlockAuthor = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!post.author.id) return;
+    blockAuthor(post.author.id, post.author.name || post.author.handle || undefined);
+  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle, blockAuthor]);
 
   const handleMuteAuthor = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -463,9 +471,20 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                   <UserCheck className="w-5 h-5" /> Following
                 </button>
               )}
+              {/* Mute sits above Block deliberately: it is the one most people
+                  actually want, and it is reversible and invisible, where Block
+                  severs the relationship in both directions. */}
               {!isOwnPost && (
                 <button
                   onClick={() => { setShowOptionsDrawer(false); handleMuteAuthor(); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
+                </button>
+              )}
+              {!isOwnPost && (
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); handleBlockAuthor(); }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
                   <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
@@ -563,7 +582,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           </DrawerContent>
         </Drawer>
 
-        {/* The ✕ that used to sit here was a second way to fire handleMuteAuthor
+        {/* The ✕ that used to sit here was a second way to fire handleBlockAuthor
             — the same call the options menu already makes, and a control no
             other card carried. Removed rather than duplicated; muting lives in
             the ⋯ menu on all three cards. */}

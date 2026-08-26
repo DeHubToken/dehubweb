@@ -527,6 +527,7 @@
     "copyPostUrl": "게시물 URL 복사",
     "copyLink": "링크 복사",
     "blockCreator": "크리에이터 차단",
+    "muteCreator": "계정 뮤트",
     "seeLessLikeThis": "이런 게시물 줄이기",
     "editPost": "게시물 수정",
     "deletePost": "게시물 삭제",
