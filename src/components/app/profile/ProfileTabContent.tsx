@@ -754,6 +754,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
             likes: post.totalVotes?.for || 0,
             dislikes: post.totalVotes?.against || 0,
           },
+          communityAlertPending: (post as any).communityAlertStatus === 'pending',
         }} />
       )}
     </div>
