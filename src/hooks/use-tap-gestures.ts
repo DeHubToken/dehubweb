@@ -35,8 +35,26 @@ const MOVE_SLOP_PX = 10;
 
 export interface UseTapGesturesOptions {
   postId?: string | number;
-  /** Runs once a tap is confirmed to be alone — about `TAP_WINDOW_MS` late. */
+  /**
+   * The surface's own single-tap action. By default it is held back
+   * `TAP_WINDOW_MS` so a second tap can overtake it — the price of telling one
+   * tap from two on a surface where the first tap does something you cannot
+   * take back (navigating, opening a viewer).
+   */
   onSingleTap?: (event: React.PointerEvent) => void;
+  /**
+   * Undo for `onSingleTap`, and the way to avoid that delay entirely.
+   *
+   * Where the single tap is reversible — play/pause being the one that matters
+   * — it fires IMMEDIATELY and this reverses it when a second tap turns out to
+   * be coming. The video never visibly pauses, the like still registers, and
+   * there is no input lag at all. Instagram avoids the same delay by giving a
+   * feed photo no single-tap action to hold back; this is the version for a
+   * surface that does have one.
+   *
+   * Only ever called once per gesture, on the second tap.
+   */
+  onUndoSingleTap?: () => void;
   /** Turn the whole ladder off; single taps still fire, immediately. */
   disabled?: boolean;
   /** Set false where a hold already means something else on this surface. */
@@ -46,6 +64,7 @@ export interface UseTapGesturesOptions {
 export function useTapGestures({
   postId,
   onSingleTap,
+  onUndoSingleTap,
   disabled,
   enableLongPress = true,
 }: UseTapGesturesOptions) {
@@ -153,7 +172,16 @@ export function useTapGestures({
       taps.current += 1;
 
       if (taps.current === 1) {
-        // Hold the single tap back long enough for a second to overtake it.
+        if (onUndoSingleTap) {
+          // Reversible: act now, take it back if a second tap arrives. No wait.
+          onSingleTap?.(event);
+          tapTimer.current = setTimeout(() => {
+            tapTimer.current = null;
+            taps.current = 0;
+          }, TAP_WINDOW_MS);
+          return;
+        }
+        // Irreversible: hold it back long enough for a second tap to overtake.
         tapTimer.current = setTimeout(() => {
           tapTimer.current = null;
           taps.current = 0;
@@ -166,6 +194,9 @@ export function useTapGestures({
         // Cast immediately — this is meant to feel like a quick like, not
         // something that waits to see whether a third tap is coming.
         if (tapTimer.current) clearTimeout(tapTimer.current);
+        // Put back whatever the first tap did, now that it turned out to be
+        // half of a double tap rather than a tap of its own.
+        onUndoSingleTap?.();
         emitTapReaction(id, 'like', point);
         tapTimer.current = setTimeout(() => {
           tapTimer.current = null;
