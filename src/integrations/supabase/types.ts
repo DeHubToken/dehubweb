@@ -2427,12 +2427,14 @@ export type Database = {
           created_at: string
           description: string
           dislike_count: number
+          fee_tx_hash: string | null
           id: string
           like_count: number
           status: string
           title: string
           updated_at: string
           vote_count: number
+          voting_ends_at: string | null
         }
         Insert: {
           author_avatar?: string | null
@@ -2442,12 +2444,14 @@ export type Database = {
           created_at?: string
           description: string
           dislike_count?: number
+          fee_tx_hash?: string | null
           id?: string
           like_count?: number
           status?: string
           title: string
           updated_at?: string
           vote_count?: number
+          voting_ends_at?: string | null
         }
         Update: {
           author_avatar?: string | null
@@ -2457,12 +2461,14 @@ export type Database = {
           created_at?: string
           description?: string
           dislike_count?: number
+          fee_tx_hash?: string | null
           id?: string
           like_count?: number
           status?: string
           title?: string
           updated_at?: string
           vote_count?: number
+          voting_ends_at?: string | null
         }
         Relationships: []
       }
@@ -5591,6 +5597,7 @@ export type Database = {
         Args: { p_listing_id: string; p_quantity: number }
         Returns: number
       }
+      resolve_due_governance_proposals: { Args: never; Returns: number }
       stage_dub_tick: {
         Args: {
           p_language: string
