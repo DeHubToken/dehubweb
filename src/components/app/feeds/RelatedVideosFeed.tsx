@@ -59,6 +59,7 @@ function toVideoItem(nft: any): VideoItem {
     likeCount: nft.totalVotes?.for || 0,
     dislikeCount: nft.totalVotes?.against || 0,
     commentCount: nft.commentCount || nft.comment_count || 0,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 

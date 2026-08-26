@@ -134,6 +134,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     creatorUsername: nft.mintername || nft.creator?.username,
     creatorId: minterAddress,
     chainId: nft.chainId,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
