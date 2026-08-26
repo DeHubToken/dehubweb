@@ -7,6 +7,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { X, Volume2, VolumeX, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
@@ -163,6 +164,12 @@ const RESTORE_ZONE_BOTTOM = 0.85;
 // its whole run. Long enough to read who posted it, short enough that the
 // video is unobstructed for most of its length.
 const AUTO_HIDE_MS = 3000;
+
+// The same idea on desktop, where there is a pointer to key off: the chrome
+// clears once the mouse has been still for this long, and the moment it leaves
+// the frame entirely. Shorter than the mobile timer because a mouse move brings
+// it straight back, so clearing early costs nothing.
+const DESKTOP_AUTO_HIDE_MS = 2000;
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -650,11 +657,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // advance two or more videos ("scrolls 2 at once"). Instead we lock on the
   // first qualifying delta and only release once the wheel has gone quiet for a
   // beat, so one gesture = exactly one video.
+  //
+  // Bound to `window`, NOT to the viewer element. Advancing a slide unmounts the
+  // node the browser latched this wheel gesture to (the render window drops the
+  // outgoing short), and Chrome then re-targets the rest of the gesture at the
+  // nearest scrollable ancestor — the document. A listener on the viewer never
+  // sees those events, so the page scrolled behind the overlay and only a mouse
+  // move (which forces a fresh hit-test) restored control. From `window` the
+  // handler catches the gesture wherever it is dispatched.
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
     const handleWheel = (e: WheelEvent) => {
+      // Regions that own their own scrolling (the desktop comments panel) opt
+      // out by attribute. This has to be a target test rather than the
+      // `stopPropagation` it replaces: a window-level capture listener runs
+      // before any handler inside the panel could stop it.
+      if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-scrollable]')) return;
+
       e.preventDefault();
       e.stopPropagation();
 
@@ -679,9 +697,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       else goToPrevRef.current();
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+    window.addEventListener('wheel', handleWheel, { passive: false, capture: true });
     return () => {
-      container.removeEventListener('wheel', handleWheel, { capture: true });
+      window.removeEventListener('wheel', handleWheel, { capture: true });
       if (wheelSettleTimer.current) clearTimeout(wheelSettleTimer.current);
     };
   }, []);
@@ -915,11 +933,54 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     showReportModal, showDeleteModal,
   ]);
 
+  /**
+   * Desktop equivalent, driven by the pointer instead of a play timer.
+   *
+   * Mouse still for DESKTOP_AUTO_HIDE_MS, or off the frame entirely, and the
+   * chrome clears. Any movement brings it back. Held open while scrubbing, so
+   * the timeline doesn't vanish out from under the drag.
+   */
+  const desktopHideTimer = useRef<ReturnType<typeof setTimeout>>();
+  const seekingRef = useRef(isTimelineSeeking);
+  seekingRef.current = isTimelineSeeking;
+
+  const scheduleDesktopHide = useCallback(() => {
+    if (desktopHideTimer.current) clearTimeout(desktopHideTimer.current);
+    desktopHideTimer.current = setTimeout(() => {
+      if (seekingRef.current) return;
+      setAutoHidden(true);
+    }, DESKTOP_AUTO_HIDE_MS);
+  }, []);
+
+  // `setAutoHidden(false)` on an already-false state is a no-op in React, so
+  // this stays cheap even at mousemove rate.
+  const handleDesktopPointerMove = useCallback(() => {
+    setAutoHidden(false);
+    scheduleDesktopHide();
+  }, [scheduleDesktopHide]);
+
+  const handleDesktopPointerLeave = useCallback(() => {
+    if (desktopHideTimer.current) clearTimeout(desktopHideTimer.current);
+    if (seekingRef.current) return;
+    setAutoHidden(true);
+  }, []);
+
   // Every short arrives with its chrome up and clears it again on its own, so
   // a cleared frame never carries into the next one.
   useEffect(() => {
     setAutoHidden(false);
-  }, [currentIndex]);
+    if (!isMobile) scheduleDesktopHide();
+  }, [currentIndex, isMobile, scheduleDesktopHide]);
+
+  useEffect(() => () => {
+    if (desktopHideTimer.current) clearTimeout(desktopHideTimer.current);
+  }, []);
+
+  // A scrub keeps the chrome up for its whole duration; releasing re-arms.
+  useEffect(() => {
+    if (isMobile || isTimelineSeeking) return;
+    scheduleDesktopHide();
+  }, [isMobile, isTimelineSeeking, scheduleDesktopHide]);
 
   // What the overlay actually reads. The gesture handlers stay keyed on
   // `overlaysHidden` alone, so the tap-to-restore band belongs to the swipe.
@@ -958,7 +1019,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setShareSheetOpen(false);
   };
 
-  return (
+  // Portalled to <body>. `backdrop-filter` only samples what is painted inside
+  // its own *backdrop root*, and an ancestor carrying filter / opacity / mask /
+  // clip-path / transform / isolation starts a new one — inside which there is
+  // nothing behind this overlay to sample, so the blur silently renders as
+  // nothing while the `bg-black/60` scrim still paints. Mounted inline, the
+  // viewer inherited whichever of those the current page and theme happened to
+  // set, which is why the frost appeared for some users and not others on the
+  // same build. From <body> nothing can cut the root. It also frees the fixed
+  // positioning and the z-[60] from any ancestor stacking context.
+  return createPortal(
     <motion.div
       ref={containerRef}
       initial={{ opacity: 0 }}
@@ -1018,6 +1088,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           // layer or the seek strip below it. No-ops unless the chrome is hidden.
           onTouchStart={handleRestoreTouchStart}
           onTouchEnd={handleRestoreTouchEnd}
+          onMouseMove={isMobile ? undefined : handleDesktopPointerMove}
+          onMouseLeave={isMobile ? undefined : handleDesktopPointerLeave}
         >
           
           {/* Draggable carousel container */}
@@ -1066,6 +1138,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       // mobile, so the short fills the screen there and a
                       // fullscreen control would do nothing visible.
                       allowFullscreen={!isMobile}
+                      // Its fullscreen control shares the top-right row with
+                      // the mute button below, so the two clear together.
+                      chromeHidden={!isMobile && chromeHidden}
                       // Buffer the current slide + the next one so a swipe lands
                       // on an already-loaded video. The previous slide (offset
                       // -1) is almost always still in the browser cache from
@@ -1088,7 +1163,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             <>
               <button
                 onClick={() => setIsMuted(prev => !prev)}
-                className="absolute top-3 right-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center transition-colors"
+                className={cn(
+                  "absolute top-3 right-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center transition-[background-color,opacity] duration-300",
+                  chromeHidden && "opacity-0 pointer-events-none",
+                )}
                 aria-label={isMuted ? 'Unmute' : 'Mute'}
               >
                 {isMuted ? (
@@ -1098,11 +1176,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 )}
               </button>
 
-              <div className="absolute inset-x-0 bottom-0 z-10 pb-4 pointer-events-none">
+              <div
+                className={cn(
+                  "absolute inset-x-0 bottom-0 z-10 pb-4 pointer-events-none transition-opacity duration-300",
+                  chromeHidden && "opacity-0",
+                )}
+              >
                 {/* Bottom gradient so the bar reads over bright video */}
                 <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                <div className="relative flex items-center justify-between px-4 pt-2 pointer-events-auto">
+                <div
+                  className={cn(
+                    "relative flex items-center justify-between px-4 pt-2",
+                    chromeHidden ? "pointer-events-none" : "pointer-events-auto",
+                  )}
+                >
                   {/* Views */}
                   <div className="flex items-center gap-1">
                     <Eye className="w-5 h-5 text-white drop-shadow-lg" />
@@ -1396,6 +1484,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {showComments && currentShort?.id && (
               <motion.div
                 key="mobile-comments-split"
+                data-shorts-scrollable
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: '58%', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
@@ -1487,8 +1576,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
             {/* Desktop: Inline comments */}
             <div
+              data-shorts-scrollable
               className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden"
-              onWheelCapture={(e) => e.stopPropagation()}
             >
           <div className="flex-1 min-h-0 [&>div]:h-full [&>div]:min-h-0 [&>div]:max-h-none [&>div]:mt-0 [&>div]:p-0">
                 <CommentsSection
@@ -1717,6 +1806,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           tokenId={currentShort.id}
         />
       )}
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
