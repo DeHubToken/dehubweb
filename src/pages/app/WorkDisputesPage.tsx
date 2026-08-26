@@ -34,7 +34,7 @@ export default function WorkDisputesPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
+    <div data-work-surface className="max-w-4xl mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold text-white mb-1">Work — Open Disputes</h1>
       <p className="text-sm text-white/60 mb-6">Resolve escrowed funds split between worker and poster. The on-chain call (if contract is deployed) plus the database state update happen together.</p>
 

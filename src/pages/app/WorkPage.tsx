@@ -45,7 +45,7 @@ export default function WorkPage() {
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
   return (
-    <div className="min-h-screen">
+    <div data-work-surface className="min-h-screen">
       <SEOHead title="Bounties — Post & Hunt Paid Tasks | DeHub" description="Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in DHB or USDC." url="https://dehub.io/work" />
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-6xl mx-auto">
@@ -55,16 +55,22 @@ export default function WorkPage() {
             <div className="flex items-center gap-3 min-w-0">
               <ThemedIcon icon="bounties" alt="" className="w-10 h-10 shrink-0 object-contain" />
               <div className="min-w-0">
-                <h1 className="text-xl font-bold text-white">Bounties</h1>
-                <p className="text-sm text-white/60">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
+                <h1 className="text-xl font-bold text-white truncate">Bounties</h1>
+                {/* Truncated, not wrapped: the header sits in a sticky pill and
+                    a second line makes the whole bento taller on every scroll. */}
+                <p className="text-sm text-white/60 truncate">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <button
                 onClick={() => navigate('/work/history')}
-                className="inline-flex items-center gap-1.5 px-3 h-11 rounded-2xl bg-white/5 border border-white/10 text-white/80 text-sm hover:bg-white/10 transition-colors"
+                aria-label="My Bounties"
+                className="inline-flex items-center gap-1.5 px-3 h-11 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white text-sm hover:bg-white/15 transition-colors"
               >
-                <History className="w-4 h-4" /> My Bounties
+                <History className="w-4 h-4" />
+                {/* The label costs ~90px next to the Post bubble — below md the
+                    icon carries it rather than squeezing the title. */}
+                <span className="hidden md:inline">My Bounties</span>
               </button>
               <LiquidGlassBubble2
                 label="Post a Bounty"

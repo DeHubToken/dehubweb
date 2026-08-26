@@ -129,7 +129,8 @@ export function useWorkJob(jobKey: string | undefined) {
   });
 }
 
-export function useMyPostedJobs() {
+/** `enabled` lets a tabbed caller skip the fetch for a tab that isn't showing. */
+export function useMyPostedJobs(enabled = true) {
   const { walletAddress } = useAuth();
   return useQuery({
     queryKey: ['work-my-posted', walletAddress],
@@ -141,12 +142,13 @@ export function useMyPostedJobs() {
       if (error) throw error;
       return (data || []) as unknown as WorkJob[];
     },
-    enabled: !!walletAddress,
+    enabled: enabled && !!walletAddress,
+    staleTime: 5 * 60_000,
   });
 }
 
 /** Every submission this wallet has made, across all jobs, newest first — the "worked on" side of bounty history. */
-export function useMyWorkSubmissions() {
+export function useMyWorkSubmissions(enabled = true) {
   const { walletAddress } = useAuth();
   return useQuery({
     queryKey: ['work-my-submissions', walletAddress],
@@ -159,7 +161,8 @@ export function useMyWorkSubmissions() {
       if (error) throw error;
       return (data || []) as unknown as (WorkSubmission & { job: WorkJob | null })[];
     },
-    enabled: !!walletAddress,
+    enabled: enabled && !!walletAddress,
+    staleTime: 5 * 60_000,
   });
 }
 
