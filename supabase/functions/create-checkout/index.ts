@@ -11,6 +11,8 @@ const ALLOWED_PRICE_IDS = new Set([
   "dehub_extra_monthly",
   "dehub_family_monthly",
   "dehub_xl_monthly",
+  "creator_monthly",
+  "creator_annual",
   "ultra_monthly",
   "ultra_annual",
   "team_monthly",
@@ -145,6 +147,16 @@ Deno.serve(async (req) => {
       });
     }
     const stripePrice = prices.data[0];
+
+    // AI plan grants (ai-plans.ts) are sized in USD at the DHB peg. A Stripe
+    // price in any other currency silently over- or under-delivers against
+    // that grant with nothing surfacing the mismatch, so log it loudly rather
+    // than let it stay invisible.
+    if (stripePrice.currency !== "usd") {
+      console.error(
+        `create-checkout: price ${priceId} is denominated in ${stripePrice.currency}, expected usd`,
+      );
+    }
 
     const customerId = await resolveOrCreateCustomer(stripe, {
       email: customerEmail,

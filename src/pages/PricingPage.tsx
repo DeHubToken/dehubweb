@@ -8,7 +8,7 @@ export default function PricingPage() {
     <>
       <SEOHead
         title="Pricing — DeHub Creator Studio"
-        description="DeHub Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation."
+        description="DeHub Creator Studio pricing in USD. Creator, Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation."
         url="https://dehub.io/pricing"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -16,18 +16,18 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Ultra',
-              description: 'For creators building AI projects — 3,500 credits/mo, access to all models including Seedance 2.0 and Nano Banana Pro. £99/mo billed annually, or £129 month-to-month.',
+              description: 'For creators building AI projects — 130,000 DHB credit/mo, access to all models including Seedance 2.0 and Nano Banana Pro. $99/mo billed annually, or $129 month-to-month.',
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
                 price: '99',
-                priceCurrency: 'GBP',
+                priceCurrency: 'USD',
                 url: 'https://dehub.io/pricing',
                 availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
                   price: '99',
-                  priceCurrency: 'GBP',
+                  priceCurrency: 'USD',
                   unitCode: 'MON',
                   referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' },
                 },
@@ -36,18 +36,18 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Team',
-              description: 'For agencies and small teams — 2,500 shared credits/mo, 2–9 seats, shared workspace and priority support. Priced per seat: £65/seat/mo billed annually, or £79 month-to-month.',
+              description: 'For agencies and small teams — 88,000 DHB credit per seat/mo, 2–9 seats, shared workspace and priority support. Priced per seat: $65/seat/mo billed annually, or $79 month-to-month.',
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
                 price: '65',
-                priceCurrency: 'GBP',
+                priceCurrency: 'USD',
                 url: 'https://dehub.io/pricing',
                 availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
                   price: '65',
-                  priceCurrency: 'GBP',
+                  priceCurrency: 'USD',
                   unitCode: 'MON',
                   referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' },
                 },
@@ -56,18 +56,38 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Scale',
-              description: 'Designed for growing creative teams — 15,000 credits/mo, 5–15 seats, SSO, priority queue and advanced admin controls. Priced per seat: £150/seat/mo billed annually, or £215 month-to-month.',
+              description: 'Designed for growing creative teams — 210,000 DHB credit per seat/mo, 5–15 seats, SSO, priority queue and advanced admin controls. Priced per seat: $150/seat/mo billed annually, or $215 month-to-month.',
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
                 price: '150',
-                priceCurrency: 'GBP',
+                priceCurrency: 'USD',
                 url: 'https://dehub.io/pricing',
                 availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
                   price: '150',
-                  priceCurrency: 'GBP',
+                  priceCurrency: 'USD',
+                  unitCode: 'MON',
+                  referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' },
+                },
+              },
+            },
+            {
+              '@type': 'Product',
+              name: 'DeHub Creator',
+              description: 'For getting started with AI creation — 23,000 DHB credit/mo, access to all models & features. $15/mo billed annually, or $19 month-to-month.',
+              brand: { '@type': 'Brand', name: 'DeHub' },
+              offers: {
+                '@type': 'Offer',
+                price: '15',
+                priceCurrency: 'USD',
+                url: 'https://dehub.io/pricing',
+                availability: 'https://schema.org/InStock',
+                priceSpecification: {
+                  '@type': 'UnitPriceSpecification',
+                  price: '15',
+                  priceCurrency: 'USD',
                   unitCode: 'MON',
                   referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' },
                 },

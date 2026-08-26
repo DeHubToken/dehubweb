@@ -46,7 +46,7 @@ interface Plan {
  * The previous copy ("3,500 credits/mo = 1,750 Nano Banana Pro Generations")
  * was inherited from a competitor whose credit unit is not ours. Nothing ever
  * granted it, which was lucky: at our cost basis that is $525 of retail sold
- * for £129. These figures are rebuilt from what we pay providers, at the
+ * for $129. These figures are rebuilt from what we pay providers, at the
  * gateway peg of 1,000 DHB = $1 of generation. The per-model counts in each
  * breakdown are at current server pricing (ai-pricing.ts, including the veo
  * markup band) and go stale if a provider reprices — recompute, don't copy.
@@ -109,8 +109,8 @@ const plans: Plan[] = [
           'Access to all models & features',
           'Early access to advanced AI features',
           'Access to unlimited marketplace',
-          // 'Lowest cost per credit' used to sit here. Creator at £15 for
-          // 23,000 DHB beats Ultra's £99 for 130,000 per credit, so the
+          // 'Lowest cost per credit' used to sit here. Creator at $15 for
+          // 23,000 DHB beats Ultra's $99 for 130,000 per credit, so the
           // claim became false the day Creator was listed.
         ],
       },
@@ -137,7 +137,7 @@ const plans: Plan[] = [
     annual: 65,
     perLabel: 'per seat/mo, billed annually',
     cta: 'Get Team',
-    savings: 'Save £168 compared to monthly',
+    savings: 'Save $168 compared to monthly',
     seats: '2 seats',
     groups: [
       {
@@ -190,9 +190,9 @@ const plans: Plan[] = [
     annual: 150,
     perLabel: 'per seat/mo, billed annually',
     cta: 'Get Scale',
-    // (215 − 150) × 12 — the £228 that sat here before reconciled with
+    // (215 − 150) × 12 — the $228 that sat here before reconciled with
     // nothing on the card.
-    savings: 'Save £780 compared to monthly',
+    savings: 'Save $780 compared to monthly',
     seats: '5 seats',
     groups: [
       {
@@ -367,9 +367,9 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
 
       <div className="mt-5 flex items-end gap-2">
         {strike !== null && (
-          <span className="text-lg text-white/40 line-through">£{strike}</span>
+          <span className="text-lg text-white/40 line-through">${strike}</span>
         )}
-        <span className="text-4xl font-black text-white">£{price}</span>
+        <span className="text-4xl font-black text-white">${price}</span>
       </div>
       <div className="text-xs text-white/50">{plan.perLabel}</div>
       {plan.savings && <div className="mt-1 text-xs text-white/60">{plan.savings}</div>}
