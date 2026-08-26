@@ -154,23 +154,29 @@ export default function PostInfoPage() {
   const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPV ? postId : undefined);
 
   // Fetch tips for this specific post from tip_records. Floored against the
-  // backend's own totalTips: tip_records is only ever written by a client
-  // after it confirms its own send, so a tip whose confirmation step failed
-  // to persist (see read-tip-transaction.ts) silently never lands a row here
-  // — the backend's total doesn't have that gap.
-  const { data: postTipTotal = 0 } = useQuery({
+  // backend's own totalTips at render time, NOT inside queryFn — nftInfo is a
+  // separate query that's frequently still unresolved when this one's queryFn
+  // actually runs (no shared queryKey, so it never re-fires just because
+  // nftInfo later arrives), which silently dropped the floor on a cold load.
+  // tip_records is only ever written by a client after it confirms its own
+  // send, so a tip whose confirmation step failed to persist (see
+  // read-tip-transaction.ts) silently never lands a row here — the backend's
+  // total doesn't have that gap.
+  const { data: recordedTipTotal = 0 } = useQuery({
     queryKey: ['post-tips', postId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('tip_records')
         .select('amount')
         .eq('token_id', postId!);
-      const recorded = (error || !data) ? 0 : data.reduce((sum, r) => sum + Number(r.amount), 0);
-      return Math.max(recorded, nftInfo?.totalTips ?? 0);
+      return (error || !data) ? 0 : data.reduce((sum, r) => sum + Number(r.amount), 0);
     },
     enabled: !!postId,
     staleTime: 2 * 60 * 1000,
   });
+  // Recomputed every render, so it picks up nftInfo the moment it arrives —
+  // never a ceiling, just a floor under whatever tip_records currently has.
+  const postTipTotal = Math.max(recordedTipTotal, nftInfo?.totalTips ?? 0);
 
   // Current visibility state (default to 'public' if not set)
   const currentVisibility: TokenVisibility = (nftInfo as any)?.visibility || 'public';
