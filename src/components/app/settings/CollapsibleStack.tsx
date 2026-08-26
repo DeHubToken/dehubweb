@@ -78,7 +78,7 @@ export function CollapsibleStack({
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="mt-3 flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
+        className="mt-3 flex items-center justify-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
         aria-expanded={expanded}
       >
         {expanded ? t('settings.showLess', 'Show less') : t('settings.showAll', 'Show all')}
