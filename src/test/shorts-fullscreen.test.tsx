@@ -188,6 +188,10 @@ describe('the two players share one fullscreen implementation', () => {
     resolve(__dirname, '../components/app/cards/VideoCard.tsx'),
     'utf8',
   );
+  const VIEWER = readFileSync(
+    resolve(__dirname, '../components/app/cards/ShortsViewer.tsx'),
+    'utf8',
+  );
 
   it('gives the shorts viewer a fullscreen control at all', () => {
     // The whole point of the change: this file had no fullscreen anything.
@@ -207,6 +211,15 @@ describe('the two players share one fullscreen implementation', () => {
     // anything is worse than no button.
     expect(SLIDE).toContain('allowSimulated: false');
     expect(SLIDE).toContain('{isActive && canFullscreen && (');
+  });
+
+  it('offers fullscreen on desktop only', () => {
+    // The viewer is `fixed inset-0` on mobile, so a short already fills the
+    // screen there — a fullscreen button would visibly do nothing, and the
+    // centre double-tap would tax tap-to-pause by 300ms for no gain.
+    expect(SLIDE).toContain('const canFullscreen = allowFullscreen && canNativeFullscreen()');
+    expect(SLIDE).toMatch(/allowFullscreen = false,/);
+    expect(VIEWER).toContain('allowFullscreen={!isMobile}');
   });
 
   it('keeps the slide frame absolutely positioned in both states', () => {
