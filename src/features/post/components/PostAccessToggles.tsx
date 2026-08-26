@@ -19,7 +19,7 @@ import { isValidSolanaAddress } from '@/lib/solana/wallet';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { getChainById } from '@/components/app/ChainSelector';
 import { useNavigate } from 'react-router-dom';
-import { useCreatorPlans } from '@/hooks/use-subscriptions';
+import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { Star } from 'lucide-react';
 
 interface PostAccessTogglesProps {
@@ -122,7 +122,7 @@ export function PostAccessToggles({
   const navigate = useNavigate();
   // The gate is the creator's own plans, so with none there is nothing to gate
   // on and the row stays off — see the comment on the switch.
-  const { hasPlans, isLoading: plansLoading } = useCreatorPlans(walletAddress || undefined);
+  const { hasPlans, isLoading: plansLoading } = useCreatorPlansLite(walletAddress);
   const { data: userCommunities = [] } = useUserCommunities();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);

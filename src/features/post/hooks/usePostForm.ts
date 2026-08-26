@@ -7,7 +7,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
-import { useCreatorPlans } from '@/hooks/use-subscriptions';
+import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type StreamInfo, type MintFeeQuoteResponse, type PostQuotaStatus } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
@@ -245,7 +245,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
   // The creator's own plans are what a subscriber-gated post is gated on.
-  const { plans: myPlans } = useCreatorPlans(user?.address);
+  const { planIds: myPlanIds } = useCreatorPlansLite(user?.address);
 
   // Restore active draft from localStorage
   const savedDraft = useRef(loadActiveDraft());
@@ -1252,7 +1252,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // standing in for a subscription, which gated against nothing.
       const subscriberPlanIds =
         isSubscribersOnly && !postingOnSolana
-          ? myPlans.map((p) => String(p.id ?? p._id)).filter(Boolean)
+          ? myPlanIds
           : undefined;
 
       // PPV settings
