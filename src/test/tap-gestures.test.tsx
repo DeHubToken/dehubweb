@@ -306,6 +306,8 @@ describe('surfaces are wired consistently', () => {
   const VIDEO_CARD = read('components/app/cards/VideoCard.tsx');
   const SHORTS = read('components/app/cards/ShortsViewer.tsx');
   const SLIDE = read('components/app/cards/VideoSlide.tsx');
+  const POST = read('components/app/cards/PostCard.tsx');
+  const IMAGE_CARD = read('components/app/cards/ImageCard.tsx');
 
   it('never lets a gesture clear a reaction the viewer already holds', () => {
     // handleReaction reads a repeat as "toggle off", so casting blind would let
@@ -331,6 +333,37 @@ describe('surfaces are wired consistently', () => {
     // mid-transition. Undoing blind there would pause a playing short.
     expect(SHORTS).toContain('lastToggleTookEffect');
     expect(SHORTS).toContain('if (!lastToggleTookEffect.current) return;');
+  });
+
+  it('gives a text post the ladder without costing it instant navigation', () => {
+    // The body carries no single-tap action, so there is nothing to hold back
+    // while a second tap is awaited — the same reason Instagram's double-tap
+    // has no lag. Tapping the rest of the card still opens the post at once.
+    expect(POST).toContain('const tapGestures = useTapGestures({');
+    expect(POST).not.toMatch(/useTapGestures\(\{[^}]*onSingleTap/s);
+    expect(POST).toMatch(/data-no-navigate\s*\n\s*\{\.\.\.tapGestures\}/);
+  });
+
+  it('leaves a hold on post text alone, so it can still be selected', () => {
+    // A long press on text is how you select it; taking that over would cost
+    // copy/paste on every text post. The tray is still on the ActionBar thumb.
+    expect(POST).toMatch(/useTapGestures\(\{[\s\S]*?enableLongPress: false/);
+  });
+
+  it('carries no second mute control on the text post header', () => {
+    // The ✕ fired the same handleMuteAuthor the ⋯ menu already calls, and no
+    // other card had one.
+    expect(POST).not.toContain('aria-label="Mute this account"');
+  });
+
+  it('keeps muting reachable from the menu on all three cards', () => {
+    for (const [name, src] of [
+      ['PostCard', POST],
+      ['VideoCard', VIDEO_CARD],
+      ['ImageCard', IMAGE_CARD],
+    ] as const) {
+      expect(src, name).toContain("postOptions.blockCreator");
+    }
   });
 
   it('keeps tap-to-pause instant on shorts', () => {
