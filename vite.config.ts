@@ -97,11 +97,18 @@ function resolveBuildVersion() {
   // subject if a merge was made with an empty body.
   const headline = merge ? body.split('\n')[0].trim() || subject : subject;
 
+  // The headline is whatever the commit/PR title happened to be, unfiltered —
+  // and tooling that commits straight to main (Lovable's agent, notably) has
+  // shipped titles like "Lovable update" before. Those are internal, not for
+  // an end user's toast, so a match blanks the note rather than surfacing it;
+  // NewVersionToast already falls back to its generic copy when note is ''.
+  const clean = !/lovable/i.test(headline);
+
   return {
     id: sha.slice(0, 8),
     // One line in a toast — long commit subjects get clipped rather than
     // pushing the Refresh button off a phone screen.
-    note: headline.length > 140 ? `${headline.slice(0, 139)}…` : headline,
+    note: clean ? (headline.length > 140 ? `${headline.slice(0, 139)}…` : headline) : '',
     url: pr ? `${GITHUB_REPO}/pull/${pr}` : sha ? `${GITHUB_REPO}/commit/${sha}` : '',
   };
 }
