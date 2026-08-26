@@ -19,6 +19,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import HomePage from '@/pages/app/HomePage';
 import { scrollDocumentTo } from '@/lib/document-scroll';
+import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -162,8 +163,32 @@ const CachedPage = memo(function CachedPage({
   // tab bar remains at the top — this is what makes the transition feel seamless.
   const shouldStayVisible = isActive || forceVisible;
 
+  // A hidden page is still MOUNTED, and `visibility: hidden` does not pause
+  // media — only removal from the document does, and a cached page is never
+  // removed. So a clip playing here carried on with full audio after navigating
+  // away, invisible, with no player left on screen to stop it from. Doing this
+  // on the way out catches every page at once; gating each media component on
+  // the route would have to be repeated for every surface added later.
+  //
+  // Scoped to this subtree by design: the radio and stage-recording mini players
+  // are mounted in AppLayout, OUTSIDE the cache, precisely so they DO survive
+  // navigation — see lib/media-session.ts. They are untouched by this.
+  const pageRef = useRef<HTMLDivElement | null>(null);
+  const resumeRef = useRef<HTMLMediaElement[]>([]);
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!root) return;
+    if (!shouldStayVisible) {
+      resumeRef.current = pauseMediaIn(root);
+    } else if (resumeRef.current.length) {
+      resumeMedia(resumeRef.current);
+      resumeRef.current = [];
+    }
+  }, [shouldStayVisible]);
+
   return (
     <div
+      ref={pageRef}
       data-cached-page={config.key}
       className={cn(shouldAnimate ? 'animate-fade-in' : '')}
       style={
