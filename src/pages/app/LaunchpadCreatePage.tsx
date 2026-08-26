@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useFormDraft } from '@/hooks/use-form-draft';
 import { SEOHead } from '@/components/SEOHead';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -27,6 +28,30 @@ export default function LaunchpadCreatePage() {
   const [curveType, setCurveType] = useState<'standard' | 'fair' | 'stealth'>('standard');
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  /*
+   * Launching a coin means writing a name, a ticker, a description and three
+   * social links, most of which live in another tab. `imageUrl` is safe to keep
+   * because the upload has already happened by then — it is a public URL, not a
+   * local File. `submitting`/`uploading` are excluded: persisting a transient
+   * flag is how a form comes back permanently stuck in its busy state.
+   */
+  const draft = useFormDraft(
+    'launchpad-create',
+    { step, name, symbol, description, imageUrl, website, twitter, telegram, chainId, curveType },
+    (saved) => {
+      if (saved.step) setStep(saved.step);
+      if (saved.name) setName(saved.name);
+      if (saved.symbol) setSymbol(saved.symbol);
+      if (saved.description) setDescription(saved.description);
+      if (saved.imageUrl) setImageUrl(saved.imageUrl);
+      if (saved.website) setWebsite(saved.website);
+      if (saved.twitter) setTwitter(saved.twitter);
+      if (saved.telegram) setTelegram(saved.telegram);
+      if (saved.chainId) setChainId(saved.chainId);
+      if (saved.curveType) setCurveType(saved.curveType);
+    },
+  );
 
   async function handleImageUpload(file: File) {
     if (!file) return;
@@ -68,6 +93,8 @@ export default function LaunchpadCreatePage() {
       }).select().single();
       if (error) throw error;
       toast.success(`${symbol} launched`);
+      // The coin exists; its draft must not reappear pre-filled next time.
+      draft.clear();
       navigate(`${base}/${data.id}`);
     } catch (e) {
       toast.error((e as Error)?.message ?? 'Failed to create');
