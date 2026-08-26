@@ -1939,6 +1939,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   <EmojiGifPicker
                     onEmojiSelect={handleCommentEmojiSelect}
                     onGifSelect={handleCommentGifSelect}
+                    triggerClassName="bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
+                    iconClassName="w-4 h-4"
                   />
                   {!voiceNote && (
                     <button
