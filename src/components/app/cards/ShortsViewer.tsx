@@ -254,7 +254,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setReactionInfoOpen(true);
   };
   const [showTipModal, setShowTipModal] = useState(false);
-  const { data: tipCount = 0 } = usePostTipCount(currentShort?.id);
+  const { data: tipCount = 0 } = usePostTipCount(currentShort?.id, currentShort?.totalTips);
 
   // Share counter = reposts + link copies.
   //
