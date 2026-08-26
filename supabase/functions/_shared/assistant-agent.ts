@@ -31,7 +31,13 @@ export type AgentSurface = 'chat' | 'assistant' | 'admin';
 export interface ToolCatalogEntry {
   name: string;
   description: string;
-  scope: 'public' | 'self' | 'admin';
+  /**
+   * What the tool reads, as the API describes it. Nothing here branches on it —
+   * the API decides what each surface is offered and the catalog it returns is
+   * already cut — so this exists to stay truthful about what arrives.
+   * `code` reads DeHub's own source and no user data at all.
+   */
+  scope: 'public' | 'self' | 'code' | 'admin';
   parameters: { type: 'object'; properties: Record<string, unknown>; required?: string[] };
 }
 
