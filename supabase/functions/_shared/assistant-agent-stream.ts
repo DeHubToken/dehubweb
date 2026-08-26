@@ -60,7 +60,11 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
     // search, then read what the search found.
     maxRounds = surface === 'admin' ? 9 : 6,
     maxTokens = 3000,
-    timeoutMs = surface === 'admin' ? 150_000 : 90_000,
+    // Same reason as the extra round: a source question carries a search and a
+    // file into every round after it, so it is the heaviest chain this surface
+    // runs. Breaking on the deadline here ends the stream wherever it got to,
+    // which reads as the assistant trailing off mid-answer.
+    timeoutMs = surface === 'admin' ? 150_000 : 120_000,
   } = opts;
 
   const encoder = new TextEncoder();
