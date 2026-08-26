@@ -343,7 +343,8 @@
     "activityLog": "Aktivitätsprotokoll",
     "endStream": "Stream beenden",
     "linkCopied": "Link kopiert",
-    "postUrlCopied": "Post-URL kopiert"
+    "postUrlCopied": "Post-URL kopiert",
+    "boostPost": "Beitrag boosten"
   },
   "filters": {
     "sort": "Sortieren",
@@ -774,7 +775,8 @@
     "ppvStartSaving": "Kaufe Pay-per-View-Inhalte deiner Lieblings-Creator, damit sie hier erscheinen.",
     "recentStartSaving": "Deine zuletzt gespeicherten Beiträge werden hier angezeigt.",
     "textStartSaving": "Speichere reine Textbeiträge als Lesezeichen und sie erscheinen hier.",
-    "videosStartSaving": "Speichere Beiträge mit Videos als Lesezeichen und sie werden hier gesammelt."
+    "videosStartSaving": "Speichere Beiträge mit Videos als Lesezeichen und sie werden hier gesammelt.",
+    "folders": "Ordner"
   },
   "notifications": {
     "title": "Benachrichtigungen",
@@ -1722,5 +1724,49 @@
       "startTerm": "Verlauf",
       "start": "– „gesamte Zeit\" heißt jeder Tag, den Cloudflare noch vorhält, heute {{days}} Tage ab {{date}}, dem Tag, an dem dehub.io auf Cloudflare umgezogen ist. Frühere Edge-Daten gibt es nicht, und ältere Tage fallen weg, sobald Cloudflare sie verfallen lässt."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Wessen Follower sollen ihn sehen?",
+    "aimAtTiers": "Welche Badge-Stufen sollen ihn sehen?",
+    "aimPlaceholder": "Benutzername oder Wallet-Adresse",
+    "boost": "Boosten",
+    "boostBooked": "Für {{minutes}} Minuten geboostet",
+    "boostExplainer": "Setzt diesen Beitrag für dein Zeitfenster auf den Platz ganz oben im Home-Feed.",
+    "boostFailed": "Der Beitrag konnte nicht geboostet werden",
+    "boostForMinutes": "Für {{minutes}} Minuten boosten",
+    "boostedLabel": "Geboostet",
+    "boostsLeft": "Noch {{left}} von {{total}} Boosts",
+    "cancelFailed": "Dieser Boost konnte nicht abgebrochen werden",
+    "cancelledRefunded": "Boost abgebrochen und deinem Kontingent gutgeschrieben",
+    "cancelledSpent": "Boost abgebrochen. Er war schon gestartet, gilt also als verbraucht.",
+    "colBoosts": "Boosts",
+    "colEach": "Je",
+    "colTier": "Stufe",
+    "colTotal": "Pro Zyklus",
+    "comingSoon": "kommt bald",
+    "finishedCount": "{{count}} in diesem Zyklus beendet, {{seen}} Mal gesehen",
+    "grantLine": "{{boosts}} × {{minutes}} Minuten pro Zyklus",
+    "intro": "Ein Badge kauft mehr als das Bild neben deinem Namen. Alle zwei Wochen gewährt er Boosts — jeder setzt einen Beitrag auf den Platz ganz oben im Home-Feed. Dreizehn Stufen, dreizehn Kräfte, eine Freischaltung pro Sprosse.",
+    "ladderHeading": "Was jede Stufe gewährt",
+    "left": "übrig",
+    "liveUntil": "live bis {{time}}",
+    "loadFailed": "Deine SuperPowers konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
+    "minutes": "Minuten",
+    "needBadge": "SuperPowers brauchen ein Staking-Badge. Stake DHB, um sie freizuschalten.",
+    "noBadgeYet": "Du hast noch kein Badge, also keine Boosts. DHB zu staken schaltet die Leiter unten frei.",
+    "noBoostsLeft": "Keine Boosts mehr in diesem Zyklus",
+    "powersHeading": "Die dreizehn Kräfte",
+    "queued": "in der Warteschlange",
+    "refills": "füllt sich am {{date}} auf",
+    "refillsOn": "Füllt sich am {{date}} auf — für alle im selben Moment.",
+    "secondWind": "Zweiter Wind",
+    "secondWindExplainer": "Dieser Beitrag ist über eine Woche alt. Zweiter Wind schickt ihn zurück nach oben im Feed.",
+    "seenCount": "{{count}} gesehen",
+    "shareOfVoice": "Der Boost-Platz rotiert. Laufen mehrere Boosts, wird jedem Betrachter einer zugeteilt, gewichtet nach Badge-Stufe — eine höhere Stufe erscheint öfter, und jeder bekommt das Zeitfenster, das ihm gewährt wurde.",
+    "spendFor": "{{power}} für {{minutes}} Minuten",
+    "spent": "{{power}} läuft für {{minutes}} Minuten",
+    "stakeDhb": "DHB staken",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} wird ab {{tier}} freigeschaltet"
   }
 }

@@ -643,7 +643,8 @@
     "activityLog": "Journal d'activité",
     "endStream": "Terminer le stream",
     "linkCopied": "Lien copié",
-    "postUrlCopied": "URL du post copiée"
+    "postUrlCopied": "URL du post copiée",
+    "boostPost": "Booster la publication"
   },
   "filters": {
     "sort": "Trier",
@@ -802,7 +803,8 @@
     "ppvStartSaving": "Achetez du contenu à la carte auprès de vos créateurs préférés pour qu'il apparaisse ici.",
     "recentStartSaving": "Vos posts ajoutés aux signets le plus récemment s'afficheront ici.",
     "textStartSaving": "Ajoutez aux signets des posts texte uniquement et ils apparaîtront ici.",
-    "videosStartSaving": "Ajoutez aux signets des posts avec vidéos et ils seront rassemblés ici."
+    "videosStartSaving": "Ajoutez aux signets des posts avec vidéos et ils seront rassemblés ici.",
+    "folders": "Dossiers"
   },
   "notifications": {
     "title": "Notifications",
@@ -1726,5 +1728,49 @@
       "startTerm": "Historique",
       "start": "— « toute la période » signifie chaque jour encore conservé par Cloudflare, soit aujourd'hui {{days}} jours à partir du {{date}}, le jour où dehub.io est passé sur Cloudflare. Il n'y a pas de données edge antérieures à montrer, et les jours anciens disparaissent au fil de leur expiration chez Cloudflare."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Quels abonnés doivent la voir ?",
+    "aimAtTiers": "Quels niveaux de badge doivent la voir ?",
+    "aimPlaceholder": "Pseudo ou adresse de portefeuille",
+    "boost": "Booster",
+    "boostBooked": "Boostée pendant {{minutes}} minutes",
+    "boostExplainer": "Place cette publication dans l'emplacement en haut du fil principal pendant votre fenêtre.",
+    "boostFailed": "Impossible de booster cette publication",
+    "boostForMinutes": "Booster pendant {{minutes}} minutes",
+    "boostedLabel": "Boostée",
+    "boostsLeft": "Il reste {{left}} boosts sur {{total}}",
+    "cancelFailed": "Impossible d'annuler ce boost",
+    "cancelledRefunded": "Boost annulé et recrédité sur votre quota",
+    "cancelledSpent": "Boost annulé. Il avait déjà commencé, il reste donc décompté.",
+    "colBoosts": "Boosts",
+    "colEach": "Chacun",
+    "colTier": "Niveau",
+    "colTotal": "Par cycle",
+    "comingSoon": "bientôt",
+    "finishedCount": "{{count}} terminés ce cycle, vus {{seen}} fois",
+    "grantLine": "{{boosts}} × {{minutes}} minutes par cycle",
+    "intro": "Un badge achète plus que le dessin à côté de votre nom. Toutes les deux semaines il accorde des boosts — chacun place une publication dans l'emplacement en haut du fil principal. Treize niveaux, treize pouvoirs, un déblocage par échelon.",
+    "ladderHeading": "Ce que chaque niveau accorde",
+    "left": "restants",
+    "liveUntil": "en ligne jusqu'à {{time}}",
+    "loadFailed": "Impossible de charger vos SuperPouvoirs pour le moment. Réessayez dans un instant.",
+    "minutes": "minutes",
+    "needBadge": "Les SuperPouvoirs nécessitent un badge de staking. Stakez des DHB pour les débloquer.",
+    "noBadgeYet": "Vous n'avez pas encore de badge, donc aucun boost. Staker des DHB débloque l'échelle ci-dessous.",
+    "noBoostsLeft": "Plus de boosts ce cycle",
+    "powersHeading": "Les treize pouvoirs",
+    "queued": "en file",
+    "refills": "se recharge le {{date}}",
+    "refillsOn": "Se recharge le {{date}} — au même moment pour tout le monde.",
+    "secondWind": "Second Souffle",
+    "secondWindExplainer": "Cette publication a plus d'une semaine. Second Souffle la renvoie en haut du fil.",
+    "seenCount": "{{count}} vues",
+    "shareOfVoice": "L'emplacement de boost tourne. Quand plusieurs boosts sont actifs, chaque spectateur en reçoit un pondéré par niveau de badge — un niveau plus élevé s'affiche plus souvent, et chacun obtient la fenêtre qui lui a été accordée.",
+    "spendFor": "{{power}} pendant {{minutes}} minutes",
+    "spent": "{{power}} actif pendant {{minutes}} minutes",
+    "stakeDhb": "Staker des DHB",
+    "title": "SuperPouvoirs",
+    "unlocksAt": "{{power}} se débloque au niveau {{tier}}"
   }
 }
