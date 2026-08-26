@@ -273,6 +273,48 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
   return promise;
 }
 
+/**
+ * Resolve once the DM socket is actually connected; reject if it will not
+ * connect in time.
+ *
+ * `emit` on a disconnected socket.io client does not throw — it drops the
+ * payload into an in-memory buffer that only survives if this same page later
+ * reconnects. And this socket gives up for good after `reconnectionAttempts`
+ * (20), which a phone that sleeps or changes network reaches easily. Past that
+ * point every emit is a no-op, forever, with nothing raised anywhere.
+ *
+ * So anything whose loss the user would care about must go through here first.
+ * `connect()` is called explicitly because a client that has exhausted its
+ * attempts will never re-arm on its own.
+ */
+export function waitForDmSocket(timeoutMs = 8000): Promise<void> {
+  const socket = getDmSocket();
+  if (socket.connected) return Promise.resolve();
+
+  return new Promise<void>((resolve, reject) => {
+    const cleanup = () => {
+      clearTimeout(timer);
+      socket.off('connect', onConnect);
+    };
+    const onConnect = () => { cleanup(); resolve(); };
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('Not connected to chat. Check your connection and try again.'));
+    }, timeoutMs);
+
+    socket.on('connect', onConnect);
+    // No-op while a reconnect is already in flight; the re-arm that matters is
+    // after `reconnect_failed`, when nothing else will ever call this.
+    if (!socket.active) socket.connect();
+  });
+}
+
+/**
+ * Fire-and-forget by design — the server echoes the created message back on
+ * `sendMessage`, which is what confirms it. Callers must `await
+ * waitForDmSocket()` first, or a send into a dead socket is silently destroyed
+ * while the optimistic bubble goes on looking delivered.
+ */
 export function emitSendMessage(payload: SendMessagePayload): void {
   getDmSocket().emit('sendMessage', payload);
 }
