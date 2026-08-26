@@ -725,11 +725,20 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [goToNext, goToPrev]);
 
   // Toggle play/pause - only shows indicator on explicit tap
+  /**
+   * Whether the last `togglePlayPause` actually flipped anything. Both early
+   * returns below leave the video exactly as it was, and `undoPlayPause` must
+   * not "reverse" a toggle that never happened — that would pause a playing
+   * short on the second tap of a double tap.
+   */
+  const lastToggleTookEffect = useRef(false);
+
   const togglePlayPause = useCallback(() => {
     // A tap that just brought the hidden chrome back is a "restore", not a
     // play/pause — swallow the click it synthesises.
     if (suppressVideoTapRef.current) {
       suppressVideoTapRef.current = false;
+      lastToggleTookEffect.current = false;
       return;
     }
     // The auto-clear takes no restore band and swallows no tap: it was never
@@ -737,8 +746,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     // meant. The timer re-arms off the state change and clears it again.
     setAutoHidden(false);
     // Don't show indicator during transitions
-    if (isTransitioning) return;
-    
+    if (isTransitioning) {
+      lastToggleTookEffect.current = false;
+      return;
+    }
+
+    lastToggleTookEffect.current = true;
     setIsPaused(prev => {
       const newPaused = !prev;
       setShowPlayIndicator(newPaused ? 'pause' : 'play');
@@ -746,6 +759,20 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       return newPaused;
     });
   }, [isTransitioning]);
+
+  /**
+   * Put back a play/pause whose tap turned out to be half of a double tap.
+   *
+   * Silent on purpose: the first tap already flashed an indicator, and showing
+   * a second one on the way back would leave a pause→play flicker under the
+   * heart. The gesture should read as "liked", not "paused, resumed, liked".
+   */
+  const undoPlayPause = useCallback(() => {
+    if (!lastToggleTookEffect.current) return;
+    lastToggleTookEffect.current = false;
+    setIsPaused(prev => !prev);
+    setShowPlayIndicator(null);
+  }, []);
 
   // Prevent touch events from bubbling to parent page
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -1030,6 +1057,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       playbackRate={playbackRate}
                       onTimeUpdate={isActive ? trackView : undefined}
                       onTap={togglePlayPause}
+                      onTapUndo={undoPlayPause}
                       onSeekStart={() => setIsTimelineSeeking(true)}
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}

@@ -116,6 +116,60 @@ describe('the tap ladder', () => {
     expect(casts.map((c) => c.reaction)).toEqual(['like', 'love']);
   });
 
+  it('fires a reversible single tap instantly, with no wait at all', () => {
+    // Instagram has no delay because a feed photo has no single-tap action to
+    // hold back. Shorts does have one — play/pause — but it is a toggle, so it
+    // can act now and be taken back if a second tap turns up.
+    const onSingleTap = vi.fn();
+    const onUndoSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', onSingleTap, onUndoSingleTap });
+
+    tapAt(h);
+    expect(onSingleTap).toHaveBeenCalledTimes(1); // no timers advanced
+    expect(onUndoSingleTap).not.toHaveBeenCalled();
+  });
+
+  it('takes the reversible tap back when a second tap arrives, and still likes', () => {
+    const onSingleTap = vi.fn();
+    const onUndoSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', onSingleTap, onUndoSingleTap });
+
+    tapAt(h);
+    act(() => void vi.advanceTimersByTime(80));
+    tapAt(h);
+
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    expect(onUndoSingleTap).toHaveBeenCalledTimes(1);
+    expect(casts.map((c) => c.reaction)).toEqual(['like']);
+  });
+
+  it('does not undo twice when the gesture runs on to a third tap', () => {
+    // The love upgrade must not re-toggle play/pause a second time.
+    const onUndoSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', onSingleTap: vi.fn(), onUndoSingleTap });
+
+    tapAt(h);
+    act(() => void vi.advanceTimersByTime(80));
+    tapAt(h);
+    act(() => void vi.advanceTimersByTime(80));
+    tapAt(h);
+
+    expect(onUndoSingleTap).toHaveBeenCalledTimes(1);
+    expect(casts.map((c) => c.reaction)).toEqual(['like', 'love']);
+  });
+
+  it('leaves a lone reversible tap standing', () => {
+    const onSingleTap = vi.fn();
+    const onUndoSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', onSingleTap, onUndoSingleTap });
+
+    tapAt(h);
+    act(() => void vi.advanceTimersByTime(500));
+
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    expect(onUndoSingleTap).not.toHaveBeenCalled();
+  });
+
   it('starts a fresh gesture once the window lapses', () => {
     const onSingleTap = vi.fn();
     const h = mountGesture({ postId: '7', onSingleTap });
@@ -251,6 +305,7 @@ describe('surfaces are wired consistently', () => {
   const ACTION_BAR = read('components/app/cards/ActionBar.tsx');
   const VIDEO_CARD = read('components/app/cards/VideoCard.tsx');
   const SHORTS = read('components/app/cards/ShortsViewer.tsx');
+  const SLIDE = read('components/app/cards/VideoSlide.tsx');
 
   it('never lets a gesture clear a reaction the viewer already holds', () => {
     // handleReaction reads a repeat as "toggle off", so casting blind would let
@@ -269,5 +324,17 @@ describe('surfaces are wired consistently', () => {
   it('gives shorts its own listener, since it renders no ActionBar', () => {
     expect(SHORTS).toContain('DOUBLE_TAP_LIKE_EVENT');
     expect(SHORTS).toContain('OPEN_REACTIONS_EVENT');
+  });
+
+  it('never reverses a play/pause that never happened', () => {
+    // togglePlayPause returns early when a tap is really a chrome-restore, or
+    // mid-transition. Undoing blind there would pause a playing short.
+    expect(SHORTS).toContain('lastToggleTookEffect');
+    expect(SHORTS).toContain('if (!lastToggleTookEffect.current) return;');
+  });
+
+  it('keeps tap-to-pause instant on shorts', () => {
+    // The whole point of the undo path: no 260ms wait on the primary gesture.
+    expect(SLIDE).toContain('onUndoSingleTap: () => (onTapUndo ?? onTap)?.()');
   });
 });
