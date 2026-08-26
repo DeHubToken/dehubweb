@@ -225,7 +225,14 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     // anything — and the final round withholds tools, so five left it four.
     maxRounds = surface === 'chat' ? 3 : surface === 'admin' ? 9 : 6,
     maxTokens = surface === 'chat' ? 700 : 3000,
-    timeoutMs = surface === 'chat' ? 20_000 : surface === 'admin' ? 120_000 : 60_000,
+    // A hundred seconds on the Assistant page rather than sixty. A source
+    // question is the heaviest thing it does — a search, then a file, each one
+    // carried into every later round — and sixty was landing mid-chain, at
+    // which point the salvage turn below gets what little time is left. What
+    // the user then saw was not a slow answer but a *wrong* one: the loop
+    // throws, the single-shot fallback answers from the prompt alone, and it
+    // says it cannot read the code while the log shows it just did.
+    timeoutMs = surface === 'chat' ? 20_000 : surface === 'admin' ? 120_000 : 100_000,
   } = opts;
 
   const catalog = await fetchToolCatalog(surface, adminToken);
@@ -327,8 +334,14 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
   // Only reachable when the deadline cut the loop short mid-tool-call. Spend a
   // few seconds turning whatever was gathered into an answer rather than
   // throwing away the work.
+  //
+  // Fifteen rather than eight: this turn carries every tool result the loop
+  // gathered, so it is the largest request of the whole run and the slowest to
+  // come back. Aborting it does not degrade the answer, it destroys it — the
+  // throw lands in the caller's catch and the reply comes from the prompt
+  // alone, which is the one outcome worse than waiting.
   const salvage = new AbortController();
-  const salvageTimer = setTimeout(() => salvage.abort(), 8000);
+  const salvageTimer = setTimeout(() => salvage.abort(), 15_000);
   try {
     const finalRes = await fetch(GATEWAY_URL, {
       method: 'POST',
