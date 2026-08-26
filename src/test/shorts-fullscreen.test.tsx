@@ -230,11 +230,28 @@ describe('the two players share one fullscreen implementation', () => {
     expect(SLIDE).not.toContain('fixed inset-0 z-[9999]');
   });
 
-  it('charges the double-tap delay only to the centre band', () => {
-    // Tap-to-pause is the viewer's primary gesture. Waiting 300ms on every tap
-    // to see whether a second one is coming would make the whole player feel
-    // laggy, so only the centre — the only place a double-tap does anything —
-    // pays it.
-    expect(SLIDE).toMatch(/if \(!inCentre \|\| !canFullscreen\) \{\s*onTap\?\.\(\);\s*return;\s*\}/);
+  it('spends the double-tap on reacting, not on fullscreen', () => {
+    // Desktop used to take the centre double-tap for fullscreen, which left
+    // shorts as the one feed where double-tap did not like the post. One
+    // gesture cannot mean two things, so fullscreen kept its button and gave
+    // the gesture up. Assert the competing handler is gone entirely — leaving
+    // it bound alongside the ladder is how both would fire on one tap.
+    expect(SLIDE).not.toContain('handleVideoTap');
+    expect(SLIDE).not.toMatch(/inCentre/);
+    expect(SLIDE).toContain('{...tapGestures}');
+  });
+
+  it('binds one tap model, not one per platform', () => {
+    // The old wiring was `onClick={allowFullscreen ? … }` plus a conditional
+    // spread, so desktop and mobile ran different gesture code.
+    expect(SLIDE).not.toMatch(/allowFullscreen \? \{\} : tapGestures/);
+    expect(SLIDE).not.toMatch(/onClick=\{allowFullscreen \?/);
+  });
+
+  it('still gates the fullscreen BUTTON on desktop', () => {
+    // Only the gesture moved. The button is still desktop-only, because a
+    // short already fills a phone screen.
+    expect(SLIDE).toContain('const canFullscreen = allowFullscreen && canNativeFullscreen()');
+    expect(SLIDE).toContain('{isActive && canFullscreen && (');
   });
 });
