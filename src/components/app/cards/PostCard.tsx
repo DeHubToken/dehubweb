@@ -49,6 +49,8 @@ import { PollCard } from './PollCard';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
@@ -141,7 +143,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const { mint: mintExisting, isMinting } = useMintExistingPost();
-  const { muteAuthor, isMuting: isMutingAuthor } = useMuteAuthor();
+  // No `isMuting` any more: the only control that used it was the ✕ removed
+  // from the header, and the options menu closes on click rather than
+  // disabling itself.
+  const { muteAuthor } = useMuteAuthor();
 
   const handleMuteAuthor = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -230,6 +235,21 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
+  /**
+   * Double 👍 / triple ❤️ on the post body, matching every other feed card.
+   *
+   * No `onSingleTap`: the body deliberately does nothing on a single tap, which
+   * is what keeps the gesture free of the 260ms wait. A card whose first tap
+   * navigates would have to hold that navigation back to find out whether a
+   * second tap is coming; giving the content region no tap action of its own
+   * removes the question entirely. Opening the post stays instant from the
+   * header, the metadata row and the card's own padding.
+   */
+  const tapGestures = useTapGestures({
+    postId: post.id,
+    enableLongPress: false,
+  });
+
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     // Swallow the ghost click left behind when a bottom sheet was just dismissed
     // by tapping the scrim — otherwise that tap navigates into the post.
@@ -525,20 +545,28 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           </DrawerContent>
         </Drawer>
 
-        {!isOwnPost && post.author.id && (
-          <button
-            onClick={handleMuteAuthor}
-            disabled={isMutingAuthor}
-            aria-label="Mute this account"
-            className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-50 -mr-0.5"
-          >
-            <X className="w-[23.5px] h-[23.5px]" />
-          </button>
-        )}
+        {/* The ✕ that used to sit here was a second way to fire handleMuteAuthor
+            — the same call the options menu already makes, and a control no
+            other card carried. Removed rather than duplicated; muting lives in
+            the ⋯ menu on all three cards. */}
       </div>
 
-      {/* Content */}
-      <div className="pt-3 space-y-2">
+      {/* Content.
+          `data-no-navigate` is what keeps navigation instant. handleCardClick
+          skips this subtree, so the body carries no single-tap action to hold
+          back while a second tap is awaited — the same arrangement VideoCard's
+          media already has, and the reason Instagram's double-tap has no lag.
+          Tapping anywhere else on the card still opens the post immediately.
+
+          The hold is off here on purpose: a long press on text is how you
+          select it, and taking that over would cost copy/paste on every text
+          post. The tray is still a hold away on the ActionBar's thumb. */}
+      <div
+        className="relative pt-3 space-y-2"
+        data-no-navigate
+        {...tapGestures}
+      >
+        <TapReactionBurst postId={post.id} />
         {/* A text post's body is its content, so the warning covers the text
             and its embeds. Metadata and the action bar stay below it, so the
             post can still be reported or opened without being read first. */}
