@@ -44,7 +44,7 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
 import { ProfileSkeleton } from '@/components/app/profile/ProfileSkeleton';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
-import { parseDefaultProfileTab, type TabValue } from '@/components/app/profile/ProfileConstants';
+import { parseDefaultProfileTab, PROFILE_TAB_OPTIONS, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 
@@ -217,6 +217,15 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!profileKey || appliedDefaultTabFor.current === profileKey) return;
     appliedDefaultTabFor.current = profileKey;
+    // ?tab= wins over the saved default: it is only ever set by something that
+    // sent the user here to do one specific thing (the composer's Subscribers
+    // row pointing at plan creation), and landing them on Home instead makes
+    // that link a dead end.
+    const requestedTab = new URLSearchParams(window.location.search).get('tab');
+    if (requestedTab && PROFILE_TAB_OPTIONS.some((tab) => tab.value === requestedTab)) {
+      setActiveTab(requestedTab as TabValue);
+      return;
+    }
     setActiveTab(parseDefaultProfileTab(
       (data.apiProfile?.customs as Record<string, unknown> | undefined)?.defaultProfileTab
     ));

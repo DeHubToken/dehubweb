@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle, Play, Images, Ticket, Lock } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildAvatarUrl, extractAvatarPath, buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
-import { isHoldGated } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
 import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
@@ -75,7 +75,13 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
     quotedPost.locked_price ?? quotedPost.streamInfo?.lockContentAmount,
   );
   const canBypassGating = !!(quotedPost.isOwner || quotedPost.isUnlocked) || isTokenUnlocked(String(quotedPost.tokenId));
-  const gated = (isPPV || isHoldLocked) && !canBypassGating;
+  // A subscriber-gated post must stay gated in an embed too, or quoting one
+  // is a way to republish it in the clear.
+  const isSubGated = isSubscriberGated(
+    (quotedPost as any).plansDetails,
+    canBypassGating,
+  );
+  const gated = ((isPPV || isHoldLocked) && !canBypassGating) || isSubGated;
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();

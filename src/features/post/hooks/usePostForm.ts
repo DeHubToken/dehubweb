@@ -7,6 +7,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
+import { useCreatorPlans } from '@/hooks/use-subscriptions';
 import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type StreamInfo, type MintFeeQuoteResponse, type PostQuotaStatus } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
@@ -71,6 +72,8 @@ interface ActiveDraft {
   /** Absent on drafts saved before ratings existed, which read as safe. */
   isMature?: boolean;
   selectedCategory: string;
+  /** Absent on drafts saved while the switch was removed. */
+  isSubscribersOnly?: boolean;
   isPPV: boolean;
   ppvAmount: string;
   ppvCurrency: Currency;
@@ -241,6 +244,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
+  // The creator's own plans are what a subscriber-gated post is gated on.
+  const { plans: myPlans } = useCreatorPlans(user?.address);
 
   // Restore active draft from localStorage
   const savedDraft = useRef(loadActiveDraft());
@@ -248,6 +253,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   // Form state — initialize from saved draft if available
   const [text, setText] = useState(d?.text ?? '');
+  const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
   const [ppvAmount, setPpvAmount] = useState(d?.ppvAmount ?? '');
@@ -428,13 +434,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const persistDraft = () => {
       const draft: ActiveDraft = {
         text, titleText, showTitle, isMature,
-        selectedCategory, isPPV, ppvAmount, ppvCurrency,
+        selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
       };
       // Only save if there's meaningful content
       const hasContent = text.trim() || titleText.trim() ||
-        selectedCategory || isPPV || isWatch2Earn || isTokenGated;
+        selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
       if (hasContent) {
         saveActiveDraft(draft);
       } else {
@@ -448,7 +454,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
   }, [text, titleText, showTitle, isMature,
-    selectedCategory, isPPV, ppvAmount, ppvCurrency,
+    selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
 
@@ -976,6 +982,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     postAttemptRef.current = null;
     setText('');
     setMedia([]);
+    setIsSubscribersOnly(false);
     setIsPPV(false);
     setPpvAmount('');
     setPpvCurrency('USD');
@@ -1238,11 +1245,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           applyLockContent(contract, symbol, chainId, amount);
         }
       }
-      // The "Subscribers" switch used to sit here and call applyLockContent with
-      // no amount. There is no subscriber field on the post model for it to gate
-      // on, so it compiled to an amount-less hold gate — every post made with it
-      // is locked against nothing. Token gating above is the working equivalent
-      // and it asks for an amount.
+      // Subscribers-only does NOT go in streamInfo. It is not a hold gate and
+      // never was: the post carries the creator's plan ids in `plans`, and the
+      // feed pipeline joins the viewer's subscriptions to decide. The switch
+      // used to call applyLockContent with no amount instead — a DHB lock
+      // standing in for a subscription, which gated against nothing.
+      const subscriberPlanIds =
+        isSubscribersOnly && !postingOnSolana
+          ? myPlans.map((p) => String(p.id ?? p._id)).filter(Boolean)
+          : undefined;
 
       // PPV settings
       if (isPPV && ppvAmount) {
@@ -1606,6 +1617,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
           contentRating: isMature ? 'mature' : undefined,
+          plans: subscriberPlanIds,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
       );
@@ -2084,7 +2096,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setUploadProgress(0);
     }
   }, [
-    text, media, isPPV, ppvAmount,
+    text, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
@@ -2097,6 +2109,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     state: {
       text,
       media,
+      isSubscribersOnly,
       isPPV,
       ppvAmount,
       ppvCurrency,
@@ -2130,6 +2143,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     actions: {
       setText,
       setMedia,
+      setIsSubscribersOnly,
       setIsPPV,
       setPpvAmount,
       setPpvCurrency,
