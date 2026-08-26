@@ -1073,12 +1073,28 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   }, []);
 
   const handleForwardSelect = useCallback(
-    (targetConversationId: string) => {
+    async (targetConversationId: string) => {
       if (!forwardMessageTarget) return;
-      emitForwardMessage({
-        messageId: forwardMessageTarget._id,
-        targetDmId: targetConversationId,
-      });
+      /*
+       * "Message forwarded" used to be raised on the line after the emit,
+       * unconditionally. A socket.io emit does not throw on a dead client, so
+       * on a socket that had given up reconnecting the forward went nowhere and
+       * the user was told in green that it had worked — and unlike a sent
+       * message there is no bubble here to notice missing afterwards.
+       *
+       * The dialog is deliberately left open on failure: it is the only way
+       * back to this action, and closing it would strand the intent as well as
+       * the message.
+       */
+      try {
+        await emitForwardMessage({
+          messageId: forwardMessageTarget._id,
+          targetDmId: targetConversationId,
+        });
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Could not forward the message.');
+        return;
+      }
       toast.success('Message forwarded');
       setForwardMessageTarget(null);
     },

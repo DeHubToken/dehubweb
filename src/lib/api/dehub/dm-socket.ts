@@ -319,15 +319,32 @@ export function emitSendMessage(payload: SendMessagePayload): void {
   getDmSocket().emit('sendMessage', payload);
 }
 
+/**
+ * Emit only once the socket is genuinely up, rejecting if it will not come up.
+ *
+ * The default for anything the user initiated. A bare `emit` cannot fail, so a
+ * caller wrapped in try/catch around one is not protected by it — the catch is
+ * unreachable and the action is silently dropped. Rejecting here is what makes
+ * a caller's error handling mean anything.
+ */
+async function emitWhenConnected(event: string, payload: unknown): Promise<void> {
+  await waitForDmSocket();
+  getDmSocket().emit(event, payload);
+}
+
 export interface ForwardMessagePayload {
   messageId: string;
   targetDmId: string;
   txHash?: string;
 }
 
-/** Forward an existing DM message to another conversation (emits `forwardMessage`). */
-export function emitForwardMessage(payload: ForwardMessagePayload): void {
-  getDmSocket().emit('forwardMessage', payload);
+/**
+ * Forward an existing DM message to another conversation (emits
+ * `forwardMessage`). Rejects rather than dropping it — the caller raises a
+ * success toast, and that toast used to fire whether or not anything left.
+ */
+export function emitForwardMessage(payload: ForwardMessagePayload): Promise<void> {
+  return emitWhenConnected('forwardMessage', payload);
 }
 
 // ─── Read-receipt queue (survives disconnect/reconnect) ──────────────────────
@@ -373,12 +390,19 @@ export function emitReadReceipt(dmId: string): void {
   // Queue will be flushed on next 'connect' event (see getDmSocket connect handler)
 }
 
-export function emitDeleteMessage(dmId: string, messageId: string): void {
-  getDmSocket().emit('deleteMessage', { dmId, messageId });
+/*
+ * Neither of these has a caller today — web has no delete-a-DM UI, and nothing
+ * reports a download. They are gated anyway, so that whoever wires one up gets
+ * a promise that can reject instead of rediscovering that `emit` never fails.
+ * A delete is the worse one to get wrong: a message the user believes they
+ * removed, still sitting on the server.
+ */
+export function emitDeleteMessage(dmId: string, messageId: string): Promise<void> {
+  return emitWhenConnected('deleteMessage', { dmId, messageId });
 }
 
-export function emitDownloadReceipt(dmId: string, messageId: string): void {
-  getDmSocket().emit('downloadReceipt', { dmId, messageId });
+export function emitDownloadReceipt(dmId: string, messageId: string): Promise<void> {
+  return emitWhenConnected('downloadReceipt', { dmId, messageId });
 }
 
 // ─── Event listeners (all return an unsubscribe fn for useEffect cleanup) ─────
