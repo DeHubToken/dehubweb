@@ -773,7 +773,6 @@
      resolve), and it must send Access-Control-Allow-Origin for the game's
      origin, or the browser will fetch the .glb and then refuse to hand it to
      WebGL. -->
-     nobody consciously sees. */
 <!-- three r180. Over http(s) we use the vendored copy in vendor/three: no third-party
      request, and it satisfies a script-src 'self' CSP. Opened as a bare file:// Chrome
      refuses to load ANY local ES module (opaque origin — fetch of the same path returns
@@ -1563,19 +1562,14 @@ for(let i=0;i<MEME_COUNT;i++){
   memes.push(m);
 }
 
-/* liquidation feed */
+/* liquidation feed — real prints only.
+   This used to invent a liquidation every few seconds whenever the socket had
+   been quiet for 45s, which on a calm day meant the panel was mostly fiction
+   sitting under a small SIM chip. The exchange feed works now, so the tape is
+   the tape: it fills as prints land and says QUIET when none have. */
 const liqs=[]; let lastRealLiq=0;
-/* real forceOrder events are bursty; when the feed goes quiet keep the panel alive */
 const liqLive=()=>Date.now()-lastRealLiq<45000;
 function pushLiq(l){liqs.unshift(l); if(liqs.length>26)liqs.pop();}
-function simLiq(){
-  if(!liqLive()){
-    const m=markets[pick(MAJORS.slice(0,10))];
-    pushLiq({t:Date.now(),sym:m.sym,side:pick(['LONG','SHORT']),usd:Math.pow(10,rnd(3.3,6.3)),px:m.price,sim:true});
-  }
-  setTimeout(simLiq,rnd(2500,9000));
-}
-simLiq();
 
 /* ========================== live stats feeds ==========================
    Everything here is free, keyless and CORS-open. Each poller fails on its own
@@ -1609,31 +1603,39 @@ poll('trending',300000,async()=>{
       ?c.item.data.price_change_percentage_24h.usd:null}));
 });
 
-/* Binance futures — funding across every perp, then OI and positioning on BTC */
+/* Futures data — funding across every perp, then OI and positioning on BTC.
+   NOT Binance: fapi.binance.com answers 451 to a US IP (measured 2026-08-26),
+   so these four panels sat on "waiting" forever for anyone stateside. Gate.io
+   and OKX are unblocked and send CORS headers a browser accepts — OKX's
+   /rubik/* stats send none, which is why positioning comes from Gate. */
 poll('funding',120000,async()=>{
-  const j=await fget('https://fapi.binance.com/fapi/v1/premiumIndex');
-  stats.funding=j.filter(r=>r.symbol.endsWith('USDT')&&isFinite(+r.lastFundingRate))
-    .map(r=>({sym:r.symbol.replace('USDT',''),rate:+r.lastFundingRate*100}))
+  const j=await fget('https://api.gateio.ws/api/v4/futures/usdt/tickers',15000);
+  stats.funding=j.filter(r=>isFinite(+r.funding_rate))
+    .map(r=>({sym:r.contract.replace(/_USDT$/,''),rate:+r.funding_rate*100}))
     .sort((a,b)=>Math.abs(b.rate)-Math.abs(a.rate)).slice(0,40);
 });
 poll('oi',60000,async()=>{
-  const [oi,mark]=await Promise.all([
-    fget('https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT'),
-    fget('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT')]);
-  const usd=+oi.openInterest*+mark.markPrice;
-  stats.oi={btc:+oi.openInterest,usd,funding:+mark.lastFundingRate*100};
+  const [oi,tk]=await Promise.all([
+    fget('https://www.okx.com/api/v5/public/open-interest?instType=SWAP&instId=BTC-USDT-SWAP'),
+    fget('https://api.gateio.ws/api/v4/futures/usdt/tickers?contract=BTC_USDT')]);
+  const row=oi&&oi.data&&oi.data[0];if(!row)throw 0;
+  const usd=+row.oiUsd;
+  stats.oi={btc:+row.oiCcy,usd,funding:+tk[0].funding_rate*100};
   stats.oiHist.push(usd);if(stats.oiHist.length>90)stats.oiHist.shift();
 });
+/* Gate returns these oldest-first, so the newest row is the last one. */
 poll('ls',120000,async()=>{
-  const j=await fget('https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol=BTCUSDT&period=5m&limit=48');
-  const last=j[j.length-1];
-  stats.ls={ratio:+last.longShortRatio,long:+last.longAccount*100,short:+last.shortAccount*100,
-    hist:j.map(r=>+r.longShortRatio)};
+  const j=await fget('https://api.gateio.ws/api/v4/futures/usdt/contract_stats?contract=BTC_USDT&interval=5m&limit=48');
+  const rows=j.filter(r=>+r.lsr_account>0);if(!rows.length)throw 0;
+  const r=+rows[rows.length-1].lsr_account;
+  stats.ls={ratio:r,long:r/(1+r)*100,short:1/(1+r)*100,
+    hist:rows.map(x=>+x.lsr_account)};
 });
 
-/* Order book depth — the ladder either side of spot */
+/* Order book depth — the ladder either side of spot. The public data mirror,
+   never api.binance.com: the main host is geo-blocked and this polls every 15s. */
 poll('depth',15000,async()=>{
-  const j=await fget('https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=200');
+  const j=await fget('https://data-api.binance.vision/api/v3/depth?symbol=BTCUSDT&limit=200');
   stats.depth={bids:j.bids.map(b=>[+b[0],+b[1]]),asks:j.asks.map(a=>[+a[0],+a[1]])};
 });
 
@@ -3910,7 +3912,7 @@ function paintSpark(s){
   ctx.fillStyle=m.dir>=0?UP:DOWN;ctx.textAlign='right';
   ctx.fillText(fmtPrice(m.price),w-10,hf+8);
   ctx.textAlign='left';
-  let cx=10+chip(ctx,10,hf+8+Math.round(hf*0.62),m.source==='DEX'?'SOL·DEX':m.source,m.source==='SIM'?AMBER:'#a78bfa')+6;
+  let cx=10+chip(ctx,10,hf+8+Math.round(hf*0.62),m.source==='DEX'?chainTag(m.chain):m.source,m.source==='SIM'?AMBER:'#a78bfa')+6;
   if(m.boosted)chip(ctx,cx,hf+8+Math.round(hf*0.62),'BOOSTED',AMBER);
 
   const pts=m.samples;
@@ -3975,7 +3977,9 @@ function paintLiq(s){
   screenBG(ctx,w,h);
   ctx.font='700 16px "Chakra Petch"';ctx.fillStyle='#fff';ctx.textAlign='left';
   ctx.fillText('LIQUIDATIONS',10,24);
-  if(liqLive())chip(ctx,w-52,20,'LIVE',UP);else chip(ctx,w-46,20,'SIM',AMBER);
+  if(liqLive())chip(ctx,w-52,20,'LIVE',UP);else chip(ctx,w-56,20,'QUIET',AMBER);
+  if(!liqs.length){ctx.font='600 11px "JetBrains Mono"';ctx.fillStyle=DIM;
+    ctx.fillText('WAITING FOR THE NEXT PRINT',10,52);scanlines(ctx,w,h);return;}
   let y=48;
   for(const l of liqs){
     if(y>h-40)break;
@@ -4005,6 +4009,12 @@ function paintLiq(s){
   ctx.fillStyle=UP;ctx.fillRect(10+(w-20)*lt/tot,h-16,(w-20)*st/tot,6);
   scanlines(ctx,w,h);
 }
+
+/* DexScreener pairs come off a dozen chains, so the chip has to read the one
+   the pair is actually on — it used to say SOL·DEX over a Base or Ethereum pair. */
+const CHAIN_TAG={solana:'SOL',ethereum:'ETH',base:'BASE',bsc:'BSC',arbitrum:'ARB',
+  polygon:'POLY',avalanche:'AVAX',optimism:'OP',sui:'SUI',ton:'TON',pulsechain:'PLS'};
+const chainTag=c=>(CHAIN_TAG[c]||(c?c.slice(0,4).toUpperCase():''))+(c?'·':'')+'DEX';
 
 /* Tokens pulled in by search. They live alongside the majors and the trench
    pool, and get their own refresh cycle so a searched screen stays live. */
@@ -7527,19 +7537,50 @@ function connectWS(){
   ws.onerror=()=>{try{ws.close();}catch(e){}};
 }
 
+/* Liquidations. Binance's !forceOrder stream lives on fstream.binance.com,
+   which is geo-blocked exactly like fapi — from the US the socket never opened
+   and the panel showed nothing at all. OKX's public liquidation-orders
+   channel is one subscription for every SWAP and needs no key.
+   Size arrives in CONTRACTS, so the instrument's ctVal is what turns it into
+   a dollar number; without the map every print would be off by 100x. */
+const okxCtVal={};
+async function okxContracts(){
+  try{
+    const j=await fget('https://www.okx.com/api/v5/public/instruments?instType=SWAP',20000);
+    (j.data||[]).forEach(i=>{
+      if(i.ctType!=='linear')return;                 /* inverse pays in USD */
+      okxCtVal[i.instId]=(+i.ctVal||0)*(+i.ctMult||1);
+    });
+  }catch(e){}
+}
 function connectLiq(){
-  let ws;
-  try{ws=new WebSocket('wss://fstream.binance.com/ws/!forceOrder@arr');}catch(e){badge('#bLiq','warn');return;}
-  ws.onopen=()=>badge('#bLiq','ok');
+  let ws,ping;
+  try{ws=new WebSocket('wss://ws.okx.com:8443/ws/v5/public');}catch(e){badge('#bLiq','warn');return;}
+  ws.onopen=()=>{
+    badge('#bLiq','ok');
+    ws.send(JSON.stringify({op:'subscribe',args:[{channel:'liquidation-orders',instType:'SWAP'}]}));
+    /* OKX drops a socket after 30s of silence and this feed goes quiet */
+    ping=setInterval(()=>{try{ws.send('ping');}catch(e){}},20000);
+  };
   ws.onmessage=ev=>{
     try{
-      const o=JSON.parse(ev.data).o;if(!o)return;
-      lastRealLiq=Date.now();
-      pushLiq({t:o.T,sym:o.s.replace('USDT',''),side:o.S==='SELL'?'LONG':'SHORT',
-        usd:+o.q*+o.ap,px:+o.ap,sim:false});
+      if(ev.data==='pong')return;
+      const m=JSON.parse(ev.data);
+      if(!m.data)return;
+      m.data.forEach(row=>{
+        const cv=okxCtVal[row.instId];if(!cv)return;      /* USDT-margined only */
+        const sym=row.instId.replace(/-USDT-SWAP$/,'');
+        (row.details||[]).forEach(d=>{
+          const px=+d.bkPx,usd=+d.sz*cv*px;
+          if(!isFinite(usd)||usd<=0)return;
+          lastRealLiq=Date.now();          /* the feed is alive even when the print is dust */
+          if(usd<25)return;                /* a $3 liquidation is a row nobody can read */
+          pushLiq({t:+d.ts,sym,side:d.side==='sell'?'LONG':'SHORT',usd,px,sim:false});
+        });
+      });
     }catch(e){}
   };
-  ws.onclose=()=>{badge('#bLiq','warn');setTimeout(connectLiq,15000);};
+  ws.onclose=()=>{clearInterval(ping);badge('#bLiq','warn');setTimeout(connectLiq,15000);};
   ws.onerror=()=>{try{ws.close();}catch(e){}};
 }
 
@@ -7647,7 +7688,7 @@ async function initData(){
   const ok=await seedBinance();
   boot.stage('markets',1);           /* offline is not a reason to hold the boot screen */
   if(ok)connectWS();else badge('#bBin','err');
-  connectLiq();
+  okxContracts().then(connectLiq);   /* ctVal map first: sizes are meaningless without it */
   pollDex();
   openPaperBook();
 }
