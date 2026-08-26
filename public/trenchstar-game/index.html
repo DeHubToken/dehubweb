@@ -773,7 +773,6 @@
      resolve), and it must send Access-Control-Allow-Origin for the game's
      origin, or the browser will fetch the .glb and then refuse to hand it to
      WebGL. -->
-     nobody consciously sees. */
 <!-- three r180. Over http(s) we use the vendored copy in vendor/three: no third-party
      request, and it satisfies a script-src 'self' CSP. Opened as a bare file:// Chrome
      refuses to load ANY local ES module (opaque origin — fetch of the same path returns
@@ -1397,16 +1396,58 @@ function tfSynth(m,tf){
   return e;
 }
 
+/* Wide candles for a DEX pair. GeckoTerminal indexes the same pool address
+   DexScreener gives us and serves real OHLCV, so a trench chart no longer has
+   to be a random walk dressed up as a market. Keyed by POOL, not symbol: two
+   slots can carry the same ticker from different chains.
+   The free tier is ~30 calls a minute and a wall can switch forty screens to
+   1h at once, so one global gate spaces them; a screen that misses its turn
+   just picks the history up on a later repaint. */
+const GT_TF={'5m':['minute',5],'15m':['minute',15],'1h':['hour',1],
+  '4h':['hour',4],'1d':['day',1]};
+let gtLastCall=0;
+function tfFetchGT(m,tf){
+  const key=tfKey('gt:'+m.chain+':'+m.pairAddr,tf.id);
+  let e=TF_CACHE.get(key);
+  if(!e){e={rows:null,at:0,loading:false,fails:0,dead:false,sim:false};TF_CACHE.set(key,e);}
+  if(e.loading||e.dead)return e;
+  const age=Date.now()-e.at;
+  if(e.rows&&age<tfRefreshMs(tf.ms))return e;
+  if(e.fails&&age<30000)return e;
+  if(Date.now()-gtLastCall<2000)return e;         /* wait our turn at the gate */
+  const [unit,agg]=GT_TF[tf.id];
+  gtLastCall=Date.now();e.loading=true;
+  fget('https://api.geckoterminal.com/api/v2/networks/'+GT_NET[m.chain]+'/pools/'+
+    m.pairAddr+'/ohlcv/'+unit+'?aggregate='+agg+'&limit=200',12000)
+    .then(j=>{
+      const rows=j&&j.data&&j.data.attributes&&j.data.attributes.ohlcv_list;
+      if(!rows||!rows.length)throw 0;
+      /* newest first from the API, and the chart reads left to right */
+      e.rows=rows.slice().reverse().map(x=>({t:x[0]*1000,o:+x[1],h:+x[2],l:+x[3],c:+x[4],v:+x[5]}));
+      e.at=Date.now();e.fails=0;e.sim=false;
+    })
+    .catch(()=>{e.at=Date.now();if(++e.fails>=3)e.dead=true;})
+    .finally(()=>{e.loading=false;});
+  return e;
+}
+
 /* Where a wide chart's candles come from: the exchange for a pair that is
-   actually live on it, an invention for one that is not. A pair that was
+   actually live on it, GeckoTerminal for a pool that is not, and an invention
+   only for a slot that is still on its simulated bench. A pair that was
    simulated at boot and has since gone live drops its fiction here rather
    than carrying it for the session. */
 function tfSource(m,tf){
   const real=m.kind==='binance'&&m.source==='BINANCE'&&!!tf.iv;
-  if(!real)return tfSynth(m,tf);
-  const key=tfKey(m.sym,tf.id),had=TF_CACHE.get(key);
-  if(had&&had.sim)TF_CACHE.delete(key);
-  return tfFetch(m,tf);
+  if(real){
+    const key=tfKey(m.sym,tf.id),had=TF_CACHE.get(key);
+    if(had&&had.sim)TF_CACHE.delete(key);
+    return tfFetch(m,tf);
+  }
+  if(m.source==='DEX'&&m.pairAddr&&GT_NET[m.chain]&&GT_TF[tf.id]){
+    const e=tfFetchGT(m,tf);
+    if(e.rows)return e;                            /* synth holds the screen meanwhile */
+  }
+  return tfSynth(m,tf);
 }
 
 /* The last n candles, with the newest one re-opened against the live price.
@@ -1563,19 +1604,14 @@ for(let i=0;i<MEME_COUNT;i++){
   memes.push(m);
 }
 
-/* liquidation feed */
+/* liquidation feed — real prints only.
+   This used to invent a liquidation every few seconds whenever the socket had
+   been quiet for 45s, which on a calm day meant the panel was mostly fiction
+   sitting under a small SIM chip. The exchange feed works now, so the tape is
+   the tape: it fills as prints land and says QUIET when none have. */
 const liqs=[]; let lastRealLiq=0;
-/* real forceOrder events are bursty; when the feed goes quiet keep the panel alive */
 const liqLive=()=>Date.now()-lastRealLiq<45000;
 function pushLiq(l){liqs.unshift(l); if(liqs.length>26)liqs.pop();}
-function simLiq(){
-  if(!liqLive()){
-    const m=markets[pick(MAJORS.slice(0,10))];
-    pushLiq({t:Date.now(),sym:m.sym,side:pick(['LONG','SHORT']),usd:Math.pow(10,rnd(3.3,6.3)),px:m.price,sim:true});
-  }
-  setTimeout(simLiq,rnd(2500,9000));
-}
-simLiq();
 
 /* ========================== live stats feeds ==========================
    Everything here is free, keyless and CORS-open. Each poller fails on its own
@@ -1609,31 +1645,39 @@ poll('trending',300000,async()=>{
       ?c.item.data.price_change_percentage_24h.usd:null}));
 });
 
-/* Binance futures — funding across every perp, then OI and positioning on BTC */
+/* Futures data — funding across every perp, then OI and positioning on BTC.
+   NOT Binance: fapi.binance.com answers 451 to a US IP (measured 2026-08-26),
+   so these four panels sat on "waiting" forever for anyone stateside. Gate.io
+   and OKX are unblocked and send CORS headers a browser accepts — OKX's
+   /rubik/* stats send none, which is why positioning comes from Gate. */
 poll('funding',120000,async()=>{
-  const j=await fget('https://fapi.binance.com/fapi/v1/premiumIndex');
-  stats.funding=j.filter(r=>r.symbol.endsWith('USDT')&&isFinite(+r.lastFundingRate))
-    .map(r=>({sym:r.symbol.replace('USDT',''),rate:+r.lastFundingRate*100}))
+  const j=await fget('https://api.gateio.ws/api/v4/futures/usdt/tickers',15000);
+  stats.funding=j.filter(r=>isFinite(+r.funding_rate))
+    .map(r=>({sym:r.contract.replace(/_USDT$/,''),rate:+r.funding_rate*100}))
     .sort((a,b)=>Math.abs(b.rate)-Math.abs(a.rate)).slice(0,40);
 });
 poll('oi',60000,async()=>{
-  const [oi,mark]=await Promise.all([
-    fget('https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT'),
-    fget('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT')]);
-  const usd=+oi.openInterest*+mark.markPrice;
-  stats.oi={btc:+oi.openInterest,usd,funding:+mark.lastFundingRate*100};
+  const [oi,tk]=await Promise.all([
+    fget('https://www.okx.com/api/v5/public/open-interest?instType=SWAP&instId=BTC-USDT-SWAP'),
+    fget('https://api.gateio.ws/api/v4/futures/usdt/tickers?contract=BTC_USDT')]);
+  const row=oi&&oi.data&&oi.data[0];if(!row)throw 0;
+  const usd=+row.oiUsd;
+  stats.oi={btc:+row.oiCcy,usd,funding:+tk[0].funding_rate*100};
   stats.oiHist.push(usd);if(stats.oiHist.length>90)stats.oiHist.shift();
 });
+/* Gate returns these oldest-first, so the newest row is the last one. */
 poll('ls',120000,async()=>{
-  const j=await fget('https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol=BTCUSDT&period=5m&limit=48');
-  const last=j[j.length-1];
-  stats.ls={ratio:+last.longShortRatio,long:+last.longAccount*100,short:+last.shortAccount*100,
-    hist:j.map(r=>+r.longShortRatio)};
+  const j=await fget('https://api.gateio.ws/api/v4/futures/usdt/contract_stats?contract=BTC_USDT&interval=5m&limit=48');
+  const rows=j.filter(r=>+r.lsr_account>0);if(!rows.length)throw 0;
+  const r=+rows[rows.length-1].lsr_account;
+  stats.ls={ratio:r,long:r/(1+r)*100,short:1/(1+r)*100,
+    hist:rows.map(x=>+x.lsr_account)};
 });
 
-/* Order book depth — the ladder either side of spot */
+/* Order book depth — the ladder either side of spot. The public data mirror,
+   never api.binance.com: the main host is geo-blocked and this polls every 15s. */
 poll('depth',15000,async()=>{
-  const j=await fget('https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=200');
+  const j=await fget('https://data-api.binance.vision/api/v3/depth?symbol=BTCUSDT&limit=200');
   stats.depth={bids:j.bids.map(b=>[+b[0],+b[1]]),asks:j.asks.map(a=>[+a[0],+a[1]])};
 });
 
@@ -3910,7 +3954,7 @@ function paintSpark(s){
   ctx.fillStyle=m.dir>=0?UP:DOWN;ctx.textAlign='right';
   ctx.fillText(fmtPrice(m.price),w-10,hf+8);
   ctx.textAlign='left';
-  let cx=10+chip(ctx,10,hf+8+Math.round(hf*0.62),m.source==='DEX'?'SOL·DEX':m.source,m.source==='SIM'?AMBER:'#a78bfa')+6;
+  let cx=10+chip(ctx,10,hf+8+Math.round(hf*0.62),m.source==='DEX'?chainTag(m.chain):m.source,m.source==='SIM'?AMBER:'#a78bfa')+6;
   if(m.boosted)chip(ctx,cx,hf+8+Math.round(hf*0.62),'BOOSTED',AMBER);
 
   const pts=m.samples;
@@ -3922,7 +3966,10 @@ function paintSpark(s){
     const up=pts[pts.length-1].p>=pts[0].p,col=up?UP:DOWN;
     ctx.beginPath();
     pts.forEach((q,i)=>{const x=x0+(x1-x0)*i/(pts.length-1),y=yB-(q.p-lo)/(hi-lo)*(yB-yT);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+    ctx.strokeStyle=col;ctx.lineWidth=2;
+    /* dashed until the real hour lands: an unbacked line is a guess at the
+       shape, drawn from the 1h percentage, and it should not look measured */
+    ctx.setLineDash(m.realHistory?[]:[4,3]);ctx.stroke();ctx.setLineDash([]);
     ctx.lineTo(x1,yB);ctx.lineTo(x0,yB);ctx.closePath();
     const g=ctx.createLinearGradient(0,yT,0,yB);
     g.addColorStop(0,up?'rgba(47,232,140,0.28)':'rgba(255,77,106,0.28)');g.addColorStop(1,'rgba(0,0,0,0)');
@@ -3975,7 +4022,9 @@ function paintLiq(s){
   screenBG(ctx,w,h);
   ctx.font='700 16px "Chakra Petch"';ctx.fillStyle='#fff';ctx.textAlign='left';
   ctx.fillText('LIQUIDATIONS',10,24);
-  if(liqLive())chip(ctx,w-52,20,'LIVE',UP);else chip(ctx,w-46,20,'SIM',AMBER);
+  if(liqLive())chip(ctx,w-52,20,'LIVE',UP);else chip(ctx,w-56,20,'QUIET',AMBER);
+  if(!liqs.length){ctx.font='600 11px "JetBrains Mono"';ctx.fillStyle=DIM;
+    ctx.fillText('WAITING FOR THE NEXT PRINT',10,52);scanlines(ctx,w,h);return;}
   let y=48;
   for(const l of liqs){
     if(y>h-40)break;
@@ -4004,6 +4053,69 @@ function paintLiq(s){
   ctx.fillStyle=DOWN;ctx.fillRect(10,h-16,(w-20)*lt/tot,6);
   ctx.fillStyle=UP;ctx.fillRect(10+(w-20)*lt/tot,h-16,(w-20)*st/tot,6);
   scanlines(ctx,w,h);
+}
+
+/* DexScreener pairs come off a dozen chains, so the chip has to read the one
+   the pair is actually on — it used to say SOL·DEX over a Base or Ethereum pair. */
+const CHAIN_TAG={solana:'SOL',ethereum:'ETH',base:'BASE',bsc:'BSC',arbitrum:'ARB',
+  polygon:'POLY',avalanche:'AVAX',optimism:'OP',sui:'SUI',ton:'TON',pulsechain:'PLS'};
+const chainTag=c=>(CHAIN_TAG[c]||(c?c.slice(0,4).toUpperCase():''))+(c?'·':'')+'DEX';
+
+/* Real minute history for a trench pair.
+   The synth backfill above draws an hour that never happened — a straight
+   line from (price / 1+h1%) to now with noise sprinkled on it. GeckoTerminal
+   serves actual OHLCV for the same pool address DexScreener just handed us,
+   free and CORS-open, so the sparkline can be the real hour instead.
+   It is rate-limited (~30 calls/min on the free tier) and a wall can hold
+   fifty pairs, so requests go through a queue at one every 2.5s and only
+   for pairs a screen is actually showing. The synth stays as the instant
+   placeholder underneath — this overwrites it when it lands. */
+const GT_NET={solana:'solana',ethereum:'eth',base:'base',bsc:'bsc',arbitrum:'arbitrum',
+  polygon:'polygon_pos',avalanche:'avax',optimism:'optimism',sui:'sui-network',
+  ton:'ton',pulsechain:'pulsechain',blast:'blast',sei:'sei-evm',hyperliquid:'hyperevm'};
+const GT_CACHE=new Map(),gtQ=[];let gtBusy=false;
+/* Trench slots are rebound to whatever is hot every 45s and can land back on a
+   pool we already pulled, so this caches by pool and re-applies from memory —
+   a plain "already fetched" set would leave the second slot on synth forever. */
+function gtApply(m,hist){
+  if(!hist||hist.length<8)return;
+  const cut=hist[hist.length-1].t;
+  m.samples=[...hist,...m.samples.filter(s=>s.t>cut)];
+  m.realHistory=true;
+}
+function gtQueue(m){
+  if(!m||!m.pairAddr||!GT_NET[m.chain]||m.realHistory)return;
+  const key=m.chain+':'+m.pairAddr,hit=GT_CACHE.get(key);
+  if(hit&&Date.now()-hit.at<300000){         /* an hour pulled 20 minutes ago is not this hour */
+    if(hit.hist)gtApply(m,hit.hist);
+    return;
+  }
+  if(gtQ.some(x=>x.key===key))return;
+  gtQ.push({key,m});
+  if(!gtBusy)gtPump();
+}
+async function gtPump(){
+  gtBusy=true;
+  while(gtQ.length){
+    const {key,m}=gtQ.shift();
+    let hist=null;
+    /* the same gate the timeframe fetcher uses — one GeckoTerminal call at a time */
+    while(Date.now()-gtLastCall<2500)await new Promise(r=>setTimeout(r,300));
+    gtLastCall=Date.now();
+    try{
+      const j=await fget('https://api.geckoterminal.com/api/v2/networks/'+GT_NET[m.chain]+
+        '/pools/'+m.pairAddr+'/ohlcv/minute?aggregate=1&limit=60',12000);
+      const rows=j&&j.data&&j.data.attributes&&j.data.attributes.ohlcv_list;
+      /* newest first out of the API; anything that arrived live since boot
+         stays on the end so nothing already sampled is thrown away */
+      if(rows&&rows.length>8)hist=rows.slice().reverse()
+        .map(r=>({t:r[0]*1000,p:+r[4]})).filter(r=>isFinite(r.p)&&r.p>0);
+    }catch(e){}
+    GT_CACHE.set(key,{at:Date.now(),hist});
+    if(GT_CACHE.size>400)GT_CACHE.delete(GT_CACHE.keys().next().value);
+    gtApply(m,hist);
+  }
+  gtBusy=false;
 }
 
 /* Tokens pulled in by search. They live alongside the majors and the trench
@@ -7527,19 +7639,50 @@ function connectWS(){
   ws.onerror=()=>{try{ws.close();}catch(e){}};
 }
 
+/* Liquidations. Binance's !forceOrder stream lives on fstream.binance.com,
+   which is geo-blocked exactly like fapi — from the US the socket never opened
+   and the panel showed nothing at all. OKX's public liquidation-orders
+   channel is one subscription for every SWAP and needs no key.
+   Size arrives in CONTRACTS, so the instrument's ctVal is what turns it into
+   a dollar number; without the map every print would be off by 100x. */
+const okxCtVal={};
+async function okxContracts(){
+  try{
+    const j=await fget('https://www.okx.com/api/v5/public/instruments?instType=SWAP',20000);
+    (j.data||[]).forEach(i=>{
+      if(i.ctType!=='linear')return;                 /* inverse pays in USD */
+      okxCtVal[i.instId]=(+i.ctVal||0)*(+i.ctMult||1);
+    });
+  }catch(e){}
+}
 function connectLiq(){
-  let ws;
-  try{ws=new WebSocket('wss://fstream.binance.com/ws/!forceOrder@arr');}catch(e){badge('#bLiq','warn');return;}
-  ws.onopen=()=>badge('#bLiq','ok');
+  let ws,ping;
+  try{ws=new WebSocket('wss://ws.okx.com:8443/ws/v5/public');}catch(e){badge('#bLiq','warn');return;}
+  ws.onopen=()=>{
+    badge('#bLiq','ok');
+    ws.send(JSON.stringify({op:'subscribe',args:[{channel:'liquidation-orders',instType:'SWAP'}]}));
+    /* OKX drops a socket after 30s of silence and this feed goes quiet */
+    ping=setInterval(()=>{try{ws.send('ping');}catch(e){}},20000);
+  };
   ws.onmessage=ev=>{
     try{
-      const o=JSON.parse(ev.data).o;if(!o)return;
-      lastRealLiq=Date.now();
-      pushLiq({t:o.T,sym:o.s.replace('USDT',''),side:o.S==='SELL'?'LONG':'SHORT',
-        usd:+o.q*+o.ap,px:+o.ap,sim:false});
+      if(ev.data==='pong')return;
+      const m=JSON.parse(ev.data);
+      if(!m.data)return;
+      m.data.forEach(row=>{
+        const cv=okxCtVal[row.instId];if(!cv)return;      /* USDT-margined only */
+        const sym=row.instId.replace(/-USDT-SWAP$/,'');
+        (row.details||[]).forEach(d=>{
+          const px=+d.bkPx,usd=+d.sz*cv*px;
+          if(!isFinite(usd)||usd<=0)return;
+          lastRealLiq=Date.now();          /* the feed is alive even when the print is dust */
+          if(usd<25)return;                /* a $3 liquidation is a row nobody can read */
+          pushLiq({t:+d.ts,sym,side:d.side==='sell'?'LONG':'SHORT',usd,px,sim:false});
+        });
+      });
     }catch(e){}
   };
-  ws.onclose=()=>{badge('#bLiq','warn');setTimeout(connectLiq,15000);};
+  ws.onclose=()=>{clearInterval(ping);badge('#bLiq','warn');setTimeout(connectLiq,15000);};
   ws.onerror=()=>{try{ws.close();}catch(e){}};
 }
 
@@ -7618,9 +7761,11 @@ async function pollDex(){
         /* slow goes with them: a slot rebound to a different token that kept
            its old slow book would draw the previous token's chart under the
            new token's name. */
-        if(m.sym!==sym){m.sym=sym;m.samples=[];m.candles=[];m.slow=[];}
+        if(m.sym!==sym){m.sym=sym;m.samples=[];m.candles=[];m.slow=[];m.realHistory=false;}
         m.source='DEX';
         m.chain=p.chainId;
+        m.pairAddr=p.pairAddress;          /* the pool GeckoTerminal keys its candles on */
+        m.tokenAddr=p.baseToken.address;
         m.boosted=dexBoosted.has(p.baseToken.address);
         const pc=p.priceChange||{};
         m.pushSample(+p.priceUsd,{h24:+pc.h24,h1:+pc.h1,m5:+pc.m5,
@@ -7647,11 +7792,17 @@ async function initData(){
   const ok=await seedBinance();
   boot.stage('markets',1);           /* offline is not a reason to hold the boot screen */
   if(ok)connectWS();else badge('#bBin','err');
-  connectLiq();
+  okxContracts().then(connectLiq);   /* ctVal map first: sizes are meaningless without it */
   pollDex();
   openPaperBook();
 }
 initData();
+
+/* Whatever a screen is currently showing gets its real hour pulled in. Screens
+   swap pairs as the trench pool turns over, so this re-sweeps rather than
+   firing once; gtQueue dedupes by pool address. */
+setInterval(()=>{screens.forEach(s=>{if(s.market&&s.market.source==='DEX')gtQueue(s.market);});},20000);
+setTimeout(()=>screens.forEach(s=>{if(s.market&&s.market.source==='DEX')gtQueue(s.market);}),6000);
 
 /* ============================== sim ticks ============================= */
 /* Four steps a second across ~42 markets is pure arithmetic — no paint, no
