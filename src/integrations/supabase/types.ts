@@ -4734,6 +4734,7 @@ export type Database = {
           resolution_tx_hash: string | null
           resolved_at: string | null
           resolved_by_address: string | null
+          resolved_by_admin: string | null
           status: Database["public"]["Enums"]["work_dispute_status"]
           updated_at: string
           worker_amount: number | null
@@ -4750,6 +4751,7 @@ export type Database = {
           resolution_tx_hash?: string | null
           resolved_at?: string | null
           resolved_by_address?: string | null
+          resolved_by_admin?: string | null
           status?: Database["public"]["Enums"]["work_dispute_status"]
           updated_at?: string
           worker_amount?: number | null
@@ -4766,6 +4768,7 @@ export type Database = {
           resolution_tx_hash?: string | null
           resolved_at?: string | null
           resolved_by_address?: string | null
+          resolved_by_admin?: string | null
           status?: Database["public"]["Enums"]["work_dispute_status"]
           updated_at?: string
           worker_amount?: number | null
