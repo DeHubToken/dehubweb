@@ -2840,8 +2840,18 @@ html[data-theme="light"] [data-post-drawer] {
 }
 
 /* Mobile bottom nav: the wrapper stays transparent (excluded from the
-   #app-root > div paper remap above) so only the glass pill paints. The
-   centre create button hardcodes a white + on white glass via inline
+   #app-root > div paper remap above) so only the glass pill paints. Its
+   raw bg-zinc-900/10 + backdrop-blur is a near-invisible wash on paper —
+   whatever is scrolling underneath (photos, bright post media) bleeds
+   straight through and the ink icons lose contrast. Give it the same
+   opaque paper panel as the mobile header and sonner toasts instead. */
+html[data-theme="light"] [data-bottom-nav] > nav {
+  background-color: var(--paper) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: var(--hairline-strong) !important;
+}
+/* The centre create button hardcodes a white + on white glass via inline
    styles — flip the glyph and its bubble ring to ink so it reads on paper
    (!important beats the inline styles). */
 html[data-theme="light"] [data-bottom-nav] .lucide-plus {
