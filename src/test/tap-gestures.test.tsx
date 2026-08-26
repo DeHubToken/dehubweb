@@ -370,4 +370,11 @@ describe('surfaces are wired consistently', () => {
     // The whole point of the undo path: no 260ms wait on the primary gesture.
     expect(SLIDE).toContain('onUndoSingleTap: () => (onTapUndo ?? onTap)?.()');
   });
+
+  it('stays off a gated card, where there is nothing to react to yet', () => {
+    // TapReactionBurst sits inside VideoCard's !isContentGated block, so a
+    // PPV / holdings-locked / mature-gated card would take the gesture and
+    // show nothing back. ImageCard already opts out by construction.
+    expect(VIDEO_CARD).toContain('|| isContentGated,');
+  });
 });
