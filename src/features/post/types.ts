@@ -62,7 +62,6 @@ export type LiveMode = 'video' | 'townhall' | null;
 export interface PostFormState {
   text: string;
   media: MediaFile[];
-  isSubscribersOnly: boolean;
   isPPV: boolean;
   ppvAmount: string;
   ppvCurrency: Currency;
@@ -86,7 +85,6 @@ export interface PostFormState {
 export interface PostFormActions {
   setText: (text: string) => void;
   setMedia: React.Dispatch<React.SetStateAction<MediaFile[]>>;
-  setIsSubscribersOnly: (value: boolean) => void;
   setIsPPV: (value: boolean) => void;
   setPpvAmount: (value: string) => void;
   setPpvCurrency: (value: Currency) => void;

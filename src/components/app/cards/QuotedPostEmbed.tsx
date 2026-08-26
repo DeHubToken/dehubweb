@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle, Play, Images, Ticket, Lock } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildAvatarUrl, extractAvatarPath, buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
+import { isHoldGated } from '@/lib/content-gate';
 import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
@@ -69,7 +70,10 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   // locked PPV post shared into a DM leaks its media as a free preview. Same
   // bypass rules as the feed cards: owners and unlockers see it clear.
   const isPPV = !!(quotedPost.is_ppv || quotedPost.streamInfo?.isPayPerView);
-  const isHoldLocked = !!(quotedPost.is_locked || quotedPost.streamInfo?.isLockContent);
+  const isHoldLocked = isHoldGated(
+    quotedPost.is_locked || quotedPost.streamInfo?.isLockContent,
+    quotedPost.locked_price ?? quotedPost.streamInfo?.lockContentAmount,
+  );
   const canBypassGating = !!(quotedPost.isOwner || quotedPost.isUnlocked) || isTokenUnlocked(String(quotedPost.tokenId));
   const gated = (isPPV || isHoldLocked) && !canBypassGating;
 

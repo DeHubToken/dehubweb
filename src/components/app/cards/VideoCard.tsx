@@ -74,6 +74,7 @@ import { AudioVisualizer } from '../audio';
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
+import { isHoldGated } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
@@ -158,6 +159,8 @@ interface MobileCreatorInfoProps {
   isLocked?: boolean;
   lockedPrice?: number;
   lockedCurrency?: string;
+  lockedTokenAddress?: string;
+  lockedChainId?: number;
   chainId?: number;
   onUnlocked?: () => void;
 }
@@ -183,6 +186,8 @@ function MobileCreatorInfo({
   isLocked,
   lockedPrice,
   lockedCurrency,
+  lockedTokenAddress,
+  lockedChainId,
   chainId,
   onUnlocked,
 }: MobileCreatorInfoProps) {
@@ -439,6 +444,8 @@ function MobileCreatorInfo({
                 <VerifyUnlockButton
                   requiredAmount={lockedPrice}
                   currency={lockedCurrency || 'DHB'}
+                  tokenAddress={lockedTokenAddress}
+                  chainId={lockedChainId}
                   onUnlocked={() => { setShowLockedDrawer(false); onUnlocked?.(); }}
                 />
               )}
@@ -839,7 +846,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || video.isLocked) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice)) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
             const vid = videoRef.current;
             if (vid) {
               // Fast fling race: the media-attach state may not have
@@ -869,7 +876,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 setIsLoading(false);
               });
             }
-          } else if (entry.isIntersecting && !isPlayingRef.current && !video.videoUrl && video.soundtrackUrl && !(video.isPPV || video.isLocked)) {
+          } else if (entry.isIntersecting && !isPlayingRef.current && !video.videoUrl && video.soundtrackUrl && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice))) {
             // Auto-play soundtrack for image posts with attached sound
             isPlayingRef.current = true;
             setIsPlaying(true);
@@ -887,7 +894,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
     };
-  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.videoUrl]);
+  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.videoUrl]);
 
   // Show controls briefly after any user interaction, then auto-hide
   const showControlsBriefly = useCallback(() => {
@@ -910,7 +917,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked || locallyUnlocked || storedUnlocked);
   const isPPVLocked = !!video.isPPV && !canBypassGating;
   const isBountyLocked = false; // W2E content is free to watch; bounty rewards first X viewers/commenters
-  const isHoldingsLocked = !!video.isLocked && !canBypassGating;
+  const isHoldingsLocked = isHoldGated(video.isLocked, video.lockedPrice) && !canBypassGating;
   const isComboLocked = isPPVLocked && isHoldingsLocked;
   // Independent of the monetisation gates above: a post can be both mature and
   // pay-per-view, and the creator's own post is warned about too — the warning
@@ -1623,7 +1630,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   >
                     <Flag className="w-5 h-5" /> {t('postOptions.report')}
                   </button>
-                  {!isContentGated && !(video.isLocked && !canBypassGating) && (
+                  {!isContentGated && !isHoldingsLocked && (
                     <button onClick={handleDownloadVideo} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                       <Download className="w-5 h-5" /> {t('postOptions.download')}
                     </button>
@@ -2170,9 +2177,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             bountyCurrency={video.bountyCurrency}
             bountyViews={video.bountyViews}
             bountyComments={video.bountyComments}
-            isLocked={video.isLocked && !canBypassGating}
+            isLocked={isHoldingsLocked}
             lockedPrice={video.lockedPrice}
             lockedCurrency={video.lockedCurrency}
+            lockedTokenAddress={video.lockedTokenAddress}
+            lockedChainId={video.lockedChainId}
             chainId={video.chainId}
             onUnlocked={() => {
               setLocallyUnlocked(true);
@@ -2377,7 +2386,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               <Flag className="w-5 h-5" /> {t('postOptions.report')}
             </button>
-            {!isContentGated && !(video.isLocked && !canBypassGating) && (
+            {!isContentGated && !isHoldingsLocked && (
               <button onClick={handleDownloadVideo} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Download className="w-5 h-5" /> {t('postOptions.download')}
               </button>
@@ -2576,7 +2585,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       )}
 
       {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
-      {video.isLocked && !canBypassGating && (
+      {isHoldingsLocked && (
         <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
           <DrawerContent glass className="px-4 pb-6">
             <DrawerHeader className="pb-3 relative">
@@ -2605,6 +2614,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <VerifyUnlockButton
                   requiredAmount={video.lockedPrice}
                   currency={video.lockedCurrency || 'DHB'}
+                  tokenAddress={video.lockedTokenAddress}
+                  chainId={video.lockedChainId}
                   onUnlocked={() => {
                     setShowLockedDrawer(false);
                     setLocallyUnlocked(true);

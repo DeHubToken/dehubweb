@@ -52,6 +52,7 @@ import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
+import { isHoldGated } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import {
@@ -165,7 +166,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const [locallyUnlocked, setLocallyUnlocked] = useState(false);
   const storedUnlocked = isTokenUnlocked(post.id);
   const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
-  const isLocked = (post.isLocked || false) && !canBypassGating;
+  const isLocked = isHoldGated(post.isLocked, post.lockedPrice) && !canBypassGating;
 
   const formatCompact = (num: number | null | undefined): string => {
     const n = Number(num);
@@ -606,7 +607,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                 className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
               >
                 <Lock className="w-3.5 h-3.5" />
-                Subscribe to view full post
+                {/* Not a subscription — isLockContent is "hold N of this token".
+                    The old label sent people looking for a subscribe flow that
+                    does not exist on this path. */}
+                Hold {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'} to read
               </button>
             </div>
           );
@@ -829,6 +833,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                 <VerifyUnlockButton
                   requiredAmount={post.lockedPrice}
                   currency={post.lockedCurrency || 'DHB'}
+                  tokenAddress={post.lockedTokenAddress}
+                  chainId={post.lockedChainId}
                   onUnlocked={() => {
                     setShowLockedDrawer(false);
                     setLocallyUnlocked(true);

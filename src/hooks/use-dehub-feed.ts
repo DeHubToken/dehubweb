@@ -164,6 +164,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const isLocked = nft.is_locked ?? false;
   const lockedPrice = nft.locked_price;
   const lockedCurrency = nft.locked_currency || 'DHB';
+  const lockedTokenAddress = nft.streamInfo?.lockContentContractAddress;
+  const lockedChainId = nft.streamInfo?.lockContentChainIds?.[0];
 
   // Extract soundtrack metadata from description
   const descText = nft.description || '';
@@ -209,6 +211,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isLocked,
     lockedPrice,
     lockedCurrency,
+    lockedTokenAddress,
+    lockedChainId,
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
@@ -295,6 +299,8 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     isLocked: nft.is_locked || nft.streamInfo?.isLockContent || false,
     lockedPrice: nft.locked_price || nft.streamInfo?.lockContentAmount,
     lockedCurrency: nft.locked_currency || nft.streamInfo?.lockContentTokenSymbol || 'DHB',
+    lockedTokenAddress: nft.streamInfo?.lockContentContractAddress,
+    lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
     bountyViews: nft.streamInfo?.addBountyFirstXViewers != null ? Number(nft.streamInfo.addBountyFirstXViewers) : undefined,
     bountyComments: nft.streamInfo?.addBountyFirstXComments != null ? Number(nft.streamInfo.addBountyFirstXComments) : undefined,
     bountyAmount: nft.streamInfo?.addBountyAmount,
