@@ -15,6 +15,24 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  # A key added to en.json and nowhere else renders in English for every other
+  # language: fallbackLng swallows it, so nothing throws and nobody notices.
+  # orphan-baseline.json is the backlog being worked through — a key outside it
+  # is a feature that shipped English-only, and fails here.
+  #
+  # No install: the check only reads JSON, so it stays independent of the
+  # lockfile drift the other two jobs work around.
+  i18n:
+    name: i18n coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: node scripts/i18n-coverage.mjs
+
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
