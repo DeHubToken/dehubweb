@@ -3708,6 +3708,44 @@ html[data-theme="light"] [data-wallet-page] .text-white\/50 {
 }
 
 /* ==========================================================================
+ * Bounties (/work, /bounty/*, /work/history, /work/post, /work/disputes) —
+ * light theme cleanup.
+ * The Work pages were written against the dark canvas and lean on white
+ * washes: bg-white/5 inputs, border-white/10 hairlines, text-white/30 hints
+ * and bg-white/15-vs-/5 tab states. On paper the search field and the status
+ * select render as blank rectangles with no visible placeholder, the active
+ * tab is indistinguishable from the inactive one, and the loading skeletons
+ * show nothing at all. Same remedy as the wallet page above.
+ * The global .text-white/40–/90 ladder only matches DIRECT children of a
+ * non-button, so /30 and the nested cases still need naming here; and
+ * hover:text-white is only rescued for the eight glass themes, which is why
+ * hovering Back or a tx link made the label vanish on light.
+ * ========================================================================== */
+html[data-theme="light"] [data-work-surface] [class*="bg-white\/"]:not([data-keep-white]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-work-surface] [class*="hover\:bg-white\/"]:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme="light"] [data-work-surface] [class*="border-white\/"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-work-surface] .text-white\/30,
+html[data-theme="light"] [data-work-surface] .text-white\/40,
+html[data-theme="light"] [data-work-surface] .text-white\/50,
+html[data-theme="light"] [data-work-surface] .text-white\/60 {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-work-surface] input::placeholder {
+  color: var(--ink-muted) !important;
+}
+/* `hover:text-white` would repaint ink back to white on paper — invisible.
+   The glass themes get this rescue already; light never did. */
+html[data-theme="light"] [data-work-surface] [class*="hover\:text-white"]:hover {
+  color: var(--ink) !important;
+}
+
+/* ==========================================================================
  * Skeleton preloaders — light mode
  * Feed/page skeletons shimmer with white washes (bg-white/[0.06] pulses in
  * border-white/[0.08|0.12] cards) that are invisible on paper, so first-time

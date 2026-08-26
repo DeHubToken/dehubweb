@@ -12,20 +12,7 @@ import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { bountyPath, bountyTitle, bountyDescription, bountyUrl, isBountyIndexable } from '@/features/work/seo';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
-import { workExplorerTxUrl } from '@/lib/contracts/dehub-work';
-
-function TxLink({ label, txHash }: { label: string; txHash: string }) {
-  return (
-    <a
-      href={workExplorerTxUrl(txHash)}
-      target="_blank"
-      rel="noreferrer"
-      className="inline-flex items-center gap-1 text-[11px] text-white/50 hover:text-white"
-    >
-      <ExternalLink className="w-3 h-3" /> {label}: {txHash.slice(0, 6)}…{txHash.slice(-4)}
-    </a>
-  );
-}
+import { TxLink, statusBadgeClass, statusLabel } from '@/features/work/components/TxLink';
 
 export default function WorkJobDetailPage() {
   // Either shape of bounty URL lands here: /bounty/<n> (canonical) or the
@@ -76,7 +63,7 @@ export default function WorkJobDetailPage() {
   const requireAuth = () => { if (!me) { openLoginModal(); return false; } return true; };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
+    <div data-work-surface className="max-w-3xl mx-auto px-4 py-6">
       {/* Same title, description, canonical and indexability the edge worker
           serves crawlers for this URL — see src/features/work/seo.ts. */}
       <SEOHead
@@ -98,12 +85,7 @@ export default function WorkJobDetailPage() {
               <Briefcase className="w-3 h-3" /> {job.job_type}
             </span>
             {job.platform && <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>}
-            <span className={`px-2 py-0.5 rounded-md ${
-              job.status === 'open' ? 'bg-emerald-500/20 text-emerald-300' :
-              job.status === 'disputed' ? 'bg-red-500/20 text-red-300' :
-              job.status === 'completed' ? 'bg-blue-500/20 text-blue-200' :
-              'bg-white/10 text-white/60'
-            }`}>{job.status}</span>
+            <span className={`px-2 py-0.5 rounded-md ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</span>
           </div>
           {isPoster && isJobEditable(job) && (
             <button

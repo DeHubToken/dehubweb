@@ -55,7 +55,7 @@ export default function WorkPostPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
       <SEOHead title="Post a Bounty — DeHub Bounties" description="Post a bounty on DeHub: social media tasks, clipping bounties, or fixed-price contracts paid in DHB or USDC." url="https://dehub.io/work/post" />
       <button
         onClick={() => navigate('/work')}
