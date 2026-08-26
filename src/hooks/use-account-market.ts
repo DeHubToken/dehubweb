@@ -9,6 +9,11 @@
  * - **Nothing is priced here.** The server quotes the asking price and names
  *   the seller; the wallet sends exactly that, to exactly them. The USD figure
  *   beside it is decoration.
+ * - **The buyer never picks a network.** `pickPayChain` reads their DHB balance
+ *   on each chain the server quoted and spends the first that covers the price,
+ *   Base first. A picker asked a question only the wallet could answer, and
+ *   getting it wrong meant a signature that reverts for funds sitting one chain
+ *   over.
  * - **Delivery goes to a named wallet, validated first.** The account lands on
  *   a vacant wallet the buyer chooses, and `check_receive` vets that address
  *   BEFORE any DHB leaves — paying first and asking questions later is the one
@@ -25,7 +30,6 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { createLogger } from '@/lib/logger';
-import type { ChainId } from '@/components/app/ChainSelector';
 import {
   browseAccounts,
   cancelAccountListing,
@@ -205,21 +209,30 @@ export function useBuyAccount() {
   const buy = useMutation({
     mutationFn: async ({
       quote,
-      chainId,
       receiveAddress,
     }: {
       quote: AccountQuote;
-      chainId: ChainId;
       /** Omitted only when the paying wallet is itself vacant (`selfReceivable`). */
       receiveAddress?: string;
     }) => {
-      const chain = quote.chains.find(c => c.chainId === chainId);
-      if (!chain?.tokenAddress) throw new Error('DHB cannot be sent on that network.');
-
       // Imported at call time: this hook is reachable from a cached page, and
       // scripts/check-entry-bundle.mjs fails the build if wagmi lands in the
       // entry chunk.
       const { sendERC20Token } = await import('@/lib/wallet/send');
+      const { pickPayChain } = await import('@/lib/wallet/pay-chain');
+      const { getWalletAddress } = await import('@/lib/contracts/aa-utils');
+      const { toWei } = await import('@/lib/contracts/dhb-token');
+
+      // Re-read here rather than trusting the drawer's caption: it may have
+      // been open for minutes, and the balance behind it is not ours.
+      const payer = await getWalletAddress();
+      const { chainId } = await pickPayChain(
+        payer,
+        toWei(quote.priceDhb),
+        quote.chains.map(c => c.chainId),
+      );
+      const chain = quote.chains.find(c => c.chainId === chainId);
+      if (!chain?.tokenAddress) throw new Error('DHB cannot be sent on that network.');
 
       setStage('paying');
       const sent = await sendERC20Token(
