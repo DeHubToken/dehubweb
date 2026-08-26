@@ -185,3 +185,7 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.winter-wonderland-draw]
     verify_jwt = false
+  # verify_jwt = false because the caller holds a DeHub *admin* bearer token,
+  # not a Supabase JWT. The function validates it against api.dehub.io itself.
+  [functions.work-admin]
+    verify_jwt = false
