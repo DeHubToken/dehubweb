@@ -39,6 +39,7 @@ import {
   MapPin,
   Wallet,
   ExternalLink,
+  Gem,
   AtSign,
   Handshake,
   PieChart,
@@ -83,6 +84,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
+import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
 import { SettingsRow } from '@/components/app/settings/SettingsRow';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -2933,6 +2935,7 @@ function AssetsSettings() {
   const { walletAddress, connectionSource } = useAuthContext();
   const navigate = useNavigate();
   const [walletDrawerOpen, setWalletDrawerOpen] = useState(false);
+  const { option: tipNetwork, setOption: setTipNetwork } = useTipNetwork();
 
   const isGasSponsored = connectionSource === 'web3auth';
   const coinBalance = 0;
@@ -3027,6 +3030,36 @@ function AssetsSettings() {
           }`}>
             {isGasSponsored ? 'Sponsored' : 'Self-paid'}
           </span>
+        </div>
+      </div>
+
+      {/* Tip network. Tucked in here rather than on the tip drawer: almost
+          nobody needs it, and asking on the way to sending money made the
+          choice look consequential when Automatic is right for them. */}
+      <div data-setting-anchor="tip-network">
+        <div className="flex items-center justify-between gap-3 p-4 bg-zinc-800 rounded-xl">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 shrink-0 bg-zinc-700 rounded-xl flex items-center justify-center">
+              <Gem className="w-5 h-5 text-white" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-white font-medium">Tip network</p>
+              <p className="text-zinc-500 text-sm">
+                Which chain your tips are paid from. Automatic uses whichever holds enough,
+                Base first.
+              </p>
+            </div>
+          </div>
+          <SettingDrawerSelect
+            value={tipNetwork}
+            onValueChange={value => setTipNetwork(value as TipNetworkOption)}
+            title="Tip network"
+            options={[
+              { value: 'auto', label: 'Automatic', description: 'Base if it covers the tip, otherwise BNB' },
+              { value: 'base', label: 'Always Base' },
+              { value: 'bnb', label: 'Always BNB' },
+            ]}
+          />
         </div>
       </div>
 

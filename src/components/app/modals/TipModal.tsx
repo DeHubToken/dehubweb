@@ -2,7 +2,20 @@
  * Tip Modal Component
  * ===================
  * Drawer for tipping creators on posts or profiles.
- * Supports Base, BNB, and Ethereum mainnet.
+ *
+ * **It does not ask which network.** The first thing on screen when somebody
+ * sends money should not be a question about infrastructure, and it was one
+ * only their wallet could answer anyway. The tip leaves from whichever of Base
+ * or BNB actually holds the amount, Base first, decided at send time. Anyone
+ * who wants to pin a chain sets it once in Settings → Assets.
+ *
+ * Ethereum was on the old picker and is deliberately not in the automatic set:
+ * DHB exists there, but the built-in wallet only signs as its **Safe** on Base
+ * and BNB, so an Ethereum tip would arrive from the owner EOA — a different
+ * backend account — and go uncredited.
+ *
+ * The balance shown is the larger of the two chains, because that is what the
+ * "All" button can actually send.
  */
 
 import { useState, useEffect } from 'react';
@@ -19,16 +32,21 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import { ChainSelector, type ChainId, getChainById } from '@/components/app/ChainSelector';
+import { getChainById, type ChainId } from '@/components/app/ChainSelector';
 import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB } from '@/hooks/use-tip-payment';
+import { useTipNetwork } from '@/hooks/use-tip-network';
 import { useAuth } from '@/contexts/AuthContext';
-// NOTE: stream-controller reaches wallet/contract code (wagmi + web3auth) and
-// this modal is statically imported by eager feed cards — getDHBBalance is
-// dynamically imported when the modal opens to keep the wallet stack out of
-// the entry bundle (scripts/check-entry-bundle.mjs fails the build otherwise).
-import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+// NOTE: stream-controller and pay-chain reach wallet/contract code (wagmi +
+// web3auth) and this modal is statically imported by eager feed cards — both
+// are dynamically imported when the modal opens to keep the wallet stack out
+// of the entry bundle (scripts/check-entry-bundle.mjs fails the build
+// otherwise).
+import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
 const QUICK_AMOUNTS = [500, 1000, 5000, 10000, 25000, 50000, 100000, 1000000];
+
+/** Chains a tip may be sent from automatically, in order. Base first, always. */
+const AUTO_TIP_CHAINS: ChainId[] = [BASE_CHAIN_ID as ChainId, BNB_CHAIN_ID as ChainId];
 
 interface TipModalProps {
   open: boolean;
@@ -55,10 +73,19 @@ export function TipModal({
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
   const [amount, setAmount] = useState('');
-  const [tipChainId, setTipChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
-  const [dhbBalance, setDhbBalance] = useState<number | null>(null);
+  const [balances, setBalances] = useState<Record<number, number> | null>(null);
   const [lastTipAmount, setLastTipAmount] = useState(0);
   const resolvedTokenId = tokenId || context;
+  const { pinnedChainId } = useTipNetwork();
+
+  const parsedAmount = parseAbbreviatedAmount(amount);
+  const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
+
+  // Base first, then BNB, then Base again as the place to fail — it is the one
+  // chain the tipper can actually top up in-app. A pinned setting wins outright:
+  // somebody who went to Settings to say "always BNB" meant it.
+  const autoChainId = AUTO_TIP_CHAINS.find(id => (balances?.[id] ?? 0) >= parsedAmount);
+  const tipChainId = pinnedChainId ?? autoChainId ?? (BASE_CHAIN_ID as ChainId);
 
   const { tip, isTipping } = useTipPayment({
     creatorAddress,
@@ -85,17 +112,31 @@ export function TipModal({
     },
   });
 
+  // Read once per open, both chains at a time. Keying this on the amount would
+  // put an RPC round trip behind every keystroke; the pick above is pure and
+  // re-derives from what is already here.
   useEffect(() => {
-    if (open && walletAddress) {
-      import('@/lib/contracts/stream-controller')
-        .then(m => m.getDHBBalance(walletAddress, tipChainId))
-        .then((raw) => {
-          const human = Number(raw) / 1e18;
-          setDhbBalance(Math.floor(human * 100) / 100);
-        })
-        .catch(() => setDhbBalance(null));
-    }
-  }, [open, walletAddress, tipChainId]);
+    if (!open || !walletAddress) return;
+    let cancelled = false;
+    import('@/lib/contracts/stream-controller')
+      .then(m =>
+        Promise.all(
+          AUTO_TIP_CHAINS.map(id =>
+            m.getDHBBalance(walletAddress, id).catch(() => BigInt(0)),
+          ),
+        ),
+      )
+      .then(raw => {
+        if (cancelled) return;
+        const next: Record<number, number> = {};
+        AUTO_TIP_CHAINS.forEach((id, i) => {
+          next[id] = Math.floor((Number(raw[i]) / 1e18) * 100) / 100;
+        });
+        setBalances(next);
+      })
+      .catch(() => { if (!cancelled) setBalances(null); });
+    return () => { cancelled = true; };
+  }, [open, walletAddress]);
 
   function parseAbbreviatedAmount(val: string): number {
     const trimmed = val.trim().toLowerCase();
@@ -108,9 +149,12 @@ export function TipModal({
     return num;
   }
 
-  const parsedAmount = parseAbbreviatedAmount(amount);
-  const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
   const chainName = getChainById(tipChainId)?.name ?? 'chain';
+  // What "All" can actually send: the bigger of the two, since either is
+  // reachable without the tipper doing anything.
+  const dhbBalance = balances
+    ? Math.max(...AUTO_TIP_CHAINS.map(id => balances[id] ?? 0))
+    : null;
 
   const handleSendTip = () => {
     if (!isValidAmount) return;
@@ -141,16 +185,6 @@ export function TipModal({
           )}
         </DrawerHeader>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <p className="text-white/60 text-xs">Network</p>
-            <ChainSelector
-              selectedChainId={tipChainId}
-              onChainChange={(id) => setTipChainId(id as ChainId)}
-              variant="compact"
-              evmOnly
-            />
-          </div>
-
           <div>
             <p className="text-white/60 text-xs mb-2">{t('tip.quickAmounts', 'Quick amounts')}</p>
             <div className="flex flex-wrap gap-2">
@@ -179,7 +213,7 @@ export function TipModal({
               <p className="text-white/60 text-xs">{t('tip.customAmount', 'Or enter amount')}</p>
               {dhbBalance != null && (
                 <p className="text-white/30 text-xs">
-                  {chainName} balance: {dhbBalance.toLocaleString()} DHB
+                  {dhbBalance.toLocaleString()} DHB · via {chainName}
                 </p>
               )}
             </div>

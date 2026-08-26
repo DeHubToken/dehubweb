@@ -126,6 +126,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'assets', anchor: 'dhb-balance', label: 'DHB Balance', keywords: 'tokens coins balance' },
   { tab: 'assets', anchor: 'wallet', label: 'Wallet', keywords: 'wallet send receive' },
   { tab: 'assets', anchor: 'gas-fees', label: 'Gas Fees', keywords: 'gas sponsored transaction fees' },
+  { tab: 'assets', anchor: 'tip-network', label: 'Tip network', keywords: 'tipping chain base bnb network' },
   { tab: 'assets', anchor: 'fractions', label: 'Fractions', labelKey: 'settings.fractionsOwn', keywords: 'shares owned' },
   { tab: 'assets', anchor: 'owned-usernames', label: 'Owned Usernames', labelKey: 'settings.usernamesOwn', keywords: 'handles marketplace' },
   { tab: 'assets', anchor: 'offers-made', label: 'Offers Made', labelKey: 'settings.offersMade', keywords: 'bids offers' },
