@@ -14,6 +14,8 @@ import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useVideoFullscreen, canNativeFullscreen } from '@/hooks/use-video-fullscreen';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -100,6 +102,19 @@ export const VideoSlide = memo(function VideoSlide({
    * play/pause still fires instantly — which is most of the frame, and keeps
    * the viewer feeling as immediate as it did before.
    */
+  /**
+   * Mobile only: double 👍, triple ❤️, hold for the tray. Desktop keeps the
+   * centre double-tap for fullscreen instead — `allowFullscreen` is the desktop
+   * signal, so the two gesture models never coexist on one slide.
+   *
+   * ShortsViewer owns the listener for these, since it renders no ActionBar.
+   */
+  const tapGestures = useTapGestures({
+    postId: short.id,
+    onSingleTap: () => onTap?.(),
+    disabled: allowFullscreen,
+  });
+
   const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTapRef = useRef(0);
 
@@ -383,8 +398,16 @@ export const VideoSlide = memo(function VideoSlide({
         </>
       )}
 
-      {/* Video element */}
-      <div className="absolute inset-0 z-[2]" onClick={handleVideoTap}>
+      {/* Video element.
+          Desktop drives the centre double-tap through onClick (fullscreen);
+          mobile gets the reaction ladder off pointer events instead. The two
+          are mutually exclusive — `allowFullscreen` IS the desktop signal — so
+          only one tap model is ever bound and they cannot double-fire. */}
+      <div
+        className="absolute inset-0 z-[2]"
+        onClick={allowFullscreen ? handleVideoTap : undefined}
+        {...(allowFullscreen ? {} : tapGestures)}
+      >
         {short.videoUrl ? (
           <video
             ref={videoRef}
@@ -431,6 +454,11 @@ export const VideoSlide = memo(function VideoSlide({
           {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
         </button>
       )}
+
+      {/* 👍 / ❤️ for the tap ladder. Sits above the controls so the burst is not
+          drawn under them, which is safe because every layer of it is
+          pointer-events-none and cannot take a tap from the seek strip. */}
+      {isActive && <TapReactionBurst postId={short.id} />}
 
       {/* Play/Pause indicator - only shown on explicit tap */}
       {showPlayIndicator && (
