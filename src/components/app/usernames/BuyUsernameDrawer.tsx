@@ -11,6 +11,11 @@
  * The price is quoted by the server when the drawer opens and re-quoted on
  * every open — a listing can sit in the grid for days and the seller can
  * reprice it. Nothing here computes an amount.
+ *
+ * There is no network picker. The payment rides the chain the wallet is already
+ * on, falling back to Base, so the drawer only reports which one that is —
+ * still worth saying out loud before somebody spends, but not a decision to
+ * hand them.
  */
 
 import { useEffect, useState } from 'react';
@@ -20,8 +25,8 @@ import { ArrowRight, Loader2, ShieldCheck, Share2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { useAuth } from '@/contexts/AuthContext';
-import { useBuyUsername } from '@/hooks/use-username-market';
-import { SUPPORTED_CHAINS, type ChainId } from '@/components/app/ChainSelector';
+import { resolvePayChain, useBuyUsername } from '@/hooks/use-username-market';
+import { SUPPORTED_CHAINS } from '@/components/app/ChainSelector';
 import type { UsernameListing, UsernameQuote } from '@/lib/api/dehub/username-market';
 
 interface Props {
@@ -32,10 +37,9 @@ interface Props {
 
 export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const { getQuote, buy, stage } = useBuyUsername();
+  const { getQuote, buy, stage, walletChainId } = useBuyUsername();
   const [quote, setQuote] = useState<UsernameQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
-  const [chainId, setChainId] = useState<ChainId>(8453);
   const [shareOpen, setShareOpen] = useState(false);
 
   const isOwn = !!walletAddress && walletAddress.toLowerCase() === listing?.seller.address.toLowerCase();
@@ -63,14 +67,13 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
   if (!listing) return null;
 
   const busy = stage === 'paying' || stage === 'confirming';
-  const payableChains = SUPPORTED_CHAINS.filter(c =>
-    (quote?.chains || []).some(q => q.chainId === c.id),
-  );
+  const payChainId = resolvePayChain(walletChainId, quote?.chains);
+  const payChain = SUPPORTED_CHAINS.find(c => c.id === payChainId);
 
   const handleBuy = async () => {
     if (!isAuthenticated) return openLoginModal();
     if (!quote) return;
-    const result = await buy.mutateAsync({ quote, chainId }).catch(() => null);
+    const result = await buy.mutateAsync(quote).catch(() => null);
     if (result && !result.pending) onClose();
   };
 
@@ -121,28 +124,12 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
               </div>
             )}
 
-            {/* Network */}
-            {payableChains.length > 1 && (
-              <div>
-                <p className="text-xs text-zinc-500 mb-2">Pay with DHB on</p>
-                <div className="flex gap-2">
-                  {payableChains.map(chain => (
-                    <button
-                      key={chain.id}
-                      disabled={busy}
-                      onClick={() => setChainId(chain.id as ChainId)}
-                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors disabled:opacity-50 ${
-                        chainId === chain.id
-                          ? 'border-white/60 bg-white/10 text-white'
-                          : 'border-white/10 bg-white/5 text-zinc-400'
-                      }`}
-                    >
-                      <img src={chain.icon} alt="" className="w-4 h-4" />
-                      {chain.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {/* Network — reported, not chosen. */}
+            {quote && payChain && (
+              <p className="text-xs text-zinc-500 flex items-center gap-2">
+                <img src={payChain.icon} alt="" className="w-4 h-4 rounded-full" />
+                Paying with DHB on {payChain.name}
+              </p>
             )}
 
             {quoteError && (

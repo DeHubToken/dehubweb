@@ -9,6 +9,11 @@
  * - **Nothing is priced here.** The server quotes the asking price and names
  *   the seller; the wallet sends exactly that, to exactly them. The USD figure
  *   beside it is decoration.
+ * - **The buyer never picks a network.** The payment goes out on whatever chain
+ *   the wallet is already on, provided the server takes DHB there; anywhere
+ *   else falls back to Base. A picker only asked a question the wallet had
+ *   already answered, and choosing the other entry meant a chain switch in the
+ *   middle of a purchase.
  * - **The claim is retried, never abandoned.** Once the transfer is broadcast
  *   the buyer has paid, so a lost response or a receipt the node has not caught
  *   up with cannot be allowed to end the flow — the server makes the call
@@ -22,8 +27,10 @@
 
 import { useCallback, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAccount } from 'wagmi';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+import { isSmartWalletSession } from '@/lib/connection-source';
 import { createLogger } from '@/lib/logger';
 import type { ChainId } from '@/components/app/ChainSelector';
 import {
@@ -44,6 +51,39 @@ const logger = createLogger('UsernameMarket');
 /** How long the claim loop keeps asking before it gives the buyer the hash. */
 const CLAIM_ATTEMPTS = 12;
 const CLAIM_INTERVAL_MS = 3000;
+
+/** Base comes first everywhere here — it is the default network and the fallback. */
+const BASE_CHAIN_ID = 8453 as ChainId;
+
+/**
+ * The chain a purchase actually goes out on.
+ *
+ * Preference order is the wallet's own chain, then Base, then anything else the
+ * server quoted. So somebody already on BNB pays on BNB and is never asked to
+ * switch, and somebody sitting on a chain DHB is not quoted on (Ethereum,
+ * Robinhood) lands on Base instead of on a dead button.
+ */
+export function resolvePayChain(
+  walletChainId: number | undefined,
+  chains: { chainId: number }[] | undefined,
+): ChainId {
+  const payable = (chains || []).map(c => c.chainId);
+  if (walletChainId && payable.includes(walletChainId)) return walletChainId as ChainId;
+  if (payable.includes(BASE_CHAIN_ID)) return BASE_CHAIN_ID;
+  return (payable[0] ?? BASE_CHAIN_ID) as ChainId;
+}
+
+/**
+ * The chain the signed-in wallet is actually sitting on.
+ *
+ * The built-in wallet has no chain of its own to read — it signs as a Safe that
+ * the AA layer configures per call, and wagmi is not connected for it at all —
+ * so those sessions count as Base.
+ */
+export function useWalletChainId(): number | undefined {
+  const { chainId } = useAccount();
+  return isSmartWalletSession() ? BASE_CHAIN_ID : chainId;
+}
 
 export type UsernameSort = 'newest' | 'price_asc' | 'price_desc' | 'shortest';
 
@@ -138,6 +178,7 @@ export type BuyStage = 'idle' | 'quoting' | 'paying' | 'confirming' | 'done';
 export function useBuyUsername() {
   const qc = useQueryClient();
   const { refreshUser } = useAuth();
+  const walletChainId = useWalletChainId();
   const [stage, setStage] = useState<BuyStage>('idle');
 
   const getQuote = useMutation<UsernameQuote, Error, string>({
@@ -152,7 +193,8 @@ export function useBuyUsername() {
   });
 
   const buy = useMutation({
-    mutationFn: async ({ quote, chainId }: { quote: UsernameQuote; chainId: ChainId }) => {
+    mutationFn: async (quote: UsernameQuote) => {
+      const chainId = resolvePayChain(walletChainId, quote.chains);
       const chain = quote.chains.find(c => c.chainId === chainId);
       if (!chain?.tokenAddress) throw new Error('DHB cannot be sent on that network.');
 
@@ -222,5 +264,5 @@ export function useBuyUsername() {
 
   const reset = useCallback(() => setStage('idle'), []);
 
-  return { getQuote, buy, stage, reset };
+  return { getQuote, buy, stage, reset, walletChainId };
 }
