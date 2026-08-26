@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Briefcase, Scissors, MessageSquare, Search } from 'lucide-react';
+import { Plus, Briefcase, Scissors, MessageSquare, Search, History } from 'lucide-react';
 import { useBrowseJobs, useRecentCompletedJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';
 import { SEOHead } from '@/components/SEOHead';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 
 const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
@@ -45,7 +45,7 @@ export default function WorkPage() {
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
   return (
-    <div className="min-h-screen">
+    <div data-work-surface className="min-h-screen">
       <SEOHead title="Bounties — Post & Hunt Paid Tasks | DeHub" description="Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in DHB or USDC." url="https://dehub.io/work" />
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-6xl mx-auto">
@@ -53,20 +53,34 @@ export default function WorkPage() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <BrandIcon src="/theme-icons/system/bounties.webp" alt="" className="w-10 h-10 shrink-0 object-contain" />
+              <ThemedIcon icon="bounties" alt="" className="w-10 h-10 shrink-0 object-contain" />
               <div className="min-w-0">
-                <h1 className="text-xl font-bold text-white">Bounties</h1>
-                <p className="text-sm text-white/60">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
+                <h1 className="text-xl font-bold text-white truncate">Bounties</h1>
+                {/* Truncated, not wrapped: the header sits in a sticky pill and
+                    a second line makes the whole bento taller on every scroll. */}
+                <p className="text-sm text-white/60 truncate">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
               </div>
             </div>
-            <LiquidGlassBubble2
-              label="Post a Bounty"
-              icon={<Plus className="w-4 h-4" />}
-              onClick={() => navigate('/work/post')}
-              width="auto"
-              height="44px"
-              className="[&>div]:!rounded-2xl"
-            />
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => navigate('/work/history')}
+                aria-label="My Bounties"
+                className="inline-flex items-center gap-1.5 px-3 h-11 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white text-sm hover:bg-white/15 transition-colors"
+              >
+                <History className="w-4 h-4" />
+                {/* The label costs ~90px next to the Post bubble — below md the
+                    icon carries it rather than squeezing the title. */}
+                <span className="hidden md:inline">My Bounties</span>
+              </button>
+              <LiquidGlassBubble2
+                label="Post a Bounty"
+                icon={<Plus className="w-4 h-4" />}
+                onClick={() => navigate('/work/post')}
+                width="auto"
+                height="44px"
+                className="[&>div]:!rounded-2xl"
+              />
+            </div>
           </div>
 
           {/* Tabs */}

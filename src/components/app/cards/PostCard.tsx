@@ -13,7 +13,8 @@ import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type Re
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket, Gift, Lock } from 'lucide-react';
+import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
@@ -48,6 +49,11 @@ import { PollCard } from './PollCard';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
+import { VerifyUnlockButton } from './VerifyUnlockButton';
+import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
+import dehubCoinSmall from '@/assets/dehub-coin.png';
 import {
   Drawer,
   DrawerContent,
@@ -107,6 +113,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showBoostModal, setShowBoostModal] = useState(false);
+
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
@@ -122,13 +129,24 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  // Deep Current is the one power spent on somebody ELSE's post, so it is
+  // the one row that belongs in this half of the menu. `status.powers` is
+  // the authority for whether this account has it — the badge the client
+  // draws from a live wallet read deliberately over-reports.
+  const { data: superpowerStatus } = useSuperpowers(!!walletAddress);
+  const canGiftBoost = !!superpowerStatus?.powers.some(
+    p => p.key === 'deep_current' && p.unlocked && p.available,
+  );
   // The options menu offers the same copy as the share sheet, so it counts the
   // same. Shares one react-query key with the ActionBar below, so no extra
   // request — and the bump lands on the card's own share counter.
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const { mint: mintExisting, isMinting } = useMintExistingPost();
-  const { muteAuthor, isMuting: isMutingAuthor } = useMuteAuthor();
+  // No `isMuting` any more: the only control that used it was the ✕ removed
+  // from the header, and the options menu closes on click rather than
+  // disabling itself.
+  const { muteAuthor } = useMuteAuthor();
 
   const handleMuteAuthor = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -141,6 +159,21 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   // The warning is for whoever is looking at the screen, so it covers the
   // author's own post too.
   const matureGate = useMatureGate(post.contentRating);
+
+  // Subscriber-only gating - bypass for owners & already-unlocked content
+  const [showLockedDrawer, setShowLockedDrawer] = useState(false);
+  const [locallyUnlocked, setLocallyUnlocked] = useState(false);
+  const storedUnlocked = isTokenUnlocked(post.id);
+  const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
+  const isLocked = (post.isLocked || false) && !canBypassGating;
+
+  const formatCompact = (num: number | null | undefined): string => {
+    const n = Number(num);
+    if (!Number.isFinite(n) || n <= 0) return '0';
+    if (n >= 1000000) return `${Math.floor(n / 1000000)}M`;
+    if (n >= 1000) return `${Math.floor(n / 1000)}K`;
+    return String(Math.floor(n));
+  };
 
   const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
@@ -202,6 +235,21 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
+  /**
+   * Double 👍 / triple ❤️ on the post body, matching every other feed card.
+   *
+   * No `onSingleTap`: the body deliberately does nothing on a single tap, which
+   * is what keeps the gesture free of the 260ms wait. A card whose first tap
+   * navigates would have to hold that navigation back to find out whether a
+   * second tap is coming; giving the content region no tap action of its own
+   * removes the question entirely. Opening the post stays instant from the
+   * header, the metadata row and the card's own padding.
+   */
+  const tapGestures = useTapGestures({
+    postId: post.id,
+    enableLongPress: false,
+  });
+
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     // Swallow the ghost click left behind when a bottom sheet was just dismissed
     // by tapping the scrim — otherwise that tap navigates into the post.
@@ -405,6 +453,15 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                   <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
                 </button>
               )}
+              {!isOwnPost && canGiftBoost && (
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                  disabled={!postTokenId}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                >
+                  <Gift className="w-5 h-5" /> {t('postOptions.giftBoost', { defaultValue: 'Gift a boost' })}
+                </button>
+              )}
               {isOwnPost && (
                 <>
                   <div className="border-t border-white/10 my-1" />
@@ -488,20 +545,28 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           </DrawerContent>
         </Drawer>
 
-        {!isOwnPost && post.author.id && (
-          <button
-            onClick={handleMuteAuthor}
-            disabled={isMutingAuthor}
-            aria-label="Mute this account"
-            className="text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-50 -mr-0.5"
-          >
-            <X className="w-[23.5px] h-[23.5px]" />
-          </button>
-        )}
+        {/* The ✕ that used to sit here was a second way to fire handleMuteAuthor
+            — the same call the options menu already makes, and a control no
+            other card carried. Removed rather than duplicated; muting lives in
+            the ⋯ menu on all three cards. */}
       </div>
 
-      {/* Content */}
-      <div className="pt-3 space-y-2">
+      {/* Content.
+          `data-no-navigate` is what keeps navigation instant. handleCardClick
+          skips this subtree, so the body carries no single-tap action to hold
+          back while a second tap is awaited — the same arrangement VideoCard's
+          media already has, and the reason Instagram's double-tap has no lag.
+          Tapping anywhere else on the card still opens the post immediately.
+
+          The hold is off here on purpose: a long press on text is how you
+          select it, and taking that over would cost copy/paste on every text
+          post. The tray is still a hold away on the ActionBar's thumb. */}
+      <div
+        className="relative pt-3 space-y-2"
+        data-no-navigate
+        {...tapGestures}
+      >
+        <TapReactionBurst postId={post.id} />
         {/* A text post's body is its content, so the warning covers the text
             and its embeds. Metadata and the action bar stay below it, so the
             post can still be reported or opened without being read first. */}
@@ -510,18 +575,55 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           onReveal={matureGate.reveal}
           description="The creator marked this post as adult or graphic."
         />
+        ) : isLocked ? (
+        <>
+        {/* Title stays visible as the headline; only the body is gated. */}
+        {post.title && (
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
+        )}
+        {displayBody?.trim() && (() => {
+          const firstLine = displayBody.split('\n')[0];
+          return (
+            <div className="space-y-2.5">
+              {/* Real alpha fade via mask-image, not a background-color gradient
+                  overlay — a color gradient has to match each theme's surface
+                  color and breaks on glass/blurred/image backgrounds, while a
+                  mask fades the text's own opacity to transparent and composites
+                  correctly over whatever sits behind the card. */}
+              <div className="relative overflow-hidden" style={{ maxHeight: '2.6em' }}>
+                <p
+                  className="text-white/90 text-sm sm:text-base"
+                  style={{
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
+                    maskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
+                  }}
+                >
+                  {renderTextWithLinks(firstLine)}
+                </p>
+              </div>
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
+                className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                Subscribe to view full post
+              </button>
+            </div>
+          );
+        })()}
+        </>
         ) : (
         <>
         {/* Title */}
         {post.title && (
-          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
         )}
         {/* auto={false}: the useTranslation above owns this post's translation
             and `bodyWithoutLinks` is already its output. Left on, TranslatableText
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText text={displayBody} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
+          <TranslatableText text={displayBody} className="text-white/90 text-sm sm:text-base" as="p" auto={false} flagged={post.communityAlertPending} />
         ) : null}
 
         {/* Quoted post embed (Twitter-style) */}
@@ -555,7 +657,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           }}
         />
 
-        {parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
+        {!isLocked && parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
 
         <div className="pt-1">
           <ActionBar
@@ -696,6 +798,50 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isLocked && (
+        <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
+          <DrawerContent glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <DrawerHeader className="pb-3 relative">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Lock className="w-5 h-5 text-white" />
+                {t('drawers.gatedTitle')}
+              </DrawerTitle>
+              <button onClick={() => setShowLockedDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              {post.lockedPrice && post.lockedPrice > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                {t('drawers.gatedDescription')}
+              </p>
+              {post.lockedPrice && post.lockedPrice > 0 && (
+                <VerifyUnlockButton
+                  requiredAmount={post.lockedPrice}
+                  currency={post.lockedCurrency || 'DHB'}
+                  onUnlocked={() => {
+                    setShowLockedDrawer(false);
+                    setLocallyUnlocked(true);
+                    markTokenUnlocked(post.id);
+                    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+                    queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
+                  }}
+                />
+              )}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
 
       {/* AI Chat */}
       <PostAIChat

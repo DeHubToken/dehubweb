@@ -1,5 +1,6 @@
 import { sendLovableEmail } from 'npm:@lovable.dev/email-js'
 import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getOrCreateUnsubscribeToken } from '../_shared/unsubscribe-token.ts'
 
 const MAX_RETRIES = 5
 const DEFAULT_BATCH_SIZE = 10
@@ -50,6 +51,30 @@ function parseJwtClaims(token: string): Record<string, unknown> | null {
   } catch {
     return null
   }
+}
+
+// Mint the idempotency key for this attempt.
+//
+// The send API burns a key on failure: re-sending with the same one answers
+// 409 run_failed, so a retry that reuses the enqueued key can never succeed.
+// The first attempt keeps the enqueued key — that is what lets the NestJS
+// backend re-request the same support ticket without mailing it twice — and
+// every retry after a failure gets a fresh, attempt-numbered one. Deriving it
+// from the attempt count rather than a random value keeps it deterministic, so
+// a visibility-timeout race that replays the same attempt still de-duplicates.
+function idempotencyKeyForAttempt(
+  baseKey: unknown,
+  messageId: unknown,
+  failedAttempts: number
+): string | undefined {
+  const base =
+    typeof baseKey === 'string' && baseKey
+      ? baseKey
+      : typeof messageId === 'string' && messageId
+        ? messageId
+        : undefined
+  if (!base) return undefined
+  return failedAttempts > 0 ? `${base}-r${failedAttempts}` : base
 }
 
 // Move a message to the dead letter queue and log the reason.
@@ -248,6 +273,15 @@ Deno.serve(async (req) => {
         }
       }
 
+      // A transactional send that is not authorised by an auth-hook run_id must
+      // carry an unsubscribe_token or the API rejects it with 400
+      // missing_unsubscribe. Mint one here so every template gets it, not just
+      // the ones whose enqueuer remembered to.
+      let unsubscribeToken = payload.unsubscribe_token
+      if (!unsubscribeToken && !payload.run_id && payload.to) {
+        unsubscribeToken = await getOrCreateUnsubscribeToken(supabase, payload.to as string)
+      }
+
       try {
         await sendLovableEmail(
           {
@@ -260,8 +294,12 @@ Deno.serve(async (req) => {
             text: payload.text,
             purpose: payload.purpose,
             label: payload.label,
-            idempotency_key: payload.idempotency_key,
-            unsubscribe_token: payload.unsubscribe_token,
+            idempotency_key: idempotencyKeyForAttempt(
+              payload.idempotency_key,
+              payload.message_id,
+              failedAttempts
+            ),
+            unsubscribe_token: unsubscribeToken,
             message_id: payload.message_id,
           },
           // sendUrl is optional — when LOVABLE_SEND_URL is not set, the library

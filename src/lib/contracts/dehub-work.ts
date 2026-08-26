@@ -28,6 +28,16 @@ export const USDC_BASE_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 export const isWorkContractDeployed = () =>
   DEHUB_WORK_ADDRESS.toLowerCase() !== '0x0000000000000000000000000000000000000000';
 
+/**
+ * Block explorer link for a Work escrow/payout tx hash. Always Base: every
+ * write below calls `switchChain(BASE_CHAIN_ID)` first and `getCurrencyToken`
+ * only ever resolves Base tokens, so a Work tx cannot land on another chain.
+ * Read the host from CHAIN_CONFIGS rather than hardcoding it a fifth time.
+ */
+export function workExplorerTxUrl(txHash: string): string {
+  return `${CHAIN_CONFIGS[BASE_CHAIN_ID].explorerUrl}/tx/${txHash}`;
+}
+
 const ZERO = '0x0000000000000000000000000000000000000000';
 
 // ── ABI ──────────────────────────────────────────────────────

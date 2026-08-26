@@ -9,6 +9,8 @@ export type WorkReviewRole = 'poster' | 'worker';
 
 export interface WorkJob {
   id: string;
+  /** Public URL number — the canonical share form is /bounty/<job_number>. */
+  job_number: number;
   onchain_job_id: number | null;
   poster_address: string;
   job_type: WorkJobType;

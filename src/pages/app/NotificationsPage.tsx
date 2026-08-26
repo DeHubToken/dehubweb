@@ -1,4 +1,4 @@
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -8,7 +8,8 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale, Siren
+} from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -28,7 +29,6 @@ import { useCustomNotifications, useCustomUnreadCount, useMarkCustomNotification
 import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
-import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import dehubMarkWhite from '@/assets/dehub-mark-white.png';
 import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -281,7 +281,7 @@ const API_BACKED_TYPES = new Set([
   'tip', 'bounty_available', 'bounty_claimed',
   'subscription', 'ppv_purchase',
   'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased',
-  'livestream_start', 'video_milestone',
+  'livestream_start', 'signal_flare', 'video_milestone',
   'video_removal', 'account_warning', 'system',
 ]);
 
@@ -352,6 +352,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'livestream_start':
       return <Zap className="w-4 h-4 text-white/70" />;
+    case 'signal_flare':
+      return <Siren className="w-4 h-4 text-white/70" />;
     case 'video_removal':
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
@@ -750,6 +752,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
           ? `/${notification.actorUsername}` 
           : '/app/command-centre';
     case 'livestream_start':
+    case 'signal_flare':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
     case 'video_removal':
       return '/app/settings';
@@ -1809,7 +1812,7 @@ export default function NotificationsPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <BrandIcon src={notificationsIcon} alt={activeTabLabel} className="w-9 h-9 object-contain" />
+              <ThemedIcon icon="notifications" alt={activeTabLabel} className="w-9 h-9 object-contain" />
               <h1 className="font-bold text-white text-lg" aria-live="polite">{activeTabLabel}</h1>
               {totalUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">

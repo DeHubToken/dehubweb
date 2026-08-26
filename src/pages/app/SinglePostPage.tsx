@@ -26,7 +26,8 @@ import {
 } from '@/lib/engagement';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
+import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { Clock, ArrowLeft, Sparkles, MoreVertical, Flag, Link2, Gem, Pencil, Trash2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -50,7 +51,6 @@ import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
 import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
 import { RelatedImagesFeed } from '@/components/app/feeds/RelatedImagesFeed';
 import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
-import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import { StreamShopRail } from '@/components/app/live/StreamShop';
 import { StreamShopManager } from '@/components/app/live/StreamShopManager';
 import { PostAIChat } from '@/components/app/cards/PostAIChat';
@@ -71,6 +71,16 @@ import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/compon
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+
+/*
+ * Only a live post ever renders this, and a live post is a small minority of
+ * what this page opens — but the static import put the whole chat panel, its
+ * voice recorder, waveform player, mention dropdown and translation stack on
+ * the boot path for every post. See scripts/boot-path-report.mjs.
+ */
+const LivePostChat = lazyWithRetry(() =>
+  import('@/components/app/cards/LivePostChat').then((m) => ({ default: m.LivePostChat })),
+);
 
 /**
  * Detect content type from API response
@@ -259,7 +269,8 @@ function toTextPost(nft: DeHubNFT): TextPost {
   const views = formatViews(resolveViewCount(nft)).replace(' views', '');
   const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
-  
+  const streamInfo = nft.streamInfo;
+
   // Canonical avatar resolution (matches feed normalization)
   const creatorObj = (nft as any).creator;
   const ownerObj = (nft as any).owner;
@@ -314,6 +325,12 @@ function toTextPost(nft: DeHubNFT): TextPost {
     isReposted: nft.isReposted ?? false,
     isQuotePost: !!nft.isQuotePost,
     quotedPost: nft.quotedPost || null,
+    communityAlertPending: (nft as any).communityAlertStatus === 'pending',
+    isLocked: nft.is_locked || streamInfo?.isLockContent || false,
+    lockedPrice: nft.locked_price || streamInfo?.lockContentAmount,
+    lockedCurrency: nft.locked_currency || streamInfo?.lockContentTokenSymbol || 'DHB',
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
   };
 }
 
@@ -1178,11 +1195,13 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
               : <StreamShopRail tokenId={id} />
           )}
           {isLivePost && id && post && (
-            <LivePostChat
-              streamId={id}
-              isOffline={!('isLive' in post ? (post as any).isLive : true)}
-              isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
-            />
+            <Suspense fallback={null}>
+              <LivePostChat
+                streamId={id}
+                isOffline={!('isLive' in post ? (post as any).isLive : true)}
+                isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
+              />
+            </Suspense>
           )}
           {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
           {showRelated && isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}

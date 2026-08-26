@@ -14,6 +14,9 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
 import { useSkipSegments } from '@/lib/skip-segments';
 import { useVideoSegments, segmentAt } from '@/hooks/use-video-segments';
@@ -26,7 +29,8 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil , Rocket } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil, Rocket } from 'lucide-react';
+import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -560,6 +564,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showBoostModal, setShowBoostModal] = useState(false);
+
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   // Two flags, not one: mounting a vaul Root that is already open renders it
   // at its final position with no transition, so the drawer mounts closed and
@@ -580,6 +585,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  // Deep Current is the one power spent on somebody ELSE's post, so it is
+  // the one row that belongs in this half of the menu. `status.powers` is
+  // the authority for whether this account has it — the badge the client
+  // draws from a live wallet read deliberately over-reports.
+  const { data: superpowerStatus } = useSuperpowers(!!walletAddress);
+  const canGiftBoost = !!superpowerStatus?.powers.some(
+    p => p.key === 'deep_current' && p.unlocked && p.available,
+  );
   // The options menu offers the same copy as the share sheet, so it counts the
   // same. Shares one react-query key with the ActionBar below, so no extra
   // request — and the bump lands on the card's own share counter.
@@ -984,83 +997,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
   }, [isMuted, instanceId]);
 
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // Track fullscreen state changes
-  useEffect(() => {
-    const onFullscreenChange = () => {
-      setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement));
-    };
-    document.addEventListener('fullscreenchange', onFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
-
-    // iOS fires these events on the video element itself
-    const videoEl = videoRef.current;
-    const onIOSFullscreen = () => setIsFullscreen(true);
-    const onIOSExitFullscreen = () => setIsFullscreen(false);
-    videoEl?.addEventListener('webkitbeginfullscreen', onIOSFullscreen);
-    videoEl?.addEventListener('webkitendfullscreen', onIOSExitFullscreen);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', onFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
-      videoEl?.removeEventListener('webkitbeginfullscreen', onIOSFullscreen);
-      videoEl?.removeEventListener('webkitendfullscreen', onIOSExitFullscreen);
-    };
-  }, []);
-
-  const toggleFullscreen = useCallback(() => {
-    const videoEl = videoRef.current as any;
-    const containerEl = containerRef.current as any;
-
-    // Exit simulated fullscreen if active
-    if (isFullscreen && !document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-      setIsFullscreen(false);
-      return;
-    }
-
-    // Check if already in fullscreen (standard or iOS video)
-    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        (document as any).webkitExitFullscreen();
-      }
-      return;
-    }
-
-    // iOS Safari: only supports webkitEnterFullscreen on <video> element
-    if (videoEl && typeof videoEl.webkitEnterFullscreen === 'function') {
-      try {
-        videoEl.webkitEnterFullscreen();
-        return;
-      } catch {
-        // Fall through to container fullscreen or simulated
-      }
-    }
-
-    // Standard Fullscreen API on container — with fallback if blocked (e.g. SafePal WebView)
-    // Also adds a timeout to catch silent failures where the promise resolves but fullscreen never activates
-    if (containerEl) {
-      const activateSimulated = () => {
-        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-          setIsFullscreen(true);
-        }
-      };
-      if (containerEl.requestFullscreen) {
-        containerEl.requestFullscreen().catch(activateSimulated);
-        setTimeout(activateSimulated, 300);
-        return;
-      } else if (containerEl.webkitRequestFullscreen) {
-        try { containerEl.webkitRequestFullscreen(); } catch { activateSimulated(); }
-        setTimeout(activateSimulated, 300);
-        return;
-      }
-    }
-
-    // Fallback: simulated fullscreen (SafePal/WebView or iOS audio posts where no native API works)
-    setIsFullscreen(true);
-  }, [isFullscreen]);
+  // Shared with the shorts viewer — see hooks/use-video-fullscreen for the iOS
+  // and WebView fallbacks, which fail silently rather than throwing.
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef);
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1343,6 +1282,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
   }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
+
+  /**
+   * Double / triple / hold on the media — feed surfaces only.
+   *
+   * The immersive player keeps its own double-tap for ±10s seek and centre
+   * fullscreen, which is the gesture people already use to scrub a video. The
+   * ladder is for the feed, where the media is content to react to rather than
+   * a player to drive. Audio posts opt out too: their surface is the visualiser
+   * and the tap handlers above are already undefined there.
+   *
+   * `enableLongPress` is off in immersive for the same reason — nothing else
+   * here should start competing with the player's own press handling.
+   */
+  const tapGestures = useTapGestures({
+    postId: video.id,
+    disabled: isImmersive || hideActions || !!video.isAudio,
+  });
 
   const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
     // In the feed the media is the content, not a link to it: a click reveals
@@ -1682,6 +1638,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                       <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
                     </button>
                   )}
+                  {!isOwnPost && canGiftBoost && (
+                    <button
+                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                      disabled={!videoTokenId}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                    >
+                      <Gift className="w-5 h-5" /> {t('postOptions.giftBoost', { defaultValue: 'Gift a boost' })}
+                    </button>
+                  )}
                   {isOwnPost && (
                     <>
                       <div className="border-t border-white/10 my-1" />
@@ -1742,6 +1707,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
+        {...tapGestures}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
@@ -1982,6 +1948,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         )}
         
         {/* Center flash indicator removed — play/pause now in progress bar */}
+
+        {/* Draws the 👍 / ❤️ for the tap ladder above. Inert and self-contained;
+            it listens for this post's own events rather than taking state. */}
+        {!isImmersive && !hideActions && !video.isAudio && (
+          <TapReactionBurst postId={video.id} />
+        )}
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {showControls && (

@@ -28,6 +28,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDraft } from '@/hooks/use-draft';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -96,6 +97,12 @@ export interface RealtimeChatPanelProps {
   /** Sits under the composer. */
   footer?: ReactNode;
   onClick?: (e: React.MouseEvent) => void;
+  /**
+   * Scope this composer's text is saved under, so a half-typed line survives
+   * the drawer closing, the card scrolling out, or a reload. Must be stable for
+   * the life of the room. Omit it and the composer behaves as before.
+   */
+  draftKey?: string | null;
 }
 
 /** Avatar with cascading fallback: primary → CDN → initials */
@@ -188,8 +195,9 @@ export function RealtimeChatPanel({
   error = null,
   footer,
   onClick,
+  draftKey,
 }: RealtimeChatPanelProps) {
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useDraft(draftKey);
   const [replyTo, setReplyTo] = useState<RealtimeChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');

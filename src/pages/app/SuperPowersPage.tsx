@@ -16,7 +16,7 @@
  * a rung is knowing what the next one holds.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Loader2, Rocket, Lock, Check, Clock } from 'lucide-react';
@@ -26,7 +26,14 @@ import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { badgeImage } from '@/lib/staking-badges';
-import { useCancelBoost, useSuperpowerLadder, useSuperpowers } from '@/hooks/use-superpowers';
+import { useQuery } from '@tanstack/react-query';
+import { getCategories } from '@/lib/api/dehub';
+import {
+  useBookBoost,
+  useCancelBoost,
+  useSuperpowerLadder,
+  useSuperpowers,
+} from '@/hooks/use-superpowers';
 
 /** Total slot minutes a tier holds per cycle — the number worth comparing. */
 function cycleMinutes(boosts: number, minutes: number): number {
@@ -57,6 +64,25 @@ export default function SuperPowersPage() {
   }, [status?.cycleEndsAt, ladder?.cycleEndsAt]);
 
   const liveBookings = status?.bookings.filter(b => b.status === 'active') ?? [];
+
+  // The two powers with no post to hang off. Both read `status.powers` for
+  // whether this account has them, and the allowance for whether there is one
+  // spare — the server re-checks both, so this only decides what to offer.
+  const [jackCategory, setJackCategory] = useState('');
+  const spendPower = useBookBoost();
+  const hasPower = (key: string) =>
+    !!status?.powers.some(p => p.key === key && p.unlocked && p.available) &&
+    (status?.boostsLeft ?? 0) > 0;
+  const canGoldenHour = hasPower('golden_hour');
+  const canTrendJack = hasPower('trend_jacker');
+
+  // Only fetched when a category actually has to be picked.
+  const { data: categories = [] } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    enabled: canTrendJack,
+    staleTime: 60 * 60 * 1000,
+  });
   const spentBookings = status?.bookings.filter(b => b.status === 'completed') ?? [];
   const badgeArt = badgeImage(status?.tier);
 
@@ -113,13 +139,30 @@ export default function SuperPowersPage() {
                   })}
                 </p>
               </div>
-              <div className="text-right shrink-0">
-                <span className="block text-2xl font-semibold text-white tabular-nums">
-                  {status.boostsLeft}
-                </span>
-                <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
-                  {t('superpowers.left')}
-                </span>
+              {/* Two numbers, because there are two allowances. A Signal
+                  Flare is paid for out of a second pot the same size as the
+                  boost one, so one figure covering both tells an Octopus who
+                  has spent their boosts that they have no flares either — and
+                  takes away the power they climbed a rung for. */}
+              <div className="flex items-start gap-5 shrink-0">
+                <div className="text-right">
+                  <span className="block text-2xl font-semibold text-white tabular-nums">
+                    {status.boostsLeft}
+                  </span>
+                  <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
+                    {t('superpowers.left')}
+                  </span>
+                </div>
+                {status.signalsLeft !== undefined && (
+                  <div className="text-right">
+                    <span className="block text-2xl font-semibold text-white tabular-nums">
+                      {status.signalsLeft}
+                    </span>
+                    <span className="block text-[10px] uppercase tracking-wider text-zinc-500">
+                      {t('superpowers.flaresLeft', { defaultValue: 'flares' })}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -146,7 +189,15 @@ export default function SuperPowersPage() {
                         to={`/app/post/${booking.tokenId}`}
                         className="text-white hover:underline truncate"
                       >
-                        #{booking.tokenId}
+                        {/* A Deep Current lands on somebody else's post, so the
+                            bare id would show the holder a number they do not
+                            recognise as theirs. */}
+                        {booking.power === 'deep_current'
+                          ? t('superpowers.giftedTo', {
+                              id: booking.tokenId,
+                              defaultValue: `gift → #${booking.tokenId}`,
+                            })
+                          : `#${booking.tokenId}`}
                       </Link>
                     ) : (
                       <span className="text-white truncate">
@@ -189,6 +240,118 @@ export default function SuperPowersPage() {
                     </button>
                   </div>
                 ))}
+              </div>
+            )}
+
+
+            {/*
+              The two powers that are not about a post.
+
+              Every other power is spent from the post's own menu, because that
+              is where the decision happens — you finish something and want it
+              seen. These two have no post to hang off: a Golden Hour acts on
+              the account for the next hour, and a Trend Jacker acts on a
+              category. Without a home here they were live on the API and
+              reachable from nowhere, which is the same debt the other eleven
+              had before their clients shipped.
+            */}
+            {(canGoldenHour || canTrendJack) && (
+              <div className="flex flex-col gap-3 border-t border-white/10 pt-3">
+                {canGoldenHour && (
+                  <div className="flex items-center gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white text-sm">
+                        {powers.find(p => p.key === 'golden_hour')?.label ?? 'Golden Hour'}
+                      </p>
+                      <p className="text-[12px] text-zinc-500 leading-snug">
+                        {powers.find(p => p.key === 'golden_hour')?.summary}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={spendPower.isPending}
+                      onClick={() =>
+                        spendPower.mutate(
+                          { tokenId: 0, power: 'golden_hour' },
+                          {
+                            onSuccess: booking =>
+                              toast.success(
+                                t('superpowers.goldenHourStarted', {
+                                  minutes: booking.minutes,
+                                  defaultValue: `Golden Hour running for ${booking.minutes} minutes — everything you post now counts double`,
+                                }),
+                              ),
+                            onError: (error: any) =>
+                              toast.error(error?.message || t('superpowers.boostFailed')),
+                          },
+                        )
+                      }
+                    >
+                      {t('superpowers.start', { defaultValue: 'Start' })}
+                    </Button>
+                  </div>
+                )}
+
+                {canTrendJack && (
+                  <div className="flex items-center gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white text-sm">
+                        {powers.find(p => p.key === 'trend_jacker')?.label ?? 'Trend Jacker'}
+                      </p>
+                      <p className="text-[12px] text-zinc-500 leading-snug">
+                        {powers.find(p => p.key === 'trend_jacker')?.summary}
+                      </p>
+                    </div>
+                    {/*
+                      A free text field would mostly produce refusals: the
+                      server only accepts a category that exists AND that the
+                      holder has posted in. The list is the same one the
+                      composer offers, so what is on screen is what can be
+                      bought.
+                    */}
+                    <select
+                      value={jackCategory}
+                      onChange={e => setJackCategory(e.target.value)}
+                      className="bg-white/5 border border-white/10 rounded-lg text-white text-[12px] px-2 py-1.5 max-w-[8rem]"
+                    >
+                      <option value="">{t('superpowers.pickCategory', { defaultValue: 'Category…' })}</option>
+                      {categories.map(c => (
+                        <option key={c.name} value={c.name} className="bg-zinc-900">
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={!jackCategory || spendPower.isPending}
+                      onClick={() =>
+                        spendPower.mutate(
+                          { tokenId: 0, power: 'trend_jacker', category: jackCategory },
+                          {
+                            onSuccess: booking => {
+                              toast.success(
+                                t('superpowers.trendJacked', {
+                                  category: booking.category ?? jackCategory,
+                                  minutes: booking.minutes,
+                                  defaultValue: `${booking.category ?? jackCategory} is trending for ${booking.minutes} minutes`,
+                                }),
+                              );
+                              setJackCategory('');
+                            },
+                            // The server writes these sentences for a person
+                            // to read — "Post in that category first".
+                            onError: (error: any) =>
+                              toast.error(error?.message || t('superpowers.boostFailed')),
+                          },
+                        )
+                      }
+                    >
+                      {t('superpowers.jack', { defaultValue: 'Jack' })}
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 

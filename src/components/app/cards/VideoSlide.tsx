@@ -8,11 +8,14 @@
  */
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Maximize, Minimize } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
+import { useVideoFullscreen, canNativeFullscreen } from '@/hooks/use-video-fullscreen';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -21,6 +24,12 @@ interface VideoSlideProps {
   playbackRate?: number;
   onTimeUpdate?: (currentTime: number, duration: number) => void;
   onTap?: () => void;
+  /**
+   * Reverses `onTap` silently. Supplying it is what lets the first tap act
+   * immediately instead of waiting 260ms to see whether a second is coming —
+   * see useTapGestures.
+   */
+  onTapUndo?: () => void;
   onSeekStart?: () => void;
   onSeekEnd?: () => void;
   showPlayIndicator?: 'play' | 'pause' | null;
@@ -38,6 +47,13 @@ interface VideoSlideProps {
    * slides further out. Defaults to the old isActive-based behaviour.
    */
   preload?: 'auto' | 'metadata' | 'none';
+  /**
+   * Whether to offer a fullscreen control. Desktop only — the viewer is
+   * `fixed inset-0` on mobile, so a short there already fills the screen and
+   * "fullscreen" would be a button that visibly does nothing. Off by default so
+   * a new caller has to opt in deliberately.
+   */
+  allowFullscreen?: boolean;
 }
 
 export const VideoSlide = memo(function VideoSlide({
@@ -47,11 +63,13 @@ export const VideoSlide = memo(function VideoSlide({
   playbackRate = 1,
   onTimeUpdate,
   onTap,
+  onTapUndo,
   onSeekStart,
   onSeekEnd,
   showPlayIndicator,
   letterbox = false,
   preload,
+  allowFullscreen = false,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
@@ -62,6 +80,89 @@ export const VideoSlide = memo(function VideoSlide({
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  // The slide frame, not the <video>: fullscreening the frame carries the seek
+  // strip and the play indicator into fullscreen with it.
+  //
+  // `allowSimulated: false` because the carousel animates every slide with
+  // `translateY`, and a transformed ancestor makes the `fixed inset-0` that
+  // simulated fullscreen relies on resolve against that wrapper rather than the
+  // viewport — it would land somewhere arbitrary. Native fullscreen promotes the
+  // element to the top layer, where no ancestor transform applies, so the real
+  // path still works; only the fake one is refused.
+  const frameRef = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, frameRef, {
+    allowSimulated: false,
+  });
+  // Desktop only, and only where a native fullscreen is actually reachable —
+  // with the simulated fallback refused, anything else would be a dead control.
+  const canFullscreen = allowFullscreen && canNativeFullscreen();
+
+  /**
+   * Tap handling on the video area.
+   *
+   * A single tap plays/pauses (that is `onTap`, owned by the viewer) and a
+   * double tap in the middle toggles fullscreen — the same split VideoCard's
+   * immersive mode uses, so the gesture means the same thing on both players.
+   *
+   * Only a tap inside the centre band pays the 300ms wait needed to tell one
+   * tap from two. Outside it there is no double-tap to disambiguate, so
+   * play/pause still fires instantly — which is most of the frame, and keeps
+   * the viewer feeling as immediate as it did before.
+   */
+  /**
+   * Mobile only: double 👍, triple ❤️, hold for the tray. Desktop keeps the
+   * centre double-tap for fullscreen instead — `allowFullscreen` is the desktop
+   * signal, so the two gesture models never coexist on one slide.
+   *
+   * ShortsViewer owns the listener for these, since it renders no ActionBar.
+   */
+  const tapGestures = useTapGestures({
+    postId: short.id,
+    // Play/pause is a toggle, so it can fire on the first tap and be toggled
+    // straight back if a second one turns up — no 260ms wait to find out. The
+    // video never visibly pauses on a double tap, and tap-to-pause stays as
+    // instant as it was before the ladder existed.
+    onSingleTap: () => onTap?.(),
+    onUndoSingleTap: () => (onTapUndo ?? onTap)?.(),
+    disabled: allowFullscreen,
+  });
+
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTapRef = useRef(0);
+
+  useEffect(() => () => {
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+  }, []);
+
+  const handleVideoTap = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const relativeX = (e.clientX - rect.left) / rect.width;
+      const inCentre = relativeX >= 0.375 && relativeX <= 0.625;
+
+      // No fullscreen to reach means no second tap to wait for.
+      if (!inCentre || !canFullscreen) {
+        onTap?.();
+        return;
+      }
+
+      const now = e.timeStamp;
+      if (tapTimerRef.current && now - lastTapRef.current < 300) {
+        clearTimeout(tapTimerRef.current);
+        tapTimerRef.current = null;
+        lastTapRef.current = 0;
+        toggleFullscreen();
+        return;
+      }
+
+      lastTapRef.current = now;
+      tapTimerRef.current = setTimeout(() => {
+        tapTimerRef.current = null;
+        onTap?.();
+      }, 300);
+    },
+    [onTap, toggleFullscreen, canFullscreen],
+  );
 
   // Handle video metadata load to detect aspect ratio
   const handleLoadedMetadata = useCallback(() => {
@@ -282,8 +383,14 @@ export const VideoSlide = memo(function VideoSlide({
   // For a true 9:16 short this fills edge-to-edge, so the glass fill stays hidden.
   const fitWhole = letterbox || videoAspect !== 'portrait';
 
+  // No simulated-fullscreen branch here on purpose: `allowSimulated: false`
+  // means this frame only ever enters *native* fullscreen, where the Fullscreen
+  // API's UA stylesheet pins it with `position: fixed !important; inset: 0
+  // !important` from the top layer. That outranks these classes and is immune to
+  // the carousel's ancestor transform, so `absolute inset-0` stays correct in
+  // both states.
   return (
-    <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
+    <div ref={frameRef} className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass fill behind letterboxed / non-portrait videos */}
       {fitWhole && thumbnail && (
         <>
@@ -303,13 +410,21 @@ export const VideoSlide = memo(function VideoSlide({
         </>
       )}
 
-      {/* Video element */}
-      <div className="absolute inset-0 z-[2]" onClick={onTap}>
+      {/* Video element.
+          Desktop drives the centre double-tap through onClick (fullscreen);
+          mobile gets the reaction ladder off pointer events instead. The two
+          are mutually exclusive — `allowFullscreen` IS the desktop signal — so
+          only one tap model is ever bound and they cannot double-fire. */}
+      <div
+        className="absolute inset-0 z-[2]"
+        onClick={allowFullscreen ? handleVideoTap : undefined}
+        {...(allowFullscreen ? {} : tapGestures)}
+      >
         {short.videoUrl ? (
           <video
             ref={videoRef}
             src={short.videoUrl}
-            className={`w-full h-full ${fitWhole ? 'object-contain' : 'object-cover'} transition-none`}
+            className={`w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`}
             style={{ willChange: 'transform' }}
             loop
             playsInline
@@ -332,6 +447,30 @@ export const VideoSlide = memo(function VideoSlide({
           </div>
         )}
       </div>
+
+      {/* Fullscreen toggle. Only the active slide gets one — the carousel keeps
+          neighbouring slides mounted, and a column of stacked buttons would all
+          sit at the same screen position. `data-no-swipe` keeps a press on it
+          from being read as the start of a navigation drag. */}
+      {isActive && canFullscreen && (
+        <button
+          type="button"
+          data-no-swipe
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFullscreen();
+          }}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+          className="absolute top-3 right-3 z-30 h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+        >
+          {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+        </button>
+      )}
+
+      {/* 👍 / ❤️ for the tap ladder. Sits above the controls so the burst is not
+          drawn under them, which is safe because every layer of it is
+          pointer-events-none and cannot take a tap from the seek strip. */}
+      {isActive && <TapReactionBurst postId={short.id} />}
 
       {/* Play/Pause indicator - only shown on explicit tap */}
       {showPlayIndicator && (

@@ -535,7 +535,8 @@
     "activityLog": "Registro de atividade",
     "endStream": "Encerrar transmissão",
     "linkCopied": "Link copiado",
-    "postUrlCopied": "URL do post copiada"
+    "postUrlCopied": "URL do post copiada",
+    "boostPost": "Impulsionar publicação"
   },
   "filters": {
     "sort": "Ordenar",
@@ -802,7 +803,8 @@
     "ppvStartSaving": "Compre conteúdo Pay-Per-View dos seus criadores favoritos para que ele apareça aqui.",
     "recentStartSaving": "Suas publicações favoritadas mais recentes aparecerão aqui.",
     "textStartSaving": "Salve publicações somente de texto nos favoritos e elas aparecerão aqui.",
-    "videosStartSaving": "Salve publicações com vídeos nos favoritos e elas serão reunidas aqui."
+    "videosStartSaving": "Salve publicações com vídeos nos favoritos e elas serão reunidas aqui.",
+    "folders": "Pastas"
   },
   "notifications": {
     "title": "Notificações",
@@ -1726,5 +1728,49 @@
       "startTerm": "Histórico",
       "start": "— «todo o histórico» significa cada dia que a Cloudflare ainda guarda, hoje {{days}} dias a começar em {{date}}, o dia em que dehub.io passou para a Cloudflare. Não há dados de edge anteriores para mostrar, e os dias antigos caem à medida que a Cloudflare os expira."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Que seguidores devem vê-la?",
+    "aimAtTiers": "Que níveis de emblema devem vê-la?",
+    "aimPlaceholder": "Nome de utilizador ou endereço de carteira",
+    "boost": "Impulsionar",
+    "boostBooked": "Impulsionada durante {{minutes}} minutos",
+    "boostExplainer": "Coloca esta publicação no espaço no topo do feed principal durante a sua janela.",
+    "boostFailed": "Não foi possível impulsionar essa publicação",
+    "boostForMinutes": "Impulsionar durante {{minutes}} minutos",
+    "boostedLabel": "Impulsionada",
+    "boostsLeft": "Restam {{left}} de {{total}} impulsos",
+    "cancelFailed": "Não foi possível cancelar esse impulso",
+    "cancelledRefunded": "Impulso cancelado e devolvido ao seu limite",
+    "cancelledSpent": "Impulso cancelado. Já tinha começado, por isso conta como gasto.",
+    "colBoosts": "Impulsos",
+    "colEach": "Cada",
+    "colTier": "Nível",
+    "colTotal": "Por ciclo",
+    "comingSoon": "brevemente",
+    "finishedCount": "{{count}} terminados neste ciclo, vistos {{seen}} vezes",
+    "grantLine": "{{boosts}} × {{minutes}} minutos por ciclo",
+    "intro": "Um emblema compra mais do que o desenho ao lado do seu nome. A cada quinzena concede impulsos — cada um coloca uma publicação no espaço no topo do feed principal. Treze níveis, treze poderes, um desbloqueio por degrau.",
+    "ladderHeading": "O que cada nível concede",
+    "left": "restantes",
+    "liveUntil": "no ar até às {{time}}",
+    "loadFailed": "Não foi possível carregar os seus SuperPoderes neste momento. Tente de novo daqui a pouco.",
+    "minutes": "minutos",
+    "needBadge": "Os SuperPoderes precisam de um emblema de staking. Faça stake de DHB para os desbloquear.",
+    "noBadgeYet": "Ainda não tem emblema, por isso não há impulsos. Fazer stake de DHB desbloqueia a escada abaixo.",
+    "noBoostsLeft": "Não restam impulsos neste ciclo",
+    "powersHeading": "Os treze poderes",
+    "queued": "em fila",
+    "refills": "recarrega a {{date}}",
+    "refillsOn": "Recarrega a {{date}} — no mesmo momento para toda a gente.",
+    "secondWind": "Segundo Fôlego",
+    "secondWindExplainer": "Esta publicação tem mais de uma semana. O Segundo Fôlego devolve-a ao topo do feed.",
+    "seenCount": "{{count}} vistas",
+    "shareOfVoice": "O espaço de impulso roda. Quando há vários impulsos a decorrer, cada visitante recebe um ponderado pelo nível de emblema — um nível mais alto aparece mais vezes, e toda a gente obtém a janela que lhe foi concedida.",
+    "spendFor": "{{power}} durante {{minutes}} minutos",
+    "spent": "{{power}} a decorrer durante {{minutes}} minutos",
+    "stakeDhb": "Fazer stake de DHB",
+    "title": "SuperPoderes",
+    "unlocksAt": "{{power}} desbloqueia no nível {{tier}}"
   }
 }

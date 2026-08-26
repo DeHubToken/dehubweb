@@ -76,6 +76,19 @@ export interface SuperPowerBooking {
   /** Tier at booking time, frozen — not necessarily the tier worn now. */
   tier: string;
   status: 'active' | 'completed' | 'cancelled';
+  /** The stage a Front Row is lifting. Null for every other power. */
+  stageId?: string | null;
+  /** The category a Trend Jacker is lifting. Null for every other power. */
+  category?: string | null;
+  /** Who else has put a boost behind this one, for a Crew Boost. */
+  contributors?: { address: string; tier: string; minutes: number }[];
+  /**
+   * Whose post it landed on.
+   *
+   * The holder's own address for every power but Deep Current, which is a
+   * gift. Optional for the same deploy-skew reason as the flare counters.
+   */
+  beneficiary?: string;
   /** Times this boost has been dealt to a viewer. */
   served: number;
   live: boolean;
@@ -93,6 +106,17 @@ export interface SuperPowerStatus {
   boostsPerCycle: number;
   boostsUsed: number;
   boostsLeft: number;
+  /**
+   * The Signal Flare pot — a SECOND allowance the same size as the boost one,
+   * spent independently.
+   *
+   * Optional because a client can be newer than the API it is talking to, and
+   * the fallback has to be the boost count rather than zero: showing an
+   * Octopus "no flares left" on a deploy skew takes the power away.
+   */
+  signalsPerCycle?: number;
+  signalsUsed?: number;
+  signalsLeft?: number;
   minutesPerBoost: number;
   /** Share of the slot when several boosts run at once. */
   slotWeight: number;
@@ -113,6 +137,64 @@ export interface SuperPowerLadder {
   cycleEndsAt: string;
   tiers: SuperPowerTierRow[];
   powers: SuperPowerInfo[];
+}
+
+/** The category holding the trending slot, or null when nothing is running. */
+export interface TrendingTopic {
+  category: string;
+  bookingId: string;
+  tier: string;
+  endsAt: string;
+}
+
+/**
+ * Which category was paid onto the trending list right now.
+ *
+ * Public. Its own read rather than part of `/superpowers/slot` — that one
+ * deals a POST and this a category name, and the list it lands on is not in
+ * the DeHub API at all: it is computed in the browser from Supabase.
+ */
+export async function fetchTrendingTopic(): Promise<TrendingTopic | null> {
+  const response = await apiCall<{ result: TrendingTopic | null }>(
+    '/api/superpowers/trending-topic',
+  );
+  return response?.result ?? null;
+}
+
+/** The stage holding the front row, or null when nothing is running. */
+export interface FrontRow {
+  stageId: string;
+  bookingId: string;
+  tier: string;
+  endsAt: string;
+}
+
+/**
+ * Which stage tops the stages rail right now.
+ *
+ * Public and unauthenticated — a stage is public by construction, so there is
+ * nothing here to gate on a viewer. Its own read rather than part of
+ * `/superpowers/slot`, because that one deals a POST and this deals a stage id
+ * from a different database.
+ */
+export async function fetchFrontRow(): Promise<FrontRow | null> {
+  const response = await apiCall<{ result: FrontRow | null }>('/api/superpowers/front-row');
+  return response?.result ?? null;
+}
+
+/**
+ * Put one of your boosts behind somebody else's Crew Boost.
+ *
+ * Minutes pool; weight does not — the leader's tier still decides how often
+ * the slot is dealt. Never write copy promising a joiner more reach; what
+ * they buy is a longer window for the post they are backing.
+ */
+export async function joinCrewBoost(bookingId: string): Promise<SuperPowerBooking> {
+  const response = await apiCall<{ result: SuperPowerBooking }>(
+    `/api/superpowers/boost/${encodeURIComponent(bookingId)}/join`,
+    { method: 'POST', requiresAuth: true },
+  );
+  return response.result;
 }
 
 export interface BoostSlot {
@@ -170,12 +252,21 @@ export async function bookBoost(
     targetAccount?: string;
     /** `harpoon` — badge tier NAMES, never balances. The ladder is dollar-pegged. */
     targetTiers?: string[];
+    /** `comment_anchor` — YOUR comment, in somebody else's thread. */
+    commentId?: string;
+    /** `front_row` — a Stage you host, live or scheduled. */
+    stageId?: string;
+    /** `trend_jacker` — a category you already post in. */
+    category?: string;
   },
 ): Promise<SuperPowerBooking> {
   const body: Record<string, unknown> = { tokenId, power };
   if (startAt) body.startAt = startAt;
   if (aim?.targetAccount) body.targetAccount = aim.targetAccount;
   if (aim?.targetTiers?.length) body.targetTiers = aim.targetTiers;
+  if (aim?.commentId) body.commentId = aim.commentId;
+  if (aim?.stageId) body.stageId = aim.stageId;
+  if (aim?.category) body.category = aim.category;
 
   const response = await apiCall<{ result: SuperPowerBooking }>('/api/superpowers/boost', {
     method: 'POST',

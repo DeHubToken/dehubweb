@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useFormDraft } from '@/hooks/use-form-draft';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageSquare, Scissors, Briefcase } from 'lucide-react';
 import { useCreateJob } from '@/features/work/hooks/use-work';
+import { bountyPath } from '@/features/work/seo';
 import type { WorkJobType, WorkCurrency, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
@@ -30,6 +32,29 @@ export default function WorkPostPage() {
   const [maxUnits, setMaxUnits] = useState('');
   const [deadline, setDeadline] = useState('');
 
+  /*
+   * /work/post is a plain lazy route, not a cached page, so it unmounts the
+   * moment the user goes to copy the link they are being asked for — and came
+   * back to an empty three-step form. `step` rides along so they land back on
+   * the part they had reached.
+   */
+  const draft = useFormDraft(
+    'work-post',
+    { step, jobType, title, description, platform, targetUrl, currency, pricePerUnit, maxUnits, deadline },
+    (saved) => {
+      if (saved.step) setStep(saved.step);
+      if (saved.jobType) setJobType(saved.jobType);
+      if (saved.title) setTitle(saved.title);
+      if (saved.description) setDescription(saved.description);
+      if (saved.platform) setPlatform(saved.platform);
+      if (saved.targetUrl) setTargetUrl(saved.targetUrl);
+      if (saved.currency) setCurrency(saved.currency);
+      if (saved.pricePerUnit) setPricePerUnit(saved.pricePerUnit);
+      if (saved.maxUnits) setMaxUnits(saved.maxUnits);
+      if (saved.deadline) setDeadline(saved.deadline);
+    },
+  );
+
   const priceNum = Number(pricePerUnit) || 0;
   const unitsNum = jobType === 'contract' ? 1 : Number(maxUnits) || 0;
   const total = priceNum * unitsNum;
@@ -49,12 +74,15 @@ export default function WorkPostPage() {
         max_units: jobType === 'contract' ? 1 : unitsNum,
         deadline: deadline || undefined,
       });
-      navigate(`/work/${job.id}`);
+      // The bounty exists now; the draft of it must not outlive it and reappear
+      // pre-filled the next time someone opens this page.
+      draft.clear();
+      navigate(bountyPath(job));
     } catch { /* toast already shown */ }
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
       <SEOHead title="Post a Bounty — DeHub Bounties" description="Post a bounty on DeHub: social media tasks, clipping bounties, or fixed-price contracts paid in DHB or USDC." url="https://dehub.io/work/post" />
       <button
         onClick={() => navigate('/work')}

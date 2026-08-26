@@ -15,6 +15,8 @@ import { ChatInput } from './ChatInput';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
+import { conversationIdentity } from '@/lib/conversation-identity';
+import { writeDraft } from '@/lib/draft-cache';
 import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
@@ -547,6 +549,40 @@ function MessagesSkeleton() {
   );
 }
 
+/**
+ * The per-message fee banner has to paint before the API answers or it flashes
+ * in half a second after the composer. It is a *hint*, so it expires: the other
+ * side can raise, drop or waive their fee at any time, and an entry with no
+ * clock on it kept showing the old number for as long as the browser lived.
+ */
+const DM_FEE_CACHE_TTL = 6 * 60 * 60 * 1000;
+
+function readCachedDmFee(key: string): DmFee | null {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { v?: number; t?: number; fee?: DmFee };
+    // Pre-TTL entries were the bare DmFee. Drop them rather than trust them.
+    if (parsed?.v !== 1 || typeof parsed.t !== 'number' || !parsed.fee) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    if (Date.now() - parsed.t > DM_FEE_CACHE_TTL) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return parsed.fee;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedDmFee(key: string, fee: DmFee): void {
+  try {
+    localStorage.setItem(key, JSON.stringify({ v: 1, t: Date.now(), fee }));
+  } catch { /* quota — the banner just waits for the API */ }
+}
+
 function useDmPin(conversationId: string, address: string | undefined, conversation: DeHubConversation) {
   const serverPinned = conversation.pinnedMessages?.length
     ? conversation.pinnedMessages[conversation.pinnedMessages.length - 1]
@@ -608,12 +644,20 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
-  const dmFeeCacheKey = `dehub-dm-fee-${conversation.id}`;
+  /**
+   * Stable for the life of the thread. Keyed on conversation.id this wrote to
+   * "…-new_0x<addr>" for the first few seconds of a brand new chat and to the
+   * ObjectId ever after, so the entry it saved could never be read back — one
+   * orphaned key per person you ever messaged.
+   */
+  const draftScope = conversationIdentity(conversation);
+  const dmFeeCacheKey = `dehub-dm-fee-${draftScope}`;
   const [dmFee, setDmFeeRaw] = useState<DmFee | null>(() => {
-    try {
-      const cached = localStorage.getItem(dmFeeCacheKey);
-      if (cached) return JSON.parse(cached) as DmFee;
-    } catch {}
+    // A fee the other side has since changed must not be believed forever —
+    // the cache is here to paint the banner before the API answers, not to
+    // replace it.
+    const cached = readCachedDmFee(dmFeeCacheKey);
+    if (cached) return cached;
     if (conversation.dmFee) return conversation.dmFee;
     // Detect fee immediately from otherUser search data so banner shows before any API call
     const otherRaw = (conversation.otherUser || conversation.participants?.[0]) as any;
@@ -626,9 +670,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const setDmFee: React.Dispatch<React.SetStateAction<DmFee | null>> = (valOrFn) => {
     setDmFeeRaw(prev => {
       const next = typeof valOrFn === 'function' ? (valOrFn as (p: DmFee | null) => DmFee | null)(prev) : valOrFn;
-      if (next) {
-        try { localStorage.setItem(dmFeeCacheKey, JSON.stringify(next)); } catch {}
-      }
+      if (next) writeCachedDmFee(dmFeeCacheKey, next);
       return next;
     });
   };
@@ -651,6 +693,20 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const [isSendingFee, setIsSendingFee] = useState(false);
   // Track tx hashes we've confirmed on-chain so we can override 'pending' paymentStatus from API
   const confirmedTxHashes = useRef<Set<string>>(new Set());
+  /**
+   * A DM fee paid on-chain for a message that then failed to send, together
+   * with the message it was paid for. Held so the retry rides the same payment
+   * — without it the user is charged twice for one message, which is the worst
+   * version of a silent send failure.
+   *
+   * The content is part of it so the payment can only be spent on the message
+   * it was bought for. Reusing it for whatever the user happens to type next
+   * would let a second, different message travel free.
+   *
+   * A ref, not persisted: it only has to survive until the retry, and a hash
+   * carried across a reload could be replayed against something unrelated.
+   */
+  const paidTxHashRef = useRef<{ hash: string; content: string } | null>(null);
   // Version tick: incremented when a tx confirms so the (memoized) bubbles
   // re-render and pick up the new txConfirmed prop.
   const [, bumpTxConfirmations] = useReducer((v: number) => v + 1, 0);
@@ -1017,12 +1073,28 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   }, []);
 
   const handleForwardSelect = useCallback(
-    (targetConversationId: string) => {
+    async (targetConversationId: string) => {
       if (!forwardMessageTarget) return;
-      emitForwardMessage({
-        messageId: forwardMessageTarget._id,
-        targetDmId: targetConversationId,
-      });
+      /*
+       * "Message forwarded" used to be raised on the line after the emit,
+       * unconditionally. A socket.io emit does not throw on a dead client, so
+       * on a socket that had given up reconnecting the forward went nowhere and
+       * the user was told in green that it had worked — and unlike a sent
+       * message there is no bubble here to notice missing afterwards.
+       *
+       * The dialog is deliberately left open on failure: it is the only way
+       * back to this action, and closing it would strand the intent as well as
+       * the message.
+       */
+      try {
+        await emitForwardMessage({
+          messageId: forwardMessageTarget._id,
+          targetDmId: targetConversationId,
+        });
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Could not forward the message.');
+        return;
+      }
       toast.success('Message forwarded');
       setForwardMessageTarget(null);
     },
@@ -1074,11 +1146,19 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     gifUrl?: string;
     duration?: number;
   }) => {
-    let feeTxHash: string | undefined;
+    /*
+     * A fee paid for a send that then failed is already on-chain. Reuse it
+     * rather than charging again for the same message — the retry is the user
+     * pressing Send on text this component put back in their composer, not a
+     * new message.
+     */
+    const held = paidTxHashRef.current;
+    const reusingPaidTx = !!held && held.content === content.trim();
+    let feeTxHash: string | undefined = reusingPaidTx ? held!.hash : undefined;
 
     // If fee is required, show optimistic message immediately, then process payment
     const paymentTempId = `temp-pay-${Date.now()}`;
-    if (feeRequired) {
+    if (feeRequired && !reusingPaidTx) {
       // Inject optimistic "pending payment" message into the cache so user sees it immediately
       const optimisticPayMsg: DmMessage = {
         _id: paymentTempId,
@@ -1223,7 +1303,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     }
 
     // Remove the payment-optimistic temp message before mutate adds its own optimistic entry
-    if (feeRequired) {
+    if (feeRequired && !reusingPaidTx) {
       queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
         if (!old?.pages) return old;
         const newPages = [...old.pages];
@@ -1246,13 +1326,38 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       },
       {
         onSuccess: (data) => {
+          // The held fee has now been spent on a message that went out.
+          paidTxHashRef.current = null;
           if (resolvedConversationId.startsWith('new_') && data.conversation) {
             setResolvedConversationId(data.conversation);
           }
           setTimeout(scrollToBottom, 100);
         },
-        onError: () => {
-          toast.error('Failed to send message');
+        onError: (err) => {
+          /*
+           * The composer cleared itself the moment Send was pressed, so a
+           * failure here used to destroy the message outright. Put the words
+           * back where they were typed instead — the draft store is already
+           * what the composer reads from, so this refills it in place.
+           * Attachments cannot be restored (a File does not survive), which is
+           * why the toast distinguishes the two cases.
+           */
+          const restored = content.trim();
+          if (restored) writeDraft(draftScope, restored);
+          if (feeTxHash && restored) {
+            // The fee is already on-chain. Hold it against this exact message
+            // so pressing Send again reuses that payment rather than charging
+            // for a second one.
+            paidTxHashRef.current = { hash: feeTxHash, content: restored };
+          }
+          const reason = err instanceof Error && err.message ? err.message : 'Failed to send message';
+          toast.error(
+            restored
+              ? `${reason} Your message is back in the box.`
+              : mediaFile || gifUrl
+                ? `${reason} Please attach it again.`
+                : reason,
+          );
         },
       }
     );
@@ -1639,6 +1744,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       {/* Chat Input — always shown, disabled send when insufficient balance */}
       <ChatInput
         initialText={initialComposerText}
+        draftKey={draftScope}
         thread={smartReplyThread}
         peerName={displayName}
         onSendMessage={handleSendMessage}

@@ -333,11 +333,29 @@ export async function getBadgeDiscount(): Promise<{ tier: string | null; rate: n
 
 /**
  * The gateway refuses a checkout when its own gas float on the buying chain
- * sits at or below `minGas`, which is 0.01 native on every chain. It answers
- * 406 "low gas" from middleware that runs before auth, so the buyer sees a
- * failure with no explanation after they have already committed to buying.
+ * sits at or below `minGas`. It answers 406 "low gas" from middleware that
+ * runs before auth, so the buyer sees a failure with no explanation after
+ * they have already committed to buying — which is why this is checked here
+ * before a card option is offered at all.
+ *
+ * These mirror `minGas` in dehub-stream-backend `src/dehub-pay/constants.ts`
+ * and have to move with it. They are per-chain because a delivery does not
+ * cost the same on each: a DHB transfer on Base is about 0.0000004 ETH, so
+ * the flat 0.01 both sides used to carry was ~25,000 deliveries of headroom
+ * and disabled card sales for weeks.
  */
+const GATEWAY_MIN_GAS_BY_CHAIN: Record<number, number> = {
+  8453: 0.0005, // Base
+  56: 0.01, // BSC
+  97: 0.01, // BSC testnet
+};
+
+/** Floor for a chain the map doesn't name — the backend's own default. */
 export const GATEWAY_MIN_GAS = 0.01;
+
+export function gatewayMinGas(chainId: number): number {
+  return GATEWAY_MIN_GAS_BY_CHAIN[chainId] ?? GATEWAY_MIN_GAS;
+}
 
 /**
  * Native gas the fiat gateway holds, keyed by chain id. Unauthenticated, one
@@ -388,7 +406,7 @@ export async function checkGatewayCanDeliver(chainId: number, tokens: number): P
     getTokenAvailableSupply('DHB', chainId),
   ]);
   const gas = gasByChain[String(chainId)] ?? 0;
-  if (gas <= GATEWAY_MIN_GAS) return { ok: false, reason: 'low_gas', supply, gas };
+  if (gas <= gatewayMinGas(chainId)) return { ok: false, reason: 'low_gas', supply, gas };
   if (supply < tokens) return { ok: false, reason: 'no_supply', supply, gas };
   return { ok: true, supply, gas };
 }

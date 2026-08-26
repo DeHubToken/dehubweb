@@ -535,7 +535,8 @@
     "activityLog": "活动日志",
     "endStream": "结束直播",
     "linkCopied": "链接已复制",
-    "postUrlCopied": "帖子链接已复制"
+    "postUrlCopied": "帖子链接已复制",
+    "boostPost": "加推帖子"
   },
   "filters": {
     "sort": "排序",
@@ -802,7 +803,8 @@
     "ppvStartSaving": "购买您喜爱的创作者的按次付费内容后，它们会显示在这里。",
     "recentStartSaving": "您最近收藏的帖子会显示在这里。",
     "textStartSaving": "收藏纯文字帖子，它们会显示在这里。",
-    "videosStartSaving": "收藏带视频的帖子，它们会收集到这里。"
+    "videosStartSaving": "收藏带视频的帖子，它们会收集到这里。",
+    "folders": "文件夹"
   },
   "notifications": {
     "title": "通知",
@@ -1726,5 +1728,49 @@
       "startTerm": "历史",
       "start": "——\"全部时间\"指 Cloudflare 仍然保留的每一天，目前为自 {{date}}（dehub.io 迁到 Cloudflare 的那天）起的 {{days}} 天。此前没有边缘数据可展示，较早的日期也会随着 Cloudflare 过期而消失。"
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "让谁的粉丝看到？",
+    "aimAtTiers": "让哪些徽章等级看到？",
+    "aimPlaceholder": "用户名或钱包地址",
+    "boost": "加推",
+    "boostBooked": "已加推 {{minutes}} 分钟",
+    "boostExplainer": "在你的时段内把这条帖子放到主页信息流顶部的位置。",
+    "boostFailed": "无法加推该帖子",
+    "boostForMinutes": "加推 {{minutes}} 分钟",
+    "boostedLabel": "已加推",
+    "boostsLeft": "还剩 {{left}} 次加推，共 {{total}} 次",
+    "cancelFailed": "无法取消该加推",
+    "cancelledRefunded": "加推已取消，次数已退回你的额度",
+    "cancelledSpent": "加推已取消。它已经开始了，所以仍算已用。",
+    "colBoosts": "加推",
+    "colEach": "每次",
+    "colTier": "等级",
+    "colTotal": "每周期",
+    "comingSoon": "即将推出",
+    "finishedCount": "本周期已完成 {{count}} 次，被看到 {{seen}} 次",
+    "grantLine": "每周期 {{boosts}} × {{minutes}} 分钟",
+    "intro": "徽章买到的不只是名字旁边那张图。它每两周发放加推次数 — 每次都能把一条帖子放进主页信息流顶部的位置。十三个等级，十三种能力，每一级解锁一种。",
+    "ladderHeading": "每个等级能获得什么",
+    "left": "剩余",
+    "liveUntil": "上线至 {{time}}",
+    "loadFailed": "此刻无法加载你的超能力。请稍后再试。",
+    "minutes": "分钟",
+    "needBadge": "超能力需要质押徽章。质押 DHB 即可解锁。",
+    "noBadgeYet": "你还没有徽章，所以没有加推次数。质押 DHB 就能解锁下面这个阶梯。",
+    "noBoostsLeft": "本周期已无加推次数",
+    "powersHeading": "十三种能力",
+    "queued": "排队中",
+    "refills": "{{date}} 补充",
+    "refillsOn": "{{date}} 补充 — 对所有人都是同一时刻。",
+    "secondWind": "第二春",
+    "secondWindExplainer": "这条帖子已经超过一周了。第二春会把它送回信息流顶部。",
+    "seenCount": "已被看到 {{count}} 次",
+    "shareOfVoice": "加推位是轮转的。当多个加推同时进行时，每位观众会被分到其中一个，按徽章等级加权 — 等级越高出现越频繁，而每个人都能拿到自己获得的时段。",
+    "spendFor": "{{power}} {{minutes}} 分钟",
+    "spent": "{{power}} 正在运行 {{minutes}} 分钟",
+    "stakeDhb": "质押 DHB",
+    "title": "超能力",
+    "unlocksAt": "{{power}} 在 {{tier}} 等级解锁"
   }
 }

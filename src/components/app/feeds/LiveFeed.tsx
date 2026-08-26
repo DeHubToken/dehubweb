@@ -18,7 +18,10 @@ import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { TVPreviewCard } from '@/components/app/tv';
+// Direct, not through '@/components/app/tv': the barrel re-exports TVChat, which
+// dragged the whole RealtimeChatPanel onto the first-paint path for a card the
+// live feed only shows a thumbnail of. See scripts/boot-path-report.mjs.
+import { TVPreviewCard } from '@/components/app/tv/TVPreviewCard';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
 import { useQuery } from '@tanstack/react-query';
 import { getTVChannelsByCountry } from '@/lib/api/live-tv';

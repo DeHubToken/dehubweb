@@ -52,6 +52,12 @@ import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlayba
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
+import {
+  DOUBLE_TAP_LIKE_EVENT,
+  OPEN_REACTIONS_EVENT,
+  type DoubleTapLikeEventDetail,
+  type OpenReactionsEventDetail,
+} from '@/lib/tap-reactions';
 
 interface ShortsViewerProps {
   shorts: ShortVideo[];
@@ -529,6 +535,43 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     return handleReaction(reactionForTap(vote, myReaction, localReactionCounts));
   }, [handleReaction, myReaction, localReactionCounts]);
 
+  /**
+   * The tap ladder on the slide itself — double 👍, triple ❤️, hold for the
+   * tray. This viewer renders no ActionBar, so the listener ActionBar owns
+   * never runs here and these events would otherwise fall on the floor.
+   *
+   * Guarded the same way ActionBar guards its own: a gesture only ever adds, so
+   * re-casting the reaction already held (which the server reads as "clear it")
+   * is refused rather than silently removing a like.
+   */
+  const handleReactionRef = useRef(handleReaction);
+  useEffect(() => { handleReactionRef.current = handleReaction; }, [handleReaction]);
+  useEffect(() => {
+    const id = currentShort?.id != null ? String(currentShort.id) : '';
+    if (!id) return;
+
+    const onTapReaction = (e: Event) => {
+      const detail = (e as CustomEvent<DoubleTapLikeEventDetail>).detail;
+      if (!detail || String(detail.postId) !== id) return;
+      const reaction = detail.reaction ?? 'like';
+      if (myReaction === reaction) return;
+      if (reaction === 'like' && isLiked) return;
+      handleReactionRef.current(reaction);
+    };
+    const onOpenReactions = (e: Event) => {
+      const detail = (e as CustomEvent<OpenReactionsEventDetail>).detail;
+      if (!detail || String(detail.postId) !== id) return;
+      setPickerOpen(true);
+    };
+
+    window.addEventListener(DOUBLE_TAP_LIKE_EVENT, onTapReaction as EventListener);
+    window.addEventListener(OPEN_REACTIONS_EVENT, onOpenReactions as EventListener);
+    return () => {
+      window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, onTapReaction as EventListener);
+      window.removeEventListener(OPEN_REACTIONS_EVENT, onOpenReactions as EventListener);
+    };
+  }, [currentShort?.id, myReaction, isLiked]);
+
   // Hold the thumbs-up to open the reaction tray (see ActionBar for the same gesture).
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressFired = useRef(false);
@@ -682,11 +725,20 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [goToNext, goToPrev]);
 
   // Toggle play/pause - only shows indicator on explicit tap
+  /**
+   * Whether the last `togglePlayPause` actually flipped anything. Both early
+   * returns below leave the video exactly as it was, and `undoPlayPause` must
+   * not "reverse" a toggle that never happened — that would pause a playing
+   * short on the second tap of a double tap.
+   */
+  const lastToggleTookEffect = useRef(false);
+
   const togglePlayPause = useCallback(() => {
     // A tap that just brought the hidden chrome back is a "restore", not a
     // play/pause — swallow the click it synthesises.
     if (suppressVideoTapRef.current) {
       suppressVideoTapRef.current = false;
+      lastToggleTookEffect.current = false;
       return;
     }
     // The auto-clear takes no restore band and swallows no tap: it was never
@@ -694,8 +746,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     // meant. The timer re-arms off the state change and clears it again.
     setAutoHidden(false);
     // Don't show indicator during transitions
-    if (isTransitioning) return;
-    
+    if (isTransitioning) {
+      lastToggleTookEffect.current = false;
+      return;
+    }
+
+    lastToggleTookEffect.current = true;
     setIsPaused(prev => {
       const newPaused = !prev;
       setShowPlayIndicator(newPaused ? 'pause' : 'play');
@@ -703,6 +759,20 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       return newPaused;
     });
   }, [isTransitioning]);
+
+  /**
+   * Put back a play/pause whose tap turned out to be half of a double tap.
+   *
+   * Silent on purpose: the first tap already flashed an indicator, and showing
+   * a second one on the way back would leave a pause→play flicker under the
+   * heart. The gesture should read as "liked", not "paused, resumed, liked".
+   */
+  const undoPlayPause = useCallback(() => {
+    if (!lastToggleTookEffect.current) return;
+    lastToggleTookEffect.current = false;
+    setIsPaused(prev => !prev);
+    setShowPlayIndicator(null);
+  }, []);
 
   // Prevent touch events from bubbling to parent page
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -987,10 +1057,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       playbackRate={playbackRate}
                       onTimeUpdate={isActive ? trackView : undefined}
                       onTap={togglePlayPause}
+                      onTapUndo={undoPlayPause}
                       onSeekStart={() => setIsTimelineSeeking(true)}
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
                       letterbox={!isMobile}
+                      // Desktop only: this viewer is already `fixed inset-0` on
+                      // mobile, so the short fills the screen there and a
+                      // fullscreen control would do nothing visible.
+                      allowFullscreen={!isMobile}
                       // Buffer the current slide + the next one so a swipe lands
                       // on an already-loaded video. The previous slide (offset
                       // -1) is almost always still in the browser cache from

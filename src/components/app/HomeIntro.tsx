@@ -45,6 +45,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { warmLoginSheet } from '@/components/app/LoginModal';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -354,7 +355,14 @@ export function HomeIntro() {
             every other CTA in the product. The earlier solid white/black pair
             was invented here and matched nothing else. */}
         <div className="mt-6 flex flex-wrap items-center gap-2">
-          <Button type="button" variant="glass" size="lg" onClick={() => openLoginModal()}>
+          <Button
+            type="button"
+            variant="glass"
+            size="lg"
+            onClick={() => openLoginModal()}
+            onPointerDown={warmLoginSheet}
+            onMouseEnter={warmLoginSheet}
+          >
             Join DeHub
           </Button>
           {/* Secondary CTA points at the docs home, not /guide. Relabelled with

@@ -140,6 +140,11 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     myReaction: resolveMyReaction(nft),
     reactionCounts: resolveReactionCounts(nft),
     isReposted: nft.isReposted ?? false,
+    isLocked: nft.is_locked ?? false,
+    lockedPrice: nft.locked_price,
+    lockedCurrency: nft.locked_currency || 'DHB',
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
     totalTips: nft.totalTips ?? 0,
   };
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import { useFormDraft } from '@/hooks/use-form-draft';
 import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus, Video, MonitorPlay, ScreenShare } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -104,6 +105,23 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     pendingScreenRef.current?.getTracks().forEach((t) => t.stop());
     pendingScreenRef.current = null;
   };
+
+  /*
+   * Only the three fields the creator actually writes. Everything else here is
+   * live-session state — `step`, `streamData`, the MediaStream — and restoring
+   * any of it would put the modal back on a broadcasting screen with no stream
+   * behind it. Cleared once the stream exists, since by then the title is on
+   * the post rather than pending.
+   */
+  const draft = useFormDraft(
+    'go-live',
+    { title, description, selectedCategory },
+    (saved) => {
+      if (saved.title) setTitle(saved.title);
+      if (saved.description) setDescription(saved.description);
+      if (saved.selectedCategory) setSelectedCategory(saved.selectedCategory);
+    },
+  );
 
   // Category drawer state
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
@@ -515,6 +533,9 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       };
 
       setStreamData(resultData);
+      // The stream exists and carries the title — the pending copy of it should
+      // not reappear in the next Go Live.
+      draft.clear();
       // Hand the capture over: from here the broadcaster owns stopping it, so
       // the ref is cleared and the bail-out paths leave it alone.
       setScreenStream(pendingScreenRef.current);

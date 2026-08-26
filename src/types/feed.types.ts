@@ -91,6 +91,18 @@ export interface TextPost extends BaseFeedItem {
   quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
   /** Post categories */
   categories?: string[];
+  /** Community Alert tripped — border the link in the text, don't outline the whole card. */
+  communityAlertPending?: boolean;
+  /** Whether content is subscriber-only locked */
+  isLocked?: boolean;
+  /** Locked: price to unlock */
+  lockedPrice?: number;
+  /** Locked: currency (DHB, USDC) */
+  lockedCurrency?: string;
+  /** Whether the current viewer is the content owner */
+  isOwner?: boolean;
+  /** Whether the content has been unlocked for the current viewer (purchased/earned) */
+  isUnlocked?: boolean;
 }
 
 /**
