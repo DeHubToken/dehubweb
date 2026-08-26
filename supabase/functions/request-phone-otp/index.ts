@@ -105,6 +105,30 @@ serve(async (req) => {
     return errorResponse("Phone must be in international format, e.g. +14155552671");
   }
 
+  // App Review needs a repeatable sign-in path: a reviewer cannot receive an SMS,
+  // and consume_phone_otp is one-shot with a 6-per-day cap, so the bypass code
+  // is re-seeded on every request rather than made permanent in the table.
+  const reviewerPhone = Deno.env.get("REVIEWER_PHONE");
+  const reviewerCode = Deno.env.get("REVIEWER_OTP_CODE");
+  if (reviewerPhone && reviewerCode && phone === reviewerPhone && /^\d{6}$/.test(reviewerCode)) {
+    const bypassSupabase = serviceClient();
+    const { error: reviewerRpcError } = await bypassSupabase.rpc("upsert_phone_otp", {
+      p_phone: phone,
+      p_code_hash: await sha256Hex(reviewerCode),
+      p_ttl_ms: 1_800_000, // 30 minutes
+    });
+    if (reviewerRpcError) {
+      console.error("request-phone-otp: reviewer bypass upsert_phone_otp failed", reviewerRpcError);
+      return errorResponse("Could not generate a verification code. Please try again.");
+    }
+
+    console.log("request-phone-otp: reviewer bypass code seeded", { to: maskPhone(phone) });
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   if (!countryAllowed(phone)) {
     return errorResponse("Phone sign-in is not available for this country yet.");
   }
