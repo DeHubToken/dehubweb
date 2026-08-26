@@ -535,7 +535,8 @@
     "activityLog": "Registro attività",
     "endStream": "Termina trasmissione",
     "linkCopied": "Link copiato",
-    "postUrlCopied": "URL del post copiato"
+    "postUrlCopied": "URL del post copiato",
+    "boostPost": "Potenzia il post"
   },
   "filters": {
     "sort": "Ordina",
@@ -802,7 +803,8 @@
     "noVideosYet": "Ancora nessun video salvato",
     "videosStartSaving": "Aggiungi ai segnalibri i post con video e verranno raccolti qui.",
     "noTextYet": "Ancora nessun post di testo salvato",
-    "textStartSaving": "Aggiungi ai segnalibri i post di solo testo e appariranno qui."
+    "textStartSaving": "Aggiungi ai segnalibri i post di solo testo e appariranno qui.",
+    "folders": "Cartelle"
   },
   "notifications": {
     "title": "Notifiche",
@@ -1634,5 +1636,49 @@
     "reject": "Rifiuta",
     "joinFirst": "Unisciti alle community per poterle fissare",
     "pinCommunity": "Fissa la community"
+  },
+  "superpowers": {
+    "aimAtAccount": "Quali follower dovrebbero vederlo?",
+    "aimAtTiers": "Quali livelli di badge dovrebbero vederlo?",
+    "aimPlaceholder": "Nome utente o indirizzo del portafoglio",
+    "boost": "Potenzia",
+    "boostBooked": "Potenziato per {{minutes}} minuti",
+    "boostExplainer": "Mette questo post nello spazio in cima al feed principale per la tua finestra.",
+    "boostFailed": "Impossibile potenziare quel post",
+    "boostForMinutes": "Potenzia per {{minutes}} minuti",
+    "boostedLabel": "Potenziato",
+    "boostsLeft": "Restano {{left}} potenziamenti su {{total}}",
+    "cancelFailed": "Impossibile annullare quel potenziamento",
+    "cancelledRefunded": "Potenziamento annullato e restituito al tuo credito",
+    "cancelledSpent": "Potenziamento annullato. Era già partito, quindi resta consumato.",
+    "colBoosts": "Potenziamenti",
+    "colEach": "Ciascuno",
+    "colTier": "Livello",
+    "colTotal": "Per ciclo",
+    "comingSoon": "in arrivo",
+    "finishedCount": "{{count}} conclusi in questo ciclo, visti {{seen}} volte",
+    "grantLine": "{{boosts}} × {{minutes}} minuti a ciclo",
+    "intro": "Un badge compra più del disegno accanto al tuo nome. Ogni due settimane concede potenziamenti — ognuno mette un post nello spazio in cima al feed principale. Tredici livelli, tredici poteri, uno sblocco per gradino.",
+    "ladderHeading": "Cosa concede ogni livello",
+    "left": "rimasti",
+    "liveUntil": "attivo fino alle {{time}}",
+    "loadFailed": "Non è stato possibile caricare i tuoi SuperPoteri in questo momento. Riprova tra poco.",
+    "minutes": "minuti",
+    "needBadge": "I SuperPoteri richiedono un badge di staking. Metti in stake DHB per sbloccarli.",
+    "noBadgeYet": "Non hai ancora un badge, quindi niente potenziamenti. Mettere in stake DHB sblocca la scala qui sotto.",
+    "noBoostsLeft": "Nessun potenziamento rimasto in questo ciclo",
+    "powersHeading": "I tredici poteri",
+    "queued": "in coda",
+    "refills": "si ricarica il {{date}}",
+    "refillsOn": "Si ricarica il {{date}} — nello stesso momento per tutti.",
+    "secondWind": "Secondo Fiato",
+    "secondWindExplainer": "Questo post ha più di una settimana. Secondo Fiato lo riporta in cima al feed.",
+    "seenCount": "{{count}} visualizzazioni",
+    "shareOfVoice": "Lo spazio di potenziamento ruota. Quando ci sono più potenziamenti attivi, a ogni spettatore ne viene servito uno ponderato per livello di badge — un livello più alto compare più spesso, e tutti ottengono la finestra che è stata loro concessa.",
+    "spendFor": "{{power}} per {{minutes}} minuti",
+    "spent": "{{power}} attivo per {{minutes}} minuti",
+    "stakeDhb": "Metti in stake DHB",
+    "title": "SuperPoteri",
+    "unlocksAt": "{{power}} si sblocca al livello {{tier}}"
   }
 }
