@@ -27,7 +27,20 @@
     "events": "Events",
     "prompt": "संकेत",
     "communities": "समुदाय",
-    "staking": "स्टेकिंग"
+    "staking": "स्टेकिंग",
+    "arcade": "आर्केड",
+    "stats": "लाइव आंकड़ा",
+    "liveTv": "लाइव TV",
+    "buyDhb": "DHB बिसावव",
+    "bridge": "ब्रिज",
+    "top100": "टॉप 100",
+    "agents": "AI एजेंट",
+    "advertising": "विज्ञापन",
+    "premium": "प्रीमियम",
+    "pricing": "कीमत",
+    "creators": "क्रिएटर मन",
+    "getTheApp": "ऐप पावव",
+    "connectAi": "AI जोड़व"
   },
   "feed": {
     "home": "घर",
@@ -35,7 +48,9 @@
     "images": "तसवीर",
     "shorts": "छोटे वीडियो",
     "music": "गाना",
-    "live": "लाइव"
+    "live": "लाइव",
+    "newPosts_one": "{{count}} नवा पोस्ट",
+    "newPosts_other": "{{count}} नवा पोस्ट"
   },
   "explore": {
     "all": "सब",
@@ -242,7 +257,58 @@
     "hazy": "धुंधरा रतिहा",
     "save": "सहेजव",
     "saving": "सहेजत हे...",
-    "swarms": "स्वार्म्स"
+    "swarms": "स्वार्म्स",
+    "profiles": "प्रोफाइल",
+    "profilesDesc": "ये डिवाइस म सहेजे खाता मन",
+    "addProfile": "प्रोफाइल जोड़व",
+    "profileActive": "सक्रिय",
+    "profileSignedOut": "बदले बर साइन इन करव",
+    "profileRemove": "प्रोफाइल हटावव",
+    "profilesUsed": "{{max}} म ले {{used}} इस्तेमाल होइस",
+    "profilesNextTier": "{{tier}} स्तर {{count}} रखथे",
+    "profilesFullTier": "{{count}} प्रोफाइल रखे बर {{tier}} बैज बर स्टेक करव",
+    "profilesFull": "अलग खाता जोड़े बर एक ठन प्रोफाइल हटावव",
+    "browserNotifications": "ब्राउजर सूचना",
+    "browserNotificationsDesc": "दूसर टैब म रहत बेरा जवाब, टिप अउ DM के बारे म सूचना पावव",
+    "browserNotificationsOnDesc": "दूसर टैब म रहत बेरा जवाब, टिप अउ DM पॉप अप होथें",
+    "browserNotificationsDismissed": "सूचना के अनुरोध खारिज होइस — स्विच ला फेर कोशिश करव",
+    "browserNotificationsBlocked": "तोर ब्राउजर द्वारा रोके गे",
+    "browserNotificationsBlockedTitle": "ये ब्राउजर सूचना ला रोकत हे",
+    "browserNotificationsBlockedNote": "सिरिफ तोर ब्राउजर ये ला वापस कर सकथे — एक बेर रोके गे त DeHub फेर नइ पूछ सके।",
+    "browserNotificationsBlockedPending": "तोर अनुरोध सहेजे गे हे — जब तोर ब्राउजर मंजूरी देही, ये अपने आप चालू हो जाही।",
+    "browserNotificationsUnblockChromium": "एड्रेस बार के डेरी तरफ के आइकन म क्लिक करव → Site settings → Notifications ला Allow म सेट करव, तहाँ ले ये पेज ला फेर लोड करव।",
+    "browserNotificationsUnblockFirefox": "एड्रेस बार के डेरी तरफ के पैडलॉक म क्लिक करव, Receive Notifications के बाजू म \"Blocked\" ला हटावव, तहाँ ले ये पेज ला फेर लोड करव।",
+    "browserNotificationsUnblockSafari": "मेनू बार म: Safari → Settings → Websites → Notifications, तहाँ ले ये साइट ला Allow म सेट करव।",
+    "browserNotificationsUnblockGeneric": "ये पेज बर अपन ब्राउजर के site settings खोलव अउ Notifications ला Allow म सेट करव, तहाँ ले फेर लोड करव।",
+    "browserNotificationsIosHint": "iPhone अउ iPad ये ला तभे मंजूरी देथें जब DeHub तोर होम स्क्रीन म रहे — Share म टैप करव, तहाँ ले \"Add to Home Screen\"।",
+    "browserNotificationsTest": "जाँच के सूचना पठोवव",
+    "browserNotificationsTestSent": "जाँच के सूचना पठोय गिस",
+    "browserNotificationsTestBody": "DeHub के सूचना अइसने दिखथे।",
+    "showAsNewMember": "मोला नवा सदस्य के रूप म देखावव",
+    "showAsNewMemberDesc": "दूसर सदस्य मन देख सकहीं के तँय अभीच जुड़े हस ताकि ओ मन तोर स्वागत कर सकँय। पंजीकरण के 30 दिन बाद अपने आप खतम हो जाही।",
+    "defaultProfileTab": "डिफॉल्ट प्रोफाइल टैब",
+    "defaultProfileTabDesc": "चुनव के तोर प्रोफाइल म आगंतुक मन पहिली कोन टैब देखथें",
+    "lavalamp": "लावा लैंप",
+    "war": "युद्ध",
+    "osaka": "ओसाका",
+    "jungle": "जंगल",
+    "themeColor": "थीम रंग",
+    "themeColorDesc": "ये थीम बर मनमाफिक रंग चुनव",
+    "themeColorReset": "रीसेट",
+    "themeColorWhite": "सफेद",
+    "themeColorBlack": "काला",
+    "themeColorRainbow": "इंद्रधनुष",
+    "themeColorBrand": "ब्रांड",
+    "themeColorBrandDesc": "तोर प्रोफाइल फोटो के रंग इस्तेमाल करव",
+    "themeColorBrandNoAvatar": "ब्रांड रंग इस्तेमाल करे बर प्रोफाइल फोटो जोड़व",
+    "themeColorBrandFailed": "तोर प्रोफाइल फोटो ले रंग नइ पढ़ पाइस",
+    "dimLights": "अंजोर कम करव",
+    "dimLightsDesc": "नीला अंजोर के असर कम करथे",
+    "matureContent": "वयस्क सामग्री देखावव",
+    "matureContentDesc": "अपन फीड म वयस्क अउ कड़ा पोस्ट सामिल करव, अउ जऊन ला तँय पहिलिच देखत हस ओकर चेतावनी हटा देवव। डिफॉल्ट म बंद हे।",
+    "noNewMessages": "नवा बातचीत नइ",
+    "noNewMessagesDesc": "तोर पहिली के थ्रेड मन रखव, फेर कोनो नवा मनखे नवा थ्रेड शुरू नइ कर सके",
+    "dmNoNewHelp": "पहिली के थ्रेड चलत रहिथें; कोनो नवा मनखे नवा थ्रेड शुरू नइ कर सके"
   },
   "common": {
     "save": "बचाव",
@@ -256,7 +322,8 @@
     "translating": "अनुवाद होवत हे...",
     "close": "बंद करव",
     "loadingMore": "अउ लोड होवत हे...",
-    "loadMore": "अउ लोड करव"
+    "loadMore": "अउ लोड करव",
+    "tryAgain": "फेर कोशिश करव"
   },
   "tip": {
     "title": "टिप भेजव",
@@ -284,7 +351,8 @@
     "activityLog": "गतिविधि लॉग",
     "endStream": "स्ट्रीम खतम करव",
     "linkCopied": "लिंक कॉपी होगे",
-    "postUrlCopied": "पोस्ट URL कॉपी होगे"
+    "postUrlCopied": "पोस्ट URL कॉपी होगे",
+    "boostPost": "पोस्ट बढ़ावव"
   },
   "filters": {
     "sort": "क्रम",
@@ -670,7 +738,8 @@
     "ppvStartSaving": "अपन पसंदीदा क्रिएटर मन ले पे-पर-व्यू कंटेंट खरीदव, ओहा इहां दिखही।",
     "recentStartSaving": "आपके सबले हाल मा बुकमार्क करे पोस्ट इहां दिखही।",
     "textStartSaving": "सिरिफ टेक्स्ट वाले पोस्ट ला बुकमार्क करव, ओमन इहां दिखही।",
-    "videosStartSaving": "वीडियो वाले पोस्ट ला बुकमार्क करव, ओमन इहां जमा होही।"
+    "videosStartSaving": "वीडियो वाले पोस्ट ला बुकमार्क करव, ओमन इहां जमा होही।",
+    "folders": "फोल्डर"
   },
   "notifications": {
     "title": "सूचना",
@@ -724,7 +793,11 @@
     "postRemoved": "तोर पोस्ट हटा दे गइस",
     "newNotification": "नवा सूचना",
     "oneOther": "1 अउ",
-    "nOthers": "{{count}} अउ"
+    "nOthers": "{{count}} अउ",
+    "thisBrowser": "ये ब्राउजर",
+    "features": "फीचर",
+    "communities": "समुदाय",
+    "stores": "दुकान"
   },
   "leaderboard": {
     "title": "लीडरबोर्ड",
@@ -753,7 +826,12 @@
     "addedToLeaderboard": "तैं जुड़ गे! बैलेंस: {{balance}} DHB",
     "balanceTooLow": "बैलेंस बहुत कम हे ({{balance}} DHB)",
     "refreshFailed": "कुछू गड़बड़ होगे",
-    "noWalletAddress": "वॉलेट पता नइ मिलिस"
+    "noWalletAddress": "वॉलेट पता नइ मिलिस",
+    "affiliates": "सहयोगी",
+    "directReferrals_one": "{{count}} सीधा",
+    "directReferrals_other": "{{count}} सीधा",
+    "secondaryReferrals_one": "{{count}} द्वितीयक",
+    "secondaryReferrals_other": "{{count}} द्वितीयक"
   },
   "explorePage": {
     "searchPlaceholder": "लोग, पोस्ट या सामग्री खोजव...",
@@ -854,7 +932,10 @@
     "statusPlanned": "योजना बने हे",
     "statusInProgress": "चलत हे",
     "statusCompleted": "पूरा होइस",
-    "statusDeclined": "अस्वीकार होइस"
+    "statusDeclined": "अस्वीकार होइस",
+    "shipping": "पठोय जावत हे",
+    "noShippingYet": "कुछु नइ चलत हे",
+    "shippingAppearHere": "जऊन अनुरोध बनत हे तऊन इहाँ दिखही।"
   },
   "auth": {
     "loginRequired": "लॉग इन जरूरी हे"
@@ -927,7 +1008,8 @@
     "failedPurchase": "खरीदारी शुरू नइ होइस",
     "redirectingOnramp": "ऑनरैम्प बर रिडायरेक्ट होवत हे...",
     "onrampCreated": "ऑनरैम्प सत्र बने गे",
-    "failedOnramp": "ऑनरैम्प शुरू नइ होइस"
+    "failedOnramp": "ऑनरैम्प शुरू नइ होइस",
+    "badgeDiscount": "{{tier}} धारक — {{percent}}% छूट"
   },
   "agents": {
     "title": "AI एजेंट",
@@ -957,7 +1039,13 @@
     "agentDeleted": "एजेंट मिटा दे गइस",
     "failedCreate": "एजेंट बनाय नइ सकिस",
     "failedDelete": "एजेंट मिटाय नइ सकिस",
-    "apiKeyCopied": "API कुंजी क्लिपबोर्ड मा कॉपी होगे"
+    "apiKeyCopied": "API कुंजी क्लिपबोर्ड मा कॉपी होगे",
+    "connectorUrl": "कनेक्टर URL",
+    "connectorUrlCopied": "कनेक्टर URL कॉपी होइस",
+    "connectorUrlHelp": "येला Claude या ChatGPT म कस्टम MCP कनेक्टर के रूप म जोड़व। ये ह ये एजेंट के रूप म प्रमाणित करथे, तेकर सेती येला API key कस समझव।",
+    "agentWallet": "एजेंट वॉलेट (Base)",
+    "walletCopied": "वॉलेट के पता कॉपी होइस",
+    "agentWalletHelp": "एजेंट पोस्ट करे के पहिली इहाँ थोरकुन Base ETH पठोवव — प्रकाशित करे म चेन ऊपर मिंट होथे अउ एजेंट अपन गैस खुदे देथे। टिप्पणी, वोट अउ फॉलो करे बर गैस के जरूरत नइ हे।"
   },
   "hero": {
     "title": "हमर दुनिया मा",
@@ -1005,7 +1093,10 @@
     "or": "या",
     "termsNotice": "आगू बढ़े से तैं सेवा शर्त अउ गोपनीयता नीति ले सहमत हस",
     "walletInfoDesktop": "सुरक्षित लॉग इन बर वॉलेट जोड़व",
-    "walletInfoMobile": "MetaMask, Trust अउ Phantom सीधा ऐप खोलही। Rabby WalletConnect उपयोग करही।"
+    "walletInfoMobile": "MetaMask, Trust अउ Phantom सीधा ऐप खोलही। Rabby WalletConnect उपयोग करही।",
+    "addProfileTitle": "प्रोफाइल जोड़व",
+    "walletConnectedAs": "जुड़े गिस",
+    "useDifferentWallet": "अलग वॉलेट इस्तेमाल करव"
   },
   "careers": {
     "title": "DeHub मा नौकरी",
@@ -1129,7 +1220,11 @@
     "comingSoon": "जल्दी आवत हे — क्षेत्रीय रुझान रस्ता म हें!",
     "post": "पोस्ट",
     "logOut": "लॉग आउट",
-    "logIn": "लॉग इन"
+    "logIn": "लॉग इन",
+    "searchMenu": "मेनू खोजव",
+    "clearSearch": "खोज हटावव",
+    "noMenuMatches": "मेनू म कुछु मेल नइ खावत",
+    "searchDehubFor": "DeHub म \"{{query}}\" खोजव"
   },
   "postInfo": {
     "title": "पोस्ट जानकारी",
@@ -1423,7 +1518,11 @@
     "new_version_available": "नवा संस्करन मिलत हे",
     "refresh_to_pick_up_the_latest_changes": "नवीनतम समायोजन बर तैयार हो जा ।",
     "refresh": "ताजा करव",
-    "what_changed": "जऊन ह बदल गे हवय"
+    "what_changed": "जऊन ह बदल गे हवय",
+    "turn_on_desktop_notifications": "डेस्कटॉप सूचना चालू करन?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "दूसर टैब म रहत बेरा घलो जवाब, टिप अउ संदेश के खबर पावव।",
+    "turn_on": "चालू करव",
+    "not_now": "अभी नइ"
   },
   "prompt": {
     "seoTitle": "अपन फ़ीड ल संकेत देवव — DeHub",
@@ -1569,5 +1668,149 @@
     "when": "कब",
     "whyStake": "जमा काबर करव?",
     "yourStaked": "आपके जमा"
+  },
+  "arcade": {
+    "title": "आर्केड",
+    "intro": "DeHub के बनाय अउ ओपन सोर्स करे खेल, दुनिया या अनुभव मन के संग्रह।",
+    "seoTitle": "आर्केड",
+    "seoDescription": "DeHub म अपन ब्राउजर म खेल खेलव — सिनेमाई 3D शतरंज, प्रोसीजरली जेनरेट होय शूटर, बरसाती जंगल के सैर, नियॉन-स्ट्रीट भिड़ंत अउ चले जाय वाला ट्रेडिंग फ्लोर। इंस्टॉल के जरूरत नइ, डाउनलोड के जरूरत नइ।",
+    "alsoIn": "{{theme}} म घलो"
+  },
+  "stats": {
+    "title": "आंकड़ा",
+    "subtitle": "रीयल-टाइम ओपन सोर्स जानकारी",
+    "live": "लाइव",
+    "range": {
+      "24h": "24 घंटा",
+      "3d": "3 दिन",
+      "7d": "7 दिन",
+      "30d": "30 दिन",
+      "all": "जम्मो समय"
+    },
+    "unavailable": {
+      "title": "आंकड़ा अभी उपलब्ध नइ हे",
+      "unconfigured": "एनालिटिक्स एंडपॉइंट ला अभी तक ओकर Cloudflare API टोकन नइ मिलिस हे। गढ़े आंकड़ा के बदला कुछु नइ देखाय जाथे।",
+      "error": "हमन Cloudflare के एनालिटिक्स API तक नइ पहुंच पायेन। पुराना या गढ़े आंकड़ा देखाय के बदला, ये पेज तब तक कुछु नइ देखाय जब तक लाइव पढ़ई सफल नइ होय।"
+    },
+    "tile": {
+      "visitorsToday": "आज के आगंतुक",
+      "soFarToday": "आज तक, UTC",
+      "peakHour": "सबले व्यस्त घंटा",
+      "peakDay": "सबले व्यस्त दिन",
+      "peakAtHour": "{{when}} UTC म",
+      "peakOnDay": "{{when}} म",
+      "inRange": "ये रेंज म",
+      "pageViews": "पेज व्यू",
+      "overHours": "{{count}} घंटा म",
+      "overDay": "1 दिन म",
+      "overDays": "{{count}} दिन म",
+      "requestsLabel": "अनुरोध",
+      "served": "सर्व होइस",
+      "requests": "{{requests}} अनुरोध"
+    },
+    "chart": {
+      "hourly": "घंटा के आगंतुक",
+      "daily": "रोज के आगंतुक",
+      "hourlyHint": "{{count}} घंटा के बकेट, UTC",
+      "dailyHint": "रोज के अनोखा आगंतुक",
+      "empty": "ये अवधि बर अभी तक डेटा नइ हे"
+    },
+    "countries": {
+      "title": "टॉप देश",
+      "windowDay": "पिछला 24 घंटा",
+      "window": "पिछला {{days}} दिन"
+    },
+    "browsers": {
+      "title": "ब्राउजर",
+      "window": "पेज व्यू के हिसाब ले"
+    },
+    "edge": {
+      "title": "एज म",
+      "windowDay": "पिछला 24 घंटा",
+      "window": "पिछला {{days}} दिन",
+      "cached": "कैश ले सर्व होइस",
+      "encrypted": "एन्क्रिप्टेड",
+      "threats": "खतरा रोके गिस"
+    },
+    "proof": {
+      "title": "ये आंकड़ा मन कहाँ ले आथें",
+      "subtitle": "Cloudflare से नापे गिस, ये पेज ले नइ",
+      "source": "स्रोत",
+      "datasets": "डेटासेट",
+      "zone": "जोन",
+      "ray": "Cloudflare ray ID",
+      "fetched": "लाय गिस",
+      "query": "चार्ट के पाछू के ठीक-ठीक जांच",
+      "copied": "कॉपी होइस",
+      "copy": "कॉपी करव",
+      "openEndpoint": "/api/stats खोलव",
+      "openRaw": "Cloudflare के बिन-छेड़े जवाब",
+      "edge": "dehub.io बर हर अनुरोध हमर सर्वर तक पहुंचे के पहिली Cloudflare ले होके जाथे। ये गिनती मन Cloudflare के अपन ओ ट्रैफिक के जोड़ आय — वइसने आंकड़ा जऊन ला हमर डैशबोर्ड देखाथे। ये मन तोर ब्राउजर म कोनो स्क्रिप्ट ले जमा नइ होंय, तेकर सेती ये पेज म कुछु भी येमन ला बढ़ा नइ सके, अउ ट्रैकर रोके ले ये मन नइ बदलें।",
+      "live": "ये पेज ह येमन ला लाइव पढ़थे। /stats लोड होय म हमर एंडपॉइंट कॉल होथे, जऊन ह वो समय Cloudflare के Analytics API ले पूछथे अउ जवाब ला 60 सेकंड बर कैश करथे।",
+      "limits": "ये का देखाथे, अउ का नइ देखाय: तँय देख सकथस के आंकड़ा मन हमर एप्लिकेशन कोड ले नइ बल्कि Cloudflare के जोड़ ले आथें, अउ जऊन जांच इहाँ प्रकाशित हे वइसनेच चलथे। ये पूरा भरोसा-मुक्त नइ हे — हमन API टोकन रखथन, अउ Cloudflare कोनो जोन के एनालिटिक्स के सार्वजनिक पढ़ई नइ देवय। अपन खुद के Cloudflare जोन रखइया कोनो भी मनखे एकेच जांच ला ओकर ऊपर चला के आकार के पुष्टि कर सकथे।"
+    },
+    "definitions": {
+      "title": "आंकड़ा मन के मतलब",
+      "visitorsTerm": "आगंतुक",
+      "visitors": "— ओ दिन Cloudflare जऊन अनोखा IP पता देखिस। मनखे के लगभग बरोबर, फेर एके नइ: एक कनेक्शन वाला ऑफिस एक बेर गिनाथे, अउ वाईफाई अउ मोबाइल डेटा के बीच जाय वाला फोन दू बेर गिनाथे।",
+      "pageViewsTerm": "पेज व्यू",
+      "pageViews": "— जऊन अनुरोध मन ला Cloudflare पेज लोड मानथे, ना कि इमेज, स्क्रिप्ट या API कॉल।",
+      "botsTerm": "बॉट सामिल हें",
+      "bots": "— ये मन कच्चा एज गिनती आय, तेकर सेती एमा क्रॉलर, अपटाइम मॉनिटर अउ स्क्रिप्टेड क्लाइंट मन घलो सामिल हें। तँय येला खुदे ऊपर के ब्राउजर ब्रेकडाउन म देख सकथस, जिहाँ \"Curl\" अउ \"Unknown\" जइसन एंट्री मनखे नइ बल्कि ऑटोमेटेड ट्रैफिक आय। बॉट मन ला फिल्टर करे बर पेड Cloudflare स्तर के जरूरत होथे जऊन ला हमन नइ चलावन, अउ चुपचाप कोनो अनुमान घटाय ले आंकड़ा मन कम जाँच लायक हो जाहीं, जादा नइ।",
+      "totalTerm": "रेंज के कुल",
+      "total": "— पेज व्यू अउ अनुरोध पूरा रेंज म जुड़ जाथें। आगंतुक गिनती ला जान-बूझ के \"कुल आगंतुक\" के मुखिया आंकड़ा म नइ जोड़े जाथे, काबर के जऊन मनखे सोमवार अउ मंगलवार दुनों दिन इहाँ रहिस ओ ह दू बेर गिनाही।",
+      "peakTerm": "सबले व्यस्त घंटा / दिन",
+      "peak": "— रेंज के कोनो एक बकेट म सबले जादा अनोखा गिनती, वइसने कारन ले: ये ह एक ठन आंकड़ा आय जऊन ला Cloudflare वास्तव म नापथे, ना कि ओव्हरलैप होय गिनती मन ला जोड़ के बनाय गिनती।",
+      "resolutionTerm": "घंटा-आधारित 3 दिन म रुक जाथे",
+      "resolution": "— ये ह ये प्लान म Cloudflare के सीमा आय, कोनो पसंद नइ: ये तीन दिन ले जादा चौड़ा घंटा वाला जांच ला मना कर देथे। 24-घंटा अउ 3-दिन के दृश्य घंटा-आधारित हें; 7 दिन अउ ओकर ले जादा रोज के हें, अउ पूरा समय के घंटा-आधारित चार्ट बनाय के कोनो रस्ता नइ हे।",
+      "breakdownTerm": "देश अउ ब्राउजर",
+      "breakdown": "— ये मन तँय चुने रेंज ला मानथें, फेर सिरिफ पिछला {{max}} दिन तक, काबर के प्रति-दिन ब्रेकडाउन एतकिच रखे जाथे। लंबा रेंज म चार्ट देश सूची ले जादा समय ला कवर करथे।",
+      "startTerm": "इतिहास",
+      "start": "— \"जम्मो समय\" के मतलब हे हर ओ दिन जऊन ला Cloudflare अभी ले रखे हे, जऊन आज {{days}} दिन आय, {{date}} ले शुरू, वो दिन जब dehub.io Cloudflare म आइस। एकर पहिली के कोनो एज डेटा देखाय बर नइ हे, अउ पुराना दिन मन Cloudflare के उमर पूरा होय ले गिर जाथें।"
+    }
+  },
+  "superpowers": {
+    "aimAtAccount": "कोन के फॉलोअर मन ये ला देखना चाही?",
+    "aimAtTiers": "कोन बैज स्तर मन ये ला देखना चाही?",
+    "aimPlaceholder": "यूजरनेम या वॉलेट के पता",
+    "boost": "बढ़ावव",
+    "boostBooked": "{{minutes}} मिनट बर बढ़ाय गिस",
+    "boostExplainer": "तोर समय-सीमा बर ये पोस्ट ला होम फीड के ऊपर के जगह म रखथे।",
+    "boostFailed": "ओ पोस्ट ला बढ़ाय नइ जा सकिस",
+    "boostForMinutes": "{{minutes}} मिनट बर बढ़ावव",
+    "boostedLabel": "बढ़ाय गिस",
+    "boostsLeft": "{{total}} म ले {{left}} बढ़ती बांचे हे",
+    "cancelFailed": "ओ बढ़ती ला रद्द नइ करे जा सकिस",
+    "cancelledRefunded": "बढ़ती रद्द होइस अउ तोर भत्ता म वापस आइस",
+    "cancelledSpent": "बढ़ती रद्द होइस। ये पहिलिच शुरू हो गे रहिस, तेकर सेती ये खरचेच रहिही।",
+    "colBoosts": "बढ़ती मन",
+    "colEach": "हर एक",
+    "colTier": "स्तर",
+    "colTotal": "हर चक्र म",
+    "comingSoon": "जल्दिच आवत हे",
+    "finishedCount": "ये चक्र म {{count}} पूरा होइस, {{seen}} बेर देखे गिस",
+    "grantLine": "हर चक्र म {{boosts}} × {{minutes}} मिनट",
+    "intro": "एक बैज तोर नाव के बाजू के डिजाइन ले जादा कुछु देथे। हर पाख (15 दिन) म ये बढ़ती देथे — हर एक ह होम फीड के ऊपर के जगह म एक पोस्ट रखथे। तेरह स्तर, तेरह ताकत, हर सीढ़ी म एक अनलॉक।",
+    "ladderHeading": "हर स्तर का देथे",
+    "left": "बांचे",
+    "liveUntil": "{{time}} तक लाइव",
+    "loadFailed": "अभी तोर SuperPowers लोड नइ हो पाइस। थोरकुन बाद फेर कोशिश करव।",
+    "minutes": "मिनट",
+    "needBadge": "SuperPowers बर स्टेकिंग बैज चाही। येमन ला अनलॉक करे बर DHB स्टेक करव।",
+    "noBadgeYet": "तोर करा अभी तक कोनो बैज नइ हे, तेकर सेती कोनो बढ़ती नइ। DHB स्टेक करे ले नीचे के सीढ़ी अनलॉक होथे।",
+    "noBoostsLeft": "ये चक्र म कोनो बढ़ती नइ बांचिस",
+    "powersHeading": "तेरह ताकत मन",
+    "queued": "कतार म",
+    "refills": "{{date}} म फेर भरथे",
+    "refillsOn": "{{date}} म फेर भरथे — जम्मो झन बर एकेच पल म।",
+    "secondWind": "दूसर सांस",
+    "secondWindExplainer": "ये पोस्ट एक हफ्ता ले जादा पुराना हे। दूसर सांस येला फेर फीड के ऊपर पठो देथे।",
+    "seenCount": "{{count}} देखे गिस",
+    "shareOfVoice": "बढ़ती के जगह घूमत रहिथे। जब कई बढ़ती चलत रहिथें, देखइया मन ला बैज स्तर के हिसाब ले वजन देके एक-एक बांटे जाथे — जादा ऊंच स्तर ला जादा बेर देखाय जाथे, अउ जम्मो झन ला ओकर मिले समय मिलथे।",
+    "spendFor": "{{minutes}} मिनट बर {{power}}",
+    "spent": "{{power}} {{minutes}} मिनट ले चलत हे",
+    "stakeDhb": "DHB स्टेक करव",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} {{tier}} म अनलॉक होथे"
   }
 }

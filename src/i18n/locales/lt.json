@@ -351,7 +351,8 @@
     "activityLog": "Veiklos žurnalas",
     "endStream": "Baigti transliaciją",
     "linkCopied": "Nuoroda nukopijuota į iškarpinę",
-    "postUrlCopied": "Įrašo URL nukopijuotas į iškarpinę"
+    "postUrlCopied": "Įrašo URL nukopijuotas į iškarpinę",
+    "boostPost": "Pakelti įrašą"
   },
   "filters": {
     "sort": "Rūšiuoti",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Įsigykite mokamą (Pay-Per-View) turinį iš mėgstamų kūrėjų, kad jis atsirastų čia.",
     "recentStartSaving": "Naujausiai pažymėti įrašai bus rodomi čia.",
     "textStartSaving": "Pažymėkite tik tekstinius įrašus ir jie atsiras čia.",
-    "videosStartSaving": "Pažymėkite įrašus su vaizdo įrašais ir jie bus renkami čia."
+    "videosStartSaving": "Pažymėkite įrašus su vaizdo įrašais ir jie bus renkami čia.",
+    "folders": "Aplankai"
   },
   "notifications": {
     "title": "Pranešimai",
@@ -1722,5 +1724,49 @@
       "startTerm": "Istorija",
       "start": "— „visas laikas“ reiškia kiekvieną dieną, kurią Cloudflare vis dar saugo, šiandien {{days}} dienų nuo {{date}}, kai dehub.io persikėlė į Cloudflare. Ankstesnių pakraščio duomenų nėra, o senesnės dienos dingsta, kai Cloudflare jas pašalina."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kieno sekėjai turėtų tai matyti?",
+    "aimAtTiers": "Kurie ženklelių lygiai turėtų tai matyti?",
+    "aimPlaceholder": "Naudotojo vardas arba piniginės adresas",
+    "boost": "Pakėlimas",
+    "boostBooked": "Pakelta {{minutes}} min.",
+    "boostExplainer": "Įrašas patenka į vietą pagrindinio srauto viršuje tavo skirtam laikotarpiui.",
+    "boostFailed": "Nepavyko pakelti šio įrašo",
+    "boostForMinutes": "Pakelti {{minutes}} min.",
+    "boostedLabel": "Pakeltas",
+    "boostsLeft": "Liko {{left}} iš {{total}} pakėlimų",
+    "cancelFailed": "Nepavyko atšaukti šio pakėlimo",
+    "cancelledRefunded": "Pakėlimas atšauktas ir grąžintas į tavo limitą",
+    "cancelledSpent": "Pakėlimas atšauktas. Jis jau buvo prasidėjęs, todėl lieka išnaudotas.",
+    "colBoosts": "Pakėlimai",
+    "colEach": "Kiekvienas",
+    "colTier": "Lygis",
+    "colTotal": "Per ciklą",
+    "comingSoon": "netrukus",
+    "finishedCount": "{{count}} baigta šį ciklą, peržiūrėta {{seen}} kartų",
+    "grantLine": "{{boosts}} × {{minutes}} min. per ciklą",
+    "intro": "Ženklelis duoda daugiau nei tik paveikslėlį šalia tavo vardo. Kas dvi savaites jis suteikia pakėlimų — kiekvienas jų iškelia įrašą į pagrindinio srauto viršuje esančią vietą. Trylika lygių, trylika galių, po vieną atrakinimą kiekvienam laipteliui.",
+    "ladderHeading": "Ką suteikia kiekvienas lygis",
+    "left": "liko",
+    "liveUntil": "aktyvus iki {{time}}",
+    "loadFailed": "Šiuo metu nepavyko įkelti tavo SuperPowers. Pabandyk po akimirkos.",
+    "minutes": "minučių",
+    "needBadge": "Norint naudotis SuperPowers, reikia ženklelio. Įnešk DHB, kad juos atrakintum.",
+    "noBadgeYet": "Kol kas neturi ženklelio, tad pakėlimų dar nėra. DHB įnešimas atrakina žemiau esančius lygius.",
+    "noBoostsLeft": "Šį ciklą pakėlimų nebeliko",
+    "powersHeading": "Trylika galių",
+    "queued": "Eilėje",
+    "refills": "atsinaujina {{date}}",
+    "refillsOn": "Atsinaujina {{date}} — tuo pačiu metu visiems.",
+    "secondWind": "Antras kvėpavimas",
+    "secondWindExplainer": "Šiam įrašui daugiau nei savaitė. „Antras kvėpavimas“ grąžina jį į srauto viršų.",
+    "seenCount": "{{count}} peržiūrų",
+    "shareOfVoice": "Pakėlimo vieta kaitaliojasi. Kai vienu metu veikia keli pakėlimai, kiekvienam žiūrovui parodomas vienas iš jų pagal ženklelio lygį — aukštesnis lygis rodomas dažniau, o kiekvienas gauna jam skirtą laiką.",
+    "spendFor": "{{power}} {{minutes}} min.",
+    "spent": "{{power}} veikia {{minutes}} min.",
+    "stakeDhb": "Įnešti DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} atsirakina pasiekus {{tier}}"
   }
 }

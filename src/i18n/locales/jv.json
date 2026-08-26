@@ -351,7 +351,8 @@
     "activityLog": "Log Aktivitas",
     "endStream": "Rampungake Siaran",
     "linkCopied": "Pranala wis dikopi",
-    "postUrlCopied": "URL kiriman wis dikopi"
+    "postUrlCopied": "URL kiriman wis dikopi",
+    "boostPost": "Tingkatake kiriman"
   },
   "filters": {
     "sort": "Urutake",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Tuku konten Pay-Per-View saka kreator favoritmu supaya muncul ing kene.",
     "recentStartSaving": "Kiriman sing paling anyar koktandhani bakal katon ing kene.",
     "textStartSaving": "Tandai kiriman teks-thok lan bakal muncul ing kene.",
-    "videosStartSaving": "Tandai kiriman nganggo video lan bakal diklumpukake ing kene."
+    "videosStartSaving": "Tandai kiriman nganggo video lan bakal diklumpukake ing kene.",
+    "folders": "Folder"
   },
   "notifications": {
     "title": "Notifikasi",
@@ -1722,5 +1724,49 @@
       "startTerm": "Riwayat",
       "start": "— \"kabeh wektu\" tegese saben dina sing isih disimpen Cloudflare, saiki {{days}} dina wiwit {{date}}, dina nalika dehub.io pindhah menyang Cloudflare. Ora ana data pinggir sing luwih lawas kanggo ditampilake, lan dina lawas ilang nalika Cloudflare nggawe kadaluwarsa."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Pengikut sapa sing kudu ndeleng iki?",
+    "aimAtTiers": "Tingkat lencana endi sing kudu ndeleng iki?",
+    "aimPlaceholder": "Jeneng pangguna utawa alamat dompet",
+    "boost": "Tingkatake",
+    "boostBooked": "Ditingkatake sajrone {{minutes}} menit",
+    "boostExplainer": "Nglebokake kiriman iki ing slot ndhuwur dhewe umpan utama sajrone wektu sing sampeyan duwe.",
+    "boostFailed": "Ora bisa ningkatake kiriman kuwi",
+    "boostForMinutes": "Tingkatake sajrone {{minutes}} menit",
+    "boostedLabel": "Ditingkatake",
+    "boostsLeft": "{{left}} saka {{total}} peningkatan isih ana",
+    "cancelFailed": "Ora bisa mbatalake peningkatan kuwi",
+    "cancelledRefunded": "Peningkatan dibatalake lan dibalekake menyang jatahmu",
+    "cancelledSpent": "Peningkatan dibatalake. Wis kadhung diwiwiti, dadi tetep dianggep dienggo.",
+    "colBoosts": "Peningkatan",
+    "colEach": "Saben siji",
+    "colTier": "Tingkat",
+    "colTotal": "Saben periode",
+    "comingSoon": "enggal teka",
+    "finishedCount": "{{count}} rampung ing periode iki, dideleng {{seen}} kaping",
+    "grantLine": "{{boosts}} × {{minutes}} menit saben periode",
+    "intro": "Lencana menehi luwih akeh tinimbang mung gambar ing jejere jenengmu. Saben rong minggu, lencana menehi peningkatan — saben siji nglebokake kiriman ing slot ndhuwur umpan utama. Telulas tingkat, telulas kekuwatan, siji dibukak saben undhakan.",
+    "ladderHeading": "Apa sing diwenehake saben tingkat",
+    "left": "kari",
+    "liveUntil": "aktif nganti {{time}}",
+    "loadFailed": "Ora bisa ngemot SuperPowers sampeyan saiki. Coba maneh sedhela.",
+    "minutes": "menit",
+    "needBadge": "SuperPowers mbutuhake lencana setoran. Setor DHB kanggo mbukak kuwi.",
+    "noBadgeYet": "Sampeyan durung duwe lencana, dadi durung ana peningkatan. Nyetor DHB mbukak undhak-undhakan ing ngisor iki.",
+    "noBoostsLeft": "Ora ana peningkatan sing kari ing periode iki",
+    "powersHeading": "Telulas kekuwatan kasebut",
+    "queued": "ing antrean",
+    "refills": "diisi maneh {{date}}",
+    "refillsOn": "Diisi maneh tanggal {{date}} — wektu sing padha kanggo kabeh wong.",
+    "secondWind": "Napas Kaloro",
+    "secondWindExplainer": "Kiriman iki wis luwih seminggu umure. Napas Kaloro ngirim maneh menyang ndhuwur umpan.",
+    "seenCount": "{{count}} dideleng",
+    "shareOfVoice": "Slot peningkatan iku muter. Yen ana peningkatan luwih saka siji sing lagi mlaku, saben penonton diwenehi siji adhedhasar bobot tingkat lencana — tingkat sing luwih dhuwur luwih kerep katon, lan kabeh wong entuk wektu sing wis diwenehake.",
+    "spendFor": "{{power}} sajrone {{minutes}} menit",
+    "spent": "{{power}} lagi mlaku sajrone {{minutes}} menit",
+    "stakeDhb": "Setor DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} kabukak ing {{tier}}"
   }
 }

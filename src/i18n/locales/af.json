@@ -1060,7 +1060,8 @@
     "activityLog": "Aktiwiteitslogboek",
     "endStream": "Beëindig stroom",
     "linkCopied": "Skakel na knipbord gekopieer",
-    "postUrlCopied": "Plasing-URL na knipbord gekopieer"
+    "postUrlCopied": "Plasing-URL na knipbord gekopieer",
+    "boostPost": "Boost plasing"
   },
   "filters": {
     "sort": "Sorteer",
@@ -1333,7 +1334,8 @@
     "ppvStartSaving": "Koop Pay-Per-View-inhoud van jou gunsteling-skeppers sodat dit hier verskyn.",
     "recentStartSaving": "Jou mees onlangs geboekmerkte plasings sal hier verskyn.",
     "textStartSaving": "Boekmerk slegs-teks plasings en hulle sal hier verskyn.",
-    "videosStartSaving": "Boekmerk plasings met video's en hulle sal hier versamel word."
+    "videosStartSaving": "Boekmerk plasings met video's en hulle sal hier versamel word.",
+    "folders": "Vouers"
   },
   "messages": {
     "title": "Messages",
@@ -1848,5 +1850,49 @@
       "startTerm": "Geskiedenis",
       "start": "— “die hele tyd” beteken elke dag wat Cloudflare nog bewaar, vandag {{days}} dae vanaf {{date}}, die dag toe dehub.io na Cloudflare geskuif het. Daar is geen vroeër randdata om te wys nie, en ouer dae val weg soos Cloudflare hulle laat verval."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Wie se volgelinge moet dit sien?",
+    "aimAtTiers": "Watter kentekenvlakke moet dit sien?",
+    "aimPlaceholder": "Gebruikersnaam of beursie-adres",
+    "boost": "Boost",
+    "boostBooked": "Geboost vir {{minutes}} minute",
+    "boostExplainer": "Plaas hierdie plasing in die gleuf bo-aan die tuisstroom vir jou tydvenster.",
+    "boostFailed": "Kon nie daardie plasing boost nie",
+    "boostForMinutes": "Boost vir {{minutes}} minute",
+    "boostedLabel": "Geboost",
+    "boostsLeft": "{{left}} van {{total}} boosts oor",
+    "cancelFailed": "Kon nie daardie boost kanselleer nie",
+    "cancelledRefunded": "Boost gekanselleer en teruggegee aan jou toekenning",
+    "cancelledSpent": "Boost gekanselleer. Dit het reeds begin, so dit bly bestee.",
+    "colBoosts": "Boosts",
+    "colEach": "Elk",
+    "colTier": "Vlak",
+    "colTotal": "Per siklus",
+    "comingSoon": "binnekort beskikbaar",
+    "finishedCount": "{{count}} voltooi hierdie siklus, {{seen}} keer gesien",
+    "grantLine": "{{boosts}} × {{minutes}} minute per siklus",
+    "intro": "'n Kenteken koop meer as net die kunswerk langs jou naam. Elke twee weke ken dit boosts toe — elkeen plaas 'n plasing in die gleuf bo-aan die tuisstroom. Dertien vlakke, dertien kragte, een ontsluiting per sport.",
+    "ladderHeading": "Wat elke vlak toeken",
+    "left": "oor",
+    "liveUntil": "lewendig tot {{time}}",
+    "loadFailed": "Kon nie jou SuperPowers nou laai nie. Probeer oor 'n oomblik weer.",
+    "minutes": "minute",
+    "needBadge": "SuperPowers benodig 'n depositokenteken. Deponeer DHB om hulle te ontsluit.",
+    "noBadgeYet": "Jy het nog geen kenteken nie, so nog geen boosts nie. Deponeer DHB om die leer hieronder te ontsluit.",
+    "noBoostsLeft": "Geen boosts oor hierdie siklus nie",
+    "powersHeading": "Die dertien kragte",
+    "queued": "in wagtou",
+    "refills": "herlaai {{date}}",
+    "refillsOn": "Herlaai op {{date}} — dieselfde oomblik vir almal.",
+    "secondWind": "Tweede Asem",
+    "secondWindExplainer": "Hierdie plasing is meer as 'n week oud. Tweede Asem stuur dit terug na die bo-kant van die stroom.",
+    "seenCount": "{{count}} gesien",
+    "shareOfVoice": "Die boost-gleuf roteer. Wanneer verskeie boosts loop, kry kykers een toegeken geweeg volgens kentekenvlak — 'n hoër vlak word meer gereeld gewys, en almal kry die tydvenster wat aan hulle toegeken is.",
+    "spendFor": "{{power}} vir {{minutes}} minute",
+    "spent": "{{power}} loop vir {{minutes}} minute",
+    "stakeDhb": "Deponeer DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} ontsluit by {{tier}}"
   }
 }

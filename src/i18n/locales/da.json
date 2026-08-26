@@ -535,7 +535,8 @@
     "activityLog": "Aktivitetslog",
     "endStream": "Afslut stream",
     "linkCopied": "Link kopieret",
-    "postUrlCopied": "Opslagslink kopieret"
+    "postUrlCopied": "Opslagslink kopieret",
+    "boostPost": "Boost opslag"
   },
   "filters": {
     "sort": "Sorter",
@@ -711,7 +712,8 @@
     "ppvStartSaving": "Køb Pay-Per-View-indhold fra dine yndlingsskabere, så vises det her.",
     "recentStartSaving": "Dine senest bogmærkede opslag vises her.",
     "textStartSaving": "Bogmærk rene tekstopslag, så vises de her.",
-    "videosStartSaving": "Bogmærk opslag med videoer, så samles de her."
+    "videosStartSaving": "Bogmærk opslag med videoer, så samles de her.",
+    "folders": "Mapper"
   },
   "notifications": {
     "title": "Notifikationer",
@@ -1726,5 +1728,49 @@
       "startTerm": "Historik",
       "start": "— “hele perioden” betyder hver dag, Cloudflare stadig gemmer, i dag {{days}} dage fra {{date}}, dagen hvor dehub.io flyttede til Cloudflare. Der findes ingen ældre kantdata at vise, og gamle dage falder fra, efterhånden som Cloudflare lader dem udløbe."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Hvis følgere skal se det?",
+    "aimAtTiers": "Hvilke badgeniveauer skal se det?",
+    "aimPlaceholder": "Brugernavn eller tegnebogsadresse",
+    "boost": "Boost",
+    "boostBooked": "Boostet i {{minutes}} minutter",
+    "boostExplainer": "Sætter dette opslag i pladsen øverst i hjemmefeedet i dit tidsrum.",
+    "boostFailed": "Kunne ikke booste det opslag",
+    "boostForMinutes": "Boost i {{minutes}} minutter",
+    "boostedLabel": "Boostet",
+    "boostsLeft": "{{left}} af {{total}} boosts tilbage",
+    "cancelFailed": "Kunne ikke annullere det boost",
+    "cancelledRefunded": "Boost annulleret og lagt tilbage i din kvote",
+    "cancelledSpent": "Boost annulleret. Det var allerede startet, så det forbliver brugt.",
+    "colBoosts": "Boosts",
+    "colEach": "Hver",
+    "colTier": "Niveau",
+    "colTotal": "Pr. cyklus",
+    "comingSoon": "kommer snart",
+    "finishedCount": "{{count}} afsluttet denne cyklus, set {{seen}} gange",
+    "grantLine": "{{boosts}} × {{minutes}} minutter pr. cyklus",
+    "intro": "Et badge køber mere end kunsten ved siden af dit navn. Hver anden uge udløser det boosts — hver især sætter et opslag i pladsen øverst i hjemmefeedet. Tretten niveauer, tretten kræfter, én oplåsning pr. trin.",
+    "ladderHeading": "Hvad hvert niveau giver",
+    "left": "tilbage",
+    "liveUntil": "aktiv indtil {{time}}",
+    "loadFailed": "Kunne ikke indlæse dine SuperPowers lige nu. Prøv igen om lidt.",
+    "minutes": "minutter",
+    "needBadge": "SuperPowers kræver et indsætningsbadge. Indsæt DHB for at låse dem op.",
+    "noBadgeYet": "Du har intet badge endnu, så ingen boosts. Indsætning af DHB låser niveauerne nedenfor op.",
+    "noBoostsLeft": "Ingen boosts tilbage denne cyklus",
+    "powersHeading": "De tretten kræfter",
+    "queued": "i kø",
+    "refills": "genopfyldes {{date}}",
+    "refillsOn": "Genopfyldes {{date}} — samme tidspunkt for alle.",
+    "secondWind": "Second Wind",
+    "secondWindExplainer": "Dette opslag er over en uge gammelt. Second Wind sender det tilbage til toppen af feedet.",
+    "seenCount": "{{count}} set",
+    "shareOfVoice": "Boost-pladsen roterer. Når flere boosts kører samtidig, får seerne vist ét, vægtet efter badgeniveau — et højere niveau vises oftere, og alle får det tidsrum, de fik tildelt.",
+    "spendFor": "{{power}} i {{minutes}} minutter",
+    "spent": "{{power}} kører i {{minutes}} minutter",
+    "stakeDhb": "Indsæt DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} låses op ved {{tier}}"
   }
 }

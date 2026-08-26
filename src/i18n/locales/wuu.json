@@ -351,7 +351,8 @@
     "activityLog": "活动记录",
     "endStream": "结束直播",
     "linkCopied": "链接已复制",
-    "postUrlCopied": "帖子网址已复制"
+    "postUrlCopied": "帖子网址已复制",
+    "boostPost": "加推帖子"
   },
   "filters": {
     "sort": "排序",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "买侬欢喜个创作者个按次付费内容，就会得显示勒搿搭。",
     "recentStartSaving": "侬最近加书签个帖子会得显示勒搿搭。",
     "textStartSaving": "把纯文字个帖子加书签，伊拉就会得显示勒搿搭。",
-    "videosStartSaving": "把带视频个帖子加书签，伊拉就会得收勒搿搭。"
+    "videosStartSaving": "把带视频个帖子加书签，伊拉就会得收勒搿搭。",
+    "folders": "文件夹"
   },
   "notifications": {
     "title": "通知",
@@ -1722,5 +1724,49 @@
       "startTerm": "历史",
       "start": "——「全部时间」是指 Cloudflare 还留牢个每一日，今朝就是从 dehub.io 搬到 Cloudflare 搿日 {{date}} 起算 {{days}} 天。前头呒没边缘数据好显示，老个日脚也会跟牢 Cloudflare 过期而消失。"
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "啥个粉丝好看着？",
+    "aimAtTiers": "啥个徽章等级好看着？",
+    "aimPlaceholder": "用户名或者钱包地址",
+    "boost": "加推",
+    "boostBooked": "加推脱 {{minutes}} 分钟",
+    "boostExplainer": "勒侬个时间窗里向，拿搿篇帖子摆到首页动态最顶浪个位子。",
+    "boostFailed": "搿篇帖子加推勿成",
+    "boostForMinutes": "加推 {{minutes}} 分钟",
+    "boostedLabel": "加推脱",
+    "boostsLeft": "{{total}} 趟加推剩 {{left}} 趟",
+    "cancelFailed": "搿趟加推取消勿脱",
+    "cancelledRefunded": "加推取消脱，退还到侬个额度里向哉",
+    "cancelledSpent": "加推取消脱。因为已经开始哉，所以算用脱哉。",
+    "colBoosts": "加推",
+    "colEach": "每趟",
+    "colTier": "等级",
+    "colTotal": "每周期",
+    "comingSoon": "马上就来",
+    "finishedCount": "搿趟周期里向做好脱 {{count}} 趟，被看着 {{seen}} 趟",
+    "grantLine": "每周期 {{boosts}} × {{minutes}} 分钟",
+    "intro": "徽章买着个勿单单是侬名字边浪个图案。每两礼拜会得拨加推 —— 每趟加推好把一篇帖子放到首页动态顶浪个位子。十三级，十三种超能力，每级解锁一样。",
+    "ladderHeading": "每级好拨啥",
+    "left": "剩",
+    "liveUntil": "有效到 {{time}}",
+    "loadFailed": "现在装勿进侬个超能力。歇歇再试。",
+    "minutes": "分钟",
+    "needBadge": "超能力要存款徽章才有。存 DHB 好解锁。",
+    "noBadgeYet": "侬还呒没徽章，所以呒没加推。存 DHB 好解锁下底个等级表。",
+    "noBoostsLeft": "搿趟周期里向呒没加推剩落哉",
+    "powersHeading": "十三种超能力",
+    "queued": "排队中",
+    "refills": "{{date}} 补满",
+    "refillsOn": "{{date}} 补满 —— 大家侪是同一个辰光。",
+    "secondWind": "第二春",
+    "secondWindExplainer": "搿篇帖子已经过脱一礼拜哉。第二春好把伊送转去首页动态顶浪。",
+    "seenCount": "被看着 {{count}} 趟",
+    "shareOfVoice": "加推位子是轮流个。有交关加推同时勒进行辰光，看客会看着其中一样，按徽章等级来分派 —— 等级高个显示勒交关，各人侪拿得着分拨伊个辰光窗。",
+    "spendFor": "{{power}} {{minutes}} 分钟",
+    "spent": "{{power}} 勒进行，一共 {{minutes}} 分钟",
+    "stakeDhb": "存 DHB",
+    "title": "超能力",
+    "unlocksAt": "{{power}} 到 {{tier}} 解锁"
   }
 }

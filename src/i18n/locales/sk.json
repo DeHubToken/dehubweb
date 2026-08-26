@@ -874,7 +874,8 @@
     "ppvStartSaving": "Zakúpte si Pay-Per-View obsah od svojich obľúbených tvorcov a zobrazí sa tu.",
     "recentStartSaving": "Vaše naposledy uložené príspevky sa zobrazia tu.",
     "textStartSaving": "Uložte si textové príspevky do záložiek a zobrazia sa tu.",
-    "videosStartSaving": "Uložte si príspevky s videami do záložiek a zhromaždia sa tu."
+    "videosStartSaving": "Uložte si príspevky s videami do záložiek a zhromaždia sa tu.",
+    "folders": "Priečinky"
   },
   "stories": {
     "title": "Príbehy",
@@ -1311,7 +1312,8 @@
     "activityLog": "Záznam aktivity",
     "endStream": "Ukončiť stream",
     "linkCopied": "Odkaz skopírovaný do schránky",
-    "postUrlCopied": "URL príspevku skopírovaná do schránky"
+    "postUrlCopied": "URL príspevku skopírovaná do schránky",
+    "boostPost": "Boostnúť príspevok"
   },
   "filters": {
     "sort": "Zoradiť",
@@ -1896,5 +1898,49 @@
       "startTerm": "História",
       "start": "— „celé obdobie“ znamená každý deň, ktorý si Cloudflare ešte drží, dnes {{days}} dní od {{date}}, dňa, keď dehub.io prešiel na Cloudflare. Staršie údaje z okraja siete neexistujú a staré dni vypadávajú, ako im Cloudflare vyprší platnosť."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Čí sledovatelia by to mali vidieť?",
+    "aimAtTiers": "Ktoré úrovne odznakov by to mali vidieť?",
+    "aimPlaceholder": "Používateľské meno alebo adresa peňaženky",
+    "boost": "Boost",
+    "boostBooked": "Boostnuté na {{minutes}} minút",
+    "boostExplainer": "Umiestni tento príspevok na vrchol domovského feedu na tvoje časové okno.",
+    "boostFailed": "Tento príspevok sa nepodarilo boostnúť",
+    "boostForMinutes": "Boostni na {{minutes}} minút",
+    "boostedLabel": "Boostnuté",
+    "boostsLeft": "Zostáva {{left}} z {{total}} boostov",
+    "cancelFailed": "Tento boost sa nepodarilo zrušiť",
+    "cancelledRefunded": "Boost zrušený a vrátený do tvojho limitu",
+    "cancelledSpent": "Boost zrušený. Už bol spustený, takže ostáva vyčerpaný.",
+    "colBoosts": "Boosty",
+    "colEach": "Za kus",
+    "colTier": "Úroveň",
+    "colTotal": "Za cyklus",
+    "comingSoon": "už čoskoro",
+    "finishedCount": "{{count}} dokončených v tomto cykle, zobrazené {{seen}}-krát",
+    "grantLine": "{{boosts}} × {{minutes}} minút za cyklus",
+    "intro": "Odznak ti kúpi viac než len grafiku vedľa tvojho mena. Každé dva týždne udeľuje boosty — každý z nich umiestni príspevok na vrchol domovského feedu. Trinásť úrovní, trinásť schopností, po jednom odomknutí na každom stupni.",
+    "ladderHeading": "Čo udeľuje každá úroveň",
+    "left": "zostáva",
+    "liveUntil": "naživo do {{time}}",
+    "loadFailed": "Tvoje SuperPowers sa teraz nepodarilo načítať. Skús to o chvíľu znova.",
+    "minutes": "minút",
+    "needBadge": "SuperPowers vyžadujú odznak za vklad. Vlož DHB, aby si ich odomkol.",
+    "noBadgeYet": "Zatiaľ nemáš odznak, takže žiadne boosty. Vklad DHB odomkne rebríček nižšie.",
+    "noBoostsLeft": "V tomto cykle nezostali žiadne boosty",
+    "powersHeading": "Trinásť schopností",
+    "queued": "v poradí",
+    "refills": "dopĺňa sa {{date}}",
+    "refillsOn": "Dopĺňa sa {{date}} — pre všetkých v rovnakej chvíli.",
+    "secondWind": "Druhý dych",
+    "secondWindExplainer": "Tento príspevok má viac než týždeň. Druhý dych ho pošle späť na vrchol feedu.",
+    "seenCount": "{{count}} zobrazení",
+    "shareOfVoice": "Miesto pre boost sa strieda. Keď beží viac boostov naraz, divákom sa zobrazí jeden vážený podľa úrovne odznaku — vyššia úroveň sa zobrazuje častejšie a každý dostane okno, ktoré mu bolo pridelené.",
+    "spendFor": "{{power}} na {{minutes}} minút",
+    "spent": "{{power}} beží {{minutes}} minút",
+    "stakeDhb": "Vlož DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} sa odomyká na úrovni {{tier}}"
   }
 }

@@ -27,7 +27,20 @@
     "events": "ইভেন্ট",
     "prompt": "নির্দেশ করুন",
     "communities": "কমিউনিটি",
-    "staking": "স্টেকিং"
+    "staking": "স্টেকিং",
+    "arcade": "আর্কেড",
+    "stats": "সরাসরি স্ট্যাটস",
+    "liveTv": "লাইভ TV",
+    "buyDhb": "DHB কিনা",
+    "bridge": "ব্রিজ",
+    "top100": "শীর্ষ ১০০",
+    "agents": "AI এজেন্ট",
+    "advertising": "বিজ্ঞাপন",
+    "premium": "প্রিমিয়াম",
+    "pricing": "দাম",
+    "creators": "ক্রিয়েটর",
+    "getTheApp": "অ্যাপ নামাউক্কা",
+    "connectAi": "AI সংযুক্ত করউক্কা"
   },
   "feed": {
     "home": "ঘর",
@@ -35,7 +48,9 @@
     "images": "ছবি",
     "shorts": "শর্টস",
     "music": "গান",
-    "live": "লাইভ"
+    "live": "লাইভ",
+    "newPosts_one": "{{count}} নয়া পোস্ট",
+    "newPosts_other": "{{count}} নয়া পোস্ট"
   },
   "explore": {
     "all": "সব",
@@ -330,7 +345,58 @@
     "winter": "উইন্টার ড্রপস",
     "hazy": "কুয়াশার রাইত",
     "saving": "সেভ অইতাসে...",
-    "swarms": "সোয়ার্ম"
+    "swarms": "সোয়ার্ম",
+    "profiles": "প্রোফাইলহকল",
+    "profilesDesc": "এই ডিভাইসো সংরক্ষিত একাউন্টহকল",
+    "addProfile": "প্রোফাইল যোগ করউক্কা",
+    "profileActive": "সক্রিয়",
+    "profileSignedOut": "বদলাইতে সাইন ইন করউক্কা",
+    "profileRemove": "প্রোফাইল সরাউক্কা",
+    "profilesUsed": "{{max}}-র মাঝে {{used}} ব্যবহার অইছে",
+    "profilesNextTier": "{{tier}} স্তরে {{count}}টা রাখে",
+    "profilesFullTier": "{{count}} প্রোফাইল রাখতে {{tier}} ব্যাজর লাগি জমা রাখউক্কা",
+    "profilesFull": "অইন্য একাউন্ট যোগ করতে একটা প্রোফাইল সরাউক্কা",
+    "browserNotifications": "ব্রাউজার বিজ্ঞপ্তি",
+    "browserNotificationsDesc": "অইন্য ট্যাবো থাকলেও রিপ্লাই, টিপ আর DM-র খবর পাউক্কা",
+    "browserNotificationsOnDesc": "অইন্য ট্যাবো থাকলেও রিপ্লাই, টিপ আর DM ভাসি ওঠে",
+    "browserNotificationsDismissed": "বিজ্ঞপ্তির অনুরোধ বাতিল করা অইছে — সুইচ আবার চেষ্টা করউক্কা",
+    "browserNotificationsBlocked": "আপনার ব্রাউজার ব্লক করি রাখছে",
+    "browserNotificationsBlockedTitle": "এই ব্রাউজার বিজ্ঞপ্তি ব্লক কররা",
+    "browserNotificationsBlockedNote": "খালি আপনার ব্রাউজারেই ইটা ফিরাইতে পারে — একবার ব্লক অইগেলে DeHub আর জিগাইতে পারতো নায়।",
+    "browserNotificationsBlockedPending": "আপনার অনুরোধ সংরক্ষিত আছে — আপনার ব্রাউজার অনুমতি দেওয়ার লগে লগেউ ইটা নিজে নিজে চালু অইযাইবো।",
+    "browserNotificationsUnblockChromium": "ঠিকানার বারর বাম পাশর আইকনো ক্লিক করউক্কা → Site settings → Notifications-রে Allow করউক্কা, তারপর পাতাটা আবার লোড করউক্কা।",
+    "browserNotificationsUnblockFirefox": "ঠিকানার বারর বাম পাশর তালাত ক্লিক করউক্কা, Receive Notifications-র পাশর \"Blocked\" সরাউক্কা, তারপর পাতাটা আবার লোড করউক্কা।",
+    "browserNotificationsUnblockSafari": "মেনু বারো: Safari → Settings → Websites → Notifications, তারপর এই সাইটরে Allow করউক্কা।",
+    "browserNotificationsUnblockGeneric": "এই পাতার লাগি আপনার ব্রাউজারর সাইট সেটিংস খুলউক্কা আর Notifications-রে Allow করউক্কা, তারপর আবার লোড করউক্কা।",
+    "browserNotificationsIosHint": "iPhone আর iPad-ও ইটা খালি তখনই অনুমতি দেয় যখন DeHub আপনার Home Screen-ও থাকে — Share-ও টিপউক্কা, তারপর \"Add to Home Screen\"।",
+    "browserNotificationsTest": "একটা পরীক্ষার বিজ্ঞপ্তি পাঠাউক্কা",
+    "browserNotificationsTestSent": "পরীক্ষার বিজ্ঞপ্তি পাঠানো অইছে",
+    "browserNotificationsTestBody": "DeHub-র বিজ্ঞপ্তি এইলাখান দেখাইতো।",
+    "showAsNewMember": "আমারে নয়া সদস্য হিসাবে দেখাউক্কা",
+    "showAsNewMemberDesc": "অইন্য সদস্যহকলে দেখতা পারবা যে আপনে এখনি যোগ দিছইন, যাতে অউতা আপনারে স্বাগত জানাইতে পারে। নিবন্ধনর ৩০ দিন পরে নিজে নিজেই শেষ অইযায়।",
+    "defaultProfileTab": "ডিফল্ট প্রোফাইল ট্যাব",
+    "defaultProfileTabDesc": "আপনার প্রোফাইলো দর্শকহকলে পয়লা কোন ট্যাব দেখবা তা বাছউক্কা",
+    "lavalamp": "Lava Lamp",
+    "war": "War",
+    "osaka": "Osaka",
+    "jungle": "Jungle",
+    "themeColor": "থিমর রঙ",
+    "themeColorDesc": "এই থিমর লাগি একটা নিজস্ব রঙ বাছউক্কা",
+    "themeColorReset": "রিসেট",
+    "themeColorWhite": "সাদা",
+    "themeColorBlack": "কালা",
+    "themeColorRainbow": "রংধনু",
+    "themeColorBrand": "Brand",
+    "themeColorBrandDesc": "আপনার প্রোফাইল ছবির রঙ ব্যবহার করউক্কা",
+    "themeColorBrandNoAvatar": "Brand রঙ ব্যবহার করতে একটা প্রোফাইল ছবি যোগ করউক্কা",
+    "themeColorBrandFailed": "আপনার প্রোফাইল ছবি তুন রঙ পড়া গেছে না",
+    "dimLights": "আলো কমাউক্কা",
+    "dimLightsDesc": "নীল আলোর প্রভাব কমায়",
+    "matureContent": "প্রাপ্তবয়স্ক কনটেন্ট দেখাউক্কা",
+    "matureContentDesc": "আপনার ফিডো প্রাপ্তবয়স্ক আর কড়া পোস্ট যোগ করউক্কা, আর যেগুলা আগেই দেখতা অউতার সতর্কতা সরাউক্কা। ডিফল্টভাবে বন্ধ।",
+    "noNewMessages": "নয়া কোনো আলাপ নাই",
+    "noNewMessagesDesc": "আপনার আগর থ্রেডহকল থাকউক, কিন্তু নয়া কেউ শুরু করতা পারে না",
+    "dmNoNewHelp": "আগর থ্রেডহকল চলতেই থাকে; নয়া কেউ শুরু করতা পারে না"
   },
   "notifications": {
     "title": "খবর",
@@ -390,7 +456,11 @@
     "postRemoved": "তোমার পোস্ট সরানো অইসে",
     "newNotification": "নয়া খবর",
     "oneOther": "আরো ১ জন",
-    "nOthers": "আরো {{count}} জন"
+    "nOthers": "আরো {{count}} জন",
+    "thisBrowser": "এই ব্রাউজার",
+    "features": "ফিচার",
+    "communities": "সম্প্রদায়",
+    "stores": "দোকান"
   },
   "messages": {
     "title": "মেসেজ",
@@ -503,7 +573,12 @@
     "addedToLeaderboard": "তোমারে যোগ করা অইসে! ব্যালেন্স: {{balance}} DHB",
     "balanceTooLow": "ব্যালেন্স খুব কম ({{balance}} DHB)",
     "refreshFailed": "কিছু একটা গণ্ডগোল অইসে",
-    "noWalletAddress": "কোনো ওয়ালেটের ঠিকানা পাওয়া যায় নাই"
+    "noWalletAddress": "কোনো ওয়ালেটের ঠিকানা পাওয়া যায় নাই",
+    "affiliates": "অ্যাফিলিয়েট",
+    "directReferrals_one": "{{count}} সরাসরি",
+    "directReferrals_other": "{{count}} সরাসরি",
+    "secondaryReferrals_one": "{{count}} দ্বিতীয় স্তরর",
+    "secondaryReferrals_other": "{{count}} দ্বিতীয় স্তরর"
   },
   "assistant": {
     "title": "AI সাহায্যকারী",
@@ -851,7 +926,8 @@
     "showOriginal": "আসলটা দেখাও",
     "translating": "অনুবাদ অইতাসে...",
     "loadingMore": "আরো লোড অইতাসে...",
-    "loadMore": "আরো লোড করো"
+    "loadMore": "আরো লোড করো",
+    "tryAgain": "আবার চেষ্টা করউক্কা"
   },
   "featureRequests": {
     "title": "ফিচার রিকোয়েস্ট",
@@ -905,7 +981,8 @@
     "ppvStartSaving": "তোমার পছন্দর ক্রিয়েটর অকলর পে-পার-ভিউ কনটেন্ট কিনলে ইনো দেখাইব।",
     "recentStartSaving": "তোমার সবচেয়ে নয়া বুকমার্ক করা পোস্ট ইনো দেখাইব।",
     "textStartSaving": "খালি লেখাওয়ালা পোস্ট বুকমার্ক করলে ওতা ইনো আইব।",
-    "videosStartSaving": "ভিডিওওয়ালা পোস্ট বুকমার্ক করলে ওতা ইনো জমা অইব।"
+    "videosStartSaving": "ভিডিওওয়ালা পোস্ট বুকমার্ক করলে ওতা ইনো জমা অইব।",
+    "folders": "ফোল্ডার"
   },
   "stories": {
     "title": "গল্প",
@@ -939,7 +1016,10 @@
     "or": "বা",
     "termsNotice": "আগাইলে তুমি সেবার শর্ত আর গোপনীয়তা নীতিতে রাজি",
     "walletInfoDesktop": "নিরাপদে লগইনের লাইগা ওয়ালেট কানেক্ট করো",
-    "walletInfoMobile": "MetaMask, Trust আর Phantom সরাসরি অ্যাপ খুলবো। Rabby WalletConnect ব্যবহার করবো।"
+    "walletInfoMobile": "MetaMask, Trust আর Phantom সরাসরি অ্যাপ খুলবো। Rabby WalletConnect ব্যবহার করবো।",
+    "addProfileTitle": "প্রোফাইল যোগ করউক্কা",
+    "walletConnectedAs": "সংযুক্ত",
+    "useDifferentWallet": "অইন্য ওয়ালেট ব্যবহার করউক্কা"
   },
   "sidebar": {
     "talkOfTheTown": "শহরর কথা",
@@ -953,7 +1033,11 @@
     "comingSoon": "আসতাসে — এলাকার ট্রেন্ড আসতাসে!",
     "post": "পোস্ট",
     "logOut": "লগ আউট",
-    "logIn": "লগ ইন"
+    "logIn": "লগ ইন",
+    "searchMenu": "মেনু খুঁজউক্কা",
+    "clearSearch": "খোঁজ মুছউক্কা",
+    "noMenuMatches": "মেনুত কিচ্ছু মিলরা না",
+    "searchDehubFor": "DeHub-ও \"{{query}}\" খুঁজউক্কা"
   },
   "tip": {
     "sendTip": "টিপ পাঠাও",
@@ -994,7 +1078,8 @@
     "activityLog": "কাজের লগ",
     "endStream": "স্ট্রিম শেষ করো",
     "linkCopied": "লিংক ক্লিপবোর্ডে কপি অইসে",
-    "postUrlCopied": "পোস্টের URL ক্লিপবোর্ডে কপি অইসে"
+    "postUrlCopied": "পোস্টের URL ক্লিপবোর্ডে কপি অইসে",
+    "boostPost": "পোস্ট বুস্ট করউক্কা"
   },
   "filters": {
     "all": "সব",
@@ -1237,7 +1322,10 @@
     "statusPlanned": "প্ল্যান করা",
     "statusInProgress": "কাজ চলতাসে",
     "statusCompleted": "শেষ অইসে",
-    "statusDeclined": "না করা অইসে"
+    "statusDeclined": "না করা অইসে",
+    "shipping": "পাঠানো অইরা",
+    "noShippingYet": "কিচ্ছু চলরা না",
+    "shippingAppearHere": "যেসব অনুরোধ বানানো অইরা অউতা ইখানে দেখা যাইবো।"
   },
   "auth": {
     "signIn": "সাইন ইন",
@@ -1302,7 +1390,8 @@
     "failedPurchase": "Failed to start purchase",
     "redirectingOnramp": "Redirecting to onramp...",
     "onrampCreated": "Onramp session created",
-    "failedOnramp": "Failed to start onramp"
+    "failedOnramp": "Failed to start onramp",
+    "badgeDiscount": "{{tier}} ধারক — {{percent}}% ছাড়"
   },
   "agents": {
     "title": "AI এজেন্ট",
@@ -1334,7 +1423,13 @@
     "agentDeleted": "Agent deleted",
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
-    "apiKeyCopied": "API key copied to clipboard"
+    "apiKeyCopied": "API key copied to clipboard",
+    "connectorUrl": "কানেক্টর URL",
+    "connectorUrlCopied": "কানেক্টর URL কপি অইছে",
+    "connectorUrlHelp": "Claude বা ChatGPT-ও ইটা একটা কাস্টম MCP কানেক্টর হিসাবে যোগ করউক্কা। ইটা এই এজেন্ট হিসাবেই প্রমাণ অয়, তাই API কীর মতোই এটার যত্ন লউক্কা।",
+    "agentWallet": "এজেন্ট ওয়ালেট (Base)",
+    "walletCopied": "ওয়ালেট ঠিকানা কপি অইছে",
+    "agentWalletHelp": "এজেন্ট পোস্ট করার আগে ইখানো অল্প কিছু Base ETH পাঠাউক্কা — প্রকাশ করলে চেইনও মিন্ট অয় আর এজেন্ট নিজর গ্যাস নিজেই দেয়। মন্তব্য, ভোট আর অনুসরণ করাত কোনো গ্যাস লাগে না।"
   },
   "hero": {
     "title": "আমাদের বিশ্বে",
@@ -1613,7 +1708,15 @@
     "unstake_failed": "আনস্টেক ফেইল অইছে",
     "unstake_request_removed": "তোমার আনস্টেক রিকোয়েস্ট মুছিয়া ফেলা অইছে।",
     "unstake_request_submitted": "উত্তোলনর রিকোয়েস্ট জমা অইছে! ✅",
-    "waiting_for_confirmation": "কনফার্মেশনর লাগি অপেক্ষা..."
+    "waiting_for_confirmation": "কনফার্মেশনর লাগি অপেক্ষা...",
+    "new_version_available": "নয়া সংস্করণ পাওয়া যাইরা",
+    "refresh_to_pick_up_the_latest_changes": "সবচায় নয়া পরিবর্তনহকল পাইতে রিফ্রেশ করউক্কা।",
+    "refresh": "রিফ্রেশ করউক্কা",
+    "what_changed": "কিতা বদলাইছে",
+    "turn_on_desktop_notifications": "ডেস্কটপ নোটিফিকেশন চালু করবা নি?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "আরেক ট্যাবো থাকলেও জবাব, টিপ আর মেসেজর খবর পাইন।",
+    "turn_on": "চালু করউকা",
+    "not_now": "অখন নায়"
   },
   "prompt": {
     "seoTitle": "আপনার ফিড নির্দেশ করুন — DeHub",
@@ -1759,5 +1862,149 @@
     "when": "কখন",
     "whyStake": "ডিপোজিট কেনে করবায়?",
     "yourStaked": "তোমার ডিপোজিট"
+  },
+  "arcade": {
+    "title": "আর্কেড",
+    "intro": "DeHub বানাইছে আর ওপেন সোর্স করা খেলা, দুনিয়া বা অভিজ্ঞতার একটা সংগ্রহ।",
+    "seoTitle": "আর্কেড",
+    "seoDescription": "DeHub-ও আপনার ব্রাউজারো খেলা খেলউক্কা — সিনেমাটিক 3D দাবা, নিয়ম মাফিক তৈয়ার করা এক শুটার, রেইনফরেস্টর মাঝে হাঁটা, নিয়ন-রাস্তার এক মারামারি খেলা, আর হাঁটা যায় এমন এক ট্রেডিং ফ্লোর। ইনস্টল করার কিচ্ছু নাই, ডাউনলোড করার কিচ্ছু নাই।",
+    "alsoIn": "{{theme}}-র মাঝেও"
+  },
+  "stats": {
+    "title": "স্ট্যাটস",
+    "subtitle": "রিয়েল-টাইম ওপেন সোর্স তথ্য",
+    "live": "সরাসরি",
+    "range": {
+      "24h": "২৪ ঘণ্টা",
+      "3d": "৩ দিন",
+      "7d": "৭ দিন",
+      "30d": "৩০ দিন",
+      "all": "সব সময়"
+    },
+    "unavailable": {
+      "title": "এখন স্ট্যাটস পাওয়া যাইরা না",
+      "unconfigured": "analytics endpoint-রে এখনো তার Cloudflare API টোকেন দেওয়া অয় নাই। বানাইনো সংখ্যার বদলে কিচ্ছু দেখানো অয় না।",
+      "error": "Cloudflare-র analytics API-ও আমরা পৌঁছতা পারছি না। পুরান বা বানাইনো একটা সংখ্যা দেখানির বদলে, সরাসরি পড়াটা সফল না অওয়া পর্যন্ত এই পাতা কিচ্ছু দেখাইতো না।"
+    },
+    "tile": {
+      "visitorsToday": "আইজর দর্শক",
+      "soFarToday": "আইজ এই পর্যন্ত, UTC",
+      "peakHour": "সবচায় ব্যস্ত ঘণ্টা",
+      "peakDay": "সবচায় ব্যস্ত দিন",
+      "peakAtHour": "{{when}} UTC-ও",
+      "peakOnDay": "{{when}}-ও",
+      "inRange": "এই সময়সীমাত",
+      "pageViews": "পাতা দেখা",
+      "overHours": "{{count}} ঘণ্টা জুড়ি",
+      "overDay": "১ দিন জুড়ি",
+      "overDays": "{{count}} দিন জুড়ি",
+      "requestsLabel": "অনুরোধ",
+      "served": "দেওয়া অইছে",
+      "requests": "{{requests}} অনুরোধ"
+    },
+    "chart": {
+      "hourly": "প্রতি ঘণ্টার দর্শক",
+      "daily": "প্রতিদিনর দর্শক",
+      "hourlyHint": "{{count}}টা ঘণ্টাভিত্তিক ভাগ, UTC",
+      "dailyHint": "প্রতিদিনর অনন্য দর্শক",
+      "empty": "এই সময়সীমার লাগি এখনো কোনো তথ্য নাই"
+    },
+    "countries": {
+      "title": "শীর্ষ দেশ",
+      "windowDay": "গত ২৪ ঘণ্টা",
+      "window": "গত {{days}} দিন"
+    },
+    "browsers": {
+      "title": "ব্রাউজার",
+      "window": "পাতা দেখা অনুযায়ী"
+    },
+    "edge": {
+      "title": "Edge-ও",
+      "windowDay": "গত ২৪ ঘণ্টা",
+      "window": "গত {{days}} দিন",
+      "cached": "ক্যাশ তুন দেওয়া অইছে",
+      "encrypted": "এনক্রিপ্টেড",
+      "threats": "হুমকি ব্লক করা অইছে"
+    },
+    "proof": {
+      "title": "এই সংখ্যাহকল কোনতুন আয়",
+      "subtitle": "Cloudflare দিয়া মাপা, এই পাতা দিয়া নায়",
+      "source": "উৎস",
+      "datasets": "ডাটাসেট",
+      "zone": "Zone",
+      "ray": "Cloudflare ray ID",
+      "fetched": "আনা অইছে",
+      "query": "চার্টর পিছনর হুবহু কোয়েরি",
+      "copied": "কপি অইছে",
+      "copy": "কপি করউক্কা",
+      "openEndpoint": "/api/stats খুলউক্কা",
+      "openRaw": "Cloudflare-র হাত না দেওয়া উত্তর",
+      "edge": "dehub.io-র প্রত্যেক অনুরোধ আমরার সার্ভারো পৌঁছার আগে Cloudflare দিয়া যায়। এই গণনাহকল ওই ট্রাফিকর Cloudflare নিজর যোগফল — আমরার ড্যাশবোর্ড যে সংখ্যা দেখায় হেইতাই। ইতা আপনার ব্রাউজারর কোনো স্ক্রিপ্ট দিয়া জমা করা নায়, তাই এই পাতার কিচ্ছু দিয়া ইতা বাড়ানো যায় না, আর ট্র্যাকার ব্লক করলেও ইতা বদলায় না।",
+      "live": "পাতাটা ইতা সরাসরি পড়ে। /stats লোড করলে আমরার endpoint কল অয়, যেটা তখনি Cloudflare-র Analytics API-রে কোয়েরি করে আর উত্তরটা ৬০ সেকেন্ডর লাগি ক্যাশ করে।",
+      "limits": "ইটা কিতা দেখায়, আর কিতা দেখায় না: আপনে দেখতা পারবা যে সংখ্যাহকল আমরার অ্যাপ্লিকেশন কোড তুন নায়, Cloudflare-র যোগফল তুনই আয়ছে, আর ইখানো প্রকাশিত কোয়েরিটাই চলে। ইটা সম্পূর্ণ বিশ্বাসমুক্ত নায় — API টোকেন আমরার কাছে থাকে, আর Cloudflare কোনো zone-র analytics পাবলিকভাবে পড়ার সুযোগ দেয় না। নিজর Cloudflare zone থাকা যে কেউ হুবহু ওই কোয়েরি চালাইয়া রূপটা মিলাইয়া দেখতা পারবা।"
+    },
+    "definitions": {
+      "title": "সংখ্যাহকল কিতা বুজায়",
+      "visitorsTerm": "দর্শক",
+      "visitors": "— ওইদিন Cloudflare দেখছে এমন অনন্য IP ঠিকানা। মানুষর কাছাকাছি, কিন্তু হুবহু নায়: একটা অফিস একটা কানেকশনো একবারই গণনা অয়, আর wifi আর মোবাইল ডাটার মাঝে বদলাইতে থাকা একটা ফোন দুইবার গণনা অয়।",
+      "pageViewsTerm": "পাতা দেখা",
+      "pageViews": "— Cloudflare যেগুলারে পাতা লোড হিসাবে ধরে, ছবি, স্ক্রিপ্ট বা API কল হিসাবে নায়।",
+      "botsTerm": "বট ধরা আছে",
+      "bots": "— এগুলা কাঁচা edge গণনা, তাই ক্রলার, uptime মনিটর আর স্ক্রিপ্টেড ক্লায়েন্টও এর ভিতরে ধরা পড়ে। উপরর ব্রাউজার বিভাজনো নিজেই দেখতা পারবা, ওইখানো \"Curl\" আর \"Unknown\"-র লাখান এন্ট্রিহকল মানুষ নায়, স্বয়ংক্রিয় ট্রাফিক। বট বাদ দিতে Cloudflare-র একটা পেইড স্তর লাগে যেটা আমরা চালাই না, আর চুপচাপ একটা আন্দাজি সংখ্যা বাদ দিলে হিসাব আরও যাচাইযোগ্য নায়, বরং কম অইযাইবো।",
+      "totalTerm": "সময়সীমার মোট",
+      "total": "— পাতা দেখা আর অনুরোধ সময়সীমা জুড়ি যোগ অয়। দর্শক গণনা ইচ্ছা কইরাই একটা \"মোট দর্শক\" হেডলাইনো যোগ করা অয় না, কেননা সোমবার আর মঙ্গলবার দুইদিনই আওয়া কেউ দুইবার গণনা অইযাইবো।",
+      "peakTerm": "সবচায় ব্যস্ত ঘণ্টা / দিন",
+      "peak": "— একই কারণে, সময়সীমার যেকোনো একটা ভাগর মাঝে সবচায় বেশি অনন্য গণনা: ইটা Cloudflare আসলেই মাপা একটা সংখ্যা, একে অইন্যর লগে মিলা যাওয়া গণনা যোগ কইরা বানানো নায়।",
+      "resolutionTerm": "ঘণ্টাভিত্তিক ৩ দিনো থামে",
+      "resolution": "— ইটা এই প্ল্যানো Cloudflare-র সীমা, আমরার পছন্দ নায়: তিন দিনর বেশি চওড়া কোনো ঘণ্টাভিত্তিক কোয়েরি ইটা মানে না। ২৪-ঘণ্টা আর ৩-দিনর দেখা ঘণ্টাভিত্তিক; ৭ দিন আর তার বেশি দৈনিক, আর সব-সময়র লাগি ঘণ্টাভিত্তিক চার্ট আঁকার কোনো উপায় নাই।",
+      "breakdownTerm": "দেশ আর ব্রাউজার",
+      "breakdown": "— আপনার বাছাই করা সময়সীমা অনুযায়ী চলে, কিন্তু খালি {{max}} দিন পিছে পর্যন্ত, কেননা প্রতিদিনর বিভাজন অতটুকুই রাখা অয়। বেশি লম্বা সময়সীমাত চার্ট দেশর তালিকার তুন বেশি সময় ঢাকে।",
+      "startTerm": "ইতিহাস",
+      "start": "— \"সব সময়\" মানে Cloudflare এখনো রাখছে এমন হকল দিন, যেটা আইজ {{date}} তুন শুরু কইরা {{days}} দিন, ওইদিনই dehub.io Cloudflare-ও উঠছিল। এর আগর কোনো edge তথ্য দেখানির লাগি নাই, আর পুরান দিনহকল Cloudflare পুরান কইরা বাদ দিলে ইতা ছাড়া অইযায়।"
+    }
+  },
+  "superpowers": {
+    "aimAtAccount": "কার অনুসরণকারীহকল ইটা দেখবা?",
+    "aimAtTiers": "কোন ব্যাজ স্তরহকল ইটা দেখবা?",
+    "aimPlaceholder": "ইউজারনেম বা ওয়ালেট ঠিকানা",
+    "boost": "বুস্ট",
+    "boostBooked": "{{minutes}} মিনিটর লাগি বুস্ট করা অইছে",
+    "boostExplainer": "আপনার সময়র লাগি এই পোস্টরে হোম ফিডর উপরর স্লটো বসায়।",
+    "boostFailed": "ওই পোস্ট বুস্ট করা গেছে না",
+    "boostForMinutes": "{{minutes}} মিনিটর লাগি বুস্ট করউক্কা",
+    "boostedLabel": "বুস্ট করা অইছে",
+    "boostsLeft": "{{total}}-র মাঝে {{left}}টা বুস্ট বাকি",
+    "cancelFailed": "ওই বুস্ট বাতিল করা গেছে না",
+    "cancelledRefunded": "বুস্ট বাতিল অইছে আর আপনার বরাদ্দো ফিরাইয়া দেওয়া অইছে",
+    "cancelledSpent": "বুস্ট বাতিল অইছে। ইটা আগেই শুরু অইগেছিল, তাই খরচ অইয়াই থাকবো।",
+    "colBoosts": "বুস্ট",
+    "colEach": "প্রতিটা",
+    "colTier": "স্তর",
+    "colTotal": "প্রতি চক্রে",
+    "comingSoon": "শীঘ্রই আয়রা",
+    "finishedCount": "এই চক্রে {{count}}টা শেষ অইছে, {{seen}} বার দেখা অইছে",
+    "grantLine": "চক্রে {{boosts}} × {{minutes}} মিনিট",
+    "intro": "একটা ব্যাজ খালি আপনার নামর পাশর আর্ট কিনে না। প্রতি দুই সপ্তাহে ইটা বুস্ট দেয় — প্রতিটাই একটা পোস্টরে হোম ফিডর উপরর স্লটো বসায়। তেরোটা স্তর, তেরোটা শক্তি, প্রতি ধাপে একটা কইরা আনলক।",
+    "ladderHeading": "প্রতিটা স্তর কিতা দেয়",
+    "left": "বাকি",
+    "liveUntil": "{{time}} পর্যন্ত সরাসরি",
+    "loadFailed": "এখনি আপনার SuperPowers লোড করা গেছে না। খানিক পরে আবার চেষ্টা করউক্কা।",
+    "minutes": "মিনিট",
+    "needBadge": "SuperPowers-র লাগি জমা রাখার ব্যাজ লাগে। ইতা আনলক করতে DHB জমা রাখউক্কা।",
+    "noBadgeYet": "আপনার এখনো কোনো ব্যাজ নাই, তাই কোনো বুস্টও নাই। DHB জমা রাখলে নিচর সিঁড়ি আনলক অয়।",
+    "noBoostsLeft": "এই চক্রে কোনো বুস্ট বাকি নাই",
+    "powersHeading": "তেরোটা শক্তি",
+    "queued": "সারিত",
+    "refills": "{{date}}-ও আবার ভরে",
+    "refillsOn": "{{date}}-ও আবার ভরে — হকলর লাগি একই মুহূর্তে।",
+    "secondWind": "Second Wind",
+    "secondWindExplainer": "এই পোস্ট এক সপ্তাহর বেশি পুরান। Second Wind ইটারে আবার ফিডর উপরে পাঠায়।",
+    "seenCount": "{{count}} বার দেখা",
+    "shareOfVoice": "বুস্ট স্লট ঘুরতে থাকে। যখন একাধিক বুস্ট চলে, দর্শকহকলরে ব্যাজ স্তর অনুযায়ী ওজন দিয়া একটা কইরা দেখানো অয় — উঁচু স্তর বেশি বার দেখানো অয়, আর হকলেই তারার পাওয়া সময়টুকু পায়।",
+    "spendFor": "{{minutes}} মিনিটর লাগি {{power}}",
+    "spent": "{{power}} {{minutes}} মিনিট ধইরা চলরা",
+    "stakeDhb": "DHB জমা রাখউক্কা",
+    "title": "SuperPowers",
+    "unlocksAt": "{{tier}}-ও {{power}} আনলক অয়"
   }
 }

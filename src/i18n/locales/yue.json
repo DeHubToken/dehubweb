@@ -351,7 +351,8 @@
     "activityLog": "活動記錄",
     "endStream": "結束直播",
     "linkCopied": "連結已複製",
-    "postUrlCopied": "帖文網址已複製"
+    "postUrlCopied": "帖文網址已複製",
+    "boostPost": "加推貼文"
   },
   "filters": {
     "sort": "排序",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "購買你鍾意嘅創作者嘅按次付費內容，就會喺呢度出現。",
     "recentStartSaving": "你最近加入書籤嘅帖子會喺呢度顯示。",
     "textStartSaving": "將純文字帖子加入書籤，佢哋就會喺呢度出現。",
-    "videosStartSaving": "將有影片嘅帖子加入書籤，就會收集喺呢度。"
+    "videosStartSaving": "將有影片嘅帖子加入書籤，就會收集喺呢度。",
+    "folders": "資料夾"
   },
   "notifications": {
     "title": "通知",
@@ -1722,5 +1724,49 @@
       "startTerm": "歷史",
       "start": "——「全部時間」係指 Cloudflare 仲保留緊嘅每一日，今日即係由 dehub.io 搬去 Cloudflare 嗰日 {{date}} 起計 {{days}} 日。之前冇邊緣數據可以顯示，舊嘅日子亦會隨住 Cloudflare 過期而消失。"
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "邊個嘅粉絲會睇到？",
+    "aimAtTiers": "邊個徽章級別會睇到？",
+    "aimPlaceholder": "用戶名或者銀包地址",
+    "boost": "加推",
+    "boostBooked": "加推咗 {{minutes}} 分鐘",
+    "boostExplainer": "喺你嘅時間窗入面，將呢篇貼文擺喺主頁動態最頂嘅位置。",
+    "boostFailed": "呢篇貼文加推唔到",
+    "boostForMinutes": "加推 {{minutes}} 分鐘",
+    "boostedLabel": "已加推",
+    "boostsLeft": "{{total}} 次加推入面仲剩 {{left}} 次",
+    "cancelFailed": "取消唔到呢次加推",
+    "cancelledRefunded": "加推已取消，退返落你嘅額度",
+    "cancelledSpent": "加推已取消。不過已經開始咗，所以照計已用。",
+    "colBoosts": "加推",
+    "colEach": "每次",
+    "colTier": "級別",
+    "colTotal": "每個週期",
+    "comingSoon": "好快推出",
+    "finishedCount": "呢個週期完成咗 {{count}} 次，俾人睇咗 {{seen}} 次",
+    "grantLine": "每個週期 {{boosts}} × {{minutes}} 分鐘",
+    "intro": "徽章買到嘅唔止係你個名旁邊嗰個圖案。每兩個星期會俾加推 —— 每次都可以將一篇貼文擺喺主頁動態最頂嘅位置。十三個級別，十三種超能力，每級解鎖一樣。",
+    "ladderHeading": "每個級別俾到咩",
+    "left": "剩",
+    "liveUntil": "有效至 {{time}}",
+    "loadFailed": "而家載入唔到你嘅超能力。遲啲再試。",
+    "minutes": "分鐘",
+    "needBadge": "超能力需要有存款徽章。存 DHB 就可以解鎖。",
+    "noBadgeYet": "你仲未有徽章，所以冇加推。存 DHB 就可以解鎖底下嘅級別表。",
+    "noBoostsLeft": "呢個週期冇加推剩低",
+    "powersHeading": "十三種超能力",
+    "queued": "排緊隊",
+    "refills": "{{date}} 補滿",
+    "refillsOn": "{{date}} 補滿 —— 全部人都係同一個時間。",
+    "secondWind": "第二春",
+    "secondWindExplainer": "呢篇貼文已經過咗一個星期。第二春會將佢送返主頁動態最頂。",
+    "seenCount": "俾人睇咗 {{count}} 次",
+    "shareOfVoice": "加推位置係輪流嘅。有幾個加推同時進行嘅時候，觀眾會按徽章級別分配睇邊個 —— 級別越高顯示得越多，而每個人都會攞到自己嗰個時間窗。",
+    "spendFor": "{{power}} {{minutes}} 分鐘",
+    "spent": "{{power}} 進行緊，總共 {{minutes}} 分鐘",
+    "stakeDhb": "存 DHB",
+    "title": "超能力",
+    "unlocksAt": "{{power}} 喺 {{tier}} 解鎖"
   }
 }

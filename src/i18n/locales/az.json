@@ -351,7 +351,8 @@
     "activityLog": "Fəaliyyət Jurnalı",
     "endStream": "Yayımı Bitir",
     "linkCopied": "Keçid kopyalandı",
-    "postUrlCopied": "Paylaşım URL-i kopyalandı"
+    "postUrlCopied": "Paylaşım URL-i kopyalandı",
+    "boostPost": "Paylaşımı gücləndir"
   },
   "filters": {
     "sort": "Sırala",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Sevimli yaradıcılarınızdan Pay-Per-View məzmunu alın ki, burada görünsün.",
     "recentStartSaving": "Ən son əlfəcinlədiyiniz paylaşımlar burada görünəcək.",
     "textStartSaving": "Yalnız mətndən ibarət paylaşımları əlfəcinləyin və onlar burada görünəcək.",
-    "videosStartSaving": "Videolu paylaşımları əlfəcinləyin və onlar burada toplanacaq."
+    "videosStartSaving": "Videolu paylaşımları əlfəcinləyin və onlar burada toplanacaq.",
+    "folders": "Qovluqlar"
   },
   "notifications": {
     "title": "Bildirişlər",
@@ -1722,5 +1724,49 @@
       "startTerm": "Tarixçə",
       "start": "— «bütün dövr» Cloudflare-in hələ saxladığı hər günü bildirir, bu gün dehub.io-nun Cloudflare-ə keçdiyi {{date}} tarixindən {{days}} gün. Daha əvvəlki kənar məlumat yoxdur və köhnə günlər Cloudflare onların müddətini bitirdikcə düşür."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Onu kimin izləyiciləri görsün?",
+    "aimAtTiers": "Onu hansı nişan səviyyələri görsün?",
+    "aimPlaceholder": "İstifadəçi adı və ya pulqabı ünvanı",
+    "boost": "Gücləndir",
+    "boostBooked": "{{minutes}} dəqiqə gücləndirildi",
+    "boostExplainer": "Bu paylaşımı sənin pəncərən boyunca əsas lentin başındakı yerə qoyur.",
+    "boostFailed": "Bu paylaşım gücləndirilə bilmədi",
+    "boostForMinutes": "{{minutes}} dəqiqəliyə gücləndir",
+    "boostedLabel": "Gücləndirilib",
+    "boostsLeft": "{{total}}-dan {{left}} gücləndirmə qalıb",
+    "cancelFailed": "Bu gücləndirmə ləğv edilə bilmədi",
+    "cancelledRefunded": "Gücləndirmə ləğv edildi və kvotana qaytarıldı",
+    "cancelledSpent": "Gücləndirmə ləğv edildi. Artıq başlamışdı, ona görə xərclənmiş qalır.",
+    "colBoosts": "Gücləndirmələr",
+    "colEach": "Hər biri",
+    "colTier": "Səviyyə",
+    "colTotal": "Dövr üzrə",
+    "comingSoon": "tezliklə",
+    "finishedCount": "Bu dövrdə {{count}} bitib, {{seen}} dəfə görünüb",
+    "grantLine": "Dövr başına {{boosts}} × {{minutes}} dəqiqə",
+    "intro": "Nişan adının yanındakı işarədən çox şey alır. Hər iki həftədən bir gücləndirmələr verir — hər biri paylaşımı əsas lentin başındakı yerə qoyur. On üç səviyyə, on üç güc, hər pillədə bir açılış.",
+    "ladderHeading": "Hər səviyyə nə verir",
+    "left": "qalıb",
+    "liveUntil": "{{time}} vaxtına qədər aktiv",
+    "loadFailed": "SuperPowers hazırda yüklənə bilmədi. Bir azdan yenidən cəhd et.",
+    "minutes": "dəqiqə",
+    "needBadge": "SuperPowers üçün depozit nişanı lazımdır. Onları açmaq üçün DHB depozit et.",
+    "noBadgeYet": "Hələ nişanın yoxdur, ona görə gücləndirmə də yoxdur. DHB depoziti aşağıdakı pilləkəni açır.",
+    "noBoostsLeft": "Bu dövrdə gücləndirmə qalmayıb",
+    "powersHeading": "On üç güc",
+    "queued": "növbədə",
+    "refills": "{{date}} tarixində dolur",
+    "refillsOn": "{{date}} tarixində dolur — hamı üçün eyni anda.",
+    "secondWind": "İkinci Nəfəs",
+    "secondWindExplainer": "Bu paylaşım bir həftədən çox əvvəl edilib. İkinci Nəfəs onu yenidən lentin başına qaytarır.",
+    "seenCount": "{{count}} baxış",
+    "shareOfVoice": "Gücləndirmə yeri növbə ilə paylanır. Bir neçə gücləndirmə eyni anda işlədikdə, izləyicilərə nişan səviyyəsinə görə çəkilmiş biri göstərilir — daha yüksək səviyyə daha tez-tez görünür, hamı isə özünə verilmiş vaxtı alır.",
+    "spendFor": "{{minutes}} dəqiqəliyə {{power}}",
+    "spent": "{{power}} {{minutes}} dəqiqədir işləyir",
+    "stakeDhb": "DHB depozit et",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} {{tier}} səviyyəsində açılır"
   }
 }

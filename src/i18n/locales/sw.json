@@ -351,7 +351,8 @@
     "activityLog": "Kumbukumbu ya Shughuli",
     "endStream": "Maliza Utiririshaji",
     "linkCopied": "Kiungo kimenakiliwa",
-    "postUrlCopied": "URL ya chapisho imenakiliwa"
+    "postUrlCopied": "URL ya chapisho imenakiliwa",
+    "boostPost": "Inua chapisho"
   },
   "filters": {
     "sort": "Panga",
@@ -800,7 +801,8 @@
     "ppvStartSaving": "Nunua maudhui ya Lipa-Kutazama kutoka kwa watayarishaji unaowapenda ili yaonekane hapa.",
     "recentStartSaving": "Machapisho uliyoalamisha hivi karibuni yataonekana hapa.",
     "textStartSaving": "Alamisha machapisho ya maandishi pekee nayo yataonekana hapa.",
-    "videosStartSaving": "Alamisha machapisho yenye video nayo yatakusanywa hapa."
+    "videosStartSaving": "Alamisha machapisho yenye video nayo yatakusanywa hapa.",
+    "folders": "Folda"
   },
   "notifications": {
     "title": "Arifa",
@@ -1723,5 +1725,49 @@
       "startTerm": "Historia",
       "start": "— \"muda wote\" maana yake ni kila siku ambayo Cloudflare bado inahifadhi, leo ni siku {{days}} kuanzia {{date}}, siku ambayo dehub.io ilihamia Cloudflare. Hakuna data ya awali ya ukingoni ya kuonyesha, na siku za zamani hupotea Cloudflare inapozizeesha."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Wafuasi wa nani wanapaswa kukiona?",
+    "aimAtTiers": "Viwango vipi vya beji vinapaswa kukiona?",
+    "aimPlaceholder": "Jina la mtumiaji au anwani ya pochi",
+    "boost": "Inua",
+    "boostBooked": "Imeinuliwa kwa dakika {{minutes}}",
+    "boostExplainer": "Huweka chapisho hili katika nafasi ya juu ya mlisho mkuu kwa muda wako uliopangwa.",
+    "boostFailed": "Imeshindwa kuinua chapisho hilo",
+    "boostForMinutes": "Inua kwa dakika {{minutes}}",
+    "boostedLabel": "Imeinuliwa",
+    "boostsLeft": "Zimebaki {{left}} kati ya {{total}} za kuinua",
+    "cancelFailed": "Imeshindwa kughairi uinuzi huo",
+    "cancelledRefunded": "Uinuzi umeghairiwa na kurejeshwa kwenye kiwango chako",
+    "cancelledSpent": "Uinuzi umeghairiwa. Ulikwisha anza, kwa hivyo unabaki umetumika.",
+    "colBoosts": "Uinuzi",
+    "colEach": "Kila moja",
+    "colTier": "Kiwango",
+    "colTotal": "Kwa kila mzunguko",
+    "comingSoon": "inakuja hivi karibuni",
+    "finishedCount": "{{count}} zimekamilika mzunguko huu, zimeonekana mara {{seen}}",
+    "grantLine": "{{boosts}} × dakika {{minutes}} kwa kila mzunguko",
+    "intro": "Beji hununua zaidi ya picha iliyo kando ya jina lako. Kila wiki mbili hutoa uinuzi — kila mmoja huweka chapisho katika nafasi ya juu ya mlisho mkuu. Viwango kumi na tatu, nguvu kumi na tatu, ufunguzi mmoja kwa kila ngazi.",
+    "ladderHeading": "Kila kiwango hutoa nini",
+    "left": "zimebaki",
+    "liveUntil": "inaendelea hadi {{time}}",
+    "loadFailed": "Imeshindwa kupakia SuperPowers zako kwa sasa. Jaribu tena baada ya muda mfupi.",
+    "minutes": "dakika",
+    "needBadge": "SuperPowers zinahitaji beji ya amana. Weka DHB amana ili kuzifungua.",
+    "noBadgeYet": "Bado huna beji, kwa hivyo hakuna uinuzi. Kuweka DHB amana kunafungua ngazi iliyo chini.",
+    "noBoostsLeft": "Hakuna uinuzi uliobaki mzunguko huu",
+    "powersHeading": "Nguvu kumi na tatu",
+    "queued": "kwenye foleni",
+    "refills": "hujazwa upya {{date}}",
+    "refillsOn": "Hujazwa upya {{date}} — wakati uleule kwa kila mtu.",
+    "secondWind": "Pumzi ya Pili",
+    "secondWindExplainer": "Chapisho hili lina zaidi ya wiki moja. Pumzi ya Pili hulirudisha juu ya mlisho.",
+    "seenCount": "{{count}} zimeonekana",
+    "shareOfVoice": "Nafasi ya uinuzi huzunguka. Wakati uinuzi kadhaa unaendelea, watazamaji hupewa mmoja uliopimwa kwa kiwango cha beji — kiwango cha juu huonyeshwa mara nyingi zaidi, na kila mtu hupata muda alioruhusiwa.",
+    "spendFor": "{{power}} kwa dakika {{minutes}}",
+    "spent": "{{power}} inaendelea kwa dakika {{minutes}}",
+    "stakeDhb": "Weka DHB Amana",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} hufunguliwa katika {{tier}}"
   }
 }

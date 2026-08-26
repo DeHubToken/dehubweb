@@ -351,7 +351,8 @@
     "activityLog": "Irekhodi Lomsebenzi",
     "endStream": "Qeda Ukusakaza",
     "linkCopied": "Isixhumanisi sikopishiwe",
-    "postUrlCopied": "I-URL yokuthunyelwe ikopishiwe"
+    "postUrlCopied": "I-URL yokuthunyelwe ikopishiwe",
+    "boostPost": "Khuthaza okuthunyelwe"
   },
   "filters": {
     "sort": "Hlela",
@@ -800,7 +801,8 @@
     "ppvStartSaving": "Thenga okuqukethwe kwe-Pay-Per-View kubadali obathandayo ukuze kuvele lapha.",
     "recentStartSaving": "Okuthunyelwe osanda kukubhukimakha kuzovela lapha.",
     "textStartSaving": "Bhukimakha okuthunyelwe kombhalo kuphela futhi kuzovela lapha.",
-    "videosStartSaving": "Bhukimakha okuthunyelwe okunamavidiyo futhi kuzoqoqelwa lapha."
+    "videosStartSaving": "Bhukimakha okuthunyelwe okunamavidiyo futhi kuzoqoqelwa lapha.",
+    "folders": "Amafolda"
   },
   "notifications": {
     "title": "Zaziso",
@@ -1753,5 +1755,49 @@
       "startTerm": "Umlando",
       "start": "— \"isikhathi sonke\" kusho usuku ngalunye i-Cloudflare esalugcinile, namuhla izinsuku ezingu-{{days}} kusukela ngo-{{date}}, usuku i-dehub.io eyathuthela ngalo ku-Cloudflare. Ayikho idatha yasemaphethelweni yangaphambili engaboniswa, futhi izinsuku ezindala ziyawa njengoba i-Cloudflare izenza zibe ndala."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Abalandeli bakabani okufanele bakubone?",
+    "aimAtTiers": "Yimaphi amazinga ebheji okufanele akubone?",
+    "aimPlaceholder": "Igama lomsebenzisi noma ikheli lesikhwama",
+    "boost": "Khuthaza",
+    "boostBooked": "Kukhuthaziwe imizuzu engu-{{minutes}}",
+    "boostExplainer": "Kubeka lokhu okuthunyelwe endaweni ephezulu kohla lwasekhaya ngesikhathi sakho esabelweyo.",
+    "boostFailed": "Ayikwazanga ukukhuthaza lokho okuthunyelwe",
+    "boostForMinutes": "Khuthaza imizuzu engu-{{minutes}}",
+    "boostedLabel": "Kukhuthaziwe",
+    "boostsLeft": "{{left}} kwaku-{{total}} kokukhuthaza kusasele",
+    "cancelFailed": "Ayikwazanga ukukhansela lokho kukhuthaza",
+    "cancelledRefunded": "Ukukhuthaza kukhanseliwe futhi kubuyiselwe esabelweni sakho",
+    "cancelledSpent": "Ukukhuthaza kukhanseliwe. Kwase kuqalile, ngakho kusasele kusetshenzisiwe.",
+    "colBoosts": "Ukukhuthaza",
+    "colEach": "Ngakunye",
+    "colTier": "Izinga",
+    "colTotal": "Ngomjikelezo ngamunye",
+    "comingSoon": "kuyeza maduze",
+    "finishedCount": "{{count}} kuqediwe kulo mjikelezo, kubonwe izikhathi ezingu-{{seen}}",
+    "grantLine": "{{boosts}} × imizuzu engu-{{minutes}} ngomjikelezo",
+    "intro": "Ibheji lithenga okungaphezu komdwebo osecaleni kwegama lakho. Njalo ngamaviki amabili linika ukukhuthaza — ngakunye kubeka okuthunyelwe endaweni ephezulu kohla lwasekhaya. Amazinga ayi-13, amandla ayi-13, ukuvulwa okukodwa ngezinga ngalinye.",
+    "ladderHeading": "Okunikwa yizinga ngalinye",
+    "left": "kusele",
+    "liveUntil": "kusebenza kuze kube ngu-{{time}}",
+    "loadFailed": "Ayikwazanga ukulayisha Amandla Akho manje. Zama futhi emzuzwini.",
+    "minutes": "imizuzu",
+    "needBadge": "Amandla adinga ibheji lokufaka. Faka i-DHB ukuze uwavule.",
+    "noBadgeYet": "Awunalo ibheji okwamanje, ngakho awukho ukukhuthaza. Ukufaka i-DHB kuvula uhlu olungezansi.",
+    "noBoostsLeft": "Akukho okukhuthaza okusele kulo mjikelezo",
+    "powersHeading": "Amandla ayi-13",
+    "queued": "kulinde ohlwini",
+    "refills": "kugcwaliswa kabusha ngo-{{date}}",
+    "refillsOn": "Kugcwaliswa kabusha ngo-{{date}} — isikhathi esifanayo kubo bonke.",
+    "secondWind": "Umoya Wesibili",
+    "secondWindExplainer": "Lokhu okuthunyelwe sekudlule iviki. Umoya Wesibili ukubuyisela phezulu ohlwini.",
+    "seenCount": "{{count}} kuboniwe",
+    "shareOfVoice": "Indawo yokukhuthaza iyajikeleza. Uma kukhuthazwa okuningi kusebenza ngasikhathi sinye, ababukeli banikwa okulinganiselwa ngezinga lebheji — izinga eliphezulu liboniswa kaningi, futhi wonke umuntu uthola isikhathi anikwe sona.",
+    "spendFor": "{{power}} imizuzu engu-{{minutes}}",
+    "spent": "{{power}} isebenza imizuzu engu-{{minutes}}",
+    "stakeDhb": "Faka i-DHB",
+    "title": "Amandla",
+    "unlocksAt": "I-{{power}} ivulwa ku-{{tier}}"
   }
 }

@@ -351,7 +351,8 @@
     "activityLog": "Fizotran'ny hetsika",
     "endStream": "Farano ny fampielezana",
     "linkCopied": "Rohy voatahiry",
-    "postUrlCopied": "URL lahatsoratra voatahiry"
+    "postUrlCopied": "URL lahatsoratra voatahiry",
+    "boostPost": "Manondrotra lahatsoratra"
   },
   "filters": {
     "sort": "Alamino",
@@ -710,7 +711,8 @@
     "ppvStartSaving": "Vidio ny votoaty Pay-Per-View avy amin'ireo mpamorona tianao mba hisehoany eto.",
     "recentStartSaving": "Hiseho eto ireo lahatsoratra nasianao marika farany.",
     "textStartSaving": "Asio marika ny lahatsoratra an-tsoratra fotsiny dia hiseho eto izy ireo.",
-    "videosStartSaving": "Asio marika ny lahatsoratra misy horonan-tsary dia hangonina eto izy ireo."
+    "videosStartSaving": "Asio marika ny lahatsoratra misy horonan-tsary dia hangonina eto izy ireo.",
+    "folders": "Rakitra"
   },
   "notifications": {
     "title": "Fampandrenesana",
@@ -1821,5 +1823,49 @@
       "startTerm": "Tantara",
       "start": "— ny \"fotoana rehetra\" dia midika hoe ny andro rehetra mbola tehirizin'ny Cloudflare, androany {{days}} andro nanomboka ny {{date}}, ny andro nifindran'ny dehub.io tany Cloudflare. Tsy misy angona sisiny taloha hasehoina, ary milatsaka ireo andro taloha rehefa esorin'ny Cloudflare."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Mpanaraky iza no tokony hahita azy?",
+    "aimAtTiers": "Ambaratongan'ny mari-pankasitrahana manao ahoana no tokony hahita azy?",
+    "aimPlaceholder": "Anarana na adiresin'ny kitapom-bola",
+    "boost": "Manondrotra",
+    "boostBooked": "Nasondrotra nandritra ny {{minutes}} minitra",
+    "boostExplainer": "Apetraka eo amin'ny toerana ambony indrindra amin'ny fantsona fandraisana ity lahatsoratra ity, mandritra ny fe-potoanao.",
+    "boostFailed": "Tsy afaka nanondro io lahatsoratra io",
+    "boostForMinutes": "Manondrotra mandritra ny {{minutes}} minitra",
+    "boostedLabel": "Nasondrotra",
+    "boostsLeft": "{{left}} amin'ny {{total}} fanondrotana no sisa",
+    "cancelFailed": "Tsy afaka nanafoana io fanondrotana io",
+    "cancelledRefunded": "Nofoanana ny fanondrotana ary naverina tao amin'ny anjara azonao",
+    "cancelledSpent": "Nofoanana ny fanondrotana. Efa nanomboka izy io, ka mijanona ho lany.",
+    "colBoosts": "Fanondrotana",
+    "colEach": "Isaky ny iray",
+    "colTier": "Ambaratonga",
+    "colTotal": "Isaky ny tsingerina",
+    "comingSoon": "ho avy tsy ho ela",
+    "finishedCount": "{{count}} vita tamin'ity tsingerina ity, hita {{seen}} indray",
+    "grantLine": "{{boosts}} × {{minutes}} minitra isaky ny tsingerina",
+    "intro": "Tsy sary ihany no vidin'ny mari-pankasitrahana iray eo akaikin'ny anaranao. Isaky ny herinandro roa dia manome fanondrotana izy — ny tsirairay dia mametraka lahatsoratra eo amin'ny toerana ambony indrindra amin'ny fantsona fandraisana. Ambaratonga telo ambin'ny folo, hery telo ambin'ny folo, iray voavaha isaky ny ambaratonga.",
+    "ladderHeading": "Izay omen'ny ambaratonga tsirairay",
+    "left": "sisa",
+    "liveUntil": "mavitrika mandra-pahatongan'ny {{time}}",
+    "loadFailed": "Tsy afaka naka ny SuperPowers-nao amin'izao fotoana izao. Andramo indray afaka kelikely.",
+    "minutes": "minitra",
+    "needBadge": "Mila mari-pankasitrahana avy amin'ny fametrahana vola ny SuperPowers. Apetraho ny DHB mba hamahana azy ireo.",
+    "noBadgeYet": "Mbola tsy manana mari-pankasitrahana ianao, ka tsy misy fanondrotana. Ny fametrahana DHB no mamaha ny ambaratonga eto ambany.",
+    "noBoostsLeft": "Tsy misy fanondrotana sisa amin'ity tsingerina ity",
+    "powersHeading": "Ny hery telo ambin'ny folo",
+    "queued": "miandry",
+    "refills": "mameno indray {{date}}",
+    "refillsOn": "Mameno indray amin'ny {{date}} — fotoana iray ihany ho an'ny rehetra.",
+    "secondWind": "Fofonaina Faharoa",
+    "secondWindExplainer": "Efa mihoatra ny herinandro ity lahatsoratra ity. Averin'ny Fofonaina Faharoa eo amin'ny tampon'ny fantsona izy io.",
+    "seenCount": "hita {{count}}",
+    "shareOfVoice": "Mihodinkodina ny toerana fanondrotana. Rehefa maro ny fanondrotana mandeha, dia iray no aseho amin'ny mpijery, safidiana araka ny lanjan'ny ambaratongan'ny mari-pankasitrahana — matetika kokoa no aseho ny ambaratonga ambony, ary samy mahazo ny fe-potoana nomena azy ny tsirairay.",
+    "spendFor": "{{power}} nandritra ny {{minutes}} minitra",
+    "spent": "Mandeha ny {{power}} nandritra ny {{minutes}} minitra",
+    "stakeDhb": "Apetraho ny DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "Mivoha ny {{power}} amin'ny {{tier}}"
   }
 }

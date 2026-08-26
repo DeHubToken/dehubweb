@@ -351,7 +351,8 @@
     "activityLog": "Registre d'activitat",
     "endStream": "Finalitzar emissió",
     "linkCopied": "Enllaç copiat al porta-retalls",
-    "postUrlCopied": "URL de la publicació copiat al porta-retalls"
+    "postUrlCopied": "URL de la publicació copiat al porta-retalls",
+    "boostPost": "Impulsa la publicació"
   },
   "filters": {
     "sort": "Ordenar",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Compra contingut de pagament per visualització dels teus creadors preferits perquè aparegui aquí.",
     "recentStartSaving": "Les teves publicacions marcades més recentment es mostraran aquí.",
     "textStartSaving": "Marca publicacions només de text i apareixeran aquí.",
-    "videosStartSaving": "Marca publicacions amb vídeos i es recopilaran aquí."
+    "videosStartSaving": "Marca publicacions amb vídeos i es recopilaran aquí.",
+    "folders": "Carpetes"
   },
   "notifications": {
     "title": "Notificacions",
@@ -1722,5 +1724,49 @@
       "startTerm": "Historial",
       "start": "— «tot el període» vol dir cada dia que Cloudflare encara conserva, avui {{days}} dies a partir del {{date}}, el dia que dehub.io va passar a Cloudflare. No hi ha dades de vora anteriors per mostrar, i els dies antics van caient a mesura que Cloudflare els caduca."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Els seguidors de qui l'han de veure?",
+    "aimAtTiers": "Quins nivells d'insígnia l'han de veure?",
+    "aimPlaceholder": "Nom d'usuari o adreça de cartera",
+    "boost": "Impulsa",
+    "boostBooked": "Impulsada durant {{minutes}} minuts",
+    "boostExplainer": "Posa aquesta publicació a l'espai de dalt de tot del canal principal durant la teva franja.",
+    "boostFailed": "No s'ha pogut impulsar aquesta publicació",
+    "boostForMinutes": "Impulsa durant {{minutes}} minuts",
+    "boostedLabel": "Impulsada",
+    "boostsLeft": "Queden {{left}} de {{total}} impulsos",
+    "cancelFailed": "No s'ha pogut cancel·lar aquest impuls",
+    "cancelledRefunded": "Impuls cancel·lat i retornat a la teva assignació",
+    "cancelledSpent": "Impuls cancel·lat. Ja havia començat, així que es manté com a gastat.",
+    "colBoosts": "Impulsos",
+    "colEach": "Cadascun",
+    "colTier": "Nivell",
+    "colTotal": "Per cicle",
+    "comingSoon": "properament",
+    "finishedCount": "{{count}} acabats aquest cicle, vist {{seen}} vegades",
+    "grantLine": "{{boosts}} × {{minutes}} minuts per cicle",
+    "intro": "Una insígnia compra més que el dibuix del costat del teu nom. Cada quinze dies concedeix impulsos: cadascun posa una publicació a l'espai de dalt de tot del canal principal. Tretze nivells, tretze poders, un desbloqueig per esglaó.",
+    "ladderHeading": "Què concedeix cada nivell",
+    "left": "queden",
+    "liveUntil": "actiu fins a les {{time}}",
+    "loadFailed": "No s'han pogut carregar els teus SuperPowers ara mateix. Torna-ho a provar d'aquí a un moment.",
+    "minutes": "minuts",
+    "needBadge": "Els SuperPowers necessiten una insígnia de dipòsit. Diposita DHB per desbloquejar-los.",
+    "noBadgeYet": "Encara no tens cap insígnia, així que no tens impulsos. Dipositar DHB desbloqueja l'escala de sota.",
+    "noBoostsLeft": "No queden impulsos aquest cicle",
+    "powersHeading": "Els tretze poders",
+    "queued": "en cua",
+    "refills": "es renova el {{date}}",
+    "refillsOn": "Es renova el {{date}} — al mateix moment per a tothom.",
+    "secondWind": "Segon Alè",
+    "secondWindExplainer": "Aquesta publicació té més d'una setmana. Segon Alè la torna a enviar a dalt de tot del canal.",
+    "seenCount": "{{count}} vistes",
+    "shareOfVoice": "L'espai d'impuls rota. Quan hi ha diversos impulsos actius alhora, als espectadors se'ls mostra un de triat segons el nivell d'insígnia — un nivell més alt es mostra més sovint, i tothom rep la franja que se li ha concedit.",
+    "spendFor": "{{power}} durant {{minutes}} minuts",
+    "spent": "{{power}} actiu des de fa {{minutes}} minuts",
+    "stakeDhb": "Diposita DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} es desbloqueja a {{tier}}"
   }
 }
