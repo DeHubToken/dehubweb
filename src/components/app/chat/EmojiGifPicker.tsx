@@ -3,6 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Smile, Search, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const EMOJI_CATEGORIES = {
   'Smileys': ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😍', '🥰', '😘', '😋', '😛', '🤪', '😎', '🤩', '🥳'],
@@ -46,9 +47,16 @@ async function searchGifs(query: string): Promise<string[]> {
 interface EmojiGifPickerProps {
   onEmojiSelect: (emoji: string) => void;
   onGifSelect: (gifUrl: string) => void;
+  /** Overrides the trigger's default ghost-button look — for callers whose
+   *  neighbouring controls use a different button style (e.g. the comment
+   *  composer's bordered glass pills instead of the chat rail's ghost icons). */
+  triggerClassName?: string;
+  /** Overrides the Smile glyph's default size, to match a neighbouring icon
+   *  size other than the chat rail's w-5 h-5. */
+  iconClassName?: string;
 }
 
-export function EmojiGifPicker({ onEmojiSelect, onGifSelect }: EmojiGifPickerProps) {
+export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, iconClassName }: EmojiGifPickerProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'emoji' | 'gif'>('emoji');
   const [activeCategory, setActiveCategory] = useState('Smileys');
@@ -120,9 +128,9 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect }: EmojiGifPickerPro
           type="button"
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-white hover:text-white hover:bg-zinc-700"
+          className={cn("h-8 w-8 text-white hover:text-white hover:bg-zinc-700", triggerClassName)}
         >
-          <Smile className="w-5 h-5" />
+          <Smile className={cn("w-5 h-5", iconClassName)} />
         </Button>
       </PopoverTrigger>
       <PopoverContent 
