@@ -6,7 +6,7 @@
  * @module components/app/feeds/ShortsFeed
  */
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, lazy, Suspense } from 'react';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
@@ -21,7 +21,12 @@ import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
-import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
+// Lazy: the viewer only exists once a short is opened, and statically it drags
+// VideoSlide, the fullscreen/tap-gesture hooks, CommentsSection and its modals
+// onto the boot path — all parsed before the feed paints.
+const ShortsViewer = lazy(() =>
+  import('@/components/app/cards/ShortsViewer').then(m => ({ default: m.ShortsViewer })),
+);
 import { useDeHubFeed } from '@/hooks/use-dehub-feed';
 import { useUnifiedFeed } from '@/hooks/use-unified-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
@@ -722,19 +727,23 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         )}
       </div>
 
-      {/* Full-screen Shorts Viewer */}
-      <AnimatePresence>
-        {viewerOpen && (
-          <ShortsViewer
-            shorts={shorts}
-            initialIndex={selectedIndex}
-            onClose={() => setViewerOpen(false)}
-            onLoadMore={() => fetchNextPage()}
-            hasMore={hasNextPage ?? false}
-            isLoadingMore={isFetchingNextPage}
-          />
-        )}
-      </AnimatePresence>
+      {/* Full-screen Shorts Viewer. Suspense sits OUTSIDE AnimatePresence so the
+          viewer stays its direct child — a boundary in between swallows the exit
+          animation. */}
+      <Suspense fallback={null}>
+        <AnimatePresence>
+          {viewerOpen && (
+            <ShortsViewer
+              shorts={shorts}
+              initialIndex={selectedIndex}
+              onClose={() => setViewerOpen(false)}
+              onLoadMore={() => fetchNextPage()}
+              hasMore={hasNextPage ?? false}
+              isLoadingMore={isFetchingNextPage}
+            />
+          )}
+        </AnimatePresence>
+      </Suspense>
     </>
   );
 }

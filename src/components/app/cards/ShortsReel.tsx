@@ -10,11 +10,14 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { Play, ChevronRight, ThumbsUp, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
-import { ShortsViewer } from './ShortsViewer';
+// Lazy for the same reason as the other call sites — see ShortsFeed.
+const ShortsViewer = lazy(() =>
+  import('./ShortsViewer').then(m => ({ default: m.ShortsViewer })),
+);
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
@@ -151,15 +154,17 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
           feed ancestor (Framer Motion masonry wrappers apply inline transforms,
           which would otherwise become the containing block for position:fixed). */}
       {createPortal(
-        <AnimatePresence>
-          {viewerOpen && (
-            <ShortsViewer
-              shorts={shorts}
-              initialIndex={selectedIndex}
-              onClose={() => setViewerOpen(false)}
-            />
-          )}
-        </AnimatePresence>,
+        <Suspense fallback={null}>
+          <AnimatePresence>
+            {viewerOpen && (
+              <ShortsViewer
+                shorts={shorts}
+                initialIndex={selectedIndex}
+                onClose={() => setViewerOpen(false)}
+              />
+            )}
+          </AnimatePresence>
+        </Suspense>,
         document.body
       )}
     </>
