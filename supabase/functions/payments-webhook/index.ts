@@ -117,12 +117,90 @@ async function handleSubscriptionDeleted(subscription: any, env: StripeEnv) {
 }
 
 /**
+ * Ask the backend to deliver this invoice's DHB to the subscriber's wallet.
+ *
+ * Returns true when the tokens are handled on-chain and this invoice must NOT
+ * also be credited to the ledger — granting both would pay the allowance
+ * twice, once in tokens and once in credit.
+ *
+ * The two systems stay in step without a second flag to remember, because the
+ * answer comes from whichever side actually owns the decision. The backend
+ * says `queued` when it took the job and `already_recorded` when a previous
+ * delivery for this invoice exists; both mean the tokens are covered.
+ * Anything else — the feature switched off, a missing secret, a non-2xx, an
+ * unreachable host — means they are not, and the caller falls back to the
+ * ledger. That is the safe direction to fail: a subscriber who paid always
+ * ends up with a usable allowance.
+ */
+async function deliverPlanTokens(args: {
+  wallet: string;
+  dhb: number;
+  invoiceId: string;
+  priceId: string;
+  seats: number;
+  env: StripeEnv;
+}): Promise<boolean> {
+  // Test-mode invoices settle in ledger credit, never in tokens. There is no
+  // testnet DHB behind this path — the backend sends on Base mainnet — so a
+  // sandbox subscription that reached it would pay out real money against a
+  // card that was never charged.
+  if (args.env !== "live") return false;
+
+  const secret = Deno.env.get("INTERNAL_SERVICE_SECRET");
+  if (!secret) return false;
+
+  const base = Deno.env.get("DEHUB_API_URL") ?? "https://api.dehub.io";
+
+  try {
+    const res = await fetch(`${base}/api/dpay/subscription-grant`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-internal-secret": secret,
+      },
+      body: JSON.stringify({
+        invoiceId: args.invoiceId,
+        walletAddress: args.wallet,
+        amountDhb: args.dhb,
+        priceId: args.priceId,
+        seats: args.seats,
+      }),
+    });
+
+    if (!res.ok) {
+      console.error(
+        `Token delivery declined for ${args.invoiceId}: HTTP ${res.status}. Falling back to ledger credit.`,
+      );
+      return false;
+    }
+
+    const body = await res.json().catch(() => ({}));
+    const handled = body?.queued === true || body?.reason === "already_recorded";
+    if (!handled) {
+      console.log(
+        `Token delivery not taken for ${args.invoiceId} (${body?.reason ?? "unknown"}); using ledger credit.`,
+      );
+    }
+    return handled;
+  } catch (e) {
+    console.error(
+      `Token delivery unreachable for ${args.invoiceId}: ${e}. Falling back to ledger credit.`,
+    );
+    return false;
+  }
+}
+
+/**
  * Grant the plan's monthly DHB allowance.
  *
  * Hung off invoice.paid rather than subscription.created so renewals grant too
  * — an allowance that only ever landed once would be a one-off, not a plan.
  * The invoice id is the idempotency key, so Stripe re-delivering a webhook (it
  * does) cannot pay the allowance twice.
+ *
+ * The allowance is settled one of two ways: as real DHB sent to the
+ * subscriber's wallet, or as ledger credit. Never both — see
+ * deliverPlanTokens.
  */
 async function handleInvoicePaid(invoice: any, env: StripeEnv) {
   const line = invoice.lines?.data?.[0];
@@ -157,6 +235,24 @@ async function handleInvoicePaid(invoice: any, env: StripeEnv) {
 
   if (!wallet) {
     console.error("No wallet for paid invoice", invoice.id);
+    return;
+  }
+
+  // On-chain delivery first. It owns the decision about whether this invoice
+  // is settled in tokens, and only says no in the cases where ledger credit
+  // is the right answer.
+  const deliveredAsTokens = await deliverPlanTokens({
+    wallet: wallet.toLowerCase(),
+    dhb: grantDhb,
+    invoiceId: invoice.id,
+    priceId,
+    seats,
+    env,
+  });
+  if (deliveredAsTokens) {
+    console.log(
+      `Queued ${grantDhb} DHB on-chain to ${wallet} for ${priceId} (${invoice.id})`,
+    );
     return;
   }
 
