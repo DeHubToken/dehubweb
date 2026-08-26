@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type Re
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket, Gift, Lock } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket, Gift, Lock, Star } from 'lucide-react';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -52,7 +52,7 @@ import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
-import { isHoldGated } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import {
@@ -76,6 +76,14 @@ import type { TextPost } from '@/types/feed.types';
  */
 const BoostModal = lazy(() =>
   import('../modals/BoostModal').then((m) => ({ default: m.BoostModal }))
+);
+
+/**
+ * Lazy for the same reason, and more so: the subscriber sheet renders PlanCard,
+ * which reaches the subscription contracts. Feed cards are the boot path.
+ */
+const SubscriberGateDrawer = lazy(() =>
+  import('./SubscriberGateDrawer').then((m) => ({ default: m.SubscriberGateDrawer }))
 );
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
@@ -161,12 +169,21 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   // author's own post too.
   const matureGate = useMatureGate(post.contentRating);
 
-  // Subscriber-only gating - bypass for owners & already-unlocked content
+  // Two independent gates, and they are not the same question. `isLocked` is a
+  // holdings gate — own N of a token, which any stranger can go and buy.
+  // `isSubGated` is a subscriber gate — subscribe to THIS creator, which only
+  // they can grant. A post can carry either, both, or neither.
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
+  const [showSubDrawer, setShowSubDrawer] = useState(false);
   const [locallyUnlocked, setLocallyUnlocked] = useState(false);
+  const [locallySubscribed, setLocallySubscribed] = useState(false);
   const storedUnlocked = isTokenUnlocked(post.id);
   const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
   const isLocked = isHoldGated(post.isLocked, post.lockedPrice) && !canBypassGating;
+  const isSubGated = isSubscriberGated(post.subscriberPlans, !!isOwnPost || !!post.isOwner || locallySubscribed);
+  const cheapestPlan = post.subscriberPlans?.length
+    ? post.subscriberPlans.reduce((a, b) => (Number(b.price) < Number(a.price) ? b : a))
+    : undefined;
 
   const formatCompact = (num: number | null | undefined): string => {
     const n = Number(num);
@@ -576,7 +593,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           onReveal={matureGate.reveal}
           description="The creator marked this post as adult or graphic."
         />
-        ) : isLocked ? (
+        ) : (isLocked || isSubGated) ? (
         <>
         {/* Title stays visible as the headline; only the body is gated. */}
         {post.title && (
@@ -602,16 +619,34 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                   {renderTextWithLinks(firstLine)}
                 </p>
               </div>
-              <button
-                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
-                className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
-              >
-                <Lock className="w-3.5 h-3.5" />
-                {/* Not a subscription — isLockContent is "hold N of this token".
-                    The old label sent people looking for a subscribe flow that
-                    does not exist on this path. */}
-                Hold {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'} to read
-              </button>
+              {/* Each gate gets its own button, because each opens a different
+                  sheet and asks for a different thing. A post carrying both
+                  shows both — either one satisfied is enough to read it. */}
+              <div className="flex flex-wrap items-center gap-2">
+                {isSubGated && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
+                    className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
+                  >
+                    <Star className="w-3.5 h-3.5" />
+                    {cheapestPlan
+                      ? `Subscribe from ${formatCompact(Number(cheapestPlan.price))} DHB`
+                      : 'Subscribe to read'}
+                  </button>
+                )}
+                {isLocked && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
+                    className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    {/* Deliberately not "Subscribe" — isLockContent is "hold N
+                        of this token", which is a different gate to the one
+                        above and has no subscription anywhere in it. */}
+                    Hold {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'} to read
+                  </button>
+                )}
+              </div>
             </div>
           );
         })()}
@@ -661,7 +696,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           }}
         />
 
-        {!isLocked && parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
+        {!isLocked && !isSubGated && parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
 
         <div className="pt-1">
           <ActionBar
@@ -802,6 +837,28 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Subscriber sheet. Separate from the hold-gate sheet below because it
+          asks a different question and buys a different thing. */}
+      {isSubGated && (
+        <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
+          <DrawerContent glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
+              <SubscriberGateDrawer
+                creatorAddress={post.author.id}
+                creatorName={post.author.name || post.author.handle}
+                previewPlans={post.subscriberPlans}
+                onSubscribed={() => {
+                  setLocallySubscribed(true);
+                  setShowSubDrawer(false);
+                  queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+                  queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
+                }}
+              />
+            </Suspense>
+          </DrawerContent>
+        </Drawer>
+      )}
 
       {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
       {isLocked && (

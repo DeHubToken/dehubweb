@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { stripDehubLinkMatches } from '@/lib/dehub-links';
@@ -17,7 +17,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil, Rocket } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil, Rocket, Star } from 'lucide-react';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
@@ -61,7 +61,12 @@ import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
-import { isHoldGated } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
+
+/** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
+const SubscriberGateDrawer = lazy(() =>
+  import('./SubscriberGateDrawer').then((m) => ({ default: m.SubscriberGateDrawer }))
+);
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,
@@ -519,11 +524,18 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
 
   // PPV/Bounty/Locked status - bypass for owners & already-unlocked content
   const [locallyUnlocked, setLocallyUnlocked] = useState(false);
+  const [locallySubscribed, setLocallySubscribed] = useState(false);
+  const [showSubDrawer, setShowSubDrawer] = useState(false);
   const storedUnlocked = isTokenUnlocked(post.id);
   const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
   const isPPV = (post.isPPV || false) && !canBypassGating;
   const isW2E = (post.isW2E || false) && !canBypassGating;
   const isLocked = isHoldGated(post.isLocked, post.lockedPrice) && !canBypassGating;
+  // A second, independent gate — subscribe to this creator, not own a token.
+  const isSubGated = isSubscriberGated(post.subscriberPlans, !!isOwnPost || !!post.isOwner || locallySubscribed);
+  const cheapestPlan = post.subscriberPlans?.length
+    ? post.subscriberPlans.reduce((a, b) => (Number(b.price) < Number(a.price) ? b : a))
+    : undefined;
   const isComboLocked = isPPV && isLocked;
   // Independent of the monetisation gates above: a post can be both mature and
   // pay-per-view, and the creator's own post is warned about too — the warning
@@ -940,6 +952,35 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
               </div>
             </div>
           </>
+        ) : isSubGated ? (
+          <>
+            {/* Subscriber gated: same blur, different ask. Ordered above the
+                holdings branch because a post carrying both is more likely to
+                be a creator's subscriber post than a token play. */}
+            <div className="relative rounded-2xl overflow-hidden">
+              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
+                onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
+                onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+                onTouchEnd={(e) => {
+                  e.stopPropagation();
+                  const start = (e.currentTarget as any)._touchStart;
+                  if (!start) return;
+                  const touch = e.changedTouches[0];
+                  if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowSubDrawer(true); }
+                }}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                  <Star className="h-7 w-7 text-white" />
+                </div>
+                <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
+                <p className="text-white/70 text-xs">
+                  {cheapestPlan ? `Subscribe from ${formatCompact(Number(cheapestPlan.price))} DHB` : `Subscribe to ${post.username}`}
+                </p>
+              </div>
+            </div>
+          </>
         ) : isLocked ? (
           <>
             {/* Holdings Locked: blurred image with lock icon overlay */}
@@ -1273,6 +1314,27 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 {t('drawers.bountyDescription')}
               </p>
             </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Subscriber sheet — a different gate to the holdings one below. */}
+      {isSubGated && (
+        <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
+              <SubscriberGateDrawer
+                creatorAddress={post.creatorId || ""}
+                creatorName={post.username}
+                previewPlans={post.subscriberPlans}
+                onSubscribed={() => {
+                  setLocallySubscribed(true);
+                  setShowSubDrawer(false);
+                  queryClient.invalidateQueries({ queryKey: ["unified-feed"] });
+                  queryClient.invalidateQueries({ queryKey: ["dehub-feed"] });
+                }}
+              />
+            </Suspense>
           </DrawerContent>
         </Drawer>
       )}

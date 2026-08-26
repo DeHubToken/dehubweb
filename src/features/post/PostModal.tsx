@@ -130,6 +130,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       />
 
       <PostAccessToggles
+        isSubscribersOnly={state.isSubscribersOnly}
+        setIsSubscribersOnly={actions.setIsSubscribersOnly}
         isPPV={state.isPPV}
         setIsPPV={actions.setIsPPV}
         ppvAmount={state.ppvAmount}
