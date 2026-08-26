@@ -81,7 +81,7 @@ export function ProfilesSection() {
   if (profiles.length === 0 && !activeId) return null;
 
   return (
-    <div className="mb-6">
+    <div>
       <div className="flex items-center gap-3 mb-1">
         <Users className="w-5 h-5 text-zinc-400" />
         <h3 className="font-medium text-white">{t('settings.profiles', 'Profiles')}</h3>
@@ -163,26 +163,28 @@ export function ProfilesSection() {
             </div>
           );
         })}
-
-        <button
-          onClick={() => openLoginModal({ intent: 'add-profile' })}
-          disabled={!!switchingId || isFull}
-          title={
-            isFull
-              ? allowance.nextTierName
-                ? t('settings.profilesFullTier', 'Stake for a {{tier}} badge to keep {{count}} profiles', {
-                    tier: allowance.nextTierName,
-                    count: allowance.nextTierProfiles,
-                  })
-                : t('settings.profilesFull', 'Remove a profile to add a different account')
-              : undefined
-          }
-          className="flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/15 text-zinc-400 hover:text-white hover:border-white/30 transition-colors disabled:opacity-40 disabled:hover:text-zinc-400 disabled:hover:border-white/15 disabled:cursor-not-allowed"
-        >
-          <Plus className="w-4 h-4" />
-          <span className="text-sm font-medium">{t('settings.addProfile', 'Add profile')}</span>
-        </button>
       </div>
+
+      {/* Full width under the grid rather than a cell inside it: it is the
+          action for the whole section, not another account in the list. */}
+      <button
+        onClick={() => openLoginModal({ intent: 'add-profile' })}
+        disabled={!!switchingId || isFull}
+        title={
+          isFull
+            ? allowance.nextTierName
+              ? t('settings.profilesFullTier', 'Stake for a {{tier}} badge to keep {{count}} profiles', {
+                  tier: allowance.nextTierName,
+                  count: allowance.nextTierProfiles,
+                })
+              : t('settings.profilesFull', 'Remove a profile to add a different account')
+            : undefined
+        }
+        className="mt-2 w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/15 text-zinc-400 hover:text-white hover:border-white/30 transition-colors disabled:opacity-40 disabled:hover:text-zinc-400 disabled:hover:border-white/15 disabled:cursor-not-allowed"
+      >
+        <Plus className="w-4 h-4" />
+        <span className="text-sm font-medium">{t('settings.addProfile', 'Add profile')}</span>
+      </button>
     </div>
   );
 }
