@@ -991,6 +991,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
                       letterbox={!isMobile}
+                      // Desktop only: this viewer is already `fixed inset-0` on
+                      // mobile, so the short fills the screen there and a
+                      // fullscreen control would do nothing visible.
+                      allowFullscreen={!isMobile}
                       // Buffer the current slide + the next one so a swipe lands
                       // on an already-loaded video. The previous slide (offset
                       // -1) is almost always still in the browser cache from
