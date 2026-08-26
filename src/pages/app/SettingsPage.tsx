@@ -188,7 +188,12 @@ import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
 import { CharactersLibrary } from '@/components/app/characters/CharactersLibrary';
 
 import { SEOHead } from '@/components/SEOHead';
-import { searchSettings, revealSettingAnchor, type SettingsSearchHit } from '@/lib/settings-search';
+import {
+  SETTINGS_SEARCH_INDEX,
+  searchSettings,
+  revealSettingAnchor,
+  type SettingsSearchHit,
+} from '@/lib/settings-search';
 import { useAppTheme, DEFAULT_THEME_HUES } from '@/contexts/ThemeContext';
 import { THEME_COLOR, isSpecialThemeColor } from '@/lib/theme-color';
 import { extractBrandColors } from '@/lib/brand-colors';
@@ -200,8 +205,14 @@ export default function SettingsPage() {
   // setting — the new-member notice toast, a support reply — otherwise lands
   // them on Profile and leaves them hunting for it.
   const [activeTab, setActiveTab] = useState(() => {
-    const requested = new URLSearchParams(window.location.search).get('tab');
-    return requested && tabs.some((tab) => tab.value === requested) ? requested : 'profile';
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get('tab');
+    if (requested && tabs.some((tab) => tab.value === requested)) return requested;
+    // `?highlight=` on its own is enough: the index knows which tab a setting
+    // lives in, so a link does not have to name both and cannot name the
+    // wrong one.
+    const highlight = params.get('highlight');
+    return SETTINGS_SEARCH_INDEX.find((entry) => entry.anchor === highlight)?.tab ?? 'profile';
   });
   const settingsIsDraggingRef = useRef(false);
   const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
@@ -244,8 +255,9 @@ export default function SettingsPage() {
     revealSettingAnchor(result.anchor);
   }, []);
 
-  // `?tab=privacy&highlight=geo-blocking` opens one specific setting — the
-  // same jump search makes, reusable from a toast or a support reply.
+  // `?highlight=geo-blocking` opens one specific setting — the same jump
+  // search makes, reusable from a toast or a support reply. The tab it lives
+  // in is looked up above, so the link only needs the one parameter.
   useEffect(() => {
     const anchor = new URLSearchParams(window.location.search).get('highlight');
     if (anchor) revealSettingAnchor(anchor);
