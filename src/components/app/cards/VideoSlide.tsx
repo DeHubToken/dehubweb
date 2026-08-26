@@ -8,11 +8,12 @@
  */
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Maximize, Minimize } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
+import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -62,6 +63,58 @@ export const VideoSlide = memo(function VideoSlide({
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  // The slide frame, not the <video>: fullscreening the frame carries the seek
+  // strip and the play indicator into fullscreen with it.
+  const frameRef = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, frameRef);
+
+  /**
+   * Tap handling on the video area.
+   *
+   * A single tap plays/pauses (that is `onTap`, owned by the viewer) and a
+   * double tap in the middle toggles fullscreen — the same split VideoCard's
+   * immersive mode uses, so the gesture means the same thing on both players.
+   *
+   * Only a tap inside the centre band pays the 300ms wait needed to tell one
+   * tap from two. Outside it there is no double-tap to disambiguate, so
+   * play/pause still fires instantly — which is most of the frame, and keeps
+   * the viewer feeling as immediate as it did before.
+   */
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTapRef = useRef(0);
+
+  useEffect(() => () => {
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+  }, []);
+
+  const handleVideoTap = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const relativeX = (e.clientX - rect.left) / rect.width;
+      const inCentre = relativeX >= 0.375 && relativeX <= 0.625;
+
+      if (!inCentre) {
+        onTap?.();
+        return;
+      }
+
+      const now = e.timeStamp;
+      if (tapTimerRef.current && now - lastTapRef.current < 300) {
+        clearTimeout(tapTimerRef.current);
+        tapTimerRef.current = null;
+        lastTapRef.current = 0;
+        toggleFullscreen();
+        return;
+      }
+
+      lastTapRef.current = now;
+      tapTimerRef.current = setTimeout(() => {
+        tapTimerRef.current = null;
+        onTap?.();
+      }, 300);
+    },
+    [onTap, toggleFullscreen],
+  );
 
   // Handle video metadata load to detect aspect ratio
   const handleLoadedMetadata = useCallback(() => {
@@ -282,8 +335,24 @@ export const VideoSlide = memo(function VideoSlide({
   // For a true 9:16 short this fills edge-to-edge, so the glass fill stays hidden.
   const fitWhole = letterbox || videoAspect !== 'portrait';
 
+  // Simulated fullscreen: `isFullscreen` with no native fullscreen element means
+  // the environment refused the API (WebViews do this silently), so the frame
+  // pins itself instead. See hooks/use-video-fullscreen.
+  const simulatedFullscreen =
+    isFullscreen &&
+    typeof document !== 'undefined' &&
+    !document.fullscreenElement &&
+    !(document as any).webkitFullscreenElement;
+
   return (
-    <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
+    <div
+      ref={frameRef}
+      className={cn(
+        'bg-black',
+        simulatedFullscreen ? 'fixed inset-0 z-[9999]' : 'absolute inset-0',
+      )}
+      style={{ willChange: 'transform' }}
+    >
       {/* Liquid glass fill behind letterboxed / non-portrait videos */}
       {fitWhole && thumbnail && (
         <>
@@ -304,12 +373,12 @@ export const VideoSlide = memo(function VideoSlide({
       )}
 
       {/* Video element */}
-      <div className="absolute inset-0 z-[2]" onClick={onTap}>
+      <div className="absolute inset-0 z-[2]" onClick={handleVideoTap}>
         {short.videoUrl ? (
           <video
             ref={videoRef}
             src={short.videoUrl}
-            className={`w-full h-full ${fitWhole ? 'object-contain' : 'object-cover'} transition-none`}
+            className={`w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`}
             style={{ willChange: 'transform' }}
             loop
             playsInline
@@ -332,6 +401,25 @@ export const VideoSlide = memo(function VideoSlide({
           </div>
         )}
       </div>
+
+      {/* Fullscreen toggle. Only the active slide gets one — the carousel keeps
+          neighbouring slides mounted, and a column of stacked buttons would all
+          sit at the same screen position. `data-no-swipe` keeps a press on it
+          from being read as the start of a navigation drag. */}
+      {isActive && (
+        <button
+          type="button"
+          data-no-swipe
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFullscreen();
+          }}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+          className="absolute top-3 right-3 z-30 h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+        >
+          {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+        </button>
+      )}
 
       {/* Play/Pause indicator - only shown on explicit tap */}
       {showPlayIndicator && (

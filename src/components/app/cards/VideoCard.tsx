@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
 import { useSkipSegments } from '@/lib/skip-segments';
 import { useVideoSegments, segmentAt } from '@/hooks/use-video-segments';
@@ -994,83 +995,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
   }, [isMuted, instanceId]);
 
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // Track fullscreen state changes
-  useEffect(() => {
-    const onFullscreenChange = () => {
-      setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement));
-    };
-    document.addEventListener('fullscreenchange', onFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
-
-    // iOS fires these events on the video element itself
-    const videoEl = videoRef.current;
-    const onIOSFullscreen = () => setIsFullscreen(true);
-    const onIOSExitFullscreen = () => setIsFullscreen(false);
-    videoEl?.addEventListener('webkitbeginfullscreen', onIOSFullscreen);
-    videoEl?.addEventListener('webkitendfullscreen', onIOSExitFullscreen);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', onFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
-      videoEl?.removeEventListener('webkitbeginfullscreen', onIOSFullscreen);
-      videoEl?.removeEventListener('webkitendfullscreen', onIOSExitFullscreen);
-    };
-  }, []);
-
-  const toggleFullscreen = useCallback(() => {
-    const videoEl = videoRef.current as any;
-    const containerEl = containerRef.current as any;
-
-    // Exit simulated fullscreen if active
-    if (isFullscreen && !document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-      setIsFullscreen(false);
-      return;
-    }
-
-    // Check if already in fullscreen (standard or iOS video)
-    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        (document as any).webkitExitFullscreen();
-      }
-      return;
-    }
-
-    // iOS Safari: only supports webkitEnterFullscreen on <video> element
-    if (videoEl && typeof videoEl.webkitEnterFullscreen === 'function') {
-      try {
-        videoEl.webkitEnterFullscreen();
-        return;
-      } catch {
-        // Fall through to container fullscreen or simulated
-      }
-    }
-
-    // Standard Fullscreen API on container — with fallback if blocked (e.g. SafePal WebView)
-    // Also adds a timeout to catch silent failures where the promise resolves but fullscreen never activates
-    if (containerEl) {
-      const activateSimulated = () => {
-        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-          setIsFullscreen(true);
-        }
-      };
-      if (containerEl.requestFullscreen) {
-        containerEl.requestFullscreen().catch(activateSimulated);
-        setTimeout(activateSimulated, 300);
-        return;
-      } else if (containerEl.webkitRequestFullscreen) {
-        try { containerEl.webkitRequestFullscreen(); } catch { activateSimulated(); }
-        setTimeout(activateSimulated, 300);
-        return;
-      }
-    }
-
-    // Fallback: simulated fullscreen (SafePal/WebView or iOS audio posts where no native API works)
-    setIsFullscreen(true);
-  }, [isFullscreen]);
+  // Shared with the shorts viewer — see hooks/use-video-fullscreen for the iOS
+  // and WebView fallbacks, which fail silently rather than throwing.
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef);
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
