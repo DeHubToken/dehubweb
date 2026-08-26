@@ -171,6 +171,23 @@ Deno.serve(async (req) => {
     }
 
     const started = await startAll(queued);
+
+    /* ── 4. the categorizer's catch-up, riding this cron ─────────────────── */
+    //
+    // `transcribe` categorizes a post the moment its transcript lands, which
+    // covers everything with speech in it from here on. It does not cover the
+    // back catalogue, and it never covers an image or a text post — nothing
+    // transcribes those, so nothing would ever look at them.
+    //
+    // Rather than a second cron job to register by hand, this sweep drags a
+    // few along with it every 15 minutes. Fire and forget: a categorization
+    // that fails must not make a transcription run look failed.
+    fetch(`${SUPABASE_URL}/functions/v1/auto-categorize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SERVICE_KEY}` },
+      body: JSON.stringify({ backfill: true, limit: backfill ? BACKFILL_BUDGET : SWEEP_BUDGET }),
+    }).catch((e) => console.warn('categorize sweep kick failed', e));
+
     return json({
       ok: true,
       mode: backfill ? 'backfill' : 'sweep',
