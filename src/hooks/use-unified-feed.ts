@@ -157,6 +157,9 @@ export interface UnifiedFeedItem {
   reposts?: number;
   quotes?: number;
   ppvBuyerCount?: number;
+  /** Backend-computed total DHB tipped on this post — absent (not 0) on posts
+   *  with no tips yet; see usePostTipCount for why this matters as a floor. */
+  totalTips?: number;
 }
 
 export interface UnifiedFeedResponse {
@@ -288,6 +291,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     livePlaybackId: item.stream?.playbackId,
     livePlaybackUrl: item.stream?.playbackUrl,
     liveStreamId: item.stream?._id || item.stream?.streamId,
+    totalTips: item.totalTips ?? 0,
   };
 }
 
@@ -357,6 +361,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     contentRating: item.contentRating,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
+    totalTips: item.totalTips ?? 0,
   };
 }
 
@@ -424,6 +429,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     lockedChainId: item.streamInfo?.lockContentChainIds?.[0],
     isOwner: item.isOwner ?? false,
     isUnlocked: item.isUnlocked ?? false,
+    totalTips: item.totalTips ?? 0,
   };
 }
 
