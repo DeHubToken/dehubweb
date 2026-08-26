@@ -57,6 +57,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     chainId: nft.chainId,
     repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
     isReposted: nft.isReposted ?? false,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
@@ -105,6 +106,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     chainId: nft.chainId,
     repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
     isReposted: nft.isReposted ?? false,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
@@ -138,6 +140,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     myReaction: resolveMyReaction(nft),
     reactionCounts: resolveReactionCounts(nft),
     isReposted: nft.isReposted ?? false,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 

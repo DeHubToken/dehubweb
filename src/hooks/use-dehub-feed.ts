@@ -216,6 +216,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     soundtrackTitle,
     soundtrackCreator,
     soundtrackTokenId,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
@@ -301,6 +302,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 

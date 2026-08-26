@@ -116,7 +116,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const [pollMultiple, setPollMultiple] = useState(false);
   const [pollExpiry, setPollExpiry] = useState('');
   const createPollMutation = useCreatePoll();
-  const { data: tipCount = 0 } = usePostTipCount(post.id);
+  const { data: tipCount = 0 } = usePostTipCount(post.id, post.totalTips);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
