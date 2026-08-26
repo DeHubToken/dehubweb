@@ -139,7 +139,7 @@ export default function WorkEditPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
       <SEOHead
         title={`Edit ${job.title} — DeHub Bounties`}
         description="Edit a bounty you posted on DeHub."

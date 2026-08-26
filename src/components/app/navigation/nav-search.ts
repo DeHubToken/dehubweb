@@ -1,5 +1,5 @@
 import {
-  ArrowLeftRight, Bot, Coins, Crown, Film, Gamepad2, ListOrdered, Megaphone,
+  ArrowLeftRight, Bot, Coins, Crown, Film, Gamepad2, History, ListOrdered, Megaphone,
   Music2, Plug, Smartphone, Star, Tag, Tv, Video,
 } from 'lucide-react';
 import type { NavItem } from '@/types/app.types';
@@ -257,6 +257,13 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   SuperPowers: ['boost', 'boosts', 'second wind', 'promote', 'amplify', 'reach', 'top of feed', 'badge perks', 'powers'],
   Governance: ['vote', 'voting', 'votes', 'proposals', 'dao', 'poll', 'ballot', 'referendum'],
   Bounties: ['work', 'jobs', 'tasks', 'gigs', 'freelance', 'hire', 'earn', 'escrow', 'contracts'],
+  // Nobody types "bounty history" — they type the thing they are chasing, which
+  // is usually a payment or a job they already finished.
+  'My Bounties': [
+    'bounty history', 'my bounties', 'my work', 'my jobs', 'completed bounties',
+    'history', 'payouts', 'paid', 'my submissions', 'my posted bounties',
+    'transactions', 'escrow',
+  ],
   Affiliate: ['referral', 'referrals', 'refer', 'invite', 'commission', 'partner', 'share link'],
   Careers: ['jobs', 'hiring', 'vacancies', 'work with us', 'apply', 'recruitment', 'roles'],
   Stores: ['shop', 'store', 'marketplace', 'merch', 'buy', 'sell', 'products', 'ecommerce', 'orders'],
@@ -352,6 +359,7 @@ export const SEARCH_ONLY_ITEMS: readonly NavItem[] = [
   { icon: ListOrdered, label: 'Top 100', path: '/app/top-100' },
   { icon: Bot, label: 'AI Agents', path: '/app/agents' },
   { icon: Megaphone, label: 'Advertising', path: '/app/ads' },
+  { icon: History, label: 'My Bounties', path: '/work/history' },
   { icon: Crown, label: 'Premium', path: '/premium' },
   { icon: Tag, label: 'Pricing', path: '/pricing' },
   { icon: Star, label: 'Creators', path: '/creators' },
