@@ -36,10 +36,10 @@ import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 
 const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
 
-const CHAINS = [
-  { id: 8453, name: 'Base', color: '#0052FF' },
-  { id: 56, name: 'BNB', color: '#F0B90B' },
-];
+// BNB is off the gateway entirely — its float sits at zero, so buying there
+// only 406s. Base is the only chain with real supply and gas, so it's the
+// only one offered here rather than a picker with a dead option in it.
+const BASE_CHAIN_ID = 8453;
 
 type PaymentMethod = 'card';
 
@@ -54,7 +54,7 @@ export default function BuyCoinsPage() {
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState('');
   const [selectedToken] = useState<DPayToken | null>(null);
-  const [selectedChainId, setSelectedChainId] = useState(8453);
+  const selectedChainId = BASE_CHAIN_ID;
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
 
   // Post-purchase state
@@ -367,42 +367,6 @@ export default function BuyCoinsPage() {
           <h1 className="text-xl font-bold text-white">{t('buyCoins.title')}</h1>
         </div>
 
-        {/* Chain Selection */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
-          <label className="text-sm text-zinc-400 block">{t('buyCoins.network')}</label>
-          <div className="grid grid-cols-2 gap-2">
-            {CHAINS.map((chain) => {
-              const isActive = selectedChainId === chain.id;
-              return (
-                <button
-                  key={chain.id}
-                  onClick={() => setSelectedChainId(chain.id)}
-                  className={`relative py-3 rounded-xl font-medium transition-colors ${
-                    isActive ? 'text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="buy-chain-toggle"
-                      className={cn(
-                        'absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30',
-                        isLightTheme
-                          ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]'
-                          : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
-                      )}
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-[2] flex items-center justify-center gap-2">
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: chain.color }} />
-                    {chain.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Amount Selection */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-4">
           <label className="text-sm text-zinc-400 block">{t('buyCoins.amountUsd')}</label>
@@ -538,7 +502,7 @@ export default function BuyCoinsPage() {
             <div>
               <p className="text-xs text-zinc-500 flex items-center gap-1">
                 <Zap className="w-3 h-3" />
-                Gas: {gasTokens.map(g => g.symbol).join(', ')} available on {CHAINS.find(c => c.id === selectedChainId)?.name}
+                Gas: {gasTokens.map(g => g.symbol).join(', ')} available on Base
               </p>
             </div>
           )}
