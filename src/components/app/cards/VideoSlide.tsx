@@ -117,9 +117,13 @@ export const VideoSlide = memo(function VideoSlide({
    * the viewer feeling as immediate as it did before.
    */
   /**
-   * Mobile only: double 👍, triple ❤️, hold for the tray. Desktop keeps the
-   * centre double-tap for fullscreen instead — `allowFullscreen` is the desktop
-   * signal, so the two gesture models never coexist on one slide.
+   * The tap ladder on a short: double 👍, triple ❤️, hold for the tray. Every
+   * platform, so the gesture means the same thing here as on every other feed
+   * surface — a short IS a feed, just a vertical one.
+   *
+   * Desktop used to spend the centre double-tap on fullscreen instead. One
+   * gesture cannot mean two things, and reacting is the far more frequent
+   * intent, so fullscreen keeps its button and gives the gesture up.
    *
    * ShortsViewer owns the listener for these, since it renders no ActionBar.
    */
@@ -131,45 +135,7 @@ export const VideoSlide = memo(function VideoSlide({
     // instant as it was before the ladder existed.
     onSingleTap: () => onTap?.(),
     onUndoSingleTap: () => (onTapUndo ?? onTap)?.(),
-    disabled: allowFullscreen,
   });
-
-  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastTapRef = useRef(0);
-
-  useEffect(() => () => {
-    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
-  }, []);
-
-  const handleVideoTap = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const relativeX = (e.clientX - rect.left) / rect.width;
-      const inCentre = relativeX >= 0.375 && relativeX <= 0.625;
-
-      // No fullscreen to reach means no second tap to wait for.
-      if (!inCentre || !canFullscreen) {
-        onTap?.();
-        return;
-      }
-
-      const now = e.timeStamp;
-      if (tapTimerRef.current && now - lastTapRef.current < 300) {
-        clearTimeout(tapTimerRef.current);
-        tapTimerRef.current = null;
-        lastTapRef.current = 0;
-        toggleFullscreen();
-        return;
-      }
-
-      lastTapRef.current = now;
-      tapTimerRef.current = setTimeout(() => {
-        tapTimerRef.current = null;
-        onTap?.();
-      }, 300);
-    },
-    [onTap, toggleFullscreen, canFullscreen],
-  );
 
   // Handle video metadata load to detect aspect ratio
   const handleLoadedMetadata = useCallback(() => {
@@ -417,16 +383,11 @@ export const VideoSlide = memo(function VideoSlide({
         </>
       )}
 
-      {/* Video element.
-          Desktop drives the centre double-tap through onClick (fullscreen);
-          mobile gets the reaction ladder off pointer events instead. The two
-          are mutually exclusive — `allowFullscreen` IS the desktop signal — so
-          only one tap model is ever bound and they cannot double-fire. */}
-      <div
-        className="absolute inset-0 z-[2]"
-        onClick={allowFullscreen ? handleVideoTap : undefined}
-        {...(allowFullscreen ? {} : tapGestures)}
-      >
+      {/* Video element. One tap model on every platform now: the reaction
+          ladder, off pointer events. Desktop used to bind a competing onClick
+          for centre-double-tap fullscreen; fullscreen kept its button and gave
+          the gesture up, because one gesture cannot mean two things. */}
+      <div className="absolute inset-0 z-[2]" {...tapGestures}>
         {short.videoUrl ? (
           <video
             ref={videoRef}
