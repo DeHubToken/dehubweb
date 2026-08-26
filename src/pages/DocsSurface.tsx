@@ -61,6 +61,7 @@ const TokenGovernance = lazy(() => import("./docs/TokenGovernance"));
 const TokenSecurity = lazy(() => import("./docs/TokenSecurity"));
 const Terms = lazy(() => import("./docs/Terms"));
 const TermsOfService = lazy(() => import("./docs/TermsOfService"));
+const CommunityGuidelines = lazy(() => import("./docs/CommunityGuidelines"));
 const Contact = lazy(() => import("./docs/Contact"));
 const PrivacyPolicy = lazy(() => import("./docs/PrivacyPolicy"));
 const TokenStake = lazy(() => import("./docs/TokenStake"));
@@ -149,6 +150,7 @@ export default function DocsSurface() {
             <Route path="/docs/terms" element={wrap(Terms)} />
             <Route path="/docs/terms-of-service" element={wrap(TermsOfService)} />
             <Route path="/docs/privacy" element={wrap(PrivacyPolicy)} />
+            <Route path="/docs/guidelines" element={wrap(CommunityGuidelines)} />
             <Route path="/docs/brand-assets" element={wrap(BrandAssets)} />
             <Route path="/docs/featured-in" element={wrap(FeaturedIn)} />
             <Route path="/docs/brand-guidelines" element={wrap(BrandGuidelines)} />
