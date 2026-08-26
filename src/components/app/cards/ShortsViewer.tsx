@@ -239,6 +239,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const wheelLockedRef = useRef(false);
   const wheelAccumRef = useRef(0);
   const wheelSettleTimer = useRef<ReturnType<typeof setTimeout>>();
+  // The slide the pointer was last hit-tested onto — kept mounted, see
+  // visibleIndices.
+  const [pointerPinnedIndex, setPointerPinnedIndex] = useState<number | null>(null);
   const isMobile = useIsMobile();
 
   /**
@@ -322,14 +325,33 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // View tracking for the current short
   const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
   
-  // Compute visible indices for the 3-video window
+  // Compute visible indices for the 3-video window, plus whichever slide the
+  // pointer is still latched to.
+  //
+  // The browser only works out what is under the cursor when the cursor moves.
+  // Advancing a short is a transform, so after a flick the pointer is visually
+  // over the new slide while the browser still aims wheel events at the old
+  // one — harmless while that slide is mounted (the event still bubbles to the
+  // window handler), fatal the moment the render window drops it: the events
+  // then go to a node that is no longer in the document and reach no listener
+  // at all. That is the "scroll goes dead until I nudge the mouse" report — a
+  // nudge is simply the fresh hit-test.
+  //
+  // So the last slide the pointer actually landed on stays mounted until the
+  // pointer moves again and re-targets. One extra paused slide, and a gesture
+  // never loses its target. Desktop only: `pointerPinnedIndex` is never set on
+  // mobile, where touch re-targets every gesture anyway.
   const visibleIndices = useMemo(() => {
-    return [
+    const indices = [
       currentIndex - 1, // Previous
       currentIndex,     // Current
       currentIndex + 1, // Next
-    ].filter(i => i >= 0 && i < shorts.length);
-  }, [currentIndex, shorts.length]);
+    ];
+    if (pointerPinnedIndex !== null && !indices.includes(pointerPinnedIndex)) {
+      indices.push(pointerPinnedIndex);
+    }
+    return indices.filter(i => i >= 0 && i < shorts.length).sort((a, b) => a - b);
+  }, [currentIndex, shorts.length, pointerPinnedIndex]);
   
   // Navigate to creator profile
   const handleNavigateToProfile = useCallback(() => {
@@ -716,6 +738,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       e.preventDefault();
       e.stopPropagation();
 
+      // The event's own target is the browser's answer to "which node is this
+      // gesture latched to", and it only changes when the pointer moves. If
+      // that is a slide, hold it mounted past the 3-slide window: dropping it
+      // is what kills the gesture (see visibleIndices). Anything else — the
+      // backdrop, the nav column, the action bar — is mounted for the life of
+      // the viewer anyway, so nothing needs pinning.
+      const latched = (e.target as HTMLElement | null)?.closest?.('[data-shorts-slide]');
+      const latchedIndex = latched ? Number(latched.getAttribute('data-shorts-slide')) : null;
+      setPointerPinnedIndex(Number.isInteger(latchedIndex) ? latchedIndex : null);
+
       // Every event pushes the "settled" moment further out; the lock only
       // clears after the momentum stream actually stops.
       if (wheelSettleTimer.current) clearTimeout(wheelSettleTimer.current);
@@ -1000,14 +1032,27 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }, DESKTOP_AUTO_HIDE_MS);
   }, []);
 
+  // Read through a ref so the handler keeps one identity for the life of the
+  // viewer instead of a new one per slide.
+  const currentIndexRef = useRef(currentIndex);
+  currentIndexRef.current = currentIndex;
+
   // `setAutoHidden(false)` on an already-false state is a no-op in React, so
-  // this stays cheap even at mousemove rate.
+  // this stays cheap even at mousemove rate — and so is re-pinning the index
+  // that is already pinned.
   const handleDesktopPointerMove = useCallback(() => {
     setAutoHidden(false);
+    // A move is the browser's own hit-test: whatever the wheel was aimed at
+    // before, it is aimed at this slide now, so this is the one that has to
+    // stay mounted (and the previous pin is free to go).
+    setPointerPinnedIndex(currentIndexRef.current);
     scheduleDesktopHide();
   }, [scheduleDesktopHide]);
 
   const handleDesktopPointerLeave = useCallback(() => {
+    // Off the frame, the wheel is aimed at something outside the carousel —
+    // nothing left to hold mounted.
+    setPointerPinnedIndex(null);
     if (desktopHideTimer.current) clearTimeout(desktopHideTimer.current);
     if (seekingRef.current) return;
     setAutoHidden(true);
@@ -1162,7 +1207,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
           >
-            {/* Render window of 3 videos (prev/current/next) */}
+            {/* Render window of 3 videos (prev/current/next), plus the slide
+                the pointer is still latched to, if it has fallen out of it */}
             <AnimatePresence initial={false}>
               {visibleIndices.map(index => {
                 const short = shorts[index];
@@ -1172,6 +1218,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 return (
                   <motion.div
                     key={short.id}
+                    // Lets the wheel handler recognise its own latched slide
+                    // and keep it mounted — see visibleIndices.
+                    data-shorts-slide={index}
                     className="absolute inset-0"
                     initial={false}
                     animate={{
