@@ -85,12 +85,15 @@ export interface WorkDispute {
   reason: string;
   evidence_url: string | null;
   status: WorkDisputeStatus;
-  resolution_notes: string | null;
+  /** Singular, and `resolution_tx_hash` below — these are the real column
+   *  names. The type said `resolution_notes` / `resolve_tx_hash` for months and
+   *  nothing caught it, because the table is reached through an `as any` cast. */
+  resolution_note: string | null;
+  resolution_tx_hash: string | null;
   resolved_by_address: string | null;
   resolved_at: string | null;
   worker_amount: number | null;
   poster_refund: number | null;
-  resolve_tx_hash: string | null;
   created_at: string;
   updated_at: string;
 }
