@@ -39,7 +39,76 @@ const MAX_BYTES = 2_000_000; // ~2MB localStorage budget (chars ≈ bytes for AS
 const PERSIST_ROOTS = new Set(['unified-feed', 'single-post', 'dehub-profile']);
 
 function isPersistable(queryKey: readonly unknown[]): boolean {
-  return typeof queryKey[0] === 'string' && PERSIST_ROOTS.has(queryKey[0] as string);
+  const root = queryKey[0];
+  if (typeof root !== 'string') return false;
+  if (PERSIST_ROOTS.has(root)) return true;
+
+  /*
+   * The conversation LIST, not the threads. Messages is the page that most
+   * obviously reloaded from nothing every time — mobile has persisted its whole
+   * query cache since day one, so the two clients differed here for no reason.
+   *
+   * Threads (`['messages','thread',id]`) stay out deliberately: they are
+   * unbounded in a way the list is not (50 contacts vs every message ever
+   * scrolled back through), and they are the most private thing the app holds.
+   * The list already costs a name and a last-message preview; whole
+   * conversations at rest is a different trade, and it buys nothing the
+   * 2s refetch on opening a thread does not.
+   */
+  if (root === 'messages') return queryKey[1] === 'conversations';
+
+  /*
+   * Notification list only. `unreadCount` is deliberately excluded — a count is
+   * the one thing here that is read as authoritative rather than as a preview,
+   * and painting a stale badge is worse than painting none.
+   */
+  if (root === 'notifications') return queryKey[1] === 'list';
+
+  return false;
+}
+
+/**
+ * Infinite queries hold every page the user scrolled through. Persisting all of
+ * them is what makes this blob big enough to trip its own 2 MB budget — and the
+ * budget's fallback is to drop everything except the feed, so a long scroll
+ * session quietly cost the profile and post slices their persistence.
+ *
+ * Only the first page is worth keeping: it is what paints, and the rest refetch
+ * on scroll anyway. Mobile's persister has always trimmed this way
+ * (`trimPersistedClient` in config/queryClient.ts); web never did.
+ */
+function trimInfinitePages(state: ReturnType<typeof dehydrate>): ReturnType<typeof dehydrate> {
+  return {
+    ...state,
+    queries: state.queries.map((q) => {
+      const data = q.state.data as { pages?: unknown[]; pageParams?: unknown[] } | undefined;
+      if (!data || !Array.isArray(data.pages) || data.pages.length <= 1) return q;
+      return {
+        ...q,
+        state: {
+          ...q.state,
+          data: {
+            ...data,
+            pages: data.pages.slice(0, 1),
+            pageParams: Array.isArray(data.pageParams) ? data.pageParams.slice(0, 1) : data.pageParams,
+          },
+        },
+      };
+    }),
+  };
+}
+
+/**
+ * Drop the persisted slice outright. Called on sign-out: the blob now carries
+ * the conversation list, so "this browser forgets the session" has to mean the
+ * previews go with it. The debounced writer would eventually overwrite it with
+ * an empty cache, but a tab closed straight after logging out never reaches
+ * that — and a privacy property should not rest on a race with an idle
+ * callback.
+ */
+export function clearPersistedQueryCache(): void {
+  if (typeof window === 'undefined') return;
+  try { localStorage.removeItem(PERSIST_KEY); } catch { /* nothing else to do */ }
 }
 
 /**
@@ -83,7 +152,7 @@ export function startQueryPersist(queryClient: QueryClient): void {
         (root ? q.queryKey[0] === root : isPersistable(q.queryKey)),
       shouldDehydrateMutation: () => false,
     });
-    return JSON.stringify({ t: Date.now(), state });
+    return JSON.stringify({ t: Date.now(), state: trimInfinitePages(state) });
   };
 
   const write = () => {
