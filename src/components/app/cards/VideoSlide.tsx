@@ -39,6 +39,13 @@ interface VideoSlideProps {
    * slides further out. Defaults to the old isActive-based behaviour.
    */
   preload?: 'auto' | 'metadata' | 'none';
+  /**
+   * Whether to offer a fullscreen control. Desktop only — the viewer is
+   * `fixed inset-0` on mobile, so a short there already fills the screen and
+   * "fullscreen" would be a button that visibly does nothing. Off by default so
+   * a new caller has to opt in deliberately.
+   */
+  allowFullscreen?: boolean;
 }
 
 export const VideoSlide = memo(function VideoSlide({
@@ -53,6 +60,7 @@ export const VideoSlide = memo(function VideoSlide({
   showPlayIndicator,
   letterbox = false,
   preload,
+  allowFullscreen = false,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
@@ -76,9 +84,9 @@ export const VideoSlide = memo(function VideoSlide({
   const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, frameRef, {
     allowSimulated: false,
   });
-  // With the simulated fallback refused, a browser without native fullscreen has
-  // no path at all — so draw no control rather than a dead one.
-  const canFullscreen = canNativeFullscreen();
+  // Desktop only, and only where a native fullscreen is actually reachable —
+  // with the simulated fallback refused, anything else would be a dead control.
+  const canFullscreen = allowFullscreen && canNativeFullscreen();
 
   /**
    * Tap handling on the video area.
