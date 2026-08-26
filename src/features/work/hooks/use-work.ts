@@ -145,6 +145,24 @@ export function useMyPostedJobs() {
   });
 }
 
+/** Every submission this wallet has made, across all jobs, newest first — the "worked on" side of bounty history. */
+export function useMyWorkSubmissions() {
+  const { walletAddress } = useAuth();
+  return useQuery({
+    queryKey: ['work-my-submissions', walletAddress],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from(TBL_SUBS)
+        .select('*, job:work_jobs(*)' as any)
+        .eq('worker_address', walletAddress!.toLowerCase())
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return (data || []) as unknown as (WorkSubmission & { job: WorkJob | null })[];
+    },
+    enabled: !!walletAddress,
+  });
+}
+
 // ── Create job ───────────────────────────────────────────────
 export function useCreateJob() {
   const { walletAddress } = useAuth();

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Briefcase, Scissors, MessageSquare, Search } from 'lucide-react';
+import { Plus, Briefcase, Scissors, MessageSquare, Search, History } from 'lucide-react';
 import { useBrowseJobs, useRecentCompletedJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';
@@ -59,14 +59,22 @@ export default function WorkPage() {
                 <p className="text-sm text-white/60">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
               </div>
             </div>
-            <LiquidGlassBubble2
-              label="Post a Bounty"
-              icon={<Plus className="w-4 h-4" />}
-              onClick={() => navigate('/work/post')}
-              width="auto"
-              height="44px"
-              className="[&>div]:!rounded-2xl"
-            />
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => navigate('/work/history')}
+                className="inline-flex items-center gap-1.5 px-3 h-11 rounded-2xl bg-white/5 border border-white/10 text-white/80 text-sm hover:bg-white/10 transition-colors"
+              >
+                <History className="w-4 h-4" /> My Bounties
+              </button>
+              <LiquidGlassBubble2
+                label="Post a Bounty"
+                icon={<Plus className="w-4 h-4" />}
+                onClick={() => navigate('/work/post')}
+                width="auto"
+                height="44px"
+                className="[&>div]:!rounded-2xl"
+              />
+            </div>
           </div>
 
           {/* Tabs */}
