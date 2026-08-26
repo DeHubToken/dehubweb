@@ -50,7 +50,12 @@ import { applyVoteStateToNFT } from '@/lib/engagement';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
-import { DOUBLE_TAP_LIKE_EVENT, type DoubleTapLikeEventDetail } from '@/hooks/use-double-tap-like';
+import {
+  DOUBLE_TAP_LIKE_EVENT,
+  OPEN_REACTIONS_EVENT,
+  type DoubleTapLikeEventDetail,
+  type OpenReactionsEventDetail,
+} from '@/lib/tap-reactions';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { Gem } from 'lucide-react';
 import {
@@ -598,12 +603,21 @@ export function ActionBar({
     const listener = (e: Event) => {
       const detail = (e as CustomEvent<DoubleTapLikeEventDetail>).detail;
       if (!detail || String(detail.postId) !== String(postId)) return;
-      if (isLiked) return; // already liked — don't toggle off on double-tap
-      handleReactionRef.current('like');
+      const reaction = detail.reaction ?? 'like';
+      // A tap gesture only ever adds. `handleReaction` reads a repeat of the
+      // reaction you already hold as "clear it", so casting blind here would
+      // make a stray double-tap silently remove a like — the one outcome the
+      // gesture must never produce.
+      if (myReaction === reaction) return;
+      // The third tap upgrades to ❤️ even though the second tap's 👍 already
+      // set isLiked, so only the plain like defers to an existing positive vote.
+      if (reaction === 'like' && isLiked) return;
+      handleReactionRef.current(reaction);
     };
     window.addEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
     return () => window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
-  }, [postId, isLiked, enableDoubleTapLike]);
+  }, [postId, isLiked, myReaction, enableDoubleTapLike]);
+
 
   const hasVoted = isLiked || isDisliked;
 
@@ -645,6 +659,20 @@ export function ActionBar({
   const cancelLongPress = useCallback(() => {
     if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
   }, []);
+
+  // A hold on the post's media opens this same tray. Declared down here rather
+  // than beside the other gesture listener because `reactionsEnabled` and
+  // `setPickerOpen` are defined above this point and below that one.
+  useEffect(() => {
+    if (!postId || !enableDoubleTapLike || !reactionsEnabled) return;
+    const listener = (e: Event) => {
+      const detail = (e as CustomEvent<OpenReactionsEventDetail>).detail;
+      if (!detail || String(detail.postId) !== String(postId)) return;
+      setPickerOpen(true);
+    };
+    window.addEventListener(OPEN_REACTIONS_EVENT, listener as EventListener);
+    return () => window.removeEventListener(OPEN_REACTIONS_EVENT, listener as EventListener);
+  }, [postId, enableDoubleTapLike, reactionsEnabled]);
 
   // Mouse users get the tray on hover instead of a hold. The handlers sit on
   // the wrapper that contains both the thumb and the tray, so travelling from
