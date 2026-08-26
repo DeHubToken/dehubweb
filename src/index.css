@@ -255,6 +255,32 @@ All colors MUST be HSL.
   }
 }
 
+/* iOS Safari zooms the whole page in the moment a focused text control computes
+   under 16px, and the zoomed visual viewport lands off to the left — so every
+   tap into a field looks like the page jumped sideways. `overflow-x: clip` on
+   body (above) already stopped the sideways scroll-into-view; this stops the
+   zoom itself, which is the other half of the same symptom.
+
+   Raise every text-entry control to 16px at phone widths — the same threshold
+   shadcn's own `text-base md:text-sm` inputs already sit on, applied to the
+   ~70 hand-rolled `<input>`/`<textarea>` elements that never got it. Controls
+   the design deliberately sets larger (text-lg and up — the post composer, the
+   trade amount field) are left alone; they are already past the threshold and
+   flattening them to 16px would be a visible downgrade. */
+@media (max-width: 767px) {
+  :is(
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']),
+    textarea,
+    select,
+    [contenteditable]:not([contenteditable='false'])
+  ):not(:is(
+    [class*='text-lg'], [class*='text-xl'], [class*='text-2xl'],
+    [class*='text-3xl'], [class*='text-4xl'], [class*='text-5xl']
+  )) {
+    font-size: 16px !important;
+  }
+}
+
 @layer utilities {
   /* Scrollbar Hide */
   .scrollbar-hide {
@@ -1384,22 +1410,14 @@ html[data-theme="system"] [data-feed-nav] {
     inset 0 0 0 1px rgb(255 255 255 / 0.08),
     0 8px 32px rgb(0 0 0 / 0.30) !important;
 }
-/* Mobile: the feed nav is the first bento a user sees, so the glass blur is
-/* Mobile: the feed nav is the first bento a user sees, so the glass blur is
-   unnecessary and adds rendering cost. Keep the tint/shadow so it still reads
-   as a raised surface. */
-@media (max-width: 1023px) {
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="system"]) [data-feed-nav] {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="system"]) [data-feed-nav] [data-glass-indicator] {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-}
 
-/* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
+/* The pill's blur is NOT stripped on mobile. It was, briefly, as a render-cost
+   saving — but osaka and jungle re-declare `backdrop-filter` in their own
+   sheets, which load after this file at equal specificity, so those two kept
+   frosting while cosmic, hazy, swarms, lavalamp, winter and system flattened
+   to a tinted strip. One surface, two materials depending on the theme. The
+   pill matches desktop on every theme; keep it that way. */
+
 /* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
    canvas themes. Without this the opaque black header lets a post's top edge
    pop as a hard bright sliver above the pill during a momentum-scroll clip lag;
