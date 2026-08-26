@@ -121,6 +121,10 @@ const TermsOfService = () => {
           <p>{t('termsOfService.decentralizedModerationText')}</p>
           <ItemList items={Array.from({ length: 4 }, (_, i) => t(`termsOfService.decentralizedModerationItem${i + 1}`))} />
         </SubSection>
+        <SubSection title={t('termsOfService.designatedModerators')}>
+          <p>{t('termsOfService.designatedModeratorsText')}</p>
+          <ItemList items={Array.from({ length: 4 }, (_, i) => t(`termsOfService.designatedModeratorsItem${i + 1}`))} />
+        </SubSection>
         <SubSection title={t('termsOfService.contentRestrictions')}>
           <p>{t('termsOfService.contentRestrictionsText')}</p>
           <ItemList items={Array.from({ length: 3 }, (_, i) => t(`termsOfService.contentRestrictionsItem${i + 1}`))} />
@@ -143,7 +147,7 @@ const TermsOfService = () => {
         </SubSection>
         <SubSection title={t('termsOfService.restrictionsByDeHub')}>
           <p>{t('termsOfService.restrictionsByDeHubText')}</p>
-          <ItemList items={[t('termsOfService.restrictionsItem1'), t('termsOfService.restrictionsItem2'), t('termsOfService.restrictionsItem3')]} />
+          <ItemList items={Array.from({ length: 5 }, (_, i) => t(`termsOfService.restrictionsItem${i + 1}`))} />
         </SubSection>
       </Section>
 
