@@ -53,8 +53,18 @@ function requestTipCount(tokenId: string): Promise<number> {
   });
 }
 
-export function usePostTipCount(tokenId?: string) {
-  return useQuery({
+/**
+ * @param backendTotal The post's own `totalTips`, already fetched as part of
+ * the feed/post payload. tip_records (what this hook otherwise reports) is
+ * only ever written by a client after it confirms its own send — a tip whose
+ * confirmation step failed to persist (see read-tip-transaction.ts) silently
+ * never lands a row there, so this hook alone can undercount. The backend's
+ * own total doesn't have that gap, so it's used as a floor, never a ceiling:
+ * the query result still wins once a fresh tip's optimistic patch (TipModal)
+ * pushes it above the backend snapshot.
+ */
+export function usePostTipCount(tokenId?: string, backendTotal?: number) {
+  const query = useQuery({
     queryKey: ['post-tip-count', tokenId],
     queryFn: () => requestTipCount(tokenId!),
     enabled: !!tokenId,
@@ -62,4 +72,5 @@ export function usePostTipCount(tokenId?: string) {
     // and invalidated by TipModal, so a long staleTime costs no freshness.
     staleTime: 5 * 60_000,
   });
+  return { ...query, data: Math.max(query.data ?? 0, backendTotal ?? 0) };
 }

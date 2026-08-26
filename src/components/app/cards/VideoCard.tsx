@@ -573,7 +573,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showSegmentDrawer, setShowSegmentDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
-  const { data: tipCount = 0 } = usePostTipCount(video.id);
+  const { data: tipCount = 0 } = usePostTipCount(video.id, video.totalTips);
   // In this account's watch history — one shared query behind every card.
   const isWatchedVideo = useIsWatchedVideo(video.id);
   const [isPlaying, setIsPlaying] = useState(false);

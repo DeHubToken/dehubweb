@@ -42,6 +42,10 @@ export interface BaseFeedItem {
    * shared link.
    */
   contentRating?: ContentRating;
+  /** Backend-computed total DHB tipped on this post — see usePostTipCount,
+   *  which uses this as a floor so a client-side recording gap never shows
+   *  fewer tips than the backend actually knows about. */
+  totalTips?: number;
 }
 
 /**
