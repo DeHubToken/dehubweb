@@ -535,7 +535,8 @@
     "activityLog": "Log Aktivitas",
     "endStream": "Akhiri Siaran",
     "linkCopied": "Tautan disalin ke clipboard",
-    "postUrlCopied": "URL postingan disalin ke clipboard"
+    "postUrlCopied": "URL postingan disalin ke clipboard",
+    "boostPost": "Boost postingan"
   },
   "filters": {
     "sort": "Urutkan",
@@ -802,7 +803,8 @@
     "ppvStartSaving": "Beli konten Pay-Per-View dari kreator favorit Anda agar muncul di sini.",
     "recentStartSaving": "Postingan yang paling baru Anda markahi akan tampil di sini.",
     "textStartSaving": "Markahi postingan khusus teks dan postingan itu akan muncul di sini.",
-    "videosStartSaving": "Markahi postingan bervideo dan semuanya akan terkumpul di sini."
+    "videosStartSaving": "Markahi postingan bervideo dan semuanya akan terkumpul di sini.",
+    "folders": "Folder"
   },
   "notifications": {
     "title": "Notifikasi",
@@ -1722,5 +1724,49 @@
       "startTerm": "Riwayat",
       "start": "— \"seluruh waktu\" berarti setiap hari yang masih disimpan Cloudflare, hari ini {{days}} hari mulai {{date}}, hari dehub.io pindah ke Cloudflare. Tidak ada data edge yang lebih lama untuk ditampilkan, dan hari-hari lama hilang seiring Cloudflare mengedaluwarsakannya."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Pengikut siapa yang harus melihatnya?",
+    "aimAtTiers": "Tingkat lencana mana yang harus melihatnya?",
+    "aimPlaceholder": "Nama pengguna atau alamat dompet",
+    "boost": "Boost",
+    "boostBooked": "Di-boost selama {{minutes}} menit",
+    "boostExplainer": "Menempatkan postingan ini di slot teratas feed beranda selama jendela waktumu.",
+    "boostFailed": "Tidak bisa mem-boost postingan itu",
+    "boostForMinutes": "Boost selama {{minutes}} menit",
+    "boostedLabel": "Di-boost",
+    "boostsLeft": "Sisa {{left}} dari {{total}} boost",
+    "cancelFailed": "Tidak bisa membatalkan boost itu",
+    "cancelledRefunded": "Boost dibatalkan dan dikembalikan ke jatahmu",
+    "cancelledSpent": "Boost dibatalkan. Sudah sempat berjalan, jadi tetap terhitung terpakai.",
+    "colBoosts": "Boost",
+    "colEach": "Masing-masing",
+    "colTier": "Tingkat",
+    "colTotal": "Per siklus",
+    "comingSoon": "segera hadir",
+    "finishedCount": "{{count}} selesai siklus ini, dilihat {{seen}} kali",
+    "grantLine": "{{boosts}} × {{minutes}} menit per siklus",
+    "intro": "Lencana membeli lebih dari sekadar gambar di sebelah namamu. Setiap dua minggu ia memberi boost — masing-masing menempatkan satu postingan di slot teratas feed beranda. Tiga belas tingkat, tiga belas kekuatan, satu terbuka per anak tangga.",
+    "ladderHeading": "Apa yang diberikan tiap tingkat",
+    "left": "tersisa",
+    "liveUntil": "tayang sampai {{time}}",
+    "loadFailed": "Tidak bisa memuat SuperPowers-mu saat ini. Coba lagi sebentar.",
+    "minutes": "menit",
+    "needBadge": "SuperPowers butuh lencana staking. Stake DHB untuk membukanya.",
+    "noBadgeYet": "Kamu belum punya lencana, jadi belum ada boost. Stake DHB membuka tangga di bawah ini.",
+    "noBoostsLeft": "Tidak ada boost tersisa siklus ini",
+    "powersHeading": "Tiga belas kekuatan",
+    "queued": "antre",
+    "refills": "diisi ulang {{date}}",
+    "refillsOn": "Diisi ulang pada {{date}} — pada saat yang sama untuk semua orang.",
+    "secondWind": "Napas Kedua",
+    "secondWindExplainer": "Postingan ini sudah lebih dari seminggu. Napas Kedua mengirimnya kembali ke puncak feed.",
+    "seenCount": "{{count}} kali dilihat",
+    "shareOfVoice": "Slot boost berputar. Saat beberapa boost berjalan, tiap penonton diberi satu yang dibobot berdasarkan tingkat lencana — tingkat lebih tinggi lebih sering muncul, dan semua orang mendapat jendela yang diberikan kepadanya.",
+    "spendFor": "{{power}} selama {{minutes}} menit",
+    "spent": "{{power}} berjalan {{minutes}} menit",
+    "stakeDhb": "Stake DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} terbuka di {{tier}}"
   }
 }
