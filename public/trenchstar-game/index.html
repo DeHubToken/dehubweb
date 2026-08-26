@@ -3924,7 +3924,10 @@ function paintSpark(s){
     const up=pts[pts.length-1].p>=pts[0].p,col=up?UP:DOWN;
     ctx.beginPath();
     pts.forEach((q,i)=>{const x=x0+(x1-x0)*i/(pts.length-1),y=yB-(q.p-lo)/(hi-lo)*(yB-yT);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+    ctx.strokeStyle=col;ctx.lineWidth=2;
+    /* dashed until the real hour lands: an unbacked line is a guess at the
+       shape, drawn from the 1h percentage, and it should not look measured */
+    ctx.setLineDash(m.realHistory?[]:[4,3]);ctx.stroke();ctx.setLineDash([]);
     ctx.lineTo(x1,yB);ctx.lineTo(x0,yB);ctx.closePath();
     const g=ctx.createLinearGradient(0,yT,0,yB);
     g.addColorStop(0,up?'rgba(47,232,140,0.28)':'rgba(255,77,106,0.28)');g.addColorStop(1,'rgba(0,0,0,0)');
@@ -4015,6 +4018,61 @@ function paintLiq(s){
 const CHAIN_TAG={solana:'SOL',ethereum:'ETH',base:'BASE',bsc:'BSC',arbitrum:'ARB',
   polygon:'POLY',avalanche:'AVAX',optimism:'OP',sui:'SUI',ton:'TON',pulsechain:'PLS'};
 const chainTag=c=>(CHAIN_TAG[c]||(c?c.slice(0,4).toUpperCase():''))+(c?'·':'')+'DEX';
+
+/* Real minute history for a trench pair.
+   The synth backfill above draws an hour that never happened — a straight
+   line from (price / 1+h1%) to now with noise sprinkled on it. GeckoTerminal
+   serves actual OHLCV for the same pool address DexScreener just handed us,
+   free and CORS-open, so the sparkline can be the real hour instead.
+   It is rate-limited (~30 calls/min on the free tier) and a wall can hold
+   fifty pairs, so requests go through a queue at one every 2.5s and only
+   for pairs a screen is actually showing. The synth stays as the instant
+   placeholder underneath — this overwrites it when it lands. */
+const GT_NET={solana:'solana',ethereum:'eth',base:'base',bsc:'bsc',arbitrum:'arbitrum',
+  polygon:'polygon_pos',avalanche:'avax',optimism:'optimism',sui:'sui-network',
+  ton:'ton',pulsechain:'pulsechain',blast:'blast',sei:'sei-evm',hyperliquid:'hyperevm'};
+const GT_CACHE=new Map(),gtQ=[];let gtBusy=false;
+/* Trench slots are rebound to whatever is hot every 45s and can land back on a
+   pool we already pulled, so this caches by pool and re-applies from memory —
+   a plain "already fetched" set would leave the second slot on synth forever. */
+function gtApply(m,hist){
+  if(!hist||hist.length<8)return;
+  const cut=hist[hist.length-1].t;
+  m.samples=[...hist,...m.samples.filter(s=>s.t>cut)];
+  m.realHistory=true;
+}
+function gtQueue(m){
+  if(!m||!m.pairAddr||!GT_NET[m.chain]||m.realHistory)return;
+  const key=m.chain+':'+m.pairAddr,hit=GT_CACHE.get(key);
+  if(hit&&Date.now()-hit.at<300000){         /* an hour pulled 20 minutes ago is not this hour */
+    if(hit.hist)gtApply(m,hit.hist);
+    return;
+  }
+  if(gtQ.some(x=>x.key===key))return;
+  gtQ.push({key,m});
+  if(!gtBusy)gtPump();
+}
+async function gtPump(){
+  gtBusy=true;
+  while(gtQ.length){
+    const {key,m}=gtQ.shift();
+    let hist=null;
+    try{
+      const j=await fget('https://api.geckoterminal.com/api/v2/networks/'+GT_NET[m.chain]+
+        '/pools/'+m.pairAddr+'/ohlcv/minute?aggregate=1&limit=60',12000);
+      const rows=j&&j.data&&j.data.attributes&&j.data.attributes.ohlcv_list;
+      /* newest first out of the API; anything that arrived live since boot
+         stays on the end so nothing already sampled is thrown away */
+      if(rows&&rows.length>8)hist=rows.slice().reverse()
+        .map(r=>({t:r[0]*1000,p:+r[4]})).filter(r=>isFinite(r.p)&&r.p>0);
+    }catch(e){}
+    GT_CACHE.set(key,{at:Date.now(),hist});
+    if(GT_CACHE.size>400)GT_CACHE.delete(GT_CACHE.keys().next().value);
+    gtApply(m,hist);
+    await new Promise(r=>setTimeout(r,2500));
+  }
+  gtBusy=false;
+}
 
 /* Tokens pulled in by search. They live alongside the majors and the trench
    pool, and get their own refresh cycle so a searched screen stays live. */
@@ -7659,9 +7717,11 @@ async function pollDex(){
         /* slow goes with them: a slot rebound to a different token that kept
            its old slow book would draw the previous token's chart under the
            new token's name. */
-        if(m.sym!==sym){m.sym=sym;m.samples=[];m.candles=[];m.slow=[];}
+        if(m.sym!==sym){m.sym=sym;m.samples=[];m.candles=[];m.slow=[];m.realHistory=false;}
         m.source='DEX';
         m.chain=p.chainId;
+        m.pairAddr=p.pairAddress;          /* the pool GeckoTerminal keys its candles on */
+        m.tokenAddr=p.baseToken.address;
         m.boosted=dexBoosted.has(p.baseToken.address);
         const pc=p.priceChange||{};
         m.pushSample(+p.priceUsd,{h24:+pc.h24,h1:+pc.h1,m5:+pc.m5,
@@ -7693,6 +7753,12 @@ async function initData(){
   openPaperBook();
 }
 initData();
+
+/* Whatever a screen is currently showing gets its real hour pulled in. Screens
+   swap pairs as the trench pool turns over, so this re-sweeps rather than
+   firing once; gtQueue dedupes by pool address. */
+setInterval(()=>{screens.forEach(s=>{if(s.market&&s.market.source==='DEX')gtQueue(s.market);});},20000);
+setTimeout(()=>screens.forEach(s=>{if(s.market&&s.market.source==='DEX')gtQueue(s.market);}),6000);
 
 /* ============================== sim ticks ============================= */
 /* Four steps a second across ~42 markets is pure arithmetic — no paint, no
