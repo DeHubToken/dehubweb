@@ -70,6 +70,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
@@ -117,6 +118,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
@@ -153,6 +155,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 

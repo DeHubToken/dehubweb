@@ -189,6 +189,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
@@ -262,6 +263,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
     isQuotePost: !!nft.isQuotePost,
     quotedPost: nft.quotedPost || null,
+    totalTips: nft.totalTips ?? 0,
     ...soundtrack,
   };
 }
@@ -337,6 +339,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     lockedChainId: streamInfo?.lockContentChainIds?.[0],
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
+    totalTips: nft.totalTips ?? 0,
   };
 }
 
