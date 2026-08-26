@@ -363,18 +363,6 @@ function AppContent() {
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
   }, [wallet]);
 
-  // Starter + daily free AI credit — claimed server-side, idempotent per UTC
-  // day, so firing on every sign-in is safe. On a grant, refresh the balance
-  // query so a mounted credit surface agrees with the toast.
-  useEffect(() => {
-    if (!wallet) return;
-    import("@/lib/ai-credit-claim")
-      .then(m => m.claimDailyAiCredit(() => {
-        queryClient.invalidateQueries({ queryKey: ['ai-credits'] });
-      }))
-      .catch(() => undefined);
-  }, [wallet, queryClient]);
-
   return (
     <>
       <SelfBadgeSync />
