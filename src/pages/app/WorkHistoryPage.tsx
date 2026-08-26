@@ -218,7 +218,13 @@ function PostedRow({ job }: { job: WorkJob }) {
 
 function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: WorkJob | null } }) {
   const job = s.job;
-  const isPaid = s.approval_status === 'approved' || s.approval_status === 'paid';
+  // Approved is not paid. Treating the two as one status is what let ~500k DHB
+  // of accepted work show a green "paid" tick on this very page while no
+  // transfer had happened — a payout is real only once it has a tx hash.
+  const paid = !!s.payout_tx_hash || s.approval_status === 'paid';
+  const awaitingPayment = s.approval_status === 'approved' && !s.payout_tx_hash;
+  const due = Number(s.payout_amount) || 0;
+
   return (
     <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-4">
       <div className="flex items-start justify-between gap-3 mb-1">
@@ -230,20 +236,25 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
         <div className="flex items-center gap-1.5 flex-shrink-0">
           {job && <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</span>}
           <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${
-            isPaid ? 'bg-emerald-500/20 text-emerald-300' :
+            paid ? 'bg-emerald-500/20 text-emerald-300' :
+            awaitingPayment ? 'bg-amber-400/20 text-amber-200' :
             s.approval_status === 'rejected' ? 'bg-red-500/20 text-red-300' :
             'bg-white/10 text-white/60'
-          }`}>{s.approval_status}</span>
+          }`}>
+            {paid ? 'paid' : awaitingPayment ? 'awaiting payment' : s.approval_status}
+          </span>
         </div>
       </div>
       <div className="text-xs text-white/50">
         {new Date(s.created_at).toLocaleDateString()}
-        {isPaid && s.payout_amount > 0 && job && ` · ${s.payout_amount.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${job.currency}`}
+        {(paid || awaitingPayment) && due > 0 && job && ` · ${due.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${job.currency}`}
       </div>
       {s.payout_tx_hash ? (
         <div className="mt-2"><TxLink label="Payout tx" txHash={s.payout_tx_hash} /></div>
-      ) : isWorkContractDeployed() && isPaid ? (
-        <div className="mt-2 text-[11px] text-white/30">Paid off-chain</div>
+      ) : awaitingPayment ? (
+        <div className="mt-2 text-[11px] text-amber-200/70">
+          Accepted — payment not sent yet.
+        </div>
       ) : null}
     </div>
   );

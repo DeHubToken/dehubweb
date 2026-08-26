@@ -1,5 +1,5 @@
 /**
- * DeHubWork — on-chain escrow wiring
+ * DeHubWork â€” on-chain escrow wiring
  * ==================================
  * Thin wagmi/AA wrapper around the DeHubWork contract. If
  * `DEHUB_WORK_ADDRESS` is the zero address (not yet deployed) every
@@ -7,12 +7,13 @@
  *
  * Replace `DEHUB_WORK_ADDRESS` with the deployed Base address.
  */
-import { Interface, parseUnits } from 'ethers';
+import { Interface, parseUnits, formatUnits } from 'ethers';
 import {
   writeContractAA,
   readContract,
   approveERC20,
   getERC20Allowance,
+  getERC20Balance,
   getWalletAddress,
   switchChain,
   type AAWriteResult,
@@ -21,7 +22,7 @@ import { CHAIN_CONFIGS, BASE_CHAIN_ID } from './dhb-token';
 import type { WorkCurrency, WorkJobType } from '@/features/work/types';
 
 
-// ── Addresses (Base) ─────────────────────────────────────────
+// â”€â”€ Addresses (Base) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const DEHUB_WORK_ADDRESS = '0x0000000000000000000000000000000000000000'; // TODO: deploy + paste
 export const USDC_BASE_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 
@@ -40,7 +41,7 @@ export function workExplorerTxUrl(txHash: string): string {
 
 const ZERO = '0x0000000000000000000000000000000000000000';
 
-// ── ABI ──────────────────────────────────────────────────────
+// â”€â”€ ABI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const DEHUB_WORK_ABI = [
   'function createJob(address token, uint8 jobType, uint256 pricePerUnit, uint256 maxUnits) returns (uint256)',
   'function awardApplicant(uint256 jobId, address worker)',
@@ -60,7 +61,7 @@ export function getCurrencyToken(currency: WorkCurrency): { address: string; dec
   return { address: CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken, decimals: 18 };
 }
 
-// ── Write helpers (return null when contract not deployed) ───
+// â”€â”€ Write helpers (return null when contract not deployed) â”€â”€â”€
 export async function createJobOnChain(params: {
   currency: WorkCurrency;
   jobType: WorkJobType;
@@ -145,4 +146,60 @@ export async function adminResolveOnChain(params: {
 export async function readOnChainJob(jobId: number) {
   if (!isWorkContractDeployed()) return null;
   return readContract(DEHUB_WORK_ADDRESS, workIface, 'jobs', [BigInt(jobId)], BASE_CHAIN_ID);
+}
+
+// â”€â”€ Direct payout (no escrow contract required) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/**
+ * Pay a worker straight from the poster's wallet.
+ *
+ * The escrow above needs `DEHUB_WORK_ADDRESS` deployed, and it is not â€” so
+ * until it is, every helper up there returns `null` and no money can move
+ * through it. That is why bounties accrued ~500k DHB of *approved* payouts with
+ * a null `payout_tx_hash`: approval was only ever a status column.
+ *
+ * A payout does not actually need escrow. Escrow protects the *worker* by
+ * locking the money up front; a plain ERC-20 transfer at approval time settles
+ * the same debt, on-chain and verifiable, with the poster keeping custody until
+ * they approve. That is strictly better than a database flag and needs nothing
+ * deployed, so it is the path the UI takes today. When the escrow contract does
+ * land, funded jobs release through it and this stays the fallback for the
+ * unfunded ones.
+ *
+ * Balance is checked first: `writeContractAA` would otherwise pop a signature
+ * prompt for a transfer that reverts, and a reverted payout still looks like a
+ * refusal to pay from the worker's side.
+ */
+const erc20Iface = new Interface([
+  'function transfer(address to, uint256 amount) returns (bool)',
+]);
+
+export async function payWorkerDirect(params: {
+  currency: WorkCurrency;
+  to: string;
+  amount: number | string;
+}): Promise<AAWriteResult> {
+  await switchChain(BASE_CHAIN_ID);
+  const { address: token, decimals } = getCurrencyToken(params.currency);
+  const amountWei = parseUnits(String(params.amount), decimals);
+  if (amountWei <= BigInt(0)) throw new Error('Payout amount must be greater than zero');
+
+  const from = await getWalletAddress();
+  if (from.toLowerCase() === params.to.toLowerCase()) {
+    throw new Error('Cannot pay a bounty to your own wallet');
+  }
+
+  const balance = await getERC20Balance(token, from, BASE_CHAIN_ID);
+  if (balance < amountWei) {
+    throw new Error(
+      `Not enough ${params.currency} â€” you hold ${formatUnits(balance, decimals)} and this payout is ${params.amount}.`
+    );
+  }
+
+  return writeContractAA(
+    token,
+    erc20Iface,
+    'transfer',
+    [params.to, amountWei],
+    { context: 'bounty payout', chainId: BASE_CHAIN_ID }
+  );
 }
