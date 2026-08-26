@@ -308,6 +308,23 @@ async function runJob(target: Target, mediaUrl: string, timeline: TimelineWindow
         body: JSON.stringify({ kind: target.kind, ref: target.ref, force: true }),
       }).catch((e) => console.warn('summarize kick failed', e));
     }
+
+    // Categories, from the same words. This is the only moment the platform
+    // knows what a video is actually about, so it is the moment to tag it —
+    // before this, a post got categories only if its author picked some in the
+    // composer or an admin drove the panel's bulk button at it by hand.
+    //
+    // Fired for an empty transcript too: "nothing was said" is still a post
+    // that has now been looked at, and the title and thumbnail are exactly
+    // what the manual path had to work from anyway. A stage has no post and
+    // therefore nothing to categorize.
+    if (target.kind !== 'stage') {
+      fetch(`${SUPABASE_URL}/functions/v1/auto-categorize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SERVICE_KEY}` },
+        body: JSON.stringify({ kind: target.kind, ref: target.ref }),
+      }).catch((e) => console.warn('categorize kick failed', e));
+    }
   } catch (e: any) {
     await db.from('transcripts').update({
       status: 'failed',

@@ -35,6 +35,11 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.auth-email-hook]
     verify_jwt = false
+  # Deliberately left verified, unlike most of this list. Every call spends AI
+  # credits, and the only callers are `transcribe` and an operator, both of
+  # which hold the service key. The backfill mode checks for that key on top.
+  [functions.auto-categorize]
+    verify_jwt = true
   # Driven by pg_cron, which posts an apikey header and no bearer token. The
   # open mode is idempotent and capped; the backfill mode checks the service
   # key itself, because that is the only one that can spend in bulk.
