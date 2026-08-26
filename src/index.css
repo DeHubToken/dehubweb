@@ -4080,6 +4080,70 @@ html.light [data-login-modal] [data-dehub-loader] {
 
 /*
 ================================================================================
+SETTINGS SEARCH REVEAL
+================================================================================
+The flash left on the row a settings-search hit sends you to. Search used to
+switch tab and stop there, which on a long tab meant hunting for the row whose
+name you had just typed. Monochrome by design — ink, not an accent colour, on whatever surface
+the theme is painting.
+
+box-shadow rather than an outline, a wrapper or a background colour: the outer
+shadows paint past the border box, so a row glows with room around it without
+moving anything on the page, and the inset one tints over whatever fill the row
+already has instead of replacing it — several of these rows are zinc-800
+buttons that would otherwise go flat for the length of the flash.
+
+Kept in sync with FLASH_MS in src/lib/settings-search.ts.
+*/
+/*
+Themes are dark bar one: the flash is white on every surface except the paper
+of `light`, where white on near-white would be no flash at all. One variable,
+overridden there, rather than a second animation.
+*/
+:root {
+  --settings-reveal-ink: 255, 255, 255;
+}
+html[data-theme="light"] {
+  --settings-reveal-ink: 26, 26, 26;
+}
+
+@keyframes settings-reveal-flash {
+  0% {
+    box-shadow: inset 0 0 0 999px rgba(var(--settings-reveal-ink), 0), 0 0 0 0 rgba(var(--settings-reveal-ink), 0), 0 0 0 0 rgba(var(--settings-reveal-ink), 0);
+  }
+  12% {
+    box-shadow: inset 0 0 0 999px rgba(var(--settings-reveal-ink), 0.1), 0 0 0 8px rgba(var(--settings-reveal-ink), 0.1), 0 0 26px 10px rgba(var(--settings-reveal-ink), 0.16);
+  }
+  38% {
+    box-shadow: inset 0 0 0 999px rgba(var(--settings-reveal-ink), 0.04), 0 0 0 8px rgba(var(--settings-reveal-ink), 0.04), 0 0 18px 8px rgba(var(--settings-reveal-ink), 0.06);
+  }
+  60% {
+    box-shadow: inset 0 0 0 999px rgba(var(--settings-reveal-ink), 0.09), 0 0 0 8px rgba(var(--settings-reveal-ink), 0.09), 0 0 24px 10px rgba(var(--settings-reveal-ink), 0.14);
+  }
+  100% {
+    box-shadow: inset 0 0 0 999px rgba(var(--settings-reveal-ink), 0), 0 0 0 8px rgba(var(--settings-reveal-ink), 0), 0 0 0 0 rgba(var(--settings-reveal-ink), 0);
+  }
+}
+
+/* Steady version for readers who asked for less motion — see the exception in
+   the reduced-motion block below. */
+@keyframes settings-reveal-hold {
+  0%,
+  80% {
+    box-shadow: inset 0 0 0 999px rgba(var(--settings-reveal-ink), 0.09), 0 0 0 8px rgba(var(--settings-reveal-ink), 0.09);
+  }
+  100% {
+    box-shadow: inset 0 0 0 999px rgba(var(--settings-reveal-ink), 0), 0 0 0 8px rgba(var(--settings-reveal-ink), 0);
+  }
+}
+
+.settings-reveal-flash {
+  border-radius: 0.75rem;
+  animation: settings-reveal-flash 2.2s cubic-bezier(0.22, 0.61, 0.36, 1) 1;
+}
+
+/*
+================================================================================
 REDUCED MOTION — honour the OS "Reduce Motion" setting (iOS Settings ›
 Accessibility › Motion, and the equivalent on every platform).
 ================================================================================
@@ -4112,5 +4176,15 @@ specificity animation declarations above.
   .animate-spin::after {
     animation-duration: 1.5s !important;
     animation-iteration-count: infinite !important;
+  }
+
+  /* The settings-search reveal flash stays visible too: it is the answer to
+     "which control did you send me to?", not decoration. Held steady instead
+     of pulsing, and specificity beats the universal rule above. */
+  .settings-reveal-flash {
+    animation-name: settings-reveal-hold !important;
+    animation-duration: 2.2s !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: 1 !important;
   }
 }

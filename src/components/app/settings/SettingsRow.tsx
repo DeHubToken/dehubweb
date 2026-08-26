@@ -10,6 +10,8 @@ interface SettingsRowProps {
   as?: 'div' | 'label';
   className?: string;
   disabled?: boolean;
+  /** Search anchor — see src/lib/settings-search.ts. */
+  anchor?: string;
 }
 
 /** Shared alignment contract for settings rows. */
@@ -21,9 +23,11 @@ export function SettingsRow({
   as: Component = 'div',
   className,
   disabled = false,
+  anchor,
 }: SettingsRowProps) {
   return (
     <Component
+      data-setting-anchor={anchor}
       className={cn(
         'grid w-full min-w-0 grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-x-3',
         disabled ? 'cursor-default opacity-60' : undefined,
