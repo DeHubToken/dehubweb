@@ -184,81 +184,11 @@ const tabs = [
   { icon: LifeBuoy, value: 'support', label: 'settings.support' },
 ];
 
-/**
- * Flat index of the named sub-sections inside each settings tab, used by the
- * search bar below. It's a static list rather than a live DOM scan because
- * every tab except the one you're on isn't mounted, so there's nothing to
- * search in the others. Selecting a hit switches to its tab — there's no
- * scroll anchor per row, so it lands you on the tab, not the exact row.
- */
-const SEARCH_INDEX: { tab: string; label: string }[] = [
-  { tab: 'profile', label: 'Profile Picture' },
-  { tab: 'profile', label: 'Social Links' },
-  { tab: 'profile', label: 'Sign-in' },
-  { tab: 'profile', label: 'ENS' },
-  { tab: 'profile', label: 'Badge delegation' },
-  { tab: 'notifications', label: 'Email Notifications' },
-  { tab: 'notifications', label: 'Likes' },
-  { tab: 'notifications', label: 'Comments' },
-  { tab: 'notifications', label: 'New Followers' },
-  { tab: 'notifications', label: 'Monetization' },
-  { tab: 'notifications', label: 'Content & Platform' },
-  { tab: 'notifications', label: 'Chat' },
-  { tab: 'notifications', label: 'Quiet Hours' },
-  { tab: 'privacy', label: 'Private Account' },
-  { tab: 'privacy', label: 'Show me as a new member' },
-  { tab: 'privacy', label: 'Public Profile' },
-  { tab: 'privacy', label: 'Follow Visibility' },
-  { tab: 'privacy', label: 'Search Engine Indexing' },
-  { tab: 'privacy', label: 'Default Post Visibility' },
-  { tab: 'privacy', label: 'Who can message you' },
-  { tab: 'privacy', label: 'Message fee' },
-  { tab: 'privacy', label: 'Do not disturb' },
-  { tab: 'privacy', label: 'Two-Factor Auth' },
-  { tab: 'privacy', label: 'Wallet unlock prompt' },
-  { tab: 'privacy', label: 'Your Data' },
-  { tab: 'privacy', label: 'Geo-blocking' },
-  { tab: 'appearance', label: 'Dim Lights' },
-  { tab: 'appearance', label: 'Auto-play' },
-  { tab: 'appearance', label: 'Data Saver' },
-  { tab: 'appearance', label: 'Show Animations' },
-  { tab: 'appearance', label: 'Shorts' },
-  { tab: 'appearance', label: 'Theme' },
-  { tab: 'appearance', label: 'Language' },
-  { tab: 'appearance', label: 'Feed Layout' },
-  { tab: 'appearance', label: 'Default Profile Tab' },
-  { tab: 'appearance', label: 'Media' },
-  { tab: 'content', label: 'Default Post Visibility' },
-  { tab: 'content', label: 'Auto-Save Drafts' },
-  { tab: 'content', label: 'Content Filtering' },
-  { tab: 'content', label: 'Playback' },
-  { tab: 'content', label: 'Show Mature Content' },
-  { tab: 'content', label: 'Hide Watched Videos' },
-  { tab: 'content', label: 'Playback Speed Per Channel' },
-  { tab: 'content', label: 'Skip Sponsors And Intros' },
-  { tab: 'content', label: 'Ads In Your Feed' },
-  { tab: 'messages', label: 'Allow Direct Messages' },
-  { tab: 'messages', label: 'Message Fee' },
-  { tab: 'messages', label: 'Do Not Disturb' },
-  { tab: 'messages', label: 'Message Notifications' },
-  { tab: 'messages', label: 'Read Receipts' },
-  { tab: 'messages', label: 'End-to-End Encryption' },
-  { tab: 'messages', label: 'Filter Message Requests' },
-  { tab: 'messages', label: 'Storage' },
-  { tab: 'messages', label: 'Quick Actions' },
-  { tab: 'assets', label: 'Gas Fees' },
-  { tab: 'assets', label: 'Fractions' },
-  { tab: 'assets', label: 'Owned Usernames' },
-  { tab: 'assets', label: 'Offers Made' },
-  { tab: 'skills', label: 'Skills' },
-  { tab: 'characters', label: 'Characters' },
-  { tab: 'support', label: 'Report a Bug' },
-];
-
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
 import { CharactersLibrary } from '@/components/app/characters/CharactersLibrary';
 
 import { SEOHead } from '@/components/SEOHead';
+import { searchSettings, revealSettingAnchor, type SettingsSearchHit } from '@/lib/settings-search';
 import { useAppTheme, DEFAULT_THEME_HUES } from '@/contexts/ThemeContext';
 import { THEME_COLOR, isSpecialThemeColor } from '@/lib/theme-color';
 import { extractBrandColors } from '@/lib/brand-colors';
@@ -295,11 +225,31 @@ export default function SettingsPage() {
 
   const [settingsSearch, setSettingsSearch] = useState('');
   const [settingsSearchFocused, setSettingsSearchFocused] = useState(false);
-  const settingsSearchResults = useMemo(() => {
-    const query = settingsSearch.trim().toLowerCase();
-    if (!query) return [];
-    return SEARCH_INDEX.filter((item) => item.label.toLowerCase().includes(query)).slice(0, 8);
-  }, [settingsSearch]);
+  const [searchCursor, setSearchCursor] = useState(0);
+  const settingsSearchResults = useMemo(
+    () => searchSettings(settingsSearch, t),
+    [settingsSearch, t],
+  );
+
+  // A hit has to land on the setting, not just on the tab it lives in:
+  // switch tab, then scroll that row clear of the sticky header and flash it.
+  // revealSettingAnchor polls for the anchor, so it copes with the tab it
+  // belongs to only mounting after this render — and with tabs that fetch
+  // before they render anything at all.
+  const openSearchResult = useCallback((result: SettingsSearchHit) => {
+    setActiveTab(result.tab);
+    setSettingsSearch('');
+    setSettingsSearchFocused(false);
+    setSearchCursor(0);
+    revealSettingAnchor(result.anchor);
+  }, []);
+
+  // `?tab=privacy&highlight=geo-blocking` opens one specific setting — the
+  // same jump search makes, reusable from a toast or a support reply.
+  useEffect(() => {
+    const anchor = new URLSearchParams(window.location.search).get('highlight');
+    if (anchor) revealSettingAnchor(anchor);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -364,32 +314,53 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Search across settings — jumps to the tab a match lives in. */}
+        {/* Search across settings — switches tab, scrolls to the match and
+            flashes it. Index and jump live in src/lib/settings-search.ts. */}
         <div className="relative mb-4">
           <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             value={settingsSearch}
-            onChange={(e) => setSettingsSearch(e.target.value)}
+            onChange={(e) => { setSettingsSearch(e.target.value); setSearchCursor(0); }}
             onFocus={() => setSettingsSearchFocused(true)}
             onBlur={() => setTimeout(() => setSettingsSearchFocused(false), 150)}
+            onKeyDown={(e) => {
+              const count = settingsSearchResults.length;
+              if (e.key === 'Escape') { setSettingsSearch(''); setSettingsSearchFocused(false); return; }
+              if (!count) return;
+              if (e.key === 'ArrowDown') { e.preventDefault(); setSearchCursor((c) => (c + 1) % count); }
+              else if (e.key === 'ArrowUp') { e.preventDefault(); setSearchCursor((c) => (c - 1 + count) % count); }
+              else if (e.key === 'Enter') {
+                e.preventDefault();
+                openSearchResult(settingsSearchResults[Math.min(searchCursor, count - 1)]);
+                e.currentTarget.blur();
+              }
+            }}
             placeholder={t('settings.searchPlaceholder', 'Search settings')}
             className="pl-9 bg-white/5 border-white/10"
+            role="combobox"
+            aria-expanded={settingsSearchFocused && settingsSearchResults.length > 0}
+            aria-controls="settings-search-results"
           />
           {settingsSearchFocused && settingsSearch.trim() && (
-            <div className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
+            <div id="settings-search-results" role="listbox" className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
               {settingsSearchResults.length > 0 ? (
                 settingsSearchResults.map((result, i) => (
                   <button
-                    key={`${result.tab}-${result.label}-${i}`}
+                    key={result.tab + ':' + result.anchor}
                     type="button"
-                    onClick={() => {
-                      setActiveTab(result.tab);
-                      setSettingsSearch('');
-                    }}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-white/5 transition-colors"
+                    role="option"
+                    aria-selected={i === searchCursor}
+                    // onMouseDown, not onClick: the input blurs first, and the
+                    // blur handler closes this list before a click can land.
+                    onMouseDown={(e) => { e.preventDefault(); openSearchResult(result); }}
+                    onMouseEnter={() => setSearchCursor(i)}
+                    className={cn(
+                      'w-full flex items-center justify-between gap-3 px-4 py-3 text-left transition-colors',
+                      i === searchCursor ? 'bg-white/10' : 'hover:bg-white/5',
+                    )}
                   >
-                    <span className="text-white text-sm">{result.label}</span>
-                    <span className="text-zinc-500 text-xs">{t(TAB_KEYS[result.tab] ?? '', tabs.find((tb) => tb.value === result.tab)?.value)}</span>
+                    <span className="text-white text-sm">{result.displayLabel}</span>
+                    <span className="text-zinc-500 text-xs">{t(TAB_KEYS[result.tab] ?? '', result.tab)}</span>
                   </button>
                 ))
               ) : (
@@ -454,8 +425,8 @@ export default function SettingsPage() {
         {activeTab === 'content' && <ContentSettings />}
         {activeTab === 'messages' && <MessagesSettings />}
         {activeTab === 'assets' && <AssetsSettings />}
-        {activeTab === 'skills' && <SkillsLibrary />}
-        {activeTab === 'characters' && <CharactersLibrary />}
+        {activeTab === 'skills' && <div data-setting-anchor="skills"><SkillsLibrary /></div>}
+        {activeTab === 'characters' && <div data-setting-anchor="characters"><CharactersLibrary /></div>}
         {activeTab === 'support' && <SupportSettings />}
       </div>
       </div>
@@ -870,6 +841,7 @@ function ProfileSettings() {
 
       {/* Cover Image */}
       <div 
+        data-setting-anchor="cover-image"
         className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group"
         onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
         onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
@@ -906,7 +878,7 @@ function ProfileSettings() {
       </div>
 
       {/* Profile Picture */}
-      <div className="flex items-center gap-4 -mt-10">
+      <div data-setting-anchor="profile-picture" className="flex items-center gap-4 -mt-10">
         <div 
           className="relative"
           onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
@@ -953,7 +925,7 @@ function ProfileSettings() {
 
       {/* Display Name & Username */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
+        <div data-setting-anchor="display-name">
           <label className="block text-sm font-medium text-white mb-2">{t('settings.displayName')}</label>
           <Input 
             placeholder={t('settings.enterDisplayName')}
@@ -962,7 +934,7 @@ function ProfileSettings() {
             className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
           />
         </div>
-        <div>
+        <div data-setting-anchor="username">
           <label className="block text-sm font-medium text-white mb-2">{t('settings.username')}</label>
           <Input 
             placeholder={t('settings.usernamePlaceholder')}
@@ -1003,7 +975,7 @@ function ProfileSettings() {
       </div>
 
       {/* Bio */}
-      <div>
+      <div data-setting-anchor="bio">
         <label className="block text-sm font-medium text-white mb-2">{t('settings.bio')}</label>
         <Textarea 
           placeholder={t('settings.bioPlaceholder')}
@@ -1019,7 +991,7 @@ function ProfileSettings() {
             people fill in one. The identity rows below are one apiece and
             hiding them is what made them impossible to find in the first
             place. */}
-        <div>
+        <div data-setting-anchor="social-links">
           <h3 className="font-medium text-white mb-4">{t('settings.socialLinks')}</h3>
           <CollapsibleStack>
             <SocialLinkInput 
@@ -1092,24 +1064,28 @@ function ProfileSettings() {
         </div>
 
         {/* How you get back in. */}
-        <div>
+        <div data-setting-anchor="sign-in">
           <h3 className="font-medium text-white mb-4">{t('settings.signIn', 'Sign-in')}</h3>
           <EmailSignInSettings />
         </div>
 
         {/* An ENS name is an alias for the profile URL, not a rename. */}
-        <div>
+        <div data-setting-anchor="ens">
           <h3 className="font-medium text-white mb-4">{t('settings.ensSection', 'ENS')}</h3>
           <EnsHandleSettings />
         </div>
 
         {/* Badge delegation — a badge is a profile-facing thing (who holds
             what tier, who lent it), so it lives here rather than in Assets. */}
-        <BadgeDelegationSection />
+        <div data-setting-anchor="badge-delegation">
+          <BadgeDelegationSection />
+        </div>
 
         {/* Other accounts saved on this browser, and the control that adds one
             — last, because adding a profile leaves this page. */}
-        <ProfilesSection />
+        <div data-setting-anchor="profiles">
+          <ProfilesSection />
+        </div>
       </div>
 
     </div>
@@ -1142,6 +1118,7 @@ function SupportSettings() {
 
       <div className="space-y-3">
         <button
+          data-setting-anchor="report-bug"
           className={rowClass}
           onClick={() => navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`)}
         >
@@ -1157,7 +1134,7 @@ function SupportSettings() {
           <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
         </button>
 
-        <button className={rowClass} onClick={() => navigate('/docs/terms-of-service')}>
+        <button data-setting-anchor="terms" className={rowClass} onClick={() => navigate('/docs/terms-of-service')}>
           <div className="flex items-center gap-3">
             <FileText className="w-5 h-5 text-zinc-500" />
             <p className="text-white font-medium">{t('settings.termsOfService', 'Terms of Service')}</p>
@@ -1165,7 +1142,7 @@ function SupportSettings() {
           <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
         </button>
 
-        <button className={rowClass} onClick={() => navigate('/docs/privacy')}>
+        <button data-setting-anchor="privacy-policy" className={rowClass} onClick={() => navigate('/docs/privacy')}>
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-zinc-500" />
             <p className="text-white font-medium">{t('settings.privacyPolicy', 'Privacy Policy')}</p>
@@ -1173,7 +1150,7 @@ function SupportSettings() {
           <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
         </button>
 
-        <button className={rowClass} onClick={() => navigate('/delete-account')}>
+        <button data-setting-anchor="delete-account" className={rowClass} onClick={() => navigate('/delete-account')}>
           <div className="flex items-center gap-3">
             <Trash2 className="w-5 h-5 text-red-500/70" />
             <div>
@@ -1253,6 +1230,7 @@ function NotificationSettings() {
         <div className="space-y-4">
           <SettingToggle
             icon={Mail}
+            anchor="email-notifications"
             title={t('settings.emailNotifications')}
             description={t('settings.emailNotificationsDesc')}
             defaultChecked={false}
@@ -1263,7 +1241,9 @@ function NotificationSettings() {
             BrowserNotificationsSetting for why a plain toggle isn't enough
             once a reader has blocked us.
           */}
-          <BrowserNotificationsSetting />
+          <div data-setting-anchor="browser-notifications">
+            <BrowserNotificationsSetting />
+          </div>
         </div>
       </div>
 
@@ -1273,6 +1253,7 @@ function NotificationSettings() {
         <div className="space-y-4">
           <SettingToggle
             icon={ThumbsUp}
+            anchor="notify-likes"
             title={t('settings.likes')}
             description={t('settings.likesDesc')}
             defaultChecked={getInAppPref(notifPrefs, 'likes')}
@@ -1281,6 +1262,7 @@ function NotificationSettings() {
           />
           <SettingToggle
             icon={MessageSquare}
+            anchor="notify-comments"
             title={t('settings.comments')}
             description={t('settings.commentsDesc')}
             defaultChecked={getInAppPref(notifPrefs, 'comments')}
@@ -1289,6 +1271,7 @@ function NotificationSettings() {
           />
           <SettingToggle
             icon={Users}
+            anchor="notify-new-followers"
             title={t('settings.newFollowers')}
             description={t('settings.newFollowersDesc')}
             defaultChecked={getInAppPref(notifPrefs, 'newFollowers')}
@@ -1305,6 +1288,7 @@ function NotificationSettings() {
           */}
           <SettingToggle
             icon={MessageSquare}
+            anchor="notify-comment-replies"
             title="Comment Replies"
             description="When someone replies to your comment"
             defaultChecked={getInAppPref(notifPrefs, 'commentReplies')}
@@ -1313,6 +1297,7 @@ function NotificationSettings() {
           />
           <SettingToggle
             icon={AtSign}
+            anchor="notify-mentions"
             title="Mentions"
             description="When someone mentions you in a post or comment"
             defaultChecked={getInAppPref(notifPrefs, 'mentions')}
@@ -1328,6 +1313,7 @@ function NotificationSettings() {
         <div className="space-y-4">
           <SettingToggle
             icon={Coins}
+            anchor="notify-tips"
             title="Tips Received"
             description="When someone sends you a DHB tip"
             defaultChecked={getInAppPref(notifPrefs, 'tips')}
@@ -1336,6 +1322,7 @@ function NotificationSettings() {
           />
           <SettingToggle
             icon={Handshake}
+            anchor="notify-subscribers"
             title="New Subscribers"
             description="When someone subscribes to your plan"
             defaultChecked={getInAppPref(notifPrefs, 'subscriptions')}
@@ -1344,6 +1331,7 @@ function NotificationSettings() {
           />
           <SettingToggle
             icon={Coins}
+            anchor="notify-ppv"
             title="PPV Purchases"
             description="When someone purchases your pay-per-view content"
             defaultChecked={getInAppPref(notifPrefs, 'ppvPurchases')}
@@ -1359,6 +1347,7 @@ function NotificationSettings() {
         <div className="space-y-4">
           <SettingToggle
             icon={Play}
+            anchor="notify-livestream"
             title="Livestream Start"
             description="When someone you follow starts a livestream"
             defaultChecked={getInAppPref(notifPrefs, 'livestreamStart')}
@@ -1367,6 +1356,7 @@ function NotificationSettings() {
           />
           <SettingToggle
             icon={Sparkles}
+            anchor="notify-milestones"
             title="Milestones"
             description="When you reach a follower or engagement milestone"
             defaultChecked={getInAppPref(notifPrefs, 'milestones')}
@@ -1376,6 +1366,7 @@ function NotificationSettings() {
           {/* Key name matches mobile's `accountAlerts` (services/push/push.service.ts). */}
           <SettingToggle
             icon={Shield}
+            anchor="notify-account-alerts"
             title="Account Alerts"
             description="Security and account activity you should know about"
             defaultChecked={getInAppPref(notifPrefs, 'accountAlerts')}
@@ -1384,6 +1375,7 @@ function NotificationSettings() {
           />
           <SettingToggle
             icon={Bell}
+            anchor="notify-announcements"
             title="Announcements"
             description="Platform updates and important announcements"
             defaultChecked={getInAppPref(notifPrefs, 'announcements')}
@@ -1397,7 +1389,9 @@ function NotificationSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">Chat</h3>
         <div className="space-y-4">
-          <BuyBotToggle />
+          <div data-setting-anchor="buy-bot">
+            <BuyBotToggle />
+          </div>
         </div>
       </div>
 
@@ -1436,7 +1430,7 @@ function QuietHoursSection() {
   const fmt = (h: number) => `${String(h).padStart(2, '0')}:00`;
 
   return (
-    <div>
+    <div data-setting-anchor="quiet-hours">
       <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quietHours')}</h3>
       <div className="bg-zinc-800/50 rounded-xl overflow-hidden border border-zinc-700/50">
         <label className="flex items-center justify-between px-4 py-3.5 cursor-pointer">
@@ -1625,6 +1619,7 @@ function PrivacySettings() {
         <div className="space-y-4">
           <SettingToggle
             icon={Lock}
+            anchor="private-account"
             title={t('settings.privateAccount')}
             description={t('settings.privateAccountDesc')}
             defaultChecked={isPrivate}
@@ -1649,6 +1644,7 @@ function PrivacySettings() {
           {isNewMember && (
             <SettingToggle
               icon={Sparkles}
+              anchor="new-member"
               title={t('settings.showAsNewMember', 'Show me as a new member')}
               description={t(
                 'settings.showAsNewMemberDesc',
@@ -1661,6 +1657,7 @@ function PrivacySettings() {
           )}
           <SettingToggle
             icon={Globe}
+            anchor="public-profile"
             title={t('settings.publicProfile')}
             description={t('settings.publicProfileDesc')}
             defaultChecked
@@ -1668,6 +1665,7 @@ function PrivacySettings() {
           />
           <SettingsRow
             icon={<Users />}
+            anchor="follow-visibility"
             title={t('settings.followVisibility')}
             description={t('settings.followVisibilityDesc')}
             action={<SettingDrawerSelect
@@ -1696,6 +1694,7 @@ function PrivacySettings() {
           />
           <SettingToggle
             icon={Globe}
+            anchor="search-indexing"
             title={t('settings.searchEngineIndexing')}
             description={t('settings.searchEngineIndexingDesc')}
             defaultChecked
@@ -1710,6 +1709,7 @@ function PrivacySettings() {
         <div className="space-y-4">
           <SettingsRow
             icon={<Eye />}
+            anchor="default-post-visibility"
             title={t('settings.defaultPostVisibility')}
             description={t('settings.defaultPostVisibilityDesc')}
             action={<SettingDrawerSelect
@@ -1789,6 +1789,7 @@ function PrivacySettings() {
           {/* Do Not Disturb */}
           <SettingToggle
             icon={Ban}
+            anchor="do-not-disturb"
             title={t('settings.doNotDisturb', 'Do not disturb')}
             description={t('settings.doNotDisturbDesc', 'Mute all message notifications')}
             defaultChecked={doNotDisturb}
@@ -1807,6 +1808,7 @@ function PrivacySettings() {
         <div className="space-y-4">
           <SettingsRow
             icon={<Shield />}
+            anchor="two-factor"
             title={t('settings.twoFactorAuth')}
             description={t('settings.twoFactorAuthDesc')}
             action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
@@ -1815,6 +1817,7 @@ function PrivacySettings() {
           />
           <SettingsRow
             icon={<Shield />}
+            anchor="wallet-unlock"
             title={t('settings.walletUnlockInterval', 'Wallet unlock prompt')}
             description={t('settings.walletUnlockIntervalDesc', 'How long your wallet stays unlocked for posting, tipping and transfers before we ask for your password again. Survives refreshes; logging out always locks it.')}
             action={<SettingDrawerSelect
@@ -1830,16 +1833,22 @@ function PrivacySettings() {
               ]}
             />}
           />
-          <BiometricUnlockSettings />
-          <WalletRecoveryTools />
+          <div data-setting-anchor="biometric-unlock">
+            <BiometricUnlockSettings />
+          </div>
+          <div data-setting-anchor="wallet-recovery">
+            <WalletRecoveryTools />
+          </div>
         </div>
       </div>
 
       {/* Active Sessions */}
-      <ActiveSessions />
+      <div data-setting-anchor="active-sessions">
+        <ActiveSessions />
+      </div>
 
       {/* Extract Data */}
-      <div>
+      <div data-setting-anchor="your-data">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.yourData')}</h3>
         <div className="space-y-4">
           <DataPortability />
@@ -1847,10 +1856,12 @@ function PrivacySettings() {
       </div>
 
       {/* Blocked Users */}
-      <BlockedUsersSection />
+      <div data-setting-anchor="blocked-users">
+        <BlockedUsersSection />
+      </div>
 
       {/* Geo-Blocking */}
-      <div>
+      <div data-setting-anchor="geo-blocking">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.geoBlocking')}</h3>
         <p className="text-zinc-500 text-sm mb-4">{t('settings.geoBlockingDesc')}</p>
         <GeoBlockingSelector />
@@ -2042,6 +2053,7 @@ function AutoPlayToggle() {
       as="label"
       className="cursor-pointer"
       icon={<Play />}
+      anchor="autoplay"
       title={t('settings.autoPlay')}
       description={t('settings.autoPlayDesc')}
       action={<Switch checked={autoplayEnabled} onCheckedChange={setAutoplayEnabled} />}
@@ -2057,6 +2069,7 @@ function DataSaverToggle() {
       as="label"
       className="cursor-pointer"
       icon={<Gauge />}
+      anchor="data-saver"
       title={t('settings.dataSaver', 'Data Saver')}
       description={t('settings.dataSaverDesc', 'Stop videos autoplaying and preloading to save data. Turns on automatically on slow connections.')}
       action={<Switch
@@ -2075,6 +2088,7 @@ function ShowAnimationsToggle() {
       as="label"
       className="cursor-pointer"
       icon={<Sparkles />}
+      anchor="show-animations"
       title={t('settings.showAnimations')}
       description={t('settings.showAnimationsDesc')}
       action={<Switch checked={animationsEnabled} onCheckedChange={setAnimationsEnabled} />}
@@ -2090,6 +2104,7 @@ function ShortsEnabledToggle() {
       as="label"
       className="cursor-pointer"
       icon={<Film />}
+      anchor="shorts"
       title={t('settings.shortsEnabled', 'Shorts')}
       description={t('settings.shortsEnabledDesc', 'Show the Shorts feed tab and Shorts carousels on Home.')}
       action={<Switch checked={shortsEnabled} onCheckedChange={setShortsEnabled} />}
@@ -2338,7 +2353,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       </div>
 
       {/* Theme */}
-      <div>
+      <div data-setting-anchor="theme">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.theme')}</h3>
         <div className="relative">
           {/* The strip that used to sit here had to be recoloured per theme in
@@ -2392,16 +2407,20 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         </div>
 
         {/* Custom color for hue-driven WebGL themes */}
-        {(theme === 'cosmic' || theme === 'hazy' || theme === 'swarms' || theme === 'lavalamp') && <ThemeColorPicker theme={theme} />}
+        {(theme === 'cosmic' || theme === 'hazy' || theme === 'swarms' || theme === 'lavalamp') && (
+          <div data-setting-anchor="theme-color">
+            <ThemeColorPicker theme={theme} />
+          </div>
+        )}
 
         {/* Dim Lights — blue light filter, independent of the chosen theme */}
-        <div className="mt-4">
+        <div data-setting-anchor="dim-lights" className="mt-4">
           <DimLightsToggle />
         </div>
       </div>
 
       {/* Language */}
-      <div>
+      <div data-setting-anchor="language">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.language')}</h3>
         <div className="space-y-4">
           <SettingsRow
@@ -2418,6 +2437,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         <div className="space-y-4">
           <SettingsRow
             icon={<LayoutGrid />}
+            anchor="feed-layout"
             title={t('settings.feedLayout')}
             description={t('settings.feedLayoutDesc')}
             action={<SettingDrawerSelect
@@ -2432,6 +2452,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
           />
           <SettingsRow
             icon={<LayoutGrid />}
+            anchor="default-profile-tab"
             title={t('settings.defaultProfileTab', 'Default profile tab')}
             description={t('settings.defaultProfileTabDesc', 'Choose which tab visitors see first on your profile')}
             action={<SettingDrawerSelect
@@ -2498,6 +2519,7 @@ function ContentSettings() {
         <div className="space-y-4">
           <SettingsRow
             icon={<Globe />}
+            anchor="content-post-visibility"
             title={t('settings.defaultPostVisibility')}
             description={t('settings.whoCanSeeDefault')}
             action={<SettingDrawerSelect
@@ -2513,6 +2535,7 @@ function ContentSettings() {
           />
           <SettingToggle
             icon={FileText}
+            anchor="auto-save-drafts"
             title={t('settings.autoSaveDrafts')}
             description={t('settings.autoSaveDraftsDesc')}
             defaultChecked
@@ -2585,7 +2608,7 @@ function FreeAccessListSection() {
   };
 
   return (
-    <div>
+    <div data-setting-anchor="free-dm-access">
       <h3 className="font-medium text-zinc-400 text-sm mb-4">
         <Gift className="w-4 h-4 inline mr-2" />
         {t('settings.freeAccessList', 'Free DM Access')}
@@ -2649,6 +2672,7 @@ function SettingToggle({
   onCheckedChange,
   disabled = false,
   comingSoon = false,
+  anchor,
 }: { 
   icon: any; 
   title: string; 
@@ -2657,11 +2681,14 @@ function SettingToggle({
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
   comingSoon?: boolean;
+  /** Search anchor — see src/lib/settings-search.ts. */
+  anchor?: string;
 }) {
   const { t } = useTranslation();
   return (
     <SettingsRow
       as="label"
+      anchor={anchor}
       icon={<Icon />}
       title={title}
       description={description}
@@ -2697,6 +2724,7 @@ function MatureContentToggle() {
   return (
     <SettingToggle
       icon={EyeOff}
+      anchor="mature-content"
       title={t('settings.matureContent', 'Show Mature Content')}
       description={t(
         'settings.matureContentDesc',
@@ -2731,6 +2759,7 @@ function HideWatchedToggle() {
   return (
     <SettingToggle
       icon={EyeOff}
+      anchor="hide-watched"
       title={t('settings.hideWatched', 'Hide watched videos')}
       description={t(
         'settings.hideWatchedDesc',
@@ -2766,6 +2795,7 @@ function ChannelSpeedRow() {
   return (
     <SettingsRow
       icon={<Gauge />}
+      anchor="channel-speed"
       title={t('settings.channelSpeed', 'Playback speed per channel')}
       description={
         count === 0
@@ -2812,6 +2842,7 @@ function SkipSegmentsToggle() {
   return (
     <SettingToggle
       icon={FastForward}
+      anchor="skip-segments"
       title={t('settings.skipSegments', 'Skip sponsors and intros')}
       description={t(
         'settings.skipSegmentsDesc',
@@ -2836,6 +2867,7 @@ function AdLoadRow() {
   return (
     <SettingsRow
       icon={<Megaphone />}
+      anchor="ad-load"
       title={t('settings.adLoad', 'Ads in your feed')}
       description={t('settings.adLoadDesc', 'Ads pay the creators you watch. Fewer means half as many in the feed.')}
       action={<SettingDrawerSelect
@@ -2927,7 +2959,7 @@ function AssetsSettings() {
       </div>
 
       {/* Wallet Address */}
-      <div>
+      <div data-setting-anchor="wallet-address">
         <button
           onClick={handleCopyWallet}
           disabled={!walletAddress}
@@ -2944,7 +2976,7 @@ function AssetsSettings() {
       </div>
 
       {/* DHB Balance */}
-      <div>
+      <div data-setting-anchor="dhb-balance">
         <button
           onClick={() => setWalletDrawerOpen(true)}
           className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
@@ -2960,7 +2992,7 @@ function AssetsSettings() {
       </div>
 
       {/* Wallet */}
-      <div>
+      <div data-setting-anchor="wallet">
         <button
           onClick={() => navigate('/app/wallet')}
           className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
@@ -2976,7 +3008,7 @@ function AssetsSettings() {
       </div>
 
       {/* Gas Sponsorship */}
-      <div>
+      <div data-setting-anchor="gas-fees">
         <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
@@ -3012,7 +3044,7 @@ function AssetsSettings() {
       </Drawer>
 
       {/* Fractions */}
-      <div>
+      <div data-setting-anchor="fractions">
         <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
           <PieChart className="w-4 h-4" />
           {t('settings.fractionsOwn')}
@@ -3024,7 +3056,7 @@ function AssetsSettings() {
       </div>
 
       {/* Owned Usernames */}
-      <div>
+      <div data-setting-anchor="owned-usernames">
         <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
           <AtSign className="w-4 h-4" />
           {t('settings.usernamesOwn')}
@@ -3036,7 +3068,7 @@ function AssetsSettings() {
       </div>
 
       {/* Offers Made */}
-      <div>
+      <div data-setting-anchor="offers-made">
         <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
           <Handshake className="w-4 h-4" />
           {t('settings.offersMade')}
@@ -3068,6 +3100,7 @@ function MessagesSettings() {
         <div className="space-y-4">
           <SettingsRow
             icon={<MessageCircle />}
+            anchor="allow-dms"
             title={t('settings.allowDirectMessages', 'Allow direct messages')}
             description={t('settings.controlDMs', 'Control who can send you DMs')}
             action={<SettingDrawerSelect
@@ -3082,6 +3115,7 @@ function MessagesSettings() {
           {/* Message Fee */}
           <SettingsRow
             icon={<Coins />}
+            anchor="message-fee"
             title={t('settings.messageFee', 'Message fee')}
             description={t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}
             action={<div className="flex items-center gap-2">
@@ -3124,6 +3158,7 @@ function MessagesSettings() {
           {/* Do Not Disturb */}
           <SettingToggle
             icon={Ban}
+            anchor="do-not-disturb"
             title={t('settings.doNotDisturb', 'Do not disturb')}
             description={t('settings.doNotDisturbDesc', 'Mute all message notifications')}
             defaultChecked={doNotDisturb}
@@ -3147,6 +3182,7 @@ function MessagesSettings() {
         <div className="space-y-4">
           <SettingToggle
             icon={Bell}
+            anchor="message-notifications"
             title={t('settings.messageNotifications')}
             description={t('settings.messageNotificationsDesc')}
             defaultChecked
@@ -3154,6 +3190,7 @@ function MessagesSettings() {
           />
           <SettingToggle
             icon={Eye}
+            anchor="read-receipts"
             title={t('settings.readReceipts')}
             description={t('settings.readReceiptsDesc')}
             defaultChecked
@@ -3161,6 +3198,7 @@ function MessagesSettings() {
           />
           <SettingToggle
             icon={Lock}
+            anchor="e2e-encryption"
             title={t('settings.e2eEncryption')}
             description={t('settings.e2eEncryptionDesc')}
             defaultChecked
@@ -3168,6 +3206,7 @@ function MessagesSettings() {
           />
           <SettingToggle
             icon={Filter}
+            anchor="filter-requests"
             title={t('settings.filterMessageRequests')}
             description={t('settings.filterMessageRequestsDesc')}
             comingSoon
@@ -3176,7 +3215,7 @@ function MessagesSettings() {
       </div>
 
       {/* Storage */}
-      <div>
+      <div data-setting-anchor="message-storage">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.storage')}</h3>
         <div className="bg-zinc-800 rounded-xl p-4">
           <div className="flex justify-between text-sm mb-2">
@@ -3197,7 +3236,7 @@ function MessagesSettings() {
       </div>
 
       {/* Quick Actions */}
-      <div>
+      <div data-setting-anchor="quick-actions">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quickActions')}</h3>
         <div className="grid grid-cols-2 gap-3">
           <button onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
