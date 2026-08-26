@@ -15,7 +15,8 @@ import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { ActionBar } from './ActionBar';
 import { PostUtilityButtons } from './PostUtilityButtons';
 import { useImageTranslation } from '@/hooks/use-image-translation';
-import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
 /**
@@ -408,7 +409,7 @@ function FullscreenSlide({
   onClose: () => void;
   postId?: string;
 }) {
-  const { onClick } = useDoubleTapLike({
+  const tapGestures = useTapGestures({
     postId,
     onSingleTap: () => {
       /* single-tap on the image itself is a no-op (closing happens on the
@@ -417,18 +418,17 @@ function FullscreenSlide({
   });
   return (
     <div
-      className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+      className="relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
       onClick={onClose}
     >
+      <TapReactionBurst postId={postId} />
       <img
         src={img}
         alt=""
         className="max-w-full max-h-full object-contain select-none"
         draggable={false}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick(e);
-        }}
+        onClick={(e) => e.stopPropagation()}
+        {...tapGestures}
         onError={(e) => {
           (e.target as HTMLImageElement).src = '/placeholder.svg';
         }}

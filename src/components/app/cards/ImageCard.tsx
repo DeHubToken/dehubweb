@@ -47,7 +47,8 @@ import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
-import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
@@ -124,7 +125,9 @@ function ImageSlide({
   postId?: string;
   onImageClick: (index: number) => void;
 }) {
-  const { onClick } = useDoubleTapLike({
+  // Upgraded from the click-only double-tap to the shared ladder, so a photo
+  // gets the same triple-tap ❤️ and hold-for-the-tray as every other surface.
+  const tapGestures = useTapGestures({
     postId,
     onSingleTap: () => onImageClick(idx),
   });
@@ -143,11 +146,12 @@ function ImageSlide({
     <div
       className="relative flex justify-start cursor-pointer select-none"
       style={{ minHeight: ratio ? undefined : '200px' }}
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick(e);
-      }}
+      // Still stops the click reaching the card's navigate handler; the ladder
+      // itself now runs off pointer events, which embla's drag does not consume.
+      onClick={(e) => e.stopPropagation()}
+      {...tapGestures}
     >
+      <TapReactionBurst postId={postId} />
       {/* The image sizes itself: fills the card width when it's wide enough,
           otherwise caps at 600px tall and shrinks its own width — so a narrow /
           portrait image is just the image, hugged to the left, with no blurred
