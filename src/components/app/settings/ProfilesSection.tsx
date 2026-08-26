@@ -106,7 +106,9 @@ export function ProfilesSection() {
         )}
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      {/* One account per row, the same width as the Add profile button below:
+          a two-up grid left a ragged half-row whenever the count was odd. */}
+      <div className="space-y-2">
         {profiles.map((profile) => {
           const isActive = profile.id === activeId;
           return (
