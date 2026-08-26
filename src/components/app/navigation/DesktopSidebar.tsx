@@ -424,7 +424,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - scrollable */}
-        <motion.div ref={sidePanelRef} data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden contain-paint flex flex-col">
+        {/* data-rail-collapsed is a STYLING hook, not state the component reads.
+            The glass themes give this panel an ambient 0 8px 32px halo that
+            blurs ~16px past its own top edge. Expanded that is exactly right —
+            the 40px wordmark sits well clear of it and the lift reads well.
+            Collapsed, the rail parks a 22px brand mark and a 14px toggle only
+            6.5px above the panel, so both land in the wash with the panel's
+            bright glass rim right underneath and stop being legible. The hook
+            lets index.css drop the cast for the collapsed rail only. */}
+        <motion.div ref={sidePanelRef} data-side-panel data-rail-collapsed={isCollapsed ? 'true' : undefined} layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden contain-paint flex flex-col">
           {/* Menu search — revealed by scrolling the list, retracted when it
               returns to the top. Animated through grid-template-rows so the
               row's own height decides the travel; no hardcoded pixel value to
