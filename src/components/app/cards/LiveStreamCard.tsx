@@ -43,7 +43,7 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
-import { useMuteAuthor } from '@/hooks/use-mute-author';
+import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -129,7 +129,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const isStreamOwner = walletAddress && stream.creatorId &&
     walletAddress.toLowerCase() === stream.creatorId.toLowerCase();
   const { like, gift, end, isLiking, isEnding } = useStreamActions();
-  const { muteAuthor } = useMuteAuthor();
+  const { blockAuthor } = useBlockAuthor();
   // Every /api/live/{id}/* interaction route takes the Mongo ObjectId, never
   // the NFT tokenId — a tokenId there is a guaranteed CastError 500.
   const apiStreamId = stream.streamId || null;
@@ -745,7 +745,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                   onClick={() => {
                     if (!walletAddress) { openLoginModal(); return; }
                     if (!stream.creatorId) return;
-                    muteAuthor(stream.creatorId, stream.streamer || undefined);
+                    blockAuthor(stream.creatorId, stream.streamer || undefined);
                   }}
                   className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
                 >
