@@ -310,3 +310,48 @@ describe('the two players share one fullscreen implementation', () => {
     expect(SLIDE).not.toMatch(/onClick=\{allowFullscreen \?/);
   });
 });
+
+/**
+ * Trackpad scrolling died every couple of shorts until the mouse was nudged.
+ *
+ * A browser only recomputes what is under the cursor when the cursor moves.
+ * The carousel advances by transform, so after a flick the wheel is still
+ * aimed at the slide that just left — fine while it is mounted, dead once the
+ * 3-slide render window drops it, because the events then land on a node that
+ * is no longer in the document and no listener sees them, window included.
+ * Binding to the window (the previous fix) cannot help with that; keeping the
+ * latched slide mounted can.
+ */
+describe('the shorts wheel gesture keeps its target', () => {
+  const VIEWER = readFileSync(
+    resolve(__dirname, '../components/app/cards/ShortsViewer.tsx'),
+    'utf8',
+  );
+
+  it('marks each slide with its index so the handler can identify its own', () => {
+    expect(VIEWER).toContain('data-shorts-slide={index}');
+  });
+
+  it('reads the latched slide off the wheel event itself', () => {
+    // The event target *is* the browser's answer to what the gesture is
+    // latched to — no guessing from currentIndex, which has already moved on.
+    expect(VIEWER).toContain(".closest?.('[data-shorts-slide]')");
+    expect(VIEWER).toMatch(/setPointerPinnedIndex\(Number\.isInteger\(latchedIndex\)/);
+  });
+
+  it('keeps that slide mounted after the render window drops it', () => {
+    // Without this the whole thing is decorative: the pin has to survive
+    // falling outside prev/current/next.
+    expect(VIEWER).toMatch(
+      /pointerPinnedIndex !== null && !indices\.includes\(pointerPinnedIndex\)[\s\S]{0,80}?indices\.push\(pointerPinnedIndex\)/,
+    );
+    expect(VIEWER).toMatch(/\}, \[currentIndex, shorts\.length, pointerPinnedIndex\]\)/);
+  });
+
+  it('releases the pin as soon as the pointer re-targets', () => {
+    // A move is the browser's own hit-test, so the old slide is free to go and
+    // the viewer is back to exactly three.
+    expect(VIEWER).toMatch(/handleDesktopPointerMove = useCallback\(\(\) => \{[\s\S]{0,400}?setPointerPinnedIndex\(currentIndexRef\.current\)/);
+    expect(VIEWER).toMatch(/handleDesktopPointerLeave = useCallback\(\(\) => \{[\s\S]{0,300}?setPointerPinnedIndex\(null\)/);
+  });
+});
