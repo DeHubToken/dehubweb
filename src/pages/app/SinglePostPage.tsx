@@ -269,7 +269,8 @@ function toTextPost(nft: DeHubNFT): TextPost {
   const views = formatViews(resolveViewCount(nft)).replace(' views', '');
   const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
-  
+  const streamInfo = nft.streamInfo;
+
   // Canonical avatar resolution (matches feed normalization)
   const creatorObj = (nft as any).creator;
   const ownerObj = (nft as any).owner;
@@ -325,6 +326,11 @@ function toTextPost(nft: DeHubNFT): TextPost {
     isQuotePost: !!nft.isQuotePost,
     quotedPost: nft.quotedPost || null,
     communityAlertPending: (nft as any).communityAlertStatus === 'pending',
+    isLocked: nft.is_locked || streamInfo?.isLockContent || false,
+    lockedPrice: nft.locked_price || streamInfo?.lockContentAmount,
+    lockedCurrency: nft.locked_currency || streamInfo?.lockContentTokenSymbol || 'DHB',
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
   };
 }
 

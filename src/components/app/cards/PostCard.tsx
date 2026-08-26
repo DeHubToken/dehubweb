@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type Re
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket, Gift } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil, Coins, Rocket, Gift, Lock } from 'lucide-react';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -49,6 +49,9 @@ import { PollCard } from './PollCard';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
+import { VerifyUnlockButton } from './VerifyUnlockButton';
+import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
+import dehubCoinSmall from '@/assets/dehub-coin.png';
 import {
   Drawer,
   DrawerContent,
@@ -151,6 +154,21 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   // The warning is for whoever is looking at the screen, so it covers the
   // author's own post too.
   const matureGate = useMatureGate(post.contentRating);
+
+  // Subscriber-only gating - bypass for owners & already-unlocked content
+  const [showLockedDrawer, setShowLockedDrawer] = useState(false);
+  const [locallyUnlocked, setLocallyUnlocked] = useState(false);
+  const storedUnlocked = isTokenUnlocked(post.id);
+  const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
+  const isLocked = (post.isLocked || false) && !canBypassGating;
+
+  const formatCompact = (num: number | null | undefined): string => {
+    const n = Number(num);
+    if (!Number.isFinite(n) || n <= 0) return '0';
+    if (n >= 1000000) return `${Math.floor(n / 1000000)}M`;
+    if (n >= 1000) return `${Math.floor(n / 1000)}K`;
+    return String(Math.floor(n));
+  };
 
   const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
@@ -529,6 +547,43 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           onReveal={matureGate.reveal}
           description="The creator marked this post as adult or graphic."
         />
+        ) : isLocked ? (
+        <>
+        {/* Title stays visible as the headline; only the body is gated. */}
+        {post.title && (
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title, { flagged: post.communityAlertPending })}</h3>
+        )}
+        {displayBody?.trim() && (() => {
+          const firstLine = displayBody.split('\n')[0];
+          return (
+            <div className="space-y-2.5">
+              {/* Real alpha fade via mask-image, not a background-color gradient
+                  overlay — a color gradient has to match each theme's surface
+                  color and breaks on glass/blurred/image backgrounds, while a
+                  mask fades the text's own opacity to transparent and composites
+                  correctly over whatever sits behind the card. */}
+              <div className="relative overflow-hidden" style={{ maxHeight: '2.6em' }}>
+                <p
+                  className="text-white/90 text-sm sm:text-base"
+                  style={{
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
+                    maskImage: 'linear-gradient(to bottom, black 0%, black 45%, transparent 95%)',
+                  }}
+                >
+                  {renderTextWithLinks(firstLine)}
+                </p>
+              </div>
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
+                className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                Subscribe to view full post
+              </button>
+            </div>
+          );
+        })()}
+        </>
         ) : (
         <>
         {/* Title */}
@@ -574,7 +629,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           }}
         />
 
-        {parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
+        {!isLocked && parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
 
         <div className="pt-1">
           <ActionBar
@@ -715,6 +770,50 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isLocked && (
+        <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
+          <DrawerContent glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <DrawerHeader className="pb-3 relative">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Lock className="w-5 h-5 text-white" />
+                {t('drawers.gatedTitle')}
+              </DrawerTitle>
+              <button onClick={() => setShowLockedDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              {post.lockedPrice && post.lockedPrice > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                {t('drawers.gatedDescription')}
+              </p>
+              {post.lockedPrice && post.lockedPrice > 0 && (
+                <VerifyUnlockButton
+                  requiredAmount={post.lockedPrice}
+                  currency={post.lockedCurrency || 'DHB'}
+                  onUnlocked={() => {
+                    setShowLockedDrawer(false);
+                    setLocallyUnlocked(true);
+                    markTokenUnlocked(post.id);
+                    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+                    queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
+                  }}
+                />
+              )}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
 
       {/* AI Chat */}
       <PostAIChat

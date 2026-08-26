@@ -142,6 +142,11 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
       likes: nft.totalVotes?.for || nft.like_count || 0,
       dislikes: nft.totalVotes?.against || nft.dislike_count || 0,
     },
+    isLocked: nft.is_locked || nft.streamInfo?.isLockContent || false,
+    lockedPrice: nft.locked_price || nft.streamInfo?.lockContentAmount,
+    lockedCurrency: nft.locked_currency || nft.streamInfo?.lockContentTokenSymbol || 'DHB',
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
   };
 }
 
