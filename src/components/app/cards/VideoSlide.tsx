@@ -13,7 +13,6 @@ import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
-import { useVideoFullscreen, canNativeFullscreen } from '@/hooks/use-video-fullscreen';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 
@@ -48,12 +47,20 @@ interface VideoSlideProps {
    */
   preload?: 'auto' | 'metadata' | 'none';
   /**
-   * Whether to offer a fullscreen control. Desktop only — the viewer is
-   * `fixed inset-0` on mobile, so a short there already fills the screen and
-   * "fullscreen" would be a button that visibly does nothing. Off by default so
-   * a new caller has to opt in deliberately.
+   * Fullscreen is owned by the VIEWER, not by the slide.
+   *
+   * The button sits on the video (that is where a viewer looks for it), but the
+   * element that actually goes fullscreen has to be the viewer's video
+   * container: the mute button, the action bar and the creator block all live
+   * there, and only what is inside the fullscreened element paints in the top
+   * layer. A slide that fullscreened itself handed back a bare video with every
+   * control left behind on the hidden page.
+   *
+   * Supplying `onToggleFullscreen` is what draws the button — desktop only,
+   * since the viewer is already `fixed inset-0` on a phone.
    */
-  allowFullscreen?: boolean;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
   /**
    * Fade the slide's own chrome out with the viewer's. The fullscreen control
    * lives here but sits in the same row as the viewer's mute button, so the two
@@ -75,7 +82,8 @@ export const VideoSlide = memo(function VideoSlide({
   showPlayIndicator,
   letterbox = false,
   preload,
-  allowFullscreen = false,
+  isFullscreen = false,
+  onToggleFullscreen,
   chromeHidden = false,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -87,22 +95,9 @@ export const VideoSlide = memo(function VideoSlide({
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
-  // The slide frame, not the <video>: fullscreening the frame carries the seek
-  // strip and the play indicator into fullscreen with it.
-  //
-  // `allowSimulated: false` because the carousel animates every slide with
-  // `translateY`, and a transformed ancestor makes the `fixed inset-0` that
-  // simulated fullscreen relies on resolve against that wrapper rather than the
-  // viewport — it would land somewhere arbitrary. Native fullscreen promotes the
-  // element to the top layer, where no ancestor transform applies, so the real
-  // path still works; only the fake one is refused.
-  const frameRef = useRef<HTMLDivElement>(null);
-  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, frameRef, {
-    allowSimulated: false,
-  });
-  // Desktop only, and only where a native fullscreen is actually reachable —
-  // with the simulated fallback refused, anything else would be a dead control.
-  const canFullscreen = allowFullscreen && canNativeFullscreen();
+  // The viewer only hands a toggle down on desktop, so this is also the
+  // desktop-only gate for the button.
+  const canFullscreen = !!onToggleFullscreen;
 
   /**
    * Tap handling on the video area.
@@ -356,14 +351,13 @@ export const VideoSlide = memo(function VideoSlide({
   // For a true 9:16 short this fills edge-to-edge, so the glass fill stays hidden.
   const fitWhole = letterbox || videoAspect !== 'portrait';
 
-  // No simulated-fullscreen branch here on purpose: `allowSimulated: false`
-  // means this frame only ever enters *native* fullscreen, where the Fullscreen
-  // API's UA stylesheet pins it with `position: fixed !important; inset: 0
-  // !important` from the top layer. That outranks these classes and is immune to
-  // the carousel's ancestor transform, so `absolute inset-0` stays correct in
-  // both states.
+  // The frame stays `absolute inset-0` in every state, fullscreen included: it
+  // is the viewer's container that goes fullscreen, and this frame simply fills
+  // it as it always did. Nothing here may go `fixed` — the carousel transforms
+  // each slide, and a transformed ancestor makes `fixed` resolve against that
+  // wrapper rather than the viewport.
   return (
-    <div ref={frameRef} className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
+    <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass fill behind letterboxed / non-portrait videos */}
       {fitWhole && thumbnail && (
         <>
@@ -418,15 +412,18 @@ export const VideoSlide = memo(function VideoSlide({
 
       {/* Fullscreen toggle. Only the active slide gets one — the carousel keeps
           neighbouring slides mounted, and a column of stacked buttons would all
-          sit at the same screen position. `data-no-swipe` keeps a press on it
-          from being read as the start of a navigation drag. */}
-      {isActive && canFullscreen && (
+          sit at the same screen position — which is why the viewer hands the
+          toggle down for the active slide alone. Gating on `isActive` here as
+          well would take the button away the moment you paused, since that prop
+          is `isActive && !isPaused`. `data-no-swipe` keeps a press on it from
+          being read as the start of a navigation drag. */}
+      {canFullscreen && (
         <button
           type="button"
           data-no-swipe
           onClick={(e) => {
             e.stopPropagation();
-            toggleFullscreen();
+            onToggleFullscreen?.();
           }}
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
           // `right-[3.75rem]` parks this immediately left of the viewer's mute
