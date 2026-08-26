@@ -4080,6 +4080,61 @@ html.light [data-login-modal] [data-dehub-loader] {
 
 /*
 ================================================================================
+SETTINGS SEARCH REVEAL
+================================================================================
+The flash left on the row a settings-search hit sends you to. Search used to
+switch tab and stop there, which on a long tab meant hunting for the row whose
+name you had just typed. Monochrome by design — a white ring on the app's zinc
+surfaces, not an accent colour.
+
+box-shadow rather than an outline or a wrapper element: it paints outside the
+border box, so a row can glow with room around it without moving anything else
+on the page. Kept in sync with FLASH_MS in src/lib/settings-search.ts.
+*/
+@keyframes settings-reveal-flash {
+  0% {
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  12% {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 26px 10px rgba(255, 255, 255, 0.16);
+  }
+  38% {
+    background-color: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.04), 0 0 18px 8px rgba(255, 255, 255, 0.06);
+  }
+  60% {
+    background-color: rgba(255, 255, 255, 0.09);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.09), 0 0 24px 10px rgba(255, 255, 255, 0.14);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0), 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Steady version for readers who asked for less motion — see the exception in
+   the reduced-motion block below. */
+@keyframes settings-reveal-hold {
+  0%,
+  80% {
+    background-color: rgba(255, 255, 255, 0.09);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.09);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+  }
+}
+
+.settings-reveal-flash {
+  border-radius: 0.75rem;
+  animation: settings-reveal-flash 2.2s cubic-bezier(0.22, 0.61, 0.36, 1) 1;
+}
+
+/*
+================================================================================
 REDUCED MOTION — honour the OS "Reduce Motion" setting (iOS Settings ›
 Accessibility › Motion, and the equivalent on every platform).
 ================================================================================
@@ -4112,5 +4167,15 @@ specificity animation declarations above.
   .animate-spin::after {
     animation-duration: 1.5s !important;
     animation-iteration-count: infinite !important;
+  }
+
+  /* The settings-search reveal flash stays visible too: it is the answer to
+     "which control did you send me to?", not decoration. Held steady instead
+     of pulsing, and specificity beats the universal rule above. */
+  .settings-reveal-flash {
+    animation-name: settings-reveal-hold !important;
+    animation-duration: 2.2s !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: 1 !important;
   }
 }
