@@ -351,7 +351,8 @@
     "activityLog": "Tegevuslogi",
     "endStream": "Lõpeta ülekanne",
     "linkCopied": "Link kopeeritud lõikelauale",
-    "postUrlCopied": "Postituse URL kopeeritud lõikelauale"
+    "postUrlCopied": "Postituse URL kopeeritud lõikelauale",
+    "boostPost": "Võimenda postitust"
   },
   "filters": {
     "sort": "Sorteeri",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Osta oma lemmikloojatelt Pay-Per-View sisu, et see siia ilmuks.",
     "recentStartSaving": "Sinu viimati järjehoidjatesse lisatud postitused kuvatakse siin.",
     "textStartSaving": "Lisa ainult tekstiga postitused järjehoidjatesse ja need ilmuvad siia.",
-    "videosStartSaving": "Lisa videotega postitused järjehoidjatesse ja need kogutakse siia."
+    "videosStartSaving": "Lisa videotega postitused järjehoidjatesse ja need kogutakse siia.",
+    "folders": "Kaustad"
   },
   "notifications": {
     "title": "Teated",
@@ -1722,5 +1724,49 @@
       "startTerm": "Ajalugu",
       "start": "— „kogu aeg“ tähendab iga päeva, mida Cloudflare veel säilitab, täna {{days}} päeva alates {{date}}, päevast, mil dehub.io kolis Cloudflare'i. Varasemaid servaandmeid pole näidata ja vanad päevad kaovad, kui Cloudflare need aegunuks loeb."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kelle jälgijad peaksid seda nägema?",
+    "aimAtTiers": "Millised märgitasemed peaksid seda nägema?",
+    "aimPlaceholder": "Kasutajanimi või rahakoti aadress",
+    "boost": "Võimenda",
+    "boostBooked": "Võimendatud {{minutes}} minutiks",
+    "boostExplainer": "Paigutab selle postituse avavoo ülaossa sinu ajaakna jooksul.",
+    "boostFailed": "Seda postitust ei õnnestunud võimendada",
+    "boostForMinutes": "Võimenda {{minutes}} minutiks",
+    "boostedLabel": "Võimendatud",
+    "boostsLeft": "{{left}} / {{total}} võimendust järel",
+    "cancelFailed": "Seda võimendust ei õnnestunud tühistada",
+    "cancelledRefunded": "Võimendus tühistati ja tagastati sinu kvooti",
+    "cancelledSpent": "Võimendus tühistati. See oli juba alanud, seega jääb see kasutatuks.",
+    "colBoosts": "Võimendused",
+    "colEach": "Iga",
+    "colTier": "Tase",
+    "colTotal": "Tsükli kohta",
+    "comingSoon": "tuleb varsti",
+    "finishedCount": "{{count}} lõppes selles tsüklis, nähtud {{seen}} korda",
+    "grantLine": "{{boosts}} × {{minutes}} minutit tsükli kohta",
+    "intro": "Märk annab enamat kui pilt sinu nime kõrval. Iga kahe nädala tagant annab see võimendusi — igaüks paigutab postituse avavoo ülaossa. Kolmteist taset, kolmteist võimet, üks avanemine astme kohta.",
+    "ladderHeading": "Mida iga tase annab",
+    "left": "järel",
+    "liveUntil": "aktiivne kuni {{time}}",
+    "loadFailed": "Sinu SuperPowersit ei õnnestunud praegu laadida. Proovi hetke pärast uuesti.",
+    "minutes": "minutit",
+    "needBadge": "SuperPowers vajavad hoiustamismärki. Hoiusta DHB-d, et need avada.",
+    "noBadgeYet": "Sul pole veel märki, seega võimendusi pole. DHB hoiustamine avab allpool oleva redeli.",
+    "noBoostsLeft": "Selles tsüklis pole enam võimendusi järel",
+    "powersHeading": "Kolmteist võimet",
+    "queued": "järjekorras",
+    "refills": "täieneb {{date}}",
+    "refillsOn": "Täieneb {{date}} — kõigi jaoks samal hetkel.",
+    "secondWind": "Teine Hingamine",
+    "secondWindExplainer": "See postitus on üle nädala vana. Teine Hingamine saadab selle tagasi voo tippu.",
+    "seenCount": "{{count}} nähtud",
+    "shareOfVoice": "Võimenduskoht vaheldub. Kui mitu võimendust on samal ajal aktiivsed, näidatakse vaatajatele üht, mis on kaalutud märgitaseme järgi — kõrgem tase kuvatakse sagedamini ja igaüks saab talle antud ajaakna.",
+    "spendFor": "{{power}} {{minutes}} minutiks",
+    "spent": "{{power}} aktiivne {{minutes}} minutit",
+    "stakeDhb": "Hoiusta DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} avaneb tasemel {{tier}}"
   }
 }

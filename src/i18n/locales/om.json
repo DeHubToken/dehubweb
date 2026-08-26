@@ -351,7 +351,8 @@
     "activityLog": "Galmee Sochii",
     "endStream": "Tamsaasa Dhaabi",
     "linkCopied": "Liinkiin waraabame",
-    "postUrlCopied": "URL barreeffamaa waraabame"
+    "postUrlCopied": "URL barreeffamaa waraabame",
+    "boostPost": "Maxxansa Boost godhi"
   },
   "filters": {
     "sort": "Tartiibsi",
@@ -750,7 +751,8 @@
     "ppvStartSaving": "Qabiyyee Pay-Per-View uumtota jaallattu irraa biti; asitti ni mul'ata.",
     "recentStartSaving": "Maxxansaaleen ati dhiheenyatti mallatteessite asitti ni mul'atu.",
     "textStartSaving": "Maxxansaalee barruu qofa qaban mallatteessi; asitti ni mul'atu.",
-    "videosStartSaving": "Maxxansaalee viidiyoo qaban mallatteessi; asitti walitti qabamu."
+    "videosStartSaving": "Maxxansaalee viidiyoo qaban mallatteessi; asitti walitti qabamu.",
+    "folders": "Foolderoota"
   },
   "notifications": {
     "title": "Beeksisa",
@@ -1772,5 +1774,49 @@
       "startTerm": "Seenaa",
       "start": "— \"yeroo guutuu\" jechuun guyyaa Cloudflare ammayyuu qabatee jiru hunda, har'a guyyoota {{days}} {{date}} irraa jalqabee, guyyaa dehub.io gara Cloudflare deeme. Deetaan qarqaraa isa duraa agarsiisuuf hin jiru, guyyoonni durii immoo yeroo Cloudflare isaan dulloomsu ni bad'u."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Hordoftoonni eenyuu isa arguu qabu?",
+    "aimAtTiers": "Sadarkaaleen asxaa kamtu isa argu qaba?",
+    "aimPlaceholder": "Maqaa fayyadamaa ykn teessoo boorsaa",
+    "boost": "Boost",
+    "boostBooked": "Daqiiqaa {{minutes}} Boost taasifame",
+    "boostExplainer": "Maxxansa kana bakka gubbaa fiidii manaa keessatti yeroo siif kennameef kaa'a.",
+    "boostFailed": "Maxxansa sana Boost gochuu hin dandeenye",
+    "boostForMinutes": "Daqiiqaa {{minutes}}f Boost godhi",
+    "boostedLabel": "Boost ta'e",
+    "boostsLeft": "{{total}} keessaa {{left}} Boostota hafan",
+    "cancelFailed": "Boost sana dhaabuu hin dandeenye",
+    "cancelledRefunded": "Boostiin dhaabame, gara hanga keetiitti deebi'eera",
+    "cancelledSpent": "Boostiin dhaabame. Duraan eegalee waan tureef, baasii ta'ee hafa.",
+    "colBoosts": "Boostota",
+    "colEach": "Tokkoon tokkoo",
+    "colTier": "Sadarkaa",
+    "colTotal": "Marsaa tokkoof",
+    "comingSoon": "dhiyootti dhufa",
+    "finishedCount": "Marsaa kana keessatti {{count}} xumurame, yeroo {{seen}} argame",
+    "grantLine": "Marsaa tokkotti {{boosts}} × daqiiqaa {{minutes}}",
+    "intro": "Asxaan maqaa kee bira jiru qofa hin bitu. Torban lama lamaan Boostota siif kenna — tokkoon tokkoon isaanii maxxansa bakka gubbaa fiidii manaa keessatti kaa'u. Sadarkaa kudha sadii, humna kudha sadii, tarkaanfii tokkoon tokkoon irratti banamaa tokko.",
+    "ladderHeading": "Sadarkaan tokkoon tokkoon maal kennu",
+    "left": "hafe",
+    "liveUntil": "hanga {{time}}tti hojjachaa jira",
+    "loadFailed": "SuperPowers kee amma fe'uu hin dandeenye. Yeroo muraasa booda irra deebi'ii yaali.",
+    "minutes": "daqiiqaa",
+    "needBadge": "SuperPowers asxaa kaa'iinsaa barbaada. Banuuf DHB kaa'i.",
+    "noBadgeYet": "Asxaa hin qabdu, kanaafuu Boostonni hin jiran. DHB kaa'uun sadarkaalee gadii kana banti.",
+    "noBoostsLeft": "Marsaa kana keessatti Boostonni hin hafne",
+    "powersHeading": "Humnoota kudha sadii",
+    "queued": "eegaa jira",
+    "refills": "guyyaa {{date}} haaromfama",
+    "refillsOn": "Guyyaa {{date}} irratti haaromfama — nama hundaaf yeroo wal fakkaataa.",
+    "secondWind": "Second Wind",
+    "secondWindExplainer": "Maxxansi kun torban tokko ol dabreera. Second Wind gara bakka gubbaa fiidii deebisa.",
+    "seenCount": "{{count}} argame",
+    "shareOfVoice": "Bakki Boost naanna'aa deema. Yeroo Boostonni hedduun deemaa jiran, ilaaltonni sadarkaa asxaa isaaniitiin madaalamanii tokko argatu — sadarkaan ol'aanaan yeroo baay'ee mul'ata, hundis yeroo isaaniif kenname argatu.",
+    "spendFor": "{{power}} daqiiqaa {{minutes}}f",
+    "spent": "{{power}} daqiiqaa {{minutes}} deemaa jira",
+    "stakeDhb": "DHB kaa'i",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} sadarkaa {{tier}} tti banama"
   }
 }

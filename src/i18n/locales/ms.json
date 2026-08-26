@@ -824,7 +824,8 @@
     "activityLog": "Log Aktiviti",
     "endStream": "Tamatkan Strim",
     "linkCopied": "Pautan disalin ke papan keratan",
-    "postUrlCopied": "URL hantaran disalin ke papan keratan"
+    "postUrlCopied": "URL hantaran disalin ke papan keratan",
+    "boostPost": "Boost siaran"
   },
   "filters": {
     "sort": "Isih",
@@ -1255,7 +1256,8 @@
     "ppvStartSaving": "Beli kandungan Bayar-Setiap-Tontonan daripada pencipta kegemaran anda untuk memaparkannya di sini.",
     "recentStartSaving": "Siaran yang paling baru anda tandakan akan dipaparkan di sini.",
     "textStartSaving": "Tandakan siaran teks sahaja dan ia akan muncul di sini.",
-    "videosStartSaving": "Tandakan siaran yang mempunyai video dan ia akan dikumpulkan di sini."
+    "videosStartSaving": "Tandakan siaran yang mempunyai video dan ia akan dikumpulkan di sini.",
+    "folders": "Folder"
   },
   "notifications": {
     "title": "Pemberitahuan",
@@ -1990,5 +1992,49 @@
       "startTerm": "Sejarah",
       "start": "— \"sepanjang masa\" bermaksud setiap hari yang Cloudflare masih simpan, hari ini {{days}} hari bermula {{date}}, hari dehub.io berpindah ke Cloudflare. Tiada data pinggir lebih awal untuk ditunjukkan, dan hari lama gugur apabila Cloudflare meluputkannya."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Pengikut siapa yang perlu melihatnya?",
+    "aimAtTiers": "Peringkat lencana mana yang perlu melihatnya?",
+    "aimPlaceholder": "Nama pengguna atau alamat dompet",
+    "boost": "Boost",
+    "boostBooked": "Di-boost selama {{minutes}} minit",
+    "boostExplainer": "Meletakkan siaran ini di slot atas suapan utama untuk tempoh anda.",
+    "boostFailed": "Tidak dapat boost siaran itu",
+    "boostForMinutes": "Boost selama {{minutes}} minit",
+    "boostedLabel": "Di-boost",
+    "boostsLeft": "{{left}} daripada {{total}} boost berbaki",
+    "cancelFailed": "Tidak dapat membatalkan boost itu",
+    "cancelledRefunded": "Boost dibatalkan dan dikembalikan ke peruntukan anda",
+    "cancelledSpent": "Boost dibatalkan. Ia sudah pun bermula, jadi ia kekal digunakan.",
+    "colBoosts": "Boost",
+    "colEach": "Setiap satu",
+    "colTier": "Peringkat",
+    "colTotal": "Setiap kitaran",
+    "comingSoon": "akan datang",
+    "finishedCount": "{{count}} selesai kitaran ini, dilihat {{seen}} kali",
+    "grantLine": "{{boosts}} × {{minutes}} minit setiap kitaran",
+    "intro": "Lencana membeli lebih daripada sekadar hiasan di sebelah nama anda. Setiap dua minggu ia memberikan boost — setiap satu meletakkan siaran di slot atas suapan utama. Tiga belas peringkat, tiga belas kuasa, satu pembukaan setiap anak tangga.",
+    "ladderHeading": "Apa yang setiap peringkat berikan",
+    "left": "berbaki",
+    "liveUntil": "aktif sehingga {{time}}",
+    "loadFailed": "Tidak dapat memuatkan SuperPowers anda buat masa ini. Cuba lagi sebentar.",
+    "minutes": "minit",
+    "needBadge": "SuperPowers memerlukan lencana staking. Staking DHB untuk membukanya.",
+    "noBadgeYet": "Anda belum ada lencana, jadi tiada boost. Staking DHB membuka tangga di bawah.",
+    "noBoostsLeft": "Tiada boost berbaki kitaran ini",
+    "powersHeading": "Tiga belas kuasa",
+    "queued": "dalam giliran",
+    "refills": "diisi semula {{date}}",
+    "refillsOn": "Diisi semula pada {{date}} — saat yang sama untuk semua orang.",
+    "secondWind": "Second Wind",
+    "secondWindExplainer": "Siaran ini sudah lebih seminggu. Second Wind menghantarnya semula ke atas suapan.",
+    "seenCount": "{{count}} dilihat",
+    "shareOfVoice": "Slot boost berputar. Apabila beberapa boost berjalan serentak, penonton diberikan satu mengikut pemberat peringkat lencana — peringkat lebih tinggi ditunjukkan lebih kerap, dan semua orang mendapat tempoh yang diberikan kepada mereka.",
+    "spendFor": "{{power}} selama {{minutes}} minit",
+    "spent": "{{power}} berjalan selama {{minutes}} minit",
+    "stakeDhb": "Staking DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} terbuka pada {{tier}}"
   }
 }

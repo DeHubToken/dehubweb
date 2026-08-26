@@ -351,7 +351,8 @@
     "activityLog": "Dnevnik aktivnosti",
     "endStream": "Završi prijenos",
     "linkCopied": "Poveznica kopirana u međuspremnik",
-    "postUrlCopied": "URL objave kopiran u međuspremnik"
+    "postUrlCopied": "URL objave kopiran u međuspremnik",
+    "boostPost": "Promoviraj objavu"
   },
   "filters": {
     "sort": "Sortiraj",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Kupite Pay-Per-View sadržaj od svojih omiljenih kreatora kako bi se pojavio ovdje.",
     "recentStartSaving": "Vaše najnovije označene objave prikazat će se ovdje.",
     "textStartSaving": "Označite objave koje sadrže samo tekst i pojavit će se ovdje.",
-    "videosStartSaving": "Označite objave s videozapisima i bit će prikupljene ovdje."
+    "videosStartSaving": "Označite objave s videozapisima i bit će prikupljene ovdje.",
+    "folders": "Mape"
   },
   "notifications": {
     "title": "Obavijesti",
@@ -1722,5 +1724,49 @@
       "startTerm": "Povijest",
       "start": "— „cijelo razdoblje” znači svaki dan koji Cloudflare još čuva, danas {{days}} dana od {{date}}, dana kada je dehub.io prešao na Cloudflare. Starijih rubnih podataka nema, a stari dani otpadaju kako im Cloudflare istječe rok."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Čiji pratitelji bi to trebali vidjeti?",
+    "aimAtTiers": "Koje razine značaka bi to trebale vidjeti?",
+    "aimPlaceholder": "Korisničko ime ili adresa novčanika",
+    "boost": "Promoviraj",
+    "boostBooked": "Promovirano na {{minutes}} minuta",
+    "boostExplainer": "Stavlja ovu objavu na mjesto na vrhu početnog feeda za tvoj vremenski prozor.",
+    "boostFailed": "Nije bilo moguće promovirati tu objavu",
+    "boostForMinutes": "Promoviraj na {{minutes}} minuta",
+    "boostedLabel": "Promovirano",
+    "boostsLeft": "Preostalo {{left}} od {{total}} promocija",
+    "cancelFailed": "Nije bilo moguće otkazati tu promociju",
+    "cancelledRefunded": "Promocija otkazana i vraćena u tvoju kvotu",
+    "cancelledSpent": "Promocija otkazana. Već je bila počela, pa ostaje potrošena.",
+    "colBoosts": "Promocije",
+    "colEach": "Svaka",
+    "colTier": "Razina",
+    "colTotal": "Po ciklusu",
+    "comingSoon": "uskoro",
+    "finishedCount": "{{count}} dovršeno ovaj ciklus, viđeno {{seen}} puta",
+    "grantLine": "{{boosts}} × {{minutes}} minuta po ciklusu",
+    "intro": "Značka kupuje više od ikonice pored tvog imena. Svaka dva tjedna donosi promocije — svaka stavlja objavu na mjesto na vrhu početnog feeda. Trinaest razina, trinaest moći, jedno otključavanje po stepenici.",
+    "ladderHeading": "Što donosi svaka razina",
+    "left": "preostalo",
+    "liveUntil": "aktivno do {{time}}",
+    "loadFailed": "Trenutačno nije bilo moguće učitati tvoje SuperPowers. Pokušaj ponovno za koji trenutak.",
+    "minutes": "minuta",
+    "needBadge": "SuperPowers zahtijevaju značku stečenu ulogom. Uloži DHB da ih otključaš.",
+    "noBadgeYet": "Još nemaš značku, pa nema ni promocija. Ulaganjem DHB-a otključavaš ljestvicu ispod.",
+    "noBoostsLeft": "Nema preostalih promocija u ovom ciklusu",
+    "powersHeading": "Trinaest moći",
+    "queued": "u redu čekanja",
+    "refills": "obnavlja se {{date}}",
+    "refillsOn": "Obnavlja se {{date}} — u isti trenutak za sve.",
+    "secondWind": "Drugi dah",
+    "secondWindExplainer": "Ova objava ima više od tjedan dana. Drugi dah je vraća na vrh feeda.",
+    "seenCount": "{{count}} pregleda",
+    "shareOfVoice": "Mjesto za promociju rotira. Kad je aktivno više promocija, gledateljima se prikazuje jedna, ponderirana prema razini značke — viša razina prikazuje se češće, a svatko dobiva vremenski prozor koji mu je dodijeljen.",
+    "spendFor": "{{power}} na {{minutes}} minuta",
+    "spent": "{{power}} aktivno {{minutes}} minuta",
+    "stakeDhb": "Uloži DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} otključava se na {{tier}}"
   }
 }

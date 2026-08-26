@@ -776,7 +776,8 @@
     "activityLog": "Activity Log",
     "endStream": "Tapusin ang Stream",
     "linkCopied": "Nakopya ang link sa clipboard",
-    "postUrlCopied": "Nakopya ang URL ng post sa clipboard"
+    "postUrlCopied": "Nakopya ang URL ng post sa clipboard",
+    "boostPost": "I-boost ang post"
   },
   "filters": {
     "sort": "Ayusin",
@@ -1207,7 +1208,8 @@
     "noVideosYet": "Wala pang naka-save na video",
     "videosStartSaving": "I-bookmark ang mga post na may video at maiipon sila rito.",
     "noTextYet": "Wala pang naka-save na post na teksto",
-    "textStartSaving": "I-bookmark ang mga post na puro teksto at lalabas sila rito."
+    "textStartSaving": "I-bookmark ang mga post na puro teksto at lalabas sila rito.",
+    "folders": "Mga folder"
   },
   "notifications": {
     "title": "Mga Abiso",
@@ -1891,5 +1893,49 @@
       "startTerm": "Kasaysayan",
       "start": "— ang \"buong panahon\" ay nangangahulugang bawat araw na itinatago pa ng Cloudflare, ngayon ay {{days}} araw mula {{date}}, ang araw na lumipat ang dehub.io sa Cloudflare. Walang mas naunang datos sa edge na maipapakita, at nawawala ang mas lumang araw habang pinapaso ito ng Cloudflare."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kaninong mga tagasunod ang dapat makakita nito?",
+    "aimAtTiers": "Aling mga badge tier ang dapat makakita nito?",
+    "aimPlaceholder": "Username o wallet address",
+    "boost": "I-boost",
+    "boostBooked": "Na-boost sa loob ng {{minutes}} minuto",
+    "boostExplainer": "Inilalagay ang post na ito sa slot sa itaas ng home feed para sa oras mong nakatakda.",
+    "boostFailed": "Hindi na-boost ang post na iyon",
+    "boostForMinutes": "I-boost sa loob ng {{minutes}} minuto",
+    "boostedLabel": "Na-boost",
+    "boostsLeft": "{{left}} sa {{total}} boost ang natitira",
+    "cancelFailed": "Hindi na-cancel ang boost na iyon",
+    "cancelledRefunded": "Kinansela ang boost at ibinalik sa allowance mo",
+    "cancelledSpent": "Kinansela ang boost. Nagsimula na ito kaya nananatiling gastado.",
+    "colBoosts": "Mga boost",
+    "colEach": "Bawat isa",
+    "colTier": "Tier",
+    "colTotal": "Kada cycle",
+    "comingSoon": "malapit na",
+    "finishedCount": "{{count}} ang natapos ngayong cycle, {{seen}} beses nakita",
+    "grantLine": "{{boosts}} × {{minutes}} minuto kada cycle",
+    "intro": "Higit pa sa art sa tabi ng pangalan mo ang binibili ng badge. Tuwing dalawang linggo, nagbibigay ito ng mga boost — inilalagay ng bawat isa ang isang post sa slot sa itaas ng home feed. Labintatlong tier, labintatlong power, isang unlock kada baitang.",
+    "ladderHeading": "Ano ang ibinibigay ng bawat tier",
+    "left": "natitira",
+    "liveUntil": "live hanggang {{time}}",
+    "loadFailed": "Hindi ma-load ang SuperPowers mo ngayon. Subukan ulit maya-maya.",
+    "minutes": "minuto",
+    "needBadge": "Kailangan ng SuperPowers ng staking badge. Mag-stake ng DHB para ma-unlock ang mga ito.",
+    "noBadgeYet": "Wala ka pang badge, kaya wala kang boost. Ang pag-stake ng DHB ang mag-a-unlock sa ladder sa ibaba.",
+    "noBoostsLeft": "Wala nang boost ngayong cycle",
+    "powersHeading": "Ang labintatlong power",
+    "queued": "nasa pila",
+    "refills": "ma-re-refill sa {{date}}",
+    "refillsOn": "Mare-refill sa {{date}} — parehong sandali para sa lahat.",
+    "secondWind": "Second Wind",
+    "secondWindExplainer": "Mahigit isang linggo na ang post na ito. Ibinabalik ito ng Second Wind sa itaas ng feed.",
+    "seenCount": "{{count}} nakakita",
+    "shareOfVoice": "Umiikot ang boost slot. Kapag may ilang boost na tumatakbo, binibigyan ang mga manonood ng isang na-weight ayon sa badge tier — mas madalas ipinapakita ang mas mataas na tier, at nakukuha ng lahat ang oras na ibinigay sa kanila.",
+    "spendFor": "{{power}} sa loob ng {{minutes}} minuto",
+    "spent": "{{power}} tumatakbo sa loob ng {{minutes}} minuto",
+    "stakeDhb": "Mag-stake ng DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "Nabubuksan ang {{power}} sa {{tier}}"
   }
 }

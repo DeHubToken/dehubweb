@@ -351,7 +351,8 @@
     "activityLog": "Ìwé-ìtàn Ìṣe",
     "endStream": "Parí Ìṣọ̀nà",
     "linkCopied": "A ti dàkọ ìjápọ̀",
-    "postUrlCopied": "A ti dàkọ URL àròkọ"
+    "postUrlCopied": "A ti dàkọ URL àròkọ",
+    "boostPost": "Gbé ìfìwéránṣẹ́ sókè"
   },
   "filters": {
     "sort": "Tò",
@@ -800,7 +801,8 @@
     "ppvStartSaving": "Ra àkóónú Pay-Per-View lọ́wọ́ àwọn olùṣẹ̀dá àyànfẹ́ rẹ kí ó lè fara hàn níbí.",
     "recentStartSaving": "Àwọn àtẹ̀jáde tí o ṣẹ̀ṣẹ̀ fi àmì ìwé sí yóò hàn níbí.",
     "textStartSaving": "Fi àmì ìwé sí àwọn àtẹ̀jáde ọ̀rọ̀ nìkan, wọn yóò sì fara hàn níbí.",
-    "videosStartSaving": "Fi àmì ìwé sí àwọn àtẹ̀jáde tó ní fídíò, wọn yóò sì kójọ síbí."
+    "videosStartSaving": "Fi àmì ìwé sí àwọn àtẹ̀jáde tó ní fídíò, wọn yóò sì kójọ síbí.",
+    "folders": "Àwọn Fódà"
   },
   "notifications": {
     "title": "Ìwífúnni",
@@ -1723,5 +1725,49 @@
       "startTerm": "Ìtàn",
       "start": "— \"gbogbo àkókò\" túmọ̀ sí gbogbo ọjọ́ tí Cloudflare ṣì ń pa mọ́, lónìí ọjọ́ {{days}} láti {{date}}, ọjọ́ tí dehub.io kó lọ sí Cloudflare. Kò sí data etí ìsopọ̀ tí ó ti kọjá láti fihàn, àwọn ọjọ́ àtijọ́ sì ń ṣubú bí Cloudflare ṣe ń mú wọn dàgbà."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Àwọn olùtẹ̀lé ta ni ó yẹ kí ó rí i?",
+    "aimAtTiers": "Àwọn ipele àmì wo ni ó yẹ kí ó rí i?",
+    "aimPlaceholder": "Orúkọ olùmúlò tàbí àdírẹ́sì àpamọ́wọ́",
+    "boost": "Gbé sókè",
+    "boostBooked": "Tí a gbé sókè fún ìṣẹ́jú {{minutes}}",
+    "boostExplainer": "Ó máa fi ìfìwéránṣẹ́ yìí sí ipò tí ó wà ní òkè féènì ilé fún àkókò rẹ.",
+    "boostFailed": "A kò lè gbé ìfìwéránṣẹ́ yẹn sókè",
+    "boostForMinutes": "Gbé sókè fún ìṣẹ́jú {{minutes}}",
+    "boostedLabel": "Tí a gbé sókè",
+    "boostsLeft": "{{left}} nínú {{total}} ìgbésókè kù",
+    "cancelFailed": "A kò lè fagilé ìgbésókè yẹn",
+    "cancelledRefunded": "A ti fagilé ìgbésókè, ó sì padà sí ìwọ̀n rẹ",
+    "cancelledSpent": "A ti fagilé ìgbésókè náà. Nítorí ó ti bẹ̀rẹ̀ tẹ́lẹ̀, owó náà kò padà.",
+    "colBoosts": "Ìgbésókè",
+    "colEach": "Ọ̀kọ̀ọ̀kan",
+    "colTier": "Ipele",
+    "colTotal": "Fún sáà kọ̀ọ̀kan",
+    "comingSoon": "ń bọ̀ láìpẹ́",
+    "finishedCount": "{{count}} parí ní sáà yìí, tí a rí {{seen}} ìgbà",
+    "grantLine": "{{boosts}} × ìṣẹ́jú {{minutes}} fún sáà kọ̀ọ̀kan",
+    "intro": "Àmì kan ń rà ju àwòrán tí ó wà lẹ́gbẹ̀ẹ́ orúkọ rẹ lọ. Ní gbogbo ọ̀sẹ̀ méjì, ó ń fúnni ní ìgbésókè — ọ̀kọ̀ọ̀kan a máa fi ìfìwéránṣẹ́ kan sí ipò tí ó wà ní òkè féènì ilé. Ìpele mẹ́tàlá, agbára mẹ́tàlá, ìṣí-sílẹ̀ kan fún ìpele kọ̀ọ̀kan.",
+    "ladderHeading": "Ohun tí ipele kọ̀ọ̀kan ń fúnni",
+    "left": "kù",
+    "liveUntil": "ó ń lọ títí di {{time}}",
+    "loadFailed": "A kò lè gbé Agbára Àkànṣe rẹ wọlé báyìí. Gbìyànjú lẹ́ẹ̀kan sí i láìpẹ́.",
+    "minutes": "ìṣẹ́jú",
+    "needBadge": "Agbára Àkànṣe nílò àmì ìfipamọ́. Fi DHB pamọ́ láti ṣí wọn payé.",
+    "noBadgeYet": "Kò tí ì sí àmì kankan lọ́wọ́ rẹ, nítorí náà kò sí ìgbésókè. Fífi DHB pamọ́ yóò ṣí àkọ̀wé ìpele tí ó wà nísàlẹ̀ payé.",
+    "noBoostsLeft": "Kò sí ìgbésókè tí ó kù ní sáà yìí",
+    "powersHeading": "Agbára mẹ́tàlá náà",
+    "queued": "nínú àtòjọ",
+    "refills": "yóò kún padà ní {{date}}",
+    "refillsOn": "Yóò kún padà ní {{date}} — àkókò kan náà fún gbogbo ènìyàn.",
+    "secondWind": "Ẹ̀mí Kejì",
+    "secondWindExplainer": "Ìfìwéránṣẹ́ yìí ti kọjá ọ̀sẹ̀ kan. Ẹ̀mí Kejì máa fi í ránṣẹ́ padà sí òkè féènì.",
+    "seenCount": "{{count}} tí a rí",
+    "shareOfVoice": "Ipò ìgbésókè ń yí padà. Nígbà tí ọ̀pọ̀ ìgbésókè bá ń ṣiṣẹ́ ní àkókò kan náà, a máa fi ọ̀kan hàn àwọn olùwo, tí ó dá lórí ìwọ̀n ipele àmì — ipele tí ó ga jù ni a óò máa fi hàn ní ọ̀pọ̀ ìgbà, gbogbo ènìyàn sì máa ń rí àkókò tí a fi fún wọn.",
+    "spendFor": "{{power}} fún ìṣẹ́jú {{minutes}}",
+    "spent": "{{power}} ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}}",
+    "stakeDhb": "Fi DHB pamọ́",
+    "title": "Agbára Àkànṣe",
+    "unlocksAt": "{{power}} ń ṣí payé ní {{tier}}"
   }
 }

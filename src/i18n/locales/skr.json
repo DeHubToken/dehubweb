@@ -27,7 +27,20 @@
     "events": "Events",
     "prompt": "پرامپٹ",
     "communities": "کمیونٹیاں",
-    "staking": "سٹیکنگ"
+    "staking": "سٹیکنگ",
+    "arcade": "آرکیڈ",
+    "stats": "لائیو انگ",
+    "liveTv": "لائیو ٹی وی",
+    "buyDhb": "DHB ونڄو",
+    "bridge": "پل (Bridge)",
+    "top100": "اُتلے 100",
+    "agents": "AI ایجنٹ",
+    "advertising": "اشتہار",
+    "premium": "پریمیم",
+    "pricing": "قیمتاں",
+    "creators": "بݨاوݨ آلے",
+    "getTheApp": "ایپ لوو",
+    "connectAi": "AI جوڑو"
   },
   "feed": {
     "home": "گھر",
@@ -35,7 +48,9 @@
     "images": "تصویراں",
     "shorts": "چھوٹیاں ویڈیو",
     "music": "موسیقی",
-    "live": "لائیو"
+    "live": "لائیو",
+    "newPosts_one": "{{count}} نویں پوسٹ",
+    "newPosts_other": "{{count}} نویاں پوسٹاں"
   },
   "explore": {
     "all": "سارے",
@@ -242,7 +257,58 @@
     "hazy": "دھندلیاں راتاں",
     "save": "محفوظ کرو",
     "saving": "محفوظ ہو ریہا ہے...",
-    "swarms": "سوارمز"
+    "swarms": "سوارمز",
+    "profiles": "پروفائل",
+    "profilesDesc": "ایں ڈیوائس تے سنبھالے کھاتے",
+    "addProfile": "پروفائل ولاؤ",
+    "profileActive": "چالو",
+    "profileSignedOut": "سوئچ کرن کیتے سائن ان کرو",
+    "profileRemove": "پروفائل ہٹاؤ",
+    "profilesUsed": "{{used}} وچوں {{max}} ورتیا ڳیا",
+    "profilesNextTier": "{{tier}} درجہ {{count}} رکھدا اے",
+    "profilesFullTier": "{{count}} پروفائل رکھݨ کیتے {{tier}} بیج کیتے اسٹیک کرو",
+    "profilesFull": "ٻیا کھاتا ولاوݨ کیتے ہک پروفائل ہٹاؤ",
+    "browserNotifications": "براؤزر دیاں خبراں",
+    "browserNotificationsDesc": "جواب، ٹپ تے DM دی خبر لبھو جݙاں تساں دوجے ٹیب وچ ہوو",
+    "browserNotificationsOnDesc": "جواب، ٹپ تے DM ݙسدے ہن جݙاں تساں دوجے ٹیب وچ ہوو",
+    "browserNotificationsDismissed": "خبر دی درخواست ہٹائی ڳئی — سوئچ ولدا آزماؤ",
+    "browserNotificationsBlocked": "تہاڈے براؤزر نال روکیا ڳیا",
+    "browserNotificationsBlockedTitle": "ایہ براؤزر خبراں روکدا اے",
+    "browserNotificationsBlockedNote": "کیول تہاڈا براؤزر ایہ واپس کر سگدا اے — ہک ڀیر روکائے دے بعد DeHub ولدا کائنی پچھ سگدا۔",
+    "browserNotificationsBlockedPending": "تہاڈی درخواست سنبھالی ڳئی اے — جݙاں تہاڈا براؤزر اجازت ڈیسی، ایہ آپے چالو تھی ویسی۔",
+    "browserNotificationsUnblockChromium": "ایڈریس بار دے کھبے پاسے نشان دباؤ → Site settings → Notifications کوں Allow کرو، فیر پیج ولدا لوڈ کرو۔",
+    "browserNotificationsUnblockFirefox": "ایڈریس بار دے کھبے پاسے تالا دباؤ، Receive Notifications دے کول \"Blocked\" ہٹاؤ، فیر پیج ولدا لوڈ کرو۔",
+    "browserNotificationsUnblockSafari": "مینو بار وچ: Safari → Settings → Websites → Notifications، فیر ایں سائٹ کوں Allow کرو۔",
+    "browserNotificationsUnblockGeneric": "ایں پیج کیتے تہاڈے براؤزر دی سائٹ سیٹنگ کھولو تے Notifications کوں Allow کرو، فیر ولدا لوڈ کرو۔",
+    "browserNotificationsIosHint": "iPhone تے iPad ایہ تݙاں ای اجازت ڈیندے ہن جݙاں DeHub تہاڈی ہوم اسکرین تے ہووے — Share دباؤ، فیر \"Add to Home Screen\"۔",
+    "browserNotificationsTest": "ہک جانچ خبر گھلو",
+    "browserNotificationsTestSent": "جانچ خبر گھلی ڳئی",
+    "browserNotificationsTestBody": "DeHub دی خبر ایݙاں ݙسدی اے۔",
+    "showAsNewMember": "میکوں نواں رکن ݙکھاؤ",
+    "showAsNewMemberDesc": "ٻئے رکن ݙیکھ سگسن جو تساں ہݨے شامل تھئے او تاں جو اوہ تہاکوں ݙکھ ݙیوݨ۔ رجسٹر تھیوݨ دے 30 ݙین٘ہ بعد آپ ای مُک ویندا اے۔",
+    "defaultProfileTab": "پہلاں توں طے پروفائل ٹیب",
+    "defaultProfileTabDesc": "چݨو کہڑا ٹیب ݙیکھݨ آلے سب توں پہلاں تہاڈے پروفائل تے ݙیکھن",
+    "lavalamp": "Lava Lamp",
+    "war": "War",
+    "osaka": "Osaka",
+    "jungle": "Jungle",
+    "themeColor": "تھیم رنگ",
+    "themeColorDesc": "ایں تھیم کیتے اپݨا رنگ چݨو",
+    "themeColorReset": "ری سیٹ",
+    "themeColorWhite": "چٹا",
+    "themeColorBlack": "کالا",
+    "themeColorRainbow": "قوس قزح",
+    "themeColorBrand": "برانڈ",
+    "themeColorBrandDesc": "اپݨی پروفائل تصویر دے رنگ ورتو",
+    "themeColorBrandNoAvatar": "برانڈ رنگ ورتݨ کیتے پروفائل تصویر ولاؤ",
+    "themeColorBrandFailed": "اپݨی پروفائل تصویر کنوں رنگ پڑھے کائنی ڳئے",
+    "dimLights": "لو گھٹ کرو",
+    "dimLightsDesc": "نیلی لو دا اثر گھٹ کریندا اے",
+    "matureContent": "وڏی عمر دا مواد ݙکھاؤ",
+    "matureContentDesc": "اپݨی فیڈ وچ وڏی عمر تے سخت پوسٹاں ولاؤ، تے جہڑیاں پہلاں توں ݙیکھدے او اونہاں کنوں تنبیہ لاہو۔ ڈیفالٹ وچ بند اے۔",
+    "noNewMessages": "کوئی نویں گالھ کائنی",
+    "noNewMessagesDesc": "تہاڈے پرانے دھاگے رکھو، پر کوئی نواں شروع کائنی کر سگدا",
+    "dmNoNewHelp": "پرانے دھاگے چلدے رہسن؛ کوئی نواں شروع کائنی کر سگدا"
   },
   "common": {
     "save": "محفوظ کرو",
@@ -256,7 +322,8 @@
     "translating": "ترجمہ ہو ریہا ہے...",
     "close": "بند کرو",
     "loadingMore": "ودھ لوڈ ہو ریہا ہے...",
-    "loadMore": "ودھ لوڈ کرو"
+    "loadMore": "ودھ لوڈ کرو",
+    "tryAgain": "ولدا کوشش کرو"
   },
   "tip": {
     "title": "ٹِپ گھلو",
@@ -284,7 +351,8 @@
     "activityLog": "سرگرمی لاگ",
     "endStream": "سٹریم ختم کرو",
     "linkCopied": "لنک کلپ بورڈ تے نقل ہو گیا",
-    "postUrlCopied": "پوسٹ URL کلپ بورڈ تے نقل ہو گیا"
+    "postUrlCopied": "پوسٹ URL کلپ بورڈ تے نقل ہو گیا",
+    "boostPost": "پوسٹ بوسٹ کرو"
   },
   "filters": {
     "sort": "ترتیب",
@@ -670,7 +738,8 @@
     "ppvStartSaving": "آپݨے پسندیدہ تخلیق کاراں توں Pay-Per-View مواد خریدو تاں جو او اتھاں ظاہر تھیوے۔",
     "recentStartSaving": "تہاڈیاں سبھ توں تازہ بُک مارک کیتیاں پوسٹاں اتھاں نظر آسن۔",
     "textStartSaving": "صرف ٹیکسٹ والیاں پوسٹاں بُک مارک کرو تے او اتھاں ظاہر تھیسن۔",
-    "videosStartSaving": "ویڈیو والیاں پوسٹاں بُک مارک کرو تے او اتھاں جمع تھی ویسن۔"
+    "videosStartSaving": "ویڈیو والیاں پوسٹاں بُک مارک کرو تے او اتھاں جمع تھی ویسن۔",
+    "folders": "فولڈر"
   },
   "notifications": {
     "title": "اطلاع",
@@ -724,7 +793,11 @@
     "postRemoved": "تہاڈی پوسٹ ہٹا ݙتی گئی",
     "newNotification": "نویں اطلاع",
     "oneOther": "1 ہور",
-    "nOthers": "{{count}} ہور"
+    "nOthers": "{{count}} ہور",
+    "thisBrowser": "ایہ براؤزر",
+    "features": "خاصیتاں",
+    "communities": "برادریاں",
+    "stores": "دکان"
   },
   "leaderboard": {
     "title": "لیڈر بورڈ",
@@ -753,7 +826,12 @@
     "addedToLeaderboard": "تسیں شامل ہو گئے! بیلنس: {{balance}} DHB",
     "balanceTooLow": "بیلنس بہوں گھٹ ({{balance}} DHB)",
     "refreshFailed": "کجھ غلط ہو گیا",
-    "noWalletAddress": "والیٹ ایڈریس کائنی ملیا"
+    "noWalletAddress": "والیٹ ایڈریس کائنی ملیا",
+    "affiliates": "افیلی ایٹس",
+    "directReferrals_one": "{{count}} سِدھا",
+    "directReferrals_other": "{{count}} سِدھا",
+    "secondaryReferrals_one": "{{count}} دوجا درجہ",
+    "secondaryReferrals_other": "{{count}} دوجا درجہ"
   },
   "explorePage": {
     "searchPlaceholder": "لوک، پوسٹاں یا مواد ڳولو...",
@@ -854,7 +932,10 @@
     "statusPlanned": "منصوبہ بند",
     "statusInProgress": "جاری",
     "statusCompleted": "مکمل",
-    "statusDeclined": "مسترد"
+    "statusDeclined": "مسترد",
+    "shipping": "گھلیا جا رہیا اے",
+    "noShippingYet": "کجھ کائنی چلدا پیا",
+    "shippingAppearHere": "جہڑیاں درخواستاں بݨدیاں پئیاں ہن اوہ ایتھے ݙسیسن۔"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروری ہے"
@@ -927,7 +1008,8 @@
     "failedPurchase": "خریداری شروع کائنی ہوئی",
     "redirectingOnramp": "آن ریمپ تے بھیج ریہا ہے...",
     "onrampCreated": "آن ریمپ سیشن بݨ گیا",
-    "failedOnramp": "آن ریمپ شروع کائنی ہوئیا"
+    "failedOnramp": "آن ریمپ شروع کائنی ہوئیا",
+    "badgeDiscount": "{{tier}} رکھݨ آلا — {{percent}}% گھٹ"
   },
   "agents": {
     "title": "AI ایجنٹ",
@@ -957,7 +1039,13 @@
     "agentDeleted": "ایجنٹ مٹا ݙتا گیا",
     "failedCreate": "ایجنٹ کائنی بݨا",
     "failedDelete": "ایجنٹ کائنی مٹا",
-    "apiKeyCopied": "API کلید کلپ بورڈ تے نقل ہو گئی"
+    "apiKeyCopied": "API کلید کلپ بورڈ تے نقل ہو گئی",
+    "connectorUrl": "کنکٹر URL",
+    "connectorUrlCopied": "کنکٹر URL کاپی تھیا",
+    "connectorUrlHelp": "ایکوں Claude یا ChatGPT وچ کسٹم MCP کنکٹر بݨا کے ولاؤ۔ ایہ ایجنٹ دے طور تے پچھاݨ کریندا اے، تاہیوں API-کی وانگوں سنڀالو۔",
+    "agentWallet": "ایجنٹ دا بٹوا (Base)",
+    "walletCopied": "بٹوے دا پتہ کاپی تھیا",
+    "agentWalletHelp": "ایجنٹ دے پوسٹ کرن توں پہلے ایتھے تھوڑا Base ETH گھلو — پوسٹ کرݨ زنجیر تے منٹ تھیندی اے تے ایجنٹ اپݨا گیس خرچ کریندا اے۔ تبصرہ کرن، ووٹ ڈین تے پچھے چلݨ کیتے گیس نئیں چاہیدی۔"
   },
   "hero": {
     "title": "ساڈی دنیا وِچ",
@@ -1005,7 +1093,10 @@
     "or": "یا",
     "termsNotice": "اگے ودھ کے تسیں شرائط خدمت تے رازداری پالیسی نال متفق او",
     "walletInfoDesktop": "محفوظ لاگ ان کیتے والیٹ جوڑو",
-    "walletInfoMobile": "MetaMask, Trust تے Phantom اپݨی ایپ کھولسن۔ Rabby WalletConnect ورتسے۔"
+    "walletInfoMobile": "MetaMask, Trust تے Phantom اپݨی ایپ کھولسن۔ Rabby WalletConnect ورتسے۔",
+    "addProfileTitle": "پروفائل ولاؤ",
+    "walletConnectedAs": "جڑیا ہویا",
+    "useDifferentWallet": "کوئی ٻیا بٹوا ورتو"
   },
   "careers": {
     "title": "DeHub وِچ نوکریاں",
@@ -1129,7 +1220,11 @@
     "comingSoon": "جلد آ ریہا ہے — علاقائی ٹرینڈز راستے وچ ہن!",
     "post": "پوسٹ",
     "logOut": "لاگ آؤٹ",
-    "logIn": "لاگ ان"
+    "logIn": "لاگ ان",
+    "searchMenu": "مینو لبھو",
+    "clearSearch": "ڳول مٹاؤ",
+    "noMenuMatches": "مینو وچ کجھ کائنی ملدا",
+    "searchDehubFor": "DeHub تے \"{{query}}\" لبھو"
   },
   "postInfo": {
     "title": "پوسٹ معلومات",
@@ -1378,7 +1473,12 @@
     "waiting_for_confirmation": "تصدیق دا انتظار...",
     "new_version_available": "نسخہ نیا دستیاب ہے",
     "refresh_to_pick_up_the_latest_changes": "Refresh کریں تاکہ تازہ ترین تبدیلیاں حاصل ہوں۔",
-    "what_changed": "کیا بدل گیا"
+    "what_changed": "کیا بدل گیا",
+    "refresh": "ولدا لوڈ کرو",
+    "turn_on_desktop_notifications": "ڈیسک ٹاپ اطلاع چالو کریے؟",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "ٻئے ٹیب وچ ہوندے ہویاں وی جواباں، ٹپاں تے سنیہیاں دی خبر لؤ۔",
+    "turn_on": "چالو کرو",
+    "not_now": "ہݨ نہیں"
   },
   "prompt": {
     "seoTitle": "اپنڑا فیڈ پرامپٹ کیو— DeHub",
@@ -1524,5 +1624,149 @@
     "when": "کݙاں",
     "whyStake": "ڈپازٹ کیوں؟",
     "yourStaked": "تہاڈا ڈپازٹ"
+  },
+  "arcade": {
+    "title": "آرکیڈ",
+    "intro": "DeHub دے بݨائے تے کھلے سورس کھیڈاں، دنیاواں، یا تجربیاں دا مجموعہ۔",
+    "seoTitle": "آرکیڈ",
+    "seoDescription": "DeHub تے اپݨے براؤزر وچ کھیڈو — سنیمائی 3D شطرنج، پروسیجرلی بݨیا شوٹر، مینہ آلے جنگل دی سیر، نیون-گلی آلی لڑائی، تے گھمن جوڳ ٹریڈنگ فرش۔ کوئی انسٹال کائنی، کوئی ڈاؤن لوڈ کائنی۔",
+    "alsoIn": "{{theme}} وچ وی"
+  },
+  "stats": {
+    "title": "انگ",
+    "subtitle": "حقیقی ویلے دی کھلی سورس خبر",
+    "live": "لائیو",
+    "range": {
+      "24h": "24 گھنٹے",
+      "3d": "3 ݙین٘ہ",
+      "7d": "7 ݙین٘ہ",
+      "30d": "30 ݙین٘ہ",
+      "all": "پورا ویلا"
+    },
+    "unavailable": {
+      "title": "انگ ایں ویلے کائنی ملدے",
+      "unconfigured": "تجزیہ اینڈ پوائنٹ کوں اڄݨ تائیں اپݨا Cloudflare API ٹوکن نئیں ڈتا ڳیا۔ بݨایا انگ دی بجائے کجھ نئیں ݙکھایا ویندا۔",
+      "error": "اسیں Cloudflare دے تجزیہ API تائیں نئیں پُڄ سگے۔ پرانا یا بݨایا انگ ݙکھاوݨ دی بجائے، ایہ پیج اوں ویلے تائیں کجھ نئیں ݙکھاسی جیستائیں لائیو پڑھن کامیاب نئیں تھیندا۔"
+    },
+    "tile": {
+      "visitorsToday": "اڄ دے آوݨ آلے",
+      "soFarToday": "ہݨ تائیں اڄ، UTC",
+      "peakHour": "سب توں مصروف گھنٹا",
+      "peakDay": "سب توں مصروف ݙین٘ہ",
+      "peakAtHour": "{{when}} UTC تے",
+      "peakOnDay": "{{when}} تے",
+      "inRange": "ایں حد وچ",
+      "pageViews": "پیج ݙیکھݨ",
+      "overHours": "{{count}}h وچ",
+      "overDay": "1 ݙین٘ہ وچ",
+      "overDays": "{{count}} ݙین٘ہ وچ",
+      "requestsLabel": "درخواستاں",
+      "served": "ڈتا ڳیا",
+      "requests": "{{requests}} درخواستاں"
+    },
+    "chart": {
+      "hourly": "ہر گھنٹے آوݨ آلے",
+      "daily": "ہر ݙین٘ہ آوݨ آلے",
+      "hourlyHint": "{{count}} گھنٹے دے حصے، UTC",
+      "dailyHint": "ہر ݙین٘ہ الگ الگ آوݨ آلے",
+      "empty": "ایں ویلے کیتے اڄݨ تائیں ڈیٹا کائنی"
+    },
+    "countries": {
+      "title": "اُتلے ملک",
+      "windowDay": "پچھلے 24 گھنٹے",
+      "window": "پچھلے {{days}} ݙین٘ہ"
+    },
+    "browsers": {
+      "title": "براؤزر",
+      "window": "پیج ݙیکھݨ دے حساب نال"
+    },
+    "edge": {
+      "title": "ایج تے",
+      "windowDay": "پچھلے 24 گھنٹے",
+      "window": "پچھلے {{days}} ݙین٘ہ",
+      "cached": "کیش کنوں ڈتا ڳیا",
+      "encrypted": "خفیہ کیتا",
+      "threats": "روکے خطرے"
+    },
+    "proof": {
+      "title": "ایہ انگ کتھوں آندے ہن",
+      "subtitle": "Cloudflare نال ناپیا، ایں پیج نال کائنی",
+      "source": "ذریعہ",
+      "datasets": "ڈیٹا سیٹ",
+      "zone": "زون",
+      "ray": "Cloudflare ray ID",
+      "fetched": "ایں ویلے لیا ڳیا",
+      "query": "چارٹ دے پچھے دا صحیح سوال",
+      "copied": "کاپی تھیا",
+      "copy": "کاپی کرو",
+      "openEndpoint": "/api/stats کھولو",
+      "openRaw": "Cloudflare دا اڻھوئیا جواب",
+      "edge": "dehub.io کوں ہر درخواست ساݙے سرور تائیں پُڄݨ توں پہلاں Cloudflare کنوں لنگدی اے۔ ایہ شمار Cloudflare دا اپݨا اوں ٹریفک دا جوڑ ہن — اوہو انگ جہڑے ساݙا ڈیش بورڈ ݙکھاندا اے۔ ایہ تہاڈے براؤزر وچ کہڑی اسکرپٹ نال جمع کیتے کائنی، تاہیوں ایں پیج تے کجھ وی اونہاں کوں ودھا کائنی سگدا، تے ٹریکر روکݨ نال ایہ نئیں بدلدے۔",
+      "live": "پیج اونہاں کوں لائیو پڑھدا اے۔ /stats لوڈ تھیوݨ نال ساݙا اینڈ پوائنٹ سدیا ویندا اے، جہڑا اوں ویلے Cloudflare دے تجزیہ API کنوں پچھدا اے تے جواب کوں 60 سیکنڈ سنبھالدا اے۔",
+      "limits": "ایہ کیا ݙکھاندا اے، تے کیا نئیں: تساں ݙیکھ سگدے او جو انگ ساݙی ایپ دے کوڈ کنوں نئیں سگوں Cloudflare دے جوڑ کنوں آندے ہن، تے ایتھے چھپیا سوال اوہو ای اے جہڑا چلدا اے۔ ایہ پورا اعتبار کنوں آزاد کائنی — اسیں API ٹوکن رکھدے ہاں، تے Cloudflare کہڑے وی زون دے تجزیے دا عام پڑھݨ کائنی ڈیندا۔ اپݨا Cloudflare زون رکھݨ آلا کوئی وی اوہو سوال اُتے چلا کے شکل دی پکی کر سگدا اے۔"
+    },
+    "definitions": {
+      "title": "انگاں دا مطلب کیا اے",
+      "visitorsTerm": "آوݨ آلے",
+      "visitors": "— اوہ الگ IP پتے جہڑے Cloudflare اوں ݙین٘ہ ݙٹھے۔ بندیاں دے نیڑے، پر اوہو جیہے کائنی: ہک دفتر ہک کنکشن تے ہک ڀیر گݨیا ویندا اے، تے ہک فون جہڑا وائی فائی تے موبائل ڈیٹا وچکار گھمدا اے ڀیر گݨیا ویندا اے۔",
+      "pageViewsTerm": "پیج ݙیکھݨ",
+      "pageViews": "— اوہ درخواستاں جہڑیاں Cloudflare پیج لوڈ دے طور تے شمار کریندا اے، تصویراں، اسکرپٹ یا API کالاں نئیں۔",
+      "botsTerm": "بوٹ شامل ہن",
+      "bots": "— ایہ کچے ایج شمار ہن، تاہیوں کرالر، اپ ٹائم مانیٹر تے اسکرپٹ کیتے کلائنٹ وی ونہاں وچ ہن۔ تساں اُتے براؤزر ٹوٹ وچ آپ ݙیکھ سگدے او جتھے \"Curl\" تے \"Unknown\" جیہڑیاں اندراجاں بندیاں دی بجائے خودکار ٹریفک ہن۔ بوٹ ہٹاوݨ کیتے ہک ادا کیتا Cloudflare درجہ چاہیدا اے جہڑا اسیں کائنی چلاندے، تے چپکے چپکے اندازہ گھٹاوݨ نال شمار زیادہ جانچݨ جوڳ کائنی، گھٹ تھی ویسن۔",
+      "totalTerm": "حد دے کل",
+      "total": "— پیج ݙیکھݨ تے درخواستاں حد وچ جوڑ تھی ویندیاں ہن۔ آوݨ آلیاں دا شمار جان بجھ کے \"کل آوݨ آلے\" دی سرخی وچ نئیں جوڑیا ویندا، کیوں جو پیر تے منگل ٻئیں ݙین٘ہ ایتھے رہن آلا بندہ ڀیر گݨیا ویسی۔",
+      "peakTerm": "سب توں مصروف گھنٹا / ݙین٘ہ",
+      "peak": "— حد دے کہڑے ہک حصے وچ سب توں زیادہ الگ شمار، اہو ای وجہ نال: ایہ ہک اوہو انگ اے جہڑا Cloudflare سچ مچ ناپدا اے، اوور لیپ تھئے شماراں کوں جوڑ کے بݨیا نئیں۔",
+      "resolutionTerm": "گھنٹہ وار 3 ݙین٘ہ تے رک ویندا اے",
+      "resolution": "— ایہ Cloudflare دی ایں پلان دی حد اے، کوئی چوائس کائنی: ایہ تن ݙین٘ہ کنوں زیادہ کوئی گھنٹہ وار سوال منع کریندا اے۔ 24-گھنٹے تے 3-ݙین٘ہ آلے ݙکھاوے گھنٹہ وار ہن؛ 7 ݙین٘ہ تے اوں کنوں اُتے روزانہ ہن، تے گھنٹہ وار پورے ویلے دا چارٹ بݨاوݨ دا کوئی رستہ کائنی۔",
+      "breakdownTerm": "ملک تے براؤزر",
+      "breakdown": "— ایہ تہاڈی چݨی حد دے مطابق ہن، پر کیول پچھلے {{max}} ݙین٘ہ تائیں، جتنا روزانہ ٹوٹ رکھیا ویندا اے۔ لمی حد تے چارٹ ملکاں دی فہرست کنوں زیادہ ویلا ݙکھاندا اے۔",
+      "startTerm": "تاریخ",
+      "start": "— \"پورا ویلا\" دا مطلب اے اوہ ہر ݙین٘ہ جہڑا Cloudflare اڄݨ تائیں رکھدا اے، جہڑا اڄ {{days}} ݙین٘ہ اے، {{date}} کنوں شروع، اوہ ݙین٘ہ جݙاں dehub.io Cloudflare تے ڳیا۔ اوں کنوں پہلاں دا ایج ڈیٹا ݙکھاوݨ کیتے کائنی، تے پرانے ݙین٘ہ Cloudflare دے پرانے تھیوݨ نال ڈِگ ویندن۔"
+    }
+  },
+  "superpowers": {
+    "aimAtAccount": "کیہدے پیروکار ایہ ݙیکھن؟",
+    "aimAtTiers": "کہڑے بیج درجے ایہ ݙیکھن؟",
+    "aimPlaceholder": "یوزرنیم یا بٹوے دا پتہ",
+    "boost": "بوسٹ",
+    "boostBooked": "{{minutes}} منٹاں کیتے بوسٹ تھیا",
+    "boostExplainer": "تہاڈے ویلے کیتے ایہ پوسٹ ہوم فیڈ دی سب توں اُتلی تھاں تے رکھدا اے۔",
+    "boostFailed": "اوہ پوسٹ بوسٹ نئیں تھی سگی",
+    "boostForMinutes": "{{minutes}} منٹاں کیتے بوسٹ کرو",
+    "boostedLabel": "بوسٹ تھیا",
+    "boostsLeft": "{{total}} وچوں {{left}} بوسٹ رہندے",
+    "cancelFailed": "اوہ بوسٹ منسوخ نئیں تھی سگیا",
+    "cancelledRefunded": "بوسٹ منسوخ تھیا تے تہاڈی حد وچ واپس آیا",
+    "cancelledSpent": "بوسٹ منسوخ تھیا۔ اوہ پہلاں توں شروع تھی چکیا سی، تاہیوں خرچ ای رہندا اے۔",
+    "colBoosts": "بوسٹ",
+    "colEach": "ہر ہک",
+    "colTier": "درجہ",
+    "colTotal": "ہر چکر وچ",
+    "comingSoon": "جلدی آندا پیا اے",
+    "finishedCount": "ایں چکر وچ {{count}} پورے تھئے، {{seen}} ڀیر ݙٹھے ڳئے",
+    "grantLine": "{{boosts}} × {{minutes}} منٹ ہر چکر",
+    "intro": "ہک بیج تہاڈے ناں کول رکھے چتر توں زیادہ ونڄدا اے۔ ہر پکھ اوہ بوسٹ ڈیندا اے — ہر ہک ہوم فیڈ دی سب توں اُتلی تھاں وچ پوسٹ رکھدا اے۔ تیرہ درجے، تیرہ طاقتاں، ہر پوڑی تے ہک کھلاؤ۔",
+    "ladderHeading": "ہر درجہ کیا ڈیندا اے",
+    "left": "رہندا",
+    "liveUntil": "{{time}} تائیں لائیو",
+    "loadFailed": "تہاڈے SuperPowers ہݨے لوڈ نئیں تھی سگے۔ تھوڑی دیر بعد ولدا کوشش کرو۔",
+    "minutes": "منٹ",
+    "needBadge": "SuperPowers کیتے جمع بیج چاہیدا اے۔ اونہاں کوں کھولݨ کیتے DHB جمع کرو۔",
+    "noBadgeYet": "تہاڈے کول اڄݨ تائیں کوئی بیج کائنی، تاہیوں کوئی بوسٹ کائنی۔ DHB جمع کرن تھلے آلی پوڑی کھولدا اے۔",
+    "noBoostsLeft": "ایں چکر وچ کوئی بوسٹ نئیں رہندا",
+    "powersHeading": "تیرہ طاقتاں",
+    "queued": "قطار وچ",
+    "refills": "{{date}} تے ولدا ڀردا اے",
+    "refillsOn": "{{date}} تے ولدا ڀردا اے — سبھناں کیتے اوہو ای ویلا۔",
+    "secondWind": "دوجا ساہ",
+    "secondWindExplainer": "ایہ پوسٹ ہفتے توں زیادہ پرانی اے۔ دوجا ساہ ایکوں فیڈ دے اُتے واپس گھلدا اے۔",
+    "seenCount": "{{count}} ݙٹھے ڳئے",
+    "shareOfVoice": "بوسٹ دی تھاں گھمدی اے۔ جݙاں ڳچ بوسٹ چلدے پئے ہون، ݙیکھݨ آلیاں کوں بیج درجے دے حساب نال وزن ڈتا ہک ملدا اے — اُتلا درجہ زیادہ ڀیر ݙسدا اے، تے سبھناں کوں اوہ ویلا ملدا اے جہڑا اونہاں کوں ڈتا ڳیا سی۔",
+    "spendFor": "{{minutes}} منٹاں کیتے {{power}} خرچ کرو",
+    "spent": "{{power}} {{minutes}} منٹاں کیتے چلدا پیا اے",
+    "stakeDhb": "DHB جمع کرو",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} {{tier}} تے کھلدا اے"
   }
 }

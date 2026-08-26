@@ -351,7 +351,8 @@
     "activityLog": "Faoliyat jurnali",
     "endStream": "Translatsiyani tugatish",
     "linkCopied": "Havola nusxalandi",
-    "postUrlCopied": "Post havolasi nusxalandi"
+    "postUrlCopied": "Post havolasi nusxalandi",
+    "boostPost": "Postni ko'tarish"
   },
   "filters": {
     "sort": "Saralash",
@@ -1531,7 +1532,8 @@
     "ppvStartSaving": "Sevimli ijodkorlaringizning pullik (Pay-Per-View) kontentini sotib oling, u shu yerda paydo bo'ladi.",
     "recentStartSaving": "Eng so'nggi xatcho'pga qo'shilgan postlaringiz shu yerda ko'rinadi.",
     "textStartSaving": "Faqat matnli postlarni xatcho'pga qo'shing va ular shu yerda paydo bo'ladi.",
-    "videosStartSaving": "Videoli postlarni xatcho'pga qo'shing va ular shu yerda to'planadi."
+    "videosStartSaving": "Videoli postlarni xatcho'pga qo'shing va ular shu yerda to'planadi.",
+    "folders": "Papkalar"
   },
   "prompt": {
     "seoTitle": "Lentangizni sozlang — DeHub",
@@ -1777,5 +1779,49 @@
       "startTerm": "Tarix",
       "start": "— «butun davr» Cloudflare hali saqlab turgan har bir kunni bildiradi, bugun dehub.io Cloudflare'ga o'tgan {{date}} dan boshlab {{days}} kun. Undan oldingi chekka ma'lumot yo'q va eski kunlar Cloudflare ularni eskirtirgani sari yo'qoladi."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kimning obunachilari buni ko'rishi kerak?",
+    "aimAtTiers": "Qaysi nishon darajalari buni ko'rishi kerak?",
+    "aimPlaceholder": "Foydalanuvchi nomi yoki hamyon manzili",
+    "boost": "Ko'tarish",
+    "boostBooked": "{{minutes}} daqiqaga ko'tarildi",
+    "boostExplainer": "Bu postni oyna vaqtingiz davomida bosh lentaning eng yuqori joyiga qo'yadi.",
+    "boostFailed": "Bu postni ko'tarib bo'lmadi",
+    "boostForMinutes": "{{minutes}} daqiqaga ko'tarish",
+    "boostedLabel": "Ko'tarilgan",
+    "boostsLeft": "{{total}} tadan {{left}} ta ko'tarish qoldi",
+    "cancelFailed": "Bu ko'tarishni bekor qilib bo'lmadi",
+    "cancelledRefunded": "Ko'tarish bekor qilindi va limitingizga qaytarildi",
+    "cancelledSpent": "Ko'tarish bekor qilindi. U allaqachon boshlangani uchun sarflangan bo'lib qoladi.",
+    "colBoosts": "Ko'tarishlar",
+    "colEach": "Har biri",
+    "colTier": "Daraja",
+    "colTotal": "Har davrda",
+    "comingSoon": "tez orada",
+    "finishedCount": "Bu davrda {{count}} ta tugadi, {{seen}} marta ko'rildi",
+    "grantLine": "Har davrda {{boosts}} × {{minutes}} daqiqa",
+    "intro": "Nishon ismingiz yonidagi rasmdan ko'proq narsani sotib oladi. Har ikki haftada u ko'tarishlar beradi — har biri postni bosh lentaning eng yuqori joyiga qo'yadi. O'n uch daraja, o'n uch kuch, har pog'onada bitta ochilish.",
+    "ladderHeading": "Har bir daraja nima beradi",
+    "left": "qoldi",
+    "liveUntil": "{{time}} gacha jonli",
+    "loadFailed": "SuperPowers'ingizni hozir yuklab bo'lmadi. Bir ozdan keyin qayta urinib ko'ring.",
+    "minutes": "daqiqa",
+    "needBadge": "SuperPowers uchun kiritma nishoni kerak. Ularni ochish uchun DHB kiriting.",
+    "noBadgeYet": "Sizda hali nishon yo'q, shuning uchun ko'tarish ham yo'q. DHB kiritish quyidagi zinapoyani ochadi.",
+    "noBoostsLeft": "Bu davrda ko'tarish qolmadi",
+    "powersHeading": "O'n uch kuch",
+    "queued": "navbatda",
+    "refills": "{{date}} da to'ldiriladi",
+    "refillsOn": "{{date}} da to'ldiriladi — hamma uchun bir xil payt.",
+    "secondWind": "Ikkinchi Nafas",
+    "secondWindExplainer": "Bu post bir haftadan ortiq yashda. Ikkinchi Nafas uni lentaning yuqorisiga qaytaradi.",
+    "seenCount": "{{count}} ko'rildi",
+    "shareOfVoice": "Ko'tarish o'rni aylanadi. Bir nechta ko'tarish ishlayotganda, tomoshabinlarga nishon darajasiga qarab og'irlik berilgan bittasi taqsimlanadi — yuqori daraja tez-tez ko'rsatiladi, va hamma o'ziga berilgan vaqtni oladi.",
+    "spendFor": "{{minutes}} daqiqaga {{power}}",
+    "spent": "{{power}} {{minutes}} daqiqa davomida ishlamoqda",
+    "stakeDhb": "DHB kiritish",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} {{tier}} darajasida ochiladi"
   }
 }

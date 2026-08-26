@@ -351,7 +351,8 @@
     "activityLog": "Rēhita mahi",
     "endStream": "Whakamutu rere",
     "linkCopied": "Kua tāruatia te hononga ki te papatopenga",
-    "postUrlCopied": "Kua tāruatia te URL pānui ki te papatopenga"
+    "postUrlCopied": "Kua tāruatia te URL pānui ki te papatopenga",
+    "boostPost": "Hiki pānui"
   },
   "filters": {
     "sort": "Raupapa",
@@ -737,7 +738,8 @@
     "ppvStartSaving": "Hokona te ihirangi Utu-ia-Titiro mai i ō kaihanga tino pai kia puta ai ki konei.",
     "recentStartSaving": "Ka whakaatuhia ki konei ō pānui i tohuwāhitia hou nei.",
     "textStartSaving": "Tohuwāhitia ngā pānui kupu-anake, ka puta ki konei.",
-    "videosStartSaving": "Tohuwāhitia ngā pānui whai ataata, ka kohia ki konei."
+    "videosStartSaving": "Tohuwāhitia ngā pānui whai ataata, ka kohia ki konei.",
+    "folders": "Ngā kōpaki"
   },
   "notifications": {
     "title": "Whakamōhio",
@@ -1722,5 +1724,49 @@
       "startTerm": "Hītori",
       "start": "— ko te \"wā katoa\" te tikanga ko ia rā e puritia tonutia ana e Cloudflare, i tēnei rā ko ngā rā {{days}} mai i te {{date}}, te rā i neke ai a dehub.io ki Cloudflare. Kāore he raraunga tapa o mua hei whakaatu, ā, ka taka ngā rā tawhito i te wā e whakakoroheketia ana e Cloudflare."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Ko ngā kaiwhai a wai e kite ai?",
+    "aimAtTiers": "Ko ēhea taumata pī e kite ai?",
+    "aimPlaceholder": "Ingoa kaiwhakamahi, wāhitau pūkoro rānei",
+    "boost": "Hiki",
+    "boostBooked": "Kua hikitia mō ngā meneti {{minutes}}",
+    "boostExplainer": "Ka tuku i tēnei pānui ki te wāhi runga rawa o te tahua kāinga i tō wā kua whakaritea.",
+    "boostFailed": "Kāore i taea te hiki i taua pānui",
+    "boostForMinutes": "Hiki mō ngā meneti {{minutes}}",
+    "boostedLabel": "Kua hikitia",
+    "boostsLeft": "{{left}} o ngā {{total}} hikinga e toe ana",
+    "cancelFailed": "Kāore i taea te whakakore i taua hikinga",
+    "cancelledRefunded": "Kua whakakorea te hikinga, ā, kua whakahokia ki tō rārangi wātea",
+    "cancelledSpent": "Kua whakakorea te hikinga. Kua tīmata kētia, nō reira ka noho tonu hei mea kua whakapaua.",
+    "colBoosts": "Ngā hikinga",
+    "colEach": "Ia mea",
+    "colTier": "Taumata",
+    "colTotal": "Ia hurihanga",
+    "comingSoon": "ā tōna wā",
+    "finishedCount": "{{count}} kua oti i tēnei hurihanga, {{seen}} ngā wā i kitea",
+    "grantLine": "{{boosts}} × {{minutes}} meneti ia hurihanga",
+    "intro": "He nui ake i te whakaahua i te taha o tō ingoa tā te pī e hoko ai. Ia rua wiki, ka whakawhiwhia ngā hikinga e ia — mā ia hikinga e tuku ai he pānui ki te wāhi runga rawa o te tahua kāinga. Tekau mā toru ngā taumata, tekau mā toru ngā mana, kotahi te mea ka wātea ia pikitanga.",
+    "ladderHeading": "He aha te mea ka whakawhiwhia e ia taumata",
+    "left": "e toe ana",
+    "liveUntil": "e kaha ana tae noa ki te {{time}}",
+    "loadFailed": "Kāore i taea te uta i ō SuperPowers ināianei. Ngana anō ā tētahi wā poto.",
+    "minutes": "meneti",
+    "needBadge": "Me whai pī whakatakoto ngā SuperPowers. Whakatakotoria te DHB hei wewete i a rātou.",
+    "noBadgeYet": "Kāore anō he pī ōu, nō reira kāore he hikinga. Mā te whakatakoto DHB e wewete te arawhata kei raro nei.",
+    "noBoostsLeft": "Kāore he hikinga e toe ana i tēnei hurihanga",
+    "powersHeading": "Ngā mana tekau mā toru",
+    "queued": "kei te rārangi tatari",
+    "refills": "ka kī anō {{date}}",
+    "refillsOn": "Ka kī anō i te {{date}} — i te wā kotahi mō te katoa.",
+    "secondWind": "Manawa Tuarua",
+    "secondWindExplainer": "Neke atu i te wiki te pakeke o tēnei pānui. Mā te Manawa Tuarua e whakahoki ki te wāhi runga rawa o te tahua.",
+    "seenCount": "{{count}} kua kitea",
+    "shareOfVoice": "Ka huri haere te wāhi hikinga. Ki te maha ngā hikinga e rere ana i te wā kotahi, ka whakawhiwhia he kaimātakitaki ki tētahi, kua kōwhiria mā te taumaha o te taumata pī — he maha ake ngā wā ka whakaatuhia te taumata teitei ake, ā, ka whiwhi ia tangata i te wā i whakaritea mōna.",
+    "spendFor": "{{power}} mō ngā meneti {{minutes}}",
+    "spent": "E rere ana a {{power}} mō ngā meneti {{minutes}}",
+    "stakeDhb": "Whakatakoto DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "Ka wātea a {{power}} i te {{tier}}"
   }
 }

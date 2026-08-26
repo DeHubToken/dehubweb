@@ -27,7 +27,20 @@
     "events": "Rurasqakuna",
     "prompt": "Yanapaq",
     "communities": "Ayllukuna",
-    "staking": "Staking"
+    "staking": "Staking",
+    "arcade": "Pukllana",
+    "stats": "Kawsaq yupaykuna",
+    "liveTv": "Kawsaq TV",
+    "buyDhb": "DHB-ta rantiy",
+    "bridge": "Chaka",
+    "top100": "Hanaq 100",
+    "agents": "IA Agentekuna",
+    "advertising": "Willachikuy",
+    "premium": "Premium",
+    "pricing": "Chaninchaykuna",
+    "creators": "Ruraqkuna",
+    "getTheApp": "App-ta hap'iy",
+    "connectAi": "IA-wan t'inkiy"
   },
   "feed": {
     "home": "Qallariy",
@@ -35,7 +48,9 @@
     "images": "Siqi",
     "shorts": "Uchuy videokuna",
     "music": "Takiy",
-    "live": "Kawsaq"
+    "live": "Kawsaq",
+    "newPosts_one": "{{count}} musuq willakuy",
+    "newPosts_other": "{{count}} musuq willakuykuna"
   },
   "explore": {
     "all": "Llapan",
@@ -242,7 +257,58 @@
     "hazy": "Phuyu Tutakuna",
     "save": "Waqaychay",
     "saving": "Waqaychachkan...",
-    "swarms": "Swarms"
+    "swarms": "Swarms",
+    "profiles": "Willakuykuna",
+    "profilesDesc": "Kay makinapi waqaychasqa willakuykuna",
+    "addProfile": "Willakuyta yapay",
+    "profileActive": "Purichkan",
+    "profileSignedOut": "t'ikranaykipaq yaykuy",
+    "profileRemove": "Willakuyta hurquy",
+    "profilesUsed": "{{max}} kaqmanta {{used}} apaykachasqa",
+    "profilesNextTier": "{{tier}} unanchaqa {{count}}-ta waqaychan",
+    "profilesFullTier": "{{tier}} unancha hap'inaykipaq churay, {{count}} willakuykunata waqaychanaykipaq",
+    "profilesFull": "Huk willakuyta hurquy, huk willakuyta yapanaykipaq",
+    "browserNotifications": "Browser willaykuna",
+    "browserNotificationsDesc": "Kutichiykunamanta, yanapaykunamanta, DM-kunamantapas willasunki, huk pestañapi kachkaptiykipas",
+    "browserNotificationsOnDesc": "Kutichiykuna, yanapaykuna, DM-kunapas rikurin huk pestañapi kachkaptiykipas",
+    "browserNotificationsDismissed": "Willay mañakuy wischusqa — hap'ichiqta yapamanta ruway",
+    "browserNotificationsBlocked": "Browser-niyki harkasqa",
+    "browserNotificationsBlockedTitle": "Kay browser willaykunata harkachkan",
+    "browserNotificationsBlockedNote": "Kayta browser-niykillam kutichiyta atin — huk kutiqa DeHub mana tapuyta atinchu ña harkasqa kaptin.",
+    "browserNotificationsBlockedPending": "Mañakuyniyki waqaychasqam — browser-niyki saqiptin, kaymi kikinmanta hap'ichikun.",
+    "browserNotificationsUnblockChromium": "Dirección barra lluq'i ladopi kaq ícono ñitiy → Sitio wakichiykuna → Willaykunata 'Saqiy' nispa churay, chaymanta kay p'anqata yapamanta kichay.",
+    "browserNotificationsUnblockFirefox": "Dirección barra lluq'i ladopi kaq candado ñitiy, 'Harkasqa' nisqata Willaykunata Chaskiy patamanta pichay, chaymanta kay p'anqata yapamanta kichay.",
+    "browserNotificationsUnblockSafari": "Menú barrapi: Safari → Wakichiykuna → Sitio webkuna → Willaykuna, chaymanta kay sitiota 'Saqiy' nispa churay.",
+    "browserNotificationsUnblockGeneric": "Kay p'anqapaq browser-niykipa sitio wakichiykunata kichay, Willaykunata 'Saqiy' nispa churay, chaymanta yapamanta kichay.",
+    "browserNotificationsIosHint": "iPhone, iPad-pas kayta saqinku DeHub Inicio pantallaykipi kaptillanmi — Rakiy ñitiy, chaymanta \"Inicio pantallaman yapay\" akllay.",
+    "browserNotificationsTest": "Pruebapaq willayta apachiy",
+    "browserNotificationsTestSent": "Prueba willay apachisqa",
+    "browserNotificationsTestBody": "Chhaynatam DeHub willayqa rikch'akun.",
+    "showAsNewMember": "Musuq runa hina rikuchiway",
+    "showAsNewMemberDesc": "Huk runakuna qanpa musuqmanta yaykusqaykita rikunanpaq, napaykusunaykipaq. Qillqasqaykimanta 30 punchaw qhipaman kikinmanta tukun.",
+    "defaultProfileTab": "Ñawpaq willakuy pestaña",
+    "defaultProfileTabDesc": "Willakuyniykipi, watukuqkuna mayqin pestañata ñawpaqta rikunanta akllay",
+    "lavalamp": "Lava Lámpara",
+    "war": "Maqanakuy",
+    "osaka": "Osaka",
+    "jungle": "Sach'a sach'a",
+    "themeColor": "Unancha llimpi",
+    "themeColorDesc": "Kay unanchapaq kikin llimpita akllay",
+    "themeColorReset": "Kutichiy",
+    "themeColorWhite": "Yuraq",
+    "themeColorBlack": "Yana",
+    "themeColorRainbow": "K'uychi",
+    "themeColorBrand": "Marca",
+    "themeColorBrandDesc": "Uyachaykipa llimpinkunata apaykachay",
+    "themeColorBrandNoAvatar": "Marca llimpikunata apaykachanaykipaq, uyachaykita yapay",
+    "themeColorBrandFailed": "Uyachaykimanta llimpikunata mana ñawinchay atirqanchu",
+    "dimLights": "K'anchayta pisiyachiy",
+    "dimLightsDesc": "Anqas k'anchayta pisiyachin",
+    "matureContent": "Kuraq runa willayta rikuchiy",
+    "matureContentDesc": "Kuraq runa willaykunata sinchi willaykunatapas mikhuyniykipi churay, ñam qhawasqaykimanta willakuyta hurquy. Ñawpaqmanta wañusqa.",
+    "noNewMessages": "Mana musuq rimanakuykuna",
+    "noNewMessagesDesc": "Kaq rimanakuykunata waqaychay, ichaqa mana pipas musuqta qallarinmanchu",
+    "dmNoNewHelp": "Kaq rimanakuykuna llamk'ashallanku; mana pipas musuqta qallarinmanchu"
   },
   "common": {
     "save": "Waqaychay",
@@ -256,7 +322,8 @@
     "translating": "Tikrachkan...",
     "close": "Wisq'ay",
     "loadingMore": "Astawanta chaskichkan...",
-    "loadMore": "Astawanta chaskiy"
+    "loadMore": "Astawanta chaskiy",
+    "tryAgain": "Yapamanta ruway"
   },
   "tip": {
     "title": "Propina apachiy",
@@ -284,7 +351,8 @@
     "activityLog": "Ruray qillqa",
     "endStream": "Mayu tukuchiy",
     "linkCopied": "Tinkiy copiasqa",
-    "postUrlCopied": "Churasqa URL copiasqa"
+    "postUrlCopied": "Churasqa URL copiasqa",
+    "boostPost": "Willakuyta kallpachay"
   },
   "filters": {
     "sort": "Churay",
@@ -733,7 +801,8 @@
     "ppvStartSaving": "Munasqayki kamariqkunapa Pay-Per-View contenidonta rantiy, kaypi rikhurinanpaq.",
     "recentStartSaving": "Aswan musuq waqaychasqa willakuykunayki kaypi rikhurinqa.",
     "textStartSaving": "Qillqallayuq willakuykunata waqaychay, kaypi rikhurinqa.",
-    "videosStartSaving": "Videoyuq willakuykunata waqaychay, kaypi huñusqa kanqa."
+    "videosStartSaving": "Videoyuq willakuykunata waqaychay, kaypi huñusqa kanqa.",
+    "folders": "Carpetakuna"
   },
   "notifications": {
     "title": "Willay",
@@ -787,7 +856,11 @@
     "postRemoved": "Churasqayki pichasqa",
     "newNotification": "Musuq willay",
     "oneOther": "1 huk",
-    "nOthers": "{{count}} hukkuna"
+    "nOthers": "{{count}} hukkuna",
+    "thisBrowser": "Kay browser",
+    "features": "Ruraykuna",
+    "communities": "Ayllukuna",
+    "stores": "Qatu wasikuna"
   },
   "leaderboard": {
     "title": "Ñawpaqkuna",
@@ -816,7 +889,12 @@
     "addedToLeaderboard": "Yapasqa! Yupay: {{balance}} DHB",
     "balanceTooLow": "Yupay pisilla ({{balance}} DHB)",
     "refreshFailed": "Huk pantay kachkan",
-    "noWalletAddress": "Mana qullqi wasi churana tarisqachu"
+    "noWalletAddress": "Mana qullqi wasi churana tarisqachu",
+    "affiliates": "Afiliadokuna",
+    "directReferrals_one": "{{count}} kikillan",
+    "directReferrals_other": "{{count}} kikillan",
+    "secondaryReferrals_one": "{{count}} iskay kaq",
+    "secondaryReferrals_other": "{{count}} iskay kaq"
   },
   "features": {
     "title": "Musuq mañakuy",
@@ -855,7 +933,10 @@
     "statusPlanned": "Yuyasqa",
     "statusInProgress": "Rurachkan",
     "statusCompleted": "Tukusqa",
-    "statusDeclined": "Manasqa"
+    "statusDeclined": "Manasqa",
+    "shipping": "Ruwakuchkan",
+    "noShippingYet": "Manaraq imapas ruwakuchkanchu",
+    "shippingAppearHere": "Ruwakuchkaq mañakuykuna kaypi rikurinqa."
   },
   "auth": {
     "loginRequired": "Yaykuy munakun"
@@ -928,7 +1009,8 @@
     "failedPurchase": "Mana rantiy qallayta atirqanchu",
     "redirectingOnramp": "Yaykuna kaqman apachkan...",
     "onrampCreated": "Yaykuna sesión kamarisqa",
-    "failedOnramp": "Mana yaykuna qallayta atirqanchu"
+    "failedOnramp": "Mana yaykuna qallayta atirqanchu",
+    "badgeDiscount": "{{tier}} hap'iq — {{percent}}% pisiyachisqa"
   },
   "agents": {
     "title": "AI Wakinkuna",
@@ -958,7 +1040,13 @@
     "agentDeleted": "Wakin pichasqa",
     "failedCreate": "Mana wakinta kamarita atirqanchu",
     "failedDelete": "Mana wakinta pichata atirqanchu",
-    "apiKeyCopied": "API llave copiasqa"
+    "apiKeyCopied": "API llave copiasqa",
+    "connectorUrl": "T'inkiq URL",
+    "connectorUrlCopied": "T'inkiq URL k'askachisqa",
+    "connectorUrlHelp": "Kayta Claude icha ChatGPT ukhupi kikinchasqa MCP t'inkiq hina yapay. Kay agente hina riqsichikun, chayrayku API llavehina qhawariy.",
+    "agentWallet": "Agente qullqi wayaqa (Base)",
+    "walletCopied": "Qullqi wayaqa dirección k'askachisqa",
+    "agentWalletHelp": "Agente willakuyta ruwananpaq, kaypi pisi Base ETH-ta apachiy ñawpaqta — willakuyqa chaka patapi ruwakun, chaymi agente kikin gas-ninta pagan. Rimay, akllay, qatiytaq mana gas-ta munanchu."
   },
   "hero": {
     "title": "Hamuykichikta",
@@ -1006,7 +1094,10 @@
     "or": "utaq",
     "termsNotice": "Qatispa, Kamachiy Simikunata Pakay Kamachiykunatawan chaskinkichis",
     "walletInfoDesktop": "Wallet-niykita t'inkiy allin yaykuypaq",
-    "walletInfoMobile": "MetaMask, Trust & Phantom app-ninkuta kichankum. Rabby WalletConnect-ta llamk'achin."
+    "walletInfoMobile": "MetaMask, Trust & Phantom app-ninkuta kichankum. Rabby WalletConnect-ta llamk'achin.",
+    "addProfileTitle": "Willakuyta yapay",
+    "walletConnectedAs": "T'inkisqa",
+    "useDifferentWallet": "Huk qullqi wayaqata apaykachay"
   },
   "careers": {
     "title": "Llamkay DeHub-pi",
@@ -1160,7 +1251,11 @@
     "comingSoon": "Chayamunqa — suyup trendinkuna hamuchkanña!",
     "post": "Apachiy",
     "logOut": "Lluqsiy",
-    "logIn": "Yaykuy"
+    "logIn": "Yaykuy",
+    "searchMenu": "Menú maskay",
+    "clearSearch": "Maskayta pichay",
+    "noMenuMatches": "Mana ima menú ukhupi tinkinchu",
+    "searchDehubFor": "DeHub ukhupi \"{{query}}\" maskay"
   },
   "postInfo": {
     "title": "Post willay",
@@ -1409,7 +1504,12 @@
     "waiting_for_confirmation": "Takyachiyta suyachkan...",
     "new_version_available": "Musuq versión nisqa kan",
     "refresh_to_pick_up_the_latest_changes": "Qhipa tikraykunata hapinaykipaq musuqyachiy.",
-    "what_changed": "Imataq tikrakurqa"
+    "what_changed": "Imataq tikrakurqa",
+    "refresh": "Musuqchay",
+    "turn_on_desktop_notifications": "¿Antañiqiq willakuykunata kichanki?",
+    "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Huk qhawanapi kachkaspapas kutichiykunamanta, quykunamanta, willakuykunamantapas yachay.",
+    "turn_on": "Kichay",
+    "not_now": "Manaraq"
   },
   "prompt": {
     "seoTitle": "Yanapaqniykita tapukuy — DeHub",
@@ -1555,5 +1655,149 @@
     "when": "Hayka pacha",
     "whyStake": "Imarayku Churana?",
     "yourStaked": "Churasqayki"
+  },
+  "arcade": {
+    "title": "Pukllana",
+    "intro": "DeHub ruwasqan, kichasqa pukyuwan, pukllaykuna, teqsimuyukuna icha ruraykunapa huñusqan.",
+    "seoTitle": "Pukllana",
+    "seoDescription": "DeHub ukhupi browser-niykipi pukllaykunata pukllay — sine hina 3D ajedrez, kikinmanta ruwakuq wañuchiy pukllay, sach'a sach'a purina, neón calle maqanakuy, hinaspa purina qatu wasi. Mana ima wakichiyta, mana ima hurquyta munanchu.",
+    "alsoIn": "{{theme}} ukhupipas"
+  },
+  "stats": {
+    "title": "Yupaykuna",
+    "subtitle": "Kunanpacha, kichasqa pukyu willay-yachay",
+    "live": "Kawsaq",
+    "range": {
+      "24h": "24 urakuna",
+      "3d": "3 punchawkuna",
+      "7d": "7 punchawkuna",
+      "30d": "30 punchawkuna",
+      "all": "Llapan pacha"
+    },
+    "unavailable": {
+      "title": "Yupaykuna kunanqa mana kanchu",
+      "unconfigured": "Analytics endpoint-manqa manaraq Cloudflare API token-ninta qusqachu. Llullakuq yupayta rikuchiymanta aswanqa, mana imatapas rikuchin.",
+      "error": "Cloudflare-pa analytics API-nman mana chayay atirqaykuchu. Mawka icha llullakuq yupayta rikuchiymanta aswanqa, kay p'anqaqa mana imatapas rikuchinchu, kawsaq ñawinchay allin kananankama."
+    },
+    "tile": {
+      "visitorsToday": "Kunan punchaw watukuqkuna",
+      "soFarToday": "kunan punchaw kunankama, UTC",
+      "peakHour": "Aswan llamk'aysapa ura",
+      "peakDay": "Aswan llamk'aysapa punchaw",
+      "peakAtHour": "{{when}} UTC-pi",
+      "peakOnDay": "{{when}} punchawpi",
+      "inRange": "kay pachapi",
+      "pageViews": "P'anqa qhawariykuna",
+      "overHours": "{{count}}h ukhupi",
+      "overDay": "1 punchawpi",
+      "overDays": "{{count}} punchawpi",
+      "requestsLabel": "Mañakuykuna",
+      "served": "Qusqa",
+      "requests": "{{requests}} mañakuykuna"
+    },
+    "chart": {
+      "hourly": "Watukuqkuna sapa ura",
+      "daily": "Watukuqkuna sapa punchaw",
+      "hourlyHint": "{{count}} ura huntachiykuna, UTC",
+      "dailyHint": "sapa punchaw huk kaq watukuqkuna",
+      "empty": "Kay pachapaq manaraq willay kanchu"
+    },
+    "countries": {
+      "title": "Hanaq llaqtakuna",
+      "windowDay": "qayna 24 urakuna",
+      "window": "qayna {{days}} punchawkuna"
+    },
+    "browsers": {
+      "title": "Browserkuna",
+      "window": "p'anqa qhawariykunawan"
+    },
+    "edge": {
+      "title": "'Edge' ukhupi",
+      "windowDay": "qayna 24 urakuna",
+      "window": "qayna {{days}} punchawkuna",
+      "cached": "Cache-manta qusqa",
+      "encrypted": "Pakasqa",
+      "threats": "Manchachiykuna harkasqa"
+    },
+    "proof": {
+      "title": "Maymantam kay yupaykuna hamun",
+      "subtitle": "Cloudflare tupusqan, mana kay p'anqachu",
+      "source": "Pukyu",
+      "datasets": "Willay huñukuna",
+      "zone": "Zona",
+      "ray": "Cloudflare ray ID",
+      "fetched": "Hurqusqa",
+      "query": "Gráfico qhipapi kaq chiqan tapuy",
+      "copied": "K'askachisqa",
+      "copy": "K'askachiy",
+      "openEndpoint": "/api/stats kichay",
+      "openRaw": "Cloudflare-pa mana llamiykusqa kutichiynin",
+      "edge": "Sapa dehub.io-man mañakuyqa Cloudflare-ta pasanmi, servidorniykuman chayananpaq ñawpaqta. Kay yupaykunaqa Cloudflare kikin huñusqan tráficom — kikillan yupaykunam dashboard-niykupi rikhurin. Mana browser-niykipi script huñusqanchu, chayrayku kay p'anqapi imapas mana hatunchay atinmanchu, tracker-kunata harkaspapas mana t'ikranchu.",
+      "live": "P'anqaqa kawsaqllatam ñawinchan. /stats kichaptiykiqa, ñuqaykupa endpoint-ninchikta waqyan, chaymi chay ratopi Cloudflare-pa Analytics API-nta tapun, kutichiytataq 60 segundo cache-pi waqaychan.",
+      "limits": "Imatam kay rikuchin, imatam mana: rikuyta atinki yupaykuna Cloudflare huñusqanmanta hamusqanta, mana ñuqaykupa código-ninmantachu, hinaspa kaypi rikuchisqa tapuykuna kikillanmi llamk'an. Mana 'confianza mana necesitaq' hinachu — ñuqaykum API token-ta hap'ikuyku, Cloudflare-taq mana pipapas zona analíticanta qhawachinchu. Pipas kikin Cloudflare zonayuq kaqqa, kikin tapuyta ruwayta atin, hinaspa chay rikch'ayta takyachiy."
+    },
+    "definitions": {
+      "title": "Imatam yupaykuna niyta munan",
+      "visitorsTerm": "Watukuqkuna",
+      "visitors": "— chay punchaw Cloudflare rikusqan huk kaq IP dirección-kuna. Runakunaman qayllam, ichaqa mana kikinchu: huk oficina huk t'inkiywan huk kutillata yupakun, huk celularñataq wifi, datos entre puriqtinqa iskay kutita yupakun.",
+      "pageViewsTerm": "P'anqa qhawariykuna",
+      "pageViews": "— Cloudflare p'anqa qhawariy hina churasqan mañakuykuna, mana rikchakuna, script-kuna icha API waqyaykuna hinachu.",
+      "botsTerm": "Botskuna yaykusqan kachkan",
+      "bots": "— kaykunaqa ch'usaq 'edge' yupaykunam, chayrayku crawlers, uptime monitors, script kliente-kunapas kaypi kanku. Kikiykipa rikuyta atinki hawapi kaq browser t'aqasqapi, maypichus \"Curl\" hina \"Unknown\" hina qillqasqakunaqa mana runakunachu, ashka kachkan kikinmanta puriq tráficom. Bots-kunata anchhuchinapaqqa Cloudflare-pa pagasqa nivelninta munachikun, mana llamk'achisqaykutachu; huk yupayta pakaymanta hurquyqa yupaykunata aswan mana qhawarina hinam saqinman, mana aswan allintachu.",
+      "totalTerm": "Pachapa llapan yupaynin",
+      "total": "— p'anqa qhawariykuna, mañakuykunapas pacha ukhupi huñusqa yupakunku. Watukuqkuna yupaykunataq mana huñunchu 'llapan watukuqkuna' hina, imaraykuchus lunes, martes p'unchawpi kaq runaqa iskay kutita yupasqa kanman.",
+      "peakTerm": "Aswan llamk'aysapa ura / punchaw",
+      "peak": "— pachapi huk huntachiy ukhullapi aswan hatun huk kaq yupay, kaqllaraykum: Cloudflare kikin tupusqan yupaymi, mana tupasqa yupaykunata yapaspa ruwasqachu.",
+      "resolutionTerm": "Ura-ura kimsa punchawpi tukun",
+      "resolution": "— chayqa Cloudflare-pa kay planninpi saynin kaqmi, mana akllasqachu: kimsa punchawmanta aswan hatun ura-ura tapuykunata mana chaskinchu. 24 ura, 3 punchaw qhawariykunaqa ura-uram; 7 punchawmanta hukkaqkunataq punchaw-punchawm, mana atikunchu ura-ura gráficota llapan pachapaq ruwayta.",
+      "breakdownTerm": "Llaqtakuna, browserkunapas",
+      "breakdown": "— kaykunaqa akllasqayki pachata qatinku, ichaqa {{max}} punchawllatam qhipaman rin, chaykamallam sapa punchawmanta t'aqasqa waqaychakun. Aswan unay pachakunapiqa, gráficoqa llaqtakuna listamanta aswan aswan pachata rikuchin.",
+      "startTerm": "Ñawpa pacha",
+      "start": "— \"llapan pacha\" nisqaqa Cloudflare-pa waqaychasqan sapa punchawtam nin, kunanqa {{days}} punchawmi, {{date}} punchawmanta qallariq, dehub.io Cloudflare-man rispan punchaw. Manam ñawpaq 'edge' willay rikuchinapaq kanchu, unay punchawkunataq Cloudflare wischusqanwan chinkanku."
+    }
+  },
+  "superpowers": {
+    "aimAtAccount": "¿Pipa qatiqninkunam rikunanku tiyan?",
+    "aimAtTiers": "¿Mayqin unancha hawakunam rikunanku tiyan?",
+    "aimPlaceholder": "Ruraq suti icha qullqi wayaqa dirección",
+    "boost": "Kallpachay",
+    "boostBooked": "{{minutes}} minutopaq kallpachasqa",
+    "boostExplainer": "Kay willakuyta wasi mikhuypa patanpi kaq lugarman churan, pachaykipa kaqllanpi.",
+    "boostFailed": "Chay willakuyta kallpachay mana atirqanchu",
+    "boostForMinutes": "{{minutes}} minutopaq kallpachay",
+    "boostedLabel": "Kallpachasqa",
+    "boostsLeft": "{{total}} kallpachaymanta {{left}} qhipan",
+    "cancelFailed": "Chay kallpachayta sayachiy mana atirqanchu",
+    "cancelledRefunded": "Kallpachay sayachisqa, cuposniykimanpas kutichisqa",
+    "cancelledSpent": "Kallpachay sayachisqa. Ñam qallarisqaña karqan, chayrayku gastasqahina qhipan.",
+    "colBoosts": "Kallpachaykuna",
+    "colEach": "Sapa huk",
+    "colTier": "Hawa",
+    "colTotal": "Sapa muyuy",
+    "comingSoon": "qayllapi hamun",
+    "finishedCount": "{{count}} kay muyuypi tukusqa, {{seen}} kutita qhawasqa",
+    "grantLine": "{{boosts}} × {{minutes}} minuto sapa muyuypi",
+    "intro": "Huk unanchaqa sutiyki patapi rikchaymantaqa aswantam rantin. Sapa iskay simanamanta kallpachaykunata qun — sapa hukmi willakuyta wasi mikhuypa patanman churan. Chunka kimsayuq hawakuna, chunka kimsayuq kallpakuna, sapa hawapi hukta kichan.",
+    "ladderHeading": "Imatam sapa hawa qun",
+    "left": "qhipan",
+    "liveUntil": "{{time}} kama kawsaq",
+    "loadFailed": "SuperPowers-niykikunata kunanqa cargay mana atirqanchu. Pisi pacha qhipata yapamanta ruway.",
+    "minutes": "minutokuna",
+    "needBadge": "SuperPowers-kunaqa churasqa unanchata munan. DHB-ta churay paykunata kichanaykipaq.",
+    "noBadgeYet": "Manaraq unanchayki kanchu, chayrayku manaraq kallpachaykuna kanchu. DHB churayqa urapi kaq hawakunata kichan.",
+    "noBoostsLeft": "Kay muyuypi manaña kallpachaykuna qhipanchu",
+    "powersHeading": "Chunka kimsayuq kallpakuna",
+    "queued": "suyaq listapi",
+    "refills": "{{date}} p'unchawpi huntanqa",
+    "refillsOn": "{{date}} p'unchawpi huntanqa — llapanpaq kikin ratopi.",
+    "secondWind": "Iskay Kaq Samay",
+    "secondWindExplainer": "Kay willakuyqa huk simanamanta aswan unaymi. Iskay Kaq Samayqa kutichin wasi mikhuypa patanman.",
+    "seenCount": "{{count}} qhawasqa",
+    "shareOfVoice": "Kallpachay lugarqa muyun. Askha kallpachaykuna purichkaptin, qhawaqkunaman unancha hawanman hina hukta qunku — aswan hanaq hawaqa askhata rikhurin, llapanmi mañasqan pachallanta hap'in.",
+    "spendFor": "{{power}} {{minutes}} minutopaq",
+    "spent": "{{power}} {{minutes}} minutota purichkan",
+    "stakeDhb": "DHB-ta churay",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} {{tier}} hawapi kichakun"
   }
 }
