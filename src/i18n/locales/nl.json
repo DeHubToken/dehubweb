@@ -817,7 +817,8 @@
     "activityLog": "Activiteitenlogboek",
     "endStream": "Stream beëindigen",
     "linkCopied": "Link gekopieerd naar klembord",
-    "postUrlCopied": "Bericht-URL gekopieerd naar klembord"
+    "postUrlCopied": "Bericht-URL gekopieerd naar klembord",
+    "boostPost": "Bericht boosten"
   },
   "filters": {
     "sort": "Sorteren",
@@ -1248,7 +1249,8 @@
     "ppvStartSaving": "Koop Pay-Per-View-content van je favoriete makers en het verschijnt hier.",
     "recentStartSaving": "Je meest recent gebookmarkte berichten verschijnen hier.",
     "textStartSaving": "Voeg berichten met alleen tekst toe aan je bladwijzers en ze verschijnen hier.",
-    "videosStartSaving": "Voeg berichten met video's toe aan je bladwijzers en ze worden hier verzameld."
+    "videosStartSaving": "Voeg berichten met video's toe aan je bladwijzers en ze worden hier verzameld.",
+    "folders": "Mappen"
   },
   "notifications": {
     "title": "Meldingen",
@@ -1983,5 +1985,49 @@
       "startTerm": "Geschiedenis",
       "start": "— \"alle tijd\" betekent elke dag die Cloudflare nog bewaart, vandaag {{days}} dagen vanaf {{date}}, de dag dat dehub.io naar Cloudflare verhuisde. Er zijn geen eerdere edge-gegevens om te tonen, en oudere dagen vallen af naarmate Cloudflare ze laat verlopen."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Wiens volgers moeten het zien?",
+    "aimAtTiers": "Welke badgeniveaus moeten het zien?",
+    "aimPlaceholder": "Gebruikersnaam of walletadres",
+    "boost": "Boosten",
+    "boostBooked": "{{minutes}} minuten geboost",
+    "boostExplainer": "Zet dit bericht tijdens jouw venster op de plek bovenaan de hoofdfeed.",
+    "boostFailed": "Kon dat bericht niet boosten",
+    "boostForMinutes": "{{minutes}} minuten boosten",
+    "boostedLabel": "Geboost",
+    "boostsLeft": "Nog {{left}} van {{total}} boosts",
+    "cancelFailed": "Kon die boost niet annuleren",
+    "cancelledRefunded": "Boost geannuleerd en teruggezet op je tegoed",
+    "cancelledSpent": "Boost geannuleerd. Hij was al begonnen, dus blijft hij verbruikt.",
+    "colBoosts": "Boosts",
+    "colEach": "Elk",
+    "colTier": "Niveau",
+    "colTotal": "Per cyclus",
+    "comingSoon": "binnenkort",
+    "finishedCount": "{{count}} afgerond deze cyclus, {{seen}} keer gezien",
+    "grantLine": "{{boosts}} × {{minutes}} minuten per cyclus",
+    "intro": "Een badge koopt meer dan het plaatje naast je naam. Elke twee weken geeft hij boosts — elk daarvan zet een bericht op de plek bovenaan de hoofdfeed. Dertien niveaus, dertien krachten, één ontgrendeling per trede.",
+    "ladderHeading": "Wat elk niveau geeft",
+    "left": "over",
+    "liveUntil": "live tot {{time}}",
+    "loadFailed": "Kon je SuperPowers nu niet laden. Probeer het zo opnieuw.",
+    "minutes": "minuten",
+    "needBadge": "SuperPowers vereisen een stakingbadge. Stake DHB om ze te ontgrendelen.",
+    "noBadgeYet": "Je hebt nog geen badge, dus geen boosts. DHB staken ontgrendelt de ladder hieronder.",
+    "noBoostsLeft": "Geen boosts meer deze cyclus",
+    "powersHeading": "De dertien krachten",
+    "queued": "in de wachtrij",
+    "refills": "vult aan op {{date}}",
+    "refillsOn": "Vult aan op {{date}} — voor iedereen op hetzelfde moment.",
+    "secondWind": "Tweede Adem",
+    "secondWindExplainer": "Dit bericht is ouder dan een week. Tweede Adem stuurt het terug naar de top van de feed.",
+    "seenCount": "{{count}} keer gezien",
+    "shareOfVoice": "De boostplek rouleert. Als er meerdere boosts lopen, krijgt elke kijker er één toebedeeld, gewogen naar badgeniveau — een hoger niveau wordt vaker getoond, en iedereen krijgt het venster dat hem is toegekend.",
+    "spendFor": "{{power}} gedurende {{minutes}} minuten",
+    "spent": "{{power}} loopt {{minutes}} minuten",
+    "stakeDhb": "DHB staken",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} wordt ontgrendeld bij {{tier}}"
   }
 }

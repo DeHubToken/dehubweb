@@ -624,7 +624,8 @@
     "activityLog": "Dziennik aktywności",
     "endStream": "Zakończ transmisję",
     "linkCopied": "Link skopiowany do schowka",
-    "postUrlCopied": "URL postu skopiowany do schowka"
+    "postUrlCopied": "URL postu skopiowany do schowka",
+    "boostPost": "Wypromuj post"
   },
   "filters": {
     "sort": "Sortuj",
@@ -1055,7 +1056,8 @@
     "ppvStartSaving": "Kup treści Pay-Per-View od ulubionych twórców, a pojawią się tutaj.",
     "recentStartSaving": "Tutaj pojawią się Twoje ostatnio dodane zakładki.",
     "textStartSaving": "Dodaj do zakładek posty tekstowe, a pojawią się tutaj.",
-    "videosStartSaving": "Dodaj do zakładek posty z filmami, a zbiorą się tutaj."
+    "videosStartSaving": "Dodaj do zakładek posty z filmami, a zbiorą się tutaj.",
+    "folders": "Foldery"
   },
   "notifications": {
     "title": "Powiadomienia",
@@ -1790,5 +1792,49 @@
       "startTerm": "Historia",
       "start": "— „cały okres\" oznacza każdy dzień, który Cloudflare wciąż przechowuje, dziś {{days}} dni od {{date}}, dnia przeniesienia dehub.io na Cloudflare. Wcześniejszych danych z edge nie ma, a starsze dni znikają, gdy Cloudflare je wygasza."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Czyi obserwujący mają go zobaczyć?",
+    "aimAtTiers": "Które poziomy odznak mają go zobaczyć?",
+    "aimPlaceholder": "Nazwa użytkownika lub adres portfela",
+    "boost": "Wypromuj",
+    "boostBooked": "Promowany przez {{minutes}} minut",
+    "boostExplainer": "Umieszcza ten post w miejscu na górze głównego kanału na czas Twojego okna.",
+    "boostFailed": "Nie udało się wypromować tego posta",
+    "boostForMinutes": "Promuj przez {{minutes}} minut",
+    "boostedLabel": "Promowany",
+    "boostsLeft": "Pozostało {{left}} z {{total}} promocji",
+    "cancelFailed": "Nie udało się anulować tej promocji",
+    "cancelledRefunded": "Promocja anulowana i zwrócona do Twojego limitu",
+    "cancelledSpent": "Promocja anulowana. Zdążyła się już zacząć, więc pozostaje zużyta.",
+    "colBoosts": "Promocje",
+    "colEach": "Każda",
+    "colTier": "Poziom",
+    "colTotal": "Na cykl",
+    "comingSoon": "wkrótce",
+    "finishedCount": "{{count}} zakończonych w tym cyklu, obejrzanych {{seen}} razy",
+    "grantLine": "{{boosts}} × {{minutes}} minut na cykl",
+    "intro": "Odznaka kupuje więcej niż rysunek obok Twojej nazwy. Co dwa tygodnie przyznaje promocje — każda umieszcza post w miejscu na górze głównego kanału. Trzynaście poziomów, trzynaście mocy, jedno odblokowanie na szczebel.",
+    "ladderHeading": "Co daje każdy poziom",
+    "left": "pozostało",
+    "liveUntil": "na żywo do {{time}}",
+    "loadFailed": "Nie udało się teraz wczytać Twoich SuperMocy. Spróbuj za chwilę.",
+    "minutes": "minut",
+    "needBadge": "SuperMoce wymagają odznaki stakingowej. Zastakuj DHB, aby je odblokować.",
+    "noBadgeYet": "Nie masz jeszcze odznaki, więc nie masz promocji. Stakowanie DHB odblokowuje drabinę poniżej.",
+    "noBoostsLeft": "Brak promocji w tym cyklu",
+    "powersHeading": "Trzynaście mocy",
+    "queued": "w kolejce",
+    "refills": "uzupełnia się {{date}}",
+    "refillsOn": "Uzupełnia się {{date}} — w tym samym momencie dla wszystkich.",
+    "secondWind": "Drugi Oddech",
+    "secondWindExplainer": "Ten post ma ponad tydzień. Drugi Oddech wysyła go z powrotem na górę kanału.",
+    "seenCount": "{{count}} wyświetleń",
+    "shareOfVoice": "Miejsce promocji rotuje. Gdy działa kilka promocji, każdemu widzowi przydzielana jest jedna, ważona poziomem odznaki — wyższy poziom pokazuje się częściej, a każdy dostaje przyznane mu okno.",
+    "spendFor": "{{power}} przez {{minutes}} minut",
+    "spent": "{{power}} działa od {{minutes}} minut",
+    "stakeDhb": "Zastakuj DHB",
+    "title": "SuperMoce",
+    "unlocksAt": "{{power}} odblokowuje się na poziomie {{tier}}"
   }
 }
