@@ -645,7 +645,8 @@
     "activityLog": "Activity Log",
     "endStream": "End Stream",
     "linkCopied": "Link copied to clipboard",
-    "postUrlCopied": "Post URL copied to clipboard"
+    "postUrlCopied": "Post URL copied to clipboard",
+    "boostPost": "Đẩy bài viết"
   },
   "filters": {
     "sort": "Sort",
@@ -1076,7 +1077,8 @@
     "ppvStartSaving": "Mua nội dung trả phí (Pay-Per-View) từ các nhà sáng tạo yêu thích để nội dung xuất hiện tại đây.",
     "recentStartSaving": "Các bài viết bạn vừa lưu dấu trang sẽ hiển thị tại đây.",
     "textStartSaving": "Lưu các bài viết chỉ có văn bản và chúng sẽ xuất hiện tại đây.",
-    "videosStartSaving": "Lưu các bài viết có video và chúng sẽ được tập hợp tại đây."
+    "videosStartSaving": "Lưu các bài viết có video và chúng sẽ được tập hợp tại đây.",
+    "folders": "Thư mục"
   },
   "notifications": {
     "title": "Thông báo",
@@ -1811,5 +1813,49 @@
       "startTerm": "Lịch sử",
       "start": "— \"toàn bộ thời gian\" nghĩa là mọi ngày Cloudflare còn lưu, hiện là {{days}} ngày tính từ {{date}}, ngày dehub.io chuyển sang Cloudflare. Không có dữ liệu biên nào sớm hơn để hiển thị, và những ngày cũ rơi dần khi Cloudflare hết hạn lưu."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Người theo dõi của ai nên thấy nó?",
+    "aimAtTiers": "Những hạng huy hiệu nào nên thấy nó?",
+    "aimPlaceholder": "Tên người dùng hoặc địa chỉ ví",
+    "boost": "Đẩy",
+    "boostBooked": "Đã đẩy trong {{minutes}} phút",
+    "boostExplainer": "Đặt bài viết này vào ô trên cùng của bảng tin chính trong khung giờ của bạn.",
+    "boostFailed": "Không thể đẩy bài viết đó",
+    "boostForMinutes": "Đẩy trong {{minutes}} phút",
+    "boostedLabel": "Đã đẩy",
+    "boostsLeft": "Còn {{left}} trên {{total}} lượt đẩy",
+    "cancelFailed": "Không thể huỷ lượt đẩy đó",
+    "cancelledRefunded": "Đã huỷ lượt đẩy và hoàn lại vào hạn mức của bạn",
+    "cancelledSpent": "Đã huỷ lượt đẩy. Nó đã bắt đầu rồi nên vẫn tính là đã dùng.",
+    "colBoosts": "Lượt đẩy",
+    "colEach": "Mỗi lượt",
+    "colTier": "Hạng",
+    "colTotal": "Mỗi chu kỳ",
+    "comingSoon": "sắp có",
+    "finishedCount": "{{count}} đã kết thúc trong chu kỳ này, được xem {{seen}} lần",
+    "grantLine": "{{boosts}} × {{minutes}} phút mỗi chu kỳ",
+    "intro": "Huy hiệu mua được nhiều hơn cái hình bên cạnh tên bạn. Cứ hai tuần nó cấp lượt đẩy — mỗi lượt đưa một bài viết vào ô trên cùng của bảng tin chính. Mười ba hạng, mười ba năng lực, mỗi bậc mở một cái.",
+    "ladderHeading": "Mỗi hạng được gì",
+    "left": "còn lại",
+    "liveUntil": "lên sóng đến {{time}}",
+    "loadFailed": "Lúc này không tải được SuperPowers của bạn. Thử lại sau giây lát.",
+    "minutes": "phút",
+    "needBadge": "SuperPowers cần huy hiệu staking. Hãy stake DHB để mở khoá.",
+    "noBadgeYet": "Bạn chưa có huy hiệu nên chưa có lượt đẩy. Stake DHB sẽ mở chiếc thang bên dưới.",
+    "noBoostsLeft": "Chu kỳ này không còn lượt đẩy",
+    "powersHeading": "Mười ba năng lực",
+    "queued": "đang chờ",
+    "refills": "nạp lại vào {{date}}",
+    "refillsOn": "Nạp lại vào {{date}} — cùng một thời điểm cho tất cả mọi người.",
+    "secondWind": "Hơi Thở Thứ Hai",
+    "secondWindExplainer": "Bài viết này đã hơn một tuần. Hơi Thở Thứ Hai đưa nó trở lại đầu bảng tin.",
+    "seenCount": "{{count}} lượt xem",
+    "shareOfVoice": "Ô đẩy được luân phiên. Khi có nhiều lượt đẩy cùng chạy, mỗi người xem được chia một lượt có trọng số theo hạng huy hiệu — hạng cao hơn xuất hiện thường xuyên hơn, và ai cũng nhận đủ khung giờ đã được cấp.",
+    "spendFor": "{{power}} trong {{minutes}} phút",
+    "spent": "{{power}} đang chạy được {{minutes}} phút",
+    "stakeDhb": "Stake DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} mở khoá ở hạng {{tier}}"
   }
 }

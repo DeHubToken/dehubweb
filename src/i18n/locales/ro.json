@@ -570,7 +570,8 @@
     "activityLog": "Jurnal de activitate",
     "endStream": "Încheie transmisiunea",
     "linkCopied": "Linkul a fost copiat în clipboard",
-    "postUrlCopied": "URL-ul postării a fost copiat în clipboard"
+    "postUrlCopied": "URL-ul postării a fost copiat în clipboard",
+    "boostPost": "Promovează postarea"
   },
   "filters": {
     "sort": "Sortare",
@@ -1001,7 +1002,8 @@
     "ppvStartSaving": "Cumpără conținut Pay-Per-View de la creatorii tăi preferați pentru a apărea aici.",
     "recentStartSaving": "Postările salvate recent vor apărea aici.",
     "textStartSaving": "Salvează postările doar cu text și vor apărea aici.",
-    "videosStartSaving": "Salvează postările cu videoclipuri și vor fi adunate aici."
+    "videosStartSaving": "Salvează postările cu videoclipuri și vor fi adunate aici.",
+    "folders": "Dosare"
   },
   "notifications": {
     "title": "Notificări",
@@ -1736,5 +1738,49 @@
       "startTerm": "Istoric",
       "start": "— „toată perioada” înseamnă fiecare zi pe care Cloudflare o mai păstrează, azi {{days}} zile începând cu {{date}}, ziua în care dehub.io a trecut pe Cloudflare. Nu există date de margine mai vechi, iar zilele vechi dispar pe măsură ce Cloudflare le expiră."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Ai cui urmăritori ar trebui să o vadă?",
+    "aimAtTiers": "Ce niveluri de insignă ar trebui să o vadă?",
+    "aimPlaceholder": "Nume de utilizator sau adresă de portofel",
+    "boost": "Promovează",
+    "boostBooked": "Promovată timp de {{minutes}} minute",
+    "boostExplainer": "Pune această postare în locul din vârful fluxului principal pe durata ferestrei tale.",
+    "boostFailed": "Nu s-a putut promova acea postare",
+    "boostForMinutes": "Promovează timp de {{minutes}} minute",
+    "boostedLabel": "Promovată",
+    "boostsLeft": "Au mai rămas {{left}} din {{total}} promovări",
+    "cancelFailed": "Nu s-a putut anula acea promovare",
+    "cancelledRefunded": "Promovare anulată și returnată în limita ta",
+    "cancelledSpent": "Promovare anulată. Începuse deja, așa că rămâne consumată.",
+    "colBoosts": "Promovări",
+    "colEach": "Fiecare",
+    "colTier": "Nivel",
+    "colTotal": "Pe ciclu",
+    "comingSoon": "în curând",
+    "finishedCount": "{{count}} încheiate în acest ciclu, văzute de {{seen}} ori",
+    "grantLine": "{{boosts}} × {{minutes}} minute pe ciclu",
+    "intro": "O insignă cumpără mai mult decât desenul de lângă numele tău. La fiecare două săptămâni acordă promovări — fiecare pune o postare în locul din vârful fluxului principal. Treisprezece niveluri, treisprezece puteri, o deblocare pe treaptă.",
+    "ladderHeading": "Ce acordă fiecare nivel",
+    "left": "rămase",
+    "liveUntil": "live până la {{time}}",
+    "loadFailed": "Nu am putut încărca SuperPuterile tale acum. Încearcă din nou într-o clipă.",
+    "minutes": "minute",
+    "needBadge": "SuperPuterile au nevoie de o insignă de staking. Pune DHB în staking ca să le deblochezi.",
+    "noBadgeYet": "Încă nu ai insignă, deci nicio promovare. Punerea DHB în staking deblochează scara de mai jos.",
+    "noBoostsLeft": "Nu au mai rămas promovări în acest ciclu",
+    "powersHeading": "Cele treisprezece puteri",
+    "queued": "în așteptare",
+    "refills": "se reîncarcă pe {{date}}",
+    "refillsOn": "Se reîncarcă pe {{date}} — în același moment pentru toată lumea.",
+    "secondWind": "Al Doilea Suflu",
+    "secondWindExplainer": "Această postare are mai mult de o săptămână. Al Doilea Suflu o trimite înapoi în vârful fluxului.",
+    "seenCount": "{{count}} vizualizări",
+    "shareOfVoice": "Locul de promovare se rotește. Când rulează mai multe promovări, fiecărui vizitator i se servește una ponderată după nivelul insignei — un nivel mai înalt apare mai des, iar fiecare primește fereastra care i-a fost acordată.",
+    "spendFor": "{{power}} timp de {{minutes}} minute",
+    "spent": "{{power}} rulează de {{minutes}} minute",
+    "stakeDhb": "Pune DHB în staking",
+    "title": "SuperPuteri",
+    "unlocksAt": "{{power}} se deblochează la {{tier}}"
   }
 }
