@@ -52,6 +52,12 @@ import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlayba
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
+import {
+  DOUBLE_TAP_LIKE_EVENT,
+  OPEN_REACTIONS_EVENT,
+  type DoubleTapLikeEventDetail,
+  type OpenReactionsEventDetail,
+} from '@/lib/tap-reactions';
 
 interface ShortsViewerProps {
   shorts: ShortVideo[];
@@ -528,6 +534,43 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleVote = useCallback((vote: boolean) => {
     return handleReaction(reactionForTap(vote, myReaction, localReactionCounts));
   }, [handleReaction, myReaction, localReactionCounts]);
+
+  /**
+   * The tap ladder on the slide itself — double 👍, triple ❤️, hold for the
+   * tray. This viewer renders no ActionBar, so the listener ActionBar owns
+   * never runs here and these events would otherwise fall on the floor.
+   *
+   * Guarded the same way ActionBar guards its own: a gesture only ever adds, so
+   * re-casting the reaction already held (which the server reads as "clear it")
+   * is refused rather than silently removing a like.
+   */
+  const handleReactionRef = useRef(handleReaction);
+  useEffect(() => { handleReactionRef.current = handleReaction; }, [handleReaction]);
+  useEffect(() => {
+    const id = currentShort?.id != null ? String(currentShort.id) : '';
+    if (!id) return;
+
+    const onTapReaction = (e: Event) => {
+      const detail = (e as CustomEvent<DoubleTapLikeEventDetail>).detail;
+      if (!detail || String(detail.postId) !== id) return;
+      const reaction = detail.reaction ?? 'like';
+      if (myReaction === reaction) return;
+      if (reaction === 'like' && isLiked) return;
+      handleReactionRef.current(reaction);
+    };
+    const onOpenReactions = (e: Event) => {
+      const detail = (e as CustomEvent<OpenReactionsEventDetail>).detail;
+      if (!detail || String(detail.postId) !== id) return;
+      setPickerOpen(true);
+    };
+
+    window.addEventListener(DOUBLE_TAP_LIKE_EVENT, onTapReaction as EventListener);
+    window.addEventListener(OPEN_REACTIONS_EVENT, onOpenReactions as EventListener);
+    return () => {
+      window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, onTapReaction as EventListener);
+      window.removeEventListener(OPEN_REACTIONS_EVENT, onOpenReactions as EventListener);
+    };
+  }, [currentShort?.id, myReaction, isLiked]);
 
   // Hold the thumbs-up to open the reaction tray (see ActionBar for the same gesture).
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);

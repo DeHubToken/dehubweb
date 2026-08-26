@@ -15,6 +15,8 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
 import { useSkipSegments } from '@/lib/skip-segments';
 import { useVideoSegments, segmentAt } from '@/hooks/use-video-segments';
@@ -1281,6 +1283,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
   }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
 
+  /**
+   * Double / triple / hold on the media — feed surfaces only.
+   *
+   * The immersive player keeps its own double-tap for ±10s seek and centre
+   * fullscreen, which is the gesture people already use to scrub a video. The
+   * ladder is for the feed, where the media is content to react to rather than
+   * a player to drive. Audio posts opt out too: their surface is the visualiser
+   * and the tap handlers above are already undefined there.
+   *
+   * `enableLongPress` is off in immersive for the same reason — nothing else
+   * here should start competing with the player's own press handling.
+   */
+  const tapGestures = useTapGestures({
+    postId: video.id,
+    disabled: isImmersive || hideActions || !!video.isAudio,
+  });
+
   const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
     // In the feed the media is the content, not a link to it: a click reveals
     // this player's own controls (play, scrubber, subtitles, mute, fullscreen)
@@ -1688,6 +1707,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
+        {...tapGestures}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
@@ -1928,6 +1948,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         )}
         
         {/* Center flash indicator removed — play/pause now in progress bar */}
+
+        {/* Draws the 👍 / ❤️ for the tap ladder above. Inert and self-contained;
+            it listens for this post's own events rather than taking state. */}
+        {!isImmersive && !hideActions && !video.isAudio && (
+          <TapReactionBurst postId={video.id} />
+        )}
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {showControls && (
