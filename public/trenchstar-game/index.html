@@ -1396,16 +1396,58 @@ function tfSynth(m,tf){
   return e;
 }
 
+/* Wide candles for a DEX pair. GeckoTerminal indexes the same pool address
+   DexScreener gives us and serves real OHLCV, so a trench chart no longer has
+   to be a random walk dressed up as a market. Keyed by POOL, not symbol: two
+   slots can carry the same ticker from different chains.
+   The free tier is ~30 calls a minute and a wall can switch forty screens to
+   1h at once, so one global gate spaces them; a screen that misses its turn
+   just picks the history up on a later repaint. */
+const GT_TF={'5m':['minute',5],'15m':['minute',15],'1h':['hour',1],
+  '4h':['hour',4],'1d':['day',1]};
+let gtLastCall=0;
+function tfFetchGT(m,tf){
+  const key=tfKey('gt:'+m.chain+':'+m.pairAddr,tf.id);
+  let e=TF_CACHE.get(key);
+  if(!e){e={rows:null,at:0,loading:false,fails:0,dead:false,sim:false};TF_CACHE.set(key,e);}
+  if(e.loading||e.dead)return e;
+  const age=Date.now()-e.at;
+  if(e.rows&&age<tfRefreshMs(tf.ms))return e;
+  if(e.fails&&age<30000)return e;
+  if(Date.now()-gtLastCall<2000)return e;         /* wait our turn at the gate */
+  const [unit,agg]=GT_TF[tf.id];
+  gtLastCall=Date.now();e.loading=true;
+  fget('https://api.geckoterminal.com/api/v2/networks/'+GT_NET[m.chain]+'/pools/'+
+    m.pairAddr+'/ohlcv/'+unit+'?aggregate='+agg+'&limit=200',12000)
+    .then(j=>{
+      const rows=j&&j.data&&j.data.attributes&&j.data.attributes.ohlcv_list;
+      if(!rows||!rows.length)throw 0;
+      /* newest first from the API, and the chart reads left to right */
+      e.rows=rows.slice().reverse().map(x=>({t:x[0]*1000,o:+x[1],h:+x[2],l:+x[3],c:+x[4],v:+x[5]}));
+      e.at=Date.now();e.fails=0;e.sim=false;
+    })
+    .catch(()=>{e.at=Date.now();if(++e.fails>=3)e.dead=true;})
+    .finally(()=>{e.loading=false;});
+  return e;
+}
+
 /* Where a wide chart's candles come from: the exchange for a pair that is
-   actually live on it, an invention for one that is not. A pair that was
+   actually live on it, GeckoTerminal for a pool that is not, and an invention
+   only for a slot that is still on its simulated bench. A pair that was
    simulated at boot and has since gone live drops its fiction here rather
    than carrying it for the session. */
 function tfSource(m,tf){
   const real=m.kind==='binance'&&m.source==='BINANCE'&&!!tf.iv;
-  if(!real)return tfSynth(m,tf);
-  const key=tfKey(m.sym,tf.id),had=TF_CACHE.get(key);
-  if(had&&had.sim)TF_CACHE.delete(key);
-  return tfFetch(m,tf);
+  if(real){
+    const key=tfKey(m.sym,tf.id),had=TF_CACHE.get(key);
+    if(had&&had.sim)TF_CACHE.delete(key);
+    return tfFetch(m,tf);
+  }
+  if(m.source==='DEX'&&m.pairAddr&&GT_NET[m.chain]&&GT_TF[tf.id]){
+    const e=tfFetchGT(m,tf);
+    if(e.rows)return e;                            /* synth holds the screen meanwhile */
+  }
+  return tfSynth(m,tf);
 }
 
 /* The last n candles, with the newest one re-opened against the live price.
@@ -4057,6 +4099,9 @@ async function gtPump(){
   while(gtQ.length){
     const {key,m}=gtQ.shift();
     let hist=null;
+    /* the same gate the timeframe fetcher uses — one GeckoTerminal call at a time */
+    while(Date.now()-gtLastCall<2500)await new Promise(r=>setTimeout(r,300));
+    gtLastCall=Date.now();
     try{
       const j=await fget('https://api.geckoterminal.com/api/v2/networks/'+GT_NET[m.chain]+
         '/pools/'+m.pairAddr+'/ohlcv/minute?aggregate=1&limit=60',12000);
@@ -4069,7 +4114,6 @@ async function gtPump(){
     GT_CACHE.set(key,{at:Date.now(),hist});
     if(GT_CACHE.size>400)GT_CACHE.delete(GT_CACHE.keys().next().value);
     gtApply(m,hist);
-    await new Promise(r=>setTimeout(r,2500));
   }
   gtBusy=false;
 }
