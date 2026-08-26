@@ -56,6 +56,7 @@ import {
 } from '@/lib/connection-source';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
+import { clearPersistedQueryCache } from '@/lib/query-persist';
 import { supabase } from '@/integrations/supabase/client';
 import {
   activateWalletKey,
@@ -2220,6 +2221,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     disconnectDmSocket();
     queryClient.clear();
+    // clear() only empties the in-memory cache. The persisted slice now carries
+    // the conversation list, so it has to be removed outright rather than left
+    // for the idle writer to overwrite — a tab closed right after logging out
+    // never reaches that write.
+    clearPersistedQueryCache();
 
     // Provider-level disconnect AFTER local cleanup (non-blocking)
     try {
