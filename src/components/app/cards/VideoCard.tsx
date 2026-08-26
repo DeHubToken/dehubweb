@@ -1297,7 +1297,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
    */
   const tapGestures = useTapGestures({
     postId: video.id,
-    disabled: isImmersive || hideActions || !!video.isAudio,
+    // A gated card (PPV, holdings/subscriber lock, mature warning) draws no
+    // burst — TapReactionBurst lives inside the isContentGated block further
+    // down — so a cast there would react, invisibly, to a post you cannot
+    // see. On gated media the tap belongs to the unlock overlay. ImageCard
+    // already behaves this way: its gate branch replaces the carousel that
+    // carries the gesture, so this only brings video into line.
+    disabled: isImmersive || hideActions || !!video.isAudio || isContentGated,
   });
 
   const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
