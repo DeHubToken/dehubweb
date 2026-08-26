@@ -535,7 +535,8 @@
     "activityLog": "Aktivitetslogg",
     "endStream": "Avsluta sändning",
     "linkCopied": "Länk kopierad",
-    "postUrlCopied": "Inläggslänk kopierad"
+    "postUrlCopied": "Inläggslänk kopierad",
+    "boostPost": "Boosta inlägg"
   },
   "filters": {
     "sort": "Sortera",
@@ -711,7 +712,8 @@
     "ppvStartSaving": "Köp Pay-Per-View-innehåll från dina favoritkreatörer så visas det här.",
     "recentStartSaving": "Dina senast bokmärkta inlägg visas här.",
     "textStartSaving": "Bokmärk inlägg med enbart text så visas de här.",
-    "videosStartSaving": "Bokmärk inlägg med videor så samlas de här."
+    "videosStartSaving": "Bokmärk inlägg med videor så samlas de här.",
+    "folders": "Mappar"
   },
   "notifications": {
     "title": "Aviseringar",
@@ -1726,5 +1728,49 @@
       "startTerm": "Historik",
       "start": "— ”hela tiden” betyder varje dag Cloudflare fortfarande sparar, i dag {{days}} dagar från {{date}}, dagen då dehub.io flyttade till Cloudflare. Det finns ingen tidigare kantdata att visa, och äldre dagar faller bort när Cloudflare låter dem gå ut."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Vems följare ska se det?",
+    "aimAtTiers": "Vilka badgenivåer ska se det?",
+    "aimPlaceholder": "Användarnamn eller plånboksadress",
+    "boost": "Boosta",
+    "boostBooked": "Boostat i {{minutes}} minuter",
+    "boostExplainer": "Placerar det här inlägget på platsen högst upp i hemflödet under ditt fönster.",
+    "boostFailed": "Kunde inte boosta det inlägget",
+    "boostForMinutes": "Boosta i {{minutes}} minuter",
+    "boostedLabel": "Boostat",
+    "boostsLeft": "{{left}} av {{total}} boostar kvar",
+    "cancelFailed": "Kunde inte avbryta den boosten",
+    "cancelledRefunded": "Boosten avbröts och lades tillbaka i din kvot",
+    "cancelledSpent": "Boosten avbröts. Den hade redan startat, så den räknas som förbrukad.",
+    "colBoosts": "Boostar",
+    "colEach": "Var",
+    "colTier": "Nivå",
+    "colTotal": "Per cykel",
+    "comingSoon": "kommer snart",
+    "finishedCount": "{{count}} avslutade den här cykeln, sedda {{seen}} gånger",
+    "grantLine": "{{boosts}} × {{minutes}} minuter per cykel",
+    "intro": "En badge köper mer än bilden bredvid ditt namn. Varannan vecka ger den boostar — var och en placerar ett inlägg på platsen högst upp i hemflödet. Tretton nivåer, tretton krafter, en upplåsning per steg.",
+    "ladderHeading": "Vad varje nivå ger",
+    "left": "kvar",
+    "liveUntil": "live till {{time}}",
+    "loadFailed": "Kunde inte ladda dina SuperPowers just nu. Försök igen om en stund.",
+    "minutes": "minuter",
+    "needBadge": "SuperPowers kräver en stakingbadge. Staka DHB för att låsa upp dem.",
+    "noBadgeYet": "Du har ingen badge än, alltså inga boostar. Att staka DHB låser upp stegen nedan.",
+    "noBoostsLeft": "Inga boostar kvar den här cykeln",
+    "powersHeading": "De tretton krafterna",
+    "queued": "i kö",
+    "refills": "fylls på {{date}}",
+    "refillsOn": "Fylls på {{date}} — samma ögonblick för alla.",
+    "secondWind": "Andra andningen",
+    "secondWindExplainer": "Det här inlägget är över en vecka gammalt. Andra andningen skickar tillbaka det till toppen av flödet.",
+    "seenCount": "{{count}} visningar",
+    "shareOfVoice": "Boostplatsen roterar. När flera boostar är igång får varje besökare en tilldelad, viktad efter badgenivå — en högre nivå visas oftare, och alla får det fönster de tilldelats.",
+    "spendFor": "{{power}} i {{minutes}} minuter",
+    "spent": "{{power}} har pågått i {{minutes}} minuter",
+    "stakeDhb": "Staka DHB",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} låses upp vid {{tier}}"
   }
 }

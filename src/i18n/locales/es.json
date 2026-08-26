@@ -343,7 +343,8 @@
     "activityLog": "Registro de actividad",
     "endStream": "Finalizar transmisión",
     "linkCopied": "Enlace copiado al portapapeles",
-    "postUrlCopied": "URL de publicación copiada"
+    "postUrlCopied": "URL de publicación copiada",
+    "boostPost": "Impulsar publicación"
   },
   "filters": {
     "sort": "Ordenar",
@@ -774,7 +775,8 @@
     "ppvStartSaving": "Compra contenido Pay-Per-View de tus creadores favoritos para que aparezca aquí.",
     "recentStartSaving": "Tus posts guardados más recientes se mostrarán aquí.",
     "textStartSaving": "Guarda posts de solo texto y aparecerán aquí.",
-    "videosStartSaving": "Guarda posts con vídeos y se recopilarán aquí."
+    "videosStartSaving": "Guarda posts con vídeos y se recopilarán aquí.",
+    "folders": "Carpetas"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -1722,5 +1724,49 @@
       "startTerm": "Historial",
       "start": "— «histórico» significa cada día que Cloudflare aún conserva, hoy {{days}} días desde el {{date}}, el día en que dehub.io pasó a Cloudflare. No hay datos de edge anteriores que mostrar, y los días antiguos van desapareciendo según Cloudflare los caduca."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "¿Qué seguidores deberían verla?",
+    "aimAtTiers": "¿Qué niveles de insignia deberían verla?",
+    "aimPlaceholder": "Nombre de usuario o dirección de cartera",
+    "boost": "Impulsar",
+    "boostBooked": "Impulsada durante {{minutes}} minutos",
+    "boostExplainer": "Coloca esta publicación en el hueco superior del feed principal durante tu ventana.",
+    "boostFailed": "No se pudo impulsar esa publicación",
+    "boostForMinutes": "Impulsar durante {{minutes}} minutos",
+    "boostedLabel": "Impulsada",
+    "boostsLeft": "Quedan {{left}} de {{total}} impulsos",
+    "cancelFailed": "No se pudo cancelar ese impulso",
+    "cancelledRefunded": "Impulso cancelado y devuelto a tu asignación",
+    "cancelledSpent": "Impulso cancelado. Ya había empezado, así que se da por gastado.",
+    "colBoosts": "Impulsos",
+    "colEach": "Cada uno",
+    "colTier": "Nivel",
+    "colTotal": "Por ciclo",
+    "comingSoon": "próximamente",
+    "finishedCount": "{{count}} terminados este ciclo, vistos {{seen}} veces",
+    "grantLine": "{{boosts}} × {{minutes}} minutos por ciclo",
+    "intro": "Una insignia compra más que el dibujo junto a tu nombre. Cada quincena concede impulsos, y cada uno coloca una publicación en el hueco superior del feed principal. Trece niveles, trece poderes, un desbloqueo por peldaño.",
+    "ladderHeading": "Qué concede cada nivel",
+    "left": "restantes",
+    "liveUntil": "en directo hasta las {{time}}",
+    "loadFailed": "No se pudieron cargar tus SuperPoderes ahora mismo. Inténtalo de nuevo en un momento.",
+    "minutes": "minutos",
+    "needBadge": "Los SuperPoderes necesitan una insignia de staking. Haz stake de DHB para desbloquearlos.",
+    "noBadgeYet": "Aún no tienes insignia, así que no hay impulsos. Hacer stake de DHB desbloquea la escalera de abajo.",
+    "noBoostsLeft": "No quedan impulsos este ciclo",
+    "powersHeading": "Los trece poderes",
+    "queued": "en cola",
+    "refills": "se recarga el {{date}}",
+    "refillsOn": "Se recarga el {{date}}, el mismo momento para todo el mundo.",
+    "secondWind": "Segundo Aire",
+    "secondWindExplainer": "Esta publicación tiene más de una semana. Segundo Aire la devuelve a lo más alto del feed.",
+    "seenCount": "{{count}} vistas",
+    "shareOfVoice": "El hueco de impulso rota. Cuando hay varios impulsos activos, a cada persona se le muestra uno ponderado por nivel de insignia: un nivel más alto aparece más a menudo, y todo el mundo recibe la ventana que se le concedió.",
+    "spendFor": "{{power}} durante {{minutes}} minutos",
+    "spent": "{{power}} activo durante {{minutes}} minutos",
+    "stakeDhb": "Hacer stake de DHB",
+    "title": "SuperPoderes",
+    "unlocksAt": "{{power}} se desbloquea en {{tier}}"
   }
 }

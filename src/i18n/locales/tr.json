@@ -351,7 +351,8 @@
     "activityLog": "Etkinlik Günlüğü",
     "endStream": "Yayını Sonlandır",
     "linkCopied": "Bağlantı panoya kopyalandı",
-    "postUrlCopied": "Gönderi URL'si panoya kopyalandı"
+    "postUrlCopied": "Gönderi URL'si panoya kopyalandı",
+    "boostPost": "Gönderiyi öne çıkar"
   },
   "filters": {
     "sort": "Sırala",
@@ -740,7 +741,8 @@
     "ppvStartSaving": "Favori içerik üreticilerinizden Pay-Per-View içerik satın alın, burada görünsün.",
     "recentStartSaving": "En son yer imlerine eklediğiniz gönderiler burada gösterilecek.",
     "textStartSaving": "Yalnızca metin içeren gönderileri yer imlerine ekleyin, burada görünsünler.",
-    "videosStartSaving": "Videolu gönderileri yer imlerine ekleyin, burada toplansınlar."
+    "videosStartSaving": "Videolu gönderileri yer imlerine ekleyin, burada toplansınlar.",
+    "folders": "Klasörler"
   },
   "notifications": {
     "title": "Bildirimler",
@@ -1722,5 +1724,49 @@
       "startTerm": "Geçmiş",
       "start": "— \"tüm zamanlar\", Cloudflare'in hâlâ sakladığı her gün demektir; bugün dehub.io'nun Cloudflare'e geçtiği {{date}} tarihinden itibaren {{days}} gün. Daha eski uç verisi yoktur ve Cloudflare eskittikçe eski günler düşer."
     }
+  },
+  "superpowers": {
+    "aimAtAccount": "Kimin takipçileri görsün?",
+    "aimAtTiers": "Hangi rozet seviyeleri görsün?",
+    "aimPlaceholder": "Kullanıcı adı veya cüzdan adresi",
+    "boost": "Öne çıkar",
+    "boostBooked": "{{minutes}} dakika öne çıkarıldı",
+    "boostExplainer": "Bu gönderiyi senin pencerende ana akışın en üstündeki yere koyar.",
+    "boostFailed": "O gönderi öne çıkarılamadı",
+    "boostForMinutes": "{{minutes}} dakika öne çıkar",
+    "boostedLabel": "Öne çıkarıldı",
+    "boostsLeft": "{{total}} öne çıkarmadan {{left}} tanesi kaldı",
+    "cancelFailed": "O öne çıkarma iptal edilemedi",
+    "cancelledRefunded": "Öne çıkarma iptal edildi ve hakkına geri eklendi",
+    "cancelledSpent": "Öne çıkarma iptal edildi. Zaten başlamıştı, bu yüzden harcanmış sayılır.",
+    "colBoosts": "Öne çıkarmalar",
+    "colEach": "Her biri",
+    "colTier": "Seviye",
+    "colTotal": "Döngü başına",
+    "comingSoon": "yakında",
+    "finishedCount": "Bu döngüde {{count}} tanesi bitti, {{seen}} kez görüldü",
+    "grantLine": "Döngü başına {{boosts}} × {{minutes}} dakika",
+    "intro": "Rozet, adının yanındaki çizimden fazlasını satın alır. İki haftada bir öne çıkarma hakkı verir — her biri bir gönderiyi ana akışın en üstündeki yere koyar. On üç seviye, on üç güç, her basamakta bir açılım.",
+    "ladderHeading": "Her seviye ne veriyor",
+    "left": "kaldı",
+    "liveUntil": "{{time}} saatine kadar yayında",
+    "loadFailed": "SuperPowers şu anda yüklenemedi. Birazdan tekrar dene.",
+    "minutes": "dakika",
+    "needBadge": "SuperPowers için staking rozeti gerekir. Açmak için DHB stake et.",
+    "noBadgeYet": "Henüz rozetin yok, dolayısıyla öne çıkarma da yok. DHB stake etmek aşağıdaki merdiveni açar.",
+    "noBoostsLeft": "Bu döngüde öne çıkarma hakkın kalmadı",
+    "powersHeading": "On üç güç",
+    "queued": "sırada",
+    "refills": "{{date}} tarihinde yenilenir",
+    "refillsOn": "{{date}} tarihinde yenilenir — herkes için aynı anda.",
+    "secondWind": "İkinci Rüzgâr",
+    "secondWindExplainer": "Bu gönderi bir haftadan eski. İkinci Rüzgâr onu akışın en üstüne geri gönderir.",
+    "seenCount": "{{count}} kez görüldü",
+    "shareOfVoice": "Öne çıkarma yeri döner. Aynı anda birden fazla öne çıkarma varsa, her izleyiciye rozet seviyesine göre ağırlıklandırılmış biri gösterilir — daha yüksek seviye daha sık görünür ve herkes kendisine verilen pencereyi alır.",
+    "spendFor": "{{power}} {{minutes}} dakika",
+    "spent": "{{power}} {{minutes}} dakikadır çalışıyor",
+    "stakeDhb": "DHB stake et",
+    "title": "SuperPowers",
+    "unlocksAt": "{{power}} {{tier}} seviyesinde açılır"
   }
 }

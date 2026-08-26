@@ -85,23 +85,43 @@ export function useRecentCompletedJobs(enabled: boolean) {
   });
 }
 
-export function useWorkJob(jobId: string | undefined) {
+/**
+ * A bounty is addressable two ways and both arrive here as a route param.
+ * `/bounty/7` is the canonical form and carries a `job_number`; `/work/<uuid>`
+ * is the shape every link shared before the numbers existed still uses, and
+ * carries the primary key. A bare run of digits is the number — uuids always
+ * contain hyphens and hex letters, so the two can never be confused.
+ */
+function jobKeyColumn(key: string): 'id' | 'job_number' {
+  return /^\d+$/.test(key) ? 'job_number' : 'id';
+}
+
+export function matchesJobKey(job: WorkJob, key: string | undefined): boolean {
+  if (!key) return false;
+  return jobKeyColumn(key) === 'job_number' ? String(job.job_number) === key : job.id === key;
+}
+
+export function useWorkJob(jobKey: string | undefined) {
   const queryClient = useQueryClient();
   return useQuery({
-    queryKey: ['work-job', jobId],
+    queryKey: ['work-job', jobKey],
     queryFn: async () => {
-      const { data, error } = await supabase.from(TBL_JOBS).select('*').eq('id', jobId!).maybeSingle();
+      const column = jobKeyColumn(jobKey!);
+      const { data, error } = await supabase
+        .from(TBL_JOBS).select('*')
+        .eq(column, column === 'job_number' ? Number(jobKey) : jobKey!)
+        .maybeSingle();
       if (error) throw error;
       return data as unknown as WorkJob | null;
     },
-    enabled: !!jobId,
+    enabled: !!jobKey,
     // Instant open from the browse list: those rows are full `select('*')`
     // WorkJob records, so paint the clicked job immediately while the
     // authoritative fetch runs behind it.
     placeholderData: () => {
       for (const query of queryClient.getQueryCache().findAll({ queryKey: ['work-jobs-browse'] })) {
         const rows = query.state.data as WorkJob[] | undefined;
-        const hit = rows?.find?.(j => j.id === jobId);
+        const hit = rows?.find?.(j => matchesJobKey(j, jobKey));
         if (hit) return hit;
       }
       return undefined;
@@ -109,7 +129,8 @@ export function useWorkJob(jobId: string | undefined) {
   });
 }
 
-export function useMyPostedJobs() {
+/** `enabled` lets a tabbed caller skip the fetch for a tab that isn't showing. */
+export function useMyPostedJobs(enabled = true) {
   const { walletAddress } = useAuth();
   return useQuery({
     queryKey: ['work-my-posted', walletAddress],
@@ -121,7 +142,27 @@ export function useMyPostedJobs() {
       if (error) throw error;
       return (data || []) as unknown as WorkJob[];
     },
-    enabled: !!walletAddress,
+    enabled: enabled && !!walletAddress,
+    staleTime: 5 * 60_000,
+  });
+}
+
+/** Every submission this wallet has made, across all jobs, newest first — the "worked on" side of bounty history. */
+export function useMyWorkSubmissions(enabled = true) {
+  const { walletAddress } = useAuth();
+  return useQuery({
+    queryKey: ['work-my-submissions', walletAddress],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from(TBL_SUBS)
+        .select('*, job:work_jobs(*)' as any)
+        .eq('worker_address', walletAddress!.toLowerCase())
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return (data || []) as unknown as (WorkSubmission & { job: WorkJob | null })[];
+    },
+    enabled: enabled && !!walletAddress,
+    staleTime: 5 * 60_000,
   });
 }
 

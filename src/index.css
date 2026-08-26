@@ -255,6 +255,32 @@ All colors MUST be HSL.
   }
 }
 
+/* iOS Safari zooms the whole page in the moment a focused text control computes
+   under 16px, and the zoomed visual viewport lands off to the left — so every
+   tap into a field looks like the page jumped sideways. `overflow-x: clip` on
+   body (above) already stopped the sideways scroll-into-view; this stops the
+   zoom itself, which is the other half of the same symptom.
+
+   Raise every text-entry control to 16px at phone widths — the same threshold
+   shadcn's own `text-base md:text-sm` inputs already sit on, applied to the
+   ~70 hand-rolled `<input>`/`<textarea>` elements that never got it. Controls
+   the design deliberately sets larger (text-lg and up — the post composer, the
+   trade amount field) are left alone; they are already past the threshold and
+   flattening them to 16px would be a visible downgrade. */
+@media (max-width: 767px) {
+  :is(
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']),
+    textarea,
+    select,
+    [contenteditable]:not([contenteditable='false'])
+  ):not(:is(
+    [class*='text-lg'], [class*='text-xl'], [class*='text-2xl'],
+    [class*='text-3xl'], [class*='text-4xl'], [class*='text-5xl']
+  )) {
+    font-size: 16px !important;
+  }
+}
+
 @layer utilities {
   /* Scrollbar Hide */
   .scrollbar-hide {
@@ -1384,22 +1410,14 @@ html[data-theme="system"] [data-feed-nav] {
     inset 0 0 0 1px rgb(255 255 255 / 0.08),
     0 8px 32px rgb(0 0 0 / 0.30) !important;
 }
-/* Mobile: the feed nav is the first bento a user sees, so the glass blur is
-/* Mobile: the feed nav is the first bento a user sees, so the glass blur is
-   unnecessary and adds rendering cost. Keep the tint/shadow so it still reads
-   as a raised surface. */
-@media (max-width: 1023px) {
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="system"]) [data-feed-nav] {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="system"]) [data-feed-nav] [data-glass-indicator] {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-}
 
-/* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
+/* The pill's blur is NOT stripped on mobile. It was, briefly, as a render-cost
+   saving — but osaka and jungle re-declare `backdrop-filter` in their own
+   sheets, which load after this file at equal specificity, so those two kept
+   frosting while cosmic, hazy, swarms, lavalamp, winter and system flattened
+   to a tinted strip. One surface, two materials depending on the theme. The
+   pill matches desktop on every theme; keep it that way. */
+
 /* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
    canvas themes. Without this the opaque black header lets a post's top edge
    pop as a hard bright sliver above the pill during a momentum-scroll clip lag;
@@ -1444,6 +1462,30 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   /* Strong enough to read over the bright nebula/canvas colours — a 45%
      black halo disappears against the dark canvas entirely. */
   filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.9)) drop-shadow(0 2px 5px rgb(0 0 0 / 0.75));
+}
+
+/* Mobile bottom nav pill + toasts — the SAME smoked glass as the top bar
+   above, because they are the same material and were drifting badly.
+   Both ship their tint from the component instead of the glass tokens: the
+   pill hardcodes `bg-zinc-900/10` (a 10% smoke — five and a half times
+   thinner than the top bar's 0.55) and the sonner toast hardcodes
+   `bg-white/10`, a WHITE wash carrying white text. Over dark canvas both
+   just about survive; the moment a white photo or a light post scrolls
+   under them the backdrop wins outright — the pill's icons and the toast's
+   copy sit white-on-white and vanish. The blur is not the problem, the
+   tint is: a backdrop-filter cannot darken anything, it only defocuses.
+   Same values as [data-mobile-header][data-scrolled="true"] — if that
+   recipe changes, change it here too.
+   Scoped to the six themes that inherit the raw component tint. Osaka,
+   jungle and war are excluded on purpose: each already paints both
+   surfaces at 0.72–0.9 in its own sheet, and those load after this file. */
+html:is([data-theme="system"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-bottom-nav] > nav,
+html:is([data-theme="system"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-sonner-toaster] [data-sonner-toast] {
+  /* `system` never joins the canvas-theme block that defines --glass-tint,
+     so the fallback is what actually paints there. Both resolve to zinc-950. */
+  background: rgb(var(--glass-tint, 9 9 11) / 0.55) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
 }
 
 /* Full-screen page wrappers that shipped opaque black (creators application,
@@ -2822,8 +2864,18 @@ html[data-theme="light"] [data-post-drawer] {
 }
 
 /* Mobile bottom nav: the wrapper stays transparent (excluded from the
-   #app-root > div paper remap above) so only the glass pill paints. The
-   centre create button hardcodes a white + on white glass via inline
+   #app-root > div paper remap above) so only the glass pill paints. Its
+   raw bg-zinc-900/10 + backdrop-blur is a near-invisible wash on paper —
+   whatever is scrolling underneath (photos, bright post media) bleeds
+   straight through and the ink icons lose contrast. Give it the same
+   opaque paper panel as the mobile header and sonner toasts instead. */
+html[data-theme="light"] [data-bottom-nav] > nav {
+  background-color: var(--paper) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: var(--hairline-strong) !important;
+}
+/* The centre create button hardcodes a white + on white glass via inline
    styles — flip the glyph and its bubble ring to ink so it reads on paper
    (!important beats the inline styles). */
 html[data-theme="light"] [data-bottom-nav] .lucide-plus {
@@ -3687,6 +3739,44 @@ html[data-theme="light"] [data-wallet-page] .text-white\/30,
 html[data-theme="light"] [data-wallet-page] .text-white\/40,
 html[data-theme="light"] [data-wallet-page] .text-white\/50 {
   color: var(--ink-muted) !important;
+}
+
+/* ==========================================================================
+ * Bounties (/work, /bounty/*, /work/history, /work/post, /work/disputes) —
+ * light theme cleanup.
+ * The Work pages were written against the dark canvas and lean on white
+ * washes: bg-white/5 inputs, border-white/10 hairlines, text-white/30 hints
+ * and bg-white/15-vs-/5 tab states. On paper the search field and the status
+ * select render as blank rectangles with no visible placeholder, the active
+ * tab is indistinguishable from the inactive one, and the loading skeletons
+ * show nothing at all. Same remedy as the wallet page above.
+ * The global .text-white/40–/90 ladder only matches DIRECT children of a
+ * non-button, so /30 and the nested cases still need naming here; and
+ * hover:text-white is only rescued for the eight glass themes, which is why
+ * hovering Back or a tx link made the label vanish on light.
+ * ========================================================================== */
+html[data-theme="light"] [data-work-surface] [class*="bg-white\/"]:not([data-keep-white]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-work-surface] [class*="hover\:bg-white\/"]:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme="light"] [data-work-surface] [class*="border-white\/"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-work-surface] .text-white\/30,
+html[data-theme="light"] [data-work-surface] .text-white\/40,
+html[data-theme="light"] [data-work-surface] .text-white\/50,
+html[data-theme="light"] [data-work-surface] .text-white\/60 {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-work-surface] input::placeholder {
+  color: var(--ink-muted) !important;
+}
+/* `hover:text-white` would repaint ink back to white on paper — invisible.
+   The glass themes get this rescue already; light never did. */
+html[data-theme="light"] [data-work-surface] [class*="hover\:text-white"]:hover {
+  color: var(--ink) !important;
 }
 
 /* ==========================================================================

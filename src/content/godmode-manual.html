@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Godmode Handbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   DeHub Godmode Handbook.
+   Single, deliberate visual world: the brand is strictly monochrome black
+   chrome, and every banner on this page is black art on a black card. A light
+   palette would fight all five images, so the page commits to one theme and
+   paints every colour explicitly rather than borrowing the host's ground.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Neutrals are cooled a hair (a touch of blue in the shadows) so black
+     chrome sits on them rather than on a flat print black. */
+  --ink:        #08080b;
+  --ink-2:      #0c0c10;
+  --slab:       #111116;
+  --slab-2:     #16161c;
+  --edge:       rgba(255,255,255,.085);
+  --edge-2:     rgba(255,255,255,.16);
+  --bracket:    rgba(255,255,255,.42);
+  --text:       #dcdce2;
+  --text-2:     #9a9aa5;
+  --dim:        #6d6d78;
+  --bright:     #ffffff;
+
+  --f-display: "Exo 2", "Segoe UI", system-ui, sans-serif;
+  --f-body:    "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:    "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+
+  --measure: 68ch;
+  --pad: clamp(18px, 4vw, 44px);
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 16.5px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── shell ──────────────────────────────────────────────────────────────── */
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) 120px; }
+.col  { max-width: var(--measure); }
+
+/* ── sticky index bar ───────────────────────────────────────────────────── */
+.bar {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(8,8,11,.86);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--edge);
+}
+.bar-in {
+  max-width: 1080px; margin: 0 auto;
+  padding: 10px var(--pad);
+  display: flex; align-items: center; gap: 22px;
+}
+.bar-mark {
+  font-family: var(--f-mono); font-size: 11.5px; font-weight: 600;
+  letter-spacing: .16em; color: var(--bright); white-space: nowrap;
+}
+.bar-mark span { color: var(--dim); }
+.bar-nav {
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  margin-left: auto;
+}
+.bar-nav::-webkit-scrollbar { display: none; }
+.bar-nav a {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em;
+  color: var(--text-2); text-decoration: none; white-space: nowrap;
+  padding: 5px 9px; border-radius: 6px;
+  transition: background-color .18s, color .18s;
+}
+.bar-nav a:hover { color: var(--bright); background: rgba(255,255,255,.07); }
+.bar-nav a:focus-visible { outline: 2px solid var(--edge-2); outline-offset: 1px; }
+
+/* ── hero ───────────────────────────────────────────────────────────────── */
+.hero { padding-top: clamp(28px, 5vw, 56px); }
+.hero img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--edge);
+}
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 10px 26px;
+  margin-top: 22px; padding-bottom: 26px;
+  border-bottom: 1px solid var(--edge);
+  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim);
+}
+.hero-meta b { color: var(--text); font-weight: 500; }
+.lede {
+  font-size: clamp(18px, 2.1vw, 21px); line-height: 1.55;
+  color: var(--text); margin: 30px 0 0; max-width: var(--measure);
+}
+.lede strong { color: var(--bright); font-weight: 600; }
+
+/* ── sections ───────────────────────────────────────────────────────────── */
+section { padding-top: clamp(56px, 7vw, 90px); }
+.eyebrow {
+  font-family: var(--f-mono); font-size: 11.5px; font-weight: 500;
+  letter-spacing: .17em; text-transform: uppercase; color: var(--dim);
+  margin: 0 0 12px;
+}
+.eyebrow b { color: var(--bright); font-weight: 600; }
+
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+h1 {
+  font-size: clamp(34px, 6vw, 60px); font-weight: 800;
+  letter-spacing: -.026em; line-height: .96; text-transform: uppercase;
+  color: var(--bright); margin: 26px 0 0;
+}
+h2 {
+  font-size: clamp(26px, 3.6vw, 38px); font-weight: 700;
+  letter-spacing: -.022em; line-height: 1.02; text-transform: uppercase;
+  color: var(--bright);
+}
+h3 {
+  font-size: 17px; font-weight: 700; letter-spacing: .01em;
+  color: var(--bright); margin: 34px 0 10px;
+}
+p { margin: 16px 0; max-width: var(--measure); }
+p.wide { max-width: none; }
+a { color: var(--bright); text-decoration-color: var(--edge-2); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--edge-2); outline-offset: 2px; border-radius: 3px; }
+strong { color: var(--bright); font-weight: 600; }
+code {
+  font-family: var(--f-mono); font-size: .86em;
+  background: var(--slab-2); border: 1px solid var(--edge);
+  padding: 1px 6px; border-radius: 5px; color: var(--text);
+}
+
+.rule { height: 1px; background: var(--edge); margin: 0; border: 0; }
+
+/* Section banner art. */
+.plate {
+  margin: 26px 0 6px;
+  border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--edge);
+}
+.plate img { display: block; width: 100%; height: auto; }
+
+/* ── HUD box: four corner brackets, the brand's own chrome device ───────── */
+.hud {
+  position: relative;
+  margin: 26px 0;
+  padding: 20px 22px;
+  background-color: rgba(255,255,255,.028);
+  background-image:
+    linear-gradient(90deg, var(--bracket) 0 16px, transparent 16px calc(100% - 16px), var(--bracket) calc(100% - 16px) 100%),
+    linear-gradient(90deg, var(--bracket) 0 16px, transparent 16px calc(100% - 16px), var(--bracket) calc(100% - 16px) 100%),
+    linear-gradient(180deg, var(--bracket) 0 13px, transparent 13px calc(100% - 13px), var(--bracket) calc(100% - 13px) 100%),
+    linear-gradient(180deg, var(--bracket) 0 13px, transparent 13px calc(100% - 13px), var(--bracket) calc(100% - 13px) 100%);
+  background-size: 100% 1px, 100% 1px, 1px 100%, 1px 100%;
+  background-position: 0 0, 0 100%, 0 0, 100% 0;
+  background-repeat: no-repeat;
+  max-width: var(--measure);
+}
+.hud-label {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: .15em; text-transform: uppercase; color: var(--bright);
+  margin: 0 0 8px;
+}
+.hud p { margin: 0; }
+.hud p + p { margin-top: 10px; }
+.hud.stop { background-color: rgba(255,255,255,.06); }
+
+/* ── numbered procedure ─────────────────────────────────────────────────── */
+/* ── golden rules: the one block that outranks everything else here ─────── */
+.golden {
+  margin: 40px 0 8px;
+  border: 1px solid var(--edge-2);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
+  padding: clamp(22px, 3vw, 34px);
+}
+.golden > .eyebrow { color: var(--bright); margin-bottom: 18px; }
+.golden ol { list-style: none; counter-reset: g; margin: 0; padding: 0; display: grid; gap: 20px; }
+.golden li { counter-increment: g; display: flex; gap: 18px; align-items: flex-start; }
+.golden li::before {
+  content: counter(g);
+  font-family: var(--f-display); font-size: 30px; font-weight: 800;
+  line-height: 1; color: var(--bright); flex: 0 0 auto;
+  min-width: 38px; padding-top: 2px;
+  border-right: 1px solid var(--edge-2);
+}
+.golden li p { margin: 0; max-width: 58ch; }
+.golden li p.lead {
+  font-size: 17.5px; font-weight: 600; color: var(--bright);
+  font-family: var(--f-display); letter-spacing: -.005em; line-height: 1.32;
+}
+.golden li p.note { margin-top: 6px; font-size: 15px; color: var(--text-2); }
+.golden-foot {
+  margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--edge);
+  font-size: 15px; color: var(--text-2); max-width: none;
+}
+@media (max-width: 560px) {
+  .golden li { gap: 13px; }
+  .golden li::before { font-size: 24px; min-width: 28px; }
+}
+
+ol.steps { list-style: none; counter-reset: s; margin: 22px 0; padding: 0; max-width: var(--measure); }
+ol.steps > li {
+  counter-increment: s;
+  position: relative;
+  padding: 0 0 0 46px;
+  margin: 0 0 18px;
+}
+ol.steps > li::before {
+  content: counter(s, decimal-leading-zero);
+  position: absolute; left: 0; top: 1px;
+  font-family: var(--f-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .08em; color: var(--dim);
+  border-left: 1px solid var(--edge-2); padding-left: 12px;
+  line-height: 1.7;
+}
+ol.steps > li > strong:first-child { display: block; }
+
+ul.plain { margin: 16px 0; padding-left: 0; list-style: none; max-width: var(--measure); }
+ul.plain li { position: relative; padding-left: 20px; margin-bottom: 10px; }
+ul.plain li::before {
+  content: ""; position: absolute; left: 0; top: .78em;
+  width: 11px; height: 1px; background: var(--edge-2);
+}
+
+/* Accessible page title — the cover art already sets it typographically. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ── tables ─────────────────────────────────────────────────────────────── */
+.scroll { overflow-x: auto; margin: 24px 0; border: 1px solid var(--edge); border-radius: var(--radius); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14.5px; }
+th, td { text-align: left; padding: 13px 16px; vertical-align: top; border-bottom: 1px solid var(--edge); }
+thead th {
+  font-family: var(--f-mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--dim);
+  background: var(--ink-2); white-space: nowrap;
+}
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:nth-child(even) { background: rgba(255,255,255,.018); }
+td strong { color: var(--bright); }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text-2); }
+
+/* ── chips ──────────────────────────────────────────────────────────────── */
+.chip {
+  display: inline-block;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px; white-space: nowrap;
+  border: 1px solid var(--edge-2); color: var(--text-2);
+}
+.chip.hard { background: var(--bright); color: #08080b; border-color: var(--bright); }
+.chip.soft { border-style: dashed; }
+
+/* ── the page map cards ─────────────────────────────────────────────────── */
+.map { display: grid; gap: 1px; background: var(--edge); border: 1px solid var(--edge); border-radius: var(--radius); overflow: hidden; margin: 24px 0; }
+@media (min-width: 720px) { .map { grid-template-columns: 1fr 1fr; } }
+.map-item { background: var(--ink); padding: 16px 18px; }
+.map-item h4 {
+  font-family: var(--f-display); font-size: 15px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .005em;
+  color: var(--bright); margin: 0 0 5px;
+}
+.map-item p { font-size: 14px; margin: 0; color: var(--text-2); max-width: none; }
+.map-item .who {
+  display: block; margin-top: 8px;
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim);
+}
+
+/* ── footer ─────────────────────────────────────────────────────────────── */
+footer {
+  margin-top: 90px; padding-top: 26px; border-top: 1px solid var(--edge);
+  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--dim);
+  display: flex; flex-wrap: wrap; gap: 8px 24px;
+}
+</style>
+</head>
+<body>
+<nav class="bar">
+  <div class="bar-in">
+    <div class="bar-mark">DEHUB <span>//</span> GODMODE</div>
+    <div class="bar-nav">
+      <a href="#golden">Golden</a>
+      <a href="#s01">01 Start</a>
+      <a href="#s02">02 Access</a>
+      <a href="#s03">03 Roles</a>
+      <a href="#s04">04 Map</a>
+      <a href="#s05">05 Queues</a>
+      <a href="#s06">06 Posts</a>
+      <a href="#s07">07 People</a>
+      <a href="#s08">08 Levers</a>
+      <a href="#s09">09 Rules</a>
+      <a href="#s10">10 Fixes</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <h1 class="sr-only">DeHub Godmode Handbook — moderator and admin manual</h1>
+    <img src="/manual/cover.jpg" alt="DeHub Godmode Handbook cover: chrome shield on a black card">
+    <div class="hero-meta">
+      <span>Panel <b>godmode.dehub.io</b></span>
+      <span>For <b>moderators &amp; admins</b></span>
+      <span>Reading time <b>~12 minutes</b></span>
+    </div>
+    <p class="lede">
+      This is the whole job, in plain words. <strong>You do not need to know how any of it
+      is built.</strong> Read it once end to end, then keep it open on your second screen
+      for the first week.
+    </p>
+
+    <div class="golden" id="golden">
+      <p class="eyebrow">// the golden rules</p>
+      <ol>
+        <li>
+          <div>
+            <p class="lead">Only malicious actors get banned.</p>
+            <p class="note">
+              People gaming the system, scamming users, and the like. A person
+              being disliked, wrong, rude or unpopular is not a malicious actor.
+              If you cannot name the harm they are doing to somebody else, it is
+              not a ban.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <p class="lead">Adult or extreme content gets marked mature, not deleted.</p>
+            <p class="note">
+              It is allowed on DeHub. Marking it mature keeps it off the public
+              feed while leaving it on the creator's profile for the people who
+              came for it. Reach for Mark mature first, every time.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <p class="lead">
+              The only thing deleted without hesitation is child sexual abuse
+              material.
+            </p>
+            <p class="note">
+              Everything else is left to community moderation. If you see this,
+              delete it and tell a super admin immediately — do not investigate
+              it yourself, do not discuss it in a group chat, and do not download
+              anything.
+            </p>
+          </div>
+        </li>
+      </ol>
+      <p class="golden-foot">
+        When a rule below seems to point one way and a golden rule points the
+        other, the golden rule wins. If you are about to do something these three
+        do not cover, that is the moment to ask rather than decide.
+      </p>
+    </div>
+  </header>
+
+  <!-- ─────────────────────────────────────────────── 01 -->
+  <section id="s01">
+    <p class="eyebrow"><b>// 01</b> &nbsp;— &nbsp;what this thing is</p>
+    <h2>The panel</h2>
+    <p>
+      Godmode is DeHub's community control room. It is a separate website from
+      dehub.io — you sign in with a moderator account, not with your wallet, and
+      it is not reachable from the app.
+    </p>
+    <p>
+      <strong>There is no staff here.</strong> DeHub is community owned and
+      community run, and this room is the community looking after itself. You are
+      not an employee policing customers; you are a member of the same place
+      everyone else is in, holding the door. That is the whole reason the rules
+      below lean so hard towards doing less.
+    </p>
+    <p>From it you can:</p>
+    <ul class="plain">
+      <li>look at any user, post, comment, stage or chat message on the platform;</li>
+      <li>hide, rate or remove content that breaks the rules;</li>
+      <li>stop someone posting, commenting, or using the platform at all;</li>
+      <li>answer support tickets and clear the reports queue;</li>
+      <li>announce things to everybody at once.</li>
+    </ul>
+    <div class="hud">
+      <p class="hud-label">// the one thing to remember</p>
+      <p>
+        Every button you press is written to an audit log with your name on it —
+        what you did, to what, when, and the note you typed. That log is a good
+        thing: it protects you when a decision is questioned later. Write your
+        reasons as if someone will read them, because someone will.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 02 -->
+  <section id="s02">
+    <p class="eyebrow"><b>// 02</b> &nbsp;— &nbsp;first time in</p>
+    <h2>Getting in</h2>
+    <div class="plate">
+      <img src="/manual/getting-in.jpg" alt="Section banner: Getting in — password then six digits">
+    </div>
+    <p>
+      You cannot sign yourself up. Somebody already moderating invites you, and
+      the invite arrives as an email with a link that expires after seven days.
+    </p>
+
+    <ol class="steps">
+      <li><strong>Open the invite link.</strong> It takes you to a page called
+        <em>Complete Your Account</em>.</li>
+      <li><strong>Set your name and password.</strong> Minimum eight characters,
+        with at least one capital, one lowercase and one number.</li>
+      <li><strong>Set up two-factor.</strong> Scan the square code with an
+        authenticator app — Google Authenticator, Authy, 1Password, whichever you
+        already use — and type the six digits it shows you.</li>
+      <li><strong>Save your recovery codes.</strong> You get a one-time list of
+        codes. Screenshot them, print them, put them in your password manager.
+        This is the only time you will ever see them.</li>
+      <li><strong>Sign in.</strong> Go to <code>godmode.dehub.io</code>, enter
+        email and password, then the six digits from your app.</li>
+    </ol>
+
+    <div class="hud stop">
+      <p class="hud-label">// if you lose your phone</p>
+      <p>
+        On the code screen, type one of your recovery codes instead of the six
+        digits. Each code works once and is then dead. When you are back in, go to
+        <strong>Profile → Two-factor authentication</strong> and issue a new set.
+      </p>
+    </div>
+
+    <h3>Forgotten password</h3>
+    <p>
+      Click <strong>Forgot password</strong> on the sign-in page and enter your
+      email. Nothing happens automatically — a senior admin has to approve the
+      request on the Admins page and send you back a reset link. Message them so
+      they know it is waiting.
+    </p>
+
+    <h3>Housekeeping</h3>
+    <ul class="plain">
+      <li>Sign out when you finish a shift, especially on a shared machine.</li>
+      <li>Your moderator password is not your dehub.io password. Do not reuse one for
+        the other.</li>
+      <li>Never send anyone a screenshot of a user's email address or wallet.</li>
+    </ul>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 03 -->
+  <section id="s03">
+    <p class="eyebrow"><b>// 03</b> &nbsp;— &nbsp;what you can and cannot touch</p>
+    <h2>Your seat</h2>
+    <div class="plate">
+      <img src="/manual/your-seat.jpg" alt="Section banner: Your seat — four roles, one rulebook">
+    </div>
+    <p>
+      There are four seats. Yours decides which pages appear in the left sidebar
+      and which buttons appear on them. If a button you have read about here is
+      not on your screen, <strong>it is not a bug — your seat does not have
+      it.</strong>
+    </p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Seat</th><th>What it is for</th><th>Can do</th><th>Cannot do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Viewer</strong></td>
+            <td>An outside observer. Safe to hand to a partner or investor.</td>
+            <td>Dashboard, uploads, stages, categories.</td>
+            <td>Sees no users, no reports, no support tickets, no emails. The
+              server refuses those, not just the screen.</td>
+          </tr>
+          <tr>
+            <td><strong>Moderator</strong></td>
+            <td>Day-to-day content work. This is most people.</td>
+            <td>Users, uploads, stages, comments, reports, support, global chat.
+              Hide, flag, pin, delete comments, restrict a user's posting or
+              commenting.</td>
+            <td>No banning, no settings, no admin management, no user email
+              addresses.</td>
+          </tr>
+          <tr>
+            <td><strong>Admin</strong></td>
+            <td>Keeps the moderator group running.</td>
+            <td>Everything a moderator can, plus deleting posts, rating posts
+              mature, ads review, categories, broadcast, inviting other moderators, and
+              the audit log.</td>
+            <td>Still no banning, no platform settings, no server logs, no user
+              email addresses.</td>
+          </tr>
+          <tr>
+            <td><strong>Super admin</strong></td>
+            <td>The keys to the building.</td>
+            <td>All of the above, plus banning, platform settings and
+              maintenance mode, changing anyone's role, and seeing user email
+              addresses.</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hud">
+      <p class="hud-label">// banning is deliberately rare</p>
+      <p>
+        Only a super admin can ban, and that is deliberate. Golden rule 1 sets the
+        bar: a ban is for malicious actors — gaming the system, scamming users —
+        not for people who are wrong or unpleasant. A ban stands until a person
+        lifts it, so it is always a considered decision. Gather the evidence and
+        hand it up.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 04 -->
+  <section id="s04">
+    <p class="eyebrow"><b>// 04</b> &nbsp;— &nbsp;every page in the sidebar</p>
+    <h2>The map</h2>
+    <p>
+      One line each, so you know where to go. The grey line under each is who
+      sees it.
+    </p>
+
+    <div class="map">
+      <div class="map-item"><h4>Dashboard</h4><p>Totals and charts for the whole platform. Where you land after signing in.</p><span class="who">everyone</span></div>
+      <div class="map-item"><h4>Users</h4><p>Search every account. Open one to see their posts, their history, and every restriction on them.</p><span class="who">moderator +</span></div>
+      <div class="map-item"><h4>Uploads</h4><p>Every post: videos, image posts, plain text posts, livestream recordings. Filter, hide, rate, delete.</p><span class="who">everyone</span></div>
+      <div class="map-item"><h4>Stages</h4><p>Live audio rooms. See who is on now, force one to end, delete a recording.</p><span class="who">everyone</span></div>
+      <div class="map-item"><h4>Livestreams</h4><p>Who is live, who is scheduled, what has ended.</p><span class="who">everyone</span></div>
+      <div class="map-item"><h4>Transcripts</h4><p>Search across the transcripts DeHub generates for video, stage and live audio. The fastest way to find a specific claim.</p><span class="who">everyone</span></div>
+      <div class="map-item"><h4>Comments</h4><p>Every comment and reply. Hide, flag, pin, edit or delete, one at a time or in bulk.</p><span class="who">moderator +</span></div>
+      <div class="map-item"><h4>Reports</h4><p>What users have reported. Your main queue — start here.</p><span class="who">moderator +</span></div>
+      <div class="map-item"><h4>Support</h4><p>Help tickets people have filed. Reply, set a status, close.</p><span class="who">moderator +</span></div>
+      <div class="map-item"><h4>Categories</h4><p>The tag list posts are filed under. Add, rename, remove.</p><span class="who">admin +, and viewer</span></div>
+      <div class="map-item"><h4>Global Chat</h4><p>The one platform-wide chat room. Participants, messages, its own moderators, its own ban list.</p><span class="who">moderator +</span></div>
+      <div class="map-item"><h4>Broadcast</h4><p>Send one notification to every user on DeHub. Handle with care.</p><span class="who">admin +</span></div>
+      <div class="map-item"><h4>Ads Review</h4><p>Advertiser campaigns waiting for approval. Approve or reject with a note.</p><span class="who">admin +</span></div>
+      <div class="map-item"><h4>Blocked Devices</h4><p>Phones and browsers blocked from signing up again. Unblock from here.</p><span class="who">moderator +</span></div>
+      <div class="map-item"><h4>Admins</h4><p>Everyone who moderates. Invite, deactivate, approve a password reset, change a role.</p><span class="who">admin +</span></div>
+      <div class="map-item"><h4>Settings</h4><p>Platform-wide switches. Read-only for most seats.</p><span class="who">super admin edits</span></div>
+      <div class="map-item"><h4>Admin Activity</h4><p>The audit trail — every action every moderator has taken.</p><span class="who">admin +</span></div>
+      <div class="map-item"><h4>System Logs</h4><p>Raw server logs. Engineering territory.</p><span class="who">super admin</span></div>
+      <div class="map-item"><h4>System Health</h4><p>Is the server healthy right now.</p><span class="who">admin +</span></div>
+      <div class="map-item"><h4>API Metrics</h4><p>Traffic and response times.</p><span class="who">admin +</span></div>
+    </div>
+
+    <div class="hud">
+      <p class="hud-label">// the search box at the top</p>
+      <p>
+        The bar at the top of every page searches users, uploads and post IDs at
+        once. When someone gives you a link, a username or a wallet address, paste
+        it there first — it is quicker than picking the right page.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 05 -->
+  <section id="s05">
+    <p class="eyebrow"><b>// 05</b> &nbsp;— &nbsp;a normal shift</p>
+    <h2>The daily round</h2>
+    <div class="plate">
+      <img src="/manual/daily-round.jpg" alt="Section banner: The daily round — reports, comments, support">
+    </div>
+    <p>Four queues, in this order. Twenty minutes twice a day clears most days.</p>
+
+    <h3>1 &nbsp;Reports</h3>
+    <p>
+      This is what users have flagged. The page splits into <strong>content
+      reports</strong> (a post) and <strong>user reports</strong> (a person). Open
+      the oldest pending one, look at the actual post or profile, then pick an
+      action.
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>On a post</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Remove</strong></td><td>Takes the post down.</td></tr>
+          <tr><td><strong>Warn creator</strong></td><td>Sends them your reason as a notification. Nothing else changes.</td></tr>
+          <tr><td><strong>Dismiss</strong></td><td>The report was wrong or the post is fine. Closes it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>On a person</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Warn</strong></td><td>A notification with your reason. Start here for a first offence.</td></tr>
+          <tr><td><strong>Restrict posting</strong></td><td>They can still read and comment, but cannot post.</td></tr>
+          <tr><td><strong>Restrict comments</strong></td><td>They can still post, but cannot comment.</td></tr>
+          <tr><td><strong>Ban</strong> <span class="chip hard">super admin</span></td><td>Locks them out of posting, commenting, voting and following.</td></tr>
+          <tr><td><strong>Dismiss</strong></td><td>Nothing to answer. Closes it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Every one of these asks for two boxes. <strong>Reason</strong> is sent to the
+      user — write it so a stranger would understand it. <strong>Admin note</strong>
+      is internal and never leaves the panel — put the evidence there.
+    </p>
+
+    <h3>2 &nbsp;Comments</h3>
+    <p>
+      Filter by <em>Flagged</em> first — the platform automatically flags comments
+      containing suspicious links, and those land here. Per comment you can
+      <strong>Hide</strong>, <strong>Flag</strong>, <strong>Pin</strong>,
+      <strong>Edit</strong> or <strong>Delete</strong>. Tick several and act on them
+      together when one person has spammed a thread.
+    </p>
+    <ul class="plain">
+      <li><strong>Hide</strong> is the gentle one — the comment stops showing, and
+        you can put it back.</li>
+      <li><strong>Delete</strong> is for scams, targeted abuse and spam rings.
+        Prefer Hide whenever you are unsure — a disagreement is not abuse.</li>
+      <li><strong>Pin</strong> sticks a comment to the top of a post. Useful for a
+        creator's own correction.</li>
+    </ul>
+
+    <h3>3 &nbsp;Support</h3>
+    <p>
+      Real people waiting for an answer. Work <em>Urgent</em> and <em>High</em>
+      first, then oldest first. Set the status as you go: <strong>Open →
+      In progress → Resolved → Closed</strong>.
+    </p>
+    <p>
+      The reply box is shown to them in the app <em>and read back word for word by
+      the DeHub assistant</em>, so write full sentences, not shorthand. The internal
+      note box is never shown to anyone outside this group.
+    </p>
+
+    <h3>4 &nbsp;Global Chat</h3>
+    <p>
+      DeHub has one platform-wide chat room. Four tabs:
+      <strong>Participants</strong> (who is in it — make someone a room moderator or
+      ban them from here), <strong>Messages</strong> (delete or pin any message),
+      <strong>Moderators</strong>, and <strong>Banned</strong>. A chat ban only
+      affects chat; it does not touch their account.
+    </p>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 06 -->
+  <section id="s06">
+    <p class="eyebrow"><b>// 06</b> &nbsp;— &nbsp;choosing the right tool</p>
+    <h2>Dealing with a post</h2>
+    <p>
+      Three different buttons look similar and do very different things. This table
+      is the most useful thing in the handbook.
+    </p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Button</th><th>What happens</th><th>Use it when</th><th>Reversible</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Mark mature</strong></td>
+            <td>The post drops out of public discovery — home feed, shorts, search,
+              suggestions. It stays on the author's own profile and anyone with the
+              link can still open it. Adults who opted in still see it.</td>
+            <td>Golden rule 2 — any adult or extreme content. It is allowed on
+              DeHub; it just should not greet a stranger on the home page. This is
+              your default, not your last resort.</td>
+            <td><span class="chip">Yes — Mark safe</span></td>
+          </tr>
+          <tr>
+            <td><strong>Hide</strong></td>
+            <td>The post disappears from <em>every</em> surface, including the
+              author's own profile.</td>
+            <td>You need it gone right now while you check something.</td>
+            <td><span class="chip">Yes — Show</span></td>
+          </tr>
+          <tr>
+            <td><strong>Delete</strong> <span class="chip hard">super admin</span></td>
+            <td>A takedown. The post comes off the platform, and a super admin
+              can restore it if the decision is overturned.</td>
+            <td>Rarely. Golden rule 3 — child sexual abuse material is deleted on
+              sight. For anything else, reach for Mark mature or Hide and ask.</td>
+            <td><span class="chip soft">By a super admin</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hud stop">
+      <p class="hud-label">// a rating you set is final</p>
+      <p>
+        A creator can mark their own post mature, and change their mind. The moment
+        a moderator sets the rating, it is frozen — their edit screen refuses to
+        change it. So be sure before you use it, and put your reasoning in the note.
+      </p>
+    </div>
+
+    <h3>Reading the Uploads page</h3>
+    <ul class="plain">
+      <li><strong>Published</strong> is the default filter and means "live right
+        now". It covers both on-chain and off-chain posts.</li>
+      <li><strong>Off-chain</strong> on a post is normal — the creator chose not to
+        mint it. It is not an error and not "pending".</li>
+      <li><strong>AI Auto-Categorize</strong> re-files a post under better tags. It
+        never changes the content.</li>
+    </ul>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 07 -->
+  <section id="s07">
+    <p class="eyebrow"><b>// 07</b> &nbsp;— &nbsp;escalating on a person</p>
+    <h2>Dealing with a person</h2>
+    <p>
+      Open them from Users, or from any report. Work down this ladder, and only go
+      as far as you need to.
+    </p>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Step</th><th>Action</th><th>They can still…</th></tr></thead>
+        <tbody>
+          <tr><td class="num">01</td><td><strong>Warn</strong></td><td>Everything. They just get a notification.</td></tr>
+          <tr><td class="num">02</td><td><strong>Remove from home feed</strong></td><td>Post, comment, and be found by their followers and on their profile — their posts just stop appearing in public discovery.</td></tr>
+          <tr><td class="num">03</td><td><strong>Disable comments</strong></td><td>Post, browse, watch.</td></tr>
+          <tr><td class="num">04</td><td><strong>Disable posting</strong></td><td>Browse, watch, comment.</td></tr>
+          <tr><td class="num">05</td><td><strong>Ban</strong> <span class="chip hard">super admin</span></td><td>Sign in and look around. They cannot post, comment, vote or follow.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hud">
+      <p class="hud-label">// give it a moment</p>
+      <p>
+        A restriction takes a short moment to reach every part of the platform.
+        Give it a minute and refresh before assuming it did not apply.
+      </p>
+    </div>
+
+    <h3>Sockpuppets — one person, many accounts</h3>
+    <p>
+      On a user's page there is a <strong>Linked accounts</strong> card listing
+      other accounts seen on the same devices or the same internet connection. Read
+      it carefully:
+    </p>
+    <ul class="plain">
+      <li><strong>Shared a device</strong> is a strong signal. The same phone or the
+        same browser profile. Treat it as the same person unless there is a good
+        reason not to.</li>
+      <li><strong>Shared an IP only</strong> is a weak signal. Mobile networks,
+        offices, universities and shared houses all put strangers on one address.
+        Never act on this alone.</li>
+    </ul>
+    <p>
+      The device signal is not available for every account, so an empty card is not
+      proof of anything either way. When you do find a ring, gather the whole list
+      first and hand it to a super admin in one go — working through them one at a
+      time over an hour just teaches them to spread out.
+    </p>
+
+    <h3>Blocked devices</h3>
+    <p>
+      Banning can also block the device behind the account, which stops it signing
+      up again. The <strong>Blocked Devices</strong> page is that list — check it
+      when someone insists they cannot create an account, and unblock if they were
+      caught by mistake.
+    </p>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 08 -->
+  <section id="s08">
+    <p class="eyebrow"><b>// 08</b> &nbsp;— &nbsp;the ones that touch everybody</p>
+    <h2>Heavy levers</h2>
+    <div class="plate">
+      <img src="/manual/heavy-levers.jpg" alt="Section banner: Heavy levers — ban, delete, broadcast">
+    </div>
+    <p>
+      Four controls affect people who were not part of the problem. Read the whole
+      entry before you touch one.
+    </p>
+
+    <h3>Broadcast <span class="chip">admin +</span></h3>
+    <p>
+      Sends one notification to <strong>every user on DeHub</strong>. Title up to
+      100 characters, message up to 500. There is a confirm step, and afterwards a
+      summary of how many were reached. Treat it as a platform-wide announcement,
+      not a marketing channel — reserve it for things everyone genuinely needs to
+      know.
+    </p>
+    <ul class="plain">
+      <li>Choose <strong>Both</strong> for anything genuinely important; mobile app
+        users get a phone push, web users get the in-app bell.</li>
+      <li>Proofread twice. There is no unsend, and no edit.</li>
+      <li>If you are linking to a blog post, paste the full link into the article
+        field rather than into the message.</li>
+    </ul>
+
+    <h3>Maintenance mode <span class="chip hard">super admin</span></h3>
+    <p>
+      This takes the entire platform offline — web and mobile, every user, until
+      someone turns it off. It asks you to type the word
+      <code>MAINTENANCE</code> precisely so it cannot be clicked by accident. Only
+      ever use it when engineering asks you to.
+    </p>
+
+    <h3>The other Settings switches <span class="chip hard">super admin</span></h3>
+    <p>
+      Video uploads, livestreaming and comments each have a platform-wide on/off.
+      Turning one off stops it for everybody, immediately. Change one only when you
+      have been asked to — never to find out what it does.
+    </p>
+
+    <h3>Ads review <span class="chip">admin +</span></h3>
+    <p>
+      Campaigns and their individual creatives wait here for approval.
+      <strong>Approve</strong> puts them in front of users; <strong>Reject</strong>
+      sends your review note back to the advertiser, so write something they can act
+      on rather than "no".
+    </p>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 09 -->
+  <section id="s09">
+    <p class="eyebrow"><b>// 09</b> &nbsp;— &nbsp;how we work</p>
+    <h2>House rules</h2>
+    <ul class="plain">
+      <li><strong>Always fill in the reason.</strong> The user sees it. A restriction
+        with no explanation generates a support ticket, an argument, and often a
+        reversal.</li>
+      <li><strong>Put the evidence in the internal note.</strong> Post IDs, comment
+        text, the report that started it. Future-you will not remember.</li>
+      <li><strong>Prefer the reversible action.</strong> Hide before delete, restrict
+        before ban. You can always escalate tomorrow; you cannot un-send a ban that
+        went out to the wrong person.</li>
+      <li><strong>Let the community do the moderating.</strong> Outside the golden
+        rules, an unpopular post is for downvotes and replies to settle, not for
+        you. Doing less is usually the right call.</li>
+      <li><strong>Never moderate yourself into a dispute you are part of.</strong> If
+        the person has argued with you personally, hand it to another moderator.</li>
+      <li><strong>Do not share what you see here.</strong> Emails, wallets,
+        personal details, ticket contents — none of it leaves the panel. Not in a
+        screenshot, not in a group chat.</li>
+      <li><strong>When in doubt, escalate.</strong> Nobody has ever been told off for
+        asking. Plenty of platforms have been embarrassed by a moderator who
+        guessed.</li>
+    </ul>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── 10 -->
+  <section id="s10">
+    <p class="eyebrow"><b>// 10</b> &nbsp;— &nbsp;before you raise it</p>
+    <h2>If something looks off</h2>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th>What you see</th><th>What it means</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>A button you expected is missing</td>
+            <td>Your seat does not have it. Nothing is broken.</td>
+            <td>Check section 03. Ask an admin if you think it is wrong.</td>
+          </tr>
+          <tr>
+            <td>A page says you do not have access</td>
+            <td>Same thing, from the server's side.</td>
+            <td>Nothing. It is working as designed.</td>
+          </tr>
+          <tr>
+            <td>A page shows an error you do not recognise</td>
+            <td>Something to pass on rather than work around.</td>
+            <td>Screenshot it with the page name and the time, and send it to the
+              group. Do not keep retrying.</td>
+          </tr>
+          <tr>
+            <td>You get signed out</td>
+            <td>These sessions are deliberately short.</td>
+            <td>Sign in again.</td>
+          </tr>
+          <tr>
+            <td>A restriction does not seem to have applied</td>
+            <td>It takes a short moment to reach the whole platform.</td>
+            <td>Wait a minute and refresh before doing it a second time.</td>
+          </tr>
+          <tr>
+            <td>A post shows a "mature" tag you did not set</td>
+            <td>The creator marked it themselves when posting — often a mis-tap.</td>
+            <td>If the content is plainly not adult, Mark safe and leave a note.</td>
+          </tr>
+          <tr>
+            <td>A figure here does not match what you see on dehub.io</td>
+            <td>The two are measured over different windows.</td>
+            <td>Ask before acting on it, and never quote a figure from here
+              outside this group.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hud">
+      <p class="hud-label">// still stuck</p>
+      <p>
+        Take a screenshot, note the exact time, and say what you were trying to do.
+        Those three things turn a twenty-message thread into a two-message one.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <span>DeHub // Godmode Handbook</span>
+    <span>godmode.dehub.io</span>
+    <span>Keep this open for your first week</span>
+  </footer>
+
+</div>
+</body>
+</html>

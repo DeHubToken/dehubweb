@@ -20,6 +20,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
+import { conversationIdentity } from '@/lib/conversation-identity';
+import { useDraftText } from '@/hooks/use-draft';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
@@ -74,6 +76,11 @@ function ConversationItem({
   const { data: onlineStatus } = useUserOnlineStatus(otherAddress || null);
   const isOnline = onlineStatus?.online ?? false;
 
+  // An unsent message left in this thread's composer. Shown in place of the
+  // last message, the way every mail and chat client does it — a draft nobody
+  // can see from the list is indistinguishable from a draft that was lost.
+  const draft = useDraftText(conversationIdentity(conversation));
+
   return (
     <button
       onClick={onClick}
@@ -126,11 +133,18 @@ function ConversationItem({
             </div>
           )}
         </div>
-        <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-zinc-200' : 'text-zinc-500'}`}>
-          {conversation.lastMessage?.type === 'image' ? '📷 Photo' :
-           conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' :
-           lastMessagePreview}
-        </p>
+        {draft ? (
+          <p className="text-sm truncate text-zinc-400">
+            <span className="text-zinc-200 font-medium">Draft: </span>
+            {draft}
+          </p>
+        ) : (
+          <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-zinc-200' : 'text-zinc-500'}`}>
+            {conversation.lastMessage?.type === 'image' ? '📷 Photo' :
+             conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' :
+             lastMessagePreview}
+          </p>
+        )}
       </div>
     </button>
   );
@@ -366,10 +380,15 @@ export default function MessagesPage() {
   }, [chatParamPresent, isMessagesRouteActive]);
 
   // The in-app arrow has to CONSUME the entry we pushed, or it is left dangling
-  // and the next Back walks straight back into the chat.
+  // and the next Back walks straight back into the chat. Don't clear the ref
+  // here — navigate(-1)'s popstate is async, so clearing it early loses the
+  // race with the effect above: it'd see chatEntryRef already false, skip
+  // clearing the selection, and the push effect would immediately re-push
+  // '?chat=1' since chatOpen was still true — undoing the back nav and
+  // forcing a second tap. Leave it true and let that effect reset it once
+  // the URL actually changes.
   const closeChat = useCallback(() => {
     if (chatEntryRef.current) {
-      chatEntryRef.current = false;
       navigate(-1);
       return;
     }
@@ -461,7 +480,15 @@ export default function MessagesPage() {
          every theme. The rows and composer carry their own inner padding. */
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-0 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden`}>
         <DirectMessageChat
-          key={selectedConversation.id}
+          /*
+           * Keyed on WHO, not on the conversation id. A thread you have never
+           * opened starts as "new_0x<addr>" and is swapped for a real ObjectId
+           * a second or two later by the effect above — keyed on the id, that
+           * swap remounted the whole chat and threw away the message being
+           * typed, the scroll position and the reply target. DirectMessageChat
+           * already adopts a new real id in place; this lets it.
+           */
+          key={conversationIdentity(selectedConversation)}
           conversation={selectedConversation}
           initialComposerText={composerPrefill?.convId === selectedConversation.id ? composerPrefill.text : undefined}
           onBack={closeChat}

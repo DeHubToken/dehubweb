@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Briefcase, Eye, Users, Coins, Clock } from 'lucide-react';
 import type { WorkJob } from '../types';
+import { bountyPath } from '../seo';
 
 const TYPE_LABEL: Record<string, string> = {
   shill: 'Comment / Shill',
@@ -12,7 +13,7 @@ export function JobCard({ job }: { job: WorkJob }) {
   const isBoosted = job.boost_expires_at && new Date(job.boost_expires_at) > new Date();
   return (
     <Link
-      to={`/work/${job.id}`}
+      to={bountyPath(job)}
       className="block bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 hover:border-white/20 transition-colors"
     >
       <div className="flex items-start justify-between gap-3 mb-3">

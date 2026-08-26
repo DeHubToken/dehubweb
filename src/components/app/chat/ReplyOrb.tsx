@@ -120,7 +120,6 @@ export function ReplyOrb({ state = 'idle', size = 44, className = '' }: ReplyOrb
           // Latitude is fixed; only the ring sweep is animated.
           marginLeft: -dot / 2,
           marginTop: -dot / 2 + m.y * R,
-          borderRadius: '9999px',
           background: m.bright
             ? 'rgba(255,255,255,0.95)'
             : busy

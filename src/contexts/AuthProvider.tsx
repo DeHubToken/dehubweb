@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { wagmiConfig, clearWagmiStorage } from '@/lib/wagmi';
+import { setBackgroundPaused } from '@/lib/background-gate';
 
 import {
   authenticateWallet,
@@ -55,6 +56,7 @@ import {
 } from '@/lib/connection-source';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
+import { clearPersistedQueryCache } from '@/lib/query-persist';
 import { supabase } from '@/integrations/supabase/client';
 import {
   activateWalletKey,
@@ -418,6 +420,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const openLoginModal = useCallback((options?: { intent?: 'login' | 'add-profile' }) => {
     connectionAbortedRef.current = false;
+    // Freeze the animated WebGL backgrounds BEFORE anything renders. The sheet
+    // composites two full-viewport backdrop-blur layers over them, and with the
+    // fbm/particle shaders running underneath, that first composite is the
+    // visible lag between tap and slide-up on weak GPUs. Same trade docs and
+    // the arcade pages make (lib/background-gate): through the blur a frozen
+    // frame is indistinguishable from an animated one. App schedules the idle
+    // resume once the whole login flow has gone quiet.
+    setBackgroundPaused(true);
     warmWalletOrigins();
     if (options?.intent === 'add-profile') {
       // The user is asking for a multi-account session on this device. The
@@ -2211,6 +2221,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     disconnectDmSocket();
     queryClient.clear();
+    // clear() only empties the in-memory cache. The persisted slice now carries
+    // the conversation list, so it has to be removed outright rather than left
+    // for the idle writer to overwrite — a tab closed right after logging out
+    // never reaches that write.
+    clearPersistedQueryCache();
 
     // Provider-level disconnect AFTER local cleanup (non-blocking)
     try {

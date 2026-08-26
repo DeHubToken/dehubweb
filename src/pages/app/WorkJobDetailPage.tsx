@@ -10,13 +10,19 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { bountyPath, bountyTitle, bountyDescription, bountyUrl, isBountyIndexable } from '@/features/work/seo';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { TxLink, statusBadgeClass, statusLabel } from '@/features/work/components/TxLink';
 
 export default function WorkJobDetailPage() {
-  const { jobId } = useParams<{ jobId: string }>();
+  // Either shape of bounty URL lands here: /bounty/<n> (canonical) or the
+  // legacy /work/<uuid>. useWorkJob resolves both; everything downstream keys
+  // off the row's real uuid, which is what the child tables' job_id holds.
+  const { jobKey } = useParams<{ jobKey: string }>();
   const navigate = useNavigate();
   const { walletAddress, openLoginModal } = useAuth();
-  const { data: job, isLoading } = useWorkJob(jobId);
+  const { data: job, isLoading } = useWorkJob(jobKey);
+  const jobId = job?.id;
   const { data: applications = [] } = useJobApplications(jobId);
   const { data: submissions = [] } = useJobSubmissions(jobId);
   const { data: reviews = [] } = useJobReviews(jobId);
@@ -57,8 +63,16 @@ export default function WorkJobDetailPage() {
   const requireAuth = () => { if (!me) { openLoginModal(); return false; } return true; };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
-      <SEOHead title={`${job.title} — DeHub Bounties`} description={(job.description || 'Open bounty on DeHub.').slice(0, 155)} url={`https://dehub.io/work/${job.id}`} />
+    <div data-work-surface className="max-w-3xl mx-auto px-4 py-6">
+      {/* Same title, description, canonical and indexability the edge worker
+          serves crawlers for this URL — see src/features/work/seo.ts. */}
+      <SEOHead
+        title={bountyTitle(job)}
+        description={bountyDescription(job)}
+        url={bountyUrl(job)}
+        image={job.cover_image_url || 'https://dehub.io/og/work.jpg'}
+        noindex={!isBountyIndexable(job)}
+      />
       <button onClick={() => navigate('/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
@@ -71,16 +85,11 @@ export default function WorkJobDetailPage() {
               <Briefcase className="w-3 h-3" /> {job.job_type}
             </span>
             {job.platform && <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>}
-            <span className={`px-2 py-0.5 rounded-md ${
-              job.status === 'open' ? 'bg-emerald-500/20 text-emerald-300' :
-              job.status === 'disputed' ? 'bg-red-500/20 text-red-300' :
-              job.status === 'completed' ? 'bg-blue-500/20 text-blue-200' :
-              'bg-white/10 text-white/60'
-            }`}>{job.status}</span>
+            <span className={`px-2 py-0.5 rounded-md ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</span>
           </div>
           {isPoster && isJobEditable(job) && (
             <button
-              onClick={() => navigate(`/work/${job.id}/edit`)}
+              onClick={() => navigate(`${bountyPath(job)}/edit`)}
               className="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-medium inline-flex items-center gap-1.5 transition-colors"
             >
               <Pencil className="w-3 h-3" /> Edit
@@ -101,8 +110,9 @@ export default function WorkJobDetailPage() {
           ) : <Stat label="Type" value="Contract" />}
           <Stat label="Slots" value={`${job.units_approved}/${job.max_units}`} />
         </div>
-        <div className="text-[11px] text-white/40 mt-3">
-          Posted by <Link to={`/${job.poster_address}`} className="underline">{job.poster_address.slice(0, 6)}…{job.poster_address.slice(-4)}</Link>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-white/40 mt-3">
+          <span>Posted by <Link to={`/${job.poster_address}`} className="underline">{job.poster_address.slice(0, 6)}…{job.poster_address.slice(-4)}</Link></span>
+          {job.fund_tx_hash && <TxLink label="Escrow funded" txHash={job.fund_tx_hash} />}
         </div>
       </div>
 
@@ -191,7 +201,10 @@ export default function WorkJobDetailPage() {
               </a>
               {s.proof_text && <p className="text-xs text-white/60 mt-1 whitespace-pre-wrap">{s.proof_text}</p>}
               {s.approval_status === 'approved' && s.payout_amount > 0 && (
-                <div className="text-[11px] text-emerald-300 mt-1">Paid {s.payout_amount} {job.currency}</div>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1">
+                  <span className="text-[11px] text-emerald-300">Paid {s.payout_amount} {job.currency}</span>
+                  {s.payout_tx_hash && <TxLink label="Payout tx" txHash={s.payout_tx_hash} />}
+                </div>
               )}
               {isPoster && s.approval_status === 'pending' && (
                 <div className="flex gap-2 mt-2">

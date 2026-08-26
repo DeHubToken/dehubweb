@@ -18,6 +18,7 @@ import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
+import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
 import { LoginModal, prefetchLoginModal } from "@/components/app/LoginModal";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
@@ -163,6 +164,8 @@ const SuperPowersPage = React.lazy(() => import("./pages/app/SuperPowersPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkEditPage = React.lazy(() => import("./pages/app/WorkEditPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
+const WorkHistoryPage = React.lazy(() => import("./pages/app/WorkHistoryPage"));
+const BountyLegacyRedirect = React.lazy(() => import("./pages/app/BountyLegacyRedirect"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 // Eager import — the referral lander is a new user's first touch of DeHub and
 // must paint instantly; it renders outside WalletProviders (see App below) so
@@ -177,6 +180,7 @@ const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
 const ConnectChatGPTPage = React.lazy(() => import("./pages/ConnectChatGPTPage"));
 const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
 const ApkPage = React.lazy(() => import("./pages/ApkPage"));
+const AdminManualPage = React.lazy(() => import("./pages/AdminManualPage"));
 // The arcade player is a standalone full-viewport surface (no AppLayout): the
 // games take the whole window and two of them take the pointer, so the header
 // and sidebars would be in the way rather than useful. Its own chunk, like the
@@ -233,6 +237,22 @@ function migrateStaleCacheOnce() {
 }
 if (typeof window !== 'undefined') {
   migrateStaleCacheOnce();
+  /*
+   * Separate from the migration above, which is a one-shot keyed on a version
+   * number. This runs every boot and is about SIZE: the per-profile and per-DM
+   * caches write one key each and never delete any, and when the shared 5 MB
+   * quota fills the failure is silent — the newest write is the one dropped.
+   *
+   * Imported dynamically and run on idle: nothing on screen waits for it, so
+   * it has no business in the entry bundle (scripts/boot-path-report.mjs).
+   */
+  const runSweep = () => {
+    import("@/lib/local-cache-sweep").then(m => m.sweepLocalCaches()).catch(() => {});
+  };
+  const ric = (window as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void })
+    .requestIdleCallback;
+  if (ric) ric(runSweep, { timeout: 5000 });
+  else setTimeout(runSweep, 3000);
 }
 
 const queryClient = new QueryClient({
@@ -315,9 +335,20 @@ function AppContent() {
   // matching the login drawer's position — instead of the full viewport.
   // See --app-main-center-x, measured in AppLayout, and the matching
   // [data-login-active] rule in index.css.
+  //
+  // The same condition drives the background render gate: openLoginModal
+  // pauses the WebGL backgrounds synchronously at tap time; here it stays
+  // paused for as long as any part of the flow is in flight, and once
+  // everything has gone quiet the resume is deferred past the sheet's exit
+  // animation (see scheduleBackgroundResume).
   useEffect(() => {
     const active = isLoginModalOpen || isConnecting || isProcessingRedirect;
     document.documentElement.toggleAttribute('data-login-active', active);
+    if (active) {
+      setBackgroundPaused(true);
+    } else {
+      scheduleBackgroundResume();
+    }
   }, [isLoginModalOpen, isConnecting, isProcessingRedirect]);
 
   // Capture ?ref=CODE / ?aff=CODE on first load (first-touch wins, 90-day cookie).
@@ -331,18 +362,6 @@ function AppContent() {
     if (!wallet) return;
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
   }, [wallet]);
-
-  // Starter + daily free AI credit — claimed server-side, idempotent per UTC
-  // day, so firing on every sign-in is safe. On a grant, refresh the balance
-  // query so a mounted credit surface agrees with the toast.
-  useEffect(() => {
-    if (!wallet) return;
-    import("@/lib/ai-credit-claim")
-      .then(m => m.claimDailyAiCredit(() => {
-        queryClient.invalidateQueries({ queryKey: ['ai-credits'] });
-      }))
-      .catch(() => undefined);
-  }, [wallet, queryClient]);
 
   return (
     <>
@@ -462,6 +481,12 @@ function AppContent() {
               reached from outside the app far more often than from inside it. */}
           <Route path="/apk" element={<Suspense fallback={<PageLoader />}><ApkPage /></Suspense>} />
 
+          {/* The moderation handbook, published. Standalone for the same reason
+              as /apk — it owns the viewport and is reached from outside the app
+              far more often than from inside it. The same document is served to
+              moderators at godmode.dehub.io/manual. */}
+          <Route path="/admin-manual" element={<Suspense fallback={<PageLoader />}><AdminManualPage /></Suspense>} />
+
           {/* Arcade player. Two segments, so it outranks the /:username
               catch-all inside AppLayout below and never has to be ordered
               against it — but it lives out here rather than in the layout
@@ -549,8 +574,14 @@ function AppContent() {
               <Route path="work" element={null} />
               <Route path="work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
               <Route path="work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
-              <Route path="work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
-              <Route path="work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+              <Route path="work/history" element={<Suspense fallback={<PageLoader />}><WorkHistoryPage /></Suspense>} />
+              {/* A bounty's own URL is /bounty/<n> (work_jobs.job_number). The
+                  /work/<uuid> pair below is the pre-numbers share form and
+                  only redirects — see BountyLegacyRedirect. */}
+              <Route path="bounty/:jobKey" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+              <Route path="bounty/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+              <Route path="work/:jobKey" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect /></Suspense>} />
+              <Route path="work/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect suffix="/edit" /></Suspense>} />
 
               <Route path="communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
@@ -569,8 +600,15 @@ function AppContent() {
             <Route path="/work" element={null} />
             <Route path="/work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
             <Route path="/work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
-            <Route path="/work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
-            <Route path="/work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
+            <Route path="/work/history" element={<Suspense fallback={<PageLoader />}><WorkHistoryPage /></Suspense>} />
+            <Route path="/work/:jobKey" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect /></Suspense>} />
+            <Route path="/work/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><BountyLegacyRedirect suffix="/edit" /></Suspense>} />
+
+            {/* Canonical bounty URLs. `bounty` is reserved in
+                src/lib/reserved-usernames.js so no account can claim the
+                handle and shadow this space. */}
+            <Route path="/bounty/:jobKey" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+            <Route path="/bounty/:jobKey/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
 
             {/* /affiliate alias (page itself is rendered by PersistentPageCache) */}
             <Route path="/affiliate" element={null} />

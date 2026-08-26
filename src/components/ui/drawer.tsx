@@ -81,6 +81,37 @@ function withoutContent(node: React.ReactNode, DrawerContentType: unknown): Reac
 }
 
 /**
+ * Warm requests let a deferred sheet mount out of dormancy BEFORE the
+ * interaction that opens it — a hover or pointerdown on its opener calls
+ * `warmDeferredSheets()`, and any listening dormant sheet does its
+ * dormant→mounting→live dance right there instead of on the click.
+ *
+ * Why this matters: the first open of a deferred sheet costs two commits and a
+ * requestAnimationFrame before `open` can even flip true (see the phase machine
+ * below). On a loaded main thread that is visible dead time between tap and
+ * slide-up. Warming moves it into the hover gap where nobody can see it, and
+ * after that first mount the Root stays mounted anyway — so warming is exactly
+ * "do now what the first click would have done", never extra ongoing cost.
+ *
+ * Opt-in per sheet via the `warmable` prop, and deliberately so: warming is
+ * "mount every dormant Root", and the feed mounts dozens of dormant sheets per
+ * card. If every one of them listened, one stray hover would recreate the
+ * scroll-listener pile-up this whole deferral exists to prevent. Only sheets
+ * whose opener is a primary CTA — the login sheet — opt in.
+ */
+const warmRequests = new Set<() => void>();
+
+export function warmDeferredSheets(): void {
+  warmRequests.forEach((warm) => {
+    try {
+      warm();
+    } catch {
+      /* a throwing subscriber must not block the others */
+    }
+  });
+}
+
+/**
  * Every mounted vaul Root registers a `window` scroll listener for the lifetime
  * of the component — `usePositionFixed` does it with an empty dep array, so it
  * happens whether or not the sheet is open, and the handler reads
@@ -100,7 +131,13 @@ function withoutContent(node: React.ReactNode, DrawerContentType: unknown): Reac
  * up would be a worse trade than the listener. Once live the Root stays mounted,
  * so this costs one frame on a sheet's first open and nothing afterwards.
  */
-const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, children, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => {
+/** Our additions on top of vaul's Root props. */
+type CustomDrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root> & {
+  /** Opt this deferred sheet in to `warmDeferredSheets()` — see the note there. */
+  warmable?: boolean;
+};
+
+const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, warmable = false, children, ...props }: CustomDrawerProps) => {
   const canDeferRef = React.useRef<boolean | null>(null);
   if (canDeferRef.current === null) {
     canDeferRef.current =
@@ -114,6 +151,18 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, chi
   React.useEffect(() => {
     if (phase === "dormant" && props.open) setPhase("mounting");
   }, [phase, props.open]);
+
+  // Same transition the open path runs, just early: a warm request mounts the
+  // Root closed now so the real `open` flip later is same-frame. Once live the
+  // subscription is gone — warming twice does nothing.
+  React.useEffect(() => {
+    if (!canDeferRef.current || !warmable || phase !== "dormant") return;
+    const warm = () => setPhase("mounting");
+    warmRequests.add(warm);
+    return () => {
+      warmRequests.delete(warm);
+    };
+  }, [phase, warmable]);
 
   React.useEffect(() => {
     if (phase !== "mounting") return;

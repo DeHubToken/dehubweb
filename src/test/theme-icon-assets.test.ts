@@ -1,4 +1,4 @@
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { resolveThemeIconAsset } from '@/components/app/war/WarHudIcon';
@@ -52,6 +52,25 @@ describe('theme icon assets', () => {
     for (const theme of ['cosmic', 'lavalamp', 'light', 'minimal']) {
       expect(resolveThemeIconAsset('/assets/home-3d-icon-abc.png', theme)).toBeNull();
       expect(resolveThemeIconAsset('/assets/settings-icon-abc.png', theme)).toBeNull();
+    }
+  });
+
+  it('does not pin page title icons to the System asset path', () => {
+    const pageFiles = [
+      'src/pages/app/AdsPage.tsx',
+      'src/pages/app/ArcadePage.tsx',
+      'src/pages/app/CommandCentrePage.tsx',
+      'src/pages/app/EventsPage.tsx',
+      'src/pages/app/NotificationsPage.tsx',
+      'src/pages/app/SettingsPage.tsx',
+      'src/pages/app/StatsPage.tsx',
+      'src/pages/app/StoresPage.tsx',
+      'src/pages/app/WorkPage.tsx',
+    ];
+
+    for (const file of pageFiles) {
+      const source = readFileSync(resolve(__dirname, '../..', file), 'utf8');
+      expect(source, file).not.toMatch(/<BrandIcon\s+src=["']\/theme-icons\/system\//);
     }
   });
 });

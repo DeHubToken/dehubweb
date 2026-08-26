@@ -15,6 +15,8 @@ export interface ApiCommentResponse {
   likeCount?: number;
   isLiked?: boolean;
   dislikeCount?: number;
+  /** Times this comment has scrolled into a reader's viewport. */
+  views?: number;
   isDisliked?: boolean;
   writor: {
     username: string;

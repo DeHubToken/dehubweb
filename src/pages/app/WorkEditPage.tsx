@@ -5,6 +5,7 @@ import { useWorkJob, useUpdateJob, isJobEditable, isBudgetEditable } from '@/fea
 import type { WorkJob, WorkCurrency, WorkJobType, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
+import { bountyPath, bountyUrl } from '@/features/work/seo';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const PLATFORMS: WorkPlatform[] = ['x', 'youtube', 'instagram', 'tiktok', 'facebook', 'reddit', 'other'];
@@ -31,10 +32,11 @@ function budgetLockReason(job: WorkJob): string {
 }
 
 export default function WorkEditPage() {
-  const { jobId } = useParams<{ jobId: string }>();
+  // /bounty/<n> or the legacy /work/<uuid> — useWorkJob resolves either.
+  const { jobKey } = useParams<{ jobKey: string }>();
   const navigate = useNavigate();
   const { walletAddress, isLoading: authLoading, openLoginModal } = useAuth();
-  const { data: job, isLoading } = useWorkJob(jobId);
+  const { data: job, isLoading } = useWorkJob(jobKey);
   const updateJob = useUpdateJob();
 
   const [title, setTitle] = useState('');
@@ -94,7 +96,7 @@ export default function WorkEditPage() {
             </button>
           )}
           <button
-            onClick={() => navigate(`/work/${job.id}`)}
+            onClick={() => navigate(bountyPath(job))}
             className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm"
           >
             Back to bounty
@@ -132,19 +134,20 @@ export default function WorkEditPage() {
             }
           : undefined,
       });
-      navigate(`/work/${job.id}`);
+      navigate(bountyPath(job));
     } catch { /* toast already shown */ }
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
       <SEOHead
         title={`Edit ${job.title} — DeHub Bounties`}
         description="Edit a bounty you posted on DeHub."
-        url={`https://dehub.io/work/${job.id}/edit`}
+        url={`${bountyUrl(job)}/edit`}
+        noindex
       />
       <button
-        onClick={() => navigate(`/work/${job.id}`)}
+        onClick={() => navigate(bountyPath(job))}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"
       >
         <ArrowLeft className="w-4 h-4" /> Back to bounty
@@ -226,7 +229,7 @@ export default function WorkEditPage() {
           </Field>
 
           <div className="flex gap-2 pt-1">
-            <button onClick={() => navigate(`/work/${job.id}`)} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white">
+            <button onClick={() => navigate(bountyPath(job))} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white">
               Cancel
             </button>
             <button

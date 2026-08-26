@@ -110,6 +110,12 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.get-web3auth-config]
     verify_jwt = false
+  # Governance writes authenticate on the DeHub token in x-dehub-token
+  # (requireDeHubAuth), not on a Supabase JWT — the board has no Supabase user.
+  [functions.governance-proposal]
+    verify_jwt = false
+  [functions.governance-vote]
+    verify_jwt = false
   # Reads are public; writes carry the DeHub token in x-dehub-token and are
   # verified by requireDeHubAuth, not by a Supabase JWT.
   [functions.film-reviews]

@@ -79,6 +79,11 @@ const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/function
 // crawlers downloaded the React shell where a PNG should be and drew no image.
 const SHARE_IMAGE = `${APP_URL}/og/dehub-social-share.png`;
 
+/** Search Console property ownership. Must stay identical to the tag in
+ *  index.html — the two are the same claim served to different user agents,
+ *  and Google removes access to a property it can no longer verify. */
+const GOOGLE_SITE_VERIFICATION = 'fCbsM2lCr6JdQuMh1uHAHwzbLC1OoXzvK-VKFnkbZnQ';
+
 
 // Per-route share cards, rendered from the banner kit into public/og/ and
 // served by the ASSETS binding. Key = the canonical route path without its
@@ -102,7 +107,7 @@ const OG_CARD_ROUTES = new Set([
   'affiliate', 'premium', 'governance', 'leaderboard',
   'top-100', 'music', 'tv', 'cinema',
   'glossary', 'bridge', 'agents', 'assistant',
-  'creators', 'jobs', 'apk',
+  'creators', 'jobs', 'apk', 'admin-manual',
   'raffle', 'stake', 'usernames',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
@@ -901,6 +906,31 @@ const MARKETING_PAGES = {
 <p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile" style="color:#9f9">on Google Play</a>.</p>`,
   },
 
+  // The moderation handbook, published. The page itself is an iframe around a
+  // static document, so a crawler running no JS sees an empty shell — the copy
+  // below is the only thing a search result or an unfurl will ever carry, and
+  // it is deliberately the three golden rules rather than a summary of the
+  // page, because those are the part anyone linking to it is arguing about.
+  'admin-manual': {
+    title: 'The DeHub Moderation Handbook',
+    description: 'The rules our moderators work to, published in full. Only malicious actors get banned, adult content is marked mature rather than deleted, and everything else is left to the community.',
+    heading: 'The DeHub Moderation Handbook',
+    jsonLdType: 'TechArticle',
+    jsonLdExtra: {
+      inLanguage: 'en',
+      isAccessibleForFree: true,
+      about: 'Content moderation policy',
+    },
+    bodyHtml: `<p>DeHub is community owned and community run, so the rules its moderators work to are not an internal document. This is the handbook they read and sign before they can moderate anything, published in full.</p>
+<p>Three golden rules outrank everything else in it:</p>
+<ol>
+<li>Only malicious actors get banned — people gaming the system or scamming users. Being disliked, wrong or unpopular is not a ban.</li>
+<li>Adult or extreme content is marked mature, not deleted. It stays on the creator's profile; it just does not greet a stranger on the home page.</li>
+<li>The only thing deleted without hesitation is child sexual abuse material. Everything else is left to community moderation.</li>
+</ol>
+<p><a href="${APP_URL}/admin-manual" style="color:#9f9">Read the full handbook</a>.</p>`,
+  },
+
   // The rest of SSR_STATIC_ROUTES, moved here from the Supabase fn's own
   // STATIC_ROUTES map. The fn deploys on its own track (`supabase functions
   // deploy ssr-seo`), not with the Cloudflare build, so edits to it sat unshipped
@@ -1158,6 +1188,29 @@ ${primaryNavHtml()}
 const SUPABASE_REST_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/rest/v1';
 const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I';
+
+/** Every row of a PostgREST select, or null. Never throws. */
+async function supabaseRows(query) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 6000);
+  try {
+    const res = await fetch(`${SUPABASE_REST_BASE}/${query}`, {
+      signal: controller.signal,
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        Accept: 'application/json',
+      },
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return Array.isArray(rows) ? rows : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /** First row of a PostgREST select, or null. Never throws. */
 async function supabaseRow(query) {
@@ -1438,6 +1491,89 @@ ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
   });
 }
 
+/**
+ * A single bounty, /bounty/<job_number>.
+ *
+ * Before this existed the whole space was invisible: `work` is a reserved
+ * ROUTE_SEGMENT, so shouldServeSSR's profile fall-through rejected
+ * /work/<uuid>, and every bounty link anyone shared unfurled as the homepage
+ * card under an `X-Robots-Tag: noindex`. Same failure the stages had — the gate
+ * has to learn the route as well as the renderer.
+ *
+ * Title, description and indexability mirror src/features/work/seo.ts, which is
+ * what the SPA writes for the same URL. Change one, change the other: bot copy
+ * that has drifted from browser copy is what cloaking looks like from outside.
+ */
+function bountyMetaDescription(job) {
+  const budget = Number(job.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 });
+  return truncate(
+    job.description ||
+      `A ${job.job_type} bounty on DeHub paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.`,
+    200,
+  );
+}
+
+/** Live bounties are indexable; finished ones are dead listings. */
+function isBountyIndexable(job) {
+  return job.status === 'open' || job.status === 'in_progress';
+}
+
+function buildBountyHtml(job) {
+  const canonicalUrl = `${APP_URL}/bounty/${job.job_number}`;
+  const name = job.title || 'Bounty';
+  const title = `${name} — DeHub Bounties`;
+  const description = bountyMetaDescription(job);
+  // The poster's own cover art when there is one; otherwise the board's card,
+  // which at least says "bounty" rather than showing the generic DeHub banner.
+  const image = absolutize(job.cover_image_url) || shareImage('work');
+  const budget = Number(job.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 });
+
+  // Deliberately NOT schema.org/JobPosting, which is the obvious fit and the
+  // wrong one. Google's JobPosting rich result requires a real hiringOrganization
+  // and either a jobLocation or an applicantLocationRequirements country; a
+  // bounty has an anonymous wallet address for a poster and no geography at all,
+  // so every one of those fields would have to be invented. Inventing them is
+  // what earns a structured-data manual action. `Offer` carries the same facts
+  // — price, currency, what is on offer, when it closes — truthfully, and
+  // schema.org explicitly allows a crypto ticker in priceCurrency.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Offer',
+    name,
+    description,
+    url: canonicalUrl,
+    price: Number(job.total_budget),
+    priceCurrency: job.currency,
+    availability: job.status === 'open'
+      ? 'https://schema.org/InStock'
+      : job.status === 'in_progress'
+        ? 'https://schema.org/LimitedAvailability'
+        : 'https://schema.org/SoldOut',
+    ...(job.created_at ? { validFrom: job.created_at } : {}),
+    ...(job.deadline ? { availabilityEnds: job.deadline } : {}),
+    ...(image ? { image } : {}),
+    itemOffered: { '@type': 'Service', name, ...(job.platform ? { serviceType: job.platform } : {}) },
+    offeredBy: ORG_JSONLD,
+  };
+
+  const deadline = job.deadline ? new Date(job.deadline).toUTCString() : '';
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image,
+    jsonLd,
+    ogType: 'website',
+    noindex: !isBountyIndexable(job),
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/work" style="color:#9f9">Bounties</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><strong>${escHtml(budget)} ${escHtml(job.currency)}</strong> · ${escHtml(job.job_type)}${job.platform ? ` · ${escHtml(job.platform)}` : ''} · ${escHtml(String(job.status).replace(/_/g, ' '))}</p>
+${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
+<p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants</p>`,
+  });
+}
+
 function buildGuidePageHtml(slug, meta) {
   const canonicalUrl = `${APP_URL}/guides/${slug}`;
   return `<!DOCTYPE html>
@@ -1490,7 +1626,7 @@ function buildFallbackHtml(pathname, canonicalUrl) {
   <meta charset="UTF-8">
   <title>${title}</title>
   <meta name="description" content="${description}">
-  <meta property="og:type" content="website">
+${canonicalizePath(pathname) === '/' ? `  <meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}">\n` : ''}  <meta property="og:type" content="website">
   <meta property="og:url" content="${url}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
@@ -1626,6 +1762,11 @@ function shouldServeSSR(pathname) {
   // /stages/1/ fall back to the homepage card while /stages/1 rendered.
   if (/^\/stage\/[0-9a-fA-F-]{16,}\/?$/.test(pathname)) return true;
   if (/^\/stages\/\d+\/?$/.test(pathname)) return true;
+  // Bounties, /bounty/<job_number>. Needed here for exactly the reason stages
+  // were: `bounty` is a reserved ROUTE_SEGMENT, so the profile fall-through at
+  // the foot of this function rejects it and the SPA shell would go out under
+  // a noindex long before the renderer below is reached.
+  if (/^\/bounty\/\d+\/?$/.test(pathname)) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
   // Always SSR for the blog: index + posts at both URL schemes
@@ -2189,6 +2330,38 @@ async function handleRequest(request, env) {
 
   const appTwin = trimmedPath.match(/^\/app\/(guides|docs\/blog)((?:\/.*)?)$/);
   if (appTwin) return redirect301(`${APP_URL}/${appTwin[1]}${appTwin[2] || ''}`);
+
+  // Bounties moved from /work/<uuid> to /bounty/<job_number>. Links to the old
+  // shape are already out in the wild — in chats, in X posts, in the Turkish
+  // community threads the first bounties came from — so the uuid space keeps
+  // resolving forever: look the row up, 301 onto its number. Both the bare and
+  // /app-prefixed forms, and the /edit child, because all three were reachable.
+  //
+  // Ahead of the bot branch on purpose. A 301 is what consolidates the ranking
+  // signal, and it has to reach browsers too, or a human sharing from the
+  // address bar keeps minting uuid links after the switch. The SPA runs the
+  // same lookup for in-app navigation (BountyLegacyRedirect), where no request
+  // gets this far.
+  //
+  // On a miss — deleted row, PostgREST unreachable — fall through rather than
+  // redirect: the SPA's own /work/:jobKey route answers, and a guessed target
+  // would be a lie cached for a year.
+  // /app/bounty/<n> is a real SPA route (the board lives inside the app shell),
+  // and left alone it would self-canonicalize into a duplicate of every bounty.
+  // Nothing links it — bountyPath() always emits the bare form — but a route
+  // that answers is a route Google will eventually find.
+  const appBounty = trimmedPath.match(/^\/app\/bounty\/(\d+)(\/edit)?$/);
+  if (appBounty) return redirect301(`${APP_URL}/bounty/${appBounty[1]}${appBounty[2] || ''}`);
+
+  const legacyBounty = trimmedPath.match(/^(?:\/app)?\/work\/([0-9a-fA-F-]{16,})(\/edit)?$/);
+  if (legacyBounty) {
+    const job = await supabaseRow(
+      `work_jobs?id=eq.${encodeURIComponent(legacyBounty[1])}&select=job_number&limit=1`,
+    );
+    if (job && job.job_number != null) {
+      return redirect301(`${APP_URL}/bounty/${job.job_number}${legacyBounty[2] || ''}`);
+    }
+  }
   const guardNext = async () => {
     const resp = await env.ASSETS.fetch(request);
     if (!isCanonicalHost) {
@@ -2267,6 +2440,35 @@ async function handleRequest(request, env) {
   // HTML page. This proxy runs first at the edge and cannot be shadowed.
   // (/sitemap-static.xml is a real file in public/ and intentionally falls
   // through.)
+
+  // Bounties, straight from PostgREST. Built here rather than as a fourth
+  // sitemap-* Supabase function for the usual reason: those only move on a
+  // manual `supabase functions deploy` that nobody runs, and this ships with
+  // the Cloudflare build. Only live bounties go in — a completed one is
+  // noindex, and submitting a URL we tell Google not to index is a wasted
+  // crawl and a soft-404 signal.
+  if (pathname === '/sitemap-bounties.xml') {
+    const rows = await supabaseRows(
+      'work_jobs?status=in.(open,in_progress)&select=job_number,updated_at&order=job_number.asc&limit=5000',
+    );
+    const urls = (rows || []).map((j) => `  <url>
+    <loc>${APP_URL}/bounty/${j.job_number}</loc>${j.updated_at ? `
+    <lastmod>${new Date(j.updated_at).toISOString().split('T')[0]}</lastmod>` : ''}
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>`).join('\n');
+    return new Response(
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`,
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      },
+    );
+  }
+
   const sitemapMatch = pathname.match(/^\/sitemap(?:-(posts|profiles)-(\d+))?\.xml$/);
   if (sitemapMatch) {
     const [, kind, page] = sitemapMatch;
@@ -2276,7 +2478,19 @@ async function handleRequest(request, env) {
     try {
       const res = await fetch(target);
       if (res.ok) {
-        return new Response(await res.text(), {
+        let body = await res.text();
+        // The index itself is still built by the (undeployable) sitemap-index
+        // function, which will never learn about bounties. Splice the entry in
+        // on the way past — same trick the homepage branch uses to swap that
+        // function's stale og:image. Guarded on the closing tag so a changed
+        // upstream shape degrades to "no bounties listed", not to broken XML.
+        if (!kind && body.includes('</sitemapindex>') && !body.includes('sitemap-bounties.xml')) {
+          body = body.replace(
+            '</sitemapindex>',
+            `  <sitemap><loc>${APP_URL}/sitemap-bounties.xml</loc></sitemap>\n</sitemapindex>`,
+          );
+        }
+        return new Response(body, {
           status: 200,
           headers: {
             // Deployed Supabase fns return text/plain; browsers/crawlers need XML.
@@ -2547,10 +2761,22 @@ async function handleRequest(request, env) {
   // Edge-rendered marketing pages — never proxied to the Supabase fn (its
   // STATIC_ROUTES allowlist predates these routes and 404s them).
   if (Object.hasOwn(MARKETING_PAGES, sectionKey)) {
-    return guard(new Response(buildMarketingHtml(sectionKey, MARKETING_PAGES[sectionKey]), {
-      status: 200,
-      headers: blogHeaders,
-    }));
+    let html = buildMarketingHtml(sectionKey, MARKETING_PAGES[sectionKey]);
+    // The bounty board is the only entry point into /bounty/*, and its bot HTML
+    // is a static description that links to no bounty. Without this the whole
+    // space is sitemap-only — reachable by no link on the site, which is what
+    // Google treats as an orphan and crawls last. The list is the same live
+    // rows the browser sees, so the two variants describe the same board.
+    if (sectionKey === 'work') {
+      const rows = await supabaseRows(
+        'work_jobs?status=in.(open,in_progress)&select=job_number,title,total_budget,currency&order=created_at.desc&limit=25',
+      );
+      if (rows && rows.length) {
+        const items = rows.map((j) => `<li style="margin:6px 0"><a href="${APP_URL}/bounty/${j.job_number}" style="color:#9f9">${escHtml(truncate(j.title || `Bounty #${j.job_number}`, 90))}</a> — ${escHtml(Number(j.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(j.currency || '')}</li>`).join('');
+        html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Open bounties</h2><ul style="list-style:none;padding:0">${items}</ul></section></body>`);
+      }
+    }
+    return guard(new Response(html, { status: 200, headers: blogHeaders }));
   }
 
   // Stores and shop items. `?listing=<id>` is the item; the bare path is the
@@ -2632,6 +2858,31 @@ async function handleRequest(request, env) {
         headers: stage.status === 'ended'
           ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' }
           : blogHeaders,
+      }));
+    }
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    }));
+  }
+
+  // A single bounty. /work/<uuid> 301s onto this shape further up, so by the
+  // time anything reaches here the number is the only address in play.
+  const bountyMatch = cleanPath.match(/^\/bounty\/(\d+)$/);
+  if (bountyMatch) {
+    const job = await supabaseRow(
+      `work_jobs?job_number=eq.${bountyMatch[1]}&select=*&limit=1`,
+    );
+    if (job) {
+      return guard(new Response(buildBountyHtml(job), {
+        status: 200,
+        headers: isBountyIndexable(job)
+          ? blogHeaders
+          : { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
       }));
     }
     return guard(new Response(buildFallbackHtml(pathname, request.url), {
@@ -2791,6 +3042,18 @@ async function handleRequest(request, env) {
     if (pathname === '/') {
       // Bot and browser titles must not diverge; align to the SPA title.
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
+      // Search Console ownership. The tag lives in index.html, which only
+      // browsers ever receive — every bot UA gets this rendered HTML instead,
+      // and it had no tag at all. Verification survives today purely because
+      // Google's checker announces itself as `Google-Site-Verification/1.0`,
+      // which matches nothing in BOT_UA_PATTERN and so falls through to the
+      // SPA shell. Anything that re-checks as Googlebot sees an unverified
+      // site and access to the property goes away quietly — and URL Inspection
+      // (Google-InspectionTool) already renders this HTML, so the tag is
+      // missing from the one view used to debug indexing.
+      if (!html.includes('google-site-verification')) {
+        html = html.replace('</head>', `<meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}"></head>`);
+      }
       // Entity repair on the deployed fn's Organization JSON-LD: its only
       // sameAs pointed at a dead account, so Google couldn't reconcile the
       // brand's real properties into one entity.

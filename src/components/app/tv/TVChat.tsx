@@ -55,6 +55,7 @@ export function TVChat({ channelId, channelName, enabled = true }: TVChatProps) 
       title="Live chat"
       subtitle={channelName}
       listClassName="h-56"
+      draftKey={channelId ? `tv:${channelId}` : null}
       // Playback controls sit right above this; a click in the chat must not
       // reach the card's play/pause handler.
       onClick={(e) => e.stopPropagation()}

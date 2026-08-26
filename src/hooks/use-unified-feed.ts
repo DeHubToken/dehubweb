@@ -410,6 +410,12 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     quotedPost: (item as any).quotedPost || null,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
+    communityAlertPending: (item as any).communityAlertStatus === 'pending',
+    isLocked: item.streamInfo?.isLockContent ?? false,
+    lockedPrice: item.streamInfo?.lockContentAmount,
+    lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
+    isOwner: item.isOwner ?? false,
+    isUnlocked: item.isUnlocked ?? false,
   };
 }
 
