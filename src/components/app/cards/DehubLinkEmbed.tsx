@@ -28,7 +28,6 @@ import { EventLinkEmbed } from '@/components/app/events/EventLinkEmbed';
 import { StageLinkEmbed } from '@/components/app/stages/StageLinkEmbed';
 import { ProfileLinkEmbed } from '@/components/app/profile/ProfileLinkEmbed';
 import { SharedPostEmbed } from '@/components/app/chat/SharedPostEmbed';
-import { BountyLinkEmbed } from '@/features/work/components/BountyLinkEmbed';
 
 /**
  * Lazy, unlike its siblings. This switchboard is on the boot path — every feed
@@ -39,6 +38,17 @@ import { BountyLinkEmbed } from '@/features/work/components/BountyLinkEmbed';
  */
 const FilmLinkEmbed = lazy(() =>
   import('@/components/cinema/FilmLinkEmbed').then((m) => ({ default: m.FilmLinkEmbed }))
+);
+
+/**
+ * Lazy for the same reason as FilmLinkEmbed: `useWorkJob` pulls in
+ * `@/features/work/hooks/use-work`, which imports the on-chain contract stack
+ * (`dehub-work.ts`, `aa-utils.ts`, wagmi, web3auth) for its escrow/payout
+ * paths. A static import put ~90KB of wallet plumbing on the boot path for
+ * every session, the vast majority of which never see a bounty link.
+ */
+const BountyLinkEmbed = lazy(() =>
+  import('@/features/work/components/BountyLinkEmbed').then((m) => ({ default: m.BountyLinkEmbed }))
 );
 
 /**
@@ -161,7 +171,12 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
     case 'stage':
       return <StageLinkEmbed stageId={link.stageId} stageShortId={link.stageShortId} fallback={fallback} />;
     case 'bounty':
-      return <BountyLinkEmbed jobKey={link.bountyJobKey!} path={link.path} fallback={fallback} />;
+      // fallback={null}, not the chip — see the film case above for why.
+      return (
+        <Suspense fallback={null}>
+          <BountyLinkEmbed jobKey={link.bountyJobKey!} path={link.path} fallback={fallback} />
+        </Suspense>
+      );
     case 'film':
       // fallback={null}, not the chip: the chip is what renders when the title
       // fails to LOAD, and flashing it for one frame on every film link while
