@@ -1742,6 +1742,7 @@ export type Database = {
           created_at: string | null
           elevenlabs_voice_id: string
           id: string
+          is_stage_voice: boolean
           name: string
           wallet_address: string
         }
@@ -1749,6 +1750,7 @@ export type Database = {
           created_at?: string | null
           elevenlabs_voice_id: string
           id?: string
+          is_stage_voice?: boolean
           name: string
           wallet_address: string
         }
@@ -1756,6 +1758,7 @@ export type Database = {
           created_at?: string | null
           elevenlabs_voice_id?: string
           id?: string
+          is_stage_voice?: boolean
           name?: string
           wallet_address?: string
         }
@@ -4656,6 +4659,39 @@ export type Database = {
           updated_at?: string
           votes_down?: number
           votes_up?: number
+        }
+        Relationships: []
+      }
+      voice_clone_payments: {
+        Row: {
+          chain: string
+          consumed_at: string | null
+          created_at: string
+          id: string
+          price_dhb: number
+          tx_hash: string
+          voice_id: string | null
+          wallet_address: string
+        }
+        Insert: {
+          chain: string
+          consumed_at?: string | null
+          created_at?: string
+          id?: string
+          price_dhb: number
+          tx_hash: string
+          voice_id?: string | null
+          wallet_address: string
+        }
+        Update: {
+          chain?: string
+          consumed_at?: string | null
+          created_at?: string
+          id?: string
+          price_dhb?: number
+          tx_hash?: string
+          voice_id?: string | null
+          wallet_address?: string
         }
         Relationships: []
       }
