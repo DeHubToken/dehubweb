@@ -1521,7 +1521,7 @@ export const en = {
       'Launch comprehensive SDKs enabling third-party developers to build mini apps and games',
       'Multi-posting software so users can post to all major web2+3 socials from one place',
       'Establish developer marketplace for community-built applications and integrations',
-      'Leading licensing partners, latest blockbusters and major PPVs',
+      'Account marketplace allowing users to trade accounts securely',
       'Commercial integrations with existing streaming and home entertainment brands',
       'DeHub creator studio for simple generative content generation ',
       'Trenchstar: VR trading and community hub release',
