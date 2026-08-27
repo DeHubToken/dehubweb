@@ -1523,7 +1523,7 @@ export const en = {
       'Establish developer marketplace for community-built applications and integrations',
       'Leading licensing partners, latest blockbusters and major PPVs',
       'Commercial integrations with existing streaming and home entertainment brands',
-      'Aggregation of All APIs of current web2+3 Streaming Platforms',
+      'DeHub creator studio for simple generative content generation ',
       'TV & game console apps for maximum global accessibility',
       'V/AR profile hub & consumer data metrics',
       'Educational AI integrations for personalized learning pathways',
