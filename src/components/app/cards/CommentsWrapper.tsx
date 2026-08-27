@@ -1,7 +1,11 @@
 /**
  * CommentsWrapper
  * ===============
- * Feed cards (all breakpoints): inline expandable section that grows the bottom
+ * Phone (<md): full-width bottom-sheet drawer, the same shape as the mobile
+ *   app's comment sheet. Inline expansion left a nested reply with ~200px of
+ *   card to live in and its action row running off the right edge; the sheet
+ *   gives the thread the whole viewport width and 82% of its height.
+ * Feed cards (md and up): inline expandable section that grows the bottom
  *   of the post bento — no drawer, no scrim, the card just gets taller.
  * Immersive surfaces (fullscreen shorts / immersive video, `immersive` prop):
  *   non-modal bottom-sheet drawer, because there is no bento to expand into and
@@ -46,6 +50,17 @@ function useIsTabletOrMobile() {
     return () => window.removeEventListener('resize', check);
   }, []);
   return isTabletOrMobile;
+}
+
+function useIsPhone() {
+  const [isPhone, setIsPhone] = useState(false);
+  useEffect(() => {
+    const check = () => setIsPhone(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return isPhone;
 }
 
 function useAdaptiveDrawerHeight(enabled: boolean) {
@@ -132,11 +147,49 @@ function useWheelChaining(enabled: boolean) {
 
 export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, postAuthorAddress }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
+  const isPhone = useIsPhone();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
   const { isCollapsed } = useSidebarCollapse();
   // Inline expansion only — the immersive drawer sits over fullscreen media and
   // should keep the scroll to itself.
-  const wheelChainRef = useWheelChaining(open && !(isTabletOrMobile && immersive));
+  const wheelChainRef = useWheelChaining(open && !isPhone && !(isTabletOrMobile && immersive));
+
+  // Phone, non-immersive: the sheet. Modal, because unlike the immersive case
+  // there is nothing behind it worth keeping visible, and the scrim is what
+  // makes the thread read as its own surface instead of part of the card.
+  if (isPhone && !immersive) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange} modal dismissible>
+        <DrawerContent
+          glass
+          hideHandle={false}
+          data-comments-wrapper
+          className="flex flex-col overflow-hidden"
+          style={{
+            height: '82dvh',
+            maxHeight: 'calc(100dvh - env(safe-area-inset-top) - 8px)',
+          }}
+        >
+          {/* One padding step and no nested card: the indent budget the replies
+              spend is the viewport's, not what a bento left over. The section itself
+              carries px-2 on mobile, so this is one 12px gutter, not two. */}
+          <div
+            className="flex-1 min-h-0 h-full px-1"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 12px)' }}
+            data-vaul-no-drag
+          >
+            <CommentsSection
+              tokenId={tokenId}
+              onClose={() => onOpenChange(false)}
+              initialTab={initialTab}
+              commentsDisabled={commentsDisabled}
+              postAuthorAddress={postAuthorAddress}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
 
   // Only fullscreen/immersive surfaces use the bottom-sheet drawer. Feed cards
   // fall through to the inline expansion below on every breakpoint.
