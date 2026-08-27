@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { AudioVisualizer } from '../audio';
 import { checkImpersonation } from '@/lib/impersonation';
@@ -351,6 +352,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               />
             )}
             <DehubLinkEmbeds links={commentLinks} />
+            <FeedLinkPreviews text={commentBody} />
             <AssetRefCards refs={commentAssetRefs} />
             {comment.imageUrl && (
               <img
