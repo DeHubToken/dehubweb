@@ -1674,6 +1674,22 @@
     "alsoIn": "{{theme}} හිද තිබේ"
   },
   "stats": {
+    "community": {
+      "title": "ප්‍රජාව",
+      "members": "සාමාජිකයන්",
+      "active": "සක්‍රීය",
+      "today": "අද",
+      "thisWeek": "මේ සතියේ",
+      "thisMonth": "මේ මාසයේ",
+      "thisYear": "මේ වසරේ",
+      "allTime": "සම්පූර්ණ කාලය",
+      "newMembers": "නව සාමාජිකයන්",
+      "chartMembers": "කාලයත් සමඟ සාමාජිකයන්",
+      "chartActive": "සක්‍රීය පුද්ගලයන්",
+      "growth": "මේ මාසයේ +{{percent}}%",
+      "growthTerm": "වර්ධනය",
+      "recordingSince": "{{date}} සිට වාර්තා වේ"
+    },
     "title": "සංඛ්‍යාලේඛන",
     "subtitle": "තත්‍ය කාලීන විවෘත මූලාශ්‍ර තොරතුරු",
     "live": "සජීවී",

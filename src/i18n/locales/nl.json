@@ -1895,6 +1895,22 @@
     "alsoIn": "Ook in {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Community",
+      "members": "Leden",
+      "active": "Actief",
+      "today": "Vandaag",
+      "thisWeek": "Deze week",
+      "thisMonth": "Deze maand",
+      "thisYear": "Dit jaar",
+      "allTime": "Alle tijd",
+      "newMembers": "Nieuwe leden",
+      "chartMembers": "Leden in de tijd",
+      "chartActive": "Actieve mensen",
+      "growth": "+{{percent}}% deze maand",
+      "growthTerm": "Groei",
+      "recordingSince": "vastgelegd sinds {{date}}"
+    },
     "title": "Statistieken",
     "subtitle": "Realtime opensource-inzicht",
     "live": "Live",

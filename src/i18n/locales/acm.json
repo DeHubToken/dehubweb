@@ -1634,6 +1634,22 @@
     "alsoIn": "بعد بـ{{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "المجتمع",
+      "members": "الأعضاء",
+      "active": "نشط",
+      "today": "اليوم",
+      "thisWeek": "هالأسبوع",
+      "thisMonth": "هالشهر",
+      "thisYear": "هالسنة",
+      "allTime": "كل الوكت",
+      "newMembers": "أعضاء جداد",
+      "chartMembers": "الأعضاء بمرور الوكت",
+      "chartActive": "الناس الناشطين",
+      "growth": "+{{percent}}% هالشهر",
+      "growthTerm": "النمو",
+      "recordingSince": "مسجّل من {{date}}"
+    },
     "title": "الإحصائيات",
     "subtitle": "استخبارات مفتوحة المصدر بالوقت الحقيقي",
     "live": "مباشر",

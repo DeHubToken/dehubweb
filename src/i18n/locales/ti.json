@@ -1617,6 +1617,22 @@
     "alsoIn": "ኣብ {{theme}} እውን"
   },
   "stats": {
+    "community": {
+      "title": "ማሕበረሰብ",
+      "members": "ኣባላት",
+      "active": "ንቑሕ",
+      "today": "ሎሚ",
+      "thisWeek": "ኣብዚ ሰሙን",
+      "thisMonth": "ኣብዚ ወርሒ",
+      "thisYear": "ኣብዚ ዓመት",
+      "allTime": "ኩሉ ግዜ",
+      "newMembers": "ሓደስቲ ኣባላት",
+      "chartMembers": "ኣባላት ብግዜ",
+      "chartActive": "ንጡፋት ሰባት",
+      "growth": "+{{percent}}% ኣብዚ ወርሒ",
+      "growthTerm": "ዕብየት",
+      "recordingSince": "ካብ {{date}} ጀሚሩ ይምዝገብ"
+    },
     "title": "ስታትስቲክስ",
     "subtitle": "ብቐጥታ ግዜ ዝርከብ ክፉት ምንጪ ሓበሬታ",
     "live": "ቀጥታ",

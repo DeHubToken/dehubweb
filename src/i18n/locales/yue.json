@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} 都有"
   },
   "stats": {
+    "community": {
+      "title": "社群",
+      "members": "成員",
+      "active": "活躍",
+      "today": "今日",
+      "thisWeek": "今個星期",
+      "thisMonth": "今個月",
+      "thisYear": "今年",
+      "allTime": "全部時間",
+      "newMembers": "新成員",
+      "chartMembers": "成員變化",
+      "chartActive": "活躍用戶",
+      "growth": "今個月 +{{percent}}%",
+      "growthTerm": "增長",
+      "recordingSince": "由 {{date}} 開始記錄"
+    },
     "title": "統計",
     "subtitle": "即時開源情報",
     "live": "直播",

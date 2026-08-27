@@ -1612,6 +1612,22 @@
     "alsoIn": "{{theme}} temasynda-da bar"
   },
   "stats": {
+    "community": {
+      "title": "Jemgyýet",
+      "members": "Agzalar",
+      "active": "Işjeň",
+      "today": "Bu gün",
+      "thisWeek": "Bu hepde",
+      "thisMonth": "Bu aý",
+      "thisYear": "Bu ýyl",
+      "allTime": "Ähli döwür",
+      "newMembers": "Täze agzalar",
+      "chartMembers": "Wagtyň dowamynda agzalar",
+      "chartActive": "Işjeň adamlar",
+      "growth": "+{{percent}}% bu aý",
+      "growthTerm": "Ösüş",
+      "recordingSince": "{{date}} senesinden bäri ýazylýar"
+    },
     "title": "Statistika",
     "subtitle": "Hakyky wagtdaky açyk çeşme maglumaty",
     "live": "Göni",

@@ -1634,6 +1634,22 @@
     "alsoIn": "Herwiha li {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Civak",
+      "members": "Endam",
+      "active": "Çalak",
+      "today": "Îro",
+      "thisWeek": "Vê hefteyê",
+      "thisMonth": "Vê mehê",
+      "thisYear": "Vê salê",
+      "allTime": "Hemû Dem",
+      "newMembers": "Endamên nû",
+      "chartMembers": "Endam bi demê re",
+      "chartActive": "Kesên çalak",
+      "growth": "+{{percent}}% vê mehê",
+      "growthTerm": "Mezinbûn",
+      "recordingSince": "ji {{date}} ve tê tomarkirin"
+    },
     "title": "Statîstîk",
     "subtitle": "Agahiya çavkaniya vekirî ya rast-dem",
     "live": "Zindî",

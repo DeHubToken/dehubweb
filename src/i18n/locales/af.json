@@ -1760,6 +1760,22 @@
     "alsoIn": "Kom ook in {{theme}} voor"
   },
   "stats": {
+    "community": {
+      "title": "Gemeenskap",
+      "members": "Lede",
+      "active": "Aktief",
+      "today": "Vandag",
+      "thisWeek": "Hierdie week",
+      "thisMonth": "Hierdie maand",
+      "thisYear": "Hierdie jaar",
+      "allTime": "Die hele tyd",
+      "newMembers": "Nuwe lede",
+      "chartMembers": "Lede oor tyd",
+      "chartActive": "Aktiewe mense",
+      "growth": "+{{percent}}% hierdie maand",
+      "growthTerm": "Groei",
+      "recordingSince": "opgeteken sedert {{date}}"
+    },
     "title": "Statistiek",
     "subtitle": "Intydse oopbron-inligting",
     "live": "Regstreeks",

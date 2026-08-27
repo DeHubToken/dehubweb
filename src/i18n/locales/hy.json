@@ -1634,6 +1634,22 @@
     "alsoIn": "Կա նաև {{theme}} թեմայում"
   },
   "stats": {
+    "community": {
+      "title": "Համայնք",
+      "members": "Անդամներ",
+      "active": "Ակտիվ",
+      "today": "Այսօր",
+      "thisWeek": "Այս շաբաթ",
+      "thisMonth": "Այս ամիս",
+      "thisYear": "Այս տարի",
+      "allTime": "Ամբողջ ժամանակը",
+      "newMembers": "Նոր անդամներ",
+      "chartMembers": "Անդամները ժամանակի ընթացքում",
+      "chartActive": "Ակտիվ մարդիկ",
+      "growth": "+{{percent}}% այս ամիս",
+      "growthTerm": "Աճ",
+      "recordingSince": "գրանցվում է {{date}}-ից"
+    },
     "title": "Վիճակագրություն",
     "subtitle": "Իրական ժամանակի բաց կոդով տվյալներ",
     "live": "Ուղիղ",

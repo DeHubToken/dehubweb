@@ -1612,6 +1612,22 @@
     "alsoIn": "{{theme}} में भी"
   },
   "stats": {
+    "community": {
+      "title": "समुदाय",
+      "members": "सदस्य",
+      "active": "सक्रिय",
+      "today": "आज",
+      "thisWeek": "ई हफ्ता",
+      "thisMonth": "ई महीना",
+      "thisYear": "ई साल",
+      "allTime": "पूरा समय",
+      "newMembers": "नया सदस्य",
+      "chartMembers": "समय के साथ सदस्य",
+      "chartActive": "सक्रिय लोग",
+      "growth": "+{{percent}}% ई महीना",
+      "growthTerm": "बढ़ोतरी",
+      "recordingSince": "{{date}} से रिकॉर्ड होखत बा"
+    },
     "title": "आँकड़ा",
     "subtitle": "रीयल-टाइम ओपन सोर्स जानकारी",
     "live": "लाइव",

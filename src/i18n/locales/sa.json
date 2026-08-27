@@ -1617,6 +1617,22 @@
     "alsoIn": "{{theme}} इत्यस्मिन्नपि"
   },
   "stats": {
+    "community": {
+      "title": "समुदायः",
+      "members": "सदस्याः",
+      "active": "सक्रियम्",
+      "today": "अद्य",
+      "thisWeek": "अस्मिन् सप्ताहे",
+      "thisMonth": "अस्मिन् मासे",
+      "thisYear": "अस्मिन् वर्षे",
+      "allTime": "सर्वकालः",
+      "newMembers": "नूतनसदस्याः",
+      "chartMembers": "कालक्रमेण सदस्याः",
+      "chartActive": "सक्रियजनाः",
+      "growth": "+{{percent}}% अस्मिन् मासे",
+      "growthTerm": "वृद्धिः",
+      "recordingSince": "{{date}} तः अभिलिख्यते"
+    },
     "title": "सांख्यिकी",
     "subtitle": "तात्कालिकं मुक्तस्रोतगुप्तवार्ता",
     "live": "प्रत्यक्षम्",

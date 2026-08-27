@@ -1634,6 +1634,22 @@
     "alsoIn": "También en {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Comunidad",
+      "members": "Miembros",
+      "active": "Activos",
+      "today": "Hoy",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mes",
+      "thisYear": "Este año",
+      "allTime": "Histórico",
+      "newMembers": "Miembros nuevos",
+      "chartMembers": "Evolución de miembros",
+      "chartActive": "Personas activas",
+      "growth": "+{{percent}} % este mes",
+      "growthTerm": "Crecimiento",
+      "recordingSince": "registrado desde el {{date}}"
+    },
     "title": "Estadísticas",
     "subtitle": "Inteligencia de código abierto en tiempo real",
     "live": "En vivo",

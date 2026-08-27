@@ -1634,6 +1634,22 @@
     "alsoIn": "Akwai kuma a cikin {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Al'umma",
+      "members": "Membobi",
+      "active": "Mai aiki",
+      "today": "Yau",
+      "thisWeek": "Wannan mako",
+      "thisMonth": "Wannan wata",
+      "thisYear": "Wannan shekara",
+      "allTime": "Dukan lokacin",
+      "newMembers": "Sabbin membobi",
+      "chartMembers": "Membobi cikin lokaci",
+      "chartActive": "Mutane masu aiki",
+      "growth": "+{{percent}}% wannan wata",
+      "growthTerm": "Girma",
+      "recordingSince": "an rubuta tun {{date}}"
+    },
     "title": "Kididdiga",
     "subtitle": "Bayanan buɗaɗɗen tushe na ainihin lokaci",
     "live": "Kai tsaye",

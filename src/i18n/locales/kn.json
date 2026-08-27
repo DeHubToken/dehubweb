@@ -1612,6 +1612,22 @@
     "alsoIn": "{{theme}} ನಲ್ಲಿಯೂ ಸಹ"
   },
   "stats": {
+    "community": {
+      "title": "ಸಮುದಾಯ",
+      "members": "ಸದಸ್ಯರು",
+      "active": "ಸಕ್ರಿಯ",
+      "today": "ಇಂದು",
+      "thisWeek": "ಈ ವಾರ",
+      "thisMonth": "ಈ ತಿಂಗಳು",
+      "thisYear": "ಈ ವರ್ಷ",
+      "allTime": "ಆಲ್ ಟೈಮ್",
+      "newMembers": "ಹೊಸ ಸದಸ್ಯರು",
+      "chartMembers": "ಕಾಲಾನಂತರ ಸದಸ್ಯರು",
+      "chartActive": "ಸಕ್ರಿಯ ಜನರು",
+      "growth": "+{{percent}}% ಈ ತಿಂಗಳು",
+      "growthTerm": "ಬೆಳವಣಿಗೆ",
+      "recordingSince": "{{date}} ರಿಂದ ದಾಖಲಾಗುತ್ತಿದೆ"
+    },
     "title": "ಅಂಕಿಅಂಶಗಳು",
     "subtitle": "ರಿಯಲ್-ಟೈಮ್ ಮುಕ್ತ ಮೂಲ ಇಂಟೆಲ್",
     "live": "ಲೈವ್",

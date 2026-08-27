@@ -1612,6 +1612,22 @@
     "alsoIn": "Мөн {{theme}}-д"
   },
   "stats": {
+    "community": {
+      "title": "Хамт олон",
+      "members": "Гишүүд",
+      "active": "Идэвхтэй",
+      "today": "Өнөөдөр",
+      "thisWeek": "Энэ 7 хоног",
+      "thisMonth": "Энэ сар",
+      "thisYear": "Энэ жил",
+      "allTime": "Бүх цаг",
+      "newMembers": "Шинэ гишүүд",
+      "chartMembers": "Гишүүдийн өөрчлөлт",
+      "chartActive": "Идэвхтэй хүмүүс",
+      "growth": "+{{percent}}% энэ сард",
+      "growthTerm": "Өсөлт",
+      "recordingSince": "{{date}}-с хойш бүртгэж байна"
+    },
     "title": "Статистик",
     "subtitle": "Бодит цагийн нээлттэй эх сурвалжийн мэдээлэл",
     "live": "Шууд",

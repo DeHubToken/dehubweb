@@ -1504,6 +1504,22 @@
     "alsoIn": "Также в теме {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Сообщество",
+      "members": "Участники",
+      "active": "Активные",
+      "today": "Сегодня",
+      "thisWeek": "На этой неделе",
+      "thisMonth": "В этом месяце",
+      "thisYear": "В этом году",
+      "allTime": "За всё время",
+      "newMembers": "Новые участники",
+      "chartMembers": "Участники по времени",
+      "chartActive": "Активные люди",
+      "growth": "+{{percent}}% за месяц",
+      "growthTerm": "Рост",
+      "recordingSince": "записывается с {{date}}"
+    },
     "title": "Статистика",
     "subtitle": "Открытая аналитика в реальном времени",
     "live": "В эфире",

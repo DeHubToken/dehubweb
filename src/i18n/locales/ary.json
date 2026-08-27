@@ -1664,6 +1664,22 @@
     "alsoIn": "كاين حتى فـ {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "المجتمع",
+      "members": "الأعضاء",
+      "active": "نشط",
+      "today": "ليوم",
+      "thisWeek": "هاد السيمانة",
+      "thisMonth": "هاد الشهر",
+      "thisYear": "هاد العام",
+      "allTime": "كل الفترة",
+      "newMembers": "أعضاء جداد",
+      "chartMembers": "الأعضاء مع الوقت",
+      "chartActive": "الناس النشيطين",
+      "growth": "+{{percent}}% هاد الشهر",
+      "growthTerm": "النمو",
+      "recordingSince": "مسجّل من {{date}}"
+    },
     "title": "الإحصائيات",
     "subtitle": "معلومات مفتوحة المصدر فالوقت الحقيقي",
     "live": "مباشر",

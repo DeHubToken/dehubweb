@@ -1647,6 +1647,22 @@
     "alsoIn": "Ou im {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Gmeinschaft",
+      "members": "Mitglieder",
+      "active": "Aktiv",
+      "today": "Hüt",
+      "thisWeek": "Die Wuche",
+      "thisMonth": "Dä Monet",
+      "thisYear": "Das Jahr",
+      "allTime": "Sit Aafang",
+      "newMembers": "Neui Mitglieder",
+      "chartMembers": "Mitglieder mit de Zit",
+      "chartActive": "Aktivi Lüt",
+      "growth": "+{{percent}} % dä Monet",
+      "growthTerm": "Wachstum",
+      "recordingSince": "ufzeichnet sit {{date}}"
+    },
     "title": "Statistike",
     "subtitle": "Echtzyt Open-Source-Date",
     "live": "Live",

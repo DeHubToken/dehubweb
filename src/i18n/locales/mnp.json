@@ -1656,6 +1656,22 @@
     "alsoIn": "也在 {{theme}} 内底"
   },
   "stats": {
+    "community": {
+      "title": "社区",
+      "members": "成员",
+      "active": "活跃",
+      "today": "今天",
+      "thisWeek": "这周",
+      "thisMonth": "这个月",
+      "thisYear": "今年",
+      "allTime": "全部时间",
+      "newMembers": "新成员",
+      "chartMembers": "成员变化",
+      "chartActive": "活跃用户",
+      "growth": "这个月 +{{percent}}%",
+      "growthTerm": "增长",
+      "recordingSince": "自 {{date}} 起记录"
+    },
     "title": "数据",
     "subtitle": "实时开源情报",
     "live": "实时",

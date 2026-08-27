@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} 里向也有"
   },
   "stats": {
+    "community": {
+      "title": "社区",
+      "members": "成员",
+      "active": "活跃",
+      "today": "今朝",
+      "thisWeek": "搿个礼拜",
+      "thisMonth": "搿个月",
+      "thisYear": "今年",
+      "allTime": "全部时间",
+      "newMembers": "新成员",
+      "chartMembers": "成员变化",
+      "chartActive": "活跃用户",
+      "growth": "搿个月 +{{percent}}%",
+      "growthTerm": "增长",
+      "recordingSince": "从 {{date}} 开始记录"
+    },
     "title": "统计",
     "subtitle": "实时开源情报",
     "live": "直播",

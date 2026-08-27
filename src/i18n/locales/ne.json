@@ -1656,6 +1656,22 @@
     "alsoIn": "{{theme}} मा पनि"
   },
   "stats": {
+    "community": {
+      "title": "समुदाय",
+      "members": "सदस्यहरू",
+      "active": "सक्रिय",
+      "today": "आज",
+      "thisWeek": "यो हप्ता",
+      "thisMonth": "यो महिना",
+      "thisYear": "यो वर्ष",
+      "allTime": "सबै समय",
+      "newMembers": "नयाँ सदस्यहरू",
+      "chartMembers": "समयसँगै सदस्यहरू",
+      "chartActive": "सक्रिय व्यक्तिहरू",
+      "growth": "+{{percent}}% यो महिना",
+      "growthTerm": "वृद्धि",
+      "recordingSince": "{{date}} देखि अभिलेख गरिँदै"
+    },
     "title": "तथ्याङ्क",
     "subtitle": "वास्तविक-समयको खुला स्रोत जानकारी",
     "live": "प्रत्यक्ष",

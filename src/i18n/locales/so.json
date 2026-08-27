@@ -1634,6 +1634,22 @@
     "alsoIn": "Sidoo kale wuxuu ku jiraa {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Bulshada",
+      "members": "Xubnaha",
+      "active": "Firfircoon",
+      "today": "Maanta",
+      "thisWeek": "Toddobaadkan",
+      "thisMonth": "Bishan",
+      "thisYear": "Sannadkan",
+      "allTime": "Waqtiga oo dhan",
+      "newMembers": "Xubno cusub",
+      "chartMembers": "Xubnaha waqti ka waqti",
+      "chartActive": "Dad firfircoon",
+      "growth": "+{{percent}}% bishan",
+      "growthTerm": "Koritaan",
+      "recordingSince": "waa la duubayaa tan iyo {{date}}"
+    },
     "title": "Tirakoob",
     "subtitle": "Xog furan oo waqti dhab ah",
     "live": "Toos ah",

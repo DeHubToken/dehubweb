@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} وچ وی"
   },
   "stats": {
+    "community": {
+      "title": "برادری",
+      "members": "ممبر",
+      "active": "فعال",
+      "today": "اَج",
+      "thisWeek": "ایہ ہفتہ",
+      "thisMonth": "ایہ مہینا",
+      "thisYear": "ایہ سال",
+      "allTime": "پورا ویلا",
+      "newMembers": "نویں ممبر",
+      "chartMembers": "ویلے نال ممبر",
+      "chartActive": "فعال لوک",
+      "growth": "+{{percent}}% ایہ مہینا",
+      "growthTerm": "ودھارا",
+      "recordingSince": "{{date}} کنوں ریکارڈ تھیندا پیا اے"
+    },
     "title": "انگ",
     "subtitle": "حقیقی ویلے دی کھلی سورس خبر",
     "live": "لائیو",

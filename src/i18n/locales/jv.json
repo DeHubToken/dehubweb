@@ -1634,6 +1634,22 @@
     "alsoIn": "Ana uga ing {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Komunitas",
+      "members": "Anggota",
+      "active": "Aktif",
+      "today": "Dina Iki",
+      "thisWeek": "Minggu Iki",
+      "thisMonth": "Sasi Iki",
+      "thisYear": "Taun Iki",
+      "allTime": "Kabeh wektu",
+      "newMembers": "Anggota anyar",
+      "chartMembers": "Anggota saka wektu",
+      "chartActive": "Wong sing aktif",
+      "growth": "+{{percent}}% sasi iki",
+      "growthTerm": "Wutuh",
+      "recordingSince": "direkam wiwit {{date}}"
+    },
     "title": "Statistik",
     "subtitle": "Informasi sumber terbuka wektu nyata",
     "live": "Langsung",

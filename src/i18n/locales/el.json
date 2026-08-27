@@ -1664,6 +1664,22 @@
     "alsoIn": "Υπάρχει και στο {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Κοινότητα",
+      "members": "Μέλη",
+      "active": "Ενεργά",
+      "today": "Σήμερα",
+      "thisWeek": "Αυτή την εβδομάδα",
+      "thisMonth": "Αυτόν τον μήνα",
+      "thisYear": "Αυτό το έτος",
+      "allTime": "Όλο το διάστημα",
+      "newMembers": "Νέα μέλη",
+      "chartMembers": "Μέλη με την πάροδο του χρόνου",
+      "chartActive": "Ενεργά άτομα",
+      "growth": "+{{percent}}% αυτόν τον μήνα",
+      "growthTerm": "Ανάπτυξη",
+      "recordingSince": "καταγράφεται από {{date}}"
+    },
     "title": "Στατιστικά",
     "subtitle": "Πληροφορίες ανοιχτού κώδικα σε πραγματικό χρόνο",
     "live": "Ζωντανά",

@@ -1664,6 +1664,22 @@
     "alsoIn": "در {{theme}} هم هست"
   },
   "stats": {
+    "community": {
+      "title": "انجمن",
+      "members": "اعضا",
+      "active": "فعال",
+      "today": "امروز",
+      "thisWeek": "این هفته",
+      "thisMonth": "این ماه",
+      "thisYear": "امسال",
+      "allTime": "کل دوره",
+      "newMembers": "اعضای جدید",
+      "chartMembers": "اعضا در طول زمان",
+      "chartActive": "افراد فعال",
+      "growth": "+{{percent}}٪ این ماه",
+      "growthTerm": "رشد",
+      "recordingSince": "ثبت‌شده از {{date}}"
+    },
     "title": "آمار",
     "subtitle": "اطلاعات متن‌باز بی‌درنگ",
     "live": "زنده",

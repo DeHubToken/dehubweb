@@ -1667,6 +1667,22 @@
     "alsoIn": "Сондай-ақ {{theme}} ішінде"
   },
   "stats": {
+    "community": {
+      "title": "Қауымдастық",
+      "members": "Мүшелер",
+      "active": "Белсенді",
+      "today": "Бүгін",
+      "thisWeek": "Осы аптада",
+      "thisMonth": "Осы айда",
+      "thisYear": "Осы жылда",
+      "allTime": "Барлық уақыт",
+      "newMembers": "Жаңа мүшелер",
+      "chartMembers": "Уақыт бойынша мүшелер",
+      "chartActive": "Белсенді адамдар",
+      "growth": "+{{percent}}% осы айда",
+      "growthTerm": "Өсу",
+      "recordingSince": "{{date}} бастап жазылуда"
+    },
     "title": "Статистика",
     "subtitle": "Нақты уақыттағы ашық көзді барлау",
     "live": "Тікелей",

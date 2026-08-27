@@ -1634,6 +1634,22 @@
     "alsoIn": "També hi és a {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Comunitat",
+      "members": "Membres",
+      "active": "Actiu",
+      "today": "Avui",
+      "thisWeek": "Aquesta setmana",
+      "thisMonth": "Aquest mes",
+      "thisYear": "Aquest any",
+      "allTime": "Tot el període",
+      "newMembers": "Membres nous",
+      "chartMembers": "Evolució de membres",
+      "chartActive": "Persones actives",
+      "growth": "+{{percent}}% aquest mes",
+      "growthTerm": "Creixement",
+      "recordingSince": "registrat des del {{date}}"
+    },
     "title": "Estadístiques",
     "subtitle": "Intel·ligència de codi obert en temps real",
     "live": "En directe",

@@ -1803,6 +1803,22 @@
     "alsoIn": "Nasa {{theme}} din"
   },
   "stats": {
+    "community": {
+      "title": "Komunidad",
+      "members": "Mga miyembro",
+      "active": "Aktibo",
+      "today": "Ngayon",
+      "thisWeek": "Ngayong linggo",
+      "thisMonth": "Ngayong buwan",
+      "thisYear": "Ngayong taon",
+      "allTime": "Buong panahon",
+      "newMembers": "Mga bagong miyembro",
+      "chartMembers": "Mga miyembro sa paglipas ng panahon",
+      "chartActive": "Mga aktibong tao",
+      "growth": "+{{percent}}% ngayong buwan",
+      "growthTerm": "Paglago",
+      "recordingSince": "itinatala mula {{date}}"
+    },
     "title": "Istatistika",
     "subtitle": "Real-time na open source na impormasyon",
     "live": "Live",

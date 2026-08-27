@@ -1612,6 +1612,22 @@
     "alsoIn": "A bɛ {{theme}} kɔnɔ fana"
   },
   "stats": {
+    "community": {
+      "title": "Jamana",
+      "members": "Tɔndenw",
+      "active": "Baaraden",
+      "today": "Bi",
+      "thisWeek": "Nin dɔgɔkun",
+      "thisMonth": "Nin kalo",
+      "thisYear": "Nin san",
+      "allTime": "Waati bɛɛ",
+      "newMembers": "Tɔnden kuraw",
+      "chartMembers": "Tɔndenw waati kɔnɔ",
+      "chartActive": "Mɔgɔ baaradenw",
+      "growth": "+{{percent}}% nin kalo",
+      "growthTerm": "Yiriwali",
+      "recordingSince": "a sɛbɛnna kabini {{date}}"
+    },
     "title": "Kunnafoniw",
     "subtitle": "Kunnafoni dayɛlɛlen waati yɛrɛ la",
     "live": "JƆNA",

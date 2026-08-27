@@ -1702,6 +1702,22 @@
     "alsoIn": "Także w {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Społeczność",
+      "members": "Członkowie",
+      "active": "Aktywni",
+      "today": "Dzisiaj",
+      "thisWeek": "Ten tydzień",
+      "thisMonth": "Ten miesiąc",
+      "thisYear": "Ten rok",
+      "allTime": "Cały okres",
+      "newMembers": "Nowi członkowie",
+      "chartMembers": "Członkowie w czasie",
+      "chartActive": "Aktywne osoby",
+      "growth": "+{{percent}}% w tym miesiącu",
+      "growthTerm": "Wzrost",
+      "recordingSince": "rejestrowane od {{date}}"
+    },
     "title": "Statystyki",
     "subtitle": "Otwartoźródłowe dane w czasie rzeczywistym",
     "live": "Na żywo",

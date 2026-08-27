@@ -1634,6 +1634,22 @@
     "alsoIn": "Ada juga di {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Komunitas",
+      "members": "Anggota",
+      "active": "Aktif",
+      "today": "Hari ini",
+      "thisWeek": "Minggu ini",
+      "thisMonth": "Bulan ini",
+      "thisYear": "Tahun ini",
+      "allTime": "Sepanjang waktu",
+      "newMembers": "Anggota baru",
+      "chartMembers": "Anggota dari waktu ke waktu",
+      "chartActive": "Orang aktif",
+      "growth": "+{{percent}}% bulan ini",
+      "growthTerm": "Pertumbuhan",
+      "recordingSince": "dicatat sejak {{date}}"
+    },
     "title": "Statistik",
     "subtitle": "Intel sumber terbuka waktu nyata",
     "live": "Langsung",

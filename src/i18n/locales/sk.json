@@ -1808,6 +1808,22 @@
     "alsoIn": "Nájdeš aj v {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Komunita",
+      "members": "Členovia",
+      "active": "Aktívni",
+      "today": "Dnes",
+      "thisWeek": "Tento týždeň",
+      "thisMonth": "Tento mesiac",
+      "thisYear": "Tento rok",
+      "allTime": "Celé obdobie",
+      "newMembers": "Noví členovia",
+      "chartMembers": "Vývoj počtu členov",
+      "chartActive": "Aktívni ľudia",
+      "growth": "+{{percent}} % tento mesiac",
+      "growthTerm": "Rast",
+      "recordingSince": "zaznamenávané od {{date}}"
+    },
     "title": "Štatistiky",
     "subtitle": "Otvorené dáta v reálnom čase",
     "live": "Naživo",

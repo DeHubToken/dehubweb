@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} mövzusunda da var"
   },
   "stats": {
+    "community": {
+      "title": "İcma",
+      "members": "Üzvlər",
+      "active": "Aktiv",
+      "today": "Bu gün",
+      "thisWeek": "Bu həftə",
+      "thisMonth": "Bu ay",
+      "thisYear": "Bu il",
+      "allTime": "Bütün dövr",
+      "newMembers": "Yeni üzvlər",
+      "chartMembers": "Zaman üzrə üzvlər",
+      "chartActive": "Aktiv istifadəçilər",
+      "growth": "+{{percent}}% bu ay",
+      "growthTerm": "Artım",
+      "recordingSince": "{{date}} tarixindən qeydə alınır"
+    },
     "title": "Statistika",
     "subtitle": "Real vaxt açıq mənbə məlumatları",
     "live": "Canlı",

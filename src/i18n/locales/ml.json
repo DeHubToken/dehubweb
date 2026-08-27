@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} തീമിലും ഉണ്ട്"
   },
   "stats": {
+    "community": {
+      "title": "സമൂഹം",
+      "members": "അംഗങ്ങൾ",
+      "active": "സജീവം",
+      "today": "ഇന്ന്",
+      "thisWeek": "ഈ ആഴ്ച",
+      "thisMonth": "ഈ മാസം",
+      "thisYear": "ഈ വർഷം",
+      "allTime": "മുഴുവൻ കാലം",
+      "newMembers": "പുതിയ അംഗങ്ങൾ",
+      "chartMembers": "കാലക്രമേണ അംഗങ്ങൾ",
+      "chartActive": "സജീവരായ ആളുകൾ",
+      "growth": "+{{percent}}% ഈ മാസം",
+      "growthTerm": "വളർച്ച",
+      "recordingSince": "{{date}} മുതൽ രേഖപ്പെടുത്തുന്നു"
+    },
     "title": "സ്ഥിതിവിവരം",
     "subtitle": "തത്സമയ ഓപ്പൺ സോഴ്‌സ് വിവരം",
     "live": "തത്സമയം",

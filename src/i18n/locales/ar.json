@@ -1638,6 +1638,22 @@
     "alsoIn": "موجودة أيضًا في {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "المجتمع",
+      "members": "الأعضاء",
+      "active": "نشط",
+      "today": "اليوم",
+      "thisWeek": "هذا الأسبوع",
+      "thisMonth": "هذا الشهر",
+      "thisYear": "هذا العام",
+      "allTime": "كل الفترة",
+      "newMembers": "أعضاء جدد",
+      "chartMembers": "الأعضاء عبر الزمن",
+      "chartActive": "الأشخاص النشطون",
+      "growth": "+{{percent}}% هذا الشهر",
+      "growthTerm": "النمو",
+      "recordingSince": "مسجَّل منذ {{date}}"
+    },
     "title": "الإحصاءات",
     "subtitle": "معلومات مفتوحة المصدر في الوقت الحقيقي",
     "live": "مباشر",

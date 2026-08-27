@@ -1683,6 +1683,22 @@
     "alsoIn": "{{theme}} میں بھی"
   },
   "stats": {
+    "community": {
+      "title": "برادری",
+      "members": "رکن",
+      "active": "فعال",
+      "today": "آج",
+      "thisWeek": "اس ہفتے",
+      "thisMonth": "اس مہینے",
+      "thisYear": "اس سال",
+      "allTime": "پورا وقت",
+      "newMembers": "نئے رکن",
+      "chartMembers": "وقت کے ساتھ رکن",
+      "chartActive": "فعال لوگ",
+      "growth": "+{{percent}}% اس مہینے",
+      "growthTerm": "بڑھوتری",
+      "recordingSince": "{{date}} سے ریکارڈ ہو رہا ہے"
+    },
     "title": "انگ",
     "subtitle": "حقیقی وقت کے کھلل سورس خبر",
     "live": "لائیو",

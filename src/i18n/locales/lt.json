@@ -1634,6 +1634,22 @@
     "alsoIn": "Yra ir temoje {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Bendruomenė",
+      "members": "Nariai",
+      "active": "Aktyvūs",
+      "today": "Šiandien",
+      "thisWeek": "Šią savaitę",
+      "thisMonth": "Šį mėnesį",
+      "thisYear": "Šiais metais",
+      "allTime": "Visas laikas",
+      "newMembers": "Nauji nariai",
+      "chartMembers": "Narių kaita",
+      "chartActive": "Aktyvūs žmonės",
+      "growth": "+{{percent}} % šį mėnesį",
+      "growthTerm": "Augimas",
+      "recordingSince": "fiksuojama nuo {{date}}"
+    },
     "title": "Statistika",
     "subtitle": "Atvirojo kodo duomenys realiu laiku",
     "live": "Tiesiogiai",

@@ -20,6 +20,8 @@ import { useTranslation } from 'react-i18next';
 import {
   Area,
   AreaChart,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -35,6 +37,8 @@ import {
   Globe,
   Loader2,
   ShieldCheck,
+  UserPlus,
+  Users,
 } from 'lucide-react';
 
 import { SEOHead } from '@/components/SEOHead';
@@ -47,6 +51,7 @@ import {
   type SiteStatsResponse,
   type SiteStatsUnavailable,
 } from '@/hooks/use-site-stats';
+import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
 import { cn } from '@/lib/utils';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
@@ -376,6 +381,374 @@ function ProvenancePanel({ stats }: { stats: SiteStats }) {
 }
 
 // ---------------------------------------------------------------------------
+// Community
+// ---------------------------------------------------------------------------
+
+/**
+ * How many days of member history each range draws.
+ *
+ * The platform records the day somebody joined, not the hour, so the two hourly
+ * ranges have nothing hourly to show. Rather than draw one lonely point they
+ * fall back to a fortnight, and the card states the span it actually covers
+ * instead of borrowing the tab's label.
+ */
+function communityWindowDays(range: Range): number | null {
+  if (range === 'all') return null;
+  if (range === '30d') return 30;
+  if (range === '7d') return 7;
+  return 14;
+}
+
+/**
+ * All time spans years, and `27/8` repeats once a year — so a chart that wide
+ * gets month/year ticks instead. The tooltip always carries the full date, so
+ * no reading of the chart depends on the tick alone.
+ */
+function formatSpanLabel(iso: string, spanDays: number): string {
+  if (spanDays > 370) {
+    const [year, month] = iso.split('-');
+    return `${parseInt(month, 10)}/${year.slice(2)}`;
+  }
+  return formatDayLabel(iso);
+}
+
+/**
+ * Tooltip for the community charts: the full date, then each drawn series by
+ * name. `newLabel` adds the day's signups, which are in the data but not drawn
+ * — putting them on the axis would need a second scale for a number two orders
+ * of magnitude smaller than the curve they belong to.
+ */
+function CommunityTooltip({
+  active,
+  payload,
+  newLabel,
+}: {
+  active?: boolean;
+  payload?: { value: number | null; name?: string; payload: { date: string; newUsers?: number } }[];
+  newLabel?: string;
+}) {
+  if (!active || !payload?.length) return null;
+  const row = payload[0].payload;
+  return (
+    <div data-keep-dark className="rounded-xl bg-zinc-900 border border-zinc-700 px-3 py-2 shadow-lg">
+      <div className="text-[11px] text-zinc-400 mb-1">{row.date}</div>
+      {payload.map((entry) => (
+        <div key={entry.name} className="text-xs text-white tabular-nums">
+          {formatCount(entry.value)} <span className="text-zinc-400">{entry.name}</span>
+        </div>
+      ))}
+      {newLabel && row.newUsers != null && (
+        <div className="text-xs text-white tabular-nums">
+          +{formatCount(row.newUsers)} <span className="text-zinc-400">{newLabel}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** One number in a labelled row, matching the edge-health card's shape. */
+function MiniFigure({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="text-center">
+      <div className="text-base font-bold text-white tabular-nums">{value}</div>
+      <div className="text-[10px] text-zinc-500 leading-tight mt-0.5">{label}</div>
+    </div>
+  );
+}
+
+/**
+ * Who is actually here, as opposed to how much traffic arrived.
+ *
+ * Same counts and the same growth arithmetic as the admin dashboard, read from
+ * a public endpoint so the figure on this page and the figure in godmode cannot
+ * drift apart. It renders nothing at all when that endpoint is unreachable —
+ * the traffic half of the page stands on its own, and a permanent error card
+ * for a section nobody asked to see would be noise.
+ */
+function CommunitySection({ range }: { range: Range }) {
+  const { t } = useTranslation();
+  const { data: stats } = useUserStats();
+
+  const windowDays = communityWindowDays(range);
+
+  const view = useMemo(() => {
+    if (!stats) return null;
+    const all = stats.history.days;
+    const days = windowDays == null ? all : all.slice(-windowDays);
+    const span = days.length;
+
+    return {
+      span,
+      members: days.map((d) => ({
+        date: d.date,
+        label: formatSpanLabel(d.date, span),
+        total: d.total,
+        newUsers: d.newUsers,
+      })),
+      // Days before the recorder first ran carry no active figures, and are
+      // dropped rather than drawn as zero — nobody being here and nobody
+      // having counted are not the same thing.
+      active: days
+        .filter((d) => d.activeDaily != null)
+        .map((d) => ({
+          date: d.date,
+          label: formatSpanLabel(d.date, span),
+          daily: d.activeDaily,
+          weekly: d.activeWeekly,
+          monthly: d.activeMonthly,
+        })),
+    };
+  }, [stats, windowDays]);
+
+  if (!stats || !view) return null;
+
+  const { totals, active, newUsers, growth, history, provenance } = stats;
+  const membersLabel = t('stats.community.members', 'Members');
+  const newMembersLabel = t('stats.community.newMembers', 'New members');
+  const windowHint =
+    windowDays == null
+      ? t('stats.community.allTime', 'All time')
+      : t('stats.countries.window', 'last {{days}} days', { days: view.span });
+
+  const periods = [
+    { key: 'today', label: t('stats.community.today', 'Today'), value: newUsers.today },
+    { key: 'week', label: t('stats.community.thisWeek', 'This week'), value: newUsers.thisWeek },
+    { key: 'month', label: t('stats.community.thisMonth', 'This month'), value: newUsers.thisMonth },
+    { key: 'year', label: t('stats.community.thisYear', 'This year'), value: newUsers.thisYear },
+    { key: 'all', label: t('stats.community.allTime', 'All time'), value: newUsers.allTime },
+  ];
+
+  return (
+    <>
+      {/* Headline: the platform's size, and how much of it showed up. */}
+      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Users className="w-4 h-4 text-zinc-400" />
+          <span className="text-sm font-semibold text-white">
+            {t('stats.community.title', 'Community')}
+          </span>
+          <a
+            href={USER_STATS_ENDPOINT}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors ml-auto truncate"
+          >
+            /api/stats/users
+          </a>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 items-center">
+          <div>
+            <div className="text-3xl font-bold text-white tabular-nums">
+              {formatCount(totals.total)}
+            </div>
+            <div className="text-sm text-zinc-500">{membersLabel}</div>
+            {growth.monthly != null && (
+              <div className="text-xs text-zinc-400 mt-1">
+                {t('stats.community.growth', '+{{percent}}% this month', {
+                  percent: growth.monthly,
+                })}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <div className="text-[11px] uppercase tracking-wide text-zinc-500 mb-1.5">
+              {t('stats.community.active', 'Active')}
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <MiniFigure value={formatCount(active.daily)} label={t('stats.community.today', 'Today')} />
+              <MiniFigure
+                value={formatCount(active.weekly)}
+                label={t('stats.community.thisWeek', 'This week')}
+              />
+              <MiniFigure
+                value={formatCount(active.monthly)}
+                label={t('stats.community.thisMonth', 'This month')}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* New members by period — the same five figures the admin panel shows. */}
+      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <UserPlus className="w-4 h-4 text-zinc-400" />
+          <span className="text-sm font-semibold text-white">{newMembersLabel}</span>
+        </div>
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+          {periods.map((p) => (
+            <MiniFigure key={p.key} value={formatCount(p.value)} label={p.label} />
+          ))}
+        </div>
+      </div>
+
+      {/* The growth curve. Same currentColor treatment as the traffic chart, so
+          every theme restyles it without a per-theme branch. */}
+      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+        <div className="flex items-baseline justify-between mb-3">
+          <span className="text-sm font-semibold text-white">
+            {t('stats.community.chartMembers', 'Members over time')}
+          </span>
+          <span className="text-[11px] text-zinc-500">{windowHint}</span>
+        </div>
+        {view.members.length === 0 ? (
+          <div className="flex items-center justify-center h-44 text-zinc-500 text-sm">
+            {t('stats.chart.empty', 'No data for this window yet')}
+          </div>
+        ) : (
+          <div className="text-white">
+            <ResponsiveContainer width="100%" height={180}>
+              <AreaChart data={view.members} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="statsMembersFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="currentColor" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="currentColor" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="label"
+                  tick={{ fontSize: 10, fill: 'currentColor', opacity: 0.45 }}
+                  tickLine={false}
+                  axisLine={false}
+                  interval="preserveStartEnd"
+                  minTickGap={16}
+                />
+                {/* The curve sits on top of a historic baseline, so a zero-based
+                    axis would flatten a fortnight of real movement into one
+                    thick line. The padding keeps a flat window from collapsing
+                    into a degenerate domain. */}
+                <YAxis
+                  tick={{ fontSize: 10, fill: 'currentColor', opacity: 0.45 }}
+                  tickLine={false}
+                  axisLine={false}
+                  allowDecimals={false}
+                  domain={['dataMin - 1', 'dataMax + 1']}
+                  width={44}
+                  tickFormatter={(v: number) => formatCompact(v)}
+                />
+                <Tooltip
+                  content={<CommunityTooltip newLabel={newMembersLabel} />}
+                  cursor={{ stroke: 'currentColor', strokeOpacity: 0.15 }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="total"
+                  name={membersLabel}
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  fill="url(#statsMembersFill)"
+                  dot={false}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </div>
+
+      {/* Active people. This one genuinely starts on the day it was first
+          recorded, because there is no query that recovers who was around on a
+          day already gone. It lengthens by a point a day from here. */}
+      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+        <div className="flex items-baseline justify-between mb-3 gap-2">
+          <span className="text-sm font-semibold text-white">
+            {t('stats.community.chartActive', 'Active people')}
+          </span>
+          {history.activeSince && (
+            <span className="text-[11px] text-zinc-500 truncate">
+              {t('stats.community.recordingSince', 'recorded since {{date}}', {
+                date: history.activeSince,
+              })}
+            </span>
+          )}
+        </div>
+        {view.active.length === 0 ? (
+          <div className="flex items-center justify-center h-44 text-zinc-500 text-sm text-center px-4">
+            {t('stats.chart.empty', 'No data for this window yet')}
+          </div>
+        ) : (
+          <div className="text-white">
+            <ResponsiveContainer width="100%" height={180}>
+              <LineChart data={view.active} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
+                <XAxis
+                  dataKey="label"
+                  tick={{ fontSize: 10, fill: 'currentColor', opacity: 0.45 }}
+                  tickLine={false}
+                  axisLine={false}
+                  interval="preserveStartEnd"
+                  minTickGap={16}
+                />
+                <YAxis
+                  tick={{ fontSize: 10, fill: 'currentColor', opacity: 0.45 }}
+                  tickLine={false}
+                  axisLine={false}
+                  allowDecimals={false}
+                  width={44}
+                  tickFormatter={(v: number) => formatCompact(v)}
+                />
+                <Tooltip
+                  content={<CommunityTooltip />}
+                  cursor={{ stroke: 'currentColor', strokeOpacity: 0.15 }}
+                />
+                {/* One colour, three weights — the theme owns the hue, and the
+                    tooltip names each line, so nothing here needs a palette.
+                    Points are dotted while the series is too short to read as
+                    a line, which it will be for the first couple of days. */}
+                <Line
+                  type="monotone"
+                  dataKey="monthly"
+                  name={t('stats.community.thisMonth', 'This month')}
+                  stroke="currentColor"
+                  strokeOpacity={0.3}
+                  strokeWidth={2}
+                  dot={view.active.length < 3}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="weekly"
+                  name={t('stats.community.thisWeek', 'This week')}
+                  stroke="currentColor"
+                  strokeOpacity={0.6}
+                  strokeWidth={2}
+                  dot={view.active.length < 3}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="daily"
+                  name={t('stats.community.today', 'Today')}
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  dot={view.active.length < 3}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </div>
+
+      {/* What each of these is a count of, in the endpoint's own words — the
+          same reason the traffic half publishes its query. */}
+      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+        <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed">
+          <li>
+            <span className="text-zinc-300">{membersLabel}</span> — {provenance.note}
+          </li>
+          <li>
+            <span className="text-zinc-300">{t('stats.community.active', 'Active')}</span> —{' '}
+            {provenance.activeDefinition}
+          </li>
+          <li>
+            <span className="text-zinc-300">{t('stats.community.growthTerm', 'Growth')}</span> —{' '}
+            {provenance.growthFormula}
+          </li>
+        </ul>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -447,20 +820,20 @@ export default function StatsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Live Site Stats — DeHub Visitors in Real Time"
-        description="Live visitor numbers for dehub.io, measured at Cloudflare's edge and published with the query behind them. Page views, unique visitors, countries and traffic over the last 30 days."
+        title="Live Site Stats — DeHub Visitors and Members in Real Time"
+        description="Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database."
         url="https://dehub.io/stats"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Dataset',
           name: 'DeHub live site statistics',
-          description: 'Edge-measured visitor statistics for dehub.io, published live from Cloudflare analytics.',
+          description: 'Edge-measured visitor statistics for dehub.io alongside the platform’s own community figures — members, active users, signups and growth — published live.',
           url: 'https://dehub.io/stats',
           creator: { '@type': 'Organization', name: 'DeHub' },
           isAccessibleForFree: true,
         }}
       />
-      <h1 className="sr-only">DeHub Live Site Statistics — Visitors, Page Views and Traffic</h1>
+      <h1 className="sr-only">DeHub Live Site Statistics — Visitors, Page Views, Members and Active Users</h1>
 
       {/* Sticky header — same shape as every other bento page, so the glass,
           war-HUD and paper themes pick it up without page-specific rules. */}
@@ -642,7 +1015,16 @@ export default function StatsPage() {
                 </div>
               )}
             </div>
+          </>
+        )}
 
+        {/* Independent of the traffic half: a Cloudflare outage takes the
+            charts above with it, and there is no reason for it to take the
+            community numbers too. */}
+        <CommunitySection range={range} />
+
+        {stats && view && (
+          <>
             {/* Where people are, and what they browse with */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
               <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">

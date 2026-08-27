@@ -1616,6 +1616,22 @@
     "alsoIn": "{{theme}}లో కూడా ఉంది"
   },
   "stats": {
+    "community": {
+      "title": "సంఘం",
+      "members": "సభ్యులు",
+      "active": "యాక్టివ్",
+      "today": "ఈ రోజు",
+      "thisWeek": "ఈ వారం",
+      "thisMonth": "ఈ నెల",
+      "thisYear": "ఈ సంవత్సరం",
+      "allTime": "మొత్తం కాలం",
+      "newMembers": "కొత్త సభ్యులు",
+      "chartMembers": "కాలక్రమేణా సభ్యులు",
+      "chartActive": "యాక్టివ్ వ్యక్తులు",
+      "growth": "+{{percent}}% ఈ నెల",
+      "growthTerm": "వృద్ధి",
+      "recordingSince": "{{date}} నుండి నమోదవుతోంది"
+    },
     "title": "గణాంకాలు",
     "subtitle": "రియల్-టైమ్ ఓపెన్ సోర్స్ సమాచారం",
     "live": "లైవ్",

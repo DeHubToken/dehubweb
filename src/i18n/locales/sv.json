@@ -1638,6 +1638,22 @@
     "alsoIn": "Finns även i {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Gemenskap",
+      "members": "Medlemmar",
+      "active": "Aktiva",
+      "today": "Idag",
+      "thisWeek": "Denna vecka",
+      "thisMonth": "Denna månad",
+      "thisYear": "I år",
+      "allTime": "Hela tiden",
+      "newMembers": "Nya medlemmar",
+      "chartMembers": "Medlemmar över tid",
+      "chartActive": "Aktiva personer",
+      "growth": "+{{percent}} % denna månad",
+      "growthTerm": "Tillväxt",
+      "recordingSince": "registreras sedan {{date}}"
+    },
     "title": "Statistik",
     "subtitle": "Öppen underrättelse i realtid",
     "live": "Live",

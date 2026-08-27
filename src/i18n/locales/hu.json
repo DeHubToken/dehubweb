@@ -1638,6 +1638,22 @@
     "alsoIn": "A(z) {{theme}} témában is"
   },
   "stats": {
+    "community": {
+      "title": "Közösség",
+      "members": "Tagok",
+      "active": "Aktív",
+      "today": "Ma",
+      "thisWeek": "Ez a hét",
+      "thisMonth": "Ez a hónap",
+      "thisYear": "Ez az év",
+      "allTime": "Teljes időszak",
+      "newMembers": "Új tagok",
+      "chartMembers": "Tagok az idő során",
+      "chartActive": "Aktív emberek",
+      "growth": "+{{percent}}% ebben a hónapban",
+      "growthTerm": "Növekedés",
+      "recordingSince": "{{date}} óta rögzítve"
+    },
     "title": "Statisztika",
     "subtitle": "Valós idejű, nyílt forrású adatok",
     "live": "Élő",

@@ -1665,6 +1665,22 @@
     "alsoIn": "{{theme}} ukhupipas"
   },
   "stats": {
+    "community": {
+      "title": "Ayllu",
+      "members": "Runakuna",
+      "active": "Kawsaq",
+      "today": "Kunan",
+      "thisWeek": "Kay simana",
+      "thisMonth": "Kay killa",
+      "thisYear": "Kay wata",
+      "allTime": "Llapan pacha",
+      "newMembers": "Musuq runakuna",
+      "chartMembers": "Runakuna pacha nisqapi",
+      "chartActive": "Kawsaq runakuna",
+      "growth": "+{{percent}}% kay killapi",
+      "growthTerm": "Wiñay",
+      "recordingSince": "{{date}} manta qillqasqa"
+    },
     "title": "Yupaykuna",
     "subtitle": "Kunanpacha, kichasqa pukyu willay-yachay",
     "live": "Kawsaq",

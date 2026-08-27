@@ -1638,6 +1638,22 @@
     "alsoIn": "קיים גם ב{{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "קהילה",
+      "members": "חברים",
+      "active": "פעילים",
+      "today": "היום",
+      "thisWeek": "השבוע",
+      "thisMonth": "החודש",
+      "thisYear": "השנה",
+      "allTime": "כל הזמן",
+      "newMembers": "חברים חדשים",
+      "chartMembers": "חברים לאורך זמן",
+      "chartActive": "אנשים פעילים",
+      "growth": "+{{percent}}% החודש",
+      "growthTerm": "צמיחה",
+      "recordingSince": "נרשם מאז {{date}}"
+    },
     "title": "סטטיסטיקה",
     "subtitle": "מודיעין קוד פתוח בזמן אמת",
     "live": "חי",
