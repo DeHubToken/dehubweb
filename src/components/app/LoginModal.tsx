@@ -135,6 +135,16 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     onOpenChange(false);
   }, [onOpenChange]);
 
+  // The sheet can also be closed from underneath it — a completed login calls
+  // closeLoginModal directly, and vaul never reports a close it did not drive.
+  // handleClose was therefore the ONLY thing resetting the step, so a sheet
+  // that closed on success kept 'wallets' and the next open landed straight
+  // back on the wallet picker. Reset here instead, once the sheet is shut, so
+  // nothing flashes on the way out.
+  useEffect(() => {
+    if (!open) setStep('main');
+  }, [open]);
+
   // Opened from Settings → Profile → Add profile while already signed in.
   // Retitled so the sheet reads as "adding another account" rather than
   // implying the current one just got signed out — it didn't.
@@ -153,7 +163,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // account only usable by them — is also the more accurate description.
     : step === 'wallet-create' ? t('loginModal.secureAccount', 'Secure account')
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
-    : step === 'resuming' ? t('loginModal.signingIn', 'Signing you in…')
+    : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
 
   // Only the sign-in options are worth sketching. Every other step is a wait or

@@ -10,6 +10,12 @@ export type LoginStep =
   | 'phone'
   | 'phone-code'
   | 'wallets'
+  // The external-wallet equivalent of 'resuming': the connector has agreed and
+  // the signature is out with the wallet. The wallet list has nothing left to
+  // offer at that point — leaving it up (now captioned "Connected", because
+  // wagmi is) is what made a successful login look like it had bounced back to
+  // the picker.
+  | 'wallet-signing'
   | 'wallet-create'
   | 'wallet-unlock'
   | 'resuming';
