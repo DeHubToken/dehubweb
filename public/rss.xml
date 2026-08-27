@@ -9,7 +9,31 @@
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
     <webMaster>team@dehub.io (DeHub Team)</webMaster>
-    <lastBuildDate>Sat, 22 Aug 2026 12:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 27 Aug 2026 13:00:00 GMT</lastBuildDate>
+    <item>
+      <title>The Creator Guide to Leaving Instagram for a Platform You Own (2026)</title>
+      <description>An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.</description>
+      <link>https://dehub.io/guides/creators-guide-leaving-instagram</link>
+      <guid>https://dehub.io/guides/creators-guide-leaving-instagram</guid>
+      <pubDate>Thu, 27 Aug 2026 13:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>The Creator Guide to Leaving YouTube for a Platform You Own (2026)</title>
+      <description>A YouTube alternative creators actually own. What the 55% AdSense split, demonetisation and Content ID really cost you, and how a 90% revenue-share Web3 platform compares.</description>
+      <link>https://dehub.io/guides/creators-guide-leaving-youtube</link>
+      <guid>https://dehub.io/guides/creators-guide-leaving-youtube</guid>
+      <pubDate>Thu, 27 Aug 2026 12:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>The Creator Guide to Leaving TikTok for a Platform You Own (2026)</title>
+      <description>A TikTok alternative creators actually own. How Creator Rewards really pays, why your audience is not yours, and how a 90% revenue-share Web3 platform compares in 2026.</description>
+      <link>https://dehub.io/guides/creators-guide-leaving-tiktok</link>
+      <guid>https://dehub.io/guides/creators-guide-leaving-tiktok</guid>
+      <pubDate>Thu, 27 Aug 2026 11:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
     <item>
       <title>Q3 Development Overview</title>
       <description>Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout.</description>
@@ -144,30 +168,6 @@
       <link>https://dehub.io/guides/web3-live-streaming-decentralised-twitch-alternative</link>
       <guid>https://dehub.io/guides/web3-live-streaming-decentralised-twitch-alternative</guid>
       <pubDate>Thu, 26 Feb 2026 11:20:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>Play-to-Earn in the UK 2026: Games, Real Earnings &amp; HMRC Tax Explained</title>
-      <description>Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from DeHub.</description>
-      <link>https://dehub.io/guides/play-to-earn-uk-2026-earnings-hmrc-tax</link>
-      <guid>https://dehub.io/guides/play-to-earn-uk-2026-earnings-hmrc-tax</guid>
-      <pubDate>Thu, 19 Feb 2026 10:00:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>We're Finally Here — A Major DeHub Update</title>
-      <description>After 5 years of development, DeHub is ready to challenge legacy media. Web app launch, fighter battle royale, airdrops, and the flywheel begins.</description>
-      <link>https://dehub.io/guides/were-finally-here-a-major-dehub-update</link>
-      <guid>https://dehub.io/guides/were-finally-here-a-major-dehub-update</guid>
-      <pubDate>Sat, 14 Feb 2026 12:00:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>Development Update: The DeHub Era Starts - Final Updates and Bug Fixes Shipping in Coming Days</title>
-      <description>DeHub development update — final updates and bug fixes shipping soon as we begin app promotions. Web app and Google Play updates coming in days, with Apple listing to follow.</description>
-      <link>https://dehub.io/guides/development-update-dehub-era-starts-final-updates-bug-fixes</link>
-      <guid>https://dehub.io/guides/development-update-dehub-era-starts-final-updates-bug-fixes</guid>
-      <pubDate>Mon, 02 Feb 2026 14:22:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
   </channel>

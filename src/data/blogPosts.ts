@@ -14,6 +14,9 @@ import { isWatchToEarnLegitPost } from './posts/isWatchToEarnLegitPost';
 import { watchToEarnComparisonPost } from './posts/watchToEarnComparisonPost';
 import { tokenizedSubscriptionsPost } from './posts/tokenizedSubscriptionsPost';
 import { leavingTiktokUkPost } from './posts/leavingTiktokUkPost';
+import { leavingTiktokGlobalPost } from './posts/leavingTiktokGlobalPost';
+import { leavingYoutubePost } from './posts/leavingYoutubePost';
+import { leavingInstagramPost } from './posts/leavingInstagramPost';
 import { freePlayToEarnNoInvestmentPost } from './posts/freePlayToEarnNoInvestmentPost';
 import { lastChadStandingPost } from './posts/lastChadStandingPost';
 import { xToEarnExplainerPost } from './posts/xToEarnExplainerPost';
@@ -283,6 +286,9 @@ export const blogPosts: BlogPost[] = [
   watchToEarnComparisonPost,
   tokenizedSubscriptionsPost,
   leavingTiktokUkPost,
+  leavingTiktokGlobalPost,
+  leavingYoutubePost,
+  leavingInstagramPost,
   freePlayToEarnNoInvestmentPost,
   lastChadStandingPost,
   xToEarnExplainerPost,
