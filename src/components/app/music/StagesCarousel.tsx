@@ -17,7 +17,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useLiveSpaces } from '@/contexts/StageContext';
+import { useLiveSpaces, useStage } from '@/contexts/StageContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { PastStageCard } from '@/components/app/stages/PastStageCard';
@@ -108,6 +108,14 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
 
 export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   const navigate = useNavigate();
+  const { openModal, joinSpace } = useStage();
+
+  // Join the specific stage a card was clicked for, rather than opening the
+  // generic browse list — the card already names one live room.
+  const handleJoinStage = (spaceId: string) => {
+    openModal('live');
+    joinSpace(spaceId);
+  };
 
   // Live stages — shared from StageProvider's single fetch + realtime channel
   // (this component previously ran its own query AND two realtime
@@ -186,10 +194,10 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
         <div className="relative">
           <SwipeableCarousel fadeEdges className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
             {liveSpaces.map((space) => (
-              <StageCard 
-                key={space.id} 
-                space={space} 
-                onClick={onOpenStages}
+              <StageCard
+                key={space.id}
+                space={space}
+                onClick={() => handleJoinStage(space.id)}
               />
             ))}
           </SwipeableCarousel>
