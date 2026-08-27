@@ -1526,7 +1526,7 @@ export const en = {
       'DeHub creator studio for simple generative content generation ',
       'TV & game console apps for maximum global accessibility',
       'V/AR profile hub & consumer data metrics',
-      'Educational AI integrations for personalized learning pathways',
+      'DePin mining for secure decentralized back up of DeHub content',
       'Username marketplace',
       'Live streaming overlays and tools for creators',
     'Video and image editor',
