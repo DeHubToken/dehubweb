@@ -1524,7 +1524,7 @@ export const en = {
       'Leading licensing partners, latest blockbusters and major PPVs',
       'Commercial integrations with existing streaming and home entertainment brands',
       'DeHub creator studio for simple generative content generation ',
-      'TV & game console apps for maximum global accessibility',
+      'Trenchstar: VR trading and community hub release',
       'V/AR profile hub & consumer data metrics',
       'DePin mining for secure decentralized back up of DeHub content',
       'Username marketplace',
