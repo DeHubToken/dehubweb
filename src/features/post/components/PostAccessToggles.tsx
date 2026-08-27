@@ -122,7 +122,7 @@ export function PostAccessToggles({
   const navigate = useNavigate();
   // The gate is the creator's own plans, so with none there is nothing to gate
   // on and the row stays off — see the comment on the switch.
-  const { hasPlans, isLoading: plansLoading } = useCreatorPlansLite(walletAddress);
+  const { hasPlans, hasAnyPlan, isLoading: plansLoading } = useCreatorPlansLite(walletAddress);
   const { data: userCommunities = [] } = useUserCommunities();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
@@ -484,13 +484,18 @@ export function PostAccessToggles({
             <span className={cn('text-sm', hasPlans ? 'text-white' : 'text-white/40')}>
               Subscribers
             </span>
+            {/* Two different reasons the switch can be dead, and they need
+                different instructions: no plan at all, or a plan still sitting
+                as a draft. Showing "Create a plan first" to someone who has
+                already created two is how a post ended up gated behind plans
+                whose Subscribe button is permanently disabled. */}
             {!plansLoading && !hasPlans && (
               <button
                 type="button"
                 onClick={(e) => { e.preventDefault(); navigate('/app/profile?tab=subscribers'); }}
                 className="text-xs text-white/50 underline underline-offset-2 hover:text-white"
               >
-                Create a plan first
+                {hasAnyPlan ? 'Publish your plan first' : 'Create a plan first'}
               </button>
             )}
           </div>

@@ -11,7 +11,7 @@
  * lazy-loaded, so the contracts arrive with it rather than at boot.
  */
 import { useQuery } from '@tanstack/react-query';
-import { getPlans, type SubscriptionPlan } from '@/lib/api/dehub/subscriptions';
+import { getPlans, isPlanPublished, type SubscriptionPlan } from '@/lib/api/dehub/subscriptions';
 
 export function useCreatorPlansLite(creatorAddress?: string | null) {
   const address = creatorAddress?.toLowerCase();
@@ -26,11 +26,19 @@ export function useCreatorPlansLite(creatorAddress?: string | null) {
   });
 
   const plans: SubscriptionPlan[] = query.data || [];
+  // A plan that is not on chain yet cannot be bought — PlanCard disables its
+  // Subscribe button and says so. Gating a post behind one produces a post
+  // nobody can ever open, so only published plans count as plans here.
+  const publishedPlans = plans.filter(isPlanPublished);
 
   return {
     plans,
-    planIds: plans.map((p) => String((p as any).id ?? (p as any)._id)).filter(Boolean),
-    hasPlans: plans.length > 0,
+    publishedPlans,
+    planIds: publishedPlans.map((p) => String((p as any).id ?? (p as any)._id)).filter(Boolean),
+    /** Whether the creator has a plan a reader could actually buy. */
+    hasPlans: publishedPlans.length > 0,
+    /** Any plan at all, published or draft — for telling the two states apart. */
+    hasAnyPlan: plans.length > 0,
     isLoading: query.isLoading,
   };
 }
