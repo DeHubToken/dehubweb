@@ -374,7 +374,14 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               onClick={handleLogoClick}
               className={cn(
                 "cursor-pointer flex items-center justify-center overflow-hidden",
-                renderCompactLogo ? "w-[28px] h-[24px]" : "w-[135px] h-[42px]"
+                // Compact width HUGS the 22px mark rather than padding it to 28.
+                // The row is mx-auto inside the rail's 44px content box, and
+                // margin:auto silently resolves to 0 the moment the row is wider
+                // than that — so the old 28 + 4 + 20 = 52px row could not centre
+                // and ran off to the right instead, putting the toggle outside
+                // the nav panel's column entirely. 22 + 4 + 18 = 44 fits exactly,
+                // so the pair sits on the panel's own centre line.
+                renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
               {isWarTheme ? (
@@ -412,7 +419,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               <button
                 onClick={handleToggleCollapse}
                 className={cn(
-                  "flex-shrink-0 w-5 h-5 ml-1 flex items-center justify-center rounded-md transition-colors",
+                  // 18px, not 20: see the compact-logo comment above — the row
+                  // has to land on exactly 44px to centre inside the rail, and
+                  // 18 keeps the gap to the mark at 6px instead of 10 without
+                  // shrinking the hit area any further than it has to.
+                  "flex-shrink-0 w-[18px] h-[18px] ml-1 flex items-center justify-center rounded-md transition-colors",
                   isLightTheme ? "hover:bg-zinc-200" : "hover:bg-zinc-800"
                 )}
                 aria-label="Expand sidebar"
