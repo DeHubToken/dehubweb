@@ -269,7 +269,11 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
 
 /**
  * Fetch DM contacts list for the given wallet address.
- * Merges DeHub API contacts with Supabase direct_messages conversations.
+ *
+ * Throws on API failure. Swallowing the error here (a leftover from a
+ * removed Supabase fallback) made a failed fetch indistinguishable from an
+ * account with zero conversations, so the page showed "No conversations yet"
+ * with no retry instead of the error state.
  */
 export async function getContacts(
   address: string,
@@ -279,25 +283,22 @@ export async function getContacts(
   if (!address) return [];
   const myAddress = address.toLowerCase();
 
-  let dehubItems: DeHubConversation[] = [];
-  try {
-    const response = await apiCall<unknown>(`/api/dm/contacts/${address}`, {
-      params: { page, limit },
-      requiresAuth: true,
-    });
-    console.log('[DM API] getContacts raw response:', response);
+  const response = await apiCall<unknown>(`/api/dm/contacts/${address}`, {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+  console.log('[DM API] getContacts raw response:', response);
 
-    let items: unknown[] = [];
-    const r = response as Record<string, unknown>;
-    if (Array.isArray(response)) items = response;
-    else if (Array.isArray(r?.result)) items = r.result as unknown[];
-    else if (r?.result && Array.isArray((r.result as Record<string, unknown>)?.items)) items = ((r.result as Record<string, unknown>).items as unknown[]) || [];
-    else if (Array.isArray(r?.items)) items = r.items as unknown[];
+  let items: unknown[] = [];
+  const r = response as Record<string, unknown>;
+  if (Array.isArray(response)) items = response;
+  else if (Array.isArray(r?.result)) items = r.result as unknown[];
+  else if (r?.result && Array.isArray((r.result as Record<string, unknown>)?.items)) items = ((r.result as Record<string, unknown>).items as unknown[]) || [];
+  else if (Array.isArray(r?.items)) items = r.items as unknown[];
 
-    dehubItems = items.map((item: unknown) => mapApiConversationToDeHub(item as Record<string, unknown>, myAddress));
-  } catch (err) {
-    console.warn('[DM API] getContacts DeHub failed (will use Supabase):', err);
-  }
+  let dehubItems: DeHubConversation[] = items.map(
+    (item: unknown) => mapApiConversationToDeHub(item as Record<string, unknown>, myAddress)
+  );
 
 
   // Enrich DeHub conversations with profile data (displayName, badgeBalance) when missing
@@ -347,7 +348,7 @@ export async function getContacts(
     return tb - ta;
   });
 
-  console.log('[DM API] getContacts mapped:', dehubItems.length, 'conversations (DeHub + Supabase)');
+  console.log('[DM API] getContacts mapped:', dehubItems.length, 'conversations');
   return dehubItems.slice(0, limit);
 }
 
