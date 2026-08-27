@@ -307,17 +307,30 @@ export function ProfileHeader({
                       {t('profile.following')}
                     </Button>
                   )}
-                  {isFollowing && !isSubscribed && hasPlans && (
-                    <Button 
-                      size="sm" 
+                  {/* Subscribing is not downstream of following: a creator who
+                      has published a plan sells to anyone, so this renders on
+                      the strength of `hasPlans` alone. It jumps to the Subs tab
+                      AND scrolls the tabs pill up to it — the header is a
+                      screenful tall, so switching the tab silently reads as a
+                      dead button. */}
+                  {!isSubscribed && hasPlans && (
+                    <Button
+                      size="sm"
                       className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
-                      onClick={() => setActiveTab('subscribers')}
+                      onClick={() => {
+                        setActiveTab('subscribers');
+                        requestAnimationFrame(() => {
+                          document
+                            .querySelector('[data-feed-nav-outer]')
+                            ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        });
+                      }}
                     >
                       <Star className="w-4 h-4" />
-                      Subscribe
+                      Subscribe Now
                     </Button>
                   )}
-                  {isFollowing && isSubscribed && (
+                  {isSubscribed && (
                     <Button 
                       size="sm" 
                       variant="outline"
