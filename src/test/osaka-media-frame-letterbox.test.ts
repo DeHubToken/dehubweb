@@ -65,7 +65,9 @@ describe('Osaka media frames do not letterbox narrow images', () => {
     // immersive fullscreen one — and every arm has to ship a fill of its own.
     // Miss one and Osaka's `:not([class*='bg-'])` guard makes that state
     // transparent, which in fullscreen means the page showing through the video.
-    const column = SHORTS.slice(SHORTS.indexOf('ref={fullscreenTargetRef}'), SHORTS.indexOf('Draggable carousel container'));
+    // `attachVideoContainer` is the callback ref that sets `fullscreenTargetRef`
+    // and keeps the same node in state for the progress bar's portal.
+    const column = SHORTS.slice(SHORTS.indexOf('ref={attachVideoContainer}'), SHORTS.indexOf('Draggable carousel container'));
     expect(column).toMatch(/isMobile\s*\n?\s*\? "w-full shrink-0 bg-black"/);
     expect(column).toMatch(/isFullscreen[\s\S]*?rounded-none bg-black"/);
     expect(column).toMatch(/bg-zinc-900/);

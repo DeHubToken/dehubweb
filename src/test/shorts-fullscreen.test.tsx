@@ -194,8 +194,10 @@ describe('the two players share one fullscreen implementation', () => {
   );
 
   it('gives the shorts viewer a fullscreen control at all', () => {
-    // The whole point of the change: this file had no fullscreen anything.
-    expect(SLIDE).toMatch(/aria-label=\{isFullscreen \? 'Exit fullscreen' : 'Enter fullscreen'\}/);
+    // The whole point of the change: there was no fullscreen anything. It is
+    // drawn by the viewer rather than the slide — see the corner-controls block
+    // below for why.
+    expect(VIEWER).toMatch(/aria-label=\{isFullscreen \? 'Exit fullscreen' : 'Enter fullscreen'\}/);
   });
 
   it('routes both players through the shared hook', () => {
@@ -211,11 +213,14 @@ describe('the two players share one fullscreen implementation', () => {
     // The slide used to fullscreen itself, which handed back a bare video: the
     // mute button, the action bar and the creator block are all siblings of the
     // carousel, one level up, and stayed behind on the hidden page.
-    expect(VIEWER).toContain('ref={fullscreenTargetRef}');
+    // The callback ref still sets `fullscreenTargetRef`; it only also keeps the
+    // node in state so the slide has somewhere to portal its progress bar.
+    expect(VIEWER).toContain('fullscreenTargetRef.current = node');
+    expect(VIEWER).toContain('ref={attachVideoContainer}');
     expect(SLIDE).not.toContain('useVideoFullscreen');
     // …and the chrome is inside that same container, below its opening tag and
     // above its close.
-    const container = VIEWER.slice(VIEWER.indexOf('ref={fullscreenTargetRef}'));
+    const container = VIEWER.slice(VIEWER.indexOf('ref={attachVideoContainer}'));
     expect(container.indexOf("aria-label={isMuted ? 'Unmute' : 'Mute'}")).toBeGreaterThan(-1);
     expect(container.indexOf('{/* Creator + description, fullscreen only.')).toBeGreaterThan(-1);
   });
@@ -243,20 +248,20 @@ describe('the two players share one fullscreen implementation', () => {
     expect(VIEWER).toMatch(/isFullscreen[\s\S]{0,600}?"fixed inset-0 z-\[70\] w-screen h-screen max-h-none rounded-none bg-black"/);
   });
 
-  it('offers fullscreen on desktop only, and only for the active slide', () => {
+  it('offers fullscreen on desktop only', () => {
     // The viewer is `fixed inset-0` on mobile, so a short already fills the
-    // screen there — a fullscreen button would visibly do nothing. Neighbouring
-    // slides stay mounted, so every one of them would draw a button at the same
-    // screen position.
-    expect(SLIDE).toContain('const canFullscreen = !!onToggleFullscreen');
-    expect(VIEWER).toContain('onToggleFullscreen={isMobile || !isActive ? undefined : toggleFullscreen}');
+    // screen there — a fullscreen button would visibly do nothing.
+    const desktopOnly = VIEWER.slice(VIEWER.indexOf('{!isMobile && (\n            <>'));
+    expect(desktopOnly).toContain("aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}");
   });
 
-  it('does not take the button away when the short is paused', () => {
-    // `isActive` reaches the slide as `isActive && !isPaused`, so gating the
-    // button on it again made pausing hide the control.
-    expect(SLIDE).toContain('{canFullscreen && (');
-    expect(SLIDE).not.toContain('{isActive && canFullscreen && (');
+  it('leaves the slide with no say in fullscreen but the fit', () => {
+    // It keeps `isFullscreen` to decide `object-contain`, and nothing else: the
+    // toggle, the button and the chrome fade all belong to the viewer now.
+    expect(SLIDE).not.toContain('onToggleFullscreen');
+    expect(SLIDE).not.toContain('canFullscreen');
+    expect(SLIDE).not.toContain('chromeHidden');
+    expect(SLIDE).toContain('isFullscreen');
   });
 
   it('drops the side panels in fullscreen instead of stranding them', () => {
@@ -353,5 +358,60 @@ describe('the shorts wheel gesture keeps its target', () => {
     // the viewer is back to exactly three.
     expect(VIEWER).toMatch(/handleDesktopPointerMove = useCallback\(\(\) => \{[\s\S]{0,400}?setPointerPinnedIndex\(currentIndexRef\.current\)/);
     expect(VIEWER).toMatch(/handleDesktopPointerLeave = useCallback\(\(\) => \{[\s\S]{0,300}?setPointerPinnedIndex\(null\)/);
+  });
+});
+
+/**
+ * Three complaints about the desktop viewer, all of them about something
+ * sitting in the wrong place.
+ */
+describe('the desktop shorts frame', () => {
+  const VIEWER = readFileSync(
+    resolve(__dirname, '../components/app/cards/ShortsViewer.tsx'),
+    'utf8',
+  );
+  const SLIDE = readFileSync(
+    resolve(__dirname, '../components/app/cards/VideoSlide.tsx'),
+    'utf8',
+  );
+
+  it('runs the player the full height of the screen', () => {
+    // It was `h-[calc(100vh-80px)] max-h-[640px]`, so on any desktop taller
+    // than ~720px the short stopped at 640px and sat in a band down the middle
+    // with dead space above and below it. Reported as "cut off top and bottom".
+    expect(VIEWER).not.toContain('max-h-[640px]');
+    expect(VIEWER).not.toContain('h-[calc(100vh-80px)]');
+    expect(VIEWER).toContain('"shrink-0 h-full aspect-[9/16] w-auto max-w-[calc(100vw-8rem)] bg-zinc-900 rounded-none"');
+  });
+
+  it('builds both corner controls from one class string', () => {
+    // Two hand-copied class lists in two files drifted: fullscreen picked up a
+    // `saturate-[180%]` that mute never had, and the pair sat side by side in
+    // different shades.
+    expect(VIEWER).toContain('const CORNER_CONTROL =');
+    expect(VIEWER.match(/cn\(\s*CORNER_CONTROL,/g) ?? []).toHaveLength(2);
+    expect(VIEWER).not.toContain('saturate-[180%] text-white rounded-xl');
+  });
+
+  it('keeps the fullscreen button out of the carousel', () => {
+    // In the slide it was translated on every step, so it slid away with the
+    // video while the mute button beside it held still.
+    expect(SLIDE).not.toContain('Maximize');
+    expect(SLIDE).not.toContain('Minimize');
+    expect(VIEWER).toContain('onClick={toggleFullscreen}');
+  });
+
+  it('paints the progress bar over the action bar, not under it', () => {
+    // The action bar lays a 96px `from-black/80` gradient across the bottom of
+    // the container. It is a sibling of the carousel, so it covers anything
+    // inside a slide — the bar included, which is the "it shadows over the
+    // scroll line" report. A slide cannot out-z-index it from inside its own
+    // stacking context, so the bar is portalled up to the container.
+    expect(SLIDE).toContain('createPortal(progressBar, progressLayer)');
+    expect(VIEWER).toContain('progressLayer={isActive ? videoContainer : null}');
+    // …and the seek zone stays where it is: hoisting that too would put a
+    // 15%-tall click target on top of the action buttons.
+    expect(SLIDE).toMatch(/ref=\{progressBarRef\}[\s\S]{0,220}?height: '15%'/);
+    expect(SLIDE).toContain('pointer-events-none');
   });
 });
