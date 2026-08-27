@@ -8,7 +8,7 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale, Siren
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Megaphone, Send, Scale, Siren, Briefcase
 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -262,7 +262,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   communities: ['community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled'],
   subscriptions: ['subscription', 'ppv_purchase'],
-  tips: ['tip', 'bounty_available', 'bounty_claimed'],
+  tips: ['tip', 'bounty_available', 'bounty_claimed', 'work_application', 'work_submission'],
   livestreams: ['livestream_start', 'stage_live', 'stage_reminder'],
 };
 
@@ -329,6 +329,9 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <Megaphone className="w-4 h-4 text-white/70" />;
     case 'community_join':
       return <UsersRound className="w-4 h-4 text-white/70" />;
+    case 'work_application':
+    case 'work_submission':
+      return <Briefcase className="w-4 h-4 text-white/70" />;
     case 'stage_live':
     case 'stage_reminder':
       return <Radio className="w-4 h-4 text-white/70" />;
@@ -675,6 +678,16 @@ function getNotificationContent(
     }
     case 'video_removal':
       return tr('notifications.postRemoved');
+    // Naming the bounty matters here in a way it doesn't for a like: a poster
+    // with several open bounties can't act on "someone applied" alone.
+    case 'work_application':
+    case 'work_submission': {
+      const verb = (notification.type as string) === 'work_application'
+        ? 'applied to your bounty'
+        : 'submitted work on your bounty';
+      const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
+      return jobTitle ? `${actorName} ${verb} “${jobTitle}”` : `${actorName} ${verb}`;
+    }
     default:
       return (notification as any).content || tr('notifications.newNotification');
   }
@@ -699,6 +712,12 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   ) {
     const slug = customReferenceId(notification);
     return slug ? `/app/communities/${slug}` : '/app/communities';
+  }
+  // Bounty applications/submissions store job_number, which is what the
+  // canonical /bounty/<n> URL is keyed on — not the job uuid.
+  if ((notification.type as string) === 'work_application' || (notification.type as string) === 'work_submission') {
+    const jobNumber = customReferenceId(notification);
+    return jobNumber ? `/bounty/${jobNumber}` : '/work/history';
   }
   if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_comment') {
     const refId = customReferenceId(notification);
