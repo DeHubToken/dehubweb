@@ -116,7 +116,7 @@ export function DmFeeGate({
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>
           <p className="text-zinc-400 text-xs leading-relaxed">
             {recipientName} requires a minimum tip of{' '}
-            <span className="text-amber-400 font-medium">{fee.toLocaleString()} DHB</span>.
+            <span className="text-white font-medium">{fee.toLocaleString()} DHB</span>.
             The more you tip, the higher you rank in their inbox — more chance of a reply.
           </p>
         </div>
@@ -139,7 +139,7 @@ export function DmFeeGate({
         {/* Pay minimum button */}
         <Button
           variant="glass"
-          className="w-full bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11"
+          className="w-full h-11"
           onClick={() => handlePay(fee)}
           disabled={isSending || !messageText.trim()}
         >
@@ -180,7 +180,7 @@ export function DmFeeGate({
           </div>
           <Button
             variant="glass"
-            className="bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11 px-4"
+            className="h-11 px-4"
             onClick={() => handlePay(tipAmount)}
             disabled={isSending || !customAmount || tipAmount < fee || !messageText.trim()}
           >
@@ -193,7 +193,7 @@ export function DmFeeGate({
         </div>
 
         {isAboveMinimum && (
-          <p className="text-[10px] text-amber-400/70 text-center">
+          <p className="text-[10px] text-zinc-400 text-center">
             🔥 Tipping {tipAmount.toLocaleString()} DHB will rank you higher in {recipientName}'s inbox
           </p>
         )}

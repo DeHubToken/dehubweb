@@ -117,10 +117,10 @@ function UserSearchResult({
           <p className="text-xs text-zinc-500 truncate">@{user.username}</p>
         )}
         {dmDisabled && (
-          <p className="text-xs text-red-400 mt-1">DMs disabled</p>
+          <p className="text-xs text-zinc-500 mt-1">DMs disabled</p>
         )}
         {!dmDisabled && !isLoading && perMessageFee && perMessageFee > 0 && (
-          <p className="text-xs text-amber-400 mt-1 flex items-center gap-1">
+          <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
             <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
             {perMessageFee.toLocaleString()} DHB to message
           </p>
@@ -267,7 +267,7 @@ function FeePaymentStep({
       </div>
 
       {/* Fee info */}
-      <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+      <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
         <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
           <BrandIcon src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
         </div>
@@ -275,7 +275,7 @@ function FeePaymentStep({
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>
           <p className="text-zinc-400 text-xs leading-relaxed">
             {displayName} requires a minimum tip of{' '}
-            <span className="text-amber-400 font-medium">{fee.toLocaleString()} DHB</span> to start a conversation.
+            <span className="text-white font-medium">{fee.toLocaleString()} DHB</span> to start a conversation.
           </p>
         </div>
       </div>
@@ -287,9 +287,9 @@ function FeePaymentStep({
           Checking your DHB balance...
         </div>
       ) : balanceInfo.checked && !balanceInfo.sufficient ? (
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
-          <p className="text-xs text-red-400">
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
+          <AlertCircle className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+          <p className="text-xs text-zinc-300">
             Insufficient balance. You have {Math.floor(balanceInfo.balance).toLocaleString()} DHB but need {fee.toLocaleString()} DHB.
           </p>
         </div>
@@ -315,7 +315,7 @@ function FeePaymentStep({
       {/* Pay minimum */}
       <Button
         variant="glass"
-        className="w-full bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11"
+        className="w-full h-11"
         onClick={() => handlePay(fee)}
         disabled={isSending || !messageText.trim() || (balanceInfo.checked && !balanceInfo.sufficient)}
       >
@@ -356,7 +356,7 @@ function FeePaymentStep({
         </div>
         <Button
           variant="glass"
-          className="bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11 px-4"
+          className="h-11 px-4"
           onClick={() => handlePay(tipAmount)}
           disabled={isSending || !isValidAmount || !messageText.trim() || (balanceInfo.checked && !balanceInfo.sufficient)}
         >
@@ -369,7 +369,7 @@ function FeePaymentStep({
       </div>
 
       {customAmount && isValidAmount && tipAmount > fee && (
-        <p className="text-[10px] text-amber-400/70 text-center">
+        <p className="text-[10px] text-zinc-400 text-center">
           🔥 Tipping {tipAmount.toLocaleString()} DHB will rank you higher in {displayName}'s inbox
         </p>
       )}
