@@ -11,5 +11,4 @@ export { NewConversationModal } from './NewConversationModal';
 export { NewMessageSelector } from './NewMessageSelector';
 export { CreateGroupModal } from './CreateGroupModal';
 export { GroupSettingsDrawer } from './GroupSettingsDrawer';
-export { SharedVideosDrawer } from './SharedVideosDrawer';
 export { BuyAlertCard } from './BuyAlertCard';

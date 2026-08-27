@@ -28,7 +28,6 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { formatAttachmentSize, getAttachmentLabel, isAllowedAttachment } from '@/lib/attachments';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
-import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { DmTipDialog } from './DmTipDialog';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
@@ -702,7 +701,6 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const [isBlocked, setIsBlocked] = useState(conversation.isBlocked ?? false);
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
   const [showGroupSettings, setShowGroupSettings] = useState(false);
-  const [showSharedVideos, setShowSharedVideos] = useState(false);
   const [showTipDialog, setShowTipDialog] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
