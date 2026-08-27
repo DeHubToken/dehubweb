@@ -20,7 +20,7 @@
  */
 
 import { io, Socket } from 'socket.io-client';
-import { DEHUB_API_BASE, getAuthToken } from './core';
+import { DEHUB_API_BASE, ensureFreshToken, getAuthToken } from './core';
 
 // ─── Socket event payload types ───────────────────────────────────────────────
 
@@ -61,11 +61,28 @@ export interface DepinChallengeResponsePayload {
 
 let depinSocket: Socket | null = null;
 
-/** Open (or return the existing) `/depin` socket, authenticated by the current session. */
-export function connectDepinSocket(): Socket {
+/**
+ * Open (or return the existing) `/depin` socket, authenticated by the current
+ * session.
+ *
+ * The token is refreshed first, not read straight out of storage. Access
+ * tokens last 15 minutes, the server refuses a handshake it cannot verify,
+ * and the handshake happens once — so a stored token that expired while the
+ * page sat open means the socket is dropped the instant it connects, and the
+ * node waits on a `depin:registered` that is never coming. `apiCall` already
+ * refreshes for the same reason; this has to as well.
+ */
+export async function connectDepinSocket(): Promise<Socket> {
   if (depinSocket) return depinSocket;
 
-  const token = getAuthToken();
+  let token: string | null = null;
+  try {
+    token = await ensureFreshToken();
+  } catch {
+    // Signed out or unrefreshable — fall back to whatever is stored so the
+    // server gets to make the call, and the caller sees the refusal.
+    token = getAuthToken();
+  }
   const handshakeAuth: Record<string, string> = {};
   const tokenTrim = token?.replace(/^Bearer\s+/i, '').trim();
   if (tokenTrim) handshakeAuth.token = `Bearer ${tokenTrim}`;
@@ -141,4 +158,17 @@ export function onDepinAssign(cb: (data: DepinAssignData) => void): () => void {
 
 export function onDepinChallenge(cb: (data: DepinChallengeData) => void): () => void {
   return onEvent('depin:challenge', cb);
+}
+
+/**
+ * The server drops a handshake it cannot verify, so a refused session shows
+ * up here and nowhere else. Without watching for it the node sits on
+ * "connecting" forever, which is indistinguishable from a slow network.
+ */
+export function onDepinDisconnect(cb: (reason: string) => void): () => void {
+  return onEvent('disconnect', cb);
+}
+
+export function onDepinConnectError(cb: (err: Error) => void): () => void {
+  return onEvent('connect_error', cb);
 }
