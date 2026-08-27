@@ -70,11 +70,23 @@ async function resolveVoiceId(stageId: string): Promise<string> {
   const hostWallet = (stage?.host_wallet_address || '').toLowerCase();
   if (!hostWallet) return FALLBACK_VOICE_ID;
 
+  // Only the voice explicitly MARKED for stages, never just the newest one the
+  // wallet happens to own. Two things turn on that.
+  //
+  // A host can hold several voices — the Studio's designer writes here too —
+  // so "newest wins" meant a monster preset trained for a video on Tuesday
+  // became the host's voice on Wednesday's stage.
+  //
+  // And the mark is the live consent switch. "Dub me in my own voice" is a box
+  // the host can untick, and unticking has to actually stop it; if this fell
+  // back to any voice on the account, turning it off would change nothing.
+  // No mark means the stock narrator, which is the correct default for someone
+  // who never asked.
   const { data: voice } = await admin
     .from('custom_voices')
     .select('elevenlabs_voice_id')
     .ilike('wallet_address', hostWallet)
-    .order('created_at', { ascending: false })
+    .eq('is_stage_voice', true)
     .limit(1)
     .maybeSingle();
 

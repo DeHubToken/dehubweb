@@ -161,6 +161,14 @@ export const TOOL_COST_USD: Record<string, number> = {
   'ace-step': 0.05,
   'creative-upscaler': 0.08,
   'minimax-music': 0.165,
+  // Cloning a host's voice for stage dubbing. Unlike everything else in this
+  // table the provider does not bill per call — ElevenLabs instant cloning is
+  // included in the plan. What it consumes is a VOICE SLOT, and the plan has a
+  // fixed number of them held for as long as the voice exists. So the basis
+  // here is one slot's share of the subscription, not an API line item, and it
+  // is charged once per wallet: the clone is cached in custom_voices and every
+  // later stage reuses it, so charging again would be charging for nothing.
+  'voice-clone': 1.0,
 };
 
 

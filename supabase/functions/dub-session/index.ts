@@ -52,10 +52,13 @@ async function hasClonedVoice(stageId: string): Promise<boolean> {
   const hostWallet = (stage?.host_wallet_address || '').toLowerCase();
   if (!hostWallet) return false;
 
+  // Marked only, matching dub-line — this is what the listener is told they
+  // will hear, so it has to ask the same question the synthesiser will.
   const { data: voice } = await admin
     .from('custom_voices')
     .select('id')
     .ilike('wallet_address', hostWallet)
+    .eq('is_stage_voice', true)
     .limit(1)
     .maybeSingle();
   return !!voice;
