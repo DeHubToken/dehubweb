@@ -24,6 +24,7 @@ import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
+import { isPlanPublished } from '@/lib/api/dehub';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { TabValue } from './ProfileConstants';
@@ -576,6 +577,9 @@ function SubscribersTabPanel({
   setCreatePlanModalOpen: (open: boolean) => void;
   setEditingPlan: (plan: SubscriptionPlan | null) => void;
 }) {
+  // A plan the creator never published on chain. PlanCard disables its
+  // Subscribe button, so these are plans that exist and cannot be sold.
+  const draftPlanCount = plans.filter((p) => !isPlanPublished(p)).length;
   if (isLoadingPlans) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
@@ -615,6 +619,24 @@ function SubscribersTabPanel({
             Add Plan
           </Button>
         </div>
+        {/* Not one plan on the platform has ever been listed on chain, because
+            creating a plan and publishing it are two steps and only the first
+            was ever taken. A creator with drafts holds plans that look finished
+            and sell nothing, so the tab says so once at the top — the card that
+            needs the action can be several screens down. */}
+        {draftPlanCount > 0 && (
+          <div className="flex items-start gap-2 rounded-xl bg-white/[0.06] border border-white/10 p-3">
+            <Info className="w-4 h-4 text-white/50 shrink-0 mt-0.5" />
+            <p className="text-xs text-white/70">
+              {draftPlanCount === 1
+                ? 'One of your plans is still a draft. '
+                : draftPlanCount + ' of your plans are still drafts. '}
+              A plan only sells once it is published on chain. Until then nobody
+              can subscribe to you, and the Subscribers switch on a new post
+              stays off.
+            </p>
+          </div>
+        )}
         <div className="grid gap-4">
           {plans.map((plan) => (
             <PlanCard 
