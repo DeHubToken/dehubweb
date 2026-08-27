@@ -102,6 +102,25 @@ describe('query-persist', () => {
     expect(fresh.getQueryData(['messages', 'conversations', '', '0xme'])).toEqual([{ id: 'c1' }]);
   });
 
+  /*
+   * Restored entries kept their original timestamp, which inside the feed's
+   * 5-minute staleTime reads as FRESH — so refetchOnMount stayed quiet and the
+   * boot prefetch short-circuited, and a reload repainted the previous visit's
+   * like and view counts with no /api/feed request at all.
+   */
+  it('hands back restored entries stale, however recently they were written', () => {
+    queryClient.setQueryData(['unified-feed', {}, 20], infinite([{ items: [{ tokenId: 1 }] }]));
+    flush();
+
+    const fresh = new QueryClient();
+    restoreQueryCache(fresh);
+
+    const query = fresh.getQueryCache().findAll({ queryKey: ['unified-feed'] })[0];
+    expect(query.state.data).toBeDefined();
+    // Five minutes is the feed's staleTime; the entry must be stale past it.
+    expect(query.isStaleByTime(5 * 60 * 1000)).toBe(true);
+  });
+
   it('clearPersistedQueryCache removes the blob outright', () => {
     queryClient.setQueryData(['messages', 'conversations', '', '0xme'], [{ id: 'c1' }]);
     flush();

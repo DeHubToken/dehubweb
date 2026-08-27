@@ -7,6 +7,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { isHomeFeedRoute } from '@/lib/home-routes';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -26,9 +27,6 @@ interface FriendOnStage {
   stage: AudioSpace;
 }
 
-// Keep in sync with AppLayout's HOME_FEED_ROUTES — '/app/' (trailing slash)
-// also renders the home feed.
-const HOME_PATHS = new Set(['/', '/app', '/app/', '/videos', '/shorts']);
 
 export function FriendsOnStageBar() {
   const { walletAddress, isAuthenticated } = useAuth();
@@ -37,7 +35,7 @@ export function FriendsOnStageBar() {
   // forever — without a route gate these two polls run every 15s for the
   // whole session on every page. Poll only while home is actually on screen.
   const { pathname } = useLocation();
-  const isHomeActive = HOME_PATHS.has(pathname);
+  const isHomeActive = isHomeFeedRoute(pathname);
 
   // Fetch user's following list
   const { data: followingData } = useQuery({

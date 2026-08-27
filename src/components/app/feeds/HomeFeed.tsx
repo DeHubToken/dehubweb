@@ -14,6 +14,8 @@ import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
+import { isHomeFeedRoute } from '@/lib/home-routes';
 import { RefreshCw, Radio, ChevronRight, ArrowUp, Rocket } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
@@ -321,6 +323,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { isCollapsed } = useSidebarCollapse();
   const { shortsEnabled } = useShortsEnabled();
   const queryClient = useQueryClient();
+  // PersistentPageCache never unmounts this component once home has been
+  // visited, so anything on a timer here has to ask whether home is on screen.
+  const isHomeActive = isHomeFeedRoute(useLocation().pathname);
 
   // Clear persisted filters on fresh page load (not in-app navigation)
   useEffect(() => {
@@ -683,10 +688,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return first?.createdAt || undefined;
   }, [singleFeed.data]);
 
+  // The same poll now also refreshes the counts on the cards already rendered,
+  // so it runs under every sort and on the interleaved feed too. Gated on the
+  // ROUTE rather than the sort, because PersistentPageCache keeps this
+  // component mounted for the rest of the session once home is visited — and
+  // held behind railsEnabled so it never competes with the first page.
   const { newPostCount, atCap: newPostsAtCap } = useNewPostsSignal({
     ...commonParams,
     postType: deferredPostType === 'all' ? undefined : deferredPostType,
-    enabled: !useInterleavedFeed && deferredSort.value === 'latest',
+    enabled: isHomeActive && railsEnabled,
+    chronological: !useInterleavedFeed && deferredSort.value === 'latest',
     newestCreatedAt: newestRenderedCreatedAt,
   });
 

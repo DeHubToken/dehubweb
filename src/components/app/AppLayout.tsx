@@ -36,6 +36,7 @@ import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { isHomeFeedRoute } from '@/lib/home-routes';
 import { scrollDocumentTo } from '@/lib/document-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
@@ -57,10 +58,8 @@ const POST_OVERLAY_ORIGIN_KEY = 'post-overlay-origin';
 // The home feed is reachable at /app and at the clean feed-tab URLs
 // (/videos, /shorts) — all backed by the same cached HomePage. Layout that's
 // specific to the home feed (full-bleed mosaic, collapsed-mode global nav)
-// must treat all of them the same.
-const HOME_FEED_ROUTES = new Set(['/', '/app', '/app/', '/videos', '/shorts']);
-const isHomeFeedRoute = (pathname: string | null | undefined) =>
-  !!pathname && HOME_FEED_ROUTES.has(pathname);
+// must treat all of them the same. The route list is shared with
+// FriendsOnStageBar and HomeFeed — see lib/home-routes.
 
 // The post layer tracks <main>'s live box (the gap between the sidebars) via the
 // CSS vars published below — the same ones the login modal centers against.
