@@ -34,7 +34,6 @@ import {
 import type { StageRadioStation, StageRadioStatus } from '@/lib/stage-radio';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { cloneHostVoiceFromStage, dubVoiceConsentGiven } from '@/lib/stage-dub-voice';
 import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import { useStageCaptionPublisher } from '@/hooks/use-stage-captions';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
@@ -698,27 +697,19 @@ export function StageProvider({ children }: { children: ReactNode }) {
       mediaRecorderRef.current = recorder;
       console.log('[Stage] Recording started (voice-effect-processed stream)');
 
-      // ─── Voice for dubbing ──────────────────────────────────────────────
+      // The host's dubbing voice is NOT taken from here any more.
       //
-      // A stage dubbed in a stock voice is worth less than one dubbed in the
-      // host's own, and asking them to go and train a voice first is a step
-      // most people will not take. So take it from the stage itself: thirty
-      // seconds in, lift the sample the recorder has already collected and
-      // clone from it once, in the background.
+      // It used to be: thirty seconds in, the recorder's buffer was posted to
+      // elevenlabs-clone-voice in the background. That never worked. The
+      // function returns a voice id and nothing wrote it to custom_voices, so
+      // every clone it made was orphaned — a voice slot consumed per page
+      // load, and dubbing still falling back to the stock narrator every time.
+      // It also read custom_voices without a wallet header, so the "already
+      // have one?" check could not see a row even when there was one.
       //
-      // Gated on the host having agreed at launch — this is their voice, and
-      // an opt-in they saw is the difference between a feature and a surprise.
-      // Once cloned it is cached in custom_voices and every later stage uses
-      // it without asking again.
-      if (dubVoiceConsentGiven()) {
-        setTimeout(() => {
-          void cloneHostVoiceFromStage(
-            recordingChunksRef.current,
-            walletAddressRef.current ?? null,
-            userRef.current?.username || 'Host',
-          );
-        }, 30_000);
-      }
+      // Cloning is now an explicit, paid step before going live
+      // (StageVoiceSetup → stage-voice-clone), which is where a permanent copy
+      // of somebody's voice belongs.
     } catch (err) {
       console.warn('[Stage] Recording setup failed:', err);
     }

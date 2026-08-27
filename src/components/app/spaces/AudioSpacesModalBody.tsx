@@ -52,6 +52,8 @@ import { StageReactions, type AvatarReactions } from './StageReactions';
 import { StageChat } from './StageChat';
 import { StageCaptionsButton, StageCaptionsOverlay } from './StageCaptions';
 import { dubVoiceConsentGiven, setDubVoiceConsent } from '@/lib/stage-dub-voice';
+import { StageVoiceSetup } from './StageVoiceSetup';
+import { fetchVoiceCloneStatus, releaseStageVoice } from '@/lib/stage-voice-clone';
 import {
   closeStagePopout,
   popOutStageRecording,
@@ -71,10 +73,10 @@ import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { formatDistanceToNow } from 'date-fns';
 
-type View = 'browse' | 'create' | 'live';
+type View = 'browse' | 'create' | 'live' | 'voice';
 
 export function AudioSpacesModalBody() {
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
   const {
     liveSpaces,
@@ -115,9 +117,16 @@ export function AudioSpacesModalBody() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [createMode, setCreateMode] = useState<'now' | 'later'>('now');
-  // Defaults to on: it is the host's own voice, on their own stage, speaking
-  // their own words — but it is visible and off-able, which is what makes it
-  // a choice rather than a surprise.
+  // Off until they ask for it, and asking for it means going through the
+  // voice setup step — recording a sample and paying for the clone. This is
+  // not a preference that can be flipped on someone's behalf: it costs money
+  // and it makes a permanent copy of their voice.
+  //
+  // localStorage only seeds the box so it does not flicker; the server is the
+  // authority (custom_voices.is_stage_voice) and corrects it a moment later.
+  // Without that, signing in on another wallet would show a ticked box for a
+  // voice that account does not have, and the host would go live believing
+  // they were being dubbed as themselves.
   const [dubVoice, setDubVoice] = useState(() => dubVoiceConsentGiven());
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
   // The recording player is app-wide now (lib/stage-playback), so this modal
@@ -168,6 +177,23 @@ export function AudioSpacesModalBody() {
       setView('live');
     }
   }, [currentSpace, isModalOpen]);
+
+  // Whether this wallet's voice is actually switched on for dubbing. Asked
+  // when the go-live form opens, because the answer lives on the account and
+  // not in this browser: a host who set it up on their phone, or who signed
+  // in as a different wallet, must see the truth rather than the last thing
+  // this device remembered.
+  useEffect(() => {
+    if (view !== 'create' || !walletAddress) return;
+    let cancelled = false;
+    (async () => {
+      const status = await fetchVoiceCloneStatus(walletAddress);
+      if (cancelled || !status) return;
+      setDubVoice(status.enabled);
+      setDubVoiceConsent(status.enabled);
+    })();
+    return () => { cancelled = true; };
+  }, [view, walletAddress]);
 
   // ─── Handlers ─────────────────────────────────────────────────────────────
 
@@ -670,22 +696,43 @@ export function AudioSpacesModalBody() {
                 />
               </div>
 
-              {/* Consent for the voice clone, asked once and here — the only
-                  moment the host is deciding what this stage is rather than
-                  running one. Off means international listeners still get
-                  dubbing, just in a stock voice. */}
-              <label className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.06] cursor-pointer">
+              {/* Asking for the voice clone, here — the only moment the host is
+                  deciding what this stage is rather than running one. Ticking
+                  it opens the setup step: record, pay, done, all before the
+                  room opens. Leaving it off means international listeners still
+                  get dubbing, just in a stock voice. */}
+              <label
+                className={cn(
+                  'flex items-start gap-3 p-3 rounded-xl bg-white/[0.06]',
+                  isAuthenticated ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
+                )}
+              >
                 <input
                   type="checkbox"
                   checked={dubVoice}
-                  onChange={(e) => { setDubVoice(e.target.checked); setDubVoiceConsent(e.target.checked); }}
+                  disabled={!isAuthenticated}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      // Never tick straight from the box: the voice does not
+                      // exist yet and has not been paid for. The step decides.
+                      setView('voice');
+                      return;
+                    }
+                    // Off is a server change, not a forgotten preference: the
+                    // voice stays on the account but stops being the one
+                    // dubbing speaks in. Switching back on later is free.
+                    setDubVoice(false);
+                    setDubVoiceConsent(false);
+                    if (walletAddress) void releaseStageVoice(walletAddress);
+                  }}
                   className="mt-0.5 w-4 h-4 rounded accent-white/80 shrink-0"
                 />
                 <span className="min-w-0">
                   <span className="block text-sm text-white">Dub me in my own voice</span>
                   <span className="block text-xs text-white/50 mt-0.5">
-                    Listeners in other languages hear you, not a narrator. Your voice is
-                    taken from the first half-minute of this stage and reused next time.
+                    {dubVoice
+                      ? 'Your voice is set up. Listeners in other languages hear you, not a narrator.'
+                      : 'Listeners in other languages hear you, not a narrator. Takes a fifteen-second recording and a one-off fee.'}
                   </span>
                 </span>
               </label>
@@ -710,6 +757,28 @@ export function AudioSpacesModalBody() {
               </>
               )}
             </div>
+          )}
+
+          {/* ── Voice setup ─────────────────────────────────────────────────
+              Reached only by asking to be dubbed in your own voice. Sits
+              between the create form and Go Live so the voice exists before
+              the room does — the title and description typed so far are held
+              in state and are still there on the way back. */}
+          {view === 'voice' && !currentSpace && (
+            <StageVoiceSetup
+              wallet={walletAddress}
+              displayName={user?.username || 'Host'}
+              onReady={() => {
+                setDubVoice(true);
+                setDubVoiceConsent(true);
+                setView('create');
+              }}
+              onCancel={() => {
+                setDubVoice(false);
+                setDubVoiceConsent(false);
+                setView('create');
+              }}
+            />
           )}
 
           {/* ── Live View ───────────────────────────────────────────────── */}
