@@ -91,11 +91,13 @@ const SORT_OPTIONS = [
 ];
 
 // Threading itself is unlimited — the server happily accepts a reply to a reply
-// at any depth. Only the visual indent is capped so a long chain doesn't walk
-// off the right edge on a narrow screen.
-const MAX_INDENT_DEPTH = 5;
-/** Fallback step; the live value is the `--comment-indent` var on the section root. */
-const INDENT_PX = 24;
+// at any depth. Nesting is NOT drawn as indentation: every reply sits flush
+// with its parent and the thread line through the avatars carries the
+// relationship, so a deep chain costs no width. `depth` survives only as
+// reading order.
+//
+// How many replies a thread shows before it needs a tap to open up.
+const REPLIES_SHOWN_COLLAPSED = 1;
 
 /** A reply plus how deep it sits under its root comment (1 = direct reply). */
 interface ThreadReply {
@@ -129,8 +131,10 @@ interface CommentItemProps {
   tipTotal?: number;
   onUserPress: (username: string) => void;
   isReply?: boolean;
-  /** Nesting depth: 0 = top-level, 1 = direct reply, 2 = reply-to-reply, … */
-  depth?: number;
+  /** Draw the thread line up out of this row's avatar to the one above it. */
+  threadLineAbove?: boolean;
+  /** Draw the thread line down out of this row's avatar to the one below it. */
+  threadLineBelow?: boolean;
   isOwnComment?: boolean;
   /**
    * Spend a Comment Anchor on this comment, or undefined when it cannot be.
@@ -202,7 +206,7 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment, isThreadEntry, onAnchor }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -229,20 +233,30 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-start gap-3 py-3"
-      style={
-        depth > 0
-          ? { marginLeft: `calc(var(--comment-indent, ${INDENT_PX}px) * ${Math.min(depth, MAX_INDENT_DEPTH)})` }
-          : undefined
-      }
+      className="relative flex items-start gap-3 py-3"
       data-comment-id={comment.id}
     >
-      <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
-        <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
-          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
-          <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
-        </Avatar>
-      </button>
+      {/* Thread line. Replies sit at the same left edge as their parent — no
+          indent — and the line through the avatars is what says "these belong
+          together". Each segment runs from the avatar's centre to the row's
+          own edge (the row is py-3, so ±12px past the avatar), which meets the
+          neighbouring row's segment exactly and draws as one continuous line.
+          The avatar is opaque and sits above it, so the line reads as starting
+          at the avatar's rim. */}
+      <div className="relative flex-shrink-0">
+        {threadLineAbove && (
+          <span aria-hidden className="absolute left-1/2 -ml-px -top-3 h-7 w-px bg-white/20" />
+        )}
+        {threadLineBelow && (
+          <span aria-hidden className="absolute left-1/2 -ml-px top-4 -bottom-3 w-px bg-white/20" />
+        )}
+        <button onClick={() => onUserPress(comment.username)} className="relative block">
+          <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
+            {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
+            <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
+          </Avatar>
+        </button>
+      </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 mb-1">
           <button 
@@ -572,6 +586,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const [tipComment, setTipComment] = useState<Comment | null>(null);
   // Which of the viewer's own comments has its likers drawer open.
   const [likersCommentId, setLikersCommentId] = useState<string | null>(null);
+  /** Root comment ids whose full reply thread the reader has opened. */
+  const [expandedThreads, setExpandedThreads] = useState<Set<string>>(() => new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
   // Optimistic delete/edit overlays — applied instantly in allComments below,
@@ -1197,6 +1213,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
     setOptimisticComments(prev => [tempComment, ...prev]);
     const replyTarget = replyTo;
+    // Your own reply has to land somewhere you can see it, so open the thread
+    // it belongs to. Replying to a reply still means the root's thread.
+    if (replyTo) {
+      const root = groupedComments.find(
+        t => t.comment.id === replyTo.id || t.replies.some(({ comment: r }) => r.id === replyTo.id),
+      );
+      if (root) setExpandedThreads(prev => new Set(prev).add(root.comment.id));
+    }
     const imageFile = commentImage;
     const gifUrl = commentGifUrl;
     clearDraft(tokenId, replyTo?.id);
@@ -1287,6 +1311,88 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     isDraggingRef: commentsIsDraggingRef,
   });
 
+  /**
+   * One root comment and its thread, collapsed to a single reply until asked.
+   *
+   * A busy post used to open with fifty rows of other people's back-and-forth
+   * between the first comment and the second, so the list read as one argument
+   * rather than as a set of comments. The rest are a tap away and stay open for
+   * the life of the section.
+   *
+   * Both the replies tab and the search tab render threads, so this lives here
+   * rather than being written twice.
+   */
+  const renderThread = ({ comment, replies }: CommentThread) => {
+    // A search hit can be the reply itself — collapsing the thread would hide
+    // the very row the query matched, so searching opens every thread.
+    const isExpanded = expandedThreads.has(comment.id) || !!searchQuery.trim();
+    const shown = isExpanded ? replies : replies.slice(0, REPLIES_SHOWN_COLLAPSED);
+    const hiddenCount = replies.length - shown.length;
+
+    return (
+      <div key={comment.id}>
+        <CommentItem
+          comment={comment}
+          tokenId={tokenId}
+          onLike={handleLike}
+          onShowLikers={setLikersCommentId}
+          onDislike={handleDislike}
+          onReply={handleReply}
+          onShare={() => {}}
+          onEdit={handleEditComment}
+          onDelete={handleDeleteComment}
+          onTip={handleTip}
+          tipTotal={commentTips?.[comment.id]}
+          onUserPress={handleUserPress}
+          isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
+          onAnchor={canAnchor ? handleAnchor : undefined}
+          threadLineBelow={shown.length > 0}
+          isThreadEntry={
+            !comment.replyToId &&
+            !!postAuthorAddress &&
+            comment.address?.toLowerCase() === postAuthorAddress.toLowerCase()
+          }
+        />
+        {shown.map(({ comment: reply }, i) => (
+          <CommentItem
+            key={reply.id}
+            comment={reply}
+            tokenId={tokenId}
+            onLike={handleLike}
+            onShowLikers={setLikersCommentId}
+            onDislike={handleDislike}
+            onReply={handleReply}
+            onShare={() => {}}
+            onEdit={handleEditComment}
+            onDelete={handleDeleteComment}
+            onTip={handleTip}
+            tipTotal={commentTips?.[reply.id]}
+            onUserPress={handleUserPress}
+            isReply
+            threadLineAbove
+            // The line has to reach the "show more" row too, or it stops dead
+            // above a control that belongs to the thread.
+            threadLineBelow={i < shown.length - 1 || hiddenCount > 0}
+            isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
+          />
+        ))}
+        {hiddenCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setExpandedThreads(prev => new Set(prev).add(comment.id))}
+            // Hangs off the end of the thread line on an elbow, and its label
+            // starts on the same 44px text column as every comment body.
+            className="relative flex h-8 items-center pl-11 mb-1 text-xs text-zinc-400 hover:text-white transition-colors"
+          >
+            <span aria-hidden className="absolute left-4 -ml-px -top-3 bottom-1/2 w-px bg-white/20" />
+            <span aria-hidden className="absolute left-4 top-1/2 -mt-px w-5 h-px bg-white/20" />
+            {hiddenCount === 1 ? 'Show 1 more reply' : `Show ${hiddenCount} more replies`}
+          </button>
+        )}
+      </div>
+    );
+  };
+
   return (
     <PostCreatorContext.Provider value={postCreator}>
     <motion.div
@@ -1296,11 +1402,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        // Indent step for nested replies, read by CommentItem below. Narrow
-        // screens get a smaller one: five levels of the desktop step is 120px
-        // of a 360px viewport, which pushed the reply's own action row past the
-        // right edge.
-        "[--comment-indent:14px] md:[--comment-indent:24px]",
         isMobile
           ? "flex flex-col h-full px-2 pt-2 pb-2 relative"
           : embedded
@@ -1446,51 +1547,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   </motion.div>
                 )}
                 {filteredGroupedComments.length > 0 ? (
-                  filteredGroupedComments.map(({ comment, replies }) => (
-                    <div key={comment.id}>
-                      <CommentItem
-                        comment={comment}
-                        tokenId={tokenId}
-                        onLike={handleLike}
-                        onShowLikers={setLikersCommentId}
-                        onDislike={handleDislike}
-                        onReply={handleReply}
-                        onShare={() => {}}
-                        onEdit={handleEditComment}
-                        onDelete={handleDeleteComment}
-                        onTip={handleTip}
-                        tipTotal={commentTips?.[comment.id]}
-                        onUserPress={handleUserPress}
-                        isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
-                        onAnchor={canAnchor ? handleAnchor : undefined}
-                        isThreadEntry={
-                          !comment.replyToId &&
-                          !!postAuthorAddress &&
-                          comment.address?.toLowerCase() === postAuthorAddress.toLowerCase()
-                        }
-                      />
-                      {replies.map(({ comment: reply, depth }) => (
-                        <CommentItem
-                          key={reply.id}
-                          comment={reply}
-                          tokenId={tokenId}
-                          onLike={handleLike}
-                          onShowLikers={setLikersCommentId}
-                          onDislike={handleDislike}
-                          onReply={handleReply}
-                          onShare={() => {}}
-                          onEdit={handleEditComment}
-                          onDelete={handleDeleteComment}
-                          onTip={handleTip}
-                          tipTotal={commentTips?.[reply.id]}
-                          onUserPress={handleUserPress}
-                          isReply
-                          depth={depth}
-                          isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
-                        />
-                      ))}
-                    </div>
-                  ))
+                  filteredGroupedComments.map(renderThread)
                 ) : (
                   <motion.p
                     initial={{ opacity: 0 }}
@@ -1661,51 +1718,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             ) : (
               <AnimatePresence mode="popLayout">
                 {filteredGroupedComments.length > 0 ? (
-                  filteredGroupedComments.map(({ comment, replies }) => (
-                    <div key={comment.id}>
-                      <CommentItem
-                        comment={comment}
-                        tokenId={tokenId}
-                        onLike={handleLike}
-                        onShowLikers={setLikersCommentId}
-                        onDislike={handleDislike}
-                        onReply={handleReply}
-                        onShare={() => {}}
-                        onEdit={handleEditComment}
-                        onDelete={handleDeleteComment}
-                        onTip={handleTip}
-                        tipTotal={commentTips?.[comment.id]}
-                        onUserPress={handleUserPress}
-                        isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
-                        onAnchor={canAnchor ? handleAnchor : undefined}
-                        isThreadEntry={
-                          !comment.replyToId &&
-                          !!postAuthorAddress &&
-                          comment.address?.toLowerCase() === postAuthorAddress.toLowerCase()
-                        }
-                      />
-                      {replies.map(({ comment: reply, depth }) => (
-                        <CommentItem
-                          key={reply.id}
-                          comment={reply}
-                          tokenId={tokenId}
-                          onLike={handleLike}
-                          onShowLikers={setLikersCommentId}
-                          onDislike={handleDislike}
-                          onReply={handleReply}
-                          onShare={() => {}}
-                          onEdit={handleEditComment}
-                          onDelete={handleDeleteComment}
-                          onTip={handleTip}
-                          tipTotal={commentTips?.[reply.id]}
-                          onUserPress={handleUserPress}
-                          isReply
-                          depth={depth}
-                          isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
-                        />
-                      ))}
-                    </div>
-                  ))
+                  filteredGroupedComments.map(renderThread)
                 ) : (
                   <motion.p
                     initial={{ opacity: 0 }}
