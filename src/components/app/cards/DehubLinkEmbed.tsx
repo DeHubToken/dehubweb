@@ -28,6 +28,7 @@ import { EventLinkEmbed } from '@/components/app/events/EventLinkEmbed';
 import { StageLinkEmbed } from '@/components/app/stages/StageLinkEmbed';
 import { ProfileLinkEmbed } from '@/components/app/profile/ProfileLinkEmbed';
 import { SharedPostEmbed } from '@/components/app/chat/SharedPostEmbed';
+import { BountyLinkEmbed } from '@/features/work/components/BountyLinkEmbed';
 
 /**
  * Lazy, unlike its siblings. This switchboard is on the boot path — every feed
@@ -159,6 +160,8 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
       return <EventLinkEmbed eventNumber={link.eventNumber!} fallback={fallback} />;
     case 'stage':
       return <StageLinkEmbed stageId={link.stageId} stageShortId={link.stageShortId} fallback={fallback} />;
+    case 'bounty':
+      return <BountyLinkEmbed jobKey={link.bountyJobKey!} path={link.path} fallback={fallback} />;
     case 'film':
       // fallback={null}, not the chip: the chip is what renders when the title
       // fails to LOAD, and flashing it for one frame on every film link while
