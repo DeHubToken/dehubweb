@@ -33,6 +33,25 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: node scripts/i18n-coverage.mjs
 
+  # A request header missing from a function's Access-Control-Allow-Headers
+  # makes the BROWSER drop the request — no network row, no function log, and a
+  # failure that reads exactly like the server being down. supabase-js started
+  # sending x-supabase-client-platform and 62 of 115 functions did not list it,
+  # which took stage transcription, every ElevenLabs feature, checkout and ads
+  # off the air for browsers with nothing anywhere to show for it.
+  #
+  # No install, like the i18n job: it only reads source.
+  edge-cors:
+    name: Edge CORS
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: node scripts/edge-cors-check.mjs
+
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest

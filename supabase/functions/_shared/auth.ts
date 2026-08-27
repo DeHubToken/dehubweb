@@ -5,26 +5,18 @@
 // with its wallet address; we verify the pair against api.dehub.io. Paid/abusable
 // endpoints should gate on requireDeHubAuth() and, where relevant, checkRateLimit().
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+// The CORS list itself now lives in _shared/cors.ts, which has no dependencies
+// — a function that wants nothing but the headers should import it from there
+// rather than drag supabase-js and the api.dehub.io verifier along with them.
+// That weight is why so many functions hand-rolled a copy in the first place,
+// and every copy eventually drifted.
+//
+// Imported as well as re-exported: a bare `export … from` does not bind the
+// name locally, and jsonResponse below spreads it.
+import { corsHeaders, handleCorsPreflight } from "./cors.ts";
+export { corsHeaders, handleCorsPreflight };
 
 const DEHUB_API_BASE = "https://api.dehub.io";
-
-export const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer",
-  // DELETE and PATCH are listed because functions here use them, and a browser
-  // will not send a non-safelisted method the preflight omits — it fails in
-  // the browser and works in curl, the worst way for a bug to present.
-  // Listing a method grants nothing: each function still branches on
-  // req.method and 405s anything it does not handle.
-  "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
-};
-
-/** Returns a preflight response for OPTIONS requests, or null to continue. */
-export function handleCorsPreflight(req: Request): Response | null {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  return null;
-}
 
 export function jsonResponse(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
