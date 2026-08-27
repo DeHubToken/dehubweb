@@ -761,6 +761,9 @@ const App = () => (
              * paints without waiting for the ~1.5 MB wallet chunk.
              */}
             <Route path="/r/:code" element={<ReferralLanding />} />
+            {/* /r/<code>/<any/path> attributes the visit, then redirects to that
+                path — one shareable link that earns and lands somewhere specific. */}
+            <Route path="/r/:code/*" element={<ReferralLanding />} />
             <Route
               path="*"
               element={

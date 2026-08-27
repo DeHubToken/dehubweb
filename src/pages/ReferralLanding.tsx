@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { Copy, ArrowRight, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
+import { resolveDeepLinkTarget } from "@/lib/affiliateDeepLink";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { getBadgeUrl, getBadgeName } from "@/lib/staking-badges";
 
@@ -13,9 +14,16 @@ import { getBadgeUrl, getBadgeName } from "@/lib/staking-badges";
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
 export default function ReferralLanding() {
-  const { code: rawCode } = useParams<{ code: string }>();
+  const { code: rawCode, "*": splat } = useParams<{ code: string; "*": string }>();
   const code = (rawCode || "").trim().toUpperCase();
   const valid = isValidAffiliateCode(code);
+  const { search } = useLocation();
+  const navigate = useNavigate();
+  // `/r/<CODE>/docs/whatever` (or `?to=/docs/whatever`) attributes the visit and
+  // then hands the visitor straight to that page, so one hyperlink can both earn
+  // and land somewhere specific. Everything below only runs when there is no
+  // destination — with one, this page is a redirect and paints nothing.
+  const deepLink = useMemo(() => (valid ? resolveDeepLinkTarget(splat, search) : null), [splat, search, valid]);
   const [inviter, setInviter] = useState<string | null>(null);
   const [inviterUsername, setInviterUsername] = useState<string | null>(null);
   const [inviterBadgeBalance, setInviterBadgeBalance] = useState<number | null>(null);
@@ -31,8 +39,17 @@ export default function ReferralLanding() {
   const pageUrl = `${SITE}/r/${code}`;
   const ctaUrl = `/app?ref=${code}`;
 
+  // Attribution has to be written before the destination page mounts, so the
+  // cookie and the redirect happen in one effect rather than racing a <Navigate>
+  // against the lookup effect below.
   useEffect(() => {
-    if (!valid) return;
+    if (!valid || !deepLink) return;
+    setAffiliateRef(code);
+    navigate(deepLink, { replace: true });
+  }, [valid, deepLink, code, navigate]);
+
+  useEffect(() => {
+    if (!valid || deepLink) return;
     setAffiliateRef(code);
     let cancelled = false;
     (async () => {
@@ -70,12 +87,12 @@ export default function ReferralLanding() {
       if (!cancelled && resolved) setInviter(resolved);
     })();
     return () => { cancelled = true; };
-  }, [code, valid]);
+  }, [code, valid, deepLink]);
 
   // Preload the share image immediately — its URL only depends on the code,
   // so it downloads in parallel with the inviter lookup instead of after it.
   useEffect(() => {
-    if (!valid) return;
+    if (!valid || deepLink) return;
     let cancelled = false;
     const img = new Image();
     img.onload = () => { if (!cancelled) setImgLoaded(true); };
@@ -86,7 +103,7 @@ export default function ReferralLanding() {
     };
     img.src = shareImage;
     return () => { cancelled = true; };
-  }, [shareImage, valid, imgRetry]);
+  }, [shareImage, valid, imgRetry, deepLink]);
 
   const title = useMemo(
     () => (valid && inviter ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
@@ -100,6 +117,9 @@ export default function ReferralLanding() {
     try { await navigator.clipboard.writeText(txt); toast.success("Copied"); }
     catch { toast.error("Copy failed"); }
   };
+
+  // Redirecting — paint nothing rather than flashing the invite splash.
+  if (deepLink) return null;
 
   return (
     <>
