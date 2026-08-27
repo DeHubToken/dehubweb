@@ -95,21 +95,60 @@ async function saveCategories(
   return Array.isArray(body?.added) ? body.added : [];
 }
 
-/** Whatever was transcribed for this post, if anything is ready yet. */
-async function transcriptFor(tokenId: string): Promise<string | null> {
+/** Whatever was transcribed for this post, and how far along it is. */
+async function transcriptFor(tokenId: string): Promise<{ text: string | null; status: string | null }> {
   const db = admin();
   const { data } = await db
     .from('transcripts')
     .select('full_text, status')
     .in('source_kind', ['video', 'audio', 'live'])
     .eq('source_ref', tokenId)
-    .eq('status', 'ready')
-    .maybeSingle();
-  const text = String(data?.full_text ?? '').trim();
-  return text || null;
+    // limit(1) rather than maybeSingle(): dropping the status filter widened
+    // this to every row for the post, and maybeSingle treats a second one as
+    // an error rather than a choice.
+    .order('updated_at', { ascending: false })
+    .limit(1);
+  const row = Array.isArray(data) ? data[0] : null;
+  const status = row?.status ? String(row.status) : null;
+  const text = status === 'ready' ? String(row?.full_text ?? '').trim() : '';
+  return { text: text || null, status };
 }
 
-async function categorizeOne(tokenId: string, available: string[]): Promise<Outcome> {
+/**
+ * How long a post with speech in it is given to produce a transcript before it
+ * is categorized without one.
+ *
+ * The sweep and the transcript race each other, and the sweep usually wins: a
+ * video is a candidate the moment it is posted, while its transcript is
+ * minutes away behind transcoding. Whoever gets there first fills the five
+ * slots, so without this the classifier reads a thumbnail on exactly the posts
+ * it was built to read the words of, and the transcript hook arrives to find
+ * no room left.
+ *
+ * So a young video waits. If the transcript never comes — transcoding failed,
+ * nothing was said, the sweeper gave up — the post ages past this and gets
+ * categorized from what there is, which is what would have happened anyway.
+ */
+const TRANSCRIPT_GRACE_MS = 6 * 60 * 60 * 1000;
+
+/** Statuses that mean no transcript is coming, so there is nothing to wait for. */
+const TRANSCRIPT_SETTLED = new Set(['ready', 'empty', 'failed']);
+
+function stillWaitingOnWords(post: any, status: string | null): boolean {
+  const transcribable = !!(post?.videoUrl || post?.audioUrl);
+  if (!transcribable) return false;
+  if (status && TRANSCRIPT_SETTLED.has(status)) return false;
+  const born = Date.parse(String(post?.createdAt ?? '')) || 0;
+  return born > 0 && Date.now() - born < TRANSCRIPT_GRACE_MS;
+}
+
+async function categorizeOne(
+  tokenId: string,
+  available: string[],
+  /** True when the transcript is the reason we are here, so there is nothing
+   *  to wait for — the words already exist. */
+  fromTranscript = false,
+): Promise<Outcome> {
   const post = await fetchPost(tokenId);
   if (!post) return { tokenId, added: [], skipped: 'post not found' };
   if (String(post.status ?? '').toLowerCase() === 'deleted') return { tokenId, added: [], skipped: 'deleted' };
@@ -120,10 +159,17 @@ async function categorizeOne(tokenId: string, available: string[]): Promise<Outc
 
   const transcript = await transcriptFor(tokenId);
 
+  // Deliberately returns WITHOUT stamping categorizedAt: the post stays a
+  // candidate so the sweep comes back to it once the words are in, or once
+  // the grace period says they never will be.
+  if (!fromTranscript && stillWaitingOnWords(post, transcript.status)) {
+    return { tokenId, added: [], skipped: 'waiting for the transcript' };
+  }
+
   const result = await classify({
     title: post.name,
     description: post.description,
-    transcript,
+    transcript: transcript.text,
     imageUrl: postImageUrl(post),
     availableCategories: available,
     existing,
@@ -166,17 +212,30 @@ Deno.serve(async (req) => {
       const ref = String(body?.ref ?? body?.tokenId ?? '').trim();
       if (!/^\d+$/.test(ref)) return json({ error: 'a numeric { ref } is required' }, 400);
 
-      const outcome = await categorizeOne(ref, available);
+      // The single-post path is `transcribe` telling us the words are ready,
+      // so it never waits for them.
+      const outcome = await categorizeOne(ref, available, true);
       return json({ ok: true, ...outcome });
     }
 
     /* ---- the catch-up pass ---- */
     const limit = Math.max(1, Math.min(Number(body?.limit ?? BACKFILL_BUDGET), BACKFILL_BUDGET));
-    const ids = await candidates(limit);
+    /**
+     * Ask for more than the budget.
+     *
+     * Candidates come newest first, and a young video now declines to be
+     * categorized until its transcript exists. Fetching exactly the budget
+     * would let a dozen fresh uploads fill the whole run with "come back
+     * later" and the back catalogue would never move while the platform was
+     * busy — the queue would look like it was being worked and drain nothing.
+     * A post that waits does not spend its slot.
+     */
+    const ids = await candidates(Math.min(limit * 4, 100));
     const results: Outcome[] = [];
     let creditsOut = false;
+    let spent = 0;
 
-    for (let i = 0; i < ids.length && !creditsOut; i += WAVE) {
+    for (let i = 0; i < ids.length && !creditsOut && spent < limit; i += WAVE) {
       const wave = ids.slice(i, i + WAVE);
       const settled = await Promise.all(wave.map(async (id): Promise<Outcome> => {
         try {
@@ -188,14 +247,16 @@ Deno.serve(async (req) => {
           return { tokenId: id, added: [], error: String(e?.message ?? e).slice(0, 200) };
         }
       }));
+      spent += settled.filter((r) => r.skipped !== 'waiting for the transcript').length;
       results.push(...settled);
     }
 
     return json({
       ok: true,
       mode: 'backfill',
-      considered: ids.length,
+      considered: results.length,
       tagged: results.filter((r) => r.added.length > 0).length,
+      waitingOnTranscript: results.filter((r) => r.skipped === 'waiting for the transcript').length,
       creditsExhausted: creditsOut,
       results,
     });
