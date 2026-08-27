@@ -242,13 +242,16 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
           data-post-modal
           className={cn(
             "max-h-[90vh] max-h-[90dvh]",
-            // Desktop: match LoginModal's focused-overlay column (360px,
-            // centred). DrawerContent ships `fixed inset-x-0` with no cap, so
-            // without this the composer stretched the full viewport width.
-            // `mx-auto` (not `-translate-x-1/2`) because vaul writes an inline
-            // transform to drive the slide-up — a transform class would lose
-            // to it and snap the sheet left mid-animation.
-            "md:mx-auto md:w-full md:max-w-[360px]",
+            // Desktop: the composer opens over the feed it posts into, so it
+            // takes the middle panel's live bounds (--app-main-left /
+            // --app-main-width, measured in AppLayout) — the same column
+            // LoginModal, CommentLikersDrawer and ReactionInfoDrawer use.
+            // DrawerContent ships `fixed inset-x-0` with no cap, so without
+            // this the composer stretches the full viewport width. Positioned
+            // with left/width rather than a transform: vaul writes an inline
+            // transform to drive the slide-up and an inline transform beats a
+            // class, so a transform here would snap the sheet mid-animation.
+            "md:left-[var(--app-main-left,0px)] md:right-auto md:w-[var(--app-main-width,100vw)]",
             state.isCameraModalOpen && "invisible pointer-events-none"
           )}
         >
