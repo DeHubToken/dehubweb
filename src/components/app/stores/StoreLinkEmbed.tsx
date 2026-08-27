@@ -10,12 +10,12 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { ImageIcon, Store as StoreIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useStoreById, useStoreListing } from '@/hooks/use-stores';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { findDehubLinks } from '@/lib/dehub-links';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 /**
  * @deprecated Use `findDehubLink` from `@/lib/dehub-links` — it is host-checked
@@ -74,7 +74,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
         {firstImage ? (
           <img src={firstImage} alt={listing.title} className="w-full h-full object-cover" />
         ) : (
-          <ImageIcon className="w-5 h-5 text-zinc-500" />
+          <ThemedIcon icon="images" alt="" className="w-10 h-10 object-contain opacity-70" />
         )}
         {listing.stock_quantity === 0 && (
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
@@ -86,7 +86,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
       <div className="flex-1 min-w-0 py-1 pr-2 flex flex-col justify-center gap-0.5">
         <p className="text-sm font-semibold text-white truncate">{listing.title}</p>
         <p className="text-xs text-zinc-500 truncate flex items-center gap-1">
-          <StoreIcon className="w-3 h-3" /> {storeName}
+          <ThemedIcon icon="stores" alt="" className="w-4 h-4 object-contain" /> {storeName}
         </p>
         <p className="text-sm font-semibold text-white flex items-center gap-1 mt-0.5">
           {dhbPrice > 0 ? (
@@ -142,7 +142,7 @@ function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNo
         {store.avatar_url ? (
           <img src={store.avatar_url} alt="" className="w-full h-full object-cover" />
         ) : (
-          <StoreIcon className="w-5 h-5 text-zinc-500" />
+          <ThemedIcon icon="stores" alt="" className="w-10 h-10 object-contain opacity-70" />
         )}
       </div>
       <div className="flex-1 min-w-0 relative">
@@ -151,7 +151,7 @@ function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNo
           <p className="text-xs truncate mt-0.5 text-slate-50">{store.description}</p>
         )}
         <div className="flex items-center gap-1.5 mt-1">
-          <StoreIcon className="w-3 h-3 text-zinc-500" />
+          <ThemedIcon icon="stores" alt="" className="w-4 h-4 object-contain opacity-70" />
           <span className="text-xs text-zinc-500">View store</span>
         </div>
       </div>

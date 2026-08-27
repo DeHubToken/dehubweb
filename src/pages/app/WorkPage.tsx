@@ -1,20 +1,20 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Briefcase, Scissors, MessageSquare, Search, History } from 'lucide-react';
+import { History } from 'lucide-react';
 import { useBrowseJobs, useRecentCompletedJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';
 import { SEOHead } from '@/components/SEOHead';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 
 
-const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
-  { id: 'all', label: 'All', icon: Briefcase },
-  { id: 'shill', label: 'Social Media', icon: MessageSquare },
-  { id: 'clipping', label: 'Clipping', icon: Scissors },
-  { id: 'contract', label: 'Contracts', icon: Briefcase },
+const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: ThemeIconKey }> = [
+  { id: 'all', label: 'All', icon: 'bounties' },
+  { id: 'shill', label: 'Social Media', icon: 'messages' },
+  { id: 'clipping', label: 'Clipping', icon: 'videos' },
+  { id: 'contract', label: 'Contracts', icon: 'command' },
 ];
 
 export default function WorkPage() {
@@ -74,7 +74,7 @@ export default function WorkPage() {
               </button>
               <LiquidGlassBubble2
                 label="Post a Bounty"
-                icon={<Plus className="w-4 h-4" />}
+                icon={<ThemedIcon icon="bounties" alt="" className="w-5 h-5 object-contain" />}
                 onClick={() => navigate('/work/post')}
                 width="auto"
                 height="44px"
@@ -86,7 +86,6 @@ export default function WorkPage() {
           {/* Tabs */}
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
             {TABS.map((t) => {
-              const Icon = t.icon;
               const active = tab === t.id;
               return (
                 <button
@@ -96,7 +95,7 @@ export default function WorkPage() {
                     active ? 'bg-white/15 text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" /> {t.label}
+                  <ThemedIcon icon={t.icon} alt="" className="w-4 h-4 object-contain" /> {t.label}
                 </button>
               );
             })}
@@ -105,7 +104,7 @@ export default function WorkPage() {
           {/* Filter bar */}
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative flex-1 min-w-[200px]">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
+              <ThemedIcon icon="search" alt="" className="w-5 h-5 absolute left-2.5 top-1/2 -translate-y-1/2 object-contain opacity-60" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -146,7 +145,7 @@ export default function WorkPage() {
         ) : jobs.length === 0 ? (
           <div>
             <div className="text-center py-16 text-white/50">
-              <Briefcase className="w-10 h-10 mx-auto mb-3 opacity-50" />
+              <ThemedIcon icon="bounties" alt="" className="w-14 h-14 mx-auto mb-3 object-contain opacity-70" />
               <p className="mb-4">
                 {hasFilters
                   ? 'No open bounties match these filters.'
@@ -155,7 +154,7 @@ export default function WorkPage() {
               <div className="flex items-center justify-center gap-3">
                 <LiquidGlassBubble2
                   label="Post a Bounty"
-                  icon={<Plus className="w-4 h-4" />}
+                  icon={<ThemedIcon icon="bounties" alt="" className="w-5 h-5 object-contain" />}
                   onClick={() => navigate('/work/post')}
                   width="auto"
                   height="40px"

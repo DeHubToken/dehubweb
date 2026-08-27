@@ -6,9 +6,9 @@
  */
 
 import { memo } from 'react';
-import { ImageIcon } from 'lucide-react';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 interface StoreListingCardProps {
   listing: any;
@@ -35,7 +35,7 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
           <img src={firstImage} alt={listing.title} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-            <ImageIcon className="w-8 h-8" />
+            <ThemedIcon icon="images" alt="" className="w-14 h-14 object-contain opacity-70" />
           </div>
         )}
         {listing.is_digital && (

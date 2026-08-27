@@ -154,10 +154,15 @@ export default function WorkEditPage() {
       </button>
 
       <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-6">
-        <h1 className="text-xl font-bold text-white mb-1">Edit Bounty</h1>
-        <p className="text-sm text-white/60 mb-6">
-          {TYPE_LABELS[job.job_type]} · the bounty type can’t be changed after posting.
-        </p>
+        <div className="mb-6 flex items-center gap-3">
+          <ThemedIcon icon="bounties" alt="" className="w-12 h-12 shrink-0 object-contain" />
+          <div>
+            <h1 className="text-xl font-bold text-white">Edit Bounty</h1>
+            <p className="text-sm text-white/60">
+              {TYPE_LABELS[job.job_type]} · the bounty type can’t be changed after posting.
+            </p>
+          </div>
+        </div>
 
         <div className="space-y-4">
           <Field label="Title">
