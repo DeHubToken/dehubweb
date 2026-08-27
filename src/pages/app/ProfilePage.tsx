@@ -619,6 +619,7 @@ export default function ProfilePage() {
                       profileTabButtonPositions.current[tab.value] = el;
                     }}
                     onClick={() => setActiveTab(tab.value)}
+                    title={t(`profile.tabs.${tab.value}`, tab.label)}
                     className={cn(
                       'relative z-40 flex-1 flex flex-col items-center justify-center gap-px px-2 py-[9px] rounded-xl transition-colors min-w-[52px]',
                       isActive ? 'text-white' : 'text-zinc-500 hover:text-white'
