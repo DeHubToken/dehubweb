@@ -94,6 +94,7 @@ const SORT_OPTIONS = [
 // at any depth. Only the visual indent is capped so a long chain doesn't walk
 // off the right edge on a narrow screen.
 const MAX_INDENT_DEPTH = 5;
+/** Fallback step; the live value is the `--comment-indent` var on the section root. */
 const INDENT_PX = 24;
 
 /** A reply plus how deep it sits under its root comment (1 = direct reply). */
@@ -229,7 +230,11 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex items-start gap-3 py-3"
-      style={depth > 0 ? { marginLeft: Math.min(depth, MAX_INDENT_DEPTH) * INDENT_PX } : undefined}
+      style={
+        depth > 0
+          ? { marginLeft: `calc(var(--comment-indent, ${INDENT_PX}px) * ${Math.min(depth, MAX_INDENT_DEPTH)})` }
+          : undefined
+      }
       data-comment-id={comment.id}
     >
       <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
@@ -1291,6 +1296,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       className={cn(
+        // Indent step for nested replies, read by CommentItem below. Narrow
+        // screens get a smaller one: five levels of the desktop step is 120px
+        // of a 360px viewport, which pushed the reply's own action row past the
+        // right edge.
+        "[--comment-indent:14px] md:[--comment-indent:24px]",
         isMobile
           ? "flex flex-col h-full px-2 pt-2 pb-2 relative"
           : embedded
