@@ -111,7 +111,7 @@ function BecomeANodePanel() {
         </div>
       )}
 
-      {isAuthenticated && !node.optedIn && (
+      {isAuthenticated && !node.optedIn && node.status !== 'unsupported' && (
         <div>
           <h3 className="text-xl font-semibold text-white">Become a node</h3>
           <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400">
@@ -125,7 +125,7 @@ function BecomeANodePanel() {
         </div>
       )}
 
-      {isAuthenticated && node.optedIn && node.status === 'unsupported' && (
+      {isAuthenticated && node.status === 'unsupported' && (
         <div>
           <h3 className="text-xl font-semibold text-white">Not supported in this browser</h3>
           <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400">
