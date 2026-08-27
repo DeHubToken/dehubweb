@@ -1574,6 +1574,65 @@ ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
   });
 }
 
+/**
+ * A single request or bug report on the community board, /features?feature=<id>
+ * (also reachable as /app/features?...). FeaturesPage never mints a per-request
+ * URL of its own — `?feature=<id>` is read purely client-side to scrollIntoView
+ * the card by its DOM id (`#feature-<id>`) — so every deep link into the board,
+ * no matter which request or whose reply someone was looking at when they
+ * copied the address bar, unfurled as the one static `features` MARKETING_PAGES
+ * card below. Read straight from PostgREST, same as stores/events/stages/
+ * bounties above: ssr-seo has never heard of this table either.
+ */
+function buildFeatureRequestHtml(feature) {
+  const canonicalUrl = `${APP_URL}/features?feature=${feature.id}`;
+  const name = feature.title || 'Feature Request';
+  const title = `${name} — DeHub Feature Requests`;
+  const description = truncate(
+    feature.description || 'A community feature request or bug report on the DeHub roadmap board.',
+    200,
+  );
+  const image = absolutize(feature.image_url) || shareImage('features');
+  const authorName = feature.author_username
+    ? `@${feature.author_username}`
+    : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
+  const status = String(feature.status || 'open').replace(/_/g, ' ');
+  const category = String(feature.category || 'other').replace(/_/g, ' ');
+
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image,
+    ogType: 'article',
+    // A declined report is a dead end, same treatment as a sold listing or a
+    // finished bounty: shareable by whoever holds the link, not crawlable.
+    noindex: feature.status === 'declined',
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/features" style="color:#9f9">Feature Requests</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><strong>${escHtml(status)}</strong> · ${escHtml(category)}</p>
+<p>${Number(feature.vote_count) || 0} votes · ${Number(feature.comment_count) || 0} comments · posted by ${escHtml(authorName)}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'DiscussionForumPosting',
+      headline: name,
+      text: description,
+      url: canonicalUrl,
+      datePublished: feature.created_at,
+      ...(feature.updated_at ? { dateModified: feature.updated_at } : {}),
+      ...(image ? { image } : {}),
+      author: { '@type': 'Person', name: authorName },
+      commentCount: Number(feature.comment_count) || 0,
+      interactionStatistic: {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/LikeAction',
+        userInteractionCount: Number(feature.vote_count) || 0,
+      },
+    },
+  });
+}
+
 function buildGuidePageHtml(slug, meta) {
   const canonicalUrl = `${APP_URL}/guides/${slug}`;
   return `<!DOCTYPE html>
@@ -2756,6 +2815,30 @@ async function handleRequest(request, env) {
       status: 200,
       headers: blogHeaders,
     }));
+  }
+
+  // A single request or bug report, /features?feature=<id>. Same PostgREST-
+  // direct shape as stores/events/stages/bounties below — checked ahead of the
+  // generic MARKETING_PAGES dispatch two blocks down so a resolvable id gets
+  // its own card instead of the board's static one.
+  if (sectionKey === 'features') {
+    const featureId = url.searchParams.get('feature');
+    if (featureId && /^[0-9a-fA-F-]{8,}$/.test(featureId)) {
+      const feature = await supabaseRow(
+        `feature_requests?id=eq.${encodeURIComponent(featureId)}&select=*&limit=1`,
+      );
+      if (feature) {
+        return guard(new Response(buildFeatureRequestHtml(feature), {
+          status: 200,
+          headers: feature.status === 'declined'
+            ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' }
+            : blogHeaders,
+        }));
+      }
+      // Row missing or Supabase unreachable: fall through to the generic
+      // board card below rather than inventing a 404 for a real request we
+      // just couldn't read.
+    }
   }
 
   // Edge-rendered marketing pages — never proxied to the Supabase fn (its
