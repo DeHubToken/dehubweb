@@ -74,7 +74,7 @@ import { AudioVisualizer } from '../audio';
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
-import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
 const SubscriberGateDrawer = lazy(() =>
@@ -935,9 +935,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const isHoldingsLocked = isHoldGated(video.isLocked, video.lockedPrice) && !canBypassGating;
   // A separate gate: subscribe to this creator, rather than own a token.
   const isSubGated = isSubscriberGated(video.subscriberPlans, !!isOwnPost || !!video.isOwner || locallySubscribed);
-  const cheapestPlan = video.subscriberPlans?.length
-    ? video.subscriberPlans.reduce((a, b) => (Number(b.price) < Number(a.price) ? b : a))
-    : undefined;
+  // Cheapest plan a reader can actually buy. The price lives on the plan's
+  // chain entry, not on `plan.price` — that field does not exist on this
+  // payload, and reading it gave NaN, which formatCompact renders as "0".
+  const cheapestPlanPrice = subscriberPlanPrice(cheapestSubscriberPlan(video.subscriberPlans));
   const isComboLocked = isPPVLocked && isHoldingsLocked;
   // Independent of the monetisation gates above: a post can be both mature and
   // pay-per-view, and the creator's own post is warned about too — the warning
@@ -1729,7 +1730,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
               <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
               <p className="text-white/70 text-xs">
-                {cheapestPlan ? `Subscribe from ${formatCompact(Number(cheapestPlan.price))} DHB` : `Subscribe to ${video.channel}`}
+                {cheapestPlanPrice !== undefined ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB` : `Subscribe to ${video.channel}`}
               </p>
             </div>
           </>
