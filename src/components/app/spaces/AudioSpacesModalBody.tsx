@@ -162,15 +162,22 @@ export function AudioSpacesModalBody() {
     if (isModalOpen) {
       if (currentSpace) {
         setView('live');
+      } else if (initialModalView === 'live' && isLoading) {
+        // A direct "join this stage" open (clicked from a feed card) — the
+        // join is still in flight, so hold the live view instead of falling
+        // through to the browse list below. Without this, opening straight
+        // into a stage flashed the full stage list and its Start Stage button
+        // for the moment before the join resolved.
+        setView('live');
       } else {
-        // A 'live' view with no room renders nothing at all — that branch is
-        // gated on `currentSpace` — which is how a stage ending used to leave
-        // an empty black sheet sitting over the page. The stage list is
-        // always something to fall back to.
+        // A 'live' view with no room and no join in flight renders nothing at
+        // all — that branch is gated on `currentSpace` — which is how a stage
+        // ending, or a failed join, used to leave an empty black sheet sitting
+        // over the page. The stage list is always something to fall back to.
         setView(initialModalView === 'live' ? 'browse' : initialModalView);
       }
     }
-  }, [isModalOpen, initialModalView, currentSpace]);
+  }, [isModalOpen, initialModalView, currentSpace, isLoading]);
 
   useEffect(() => {
     if (currentSpace && isModalOpen) {
@@ -319,7 +326,7 @@ export function AudioSpacesModalBody() {
   return (
     <>
     <Drawer open={isModalOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] flex flex-col [&>div:first-child]:hidden">
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] max-h-[90dvh] flex flex-col [&>div:first-child]:hidden">
         {!currentSpace ? (
           <DrawerHeader className="border-b-0 p-3 pb-1">
             <div className="flex items-center justify-between">
@@ -779,6 +786,17 @@ export function AudioSpacesModalBody() {
                 setView('create');
               }}
             />
+          )}
+
+          {/* ── Joining View — a stage was tapped directly from a feed card
+              and the join hasn't connected yet. Shown instead of Browse so
+              the Start Stage button never flashes on the way into a room
+              someone else is already hosting. ── */}
+          {view === 'live' && !currentSpace && isLoading && (
+            <div className="flex flex-col items-center justify-center gap-3 py-16 text-white/60">
+              <Loader2 className="w-6 h-6 animate-spin" />
+              <p className="text-sm">Joining stage…</p>
+            </div>
           )}
 
           {/* ── Live View ───────────────────────────────────────────────── */}
