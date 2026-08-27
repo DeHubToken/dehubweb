@@ -347,6 +347,22 @@ export function emitForwardMessage(payload: ForwardMessagePayload): Promise<void
   return emitWhenConnected('forwardMessage', payload);
 }
 
+export interface EditMessagePayload {
+  dmId: string;
+  messageId: string;
+  content: string;
+}
+
+/**
+ * Edit an own text message (emits `editMessage`). Server-side this is
+ * restricted to `msgType: 'msg'` messages the caller sent. Resolving only
+ * means the payload reached a live socket — the actual edited content comes
+ * back over the `editMessage` broadcast (see `onEditMessage`).
+ */
+export function emitEditMessage(payload: EditMessagePayload): Promise<void> {
+  return emitWhenConnected('editMessage', payload);
+}
+
 // ─── Read-receipt queue (survives disconnect/reconnect) ──────────────────────
 
 const pendingReadReceipts = new Set<string>();
