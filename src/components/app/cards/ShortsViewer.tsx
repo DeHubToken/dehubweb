@@ -51,6 +51,7 @@ import { VideoSlide } from './VideoSlide';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
+import { createWheelGesture } from '@/lib/wheel-gesture';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
@@ -235,10 +236,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   [followOverrides, followedCreators]);
   
   const containerRef = useRef<HTMLDivElement>(null);
-  // Wheel/trackpad momentum lock — see the wheel effect below.
-  const wheelLockedRef = useRef(false);
-  const wheelAccumRef = useRef(0);
-  const wheelSettleTimer = useRef<ReturnType<typeof setTimeout>>();
+  // Turns the trackpad's continuous wheel stream into one step per swipe — see
+  // the wheel effect below and `createWheelGesture` for why it is not a timer.
+  // Lazily built into a ref rather than a memo: it carries the live gesture,
+  // and a memo React is free to discard would drop it mid-swipe.
+  const wheelGestureRef = useRef<ReturnType<typeof createWheelGesture>>();
+  if (!wheelGestureRef.current) wheelGestureRef.current = createWheelGesture();
   // The slide the pointer was last hit-tested onto — kept mounted, see
   // visibleIndices.
   const [pointerPinnedIndex, setPointerPinnedIndex] = useState<number | null>(null);
@@ -703,9 +706,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [currentIndex, isTransitioning]);
 
   // Keep the wheel effect mounted once (below) while always calling the latest
-  // navigation handlers. If the effect re-subscribed whenever goToNext/goToPrev
-  // changed identity (they depend on isTransitioning), its cleanup would clear
-  // the in-flight momentum "settle" timer and leave the lock stuck true.
+  // navigation handlers. Re-subscribing whenever goToNext/goToPrev changed
+  // identity (they depend on isTransitioning) would tear the listener down and
+  // back up in the middle of a swipe.
   const goToNextRef = useRef(goToNext);
   const goToPrevRef = useRef(goToPrev);
   goToNextRef.current = goToNext;
@@ -713,12 +716,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   // Handle mouse wheel / trackpad scrolling.
   //
-  // Trackpads and the Magic Mouse fire a long *burst* of wheel events per
-  // physical flick (inertial momentum) that easily outlasts the 350ms slide
-  // transition — so guarding only on `isTransitioning` let a single flick
-  // advance two or more videos ("scrolls 2 at once"). Instead we lock on the
-  // first qualifying delta and only release once the wheel has gone quiet for a
-  // beat, so one gesture = exactly one video.
+  // A trackpad fires a long *burst* of wheel events per physical swipe — a
+  // captured flick ran 31 events over 983ms — so guarding only on
+  // `isTransitioning` let one swipe advance several videos. The step rule that
+  // solves that lives in `createWheelGesture`; it reads its timing off the
+  // events rather than a timer, because the version that waited for a 220ms
+  // `setTimeout` to fire between swipes lost that race under load and left the
+  // feed dead until the pointer was nudged.
   //
   // Bound to `window`, NOT to the viewer element. Advancing a slide unmounts the
   // node the browser latched this wheel gesture to (the render window drops the
@@ -748,31 +752,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       const latchedIndex = latched ? Number(latched.getAttribute('data-shorts-slide')) : null;
       setPointerPinnedIndex(Number.isInteger(latchedIndex) ? latchedIndex : null);
 
-      // Every event pushes the "settled" moment further out; the lock only
-      // clears after the momentum stream actually stops.
-      if (wheelSettleTimer.current) clearTimeout(wheelSettleTimer.current);
-      wheelSettleTimer.current = setTimeout(() => {
-        wheelLockedRef.current = false;
-        wheelAccumRef.current = 0;
-      }, 220);
-
-      if (wheelLockedRef.current) return;
-
-      wheelAccumRef.current += e.deltaY;
-      const threshold = 40;
-      if (Math.abs(wheelAccumRef.current) < threshold) return;
-
-      const direction = wheelAccumRef.current;
-      wheelLockedRef.current = true;
-      wheelAccumRef.current = 0;
-      if (direction > 0) goToNextRef.current();
-      else goToPrevRef.current();
+      // `e.timeStamp`, not `performance.now()`: it is when the event was
+      // created, so a janked main thread delivering a batch late still reports
+      // the real spacing between swipes.
+      const step = wheelGestureRef.current!.read(e.deltaY, e.timeStamp);
+      if (step === 'next') goToNextRef.current();
+      else if (step === 'prev') goToPrevRef.current();
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false, capture: true });
     return () => {
       window.removeEventListener('wheel', handleWheel, { capture: true });
-      if (wheelSettleTimer.current) clearTimeout(wheelSettleTimer.current);
     };
   }, []);
 
