@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 import { useUpdatePlan } from '@/hooks/use-subscriptions';
 import { type SubscriptionPlan, planPrice, isPlanPublished } from '@/lib/api/dehub';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -105,16 +105,32 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
   const isValid = name.trim() && price && parseFloat(price) > 0;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl text-white max-w-md max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Star className="w-5 h-5 text-yellow-400" />
-            Edit Plan
-          </DialogTitle>
-        </DialogHeader>
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent
+        glass
+        hideHandle
+        column
+        className="text-white max-h-[85vh] max-h-[85dvh] overflow-hidden flex flex-col px-4 pb-6"
+      >
+        <DrawerHeader className="relative pb-4 border-b border-white/10 shrink-0 px-0 text-left">
+          <div className="flex items-center justify-between gap-2">
+            <DrawerTitle className="flex items-center gap-2 text-xl text-white">
+              <Star className="w-5 h-5 text-yellow-400" />
+              Edit Plan
+            </DrawerTitle>
+            {/* Drawer has no built-in close affordance the way Dialog did, and the
+                scrim alone is not discoverable enough for a form this long. */}
+            <button
+              onClick={() => onOpenChange(false)}
+              aria-label="Close"
+              className="p-2 -mr-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </DrawerHeader>
 
-        <div className="space-y-4 mt-4">
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pt-4">
           {/* Plan Name */}
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block">Plan Name</label>
@@ -256,7 +272,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
             )}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 }

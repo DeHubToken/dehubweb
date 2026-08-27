@@ -22,7 +22,7 @@
  * Below 768px it falls back to the normal full-width bottom sheet.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
@@ -31,7 +31,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getPostLikers, type PostLiker } from '@/lib/api/dehub';
 import { NEGATIVE_REACTIONS, REACTION_LIST, type PostReaction } from '@/lib/reactions';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import { cn } from '@/lib/utils';
 
 const PAGE_SIZE = 50;
 
@@ -43,14 +42,6 @@ interface ReactionInfoDrawerProps {
 
 export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfoDrawerProps) {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
 
   const {
     data,
@@ -117,10 +108,8 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
         data-reaction-info-drawer
-        className={cn(
-          'bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[80dvh]',
-          !isMobile && 'left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]',
-        )}
+        column
+        className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[80dvh]"
       >
         <DrawerHeader className="px-5 pt-4 pb-3 shrink-0">
           <DrawerTitle className="text-base font-medium text-white text-center">

@@ -58,9 +58,10 @@ export function DraftsSheet({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent 
+      <DrawerContent
         glass
         hideHandle
+        column
         className="max-h-[90vh] max-h-[90dvh] overflow-hidden flex flex-col px-4 pb-6"
       >
         <DrawerHeader className="relative pb-4 border-b border-white/10 shrink-0 px-0">

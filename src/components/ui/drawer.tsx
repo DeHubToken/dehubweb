@@ -217,10 +217,30 @@ const DrawerOverlay = React.forwardRef<
 ));
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 
+/**
+ * Desktop: clip a sheet to the middle panel instead of the viewport.
+ *
+ * `DrawerContent` ships `fixed inset-x-0` with no cap, so by default every sheet
+ * stretches edge to edge — under both sidebars — while the content it belongs to
+ * sits in the ~1300px middle column. These vars are the live bounds of that
+ * column, measured off `<main>` in AppLayout, so an opted-in sheet reads as part
+ * of the page it opened from. Below `md` it stays a full-width bottom sheet.
+ *
+ * Positioned with left/width and never a transform: vaul writes
+ * `transform: translate3d(...)` **inline** to drive the slide-up and drag, and an
+ * inline transform beats a class, so centring this with `-translate-x-1/2` makes
+ * the sheet jump for the length of every animation.
+ *
+ * A 360px viewport-centred column was tried instead (PRs #700/#702) and reverted
+ * the same day — a third of the surrounding column reads as a different app.
+ */
+const COLUMN_CLASS =
+  "md:left-[var(--app-main-left,0px)] md:right-auto md:w-[var(--app-main-width,100vw)]";
+
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string }
->(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean }
+>(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, ...props }, ref) => {
   const rootMounted = React.useContext(DrawerRootMounted);
   // No Root above us — this sheet is dormant (or the content escaped its
   // Drawer entirely). Render nothing rather than portalling into no Dialog.
@@ -236,10 +256,11 @@ const DrawerContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed inset-x-0 bottom-0 z-[100] mt-24 flex h-auto flex-col rounded-t-[20px]",
-        glass 
-          ? "bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl" 
+        glass
+          ? "bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl"
           : "border bg-background",
         "focus:outline-none focus-visible:outline-none",
+        column && COLUMN_CLASS,
         className,
       )}
       onClick={(e) => e.stopPropagation()}

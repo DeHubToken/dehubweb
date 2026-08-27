@@ -236,22 +236,16 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   return (
     <>
       <Drawer open={isOpen} onOpenChange={handleDrawerChange}>
-        <DrawerContent 
-          glass 
-          hideHandle 
+        <DrawerContent
+          glass
+          hideHandle
           data-post-modal
+          // The composer opens over the feed it posts into, so on desktop it
+          // takes that column rather than the whole viewport — see `column` in
+          // ui/drawer.
+          column
           className={cn(
             "max-h-[90vh] max-h-[90dvh]",
-            // Desktop: the composer opens over the feed it posts into, so it
-            // takes the middle panel's live bounds (--app-main-left /
-            // --app-main-width, measured in AppLayout) — the same column
-            // LoginModal, CommentLikersDrawer and ReactionInfoDrawer use.
-            // DrawerContent ships `fixed inset-x-0` with no cap, so without
-            // this the composer stretches the full viewport width. Positioned
-            // with left/width rather than a transform: vaul writes an inline
-            // transform to drive the slide-up and an inline transform beats a
-            // class, so a transform here would snap the sheet mid-animation.
-            "md:left-[var(--app-main-left,0px)] md:right-auto md:w-[var(--app-main-width,100vw)]",
             state.isCameraModalOpen && "invisible pointer-events-none"
           )}
         >
