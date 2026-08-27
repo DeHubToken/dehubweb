@@ -112,12 +112,39 @@ export function clearPersistedQueryCache(): void {
 }
 
 /**
+ * Stamp every restored entry stale. Restored data is last-known, never current.
+ *
+ * Without this, persistence silently suppressed the reload refetch. A hydrated
+ * entry keeps its ORIGINAL `dataUpdatedAt`, and the feed's `staleTime` is five
+ * minutes — so a reload inside that window leaves React Query believing the
+ * restored page is fresh: `refetchOnMount` does not fire, and the boot prefetch
+ * in App.tsx (which honours staleTime too) short-circuits. Measured on prod
+ * 2026-08-27: a hard refresh of /app issued no `/api/feed` request at all and
+ * repainted the counts cached by the previous visit. The same post read
+ * 0 likes / 9 views on the home feed and 1 like / 16 views on its author's
+ * profile, whose query key is not persisted and therefore always fetches.
+ *
+ * `dataUpdatedAt: 0` rather than `isInvalidated` alone, because the prefetch
+ * path compares timestamps against staleTime and never reads the flag.
+ */
+function markRestoredStale(queryClient: QueryClient, state: unknown): void {
+  const queries = (state as { queries?: Array<{ queryHash?: string }> } | null)?.queries;
+  if (!Array.isArray(queries)) return;
+  const cache = queryClient.getQueryCache();
+  for (const dehydrated of queries) {
+    if (!dehydrated?.queryHash) continue;
+    const query = cache.get(dehydrated.queryHash);
+    if (!query) continue;
+    query.setState({ ...query.state, dataUpdatedAt: 0, isInvalidated: true });
+  }
+}
+
+/**
  * Rehydrate the persisted cache slice into the QueryClient. Call this
  * synchronously right after the client is created and BEFORE any boot prefetch,
  * so restored data is present when the first components read the cache.
- * Restored entries carry their original (old) timestamp, so React Query treats
- * them as stale and refetches — the user sees last-known content immediately
- * while fresh data loads behind it.
+ * Restored entries are stamped stale (see markRestoredStale), so the user sees
+ * last-known content immediately while fresh data loads behind it.
  */
 export function restoreQueryCache(queryClient: QueryClient): void {
   if (typeof window === 'undefined') return;
@@ -131,6 +158,7 @@ export function restoreQueryCache(queryClient: QueryClient): void {
       return;
     }
     hydrate(queryClient, parsed.state);
+    markRestoredStale(queryClient, parsed.state);
   } catch {
     // Corrupt / unparseable cache — drop it and move on. Never block boot.
     try { localStorage.removeItem(PERSIST_KEY); } catch { /* ignore */ }

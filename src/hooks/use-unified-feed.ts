@@ -7,12 +7,13 @@
  * @module hooks/use-unified-feed
  */
 
-import { useMemo } from 'react';
-import { useInfiniteQuery, useQuery, keepPreviousData, type QueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+import { useInfiniteQuery, useQuery, useQueryClient, keepPreviousData, type QueryClient } from '@tanstack/react-query';
 import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
+import { mergeLiveCounts, type RawFeedRow } from '@/lib/live-counts';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
@@ -766,8 +767,18 @@ const NEW_POSTS_HEAD_SIZE = 20;
 const NEW_POSTS_POLL_MS = 60_000;
 
 interface UseNewPostsSignalOptions extends Omit<UnifiedFeedParams, 'page'> {
-  /** Poll only when the feed is chronological and actually on screen. */
+  /**
+   * Poll only while the feed is actually on screen. PersistentPageCache keeps
+   * HomeFeed mounted for the whole session, so without a route gate this runs
+   * every minute from every other page too.
+   */
   enabled?: boolean;
+  /**
+   * Whether position in this list means time. The pill is suppressed when it
+   * does not — but the poll still runs, because refreshing the counts on the
+   * cards already rendered is worth doing under every sort.
+   */
+  chronological?: boolean;
   /** `createdAt` of the newest post currently rendered. */
   newestCreatedAt?: string;
 }
@@ -788,15 +799,16 @@ interface UseNewPostsSignalOptions extends Omit<UnifiedFeedParams, 'page'> {
  * aren't stable enough to test identity across two fetches.
  */
 export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
-  const { enabled = true, newestCreatedAt, ...params } = options;
+  const { enabled = true, chronological = true, newestCreatedAt, ...params } = options;
   const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   const viewer = walletAddress?.toLowerCase() || null;
 
   const { data } = useQuery({
     queryKey: ['unified-feed-head', params, viewer],
     queryFn: () =>
       fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer),
-    enabled: enabled && !!newestCreatedAt,
+    enabled,
     refetchInterval: NEW_POSTS_POLL_MS,
     // A backgrounded tab shouldn't keep hitting the API to update a pill
     // nobody can see.
@@ -806,8 +818,17 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
     retry: 1,
   });
 
+  // The rows this poll already paid for carry current counts for the head of
+  // the feed — the cards the reader is most likely looking at. Folding them in
+  // is what makes views and likes move without a refresh; the pill below is the
+  // same request's other job. See mergeLiveCounts.
+  useEffect(() => {
+    const rows = data?.result as RawFeedRow[] | undefined;
+    if (rows?.length) mergeLiveCounts(queryClient, rows);
+  }, [data, queryClient]);
+
   return useMemo(() => {
-    const newest = newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
+    const newest = chronological && newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
     if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false };
 
     const newer = (data.result || []).filter((item) => {
@@ -824,5 +845,5 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
       // Every row came back newer, so there are likely more than were fetched.
       atCap: newer.length >= NEW_POSTS_HEAD_SIZE,
     };
-  }, [data, newestCreatedAt]);
+  }, [data, newestCreatedAt, chronological]);
 }
