@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgedName } from '@/components/app/BadgedName';
 import { TranslatableText } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from './DehubLinkEmbed';
+import { FeedLinkPreviews } from './FeedLinkPreviews';
 import {
   toggleCommentLike,
   toggleCommentDislike,
@@ -212,6 +213,7 @@ function ThreadEntry({
           />
         )}
         <DehubLinkEmbeds links={links} />
+        <FeedLinkPreviews text={bodyText} />
         {entry.imageUrl && (
           <img
             src={entry.imageUrl}

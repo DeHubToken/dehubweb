@@ -3,7 +3,7 @@
  * ==================
  * One parser for every in-app URL that deserves to render as a card instead of
  * as a link: posts, profiles, communities, community invites, stores, store
- * listings and events.
+ * listings, events and bounties.
  *
  * Before this module the same job was done by three separate pairs of
  * `hasXLink`/`extractX` helpers living next to their own embed components, each
@@ -34,7 +34,8 @@ export type DehubLinkKind =
   | 'listing'
   | 'event'
   | 'stage'
-  | 'film';
+  | 'film'
+  | 'bounty';
 
 export interface DehubLinkMatch {
   kind: DehubLinkKind;
@@ -60,6 +61,12 @@ export interface DehubLinkMatch {
   filmId?: string;
   /** Which catalogue the id belongs to — the offers endpoint needs both. */
   filmObjectType?: 'movie' | 'show';
+  /**
+   * `/bounty/<job_number>` or the legacy `/work/<uuid>` — `useWorkJob` resolves
+   * either shape, so the raw key is carried through rather than split into two
+   * fields.
+   */
+  bountyJobKey?: string;
 }
 
 // ── Hosts ───────────────────────────────────────────────────────────────────
@@ -97,7 +104,7 @@ const RESERVED_ROOT_SEGMENTS = new Set([
   'music', 'premium', 'pricing', 'prompt', 'posts', 'r', 'radio', 'robots.txt',
   'shorts',
   'sitemap.xml', 'skill.md', 'stage', 'stages', 'stake', 'stats', 'stores',
-  'top-100', 'tv', 'videos', 'work',
+  'top-100', 'tv', 'videos', 'work', 'bounty',
 ]);
 
 // ── Tokenising ──────────────────────────────────────────────────────────────
@@ -108,8 +115,10 @@ const ABSOLUTE_URL_RE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?\/[^
 // `stage` sits alongside the /app prefix rather than under it because the
 // invite route is top-level — App.tsx routes /stage/:id, not /app/stage/:id.
 // The optional `s` also admits the short share form, /stages/7. `posts` is the
-// short post/thread form for the same reason (/posts/1, /posts/1/b/9).
-const BARE_PATH_RE = /\/(?:app|communities|posts|stages?)\/[^\s<>"'`]*/gi;
+// short post/thread form for the same reason (/posts/1, /posts/1/b/9). `bounty`
+// and `work` are the same story again for bounty detail pages — /bounty/7 is
+// canonical, /work/<uuid> is the pre-numbering form still out in the wild.
+const BARE_PATH_RE = /\/(?:app|communities|posts|stages?|bounty|work)\/[^\s<>"'`]*/gi;
 
 // A URL at the end of a sentence carries the punctuation with it.
 const TRAILING_PUNCTUATION_RE = /[.,;:!?)\]}>"']+$/;
@@ -268,6 +277,26 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
     };
   }
 
+  // ── /bounty/:jobNumber — the canonical bounty detail link ──
+  //
+  // Top-level, like /stage. Only the numeric shape: bare /bounty has no route
+  // of its own (a bounty is always addressed by number).
+  if (scoped[0] === 'bounty' && scoped[1]) {
+    if (!/^\d+$/.test(scoped[1])) return null;
+    return { ...base, kind: 'bounty', bountyJobKey: scoped[1] };
+  }
+
+  // ── /work/:uuid — the legacy bounty detail link, from before job numbers ──
+  //
+  // Bare /work (the board), /work/post and /work/history are app pages, not
+  // entities — like bare /stages, they stay plain links. Only the uuid detail
+  // shape cards, `/edit` tail and all, so the card still opens wherever the
+  // link pointed.
+  if (scoped[0] === 'work' && scoped[1] && scoped[1] !== 'post' && scoped[1] !== 'history') {
+    if (!/^[a-fA-F0-9-]{8,}$/.test(scoped[1])) return null;
+    return { ...base, kind: 'bounty', bountyJobKey: scoped[1] };
+  }
+
   // ── /:username ──
   //
   // Host-qualified links only. A bare "/foo" in a sentence is far more likely
@@ -409,6 +438,7 @@ export const dehubLinkFor = {
    */
   film: (objectType: 'movie' | 'show', id: string | number) =>
     `${shareOrigin()}/cinema/${objectType === 'show' ? 'series' : 'film'}/${encodeURIComponent(String(id))}`,
+  bounty: (jobNumber: string | number) => `${shareOrigin()}/bounty/${jobNumber}`,
 };
 
 /** Human label for a link kind — used by share sheets and fallback chips. */
@@ -423,5 +453,6 @@ export function dehubLinkLabel(kind: DehubLinkKind): string {
     case 'event': return 'event';
     case 'stage': return 'stage';
     case 'film': return 'title';
+    case 'bounty': return 'bounty';
   }
 }

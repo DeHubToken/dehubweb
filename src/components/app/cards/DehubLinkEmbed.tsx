@@ -41,6 +41,17 @@ const FilmLinkEmbed = lazy(() =>
 );
 
 /**
+ * Lazy for the same reason as FilmLinkEmbed: `useWorkJob` pulls in
+ * `@/features/work/hooks/use-work`, which imports the on-chain contract stack
+ * (`dehub-work.ts`, `aa-utils.ts`, wagmi, web3auth) for its escrow/payout
+ * paths. A static import put ~90KB of wallet plumbing on the boot path for
+ * every session, the vast majority of which never see a bounty link.
+ */
+const BountyLinkEmbed = lazy(() =>
+  import('@/features/work/components/BountyLinkEmbed').then((m) => ({ default: m.BountyLinkEmbed }))
+);
+
+/**
  * What a card renders when its entity could not be loaded: the link, still
  * clickable, still in-app.
  */
@@ -159,6 +170,13 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
       return <EventLinkEmbed eventNumber={link.eventNumber!} fallback={fallback} />;
     case 'stage':
       return <StageLinkEmbed stageId={link.stageId} stageShortId={link.stageShortId} fallback={fallback} />;
+    case 'bounty':
+      // fallback={null}, not the chip — see the film case above for why.
+      return (
+        <Suspense fallback={null}>
+          <BountyLinkEmbed jobKey={link.bountyJobKey!} path={link.path} fallback={fallback} />
+        </Suspense>
+      );
     case 'film':
       // fallback={null}, not the chip: the chip is what renders when the title
       // fails to LOAD, and flashing it for one frame on every film link while
