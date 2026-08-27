@@ -359,6 +359,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { connectAsync, connectors } = useConnect();
 
   const connectionAbortedRef = useRef(false);
+  // The wallet this browser was signed in as when the sheet opened — null on an
+  // ordinary signed-out login, the live account on an add-profile attempt. The
+  // sheet's whole job is to change this value, so a change is the one reliable
+  // signal that it is finished (see the effect below closeLoginModal).
+  const sheetOpenedWithAddressRef = useRef<string | null>(null);
   // Set when the sheet opens with add-profile intent: the id of the account
   // that was live at that moment. Drives two promises the sheet makes to the
   // user — closing it mid-attempt restores this account, and completing a new
@@ -420,6 +425,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const openLoginModal = useCallback((options?: { intent?: 'login' | 'add-profile' }) => {
     connectionAbortedRef.current = false;
+    // Read off storage, not state: this callback closes over the first render's
+    // walletAddress and never rebuilds.
+    sheetOpenedWithAddressRef.current = localStorage.getItem('dehub_wallet');
     // Freeze the animated WebGL backgrounds BEFORE anything renders. The sheet
     // composites two full-viewport backdrop-blur layers over them, and with the
     // fbm/particle shaders running underneath, that first composite is the
@@ -523,6 +531,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsConnecting(false);
     }
   }, [isConnecting, walletAddress]);
+
+  /**
+   * The sheet goes away the moment the session it was opened for exists.
+   *
+   * Every login path already calls closeLoginModal on its own success, and
+   * every one of them is a single line at the end of a long async function —
+   * so any throw after the session has been written (a snapshot write, a
+   * profile-list update, a toast) skips it and strands the user on a sheet
+   * that is asking them to do something they have just finished doing. That is
+   * the "signed in, but the login sheet is still there showing the wallet
+   * connected, click the backdrop to get on with it" report.
+   *
+   * Closing on state rather than on the success path makes it unmissable: the
+   * sheet exists to produce a session, and it is finished when one arrives.
+   *
+   * Keyed on the address CHANGING, not merely existing, because the sheet is
+   * also opened over live sessions — "Add a profile", and the mid-session
+   * wallet-unlock request — and those must stay up until they have done their
+   * own work. `walletPhase` holds it open across the create/unlock handoff,
+   * where a DeHub session can exist before the wallet step is done.
+   */
+  useEffect(() => {
+    if (!isLoginModalOpen || isProcessingRedirect) return;
+    if (!isAuthenticated || !walletAddress) return;
+    if (walletPhase !== 'none') return;
+    if (walletAddress.toLowerCase() === sheetOpenedWithAddressRef.current?.toLowerCase()) return;
+    closeLoginModal();
+  }, [isLoginModalOpen, isProcessingRedirect, isAuthenticated, walletAddress, walletPhase, closeLoginModal]);
 
   /**
    * Ask for the wallet password now.
