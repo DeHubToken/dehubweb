@@ -823,7 +823,9 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
   // is what makes views and likes move without a refresh; the pill below is the
   // same request's other job. See mergeLiveCounts.
   useEffect(() => {
-    const rows = data?.result as RawFeedRow[] | undefined;
+    // UnifiedFeedItem declares its counts; RawFeedRow is the untyped object the
+    // cache actually holds. Neither is a subtype of the other, hence the hop.
+    const rows = data?.result as unknown as RawFeedRow[] | undefined;
     if (rows?.length) mergeLiveCounts(queryClient, rows);
   }, [data, queryClient]);
 
