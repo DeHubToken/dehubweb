@@ -402,7 +402,7 @@ const MessageBubble = memo(function MessageBubble({
                     <button
                       type="button"
                       onClick={() => onSaveEdit?.(message._id, draftText)}
-                      className="p-1 text-emerald-400 hover:text-emerald-300"
+                      className="p-1 text-white hover:text-zinc-300"
                       title="Save"
                     >
                       <Check className="w-3.5 h-3.5" />
@@ -534,8 +534,8 @@ const MessageBubble = memo(function MessageBubble({
 
             {/* Tip badge on regular messages */}
             {message.tipAmount != null && (message.msgType as string) !== 'tip' && (
-              <div className="inline-flex items-center gap-1 mt-1 text-xs text-amber-300">
-                <Gem className="w-3 h-3 text-amber-300" />
+              <div className="inline-flex items-center gap-1 mt-1 text-xs text-zinc-300">
+                <Gem className="w-3 h-3 text-zinc-300" />
                 {message.tipAmount} {message.tipSymbol || 'DHB'}
               </div>
             )}
@@ -581,7 +581,7 @@ const MessageBubble = memo(function MessageBubble({
           )}
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
           {showPaymentPending && (
-            <Loader2 className="w-3 h-3 animate-spin text-amber-500/70" />
+            <Loader2 className="w-3 h-3 animate-spin text-zinc-400" />
           )}
           {isOwnMessage && !showPaymentPending && (
             <span className={message.isRead ? "text-white" : "text-zinc-500"}>
@@ -1694,7 +1694,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
-              className="text-red-400 focus:text-red-400 focus:bg-zinc-700 cursor-pointer"
+              className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
               onClick={() => setShowDeleteDialog(true)}
             >
               <Trash2 className="w-4 h-4 mr-2" />
@@ -1732,27 +1732,27 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             const el = document.getElementById(`dm-msg-${pinnedMessage._id}`);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              el.classList.add('ring-2', 'ring-blue-500/60', 'bg-blue-500/10');
-              setTimeout(() => el.classList.remove('ring-2', 'ring-blue-500/60', 'bg-blue-500/10'), 2000);
+              el.classList.add('ring-2', 'ring-white/40', 'bg-white/10');
+              setTimeout(() => el.classList.remove('ring-2', 'ring-white/40', 'bg-white/10'), 2000);
             }
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 text-sm w-full text-left hover:bg-blue-500/15 transition-colors cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 bg-white/5 border-b border-white/10 text-sm w-full text-left hover:bg-white/10 transition-colors cursor-pointer"
         >
-          <Pin className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 fill-current" />
+          <Pin className="w-3.5 h-3.5 text-white/80 flex-shrink-0 fill-current" />
           <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-blue-400 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">Pinned Message</span>
-            <span className="text-blue-100/80 text-xs truncate">{pinnedMessage.content || '📎 Media'}</span>
+            <span className="text-zinc-300 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">Pinned Message</span>
+            <span className="text-zinc-400 text-xs truncate">{pinnedMessage.content || '📎 Media'}</span>
           </div>
           <X
             onClick={(e) => { e.stopPropagation(); handleUnpinMessage(); }}
-            className="ml-2 w-4 h-4 text-blue-400/50 hover:text-blue-300 flex-shrink-0 transition-colors cursor-pointer"
+            className="ml-2 w-4 h-4 text-zinc-500 hover:text-white flex-shrink-0 transition-colors cursor-pointer"
           />
         </button>
       )}
 
       {/* DM Fee banner - simple for free access */}
       {dmFee?.required && dmFee.hasFreeAccess && (
-        <div className="px-4 py-2 text-xs flex items-center gap-2 bg-green-500/10 text-green-400 border-b border-green-500/20">
+        <div className="px-4 py-2 text-xs flex items-center gap-2 bg-white/5 text-zinc-300 border-b border-white/10">
           <Gem className="w-3 h-3 flex-shrink-0 text-current" />
           You have free access to message this user
         </div>
@@ -1763,8 +1763,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         <MessagesSkeleton />
       ) : messagesError ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
-          <AlertCircle className="w-12 h-12 text-red-500/60 mb-3" />
-          <p className="text-red-400 mb-2">Failed to load messages</p>
+          <AlertCircle className="w-12 h-12 text-zinc-500 mb-3" />
+          <p className="text-zinc-300 mb-2">Failed to load messages</p>
           <Button variant="glass" size="sm" onClick={() => refetchMessages()}>
             <RefreshCw className="w-3 h-3 mr-2" />
             Try Again
@@ -1871,8 +1871,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
 
       {/* Init error banner — shown when createAndStart timed out for a new conversation */}
       {initError && isVirtualConv && (
-        <div className="px-4 py-2.5 bg-red-950/50 border-t border-red-500/20 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-red-400 text-xs min-w-0">
+        <div className="px-4 py-2.5 bg-white/5 border-t border-white/10 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-zinc-300 text-xs min-w-0">
             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">Could not connect — server didn't respond</span>
           </div>
@@ -1881,7 +1881,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             size="sm"
             onClick={handleRetryInit}
             disabled={createAndStart.isPending}
-            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 shrink-0 h-7 px-2 text-xs"
+            className="text-white hover:text-zinc-200 hover:bg-white/10 shrink-0 h-7 px-2 text-xs"
           >
             {createAndStart.isPending ? (
               <Loader2 className="w-3 h-3 animate-spin mr-1" />
@@ -1927,7 +1927,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConversation} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleDeleteConversation}>
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1949,7 +1949,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleFeeWarningConfirm} className="bg-amber-600 hover:bg-amber-700">
+            <AlertDialogAction onClick={handleFeeWarningConfirm}>
               Continue
             </AlertDialogAction>
           </AlertDialogFooter>

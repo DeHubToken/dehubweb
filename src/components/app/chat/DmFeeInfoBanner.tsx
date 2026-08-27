@@ -67,14 +67,14 @@ export function DmFeeInfoBanner({
               <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
               <span className="text-xs text-zinc-400">Your balance:</span>
               {totalBalance !== null ? (
-                <span className={`text-xs font-medium ${hasSufficientBalance ? 'text-green-400' : 'text-red-400'}`}>
+                <span className={`text-xs font-medium ${hasSufficientBalance ? 'text-white' : 'text-zinc-400'}`}>
                   {totalBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
                 </span>
               ) : (
                 <span className="text-xs text-zinc-500">Unavailable</span>
               )}
               {!hasSufficientBalance && totalBalance !== null && (
-                <span className="text-xs text-red-400 ml-auto">Insufficient</span>
+                <span className="text-xs text-zinc-400 ml-auto">Insufficient</span>
               )}
             </div>
           )}
@@ -105,12 +105,12 @@ export function DmFeeInfoBanner({
         </div>
 
         {isAboveMinimum && hasCustomSufficient && (
-          <p className="text-[10px] text-amber-400/70 text-center mt-2">
+          <p className="text-[10px] text-zinc-400 text-center mt-2">
             🔥 Tipping {tipAmount.toLocaleString()} DHB per message will rank you higher in {recipientName}'s inbox
           </p>
         )}
         {isAboveMinimum && !hasCustomSufficient && (
-          <p className="text-[10px] text-red-400/70 text-center mt-2">
+          <p className="text-[10px] text-zinc-500 text-center mt-2">
             Insufficient balance for {tipAmount.toLocaleString()} DHB tip
           </p>
         )}

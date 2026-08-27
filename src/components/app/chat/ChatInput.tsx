@@ -458,7 +458,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           />
           <button
             onClick={clearImage}
-            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-full flex items-center justify-center hover:bg-zinc-700 transition-colors"
           >
             <X className="w-3 h-3 text-white" />
           </button>
@@ -479,7 +479,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           </span>
           <button
             onClick={clearDoc}
-            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-full flex items-center justify-center hover:bg-zinc-700 transition-colors"
             aria-label="Remove attachment"
           >
             <X className="w-3 h-3 text-white" />
@@ -490,13 +490,13 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       {/* Audio Preview */}
       {audioPreview && (
         <div className="mb-2 relative inline-flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg">
-          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <div className="w-2 h-2 rounded-full bg-white" />
           <span className="text-sm text-white">
             🎤 Voice message ({formatDuration(audioPreview.duration)})
           </span>
           <button
             onClick={removeAudioPreview}
-            className="ml-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            className="ml-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-full flex items-center justify-center hover:bg-zinc-700 transition-colors"
           >
             <X className="w-3 h-3 text-white" />
           </button>
@@ -685,7 +685,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             ) : (
               <>
                 {!!feeAmount && (
-                  <span className={`text-[11px] font-semibold leading-none ${sendDisabled ? 'text-zinc-600' : 'text-amber-400'}`}>
+                  <span className={`text-[11px] font-semibold leading-none ${sendDisabled ? 'text-zinc-600' : 'text-white'}`}>
                     {feeAmount.toLocaleString()}
                   </span>
                 )}
