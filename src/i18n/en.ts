@@ -1527,7 +1527,7 @@ export const en = {
       'TV & game console apps for maximum global accessibility',
       'V/AR profile hub & consumer data metrics',
       'Educational AI integrations for personalized learning pathways',
-      'Creator and viewer tools utilising advancements in AI and blockchain technology',
+      'Username marketplace',
       'Live streaming overlays and tools for creators',
     'Video and image editor',
     ],
