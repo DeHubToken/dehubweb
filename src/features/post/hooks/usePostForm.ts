@@ -2043,10 +2043,23 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           duration: 12000,
         });
         refreshPostQuota();
+      // Still gated on wagmi: a smart wallet's gas is sponsored, so the same
+      // error there means the paymaster ran dry, and telling that user to buy
+      // ETH would be wrong advice.
       } else if (isGasFunds && connectionSource === 'wagmi') {
+        // The one failure with an obvious next step and, until now, no way to
+        // take it: "add ETH and try again" with nothing to press, on a screen
+        // whose text the user is afraid of losing. /app/buy sells the gas
+        // tokens on Base by card, so it is the honest destination — and saying
+        // the draft is kept matters more here than anywhere else, because this
+        // is the branch people reported retyping their post after.
         const gasName = chainId === 56 ? 'BNB' : 'ETH';
         const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
-        toast.error(`Post failed: Insufficient ${gasName} for gas on ${chainName}. Add ${gasName} to your wallet and try again.`);
+        toast.error(`Not enough ${gasName} for gas on ${chainName}`, {
+          description: `Your draft is still here — top up and press Post again.`,
+          action: { label: `Get ${gasName}`, onClick: () => navigate('/app/buy') },
+          duration: 12000,
+        });
       } else if (isWalletLocked) {
         // Not a failure the user caused, and not a sign-out. Tell them what the
         // prompt is for, that nothing was lost, and — the part that was missing
