@@ -1528,7 +1528,7 @@ export const en = {
       'V/AR profile hub & consumer data metrics',
       'Educational AI integrations for personalized learning pathways',
       'Creator and viewer tools utilising advancements in AI and blockchain technology',
-      'Integration with IoT devices and smart home systems for seamless content delivery',
+      'Live streaming overlays and tools for creators',
     'Video and image editor',
     ],
   },
