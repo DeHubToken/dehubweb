@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import {
   ArrowDown,
   ArrowRight,
@@ -9,6 +11,7 @@ import {
   Cpu,
   Gauge,
   HardDrive,
+  Loader2,
   LockKeyhole,
   Network,
   Radio,
@@ -18,9 +21,176 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDepinNode } from '@/lib/depin-node';
+import { getDepinStats, getDepinMe, type DepinStatsResponse, type DepinMeResponse } from '@/lib/api/dehub/depin';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import edgeNetworkImage from '@/assets/depin-edge-network.webp';
 import transcodeImage from '@/assets/depin-transcode-workstation.webp';
+
+function formatBytes(bytes: number): string {
+  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  const value = bytes / 1024 ** exponent;
+  return `${value >= 100 || exponent === 0 ? Math.round(value) : value.toFixed(1)} ${units[exponent]}`;
+}
+
+function isUnavailable(payload: unknown): payload is { ok: false; reason: string } {
+  return !!payload && typeof payload === 'object' && (payload as { ok?: unknown }).ok === false;
+}
+
+/** Public network stats strip — shown to everyone, wallet or not. */
+function DepinStatsStrip() {
+  const { data, isLoading } = useQuery<DepinStatsResponse>({
+    queryKey: ['depin-stats'],
+    queryFn: getDepinStats,
+    refetchInterval: 60_000,
+    staleTime: 45_000,
+    retry: 1,
+  });
+
+  const stats = data && !isUnavailable(data) ? data : null;
+  const unavailable = data && isUnavailable(data) ? data : null;
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      {[
+        ['Nodes online', stats ? String(stats.onlineNodes) : null],
+        ['Stored', stats ? formatBytes(stats.totalStoredBytes) : null],
+        ['Verified', stats ? formatBytes(stats.totalVerifiedBytes) : null],
+      ].map(([label, value]) => (
+        <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">{label}</p>
+          <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-white">
+            {isLoading ? <Loader2 className="h-5 w-5 animate-spin text-zinc-500" /> : value ?? '—'}
+          </p>
+          {unavailable && (
+            <p className="mt-1 text-xs text-zinc-500">
+              {unavailable.reason === 'unconfigured' ? 'Not tracked yet.' : 'Unavailable right now.'}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** The functional "Become a node" panel: wallet-connect → opt-in → live status. */
+function BecomeANodePanel() {
+  const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
+  const node = useDepinNode(walletAddress);
+  const [meResponse, setMeResponse] = useState<DepinMeResponse | null>(null);
+
+  const { data: meData } = useQuery<DepinMeResponse>({
+    queryKey: ['depin-me', walletAddress],
+    queryFn: getDepinMe,
+    enabled: isAuthenticated && node.optedIn,
+    refetchInterval: 30_000,
+  });
+
+  useEffect(() => {
+    if (meData) setMeResponse(meData);
+  }, [meData]);
+
+  const me = meResponse && !isUnavailable(meResponse) ? meResponse : null;
+  const meUnavailable = meResponse && isUnavailable(meResponse) ? meResponse : null;
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-zinc-900 p-6 sm:p-8">
+      {!isAuthenticated && (
+        <div>
+          <h3 className="text-xl font-semibold text-white">Become a node</h3>
+          <p className="mt-3 text-sm leading-6 text-zinc-400">
+            Connect a wallet to turn this browser tab into a lightweight backup node.
+          </p>
+          <Button className="mt-6" onClick={() => openLoginModal()}>
+            Connect wallet
+          </Button>
+        </div>
+      )}
+
+      {isAuthenticated && !node.optedIn && (
+        <div>
+          <h3 className="text-xl font-semibold text-white">Become a node</h3>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400">
+            This tier runs entirely in your browser using local storage (OPFS). It contributes only
+            while this tab stays open — closing it stops your node, and reopening it starts a new one.
+            There is no install and nothing runs in the background.
+          </p>
+          <Button className="mt-6" onClick={() => void node.optIn()}>
+            Opt in
+          </Button>
+        </div>
+      )}
+
+      {isAuthenticated && node.optedIn && node.status === 'unsupported' && (
+        <div>
+          <h3 className="text-xl font-semibold text-white">Not supported in this browser</h3>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400">
+            Browser storage nodes need Origin Private File System support, which this browser does not
+            offer (this is common on Safari). Try a recent Chrome, Edge or Firefox instead.
+          </p>
+          <Button variant="outline" className="mt-6" onClick={() => node.optOut()}>
+            Dismiss
+          </Button>
+        </div>
+      )}
+
+      {isAuthenticated && node.optedIn && node.status !== 'unsupported' && (
+        <div>
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-white">Your node</h3>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  node.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'
+                }`}
+              />
+              {node.status === 'online' ? 'Online' : 'Connecting…'}
+            </span>
+          </div>
+
+          <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                Stored this session
+              </dt>
+              <dd className="mt-1 text-lg font-semibold text-white">{formatBytes(node.storedBytes)}</dd>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">Verified bytes</dt>
+              <dd className="mt-1 text-lg font-semibold text-white">
+                {me ? formatBytes(me.verifiedBytes) : meUnavailable ? 'Not tracked yet' : '—'}
+              </dd>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                Total stored (ledger)
+              </dt>
+              <dd className="mt-1 text-lg font-semibold text-white">
+                {me ? formatBytes(me.storedBytes) : meUnavailable ? 'Not tracked yet' : '—'}
+              </dd>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                DHB earned this period
+              </dt>
+              <dd className="mt-1 text-lg font-semibold text-white">
+                {me ? me.dhbEarnedThisPeriod : meUnavailable ? 'Not tracked yet' : '—'}
+              </dd>
+            </div>
+          </dl>
+
+          <Button variant="outline" className="mt-6" onClick={() => node.optOut()}>
+            Opt out
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const pageDescription =
   'DeHub DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.';
@@ -87,7 +257,12 @@ const faqItems = [
   {
     question: 'Is the node software available now?',
     answer:
-      'Not yet. DePin is being built in controlled phases, beginning with delivery and adaptive video infrastructure before a public desktop node release.',
+      'A lightweight, browser-based tier is available today: connect a wallet and opt in on this page, and your open tab becomes a node while it stays open. A heavier, always-on desktop node is a stated future direction — it does not exist yet.',
+  },
+  {
+    question: 'Do I need to install anything for the browser node?',
+    answer:
+      'No. It runs entirely in the tab using your browser\'s local storage. Closing the tab stops your node; there is no background service and no install.',
   },
 ];
 
@@ -224,11 +399,29 @@ export default function DePinPage() {
             <div className="mx-auto grid max-w-7xl gap-5 px-4 py-8 sm:px-6 md:grid-cols-[auto_1fr] md:items-center md:gap-8 lg:px-8">
               <div className="inline-flex w-fit items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-white">
                 <Gauge aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
-                In development
+                Early access
               </div>
               <p className="max-w-3xl text-sm leading-6 text-zinc-400">
-                The node client is not available yet. DePin will launch in controlled phases, and participation does not guarantee a reward.
+                A lightweight, browser-based node is live below. A heavier, always-on desktop node is a
+                stated future direction, not available yet. Participation never guarantees a reward.
               </p>
+            </div>
+          </section>
+
+          <section className="border-b border-white/10 bg-zinc-950 py-16 sm:py-20">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <Reveal className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-start">
+                <div>
+                  <SectionHeading
+                    title="Run a node from this tab."
+                    body="No install, no download. Connect a wallet, opt in, and your open browser tab starts holding a second copy of a few DeHub media objects."
+                  />
+                  <div className="mt-10">
+                    <DepinStatsStrip />
+                  </div>
+                </div>
+                <BecomeANodePanel />
+              </Reveal>
             </div>
           </section>
 
