@@ -73,4 +73,26 @@ describe('theme icon assets', () => {
       expect(source, file).not.toMatch(/<BrandIcon\s+src=["']\/theme-icons\/system\//);
     }
   });
+
+  it('keeps Store and Bounty identity states on themed icons', () => {
+    const guardedImports: Record<string, RegExp> = {
+      'src/pages/app/StoresPage.tsx': /\b(Store|ShoppingBag|PackagePlus)\b/,
+      'src/pages/app/WorkPage.tsx': /\b(Briefcase|Search|Scissors|MessageSquare)\b/,
+      'src/pages/app/WorkPostPage.tsx': /\b(Briefcase|Scissors|MessageSquare)\b/,
+      'src/pages/app/WorkJobDetailPage.tsx': /\bBriefcase\b/,
+      'src/components/app/stores/SetupStoreFlow.tsx': /\bStore\b/,
+      'src/components/app/stores/EditStoreDrawer.tsx': /\bStore\b/,
+      'src/components/app/stores/StoreListingCard.tsx': /\bImageIcon\b/,
+      'src/components/app/stores/StoreLinkEmbed.tsx': /\b(StoreIcon|ImageIcon)\b/,
+      'src/features/work/components/JobCard.tsx': /\bBriefcase\b/,
+    };
+
+    for (const [file, pattern] of Object.entries(guardedImports)) {
+      const imports = readFileSync(resolve(__dirname, '../..', file), 'utf8')
+        .split('\n')
+        .filter((line) => line.includes("from 'lucide-react'"))
+        .join('\n');
+      expect(imports, file).not.toMatch(pattern);
+    }
+  });
 });

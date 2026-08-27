@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Briefcase, Star, AlertTriangle, ExternalLink, Check, X, Pencil, Wallet, Clock } from 'lucide-react';
+import { ArrowLeft, Star, AlertTriangle, ExternalLink, Check, X, Pencil, Wallet, Clock } from 'lucide-react';
 import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,
   useApplyToJob, useAwardApplicant, useSubmitProof,
@@ -11,10 +11,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { bountyPath, bountyTitle, bountyDescription, bountyUrl, isBountyIndexable } from '@/features/work/seo';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { TxLink, statusBadgeClass, statusLabel } from '@/features/work/components/TxLink';
 import { WorkUser } from '@/features/work/components/WorkUser';
 import type { WorkJob, WorkSubmission } from '@/features/work/types';
+
+const TYPE_ICON: Record<string, ThemeIconKey> = {
+  shill: 'messages',
+  clipping: 'videos',
+  contract: 'command',
+};
 
 /** What one accepted submission is worth: the whole budget on a contract, one unit otherwise. */
 function payoutFor(job: WorkJob): number {
@@ -108,7 +114,7 @@ export default function WorkJobDetailPage() {
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/80 inline-flex items-center gap-1">
-              <Briefcase className="w-3 h-3" /> {job.job_type}
+              <ThemedIcon icon={TYPE_ICON[job.job_type] ?? 'bounties'} alt="" className="w-4 h-4 object-contain" /> {job.job_type}
             </span>
             {job.platform && <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>}
             <span className={`px-2 py-0.5 rounded-md ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</span>
