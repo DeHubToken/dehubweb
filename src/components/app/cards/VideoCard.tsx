@@ -1600,137 +1600,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
             </motion.button>
-            <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
-              {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
-                  vaul's Root (and its window scroll listener) into every card. */}
-              <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
-                <MoreVertical className="w-[23.5px] h-[23.5px]" />
-              </button>
-              <DrawerContent column glass className="px-4 pb-6">
-                <DrawerHeader className="pb-2">
-                  <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
-                </DrawerHeader>
-                <div className="flex flex-col gap-1">
-                  {/* Bookmark / Post info — mobile/tablet only; desktop shows these
-                      anchored left in the bottom action bar instead. */}
-                  <button
-                    onClick={() => { toggleBookmark(); }}
-                    disabled={isBookmarkLoading}
-                    className={cn(
-                      "lg:hidden flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-50",
-                      isBookmarked ? "text-yellow-500" : "text-white"
-                    )}
-                  >
-                    <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
-                    {isBookmarked ? 'Remove bookmark' : 'Bookmark'}
-                  </button>
-                  <button
-                    onClick={openPostInfoPage}
-                    className="lg:hidden flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                  >
-                    <Info className="w-5 h-5" /> Post info
-                  </button>
-                  {!isOwnPost && (
-                    <button
-                      onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
-                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                    >
-                       <Gem className="w-5 h-5" /> {t('postOptions.sendTip')}
-                    </button>
-                  )}
-                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                    <ListPlus className="w-5 h-5" /> {t('postOptions.queue')}
-                  </button>
-                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                    <Clock className="w-5 h-5" /> {t('postOptions.watchList')}
-                  </button>
-                  <button
-                    onClick={() => setShowReportModal(true)}
-                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                  >
-                    <Flag className="w-5 h-5" /> {t('postOptions.report')}
-                  </button>
-                  {!isContentGated && !isHoldingsLocked && (
-                    <button onClick={handleDownloadVideo} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                      <Download className="w-5 h-5" /> {t('postOptions.download')}
-                    </button>
-                  )}
-                  <button 
-                    onClick={() => {
-                      const url = `${window.location.origin}/app/post/${video.id}`;
-                      navigator.clipboard.writeText(url);
-                      toast.success(t('postOptions.postUrlCopied'));
-                      trackLinkCopy(video.id, walletAddress, linkCopyCount);
-                    }}
-                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                  >
-                    <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
-                  </button>
-                  {!isOwnPost && (
-                    <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                      <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
-                    </button>
-                  )}
-                  {!isOwnPost && (
-                    <button onClick={handleBlockCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                      <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
-                    </button>
-                  )}
-                  {!isOwnPost && canGiftBoost && (
-                    <button
-                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
-                      disabled={!videoTokenId}
-                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
-                    >
-                      <Gift className="w-5 h-5" /> {t('postOptions.giftBoost', { defaultValue: 'Gift a boost' })}
-                    </button>
-                  )}
-                  {isOwnPost && (
-                    <>
-                      <div className="border-t border-white/10 my-1" />
-                      <button
-                        onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
-                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                      >
-                        <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
-                      </button>
-                      {/* Boost. Offered to every owner rather than only to badge holders:
-                          the sheet explains what a badge buys and links to staking, which is
-                          worth more than hiding the row from the people who have not staked. */}
-                      <button
-                        onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
-                        disabled={!videoTokenId}
-                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
-                      >
-                        <Rocket className="w-5 h-5" /> {t('postOptions.boostPost')}
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (!videoTokenId || togglePinMutation.isPending) return;
-                          togglePinMutation.mutate(videoTokenId, {
-                            onSuccess: (data) => setIsPinned(data.pinned),
-                          });
-                        }}
-                        disabled={!videoTokenId || togglePinMutation.isPending}
-                        className={cn(
-                          "lg:hidden flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40",
-                          isPinned ? "text-blue-400" : "text-white"
-                        )}
-                      >
-                        <Pin className={cn("w-5 h-5", isPinned && "fill-current")} />
-                        {isPinned ? 'Unpin post' : 'Pin post'}
-                      </button>
-                      <button
-                        onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
-                        className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
-                      >
-                        <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
-                      </button>
-                    </>
-                  )}
-                </div>
-              </DrawerContent>
-            </Drawer>
+            {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
+                vaul's Root (and its window scroll listener) into every card.
+                The sheet itself is mounted once at the card root and shared
+                with the carousel and immersive openers further down; a second
+                <Drawer> here bound to the same state opened a duplicate. */}
+            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <MoreVertical className="w-[23.5px] h-[23.5px]" />
+            </button>
           </div>
         </div>
       )}
@@ -2380,7 +2257,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </Suspense>
       )}
 
-      {/* Options Drawer for immersive mode */}
+      {/* The card's only options sheet, for all three openers: the feed-card
+          header, the carousel avatar row, and the immersive creator bar. They
+          share one piece of state, so a second <Drawer> reading it — there used
+          to be one in the header — mounted a duplicate sheet on top of this one
+          on every non-immersive card. Items stay conditional, not the sheet. */}
       <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
         <DrawerContent column glass className="px-4 pb-6">
           <DrawerHeader className="pb-2">
@@ -2454,6 +2335,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
             </button>
+            {!isOwnPost && (
+              <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
+              </button>
+            )}
+            {!isOwnPost && (
+              <button onClick={handleBlockCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
+              </button>
+            )}
+            {!isOwnPost && canGiftBoost && (
+              <button
+                onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                disabled={!videoTokenId}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+              >
+                <Gift className="w-5 h-5" /> {t('postOptions.giftBoost', { defaultValue: 'Gift a boost' })}
+              </button>
+            )}
             {isOwnPost && (
               <>
                 <div className="border-t border-white/10 my-1" />
@@ -2462,6 +2362,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
                   <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                </button>
+                {/* Boost. Offered to every owner rather than only to badge holders:
+                    the sheet explains what a badge buys and links to staking, which is
+                    worth more than hiding the row from the people who have not staked. */}
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                  disabled={!videoTokenId}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                >
+                  <Rocket className="w-5 h-5" /> {t('postOptions.boostPost')}
                 </button>
                 <button
                   onClick={() => {
