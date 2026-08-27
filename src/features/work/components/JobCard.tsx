@@ -1,12 +1,19 @@
 import { Link } from 'react-router-dom';
-import { Briefcase, Eye, Users, Coins, Clock } from 'lucide-react';
-import type { WorkJob } from '../types';
+import { Eye, Users, Coins, Clock } from 'lucide-react';
+import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
+import type { WorkJob, WorkJobType } from '../types';
 import { bountyPath } from '../seo';
 
 const TYPE_LABEL: Record<string, string> = {
   shill: 'Comment / Shill',
   clipping: 'Clipping',
   contract: 'Contract',
+};
+
+const TYPE_ICON: Record<WorkJobType, ThemeIconKey> = {
+  shill: 'messages',
+  clipping: 'videos',
+  contract: 'command',
 };
 
 export function JobCard({ job }: { job: WorkJob }) {
@@ -19,7 +26,7 @@ export function JobCard({ job }: { job: WorkJob }) {
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 text-xs">
           <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/80 inline-flex items-center gap-1">
-            <Briefcase className="w-3 h-3" /> {TYPE_LABEL[job.job_type]}
+            <ThemedIcon icon={TYPE_ICON[job.job_type] ?? 'bounties'} alt="" className="w-4 h-4 object-contain" /> {TYPE_LABEL[job.job_type]}
           </span>
           {job.platform && (
             <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>

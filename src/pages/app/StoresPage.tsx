@@ -5,7 +5,6 @@
  */
 
 import { useState, useRef } from 'react';
-import { Store, ShoppingBag, Plus, PackagePlus } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { BrowseTab } from '@/components/app/stores/BrowseTab';
@@ -46,7 +45,7 @@ export default function StoresPage() {
           <div className="flex items-center gap-2">
             <LiquidGlassBubble2
               label="Browse"
-              icon={<ShoppingBag className="w-4 h-4" />}
+              icon={<ThemedIcon icon="stores" alt="" className="w-5 h-5 object-contain" />}
               onClick={() => setTab('browse')}
               width="auto"
               height="38px"
@@ -55,7 +54,7 @@ export default function StoresPage() {
             />
             <LiquidGlassBubble2
               label={storeLabel}
-              icon={<Store className="w-4 h-4" />}
+              icon={<ThemedIcon icon="profile" alt="" className="w-5 h-5 object-contain" />}
               onClick={() => setTab('my-store')}
               width="auto"
               height="38px"
@@ -70,7 +69,7 @@ export default function StoresPage() {
                     <div>
                       <LiquidGlassBubble2
                         label=""
-                        icon={<Plus className="w-4 h-4" />}
+                        icon={<ThemedIcon icon="stores" alt="" className="w-5 h-5 object-contain" />}
                         onClick={() => {}}
                         width="38px"
                         height="38px"
@@ -79,11 +78,11 @@ export default function StoresPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="bg-zinc-900 border-white/10">
                     <DropdownMenuItem onClick={() => { setCreateStoreOpen(true); setTab('my-store'); }}>
-                      <Store className="w-4 h-4 mr-2" /> New Store
+                      <ThemedIcon icon="stores" alt="" className="w-5 h-5 mr-2 object-contain" /> New Store
                     </DropdownMenuItem>
                     {hasStores && (
                       <DropdownMenuItem onClick={() => { setCreateListingOpen(true); setTab('my-store'); }}>
-                        <PackagePlus className="w-4 h-4 mr-2" /> New Listing
+                        <ThemedIcon icon="stores" alt="" className="w-5 h-5 mr-2 object-contain" /> New Listing
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>

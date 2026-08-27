@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, MessageSquare, Scissors, Briefcase } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useCreateJob } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';
 import type { WorkJobType, WorkCurrency, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
+import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 
-const TYPE_OPTIONS: Array<{ id: WorkJobType; label: string; desc: string; icon: any; unitLabel: string }> = [
-  { id: 'shill', label: 'Comments / Shill', desc: 'Pay per verified comment on X, YouTube, IG, TikTok.', icon: MessageSquare, unitLabel: 'comment' },
-  { id: 'clipping', label: 'Clipping', desc: 'Pay per 1k views on clips posted across TikTok, IG, YouTube.', icon: Scissors, unitLabel: '1k views' },
-  { id: 'contract', label: 'Contract', desc: 'Fixed-price gig. Pick one worker from applicants.', icon: Briefcase, unitLabel: 'job' },
+const TYPE_OPTIONS: Array<{ id: WorkJobType; label: string; desc: string; icon: ThemeIconKey; unitLabel: string }> = [
+  { id: 'shill', label: 'Comments / Shill', desc: 'Pay per verified comment on X, YouTube, IG, TikTok.', icon: 'messages', unitLabel: 'comment' },
+  { id: 'clipping', label: 'Clipping', desc: 'Pay per 1k views on clips posted across TikTok, IG, YouTube.', icon: 'videos', unitLabel: '1k views' },
+  { id: 'contract', label: 'Contract', desc: 'Fixed-price gig. Pick one worker from applicants.', icon: 'command', unitLabel: 'job' },
 ];
 
 const PLATFORMS: WorkPlatform[] = ['x', 'youtube', 'instagram', 'tiktok', 'facebook', 'reddit', 'other'];
@@ -92,13 +93,17 @@ export default function WorkPostPage() {
       </button>
 
       <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-6">
-        <h1 className="text-xl font-bold text-white mb-1">Post a Bounty</h1>
-        <p className="text-sm text-white/60 mb-6">Step {step} of 3</p>
+        <div className="mb-6 flex items-center gap-3">
+          <ThemedIcon icon="bounties" alt="" className="w-12 h-12 shrink-0 object-contain" />
+          <div>
+            <h1 className="text-xl font-bold text-white">Post a Bounty</h1>
+            <p className="text-sm text-white/60">Step {step} of 3</p>
+          </div>
+        </div>
 
         {step === 1 && (
           <div className="space-y-3">
             {TYPE_OPTIONS.map((t) => {
-              const Icon = t.icon;
               const active = jobType === t.id;
               return (
                 <button
@@ -110,7 +115,7 @@ export default function WorkPostPage() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                      <Icon className="w-5 h-5 text-white" />
+                      <ThemedIcon icon={t.icon} alt="" className="w-8 h-8 object-contain" />
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold text-white">{t.label}</div>

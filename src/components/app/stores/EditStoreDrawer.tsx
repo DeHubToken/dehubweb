@@ -9,12 +9,13 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Camera, Loader2, Store } from 'lucide-react';
+import { Camera, Loader2 } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useUpdateStore, uploadStoreMedia } from '@/hooks/use-stores';
 import { useAuth } from '@/contexts/AuthContext';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { toast } from 'sonner';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 interface Props {
   store: any;
@@ -109,7 +110,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
                   <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Store className="w-6 h-6 text-zinc-500" />
+                    <ThemedIcon icon="stores" alt="" className="w-10 h-10 object-contain opacity-75" />
                   </div>
                 )}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">

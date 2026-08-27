@@ -5,7 +5,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { useBrowseListings } from '@/hooks/use-stores';
 import { StoreListingCard } from './StoreListingCard';
 import { ListingDetailDrawer } from './ListingDetailDrawer';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const CATEGORIES = [
   { value: 'all', label: 'All' },
@@ -85,7 +86,7 @@ export function BrowseTab() {
     <div className="space-y-4">
       {/* Search bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
+        <ThemedIcon icon="search" alt="" className="absolute left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 object-contain opacity-60 z-10" />
         <Input
           value={search}
           onChange={e => setSearch(e.target.value)}
@@ -256,6 +257,7 @@ export function BrowseTab() {
         </div>
       ) : filteredListings.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground text-sm">
+          <ThemedIcon icon="stores" alt="" className="w-14 h-14 mx-auto mb-3 object-contain opacity-70" />
           {hasPriceFilter ? 'No listings in this price range.' : 'No listings found. Be the first to sell something!'}
         </div>
       ) : (

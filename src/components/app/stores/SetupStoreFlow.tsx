@@ -8,11 +8,12 @@ import { useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Store, Loader2, ArrowLeft, Camera } from 'lucide-react';
+import { Loader2, ArrowLeft, Camera } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useCreateStore, uploadStoreMedia } from '@/hooks/use-stores';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 interface SetupStoreFlowProps {
   onComplete?: () => void;
@@ -103,7 +104,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
           <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Store className="w-8 h-8 text-zinc-500" />
+            <ThemedIcon icon="stores" alt="" className="w-12 h-12 object-contain opacity-75" />
           </div>
         )}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
@@ -127,7 +128,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
         </div>
         <LiquidGlassBubble2
           label="Create Store"
-          icon={<Store className="w-4 h-4" />}
+          icon={<ThemedIcon icon="stores" alt="" className="w-5 h-5 object-contain" />}
           loading={createStore.isPending}
           loadingLabel="Creating..."
           disabled={!name.trim() || uploading || uploadingBanner}
