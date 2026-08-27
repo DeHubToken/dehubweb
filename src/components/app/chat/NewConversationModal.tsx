@@ -36,6 +36,7 @@ import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { VerifiedBadge } from '../VerifiedBadge';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { DM_FEE_WARNING_SEEN_KEY } from './DirectMessageChat';
 import {
   getWalletAddress,
   getERC20Balance,
@@ -227,6 +228,9 @@ function FeePaymentStep({
       const txHash = tipResult.hash;
 
       toast.success(dhbText(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`), { id: 'dm-fee-gate' });
+      // Paying to unlock DMs already makes the per-message cost explicit —
+      // don't make them click through the same warning again in the thread.
+      localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
       onPaid(messageText.trim(), txHash);
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);

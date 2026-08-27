@@ -39,6 +39,18 @@ interface ChatInputProps {
   sendDisabledReason?: string;
   /** If true, shows a processing spinner on the send button */
   isSendingFee?: boolean;
+  /**
+   * Per-message DHB cost, when the recipient gates messaging behind a tip.
+   * Shown directly on the send button so the cost stays visible while
+   * composing, instead of only in a banner that scrolls out of view.
+   */
+  feeAmount?: number;
+  /**
+   * Awaited before a paid send proceeds — lets the parent show a one-time
+   * "this costs DHB" confirmation. Resolving false leaves the composer
+   * untouched (message, attachments) so a cancelled send loses nothing.
+   */
+  confirmBeforeSend?: () => Promise<boolean> | boolean;
   /** Message being replied to */
   replyTo?: Message | null;
   /** Cancel the current reply */
@@ -65,7 +77,7 @@ interface ChatInputProps {
   draftKey?: string | null;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, replyTo, onCancelReply, initialText, thread, peerName, draftKey }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey }: ChatInputProps) {
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
   // in an effect once the conversation resolves) — adopt it only while the
@@ -178,8 +190,9 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     if (ta) ta.style.height = 'auto';
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (sendDisabled || isSendingFee) return;
+    if (confirmBeforeSend && !(await confirmBeforeSend())) return;
     // Whatever is on the rail was drafted against a thread that no longer ends
     // where it did, so it goes down with the send and comes back up on the
     // next tail — as follow-ups, since the user now holds the last word.
@@ -243,7 +256,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      void handleSend();
     }
   };
 
@@ -659,15 +672,26 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             type="button"
             variant="ghost"
             size="icon"
-            className={`h-8 w-8 ${sendDisabled ? 'text-zinc-600 cursor-not-allowed' : 'text-zinc-400 hover:text-white hover:bg-zinc-700'}`}
+            className={`h-8 ${feeAmount ? 'w-auto px-2 gap-1' : 'w-8'} ${sendDisabled ? 'text-zinc-600 cursor-not-allowed' : 'text-zinc-400 hover:text-white hover:bg-zinc-700'}`}
             // Don't steal focus from the textarea — keeps the on-screen
             // keyboard open across sends instead of collapsing every tap.
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleSend}
             disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !docFile && !audioPreview)}
-            title={sendDisabled ? sendDisabledReason : undefined}
+            title={sendDisabled ? sendDisabledReason : feeAmount ? `${feeAmount.toLocaleString()} DHB per message` : undefined}
           >
-            {isSendingFee ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+            {isSendingFee ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>
+                {!!feeAmount && (
+                  <span className={`text-[11px] font-semibold leading-none ${sendDisabled ? 'text-zinc-600' : 'text-amber-400'}`}>
+                    {feeAmount.toLocaleString()}
+                  </span>
+                )}
+                <Send className="w-5 h-5" />
+              </>
+            )}
           </Button>
         </div>
       </div>

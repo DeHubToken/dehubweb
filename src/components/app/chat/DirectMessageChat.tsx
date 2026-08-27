@@ -623,6 +623,9 @@ function MessagesSkeleton() {
  */
 const DM_FEE_CACHE_TTL = 6 * 60 * 60 * 1000;
 
+/** Set once the user has confirmed the "messages cost DHB" warning — never shown again on this browser. */
+export const DM_FEE_WARNING_SEEN_KEY = 'dehub-dm-fee-warning-seen';
+
 function readCachedDmFee(key: string): DmFee | null {
   try {
     const raw = localStorage.getItem(key);
@@ -786,6 +789,35 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const bestFeeBalance = Math.max(feeBalanceBase ?? -1, feeBalanceBnb ?? -1);
   const balancesLoaded = feeBalanceBase !== null || feeBalanceBnb !== null;
   const feeSendDisabled = feeRequired && balancesLoaded && (bestFeeBalance < activeFee);
+
+  /**
+   * First paid send in this browser gets a one-time "this costs DHB, are you
+   * sure?" confirmation — a lot of people don't expect messaging to cost
+   * anything and the fee banner lives up in the scroll history, out of view
+   * once a conversation has any length to it.
+   */
+  const [showFeeWarning, setShowFeeWarning] = useState(false);
+  const feeWarningResolveRef = useRef<((confirmed: boolean) => void) | null>(null);
+  const confirmFeeSend = useCallback((): Promise<boolean> => {
+    if (localStorage.getItem(DM_FEE_WARNING_SEEN_KEY) === '1') return Promise.resolve(true);
+    return new Promise<boolean>((resolve) => {
+      feeWarningResolveRef.current = resolve;
+      setShowFeeWarning(true);
+    });
+  }, []);
+  const handleFeeWarningOpenChange = (open: boolean) => {
+    setShowFeeWarning(open);
+    if (!open && feeWarningResolveRef.current) {
+      feeWarningResolveRef.current(false);
+      feeWarningResolveRef.current = null;
+    }
+  };
+  const handleFeeWarningConfirm = () => {
+    localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
+    feeWarningResolveRef.current?.(true);
+    feeWarningResolveRef.current = null;
+    setShowFeeWarning(false);
+  };
 
   // Check DHB balance on both Base and BNB when fee is required
   useEffect(() => {
@@ -1878,6 +1910,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             : undefined
         }
         isSendingFee={isSendingFee}
+        feeAmount={feeRequired ? activeFee : undefined}
+        confirmBeforeSend={feeRequired ? confirmFeeSend : undefined}
       />
 
       {/* Delete confirmation dialog */}
@@ -1895,6 +1929,28 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteConversation} className="bg-red-600 hover:bg-red-700">
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* First-paid-message warning — shown once per browser before the first fee is charged */}
+      <AlertDialog open={showFeeWarning} onOpenChange={handleFeeWarningOpenChange}>
+        <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Messages cost DHB</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">
+              The messages you send to {displayName} are paid and will cost{' '}
+              <span className="text-white font-semibold">{activeFee.toLocaleString()} DHB</span> each.
+              Are you sure you want to continue?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleFeeWarningConfirm} className="bg-amber-600 hover:bg-amber-700">
+              Continue
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
