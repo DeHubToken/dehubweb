@@ -93,6 +93,7 @@ export function AudioSpacesModalBody() {
     joinSpace,
     leaveSpace,
     endSpace,
+    endStageById,
     toggleMute,
     raiseHand,
     lowerHand,
@@ -200,6 +201,16 @@ export function AudioSpacesModalBody() {
     await joinSpace(spaceId);
     // Increment listen count
     supabase.rpc('increment_stage_listens', { p_space_id: spaceId }).then(() => {});
+  };
+
+  /**
+   * Close a room you host without being inside it. Same escape hatch as the
+   * one on /stages: the in-room End button is unreachable when the stage is
+   * one you could never connect to in the first place.
+   */
+  const handleEndFromList = async (space: AudioSpace) => {
+    if (!confirm(`End "${space.title}"? It comes off the air for everyone.`)) return;
+    await endStageById(space.id);
   };
 
   const handleEndOrLeave = () => {
@@ -363,6 +374,13 @@ export function AudioSpacesModalBody() {
                         key={space.id}
                         space={space}
                         onJoin={() => handleJoin(space.id)}
+                        onEnd={
+                          walletAddress &&
+                          space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase() &&
+                          currentSpace?.id !== space.id
+                            ? () => handleEndFromList(space)
+                            : undefined
+                        }
                         isLoading={isLoading}
                       />
                     ))}
@@ -1004,10 +1022,13 @@ export function AudioSpacesModalBody() {
 function StageCard({
   space,
   onJoin,
+  onEnd,
   isLoading,
 }: {
   space: AudioSpace;
   onJoin: () => void;
+  /** Host-only, and only from outside the room — see StagesPage for the why. */
+  onEnd?: () => void;
   isLoading: boolean;
 }) {
   return (
@@ -1023,6 +1044,28 @@ function StageCard({
         </span>
         <span className="text-xs text-white font-medium">LIVE</span>
         {isLoading && <Loader2 className="w-3 h-3 animate-spin text-white/50" />}
+        {onEnd && (
+          // A <span>, because the whole card is already a <button> and the
+          // parser unnests a nested one.
+          <span
+            role="button"
+            tabIndex={0}
+            title="End this stage"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEnd();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.stopPropagation();
+                onEnd();
+              }
+            }}
+            className="ml-auto px-2 py-0.5 rounded-lg text-[11px] font-medium text-red-400/70 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
+          >
+            End
+          </span>
+        )}
       </div>
       <h4 className="font-medium text-white truncate">{space.title}</h4>
       {space.description && (

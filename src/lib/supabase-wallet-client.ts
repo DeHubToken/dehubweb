@@ -66,3 +66,40 @@ export function walletScopedClient(walletAddress: string) {
     global: { headers: { 'x-wallet-address': walletAddress.toLowerCase() } },
   });
 }
+
+/**
+ * Take a stage back off the air from a page that is going away.
+ *
+ * A stage row is flipped to `live` before its host is actually on air, and put
+ * back if going live fails. That put-back is an ordinary fetch, and an ordinary
+ * fetch dies with the document — so a host who hits refresh the moment they see
+ * an error leaves the row saying `live` forever, advertised on the home rail
+ * with nobody in the room. `keepalive` is what lets the request outlive the
+ * page; the logger's exit flush uses the same trick for the same reason.
+ *
+ * Best-effort by design: it is a PATCH, so it needs a preflight the browser may
+ * not finish on the way out. When it lands the stage closes cleanly, and when it
+ * does not, the host's own End control ([[endStageById]]) is still there.
+ */
+export function endStageOnExit(
+  spaceId: string,
+  status: 'ended' | 'scheduled',
+  walletAddress: string | null,
+) {
+  try {
+    void fetch(`${SUPABASE_URL}/rest/v1/audio_spaces?id=eq.${encodeURIComponent(spaceId)}`, {
+      method: 'PATCH',
+      keepalive: true,
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+        ...(walletAddress ? { 'x-wallet-address': walletAddress.toLowerCase() } : {}),
+      },
+      body: JSON.stringify({ status }),
+    }).catch(() => { /* the page is leaving; there is nobody left to tell */ });
+  } catch {
+    /* noop */
+  }
+}

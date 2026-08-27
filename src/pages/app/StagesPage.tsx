@@ -14,7 +14,7 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -37,7 +37,7 @@ import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
-import { useMyStages } from '@/hooks/use-my-stages';
+import { useMyStages, myStagesKeys } from '@/hooks/use-my-stages';
 import { supabase } from '@/integrations/supabase/client';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -214,6 +214,7 @@ function LiveStageCard({
   isPaper,
   onOpen,
   onShare,
+  onEnd,
 }: {
   space: AudioSpace;
   isCurrent: boolean;
@@ -221,6 +222,12 @@ function LiveStageCard({
   isPaper: boolean;
   onOpen: () => void;
   onShare: () => void;
+  /**
+   * Present only for the host of a room they are not currently in — the way
+   * out of a stage that says it is live and cannot be joined. Undefined for
+   * everyone else, and while the host is inside (End lives in the room then).
+   */
+  onEnd?: () => void;
 }) {
   const totalListeners = Math.max(1, (space.speaker_count || 1) + (space.listener_count || 0));
   const avatar =
@@ -280,6 +287,27 @@ function LiveStageCard({
             >
               <Share2 className="w-3.5 h-3.5" />
             </span>
+            {onEnd && (
+              <span
+                role="button"
+                tabIndex={0}
+                title="End this stage"
+                aria-label="End this stage"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEnd();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.stopPropagation();
+                    onEnd();
+                  }
+                }}
+                className="px-2 h-7 rounded-lg flex items-center text-[11px] font-medium text-red-400/70 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
+              >
+                End
+              </span>
+            )}
           </div>
         </div>
 
@@ -340,8 +368,10 @@ export default function StagesPage() {
     isLoading,
     startScheduledSpace,
     cancelScheduledSpace,
+    endStageById,
   } = useStage();
   const { isAuthenticated, walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   const { theme } = useAppTheme();
   // Paper themes need inked waveform bars (white bars vanish on a light card).
   const isPaper = theme === 'light' || theme === 'minimal';
@@ -422,6 +452,27 @@ export default function StagesPage() {
       }
     } finally {
       setJoiningId(null);
+    }
+  };
+
+  /**
+   * A host looking at their own live room from outside it.
+   *
+   * That is either a room they wandered away from, or — the case this exists
+   * for — one whose launch failed after the row went live, which can never be
+   * joined and, until now, could never be ended either.
+   */
+  const canEndFromOutside = (space: AudioSpace) =>
+    !!walletAddress &&
+    space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase() &&
+    currentSpace?.id !== space.id;
+
+  const handleEndLive = async (space: AudioSpace) => {
+    if (!confirm(`End "${space.title}"? It comes off the air for everyone.`)) return;
+    // The Hosting tab is its own query, so the context's own refresh does not
+    // reach it — the row would sit there still labelled LIVE.
+    if (await endStageById(space.id)) {
+      await queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
     }
   };
 
@@ -552,6 +603,7 @@ export default function StagesPage() {
             isPaper={isPaper}
             onOpen={() => handleOpenLive(space)}
             onShare={() => setShareSpace(space)}
+            onEnd={canEndFromOutside(space) ? () => handleEndLive(space) : undefined}
           />
         ))}
       </div>
@@ -600,6 +652,7 @@ export default function StagesPage() {
                 isPaper={isPaper}
                 onOpen={() => handleOpenLive(space)}
                 onShare={() => setShareSpace(space)}
+                onEnd={canEndFromOutside(space) ? () => handleEndLive(space) : undefined}
               />
             ))}
           </div>
