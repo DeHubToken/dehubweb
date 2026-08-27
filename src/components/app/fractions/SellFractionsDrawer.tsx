@@ -109,7 +109,7 @@ export function SellFractionsDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="px-4 pb-8">
+      <DrawerContent column glass className="px-4 pb-8">
         <DrawerHeader className="px-0">
           <DrawerTitle className="text-white text-lg">Sell fractions</DrawerTitle>
         </DrawerHeader>

@@ -133,7 +133,7 @@ function PinPickerDrawer({ open, onOpenChange, walletAddress, pinnedIds, nextOrd
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass hideHandle>
+      <DrawerContent column glass hideHandle>
         <div className="px-4 pt-4 pb-2">
           <DrawerHeader className="p-0">
             <DrawerTitle className="text-white font-medium text-sm">{t('communities.pinToProfile')}</DrawerTitle>

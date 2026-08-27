@@ -346,7 +346,7 @@ export function ProfileHeader({
                     <Plus className="w-4 h-4" />
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent glass hideHandle={false} className="px-4 pt-1 pb-8">
+                <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
                   <DrawerHeader className="sr-only">
                     <DrawerTitle>Profile Options</DrawerTitle>
                   </DrawerHeader>

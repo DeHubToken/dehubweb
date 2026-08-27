@@ -403,7 +403,7 @@ export default function FullWalletPage() {
 
       {/* Send Chain Picker - only shown when sending and multiple chains have balance */}
       <Drawer open={!!sendChainPickerGrouped} onOpenChange={v => { if (!v) setSendChainPickerGrouped(null); }}>
-        <DrawerContent glass data-wallet-page>
+        <DrawerContent column glass data-wallet-page>
           <DrawerHeader>
             <DrawerTitle className="text-white">
               {t('wallet.selectChain', { symbol: sendChainPickerGrouped?.symbol })}
@@ -484,7 +484,7 @@ export default function FullWalletPage() {
 
       {/* Buy Options Drawer — top-level Buy button (DHB-focused) */}
       <Drawer open={buyDrawerOpen} onOpenChange={setBuyDrawerOpen}>
-        <DrawerContent glass hideHandle={false} data-wallet-page>
+        <DrawerContent column glass hideHandle={false} data-wallet-page>
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">{t('wallet.buy')}</h3>
             <button
@@ -615,7 +615,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
   return (
     <>
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass data-wallet-page>
+      <DrawerContent column glass data-wallet-page>
         <DrawerHeader>
           <DrawerTitle className="flex items-center gap-3 text-white">
             {icon ? (
@@ -671,7 +671,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
 
       {/* Buy Method Sub-Drawer */}
       <Drawer open={buyMethodOpen} onOpenChange={setBuyMethodOpen}>
-        <DrawerContent glass hideHandle={false} data-wallet-page>
+        <DrawerContent column glass hideHandle={false} data-wallet-page>
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">Buy {grouped?.symbol}</h3>
             {grouped?.symbol === 'DHB' ? (
@@ -1078,7 +1078,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
 
   return (
     <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
-      <DrawerContent glass hideHandle={false} data-wallet-page>
+      <DrawerContent column glass hideHandle={false} data-wallet-page>
         <div className="p-5 pb-8 max-h-[85vh] overflow-y-auto">
           <DrawerHeader className="p-0 mb-4">
             <DrawerTitle className="text-white">{t('wallet.importCustomToken')}</DrawerTitle>

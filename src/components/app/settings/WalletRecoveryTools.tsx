@@ -73,7 +73,7 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
   return (
     <Drawer open={open} onOpenChange={close}>
-      <DrawerContent className="bg-black/95 border-white/10">
+      <DrawerContent column className="bg-black/95 border-white/10">
         <DrawerHeader>
           <DrawerTitle className="text-white text-center">Export Private Key</DrawerTitle>
         </DrawerHeader>
@@ -245,7 +245,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
   return (
     <Drawer open={open} onOpenChange={close}>
-      <DrawerContent className="bg-black/95 border-white/10">
+      <DrawerContent column className="bg-black/95 border-white/10">
         <DrawerHeader>
           <DrawerTitle className="text-white text-center">Switch to a different old account</DrawerTitle>
         </DrawerHeader>

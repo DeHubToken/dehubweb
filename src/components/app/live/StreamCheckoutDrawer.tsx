@@ -88,7 +88,7 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
 
   return (
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
-      <DrawerContent className={GLASS_STYLES.drawer}>
+      <DrawerContent column className={GLASS_STYLES.drawer}>
         <DrawerHeader>
           <DrawerTitle className="truncate">{listing.title}</DrawerTitle>
         </DrawerHeader>

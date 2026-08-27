@@ -81,7 +81,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
   return (
     <>
       <Drawer open={open} onOpenChange={o => { if (!o && !busy) onClose(); }}>
-        <DrawerContent className="bg-zinc-950 border-white/10">
+        <DrawerContent column className="bg-zinc-950 border-white/10">
           <DrawerHeader className="pb-2">
             <DrawerTitle className="text-white break-all">
               <span className="text-zinc-500">@</span>{listing.username}

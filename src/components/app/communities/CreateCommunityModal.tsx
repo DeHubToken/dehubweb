@@ -95,7 +95,7 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass hideHandle>
+      <DrawerContent column glass hideHandle>
         <div className="flex items-center justify-between px-4 pt-4 pb-2">
           <DrawerHeader className="p-0">
             <DrawerTitle className="text-white font-medium flex items-center gap-2">

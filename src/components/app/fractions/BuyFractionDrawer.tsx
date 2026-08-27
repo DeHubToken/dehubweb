@@ -99,7 +99,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="px-4 pb-8">
+      <DrawerContent column glass className="px-4 pb-8">
         <DrawerHeader className="px-0">
           <DrawerTitle className="text-white text-lg">
             {listing.post_title || `Post #${listing.token_id}`}

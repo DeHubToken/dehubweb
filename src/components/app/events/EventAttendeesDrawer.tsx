@@ -121,7 +121,7 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className={cn(GLASS_STYLES.drawer, 'max-h-[80vh]')}>
+      <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[80vh]')}>
         <DrawerHeader>
           <DrawerTitle className="text-white capitalize">{type} ({attendees.length}{hasMore ? '+' : ''})</DrawerTitle>
         </DrawerHeader>

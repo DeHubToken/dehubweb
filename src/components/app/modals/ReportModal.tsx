@@ -152,7 +152,7 @@ export function ReportModal({
 
   return (
     <Drawer open={open} onOpenChange={handleClose}>
-      <DrawerContent glass className="max-h-[90vh]">
+      <DrawerContent column glass className="max-h-[90vh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Flag className="w-5 h-5 text-red-500" />

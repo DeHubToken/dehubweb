@@ -159,7 +159,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="max-h-[85vh]">
+      <DrawerContent column glass className="max-h-[85vh]">
         <VisuallyHidden>
           <DrawerTitle>Quote Post</DrawerTitle>
         </VisuallyHidden>

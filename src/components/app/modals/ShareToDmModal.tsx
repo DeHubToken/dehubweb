@@ -181,7 +181,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent
+      <DrawerContent column
         glass
         className="max-h-[85vh]"
         data-no-navigate

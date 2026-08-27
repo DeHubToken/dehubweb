@@ -76,7 +76,7 @@ function EnrollDialog({
 
   return (
     <Drawer open={open} onOpenChange={close}>
-      <DrawerContent className="bg-black/95 border-white/10">
+      <DrawerContent column className="bg-black/95 border-white/10">
         <DrawerHeader>
           <DrawerTitle className="text-white text-center">Add biometric unlock</DrawerTitle>
         </DrawerHeader>
@@ -189,7 +189,7 @@ function AddPasswordBackupDialog({
 
   return (
     <Drawer open={open} onOpenChange={close}>
-      <DrawerContent className="bg-black/95 border-white/10">
+      <DrawerContent column className="bg-black/95 border-white/10">
         <DrawerHeader>
           <DrawerTitle className="text-white text-center">Add a password backup</DrawerTitle>
         </DrawerHeader>

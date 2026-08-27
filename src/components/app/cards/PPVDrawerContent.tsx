@@ -61,7 +61,7 @@ export function PPVDrawerContent({
   });
 
   return (
-    <DrawerContent glass className="px-4 pb-6">
+    <DrawerContent column glass className="px-4 pb-6">
       <DrawerHeader className="pb-3 relative">
         <DrawerTitle className="text-white text-lg flex items-center gap-2">
           <Ticket className="w-5 h-5 text-white" />

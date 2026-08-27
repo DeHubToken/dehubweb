@@ -724,7 +724,7 @@ function SubmitFeatureDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85vh]">
+      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85vh]">
         <DrawerHeader className="relative">
           <DrawerTitle className="text-white text-lg font-bold">{t('features.submitDrawerTitle')}</DrawerTitle>
           <button

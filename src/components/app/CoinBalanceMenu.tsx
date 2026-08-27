@@ -496,7 +496,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
       <DrawerTrigger asChild>
         {coinButton}
       </DrawerTrigger>
-      <DrawerContent glass hideHandle={false} className="px-4 pt-1 pb-8">
+      <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Coin Menu</DrawerTitle>
         </DrawerHeader>

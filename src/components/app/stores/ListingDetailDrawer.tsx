@@ -111,7 +111,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   return (
     <>
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
-      <DrawerContent className={GLASS_STYLES.drawer}>
+      <DrawerContent column className={GLASS_STYLES.drawer}>
         <DrawerHeader className="flex flex-row items-center justify-between gap-3">
           <DrawerTitle className="truncate">{listing.title}</DrawerTitle>
           <button

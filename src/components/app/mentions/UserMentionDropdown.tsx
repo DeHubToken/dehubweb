@@ -178,7 +178,7 @@ export function UserMentionDropdown({
         if (!open) onClose();
       }}
     >
-      <DrawerContent
+      <DrawerContent column
         className="bg-black/95 border-t border-white/[0.08] max-h-[70vh] rounded-t-3xl"
         style={{
           backdropFilter: 'blur(40px)',

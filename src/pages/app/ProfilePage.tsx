@@ -695,7 +695,7 @@ export default function ProfilePage() {
 
       {/* Make Offer Drawer */}
       <Drawer open={offerDrawerOpen} onOpenChange={setOfferDrawerOpen}>
-        <DrawerContent glass hideHandle={false} className="px-4 pb-8">
+        <DrawerContent column glass hideHandle={false} className="px-4 pb-8">
           <DrawerHeader className="text-left">
             <DrawerTitle className="text-white">{t('profile.makeOffer', { handle: data.profile.handle })}</DrawerTitle>
           </DrawerHeader>

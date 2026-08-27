@@ -1606,7 +1606,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
-              <DrawerContent glass className="px-4 pb-6">
+              <DrawerContent column glass className="px-4 pb-6">
                 <DrawerHeader className="pb-2">
                   <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
                 </DrawerHeader>
@@ -2382,7 +2382,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
       {/* Options Drawer for immersive mode */}
       <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
-        <DrawerContent glass className="px-4 pb-6">
+        <DrawerContent column glass className="px-4 pb-6">
           <DrawerHeader className="pb-2">
             <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
           </DrawerHeader>
@@ -2558,7 +2558,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       {/* Bounty Drawer - controlled, rendered at root level for mobile compatibility */}
       {video.isW2E && (
         <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
-          <DrawerContent glass className="px-4 pb-6">
+          <DrawerContent column glass className="px-4 pb-6">
             <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Gift className="w-5 h-5 text-white" />
@@ -2638,7 +2638,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       {/* Subscriber sheet — a different gate to the holdings one below. */}
       {isSubGated && (
         <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
-          <DrawerContent glass className="px-4 pb-6">
+          <DrawerContent column glass className="px-4 pb-6">
             <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
               <SubscriberGateDrawer
                 creatorAddress={video.creatorId || ""}
@@ -2659,7 +2659,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
       {isHoldingsLocked && (
         <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
-          <DrawerContent glass className="px-4 pb-6">
+          <DrawerContent column glass className="px-4 pb-6">
             <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />

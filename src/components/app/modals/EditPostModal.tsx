@@ -152,7 +152,7 @@ export function EditPostModal({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="max-h-[90vh]">
+      <DrawerContent column glass className="max-h-[90vh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Pencil className="w-5 h-5" />

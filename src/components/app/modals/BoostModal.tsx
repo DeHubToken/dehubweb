@@ -175,7 +175,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="px-4 pb-6">
+      <DrawerContent column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
             <Rocket className="w-5 h-5" />

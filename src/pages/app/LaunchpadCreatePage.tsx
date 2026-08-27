@@ -114,7 +114,8 @@ export default function LaunchpadCreatePage() {
         <DrawerContent
           glass
           hideHandle={false}
-          className="left-0 right-0 mx-auto max-w-2xl max-h-[92vh]"
+          column
+          className="max-h-[92vh]"
         >
           <div className="flex items-center justify-between px-5 pt-3 pb-2">
             <div>

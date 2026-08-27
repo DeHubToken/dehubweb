@@ -118,7 +118,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className={cn(GLASS_STYLES.drawer, 'max-h-[90vh]')}>
+      <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[90vh]')}>
         <DrawerHeader>
           <DrawerTitle className="text-white">Create Event</DrawerTitle>
         </DrawerHeader>
