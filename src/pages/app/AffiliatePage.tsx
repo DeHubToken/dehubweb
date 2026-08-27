@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
+import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy } from "lucide-react";
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +16,8 @@ import { VerifiedBadge } from "@/components/app/VerifiedBadge";
 import { useDeHubProfile } from "@/hooks/use-dehub-profile";
 import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
+import { buildReferralDeepLink, sanitizeDeepLinkPath } from "@/lib/affiliateDeepLink";
+import { Input } from "@/components/ui/input";
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
@@ -258,6 +260,10 @@ export default function AffiliatePage() {
               ) : (
                 <p className="text-sm text-white/60">Could not generate a code. Try refreshing.</p>
               )}
+
+              {stats?.code && (
+                <DeepLinkBuilder code={stats.code} onCopy={copy} />
+              )}
             </CardContent>
           </Card>
 
@@ -287,6 +293,53 @@ export default function AffiliatePage() {
         </div>
       )}
     </>
+  );
+}
+
+/**
+ * Turns any DeHub page into a link that still pays the referrer.
+ *
+ * `/r/<CODE>/<path>` sets attribution and then forwards to `<path>`, so a single
+ * hyperlink can point at one docs section or app page instead of always dumping
+ * people on the generic invite splash.
+ */
+function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string, label?: string) => void }) {
+  const [target, setTarget] = useState("");
+  const trimmed = target.trim();
+  const path = sanitizeDeepLinkPath(trimmed);
+  const invalid = trimmed.length > 0 && !path;
+  const link = buildReferralDeepLink(SITE, code, trimmed);
+
+  return (
+    <div className="mt-5 pt-5 border-t border-white/10 space-y-3">
+      <div>
+        <h3 className="text-sm font-semibold text-white">Link to a specific page</h3>
+        <p className="text-xs text-white/60">
+          Paste any DeHub page — a docs section, a bounty, your profile. The link below still attributes the visit to you, then takes them straight there.
+        </p>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Input
+          value={target}
+          onChange={(e) => setTarget(e.target.value)}
+          placeholder="/docs/getting-started"
+          aria-label="Destination page"
+          aria-invalid={invalid}
+          className="font-mono text-sm bg-white/[0.04] border-white/10"
+        />
+        <Button
+          variant="secondary"
+          onClick={() => onCopy(link, "Deep link copied")}
+          disabled={invalid}
+          className="shrink-0"
+        >
+          <Copy className="w-4 h-4 mr-2" /> Copy link
+        </Button>
+      </div>
+      <p className={`text-xs font-mono break-all ${invalid ? "text-red-400" : "text-white/50"}`}>
+        {invalid ? "That has to be a page on dehub.io." : link}
+      </p>
+    </div>
   );
 }
 
