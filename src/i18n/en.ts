@@ -1513,7 +1513,7 @@ export const en = {
     ],
     q2q4_2026: 'Q4 2026 and Beyond',
     q2q4_2026_items: [
-      'TGE begins for LCS listing',
+      'TGE begins for LCS',
       'Apple App Store listing',
       'App launch marketing campaigns across X, TikTok, YouTube, Instagram, and Twitch',
       'LP farming with community yields',
