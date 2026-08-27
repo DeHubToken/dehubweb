@@ -35,7 +35,7 @@ export const sanitizeDeepLinkPath = (raw: string | null | undefined): string | n
     }
   }
 
-  value = value.replace(/\/g, "/");
+  value = value.replace(/\\/g, "/");
   if (!value.startsWith("/")) value = `/${value}`;
   // `//host` and `/\host` are origin-relative in name only.
   if (/^\/{2,}/.test(value)) return null;
