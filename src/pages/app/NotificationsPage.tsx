@@ -636,6 +636,18 @@ function getNotificationContent(
     }
   }
 
+  // Supabase-only types are absent from NotificationType, so they are matched
+  // ahead of the switch rather than as cases — same shape as the routing above.
+  // Naming the bounty matters here in a way it doesn't for a like: a poster with
+  // several open bounties can't act on "someone applied" alone.
+  if (typeStr === 'work_application' || typeStr === 'work_submission') {
+    const verb = typeStr === 'work_application'
+      ? 'applied to your bounty'
+      : 'submitted work on your bounty';
+    const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
+    return jobTitle ? `${actorName} ${verb} “${jobTitle}”` : `${actorName} ${verb}`;
+  }
+
   switch (notification.type) {
     case 'like':
       return notification.content || `${actorName} reacted to your post`;
@@ -678,16 +690,6 @@ function getNotificationContent(
     }
     case 'video_removal':
       return tr('notifications.postRemoved');
-    // Naming the bounty matters here in a way it doesn't for a like: a poster
-    // with several open bounties can't act on "someone applied" alone.
-    case 'work_application':
-    case 'work_submission': {
-      const verb = (notification.type as string) === 'work_application'
-        ? 'applied to your bounty'
-        : 'submitted work on your bounty';
-      const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
-      return jobTitle ? `${actorName} ${verb} “${jobTitle}”` : `${actorName} ${verb}`;
-    }
     default:
       return (notification as any).content || tr('notifications.newNotification');
   }
