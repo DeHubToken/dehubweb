@@ -174,35 +174,22 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     : <DeHubPageLoader size={56} minHeight="180px" />;
 
   // Both mobile and desktop use the same bottom-sheet Drawer. On desktop the
-  // sheet is a fixed-width column centred on the VIEWPORT.
+  // sheet clips to the middle panel's live bounds (--app-main-left /
+  // --app-main-width, measured in AppLayout) so it opens as a drawer in the
+  // gap between the sidebars instead of spanning the full viewport. Falls back
+  // to full-viewport when those vars are unset (e.g. routes without the app
+  // shell/sidebars).
   //
-  // It used to clip to the middle panel's live bounds
-  // (--app-main-left/--app-main-width, measured in AppLayout) on the theory
-  // that a login sheet belongs in the gap between the sidebars. In practice
-  // that gap is not a column, it is most of the screen: measured on a 1707px
-  // viewport with the rail collapsed, <main> is 1326.7px wide and starts at
-  // x=60, so the sheet rendered 1327px across and centred on x=723 while the
-  // viewport centre is x=853. A sign-in form stretched to 1327px and sitting
-  // 130px left of centre reads as broken chrome, and it got worse the moment
-  // the rail collapsed, because that is when <main> is widest.
+  // A 360px viewport-centred cap was tried here and reverted: every overlay
+  // sheet in the app rides this column (PostModal, CommentLikersDrawer,
+  // ReactionInfoDrawer), and a login sheet three times narrower than the rest
+  // reads as a different app, not as a focused overlay.
   //
-  // LOGIN IS NOT A FEED-COLUMN OBJECT. Nothing about signing in belongs to the
-  // middle panel — the overlay already blurs both sidebars to pull attention
-  // out of the layout — so the sheet no longer tracks the layout at all. The
-  // cap matches the shorts pop-out column (max-h-[640px] at aspect-[9/16] =
-  // 360px), which is the app's existing "focused overlay column" width, so the
-  // two read as the same kind of object.
-  //
-  // CENTRED WITH AUTO MARGINS, NOT A TRANSFORM. DrawerContent ships
-  // `fixed inset-x-0`, so `mx-auto` against a max-width centres it with no
-  // transform of our own. `-translate-x-1/2` would have been the obvious way
-  // and is wrong here: vaul writes `transform: translate3d(...)` inline to
-  // drive the slide-up and the drag, and an inline transform beats a class —
-  // the sheet would snap to the left edge for the length of every animation.
-  //
-  // --app-main-left/--app-main-width stay in AppLayout; CommentLikersDrawer
-  // and ReactionInfoDrawer still use them, and those two ARE feed-column
-  // objects (they annotate a specific post).
+  // POSITIONED WITH left/width, NOT A TRANSFORM. DrawerContent ships
+  // `fixed inset-x-0`; `-translate-x-1/2` would be the obvious way to centre
+  // and is wrong here, because vaul writes `transform: translate3d(...)`
+  // inline to drive the slide-up and the drag, and an inline transform beats a
+  // class — the sheet would jump for the length of every animation.
   return (
     <Drawer open={open} onOpenChange={handleClose} warmable>
       <DrawerContent
@@ -210,7 +197,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         hideHandle
         className={cn(
           "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[90dvh]",
-          !isMobile && "mx-auto w-full max-w-[360px]",
+          !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
         )}
         overlayClassName={cn(
           // Unlike the drawer sheet itself (clipped to the middle panel
