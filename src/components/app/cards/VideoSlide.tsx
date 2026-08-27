@@ -8,7 +8,8 @@
  */
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
-import { Play, Pause, Maximize, Minimize } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { Play, Pause } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
@@ -46,27 +47,24 @@ interface VideoSlideProps {
    * slides further out. Defaults to the old isActive-based behaviour.
    */
   preload?: 'auto' | 'metadata' | 'none';
-  /**
-   * Fullscreen is owned by the VIEWER, not by the slide.
-   *
-   * The button sits on the video (that is where a viewer looks for it), but the
-   * element that actually goes fullscreen has to be the viewer's video
-   * container: the mute button, the action bar and the creator block all live
-   * there, and only what is inside the fullscreened element paints in the top
-   * layer. A slide that fullscreened itself handed back a bare video with every
-   * control left behind on the hidden page.
-   *
-   * Supplying `onToggleFullscreen` is what draws the button — desktop only,
-   * since the viewer is already `fixed inset-0` on a phone.
-   */
+  /** Only tells the frame to fit the whole video; the control lives in the viewer. */
   isFullscreen?: boolean;
-  onToggleFullscreen?: () => void;
   /**
-   * Fade the slide's own chrome out with the viewer's. The fullscreen control
-   * lives here but sits in the same row as the viewer's mute button, so the two
-   * have to clear together or the row half-disappears.
+   * Where to paint the progress bar, if not in place.
+   *
+   * The viewer's action bar lays a 96px `from-black/80` gradient across the
+   * bottom of the video container, and it is a sibling of the carousel, so it
+   * paints over everything inside a slide — including this bar, which is what
+   * "the action bar shadows over the scroll line" was. The bar cannot simply
+   * out-z-index it: each slide is its own stacking context, so nothing inside
+   * one can reach past the container's own layers.
+   *
+   * Given the container element, the *visual* bar is portalled there instead
+   * and sits above the gradient. The seek zone stays put — the gradient is
+   * `pointer-events-none`, so clicks were always reaching it, and hoisting the
+   * zone as well would park a 15%-tall target on top of the action buttons.
    */
-  chromeHidden?: boolean;
+  progressLayer?: HTMLElement | null;
 }
 
 export const VideoSlide = memo(function VideoSlide({
@@ -83,8 +81,7 @@ export const VideoSlide = memo(function VideoSlide({
   letterbox = false,
   preload,
   isFullscreen = false,
-  onToggleFullscreen,
-  chromeHidden = false,
+  progressLayer = null,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
@@ -95,9 +92,6 @@ export const VideoSlide = memo(function VideoSlide({
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
-  // The viewer only hands a toggle down on desktop, so this is also the
-  // desktop-only gate for the button.
-  const canFullscreen = !!onToggleFullscreen;
 
   /**
    * Tap handling on the video area.
@@ -351,6 +345,24 @@ export const VideoSlide = memo(function VideoSlide({
   // For a true 9:16 short this fills edge-to-edge, so the glass fill stays hidden.
   const fitWhole = letterbox || videoAspect !== 'portrait';
 
+  // Pinned to the very bottom of whichever box it lands in — the seek zone in
+  // place, or the viewer's video container through the portal below. `z-20`
+  // clears the action bar's gradient (`z-10`) once it is a sibling of it, and
+  // it never takes a click either way: the zone below owns the interaction.
+  const progressBar = (
+    <div className={cn(
+      "absolute bottom-0 left-0 right-0 z-20 pointer-events-none",
+      isSeeking ? "h-2" : "h-1",
+      "transition-[height] duration-150"
+    )}>
+      <div className="absolute inset-0 bg-white/20" />
+      <div
+        className="absolute top-0 left-0 bottom-0 bg-white/80"
+        style={{ width: `${progress * 100}%` }}
+      />
+    </div>
+  );
+
   // The frame stays `absolute inset-0` in every state, fullscreen included: it
   // is the viewer's container that goes fullscreen, and this frame simply fills
   // it as it always did. Nothing here may go `fixed` — the carousel transforms
@@ -410,35 +422,12 @@ export const VideoSlide = memo(function VideoSlide({
         )}
       </div>
 
-      {/* Fullscreen toggle. Only the active slide gets one — the carousel keeps
-          neighbouring slides mounted, and a column of stacked buttons would all
-          sit at the same screen position — which is why the viewer hands the
-          toggle down for the active slide alone. Gating on `isActive` here as
-          well would take the button away the moment you paused, since that prop
-          is `isActive && !isPaused`. `data-no-swipe` keeps a press on it from
-          being read as the start of a navigation drag. */}
-      {canFullscreen && (
-        <button
-          type="button"
-          data-no-swipe
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFullscreen?.();
-          }}
-          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-          // `right-[3.75rem]` parks this immediately left of the viewer's mute
-          // button (w-10 at right-3, so it ends 3.25rem in) with a 0.5rem gap.
-          // Both used to sit at `top-3 right-3` in separate stacking parents,
-          // so this one covered the mute button exactly and the pair read as a
-          // single control. Sizes match for the same reason.
-          className={cn(
-            "absolute top-3 right-[3.75rem] z-30 h-10 w-10 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 transition-opacity duration-300",
-            chromeHidden && "opacity-0 pointer-events-none",
-          )}
-        >
-          {isFullscreen ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />}
-        </button>
-      )}
+      {/* The fullscreen toggle used to live here, and it showed: a slide is
+          translated by the carousel, so the button slid along with the video on
+          every step while the viewer's mute button — its neighbour in the same
+          row — held still. It now sits beside the mute button in the viewer,
+          which is also the only way the two can be guaranteed the same
+          treatment. */}
 
       {/* 👍 / ❤️ for the tap ladder. Sits above the controls so the burst is not
           drawn under them, which is safe because every layer of it is
@@ -463,26 +452,18 @@ export const VideoSlide = memo(function VideoSlide({
         </div>
       )}
 
-      {/* Bottom 15% seek zone + progress bar */}
+      {/* Bottom 15% seek zone. The bar it draws goes out to `progressLayer`
+          when there is one, so the action bar's gradient cannot sit on top of
+          it — see the prop. The zone itself never moves. */}
       <div
         ref={progressBarRef}
         data-no-swipe
         className="absolute bottom-0 left-0 right-0 z-20 cursor-pointer touch-none select-none"
         style={{ height: '15%' }}
       >
-        {/* Visual progress bar pinned to very bottom */}
-        <div className={cn(
-          "absolute bottom-0 left-0 right-0",
-          isSeeking ? "h-2" : "h-1",
-          "transition-[height] duration-150"
-        )}>
-          <div className="absolute inset-0 bg-white/20" />
-          <div
-            className="absolute top-0 left-0 bottom-0 bg-white/80"
-            style={{ width: `${progress * 100}%` }}
-          />
-        </div>
+        {!progressLayer && progressBar}
       </div>
+      {progressLayer && createPortal(progressBar, progressLayer)}
     </div>
   );
 });
