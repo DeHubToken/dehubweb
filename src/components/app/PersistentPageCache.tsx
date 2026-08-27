@@ -9,7 +9,7 @@
  * - Skeleton loaders on first visit while lazy components load
  */
 
-import React, { Suspense, useState, useEffect, useRef, memo } from 'react';
+import React, { Suspense, useState, useEffect, useMemo, useRef, memo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
@@ -254,6 +254,24 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
   // Find which cached page matches current path
   const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
 
+  // Render the destination in the SAME pass that saw the new pathname.
+  //
+  // Mounting only from the effect below cost a whole render cycle before
+  // React.lazy was even asked for the page's chunk: click -> render (the page
+  // is not in `mountedPages`, so nothing of it is rendered) -> effect ->
+  // setState -> render -> lazy() -> network. On a main thread still busy
+  // settling the feed that gap measured ~1s before the chunk request even
+  // left the browser, and the visitor spent all of it on the skeleton — which
+  // on the profile reads as a real profile that has lost its avatar and
+  // username rather than as a page still loading.
+  //
+  // `mountedPages` still does the job it was added for: keeping every page the
+  // visitor has already opened mounted after they navigate away from it.
+  const renderedPages = useMemo(() => {
+    if (!activeCachedPage || mountedPages.has(activeCachedPage.key)) return mountedPages;
+    return new Set(mountedPages).add(activeCachedPage.key);
+  }, [mountedPages, activeCachedPage?.key]);
+
   // Mount the active page if not yet mounted
   useEffect(() => {
     if (activeCachedPage && !mountedPages.has(activeCachedPage.key)) {
@@ -281,7 +299,7 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
   return (
     <>
       {/* Render all mounted cached pages — active one visible, others hidden */}
-      {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => {
+      {CACHED_PAGES.filter(p => renderedPages.has(p.key)).map(config => {
         // Home stays mounted (state preserved) but hidden when a post overlay is shown above it —
         // except when `keepHomeVisible` is set, in which case we keep home visible so its
         // sticky top nav bar remains anchored to the top during the overlay.
