@@ -128,8 +128,17 @@ export const messagesKeys = {
 // ─── Conversations ────────────────────────────────────────────────────────────
 
 export function useConversations(searchQuery: string = '') {
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, isLoading: isAuthResolving } = useAuth();
   const queryClient = useQueryClient();
+
+  // Both branches of the queryFn below need an input: a search term, or an
+  // address to list contacts for. With neither, the query still ran, fell
+  // through both branches and RESOLVED with [] — which React Query caches as a
+  // genuine success, so consumers read isLoading:false plus an empty list and
+  // rendered "no conversations yet" at somebody who simply had no address yet.
+  // MessagesPage is in CACHED_PAGES and never unmounts, so that wrong empty
+  // state survived until a full page reload.
+  const hasQueryInput = !!walletAddress || !!searchQuery;
 
   const query = useQuery({
     queryKey: [...messagesKeys.conversations(), searchQuery, walletAddress],
@@ -160,6 +169,7 @@ export function useConversations(searchQuery: string = '') {
         return conv;
       });
     },
+    enabled: hasQueryInput,
   });
 
   // Real-time: when any DM message arrives, refresh the conversations list.
@@ -193,7 +203,13 @@ export function useConversations(searchQuery: string = '') {
   return {
     conversations,
     allConversations: conversations,
-    isLoading: query.isLoading,
+    // A disabled query is pending-but-idle, which TanStack v5 reports as
+    // isLoading:false — indistinguishable from "loaded, and there is nothing
+    // here". While auth is still resolving there IS an address coming, so keep
+    // saying loading and let the caller hold its skeleton. Once auth settles
+    // with no address this goes false, and a genuinely signed-out consumer
+    // gets its empty state exactly as before.
+    isLoading: query.isLoading || (!hasQueryInput && isAuthResolving),
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
