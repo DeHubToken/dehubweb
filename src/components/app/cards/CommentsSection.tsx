@@ -238,25 +238,28 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
     >
       {/* Thread line. Replies sit at the same left edge as their parent — no
           indent — and the line through the avatars is what says "these belong
-          together". Each segment runs from the avatar's centre to the row's
-          own edge (the row is py-3, so ±12px past the avatar), which meets the
-          neighbouring row's segment exactly and draws as one continuous line.
-          The avatar is opaque and sits above it, so the line reads as starting
-          at the avatar's rim. */}
-      <div className="relative flex-shrink-0">
-        {threadLineAbove && (
-          <span aria-hidden className="absolute left-1/2 -ml-px -top-3 h-7 w-px bg-white/20" />
-        )}
-        {threadLineBelow && (
-          <span aria-hidden className="absolute left-1/2 -ml-px top-4 -bottom-3 w-px bg-white/20" />
-        )}
-        <button onClick={() => onUserPress(comment.username)} className="relative block">
-          <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
-            {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
-            <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
-          </Avatar>
-        </button>
-      </div>
+          together".
+
+          Both segments are positioned against the ROW, not the avatar: a row is
+          as tall as its text column, which is far taller than the 32px avatar,
+          so anchoring the downward one to the avatar box left it stopping ~40px
+          above the next row and the line came out in disconnected stubs. Run
+          each segment to the row's own top or bottom edge instead and
+          neighbouring rows meet exactly. The avatar is opaque and paints over
+          the middle, so the line reads as leaving its rim. `left-4` is the
+          avatar's centre: 32px wide, flush with the row's left edge. */}
+      {threadLineAbove && (
+        <span aria-hidden className="absolute left-4 -ml-px top-0 h-7 w-px bg-white/20" />
+      )}
+      {threadLineBelow && (
+        <span aria-hidden className="absolute left-4 -ml-px top-7 bottom-0 w-px bg-white/20" />
+      )}
+      <button onClick={() => onUserPress(comment.username)} className="relative flex-shrink-0">
+        <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
+          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
+          <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
+        </Avatar>
+      </button>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 mb-1">
           <button 
@@ -1384,7 +1387,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             // starts on the same 44px text column as every comment body.
             className="relative flex h-8 items-center pl-11 mb-1 text-xs text-zinc-400 hover:text-white transition-colors"
           >
-            <span aria-hidden className="absolute left-4 -ml-px -top-3 bottom-1/2 w-px bg-white/20" />
+            <span aria-hidden className="absolute left-4 -ml-px top-0 bottom-1/2 w-px bg-white/20" />
             <span aria-hidden className="absolute left-4 top-1/2 -mt-px w-5 h-px bg-white/20" />
             {hiddenCount === 1 ? 'Show 1 more reply' : `Show ${hiddenCount} more replies`}
           </button>
