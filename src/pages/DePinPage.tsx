@@ -103,10 +103,10 @@ function BecomeANodePanel() {
         <div>
           <h3 className="text-xl font-semibold text-white">Become a node</h3>
           <p className="mt-3 text-sm leading-6 text-zinc-400">
-            Connect a wallet to turn this browser tab into a lightweight backup node.
+            Sign in to turn this browser tab into a lightweight backup node.
           </p>
           <Button className="mt-6" onClick={() => openLoginModal()}>
-            Connect wallet
+            Sign in
           </Button>
         </div>
       )}
@@ -257,7 +257,7 @@ const faqItems = [
   {
     question: 'Is the node software available now?',
     answer:
-      'A lightweight, browser-based tier is available today: connect a wallet and opt in on this page, and your open tab becomes a node while it stays open. A heavier, always-on desktop node is a stated future direction — it does not exist yet.',
+      'A lightweight, browser-based tier is available today: sign in and opt in on this page, and your open tab becomes a node while it stays open. A heavier, always-on desktop node is a stated future direction — it does not exist yet.',
   },
   {
     question: 'Do I need to install anything for the browser node?',
@@ -414,7 +414,7 @@ export default function DePinPage() {
                 <div>
                   <SectionHeading
                     title="Run a node from this tab."
-                    body="No install, no download. Connect a wallet, opt in, and your open browser tab starts holding a second copy of a few DeHub media objects."
+                    body="No install, no download. Sign in, opt in, and your open browser tab starts holding a second copy of a few DeHub media objects."
                   />
                   <div className="mt-10">
                     <DepinStatsStrip />

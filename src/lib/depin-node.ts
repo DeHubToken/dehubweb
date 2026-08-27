@@ -18,7 +18,6 @@ import {
   connectDepinSocket,
   disconnectDepinSocket,
   emitDepinChallengeResponse,
-  emitDepinRegister,
   emitDepinStored,
   onDepinAssign,
   onDepinChallenge,
@@ -106,9 +105,9 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
 
       setStoredBytes((prev) => prev + buf.byteLength);
 
-      if (nodeIdRef.current) {
-        emitDepinStored({ assetKey: assign.assetKey, nodeId: nodeIdRef.current, sha256 });
-      }
+      // No node id and no byte count: the server knows both already, and a
+      // client-supplied size would be a lever on this node's own rewards.
+      emitDepinStored({ assetKey: assign.assetKey, sha256 });
     } catch (err) {
       // A failed download/store is not fatal — the server's verify-cron will
       // notice this node never confirmed the asset and reassign it elsewhere.
@@ -121,9 +120,24 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
       const dir = await getRootDir();
       const fileHandle = await dir.getFileHandle(sanitizeAssetKey(challenge.assetKey));
       const file = await fileHandle.getFile();
-      const slice = file.slice(challenge.byteStart, challenge.byteEnd);
-      const buf = await slice.arrayBuffer();
-      const hash = await sha256Hex(buf);
+
+      // `ranges` are INCLUSIVE of both ends, matching the HTTP Range header
+      // the server hashes the canonical copy with. `Blob.slice` is exclusive
+      // of its end, so the +1 is required — without it this node hashes one
+      // byte less than the server for every range, no challenge can ever
+      // pass, and every replica gets marked lost and reassigned in a loop.
+      const parts = await Promise.all(
+        challenge.ranges.map((r) => file.slice(r.start, r.end + 1).arrayBuffer()),
+      );
+      const total = parts.reduce((n, p) => n + p.byteLength, 0);
+      const joined = new Uint8Array(total);
+      let offset = 0;
+      for (const part of parts) {
+        joined.set(new Uint8Array(part), offset);
+        offset += part.byteLength;
+      }
+
+      const hash = await sha256Hex(joined.buffer);
       emitDepinChallengeResponse({ assetKey: challenge.assetKey, hash });
     } catch (err) {
       // File missing (evicted, quota pressure) or unreadable — tell the server
@@ -170,14 +184,11 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
       return;
     }
 
-    const socket = connectDepinSocket(walletAddress);
-
-    socket.on('connect', () => {
-      emitDepinRegister({ walletAddress });
-    });
-    if (socket.connected) {
-      emitDepinRegister({ walletAddress });
-    }
+    // Registration is implicit in connecting: the server reads this node's
+    // wallet out of the signed session on the handshake. There is no
+    // register message to send, and nothing here tells the server who we
+    // are — a client-supplied address would let anyone claim any wallet.
+    connectDepinSocket();
   }, [walletAddress, getRootDir]);
 
   useEffect(() => {
