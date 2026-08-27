@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, useMemo, useRef, useEffect, useCallback, createContext, useContext } from 'react';
+import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -552,7 +552,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
-  
+  // A soft keyboard's return key is a bare Enter — there is no Shift to hold —
+  // so on touch it has to mean "new line", and Post becomes the only way to
+  // send. Hardware keyboards keep Enter = send, Shift+Enter = new line.
+  const enterSends = useMemo(
+    () => !isMobile && !window.matchMedia?.('(pointer: coarse)').matches,
+    [isMobile],
+  );
+
   // Who the post belongs to, for the Creator / Not-the-creator chips. Shares
   // the ['nft-info', tokenId] cache the rest of the app already fills, so on a
   // post page this is a cache read rather than a request.
@@ -623,6 +630,33 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     inputRef,
     onMentionInsert: (_user, newText) => setNewComment(newText),
   });
+
+  /**
+   * Grow the composer a line at a time.
+   *
+   * Two things had to change for this to do anything at all. The field used to
+   * be `flex-1` inside the well, i.e. `flex-basis: 0` — which throws away the
+   * height set here and pins the field to the well's `min-h`, so it stayed
+   * three lines tall forever and every line past the third scrolled out of
+   * sight. And `height: auto` on a textarea resolves to its `rows` height, so
+   * measuring at `rows={3}` set a floor under the first two lines of growth.
+   * The field is `rows={1}` and sizes itself now; the well follows it.
+   */
+  const composerMaxHeight = isMobile ? 140 : 180;
+  const resizeInput = useCallback(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    if (!isInputExpanded) {
+      el.style.height = '';
+      return;
+    }
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, composerMaxHeight)}px`;
+  }, [isInputExpanded, composerMaxHeight]);
+
+  // Re-measure on every value change, not just keystrokes: the reply prefill,
+  // an emoji, and a restored draft all arrive without an input event.
+  useLayoutEffect(resizeInput, [resizeInput, newComment]);
 
   // Persist draft to localStorage on every keystroke
   useEffect(() => {
@@ -1871,14 +1905,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 className={cn(
                   "w-full flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
-                    ? "items-start flex-col px-3"
+                    ? "items-stretch flex-col px-3 pb-2"
                     : "items-center flex-row px-3 pr-1 gap-1.5",
                   isMobile
                     ? "bg-zinc-800/80 border-zinc-700"
                     : "bg-white/[0.08] border-white/[0.12]",
-                  isInputExpanded
-                    ? (isMobile ? "min-h-[88px]" : "min-h-[96px]")
-                    : "min-h-0 h-10"
+                  // The expanded floor is the three-line resting size the field
+                  // sizes itself to anyway — kept so a shorter field can never
+                  // shrink the well under its own tool row.
+                  isInputExpanded ? "min-h-[118px]" : "min-h-0 h-10"
                 )}>
                 <textarea
                   ref={inputRef}
@@ -1900,12 +1935,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     }
                   }}
                   className={cn(
-                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full",
+                    "bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full",
                     isInputExpanded
-                      ? cn("pt-2.5 pb-12 pr-1", isMobile ? "min-h-[72px] max-h-[144px]" : "min-h-[84px] max-h-[160px]")
-                      : "self-center h-5 min-h-5 py-0 leading-5 overflow-hidden pr-0"
+                      ? cn("shrink-0 pt-2.5 pb-1 pr-1 min-h-[74px]", isMobile ? "max-h-[140px]" : "max-h-[180px]")
+                      : "flex-1 self-center h-5 min-h-5 py-0 leading-5 overflow-hidden pr-0"
                   )}
-                  rows={isInputExpanded ? 3 : 1}
+                  rows={1}
+                  // The return key writes a line break on touch, so don't let the
+                  // keyboard advertise itself as a send key there.
+                  enterKeyHint={enterSends ? 'send' : 'enter'}
                   onKeyDown={(e) => {
                     if (mention.isOpen) {
                       const handled = mention.handleKeyDown(e);
@@ -1920,7 +1958,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         return;
                       }
                     }
-                    if (e.key === 'Enter' && !e.shiftKey) {
+                    if (e.key === 'Enter' && !e.shiftKey && enterSends && !e.nativeEvent.isComposing) {
                       e.preventDefault();
                       if (canPost) handlePostComment();
                     } else if (e.key === 'Escape') {
@@ -1928,15 +1966,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       (e.target as HTMLTextAreaElement).blur();
                     }
                   }}
-                  onInput={(e) => {
-                    if (!isInputExpanded) return;
-                    const target = e.target as HTMLTextAreaElement;
-                    const maxHeight = isMobile ? 144 : 160;
-                    requestAnimationFrame(() => {
-                      target.style.height = 'auto';
-                      target.style.height = Math.min(target.scrollHeight, maxHeight) + 'px';
-                    });
-                  }}
+                  onInput={resizeInput}
                 />
                 <UserMentionDropdown
                   query={mention.query}
@@ -1947,11 +1977,16 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   onSelect={mention.handleSelect}
                   onClose={mention.handleClose}
                 />
-                {/* Buttons - inline when collapsed, bottom-right when expanded */}
+                {/* Inline when collapsed; a row under the text when expanded.
+                    Deliberately in flow rather than absolutely positioned over
+                    the field: floating it meant the text only cleared it by way
+                    of a matching `pb-12`, which a scrolled textarea does not
+                    honour on every engine, and the line being typed ended up
+                    behind the buttons. */}
                 <div className={cn(
                   "flex items-center gap-1.5",
                   isInputExpanded
-                    ? "absolute bottom-2 right-2"
+                    ? "shrink-0 justify-end mt-auto pt-1"
                     : "shrink-0 ml-1"
                 )}>
                   <button
