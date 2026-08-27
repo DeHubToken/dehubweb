@@ -21,12 +21,14 @@ import {
   emitDepinStored,
   onDepinAssign,
   onDepinChallenge,
+  onDepinConnectError,
+  onDepinDisconnect,
   onDepinRegistered,
   type DepinAssignData,
   type DepinChallengeData,
 } from '@/lib/api/dehub/depin-socket';
 
-export type DepinNodeStatus = 'idle' | 'connecting' | 'online' | 'unsupported';
+export type DepinNodeStatus = 'idle' | 'connecting' | 'online' | 'unsupported' | 'rejected';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -79,6 +81,7 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
   const [storedBytes, setStoredBytes] = useState(0);
   const [nodeId, setNodeId] = useState<string | null>(null);
   const [optedIn, setOptedIn] = useState(false);
+  const [socketReady, setSocketReady] = useState(false);
 
   const rootDirRef = useRef<FileSystemDirectoryHandle | null>(null);
   const nodeIdRef = useRef<string | null>(null);
@@ -154,6 +157,7 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
     nodeIdRef.current = null;
     setNodeId(null);
     setOptedIn(false);
+    setSocketReady(false);
     setStatus('idle');
   }, []);
 
@@ -188,11 +192,18 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
     // wallet out of the signed session on the handshake. There is no
     // register message to send, and nothing here tells the server who we
     // are — a client-supplied address would let anyone claim any wallet.
-    connectDepinSocket();
+    //
+    // `socketReady` is what lets the listener effect below run. The listeners
+    // can only bind to a socket that already exists, so flipping `optedIn`
+    // alone is not enough — that ran the effect before this line had created
+    // anything, every subscription silently no-opped, and the node waited on
+    // a `depin:registered` nothing was listening for.
+    await connectDepinSocket();
+    setSocketReady(true);
   }, [walletAddress, getRootDir]);
 
   useEffect(() => {
-    if (!optedIn) return;
+    if (!socketReady) return;
 
     const unsubRegistered = onDepinRegistered((data) => {
       nodeIdRef.current = data.nodeId;
@@ -206,12 +217,24 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
       void handleChallenge(challenge);
     });
 
+    // A handshake the server refuses arrives as a disconnect with no prior
+    // `depin:registered`. Treat that as rejected rather than leaving the UI
+    // claiming it is still connecting.
+    const onDropped = () => {
+      if (nodeIdRef.current) return; // already registered; an ordinary drop
+      setStatus('rejected');
+    };
+    const unsubDisconnect = onDepinDisconnect(onDropped);
+    const unsubConnectError = onDepinConnectError(onDropped);
+
     return () => {
       unsubRegistered();
       unsubAssign();
       unsubChallenge();
+      unsubDisconnect();
+      unsubConnectError();
     };
-  }, [optedIn, handleAssign, handleChallenge]);
+  }, [socketReady, handleAssign, handleChallenge]);
 
   // Clean up the socket and any pending work when the page unmounts, or the
   // wallet disconnects out from under an opted-in node.
