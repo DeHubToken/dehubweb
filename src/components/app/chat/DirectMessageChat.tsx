@@ -71,6 +71,7 @@ import { DmVoiceCallButton } from '@/components/app/chat/calls/DmVoiceCallButton
 import { DmVideoCallButton } from '@/components/app/chat/calls/DmVideoCallButton';
 import { useCall } from '@/contexts/CallContext';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
+import { formatUnreadCount } from '@/lib/unread-count';
 
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
@@ -1863,7 +1864,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
           >
             <ArrowDown className="w-4 h-4 mr-1" />
             {newMessageCount > 0
-              ? `${newMessageCount} new message${newMessageCount > 1 ? 's' : ''}`
+              ? `${formatUnreadCount(newMessageCount)} new message${newMessageCount > 1 ? 's' : ''}`
               : 'Jump to latest'}
           </Button>
         </div>

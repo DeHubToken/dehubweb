@@ -69,6 +69,7 @@ function formatCountdown(seconds: number): string {
 // Buy alert card imported from shared component
 import { BuyAlertCard } from '../chat/BuyAlertCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
+import { formatUnreadCount } from '@/lib/unread-count';
 
 function ChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
   const [failed, setFailed] = useState(false);
@@ -170,6 +171,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const prevScrollHeightRef = useRef<number | null>(null);
   const messageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const pendingJumpRef = useRef<string | null>(null);
+  const prevLastMessageIdRef = useRef<string | null>(null);
   const navigate = useNavigate();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -317,11 +319,28 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   }, [messages.length]);
 
   // Auto-scroll to bottom on new message arrival (only if user is near bottom)
+  //
+  // The count is derived from where the previous tail sits in the current list,
+  // never accumulated one-per-signal. A blind `c + 1` trusts that every firing
+  // of this effect means exactly one new message, and anything that makes the
+  // last id flip back and forth — an optimistic id swapped for a real one, two
+  // messages sharing a timestamp, a refetch reordering the tail — then ratchets
+  // the pill up on every render. That is how it reached "602070 new messages".
+  // Re-deriving is self-correcting: an id that comes back around scores zero.
   const lastMessageId = messages[messages.length - 1]?.id;
   useEffect(() => {
     if (!didInitialScrollRef.current) return;
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
+
+    const prevLastId = prevLastMessageIdRef.current;
+    const prevIndex = prevLastId ? messages.findIndex((m) => m.id === prevLastId) : -1;
+    // Old tail gone (full refetch, or an id swap) — count nothing rather than
+    // guess, so the pill can't lie.
+    const appended = prevIndex === -1 ? 0 : messages.length - 1 - prevIndex;
+    prevLastMessageIdRef.current = lastMessageId ?? null;
+    if (appended <= 0) return;
+
     const distanceFromBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
     if (distanceFromBottom < 120) {
       requestAnimationFrame(() => {
@@ -330,9 +349,13 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     } else {
       // New message arrived while the user is scrolled up — surface the
       // "jump to latest" button with an unread count (matches DM behaviour).
-      setNewMessageCount((c) => c + 1);
+      setNewMessageCount((c) => c + appended);
       setShowJumpToLatest(true);
     }
+    // `messages` is read but deliberately not a dependency: only a change of
+    // tail is a new message, and re-running on every list identity change is
+    // exactly the over-firing this guards against.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastMessageId]);
 
   // Preserve scroll position when loading older messages
@@ -958,7 +981,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
             >
               <ArrowDown className="w-3.5 h-3.5" />
               {newMessageCount > 0
-                ? `${newMessageCount} new message${newMessageCount > 1 ? 's' : ''}`
+                ? `${formatUnreadCount(newMessageCount)} new message${newMessageCount > 1 ? 's' : ''}`
                 : 'Jump to latest'}
             </button>
           )}
