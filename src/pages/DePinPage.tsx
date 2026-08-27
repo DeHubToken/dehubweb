@@ -138,7 +138,23 @@ function BecomeANodePanel() {
         </div>
       )}
 
-      {isAuthenticated && node.optedIn && node.status !== 'unsupported' && (
+      {isAuthenticated && node.status === 'rejected' && (
+        <div>
+          <h3 className="text-xl font-semibold text-white">Session needs a refresh</h3>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400">
+            The network refused this node's session, which usually means it expired while the page
+            was open. Sign in again and opt in — nothing was lost.
+          </p>
+          <div className="mt-6 flex gap-3">
+            <Button onClick={() => openLoginModal()}>Sign in again</Button>
+            <Button variant="outline" onClick={() => node.optOut()}>
+              Dismiss
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {isAuthenticated && node.optedIn && node.status !== 'unsupported' && node.status !== 'rejected' && (
         <div>
           <div className="flex items-center justify-between gap-4">
             <h3 className="text-xl font-semibold text-white">Your node</h3>
