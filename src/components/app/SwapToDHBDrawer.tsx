@@ -199,7 +199,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   return (
     <>
     <Drawer open={open} onOpenChange={handleClose}>
-      <DrawerContent glass hideHandle={false} data-wallet-page>
+      <DrawerContent column glass hideHandle={false} data-wallet-page>
         <DrawerHeader>
           <DrawerTitle className="text-white">Swap {selectedToken.symbol} → DHB</DrawerTitle>
         </DrawerHeader>
@@ -331,7 +331,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
 
     {/* Token Picker Drawer */}
     <Drawer open={tokenPickerOpen} onOpenChange={setTokenPickerOpen}>
-      <DrawerContent glass hideHandle={false} data-wallet-page>
+      <DrawerContent column glass hideHandle={false} data-wallet-page>
         <DrawerHeader>
           <DrawerTitle className="text-white">Select Token to Pay With</DrawerTitle>
         </DrawerHeader>
@@ -380,7 +380,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
 
     {/* Buy Token sub-drawer */}
     <Drawer open={buyTokenOpen} onOpenChange={setBuyTokenOpen}>
-      <DrawerContent glass hideHandle={false} data-wallet-page>
+      <DrawerContent column glass hideHandle={false} data-wallet-page>
         <div className="p-5 pb-8 space-y-2">
           <h3 className="text-white font-semibold text-base mb-4">Buy {selectedToken.symbol}</h3>
           <button

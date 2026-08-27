@@ -199,7 +199,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass hideHandle={false} data-wallet-page>
+      <DrawerContent column glass hideHandle={false} data-wallet-page>
         <div className="p-5 pb-8 space-y-4 max-h-[80vh] overflow-y-auto">
           {/* Header */}
           <div className="flex items-center gap-3">

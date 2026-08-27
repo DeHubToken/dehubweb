@@ -2069,7 +2069,7 @@ export default function AssistantPage() {
 
         {/* Style Drawer */}
         <Drawer open={styleSheetOpen} onOpenChange={setStyleSheetOpen}>
-          <DrawerContent glass className="border-t border-white/10">
+          <DrawerContent column glass className="border-t border-white/10">
             <DrawerHeader className="border-b border-white/10">
               <DrawerTitle className="text-white flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-white" />
@@ -2082,7 +2082,7 @@ export default function AssistantPage() {
 
         {/* Unified Settings Drawer */}
         <Drawer open={settingsSheetOpen} onOpenChange={setSettingsSheetOpen}>
-          <DrawerContent glass className="border-t border-white/10">
+          <DrawerContent column glass className="border-t border-white/10">
             <DrawerHeader className="border-b border-white/10">
               <DrawerTitle className="text-white flex items-center gap-2">
                 <Settings className="w-5 h-5 text-white" />

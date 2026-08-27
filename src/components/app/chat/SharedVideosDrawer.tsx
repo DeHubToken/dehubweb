@@ -44,7 +44,7 @@ export function SharedVideosDrawer({ open, onOpenChange }: SharedVideosDrawerPro
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="px-4 pb-8 max-h-[70vh]">
+      <DrawerContent column glass className="px-4 pb-8 max-h-[70vh]">
         <DrawerHeader className="border-b border-white/10 mb-4">
           <DrawerTitle className="text-white flex items-center gap-2">
             <Video className="w-5 h-5" />

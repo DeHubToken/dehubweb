@@ -947,7 +947,7 @@ export default function BuilderPage() {
   // ── DETAILS SHEET ───────────────────────────────────────────────────────
   const details = (
     <Drawer open={detailsOpen} onOpenChange={setDetailsOpen}>
-      <DrawerContent className="bg-[#121214] border-t border-[rgba(255,255,255,0.09)]">
+      <DrawerContent column className="bg-[#121214] border-t border-[rgba(255,255,255,0.09)]">
         <DrawerHeader>
           <DrawerTitle className="text-[#fff] text-[19px] font-bold">
             {project ? `${project.name} · Files` : 'Files'}

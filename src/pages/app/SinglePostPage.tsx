@@ -1083,7 +1083,7 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
 
         {/* Desktop Options Drawer */}
         <Drawer open={showDesktopOptionsDrawer} onOpenChange={setShowDesktopOptionsDrawer}>
-          <DrawerContent glass className="px-4 pb-6">
+          <DrawerContent column glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
             </DrawerHeader>

@@ -564,7 +564,7 @@ export function PostAccessToggles({
 
       {/* Category Drawer */}
       <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
-        <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
+        <DrawerContent column glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
               <Hash className="w-5 h-5" />
@@ -675,7 +675,7 @@ export function PostAccessToggles({
 
       {/* Community Drawer */}
       <Drawer open={communityDrawerOpen} onOpenChange={setCommunityDrawerOpen}>
-        <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
+        <DrawerContent column glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
               <Users className="w-5 h-5" />
@@ -731,7 +731,7 @@ export function PostAccessToggles({
 
       {/* PPV Drawer */}
       <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>
-        <DrawerContent glass className="max-h-[90dvh] flex flex-col overflow-hidden">
+        <DrawerContent column glass className="max-h-[90dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Ticket className="w-5 h-5" />
@@ -796,7 +796,7 @@ export function PostAccessToggles({
 
       {/* Bounty Drawer */}
       <Drawer open={bountyDrawerOpen} onOpenChange={setBountyDrawerOpen}>
-        <DrawerContent glass className="max-h-[90dvh] flex flex-col overflow-hidden">
+        <DrawerContent column glass className="max-h-[90dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Gift className="w-5 h-5" />
@@ -878,7 +878,7 @@ export function PostAccessToggles({
 
       {/* Token Gated Drawer */}
       <Drawer open={tokenDrawerOpen} onOpenChange={setTokenDrawerOpen}>
-        <DrawerContent glass className="max-h-[90dvh] flex flex-col overflow-hidden">
+        <DrawerContent column glass className="max-h-[90dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Shield className="w-5 h-5" />

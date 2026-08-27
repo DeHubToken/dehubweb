@@ -39,7 +39,7 @@ export function SkillDetailDrawer({ skill, open, onOpenChange, onEdit }: Props) 
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="bg-zinc-900 border-white/10">
+      <DrawerContent column className="bg-zinc-900 border-white/10">
         <DrawerHeader>
           <DrawerTitle className="flex items-center gap-2">
             <Sparkles className="w-4 h-4" /> {skill.name}

@@ -105,7 +105,7 @@ export function EditListingDrawer({ open, onClose, listing }: Props) {
 
   return (
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
-      <DrawerContent glass className="border-t border-white/10">
+      <DrawerContent column glass className="border-t border-white/10">
         <DrawerHeader>
           <DrawerTitle className="text-white">Edit Listing</DrawerTitle>
         </DrawerHeader>

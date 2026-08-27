@@ -123,7 +123,7 @@ export function ShareEntityDrawer({
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent glass className="max-h-[60vh]" data-no-navigate>
+        <DrawerContent column glass className="max-h-[60vh]" data-no-navigate>
           <DrawerHeader className="sr-only">
             <DrawerTitle>Share</DrawerTitle>
           </DrawerHeader>

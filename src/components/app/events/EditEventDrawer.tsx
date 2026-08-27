@@ -85,7 +85,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className={cn(GLASS_STYLES.drawer, 'max-h-[90vh]')}>
+      <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[90vh]')}>
         <DrawerHeader>
           <DrawerTitle className="text-white">Edit Event</DrawerTitle>
         </DrawerHeader>
