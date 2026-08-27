@@ -17,7 +17,9 @@ import {
   showRecordingFailed,
   dismissRecordingToast,
 } from '@/lib/stage-recording-toast';
-import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { withWalletHeader, endStageOnExit } from '@/lib/supabase-wallet-client';
+import { isChunkLoadError } from '@/lib/lazy-with-retry';
+import { createLogger } from '@/lib/logger';
 import {
   openStageRadioTap,
   closeStageRadioTap,
@@ -95,6 +97,11 @@ interface StageContextType {
   guestSpace: AudioSpace | null;
   leaveSpace: () => Promise<void>;
   endSpace: () => Promise<void>;
+  /**
+   * Take a stage you host off the air without being in it — the way out of a
+   * room whose host never managed to connect to it.
+   */
+  endStageById: (spaceId: string) => Promise<boolean>;
   toggleMute: () => void;
   raiseHand: () => Promise<void>;
   lowerHand: () => Promise<void>;
@@ -388,6 +395,80 @@ async function recountSpace(spaceId: string): Promise<void> {
     // A headcount is not worth failing a join or a leave over.
     console.warn('[Stage] Headcount recount failed:', err);
   }
+}
+
+// ─── Failure handling ───────────────────────────────────────────────────────
+
+/**
+ * Everything that can stop a stage goes through here, and it goes to
+ * `client_error_logs`, not just the console.
+ *
+ * Every failure in this file used to end at `console.error` behind a toast that
+ * said "Failed to create stage" — so when a launch failed in production there
+ * was no record anywhere of what actually failed. The stage row said `live`,
+ * the edge function logs were clean (the token had been minted fine), and the
+ * only remaining suspects — the microphone, the audio graph, the Agora chunk —
+ * all live in a browser nobody can go back and read. One line of logging is the
+ * difference between answering that question in a minute and not at all.
+ */
+const stageLogger = createLogger('Stage');
+
+/**
+ * Turn whatever went wrong into something the host can act on.
+ *
+ * "Failed to create stage" is true of a denied microphone, a stale bundle and a
+ * dead network alike, and only one of those is worth a retry. The three that
+ * actually happen are named; anything else keeps its own message rather than
+ * being flattened into a generic one.
+ */
+function describeStageFailure(err: unknown): string {
+  const e = (err ?? {}) as { name?: string; message?: string };
+  const name = e.name || '';
+  const message = e.message || '';
+
+  if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || /permission denied/i.test(message)) {
+    return 'DeHub needs microphone access to put you on air — allow it for dehub.io and try again.';
+  }
+  if (name === 'NotFoundError' || name === 'NotReadableError' || name === 'OverconstrainedError') {
+    return 'No microphone available. Check nothing else is using it and try again.';
+  }
+  if (isChunkLoadError(err)) {
+    return 'The app updated while this page was open. Refresh, then start the stage again.';
+  }
+  return message || 'Something went wrong';
+}
+
+// ─── Abandoned-launch guard ─────────────────────────────────────────────────
+//
+// The row is flipped to `live` BEFORE the host is on air, because the token
+// gate reads the row to decide who may publish. If going live then fails, the
+// client puts the row back — but that put-back is an ordinary fetch, and a host
+// who reads the error and hits refresh takes the document (and the fetch) with
+// them. The row then says `live` forever: it sits on the home rail, the host
+// has a ghost seat in it, and nothing ever ends it, because the auto-end
+// trigger fires on a participant LEAVING and this participant never arrived.
+//
+// So the pending put-back is also armed on `pagehide`, where a keepalive
+// request can still get out. Module scope, not a ref: there is one launch in
+// flight at a time, and it has to survive the provider unmounting under it.
+
+let launchGuard: { spaceId: string; rollbackStatus: 'ended' | 'scheduled'; wallet: string | null } | null = null;
+
+function abandonLaunch() {
+  const guard = launchGuard;
+  if (!guard) return;
+  releaseLaunch();
+  endStageOnExit(guard.spaceId, guard.rollbackStatus, guard.wallet);
+}
+
+function holdLaunch(spaceId: string, rollbackStatus: 'ended' | 'scheduled', wallet: string | null) {
+  launchGuard = { spaceId, rollbackStatus, wallet };
+  window.addEventListener('pagehide', abandonLaunch);
+}
+
+function releaseLaunch() {
+  launchGuard = null;
+  window.removeEventListener('pagehide', abandonLaunch);
 }
 
 // ─── Modal opener (subscription-free) ───────────────────────────────────────
@@ -821,10 +902,16 @@ export function StageProvider({ children }: { children: ReactNode }) {
     setScreenShare(prev => (prev && !prev.isLocal && prev.uid === uid ? null : prev));
   }, []);
 
+  /**
+   * Throws rather than returning null: a caller that has already flipped a row
+   * to `live` must not be able to forget to check, and the reason it failed is
+   * worth more than a boolean. Every call site is inside a try that owns the
+   * put-back.
+   */
   const getAgoraToken = async (
     channelName: string,
     role: 'publisher' | 'subscriber',
-  ): Promise<AgoraTokenResponse | null> => {
+  ): Promise<AgoraTokenResponse> => {
     const requestToken = async (withIdentity: boolean): Promise<AgoraTokenResponse> => {
       // A subscriber token stays anonymous — that is what lets a signed-out
       // visitor on an invite link hear the room. A publisher token is gated on
@@ -869,16 +956,24 @@ export function StageProvider({ children }: { children: ReactNode }) {
         return await requestToken(false);
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to get audio token';
-      toast.error(msg);
-      return null;
+      stageLogger.error('Stage token request failed', { channelName, role }, err);
+      throw new Error(describeStageFailure(err));
     }
   };
 
+  /**
+   * Throws on failure, and takes the half-joined client with it.
+   *
+   * It used to swallow the error, toast "Failed to connect to audio" and return
+   * false — which left `agoraClientRef` pointing at a client that had joined the
+   * channel but published nothing, so the next attempt built a second one on top
+   * of it. The reason for the failure (a denied mic, a stale bundle) never
+   * reached the host or the logs.
+   */
   const initializeAgora = async (
     tokenData: AgoraTokenResponse,
     role: SpaceRole,
-  ): Promise<boolean> => {
+  ): Promise<void> => {
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       const client = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
@@ -958,11 +1053,15 @@ export function StageProvider({ children }: { children: ReactNode }) {
       }
 
       setIsConnected(true);
-      return true;
     } catch (err) {
-      console.error('Error initializing Agora:', err);
-      toast.error('Failed to connect to audio');
-      return false;
+      // Drop whatever got as far as joining, so a retry starts clean.
+      const client = agoraClientRef.current;
+      agoraClientRef.current = null;
+      if (client) {
+        try { await client.leave(); } catch { /* already gone */ }
+      }
+      stageLogger.error('Stage audio connection failed', { role, channel: tokenData.channel }, err);
+      throw new Error(describeStageFailure(err));
     }
   };
 
@@ -1000,39 +1099,60 @@ export function StageProvider({ children }: { children: ReactNode }) {
    * dead if it never connected, so it rolls back to `ended`; a scheduled one
    * must go back to `scheduled` or a failed start would quietly destroy an
    * announcement people are already holding a link to.
+   *
+   * EVERY step between the row saying `live` and the host actually being on air
+   * is inside the try, and the put-back runs for all of them. The host's seat
+   * used to be written above it — so a seat write that failed threw with the row
+   * still advertised as live, which is one of the two ways a stage ended up
+   * stranded on the home rail with nobody in it. The other was the put-back
+   * itself dying with the page; see the launch guard at the top of this file.
    */
   const goLiveAsHost = useCallback(
     async (space: AudioSpace, rollbackStatus: 'ended' | 'scheduled'): Promise<AudioSpace> => {
-      await signed(
-        supabase.from('space_participants').insert({
-          space_id: space.id,
-          wallet_address: walletAddress,
-          username: user?.username || null,
-          avatar: persistableAvatar(user?.avatarImageUrl),
-          role: 'host',
-          is_muted: true,
-        }),
-      );
-
       const rollback = async () => {
-        await signed(
-          supabase
-            .from('audio_spaces')
-            .update({ status: rollbackStatus })
-            .eq('id', space.id),
-        );
+        // One retry, and a complaint if it still does not land. This is the
+        // only thing standing between a failed launch and a stage that says
+        // "live on air" until somebody deletes the row by hand.
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const { error } = await signed(
+            supabase
+              .from('audio_spaces')
+              .update({ status: rollbackStatus })
+              .eq('id', space.id),
+          );
+          if (!error) return;
+          if (attempt === 1) {
+            stageLogger.error(
+              'Stage left advertised as live after a failed launch',
+              { spaceId: space.id, rollbackStatus, reason: error.message },
+            );
+          }
+        }
       };
 
-      const tokenData = await getAgoraToken(space.channel_name, 'publisher');
-      if (!tokenData) {
-        await rollback();
-        throw new Error('Failed to get audio token');
-      }
+      holdLaunch(space.id, rollbackStatus, walletAddress ?? null);
+      try {
+        const { error: seatError } = await signed(
+          supabase.from('space_participants').insert({
+            space_id: space.id,
+            wallet_address: walletAddress,
+            username: user?.username || null,
+            avatar: persistableAvatar(user?.avatarImageUrl),
+            role: 'host',
+            is_muted: true,
+          }),
+        );
+        // Not cosmetic: the publisher-token gate reads this row to decide the
+        // caller may speak, so a stage whose host has no seat cannot go live.
+        if (seatError) throw new Error(seatError.message);
 
-      const connected = await initializeAgora(tokenData, 'host');
-      if (!connected) {
+        const tokenData = await getAgoraToken(space.channel_name, 'publisher');
+        await initializeAgora(tokenData, 'host');
+      } catch (err) {
         await rollback();
-        throw new Error('Failed to connect to audio');
+        throw err;
+      } finally {
+        releaseLaunch();
       }
 
       setCurrentSpace(space);
@@ -1075,10 +1195,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         toast.success("Stage created! You're now live.");
         return space as AudioSpace;
       } catch (err) {
-        console.error('Error creating stage:', err);
-        if (err instanceof Error && !err.message.includes('token')) {
-          toast.error('Failed to create stage');
-        }
+        // One toast, carrying the actual reason. The old pair of handlers
+        // toasted twice for a token failure and hid the reason for every other
+        // one behind "Failed to create stage".
+        stageLogger.error('Stage launch failed', { title }, err);
+        toast.error(describeStageFailure(err));
         return null;
       } finally {
         setIsLoading(false);
@@ -1183,10 +1304,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
         toast.success("You're now live.");
         return true;
       } catch (err) {
-        console.error('Error starting scheduled stage:', err);
-        if (err instanceof Error && !err.message.includes('token')) {
-          toast.error('Failed to start stage');
-        }
+        stageLogger.error('Scheduled stage failed to start', { spaceId }, err);
+        toast.error(describeStageFailure(err));
         return false;
       } finally {
         setIsLoading(false);
@@ -1228,6 +1347,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
       // drop the listen-only session before taking the real one.
       if (guestSpaceRef.current) await guestStopListeningRef.current();
       setIsLoading(true);
+      // Read by the failure handler below, which needs to know whether the
+      // person who could not get in owns the room.
+      let hostWallet: string | null = null;
       try {
         const { data: space, error: spaceError } = await supabase
           .from('audio_spaces')
@@ -1235,6 +1357,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .eq('id', spaceId)
           .single();
         if (spaceError || !space) throw new Error('Stage not found');
+        hostWallet = space.host_wallet_address ?? null;
 
         // A stage that is not live has no channel to join. Without this the
         // invite link for an ended stage opened an Agora connection to an empty
@@ -1269,7 +1392,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         const isSpeakerRole = rejoiningRole === 'host' || rejoiningRole === 'speaker';
 
-        await signed(
+        // Checked, not fired and forgotten: the publisher-token gate reads this
+        // seat, so a host or speaker whose seat write fails is refused the mic a
+        // moment later with no clue why.
+        const { error: seatError } = await signed(
           supabase.from('space_participants').upsert(
             {
               space_id: spaceId,
@@ -1283,6 +1409,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             { onConflict: 'space_id,wallet_address' },
           ),
         );
+        if (seatError) throw new Error(seatError.message);
 
         // Recount from the participant rows so a rejoin cannot drift the
         // figures. Through the RPC rather than three statements here: once
@@ -1293,10 +1420,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         const agoraRole = isSpeakerRole ? 'publisher' : 'subscriber';
         const tokenData = await getAgoraToken(space.channel_name, agoraRole);
-        if (!tokenData) throw new Error('Failed to get token');
-
-        const connected = await initializeAgora(tokenData, rejoiningRole === 'listener' ? 'listener' : 'speaker');
-        if (!connected) throw new Error('Failed to connect');
+        await initializeAgora(tokenData, rejoiningRole === 'listener' ? 'listener' : 'speaker');
 
         setCurrentSpace(space as AudioSpace);
         setMyRole(rejoiningRole as any);
@@ -1313,8 +1437,14 @@ export function StageProvider({ children }: { children: ReactNode }) {
         toast.success(isHost ? 'Rejoined as host!' : 'Joined the stage!');
         return true;
       } catch (err) {
-        console.error('Error joining stage:', err);
-        toast.error('Failed to join stage');
+        stageLogger.error('Stage join failed', { spaceId }, err);
+        toast.error(describeStageFailure(err), {
+          // A host who cannot get back into their own room is otherwise stuck
+          // with it on air forever: End only exists inside the room.
+          description: sameWallet(hostWallet, walletAddress)
+            ? 'You can close the stage from the End button on its card.'
+            : undefined,
+        });
         return false;
       } finally {
         setIsLoading(false);
@@ -1365,14 +1495,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
           return false;
         }
         const tokenData = await getAgoraToken(space.channel_name, 'subscriber');
-        if (!tokenData) return false;
-        const connected = await initializeAgora(tokenData, 'listener');
-        if (!connected) return false;
+        await initializeAgora(tokenData, 'listener');
         setGuestSpace(space as AudioSpace);
         return true;
       } catch (err) {
-        console.error('Error joining stage as guest:', err);
-        toast.error('Failed to join stage');
+        stageLogger.error('Guest listen failed', { spaceId }, err);
+        toast.error(describeStageFailure(err));
         return false;
       } finally {
         setIsLoading(false);
@@ -1451,7 +1579,16 @@ export function StageProvider({ children }: { children: ReactNode }) {
     void (async () => {
       try {
         if (wasHost && recorder) {
-          await stopAndUploadRecording(space.id, recorder);
+          // Ring-fenced: a recording that fails to upload must not carry the
+          // seat release down with it. It used to sit in the same try, so a
+          // throw here skipped `left_at` — and `left_at` is what fires the
+          // auto-end trigger, which is what takes the stage off the air. One
+          // bad upload left the room advertised as live with a ghost in it.
+          try {
+            await stopAndUploadRecording(space.id, recorder);
+          } catch (err) {
+            stageLogger.error('Stage recording upload failed', { spaceId: space.id }, err);
+          }
         }
         if (localTrack) {
           try { localTrack.stop(); localTrack.close(); } catch { /* noop */ }
@@ -1510,6 +1647,68 @@ export function StageProvider({ children }: { children: ReactNode }) {
       if (error) console.warn('Direct end failed (will auto-end via trigger):', error.message);
     });
   }, [currentSpace, myRole, leaveSpace, signed]);
+
+  /**
+   * Close a stage you host but are not standing in.
+   *
+   * Until now `endSpace` was the only way to take a room off the air, and it
+   * requires being connected to it as host — so a launch that failed after the
+   * row went live, or a host whose tab died, produced a stage that could never
+   * be ended by anybody. It stayed on the home rail and in the live carousel
+   * with a headcount of one and nobody inside, and the host's only remaining
+   * options were to delete the row by hand or live with it.
+   *
+   * Also clears the host's own seat: the row is what the auto-end trigger keys
+   * off, and leaving it open makes the wallet look like it is still in a room.
+   */
+  const endStageById = useCallback(
+    async (spaceId: string): Promise<boolean> => {
+      if (!walletAddress) { toast.error('Please log in first'); return false; }
+      try {
+        const { data: space, error: readError } = await supabase
+          .from('audio_spaces')
+          .select('id, host_wallet_address, status')
+          .eq('id', spaceId)
+          .single();
+        if (readError || !space) throw new Error('Stage not found');
+        if (!sameWallet(space.host_wallet_address, walletAddress)) {
+          toast.error('Only the host can end this stage');
+          return false;
+        }
+        if (space.status === 'ended') {
+          await refreshSpaces();
+          return true;
+        }
+
+        const { error } = await signed(
+          supabase
+            .from('audio_spaces')
+            .update({ status: 'ended', ended_at: new Date().toISOString() })
+            .eq('id', spaceId),
+        );
+        if (error) throw new Error(error.message);
+
+        await signed(
+          supabase
+            .from('space_participants')
+            .update({ left_at: new Date().toISOString() })
+            .eq('space_id', spaceId)
+            .is('left_at', null),
+        );
+
+        // If this was the room we thought we were in, stop believing it.
+        if (currentSpace?.id === spaceId) await leaveSpace();
+        await refreshSpaces();
+        toast.success('Stage ended');
+        return true;
+      } catch (err) {
+        stageLogger.error('Ending a stage from outside it failed', { spaceId }, err);
+        toast.error(describeStageFailure(err));
+        return false;
+      }
+    },
+    [walletAddress, signed, refreshSpaces, currentSpace, leaveSpace],
+  );
 
   // ─── Set voice effect ─────────────────────────────────────────────────────
 
@@ -2313,6 +2512,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       guestSpace,
       leaveSpace,
       endSpace,
+      endStageById,
       toggleMute,
       raiseHand,
       lowerHand,
@@ -2346,7 +2546,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       isConnected, isMuted, myRole, hasRaisedHand, voiceEffect, setVoiceEffect,
       isModalOpen, openModal, closeModal, initialModalView, createSpace,
       scheduleSpace, startScheduledSpace, cancelScheduledSpace, refreshScheduledSpaces,
-      joinSpace, guestListen, guestStopListening, guestSpace, leaveSpace, endSpace,
+      joinSpace, guestListen, guestStopListening, guestSpace, leaveSpace, endSpace, endStageById,
       toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
       stopInject, setRoomVolume, screenShare, canScreenShare, startScreenShare, stopScreenShare,
