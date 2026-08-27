@@ -206,8 +206,9 @@ export default function ProfilePage() {
   const [showTipModal, setShowTipModal] = useState(false);
   
 
-  // All data fetching + derived state
-  const data = useProfilePage();
+  // All data fetching + derived state. activeTab goes in because the filter
+  // panel's post-type row only applies on the All tab.
+  const data = useProfilePage({ activeTab });
 
   // Land on the tab the profile owner chose to show first. Applied once per
   // profile (keyed by wallet address) so a visitor's own tab clicks afterwards
@@ -644,6 +645,12 @@ export default function ProfilePage() {
             onSortChange={data.setContentSort}
             search={data.contentSearch}
             onSearchChange={data.setContentSearch}
+            filters={data.contentFilters}
+            onFiltersChange={data.setContentFilters}
+            onFiltersReset={data.resetContentFilters}
+            filtersOpen={data.contentFiltersOpen}
+            onFiltersOpenChange={data.setContentFiltersOpen}
+            showPostType={data.showPostTypeFilter}
             resultCount={
               activeTab === 'posts' ? data.PROFILE_POSTS.length
                 : activeTab === 'images' ? data.PROFILE_IMAGES.length

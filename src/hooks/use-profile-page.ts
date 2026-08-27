@@ -3,7 +3,15 @@ import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart, Pin } from 'lucide-react';
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileSortMode } from '@/hooks/use-dehub-profile';
+import {
+  useDeHubProfile,
+  useDeHubUserContent,
+  separateUserContent,
+  countActiveProfileFilters,
+  EMPTY_PROFILE_FILTERS,
+  type ProfileContentFilters,
+  type ProfileSortMode,
+} from '@/hooks/use-dehub-profile';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { parseVisibility } from '@/hooks/use-privacy-settings';
@@ -23,7 +31,12 @@ import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 
 const PULL_THRESHOLD = 80;
 
-export function useProfilePage() {
+interface UseProfilePageOptions {
+  /** The tab the visitor is on. Only the filter panel's post-type row cares. */
+  activeTab?: TabValue;
+}
+
+export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {}) {
   const [searchParams] = useSearchParams();
   const { username: routeUsername } = useParams<{ username: string }>();
   const navigate = useNavigate();
@@ -99,13 +112,38 @@ export function useProfilePage() {
   const [contentSort, setContentSort] = useState<ProfileSortMode>('newest');
   const [contentSearch, setContentSearch] = useState('');
   const debouncedContentSearch = useDebouncedValue(contentSearch, 350);
-  const isContentFiltered = contentSort !== 'newest' || !!debouncedContentSearch.trim();
+
+  // The home feed's filter panel, scoped to this channel. Server-side too, for
+  // the same reason — and because this one query also feeds the tab counts.
+  const [contentFilters, setContentFilters] = useState<ProfileContentFilters>(EMPTY_PROFILE_FILTERS);
+  const [contentFiltersOpen, setContentFiltersOpen] = useState(false);
+  const resetContentFilters = useCallback(() => setContentFilters(EMPTY_PROFILE_FILTERS), []);
+
+  // Post type only means something on the All tab. Every other content tab IS
+  // a post type, so a second control that can contradict it would empty the tab
+  // the visitor is standing on with no way to see why. The choice is parked
+  // rather than cleared, so coming back to All restores it.
+  const showPostTypeFilter = activeTab === 'home';
+  const appliedContentFilters = useMemo<ProfileContentFilters>(
+    () => (showPostTypeFilter ? contentFilters : { ...contentFilters, postType: 'all' }),
+    [showPostTypeFilter, contentFilters],
+  );
+
+  // Drives the "no matches" empty state and suppresses the client-side merges
+  // (reposts, comments) that a server-ordered list has no place for.
+  const isContentFiltered =
+    contentSort !== 'newest' ||
+    !!debouncedContentSearch.trim() ||
+    countActiveProfileFilters(appliedContentFilters) > 0;
 
   // Reset the toolbar when the visitor moves to another profile — a query
-  // typed on one channel has no meaning on the next.
+  // typed on one channel has no meaning on the next, and neither does a
+  // category the next creator never posts in.
   useEffect(() => {
     setContentSort('newest');
     setContentSearch('');
+    setContentFilters(EMPTY_PROFILE_FILTERS);
+    setContentFiltersOpen(false);
   }, [routeUsername, userId]);
 
   // Fetch user content — small first page for fast initial paint, then auto-fetch rest
@@ -121,6 +159,7 @@ export function useProfilePage() {
     enabled: !!contentUserId,
     sortMode: contentSort,
     search: debouncedContentSearch,
+    filters: appliedContentFilters,
   });
 
   // Prefetch ONLY page 2 in the background after first paint. The old
@@ -463,6 +502,12 @@ export function useProfilePage() {
     setContentSort,
     contentSearch,
     setContentSearch,
+    contentFilters,
+    setContentFilters,
+    resetContentFilters,
+    contentFiltersOpen,
+    setContentFiltersOpen,
+    showPostTypeFilter,
     isContentFiltered,
     // Subscriptions
     plans,
