@@ -7,7 +7,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -61,6 +61,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import {
   emitReadReceipt,
   emitForwardMessage,
+  emitEditMessage,
   onConversationDeleted,
   onDmSendMessage,
   onForwardMessage,
@@ -147,8 +148,12 @@ const MessageBubble = memo(function MessageBubble({
   isOwnMessage,
   highlightText,
   txConfirmed = false,
+  isEditing = false,
   onPin,
   onForward,
+  onEdit,
+  onSaveEdit,
+  onCancelEdit,
   onOpenImage,
 }: {
   message: DmMessage;
@@ -156,8 +161,13 @@ const MessageBubble = memo(function MessageBubble({
   highlightText?: string;
   /** Locally-confirmed payment tx for this message (prop, not ref — memo-safe). */
   txConfirmed?: boolean;
+  /** True while this message's text is being edited inline. */
+  isEditing?: boolean;
   onPin?: (messageId: string) => void;
   onForward?: (message: DmMessage) => void;
+  onEdit?: (message: DmMessage) => void;
+  onSaveEdit?: (messageId: string, content: string) => void;
+  onCancelEdit?: () => void;
   onOpenImage?: (url: string) => void;
 }) {
   // Payment-pending spinner: memo means no incidental re-renders, so the 90s
@@ -224,6 +234,15 @@ const MessageBubble = memo(function MessageBubble({
   );
   const isPostShare = !!sharedLink;
 
+  // Editing is restricted to plain text messages — an entity share's raw
+  // content carries the link the embed card is built from, so letting someone
+  // edit the visible caption alone would silently drop that link on save.
+  const canEdit = isOwnMessage && message.msgType === 'msg' && !isPostShare && !message.isDeleted;
+  const [draftText, setDraftText] = useState(message.content || '');
+  useEffect(() => {
+    if (isEditing) setDraftText(message.content || '');
+  }, [isEditing, message.content]);
+
   // Entity shares translate their caption (link stripped) — feeding the raw URL to the
   // translator garbles it and previously the translate control was hidden entirely.
   const shareCaption = useMemo(
@@ -257,10 +276,20 @@ const MessageBubble = memo(function MessageBubble({
       id={`dm-msg-${message._id}`}
       className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''} group relative rounded-lg transition-colors`}
     >
-      {!message.isDeleted && message.msgType !== 'tip' && (onPin || onForward) && (
+      {!message.isDeleted && message.msgType !== 'tip' && !isEditing && (onPin || onForward || (onEdit && canEdit)) && (
         <div
           className={`absolute top-3 ${isOwnMessage ? 'left-1' : 'right-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
         >
+          {onEdit && canEdit && (
+            <button
+              type="button"
+              onClick={() => onEdit(message)}
+              className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+              title="Edit message"
+            >
+              <Pencil className="w-3 h-3" />
+            </button>
+          )}
           {onForward && (
             <button
               type="button"
@@ -343,7 +372,45 @@ const MessageBubble = memo(function MessageBubble({
           >
             {/* Text message — or a shared post rendered as a rich card */}
             {message.msgType === 'msg' && (
-              isPostShare ? (
+              isEditing ? (
+                <div className="flex flex-col gap-1.5 items-stretch min-w-[200px]">
+                  <textarea
+                    autoFocus
+                    dir="auto"
+                    value={draftText}
+                    onChange={(e) => setDraftText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        onSaveEdit?.(message._id, draftText);
+                      } else if (e.key === 'Escape') {
+                        onCancelEdit?.();
+                      }
+                    }}
+                    maxLength={5000}
+                    rows={Math.min(6, Math.max(2, draftText.split('\n').length))}
+                    className="w-full text-sm text-white bg-white/[0.08] border border-white/20 rounded-lg px-3 py-1.5 outline-none focus:border-white/40 resize-none"
+                  />
+                  <div className="flex items-center gap-2 justify-end">
+                    <button
+                      type="button"
+                      onClick={() => onCancelEdit?.()}
+                      className="p-1 text-zinc-400 hover:text-white"
+                      title="Cancel"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onSaveEdit?.(message._id, draftText)}
+                      className="p-1 text-emerald-400 hover:text-emerald-300"
+                      title="Save"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ) : isPostShare ? (
                 <div className={`flex flex-col gap-1.5 ${isOwnMessage ? 'items-end' : 'items-start'}`}>
                   {shareCaption ? (
                     <p dir="auto" className={`text-sm break-words whitespace-pre-wrap text-left rounded-xl px-4 py-2 ${
@@ -641,6 +708,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const [searchQuery, setSearchQuery] = useState('');
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [forwardMessageTarget, setForwardMessageTarget] = useState<DmMessage | null>(null);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
@@ -863,6 +931,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     markAsRead,
   } = useMessages(resolvedConversationId);
 
+  // Lets handleSaveEdit read current content without depending on `messages` —
+  // that array changes on every incoming socket message, and putting it in a
+  // useCallback dep list would break the bubble-level memoization documented
+  // above MessageBubble (every bubble's onSaveEdit prop would change identity
+  // on every new message, not just the one being edited).
+  const messagesRef = useRef(messages);
+  useEffect(() => { messagesRef.current = messages; }, [messages]);
+
   const pinnedMessage = pinnedMessageId ? messages.find(m => m._id === pinnedMessageId) ?? null : null;
 
   /**
@@ -1071,6 +1147,48 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const handleForward = useCallback((message: DmMessage) => {
     setForwardMessageTarget(message);
   }, []);
+
+  const handleStartEdit = useCallback((message: DmMessage) => {
+    setEditingMessageId(message._id);
+  }, []);
+
+  const handleCancelEdit = useCallback(() => {
+    setEditingMessageId(null);
+  }, []);
+
+  // Same "await before trusting it" reasoning as handleForwardSelect below —
+  // emitEditMessage rejects rather than dropping the edit into a dead socket.
+  // Left open on failure, same as the forward dialog, so a rejected save
+  // doesn't strand the user's in-progress edit.
+  const handleSaveEdit = useCallback(async (messageId: string, content: string) => {
+    const trimmed = content.trim();
+    const original = messagesRef.current.find(m => m._id === messageId);
+    if (!trimmed || !original || trimmed === original.content) {
+      setEditingMessageId(null);
+      return;
+    }
+
+    try {
+      await emitEditMessage({ dmId: resolvedConversationId, messageId, content: trimmed });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Could not save the edit.');
+      return;
+    }
+
+    queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
+      if (!old?.pages) return old;
+      const pages = old.pages.map((page: any) => ({
+        ...page,
+        items: page.items.map((m: DmMessage) =>
+          m._id === messageId
+            ? { ...m, content: trimmed, isEdited: true, editedAt: new Date().toISOString() }
+            : m
+        ),
+      }));
+      return { ...old, pages };
+    });
+    setEditingMessageId(null);
+  }, [queryClient, resolvedConversationId]);
 
   const handleForwardSelect = useCallback(
     async (targetConversationId: string) => {
@@ -1690,8 +1808,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
                   !!(message.paymentTxHash &&
                     confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase()))
                 }
+                isEditing={editingMessageId === message._id}
                 onPin={handlePinMessage}
                 onForward={handleForward}
+                onEdit={handleStartEdit}
+                onSaveEdit={handleSaveEdit}
+                onCancelEdit={handleCancelEdit}
                 onOpenImage={setFullscreenImage}
               />
             )});
