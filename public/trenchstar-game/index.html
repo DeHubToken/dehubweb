@@ -1291,8 +1291,8 @@ const LIVE_CANDLE_MS=10000;        /* the fast tape: small panels */
 const SLOW_CANDLE_MS=60000;        /* the slow book: the big board */
 /* Binance caps a klines request at 1000 rows, and 1s rows are what we fold. */
 const KLINE_N=Math.min(1000,120*(LIVE_CANDLE_MS/1000));
-const SIM_MS=250;                  /* simulated price steps, 4 a second */
-const SIM_CANDLE_MS=2000;          /* simulated candle width: 8 steps each */
+const SIM_CANDLE_MS=2000;          /* seeded candle width, and the fallback
+                                      unit when a book is too short to measure */
 
 /* Fold 1s rows into wider candles. Kept exact rather than approximate: the
    live stream re-sends the SAME second many times as it forms, so a bucket
@@ -1479,6 +1479,14 @@ class Market{
     this.flashDir=0; this.flashUntil=0;
     this._simP=0; this._simDrift=0;
   }
+  /* A market is FED once a real print has landed on it.
+     Everything a seeded market holds is invented — SIM_SEED's opening price,
+     seedSim's volume and 24h move — and none of it is distinguishable from a
+     real reading at a glance. BTC seeded at 118,000 and drifting looks exactly
+     like BTC, which is how a room with no feed at all read as a working one.
+     So an unfed market never reaches a price on a screen, never places in a
+     list, and never ticks. It says NO FEED and waits. */
+  get fed(){return this.source!=='SIM';}
   seedSim(p0){
     this.source='SIM';
     /* Two histories, each seeded at the width it will carry on at — the slow
@@ -1568,30 +1576,6 @@ class Market{
     if(a.length<2)return SIM_CANDLE_MS;
     const d=a[a.length-1].t-a[a.length-2].t;
     return d>0?d:SIM_CANDLE_MS;
-  }
-  simTick(){
-    if(this.source!=='SIM')return;
-    this._simDrift=this._simDrift*0.94+(Math.random()-0.5)*0.0016;
-    let p=this.price*(1+this._simDrift+(Math.random()-0.5)*0.0022);
-    if(Math.random()<0.004)p*=1+pick([-1,1])*rnd(0.01,0.045);
-    this.dir=p>=this.price?1:-1; this.price=p;
-    /* Both books, same tick — the fast tape the panels draw and the slow one
-       the big board draws. */
-    const bump=(arr,ms,cap)=>{
-      const last=arr[arr.length-1];
-      if(!last)return;
-      const bt=Math.floor(Date.now()/ms)*ms;
-      if(last.t===bt){last.c=p;last.h=Math.max(last.h,p);last.l=Math.min(last.l,p);last.v+=rnd(0.4,3);}
-      else{
-        arr.push({t:bt,o:last.c,h:Math.max(last.c,p),l:Math.min(last.c,p),c:p,v:rnd(4,40)});
-        while(arr.length>cap)arr.shift();
-      }
-    };
-    bump(this.candles,SIM_CANDLE_MS,160);
-    bump(this.slow,SLOW_CANDLE_MS,140);
-    if(this.kind==='dex'){this.samples.push({t:Date.now(),p});if(this.samples.length>260)this.samples.shift();}
-    this.pct24+= (Math.random()-0.5)*0.06;
-    this.checkMomentum();
   }
 }
 
@@ -1947,8 +1931,16 @@ async function buyToken(tokenOut,ethAmount,slipPct){
 }
 const positions=[];
 function openPaperBook(){
-  const syms=[...MAJORS].sort(()=>Math.random()-0.5).slice(0,6);
-  syms.forEach(s=>{
+  /* The book is openly PAPER — the panel says so on a chip — but an entry
+     still has to be struck against a real price. Opened against SIM_SEED they
+     were struck at 118,000 on BTC, so the instant the feed landed every one of
+     them showed a 35% loss that had never happened. Wait for the feed. */
+  if(positions.length)return;
+  /* The seed lands symbol by symbol, so waiting on BTC alone opened a book of
+     three. Wait until there are six to choose from. */
+  const live=MAJORS.filter(s=>markets[s].fed);
+  if(live.length<6){setTimeout(openPaperBook,3000);return;}
+  live.sort(()=>Math.random()-0.5).slice(0,6).forEach(s=>{
     const m=markets[s];
     positions.push({m,side:pick([1,1,-1]),lev:pick([5,10,15,25]),size:rnd(4000,90000),entry:m.price});
   });
@@ -3766,6 +3758,30 @@ function chip(ctx,x,y,txt,col){
   return w;
 }
 
+/* WHAT A SCREEN SAYS WHEN IT HAS NOTHING TRUE TO SAY.
+   Drawn INSTEAD of the chart, never over it. A seeded price under a small
+   amber chip reads as the market — the chip is nine pixels tall and the
+   number is the size of the screen — so the only honest thing to draw is no
+   number at all. */
+function noFeedCard(ctx,w,h,m,note){
+  const hf=Math.round(h*(w>600?0.085:0.115));
+  ctx.textBaseline='alphabetic';
+  ctx.font='700 '+hf+'px "Chakra Petch"';
+  ctx.fillStyle='#fff';ctx.textAlign='left';
+  ctx.fillText(m.sym,10,hf+8);
+  ctx.font='700 '+hf+'px "JetBrains Mono"';
+  ctx.fillStyle=DIM;ctx.textAlign='right';
+  ctx.fillText('—',w-10,hf+8);
+  ctx.textAlign='left';
+  chip(ctx,10,hf+8+Math.round(hf*0.62),'NO FEED',AMBER);
+  ctx.font='600 '+Math.max(10,Math.round(h*0.05))+'px "JetBrains Mono"';
+  ctx.fillStyle=DIM;ctx.textAlign='center';
+  ctx.fillText(note||'WAITING FOR THE EXCHANGE',w/2,h*0.56);
+  ctx.textAlign='left';
+  scanlines(ctx,w,h);
+}
+const noFeedNote=m=>m.kind==='dex'?'NO PAIR ON THIS SLOT':'WAITING FOR BINANCE';
+
 /* A DexScreener pair never produces candles: the poller only ever hands us a
    price, and the moment a meme slot is reassigned to a real pair its seeded
    books are cleared outright. Bucket the tick history instead — put a trench
@@ -3861,6 +3877,7 @@ function resolveBook(s,m,big,N){
 function paintCandles(s){
   const ctx=s.ctx,w=s.cw,h=s.ch,m=s.market;
   screenBG(ctx,w,h);
+  if(!m.fed){noFeedCard(ctx,w,h,m,noFeedNote(m));return;}
   const big=w>600;
   /* Resolve the book BEFORE anything is drawn: the header carries the width
      as a chip, and a screen that is still waiting for a history has to say
@@ -3947,6 +3964,7 @@ function paintCandles(s){
 function paintSpark(s){
   const ctx=s.ctx,w=s.cw,h=s.ch,m=s.market;
   screenBG(ctx,w,h);
+  if(!m.fed){noFeedCard(ctx,w,h,m,noFeedNote(m));return;}
   const hf=Math.round(h*0.115);
   ctx.font='700 '+hf+'px "Chakra Petch"';ctx.textAlign='left';ctx.fillStyle='#fff';
   ctx.fillText('$'+m.sym,10,hf+8);
@@ -4121,7 +4139,11 @@ async function gtPump(){
 /* Tokens pulled in by search. They live alongside the majors and the trench
    pool, and get their own refresh cycle so a searched screen stays live. */
 const pinned=[];
-function allMarkets(){return MAJORS.map(s=>markets[s]).concat(memes,pinned);}
+/* Only markets carrying a real print. TOP MOVERS, BLEEDING, VOLUME LEADERS
+   and the pair picker all read this, and seedSim hands an unbound slot a
+   24h volume of up to $900m against a real trench pair's $100m — so the
+   invented tickers took the volume board outright, four rows out of five. */
+function allMarkets(){return MAJORS.map(s=>markets[s]).concat(memes,pinned).filter(m=>m&&m.fed);}
 
 function applyPair(m,p){
   m.source='DEX';
@@ -5496,7 +5518,13 @@ function buildWall(){
   const majs=MAJORS.slice(1).map(s=>markets[s]);
   const feed=[];
   for(let i=0;i<open.length-nDex;i++)feed.push(majs[i%majs.length]);
-  for(let i=0;i<nDex;i++)feed.push(memes[i%memes.length]);
+  /* Wrap inside the slots the poller actually bound. DexScreener returns
+     40-56 qualifying pairs against 64 slots, so the tail of the pool never
+     binds; a dense wall used to run straight into it and hang GLORP and
+     HOPIUM on the outer columns. Repeating a real pair into the spare
+     screens is what this loop already does when slots outnumber feeds. */
+  const nT=memes.filter(m=>m.fed).length||memes.length;
+  for(let i=0;i<nDex;i++)feed.push(memes[i%nT]);
   open.forEach((slot,i)=>{
     const m=feed[i];if(!m)return;
     addScreen({w:W.screenW,h:W.screenH,theta:slot.theta,y:slot.y,slotId:slot.id,
@@ -7572,11 +7600,18 @@ async function fget(url,ms=9000){
   finally{clearTimeout(to);}
 }
 
+/* Race the hosts, do not walk them. api.binance.com is geo-blocked in a good
+   part of the world and refuses by hanging rather than answering, so probing
+   it second cost the first host's full timeout on top of its own — and 5s was
+   never a generous budget for a cold DNS and TLS handshake on a phone. The
+   whole room fell back to invented prices on a slow handshake. */
+async function pickHost(){
+  try{return await Promise.any(REST.map(h=>fget(h+'/api/v3/time',9000).then(()=>h)));}
+  catch(e){return null;}
+}
+
 async function seedBinance(){
-  let host=null;
-  for(const hst of REST){
-    try{await fget(hst+'/api/v3/time',5000);host=hst;break;}catch(e){}
-  }
+  const host=await pickHost();
   if(!host){badge('#bBin','err');return false;}
   try{
     const q=encodeURIComponent(JSON.stringify(MAJORS.map(s=>s+'USDT')));
@@ -7616,16 +7651,24 @@ async function seedBinance(){
 }
 
 let wsTry=0;
+/* Retrying for ever only works if it stops hammering. Three seconds after the
+   first drop, a minute once it is clearly not coming back. */
+const wsWait=()=>Math.min(3000*Math.pow(1.6,Math.max(0,wsTry-1)),60000);
 function connectWS(){
-  if(wsTry>=4){badge('#bBin','err');return;}
-  const host=WSH[wsTry%2];wsTry++;
+  /* No permanent surrender, and lead with the host that answers everywhere.
+     Four failures used to end the stream for the whole session, and half of
+     those four were spent on stream.binance.com, which is geo-blocked in the
+     same places fapi is — so two real attempts, then silence. The REST seed
+     keeps the prices real when this fails, but frozen, which is its own kind
+     of lie on a wall that is meant to be moving. */
+  const host=WSH[wsTry%4===3?1:0];wsTry++;
   /* One message per symbol per second instead of per minute. Twenty small
      JSON frames a second is nothing to parse, and it is the difference
      between charts that move and charts that sit there. */
   const streams=MAJORS.map(s=>s.toLowerCase()+'usdt@kline_'+KLINE_IV)
     .concat(MAJORS.map(s=>s.toLowerCase()+'usdt@miniTicker')).join('/');
   let ws;
-  try{ws=new WebSocket(host+'/stream?streams='+streams);}catch(e){setTimeout(connectWS,3000);return;}
+  try{ws=new WebSocket(host+'/stream?streams='+streams);}catch(e){setTimeout(connectWS,wsWait());return;}
   ws.onopen=()=>{wsTry=0;badge('#bBin','ok');};
   ws.onmessage=ev=>{
     try{
@@ -7635,7 +7678,7 @@ function connectWS(){
       else if(d.e==='24hrMiniTicker'){m.pct24=(+d.c-+d.o)/+d.o*100;m.vol24=+d.q;}
     }catch(e){}
   };
-  ws.onclose=()=>{badge('#bBin','warn');setTimeout(connectWS,3000);};
+  ws.onclose=()=>{badge('#bBin','warn');setTimeout(connectWS,wsWait());};
   ws.onerror=()=>{try{ws.close();}catch(e){}};
 }
 
@@ -7788,10 +7831,22 @@ async function pollDex(){
   setTimeout(pollDex,45000);
 }
 
+/* KEEP TRYING.
+   The seed used to be one attempt at boot. One blocked probe, one slow
+   handshake, one flaky minute of hotel wifi, and the room ran on SIM_SEED for
+   the entire session with nothing on screen to say so — and no second chance
+   even after the network came back. */
+async function retrySeed(){
+  for(let wait=4000;;wait=Math.min(wait*2,60000)){
+    await new Promise(r=>setTimeout(r,wait));
+    if(await seedBinance()){connectWS();return;}
+  }
+}
+
 async function initData(){
   const ok=await seedBinance();
   boot.stage('markets',1);           /* offline is not a reason to hold the boot screen */
-  if(ok)connectWS();else badge('#bBin','err');
+  if(ok)connectWS();else{badge('#bBin','err');retrySeed();}
   okxContracts().then(connectLiq);   /* ctVal map first: sizes are meaningless without it */
   pollDex();
   openPaperBook();
@@ -7805,13 +7860,12 @@ setInterval(()=>{screens.forEach(s=>{if(s.market&&s.market.source==='DEX')gtQueu
 setTimeout(()=>screens.forEach(s=>{if(s.market&&s.market.source==='DEX')gtQueue(s.market);}),6000);
 
 /* ============================== sim ticks ============================= */
-/* Four steps a second across ~42 markets is pure arithmetic — no paint, no
-   layout, no allocation beyond one candle every SIM_CANDLE_MS. The painters
-   are unchanged and still bounded by PAINT_BUDGET. */
-setInterval(()=>{
-  for(const sym of MAJORS)markets[sym].simTick();
-  for(const m of memes)m.simTick();
-},SIM_MS);
+/* THERE ARE NONE ANY MORE, AND THAT IS THE POINT.
+   This drove four steps a second through every unfed market, which is what
+   made a dead feed convincing: BTC did not sit at its seed of 118,000, it
+   wandered around it, printed candles, flashed PUMP and DUMP, and moved the
+   browser tab title. A market with nothing behind it now holds still and says
+   NO FEED, so the only thing on the wall that moves is a real market. */
 
 /* ================================ HUD =================================
    The controls card. Two rules: it says what you can do HERE (desk and walk
@@ -7861,7 +7915,7 @@ function hudTick(){
   $('#guideTab').addEventListener('click',()=>set(false));
 }
 setInterval(()=>{
-  document.title=(markets.BTC.price?'BTC '+fmtPrice(markets.BTC.price)+' · ':'')+'TRENCHSTAR';
+  document.title=(markets.BTC.fed&&markets.BTC.price?'BTC '+fmtPrice(markets.BTC.price)+' · ':'')+'TRENCHSTAR';
   if(focus.screen&&focus.screen.market){
     const m=focus.screen.market;
     $('#fpSym').textContent=(m.kind==='dex'?'$':'')+m.sym;
@@ -10463,7 +10517,7 @@ function checkAlerts(){
   for(const a of alerts){
     if(a.fired)continue;
     const m=marketBySym(a.sym);
-    if(!m||!m.price)continue;
+    if(!m||!m.fed||!m.price)continue;   /* never fire an alert on a seeded price */
     if(a.cond==='above'&&m.price>a.value)fireAlert(a,m,fmtPrice(m.price)+' — above '+fmtPrice(a.value));
     else if(a.cond==='below'&&m.price<a.value)fireAlert(a,m,fmtPrice(m.price)+' — below '+fmtPrice(a.value));
     else if(a.cond==='up'||a.cond==='down'){
