@@ -12,6 +12,7 @@ import i18n from 'i18next';
 import { getAccountInfo, getAccountByUsername, getAuthToken, getNFTInfo, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl, deviceWidth } from '@/lib/media-url';
 import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } from './use-unified-feed';
+import type { DateFilterValue, PostTypeFilterValue } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -287,6 +288,59 @@ export const PROFILE_SORT_PARAMS: Record<ProfileSortMode, { sortBy: string; sort
   likes: { sortBy: 'likes', sortOrder: 'desc' },
 };
 
+/**
+ * The home feed's filter panel, narrowed to one creator's channel.
+ *
+ * Every field is a `/api/feed` parameter, so the filtering happens where the
+ * catalogue is rather than over the pages already scrolled into memory — the
+ * same reason sort and search are server-side. `category` is single-select
+ * here (the home feed allows several and post-filters the extras on the
+ * client): this one query also feeds the profile's tab counts, and a
+ * client-side pass would leave those counts describing a list nobody sees.
+ */
+export interface ProfileContentFilters {
+  /** Category id, or null for every category. */
+  category: string | null;
+  date: DateFilterValue;
+  postType: PostTypeFilterValue;
+  /** Pay-per-view only. */
+  ppv: boolean;
+  /** Bounty (watch-to-earn) only. */
+  w2e: boolean;
+  /** Subscriber-gated only. */
+  locked: boolean;
+}
+
+export const EMPTY_PROFILE_FILTERS: ProfileContentFilters = {
+  category: null,
+  date: 'all',
+  postType: 'all',
+  ppv: false,
+  w2e: false,
+  locked: false,
+};
+
+/** `all` has no `range` param — the API reads its absence as all time. */
+const PROFILE_DATE_RANGE: Record<DateFilterValue, 'day' | 'week' | 'month' | 'year' | undefined> = {
+  all: undefined,
+  today: 'day',
+  week: 'week',
+  month: 'month',
+  year: 'year',
+};
+
+/** How many chips the toggle button should badge. */
+export function countActiveProfileFilters(filters: ProfileContentFilters): number {
+  return (
+    (filters.category ? 1 : 0) +
+    (filters.date !== 'all' ? 1 : 0) +
+    (filters.postType !== 'all' ? 1 : 0) +
+    (filters.ppv ? 1 : 0) +
+    (filters.w2e ? 1 : 0) +
+    (filters.locked ? 1 : 0)
+  );
+}
+
 interface UseDeHubUserContentOptions {
   userId?: string;
   /** @deprecated Viewer context is now extracted from JWT Bearer token */
@@ -297,6 +351,8 @@ interface UseDeHubUserContentOptions {
   sortMode?: ProfileSortMode;
   /** Free text, matched server-side against a post's title and description. */
   search?: string;
+  /** Category / date / post type / access narrowing, all server-side. */
+  filters?: ProfileContentFilters;
 }
 
 /**
@@ -311,13 +367,14 @@ export function useDeHubUserContent({
   limit = 15,
   sortMode = 'newest',
   search = '',
+  filters = EMPTY_PROFILE_FILTERS,
 }: UseDeHubUserContentOptions = {}) {
   const trimmedSearch = search.trim();
   return useInfiniteQuery({
-    queryKey: ['dehub-user-content', userId, viewerAddress, sortMode, trimmedSearch],
+    queryKey: ['dehub-user-content', userId, viewerAddress, sortMode, trimmedSearch, filters],
     queryFn: async ({ pageParam = 1 }) => {
       if (!userId) throw new Error('User ID (wallet address) is required');
-      
+
       // Use /api/feed with minter parameter - the same API that powers the home feed
       const url = new URL('/api/feed', DEHUB_API_BASE);
       url.searchParams.set('page', String(pageParam));
@@ -329,8 +386,20 @@ export function useDeHubUserContent({
       if (trimmedSearch) url.searchParams.set('search', trimmedSearch);
       // Show all confirmed and pending content on profiles
       url.searchParams.set('status', 'all');
+
+      // Filter panel — same parameter names the home feed sends, so a lane that
+      // works there works here. postType is only ever sent for a type the
+      // deployed API already knows: an unrecognised value is answered with an
+      // unfiltered feed rather than an error.
+      if (filters.category) url.searchParams.set('category', filters.category);
+      const range = PROFILE_DATE_RANGE[filters.date];
+      if (range) url.searchParams.set('range', range);
+      if (filters.postType !== 'all') url.searchParams.set('postType', filters.postType);
+      if (filters.ppv) url.searchParams.set('isPPV', 'true');
+      if (filters.w2e) url.searchParams.set('hasBounty', 'true');
+      if (filters.locked) url.searchParams.set('isLocked', 'true');
       // address param is deprecated - viewer context comes from JWT token
-      
+
       const token = getAuthToken();
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
