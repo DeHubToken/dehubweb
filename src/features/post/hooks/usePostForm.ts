@@ -1250,8 +1250,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // feed pipeline joins the viewer's subscriptions to decide. The switch
       // used to call applyLockContent with no amount instead — a DHB lock
       // standing in for a subscription, which gated against nothing.
+      // `myPlanIds` is published plans only. An unpublished plan cannot be
+      // bought, so gating on one ships a post nobody can ever open — which is
+      // exactly what happened when this counted drafts. Empty stays undefined
+      // rather than [] so a gate is never stored with nothing behind it.
       const subscriberPlanIds =
-        isSubscribersOnly && !postingOnSolana
+        isSubscribersOnly && !postingOnSolana && myPlanIds.length
           ? myPlanIds
           : undefined;
 
