@@ -8,6 +8,89 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "creators-guide-leaving-instagram",
+    "slug": "creators-guide-leaving-instagram",
+    "title": "The Creator Guide to Leaving Instagram for a Platform You Own (2026)",
+    "seoTitle": "Best Instagram Alternative for Creators 2026 | DeHub",
+    "seoDescription": "An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.",
+    "excerpt": "Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight — it is the model.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/creators-guide-leaving-instagram-banner.png",
+    "bannerImageAlt": "A creator moving from Instagram to a Web3 platform they own on DeHub",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-27T13:00:00.000Z",
+    "updatedAt": "2026-08-27T13:00:00.000Z",
+    "tags": [
+      "instagram alternative",
+      "creator monetisation",
+      "web3 creators",
+      "leaving instagram",
+      "reels",
+      "watch-to-earn",
+      "dehub"
+    ],
+    "readingTime": 8,
+    "featured": false,
+    "status": "published"
+  },
+  {
+    "id": "creators-guide-leaving-youtube",
+    "slug": "creators-guide-leaving-youtube",
+    "title": "The Creator Guide to Leaving YouTube for a Platform You Own (2026)",
+    "seoTitle": "Best YouTube Alternative for Creators 2026 | DeHub",
+    "seoDescription": "A YouTube alternative creators actually own. What the 55% AdSense split, demonetisation and Content ID really cost you, and how a 90% revenue-share Web3 platform compares.",
+    "excerpt": "YouTube pays better than most platforms and still keeps 45% of your ad revenue, the right to demonetise you, and the deed to your channel. Here is the alternative.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/creators-guide-leaving-youtube-banner.png",
+    "bannerImageAlt": "A creator moving from YouTube to a Web3 platform they own on DeHub",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-27T12:00:00.000Z",
+    "updatedAt": "2026-08-27T12:00:00.000Z",
+    "tags": [
+      "youtube alternative",
+      "creator monetisation",
+      "web3 creators",
+      "leaving youtube",
+      "demonetisation",
+      "watch-to-earn",
+      "dehub"
+    ],
+    "readingTime": 9,
+    "featured": false,
+    "status": "published"
+  },
+  {
+    "id": "creators-guide-leaving-tiktok",
+    "slug": "creators-guide-leaving-tiktok",
+    "title": "The Creator Guide to Leaving TikTok for a Platform You Own (2026)",
+    "seoTitle": "Best TikTok Alternative for Creators 2026 | DeHub",
+    "seoDescription": "A TikTok alternative creators actually own. How Creator Rewards really pays, why your audience is not yours, and how a 90% revenue-share Web3 platform compares in 2026.",
+    "excerpt": "Wherever you post from, the TikTok trade is the same: enormous reach you do not control, on top of an audience you cannot take with you. Here is what to do about it.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/creators-guide-leaving-tiktok-banner.png",
+    "bannerImageAlt": "A creator moving from TikTok to a Web3 platform they own on DeHub",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-27T11:00:00.000Z",
+    "updatedAt": "2026-08-27T11:00:00.000Z",
+    "tags": [
+      "tiktok alternative",
+      "creator monetisation",
+      "web3 creators",
+      "leaving tiktok",
+      "watch-to-earn",
+      "dehub"
+    ],
+    "readingTime": 9,
+    "featured": false,
+    "status": "published"
+  },
+  {
     "id": "dehub-creator-vs-higgsfield-ai-credits",
     "slug": "dehub-creator-vs-higgsfield-ai-credits",
     "title": "DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
@@ -640,7 +723,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2025-04-03T00:00:00.000Z",
+    "publishedAt": "2025-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1042,7 +1125,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-07-02T00:00:00.000Z",
+    "publishedAt": "2024-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1067,7 +1150,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-07-01T00:00:00.000Z",
+    "publishedAt": "2024-06-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1092,7 +1175,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-04T00:00:00.000Z",
+    "publishedAt": "2024-04-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1117,7 +1200,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-03T00:00:00.000Z",
+    "publishedAt": "2024-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1142,7 +1225,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-02T00:00:00.000Z",
+    "publishedAt": "2024-04-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1167,7 +1250,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2024-04-01T00:00:00.000Z",
+    "publishedAt": "2024-03-31T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1317,7 +1400,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-04T00:00:00.000Z",
+    "publishedAt": "2023-10-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1342,7 +1425,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-03T00:00:00.000Z",
+    "publishedAt": "2023-10-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1367,7 +1450,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-02T00:00:00.000Z",
+    "publishedAt": "2023-10-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1392,7 +1475,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-10-01T00:00:00.000Z",
+    "publishedAt": "2023-09-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1439,7 +1522,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-07-04T00:00:00.000Z",
+    "publishedAt": "2023-07-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1464,7 +1547,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-07-03T00:00:00.000Z",
+    "publishedAt": "2023-07-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1489,7 +1572,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-07-02T00:00:00.000Z",
+    "publishedAt": "2023-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1514,7 +1597,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-04-03T00:00:00.000Z",
+    "publishedAt": "2023-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1539,7 +1622,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-04-02T00:00:00.000Z",
+    "publishedAt": "2023-04-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1564,7 +1647,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2023-04-01T00:00:00.000Z",
+    "publishedAt": "2023-03-31T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1711,7 +1794,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-10-03T00:00:00.000Z",
+    "publishedAt": "2022-10-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1736,7 +1819,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-10-02T00:00:00.000Z",
+    "publishedAt": "2022-10-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1761,7 +1844,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-10-01T00:00:00.000Z",
+    "publishedAt": "2022-09-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1786,7 +1869,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-05T00:00:00.000Z",
+    "publishedAt": "2022-07-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1811,7 +1894,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-04T00:00:00.000Z",
+    "publishedAt": "2022-07-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1836,7 +1919,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-03T00:00:00.000Z",
+    "publishedAt": "2022-07-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1861,7 +1944,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-07-02T00:00:00.000Z",
+    "publishedAt": "2022-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1886,7 +1969,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-06T00:00:00.000Z",
+    "publishedAt": "2022-04-05T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1911,7 +1994,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-05T00:00:00.000Z",
+    "publishedAt": "2022-04-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1936,7 +2019,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-04T00:00:00.000Z",
+    "publishedAt": "2022-04-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1961,7 +2044,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-03T00:00:00.000Z",
+    "publishedAt": "2022-04-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -1986,7 +2069,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-02T00:00:00.000Z",
+    "publishedAt": "2022-04-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2011,7 +2094,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2022-04-01T00:00:00.000Z",
+    "publishedAt": "2022-03-31T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2161,7 +2244,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-05T00:00:00.000Z",
+    "publishedAt": "2021-10-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2186,7 +2269,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-04T00:00:00.000Z",
+    "publishedAt": "2021-10-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2211,7 +2294,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-03T00:00:00.000Z",
+    "publishedAt": "2021-10-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2236,7 +2319,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-02T00:00:00.000Z",
+    "publishedAt": "2021-10-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2261,7 +2344,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-10-01T00:00:00.000Z",
+    "publishedAt": "2021-09-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2286,7 +2369,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-05T00:00:00.000Z",
+    "publishedAt": "2021-07-04T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2311,7 +2394,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-04T00:00:00.000Z",
+    "publishedAt": "2021-07-03T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2336,7 +2419,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-03T00:00:00.000Z",
+    "publishedAt": "2021-07-02T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2361,7 +2444,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-02T00:00:00.000Z",
+    "publishedAt": "2021-07-01T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -2386,7 +2469,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "author": {
       "name": "DeHub Team"
     },
-    "publishedAt": "2021-07-01T00:00:00.000Z",
+    "publishedAt": "2021-06-30T23:00:00.000Z",
     "tags": [
       "DeHub Journey",
       "Roadmap",
@@ -3141,30 +3224,32 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "q3-development-overview",
-  "slug": "q3-development-overview",
-  "title": "Q3 Development Overview",
-  "excerpt": "Every distinct thing we shipped since July across dehubweb, dehub-mobile and dehub-stream-backend — stages, AI, ten themes, the arcade, wallets, economy, mobile parity and the plumbing underneath, with the commit next to each entry.",
+  "id": "creators-guide-leaving-instagram",
+  "slug": "creators-guide-leaving-instagram",
+  "title": "The Creator Guide to Leaving Instagram for a Platform You Own (2026)",
+  "seoTitle": "Best Instagram Alternative for Creators 2026 | DeHub",
+  "seoDescription": "An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.",
+  "excerpt": "Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight — it is the model.",
   "content": "",
-  "bannerImage": "/lovable-uploads/q3-development-overview-banner.png",
-  "bannerImageAlt": "Q3 Development Overview - DeHub rocket banner",
+  "bannerImage": "/lovable-uploads/creators-guide-leaving-instagram-banner.png",
+  "bannerImageAlt": "A creator moving from Instagram to a Web3 platform they own on DeHub",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-08-22T12:00:00.000Z",
-  "updatedAt": "2026-08-24T12:00:00.000Z",
+  "publishedAt": "2026-08-27T13:00:00.000Z",
+  "updatedAt": "2026-08-27T13:00:00.000Z",
   "tags": [
-    "Development",
-    "Update",
-    "Q3",
-    "Shipping",
-    "2026"
+    "instagram alternative",
+    "creator monetisation",
+    "web3 creators",
+    "leaving instagram",
+    "reels",
+    "watch-to-earn",
+    "dehub"
   ],
-  "readingTime": 25,
+  "readingTime": 8,
   "featured": false,
-  "status": "published",
-  "seoTitle": "Q3 Development Overview | DeHub",
-  "seoDescription": "Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout."
+  "status": "published"
 };
 
 export const excludedTitles: string[] = [
