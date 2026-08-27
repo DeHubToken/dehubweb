@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} темасында да бар"
   },
   "stats": {
+    "community": {
+      "title": "Коомчулук",
+      "members": "Мүчөлөр",
+      "active": "Активдүү",
+      "today": "Бүгүн",
+      "thisWeek": "Бул жума",
+      "thisMonth": "Бул ай",
+      "thisYear": "Бул жыл",
+      "allTime": "Бүт мезгил",
+      "newMembers": "Жаңы мүчөлөр",
+      "chartMembers": "Убакыт боюнча мүчөлөр",
+      "chartActive": "Активдүү адамдар",
+      "growth": "+{{percent}}% бул айда",
+      "growthTerm": "Өсүш",
+      "recordingSince": "{{date}} тартып жазылууда"
+    },
     "title": "Статистика",
     "subtitle": "Реалдуу убакыттагы ачык маалымат",
     "live": "Түз эфир",

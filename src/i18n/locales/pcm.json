@@ -1613,6 +1613,22 @@
     "alsoIn": "Also for di {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Community",
+      "members": "Members",
+      "active": "Active",
+      "today": "Today",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "thisYear": "This year",
+      "allTime": "All time",
+      "newMembers": "New members",
+      "chartMembers": "Members as time dey go",
+      "chartActive": "People wey active",
+      "growth": "+{{percent}}% this month",
+      "growthTerm": "Growth",
+      "recordingSince": "dem dey record am since {{date}}"
+    },
     "title": "Stats",
     "subtitle": "Real-time open source intel",
     "live": "Live",

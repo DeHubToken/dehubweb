@@ -1689,6 +1689,22 @@
     "alsoIn": "{{theme}} mavzusida ham bor"
   },
   "stats": {
+    "community": {
+      "title": "Hamjamiyat",
+      "members": "A'zolar",
+      "active": "Faol",
+      "today": "Bugun",
+      "thisWeek": "Bu hafta",
+      "thisMonth": "Bu oy",
+      "thisYear": "Bu yil",
+      "allTime": "Butun davr",
+      "newMembers": "Yangi a'zolar",
+      "chartMembers": "Vaqt bo'yicha a'zolar",
+      "chartActive": "Faol odamlar",
+      "growth": "+{{percent}}% bu oy",
+      "growthTerm": "O'sish",
+      "recordingSince": "{{date}} dan beri yozib borilmoqda"
+    },
     "title": "Statistika",
     "subtitle": "Real vaqtda ochiq manba ma'lumotlari",
     "live": "Jonli",

@@ -1684,6 +1684,22 @@
     "alsoIn": "{{theme}} keessattis jira"
   },
   "stats": {
+    "community": {
+      "title": "Hawaasa",
+      "members": "Miseensota",
+      "active": "Sochii irra",
+      "today": "Har'a",
+      "thisWeek": "Torban kana",
+      "thisMonth": "Ji'a kana",
+      "thisYear": "Bara kana",
+      "allTime": "Yeroo guutuu",
+      "newMembers": "Miseensota haaraa",
+      "chartMembers": "Miseensota yeroo keessa",
+      "chartActive": "Namoota sochii irra jiran",
+      "growth": "+{{percent}}% ji'a kana",
+      "growthTerm": "Guddina",
+      "recordingSince": "{{date}} irraa kaasee galmaa'aa jira"
+    },
     "title": "Istaatistiksii",
     "subtitle": "Odeeffannoo madda banaa yeroo dhugaa",
     "live": "Kallattii",

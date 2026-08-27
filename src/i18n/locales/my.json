@@ -1656,6 +1656,22 @@
     "alsoIn": "{{theme}} တွင်လည်း"
   },
   "stats": {
+    "community": {
+      "title": "အသိုက်အဝန်း",
+      "members": "အဖွဲ့ဝင်များ",
+      "active": "တက်ကြွ",
+      "today": "ယနေ့",
+      "thisWeek": "ဤအပတ်",
+      "thisMonth": "ဤလ",
+      "thisYear": "ဤနှစ်",
+      "allTime": "အချိန်အားလုံး",
+      "newMembers": "အဖွဲ့ဝင်အသစ်များ",
+      "chartMembers": "အချိန်နှင့်အမျှ အဖွဲ့ဝင်များ",
+      "chartActive": "တက်ကြွသူများ",
+      "growth": "ဤလ +{{percent}}%",
+      "growthTerm": "တိုးတက်မှု",
+      "recordingSince": "{{date}} မှစ၍ မှတ်တမ်းတင်သည်"
+    },
     "title": "စာရင်းအင်း",
     "subtitle": "အချိန်နှင့်တပြေးညီ open source သတင်းအချက်အလက်",
     "live": "တိုက်ရိုက်",

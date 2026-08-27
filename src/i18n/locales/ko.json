@@ -1638,6 +1638,22 @@
     "alsoIn": "{{theme}}에도 있습니다"
   },
   "stats": {
+    "community": {
+      "title": "커뮤니티",
+      "members": "멤버",
+      "active": "활성",
+      "today": "오늘",
+      "thisWeek": "이번 주",
+      "thisMonth": "이번 달",
+      "thisYear": "올해",
+      "allTime": "전체 기간",
+      "newMembers": "신규 멤버",
+      "chartMembers": "기간별 멤버 수",
+      "chartActive": "활성 사용자",
+      "growth": "이번 달 +{{percent}}%",
+      "growthTerm": "성장",
+      "recordingSince": "{{date}}부터 기록"
+    },
     "title": "통계",
     "subtitle": "실시간 오픈소스 인텔",
     "live": "라이브",

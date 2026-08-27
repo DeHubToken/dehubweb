@@ -1634,6 +1634,22 @@
     "alsoIn": "Löytyy myös teemasta {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Yhteisö",
+      "members": "Jäsenet",
+      "active": "Aktiiviset",
+      "today": "Tänään",
+      "thisWeek": "Tällä viikolla",
+      "thisMonth": "Tässä kuussa",
+      "thisYear": "Tänä vuonna",
+      "allTime": "Koko aika",
+      "newMembers": "Uudet jäsenet",
+      "chartMembers": "Jäsenet ajan mittaan",
+      "chartActive": "Aktiiviset ihmiset",
+      "growth": "+{{percent}} % tässä kuussa",
+      "growthTerm": "Kasvu",
+      "recordingSince": "kirjattu alkaen {{date}}"
+    },
     "title": "Tilastot",
     "subtitle": "Reaaliaikaista avointa tietoa",
     "live": "Livenä",

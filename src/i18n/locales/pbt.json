@@ -1612,6 +1612,22 @@
     "alsoIn": "همدارنګه په {{theme}} کې"
   },
   "stats": {
+    "community": {
+      "title": "ټولنه",
+      "members": "غړي",
+      "active": "فعال",
+      "today": "نن",
+      "thisWeek": "دا اونۍ",
+      "thisMonth": "دا میاشت",
+      "thisYear": "دا کال",
+      "allTime": "تل",
+      "newMembers": "نوي غړي",
+      "chartMembers": "غړي د وخت په تېرېدو",
+      "chartActive": "فعال کسان",
+      "growth": "+{{percent}}% دا میاشت",
+      "growthTerm": "وده",
+      "recordingSince": "له {{date}} راهیسې ثبتېږي"
+    },
     "title": "احصایې",
     "subtitle": "ریښتوني وخت خلاص سرچینه معلومات",
     "live": "ژوندی",

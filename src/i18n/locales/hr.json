@@ -1634,6 +1634,22 @@
     "alsoIn": "Postoji i u temi {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Zajednica",
+      "members": "Članovi",
+      "active": "Aktivni",
+      "today": "Danas",
+      "thisWeek": "Ovaj tjedan",
+      "thisMonth": "Ovaj mjesec",
+      "thisYear": "Ova godina",
+      "allTime": "Cijelo razdoblje",
+      "newMembers": "Novi članovi",
+      "chartMembers": "Članovi kroz vrijeme",
+      "chartActive": "Aktivni ljudi",
+      "growth": "+{{percent}} % ovaj mjesec",
+      "growthTerm": "Rast",
+      "recordingSince": "bilježi se od {{date}}"
+    },
     "title": "Statistika",
     "subtitle": "Otvoreni podaci u stvarnom vremenu",
     "live": "Uživo",

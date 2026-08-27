@@ -1636,6 +1636,22 @@
     "alsoIn": "{{theme}} にもあります"
   },
   "stats": {
+    "community": {
+      "title": "コミュニティ",
+      "members": "メンバー",
+      "active": "アクティブ",
+      "today": "今日",
+      "thisWeek": "今週",
+      "thisMonth": "今月",
+      "thisYear": "今年",
+      "allTime": "全期間",
+      "newMembers": "新規メンバー",
+      "chartMembers": "メンバー数の推移",
+      "chartActive": "アクティブな人数",
+      "growth": "今月 +{{percent}}%",
+      "growthTerm": "成長",
+      "recordingSince": "{{date}} から記録"
+    },
     "title": "統計",
     "subtitle": "リアルタイムのオープンソース情報",
     "live": "ライブ",

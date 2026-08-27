@@ -1652,6 +1652,22 @@
     "alsoIn": "ក៏មាននៅក្នុង {{theme}} ដែរ"
   },
   "stats": {
+    "community": {
+      "title": "សហគមន៍",
+      "members": "សមាជិក",
+      "active": "សកម្ម",
+      "today": "ថ្ងៃនេះ",
+      "thisWeek": "សប្តាហ៍នេះ",
+      "thisMonth": "ខែនេះ",
+      "thisYear": "ឆ្នាំនេះ",
+      "allTime": "គ្រប់ពេលវេលា",
+      "newMembers": "សមាជិកថ្មី",
+      "chartMembers": "សមាជិកតាមពេលវេលា",
+      "chartActive": "អ្នកសកម្ម",
+      "growth": "+{{percent}}% ខែនេះ",
+      "growthTerm": "កំណើន",
+      "recordingSince": "កត់ត្រាតាំងពី {{date}}"
+    },
     "title": "ស្ថិតិ",
     "subtitle": "ព័ត៌មានប្រភពបើកចំហតាមពេលវេលាជាក់ស្តែង",
     "live": "ផ្ទាល់",

@@ -1635,6 +1635,22 @@
     "alsoIn": "Ipo pia katika {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Jumuiya",
+      "members": "Wanachama",
+      "active": "Hai",
+      "today": "Leo",
+      "thisWeek": "Wiki hii",
+      "thisMonth": "Mwezi huu",
+      "thisYear": "Mwaka huu",
+      "allTime": "Muda wote",
+      "newMembers": "Wanachama wapya",
+      "chartMembers": "Wanachama kwa muda",
+      "chartActive": "Watu walio hai",
+      "growth": "+{{percent}}% mwezi huu",
+      "growthTerm": "Ukuaji",
+      "recordingSince": "imerekodiwa tangu {{date}}"
+    },
     "title": "Takwimu",
     "subtitle": "Taarifa huria kwa wakati halisi",
     "live": "Moja kwa moja",

@@ -1634,6 +1634,22 @@
     "alsoIn": "Gjendet edhe te {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Komuniteti",
+      "members": "Anëtarët",
+      "active": "Aktivë",
+      "today": "Sot",
+      "thisWeek": "Këtë javë",
+      "thisMonth": "Këtë muaj",
+      "thisYear": "Këtë vit",
+      "allTime": "Gjithë koha",
+      "newMembers": "Anëtarë të rinj",
+      "chartMembers": "Anëtarët me kalimin e kohës",
+      "chartActive": "Persona aktivë",
+      "growth": "+{{percent}}% këtë muaj",
+      "growthTerm": "Rritja",
+      "recordingSince": "regjistrohet që nga {{date}}"
+    },
     "title": "Statistika",
     "subtitle": "Të dhëna me burim të hapur në kohë reale",
     "live": "Drejtpërdrejt",

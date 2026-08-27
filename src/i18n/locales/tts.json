@@ -1617,6 +1617,22 @@
     "alsoIn": "อยู่ใน {{theme}} คือกัน"
   },
   "stats": {
+    "community": {
+      "title": "ซุมซน",
+      "members": "สมาซิก",
+      "active": "ใช้งานอยู่",
+      "today": "วันนี้",
+      "thisWeek": "อาทิตย์นี้",
+      "thisMonth": "เดือนนี้",
+      "thisYear": "ปีนี้",
+      "allTime": "ตลอดเวลา",
+      "newMembers": "สมาซิกไหม่",
+      "chartMembers": "สมาซิกตามซ่วงเวลา",
+      "chartActive": "คนที่ใซ้งานอยู่",
+      "growth": "+{{percent}}% เดือนนี้",
+      "growthTerm": "การเติบโต",
+      "recordingSince": "บันทึกตั้งแต่ {{date}}"
+    },
     "title": "สถิติ",
     "subtitle": "ข้อมูลข่าวกรองโอเพนซอร์สแบบเรียลไทม์",
     "live": "สด",

@@ -1642,6 +1642,22 @@
     "alsoIn": "እንዲሁም በ{{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "ማህበረሰብ",
+      "members": "አባላት",
+      "active": "ንቁ",
+      "today": "ዛሬ",
+      "thisWeek": "በዚህ ሳምንት",
+      "thisMonth": "በዚህ ወር",
+      "thisYear": "በዚህ ዓመት",
+      "allTime": "ሁሉንም ጊዜ",
+      "newMembers": "አዲስ አባላት",
+      "chartMembers": "አባላት በጊዜ ሂደት",
+      "chartActive": "ንቁ ሰዎች",
+      "growth": "+{{percent}}% በዚህ ወር",
+      "growthTerm": "እድገት",
+      "recordingSince": "ከ{{date}} ጀምሮ ተመዝግቧል"
+    },
     "title": "ስታቲስቲክስ",
     "subtitle": "በቀጥታ ጊዜ ክፍት ምንጭ መረጃ",
     "live": "ቀጥታ",

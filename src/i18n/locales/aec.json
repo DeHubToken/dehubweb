@@ -1656,6 +1656,22 @@
     "alsoIn": "كمان في {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "المجتمع",
+      "members": "الأعضاء",
+      "active": "نشط",
+      "today": "النهارده",
+      "thisWeek": "الأسبوع ده",
+      "thisMonth": "الشهر ده",
+      "thisYear": "السنة دي",
+      "allTime": "كل الوقت",
+      "newMembers": "أعضاء جداد",
+      "chartMembers": "الأعضاء على مدار الوقت",
+      "chartActive": "الناس النشطين",
+      "growth": "+{{percent}}% الشهر ده",
+      "growthTerm": "النمو",
+      "recordingSince": "مسجّل من {{date}}"
+    },
     "title": "الإحصائيات",
     "subtitle": "استخبارات مفتوحة المصدر في الوقت الحقيقي",
     "live": "مباشر",

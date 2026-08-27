@@ -1723,6 +1723,22 @@
     "alsoIn": "Cũng có trong {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Cộng đồng",
+      "members": "Thành viên",
+      "active": "Đang hoạt động",
+      "today": "Hôm nay",
+      "thisWeek": "Tuần này",
+      "thisMonth": "Tháng này",
+      "thisYear": "Năm nay",
+      "allTime": "Toàn bộ thời gian",
+      "newMembers": "Thành viên mới",
+      "chartMembers": "Thành viên theo thời gian",
+      "chartActive": "Người đang hoạt động",
+      "growth": "+{{percent}}% tháng này",
+      "growthTerm": "Tăng trưởng",
+      "recordingSince": "ghi nhận từ {{date}}"
+    },
     "title": "Thống kê",
     "subtitle": "Thông tin nguồn mở theo thời gian thực",
     "live": "Trực tiếp",

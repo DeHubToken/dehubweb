@@ -1635,6 +1635,22 @@
     "alsoIn": "Ó tún wà nínú {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Àwùjọ",
+      "members": "Àwọn Ọmọ Ẹgbẹ́",
+      "active": "Ṣíṣẹ́",
+      "today": "Lónìí",
+      "thisWeek": "Ọ̀sẹ̀ yìí",
+      "thisMonth": "Oṣù yìí",
+      "thisYear": "Ọdún yìí",
+      "allTime": "Gbogbo àkókò",
+      "newMembers": "Àwọn ọmọ ẹgbẹ́ tuntun",
+      "chartMembers": "Àwọn ọmọ ẹgbẹ́ ní àkókò",
+      "chartActive": "Àwọn ènìyàn tí ń ṣiṣẹ́",
+      "growth": "+{{percent}}% oṣù yìí",
+      "growthTerm": "Ìdàgbàsókè",
+      "recordingSince": "a ti ń ṣàkọsílẹ̀ láti {{date}}"
+    },
     "title": "Ìṣirò",
     "subtitle": "Ìwífún orísun ṣíṣí ní àkókò gidi",
     "live": "Tààrà",

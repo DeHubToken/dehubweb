@@ -1616,6 +1616,22 @@
     "alsoIn": "Има го и в темата {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Общност",
+      "members": "Членове",
+      "active": "Активни",
+      "today": "Днес",
+      "thisWeek": "Тази седмица",
+      "thisMonth": "Този месец",
+      "thisYear": "Тази година",
+      "allTime": "Целият период",
+      "newMembers": "Нови членове",
+      "chartMembers": "Членове във времето",
+      "chartActive": "Активни хора",
+      "growth": "+{{percent}}% този месец",
+      "growthTerm": "Растеж",
+      "recordingSince": "записва се от {{date}}"
+    },
     "title": "Статистика",
     "subtitle": "Отворени данни в реално време",
     "live": "На живо",

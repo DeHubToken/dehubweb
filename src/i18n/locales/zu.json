@@ -1665,6 +1665,22 @@
     "alsoIn": "Kukhona nakwi-{{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Umphakathi",
+      "members": "Amalungu",
+      "active": "Kusebenza",
+      "today": "Namhlanje",
+      "thisWeek": "Leli viki",
+      "thisMonth": "Le nyanga",
+      "thisYear": "Lo nyaka",
+      "allTime": "Isikhathi sonke",
+      "newMembers": "Amalungu amasha",
+      "chartMembers": "Amalungu ngokuhamba kwesikhathi",
+      "chartActive": "Abantu abasebenzayo",
+      "growth": "+{{percent}}% kule nyanga",
+      "growthTerm": "Ukukhula",
+      "recordingSince": "kuqoshwa kusukela ku-{{date}}"
+    },
     "title": "Izibalo",
     "subtitle": "Ulwazi lomthombo ovulekile ngesikhathi sangempela",
     "live": "Bukhoma",

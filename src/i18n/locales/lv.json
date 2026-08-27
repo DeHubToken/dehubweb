@@ -1634,6 +1634,22 @@
     "alsoIn": "Pieejams arī tēmā {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Kopiena",
+      "members": "Dalībnieki",
+      "active": "Aktīvi",
+      "today": "Šodien",
+      "thisWeek": "Šonedēļ",
+      "thisMonth": "Šomēnes",
+      "thisYear": "Šogad",
+      "allTime": "Viss laiks",
+      "newMembers": "Jauni dalībnieki",
+      "chartMembers": "Dalībnieki laika gaitā",
+      "chartActive": "Aktīvi cilvēki",
+      "growth": "+{{percent}} % šomēnes",
+      "growthTerm": "Izaugsme",
+      "recordingSince": "reģistrēts kopš {{date}}"
+    },
     "title": "Statistika",
     "subtitle": "Atklātā koda dati reāllaikā",
     "live": "Tiešraidē",

@@ -1678,6 +1678,22 @@
     "alsoIn": "{{theme}} म घलो"
   },
   "stats": {
+    "community": {
+      "title": "समाज",
+      "members": "सदस्य",
+      "active": "सक्रिय",
+      "today": "आज",
+      "thisWeek": "ये हफ्ता",
+      "thisMonth": "ये महीना",
+      "thisYear": "ये साल",
+      "allTime": "जम्मो समय",
+      "newMembers": "नवा सदस्य",
+      "chartMembers": "समय के संग सदस्य",
+      "chartActive": "सक्रिय मनखे",
+      "growth": "+{{percent}}% ये महीना",
+      "growthTerm": "बढ़वार",
+      "recordingSince": "{{date}} ले दरज होवत हे"
+    },
     "title": "आंकड़ा",
     "subtitle": "रीयल-टाइम ओपन सोर्स जानकारी",
     "live": "लाइव",

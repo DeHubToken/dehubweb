@@ -1733,6 +1733,22 @@
     "alsoIn": "Misy ao amin'ny {{theme}} koa"
   },
   "stats": {
+    "community": {
+      "title": "Vondrom-piarahamonina",
+      "members": "Mpikambana",
+      "active": "Mavitrika",
+      "today": "Androany",
+      "thisWeek": "Ity herinandro ity",
+      "thisMonth": "Ity volana ity",
+      "thisYear": "Ity taona ity",
+      "allTime": "Fotoana rehetra",
+      "newMembers": "Mpikambana vaovao",
+      "chartMembers": "Mpikambana araka ny fotoana",
+      "chartActive": "Olona mavitrika",
+      "growth": "+{{percent}}% ity volana ity",
+      "growthTerm": "Fitomboana",
+      "recordingSince": "voarakitra hatramin'ny {{date}}"
+    },
     "title": "Antontan'isa",
     "subtitle": "Vaovao loharano misokatra amin'ny fotoana tena izy",
     "live": "Mivantana",
