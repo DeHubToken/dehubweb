@@ -8,8 +8,13 @@
  * opts in and closed again on opt-out or unmount — there is no background
  * persistence beyond the open tab.
  *
+ * The node's identity is never sent from here. The server reads the wallet
+ * out of the signed session presented on the handshake and refuses the
+ * connection without one, so there is no register message and no way for a
+ * client to claim a wallet that is not its own.
+ *
  * Usage:
- *   const socket = connectDepinSocket(walletAddress);
+ *   const socket = connectDepinSocket();
  *   const unsub = onDepinAssign((assignment) => { ... });
  *   return () => { unsub(); disconnectDepinSocket(); };
  */
@@ -18,10 +23,6 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 
 // ─── Socket event payload types ───────────────────────────────────────────────
-
-export interface DepinRegisterPayload {
-  walletAddress: string;
-}
 
 export interface DepinRegisteredData {
   nodeId: string;
@@ -36,14 +37,17 @@ export interface DepinAssignData {
 
 export interface DepinStoredPayload {
   assetKey: string;
-  nodeId: string;
   sha256: string;
 }
 
+/**
+ * Byte ranges to hash, INCLUSIVE of both `start` and `end` — the server
+ * hashes the canonical copy with an HTTP Range header, which is inclusive.
+ * `Blob.slice` is not, so a reader has to add 1 to `end`.
+ */
 export interface DepinChallengeData {
   assetKey: string;
-  byteStart: number;
-  byteEnd: number;
+  ranges: { start: number; end: number }[];
 }
 
 /** `lost: true` tells the server the local copy is gone (evicted, quota pressure) so it can reassign instead of waiting out a timeout. */
@@ -57,12 +61,12 @@ export interface DepinChallengeResponsePayload {
 
 let depinSocket: Socket | null = null;
 
-/** Open (or return the existing) `/depin` socket, authenticated as `walletAddress`. */
-export function connectDepinSocket(walletAddress: string): Socket {
+/** Open (or return the existing) `/depin` socket, authenticated by the current session. */
+export function connectDepinSocket(): Socket {
   if (depinSocket) return depinSocket;
 
   const token = getAuthToken();
-  const handshakeAuth: Record<string, string> = { address: walletAddress.toLowerCase() };
+  const handshakeAuth: Record<string, string> = {};
   const tokenTrim = token?.replace(/^Bearer\s+/i, '').trim();
   if (tokenTrim) handshakeAuth.token = `Bearer ${tokenTrim}`;
 
@@ -109,10 +113,6 @@ export function isDepinSocketConnected(): boolean {
 }
 
 // ─── Emitters ─────────────────────────────────────────────────────────────────
-
-export function emitDepinRegister(payload: DepinRegisterPayload): void {
-  depinSocket?.emit('depin:register', payload);
-}
 
 export function emitDepinStored(payload: DepinStoredPayload): void {
   depinSocket?.emit('depin:stored', payload);
