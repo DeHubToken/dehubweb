@@ -9,7 +9,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe } from 'lucide-react';
+import { X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -173,6 +173,18 @@ const AUTO_HIDE_MS = 3000;
 // it straight back, so clearing early costs nothing.
 const DESKTOP_AUTO_HIDE_MS = 2000;
 
+/**
+ * The pair of controls in the video's top-right corner, as one class string.
+ *
+ * They read as a single two-button control, and they used to be built in two
+ * different components from hand-copied classes, which drifted: fullscreen
+ * carried a `saturate-[180%]` mute never had, so the two sat side by side in
+ * visibly different shades. Both are built from this now — position and the
+ * hidden state are all either is allowed to add.
+ */
+const CORNER_CONTROL =
+  "absolute top-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center text-white transition-[background-color,opacity] duration-300";
+
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
@@ -264,6 +276,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
    * the only one that should ever run.
    */
   const fullscreenTargetRef = useRef<HTMLDivElement>(null);
+  // The same node, as state: the active slide portals its progress bar in here
+  // (see `progressLayer` on VideoSlide), and a portal target has to be
+  // something a render can react to. The callback is memoised because an inline
+  // one changes identity every render, and React would then detach and re-attach
+  // the ref — setting this back to null and round-tripping forever.
+  const [videoContainer, setVideoContainer] = useState<HTMLDivElement | null>(null);
+  const attachVideoContainer = useCallback((node: HTMLDivElement | null) => {
+    fullscreenTargetRef.current = node;
+    setVideoContainer(node);
+  }, []);
   const noVideoRef = useRef<HTMLVideoElement>(null);
   const { isFullscreen, toggleFullscreen } = useVideoFullscreen(noVideoRef, fullscreenTargetRef, {
     // Unlike a slide, this container has no transformed ancestor — the
@@ -1138,7 +1160,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             so it could not paint there anyway, and the immersive view carries
             its own pair over the video. */}
         {!isMobile && !isFullscreen && (
-          <div className="w-[60px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-3">
+          <div className="w-[60px] h-full flex flex-col items-center justify-center gap-3">
             <button
               onClick={goToPrev}
               disabled={currentIndex === 0}
@@ -1161,7 +1183,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             On mobile, when comments are open it shrinks to the top half so the
             comments panel below can take the bottom half (Instagram-style split). */}
         <motion.div
-          ref={fullscreenTargetRef}
+          ref={attachVideoContainer}
           data-media-full
           className={cn(
             "relative overflow-hidden",
@@ -1175,7 +1197,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 // letterboxed inside a phone-shaped box and runs the full width
                 // of the display.
                 ? "fixed inset-0 z-[70] w-screen h-screen max-h-none rounded-none bg-black"
-                : "shrink-0 h-[calc(100vh-80px)] max-h-[640px] aspect-[9/16] w-auto bg-zinc-900 rounded-none md:rounded-2xl"
+                // Full height, edge to edge. It used to cap at 640px, so on any
+                // normal desktop the short sat in the middle of the screen with
+                // dead space above and below it however tall the display was.
+                // `max-w` is the guard for the other extreme: at 9:16 a very
+                // tall, narrow window would otherwise make the player wider
+                // than the space beside the rails. Nothing is cropped when it
+                // bites — the frame letterboxes instead.
+                : "shrink-0 h-full aspect-[9/16] w-auto max-w-[calc(100vw-8rem)] bg-zinc-900 rounded-none"
           )}
           animate={isMobile ? { height: showComments ? '42%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
@@ -1233,17 +1262,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
                       letterbox={!isMobile}
-                      // The button sits on the video, but the thing that goes
-                      // fullscreen is this viewer's container — that is what
-                      // carries the mute button, the action bar and the creator
-                      // block into the top layer with it. Desktop only: the
-                      // viewer is already `fixed inset-0` on mobile, so a
-                      // fullscreen control there would do nothing visible.
                       isFullscreen={isFullscreen}
-                      onToggleFullscreen={isMobile || !isActive ? undefined : toggleFullscreen}
-                      // Its fullscreen control shares the top-right row with
-                      // the mute button below, so the two clear together.
-                      chromeHidden={!isMobile && chromeHidden}
+                      // Only the playing short draws a bar over the action
+                      // bar's gradient; the neighbours keep theirs in place,
+                      // where nothing can see it anyway.
+                      progressLayer={isActive ? videoContainer : null}
                       // Buffer the current slide + the next one so a swipe lands
                       // on an already-loaded video. The previous slide (offset
                       // -1) is almost always still in the browser cache from
@@ -1264,18 +1287,42 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               bottom stays reachable. */}
           {!isMobile && (
             <>
+              {/* Fullscreen and mute, in that order, parked left of each other.
+                  Fullscreen used to be drawn by the slide, which the carousel
+                  translates — so it slid away with the video on every step
+                  while its neighbour here held still. Both live in the
+                  container now, and neither moves. */}
+              <button
+                onClick={toggleFullscreen}
+                className={cn(
+                  CORNER_CONTROL,
+                  // Immediately left of mute: that one is `w-10` at `right-3`,
+                  // so it ends 3.25rem in, leaving a 0.5rem gap.
+                  "right-[3.75rem]",
+                  chromeHidden && "opacity-0 pointer-events-none",
+                )}
+                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+              >
+                {isFullscreen ? (
+                  <Minimize className="w-5 h-5" />
+                ) : (
+                  <Maximize className="w-5 h-5" />
+                )}
+              </button>
+
               <button
                 onClick={() => setIsMuted(prev => !prev)}
                 className={cn(
-                  "absolute top-3 right-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center transition-[background-color,opacity] duration-300",
+                  CORNER_CONTROL,
+                  "right-3",
                   chromeHidden && "opacity-0 pointer-events-none",
                 )}
                 aria-label={isMuted ? 'Unmute' : 'Mute'}
               >
                 {isMuted ? (
-                  <VolumeX className="w-5 h-5 text-white" />
+                  <VolumeX className="w-5 h-5" />
                 ) : (
-                  <Volume2 className="w-5 h-5 text-white" />
+                  <Volume2 className="w-5 h-5" />
                 )}
               </button>
 
@@ -1751,7 +1798,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             Fullscreen drops it — it is a sibling of the fullscreened container
             and could not paint there — and moves both onto the video instead. */}
         {!isMobile && !isFullscreen && (
-          <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
+          <div className="w-[268px] lg:w-[320px] h-full py-4 flex flex-col">
             {/* Creator Info - Top */}
             <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
               <div className="absolute top-3 right-3 lg:top-4 lg:right-4 flex items-center gap-1.5">
