@@ -1511,7 +1511,7 @@ export const en = {
       'Mobile caught up across feeds, stages, posting, messaging and notifications ✅',
       'A daily posting allowance with DHB overage pricing: ten text posts and a gigabyte free every day, scaling with your staking badge up to 100 posts and 10 GB ✅',
     ],
-    q2q4_2026: 'Q2–Q4 2026 and Beyond',
+    q2q4_2026: 'Q4 2026 and Beyond',
     q2q4_2026_items: [
       'TGE begins for LCS listing',
       'Apple App Store listing',
