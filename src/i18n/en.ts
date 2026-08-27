@@ -1323,9 +1323,9 @@ export const en = {
   roadmap: {
     title: 'DeHub Roadmap',
     subtitle: 'From humble beginnings to a complete platform - our journey through the ups',
-    completed: 'Completed',
-    inProgress: 'In Progress',
-    planned: 'Planned',
+     completed: 'Completed',
+     inProgress: 'Completed',
+     planned: 'Planned',
     latestUpdate: 'Latest development update',
     latestUpdateDesc: 'Q3 2026 was our largest quarter of shipping so far — more than 840 merged changes across the web app, the mobile app and the backend. Rather than summarise it twice, the full write-up lists every distinct piece of work with the commit or pull request next to it.',
     latestUpdateCta: 'Read the Q3 Development Overview',
