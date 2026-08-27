@@ -1612,6 +1612,22 @@
     "alsoIn": "Nakwa na {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Obodo",
+      "members": "Ndị Otu",
+      "active": "Na-arụ ọrụ",
+      "today": "Taa",
+      "thisWeek": "Izu a",
+      "thisMonth": "Ọnwa a",
+      "thisYear": "Afọ a",
+      "allTime": "Oge Niile",
+      "newMembers": "Ndị otu ọhụrụ",
+      "chartMembers": "Ndị otu n'oge",
+      "chartActive": "Ndị na-arụ ọrụ",
+      "growth": "+{{percent}}% n'ọnwa a",
+      "growthTerm": "Uto",
+      "recordingSince": "edekọtara kemgbe {{date}}"
+    },
     "title": "Ọnụọgụ",
     "subtitle": "Ozi Izugbe Nchọpụta N'Oge Ya",
     "live": "Ndụ",

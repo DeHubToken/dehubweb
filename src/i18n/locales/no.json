@@ -1634,6 +1634,22 @@
     "alsoIn": "Finnes også i {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Fellesskap",
+      "members": "Medlemmer",
+      "active": "Aktive",
+      "today": "I dag",
+      "thisWeek": "Denne uken",
+      "thisMonth": "Denne måneden",
+      "thisYear": "I år",
+      "allTime": "Hele perioden",
+      "newMembers": "Nye medlemmer",
+      "chartMembers": "Medlemmer over tid",
+      "chartActive": "Aktive personer",
+      "growth": "+{{percent}} % denne måneden",
+      "growthTerm": "Vekst",
+      "recordingSince": "registrert siden {{date}}"
+    },
     "title": "Statistikk",
     "subtitle": "Åpen etterretning i sanntid",
     "live": "Direkte",

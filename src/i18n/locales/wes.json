@@ -1612,6 +1612,22 @@
     "alsoIn": "I dei fo {{theme}} sef"
   },
   "stats": {
+    "community": {
+      "title": "Community",
+      "members": "Member dem",
+      "active": "Active",
+      "today": "Today",
+      "thisWeek": "Dis week",
+      "thisMonth": "Dis month",
+      "thisYear": "Dis year",
+      "allTime": "All time",
+      "newMembers": "New member dem",
+      "chartMembers": "Member dem as time di go",
+      "chartActive": "People weh dey active",
+      "growth": "+{{percent}}% dis month",
+      "growthTerm": "Growth",
+      "recordingSince": "dem di record am since {{date}}"
+    },
     "title": "Stats",
     "subtitle": "Real-time open source intel",
     "live": "Live",

@@ -1638,6 +1638,22 @@
     "alsoIn": "{{theme}} मध्येही आहे"
   },
   "stats": {
+    "community": {
+      "title": "समुदाय",
+      "members": "सदस्य",
+      "active": "सक्रिय",
+      "today": "आज",
+      "thisWeek": "या आठवड्यात",
+      "thisMonth": "या महिन्यात",
+      "thisYear": "या वर्षी",
+      "allTime": "संपूर्ण काळ",
+      "newMembers": "नवीन सदस्य",
+      "chartMembers": "कालानुरूप सदस्य",
+      "chartActive": "सक्रिय लोक",
+      "growth": "+{{percent}}% या महिन्यात",
+      "growthTerm": "वाढ",
+      "recordingSince": "{{date}} पासून नोंद होत आहे"
+    },
     "title": "आकडेवारी",
     "subtitle": "रिअल-टाइम मुक्तस्रोत माहिती",
     "live": "थेट",

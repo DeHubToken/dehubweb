@@ -1612,6 +1612,22 @@
     "alsoIn": "برضو في {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "المجتمع",
+      "members": "الأعضاء",
+      "active": "نشط",
+      "today": "اليوم",
+      "thisWeek": "الأسبوع دا",
+      "thisMonth": "الشهر دا",
+      "thisYear": "السنة دي",
+      "allTime": "كل الوقت",
+      "newMembers": "أعضاء جداد",
+      "chartMembers": "الأعضاء مع مرور الوقت",
+      "chartActive": "الناس النشطين",
+      "growth": "+{{percent}}% الشهر دا",
+      "growthTerm": "النمو",
+      "recordingSince": "مسجّل من {{date}}"
+    },
     "title": "الإحصائيات",
     "subtitle": "استخبارات مفتوحة المصدر في الوقت الحقيقي",
     "live": "مباشر",

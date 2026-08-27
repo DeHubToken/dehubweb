@@ -1616,6 +1616,22 @@
     "alsoIn": "{{theme}} ਵਿੱਚ ਵੀ"
   },
   "stats": {
+    "community": {
+      "title": "ਭਾਈਚਾਰਾ",
+      "members": "ਮੈਂਬਰ",
+      "active": "ਕਿਰਿਆਸ਼ੀਲ",
+      "today": "ਅੱਜ",
+      "thisWeek": "ਇਸ ਹਫ਼ਤੇ",
+      "thisMonth": "ਇਸ ਮਹੀਨੇ",
+      "thisYear": "ਇਸ ਸਾਲ",
+      "allTime": "ਹਮੇਸ਼ਾ",
+      "newMembers": "ਨਵੇਂ ਮੈਂਬਰ",
+      "chartMembers": "ਸਮੇਂ ਨਾਲ ਮੈਂਬਰ",
+      "chartActive": "ਕਿਰਿਆਸ਼ੀਲ ਲੋਕ",
+      "growth": "+{{percent}}% ਇਸ ਮਹੀਨੇ",
+      "growthTerm": "ਵਾਧਾ",
+      "recordingSince": "{{date}} ਤੋਂ ਦਰਜ ਹੋ ਰਿਹਾ ਹੈ"
+    },
     "title": "ਅੰਕੜੇ",
     "subtitle": "ਰੀਅਲ-ਟਾਈਮ ਓਪਨ ਸੋਰਸ ਜਾਣਕਾਰੀ",
     "live": "ਲਾਈਵ",

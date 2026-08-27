@@ -1785,6 +1785,22 @@
     "alsoIn": "{{theme}}-অতও আছে"
   },
   "stats": {
+    "community": {
+      "title": "সমাজ",
+      "members": "সদস্য",
+      "active": "সক্রিয়",
+      "today": "আজিয়া",
+      "thisWeek": "এই সপ্তাহ",
+      "thisMonth": "এই মাস",
+      "thisYear": "এই বছর",
+      "allTime": "সব সময়",
+      "newMembers": "নয়া সদস্য",
+      "chartMembers": "সময়র লগে সদস্য",
+      "chartActive": "সক্রিয় মানুষ",
+      "growth": "+{{percent}}% এই মাসত",
+      "growthTerm": "বৃদ্ধি",
+      "recordingSince": "{{date}} তুন রেকর্ড অইর"
+    },
     "title": "পরিসংখ্যান",
     "subtitle": "রিয়েল-টাইম ওপেন সোর্স ইন্টেল",
     "live": "লাইভ",

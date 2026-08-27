@@ -1674,6 +1674,22 @@
     "alsoIn": "Ёсць і ў тэме {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Супольнасць",
+      "members": "Удзельнікі",
+      "active": "Актыўныя",
+      "today": "Сёння",
+      "thisWeek": "На гэтым тыдні",
+      "thisMonth": "У гэтым месяцы",
+      "thisYear": "У гэтым годзе",
+      "allTime": "Увесь час",
+      "newMembers": "Новыя ўдзельнікі",
+      "chartMembers": "Удзельнікі з цягам часу",
+      "chartActive": "Актыўныя людзі",
+      "growth": "+{{percent}}% за месяц",
+      "growthTerm": "Рост",
+      "recordingSince": "запісваецца з {{date}}"
+    },
     "title": "Статыстыка",
     "subtitle": "Адкрытая аналітыка ў рэальным часе",
     "live": "У эфіры",

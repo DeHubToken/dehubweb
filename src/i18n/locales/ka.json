@@ -1671,6 +1671,22 @@
     "alsoIn": "{{theme}}-შიც არის"
   },
   "stats": {
+    "community": {
+      "title": "საზოგადოება",
+      "members": "წევრები",
+      "active": "აქტიური",
+      "today": "დღეს",
+      "thisWeek": "ამ კვირაში",
+      "thisMonth": "ამ თვეში",
+      "thisYear": "ამ წელს",
+      "allTime": "მთელი პერიოდი",
+      "newMembers": "ახალი წევრები",
+      "chartMembers": "წევრები დროთა განმავლობაში",
+      "chartActive": "აქტიური ადამიანები",
+      "growth": "+{{percent}}% ამ თვეში",
+      "growthTerm": "ზრდა",
+      "recordingSince": "ჩაიწერება {{date}}-დან"
+    },
     "title": "სტატისტიკა",
     "subtitle": "რეალურ დროში ღია წყაროს ინფორმაცია",
     "live": "პირდაპირი",

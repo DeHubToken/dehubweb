@@ -2119,6 +2119,22 @@
     "alsoIn": "Також у темі {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Спільнота",
+      "members": "Учасники",
+      "active": "Активні",
+      "today": "Сьогодні",
+      "thisWeek": "Цього тижня",
+      "thisMonth": "Цього місяця",
+      "thisYear": "Цього року",
+      "allTime": "За весь час",
+      "newMembers": "Нові учасники",
+      "chartMembers": "Учасники за час",
+      "chartActive": "Активні люди",
+      "growth": "+{{percent}}% цього місяця",
+      "growthTerm": "Зростання",
+      "recordingSince": "записується з {{date}}"
+    },
     "title": "Статистика",
     "subtitle": "Відкрита аналітика в реальному часі",
     "live": "Наживо",

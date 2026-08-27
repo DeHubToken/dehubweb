@@ -1634,6 +1634,22 @@
     "alsoIn": "Olemas ka teemas {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Kogukond",
+      "members": "Liikmed",
+      "active": "Aktiivsed",
+      "today": "Täna",
+      "thisWeek": "Sel nädalal",
+      "thisMonth": "Sel kuul",
+      "thisYear": "Sel aastal",
+      "allTime": "Kogu aeg",
+      "newMembers": "Uued liikmed",
+      "chartMembers": "Liikmed ajas",
+      "chartActive": "Aktiivsed inimesed",
+      "growth": "+{{percent}}% sel kuul",
+      "growthTerm": "Kasv",
+      "recordingSince": "salvestatud alates {{date}}"
+    },
     "title": "Statistika",
     "subtitle": "Avatud lähtekoodiga teave reaalajas",
     "live": "Otse",

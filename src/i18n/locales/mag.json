@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} में सेहो"
   },
   "stats": {
+    "community": {
+      "title": "समुदाय",
+      "members": "सदस्य",
+      "active": "सक्रिय",
+      "today": "आज",
+      "thisWeek": "ई हफ्ता",
+      "thisMonth": "ई महीना",
+      "thisYear": "ई साल",
+      "allTime": "ऑल टाइम",
+      "newMembers": "नया सदस्य",
+      "chartMembers": "समय के साथ सदस्य",
+      "chartActive": "सक्रिय लोग",
+      "growth": "+{{percent}}% ई महीना",
+      "growthTerm": "बढ़ती",
+      "recordingSince": "{{date}} से दर्ज होबऽ हे"
+    },
     "title": "आँकड़ा",
     "subtitle": "रियल-टाइम ओपन सोर्स जानकारी",
     "live": "लाइव",

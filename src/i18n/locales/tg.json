@@ -1634,6 +1634,22 @@
     "alsoIn": "Инчунин дар {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Ҷомеа",
+      "members": "Аъзоён",
+      "active": "Фаъол",
+      "today": "Имрӯз",
+      "thisWeek": "Ин ҳафта",
+      "thisMonth": "Ин моҳ",
+      "thisYear": "Ин сол",
+      "allTime": "Тамоми давра",
+      "newMembers": "Аъзоёни нав",
+      "chartMembers": "Аъзоён дар тӯли вақт",
+      "chartActive": "Одамони фаъол",
+      "growth": "+{{percent}}% ин моҳ",
+      "growthTerm": "Афзоиш",
+      "recordingSince": "аз {{date}} сабт мешавад"
+    },
     "title": "Омор",
     "subtitle": "Маълумоти манбаъкушод дар вақти воқеӣ",
     "live": "ЗИНДА",

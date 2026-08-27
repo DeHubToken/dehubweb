@@ -1634,6 +1634,22 @@
     "alsoIn": "ມີຢູ່ໃນ {{theme}} ຄືກັນ"
   },
   "stats": {
+    "community": {
+      "title": "ຊຸມຊົນ",
+      "members": "ສະມາຊິກ",
+      "active": "ໃຊ້ງານ",
+      "today": "ມື້ນີ້",
+      "thisWeek": "ອາທິດນີ້",
+      "thisMonth": "ເດືອນນີ້",
+      "thisYear": "ປີນີ້",
+      "allTime": "ຕະຫຼອດເວລາ",
+      "newMembers": "ສະມາຊິກໃໝ່",
+      "chartMembers": "ສະມາຊິກຕາມເວລາ",
+      "chartActive": "ຄົນທີ່ໃຊ້ງານ",
+      "growth": "+{{percent}}% ເດືອນນີ້",
+      "growthTerm": "ການເຕີບໂຕ",
+      "recordingSince": "ບັນທຶກຕັ້ງແຕ່ {{date}}"
+    },
     "title": "ສະຖິຕິ",
     "subtitle": "ຂໍ້ມູນໂອເພນຊອດແບບເວລາຈິງ",
     "live": "ສົດ",

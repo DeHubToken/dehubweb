@@ -1500,6 +1500,22 @@
     "alsoIn": "Anche in {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Comunità",
+      "members": "Membri",
+      "active": "Attivi",
+      "today": "Oggi",
+      "thisWeek": "Questa settimana",
+      "thisMonth": "Questo mese",
+      "thisYear": "Quest'anno",
+      "allTime": "Tutto il periodo",
+      "newMembers": "Nuovi membri",
+      "chartMembers": "Membri nel tempo",
+      "chartActive": "Persone attive",
+      "growth": "+{{percent}}% questo mese",
+      "growthTerm": "Crescita",
+      "recordingSince": "registrato dal {{date}}"
+    },
     "title": "Statistiche",
     "subtitle": "Intelligence open source in tempo reale",
     "live": "Live",

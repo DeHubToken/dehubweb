@@ -1638,6 +1638,22 @@
     "alsoIn": "Também no {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Comunidade",
+      "members": "Membros",
+      "active": "Ativos",
+      "today": "Hoje",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mês",
+      "thisYear": "Este ano",
+      "allTime": "Todo o histórico",
+      "newMembers": "Novos membros",
+      "chartMembers": "Membros ao longo do tempo",
+      "chartActive": "Pessoas ativas",
+      "growth": "+{{percent}}% este mês",
+      "growthTerm": "Crescimento",
+      "recordingSince": "registado desde {{date}}"
+    },
     "title": "Estatísticas",
     "subtitle": "Informação open source em tempo real",
     "live": "Ao vivo",

@@ -1620,6 +1620,22 @@
     "alsoIn": "Najdeš i v tématu {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Komunita",
+      "members": "Členové",
+      "active": "Aktivní",
+      "today": "Dnes",
+      "thisWeek": "Tento týden",
+      "thisMonth": "Tento měsíc",
+      "thisYear": "Tento rok",
+      "allTime": "Celé období",
+      "newMembers": "Noví členové",
+      "chartMembers": "Vývoj počtu členů",
+      "chartActive": "Aktivní lidé",
+      "growth": "+{{percent}} % tento měsíc",
+      "growthTerm": "Růst",
+      "recordingSince": "zaznamenáváno od {{date}}"
+    },
     "title": "Statistiky",
     "subtitle": "Otevřená data v reálném čase",
     "live": "Živě",

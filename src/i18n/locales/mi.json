@@ -1634,6 +1634,22 @@
     "alsoIn": "Kei roto anō i te {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Hapori",
+      "members": "Ngā Mema",
+      "active": "Hohe",
+      "today": "Āianei",
+      "thisWeek": "Tēnei wiki",
+      "thisMonth": "Tēnei marama",
+      "thisYear": "Tēnei tau",
+      "allTime": "Wā katoa",
+      "newMembers": "Ngā mema hou",
+      "chartMembers": "Ngā mema i roto i te wā",
+      "chartActive": "Ngā tāngata hohe",
+      "growth": "+{{percent}}% i tēnei marama",
+      "growthTerm": "Tipu",
+      "recordingSince": "kua tuhia mai i {{date}}"
+    },
     "title": "Tatauranga",
     "subtitle": "Mōhiohio puna tuwhera ā-wā tūturu",
     "live": "Ora",

@@ -1612,6 +1612,22 @@
     "alsoIn": "{{theme}} ۾ پڻ"
   },
   "stats": {
+    "community": {
+      "title": "برادري",
+      "members": "ميمبر",
+      "active": "فعال",
+      "today": "اڄ",
+      "thisWeek": "هن هفتي",
+      "thisMonth": "هن مهيني",
+      "thisYear": "هن سال",
+      "allTime": "سڄو وقت",
+      "newMembers": "نوان ميمبر",
+      "chartMembers": "وقت سان گڏ ميمبر",
+      "chartActive": "فعال ماڻهو",
+      "growth": "+{{percent}}% هن مهيني",
+      "growthTerm": "واڌ",
+      "recordingSince": "{{date}} کان رڪارڊ ٿي رهيو آهي"
+    },
     "title": "انگ اکر",
     "subtitle": "حقيقي وقت جو اوپن سورس انٽيليجنس",
     "live": "لائيو",

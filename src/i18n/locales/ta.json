@@ -1638,6 +1638,22 @@
     "alsoIn": "{{theme}} இலும் உள்ளது"
   },
   "stats": {
+    "community": {
+      "title": "சமூகம்",
+      "members": "உறுப்பினர்கள்",
+      "active": "செயலில்",
+      "today": "இன்று",
+      "thisWeek": "இந்த வாரம்",
+      "thisMonth": "இந்த மாதம்",
+      "thisYear": "இந்த ஆண்டு",
+      "allTime": "முழுக் காலம்",
+      "newMembers": "புதிய உறுப்பினர்கள்",
+      "chartMembers": "காலப்போக்கில் உறுப்பினர்கள்",
+      "chartActive": "செயலில் உள்ளவர்கள்",
+      "growth": "+{{percent}}% இந்த மாதம்",
+      "growthTerm": "வளர்ச்சி",
+      "recordingSince": "{{date}} முதல் பதிவு செய்யப்படுகிறது"
+    },
     "title": "புள்ளிவிவரம்",
     "subtitle": "நிகழ்நேர திறந்த மூல தகவல்",
     "live": "நேரலை",

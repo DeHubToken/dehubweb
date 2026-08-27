@@ -1648,6 +1648,22 @@
     "alsoIn": "Există și în {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Comunitate",
+      "members": "Membri",
+      "active": "Activi",
+      "today": "Astăzi",
+      "thisWeek": "Săptămâna aceasta",
+      "thisMonth": "Luna aceasta",
+      "thisYear": "Anul acesta",
+      "allTime": "Toată perioada",
+      "newMembers": "Membri noi",
+      "chartMembers": "Membri în timp",
+      "chartActive": "Persoane active",
+      "growth": "+{{percent}}% luna aceasta",
+      "growthTerm": "Creștere",
+      "recordingSince": "înregistrat din {{date}}"
+    },
     "title": "Statistici",
     "subtitle": "Informații open source în timp real",
     "live": "Live",

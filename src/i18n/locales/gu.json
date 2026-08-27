@@ -1612,6 +1612,22 @@
     "alsoIn": "{{theme}} માં પણ"
   },
   "stats": {
+    "community": {
+      "title": "સમુદાય",
+      "members": "સભ્યો",
+      "active": "સક્રિય",
+      "today": "આજે",
+      "thisWeek": "આ અઠવાડિયું",
+      "thisMonth": "આ મહિનો",
+      "thisYear": "આ વર્ષ",
+      "allTime": "સર્વકાલીન",
+      "newMembers": "નવા સભ્યો",
+      "chartMembers": "સમય સાથે સભ્યો",
+      "chartActive": "સક્રિય લોકો",
+      "growth": "+{{percent}}% આ મહિને",
+      "growthTerm": "વૃદ્ધિ",
+      "recordingSince": "{{date}} થી નોંધાય છે"
+    },
     "title": "આંકડા",
     "subtitle": "રીયલ-ટાઇમ ઓપન સોર્સ માહિતી",
     "live": "લાઇવ",

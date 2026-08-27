@@ -1872,6 +1872,22 @@
     "alsoIn": "{{theme}}-র মাঝেও"
   },
   "stats": {
+    "community": {
+      "title": "সমাজ",
+      "members": "সদস্য",
+      "active": "সক্রিয়",
+      "today": "আইজ",
+      "thisWeek": "ই সপ্তাহ",
+      "thisMonth": "ই মাস",
+      "thisYear": "ই বছর",
+      "allTime": "সব সময়",
+      "newMembers": "নয়া সদস্য",
+      "chartMembers": "সময়র লগে সদস্য",
+      "chartActive": "সক্রিয় মানুষ",
+      "growth": "+{{percent}}% ই মাসো",
+      "growthTerm": "বাড়ন",
+      "recordingSince": "{{date}} থাকি লেখা অইরো"
+    },
     "title": "স্ট্যাটস",
     "subtitle": "রিয়েল-টাইম ওপেন সোর্স তথ্য",
     "live": "সরাসরি",

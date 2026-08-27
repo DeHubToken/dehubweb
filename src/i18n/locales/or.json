@@ -1612,6 +1612,22 @@
     "alsoIn": "{{theme}}ରେ ମଧ୍ୟ"
   },
   "stats": {
+    "community": {
+      "title": "ସମ୍ପ୍ରଦାୟ",
+      "members": "ସଦସ୍ୟ",
+      "active": "ସକ୍ରିୟ",
+      "today": "ଆଜି",
+      "thisWeek": "ଏହି ସପ୍ତାହ",
+      "thisMonth": "ଏହି ମାସ",
+      "thisYear": "ଏହି ବର୍ଷ",
+      "allTime": "ସର୍ବଦା",
+      "newMembers": "ନୂଆ ସଦସ୍ୟ",
+      "chartMembers": "ସମୟ ସହିତ ସଦସ୍ୟ",
+      "chartActive": "ସକ୍ରିୟ ଲୋକ",
+      "growth": "+{{percent}}% ଏହି ମାସ",
+      "growthTerm": "ବୃଦ୍ଧି",
+      "recordingSince": "{{date}} ଠାରୁ ରେକର୍ଡ ହେଉଛି"
+    },
     "title": "ପରିସଂଖ୍ୟାନ",
     "subtitle": "ରିଅଲ-ଟାଇମ ଓପନ ସୋର୍ସ ଇନଫୋ",
     "live": "ଲାଇଭ",

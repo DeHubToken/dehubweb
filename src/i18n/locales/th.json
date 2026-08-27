@@ -1597,6 +1597,22 @@
     "alsoIn": "มีใน {{theme}} ด้วย"
   },
   "stats": {
+    "community": {
+      "title": "ชุมชน",
+      "members": "สมาชิก",
+      "active": "ใช้งานอยู่",
+      "today": "วันนี้",
+      "thisWeek": "สัปดาห์นี้",
+      "thisMonth": "เดือนนี้",
+      "thisYear": "ปีนี้",
+      "allTime": "ตลอดช่วงเวลา",
+      "newMembers": "สมาชิกใหม่",
+      "chartMembers": "สมาชิกตามช่วงเวลา",
+      "chartActive": "ผู้ใช้งานที่ใช้งานอยู่",
+      "growth": "+{{percent}}% เดือนนี้",
+      "growthTerm": "การเติบโต",
+      "recordingSince": "บันทึกตั้งแต่ {{date}}"
+    },
     "title": "สถิติ",
     "subtitle": "ข้อมูลโอเพนซอร์สแบบเรียลไทม์",
     "live": "สด",

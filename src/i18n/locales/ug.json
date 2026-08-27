@@ -1612,6 +1612,22 @@
     "alsoIn": "{{theme}} دىمۇ بار"
   },
   "stats": {
+    "community": {
+      "title": "جەمئىيەت",
+      "members": "ئەزالار",
+      "active": "ئاكتىپ",
+      "today": "بۈگۈن",
+      "thisWeek": "بۇ ھەپتە",
+      "thisMonth": "بۇ ئاي",
+      "thisYear": "بۇ يىل",
+      "allTime": "بارلىق ۋاقىت",
+      "newMembers": "يېڭى ئەزالار",
+      "chartMembers": "ۋاقىت بويىچە ئەزالار",
+      "chartActive": "ئاكتىپ كىشىلەر",
+      "growth": "بۇ ئايدا +{{percent}}%",
+      "growthTerm": "ئۆسۈش",
+      "recordingSince": "{{date}} دىن باشلاپ خاتىرىلىنىۋاتىدۇ"
+    },
     "title": "ستاتىستىكا",
     "subtitle": "ئەينى ۋاقىتلىق ئوچۇق مەنبەلىك ئۇچۇر",
     "live": "جانلىق",

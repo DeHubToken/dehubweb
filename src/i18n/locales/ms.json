@@ -1902,6 +1902,22 @@
     "alsoIn": "Ada juga dalam {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Komuniti",
+      "members": "Ahli",
+      "active": "Aktif",
+      "today": "Hari ini",
+      "thisWeek": "Minggu ini",
+      "thisMonth": "Bulan ini",
+      "thisYear": "Tahun ini",
+      "allTime": "Sepanjang masa",
+      "newMembers": "Ahli baharu",
+      "chartMembers": "Ahli dari masa ke masa",
+      "chartActive": "Orang aktif",
+      "growth": "+{{percent}}% bulan ini",
+      "growthTerm": "Pertumbuhan",
+      "recordingSince": "direkodkan sejak {{date}}"
+    },
     "title": "Statistik",
     "subtitle": "Maklumat sumber terbuka masa nyata",
     "live": "Langsung",

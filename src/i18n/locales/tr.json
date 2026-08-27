@@ -1634,6 +1634,22 @@
     "alsoIn": "{{theme}} temasında da var"
   },
   "stats": {
+    "community": {
+      "title": "Topluluk",
+      "members": "Üyeler",
+      "active": "Aktif",
+      "today": "Bugün",
+      "thisWeek": "Bu hafta",
+      "thisMonth": "Bu ay",
+      "thisYear": "Bu yıl",
+      "allTime": "Tüm zamanlar",
+      "newMembers": "Yeni üyeler",
+      "chartMembers": "Zaman içinde üyeler",
+      "chartActive": "Aktif kişiler",
+      "growth": "Bu ay +{{percent}}%",
+      "growthTerm": "Büyüme",
+      "recordingSince": "{{date}} tarihinden beri kaydediliyor"
+    },
     "title": "İstatistikler",
     "subtitle": "Gerçek zamanlı açık kaynak veriler",
     "live": "Canlı",

@@ -1616,6 +1616,22 @@
     "alsoIn": "{{theme}} میں بھی موجود ہے"
   },
   "stats": {
+    "community": {
+      "title": "برادری",
+      "members": "اراکین",
+      "active": "فعال",
+      "today": "آج",
+      "thisWeek": "اس ہفتے",
+      "thisMonth": "اس ماہ",
+      "thisYear": "اس سال",
+      "allTime": "پورا عرصہ",
+      "newMembers": "نئے اراکین",
+      "chartMembers": "وقت کے ساتھ اراکین",
+      "chartActive": "فعال افراد",
+      "growth": "+{{percent}}% اس ماہ",
+      "growthTerm": "اضافہ",
+      "recordingSince": "{{date}} سے ریکارڈ ہو رہا ہے"
+    },
     "title": "اعداد و شمار",
     "subtitle": "حقیقی وقت میں اوپن سورس معلومات",
     "live": "لائیو",

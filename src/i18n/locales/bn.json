@@ -1614,6 +1614,22 @@
     "alsoIn": "{{theme}}-এও আছে"
   },
   "stats": {
+    "community": {
+      "title": "সম্প্রদায়",
+      "members": "সদস্য",
+      "active": "সক্রিয়",
+      "today": "আজ",
+      "thisWeek": "এই সপ্তাহ",
+      "thisMonth": "এই মাস",
+      "thisYear": "এই বছর",
+      "allTime": "সমগ্র সময়",
+      "newMembers": "নতুন সদস্য",
+      "chartMembers": "সময়ের সাথে সদস্য",
+      "chartActive": "সক্রিয় ব্যক্তি",
+      "growth": "+{{percent}}% এই মাসে",
+      "growthTerm": "বৃদ্ধি",
+      "recordingSince": "{{date}} থেকে রেকর্ড করা হচ্ছে"
+    },
     "title": "পরিসংখ্যান",
     "subtitle": "রিয়েল-টাইম ওপেন সোর্স তথ্য",
     "live": "লাইভ",

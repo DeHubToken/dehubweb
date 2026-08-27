@@ -1638,6 +1638,22 @@
     "alsoIn": "Постоји и у теми {{theme}}"
   },
   "stats": {
+    "community": {
+      "title": "Заједница",
+      "members": "Чланови",
+      "active": "Активни",
+      "today": "Данас",
+      "thisWeek": "Ова недеља",
+      "thisMonth": "Овај месец",
+      "thisYear": "Ова година",
+      "allTime": "Цео период",
+      "newMembers": "Нови чланови",
+      "chartMembers": "Чланови кроз време",
+      "chartActive": "Активни људи",
+      "growth": "+{{percent}} % овог месеца",
+      "growthTerm": "Раст",
+      "recordingSince": "бележи се од {{date}}"
+    },
     "title": "Статистика",
     "subtitle": "Отворени подаци у реалном времену",
     "live": "Уживо",
