@@ -96,6 +96,26 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
     setActiveProvider(null);
   }, [open]);
 
+  // Once the connector has agreed, the wallet list is done: what happens next
+  // is a signature request, and everything on that screen either does nothing
+  // (the buttons are disabled) or actively misleads — the "Connected · 0x…"
+  // banner appears at exactly the moment the signature goes out, so a login
+  // that was working read as a login that had bounced back to the picker.
+  // Swap it for the same "Signing you in…" loader the social/email resume
+  // uses, and put the list back if the attempt ends without a session.
+  //
+  // Gated on `open` so the revert can't fire on the way out: a successful login
+  // drops isConnecting and closes the sheet in the same commit, and without
+  // this the wallet list would flash back for the length of the exit animation.
+  useEffect(() => {
+    if (!open) return;
+    if (step === 'wallets' && isConnecting && isWagmiAlreadyConnected && wagmiCurrentAddress) {
+      setStep('wallet-signing');
+    } else if (step === 'wallet-signing' && !isConnecting) {
+      setStep('wallets');
+    }
+  }, [open, step, isConnecting, isWagmiAlreadyConnected, wagmiCurrentAddress, setStep]);
+
   // Escape hatch from the wallet-unlock/create dead-end: sign out of the
   // half-established identity (clears the Supabase session + pending flag so it
   // doesn't loop back to unlock) and return to the login options, modal open.
@@ -569,7 +589,7 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
           resume itself, and a wallet step reached a beat before the identity
           id lands (which used to render an empty sheet). Same mark as the
           route loader, so the login flow doesn't invent its own idiom. */}
-      {(step === 'resuming' || (step.startsWith('wallet-') && !supabaseUserId)) && (
+      {(step === 'resuming' || step === 'wallet-signing' || (step.startsWith('wallet-') && !supabaseUserId)) && (
         <DeHubPageLoader size={56} minHeight="180px" />
       )}
     </>
