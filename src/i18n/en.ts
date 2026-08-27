@@ -1529,7 +1529,7 @@ export const en = {
       'Educational AI integrations for personalized learning pathways',
       'Creator and viewer tools utilising advancements in AI and blockchain technology',
       'Integration with IoT devices and smart home systems for seamless content delivery',
-    'Blockchain-based content verification and anti-piracy measures',
+    'Video and image editor',
     ],
   },
   brandAssets: {
