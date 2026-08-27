@@ -4,6 +4,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -31,7 +32,7 @@ const HOME_PATHS = new Set(['/', '/app', '/app/', '/videos', '/shorts']);
 
 export function FriendsOnStageBar() {
   const { walletAddress, isAuthenticated } = useAuth();
-  const { openModal } = useStage();
+  const { openModal, joinSpace } = useStage();
   // This bar lives in HomeFeed, which PersistentPageCache keeps mounted
   // forever — without a route gate these two polls run every 15s for the
   // whole session on every page. Poll only while home is actually on screen.
@@ -115,13 +116,21 @@ export function FriendsOnStageBar() {
   const primary = stageGroups[0];
   const hostFriend = primary?.friends.find(f => f.role === 'host');
   const otherFriends = primary?.friends.filter(f => f !== hostFriend) ?? [];
+  const totalListeners = primary
+    ? (primary.stage.speaker_count || 1) + (primary.stage.listener_count || 0)
+    : 0;
 
   if (friendsOnStage.length === 0) return null;
 
   return (
     <>
     {<button
-      onClick={() => openModal('browse')}
+      onClick={() => {
+        // Join the stage that was actually tapped, not a generic browse list
+        // — the bar already names one specific room.
+        openModal('live');
+        joinSpace(primary.stage.id);
+      }}
       className="w-full flex items-center gap-2.5 px-3 py-2 mb-2 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] transition-all group"
     >
       {/* Stage mic icon */}
@@ -170,13 +179,17 @@ export function FriendsOnStageBar() {
         </p>
       </div>
 
-      {/* Live indicator */}
+      {/* Live indicator + listener count */}
       <div className="flex items-center gap-1.5 shrink-0">
         <span className="relative flex h-1.5 w-1.5">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
         </span>
         <span className="text-[10px] font-semibold text-red-400 uppercase tracking-wide">Live</span>
+        <span className="flex items-center gap-0.5 text-[10px] text-white/40">
+          <Users className="w-3 h-3" />
+          {totalListeners}
+        </span>
       </div>
     </button>}
     </>
