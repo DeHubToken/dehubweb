@@ -1,6 +1,6 @@
 // Mock launchpad trade endpoint. No real chain interaction in Phase 1.
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { corsHeaders } from '../_shared/cors.ts';
 
 const CURVE = {
   virtualDHB: 30_000,
