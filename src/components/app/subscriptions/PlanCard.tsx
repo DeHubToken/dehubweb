@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Check, Clock, Loader2, Star, Users, Upload, AlertTriangle } from 'lucide-react';
+import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -19,6 +19,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
 import dehubCoin from '@/assets/dehub-coin.png';
 
+/**
+ * One subscription plan, wherever plans are shown — the profile's Subs tab and
+ * the sheet a subscriber-gated post opens.
+ *
+ * Monochrome on purpose. This card used to carry a yellow-to-orange gradient
+ * Subscribe button, a yellow star, a green "Subscribed" pill and amber and red
+ * notices: four accent hues on a surface the rest of the app renders in black,
+ * white and zinc (the design system block at the top of index.css). Every state
+ * below is told apart by its copy and its icon instead.
+ */
+
 interface PlanCardProps {
   plan: SubscriptionPlan;
   isOwner?: boolean;
@@ -29,6 +40,16 @@ interface PlanCardProps {
 function formatDhb(value: number | undefined): string {
   if (value === undefined || value === null || Number.isNaN(value)) return '—';
   return value.toLocaleString(undefined, { maximumFractionDigits: 4 });
+}
+
+/** Shared shape for the two "you cannot buy this" notices. */
+function PlanNotice({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-start gap-2 mb-4 rounded-xl bg-white/[0.06] border border-white/10 p-3">
+      <Info className="w-4 h-4 text-white/50 shrink-0 mt-0.5" />
+      <p className="text-xs text-white/70">{children}</p>
+    </div>
+  );
 }
 
 export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps) {
@@ -72,6 +93,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   };
 
   const busy = buyPlanMutation.isPending;
+  const subscriberCount = plan.subscriberCount;
 
   return (
     <div className="relative rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-5 hover:border-white/20 transition-all">
@@ -79,18 +101,27 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            <Star className="w-4 h-4 text-yellow-400" />
+            <Star className="w-4 h-4 text-white" />
             {plan.name}
           </h3>
           {plan.description && (
             <p className="text-sm text-zinc-400 mt-1">{plan.description}</p>
           )}
         </div>
-        {isSubscribed && (
-          <span className="px-2 py-1 rounded-lg bg-green-500/20 text-green-400 text-xs font-medium">
-            Subscribed
-          </span>
-        )}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* A creator's own drafts read as unfinished at a glance, so scanning
+              the tab shows which plans still need a step to become real. */}
+          {isOwner && !published && (
+            <span className="px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/60 text-xs font-medium">
+              Draft
+            </span>
+          )}
+          {isSubscribed && (
+            <span className="px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white text-xs font-medium">
+              Subscribed
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Price & Duration */}
@@ -112,7 +143,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
         <ul className="space-y-2 mb-4">
           {plan.benefits.map((benefit, idx) => (
             <li key={idx} className="flex items-start gap-2 text-sm text-zinc-300">
-              <Check className="w-4 h-4 text-green-400 shrink-0 mt-0.5" />
+              <Check className="w-4 h-4 text-white/40 shrink-0 mt-0.5" />
               <span>{benefit}</span>
             </li>
           ))}
@@ -120,45 +151,49 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       )}
 
       {/* Subscriber count */}
-      {typeof plan.subscriberCount === 'number' && (
+      {typeof subscriberCount === 'number' && (
         <div className="flex items-center gap-1.5 text-xs text-zinc-500 mb-4">
           <Users className="w-3.5 h-3.5" />
-          <span>{plan.subscriberCount} subscriber{plan.subscriberCount !== 1 ? 's' : ''}</span>
+          <span>
+            {subscriberCount} subscriber{subscriberCount === 1 ? '' : 's'}
+          </span>
         </div>
       )}
 
       {/* Not yet on chain — nobody can buy this, so say so rather than showing
           a Subscribe button that reverts in the buyer's wallet. */}
-      {!published && (
-        <div className="flex items-start gap-2 mb-4 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3">
-          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-200/90">
-            {isOwner
-              ? 'Not published yet — publish it on chain to let people subscribe.'
-              : 'This plan is not available to buy yet.'}
-          </p>
-        </div>
+      {!published && isBuyable && (
+        <PlanNotice>
+          {isOwner
+            ? 'This plan is a draft. Publish it on chain and people can subscribe — it is one transaction from your wallet.'
+            : 'This plan is not available to buy yet.'}
+        </PlanNotice>
       )}
 
       {!isBuyable && (
-        <div className="flex items-start gap-2 mb-4 rounded-xl bg-red-500/10 border border-red-500/20 p-3">
-          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-          <p className="text-xs text-red-200/90">
-            This plan's duration is outside the range the contract accepts.
-            {isOwner ? ' Recreate it to make it buyable.' : ''}
-          </p>
-        </div>
+        <PlanNotice>
+          {isOwner
+            ? 'This plan was set up before the current duration rules, so the chain will never accept it. Start again to pick a new duration — the name, price and benefits are kept.'
+            : 'This plan is not available to buy.'}
+        </PlanNotice>
       )}
 
       {/* Actions */}
       {isOwner ? (
         <div className="flex gap-2">
+          {/* A plan the chain will never accept has one useful action, and it is
+              not "Edit" — the duration is the thing that has to change, so the
+              button says what the creator actually has to do. */}
           <Button
             onClick={onEdit}
-            variant="outline"
-            className="flex-1 rounded-xl border-white/20 text-white hover:bg-white/10"
+            variant={isBuyable ? 'outline' : 'default'}
+            className={
+              isBuyable
+                ? 'flex-1 rounded-xl border-white/20 text-white hover:bg-white/10'
+                : 'flex-1 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white font-semibold'
+            }
           >
-            Edit Plan
+            {isBuyable ? 'Edit Plan' : 'Start again'}
           </Button>
           {!published && isBuyable && (
             <Button
@@ -193,7 +228,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
           <AlertDialogTrigger asChild>
             <Button
               disabled={busy || !published || !isBuyable}
-              className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold disabled:opacity-40"
+              className="w-full rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white font-semibold disabled:opacity-40"
             >
               {busy ? (
                 <>
@@ -213,7 +248,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               <AlertDialogTitle className="text-white">Confirm Subscription</AlertDialogTitle>
               <AlertDialogDescription className="text-zinc-400">
                 Subscribe to <span className="text-white font-medium">{plan.name}</span> for{' '}
-                <span className="text-yellow-400 font-medium">{formatDhb(price)} DHB</span> /{' '}
+                <span className="text-white font-medium">{formatDhb(price)} DHB</span> /{' '}
                 {formatDuration(plan.duration)}.
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -224,8 +259,8 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               </div>
               <div className="flex justify-between text-zinc-400 mt-1.5 pt-1.5 border-t border-white/10">
                 <span>You pay (incl. platform fee)</span>
-                <span className="text-yellow-400 font-medium">
-                  {total ? `${formatDhb(Number(total))} DHB` : 'calculating…'}
+                <span className="text-white font-medium">
+                  {total ? formatDhb(Number(total)) + ' DHB' : 'calculating…'}
                 </span>
               </div>
             </div>
@@ -236,7 +271,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               <AlertDialogAction
                 onClick={handleSubscribe}
                 disabled={busy}
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold"
+                className="bg-white/10 border border-white/20 hover:bg-white/20 text-white font-semibold"
               >
                 {busy ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />

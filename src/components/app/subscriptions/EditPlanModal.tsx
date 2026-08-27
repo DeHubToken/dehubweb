@@ -115,7 +115,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
         <DrawerHeader className="relative pb-4 border-b border-white/10 shrink-0 px-0 text-left">
           <div className="flex items-center justify-between gap-2">
             <DrawerTitle className="flex items-center gap-2 text-xl text-white">
-              <Star className="w-5 h-5 text-yellow-400" />
+              <Star className="w-5 h-5 text-white" />
               Edit Plan
             </DrawerTitle>
             {/* Drawer has no built-in close affordance the way Dialog did, and the
@@ -223,7 +223,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveBenefit(index)}
-                      className="text-zinc-400 hover:text-red-400 shrink-0"
+                      className="text-zinc-400 hover:text-white shrink-0"
                     >
                       <X className="w-4 h-4" />
                     </Button>
@@ -247,8 +247,8 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
               so it silently did nothing. Whether a plan can be bought is
               decided on chain — which is what this says instead. */}
           {published && (priceChanged || durationChanged) && (
-            <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-3">
-              <p className="text-xs text-amber-200/90">
+            <div className="rounded-xl bg-white/[0.06] border border-white/10 p-3">
+              <p className="text-xs text-white/70">
                 Changing the {priceChanged && durationChanged ? 'price and duration' : priceChanged ? 'price' : 'duration'}{' '}
                 takes this plan off sale until you publish it again — buyers are charged
                 what the chain holds, not what's shown here.
@@ -260,7 +260,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           <Button
             onClick={handleSubmit}
             disabled={!isValid || updatePlanMutation.isPending}
-            className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold"
+            className="w-full rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white font-semibold"
           >
             {updatePlanMutation.isPending ? (
               <>

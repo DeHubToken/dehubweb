@@ -284,7 +284,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveBenefit(index)}
-                      className="text-zinc-400 hover:text-red-400 shrink-0"
+                      className="text-zinc-400 hover:text-white shrink-0"
                     >
                       <X className="w-4 h-4" />
                     </Button>
