@@ -1701,6 +1701,43 @@ export default function NotificationsPage() {
 
   const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
 
+  // useCallback: passed to every memoized NotificationItem row — a fresh
+  // function per render would defeat the memo. mutate fns are stable.
+  const handleMarkAsRead = useCallback((notificationId: string) => {
+    setMarkingNotificationId(notificationId);
+    if (notificationId.startsWith('custom_')) {
+      markCustomAsRead.mutate(notificationId, {
+        onSettled: () => setMarkingNotificationId(null),
+      });
+    } else {
+      markAsRead.mutate(notificationId, {
+        onSettled: () => setMarkingNotificationId(null),
+      });
+    }
+  }, [markCustomAsRead.mutate, markAsRead.mutate]);
+
+  // Filter notifications by selected tab type
+  const notifications = activeTab === 'all'
+    ? allNotifications
+    : allNotifications.filter(n => {
+        const allowedTypes = filterTypeMap[activeTab];
+        return allowedTypes ? allowedTypes.includes(n.type) : true;
+      });
+
+  // Bundling is O(n²) over ~130 rows; memoized so the avatar-enrichment
+  // drip (one state update per resolved actor) doesn't recompute it every
+  // render — it re-runs only when the list or avatar map actually changes.
+  const bundledNotifications = useMemo(
+    () => bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars),
+    [notifications, enrichedAvatars]
+  );
+
+  // Hooks must run unconditionally on every render. This page stays mounted in
+  // the background even while signed out (PersistentPageCache never unmounts
+  // it), so an early return before this point used to skip the two hooks above
+  // whenever `isAuthenticated` flipped mid-session — throwing React's
+  // rendered-fewer/more-hooks invariant (#300/#310) the next time it flipped
+  // back, caught by the page's ErrorBoundary and self-healing on navigation.
   if (!isAuthenticated) {
     return (
       <AuthGate description={t('notifications.loginDescription')} />
@@ -1748,37 +1785,6 @@ export default function NotificationsPage() {
       setIsClearingAll(false);
     }
   };
-
-  // useCallback: passed to every memoized NotificationItem row — a fresh
-  // function per render would defeat the memo. mutate fns are stable.
-  const handleMarkAsRead = useCallback((notificationId: string) => {
-    setMarkingNotificationId(notificationId);
-    if (notificationId.startsWith('custom_')) {
-      markCustomAsRead.mutate(notificationId, {
-        onSettled: () => setMarkingNotificationId(null),
-      });
-    } else {
-      markAsRead.mutate(notificationId, {
-        onSettled: () => setMarkingNotificationId(null),
-      });
-    }
-  }, [markCustomAsRead.mutate, markAsRead.mutate]);
-
-  // Filter notifications by selected tab type
-  const notifications = activeTab === 'all'
-    ? allNotifications
-    : allNotifications.filter(n => {
-        const allowedTypes = filterTypeMap[activeTab];
-        return allowedTypes ? allowedTypes.includes(n.type) : true;
-      });
-
-  // Bundling is O(n²) over ~130 rows; memoized so the avatar-enrichment
-  // drip (one state update per resolved actor) doesn't recompute it every
-  // render — it re-runs only when the list or avatar map actually changes.
-  const bundledNotifications = useMemo(
-    () => bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars),
-    [notifications, enrichedAvatars]
-  );
 
   // Get total unread count (DeHub + custom)
   const totalUnread = (unreadCount?.total ?? 0) + (customUnreadCount ?? 0);
