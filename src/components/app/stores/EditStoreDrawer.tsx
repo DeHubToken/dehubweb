@@ -73,7 +73,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
 
   return (
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
-      <DrawerContent className={GLASS_STYLES.drawer}>
+      <DrawerContent column className={GLASS_STYLES.drawer}>
         <DrawerHeader>
           <DrawerTitle>Edit Store</DrawerTitle>
         </DrawerHeader>

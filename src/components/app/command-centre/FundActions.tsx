@@ -49,7 +49,7 @@ export function FundActions() {
 
       {/* Add Funds Drawer */}
       <Drawer open={addFundsOpen} onOpenChange={setAddFundsOpen}>
-        <DrawerContent glass hideHandle={false}>
+        <DrawerContent column glass hideHandle={false}>
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">{t('commandCentre.addFunds')}</h3>
             <button
@@ -88,7 +88,7 @@ export function FundActions() {
 
       {/* Withdraw Drawer */}
       <Drawer open={withdrawOpen} onOpenChange={setWithdrawOpen}>
-        <DrawerContent glass hideHandle={false}>
+        <DrawerContent column glass hideHandle={false}>
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">{t('commandCentre.withdraw')}</h3>
             <button
@@ -118,7 +118,7 @@ export function FundActions() {
 
       {/* Transfer Drawer */}
       <Drawer open={transferOpen} onOpenChange={setTransferOpen}>
-        <DrawerContent glass hideHandle={false}>
+        <DrawerContent column glass hideHandle={false}>
           <div className="p-5 pb-8 space-y-4">
             <h3 className="text-white font-semibold text-base">{t('commandCentre.transferDhb')}</h3>
             <div className="space-y-2">

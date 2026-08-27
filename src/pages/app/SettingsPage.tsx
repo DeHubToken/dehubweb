@@ -3065,7 +3065,7 @@ function AssetsSettings() {
 
       {/* Wallet Drawer */}
       <Drawer open={walletDrawerOpen} onOpenChange={setWalletDrawerOpen}>
-        <DrawerContent glass hideHandle={false} className="px-4 pt-1 pb-8">
+        <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
           <DrawerHeader className="sr-only">
             <DrawerTitle>Wallet</DrawerTitle>
           </DrawerHeader>
@@ -3412,7 +3412,7 @@ function GeoBlockingSelector() {
 
       {/* Drawer */}
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent glass data-country-block-drawer className="max-h-[70vh]">
+        <DrawerContent column glass data-country-block-drawer className="max-h-[70vh]">
           <DrawerHeader className="border-b border-white/10">
             <DrawerTitle className="text-white">{t('settings.blockCountries')}</DrawerTitle>
           </DrawerHeader>

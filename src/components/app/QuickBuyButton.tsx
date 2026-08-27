@@ -56,7 +56,7 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
 
       {/* Buy Method Drawer */}
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent glass>
+        <DrawerContent column glass>
           <DrawerTitle className="sr-only">Buy {symbol}</DrawerTitle>
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">Buy ${symbol}</h3>

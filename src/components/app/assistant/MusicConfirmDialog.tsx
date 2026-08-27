@@ -118,7 +118,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="border-t border-white/10">
+      <DrawerContent column glass className="border-t border-white/10">
         <DrawerHeader className="border-b border-white/10 pb-3">
           <DrawerTitle className="text-white flex items-center gap-2 text-base">
             🎵 Create a Song

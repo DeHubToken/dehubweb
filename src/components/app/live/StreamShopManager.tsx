@@ -67,7 +67,7 @@ function AddProductSheet({ tokenId, attachedIds }: { tokenId: string | null; att
           <Plus className="w-3.5 h-3.5" /> Add
         </Button>
       </DrawerTrigger>
-      <DrawerContent className={GLASS_STYLES.drawer}>
+      <DrawerContent column className={GLASS_STYLES.drawer}>
         <DrawerHeader>
           <DrawerTitle>Add to this stream</DrawerTitle>
         </DrawerHeader>

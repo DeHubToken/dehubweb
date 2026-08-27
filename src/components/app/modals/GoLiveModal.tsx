@@ -603,7 +603,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // user had already paid gas for. The header X stays active as the
     // explicit cancel.
     <Drawer open={isOpen} onOpenChange={handleDismiss} dismissible={!isLoading}>
-      <DrawerContent glass className="max-h-[90vh] px-4 pb-8">
+      <DrawerContent column glass className="max-h-[90vh] px-4 pb-8">
         <DrawerHeader className="border-b border-white/10 mb-4 relative">
           <DrawerTitle className="text-white flex items-center gap-2">
             <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
@@ -819,7 +819,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       </DrawerContent>
 
       <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
-        <DrawerContent glass hideHandle className="max-h-[60vh]">
+        <DrawerContent column glass hideHandle className="max-h-[60vh]">
           <div className="p-4 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-white font-medium">Categories</h3>

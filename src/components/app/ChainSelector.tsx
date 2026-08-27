@@ -138,7 +138,7 @@ export function ChainSelector({
         </TooltipTrigger>
         <TooltipContent>{selectedChain.name}</TooltipContent>
       </Tooltip>
-      <DrawerContent glass className="border-t border-white/10" hideHandle>
+      <DrawerContent column glass className="border-t border-white/10" hideHandle>
         <DrawerHeader className="border-b border-white/10">
           <DrawerTitle className="text-white">Choose Decentralized Database</DrawerTitle>
         </DrawerHeader>

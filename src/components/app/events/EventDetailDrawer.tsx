@@ -178,7 +178,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className={cn(GLASS_STYLES.drawer, 'max-h-[92vh]')}>
+        <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[92vh]')}>
           <DrawerHeader className="sr-only">
             <DrawerTitle>{event.title}</DrawerTitle>
           </DrawerHeader>

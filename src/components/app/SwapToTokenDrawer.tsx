@@ -203,7 +203,7 @@ export function SwapToTokenDrawer({
   return (
     <>
     <Drawer open={open} onOpenChange={handleClose}>
-      <DrawerContent glass hideHandle={false}>
+      <DrawerContent column glass hideHandle={false}>
         <DrawerHeader>
           <DrawerTitle className="text-white">Buy ${targetSymbol}</DrawerTitle>
         </DrawerHeader>
@@ -329,7 +329,7 @@ export function SwapToTokenDrawer({
 
     {/* Token Picker Drawer */}
     <Drawer open={tokenPickerOpen} onOpenChange={setTokenPickerOpen}>
-      <DrawerContent glass hideHandle={false}>
+      <DrawerContent column glass hideHandle={false}>
         <DrawerHeader>
           <DrawerTitle className="text-white">Select Token to Pay With</DrawerTitle>
         </DrawerHeader>
@@ -378,7 +378,7 @@ export function SwapToTokenDrawer({
 
     {/* Buy Token sub-drawer */}
     <Drawer open={buyTokenOpen} onOpenChange={setBuyTokenOpen}>
-      <DrawerContent glass hideHandle={false}>
+      <DrawerContent column glass hideHandle={false}>
         <div className="p-5 pb-8 space-y-2">
           <h3 className="text-white font-semibold text-base mb-4">Buy {selectedToken.symbol}</h3>
           <button

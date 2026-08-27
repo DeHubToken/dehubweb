@@ -332,7 +332,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               <div onClick={() => setIsOpen(true)}>
                 {triggerButton}
               </div>
-              <DrawerContent glass className="px-4 pb-8" hideHandle>
+              <DrawerContent column glass className="px-4 pb-8" hideHandle>
                 <DrawerHeader className="mb-2">
                   <DrawerTitle className="text-white">Create</DrawerTitle>
                   <DrawerDescription className="sr-only">
@@ -345,7 +345,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
 
             {/* Live Options Drawer */}
             <Drawer open={showLiveOptions} onOpenChange={setShowLiveOptions}>
-              <DrawerContent glass className="px-4 pb-8" hideHandle>
+              <DrawerContent column glass className="px-4 pb-8" hideHandle>
                 <DrawerHeader className="mb-2">
                   <DrawerTitle className="text-white">Go Live</DrawerTitle>
                   <DrawerDescription className="sr-only">
