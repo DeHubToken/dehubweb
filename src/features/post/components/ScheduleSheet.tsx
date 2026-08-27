@@ -266,10 +266,11 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent 
+      <DrawerContent
         glass
         hideHandle
-        className="max-h-[90vh] max-h-[90dvh] overflow-y-auto px-4 pb-2 sm:max-w-md sm:mx-auto"
+        column
+        className="max-h-[90vh] max-h-[90dvh] overflow-y-auto px-4 pb-2"
       >
         <DrawerHeader className="relative pb-4 border-b border-white/10 px-0">
           <div className="flex items-center justify-between">
