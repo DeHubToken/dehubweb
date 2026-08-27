@@ -53,7 +53,7 @@ import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
-import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import {
@@ -189,9 +189,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
   const isLocked = isHoldGated(post.isLocked, post.lockedPrice) && !canBypassGating;
   const isSubGated = isSubscriberGated(post.subscriberPlans, !!isOwnPost || !!post.isOwner || locallySubscribed);
-  const cheapestPlan = post.subscriberPlans?.length
-    ? post.subscriberPlans.reduce((a, b) => (Number(b.price) < Number(a.price) ? b : a))
-    : undefined;
+  // Cheapest plan a reader can actually buy. The price lives on the plan's
+  // chain entry, not on `plan.price` — that field does not exist on this
+  // payload, and reading it gave NaN, which formatCompact renders as "0".
+  const cheapestPlanPrice = subscriberPlanPrice(cheapestSubscriberPlan(post.subscriberPlans));
 
   const formatCompact = (num: number | null | undefined): string => {
     const n = Number(num);
@@ -648,8 +649,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                     className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
                   >
                     <Star className="w-3.5 h-3.5" />
-                    {cheapestPlan
-                      ? `Subscribe from ${formatCompact(Number(cheapestPlan.price))} DHB`
+                    {cheapestPlanPrice !== undefined
+                      ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB`
                       : 'Subscribe to read'}
                   </button>
                 )}

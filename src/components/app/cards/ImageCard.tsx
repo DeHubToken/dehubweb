@@ -62,7 +62,7 @@ import { useTogglePin } from '@/hooks/use-pins';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
-import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
 const SubscriberGateDrawer = lazy(() =>
@@ -541,9 +541,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const isLocked = isHoldGated(post.isLocked, post.lockedPrice) && !canBypassGating;
   // A second, independent gate — subscribe to this creator, not own a token.
   const isSubGated = isSubscriberGated(post.subscriberPlans, !!isOwnPost || !!post.isOwner || locallySubscribed);
-  const cheapestPlan = post.subscriberPlans?.length
-    ? post.subscriberPlans.reduce((a, b) => (Number(b.price) < Number(a.price) ? b : a))
-    : undefined;
+  // Cheapest plan a reader can actually buy. The price lives on the plan's
+  // chain entry, not on `plan.price` — that field does not exist on this
+  // payload, and reading it gave NaN, which formatCompact renders as "0".
+  const cheapestPlanPrice = subscriberPlanPrice(cheapestSubscriberPlan(post.subscriberPlans));
   const isComboLocked = isPPV && isLocked;
   // Independent of the monetisation gates above: a post can be both mature and
   // pay-per-view, and the creator's own post is warned about too — the warning
@@ -989,7 +990,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
                 <p className="text-white/70 text-xs">
-                  {cheapestPlan ? `Subscribe from ${formatCompact(Number(cheapestPlan.price))} DHB` : `Subscribe to ${post.username}`}
+                  {cheapestPlanPrice !== undefined ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB` : `Subscribe to ${post.username}`}
                 </p>
               </div>
             </div>
