@@ -6,6 +6,8 @@
  *
  * Paid: the client settles DHB before calling this, so an upload the provider
  * would reject has to be caught in the composer while it is still free.
+ *
+ * The settlement is not yet verified here — see the guard below.
  */
 import {
   audioResponse,
@@ -16,11 +18,31 @@ import {
   readProviderError,
   readUpload,
 } from '../_shared/elevenlabs.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  // Authenticated and rate-limited, not yet priced. What this bills for is the
+  // DURATION of the upload, and the duration is the one thing that cannot be
+  // established here: a caller-declared length is worth nothing, and file size
+  // does not bound it either, because a low-bitrate recording is long and small
+  // at the same time. Charging on either would price a two-hour job as a
+  // one-minute one.
+  //
+  // So the door closes now and the meter follows. TOOL_COST_USD already carries
+  // the per-minute basis, so pricing this is deleting `free` and passing a
+  // server-measured `quantity`.
+  const charged = await chargeForJob(req, {
+    kind: 'tool',
+    modelId: 'elevenlabs-voice-changer',
+    actionType: 'elevenlabs-voice-changer',
+    rateLimit: { limit: 15, windowMs: 60 * 60 * 1000 },
+    free: true,
+  });
+  if (!charged.ok) return charged.response;
 
   try {
     const apiKey = getApiKey();

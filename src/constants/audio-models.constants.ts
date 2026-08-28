@@ -76,6 +76,21 @@ export interface AudioTaskSpec {
    * per minute of input. Absent means a flat per-run charge.
    */
   meteredBy?: 'per-10s' | 'per-minute';
+  /**
+   * The id this task is priced under in the server's TOOL_COST_USD, when the
+   * edge function actually takes the money.
+   *
+   * Present means the paywall quotes from the server and hands the transfer
+   * hash to the generation call, so the number shown is the number charged.
+   * Absent means the function does not verify payment yet and `baseCostUsd`
+   * below is the estimate the paywall shows — see the note on that field.
+   *
+   * Only music has one today: it is the task whose billable length is a number
+   * in the request body, so the function can clamp it and price the clamped
+   * value. The two media tasks bill per minute of an UPLOAD, and that duration
+   * cannot be measured server-side yet.
+   */
+  quoteModelId?: string;
   /** Rough wall-clock, so nobody thinks a two-minute dub has hung. */
   typicalDuration: string;
   tips?: string[];
@@ -157,6 +172,8 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     // length, so it is metered rather than flat-rated.
     baseCostUsd: 0.04,
     meteredBy: 'per-10s',
+    // Priced and charged by elevenlabs-music itself, off the clamped length.
+    quoteModelId: 'elevenlabs-music',
     typicalDuration: '30-90s',
     tips: [
       '🎼 Name the instruments, tempo and mood — genre alone gives generic results',

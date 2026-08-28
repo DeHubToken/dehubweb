@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { dehubAuthHeaders } from '@/lib/ai-invoke';
 
 interface VoiceTrainingDrawerProps {
   open: boolean;
@@ -88,7 +89,10 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
           headers: {
             apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            'x-wallet-address': walletAddress,
+            // The function takes the wallet off the verified DeHub token now,
+            // not off x-wallet-address — that header was the whole guard, and
+            // it is a string anyone can set.
+            ...dehubAuthHeaders(),
           },
           body: formData,
         }

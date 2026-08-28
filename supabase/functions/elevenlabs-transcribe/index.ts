@@ -17,6 +17,7 @@ import {
   readProviderError,
   readUpload,
 } from '../_shared/elevenlabs.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
@@ -30,6 +31,18 @@ interface Word {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  // Guarded before the upload is read. The 100 MB ceiling is close to two hours
+  // of Scribe per call, which is not the "fraction of a cent" the free tools
+  // were reasoned about as.
+  const charged = await chargeForJob(req, {
+    kind: 'tool',
+    modelId: 'elevenlabs-transcribe',
+    actionType: 'elevenlabs-transcribe',
+    rateLimit: { limit: 30, windowMs: 60 * 60 * 1000 },
+    free: true,
+  });
+  if (!charged.ok) return charged.response;
 
   try {
     const apiKey = getApiKey();

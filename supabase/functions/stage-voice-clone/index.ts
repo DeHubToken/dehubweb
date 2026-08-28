@@ -343,7 +343,9 @@ Deno.serve(async (req) => {
     const cloneForm = new FormData();
     cloneForm.append('name', name);
     cloneForm.append('files', file, file.name || 'stage-voice.webm');
-    cloneForm.append('description', `DeHub stage voice for ${wallet}`);
+    // Ownership belongs in custom_voices, not in a provider-side string that
+    // the app's own voice list hands back to whoever asks.
+    cloneForm.append('description', 'DeHub stage voice');
 
     const res = await fetch('https://api.elevenlabs.io/v1/voices/add', {
       method: 'POST',

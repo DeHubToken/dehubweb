@@ -78,6 +78,39 @@ project_id = "aigxuutjaqsywioxjefr"
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
   [functions.dub-session]
     verify_jwt = false
+  # ── ElevenLabs audio ───────────────────────────────────────────────────────
+  # Listed so the setting is a decision on the record rather than a default
+  # nobody chose. It stays false for the usual reason — auth is the DeHub token
+  # in x-dehub-token, not a Supabase JWT — and the guard is in the function.
+  #
+  # Turning it on would not be the fix here anyway: the anon key is a publishable
+  # value that ships in every browser bundle and does not expire until 2036, so a
+  # platform JWT check is satisfied by anyone who reads the page source.
+  [functions.elevenlabs-audio-isolation]
+    verify_jwt = false
+  [functions.elevenlabs-clone-voice]
+    verify_jwt = false
+  [functions.elevenlabs-dialogue]
+    verify_jwt = false
+  [functions.elevenlabs-dub]
+    verify_jwt = false
+  [functions.elevenlabs-music]
+    verify_jwt = false
+  [functions.elevenlabs-sound-effects]
+    verify_jwt = false
+  [functions.elevenlabs-transcribe]
+    verify_jwt = false
+  [functions.elevenlabs-tts]
+    verify_jwt = false
+  # Callable signed out on purpose: the stock voice library is not private and
+  # the pickers render before auth. Rate-limited per IP, and filtered so it can
+  # only ever hand back stock voices plus the caller's own.
+  [functions.elevenlabs-voices]
+    verify_jwt = false
+  [functions.elevenlabs-voice-changer]
+    verify_jwt = false
+  [functions.elevenlabs-voice-design]
+    verify_jwt = false
   # Auth is the EMAIL_LINK_SERVICE_SECRET shared secret from the NestJS
   # backend, verified in-function — not a Supabase JWT.
   [functions.email-link-provision]

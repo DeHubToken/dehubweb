@@ -12,6 +12,7 @@
  */
 import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
+import { forgetPayment } from '@/lib/ai-payment';
 
 export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
@@ -102,6 +103,13 @@ export interface MusicRequest {
   lengthSeconds: number;
   instrumental?: boolean;
   outputFormat?: string;
+  /**
+   * The DHB transfer that pays for this track, from the audio paywall.
+   *
+   * elevenlabs-music verifies it on chain and prices the job off the clamped
+   * length, so a request without one is refused with a 402 rather than run.
+   */
+  txHash?: string;
 }
 
 export interface VoiceChangerRequest {
@@ -745,6 +753,35 @@ async function callAudioJson<T>(
   return (await response.json()) as T;
 }
 
+/**
+ * Run a paid audio call, then retire its transfer once it has actually been spent.
+ *
+ * invokeAi already does this for the four functions that go through it. The
+ * audio tools call fetch directly — they answer with raw audio bodies — so the
+ * same bookkeeping has to happen here, and skipping it is not cosmetic: a hash
+ * left in the unspent list is offered to the NEXT job, which the server then
+ * refuses as exhausted. The user would be holding a paid receipt that buys
+ * nothing.
+ *
+ * A provider failure is the one case where the hash survives. The function puts
+ * the price back on the receipt when the provider errors, so the retry is
+ * already paid for and must find the hash still there.
+ */
+async function spendingPayment<T>(txHash: string | undefined, run: () => Promise<T>): Promise<T> {
+  if (!txHash) return run();
+  try {
+    const result = await run();
+    forgetPayment(txHash);
+    return result;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err ?? '');
+    if (message.includes('PAYMENT_EXHAUSTED') || message.includes('already been used')) {
+      forgetPayment(txHash);
+    }
+    throw err;
+  }
+}
+
 const DUB_POLL_MS = 8_000;
 /**
  * Dubbing is minutes, not seconds, and is charged for up front — so the
@@ -857,16 +894,19 @@ export async function runAudioTask(
 
     case 'music': {
       handlers.onStage?.('Composing');
-      const blob = await callAudioFunction(
-        'elevenlabs-music',
-        {
-          prompt: req.prompt,
-          lengthSeconds: req.lengthSeconds,
-          instrumental: req.instrumental,
-          outputFormat: req.outputFormat,
-        },
-        handlers,
-        'Music generation failed',
+      const blob = await spendingPayment(req.txHash, () =>
+        callAudioFunction(
+          'elevenlabs-music',
+          {
+            prompt: req.prompt,
+            lengthSeconds: req.lengthSeconds,
+            instrumental: req.instrumental,
+            outputFormat: req.outputFormat,
+            txHash: req.txHash,
+          },
+          handlers,
+          'Music generation failed',
+        ),
       );
       return { url: URL.createObjectURL(blob) };
     }
