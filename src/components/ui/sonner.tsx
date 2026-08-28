@@ -18,9 +18,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
       expand={false}
       toastOptions={{
         classNames: {
-          toast: "group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:text-center",
+          toast: "group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:text-center has-[[data-action]]:flex-wrap",
           description: "group-[.toast]:text-white/70 group-[.toast]:text-center",
-          actionButton: "group-[.toast]:bg-white/20 group-[.toast]:text-white group-[.toast]:hover:bg-white/30",
+          actionButton: "group-[.toast]:bg-white/20 group-[.toast]:text-white group-[.toast]:hover:bg-white/30 group-[.toast]:!ms-0 group-[.toast]:mt-2 group-[.toast]:w-full group-[.toast]:basis-full group-[.toast]:justify-center",
           cancelButton: "group-[.toast]:bg-white/10 group-[.toast]:text-white/70 group-[.toast]:hover:bg-white/20",
           loader: "group-[.toast]:text-white",
         },
