@@ -1,5 +1,5 @@
 import {
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban, Youtube
+  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
@@ -241,26 +241,15 @@ export function ProfileHeader({
           </div>
           <div className="flex items-center gap-2">
               {isViewingOwnProfile ? (
-                <>
-                  <Button
-                    variant="glass"
-                    size="sm"
-                    className="rounded-xl gap-2"
-                    onClick={() => navigate('/app/settings')}
-                  >
-                    <Pencil className="w-4 h-4" />
-                    Edit Profile
-                  </Button>
-                  <Button
-                    variant="glass"
-                    size="sm"
-                    className="rounded-xl gap-2"
-                    onClick={() => navigate('/app/migrate-youtube')}
-                  >
-                    <Youtube className="w-4 h-4" />
-                    Migrate all
-                  </Button>
-                </>
+                <Button
+                  variant="glass"
+                  size="sm"
+                  className="rounded-xl gap-2"
+                  onClick={() => navigate('/app/settings')}
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Profile
+                </Button>
               ) : isBlocked ? (
                 <Button 
                   size="sm" 

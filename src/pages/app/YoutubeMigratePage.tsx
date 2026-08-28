@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Youtube, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -176,10 +176,15 @@ export default function YoutubeMigratePage() {
 
       <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
         <header className="flex flex-col gap-2">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Youtube className="w-5 h-5" />
-            Migrate all from YouTube
-          </h1>
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-xl font-bold text-white flex items-center gap-2">
+              <Youtube className="w-5 h-5" />
+              Migrate all from YouTube
+            </h1>
+            <Link to="/yt-dlp" className="text-sm text-zinc-400 underline shrink-0">
+              Just one video?
+            </Link>
+          </div>
           <p className="text-sm text-zinc-400 max-w-prose">
             Connect your channel, pick what to bring over, and pay once to migrate the whole batch.
           </p>
