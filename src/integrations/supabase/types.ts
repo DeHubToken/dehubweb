@@ -570,58 +570,61 @@ export type Database = {
         }
         Relationships: []
       }
-      ai_payment_refunds: {
+      ai_credit_ledger: {
         Row: {
           created_at: string
-          dhb: number
-          job_id: string
-          payment_id: string
+          delta_dhb: number
+          id: string
+          metadata: Json | null
+          model_id: string | null
+          reason: string
+          ref: string | null
+          wallet_address: string
         }
         Insert: {
           created_at?: string
-          dhb: number
-          job_id: string
-          payment_id: string
+          delta_dhb: number
+          id?: string
+          metadata?: Json | null
+          model_id?: string | null
+          reason: string
+          ref?: string | null
+          wallet_address: string
         }
         Update: {
           created_at?: string
-          dhb?: number
-          job_id?: string
-          payment_id?: string
+          delta_dhb?: number
+          id?: string
+          metadata?: Json | null
+          model_id?: string | null
+          reason?: string
+          ref?: string | null
+          wallet_address?: string
         }
         Relationships: []
       }
-      ai_payments: {
+      ai_credits: {
         Row: {
-          chain: string
+          balance_dhb: number
           created_at: string
-          id: string
-          paid_dhb: number
-          purpose: string
-          remaining_dhb: number
-          tx_hash: string
+          lifetime_granted_dhb: number
+          lifetime_spent_dhb: number
           updated_at: string
           wallet_address: string
         }
         Insert: {
-          chain: string
+          balance_dhb?: number
           created_at?: string
-          id?: string
-          paid_dhb: number
-          purpose?: string
-          remaining_dhb: number
-          tx_hash: string
+          lifetime_granted_dhb?: number
+          lifetime_spent_dhb?: number
           updated_at?: string
           wallet_address: string
         }
         Update: {
-          chain?: string
+          balance_dhb?: number
           created_at?: string
-          id?: string
-          paid_dhb?: number
-          purpose?: string
-          remaining_dhb?: number
-          tx_hash?: string
+          lifetime_granted_dhb?: number
+          lifetime_spent_dhb?: number
           updated_at?: string
           wallet_address?: string
         }
@@ -5225,12 +5228,37 @@ export type Database = {
         }
         Returns: Json
       }
-      ai_payment_release: {
-        Args: { p_dhb: number; p_job_id: string; p_tx_hash: string; p_wallet: string }
+      ai_credit_claim_daily: {
+        Args: {
+          p_cap_dhb: number
+          p_daily_dhb: number
+          p_starter_dhb: number
+          p_wallet: string
+        }
+        Returns: Json
+      }
+      ai_credit_grant: {
+        Args: {
+          p_dhb: number
+          p_metadata?: Json
+          p_reason: string
+          p_ref?: string
+          p_wallet: string
+        }
         Returns: number
       }
-      ai_payment_spend: {
-        Args: { p_dhb: number; p_tx_hash: string; p_wallet: string }
+      ai_credit_refund: {
+        Args: { p_dhb: number; p_ref: string; p_wallet: string }
+        Returns: number
+      }
+      ai_credit_spend: {
+        Args: {
+          p_dhb: number
+          p_metadata?: Json
+          p_model_id: string
+          p_ref: string
+          p_wallet: string
+        }
         Returns: number
       }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
