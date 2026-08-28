@@ -235,7 +235,7 @@ export default function YoutubeMigratePage() {
               <Youtube className="w-5 h-5" />
               Migrate all from YouTube
             </h1>
-            <Link to="/yt-dlp" className="text-sm text-zinc-400 underline shrink-0">
+            <Link to="/converter" className="text-sm text-zinc-400 underline shrink-0">
               Just one video?
             </Link>
           </div>

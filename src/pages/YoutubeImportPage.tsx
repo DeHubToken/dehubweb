@@ -1,6 +1,6 @@
 /**
- * dehub.io/yt-dlp — import a YouTube video as a DeHub post.
- * ==========================================================
+ * dehub.io/converter — import a YouTube video as a DeHub post.
+ * ==============================================================
  * Lives inside AppLayout (sidebar/nav chrome), same as wallet/profile/etc —
  * this is a signed-in action, not a marketing landing page. Pasting a URL
  * and confirming ownership is a different action from "make a post" though,
@@ -105,7 +105,7 @@ export default function YoutubeImportPage() {
       <SEOHead
         title="Import from YouTube — DeHub"
         description="Paste a YouTube link and publish it as a DeHub post."
-        url="https://dehub.io/yt-dlp"
+        url="https://dehub.io/converter"
       />
 
       <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
@@ -127,7 +127,7 @@ export default function YoutubeImportPage() {
           </p>
         </header>
 
-        <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4 max-w-md">
+        <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
           {/* Same look as the sidebar's search box — bg-zinc-900/rounded-xl/no
               border — so this reads as one of the app's real inputs. */}
           <div className="relative">
