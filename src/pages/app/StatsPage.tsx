@@ -776,12 +776,7 @@ function CommunitySection({ range }: { range: Range }) {
             <span className="text-zinc-300">{membersLabel}</span> — {provenance.note}
           </li>
           <li>
-            <span className="text-zinc-300">{t('stats.community.active', 'Active')}</span> —{' '}
-            {provenance.activeDefinition}
-          </li>
-          <li>
-            <span className="text-zinc-300">{t('stats.community.growthTerm', 'Growth')}</span> —{' '}
-            {provenance.growthFormula}
+            <span className="text-zinc-300">{activeLabel}</span> — {provenance.activeDefinition}
           </li>
         </ul>
       </div>
