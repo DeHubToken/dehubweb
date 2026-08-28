@@ -10,9 +10,14 @@
  * data URI, so nothing here can 404 (no network → no broken-image icons).
  * If the poster URL fails (or none is given), the poster layers are dropped
  * and the static/scanlines/slice keep running on their own.
+ *
+ * The glitch itself is opt-in (lib/video-glitch, off by default). Without it
+ * this is still the video loading state — the first frame, dimmed, with a
+ * soft pulse — so both mount sites render it unconditionally either way.
  */
 import { memo, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useVideoGlitch } from '@/lib/video-glitch';
 
 // Tileable grayscale noise, ~200 bytes. stitchTiles keeps the tile seamless.
 const NOISE_TEXTURE =
@@ -41,6 +46,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
   const [posterFailed, setPosterFailed] = useState(false);
   useEffect(() => setPosterFailed(false), [poster]);
   const showPoster = !!poster && !posterFailed;
+  const glitch = useVideoGlitch();
 
   return (
     <div
@@ -62,6 +68,8 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
             className="absolute inset-0 w-full h-full object-cover"
             draggable={false}
           />
+          {glitch && (
+          <>
           {/* Red channel offset */}
           <img
             src={poster}
@@ -88,10 +96,14 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
             }}
             draggable={false}
           />
+          </>
+          )}
         </>
       ) : (
         <div className="absolute inset-0 bg-white/[0.06] animate-pulse" />
       )}
+      {glitch ? (
+      <>
       {/* TV static — noise tile jitters position/opacity in discrete steps */}
       <div
         className="absolute inset-0 mix-blend-screen"
@@ -135,6 +147,11 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
             'video-glitch-slice 2.8s linear infinite, video-glitch-line-static 0.14s steps(1) infinite',
         }}
       />
+      </>
+      ) : (
+        // Quiet loading state: the frame reads as pending without the noise.
+        showPoster && <div className="absolute inset-0 bg-white/[0.05] animate-pulse" />
+      )}
       {/* Vignette darken — only over a real poster frame */}
       {showPoster && <div className="absolute inset-0 bg-black/25" />}
     </div>

@@ -106,6 +106,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'content', anchor: 'mature-content', label: 'Show Mature Content', labelKey: 'settings.matureContent', keywords: 'nsfw adult sensitive explicit filter' },
   { tab: 'content', anchor: 'hide-watched', label: 'Hide watched videos', labelKey: 'settings.hideWatched', keywords: 'seen history feed' },
   { tab: 'content', anchor: 'skip-segments', label: 'Skip sponsors and intros', labelKey: 'settings.skipSegments', keywords: 'sponsorblock ads intro' },
+  { tab: 'content', anchor: 'video-glitch', label: 'Glitch effect while videos load', labelKey: 'settings.videoGlitch', keywords: 'static noise scanlines animation loading' },
   { tab: 'content', anchor: 'channel-speed', label: 'Playback speed per channel', labelKey: 'settings.channelSpeed', keywords: 'speed playback rate' },
   { tab: 'content', anchor: 'ad-load', label: 'Ads in your feed', labelKey: 'settings.adLoad', keywords: 'advertising frequency sponsored' },
 
