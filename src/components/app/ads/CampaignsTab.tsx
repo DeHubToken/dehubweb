@@ -254,7 +254,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {/* An approved campaign on an empty balance is simply skipped by the ad
           server. Say so where the advertiser is looking at it. */}
       {unfunded && (campaign.status === 'active' || campaign.status === 'pending_review') && (
-        <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+        <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 flex flex-col items-stretch gap-3">
           <div className="flex items-center gap-2 text-sm text-yellow-500">
             <Wallet className="w-4 h-4 shrink-0" />
             <span>
@@ -263,7 +263,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
                 : 'Your ads balance is $0 — this campaign won’t serve once approved.'}
             </span>
           </div>
-          <Button size="sm" variant="glass" onClick={() => setTopUpOpen(true)}>
+          <Button size="sm" variant="glass" className="w-full" onClick={() => setTopUpOpen(true)}>
             Top up
           </Button>
         </div>

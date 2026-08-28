@@ -93,7 +93,7 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
   return (
     <div className="space-y-4">
       {unfunded && (
-        <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-4 flex items-center justify-between gap-3 flex-wrap">
+        <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-4 flex flex-col items-stretch gap-3">
           <div className="flex items-center gap-2.5">
             <Wallet className="w-4 h-4 text-yellow-500 shrink-0" />
             <div>
@@ -105,7 +105,7 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
               </p>
             </div>
           </div>
-          <Button variant="glass" size="sm" onClick={() => setTopUpOpen(true)}>
+          <Button variant="glass" size="sm" className="w-full" onClick={() => setTopUpOpen(true)}>
             <Plus className="w-4 h-4 mr-1.5" /> Top up
           </Button>
         </div>
