@@ -23,24 +23,34 @@ import {
   readUpload,
 } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
+import { serviceClient } from '../_shared/auth.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
+  const contentType = req.headers.get('content-type') ?? '';
+  // Starting a dub and polling one are the same endpoint but not remotely the
+  // same cost, so they get separate buckets. A single dub polls every 8s for up
+  // to 20 minutes — about 150 calls — so one shared limit low enough to be
+  // meaningful for starts would cut off a creator's second concurrent dub
+  // halfway through.
+  const isStart = contentType.includes('multipart/form-data');
+
   // Covers all three branches, polling included. Start is the expensive one,
   // but status and result were reachable by anyone holding a dubbing id, which
   // made a creator's own footage fetchable by a stranger who had one.
   //
   // Not yet priced, for the same reason as the voice changer: the bill is per
-  // minute of the upload and nothing here can measure that yet. The rate limit
-  // is generous because a single dub polls this many times over.
+  // minute of the upload and nothing here can measure that yet.
   const charged = await chargeForJob(req, {
     kind: 'tool',
     modelId: 'elevenlabs-dub',
-    actionType: 'elevenlabs-dub',
-    rateLimit: { limit: 200, windowMs: 60 * 60 * 1000 },
+    actionType: isStart ? 'elevenlabs-dub-start' : 'elevenlabs-dub-poll',
+    rateLimit: isStart
+      ? { limit: 10, windowMs: 60 * 60 * 1000 }
+      : { limit: 1200, windowMs: 60 * 60 * 1000 },
     free: true,
   });
   if (!charged.ok) return charged.response;
@@ -49,13 +59,23 @@ Deno.serve(async (req) => {
     const apiKey = getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
-    const contentType = req.headers.get('content-type') ?? '';
-
     // ── Poll / collect ──────────────────────────────────────────────────────
-    if (!contentType.includes('multipart/form-data')) {
+    if (!isStart) {
       const { action, dubbingId, targetLang } = (await req.json()) ?? {};
       if (!dubbingId || typeof dubbingId !== 'string') {
         return errorResponse('dubbingId is required');
+      }
+
+      // A dub id used to be the whole credential: hold one, get the audio. It
+      // is now checked against the wallet that started the job.
+      //
+      // A job with no row is one that began before this shipped. Those are
+      // allowed through rather than stranded — the money for them is already
+      // spent — and they age out as they finish. Every new dub gets a row, so
+      // this is a grace period, not a standing hole.
+      const owner = await dubOwner(dubbingId);
+      if (owner && owner !== charged.wallet) {
+        return errorResponse('That dub is not available to you.', 403);
       }
 
       if (action === 'result') {
@@ -138,6 +158,8 @@ Deno.serve(async (req) => {
       return errorResponse('The dubbing service did not return a job id', 502);
     }
 
+    await claimDub(String(data.dubbing_id), charged.wallet);
+
     return jsonResponse({
       dubbingId: data.dubbing_id,
       expectedDurationSec: data.expected_duration_sec ?? null,
@@ -148,3 +170,42 @@ Deno.serve(async (req) => {
     return errorResponse('Internal server error', 500);
   }
 });
+
+/**
+ * The wallet that started a dub, or null if nothing has claimed it.
+ *
+ * Null covers two cases that are treated the same on purpose: a job from before
+ * dub_jobs existed, and a job whose claim did not land. Both are allowed
+ * through, because refusing would strand a dub that has already been paid for.
+ */
+async function dubOwner(dubbingId: string): Promise<string | null> {
+  const { data, error } = await serviceClient()
+    .from('dub_jobs')
+    .select('wallet_address')
+    .eq('dubbing_id', dubbingId)
+    .maybeSingle();
+
+  if (error) {
+    console.error('[elevenlabs-dub] owner lookup failed:', error);
+    return null;
+  }
+  const wallet = data?.wallet_address;
+  return wallet ? String(wallet).toLowerCase() : null;
+}
+
+/**
+ * Record who a dub belongs to, once the provider has given it an id.
+ *
+ * Deliberately does NOT fail the request. By the time this runs the dub is
+ * already running upstream and has been paid for, so a bookkeeping error must
+ * not be reported to the creator as a failed job — it would send them to pay
+ * for a second one. The cost of losing the row is that this dub falls into the
+ * unclaimed case above and stays reachable by its id, which is exactly where it
+ * was before any of this.
+ */
+async function claimDub(dubbingId: string, wallet: string): Promise<void> {
+  const { error } = await serviceClient()
+    .from('dub_jobs')
+    .insert({ dubbing_id: dubbingId, wallet_address: wallet });
+  if (error) console.error('[elevenlabs-dub] could not claim job:', error);
+}
