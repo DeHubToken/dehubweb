@@ -71,6 +71,7 @@ import {
   Gauge,
   Megaphone,
   FastForward,
+  Radio,
   LifeBuoy,
   Trash2,
 } from 'lucide-react';
@@ -103,6 +104,7 @@ import { useHideWatched } from '@/hooks/use-watched-videos';
 import { DataPortability } from '@/components/app/settings/DataPortability';
 import { normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
 import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
+import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
@@ -2560,6 +2562,7 @@ function ContentSettings() {
         <div className="space-y-4">
           <HideWatchedToggle />
           <SkipSegmentsToggle />
+          <VideoGlitchToggle />
           <ChannelSpeedRow />
           <AdLoadRow />
         </div>
@@ -2851,6 +2854,34 @@ function SkipSegmentsToggle() {
       onCheckedChange={(checked) => {
         writeSkipSegments(checked);
         prefs?.setPref('skipVideoSegments', checked);
+      }}
+    />
+  );
+}
+
+/**
+ * The glitch is an accent, not a resting state — on a feed it fires once per
+ * card, so it is opt-in. Off, videos still show their first frame while they
+ * load, just without the noise.
+ */
+function VideoGlitchToggle() {
+  const { t } = useTranslation();
+  const videoGlitch = useVideoGlitch();
+  const prefs = useUserPreferences();
+
+  return (
+    <SettingToggle
+      icon={Radio}
+      anchor="video-glitch"
+      title={t('settings.videoGlitch', 'Glitch effect while videos load')}
+      description={t(
+        'settings.videoGlitchDesc',
+        'Play an RGB-split TV-static animation over the first frame while a video loads. Off by default.',
+      )}
+      defaultChecked={videoGlitch}
+      onCheckedChange={(checked) => {
+        writeVideoGlitch(checked);
+        prefs?.setPref('videoGlitchLoader', checked);
       }}
     />
   );
