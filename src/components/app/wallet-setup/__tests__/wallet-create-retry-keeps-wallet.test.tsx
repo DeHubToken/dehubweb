@@ -29,6 +29,30 @@ const mocks = vi.hoisted(() => ({
   fetchWallet: vi.fn(
     async (_userId: string): Promise<{ ethAddress: string; payload: unknown } | null> => null,
   ),
+  /**
+   * Two different, valid mnemonics handed out in order — a stand-in for the
+   * real generator, which returns a new wallet on every call. That is the
+   * behaviour under test: the component must ask for one and keep it, so the
+   * second phrase here should never reach a wallet.
+   *
+   * It also keeps ethers' randomBytes out of the test. Under jsdom it hands
+   * Mnemonic.fromEntropy a Node Buffer, which ethers' own getBytes then
+   * rejects as an invalid BytesLike — an environment quirk with nothing to say
+   * about this component.
+   */
+  generateMnemonic12: vi.fn(() => {
+    const phrases = [
+      'test test test test test test test test test test test junk',
+      'legal winner thank year wave sausage worth useful legal winner thank yellow',
+    ];
+    const next = phrases[Math.min(mocks.generateMnemonic12.mock.calls.length - 1, 1)];
+    return next;
+  }),
+}));
+
+vi.mock('@/lib/wallet-core/derive', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/wallet-core/derive')>()),
+  generateMnemonic12: mocks.generateMnemonic12,
 }));
 
 vi.mock('@/lib/wallet-core/store', () => ({
@@ -58,6 +82,7 @@ let root: Root;
 beforeEach(() => {
   mocks.saveWallet.mockClear();
   mocks.fetchWallet.mockClear();
+  mocks.generateMnemonic12.mockClear();
   mocks.fetchWallet.mockResolvedValue(null);
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -119,6 +144,8 @@ describe('wallet setup retry', () => {
     const addresses = mocks.saveWallet.mock.calls.map((call) => call[1]);
     expect(addresses[0]).toMatch(/^0x[0-9a-fA-F]{40}$/);
     expect(addresses[1]).toBe(addresses[0]);
+    // The generator is the thing that must not run twice.
+    expect(mocks.generateMnemonic12).toHaveBeenCalledTimes(1);
     // And the key handed to the sign-in is that same wallet's, both times.
     expect(onComplete.mock.calls[1][0]).toBe(onComplete.mock.calls[0][0]);
   });
