@@ -35,6 +35,7 @@ import {
   Gamepad2,
   PieChart,
   Rocket,
+  Youtube,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -72,6 +73,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: AtSign, label: 'Usernames', path: '/usernames' },
   { icon: Users, label: 'Accounts', path: '/accounts' },
   { icon: Wand2, label: 'Prompt', path: '/prompt' },
+  { icon: Youtube, label: 'Converter', path: '/converter' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },

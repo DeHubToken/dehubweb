@@ -477,6 +477,8 @@ function AppContent() {
           <Route path="/connect/chatgpt" element={<Suspense fallback={<PageLoader />}><ConnectChatGPTPage /></Suspense>} />
           <Route path="/connect/claude" element={<Suspense fallback={<PageLoader />}><ConnectClaudePage /></Suspense>} />
           <Route path="/mcp" element={<Navigate to="/connect" replace />} />
+          {/* Renamed to /converter — kept as a redirect for anyone with the old link. */}
+          <Route path="/yt-dlp" element={<Navigate to="/converter" replace />} />
 
           {/* Direct APK download lander. Standalone (no AppLayout) — it is a
               single non-scrolling screen that owns the viewport, and it is
@@ -518,7 +520,7 @@ function AppContent() {
             {/* Sits inside the layout, not with the marketing pages it used
                 to ship beside — it's a signed-in action, not a landing page,
                 so it gets the sidebar/nav chrome like wallet/profile/etc. */}
-            <Route path="/yt-dlp" element={<Suspense fallback={<PageLoader />}><YoutubeImportPage /></Suspense>} />
+            <Route path="/converter" element={<Suspense fallback={<PageLoader />}><YoutubeImportPage /></Suspense>} />
 
             {/* Cinema sits INSIDE the layout, unlike the marketing pages it
                 shipped beside. It shares to the feed and it collects reviews,
