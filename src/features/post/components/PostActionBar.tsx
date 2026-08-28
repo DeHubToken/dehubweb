@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, Gauge } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, Gauge, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -10,6 +10,7 @@ import { GLASS_STYLES } from '@/constants/app.constants';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
+import { YoutubeImportModal } from './YoutubeImportModal';
 import { openStageModal } from '@/contexts/StageContext';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import type { LiveMode } from '../types';
@@ -93,6 +94,7 @@ export function PostActionBar({
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
   const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
+  const [youtubeImportOpen, setYoutubeImportOpen] = useState(false);
   const navigate = useNavigate();
   const isLive = liveMode !== null;
 
@@ -219,6 +221,12 @@ export function PostActionBar({
       <GoLiveModal
         isOpen={goLiveModalOpen}
         onClose={handleGoLiveModalClose}
+      />
+
+      <YoutubeImportModal
+        isOpen={youtubeImportOpen}
+        onClose={() => setYoutubeImportOpen(false)}
+        onImported={() => onCloseModal?.()}
       />
 
       {/* Upload progress bar — liquid glass bubble style */}
@@ -348,6 +356,22 @@ export function PostActionBar({
               </button>
             </TooltipTrigger>
             <TooltipContent>Add video</TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Import a video the creator already posted to YouTube */}
+        {!hasImage && !hasVideo && !isLive && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => setYoutubeImportOpen(true)}
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <Youtube className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Import from YouTube</TooltipContent>
           </Tooltip>
         )}
 
