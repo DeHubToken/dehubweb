@@ -50,6 +50,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -509,6 +510,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
           />
         ) : null}
         <DehubLinkEmbeds links={dehubLinks} />
+        <FeedLinkPreviews text={normalized} />
         <AssetRefCards refs={assetRefs} />
       </>
     );
@@ -530,6 +532,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
         ) : null}
       </div>
       <DehubLinkEmbeds links={dehubLinks} />
+      <FeedLinkPreviews text={normalized} />
       <AssetRefCards refs={assetRefs} />
       {needsExpansion && !isExpanded && (
         <button

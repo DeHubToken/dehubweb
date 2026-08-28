@@ -11,6 +11,7 @@
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
+import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { stripDehubLinkMatches } from '@/lib/dehub-links';
 import { stripAssetRefs } from '@/lib/asset-refs';
@@ -449,6 +450,7 @@ function FeedDescription({
         </div>
       )}
       <DehubLinkEmbeds links={dehubLinks} />
+      <FeedLinkPreviews text={linkSource} />
       <AssetRefCards refs={assetRefs} />
     </div>
   );
