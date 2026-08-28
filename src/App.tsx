@@ -468,7 +468,6 @@ function AppContent() {
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
           <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
-          <Route path="/yt-dlp" element={<Suspense fallback={<PageLoader />}><YoutubeImportPage /></Suspense>} />
           <Route path="/depin" element={<Suspense fallback={<PageLoader />}><DePinPage /></Suspense>} />
           {/* Prize draws. dehub.net/prize-draw and raffle.dehub.net both 301
               here (CLOUDFLARE_WORKER_SEO.js), so this route is the landing for
@@ -515,6 +514,11 @@ function AppContent() {
             <Route path="/communities" element={null} />
             <Route path="/communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
             <Route path="/communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
+
+            {/* Sits inside the layout, not with the marketing pages it used
+                to ship beside — it's a signed-in action, not a landing page,
+                so it gets the sidebar/nav chrome like wallet/profile/etc. */}
+            <Route path="/yt-dlp" element={<Suspense fallback={<PageLoader />}><YoutubeImportPage /></Suspense>} />
 
             {/* Cinema sits INSIDE the layout, unlike the marketing pages it
                 shipped beside. It shares to the feed and it collects reviews,
