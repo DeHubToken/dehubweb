@@ -22,11 +22,28 @@ import {
   readProviderError,
   readUpload,
 } from '../_shared/elevenlabs.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  // Covers all three branches, polling included. Start is the expensive one,
+  // but status and result were reachable by anyone holding a dubbing id, which
+  // made a creator's own footage fetchable by a stranger who had one.
+  //
+  // Not yet priced, for the same reason as the voice changer: the bill is per
+  // minute of the upload and nothing here can measure that yet. The rate limit
+  // is generous because a single dub polls this many times over.
+  const charged = await chargeForJob(req, {
+    kind: 'tool',
+    modelId: 'elevenlabs-dub',
+    actionType: 'elevenlabs-dub',
+    rateLimit: { limit: 200, windowMs: 60 * 60 * 1000 },
+    free: true,
+  });
+  if (!charged.ok) return charged.response;
 
   try {
     const apiKey = getApiKey();
