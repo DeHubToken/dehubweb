@@ -8,7 +8,7 @@ export default function PricingPage() {
     <>
       <SEOHead
         title="Pricing — DeHub Creator Studio"
-        description="DeHub Creator Studio pricing in USD. Creator, Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation."
+        description="DeHub Creator Studio pricing in USD. Creator, Ultra, Team and Scale plans with monthly DHB for AI image, video, music and poster generation."
         url="https://dehub.io/pricing"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -16,7 +16,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Ultra',
-              description: 'For creators building AI projects — 130,000 DHB credit/mo, access to all models including Seedance 2.0 and Nano Banana Pro. $99/mo billed annually, or $129 month-to-month.',
+              description: 'For creators building AI projects — 130,000 DHB/mo, sent to your wallet, access to all models including Seedance 2.0 and Nano Banana Pro. $99/mo billed annually, or $129 month-to-month.',
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
@@ -36,7 +36,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Team',
-              description: 'For agencies and small teams — 88,000 DHB credit per seat/mo, 2–9 seats, shared workspace and priority support. Priced per seat: $65/seat/mo billed annually, or $79 month-to-month.',
+              description: 'For agencies and small teams — 88,000 DHB per seat/mo, sent to your wallet, 2–9 seats, shared workspace and priority support. Priced per seat: $65/seat/mo billed annually, or $79 month-to-month.',
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
@@ -56,7 +56,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Scale',
-              description: 'Designed for growing creative teams — 210,000 DHB credit per seat/mo, 5–15 seats, SSO, priority queue and advanced admin controls. Priced per seat: $150/seat/mo billed annually, or $215 month-to-month.',
+              description: 'Designed for growing creative teams — 210,000 DHB per seat/mo, sent to your wallet, 5–15 seats, SSO, priority queue and advanced admin controls. Priced per seat: $150/seat/mo billed annually, or $215 month-to-month.',
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
@@ -76,7 +76,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Creator',
-              description: 'For getting started with AI creation — 23,000 DHB credit/mo, access to all models & features. $15/mo billed annually, or $19 month-to-month.',
+              description: 'For getting started with AI creation — 23,000 DHB/mo, sent to your wallet, access to all models & features. $15/mo billed annually, or $19 month-to-month.',
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',

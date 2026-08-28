@@ -1236,7 +1236,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   ]);
 
   /** Called by the paywall once the DHB transfer confirms. */
-  const runImage = useCallback(() => {
+  const runImage = useCallback((txHash: string) => {
     setImagePaywallOpen(false);
     const meta = {
       prompt: prompt.trim() || preset?.sample || 'Untitled',
@@ -1251,6 +1251,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           prompt: resolvedPrompt,
           model: imageModel,
           aspectRatio: imageAspect,
+          txHash,
           ...(reference ? { sourceImage: reference.url } : {}),
         },
         meta,
@@ -1260,7 +1261,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   }, [prompt, preset, resolvedPrompt, imageModel, imageAspect, batch, reference, presetId, startImage]);
 
   const runVideo = useCallback(
-    (options?: VideoGenerationOptions) => {
+    (options: VideoGenerationOptions | undefined, txHash: string) => {
       setVideoPaywallOpen(false);
       startVideo(
         {
@@ -1280,6 +1281,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           audioUrls: options?.audioUrls,
           videoUrls: options?.videoUrls,
           seed: options?.seed,
+          txHash,
           ...(reference ? { sourceImage: reference.url } : {}),
         },
         {
@@ -1309,7 +1311,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
   /** Called by the paywall once the DHB transfer confirms. */
   const run3d = useCallback(
-    (options?: Model3dGenerationOptions) => {
+    (options: Model3dGenerationOptions | undefined, txHash: string) => {
       setModel3dPaywallOpen(false);
       startModel3d(
         {
@@ -1323,6 +1325,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           quad: options?.quad,
           seed: options?.seed,
           exportFormat: options?.exportFormat,
+          txHash,
           ...(reference ? { sourceImage: reference.url } : {}),
         },
         {

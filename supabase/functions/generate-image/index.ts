@@ -5,7 +5,7 @@ import {
   pickLayoutForFormat,
 } from '../_shared/dehub-brand-composite.ts';
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
-import { chargeForJob } from '../_shared/ai-credit-guard.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
 // says they are allowed. A local copy silently drops them; see auth.ts.
@@ -1006,6 +1006,7 @@ serve(async (req) => {
   const charged = await chargeForJob(req, {
     kind: 'image',
     modelId: peek.model || 'gemini-2.5-flash',
+    body: peek as Record<string, unknown>,
     actionType: 'generate-image',
     rateLimit: { limit: 60, windowMs: 60 * 60 * 1000 },
     // DeHub banners cost nothing. Still authenticated and still rate-limited —

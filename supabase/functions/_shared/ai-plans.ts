@@ -1,5 +1,5 @@
 /**
- * Subscription plans and their monthly DHB allowance.
+ * Subscription plans and their monthly DHB allowance, paid on chain.
  * ===================================================
  * The pricing page used to advertise "3,500 credits/mo = 1,750 Nano Banana Pro
  * Generations". Nothing granted those credits — there was no balance to grant
@@ -24,7 +24,7 @@ export interface AiPlan {
   priceId: string;
   /** Headline price this grant was sized against, in USD. */
   pricedAtUsd: number;
-  /** DHB granted per billing period, per seat. */
+  /** DHB delivered on chain per billing period, per seat. */
   grantDhb: number;
   /** Whether grantDhb multiplies by the subscription item quantity. */
   perSeat: boolean;
@@ -65,27 +65,12 @@ export const AI_PLANS: Record<string, AiPlan> = {
   },
 };
 
-/** One-off allowance on first sign-in: $1 of generation. */
-export const FREE_GRANT_DHB = 1_000;
-
-/**
- * Daily allowance: $0.40 of generation per calendar day at the peg.
- *
- * Unclaimed days accrue — someone who signs in once a week collects the whole
- * week, so an occasional visitor is not punished for not opening the app
- * daily. The accrual is capped at 30 days so a wallet that goes dormant for a
- * year cannot mint unbounded credit on its return. Paid for out of the
- * generation margins in ai-pricing.ts.
- */
-export const DAILY_GRANT_DHB = 400;
-export const DAILY_ACCRUAL_CAP_DHB = 12_000;
-
 /**
  * DHB to grant for a paid invoice.
  *
  * The legacy dehub_extra / dehub_family / dehub_xl tiers are the older Premium
  * product, not AI plans, and deliberately grant nothing — returning 0 here
- * rather than a default keeps an unpriced tier from silently minting credit.
+ * rather than a default keeps an unpriced tier from silently paying out.
  */
 export function planGrantDhb(priceId: string | null | undefined, seats = 1): number {
   if (!priceId) return 0;

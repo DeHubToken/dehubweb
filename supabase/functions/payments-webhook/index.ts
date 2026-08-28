@@ -119,18 +119,15 @@ async function handleSubscriptionDeleted(subscription: any, env: StripeEnv) {
 /**
  * Ask the backend to deliver this invoice's DHB to the subscriber's wallet.
  *
- * Returns true when the tokens are handled on-chain and this invoice must NOT
- * also be credited to the ledger — granting both would pay the allowance
- * twice, once in tokens and once in credit.
+ * This is now the only way a plan allowance is settled, so the return value
+ * is a report rather than a routing decision: true when the tokens are on
+ * their way, false when nobody took the job and the subscriber is owed.
  *
- * The two systems stay in step without a second flag to remember, because the
- * answer comes from whichever side actually owns the decision. The backend
- * says `queued` when it took the job and `already_recorded` when a previous
- * delivery for this invoice exists; both mean the tokens are covered.
- * Anything else — the feature switched off, a missing secret, a non-2xx, an
- * unreachable host — means they are not, and the caller falls back to the
- * ledger. That is the safe direction to fail: a subscriber who paid always
- * ends up with a usable allowance.
+ * The backend says `queued` when it took the job and `already_recorded` when
+ * a previous delivery for this invoice exists; both mean the tokens are
+ * covered, which is what makes Stripe's webhook redeliveries safe. Anything
+ * else — the feature switched off, a missing secret, a non-2xx, an
+ * unreachable host — means they are not.
  */
 async function deliverPlanTokens(args: {
   wallet: string;
@@ -140,11 +137,13 @@ async function deliverPlanTokens(args: {
   seats: number;
   env: StripeEnv;
 }): Promise<boolean> {
-  // Test-mode invoices settle in ledger credit, never in tokens. There is no
-  // testnet DHB behind this path — the backend sends on Base mainnet — so a
-  // sandbox subscription that reached it would pay out real money against a
-  // card that was never charged.
-  if (args.env !== "live") return false;
+  // Test-mode invoices never settle. There is no testnet DHB behind this path
+  // — the backend sends on Base mainnet — so a sandbox subscription that
+  // reached it would pay out real money against a card that was never charged.
+  if (args.env !== "live") {
+    console.log(`Sandbox invoice ${args.invoiceId}: no tokens delivered.`);
+    return false;
+  }
 
   const secret = Deno.env.get("INTERNAL_SERVICE_SECRET");
   if (!secret) return false;
@@ -169,7 +168,7 @@ async function deliverPlanTokens(args: {
 
     if (!res.ok) {
       console.error(
-        `Token delivery declined for ${args.invoiceId}: HTTP ${res.status}. Falling back to ledger credit.`,
+        `Token delivery declined for ${args.invoiceId}: HTTP ${res.status}`,
       );
       return false;
     }
@@ -178,13 +177,13 @@ async function deliverPlanTokens(args: {
     const handled = body?.queued === true || body?.reason === "already_recorded";
     if (!handled) {
       console.log(
-        `Token delivery not taken for ${args.invoiceId} (${body?.reason ?? "unknown"}); using ledger credit.`,
+        `Token delivery not taken for ${args.invoiceId} (${body?.reason ?? "unknown"})`,
       );
     }
     return handled;
   } catch (e) {
     console.error(
-      `Token delivery unreachable for ${args.invoiceId}: ${e}. Falling back to ledger credit.`,
+      `Token delivery unreachable for ${args.invoiceId}: ${e}`,
     );
     return false;
   }
@@ -198,9 +197,8 @@ async function deliverPlanTokens(args: {
  * The invoice id is the idempotency key, so Stripe re-delivering a webhook (it
  * does) cannot pay the allowance twice.
  *
- * The allowance is settled one of two ways: as real DHB sent to the
- * subscriber's wallet, or as ledger credit. Never both — see
- * deliverPlanTokens.
+ * The allowance is settled one way only: real DHB sent to the subscriber's
+ * wallet. There is no credit balance behind it any more.
  */
 async function handleInvoicePaid(invoice: any, env: StripeEnv) {
   const line = invoice.lines?.data?.[0];
@@ -238,9 +236,6 @@ async function handleInvoicePaid(invoice: any, env: StripeEnv) {
     return;
   }
 
-  // On-chain delivery first. It owns the decision about whether this invoice
-  // is settled in tokens, and only says no in the cases where ledger credit
-  // is the right answer.
   const deliveredAsTokens = await deliverPlanTokens({
     wallet: wallet.toLowerCase(),
     dhb: grantDhb,
@@ -249,6 +244,7 @@ async function handleInvoicePaid(invoice: any, env: StripeEnv) {
     seats,
     env,
   });
+
   if (deliveredAsTokens) {
     console.log(
       `Queued ${grantDhb} DHB on-chain to ${wallet} for ${priceId} (${invoice.id})`,
@@ -256,24 +252,14 @@ async function handleInvoicePaid(invoice: any, env: StripeEnv) {
     return;
   }
 
-  const { error } = await getSupabase().rpc("ai_credit_grant", {
-    p_wallet: wallet.toLowerCase(),
-    p_dhb: grantDhb,
-    p_reason: "plan_grant",
-    p_ref: invoice.id,
-    p_metadata: { priceId, seats, subscriptionId, environment: env },
-  });
-
-  if (error) {
-    if (String(error.message || "").includes("CREDIT_ALREADY_APPLIED")) {
-      console.log("Allowance already granted for invoice", invoice.id);
-      return;
-    }
-    console.error("Failed to grant AI allowance:", error);
-    return;
-  }
-
-  console.log(`Granted ${grantDhb} DHB to ${wallet} for ${priceId} (${invoice.id})`);
+  // There is no second way to settle this any more. The ledger fallback that
+  // used to sit here granted spendable credit with no token behind it — the
+  // thing this release exists to remove — so a refusal is now a real failure
+  // and has to be loud. The subscriber has paid Stripe and holds nothing; the
+  // grant is recoverable by replaying the invoice once delivery is working.
+  console.error(
+    `UNDELIVERED ALLOWANCE: ${grantDhb} DHB owed to ${wallet} for ${priceId} (invoice ${invoice.id}, sub ${subscriptionId ?? "unknown"}, env ${env}). Token delivery declined and there is no fallback — replay this invoice.`,
+  );
 }
 
 async function handleWebhook(req: Request, env: StripeEnv) {

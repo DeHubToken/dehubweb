@@ -6,8 +6,8 @@ import { AiToolModel, AiToolCategory, getToolCostUsd, getToolCostDhb, getToolsBy
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAiCredits } from '@/hooks/use-ai-credits';
-import { payAsYouGo, useSpendableDhb } from '@/lib/ai-payg';
+import { useJobQuote } from '@/hooks/use-ai-quote';
+import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
@@ -18,7 +18,8 @@ interface AiToolPaywallModalProps {
   model: AiToolModel;
   selectedModelId: string;
   onModelChange: (modelId: string) => void;
-  onConfirm: () => void;
+  /** Receives the hash of the transfer that paid for this run. */
+  onConfirm: (txHash: string) => void;
   isProcessing?: boolean;
   category: AiToolCategory;
 }
@@ -40,12 +41,11 @@ export function AiToolPaywallModal({
   const [isPaying, setIsPaying] = useState(false);
 
   const { walletAddress } = useAuth();
-  const { balanceDhb, isLoading: profileLoading, refresh } = useAiCredits();
+  // What the wallet actually holds on the two chains the treasury accepts —
+  // the only balance there is now. The run is paid for by a transfer signed
+  // here and verified on chain by fal-ai-tools.
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
   const navigate = useNavigate();
-  // Credit balance, not the wallet's on-chain holding — the generate function
-  // charges credit, and holding DHB is not the same as having topped it up.
-  const userBalance = balanceDhb;
 
   const categoryInfo = CATEGORY_LABELS[category];
   const categoryModels = getToolsByCategory(category);
@@ -73,14 +73,16 @@ export function AiToolPaywallModal({
   };
 
   const costUsd = getToolCostUsd(model);
-  const costDhb = dhbPrice ? getToolCostDhb(model, dhbPrice) : 0;
-  const isBalanceLoading = profileLoading;
-  const hasEnoughBalance = userBalance >= costDhb;
-  const shortfall = Math.max(0, costDhb - userBalance);
-  // Three states: enough credit, enough DHB to pay for this one job, or
-  // neither — in which case offering a payment would only fail.
-  const canPayAsYouGo = !hasEnoughBalance && walletDhb >= shortfall;
-  const needsTokens = !hasEnoughBalance && !canPayAsYouGo && !isWalletLoading;
+  // Priced by the server, not from the constants. The wallet transfers exactly
+  // this number and fal-ai-tools checks the transfer against its own quote, so
+  // a client price that drifted would fail at the chain rather than look wrong.
+  const { priceDhb: costDhb, isLoading: isQuoting, error: quoteError } = useJobQuote(
+    { kind: 'tool', modelId: selectedModelId },
+    open,
+  );
+  // Offering a payment someone cannot make would only fail at the signature,
+  // so a wallet short of the price is sent to buy instead.
+  const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
 
   const formatDhb = (amount: number) => {
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(2)}M`;
@@ -92,24 +94,19 @@ export function AiToolPaywallModal({
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
-      // Credit first; pay-as-you-go for the shortfall when there is not enough.
-      // fal-ai-tools debits the balance itself, so paying here tops up rather
-      // than charging a second time for the same run.
-      if (!hasEnoughBalance) {
-        if (needsTokens) {
-          toast.dismiss('ai-tool-payment');
-          onOpenChange(false);
-          navigate('/app/buy');
-          setIsPaying(false);
-          return;
-        }
-        toast.loading(`Paying ${formatDhb(shortfall)} DHB...`, { id: 'ai-tool-payment' });
-        await payAsYouGo(shortfall);
-        refresh();
+      if (needsTokens) {
+        toast.dismiss('ai-tool-payment');
+        onOpenChange(false);
+        navigate('/app/buy');
+        setIsPaying(false);
+        return;
       }
 
+      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'ai-tool-payment' });
+      const txHash = await payForJob(costDhb);
+
       toast.dismiss('ai-tool-payment');
-      onConfirm();
+      onConfirm(txHash);
     } catch (err: unknown) {
       console.error('[AiToolPaywall] Tool setup failed:', err);
       toast.dismiss('ai-tool-payment');
@@ -128,7 +125,9 @@ export function AiToolPaywallModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    // Locked shut while a transfer is in flight: it cannot be recalled once
+    // signed, and a modal that unmounts mid-payment takes the hash with it.
+    <Dialog open={open} onOpenChange={(next) => { if (!isPaying) onOpenChange(next); }}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
@@ -230,7 +229,7 @@ export function AiToolPaywallModal({
 
           {/* DHB Cost */}
           <div className={`bg-gradient-to-r ${gradientColors[categoryInfo.color] || gradientColors.purple} rounded-xl p-4 border`}>
-            {loading ? (
+            {loading || isQuoting ? (
               <div className="flex items-center justify-center py-2">
                 <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
                 <span className="ml-2 text-zinc-400">Fetching live price...</span>
@@ -247,35 +246,35 @@ export function AiToolPaywallModal({
                     <p className="text-xs text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
                   </div>
                 </div>
-                {error && (
+                {(error || quoteError) && (
                   <div className="flex items-center gap-2 mt-2 text-yellow-500 text-xs">
                     <AlertCircle className="w-3 h-3" />
-                    <span>{error}</span>
+                    <span>{quoteError || error}</span>
                   </div>
                 )}
               </>
             )}
           </div>
 
-          {/* User Balance */}
+          {/* Wallet balance */}
           <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-3">
-            <span className="text-zinc-400">Your Balance</span>
+            <span className="text-zinc-400">Your DHB</span>
             <div className="flex items-center gap-2">
               <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
-              {isBalanceLoading ? (
+              {isWalletLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               ) : (
-                <span className={hasEnoughBalance ? 'text-white font-bold' : 'text-red-400'}>
-                  {formatDhb(userBalance)} DHB
+                <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
+                  {formatDhb(walletDhb)} DHB
                 </span>
               )}
             </div>
           </div>
 
-          {!hasEnoughBalance && !loading && !isBalanceLoading && (
+          {needsTokens && !loading && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3 flex flex-col items-center gap-2">
               <p className="text-red-400 text-sm text-center">
-                Insufficient DHB balance. You need {formatDhb(costDhb - userBalance)} more DHB.
+                Insufficient DHB balance. You need {formatDhb(costDhb - walletDhb)} more DHB.
               </p>
               <Button
                 variant="outline"
@@ -303,7 +302,7 @@ export function AiToolPaywallModal({
             variant="glass"
             className="flex-1 font-medium"
             onClick={handlePayAndExecute}
-            disabled={loading || isBalanceLoading || isWalletLoading || isProcessing || isPaying}
+            disabled={loading || isQuoting || isWalletLoading || isProcessing || isPaying}
           >
             {isPaying ? (
               <>
