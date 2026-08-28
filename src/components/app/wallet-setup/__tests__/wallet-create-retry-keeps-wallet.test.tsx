@@ -52,11 +52,16 @@ const mocks = vi.hoisted(() => ({
  */
 vi.mock('@/lib/wallet-core/derive', () => ({
   generateMnemonic12: mocks.generateMnemonic12,
-  deriveFromSecret: (secret: string) => ({
-    secret,
-    ethAddress: `0x${secret.replace(/\W/g, '').padEnd(40, '0').slice(0, 40)}`,
-    ethPrivateKey: `0x${secret.replace(/\W/g, '').padEnd(64, '0').slice(0, 64)}`,
-  }),
+  deriveFromSecret: (secret: string) => {
+    // "phrase-2" → 0x0…02, so the addresses stay well-formed hex and still say
+    // at a glance which phrase produced them.
+    const nth = secret.replace(/\D/g, '') || '0';
+    return {
+      secret,
+      ethAddress: `0x${nth.padStart(40, '0')}`,
+      ethPrivateKey: `0x${nth.padStart(64, '0')}`,
+    };
+  },
   isValidMnemonic: () => true,
   isRawPrivateKey: () => false,
 }));
