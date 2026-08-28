@@ -21,7 +21,7 @@ export async function listChannelVideos(): Promise<{ videos: ChannelVideo[]; tru
 export interface MigrationQuote {
   chargeId: string;
   videoCount: number;
-  unitPriceDhb: number;
+  perVideoCreditDhb: number;
   creditAppliedDhb: number;
   amountDhb: number;
   recipient: string | null;
@@ -63,6 +63,15 @@ export interface MigrationChargeStatus {
 
 export async function getMigrationChargeStatus(chargeId: string): Promise<MigrationChargeStatus> {
   return apiCall<MigrationChargeStatus>(`/api/youtube_migration/charge/${chargeId}`, {
+    requiresAuth: true,
+  });
+}
+
+/** The creator's most recently paid batch, or null if they've never run one
+ * — lets the page resume showing progress/results after a reload or a
+ * closed tab instead of restarting the whole connect/list flow. */
+export async function getActiveMigrationCharge(): Promise<MigrationChargeStatus | null> {
+  return apiCall<MigrationChargeStatus | null>('/api/youtube_migration/charge/active', {
     requiresAuth: true,
   });
 }
