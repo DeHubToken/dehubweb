@@ -143,10 +143,10 @@ export function GeneratePanel() {
     else void runVoice();
   }, [canRun, blockingIssue, kind, runVoice]);
 
-  const runImage = useCallback(() => {
+  const runImage = useCallback((txHash: string) => {
     setImagePaywallOpen(false);
     startImage(
-      { prompt: prompt.trim(), model: imageModel, aspectRatio: imageAspect },
+      { prompt: prompt.trim(), model: imageModel, aspectRatio: imageAspect, txHash },
       {
         prompt: prompt.trim(),
         resolvedPrompt: prompt.trim(),
@@ -159,7 +159,7 @@ export function GeneratePanel() {
   }, [prompt, imageModel, imageAspect, startImage, setPanel]);
 
   const runVideoJob = useCallback(
-    (options?: VideoGenerationOptions) => {
+    (options: VideoGenerationOptions | undefined, txHash: string) => {
       setVideoPaywallOpen(false);
       startVideo(
         {
@@ -174,6 +174,7 @@ export function GeneratePanel() {
           audioUrls: options?.audioUrls,
           videoUrls: options?.videoUrls,
           seed: options?.seed,
+          txHash,
         },
         {
           prompt: prompt.trim(),

@@ -40,8 +40,10 @@ interface Plan {
 
 /**
  * Allowances are DHB, and the numbers below have to match AI_PLANS in
- * supabase/functions/_shared/ai-plans.ts — that file is what actually grants
- * the credit when an invoice is paid.
+ * supabase/functions/_shared/ai-plans.ts — that file is what actually sends
+ * the tokens when an invoice is paid. They are real DHB delivered to the
+ * subscriber's wallet, not a balance held here: there is no credit ledger any
+ * more, and a job is paid for by a transfer signed at the moment it runs.
  *
  * The previous copy ("3,500 credits/mo = 1,750 Nano Banana Pro Generations")
  * was inherited from a competitor whose credit unit is not ours. Nothing ever
@@ -61,9 +63,9 @@ const plans: Plan[] = [
     tagline: '',
     headline: 'For getting started with AI creation',
     breakdown: [
-      '23,000 DHB credit/mo',
+      '23,000 DHB/mo, sent to your wallet',
       '= 54 Veo 3.1 Fast videos  ·  212 Nano Banana Pro images',
-      'Credit is DHB — it never expires',
+      'Real DHB in your wallet — spend it anywhere, it never expires',
     ],
     monthly: 19,
     annual: 15,
@@ -90,9 +92,9 @@ const plans: Plan[] = [
     tagline: 'Best value',
     headline: 'For creators building AI projects',
     breakdown: [
-      '130,000 DHB credit/mo',
+      '130,000 DHB/mo, sent to your wallet',
       '= 78 Veo 3.1 videos  ·  1,203 Nano Banana Pro images',
-      'DHB credit never expires — top up any time',
+      'Real DHB in your wallet — it never expires',
     ],
     monthly: 129,
     annual: 99,
@@ -129,7 +131,7 @@ const plans: Plan[] = [
     tagline: '',
     headline: 'For agencies and small teams to create faster',
     breakdown: [
-      '88,000 DHB credit per seat/mo',
+      '88,000 DHB per seat/mo, sent to your wallet',
       '= 53 Veo 3.1 videos  ·  814 Nano Banana Pro images',
       'Pooled across the workspace — never expires',
     ],
@@ -146,7 +148,7 @@ const plans: Plan[] = [
           '2 to 9 members in one shared workspace',
           'Parallel generations: up to 16 video & 16 image',
           'Access to all features & models',
-          'Shared credit pool',
+          'Shared DHB pool',
           'Shared workspace for your team',
           'Early access to advanced AI features',
           'Access to Seedance 2.0',
@@ -182,7 +184,7 @@ const plans: Plan[] = [
     tagline: '',
     headline: 'Designed for growing creative teams',
     breakdown: [
-      '210,000 DHB credit per seat/mo',
+      '210,000 DHB per seat/mo, sent to your wallet',
       '= 126 Veo 3.1 videos  ·  1,944 Nano Banana Pro images',
       'Pooled across the workspace — never expires',
     ],
@@ -201,7 +203,7 @@ const plans: Plan[] = [
           '5 to 15 members in one shared workspace',
           'Parallel generations: up to 20 videos & 24 images',
           'Access to all features & models',
-          'Shared credit pool',
+          'Shared DHB pool',
           'Shared workspace for your team',
           'Early access to advanced AI features',
           'Access to Seedance 2.0',

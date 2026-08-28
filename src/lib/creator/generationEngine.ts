@@ -22,6 +22,8 @@ export interface ImageRequest {
   sourceImage?: string;
   /** Requested framing, e.g. '16:9'. Steered in the prompt by the edge function. */
   aspectRatio?: string;
+  /** Hash of the DHB transfer that paid for this job. */
+  txHash?: string;
 }
 
 export interface VideoRequest {
@@ -37,6 +39,8 @@ export interface VideoRequest {
   audioUrls?: string[];
   videoUrls?: string[];
   seed?: number;
+  /** Hash of the DHB transfer that paid for this job. */
+  txHash?: string;
 }
 
 /**
@@ -177,6 +181,8 @@ export interface Model3dRequest {
   quad?: boolean;
   seed?: number;
   exportFormat?: 'glb' | 'usdz' | 'fbx' | 'obj' | 'stl';
+  /** Hash of the DHB transfer that paid for this job. */
+  txHash?: string;
 }
 
 /**
@@ -368,6 +374,7 @@ export async function generateImage(
       model: req.model,
       ...(sourceImage ? { sourceImage } : {}),
       ...(req.aspectRatio ? { aspectRatio: req.aspectRatio } : {}),
+      ...(req.txHash ? { txHash: req.txHash } : {}),
     },
   });
 
@@ -412,6 +419,7 @@ export async function generateVideo(
       ...(req.audioUrls?.length ? { audioUrls: req.audioUrls } : {}),
       ...(req.videoUrls?.length ? { videoUrls: req.videoUrls } : {}),
       ...(req.seed !== undefined ? { seed: req.seed } : {}),
+      ...(req.txHash ? { txHash: req.txHash } : {}),
     },
   });
 
@@ -594,6 +602,7 @@ export async function generate3d(
       ...(req.quad ? { quad: req.quad } : {}),
       ...(req.seed !== undefined ? { seed: req.seed } : {}),
       ...(req.exportFormat ? { exportFormat: req.exportFormat } : {}),
+      ...(req.txHash ? { txHash: req.txHash } : {}),
     },
   });
 

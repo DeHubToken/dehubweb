@@ -32,8 +32,8 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAiCredits } from '@/hooks/use-ai-credits';
-import { payAsYouGo, useSpendableDhb } from '@/lib/ai-payg';
+import { useJobQuote } from '@/hooks/use-ai-quote';
+import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -52,7 +52,8 @@ interface Model3dPaywallModalProps {
   model: Model3dModel;
   selectedModelKey: Model3dModelKey;
   onModelChange: (key: Model3dModelKey) => void;
-  onConfirm: (options?: Model3dGenerationOptions) => void;
+  /** Receives the options and the hash of the transfer that paid for this run. */
+  onConfirm: (options: Model3dGenerationOptions | undefined, txHash: string) => void;
   isGenerating?: boolean;
   /** True when a reference image is attached, so image-only models stay pickable. */
   hasReference?: boolean;
@@ -81,12 +82,11 @@ export function Model3dPaywallModal({
   const [exportFormat, setExportFormat] = useState<'glb' | 'usdz' | 'fbx' | 'obj' | 'stl'>('glb');
 
   const { walletAddress } = useAuth();
-  // Credit balance, not the wallet's on-chain holding — the generate function
-  // charges credit, and holding DHB is not the same as having topped it up.
-  const { balanceDhb, isLoading: profileLoading, refresh } = useAiCredits();
+  // What the wallet actually holds on the two chains the treasury accepts —
+  // the only balance there is now. The job is paid for by a transfer signed
+  // here and verified on chain by generate-3d.
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
   const navigate = useNavigate();
-  const userBalance = balanceDhb;
 
   // Reset the options whenever the model changes; they are not all portable
   // between families and a stale face limit on a model that ignores it is just
@@ -125,13 +125,16 @@ export function Model3dPaywallModal({
   // Priced on the exact texture quality, so the Total moves when the toggle
   // does and the charge always matches the number on screen.
   const costUsd = getModel3dCostUsd(model, textureQuality);
-  const costDhb = dhbPrice ? getModel3dCostDhb(model, dhbPrice, textureQuality) : 0;
-  const hasEnoughBalance = userBalance >= costDhb;
-  const shortfall = Math.max(0, costDhb - userBalance);
-  // Three states: enough credit, enough DHB to pay for this one job, or
-  // neither — in which case offering a payment would only fail.
-  const canPayAsYouGo = !hasEnoughBalance && walletDhb >= shortfall;
-  const needsTokens = !hasEnoughBalance && !canPayAsYouGo && !isWalletLoading;
+  // Priced by the server, not from the constants. The wallet transfers exactly
+  // this number and generate-3d checks the transfer against its own quote, so
+  // a client price that drifted would fail at the chain rather than look wrong.
+  const { priceDhb: costDhb, isLoading: isQuoting, error: quoteError } = useJobQuote(
+    { kind: 'model3d', modelId: selectedModelKey, quality: textureQuality },
+    open,
+  );
+  // Offering a payment someone cannot make would only fail at the signature,
+  // so a wallet short of the price is sent to buy instead.
+  const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
 
   const formatDhb = (amount: number) => {
     if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(2)}M`;
@@ -159,24 +162,19 @@ export function Model3dPaywallModal({
     try {
       const options = buildOptions();
 
-      // Credit first; pay-as-you-go for the shortfall when there is not enough.
-      // generate-3d debits the balance itself, so paying here tops up rather
-      // than charging a second time for the same mesh.
-      if (!hasEnoughBalance) {
-        if (needsTokens) {
-          toast.dismiss('model3d-gen-payment');
-          onOpenChange(false);
-          navigate('/app/buy');
-          setIsPaying(false);
-          return;
-        }
-        toast.loading(`Paying ${formatDhb(shortfall)} DHB...`, { id: 'model3d-gen-payment' });
-        await payAsYouGo(shortfall);
-        refresh();
+      if (needsTokens) {
+        toast.dismiss('model3d-gen-payment');
+        onOpenChange(false);
+        navigate('/app/buy');
+        setIsPaying(false);
+        return;
       }
 
+      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'model3d-gen-payment' });
+      const txHash = await payForJob(costDhb);
+
       toast.dismiss('model3d-gen-payment');
-      onConfirm(options);
+      onConfirm(options, txHash);
     } catch (err: unknown) {
       console.error('[Model3dPaywall] Generation setup failed:', err);
       toast.dismiss('model3d-gen-payment');
@@ -445,7 +443,7 @@ export function Model3dPaywallModal({
 
             {/* DHB cost */}
             <div className="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-xl p-3 border border-cyan-500/20">
-              {loading ? (
+              {loading || isQuoting ? (
                 <div className="flex items-center justify-center py-2">
                   <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
                   <span className="ml-2 text-zinc-400 text-sm">Fetching live price...</span>
@@ -462,35 +460,35 @@ export function Model3dPaywallModal({
                       <p className="text-[10px] text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
                     </div>
                   </div>
-                  {error && (
+                  {(error || quoteError) && (
                     <div className="flex items-center gap-2 mt-1.5 text-yellow-500 text-xs">
                       <AlertCircle className="w-3 h-3" />
-                      <span>{error}</span>
+                      <span>{quoteError || error}</span>
                     </div>
                   )}
                 </>
               )}
             </div>
 
-            {/* Balance */}
+            {/* Wallet balance */}
             <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-2.5">
-              <span className="text-zinc-400">Your Balance</span>
+              <span className="text-zinc-400">Your DHB</span>
               <div className="flex items-center gap-2">
                 <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
-                {profileLoading ? (
+                {isWalletLoading ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
                 ) : (
-                  <span className={hasEnoughBalance ? 'text-white font-bold' : 'text-red-400'}>
-                    {formatDhb(userBalance)} DHB
+                  <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
+                    {formatDhb(walletDhb)} DHB
                   </span>
                 )}
               </div>
             </div>
 
-            {!hasEnoughBalance && !loading && !profileLoading && (
+            {needsTokens && !loading && (
               <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-2.5 flex flex-col items-center gap-1.5">
                 <p className="text-red-400 text-xs text-center">
-                  Insufficient DHB. Need {formatDhb(costDhb - userBalance)} more DHB.
+                  Insufficient DHB. Need {formatDhb(costDhb - walletDhb)} more DHB.
                 </p>
                 <Button
                   variant="outline"
@@ -522,7 +520,7 @@ export function Model3dPaywallModal({
             variant="glass"
             className="flex-1 font-medium h-10"
             onClick={handlePayAndGenerate}
-            disabled={loading || profileLoading || isWalletLoading || isGenerating || isPaying}
+            disabled={loading || isQuoting || isWalletLoading || isGenerating || isPaying}
           >
             {isPaying ? (
               <>

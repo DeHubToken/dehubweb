@@ -19,6 +19,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, readFunctionError } from '@/lib/ai-invoke';
+import { fetchJobQuote, formatDhb } from '@/hooks/use-ai-quote';
+import { payForJob } from '@/lib/ai-payment';
+import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
@@ -231,11 +234,22 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
+        // Generation is paid in live DHB, so this pays before it asks. There
+        // is no paywall modal on this surface — the price is quoted, the
+        // transfer is signed, and the hash rides along with the request. The
+        // model id matches generate-image's own default, or the quote would
+        // price a job the server is not about to run.
+        const { priceDhb } = await fetchJobQuote({ kind: 'image', modelId: 'gemini-2.5-flash' });
+        toast.loading(`Paying ${formatDhb(priceDhb)} DHB...`, { id: 'chat-image-payment' });
+        const txHash = await payForJob(priceDhb);
+        toast.dismiss('chat-image-payment');
+
         const { data, error } = await invokeAi('generate-image', {
           body: {
             prompt: wantsDeHubBrand ? buildDeHubBrandPrompt(currentInput) : currentInput,
             sourceImage: effectiveSourceImage || undefined,
             logoImage: brandLogoImage,
+            txHash,
           }
         });
 
@@ -291,6 +305,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       }
     } catch (error) {
       console.error('AI chat error:', error);
+      toast.dismiss('chat-image-payment');
       // Append the reason to the translated line rather than replacing it, so
       // "not enough DHB" or "rate limited" reaches the user without needing a
       // new key in all 110 locales.

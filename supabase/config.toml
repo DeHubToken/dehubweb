@@ -28,7 +28,7 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, not a Supabase JWT, so the
   # platform check stays off and requireDeHubAuth does the work.
-  [functions.ai-credits]
+  [functions.ai-quote]
     verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
   [functions.arcade-score]

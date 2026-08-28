@@ -4,7 +4,7 @@ import Replicate from "https://esm.sh/replicate@0.25.2";
 // x-dehub-token, which chargeForJob requires and the browser will not send
 // unless the preflight says they are allowed. A local copy silently drops them.
 import { corsHeaders, rateLimitByIp } from "../_shared/auth.ts";
-import { chargeForJob } from "../_shared/ai-credit-guard.ts";
+import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import {
   kieKey,
   kieUsableUrl,
@@ -957,6 +957,7 @@ serve(async (req) => {
     const charged = await chargeForJob(req, {
       kind: 'video',
       modelId: model,
+      body,
       actionType: 'generate-video',
       rateLimit: { limit: 20, windowMs: 60 * 60 * 1000 },
       durationSeconds: parseInt(String(duration), 10) || undefined,

@@ -5,8 +5,8 @@ import { Loader2, ImageIcon, AlertCircle, ChevronDown } from 'lucide-react';
 import { ImageModel, ImageModelKey, IMAGE_MODELS, IMAGE_MODEL_OPTIONS, getImageCostUsd } from '@/constants/image-models.constants';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { toast } from 'sonner';
-import { useAiCredits, useJobQuote, formatDhb, DHB_USD_PEG } from '@/hooks/use-ai-credits';
-import { payAsYouGo, useSpendableDhb } from '@/lib/ai-payg';
+import { useJobQuote, formatDhb, DHB_USD_PEG } from '@/hooks/use-ai-quote';
+import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
 import { useNavigate } from 'react-router-dom';
 
 interface ImagePaywallModalProps {
@@ -15,7 +15,8 @@ interface ImagePaywallModalProps {
   model: ImageModel;
   selectedModelKey: ImageModelKey;
   onModelChange: (modelKey: ImageModelKey) => void;
-  onConfirm: () => void;
+  /** Receives the hash of the transfer that paid for this run. */
+  onConfirm: (txHash: string) => void;
   isGenerating?: boolean;
   /**
    * How many images this run will produce. The studio composer lets creators
@@ -47,33 +48,21 @@ export function ImagePaywallModal({
     { kind: 'image', modelId: selectedModelKey, quantity: count },
     open,
   );
-  const { balanceDhb, isLoading: isBalanceLoading, refresh } = useAiCredits();
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
 
-  const hasEnoughBalance = balanceDhb >= costDhb;
-  const shortfall = Math.max(0, costDhb - balanceDhb);
-  // Three states, not two. Someone holding neither credit nor DHB cannot
-  // pay-as-you-go either, so the honest answer is to send them to buy rather
-  // than offer a payment that is guaranteed to fail.
-  const canPayAsYouGo = !hasEnoughBalance && walletDhb >= shortfall;
-  const needsTokens = !hasEnoughBalance && !canPayAsYouGo && !isWalletLoading;
+  // Someone without the DHB cannot pay at all, so the honest answer is to send
+  // them to buy rather than offer a payment that is guaranteed to fail.
+  const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
 
   /**
-   * Two ways to pay, and the balance decides which.
+   * One way to pay: sign a DHB transfer for the price and hand the hash on.
    *
-   * With enough credit this just hands over — the generate function debits the
-   * balance itself, no signature and no gas. Without, it falls back to
-   * pay-as-you-go: sign for the shortfall, have it credited, then generate.
-   * Either way the charge happens server-side against a verified balance,
-   * which the old flow did not do at all.
+   * The generate function verifies that transfer on chain before it spends
+   * anything with a provider, so nothing here is taken on trust — and there is
+   * no balance in between that could hold value no token stands behind.
    */
   const handlePayAndGenerate = async () => {
     if (costDhb <= 0) return;
-
-    if (hasEnoughBalance) {
-      onConfirm();
-      return;
-    }
 
     if (needsTokens) {
       onOpenChange(false);
@@ -83,11 +72,10 @@ export function ImagePaywallModal({
 
     setIsPaying(true);
     try {
-      toast.loading(`Paying ${formatDhb(shortfall)} DHB...`, { id: 'image-gen-payment' });
-      await payAsYouGo(shortfall);
-      refresh();
+      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'image-gen-payment' });
+      const txHash = await payForJob(costDhb);
       toast.success('Payment confirmed. Generating...', { id: 'image-gen-payment' });
-      onConfirm();
+      onConfirm(txHash);
     } catch (err) {
       toast.dismiss('image-gen-payment');
       toast.error(err instanceof Error ? err.message : 'Payment failed.');
@@ -97,10 +85,10 @@ export function ImagePaywallModal({
   };
 
   return (
-    // The modal no longer needs to lock itself shut. Payment used to be an
-    // on-chain transfer that could not be recalled once signed; the debit now
-    // happens inside the generate call, so closing early simply cancels.
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    // Locked shut while a transfer is in flight. It cannot be recalled once
+    // signed, and a modal that unmounts mid-payment takes the hash with it —
+    // which is money paid for a generation that then never starts.
+    <Dialog open={open} onOpenChange={(next) => { if (!isPaying) onOpenChange(next); }}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
@@ -221,16 +209,16 @@ export function ImagePaywallModal({
             )}
           </div>
 
-          {/* Credit Balance */}
+          {/* Wallet balance */}
           <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-3">
-            <span className="text-zinc-400">Your Credit</span>
+            <span className="text-zinc-400">Your DHB</span>
             <div className="flex items-center gap-2">
               <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
-              {isBalanceLoading ? (
+              {isWalletLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               ) : (
-                <span className={hasEnoughBalance ? 'text-white font-bold' : 'text-red-400'}>
-                  {formatDhb(balanceDhb)} DHB
+                <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
+                  {formatDhb(walletDhb)} DHB
                 </span>
               )}
             </div>
@@ -243,17 +231,10 @@ export function ImagePaywallModal({
             </p>
           )}
 
-          {canPayAsYouGo && !isQuoting && (
-            <p className="text-xs text-zinc-400 text-center">
-              No credit balance — you'll pay {formatDhb(shortfall)} DHB from your wallet for this
-              run. Buy credit in bulk to skip the signature and the gas.
-            </p>
-          )}
-
-          {needsTokens && !isQuoting && !isBalanceLoading && (
+          {needsTokens && !isQuoting && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
               <p className="text-red-400 text-sm text-center">
-                This costs {formatDhb(costDhb)} DHB and you have no credit and no DHB to pay with.
+                This costs {formatDhb(costDhb)} DHB and you hold {formatDhb(walletDhb)}.
               </p>
             </div>
           )}
@@ -273,7 +254,7 @@ export function ImagePaywallModal({
             variant="glass"
             className="flex-1 font-medium"
             onClick={handlePayAndGenerate}
-            disabled={isQuoting || isBalanceLoading || isWalletLoading || isGenerating || isPaying}
+            disabled={isQuoting || isWalletLoading || isGenerating || isPaying}
           >
             {isPaying ? (
               <>
@@ -287,10 +268,8 @@ export function ImagePaywallModal({
               </>
             ) : needsTokens ? (
               'Buy DHB'
-            ) : canPayAsYouGo ? (
-              `Pay ${formatDhb(shortfall)} DHB & Generate`
             ) : (
-              'Generate'
+              `Pay ${formatDhb(costDhb)} DHB & Generate`
             )}
           </Button>
         </div>
