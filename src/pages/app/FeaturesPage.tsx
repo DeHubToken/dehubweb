@@ -105,6 +105,38 @@ const STATUS_BADGE_STYLES: Partial<Record<FeatureStatus, string>> = {
  * always has; several tile so a multi-screenshot bug report stays scannable
  * without pushing the vote controls off screen.
  */
+/**
+ * A single attachment, with its space reserved before it arrives.
+ *
+ * These images are lazy, and an `<img>` that has not loaded has no intrinsic
+ * height — so `w-full max-h-64` alone gave a box 677px wide and 0px tall. A
+ * card whose screenshot has not scrolled into view therefore rendered as if it
+ * had no attachment at all, which is exactly how "see screenshot" reports get
+ * read as having no screenshot. Holding 16rem (the same 64 the loaded image is
+ * capped at) until `onLoad` also stops every card below it jumping down the
+ * page as attachments arrive.
+ */
+function LazyAttachmentImage({ url }: { url: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className={cn('relative w-full', !loaded && 'h-64 animate-pulse bg-white/[0.04]')}>
+      <img
+        src={url}
+        alt="Attachment"
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        // Errors must not strand the skeleton pulsing forever — settle the box
+        // and let the browser show its own broken-image state.
+        onError={() => setLoaded(true)}
+        className={cn(
+          'w-full max-h-64 object-contain bg-black/30 transition-opacity duration-300',
+          loaded ? 'opacity-100' : 'absolute inset-0 h-full opacity-0'
+        )}
+      />
+    </div>
+  );
+}
+
 function FeatureAttachments({ feature }: { feature: FeatureRequest }) {
   const urls = featureAttachments(feature);
   if (urls.length === 0) return null;
@@ -116,7 +148,7 @@ function FeatureAttachments({ feature }: { feature: FeatureRequest }) {
         {isVideoAttachment(url) ? (
           <video src={url} className="w-full max-h-64 object-contain bg-black" controls />
         ) : (
-          <img src={url} alt="Attachment" className="w-full max-h-64 object-contain bg-black/30" loading="lazy" />
+          <LazyAttachmentImage url={url} />
         )}
       </div>
     );
