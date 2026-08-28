@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Youtube, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -32,13 +33,13 @@ import {
 
 type Stage = 'loading' | 'not-connected' | 'listing' | 'quoting' | 'paying' | 'processing' | 'done';
 
-/** The default Checkbox's `border-primary` renders as a near-invisible
- * hairline (the `--border` token is a deliberately subtle divider color, not
- * a control border). A hardcoded white ring only fixes dark theme and goes
- * invisible again on light — `border-foreground` tracks the theme's own text
- * color, which contrasts the page background either way. */
+/** Two attempts at a theme-token color (`border-primary`, then
+ * `border-foreground`) both went invisible on some DeHub theme — this app
+ * remaps named colors per theme, so any semantic token can end up close to
+ * its own background. Bracket syntax below is a literal, unthemed color:
+ * black border, white fill, on every theme, full stop. */
 const CHECKBOX_CLASS =
-  'h-5 w-5 border-2 border-foreground/50 data-[state=checked]:border-foreground data-[state=checked]:bg-foreground data-[state=checked]:text-background';
+  'h-5 w-5 shrink-0 rounded border-[2.5px] border-[#000] bg-[#fff] shadow-[0_0_0_1px_rgba(255,255,255,0.6)] data-[state=checked]:bg-[#000] data-[state=checked]:text-[#fff]';
 
 export default function YoutubeMigratePage() {
   const { user } = useAuth();
@@ -205,21 +206,30 @@ export default function YoutubeMigratePage() {
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
             <div className="flex max-h-96 flex-col gap-1 overflow-y-auto -mx-2 px-2">
               {videos.map(v => (
-                <label
+                <div
                   key={v.youtubeVideoId}
-                  className={`flex items-center gap-3 rounded-xl p-2.5 text-sm hover:bg-white/5 ${v.alreadyImported ? 'opacity-40' : 'cursor-pointer'}`}
+                  role="checkbox"
+                  aria-checked={v.alreadyImported || selected.has(v.youtubeVideoId)}
+                  tabIndex={v.alreadyImported ? -1 : 0}
+                  onClick={() => !v.alreadyImported && toggle(v.youtubeVideoId)}
+                  onKeyDown={(e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && !v.alreadyImported) {
+                      e.preventDefault();
+                      toggle(v.youtubeVideoId);
+                    }
+                  }}
+                  className={`flex items-center gap-3 rounded-xl p-2.5 text-sm hover:bg-white/5 select-none ${v.alreadyImported ? 'opacity-40' : 'cursor-pointer'}`}
                 >
                   <Checkbox
                     checked={v.alreadyImported || selected.has(v.youtubeVideoId)}
                     disabled={v.alreadyImported}
-                    onCheckedChange={() => toggle(v.youtubeVideoId)}
-                    className={CHECKBOX_CLASS}
+                    className={cn(CHECKBOX_CLASS, 'pointer-events-none')}
                   />
                   <span className="truncate text-white">{v.title}</span>
                   {v.alreadyImported && (
                     <span className="ml-auto shrink-0 text-[11px] text-zinc-500">Imported</span>
                   )}
-                </label>
+                </div>
               ))}
             </div>
             <Button
