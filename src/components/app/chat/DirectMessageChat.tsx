@@ -1872,17 +1872,17 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
 
       {/* Init error banner — shown when createAndStart timed out for a new conversation */}
       {initError && isVirtualConv && (
-        <div className="px-4 py-2.5 bg-white/5 border-t border-white/10 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-zinc-300 text-xs min-w-0">
+        <div className="px-4 py-2.5 bg-white/5 border-t border-white/10 flex flex-col items-stretch gap-2">
+          <div className="flex items-center gap-2 text-zinc-300 text-xs">
             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            <span className="truncate">Could not connect — server didn't respond</span>
+            <span>Could not connect — server didn't respond</span>
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleRetryInit}
             disabled={createAndStart.isPending}
-            className="text-white hover:text-zinc-200 hover:bg-white/10 shrink-0 h-7 px-2 text-xs"
+            className="text-white hover:text-zinc-200 hover:bg-white/10 w-full h-7 px-2 text-xs"
           >
             {createAndStart.isPending ? (
               <Loader2 className="w-3 h-3 animate-spin mr-1" />

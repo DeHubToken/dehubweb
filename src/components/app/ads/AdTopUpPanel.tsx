@@ -249,12 +249,12 @@ export function AdTopUpPanel({
               <span className="ml-2 text-zinc-400 text-sm">Fetching live price…</span>
             </div>
           ) : priceError || !dhbPrice ? (
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col items-stretch gap-3">
               <div className="flex items-center gap-2 text-yellow-500 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>Live DHB price unavailable — a top-up can't be credited until it's back.</span>
               </div>
-              <Button size="sm" variant="glass" onClick={() => refetchQuote()}>Retry</Button>
+              <Button size="sm" variant="glass" className="w-full" onClick={() => refetchQuote()}>Retry</Button>
             </div>
           ) : (
             <div className="flex items-center justify-between">
