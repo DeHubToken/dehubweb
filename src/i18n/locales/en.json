@@ -1637,7 +1637,7 @@
     "community": {
       "title": "Community",
       "members": "Members",
-      "active": "Active",
+      "active": "Active registered users",
       "today": "Today",
       "thisWeek": "This week",
       "thisMonth": "This month",
@@ -1645,7 +1645,7 @@
       "allTime": "All time",
       "newMembers": "New members",
       "chartMembers": "Members over time",
-      "chartActive": "Active people",
+      "chartActive": "Active registered users",
       "growth": "+{{percent}}% this month",
       "growthTerm": "Growth",
       "recordingSince": "recorded since {{date}}"
