@@ -143,6 +143,68 @@ export class WalletNotLinkedError extends Error {
 }
 
 /**
+ * Move this login's existing account onto the wallet this browser holds.
+ *
+ * For the case where the account is linked to one address and the browser can
+ * only derive another. Signing in from there does not reach the account: the
+ * signature registers as a brand-new signup, which is both a second empty
+ * account under a generated username and — since the history gate — usually no
+ * account at all, because a wallet minted seconds ago has nothing on chain.
+ *
+ * Two proofs, and the backend requires both: the Supabase token says WHICH
+ * account (the same verifierId join the passwordless exchange uses), and the
+ * signature says the destination is a wallet the caller controls. Nothing here
+ * can move an account onto a wallet that did not sign.
+ *
+ * ORDER MATTERS — this must run BEFORE authenticateWallet. A signature login
+ * sends web3AuthMeta, and the backend makes that link exclusive by unsetting it
+ * on every other account, including the one being rescued, after which there is
+ * nothing left to look the account up by.
+ *
+ * The session it returns is deliberately dropped: the caller signs in straight
+ * afterwards through the normal path, so "signed in" keeps one definition.
+ *
+ * @throws WalletNotLinkedError when there is no account to move (409), which is
+ *   the ordinary answer for a genuinely new signup.
+ */
+export async function rotateWallet(
+  address: string,
+  signature: string,
+  timestamp: number,
+  chainId: number,
+  supabaseAccessToken: string,
+): Promise<void> {
+  const response = await fetch(`${DEHUB_API_BASE}/api/auth/rotate-wallet`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      // Header rather than body so it stays out of request logs that record
+      // bodies — same reasoning as authenticateWithSupabaseSession.
+      'x-supabase-authorization': `Bearer ${supabaseAccessToken}`,
+      ...deviceHeaders(),
+    },
+    body: JSON.stringify({
+      address: address.toLowerCase(),
+      sig: signature,
+      timestamp,
+      chainId,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({} as Record<string, unknown>));
+    const code = errorData.code as string | undefined;
+    if (code === 'WALLET_NOT_LINKED' || code === 'WALLET_LINK_AMBIGUOUS') {
+      throw new WalletNotLinkedError((errorData.message as string) || undefined);
+    }
+    throw new Error(
+      (errorData.message as string) || (errorData.error as string) || 'Could not move the account',
+    );
+  }
+}
+
+/**
  * Exchange a Supabase access token for a DeHub session, with no wallet
  * signature — so login can finish without unlocking the wallet.
  *

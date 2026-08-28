@@ -26,6 +26,7 @@ import { setBackgroundPaused } from '@/lib/background-gate';
 import {
   authenticateWallet,
   authenticateWithSupabaseSession,
+  rotateWallet,
   WalletNotLinkedError,
   WalletSignupBlockedError,
   getAccountInfo,
@@ -310,6 +311,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Settings while already signed in. Only changes the sheet's title.
   const [loginIntent, setLoginIntent] = useState<'login' | 'add-profile'>('login');
   const [walletPhase, setWalletPhase] = useState<WalletPhase>('none');
+  // The address this Supabase identity is linked to, when it is NOT the wallet
+  // this browser holds — set by completeLoginWithoutUnlock when it refuses the
+  // exchange, and consumed by the signature that follows, which moves the
+  // account across instead of registering as a new signup. Null the rest of the
+  // time, which is every ordinary login.
+  const driftedLinkRef = useRef<string | null>(null);
   // Hydrated from storage rather than left null until some login flow happens
   // to run. This is the identity that OWNS the wallet row, and it is needed on
   // an ordinary page load where no login is in progress: BiometricUnlockSettings
@@ -664,6 +671,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       );
       const meta = await getSupabaseAuthMeta();
       toast.loading('Signing in...', { id: 'auth-smart-wallet' });
+      // Same drift, one step earlier in the flow: this silent resume is reached
+      // straight after the exchange was refused, so it signs for the same
+      // wallet the account is not linked to.
+      await moveAccountToThisWallet(address, signature, timestamp, 8453);
       const authResponse = await authenticateWallet(address, signature, timestamp, 8453, meta);
       applyAuthenticatedSession(authResponse, address, userId, 'SMART-RESUME');
       toast.success(
@@ -1697,6 +1708,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         matched = (await predictSafeAddress(storedEoa)) === address ? 'predicted-safe' : null;
       }
       if (!matched && !serverLinkedEmail) {
+        // The signature about to be taken would arrive as a NEW signup — a
+        // second empty account beside the real one, or, since the wallet
+        // history gate, no account at all and a dead end on every device.
+        // Record the link so that signature moves the account here instead.
+        driftedLinkRef.current = address;
         authLogger.warn('Supabase session maps to a different wallet — falling back to signing', {
           linked: address,
           stored: storedEoa,
@@ -1736,6 +1752,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  /**
+   * When this identity's account lives at an address this browser cannot
+   * derive, move the account here before signing in — otherwise the signature
+   * registers as a new signup, and the account, its username, its posts and its
+   * messages stay behind at an address nobody can sign for.
+   *
+   * Runs only when completeLoginWithoutUnlock actually saw the drift. A normal
+   * login never reaches it, and neither does switchActiveWallet, which is a
+   * deliberate move to a DIFFERENT account and must not drag this one onto it.
+   *
+   * The same signature serves both calls: it carries the timestamp it was
+   * signed with, the backend re-derives the message from that, and it stays
+   * valid for 24 hours. Two round trips, one wallet prompt.
+   *
+   * A failure here never blocks the sign-in. The rescue is best-effort by
+   * design — a backend without the endpoint, a link that turns out to point
+   * nowhere, or an account that has since moved all land here, and refusing to
+   * continue would leave the person signed out with nothing to retry.
+   */
+  const moveAccountToThisWallet = async (
+    address: string,
+    signature: string,
+    timestamp: number,
+    chainId: number,
+  ) => {
+    const linked = driftedLinkRef.current;
+    if (!linked || linked.toLowerCase() === address.toLowerCase()) return;
+    // Cleared before the attempt, not after: one drift gets one rescue, so a
+    // failure cannot have the next signature in this session try again from a
+    // state the first attempt may already have changed.
+    driftedLinkRef.current = null;
+
+    try {
+      const { data } = await supabase.auth.getSession();
+      const accessToken = data?.session?.access_token;
+      if (!accessToken) return;
+      await rotateWallet(address, signature, timestamp, chainId, accessToken);
+      authLogger.warn('Moved account onto the wallet this browser holds', {
+        from: linked,
+        to: address,
+      });
+    } catch (e) {
+      // WalletNotLinkedError is the ordinary answer when there is nothing to
+      // move; anything else is worth a row, since the sign-in that follows will
+      // create a second account or be refused by the signup gate.
+      authLogger.warn('Could not move the account onto this wallet', {
+        from: linked,
+        to: address,
+        reason: e instanceof Error ? e.message : String(e),
+        expected: e instanceof WalletNotLinkedError,
+      });
+    }
+  };
+
   const signAndAuthenticateSmartWallet = async (toastId: string) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
@@ -1763,6 +1833,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const meta = await getSupabaseAuthMeta();
     toast.loading('Signing in...', { id: toastId });
+    await moveAccountToThisWallet(address, signature, timestamp, BASE_CHAIN_ID);
     const authResponse = await authenticateWallet(address, signature, timestamp, BASE_CHAIN_ID, meta);
 
     applyAuthenticatedSession(authResponse, address, supabaseUserId, flow);
@@ -1811,6 +1882,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const switchActiveWallet = async (secret: string, password: string) => {
     if (!supabaseUserId) throw new Error('Not signed in');
+    // Reaching a DIFFERENT account on purpose. Any drift recorded earlier in
+    // this session must not turn that into a move of the account being left.
+    driftedLinkRef.current = null;
     const toastId = 'auth-switch-wallet';
     setIsConnecting(true);
     try {
@@ -2224,6 +2298,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const disconnect = async (options?: { forgetProfile?: boolean }) => {
     // Best-effort server-side token revocation (fire-and-forget)
     logoutFromServer().catch(() => {});
+    // Belongs to the identity signing out — the next one must not inherit it.
+    driftedLinkRef.current = null;
 
     // Read the identity off storage before any of it is cleared below, so an
     // explicit sign-out can drop that account from this device's profile list.
