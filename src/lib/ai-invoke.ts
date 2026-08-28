@@ -1,8 +1,8 @@
 /**
  * Authenticated calls to the paid AI functions.
  * =============================================
- * generate-image, generate-video, generate-3d and fal-ai-tools now charge a
- * DHB balance, which means they need to know who is calling. They read the
+ * generate-image, generate-video, generate-3d and fal-ai-tools charge live
+ * DHB per job, which means they need to know who is calling. They read the
  * DeHub token from `x-dehub-token` and the wallet from `x-wallet-address`
  * rather than a Supabase JWT, so `supabase.functions.invoke` has to be handed
  * those headers explicitly.
@@ -14,6 +14,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
+import { forgetPayment } from '@/lib/ai-payment';
 
 /** Headers the paid AI functions authenticate against. Empty when signed out. */
 export function dehubAuthHeaders(): Record<string, string> {
@@ -37,23 +38,46 @@ export function dehubAuthHeaders(): Record<string, string> {
 // drop-in for it at 11 existing call sites, and defaulting to `unknown` would
 // make every one of them a type error over data they already destructure.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function invokeAi<T = any>(
+export async function invokeAi<T = any>(
   name: string,
   options: { body?: unknown; headers?: Record<string, string> } = {},
 ) {
-  return supabase.functions.invoke<T>(name, {
+  const result = await supabase.functions.invoke<T>(name, {
     ...options,
     headers: { ...dehubAuthHeaders(), ...options.headers },
   });
+
+  // Retire the payment this call carried. It happens here rather than in a
+  // paywall because a paywall hands over before the job runs and never learns
+  // whether its hash was accepted: a job that succeeds has spent the whole
+  // transfer, and one refused as exhausted had it spent already.
+  //
+  // A voice session is the exception — one transfer buys a block of exchanges
+  // and has to survive them — so it says so and keeps its hash.
+  const body = options.body as { txHash?: unknown; purpose?: unknown } | undefined;
+  if (typeof body?.txHash === 'string' && body.purpose !== 'voice') {
+    const spent = !result.error || isPaymentExhausted(await readFunctionError(result.error, result.data));
+    if (spent) forgetPayment(body.txHash);
+  }
+
+  return result;
+}
+
+function isPaymentExhausted(message: string): boolean {
+  return message.includes('PAYMENT_EXHAUSTED') || message.includes('already been used');
 }
 
 /**
- * True when a failed call was a credit problem rather than a broken request,
- * so callers can send the user to top up instead of showing a generic error.
+ * True when a call was refused over payment rather than a broken request, so
+ * callers can send the user back to the paywall instead of showing a generic
+ * error.
  */
-export function isInsufficientCredit(error: unknown): boolean {
+export function isPaymentRequired(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error ?? '');
-  return message.includes('INSUFFICIENT_CREDITS') || message.includes('Not enough DHB credit');
+  return message.includes('PAYMENT_REQUIRED')
+    || message.includes('PAYMENT_EXHAUSTED')
+    || message.includes('PAYMENT_UNVERIFIED')
+    || message.includes('costs DHB');
 }
 
 /**

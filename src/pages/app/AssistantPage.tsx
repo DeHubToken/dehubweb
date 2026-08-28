@@ -36,7 +36,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 import { createLogger } from '@/lib/logger';
-import { useAiCredits } from '@/hooks/use-ai-credits';
+import { fetchJobQuote, formatDhb } from '@/hooks/use-ai-quote';
+import { payForJob } from '@/lib/ai-payment';
 import { SEOHead } from '@/components/SEOHead';
 import { MarkdownText } from '@/lib/markdown';
 
@@ -689,15 +690,13 @@ export default function AssistantPage() {
   const userContext = useAssistantUserContext();
 
   /**
-   * Voice runs on the DHB credit balance like everything else.
+   * Voice is bought as a session, not per exchange.
    *
-   * It used to keep its own prepaid counter in localStorage — forgeable in
-   * devtools, per-device, and gone on a cache clear. Now that fal-ai-tools
-   * charges the balance itself (Whisper 60 + Dia 80 = 140 DHB an exchange),
-   * that counter was gating the same exchange a second time, so someone with
-   * credit could still be told they had none.
+   * Whisper 60 + Dia 80 = 140 DHB an exchange, and a wallet signature between
+   * every sentence is not a conversation — so one transfer up front covers a
+   * block of exchanges and the backend counts them down against it. The hook
+   * owns that payment; this only has to handle it running out.
    */
-  const { balanceDhb: voiceBalanceDhb, refresh: refreshVoiceBalance } = useAiCredits();
   const voiceStopRef = useRef<(() => void) | null>(null);
 
   // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
@@ -706,11 +705,10 @@ export default function AssistantPage() {
       voiceTranscriptHandlerRef.current?.(text);
     },
     onPaymentRequired: () => {
-      // The server refused the charge mid-conversation. Stop rather than let
-      // the mic keep listening into a session that cannot answer.
+      // The session is used up. Stop rather than let the mic keep listening
+      // into a conversation that cannot answer.
       voiceStopRef.current?.();
-      refreshVoiceBalance();
-      toast.error('Out of DHB credit — top up to keep talking.');
+      toast.error('Voice session used up — start voice mode again to buy another.');
     },
     isChatLoading: isLoading,
   });
@@ -1211,7 +1209,7 @@ export default function AssistantPage() {
   }, [clearPendingVideo]);
 
   // Handle video generation after payment confirmation
-  const handleVideoGenerationConfirm = async (options?: VideoGenerationOptions) => {
+  const handleVideoGenerationConfirm = async (options: VideoGenerationOptions | undefined, txHash: string) => {
     if (!pendingVideoRequest) return;
 
     const { prompt, model, sourceImage } = pendingVideoRequest;
@@ -1238,6 +1236,7 @@ export default function AssistantPage() {
           ...(options?.audioUrls && options.audioUrls.length > 0 && { audioUrls: options.audioUrls }),
           ...(options?.videoUrls && options.videoUrls.length > 0 && { videoUrls: options.videoUrls }),
           ...(options?.seed !== undefined && { seed: options.seed }),
+          txHash,
         }
       });
 
@@ -1291,7 +1290,7 @@ export default function AssistantPage() {
   };
 
   // Handle image generation after payment confirmation
-  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string; headline?: string; bannerRenderer?: 'template' | 'scene'; bannerFormat?: 'landscape' | 'square' | 'portrait' }) => {
+  const handleImageGenerationConfirm = async (txHash: string, override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string; headline?: string; bannerRenderer?: 'template' | 'scene'; bannerFormat?: 'landscape' | 'square' | 'portrait' }) => {
     const req = override ?? pendingImageRequest;
     if (!req) return;
 
@@ -1328,7 +1327,8 @@ export default function AssistantPage() {
           bannerRenderer,
           bannerFormat,
           conversationHistory,
-          model
+          model,
+          txHash,
         }
       });
 
@@ -1447,7 +1447,7 @@ export default function AssistantPage() {
     }
   }, [pollVideoStatus, clearPendingTool, clearPendingVideo, savePendingVideo, queueMessage]);
 
-  const handleAiToolConfirm = async () => {
+  const handleAiToolConfirm = async (txHash: string) => {
     if (!pendingAiToolRequest) return;
 
     const { prompt, tool, category, sourceImage } = pendingAiToolRequest;
@@ -1458,7 +1458,7 @@ export default function AssistantPage() {
 
     try {
       const actualTool = tool;
-      const body: Record<string, unknown> = { tool: actualTool, prompt };
+      const body: Record<string, unknown> = { tool: actualTool, prompt, txHash };
       if (sourceImage) body.image_url = sourceImage;
       if (category === 'tts') body.text = prompt;
       // Pass lyrics separately for music tools
@@ -2890,15 +2890,7 @@ export default function AssistantPage() {
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
-                          // 140 DHB an exchange; refuse to open the mic with
-                          // nothing to pay the first one with.
-                          if (voiceBalanceDhb < 140) {
-                            toast.error('Voice chat costs 140 DHB an exchange. Top up to start.');
-                            return;
-                          }
-                          voiceAssistant.startVoiceMode();
-                        }}
+                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
                         disabled={isLoading && !voiceAssistant.isVoiceMode}
                         className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
                           voiceAssistant.isVoiceMode
@@ -3067,13 +3059,7 @@ export default function AssistantPage() {
                   {/* Voice Assistant Mode (mobile) */}
                   <button
                     type="button"
-                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
-                      if (voiceBalanceDhb < 140) {
-                        toast.error('Voice chat costs 140 DHB an exchange. Top up to start.');
-                        return;
-                      }
-                      voiceAssistant.startVoiceMode();
-                    }}
+                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
                     disabled={isLoading && !voiceAssistant.isVoiceMode}
                     className={`transition-colors p-1 disabled:opacity-30 ${
                       voiceAssistant.isVoiceMode
@@ -3147,7 +3133,7 @@ export default function AssistantPage() {
         recordingDuration={voiceAssistant.recordingDuration}
         onStop={voiceAssistant.stopVoiceMode}
         onStopSpeaking={voiceAssistant.stopSpeaking}
-        remainingCredits={Math.floor(voiceBalanceDhb / 140)}
+        remainingCredits={voiceAssistant.exchangesLeft}
       />
 
       <PostModal
@@ -3233,7 +3219,19 @@ export default function AssistantPage() {
               cfg.dimension === 'landscape' ? 'landscape'
               : cfg.dimension === 'square' ? 'square'
               : 'portrait';
-            await handleImageGenerationConfirm({
+            // The template renderer is our own code and costs nothing, so it
+            // runs unpaid. The scene renderer is a metered model like any
+            // other and has to be paid for before it will run — this dialog is
+            // its paywall, so it quotes and signs here rather than handing the
+            // user off to another modal mid-flow.
+            let txHash = '';
+            if (bannerRenderer === 'scene') {
+              const { priceDhb } = await fetchJobQuote({ kind: 'image', modelId: DEHUB_BRAND_IMAGE_MODEL });
+              toast.loading(`Paying ${formatDhb(priceDhb)} DHB...`, { id: 'poster-payment' });
+              txHash = await payForJob(priceDhb);
+              toast.dismiss('poster-payment');
+            }
+            await handleImageGenerationConfirm(txHash, {
               prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
               model: DEHUB_BRAND_IMAGE_MODEL,
               logoImage: logoBase64,
@@ -3242,6 +3240,7 @@ export default function AssistantPage() {
               bannerFormat,
             });
           } catch (err) {
+            toast.dismiss('poster-payment');
             console.error('Poster generation error:', err);
             toast.error('Failed to start poster generation');
           } finally {

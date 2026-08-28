@@ -9,19 +9,19 @@ import { readFunctionError } from '@/lib/ai-invoke';
  *  - Every rejection from a paid AI function surfaced as Supabase's fixed
  *    "Edge Function returned a non-2xx status code", because `invoke` leaves
  *    `data` null on a non-2xx and the body is only reachable via `error.context`.
- *  - A claim that failed after the transfer was mined threw the hash away, and
- *    the ledger is keyed on that hash — so the DHB was gone with no handle left.
+ *  - A payment that failed after the transfer was mined threw the hash away,
+ *    so the DHB was gone with no handle left to retry it.
  */
 describe('paid AI error recovery', () => {
   it('reads the reason out of the response body, not the wrapper', async () => {
     const error = Object.assign(new Error('Edge Function returned a non-2xx status code'), {
-      context: new Response(JSON.stringify({ error: 'Not enough DHB credit for this generation.' }), {
+      context: new Response(JSON.stringify({ error: 'That payment has already been used up.' }), {
         status: 402,
       }),
     });
 
     await expect(readFunctionError(error, null)).resolves.toBe(
-      'Not enough DHB credit for this generation.',
+      'That payment has already been used up.',
     );
   });
 
@@ -49,18 +49,18 @@ describe('paid AI error recovery', () => {
     expect(response.bodyUsed, 'readFunctionError must clone, not consume').toBe(false);
   });
 
-  it('parks an unclaimed transfer instead of losing the hash', () => {
-    const source = readFileSync(resolve(__dirname, '../lib/ai-payg.ts'), 'utf8');
+  it('records a transfer as unspent instead of losing the hash', () => {
+    const source = readFileSync(resolve(__dirname, '../lib/ai-payment.ts'), 'utf8');
 
-    // The throw that ends claimTopUp must record the hash first, or a paid-for
-    // transfer becomes unrecoverable.
-    expect(source).toMatch(/rememberUnclaimed\(txHash\);\s*\n\s*throw new Error\(/);
-    // And a new payment must spend what is already owed before charging again.
-    expect(source).toMatch(/await flushUnclaimedTopUps\(\);/);
+    // The hash must be recorded before it is returned, or a job that dies
+    // between the signature and the provider costs a second transfer.
+    expect(source).toMatch(/writeUnspent\(\[\.\.\.readUnspent\(\), \{ txHash/);
+    // And a new payment must spend what is already paid for before charging.
+    expect(source).toMatch(/const reusable = remember \? reusablePayment\(priceDhb\) : null;/);
   });
 
   it('bounds the chain switch so the paywall cannot wedge', () => {
-    const source = readFileSync(resolve(__dirname, '../lib/ai-payg.ts'), 'utf8');
+    const source = readFileSync(resolve(__dirname, '../lib/ai-payment.ts'), 'utf8');
 
     expect(source).toMatch(/withTimeout\(\s*switchChain\(payChainId\)/);
     // The timeout must not wrap anything that has already been signed.

@@ -476,8 +476,8 @@ const sections: GuideSection[] = [
     ],
     tips: [
       "A free stock asset library sits alongside the Studio for anything you would rather not generate.",
-      "Generation runs on AI credits, denominated in DHB, which every account accrues daily.",
-      "Heavier users can take an Ultra, Team or Scale plan for a monthly credit allowance instead."
+      "Generation is paid for in DHB from your wallet — you sign one transfer per job, and the price is quoted before you pay.",
+      "Heavier users can take an Ultra, Team or Scale plan, which sends a monthly DHB allowance straight to their wallet."
     ]
   },
   {

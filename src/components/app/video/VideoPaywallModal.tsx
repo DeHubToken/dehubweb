@@ -6,8 +6,9 @@ import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoC
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAiCredits } from '@/hooks/use-ai-credits';
-import { payAsYouGo, useSpendableDhb } from '@/lib/ai-payg';
+
+import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
+import { useJobQuote } from '@/hooks/use-ai-quote';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
@@ -31,7 +32,8 @@ interface VideoPaywallModalProps {
   model: VideoModel;
   selectedModelKey: VideoModelKey;
   onModelChange: (modelKey: VideoModelKey) => void;
-  onConfirm: (options?: VideoGenerationOptions) => void;
+  /** Receives the options and the hash of the transfer that paid for this run. */
+  onConfirm: (options: VideoGenerationOptions | undefined, txHash: string) => void;
   isGenerating?: boolean;
   /**
    * Seed values from a caller that already collected them, so the Creator
@@ -100,13 +102,11 @@ export function VideoPaywallModal({
   const videoInputRef = useRef<HTMLInputElement>(null);
 
   const { walletAddress } = useAuth();
-  // The balance that matters is DHB credit, not the wallet's on-chain holding —
-  // generate-video charges credit, and holding DHB is not the same as having
-  // topped it up.
-  const { balanceDhb, isLoading: profileLoading, refresh } = useAiCredits();
+  // What the wallet actually holds on the two chains the treasury accepts.
+  // That is the only balance there is now — the job is paid for by a transfer
+  // signed here and verified on chain by generate-video.
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
   const navigate = useNavigate();
-  const userBalance = balanceDhb;
 
   // Reset options when model changes. Duration and resolution fall back to the
   // caller's seed first, so a value the creator already chose upstream survives.
@@ -180,15 +180,18 @@ export function VideoPaywallModal({
   };
 
   const isPerSecond = !!model.perSecondCostUsd;
+  // Priced by the server, not from the constants. The wallet now transfers
+  // exactly this number and generate-video verifies that the transfer covers
+  // its own quote, so a client-side price that drifted by a single DHB would
+  // fail at the chain rather than merely look wrong.
+  const { priceDhb: costDhb, isLoading: isQuoting, error: quoteError } = useJobQuote(
+    { kind: 'video', modelId: selectedModelKey, durationSeconds: isPerSecond ? duration : undefined },
+    open,
+  );
   const costUsd = getVideoCostUsd(model, isPerSecond ? duration : undefined);
-  const costDhb = dhbPrice ? getVideoCostDhb(model, dhbPrice, isPerSecond ? duration : undefined) : 0;
-  const isBalanceLoading = profileLoading;
-  const hasEnoughBalance = userBalance >= costDhb;
-  const shortfall = Math.max(0, costDhb - userBalance);
-  // Three states: enough credit, enough DHB to pay for this one job, or
-  // neither — in which case offering a payment would only fail.
-  const canPayAsYouGo = !hasEnoughBalance && walletDhb >= shortfall;
-  const needsTokens = !hasEnoughBalance && !canPayAsYouGo && !isWalletLoading;
+  // Offering a payment someone cannot make would only fail at the signature,
+  // so a wallet short of the price is sent to buy instead.
+  const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
 
   const hasAdvancedFeatures = model.supportsReferenceImages || model.supportsEndFrame || model.supportsAudioInput || model.supportsVideoInput || model.supportsSeed;
 
@@ -288,27 +291,22 @@ export function VideoPaywallModal({
         setIsUploading(false);
       }
 
-      // Credit first; pay-as-you-go for the shortfall when there is not enough.
-      // generate-video debits the balance itself, so paying here tops up — it
-      // is never a second charge for the same job.
-      if (!hasEnoughBalance) {
-        if (needsTokens) {
-          // The upload phase claims this toast id and sonner loading toasts
-          // never auto-dismiss, so an early return has to clear it or a
-          // spinner is left running forever.
-          toast.dismiss('video-gen-payment');
-          onOpenChange(false);
-          navigate('/app/buy');
-          setIsPaying(false);
-          return;
-        }
-        toast.loading(`Paying ${formatDhb(shortfall)} DHB...`, { id: 'video-gen-payment' });
-        await payAsYouGo(shortfall);
-        refresh();
+      if (needsTokens) {
+        // The upload phase claims this toast id and sonner loading toasts
+        // never auto-dismiss, so an early return has to clear it or a
+        // spinner is left running forever.
+        toast.dismiss('video-gen-payment');
+        onOpenChange(false);
+        navigate('/app/buy');
+        setIsPaying(false);
+        return;
       }
 
+      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'video-gen-payment' });
+      const txHash = await payForJob(costDhb);
+
       toast.dismiss('video-gen-payment');
-      onConfirm(options);
+      onConfirm(options, txHash);
     } catch (err: unknown) {
       console.error('[VideoPaywall] Generation setup failed:', err);
       toast.dismiss('video-gen-payment');
@@ -768,7 +766,7 @@ export function VideoPaywallModal({
 
             {/* DHB Cost */}
             <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-xl p-3 border border-purple-500/20">
-              {loading ? (
+              {loading || isQuoting ? (
                 <div className="flex items-center justify-center py-2">
                   <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
                   <span className="ml-2 text-zinc-400 text-sm">Fetching live price...</span>
@@ -785,35 +783,35 @@ export function VideoPaywallModal({
                       <p className="text-[10px] text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
                     </div>
                   </div>
-                  {error && (
+                  {(error || quoteError) && (
                     <div className="flex items-center gap-2 mt-1.5 text-yellow-500 text-xs">
                       <AlertCircle className="w-3 h-3" />
-                      <span>{error}</span>
+                      <span>{quoteError || error}</span>
                     </div>
                   )}
                 </>
               )}
             </div>
 
-            {/* User Balance */}
+            {/* Wallet balance */}
             <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-2.5">
-              <span className="text-zinc-400">Your Balance</span>
+              <span className="text-zinc-400">Your DHB</span>
               <div className="flex items-center gap-2">
                 <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
-                {isBalanceLoading ? (
+                {isWalletLoading ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
                 ) : (
-                  <span className={hasEnoughBalance ? 'text-white font-bold' : 'text-red-400'}>
-                    {formatDhb(userBalance)} DHB
+                  <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
+                    {formatDhb(walletDhb)} DHB
                   </span>
                 )}
               </div>
             </div>
 
-            {!hasEnoughBalance && !loading && !isBalanceLoading && (
+            {needsTokens && !loading && (
               <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-2.5 flex flex-col items-center gap-1.5">
                 <p className="text-red-400 text-xs text-center">
-                  Insufficient DHB. Need {formatDhb(costDhb - userBalance)} more DHB.
+                  Insufficient DHB. Need {formatDhb(costDhb - walletDhb)} more DHB.
                 </p>
                 <Button
                   variant="outline"
@@ -842,7 +840,7 @@ export function VideoPaywallModal({
             variant="glass"
             className="flex-1 font-medium h-10"
             onClick={handlePayAndGenerate}
-            disabled={loading || isBalanceLoading || isWalletLoading || isGenerating || isPaying || isUploading}
+            disabled={loading || isQuoting || isWalletLoading || isGenerating || isPaying || isUploading}
           >
             {isUploading ? (
               <>

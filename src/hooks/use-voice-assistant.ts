@@ -7,7 +7,8 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { invokeAi, isInsufficientCredit } from '@/lib/ai-invoke';
+import { invokeAi, isPaymentRequired } from '@/lib/ai-invoke';
+import { payForVoiceSession, VOICE_EXCHANGE_DHB, VOICE_SESSION_EXCHANGES } from '@/lib/ai-payment';
 import { toast } from 'sonner';
 
 interface UseVoiceAssistantOptions {
@@ -50,6 +51,8 @@ interface UseVoiceAssistantReturn {
   isSpeaking: boolean;
   /** Current recording duration in seconds */
   recordingDuration: number;
+  /** Exchanges left on the prepaid session, or undefined before one is bought. */
+  exchangesLeft?: number;
 }
 
 export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAssistantReturn {
@@ -58,6 +61,11 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [status, setStatus] = useState<VoiceStatus>('idle');
   const [isSpeaking, setIsSpeaking] = useState(false);
+
+  // The transfer that paid for this session. Every exchange carries it, and
+  // the backend counts them down against what it is worth.
+  const sessionTxRef = useRef<string>('');
+  const [exchangesLeft, setExchangesLeft] = useState<number | undefined>(undefined);
   const [recordingDuration, setRecordingDuration] = useState(0);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -116,11 +124,15 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
   // Transcribe audio via Whisper (fal-ai-tools)
   const transcribeAudio = useCallback(async (audioUrl: string): Promise<string> => {
     const { data, error } = await invokeAi('fal-ai-tools', {
-      body: { tool: 'whisper', audio_url: audioUrl },
+      body: { tool: 'whisper', audio_url: audioUrl, txHash: sessionTxRef.current, purpose: 'voice' },
     });
 
     if (error) throw error;
     if (data.error) throw new Error(data.error);
+
+    // One exchange drawn from the session. The server is the authority on
+    // what is left; this is the display counting alongside it.
+    setExchangesLeft((left) => (left === undefined ? left : Math.max(0, left - 1)));
 
     return data.text || '';
   }, []);
@@ -143,7 +155,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     const truncated = cleanText.substring(0, 1500);
 
     const { data, error } = await invokeAi('fal-ai-tools', {
-      body: { tool: 'dia-tts', text: truncated },
+      body: { tool: 'dia-tts', text: truncated, txHash: sessionTxRef.current, purpose: 'voice' },
     });
 
     if (error) throw error;
@@ -325,10 +337,10 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
           }
         } catch (err) {
           console.error('[VoiceAssistant] Transcription error:', err);
-          // Running out of credit is not a transcription failure, and
+          // Running out of the prepaid session is not a transcription failure, and
           // restarting the mic would only burn another round trip into the
           // same refusal. Hand it up so the caller can stop and say why.
-          if (isInsufficientCredit(err)) {
+          if (isPaymentRequired(err)) {
             onPaymentRequiredRef.current?.();
             resolve();
             return;
@@ -366,20 +378,50 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
   // Start voice mode
   const startVoiceMode = useCallback(async () => {
+    let stream: MediaStream;
     try {
-      // Request mic permission first
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-
-      voiceModeRef.current = true;
-      setIsVoiceMode(true);
-      toast.success('Voice mode activated — each exchange uses Whisper + Dia TTS (DHB charged per use)');
-
-      startListening();
+      // Request mic permission first — asking someone to pay for a session
+      // they then cannot use would be the wrong order.
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err) {
       console.error('[VoiceAssistant] Permission denied:', err);
       toast.error('Microphone access required for voice mode');
+      return;
     }
+
+    // Voice is billed per exchange and cannot ask for a signature between
+    // sentences, so the session is paid for once up front and each exchange
+    // draws from that one transfer.
+    const sessionDhb = VOICE_SESSION_EXCHANGES * VOICE_EXCHANGE_DHB;
+    // A session already paid for on this page is picked back up rather than
+    // bought again — stopping and restarting voice mode must not cost twice.
+    if (sessionTxRef.current) {
+      streamRef.current = stream;
+      voiceModeRef.current = true;
+      setIsVoiceMode(true);
+      startListening();
+      return;
+    }
+
+    try {
+      toast.loading(`Paying ${sessionDhb.toLocaleString()} DHB for a voice session...`, { id: 'voice-session' });
+      sessionTxRef.current = await payForVoiceSession();
+      setExchangesLeft(VOICE_SESSION_EXCHANGES);
+      toast.success(
+        `Voice mode activated — ${VOICE_SESSION_EXCHANGES} exchanges paid for.`,
+        { id: 'voice-session' },
+      );
+    } catch (err) {
+      toast.dismiss('voice-session');
+      toast.error(err instanceof Error ? err.message : 'Could not pay for a voice session.');
+      stream.getTracks().forEach((track) => track.stop());
+      return;
+    }
+
+    streamRef.current = stream;
+    voiceModeRef.current = true;
+    setIsVoiceMode(true);
+    startListening();
   }, [startListening]);
 
   // Stop voice mode
@@ -443,5 +485,6 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     stopSpeaking,
     isSpeaking,
     recordingDuration,
+    exchangesLeft,
   };
 }

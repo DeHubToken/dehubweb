@@ -14,7 +14,7 @@
 // x-dehub-token, which chargeForJob requires and the browser will not send
 // unless the preflight says they are allowed. A local copy silently drops them.
 import { corsHeaders, rateLimitByIp } from '../_shared/auth.ts';
-import { chargeForJob } from '../_shared/ai-credit-guard.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 type Mode = 'text-to-3d' | 'image-to-3d';
 
@@ -322,6 +322,7 @@ Deno.serve(async (req) => {
     const charged = await chargeForJob(req, {
       kind: 'model3d',
       modelId: model,
+      body,
       actionType: 'generate-3d',
       rateLimit: { limit: 20, windowMs: 60 * 60 * 1000 },
       quality: request.textureQuality ?? 'standard',

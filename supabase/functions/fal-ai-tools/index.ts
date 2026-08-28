@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { chargeForJob } from "../_shared/ai-credit-guard.ts";
+import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
 // says they are allowed. A local copy silently drops them; see auth.ts.
@@ -218,7 +218,9 @@ serve(async (req) => {
     if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
     const body = await req.json();
-    const { tool, requestId, appId: statusAppId, statusUrl, responseUrl, ...params } = body;
+    // txHash and purpose are payment fields, not tool inputs — pulled out here
+    // so they never reach buildInput and get forwarded to the provider.
+    const { tool, requestId, appId: statusAppId, statusUrl, responseUrl, txHash: _txHash, purpose: _purpose, ...params } = body;
 
     // ─── Status check for async tools ───
     if (requestId && (statusUrl || statusAppId)) {
@@ -261,6 +263,7 @@ serve(async (req) => {
     const charged = await chargeForJob(req, {
       kind: 'tool',
       modelId: tool,
+      body,
       actionType: 'fal-ai-tools',
       rateLimit: { limit: 40, windowMs: 60 * 60 * 1000 },
     });
