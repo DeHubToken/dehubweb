@@ -30,29 +30,35 @@ const mocks = vi.hoisted(() => ({
     async (_userId: string): Promise<{ ethAddress: string; payload: unknown } | null> => null,
   ),
   /**
-   * Two different, valid mnemonics handed out in order — a stand-in for the
-   * real generator, which returns a new wallet on every call. That is the
-   * behaviour under test: the component must ask for one and keep it, so the
-   * second phrase here should never reach a wallet.
-   *
-   * It also keeps ethers' randomBytes out of the test. Under jsdom it hands
-   * Mnemonic.fromEntropy a Node Buffer, which ethers' own getBytes then
-   * rejects as an invalid BytesLike — an environment quirk with nothing to say
-   * about this component.
+   * A distinct phrase per call — a stand-in for the real generator, which
+   * mints a new wallet every time it is asked. That is the whole point: the
+   * component must ask once and keep the answer, so "phrase-2" should never
+   * reach a wallet.
    */
-  generateMnemonic12: vi.fn(() => {
-    const phrases = [
-      'test test test test test test test test test test test junk',
-      'legal winner thank year wave sausage worth useful legal winner thank yellow',
-    ];
-    const next = phrases[Math.min(mocks.generateMnemonic12.mock.calls.length - 1, 1)];
-    return next;
-  }),
+  generateMnemonic12: vi.fn(
+    () => `phrase-${mocks.generateMnemonic12.mock.calls.length}`,
+  ),
 }));
 
-vi.mock('@/lib/wallet-core/derive', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@/lib/wallet-core/derive')>()),
+/**
+ * Derivation is stubbed rather than run.
+ *
+ * ethers cannot do mnemonics under jsdom here: its sha256 is handed a Node
+ * Buffer, its own getBytes rejects that as an invalid BytesLike, and
+ * isValidMnemonic swallows the failure and answers "not a valid phrase" — so
+ * every real derivation fails for a reason that has nothing to do with this
+ * component. The mapping below is deterministic and one-to-one, which is all
+ * the assertions need: same phrase in, same address out.
+ */
+vi.mock('@/lib/wallet-core/derive', () => ({
   generateMnemonic12: mocks.generateMnemonic12,
+  deriveFromSecret: (secret: string) => ({
+    secret,
+    ethAddress: `0x${secret.replace(/\W/g, '').padEnd(40, '0').slice(0, 40)}`,
+    ethPrivateKey: `0x${secret.replace(/\W/g, '').padEnd(64, '0').slice(0, 64)}`,
+  }),
+  isValidMnemonic: () => true,
+  isRawPrivateKey: () => false,
 }));
 
 vi.mock('@/lib/wallet-core/store', () => ({
