@@ -520,14 +520,23 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               type="button"
               onClick={runFullSearch}
               className={cn(
-                "relative z-20 flex w-full items-center gap-2.5 px-3.5 py-3 text-left text-[13px] border-b transition-colors",
+                "group relative z-20 flex w-full items-center gap-2.5 px-3.5 py-3 text-left text-[13px] border-b transition-colors",
                 isLightTheme
-                  ? "border-black/10 text-zinc-600 hover:text-black hover:bg-black/5"
-                  : "border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
+                  ? "border-black/10 text-zinc-600 hover:text-black"
+                  : "border-white/10 text-zinc-400 hover:text-white"
               )}
             >
               <Search className="w-4 h-4 flex-shrink-0" />
-              <span className="truncate">{t('sidebar.searchDehubFor', { query: navQuery.trim() })}</span>
+              <span
+                className={cn(
+                  "truncate transition-[text-shadow]",
+                  isLightTheme
+                    ? "group-hover:[text-shadow:0_0_10px_rgba(0,0,0,0.35)]"
+                    : "group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.75)]"
+                )}
+              >
+                {t('sidebar.searchDehubFor', { query: navQuery.trim() })}
+              </span>
               <CornerDownLeft className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-60" />
             </button>
           )}
@@ -693,14 +702,23 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               type="button"
               onClick={runFullSearch}
               className={cn(
-                "relative z-20 flex w-full items-center gap-2.5 px-3.5 py-3 text-left text-[13px] border-t transition-colors",
+                "group relative z-20 flex w-full items-center gap-2.5 px-3.5 py-3 text-left text-[13px] border-t transition-colors",
                 isLightTheme
-                  ? "border-black/10 text-zinc-600 hover:text-black hover:bg-black/5"
-                  : "border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
+                  ? "border-black/10 text-zinc-600 hover:text-black"
+                  : "border-white/10 text-zinc-400 hover:text-white"
               )}
             >
               <Search className="w-4 h-4 flex-shrink-0" />
-              <span className="truncate">{t('sidebar.searchDehubFor', { query: navQuery.trim() })}</span>
+              <span
+                className={cn(
+                  "truncate transition-[text-shadow]",
+                  isLightTheme
+                    ? "group-hover:[text-shadow:0_0_10px_rgba(0,0,0,0.35)]"
+                    : "group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.75)]"
+                )}
+              >
+                {t('sidebar.searchDehubFor', { query: navQuery.trim() })}
+              </span>
               <CornerDownLeft className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-60" />
             </button>
           )}
