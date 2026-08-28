@@ -119,6 +119,7 @@ const PRELOADERS: Record<string, Preloader | Preloader[]> = {
   '/premium': () => import('@/pages/Premium'),
   '/pricing': () => import('@/pages/PricingPage'),
   '/prompt': () => import('@/pages/PromptLanding'),
+  '/converter': () => import('@/pages/YoutubeImportPage'),
   '/guide': () => import('@/pages/GuidePage'),
   '/docs': () => import('@/pages/DocsSurface'),
   '/guides': () => import('@/pages/DocsSurface'),
