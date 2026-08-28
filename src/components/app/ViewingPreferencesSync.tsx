@@ -21,11 +21,13 @@ import { getCreatorPlaybackRates, setCreatorPlaybackRates } from '@/lib/video-pr
 import { sanitiseGroups, useFollowGroupList, writeGroups } from '@/lib/follow-groups';
 import { DEFAULT_AD_LOAD, normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
 import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
+import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 
 const PREF_KEY = 'videoChannelSpeeds';
 const GROUPS_KEY = 'followGroups';
 const AD_LOAD_KEY = 'adLoad';
 const SKIP_SEGMENTS_KEY = 'skipVideoSegments';
+const VIDEO_GLITCH_KEY = 'videoGlitchLoader';
 const EMPTY: Record<string, number> = {};
 
 /**
@@ -60,10 +62,20 @@ function useSkipSegmentsSync() {
   useSyncedPreference(SKIP_SEGMENTS_KEY, skipSegments, apply, false);
 }
 
+/** The video loading glitch; inbound only, same shape as the two above. */
+function useVideoGlitchSync() {
+  const videoGlitch = useVideoGlitch();
+  const apply = useCallback((value: unknown) => {
+    writeVideoGlitch(value === true || value === 'true');
+  }, []);
+  useSyncedPreference(VIDEO_GLITCH_KEY, videoGlitch, apply, false);
+}
+
 export function ViewingPreferencesSync() {
   useFollowGroupSync();
   useAdLoadSync();
   useSkipSegmentsSync();
+  useVideoGlitchSync();
   const [rates, setRates] = useState<Record<string, number>>(() => getCreatorPlaybackRates());
 
   // What the server last handed us. A server-applied map re-fires the same
