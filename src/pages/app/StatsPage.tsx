@@ -446,12 +446,40 @@ function CommunityTooltip({
   );
 }
 
-/** One number in a labelled row, matching the edge-health card's shape. */
-function MiniFigure({ value, label }: { value: string; label: string }) {
+/**
+ * A heading for a group of tiles.
+ *
+ * Bare rather than a bento: the tiles beneath it are the cards, and wrapping a
+ * label in its own card only to stack more cards under it reads as nesting that
+ * isn't there. `href`, when given, is the endpoint the group's figures come
+ * from — same self-evidencing habit as the traffic half.
+ */
+function GroupHeading({
+  icon: Icon,
+  title,
+  href,
+}: {
+  icon: typeof Users;
+  title: string;
+  href?: string;
+}) {
   return (
-    <div className="text-center">
-      <div className="text-base font-bold text-white tabular-nums">{value}</div>
-      <div className="text-[10px] text-zinc-500 leading-tight mt-0.5">{label}</div>
+    // The page stacks its children on a uniform space-y-3. Left alone a heading
+    // would sit as far from its own tiles as from the block above it; the extra
+    // top padding and negative bottom margin pull it into the group it labels.
+    <div className="flex items-baseline gap-2 px-1 pt-2 -mb-1">
+      <Icon className="w-4 h-4 text-zinc-400 self-center shrink-0" />
+      <span className="text-sm font-semibold text-white">{title}</span>
+      {href && (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors ml-auto shrink-0"
+        >
+          /api/stats/users
+        </a>
+      )}
     </div>
   );
 }
@@ -505,83 +533,96 @@ function CommunitySection({ range }: { range: Range }) {
   const { totals, active, newUsers, growth, history, provenance } = stats;
   const membersLabel = t('stats.community.members', 'Members');
   const newMembersLabel = t('stats.community.newMembers', 'New members');
+  const activeLabel = t('stats.community.active', 'Active registered users');
+  const todayLabel = t('stats.community.today', 'Today');
+  const weekLabel = t('stats.community.thisWeek', 'This week');
+  const monthLabel = t('stats.community.thisMonth', 'This month');
   const windowHint =
     windowDays == null
       ? t('stats.community.allTime', 'All time')
       : t('stats.countries.window', 'last {{days}} days', { days: view.span });
 
+  const activeTiles = [
+    {
+      key: 'today',
+      label: todayLabel,
+      value: active.daily,
+      hint: t('stats.tile.soFarToday', 'so far today, UTC'),
+    },
+    {
+      key: 'week',
+      label: weekLabel,
+      value: active.weekly,
+      hint: t('stats.countries.window', 'last {{days}} days', { days: 7 }),
+    },
+    {
+      key: 'month',
+      label: monthLabel,
+      value: active.monthly,
+      hint: t('stats.countries.window', 'last {{days}} days', { days: 30 }),
+    },
+  ];
+
   const periods = [
-    { key: 'today', label: t('stats.community.today', 'Today'), value: newUsers.today },
-    { key: 'week', label: t('stats.community.thisWeek', 'This week'), value: newUsers.thisWeek },
-    { key: 'month', label: t('stats.community.thisMonth', 'This month'), value: newUsers.thisMonth },
+    { key: 'today', label: todayLabel, value: newUsers.today },
+    { key: 'week', label: weekLabel, value: newUsers.thisWeek },
+    { key: 'month', label: monthLabel, value: newUsers.thisMonth },
     { key: 'year', label: t('stats.community.thisYear', 'This year'), value: newUsers.thisYear },
     { key: 'all', label: t('stats.community.allTime', 'All time'), value: newUsers.allTime },
   ];
 
   return (
     <>
-      {/* Headline: the platform's size, and how much of it showed up. */}
-      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Users className="w-4 h-4 text-zinc-400" />
-          <span className="text-sm font-semibold text-white">
-            {t('stats.community.title', 'Community')}
-          </span>
-          <a
-            href={USER_STATS_ENDPOINT}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors ml-auto truncate"
-          >
-            /api/stats/users
-          </a>
-        </div>
+      {/* One heading for the whole community half, then plain tile grids under
+          it — the same shape the traffic half uses, rather than a card whose
+          two halves were a big number and a cramped three-up cluster. */}
+      <GroupHeading
+        icon={Users}
+        title={t('stats.community.title', 'Community')}
+        href={USER_STATS_ENDPOINT}
+      />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 items-center">
+      {/* Members leads on its own row: it is the headline figure, and every
+          tile under it counts some slice of it. */}
+      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 px-4 py-4">
+        <div className="flex items-end justify-between gap-3 flex-wrap">
           <div>
-            <div className="text-3xl font-bold text-white tabular-nums">
+            <div className="text-[11px] uppercase tracking-wide text-zinc-500">{membersLabel}</div>
+            <div className="text-3xl sm:text-4xl font-bold text-white tabular-nums mt-0.5">
               {formatCount(totals.total)}
             </div>
-            <div className="text-sm text-zinc-500">{membersLabel}</div>
-            {growth.monthly != null && (
-              <div className="text-xs text-zinc-400 mt-1">
-                {t('stats.community.growth', '+{{percent}}% this month', {
-                  percent: growth.monthly,
-                })}
-              </div>
-            )}
           </div>
-
-          <div>
-            <div className="text-[11px] uppercase tracking-wide text-zinc-500 mb-1.5">
-              {t('stats.community.active', 'Active')}
+          {growth.monthly != null && (
+            <div className="text-xs text-zinc-400 tabular-nums pb-1">
+              {t('stats.community.growth', '+{{percent}}% this month', {
+                percent: growth.monthly,
+              })}
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              <MiniFigure value={formatCount(active.daily)} label={t('stats.community.today', 'Today')} />
-              <MiniFigure
-                value={formatCount(active.weekly)}
-                label={t('stats.community.thisWeek', 'This week')}
-              />
-              <MiniFigure
-                value={formatCount(active.monthly)}
-                label={t('stats.community.thisMonth', 'This month')}
-              />
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
+      {/* Active gets its own heading and its own full-width row. It was
+          previously wedged into the right half of the members card at a
+          smaller type scale than any comparable figure on the page. */}
+      <GroupHeading icon={Activity} title={activeLabel} />
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        {activeTiles.map((tile) => (
+          <StatTile
+            key={tile.key}
+            label={tile.label}
+            value={formatCount(tile.value)}
+            hint={tile.hint}
+          />
+        ))}
+      </div>
+
       {/* New members by period — the same five figures the admin panel shows. */}
-      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <UserPlus className="w-4 h-4 text-zinc-400" />
-          <span className="text-sm font-semibold text-white">{newMembersLabel}</span>
-        </div>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-          {periods.map((p) => (
-            <MiniFigure key={p.key} value={formatCount(p.value)} label={p.label} />
-          ))}
-        </div>
+      <GroupHeading icon={UserPlus} title={newMembersLabel} />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+        {periods.map((p) => (
+          <StatTile key={p.key} label={p.label} value={formatCount(p.value)} />
+        ))}
       </div>
 
       {/* The growth curve. Same currentColor treatment as the traffic chart, so
@@ -653,7 +694,7 @@ function CommunitySection({ range }: { range: Range }) {
       <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
         <div className="flex items-baseline justify-between mb-3 gap-2">
           <span className="text-sm font-semibold text-white">
-            {t('stats.community.chartActive', 'Active people')}
+            {t('stats.community.chartActive', 'Active registered users')}
           </span>
           {history.activeSince && (
             <span className="text-[11px] text-zinc-500 truncate">
