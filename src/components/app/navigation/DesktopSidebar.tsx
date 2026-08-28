@@ -510,6 +510,27 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               </div>
             </div>
           </div>
+          {/* Hand-off, top variant — the query was typed into the field above,
+              so that is where the user is looking; the bottom of the panel
+              (behind an emptied, scrolled-away list) is not. Mirrors the
+              bottom hand-off below, which stays put for a query owned by the
+              bottom field. */}
+          {navQuery && !isCollapsed && queryOwner === 'top' && (
+            <button
+              type="button"
+              onClick={runFullSearch}
+              className={cn(
+                "relative z-20 flex w-full items-center gap-2.5 px-3.5 py-3 text-left text-[13px] border-b transition-colors",
+                isLightTheme
+                  ? "border-black/10 text-zinc-600 hover:text-black hover:bg-black/5"
+                  : "border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
+              )}
+            >
+              <Search className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">{t('sidebar.searchDehubFor', { query: navQuery.trim() })}</span>
+              <CornerDownLeft className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-60" />
+            </button>
+          )}
           <div
             ref={scrollRef}
             className={cn(
@@ -662,10 +683,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           )}
           </div>
           </div>
-          {/* Hand-off. Always the last thing in the panel while a query is
-              typed, so the field is never a dead end: whatever was typed can be
-              run as a real search on Explore. */}
-          {navQuery && !isCollapsed && (
+          {/* Hand-off, bottom variant. Last thing in the panel while a query
+              typed into the BOTTOM field has no matches, so the field it was
+              typed into is never a dead end: whatever was typed can be run as
+              a real search on Explore. A query owned by the top field gets its
+              own copy above instead — see the comment there. */}
+          {navQuery && !isCollapsed && queryOwner === 'bottom' && (
             <button
               type="button"
               onClick={runFullSearch}
