@@ -23,7 +23,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/api/dehub';
 import { writeContractAA, getERC20Balance, getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
 import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { dehubAuthHeaders } from '@/lib/ai-invoke';
+import { dehubAuthHeaders, readFunctionError } from '@/lib/ai-invoke';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 const erc20TransferInterface = new Interface([
@@ -42,24 +42,118 @@ const CLAIM_DELAY_MS = 2500;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function claimTopUp(txHash: string): Promise<number> {
+/** How long to let the wallet get onto the paying chain before giving up. */
+const CHAIN_SWITCH_TIMEOUT_MS = 45_000;
+
+/**
+ * Reject with a useful message instead of hanging forever.
+ *
+ * Only safe around steps that have not signed anything — a timeout applied to a
+ * submitted transaction would report a failure over money that is still in
+ * flight.
+ */
+async function withTimeout<T>(work: Promise<T>, ms: number, message: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      work,
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(message)), ms);
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+/**
+ * Transfers that reached the treasury but were never credited.
+ *
+ * A claim can fail after the money has already moved — an indexer that stays
+ * behind longer than CLAIM_ATTEMPTS covers, a 5xx, a closed laptop. Before this
+ * existed the hash was thrown away with the error, and since the ledger is keyed
+ * on txHash that lost the only handle on a payment the user had already made.
+ * Parking it here makes the loss recoverable: the next payment flushes it first,
+ * and `topup` is idempotent, so a stale entry can only ever credit once.
+ */
+const UNCLAIMED_KEY = 'dehub.ai.unclaimedTopups';
+
+function readUnclaimed(): string[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(UNCLAIMED_KEY) || '[]');
+    return Array.isArray(raw) ? raw.filter((h): h is string => typeof h === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeUnclaimed(hashes: string[]): void {
+  try {
+    if (hashes.length) localStorage.setItem(UNCLAIMED_KEY, JSON.stringify(hashes));
+    else localStorage.removeItem(UNCLAIMED_KEY);
+  } catch {
+    // Private mode or a full quota. Losing the record is bad but it must not
+    // take the payment down with it.
+  }
+}
+
+/** Newest entries win: an unbounded list would retry forever and grow forever. */
+const MAX_UNCLAIMED = 20;
+
+function rememberUnclaimed(txHash: string): void {
+  const hashes = readUnclaimed();
+  if (hashes.includes(txHash)) return;
+  writeUnclaimed([...hashes, txHash].slice(-MAX_UNCLAIMED));
+}
+
+function forgetUnclaimed(txHash: string): void {
+  writeUnclaimed(readUnclaimed().filter((h) => h !== txHash));
+}
+
+/**
+ * Retry every parked transfer. Runs before a new payment so someone who is
+ * already owed credit spends that first instead of paying twice.
+ */
+export async function flushUnclaimedTopUps(): Promise<void> {
+  // One shot per entry. The indexer-lag retries exist for a transfer that was
+  // mined seconds ago; a parked hash is minutes or days old, so re-running them
+  // here would only add 15s of dead waiting in front of every later payment.
+  for (const txHash of readUnclaimed()) {
+    try {
+      await claimTopUp(txHash, 1);
+      forgetUnclaimed(txHash);
+    } catch {
+      // Still not claimable. Keep it parked and try again next time.
+    }
+  }
+}
+
+async function claimTopUp(txHash: string, attempts = CLAIM_ATTEMPTS): Promise<number> {
   let lastError = 'Could not credit the transfer.';
 
-  for (let attempt = 0; attempt < CLAIM_ATTEMPTS; attempt++) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
     const { data, error } = await supabase.functions.invoke('ai-credits', {
       body: { action: 'topup', txHash },
       headers: dehubAuthHeaders(),
     });
 
     const balance = (data as { balanceDhb?: number })?.balanceDhb;
-    if (!error && typeof balance === 'number') return balance;
+    if (!error && typeof balance === 'number') {
+      forgetUnclaimed(txHash);
+      return balance;
+    }
 
-    const message = (data as { error?: string })?.error
-      || (error instanceof Error ? error.message : '');
+    // On a non-2xx the body — and with it the actual reason — lives on the
+    // error, not on `data`. Reading `data.error` alone yielded "Edge Function
+    // returned a non-2xx status code" for every failure alike.
+    const message = error ? await readFunctionError(error, data) : ((data as { error?: string })?.error || '');
 
     // Already credited is a success from the caller's point of view: the money
     // is on the balance, this is just a duplicate claim.
-    if (message.includes('already credited')) return NaN;
+    if (message.includes('already credited')) {
+      forgetUnclaimed(txHash);
+      return NaN;
+    }
 
     lastError = message || lastError;
 
@@ -70,7 +164,12 @@ async function claimTopUp(txHash: string): Promise<number> {
     await wait(CLAIM_DELAY_MS);
   }
 
-  throw new Error(lastError);
+  // The transfer is on chain and unspent. Park it so it is not lost, and say so
+  // — "payment failed" would be a lie about money that has already moved.
+  rememberUnclaimed(txHash);
+  throw new Error(
+    `${lastError} Your DHB has been sent and is safe — it will be credited automatically on your next generation. (tx ${txHash.slice(0, 10)}…)`,
+  );
 }
 
 /**
@@ -129,6 +228,11 @@ export async function payAsYouGo(amountDhb: number): Promise<PaygResult> {
     throw new Error('Nothing to pay.');
   }
 
+  // Credit already paid for but never granted is spent before asking for more
+  // money. Cheap, idempotent, and it stops a failed claim quietly turning into
+  // a second charge for the same generation.
+  await flushUnclaimedTopUps();
+
   // Round up: the treasury must receive at least the shortfall, and a
   // fractional wei short would leave the balance one unit under the price.
   const amount = Math.ceil(amountDhb);
@@ -159,7 +263,17 @@ export async function payAsYouGo(amountDhb: number): Promise<PaygResult> {
   }
 
   const chainConfig = getChainConfig(payChainId);
-  await switchChain(payChainId);
+
+  // Bounded because it can hang rather than reject. Switching to a chain the
+  // smart account has no provider for yet builds one, and that path gives up
+  // silently on a locked wallet or an unfunded paymaster — leaving the paywall
+  // spinning forever with its own Cancel button disabled. Nothing has been
+  // signed at this point, so a timeout here cannot strand a payment.
+  await withTimeout(
+    switchChain(payChainId),
+    CHAIN_SWITCH_TIMEOUT_MS,
+    `Could not switch to ${chain}. Unlock your wallet and try again.`,
+  );
 
   let txHash: string;
   try {

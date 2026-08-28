@@ -18,7 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
-import { invokeAi } from '@/lib/ai-invoke';
+import { invokeAi, readFunctionError } from '@/lib/ai-invoke';
 import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
@@ -240,8 +240,11 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         });
 
 
-        if (error) throw error;
-        
+        // The reason lives in the response body, not on the wrapper: throwing
+        // `error` raw showed "Edge Function returned a non-2xx status code" for a
+        // spent balance, a rate limit and a safety block alike.
+        if (error) throw new Error(await readFunctionError(error, data));
+
         // Check for error in response (like safety blocks)
         if (data.error) {
           setMessages(prev => [...prev, {
@@ -275,7 +278,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
           }
         });
 
-        if (error) throw error;
+        if (error) throw new Error(await readFunctionError(error, data));
 
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -288,10 +291,14 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       }
     } catch (error) {
       console.error('AI chat error:', error);
+      // Append the reason to the translated line rather than replacing it, so
+      // "not enough DHB" or "rate limited" reaches the user without needing a
+      // new key in all 110 locales.
+      const reason = error instanceof Error ? error.message : '';
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: t('aiChat.errorGeneric')
+        content: reason ? `${t('aiChat.errorGeneric')} (${reason})` : t('aiChat.errorGeneric')
       }]);
     } finally {
       setIsLoading(false);
