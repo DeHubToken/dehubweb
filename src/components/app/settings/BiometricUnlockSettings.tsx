@@ -352,7 +352,7 @@ export function BiometricUnlockSettings() {
 
         {/* The safety net: a biometrics-only wallet has exactly one route in. */}
         {!hasPassword && (
-          <div className="flex items-start justify-between gap-3 rounded-xl border border-amber-400/30 bg-amber-400/[0.07] p-3">
+          <div className="flex flex-col items-stretch gap-3 rounded-xl border border-amber-400/30 bg-amber-400/[0.07] p-3">
             <div className="flex items-start gap-2 min-w-0">
               <KeyRound className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
               <div className="min-w-0">
@@ -367,7 +367,7 @@ export function BiometricUnlockSettings() {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md shrink-0"
+                className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md w-full"
                 onClick={() => setBackupOpen(true)}
               >
                 Add
