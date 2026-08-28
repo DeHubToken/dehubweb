@@ -32,11 +32,13 @@ import {
 
 type Stage = 'loading' | 'not-connected' | 'listing' | 'quoting' | 'paying' | 'processing' | 'done';
 
-/** The default Checkbox's `border-primary` reads as a hairline on this dark
- * background — bump it to a visible white ring so an unchecked box doesn't
- * disappear next to a title. */
+/** The default Checkbox's `border-primary` renders as a near-invisible
+ * hairline (the `--border` token is a deliberately subtle divider color, not
+ * a control border). A hardcoded white ring only fixes dark theme and goes
+ * invisible again on light — `border-foreground` tracks the theme's own text
+ * color, which contrasts the page background either way. */
 const CHECKBOX_CLASS =
-  'h-5 w-5 border-2 border-white/50 data-[state=checked]:border-white data-[state=checked]:bg-white data-[state=checked]:text-black';
+  'h-5 w-5 border-2 border-foreground/50 data-[state=checked]:border-foreground data-[state=checked]:bg-foreground data-[state=checked]:text-background';
 
 export default function YoutubeMigratePage() {
   const { user } = useAuth();

@@ -21,10 +21,14 @@ import { importFromYoutube, getYoutubeImportStatus } from '@/lib/api/dehub/youtu
 
 const YOUTUBE_URL_RE = /^https?:\/\/(www\.|m\.|music\.)?(youtube\.com|youtu\.be)\//i;
 
-/** The default Checkbox's `border-primary` reads as a hairline on this dark
- * background — bump it to a visible white ring so unchecked isn't invisible. */
+/** The default Checkbox's `border-primary` renders as a near-invisible
+ * hairline (the `--border` token is a deliberately subtle divider color, not
+ * a control border). A hardcoded white ring "fixed" it on a dark background
+ * and made it invisible again on light theme — `border-foreground` tracks
+ * the theme's own text color, which is guaranteed to contrast the page
+ * background in both directions. */
 const CHECKBOX_CLASS =
-  'mt-0.5 h-5 w-5 border-2 border-white/50 data-[state=checked]:border-white data-[state=checked]:bg-white data-[state=checked]:text-black';
+  'mt-0.5 h-5 w-5 border-2 border-foreground/50 data-[state=checked]:border-foreground data-[state=checked]:bg-foreground data-[state=checked]:text-background';
 
 export default function YoutubeImportPage() {
   const { isAuthenticated } = useAuth();
