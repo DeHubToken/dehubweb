@@ -173,6 +173,7 @@ const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 import ReferralLanding from "./pages/ReferralLanding";
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
 const PricingPage = React.lazy(() => import("./pages/PricingPage"));
+const YoutubeImportPage = React.lazy(() => import("./pages/YoutubeImportPage"));
 const DePinPage = React.lazy(() => import("./pages/DePinPage"));
 const CinemaPage = React.lazy(() => import("./pages/CinemaPage"));
 const RafflePage = React.lazy(() => import("./pages/RafflePage"));
@@ -466,6 +467,7 @@ function AppContent() {
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
           <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
+          <Route path="/yt-dlp" element={<Suspense fallback={<PageLoader />}><YoutubeImportPage /></Suspense>} />
           <Route path="/depin" element={<Suspense fallback={<PageLoader />}><DePinPage /></Suspense>} />
           {/* Prize draws. dehub.net/prize-draw and raffle.dehub.net both 301
               here (CLOUDFLARE_WORKER_SEO.js), so this route is the landing for
