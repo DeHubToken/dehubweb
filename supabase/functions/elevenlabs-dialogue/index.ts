@@ -17,6 +17,7 @@ import {
   readProviderError,
 } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
+import { refuseForeignVoice } from '../_shared/voice-ownership.ts';
 
 const MAX_LINES = 50;
 const MAX_TOTAL_CHARS = 5000;
@@ -64,6 +65,11 @@ Deno.serve(async (req) => {
     if (totalChars > MAX_TOTAL_CHARS) {
       return errorResponse(`A scene can be at most ${MAX_TOTAL_CHARS} characters in total`);
     }
+
+    // Every speaker in the scene, not just the first. A multi-speaker payload is
+    // the easiest place to slip one borrowed voice in among several owned ones.
+    const foreign = await refuseForeignVoice(lines.map((l) => l.voice_id), charged.wallet);
+    if (foreign) return foreign;
 
     const apiKey = getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);

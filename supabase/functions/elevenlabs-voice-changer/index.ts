@@ -19,6 +19,7 @@ import {
   readUpload,
 } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
+import { refuseForeignVoice } from '../_shared/voice-ownership.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
@@ -60,6 +61,12 @@ Deno.serve(async (req) => {
     if (!voiceId || typeof voiceId !== 'string') {
       return errorResponse('voiceId is required');
     }
+
+    // The sharpest of the three: this re-performs a real recording in the
+    // chosen voice, so a borrowed clone here produces someone saying whatever
+    // was uploaded, in their own delivery.
+    const foreign = await refuseForeignVoice([voiceId], charged.wallet);
+    if (foreign) return foreign;
 
     const outbound = new FormData();
     outbound.append('audio', file, file.name || 'input.mp3');
