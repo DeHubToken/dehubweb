@@ -17,6 +17,10 @@ import { leavingTiktokUkPost } from './posts/leavingTiktokUkPost';
 import { leavingTiktokGlobalPost } from './posts/leavingTiktokGlobalPost';
 import { leavingYoutubePost } from './posts/leavingYoutubePost';
 import { leavingInstagramPost } from './posts/leavingInstagramPost';
+import { athleteMediaPlatformPost } from './posts/athleteMediaPlatformPost';
+import { teachingCreatorEconomyPost } from './posts/teachingCreatorEconomyPost';
+import { nilEndsAudiencePost } from './posts/nilEndsAudiencePost';
+import { youngCreatorsOwnershipPost } from './posts/youngCreatorsOwnershipPost';
 import { freePlayToEarnNoInvestmentPost } from './posts/freePlayToEarnNoInvestmentPost';
 import { lastChadStandingPost } from './posts/lastChadStandingPost';
 import { xToEarnExplainerPost } from './posts/xToEarnExplainerPost';
@@ -289,6 +293,10 @@ export const blogPosts: BlogPost[] = [
   leavingTiktokGlobalPost,
   leavingYoutubePost,
   leavingInstagramPost,
+  athleteMediaPlatformPost,
+  teachingCreatorEconomyPost,
+  nilEndsAudiencePost,
+  youngCreatorsOwnershipPost,
   freePlayToEarnNoInvestmentPost,
   lastChadStandingPost,
   xToEarnExplainerPost,

@@ -8,6 +8,118 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "young-creators-ground-you-own",
+    "slug": "young-creators-ground-you-own",
+    "title": "A Note for Young Creators, and the Adults Helping Them",
+    "seoTitle": "Young Creators: Build on Ground That Cannot Be Taken Away | DeHub",
+    "seoDescription": "New laws protect a child creator’s earnings. Nothing protects the asset. A guide for young creators, parents and managers on building where the work is owned.",
+    "excerpt": "Illinois and California now force a share of a child creator’s earnings into trust. Nobody has legislated the harder problem: the account itself was never theirs.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/young-creators-ground-you-own-banner.png",
+    "bannerImageAlt": "A young creator publishing on ground they own rather than rent",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-28T13:00:00.000Z",
+    "updatedAt": "2026-08-28T13:00:00.000Z",
+    "tags": [
+      "young creators",
+      "child influencers",
+      "creator parents",
+      "demonetisation",
+      "digital ownership",
+      "creator economy",
+      "dehub"
+    ],
+    "readingTime": 10,
+    "featured": false,
+    "status": "published"
+  },
+  {
+    "id": "nil-ends-your-audience-does-not",
+    "slug": "nil-ends-your-audience-does-not",
+    "title": "NIL Ends. Your Audience Doesn’t Have To.",
+    "seoTitle": "NIL Money Ends — Build an Audience You Own | DeHub",
+    "seoDescription": "Revenue sharing and NIL pay you while you are eligible. The audience you build is the only asset that outlives your last game. A guide for college athletes.",
+    "excerpt": "Your NIL deal has an expiry date written into it: eligibility. The audience you build during those years does not. Here is the difference, and what to do about it now.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/nil-ends-your-audience-does-not-banner.png",
+    "bannerImageAlt": "A college athlete building an audience that outlasts NIL eligibility",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-28T12:00:00.000Z",
+    "updatedAt": "2026-08-28T12:00:00.000Z",
+    "tags": [
+      "NIL",
+      "college athletes",
+      "revenue sharing",
+      "creator monetisation",
+      "athlete branding",
+      "web3 creators",
+      "dehub"
+    ],
+    "readingTime": 10,
+    "featured": false,
+    "status": "published"
+  },
+  {
+    "id": "teaching-the-creator-economy",
+    "slug": "teaching-the-creator-economy",
+    "title": "Are We Teaching Tomorrow’s Creator Economy With Yesterday’s Platforms?",
+    "seoTitle": "Teaching the Creator Economy: A Syllabus Problem | DeHub",
+    "seoDescription": "Creator economy courses teach students to succeed inside platforms whose terms they will never control. A case for teaching ownership structure, not platform tactics.",
+    "excerpt": "A syllabus is a claim about what will still be true when the student graduates. Most creator economy courses quietly teach one company’s business model as though it were physics.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/teaching-the-creator-economy-banner.png",
+    "bannerImageAlt": "A creator economy syllabus examined for what survives a platform change",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-28T11:00:00.000Z",
+    "updatedAt": "2026-08-28T11:00:00.000Z",
+    "tags": [
+      "creator economy education",
+      "higher education",
+      "media studies",
+      "platform economics",
+      "digital ownership",
+      "web3 curriculum",
+      "dehub"
+    ],
+    "readingTime": 10,
+    "featured": false,
+    "status": "published"
+  },
+  {
+    "id": "athlete-is-becoming-a-media-platform",
+    "slug": "athlete-is-becoming-a-media-platform",
+    "title": "The Athlete Is Becoming a Media Platform. Who Owns the Fan?",
+    "seoTitle": "Athletes as Media Brands: Who Owns the Fan Relationship? | DeHub",
+    "seoDescription": "Leagues spent forty years perfecting the sale of distribution rights. The one asset they never acquired is the fan relationship — and the athlete now holds it.",
+    "excerpt": "Media rights are a lease on attention. The athlete now holds the freehold. A piece for league and team executives on the asset nobody put on the balance sheet.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/athlete-is-becoming-a-media-platform-banner.png",
+    "bannerImageAlt": "An athlete as a media property, with the fan relationship owned rather than licensed",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-08-28T10:00:00.000Z",
+    "updatedAt": "2026-08-28T10:00:00.000Z",
+    "tags": [
+      "sports media rights",
+      "athlete media",
+      "creator economy",
+      "fan engagement",
+      "sports business",
+      "web3 creators",
+      "dehub"
+    ],
+    "readingTime": 10,
+    "featured": false,
+    "status": "published"
+  },
+  {
     "id": "creators-guide-leaving-instagram",
     "slug": "creators-guide-leaving-instagram",
     "title": "The Creator Guide to Leaving Instagram for a Platform You Own (2026)",
@@ -3224,30 +3336,30 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "creators-guide-leaving-instagram",
-  "slug": "creators-guide-leaving-instagram",
-  "title": "The Creator Guide to Leaving Instagram for a Platform You Own (2026)",
-  "seoTitle": "Best Instagram Alternative for Creators 2026 | DeHub",
-  "seoDescription": "An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.",
-  "excerpt": "Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight — it is the model.",
+  "id": "young-creators-ground-you-own",
+  "slug": "young-creators-ground-you-own",
+  "title": "A Note for Young Creators, and the Adults Helping Them",
+  "seoTitle": "Young Creators: Build on Ground That Cannot Be Taken Away | DeHub",
+  "seoDescription": "New laws protect a child creator’s earnings. Nothing protects the asset. A guide for young creators, parents and managers on building where the work is owned.",
+  "excerpt": "Illinois and California now force a share of a child creator’s earnings into trust. Nobody has legislated the harder problem: the account itself was never theirs.",
   "content": "",
-  "bannerImage": "/lovable-uploads/creators-guide-leaving-instagram-banner.png",
-  "bannerImageAlt": "A creator moving from Instagram to a Web3 platform they own on DeHub",
+  "bannerImage": "/lovable-uploads/young-creators-ground-you-own-banner.png",
+  "bannerImageAlt": "A young creator publishing on ground they own rather than rent",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-08-27T13:00:00.000Z",
-  "updatedAt": "2026-08-27T13:00:00.000Z",
+  "publishedAt": "2026-08-28T13:00:00.000Z",
+  "updatedAt": "2026-08-28T13:00:00.000Z",
   "tags": [
-    "instagram alternative",
-    "creator monetisation",
-    "web3 creators",
-    "leaving instagram",
-    "reels",
-    "watch-to-earn",
+    "young creators",
+    "child influencers",
+    "creator parents",
+    "demonetisation",
+    "digital ownership",
+    "creator economy",
     "dehub"
   ],
-  "readingTime": 8,
+  "readingTime": 10,
   "featured": false,
   "status": "published"
 };
