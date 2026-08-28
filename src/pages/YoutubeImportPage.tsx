@@ -1,9 +1,10 @@
 /**
  * dehub.io/yt-dlp — import a YouTube video as a DeHub post.
  * ==========================================================
- * Standalone page, not a composer add-on: pasting a URL and confirming
- * ownership is a different action from "make a post" and doesn't belong
- * cluttering the compose action bar.
+ * Lives inside AppLayout (sidebar/nav chrome), same as wallet/profile/etc —
+ * this is a signed-in action, not a marketing landing page. Pasting a URL
+ * and confirming ownership is a different action from "make a post" though,
+ * so it stays off the compose action bar and gets its own page instead.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -11,7 +12,6 @@ import { Link } from 'react-router-dom';
 import { Loader2, Youtube } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
-import dehubLogo from '@/assets/dehub-logo-white.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,6 +20,11 @@ import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { importFromYoutube, getYoutubeImportStatus } from '@/lib/api/dehub/youtube-import';
 
 const YOUTUBE_URL_RE = /^https?:\/\/(www\.|m\.|music\.)?(youtube\.com|youtu\.be)\//i;
+
+/** The default Checkbox's `border-primary` reads as a hairline on this dark
+ * background — bump it to a visible white ring so unchecked isn't invisible. */
+const CHECKBOX_CLASS =
+  'mt-0.5 h-5 w-5 border-2 border-white/50 data-[state=checked]:border-white data-[state=checked]:bg-white data-[state=checked]:text-black';
 
 export default function YoutubeImportPage() {
   const { isAuthenticated } = useAuth();
@@ -89,22 +94,19 @@ export default function YoutubeImportPage() {
         description="Paste a YouTube link and publish it as a DeHub post."
         url="https://dehub.io/yt-dlp"
       />
-      <div className="min-h-screen bg-black text-white">
-        <header className="flex items-center justify-between px-4 py-4 sm:px-8">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={dehubLogo} alt="DeHub logo white" className="h-6 w-auto" />
-          </Link>
-        </header>
 
-        <main className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 sm:px-0">
-          <div className="flex items-center gap-2">
-            <Youtube className="h-6 w-6" />
-            <h1 className="text-xl font-semibold">Import from YouTube</h1>
-          </div>
-          <p className="text-sm text-white/60">
+      <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
+        <header className="flex flex-col gap-2">
+          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+            <Youtube className="w-5 h-5" />
+            Import from YouTube
+          </h1>
+          <p className="text-sm text-zinc-400 max-w-prose">
             Paste a link to a video you already own and we'll publish it as a post on your profile.
           </p>
+        </header>
 
+        <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4 max-w-md">
           <Input
             placeholder="https://youtube.com/watch?v=..."
             value={url}
@@ -112,12 +114,12 @@ export default function YoutubeImportPage() {
             disabled={status !== 'idle'}
           />
 
-          <label className="flex items-start gap-2 text-sm text-white/60">
+          <label className="flex items-start gap-2 text-sm text-zinc-400">
             <Checkbox
               checked={ownershipConfirmed}
               onCheckedChange={(checked) => setOwnershipConfirmed(checked === true)}
               disabled={status !== 'idle'}
-              className="mt-0.5"
+              className={CHECKBOX_CLASS}
             />
             <span>
               I own this content, or have the rights holder's permission to publish it on DeHub.
@@ -125,18 +127,19 @@ export default function YoutubeImportPage() {
           </label>
 
           {status === 'importing' && (
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-zinc-500">
               Downloading and publishing — you can leave this page and it'll keep going in the background.
             </p>
           )}
 
           {tokenId && (
-            <Link to="/" className="text-sm underline">
+            <Link to="/" className="text-sm text-white underline">
               View your feed
             </Link>
           )}
 
           <Button
+            variant="glass"
             onClick={handleSubmit}
             disabled={status !== 'idle' || !url.trim() || !ownershipConfirmed}
             className="w-full"
@@ -150,7 +153,7 @@ export default function YoutubeImportPage() {
                 ? 'Starting…'
                 : 'Importing…'}
           </Button>
-        </main>
+        </section>
       </div>
     </>
   );
