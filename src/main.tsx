@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { shouldReloadForChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
+import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import "./lib/toast-i18n-interceptor";
 // NOTE: auth-toast translations are no longer imported here — English lives in
@@ -97,3 +98,8 @@ createRoot(document.getElementById("root")!).render(
 // Register the offline-shell / asset-cache service worker (production only,
 // deferred to `load` so it doesn't compete with first paint). See lib/register-sw.ts.
 registerServiceWorker();
+
+// Watch for the page losing the ability to scroll — a leaked body lock or a
+// stuck overlay — report what caused it and put it back. Touch devices only.
+// See lib/scroll-freeze-watchdog.ts.
+installScrollFreezeWatchdog();
