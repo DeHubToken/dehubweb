@@ -1769,6 +1769,24 @@ export type Database = {
         }
         Relationships: []
       }
+      dub_jobs: {
+        Row: {
+          created_at: string
+          dubbing_id: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          dubbing_id: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          dubbing_id?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       edge_rate_limits: {
         Row: {
           action_type: string
