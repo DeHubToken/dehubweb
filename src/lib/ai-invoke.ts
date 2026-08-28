@@ -55,3 +55,38 @@ export function isInsufficientCredit(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error ?? '');
   return message.includes('INSUFFICIENT_CREDITS') || message.includes('Not enough DHB credit');
 }
+
+/**
+ * The reason a paid AI function actually rejected a call.
+ *
+ * `supabase.functions.invoke` does NOT populate `data` on a non-2xx: it returns
+ * `data: null` plus a FunctionsHttpError whose message is the fixed string
+ * "Edge Function returned a non-2xx status code". Our functions answer with a
+ * useful `{ error }` body — "Not enough DHB credit", "not found on-chain",
+ * a rate-limit notice — and every one of those was being thrown away, so the
+ * user saw the generic wrapper and a developer had no way to tell a payment
+ * problem from an indexing lag.
+ *
+ * The body is still readable through `error.context`, which is the raw
+ * `Response`. Reading it is the only way to recover the reason, and it can be
+ * read exactly once, so this is the single place that does it.
+ */
+export async function readFunctionError(error: unknown, data?: unknown): Promise<string> {
+  // A 2xx that carries `{ error }` in the body — the functions do this for
+  // soft failures like a safety block — is already readable.
+  const inline = (data as { error?: string } | null)?.error;
+  if (inline) return inline;
+
+  const context = (error as { context?: unknown })?.context;
+  if (context instanceof Response) {
+    try {
+      const body = await context.clone().json();
+      const message = (body as { error?: string })?.error;
+      if (message) return message;
+    } catch {
+      // Not JSON, or already consumed. Fall through to the generic message.
+    }
+  }
+
+  return error instanceof Error ? error.message : String(error ?? 'Request failed.');
+}
