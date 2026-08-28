@@ -56,7 +56,7 @@ describe('paid AI error recovery', () => {
     // between the signature and the provider costs a second transfer.
     expect(source).toMatch(/writeUnspent\(\[\.\.\.readUnspent\(\), \{ txHash/);
     // And a new payment must spend what is already paid for before charging.
-    expect(source).toMatch(/const reusable = reusablePayment\(priceDhb\);/);
+    expect(source).toMatch(/const reusable = remember \? reusablePayment\(priceDhb\) : null;/);
   });
 
   it('bounds the chain switch so the paywall cannot wedge', () => {
