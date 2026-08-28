@@ -28,9 +28,11 @@ import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { getPostLikers, type PostLiker } from '@/lib/api/dehub';
 import { NEGATIVE_REACTIONS, REACTION_LIST, type PostReaction } from '@/lib/reactions';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { engagementWeight, formatEngagementWeight, NO_BADGE_ENGAGEMENT_WEIGHT } from '@/lib/engagement-weight';
 
 const PAGE_SIZE = 50;
 
@@ -143,6 +145,11 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
                       const displayName =
                         person.displayName || person.username || person.address?.slice(0, 8) || 'Unknown';
                       const avatarUrl = buildAvatarUrl(person.address, extractAvatarPath(person));
+                      // A badge holder's reaction is worth more than one — see the
+                      // weightedTotalCount note above. Only draw the multiplier when
+                      // it actually differs from the badgeless default.
+                      const weight = engagementWeight(person.badgeBalance, person.username);
+                      const hasBadge = weight > NO_BADGE_ENGAGEMENT_WEIGHT;
                       return (
                         <button
                           key={`${meta.key}-${person.address}`}
@@ -165,6 +172,12 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
                               </span>
                             )}
                           </div>
+                          {hasBadge && (
+                            <div className="flex items-center gap-1 shrink-0">
+                              <BadgeIcon badgeBalance={person.badgeBalance} username={person.username} className="w-[14px] h-[14px]" />
+                              <span className="font-mono text-xs text-white/60">{formatEngagementWeight(weight)}</span>
+                            </div>
+                          )}
                         </button>
                       );
                     })}
