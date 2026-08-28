@@ -67,32 +67,30 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
               className="block bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.08] transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex">
-                {preview.image && (
-                  <div className="w-28 h-20 sm:w-32 sm:h-24 flex-shrink-0 bg-white/5">
-                    <img
-                      src={preview.image}
-                      alt={preview.title}
-                      className="w-full h-full object-cover rounded-lg"
-                      loading="lazy"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                  </div>
-                )}
-                <div className="flex-1 p-2.5 sm:p-3 min-w-0">
-                  <div className="flex items-center gap-1.5 text-xs text-white/50 mb-0.5">
-                    <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                    <span className="truncate">{preview.siteName || domain}</span>
-                  </div>
-                  <h4 className="text-sm font-medium text-white line-clamp-1 mb-0.5">
-                    {preview.title}
-                  </h4>
-                  {preview.description && (
-                    <p className="text-xs text-white/60 line-clamp-2">
-                      {preview.description}
-                    </p>
-                  )}
+              {preview.image && (
+                <div className="w-full aspect-[1.91/1] bg-white/5">
+                  <img
+                    src={preview.image}
+                    alt={preview.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
                 </div>
+              )}
+              <div className="p-2.5 sm:p-3 min-w-0">
+                <div className="flex items-center gap-1.5 text-xs text-white/50 mb-0.5">
+                  <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">{preview.siteName || domain}</span>
+                </div>
+                <h4 className="text-sm font-medium text-white line-clamp-1 mb-0.5">
+                  {preview.title}
+                </h4>
+                {preview.description && (
+                  <p className="text-xs text-white/60 line-clamp-2">
+                    {preview.description}
+                  </p>
+                )}
               </div>
             </motion.a>
           );
@@ -100,9 +98,9 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
       </AnimatePresence>
 
       {loading && (
-        <div className="flex bg-white/5 border border-white/10 rounded-xl overflow-hidden">
-          <Skeleton className="w-28 h-20 sm:w-32 sm:h-24 flex-shrink-0" />
-          <div className="flex-1 p-2.5 sm:p-3 space-y-2">
+        <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+          <Skeleton className="w-full aspect-[1.91/1]" />
+          <div className="p-2.5 sm:p-3 space-y-2">
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-3 w-3/4" />
