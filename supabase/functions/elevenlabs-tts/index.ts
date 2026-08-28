@@ -18,6 +18,7 @@ const corsHeaders = {
 };
 
 import { checkRateLimit, requireDeHubAuth, serviceClient } from '../_shared/auth.ts';
+import { refuseForeignVoice } from '../_shared/voice-ownership.ts';
 
 /**
  * Kept in step with MAX_SPEECH_CHARS in audio-models.constants.ts.
@@ -101,6 +102,12 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Authenticating the endpoint stopped strangers using it. It did not stop
+    // one signed-in user naming another's cloned voice, which is the half that
+    // matters: a clone is somebody's actual voice.
+    const foreign = await refuseForeignVoice([voiceId], auth.wallet);
+    if (foreign) return foreign;
 
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
     if (!ELEVENLABS_API_KEY) {
