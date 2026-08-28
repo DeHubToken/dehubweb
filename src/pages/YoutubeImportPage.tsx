@@ -110,10 +110,18 @@ export default function YoutubeImportPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
         <header className="flex flex-col gap-2">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Youtube className="w-5 h-5" />
-            Import from YouTube
-          </h1>
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-xl font-bold text-white flex items-center gap-2">
+              <Youtube className="w-5 h-5" />
+              Import from YouTube
+            </h1>
+            {/* Bulk equivalent of this page — a whole channel instead of one
+                link. Lives here, not on the profile: this is where creators
+                already are when they're thinking about YouTube content. */}
+            <Button variant="glass" size="sm" asChild>
+              <Link to="/app/migrate-youtube">Migrate all</Link>
+            </Button>
+          </div>
           <p className="text-sm text-zinc-400 max-w-prose">
             Paste a link to a video you already own and we'll publish it as a post on your profile.
           </p>
