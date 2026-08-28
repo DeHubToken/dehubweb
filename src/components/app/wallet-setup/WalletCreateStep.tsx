@@ -27,7 +27,7 @@ import {
   PasskeyCancelledError,
   PasskeyUnsupportedError,
 } from '@/lib/wallet-core/biometric-unlock';
-import { saveWallet } from '@/lib/wallet-core/store';
+import { fetchWallet, saveWallet } from '@/lib/wallet-core/store';
 import { normalisePhoneHint } from '@/lib/wallet-core/phone-hint';
 import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -116,6 +116,20 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const [backendHint, setBackendHint] = useState<LegacyAccountHint | null>(null);
   const [residueDetected, setResidueDetected] = useState(false);
   const userChoseModeRef = useRef(false);
+  // The mnemonic for a brand-new wallet, generated once per setup attempt.
+  //
+  // It used to be minted inside resolveSecret(), which runs on every submit —
+  // so a retry did not retry, it created a DIFFERENT wallet. The first attempt
+  // may already have got far enough for the backend to link the account to the
+  // wallet it signed with, while saveWallet upserts on user_id and hands the
+  // row to the newcomer. The account is then linked to a wallet this browser
+  // can no longer derive: every later login logs "Supabase session maps to a
+  // different wallet", and the signature it falls back to arrives as a brand
+  // new signup, which the wallet-history gate refuses — locking the person out
+  // of the account they created minutes earlier, on every device, permanently.
+  //
+  // A retry now re-derives the same wallet, so the write is idempotent.
+  const newWalletSecretRef = useRef<string | null>(null);
   // null while probing — the protection UI waits rather than flashing the
   // password form and then swapping it for the biometric button.
   const [biometricAvailable, setBiometricAvailable] = useState<boolean | null>(null);
@@ -227,7 +241,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
    * an inline error when the mode's input isn't usable yet.
    */
   const resolveSecret = (): string | null => {
-    if (mode === 'new') return generateMnemonic12();
+    if (mode === 'new') {
+      if (!newWalletSecretRef.current) newWalletSecretRef.current = generateMnemonic12();
+      return newWalletSecretRef.current;
+    }
     if (mode === 'migrate') {
       if (!migratedKey) {
         setError('Sign in with your old account first');
@@ -272,12 +289,33 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     if (secret) void persist(secret);
   };
 
+  /**
+   * Last line of defence before a write that replaces this account's wallet.
+   *
+   * Setup is only ever reached when the wallet lookup came back empty, so a row
+   * holding a DIFFERENT address means one appeared underneath us — a second tab,
+   * a duplicate submit that raced the first write. Overwriting it splits the
+   * account away from the wallet the backend just linked, and there is no way
+   * back from that: the seed it replaces is gone and the gate refuses the
+   * newcomer as a fresh signup. Refusing costs a reload; the write costs the
+   * account. Same address is the ordinary retry, and passes straight through.
+   */
+  const assertNotReplacingWallet = async (ethAddress: string) => {
+    const existing = await fetchWallet(userId).catch(() => null);
+    if (existing && existing.ethAddress.toLowerCase() !== ethAddress.toLowerCase()) {
+      throw new Error(
+        'This account already has a wallet — reload the page and sign in with it.',
+      );
+    }
+  };
+
   const persist = async (secret: string) => {
     setBusy(true);
     setError(null);
     try {
       const derived = deriveFromSecret(secret);
       const encrypted = await encryptString(derived.secret, password);
+      await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, encrypted);
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
@@ -305,6 +343,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     try {
       const derived = deriveFromSecret(secret);
       await enrollBiometricUnlock(userId, derived.secret);
+      await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, null);
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
