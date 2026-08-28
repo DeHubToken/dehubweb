@@ -365,18 +365,23 @@ export default function StakingPage() {
         return;
       }
 
-      // Pick chain with sufficient balance
+      // Pick chain with sufficient balance. Base leads, matching the order
+      // every other DHB spend uses (src/lib/wallet/pay-chain.ts): it is the
+      // default network, the only chain with a DHB pool to swap into and the
+      // only one the fiat gateway delivers on, so a staker who comes up short
+      // can top up there and finish. Walking BNB first parked deposits on the
+      // chain they cannot refill from.
       const bothChains = bnbBal > 0 && baseBal > 0;
       let targetChain: 'BNB' | 'Base';
 
-      if (bnbBal >= amount) {
-        targetChain = 'BNB';
-      } else if (baseBal >= amount) {
+      if (baseBal >= amount) {
         targetChain = 'Base';
+      } else if (bnbBal >= amount) {
+        targetChain = 'BNB';
       } else {
         // Neither chain has enough for the full amount
         const maxBal = Math.max(bnbBal, baseBal);
-        const maxChain = bnbBal >= baseBal ? 'BNB Chain' : 'Base';
+        const maxChain = baseBal >= bnbBal ? 'Base' : 'BNB Chain';
         toast.error(t('toasts.insufficient_balance', 'Insufficient balance'), {
           description: t('toasts.max_available_on_chain', 'Max available: {{amount}} DHB on {{chain}}', { amount: maxBal.toFixed(2), chain: maxChain }),
         });
