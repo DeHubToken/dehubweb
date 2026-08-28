@@ -11,7 +11,7 @@
  * page lives inside AppLayout same as wallet/profile/etc.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Youtube, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -26,6 +26,7 @@ import {
   quoteMigration,
   settleMigration,
   getMigrationChargeStatus,
+  getActiveMigrationCharge,
   type ChannelVideo,
   type MigrationQuote,
   type MigrationChargeStatus,
@@ -50,14 +51,31 @@ export default function YoutubeMigratePage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [quote, setQuote] = useState<MigrationQuote | null>(null);
   const [charge, setCharge] = useState<MigrationChargeStatus | null>(null);
+  // Where a failed payment attempt drops the creator back to — the fresh
+  // "pick videos" flow returns to the picker, but retrying already-failed
+  // videos from a finished batch should return to that batch's grid instead.
+  const [payFallback, setPayFallback] = useState<Stage>('listing');
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const titleById = useMemo(
+    () => new Map(videos.map(v => [v.youtubeVideoId, v.title])),
+    [videos],
+  );
+
+  /** Fetches the channel list into state without touching `stage` — used
+   * both by the normal picker flow and, silently in the background, when
+   * resuming an in-progress or finished batch (so titles resolve in the
+   * results grid instead of showing bare video IDs). */
+  const fetchVideos = useCallback(async () => {
+    const { videos: list } = await listChannelVideos();
+    setVideos(list);
+    setSelected(new Set(list.filter(v => !v.alreadyImported).map(v => v.youtubeVideoId)));
+  }, []);
 
   const loadVideos = useCallback(async () => {
     setStage('listing');
     try {
-      const { videos: list } = await listChannelVideos();
-      setVideos(list);
-      setSelected(new Set(list.filter(v => !v.alreadyImported).map(v => v.youtubeVideoId)));
+      await fetchVideos();
       setStage('listing');
     } catch (err) {
       const message = err instanceof Error ? err.message : '';
@@ -66,12 +84,51 @@ export default function YoutubeMigratePage() {
       }
       setStage('not-connected');
     }
+  }, [fetchVideos]);
+
+  const pollCharge = useCallback((chargeId: string) => {
+    pollRef.current = setInterval(async () => {
+      try {
+        const status = await getMigrationChargeStatus(chargeId);
+        setCharge(status);
+        if (status.results.every(r => r.status !== 'pending')) {
+          if (pollRef.current) clearInterval(pollRef.current);
+          setStage('done');
+          const imported = status.results.filter(r => r.status === 'imported').length;
+          const failed = status.results.filter(r => r.status === 'failed').length;
+          toast.success(
+            failed
+              ? `Migrated ${imported} video${imported === 1 ? '' : 's'} — ${failed} couldn't import and were credited toward your next migration.`
+              : `Migrated ${imported} video${imported === 1 ? '' : 's'}!`,
+          );
+        }
+      } catch {
+        // transient — keep polling
+      }
+    }, 5000);
   }, []);
 
   useEffect(() => {
     if (searchParams.get('error')) toast.error(searchParams.get('error')!);
-    loadVideos();
-  }, [loadVideos, searchParams]);
+    (async () => {
+      try {
+        const active = await getActiveMigrationCharge();
+        if (active) {
+          setCharge(active);
+          const stillPending = active.results.some(r => r.status === 'pending');
+          setStage(stillPending ? 'processing' : 'done');
+          if (stillPending) pollCharge(active._id);
+          // Best-effort, in the background — resolves titles in the grid
+          // but a resumed view shouldn't wait on it or fail because of it.
+          fetchVideos().catch(() => undefined);
+          return;
+        }
+      } catch {
+        // no session / connection yet — fall through to the normal flow
+      }
+      loadVideos();
+    })();
+  }, [loadVideos, fetchVideos, pollCharge, searchParams]);
 
   useEffect(() => {
     return () => {
@@ -102,6 +159,7 @@ export default function YoutubeMigratePage() {
       toast.error('Select at least one video');
       return;
     }
+    setPayFallback('listing');
     setStage('quoting');
     try {
       const q = await quoteMigration([...selected]);
@@ -112,59 +170,55 @@ export default function YoutubeMigratePage() {
     }
   };
 
-  const pollCharge = (chargeId: string) => {
-    pollRef.current = setInterval(async () => {
-      try {
-        const status = await getMigrationChargeStatus(chargeId);
-        setCharge(status);
-        if (status.results.every(r => r.status !== 'pending')) {
-          if (pollRef.current) clearInterval(pollRef.current);
-          setStage('done');
-          const imported = status.results.filter(r => r.status === 'imported').length;
-          const failed = status.results.filter(r => r.status === 'failed').length;
-          toast.success(
-            failed
-              ? `Migrated ${imported} video${imported === 1 ? '' : 's'} — ${failed} couldn't import and were credited toward your next migration.`
-              : `Migrated ${imported} video${imported === 1 ? '' : 's'}!`,
-          );
-        }
-      } catch {
-        // transient — keep polling
-      }
-    }, 5000);
+  const handleRetryFailed = async () => {
+    const failedIds = charge?.results.filter(r => r.status === 'failed').map(r => r.youtubeVideoId) ?? [];
+    if (!failedIds.length) return;
+    setPayFallback('done');
+    setStage('quoting');
+    try {
+      const q = await quoteMigration(failedIds);
+      setQuote(q);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Could not retry the failed videos');
+      setStage('done');
+    }
   };
 
-  const handlePay = async () => {
-    if (!quote) return;
+  const handlePay = async (q: MigrationQuote | null) => {
+    if (!q) return;
     setStage('paying');
     try {
-      if (quote.amountDhb === 0) {
+      if (q.amountDhb === 0) {
         // Fully covered by credit — nothing to sign, just settle.
-        await settleMigration(quote.chargeId, '0x0', 0);
+        await settleMigration(q.chargeId, '0x0', 0);
       } else {
-        if (!quote.recipient) throw new Error('Payments are not configured right now.');
+        if (!q.recipient) throw new Error('Payments are not configured right now.');
         const { payDhb } = await import('@/lib/dhb-payment');
-        toast.loading(`Paying ${quote.amountDhb.toLocaleString()} DHB to migrate ${quote.videoCount} videos`, {
+        toast.loading(`Paying ${q.amountDhb.toLocaleString()} DHB to migrate ${q.videoCount} video${q.videoCount === 1 ? '' : 's'}`, {
           id: 'migration-pay',
           duration: Infinity,
         });
-        const payment = await payDhb(quote.amountDhb, quote.recipient, {
+        const payment = await payDhb(q.amountDhb, q.recipient, {
           context: 'YouTube migration',
           expectedSigner: user?.address,
           shortfallMessage: (amount, has) =>
             `This migration costs ${amount.toLocaleString()} DHB and you hold ${has.toLocaleString()}.`,
         });
         toast.dismiss('migration-pay');
-        await settleMigration(quote.chargeId, payment.txHash, payment.chainId);
+        await settleMigration(q.chargeId, payment.txHash, payment.chainId);
       }
+      setCharge(null);
       setStage('processing');
-      pollCharge(quote.chargeId);
+      pollCharge(q.chargeId);
     } catch (err) {
       toast.dismiss('migration-pay');
       toast.error(err instanceof Error ? err.message : 'Payment failed');
-      setStage('listing');
+      setStage(payFallback);
     }
   };
+
+  const imported = charge?.results.filter(r => r.status === 'imported').length ?? 0;
+  const failed = charge?.results.filter(r => r.status === 'failed').length ?? 0;
 
   return (
     <>
@@ -258,8 +312,7 @@ export default function YoutubeMigratePage() {
         {quote && (stage === 'quoting' || stage === 'paying') && (
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3 items-start">
             <p className="text-sm text-zinc-400">
-              {quote.videoCount} video{quote.videoCount === 1 ? '' : 's'} ×{' '}
-              {quote.unitPriceDhb.toLocaleString()} DHB
+              {quote.videoCount} video{quote.videoCount === 1 ? '' : 's'}
               {quote.creditAppliedDhb > 0 && (
                 <> — {quote.creditAppliedDhb.toLocaleString()} DHB credit applied</>
               )}
@@ -267,27 +320,46 @@ export default function YoutubeMigratePage() {
             <p className="text-lg font-semibold text-white">
               {quote.amountDhb === 0 ? 'Free (covered by credit)' : `${quote.amountDhb.toLocaleString()} DHB`}
             </p>
-            <Button variant="glass" onClick={handlePay} disabled={stage === 'paying'}>
+            <Button variant="glass" onClick={() => handlePay(quote)} disabled={stage === 'paying'}>
               {stage === 'paying' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {quote.amountDhb === 0 ? 'Start migration' : `Pay ${quote.amountDhb.toLocaleString()} DHB`}
             </Button>
           </section>
         )}
 
-        {stage === 'processing' && (
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
-            <p className="text-sm text-zinc-400">Migrating — this runs in the background.</p>
-            <div className="flex flex-col gap-1.5">
-              {charge?.results.map(r => (
-                <div key={r.youtubeVideoId} className="flex items-center gap-2 text-sm">
-                  {r.status === 'pending' && <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />}
-                  {r.status === 'imported' && <CheckCircle2 className="h-4 w-4 text-emerald-400" />}
-                  {r.status === 'failed' && <XCircle className="h-4 w-4 text-red-400" />}
-                  <span className="truncate text-white">{r.youtubeVideoId}</span>
+        {(stage === 'processing' || stage === 'done') && charge && (
+          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm text-zinc-400">
+                {stage === 'processing'
+                  ? "Migrating — this runs in the background, safe to close this tab. We'll notify you when it's done."
+                  : `${imported} imported${failed ? `, ${failed} couldn't import` : ''}.`}
+              </p>
+              {stage === 'done' && failed > 0 && (
+                <Button variant="outline" size="sm" onClick={handleRetryFailed} className="shrink-0">
+                  Retry {failed} failed
+                </Button>
+              )}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[32rem] overflow-y-auto -mx-1 px-1">
+              {charge.results.map(r => (
+                <a
+                  key={r.youtubeVideoId}
+                  href={`https://www.youtube.com/watch?v=${r.youtubeVideoId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex flex-col gap-1.5 rounded-xl bg-white/5 hover:bg-white/10 p-2.5 text-xs transition-colors"
+                >
+                  <div className="flex items-center gap-1.5">
+                    {r.status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-400" />}
+                    {r.status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
+                    {r.status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
+                    <span className="truncate text-white">{titleById.get(r.youtubeVideoId) || r.youtubeVideoId}</span>
+                  </div>
                   {r.failedReason && (
-                    <span className="text-xs text-zinc-500 truncate">{r.failedReason}</span>
+                    <span className="text-zinc-500 line-clamp-2">{r.failedReason}</span>
                   )}
-                </div>
+                </a>
               ))}
             </div>
           </section>
