@@ -1055,11 +1055,11 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
    * Queue the chosen audio task.
    *
    * Called directly for the six free tools, and by the paywall's onConfirm for
-   * the three paid ones — which is why it takes no arguments and reads the
-   * composer's own state: the settings were all chosen before the transfer, so
-   * there is nothing for the modal to hand back.
+   * the three paid ones. Every setting was chosen before the transfer, so the
+   * only thing the modal hands back is the hash of the payment it took — which
+   * the generation function needs in order to verify it on chain.
    */
-  const runAudio = useCallback(() => {
+  const runAudio = useCallback((txHash?: string) => {
     setAudioPaywallOpen(false);
 
     const voiceTuning = {
@@ -1096,6 +1096,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           prompt: resolvedPrompt,
           lengthSeconds: musicSeconds,
           instrumental,
+          txHash,
         };
         break;
       case 'voice-changer':

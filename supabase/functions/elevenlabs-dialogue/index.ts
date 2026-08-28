@@ -16,6 +16,7 @@ import {
   num,
   readProviderError,
 } from '../_shared/elevenlabs.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_LINES = 50;
 const MAX_TOTAL_CHARS = 5000;
@@ -27,6 +28,18 @@ interface DialogueInput {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  // Free, but not open. "A fraction of a cent a run" is true of a two-second
+  // line and not of a 5,000-character v3 scene, which is what this actually
+  // allows — and it allowed it to anyone, unauthenticated and unlimited.
+  const charged = await chargeForJob(req, {
+    kind: 'tool',
+    modelId: 'elevenlabs-dialogue',
+    actionType: 'elevenlabs-dialogue',
+    rateLimit: { limit: 40, windowMs: 60 * 60 * 1000 },
+    free: true,
+  });
+  if (!charged.ok) return charged.response;
 
   try {
     const { inputs, outputFormat, voiceSettings, seed } = (await req.json()) ?? {};

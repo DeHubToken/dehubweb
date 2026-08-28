@@ -169,6 +169,23 @@ export const TOOL_COST_USD: Record<string, number> = {
   // is charged once per wallet: the clone is cached in custom_voices and every
   // later stage reuses it, so charging again would be charging for nothing.
   'voice-clone': 1.0,
+  // ── ElevenLabs studio audio ────────────────────────────────────────────────
+  // Metered by length rather than by call, so each of these is the cost of ONE
+  // unit and the caller passes `quantity`. The numbers are the conservative
+  // per-tier conversions from audio-models.constants.ts, which is where they
+  // were already being used to price the client paywall.
+  //
+  // Only music is charged today. It is the one whose billable quantity the
+  // function derives itself — the length is a number in the body and it is
+  // clamped before it is priced. The other two are metered by the duration of
+  // an UPLOAD, which cannot be measured server-side yet: a caller-declared
+  // length is not chargeable, and file size cannot stand in for it because a
+  // low-bitrate recording is long and small at once. They are authenticated
+  // and rate-limited in the meantime, and pricing them is deleting one line
+  // once that measurement exists.
+  'elevenlabs-music': 0.04, // per 10s of track
+  'elevenlabs-voice-changer': 0.06, // per minute of source
+  'elevenlabs-dub': 0.3, // per minute of source
 };
 
 

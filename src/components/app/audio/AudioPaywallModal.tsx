@@ -17,6 +17,17 @@
  * and the length is known before the call: the creator picks it for music, and
  * the composer reads it off the upload for the other two. `units` arrives
  * already computed so the number on the button is the number that is charged.
+ *
+ * ── The hash is the point ────────────────────────────────────────────────────
+ * This used to move DHB and then call onConfirm() with nothing, so the transfer
+ * was real but no function ever checked it had happened — calling the endpoint
+ * directly skipped the whole drawer. The hash now travels to the generation
+ * function, which verifies it on chain.
+ *
+ * A task whose spec carries `quoteModelId` is priced by the SERVER, so the
+ * number on the button is the number the function will charge. Without one the
+ * task falls back to the local estimate: it is not server-charged yet, and a
+ * quote it cannot pay against would only invent a disagreement.
  */
 import { useEffect, useState } from 'react';
 import {
@@ -39,21 +50,9 @@ import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { toast } from 'sonner';
-import { Interface } from 'ethers';
-import {
-  writeContractAA,
-  getWalletAddress,
-  getERC20Balance,
-  switchChain,
-  parseTxError,
-} from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import type { ChainId } from '@/components/app/ChainSelector';
-
-const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
+import { parseTxError } from '@/lib/contracts/aa-utils';
+import { payForJob } from '@/lib/ai-payment';
+import { useJobQuote } from '@/hooks/use-ai-quote';
 
 interface AudioPaywallModalProps {
   open: boolean;
@@ -63,7 +62,11 @@ interface AudioPaywallModalProps {
   units: number;
   /** Human summary of what is being charged for, e.g. "60s track". */
   quantityLabel: string;
-  onConfirm: () => void;
+  /**
+   * The confirmed transfer. Pass it to the generation function as `txHash` —
+   * that is what proves the payment happened to the endpoint that spends it.
+   */
+  onConfirm: (txHash: string) => void;
 }
 
 export function AudioPaywallModal({
@@ -108,8 +111,29 @@ export function AudioPaywallModal({
     }
   };
 
-  const costUsd = getAudioCostUsd(spec, units);
-  const costDhb = dhbPrice ? getAudioCostDhb(spec, dhbPrice, units) : 0;
+  // Server quote where the function actually charges, local estimate where it
+  // does not yet. Only the quoted price is authoritative — it is produced by
+  // the same table the endpoint prices from, so the two cannot drift.
+  const quote = useJobQuote(
+    spec.quoteModelId ? { kind: 'tool', modelId: spec.quoteModelId, quantity: units } : null,
+    open,
+  );
+
+  const isQuoted = !!spec.quoteModelId;
+  const costUsd = isQuoted ? quote.priceUsd : getAudioCostUsd(spec, units);
+  const costDhb = isQuoted
+    ? quote.priceDhb
+    : dhbPrice
+      ? getAudioCostDhb(spec, dhbPrice, units)
+      : 0;
+  // A quoted task waits on the quote, not on the DHB spot price — showing a
+  // stale local estimate while the real number is still in flight would put a
+  // figure on the button that is not the one being charged.
+  const isPriceLoading = isQuoted ? quote.isLoading : loading;
+  // A quote that failed leaves the button disabled at 0 DHB, so it has to say
+  // why — the local path's fallback price means its own error is only ever a
+  // warning, but a missing quote is the whole reason nothing can be paid.
+  const shownError = isQuoted ? quote.error : error;
   const hasEnoughBalance = userBalance >= costDhb;
 
   const formatDhb = (amount: number) => {
@@ -122,54 +146,14 @@ export function AudioPaywallModal({
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
-      const signerAddress = await getWalletAddress();
-      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
-
-      const baseConfig = getChainConfig(BASE_CHAIN_ID);
-      const bnbConfig = getChainConfig(BNB_CHAIN_ID);
-      // A flaky RPC reads as a zero balance rather than aborting, matching the
-      // image, video and 3D paywalls.
-      const [baseBalance, bnbBalance] = await Promise.all([
-        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID).catch(() => BigInt(0)),
-        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID).catch(() => BigInt(0)),
-      ]);
-
-      let payChainId: ChainId;
-      if (baseBalance >= amountWei) {
-        payChainId = BASE_CHAIN_ID;
-      } else if (bnbBalance >= amountWei) {
-        payChainId = BNB_CHAIN_ID;
-      } else {
-        const baseDhb = Number(baseBalance) / 1e18;
-        const bnbDhb = Number(bnbBalance) / 1e18;
-        toast.dismiss('audio-gen-payment');
-        toast.error(
-          `Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`,
-        );
-        setIsPaying(false);
-        return;
-      }
-
-      const chainConfig = getChainConfig(payChainId);
-      await switchChain(payChainId);
-
       toast.loading('Processing payment...', { id: 'audio-gen-payment' });
-      const result = await writeContractAA(
-        chainConfig.dhbToken,
-        erc20TransferInterface,
-        'transfer',
-        [DEHUB_AI_TREASURY, amountWei],
-        { context: `AI ${spec.label.toLowerCase()} payment`, chainId: payChainId },
-      );
-      // wait() resolves with status 0 for a REVERTED transaction rather than
-      // throwing, so skipping the receipt would hand out a free generation
-      // every time the transfer failed on chain.
-      const receipt = await result.wait(1);
-      if (receipt?.status !== 1) {
-        throw new Error('The DHB transfer did not go through. Nothing has been charged.');
-      }
+      // payForJob is the shared path the 3D paywall uses, and it carries the
+      // things this drawer's own copy had drifted away from: a bounded chain
+      // switch, the receipt status check, and reuse of a transfer that was paid
+      // for a generation that then never ran.
+      const txHash = await payForJob(costDhb);
       toast.success('Payment confirmed! Starting…', { id: 'audio-gen-payment' });
-      onConfirm();
+      onConfirm(txHash);
     } catch (err: unknown) {
       console.error('[AudioPaywall] Payment failed:', err);
       const msg = parseTxError(err);
@@ -243,7 +227,7 @@ export function AudioPaywallModal({
                 <span className="text-zinc-400">Total</span>
                 <span className="flex items-center gap-1.5 font-semibold text-white">
                   <img src={dhbCoinImage} alt="" className="h-4 w-4" />
-                  {loading ? '…' : `${formatDhb(costDhb)} DHB`}
+                  {isPriceLoading ? '…' : `${formatDhb(costDhb)} DHB`}
                   <span className="text-xs font-normal text-zinc-500">
                     (${costUsd.toFixed(2)})
                   </span>
@@ -257,10 +241,10 @@ export function AudioPaywallModal({
               </div>
             </div>
 
-            {error && (
+            {shownError && (
               <p className="flex items-center gap-1.5 text-xs text-amber-400">
                 <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                {error}
+                {shownError}
               </p>
             )}
           </div>
@@ -269,7 +253,7 @@ export function AudioPaywallModal({
         <div className="p-4 pt-2">
           <Button
             onClick={() => void handlePayAndGenerate()}
-            disabled={loading || isPaying || !hasEnoughBalance || costDhb <= 0}
+            disabled={isPriceLoading || isPaying || !hasEnoughBalance || costDhb <= 0}
             className="w-full"
           >
             {isPaying ? (

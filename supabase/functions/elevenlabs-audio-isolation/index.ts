@@ -13,11 +13,23 @@ import {
   readProviderError,
   readUpload,
 } from '../_shared/elevenlabs.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  // Before the upload is read, not after: an unauthenticated caller should not
+  // get to push 100 MB through this function to find out it is going to say no.
+  const charged = await chargeForJob(req, {
+    kind: 'tool',
+    modelId: 'elevenlabs-audio-isolation',
+    actionType: 'elevenlabs-audio-isolation',
+    rateLimit: { limit: 30, windowMs: 60 * 60 * 1000 },
+    free: true,
+  });
+  if (!charged.ok) return charged.response;
 
   try {
     const apiKey = getApiKey();

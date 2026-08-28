@@ -21,6 +21,7 @@ import {
   jsonResponse,
   readProviderError,
 } from '../_shared/elevenlabs.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_DESCRIPTION_CHARS = 1000;
 /** The provider requires a description with enough in it to work from. */
@@ -32,6 +33,24 @@ Deno.serve(async (req) => {
   try {
     const body = (await req.json()) ?? {};
     const action = body.action === 'save' ? 'save' : 'design';
+
+    // Two buckets, because the two actions cost the account different things.
+    // Designing spends previews and can be repeated until one sounds right;
+    // saving takes a VOICE SLOT, and the plan holds a fixed number of those for
+    // as long as the voice exists. Slots are the scarcer resource and are
+    // limited far harder — an anonymous caller could previously exhaust them
+    // outright, which takes stage dubbing down with it.
+    const charged = await chargeForJob(req, {
+      kind: 'tool',
+      modelId: action === 'save' ? 'elevenlabs-voice-design-save' : 'elevenlabs-voice-design',
+      actionType: `elevenlabs-voice-design-${action}`,
+      rateLimit:
+        action === 'save'
+          ? { limit: 5, windowMs: 60 * 60 * 1000 }
+          : { limit: 20, windowMs: 60 * 60 * 1000 },
+      free: true,
+    });
+    if (!charged.ok) return charged.response;
 
     const apiKey = getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);

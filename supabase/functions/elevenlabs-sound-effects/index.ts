@@ -12,6 +12,7 @@ import {
   num,
   readProviderError,
 } from '../_shared/elevenlabs.ts';
+import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_PROMPT_CHARS = 1000;
 /** The provider's own ceiling for a single effect. */
@@ -20,6 +21,18 @@ const MIN_DURATION_SECONDS = 0.5;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  // Free, but not open. Thirty seconds of sound is cheap enough not to put a
+  // transfer in front of, and it is not cheap enough to hand to anyone holding
+  // the URL: this ran for unauthenticated callers with no ceiling at all.
+  const charged = await chargeForJob(req, {
+    kind: 'tool',
+    modelId: 'elevenlabs-sound-effects',
+    actionType: 'elevenlabs-sound-effects',
+    rateLimit: { limit: 60, windowMs: 60 * 60 * 1000 },
+    free: true,
+  });
+  if (!charged.ok) return charged.response;
 
   try {
     const { text, durationSeconds, promptInfluence, loop, outputFormat } = (await req.json()) ?? {};
