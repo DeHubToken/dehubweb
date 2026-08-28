@@ -184,6 +184,34 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, war
     <DrawerPrimitive.Root
       shouldScaleBackground={shouldScaleBackground}
       modal={modal}
+      /**
+       * Never let vaul touch `document.body`'s position.
+       *
+       * On iOS — vaul's `isSafari()` is true for every browser there — an open
+       * sheet pins the page with `position: fixed !important; top: -scrollY;
+       * height: auto`. Both halves of that are wrong here:
+       *
+       * - The offset is read from `window.scrollY` and put back with
+       *   `window.scrollTo`. **Body** is this app's scrolling element, so both
+       *   are silent no-ops (see lib/document-scroll.ts): the offset is always
+       *   0, so opening a sheet throws the reader's place away and closing it
+       *   cannot put it back.
+       * - `height: auto` on the scroller collapses it to content height, so
+       *   nothing scrolls at all while it is set — and vaul only removes it on
+       *   the close path. `usePositionFixed` has no unmount cleanup and its
+       *   `previousBodyPosition` is a module-level singleton, so a Root that
+       *   unmounts while open (a card leaving the feed, a sheet whose action
+       *   navigates, an ErrorBoundary catching underneath it) leaves the page
+       *   permanently unscrollable with a refresh the only way out.
+       *
+       * Nothing is lost by switching it off. Every sheet in this app renders a
+       * `DrawerOverlay`, and Radix's modal Dialog wraps that in `RemoveScroll`,
+       * which holds the background with `body { overflow: hidden }` — right for
+       * a body scroller, scroll position preserved, ref-counted and removed
+       * with the component. Vaul's iOS `touchmove` guard (`usePreventScroll`)
+       * does not read this flag and still runs.
+       */
+      noBodyStyles
       onOpenChange={(open) => {
         if (!open) lastDrawerDismissAt = Date.now();
         onOpenChange?.(open);
