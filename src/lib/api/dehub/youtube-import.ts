@@ -19,7 +19,7 @@ export async function importFromYoutube(
   return apiCall<YoutubeImportQueuedResponse>('/api/youtube_import', {
     method: 'POST',
     requiresAuth: true,
-    body: params,
+    body: params as unknown as Record<string, unknown>,
   });
 }
 
