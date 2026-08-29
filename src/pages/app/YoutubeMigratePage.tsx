@@ -20,6 +20,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
+import dehubCoin from '@/assets/dehub-coin.png';
 import {
   getYoutubeConnectUrl,
   listChannelVideos,
@@ -43,6 +44,33 @@ type Stage = 'loading' | 'not-connected' | 'listing' | 'quoting' | 'paying' | 'p
  * black border, white fill, on every theme, full stop. */
 const CHECKBOX_CLASS =
   'h-5 w-5 shrink-0 rounded border-[2.5px] border-[#000] bg-[#fff] shadow-[0_0_0_1px_rgba(255,255,255,0.6)] data-[state=checked]:bg-[#000] data-[state=checked]:text-[#fff]';
+
+/** The example grid shown before a batch exists. Deliberately covers all
+ * three states and a real-sounding failure reason — the point is to show
+ * that failures are surfaced per video and can be retried, not to fill
+ * space. Titles are generic so it never looks like someone else's channel. */
+const SAMPLE_RESULTS: { title: string; status: 'imported' | 'failed' | 'pending'; reason?: string }[] = [
+  { title: 'Channel trailer', status: 'imported' },
+  { title: 'Behind the scenes', status: 'imported' },
+  { title: 'Q&A — episode 4', status: 'imported' },
+  { title: 'Studio tour', status: 'pending' },
+  { title: 'Live replay', status: 'failed', reason: 'That video is age-restricted, so it cannot be imported.' },
+  { title: 'Old vlog', status: 'imported' },
+];
+
+/** A DHB amount, written the way the rest of the app writes one: the coin
+ * ahead of the number, no ticker text. Local rather than shared because the
+ * codebase inlines this `<img>` at each site today — this only exists to
+ * avoid repeating it four times on one page. `alt` carries the ticker, so
+ * the amount still reads as DHB to a screen reader. */
+function DhbAmount({ value, className }: { value: number; className?: string }) {
+  return (
+    <span className={cn('inline-flex items-center gap-1 tabular-nums', className)}>
+      <img src={dehubCoin} alt="DHB" className="w-4 h-4 shrink-0" />
+      {value.toLocaleString()}
+    </span>
+  );
+}
 
 export default function YoutubeMigratePage() {
   const { user } = useAuth();
@@ -325,24 +353,33 @@ export default function YoutubeMigratePage() {
             <p className="text-sm text-zinc-400">
               {quote.videoCount} video{quote.videoCount === 1 ? '' : 's'}
               {quote.creditAppliedDhb > 0 && (
-                <> — {quote.creditAppliedDhb.toLocaleString()} DHB credit applied</>
+                <> — <DhbAmount value={quote.creditAppliedDhb} /> credit applied</>
               )}
             </p>
             <p className="text-lg font-semibold text-white">
-              {quote.amountDhb === 0 ? 'Free (covered by credit)' : `${quote.amountDhb.toLocaleString()} DHB`}
+              {quote.amountDhb === 0 ? (
+                'Free (covered by credit)'
+              ) : (
+                <DhbAmount value={quote.amountDhb} className="gap-1.5" />
+              )}
             </p>
             <Button variant="glass" onClick={() => handlePay(quote)} disabled={stage === 'paying'}>
               {stage === 'paying' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {quote.amountDhb === 0 ? 'Start migration' : `Pay ${quote.amountDhb.toLocaleString()} DHB`}
+              {quote.amountDhb === 0 ? (
+                'Start migration'
+              ) : (
+                <>Pay&nbsp;<DhbAmount value={quote.amountDhb} /></>
+              )}
             </Button>
           </section>
         )}
 
-        {/* The tracker is rendered even with nothing running. It is the part
-            of this page a creator comes back to — showing its shape while
-            empty is what tells them progress will be here, rather than
-            leaving the page looking like the batch vanished. */}
-        {stage !== 'loading' && stage !== 'not-connected' && (
+        {/* Rendered at every stage, including before a channel is connected.
+            It is the part of this page a creator comes back to, and showing
+            its shape up front is what explains the feature — the sample grid
+            below says "each video gets a tile and you can retry the failures"
+            far faster than a paragraph would. */}
+        {stage !== 'loading' && (
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-0.5">
@@ -352,7 +389,7 @@ export default function YoutubeMigratePage() {
                     ? "Migrating — this runs in the background, safe to close this tab. We'll notify you when it's done."
                     : charge
                       ? `${imported} imported${failed ? `, ${failed} couldn't import` : ''}.`
-                      : 'Nothing running. Once you pay for a batch, every video shows up here with its own status.'}
+                      : 'Every video in a batch gets its own tile here, so you can see what landed and retry what did not. Nothing running yet — the grid below is an example.'}
                 </p>
               </div>
               {stage === 'done' && failed > 0 && (
@@ -385,17 +422,25 @@ export default function YoutubeMigratePage() {
                 ))}
               </div>
             ) : (
-              /* Placeholder tiles, not a bare sentence — the point is to show
-                 the grid's shape. aria-hidden because there is nothing here
-                 to read out; the sentence above already says so. */
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2" aria-hidden="true">
-                {Array.from({ length: 6 }).map((_, i) => (
+              /* A worked example rather than blank boxes: showing all three
+                 states, failure reason included, is what makes "and you can
+                 retry the ones that failed" land before anyone has paid.
+                 Dashed and dimmed so it never reads as real progress, and
+                 aria-hidden because the sentence above already says what
+                 this is — six fake rows would just be noise to read out. */
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 opacity-60" aria-hidden="true">
+                {SAMPLE_RESULTS.map(sample => (
                   <div
-                    key={i}
-                    className="flex items-center gap-1.5 rounded-xl border border-dashed border-white/10 p-2.5"
+                    key={sample.title}
+                    className="flex flex-col gap-1.5 rounded-xl border border-dashed border-white/10 p-2.5 text-xs"
                   >
-                    <div className="h-3.5 w-3.5 shrink-0 rounded-full bg-white/10" />
-                    <div className="h-2 flex-1 rounded bg-white/10" />
+                    <div className="flex items-center gap-1.5">
+                      {sample.status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-400" />}
+                      {sample.status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
+                      {sample.status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
+                      <span className="truncate text-white">{sample.title}</span>
+                    </div>
+                    {sample.reason && <span className="text-zinc-500 line-clamp-2">{sample.reason}</span>}
                   </div>
                 ))}
               </div>
@@ -451,7 +496,7 @@ export default function YoutubeMigratePage() {
                           {from}–{tier.maxVideos} video{tier.maxVideos === 1 ? '' : 's'}
                         </span>
                         <span className="text-white tabular-nums">
-                          {tier.priceUsd === 0 ? 'Free' : `${tier.priceDhb.toLocaleString()} DHB`}
+                          {tier.priceUsd === 0 ? 'Free' : <DhbAmount value={tier.priceDhb} />}
                         </span>
                       </li>
                     );
