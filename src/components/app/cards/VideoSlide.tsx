@@ -9,7 +9,7 @@
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
 import { createPortal } from 'react-dom';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Loader2, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
@@ -394,7 +394,38 @@ export const VideoSlide = memo(function VideoSlide({
           for centre-double-tap fullscreen; fullscreen kept its button and gave
           the gesture up, because one gesture cannot mean two things. */}
       <div className="absolute inset-0 z-[2]" {...tapGestures}>
-        {short.videoUrl ? (
+        {short.transcodingStatus === 'failed' ? (
+          /* Transcode job failed server-side — videoUrl was written
+             optimistically at upload time and the file was never actually
+             produced, so a player here would just sit on a dead src. */
+          <div className="relative w-full h-full bg-zinc-900">
+            {thumbnail && (
+              <img src={thumbnail} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
+            )}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+              <div className="w-11 h-11 rounded-xl bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-white/80" />
+              </div>
+              <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow px-4 text-center">
+                Failed to process video
+              </span>
+            </div>
+          </div>
+        ) : short.transcodingStatus === 'pending' || short.transcodingStatus === 'on' ? (
+          /* Still transcoding — same optimistic videoUrl, but recoverable
+             once the job finishes, unlike the 'failed' branch above. */
+          <div className="relative w-full h-full bg-zinc-900">
+            {thumbnail && (
+              <img src={thumbnail} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
+            )}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+              <Loader2 className="w-7 h-7 text-white animate-spin" />
+              <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow">
+                Processing video…
+              </span>
+            </div>
+          </div>
+        ) : short.videoUrl ? (
           <video
             ref={videoRef}
             src={short.videoUrl}

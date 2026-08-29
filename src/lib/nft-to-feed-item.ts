@@ -29,6 +29,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     type: 'video',
     thumbnail,
     videoUrl: videoUrl || nft.videoUrl || undefined,
+    transcodingStatus: nft.transcodingStatus,
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     description: nft.description || undefined,
