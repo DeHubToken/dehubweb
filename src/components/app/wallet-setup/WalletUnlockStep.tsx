@@ -53,7 +53,7 @@ interface WalletUnlockStepProps {
   onLogout?: () => void | Promise<void>;
 }
 
-type Phase = 'unlock' | 'recover' | 'recover-new-code' | 'enroll-offer';
+type Phase = 'unlock' | 'recover' | 'recover-new-code' | 'enroll-offer' | 'set-password';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
@@ -115,6 +115,22 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       // in with it would silently switch the user's wallet, so refuse.
       if (current.ethAddress && derived.ethAddress.toLowerCase() !== current.ethAddress.toLowerCase()) {
         throw new Error('That passkey unlocks a different wallet. Use your wallet password instead.');
+      }
+      // A wallet whose ONLY key is this passkey is one lost handset from being
+      // unreachable, and the person cannot discover that until the day they
+      // try DeHub somewhere else. This is the moment to fix it: they have just
+      // proved themselves, the plaintext seed is in hand, and the wrap costs
+      // them one password and no second prompt.
+      //
+      // Deliberately NOT asked at signup. Nobody arriving has a reason to care
+      // about a backup key yet, and a password field on the first screen is
+      // pure drop-off. By the time this fires they have chosen to do something
+      // with the wallet, so the ask has a reason attached to it.
+      if (!current.payload) {
+        setPendingSecret(derived.secret);
+        setPendingPrivKey(derived.ethPrivateKey);
+        setPhase('set-password');
+        return;
       }
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
@@ -179,6 +195,66 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to unlock wallet');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  /**
+   * Write the password wrap for a biometrics-only wallet, then continue.
+   *
+   * Mirrors AddPasswordBackupDialog in Settings, minus its biometric step: the
+   * unlock that got us here already produced the seed, so this asks for nothing
+   * beyond the password itself. The biometric wraps are untouched — this only
+   * fills in the password columns, so the fingerprint keeps working.
+   *
+   * A failure here must not strand the unlock that already succeeded. The
+   * caller is mid-action (a tip, a mint, a login), and refusing to hand back a
+   * key we are holding would turn a backup problem into a broken feature — so
+   * the error is shown, and the wallet still opens.
+   */
+  const handleSetPassword = async () => {
+    if (!pendingSecret || !pendingPrivKey) return;
+    setError(null);
+    if (password !== newConfirm) { setError("Passwords don't match"); return; }
+    setBusy(true);
+    // Rejections release the button before returning. There is no `finally`
+    // covering this block — the success path deliberately falls through to the
+    // sign-in below, still busy — so anything that bails here has to say so, or
+    // the form stays disabled with no way to correct the password.
+    const reject = (message: string) => { setError(message); setBusy(false); };
+    try {
+      const assessment = await assessPassword(password);
+      if (!assessment.longEnough) {
+        reject(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+        return;
+      }
+      if (assessment.breached === true) {
+        reject('This password has appeared in a data breach — choose a different one');
+        return;
+      }
+      if (!assessment.acceptable) {
+        reject('Choose a stronger password (mix letters, numbers, and symbols)');
+        return;
+      }
+
+      const derived = deriveFromSecret(pendingSecret);
+      const encrypted = await encryptString(derived.secret, password);
+      await saveWallet(userId, derived.ethAddress, encrypted);
+      toast.success('Password backup saved — your wallet now opens on any device');
+    } catch (err) {
+      reject(err instanceof Error ? err.message : 'Could not save the password backup');
+      return;
+    }
+
+    const privKey = pendingPrivKey;
+    setPendingSecret(null);
+    setPassword('');
+    setNewConfirm('');
+    try {
+      await onComplete(privKey);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to sign in');
     } finally {
       setBusy(false);
     }
@@ -357,6 +433,61 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         >
           Not now
         </button>
+      </div>
+    );
+  }
+
+  // No "not now". Every other prompt in this file is a convenience and takes a
+  // skip; this one is the difference between a wallet that survives losing a
+  // phone and one that does not, and it is asked exactly once in the account's
+  // life. A dismissible version of it is a version most people dismiss.
+  if (phase === 'set-password') {
+    return (
+      <div className="space-y-4">
+        <div className="mx-auto w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
+          <KeyRound className="w-6 h-6 text-white" />
+        </div>
+        <div className="space-y-2 text-center">
+          <p className="text-white text-sm font-medium">Set a wallet password</p>
+          <p className="text-white/50 text-xs leading-relaxed">
+            Right now your wallet only opens with biometrics on this device — if you lose it, nobody can
+            get back in. A password is the backup, and it lets you use DeHub on your laptop too. Your
+            fingerprint keeps working here.
+          </p>
+        </div>
+        <form
+          onSubmit={(e) => { e.preventDefault(); if (password && newConfirm && !busy) handleSetPassword(); }}
+          className="space-y-4"
+        >
+          <div className="space-y-2">
+            <Input
+              type="password"
+              placeholder={`Wallet password (min ${MIN_PASSWORD_LENGTH} chars)`}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={inputClass}
+              autoFocus
+            />
+            <PasswordStrengthMeter password={password} />
+          </div>
+          <Input
+            type="password"
+            placeholder="Confirm password"
+            value={newConfirm}
+            onChange={(e) => setNewConfirm(e.target.value)}
+            className={inputClass}
+          />
+          {error && <p className="text-sm text-red-400">{error}</p>}
+          <Button
+            type="submit"
+            disabled={busy || !password || !newConfirm}
+            className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+          >
+            {busy
+              ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Saving…</span>
+              : 'Save and continue'}
+          </Button>
+        </form>
       </div>
     );
   }
