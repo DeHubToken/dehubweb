@@ -42,7 +42,7 @@ import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addGifComment, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
@@ -1302,12 +1302,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           parentId: replyTarget?.id,
         });
       } else if (imageFile) {
-        // Upload image first, then post comment with image
-        const { url: imageUrl } = await uploadChatImage(imageFile);
-        await addCommentWithImage({
+        // /api/comment_image only reads the image from an uploaded file, so
+        // this has to go straight there as multipart/form-data — no separate
+        // upload-then-post-URL step (that silently dropped the image, since
+        // the backend never looks at a JSON imageUrl).
+        await addImageComment({
           tokenId: parseInt(tokenId, 10),
+          imageFile,
           content: newComment,
-          imageUrl,
           parentId: replyTarget?.id,
         });
       } else {
