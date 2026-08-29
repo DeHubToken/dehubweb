@@ -18,11 +18,19 @@ export async function listChannelVideos(): Promise<{ videos: ChannelVideo[]; tru
   });
 }
 
+/** One worked example off the price curve — what a batch of exactly this many
+ * videos comes to. Not a bracket: pricing is marginal, so a batch one video
+ * larger costs one more video, not the next row up. */
 export interface MigrationPricingTier {
-  /** Upper bound of the bracket — a batch of this many or fewer costs `priceUsd`. */
+  videos: number;
+  /** Same number as `videos`, kept while older builds may still be reading it. */
   maxVideos: number;
   priceUsd: number;
   priceDhb: number;
+  /** Effective rate at this size — falls as the batch grows. */
+  usdPerVideo?: number;
+  /** What each additional video costs once the batch is past the previous row. */
+  marginalUsdPerVideo?: number;
 }
 
 export interface MigrationPricing {
