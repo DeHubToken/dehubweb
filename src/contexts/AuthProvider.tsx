@@ -77,7 +77,7 @@ import {
   DEFAULT_WALLET_UNLOCK_INTERVAL,
 } from '@/hooks/use-wallet-unlock-interval';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
-import { deriveFromSecret } from '@/lib/wallet-core/derive';
+import { deriveFromSecret, generateMnemonic12 } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
@@ -1945,6 +1945,94 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
+   * The wallet is gone — mint a new one and bring the ACCOUNT with it.
+   *
+   * For the person whose only key was a passkey on a handset they no longer
+   * have. Until now that was terminal on the web: the unlock sheet correctly
+   * refused every option, and there was nothing else to press. The backend has
+   * been able to fix this since #231 — `POST /api/auth/rotate-wallet` moves an
+   * account onto a new address — but nothing on the web ever asked it to
+   * outside the automatic drift path, so the capability was unreachable.
+   *
+   * Deliberately the MIRROR of switchActiveWallet, which sets driftedLinkRef to
+   * null because it is going to a different account on purpose. Here the whole
+   * point is that the account must follow, so the ref is armed with the address
+   * being left. moveAccountToThisWallet then fires inside
+   * signAndAuthenticateSmartWallet, which is the only place the ordering is
+   * right: the rotate has to happen BEFORE authenticateWallet, because a
+   * signature login makes the Supabase link exclusive and would unset the very
+   * link the rotate looks the account up by.
+   *
+   * The ref's value is only a guard and a log line — rotateWallet identifies
+   * the account from the Supabase token, never from what we send — so the old
+   * EOA from user_wallets is both sufficient and the honest thing to record.
+   *
+   * What survives: username, posts, DMs, notifications, followers, bookmarks.
+   * What does not: anything on-chain at the old address, which no longer has a
+   * key. Callers MUST say so before getting here.
+   */
+  const replaceLostWallet = async (password: string) => {
+    if (!supabaseUserId) throw new Error('Not signed in');
+    const toastId = 'auth-replace-wallet';
+    setIsConnecting(true);
+    try {
+      // Read the outgoing address before it is overwritten, for the guard and
+      // the log line.
+      const previous = await fetchWallet(supabaseUserId).catch(() => null);
+
+      const secret = generateMnemonic12();
+      const derived = deriveFromSecret(secret);
+      const encrypted = await encryptString(derived.secret, password);
+      await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
+
+      // The old wraps still hold the OLD seed, so they would now open a wallet
+      // this account no longer uses. Best-effort, exactly as in
+      // switchActiveWallet: the write above already succeeded, and biometric
+      // unlock refuses any wrap whose address disagrees with the wallet row.
+      try {
+        await deleteAllPasskeyWraps(supabaseUserId);
+      } catch (e) {
+        console.warn('[Auth] Could not clear biometric wraps after wallet replacement:', e);
+      }
+      clearWalletCache();
+      clearPasskeyCache();
+      lockWallet();
+
+      // Arm the rescue, then drop the stale address so the "address changed"
+      // guard in signAndAuthenticateSmartWallet does not block this
+      // INTENTIONAL replacement.
+      //
+      // Armed even when the old row is missing, which is the case that looks
+      // like it needs nothing and is in fact the most dangerous: if the
+      // identity is still linked to an account somewhere, signing in unarmed
+      // would make the new link EXCLUSIVE and unset that account's, orphaning
+      // it behind a new empty one. The fallback only has to differ from the
+      // address being signed with — that is the SAFE, never the owner EOA
+      // used here — so the rotate always gets its chance, and answers
+      // WALLET_NOT_LINKED harmlessly when there really is nothing to move.
+      driftedLinkRef.current = previous?.ethAddress ?? derived.ethAddress;
+      setWalletAddress(null);
+
+      await activateWalletKey(derived.ethPrivateKey);
+      await signAndAuthenticateSmartWallet(toastId);
+      setWalletPhase('none');
+      localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+      localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
+      closeLoginModal();
+      toast.success('New wallet ready — your account came with it', { id: toastId });
+    } catch (err: any) {
+      console.error('[Auth] Wallet replacement failed:', err);
+      driftedLinkRef.current = null;
+      if (!reportWalletSignupBlocked(err)) {
+        toast.error(err?.message || 'Could not set up a new wallet', { id: toastId });
+      }
+      throw err;
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  /**
    * Final step of the smart-wallet login flow — called by the login modal
    * after the wallet was created/unlocked and the private key is available.
    */
@@ -2571,6 +2659,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     exportPrivateKey,
     exportPrivateKeyWithBiometrics,
     switchActiveWallet,
+    replaceLostWallet,
     switchToProfile,
     disconnect,
     refreshUser,
