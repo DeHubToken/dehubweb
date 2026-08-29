@@ -136,6 +136,9 @@ export interface VideoItem extends BaseFeedItem {
   uploadedAgo: string;
   /** Mint status: 'minted' | 'signed' (pending) */
   status?: 'minted' | 'signed' | string;
+  /** Async video transcode state, written optimistically before the CDN file
+   *  exists. Absent on posts predating this field — treat as 'done'. */
+  transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
   /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
   newPostId?: number;
   /** Creator's user ID for navigation */
@@ -387,6 +390,9 @@ export interface ShortVideo extends BaseFeedItem {
   dislikes?: number;
   thumbnail: string;
   videoUrl: string;
+  /** Async video transcode state, written optimistically before the CDN file
+   *  exists. Absent on posts predating this field — treat as 'done'. */
+  transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
   description?: string;
   sound?: string;
   comments?: string;

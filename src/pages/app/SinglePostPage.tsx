@@ -159,6 +159,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     views,
     uploadedAgo: formatTimeAgo(timestamp),
     status: nft.status,
+    transcodingStatus: nft.transcodingStatus,
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     // Same source the feed normalizer reads (use-unified-feed). Without it the

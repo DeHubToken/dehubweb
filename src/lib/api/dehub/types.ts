@@ -218,6 +218,9 @@ export interface DeHubNFT {
   chainId?: number;
   mintTxHash?: string;
   status?: string;
+  /** Async video transcode state, written optimistically before the CDN file
+   *  exists. Absent on posts predating this field — treat as 'done'. */
+  transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
   audioUrl?: string;
   audioDuration?: number;
 

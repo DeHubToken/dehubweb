@@ -182,6 +182,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     type: 'video',
     thumbnail,
     videoUrl,
+    transcodingStatus: nft.transcodingStatus,
     audioUrl,
     audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
     isAudio: isAudioPost,
