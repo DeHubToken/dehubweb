@@ -6,6 +6,9 @@ export interface ChannelVideo {
   url: string;
   publishedAt: string;
   alreadyImported: boolean;
+  thumbnailUrl?: string;
+  durationSeconds?: number;
+  viewCount?: number;
 }
 
 export async function getYoutubeConnectUrl(): Promise<{ url: string }> {
