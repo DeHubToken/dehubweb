@@ -488,19 +488,29 @@ export default function YoutubeMigratePage() {
                   One flat price per batch — not per video — so the more you bring over, the less each one costs.
                 </p>
                 <ul className="flex flex-col divide-y divide-white/5 text-sm">
-                  {pricing.tiers.map((tier, i) => {
-                    const from = i === 0 ? 1 : pricing.tiers[i - 1].maxVideos + 1;
-                    return (
-                      <li key={tier.maxVideos} className="flex items-center justify-between gap-3 py-2">
-                        <span className="text-zinc-400 tabular-nums">
-                          {from}–{tier.maxVideos} video{tier.maxVideos === 1 ? '' : 's'}
-                        </span>
-                        <span className="text-white tabular-nums">
-                          {tier.priceUsd === 0 ? 'Free' : <DhbAmount value={tier.priceDhb} />}
-                        </span>
-                      </li>
-                    );
-                  })}
+                  {/* The allowance is not a bracket: it comes off the top of
+                      the count once, ever, and what is left is what gets
+                      priced. So it is its own row, and the brackets below
+                      read "up to N" rather than a range — a range would
+                      imply the first N are charged when they are not. */}
+                  {pricing.freeAllowance > 0 && (
+                    <li className="flex items-center justify-between gap-3 py-2">
+                      <span className="text-zinc-400 tabular-nums">
+                        First {pricing.freeAllowance} videos
+                      </span>
+                      <span className="text-white">Free, once</span>
+                    </li>
+                  )}
+                  {pricing.tiers.map(tier => (
+                    <li key={tier.maxVideos} className="flex items-center justify-between gap-3 py-2">
+                      <span className="text-zinc-400 tabular-nums">
+                        Up to {tier.maxVideos.toLocaleString()} videos
+                      </span>
+                      <span className="text-white tabular-nums">
+                        {tier.priceUsd === 0 ? 'Free' : <DhbAmount value={tier.priceDhb} />}
+                      </span>
+                    </li>
+                  ))}
                 </ul>
               </>
             ) : (
