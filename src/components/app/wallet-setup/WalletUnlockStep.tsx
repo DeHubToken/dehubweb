@@ -43,6 +43,7 @@ import {
 } from '@/lib/wallet-core/biometric-unlock';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface WalletUnlockStepProps {
   userId: string;
@@ -53,11 +54,15 @@ interface WalletUnlockStepProps {
   onLogout?: () => void | Promise<void>;
 }
 
-type Phase = 'unlock' | 'recover' | 'recover-new-code' | 'enroll-offer' | 'set-password';
+type Phase = 'unlock' | 'recover' | 'recover-new-code' | 'enroll-offer' | 'set-password' | 'lost-device';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
 export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockStepProps) {
+  // Only for the lost-device path. That flow mints a wallet, moves the account
+  // onto it and finishes the sign-in itself, so it cannot go through
+  // onComplete — which expects a key for the wallet this row already names.
+  const { replaceLostWallet } = useAuth();
   const [phase, setPhase] = useState<Phase>('unlock');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -261,6 +266,44 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   };
 
   /**
+   * Give up on the old wallet and mint a new one, carrying the account across.
+   *
+   * The password is required rather than offered: this runs on a device that
+   * has just proved it cannot do biometrics for this account, so a
+   * biometrics-only replacement would rebuild the same trap the user is
+   * standing in.
+   */
+  const handleReplaceLostWallet = async () => {
+    setError(null);
+    if (password !== newConfirm) { setError("Passwords don't match"); return; }
+    setBusy(true);
+    const reject = (message: string) => { setError(message); setBusy(false); };
+    try {
+      const assessment = await assessPassword(password);
+      if (!assessment.longEnough) {
+        reject(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+        return;
+      }
+      if (assessment.breached === true) {
+        reject('This password has appeared in a data breach — choose a different one');
+        return;
+      }
+      if (!assessment.acceptable) {
+        reject('Choose a stronger password (mix letters, numbers, and symbols)');
+        return;
+      }
+      // Closes the sheet and finishes the sign-in on success.
+      await replaceLostWallet(password);
+      setPassword('');
+      setNewConfirm('');
+    } catch (err) {
+      reject(err instanceof Error ? err.message : 'Could not set up a new wallet');
+      return;
+    }
+    setBusy(false);
+  };
+
+  /**
    * Enrol from the post-password offer, then finish signing in either way.
    *
    * Enrolment and sign-in are caught separately on purpose: they used to share
@@ -383,6 +426,21 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           Forgot password? Use recovery code
         </button>
       )}
+      {/* Offered wherever biometrics are part of the answer, including the
+          screen that CAN show a biometrics button: this device having a
+          fingerprint reader says nothing about whether the enrolled credential
+          is still on it, so the person whose handset is gone lands there too
+          and needs a way out that is not "log out". */}
+      {wraps.length > 0 && (
+        <button
+          type="button"
+          onClick={() => { setPhase('lost-device'); setError(null); setPassword(''); setNewConfirm(''); }}
+          disabled={busy || loggingOut}
+          className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
+        >
+          Lost the device you set this up on?
+        </button>
+      )}
       {onLogout && (
         <button
           type="button"
@@ -432,6 +490,65 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
         >
           Not now
+        </button>
+      </div>
+    );
+  }
+
+  if (phase === 'lost-device') {
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2 text-center">
+          <p className="text-white text-sm font-medium">Start a new wallet on this device</p>
+          <p className="text-white/50 text-xs leading-relaxed">
+            Your account comes with it — same username, posts, messages and followers. Only the wallet
+            itself is replaced.
+          </p>
+        </div>
+        <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
+          <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+          <p>Any DeHub tokens in your old wallet can be recovered but other assets will be lost.</p>
+        </div>
+        <form
+          onSubmit={(e) => { e.preventDefault(); if (password && newConfirm && !busy) handleReplaceLostWallet(); }}
+          className="space-y-4"
+        >
+          <div className="space-y-2">
+            <Input
+              type="password"
+              placeholder={`New wallet password (min ${MIN_PASSWORD_LENGTH} chars)`}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={inputClass}
+              autoFocus
+            />
+            <PasswordStrengthMeter password={password} />
+          </div>
+          <Input
+            type="password"
+            placeholder="Confirm password"
+            value={newConfirm}
+            onChange={(e) => setNewConfirm(e.target.value)}
+            className={inputClass}
+          />
+          {error && <p className="text-sm text-red-400">{error}</p>}
+          <Button
+            type="submit"
+            disabled={busy || !password || !newConfirm}
+            className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+          >
+            {busy
+              ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Setting up…</span>
+              : 'Create a new wallet'}
+          </Button>
+        </form>
+        <button
+          type="button"
+          onClick={() => { setPhase('unlock'); setError(null); setPassword(''); setNewConfirm(''); }}
+          disabled={busy}
+          className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
+        >
+          Back
         </button>
       </div>
     );
