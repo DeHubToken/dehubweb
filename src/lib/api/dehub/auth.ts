@@ -72,6 +72,7 @@ export async function authenticateWallet(
   timestamp: number,
   chainId: number = 8453,
   web3AuthMeta?: Web3AuthMeta,
+  supabaseAccessToken?: string,
 ): Promise<AuthResponse> {
   const body: Record<string, any> = {
     address: address.toLowerCase(),
@@ -82,6 +83,20 @@ export async function authenticateWallet(
 
   if (web3AuthMeta) {
     body.web3AuthMeta = web3AuthMeta;
+  }
+
+  // Proves this login actually owns web3AuthMeta.verifierId. Without it the
+  // backend (vetSupabaseIdentityLink) only accepts a FIRST link and silently
+  // drops the meta whenever any other account already holds that identity —
+  // so a stale or duplicate link could never be repaired from the web, and
+  // every later login bounced off the exchange with WALLET_NOT_LINKED. With
+  // it, the link is stored and made exclusive, which is what self-heals old
+  // duplicates. Mobile has always sent this; web is catching up.
+  //
+  // Body field, not the x-supabase-authorization header: that header is not
+  // in the API's CORS allowlist, so browsers refuse the preflight.
+  if (supabaseAccessToken) {
+    body.supabaseAccessToken = supabaseAccessToken;
   }
 
   const headers = {
@@ -179,9 +194,6 @@ export async function rotateWallet(
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      // Header rather than body so it stays out of request logs that record
-      // bodies — same reasoning as authenticateWithSupabaseSession.
-      'x-supabase-authorization': `Bearer ${supabaseAccessToken}`,
       ...deviceHeaders(),
     },
     body: JSON.stringify({
@@ -189,6 +201,12 @@ export async function rotateWallet(
       sig: signature,
       timestamp,
       chainId,
+      // In the body, NOT the x-supabase-authorization header this used to
+      // send: that header is missing from the API's CORS allowlist, so every
+      // browser failed the preflight and the rescue never ran — the string of
+      // "Could not move the account onto this wallet: Failed to fetch" rows.
+      // The endpoint accepts either; only the body form works cross-origin.
+      supabaseAccessToken,
     }),
   });
 

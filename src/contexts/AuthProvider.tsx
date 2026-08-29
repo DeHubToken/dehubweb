@@ -244,6 +244,23 @@ async function getSupabaseAuthMeta(): Promise<Web3AuthMeta | undefined> {
 }
 
 /**
+ * The current Supabase access token, for proving the auth meta's verifierId to
+ * the backend. A signature login that carries the meta WITHOUT this proof can
+ * only ever create a first link — the backend drops the meta entirely when any
+ * other account already holds the identity, which left stale links permanently
+ * unrepairable from the web (mobile has always sent it). With the proof, the
+ * backend stores the link and makes it exclusive, self-healing old duplicates.
+ */
+async function getSupabaseAccessToken(): Promise<string | undefined> {
+  try {
+    const { data } = await supabase.auth.getSession();
+    return data?.session?.access_token ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Sign auth message using the provider's personal_sign.
  * Used for both the smart-wallet AA provider and external-wallet fallbacks.
  */
@@ -670,12 +687,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         'SMART-RESUME',
       );
       const meta = await getSupabaseAuthMeta();
+      const supabaseToken = await getSupabaseAccessToken();
       toast.loading('Signing in...', { id: 'auth-smart-wallet' });
       // Same drift, one step earlier in the flow: this silent resume is reached
       // straight after the exchange was refused, so it signs for the same
       // wallet the account is not linked to.
       await moveAccountToThisWallet(address, signature, timestamp, 8453);
-      const authResponse = await authenticateWallet(address, signature, timestamp, 8453, meta);
+      const authResponse = await authenticateWallet(address, signature, timestamp, 8453, meta, supabaseToken);
       applyAuthenticatedSession(authResponse, address, userId, 'SMART-RESUME');
       toast.success(
         authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!',
@@ -1832,9 +1850,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const meta = await getSupabaseAuthMeta();
+    const supabaseToken = await getSupabaseAccessToken();
     toast.loading('Signing in...', { id: toastId });
     await moveAccountToThisWallet(address, signature, timestamp, BASE_CHAIN_ID);
-    const authResponse = await authenticateWallet(address, signature, timestamp, BASE_CHAIN_ID, meta);
+    const authResponse = await authenticateWallet(address, signature, timestamp, BASE_CHAIN_ID, meta, supabaseToken);
 
     applyAuthenticatedSession(authResponse, address, supabaseUserId, flow);
 
