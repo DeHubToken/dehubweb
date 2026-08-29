@@ -135,29 +135,6 @@ export async function addComment(params: {
   return response as CommentResponse;
 }
 
-export async function addCommentWithImage(params: {
-  tokenId: number;
-  content?: string;
-  imageUrl: string;
-  parentId?: string;
-}): Promise<CommentResponse> {
-  const response = await apiCall<{ result: CommentResponse } | CommentResponse>("/api/comment_image", {
-    method: "POST",
-    body: {
-      streamTokenId: params.tokenId,
-      content: params.content || '',
-      imageUrl: params.imageUrl,
-      commentId: params.parentId,
-    },
-    requiresAuth: true,
-  });
-  assertCommentAccepted(response);
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
-  }
-  return response as CommentResponse;
-}
-
 export async function editComment(params: {
   commentId: string;
   content: string;
@@ -207,6 +184,39 @@ export async function addVoiceComment(params: {
   }
 
   const response = await authedUpload<VoiceCommentResponse>(`${url.pathname}${url.search}`, formData);
+  assertCommentAccepted(response);
+  return response;
+}
+
+export interface ImageCommentResponse {
+  result: boolean;
+  commentId: number;
+}
+
+/**
+ * `/api/comment_image` only ever reads the image from an uploaded file
+ * (`files[0].buffer` on the backend) — it has no JSON `imageUrl` fallback, so
+ * this has to be a multipart upload, not a pre-upload-then-post-URL flow.
+ */
+export async function addImageComment(params: {
+  tokenId: number;
+  imageFile: File;
+  content?: string;
+  parentId?: string;
+}): Promise<ImageCommentResponse> {
+  const formData = new FormData();
+  formData.append('file', params.imageFile, params.imageFile.name || `comment-${Date.now()}.jpg`);
+
+  const url = new URL('/api/comment_image', DEHUB_API_BASE);
+  url.searchParams.set('streamTokenId', String(params.tokenId));
+  if (params.content?.trim()) {
+    url.searchParams.set('content', params.content);
+  }
+  if (params.parentId) {
+    url.searchParams.set('commentId', params.parentId);
+  }
+
+  const response = await authedUpload<ImageCommentResponse>(`${url.pathname}${url.search}`, formData);
   assertCommentAccepted(response);
   return response;
 }
