@@ -28,6 +28,10 @@ export interface MigrationPricingTier {
 export interface MigrationPricing {
   tiers: MigrationPricingTier[];
   maxVideosPerBatch: number;
+  /** Videos a creator can migrate free in total, ever — not per batch. Comes
+   * off the top of a batch's count once, and the brackets price whatever is
+   * left. */
+  freeAllowance: number;
 }
 
 /** The price ladder, read from the same constant the quote is charged off —
