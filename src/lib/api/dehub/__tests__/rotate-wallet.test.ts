@@ -53,14 +53,18 @@ describe('rotateWallet', () => {
     });
   });
 
-  it('sends the Supabase token as a header, not in the body', async () => {
+  it('sends the Supabase token in the body, never as a custom header', async () => {
+    // The x-supabase-authorization header is not in the API's CORS allowlist,
+    // so a browser refuses the preflight and the request never leaves — which
+    // is how the rescue shipped dead. The body field is the form that works
+    // cross-origin; this test keeps the header from coming back.
     mockFetch({ status: true, result: {} });
     await rotate();
 
     const [, opts] = vi.mocked(fetch).mock.calls[0];
     const headers = opts?.headers as Record<string, string>;
-    expect(headers['x-supabase-authorization']).toBe('Bearer supabase-jwt');
-    expect(String(opts?.body)).not.toContain('supabase-jwt');
+    expect(headers['x-supabase-authorization']).toBeUndefined();
+    expect(JSON.parse(String(opts?.body)).supabaseAccessToken).toBe('supabase-jwt');
   });
 
   it('raises WalletNotLinkedError when there is no account to move', async () => {

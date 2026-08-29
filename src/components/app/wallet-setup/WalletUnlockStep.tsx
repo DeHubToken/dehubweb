@@ -506,6 +506,21 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         </Button>
       )}
 
+      {/* canUseBiometrics only says this machine HAS an authenticator — the
+          enrolled credential may live on another device entirely, and with no
+          password wrap there is nothing else on this screen to try. Name the
+          device the wallet was set up on so a confused "I never set up
+          biometrics" moment turns into "oh, that's my phone" — the browser's
+          passkey sheet can often hand off to that device via QR, and failing
+          that, the fix is a password backup added from it. */}
+      {canUseBiometrics && !hasPasswordWrap && wraps.some((w) => w.label) && (
+        <p className="text-white/40 text-xs text-center">
+          Your wallet's biometric unlock was set up on: {[...new Set(wraps.map((w) => w.label).filter(Boolean))].join(', ')}.
+          On a different device, choose that device if your browser offers it — or open Settings → Account
+          Security there to add a wallet password.
+        </p>
+      )}
+
       {showPasswordForm && (
         <form
           onSubmit={(e) => { e.preventDefault(); if (password && !busy) handleUnlock(); }}
