@@ -1825,6 +1825,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow px-4 text-center">
                     Failed to process video
                   </span>
+                  {isOwnPost && (
+                    <span className="text-white/60 text-[11px] tracking-wide drop-shadow px-6 text-center">
+                      Replace it with a standard MP4 via Edit in the ⋮ menu, top right of the post.
+                    </span>
+                  )}
                 </div>
               </div>
             ) : (video.transcodingStatus === 'pending' || video.transcodingStatus === 'on') ? (
