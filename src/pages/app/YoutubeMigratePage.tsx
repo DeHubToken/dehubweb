@@ -329,7 +329,7 @@ export default function YoutubeMigratePage() {
 
         {(stage === 'listing' || stage === 'quoting') && videos.length > 0 && !quote && (
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[36rem] overflow-y-auto -mx-1 px-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[40rem] overflow-y-auto -mx-1 px-1 pb-1">
               {videos.map(v => {
                 const checked = v.alreadyImported || selected.has(v.youtubeVideoId);
                 const duration = formatDuration(v.durationSeconds);
@@ -350,17 +350,17 @@ export default function YoutubeMigratePage() {
                     }}
                     className={cn(
                       'group flex flex-col gap-2 rounded-xl bg-black/20 overflow-hidden select-none ring-1 ring-white/5 transition-all',
-                      v.alreadyImported ? 'opacity-40' : 'cursor-pointer hover:ring-white/20 hover:bg-black/30',
+                      v.alreadyImported ? 'opacity-40' : 'cursor-pointer hover:ring-2 hover:ring-white/20 hover:bg-black/30',
                       checked && !v.alreadyImported && 'ring-2 ring-white/60',
                     )}
                   >
-                    <div className="relative aspect-video bg-zinc-900">
+                    <div className="relative aspect-video bg-zinc-900 overflow-hidden">
                       {v.thumbnailUrl ? (
                         <img
                           src={v.thumbnailUrl}
                           alt=""
                           loading="lazy"
-                          className="absolute inset-0 h-full w-full object-cover"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
                         <Youtube className="absolute inset-0 m-auto h-8 w-8 text-zinc-700" />
