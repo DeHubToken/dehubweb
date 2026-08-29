@@ -79,6 +79,9 @@ export interface UnifiedFeedItem {
   owner?: string;
   postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
   status?: string;
+  /** Async video transcode state, written optimistically before the CDN file
+   *  exists. Absent on posts predating this field — treat as 'done'. */
+  transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
   category?: string[];
   /** Absent means safe — see ContentRating. */
   contentRating?: ContentRating;
@@ -254,6 +257,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     views: formatViews(resolveViewCount(item)),
     uploadedAgo: formatTimeAgo(item.createdAt),
     status: item.status,
+    transcodingStatus: item.transcodingStatus,
     newPostId: (item as any).newPostId,
     creatorId: item.minter,
     creatorUsername: item.minterUsername || item.mintername,

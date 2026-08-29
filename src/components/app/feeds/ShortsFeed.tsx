@@ -150,6 +150,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     dislikes: nft.totalVotes?.against || nft.dislike_count || 0,
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
+    transcodingStatus: nft.transcodingStatus,
     description: nft.description || nft.name || nft.title || '',
     sound: 'Original Sound',
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),

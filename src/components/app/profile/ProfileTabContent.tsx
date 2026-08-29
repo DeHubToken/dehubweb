@@ -730,6 +730,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           id: String(post.tokenId), type: 'video', contentRating: post.contentRating,
           thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           videoUrl: buildVideoUrl(post.tokenId),
+          transcodingStatus: post.transcodingStatus,
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
           channelAvatar: avatar, verified: false,

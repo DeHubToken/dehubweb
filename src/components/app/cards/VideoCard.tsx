@@ -29,7 +29,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil, Rocket, Star } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil, Rocket, Star, Loader2, AlertTriangle } from 'lucide-react';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
@@ -845,6 +845,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         : 'none';
   const hasErrorRef = useRef(hasError);
   hasErrorRef.current = hasError;
+  // Transcode still running or dead — videoUrl is the optimistic CDN guess
+  // written at upload time, and the file doesn't exist yet (or ever) until
+  // this clears. Autoplay/tap-to-play must not attempt it.
+  const isVideoNotReady = video.transcodingStatus === 'pending' || video.transcodingStatus === 'on' || video.transcodingStatus === 'failed';
 
   // Register with playback manager and setup IntersectionObserver (stable — no isPlaying dep)
   useEffect(() => {
@@ -862,7 +866,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current && !isVideoNotReady) {
             const vid = videoRef.current;
             if (vid) {
               // Fast fling race: the media-attach state may not have
@@ -910,7 +914,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
     };
-  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl]);
+  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl, isVideoNotReady]);
 
   // Show controls briefly after any user interaction, then auto-hide
   const showControlsBriefly = useCallback(() => {
@@ -968,7 +972,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       return;
     }
     
-    if (!video.videoUrl || isContentGated) return;
+    if (!video.videoUrl || isContentGated || isVideoNotReady) return;
 
     if (hasError) {
       toast.error('Playback failed. Report sent.');
@@ -1012,7 +1016,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated]);
+  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1804,6 +1808,37 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     seed={video.id}
                     decodeEnabled={nearViewport}
                   />
+                </div>
+              </div>
+            ) : video.transcodingStatus === 'failed' ? (
+              /* Transcode job failed server-side — videoUrl was written
+                 optimistically at upload time and the file was never actually
+                 produced, so a player here would just 404 forever. */
+              <div className="absolute inset-0 overflow-hidden bg-black">
+                {thumbnail && (
+                  <img src={thumbnail} alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
+                )}
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+                  <div className="w-11 h-11 rounded-xl bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center">
+                    <AlertTriangle className="w-5 h-5 text-white/80" />
+                  </div>
+                  <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow px-4 text-center">
+                    Failed to process video
+                  </span>
+                </div>
+              </div>
+            ) : (video.transcodingStatus === 'pending' || video.transcodingStatus === 'on') ? (
+              /* Still transcoding — same optimistic videoUrl, but recoverable
+                 once the job finishes, unlike the 'failed' branch above. */
+              <div className="absolute inset-0 overflow-hidden bg-black">
+                {thumbnail && (
+                  <img src={thumbnail} alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
+                )}
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+                  <Loader2 className="w-7 h-7 text-white animate-spin" />
+                  <span className="text-white/80 text-xs font-medium tracking-wide drop-shadow">
+                    Processing video…
+                  </span>
                 </div>
               </div>
             ) : video.videoUrl ? (

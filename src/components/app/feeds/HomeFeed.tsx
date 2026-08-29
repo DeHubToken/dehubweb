@@ -770,6 +770,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         videoUrl: item.videoUrl
           ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        transcodingStatus: item.transcodingStatus,
         description: item.description || item.name || '',
         sound: 'Original Sound',
         comments: formatCount(item.commentCount || 0),
