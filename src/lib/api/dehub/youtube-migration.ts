@@ -18,6 +18,24 @@ export async function listChannelVideos(): Promise<{ videos: ChannelVideo[]; tru
   });
 }
 
+export interface MigrationPricingTier {
+  /** Upper bound of the bracket — a batch of this many or fewer costs `priceUsd`. */
+  maxVideos: number;
+  priceUsd: number;
+  priceDhb: number;
+}
+
+export interface MigrationPricing {
+  tiers: MigrationPricingTier[];
+  maxVideosPerBatch: number;
+}
+
+/** The price ladder, read from the same constant the quote is charged off —
+ * the explainer on the page can't drift from the bill that way. */
+export async function getMigrationPricing(): Promise<MigrationPricing> {
+  return apiCall<MigrationPricing>('/api/youtube_migration/pricing');
+}
+
 export interface MigrationQuote {
   chargeId: string;
   videoCount: number;
