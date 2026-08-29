@@ -66,6 +66,14 @@ export interface AuthContextType {
   /** Replace the active wallet with a different old account's key. */
   switchActiveWallet: (secret: string, password: string) => Promise<void>;
   /**
+   * Last resort for a wallet nothing on this device can open — the passkey
+   * lived on a handset that is gone. Mints a fresh wallet and MOVES the
+   * existing account onto it, so the username, posts, DMs and followers all
+   * survive; only on-chain assets stay at the old address. The opposite of
+   * switchActiveWallet, which deliberately goes to a DIFFERENT account.
+   */
+  replaceLostWallet: (password: string) => Promise<void>;
+  /**
    * Become another profile saved on this device (Settings → Profile →
    * Profiles). Silent when that account's session can be restored from its
    * stored snapshot; otherwise opens the sign-in sheet for it. Resolves by
