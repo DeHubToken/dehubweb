@@ -13,7 +13,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Loader2, Youtube, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, Youtube, CheckCircle2, XCircle, ExternalLink, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
@@ -70,6 +70,33 @@ function DhbAmount({ value, className }: { value: number; className?: string }) 
       {value.toLocaleString()}
     </span>
   );
+}
+
+/** `3661` → `1:01:01`, `125` → `2:05` — YouTube's own player format, so a
+ * duration badge on a thumbnail reads the same here as it does there. */
+function formatDuration(totalSeconds?: number): string | null {
+  if (!totalSeconds) return null;
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+  const mm = h > 0 ? String(m).padStart(2, '0') : String(m);
+  const ss = String(s).padStart(2, '0');
+  return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
+}
+
+const viewsFormatter = new Intl.NumberFormat('en', { notation: 'compact' });
+
+function formatViews(count?: number): string | null {
+  if (count === undefined) return null;
+  return `${viewsFormatter.format(count)} view${count === 1 ? '' : 's'}`;
+}
+
+const publishedDateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' });
+
+function formatPublishedAt(iso?: string): string | null {
+  if (!iso) return null;
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? null : publishedDateFormatter.format(date);
 }
 
 export default function YoutubeMigratePage() {
@@ -302,33 +329,94 @@ export default function YoutubeMigratePage() {
 
         {(stage === 'listing' || stage === 'quoting') && videos.length > 0 && !quote && (
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
-            <div className="flex max-h-96 flex-col gap-1 overflow-y-auto -mx-2 px-2">
-              {videos.map(v => (
-                <div
-                  key={v.youtubeVideoId}
-                  role="checkbox"
-                  aria-checked={v.alreadyImported || selected.has(v.youtubeVideoId)}
-                  tabIndex={v.alreadyImported ? -1 : 0}
-                  onClick={() => !v.alreadyImported && toggle(v.youtubeVideoId)}
-                  onKeyDown={(e) => {
-                    if ((e.key === 'Enter' || e.key === ' ') && !v.alreadyImported) {
-                      e.preventDefault();
-                      toggle(v.youtubeVideoId);
-                    }
-                  }}
-                  className={`flex items-center gap-3 rounded-xl p-2.5 text-sm hover:bg-white/5 select-none ${v.alreadyImported ? 'opacity-40' : 'cursor-pointer'}`}
-                >
-                  <Checkbox
-                    checked={v.alreadyImported || selected.has(v.youtubeVideoId)}
-                    disabled={v.alreadyImported}
-                    className={cn(CHECKBOX_CLASS, 'pointer-events-none')}
-                  />
-                  <span className="truncate text-white">{v.title}</span>
-                  {v.alreadyImported && (
-                    <span className="ml-auto shrink-0 text-[11px] text-zinc-500">Imported</span>
-                  )}
-                </div>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[36rem] overflow-y-auto -mx-1 px-1">
+              {videos.map(v => {
+                const checked = v.alreadyImported || selected.has(v.youtubeVideoId);
+                const duration = formatDuration(v.durationSeconds);
+                const views = formatViews(v.viewCount);
+                const published = formatPublishedAt(v.publishedAt);
+                return (
+                  <div
+                    key={v.youtubeVideoId}
+                    role="checkbox"
+                    aria-checked={checked}
+                    tabIndex={v.alreadyImported ? -1 : 0}
+                    onClick={() => !v.alreadyImported && toggle(v.youtubeVideoId)}
+                    onKeyDown={(e) => {
+                      if ((e.key === 'Enter' || e.key === ' ') && !v.alreadyImported) {
+                        e.preventDefault();
+                        toggle(v.youtubeVideoId);
+                      }
+                    }}
+                    className={cn(
+                      'group flex flex-col gap-2 rounded-xl bg-black/20 overflow-hidden select-none ring-1 ring-white/5 transition-all',
+                      v.alreadyImported ? 'opacity-40' : 'cursor-pointer hover:ring-white/20 hover:bg-black/30',
+                      checked && !v.alreadyImported && 'ring-2 ring-white/60',
+                    )}
+                  >
+                    <div className="relative aspect-video bg-zinc-900">
+                      {v.thumbnailUrl ? (
+                        <img
+                          src={v.thumbnailUrl}
+                          alt=""
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      ) : (
+                        <Youtube className="absolute inset-0 m-auto h-8 w-8 text-zinc-700" />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+
+                      <Checkbox
+                        checked={checked}
+                        disabled={v.alreadyImported}
+                        className={cn(CHECKBOX_CLASS, 'pointer-events-none absolute top-2 left-2 shadow-lg')}
+                      />
+
+                      {duration && (
+                        <span className="absolute bottom-1.5 right-1.5 rounded bg-black/85 px-1.5 py-0.5 text-[11px] font-medium text-white tabular-nums">
+                          {duration}
+                        </span>
+                      )}
+
+                      {v.alreadyImported && (
+                        <span className="absolute top-2 right-2 rounded-full bg-black/85 px-2 py-0.5 text-[10px] font-medium text-zinc-300">
+                          Imported
+                        </span>
+                      )}
+
+                      <a
+                        href={v.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={e => e.stopPropagation()}
+                        aria-label="Watch on YouTube"
+                        className="absolute bottom-1.5 left-1.5 rounded bg-black/70 p-1 text-zinc-300 opacity-0 transition-opacity group-hover:opacity-100 hover:!text-white"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    </div>
+
+                    <div className="flex flex-col gap-1 px-2.5 pb-2.5">
+                      <span className="line-clamp-2 text-sm text-white leading-snug" title={v.title}>
+                        {v.title}
+                      </span>
+                      {(views || published) && (
+                        <span className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+                          {views && (
+                            <span className="flex items-center gap-1">
+                              <Eye className="h-3 w-3" />
+                              {views}
+                            </span>
+                          )}
+                          {views && published && <span>&middot;</span>}
+                          {published && <span>{published}</span>}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <Button
               variant="glass"
