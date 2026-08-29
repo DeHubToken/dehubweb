@@ -144,10 +144,10 @@ export async function addCommentWithImage(params: {
   const response = await apiCall<{ result: CommentResponse } | CommentResponse>("/api/comment_image", {
     method: "POST",
     body: {
-      tokenId: params.tokenId,
+      streamTokenId: params.tokenId,
       content: params.content || '',
       imageUrl: params.imageUrl,
-      parentId: params.parentId,
+      commentId: params.parentId,
     },
     requiresAuth: true,
   });

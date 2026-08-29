@@ -42,7 +42,7 @@ import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addGifComment, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo } from '@/lib/api/dehub';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
@@ -1291,11 +1291,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           parentId: replyTarget?.id,
         });
       } else if (gifUrl) {
-        // Already hosted on GIPHY's CDN — no upload step needed.
-        await addCommentWithImage({
+        // Already hosted on GIPHY's CDN — no upload step needed. This has to
+        // be the dedicated GIF endpoint: /api/comment_image only ever looks
+        // at an uploaded file, so a hosted URL posted through it would save
+        // as a caption with no GIF attached.
+        await addGifComment({
           tokenId: parseInt(tokenId, 10),
           content: newComment,
-          imageUrl: gifUrl,
+          gifUrl,
           parentId: replyTarget?.id,
         });
       } else if (imageFile) {
