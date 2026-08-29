@@ -485,14 +485,13 @@ export default function YoutubeMigratePage() {
             {pricing ? (
               <>
                 <p className="text-sm text-zinc-400">
-                  One flat price per batch — not per video — so the more you bring over, the less each one costs.
+                  Every video is cheaper than the one before it — the rate drops as the batch grows,
+                  so the price below is what that many videos comes to in total.
                 </p>
                 <ul className="flex flex-col divide-y divide-white/5 text-sm">
-                  {/* The allowance is not a bracket: it comes off the top of
-                      the count once, ever, and what is left is what gets
-                      priced. So it is its own row, and the brackets below
-                      read "up to N" rather than a range — a range would
-                      imply the first N are charged when they are not. */}
+                  {/* The allowance comes off the top of the count once, ever,
+                      and the curve prices whatever is left — so it is its own
+                      row rather than a point on the curve. */}
                   {pricing.freeAllowance > 0 && (
                     <li className="flex items-center justify-between gap-3 py-2">
                       <span className="text-zinc-400 tabular-nums">
@@ -501,21 +500,37 @@ export default function YoutubeMigratePage() {
                       <span className="text-white">Free, once</span>
                     </li>
                   )}
-                  {pricing.tiers.map(tier => (
-                    <li key={tier.maxVideos} className="flex items-center justify-between gap-3 py-2">
-                      <span className="text-zinc-400 tabular-nums">
-                        Up to {tier.maxVideos.toLocaleString()} videos
-                      </span>
-                      <span className="text-white tabular-nums">
-                        {tier.priceUsd === 0 ? 'Free' : <DhbAmount value={tier.priceDhb} />}
-                      </span>
-                    </li>
-                  ))}
+                  {/* Rows are worked examples off a continuous curve, not
+                      brackets — 300 videos costs what 300 costs, and 301
+                      costs one more video, not a jump to the next row. The
+                      saving is spelled out because a falling per-video rate
+                      is the whole shape and a column of totals hides it. */}
+                  {pricing.tiers.map(tier => {
+                    const videos = tier.videos ?? tier.maxVideos;
+                    const baseRate = pricing.tiers[0].priceUsd / (pricing.tiers[0].videos ?? pricing.tiers[0].maxVideos);
+                    const rate = tier.priceUsd / videos;
+                    const saving = Math.round((1 - rate / baseRate) * 100);
+                    return (
+                      <li key={videos} className="flex items-center justify-between gap-3 py-2">
+                        <span className="flex items-baseline gap-2">
+                          <span className="text-zinc-400 tabular-nums">
+                            {videos.toLocaleString()} videos
+                          </span>
+                          {saving > 0 && (
+                            <span className="text-[11px] text-zinc-500 tabular-nums">−{saving}%</span>
+                          )}
+                        </span>
+                        <span className="text-white tabular-nums">
+                          {tier.priceUsd === 0 ? 'Free' : <DhbAmount value={tier.priceDhb} />}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </>
             ) : (
               <p className="text-sm text-zinc-400">
-                One flat price per batch — not per video — so the more you bring over, the less each one costs. The exact price is shown before you pay.
+                Every video is cheaper than the one before it — the rate drops as the batch grows. The exact price is shown before you pay.
               </p>
             )}
             <p className="text-xs text-zinc-500">
