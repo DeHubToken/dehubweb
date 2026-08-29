@@ -27,9 +27,11 @@ import {
   settleMigration,
   getMigrationChargeStatus,
   getActiveMigrationCharge,
+  getMigrationPricing,
   type ChannelVideo,
   type MigrationQuote,
   type MigrationChargeStatus,
+  type MigrationPricing,
 } from '@/lib/api/dehub/youtube-migration';
 
 type Stage = 'loading' | 'not-connected' | 'listing' | 'quoting' | 'paying' | 'processing' | 'done';
@@ -51,6 +53,7 @@ export default function YoutubeMigratePage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [quote, setQuote] = useState<MigrationQuote | null>(null);
   const [charge, setCharge] = useState<MigrationChargeStatus | null>(null);
+  const [pricing, setPricing] = useState<MigrationPricing | null>(null);
   // Where a failed payment attempt drops the creator back to — the fresh
   // "pick videos" flow returns to the picker, but retrying already-failed
   // videos from a finished batch should return to that batch's grid instead.
@@ -134,6 +137,14 @@ export default function YoutubeMigratePage() {
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
+  }, []);
+
+  // Public pricing, and the explainer degrades to prose without it — so this
+  // never blocks the page or raises a toast on failure.
+  useEffect(() => {
+    getMigrationPricing()
+      .then(setPricing)
+      .catch(() => undefined);
   }, []);
 
   const handleConnect = async () => {
@@ -327,41 +338,68 @@ export default function YoutubeMigratePage() {
           </section>
         )}
 
-        {(stage === 'processing' || stage === 'done') && charge && (
+        {/* The tracker is rendered even with nothing running. It is the part
+            of this page a creator comes back to — showing its shape while
+            empty is what tells them progress will be here, rather than
+            leaving the page looking like the batch vanished. */}
+        {stage !== 'loading' && stage !== 'not-connected' && (
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-sm text-zinc-400">
-                {stage === 'processing'
-                  ? "Migrating — this runs in the background, safe to close this tab. We'll notify you when it's done."
-                  : `${imported} imported${failed ? `, ${failed} couldn't import` : ''}.`}
-              </p>
+              <div className="flex flex-col gap-0.5">
+                <h2 className="text-sm font-semibold text-white">Migration progress</h2>
+                <p className="text-sm text-zinc-400">
+                  {stage === 'processing'
+                    ? "Migrating — this runs in the background, safe to close this tab. We'll notify you when it's done."
+                    : charge
+                      ? `${imported} imported${failed ? `, ${failed} couldn't import` : ''}.`
+                      : 'Nothing running. Once you pay for a batch, every video shows up here with its own status.'}
+                </p>
+              </div>
               {stage === 'done' && failed > 0 && (
                 <Button variant="outline" size="sm" onClick={handleRetryFailed} className="shrink-0">
                   Retry {failed} failed
                 </Button>
               )}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[32rem] overflow-y-auto -mx-1 px-1">
-              {charge.results.map(r => (
-                <a
-                  key={r.youtubeVideoId}
-                  href={`https://www.youtube.com/watch?v=${r.youtubeVideoId}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex flex-col gap-1.5 rounded-xl bg-white/5 hover:bg-white/10 p-2.5 text-xs transition-colors"
-                >
-                  <div className="flex items-center gap-1.5">
-                    {r.status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-400" />}
-                    {r.status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
-                    {r.status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
-                    <span className="truncate text-white">{titleById.get(r.youtubeVideoId) || r.youtubeVideoId}</span>
+
+            {charge ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[32rem] overflow-y-auto -mx-1 px-1">
+                {charge.results.map(r => (
+                  <a
+                    key={r.youtubeVideoId}
+                    href={`https://www.youtube.com/watch?v=${r.youtubeVideoId}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex flex-col gap-1.5 rounded-xl bg-white/5 hover:bg-white/10 p-2.5 text-xs transition-colors"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {r.status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-400" />}
+                      {r.status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
+                      {r.status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
+                      <span className="truncate text-white">{titleById.get(r.youtubeVideoId) || r.youtubeVideoId}</span>
+                    </div>
+                    {r.failedReason && (
+                      <span className="text-zinc-500 line-clamp-2">{r.failedReason}</span>
+                    )}
+                  </a>
+                ))}
+              </div>
+            ) : (
+              /* Placeholder tiles, not a bare sentence — the point is to show
+                 the grid's shape. aria-hidden because there is nothing here
+                 to read out; the sentence above already says so. */
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2" aria-hidden="true">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-1.5 rounded-xl border border-dashed border-white/10 p-2.5"
+                  >
+                    <div className="h-3.5 w-3.5 shrink-0 rounded-full bg-white/10" />
+                    <div className="h-2 flex-1 rounded bg-white/10" />
                   </div>
-                  {r.failedReason && (
-                    <span className="text-zinc-500 line-clamp-2">{r.failedReason}</span>
-                  )}
-                </a>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
 
@@ -370,6 +408,67 @@ export default function YoutubeMigratePage() {
             View your feed
           </Button>
         )}
+
+        {/* ── Explainers ──────────────────────────────────────────────────
+            Below the working part of the page on purpose: this answers
+            "what will this cost me and what happens next", which is a
+            question people ask before paying and never again after. */}
+        <section className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
+            <h2 className="text-sm font-semibold text-white">How it works</h2>
+            <ol className="flex flex-col gap-2.5 text-sm text-zinc-400">
+              <li className="flex gap-2.5">
+                <span className="text-zinc-600 tabular-nums">1.</span>
+                <span>Connect your channel. The Google sign-in is what proves the videos are yours — we only ask for read access to your uploads.</span>
+              </li>
+              <li className="flex gap-2.5">
+                <span className="text-zinc-600 tabular-nums">2.</span>
+                <span>Pick what to bring over and pay once for the whole batch. Anything already imported is skipped and never charged twice.</span>
+              </li>
+              <li className="flex gap-2.5">
+                <span className="text-zinc-600 tabular-nums">3.</span>
+                <span>We download and publish them to your profile in the background. Close the tab — you'll get a notification when it finishes.</span>
+              </li>
+            </ol>
+            <p className="text-xs text-zinc-500">
+              Videos publish as normal posts without minting, since a batch can't stop to ask your wallet to sign each one.
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
+            <h2 className="text-sm font-semibold text-white">What it costs</h2>
+            {pricing ? (
+              <>
+                <p className="text-sm text-zinc-400">
+                  One flat price per batch — not per video — so the more you bring over, the less each one costs.
+                </p>
+                <ul className="flex flex-col divide-y divide-white/5 text-sm">
+                  {pricing.tiers.map((tier, i) => {
+                    const from = i === 0 ? 1 : pricing.tiers[i - 1].maxVideos + 1;
+                    return (
+                      <li key={tier.maxVideos} className="flex items-center justify-between gap-3 py-2">
+                        <span className="text-zinc-400 tabular-nums">
+                          {from}–{tier.maxVideos} video{tier.maxVideos === 1 ? '' : 's'}
+                        </span>
+                        <span className="text-white tabular-nums">
+                          {tier.priceUsd === 0 ? 'Free' : `${tier.priceDhb.toLocaleString()} DHB`}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            ) : (
+              <p className="text-sm text-zinc-400">
+                One flat price per batch — not per video — so the more you bring over, the less each one costs. The exact price is shown before you pay.
+              </p>
+            )}
+            <p className="text-xs text-zinc-500">
+              Paid in DHB, once, before the batch starts. Badge holders pay less — your discount is applied to the quote.
+              If a video can't be imported, its share is credited back toward your next migration.
+            </p>
+          </div>
+        </section>
       </div>
     </>
   );
