@@ -87,6 +87,7 @@ import {
   initProfileTracking,
   snapshotCurrentSession,
   adoptCurrentProfile,
+  preserveOutgoingProfile,
   stageIncomingIdentity,
   applyProfileSnapshot,
   currentProfileId,
@@ -394,6 +395,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // login adds BOTH accounts to the device's profile list. Null otherwise, so
   // plain logins never touch this machinery.
   const addProfilePrevIdRef = useRef<string | null>(null);
+  // True once a login has taken the session away from an account that was
+  // already signed in on this device. `addProfilePrevIdRef` cannot cover this:
+  // it is only set by an explicit Add-profile tap, and it does not survive the
+  // OAuth redirect that a Google or Apple login leaves the page through. When
+  // it is set at completion, BOTH accounts are saved — the displaced one by
+  // preserveOutgoingProfile on the way down, the new one here — so the device
+  // ends up holding a real multi-account list however the second login started.
+  const displacedAnAccountRef = useRef(false);
+  // switchToProfile is defined far below; the wagmi effect needs to call it and
+  // only ever does so after mount, when this is populated.
+  const switchToProfileRef = useRef<((id: string) => Promise<void>) | null>(null);
   // Whether THIS page mount opened the sheet itself because a login resume
   // was expected at first paint. Only that case needs the watchdog below —
   // a resume started later in the page's life already has a session on its
@@ -504,6 +516,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // closing is just closing.
     const attemptedFrom = addProfilePrevIdRef.current;
     addProfilePrevIdRef.current = null;
+    displacedAnAccountRef.current = false;
     if (attemptedFrom && currentProfileId() !== attemptedFrom) {
       const restored = applyProfileSnapshot(attemptedFrom);
       if (restored?.supabase) {
@@ -745,17 +758,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const cachedUid = localStorage.getItem('dehub_supabase_uid');
     const identityIsUnknownOrDifferent = !cachedUid || cachedUid !== userId;
     if (identityIsUnknownOrDifferent && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
-      clearAuthSession();
-      localStorage.removeItem('dehub_user');
+      // Save the account being displaced BEFORE anything is taken apart. An
+      // Add-profile attempt already adopted it at sheet-open; an ordinary
+      // "sign in as someone else" never did, so every social/email/phone login
+      // on a browser that was already signed in simply threw the previous
+      // account away. It is a saved profile now — one tap in Settings →
+      // Profile, no re-login.
+      //
+      // …unless this identity IS the live one, just untagged. A wallet-first
+      // session carries no `dehub_supabase_uid` at all, so attaching an email
+      // to it later reaches this line looking like a different person;
+      // preserving then would file one account twice, once per address space
+      // (the Safe smart account and the EOA never compare equal, so nothing
+      // downstream could merge the two rows again).
+      const sameIdentityUntagged = readLastSession()?.uid === userId;
+      if (!sameIdentityUntagged) {
+        preserveOutgoingProfile();
+        displacedAnAccountRef.current = true;
+        // Arms the same undo the Add-profile flow gets: abandoning the sheet
+        // from here puts the displaced account back on disk and reloads into
+        // it, instead of leaving the browser signed in as nobody.
+        addProfilePrevIdRef.current = addProfilePrevIdRef.current ?? currentProfileId();
+      }
       setUser(null);
       setWalletAddress(null);
-      // Destroy the previous identity's key material as well. The unlock now
-      // outlives the page, so a signed-in-as-somebody-else browser would
-      // otherwise still be holding a usable key for the account it just
-      // dropped. The vault read has its own address check as a backstop, but
-      // that only engages once fetchWallet below has re-cached an address —
-      // clearing here means there is no window at all.
-      lockWallet();
+      // This login is mid-flight: its pending flag says "a resume is still
+      // expected here", and staging clears the flags as part of tearing a
+      // finished session down. Reinstated below so a reload before the wallet
+      // step still reopens the sheet instead of landing on a bare feed.
+      const pending = localStorage.getItem(SUPA_LOGIN_PENDING_KEY);
+      const pendingAt = localStorage.getItem(SUPA_LOGIN_PENDING_AT_KEY);
+      // Then take the outgoing identity down as ONE operation. The hand-rolled
+      // clear this replaced missed two things: `dehub_wallet_enc` (the vault is
+      // single-slot, so the incoming account inherited the previous one's
+      // encrypted key until something happened to overwrite it) and the
+      // outgoing wallet's wagmi storage. stageIncomingIdentity wipes every key
+      // a session owns and locks the vault, which is what
+      // `lockWallet()`/`clearAuthSession()` were reaching for one key at a time.
+      //
+      // keepSupabaseSession: the INCOMING identity's Supabase session has
+      // already landed and is persisted under `sb-*-auth-token` — this whole
+      // function runs off the back of it — so the usual wipe would destroy the
+      // session the login is being built from.
+      stageIncomingIdentity({ keepSupabaseSession: true });
+      if (pending) localStorage.setItem(SUPA_LOGIN_PENDING_KEY, pending);
+      if (pendingAt) localStorage.setItem(SUPA_LOGIN_PENDING_AT_KEY, pendingAt);
       clearWalletCache();
     }
     setSupabaseUserId(userId);
@@ -1209,11 +1256,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               wagmiDisconnect();
               return;
             }
-            console.log('[Auth] Address mismatch (Wagmi vs Session), requiring re-auth');
-            clearAuthSession();
-            localStorage.removeItem('dehub_user');
-            setWalletAddress(null);
-            setUser(null);
+            // An explicit tap means this wallet IS the login the user asked
+            // for. Fall through to CASE C, which hands the session over
+            // properly (snapshot the outgoing account, wipe its keys as one
+            // operation, write the incoming ones).
+            if (!wagmiAuthIntentRef.current) {
+              // Nobody asked to sign in as this address: the extension switched
+              // accounts underneath a live session. This used to answer that by
+              // clearing the session outright — which is exactly how "connect
+              // another wallet" became "logged out of the account I was
+              // using", with nothing left on the device to switch back to.
+              //
+              // Save the live account first, so whatever happens next it is
+              // still one tap away.
+              preserveOutgoingProfile();
+              const incoming = wagmiAddress.toLowerCase();
+              const saved = listProfiles().find(
+                (p) => p.address.toLowerCase() === incoming && p.session,
+              );
+              if (saved) {
+                // Both accounts are saved here, so honour the wallet's choice:
+                // switching accounts in MetaMask switches DeHub accounts, and
+                // switching back switches back. Neither session is destroyed.
+                void switchToProfileRef.current?.(saved.id);
+                return;
+              }
+              // An account this device has never signed in as. Drop the
+              // connection rather than the session, and say what happened —
+              // silently ignoring it is what made the old behaviour feel like
+              // a bug either way.
+              console.log('[Auth] Wallet switched to an unknown account — keeping the current session');
+              clearWagmiStorage();
+              wagmiDisconnect();
+              toast('Your wallet switched accounts', {
+                description: 'You are still signed in here. Add that wallet as another profile to use it.',
+                action: {
+                  label: 'Add profile',
+                  onClick: () => openLoginModal({ intent: 'add-profile' }),
+                },
+                duration: 10_000,
+              });
+              return;
+            }
         }
 
         // CASE C: Not authed -> Only start auth on explicit intent or returning wagmi user
@@ -1488,7 +1572,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       walletAddress &&
       walletAddress.toLowerCase() !== authAddress.toLowerCase()
     ) {
-      throw new Error('Wallet address changed during session refresh. Please sign in again.');
+      // A BACKGROUND re-auth (the returning-wagmi-user branch, no tap behind
+      // it) landing on a different address really is the silent switch this
+      // guard was written for — refuse it.
+      if (trigger !== 'user') {
+        throw new Error('Wallet address changed during session refresh. Please sign in again.');
+      }
+      // A deliberate sign-in as a different wallet, just not through Settings →
+      // Add profile. Nothing about it is silent, and refusing it was what sent
+      // people round the loop of signing out to sign back in as someone else.
+      // Treat it as the same hand-over the add-profile flow gets: the outgoing
+      // account is saved to this device first, so it survives as a profile.
+      preserveOutgoingProfile();
+      displacedAnAccountRef.current = true;
+      // Same undo as above: a failed exchange or a closed sheet from this
+      // point on restores the account that was signed in.
+      addProfilePrevIdRef.current = currentProfileId();
+      stageIncomingIdentity({ keepWagmiKeys: true });
     }
 
     const BASE_CHAIN_ID = 8453;
@@ -1542,8 +1642,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // a "Signing you in…" step that swallows clicks.
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
-    if (attemptedFrom != null) {
+    if (attemptedFrom != null || displacedAnAccountRef.current) {
       addProfilePrevIdRef.current = null;
+      displacedAnAccountRef.current = false;
       adoptCurrentProfile();
     } else {
       snapshotCurrentSession();
@@ -1630,8 +1731,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // you in…" step until a watchdog lets it go.
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
-    if (addProfilePrevIdRef.current != null) {
+    // `displacedAnAccountRef` covers what the add-profile ref cannot: a login
+    // that took the session off somebody who was already signed in, whether or
+    // not it started from the Add profile button — the ref does not survive
+    // the OAuth redirect a Google or Apple login leaves the page through. Both
+    // accounts end up on the list, which is the whole point of the flow.
+    if (addProfilePrevIdRef.current != null || displacedAnAccountRef.current) {
       addProfilePrevIdRef.current = null;
+      displacedAnAccountRef.current = false;
       adoptCurrentProfile();
     } else {
       snapshotCurrentSession();
@@ -2436,6 +2543,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setSupabaseUserId(null);
     wagmiAuthInProgressRef.current = false;
     rejectedSignatureAddressRef.current = null;
+    // Signing out is not a hand-over — nothing is waiting to be adopted, and a
+    // ref left armed here would make the NEXT login look like a displacement.
+    displacedAnAccountRef.current = false;
+    addProfilePrevIdRef.current = null;
     setWagmiAuthIntent(false);
 
     disconnectDmSocket();
@@ -2518,6 +2629,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       openLoginModal({ intent: 'add-profile' });
     }
   };
+
+  // The wagmi effect is defined above this and needs to reach it (a wallet
+  // switching to an account already saved here switches DeHub accounts rather
+  // than logging anybody out). It only ever calls through after mount.
+  switchToProfileRef.current = switchToProfile;
 
   const refreshUser = async () => {
     if (!walletAddress) return;
