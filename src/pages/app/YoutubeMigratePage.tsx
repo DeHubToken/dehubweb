@@ -344,19 +344,22 @@ export default function YoutubeMigratePage() {
           surface. */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-          <div className="flex items-start justify-between gap-3">
+          {/* Stacks under 640px. Side by side, the button ate half a phone's
+              width and left the title to truncate to "Migrate all f…" with the
+              subtitle in a four-line ribbon beside the icon. */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-11 h-11 shrink-0 rounded-2xl bg-white/5 flex items-center justify-center">
                 <Youtube className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-xl font-bold text-white truncate">Migrate all from YouTube</h1>
+                <h1 className="text-lg sm:text-xl font-bold text-white leading-tight">Migrate all from YouTube</h1>
                 <p className="text-sm text-zinc-500">
                   Connect your channel, pick what to bring over, pay once.
                 </p>
               </div>
             </div>
-            <Button variant="glass" size="sm" asChild className="shrink-0">
+            <Button variant="glass" size="sm" asChild className="shrink-0 self-start sm:self-auto">
               <Link to="/converter">Just one video?</Link>
             </Button>
           </div>
