@@ -4,21 +4,36 @@ export interface ChannelVideo {
   youtubeVideoId: string;
   title: string;
   url: string;
-  publishedAt: string;
   alreadyImported: boolean;
   thumbnailUrl?: string;
   durationSeconds?: number;
   viewCount?: number;
+  /** Optional: the uploads listing reads the channel's own tab rather than
+   * fetching each video, and that listing carries no reliable upload date. */
+  publishedAt?: string;
 }
 
-export async function getYoutubeConnectUrl(): Promise<{ url: string }> {
-  return apiCall<{ url: string }>('/api/youtube_migration/connect-url', { requiresAuth: true });
-}
-
-export async function listChannelVideos(): Promise<{ videos: ChannelVideo[]; truncated: boolean }> {
-  return apiCall<{ videos: ChannelVideo[]; truncated: boolean }>('/api/youtube_migration/videos', {
-    requiresAuth: true,
+/**
+ * List a channel's uploads from its pasted address.
+ *
+ * Took no arguments while this went through a Google OAuth connection — the
+ * signed-in account was both the channel and the proof it belonged to you.
+ * Both of those are now explicit: the URL says which channel, and
+ * `ownershipConfirmed` is the creator's attestation that it is theirs. The
+ * backend rejects the call without it.
+ */
+export async function listChannelVideos(
+  channelUrl: string,
+  ownershipConfirmed: boolean,
+): Promise<{ videos: ChannelVideo[]; truncated: boolean }> {
+  const params = new URLSearchParams({
+    channelUrl,
+    ownershipConfirmed: String(ownershipConfirmed),
   });
+  return apiCall<{ videos: ChannelVideo[]; truncated: boolean }>(
+    `/api/youtube_migration/videos?${params}`,
+    { requiresAuth: true },
+  );
 }
 
 /** One worked example off the price curve — what a batch of exactly this many
