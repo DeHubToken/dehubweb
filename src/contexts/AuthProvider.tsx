@@ -25,6 +25,7 @@ import { wagmiConfig, clearWagmiStorage } from '@/lib/wagmi';
 import { setBackgroundPaused } from '@/lib/background-gate';
 
 import type { SolanaLoginProof } from '@/lib/api/dehub/auth';
+import { buildDeHubLoginMessage } from '@/lib/dehub-login-message';
 import {
   authenticateWallet,
   authenticateWithSupabaseSession,
@@ -205,6 +206,12 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
     lastLoginTimestamp: safe.lastLoginTimestamp,
     badgeBalance,
     balanceData: safe.balanceData,
+    // This builder is an allowlist — anything not named here is dropped, which
+    // is why it has to be listed explicitly rather than spread in. Settings
+    // reads it to show whether a Solana wallet is connected, and a creator
+    // without one cannot be paid on Solana at all.
+    solanaAddress: safe.solanaAddress ?? null,
+    solanaAddressVerifiedAt: safe.solanaAddressVerifiedAt ?? null,
   };
 }
 
@@ -282,7 +289,7 @@ async function signWithProvider(
   if (!accounts?.length) throw new Error('No accounts available for signing');
   const address = accounts[0].toLowerCase();
 
-  const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
+  const message = buildDeHubLoginMessage(address, Math.floor(displayedDate.getTime() / 1000));
 
   let signature: string;
   try {
@@ -1469,12 +1476,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const completeDeHubAuthWagmi = async (address: string, trigger: WagmiAuthTrigger = 'user') => {
     const timestamp = Math.floor(Date.now() / 1000);
-    const displayedDate = new Date(timestamp * 1000);
     const authAddress = address.toLowerCase();
     const connectorId = wagmiConnector?.id;
     const connectorName = wagmiConnector?.name;
 
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = buildDeHubLoginMessage(authAddress, timestamp);
 
     toast.info(
       trigger === 'user'
