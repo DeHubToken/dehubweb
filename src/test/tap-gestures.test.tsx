@@ -308,6 +308,7 @@ describe('surfaces are wired consistently', () => {
   const SLIDE = read('components/app/cards/VideoSlide.tsx');
   const POST = read('components/app/cards/PostCard.tsx');
   const IMAGE_CARD = read('components/app/cards/ImageCard.tsx');
+  const BURST = read('components/app/cards/TapReactionBurst.tsx');
 
   it('never lets a gesture clear a reaction the viewer already holds', () => {
     // handleReaction reads a repeat as "toggle off", so casting blind would let
@@ -315,6 +316,22 @@ describe('surfaces are wired consistently', () => {
     for (const [name, src] of [['ActionBar', ACTION_BAR], ['ShortsViewer', SHORTS]] as const) {
       expect(src, name).toContain('if (myReaction === reaction) return;');
       expect(src, name).toContain("if (reaction === 'like' && isLiked) return;");
+    }
+  });
+
+  it('never replays the burst over a reaction the viewer already holds', () => {
+    // The guards above make a repeat tap a no-op. Drawing the burst off the
+    // GESTURE would still animate it, telling someone their like landed again
+    // when the vote never moved. So the burst listens for the cast the vote
+    // owner emits after its guards pass, and only those two emit it.
+    expect(BURST).toContain('TAP_REACTION_CAST_EVENT');
+    expect(BURST).not.toContain('DOUBLE_TAP_LIKE_EVENT');
+    for (const [name, src] of [['ActionBar', ACTION_BAR], ['ShortsViewer', SHORTS]] as const) {
+      // ...and emits it below the guards, never above them.
+      const guard = src.indexOf("if (reaction === 'like' && isLiked) return;");
+      const cast = src.indexOf('emitTapReactionCast({');
+      expect(guard, name).toBeGreaterThan(-1);
+      expect(cast, name).toBeGreaterThan(guard);
     }
   });
 
