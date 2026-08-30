@@ -607,7 +607,10 @@ export default function YoutubeMigratePage() {
                  a stock picture here would read as somebody's actual video.
                  aria-hidden because the sentence above already says what this
                  is; six fake tiles would just be noise to read out. */
-              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 opacity-50" aria-hidden="true">
+              /* Two-up on phones where the real grids go single-column: six
+                 post-sized placeholders is four screens of dimmed example
+                 before the explainers. Half-size still shows the shape. */
+              <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3 opacity-50" aria-hidden="true">
                 {SAMPLE_RESULTS.map(sample => (
                   <div
                     key={sample.title}
