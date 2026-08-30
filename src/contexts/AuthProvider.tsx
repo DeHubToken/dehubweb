@@ -24,6 +24,7 @@ import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { wagmiConfig, clearWagmiStorage } from '@/lib/wagmi';
 import { setBackgroundPaused } from '@/lib/background-gate';
 
+import type { SolanaLoginProof } from '@/lib/api/dehub/auth';
 import {
   authenticateWallet,
   authenticateWithSupabaseSession,
@@ -1623,8 +1624,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const BASE_CHAIN_ID = 8453;
     let authResponse: AuthResponse;
+    // Only set on the retry below, and only for Phantom — see there.
+    let solanaProof: SolanaLoginProof | null = null;
     try {
-      authResponse = await authenticateWallet(authAddress, signature, timestamp, BASE_CHAIN_ID);
+      try {
+        authResponse = await authenticateWallet(authAddress, signature, timestamp, BASE_CHAIN_ID);
+      } catch (firstError: any) {
+        // The one failure a second signature can actually fix.
+        //
+        // Phantom signs in through its Ethereum provider, and that EVM address
+        // is a by-product most Phantom users have never touched — no balance,
+        // no nonce, nothing anywhere. The API's anti-bot signup gate judged
+        // them by it and refused every one: four blocked signups in nine
+        // minutes on 30 Aug, two different wallets. Countersigning this same
+        // message with the Solana key lets the gate look at the half of the
+        // wallet that has actually been used.
+        //
+        // Deliberately NOT asked for up front. It costs a connect and a
+        // signature prompt, and the overwhelming majority of logins — every
+        // returning user, every other wallet — do not need it. Asked here, it
+        // appears exactly when it unblocks somebody. Everyone else links their
+        // Solana wallet deliberately, from Settings.
+        //
+        // The EVM signature is still inside its validity window, so the retry
+        // reuses it rather than asking the wallet to sign twice.
+        const canRetryWithSolana =
+          firstError instanceof WalletSignupBlockedError &&
+          connectorMatchesWallet(wagmiConnector, 'phantom');
+        if (!canRetryWithSolana) throw firstError;
+
+        toast.info('One more signature — this proves your Solana wallet', {
+          description: 'Phantom’s Ethereum address is brand new, so we check your Solana side instead.',
+        });
+
+        const { signSolanaLoginProof } = await import('@/lib/solana/wallet');
+        solanaProof = await signSolanaLoginProof(message);
+        // Declined, or a Phantom too old to sign a message. The original
+        // refusal is the honest answer, and it names the alternatives.
+        if (!solanaProof) throw firstError;
+
+        authResponse = await authenticateWallet(
+          authAddress,
+          signature,
+          timestamp,
+          BASE_CHAIN_ID,
+          undefined,
+          undefined,
+          solanaProof,
+        );
+      }
     } catch (authError: any) {
       // A signature the wallet happily produced, refused one step later. The
       // only caller catches this into a console.error, so the whole visible
@@ -1637,6 +1685,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         address: authAddress,
         chainId: BASE_CHAIN_ID,
         status: authError?.status,
+        // Tells a blocked Phantom signup apart from one where the second
+        // prompt was never answered — the two need different advice and the
+        // logs could not distinguish them.
+        hasSolanaProof: !!solanaProof,
         ...describeWalletError(authError),
       }, authError);
       if (!reportWalletSignupBlocked(authError)) {
