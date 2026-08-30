@@ -102,6 +102,17 @@ const SORT_OPTIONS = [
 // How many replies a thread shows before it needs a tap to open up.
 const REPLIES_SHOWN_COLLAPSED = 1;
 
+/**
+ * Hit area for the 16px icons on a comment's action row.
+ *
+ * The icons are `w-4 h-4` with no padding, which is a 16px target — half the
+ * size a finger can reliably land on, and small enough with a mouse that the
+ * reply control was routinely missed. The negative margin cancels the padding
+ * in the layout, so every icon stays exactly where it was and only the
+ * clickable box grows.
+ */
+const COMMENT_ACTION_HIT = '-m-2 p-2';
+
 /** A reply plus how deep it sits under its root comment (1 = direct reply). */
 interface ThreadReply {
   comment: Comment;
@@ -236,8 +247,32 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative flex items-start gap-3 py-3"
+      className="relative flex items-start gap-3 py-3 cursor-pointer"
       data-comment-id={comment.id}
+      /*
+        Tap the comment to answer it.
+
+        The reply control was a bare 16px icon with no label, sharing a row with
+        five other 16px icons, and it is the only way to attach a comment to the
+        one above it. New readers did not find it: they answered in the big
+        "Type here…" box at the bottom instead, which posts a top-level comment,
+        and the conversation came out as a pile of unconnected remarks. Every
+        reply on the platform that did thread carries the "@name " prefix this
+        handler writes; the ones that read like replies and are not, don't.
+
+        So the row itself is the target. Anything interactive inside it — the
+        avatar, the name, a link, a menu, the edit box, an image that opens
+        full size — keeps its own behaviour, and a drag that selected text is
+        not a tap.
+      */
+      onClick={(e) => {
+        if (isEditing) return;
+        const target = e.target as HTMLElement;
+        if (target.closest('button, a, img, input, textarea, select, [role="button"], [contenteditable="true"]')) return;
+        const selection = window.getSelection();
+        if (selection && selection.toString().length > 0) return;
+        onReply(comment.id);
+      }}
     >
       {/* Thread line. Replies sit at the same left edge as their parent — no
           indent — and the line through the avatars is what says "these belong
@@ -380,6 +415,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
             <button
               onClick={() => (isOwnComment ? onShowLikers(comment.id) : onLike(comment.id))}
               className={cn(
+                COMMENT_ACTION_HIT,
                 "flex items-center gap-1 transition-colors",
                 !isOwnComment && comment.isLiked ? "text-white" : "text-white/70 hover:text-white"
               )}
@@ -393,6 +429,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
             <button
               onClick={() => onDislike(comment.id)}
               className={cn(
+                COMMENT_ACTION_HIT,
                 "flex items-center gap-1 transition-colors",
                 comment.isDisliked ? "text-white" : "text-white/70 hover:text-white"
               )}
@@ -404,7 +441,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
             {/* Every comment is replyable, replies included — threads nest without limit. */}
             <button
               onClick={() => onReply(comment.id)}
-              className="text-white hover:text-zinc-400 transition-colors"
+              className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
               aria-label="Reply"
             >
               <MessageSquare className="w-4 h-4" />
@@ -414,7 +451,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
                 already refuses self-tips. */}
             <button
               onClick={() => onTip(comment.id)}
-              className="flex items-center gap-1 text-white hover:text-zinc-400 transition-colors"
+              className={cn(COMMENT_ACTION_HIT, "flex items-center gap-1 text-white hover:text-zinc-400 transition-colors")}
               aria-label="Tip"
             >
               <Gem className="w-4 h-4" />
@@ -431,7 +468,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
             {isOwnComment && !isEditing && !isReply && onAnchor && (
               <button
                 onClick={() => onAnchor(comment.id)}
-                className="text-white hover:text-zinc-400 transition-colors"
+                className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
                 aria-label="Anchor this comment to the top"
                 title="Anchor to the top of this thread"
               >
@@ -442,14 +479,14 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-white hover:text-zinc-400 transition-colors"
+                  className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
                   aria-label="Edit"
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => onDelete(comment.id)}
-                  className="text-white hover:text-red-400 transition-colors"
+                  className={cn(COMMENT_ACTION_HIT, "text-white hover:text-red-400 transition-colors")}
                   aria-label="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -459,7 +496,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="text-white hover:text-zinc-400 transition-colors"
+                  className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
                   aria-label="Share"
                 >
                   <Share2 className="w-4 h-4" />
@@ -504,6 +541,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
                   <button
                     onClick={() => translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()}
                     className={cn(
+                      COMMENT_ACTION_HIT,
                       "transition-colors",
                       translation.isLoading ? "text-white/60" : 
                       translation.isTranslated ? "text-white" : "text-white hover:text-zinc-400"
