@@ -4,10 +4,39 @@ export interface SolanaMintStatus {
   chainsConfigured: number[];
   mintingEnabled: boolean;
   message: string;
+  /** The sponsor wallet that pays mint and account rent. Public key, not a secret. */
+  signerAddress?: string | null;
+  /**
+   * What that wallet actually holds. `mintingEnabled` used to be true whenever
+   * a signer key was merely configured, so a sponsor with no SOL reported
+   * "minting is active" while every mint died at broadcast.
+   */
+  signerBalanceSol?: number | null;
 }
 
 export async function getSolanaStatus(): Promise<SolanaMintStatus> {
   return apiCall<SolanaMintStatus>('/api/solana/status');
+}
+
+/**
+ * Attach a Solana account to the signed-in DeHub account.
+ *
+ * `signature` must be the DeHub login message for this account's EVM address,
+ * signed by the Solana key — proving control, and binding the link to this
+ * account rather than any other. The server re-derives the message from
+ * `timestamp`, so all three have to describe the same moment.
+ */
+export async function linkSolanaWallet(params: {
+  solanaAddress: string;
+  signature: string;
+  timestamp: number;
+}): Promise<{ success: boolean; solanaAddress: string }> {
+  return apiCall('/api/solana/link', { method: 'POST', body: params });
+}
+
+/** Drop the Solana address. No proof needed — it only ever costs the person doing it. */
+export async function unlinkSolanaWallet(): Promise<{ success: boolean }> {
+  return apiCall('/api/solana/unlink', { method: 'POST', body: {} });
 }
 
 export async function confirmSolanaMint(params: {
