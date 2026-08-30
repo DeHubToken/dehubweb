@@ -6,9 +6,14 @@
  * single-video importer's checkbox), quotes the batch in DHB, takes one
  * upfront on-chain payment, then runs the import in the background.
  *
- * Styled like the rest of the app shell (SuperPowersPage, Settings): a
- * max-w-3xl column, `rounded-2xl bg-white/5` cards, not a bare form — this
- * page lives inside AppLayout same as wallet/profile/etc.
+ * Styled as an app feed surface rather than a form. The title used to be bare
+ * text at the very top of <main>, which reads as clipped against the viewport
+ * edge and slid away on scroll with nothing behind it; it now lives in the
+ * sticky `[data-page-bento]` header the rest of the app uses (Explore,
+ * Leaderboard, Music), with the content swallowed at its top edge. Below it,
+ * `bg-zinc-900` bentos, and video tiles in the feed's own post-card shape —
+ * aspect-video media, black pill badges, a p-3 body — because these ARE posts,
+ * just ones that have not landed yet.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -16,6 +21,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Youtube, CheckCircle2, XCircle, ExternalLink, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -57,6 +63,24 @@ const SAMPLE_RESULTS: { title: string; status: 'imported' | 'failed' | 'pending'
   { title: 'Live replay', status: 'failed', reason: 'That video is age-restricted, so it cannot be imported.' },
   { title: 'Old vlog', status: 'imported' },
 ];
+
+/** Per-video state, worn the way a feed card wears its duration: a black pill
+ * on the thumbnail rather than a line of body text. `data-keep-dark` holds it
+ * black on the themes that repaint dark surfaces — it sits over an image, so
+ * it has to stay legible whatever the theme does to the card beneath it. */
+function StatusBadge({ status }: { status: 'imported' | 'failed' | 'pending' }) {
+  return (
+    <span
+      data-keep-dark
+      className="absolute top-2 left-2 flex items-center gap-1.5 rounded bg-black/70 px-2 py-1 text-xs font-medium text-white"
+    >
+      {status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-300" />}
+      {status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
+      {status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
+      {status === 'pending' ? 'Importing' : status === 'imported' ? 'Imported' : 'Failed'}
+    </span>
+  );
+}
 
 /** A DHB amount, written the way the rest of the app writes one: the coin
  * ahead of the number, no ticker text. Local rather than shared because the
@@ -117,6 +141,11 @@ export default function YoutubeMigratePage() {
 
   const titleById = useMemo(
     () => new Map(videos.map(v => [v.youtubeVideoId, v.title])),
+    [videos],
+  );
+
+  const thumbById = useMemo(
+    () => new Map(videos.filter(v => v.thumbnailUrl).map(v => [v.youtubeVideoId, v.thumbnailUrl!])),
     [videos],
   );
 
@@ -220,6 +249,16 @@ export default function YoutubeMigratePage() {
     });
   };
 
+  /** Everything not already imported, which is what "select all" means here —
+   * imported videos are permanently checked and can't be unpicked. */
+  const selectableIds = useMemo(
+    () => videos.filter(v => !v.alreadyImported).map(v => v.youtubeVideoId),
+    [videos],
+  );
+  const allSelected = selectableIds.length > 0 && selectableIds.every(id => selected.has(id));
+
+  const toggleAll = () => setSelected(allSelected ? new Set() : new Set(selectableIds));
+
   const handleGetQuote = async () => {
     if (!selected.size) {
       toast.error('Select at least one video');
@@ -286,6 +325,11 @@ export default function YoutubeMigratePage() {
   const imported = charge?.results.filter(r => r.status === 'imported').length ?? 0;
   const failed = charge?.results.filter(r => r.status === 'failed').length ?? 0;
 
+  // Swallow the page content at the sticky header bento's top edge under the
+  // glass themes, exactly like the home feed cuts at its nav pill.
+  const contentRef = useRef<HTMLDivElement>(null);
+  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+
   return (
     <>
       <SEOHead
@@ -294,21 +338,32 @@ export default function YoutubeMigratePage() {
         url="https://dehub.io/app/migrate-youtube"
       />
 
-      <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
-        <header className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-3">
-            <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              <Youtube className="w-5 h-5" />
-              Migrate all from YouTube
-            </h1>
-            <Link to="/converter" className="text-sm text-zinc-400 underline shrink-0">
-              Just one video?
-            </Link>
+      {/* Sticky nav pill — the page's own header bento, pinned below the
+          mobile top bar and flush under the desktop chrome. The wrapper stays
+          transparent on purpose (see the swallow clip): the bento is the only
+          surface. */}
+      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 lg:pt-2">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-11 h-11 shrink-0 rounded-2xl bg-white/5 flex items-center justify-center">
+                <Youtube className="w-5 h-5 text-white" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold text-white truncate">Migrate all from YouTube</h1>
+                <p className="text-sm text-zinc-500">
+                  Connect your channel, pick what to bring over, pay once.
+                </p>
+              </div>
+            </div>
+            <Button variant="glass" size="sm" asChild className="shrink-0">
+              <Link to="/converter">Just one video?</Link>
+            </Button>
           </div>
-          <p className="text-sm text-zinc-400 max-w-prose">
-            Connect your channel, pick what to bring over, and pay once to migrate the whole batch.
-          </p>
-        </header>
+        </div>
+      </div>
+
+      <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3 flex flex-col gap-2 sm:gap-3">
 
         {stage === 'loading' && (
           <div className="flex justify-center py-10">
@@ -317,7 +372,7 @@ export default function YoutubeMigratePage() {
         )}
 
         {stage === 'not-connected' && (
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3 items-start">
+          <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3 items-start">
             <p className="text-sm text-zinc-400">
               Connect your YouTube channel to see what's ready to migrate.
             </p>
@@ -328,8 +383,23 @@ export default function YoutubeMigratePage() {
         )}
 
         {(stage === 'listing' || stage === 'quoting') && videos.length > 0 && !quote && (
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[40rem] overflow-y-auto -mx-1 px-1 pb-1">
+          <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col gap-0.5">
+                <h2 className="text-sm font-semibold text-white">Pick what to bring over</h2>
+                <p className="text-sm text-zinc-400">
+                  {selected.size} of {videos.filter(v => !v.alreadyImported).length} selected. Anything already on
+                  your profile is skipped and never charged twice.
+                </p>
+              </div>
+              <Button variant="outline" size="sm" onClick={toggleAll} className="shrink-0">
+                {allSelected ? 'Clear all' : 'Select all'}
+              </Button>
+            </div>
+            {/* No inner scroller: the page is the scroller, so the grid keeps
+                growing and gets swallowed under the header pill like a feed
+                instead of trapping a second scrollbar inside a card. */}
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {videos.map(v => {
                 const checked = v.alreadyImported || selected.has(v.youtubeVideoId);
                 const duration = formatDuration(v.durationSeconds);
@@ -348,13 +418,14 @@ export default function YoutubeMigratePage() {
                         toggle(v.youtubeVideoId);
                       }
                     }}
+                    data-page-bento
                     className={cn(
-                      'group flex flex-col gap-2 rounded-xl bg-black/20 overflow-hidden select-none ring-1 ring-white/5 transition-all',
-                      v.alreadyImported ? 'opacity-40' : 'cursor-pointer hover:ring-2 hover:ring-white/20 hover:bg-black/30',
+                      'group flex flex-col bg-zinc-900 rounded-2xl overflow-hidden select-none transition-all',
+                      v.alreadyImported ? 'opacity-40' : 'cursor-pointer hover:ring-2 hover:ring-white/30',
                       checked && !v.alreadyImported && 'ring-2 ring-white/60',
                     )}
                   >
-                    <div className="relative aspect-video bg-zinc-900 overflow-hidden">
+                    <div className="relative aspect-video bg-zinc-800 overflow-hidden">
                       {v.thumbnailUrl ? (
                         <img
                           src={v.thumbnailUrl}
@@ -374,13 +445,13 @@ export default function YoutubeMigratePage() {
                       />
 
                       {duration && (
-                        <span className="absolute bottom-1.5 right-1.5 rounded bg-black/85 px-1.5 py-0.5 text-[11px] font-medium text-white tabular-nums">
+                        <span data-keep-dark className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs font-medium text-white tabular-nums">
                           {duration}
                         </span>
                       )}
 
                       {v.alreadyImported && (
-                        <span className="absolute top-2 right-2 rounded-full bg-black/85 px-2 py-0.5 text-[10px] font-medium text-zinc-300">
+                        <span data-keep-dark className="absolute top-2 right-2 rounded bg-black/70 px-2 py-1 text-xs font-medium text-white">
                           Imported
                         </span>
                       )}
@@ -391,18 +462,19 @@ export default function YoutubeMigratePage() {
                         rel="noreferrer"
                         onClick={e => e.stopPropagation()}
                         aria-label="Watch on YouTube"
-                        className="absolute bottom-1.5 left-1.5 rounded bg-black/70 p-1 text-zinc-300 opacity-0 transition-opacity group-hover:opacity-100 hover:!text-white"
+                        data-keep-dark
+                        className="absolute bottom-2 left-2 rounded bg-black/70 p-1.5 text-white opacity-0 transition-opacity group-hover:opacity-100"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     </div>
 
-                    <div className="flex flex-col gap-1 px-2.5 pb-2.5">
-                      <span className="line-clamp-2 text-sm text-white leading-snug" title={v.title}>
+                    <div className="flex flex-col gap-1 p-3">
+                      <span className="line-clamp-2 text-sm font-medium text-white leading-snug" title={v.title}>
                         {v.title}
                       </span>
                       {(views || published) && (
-                        <span className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+                        <span className="flex items-center gap-1.5 text-xs text-zinc-400">
                           {views && (
                             <span className="flex items-center gap-1">
                               <Eye className="h-3 w-3" />
@@ -431,13 +503,13 @@ export default function YoutubeMigratePage() {
         )}
 
         {stage === 'listing' && videos.length === 0 && (
-          <section className="rounded-2xl bg-white/5 p-5">
+          <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
             <p className="text-sm text-zinc-400">No uploads found on your channel.</p>
           </section>
         )}
 
         {quote && (stage === 'quoting' || stage === 'paying') && (
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3 items-start">
+          <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3 items-start">
             <p className="text-sm text-zinc-400">
               {quote.videoCount} video{quote.videoCount === 1 ? '' : 's'}
               {quote.creditAppliedDhb > 0 && (
@@ -468,7 +540,7 @@ export default function YoutubeMigratePage() {
             below says "each video gets a tile and you can retry the failures"
             far faster than a paragraph would. */}
         {stage !== 'loading' && (
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-4">
+          <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-0.5">
                 <h2 className="text-sm font-semibold text-white">Migration progress</h2>
@@ -488,24 +560,38 @@ export default function YoutubeMigratePage() {
             </div>
 
             {charge ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[32rem] overflow-y-auto -mx-1 px-1">
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {charge.results.map(r => (
                   <a
                     key={r.youtubeVideoId}
                     href={`https://www.youtube.com/watch?v=${r.youtubeVideoId}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex flex-col gap-1.5 rounded-xl bg-white/5 hover:bg-white/10 p-2.5 text-xs transition-colors"
+                    data-page-bento
+                    className="group flex flex-col bg-zinc-900 rounded-2xl overflow-hidden transition-all hover:ring-2 hover:ring-white/30"
                   >
-                    <div className="flex items-center gap-1.5">
-                      {r.status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-400" />}
-                      {r.status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
-                      {r.status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
-                      <span className="truncate text-white">{titleById.get(r.youtubeVideoId) || r.youtubeVideoId}</span>
+                    <div className="relative aspect-video bg-zinc-800 overflow-hidden">
+                      {/* The channel list carries a thumbnail, but a resumed
+                          batch renders before that background fetch lands —
+                          so fall back to YouTube's own thumbnail URL for the
+                          id, which needs no API call and always exists. */}
+                      <img
+                        src={thumbById.get(r.youtubeVideoId) || `https://i.ytimg.com/vi/${r.youtubeVideoId}/mqdefault.jpg`}
+                        alt=""
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+                      <StatusBadge status={r.status} />
                     </div>
-                    {r.failedReason && (
-                      <span className="text-zinc-500 line-clamp-2">{r.failedReason}</span>
-                    )}
+                    <div className="flex flex-col gap-1 p-3">
+                      <span className="line-clamp-2 text-sm font-medium text-white leading-snug">
+                        {titleById.get(r.youtubeVideoId) || r.youtubeVideoId}
+                      </span>
+                      {r.failedReason && (
+                        <span className="text-xs text-zinc-400 line-clamp-2">{r.failedReason}</span>
+                      )}
+                    </div>
                   </a>
                 ))}
               </div>
@@ -513,22 +599,26 @@ export default function YoutubeMigratePage() {
               /* A worked example rather than blank boxes: showing all three
                  states, failure reason included, is what makes "and you can
                  retry the ones that failed" land before anyone has paid.
-                 Dashed and dimmed so it never reads as real progress, and
-                 aria-hidden because the sentence above already says what
-                 this is — six fake rows would just be noise to read out. */
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 opacity-60" aria-hidden="true">
+                 Same tile as a real result so the shape is the message, but
+                 dimmed with an empty media well instead of a fake thumbnail —
+                 a stock picture here would read as somebody's actual video.
+                 aria-hidden because the sentence above already says what this
+                 is; six fake tiles would just be noise to read out. */
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 opacity-50" aria-hidden="true">
                 {SAMPLE_RESULTS.map(sample => (
                   <div
                     key={sample.title}
-                    className="flex flex-col gap-1.5 rounded-xl border border-dashed border-white/10 p-2.5 text-xs"
+                    data-page-bento
+                    className="flex flex-col bg-zinc-900 rounded-2xl overflow-hidden"
                   >
-                    <div className="flex items-center gap-1.5">
-                      {sample.status === 'pending' && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-zinc-400" />}
-                      {sample.status === 'imported' && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />}
-                      {sample.status === 'failed' && <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" />}
-                      <span className="truncate text-white">{sample.title}</span>
+                    <div className="relative aspect-video bg-zinc-800 flex items-center justify-center">
+                      <Youtube className="h-7 w-7 text-zinc-700" />
+                      <StatusBadge status={sample.status} />
                     </div>
-                    {sample.reason && <span className="text-zinc-500 line-clamp-2">{sample.reason}</span>}
+                    <div className="flex flex-col gap-1 p-3">
+                      <span className="line-clamp-2 text-sm font-medium text-white leading-snug">{sample.title}</span>
+                      {sample.reason && <span className="text-xs text-zinc-400 line-clamp-2">{sample.reason}</span>}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -546,8 +636,8 @@ export default function YoutubeMigratePage() {
             Below the working part of the page on purpose: this answers
             "what will this cost me and what happens next", which is a
             question people ask before paying and never again after. */}
-        <section className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
+        <section className="grid gap-2 sm:gap-3 sm:grid-cols-2">
+          <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3">
             <h2 className="text-sm font-semibold text-white">How it works</h2>
             <ol className="flex flex-col gap-2.5 text-sm text-zinc-400">
               <li className="flex gap-2.5">
@@ -568,7 +658,7 @@ export default function YoutubeMigratePage() {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
+          <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3">
             <h2 className="text-sm font-semibold text-white">What it costs</h2>
             {pricing ? (
               <>
