@@ -114,6 +114,14 @@ import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 const TAP_SLOP_PX = 10;
 
 /**
+ * Tallest the media may get in the feed, in px. A portrait clip stops growing
+ * here and narrows its own width instead — the same 600px cap and left-hugging
+ * behaviour ImageCard gives a portrait photo, so a vertical video takes one
+ * screen rather than three.
+ */
+const MAX_MEDIA_HEIGHT = 600;
+
+/**
  * How long the player's controls stay up after the interaction that revealed
  * them — a hover, a pointer move, or (in the feed) a click or tap on the media.
  * Any further interaction re-arms the window rather than shortening it.
@@ -1641,7 +1649,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         data-no-navigate
         data-media-full
         className={`relative bg-black cursor-pointer group/thumb outline-none overflow-hidden transition-all duration-300 ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : '')}`}
-        style={isFullscreen || (isImmersive && showComments) ? undefined : { aspectRatio: mediaAspect }}
+        /* Fills the card width when the clip is wide enough; a portrait clip
+           caps at MAX_MEDIA_HEIGHT tall and shrinks its own width instead, so
+           it sits hugged to the left like a portrait photo does. */
+        style={
+          isFullscreen || (isImmersive && showComments)
+            ? undefined
+            : {
+                aspectRatio: mediaAspect,
+                width: `min(100%, ${Math.round(MAX_MEDIA_HEIGHT * mediaAspect)}px)`,
+                // Backstop for the minimal theme, which forces media to full
+                // bleed with !important width: the box letterboxes there rather
+                // than growing past a screen.
+                maxHeight: MAX_MEDIA_HEIGHT,
+              }
+        }
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
