@@ -53,6 +53,7 @@ import { getCommentCountDelta } from '@/lib/comment-count-cache';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
+  emitTapReactionCast,
   type DoubleTapLikeEventDetail,
   type OpenReactionsEventDetail,
 } from '@/lib/tap-reactions';
@@ -612,6 +613,10 @@ export function ActionBar({
       // The third tap upgrades to ❤️ even though the second tap's 👍 already
       // set isLiked, so only the plain like defers to an existing positive vote.
       if (reaction === 'like' && isLiked) return;
+      // Past the guards, so this one is really happening: tell the burst to
+      // draw. It listens here rather than to the gesture so a refused tap
+      // stays silent instead of replaying a like that never moved.
+      emitTapReactionCast({ ...detail, reaction });
       handleReactionRef.current(reaction);
     };
     window.addEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);

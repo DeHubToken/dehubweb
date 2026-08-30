@@ -9,6 +9,12 @@
  * surface opts in by dropping one self-contained element inside its media box —
  * no state to thread, and the emitting hook stays independent of the drawing.
  *
+ * It listens for the CAST event, not the gesture. The gesture fires on every
+ * double tap; the cast only fires when the vote actually moves. A post you have
+ * already liked refuses the gesture (a repeat would read as "clear it"), and
+ * animating that anyway tells you a like landed when nothing happened — enough
+ * to make someone think they had un-liked and re-liked the post in public.
+ *
  * Purely decorative: `pointer-events-none` throughout, so it can never take a
  * tap from the carousel, the player, or the card underneath.
  */
@@ -16,7 +22,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Heart, ThumbsUp } from 'lucide-react';
 import {
-  DOUBLE_TAP_LIKE_EVENT,
+  TAP_REACTION_CAST_EVENT,
   type DoubleTapLikeEventDetail,
   type TapReaction,
 } from '@/lib/tap-reactions';
@@ -114,8 +120,8 @@ export function TapReactionBurst({ postId }: { postId?: string | number }) {
       });
     };
 
-    window.addEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
-    return () => window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
+    window.addEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
+    return () => window.removeEventListener(TAP_REACTION_CAST_EVENT, listener as EventListener);
   }, [postId]);
 
   return (

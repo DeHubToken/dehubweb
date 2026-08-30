@@ -58,6 +58,7 @@ import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
+  emitTapReactionCast,
   type DoubleTapLikeEventDetail,
   type OpenReactionsEventDetail,
 } from '@/lib/tap-reactions';
@@ -650,6 +651,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       const reaction = detail.reaction ?? 'like';
       if (myReaction === reaction) return;
       if (reaction === 'like' && isLiked) return;
+      // Past the guards, so the slide's burst may draw. Same reason as
+      // ActionBar: the burst listens to the cast, never the gesture, so a
+      // refused tap on something already liked stays silent.
+      emitTapReactionCast({ ...detail, reaction });
       handleReactionRef.current(reaction);
     };
     const onOpenReactions = (e: Event) => {
