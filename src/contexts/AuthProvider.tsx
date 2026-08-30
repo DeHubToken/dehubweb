@@ -19,6 +19,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { wagmiConfig, clearWagmiStorage } from '@/lib/wagmi';
 import { setBackgroundPaused } from '@/lib/background-gate';
@@ -301,6 +302,11 @@ async function signWithProvider(
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
+  // Only used by the unlock toast's "Ask less often" button. AuthProvider sits
+  // inside BrowserRouter (App.tsx mounts WalletProviders under it), so this is
+  // safe — and a client navigation keeps the pending action's page alive,
+  // which a location.href would throw away.
+  const navigate = useNavigate();
 
   // Hydrate user/wallet immediately from localStorage to prevent zombie state on mobile refresh.
   const [user, setUser] = useState<DeHubUser | null>(() => {
@@ -1099,10 +1105,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       requestWalletUnlock();
+
+      // One explanation for the whole app, raised where the prompt is raised.
+      //
+      // Every surface that signs — tipping, boosting, unlocking paid content,
+      // staking, sending — used to catch the "wallet is locked" error in its
+      // own way and toast its own generic wording, so the moment the password
+      // sheet appeared people were also told the transaction had FAILED. It
+      // hadn't; it was waiting for them. Callers now stay silent on this error
+      // (isWalletLockedError) and this is the only toast that fires.
+      //
+      // The second half is the part people asked for: nobody found the
+      // frequency setting, so the wallet felt like it was nagging at random.
+      // `?highlight=wallet-unlock` deep-links the exact row.
+      toast.info('Unlock your wallet to continue', {
+        id: 'wallet-unlock-required',
+        description:
+          'Nothing failed — enter your wallet password (or use biometrics) and your action will go through.',
+        action: { label: 'Unlock', onClick: () => requestWalletUnlock() },
+        cancel: {
+          label: 'Ask less often',
+          onClick: () => navigate('/app/settings?highlight=wallet-unlock'),
+        },
+        duration: 10000,
+      });
     };
     window.addEventListener('dehub:wallet-unlock-required', handler);
     return () => window.removeEventListener('dehub:wallet-unlock-required', handler);
-  }, [requestWalletUnlock]);
+  }, [requestWalletUnlock, navigate]);
 
   // Reconnect DM socket when user logs in
   useEffect(() => {

@@ -52,10 +52,46 @@ function noSigningProviderMessage(): string {
  * someone opened a page.
  */
 function requestUnlockForSigning(): Error {
-  if (isSmartWalletSession()) {
+  const locked = isSmartWalletSession();
+  if (locked) {
     window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
   }
-  return new Error(noSigningProviderMessage());
+  const err = new Error(noSigningProviderMessage()) as Error & { code?: string };
+  // The message alone was never enough to tell this apart from a real failure.
+  // It travels through parseTxError, through viem wrappers, and through every
+  // caller's own catch, and each one re-words it — so by the time it reached
+  // the screen a locked wallet was indistinguishable from a reverted
+  // transaction. People were told "Transaction failed" at the exact moment the
+  // password sheet appeared: nothing had failed, and the toast told them to
+  // stop. A code survives all of that. isWalletLockedError is its only reader.
+  if (locked) err.code = WALLET_LOCKED_ERROR_CODE;
+  return err;
+}
+
+/**
+ * Marker on the error thrown when signing stopped to ask for the password.
+ * See isWalletLockedError.
+ */
+export const WALLET_LOCKED_ERROR_CODE = 'WALLET_LOCKED';
+
+/**
+ * True when the only thing wrong is that the wallet needs unlocking.
+ *
+ * Callers use this to stay QUIET: AuthProvider already opens the unlock sheet
+ * and raises one explanatory toast for the whole app (the
+ * `dehub:wallet-unlock-required` handler), so a second "… failed" toast from
+ * the surface that triggered it is both wrong and the louder of the two.
+ *
+ * The string check is the fallback for errors that crossed a boundary which
+ * copies the message but drops own properties (a viem re-wrap, a structured
+ * clone, a `new Error(String(e))` in an older catch).
+ */
+export function isWalletLockedError(error: unknown): boolean {
+  if (!error) return false;
+  const e = error as { code?: unknown; message?: unknown };
+  if (e.code === WALLET_LOCKED_ERROR_CODE) return true;
+  const message = typeof e.message === 'string' ? e.message : String(error);
+  return message.toLowerCase().includes('wallet is locked');
 }
 
 /**
@@ -424,6 +460,12 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
 
   const lowerError = errorStr.toLowerCase();
 
+  // Before every other branch: a locked wallet is not a failed transaction and
+  // must never be worded as one. Callers that check isWalletLockedError skip
+  // their toast entirely — this is what the ones that don't will print.
+  if (isWalletLockedError(error) || lowerError.includes('wallet is locked')) {
+    return 'Your wallet is locked — unlock it to continue.';
+  }
   if (lowerError.includes('user rejected') || lowerError.includes('user denied')) {
     return 'Transaction was rejected by user.';
   }

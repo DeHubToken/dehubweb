@@ -12,7 +12,8 @@ import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import { getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
+import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { useAuth } from '@/contexts/AuthContext';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
@@ -100,8 +101,7 @@ export function useEventGatePayment({
       onSuccess?.();
     } catch (error: unknown) {
       console.error('[GatePayment] Failed:', error);
-      const message = parseTxError(error as Error);
-      toast.error(message || 'Payment failed', { id: 'gate-payment' });
+      toastTxError(error, 'Payment failed', { id: 'gate-payment' });
     } finally {
       setIsPaying(false);
     }
