@@ -390,7 +390,7 @@ export default function YoutubeMigratePage() {
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-xl font-bold text-white leading-tight">Migrate all from YouTube</h1>
                 <p className="text-sm text-zinc-500">
-                  Connect your channel, pick what to bring over, pay once.
+                  Paste your channel, pick what to bring over, pay once.
                 </p>
               </div>
             </div>
@@ -751,7 +751,7 @@ export default function YoutubeMigratePage() {
             <ol className="flex flex-col gap-2.5 text-sm text-zinc-400">
               <li className="flex gap-2.5">
                 <span className="text-zinc-600 tabular-nums">1.</span>
-                <span>Connect your channel. The Google sign-in is what proves the videos are yours — we only ask for read access to your uploads.</span>
+                <span>Paste your channel address and confirm the videos are yours. Nothing to sign in to &mdash; DeHub reads the channel's public uploads list.</span>
               </li>
               <li className="flex gap-2.5">
                 <span className="text-zinc-600 tabular-nums">2.</span>
