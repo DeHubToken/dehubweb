@@ -37,10 +37,10 @@ import {
   checkDHBPaused,
   getERC20Balance,
   getWalletAddress,
-  parseTxError,
   switchChain,
   writeContractAA,
 } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { formatCompact } from '@/lib/ads/povr';
@@ -186,7 +186,7 @@ export function AdTopUpPanel({
       }
     } catch (err) {
       toast.dismiss('ads-topup');
-      toast.error(parseTxError(err) || 'Top-up failed.');
+      toastTxError(err, 'Top-up failed.');
     } finally {
       setIsPaying(false);
       setPhase('idle');

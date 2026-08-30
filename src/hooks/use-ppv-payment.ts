@@ -289,10 +289,13 @@ export function usePPVPayment({
       console.error('[PPV] Payment failed:', error);
       // Module is cached after the import above; the fallback only fires if
       // the chunk itself failed to load.
-      const message = await import('@/lib/contracts/aa-utils')
-        .then(m => m.parseTxError(error))
-        .catch(() => '');
-      toast.error(message || 'PPV payment failed', { id: 'ppv-payment' });
+      const aa = await import('@/lib/contracts/aa-utils').catch(() => null);
+      const message = aa ? aa.parseTxError(error) : '';
+      // Locked wallet: the unlock sheet is already up with its own toast, and
+      // nothing has failed — the payment goes through on the next tap.
+      if (!aa || !aa.isWalletLockedError(error)) {
+        toast.error(message || 'PPV payment failed', { id: 'ppv-payment' });
+      }
       if (message.toLowerCase().includes('session expired') || message.toLowerCase().includes('log in again')) {
         setTimeout(() => openLoginModal?.(), 1200);
       }

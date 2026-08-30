@@ -29,8 +29,8 @@ import {
   getWalletAddress,
   getERC20Balance,
   switchChain,
-  parseTxError,
 } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
 const GOVERNANCE_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
@@ -297,8 +297,7 @@ export function useSubmitGovernanceProposal() {
     },
     onError: (err: any) => {
       toast.dismiss('governance-proposal-fee');
-      const msg = parseTxError(err) || err?.message || 'Failed to submit proposal';
-      toast.error(msg);
+      toastTxError(err, err?.message || 'Failed to submit proposal');
     },
   });
 }
@@ -419,8 +418,7 @@ export function useVoteGovernanceProposal() {
       if (context?.previousDetail && context?.proposalId) {
         queryClient.setQueryData(['governance-proposal', context.proposalId], context.previousDetail);
       }
-      const msg = parseTxError(err) || err?.message || 'Vote failed. You must hold DHB tokens to vote.';
-      toast.error(msg);
+      toastTxError(err, err?.message || 'Vote failed. You must hold DHB tokens to vote.');
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });

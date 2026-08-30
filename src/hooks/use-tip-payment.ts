@@ -178,10 +178,15 @@ export function useTipPayment({
         console.error('[Tip] Payment failed:', error);
         // Module is cached after the import above; the fallback only fires if
         // the chunk itself failed to load.
-        const message = await import('@/lib/contracts/aa-utils')
-          .then(m => m.parseTxError(error as Error))
-          .catch(() => '');
-        toast.error(message || 'Tip failed', { id: 'tip-payment' });
+        const aa = await import('@/lib/contracts/aa-utils').catch(() => null);
+        // A locked wallet is not a failed tip: signing stopped to ask for the
+        // password and AuthProvider has already put the unlock sheet up with
+        // its own toast. Saying "failed" on top of that is what made people
+        // abandon a tip that was one tap from going through.
+        if (!aa || !aa.isWalletLockedError(error)) {
+          const message = aa ? aa.parseTxError(error as Error) : '';
+          toast.error(message || 'Tip failed', { id: 'tip-payment' });
+        }
       } finally {
         setIsTipping(false);
       }
