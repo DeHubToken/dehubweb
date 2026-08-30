@@ -16,6 +16,14 @@
  * nothing rather than toggling the like off, because the gesture is easy to
  * fire by accident and losing a like you meant to keep is worse than a tap that
  * appears to do nothing.
+ *
+ * Which is why there are TWO events, not one. A media surface only knows that a
+ * gesture happened; whether it changes anything is the vote owner's call. So the
+ * surface emits `DOUBLE_TAP_LIKE_EVENT` (an attempt) and the bar that owns the
+ * vote emits `TAP_REACTION_CAST_EVENT` (an outcome) once its guards pass.
+ * Anything that DRAWS a reaction listens for the outcome. Off the attempt, a
+ * double tap on a post you already liked replays the entire burst over a vote
+ * that never moved — which reads as if the like landed a second time.
  */
 
 /** Reactions the tap ladder can cast. Both are positive; see lib/reactions. */
@@ -26,6 +34,14 @@ export type TapReaction = 'like' | 'love';
  * working — `reaction` is new and absent means 'like'.
  */
 export const DOUBLE_TAP_LIKE_EVENT = 'dehub:double-tap-like';
+
+/**
+ * Fired by whoever owns the vote — `ActionBar`, or `ShortsViewer` which renders
+ * none — after its guards pass and the reaction really is being cast. Carries
+ * the prompting gesture's detail through unchanged so the burst still lands
+ * under the finger.
+ */
+export const TAP_REACTION_CAST_EVENT = 'dehub:tap-reaction-cast';
 
 /** A hold on the media asks the post's ActionBar to open its reaction tray. */
 export const OPEN_REACTIONS_EVENT = 'dehub:open-reactions';
@@ -61,6 +77,18 @@ export function emitTapReaction(
     reaction,
     x: point?.x,
     y: point?.y,
+  });
+}
+
+/**
+ * The vote owner confirming it is casting `reaction`. Give it the detail of the
+ * gesture event that prompted it, so the tap point survives the hand-off.
+ */
+export function emitTapReactionCast(detail: DoubleTapLikeEventDetail) {
+  if (!detail?.postId) return;
+  dispatch<DoubleTapLikeEventDetail>(TAP_REACTION_CAST_EVENT, {
+    ...detail,
+    postId: String(detail.postId),
   });
 }
 
