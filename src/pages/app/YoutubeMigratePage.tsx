@@ -33,6 +33,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import dehubCoin from '@/assets/dehub-coin.png';
 import {
   listChannelVideos,
@@ -137,7 +138,8 @@ function formatPublishedAt(iso?: string): string | null {
 }
 
 export default function YoutubeMigratePage() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const { requireAuth } = useAuthPrompt();
   const navigate = useNavigate();
   const [stage, setStage] = useState<Stage>('loading');
   const [channelUrl, setChannelUrl] = useState('');
@@ -182,22 +184,32 @@ export default function YoutubeMigratePage() {
       toast.error('Please confirm this is your channel');
       return;
     }
-    setStage('fetching');
-    try {
-      await fetchVideos(channelUrl.trim());
-      // Only remembered once it has actually resolved, so a bad paste is not
-      // what a resumed batch tries to re-list from later.
+    // Listing is an authenticated call, and `apiCall` throws on a dead session
+    // BEFORE it ever reaches the network. Without this wrapper that surfaced as
+    // the button doing nothing at all: no request, no console error, just a
+    // "Session expired" toast that auto-dismissed, and no way to sign in from
+    // this page. The old flow never needed a prompt because it listed on mount
+    // and "Connect your YouTube channel" was the way in; making the paste form
+    // the primary action is what put an authed call behind a button.
+    // Same requireAuth the single-video importer wraps its submit in.
+    requireAuth(async () => {
+      setStage('fetching');
       try {
-        localStorage.setItem(CHANNEL_URL_KEY, channelUrl.trim());
-      } catch {
-        // private mode / blocked storage — resume just shows ids, not a failure
+        await fetchVideos(channelUrl.trim());
+        // Only remembered once it has actually resolved, so a bad paste is not
+        // what a resumed batch tries to re-list from later.
+        try {
+          localStorage.setItem(CHANNEL_URL_KEY, channelUrl.trim());
+        } catch {
+          // private mode / blocked storage — resume just shows ids, not a failure
+        }
+        setStage('listing');
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Could not read that channel');
+        setStage('idle');
       }
-      setStage('listing');
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not read that channel');
-      setStage('idle');
-    }
-  }, [channelUrl, ownershipConfirmed, fetchVideos]);
+    });
+  }, [channelUrl, ownershipConfirmed, fetchVideos, requireAuth]);
 
   const pollCharge = useCallback((chargeId: string) => {
     pollRef.current = setInterval(async () => {
@@ -483,7 +495,11 @@ export default function YoutubeMigratePage() {
               className="self-start"
             >
               {stage === 'fetching' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {stage === 'fetching' ? 'Reading your channel…' : 'Show my videos'}
+              {stage === 'fetching'
+                ? 'Reading your channel…'
+                : isAuthenticated
+                  ? 'Show my videos'
+                  : 'Sign in to show my videos'}
             </Button>
           </section>
         )}
