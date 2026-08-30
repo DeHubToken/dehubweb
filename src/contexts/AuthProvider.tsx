@@ -19,7 +19,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { wagmiConfig, clearWagmiStorage } from '@/lib/wagmi';
 import { setBackgroundPaused } from '@/lib/background-gate';
@@ -78,7 +77,9 @@ import { unlockWithBiometrics, hasBiometricUsableHere } from '@/lib/wallet-core/
 import {
   WALLET_UNLOCK_INTERVAL_KEY,
   DEFAULT_WALLET_UNLOCK_INTERVAL,
+  type WalletUnlockIntervalOption,
 } from '@/hooks/use-wallet-unlock-interval';
+import { WalletUnlockToastBody } from '@/components/app/wallet-setup/WalletUnlockToastBody';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
 import { deriveFromSecret, generateMnemonic12 } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
@@ -310,11 +311,6 @@ async function signWithProvider(
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
-  // Only used by the unlock toast's "Ask less often" button. AuthProvider sits
-  // inside BrowserRouter (App.tsx mounts WalletProviders under it), so this is
-  // safe — and a client navigation keeps the pending action's page alive,
-  // which a location.href would throw away.
-  const navigate = useNavigate();
 
   // Hydrate user/wallet immediately from localStorage to prevent zombie state on mobile refresh.
   const [user, setUser] = useState<DeHubUser | null>(() => {
@@ -1074,6 +1070,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Mid-session unlock requests — a post, tip or stream attempted with the key
   // no longer in memory. Raised by aa-utils when no signing provider exists.
   useEffect(() => {
+    // Re-raised (same toast id) rather than driven from component state so the
+    // picker can also swap the toast's duration: 10s is right for a toast you
+    // only read, and far too short for one you are picking an option in.
+    const showUnlockToast: (
+      expanded: boolean,
+      chosen: WalletUnlockIntervalOption | null,
+    ) => void = (expanded, chosen) => {
+      toast.info('Unlock your wallet to continue', {
+        id: 'wallet-unlock-required',
+        description: (
+          <WalletUnlockToastBody
+            expanded={expanded}
+            chosen={chosen}
+            onExpand={() => showUnlockToast(true, null)}
+            onPicked={(next) => showUnlockToast(false, next)}
+          />
+        ),
+        action: { label: 'Unlock', onClick: () => requestWalletUnlock() },
+        duration: expanded ? 30000 : 10000,
+      });
+    };
+
     const handler = () => {
       // Matches the condition aa-utils used to decide to raise this event at
       // all; if the two ever disagree the dialog silently never opens and the
@@ -1125,22 +1143,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       //
       // The second half is the part people asked for: nobody found the
       // frequency setting, so the wallet felt like it was nagging at random.
-      // `?highlight=wallet-unlock` deep-links the exact row.
-      toast.info('Unlock your wallet to continue', {
-        id: 'wallet-unlock-required',
-        description:
-          'Nothing failed — enter your wallet password (or use biometrics) and your action will go through.',
-        action: { label: 'Unlock', onClick: () => requestWalletUnlock() },
-        cancel: {
-          label: 'Ask less often',
-          onClick: () => navigate('/app/settings?highlight=wallet-unlock'),
-        },
-        duration: 10000,
-      });
+      // The choice is made inside the toast — sending them to Settings meant
+      // abandoning the page and the half-finished action to answer it.
+      showUnlockToast(false, null);
     };
     window.addEventListener('dehub:wallet-unlock-required', handler);
     return () => window.removeEventListener('dehub:wallet-unlock-required', handler);
-  }, [requestWalletUnlock, navigate]);
+  }, [requestWalletUnlock]);
 
   // Reconnect DM socket when user logs in
   useEffect(() => {
