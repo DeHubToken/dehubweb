@@ -14,6 +14,12 @@ import { useSearchHistory } from '@/hooks/use-search-history';
 // static import here would pull the wallet stack into the entry bundle
 // (AppSidebar is eager via AppLayout) — scripts/check-entry-bundle.mjs
 // fails the build if that happens.
+// Lazy for the same reason: @/lib/profiles reaches the wallet vault, and a
+// static import from this eager component would put the wallet stack in the
+// entry bundle.
+const SidebarProfileSwitcher = React.lazy(() =>
+  import('./navigation/SidebarProfileSwitcher').then(m => ({ default: m.SidebarProfileSwitcher }))
+);
 const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then(m => ({ default: m.PostModal }))
 );
@@ -155,9 +161,21 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               {t('sidebar.post')}
             </div>
           </LiquidGlassBubble>
+          {/* Every other account saved on this device, one tap away. Settings
+              → Profile used to be the only surface for this, which made
+              multi-account invisible unless you already knew it existed. */}
+          <Suspense fallback={null}>
+            <SidebarProfileSwitcher onNavigate={onToggle} />
+          </Suspense>
           <div className="flex items-center justify-center gap-3">
+            {/* forgetProfile: logging out revokes this session's tokens
+                server-side, so its stored snapshot is dead the moment this
+                runs. Left on the list it looked like a working profile and
+                dumped you into the sign-in sheet on tap. Other saved accounts
+                are untouched — that is what makes this a log out of ONE
+                account rather than of the device. */}
             <button
-              onClick={() => { onToggle(); disconnect(); }}
+              onClick={() => { onToggle(); disconnect({ forgetProfile: true }); }}
               className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
             >
               <LogOut className="w-4 h-4" />
