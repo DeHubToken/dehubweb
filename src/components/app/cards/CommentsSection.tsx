@@ -46,6 +46,7 @@ import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, e
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
+import { useAuthorThread } from '@/hooks/use-author-thread';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { toast } from 'sonner';
@@ -56,6 +57,7 @@ import { mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { mapApiComment, type Comment, type VoiceNote } from '@/lib/comment-mapper';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
+import { hasUnresolvedParent } from '@/lib/comment-threading';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so
 // non-component consumers can share them. Re-exported here for the surfaces
@@ -582,6 +584,16 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     };
   }, [postInfo, postAuthorAddress]);
 
+  // The ids the host page's author-thread block has already rendered above the
+  // card. Same query key as <AuthorThread>, so this is its cached answer rather
+  // than a second request, and the two surfaces can never disagree about which
+  // comments belong where.
+  const { entryIds: authorThreadIds } = useAuthorThread(
+    postAuthorAddress ? tokenId : undefined,
+    postAuthorAddress,
+    walletAddress,
+  );
+
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>(initialTab ?? 'replies');
   // The mount-time initial value alone doesn't cover a section that's already
   // open: tapping the like count while comments are expanded changes initialTab
@@ -694,6 +706,28 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   });
   const apiComments = useMemo(() => commentPages?.pages.flat(), [commentPages]);
 
+  /**
+   * Pull the pages a loaded reply's parent is sitting on.
+   *
+   * The API hands back a flat window of comments newest-first, so a reply can
+   * easily arrive on page 0 while the comment it answers is on page 2. The
+   * grouping below promotes such a reply to a root rather than dropping it, so
+   * it rendered as a plain top-level comment with no connection to what it was
+   * answering — on a busy post the same author's "👍" appeared three times in a
+   * row, apparently addressed to nobody. A missing parent is always older than
+   * its reply, so it is always on a later page: keep pulling until every loaded
+   * reply has its parent.
+   *
+   * Bounded, because a reply whose parent was deleted has no page to find and
+   * would otherwise walk the whole comment history on every open.
+   */
+  const MAX_AUTO_PAGES = 5;
+  useEffect(() => {
+    if (!apiComments?.length || !hasNextPage || isFetchingNextPage) return;
+    if ((commentPages?.pages.length ?? 0) >= MAX_AUTO_PAGES) return;
+    if (hasUnresolvedParent(apiComments)) fetchNextPage();
+  }, [apiComments, commentPages, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   const loadMoreRow = !isLoading && !error && hasNextPage ? (
     <div className="flex justify-center py-3">
       <button
@@ -789,18 +823,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const childrenOf = new Map<string, Comment[]>();
     const roots: Comment[] = [];
 
-    // The author's straight comments on their own post are rendered by the host
-    // page as the author thread above the card — drop them here so they don't
-    // appear twice. Replies TO those stay listed (promoted to roots, since the
-    // parent is not in this list). Only applies when the host opted in by
-    // passing postAuthorAddress; a temp/optimistic self-comment carries the
-    // viewer address, so it jumps straight into the thread with no flash in
-    // this list either.
-    const isAuthorThreadEntry = (c: Comment) =>
-      !!postAuthorAddress &&
-      !c.replyToId &&
-      !!c.address &&
-      c.address.toLowerCase() === postAuthorAddress.toLowerCase();
+    // The comments the host page has already rendered as the author thread above
+    // the card — drop them here so each one exists exactly once. useAuthorThread
+    // owns that rule and this reads its answer, so the two can never disagree
+    // about a comment and show it twice or nowhere. It only ever contains the
+    // author's opening continuation, so nothing that belongs beside another
+    // comment is taken out of this list.
+    const isAuthorThreadEntry = (c: Comment) => authorThreadIds.has(c.id);
 
     allComments.forEach(c => {
       const parentId = c.replyToId;
@@ -849,7 +878,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     });
 
     return threads;
-  }, [allComments, postAuthorAddress]);
+  }, [allComments, authorThreadIds]);
 
   useEffect(() => {
     return () => {
@@ -1391,11 +1420,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
           onAnchor={canAnchor ? handleAnchor : undefined}
           threadLineBelow={shown.length > 0}
-          isThreadEntry={
-            !comment.replyToId &&
-            !!postAuthorAddress &&
-            comment.address?.toLowerCase() === postAuthorAddress.toLowerCase()
-          }
+          isThreadEntry={authorThreadIds.has(comment.id)}
         />
         {shown.map(({ comment: reply }, i) => (
           <CommentItem

@@ -2,13 +2,24 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getNFTComments, type ApiCommentResponse } from '@/lib/api/dehub';
 import { mapApiComment, type Comment } from '@/lib/comment-mapper';
+import { selectAuthorThreadEntries } from '@/lib/comment-threading';
 
 /**
- * Author thread — the post creator's straight comments on their own post.
+ * Author thread — the post creator's own continuation of their post.
  *
- * A "thread entry" is a top-level comment (no parentId) written by the post's
- * author. Everything else stays in the normal comments list. The entries feed
- * the X-style thread rendered directly under the post on its own page.
+ * A "thread entry" is a top-level comment (no parentId) the author wrote
+ * *before anybody else commented and that nobody has replied to*: the X-style
+ * continuation you tack onto your own post. Those entries render directly
+ * under the post card and are dropped from the comments list below, so each
+ * one exists exactly once.
+ *
+ * The cutoff matters. Without it every straight comment the author ever left
+ * on their own post was promoted into the block — including a "thanks" written
+ * two minutes after somebody else's comment, which then sat above the comment
+ * it was answering, in a separate block, in the wrong time order. That reads as
+ * a broken conversation, because it is one. Once somebody else has commented,
+ * the author is talking *in* the thread, not continuing the post, so their
+ * comment belongs in the list with everyone else's.
  *
  * The query key deliberately extends ['comments', <tokenId>]: posting, editing,
  * deleting or liking a comment refetches that prefix from the comments section,
@@ -40,13 +51,12 @@ export function useAuthorThread(tokenId?: string, authorAddress?: string, viewer
     retry: 1,
   });
 
-  const entries = useMemo<Comment[]>(() => {
-    if (!author) return [];
-    return (query.data ?? [])
-      .filter((c) => !c.parentId && c.address?.toLowerCase() === author)
-      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-      .map(mapApiComment);
-  }, [query.data, author]);
+  const entries = useMemo<Comment[]>(
+    () => selectAuthorThreadEntries(query.data ?? [], author).map(mapApiComment),
+    [query.data, author],
+  );
 
-  return { entries, isLoading: query.isLoading };
+  const entryIds = useMemo(() => new Set(entries.map((e) => e.id)), [entries]);
+
+  return { entries, entryIds, isLoading: query.isLoading };
 }
