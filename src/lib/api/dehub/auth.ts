@@ -66,6 +66,12 @@ export async function checkUsernameAvailabilityPost(username: string): Promise<U
   });
 }
 
+/** Phantom's Solana account, and its signature over this same login message. */
+export interface SolanaLoginProof {
+  address: string;
+  signature: string;
+}
+
 export async function authenticateWallet(
   address: string,
   signature: string,
@@ -73,6 +79,7 @@ export async function authenticateWallet(
   chainId: number = 8453,
   web3AuthMeta?: Web3AuthMeta,
   supabaseAccessToken?: string,
+  solanaProof?: SolanaLoginProof | null,
 ): Promise<AuthResponse> {
   const body: Record<string, any> = {
     address: address.toLowerCase(),
@@ -80,6 +87,17 @@ export async function authenticateWallet(
     timestamp,
     chainId,
   };
+
+  // Phantom signs in through its Ethereum provider, and that EVM address is a
+  // by-product most Phantom users have never touched — so the backend's
+  // anti-bot signup gate, which asks for on-chain history, turned every one of
+  // them away. This is the same login message countersigned by the Solana key:
+  // it lets the gate look at the half of the wallet that has actually been
+  // used, and leaves a verified Solana address on the account, which is what
+  // makes the creator payable on Solana at all.
+  if (solanaProof?.address && solanaProof?.signature) {
+    body.solanaProof = solanaProof;
+  }
 
   if (web3AuthMeta) {
     body.web3AuthMeta = web3AuthMeta;
