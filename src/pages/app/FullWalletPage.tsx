@@ -24,6 +24,7 @@ import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
 import { getDexBuyLink } from '@/lib/wallet/buy-links';
 import { getERC20Metadata, saveCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
+import { SOLANA_MAINNET_CHAIN_ID, isSolanaChainId } from '@/lib/chains/solana';
 import { switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
@@ -76,7 +77,7 @@ interface GroupedToken {
 }
 
 export default function FullWalletPage() {
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, user } = useAuth();
   const { isCollapsed } = useSidebarCollapse();
   const navigate = useNavigate();
   const location = useLocation();
@@ -109,6 +110,10 @@ export default function FullWalletPage() {
     const seen = new Set<string>();
     const extras: { address: string; symbol: string }[] = [];
     for (const tk of allTokens) {
+      // Solana mints are skipped: this list feeds an EVM contract-address
+      // price lookup, and a base58 mint sent to it is a guaranteed miss that
+      // costs a request per unknown SPL token an owner happens to hold.
+      if (isSolanaChainId(tk.chainId)) continue;
       if (!known.has(tk.symbol) && tk.address !== '0x0' && !seen.has(tk.address.toLowerCase())) {
         seen.add(tk.address.toLowerCase());
         extras.push({ address: tk.address, symbol: tk.symbol });
@@ -176,6 +181,20 @@ export default function FullWalletPage() {
 
   const [copied, setCopied] = useState(false);
 
+  /**
+   * Which address the Receive dialog is showing.
+   *
+   * Not cosmetic. SOL and SPL tokens sent to an `0x…` address are gone — the
+   * two chains do not share an address space — so a dialog that shows only the
+   * EVM address beside a list of Solana balances is an invitation to lose
+   * money. The toggle only appears when there is a linked Solana address to
+   * switch to.
+   */
+  const [receiveNetwork, setReceiveNetwork] = useState<'evm' | 'solana'>('evm');
+  const linkedSolanaAddress = user?.solanaAddress ?? null;
+  const receiveAddress =
+    receiveNetwork === 'solana' && linkedSolanaAddress ? linkedSolanaAddress : walletAddress;
+
   // All tokens with balance across all chains (for send dialog)
   const allWithBalance = useMemo(() => allTokens.filter(tk => tk.balance > BigInt(0)), [allTokens]);
 
@@ -183,9 +202,12 @@ export default function FullWalletPage() {
     return <AuthGate description={t('wallet.loginRequired')} />;
   }
 
-  const handleCopy = () => {
-    if (!walletAddress) return;
-    navigator.clipboard.writeText(walletAddress)
+  // Takes the address explicitly: the header button always copies the EVM
+  // address, while the Receive dialog copies whichever network is selected.
+  const handleCopy = (address?: string | null) => {
+    const target = address ?? walletAddress;
+    if (!target) return;
+    navigator.clipboard.writeText(target)
       .then(() => {
         setCopied(true);
         toast.success(t('wallet.addressCopied'));
@@ -194,7 +216,29 @@ export default function FullWalletPage() {
       .catch(() => toast.error('Could not copy address'));
   };
 
+  /**
+   * Sending is EVM-only for now.
+   *
+   * SendDialog switches chain through wagmi and moves value with
+   * `sendNativeToken` / `sendERC20Token`. None of that reaches Solana, and a
+   * Solana token arriving here would fail somewhere inside the EVM stack and
+   * read as a broken wallet. Balances are shown; moving them is not offered
+   * until there is an SPL transfer path that has actually been exercised
+   * on-chain — hand-rolled instruction encoding is not something to ship
+   * untested when it moves money.
+   */
+  const isSolanaToken = (token: WalletToken) => isSolanaChainId(token.chainId);
+
   const handleSend = (token: WalletToken) => {
+    if (isSolanaToken(token)) {
+      toast.info(t('wallet.solanaSendUnavailable', 'Sending on Solana is not available yet'), {
+        description: t(
+          'wallet.solanaSendUnavailableHint',
+          'Use Phantom directly to move this balance.',
+        ),
+      });
+      return;
+    }
     setSelectedToken(token);
     setSendDialogOpen(true);
   };
@@ -206,8 +250,20 @@ export default function FullWalletPage() {
 
   // Smart send: if multiple chains have balance, show chain picker. Otherwise send directly.
   const handleSmartSend = (grouped: GroupedToken) => {
-    const chainsWithBalance = grouped.chains.filter(tk => tk.balance > BigInt(0));
-    if (chainsWithBalance.length === 0) return;
+    // Solana is filtered out before the count, not after: a DHB balance split
+    // across Base and Solana would otherwise offer a two-chain picker whose
+    // second row cannot be sent, and a Solana-only balance would open the
+    // picker for a single unusable option.
+    const chainsWithBalance = grouped.chains.filter(
+      tk => tk.balance > BigInt(0) && !isSolanaToken(tk),
+    );
+    if (chainsWithBalance.length === 0) {
+      // Everything this token holds is on Solana. Route it through handleSend
+      // anyway so the person gets the explanation rather than a dead button.
+      const solanaHolding = grouped.chains.find(tk => tk.balance > BigInt(0));
+      if (solanaHolding) handleSend(solanaHolding);
+      return;
+    }
     if (chainsWithBalance.length === 1) {
       handleSend(chainsWithBalance[0]);
     } else {
@@ -259,7 +315,7 @@ export default function FullWalletPage() {
               {t('wallet.totalWalletValue')}: ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={handleCopy} title={walletAddress || ''}>
+          <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={() => handleCopy()} title={walletAddress || ''}>
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
           </Button>
         </div>
@@ -435,12 +491,18 @@ export default function FullWalletPage() {
         </DrawerContent>
       </Drawer>
 
-      {/* Send Dialog */}
+      {/* Send Dialog. handleSend refuses Solana tokens, so the chainId
+          narrowing below restates at the type level a guard that already
+          holds at runtime. */}
       <SendDialog
         open={sendDialogOpen}
         onOpenChange={setSendDialogOpen}
         token={selectedToken}
-        chainId={selectedToken?.chainId ?? BASE_CHAIN_ID}
+        chainId={
+          selectedToken && selectedToken.chainId !== SOLANA_MAINNET_CHAIN_ID
+            ? selectedToken.chainId
+            : BASE_CHAIN_ID
+        }
         onSuccess={() => { setSendDialogOpen(false); }}
         allTokens={allWithBalance}
         onTokenChange={setSelectedToken}
@@ -453,20 +515,48 @@ export default function FullWalletPage() {
             <DialogTitle className="text-white">{t('wallet.receiveTokens')}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col items-center gap-4 py-4">
+            {linkedSolanaAddress && (
+              <div className="flex w-full rounded-xl bg-white/5 border border-white/10 p-1 gap-1">
+                {([
+                  { key: 'evm' as const, label: t('wallet.receiveEvm', 'Base · BNB · ETH') },
+                  { key: 'solana' as const, label: 'Solana' },
+                ]).map(option => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => setReceiveNetwork(option.key)}
+                    className={`flex-1 rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                      receiveNetwork === option.key
+                        ? 'bg-white/15 text-white'
+                        : 'text-white/50 hover:text-white/80'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
             <div data-keep-white className="bg-white rounded-2xl p-4">
               <div className="w-48 h-48 flex items-center justify-center">
-                {walletAddress ? (
-                  <AddressQr address={walletAddress} />
+                {receiveAddress ? (
+                  <AddressQr address={receiveAddress} />
                 ) : (
                   <QrCode className="w-32 h-32 text-zinc-900" />
                 )}
               </div>
             </div>
-            <p className="text-xs text-white/40 text-center">{t('wallet.receiveDescription')}</p>
+            <p className="text-xs text-white/40 text-center">
+              {receiveNetwork === 'solana'
+                ? t(
+                    'wallet.receiveSolanaDescription',
+                    'Only send SOL and SPL tokens here. Anything sent from another network is lost.',
+                  )
+                : t('wallet.receiveDescription')}
+            </p>
             <div className="w-full bg-white/5 border border-white/10 rounded-xl p-3">
-              <p className="text-xs text-white/60 font-mono break-all text-center">{walletAddress}</p>
+              <p className="text-xs text-white/60 font-mono break-all text-center">{receiveAddress}</p>
             </div>
-            <Button variant="glass" className="w-full rounded-xl" onClick={handleCopy}>
+            <Button variant="glass" className="w-full rounded-xl" onClick={() => handleCopy(receiveAddress)}>
               {copied ? <Check className="w-4 h-4 mr-2 text-emerald-400" /> : <Copy className="w-4 h-4 mr-2" />}
               {t('wallet.copyAddress')}
             </Button>

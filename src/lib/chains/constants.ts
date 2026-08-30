@@ -11,8 +11,17 @@ import {
   IS_DHB_LIVE_ON_ROBINHOOD,
 } from '@/lib/chains/robinhood';
 
-export const SOLANA_MAINNET_CHAIN_ID = 101 as const;
-export const SOLANA_DEVNET_CHAIN_ID = 103 as const;
+// Re-exported rather than redeclared: `lib/chains/solana.ts` is where Solana's
+// ids, RPC, explorer and pending DHB mint live, and two copies of a chain id
+// is how one of them quietly becomes wrong.
+export { SOLANA_MAINNET_CHAIN_ID, SOLANA_DEVNET_CHAIN_ID } from '@/lib/chains/solana';
+import {
+  SOLANA_MAINNET_CHAIN_ID,
+  SOLANA_DEVNET_CHAIN_ID,
+  SOLANA_TOKENS,
+  NATIVE_SOL_MINT,
+  dhbSolanaMint,
+} from '@/lib/chains/solana';
 
 export const SOLANA_CHAIN_IDS: readonly number[] = [SOLANA_MAINNET_CHAIN_ID, SOLANA_DEVNET_CHAIN_ID];
 
@@ -48,10 +57,21 @@ export const SUPPORTED_LOCK_TOKENS: SupportedLockToken[] = [
   { symbol: 'DHB', name: 'DeHub', address: '0x99BB69Ee1BbFC7706C3ebb79b21C5B698fe58EC0', chainId: 1, decimals: 18 },
   { symbol: 'USDC', name: 'USD Coin', address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', chainId: 1, decimals: 6 },
   { symbol: 'USDT', name: 'Tether', address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', chainId: 1, decimals: 6 },
-  // Solana
-  { symbol: 'SOL', name: 'Solana', address: 'So11111111111111111111111111111111111111112', chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 9 },
-  { symbol: 'USDT', name: 'Tether', address: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 6 },
-  { symbol: 'USDC', name: 'USD Coin', address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 6 },
+  // Solana. DHB is listed only once its SPL mint actually exists — the same
+  // rule Robinhood's bridged DHB follows below, and for the same reason: a
+  // lock token with no mint behind it is an option that fails at send time.
+  { symbol: 'SOL', name: 'Solana', address: NATIVE_SOL_MINT, chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 9 },
+  { symbol: 'USDT', name: 'Tether', address: SOLANA_TOKENS.USDT, chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 6 },
+  { symbol: 'USDC', name: 'USD Coin', address: SOLANA_TOKENS.USDC, chainId: SOLANA_MAINNET_CHAIN_ID, decimals: 6 },
+  ...(dhbSolanaMint()
+    ? ([{
+        symbol: 'DHB',
+        name: 'DeHub',
+        address: dhbSolanaMint()!,
+        chainId: SOLANA_MAINNET_CHAIN_ID,
+        decimals: 9,
+      }] as SupportedLockToken[])
+    : []),
   // Robinhood Chain. ETH is the gas token here, so it is spendable directly —
   // the v3 controller reads the zero address as native. USDT and USDC are the
   // bridged L1 tokens and carry 6 decimals, unlike BNB Chain where both are 18.

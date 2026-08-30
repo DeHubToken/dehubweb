@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAllTokenBalances, type WalletToken } from '@/lib/wallet/tokens';
+import { getSolanaTokenBalances } from '@/lib/wallet/solana-tokens';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
@@ -61,7 +62,7 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
  * Hook to get tokens across ALL chains (for total balance computation)
  */
 export function useAllChainsTokens() {
-  const { walletAddress, isAuthenticated } = useAuth();
+  const { walletAddress, isAuthenticated, user } = useAuth();
 
   const baseQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BASE_CHAIN_ID],
@@ -87,12 +88,35 @@ export function useAllChainsTokens() {
     refetchOnWindowFocus: false,
   });
 
+  /**
+   * Solana holdings, read from the account's LINKED Solana address rather than
+   * from a connected wallet — someone signed in with Google has no Phantom
+   * attached to the page and should still see what they hold.
+   *
+   * Its own query rather than a branch inside `getAllTokenBalances`, because
+   * nothing about the EVM path applies: no wagmi, no ERC20 calls, no
+   * CHAIN_CONFIGS entry. It also fails independently — a Solana RPC that is
+   * rate-limiting must not stop Base and BNB balances rendering.
+   */
+  const solanaAddress = user?.solanaAddress ?? null;
+  const solanaQuery = useQuery<WalletToken[]>({
+    queryKey: ['wallet-tokens', 'solana', solanaAddress],
+    queryFn: () => getSolanaTokenBalances(solanaAddress),
+    enabled: !!solanaAddress && isAuthenticated,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+
   const allTokens = useMemo(() => [
     ...(baseQuery.data ?? []),
     ...(bnbQuery.data ?? []),
     ...(ethQuery.data ?? []),
-  ], [baseQuery.data, bnbQuery.data, ethQuery.data]);
+    ...(solanaQuery.data ?? []),
+  ], [baseQuery.data, bnbQuery.data, ethQuery.data, solanaQuery.data]);
 
+  // Solana is excluded on purpose: it is optional (most accounts have no
+  // linked address) and slower, and gating the whole wallet's skeleton on it
+  // would delay balances that are already in hand.
   const isLoading = baseQuery.isLoading || bnbQuery.isLoading || ethQuery.isLoading;
 
   return { allTokens, isLoading };
