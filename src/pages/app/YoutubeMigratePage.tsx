@@ -2,9 +2,15 @@
  * /app/migrate-youtube — "Migrate all"
  * =====================================
  * Bulk-import a creator's whole YouTube channel as DeHub posts, one paid
- * batch at a time. Connects via OAuth (real ownership proof, unlike the
- * single-video importer's checkbox), quotes the batch in DHB, takes one
- * upfront on-chain payment, then runs the import in the background.
+ * batch at a time. Paste the channel address, tick the ownership box, pick
+ * what to bring over, pay once in DHB, and the import runs in the background.
+ *
+ * This went through a Google OAuth connection until 2026-08-30, where signing
+ * in served as both "which channel" and "it's yours". That is gone: the URL
+ * says which channel, and the checkbox — the same attestation /converter has
+ * always taken for a single video — says whose. Losing OAuth also lost the
+ * only thing that remembered a creator's channel between visits, hence
+ * CHANNEL_URL_KEY below.
  *
  * Styled as an app feed surface rather than a form. The title used to be bare
  * text at the very top of <main>, which reads as clipped against the viewport
@@ -17,18 +23,18 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Loader2, Youtube, CheckCircle2, XCircle, ExternalLink, Eye } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Loader2, Youtube, CheckCircle2, XCircle, ExternalLink, Eye, Clipboard } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubCoin from '@/assets/dehub-coin.png';
 import {
-  getYoutubeConnectUrl,
   listChannelVideos,
   quoteMigration,
   settleMigration,
@@ -41,7 +47,7 @@ import {
   type MigrationPricing,
 } from '@/lib/api/dehub/youtube-migration';
 
-type Stage = 'loading' | 'not-connected' | 'listing' | 'quoting' | 'paying' | 'processing' | 'done';
+type Stage = 'loading' | 'idle' | 'fetching' | 'listing' | 'quoting' | 'paying' | 'processing' | 'done';
 
 /** Two attempts at a theme-token color (`border-primary`, then
  * `border-foreground`) both went invisible on some DeHub theme — this app
@@ -50,6 +56,13 @@ type Stage = 'loading' | 'not-connected' | 'listing' | 'quoting' | 'paying' | 'p
  * black border, white fill, on every theme, full stop. */
 const CHECKBOX_CLASS =
   'h-5 w-5 shrink-0 rounded border-[2.5px] border-[#000] bg-[#fff] shadow-[0_0_0_1px_rgba(255,255,255,0.6)] data-[state=checked]:bg-[#000] data-[state=checked]:text-[#fff]';
+
+/** The last channel that listed successfully. Purely so a batch resumed after
+ * a reload can re-fetch titles for its results grid — the OAuth connection
+ * used to be what remembered which channel a creator was migrating, and
+ * nothing server-side does now. Per-browser and disposable: losing it costs
+ * video IDs instead of titles on a resumed view, nothing more. */
+const CHANNEL_URL_KEY = 'dehub:migrate-youtube:channel-url';
 
 /** The example grid shown before a batch exists. Deliberately covers all
  * three states and a real-sounding failure reason — the point is to show
@@ -126,8 +139,9 @@ function formatPublishedAt(iso?: string): string | null {
 export default function YoutubeMigratePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const [stage, setStage] = useState<Stage>('loading');
+  const [channelUrl, setChannelUrl] = useState('');
+  const [ownershipConfirmed, setOwnershipConfirmed] = useState(false);
   const [videos, setVideos] = useState<ChannelVideo[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [quote, setQuote] = useState<MigrationQuote | null>(null);
@@ -153,25 +167,37 @@ export default function YoutubeMigratePage() {
    * both by the normal picker flow and, silently in the background, when
    * resuming an in-progress or finished batch (so titles resolve in the
    * results grid instead of showing bare video IDs). */
-  const fetchVideos = useCallback(async () => {
-    const { videos: list } = await listChannelVideos();
+  const fetchVideos = useCallback(async (url: string) => {
+    const { videos: list } = await listChannelVideos(url, true);
     setVideos(list);
     setSelected(new Set(list.filter(v => !v.alreadyImported).map(v => v.youtubeVideoId)));
   }, []);
 
-  const loadVideos = useCallback(async () => {
-    setStage('listing');
+  const handleListChannel = useCallback(async () => {
+    if (!channelUrl.trim()) {
+      toast.error('Paste your channel address first');
+      return;
+    }
+    if (!ownershipConfirmed) {
+      toast.error('Please confirm this is your channel');
+      return;
+    }
+    setStage('fetching');
     try {
-      await fetchVideos();
+      await fetchVideos(channelUrl.trim());
+      // Only remembered once it has actually resolved, so a bad paste is not
+      // what a resumed batch tries to re-list from later.
+      try {
+        localStorage.setItem(CHANNEL_URL_KEY, channelUrl.trim());
+      } catch {
+        // private mode / blocked storage — resume just shows ids, not a failure
+      }
       setStage('listing');
     } catch (err) {
-      const message = err instanceof Error ? err.message : '';
-      if (!message.toLowerCase().includes('connect your youtube channel')) {
-        toast.error(message || 'Could not load your channel');
-      }
-      setStage('not-connected');
+      toast.error(err instanceof Error ? err.message : 'Could not read that channel');
+      setStage('idle');
     }
-  }, [fetchVideos]);
+  }, [channelUrl, ownershipConfirmed, fetchVideos]);
 
   const pollCharge = useCallback((chargeId: string) => {
     pollRef.current = setInterval(async () => {
@@ -196,8 +222,15 @@ export default function YoutubeMigratePage() {
   }, []);
 
   useEffect(() => {
-    if (searchParams.get('error')) toast.error(searchParams.get('error')!);
     (async () => {
+      let remembered = '';
+      try {
+        remembered = localStorage.getItem(CHANNEL_URL_KEY) || '';
+      } catch {
+        // blocked storage — the field just starts empty
+      }
+      if (remembered) setChannelUrl(remembered);
+
       try {
         const active = await getActiveMigrationCharge();
         if (active) {
@@ -207,15 +240,17 @@ export default function YoutubeMigratePage() {
           if (stillPending) pollCharge(active._id);
           // Best-effort, in the background — resolves titles in the grid
           // but a resumed view shouldn't wait on it or fail because of it.
-          fetchVideos().catch(() => undefined);
+          // Needs the remembered address: without an OAuth connection there
+          // is nothing else that says which channel the batch came from.
+          if (remembered) fetchVideos(remembered).catch(() => undefined);
           return;
         }
       } catch {
-        // no session / connection yet — fall through to the normal flow
+        // no session yet — fall through to the paste form
       }
-      loadVideos();
+      setStage('idle');
     })();
-  }, [loadVideos, fetchVideos, pollCharge, searchParams]);
+  }, [fetchVideos, pollCharge]);
 
   useEffect(() => {
     return () => {
@@ -231,12 +266,12 @@ export default function YoutubeMigratePage() {
       .catch(() => undefined);
   }, []);
 
-  const handleConnect = async () => {
+  const handlePasteUrl = async () => {
     try {
-      const { url } = await getYoutubeConnectUrl();
-      window.location.href = url;
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not start the connection');
+      const text = await navigator.clipboard.readText();
+      if (text) setChannelUrl(text.trim());
+    } catch {
+      toast.error('Could not read the clipboard — paste manually instead');
     }
   };
 
@@ -374,13 +409,81 @@ export default function YoutubeMigratePage() {
           </div>
         )}
 
-        {stage === 'not-connected' && (
-          <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-3 items-start">
-            <p className="text-sm text-zinc-400">
-              Connect your YouTube channel to see what's ready to migrate.
-            </p>
-            <Button variant="glass" onClick={handleConnect}>
-              Connect your YouTube channel
+        {(stage === 'idle' || stage === 'fetching') && (
+          <section data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-sm font-semibold text-white">Your channel</h2>
+              <p className="text-sm text-zinc-400">
+                Paste your channel address — the handle on its own works too.
+              </p>
+            </div>
+
+            {/* Same input treatment as the single-video importer on
+                /converter, because it is the same action at a different
+                scale — a creator moving between the two pages should not
+                meet two different-looking forms. */}
+            <div className="relative">
+              <Youtube className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Input
+                placeholder="youtube.com/@yourchannel"
+                value={channelUrl}
+                onChange={(e) => setChannelUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleListChannel();
+                  }
+                }}
+                disabled={stage === 'fetching'}
+                className="pl-10 pr-20 h-[36px] bg-zinc-800 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+              <button
+                type="button"
+                onClick={handlePasteUrl}
+                disabled={stage === 'fetching'}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-zinc-300 hover:bg-white/10 disabled:opacity-50"
+              >
+                <Clipboard className="w-3.5 h-3.5" />
+                Paste
+              </button>
+            </div>
+
+            {/* The ownership attestation. A pasted URL says which channel, not
+                whose — this is the only thing standing between "migrate my
+                own catalogue" and "bulk-rip a stranger's". The whole line
+                toggles it: Radix renders a <button>, which a <label> does not
+                forward clicks to the way a native input would. */}
+            <div
+              role="checkbox"
+              aria-checked={ownershipConfirmed}
+              tabIndex={stage === 'fetching' ? -1 : 0}
+              onClick={() => stage !== 'fetching' && setOwnershipConfirmed(v => !v)}
+              onKeyDown={(e) => {
+                if ((e.key === 'Enter' || e.key === ' ') && stage !== 'fetching') {
+                  e.preventDefault();
+                  setOwnershipConfirmed(v => !v);
+                }
+              }}
+              className="flex items-start gap-2 text-sm text-zinc-400 cursor-pointer select-none"
+            >
+              <Checkbox
+                checked={ownershipConfirmed}
+                disabled={stage === 'fetching'}
+                className={cn(CHECKBOX_CLASS, 'mt-0.5 pointer-events-none')}
+              />
+              <span>
+                This is my channel, or I have the rights holder's permission to publish its videos on DeHub.
+              </span>
+            </div>
+
+            <Button
+              variant="glass"
+              onClick={handleListChannel}
+              disabled={stage === 'fetching' || !channelUrl.trim() || !ownershipConfirmed}
+              className="self-start"
+            >
+              {stage === 'fetching' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {stage === 'fetching' ? 'Reading your channel…' : 'Show my videos'}
             </Button>
           </section>
         )}
