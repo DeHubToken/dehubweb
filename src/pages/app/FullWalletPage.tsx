@@ -77,7 +77,7 @@ interface GroupedToken {
 }
 
 export default function FullWalletPage() {
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, user } = useAuth();
   const { isCollapsed } = useSidebarCollapse();
   const navigate = useNavigate();
   const location = useLocation();
@@ -181,6 +181,20 @@ export default function FullWalletPage() {
 
   const [copied, setCopied] = useState(false);
 
+  /**
+   * Which address the Receive dialog is showing.
+   *
+   * Not cosmetic. SOL and SPL tokens sent to an `0x…` address are gone — the
+   * two chains do not share an address space — so a dialog that shows only the
+   * EVM address beside a list of Solana balances is an invitation to lose
+   * money. The toggle only appears when there is a linked Solana address to
+   * switch to.
+   */
+  const [receiveNetwork, setReceiveNetwork] = useState<'evm' | 'solana'>('evm');
+  const linkedSolanaAddress = user?.solanaAddress ?? null;
+  const receiveAddress =
+    receiveNetwork === 'solana' && linkedSolanaAddress ? linkedSolanaAddress : walletAddress;
+
   // All tokens with balance across all chains (for send dialog)
   const allWithBalance = useMemo(() => allTokens.filter(tk => tk.balance > BigInt(0)), [allTokens]);
 
@@ -188,9 +202,12 @@ export default function FullWalletPage() {
     return <AuthGate description={t('wallet.loginRequired')} />;
   }
 
-  const handleCopy = () => {
-    if (!walletAddress) return;
-    navigator.clipboard.writeText(walletAddress)
+  // Takes the address explicitly: the header button always copies the EVM
+  // address, while the Receive dialog copies whichever network is selected.
+  const handleCopy = (address?: string | null) => {
+    const target = address ?? walletAddress;
+    if (!target) return;
+    navigator.clipboard.writeText(target)
       .then(() => {
         setCopied(true);
         toast.success(t('wallet.addressCopied'));
@@ -298,7 +315,7 @@ export default function FullWalletPage() {
               {t('wallet.totalWalletValue')}: ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={handleCopy} title={walletAddress || ''}>
+          <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={() => handleCopy()} title={walletAddress || ''}>
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
           </Button>
         </div>
@@ -498,20 +515,48 @@ export default function FullWalletPage() {
             <DialogTitle className="text-white">{t('wallet.receiveTokens')}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col items-center gap-4 py-4">
+            {linkedSolanaAddress && (
+              <div className="flex w-full rounded-xl bg-white/5 border border-white/10 p-1 gap-1">
+                {([
+                  { key: 'evm' as const, label: t('wallet.receiveEvm', 'Base · BNB · ETH') },
+                  { key: 'solana' as const, label: 'Solana' },
+                ]).map(option => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => setReceiveNetwork(option.key)}
+                    className={`flex-1 rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                      receiveNetwork === option.key
+                        ? 'bg-white/15 text-white'
+                        : 'text-white/50 hover:text-white/80'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
             <div data-keep-white className="bg-white rounded-2xl p-4">
               <div className="w-48 h-48 flex items-center justify-center">
-                {walletAddress ? (
-                  <AddressQr address={walletAddress} />
+                {receiveAddress ? (
+                  <AddressQr address={receiveAddress} />
                 ) : (
                   <QrCode className="w-32 h-32 text-zinc-900" />
                 )}
               </div>
             </div>
-            <p className="text-xs text-white/40 text-center">{t('wallet.receiveDescription')}</p>
+            <p className="text-xs text-white/40 text-center">
+              {receiveNetwork === 'solana'
+                ? t(
+                    'wallet.receiveSolanaDescription',
+                    'Only send SOL and SPL tokens here. Anything sent from another network is lost.',
+                  )
+                : t('wallet.receiveDescription')}
+            </p>
             <div className="w-full bg-white/5 border border-white/10 rounded-xl p-3">
-              <p className="text-xs text-white/60 font-mono break-all text-center">{walletAddress}</p>
+              <p className="text-xs text-white/60 font-mono break-all text-center">{receiveAddress}</p>
             </div>
-            <Button variant="glass" className="w-full rounded-xl" onClick={handleCopy}>
+            <Button variant="glass" className="w-full rounded-xl" onClick={() => handleCopy(receiveAddress)}>
               {copied ? <Check className="w-4 h-4 mr-2 text-emerald-400" /> : <Copy className="w-4 h-4 mr-2" />}
               {t('wallet.copyAddress')}
             </Button>
