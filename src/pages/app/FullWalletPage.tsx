@@ -24,6 +24,7 @@ import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
 import { getDexBuyLink } from '@/lib/wallet/buy-links';
 import { getERC20Metadata, saveCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
+import { SOLANA_MAINNET_CHAIN_ID, isSolanaChainId } from '@/lib/chains/solana';
 import { switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
@@ -109,6 +110,10 @@ export default function FullWalletPage() {
     const seen = new Set<string>();
     const extras: { address: string; symbol: string }[] = [];
     for (const tk of allTokens) {
+      // Solana mints are skipped: this list feeds an EVM contract-address
+      // price lookup, and a base58 mint sent to it is a guaranteed miss that
+      // costs a request per unknown SPL token an owner happens to hold.
+      if (isSolanaChainId(tk.chainId)) continue;
       if (!known.has(tk.symbol) && tk.address !== '0x0' && !seen.has(tk.address.toLowerCase())) {
         seen.add(tk.address.toLowerCase());
         extras.push({ address: tk.address, symbol: tk.symbol });
@@ -194,7 +199,29 @@ export default function FullWalletPage() {
       .catch(() => toast.error('Could not copy address'));
   };
 
+  /**
+   * Sending is EVM-only for now.
+   *
+   * SendDialog switches chain through wagmi and moves value with
+   * `sendNativeToken` / `sendERC20Token`. None of that reaches Solana, and a
+   * Solana token arriving here would fail somewhere inside the EVM stack and
+   * read as a broken wallet. Balances are shown; moving them is not offered
+   * until there is an SPL transfer path that has actually been exercised
+   * on-chain — hand-rolled instruction encoding is not something to ship
+   * untested when it moves money.
+   */
+  const isSolanaToken = (token: WalletToken) => isSolanaChainId(token.chainId);
+
   const handleSend = (token: WalletToken) => {
+    if (isSolanaToken(token)) {
+      toast.info(t('wallet.solanaSendUnavailable', 'Sending on Solana is not available yet'), {
+        description: t(
+          'wallet.solanaSendUnavailableHint',
+          'Use Phantom directly to move this balance.',
+        ),
+      });
+      return;
+    }
     setSelectedToken(token);
     setSendDialogOpen(true);
   };
@@ -206,8 +233,20 @@ export default function FullWalletPage() {
 
   // Smart send: if multiple chains have balance, show chain picker. Otherwise send directly.
   const handleSmartSend = (grouped: GroupedToken) => {
-    const chainsWithBalance = grouped.chains.filter(tk => tk.balance > BigInt(0));
-    if (chainsWithBalance.length === 0) return;
+    // Solana is filtered out before the count, not after: a DHB balance split
+    // across Base and Solana would otherwise offer a two-chain picker whose
+    // second row cannot be sent, and a Solana-only balance would open the
+    // picker for a single unusable option.
+    const chainsWithBalance = grouped.chains.filter(
+      tk => tk.balance > BigInt(0) && !isSolanaToken(tk),
+    );
+    if (chainsWithBalance.length === 0) {
+      // Everything this token holds is on Solana. Route it through handleSend
+      // anyway so the person gets the explanation rather than a dead button.
+      const solanaHolding = grouped.chains.find(tk => tk.balance > BigInt(0));
+      if (solanaHolding) handleSend(solanaHolding);
+      return;
+    }
     if (chainsWithBalance.length === 1) {
       handleSend(chainsWithBalance[0]);
     } else {
@@ -435,12 +474,18 @@ export default function FullWalletPage() {
         </DrawerContent>
       </Drawer>
 
-      {/* Send Dialog */}
+      {/* Send Dialog. handleSend refuses Solana tokens, so the chainId
+          narrowing below restates at the type level a guard that already
+          holds at runtime. */}
       <SendDialog
         open={sendDialogOpen}
         onOpenChange={setSendDialogOpen}
         token={selectedToken}
-        chainId={selectedToken?.chainId ?? BASE_CHAIN_ID}
+        chainId={
+          selectedToken && selectedToken.chainId !== SOLANA_MAINNET_CHAIN_ID
+            ? selectedToken.chainId
+            : BASE_CHAIN_ID
+        }
         onSuccess={() => { setSendDialogOpen(false); }}
         allTokens={allWithBalance}
         onTokenChange={setSelectedToken}
