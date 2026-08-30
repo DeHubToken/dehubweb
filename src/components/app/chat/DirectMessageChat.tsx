@@ -34,9 +34,9 @@ import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
 import {
   getERC20Balance,
-  parseTxError,
   checkDHBPaused,
 } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import {
@@ -1431,8 +1431,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             duration: 8000,
           });
         } else {
-          const message = parseTxError(error as Error);
-          toast.error(message || 'Payment failed', { id: 'dm-fee-send' });
+          toastTxError(error, 'Payment failed', { id: 'dm-fee-send' });
         }
         
         // Remove optimistic message on failure

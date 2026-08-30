@@ -18,9 +18,9 @@ import { dhbText } from '@/lib/dhb-toast';
 import {
   getWalletAddress,
   switchChain,
-  parseTxError,
   checkDHBPaused,
 } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
@@ -97,8 +97,7 @@ export function DmFeeGate({
           duration: 8000,
         });
       } else {
-        const message = parseTxError(error as Error);
-        toast.error(message || 'Payment failed', { id: 'dm-fee-gate' });
+        toastTxError(error, 'Payment failed', { id: 'dm-fee-gate' });
       }
     } finally {
       setIsSending(false);

@@ -41,8 +41,8 @@ import {
   getWalletAddress,
   getERC20Balance,
   switchChain,
-  parseTxError,
 } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
@@ -234,8 +234,7 @@ function FeePaymentStep({
       onPaid(messageText.trim(), txHash);
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);
-      const message = parseTxError(error as Error);
-      toast.error(message || 'Payment failed', { id: 'dm-fee-gate' });
+      toastTxError(error, 'Payment failed', { id: 'dm-fee-gate' });
     } finally {
       setIsSending(false);
     }

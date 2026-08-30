@@ -50,7 +50,7 @@ import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { toast } from 'sonner';
-import { parseTxError } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { payForJob } from '@/lib/ai-payment';
 import { useJobQuote } from '@/hooks/use-ai-quote';
 
@@ -156,9 +156,8 @@ export function AudioPaywallModal({
       onConfirm(txHash);
     } catch (err: unknown) {
       console.error('[AudioPaywall] Payment failed:', err);
-      const msg = parseTxError(err);
       toast.dismiss('audio-gen-payment');
-      toast.error(msg || 'Payment failed.');
+      toastTxError(err, 'Payment failed.');
     } finally {
       setIsPaying(false);
     }
