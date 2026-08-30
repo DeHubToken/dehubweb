@@ -331,7 +331,9 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
               Not the creator
             </span>
           )}
-          <NewMemberChip address={comment.address} />
+          {/* A creator already carries the "Creator" chip above — pairing it
+              with "New here" is redundant and just crowds the name. */}
+          {!isCreator && <NewMemberChip address={comment.address} />}
           {/* The bot comments under a normal account, so without this it is
               indistinguishable from a user who picked the handle. */}
           {isAssistantAddress(comment.address) && (
