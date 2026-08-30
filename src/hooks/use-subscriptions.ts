@@ -17,12 +17,12 @@ import {
   buySubscriptionOnChain,
   publishPlanOnChain,
   normaliseDuration,
-  parseTxError,
 } from '@/lib/contracts';
 import { BASE_CHAIN_ID } from '@/lib/contracts';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { toastTxError } from '@/lib/tx-error-toast';
 
 /**
  * A subscription is two things happening in order: a row in our database and a
@@ -180,7 +180,7 @@ export function usePublishPlan() {
     },
     onError: (error: Error) => {
       setStage('idle');
-      toast.error(parseTxError(error, 'publish plan'));
+      toastTxError(error, 'Could not publish plan', { context: 'publish plan' });
     },
     onSettled: () => setStage('idle'),
   });
@@ -244,7 +244,7 @@ export function useCreatePlan() {
       // The row may well exist even when the chain step failed, so the copy
       // has to point at Publish rather than implying nothing happened.
       invalidate();
-      toast.error(parseTxError(error, 'create plan'));
+      toastTxError(error, 'Could not create plan', { context: 'create plan' });
     },
     onSettled: () => setStage('idle'),
   });
@@ -340,7 +340,7 @@ export function useBuyPlan() {
     },
     onError: (error: Error) => {
       setStage('idle');
-      toast.error(parseTxError(error, 'subscribe'));
+      toastTxError(error, 'Could not subscribe', { context: 'subscribe' });
     },
     onSettled: () => setStage('idle'),
   });

@@ -24,7 +24,7 @@ import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
 import { getDexBuyLink } from '@/lib/wallet/buy-links';
 import { getERC20Metadata, saveCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
-import { switchChain } from '@/lib/contracts/aa-utils';
+import { switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -859,7 +859,12 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
       setResolvedUser(null);
       onSuccess();
     } catch (err: any) {
-      toast.error(err.message || t('wallet.transactionFailed'));
+      // A locked wallet stops the send before it starts, and AuthProvider is
+      // already showing the unlock sheet plus its own toast. "Transaction
+      // failed" underneath that sheet is simply untrue.
+      if (!isWalletLockedError(err)) {
+        toast.error(err.message || t('wallet.transactionFailed'));
+      }
     } finally {
       setSending(false);
     }

@@ -22,9 +22,9 @@ import { dhbText } from '@/lib/dhb-toast';
 import {
   getWalletAddress,
   switchChain,
-  parseTxError,
   checkDHBPaused,
 } from '@/lib/contracts/aa-utils';
+import { toastTxError } from '@/lib/tx-error-toast';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { apiCall } from '@/lib/api/dehub/core';
@@ -109,8 +109,7 @@ export function DmTipDialog({
           duration: 8000,
         });
       } else {
-        const message = parseTxError(error as Error);
-        toast.error(message || 'Tip failed', { id: 'dm-tip' });
+        toastTxError(error, 'Tip failed', { id: 'dm-tip' });
       }
     } finally {
       setIsSending(false);

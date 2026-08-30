@@ -18,7 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { STAKING_ADDRESS, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS, fromWei } from '@/lib/contracts/dhb-token';
-import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
+import { getWalletAddress, switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -268,7 +268,11 @@ export default function StakingPage() {
       refetchStats();
     } catch (err: any) {
       console.error('[Staking] Cancel unstake error:', err);
-      toast.error(t('toasts.failed_to_cancel'), { description: err?.message || 'Unknown error' });
+      // Locked wallet: the unlock sheet and its toast are already up, and
+      // nothing failed — this would just tell them to stop.
+      if (!isWalletLockedError(err)) {
+        toast.error(t('toasts.failed_to_cancel'), { description: err?.message || 'Unknown error' });
+      }
     } finally {
       setCancellingTx(null);
     }
@@ -402,7 +406,11 @@ export default function StakingPage() {
     } catch (err: any) {
       console.error('[Staking] Stake error:', err);
       toast.dismiss();
-      toast.error(t('toasts.stake_failed'), { description: err?.message || 'Unknown error' });
+      // Locked wallet: the unlock sheet and its toast are already up, and
+      // nothing failed — this would just tell them to stop.
+      if (!isWalletLockedError(err)) {
+        toast.error(t('toasts.stake_failed'), { description: err?.message || 'Unknown error' });
+      }
     } finally {
       setIsStaking(false);
       setIsApproving(false);
@@ -509,7 +517,11 @@ export default function StakingPage() {
       refetchQueue();
     } catch (err: any) {
       console.error('[Staking] Unstake error:', err);
-      toast.error(t('toasts.unstake_failed'), { description: err?.message || 'Unknown error' });
+      // Locked wallet: the unlock sheet and its toast are already up, and
+      // nothing failed — this would just tell them to stop.
+      if (!isWalletLockedError(err)) {
+        toast.error(t('toasts.unstake_failed'), { description: err?.message || 'Unknown error' });
+      }
     } finally {
       setIsUnstaking(false);
     }
@@ -539,7 +551,11 @@ export default function StakingPage() {
     } catch (err: any) {
       console.error('[Staking] Claim error:', err);
       toast.dismiss();
-      toast.error(t('toasts.claim_failed'), { description: err?.message || 'Unknown error' });
+      // Locked wallet: the unlock sheet and its toast are already up, and
+      // nothing failed — this would just tell them to stop.
+      if (!isWalletLockedError(err)) {
+        toast.error(t('toasts.claim_failed'), { description: err?.message || 'Unknown error' });
+      }
     } finally {
       setIsClaiming(false);
     }
