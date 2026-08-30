@@ -36,6 +36,16 @@ export interface DeHubUser {
   ensName?: string | null;
   /** When that name was last proven against Ethereum. */
   ensVerifiedAt?: string | null;
+  /**
+   * The Solana account this profile owns, proven by an Ed25519 signature over
+   * the DeHub login message. This is where Solana tips and PPV payments are
+   * sent, so its absence is what makes "pay on Solana" unavailable for a
+   * creator. Never client-writable through /update_profile — see
+   * /api/solana/link.
+   */
+  solanaAddress?: string | null;
+  /** When that address was last proven. */
+  solanaAddressVerifiedAt?: string | null;
   displayName?: string | null;
   display_name?: string;
   bio?: string;

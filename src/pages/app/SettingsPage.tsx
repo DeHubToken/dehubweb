@@ -115,6 +115,7 @@ import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryToo
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettings';
 import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
+import { SolanaWalletSettings } from '@/components/app/settings/SolanaWalletSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
@@ -3063,6 +3064,11 @@ function AssetsSettings() {
           </span>
         </div>
       </div>
+
+      {/* Where Solana money arrives. Sits with Tip network because both answer
+          "how does value move", and an account without this simply cannot be
+          paid on Solana at all. */}
+      <SolanaWalletSettings />
 
       {/* Tip network. Tucked in here rather than on the tip drawer: almost
           nobody needs it, and asking on the way to sending money made the
