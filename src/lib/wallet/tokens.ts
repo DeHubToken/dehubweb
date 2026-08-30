@@ -8,6 +8,18 @@ import { Interface, formatUnits } from 'ethers';
 import { readContract } from '@/lib/contracts/aa-utils';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, initChainRpcUrls } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { SOLANA_MAINNET_CHAIN_ID } from '@/lib/chains/solana';
+
+/**
+ * A chain a balance can be held on. Wider than `ChainId` because Solana is
+ * not EVM and never will be: its addresses are base58, not `0x…`, and nothing
+ * in `CHAIN_CONFIGS`, wagmi or the ERC20 path can serve it.
+ *
+ * Widening this deliberately breaks every EVM-only consumer at the type level
+ * rather than at runtime — a Solana token reaching `switchChain()` or
+ * `sendERC20Token()` would fail in a way that looks like a wallet fault.
+ */
+export type WalletChainId = ChainId | typeof SOLANA_MAINNET_CHAIN_ID;
 
 export interface WalletToken {
   address: string; // '0x0' for native token
@@ -19,7 +31,7 @@ export interface WalletToken {
   logo?: string;
   isNative?: boolean;
   isCustom?: boolean;
-  chainId: ChainId;
+  chainId: WalletChainId;
 }
 
 // Well-known tokens per chain
