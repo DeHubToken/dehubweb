@@ -29,6 +29,7 @@ import {
   abortProfileSwitch,
   profileAllowance,
   canAddProfile,
+  preserveOutgoingProfile,
 } from '@/lib/profiles';
 
 const SB_KEY = 'sb-testproject-auth-token';
@@ -315,6 +316,61 @@ describe('stageIncomingIdentity', () => {
 
     expect(restored?.supabase).toBeNull();
     expect(localStorage.getItem('dehub_token')).toBeNull();
+  });
+
+  it('keeps the incoming Supabase session when the login is being built from it', () => {
+    seedAccountA();
+    // The single-slot vault. The hand-rolled clear this replaced left it
+    // behind, so the incoming account inherited the previous one's key.
+    localStorage.setItem('dehub_wallet_enc', 'cipher-a');
+    adoptCurrentProfile();
+
+    // The social path reaches teardown with the NEW identity's Supabase
+    // session already persisted — wiping it would destroy the session the
+    // login is made of.
+    stageIncomingIdentity({ keepSupabaseSession: true });
+
+    expect(localStorage.getItem('dehub_token')).toBeNull();
+    expect(localStorage.getItem('dehub_wallet_enc')).toBeNull();
+    expect(localStorage.getItem(SB_KEY)).toBe(
+      JSON.stringify({ access_token: 'sa-now', refresh_token: 'sr-now' }),
+    );
+  });
+});
+
+describe('preserveOutgoingProfile', () => {
+  it('saves an account that was never explicitly added, so a second login cannot lose it', () => {
+    seedAccountA();
+    // Deliberately NOT adopted: this is an ordinary session that has never
+    // been through Settings → Add profile.
+    expect(listProfiles()).toHaveLength(0);
+
+    expect(preserveOutgoingProfile()).toBe(true);
+    stageIncomingIdentity({ keepWagmiKeys: true });
+
+    // The account being signed out of the live keys is still switchable.
+    const saved = getProfile('uid-a');
+    expect(saved?.session?.tokens['dehub_token']).toBe('tok-a');
+    expect(beginProfileSwitch('uid-a')).not.toBeNull();
+    expect(localStorage.getItem('dehub_token')).toBe('tok-a');
+  });
+
+  it('refuses, rather than evicting, once the device is at its allowance', () => {
+    seedAccountA();
+    adoptCurrentProfile();
+    seedAccountB();
+    adoptCurrentProfile();
+
+    // Two profiles is the no-badge allowance. A third displacement must not
+    // silently drop one of the saved accounts to make room.
+    for (const key of Object.keys(localStorage)) {
+      if (key !== PROFILES_STORAGE_KEY) localStorage.removeItem(key);
+    }
+    localStorage.setItem('dehub_token', 'tok-c');
+    localStorage.setItem('dehub_wallet', '0xcccccccccccccccccccccccccccccccccccccccc');
+
+    expect(preserveOutgoingProfile()).toBe(false);
+    expect(listProfiles().map((p) => p.id).sort()).toEqual(['addr:' + ADDR_B, 'uid-a'].sort());
   });
 });
 
