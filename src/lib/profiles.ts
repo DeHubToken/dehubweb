@@ -355,6 +355,27 @@ export function adoptCurrentProfile(): boolean {
 }
 
 /**
+ * Save whatever account is live right now, because something is about to take
+ * the session keys away from it.
+ *
+ * The same write as `adoptCurrentProfile`; separated because the reason
+ * differs, and the reason is the whole argument for it. An explicit Add
+ * profile tap adopts up front — but every OTHER way a session gets displaced
+ * (signing in as somebody else from the ordinary sheet, an extension switching
+ * accounts under a live wagmi session) used to tear the outgoing account down
+ * leaving nothing behind. That account was never signed out server-side; the
+ * device had simply forgotten how to get back to it, which is what "logging in
+ * to a second account logs me out of the first" actually was. Preserving here
+ * makes a second login additive instead of destructive.
+ *
+ * False means the device is at its badge allowance and the outgoing account
+ * was NOT saved — a caller that can still stop should say so.
+ */
+export function preserveOutgoingProfile(): boolean {
+  return snapshotSession(true);
+}
+
+/**
  * A new login is about to overwrite the session keys with the incoming
  * account's identity. Give the outgoing account one final snapshot, then
  * clear every key it owned so the two identities can never blend — the vault
@@ -364,14 +385,23 @@ export function adoptCurrentProfile(): boolean {
  * `keepWagmiKeys` for flows whose own connect call just wrote the incoming
  * wallet's wagmi storage; wiping those would sever the in-progress connection.
  */
-export function stageIncomingIdentity(options?: { keepWagmiKeys?: boolean }): void {
+export function stageIncomingIdentity(options?: {
+  keepWagmiKeys?: boolean;
+  /**
+   * For the social / email / phone path, where the INCOMING identity's
+   * Supabase session has already landed and been persisted under
+   * `sb-*-auth-token` before the outgoing DeHub keys come down. Wiping it
+   * there would destroy the very session the login is being built from.
+   */
+  keepSupabaseSession?: boolean;
+}): void {
   snapshotCurrentSession();
   lockWallet();
   for (const key of SESSION_KEYS) localStorage.removeItem(key);
   if (!options?.keepWagmiKeys) wipeWagmiKeys();
   // Without this, the Supabase client's next boot hydrates the OUTGOING
   // user's session while every DeHub key belongs to the new one.
-  wipeSupabaseStorageKeys();
+  if (!options?.keepSupabaseSession) wipeSupabaseStorageKeys();
   localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
   localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
 }
