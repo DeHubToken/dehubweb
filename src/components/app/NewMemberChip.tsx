@@ -43,12 +43,12 @@ export function NewMemberChip({ address, lookupId, className }: NewMemberChipPro
     <span
       title={`Joined ${joinedAgoLabel(joinedAt)} — say hello`}
       className={cn(
-        'inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md',
-        'bg-white/10 text-white border border-white/15 whitespace-nowrap',
+        'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md',
+        'bg-white/[0.12] text-white/75 border border-white/[0.12] text-[10px] font-semibold leading-none whitespace-nowrap flex-shrink-0',
         className,
       )}
     >
-      <Star className="w-3 h-3" />
+      <Star className="w-2.5 h-2.5" />
       New here
     </span>
   );
