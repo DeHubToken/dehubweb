@@ -87,6 +87,7 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTogglePin } from '@/hooks/use-pins';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
+import { useMediaAspect, DEFAULT_ASPECT } from '@/hooks/use-media-aspect';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
 import {
@@ -649,6 +650,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [hasError, setHasError] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [intrinsicAspect, setIntrinsicAspect] = useState<number | null>(null);
   const [volume, setVolume] = useState(() => getVideoPreferences().volume);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
@@ -1237,8 +1239,20 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {
       setDuration(videoRef.current.duration);
+      // The clip's own shape, once known — trusted over the poster probe.
+      const { videoWidth: w, videoHeight: h } = videoRef.current;
+      if (w && h) setIntrinsicAspect(w / h);
     }
   }, []);
+
+  /**
+   * Real shape of the media, so a portrait clip shows portrait instead of being
+   * cropped into a 16:9 slot. Falls back to the poster's ratio until the element
+   * reports its own, and to 16:9 until either is measured. Audio posts keep the
+   * fixed frame: their "poster" is square cover art, not a video frame.
+   */
+  const measuredAspect = useMediaAspect(video.isAudio ? null : thumbnail, intrinsicAspect);
+  const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -1250,7 +1264,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: `w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`,
+    className: 'w-full h-full object-contain',
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -1626,7 +1640,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         tabIndex={0}
         data-no-navigate
         data-media-full
-        className={`relative bg-black cursor-pointer group/thumb outline-none overflow-hidden transition-all duration-300 ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : 'aspect-video')}`}
+        className={`relative bg-black cursor-pointer group/thumb outline-none overflow-hidden transition-all duration-300 ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : '')}`}
+        style={isFullscreen || (isImmersive && showComments) ? undefined : { aspectRatio: mediaAspect }}
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
@@ -1862,7 +1877,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     src={thumbnail}
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
+                    className="absolute inset-0 w-full h-full object-contain"
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
