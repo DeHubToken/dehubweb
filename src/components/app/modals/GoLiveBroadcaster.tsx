@@ -888,11 +888,11 @@ export function GoLiveBroadcaster({
                 // does, but the signaling side never sees it — which is how
                 // this used to dead-end on an error screen with no marker and
                 // no retry, leaving the creator to loop on the same dead path.
-                const mediaNeverStarted =
-                  Boolean(endpointBits.url) &&
+                const mediaDied =
                   !sawLive &&
                   acceptedAt > 0 &&
                   Date.now() - acceptedAt < MEDIA_FAILURE_WINDOW_MS;
+                const mediaNeverStarted = Boolean(endpointBits.url) && mediaDied;
                 if (mediaNeverStarted) {
                   if (viaRelay) markRelayFailed();
                   else markIngestUnreachable();
@@ -903,10 +903,20 @@ export function GoLiveBroadcaster({
                     void recoverMediaOver(opened, other);
                     return;
                   }
+                } else if (mediaDied) {
+                  // The LIVEPEER escape hatch died at its media leg. That is
+                  // evidence the refuge does not work from here — so forget
+                  // whatever this device remembered against the self-hosted
+                  // routes, or the unreachable marker locks it onto a Livepeer
+                  // that can never carry its video for the rest of the 24h
+                  // window (observed: a creator looping on dead Livepeer
+                  // mints while the ingest answered their probes fine).
+                  clearIngestUnreachable();
+                  clearRelayFailed();
                 }
                 setPhase('error');
                 setErrorMessage(
-                  mediaNeverStarted
+                  mediaDied
                     ? 'This network blocked the video from leaving your device. Tap Go Live again — the retry takes a different route.'
                     : detail || 'The broadcast connection failed.'
                 );
