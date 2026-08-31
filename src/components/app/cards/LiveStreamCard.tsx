@@ -49,6 +49,7 @@ import {
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
+import { GatedMedia } from './GatedMedia';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -815,6 +816,31 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
       {/* Video Player or Stream Ended State */}
       <div ref={containerRef} data-media-full className={`aspect-video bg-black relative rounded-lg overflow-hidden${isFullscreen ? ' fixed inset-0 z-[9999] !aspect-auto w-screen h-screen rounded-none' : ''}`}>
+        {/* The paywall. It wraps the player rather than covering it, so a
+            gated stream never mounts the <video> at all — no WHEP subscription
+            and no HLS ladder for a broadcast the viewer has not paid for. The
+            replay is behind the same gate: a stream sold per view is not free
+            the day after. */}
+        <GatedMedia
+          gate={{
+            tokenId: stream.tokenId || stream.id,
+            creatorAddress: stream.creatorId,
+            creatorName: stream.streamer,
+            isPPV: stream.isPPV,
+            ppvPrice: stream.ppvPrice,
+            ppvCurrency: stream.ppvCurrency,
+            ppvChainId: stream.ppvChainId,
+            isLocked: stream.isLocked,
+            lockedPrice: stream.lockedPrice,
+            lockedCurrency: stream.lockedCurrency,
+            lockedTokenAddress: stream.lockedTokenAddress,
+            lockedChainId: stream.lockedChainId,
+            subscriberPlans: stream.subscriberPlans,
+            contentRating: stream.contentRating,
+            canBypass: !!isStreamOwner || stream.isOwner || stream.isUnlocked,
+          }}
+          preview={stream.thumbnail || undefined}
+        >
         {streamEnded && stream.replayUrl ? (
           /* The broadcast is over but the recording was captured: play that
              instead of the tombstone. A plain mp4 off our own CDN, so no
@@ -913,6 +939,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             <StreamShopPinnedCard tokenId={stream.id} />
           </>
         )}
+        </GatedMedia>
       </div>
 
       {/* Info & Actions */}

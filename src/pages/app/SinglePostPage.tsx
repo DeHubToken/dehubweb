@@ -442,6 +442,22 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     playbackUrls: buildLivePlaybackUrls(nft),
     replayUrl: extractReplayUrl(streamObj),
     replayTruncated: isReplayTruncated(streamObj),
+    // Access, from the same streamInfo every other post type reads. A live
+    // post is minted through /user_mint with the composer's switches on it, so
+    // it can be sold per view or gated like anything else.
+    tokenId: String(nft.tokenId),
+    isPPV: (nft as any).is_ppv || nft.streamInfo?.isPayPerView || false,
+    ppvPrice: (nft as any).ppv_price || nft.streamInfo?.payPerViewAmount,
+    ppvCurrency: (nft as any).ppv_currency || nft.streamInfo?.payPerViewTokenSymbol || 'DHB',
+    ppvChainId: nft.streamInfo?.payPerViewChainIds?.[0] ?? nft.chainId,
+    isLocked: (nft as any).is_locked || nft.streamInfo?.isLockContent || false,
+    lockedPrice: (nft as any).locked_price || nft.streamInfo?.lockContentAmount,
+    lockedCurrency: (nft as any).locked_currency || nft.streamInfo?.lockContentTokenSymbol || 'DHB',
+    lockedTokenAddress: nft.streamInfo?.lockContentContractAddress,
+    lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
+    subscriberPlans: (nft as any).plansDetails,
+    isOwner: (nft as any).isOwner ?? false,
+    isUnlocked: (nft as any).isUnlocked ?? false,
   };
 }
 
