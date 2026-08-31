@@ -45,6 +45,12 @@ export interface SubscribeOptions {
    * amount of base-URL juggling can reach from the Livepeer shape.
    */
   endpoint?: string;
+  /**
+   * Extra ICE servers (a TURN relay) appended to the STUN defaults — the
+   * media leg of the relayed path for networks that cannot reach the ingest
+   * address directly. The browser still prefers a direct route when one works.
+   */
+  iceServers?: RTCIceServer[];
   onStateChange?: (state: WhepState, detail?: string) => void;
 }
 
@@ -54,11 +60,15 @@ export { playbackIdFromHlsUrl } from './playback-id';
 export async function subscribeToWhep({
   playbackId,
   endpoint: endpointOverride,
+  iceServers: extraIceServers,
   onStateChange,
 }: SubscribeOptions): Promise<WhepSubscription> {
   if (!playbackId) throw new Error('A playback id is required to subscribe.');
 
-  const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS, bundlePolicy: 'max-bundle' });
+  const pc = new RTCPeerConnection({
+    iceServers: extraIceServers?.length ? [...ICE_SERVERS, ...extraIceServers] : ICE_SERVERS,
+    bundlePolicy: 'max-bundle',
+  });
   const stream = new MediaStream();
   let resourceUrl: string | null = null;
   let stopped = false;

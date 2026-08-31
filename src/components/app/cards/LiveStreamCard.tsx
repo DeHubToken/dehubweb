@@ -40,7 +40,12 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 // on the boot path, since this card is eager via HomeFeed. live-ingest is
 // safe to import statically for the same reason: it is pure URL arithmetic
 // with no imports of its own.
-import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
+import {
+  liveSourceFromHlsUrl,
+  whepEndpointFor,
+  edgeWhepEndpointFor,
+  fetchTurnServers,
+} from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
@@ -205,25 +210,60 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
     // A session that negotiates but never delivers media is the worst case:
     // no error to catch and nothing on screen. Give it a few seconds, then go.
-    const timer = setTimeout(() => {
-      if (!cancelled && !video.videoWidth) fallBack('no frames');
-    }, WHEP_START_TIMEOUT_MS);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const armStartTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!cancelled && !video.videoWidth) void failOver('no frames');
+      }, WHEP_START_TIMEOUT_MS);
+    };
 
-    (async () => {
+    // A self-hosted stream gets one more chance before HLS: signaling via
+    // the api.dehub.io edge with TURN carrying the media — the route for
+    // networks that cannot reach the ingest host at all, where the HLS
+    // "fallback" below is on the same unreachable host and saves nothing.
+    // Livepeer streams skip straight to the ladder as before.
+    let triedEdge = false;
+    const failOver = async (reason: string) => {
+      if (cancelled) return;
+      if (!triedEdge && whepSource?.provider === 'mediamtx') {
+        triedEdge = true;
+        const relay = await fetchTurnServers();
+        if (relay.length) {
+          logger.info('WHEP direct failed; retrying via the signaling edge', {
+            reason,
+            streamId: stream.id,
+          });
+          const old = session;
+          session = null;
+          void old?.stop();
+          if (!cancelled) await start(edgeWhepEndpointFor, relay);
+          return;
+        }
+      }
+      fallBack(reason);
+    };
+
+    const start = async (
+      endpointFor: typeof whepEndpointFor,
+      iceServers?: RTCIceServer[],
+    ) => {
+      armStartTimer();
       try {
         const { subscribeToWhep } = await import('@/lib/livepeer/whep');
         if (cancelled) return;
         session = await subscribeToWhep({
           playbackId: whepPlaybackId,
-          endpoint: whepEndpointFor({
+          endpoint: endpointFor({
             provider: whepSource?.provider,
             playbackId: whepPlaybackId,
           }),
+          iceServers,
           onStateChange: (state, detail) => {
             if (cancelled) return;
             if (state === 'playing') setError(null);
             else if (state === 'reconnecting') setError('Reconnecting…');
-            else if (state === 'failed') fallBack(detail || 'connection failed');
+            else if (state === 'failed') void failOver(detail || 'connection failed');
           },
         });
         if (cancelled) {
@@ -237,9 +277,11 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           setIsPlaying(false);
         });
       } catch (e) {
-        fallBack((e as Error)?.message || 'subscribe failed');
+        void failOver((e as Error)?.message || 'subscribe failed');
       }
-    })();
+    };
+
+    void start(whepEndpointFor);
 
     return () => {
       cancelled = true;

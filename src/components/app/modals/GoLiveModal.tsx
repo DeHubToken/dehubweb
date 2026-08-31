@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { mintPost, getPostQuota, type PostQuotaStatus } from '@/lib/api/dehub/content';
-import { probeIngestReachable } from '@/lib/live-ingest';
+import { probeIngestReachable, fetchTurnServers } from '@/lib/live-ingest';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
 // they are dynamically imported at go-live time to keep the wallet stack out
@@ -366,7 +366,13 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // Ask now, in parallel with the wallet module, and tell the mint so the
     // stream is created on Livepeer instead of on a server this browser will
     // never manage to send a byte to.
+    // Three-way call, decided once the probe answers: reachable → direct
+    // self-hosted; unreachable with a TURN relay deployed → self-hosted via
+    // the api.dehub.io signaling edge and relayed media; unreachable with no
+    // relay → Livepeer, the fallback of last resort. Both lookups run in
+    // parallel with the wallet module so neither costs wall-clock.
     const ingestReachable = probeIngestReachable();
+    const turnServers = fetchTurnServers();
 
     try {
       // Step 1: Get user's wallet address for minting
@@ -385,7 +391,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         chainId: BASE_CHAIN_ID,
         category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
         minterAddress,
-        ingestPreference: (await ingestReachable) ? undefined : 'livepeer',
+        ingestPreference:
+          (await ingestReachable) || (await turnServers).length > 0 ? undefined : 'livepeer',
         streamInfo: {
           isLockContent: false,
           isPayPerView: false,
