@@ -1924,19 +1924,28 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       })()}
 
       {/* "N new posts" — the chronological feed's only cue that the timeline
-          moved on. Rendered into the sticky nav like the filter chips rather
-          than floating over the list: the feed container is clipped at the nav
-          surface's top edge under the glass themes, so anything sticky inside
-          it gets swallowed the moment the reader scrolls. */}
+          moved on. Portaled to the sticky nav (anything sticky inside the feed
+          gets swallowed by the glass-theme clip at the nav's top edge), but
+          hung BELOW it: absolutely positioned against [data-feed-nav-outer]
+          (the nearest positioned ancestor), so it never adds height to the nav
+          pill itself and still slides away with the nav on scroll. */}
       {(() => {
         if (newPostCount <= 0) return null;
 
         const pill = (
-          <div className={cn("flex justify-center px-1 pt-1 pb-2", portalTarget && "order-0")}>
+          <div
+            className={cn(
+              "flex justify-center px-1 pt-1 pb-2",
+              portalTarget && "absolute inset-x-0 top-full pt-1 pb-0 pointer-events-none"
+            )}
+          >
             <button
               type="button"
               onClick={showNewPosts}
-              className="inline-flex items-center gap-1.5 pl-2.5 pr-3 py-[6px] rounded-full text-xs font-semibold bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              className={cn(
+                "inline-flex items-center gap-1.5 pl-2.5 pr-3 py-[6px] rounded-full text-xs font-semibold bg-zinc-900/90 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50",
+                portalTarget && "pointer-events-auto"
+              )}
             >
               <ArrowUp className="w-3.5 h-3.5" />
               <span className="leading-[1]">
