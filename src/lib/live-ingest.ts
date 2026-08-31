@@ -46,7 +46,13 @@ export function whipEndpointFor(
 ): { url?: string; token?: string } {
   if (liveProviderOf(stream) !== 'mediamtx') return {};
   return {
-    url: `https://${MEDIAMTX_HOST}/${stream.playbackId}/whip`,
+    // `/publish`, not `/whip`: nginx serves the same WHIP endpoint under both
+    // names, and the client uses the one that client-side HTTPS filters do
+    // not forge 403s for. Every field 403 arrived with zero packets at nginx,
+    // MediaMTX or Cloudflare's edge while the same device's other POSTs to
+    // the same hosts landed — something on the device kills URLs containing
+    // /whip before they leave it.
+    url: `https://${MEDIAMTX_HOST}/${stream.playbackId}/publish`,
     token: `dehub:${stream.streamKey ?? ''}`,
   };
 }
@@ -129,7 +135,11 @@ export function hadRecentIngestFailure(): boolean {
  * the relay is unusable from where it stands — and the mint keeps sending a
  * blocked creator down the same dead end instead of falling back to Livepeer.
  */
-const RELAY_FAILURE_KEY = 'dehub.ingest.relay-failed-at';
+// `.v2`: the relay endpoint changed shape (/whip → /publish), and every
+// marker written before that was evidence against a URL the client no longer
+// sends — a device that only ever failed on the filtered /whip path deserves
+// a clean try at /publish rather than 24h steered away from a fixed route.
+const RELAY_FAILURE_KEY = 'dehub.ingest.relay-failed-at.v2';
 
 export function markRelayFailed(): void {
   try {
@@ -183,7 +193,9 @@ export function edgeWhipEndpointFor(
 ): { url?: string; token?: string } {
   if (liveProviderOf(stream) !== 'mediamtx') return {};
   return {
-    url: `${EDGE_SIGNALING_BASE}/${stream.playbackId}/whip`,
+    // Same "/publish" naming as the direct host, for the same reason: the
+    // path token /whip is what the on-device filters key on.
+    url: `${EDGE_SIGNALING_BASE}/${stream.playbackId}/publish`,
     token: `dehub:${stream.streamKey ?? ''}`,
   };
 }
