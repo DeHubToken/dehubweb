@@ -1008,7 +1008,24 @@ export function GoLiveBroadcaster({
         // Without this a phone screen-locks mid-stream and the broadcast dies.
         await acquireWakeLock();
       } catch (error) {
-        logger.error('Failed to start broadcast', { streamKey: !!streamKey }, error);
+        // A refused publish carries the responder's fingerprint — every field
+        // observed 403 arrived with zero packets at our servers or the edge,
+        // so the final URL, content type and body of whatever answered are
+        // the only evidence of what is actually intercepting these requests.
+        logger.error(
+          'Failed to start broadcast',
+          error instanceof WhipHttpError
+            ? {
+                streamKey: !!streamKey,
+                whipStatus: error.status,
+                whipRequestedUrl: error.requestedUrl,
+                whipFinalUrl: error.finalUrl,
+                whipContentType: error.contentType,
+                whipBody: error.bodySnippet,
+              }
+            : { streamKey: !!streamKey },
+          error,
+        );
         if (cancelled) return;
         setPhase('error');
         setErrorMessage(describeMediaError(error));

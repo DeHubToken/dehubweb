@@ -48,11 +48,27 @@ export type WhipState =
  */
 export class WhipHttpError extends Error {
   readonly status: number;
+  /** The endpoint the offer was POSTed to. */
+  readonly requestedUrl: string;
+  /**
+   * Where the response actually came from (`response.url`, i.e. after any
+   * redirect). Every refusal observed in the field arrived with zero packets
+   * at our servers or Cloudflare's edge, so identifying the responder is the
+   * whole game: a mismatch with requestedUrl means a redirect was followed,
+   * and the body snippet fingerprints whatever answered in our place.
+   */
+  readonly finalUrl: string;
+  readonly contentType: string;
+  readonly bodySnippet: string;
 
-  constructor(status: number) {
+  constructor(status: number, requestedUrl: string, finalUrl: string, contentType: string, bodySnippet: string) {
     super(`Streaming server rejected the broadcast (HTTP ${status}).`);
     this.name = 'WhipHttpError';
     this.status = status;
+    this.requestedUrl = requestedUrl;
+    this.finalUrl = finalUrl;
+    this.contentType = contentType;
+    this.bodySnippet = bodySnippet;
   }
 }
 
@@ -255,7 +271,19 @@ export async function publishToWhip({
     });
 
     if (!response.ok) {
-      throw new WhipHttpError(response.status);
+      let bodySnippet = '';
+      try {
+        bodySnippet = (await response.text()).slice(0, 300);
+      } catch {
+        /* body unreadable — the status and urls still identify the responder */
+      }
+      throw new WhipHttpError(
+        response.status,
+        endpoint,
+        response.url,
+        response.headers.get('content-type') || '',
+        bodySnippet,
+      );
     }
 
     const answer = await response.text();
