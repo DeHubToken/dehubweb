@@ -54,6 +54,7 @@ import {
   fetchTurnServers,
   markIngestUnreachable,
   clearIngestUnreachable,
+  hadRecentIngestFailure,
 } from '@/lib/live-ingest';
 
 // The chat is a heavy component (mentions, voice notes, realtime) and most
@@ -762,23 +763,31 @@ export function GoLiveBroadcaster({
         // rides the api.dehub.io edge and media rides the relay; with no
         // relay the direct attempt proceeds and fails into the clear
         // network-error copy rather than silently.
-        let endpointBits = whipEndpointFor({ provider, playbackId, streamKey });
-        let relayIce: RTCIceServer[] | undefined;
-        if (endpointBits.url && !(await probeIngestReachable())) {
-          const turn = await fetchTurnServers();
-          if (turn.length) {
-            endpointBits = edgeWhipEndpointFor({ provider, playbackId, streamKey });
-            relayIce = turn;
-          }
-        }
+        // Whether to relay is NOT gated on the probe. The probe false-passes
+        // on the exact DPI networks the relay exists for — a tiny GET to the
+        // ingest slips through intermittently while the WHIP POST never does
+        // (observed: three go-lives that all probed "reachable", zero of which
+        // ever reached nginx). So the relay is chosen on evidence that
+        // survives that: a fresh record of the direct path failing ON THIS
+        // DEVICE, or the probe actually admitting unreachability — and, either
+        // way, a direct attempt that dies network-shaped is retried over the
+        // relay before the creator sees an error.
+        const directBits = whipEndpointFor({ provider, playbackId, streamKey });
+        const relayBits = edgeWhipEndpointFor({ provider, playbackId, streamKey });
+        const turnServers = directBits.url ? await fetchTurnServers() : [];
         if (cancelled) return;
-        // Direct self-hosted signaling, no relay in front of it — the one
-        // path whose network failure teaches the next mint something.
-        const directSelfHosted = Boolean(endpointBits.url) && !relayIce;
+        const canRelay = Boolean(relayBits.url) && turnServers.length > 0;
+        const relayFirst =
+          canRelay && (hadRecentIngestFailure() || !(await probeIngestReachable()));
+        if (cancelled) return;
 
-        let session: WhipSession;
-        try {
-          session = await publishToWhip({
+        const openSession = (viaRelay: boolean): Promise<WhipSession> => {
+          const endpointBits = viaRelay ? relayBits : directBits;
+          const relayIce = viaRelay ? turnServers : undefined;
+          // Direct self-hosted signaling, no relay in front of it — the one
+          // path whose success or failure teaches this device something.
+          const directSelfHosted = Boolean(endpointBits.url) && !relayIce;
+          return publishToWhip({
             streamKey,
             stream,
             ...endpointBits,
@@ -802,13 +811,28 @@ export function GoLiveBroadcaster({
               }
             },
           });
+        };
+
+        let session: WhipSession;
+        try {
+          session = await openSession(relayFirst);
         } catch (error) {
-          // The signaling POST itself died while pointed straight at the
-          // ingest. Remember that, so the next mint on this device prefers
-          // Livepeer over re-running the same optimistic probe into the same
-          // wall — a stuck creator's real behaviour is to retry in a loop.
-          if (directSelfHosted && isNetworkShapedError(error)) markIngestUnreachable();
-          throw error;
+          // The signaling POST died pointed straight at the ingest. Remember
+          // it — a stuck creator retries in a loop, and the next mint should
+          // know. Then, rather than error out, reach for the relay this device
+          // was too optimistic to use the first time. A relay attempt that
+          // fails just propagates; there is nowhere better to go.
+          if (!relayFirst && isNetworkShapedError(error)) {
+            markIngestUnreachable();
+            if (canRelay) {
+              if (cancelled) return;
+              session = await openSession(true);
+            } else {
+              throw error;
+            }
+          } else {
+            throw error;
+          }
         }
 
         if (cancelled) {
