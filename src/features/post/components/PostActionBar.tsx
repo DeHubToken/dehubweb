@@ -480,7 +480,7 @@ export function PostActionBar({
         <EmojiGifPicker 
           onEmojiSelect={onInsertEmoji}
           onGifSelect={onInsertGif}
-          triggerClassName="h-auto w-auto p-2 rounded-xl text-white hover:bg-white/10"
+          triggerClassName="h-auto w-auto p-2 rounded-xl text-white backdrop-blur-none hover:bg-white/10 [&_svg]:size-5"
         />
 
       </div>
