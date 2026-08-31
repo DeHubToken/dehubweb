@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, Gauge } from 'lucide-react';
+import { Paperclip, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -95,6 +95,19 @@ export function PostActionBar({
   const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
   const navigate = useNavigate();
   const isLive = liveMode !== null;
+  const attachmentInputRef = useRef<HTMLInputElement>(null);
+
+  // One attachment control for both images and video: route the picked files to
+  // whichever handler matches the first file's type.
+  const handleAttachmentSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const first = e.target.files?.[0];
+    if (!first) return;
+    if (first.type.startsWith('video/')) {
+      onVideoSelect(e);
+    } else {
+      onImageSelect(e);
+    }
+  };
 
 
   const handleSelectLiveMode = (mode: LiveMode) => {
@@ -302,7 +315,15 @@ export function PostActionBar({
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
         <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
-        
+        <input
+          ref={attachmentInputRef}
+          type="file"
+          accept={hasImage ? 'image/*' : hasVideo ? 'video/*' : 'image/*,video/*'}
+          multiple={!hasVideo}
+          onChange={handleAttachmentSelect}
+          className="hidden"
+        />
+
         {/* Camera button for recording - leftmost position */}
         {!isLive && !hasVideo && !hasImage && (
           <Tooltip>
@@ -319,35 +340,21 @@ export function PostActionBar({
           </Tooltip>
         )}
 
-        {/* Image button */}
-        {!isLive && !hasVideo && (
+        {/* Attachment button — image and video share one control */}
+        {!isLive && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <button 
-                type="button" 
-                onClick={() => imageInputRef.current?.click()} 
+              <button
+                type="button"
+                onClick={() => attachmentInputRef.current?.click()}
                 className="p-2 hover:bg-white/10 rounded-xl transition-colors"
               >
-                <Image className="w-5 h-5 text-white" />
+                <Paperclip className="w-5 h-5 text-white" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>Add image</TooltipContent>
-          </Tooltip>
-        )}
-        
-        {/* Desktop: Separate video button */}
-        {!hasImage && !isLive && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button 
-                type="button" 
-                onClick={() => videoInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-              >
-                <Film className="w-5 h-5 text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Add video</TooltipContent>
+            <TooltipContent>
+              {hasImage ? 'Add image' : hasVideo ? 'Replace video' : 'Add image or video'}
+            </TooltipContent>
           </Tooltip>
         )}
 
@@ -473,6 +480,7 @@ export function PostActionBar({
         <EmojiGifPicker 
           onEmojiSelect={onInsertEmoji}
           onGifSelect={onInsertGif}
+          triggerClassName="h-auto w-auto p-2 rounded-xl text-white hover:bg-white/10"
         />
 
       </div>
