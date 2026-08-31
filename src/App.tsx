@@ -11,6 +11,7 @@ import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // of the entry bundle.
 import { UsernameRequiredModal } from "@/components/app/modals/UsernameRequiredModal";
 import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
+import { ConnectLinkedWalletModal } from "@/components/app/wallet-setup/ConnectLinkedWalletModal";
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { useAuth } from "@/contexts/AuthContext";
@@ -371,6 +372,7 @@ function AppContent() {
       <ViewingPreferencesSync />
       <UsernameRequiredModal />
       <GiveawayPrizeModal />
+      <ConnectLinkedWalletModal />
       {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's
           Root out of the tree until a sheet first opens, so this renders no
           DOM and registers no listeners until someone taps "Log in". Mounting

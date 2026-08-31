@@ -57,6 +57,7 @@ import {
   clearLastSession,
   type ConnectionSource,
 } from '@/lib/connection-source';
+import { isWalletReconnectGuardActive } from '@/lib/wallet-reconnect';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { clearPersistedQueryCache } from '@/lib/query-persist';
@@ -1297,8 +1298,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (walletAddress && walletAddress.toLowerCase() !== wagmiAddress.toLowerCase()) {
             const savedSrc = readConnectionSource();
             // Smart-wallet sessions: SA address always differs from any external
-            // wallet. Silently disconnect Wagmi — don't wipe the session.
-            if (connectionSource === 'web3auth' || savedSrc === 'web3auth') {
+            // wallet. Silently disconnect Wagmi — don't wipe the session. The
+            // reconnect sheet's verification connects get the same treatment:
+            // it compares the address itself and shows "wrong wallet" in place,
+            // so a mismatch there must not read as an account switch.
+            if (connectionSource === 'web3auth' || savedSrc === 'web3auth' || isWalletReconnectGuardActive()) {
               clearWagmiStorage();
               wagmiDisconnect();
               return;

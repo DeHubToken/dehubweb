@@ -13,6 +13,7 @@ import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { isSmartWalletSession } from '@/lib/connection-source';
+import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from './dhb-token';
 
@@ -27,12 +28,26 @@ type Hex = `0x${string}`;
  * reload, after every auto-lock, and — since login stopped unlocking the
  * wallet on the way in — for most of a normal session. Telling someone who is
  * demonstrably signed in to sign in is what turned this into support tickets.
- * For an external wallet it really is a dropped connection, and the caller's
- * own recovery (silent reconnect, then logout) is the right handler.
+ *
+ * An external-wallet session with a live DeHub token is the same mistake one
+ * layer over: the email-link login establishes the full session with no
+ * wallet attached (completeLoginWithoutUnlock tags it 'wagmi'), so "sign in
+ * first" is told to someone who is signed in, on a browser where nothing
+ * offers a way to connect the wallet. Only with no session at all is signing
+ * in actually the answer.
  */
+function hasDeHubSession(): boolean {
+  try {
+    return !!localStorage.getItem('dehub_wallet');
+  } catch {
+    return false;
+  }
+}
+
 function noSigningProviderMessage(): string {
-  return isSmartWalletSession()
-    ? 'Your wallet is locked. Please unlock it and try again.'
+  if (isSmartWalletSession()) return 'Your wallet is locked. Please unlock it and try again.';
+  return hasDeHubSession()
+    ? 'Connect the wallet linked to this account to continue.'
     : 'No wallet connected. Please sign in first.';
 }
 
@@ -53,8 +68,11 @@ function noSigningProviderMessage(): string {
  */
 function requestUnlockForSigning(): Error {
   const locked = isSmartWalletSession();
+  const needsWalletConnect = !locked && hasDeHubSession();
   if (locked) {
     window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
+  } else if (needsWalletConnect) {
+    requestSessionWalletConnect();
   }
   const err = new Error(noSigningProviderMessage()) as Error & { code?: string };
   // The message alone was never enough to tell this apart from a real failure.
@@ -65,6 +83,7 @@ function requestUnlockForSigning(): Error {
   // password sheet appeared: nothing had failed, and the toast told them to
   // stop. A code survives all of that. isWalletLockedError is its only reader.
   if (locked) err.code = WALLET_LOCKED_ERROR_CODE;
+  if (needsWalletConnect) err.code = WALLET_NOT_CONNECTED_ERROR_CODE;
   return err;
 }
 
@@ -75,12 +94,34 @@ function requestUnlockForSigning(): Error {
 export const WALLET_LOCKED_ERROR_CODE = 'WALLET_LOCKED';
 
 /**
- * True when the only thing wrong is that the wallet needs unlocking.
+ * Marker on the error thrown when signing stopped to ask a signed-in
+ * external-wallet session to connect its wallet (the connect sheet is up).
+ */
+export const WALLET_NOT_CONNECTED_ERROR_CODE = 'WALLET_NOT_CONNECTED';
+
+/**
+ * True when signing stopped to ask the session to connect its wallet.
+ * parseTxError checks this before the locked case so the two prompts keep
+ * their own words.
+ */
+export function isWalletConnectRequiredError(error: unknown): boolean {
+  if (!error) return false;
+  const e = error as { code?: unknown; message?: unknown };
+  if (e.code === WALLET_NOT_CONNECTED_ERROR_CODE) return true;
+  const message = typeof e.message === 'string' ? e.message : String(error);
+  return message.toLowerCase().includes('connect the wallet linked');
+}
+
+/**
+ * True when the only thing wrong is that signing stopped to prompt the user —
+ * the unlock sheet for a locked built-in wallet, or the connect sheet for an
+ * external-wallet session with no wallet attached.
  *
  * Callers use this to stay QUIET: AuthProvider already opens the unlock sheet
  * and raises one explanatory toast for the whole app (the
- * `dehub:wallet-unlock-required` handler), so a second "… failed" toast from
- * the surface that triggered it is both wrong and the louder of the two.
+ * `dehub:wallet-unlock-required` handler), and ConnectLinkedWalletModal is
+ * the same idea for the connect case — so a second "… failed" toast from the
+ * surface that triggered it is both wrong and the louder of the two.
  *
  * The string check is the fallback for errors that crossed a boundary which
  * copies the message but drops own properties (a viem re-wrap, a structured
@@ -88,6 +129,7 @@ export const WALLET_LOCKED_ERROR_CODE = 'WALLET_LOCKED';
  */
 export function isWalletLockedError(error: unknown): boolean {
   if (!error) return false;
+  if (isWalletConnectRequiredError(error)) return true;
   const e = error as { code?: unknown; message?: unknown };
   if (e.code === WALLET_LOCKED_ERROR_CODE) return true;
   const message = typeof e.message === 'string' ? e.message : String(error);
@@ -460,9 +502,15 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
 
   const lowerError = errorStr.toLowerCase();
 
-  // Before every other branch: a locked wallet is not a failed transaction and
+  // Before every other branch: a signing prompt is not a failed transaction and
   // must never be worded as one. Callers that check isWalletLockedError skip
-  // their toast entirely — this is what the ones that don't will print.
+  // their toast entirely — this is what the ones that don't will print. The
+  // connect case goes first: isWalletLockedError covers it too, and reaching
+  // the locked wording would tell an external-wallet user to unlock a vault
+  // they don't have.
+  if (isWalletConnectRequiredError(error)) {
+    return 'Connect the wallet linked to this account to continue.';
+  }
   if (isWalletLockedError(error) || lowerError.includes('wallet is locked')) {
     return 'Your wallet is locked — unlock it to continue.';
   }
