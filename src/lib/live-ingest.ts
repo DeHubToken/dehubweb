@@ -86,7 +86,18 @@ const describeFailure = (error: unknown): string => {
   return `${e?.name || 'Error'}: ${String(e?.message || '').slice(0, 120)}`;
 };
 
-export async function probeIngestReachable(timeoutMs = 4000): Promise<boolean> {
+/**
+ * 15s, not 4s: AbortSignal.timeout measures WALL time, and this runs in
+ * parallel with the wallet stack, whose synchronous crypto blocks the main
+ * thread for seconds at a stretch. When the thread unblocks, an expired
+ * abort timer is processed ahead of a response that arrived mid-block — so a
+ * short cap "times out" answers nginx logged as served instantly, the probe
+ * reads unreachable, and the mint flees to Livepeer (observed in the field:
+ * every misrouted mint, on a browser where the same fetch passes from an
+ * idle console). The result is consumed after the mint round-trip anyway,
+ * so the longer cap costs nothing.
+ */
+export async function probeIngestReachable(timeoutMs = 15_000): Promise<boolean> {
   if (!MEDIAMTX_HOST) return true;
   try {
     await fetch(`https://${MEDIAMTX_HOST}/`, {
@@ -240,7 +251,10 @@ export function fetchTurnServers(): Promise<RTCIceServer[]> {
     turnServersPromise = (async () => {
       try {
         const res = await fetch('https://api.dehub.io/api/live/turn-credentials', {
-          signal: AbortSignal.timeout(5000),
+          // 15s for the same reason as the probe above: a main thread blocked
+          // by wallet crypto lets a short abort timer beat an already-arrived
+          // response, and "no relay available" here silently reroutes mints.
+          signal: AbortSignal.timeout(15_000),
         });
         if (!res.ok) {
           lastTurnFailure = `HTTP ${res.status}`;
