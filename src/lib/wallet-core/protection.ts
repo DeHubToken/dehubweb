@@ -2,6 +2,7 @@
 //
 // One answer, shared by the unlock screen and Settings, so the two can never
 // disagree about whether biometrics or a password is available.
+import { supabase } from "@/integrations/supabase/client";
 import { fetchWallet, getCachedWallet, type StoredWallet } from "./store";
 import { isBiometricUnlockAvailable } from "./passkey";
 import { loadPasskeyWraps, type PasskeyWrap } from "./passkey-store";
@@ -21,6 +22,17 @@ export interface WalletProtection {
    * set it up on (or a password backup added from there).
    */
   biometricEnrolledElsewhere: boolean;
+  /**
+   * The server positively answered "this account has no wallet row" and no
+   * local cache disagreed — i.e. the account has no built-in wallet at all
+   * (its signatures come from an external wallet). A fetch FAILURE leaves
+   * this false: unreachable is not the same as absent, and treating it as
+   * absent would route a smart-wallet user away from their unlock options.
+   * So does a missing Supabase auth session — user_wallets is RLS-scoped,
+   * and an unauthenticated read comes back as zero rows rather than an
+   * error, which reads exactly like "no wallet" and is not.
+   */
+  noWalletOnServer: boolean;
 }
 
 /**
@@ -42,13 +54,23 @@ export async function loadWalletOrCached(userId: string): Promise<StoredWallet> 
 export async function getWalletProtection(userId: string): Promise<WalletProtection> {
   // All three are independent and each degrades to a safe default, so probe
   // them together rather than serialising three round-trips on a login screen.
-  const [walletResult, availableResult, wrapsResult] = await Promise.allSettled([
-    loadWalletOrCached(userId),
+  //
+  // fetchWallet directly rather than loadWalletOrCached, because the two ways
+  // of ending up with no wallet mean different things here: the server saying
+  // "no row" identifies an account with no built-in wallet, while a failed
+  // fetch identifies nothing. The cache fallback is reproduced below.
+  const [walletResult, availableResult, wrapsResult, sessionResult] = await Promise.allSettled([
+    fetchWallet(userId),
     isBiometricUnlockAvailable(),
     loadPasskeyWraps(userId),
+    supabase.auth.getSession(),
   ]);
 
-  const wallet = walletResult.status === "fulfilled" ? walletResult.value : null;
+  const fetched = walletResult.status === "fulfilled" ? walletResult.value : null;
+  const wallet = fetched ?? getCachedWallet();
+  const authedRead =
+    sessionResult.status === "fulfilled" && sessionResult.value.data?.session?.user?.id === userId;
+  const noWalletOnServer = walletResult.status === "fulfilled" && !wallet && authedRead;
   const biometricAvailable = availableResult.status === "fulfilled" ? availableResult.value : false;
   const wraps = wrapsResult.status === "fulfilled" ? wrapsResult.value : [];
 
@@ -59,5 +81,6 @@ export async function getWalletProtection(userId: string): Promise<WalletProtect
     biometricAvailable,
     canUseBiometrics: biometricAvailable && wraps.length > 0,
     biometricEnrolledElsewhere: !biometricAvailable && wraps.length > 0,
+    noWalletOnServer,
   };
 }

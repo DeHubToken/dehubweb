@@ -13,7 +13,7 @@
  * hold the plaintext seed and can wrap it without asking for anything again.
  */
 import { useEffect, useState } from 'react';
-import { Loader2, KeyRound, AlertTriangle, Copy, Fingerprint } from 'lucide-react';
+import { Loader2, KeyRound, AlertTriangle, Copy, Fingerprint, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -46,6 +46,7 @@ import {
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { useAuth } from '@/contexts/AuthContext';
+import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
 
 interface WalletUnlockStepProps {
   userId: string;
@@ -61,10 +62,11 @@ type Phase = 'unlock' | 'recover' | 'recover-new-code' | 'enroll-offer' | 'set-p
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
 export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockStepProps) {
-  // Only for the lost-device path. That flow mints a wallet, moves the account
-  // onto it and finishes the sign-in itself, so it cannot go through
-  // onComplete — which expects a key for the wallet this row already names.
-  const { replaceLostWallet } = useAuth();
+  // replaceLostWallet: only for the lost-device path. That flow mints a
+  // wallet, moves the account onto it and finishes the sign-in itself, so it
+  // cannot go through onComplete — which expects a key for the wallet this
+  // row already names. The other two serve the no-built-in-wallet hand-off.
+  const { replaceLostWallet, isAuthenticated, closeLoginModal } = useAuth();
   const [phase, setPhase] = useState<Phase>('unlock');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -82,6 +84,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   const [wallet, setWallet] = useState<StoredWallet | null>(null);
   const [wraps, setWraps] = useState<PasskeyWrap[]>([]);
   const [biometricAvailable, setBiometricAvailable] = useState<boolean | null>(null);
+  const [noWalletOnServer, setNoWalletOnServer] = useState(false);
   const [probing, setProbing] = useState(true);
   // Held only across the post-password enrolment offer, then dropped.
   const [pendingSecret, setPendingSecret] = useState<string | null>(null);
@@ -97,6 +100,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       setWallet(p.wallet);
       setBiometricAvailable(p.biometricAvailable);
       setWraps(p.wraps);
+      setNoWalletOnServer(p.noWalletOnServer);
       setProbing(false);
     });
     return () => { cancelled = true; };
@@ -742,6 +746,42 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         // mark's fade-in animates `opacity` and would win over that.
         className="[&_span]:text-white/50"
       />
+    );
+  }
+
+  // The account has no built-in wallet at all — its signatures come from an
+  // external wallet, and this is what an email sign-in to a MetaMask/Phantom
+  // account looks like when something asks for a signature. A password box or
+  // a biometrics pitch here can never work; hand over to the connect sheet
+  // instead. Gated on the server's positive answer, not on the fetch failing —
+  // see noWalletOnServer in wallet-core/protection.
+  if (noWalletOnServer && wraps.length === 0) {
+    if (isAuthenticated) {
+      return (
+        <div className="space-y-4">
+          <p className="text-white/60 text-sm leading-relaxed">
+            You’re signed in to a wallet-based account via email — there’s no built-in wallet to
+            unlock here. Connect the account’s wallet to use wallet features, or log out and sign
+            back in with it.
+          </p>
+          <Button
+            onClick={() => { closeLoginModal(); requestSessionWalletConnect(); }}
+            className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+          >
+            <span className="flex items-center gap-2"><Wallet className="w-4 h-4" /> Connect wallet</span>
+          </Button>
+          {recoveryAndLogoutLinks}
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-4">
+        <p className="text-white/60 text-sm leading-relaxed">
+          This account signs in with its own wallet app — there’s no wallet password to enter.
+          Go back and choose Connect Wallet to sign in.
+        </p>
+        {recoveryAndLogoutLinks}
+      </div>
     );
   }
 
