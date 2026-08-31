@@ -1086,6 +1086,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             chosen={chosen}
             onExpand={() => showUnlockToast(true, null)}
             onPicked={(next) => showUnlockToast(false, next)}
+            onUnlock={() => {
+              // Custom buttons live in the description, which sonner does not
+              // auto-dismiss the way it does its own action buttons.
+              toast.dismiss('wallet-unlock-required');
+              requestWalletUnlock();
+            }}
           />
         ),
         action: { label: 'Unlock', onClick: () => requestWalletUnlock() },
