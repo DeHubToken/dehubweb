@@ -823,6 +823,14 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         hlsUrl,
       };
 
+      // warn, not info, so it ships to the error log — see the broadcaster's
+      // 'connect route' line: together they bracket where provider is lost.
+      logger.warn('mint stream fields', {
+        provider: resultData.provider || '(empty)',
+        playbackId: resultData.playbackId || '(empty)',
+        hasKey: Boolean(resultData.streamKey),
+        fromMintResponse: Boolean(mintResponse.stream?.streamKey),
+      });
       setStreamData(resultData);
       // The stream exists and carries the title — the pending copy of it should
       // not reappear in the next Go Live.

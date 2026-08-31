@@ -847,6 +847,17 @@ export function GoLiveBroadcaster({
         const relayFirst =
           canRelay && (hadRecentIngestFailure() || !(await probeIngestReachable()));
         if (cancelled) return;
+        // warn, not info, so it ships to the error log: the field failure
+        // under investigation is a mediamtx stream publishing to the Livepeer
+        // default, with every static layer verified correct — this line says
+        // what the RUNTIME actually decided, and where provider stood.
+        logger.warn('connect route', {
+          provider: provider || '(empty)',
+          direct: directBits.url || '(none)',
+          relay: relayBits.url || '(none)',
+          turnCount: turnServers.length,
+          relayFirst,
+        });
 
         // One media-leg recovery per broadcast. The two routes are the same
         // two the signaling fallback uses, and a route whose media has
