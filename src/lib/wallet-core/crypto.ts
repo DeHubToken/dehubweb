@@ -182,6 +182,27 @@ function parseCiphertext(ciphertext: string): { header: V2Header | null; body: s
   return { header: parsed, body };
 }
 
+/**
+ * What kind of key opens this ciphertext, judged from its header alone.
+ *
+ * 'password' — argon2id v2 header, or a legacy no-header pbkdf2 payload.
+ * 'passkey'  — hkdf v2 header: wrapped under PRF/device key material, so no
+ *              password can ever open it. user_wallets.encrypted_seed can hold
+ *              one of these — the mobile app's biometric wallets write theirs
+ *              there — so "a payload exists" must never be read as "a password
+ *              exists".
+ * 'unknown'  — unparseable or future format; callers should let the password
+ *              path run and surface decryptString's own error.
+ */
+export function classifyPayloadKind(ciphertext: string): "password" | "passkey" | "unknown" {
+  try {
+    const { header } = parseCiphertext(ciphertext);
+    return header?.kdf === "hkdf" ? "passkey" : "password";
+  } catch {
+    return "unknown";
+  }
+}
+
 /** AES-GCM open, shared by every KDF path. */
 async function aesDecrypt(key: CryptoKey, iv: Uint8Array, ct: Uint8Array): Promise<string> {
   const ptBuf = await crypto.subtle.decrypt(

@@ -86,6 +86,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   const [biometricAvailable, setBiometricAvailable] = useState<boolean | null>(null);
   const [noWalletOnServer, setNoWalletOnServer] = useState(false);
   const [stateUnknown, setStateUnknown] = useState(false);
+  const [seedIsPasskeyWrapped, setSeedIsPasskeyWrapped] = useState(false);
   const [probing, setProbing] = useState(true);
   const [probeNonce, setProbeNonce] = useState(0);
   // Held only across the post-password enrolment offer, then dropped.
@@ -105,16 +106,31 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       setWraps(p.wraps);
       setNoWalletOnServer(p.noWalletOnServer);
       setStateUnknown(p.stateUnknown);
+      setSeedIsPasskeyWrapped(p.seedIsPasskeyWrapped);
       setProbing(false);
     });
     return () => { cancelled = true; };
   }, [userId, probeNonce]);
 
-  const hasPasswordWrap = !!wallet?.payload;
+  // From the payload's KDF header, not mere presence: the mobile app's
+  // biometric wallets write an hkdf wrap into the password column, and a
+  // password box in front of one of those is a dead end.
+  const hasPasswordWrap = !!wallet?.payload && !seedIsPasskeyWrapped;
   const canUseBiometrics = biometricAvailable === true && wraps.length > 0;
   // Enrolled elsewhere but unusable here — the user needs the device they set
   // it up on, or a password backup added from that device.
   const biometricEnrolledElsewhere = biometricAvailable === false && wraps.length > 0;
+  // What the wraps' recorded metadata says about using them from THIS device:
+  // a synced passkey (or one with the "hybrid" transport) can answer here —
+  // the browser hands off to the phone that holds it via QR — while a
+  // device-bound one (Windows Hello) can only ever answer on its own machine.
+  // Pre-migration rows have neither recorded and stay null → both false.
+  const someWrapReachableHere = wraps.some(
+    (w) => w.backedUp === true || (w.transports ?? []).includes('hybrid'),
+  );
+  const allWrapsDeviceBound =
+    wraps.length > 0 &&
+    wraps.every((w) => w.backedUp === false && !!w.transports && !w.transports.includes('hybrid'));
 
   const handleBiometricUnlock = async () => {
     setBusy(true);
@@ -146,7 +162,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       // the reminder for a week. Forcing it turned the unlock into a wall, and
       // a wall in front of a tip or a login gets a throwaway password typed at
       // it — a backup nobody remembers is worse than a reminder that returns.
-      if (!current.payload && !isPasswordBackupReminderSnoozed(userId)) {
+      if (!hasPasswordWrap && !isPasswordBackupReminderSnoozed(userId)) {
         setPendingSecret(derived.secret);
         setPendingPrivKey(derived.ethPrivateKey);
         setPhase('set-password');
@@ -827,9 +843,11 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
           <p>
-            {biometricEnrolledElsewhere
-              ? 'This wallet unlocks with biometrics, which this browser doesn’t support. Open DeHub on the device you set it up on — or add a wallet password there, from Settings → Account Security.'
-              : 'This wallet unlocks with biometrics, but none are set up on this device. Open DeHub on the device you set it up on, or add a wallet password there from Settings → Account Security.'}
+            {seedIsPasskeyWrapped && wraps.length === 0
+              ? 'This wallet’s biometric unlock was set up in the DeHub mobile app. Open the app on that phone to use the wallet — or add a wallet password there, from its Settings, to unlock it here.'
+              : biometricEnrolledElsewhere
+                ? 'This wallet unlocks with biometrics, which this browser doesn’t support. Open DeHub on the device you set it up on — or add a wallet password there, from Settings → Account Security.'
+                : 'This wallet unlocks with biometrics, but none are set up on this device. Open DeHub on the device you set it up on, or add a wallet password there from Settings → Account Security.'}
           </p>
         </div>
         {error && <p className="text-sm text-red-400">{error}</p>}
@@ -870,14 +888,18 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           enrolled credential may live on another device entirely, and with no
           password wrap there is nothing else on this screen to try. Name the
           device the wallet was set up on so a confused "I never set up
-          biometrics" moment turns into "oh, that's my phone" — the browser's
-          passkey sheet can often hand off to that device via QR, and failing
-          that, the fix is a password backup added from it. */}
+          biometrics" moment turns into "oh, that's my phone" — and use the
+          recorded transports/backup state to say whether the browser's QR
+          handoff can reach it (synced passkeys and "hybrid" transports can;
+          a Windows Hello credential answers only on its own machine). */}
       {canUseBiometrics && !hasPasswordWrap && wraps.some((w) => w.label) && (
         <p className="text-white/40 text-xs text-center">
-          Your wallet's biometric unlock was set up on: {[...new Set(wraps.map((w) => w.label).filter(Boolean))].join(', ')}.
-          On a different device, choose that device if your browser offers it — or open Settings → Account
-          Security there to add a wallet password.
+          Your wallet's biometric unlock was set up on: {[...new Set(wraps.map((w) => w.label).filter(Boolean))].join(', ')}.{' '}
+          {someWrapReachableHere
+            ? 'Your passkey can answer from that device: when the passkey sheet opens, choose “use another device” and scan the QR code with it.'
+            : allWrapsDeviceBound
+              ? 'That credential only works on the device it was made on — open DeHub there, or add a wallet password from its Settings → Account Security to unlock anywhere.'
+              : 'On a different device, choose that device if your browser offers it — or open Settings → Account Security there to add a wallet password.'}
         </p>
       )}
 
