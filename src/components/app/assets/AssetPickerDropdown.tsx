@@ -51,6 +51,7 @@ export function AssetPickerDropdown({
 
   return createPortal(
     <div
+      data-overlay-content
       className="fixed z-[9999] w-[300px] max-h-[296px] overflow-y-auto rounded-2xl border border-white/[0.08] bg-black/95 shadow-2xl"
       style={{
         top: position.top,

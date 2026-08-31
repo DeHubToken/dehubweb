@@ -533,6 +533,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 40, scale: 0.95 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          data-overlay-content
           className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
           style={{
             right: `${rightOffset}px`,
