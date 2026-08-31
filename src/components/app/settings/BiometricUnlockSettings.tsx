@@ -282,6 +282,32 @@ export function BiometricUnlockSettings() {
       </div>
     );
   }
+  // The probe learned nothing — an expired Supabase session makes both reads
+  // return zero rows (RLS hides them rather than erroring), which used to make
+  // this whole section vanish on exactly the device where someone comes
+  // looking for "add a wallet password". Say so instead of rendering nothing.
+  if (protection?.stateUnknown) {
+    return (
+      <div className="flex items-start gap-2 rounded-xl border border-amber-400/30 bg-amber-400/[0.07] p-3">
+        <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <p className="text-white text-sm font-medium">Couldn’t check wallet security</p>
+          <p className="text-zinc-400 text-xs">
+            This device’s secure session has expired, or the connection dropped. Log out and sign
+            back in on this device, then come back here.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl shrink-0"
+          onClick={() => { setLoading(true); void refresh(); }}
+        >
+          Retry
+        </Button>
+      </div>
+    );
+  }
   if (!protection?.wallet) return null;
 
   const { wraps, hasPassword, biometricAvailable, canUseBiometrics } = protection;

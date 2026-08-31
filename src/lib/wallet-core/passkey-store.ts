@@ -80,7 +80,11 @@ export async function fetchPasskeyWraps(userId: string): Promise<PasskeyWrap[]> 
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message || "Failed to load biometric unlock");
   const wraps = (data ?? []).map(rowToWrap).filter(isUsable);
-  cachePasskeyWraps(wraps);
+  // Zero rows is ambiguous: it's also what an expired session gets, because
+  // RLS hides the rows rather than erroring. Never let that wipe a populated
+  // cache — the cache exists precisely to keep unlock working when the server
+  // can't answer, and genuine removals already clearPasskeyCache() explicitly.
+  if (wraps.length > 0) cachePasskeyWraps(wraps);
   return wraps;
 }
 
