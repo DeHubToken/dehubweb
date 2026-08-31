@@ -38,6 +38,8 @@ import {
   declineBiometricOffer,
   clearBiometricOfferDecline,
   hasBiometricUsableHere,
+  isPasswordBackupReminderSnoozed,
+  snoozePasswordBackupReminder,
   PasskeyCancelledError,
   type PasskeyWrap,
 } from '@/lib/wallet-core/biometric-unlock';
@@ -123,15 +125,20 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       }
       // A wallet whose ONLY key is this passkey is one lost handset from being
       // unreachable, and the person cannot discover that until the day they
-      // try DeHub somewhere else. This is the moment to fix it: they have just
-      // proved themselves, the plaintext seed is in hand, and the wrap costs
-      // them one password and no second prompt.
+      // try DeHub somewhere else. This is the moment to warn them: they have
+      // just proved themselves, the plaintext seed is in hand, and the wrap
+      // costs them one password and no second prompt.
       //
       // Deliberately NOT asked at signup. Nobody arriving has a reason to care
       // about a backup key yet, and a password field on the first screen is
       // pure drop-off. By the time this fires they have chosen to do something
-      // with the wallet, so the ask has a reason attached to it.
-      if (!current.payload) {
+      // with the wallet, so the warning has a reason attached to it.
+      //
+      // A warning with a choice, not a gate: "not now" signs in and snoozes
+      // the reminder for a week. Forcing it turned the unlock into a wall, and
+      // a wall in front of a tip or a login gets a throwaway password typed at
+      // it — a backup nobody remembers is worse than a reminder that returns.
+      if (!current.payload && !isPasswordBackupReminderSnoozed(userId)) {
         setPendingSecret(derived.secret);
         setPendingPrivKey(derived.ethPrivateKey);
         setPhase('set-password');
@@ -252,6 +259,27 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       return;
     }
 
+    const privKey = pendingPrivKey;
+    setPendingSecret(null);
+    setPassword('');
+    setNewConfirm('');
+    try {
+      await onComplete(privKey);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to sign in');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  /** Decline the password backup for now and finish signing in. */
+  const handleSkipSetPassword = async () => {
+    if (!pendingPrivKey) return;
+    setBusy(true);
+    setError(null);
+    // A snooze, not a permanent no — the risk stays, so the reminder returns
+    // after a week rather than at every unlock.
+    snoozePasswordBackupReminder(userId);
     const privKey = pendingPrivKey;
     setPendingSecret(null);
     setPassword('');
@@ -554,22 +582,25 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     );
   }
 
-  // No "not now". Every other prompt in this file is a convenience and takes a
-  // skip; this one is the difference between a wallet that survives losing a
-  // phone and one that does not, and it is asked exactly once in the account's
-  // life. A dismissible version of it is a version most people dismiss.
+  // A security warning with a choice, not a gate. The first cut of this had
+  // no "not now" — on the theory that a dismissible prompt is a prompt most
+  // people dismiss — but that meant anyone mid-tip or mid-login hit a wall
+  // they couldn't decline, and a wall gets a throwaway password typed at it.
+  // So: state the risk plainly, let them choose, and if they skip, the
+  // reminder returns in a week (snoozePasswordBackupReminder). Settings →
+  // Account Security has the same flow whenever they're ready.
   if (phase === 'set-password') {
     return (
       <div className="space-y-4">
-        <div className="mx-auto w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
-          <KeyRound className="w-6 h-6 text-white" />
+        <div className="mx-auto w-14 h-14 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center">
+          <AlertTriangle className="w-6 h-6 text-amber-400" />
         </div>
         <div className="space-y-2 text-center">
-          <p className="text-white text-sm font-medium">Set a wallet password</p>
+          <p className="text-white text-sm font-medium">Your wallet has no backup</p>
           <p className="text-white/50 text-xs leading-relaxed">
-            Right now your wallet only opens with biometrics on this device — if you lose it, nobody can
-            get back in. A password is the backup, and it lets you use DeHub on your laptop too. Your
-            fingerprint keeps working here.
+            It only opens with biometrics on this device — lose the device and nobody, including DeHub,
+            can get you back in. A password fixes that and lets you sign in anywhere. Your fingerprint
+            keeps working here.
           </p>
         </div>
         <form
@@ -605,6 +636,14 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
               : 'Save and continue'}
           </Button>
         </form>
+        <button
+          type="button"
+          onClick={handleSkipSetPassword}
+          disabled={busy}
+          className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
+        >
+          Not now — remind me later
+        </button>
       </div>
     );
   }
