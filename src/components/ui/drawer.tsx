@@ -3,6 +3,7 @@ import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
+import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
 
 // Shared guard against the vaul "ghost click": dismissing a sheet — tapping the
 // scrim, or an outside tap on a non-modal drawer — fires a synthesized click on
@@ -268,7 +269,7 @@ const COLUMN_CLASS =
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean }
->(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, ...props }, ref) => {
+>(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, onPointerDownOutside, ...props }, ref) => {
   const rootMounted = React.useContext(DrawerRootMounted);
   // No Root above us — this sheet is dormant (or the content escaped its
   // Drawer entirely). Render nothing rather than portalling into no Dialog.
@@ -293,6 +294,11 @@ const DrawerContent = React.forwardRef<
       )}
       onClick={(e) => e.stopPropagation()}
       {...props}
+      /* After the spread: a sheet that opens another sheet, a Select, a menu or
+         a toast must not read that surface's own clicks as "clicked off me"
+         (lib/overlay-dismiss). vaul composes this handler ahead of its own and
+         honours defaultPrevented, so guarding here is enough. */
+      onPointerDownOutside={guardOutsideDismiss(onPointerDownOutside)}
     >
       {!hideHandle && (
         <div className={cn(

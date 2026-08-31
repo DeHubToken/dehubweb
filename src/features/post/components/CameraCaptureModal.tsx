@@ -233,7 +233,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
   if (!isOpen) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
+    <div data-overlay-content className="fixed inset-0 z-[9999] bg-black flex flex-col">
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
         <button
