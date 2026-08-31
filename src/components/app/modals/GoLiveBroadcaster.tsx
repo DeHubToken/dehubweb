@@ -44,7 +44,7 @@ import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
-import { getLiveStream } from '@/lib/api/dehub/livestream';
+import { getLiveStream, updateStreamThumbnail } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
 import { createLogger } from '@/lib/logger';
 import {
@@ -74,6 +74,20 @@ const logger = createLogger('GoLiveBroadcaster');
  * cannot be used as a live feed.
  */
 const CONSOLE_POLL_MS = 15_000;
+
+/**
+ * Poster-frame capture cadence.
+ *
+ * The first grab waits for the scene to settle — a camera opens on a dark,
+ * still-exposing frame, and a screen share often opens on the picker's own
+ * afterimage. After that it is slow on purpose: the point is a listing that
+ * looks like the stream, not a live preview, and every capture is a round
+ * trip the broadcast does not otherwise need.
+ */
+const POSTER_FIRST_DELAY_MS = 12_000;
+const POSTER_INTERVAL_MS = 3 * 60_000;
+/** Listings render this into an aspect-video card; the original is waste. */
+const POSTER_WIDTH = 640;
 
 interface GoLiveBroadcasterProps {
   streamKey: string;
@@ -899,6 +913,61 @@ export function GoLiveBroadcaster({
     const id = setInterval(() => setElapsed((s) => s + 1), 1000);
     return () => clearInterval(id);
   }, [phase]);
+
+  /**
+   * Poster frame.
+   *
+   * A stream with no cover renders as an empty grey box everywhere it is
+   * listed, and most streams have none — nothing in the go-live flow ever
+   * required a picture. So the broadcast supplies its own: a frame off the
+   * video actually being published, shortly after it connects and then every
+   * few minutes, which also keeps the listing honest when the scene changes.
+   *
+   * Taken from the preview element rather than the track, so it captures
+   * whatever the compositor is publishing (camera bubble over a screen share
+   * included) — exactly what a viewer sees. Best-effort throughout: a failure
+   * here is a stale poster, never a broken broadcast, so nothing is surfaced
+   * to the creator.
+   */
+  useEffect(() => {
+    if (phase !== 'live' || !streamId) return;
+    let cancelled = false;
+
+    const capture = async () => {
+      const video = videoRef.current;
+      if (cancelled || !video || !video.videoWidth) return;
+      // A hidden tab stops feeding the element — the best a capture gets there
+      // is the last painted frame, and the worst is a blank one.
+      if (document.hidden) return;
+
+      const width = Math.min(POSTER_WIDTH, video.videoWidth);
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = Math.round((video.videoHeight / video.videoWidth) * width);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, 'image/jpeg', 0.7)
+      );
+      if (cancelled || !blob) return;
+
+      try {
+        await updateStreamThumbnail(streamId, blob);
+      } catch (error) {
+        logger.info('Poster frame upload failed', error);
+      }
+    };
+
+    const first = window.setTimeout(() => void capture(), POSTER_FIRST_DELAY_MS);
+    const repeat = window.setInterval(() => void capture(), POSTER_INTERVAL_MS);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(first);
+      window.clearInterval(repeat);
+    };
+  }, [phase, streamId]);
 
   const toggleMic = () => {
     // Muting happens at the RAW capture, upstream of the effect graph — never

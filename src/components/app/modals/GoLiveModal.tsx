@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
-import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus, Video, MonitorPlay, ScreenShare } from 'lucide-react';
+import { Radio, Loader2, Copy, Check, ExternalLink, Hash, ImagePlus, Search, X, Plus, Video, MonitorPlay, ScreenShare } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -70,6 +70,9 @@ const SCREEN_CONSTRAINTS: MediaTrackConstraints = {
   frameRate: { ideal: 30 },
 };
 
+/** Matches the server's cap on the thumbnail route. */
+const MAX_COVER_BYTES = 8 * 1024 * 1024;
+
 const MAX_CATEGORIES = 5;
 
 /**
@@ -94,6 +97,18 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  /*
+   * Optional cover image.
+   *
+   * Mobile has always required one and the web flow never asked, which is the
+   * whole reason streams started from a browser list as empty boxes. Optional
+   * here rather than required: the broadcaster grabs a frame off the live
+   * video a few seconds in, so a creator who skips this still ends up with a
+   * picture — it just will not be one they chose.
+   */
+  const [cover, setCover] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
   // The display capture taken at click time (see handleStartStream), handed to
   // the broadcaster once the mint lands. Mirrored in a ref because every
   // bail-out — dismissal, unmount, a failed mint — has to release it, and those
@@ -258,6 +273,21 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setSelectedCategory(next.join('|||'));
   };
 
+  /**
+   * Object URLs are not garbage-collected on their own. The effect owns the
+   * revoking — its cleanup runs both when a preview is replaced and on
+   * unmount — so choosing a cover never has to think about it.
+   */
+  const chooseCover = (file: File | null) => {
+    setCover(file);
+    setCoverPreview(file ? URL.createObjectURL(file) : null);
+  };
+
+  useEffect(() => {
+    if (!coverPreview) return;
+    return () => URL.revokeObjectURL(coverPreview);
+  }, [coverPreview]);
+
   const handleClose = () => {
     // Invalidate any in-flight go-live sequence — its continuation checks
     // this and bails instead of marking a dismissed stream live.
@@ -269,6 +299,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setTitle('');
     setDescription('');
     setSelectedCategory('');
+    chooseCover(null);
     setStreamData(null);
     // The broadcaster stops the tracks it adopted in its own teardown; this
     // only drops the reference so a reopened modal starts from a clean slate.
@@ -394,6 +425,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         postType: 'live',
         chainId: BASE_CHAIN_ID,
         category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
+        // Rides the mint as files[0], which is where the server reads a live
+        // post's cover from. Skipping it is fine — the broadcaster posts a
+        // frame off its own video once the stream is up.
+        thumbnail: cover ?? undefined,
         minterAddress,
         ingestPreference:
           ((await ingestReachable) && !hadRecentIngestFailure()) ||
@@ -721,6 +756,64 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   rows={3}
                   maxLength={500}
                 />
+              </div>
+
+              {/* Cover image — optional. Left empty, the broadcaster posts a
+                  frame off the live video a few seconds in, so the listing
+                  still gets a picture; this is the creator's chance to pick a
+                  better one. */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-zinc-400 flex items-center gap-2">
+                    <ImagePlus className="w-4 h-4" />
+                    Cover image
+                  </label>
+                  {cover ? (
+                    <button
+                      type="button"
+                      onClick={() => chooseCover(null)}
+                      className="text-xs text-white/50 hover:text-white"
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <span className="text-xs text-white/30">Optional</span>
+                  )}
+                </div>
+                <input
+                  ref={coverInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    if (file && file.size > MAX_COVER_BYTES) {
+                      toast.error('Cover image must be under 8 MB');
+                      e.target.value = '';
+                      return;
+                    }
+                    chooseCover(file);
+                    // Cleared so re-picking the same file still fires change.
+                    e.target.value = '';
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => coverInputRef.current?.click()}
+                  className={cn(
+                    'w-full aspect-video rounded-xl overflow-hidden border border-dashed border-zinc-700',
+                    'bg-zinc-800/60 flex items-center justify-center text-zinc-500 hover:border-zinc-500 hover:text-zinc-300 transition-colors'
+                  )}
+                >
+                  {coverPreview ? (
+                    <img src={coverPreview} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="flex flex-col items-center gap-1 text-xs">
+                      <ImagePlus className="w-5 h-5" />
+                      Add a cover
+                    </span>
+                  )}
+                </button>
               </div>
 
               <div className="space-y-2">
