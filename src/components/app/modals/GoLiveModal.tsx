@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { mintPost, getPostQuota, type PostQuotaStatus } from '@/lib/api/dehub/content';
+import { mintPost, getPostQuota, deletePost, type PostQuotaStatus } from '@/lib/api/dehub/content';
 import {
   probeIngestReachable,
   fetchTurnServers,
@@ -165,6 +165,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   useEffect(() => { streamDataRef.current = streamData; }, [streamData]);
   useEffect(() => { walletAddressRef.current = walletAddress; }, [walletAddress]);
   useEffect(() => { broadcastingRef.current = step === 'broadcasting'; }, [step]);
+  // Whether this go-live ever actually went on air (the broadcaster's WHIP
+  // session reached 'live' at least once). A launch that never did leaves a
+  // post advertising a stream nobody can ever watch, so every end path
+  // discards it instead of keeping it — see discardFailedLaunch.
+  const wentLiveRef = useRef(false);
 
   // mark-stream-live is fired without awaiting; every end path must sequence
   // its end-stream-session AFTER it settles, or a cold-started mark landing
@@ -187,6 +192,18 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       .catch(() => undefined);
   };
 
+  // A live post whose stream never went on air is pure feed pollution: no
+  // content, no replay, nothing anyone can ever watch. Discard it with the
+  // same soft delete the card menu runs, and tidy the live surfaces. Every
+  // call is best-effort — a cleanup that fails just leaves what a failed
+  // launch leaves today, a stranded row.
+  const discardFailedLaunch = (tokenId: string, streamId?: string) => {
+    logger.info('Discarding live post from failed launch', { tokenId, streamId });
+    deletePost(tokenId).catch((e) => logger.warn('Failed to discard dead live post', e));
+    if (streamId) endLiveStream(streamId).catch(() => undefined);
+    clearLiveSession(tokenId);
+  };
+
   // Route-change unmount (browser Back, link navigation): the broadcaster's
   // own cleanup stops the camera and the WHIP ingest, but nothing else clears
   // the live surfaces. Note what each call really does: end-stream-session
@@ -205,6 +222,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     if (!broadcastingRef.current) return;
     const data = streamDataRef.current;
     if (!data) return;
+    // Navigating away from a broadcast that never connected follows the same
+    // rule as an explicit end: the post advertises a stream that never existed.
+    if (data.tokenId && !wentLiveRef.current) {
+      deletePost(data.tokenId).catch(() => undefined);
+    }
     if (data.streamId) {
       endLiveStream(data.streamId).catch(() => undefined);
     }
@@ -317,6 +339,17 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // The unmount teardown must not double-fire after an explicit end.
     broadcastingRef.current = false;
 
+    // A browser broadcast that never actually connected has nothing behind its
+    // post — no stream happened, no replay will exist — so ending it discards
+    // the post rather than leaving a dead live card in the feed. The RTMP path
+    // (step 'ready') stays out of this: OBS connects out-of-band, so "never
+    // aired" is unknowable here.
+    if (step === 'broadcasting' && !wentLiveRef.current) {
+      discardFailedLaunch(streamData.tokenId, streamData.streamId);
+      handleClose();
+      return;
+    }
+
     // Plant the settings.status='ended' marker. This is client-honored only
     // (deriveIsLive reads it) — the backend's top-level status transitions
     // via the Livepeer idle webhook once ingest actually stops.
@@ -374,7 +407,14 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     }
 
     setIsLoading(true);
+    wentLiveRef.current = false;
     logger.info('User initiated "Go Live"', { title, source, selectedCategoriesArray });
+
+    // Once the mint lands these identify the post this launch created, so the
+    // bail-outs and the catch below can discard it — a launch that dies (or is
+    // dismissed) after minting must not leave a dead live post in the feed.
+    let mintedTokenId: string | null = null;
+    let mintedStreamId: string | undefined;
 
     // Bail points for a dismissal that arrives mid-sequence. Everything after
     // a bail is skipped — critically startLiveStream / mark-stream-live / the
@@ -385,6 +425,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     const wasDismissed = () => {
       if (goLiveRunRef.current === run) return false;
       releasePendingScreen();
+      if (mintedTokenId) discardFailedLaunch(mintedTokenId, mintedStreamId);
       return true;
     };
 
@@ -451,6 +492,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       });
 
       const tokenId = mintResponse.createdTokenId;
+      mintedTokenId = String(tokenId);
       logger.info('NFT Minted via API', { tokenId });
       if (wasDismissed()) return;
 
@@ -521,6 +563,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         if (wasDismissed()) return;
       }
 
+      if (streamId) mintedStreamId = streamId;
       if (wasDismissed()) return;
       if (!streamKey) {
         throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
@@ -570,12 +613,9 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       } catch (e) {
         logger.warn('startLiveStream (settings) failed (non-blocking)', e);
       }
-      if (wasDismissed()) {
-        // Undo the settings marker just written — this is the only bail
-        // point past that PATCH, so the compensation lives here.
-        endLiveStream(streamId).catch(() => undefined);
-        return;
-      }
+      // The dismissal discard (via wasDismissed) also unwinds the settings
+      // marker the PATCH above just wrote.
+      if (wasDismissed()) return;
 
       // Final fallback: standard Livepeer RTMP URL. Only Livepeer's — a
       // self-hosted stream publishes to its own host, and handing its
@@ -633,7 +673,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       // bar for a stream that never happened.
       releasePendingScreen();
       logger.error('Failed to start stream', { title, selectedCategory }, error);
-      
+      // The mint may already have landed; without this the failed launch
+      // leaves a dead "live" post stranded at the head of the feed.
+      if (mintedTokenId) discardFailedLaunch(mintedTokenId, mintedStreamId);
+
       const errorMsg = error instanceof Error ? error.message : '';
       const isWeb3AuthError = errorMsg.includes('Web3Auth');
       // "overflow" or "INVALID_ARGUMENT" often happen during gas calculation or signing
@@ -869,6 +912,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                     initialScreenStream={screenStream}
                     streamId={streamData.streamId}
                     onEnd={handleEndStream}
+                    onLive={() => { wentLiveRef.current = true; }}
                   />
                 </Suspense>
               </BroadcasterBoundary>
