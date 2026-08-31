@@ -220,6 +220,10 @@ export async function publishToWhip({
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: pc.localDescription?.sdp ?? '',
+      // A host the network silently drops (null-routed IP, hostile middlebox)
+      // leaves this fetch pending for minutes while the UI says "Connecting…".
+      // Cap it so the creator gets an error screen they can act on instead.
+      signal: AbortSignal.timeout(15_000),
     });
 
     if (!response.ok) {

@@ -32,6 +32,12 @@ export interface MintPostParams {
   thumbnail?: Blob;
   minterAddress: string;
   /**
+   * Live posts only. 'livepeer' reports that this browser probed the
+   * self-hosted ingest and could not reach it (some ISPs null-route the
+   * droplet's bare IP), so the server should create the stream on Livepeer.
+   */
+  ingestPreference?: 'livepeer';
+  /**
    * Publish without minting on-chain. The post lands in feeds as soon as this
    * call returns and the client skips the contract step entirely.
    */
@@ -126,6 +132,10 @@ export async function mintPost(
 
   if (params.mintOptOut) {
     formData.append('mintOptOut', 'true');
+  }
+
+  if (params.ingestPreference) {
+    formData.append('ingestPreference', params.ingestPreference);
   }
 
   if (params.idempotencyKey) {
