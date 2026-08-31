@@ -158,6 +158,45 @@ export function clearBiometricOfferDecline(userId: string): void {
   } catch { /* ignore */ }
 }
 
+// ── Password-backup reminder memory ─────────────────────────────────────────
+// After a biometric unlock of a wallet with no password wrap, the unlock
+// screen warns that the wallet is one lost device from unreachable and offers
+// to add a password backup. Unlike the enrolment decline above, "not now" here
+// is a snooze, not a permanent no: the risk doesn't go away, so the reminder
+// returns after a while — just never at back-to-back unlocks. Device-local on
+// purpose, same as the decline memory, and self-expiring so the map can't
+// grow stale entries.
+
+const PASSWORD_REMINDER_SNOOZE_KEY = "dehub_password_backup_snooze";
+const PASSWORD_REMINDER_SNOOZE_MS = 7 * 24 * 60 * 60 * 1000; // a week
+
+function readPasswordSnoozes(): Record<string, number> {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(PASSWORD_REMINDER_SNOOZE_KEY) || "{}");
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    return Object.fromEntries(
+      Object.entries(parsed).filter((e): e is [string, number] => typeof e[1] === "number"),
+    );
+  } catch {
+    return {};
+  }
+}
+
+export function isPasswordBackupReminderSnoozed(userId: string): boolean {
+  const until = readPasswordSnoozes()[userId];
+  return typeof until === "number" && Date.now() < until;
+}
+
+export function snoozePasswordBackupReminder(userId: string): void {
+  try {
+    const now = Date.now();
+    const live = Object.entries(readPasswordSnoozes()).filter(([, until]) => until > now);
+    const entries: [string, number][] = [...live, [userId, now + PASSWORD_REMINDER_SNOOZE_MS]];
+    const next = Object.fromEntries(entries.slice(-MAX_REMEMBERED_USERS));
+    localStorage.setItem(PASSWORD_REMINDER_SNOOZE_KEY, JSON.stringify(next));
+  } catch { /* private mode — worst case they're reminded again */ }
+}
+
 // ── "Biometrics have worked on this device" memory ──────────────────────────
 // Wraps live in user_wallet_passkeys, which is account-wide: enrolling on a
 // phone writes a row that a desktop browser can read but generally cannot use.
