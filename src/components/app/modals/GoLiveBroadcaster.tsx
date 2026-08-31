@@ -52,6 +52,8 @@ import {
   edgeWhipEndpointFor,
   probeIngestReachable,
   fetchTurnServers,
+  markIngestUnreachable,
+  clearIngestUnreachable,
 } from '@/lib/live-ingest';
 
 // The chat is a heavy component (mentions, voice notes, realtime) and most
@@ -134,8 +136,24 @@ function formatElapsed(seconds: number): string {
   return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
 }
 
+/**
+ * The failure shapes that mean the network ate the request — the WHIP POST
+ * aborted on its own cap, or died without ever getting a response — as
+ * opposed to a camera or permission problem. One definition, because two
+ * things key off it: the error copy must not blame the camera, and a direct
+ * self-hosted connect dying this way leaves the unreachable marker that
+ * steers the next mint to Livepeer.
+ */
+function isNetworkShapedError(error: unknown): boolean {
+  const name = (error as DOMException)?.name;
+  return name === 'TimeoutError' || name === 'AbortError' || error instanceof TypeError;
+}
+
 /** Turns the DOM's terse permission errors into something a creator can act on. */
 function describeMediaError(error: unknown): string {
+  if (isNetworkShapedError(error)) {
+    return 'Could not reach the streaming server. Check your connection or try again on another network (a VPN often helps).';
+  }
   const name = (error as DOMException)?.name;
   switch (name) {
     case 'NotAllowedError':
@@ -146,16 +164,7 @@ function describeMediaError(error: unknown): string {
       return 'No camera or microphone was found on this device.';
     case 'NotReadableError':
       return 'Your camera is already in use by another app. Close it and try again.';
-    // The WHIP POST aborted on its own cap, or died without a response —
-    // the network between this browser and the streaming server is the
-    // problem, not the camera, and the wording should not blame the camera.
-    case 'TimeoutError':
-    case 'AbortError':
-      return 'Could not reach the streaming server. Check your connection or try again on another network (a VPN often helps).';
     default:
-      if (error instanceof TypeError) {
-        return 'Could not reach the streaming server. Check your connection or try again on another network (a VPN often helps).';
-      }
       return error instanceof Error ? error.message : 'Could not start your camera.';
   }
 }
@@ -763,27 +772,44 @@ export function GoLiveBroadcaster({
           }
         }
         if (cancelled) return;
+        // Direct self-hosted signaling, no relay in front of it — the one
+        // path whose network failure teaches the next mint something.
+        const directSelfHosted = Boolean(endpointBits.url) && !relayIce;
 
-        const session = await publishToWhip({
-          streamKey,
-          stream,
-          ...endpointBits,
-          iceServers: relayIce,
-          onStateChange: (state: WhipState, detail) => {
-            if (cancelled) return;
-            if (state === 'live') setPhase('live');
-            else if (state === 'reconnecting') setPhase('reconnecting');
-            else if (state === 'failed') {
-              setPhase('error');
-              setErrorMessage(detail || 'The broadcast connection failed.');
-              // Unrecoverable: nothing here retries a 'failed' connection, so
-              // holding the camera, mic, and wake lock on a dead error screen
-              // is pure leak (hardware light on, phone kept awake). Stop the
-              // local capture; the End button still runs the backend teardown.
-              void teardown();
-            }
-          },
-        });
+        let session: WhipSession;
+        try {
+          session = await publishToWhip({
+            streamKey,
+            stream,
+            ...endpointBits,
+            iceServers: relayIce,
+            onStateChange: (state: WhipState, detail) => {
+              if (cancelled) return;
+              if (state === 'live') {
+                // A byte actually arrived over the direct path: whatever this
+                // device remembered about the ingest being unreachable is stale.
+                if (directSelfHosted) clearIngestUnreachable();
+                setPhase('live');
+              } else if (state === 'reconnecting') setPhase('reconnecting');
+              else if (state === 'failed') {
+                setPhase('error');
+                setErrorMessage(detail || 'The broadcast connection failed.');
+                // Unrecoverable: nothing here retries a 'failed' connection, so
+                // holding the camera, mic, and wake lock on a dead error screen
+                // is pure leak (hardware light on, phone kept awake). Stop the
+                // local capture; the End button still runs the backend teardown.
+                void teardown();
+              }
+            },
+          });
+        } catch (error) {
+          // The signaling POST itself died while pointed straight at the
+          // ingest. Remember that, so the next mint on this device prefers
+          // Livepeer over re-running the same optimistic probe into the same
+          // wall — a stuck creator's real behaviour is to retry in a loop.
+          if (directSelfHosted && isNetworkShapedError(error)) markIngestUnreachable();
+          throw error;
+        }
 
         if (cancelled) {
           await session.stop();
