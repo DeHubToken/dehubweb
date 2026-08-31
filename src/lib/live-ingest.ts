@@ -69,6 +69,23 @@ export function whipEndpointFor(
  * timeout says it is closed. With no host configured the answer is true —
  * every stream is Livepeer then and the question never matters.
  */
+/**
+ * Why the last probe / TURN lookup failed, as `ErrorName: message`, empty
+ * while none has. Kept as bare exports (this module must stay import-free —
+ * boot path) so the go-live telemetry can report them: the field failure
+ * under investigation is a browser whose probe and TURN fetches both die
+ * while the SAME requests visibly arrive and get answered at nginx — the
+ * error name is the only thing that distinguishes an abort from a network
+ * throw from a response that never surfaced.
+ */
+export let lastProbeFailure = '';
+export let lastTurnFailure = '';
+
+const describeFailure = (error: unknown): string => {
+  const e = error as { name?: string; message?: string } | null;
+  return `${e?.name || 'Error'}: ${String(e?.message || '').slice(0, 120)}`;
+};
+
 export async function probeIngestReachable(timeoutMs = 4000): Promise<boolean> {
   if (!MEDIAMTX_HOST) return true;
   try {
@@ -78,8 +95,10 @@ export async function probeIngestReachable(timeoutMs = 4000): Promise<boolean> {
       cache: 'no-store',
       signal: AbortSignal.timeout(timeoutMs),
     });
+    lastProbeFailure = '';
     return true;
-  } catch {
+  } catch (error) {
+    lastProbeFailure = describeFailure(error);
     return false;
   }
 }
@@ -223,12 +242,17 @@ export function fetchTurnServers(): Promise<RTCIceServer[]> {
         const res = await fetch('https://api.dehub.io/api/live/turn-credentials', {
           signal: AbortSignal.timeout(5000),
         });
-        if (!res.ok) return [];
+        if (!res.ok) {
+          lastTurnFailure = `HTTP ${res.status}`;
+          return [];
+        }
         const body = (await res.json()) as { iceServers?: RTCIceServer[] };
+        lastTurnFailure = '';
         return Array.isArray(body.iceServers) ? body.iceServers : [];
-      } catch {
+      } catch (error) {
         // A failed lookup must never break the direct path; it only means
         // "no relay available right now".
+        lastTurnFailure = describeFailure(error);
         turnServersPromise = null;
         return [];
       }
