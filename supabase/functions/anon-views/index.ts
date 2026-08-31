@@ -16,10 +16,13 @@
  * never stored. That hash cannot go into the DeHub API's own dedup, which is a
  * Redis set of wallet addresses, which is why this half is deduped separately.
  *
- * Once deduped, the surviving views are FORWARDED to the DeHub API, which folds
- * them into the post's `totalViews`. That is the number the apps render. Clients
- * used to fetch this store separately and add it on at display time, which is
- * why a post's view count painted low and then jumped a moment later.
+ * Dedup sorts the views, it no longer discards any. Everything is FORWARDED to
+ * the DeHub API, which folds it into the post's `totalViews` — the number the
+ * apps render: first-of-the-day views as `tokenIds`, the rest as
+ * `repeatTokenIds`, which count on videos and are ignored on text and image
+ * posts. Clients used to fetch this store separately and add it on at display
+ * time, which is why a post's view count painted low and then jumped a moment
+ * later.
  *
  * Endpoints (verify_jwt = false — anonymous by definition):
  *   POST /            { tokenIds: string[], deviceId: string } → { recorded }
@@ -118,8 +121,8 @@ async function hashViewer(deviceId: string, ip: string): Promise<string> {
  * a later request and the totals table still holds the truth for a re-import.
  * The viewer's own request must never fail because of this.
  */
-async function forwardToDeHub(tokenIds: string[]): Promise<void> {
-  if (tokenIds.length === 0) return;
+async function forwardToDeHub(tokenIds: string[], repeatTokenIds: string[] = []): Promise<void> {
+  if (tokenIds.length === 0 && repeatTokenIds.length === 0) return;
 
   const serviceKey = Deno.env.get('VIEW_SERVICE_KEY');
   if (!serviceKey) {
@@ -138,7 +141,10 @@ async function forwardToDeHub(tokenIds: string[]): Promise<void> {
         'Accept': 'application/json',
         'x-service-key': serviceKey,
       },
-      body: JSON.stringify({ tokenIds: tokenIds.map(Number) }),
+      body: JSON.stringify({
+        tokenIds: tokenIds.map(Number),
+        repeatTokenIds: repeatTokenIds.map(Number),
+      }),
       signal: controller.signal,
     });
 
@@ -241,11 +247,28 @@ Deno.serve(async (req) => {
       }
 
       const newIds = Array.isArray(data) ? (data as string[]) : [];
-      console.log(`[anon-views] recorded ${newIds.length}/${tokenIds.length} anonymous views`);
 
-      await forwardToDeHub(newIds);
+      // The ledger above still records one row per viewer per post per day —
+      // that table is the record of unique signed-out VIEWERS and stays that.
+      // But the ids it deduped away are real views of real posts, and used to
+      // be dropped here. They go on to the API as repeats, which counts them on
+      // videos and ignores them elsewhere. The split is the whole reason this
+      // forward names two lists.
+      const newIdSet = new Set(newIds);
+      const repeatIds = tokenIds.filter((id) => !newIdSet.has(id));
 
-      return json({ success: true, recorded: newIds.length, submitted: tokenIds.length });
+      console.log(
+        `[anon-views] recorded ${newIds.length}/${tokenIds.length} anonymous views (${repeatIds.length} repeat)`,
+      );
+
+      await forwardToDeHub(newIds, repeatIds);
+
+      return json({
+        success: true,
+        recorded: newIds.length,
+        repeats: repeatIds.length,
+        submitted: tokenIds.length,
+      });
     }
 
     return errorResponse('Method not allowed', 405);
