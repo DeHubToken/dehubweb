@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
+import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -39,7 +40,7 @@ interface DialogContentProps extends React.ComponentPropsWithoutRef<typeof Dialo
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, children, hideCloseButton, overlayClassName, ...props }, ref) => (
+>(({ className, children, hideCloseButton, overlayClassName, onPointerDownOutside, ...props }, ref) => (
   <DialogPortal>
     {/* Dialogs render as bottom sheets on mobile at z-50 — below the sticky
         feed navs (z-110) and mobile header (z-60). Registering here lets that
@@ -65,6 +66,10 @@ const DialogContent = React.forwardRef<
         className,
       )}
       {...props}
+      /* After the spread: a sheet, Select, menu or toast opened from inside this
+         dialog portals to `body`, so its own clicks look like clicks off the
+         dialog. They are not (lib/overlay-dismiss). */
+      onPointerDownOutside={guardOutsideDismiss(onPointerDownOutside)}
     >
       {/* Mobile drag handle */}
       {!hideCloseButton && <div className="mx-auto h-1.5 w-12 rounded-full bg-white/30 sm:hidden" />}
