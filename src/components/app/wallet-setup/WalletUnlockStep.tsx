@@ -85,7 +85,9 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   const [wraps, setWraps] = useState<PasskeyWrap[]>([]);
   const [biometricAvailable, setBiometricAvailable] = useState<boolean | null>(null);
   const [noWalletOnServer, setNoWalletOnServer] = useState(false);
+  const [stateUnknown, setStateUnknown] = useState(false);
   const [probing, setProbing] = useState(true);
+  const [probeNonce, setProbeNonce] = useState(0);
   // Held only across the post-password enrolment offer, then dropped.
   const [pendingSecret, setPendingSecret] = useState<string | null>(null);
   const [showPasswordAnyway, setShowPasswordAnyway] = useState(false);
@@ -95,16 +97,18 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   // Decide up front what this device + account can actually offer.
   useEffect(() => {
     let cancelled = false;
+    setProbing(true);
     getWalletProtection(userId).then((p) => {
       if (cancelled) return;
       setWallet(p.wallet);
       setBiometricAvailable(p.biometricAvailable);
       setWraps(p.wraps);
       setNoWalletOnServer(p.noWalletOnServer);
+      setStateUnknown(p.stateUnknown);
       setProbing(false);
     });
     return () => { cancelled = true; };
-  }, [userId]);
+  }, [userId, probeNonce]);
 
   const hasPasswordWrap = !!wallet?.payload;
   const canUseBiometrics = biometricAvailable === true && wraps.length > 0;
@@ -746,6 +750,35 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         // mark's fade-in animates `opacity` and would win over that.
         className="[&_span]:text-white/50"
       />
+    );
+  }
+
+  // The probe learned nothing: the reads failed, or ran without a live
+  // Supabase session for this user — where RLS answers with zero rows, so a
+  // wallet with a password wrap and enrolled devices looks exactly like a
+  // bare biometrics-only one. Falling through would assert that guess as
+  // fact ("no password, no biometrics here") and hide the password box that
+  // would have worked. Say what happened and what fixes it instead.
+  if (stateUnknown) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
+          <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+          <p>
+            We couldn’t check how your wallet is protected on this device — the secure session
+            here has expired, or the connection dropped. Your wallet is unaffected. Try again,
+            or log out and sign back in on this device to refresh it.
+          </p>
+        </div>
+        {error && <p className="text-sm text-red-400">{error}</p>}
+        <Button
+          onClick={() => { setError(null); setProbeNonce((n) => n + 1); }}
+          className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+        >
+          Try again
+        </Button>
+        {recoveryAndLogoutLinks}
+      </div>
     );
   }
 
