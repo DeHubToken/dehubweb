@@ -111,6 +111,18 @@ function firstPrfBytes(prf: PrfExtensionOutput | undefined): Uint8Array | null {
   return bytes.length >= 32 ? bytes : null;
 }
 
+/**
+ * The BS ("backup state") bit from WebAuthn authenticator data — flags byte at
+ * offset 32, bit 0x10. Set when the credential lives in a syncing provider
+ * (Google Password Manager, iCloud Keychain) and so can answer from the user's
+ * other devices; clear for one bound to the authenticator that made it
+ * (Windows Hello). null when the browser can't hand us the bytes.
+ */
+function readBackupState(authData: ArrayBuffer | null | undefined): boolean | null {
+  if (!authData || authData.byteLength < 33) return null;
+  return (new Uint8Array(authData)[32] & 0x10) !== 0;
+}
+
 /** Map a WebAuthn DOMException onto our two meaningful outcomes. */
 function classifyWebAuthnError(err: unknown): Error {
   const name = (err as { name?: string } | null)?.name;
@@ -169,6 +181,14 @@ export interface PasskeyEnrollment {
   keyMaterial: Uint8Array;
   /** Suggested display label. */
   label: string;
+  /**
+   * AuthenticatorTransport list ("internal", "hybrid", …). "hybrid" means the
+   * credential can answer from another device via the browser's QR handoff.
+   * Empty when the browser can't say.
+   */
+  transports: string[];
+  /** BS flag — synced passkey vs bound to this device. null when unreadable. */
+  backedUp: boolean | null;
 }
 
 /**
@@ -232,6 +252,19 @@ export async function enrollWalletPasskey(opts: {
   if (!credential) throw new PasskeyCancelledError();
 
   const credentialId = bufToBase64Url(credential.rawId);
+  // Both accessors postdate the lib.dom this project pins, hence the cast.
+  const attestation = credential.response as AuthenticatorAttestationResponse & {
+    getTransports?: () => string[];
+    getAuthenticatorData?: () => ArrayBuffer;
+  };
+  let transports: string[] = [];
+  let backedUp: boolean | null = null;
+  try {
+    transports = typeof attestation.getTransports === "function" ? attestation.getTransports() : [];
+    backedUp = readBackupState(
+      typeof attestation.getAuthenticatorData === "function" ? attestation.getAuthenticatorData() : null,
+    );
+  } catch { /* metadata only — never fail an enrolment over it */ }
   const prf = readPrfOutput(credential);
 
   // An explicit `enabled: false` means this credential will never do PRF. The
@@ -256,6 +289,8 @@ export async function enrollWalletPasskey(opts: {
     prfSalt: bytesToBase64(prfSalt),
     keyMaterial,
     label: describeThisDevice(),
+    transports,
+    backedUp,
   };
 }
 
@@ -270,6 +305,12 @@ export interface PrfEvaluation {
   /** Which of the offered credentials actually responded. */
   credentialId: string;
   keyMaterial: Uint8Array;
+  /**
+   * BS flag from the assertion — the responding credential is synced (can
+   * answer from other devices) vs bound to this one. null when unreadable.
+   * Rows enrolled before this was recorded backfill from it on unlock.
+   */
+  backedUp: boolean | null;
 }
 
 /**
@@ -331,8 +372,15 @@ export async function evaluatePrf(refs: PasskeyRef[]): Promise<PrfEvaluation> {
   // Fall back to the single offered ref when the id doesn't round-trip
   // byte-identically (padding/encoding differences across platforms).
   const matched = refs.find((r) => r.credentialId === respondedId);
+  let backedUp: boolean | null = null;
+  try {
+    backedUp = readBackupState(
+      (assertion.response as AuthenticatorAssertionResponse).authenticatorData,
+    );
+  } catch { /* metadata only */ }
   return {
     credentialId: matched?.credentialId ?? (refs.length === 1 ? refs[0].credentialId : respondedId),
     keyMaterial,
+    backedUp,
   };
 }
