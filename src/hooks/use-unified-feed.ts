@@ -837,7 +837,24 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
     const newest = chronological && newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
     if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false };
 
+    // Only count rows the list would actually render. Live rows never enter
+    // the feed (loadUnifiedFeedPage drops them for the carousel), and a
+    // stranded "live" post from a failed stream launch sits at the head of the
+    // chronological sort indefinitely — counting it makes the pill claim new
+    // posts that clicking can never surface.
+    const blockList = queryClient.getQueryData<Array<{ address: string }>>(['block-list']);
+    const blockedAddresses = blockList?.length
+      ? new Set(blockList.map(u => u.address.toLowerCase()))
+      : undefined;
+
     const newer = (data.result || []).filter((item) => {
+      if (
+        item.postType === 'live' ||
+        isBlockedPost(item) ||
+        isBlockedCreator(item, blockedAddresses)
+      ) {
+        return false;
+      }
       // Same normalisation loadUnifiedFeedPage applies, so a row missing
       // createdAt doesn't read as epoch zero and get counted as old.
       const raw =
@@ -851,5 +868,5 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
       // Every row came back newer, so there are likely more than were fetched.
       atCap: newer.length >= NEW_POSTS_HEAD_SIZE,
     };
-  }, [data, newestCreatedAt, chronological]);
+  }, [data, newestCreatedAt, chronological, queryClient]);
 }
