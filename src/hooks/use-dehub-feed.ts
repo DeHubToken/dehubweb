@@ -97,8 +97,18 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const tokenId = nft.tokenId || nft.id || nft.token_id;
   const id = String(tokenId);
 
-  // Get thumbnail with CDN URL
-  const thumbnail = getMediaUrl(nft.imageUrl) ||
+  // Get thumbnail with CDN URL.
+  //
+  // A live post keeps its poster on the nested stream, not on the token —
+  // /api/feed answers live items with no imageUrl at all — so reading only the
+  // token fields dropped every live cover on the floor and handed the card a
+  // random stock photo instead. The stream's own thumbnail comes first for
+  // live posts because the broadcaster refreshes it while the stream runs,
+  // making it the newer of the two.
+  const streamThumbnail = (nft as any).stream?.thumbnail as string | undefined;
+  const thumbnail =
+    ((nft.postType as string) === 'live' ? getMediaUrl(streamThumbnail) : '') ||
+    getMediaUrl(nft.imageUrl) ||
     getMediaUrl(nft.thumbnail_url) ||
     getMediaUrl(nft.media_url) ||
     FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];

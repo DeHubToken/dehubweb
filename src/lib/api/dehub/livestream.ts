@@ -1,4 +1,4 @@
-import { apiCall } from './core';
+import { apiCall, authedUpload } from './core';
 import type { DeHubUser } from './types';
 
 export interface LiveStream {
@@ -274,3 +274,31 @@ export const endLivestream = async () => ({ success: true });
 
 // DHB Price — re-exported from payments for backward compatibility
 export { getDHBPrice } from './payments';
+
+/**
+ * Set or refresh a stream's poster frame.
+ *
+ * Two callers. The creator picks a cover before going live (that one rides
+ * along with the mint, not this call), and the broadcaster posts a frame off
+ * its own outgoing video every couple of minutes while the stream runs — so a
+ * broadcast nobody gave a cover to still shows what is on it instead of an
+ * empty box.
+ *
+ * `streamId` is the Mongo ObjectId, like every other /api/live/:id route; a
+ * tokenId 500s with a CastError. Owner-gated server-side.
+ */
+export async function updateStreamThumbnail(
+  streamId: string,
+  frame: Blob,
+): Promise<{ thumbnail: string }> {
+  const formData = new FormData();
+  formData.append('thumbnail', frame, 'thumbnail.jpg');
+  return authedUpload<{ thumbnail: string }>(
+    `/api/live/${streamId}/thumbnail`,
+    formData,
+    // A poster frame is tens of kilobytes. The mint path's eight-minute budget
+    // exists for video uploads and would leave a dead refresh hanging for the
+    // whole broadcast.
+    { timeoutMs: 30_000 },
+  );
+}
