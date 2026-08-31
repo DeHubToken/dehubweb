@@ -3,14 +3,26 @@
 // One answer, shared by the unlock screen and Settings, so the two can never
 // disagree about whether biometrics or a password is available.
 import { supabase } from "@/integrations/supabase/client";
+import { classifyPayloadKind } from "./crypto";
 import { fetchWallet, getCachedWallet, type StoredWallet } from "./store";
 import { isBiometricUnlockAvailable } from "./passkey";
 import { getCachedPasskeyWraps, loadPasskeyWraps, type PasskeyWrap } from "./passkey-store";
 
 export interface WalletProtection {
   wallet: StoredWallet | null;
-  /** A password wrap exists for this wallet. */
+  /**
+   * A password wrap exists for this wallet. Judged from the payload's KDF
+   * header, not mere presence: the mobile app's biometric wallets write an
+   * hkdf-wrapped seed into the same column, and offering a password box for
+   * one of those is a dead end no password can ever get through.
+   */
   hasPassword: boolean;
+  /**
+   * The stored seed is wrapped under passkey/device key material (hkdf), i.e.
+   * a mobile-app biometric wallet. The remedy lives on the device that made
+   * it — say that, instead of asking for a password that does not exist.
+   */
+  seedIsPasskeyWrapped: boolean;
   /** Biometric wraps enrolled for this account (on any device). */
   wraps: PasskeyWrap[];
   /** This browser has a user-verifying platform authenticator. */
@@ -89,9 +101,12 @@ export async function getWalletProtection(userId: string): Promise<WalletProtect
   // does, or a device whose biometrics work fine gets told it has none.
   if (!authedRead && wraps.length === 0) wraps = getCachedPasskeyWraps();
 
+  const payloadKind = wallet?.payload ? classifyPayloadKind(wallet.payload.ciphertext) : null;
+
   return {
     wallet,
-    hasPassword: !!wallet?.payload,
+    hasPassword: payloadKind === "password" || payloadKind === "unknown",
+    seedIsPasskeyWrapped: payloadKind === "passkey",
     wraps,
     biometricAvailable,
     canUseBiometrics: biometricAvailable && wraps.length > 0,

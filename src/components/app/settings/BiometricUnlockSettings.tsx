@@ -349,6 +349,14 @@ export function BiometricUnlockSettings() {
                     <p className="text-zinc-500 text-xs">
                       {added ? `Added ${added}` : 'Added recently'}
                       {used ? ` · last used ${used}` : ''}
+                      {/* Recorded at enrolment (backfilled on unlock): a synced
+                          passkey answers from the user's other devices via the
+                          browser's QR handoff; a device-bound one cannot. */}
+                      {wrap.backedUp === true
+                        ? ' · synced passkey — works from your other devices'
+                        : wrap.backedUp === false
+                          ? ' · this device only'
+                          : ''}
                     </p>
                   </div>
                   <Button
@@ -384,8 +392,9 @@ export function BiometricUnlockSettings() {
               <div className="min-w-0">
                 <p className="text-white text-sm font-medium">No password backup</p>
                 <p className="text-zinc-400 text-xs">
-                  Biometrics is the only way into this wallet. Add a password so a lost device isn’t a
-                  lost wallet.
+                  {protection.seedIsPasskeyWrapped && !canUseBiometrics
+                    ? 'Biometrics is the only way into this wallet, and it was set up in the DeHub mobile app — add a password from that app’s settings so a lost phone isn’t a lost wallet.'
+                    : 'Biometrics is the only way into this wallet. Add a password so a lost device isn’t a lost wallet.'}
                 </p>
               </div>
             </div>

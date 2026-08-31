@@ -18,6 +18,10 @@ export interface PasskeyWrap extends PasskeyRef {
   label: string | null;
   createdAt: string | null;
   lastUsedAt: string | null;
+  /** AuthenticatorTransport list; "hybrid" = reachable from another device via QR. null = unknown (pre-migration row). */
+  transports: string[] | null;
+  /** Synced passkey (true) vs bound to its device (false); null = unknown. */
+  backedUp: boolean | null;
 }
 
 const CACHE_KEY = "dehub_wallet_passkeys";
@@ -43,6 +47,8 @@ function rowToWrap(row: any): PasskeyWrap {
     label: row.label ?? null,
     createdAt: row.created_at ?? null,
     lastUsedAt: row.last_used_at ?? null,
+    transports: Array.isArray(row.transports) ? row.transports : null,
+    backedUp: typeof row.backed_up === "boolean" ? row.backed_up : null,
   };
 }
 
@@ -75,7 +81,7 @@ export function clearPasskeyCache(): void {
 export async function fetchPasskeyWraps(userId: string): Promise<PasskeyWrap[]> {
   const { data, error } = await db()
     .from("user_wallet_passkeys")
-    .select("credential_id, prf_salt, encrypted_seed, salt, iv, kdf_iterations, label, created_at, last_used_at")
+    .select("credential_id, prf_salt, encrypted_seed, salt, iv, kdf_iterations, label, created_at, last_used_at, transports, backed_up")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message || "Failed to load biometric unlock");
@@ -104,7 +110,14 @@ export async function loadPasskeyWraps(userId: string): Promise<PasskeyWrap[]> {
 
 export async function savePasskeyWrap(
   userId: string,
-  wrap: { credentialId: string; prfSalt: string; payload: EncryptedPayload; label?: string | null },
+  wrap: {
+    credentialId: string;
+    prfSalt: string;
+    payload: EncryptedPayload;
+    label?: string | null;
+    transports?: string[] | null;
+    backedUp?: boolean | null;
+  },
 ): Promise<void> {
   const { error } = await db().from("user_wallet_passkeys").upsert(
     {
@@ -116,6 +129,8 @@ export async function savePasskeyWrap(
       iv: wrap.payload.iv,
       kdf_iterations: wrap.payload.iterations,
       label: wrap.label ?? null,
+      transports: wrap.transports ?? null,
+      backed_up: wrap.backedUp ?? null,
       last_used_at: new Date().toISOString(),
     },
     { onConflict: "user_id,credential_id" },
@@ -159,11 +174,21 @@ export async function getPasskeyAccountLabel(): Promise<string | undefined> {
 }
 
 /** Best-effort "last used" bookkeeping for the Settings list. Never throws. */
-export async function touchPasskeyWrap(userId: string, credentialId: string): Promise<void> {
+export async function touchPasskeyWrap(
+  userId: string,
+  credentialId: string,
+  backedUp?: boolean | null,
+): Promise<void> {
   try {
     await db()
       .from("user_wallet_passkeys")
-      .update({ last_used_at: new Date().toISOString() })
+      .update({
+        last_used_at: new Date().toISOString(),
+        // Backfills rows enrolled before backup state was recorded, and tracks
+        // the one legitimate flip: a device-bound credential joining a syncing
+        // provider later. Undefined/null means the assertion didn't say.
+        ...(typeof backedUp === "boolean" ? { backed_up: backedUp } : {}),
+      })
       .eq("user_id", userId)
       .eq("credential_id", credentialId);
   } catch { /* cosmetic only */ }

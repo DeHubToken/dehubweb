@@ -42,6 +42,8 @@ export async function enrollBiometricUnlock(userId: string, secret: string): Pro
     prfSalt: enrollment.prfSalt,
     payload,
     label: enrollment.label,
+    transports: enrollment.transports,
+    backedUp: enrollment.backedUp,
   });
   markBiometricUsableHere(userId);
   return {
@@ -51,6 +53,8 @@ export async function enrollBiometricUnlock(userId: string, secret: string): Pro
     label: enrollment.label,
     createdAt: null,
     lastUsedAt: null,
+    transports: enrollment.transports,
+    backedUp: enrollment.backedUp,
   };
 }
 
@@ -73,7 +77,7 @@ export async function unlockWithBiometrics(
   }
 
   const refs: PasskeyRef[] = wraps.map((w) => ({ credentialId: w.credentialId, prfSalt: w.prfSalt }));
-  const { credentialId, keyMaterial } = await evaluatePrf(refs);
+  const { credentialId, keyMaterial, backedUp } = await evaluatePrf(refs);
 
   const ordered = [
     ...wraps.filter((w) => w.credentialId === credentialId),
@@ -85,7 +89,7 @@ export async function unlockWithBiometrics(
     for (const wrap of ordered) {
       try {
         const secret = await decryptStringWithKeyMaterial(wrap.payload, keyMaterial);
-        void touchPasskeyWrap(userId, wrap.credentialId);
+        void touchPasskeyWrap(userId, wrap.credentialId, backedUp);
         markBiometricUsableHere(userId);
         return secret;
       } catch (err) {
