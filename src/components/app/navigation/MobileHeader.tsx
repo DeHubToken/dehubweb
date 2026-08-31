@@ -12,7 +12,7 @@ import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
-import { useScrollDirection } from '@/hooks/use-scroll-direction';
+import { useScrollDirection, SCROLL_NAV_SOURCE_ATTR } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { warmLoginSheet } from '@/components/app/LoginModal';
@@ -100,8 +100,14 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
     const getY = () =>
       window.scrollY || document.documentElement.scrollTop || document.body.scrollTop ||
       document.getElementById('app-root')?.scrollTop || 0;
+    // The post layer scrolls itself rather than the document, so read it too —
+    // otherwise the header stays clear over a scrolled post.
+    const getSourceY = () => {
+      const source = document.querySelector<HTMLElement>(`[${SCROLL_NAV_SOURCE_ATTR}]`);
+      return Math.max(getY(), source?.scrollTop ?? 0);
+    };
     const onScroll = () => {
-      const next = getY() > 8;
+      const next = getSourceY() > 8;
       if (next !== scrolledRef.current) {
         scrolledRef.current = next;
         setScrolled(next);
@@ -112,7 +118,14 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
     const appRoot = document.getElementById('app-root');
     if (appRoot) targets.push(appRoot);
     targets.forEach((t) => t.addEventListener('scroll', onScroll, { passive: true }));
-    return () => targets.forEach((t) => t.removeEventListener('scroll', onScroll));
+    // Capture phase: the post layer mounts and unmounts with the route, and
+    // scroll events reach a document capture listener even though they do not
+    // bubble.
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    return () => {
+      targets.forEach((t) => t.removeEventListener('scroll', onScroll));
+      document.removeEventListener('scroll', onScroll, { capture: true });
+    };
   }, []);
 
   const isNotificationsActive = location.pathname === '/app/notifications';
