@@ -51,6 +51,33 @@ export function whipEndpointFor(
   };
 }
 
+/**
+ * Whether this browser can reach the self-hosted ingest at all.
+ *
+ * The ingest is a bare droplet IP — the one DeHub host not behind Cloudflare,
+ * because WebRTC cannot ride the proxy — and some ISPs null-route whole
+ * hosting ranges, so a client there connects to everything except this. The
+ * failure is a silent packet drop, which a fetch reports only by hanging, so
+ * the probe caps its own wait. `no-cors` on purpose: any response at all,
+ * opaque included, proves the network path; only a network error or the
+ * timeout says it is closed. With no host configured the answer is true —
+ * every stream is Livepeer then and the question never matters.
+ */
+export async function probeIngestReachable(timeoutMs = 4000): Promise<boolean> {
+  if (!MEDIAMTX_HOST) return true;
+  try {
+    await fetch(`https://${MEDIAMTX_HOST}/`, {
+      method: 'GET',
+      mode: 'no-cors',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** WHEP subscribe endpoint. Playback is ungated — watching costs no round-trip. */
 export function whepEndpointFor(stream: LiveStreamRef): string | undefined {
   if (liveProviderOf(stream) !== 'mediamtx') return undefined;

@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { mintPost, getPostQuota, type PostQuotaStatus } from '@/lib/api/dehub/content';
+import { probeIngestReachable } from '@/lib/live-ingest';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
 // they are dynamically imported at go-live time to keep the wallet stack out
@@ -359,6 +360,14 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       void import('@/components/app/modals/GoLiveBroadcaster');
     }
 
+    // Some networks cannot reach the self-hosted ingest at all (its bare
+    // droplet IP is the one DeHub host not behind Cloudflare, and a few ISPs
+    // null-route whole hosting ranges — every request from there just hangs).
+    // Ask now, in parallel with the wallet module, and tell the mint so the
+    // stream is created on Livepeer instead of on a server this browser will
+    // never manage to send a byte to.
+    const ingestReachable = probeIngestReachable();
+
     try {
       // Step 1: Get user's wallet address for minting
       const { getWeb3AuthSigner, mintOnChain } = await import('@/lib/contracts/stream-collection');
@@ -376,6 +385,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         chainId: BASE_CHAIN_ID,
         category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
         minterAddress,
+        ingestPreference: (await ingestReachable) ? undefined : 'livepeer',
         streamInfo: {
           isLockContent: false,
           isPayPerView: false,
