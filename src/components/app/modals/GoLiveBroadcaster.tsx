@@ -817,12 +817,17 @@ export function GoLiveBroadcaster({
         try {
           session = await openSession(relayFirst);
         } catch (error) {
-          // The signaling POST died pointed straight at the ingest. Remember
-          // it — a stuck creator retries in a loop, and the next mint should
-          // know. Then, rather than error out, reach for the relay this device
-          // was too optimistic to use the first time. A relay attempt that
-          // fails just propagates; there is nowhere better to go.
-          if (!relayFirst && isNetworkShapedError(error)) {
+          // A DIRECT attempt at the ingest failed. Crucially, we do NOT look at
+          // the error's SHAPE: the field failure is a Turkish DPI middlebox
+          // that answers the POST to the bare-IP ingest with an injected HTTP
+          // 403 block page — an HTTP error, not a network throw — so gating the
+          // relay on isNetworkShapedError left these creators stuck forever
+          // (403 → no retry, and no marker written → never relay-first either).
+          // Our own ingest returns 201/401/406, never 403; any failure of the
+          // direct path here means this device cannot reach it, so mark it and
+          // reach for the relay regardless of how the failure dressed itself.
+          // A relay attempt that fails just propagates — there is nowhere better.
+          if (!relayFirst) {
             markIngestUnreachable();
             if (canRelay) {
               if (cancelled) return;
