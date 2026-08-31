@@ -361,6 +361,10 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
               <div
                 ref={postOverlayRef}
                 data-post-overlay
+                // This layer, not the document, is what moves while a post is
+                // open — the tag is what lets the mobile header and the sticky
+                // pills ride its scroll (see use-scroll-direction).
+                data-scroll-nav-source
                 className="fixed top-0 bottom-0 z-10 overflow-y-auto overscroll-contain"
                 style={{
                   left: POST_LAYER_LEFT,
