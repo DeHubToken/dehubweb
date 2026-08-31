@@ -189,6 +189,22 @@ function isPathDeadError(error: unknown): boolean {
   );
 }
 
+/**
+ * How long after a publish is accepted a dead connection still means the media
+ * never started, rather than a working broadcast that lost its network.
+ *
+ * Signaling and media do not travel together: the offer is an HTTPS POST, the
+ * media is UDP to a bare address or a TURN relay. So the exchange can succeed
+ * in full — 201, answer applied — on a network that then carries not one media
+ * byte. That is not hypothetical: on 2026-08-31 the owner's own desktop
+ * published to Livepeer cleanly and sent zero bytes, and the same shape
+ * reproduced synthetically from that machine while every leg of the self-hosted
+ * path verified from it. ICE gives up within roughly fifteen seconds of the
+ * answer, so a failure inside this window is that; a failure after it is a live
+ * broadcast dropping, which must never be restarted underneath the creator.
+ */
+const MEDIA_FAILURE_WINDOW_MS = 20_000;
+
 /** Turns the DOM's terse permission errors into something a creator can act on. */
 function describeMediaError(error: unknown): string {
   if (error instanceof WhipHttpError && isPathDeadError(error)) {
@@ -819,6 +835,10 @@ export function GoLiveBroadcaster({
         // DEVICE, or the probe actually admitting unreachability — and, either
         // way, a direct attempt that dies network-shaped is retried over the
         // relay before the creator sees an error.
+        // A route can also die AFTER the server accepts the publish, when the
+        // media leg never comes up — see MEDIA_FAILURE_WINDOW_MS. Both kinds of
+        // death mean the same thing to this device, so both leave the same
+        // marker and both get the same one retry over the other route.
         const directBits = whipEndpointFor({ provider, playbackId, streamKey });
         const relayBits = edgeWhipEndpointFor({ provider, playbackId, streamKey });
         const turnServers = directBits.url ? await fetchTurnServers() : [];
@@ -828,13 +848,25 @@ export function GoLiveBroadcaster({
           canRelay && (hadRecentIngestFailure() || !(await probeIngestReachable()));
         if (cancelled) return;
 
-        const openSession = (viaRelay: boolean): Promise<WhipSession> => {
+        // One media-leg recovery per broadcast. The two routes are the same
+        // two the signaling fallback uses, and a route whose media has
+        // already died is not worth a third attempt.
+        let mediaRecoveryUsed = false;
+
+        const openSession = async (viaRelay: boolean): Promise<WhipSession> => {
           const endpointBits = viaRelay ? relayBits : directBits;
           const relayIce = viaRelay ? turnServers : undefined;
           // Direct self-hosted signaling, no relay in front of it — the one
           // path whose success or failure teaches this device something.
           const directSelfHosted = Boolean(endpointBits.url) && !relayIce;
-          return publishToWhip({
+          // Per attempt, because the failure handler below has to tell "media
+          // never started" from "media was flowing and stopped" for THIS
+          // connection, and a recovery opens a second one behind it.
+          let opened: WhipSession | null = null;
+          let acceptedAt = 0;
+          let sawLive = false;
+
+          const session = await publishToWhip({
             streamKey,
             stream,
             ...endpointBits,
@@ -842,6 +874,7 @@ export function GoLiveBroadcaster({
             onStateChange: (state: WhipState, detail) => {
               if (cancelled) return;
               if (state === 'live') {
+                sawLive = true;
                 // A byte actually arrived: whatever this device remembered
                 // about the path it just used being dead is stale.
                 if (directSelfHosted) clearIngestUnreachable();
@@ -850,16 +883,82 @@ export function GoLiveBroadcaster({
                 onLiveRef.current?.();
               } else if (state === 'reconnecting') setPhase('reconnecting');
               else if (state === 'failed') {
+                // The server accepted the broadcast and the media never
+                // followed. That condemns the ROUTE exactly as a refused POST
+                // does, but the signaling side never sees it — which is how
+                // this used to dead-end on an error screen with no marker and
+                // no retry, leaving the creator to loop on the same dead path.
+                const mediaNeverStarted =
+                  Boolean(endpointBits.url) &&
+                  !sawLive &&
+                  acceptedAt > 0 &&
+                  Date.now() - acceptedAt < MEDIA_FAILURE_WINDOW_MS;
+                if (mediaNeverStarted) {
+                  if (viaRelay) markRelayFailed();
+                  else markIngestUnreachable();
+                  const other = !viaRelay;
+                  const otherIsOpen = other ? canRelay : Boolean(directBits.url);
+                  if (!mediaRecoveryUsed && otherIsOpen) {
+                    mediaRecoveryUsed = true;
+                    void recoverMediaOver(opened, other);
+                    return;
+                  }
+                }
                 setPhase('error');
-                setErrorMessage(detail || 'The broadcast connection failed.');
-                // Unrecoverable: nothing here retries a 'failed' connection, so
-                // holding the camera, mic, and wake lock on a dead error screen
-                // is pure leak (hardware light on, phone kept awake). Stop the
-                // local capture; the End button still runs the backend teardown.
+                setErrorMessage(
+                  mediaNeverStarted
+                    ? 'This network blocked the video from leaving your device. Tap Go Live again — the retry takes a different route.'
+                    : detail || 'The broadcast connection failed.'
+                );
+                // Nothing left to try, so holding the camera, mic and wake lock
+                // on a dead error screen is pure leak (hardware light on, phone
+                // kept awake). Stop the local capture; the End button still
+                // runs the backend teardown.
                 void teardown();
               }
             },
           });
+          acceptedAt = Date.now();
+          opened = session;
+          return session;
+        };
+
+        /**
+         * Move a dead media leg onto the other route.
+         *
+         * Only the WHIP session is retired — the camera, the microphone and the
+         * effect graph are left exactly as they are, so the creator sees
+         * "Connecting…" again rather than a restarted preview and a second
+         * permission prompt. openSession above reaches forward to this; the two
+         * are mutually recursive by one hop and the order cannot satisfy both.
+         */
+        const recoverMediaOver = async (
+          dead: WhipSession | null,
+          viaRelay: boolean
+        ): Promise<void> => {
+          setPhase('connecting');
+          await dead?.stop().catch(() => undefined);
+          if (sessionRef.current === dead) sessionRef.current = null;
+          if (cancelled) return;
+          try {
+            const next = await openSession(viaRelay);
+            if (cancelled) {
+              await next.stop();
+              return;
+            }
+            sessionRef.current = next;
+            await acquireWakeLock();
+          } catch (error) {
+            logger.error('Media fallback failed', { viaRelay }, error);
+            if (isPathDeadError(error)) {
+              if (viaRelay) markRelayFailed();
+              else markIngestUnreachable();
+            }
+            if (cancelled) return;
+            setPhase('error');
+            setErrorMessage(describeMediaError(error));
+            void teardown();
+          }
         };
 
         let session: WhipSession;
