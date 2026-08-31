@@ -5,7 +5,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { fetchWallet, getCachedWallet, type StoredWallet } from "./store";
 import { isBiometricUnlockAvailable } from "./passkey";
-import { loadPasskeyWraps, type PasskeyWrap } from "./passkey-store";
+import { getCachedPasskeyWraps, loadPasskeyWraps, type PasskeyWrap } from "./passkey-store";
 
 export interface WalletProtection {
   wallet: StoredWallet | null;
@@ -33,6 +33,16 @@ export interface WalletProtection {
    * error, which reads exactly like "no wallet" and is not.
    */
   noWalletOnServer: boolean;
+  /**
+   * The probe learned nothing: no wallet, no wraps, and no positive "this
+   * account has no wallet" from the server. Every field above is then a
+   * default, not a fact — the reads failed, or ran without a Supabase session
+   * for this user (expired, or a different profile's), where RLS answers with
+   * zero rows instead of an error. A wallet with a password wrap and enrolled
+   * devices looks EXACTLY like a bare biometrics-only wallet in that state,
+   * so callers must show "couldn't check" surfaces, never protection claims.
+   */
+  stateUnknown: boolean;
 }
 
 /**
@@ -72,7 +82,12 @@ export async function getWalletProtection(userId: string): Promise<WalletProtect
     sessionResult.status === "fulfilled" && sessionResult.value.data?.session?.user?.id === userId;
   const noWalletOnServer = walletResult.status === "fulfilled" && !wallet && authedRead;
   const biometricAvailable = availableResult.status === "fulfilled" ? availableResult.value : false;
-  const wraps = wrapsResult.status === "fulfilled" ? wrapsResult.value : [];
+  let wraps = wrapsResult.status === "fulfilled" ? wrapsResult.value : [];
+  // An unauthenticated read of user_wallet_passkeys "succeeds" with zero rows
+  // — RLS hides the account's rows rather than erroring — so an expired
+  // session must fall back to the device's cache the same way a failed fetch
+  // does, or a device whose biometrics work fine gets told it has none.
+  if (!authedRead && wraps.length === 0) wraps = getCachedPasskeyWraps();
 
   return {
     wallet,
@@ -82,5 +97,6 @@ export async function getWalletProtection(userId: string): Promise<WalletProtect
     canUseBiometrics: biometricAvailable && wraps.length > 0,
     biometricEnrolledElsewhere: !biometricAvailable && wraps.length > 0,
     noWalletOnServer,
+    stateUnknown: !wallet && wraps.length === 0 && !noWalletOnServer,
   };
 }
