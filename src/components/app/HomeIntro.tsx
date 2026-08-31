@@ -160,6 +160,20 @@ export function HomeIntro() {
     } catch {
       /* dismissal just won't persist */
     }
+    /* Lift the first-visit frost too. The sheet (#root::after, driven by
+       data-feed-loading on <html> from the boot script in index.html) exists to
+       point a brand-new visitor at THIS panel, so closing the panel is as clear
+       a "seen it" as scrolling down. Same teardown as the boot script's own
+       unfrost: flip to 'off' for the 1.2s transition in index.css, then remove
+       the attribute — the sheet is a full-viewport backdrop-filter, so it has
+       to stop existing rather than merely go clear. */
+    const root = document.documentElement;
+    if (root.dataset.feedLoading === 'on') {
+      root.dataset.feedLoading = 'off';
+      window.setTimeout(() => {
+        if (root.dataset.feedLoading === 'off') delete root.dataset.feedLoading;
+      }, 1300);
+    }
   }, []);
 
   const goTo = useCallback((i: number) => {
