@@ -162,6 +162,10 @@ project_id = "aigxuutjaqsywioxjefr"
   # x-infra-stats-secret, verified in-function — not a Supabase JWT.
   [functions.infra-stats]
     verify_jwt = false
+  # Auth is the CDN_PURGE_SERVICE_SECRET shared secret in x-jarvis-tts-secret,
+  # verified in-function — not a Supabase JWT.
+  [functions.jarvis-tts]
+    verify_jwt = false
 
   # Public catalogue proxy for /cinema. No user context — it exists to keep the
   # JustWatch partner token server-side and to add CORS the upstream lacks.
