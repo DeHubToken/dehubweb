@@ -120,6 +120,42 @@ export function hadRecentIngestFailure(): boolean {
   }
 }
 
+/**
+ * The same memory for the RELAYED path. The relay rides Cloudflare, and an
+ * edge that refuses a client's SDP POST refuses it identically on every retry
+ * (observed 2026-08-31: WHIP 403s that never reached nginx, from a phone
+ * whose JSON API calls passed in the same minute). Without this record,
+ * "a relay is deployed" permanently outvotes the device's own evidence that
+ * the relay is unusable from where it stands — and the mint keeps sending a
+ * blocked creator down the same dead end instead of falling back to Livepeer.
+ */
+const RELAY_FAILURE_KEY = 'dehub.ingest.relay-failed-at';
+
+export function markRelayFailed(): void {
+  try {
+    localStorage.setItem(RELAY_FAILURE_KEY, String(Date.now()));
+  } catch {
+    /* storage unavailable — the mint just falls back to trusting the probe */
+  }
+}
+
+export function clearRelayFailed(): void {
+  try {
+    localStorage.removeItem(RELAY_FAILURE_KEY);
+  } catch {
+    /* nothing to clear where nothing could be written */
+  }
+}
+
+export function hadRecentRelayFailure(): boolean {
+  try {
+    const at = Number(localStorage.getItem(RELAY_FAILURE_KEY));
+    return Number.isFinite(at) && at > 0 && Date.now() - at < INGEST_FAILURE_WINDOW_MS;
+  } catch {
+    return false;
+  }
+}
+
 /** WHEP subscribe endpoint. Playback is ungated — watching costs no round-trip. */
 export function whepEndpointFor(stream: LiveStreamRef): string | undefined {
   if (liveProviderOf(stream) !== 'mediamtx') return undefined;
