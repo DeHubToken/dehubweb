@@ -8,7 +8,7 @@ import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
-import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type StreamInfo, type MintFeeQuoteResponse, type PostQuotaStatus } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -20,14 +20,15 @@ import { MEDIA_LIMITS } from '@/constants/post.constants';
 // handlePost to keep the wallet stack out of the entry bundle
 // (scripts/check-entry-bundle.mjs fails the build otherwise). Only the light
 // chain-config constants are imported statically.
-import { getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { isSolanaChain, findLockToken, isValidEvmAddress } from '@/lib/chains/constants';
-import { connectSolanaWallet, isValidSolanaAddress } from '@/lib/solana/wallet';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { isSolanaChain } from '@/lib/chains/constants';
+import { connectSolanaWallet } from '@/lib/solana/wallet';
 import { broadcastSolanaMint } from '@/lib/solana/mint';
 import { confirmEvmMint, getSolanaStatus } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
+import { buildStreamInfo } from '../lib/stream-info';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
@@ -1193,130 +1194,50 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
       console.log('[Mint] Minter address:', minterAddress, 'chainId:', chainId, 'mint:', effectiveShouldMint);
 
-      const evmChainConfig = !postingOnSolana ? getChainConfig(chainId as import('@/components/app/ChainSelector').ChainId) : null;
+      // Monetization → streamInfo, shared with Go Live so both composers write
+      // the same shape (see features/post/lib/stream-info.ts).
+      const access = buildStreamInfo({
+        chainId,
+        isTokenGated,
+        tokenAmount,
+        tokenContract,
+        tokenSymbol,
+        isPPV,
+        ppvAmount,
+        ppvCurrency,
+        isWatch2Earn,
+        w2eTotal,
+        w2eViews,
+        w2eComments,
+        isSubscribersOnly,
+        myPlanIds,
+      });
 
-      // Build streamInfo for monetization
-      const streamInfo: StreamInfo = {
-        isLockContent: false,
-        isPayPerView: false,
-        isAddBounty: false,
-      };
-
-      /**
-       * A hold gate is only ever written together with its amount. isLockContent
-       * without lockContentAmount is a condition nobody can satisfy and nobody
-       * can fail: readers show a lock badge over an unlock sheet with no button
-       * in it, while the API serves the body in full regardless.
-       */
-      const applyLockContent = (contract: string, symbol: string, lockChainId: number, amount: number) => {
-        streamInfo.isLockContent = true;
-        streamInfo.lockContentAmount = amount;
-        streamInfo.lockContentContractAddress = contract;
-        streamInfo.lockContentTokenSymbol = symbol;
-        streamInfo.lockContentChainIds = [lockChainId];
-      };
-
-      // Token-gated content (any supported or custom token on active chain)
-      if (isTokenGated && tokenAmount) {
-        const amount = parseFloat(tokenAmount);
-        if (amount > 0) {
-          let contract = tokenContract.trim();
-          let symbol = tokenSymbol.trim() || 'TOKEN';
-          if (!contract) {
-            const known = findLockToken(symbol, chainId);
-            if (!known) {
-              toast.error('Select a valid token for token gating');
-              setIsPosting(false);
-              return;
-            }
-            contract = known.address;
-            symbol = known.symbol;
-          } else if (postingOnSolana) {
-            if (!isValidSolanaAddress(contract)) {
-              toast.error('Invalid Solana token mint address for token gating');
-              setIsPosting(false);
-              return;
-            }
-          } else if (!isValidEvmAddress(contract)) {
-            toast.error('Invalid token contract address for token gating');
-            setIsPosting(false);
-            return;
-          }
-          applyLockContent(contract, symbol, chainId, amount);
-        }
-      }
-      // Subscribers-only does NOT go in streamInfo. It is not a hold gate and
-      // never was: the post carries the creator's plan ids in `plans`, and the
-      // feed pipeline joins the viewer's subscriptions to decide. The switch
-      // used to call applyLockContent with no amount instead — a DHB lock
-      // standing in for a subscription, which gated against nothing.
-      // `myPlanIds` is published plans only. An unpublished plan cannot be
-      // bought, so gating on one ships a post nobody can ever open — which is
-      // exactly what happened when this counted drafts. Empty stays undefined
-      // rather than [] so a gate is never stored with nothing behind it.
-      const subscriberPlanIds =
-        isSubscribersOnly && !postingOnSolana && myPlanIds.length
-          ? myPlanIds
-          : undefined;
-
-      // PPV settings
-      if (isPPV && ppvAmount) {
-        const ppvValue = parseFloat(ppvAmount);
-        if (ppvValue > 0) {
-          streamInfo.isPayPerView = true;
-          streamInfo.payPerViewAmount = ppvValue;
-
-          if (postingOnSolana) {
-            // Without the mint address and chain id the post ships as "PPV, no
-            // token, no chain": mobile reads payPerViewChainId as undefined and
-            // routes the unlock to the EVM DHB path, and the backend cannot
-            // resolve a mint for /solana/build-payment. Nobody can pay it.
-            const splSymbol = ppvCurrency === 'USD' || ppvCurrency === 'DHB' ? 'SOL' : ppvCurrency;
-            const splToken = findLockToken(splSymbol, chainId);
-            if (!splToken) {
-              toast.error(`${splSymbol} is not available for PPV on Solana`);
-              setIsPosting(false);
-              return;
-            }
-            streamInfo.payPerViewTokenSymbol = splToken.symbol;
-            streamInfo.payPerViewContractAddress = splToken.address;
-            streamInfo.payPerViewChainIds = [chainId];
-          } else {
-            // EVM PPV is always DHB. Old drafts can still carry USD, which
-            // ships with no contract address and cannot be paid — coerce it.
-            streamInfo.payPerViewTokenSymbol = 'DHB';
-            if (evmChainConfig?.dhbToken) {
-              streamInfo.payPerViewContractAddress = evmChainConfig.dhbToken;
-              streamInfo.payPerViewChainIds = [chainId];
-            }
-          }
-        }
+      if (access.error) {
+        toast.error(access.error);
+        setIsPosting(false);
+        return;
       }
 
-      // Bounty (W2E) — DHB on selected EVM chain
-      const hasBounty = !postingOnSolana && isWatch2Earn && w2eTotal && w2eViews;
-      if (hasBounty && evmChainConfig) {
-        const bountyAmount = parseFloat(w2eTotal);
-        const viewerCount = w2eViews.trim() !== '' ? parseInt(w2eViews) : 10;
-        const commentCount = w2eComments.trim() !== '' ? parseInt(w2eComments) : 0;
-        
-        if (bountyAmount > 0 && (viewerCount > 0 || commentCount > 0)) {
-          const totalBounty = calculateTotalBounty(bountyAmount, viewerCount, commentCount);
-          const balance = await getDHBBalance(minterAddress, chainId as import('@/components/app/ChainSelector').ChainId);
-          const balanceNum = Number(balance) / 1e18;
-          
-          if (balanceNum < totalBounty) {
-            toast.error(dhbText(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`));
-            setIsPosting(false);
-            return;
-          }
-          
-          streamInfo.isAddBounty = true;
-          streamInfo.addBountyTokenSymbol = 'DHB';
-          streamInfo.addBountyAmount = bountyAmount;
-          streamInfo.addBountyFirstXViewers = viewerCount;
-          streamInfo.addBountyFirstXComments = commentCount;
-          streamInfo.addBountyChainId = chainId;
+      const { streamInfo, subscriberPlanIds } = access;
+      const hasBounty = !!access.bounty;
+
+      // The bounty is locked through the mint transaction, so the tokens have
+      // to be there before anything is uploaded — a post that advertises a
+      // bounty with nothing behind it is worse than a post that never went out.
+      if (access.bounty) {
+        const totalBounty = calculateTotalBounty(
+          access.bounty.amount,
+          access.bounty.viewers,
+          access.bounty.commenters,
+        );
+        const balance = await getDHBBalance(minterAddress, chainId as import('@/components/app/ChainSelector').ChainId);
+        const balanceNum = Number(balance) / 1e18;
+
+        if (balanceNum < totalBounty) {
+          toast.error(dhbText(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`));
+          setIsPosting(false);
+          return;
         }
       }
 

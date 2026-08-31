@@ -375,6 +375,22 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     creatorBadgeBalance: nft.minterUser?.badgeBalance,
     replayUrl: extractReplayUrl(nft.stream),
     replayTruncated: isReplayTruncated(nft.stream),
+    // Access, read from the same streamInfo a video post carries. Go Live
+    // writes it through the same composer switches, so a stream can be sold or
+    // gated like any other post.
+    isPPV: nft.is_ppv || nft.streamInfo?.isPayPerView || false,
+    ppvPrice: nft.ppv_price || nft.streamInfo?.payPerViewAmount,
+    ppvCurrency: nft.ppv_currency || nft.streamInfo?.payPerViewTokenSymbol || 'DHB',
+    ppvChainId: nft.streamInfo?.payPerViewChainIds?.[0] ?? nft.chainId,
+    isLocked: nft.is_locked || nft.streamInfo?.isLockContent || false,
+    lockedPrice: nft.locked_price || nft.streamInfo?.lockContentAmount,
+    lockedCurrency: nft.locked_currency || nft.streamInfo?.lockContentTokenSymbol || 'DHB',
+    lockedTokenAddress: nft.streamInfo?.lockContentContractAddress,
+    lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
+    subscriberPlans: (nft as any).plansDetails,
+    contentRating: nft.contentRating,
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
     ...(streamId ? { streamId } : {}),
   };
 }
@@ -583,6 +599,9 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
   const category = Array.isArray((stream as any).categories) ? (stream as any).categories[0] : stream.category;
   const viewerCount = (stream as any).totalViews ?? (stream as any).peakViewers ?? stream.viewerCount ?? 0;
   const likeCount = (stream as any).likes ?? stream.likeCount ?? 0;
+  const liveStreamInfo = (stream as any).streamInfo as
+    | import('@/lib/api/dehub').StreamInfo
+    | undefined;
 
   return {
     id,
@@ -610,6 +629,23 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     likeCount,
     replayUrl: extractReplayUrl(stream),
     replayTruncated: isReplayTruncated(stream),
+    // `id` above is the stream's ObjectId, which every /api/live route wants.
+    // A PPV payment is recorded against the POST, so the tokenId is carried
+    // separately rather than conflated with it.
+    tokenId: (stream as any).tokenId != null ? String((stream as any).tokenId) : undefined,
+    // /api/live projects the token's streamInfo, so a stream sold per view or
+    // gated on a holding is gated here too. It carries no plan list, so the
+    // subscriber gate resolves on the post page, where plansDetails is served.
+    isPPV: liveStreamInfo?.isPayPerView || false,
+    ppvPrice: liveStreamInfo?.payPerViewAmount,
+    ppvCurrency: liveStreamInfo?.payPerViewTokenSymbol || 'DHB',
+    ppvChainId: liveStreamInfo?.payPerViewChainIds?.[0],
+    isLocked: liveStreamInfo?.isLockContent || false,
+    lockedPrice: liveStreamInfo?.lockContentAmount,
+    lockedCurrency: liveStreamInfo?.lockContentTokenSymbol || 'DHB',
+    lockedTokenAddress: liveStreamInfo?.lockContentContractAddress,
+    lockedChainId: liveStreamInfo?.lockContentChainIds?.[0],
+    isOwner: (stream as any).isOwner ?? false,
   };
 }
 

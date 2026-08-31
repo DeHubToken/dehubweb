@@ -186,6 +186,11 @@ export interface DeHubNFT {
     lockContentChainIds?: number[];
     isPayPerView?: boolean;
     payPerViewAmount?: number;
+    /** The token a PPV price is denominated in. Absent means the chain's DHB. */
+    payPerViewTokenSymbol?: string;
+    payPerViewContractAddress?: string;
+    /** The chain a PPV payment settles on. */
+    payPerViewChainIds?: number[];
     isAddBounty?: boolean;
     addBountyFirstXViewers?: number | string;
     addBountyFirstXComments?: number | string;

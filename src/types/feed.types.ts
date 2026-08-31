@@ -373,6 +373,36 @@ export interface LiveStream extends BaseFeedItem {
   commentCount?: number;
   /** MongoDB ObjectId of the stream (needed for /api/live/{id}/settings API calls) */
   streamId?: string;
+  /**
+   * The post's tokenId. On the NFT feed path `id` already is it; on the
+   * /api/live path `id` is the stream's ObjectId, and a PPV payment has to be
+   * recorded against the post, so it is carried explicitly.
+   */
+  tokenId?: string;
+
+  /*
+   * Access, exactly as a video post carries it. A live post is minted through
+   * the same endpoint and stores the same `streamInfo`, so a stream can be sold
+   * per view, gated behind the creator's plans or behind a token holding.
+   * Resolved through lib/content-gate, never by reading these flags raw.
+   */
+  isPPV?: boolean;
+  ppvPrice?: number;
+  ppvCurrency?: string;
+  /** Chain the PPV payment settles on. */
+  ppvChainId?: number;
+  /** Hold gate. Means nothing without `lockedPrice` — see isHoldGated. */
+  isLocked?: boolean;
+  lockedPrice?: number;
+  lockedCurrency?: string;
+  lockedTokenAddress?: string;
+  lockedChainId?: number;
+  /** Plans that open this stream; empty is not a gate. */
+  subscriberPlans?: SubscriberPlan[];
+  /** The viewer is the creator — every gate is open to them. */
+  isOwner?: boolean;
+  /** The viewer has already paid for this one. */
+  isUnlocked?: boolean;
 }
 
 /**

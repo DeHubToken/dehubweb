@@ -20,6 +20,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
+import { GatedMedia } from './GatedMedia';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import {
@@ -159,8 +160,32 @@ export function LiveCard({ stream }: LiveCardProps) {
         </div>
       </div>
 
-      {/* Thumbnail */}
+      {/* Thumbnail. Gated exactly like a video post's poster frame: a stream
+          sold per view, held behind a token or marked mature stands behind the
+          same sheet here, so the paywall is met before the click-through
+          rather than after it. */}
       <div className="relative aspect-video bg-black rounded-lg overflow-hidden" data-no-navigate>
+        <GatedMedia
+          gate={{
+            tokenId: stream.tokenId || stream.id,
+            creatorAddress: stream.creatorId,
+            creatorName: stream.streamer,
+            isPPV: stream.isPPV,
+            ppvPrice: stream.ppvPrice,
+            ppvCurrency: stream.ppvCurrency,
+            ppvChainId: stream.ppvChainId,
+            isLocked: stream.isLocked,
+            lockedPrice: stream.lockedPrice,
+            lockedCurrency: stream.lockedCurrency,
+            lockedTokenAddress: stream.lockedTokenAddress,
+            lockedChainId: stream.lockedChainId,
+            subscriberPlans: stream.subscriberPlans,
+            contentRating: stream.contentRating,
+            canBypass: stream.isOwner || stream.isUnlocked,
+          }}
+          preview={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
+          className="rounded-lg"
+        >
         {stream.isLive && stream.thumbnail ? (
           <img
             /* Live thumbnails come straight off the API as raw CDN paths, so
@@ -181,6 +206,7 @@ export function LiveCard({ stream }: LiveCardProps) {
              if there is one, otherwise a staticy TV screen — never an empty box. */
           <LiveEndedMedia thumbnail={stream.thumbnail} />
         )}
+        </GatedMedia>
       </div>
 
       {/* Info & Actions */}

@@ -96,6 +96,23 @@ export interface MintResponse {
    */
   alreadyMinted?: boolean;
   /**
+   * Live posts only: the stream this mint provisioned, returned by the same
+   * call. The server creates it whether or not the post goes on chain, so
+   * these credentials are ready before any transaction is sent — and an
+   * off-chain stream can start on them immediately instead of polling
+   * `nft_info` for a key the mint was never going to change.
+   */
+  stream?: {
+    _id?: string;
+    tokenId?: number | string;
+    playbackId?: string;
+    streamKey?: string;
+    livepeerId?: string;
+    provider?: string;
+    status?: string;
+    ingestUrl?: string;
+  };
+  /**
    * This post went past the daily free allowance and has been billed.
    *
    * Present only when there is something to pay. The post is already

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
-import { Radio, Loader2, Copy, Check, ExternalLink, Hash, ImagePlus, Search, X, Plus, Video, MonitorPlay, ScreenShare } from 'lucide-react';
+import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, X, Video, MonitorPlay, ScreenShare } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { mintPost, getPostQuota, deletePost, type PostQuotaStatus } from '@/lib/api/dehub/content';
+import {
+  mintPost,
+  getPostQuota,
+  getMintFee,
+  deletePost,
+  type PostQuotaStatus,
+  type MintFeeQuoteResponse,
+} from '@/lib/api/dehub/content';
+import { isSmartWalletSession } from '@/lib/connection-source';
 import {
   probeIngestReachable,
   fetchTurnServers,
@@ -21,9 +29,12 @@ import {
 // of the entry bundle (scripts/check-entry-bundle.mjs fails the build
 // otherwise). BASE_CHAIN_ID comes from the light dhb-token module.
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
+import { buildStreamInfo } from '@/features/post/lib/stream-info';
+import type { Currency } from '@/features/post/types';
+import type { PostChainId } from '@/components/app/ChainSelector';
+import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
+import { getNFTInfo } from '@/lib/api/dehub/feed';
 import { getStreamIngestUrl, startLiveStream, endLiveStream } from '@/lib/api/dehub/livestream';
-import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
@@ -35,6 +46,20 @@ import { hlsUrlFor } from '@/lib/live-ingest';
 // riding along with the modal for people who stream from OBS.
 const GoLiveBroadcaster = React.lazy(() =>
   import('@/components/app/modals/GoLiveBroadcaster').then(m => ({ default: m.GoLiveBroadcaster }))
+);
+
+/**
+ * The composer's own switch list, reused rather than reimplemented — a live
+ * post gets the same options a normal post does, in the same order, with the
+ * same drawers behind them.
+ *
+ * Lazy for the same reason the broadcaster is: this modal is re-exported by
+ * the modals barrel that eager feed components import, and the toggles reach
+ * the subscription and chain-token modules that scripts/check-entry-bundle.mjs
+ * refuses on the boot path.
+ */
+const PostAccessToggles = React.lazy(() =>
+  import('@/features/post/components/PostAccessToggles').then(m => ({ default: m.PostAccessToggles }))
 );
 
 const logger = createLogger('GoLiveModal');
@@ -78,8 +103,6 @@ const SCREEN_CONSTRAINTS: MediaTrackConstraints = {
 /** Matches the server's cap on the thumbnail route. */
 const MAX_COVER_BYTES = 8 * 1024 * 1024;
 
-const MAX_CATEGORIES = 5;
-
 /**
  * 1024-based, matching the server's pool math — a 1000-based reading would
  * announce a smaller budget than the backend actually honours. Local rather
@@ -99,6 +122,31 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  /*
+   * A live post is a post. It carries the same access switches the composer
+   * writes — minting, the paywalls, the gates, the rating — and they are held
+   * here in the same names PostAccessToggles and buildStreamInfo use, so the
+   * one shared row of switches drives both surfaces.
+   *
+   * Mint is off by default, matching the composer: going live no longer needs
+   * a wallet, a signature or gas. The stream key comes back from /user_mint
+   * itself, not from the chain, so nothing about the broadcast depends on it.
+   */
+  const [shouldMint, setShouldMint] = useState(false);
+  const [isSubscribersOnly, setIsSubscribersOnly] = useState(false);
+  const [isPPV, setIsPPV] = useState(false);
+  const [ppvAmount, setPpvAmount] = useState('');
+  const [ppvCurrency, setPpvCurrency] = useState<Currency>('DHB');
+  const [isWatch2Earn, setIsWatch2Earn] = useState(false);
+  const [w2eViews, setW2eViews] = useState('');
+  const [w2eComments, setW2eComments] = useState('');
+  const [w2eTotal, setW2eTotal] = useState('');
+  const [w2eCurrency, setW2eCurrency] = useState<Currency>('DHB');
+  const [isTokenGated, setIsTokenGated] = useState(false);
+  const [tokenContract, setTokenContract] = useState('');
+  const [tokenSymbol, setTokenSymbol] = useState('');
+  const [tokenAmount, setTokenAmount] = useState('');
+  const [isMature, setIsMature] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -136,19 +184,48 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
    */
   const draft = useFormDraft(
     'go-live',
-    { title, description, selectedCategory },
+    {
+      title,
+      description,
+      selectedCategory,
+      shouldMint,
+      isSubscribersOnly,
+      isPPV,
+      ppvAmount,
+      ppvCurrency,
+      isWatch2Earn,
+      w2eViews,
+      w2eComments,
+      w2eTotal,
+      isTokenGated,
+      tokenContract,
+      tokenSymbol,
+      tokenAmount,
+      isMature,
+    },
     (saved) => {
       if (saved.title) setTitle(saved.title);
       if (saved.description) setDescription(saved.description);
       if (saved.selectedCategory) setSelectedCategory(saved.selectedCategory);
+      // Every switch is restored, but only from a truthy value: a draft saved
+      // before these existed carries none of them and must not read as "off"
+      // overwriting a default, nor as "on" turning a paywall on by itself.
+      if (saved.shouldMint) setShouldMint(true);
+      if (saved.isSubscribersOnly) setIsSubscribersOnly(true);
+      if (saved.isPPV) setIsPPV(true);
+      if (saved.ppvAmount) setPpvAmount(saved.ppvAmount);
+      if (saved.ppvCurrency) setPpvCurrency(saved.ppvCurrency);
+      if (saved.isWatch2Earn) setIsWatch2Earn(true);
+      if (saved.w2eViews) setW2eViews(saved.w2eViews);
+      if (saved.w2eComments) setW2eComments(saved.w2eComments);
+      if (saved.w2eTotal) setW2eTotal(saved.w2eTotal);
+      if (saved.isTokenGated) setIsTokenGated(true);
+      if (saved.tokenContract) setTokenContract(saved.tokenContract);
+      if (saved.tokenSymbol) setTokenSymbol(saved.tokenSymbol);
+      if (saved.tokenAmount) setTokenAmount(saved.tokenAmount);
+      if (saved.isMature) setIsMature(true);
     },
   );
-
-  // Category drawer state
-  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
-  const [categories, setCategories] = useState<DeHubCategory[]>([]);
-  const [categorySearch, setCategorySearch] = useState('');
-  const [loadingCategories, setLoadingCategories] = useState(false);
 
   // Generation counter for the go-live sequence. handleClose bumps it, and
   // handleStartStream re-checks after every await: without this, dismissing
@@ -249,6 +326,37 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     };
   }, [isOpen]);
 
+  /**
+   * A bounty locks DHB through the mint transaction, so it cannot ride on a
+   * stream that never goes on chain — the switch forces minting on, exactly as
+   * the composer does.
+   */
+  const mintRequired = isWatch2Earn;
+  const effectiveShouldMint = shouldMint || mintRequired;
+
+  /** Published plans only — an unpublished plan gates a stream nobody can open. */
+  const { planIds: myPlanIds } = useCreatorPlansLite(walletAddress);
+
+  // Priced by the server and only for sponsored sessions; a null quote means
+  // "could not price it" and is shown as free rather than as a blocker.
+  const [mintFee, setMintFee] = useState<MintFeeQuoteResponse | null>(null);
+  useEffect(() => {
+    if (!isOpen || !effectiveShouldMint || !isSmartWalletSession()) {
+      setMintFee(null);
+      return;
+    }
+    let cancelled = false;
+    getMintFee(BASE_CHAIN_ID).then((quote) => {
+      if (!cancelled) setMintFee(quote);
+    });
+    return () => { cancelled = true; };
+  }, [isOpen, effectiveShouldMint]);
+
+  const mintFeeLabel =
+    mintFee?.chargeable && mintFee.amount > 0
+      ? `${mintFee.amount >= 1 ? mintFee.amount.toFixed(2).replace(/\.?0+$/, '') : mintFee.amount.toFixed(8).replace(/\.?0+$/, '')} ${mintFee.symbol}`
+      : null;
+
   const replayBudget = useMemo(() => {
     if (!quota) return null;
     const remaining = Math.max(0, quota.mediaBytesPerDay - quota.mediaBytesUsed);
@@ -263,42 +371,13 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     }
   }, [isOpen]);
 
-  // Fetch categories when drawer opens
-  useEffect(() => {
-    if (categoryDrawerOpen && categories.length === 0) {
-      setLoadingCategories(true);
-      getCategories()
-        .then(setCategories)
-        .catch(console.error)
-        .finally(() => setLoadingCategories(false));
-    }
-  }, [categoryDrawerOpen, categories.length]);
-
+  // Categories are picked in PostAccessToggles below, which stores them in the
+  // same '|||'-joined string the composer uses. Only the saved default is
+  // seeded here, so a creator's usual tags are already on a fresh stream.
   const selectedCategoriesArray = useMemo(() =>
     selectedCategory ? selectedCategory.split('|||').filter(Boolean) : [],
     [selectedCategory]
   );
-
-  const filteredCategories = useMemo(() => {
-    if (!categorySearch.trim()) return categories;
-    const q = categorySearch.toLowerCase();
-    return categories.filter(c => c.name.toLowerCase().includes(q));
-  }, [categories, categorySearch]);
-
-  const toggleCategory = (name: string) => {
-    const current = selectedCategoriesArray;
-    if (current.includes(name)) {
-      const next = current.filter(c => c !== name);
-      setSelectedCategory(next.join('|||'));
-    } else if (current.length < MAX_CATEGORIES) {
-      setSelectedCategory([...current, name].join('|||'));
-    }
-  };
-
-  const removeCategory = (name: string) => {
-    const next = selectedCategoriesArray.filter(c => c !== name);
-    setSelectedCategory(next.join('|||'));
-  };
 
   /**
    * Object URLs are not garbage-collected on their own. The effect owns the
@@ -327,6 +406,21 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setDescription('');
     setSelectedCategory('');
     chooseCover(null);
+    // The access switches reset with the rest of the form: leaving a paywall
+    // armed would put a price on the next stream without anyone asking for it.
+    setShouldMint(false);
+    setIsSubscribersOnly(false);
+    setIsPPV(false);
+    setPpvAmount('');
+    setIsWatch2Earn(false);
+    setW2eViews('');
+    setW2eComments('');
+    setW2eTotal('');
+    setIsTokenGated(false);
+    setTokenContract('');
+    setTokenSymbol('');
+    setTokenAmount('');
+    setIsMature(false);
     setStreamData(null);
     // The broadcaster stops the tracks it adopted in its own teardown; this
     // only drops the reference so a reopened modal starts from a clean slate.
@@ -384,6 +478,32 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const handleStartStream = async () => {
     if (!title.trim()) {
       toast.error('Please enter a stream title');
+      return;
+    }
+
+    // The access switches become the same `streamInfo` blob a normal post
+    // writes. Resolved here, before the screen picker and before anything is
+    // sent, so a gate that cannot be built costs a toast rather than a capture
+    // the browser then has to be talked out of.
+    const access = buildStreamInfo({
+      chainId: BASE_CHAIN_ID,
+      isTokenGated,
+      tokenAmount,
+      tokenContract,
+      tokenSymbol,
+      isPPV,
+      ppvAmount,
+      ppvCurrency,
+      isWatch2Earn,
+      w2eTotal,
+      w2eViews,
+      w2eComments,
+      isSubscribersOnly,
+      myPlanIds,
+    });
+
+    if (access.error) {
+      toast.error(access.error);
       return;
     }
 
@@ -456,14 +576,47 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     const turnServers = fetchTurnServers();
 
     try {
-      // Step 1: Get user's wallet address for minting
-      const { getWeb3AuthSigner, mintOnChain } = await import('@/lib/contracts/stream-collection');
-      const minterAddress = await getWeb3AuthSigner();
-      logger.info('Minter address obtained', { minterAddress });
-      if (wasDismissed()) return;
+      /*
+       * Step 1: the wallet, but only if this stream is going on chain.
+       *
+       * getWeb3AuthSigner is getWalletAddress under another name, and on a
+       * built-in wallet reading it raises the unlock dialog — which is why
+       * going live used to ask for a password before anything existed. The
+       * backend takes the minter from the authenticated session, so an
+       * off-chain stream needs no address from here at all.
+       */
+      let mintingThisStream = effectiveShouldMint;
+      let minterAddress = walletAddress || '';
+
+      if (mintingThisStream) {
+        const { getWeb3AuthSigner } = await import('@/lib/contracts/stream-collection');
+        minterAddress = await getWeb3AuthSigner();
+        logger.info('Minter address obtained', { minterAddress });
+        if (wasDismissed()) return;
+
+        // A bounty locks DHB through the mint, so the tokens have to be there
+        // before the stream exists — a stream advertising a bounty with
+        // nothing behind it is worse than one that never started.
+        if (access.bounty) {
+          const { calculateTotalBounty, getDHBBalance } = await import('@/lib/contracts/stream-controller');
+          const totalBounty = calculateTotalBounty(
+            access.bounty.amount,
+            access.bounty.viewers,
+            access.bounty.commenters,
+          );
+          const balance = await getDHBBalance(minterAddress, BASE_CHAIN_ID);
+          const balanceNum = Number(balance) / 1e18;
+          if (balanceNum < totalBounty) {
+            throw new Error(
+              `Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`,
+            );
+          }
+          if (wasDismissed()) return;
+        }
+      }
 
       // Step 2: Mint the live post via /api/user_mint
-      logger.info('Minting live post...', { title });
+      logger.info('Minting live post...', { title, mint: mintingThisStream });
 
       const mintResponse = await mintPost({
         name: title.trim(),
@@ -484,61 +637,88 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           ((await turnServers).length > 0 && !hadRecentRelayFailure())
             ? undefined
             : 'livepeer',
-        streamInfo: {
-          isLockContent: false,
-          isPayPerView: false,
-          isAddBounty: false,
-        },
+        streamInfo: access.streamInfo,
+        plans: access.subscriberPlanIds,
+        contentRating: isMature ? 'mature' : undefined,
+        mintOptOut: !mintingThisStream,
       });
 
       const tokenId = mintResponse.createdTokenId;
       mintedTokenId = String(tokenId);
-      logger.info('NFT Minted via API', { tokenId });
+      logger.info('Live post created', { tokenId, mint: mintingThisStream });
       if (wasDismissed()) return;
 
-      // Step 3: Execute on-chain minting transaction
-      if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
-        throw new Error('Invalid signature data from backend');
+      // Step 3: Execute the on-chain mint — skipped wholesale when the creator
+      // turned minting off. The post is already published (the server serves
+      // status 'signed' everywhere) and the stream below is provisioned either
+      // way, so nothing about the broadcast waits on a transaction.
+      if (mintingThisStream) {
+        if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
+          throw new Error('Invalid signature data from backend');
+        }
+
+        logger.info('Executing on-chain mint...', { tokenId });
+        toast.loading('Publishing to decentralized database...', { id: 'golive-progress', duration: Infinity });
+
+        const chainMint = {
+          tokenId,
+          timestamp: mintResponse.timestamp,
+          v: mintResponse.v,
+          r: mintResponse.r,
+          s: mintResponse.s,
+          uri: mintResponse.uri,
+          chainId: BASE_CHAIN_ID as import('@/components/app/ChainSelector').ChainId,
+        };
+
+        if (access.bounty) {
+          const { mintWithBounty } = await import('@/lib/contracts/stream-controller');
+          const txHash = await mintWithBounty({
+            ...chainMint,
+            timestamp: mintResponse.timestamp!,
+            v: mintResponse.v!,
+            r: mintResponse.r!,
+            s: mintResponse.s!,
+            bountyAmount: access.bounty.amount,
+            countOfViewers: access.bounty.viewers,
+            countOfCommentors: access.bounty.commenters,
+          });
+          logger.info('On-chain mint with bounty submitted', { tokenId, txHash });
+        } else {
+          const { mintOnChain } = await import('@/lib/contracts/stream-collection');
+          const mintResult = await mintOnChain(chainMint);
+          logger.info('On-chain mint submitted', { tokenId, txHash: mintResult.hash });
+          // Background confirmation
+          mintResult.confirmed.catch((err) => {
+            logger.warn('Background mint confirmation failed', err);
+          });
+        }
+
+        toast.dismiss('golive-progress');
+
+        // Past this point the mint is on-chain either way; a dismissal still
+        // stops us short of marking anything live.
+        if (wasDismissed()) return;
       }
 
-      logger.info('Executing on-chain mint...', { tokenId });
-      toast.loading('Publishing to decentralized database...', { id: 'golive-progress', duration: Infinity });
-
-      const mintResult = await mintOnChain({
-        tokenId,
-        timestamp: mintResponse.timestamp,
-        v: mintResponse.v,
-        r: mintResponse.r,
-        s: mintResponse.s,
-        uri: mintResponse.uri,
-        chainId: BASE_CHAIN_ID,
-      });
-
-      const txHash = mintResult.hash;
-      logger.info('On-chain mint submitted', { tokenId, txHash });
-      toast.dismiss('golive-progress');
-
-      // Background confirmation
-      mintResult.confirmed.catch((err) => {
-        logger.warn('Background mint confirmation failed', err);
-      });
-
-      // Past this point the mint is on-chain either way; a dismissal still
-      // stops us short of marking anything live.
-      if (wasDismissed()) return;
-
-      // Step 4: Poll /api/nft_info/{tokenId} to get stream credentials
-      // Backend needs a moment to provision the stream after minting
-      logger.info('Fetching stream credentials from nft_info...', { tokenId });
-
-      let streamKey = '';
-      let streamId = '';
-      let playbackId = '';
-      let provider = '';
+      /*
+       * Step 4: the stream credentials.
+       *
+       * /user_mint provisions the stream in the same call and answers with it,
+       * so the usual case needs no lookup at all. The poll below stays as the
+       * fallback for a response that arrived without one — it is also what an
+       * on-chain mint used to depend on, and the eight two-second attempts are
+       * cheap next to a stream that cannot start.
+       */
+      let streamKey = mintResponse.stream?.streamKey || '';
+      let streamId = String(mintResponse.stream?._id || '');
+      let playbackId = mintResponse.stream?.playbackId || '';
+      let provider = mintResponse.stream?.provider || '';
       let retryCount = 0;
       const MAX_RETRIES = 8;
 
-      while (retryCount < MAX_RETRIES) {
+      if (!streamKey) logger.info('Fetching stream credentials from nft_info...', { tokenId });
+
+      while (!streamKey && retryCount < MAX_RETRIES) {
         try {
           const nftInfo = await getNFTInfo(tokenId);
           const stream = nftInfo?.stream;
@@ -564,6 +744,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       }
 
       if (streamId) mintedStreamId = streamId;
+      // Every /api/live/{id}/* route wants the Mongo ObjectId; the tokenId is
+      // the same last-resort the poll above falls back to.
+      if (!streamId) streamId = tokenId;
+
       if (wasDismissed()) return;
       if (!streamKey) {
         throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
@@ -867,33 +1051,56 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                 </button>
               </div>
 
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={() => setCategoryDrawerOpen(true)}
-                  className="flex items-center justify-between w-full"
-                >
-                  <label className="text-sm text-zinc-400 flex items-center gap-2 cursor-pointer">
-                    <Hash className="w-4 h-4" />
-                    Category
-                  </label>
-                  <span className="text-xs text-white/50 hover:text-white">
-                    {selectedCategoriesArray.length > 0 ? 'Edit' : 'Add'}
-                  </span>
-                </button>
-                {selectedCategoriesArray.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {selectedCategoriesArray.map((cat) => (
-                      <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white border border-white/10">
-                        {cat}
-                        <button type="button" onClick={() => removeCategory(cat)}>
-                          <X className="w-2.5 h-2.5" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+              {/* The composer's own switches — minting, subscribers, PPV,
+                  bounty, token gate, category, community, rating — so a
+                  stream can be sold or gated exactly like any other post.
+                  Suspense rather than a spinner: the chunk is small and the
+                  fields above are usable while it arrives. */}
+              <Suspense fallback={<div className="h-[140px]" />}>
+                <PostAccessToggles
+                  isSubscribersOnly={isSubscribersOnly}
+                  setIsSubscribersOnly={setIsSubscribersOnly}
+                  isPPV={isPPV}
+                  setIsPPV={setIsPPV}
+                  ppvAmount={ppvAmount}
+                  setPpvAmount={setPpvAmount}
+                  ppvCurrency={ppvCurrency}
+                  setPpvCurrency={setPpvCurrency}
+                  isWatch2Earn={isWatch2Earn}
+                  setIsWatch2Earn={setIsWatch2Earn}
+                  w2eViews={w2eViews}
+                  setW2eViews={setW2eViews}
+                  w2eComments={w2eComments}
+                  setW2eComments={setW2eComments}
+                  w2eTotal={w2eTotal}
+                  setW2eTotal={setW2eTotal}
+                  w2eCurrency={w2eCurrency}
+                  setW2eCurrency={setW2eCurrency}
+                  isTokenGated={isTokenGated}
+                  setIsTokenGated={setIsTokenGated}
+                  tokenContract={tokenContract}
+                  setTokenContract={setTokenContract}
+                  tokenSymbol={tokenSymbol}
+                  setTokenSymbol={setTokenSymbol}
+                  tokenAmount={tokenAmount}
+                  setTokenAmount={setTokenAmount}
+                  postChainId={BASE_CHAIN_ID as PostChainId}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  /* A stream always has a title of its own above, so the
+                     Title switch has nothing to offer — the same reason the
+                     composer hides it for video and audio posts. */
+                  showTitle
+                  setShowTitle={() => undefined}
+                  hasVideoOrAudio
+                  isMature={isMature}
+                  setIsMature={setIsMature}
+                  shouldMint={effectiveShouldMint}
+                  setShouldMint={setShouldMint}
+                  mintFeeLabel={mintFeeLabel}
+                  mintRequired={mintRequired}
+                />
+              </Suspense>
             </div>
           ) : step === 'broadcasting' ? (
             streamData && (
@@ -986,56 +1193,6 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           )}
         </div>
       </DrawerContent>
-
-      <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
-        <DrawerContent column glass hideHandle className="max-h-[60vh]">
-          <div className="p-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-white font-medium">Categories</h3>
-              <button onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-zinc-400 hover:text-white">Done</button>
-            </div>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-              <input
-                value={categorySearch}
-                onChange={(e) => setCategorySearch(e.target.value)}
-                placeholder="Search..."
-                className="w-full h-11 bg-zinc-800 border border-white/10 rounded-xl pl-10 pr-4 text-white text-sm outline-none focus:border-white/20"
-              />
-            </div>
-            <div className="overflow-y-auto max-h-[30vh] space-y-1">
-              {categorySearch.trim() && !filteredCategories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && (
-                <button
-                  onClick={() => {
-                    const name = categorySearch.trim();
-                    if (name && selectedCategoriesArray.length < MAX_CATEGORIES && !selectedCategoriesArray.includes(name)) {
-                      setSelectedCategory([...selectedCategoriesArray, name].join('|||'));
-                      setCategorySearch('');
-                    }
-                  }}
-                  className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm text-white hover:bg-white/5 transition-colors"
-                >
-                  <Plus className="w-4 h-4 text-zinc-400" />
-                  Create "{categorySearch.trim()}"
-                </button>
-              )}
-              {filteredCategories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => toggleCategory(cat.name)}
-                  className={cn(
-                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
-                    selectedCategoriesArray.includes(cat.name) ? "bg-white/10 text-white" : "text-zinc-400 hover:bg-white/5"
-                  )}
-                >
-                  {cat.name}
-                  {selectedCategoriesArray.includes(cat.name) && <Check className="w-4 h-4" />}
-                </button>
-              ))}
-            </div>
-          </div>
-        </DrawerContent>
-      </Drawer>
     </Drawer>
   );
 }
