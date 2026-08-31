@@ -37,6 +37,25 @@ export type WhipState =
   | 'failed'
   | 'closed';
 
+/**
+ * A response came back and it was a refusal. The status matters to callers as
+ * evidence about the PATH, not just the request: our own publish gate refuses
+ * with 401 (bad key — the same credentials fail everywhere), while any other
+ * status on a self-hosted endpoint came from a middlebox or edge answering in
+ * the server's place (observed: 403s on the relay path that never reached
+ * nginx, from a phone whose JSON API calls passed in the same minute). Those
+ * repeat identically on every retry, so callers fall back instead.
+ */
+export class WhipHttpError extends Error {
+  readonly status: number;
+
+  constructor(status: number) {
+    super(`Streaming server rejected the broadcast (HTTP ${status}).`);
+    this.name = 'WhipHttpError';
+    this.status = status;
+  }
+}
+
 export interface WhipSession {
   /** Tears down the peer connection and DELETEs the session resource. */
   stop: () => Promise<void>;
@@ -236,9 +255,7 @@ export async function publishToWhip({
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Streaming server rejected the broadcast (HTTP ${response.status}).`
-      );
+      throw new WhipHttpError(response.status);
     }
 
     const answer = await response.text();

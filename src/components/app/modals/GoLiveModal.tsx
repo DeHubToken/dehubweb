@@ -9,7 +9,12 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { mintPost, getPostQuota, type PostQuotaStatus } from '@/lib/api/dehub/content';
-import { probeIngestReachable, fetchTurnServers, hadRecentIngestFailure } from '@/lib/live-ingest';
+import {
+  probeIngestReachable,
+  fetchTurnServers,
+  hadRecentIngestFailure,
+  hadRecentRelayFailure,
+} from '@/lib/live-ingest';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
 // they are dynamically imported at go-live time to keep the wallet stack out
@@ -395,9 +400,12 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         chainId: BASE_CHAIN_ID,
         category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
         minterAddress,
+        // The relay only counts as a way out while this device has no fresh
+        // record of the relay itself failing — an edge that refuses the SDP
+        // POST refuses it every time, and Livepeer is the fallback then.
         ingestPreference:
           ((await ingestReachable) && !hadRecentIngestFailure()) ||
-          (await turnServers).length > 0
+          ((await turnServers).length > 0 && !hadRecentRelayFailure())
             ? undefined
             : 'livepeer',
         streamInfo: {

@@ -33,7 +33,7 @@ import {
   Radio,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { publishToWhip, type WhipSession, type WhipState } from '@/lib/livepeer/whip';
+import { publishToWhip, WhipHttpError, type WhipSession, type WhipState } from '@/lib/livepeer/whip';
 import {
   composeCameraBubble,
   BUBBLE_CORNERS,
@@ -55,6 +55,8 @@ import {
   markIngestUnreachable,
   clearIngestUnreachable,
   hadRecentIngestFailure,
+  markRelayFailed,
+  clearRelayFailed,
 } from '@/lib/live-ingest';
 
 // The chat is a heavy component (mentions, voice notes, realtime) and most
@@ -150,8 +152,28 @@ function isNetworkShapedError(error: unknown): boolean {
   return name === 'TimeoutError' || name === 'AbortError' || error instanceof TypeError;
 }
 
+/**
+ * Whether a publish attempt failed in a way that condemns the PATH rather
+ * than the request. Network-shaped failures obviously qualify. So does an
+ * HTTP refusal with any status our own ingest never sends: it answers 401
+ * (bad key — the same credentials fail everywhere) and 406 (unsupported
+ * media) and nothing else, so anything different came from a middlebox or
+ * edge speaking in the server's place — observed as 403s that never reached
+ * nginx. Those repeat identically on every retry, which is exactly what the
+ * fallback markers exist to break.
+ */
+function isPathDeadError(error: unknown): boolean {
+  if (isNetworkShapedError(error)) return true;
+  return (
+    error instanceof WhipHttpError && error.status !== 401 && error.status !== 406
+  );
+}
+
 /** Turns the DOM's terse permission errors into something a creator can act on. */
 function describeMediaError(error: unknown): string {
+  if (error instanceof WhipHttpError && isPathDeadError(error)) {
+    return 'Something on this network blocked the broadcast. Tap Go Live again — the retry takes a different route.';
+  }
   if (isNetworkShapedError(error)) {
     return 'Could not reach the streaming server. Check your connection or try again on another network (a VPN often helps).';
   }
@@ -795,9 +817,10 @@ export function GoLiveBroadcaster({
             onStateChange: (state: WhipState, detail) => {
               if (cancelled) return;
               if (state === 'live') {
-                // A byte actually arrived over the direct path: whatever this
-                // device remembered about the ingest being unreachable is stale.
+                // A byte actually arrived: whatever this device remembered
+                // about the path it just used being dead is stale.
                 if (directSelfHosted) clearIngestUnreachable();
+                else if (viaRelay && endpointBits.url) clearRelayFailed();
                 setPhase('live');
               } else if (state === 'reconnecting') setPhase('reconnecting');
               else if (state === 'failed') {
@@ -817,26 +840,37 @@ export function GoLiveBroadcaster({
         try {
           session = await openSession(relayFirst);
         } catch (error) {
-          // A DIRECT attempt at the ingest failed. Crucially, we do NOT look at
-          // the error's SHAPE: the field failure is a Turkish DPI middlebox
-          // that answers the POST to the bare-IP ingest with an injected HTTP
-          // 403 block page — an HTTP error, not a network throw — so gating the
-          // relay on isNetworkShapedError left these creators stuck forever
-          // (403 → no retry, and no marker written → never relay-first either).
-          // Our own ingest returns 201/401/406, never 403; any failure of the
-          // direct path here means this device cannot reach it, so mark it and
-          // reach for the relay regardless of how the failure dressed itself.
-          // A relay attempt that fails just propagates — there is nowhere better.
-          if (!relayFirst) {
-            markIngestUnreachable();
-            if (canRelay) {
-              if (cancelled) return;
-              session = await openSession(true);
-            } else {
-              throw error;
+          // Only a self-hosted attempt that died path-shaped teaches this
+          // device anything or has anywhere else to go; every other failure
+          // (bad key, camera, a Livepeer stream) just propagates.
+          if (!directBits.url || !isPathDeadError(error)) throw error;
+          if (relayFirst) {
+            // The relay died first. Remember it — the next mint must not let
+            // "a relay is deployed" outvote this device's own evidence again
+            // — then give the direct path one shot: the relay was chosen on
+            // a probe or an old marker, and both lie in both directions.
+            markRelayFailed();
+            if (cancelled) return;
+            try {
+              session = await openSession(false);
+            } catch (directError) {
+              if (isPathDeadError(directError)) markIngestUnreachable();
+              throw directError;
             }
           } else {
-            throw error;
+            // The signaling POST died pointed straight at the ingest.
+            // Remember it — a stuck creator retries in a loop, and the next
+            // mint should know — then reach for the relay this device was
+            // too optimistic to use the first time.
+            markIngestUnreachable();
+            if (cancelled) return;
+            if (!canRelay) throw error;
+            try {
+              session = await openSession(true);
+            } catch (relayError) {
+              if (isPathDeadError(relayError)) markRelayFailed();
+              throw relayError;
+            }
           }
         }
 
