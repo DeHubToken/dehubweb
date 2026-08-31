@@ -10,9 +10,26 @@ const TOP_THRESHOLD = 60;
  * useSyncExternalStore. Listeners attach on first subscribe and detach when
  * the last subscriber leaves.
  */
+/**
+ * Elements that scroll instead of the document opt in with this attribute.
+ * The post layer (`[data-post-overlay]` in AppLayout) is one: it is `fixed` and
+ * carries its own `overflow-y-auto`, so the document never moves while a post
+ * opened from the feed is scrolled, and none of the targets below ever fire.
+ * That is why the top bar used to stay pinned on post pages.
+ *
+ * Scroll events do not bubble, but they DO reach a capture listener on
+ * document, so one listener covers a scroller that mounts and unmounts with a
+ * route. Only tagged elements count — every dialog, chat panel and carousel on
+ * the page also scrolls, and none of those should move the chrome.
+ */
+export const SCROLL_NAV_SOURCE_ATTR = 'data-scroll-nav-source';
+const SCROLL_NAV_SOURCE_SELECTOR = `[${SCROLL_NAV_SOURCE_ATTR}]`;
+
 let visible = true;
 let lastScrollY = 0;
 let touchLastY = 0;
+/** The tagged element currently being scrolled, if any; null = the document. */
+let activeScroller: HTMLElement | null = null;
 const subscribers = new Set<() => void>();
 let detach: (() => void) | null = null;
 
@@ -24,8 +41,11 @@ function setVisible(next: boolean) {
 
 function attachListeners(): () => void {
   const getY = () =>
-    window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    activeScroller?.isConnected
+      ? activeScroller.scrollTop
+      : window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
 
+  activeScroller = null;
   lastScrollY = getY();
   // Re-seed visibility from the actual scroll position: if the last subscriber
   // left while the nav was hidden, a fresh subscriber at the top of a new page
@@ -40,6 +60,24 @@ function attachListeners(): () => void {
     if (y <= TOP_THRESHOLD) { setVisible(true); return; }
     if (diff > 4)  setVisible(false);
     if (diff < -4) setVisible(true);
+  };
+
+  // Capture-phase catch-all for tagged element scrollers. Switching scroller
+  // re-seeds the baseline and skips one frame rather than diffing this
+  // container's scrollTop against the last one's — a jump of a few thousand
+  // pixels would otherwise read as a hard scroll down.
+  const onCapturedScroll = (e: Event) => {
+    const target = e.target;
+    const el =
+      target instanceof HTMLElement && target.matches(SCROLL_NAV_SOURCE_SELECTOR)
+        ? target
+        : null;
+    if (el !== activeScroller) {
+      activeScroller = el;
+      lastScrollY = getY();
+      return;
+    }
+    if (el) onScroll();
   };
 
   // ── touch events: most reliable on iOS/Android ──────────────────────────
@@ -78,11 +116,14 @@ function attachListeners(): () => void {
   const appRoot = document.getElementById('app-root');
   if (appRoot) targets.push(appRoot);
   targets.forEach(t => t.addEventListener('scroll', onScroll, { passive: true }));
+  document.addEventListener('scroll', onCapturedScroll, { passive: true, capture: true });
   window.addEventListener('touchstart', onTouchStart, { passive: true });
   window.addEventListener('touchmove',  onTouchMove,  { passive: true });
 
   return () => {
     targets.forEach(t => t.removeEventListener('scroll', onScroll));
+    document.removeEventListener('scroll', onCapturedScroll, { capture: true });
+    activeScroller = null;
     window.removeEventListener('touchstart', onTouchStart);
     window.removeEventListener('touchmove',  onTouchMove);
   };
