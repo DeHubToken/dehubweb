@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { mintPost, getPostQuota, type PostQuotaStatus } from '@/lib/api/dehub/content';
-import { probeIngestReachable, fetchTurnServers } from '@/lib/live-ingest';
+import { probeIngestReachable, fetchTurnServers, hadRecentIngestFailure } from '@/lib/live-ingest';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
 // they are dynamically imported at go-live time to keep the wallet stack out
@@ -371,6 +371,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // the api.dehub.io signaling edge and relayed media; unreachable with no
     // relay → Livepeer, the fallback of last resort. Both lookups run in
     // parallel with the wallet module so neither costs wall-clock.
+    // A passing probe is additionally outvoted by a fresh failure marker: on
+    // DPI-throttled networks one small GET slips through intermittently while
+    // the WHIP POST never does, so the device's own last direct connect is
+    // better evidence than a probe taken seconds before the same dead end.
     const ingestReachable = probeIngestReachable();
     const turnServers = fetchTurnServers();
 
@@ -392,7 +396,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
         minterAddress,
         ingestPreference:
-          (await ingestReachable) || (await turnServers).length > 0 ? undefined : 'livepeer',
+          ((await ingestReachable) && !hadRecentIngestFailure()) ||
+          (await turnServers).length > 0
+            ? undefined
+            : 'livepeer',
         streamInfo: {
           isLockContent: false,
           isPayPerView: false,

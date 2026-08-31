@@ -78,6 +78,48 @@ export async function probeIngestReachable(timeoutMs = 4000): Promise<boolean> {
   }
 }
 
+/**
+ * Memory of the last direct connect that died on the network, because a
+ * passing probe is not proof. The DPI-throttled ISPs the probe exists for
+ * intermittently let one small GET through while never carrying the WHIP
+ * POST — a broadcaster there passes the probe, mints self-hosted, and dies
+ * seconds later, identically on every retry (observed three times in six
+ * minutes from one phone on 2026-08-31). So a network-shaped failure of a
+ * DIRECT connect leaves a marker, the mint prefers Livepeer while one is
+ * fresh, and a later successful direct connect clears it. A deployed TURN
+ * relay outranks the marker at both decision points, exactly as it outranks
+ * the probe. localStorage rather than component state so the marker survives
+ * the reload-and-retry loop a stuck creator actually performs; every touch
+ * is wrapped because Safari private mode throws on any storage access.
+ */
+const INGEST_FAILURE_KEY = 'dehub.ingest.unreachable-at';
+const INGEST_FAILURE_WINDOW_MS = 24 * 3600 * 1000;
+
+export function markIngestUnreachable(): void {
+  try {
+    localStorage.setItem(INGEST_FAILURE_KEY, String(Date.now()));
+  } catch {
+    /* storage unavailable — the mint just falls back to trusting the probe */
+  }
+}
+
+export function clearIngestUnreachable(): void {
+  try {
+    localStorage.removeItem(INGEST_FAILURE_KEY);
+  } catch {
+    /* nothing to clear where nothing could be written */
+  }
+}
+
+export function hadRecentIngestFailure(): boolean {
+  try {
+    const at = Number(localStorage.getItem(INGEST_FAILURE_KEY));
+    return Number.isFinite(at) && at > 0 && Date.now() - at < INGEST_FAILURE_WINDOW_MS;
+  } catch {
+    return false;
+  }
+}
+
 /** WHEP subscribe endpoint. Playback is ungated — watching costs no round-trip. */
 export function whepEndpointFor(stream: LiveStreamRef): string | undefined {
   if (liveProviderOf(stream) !== 'mediamtx') return undefined;
