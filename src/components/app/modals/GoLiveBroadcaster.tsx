@@ -47,7 +47,12 @@ import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
 import { getLiveStream } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
 import { createLogger } from '@/lib/logger';
-import { whipEndpointFor } from '@/lib/live-ingest';
+import {
+  whipEndpointFor,
+  edgeWhipEndpointFor,
+  probeIngestReachable,
+  fetchTurnServers,
+} from '@/lib/live-ingest';
 
 // The chat is a heavy component (mentions, voice notes, realtime) and most
 // broadcasts never open it, so it stays out of the broadcaster chunk.
@@ -739,10 +744,31 @@ export function GoLiveBroadcaster({
         if (screenTrack) watchForShareStop(screenTrack);
         setPhase('connecting');
 
+        // Decide direct vs relayed at connect time, not mint time — the
+        // network the broadcast starts on is what matters, and a scheduled
+        // stream can start long after it was created. Reachable ingest means
+        // the probe answers in well under a second; only the blocked case
+        // pays the cap, and it was going nowhere without this anyway. When
+        // the ingest is unreachable AND a TURN relay is deployed, signaling
+        // rides the api.dehub.io edge and media rides the relay; with no
+        // relay the direct attempt proceeds and fails into the clear
+        // network-error copy rather than silently.
+        let endpointBits = whipEndpointFor({ provider, playbackId, streamKey });
+        let relayIce: RTCIceServer[] | undefined;
+        if (endpointBits.url && !(await probeIngestReachable())) {
+          const turn = await fetchTurnServers();
+          if (turn.length) {
+            endpointBits = edgeWhipEndpointFor({ provider, playbackId, streamKey });
+            relayIce = turn;
+          }
+        }
+        if (cancelled) return;
+
         const session = await publishToWhip({
           streamKey,
           stream,
-          ...whipEndpointFor({ provider, playbackId, streamKey }),
+          ...endpointBits,
+          iceServers: relayIce,
           onStateChange: (state: WhipState, detail) => {
             if (cancelled) return;
             if (state === 'live') setPhase('live');

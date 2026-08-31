@@ -61,6 +61,12 @@ export interface PublishOptions {
   endpoint?: string;
   /** Publish credential, sent as a bearer token. See live-ingest.ts. */
   token?: string;
+  /**
+   * Extra ICE servers (a TURN relay) appended to the STUN defaults. Given on
+   * the relayed path so media can travel even where the ingest's own address
+   * is unreachable; the browser still prefers a direct route when one works.
+   */
+  iceServers?: RTCIceServer[];
   onStateChange?: (state: WhipState, detail?: string) => void;
 }
 
@@ -106,12 +112,15 @@ export async function publishToWhip({
   stream,
   endpoint: endpointOverride,
   token,
+  iceServers: extraIceServers,
   onStateChange,
 }: PublishOptions): Promise<WhipSession> {
   if (!streamKey) throw new Error('A stream key is required to go live.');
 
   const pc = new RTCPeerConnection({
-    iceServers: ICE_SERVERS,
+    iceServers: extraIceServers?.length
+      ? [...ICE_SERVERS, ...extraIceServers]
+      : ICE_SERVERS,
     bundlePolicy: 'max-bundle',
   });
 

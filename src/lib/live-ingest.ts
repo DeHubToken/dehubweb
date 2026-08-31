@@ -84,6 +84,69 @@ export function whepEndpointFor(stream: LiveStreamRef): string | undefined {
   return `https://${MEDIAMTX_HOST}/${stream.playbackId}/whep`;
 }
 
+/**
+ * Signaling relay for networks where the probe above fails.
+ *
+ * Rides api.dehub.io — Cloudflare-proxied, already in the CSP, and proven
+ * reachable from the exact phones whose direct WHIP never arrived (their API
+ * calls landed in the same minute). nginx forwards ONLY
+ * /live-edge/{path}/(whip|whep) to MediaMTX's loopback signaling port; the
+ * media itself never passes through it — a few KB of SDP text does, which is
+ * why fronting it with the proxy is fine where fronting video is not.
+ *
+ * Signaling alone moves nothing: a network that cannot reach the ingest for
+ * a POST usually cannot carry UDP media to it either. The relay path is only
+ * whole once fetchTurnServers() below returns a relay for the media leg.
+ */
+const EDGE_SIGNALING_BASE = 'https://api.dehub.io/live-edge';
+
+export function edgeWhipEndpointFor(
+  stream: LiveStreamRef,
+): { url?: string; token?: string } {
+  if (liveProviderOf(stream) !== 'mediamtx') return {};
+  return {
+    url: `${EDGE_SIGNALING_BASE}/${stream.playbackId}/whip`,
+    token: `dehub:${stream.streamKey ?? ''}`,
+  };
+}
+
+export function edgeWhepEndpointFor(stream: LiveStreamRef): string | undefined {
+  if (liveProviderOf(stream) !== 'mediamtx') return undefined;
+  return `${EDGE_SIGNALING_BASE}/${stream.playbackId}/whep`;
+}
+
+/**
+ * TURN relay servers for the media leg, or [] when no relay is deployed.
+ *
+ * The API answers with coturn REST credentials (expiry-stamp username, HMAC
+ * credential, 6h TTL) and the relay URIs; an unconfigured backend answers an
+ * empty list and callers skip the relay path entirely. Cached for the
+ * session — the credential outlives any broadcast this tab will start, and
+ * asking once keeps this safe to call at every decision point.
+ */
+let turnServersPromise: Promise<RTCIceServer[]> | null = null;
+
+export function fetchTurnServers(): Promise<RTCIceServer[]> {
+  if (!turnServersPromise) {
+    turnServersPromise = (async () => {
+      try {
+        const res = await fetch('https://api.dehub.io/api/live/turn-credentials', {
+          signal: AbortSignal.timeout(5000),
+        });
+        if (!res.ok) return [];
+        const body = (await res.json()) as { iceServers?: RTCIceServer[] };
+        return Array.isArray(body.iceServers) ? body.iceServers : [];
+      } catch {
+        // A failed lookup must never break the direct path; it only means
+        // "no relay available right now".
+        turnServersPromise = null;
+        return [];
+      }
+    })();
+  }
+  return turnServersPromise;
+}
+
 /** HLS ladder — the fallback WHEP drops to, and what non-WebRTC clients get. */
 export function hlsUrlFor(stream: LiveStreamRef): string | undefined {
   const playbackId = stream?.playbackId;
