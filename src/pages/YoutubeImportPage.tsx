@@ -26,9 +26,14 @@ const YOUTUBE_URL_RE = /^https?:\/\/(www\.|m\.|music\.)?(youtube\.com|youtu\.be)
  * `border-foreground`) both went invisible on some DeHub theme — this app
  * remaps named colors per theme, so any semantic token can end up close to
  * its own background. Bracket syntax below is a literal, unthemed color:
- * black border, white fill, on every theme, full stop. */
+ * black border, white fill, on every theme, full stop.
+ *
+ * No top margin: the box is 20px and `text-sm` sets a 20px line-height, so
+ * under the row's `items-start` it already centres on the label's first line
+ * and stays centred when the label wraps. The `mt-0.5` that used to be here
+ * pushed it 2px low, which read as the text sitting high. */
 const CHECKBOX_CLASS =
-  'mt-0.5 h-5 w-5 shrink-0 rounded border-[2.5px] border-[#000] bg-[#fff] shadow-[0_0_0_1px_rgba(255,255,255,0.6)] data-[state=checked]:bg-[#000] data-[state=checked]:text-[#fff]';
+  'h-5 w-5 shrink-0 rounded border-[2.5px] border-[#000] bg-[#fff] shadow-[0_0_0_1px_rgba(255,255,255,0.6)] data-[state=checked]:bg-[#000] data-[state=checked]:text-[#fff]';
 
 export default function YoutubeImportPage() {
   const { isAuthenticated } = useAuth();
