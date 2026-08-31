@@ -141,7 +141,16 @@ function describeMediaError(error: unknown): string {
       return 'No camera or microphone was found on this device.';
     case 'NotReadableError':
       return 'Your camera is already in use by another app. Close it and try again.';
+    // The WHIP POST aborted on its own cap, or died without a response —
+    // the network between this browser and the streaming server is the
+    // problem, not the camera, and the wording should not blame the camera.
+    case 'TimeoutError':
+    case 'AbortError':
+      return 'Could not reach the streaming server. Check your connection or try again on another network (a VPN often helps).';
     default:
+      if (error instanceof TypeError) {
+        return 'Could not reach the streaming server. Check your connection or try again on another network (a VPN often helps).';
+      }
       return error instanceof Error ? error.message : 'Could not start your camera.';
   }
 }
