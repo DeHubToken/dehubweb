@@ -22,6 +22,8 @@ import {
   fetchTurnServers,
   hadRecentIngestFailure,
   hadRecentRelayFailure,
+  lastProbeFailure,
+  lastTurnFailure,
 } from '@/lib/live-ingest';
 // NOTE: mint helpers reach wallet/contract code (wagmi + web3auth) and this
 // modal is re-exported by the modals barrel used by eager feed components —
@@ -830,6 +832,13 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         playbackId: resultData.playbackId || '(empty)',
         hasKey: Boolean(resultData.streamKey),
         fromMintResponse: Boolean(mintResponse.stream?.streamKey),
+        // Why the mint asked for what it asked for: the failing browser's
+        // probe and TURN lookup both die while the same requests arrive at
+        // nginx and get answered — these say HOW they die on the client.
+        probeOk: await ingestReachable,
+        probeFailure: lastProbeFailure || '(none)',
+        turnCount: (await turnServers).length,
+        turnFailure: lastTurnFailure || '(none)',
       });
       setStreamData(resultData);
       // The stream exists and carries the title — the pending copy of it should
