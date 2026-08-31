@@ -3,9 +3,12 @@
  * ============
  * Manages view recording for videos (single) and feed items (batch).
  * 
- * - Videos: Fire-and-forget after watching to a threshold
+ * - Videos: Fire-and-forget after watching to a threshold, ONCE PER WATCH —
+ *   a replay or a reopen is another view, the way it works on every other video
+ *   platform. No local suppression; the API's 30-second per-viewer-per-post
+ *   rate limit is what stops a reload loop.
  * - Feed items (images/posts): Batch after visibility duration, sent together
- * - Deduplication: 24-hour per-user-per-post via localStorage
+ * - Deduplication: 24-hour per-user-per-post via localStorage, feed items only
  *
  * Signed-out visitors count too. The DeHub API requires a valid JWT on its view
  * endpoints, so views from visitors with no session go to the `anon-views`
@@ -182,10 +185,10 @@ async function recordBatchViews(tokenIds: number[]): Promise<BatchViewResponse |
 class VideoViewTracker {
   private watchedVideos = new Set<string>();
   private watchProgress = new Map<string, number>(); // tokenId -> seconds watched
-  
+
   private readonly WATCH_THRESHOLD_PERCENT = 0.1; // 10% of video
   private readonly MIN_WATCH_SECONDS = 3; // At least 3 seconds
-  
+
   /**
    * Update watch progress for a video
    * @param tokenId - The video token ID
@@ -193,15 +196,24 @@ class VideoViewTracker {
    * @param duration - Total video duration in seconds
    */
   updateProgress(tokenId: string, currentTime: number, duration: number): void {
-    // Already sent view for this video
-    if (this.watchedVideos.has(tokenId)) return;
-    
-    // Already viewed in last 24h
-    if (hasBeenViewed(tokenId)) {
-      this.watchedVideos.add(tokenId);
-      return;
+    // One view per watch, not one view ever. `watchedVideos` closes the current
+    // watch so a single play fires once; `reset()` re-arms it, so a replay or a
+    // fresh open of the same video is another view. The 24-hour localStorage
+    // dedup that used to sit here is gone on purpose — it made the second watch
+    // of a video invisible, which is not how a video's view count works
+    // anywhere. What is left standing against a reload loop is the API's
+    // 30-second per-viewer-per-post rate limit.
+
+    // Playback has jumped back to the top after a real watch — a replay, in the
+    // same mounted player. Re-arm, or a looping video counts once and never
+    // again however long it runs.
+    const priorProgress = this.watchProgress.get(tokenId) || 0;
+    if (priorProgress > this.MIN_WATCH_SECONDS && currentTime < 1) {
+      this.reset(tokenId);
     }
-    
+
+    if (this.watchedVideos.has(tokenId)) return;
+
     // Track cumulative watch time
     const previousTime = this.watchProgress.get(tokenId) || 0;
     if (currentTime > previousTime) {
@@ -222,8 +234,11 @@ class VideoViewTracker {
   
   private fireView(tokenId: string): void {
     this.watchedVideos.add(tokenId);
-    markAsViewed([tokenId]);
-    
+
+    // Deliberately does NOT markAsViewed: that list is the feed tracker's
+    // 24-hour suppression, and a video that counts every watch must not write
+    // itself into it. The feed's own impression dedup is untouched.
+
     // Fire and forget - don't await
     recordSingleView(tokenId).then(result => {
       if (result?.success) {
@@ -233,17 +248,22 @@ class VideoViewTracker {
   }
   
   /**
-   * Reset tracking for a video (e.g., when unmounting)
+   * Reset tracking for a video (e.g., when unmounting, or on replay).
+   *
+   * Clears the fired flag as well as the progress, which is what makes the next
+   * watch count. Leave the flag set and a rewatch inside the same page session
+   * would be silently dropped by the client before the API ever saw it.
    */
   reset(tokenId: string): void {
     this.watchProgress.delete(tokenId);
+    this.watchedVideos.delete(tokenId);
   }
-  
+
   /**
-   * Check if a video has already been viewed this session
+   * Whether the CURRENT watch of this video has already counted.
    */
   hasViewed(tokenId: string): boolean {
-    return this.watchedVideos.has(tokenId) || hasBeenViewed(tokenId);
+    return this.watchedVideos.has(tokenId);
   }
 }
 
