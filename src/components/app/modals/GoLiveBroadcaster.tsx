@@ -115,6 +115,12 @@ interface GoLiveBroadcasterProps {
   streamId?: string;
   /** Fired when the creator ends the broadcast; the parent runs API teardown. */
   onEnd: () => void;
+  /**
+   * Fired the first time the WHIP session actually reaches 'live'. The parent
+   * uses it to tell a broadcast that aired apart from a launch that never did —
+   * ending the latter discards its post instead of leaving a dead live card.
+   */
+  onLive?: () => void;
 }
 
 type Phase = 'starting' | 'connecting' | 'live' | 'reconnecting' | 'error';
@@ -255,6 +261,7 @@ export function GoLiveBroadcaster({
   initialScreenStream = null,
   streamId,
   onEnd,
+  onLive,
 }: GoLiveBroadcasterProps) {
   const [phase, setPhase] = useState<Phase>('starting');
   const [errorMessage, setErrorMessage] = useState('');
@@ -314,6 +321,10 @@ export function GoLiveBroadcaster({
   const facingModeRef = useRef<'user' | 'environment'>('user');
   useEffect(() => { videoOnRef.current = videoOn; }, [videoOn]);
   useEffect(() => { facingModeRef.current = facingMode; }, [facingMode]);
+  // Read through a ref so the connect effect (whose dep list is deliberately
+  // frozen) never restarts the ingest because the parent re-rendered.
+  const onLiveRef = useRef(onLive);
+  useEffect(() => { onLiveRef.current = onLive; }, [onLive]);
 
   /** Feature detection, not a device check: undefined on iOS and on Android. */
   const canShareScreen = typeof navigator?.mediaDevices?.getDisplayMedia === 'function';
@@ -836,6 +847,7 @@ export function GoLiveBroadcaster({
                 if (directSelfHosted) clearIngestUnreachable();
                 else if (viaRelay && endpointBits.url) clearRelayFailed();
                 setPhase('live');
+                onLiveRef.current?.();
               } else if (state === 'reconnecting') setPhase('reconnecting');
               else if (state === 'failed') {
                 setPhase('error');
