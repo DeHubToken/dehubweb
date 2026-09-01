@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { buildAvatarUrl, deviceWidth } from '@/lib/media-url';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
 import {
   listProfiles,
   currentProfileId,
@@ -139,6 +140,12 @@ export function ProfilesSection() {
                     {profile.session ? '' : ` · ${t('settings.profileSignedOut', 'sign in to switch')}`}
                   </span>
                 </span>
+                {switchingId === profile.id && (
+                  /* Switching profile tears down one session and restores
+                     another — seconds on a slow link, so the row that was
+                     tapped carries the mark instead of just dimming. */
+                  <ButtonLoader className="shrink-0" />
+                )}
                 {isActive && (
                   <span className="flex items-center gap-1 text-xs text-emerald-400 shrink-0 pr-6">
                     <Check className="w-3.5 h-3.5" />
