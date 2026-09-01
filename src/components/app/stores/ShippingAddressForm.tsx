@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export function ShippingAddressForm({ onChange }: Props) {
+  const { t } = useTranslation();
   const { data: saved = [], isLoading } = useSavedAddresses();
   const saveAddress = useSaveAddress();
   const deleteAddress = useDeleteAddress();
@@ -104,7 +106,7 @@ export function ShippingAddressForm({ onChange }: Props) {
 
   const handleSave = () => {
     if (!fields.full_name || !fields.address_line1 || !fields.city || !fields.postal_code || !fields.country) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('stores.fillRequired'));
       return;
     }
     setJustSaved(true);
@@ -132,14 +134,14 @@ export function ShippingAddressForm({ onChange }: Props) {
 
   return (
     <div className="space-y-3">
-      <Label className="text-primary-foreground font-semibold">Shipping Address</Label>
+      <Label className="text-primary-foreground font-semibold">{t('stores.shippingAddress')}</Label>
 
       {saved.length > 0 && (
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <Select value={selectedId} onValueChange={handleSelectChange}>
               <SelectTrigger className={`${inputClass} [&>svg]:text-primary-foreground [&>span]:text-primary-foreground`}>
-                <SelectValue placeholder="Select a saved address..." />
+                <SelectValue placeholder={t('stores.selectSavedAddress')} />
               </SelectTrigger>
               <SelectContent className="text-primary-foreground">
                 {saved.map(a => (
@@ -173,35 +175,35 @@ export function ShippingAddressForm({ onChange }: Props) {
 
       {/* Structured fields */}
       <div>
-        <Label className="text-primary-foreground text-xs">Full Name *</Label>
-        <Input value={fields.full_name} onChange={e => update('full_name', e.target.value)} placeholder="John Doe" className={inputClass} />
+        <Label className="text-primary-foreground text-xs">{t('stores.fullName')}</Label>
+        <Input value={fields.full_name} onChange={e => update('full_name', e.target.value)} placeholder={t('stores.fullNamePlaceholder')} className={inputClass} />
       </div>
       <div>
-        <Label className="text-primary-foreground text-xs">Street Address *</Label>
-        <Input value={fields.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder="123 Main St" className={inputClass} />
+        <Label className="text-primary-foreground text-xs">{t('stores.street')}</Label>
+        <Input value={fields.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder={t('stores.streetPlaceholder')} className={inputClass} />
       </div>
       <div>
-        <Label className="text-primary-foreground text-xs">Apt / Suite / Unit</Label>
-        <Input value={fields.address_line2} onChange={e => update('address_line2', e.target.value)} placeholder="Apt 4B" className={inputClass} />
+        <Label className="text-primary-foreground text-xs">{t('stores.apt')}</Label>
+        <Input value={fields.address_line2} onChange={e => update('address_line2', e.target.value)} placeholder={t('stores.aptPlaceholder')} className={inputClass} />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <Label className="text-primary-foreground text-xs">City *</Label>
-          <Input value={fields.city} onChange={e => update('city', e.target.value)} placeholder="New York" className={inputClass} />
+          <Label className="text-primary-foreground text-xs">{t('stores.city')}</Label>
+          <Input value={fields.city} onChange={e => update('city', e.target.value)} placeholder={t('stores.cityPlaceholder')} className={inputClass} />
         </div>
         <div>
-          <Label className="text-primary-foreground text-xs">State / Province</Label>
-          <Input value={fields.state} onChange={e => update('state', e.target.value)} placeholder="NY" className={inputClass} />
+          <Label className="text-primary-foreground text-xs">{t('stores.state')}</Label>
+          <Input value={fields.state} onChange={e => update('state', e.target.value)} placeholder={t('stores.statePlaceholder')} className={inputClass} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <Label className="text-primary-foreground text-xs">Postal Code *</Label>
-          <Input value={fields.postal_code} onChange={e => update('postal_code', e.target.value)} placeholder="10001" className={inputClass} />
+          <Label className="text-primary-foreground text-xs">{t('stores.postal')}</Label>
+          <Input value={fields.postal_code} onChange={e => update('postal_code', e.target.value)} placeholder={t('stores.postalPlaceholder')} className={inputClass} />
         </div>
         <div>
-          <Label className="text-primary-foreground text-xs">Country *</Label>
-          <Input value={fields.country} onChange={e => update('country', e.target.value)} placeholder="United States" className={inputClass} />
+          <Label className="text-primary-foreground text-xs">{t('stores.country')}</Label>
+          <Input value={fields.country} onChange={e => update('country', e.target.value)} placeholder={t('stores.countryPlaceholder')} className={inputClass} />
         </div>
       </div>
 
@@ -210,7 +212,7 @@ export function ShippingAddressForm({ onChange }: Props) {
         <div className="rounded-lg border border-white/10 bg-white/5 p-3 space-y-2">
           <div className="flex items-center gap-2">
             <Checkbox id="save-addr" className={checkboxClass} checked={wantSave} onCheckedChange={v => setWantSave(!!v)} />
-            <label htmlFor="save-addr" className="text-sm text-primary-foreground cursor-pointer">Save this address for next time</label>
+            <label htmlFor="save-addr" className="text-sm text-primary-foreground cursor-pointer">{t('stores.saveAddressForNextTime')}</label>
           </div>
           {wantSave && (
             <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -218,12 +220,12 @@ export function ShippingAddressForm({ onChange }: Props) {
                 <Input
                   value={saveLabel}
                   onChange={e => setSaveLabel(e.target.value)}
-                  placeholder="Label (e.g. Home, Work)"
+                  placeholder={t('stores.addressLabelPlaceholder')}
                   className={`${inputClass} flex-1 h-8 text-sm`}
                 />
                 <div className="flex items-center gap-1.5">
                   <Checkbox id="set-default" className={checkboxClass} checked={isDefault} onCheckedChange={v => setIsDefault(!!v)} />
-                  <label htmlFor="set-default" className="text-xs text-primary-foreground whitespace-nowrap cursor-pointer">Default</label>
+                  <label htmlFor="set-default" className="text-xs text-primary-foreground whitespace-nowrap cursor-pointer">{t('stores.defaultLabel')}</label>
                 </div>
               </div>
               <Button
@@ -233,11 +235,11 @@ export function ShippingAddressForm({ onChange }: Props) {
                 className="w-full"
               >
                 {saveAddress.isPending ? (
-                  <><Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> Saving...</>
+                  <><Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> {t('stores.savingAddress')}</>
                 ) : saveAddress.isSuccess && justSaved ? (
-                  <><Check className="w-3.5 h-3.5 mr-1.5" /> Saved!</>
+                  <><Check className="w-3.5 h-3.5 mr-1.5" /> {t('stores.savedAddress')}</>
                 ) : (
-                  <><BookmarkPlus className="w-3.5 h-3.5 mr-1.5" /> Save Address</>
+                  <><BookmarkPlus className="w-3.5 h-3.5 mr-1.5" /> {t('stores.saveAddress')}</>
                 )}
               </Button>
             </div>
