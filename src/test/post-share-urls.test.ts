@@ -27,7 +27,10 @@ const APP_TSX = readFileSync(resolve(ROOT, 'src/App.tsx'), 'utf8');
 const gate = () => {
   const start = WORKER.indexOf('function shouldServeSSR');
   expect(start).toBeGreaterThan(-1);
-  return WORKER.slice(start, start + 4000);
+  // The whole function, not a byte window: each new rule pushes the older
+  // ones down, and a fixed slice starts failing on arrivals rather than on
+  // regressions.
+  return WORKER.slice(start, WORKER.indexOf('\n}\n', start));
 };
 
 describe('post share URLs', () => {
@@ -50,7 +53,7 @@ describe('post share URLs', () => {
    * all: the SPA shell goes out with the homepage card and a noindex.
    */
   it('lets the off-chain slug and the short shapes past the SSR gate', () => {
-    expect(gate()).toContain(String.raw`/^\/newpost\/\d+\/?$/`);
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?newpost\/\d+\/?$/`);
     expect(gate()).toContain(String.raw`/^\/posts\/\d+(?:\/b(?:\/[^/]+)?)?\/?$/`);
   });
 
@@ -63,7 +66,7 @@ describe('post share URLs', () => {
   it('normalises every shape onto /app/post/<tokenId> before proxying', () => {
     expect(WORKER).toContain('let ssrPath = pathname;');
     expect(WORKER).toContain('encodeURIComponent(ssrPath)');
-    expect(WORKER).toContain(String.raw`/^\/newpost\/(\d+)\/?$/`);
+    expect(WORKER).toContain(String.raw`/^\/(?:app\/)?newpost\/(\d+)\/?$/`);
     expect(WORKER).toContain(String.raw`/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/`);
     expect(WORKER).toContain(String.raw`/^\/post\/(\d+)\/?$/`);
     // /app/video/<tokenId> renders SinglePostPage and parseDehubLink reads it
@@ -84,6 +87,7 @@ describe('post share URLs', () => {
    */
   it('classifies the normalised path as an entity route', () => {
     expect(WORKER).toContain("ssrPath.includes('/post/')");
-    expect(WORKER).toContain("pathname.includes('/newpost/')");
+    // Unanchored: /newpost/<n> and its /app twin both have to count.
+    expect(WORKER).toContain("pathname.includes('newpost/')");
   });
 });
