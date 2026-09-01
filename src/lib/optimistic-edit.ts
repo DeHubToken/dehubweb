@@ -31,6 +31,9 @@ function normalizeEditedPost(edited: EditPostResult) {
     // Patched in so the content warning appears (or clears) on the card the
     // creator just edited, without waiting for a refetch.
     contentRating: edited.contentRating,
+    // Same reason: the Shop button has to appear, change count or disappear on
+    // the card that is already on screen.
+    shopLinks: edited.shopLinks,
   };
 }
 

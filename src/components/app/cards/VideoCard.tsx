@@ -43,6 +43,7 @@ import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
+import { ShopLinkBoard } from '../live/ShopLinkBoard';
 import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
@@ -2257,6 +2258,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {!hideActions && (
           <>
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
+            {/* The creator's Shop board. Inline rather than over the player:
+                this card runs an immersive mode that reflows the video, and an
+                absolutely-positioned board would have to track it. Live keeps
+                the overlay, where not leaving the stream is the point. */}
+            <ShopLinkBoard links={video.shopLinks} variant="inline" />
             <ActionBar
               postId={video.id}
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
@@ -2510,6 +2516,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         currentDescription={video.description ?? ''}
         currentCategories={video.categories ?? []}
         currentContentRating={video.contentRating}
+        currentShopLinks={video.shopLinks}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, video.id, edited);
         }}

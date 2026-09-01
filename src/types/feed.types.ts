@@ -9,7 +9,7 @@
 
 import type { User } from './app.types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
-import type { ContentRating } from '@/lib/api/dehub/types';
+import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import type { SubscriberPlan } from '@/lib/content-gate';
 
 /**
@@ -47,6 +47,15 @@ export interface BaseFeedItem {
    *  which uses this as a floor so a client-side recording gap never shows
    *  fewer tips than the backend actually knows about. */
   totalTips?: number;
+  /**
+   * The creator's Shop board — affiliate and shop links attached to this post.
+   * Absent or empty means no Shop button draws.
+   *
+   * On BaseFeedItem rather than on LiveStream alone: the board is a property
+   * of the post, and a video or an image card is as good a place to offer it
+   * as a stream. Live is simply where it ships first.
+   */
+  shopLinks?: ShopLink[];
 }
 
 /**

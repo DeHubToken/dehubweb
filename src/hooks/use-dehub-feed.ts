@@ -190,6 +190,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   return {
     id,
     type: 'video',
+    shopLinks: (nft as any).shopLinks,
     thumbnail,
     videoUrl,
     transcodingStatus: nft.transcodingStatus,
@@ -284,6 +285,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   return {
     id,
     type: 'image',
+    shopLinks: (nft as any).shopLinks,
     username,
     verified,
     avatar,
@@ -389,6 +391,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
     subscriberPlans: (nft as any).plansDetails,
     contentRating: nft.contentRating,
+    shopLinks: nft.shopLinks,
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     ...(streamId ? { streamId } : {}),
@@ -645,6 +648,9 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
      */
     contentRating: (stream as any).contentRating,
     subscriberPlans: (stream as any).plansDetails,
+    // Flattened onto the row by applyLiveAccess, like contentRating — the
+    // board lives on the token, and /api/live only serves the stream.
+    shopLinks: (stream as any).shopLinks,
     isUnlocked: (stream as any).isUnlocked ?? false,
     isPPV: liveStreamInfo?.isPayPerView || false,
     ppvPrice: liveStreamInfo?.payPerViewAmount,
