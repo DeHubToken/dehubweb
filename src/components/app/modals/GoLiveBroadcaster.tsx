@@ -56,7 +56,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { getLiveStream, updateStreamThumbnail } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
-import { useStreamAudience } from '@/hooks/use-stream-presence';
+import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { createLogger } from '@/lib/logger';
 import {
   whipEndpointFor,

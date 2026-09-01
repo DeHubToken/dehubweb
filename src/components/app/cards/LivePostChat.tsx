@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
 import { useLiveChatMessages } from '@/hooks/use-livechat';
-import { useStreamAudience } from '@/hooks/use-stream-presence';
+import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
