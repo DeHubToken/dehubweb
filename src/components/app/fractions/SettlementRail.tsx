@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 /** "3h left", "overdue by 2h" — the deadline is the whole point of the row. */
-function deadlineLabel(settleBy: string | null): { text: string; overdue: boolean } {
+function deadlineLabel(settleBy: string | null, t: TFunction): { text: string; overdue: boolean } {
   if (!settleBy) return { text: '', overdue: false };
   const ms = new Date(settleBy).getTime() - Date.now();
   const overdue = ms < 0;
@@ -34,7 +34,7 @@ function deadlineLabel(settleBy: string | null): { text: string; overdue: boolea
   const hours = Math.floor(abs / 3600_000);
   const mins = Math.floor((abs % 3600_000) / 60_000);
   const span = hours > 0 ? `${hours}h` : `${mins}m`;
-  return { text: overdue ? `overdue by ${span}` : `${span} left`, overdue };
+  return { text: t(overdue ? 'fractions.overdueBy' : 'fractions.timeLeft', { span }), overdue };
 }
 
 function TradeRow({
@@ -52,7 +52,8 @@ function TradeRow({
   pending?: boolean;
   direction: 'in' | 'out';
 }) {
-  const { text, overdue } = deadlineLabel(trade.settle_by);
+  const { t } = useTranslation();
+  const { text, overdue } = deadlineLabel(trade.settle_by, t);
   const counterparty = direction === 'out' ? trade.buyer_address : trade.seller_address;
   const Icon = direction === 'out' ? ArrowUpRight : ArrowDownLeft;
 
@@ -67,7 +68,7 @@ function TradeRow({
         <span className="text-xs text-white/60 flex items-center gap-1.5 min-w-0">
           <Icon className="w-3.5 h-3.5 shrink-0" />
           <span className="truncate">
-            Post #{trade.token_id} · {truncateAddress(counterparty)}
+            {t('fractions.postCounterparty', { id: trade.token_id, address: truncateAddress(counterparty) })}
           </span>
         </span>
         {text && (
@@ -86,7 +87,7 @@ function TradeRow({
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-white font-medium text-sm">
-            {trade.quantity} fraction{trade.quantity === 1 ? '' : 's'}
+            {t('fractions.fractionCount', { count: trade.quantity })}
           </p>
           <p className="text-xs text-white/50 flex items-center gap-1">
             <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
@@ -120,6 +121,7 @@ interface SettlementRailProps {
 }
 
 export function SettlementRail({ tokenId, className }: SettlementRailProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data, isLoading } = useOpenTrades(walletAddress);
   const { deliver, pay } = useSettleTrade();
@@ -138,7 +140,7 @@ export function SettlementRail({ tokenId, className }: SettlementRailProps) {
   return (
     <section className={cn('space-y-3', className)}>
       <h2 className="text-sm font-medium text-white/60">
-        Open trades
+        {t('fractions.openTrades')}
         <span className="text-white/30 ml-1.5">
           ({toDeliver.length + toPay.length + waiting.length})
         </span>
@@ -150,7 +152,7 @@ export function SettlementRail({ tokenId, className }: SettlementRailProps) {
           trade={trade}
           direction="out"
           action
-          actionLabel="Send fractions"
+          actionLabel={t('fractions.sendFractions')}
           pending={deliver.isPending && deliver.variables?.id === trade.id}
           onAction={() => deliver.mutate(trade)}
         />
@@ -162,7 +164,7 @@ export function SettlementRail({ tokenId, className }: SettlementRailProps) {
           trade={trade}
           direction="in"
           action
-          actionLabel="Pay now"
+          actionLabel={t('fractions.payNow')}
           pending={pay.isPending && pay.variables?.trade.id === trade.id}
           onAction={() =>
             pay.mutate({
@@ -183,7 +185,7 @@ export function SettlementRail({ tokenId, className }: SettlementRailProps) {
           direction={trade.status === 'awaiting_delivery' ? 'in' : 'out'}
           action={false}
           actionLabel={
-            trade.status === 'awaiting_delivery' ? 'Waiting on seller' : 'Waiting on buyer'
+            t(trade.status === 'awaiting_delivery' ? 'fractions.waitingOnSeller' : 'fractions.waitingOnBuyer')
           }
         />
       ))}

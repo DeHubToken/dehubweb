@@ -11,6 +11,7 @@
  */
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShieldCheck, ShieldAlert, Clock, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { FractionSellerStats } from '@/hooks/use-fraction-marketplace';
@@ -36,6 +37,7 @@ export const SellerTrustBadge = memo(function SellerTrustBadge({
   className,
   compact,
 }: SellerTrustBadgeProps) {
+  const { t } = useTranslation();
   const settled = Number(stats?.settled_trades || 0);
   const overdue = Number(stats?.overdue_trades || 0);
   const speed = formatSettleTime(stats?.avg_settle_seconds);
@@ -47,10 +49,10 @@ export const SellerTrustBadge = memo(function SellerTrustBadge({
           'inline-flex items-center gap-1 text-[10px] font-medium text-amber-300/90',
           className,
         )}
-        title={`${overdue} trade${overdue === 1 ? '' : 's'} past the settlement deadline`}
+        title={t('fractions.overdueTitle', { count: overdue })}
       >
         <ShieldAlert className="w-3 h-3" />
-        {overdue} late
+        {t('fractions.lateCount', { count: overdue })}
       </span>
     );
   }
@@ -59,10 +61,10 @@ export const SellerTrustBadge = memo(function SellerTrustBadge({
     return (
       <span
         className={cn('inline-flex items-center gap-1 text-[10px] text-white/40', className)}
-        title="This seller has not completed a fraction trade yet"
+        title={t('fractions.newSellerTitle')}
       >
         <Sparkles className="w-3 h-3" />
-        New seller
+        {t('fractions.newSeller')}
       </span>
     );
   }
@@ -70,10 +72,10 @@ export const SellerTrustBadge = memo(function SellerTrustBadge({
   return (
     <span
       className={cn('inline-flex items-center gap-1 text-[10px] text-emerald-300/80', className)}
-      title={`${settled} settled trade${settled === 1 ? '' : 's'}${speed ? `, typically in ${speed}` : ''}`}
+      title={t('fractions.settledTitle', { count: settled }) + (speed ? t('fractions.settledTitleSpeed', { speed }) : '')}
     >
       <ShieldCheck className="w-3 h-3" />
-      {settled} settled
+      {t('fractions.settledCount', { count: settled })}
       {!compact && speed && (
         <>
           <Clock className="w-3 h-3 ml-0.5" />
