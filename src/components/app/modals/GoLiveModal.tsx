@@ -1100,19 +1100,29 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
             liveFullScreen && 'sr-only'
           )}
         >
-          <DrawerTitle className="text-white flex items-center gap-2">
-            <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+          <DrawerTitle className={cn('text-white flex items-center gap-2', liveFullScreen && 'sr-only')}>
+            {/* Both the pulse dot and the close button are absolutely
+                positioned children, so `sr-only` on the header does not hide
+                them — they escaped its 1px clip and landed as a stray red dot
+                and a second ✕ in the top-left corner of the full-screen
+                broadcast, over a picture that already has its own close in the
+                top-right. Withhold them outright instead of hiding the box. */}
+            {!liveFullScreen && (
+              <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+            )}
             {step === 'setup' ? 'Go Live' : step === 'broadcasting' ? "You're Live" : 'Stream Ready'}
           </DrawerTitle>
           <DrawerDescription className="sr-only">
             Configure your livestream settings or get your RTMP credentials.
           </DrawerDescription>
-          <button
-            onClick={handleDismiss}
-            className="absolute top-1/2 -translate-y-1/2 right-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          {!liveFullScreen && (
+            <button
+              onClick={handleDismiss}
+              className="absolute top-1/2 -translate-y-1/2 right-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </DrawerHeader>
 
         <div
