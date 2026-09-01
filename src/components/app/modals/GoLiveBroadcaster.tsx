@@ -880,7 +880,17 @@ export function GoLiveBroadcaster({
           const session = await publishToWhip({
             streamKey,
             stream,
-            ...endpointBits,
+            // Named explicitly, NEVER spread: endpointBits carries `url`, but
+            // publishToWhip's option is `endpoint` — `...endpointBits` passed
+            // a key the function ignores, `endpoint` stayed undefined, and
+            // EVERY self-hosted publish fell to the Livepeer default URL with
+            // a key Livepeer had never heard of (the catalyst's 403 "Request
+            // not allowed" seen on every failing device). A spread bypasses
+            // the excess-property check, which is why typecheck never said a
+            // word — the whole self-hosted browser publish path was dead from
+            // the day it shipped.
+            endpoint: endpointBits.url,
+            token: endpointBits.token,
             iceServers: relayIce,
             onStateChange: (state: WhipState, detail) => {
               if (cancelled) return;
