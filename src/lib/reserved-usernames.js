@@ -53,7 +53,8 @@ export const ROUTE_SEGMENTS = [
   // /app/<x> onto /<x>, so they resolve into the same space. Several were
   // already in the worker's list for exactly this reason. ---
   'ads', 'bookmarks', 'buy', 'command-centre', 'fractions', 'glossary', 'messages',
-  'migrate-youtube', 'notifications', 'post', 'profile', 'settings', 'stores', 'video', 'wallet',
+  'migrate-youtube', 'notifications', 'post', 'profile', 'settings', 'stores', 'superpowers',
+  'video', 'wallet',
 
   // --- Edge-only surfaces: served by the worker, never reach the router ---
   'blog', 'rss', 'sitemap', 'robots',

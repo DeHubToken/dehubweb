@@ -859,6 +859,7 @@ export default function StatsPage() {
         title="Live Site Stats — DeHub Visitors and Members in Real Time"
         description="Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database."
         url="https://dehub.io/stats"
+        image="https://dehub.io/og/stats.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Dataset',

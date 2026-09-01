@@ -39,7 +39,7 @@ export default function AccountsPage() {
       <SEOHead
         title="Account Marketplace — DeHub"
         description="Buy and sell established DeHub accounts for DHB. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller."
-        image="https://dehub.io/og/dehub-social-share.png"
+        image="https://dehub.io/og/accounts.jpg"
         url="https://dehub.io/accounts"
         jsonLd={JSON_LD}
       />

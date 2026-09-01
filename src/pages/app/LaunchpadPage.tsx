@@ -44,6 +44,8 @@ export default function LaunchpadPage() {
       <SEOHead
         title="Launchpad — DeHub"
         description="Tokenise a business on the DeHub launchpad: browse live coins or create your own."
+        url="https://dehub.io/launchpad"
+        image="https://dehub.io/og/launchpad.jpg"
         noindex
       />
       <h1 className="sr-only">DeHub Launchpad</h1>

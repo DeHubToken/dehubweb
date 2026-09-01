@@ -270,6 +270,7 @@ export default function YoutubeImportPage() {
         title="Import from YouTube — DeHub"
         description="Paste a YouTube link and publish it as a DeHub post."
         url="https://dehub.io/converter"
+        image="https://dehub.io/og/converter.jpg"
       />
 
       <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
