@@ -2828,6 +2828,7 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "presetNeedsImage": "{{name}} needs an attached image. Attach one first.",
     "presets": "Presets",
     "clearPreset": "Clear preset",
     "presetAria": "{{name}} preset. {{hint}}",

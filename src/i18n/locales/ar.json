@@ -2832,6 +2832,7 @@
     "sellYourFractions": "بِع أجزاءك ({{held}} بحوزتك)"
   },
   "creator": {
+    "presetNeedsImage": "يتطلب {{name}} صورة مرفقة. أرفق واحدة أولاً.",
     "presets": "الإعدادات الجاهزة",
     "clearPreset": "إزالة الإعداد",
     "presetAria": "إعداد {{name}}. {{hint}}",

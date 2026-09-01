@@ -2832,6 +2832,7 @@
     "sellYourFractions": "出售你的碎片（持有 {{held}} 份）"
   },
   "creator": {
+    "presetNeedsImage": "{{name}} 需要附上图片。请先添加一张。",
     "presets": "预设",
     "clearPreset": "清除预设",
     "presetAria": "{{name}} 预设。{{hint}}",

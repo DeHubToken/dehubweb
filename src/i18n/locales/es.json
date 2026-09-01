@@ -2828,6 +2828,7 @@
     "sellYourFractions": "Vender tus fracciones ({{held}} en cartera)"
   },
   "creator": {
+    "presetNeedsImage": "{{name}} necesita una imagen adjunta. Adjunta una primero.",
     "presets": "Presets",
     "clearPreset": "Quitar preset",
     "presetAria": "Preset {{name}}. {{hint}}",
