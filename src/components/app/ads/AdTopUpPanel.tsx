@@ -25,6 +25,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -79,9 +80,13 @@ export function AdTopUpPanel({
   suggestedUsd,
   onCredited,
   onCancel,
-  cancelLabel = 'Cancel',
+  cancelLabel,
   onBusyChange,
 }: AdTopUpPanelProps) {
+  const { t } = useTranslation();
+  // Defaulted here, not in the signature: a default parameter cannot call the
+  // hook that translates it.
+  const cancelText = cancelLabel ?? t('ads.cancel');
   const { data: quote, isLoading: loadingPrice, isError: priceError, refetch: refetchQuote } = useAdsTopUpQuote();
   const minTopup = quote?.minTopupUsd ?? 25;
 
@@ -104,7 +109,7 @@ export function AdTopUpPanel({
   const costDhb = dhbPrice && effectiveUsd > 0 ? (effectiveUsd / dhbPrice) * TRANSFER_HEADROOM : 0;
 
   const runTopUp = useCallback(async () => {
-    if (!dhbPrice) { toast.error('DHB price unavailable — try again shortly.'); return; }
+    if (!dhbPrice) { toast.error(t('ads.priceUnavailable')); return; }
     if (costDhb <= 0 || effectiveUsd < minTopup) {
       toast.error(`Minimum top-up is $${minTopup}`);
       return;
@@ -118,7 +123,7 @@ export function AdTopUpPanel({
       // A paused token reverts the transfer after the signature, which reads
       // as "the top-up is broken" rather than "the token is paused".
       if (await checkDHBPaused(BASE_CHAIN_ID)) {
-        toast.error('DHB transfers are paused on-chain right now. Try again shortly.');
+        toast.error(t('ads.transfersPaused'));
         setIsPaying(false);
         setPhase('idle');
         return;
@@ -154,19 +159,19 @@ export function AdTopUpPanel({
       const chainConfig = getChainConfig(payChainId);
       await switchChain(payChainId);
 
-      toast.loading('Sending DHB…', { id: 'ads-topup' });
+      toast.loading(t('ads.sendingDhb'), { id: 'ads-topup' });
       const result = await writeContractAA(
         chainConfig.dhbToken,
         erc20TransferInterface,
         'transfer',
         [ADS_TREASURY, amountWei],
-        { context: 'Ads balance top-up', chainId: payChainId },
+        { context: t('ads.adsBalanceTopUp'), chainId: payChainId },
       );
       await result.wait(1);
 
       // Verify + credit (retry briefly while the transfer indexes).
       setPhase('verify');
-      toast.loading('Verifying on-chain…', { id: 'ads-topup' });
+      toast.loading(t('ads.verifyingOnChain'), { id: 'ads-topup' });
       let credited: number | null = null;
       let lastError: Error | null = null;
       for (let attempt = 0; attempt < 6 && credited === null; attempt++) {
@@ -187,7 +192,7 @@ export function AdTopUpPanel({
       }
     } catch (err) {
       toast.dismiss('ads-topup');
-      toastTxError(err, 'Top-up failed.');
+      toastTxError(err, t('ads.topUpFailed'));
     } finally {
       setIsPaying(false);
       setPhase('idle');
@@ -247,21 +252,21 @@ export function AdTopUpPanel({
           {loadingPrice ? (
             <div className="flex items-center justify-center py-1.5">
               <Loader2 className="w-5 h-5 animate-spin text-emerald-400" />
-              <span className="ml-2 text-zinc-400 text-sm">Fetching live price…</span>
+              <span className="ml-2 text-zinc-400 text-sm">{t('ads.fetchingPrice')}</span>
             </div>
           ) : priceError || !dhbPrice ? (
             <div className="flex flex-col items-stretch gap-3">
               <div className="flex items-center gap-2 text-yellow-500 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>Live DHB price unavailable — a top-up can't be credited until it's back.</span>
+                <span>{t('ads.livePriceUnavailable')}</span>
               </div>
-              <Button size="sm" variant="glass" className="w-full" onClick={() => refetchQuote()}>Retry</Button>
+              <Button size="sm" variant="glass" className="w-full" onClick={() => refetchQuote()}>{t('ads.retry')}</Button>
             </div>
           ) : (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <img src={dhbCoinImage} alt="DHB" className="w-6 h-6" />
-                <span className="text-white font-medium">You send</span>
+                <span className="text-white font-medium">{t('ads.youSend')}</span>
               </div>
               <div className="text-right">
                 <p className="text-xl font-bold text-white">{formatCompact(costDhb)} <DhbCoin /></p>
@@ -286,7 +291,7 @@ export function AdTopUpPanel({
             onClick={onCancel}
             disabled={isPaying}
           >
-            {cancelLabel}
+            {cancelText}
           </Button>
         )}
         <Button
@@ -298,7 +303,7 @@ export function AdTopUpPanel({
           {isPaying ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              {phase === 'verify' ? 'Verifying…' : 'Sending…'}
+              {phase === 'verify' ? t('ads.verifying') : t('ads.sending')}
             </>
           ) : (
             `Top up $${effectiveUsd.toFixed(0)}`
