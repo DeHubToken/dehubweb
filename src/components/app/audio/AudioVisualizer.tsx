@@ -16,6 +16,7 @@ import {
   drawRings,
   drawPulse,
   drawTerrain,
+  drawOrb,
   drawStatic,
   decodeAudioWaveform,
   seededPeaks,
@@ -25,6 +26,7 @@ import {
   resetRings,
   resetPulse,
   resetTerrain,
+  resetOrb,
   resetStatic,
 } from './visualizer-styles';
 
@@ -79,6 +81,7 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'rings', label: 'Rings' },
   { value: 'pulse', label: 'Pulse' },
   { value: 'terrain', label: 'Terrain' },
+  { value: 'orb', label: 'Orb' },
 ];
 
 /** One height for every control in the bottom row, so they line up. */
@@ -377,6 +380,9 @@ export function AudioVisualizer({
       case 'terrain':
         drawTerrain(ctx, frequencyData, width, height, hue);
         break;
+      case 'orb':
+        drawOrb(ctx, frequencyData, width, height, hue);
+        break;
     }
   }, [style, hue, seed, idleFrequency, idleTime]);
 
@@ -420,6 +426,7 @@ export function AudioVisualizer({
     resetRings();
     resetPulse();
     resetTerrain();
+    resetOrb();
     resetStatic();
   }, [style]);
 
@@ -560,6 +567,7 @@ export function AudioVisualizer({
       resetRings();
       resetPulse();
       resetTerrain();
+      resetOrb();
       resetStatic();
     };
   }, []);
