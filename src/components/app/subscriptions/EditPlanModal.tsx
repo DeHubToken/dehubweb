@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { Plus, X, Loader2, Star, Clock, DollarSign, FileText, Gift, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,11 +29,11 @@ interface EditPlanModalProps {
  * selected, and saving wrote `duration: 30` — a plan the contract rejects.
  */
 const DURATION_PRESETS = [
-  { label: '1 Month', months: 1 },
-  { label: '3 Months', months: 3 },
-  { label: '6 Months', months: 6 },
-  { label: '1 Year', months: 12 },
-  { label: 'Lifetime', months: 0 },
+  { labelKey: 'subscriptions.preset1Month', months: 1 },
+  { labelKey: 'subscriptions.preset3Months', months: 3 },
+  { labelKey: 'subscriptions.preset6Months', months: 6 },
+  { labelKey: 'subscriptions.preset1Year', months: 12 },
+  { labelKey: 'subscriptions.presetLifetime', months: 0 },
 ];
 
 /** Legacy lifetime value, so an existing 999 plan still lights up "Lifetime". */
@@ -41,6 +42,7 @@ function toPresetMonths(duration: number): number {
 }
 
 export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState(plan.name);
   const [description, setDescription] = useState(plan.description || '');
   // `plan.price` is only populated for plans the API has flattened; the price
@@ -116,13 +118,13 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           <div className="flex items-center justify-between gap-2">
             <DrawerTitle className="flex items-center gap-2 text-xl text-white">
               <Star className="w-5 h-5 text-white" />
-              Edit Plan
+              {t('subscriptions.editPlan')}
             </DrawerTitle>
             {/* Drawer has no built-in close affordance the way Dialog did, and the
                 scrim alone is not discoverable enough for a form this long. */}
             <button
               onClick={() => onOpenChange(false)}
-              aria-label="Close"
+              aria-label={t('subscriptions.close')}
               className="p-2 -mr-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
             >
               <X className="w-5 h-5" />
@@ -133,11 +135,11 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
         <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pt-4">
           {/* Plan Name */}
           <div>
-            <label className="text-sm text-zinc-400 mb-1.5 block">Plan Name</label>
+            <label className="text-sm text-zinc-400 mb-1.5 block">{t('subscriptions.planName')}</label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Basic, Premium, VIP"
+              placeholder={t('subscriptions.planNamePlaceholder')}
               className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500"
             />
           </div>
@@ -146,12 +148,12 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <FileText className="w-3.5 h-3.5" />
-              Description (optional)
+              {t('subscriptions.descriptionOptional')}
             </label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe what subscribers get..."
+              placeholder={t('subscriptions.descriptionPlaceholder')}
               rows={3}
               className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 resize-none"
             />
@@ -161,7 +163,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <DollarSign className="w-3.5 h-3.5" />
-              Price
+              {t('subscriptions.price')}
             </label>
             <div className="relative">
               <Input
@@ -183,7 +185,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
-              Duration
+              {t('subscriptions.duration')}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {DURATION_PRESETS.map((preset) => (
@@ -196,7 +198,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                       : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10'
                   } border`}
                 >
-                  {preset.label}
+                  {t(preset.labelKey)}
                 </button>
               ))}
             </div>
@@ -206,7 +208,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <Gift className="w-3.5 h-3.5" />
-              Benefits (optional)
+              {t('subscriptions.benefitsOptional')}
             </label>
             <div className="space-y-2">
               {benefits.map((benefit, index) => (
@@ -214,7 +216,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                   <Input
                     value={benefit}
                     onChange={(e) => handleBenefitChange(index, e.target.value)}
-                    placeholder={`Benefit ${index + 1}`}
+                    placeholder={t('subscriptions.benefitN', { number: index + 1 })}
                     className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 flex-1"
                   />
                   {benefits.length > 1 && (
@@ -236,7 +238,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                 className="text-zinc-400 hover:text-white gap-1"
               >
                 <Plus className="w-4 h-4" />
-                Add benefit
+                {t('subscriptions.addBenefit')}
               </Button>
             </div>
           </div>
@@ -248,9 +250,15 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           {published && (priceChanged || durationChanged) && (
             <div className="rounded-xl bg-white/[0.06] border border-white/10 p-3">
               <p className="text-xs text-white/70">
-                Changing the {priceChanged && durationChanged ? 'price and duration' : priceChanged ? 'price' : 'duration'}{' '}
-                takes this plan off sale until you publish it again — buyers are charged
-                what the chain holds, not what's shown here.
+                {t('subscriptions.republishWarning', {
+                  field: t(
+                    priceChanged && durationChanged
+                      ? 'subscriptions.fieldPriceAndDuration'
+                      : priceChanged
+                        ? 'subscriptions.fieldPrice'
+                        : 'subscriptions.fieldDuration',
+                  ),
+                })}
               </p>
             </div>
           )}
@@ -264,10 +272,10 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
             {updatePlanMutation.isPending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
+                {t('subscriptions.saving')}
               </>
             ) : (
-              'Save Changes'
+              t('subscriptions.saveChanges')
             )}
           </Button>
         </div>
