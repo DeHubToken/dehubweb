@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calculator } from 'lucide-react';
 import { badgeTiers, calculateCampaignMetrics } from './utils/badgeTiers';
@@ -8,6 +9,7 @@ import CampaignEstimates from './CampaignEstimates';
 import BadgeTiersBreakdown from './BadgeTiersBreakdown';
 
 const BudgetCalculator = () => {
+  const { t } = useLanguage();
   const [budget, setBudget] = useState(1000);
   const [targetTiers, setTargetTiers] = useState<[number, number]>([0, 0]);
   const [campaignDuration, setCampaignDuration] = useState(7);
@@ -21,10 +23,10 @@ const BudgetCalculator = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calculator className="w-5 h-5 text-middle-blue" />
-            Campaign Budget Calculator
+            {t('adTools.budgetCalculatorTitle')}
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Plan your POVR advertising campaign with realistic cost estimates and audience targeting
+            {t('adTools.budgetCalculatorDesc')}
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
