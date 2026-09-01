@@ -30,6 +30,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
+import { ShopLinkBoard } from '../live/ShopLinkBoard';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
@@ -1102,7 +1103,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
             onShowOriginal: handleShowOriginal,
           }}
         />
-        
+
+        {/* The creator's Shop board — affiliate links, opened in place. */}
+        <ShopLinkBoard links={post.shopLinks} variant="inline" />
+
         <ActionBar
           postId={post.id}
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
@@ -1243,6 +1247,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         currentDescription={editDescription}
         currentCategories={post.categories ?? []}
         currentContentRating={post.contentRating}
+        currentShopLinks={post.shopLinks}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, post.id, edited);
         }}

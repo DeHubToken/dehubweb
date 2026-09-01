@@ -164,6 +164,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         setShowTitle={actions.setShowTitle}
         isMature={state.isMature}
         setIsMature={actions.setIsMature}
+        shopLinks={state.shopLinks}
+        setShopLinks={actions.setShopLinks}
         hasVideoOrAudio={computed.hasVideo || computed.hasAudio}
         categoryDrawerOpen={categoryDrawerOpen}
         setCategoryDrawerOpen={setCategoryDrawerOpen}
