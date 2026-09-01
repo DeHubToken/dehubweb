@@ -34,6 +34,7 @@ function normalizeEditedPost(edited: EditPostResult) {
     // Same reason: the Shop button has to appear, change count or disappear on
     // the card that is already on screen.
     shopLinks: edited.shopLinks,
+    shopListingCount: edited.shopListingCount,
   };
 }
 

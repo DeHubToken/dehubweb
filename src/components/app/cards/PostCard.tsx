@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
-import { ShopLinkBoard } from '../live/ShopLinkBoard';
+import { ShopBoard } from '../live/ShopBoard';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
@@ -720,7 +720,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         {!isLocked && !isSubGated && parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
 
         {/* The creator's Shop board — affiliate links, opened in place. */}
-        <ShopLinkBoard links={post.shopLinks} variant="inline" />
+        <ShopBoard tokenId={post.id} links={post.shopLinks} listingCount={post.shopListingCount} variant="inline" />
 
         <div className="pt-1">
           <ActionBar

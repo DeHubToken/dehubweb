@@ -30,7 +30,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
-import { ShopLinkBoard } from '../live/ShopLinkBoard';
+import { ShopBoard } from '../live/ShopBoard';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
@@ -1105,7 +1105,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         />
 
         {/* The creator's Shop board — affiliate links, opened in place. */}
-        <ShopLinkBoard links={post.shopLinks} variant="inline" />
+        <ShopBoard tokenId={post.id} links={post.shopLinks} listingCount={post.shopListingCount} variant="inline" />
 
         <ActionBar
           postId={post.id}

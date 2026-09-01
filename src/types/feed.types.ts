@@ -56,6 +56,13 @@ export interface BaseFeedItem {
    * as a stream. Live is simply where it ships first.
    */
   shopLinks?: ShopLink[];
+  /**
+   * How many of the creator's own store listings are on this post's Shop
+   * board. A render hint from the feed payload, so a card can draw the button
+   * without querying Supabase; the rows themselves come from stream_products
+   * when the board opens.
+   */
+  shopListingCount?: number;
 }
 
 /**

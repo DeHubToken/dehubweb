@@ -57,8 +57,14 @@ export function effectivePrice(product: StreamProduct): number {
  * Realtime carries the raw row, not the joined listing, so a change refetches
  * rather than patching the cache — the rail has at most 20 rows and a pin has
  * to be right more than it has to be instant.
+ *
+ * `enabled` exists because the Shop board on an ordinary feed card must not
+ * pay for this. A feed is twenty cards; twenty always-on calls to this hook is
+ * twenty Supabase queries and twenty realtime channels to answer a question the
+ * token's `shopListingCount` already answers. The board passes `open`, so the
+ * query and the channel start on the tap that opens it.
  */
-export function useStreamProducts(tokenId: string | null) {
+export function useStreamProducts(tokenId: string | null, enabled: boolean = true) {
   const queryClient = useQueryClient();
   // The pinned overlay and the rail both call this hook for the same stream.
   // Two channels created with the same topic name are not two subscriptions —
@@ -80,12 +86,12 @@ export function useStreamProducts(tokenId: string | null) {
       if (error) throw error;
       return (data || []) as unknown as StreamProduct[];
     },
-    enabled: !!tokenId,
+    enabled: !!tokenId && enabled,
     staleTime: 30_000,
   });
 
   useEffect(() => {
-    if (!tokenId) return;
+    if (!tokenId || !enabled) return;
     const channel = supabase
       .channel(`stream-products-${tokenId}-${channelId.current}`)
       .on(

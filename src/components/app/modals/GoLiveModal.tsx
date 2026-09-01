@@ -18,6 +18,7 @@ import {
   type MintFeeQuoteResponse,
 } from '@/lib/api/dehub/content';
 import type { ShopLink } from '@/lib/api/dehub/types';
+import { attachShopListings } from '@/lib/attach-shop-listings';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import {
   probeIngestReachable,
@@ -153,6 +154,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [isMature, setIsMature] = useState(false);
   /** The Shop board this stream goes on air with. Empty means no Shop button. */
   const [shopLinks, setShopLinks] = useState<ShopLink[]>([]);
+  /** Own store listings picked for the board, attached once the mint returns. */
+  const [shopListingIds, setShopListingIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -209,6 +212,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       tokenAmount,
       isMature,
       shopLinks,
+      shopListingIds,
     },
     (saved) => {
       if (saved.title) setTitle(saved.title);
@@ -234,6 +238,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       // Restored on the same truthy rule, and worth more than the switches:
       // these are URLs somebody typed by hand.
       if (Array.isArray(saved.shopLinks) && saved.shopLinks.length) setShopLinks(saved.shopLinks);
+      if (Array.isArray(saved.shopListingIds) && saved.shopListingIds.length) setShopListingIds(saved.shopListingIds);
     },
   );
 
@@ -487,6 +492,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setTokenAmount('');
     setIsMature(false);
     setShopLinks([]);
+    setShopListingIds([]);
     setStreamData(null);
     // The broadcaster stops the tracks it adopted in its own teardown; this
     // only drops the reference so a reopened modal starts from a clean slate.
@@ -709,6 +715,9 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         // On the mint, so the Shop button has something behind it for the
         // people who arrive in the first seconds of the stream.
         shopLinks: shopLinks.length ? shopLinks : undefined,
+        // What we are about to attach — the attach needs the tokenId this call
+        // returns, so the count lands now and the rows a moment later.
+        shopListingCount: shopListingIds.length || undefined,
         mintOptOut: !mintingThisStream,
       });
 
@@ -716,6 +725,23 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       mintedTokenId = String(tokenId);
       logger.info('Live post created', { tokenId, mint: mintingThisStream });
       if (wasDismissed()) return;
+
+      /**
+       * Put the picked store listings on the stream, now that it has a
+       * tokenId. Not awaited: going live must not wait on Supabase, and the
+       * board resolves whatever landed when a viewer opens it. A failure is
+       * reported rather than swallowed — the host can add them from the shop
+       * manager beside the player.
+       */
+      if (shopListingIds.length) {
+        void attachShopListings(tokenId, shopListingIds, walletAddress).then(({ failed }) => {
+          if (failed > 0) {
+            toast.error(
+              `${failed} shop ${failed === 1 ? 'item' : 'items'} could not be attached — add them from the shop panel.`,
+            );
+          }
+        });
+      }
 
       // Step 3: Execute the on-chain mint — skipped wholesale when the creator
       // turned minting off. The post is already published (the server serves
@@ -1213,6 +1239,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   setIsMature={setIsMature}
                   shopLinks={shopLinks}
                   setShopLinks={setShopLinks}
+                  shopListingIds={shopListingIds}
+                  setShopListingIds={setShopListingIds}
                   shouldMint={effectiveShouldMint}
                   setShouldMint={setShouldMint}
                   mintFeeLabel={mintFeeLabel}

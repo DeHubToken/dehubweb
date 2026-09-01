@@ -276,6 +276,8 @@ export interface DeHubNFT {
    * so a card knows whether there is a board before anyone taps.
    */
   shopLinks?: ShopLink[];
+  /** How many of the creator's own store listings are on this post's board. */
+  shopListingCount?: number;
 
   // Pay-per-view
   ppvBuyerCount?: number;

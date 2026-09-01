@@ -144,6 +144,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
     shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     videoUrl: isAudioPost ? undefined : (nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined),
@@ -226,6 +227,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
     shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'image',
     username: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
     verified: false,
@@ -302,6 +304,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
     shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'post',
     createdAt: timestamp || '',
     views,
@@ -426,6 +429,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     // The Shop board rides straight through to LiveStreamCard, which is what
     // renders the player here — the button lives inside it.
     shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'live',
     // The Mongo ObjectId every /api/live/{id}/* route requires. Without it the
     // card falls back to the numeric tokenId and like/gift/activities/end all
