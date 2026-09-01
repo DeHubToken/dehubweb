@@ -8,7 +8,7 @@ import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
-import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -72,6 +72,8 @@ interface ActiveDraft {
   showTitle: boolean;
   /** Absent on drafts saved before ratings existed, which read as safe. */
   isMature?: boolean;
+  /** The Shop board. Absent on drafts saved before it existed. */
+  shopLinks?: ShopLink[];
   selectedCategory: string;
   /** Absent on drafts saved while the switch was removed. */
   isSubscribersOnly?: boolean;
@@ -211,6 +213,7 @@ interface UsePostFormReturn {
     titleText: string;
     shouldMint: boolean;
     isMature: boolean;
+    shopLinks: ShopLink[];
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -224,6 +227,7 @@ interface UsePostFormReturn {
     setShowTitle: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
+    setShopLinks: (links: ShopLink[]) => void;
     setTitleText: (text: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
@@ -361,6 +365,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isMature, setIsMature] = useState(d?.isMature === true);
 
   /**
+   * The creator's Shop board — affiliate and shop links for this post.
+   *
+   * Restored from the draft, unlike the mature switch: these are URLs somebody
+   * typed by hand, and losing three of them to a reload is exactly what a
+   * draft exists to prevent.
+   */
+  const [shopLinks, setShopLinks] = useState<ShopLink[]>(
+    Array.isArray(d?.shopLinks) ? d.shopLinks : [],
+  );
+
+  /**
    * Bounty locks DHB through the mint transaction itself, so a post that never
    * goes on-chain cannot carry one. Rather than let the two settings contradict
    * each other, bounty wins and the mint row goes read-only.
@@ -434,14 +449,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   useEffect(() => {
     const persistDraft = () => {
       const draft: ActiveDraft = {
-        text, titleText, showTitle, isMature,
+        text, titleText, showTitle, isMature, shopLinks,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
       };
       // Only save if there's meaningful content
       const hasContent = text.trim() || titleText.trim() ||
-        selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
+        selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly ||
+        shopLinks.length > 0;
       if (hasContent) {
         saveActiveDraft(draft);
       } else {
@@ -454,7 +470,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // clear the timer here, never persist, or the debounce is defeated. The
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
-  }, [text, titleText, showTitle, isMature,
+  }, [text, titleText, showTitle, isMature, shopLinks,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
@@ -1001,6 +1017,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as PostChainId);
     setTitleText('');
+    // Cleared per post, deliberately. Links are usually specific to what was
+    // just posted, and a board that quietly carries over is one that ends up
+    // on content it has nothing to do with.
+    setShopLinks([]);
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
       setSelectedCategory('');
@@ -1542,6 +1562,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
           contentRating: isMature ? 'mature' : undefined,
+          // Sent with the mint rather than PATCHed after it, so a live post is
+          // already carrying its board when the stream comes up.
+          shopLinks: shopLinks.length ? shopLinks : undefined,
           plans: subscriberPlanIds,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
@@ -2077,6 +2100,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       titleText,
       shouldMint,
       isMature,
+      shopLinks,
     },
     actions: {
       setText,
@@ -2127,6 +2151,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setShowTitle: handleSetShowTitle,
       setShouldMint: handleSetShouldMint,
       setIsMature,
+      setShopLinks,
       setTitleText,
       insertEmoji,
       insertGif,

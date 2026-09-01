@@ -143,6 +143,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    shopLinks: (nft as any).shopLinks,
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     videoUrl: isAudioPost ? undefined : (nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined),
@@ -224,6 +225,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    shopLinks: (nft as any).shopLinks,
     type: 'image',
     username: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
     verified: false,
@@ -299,6 +301,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    shopLinks: (nft as any).shopLinks,
     type: 'post',
     createdAt: timestamp || '',
     views,
@@ -420,6 +423,9 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    // The Shop board rides straight through to LiveStreamCard, which is what
+    // renders the player here — the button lives inside it.
+    shopLinks: (nft as any).shopLinks,
     type: 'live',
     // The Mongo ObjectId every /api/live/{id}/* route requires. Without it the
     // card falls back to the numeric tokenId and like/gift/activities/end all
@@ -1167,6 +1173,7 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
           currentTitle={videoData.title}
           currentDescription={videoData.description}
           currentContentRating={videoData.contentRating}
+          currentShopLinks={videoData.shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, id || '', edited);
           }}

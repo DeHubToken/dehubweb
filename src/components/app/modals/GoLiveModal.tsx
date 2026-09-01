@@ -17,6 +17,7 @@ import {
   type PostQuotaStatus,
   type MintFeeQuoteResponse,
 } from '@/lib/api/dehub/content';
+import type { ShopLink } from '@/lib/api/dehub/types';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import {
   probeIngestReachable,
@@ -150,6 +151,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [tokenSymbol, setTokenSymbol] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
   const [isMature, setIsMature] = useState(false);
+  /** The Shop board this stream goes on air with. Empty means no Shop button. */
+  const [shopLinks, setShopLinks] = useState<ShopLink[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -205,6 +208,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       tokenSymbol,
       tokenAmount,
       isMature,
+      shopLinks,
     },
     (saved) => {
       if (saved.title) setTitle(saved.title);
@@ -227,6 +231,9 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       if (saved.tokenSymbol) setTokenSymbol(saved.tokenSymbol);
       if (saved.tokenAmount) setTokenAmount(saved.tokenAmount);
       if (saved.isMature) setIsMature(true);
+      // Restored on the same truthy rule, and worth more than the switches:
+      // these are URLs somebody typed by hand.
+      if (Array.isArray(saved.shopLinks) && saved.shopLinks.length) setShopLinks(saved.shopLinks);
     },
   );
 
@@ -479,6 +486,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setTokenSymbol('');
     setTokenAmount('');
     setIsMature(false);
+    setShopLinks([]);
     setStreamData(null);
     // The broadcaster stops the tracks it adopted in its own teardown; this
     // only drops the reference so a reopened modal starts from a clean slate.
@@ -698,6 +706,9 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         streamInfo: access.streamInfo,
         plans: access.subscriberPlanIds,
         contentRating: isMature ? 'mature' : undefined,
+        // On the mint, so the Shop button has something behind it for the
+        // people who arrive in the first seconds of the stream.
+        shopLinks: shopLinks.length ? shopLinks : undefined,
         mintOptOut: !mintingThisStream,
       });
 
@@ -1200,6 +1211,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   hasVideoOrAudio
                   isMature={isMature}
                   setIsMature={setIsMature}
+                  shopLinks={shopLinks}
+                  setShopLinks={setShopLinks}
                   shouldMint={effectiveShouldMint}
                   setShouldMint={setShouldMint}
                   mintFeeLabel={mintFeeLabel}

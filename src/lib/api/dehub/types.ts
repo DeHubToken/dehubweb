@@ -122,6 +122,18 @@ export interface AuthResponse {
   message: string;
 }
 
+/**
+ * One row of a post's Shop board.
+ *
+ * Affiliate links are allowed and expected here — that is what the board is
+ * for. The server refuses anything that is not http(s), plus known-bad and
+ * DeHub-lookalike hosts, so a label is safe to render as an anchor.
+ */
+export interface ShopLink {
+  label: string;
+  url: string;
+}
+
 export interface DeHubNFT {
   tokenId: number;
   id?: string;
@@ -256,6 +268,14 @@ export interface DeHubNFT {
   /** Creator turned replies off. Existing comments remain readable; only new
    *  ones are refused, server-side in requestCommentFunc. */
   commentsDisabled?: boolean;
+  /**
+   * The creator's Shop board — affiliate and shop links they attached to this
+   * post. Absent or empty means the toggle is off and no Shop button draws.
+   *
+   * Carried on every feed item (it is in the shared tokenTemplate projection),
+   * so a card knows whether there is a board before anyone taps.
+   */
+  shopLinks?: ShopLink[];
 
   // Pay-per-view
   ppvBuyerCount?: number;
