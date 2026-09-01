@@ -1,19 +1,13 @@
-// Sends the admin-panel invite email through the shared email queue.
+// Sends the admin-panel invite email through Lovable's managed email API.
 //
 // Called server-to-server by the NestJS backend when an admin invite is
 // created. Authenticated with the ADMIN_INVITE_EMAIL_SECRET shared secret
 // (x-invite-secret header) — not a Supabase JWT, so verify_jwt is off in
-// config.toml. The mail rides the same pipeline as auth email:
-// enqueue_email → process-email-queue → Lovable/Mailgun, sent as
-// noreply@notify.dehub.io.
-import * as React from 'npm:react@18.3.1'
-import { renderAsync } from 'npm:@react-email/components@0.0.22'
+// config.toml. Sent as noreply@notify.dehub.io.
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { AdminInviteEmail } from '../_shared/email-templates/admin-invite.tsx'
+import { sendTemplateEmail } from '../_shared/transactional-email-templates/send-email.ts'
 
 const SITE_NAME = 'DeHub'
-const FROM_DOMAIN = 'notify.dehub.io'
-const SENDER_DOMAIN = 'notify.dehub.io'
 // Only links into the admin panel's onboarding page may be mailed. Even with
 // a leaked secret this function must not become an open phishing relay.
 const ALLOWED_LINK_PREFIX = 'https://godmode.dehub.io/admin/onboarding?token='
@@ -71,55 +65,49 @@ Deno.serve(async (req) => {
     inviteLink,
     expiresInDays: INVITE_EXPIRES_DAYS,
   }
-  const html = await renderAsync(React.createElement(AdminInviteEmail, props))
-  const text = await renderAsync(React.createElement(AdminInviteEmail, props), {
-    plainText: true,
-  })
 
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   )
 
-  const messageId = crypto.randomUUID()
-
-  // Log pending BEFORE enqueue so we have a record even if enqueue crashes
-  await supabase.from('email_send_log').insert({
-    message_id: messageId,
-    template_name: 'admin_invite',
-    recipient_email: email,
-    status: 'pending',
-  })
-
-  const { error: enqueueError } = await supabase.rpc('enqueue_email', {
-    queue_name: 'transactional_emails',
-    payload: {
-      message_id: messageId,
-      idempotency_key: messageId,
-      to: email,
-      from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
-      sender_domain: SENDER_DOMAIN,
-      subject: `You've been invited to the ${SITE_NAME} admin panel`,
-      html,
-      text,
-      purpose: 'transactional',
-      label: 'admin_invite',
-      queued_at: new Date().toISOString(),
-    },
-  })
-
-  if (enqueueError) {
-    console.error('Failed to enqueue admin invite email', { error: enqueueError, email })
-    await supabase.from('email_send_log').insert({
-      message_id: messageId,
+  async function log(status: string, errorMessage?: string) {
+    const { error } = await supabase.from('email_send_log').insert({
       template_name: 'admin_invite',
       recipient_email: email,
-      status: 'failed',
-      error_message: 'Failed to enqueue email',
+      status,
+      error_message: errorMessage ?? null,
     })
-    return json(500, { error: 'Failed to enqueue email' })
+    if (error) console.error('email_send_log write failed', { code: error.code, message: error.message })
   }
 
-  console.log('Admin invite email enqueued', { email })
-  return json(200, { success: true, queued: true })
+  try {
+    const result = await sendTemplateEmail('admin-invite', email, {
+      templateData: props,
+      idempotencyKey: `admin-invite-${await hash(inviteLink)}`,
+    })
+    if (!result.sent) {
+      await log('suppressed')
+      console.log('Admin invite email suppressed')
+      return json(200, { success: true, suppressed: true })
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('Failed to send admin invite email', { message })
+    await log('failed', message)
+    return json(500, { error: 'Failed to send email' })
+  }
+
+  await log('sent')
+  console.log('Admin invite email sent')
+  return json(200, { success: true, sent: true })
 })
+
+/** Stable idempotency key from the one-time invite link, without mailing it. */
+async function hash(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))
+  return Array.from(new Uint8Array(digest))
+    .slice(0, 16)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+}
