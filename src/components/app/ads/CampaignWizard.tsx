@@ -9,6 +9,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,9 +48,10 @@ interface CampaignWizardProps {
   onCreated?: (campaignId: string) => void;
 }
 
-const STEPS = ['Creative', 'Audience', 'Budget', 'Review'] as const;
+const STEP_KEYS = ['ads.stepCreative', 'ads.stepAudience', 'ads.stepBudget', 'ads.stepReview'] as const;
 
 export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizardProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [step, setStep] = useState(0);
 
@@ -106,15 +108,15 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
     kind,
     mediaUrl,
     thumbnailUrl,
-    headline: headline || 'Your headline appears here',
+    headline: headline || t('ads.headlinePreview'),
     body: bodyText || null,
-    ctaLabel: ctaLabel || 'Learn more',
+    ctaLabel: ctaLabel || t('ads.learnMore'),
     ctaUrl: ctaUrl || null,
-    advertiser: 'Your brand',
+    advertiser: t('ads.yourBrand'),
     width: null,
     height: null,
     durationSeconds: null,
-  }), [kind, mediaUrl, thumbnailUrl, headline, bodyText, ctaLabel, ctaUrl]);
+  }), [kind, mediaUrl, thumbnailUrl, headline, bodyText, ctaLabel, ctaUrl, t]);
 
   const projections = useMemo(() => {
     const cpm = blendedCpmUsd(targeting.tiers ?? []);
@@ -134,7 +136,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   }, [targeting.tiers, estimate?.audience, dailyBudget, totalBudget, durationDays, frequencyCap]);
 
   const handleUpload = async (file: File, kindOf: 'media' | 'thumb') => {
-    if (!walletAddress) { toast.error('Connect a wallet first'); return; }
+    if (!walletAddress) { toast.error(t('ads.connectWalletFirst')); return; }
     const isVideo = file.type.startsWith('video/');
     if (kindOf === 'media' && kind === 'image' && isVideo) setKind('video');
     if (kindOf === 'media' && kind === 'video' && !isVideo) setKind('image');
@@ -144,7 +146,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
       if (kindOf === 'media') setMediaUrl(url);
       else setThumbnailUrl(url);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Upload failed');
+      toast.error(e instanceof Error ? e.message : t('ads.uploadFailed'));
     } finally {
       setUploading(null);
     }
@@ -179,7 +181,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   };
 
   const submit = async (asDraft: boolean) => {
-    if (!walletAddress) { toast.error('Connect a wallet first'); return; }
+    if (!walletAddress) { toast.error(t('ads.connectWalletFirst')); return; }
     // Hold it as a draft while we fund, then flip it to review — a campaign
     // that reaches moderation unfunded gets approved into silence.
     const holdForFunding = !asDraft && unfunded;
@@ -213,7 +215,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
         setFundingCampaignId(campaign.id);
         return;
       }
-      finish(campaign.id, asDraft ? 'Campaign saved as draft' : 'Campaign submitted for review');
+      finish(campaign.id, asDraft ? t('ads.savedAsDraft') : t('ads.submittedForReview'));
     } catch {
       /* hooks already toast */
     } finally {
@@ -228,7 +230,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
     setSubmitting(true);
     try {
       await updateCampaign.mutateAsync({ id, status: 'pending_review' });
-      finish(id, 'Balance topped up — campaign submitted for review');
+      finish(id, t('ads.toppedUpAndSubmitted'));
     } catch {
       /* hooks already toast; the campaign is still a draft they can submit */
     } finally {
@@ -242,12 +244,12 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-2">
             {fundingCampaignId ? <Wallet className="w-5 h-5" /> : <Rocket className="w-5 h-5" />}
-            {fundingCampaignId ? 'Fund your campaign' : 'New campaign'}
+            {fundingCampaignId ? t('ads.fundYourCampaign') : t('ads.newCampaign')}
           </DialogTitle>
           <DialogDescription className="text-zinc-400">
             {fundingCampaignId
-              ? 'Your campaign is saved. Add balance and it goes to review — nothing to redo.'
-              : `Step ${step + 1} of ${STEPS.length} — ${STEPS[step]}`}
+              ? t('ads.campaignSavedAddBalance')
+              : t('ads.stepOf', { step: step + 1, total: STEP_KEYS.length, name: t(STEP_KEYS[step]) })}
           </DialogDescription>
         </DialogHeader>
 
@@ -256,8 +258,8 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
             <AdTopUpPanel
               suggestedUsd={Math.max(25, Math.ceil(dailyBudget))}
               onBusyChange={setFunding}
-              cancelLabel="Leave as draft"
-              onCancel={() => finish(fundingCampaignId, 'Saved as draft — top up and submit it from Campaigns')}
+              cancelLabel={t('ads.leaveAsDraft')}
+              onCancel={() => finish(fundingCampaignId, t('ads.draftTopUpFromCampaigns'))}
               onCredited={submitFunded}
             />
           </div>
@@ -266,7 +268,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
 
         {/* Step indicator */}
         <div className="flex items-center gap-1.5">
-          {STEPS.map((s, i) => (
+          {STEP_KEYS.map((s, i) => (
             <div
               key={s}
               className={cn(
@@ -282,22 +284,22 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 py-2">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="wiz-name" className="text-white">Campaign name</Label>
-                <Input id="wiz-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Spring launch" className="mt-1" />
+                <Label htmlFor="wiz-name" className="text-white">{t('ads.campaignName')}</Label>
+                <Input id="wiz-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('ads.campaignNamePlaceholder')} className="mt-1" />
               </div>
               <div>
-                <Label className="text-white">Objective</Label>
+                <Label className="text-white">{t('ads.objective')}</Label>
                 <Select value={objective} onValueChange={setObjective}>
                   <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="awareness">Brand awareness</SelectItem>
-                    <SelectItem value="traffic">Website traffic</SelectItem>
-                    <SelectItem value="engagement">Engagement</SelectItem>
+                    <SelectItem value="awareness">{t('ads.objectiveAwareness')}</SelectItem>
+                    <SelectItem value="traffic">{t('ads.objectiveTraffic')}</SelectItem>
+                    <SelectItem value="engagement">{t('ads.objectiveEngagement')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label className="text-white">Format</Label>
+                <Label className="text-white">{t('ads.format')}</Label>
                 <div className="flex gap-2 mt-1">
                   {([['image', ImageIcon, 'Image'], ['video', Film, 'Video'], ['text', Type, 'Text']] as const).map(([k, Icon, label]) => (
                     <button
@@ -328,7 +330,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
                     ) : (
                       <>
                         <Upload className="w-4 h-4 text-zinc-400" />
-                        <span className="text-sm text-zinc-400">{mediaUrl ? 'Replace file' : `Upload ${kind}`}</span>
+                        <span className="text-sm text-zinc-400">{mediaUrl ? t('ads.replaceFile') : `Upload ${kind}`}</span>
                       </>
                     )}
                     <input
@@ -343,12 +345,12 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
 
               {kind === 'video' && (
                 <div>
-                  <Label className="text-white">Thumbnail (optional)</Label>
+                  <Label className="text-white">{t('ads.thumbnailOptional')}</Label>
                   <label className="mt-1 flex items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 px-3 py-3 cursor-pointer hover:bg-white/5 transition-colors">
                     {uploading === 'thumb' ? (
                       <Loader2 className="w-4 h-4 text-white animate-spin" />
                     ) : (
-                      <span className="text-xs text-zinc-400">{thumbnailUrl ? 'Replace thumbnail' : 'Upload thumbnail'}</span>
+                      <span className="text-xs text-zinc-400">{thumbnailUrl ? t('ads.replaceThumbnail') : t('ads.uploadThumbnail')}</span>
                     )}
                     <input
                       type="file"
@@ -361,20 +363,20 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
               )}
 
               <div>
-                <Label htmlFor="wiz-headline" className="text-white">Headline</Label>
-                <Input id="wiz-headline" value={headline} onChange={(e) => setHeadline(e.target.value)} maxLength={90} placeholder="Say it in one line" className="mt-1" />
+                <Label htmlFor="wiz-headline" className="text-white">{t('ads.headline')}</Label>
+                <Input id="wiz-headline" value={headline} onChange={(e) => setHeadline(e.target.value)} maxLength={90} placeholder={t('ads.headlinePlaceholder')} className="mt-1" />
               </div>
               <div>
-                <Label htmlFor="wiz-body" className="text-white">Body (optional)</Label>
-                <Textarea id="wiz-body" value={bodyText} onChange={(e) => setBodyText(e.target.value)} maxLength={280} rows={3} placeholder="Add supporting copy" className="mt-1" />
+                <Label htmlFor="wiz-body" className="text-white">{t('ads.bodyOptional')}</Label>
+                <Textarea id="wiz-body" value={bodyText} onChange={(e) => setBodyText(e.target.value)} maxLength={280} rows={3} placeholder={t('ads.bodyPlaceholder')} className="mt-1" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label htmlFor="wiz-cta-label" className="text-white">CTA label</Label>
+                  <Label htmlFor="wiz-cta-label" className="text-white">{t('ads.ctaLabel')}</Label>
                   <Input id="wiz-cta-label" value={ctaLabel} onChange={(e) => setCtaLabel(e.target.value)} maxLength={24} className="mt-1" />
                 </div>
                 <div>
-                  <Label htmlFor="wiz-cta-url" className="text-white">CTA link</Label>
+                  <Label htmlFor="wiz-cta-url" className="text-white">{t('ads.ctaLink')}</Label>
                   <Input id="wiz-cta-url" value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} placeholder="https://…" className="mt-1" />
                 </div>
               </div>
@@ -382,7 +384,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
 
             {/* Live preview */}
             <div>
-              <p className="text-xs uppercase tracking-wider text-zinc-500 mb-2">Feed preview</p>
+              <p className="text-xs uppercase tracking-wider text-zinc-500 mb-2">{t('ads.feedPreview')}</p>
               <div className="rounded-2xl border border-white/10 bg-zinc-950/60 p-4 pointer-events-none">
                 <SponsoredAdCard ad={previewAd} />
               </div>
@@ -405,7 +407,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
           <div className="space-y-5 py-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="wiz-daily" className="text-white">Daily budget (USD)</Label>
+                <Label htmlFor="wiz-daily" className="text-white">{t('ads.dailyBudget')}</Label>
                 <Input
                   id="wiz-daily" type="number" min={1} step={5} value={dailyBudget}
                   onChange={(e) => setDailyBudget(Math.max(1, Number(e.target.value) || 1))}
@@ -413,14 +415,14 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
                 />
               </div>
               <div>
-                <Label htmlFor="wiz-total" className="text-white">Total budget (USD)</Label>
+                <Label htmlFor="wiz-total" className="text-white">{t('ads.totalBudget')}</Label>
                 <Input
                   id="wiz-total" type="number" min={dailyBudget} step={25} value={totalBudget}
                   onChange={(e) => setTotalBudget(Math.max(1, Number(e.target.value) || 1))}
                   className="mt-1"
                 />
                 {totalBudget < dailyBudget && (
-                  <p className="text-xs text-red-400 mt-1">Total must be at least the daily budget</p>
+                  <p className="text-xs text-red-400 mt-1">{t('ads.totalAtLeastDaily')}</p>
                 )}
               </div>
             </div>
@@ -437,19 +439,19 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
 
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <p className="text-[11px] text-zinc-500">Blended CPM</p>
+                <p className="text-[11px] text-zinc-500">{t('ads.blendedCpm')}</p>
                 <p className="text-base font-bold text-white">{formatUsd(projections.cpm)}</p>
               </div>
               <div>
-                <p className="text-[11px] text-zinc-500">Est. impressions / day</p>
+                <p className="text-[11px] text-zinc-500">{t('ads.estImpressionsPerDay')}</p>
                 <p className="text-base font-bold text-white">{formatCompact(projections.impressionsPerDay)}</p>
               </div>
               <div>
-                <p className="text-[11px] text-zinc-500">Est. total impressions</p>
+                <p className="text-[11px] text-zinc-500">{t('ads.estTotalImpressions')}</p>
                 <p className="text-base font-bold text-white">{formatCompact(projections.totalImpressions)}</p>
               </div>
               <div>
-                <p className="text-[11px] text-zinc-500">Est. clicks (0.8% CTR)</p>
+                <p className="text-[11px] text-zinc-500">{t('ads.estClicks')}</p>
                 <p className="text-base font-bold text-white">{formatCompact(projections.estClicks)}</p>
               </div>
             </div>
@@ -466,12 +468,12 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-2 text-sm">
-                <p className="text-white font-semibold">{name || 'Untitled campaign'}</p>
-                <p className="text-zinc-400">Objective: <span className="text-white capitalize">{objective}</span></p>
-                <p className="text-zinc-400">Budget: <span className="text-white">{formatUsd(dailyBudget)}/day · {formatUsd(totalBudget)} total</span></p>
-                <p className="text-zinc-400">Duration: <span className="text-white">{durationDays} days</span> · Cap: <span className="text-white">{frequencyCap}/day</span></p>
-                <p className="text-zinc-400">Audience: <span className="text-white">{formatCompact(estimate?.audience ?? 0)} tracked wallets</span></p>
-                <p className="text-zinc-400">Tiers: <span className="text-white">{(targeting.tiers ?? []).length ? (targeting.tiers ?? []).join(', ') : 'All'}</span></p>
+                <p className="text-white font-semibold">{name || t('ads.untitledCampaign')}</p>
+                <p className="text-zinc-400">{t('ads.reviewObjective')}<span className="text-white capitalize">{objective}</span></p>
+                <p className="text-zinc-400">{t('ads.reviewBudget')}<span className="text-white">{formatUsd(dailyBudget)}/day · {formatUsd(totalBudget)} total</span></p>
+                <p className="text-zinc-400">{t('ads.reviewDuration')}<span className="text-white">{durationDays} days</span> · Cap: <span className="text-white">{frequencyCap}/day</span></p>
+                <p className="text-zinc-400">{t('ads.reviewAudience')}<span className="text-white">{formatCompact(estimate?.audience ?? 0)} tracked wallets</span></p>
+                <p className="text-zinc-400">{t('ads.reviewTiers')}<span className="text-white">{(targeting.tiers ?? []).length ? (targeting.tiers ?? []).join(', ') : 'All'}</span></p>
                 <p className="text-zinc-400">
                   Ads balance:{' '}
                   <span className={unfunded ? 'text-yellow-500' : 'text-white'}>{formatUsd(balanceUsd)}</span>
@@ -499,7 +501,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
             <ChevronLeft className="w-4 h-4 mr-1" /> Back
           </Button>
 
-          {step < STEPS.length - 1 ? (
+          {step < STEP_KEYS.length - 1 ? (
             <Button
               variant="glass"
               disabled={!stepValid() || uploading !== null}
@@ -519,7 +521,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
               </Button>
               <Button variant="glass" disabled={submitting} onClick={() => submit(false)}>
                 {submitting ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Rocket className="w-4 h-4 mr-1.5" />}
-                {unfunded ? 'Fund & submit' : 'Submit for review'}
+                {unfunded ? t('ads.fundAndSubmit') : t('ads.submitForReview')}
               </Button>
             </div>
           )}

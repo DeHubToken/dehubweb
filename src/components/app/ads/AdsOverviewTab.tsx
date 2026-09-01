@@ -7,6 +7,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { Wallet, Eye, MousePointerClick, DollarSign, Rocket, Plus, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,7 @@ interface AdsOverviewTabProps {
 }
 
 export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: AdsOverviewTabProps) {
+  const { t } = useTranslation();
   const { data: account, isLoading: loadingAccount } = useAdAccount();
   const { data: campaigns = [], isLoading } = useAdCampaigns();
   const { data: stats = [] } = useAllCampaignStats(campaigns.map((c) => c.id));
@@ -98,7 +100,7 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
             <Wallet className="w-4 h-4 text-yellow-500 shrink-0" />
             <div>
               <p className="text-sm font-medium text-yellow-500">
-                {waitingOnMoney.length === 1 ? 'Your campaign is not serving' : `${waitingOnMoney.length} campaigns are not serving`}
+                {t('ads.notServingCount', { count: waitingOnMoney.length })}
               </p>
               <p className="text-xs text-muted-foreground">
                 Ads only serve while the balance is above $0. Top up and delivery starts on the next request.
@@ -118,20 +120,20 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
           onClick={onGoBilling}
           className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4 text-left hover:bg-foreground/[0.06] transition-colors"
         >
-          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><Wallet className="w-3.5 h-3.5" /> Balance</div>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><Wallet className="w-3.5 h-3.5" /> {t('ads.balance')}</div>
           <p className="text-xl font-bold text-foreground">{formatUsd(account?.balance_usd)}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Top up →</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{t('ads.topUp')}</p>
         </button>
         <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><DollarSign className="w-3.5 h-3.5" /> Spend</div>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><DollarSign className="w-3.5 h-3.5" /> {t('ads.spend')}</div>
           <p className="text-xl font-bold text-foreground">{formatUsd(kpis.spend)}</p>
         </div>
         <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><Eye className="w-3.5 h-3.5" /> Impressions</div>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><Eye className="w-3.5 h-3.5" /> {t('ads.impressions')}</div>
           <p className="text-xl font-bold text-foreground">{formatCompact(kpis.impressions)}</p>
         </div>
         <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><MousePointerClick className="w-3.5 h-3.5" /> Clicks</div>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><MousePointerClick className="w-3.5 h-3.5" /> {t('ads.clicks')}</div>
           <p className="text-xl font-bold text-foreground">{formatCompact(kpis.clicks)}</p>
           <p className="text-[11px] text-muted-foreground mt-0.5">{kpis.ctr.toFixed(2)}% CTR</p>
         </div>
@@ -143,7 +145,7 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
 
       {/* 14-day chart */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-        <p className="text-sm font-semibold text-foreground mb-3">Last 14 days</p>
+        <p className="text-sm font-semibold text-foreground mb-3">{t('ads.last14Days')}</p>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 0, left: -18 }}>
             <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
@@ -162,17 +164,17 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
       {/* Recent campaigns */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-sm font-semibold text-foreground">Campaigns</p>
+          <p className="text-sm font-semibold text-foreground">{t('ads.campaigns')}</p>
           <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={onNewCampaign}>
             <Plus className="w-4 h-4 mr-1" /> New
           </Button>
         </div>
         {isLoading ? (
-          <p className="text-sm text-muted-foreground py-4 text-center">Loading…</p>
+          <p className="text-sm text-muted-foreground py-4 text-center">{t('ads.loading')}</p>
         ) : recent.length === 0 ? (
           <div className="text-center py-8 space-y-3">
             <Rocket className="w-7 h-7 text-muted-foreground mx-auto" />
-            <p className="text-sm text-muted-foreground">No campaigns yet. Launch your first in minutes.</p>
+            <p className="text-sm text-muted-foreground">{t('ads.noCampaignsYet')}</p>
             <Button variant="glass" size="sm" onClick={onNewCampaign}>
               <Plus className="w-4 h-4 mr-1" /> Create campaign
             </Button>
