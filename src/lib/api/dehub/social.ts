@@ -642,17 +642,18 @@ export async function quotePost(params: {
 }): Promise<QuotePostMintResponse> {
   const { authedUpload } = await import('./core');
 
-  // Extract hashtags from content as augmented categories
+  // Hashtags the author typed become categories too, but the text is sent as
+  // written — see the same decision in usePostForm. Stripping them made a typed
+  // tag indistinguishable from a picked category and deleted it from the quote.
   const hashtagRegex = /#([A-Za-z][A-Za-z0-9_]{0,49})/g;
   const extractedTags = Array.from(params.content.matchAll(hashtagRegex)).map(m => m[1]);
-  const cleanContent = params.content.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim();
   const hashtagCategories = extractedTags.map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
   const baseCategory = params.category || 'general';
   const mergedCategories = [...new Set([baseCategory, ...hashtagCategories])];
 
   const formData = new FormData();
   formData.append('quotedTokenId', String(params.quotedTokenId));
-  formData.append('description', cleanContent);
+  formData.append('description', params.content);
   formData.append('postType', 'feed-simple');
   formData.append('category', JSON.stringify(mergedCategories));
   formData.append('chainId', '8453');
