@@ -88,9 +88,17 @@ const WHEP_START_TIMEOUT_MS = 6000;
 
 interface LiveStreamCardProps {
   stream: LiveStream;
+  /**
+   * The stream's own chat, dropped down by the message button in the action
+   * bar. When it is given, that button opens the chat rather than the post's
+   * comments: a broadcast has one conversation, and it is the live one — the
+   * chat used to be a second panel bolted under the player, which read as the
+   * platform's chat sitting on somebody's stream.
+   */
+  chatSlot?: React.ReactNode;
 }
 
-export function LiveStreamCard({ stream }: LiveStreamCardProps) {
+export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   const [showComments, setShowComments] = useState(false);
   const { t } = useI18n();
   const navigate = useNavigate();
@@ -1020,12 +1028,21 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments */}
-      <CommentsWrapper
-        open={showComments}
-        onOpenChange={setShowComments}
-        tokenId={stream.id}
-      />
+      {/* The chat, or the comments when there is no chat to show — same
+          button, same drop-down position under the action bar. */}
+      {chatSlot ? (
+        showComments && (
+          <div className="mt-3" data-no-navigate onClick={(e) => e.stopPropagation()}>
+            {chatSlot}
+          </div>
+        )
+      ) : (
+        <CommentsWrapper
+          open={showComments}
+          onOpenChange={setShowComments}
+          tokenId={stream.id}
+        />
+      )}
 
       {/* Gift Drawer */}
       <Drawer open={showGiftDrawer} onOpenChange={setShowGiftDrawer}>
