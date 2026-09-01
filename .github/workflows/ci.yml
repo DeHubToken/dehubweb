@@ -91,6 +91,15 @@ jobs:
       - name: Typecheck node (vite.config.ts)
         run: pnpm exec tsc --noEmit -p tsconfig.node.json
 
+      # The edge functions are the one tree nothing else in CI reads. tsc is
+      # aimed at src, vitest never loads them, and the CORS check only reads
+      # the header lists they declare — so an import that cannot resolve ships
+      # green and fails at module load on every request. Runs here rather than
+      # in its own job because judging an `npm:` subpath needs the installed
+      # package's exports map, and this is the job that has node_modules.
+      - name: Edge function imports resolve
+        run: node scripts/edge-imports-check.mjs
+
   tests:
     name: Tests
     runs-on: ubuntu-latest
