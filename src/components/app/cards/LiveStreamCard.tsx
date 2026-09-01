@@ -13,6 +13,7 @@ import {
   Play, Volume2, VolumeX, Maximize, Minimize,
   Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info
 } from 'lucide-react';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~400 kB raw) loads dynamically at attach time
@@ -762,7 +763,11 @@ export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
               whileTap={{ scale: 0.95 }}
               aria-label="Like stream"
             >
-              <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              {isLiking ? (
+                <ButtonLoader size={20} />
+              ) : (
+                <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              )}
             </motion.button>
           )}
           {/* Gift button */}

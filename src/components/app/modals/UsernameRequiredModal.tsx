@@ -24,6 +24,8 @@ import { cn } from '@/lib/utils';
 import profileIcon from '@/assets/profile-icon.png';
 
 import { isReservedUsername } from '@/lib/reserved-usernames';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
+import { usePendingAction } from '@/hooks/use-pending-action';
 
 // Debounce helper
 function useDebounce<T>(value: T, delay: number): T {
@@ -215,6 +217,9 @@ export function UsernameRequiredModal() {
     }
   };
 
+  // Disconnecting is a session teardown plus a network hop; without this the
+  // button sat inert long enough to read as a missed tap.
+  const { pending: isLoggingOut, run: runLogout } = usePendingAction(handleLogout);
   const canSubmit = username.trim().length >= 1 &&
                     displayName.trim().length > 0 && 
                     usernameAvailable === true && 
@@ -325,10 +330,11 @@ export function UsernameRequiredModal() {
               type="button"
               variant="ghost"
               className="w-full text-zinc-400 hover:text-white hover:bg-zinc-800"
-              onClick={handleLogout}
-              disabled={isSubmitting}
+              onClick={() => void runLogout()}
+              disabled={isSubmitting || isLoggingOut}
+              aria-busy={isLoggingOut || undefined}
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              {isLoggingOut ? <ButtonLoader className="mr-2" /> : <LogOut className="mr-2 h-4 w-4" />}
               Log out instead
             </Button>
           </div>
