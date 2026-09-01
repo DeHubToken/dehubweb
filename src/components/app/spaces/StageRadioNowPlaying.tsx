@@ -14,6 +14,7 @@
 
 import { Music, Radio } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useStageRadioNowPlaying } from '@/hooks/use-stage-radio';
 import { getCountryFlag, getPrimaryTags } from '@/lib/api/radio-browser';
@@ -24,6 +25,7 @@ interface StageRadioNowPlayingProps {
 }
 
 export function StageRadioNowPlaying({ spaceId, className }: StageRadioNowPlayingProps) {
+  const { t } = useTranslation();
   const station = useStageRadioNowPlaying(spaceId);
   const [logoFailed, setLogoFailed] = useState(false);
 
@@ -56,7 +58,7 @@ export function StageRadioNowPlaying({ spaceId, className }: StageRadioNowPlayin
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] uppercase tracking-wide text-white/40">{isTrack ? 'Now playing' : 'On the radio'}</p>
+        <p className="text-[10px] uppercase tracking-wide text-white/40">{isTrack ? t('stages.nowPlaying') : t('stages.onTheRadio')}</p>
         <p className="text-xs font-medium text-white truncate">{station.name}</p>
         {(tags || station.country) && (
           <p className="text-[10px] text-white/40 truncate">
