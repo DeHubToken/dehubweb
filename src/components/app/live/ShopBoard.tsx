@@ -39,6 +39,7 @@
  * any player or card.
  */
 
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ShoppingBag, ExternalLink, ImageIcon, X, Loader2 } from 'lucide-react';
@@ -97,6 +98,7 @@ function ListingRow({
   product: StreamProduct;
   onBuy: () => void;
 }) {
+  const { t } = useTranslation();
   const { data: prices } = useTokenPrices();
   const dhbPrice = prices?.DHB ?? 0;
   const priceUsd = effectivePrice(product);
@@ -130,12 +132,12 @@ function ListingRow({
           </span>
           {stock !== null && stock !== undefined && stock <= LOW_STOCK_THRESHOLD && (
             <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-400">
-              {stock === 1 ? 'Last one' : `${stock} left`}
+              {stock === 1 ? t('live.lastOne') : t('live.stockLeft', { count: stock })}
             </span>
           )}
         </div>
       </div>
-      <span className="text-xs font-medium text-white/70 shrink-0">Buy</span>
+      <span className="text-xs font-medium text-white/70 shrink-0">{t('live.buy')}</span>
     </button>
   );
 }
@@ -147,6 +149,7 @@ export function ShopBoard({
   variant = 'overlay',
   className,
 }: ShopBoardProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [checkout, setCheckout] = useState<StreamProduct | null>(null);
   const overlay = variant === 'overlay';
@@ -183,7 +186,7 @@ export function ShopBoard({
         )}
       >
         <ShoppingBag className="w-4 h-4" />
-        Shop
+        {t('live.shop')}
         <span className="text-white/50 text-xs">{total}</span>
       </button>
 
@@ -204,13 +207,13 @@ export function ShopBoard({
             <div className="flex items-center justify-between px-4 pt-3 pb-2">
               <div className="flex items-center gap-2 text-white text-sm font-medium">
                 <ShoppingBag className="w-4 h-4" />
-                Shop
+                {t('live.shop')}
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 className="p-1.5 -mr-1.5 text-white/60 hover:text-white transition-colors"
-                aria-label="Close shop"
+                aria-label={t('live.closeShop')}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -231,8 +234,7 @@ export function ShopBoard({
                 <>
                   {sellable.length > 0 && <div className="h-px bg-white/10 my-2" />}
                   <p className="px-1 pb-1 text-[11px] leading-snug text-white/45">
-                    Affiliate links — the creator may earn a commission on anything you buy.
-                    Prices are the same for you.
+                    {t('live.affiliateNotice')}
                   </p>
                   {linkRows.map((link, index) => (
                     <a
@@ -257,7 +259,7 @@ export function ShopBoard({
                   this post was published. Saying so beats an empty panel. */}
               {!isLoading && sellable.length === 0 && linkRows.length === 0 && (
                 <p className="py-4 text-center text-xs text-white/40">
-                  Nothing on sale here right now.
+                  {t('live.nothingOnSale')}
                 </p>
               )}
             </div>
