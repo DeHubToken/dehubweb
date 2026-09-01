@@ -6,7 +6,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getCategories, type DeHubCategory, type ShopLink } from '@/lib/api/dehub';
-import { ShopLinksSheet } from './ShopLinksSheet';
+import { ShopSheet, type ShopBoardDraft } from './ShopSheet';
 import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { toast } from 'sonner';
 import { useUserCommunities } from '@/hooks/use-communities';
@@ -69,6 +69,13 @@ interface PostAccessTogglesProps {
    */
   shopLinks?: ShopLink[];
   setShopLinks?: (links: ShopLink[]) => void;
+  /**
+   * Ids of the creator's own store listings on this board. They are attached
+   * in Supabase after the post has a tokenId, so the composer only carries the
+   * choice — see the attach step in usePostForm.
+   */
+  shopListingIds?: string[];
+  setShopListingIds?: (ids: string[]) => void;
   hasVideoOrAudio: boolean;
   categoryDrawerOpen?: boolean;
   setCategoryDrawerOpen?: (value: boolean) => void;
@@ -121,6 +128,8 @@ export function PostAccessToggles({
   setIsMature,
   shopLinks,
   setShopLinks,
+  shopListingIds,
+  setShopListingIds,
   hasVideoOrAudio,
   categoryDrawerOpen: categoryDrawerOpenProp,
   setCategoryDrawerOpen: setCategoryDrawerOpenProp,
@@ -349,18 +358,28 @@ export function PostAccessToggles({
   // Shop board. The row is only rendered when the composer wired it up, so
   // surfaces that have not adopted it yet are unchanged.
   const shopAllowance = useShopLinkAllowance();
-  const shopEnabled = (shopLinks?.length ?? 0) > 0;
+  const shopRows = (shopLinks?.length ?? 0) + (shopListingIds?.length ?? 0);
+  const shopEnabled = shopRows > 0;
   /**
    * Toggling on opens the editor rather than writing an empty board: a switch
    * that turns green and does nothing is the shape of a bug report. Toggling
-   * off clears the links — there is no separate flag to park them behind, and
-   * keeping invisible links on a post is worse than making somebody retype
-   * three URLs.
+   * off clears the board — there is no separate flag to park it behind, and
+   * keeping an invisible board on a post is worse than making somebody pick
+   * three things again.
    */
   const handleShopToggle = (next: boolean) => {
     if (!setShopLinks) return;
-    if (next) setShopDrawerOpen(true);
-    else setShopLinks([]);
+    if (next) {
+      setShopDrawerOpen(true);
+      return;
+    }
+    setShopLinks([]);
+    setShopListingIds?.([]);
+  };
+
+  const saveShopBoard = (value: ShopBoardDraft) => {
+    setShopLinks?.(value.links);
+    setShopListingIds?.(value.listingIds);
   };
 
   return (
@@ -576,7 +595,7 @@ export function PostAccessToggles({
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
 
-        {/* Shop — the creator's affiliate / shop link board. Tapping the row
+        {/* Shop — the creator's own listings and affiliate links. Tapping the row
             anywhere opens the editor, including when it is already on, so
             "add another link" is one tap rather than off-then-on. */}
         {setShopLinks && (
@@ -586,7 +605,7 @@ export function PostAccessToggles({
             <span className="text-sm text-white">Shop</span>
             {shopEnabled && (
               <span className="text-xs text-white/50 truncate">
-                ({shopLinks!.length} of {shopAllowance.allowance} link{shopAllowance.allowance === 1 ? '' : 's'})
+                ({shopRows} of {shopAllowance.allowance})
               </span>
             )}
           </div>
@@ -789,11 +808,11 @@ export function PostAccessToggles({
 
       {/* PPV Drawer */}
       {setShopLinks && (
-        <ShopLinksSheet
+        <ShopSheet
           open={shopDrawerOpen}
           onOpenChange={setShopDrawerOpen}
-          links={shopLinks ?? []}
-          onSave={setShopLinks}
+          value={{ links: shopLinks ?? [], listingIds: shopListingIds ?? [] }}
+          onSave={saveShopBoard}
           allowance={shopAllowance.allowance}
           tier={shopAllowance.tier}
         />

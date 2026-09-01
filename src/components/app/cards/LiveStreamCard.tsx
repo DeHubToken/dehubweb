@@ -23,7 +23,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { StreamShopPinnedCard } from '../live/StreamShop';
-import { ShopLinkBoard } from '../live/ShopLinkBoard';
+import { ShopBoard } from '../live/ShopBoard';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -971,7 +971,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                 the same reason as the pinned card — it has to survive
                 fullscreen — and anchored bottom-left, clear of the mute and
                 fullscreen controls on the right. */}
-            <ShopLinkBoard links={stream.shopLinks} />
+            <ShopBoard tokenId={stream.tokenId || stream.id} links={stream.shopLinks} listingCount={stream.shopListingCount} />
           </>
         )}
         </GatedMedia>
