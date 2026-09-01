@@ -196,11 +196,21 @@ const HOME_INTRO_SLIDES = [
   ['You Will Own Everything, And Be Happy', 'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.'],
 ];
 
+// Outlets that have covered DeHub — mirrors PRESS in HomeIntro.tsx, where they
+// render as a wordmark marquee under the entity copy. Worth emitting at the
+// edge rather than leaving to the SPA: naming four established publishers in
+// crawlable body copy is corroboration for a contested brand string, which is
+// the same job the disambiguation sentence below is doing. Like the panel
+// itself, this links INWARD to /docs/featured-in — that page holds the outbound
+// article links, so the home page spends none of its own equity on them.
+const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investing.com'];
+
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left">
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
 <p>DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs" style="color:#9f9">Read the docs</a></p>
+<p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in" style="color:#9f9">DeHub press coverage</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
   HOME_INTRO_LINKS.map(([href, label]) =>
     `<li style="margin:6px 0"><a href="${APP_URL}${href}" style="color:#9f9">${label}</a></li>`

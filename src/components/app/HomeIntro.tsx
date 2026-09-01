@@ -19,8 +19,9 @@
  * Rendered ONLY when signed out, so the existing community's feed is untouched.
  * Googlebot is signed out AND starts with empty localStorage, so it always sees
  * the panel — and so does every first-time human visitor. The copy is therefore
- * never bot-only, and there is no bot/browser divergence to defend. Keep SLIDES
- * and ENTITY_COPY in sync with HOME_INTRO_HTML in CLOUDFLARE_WORKER_SEO.js.
+ * never bot-only, and there is no bot/browser divergence to defend. Keep SLIDES,
+ * ENTITY_COPY and PRESS in sync with HOME_INTRO_HTML / HOME_INTRO_PRESS in
+ * CLOUDFLARE_WORKER_SEO.js.
  *
  * Every slide's text stays mounted — slides are stacked in one grid cell and
  * cross-faded, never conditionally rendered. All three stay indexable whichever
@@ -98,6 +99,32 @@ const LINKS: { to: string; label: string }[] = [
   { to: '/guides/what-is-watch-to-earn', label: 'What is watch-to-earn?' },
   { to: '/guides/tokenized-subscriptions-explained', label: 'Tokenised subscriptions' },
 ];
+
+/* Press strip under the entity copy. Four outlets, set as WORDMARKS rather than
+   logo images on purpose:
+
+   - There are no publisher logo files in this repo, and there should not be.
+     Shipping four third-party trademarks as raster assets means hosting other
+     people's marks, at every DPR, forever, and re-cutting them whenever an
+     outlet rebrands. Type we already load costs nothing and never goes stale.
+   - The panel is monochrome. Real press logos arrive in four different brand
+     colours and would be the only colour on the plate; greyscaling them just
+     makes them look broken rather than deliberate.
+
+   Every item links INTERNALLY to /docs/featured-in, not out to the article.
+   This panel exists to rank the signed-out home page, and four external
+   dofollow links on it would bleed the exact equity it is here to gather —
+   /docs/featured-in already carries the real article links, so a wordmark is
+   one hop from the piece and the crawl stays in-site.
+
+   `reach` is title-attribute text only. It is on /docs/featured-in already and
+   the strip is far too small to carry it visually. */
+const PRESS = [
+  { outlet: 'US Weekly', reach: '50M+ readers' },
+  { outlet: 'Yahoo Finance', reach: "World's largest business news platform" },
+  { outlet: 'Entrepreneur', reach: '20M+ monthly users' },
+  { outlet: 'Investing.com', reach: '46M+ monthly users' },
+] as const;
 
 /* --- design tokens, lifted verbatim from kit/compose.mjs ------------------ */
 const MONO = "'Cascadia Mono','Consolas','DejaVu Sans Mono','Menlo',monospace";
@@ -411,6 +438,56 @@ export function HomeIntro() {
               // read_more
             </button>
           )}
+        </div>
+
+        {/* --- featured in --------------------------------------------------
+            A marquee, not a static row. Four wordmarks at a legible size
+            overflow the narrow column this panel is built for — it is
+            container-queried down to ~320px — and letting them wrap turned a
+            one-line credential strip into a three-line block that pushed both
+            CTAs further off a small screen. Scrolling keeps it one line at
+            every width.
+
+            The track holds the list TWICE and translates exactly -50%, which is
+            what makes the loop seamless. The second copy is aria-hidden and
+            untabbable so each outlet is announced and focused once, not twice.
+
+            Motion is CSS-only and pauses on hover; prefers-reduced-motion turns
+            it off entirely and hands the strip back as a normal scroller (see
+            index.css) — a permanently moving element is exactly what that
+            setting is for. */}
+        <div className="dehub-press mt-4">
+          <span
+            className="text-[11px] uppercase tracking-[0.12em] text-zinc-500"
+            style={{ fontFamily: MONO }}
+          >
+            // featured_in
+          </span>
+          {/* <nav>, not a div: this is a labelled set of links, and aria-label
+              on a generic element is ignored by most screen readers. */}
+          <nav className="dehub-press-viewport mt-2" aria-label="DeHub in the press">
+            <div className="dehub-press-track">
+              {[0, 1].map((copy) => (
+                <div
+                  key={copy}
+                  className="dehub-press-set"
+                  aria-hidden={copy === 1 ? 'true' : undefined}
+                >
+                  {PRESS.map((p) => (
+                    <Link
+                      key={p.outlet}
+                      to="/docs/featured-in"
+                      title={`${p.outlet} — ${p.reach}`}
+                      tabIndex={copy === 1 ? -1 : undefined}
+                      className="font-exo text-sm font-semibold uppercase tracking-[0.06em] text-white/45 transition-colors hover:text-white/85"
+                    >
+                      {p.outlet}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </nav>
         </div>
 
         <nav aria-label="Learn more about DeHub" className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
