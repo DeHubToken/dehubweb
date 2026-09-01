@@ -1,4 +1,10 @@
-/**
+          <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
+            <LiveFeedPreview
+              urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
+              thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
+              fallbackLabel="Live"
+            />
+          </Suspense>/**
  * Live Card Component
  * ===================
  * Displays live stream content with viewer count and universal styling.
@@ -9,7 +15,7 @@
  * ```
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cdnImage } from '@/lib/media-url';
@@ -20,7 +26,9 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
-import { LiveFeedPreview } from './LiveFeedPreview';
+// Lazy: only an on-air stream renders it, so the HLS glue stays off the boot path.
+const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ default: m.LiveFeedPreview })));
+
 import { GatedMedia } from './GatedMedia';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -189,11 +197,13 @@ export function LiveCard({ stream }: LiveCardProps) {
         >
         {stream.isLive && (stream.playbackUrl || stream.playbackUrls?.length) ? (
           /* On air: the carousel card plays the stream, not a still of it. */
-          <LiveFeedPreview
-            urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
-            thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
-            fallbackLabel="Live"
-          />
+          <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
+            <LiveFeedPreview
+              urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
+              thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
+              fallbackLabel="Live"
+            />
+          </Suspense>
         ) : stream.isLive && stream.thumbnail ? (
           <img
             /* Live thumbnails come straight off the API as raw CDN paths, so
