@@ -6,6 +6,7 @@
  * @module components/app/tv/LiveTVSection
  */
 
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
@@ -27,6 +28,7 @@ interface LiveTVSectionProps {
 }
 
 export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
+  const { t } = useTranslation();
   const [activeCountry, setActiveCountry] = useState<TVCountryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
@@ -80,7 +82,7 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             type="text"
-            placeholder="Search hundreds of free TV channels..."
+            placeholder={t('tv.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
@@ -99,8 +101,8 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
         {/* Search Results Header */}
         {isSearching && (
           <div className="flex items-center gap-2 text-sm text-zinc-400">
-            <span>Results for "{debouncedSearch}"</span>
-            {!isLoading && <span>({channels.length} channels)</span>}
+            <span>{t('tv.resultsFor', { query: debouncedSearch })}</span>
+            {!isLoading && <span>{t('tv.channelCount', { count: channels.length })}</span>}
           </div>
         )}
       </div>
@@ -127,9 +129,9 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
       {error && !isLoading && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <ThemedIcon icon="live" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
-          <h3 className="text-white font-semibold mb-2">Failed to load channels</h3>
+          <h3 className="text-white font-semibold mb-2">{t('tv.loadFailed')}</h3>
           <p className="text-zinc-500 text-sm max-w-[280px]">
-            Please check your connection and try again.
+            {t('tv.loadFailedHint')}
           </p>
         </div>
       )}
@@ -139,12 +141,10 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <ThemedIcon icon="live" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
           <h3 className="text-white font-semibold mb-2">
-            {isSearching ? 'No channels found' : 'No channels available'}
+            {t(isSearching ? 'tv.noChannelsFound' : 'tv.noChannelsAvailable')}
           </h3>
           <p className="text-zinc-500 text-sm max-w-[280px]">
-            {isSearching 
-              ? 'Try a different search term.'
-              : 'Try selecting a different country.'}
+            {t(isSearching ? 'tv.tryDifferentSearch' : 'tv.tryDifferentCountry')}
           </p>
         </div>
       )}

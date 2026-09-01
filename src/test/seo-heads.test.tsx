@@ -6,6 +6,7 @@
  *   3. A visually-hidden <h1> element
  */
 import { describe, it, expect, vi } from 'vitest';
+import { readFileSync } from 'fs';
 
 // ---- Heavy mocks to avoid pulling in wallets, supabase, etc. ----
 
@@ -234,7 +235,10 @@ vi.mock('@/assets/glossary-icon.png', () => ({ default: '' }));
 // List of pages that should have SEOHead + hidden H1
 const PAGE_CASES: { name: string; path: string; h1Substring: string }[] = [
   { name: 'Home', path: 'src/pages/app/HomePage.tsx', h1Substring: 'Home' },
-  { name: 'TV', path: 'src/pages/app/TVPage.tsx', h1Substring: 'Live TV' },
+  // Translated pages carry an i18n key rather than English prose, so the
+  // substring pins the key. It still identifies THIS page's heading — a
+  // different page's key would not match.
+  { name: 'TV', path: 'src/pages/app/TVPage.tsx', h1Substring: "t('tv.srHeading')" },
   { name: 'Governance', path: 'src/pages/app/GovernancePage.tsx', h1Substring: 'Governance' },
   { name: 'Leaderboard', path: 'src/pages/app/LeaderboardPage.tsx', h1Substring: 'Leaderboard' },
   { name: 'Music', path: 'src/pages/app/MusicPage.tsx', h1Substring: 'Music' },
@@ -282,13 +286,36 @@ describe('SEO: Every page has SEOHead with title and description', () => {
       // Check SEOHead import
       expect(source).toContain("import { SEOHead }");
       
-      // Check SEOHead usage with title and description props
+      // Check SEOHead usage with title and description props. Either form
+      // counts: a literal on an English-only page, or `{t('…')}` on a
+      // translated one. What is being guarded is that the props are there.
       expect(source).toMatch(/<SEOHead\s/);
-      expect(source).toMatch(/title="/);
-      expect(source).toMatch(/description="/);
+      expect(source).toMatch(/title=["{]/);
+      expect(source).toMatch(/description=["{]/);
     });
   }
 });
+
+/**
+ * The English text of an SEOHead prop, however the page writes it.
+ *
+ * A page may pass a literal (`title="…"`) or, once translated, a key
+ * (`title={t('tv.seoTitle')}`). Both have to be measurable or the length
+ * guarantee below would quietly stop applying to every page we translate —
+ * which is the moment it stops being worth having. A key is resolved against
+ * `en.json`, since English is what the crawler is served.
+ */
+function seoProp(source: string, prop: 'title' | 'description'): string | null {
+  const literal = source.match(new RegExp(`<SEOHead[^>]*${prop}="([^"]+)"`));
+  if (literal) return literal[1];
+
+  const keyed = source.match(new RegExp(`<SEOHead[^>]*${prop}=\\{t\\('([^']+)'\\)\\}`));
+  if (!keyed) return null;
+
+  const [ns, key] = keyed[1].split('.');
+  const en = JSON.parse(readFileSync('src/i18n/locales/en.json', 'utf-8'));
+  return en?.[ns]?.[key] ?? null;
+}
 
 describe('SEO: Title and description length constraints', () => {
   for (const { name } of PAGE_CASES) {
@@ -296,22 +323,18 @@ describe('SEO: Title and description length constraints', () => {
       const fs = await import('fs');
       const filePath = PAGE_CASES.find(p => p.name === name)!.path;
       const source = fs.readFileSync(filePath, 'utf-8');
-      
-      // Extract title from SEOHead
-      const titleMatch = source.match(/<SEOHead[^>]*title="([^"]+)"/);
-      expect(titleMatch, `${name}: SEOHead title not found`).toBeTruthy();
-      const title = titleMatch![1];
-      
+
+      const title = seoProp(source, 'title');
+      expect(title, `${name}: SEOHead title not found`).toBeTruthy();
+
       // Title should be under 60 chars (SEO best practice)
-      expect(title.length, `${name}: title "${title}" is ${title.length} chars, should be < 60`).toBeLessThan(60);
-      
-      // Extract description
-      const descMatch = source.match(/<SEOHead[^>]*description="([^"]+)"/);
-      expect(descMatch, `${name}: SEOHead description not found`).toBeTruthy();
-      const desc = descMatch![1];
-      
+      expect(title!.length, `${name}: title "${title}" is ${title!.length} chars, should be < 60`).toBeLessThan(60);
+
+      const desc = seoProp(source, 'description');
+      expect(desc, `${name}: SEOHead description not found`).toBeTruthy();
+
       // Description should be > 100 chars (SEO best practice)
-      expect(desc.length, `${name}: description is only ${desc.length} chars, should be > 100`).toBeGreaterThan(100);
+      expect(desc!.length, `${name}: description is only ${desc!.length} chars, should be > 100`).toBeGreaterThan(100);
     });
   }
 });
@@ -323,9 +346,9 @@ describe('SEO: No page title contains "Page" suffix', () => {
       const filePath = PAGE_CASES.find(p => p.name === name)!.path;
       const source = fs.readFileSync(filePath, 'utf-8');
       
-      const titleMatch = source.match(/<SEOHead[^>]*title="([^"]+)"/);
-      if (titleMatch) {
-        expect(titleMatch[1]).not.toMatch(/\bPage\b/i);
+      const title = seoProp(source, 'title');
+      if (title) {
+        expect(title).not.toMatch(/Page/i);
       }
     });
   }

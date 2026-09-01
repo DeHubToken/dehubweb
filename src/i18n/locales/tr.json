@@ -980,6 +980,26 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "tv": {
+    "seoTitle": "Canlı TV — Dünyanın dört bir yanından ücretsiz kanallar",
+    "seoDescription": "DeHub'da dünyanın dört bir yanından ücretsiz canlı TV kanallarını izleyin. Haber, spor, eğlence ve daha fazlası — tarayıcıda yayınlanır, abonelik gerekmez.",
+    "srHeading": "DeHub Canlı TV — Merkeziyetsiz sosyal medya, sansüre dirençli ve ifade özgürlüğüne açık",
+    "searchPlaceholder": "Yüzlerce ücretsiz TV kanalı içinde arayın...",
+    "filterAll": "Tümü",
+    "resultsFor": "“{{query}}” için sonuçlar",
+    "channelCount_one": "({{count}} kanal)",
+    "channelCount_other": "({{count}} kanal)",
+    "loadFailed": "Kanallar yüklenemedi",
+    "loadFailedHint": "Lütfen bağlantınızı kontrol edip tekrar deneyin.",
+    "noChannelsFound": "Kanal bulunamadı",
+    "noChannelsAvailable": "Kullanılabilir kanal yok",
+    "tryDifferentSearch": "Başka bir arama terimi deneyin.",
+    "tryDifferentCountry": "Başka bir ülke seçmeyi deneyin.",
+    "live": "CANLI",
+    "geoBlocked": "Yayın bölgesel olarak engelli ya da kullanılamıyor",
+    "sorryInconvenience": "Verdiğimiz rahatsızlık için özür dileriz",
+    "retryCount_one": "Tekrar dene ({{count}} hak kaldı)",
+    "retryCount_other": "Tekrar dene ({{count}} hak kaldı)",
+    "liveChat": "Canlı sohbet",
     "title": "TV"
   },
   "buyCoins": {

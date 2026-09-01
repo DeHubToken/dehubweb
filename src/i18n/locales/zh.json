@@ -980,6 +980,26 @@
     "loginDescription": "登录以查看和管理您的个人资料。"
   },
   "tv": {
+    "seoTitle": "电视直播 — 来自世界各地的免费频道",
+    "seoDescription": "在 DeHub 观看来自世界各地的免费电视直播频道。新闻、体育、娱乐等等——直接在浏览器里看，无需订阅。",
+    "srHeading": "DeHub 电视直播 — 去中心化社交媒体，抗审查、言论自由",
+    "searchPlaceholder": "搜索数百个免费电视频道…",
+    "filterAll": "全部",
+    "resultsFor": "「{{query}}」的搜索结果",
+    "channelCount_one": "（{{count}} 个频道）",
+    "channelCount_other": "（{{count}} 个频道）",
+    "loadFailed": "频道加载失败",
+    "loadFailedHint": "请检查网络连接后重试。",
+    "noChannelsFound": "未找到频道",
+    "noChannelsAvailable": "暂无可用频道",
+    "tryDifferentSearch": "换个关键词试试。",
+    "tryDifferentCountry": "试试选择其他国家/地区。",
+    "live": "直播中",
+    "geoBlocked": "该频道受地区限制或暂不可用",
+    "sorryInconvenience": "给你带来不便，敬请谅解",
+    "retryCount_one": "重试（还剩 {{count}} 次）",
+    "retryCount_other": "重试（还剩 {{count}} 次）",
+    "liveChat": "实时聊天",
     "title": "电视"
   },
   "buyCoins": {
