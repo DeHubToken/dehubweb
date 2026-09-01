@@ -6,6 +6,7 @@
  * Matches ShortsViewer UI exactly with left action panel on desktop.
  */
 
+import { useTranslation } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Volume2, VolumeX, ChevronLeft, ChevronUp, ChevronDown, MoreHorizontal, ThumbsUp, ThumbsDown, Share2, Trash2, Loader2, MessageSquare, Eye, Bookmark, Send } from 'lucide-react';
@@ -57,6 +58,7 @@ function formatCount(count: number): string {
 }
 
 export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, onStoryWatched, onSwitchToShorts }: StoryViewerModalProps) {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -257,7 +259,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
       if (error) throw error;
 
       queryClient.invalidateQueries({ queryKey: ['stories'] });
-      toast.success('Story deleted');
+      toast.success(t('stories.storyDeleted'));
 
       if (stories.length === 1) {
         onClose();
@@ -266,7 +268,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
       }
     } catch (error) {
       console.error('Failed to delete story:', error);
-      toast.error('Failed to delete story');
+      toast.error(t('stories.storyDeleteFailed'));
     } finally {
       setIsDeleting(false);
     }
@@ -289,12 +291,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
   const handleCopyLink = () => {
     const url = `${window.location.origin}/app`;
     navigator.clipboard.writeText(url);
-    toast.success('Link copied to clipboard');
+    toast.success(t('stories.linkCopied'));
     setShareSheetOpen(false);
   };
 
   const handleRepost = () => {
-    toast.info('Repost for stories coming soon!');
+    toast.info(t('stories.repostComingSoon'));
     setShareSheetOpen(false);
   };
 
@@ -302,7 +304,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
     if (!inlineCommentText.trim() || !currentStory?.id || isPostingComment) return;
     
     if (!walletAddress) {
-      toast.error('Please log in to comment');
+      toast.error(t('stories.logInToComment'));
       return;
     }
     
@@ -637,12 +639,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                           <span>•</span>
                         </>
                       )}
-                      <span>{formatCount(likes)} {likes === 1 ? 'like' : 'likes'}</span>
+                      <span>{t('stories.likesCount', { count: likes, value: formatCount(likes) })}</span>
                     </div>
                   </div>
                 </button>
                 <button className="bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10 text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl transition-colors flex-shrink-0 max-w-[80px]">
-                  Follow
+                  {t('stories.follow')}
                 </button>
               </div>
               <p className="text-white/60 text-xs lg:text-sm mt-2">
@@ -654,7 +656,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
             <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0">
               <div className="flex items-center gap-2 text-white/60 text-xs mb-3 flex-shrink-0">
                 <MessageSquare className="w-4 h-4" />
-                <span>{commentCount} Comments</span>
+                <span>{t('stories.commentsCount', { count: commentCount })}</span>
               </div>
               
               {/* Comments list */}
@@ -710,7 +712,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                       handlePostInlineComment();
                     }
                   }}
-                  placeholder="Add a comment..."
+                  placeholder={t('stories.addComment')}
                   className="flex-1 bg-transparent text-white text-xs placeholder:text-white/40 outline-none"
                 />
                 <UserMentionDropdown
@@ -743,7 +745,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                   ) : (
                     <Trash2 className="w-5 h-5 text-red-400" />
                   )}
-                  <span className="text-red-400 text-sm">Delete Story</span>
+                  <span className="text-red-400 text-sm">{t('stories.deleteStory')}</span>
                 </button>
               )}
             </div>

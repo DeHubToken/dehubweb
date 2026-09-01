@@ -4,6 +4,7 @@
  * Comments drawer for stories, matching the shorts comments UX.
  */
 
+import { useTranslation } from 'react-i18next';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
@@ -33,9 +34,13 @@ interface StoryCommentsDrawerProps {
   storyId: string;
 }
 
+/**
+ * The sort values are compared against, not printed — `sortBy === option.value`
+ * decides the order — so they stay English and map to keys where drawn.
+ */
 const SORT_OPTIONS = [
-  { value: 'recent', label: 'Most Recent' },
-  { value: 'oldest', label: 'Oldest' },
+  { value: 'recent', labelKey: 'stories.sortRecent' },
+  { value: 'oldest', labelKey: 'stories.sortOldest' },
 ];
 
 interface CommentItemProps {
@@ -46,6 +51,7 @@ interface CommentItemProps {
 }
 
 function CommentItem({ comment, currentWallet, onDelete, onUserPress }: CommentItemProps) {
+  const { t } = useTranslation();
   const isOwnComment = currentWallet && comment.wallet_address.toLowerCase() === currentWallet.toLowerCase();
   
   // Resolve avatar
@@ -87,7 +93,7 @@ function CommentItem({ comment, currentWallet, onDelete, onUserPress }: CommentI
             onClick={() => onDelete(comment.id)}
             className="text-red-400 text-xs mt-1 hover:underline"
           >
-            Delete
+            {t('stories.delete')}
           </button>
         )}
       </div>
@@ -96,6 +102,7 @@ function CommentItem({ comment, currentWallet, onDelete, onUserPress }: CommentI
 }
 
 export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsDrawerProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { walletAddress, user } = useAuth();
   const [newComment, setNewComment] = useState('');
@@ -138,14 +145,14 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
       <DrawerContent glass className="max-h-[70vh] flex flex-col">
         <DrawerHeader className="flex items-center justify-between px-4 pb-2 flex-shrink-0">
           <DrawerTitle className="text-white/90 font-semibold">
-            Comments ({commentCount})
+            {t('stories.commentsCount', { count: commentCount })}
           </DrawerTitle>
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-1 text-zinc-400 hover:text-white transition-colors text-sm">
                   <ArrowUpDown className="w-4 h-4" />
-                  <span>{SORT_OPTIONS.find(o => o.value === sortBy)?.label}</span>
+                  <span>{t(SORT_OPTIONS.find(o => o.value === sortBy)?.labelKey ?? 'stories.sortRecent')}</span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-[140px]">
@@ -158,7 +165,7 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
                       sortBy === option.value && "bg-white/10"
                     )}
                   >
-                    {option.label}
+                    {t(option.labelKey)}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -174,7 +181,7 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
             </div>
           ) : sortedComments.length === 0 ? (
             <div className="text-center py-8 text-zinc-500 text-sm">
-              No comments yet. Be the first to comment!
+              {t('stories.noCommentsYet')}
             </div>
           ) : (
             <div className="divide-y divide-zinc-800/50">
@@ -202,7 +209,7 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
                 setNewComment(val);
                 mention.handleInput(val, e.target.selectionStart ?? val.length);
               }}
-              placeholder="Add a comment..."
+              placeholder={t('stories.addComment')}
               className="flex-1 bg-white/5 border-zinc-700 text-white placeholder:text-zinc-500"
               onKeyDown={(e) => {
                 if (mention.isOpen) {

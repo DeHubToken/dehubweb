@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Check, Bold, Type } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TextStyle, TEXT_COLORS } from './types';
@@ -32,6 +33,7 @@ export function StoryTextInput({
   initialText = '', 
   initialStyle 
 }: StoryTextInputProps) {
+  const { t } = useTranslation();
   const [text, setText] = useState(initialText);
   const [textColor, setTextColor] = useState(initialStyle?.color || '#FFFFFF');
   const [textStyle, setTextStyle] = useState<TextStyle>(initialStyle?.textStyle || 'normal');
@@ -101,7 +103,7 @@ export function StoryTextInput({
         >
           <X className="w-5 h-5 text-white" />
         </button>
-        <span className="text-white font-medium">Add Text</span>
+        <span className="text-white font-medium">{t('stories.addText')}</span>
         <button
           onClick={handleSubmit}
           disabled={!text.trim()}
@@ -117,7 +119,7 @@ export function StoryTextInput({
           ref={inputRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Type something..."
+          placeholder={t('stories.typeSomething')}
           className="w-full bg-transparent text-center text-2xl resize-none border-none outline-none placeholder:text-zinc-500"
           style={getPreviewStyle()}
           rows={3}
