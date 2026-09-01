@@ -500,7 +500,6 @@ html {
   .dehub-intro-stage { padding-right: 302px; }
   .dehub-intro-head { font-size: 50px; }
   .dehub-intro-clamp { display: block; overflow: visible; -webkit-line-clamp: none; }
-  .dehub-intro-readmore { display: none; }
 }
 
 /* "Featured in" press marquee inside the welcome panel (HomeIntro.tsx).
