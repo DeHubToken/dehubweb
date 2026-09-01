@@ -80,7 +80,7 @@ interface StageContextType {
   initialModalView: 'browse' | 'create' | 'live';
 
   // Actions
-  createSpace: (title: string, description?: string) => Promise<AudioSpace | null>;
+  createSpace: (title: string, description?: string, coverImageUrl?: string | null) => Promise<AudioSpace | null>;
   scheduleSpace: (input: ScheduleSpaceInput) => Promise<AudioSpace | null>;
   startScheduledSpace: (spaceId: string) => Promise<boolean>;
   cancelScheduledSpace: (spaceId: string) => Promise<void>;
@@ -1157,7 +1157,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   );
 
   const createSpace = useCallback(
-    async (title: string, description?: string): Promise<AudioSpace | null> => {
+    async (title: string, description?: string, coverImageUrl?: string | null): Promise<AudioSpace | null> => {
       if (!walletAddress) { toast.error('Please log in first'); return null; }
       setIsLoading(true);
       try {
@@ -1174,6 +1174,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
               host_username: user?.username || null,
               host_avatar: persistableAvatar(user?.avatarImageUrl),
               status: 'live',
+              // The composer can hand over a cover — the image or clip it was
+              // holding when Go Live was pressed. Scheduled stages already
+              // carried one; a stage opened now had nowhere to put it.
+              cover_image_url: coverImageUrl ?? null,
               speaker_count: 1,
               listener_count: 0,
             })

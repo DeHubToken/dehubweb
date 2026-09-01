@@ -10,7 +10,6 @@ import { GLASS_STYLES } from '@/constants/app.constants';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
-import { openStageModal } from '@/contexts/StageContext';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import type { LiveMode, LiveStreamHandoff } from '../types';
 import type { AttachedSound } from '../hooks/usePostSound';
@@ -119,14 +118,11 @@ export function PostActionBar({
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
     setLivePopoverOpen(false);
-    if (mode === 'townhall') {
-      // Close the post modal and open the Stages modal globally
-      onCloseModal?.();
-      openStageModal('create');
-    }
-    // A video stream opens nothing: picking Live just puts the composer in live
-    // mode, and the composer itself is the setup form. The Go Live sheet now
-    // only ever appears already broadcasting, handed a provisioned stream.
+    // Neither mode opens anything. Picking Live — video or stage — just puts
+    // the composer in live mode, and the composer itself is the setup form.
+    // Stages used to close this modal and hand over a second create form asking
+    // for the same title and description again; the room is now opened by the
+    // Go Live button below, off what was typed here.
   };
 
   const handleSpellCheck = () => {
@@ -344,8 +340,10 @@ export function PostActionBar({
           </Tooltip>
         )}
 
-        {/* Attachment button — image and video share one control */}
-        {!isLive && (
+        {/* Attachment button — image and video share one control. It stays put
+            in live mode: the file picked there is the stream's preview media —
+            a thumbnail, a GIF or a short clip — not a second post. */}
+        {(
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -357,7 +355,9 @@ export function PostActionBar({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              {hasImage ? 'Add image' : hasVideo ? 'Replace video' : 'Add image or video'}
+              {isLive
+                ? 'Set live preview image or video'
+                : hasImage ? 'Add image' : hasVideo ? 'Replace video' : 'Add image or video'}
             </TooltipContent>
           </Tooltip>
         )}
@@ -420,7 +420,10 @@ export function PostActionBar({
           </Popover>
         )}
         
-        {!hasImage && (
+        {/* Always present. Hiding it once an image was attached left live mode
+            with no way back off it, now that a cover is a normal thing to
+            attach to a stream. */}
+        {(
           <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen} modal={true}>
             <PopoverTrigger asChild>
               <button 
