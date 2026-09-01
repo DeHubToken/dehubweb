@@ -9,6 +9,11 @@ type PressFeature = {
   headline: string;
   blurb: string;
   url: string;
+  /** Set when `url` points at a Wayback capture because the publisher took the
+   *  original down. Surfaces an "archived" note so a reader isn't surprised to
+   *  land on web.archive.org, and flags the entry for anyone re-checking these
+   *  links later. */
+  archived?: boolean;
 };
 
 const features: PressFeature[] = [
@@ -31,10 +36,22 @@ const features: PressFeature[] = [
   {
     outlet: 'Entrepreneur',
     reach: '20M+ monthly users',
-    headline: "DeHub's “Redefining Vision”",
+    // Entrepreneur has since pulled the piece — entrepreneur.com/article/420564
+    // now 404s, so this pointed at a dead page. The article itself is intact in
+    // the Wayback Machine (three captures, Feb–Jul 2022), which is a real,
+    // checkable citation, so the entry stays and the link goes to the archive
+    // rather than being deleted. If Entrepreneur restores it, swap the URL back
+    // and drop `archived`.
+    //
+    // Headline and blurb were also wrong. The real piece is bylined Srivatsa KR
+    // for Entrepreneur Asia Pacific (25 Feb 2022) and carries Entrepreneur's
+    // "Opinions expressed by Entrepreneur contributors are their own" notice —
+    // it is contributor coverage, not the founder interview this claimed.
+    headline: 'A User-Centric Entertainment EcoSystem that Empowers Creators and Consumers',
     blurb:
-      'Founders Malik, Mike and Indi sat down with Entrepreneur for an interview and review of DeHub’s vision for a creator-owned economy.',
-    url: 'https://www.entrepreneur.com/article/420564',
+      'Entrepreneur Asia Pacific covered DeHub’s vision for a creator-owned entertainment economy — VR-ready sport, film, music and gaming built on NFT infrastructure, bootstrapped since 2021.',
+    url: 'https://web.archive.org/web/20220702152228/https://www.entrepreneur.com/article/420564',
+    archived: true,
   },
   {
     outlet: 'Investing.com',
@@ -75,12 +92,19 @@ const FeaturedIn = () => {
             </CardHeader>
             <CardContent className="flex flex-col flex-1 justify-between gap-4">
               <p className="text-sm text-muted-foreground leading-relaxed">{f.blurb}</p>
-              <Button asChild size="sm" className="w-full sm:w-auto self-start">
-                <a href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                  Read the article
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              </Button>
+              <div className="flex flex-col gap-2 items-start">
+                <Button asChild size="sm" className="w-full sm:w-auto self-start">
+                  <a href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    {f.archived ? 'Read the archived article' : 'Read the article'}
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </Button>
+                {f.archived && (
+                  <span className="text-xs text-muted-foreground">
+                    The publisher has removed the original; this opens the Wayback Machine capture.
+                  </span>
+                )}
+              </div>
             </CardContent>
           </Card>
         ))}
