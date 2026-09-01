@@ -14,6 +14,7 @@
  */
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Hash, Ruler } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -41,6 +42,7 @@ function handleClass(length: number): string {
 }
 
 export const UsernameCard = memo(function UsernameCard({ listing, onClick, isOwn }: Props) {
+  const { t } = useTranslation();
   const avatar = buildAvatarUrl(listing.seller.address, listing.seller.avatarUrl);
   const sellerName = listing.seller.displayName || shortAddress(listing.seller.address);
 
@@ -59,9 +61,9 @@ export const UsernameCard = memo(function UsernameCard({ listing, onClick, isOwn
         </p>
 
         <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-          <Chip icon={<Ruler className="w-3 h-3" />} label={`${listing.length} char${listing.length === 1 ? '' : 's'}`} />
-          {listing.isNumeric && <Chip icon={<Hash className="w-3 h-3" />} label="Numbers only" />}
-          {isOwn && <Chip label="Yours" />}
+          <Chip icon={<Ruler className="w-3 h-3" />} label={t('usernames.charCount', { count: listing.length })} />
+          {listing.isNumeric && <Chip icon={<Hash className="w-3 h-3" />} label={t('usernames.numbersOnly')} />}
+          {isOwn && <Chip label={t('usernames.yours')} />}
 
           {/* Seller rides the chip row on wide viewports — it is the least
               important thing here, and giving it its own line on a row this
