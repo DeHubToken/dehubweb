@@ -1785,5 +1785,25 @@
     "stakeDhb": "Hoiusta DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} avaneb tasemel {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kaamera stiilid",
+    "title": "Stiil",
+    "hint": "Rakendatakse enne, kui video sellest seadmest lahkub — vaatajad näevad täpselt seda, mida sina siin näed.",
+    "backgroundBlur": "Uduta minu taust",
+    "on": "Sees",
+    "off": "Väljas",
+    "none": "Puudub",
+    "soft": "Pehme",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Soe",
+    "cool": "Külm",
+    "vivid": "Erk",
+    "dream": "Unenägu",
+    "vhs": "VHS",
+    "neon": "Neoon",
+    "blur": "Hägu",
+    "pixelate": "Pikselda"
   }
 }

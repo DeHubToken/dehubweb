@@ -1798,5 +1798,25 @@
     "stakeDhb": "DHB staken",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} schaltet fry ab {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kamera-Looks",
+    "title": "Look",
+    "hint": "Wird aagwendet, bevor dis Video das Grät verlaat — Zueschauer gsehnd genau das, wo du da gsehsch.",
+    "backgroundBlur": "Hindergrund verwüsche",
+    "on": "Ii",
+    "off": "Us",
+    "none": "Kei",
+    "soft": "Weich",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Warm",
+    "cool": "Chüel",
+    "vivid": "Chräftig",
+    "dream": "Traum",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Unschärfi",
+    "pixelate": "Pixelig"
   }
 }

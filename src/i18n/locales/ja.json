@@ -1959,5 +1959,25 @@
     "disputeTotal": "合計：{{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "解決して支払う",
     "resolve": "解決する"
+  },
+  "videoLooks": {
+    "button": "カメラエフェクト",
+    "title": "エフェクト",
+    "hint": "映像がこの端末を出る前に適用されます — 視聴者にはここで見えているものがそのまま届きます。",
+    "backgroundBlur": "背景をぼかす",
+    "on": "オン",
+    "off": "オフ",
+    "none": "なし",
+    "soft": "ソフト",
+    "mono": "モノクロ",
+    "noir": "ノワール",
+    "warm": "ウォーム",
+    "cool": "クール",
+    "vivid": "ビビッド",
+    "dream": "ドリーム",
+    "vhs": "VHS",
+    "neon": "ネオン",
+    "blur": "ぼかし",
+    "pixelate": "モザイク"
   }
 }

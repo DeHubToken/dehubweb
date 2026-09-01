@@ -1763,5 +1763,25 @@
     "stakeDhb": "DHB Goý",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} {{tier}} derejesinde açylýar"
+  },
+  "videoLooks": {
+    "button": "Kamera görnüşleri",
+    "title": "Görnüş",
+    "hint": "Wideoňyz bu enjamdan çykmazdan öň ulanylýar — tomaşaçylar edil şu ýerde görýän zadyňyzy görýärler.",
+    "backgroundBlur": "Fonumy bulaşdyr",
+    "on": "Açyk",
+    "off": "Ýapyk",
+    "none": "Ýok",
+    "soft": "Ýumşak",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Ýyly",
+    "cool": "Sowuk",
+    "vivid": "Janly",
+    "dream": "Düýş",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Bulaşyklyk",
+    "pixelate": "Piksel"
   }
 }

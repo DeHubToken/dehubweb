@@ -1785,5 +1785,25 @@
     "stakeDhb": "DHB depozit et",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} {{tier}} səviyyəsində açılır"
+  },
+  "videoLooks": {
+    "button": "Kamera görünüşləri",
+    "title": "Görünüş",
+    "hint": "Videonuz bu cihazdan çıxmazdan əvvəl tətbiq olunur — izləyicilər tam olaraq burada gördüyünüzü görür.",
+    "backgroundBlur": "Fonumu bulanıqlaşdır",
+    "on": "Açıq",
+    "off": "Bağlı",
+    "none": "Yoxdur",
+    "soft": "Yumşaq",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "İsti",
+    "cool": "Soyuq",
+    "vivid": "Canlı",
+    "dream": "Yuxu",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Bulanıqlıq",
+    "pixelate": "Piksel"
   }
 }

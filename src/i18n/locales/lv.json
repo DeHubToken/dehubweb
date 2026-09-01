@@ -1785,5 +1785,25 @@
     "stakeDhb": "Iemaksā DHB",
     "title": "SuperSpējas",
     "unlocksAt": "{{power}} atslēdzas līmenī {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kameras izskati",
+    "title": "Izskats",
+    "hint": "Tiek lietots, pirms video pamet šo ierīci — skatītāji redz tieši to, ko redzat jūs.",
+    "backgroundBlur": "Aizmiglot manu fonu",
+    "on": "Ieslēgts",
+    "off": "Izslēgts",
+    "none": "Nav",
+    "soft": "Maigs",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Silts",
+    "cool": "Vēss",
+    "vivid": "Spilgts",
+    "dream": "Sapnis",
+    "vhs": "VHS",
+    "neon": "Neons",
+    "blur": "Aizmiglojums",
+    "pixelate": "Pikseļi"
   }
 }

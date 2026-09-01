@@ -12,6 +12,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Mic,
   MicOff,
@@ -23,6 +24,7 @@ import {
   PictureInPicture2,
   Move,
   Wand2,
+  Palette,
   MessageSquare,
   Eye,
   X,
@@ -49,6 +51,9 @@ import {
   type BubbleCorner,
   type CameraBubble,
 } from '@/lib/livepeer/compositor';
+import { startVideoEffect, type VideoEffectStage } from '@/lib/livepeer/video-effects';
+import type { VideoEffectId } from '@/constants/video-effects.constants';
+import { VideoEffectSelector } from '@/components/app/live/VideoEffectSelector';
 import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
@@ -359,6 +364,7 @@ export function GoLiveBroadcaster({
   onEnd,
   onLive,
 }: GoLiveBroadcasterProps) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>('starting');
   const [errorMessage, setErrorMessage] = useState('');
   const [micOn, setMicOn] = useState(true);
@@ -395,9 +401,21 @@ export function GoLiveBroadcaster({
   const [starved, setStarved] = useState(false);
   // Only one drawer of extras at a time — the broadcast preview is the point
   // of this panel and two open boards would push it off a laptop screen.
-  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'sounds' | 'chat'>('none');
+  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'looks' | 'sounds' | 'chat'>(
+    'none'
+  );
   const [effect, setEffect] = useState<VoiceEffectId>('none');
   const [switchingEffect, setSwitchingEffect] = useState(false);
+  const [videoLook, setVideoLook] = useState<VideoEffectId>('none');
+  const [switchingLook, setSwitchingLook] = useState(false);
+  /*
+   * System background blur, which is a capability of the camera rather than
+   * one of our looks: the OS separates the person from the room and we only
+   * ask for it. Null until a camera reports on it, and stays null on hardware
+   * that cannot — which is most of it, so the row is hidden by default rather
+   * than shown broken.
+   */
+  const [backgroundBlur, setBackgroundBlur] = useState<boolean | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -422,14 +440,24 @@ export function GoLiveBroadcaster({
   // screen track and this camera are sources rather than senders.
   const bubbleRef = useRef<CameraBubble | null>(null);
   const bubbleCameraRef = useRef<MediaStreamTrack | null>(null);
+  // The look canvas and the camera it draws, on the same borrowing terms as the
+  // bubble: while a look is on, what goes out is the canvas and the camera
+  // underneath is a source rather than a sender. Stopping the wrong one of
+  // these blanks the broadcast, so they are held apart on purpose.
+  const lookStageRef = useRef<VideoEffectStage | null>(null);
+  const lookSourceRef = useRef<MediaStreamTrack | null>(null);
   // The handed-over capture is consumed exactly once, on mount.
   const initialScreenRef = useRef<MediaStream | null>(initialScreenStream);
   // Mirrors for the async swap paths, which run long after their closures were
   // created and must not act on a stale toggle.
   const videoOnRef = useRef(true);
   const facingModeRef = useRef<'user' | 'environment'>('user');
+  const videoLookRef = useRef<VideoEffectId>('none');
+  const captureModeRef = useRef<CaptureMode>(initialScreenStream ? 'screen' : 'camera');
   useEffect(() => { videoOnRef.current = videoOn; }, [videoOn]);
   useEffect(() => { facingModeRef.current = facingMode; }, [facingMode]);
+  useEffect(() => { videoLookRef.current = videoLook; }, [videoLook]);
+  useEffect(() => { captureModeRef.current = captureMode; }, [captureMode]);
   // Read through a ref so the connect effect (whose dep list is deliberately
   // frozen) never restarts the ingest because the parent re-rendered.
   const onLiveRef = useRef(onLive);
@@ -593,9 +621,47 @@ export function GoLiveBroadcaster({
     bubbleCameraRef.current = null;
   }, []);
 
+  /**
+   * Retires the look canvas.
+   *
+   * `restore` puts the camera underneath back on air first, which is what
+   * turning a look off means. Teardown passes false: the session is closing,
+   * so the camera has nowhere to go back to and is stopped here instead — or
+   * its light stays on until the page unloads.
+   *
+   * The order matters. The camera is spliced back into the sender BEFORE the
+   * canvas track is stopped, so there is no frame where the session is holding
+   * a dead track.
+   */
+  const releaseLook = useCallback(async (restore: boolean) => {
+    const stage = lookStageRef.current;
+    const source = lookSourceRef.current;
+    if (!stage) return;
+    lookStageRef.current = null;
+    lookSourceRef.current = null;
+
+    const stream = streamRef.current;
+    const session = sessionRef.current;
+    if (restore && stream && session && source) {
+      await session.replaceTrack('video', source);
+      const canvasTrack = stream.getVideoTracks()[0];
+      if (canvasTrack) stream.removeTrack(canvasTrack);
+      stream.addTrack(source);
+      source.enabled = videoOnRef.current;
+      if (videoRef.current) videoRef.current.srcObject = stream;
+    } else {
+      source?.stop();
+    }
+    stage.stop();
+  }, []);
+
   const teardown = useCallback(async () => {
     releaseWakeLock();
     releaseBubble();
+    // Before the stream's own tracks are stopped below: with a look on, the
+    // camera is NOT in that stream — the canvas is — so it would otherwise
+    // survive the teardown with its light on.
+    await releaseLook(false);
     await sessionRef.current?.stop();
     sessionRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -616,7 +682,7 @@ export function GoLiveBroadcaster({
     audioMixRef.current?.track.stop();
     void audioMixRef.current?.ctx.close().catch(() => undefined);
     audioMixRef.current = null;
-  }, [releaseWakeLock, releaseBubble, cleanupVoice]);
+  }, [releaseWakeLock, releaseBubble, releaseLook, cleanupVoice]);
 
   /**
    * Captures the mic and runs it through the voice-effect graph. What comes
@@ -703,6 +769,22 @@ export function GoLiveBroadcaster({
       const session = sessionRef.current;
       if (!stream || !session) return false;
 
+      /*
+       * With a look on, the published track is the look's canvas and it never
+       * changes hands: a camera flip hands the canvas a new SOURCE instead, so
+       * viewers keep the same sender and the look survives the switch. The
+       * canvas track must not be retired down there — it is what is on air.
+       */
+      const stage = lookStageRef.current;
+      if (stage) {
+        await stage.setSource(track);
+        const previousSource = lookSourceRef.current;
+        lookSourceRef.current = track;
+        if (stopPrevious) previousSource?.stop();
+        track.enabled = videoOnRef.current;
+        return true;
+      }
+
       // Into the live session first so viewers never see a gap, then retire the
       // old track and splice the new one into the preview.
       await session.replaceTrack('video', track);
@@ -720,6 +802,123 @@ export function GoLiveBroadcaster({
     []
   );
 
+
+  /**
+   * Turns a look on, off, or swaps one for another.
+   *
+   * Only the first and last of those touch the published track. Changing look
+   * while one is already running is an assignment inside the canvas, which is
+   * why the picker feels instant and why viewers never see a reconnect for it.
+   */
+  const applyLook = useCallback(
+    async (next: VideoEffectId) => {
+      setVideoLook(next);
+      videoLookRef.current = next;
+
+      // A look is a camera treatment. The picker is not rendered during a
+      // share, so this only catches the race where one starts under an open
+      // panel — the look is re-applied when the share ends. Read through the
+      // ref because stopScreenShare calls this in the same tick it flips the
+      // mode, when the state closure still says 'screen'.
+      if (captureModeRef.current === 'screen') return;
+      if (videoSwapRef.current) return;
+      if (!streamRef.current || !sessionRef.current) return;
+
+      const running = lookStageRef.current;
+      if (running && next !== 'none') {
+        running.setEffect(next);
+        return;
+      }
+
+      videoSwapRef.current = true;
+      setSwitchingLook(true);
+      try {
+        if (next === 'none') {
+          await releaseLook(true);
+          return;
+        }
+
+        const camera = streamRef.current.getVideoTracks()[0];
+        if (!camera) return;
+
+        const stage = await startVideoEffect({ source: camera, effect: next });
+        // No permission prompt here, but the first frame is still a tick away:
+        // End Stream may have run underneath it.
+        if (!streamRef.current || !sessionRef.current) {
+          stage.stop();
+          return;
+        }
+
+        await sessionRef.current.replaceTrack('video', stage.track);
+        streamRef.current.removeTrack(camera);
+        streamRef.current.addTrack(stage.track);
+        stage.track.enabled = videoOnRef.current;
+        if (videoRef.current) videoRef.current.srcObject = streamRef.current;
+
+        lookStageRef.current = stage;
+        // Borrowed, not adopted: the camera keeps running as the canvas's
+        // source and is only stopped by releaseLook or by teardown.
+        lookSourceRef.current = camera;
+      } catch (error) {
+        logger.warn('Could not apply that look', error);
+        setVideoLook('none');
+        videoLookRef.current = 'none';
+      } finally {
+        setSwitchingLook(false);
+        videoSwapRef.current = false;
+      }
+    },
+    [releaseLook]
+  );
+
+  /** The camera itself, wherever it currently sits in the chain. */
+  const liveCameraTrack = useCallback(
+    (): MediaStreamTrack | null =>
+      lookSourceRef.current ?? streamRef.current?.getVideoTracks()[0] ?? null,
+    []
+  );
+
+  /*
+   * System background blur.
+   *
+   * Read when the panel opens rather than at capture: it is the only moment
+   * the answer is needed and it is always current, since flipping to a
+   * different camera changes it. A capability list with fewer than two entries
+   * means the camera has an opinion we cannot change, which is the common case
+   * — so the row stays hidden rather than rendering a dead toggle.
+   */
+  useEffect(() => {
+    if (openPanel !== 'looks') return;
+    const camera = liveCameraTrack();
+    const capabilities = (
+      camera as unknown as { getCapabilities?: () => { backgroundBlur?: boolean[] } } | null
+    )?.getCapabilities?.();
+    if (!capabilities?.backgroundBlur || capabilities.backgroundBlur.length < 2) {
+      setBackgroundBlur(null);
+      return;
+    }
+    const settings = (
+      camera as unknown as { getSettings?: () => { backgroundBlur?: boolean } } | null
+    )?.getSettings?.();
+    setBackgroundBlur(Boolean(settings?.backgroundBlur));
+  }, [openPanel, liveCameraTrack]);
+
+  const toggleBackgroundBlur = useCallback(async () => {
+    const camera = liveCameraTrack();
+    if (!camera || backgroundBlur === null) return;
+    const next = !backgroundBlur;
+    try {
+      await camera.applyConstraints({
+        advanced: [{ backgroundBlur: next }],
+      } as unknown as MediaTrackConstraints);
+      setBackgroundBlur(next);
+    } catch (error) {
+      // The OS can refuse — another app holding the effect, or a camera that
+      // advertised the control and then declined it. Leave the toggle where it
+      // was rather than lying about the picture going out.
+      logger.warn('The camera refused the background blur request', error);
+    }
+  }, [backgroundBlur, liveCameraTrack]);
 
   const releaseScreenCapture = useCallback(() => {
     screenStreamRef.current?.getTracks().forEach((t) => t.stop());
@@ -772,6 +971,7 @@ export function GoLiveBroadcaster({
       setBubbleOn(false);
       await applySystemAudio(null);
       releaseScreenCapture();
+      captureModeRef.current = 'camera';
       setCaptureMode('camera');
     } catch (error) {
       logger.warn('Returning to the camera failed', error);
@@ -779,7 +979,13 @@ export function GoLiveBroadcaster({
       camera?.stop();
       videoSwapRef.current = false;
     }
-  }, [swapVideoTrack, applySystemAudio, releaseScreenCapture, releaseBubble]);
+
+    // Re-dress the camera in whatever look the creator was wearing before the
+    // share. Outside the lock above, because applyLook takes it too.
+    if (videoLookRef.current !== 'none' && captureModeRef.current === 'camera') {
+      await applyLook(videoLookRef.current);
+    }
+  }, [swapVideoTrack, applySystemAudio, releaseScreenCapture, releaseBubble, applyLook]);
 
   /** Ends the share when the creator uses the browser's own stop-sharing bar. */
   const watchForShareStop = useCallback(
@@ -816,6 +1022,10 @@ export function GoLiveBroadcaster({
       // Sharing implies showing: without this the swap would inherit a paused
       // video toggle and publish a black frame the controls claim is live.
       videoOnRef.current = true;
+      // A look treats a camera, not a desktop — and swapVideoTrack would
+      // otherwise feed the share straight into the canvas. Released only now
+      // the picker has returned, so dismissing it leaves the look untouched.
+      await releaseLook(true);
       if (!(await swapVideoTrack(track))) return;
 
       screenStreamRef.current = display;
@@ -824,6 +1034,7 @@ export function GoLiveBroadcaster({
 
       setMirror(false);
       setVideoOn(true);
+      captureModeRef.current = 'screen';
       setCaptureMode('screen');
       display = null; // adopted — must not be stopped below
     } catch (error) {
@@ -833,7 +1044,7 @@ export function GoLiveBroadcaster({
       display?.getTracks().forEach((t) => t.stop());
       videoSwapRef.current = false;
     }
-  }, [swapVideoTrack, applySystemAudio, watchForShareStop]);
+  }, [swapVideoTrack, applySystemAudio, watchForShareStop, releaseLook]);
 
   /**
    * The camera bubble: your face in the corner of the share, which is the
@@ -1386,6 +1597,10 @@ export function GoLiveBroadcaster({
     const track = streamRef.current?.getVideoTracks()[0];
     if (!track) return;
     track.enabled = !track.enabled;
+    // With a look on, the published track is a canvas: disabling that alone
+    // would leave the camera capturing — and its indicator light on — behind a
+    // black frame. The source has to follow it down.
+    if (lookSourceRef.current) lookSourceRef.current.enabled = track.enabled;
     setVideoOn(track.enabled);
   };
 
@@ -1668,6 +1883,20 @@ export function GoLiveBroadcaster({
           </ControlButton>
         )}
 
+        {/* Looks treat the camera, so the button goes where the camera controls
+            are and leaves with them when a share takes the frame. */}
+        {!isScreen && (
+          <ControlButton
+            floating={fullBleed}
+            active={openPanel !== 'looks'}
+            onClick={() => setOpenPanel((p) => (p === 'looks' ? 'none' : 'looks'))}
+            disabled={phase === 'error'}
+            label={t('videoLooks.button')}
+          >
+            <Palette className="h-5 w-5" />
+          </ControlButton>
+        )}
+
         <ControlButton
           floating={fullBleed}
           active={openPanel !== 'voice'}
@@ -1813,6 +2042,24 @@ export function GoLiveBroadcaster({
             Viewers hear the effect; your own captions and transcripts still read
             the unprocessed microphone.
           </p>
+        </div>
+      )}
+
+      {openPanel === 'looks' && (
+        <div
+          className={cn(
+            'rounded-xl border border-white/10 bg-white/5 p-3',
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 bg-black/80 backdrop-blur-xl',
+            switchingLook && 'pointer-events-none opacity-60'
+          )}
+        >
+          <VideoEffectSelector
+            activeEffect={videoLook}
+            onSelect={(id) => void applyLook(id)}
+            backgroundBlur={backgroundBlur}
+            onToggleBackgroundBlur={() => void toggleBackgroundBlur()}
+          />
+          <p className="mt-2 text-[11px] text-zinc-500">{t('videoLooks.hint')}</p>
         </div>
       )}
 

@@ -1961,5 +1961,25 @@
     "disputeTotal": "Total: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "Resolver e pagar",
     "resolve": "Resolver"
+  },
+  "videoLooks": {
+    "button": "Estilos de câmera",
+    "title": "Estilo",
+    "hint": "Aplicado antes de o vídeo sair deste dispositivo — os espectadores veem exatamente o que você vê aqui.",
+    "backgroundBlur": "Desfocar meu fundo",
+    "on": "Ativado",
+    "off": "Desativado",
+    "none": "Nenhum",
+    "soft": "Suave",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Quente",
+    "cool": "Frio",
+    "vivid": "Vívido",
+    "dream": "Sonho",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Desfoque",
+    "pixelate": "Pixelado"
   }
 }
