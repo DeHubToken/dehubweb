@@ -10,6 +10,7 @@
  * instead of quietly offering the item for nothing.
  */
 
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props) {
+  const { t } = useTranslation();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { getQuote, buy } = useProductCheckout(tokenId);
   const [quote, setQuote] = useState<ProductQuote | null>(null);
@@ -118,13 +120,13 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
                 <p className="text-sm text-red-400">{quoteError}</p>
               ) : (
                 <div className="flex items-center gap-2 text-sm text-zinc-400">
-                  <Loader2 className="w-4 h-4 animate-spin" /> Getting price…
+                  <Loader2 className="w-4 h-4 animate-spin" /> {t('live.gettingPrice')}
                 </div>
               )}
 
               {product.live_price != null && product.live_price < Number(listing.price) && (
                 <span className="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-white text-black px-1.5 py-0.5 rounded">
-                  Live price
+                  {t('live.livePrice')}
                 </span>
               )}
             </div>
@@ -148,9 +150,9 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
             <div className="flex gap-2.5 p-3 rounded-xl border border-amber-500/30 bg-amber-500/10">
               <PauseCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <div className="text-xs text-amber-200/90">
-                <p className="font-semibold text-amber-300">DHB transfers are paused</p>
+                <p className="font-semibold text-amber-300">{t('live.transfersPaused')}</p>
                 <p className="mt-0.5">
-                  Buying is unavailable until trading resumes. Nothing has been charged.
+                  {t('live.transfersPausedHint')}
                 </p>
               </div>
             </div>
@@ -159,7 +161,7 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
           {isSelf && (
             <div className="flex gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5">
               <AlertTriangle className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-zinc-400">This is your own listing.</p>
+              <p className="text-xs text-zinc-400">{t('live.ownListing')}</p>
             </div>
           )}
 
@@ -167,11 +169,11 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
             <>
               {needsShipping && <ShippingAddressForm onChange={setShippingAddress} />}
               <div>
-                <Label>Note to seller (optional)</Label>
+                <Label>{t('live.noteToSeller')}</Label>
                 <Input
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
-                  placeholder="Size, colour, anything else…"
+                  placeholder={t('live.notePlaceholder')}
                   className="bg-white/5 border-white/10"
                 />
               </div>
@@ -180,15 +182,15 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
 
           <Button onClick={handleBuy} disabled={!canBuy} className="w-full">
             {buy.isPending ? (
-              <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Confirming payment…</>
+              <><Loader2 className="w-4 h-4 animate-spin mr-2" /> {t('live.confirmingPayment')}</>
             ) : (
-              <><ShoppingCart className="w-4 h-4 mr-2" /> Buy now</>
+              <><ShoppingCart className="w-4 h-4 mr-2" /> {t('live.buyNow')}</>
             )}
           </Button>
 
           {buy.isPending && (
             <p className="text-[11px] text-center text-zinc-500">
-              Don't close this — the order is written once the transfer is confirmed on Base.
+              {t('live.dontCloseHint')}
             </p>
           )}
         </div>
