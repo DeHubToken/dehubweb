@@ -10,7 +10,8 @@
  */
 
 import { useMemo } from 'react';
-import { useTranslation, type TFunction } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Activity, ArrowRight, Clock } from 'lucide-react';

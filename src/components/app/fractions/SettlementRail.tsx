@@ -14,6 +14,8 @@
  * the portfolio and the post panel without taking up space in the normal case.
  */
 
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowUpRight, ArrowDownLeft, Clock, AlertTriangle } from 'lucide-react';
 import { useOpenTrades, type FractionTrade } from '@/hooks/use-fraction-marketplace';
