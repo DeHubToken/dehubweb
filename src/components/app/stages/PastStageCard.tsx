@@ -13,6 +13,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Clock, Headphones } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BadgedName } from '@/components/app/BadgedName';
@@ -23,6 +24,7 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 export function PastStageCard({ space, className }: { space: AudioSpace; className?: string }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const avatar =
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
@@ -48,7 +50,7 @@ export function PastStageCard({ space, className }: { space: AudioSpace; classNa
         <div className="flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-lg bg-white/10">
             <Clock className="w-3 h-3 text-zinc-400" />
-            <span className="text-zinc-400 text-[10px] font-medium">ENDED</span>
+            <span className="text-zinc-400 text-[10px] font-medium">{t('stages.ended')}</span>
           </span>
           {!!space.total_listens && (
             <span className="flex items-center gap-1 text-zinc-400 text-[11px]">
