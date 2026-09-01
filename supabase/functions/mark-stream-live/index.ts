@@ -88,12 +88,25 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    const now = new Date().toISOString();
+
+    // Called once to go live and then once a minute while on air, so this is
+    // both the marker and the pulse. `started_at` is only moved on the first
+    // write — a heartbeat that reset it would make every stream look like it
+    // just began.
+    const existing = await supabase
+      .from("live_stream_sessions")
+      .select("started_at")
+      .eq("token_id", String(tokenId))
+      .maybeSingle();
+
     const { error } = await supabase.from("live_stream_sessions").upsert(
       {
         token_id: String(tokenId),
         stream_id: streamId || null,
         address: walletAddress,
-        started_at: new Date().toISOString(),
+        started_at: existing.data?.started_at ?? now,
+        heartbeat_at: now,
       },
       { onConflict: "token_id" }
     );

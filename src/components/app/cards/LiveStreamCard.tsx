@@ -50,6 +50,7 @@ import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { GatedMedia } from './GatedMedia';
+import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -125,6 +126,8 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Records the view once the player has been on screen long enough to mean it.
+  const viewRef = useFeedViewTracking(stream.tokenId || stream.id);
   const hlsRef = useRef<Hls | null>(null);
   /** One WebRTC attempt per card: once it fails, HLS keeps the element. */
   const whepFailedRef = useRef(false);
@@ -841,6 +844,17 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           }}
           preview={stream.thumbnail || undefined}
         >
+        {/* A live stream recorded no view at all. Every other post type tracks
+            one — VideoCard by watch progress, PostCard and ImageCard by dwell —
+            but nothing on the live surfaces ever called it, and the viewer
+            bounty is decided from exactly those rows. So a creator who switched
+            Watch2Earn on locked their DHB in escrow at mint against a reward no
+            viewer could ever become eligible for.
+
+            Inside GatedMedia on purpose: it renders its children only once the
+            viewer is through the paywall, so a locked stream cannot bank a view
+            for a broadcast nobody watched. */}
+        <div ref={viewRef} aria-hidden className="absolute inset-0 pointer-events-none" />
         {streamEnded && stream.replayUrl ? (
           /* The broadcast is over but the recording was captured: play that
              instead of the tombstone. A plain mp4 off our own CDN, so no

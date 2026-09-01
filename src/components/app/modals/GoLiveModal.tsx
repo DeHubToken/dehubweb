@@ -256,7 +256,45 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   // rendering live forever (the row is a pure existence check with no TTL).
   const markLivePromiseRef = useRef<Promise<unknown> | null>(null);
 
+  /**
+   * The pulse behind that row.
+   *
+   * The row has no TTL and nothing removes it when a broadcast dies without
+   * running its teardown — a crashed tab, a killed browser, a closed laptop —
+   * so a post went on claiming to be LIVE forever over a player that could
+   * never load. `mark-stream-live` doubles as the heartbeat: re-invoking it
+   * only moves `heartbeat_at`, and a row whose pulse has stopped no longer
+   * reads as live (see use-stream-live-status).
+   */
+  const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopHeartbeat = () => {
+    if (heartbeatRef.current) {
+      clearInterval(heartbeatRef.current);
+      heartbeatRef.current = null;
+    }
+  };
+
+  const startHeartbeat = (tokenId: string, streamId?: string) => {
+    stopHeartbeat();
+    heartbeatRef.current = setInterval(() => {
+      const token = getAuthToken();
+      const addr = walletAddressRef.current?.toLowerCase();
+      if (!token || !addr) return;
+      supabase.functions
+        .invoke('mark-stream-live', {
+          body: { tokenId, streamId },
+          headers: { 'x-wallet-address': addr, 'x-dehub-token': token },
+        })
+        .catch(() => undefined);
+    }, 60_000);
+  };
+
   const clearLiveSession = (tokenId: string) => {
+    // Before anything else: a beat that fires after the delete would re-upsert
+    // the row this call exists to remove, which is the same race the
+    // markLivePromiseRef sequencing below already guards against.
+    stopHeartbeat();
     const token = getAuthToken();
     const addr = walletAddressRef.current?.toLowerCase();
     if (!token || !addr) return;
@@ -298,6 +336,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // A capture taken for a go-live that never reached the broadcaster would
     // otherwise keep the browser's "sharing your screen" bar up for good.
     releasePendingScreen();
+    // Unconditionally, and before the early return below: the RTMP path never
+    // reaches step 'broadcasting', so a beat started for it would outlive the
+    // component and keep a stream marked live for good.
+    stopHeartbeat();
     if (!broadcastingRef.current) return;
     const data = streamDataRef.current;
     if (!data) return;
@@ -402,6 +444,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     goLiveRunRef.current++;
     toast.dismiss('golive-progress');
     releasePendingScreen();
+    // Covers the RTMP path, which closes from step 'ready' without running the
+    // end-stream teardown. Its broadcast carries on in OBS and the backend's
+    // own LIVE status is what the post reads from then on — but this browser
+    // has stopped vouching for it, which is exactly right once the tab is gone.
+    stopHeartbeat();
     setStep('setup');
     setSource('camera');
     setTitle('');
@@ -867,6 +914,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         }).then(({ error }) => {
           if (error) logger.warn('mark-stream-live failed (non-blocking)', error);
         });
+        startHeartbeat(String(tokenId), streamId);
       }
     } catch (error) {
       toast.dismiss('golive-progress');
