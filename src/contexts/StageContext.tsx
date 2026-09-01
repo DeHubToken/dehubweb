@@ -483,6 +483,24 @@ export function openStageModal(view: 'browse' | 'create' | 'live' = 'browse') {
   stageModalOpener?.(view);
 }
 
+let stageCreator: ((title: string, description?: string, coverImageUrl?: string | null) => Promise<AudioSpace | null>) | null = null;
+
+/**
+ * Open a stage from outside the stage tree.
+ *
+ * The post composer is the setup form for a stage, and it reaches this through
+ * `await import()` rather than the context: it is on the module graph the entry
+ * bundle is measured against, and a static edge from the composer into the
+ * stage stack drags the whole thing onto the boot path.
+ */
+export function createStageNow(
+  title: string,
+  description?: string,
+  coverImageUrl?: string | null,
+): Promise<AudioSpace | null> {
+  return stageCreator ? stageCreator(title, description, coverImageUrl) : Promise.resolve(null);
+}
+
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function StageProvider({ children }: { children: ReactNode }) {
@@ -1202,6 +1220,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
     },
     [walletAddress, user, goLiveAsHost, signed],
   );
+
+  // Feed the module-level opener the composer uses (see createStageNow above).
+  useEffect(() => {
+    stageCreator = createSpace;
+    return () => { stageCreator = null; };
+  }, [createSpace]);
 
   // ─── Schedule a stage for later ──────────────────────────────────────────
 
