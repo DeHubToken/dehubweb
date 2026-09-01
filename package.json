@@ -9,12 +9,10 @@
     "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/check-entry-bundle.mjs",
     "build:dev": "NODE_OPTIONS=--max-old-space-size=8192 vite build --mode development",
     "lint": "eslint .",
-    "check:db": "node scripts/check-supabase-drift.mjs",
     "i18n:coverage": "node scripts/i18n-coverage.mjs",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:agora": "node scripts/test-agora-credentials.mjs"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@coinbase/wallet-sdk": "^4.3.7",
