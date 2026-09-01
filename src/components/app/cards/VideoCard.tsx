@@ -64,6 +64,7 @@ import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
+import { LiveFeedPreview } from './LiveFeedPreview';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -1924,6 +1925,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 )}
                 <div ref={attachVideoSlot} className="absolute inset-0 w-full h-full" />
               </>
+            ) : video.isLivePost && video.isLiveNow ? (
+              /* On air: play the stream right here. The feed used to show only
+                 a poster for a live post, so a stream that was actually running
+                 read as a dead card until you opened it. */
+              <LiveFeedPreview
+                urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
+                thumbnail={thumbnail}
+                fallbackLabel="Live"
+              />
             ) : (
               /* No playable URL — a past live (or url-less video). Show the
                  cover image if there is one, otherwise a staticy TV screen.
