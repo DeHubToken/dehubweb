@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import { Copy, ArrowRight, Share2 } from "lucide-react";
@@ -14,6 +15,7 @@ import { getBadgeUrl, getBadgeName } from "@/lib/staking-badges";
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
 export default function ReferralLanding() {
+  const { t } = useTranslation();
   const { code: rawCode, "*": splat } = useParams<{ code: string; "*": string }>();
   const code = (rawCode || "").trim().toUpperCase();
   const valid = isValidAffiliateCode(code);
@@ -106,16 +108,17 @@ export default function ReferralLanding() {
   }, [shareImage, valid, imgRetry, deepLink]);
 
   const title = useMemo(
-    () => (valid && inviter ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
-    [inviter, valid],
+    () => (valid && inviter ? t('referral.seoTitleInvited', { inviter }) : t('referral.seoTitle')),
+    [inviter, valid, t],
   );
   const description = valid
-    ? `Use invite code ${code} to join DeHub. The decentralised creator network for video, music, social, jobs and Web3.`
-    : "The decentralised creator network.";
+    ? t('referral.seoDescriptionInvited', { code })
+    : t('referral.seoDescription');
 
   const copy = async (txt: string) => {
-    try { await navigator.clipboard.writeText(txt); toast.success("Copied"); }
-    catch { toast.error("Copy failed"); }
+    try { await navigator.clipboard.writeText(txt); toast.success(t('referral.copied')); }
+
+    catch { toast.error(t('referral.copyFailed')); }
   };
 
   // Redirecting — paint nothing rather than flashing the invite splash.
@@ -143,7 +146,7 @@ export default function ReferralLanding() {
         <div className="max-w-3xl w-full text-center space-y-8 animate-in fade-in duration-500">
           {valid ? (
             <>
-              <p className="text-sm uppercase tracking-[0.3em] text-white/50">You've been invited</p>
+              <p className="text-sm uppercase tracking-[0.3em] text-white/50">{t('referral.youveBeenInvited')}</p>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
                 {inviter ? (() => {
                   const badgeUrl = getBadgeUrl(inviterBadgeBalance ?? undefined, inviterUsername);
@@ -155,28 +158,28 @@ export default function ReferralLanding() {
                         {badgeUrl && (
                           <img
                             src={badgeUrl}
-                            alt={badgeName || "Badge"}
+                            alt={badgeName || t('referral.badge')}
                             width={16}
                             height={16}
                             className="absolute -top-1 -right-3 md:-top-2 md:-right-4 w-3 h-3 md:w-4 md:h-4 brightness-0 invert pointer-events-none select-none"
                           />
                         )}
                       </span>
-                      <span>invited you to DeHub</span>
+                      <span>{t('referral.invitedYouToDehub')}</span>
                     </>
                   );
                 })() : (
-                  <span>You've been invited to DeHub</span>
+                  <span>{t('referral.youveBeenInvitedToDehub')}</span>
                 )}
               </h1>
               <p className="text-lg text-white/70">
-                Join with code <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
+                {t('referral.joinWithCode')} <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
               </p>
               <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] aspect-[1200/630] relative">
                 {!imgLoaded && <div className="absolute inset-0 animate-pulse bg-white/[0.04]" aria-hidden="true" />}
                 <img
                   src={shareImage}
-                  alt={inviter ? `${inviter} invited you to DeHub` : "DeHub invite"}
+                  alt={inviter ? t('referral.inviterInvitedYou', { inviter }) : t('referral.dehubInvite')}
                   width={1200}
                   height={630}
                   className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
@@ -184,10 +187,10 @@ export default function ReferralLanding() {
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Button asChild size="lg">
-                  <Link to={ctaUrl}>Continue to DeHub <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  <Link to={ctaUrl}>{t('referral.continueToDehub')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
                 <Button size="lg" variant="outline" onClick={() => copy(pageUrl)}>
-                  <Copy className="mr-2 h-4 w-4" /> Copy invite link
+                  <Copy className="mr-2 h-4 w-4" /> {t('referral.copyInviteLink')}
                 </Button>
                 {typeof navigator !== "undefined" && (navigator as Navigator & { share?: (d: ShareData) => Promise<void> }).share && (
                   <Button size="lg" variant="ghost" onClick={() => {
@@ -195,16 +198,16 @@ export default function ReferralLanding() {
                       title, text: description, url: pageUrl,
                     }).catch(() => undefined);
                   }}>
-                    <Share2 className="mr-2 h-4 w-4" /> Share
+                    <Share2 className="mr-2 h-4 w-4" /> {t('referral.share')}
                   </Button>
                 )}
               </div>
             </>
           ) : (
             <>
-              <h1 className="text-4xl font-bold">Invalid invite</h1>
-              <p className="text-white/70">That referral code doesn't look right.</p>
-              <Button asChild size="lg"><Link to="/app">Go to DeHub</Link></Button>
+              <h1 className="text-4xl font-bold">{t('referral.invalidInvite')}</h1>
+              <p className="text-white/70">{t('referral.invalidInviteHint')}</p>
+              <Button asChild size="lg"><Link to="/app">{t('referral.goToDehub')}</Link></Button>
             </>
           )}
         </div>
