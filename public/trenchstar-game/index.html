@@ -1965,6 +1965,10 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
    uses exposure as a per-tile dimmer.) */
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.15;
+/* PCFSoft, not the default: a hard shadow edge on a floor lit this softly
+   reads as a decal. See keyLight — one directional light does all of it. */
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const host=$('#gl');
 host.appendChild(renderer.domElement);
 /* the host can be 0x0 at load (hidden tab, iframe not yet laid out); never bake that in */
@@ -2181,6 +2185,45 @@ areaLight(0x66d9ff,0,-11);        /* [0] centre */
 areaLight(0x8fb8ff,-7.5,-9.0);    /* [1] left   */
 areaLight(0xff9ad5,7.5,-9.0);     /* [2] right  */
 
+/* ------------------------- THE ONE HARD LIGHT -------------------------
+   Everything above is a RectAreaLight, and three cannot cast a shadow from
+   one. So nothing in this room had a shadow: the desk met the floor with no
+   contact at all, the monitor stood on it without touching it, and the trader
+   carried a painted blob under their feet that stayed the same size and shape
+   whatever they did. That reads as a set of props hovering over a backdrop,
+   and it is the single biggest thing between this room and a rendered one.
+
+   One directional light, over the shoulder of where you actually stand, aimed
+   at the desk. Deliberately dim — 0.55 — because the room's LOOK is already
+   authored and this is here for the shadow, not to relight anything. Its
+   frustum is drawn tight around the floor you can walk on rather than the
+   whole 60 m room: at 1024 that is ~1.6 cm per shadow texel where it matters,
+   instead of 6 cm of mush everywhere. */
+const SHADOW_R=11;                 /* the walkable floor, not the whole room */
+let blobShadow=null;               /* the painted fallback, see loadAvatar */
+const keyLight=new THREE.DirectionalLight(0xbcd8ff,0.55);
+keyLight.position.set(4.5,9.5,7.5);
+keyLight.target.position.set(0,0.6,3.2);
+scene.add(keyLight,keyLight.target);
+keyLight.castShadow=true;
+keyLight.shadow.mapSize.set(1024,1024);
+const sc=keyLight.shadow.camera;
+sc.left=-SHADOW_R;sc.right=SHADOW_R;sc.top=SHADOW_R;sc.bottom=-SHADOW_R;
+sc.near=1;sc.far=30;sc.updateProjectionMatrix();
+/* Acne on a floor this glancing is all slope, not depth — normalBias fixes it
+   where a flat `bias` only trades it for the shadow detaching from the feet. */
+keyLight.shadow.bias=-0.0008;
+keyLight.shadow.normalBias=0.035;
+/* Cheap, and the only lever worth having: turning this off is the first thing
+   the degrade path does, before it touches bloom or the mirror. */
+function setShadows(on){
+  if(renderer.shadowMap.enabled===on)return;
+  renderer.shadowMap.enabled=on;
+  keyLight.castShadow=on;
+  if(blobShadow)blobShadow.visible=!on;     /* never both */
+  scene.traverse(o=>{if(o.isMesh)o.material&&(o.material.needsUpdate=true);});
+}
+
 /* ---- the room takes its colour from the wall -------------------------
    The brightest thing in this room is 39 monitors, and until now they cast
    no light at all: three lamps sat at fixed colours with no causal relation
@@ -2315,12 +2358,31 @@ function buildFloor(){
        black, and the whole lower half of the frame read as a hole in the
        world. Mostly diffuse with a real environment contribution instead: it
        is still a dark polished floor, it just exists. */
-    floorGrp.add(new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),
-      new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.34,metalness:0.22,envMapIntensity:0.95})));
+    const plain=new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),
+      new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.34,metalness:0.22,envMapIntensity:0.95}));
+    plain.receiveShadow=true;
+    floorGrp.add(plain);
   }
   const skin=new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),floorMat);
   skin.position.y=0.02;
   floorGrp.add(skin);
+  /* A SHADOW CATCHER, not a lit surface.
+     Marking the floor receiveShadow and pointing a light at it does almost
+     nothing here, and the reason is worth writing down: a shadow can only
+     remove the light it blocks, and this room is lit by 39 emissive monitors
+     plus three area lights. Measured — one directional key at 0.55 over a
+     receiveShadow floor darkened SIXTEEN PIXELS of a 1.34-million-pixel frame.
+     A stronger key would show up, but it would also relight a room whose look
+     is deliberately authored by the wall.
+     ShadowMaterial draws the shadow and nothing else, at an opacity of its own
+     choosing, so the contact is visible without touching the light balance. It
+     sits above the skin and below nothing. */
+  const catcher=new THREE.Mesh(new THREE.CircleGeometry(SHADOW_R+2,64).rotateX(-Math.PI/2),
+    new THREE.ShadowMaterial({opacity:0.42,transparent:true,depthWrite:false}));
+  catcher.position.y=0.026;
+  catcher.renderOrder=1;
+  catcher.receiveShadow=true;
+  floorGrp.add(catcher);
 }
 let grid=null;
 function setGrid(c1,c2,op){
@@ -5622,15 +5684,17 @@ function drawCoin(ctx,cx,cy,r){
     ctx.globalAlpha=1;
   }
 }
-/* The coin row: what this account holds, under what it made today. Drawn only
-   when there is a real number — an empty DHB line under the PnL would be one
-   more thing on this screen that is not true. */
-function paintPnlCoin(ctx,w){
-  const bal=dhData.me&&isFinite(dhData.me.badge)?dhData.me.badge:0;
-  if(!bal)return;
-  const y=300,r=34;
+/* The coin row: the DeHub coin and what this account holds, under what it made
+   today. Drawn whenever there is a DeHub session — a holder with nothing in
+   the bag still gets the coin and a 0, because "0 DHB" is a true statement and
+   a missing row is just a missing row. Signed out there is no account to state
+   a balance for, so it is left off. */
+function paintPnlCoin(ctx,w,y){
+  if(!dhData.me)return;
+  const bal=isFinite(dhData.me.badge)?dhData.me.badge:0;
+  const r=29;
   const label=fmtBig(bal)+' DHB';
-  ctx.font='700 62px "Chakra Petch"';
+  ctx.font='700 54px "Chakra Petch"';
   const tw=ctx.measureText(label).width;
   const total=r*2+18+tw;
   const cx=w/2-total/2+r;
@@ -5642,24 +5706,52 @@ function paintPnlCoin(ctx,w){
   ctx.shadowBlur=0;
   ctx.textAlign='center';
 }
-function paintPnl(v){
+/* One caption line under the number saying WHOSE money it is and WHICH
+   measure. The number used to hang there at screen height with nothing
+   attached to it, which is how a paper-trading figure passed for a balance. */
+function paintPnlLabel(ctx,w,y,text,col){
+  ctx.font='700 26px "Chakra Petch"';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.letterSpacing&&(ctx.letterSpacing='6px');
+  ctx.shadowColor=col;ctx.shadowBlur=18;
+  ctx.fillStyle=col;
+  ctx.fillText(text,w/2,y);
+  ctx.shadowBlur=0;
+  ctx.letterSpacing&&(ctx.letterSpacing='0px');
+}
+/* `meta` is null when no account is connected. There is deliberately no
+   fallback number in that branch: the room used to project the PAPER book's
+   running total, at screen height, in the same colours and the same font as a
+   real balance, with nothing to say it was not one. See the note on pnlTick. */
+function paintPnl(v,meta){
   const ctx=pnlCtx,w=pnlCv.width,h=pnlCv.height;
   ctx.clearRect(0,0,w,h);
-  const up=v>=0;
-  const col=up?'#4dffa6':'#ff5c7a';
-  const txt=(up?'+$':'-$')+fmtBig(Math.abs(v));
-  const my=128;                       /* the number keeps the place it had */
+  const my=118;                       /* the number keeps the place it had */
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.font='700 150px "Chakra Petch"';
-  /* chromatic split, like a mis-converged projector */
-  ctx.globalAlpha=0.5;
-  ctx.fillStyle=up?'#00ffd0':'#ff2f6a';ctx.fillText(txt,w/2-4,my);
-  ctx.fillStyle=up?'#7dff6b':'#ff9a5c';ctx.fillText(txt,w/2+4,my);
-  ctx.globalAlpha=1;
-  ctx.shadowColor=col;ctx.shadowBlur=52;
-  ctx.fillStyle='#ffffff';ctx.fillText(txt,w/2,my);
-  ctx.shadowBlur=0;
-  paintPnlCoin(ctx,w);
+  if(!meta){
+    ctx.font='700 132px "Chakra Petch"';
+    ctx.globalAlpha=0.55;
+    ctx.shadowColor='#38e0ff';ctx.shadowBlur=44;
+    ctx.fillStyle='#cfe9f5';ctx.fillText('$ —',w/2,my);
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+    paintPnlLabel(ctx,w,199,'NO ACCOUNT CONNECTED','#7fd4e8');
+    paintPnlLabel(ctx,w,238,'WALLET OR BINANCE FOR LIVE PNL','#4b7d8c');
+  }else{
+    const up=v>=0;
+    const col=up?'#4dffa6':'#ff5c7a';
+    const txt=(up?'+$':'-$')+fmtBig(Math.abs(v));
+    ctx.font='700 150px "Chakra Petch"';
+    /* chromatic split, like a mis-converged projector */
+    ctx.globalAlpha=0.5;
+    ctx.fillStyle=up?'#00ffd0':'#ff2f6a';ctx.fillText(txt,w/2-4,my);
+    ctx.fillStyle=up?'#7dff6b':'#ff9a5c';ctx.fillText(txt,w/2+4,my);
+    ctx.globalAlpha=1;
+    ctx.shadowColor=col;ctx.shadowBlur=52;
+    ctx.fillStyle='#ffffff';ctx.fillText(txt,w/2,my);
+    ctx.shadowBlur=0;
+    paintPnlLabel(ctx,w,199,meta.label,up?'#7fe8bd':'#ff9fb4');
+  }
+  paintPnlCoin(ctx,w,268);
   /* interlace so it reads as a projection, not a decal */
   ctx.globalCompositeOperation='destination-out';
   ctx.fillStyle='rgba(0,0,0,0.5)';
@@ -5672,20 +5764,53 @@ function placePnl(){
   let top=WALL.baseY,R=WALL.radius;
   for(const s of wallScreens)top=Math.max(top,s.yPos+s.h/2);
   /* The plane grew downward to make room for the coin row, so the group drops
-     by half that growth and the NUMBER stays exactly where it always hung. */
+     by half that growth and the NUMBER stays exactly where it always hung.
+     Raising the whole group to clear the ticker was tried and is wrong: the
+     number is already close to the top of the frame on a 16:9 window and it
+     started clipping. The rows below it were moved UP the canvas instead —
+     see paintPnl — which costs nothing, because the bottom of that texture was
+     empty. */
   const y=top+2.35-0.5625;
   pnlGroup.position.set(0,y,-(R-1.2));
   pnlGroup.lookAt(0,y,0);
 }
+/* ------------------------- WHOSE MONEY THIS IS -------------------------
+   The hologram shows REAL money or it shows nothing. It used to fall back to
+   paperPnl() — the running total of a book of six positions the room opened
+   for itself at random size, random side and random leverage — and drew it at
+   two metres tall in exactly the palette and font a real balance gets. Nothing
+   on the surface said "paper". Walk in signed out and the room told you that
+   you were up three hundred dollars.
+
+   That is the same failure as SIM_SEED (see the note above simTick): a
+   fabricated number is far more dangerous when it is PLAUSIBLE and moving than
+   when it is obviously stale, because there is no moment where it looks wrong.
+   So this returns null rather than inventing a figure, and paintPnl draws a
+   connect prompt. The paper book still exists and still runs — it just has to
+   live on a panel that says PAPER, not on the biggest surface in the room.
+
+   Exactly one source wins, ordered by how directly it is the user's own money:
+   an exchange account they authenticated to, then an address the room can
+   read on-chain, then nothing. */
+function pnlSource(){
+  if(bnx.ready&&bnx.balances.length&&isFinite(bnx.pnl)){
+    const real=bnx.pnlReal!=null;
+    return {v:real?bnx.pnlReal:bnx.pnl,
+      label:(bnx.net==='test'?'BINANCE TESTNET · ':'BINANCE · ')+(real?'24H':'24H MARKET MOVE')};
+  }
+  if(watchAddr()&&(wallet.assets.length||wallet.usd>0)){
+    const real=wallet.pnlReal!=null;
+    return {v:real?wallet.pnlReal:wallet.pnl24,
+      label:'WALLET · '+(real?'REAL 24H':'24H MARKET MOVE')};
+  }
+  return null;
+}
 function pnlTick(dt,t){
-  /* Real money once there is an account to value — connected in here or
-     signed in on DeHub. The paper book is only the fallback. */
-  const target=watchAddr()
-    ? (wallet.pnlReal!=null?wallet.pnlReal:wallet.pnl24)
-    : paperPnl();
+  const src=pnlSource();
+  const target=src?src.v:0;
   pnlShown=lerp(pnlShown,target,Math.min(1,dt*2.2));
   if(Math.abs(pnlShown-target)<0.5)pnlShown=target;
-  paintPnl(pnlShown);
+  paintPnl(pnlShown,src);
   /* a slow breathing flicker so it feels projected */
   const flick=0.88+Math.sin(t/140)*0.05+Math.sin(t/37)*0.025;
   pnlGroup.children.forEach((m,i)=>{
@@ -5830,10 +5955,14 @@ function dhSeed(str,mod){
 
    A page mounts when you first zoom its monitor and stays mounted. Three
    React apps booting behind a WebGL room is not something to do at load. */
+/* ONE monitor, not three. Three framed React apps behind a WebGL room is
+   three page loads, three compositor layers and three projective transforms
+   per frame for a surface nobody reads at that size — and on a slow machine
+   it was the difference between a room that holds 60fps and one that does
+   not. The home feed is the page worth having in front of you; the composer
+   and the profile are one click away inside it. */
 const DESK_PAGES=[
-  {key:'home',   label:'DEHUB',           title:'HOME',     path:'/app'},
-  {key:'upload', label:'DEHUB · POST',    title:'NEW POST', path:'/app/upload'},
-  {key:'profile',label:'DEHUB · PROFILE', title:'PROFILE',  path:'/app/profile'}];
+  {key:'home',   label:'DEHUB',           title:'HOME',     path:'/app'}];
 /* The CSS size the iframe is laid out at before the matrix maps it onto the
    monitor. Bigger than the monitor's texture on purpose: the page inside is a
    real desktop app and wants a desktop viewport, and the projection scales it
@@ -5882,10 +6011,25 @@ function deskCorners(d){
     d.mesh.localToWorld(deskQuad[k]);
   }
 }
-/* Pin each mounted page to its monitor, every frame. Same projection the wall
-   sites use: four corners into screen space, then one projective matrix. */
+/* Pin the mounted page to its monitor, every frame. Same projection the wall
+   sites use: four corners into screen space, then one projective matrix.
+
+   THE CAMERA MATRIX HAS TO BE REFRESHED FIRST, and for a long time it was not.
+   `Vector3.project(camera)` reads `camera.matrixWorldInverse` — it does not
+   recompute it. That matrix is only rebuilt inside `renderer.render()`, which
+   runs at the END of the frame, so this function was pinning a DOM iframe with
+   the camera pose from the PREVIOUS frame while the monitor underneath it was
+   about to be drawn with THIS one. At 60fps the mismatch is 16ms and nobody
+   sees it. On a machine holding 15fps it is 67ms — and the page visibly floats
+   off the monitor, lagging behind every camera move and swimming back when you
+   stop. That is what "the screens hover off the computer on slow devices" was:
+   not a layout bug, one stale matrix.
+
+   siteTick() has always called this for the wall's live sites, which is why
+   they never drifted and the desk did. */
 function deskSiteTick(){
   const cv=renderer.domElement,W=cv.clientWidth,H=cv.clientHeight;
+  camera.updateMatrixWorld(true);
   for(const d of deskMons){
     const el=d.frame;
     if(!el)continue;
@@ -6140,15 +6284,19 @@ function hit(x,y,w,h,label,fn){if(dhHits)dhHits.push({x,y,w,h,label,fn});}
 const deskMons=[];
 {
   const desk=new THREE.Group();
-  /* Rougher and less metallic than it was: at 0.35/0.55 the three area lights
-     smeared one broad hot reflection across the whole surface and the desk
-     read as a slab of grey plastic brighter than anything else in the room —
-     including the monitors standing on it. */
+  /* Rougher and less metallic AGAIN. 0.35/0.55 was the original, 0.52/0.38 was
+     the first attempt at fixing it, and both still blew out: three 7x4.5m area
+     emitters hang 2.3 m directly above this surface, and at any metalness worth
+     the name their specular lobe covers the whole desk at once. Turned to the
+     desk you were looking at a sheet of white — brighter than the monitor
+     standing on it, brighter than the wall the room is named after.
+     A desk is not a mirror. 0.78/0.06 is matte, and the surface finally reads
+     as the dark slab its colour has always said it was. */
   const top=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.09,1.7),
-    new THREE.MeshStandardMaterial({color:0x0e131a,roughness:0.52,metalness:0.38}));
+    new THREE.MeshStandardMaterial({color:0x0e131a,roughness:0.78,metalness:0.06}));
   top.position.y=1.12;desk.add(top);
   const ped=new THREE.Mesh(new THREE.BoxGeometry(3.6,1.06,1.2),
-    new THREE.MeshStandardMaterial({color:0x0a0d12,roughness:0.7,metalness:0.3}));
+    new THREE.MeshStandardMaterial({color:0x0a0d12,roughness:0.82,metalness:0.06}));
   ped.position.y=0.55;desk.add(ped);
   const strip=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.02,0.02),
     new THREE.MeshBasicMaterial({color:new THREE.Color(CYAN).multiplyScalar(1.2)}));
@@ -6175,20 +6323,25 @@ const deskMons=[];
     mug.material);
   handle.position.set(1.73,1.25,0.35);handle.rotation.y=Math.PI/2;desk.add(handle);
 
-  /* Three desk monitors, each with a canvas of its own — they no longer borrow
-     a wall screen's texture, which used to mean a wall rebuild could leave a
-     disposed map pointed at the desk. */
+  /* The desk monitor carries a canvas of its own — it does not borrow a wall
+     screen's texture, which used to mean a wall rebuild could leave a disposed
+     map pointed at the desk. */
+  const DESK_MON_W=1.74,DESK_MON_H=DESK_MON_W*DH_H/DH_W;   /* 640x364, kept exact */
   const deskMon=(page,x,ry)=>{
     const g=new THREE.Group();
     const cv=document.createElement('canvas');cv.width=DH_W;cv.height=DH_H;
     const tex=new THREE.CanvasTexture(cv);
     tex.colorSpace=THREE.SRGBColorSpace;tex.generateMipmaps=false;
     tex.minFilter=THREE.LinearFilter;
-    const p=new THREE.Mesh(new THREE.PlaneGeometry(1.02,0.58),
+    const p=new THREE.Mesh(new THREE.PlaneGeometry(DESK_MON_W,DESK_MON_H),
       new THREE.MeshBasicMaterial({map:tex}));
-    const f=new THREE.Mesh(new THREE.PlaneGeometry(1.1,0.66),frameMat);f.position.z=-0.012;
-    const stand=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.22,0.06),frameMat);stand.position.set(0,-0.4,-0.02);
-    g.add(f,p,stand);g.position.set(x,1.62,-0.35);g.rotation.y=ry;
+    const f=new THREE.Mesh(new THREE.PlaneGeometry(DESK_MON_W+0.08,DESK_MON_H+0.08),frameMat);
+    f.position.z=-0.012;
+    const stand=new THREE.Mesh(new THREE.BoxGeometry(0.09,0.26,0.07),frameMat);
+    stand.position.set(0,-DESK_MON_H/2-0.13,-0.02);
+    const foot=new THREE.Mesh(new THREE.BoxGeometry(0.44,0.02,0.18),frameMat);
+    foot.position.set(0,-DESK_MON_H/2-0.26,-0.02);
+    g.add(f,p,stand,foot);g.position.set(x,1.78,-0.35);g.rotation.y=ry;
     desk.add(g);
     /* A desk monitor is a SCREEN, not a special case. It carries the same
        fields a wall screen carries, so focusOn zooms it with the same code
@@ -6196,18 +6349,19 @@ const deskMons=[];
        used. `kind` is what keeps the chart chrome (template picker,
        timeframes, the buy box) off a screen none of it applies to. */
     deskMons.push({mesh:p,ctx:cv.getContext('2d'),tex,page,
-      w:1.02,h:0.58,kind:'desk',label:page.label,src:'DEHUB',
+      w:DESK_MON_W,h:DESK_MON_H,kind:'desk',label:page.label,src:'DEHUB',
       frame:null,blocked:false,mounted:0});
   };
-  /* Home dead ahead, the composer on your left, your profile on your right —
-     and note the desk group is turned to face the wall, so the x that puts a
-     monitor on YOUR left is the positive one. */
+  /* Dead ahead, and bigger than the three it replaced — a single monitor can
+     have the width they were splitting between them. */
   deskMon(DESK_PAGES[0],0,Math.PI);
-  deskMon(DESK_PAGES[1],-1.18,Math.PI-0.32);
-  deskMon(DESK_PAGES[2],1.18,Math.PI+0.32);
 
   desk.position.set(0,0,4.7);
   desk.rotation.y=Math.PI;   /* face the wall */
+  /* The desk is the only thing in the room with a floor under it and a light
+     over it, so it is where a shadow does the most work — it is what turns a
+     grey slab hovering over a grid into a desk standing on a floor. */
+  desk.traverse(o=>{if(o.isMesh)o.castShadow=true;});
   scene.add(desk);
 }
 
@@ -8225,6 +8379,13 @@ function retargetByBindPose(clip,srcRoot,dstMesh){
      since one such file animates every character you own. */
   const srcByKey={},dstByKey={};
   srcRoot.traverse(o=>{if(o.isBone){const k=rigKey(o.name);if(!srcByKey[k])srcByKey[k]=o;}});
+  /* One skeleton, one set of targets. A Mixamo character whose rig is
+     PARTITIONED across its garment meshes breaks this — the body skeleton may
+     hold no Hips and no legs at all — but that is fixed where it belongs, in
+     the conversion, by merging every mesh onto one skeleton before export
+     (see convert.js). Retargeting against a whole bone TREE instead was tried
+     and is worse: it pairs joints across skeletons that were never bound
+     together and the arms come out visibly torn. */
   dstMesh.skeleton.bones.forEach(b=>{const k=rigKey(b.name);if(!dstByKey[k])dstByKey[k]=b;});
   /* pair up by joint, but emit under the TARGET's own bone names — those are
      what the mixer has to resolve against */
@@ -8395,9 +8556,22 @@ function unifySkeletons(model){
   model.traverse(o=>{if(o.isSkinnedMesh)meshes.push(o);});
   if(!meshes.length)return null;
   if(meshes.length===1)return meshes[0];
-  let firstBone=null;
-  model.traverse(o=>{if(o.isBone&&!firstBone)firstBone=o;});
-  const primary=meshes.find(m=>m.skeleton.bones.indexOf(firstBone)>=0)||meshes[0];
+  /* THE PRIMARY IS THE BIGGEST SKELETON, not whichever mesh happens to own the
+     root bone. That test was written for a character whose meshes each carry an
+     identical FULL copy of the rig (Erika: 4 meshes x 67 bones), where any of
+     them is as good as any other. Mixamo also ships the opposite shape — one
+     hierarchy PARTITIONED across the meshes, each binding only the joints it
+     needs. Measured on Pete: 8 meshes over 127 bones as body:52, boots:10,
+     helmet:6, vest:12, shirt:20, pants:13, eyelashes:6, hair:8. The root
+     `Hips` belongs to the PANTS there, so the old rule handed every retarget a
+     13-bone target: 52 of the character's joints had nowhere to land, and he
+     stood in a T-pose wearing animated trousers.
+     The mesh with the most bones is the body on both shapes — on the identical
+     -copies shape every candidate ties, and the tie goes to the first, which is
+     the mesh the old rule picked anyway. */
+  let primary=meshes[0];
+  for(const m of meshes)
+    if(m.skeleton.bones.length>primary.skeleton.bones.length)primary=m;
   const want=primary.skeleton.bones.map(b=>b.name).join('|');
   for(const m of meshes){
     if(m.skeleton===primary.skeleton)continue;
@@ -8575,11 +8749,44 @@ function dropRoot(clip){
   }
   return clip;
 }
+/* DO NOT RETARGET A CLIP ONTO THE RIG IT WAS AUTHORED ON.
+   Downloading a Mixamo animation with a character selected gives you that
+   character's own skeleton, bone for bone — the clip already fits. Pushing it
+   through the bind-pose retarget anyway is not a harmless no-op: it re-derives
+   every joint from rest orientations, and on a rig whose bones were merged
+   from several skinned meshes it produced 65 tracks that bound to nothing.
+   Measured on Pete: retargeted, his arms sat at bind height (0.013 m of hand
+   drop) and did not move between frame 0 and mid-clip. The SAME clip applied
+   to the SAME model untouched drops the hand 0.43 m and animates.
+   So check first. Identical bone names mean identical rig, and the honest
+   thing to do with a clip that already fits is nothing at all. */
+function sameRig(srcRoot,dstMesh){
+  /* Compare against the WHOLE MODEL, not dstMesh.skeleton. On a Mixamo rig
+     partitioned across garment meshes the chosen skeleton is only a slice of
+     the hierarchy — Pete's body skeleton is 52 of his 127 bones and starts at
+     Spine2, with Hips, both legs and the lower spine owned by the pants. A
+     65-bone clip authored on that exact character then matched only 52/65,
+     fell under the threshold, and was retargeted onto the slice: the torso
+     stayed in bind pose and he stood in a T-pose wearing an animated shirt.
+     The mixer binds tracks by NAME against the whole model, so that is the set
+     that decides whether the clip already fits. */
+  let root=dstMesh;
+  while(root.parent&&!root.parent.isScene)root=root.parent;
+  const dst=new Set();
+  root.traverse(o=>{if(o.isBone)dst.add(o.name);});
+  dstMesh.skeleton.bones.forEach(b=>dst.add(b.name));
+  let n=0,hit=0;
+  srcRoot.traverse(o=>{if(o.isBone){n++;if(dst.has(o.name))hit++;}});
+  /* Not 100%: an animation rig can carry a helper joint the character does not
+     skin. Nine in ten naming the same joints is one rig, not two. */
+  return n>0&&hit/n>=0.9;
+}
 async function borrowClip(file,re,dstMesh){
   const rec=await loadAnimSource(file);
   if(!rec)return null;
   const c=liveClip(rec.clips,re)||soleClip(rec.clips);
   if(!c)return null;
+  if(sameRig(rec.root,dstMesh))return c;
   return retargetByBindPose(c,rec.root,dstMesh);
 }
 /* ======================== where assets live ===========================
@@ -8687,6 +8894,11 @@ async function loadAvatar(id){
   const blob=new THREE.Mesh(new THREE.PlaneGeometry(1.1,1.1).rotateX(-Math.PI/2),
     new THREE.MeshBasicMaterial({map:blobTex,transparent:true,depthWrite:false}));
   blob.position.y=0.045;
+  /* Kept as the fallback for machines that drop shadows, and hidden the moment
+     a real one is being cast — a painted ellipse under a body that already has
+     a shadow reads as a second, wrong one. */
+  blob.visible=!renderer.shadowMap.enabled;
+  blobShadow=blob;
   root.add(blob);
 
   /* Do this BEFORE anything asks for "the" skinned mesh: on a multi-mesh
@@ -8700,16 +8912,28 @@ async function loadAvatar(id){
      They vanish at particular camera angles and come back at others, which
      reads as the model failing to load. Two meshes cost nothing to draw
      unconditionally. */
-  model.traverse(o=>{if(o.isMesh||o.isSkinnedMesh)o.frustumCulled=false;});
+  model.traverse(o=>{if(o.isMesh||o.isSkinnedMesh){o.frustumCulled=false;o.castShadow=true;}});
   walk.obj=root;walk.inner=inner;walk.groundY=0;
   root.position.set(0,0,2.0);
   walk.yaw=Math.PI;walk.camYaw=0;
   root.rotation.y=walk.yaw;
   scene.add(root);
 
-  if(gltf.animations&&gltf.animations.length){
+  /* A CHARACTER FILE DOES NOT HAVE TO CARRY CLIPS, and gating on that was a
+     silent trap. Everything below borrows its walk, idle and lean from the
+     manifest and retargets them, so a file with no animations of its own is
+     the NORMAL case — but this block used to be entered only when the file
+     shipped at least one clip. The Mixamo FBX downloads happen to carry a
+     motionless T-pose stack, which satisfied the test by accident and hid it
+     for the whole life of the roster. Export a clean GLB with no clips in it
+     — which is what every converted character now is — and the mixer was never
+     built, `acts` stayed empty, and the character stood in a T-pose forever
+     with nothing logged and nothing to see but the pose.
+     Ask the real question instead: is there anything to animate WITH? */
+  const cmeta=CHARACTERS.find(c=>c.id===id)||{};
+  if((gltf.animations&&gltf.animations.length)||cmeta.anim||cmeta.idleAnim||cmeta.leanAnim){
     walk.mixer=new THREE.AnimationMixer(model);
-    const clips=gltf.animations.map(cleanClip);
+    const clips=(gltf.animations||[]).map(cleanClip);
     const find=re=>clips.find(c=>re.test(c.name));
     /* prefer an actual walk: a rig that ships idle/run/walk would otherwise
        hand back `run`, whichever happened to be listed first, and the whole
@@ -8723,7 +8947,7 @@ async function loadAvatar(id){
        insists on curves that actually move. */
     let wc=liveClip(clips,/\bwalk\b|walk/i)||liveClip(clips,/run|jog|move/i);
     let ic=liveClip(clips,/idle|stand|breath/i);
-    const meta=CHARACTERS.find(c=>c.id===id)||{};
+    const meta=cmeta;
     const tgt=walk.skin;
     if(tgt){
       /* `anim` in the manifest, else the donor rig. Either goes through the
@@ -10112,6 +10336,12 @@ function bnxUI(){
 $('#bnNet').addEventListener('change',()=>{
   bnx.net=$('#bnNet').value;
   if(bnx.ws){try{bnx.ws.close();}catch(e){}bnx.ws=null;bnx.ready=false;}
+  /* Drop the balances too, not just the sockets. Leaving a testnet book in
+     place while the panel says LIVE would put testnet money on the hologram
+     under a LIVE caption — the exact confusion this whole pass is about. */
+  bnxStopStream();
+  bnx.balances=[];bnx.px={};bnx.usd=0;bnx.pnl=null;bnx.pnlReal=null;
+  bnxRenderBalances();
   $('#bnStat').textContent=bnx.net==='live'
     ? 'LIVE SELECTED — ORDERS WILL SPEND REAL FUNDS'
     : 'TESTNET SELECTED';
@@ -10182,7 +10412,14 @@ const BNX={
   test:'wss://ws-api.testnet.binance.vision/ws-api/v3'
 };
 const bnx={ws:null,key:'',secret:'',net:'test',offset:0,ready:false,
-  reqs:new Map(),seq:0,balances:[],usd:0,pending:null};
+  reqs:new Map(),seq:0,balances:[],usd:0,pending:null,
+  /* live revaluation, see bnxStartStream */
+  px:{},pxWs:null,streamKey:'',pnl:null,pnlReal:null,at:0,poll:0};
+/* Anything that is already a dollar. Kept in one place because the account
+   loader and the live revaluation have to agree on it — if one of them treats
+   FDUSD as a coin to price and the other as cash, the PnL gains or loses the
+   whole stablecoin balance the moment the stream connects. */
+const BNX_STABLE=/^(USDT|BUSD|USDC|FDUSD|TUSD|DAI|USDP)$/;
 
 function bnxRemember(){
   /* opt-in only, and we say what it costs */
@@ -10255,9 +10492,13 @@ function bnxCall(method,params,signed){
     }catch(e){rej(e);}
   });
 }
-async function bnxLoadAccount(){
+/* `quiet` is the 60s refresh: same call, but it must not stamp CONNECTING… over
+   a healthy panel once a minute, and a blip must not report the account as
+   FAILED when the balances on screen are still the ones that were loaded. */
+async function bnxLoadAccount(quiet){
   const st=$('#bnStat');
-  st.textContent='CONNECTING…';
+  if(!quiet)st.textContent='CONNECTING…';
+  bnx.poll=Date.now();
   try{
     await bnxSyncClock();
     const acct=await bnxCall('account.status',{omitZeroBalances:true},true);
@@ -10270,22 +10511,128 @@ async function bnxLoadAccount(){
       const t=await fget(host+'/api/v3/ticker/24hr',20000);
       for(const r of t)px[r.symbol]={p:+r.lastPrice,c:+r.priceChangePercent};
     }catch(e){}
-    let usd=0,then=0;
     for(const b of bal){
       const q=b.free+b.locked;
-      if(/^(USDT|BUSD|USDC|FDUSD)$/.test(b.asset)){usd+=q;then+=q;b.usd=q;continue;}
+      if(BNX_STABLE.test(b.asset)){b.usd=q;continue;}
       const k=px[b.asset+'USDT'];
-      if(k){b.usd=q*k.p;usd+=b.usd;then+=q*(k.p/(1+(k.c||0)/100));}
+      /* Seed the live table from the same 24hr snapshot, so the number is
+         right for the second between the account landing and the first
+         miniTicker frame rather than starting at zero and jumping. */
+      if(k){b.usd=q*k.p;bnx.px[b.asset+'USDT']={p:k.p,o:k.p/(1+(k.c||0)/100)};}
       else b.usd=0;
     }
     bnx.balances=bal.sort((a,b)=>(b.usd||0)-(a.usd||0));
-    bnx.usd=usd;bnx.pnl=usd-then;
+    bnxRevalue();
+    bnxStartStream();
     st.textContent=(bnx.net==='test'?'TESTNET':'LIVE')+' · '+bal.length+' ASSETS';
     bnxRenderBalances();
   }catch(e){
-    st.textContent='FAILED · '+String(e.message||e).slice(0,58);
+    if(!quiet||!bnx.balances.length)
+      st.textContent='FAILED · '+String(e.message||e).slice(0,58);
   }
 }
+/* ---------------------- live, not once-per-button ----------------------
+   `account.status` is a snapshot, and a PnL that only moves when you press
+   LOAD ACCOUNT is not a PnL — it is a receipt. So the balances are revalued
+   from a public price stream: one combined subscription, no key and no
+   signature, carrying a miniTicker for each held asset.
+
+   The host matters. Per the REST notes at the top of this file api.binance.com
+   and fstream.binance.com are 451 from a US IP, and fstream is the worse of
+   the two because the socket OPENS and then delivers nothing — a feed that
+   looks connected forever. data-stream.binance.vision is the one that answers.
+
+   A miniTicker carries the last price AND the 24h open, which is the whole
+   reason this works: the 24h move is recomputed from the stream itself rather
+   than being interpolated from a figure that was true a minute ago. */
+const BNX_STREAM={live:'wss://data-stream.binance.vision/stream?streams=',
+                  test:'wss://stream.testnet.binance.vision/stream?streams='};
+function bnxStopStream(){
+  if(bnx.pxWs){try{bnx.pxWs.onclose=null;bnx.pxWs.close();}catch(e){}bnx.pxWs=null;}
+  bnx.streamKey='';
+}
+function bnxStartStream(){
+  const syms=bnx.balances.filter(b=>!BNX_STABLE.test(b.asset))
+    /* Binance caps a combined stream's URL; the tail of a very long book is
+       not worth a refused socket, and those rows are the smallest holdings
+       anyway — the list is already sorted by value. */
+    .map(b=>b.asset.toLowerCase()+'usdt').slice(0,48);
+  const key=bnx.net+'|'+syms.join(',');
+  /* Idempotent on purpose. The 60s account refresh calls this every time, and
+     tearing a healthy socket down and rebuilding it once a minute would put a
+     gap in the live number for no reason — the symbols only change when the
+     book does. */
+  if(bnx.pxWs&&bnx.streamKey===key)return;
+  bnxStopStream();
+  bnx.streamKey=key;
+  if(!syms.length)return;
+  const url=(bnx.net==='test'?BNX_STREAM.test:BNX_STREAM.live)+
+    syms.map(s=>s+'@miniTicker').join('/');
+  let ws;try{ws=new WebSocket(url);}catch(e){return;}
+  bnx.pxWs=ws;
+  ws.onmessage=ev=>{
+    let m;try{m=JSON.parse(ev.data);}catch(e){return;}
+    const d=m.data||m;
+    if(!d||!d.s||!d.c)return;
+    bnx.px[d.s]={p:+d.c,o:+d.o};
+    bnxRevalue();
+  };
+  /* Reconnect for as long as the panel is open. A dropped price socket used to
+     be indistinguishable from a flat market. */
+  ws.onclose=()=>{
+    if(bnx.pxWs!==ws)return;
+    bnx.pxWs=null;bnx.streamKey='';
+    if(bnx.ready)setTimeout(bnxStartStream,4000);
+  };
+  ws.onerror=()=>{};
+}
+/* Pure arithmetic — it runs on every frame the stream delivers, so it does no
+   DOM work and touches no storage. Those are on a 1s timer below. */
+function bnxRevalue(){
+  if(!bnx.balances.length)return;
+  let usd=0,then=0;
+  for(const b of bnx.balances){
+    const q=b.free+b.locked;
+    if(BNX_STABLE.test(b.asset)){b.usd=q;usd+=q;then+=q;continue;}
+    const k=bnx.px[b.asset+'USDT'];
+    if(k&&k.p>0){b.usd=q*k.p;usd+=b.usd;then+=q*(k.o||k.p);}
+    /* No price is not a loss. An asset the stream cannot quote is carried at
+       its last known value on BOTH sides, so it contributes zero to the move
+       instead of silently marking the book down to nothing. */
+    else if(b.usd>0){usd+=b.usd;then+=b.usd;}
+  }
+  bnx.usd=usd;bnx.pnl=usd-then;bnx.at=Date.now();
+}
+/* An hourly snapshot turns the 24h market move into real day-over-day PnL from
+   tomorrow on — the same trick the on-chain wallet uses, and the same honesty
+   about which of the two is on screen until then. Keyed by network so a testnet
+   session can never be differenced against a live one. */
+function bnxSnapshot(){
+  try{
+    const key='trenchstar.bnxsnaps';
+    const snaps=JSON.parse(localStorage.getItem(key)||'[]');
+    const now=Date.now();
+    if(!snaps.length||now-snaps[snaps.length-1].t>3600e3){
+      snaps.push({t:now,usd:bnx.usd,n:bnx.net});
+      while(snaps.length>72)snaps.shift();
+      localStorage.setItem(key,JSON.stringify(snaps));
+    }
+    const old=snaps.filter(s=>s.t<=now-86400e3&&s.n===bnx.net).pop();
+    bnx.pnlReal=old?bnx.usd-old.usd:null;
+  }catch(e){}
+}
+/* The stream can deliver dozens of frames a second; the panel and localStorage
+   do not need that, and the hologram reads bnx.pnl straight off every frame
+   anyway — so the big number is genuinely realtime while the cheap surfaces
+   settle at 1 Hz. The 60s reload catches what prices cannot: a fill, a deposit,
+   a withdrawal — anything that changes WHAT is held rather than what it is
+   worth. */
+setInterval(()=>{
+  if(!bnx.ready||!bnx.balances.length)return;
+  bnxSnapshot();
+  bnxRenderBalances();
+  if(Date.now()-bnx.poll>60000)bnxLoadAccount(true);
+},1000);
 function bnxRenderBalances(){
   const box=$('#bnList');box.innerHTML='';
   for(const b of bnx.balances.slice(0,8)){
@@ -10296,10 +10643,16 @@ function bnxRenderBalances(){
   }
   $('#bnTotal').textContent=bnx.usd?'$'+fmtBig(bnx.usd):'—';
   const el=$('#bnPnl');
-  if(bnx.pnl!=null){
-    el.textContent=(bnx.pnl>=0?'+$':'-$')+fmtBig(Math.abs(bnx.pnl))+'  24H MARKET MOVE';
-    el.style.color=bnx.pnl>=0?'var(--up)':'var(--down)';
-  }
+  if(bnx.pnl==null){el.textContent='—';el.style.color='';return;}
+  /* Say which of the two measures this is. They are not the same claim: one is
+     what the market did to the bag you are holding right now, the other is what
+     the account is actually worth against yesterday — which includes anything
+     you traded, deposited or withdrew in between. */
+  const real=bnx.pnlReal!=null;
+  const v=real?bnx.pnlReal:bnx.pnl;
+  el.textContent=(v>=0?'+$':'-$')+fmtBig(Math.abs(v))+
+    (real?'  REAL 24H':'  24H MARKET MOVE')+(bnx.pxWs?'  · LIVE':'');
+  el.style.color=v>=0?'var(--up)':'var(--down)';
 }
 /* Two-step: the first press prepares and shows exactly what will happen,
    the second press is the only thing that sends an order. */
@@ -10658,7 +11011,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   syncDesk,deskMons,pickDesk,deskFire,deskToWall,dhGo,buildWall,
   /* the desk's DeHub data and its composer, exposed so a change here can be
      asserted on without a screenshot: dhData holds what the app sent back,
-     dhPix the pictures it drew, and the three desk pages are DESK_PAGES */
+     dhPix the pictures it drew, and the desk page is DESK_PAGES */
   dhData,dhPull,dhPix,dhPostImg,dhAvatarUrl,deskAction,DESK_PAGES,deskMount,deskProbe,deskSiteTick,
   pickFloor,goToFloor,pingFloor,fly,flyTo,
   /* renderer/composer are exposed so a frame can be drawn on demand and read
@@ -10668,6 +11021,11 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   mountStream,streamKind,
   undoLast,undoStack,
   THEME_SCENES,pnlGroup,paintPnl,placePnl,buildFloor,
+  /* The hologram's source resolution, and the exchange state behind it. Both
+     are here so "is that number real, and whose is it?" can be answered from
+     the console instead of from a screenshot — pnlSource() returning null IS
+     the assertion that nothing is being invented. */
+  pnlSource,paperPnl,bnx,bnxRevalue,bnxStartStream,bnxStopStream,bnxSnapshot,
   get cityRing(){return cityRing;},buildCityRing,clearCityRing,dressPlate,cityLife,life,
   get skyMesh(){return skyMesh;},
   wallet,connectWallet,refreshWallet,quoteBest,buyToken,encExactInputSingle,
@@ -10931,11 +11289,17 @@ function tick(t){
     if(fps<28){
       slowSince++;
       if(slowSince>=2){
+        /* SHADOWS GO FIRST — before bloom, before the mirror. The shadow map
+           is a second pass over every caster in the room, and it is the newest
+           and least load-bearing thing here: dropping it puts the painted blob
+           back under the trader and costs the desk its contact with the floor,
+           which is a smaller loss than a flat room or a stuttering one. */
+        if(renderer.shadowMap.enabled)setShadows(false);
         /* The composer keeps its OWN pixel ratio, and it owns the expensive
            full-screen passes — dropping only the renderer's left the post
            chain rendering at the old resolution, so the one lever that was
            supposed to buy back a struggling GPU barely moved. */
-        if(bloom.strength>0){
+        else if(bloom.strength>0){
           bloom.strength=0;
           renderer.setPixelRatio(1);
           if(composer.setPixelRatio)composer.setPixelRatio(1);

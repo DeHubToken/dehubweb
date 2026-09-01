@@ -1,10 +1,24 @@
 {
-  "_comment": "Arcade build. Every character on this roster is vendored beside the game, Fat Chad included: his 41 MiB Mixamo FBX was three 4096px maps on an unindexed mesh, not geometry, so re-exported at 1024px with the vertices welded he is a 2 MiB GLB and inside Cloudflare's per-asset limit. Model URLs still resolve bucket-first and fall back to this folder — TRENCHSTAR_ASSETS in index.html points at the bucket — so anything not up there costs one failed lookup and nothing else. Lady Luck's own walk was a 19 MB 'With Skin' Mixamo download whose duplicate mesh is discarded on load anyway, so she borrows the donor rig's like everyone else. xbot.glb and soldier.glb are the donor rigs every borrowed walk and idle comes from: deliberately off this roster, never playable, and both files stay here regardless.",
+  "_comment": "Drop a character file into this folder, add a line here, done. No code changes. Accepted: <id>-rigged.glb, <id>.glb, <id>.fbx. A character does NOT need its own animation — point `anim` (walk), `idleAnim` (standing) and `leanAnim` (what they do once they have drifted to the wall and stopped) at Mixamo animation files and they are retargeted onto that character's skeleton. `anim` can point at a .glb as well as an .fbx — soldier.glb is the second donor, and its Walk is the one to reach for on a male character: measured against xbot's walk on the same rig it carries half the hip twist (7.0 deg against 14.2) and a stance 43% wider (0.589 against 0.411), which is the difference between a stride and a sashay. Anything omitted falls back to xbot.glb. Both donor rigs are deliberately OFF this roster — neither is playable — but both files have to stay in this folder, and keep being uploaded (upload-assets.ps1 lets them through by name), or every character that borrows a walk or an idle loses it. `leanAnim` takes ONE file for a held pose (a lean), or THREE — [enter, loop, exit] — for a full set such as the push-ups, which then runs as drop in, a few reps, get back up, rest, repeat. Nothing needs flagging: a clip whose start pose does not meet its end is played once and clamped instead of looped, and any clip that holds the hips away from their rest height carries its vertical root motion so the body actually reaches the floor. Download animations as FBX Binary / WITHOUT SKIN: with skin they carry a duplicate character mesh and run ~19 MB instead of ~0.3 MB for identical motion, and the mesh is discarded on load anyway — it can never add a prop such as a bow. Optional thumbnail: thumbs/<id>.jpg — only used until the live card loads. The picker draws the real character, from a low-res preview it bakes itself the first time (128px maps, idle clip only) and keeps in IndexedDB. Run TS.savePreviews() in the console and drop the downloads into characters/preview/<id>.glb to ship those instead, so nobody has to bake: the uploader takes that folder with everything else.",
   "characters": [
-    { "id": "peasant-girl", "name": "LADY LUCK",
+    { "id": "peasant-girl", "name": "LADY LUCK", "tag": "MIXAMO RIG",
+      "anim": "walk-peasant-girl.fbx",
       "idleAnim": "idle-peasant-girl.fbx",
       "leanAnim": "lean-peasant-girl.fbx" },
     { "id": "fat-chad", "name": "FAT CHAD", "tag": "STILL HITS THE FLOOR",
-      "leanAnim": ["pushup-in.fbx", "pushup-loop.fbx", "pushup-out.fbx"] }
+      "leanAnim": ["pushup-in.fbx", "pushup-loop.fbx", "pushup-out.fbx"] },
+
+    { "id": "pete", "name": "THE BUILDER", "tag": "HARD HAT, HARDER FLOOR",
+      "anim": "walk-pete.fbx",
+      "idleAnim": "idle-pete.fbx",
+      "leanAnim": "lean-pete.fbx" },
+    { "id": "joe", "name": "THE QUANT", "tag": "THE SUIT IS THE STRATEGY",
+      "anim": "walk-joe.fbx",
+      "idleAnim": "idle-joe.fbx",
+      "leanAnim": "lean-joe.fbx" },
+    { "id": "michelle-nft", "name": "NFT ARTIST", "tag": "MINTS IT HERSELF",
+      "anim": "walk-michelle-nft.fbx",
+      "idleAnim": "idle-michelle-nft.fbx",
+      "leanAnim": "lean-michelle-nft.fbx" }
   ]
 }
