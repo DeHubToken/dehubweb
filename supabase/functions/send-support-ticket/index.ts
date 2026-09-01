@@ -3,25 +3,20 @@
 // Called server-to-server by the NestJS backend when the assistant files a
 // ticket for a signed-in user. Authenticated with the SUPPORT_TICKET_SECRET
 // shared secret (x-support-secret header) — not a Supabase JWT, so verify_jwt
-// is off in config.toml. The mail rides the same pipeline as auth and admin
-// invite email: enqueue_email → process-email-queue → Lovable/Mailgun, sent as
-// noreply@notify.dehub.io.
+// is off in config.toml. The mail is sent through Lovable's managed email API
+// as noreply@notify.dehub.io.
 //
-// The recipient is a constant. Everything in the body comes from a user talking
-// to a chatbot, so an addressable `to` field would turn a leaked secret into an
-// open relay — the same reason send-admin-invite pins its link prefix.
-import * as React from 'npm:react@18.3.1'
-import { renderAsync } from 'npm:@react-email/components@0.0.22'
+// The recipient is fixed by the template. Everything in the body comes from a
+// user talking to a chatbot, so an addressable `to` field would turn a leaked
+// secret into an open relay — the same reason send-admin-invite pins its link
+// prefix.
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { SupportTicketEmail } from '../_shared/email-templates/support-ticket.tsx'
+import { sendTemplateEmail } from '../_shared/transactional-email-templates/send-email.ts'
 
-const SITE_NAME = 'DeHub'
-const FROM_DOMAIN = 'notify.dehub.io'
-const SENDER_DOMAIN = 'notify.dehub.io'
 const SUPPORT_INBOX = 'dev@dehub.io'
 
 // Caps mirror the backend's own, so a request that somehow skips them cannot
-// enqueue an unbounded payload.
+// send an unbounded payload.
 const LIMITS = {
   ref: 32,
   subject: 160,
@@ -113,57 +108,41 @@ Deno.serve(async (req) => {
     createdAt: optional(body.createdAt, LIMITS.short),
   }
 
-  const html = await renderAsync(React.createElement(SupportTicketEmail, props))
-  const text = await renderAsync(React.createElement(SupportTicketEmail, props), {
-    plainText: true,
-  })
-
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   )
 
-  const messageId = crypto.randomUUID()
-
-  // Log pending BEFORE enqueue so we have a record even if enqueue crashes
-  await supabase.from('email_send_log').insert({
-    message_id: messageId,
-    template_name: 'support_ticket',
-    recipient_email: SUPPORT_INBOX,
-    status: 'pending',
-  })
-
-  const { error: enqueueError } = await supabase.rpc('enqueue_email', {
-    queue_name: 'transactional_emails',
-    payload: {
-      message_id: messageId,
-      // The ticket reference is the idempotency key, so the backend retrying a
-      // send after a timeout cannot put the same ticket in the inbox twice.
-      idempotency_key: `support-${reference}`,
-      to: SUPPORT_INBOX,
-      from: `${SITE_NAME} Support <noreply@${FROM_DOMAIN}>`,
-      sender_domain: SENDER_DOMAIN,
-      subject: `[${reference}] ${props.severity === 'urgent' ? 'URGENT · ' : ''}${subject}`,
-      html,
-      text,
-      purpose: 'transactional',
-      label: 'support_ticket',
-      queued_at: new Date().toISOString(),
-    },
-  })
-
-  if (enqueueError) {
-    console.error('Failed to enqueue support ticket email', { error: enqueueError, reference })
-    await supabase.from('email_send_log').insert({
-      message_id: messageId,
+  async function log(status: string, errorMessage?: string) {
+    const { error } = await supabase.from('email_send_log').insert({
       template_name: 'support_ticket',
       recipient_email: SUPPORT_INBOX,
-      status: 'failed',
-      error_message: 'Failed to enqueue email',
+      status,
+      error_message: errorMessage ?? null,
     })
-    return json(500, { error: 'Failed to enqueue email' })
+    if (error) console.error('email_send_log write failed', { code: error.code, message: error.message })
   }
 
-  console.log('Support ticket email enqueued', { reference, severity: props.severity })
-  return json(200, { success: true, queued: true })
+  try {
+    // The ticket reference is the idempotency key, so the backend retrying a
+    // send after a timeout cannot put the same ticket in the inbox twice.
+    const result = await sendTemplateEmail('support-ticket', SUPPORT_INBOX, {
+      templateData: props,
+      idempotencyKey: `support-ticket-${reference}`,
+    })
+    if (!result.sent) {
+      await log('suppressed')
+      console.log('Support ticket email suppressed', { reference })
+      return json(200, { success: true, suppressed: true })
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to send email'
+    console.error('Failed to send support ticket email', { reference, message })
+    await log('failed', message)
+    return json(500, { error: 'Failed to send email' })
+  }
+
+  await log('sent')
+  console.log('Support ticket email sent', { reference, severity: props.severity })
+  return json(200, { success: true, sent: true })
 })
