@@ -27,6 +27,7 @@
  */
 
 import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { KeyboardEvent, SyntheticEvent } from 'react';
 import { Play, Pause, Loader2, PictureInPicture2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -63,6 +64,7 @@ export function StageRecordingPlayer({
   endedAt?: string | null;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const {
     spaceId: loadedId,
     loading,
@@ -124,7 +126,7 @@ export function StageRecordingPlayer({
     <div
       data-no-navigate
       role="group"
-      aria-label="Stage recording"
+      aria-label={t('stages.stageRecording')}
       onClick={(e) => e.stopPropagation()}
       onPointerDown={(e) => e.stopPropagation()}
       className={cn(
@@ -135,8 +137,8 @@ export function StageRecordingPlayer({
       <span
         role="button"
         tabIndex={0}
-        aria-label={isPlaying ? 'Pause recording' : 'Play recording'}
-        title={isPlaying ? 'Pause' : 'Play the recording'}
+        aria-label={isPlaying ? t('stages.pauseRecording') : t('stages.playRecording')}
+        title={isPlaying ? t('stages.pause') : t('stages.playTheRecording')}
         onClick={togglePlay}
         onKeyDown={controlKeys(togglePlay)}
         className={cn(
@@ -187,9 +189,9 @@ export function StageRecordingPlayer({
       <span
         role="button"
         tabIndex={0}
-        aria-label={isLoaded && popout ? 'Close the corner player' : 'Pop out the player'}
+        aria-label={isLoaded && popout ? t('stages.closeCornerPlayer') : t('stages.popOutPlayer')}
         aria-pressed={isLoaded && popout}
-        title={isLoaded && popout ? 'Close the corner player' : 'Pop out — keep listening while you browse'}
+        title={isLoaded && popout ? t('stages.closeCornerPlayer') : t('stages.popOutKeepListening')}
         onClick={togglePopout}
         onKeyDown={controlKeys(togglePopout)}
         className={cn(
