@@ -1,10 +1,4 @@
-          <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
-            <LiveFeedPreview
-              urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
-              thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
-              fallbackLabel="Live"
-            />
-          </Suspense>/**
+/**
  * Live Card Component
  * ===================
  * Displays live stream content with viewer count and universal styling.
