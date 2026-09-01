@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import alibabaLogo from '@/assets/ai-logos/alibaba.png';
 import blackForestLabsLogo from '@/assets/ai-logos/black-forest-labs.png';
@@ -109,7 +110,16 @@ function VendorLogo({ vendor }: { vendor: string }) {
   );
 }
 
+const KIND_KEYS: Record<string, string> = {
+  Image: 'creator.navImage',
+  Video: 'creator.navVideo',
+  Audio: 'creator.navAudio',
+  Text: 'creator.kindText',
+  '3D': 'creator.kind3d',
+};
+
 function Chip({ model }: { model: ModelChip }) {
+  const { t } = useTranslation();
   const meta = vendorMeta[model.vendor] ?? { color: '#ffffff' };
   const glow = `${meta.color}40`; // ~25% opacity glow
   return (
@@ -123,7 +133,7 @@ function Chip({ model }: { model: ModelChip }) {
           {model.name}
         </span>
         <span className="mt-0.5 text-[9px] font-medium uppercase tracking-wider text-white/40">
-          {model.vendor} · {model.kind}
+          {model.vendor} · {t(KIND_KEYS[model.kind])}
         </span>
       </div>
     </div>
