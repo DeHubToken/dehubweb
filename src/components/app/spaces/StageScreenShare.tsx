@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Expand, Shrink, MonitorUp } from 'lucide-react';
 import { useStage } from '@/contexts/StageContext';
 import { cn } from '@/lib/utils';
@@ -26,6 +27,7 @@ interface StageScreenShareProps {
 }
 
 export function StageScreenShare({ className, sharerName }: StageScreenShareProps) {
+  const { t } = useTranslation();
   const { screenShare } = useStage();
   const containerRef = useRef<HTMLDivElement>(null);
   const videoBoxRef = useRef<HTMLDivElement>(null);
@@ -125,10 +127,10 @@ export function StageScreenShare({ className, sharerName }: StageScreenShareProp
         <MonitorUp className="w-3.5 h-3.5 text-white/70" />
         <span className="text-[11px] font-medium text-white/90">
           {isLocal
-            ? "You're sharing your screen"
+            ? t('stages.youAreSharing')
             : sharerName
-              ? `@${sharerName} is sharing`
-              : 'Screen share'}
+              ? t('stages.someoneIsSharing', { name: sharerName })
+              : t('stages.screenShare')}
         </span>
       </div>
 
@@ -137,8 +139,8 @@ export function StageScreenShare({ className, sharerName }: StageScreenShareProp
         <button
           type="button"
           onClick={toggleFullscreen}
-          title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-          aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+          title={isFullscreen ? t('stages.exitFullscreen') : t('stages.fullscreen')}
+          aria-label={isFullscreen ? t('stages.exitFullscreen') : t('stages.fullscreen')}
           className="absolute bottom-2 right-2 w-11 h-11 sm:w-9 sm:h-9 rounded-lg bg-black/60 backdrop-blur-sm text-white/70 hover:text-white hover:bg-black/80 flex items-center justify-center transition-colors"
         >
           {isFullscreen ? <Shrink className="w-4 h-4" /> : <Expand className="w-4 h-4" />}

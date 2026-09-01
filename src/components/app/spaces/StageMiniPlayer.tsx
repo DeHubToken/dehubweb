@@ -9,10 +9,12 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Mic, MicOff, X, Maximize2, Users, Volume2, ScreenShare, Radio } from 'lucide-react';
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 import { useStage } from '@/contexts/StageContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 
 export function StageMiniPlayer() {
+  const { t } = useTranslation();
   const {
     currentSpace,
     myRole,
@@ -140,7 +142,7 @@ export function StageMiniPlayer() {
                   ? "bg-white/10 hover:bg-white/20 text-white/60"
                   : "bg-white/20 hover:bg-white/30 text-white ring-2 ring-white/30"
               )}
-              title={isMuted ? 'Unmute' : 'Mute'}
+              title={isMuted ? t('stages.unmute') : t('stages.mute')}
             >
               {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
             </button>
@@ -150,7 +152,7 @@ export function StageMiniPlayer() {
           <button
             onClick={handleLeaveOrEnd}
             className="w-8 h-8 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
-            title={myRole === 'host' ? 'End stage' : 'Leave stage'}
+            title={myRole === 'host' ? t('stages.endStage') : t('stages.leaveStage')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -159,7 +161,7 @@ export function StageMiniPlayer() {
           <button
             onClick={() => openModal('live')}
             className="absolute right-3 text-white/50 hover:text-white transition-colors"
-            title="Expand stage"
+            title={t('stages.expandStage')}
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
