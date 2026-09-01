@@ -64,7 +64,9 @@ import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
-import { LiveFeedPreview } from './LiveFeedPreview';
+// Lazy: only a live post ever renders it, and a static import would put the
+// preview (and its HLS glue) in the boot path for every card.
+const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ default: m.LiveFeedPreview })));
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -1929,11 +1931,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               /* On air: play the stream right here. The feed used to show only
                  a poster for a live post, so a stream that was actually running
                  read as a dead card until you opened it. */
-              <LiveFeedPreview
-                urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
-                thumbnail={thumbnail}
-                fallbackLabel="Live"
-              />
+              <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
+                <LiveFeedPreview
+                  urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
+                  thumbnail={thumbnail}
+                  fallbackLabel="Live"
+                />
+              </Suspense>
             ) : (
               /* No playable URL — a past live (or url-less video). Show the
                  cover image if there is one, otherwise a staticy TV screen.
