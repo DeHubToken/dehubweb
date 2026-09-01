@@ -15,6 +15,7 @@ import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { mergeLiveCounts, type RawFeedRow } from '@/lib/live-counts';
 import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+import { extractReplayUrl } from '@/lib/live-replay';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
@@ -153,6 +154,15 @@ export interface UnifiedFeedItem {
     title?: string;
     category?: string;
     playbackUrl?: string;
+    /** Set the first time the stream went on air — absent means it never did. */
+    startedAt?: string;
+    /** Captured replay of a finished stream; playable only at status 'ready'. */
+    recording?: {
+      status?: string;
+      url?: string;
+      durationSec?: number;
+      truncated?: boolean;
+    };
   };
   createdAt: string;
   updatedAt?: string;
@@ -225,8 +235,13 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     buildImageUrl(item.tokenId, item.imageUrl);
 
   const isAudioPost = item.postType === 'audio' || item.postType === 'feed-audio';
+  // A finished stream leaves a plain mp4 replay on the CDN once its capture
+  // reports ready. Handing that to the card is what makes a past live playable
+  // in the feed instead of a permanent "Live ended" poster.
+  const replayUrl = item.postType === 'live' ? extractReplayUrl(item.stream) : undefined;
+  const replayDurationSec = item.postType === 'live' ? item.stream?.recording?.durationSec : undefined;
   const videoUrl = item.postType === 'live'
-    ? undefined
+    ? replayUrl
     : isAudioPost
       ? undefined
       : (item.videoUrl?.startsWith('http') ? item.videoUrl : buildVideoUrl(item.tokenId));
@@ -253,8 +268,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     audioUrl,
     audioDuration: isAudioPost ? item.audioDuration : undefined,
     isAudio: isAudioPost,
-    duration: formatDuration(isAudioPost ? item.audioDuration : item.videoDuration),
-    durationSeconds: (isAudioPost ? item.audioDuration : item.videoDuration) || 0,
+    duration: formatDuration(isAudioPost ? item.audioDuration : (item.videoDuration ?? replayDurationSec)),
+    durationSeconds: (isAudioPost ? item.audioDuration : (item.videoDuration ?? replayDurationSec)) || 0,
     title: item.name || item.description?.split('\n')[0] || '',
     description: item.description,
     channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
@@ -466,6 +481,17 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
 // ===========================================================================
 
 /**
+ * A live post whose stream never went on air — the shape a failed or abandoned
+ * Go Live launch leaves behind: a minted token with a stream row that has no
+ * `startedAt`. Those are the only live posts the feed hides. A stream that
+ * aired belongs in the feed like any other post, live while it runs and as its
+ * replay afterwards.
+ */
+function isUnairedLivePost(item: { postType?: string; stream?: { startedAt?: string } }): boolean {
+  return item.postType === 'live' && !item.stream?.startedAt;
+}
+
+/**
  * True when `params` describe exactly the request the index.html boot script
  * issued (page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=all, no
  * other filters). Must stay in lockstep with the inline <script> in index.html.
@@ -641,14 +667,14 @@ async function loadUnifiedFeedPage(args: {
     shuffleSeedRef.current = response.shuffleSeed;
   }
 
-  // Filter out blocked creators and ended live streams (live content is shown in the carousel instead)
+  // Filter out blocked creators and live posts that never aired.
   // Normalize timestamp fields so downstream mappers/cache always get a real ISO date.
   const filteredItems = (response.result || [])
     .map(item => ({
       ...item,
       createdAt: item.createdAt || item.updatedAt || (item as any).created_at || (item as any).updated_at || '',
     }))
-    .filter(item => !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live');
+    .filter(item => !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && !isUnairedLivePost(item));
 
   // Enrich quote posts that are missing their quotedPost data
   const needsEnrich: { idx: number; item: any }[] = [];
@@ -857,11 +883,11 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
     const newest = chronological && newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
     if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false };
 
-    // Only count rows the list would actually render. Live rows never enter
-    // the feed (loadUnifiedFeedPage drops them for the carousel), and a
-    // stranded "live" post from a failed stream launch sits at the head of the
-    // chronological sort indefinitely — counting it makes the pill claim new
-    // posts that clicking can never surface.
+    // Only count rows the list would actually render. A stranded "live" post
+    // from a failed stream launch never enters the feed (loadUnifiedFeedPage
+    // drops it) yet sits at the head of the chronological sort indefinitely —
+    // counting it would make the pill claim new posts that clicking can never
+    // surface.
     const blockList = queryClient.getQueryData<Array<{ address: string }>>(['block-list']);
     const blockedAddresses = blockList?.length
       ? new Set(blockList.map(u => u.address.toLowerCase()))
@@ -869,7 +895,7 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
 
     const newer = (data.result || []).filter((item) => {
       if (
-        item.postType === 'live' ||
+        isUnairedLivePost(item) ||
         isBlockedPost(item) ||
         isBlockedCreator(item, blockedAddresses)
       ) {
