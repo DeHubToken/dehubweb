@@ -39,6 +39,7 @@ export default function EventsPage() {
         title="Events — Meetups & Community Events on DeHub"
         description="Browse upcoming DeHub community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform."
         url="https://dehub.io/events"
+        image="https://dehub.io/og/events.jpg"
         noindex
       />
 
