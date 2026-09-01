@@ -2828,6 +2828,7 @@
     "sellYourFractions": "Jual fraksi Anda ({{held}} dipegang)"
   },
   "creator": {
+    "presetNeedsImage": "{{name}} memerlukan gambar terlampir. Lampirkan satu dulu.",
     "presets": "Preset",
     "clearPreset": "Hapus preset",
     "presetAria": "Preset {{name}}. {{hint}}",

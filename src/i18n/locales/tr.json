@@ -2828,6 +2828,7 @@
     "sellYourFractions": "Paylarınızı satın ({{held}} adet)"
   },
   "creator": {
+    "presetNeedsImage": "{{name}} için görsel eklenmesi gerekir. Önce bir tane ekleyin.",
     "presets": "Hazır ayarlar",
     "clearPreset": "Hazır ayarı kaldır",
     "presetAria": "{{name}} hazır ayarı. {{hint}}",

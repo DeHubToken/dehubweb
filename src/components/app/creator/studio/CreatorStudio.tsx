@@ -771,7 +771,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     if (next?.requiresImage && !reference) {
       // Adopting its model anyway would swap in a different engine at a
       // different price than the tile advertised.
-      toast.error(`${next.name} needs an attached image. Attach one first.`);
+      toast.error(t('creator.presetNeedsImage', { name: t(next.nameKey) }));
       return;
     }
     setPresetId(next?.id ?? null);
@@ -798,7 +798,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       }
     }
     textareaRef.current?.focus();
-  }, [reference, setPresetId]);
+  }, [reference, setPresetId, t]);
 
   /**
    * Switching mode now only switches mode. Each workspace keeps its own prompt,

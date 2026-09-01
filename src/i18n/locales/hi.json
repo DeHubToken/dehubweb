@@ -2835,6 +2835,7 @@
     "sellYourFractions": "अपने फ़्रैक्शन बेचें ({{held}} रखे हुए)"
   },
   "creator": {
+    "presetNeedsImage": "{{name}} के लिए इमेज जोड़ना ज़रूरी है। पहले एक जोड़िए।",
     "presets": "प्रीसेट",
     "clearPreset": "प्रीसेट हटाएँ",
     "presetAria": "{{name}} प्रीसेट। {{hint}}",
