@@ -28,7 +28,6 @@ import {
   X,
   Users,
   Heart,
-  Gift,
   Music,
   Loader2,
   AlertTriangle,
@@ -98,7 +97,7 @@ const TOP_CHROME_Y = 'top-[max(0.75rem,env(safe-area-inset-top))]';
  * because "on air" is semantic state.
  */
 const GLASS_PILL =
-  'inline-flex h-8 items-center rounded-full border border-white/20 bg-white/10 px-3 backdrop-blur-xl';
+  'inline-flex h-8 items-center rounded-xl border border-white/20 bg-white/10 px-3 backdrop-blur-xl';
 
 /**
  * How often the console asks the API for viewers, likes and tips.
@@ -1526,7 +1525,7 @@ export function GoLiveBroadcaster({
               data-live-pulse
               data-keep-dark
               className={cn(
-                'flex h-8 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold tracking-wide',
+                'flex h-8 items-center gap-1.5 rounded-xl px-3 text-[11px] font-semibold tracking-wide',
                 // The one place hue is allowed on this screen: "on air" is a
                 // state, not decoration. Everything else here is glass.
                 phase === 'live'
@@ -1564,7 +1563,7 @@ export function GoLiveBroadcaster({
         )}
 
         {isScreen && phase !== 'error' && (
-          <span className="absolute right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] text-white backdrop-blur-xl">
+          <span className="absolute right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] text-white backdrop-blur-xl">
             <ScreenShare className="h-3 w-3" />
             Sharing screen
           </span>
@@ -1724,14 +1723,17 @@ export function GoLiveBroadcaster({
               {watching} watching
             </span>
           )}
-          <span className="flex items-center gap-1.5">
-            <Heart className="h-3.5 w-3.5" />
-            {room?.likes ?? 0}
+          <span className="flex items-center gap-1.5 leading-none">
+            <Heart className="h-3.5 w-3.5 shrink-0" />
+            <span className="tabular-nums">{room?.likes ?? 0}</span>
           </span>
-          <span className="flex items-center gap-1.5">
-            <Gift className="h-3.5 w-3.5" />
-            <DhbAmount amount={room?.totalTips ?? 0} iconClassName="h-3.5 w-3.5" />
-          </span>
+          {/* No gift icon: the DHB coin already says what this number is, and
+              two glyphs around one figure read as two separate stats. */}
+          <DhbAmount
+            amount={<span className="tabular-nums">{room?.totalTips ?? 0}</span>}
+            iconClassName="h-3.5 w-3.5"
+            className="gap-1.5 leading-none"
+          />
         </div>
       )}
 
@@ -1842,7 +1844,7 @@ export function GoLiveBroadcaster({
           'flex items-center justify-center gap-2 font-medium transition-colors disabled:opacity-60',
           fullBleed
             ? cn(
-                'absolute right-3 z-20 h-9 w-9 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-xl active:bg-white/20',
+                'absolute right-3 z-20 h-9 w-9 rounded-xl border border-white/20 bg-white/10 text-white backdrop-blur-xl active:bg-white/20',
                 TOP_CHROME_Y
               )
             : 'h-14 w-full gap-2 rounded-xl border border-red-500/30 bg-red-500/10 text-sm text-red-300 hover:bg-red-500/20'
@@ -1896,7 +1898,7 @@ function ControlButton({
       aria-label={label}
       title={label}
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-full transition-colors disabled:opacity-40',
+        'flex shrink-0 items-center justify-center rounded-xl transition-colors disabled:opacity-40',
         floating
           ? cn(
               'h-12 w-12 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]',
