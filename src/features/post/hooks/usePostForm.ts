@@ -1406,7 +1406,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           : extra.soundtrackTag;
       }
 
-      // Extract hashtags from description and title, use as augmented categories
+      // Hashtags the author typed become categories as well, so the tag is
+      // filterable — but the text goes out exactly as written.
+      //
+      // This used to strip them out and tidy the whitespace they left behind,
+      // which made a typed tag indistinguishable from one picked in the
+      // category selector: both ended up as invisible metadata, and the tags
+      // an author had deliberately written simply vanished from their own
+      // post. Where a tag appears is the author's decision, not ours — a
+      // picked category stays out of sight, a typed one stays where it was
+      // put, and the feed renders it as a link.
       const hashtagRegex = /#([A-Za-z][A-Za-z0-9_]{0,49})/g;
       const extractedTags = new Set<string>();
       for (const match of (postDescription.matchAll(hashtagRegex))) {
@@ -1416,9 +1425,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         extractedTags.add(match[1]);
       }
 
-      // Strip hashtags from the text sent to API
-      const cleanDescription = postDescription.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
-      const cleanTitle = postTitle.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim() || postTitle;
+      const submittedDescription = postDescription;
+      const submittedTitle = postTitle;
 
       // Merge extracted hashtags into categories
       const baseCategories = selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'];
@@ -1538,8 +1546,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const attemptSignature = [
         postType,
         chainId,
-        cleanTitle,
-        cleanDescription,
+        submittedTitle,
+        submittedDescription,
         media
           .map((m) =>
             [
@@ -1566,8 +1574,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       const mintResponse = await mintPost(
         {
-          name: cleanTitle,
-          description: cleanDescription,
+          name: submittedTitle,
+          description: submittedDescription,
           postType,
           chainId,
           category: mergedCategories,
