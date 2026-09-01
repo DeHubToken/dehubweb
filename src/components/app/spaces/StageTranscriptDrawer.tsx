@@ -48,6 +48,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { PLAYBACK_RATES } from '@/lib/video-preferences';
 import { getStagePlaybackState } from '@/lib/stage-playback';
 import { formatStageRate } from '@/components/app/stages/StageRateButton';
+import { usePendingAction } from '@/hooks/use-pending-action';
 
 interface Segment { speaker: string; text: string; start: number; end: number }
 interface Chapter { title: string; start: number; end: number }
@@ -642,6 +643,10 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
   };
 
+  // The rename sheet stays open until the write lands, so without a mark the
+  // Save button looks inert for the whole round trip.
+  const { pending: isSavingRename, run: runSaveRename } = usePendingAction(saveRename);
+
   /* ────── privacy ────── */
   const setPrivacy = async (next: 'public' | 'members' | 'private') => {
     if (!stageId) return;
@@ -939,7 +944,8 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                 </Button>
                 <Button
                   className="rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/15 h-8 text-xs"
-                  onClick={saveRename}
+                  onClick={() => void runSaveRename()}
+                  loading={isSavingRename}
                 >
                   {t('stages.save')}
                 </Button>
