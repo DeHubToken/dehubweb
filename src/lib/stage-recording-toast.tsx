@@ -17,21 +17,8 @@
 
 import { toast } from 'sonner';
 import { DeHubLoader } from '@/components/app/DeHubLoader';
-import {
-  TOAST_CLASSES,
-  TITLE_CLASSES,
-  CONTENT_CLASSES,
-  CLOSE_CLASSES,
-} from '@/components/app/NewVersionToast';
 
 const TOAST_ID = 'stage-recording-upload';
-
-const classNames = {
-  toast: TOAST_CLASSES,
-  title: TITLE_CLASSES,
-  content: CONTENT_CLASSES,
-  closeButton: CLOSE_CLASSES,
-};
 
 /**
  * Desktop parks the toast bottom-right like the update toast; mobile keeps the
@@ -52,7 +39,6 @@ export function showRecordingUploading(): void {
     // Stays until the upload resolves it one way or the other.
     duration: Infinity,
     ...corner(),
-    classNames,
     description: (
       <span className="flex items-center gap-3">
         <DeHubLoader size={28} className="shrink-0" />
@@ -68,7 +54,6 @@ export function showRecordingSaved(): void {
     id: TOAST_ID,
     duration: 6_000,
     ...corner(),
-    classNames,
     description: "It's safe to close this tab. The stage will appear under Recorded shortly.",
   });
 }
@@ -80,7 +65,6 @@ export function showRecordingFailed(): void {
     duration: Infinity,
     closeButton: true,
     ...corner(),
-    classNames,
     description: 'The upload failed after retrying. The recording could not be kept.',
   });
 }
