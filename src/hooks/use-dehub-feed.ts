@@ -633,9 +633,19 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     // A PPV payment is recorded against the POST, so the tokenId is carried
     // separately rather than conflated with it.
     tokenId: (stream as any).tokenId != null ? String((stream as any).tokenId) : undefined,
-    // /api/live projects the token's streamInfo, so a stream sold per view or
-    // gated on a holding is gated here too. It carries no plan list, so the
-    // subscriber gate resolves on the post page, where plansDetails is served.
+    /*
+     * Access, from the token behind the stream.
+     *
+     * `/api/live` used to project the stream's own `streamInfo` and nothing
+     * else, so two of the four gates were invisible here: `plans` and
+     * `contentRating` live on the TOKEN. The Live tab therefore drew
+     * subscriber-only streams as open and mature thumbnails unblurred, and only
+     * the post page ever resolved them. The backend now serves both, along with
+     * `plansDetails` and the viewer's own `isUnlocked`.
+     */
+    contentRating: (stream as any).contentRating,
+    subscriberPlans: (stream as any).plansDetails,
+    isUnlocked: (stream as any).isUnlocked ?? false,
     isPPV: liveStreamInfo?.isPayPerView || false,
     ppvPrice: liveStreamInfo?.payPerViewAmount,
     ppvCurrency: liveStreamInfo?.payPerViewTokenSymbol || 'DHB',
