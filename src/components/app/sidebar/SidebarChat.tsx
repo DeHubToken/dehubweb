@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
-import { Send, Users, Loader2, Mic, SmilePlus, Reply, CornerDownRight, X } from 'lucide-react';
+import { Send, Users, Loader2, Mic, SmilePlus, Reply, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -111,6 +111,11 @@ function SidebarReactions({
 export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<SupabaseLiveChatMessage | null>(null);
+  // Edits happen in the row itself rather than in the composer at the foot of
+  // the rail — the composer is a 169-character single line shared with the
+  // mention picker, and hijacking it would strand a half-typed message.
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState('');
   const translateSignal = 0;
   const originalSignal = 0;
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -126,7 +131,7 @@ export function SidebarChat() {
 
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
   const roomId = rooms[0]?.id || null;
-  const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction } = useLiveChatMessages(roomId);
+  const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
 
   // Buy alerts
@@ -431,8 +436,44 @@ export function SidebarChat() {
                           <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                         </span>
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
+                        {msg.is_edited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
                       </span>
-                      {msg.message_type === 'image' && msg.image_url ? (
+                      {editingId === msg.id ? (
+                        <div className="mt-0.5">
+                          <textarea
+                            autoFocus
+                            value={editDraft}
+                            onChange={(e) => setEditDraft(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                const next = editDraft.trim();
+                                setEditingId(null);
+                                if (next && next !== msg.content) void editMessage(msg.id, next);
+                              } else if (e.key === 'Escape') {
+                                e.preventDefault();
+                                setEditingId(null);
+                              }
+                            }}
+                            rows={2}
+                            maxLength={169}
+                            className="w-full resize-none rounded-lg border border-white/15 bg-white/[0.06] px-2 py-1 text-xs text-white outline-none focus:border-white/30"
+                          />
+                          <div className="mt-0.5 flex items-center gap-2 text-[10px] text-zinc-500">
+                            <button
+                              onClick={() => {
+                                const next = editDraft.trim();
+                                setEditingId(null);
+                                if (next && next !== msg.content) void editMessage(msg.id, next);
+                              }}
+                              className="text-white hover:underline"
+                            >
+                              Save
+                            </button>
+                            <button onClick={() => setEditingId(null)} className="hover:text-zinc-300">Cancel</button>
+                          </div>
+                        </div>
+                      ) : msg.message_type === 'image' && msg.image_url ? (
                         <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
                       ) : msg.message_type === 'gif' && msg.image_url ? (
                         <img src={msg.image_url} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
@@ -468,6 +509,36 @@ export function SidebarChat() {
                           </TooltipTrigger>
                           <TooltipContent side="top">Reply</TooltipContent>
                         </Tooltip>
+                        {walletAddress && msg.sender_address?.toLowerCase() === walletAddress.toLowerCase() && (
+                          <>
+                            {/* Text only: rewording an image or a voice note
+                                changes what people think they are looking at. */}
+                            {(!msg.message_type || msg.message_type === 'text') && (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button
+                                    onClick={() => { setEditingId(msg.id); setEditDraft(msg.content || ''); }}
+                                    className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
+                                  >
+                                    <Pencil className="w-3 h-3" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top">Edit</TooltipContent>
+                              </Tooltip>
+                            )}
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => void deleteMessage(msg.id)}
+                                  className="p-0.5 text-zinc-500 hover:text-red-400 transition-colors rounded"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">Delete</TooltipContent>
+                            </Tooltip>
+                          </>
+                        )}
                         <Popover>
                           <Tooltip>
                             <TooltipTrigger asChild>

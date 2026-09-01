@@ -209,9 +209,48 @@ export function onRoomJoined(roomId: string | undefined, cb: (data: {
   return subscribe(roomId, ['roomJoined', 'livechat:roomJoined'], cb);
 }
 
+/**
+ * Edit one of your own messages.
+ *
+ * Author-gated server-side, so there is nothing to check here beyond being
+ * signed in; a request for someone else's message comes back on the error
+ * channel rather than silently succeeding.
+ */
+export function emitEditMessage(roomId: string | undefined, messageId: string, content: string) {
+  const s = getSocket(keyOf(roomId));
+  const payload = { messageId, content };
+  s.emit('editMessage', payload);
+  s.emit('livechat:editMessage', payload);
+}
+
+/** Delete a message — your own, or anyone's if you moderate the room. */
+export function emitDeleteMessage(roomId: string | undefined, messageId: string) {
+  const s = getSocket(keyOf(roomId));
+  const payload = { messageId };
+  s.emit('deleteMessage', payload);
+  s.emit('livechat:deleteMessage', payload);
+}
+
+/** Subscribe to message edited events */
+export function onMessageEdited(roomId: string | undefined, cb: (msg: unknown) => void): () => void {
+  return subscribe(roomId, ['messageEdited', 'livechat:messageEdited'], (data: unknown) => cb(data));
+}
+
 /** Subscribe to message deleted events */
 export function onMessageDeleted(roomId: string | undefined, cb: (data: { messageId: string }) => void): () => void {
   return subscribe(roomId, ['messageDeleted', 'livechat:messageDeleted'], cb);
+}
+
+/**
+ * Subscribe to the gateway's error channel.
+ *
+ * Edits and deletes are fire-and-forget emits, so a refusal (not your message,
+ * message already gone) arrives here or nowhere.
+ */
+export function onLiveChatError(roomId: string | undefined, cb: (data: { message?: string; code?: string }) => void): () => void {
+  return subscribe(roomId, ['error', 'livechat:error'], (data: unknown) =>
+    cb((data || {}) as { message?: string; code?: string }),
+  );
 }
 
 /** Subscribe to reaction updates */

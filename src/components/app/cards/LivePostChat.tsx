@@ -8,7 +8,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { MessageSquare, Send, Loader2, Eye, Mic, Languages, RotateCcw, Pin, X } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Eye, Mic, Languages, RotateCcw, Pin, Pencil, Trash2, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
@@ -147,13 +147,15 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   const [isPinning, setIsPinning] = useState(false);
   const [contextMenuMsg, setContextMenuMsg] = useState<SupabaseLiveChatMessage | null>(null);
   const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState('');
 
   const mention = useMention({
     inputRef: textareaRef,
     onMentionInsert: (_user, newText) => setNewMessage(newText),
   });
 
-  const { messages, isLoading, isSending, send } = useLiveChatMessages(streamId);
+  const { messages, isLoading, isSending, send, editMessage, deleteMessage } = useLiveChatMessages(streamId);
   // The stream's real audience, shared with the host's broadcast console. This
   // slot used to hold `useLiveChatPresence`, which ignores the room it is given
   // and returns the number of people connected to the ONE global platform chat
@@ -224,12 +226,38 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     }
   }, [streamId, pinnedMessageId]);
 
+  /** Your own line, whoever is hosting — the test the edit and delete controls hang off. */
+  const isMine = useCallback(
+    (msg: SupabaseLiveChatMessage) =>
+      !!walletAddress && msg.sender_address?.toLowerCase() === walletAddress.toLowerCase(),
+    [walletAddress]
+  );
+
+  const startEditing = useCallback((msg: SupabaseLiveChatMessage) => {
+    setContextMenuMsg(null);
+    setEditingId(msg.id);
+    setEditDraft(msg.content || '');
+  }, []);
+
+  const commitEdit = useCallback((msg: SupabaseLiveChatMessage) => {
+    const next = editDraft.trim();
+    setEditingId(null);
+    if (next && next !== msg.content) void editMessage(msg.id, next);
+  }, [editDraft, editMessage]);
+
+  const handleDeleteMessage = useCallback((msg: SupabaseLiveChatMessage) => {
+    setContextMenuMsg(null);
+    void deleteMessage(msg.id);
+  }, [deleteMessage]);
+
   const handleMessageContextMenu = useCallback((e: React.MouseEvent, msg: SupabaseLiveChatMessage) => {
-    if (!isHost) return;
+    // Opens for the host (pinning) and for whoever wrote the line (edit,
+    // delete). Everyone else keeps the browser's own menu.
+    if (!isHost && !isMine(msg)) return;
     e.preventDefault();
     setContextMenuPos({ x: e.clientX, y: e.clientY });
     setContextMenuMsg(msg);
-  }, [isHost]);
+  }, [isHost, isMine]);
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
@@ -395,7 +423,31 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                       </span>
                       {isPinned && <Pin className="w-2.5 h-2.5 text-blue-400 fill-current shrink-0" />}
                     </div>
-                    {(msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
+                    {editingId === msg.id ? (
+                      <div className="mt-0.5">
+                        <textarea
+                          autoFocus
+                          value={editDraft}
+                          onChange={(e) => setEditDraft(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              commitEdit(msg);
+                            } else if (e.key === 'Escape') {
+                              e.preventDefault();
+                              setEditingId(null);
+                            }
+                          }}
+                          rows={2}
+                          maxLength={500}
+                          className="w-full resize-none rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none focus:border-white/30"
+                        />
+                        <div className="mt-0.5 flex items-center gap-2 text-[10px] text-zinc-400">
+                          <button onClick={() => commitEdit(msg)} className="text-white hover:underline">Save</button>
+                          <button onClick={() => setEditingId(null)} className="hover:text-white">Cancel</button>
+                        </div>
+                      </div>
+                    ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
                       <div className="mt-1">
                         <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />
                       </div>
@@ -408,8 +460,30 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                     )}
                     <span className="text-[10px] text-zinc-600 mt-0.5 block">
                       {format(new Date(msg.created_at), 'HH:mm')}
+                      {msg.is_edited && <span className="ml-1">(edited)</span>}
                     </span>
                   </div>
+                  {/* Your own line — edit and remove, on hover like the host's pin */}
+                  {isMine(msg) && editingId !== msg.id && (
+                    <>
+                      {(!msg.message_type || msg.message_type === 'text') && (
+                        <button
+                          onClick={() => startEditing(msg)}
+                          className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-white mt-0.5"
+                          title="Edit message"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDeleteMessage(msg)}
+                        className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400 mt-0.5"
+                        title="Delete message"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </>
+                  )}
                   {/* Pin button on hover (host only) */}
                   {isHost && (
                     <button
@@ -430,20 +504,40 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       </div>
 
       {/* Right-click context menu for host */}
-      {contextMenuMsg && isHost && (
+      {contextMenuMsg && (isHost || isMine(contextMenuMsg)) && (
         <div
           className="fixed z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-2xl py-1 min-w-[140px]"
           style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            onClick={() => contextMenuMsg.id === pinnedMessageId ? handleUnpinMessage() : handlePinMessage(contextMenuMsg)}
-            disabled={isPinning}
-            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-          >
-            <Pin className="w-3.5 h-3.5" />
-            {contextMenuMsg.id === pinnedMessageId ? 'Unpin message' : 'Pin message'}
-          </button>
+          {isHost && (
+            <button
+              onClick={() => contextMenuMsg.id === pinnedMessageId ? handleUnpinMessage() : handlePinMessage(contextMenuMsg)}
+              disabled={isPinning}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+            >
+              <Pin className="w-3.5 h-3.5" />
+              {contextMenuMsg.id === pinnedMessageId ? 'Unpin message' : 'Pin message'}
+            </button>
+          )}
+          {isMine(contextMenuMsg) && (!contextMenuMsg.message_type || contextMenuMsg.message_type === 'text') && (
+            <button
+              onClick={() => startEditing(contextMenuMsg)}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              Edit message
+            </button>
+          )}
+          {isMine(contextMenuMsg) && (
+            <button
+              onClick={() => handleDeleteMessage(contextMenuMsg)}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Delete message
+            </button>
+          )}
         </div>
       )}
 

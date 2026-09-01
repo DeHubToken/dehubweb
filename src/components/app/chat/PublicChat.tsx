@@ -9,7 +9,7 @@ import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
-import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, deleteLiveChatMessage, uploadChatImage, uploadLiveChatVoice, type LiveChatRoom } from '@/lib/api/dehub';
+import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, uploadChatImage, uploadLiveChatVoice, type LiveChatRoom } from '@/lib/api/dehub';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -49,6 +49,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     audioUrl: msg.audio_url ? getMediaUrl(msg.audio_url) : undefined,
     audioDuration: msg.audio_duration || undefined,
 
+    isEdited: msg.is_edited,
     reactions: msg.reactions,
     replyTo: msg.reply_to ? {
       id: msg.reply_to.id,
@@ -109,7 +110,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   const {
     messages: apiMessages, isLoading: messagesLoading, isSending, isBanned,
-    send, addReaction, removeReaction, refetch,
+    send, addReaction, removeReaction, editMessage, deleteMessage, refetch,
   } = useLiveChatMessages(selectedRoomId);
 
   // Fetch full room details
@@ -279,15 +280,21 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [selectedRoomId, isAuthenticated, refetch]);
 
-  const handleDeleteMessage = useCallback(async (messageId: string) => {
-    try {
-      await deleteLiveChatMessage(messageId);
-      refetch();
-    } catch (err) {
-      console.error('[PublicChat] Delete failed:', err);
-      toast.error(err instanceof Error ? err.message : 'Failed to delete message');
-    }
-  }, [refetch]);
+  /**
+   * Remove a message.
+   *
+   * Over the socket rather than the moderator REST route: the gateway accepts
+   * a delete from the message's own author as well as from a moderator, which
+   * is what lets anyone clear their own line here, and it tells the room
+   * straight away instead of waiting on a refetch.
+   */
+  const handleDeleteMessage = useCallback((messageId: string) => {
+    void deleteMessage(messageId);
+  }, [deleteMessage]);
+
+  const handleEditMessage = useCallback((messageId: string, content: string) => {
+    void editMessage(messageId, content);
+  }, [editMessage]);
 
   // Merge list-level room data with the richer single-room details
   const enrichedRoom = roomDetails || selectedRoom;
@@ -502,6 +509,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 onBan={handleBanUser}
                 onUnban={handleUnbanUser}
                 onDelete={handleDeleteMessage}
+                onEdit={handleEditMessage}
                 onReact={addReaction}
                 onRemoveReaction={removeReaction}
                 onReply={isAuthenticated ? handleReply : undefined}
