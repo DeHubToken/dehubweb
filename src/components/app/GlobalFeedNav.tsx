@@ -209,7 +209,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
     }
   }, [isHomePage, navigate, activeTab, isDragging, applyTab]);
 
-  const { setFiltersPortalElement } = useGlobalFeedNav() ?? {};
+  const { setFiltersPortalElement, setChipsPortalElement } = useGlobalFeedNav() ?? {};
 
   // The images tab's scroll view exits through this slot too — same back arrow
   // as the post overlay, since the collapsed sidebar hides HomePage's own pill.
@@ -314,6 +314,9 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
             hidden (collapsed desktop mode). */}
         <div ref={setFiltersPortalElement} className="contents" data-global-feed-filters-portal />
       </div>
+      {/* Active-filter chips — outside the pill, so they read as a line about
+          the feed sitting under the bar rather than as another row of the bar. */}
+      <div ref={setChipsPortalElement} className="contents" data-global-feed-chips-portal />
     </div>
   );
 }
