@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
@@ -44,6 +45,7 @@ interface CampaignsTabProps {
 }
 
 export function CampaignsTab({ focusCampaignId, onFocusHandled, onNewCampaign }: CampaignsTabProps) {
+  const { t } = useTranslation();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { data: campaigns = [], isLoading } = useAdCampaigns();
 
@@ -61,11 +63,11 @@ export function CampaignsTab({ focusCampaignId, onFocusHandled, onNewCampaign }:
   return (
     <div className="space-y-3">
       {isLoading ? (
-        <p className="text-sm text-muted-foreground py-8 text-center">Loading campaigns…</p>
+        <p className="text-sm text-muted-foreground py-8 text-center">{t('ads.loadingCampaigns')}</p>
       ) : campaigns.length === 0 ? (
         <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-10 text-center space-y-3">
           <Rocket className="w-8 h-8 text-muted-foreground mx-auto" />
-          <p className="text-sm text-muted-foreground">No campaigns yet.</p>
+          <p className="text-sm text-muted-foreground">{t('ads.noCampaigns')}</p>
           <Button variant="glass" size="sm" onClick={onNewCampaign}>
             <Plus className="w-4 h-4 mr-1" /> Create your first campaign
           </Button>
@@ -109,6 +111,7 @@ export function CampaignsTab({ focusCampaignId, onFocusHandled, onNewCampaign }:
 // ---------------------------------------------------------------------------
 
 function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
+  const { t } = useTranslation();
   const { data: campaign, isLoading } = useAdCampaign(id);
   const { data: creatives = [] } = useAdCreatives(id);
   const { data: stats = [] } = useCampaignStats(id);
@@ -153,7 +156,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
     return (
       <div className="py-16 text-center">
         {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-muted-foreground mx-auto" /> : (
-          <p className="text-sm text-muted-foreground">Campaign not found.</p>
+          <p className="text-sm text-muted-foreground">{t('ads.campaignNotFound')}</p>
         )}
       </div>
     );
@@ -180,38 +183,38 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const actions: Array<{ label: string; icon: typeof Play; onClick: () => void; danger?: boolean }> = [];
   if (campaign.status === 'draft') {
     actions.push({
-      label: unfunded ? 'Fund & submit' : 'Submit for review',
+      label: unfunded ? t('ads.fundAndSubmit') : t('ads.submitForReview'),
       icon: unfunded ? Wallet : Rocket,
-      onClick: () => setStatusFunded('pending_review', 'Submitted for review'),
+      onClick: () => setStatusFunded('pending_review', t('ads.submittedForReviewToast')),
     });
     actions.push({
       label: 'Delete', icon: Trash2, danger: true,
-      onClick: () => deleteCampaign.mutate(id, { onSuccess: () => { toast.success('Draft deleted'); onBack(); } }),
+      onClick: () => deleteCampaign.mutate(id, { onSuccess: () => { toast.success(t('ads.draftDeleted')); onBack(); } }),
     });
   }
   if (campaign.status === 'pending_review') {
-    actions.push({ label: 'Withdraw to draft', icon: PencilLine, onClick: () => setStatus('draft', 'Moved back to draft') });
+    actions.push({ label: t('ads.withdrawToDraft'), icon: PencilLine, onClick: () => setStatus('draft', t('ads.movedBackToDraft')) });
   }
   if (campaign.status === 'rejected') {
     actions.push({
-      label: unfunded ? 'Fund & resubmit' : 'Resubmit',
+      label: unfunded ? t('ads.fundAndResubmit') : t('ads.resubmit'),
       icon: unfunded ? Wallet : Rocket,
-      onClick: () => setStatusFunded('pending_review', 'Resubmitted for review'),
+      onClick: () => setStatusFunded('pending_review', t('ads.resubmittedForReview')),
     });
   }
   if (campaign.status === 'active') {
-    actions.push({ label: 'Pause', icon: Pause, onClick: () => setStatus('paused', 'Campaign paused') });
+    actions.push({ label: 'Pause', icon: Pause, onClick: () => setStatus('paused', t('ads.campaignPaused')) });
   }
   if (campaign.status === 'paused') {
     actions.push({
-      label: unfunded ? 'Fund & resume' : 'Resume',
+      label: unfunded ? t('ads.fundAndResume') : t('ads.resume'),
       icon: unfunded ? Wallet : Play,
-      onClick: () => setStatusFunded('active', 'Campaign resumed'),
+      onClick: () => setStatusFunded('active', t('ads.campaignResumed')),
     });
-    actions.push({ label: 'Archive', icon: Archive, onClick: () => setStatus('archived', 'Campaign archived') });
+    actions.push({ label: 'Archive', icon: Archive, onClick: () => setStatus('archived', t('ads.campaignArchived')) });
   }
   if (campaign.status === 'completed') {
-    actions.push({ label: 'Archive', icon: Archive, onClick: () => setStatus('archived', 'Campaign archived') });
+    actions.push({ label: 'Archive', icon: Archive, onClick: () => setStatus('archived', t('ads.campaignArchived')) });
   }
 
   return (
@@ -219,7 +222,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
-          <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" onClick={onBack} aria-label="Back">
+          <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" onClick={onBack} aria-label={t('ads.back')}>
             <ChevronLeft className="w-5 h-5" />
           </Button>
           <div className="min-w-0">
@@ -259,8 +262,8 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
             <Wallet className="w-4 h-4 shrink-0" />
             <span>
               {campaign.status === 'active'
-                ? 'Not serving — your ads balance is $0.'
-                : 'Your ads balance is $0 — this campaign won’t serve once approved.'}
+                ? t('ads.notServingZeroBalance')
+                : t('ads.zeroBalanceWarning')}
             </span>
           </div>
           <Button size="sm" variant="glass" className="w-full" onClick={() => setTopUpOpen(true)}>
@@ -272,10 +275,10 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          ['Spend', `${formatUsd(totals.spend)} / ${formatUsd(campaign.total_budget_usd)}`],
-          ['Impressions', formatCompact(totals.impressions)],
-          ['Clicks', `${formatCompact(totals.clicks)} · ${totals.ctr.toFixed(2)}%`],
-          ['Daily budget', `${formatUsd(campaign.daily_budget_usd)}/day`],
+          [t('ads.spend'), `${formatUsd(totals.spend)} / ${formatUsd(campaign.total_budget_usd)}`],
+          [t('ads.impressions'), formatCompact(totals.impressions)],
+          [t('ads.clicks'), `${formatCompact(totals.clicks)} · ${totals.ctr.toFixed(2)}%`],
+          [t('ads.dailyBudgetShort'), `${formatUsd(campaign.daily_budget_usd)}/day`],
         ].map(([label, val]) => (
           <div key={label} className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-3.5">
             <p className="text-[11px] text-muted-foreground">{label}</p>
@@ -286,9 +289,9 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
 
       {/* Performance chart */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-        <p className="text-sm font-semibold text-foreground mb-3">Daily performance</p>
+        <p className="text-sm font-semibold text-foreground mb-3">{t('ads.dailyPerformance')}</p>
         {chartData.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-6 text-center">No delivery yet — stats appear once the campaign serves.</p>
+          <p className="text-sm text-muted-foreground py-6 text-center">{t('ads.noDeliveryYet')}</p>
         ) : (
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 0, left: -18 }}>
@@ -309,7 +312,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {/* POVR tier breakdown */}
       {Object.keys(totals.byTier).length > 0 && (
         <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-          <p className="text-sm font-semibold text-foreground mb-3">Performance by badge tier</p>
+          <p className="text-sm font-semibold text-foreground mb-3">{t('ads.performanceByTier')}</p>
           <div className="space-y-2">
             {Object.entries(totals.byTier)
               .sort((a, b) => b[1].spend - a[1].spend)
@@ -331,7 +334,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {/* Targeting */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-semibold text-foreground">Targeting</p>
+          <p className="text-sm font-semibold text-foreground">{t('ads.targeting')}</p>
           <Button
             size="sm"
             variant="ghost"
@@ -340,14 +343,14 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
               if (editingTargeting && targetingDraft) {
                 updateCampaign.mutate(
                   { id, targeting: targetingDraft },
-                  { onSuccess: () => toast.success('Targeting updated') },
+                  { onSuccess: () => toast.success(t('ads.targetingUpdated')) },
                 );
               }
               setTargetingDraft(editingTargeting ? null : { ...(campaign.targeting || {}) });
               setEditingTargeting((v) => !v);
             }}
           >
-            <PencilLine className="w-3.5 h-3.5 mr-1" /> {editingTargeting ? 'Save targeting' : 'Edit'}
+            <PencilLine className="w-3.5 h-3.5 mr-1" /> {editingTargeting ? t('ads.saveTargeting') : 'Edit'}
           </Button>
         </div>
         {editingTargeting && targetingDraft ? (
@@ -360,9 +363,9 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {/* Creatives */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold text-foreground">Creatives</p>
+          <p className="text-sm font-semibold text-foreground">{t('ads.creatives')}</p>
           <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={() => setAddingCreative((v) => !v)}>
-            <Plus className="w-3.5 h-3.5 mr-1" /> {addingCreative ? 'Cancel' : 'Add creative'}
+            <Plus className="w-3.5 h-3.5 mr-1" /> {addingCreative ? t('ads.cancel') : t('ads.addCreative')}
           </Button>
         </div>
 
@@ -371,7 +374,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
         )}
 
         {creatives.length === 0 && !addingCreative ? (
-          <p className="text-sm text-muted-foreground py-3 text-center">No creatives — add one so the campaign can serve.</p>
+          <p className="text-sm text-muted-foreground py-3 text-center">{t('ads.noCreatives')}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {creatives.map((cr) => <CreativeCard key={cr.id} creative={cr} />)}
@@ -393,18 +396,19 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
 }
 
 function TargetingSummary({ targeting }: { targeting: AdTargeting }) {
+  const { t } = useTranslation();
   const rows: string[] = [];
   if (targeting.tiers?.length) rows.push(`Tiers: ${targeting.tiers.map(tierLabel).join(', ')}`);
   if (targeting.followerMin != null || targeting.followerMax != null) {
     rows.push(`Followers: ${targeting.followerMin ?? 0}–${targeting.followerMax ?? '∞'}`);
   }
   if (targeting.languages?.length) rows.push(`Languages: ${targeting.languages.join(', ')}`);
-  if (targeting.premium) rows.push('Premium subscribers only');
+  if (targeting.premium) rows.push(t('ads.premiumOnly'));
   if (targeting.communities?.length) rows.push(`${targeting.communities.length} communit${targeting.communities.length === 1 ? 'y' : 'ies'}`);
   if (targeting.behaviors?.length) rows.push(`Behaviors: ${targeting.behaviors.join(', ')}`);
   if (targeting.categories?.length) rows.push(`Categories: ${targeting.categories.map((c) => `#${c}`).join(' ')}`);
   if (targeting.followedCreators?.length) rows.push(`Followers of ${targeting.followedCreators.length} creator(s)`);
-  if (rows.length === 0) return <p className="text-sm text-muted-foreground">Everyone (no filters)</p>;
+  if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t('ads.everyoneNoFilters')}</p>;
   return (
     <ul className="text-sm text-muted-foreground space-y-1">
       {rows.map((r) => <li key={r}>· {r}</li>)}
@@ -413,6 +417,7 @@ function TargetingSummary({ targeting }: { targeting: AdTargeting }) {
 }
 
 function BudgetEditor({ campaign }: { campaign: { id: string; daily_budget_usd: number; total_budget_usd: number; spent_usd: number } }) {
+  const { t } = useTranslation();
   const updateCampaign = useUpdateCampaign();
   const [daily, setDaily] = useState(String(campaign.daily_budget_usd));
   const [total, setTotal] = useState(String(campaign.total_budget_usd));
@@ -420,14 +425,14 @@ function BudgetEditor({ campaign }: { campaign: { id: string; daily_budget_usd: 
 
   return (
     <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-      <p className="text-sm font-semibold text-foreground mb-3">Budget</p>
+      <p className="text-sm font-semibold text-foreground mb-3">{t('ads.budget')}</p>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <Label htmlFor="det-daily" className="text-foreground text-xs">Daily (USD)</Label>
+          <Label htmlFor="det-daily" className="text-foreground text-xs">{t('ads.dailyUsd')}</Label>
           <Input id="det-daily" type="number" min={1} value={daily} onChange={(e) => setDaily(e.target.value)} className="mt-1" />
         </div>
         <div>
-          <Label htmlFor="det-total" className="text-foreground text-xs">Total (USD)</Label>
+          <Label htmlFor="det-total" className="text-foreground text-xs">{t('ads.totalUsd')}</Label>
           <Input id="det-total" type="number" min={Math.max(1, Number(campaign.spent_usd))} value={total} onChange={(e) => setTotal(e.target.value)} className="mt-1" />
         </div>
       </div>
@@ -440,7 +445,7 @@ function BudgetEditor({ campaign }: { campaign: { id: string; daily_budget_usd: 
           onClick={() =>
             updateCampaign.mutate(
               { id: campaign.id, daily_budget_usd: Number(daily), total_budget_usd: Number(total) },
-              { onSuccess: () => toast.success('Budget updated') },
+              { onSuccess: () => toast.success(t('ads.budgetUpdated')) },
             )
           }
         >
@@ -458,6 +463,7 @@ const CREATIVE_STATUS_STYLES: Record<string, string> = {
 };
 
 function CreativeCard({ creative }: { creative: AdCreative }) {
+  const { t } = useTranslation();
   const deleteCreative = useDeleteCreative();
   const ad: ServedAd = {
     serveId: `creative-${creative.id}`,
@@ -489,9 +495,9 @@ function CreativeCard({ creative }: { creative: AdCreative }) {
           disabled={deleteCreative.isPending}
           onClick={() => deleteCreative.mutate(
             { id: creative.id, campaign_id: creative.campaign_id },
-            { onSuccess: () => toast.success('Creative deleted') },
+            { onSuccess: () => toast.success(t('ads.creativeDeleted')) },
           )}
-          aria-label="Delete creative"
+          aria-label={t('ads.deleteCreative')}
         >
           <Trash2 className="w-3.5 h-3.5" />
         </Button>
@@ -507,6 +513,7 @@ function CreativeCard({ creative }: { creative: AdCreative }) {
 }
 
 function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone: () => void }) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const createCreative = useCreateCreative();
   const [kind, setKind] = useState<CreativeKind>('image');
@@ -541,7 +548,7 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
           {uploading ? <Loader2 className="w-4 h-4 animate-spin text-foreground" /> : (
             <>
               <Upload className="w-4 h-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">{mediaUrl ? 'Replace file' : `Upload ${kind}`}</span>
+              <span className="text-xs text-muted-foreground">{mediaUrl ? t('ads.replaceFile') : `Upload ${kind}`}</span>
             </>
           )}
           <input
@@ -556,7 +563,7 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
               try {
                 setMediaUrl(await uploadAdMedia(walletAddress, f, f.type));
               } catch (err) {
-                toast.error(err instanceof Error ? err.message : 'Upload failed');
+                toast.error(err instanceof Error ? err.message : t('ads.uploadFailed'));
               } finally {
                 setUploading(false);
               }
@@ -564,14 +571,14 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
           />
         </label>
       )}
-      <Input placeholder="Headline" value={headline} onChange={(e) => setHeadline(e.target.value)} maxLength={90} />
-      <Textarea placeholder="Body (optional)" value={body} onChange={(e) => setBody(e.target.value)} maxLength={280} rows={2} />
+      <Input placeholder={t('ads.headline')} value={headline} onChange={(e) => setHeadline(e.target.value)} maxLength={90} />
+      <Textarea placeholder={t('ads.bodyOptional')} value={body} onChange={(e) => setBody(e.target.value)} maxLength={280} rows={2} />
       <div className="grid grid-cols-2 gap-2">
-        <Input placeholder="CTA label" value={ctaLabel} onChange={(e) => setCtaLabel(e.target.value)} maxLength={24} />
-        <Input placeholder="CTA link (https://…)" value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} />
+        <Input placeholder={t('ads.ctaLabel')} value={ctaLabel} onChange={(e) => setCtaLabel(e.target.value)} maxLength={24} />
+        <Input placeholder={t('ads.ctaLinkPlaceholder')} value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} />
       </div>
       <div className="flex justify-end gap-2">
-        <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={onDone}>Cancel</Button>
+        <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={onDone}>{t('ads.cancel')}</Button>
         <Button
           size="sm"
           variant="glass"
@@ -586,7 +593,7 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
               cta_label: ctaLabel.trim() || 'Learn more',
               cta_url: ctaUrl.trim() || null,
             }, {
-              onSuccess: () => { toast.success('Creative added — pending review'); onDone(); },
+              onSuccess: () => { toast.success(t('ads.creativeAdded')); onDone(); },
             })
           }
         >

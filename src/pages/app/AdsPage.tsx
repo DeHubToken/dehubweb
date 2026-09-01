@@ -7,6 +7,7 @@
  */
 
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Megaphone, LayoutDashboard, Rocket, Wallet, Plus } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -19,6 +20,7 @@ import { CampaignWizard } from '@/components/app/ads/CampaignWizard';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function AdsPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<'overview' | 'campaigns' | 'billing'>('overview');
   const [wizardOpen, setWizardOpen] = useState(false);
   const [focusCampaignId, setFocusCampaignId] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export default function AdsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Ads Manager | DeHub"
+        title={t('ads.seoTitle')}
         description="Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in DHB."
       />
 
@@ -48,11 +50,11 @@ export default function AdsPage() {
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
               <ThemedIcon icon="ads" alt="" className="w-10 h-10 shrink-0 object-contain" />
-              <h1 className="text-xl font-bold text-white truncate">Ads Manager</h1>
+              <h1 className="text-xl font-bold text-white truncate">{t('ads.adsManager')}</h1>
             </div>
             {isAuthenticated && (
               <LiquidGlassBubble2
-                label="New campaign"
+                label={t('ads.newCampaign')}
                 icon={<Plus className="w-4 h-4" />}
                 onClick={() => setWizardOpen(true)}
                 width="auto"
@@ -63,7 +65,7 @@ export default function AdsPage() {
 
           <div className="flex items-center gap-2 overflow-x-auto">
             <LiquidGlassBubble2
-              label="Overview"
+              label={t('ads.tabOverview')}
               icon={<LayoutDashboard className="w-4 h-4" />}
               onClick={() => setTab('overview')}
               width="auto"
@@ -72,7 +74,7 @@ export default function AdsPage() {
               className={tab === 'overview' ? undefined : 'opacity-60'}
             />
             <LiquidGlassBubble2
-              label="Campaigns"
+              label={t('ads.tabCampaigns')}
               icon={<Rocket className="w-4 h-4" />}
               onClick={() => setTab('campaigns')}
               width="auto"
@@ -81,7 +83,7 @@ export default function AdsPage() {
               className={tab === 'campaigns' ? undefined : 'opacity-60'}
             />
             <LiquidGlassBubble2
-              label="Billing"
+              label={t('ads.tabBilling')}
               icon={<Wallet className="w-4 h-4" />}
               onClick={() => setTab('billing')}
               width="auto"
@@ -98,7 +100,7 @@ export default function AdsPage() {
         {!isAuthenticated ? (
           <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-10 text-center space-y-2">
             <Megaphone className="w-8 h-8 text-muted-foreground mx-auto" />
-            <h2 className="text-lg font-semibold text-foreground">Advertise on DeHub</h2>
+            <h2 className="text-lg font-semibold text-foreground">{t('ads.advertiseOnDehub')}</h2>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
               Target verified badge holders with POVR — proof-of-view-and-rank advertising.
               Connect your wallet to create your first campaign.
