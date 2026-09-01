@@ -1,4 +1,4 @@
-export type VisualizerStyle = 'static' | 'bars' | 'waveform' | 'circular' | 'spectrum' | 'mirror' | 'rings' | 'pulse' | 'terrain';
+export type VisualizerStyle = 'static' | 'bars' | 'waveform' | 'circular' | 'spectrum' | 'mirror' | 'rings' | 'pulse' | 'terrain' | 'orb';
 
 // Helper to get colors from hue
 function getColors(hue: number) {
@@ -811,4 +811,187 @@ export function drawStatic(
 
 export function resetStatic() {
   // No per-frame state to reset
+}
+
+
+/* ─── Orb ──────────────────────────────────────────────────────────────────
+   The assistant's ball of cosmic dust, on canvas and wired to the analyser.
+
+   This is a TRANSCRIPTION of src/components/app/chat/ReplyOrb.tsx, not a new
+   effect that resembles it: same 30 grains, same uniform-y latitudes, same
+   golden-angle longitudes, same -14° lean, same 0.42/0.05/0.62 ratios, same
+   0.55+0.45·depth scale and 0.2+0.8·depth fade, same 9000ms idle spin. Change
+   one, change all three (web orb, mobile orb, this) or the ball stops being
+   the same object in three places.
+
+   The only thing this file adds is the music, and it adds it to values the
+   orb already had rather than to new geometry:
+     · spin sweeps between the orb's own idle (9000ms) and thinking (2600ms)
+       rates with loudness, so a loud track really is the "thinking" ball;
+     · the haze pulse the orb runs on a timer is driven by bass instead;
+     · each grain owns a slice of the spectrum, so its own band brightens it,
+       fattens it and pushes it a little off the sphere;
+     · loudness opens up the glow and the colour saturation. */
+
+/** Mirrors ReplyOrb's MOTES. */
+const ORB_MOTES = 30;
+/** Golden-angle fraction (137.5°/360°) — ReplyOrb's GOLDEN_FRACTION. */
+const ORB_GOLDEN_FRACTION = 0.381966;
+/** ms — ReplyOrb's DURATION, and the two ends the music interpolates between. */
+const ORB_DURATION = {
+  idle: { spin: 9000, haze: 3000 },
+  thinking: { spin: 2600, haze: 1200 },
+} as const;
+/** ReplyOrb's RATIO: sphere radius, grain size and haze size over the box. */
+const ORB_RATIO = { sphere: 0.42, mote: 0.05, haze: 0.62 } as const;
+/** ReplyOrb's TILT_DEG. */
+const ORB_TILT = (-14 * Math.PI) / 180;
+const ORB_TAU = Math.PI * 2;
+
+/** ReplyOrb's LAYOUT, plus the one field it has no use for: which slice of the
+    spectrum this grain listens to. Longitude picks it, so a grain carries its
+    band around the sphere as it turns — keyed off latitude it would paint a
+    bass-pole/treble-pole gradient that never moves. */
+const ORB_LAYOUT = Array.from({ length: ORB_MOTES }, (_, i) => {
+  const t = (i + 0.5) / ORB_MOTES;
+  const y = 1 - 2 * t;
+  const phase = (i * ORB_GOLDEN_FRACTION) % 1;
+  return {
+    y,
+    ringRadius: Math.sqrt(Math.max(0, 1 - y * y)),
+    phase,
+    bright: i % 7 === 3,
+    // Crowded towards the low end, where music actually lives.
+    binFrac: Math.pow(phase, 1.35),
+  };
+});
+
+let orbSpin = 0;
+let orbHaze = 0;
+let orbHazeDir = 1;
+let orbEnergy = 0;
+let orbBass = 0;
+let orbLastFrame = 0;
+
+const orbLerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+export function drawOrb(
+  ctx: CanvasRenderingContext2D,
+  frequencyData: Uint8Array,
+  width: number,
+  height: number,
+  hue: number = 0
+) {
+  ctx.clearRect(0, 0, width, height);
+
+  const bins = frequencyData.length;
+  const band = (from: number, to: number) => {
+    if (!bins) return 0;
+    const lo = Math.min(from, bins);
+    const hi = Math.min(to, bins);
+    if (hi <= lo) return 0;
+    let sum = 0;
+    for (let i = lo; i < hi; i++) sum += frequencyData[i];
+    return sum / (hi - lo) / 255;
+  };
+
+  const bass = band(0, 8);
+  const level = bass * 0.5 + band(8, 32) * 0.32 + band(32, 72) * 0.18;
+
+  // Fast attack, slow release: the ball snaps onto a hit and settles out of
+  // it, which is what reads as reacting rather than wobbling.
+  orbEnergy += (level - orbEnergy) * (level > orbEnergy ? 0.45 : 0.12);
+  orbBass += (bass - orbBass) * (bass > orbBass ? 0.6 : 0.15);
+
+  // Real elapsed time, so ReplyOrb's durations mean here what they mean there.
+  const now = typeof performance !== 'undefined' ? performance.now() : 0;
+  const dt = orbLastFrame ? Math.min(64, now - orbLastFrame) : 16;
+  orbLastFrame = now;
+
+  const spinMs = orbLerp(ORB_DURATION.idle.spin, ORB_DURATION.thinking.spin, orbEnergy);
+  const hazeMs = orbLerp(ORB_DURATION.idle.haze, ORB_DURATION.thinking.haze, orbEnergy);
+  orbSpin = (orbSpin + dt / spinMs) % 1;
+  // The orb's haze keyframe is a ping-pong; here it ping-pongs on a clock that
+  // the bass can shove straight to the top.
+  orbHaze += (orbHazeDir * dt) / (hazeMs / 2);
+  if (orbHaze >= 1) { orbHaze = 1; orbHazeDir = -1; }
+  if (orbHaze <= 0) { orbHaze = 0; orbHazeDir = 1; }
+  const haze = Math.min(1, orbHaze + orbBass * 0.6);
+
+  const centreX = width / 2;
+  const centreY = height / 2;
+  const box = Math.min(width, height);
+  const R = box * ORB_RATIO.sphere;
+  const moteBase = Math.max(1.5, box * ORB_RATIO.mote);
+
+  // Hue 0 is the orb as it ships everywhere else: white dust, nothing hued.
+  // Past that the slider tints it, and loudness is what saturates it.
+  const mono = hue === 0;
+  const h = mono ? 0 : hue;
+  const sat = mono ? 0 : Math.round(45 + orbEnergy * 55);
+  const dust = (lightness: number, alpha: number) =>
+    `hsla(${h}, ${sat}%, ${lightness}%, ${alpha})`;
+
+  ctx.save();
+  ctx.translate(centreX, centreY);
+  ctx.rotate(ORB_TILT);
+
+  // Faint core haze — without it the motes read as a ring of dots rather than
+  // a body with volume. ReplyOrb's exact gradient, with its 0.18/0.30 idle and
+  // thinking alphas becoming a continuous ramp off the music.
+  const hazeR = ((box * ORB_RATIO.haze) / 2) * (1 + haze * 0.12 + orbBass * 0.18);
+  const hazeAlpha = (0.22 + orbEnergy * 0.5) * (0.5 + haze * 0.5);
+  const hazeGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, hazeR);
+  // The extra stop over ReplyOrb's two: a tight hot centre that only the bass
+  // opens. It is what turns the haze from a grey smudge into something that
+  // flares on the beat, without adding an object the orb doesn't have.
+  hazeGradient.addColorStop(0, dust(mono ? 100 : 92, Math.min(1, hazeAlpha + orbBass * 0.5)));
+  hazeGradient.addColorStop(0.14, dust(mono ? 100 : 84, hazeAlpha));
+  hazeGradient.addColorStop(0.7, dust(mono ? 100 : 70, 0));
+  hazeGradient.addColorStop(1, dust(mono ? 100 : 70, 0));
+  ctx.beginPath();
+  ctx.arc(0, 0, hazeR, 0, ORB_TAU);
+  ctx.fillStyle = hazeGradient;
+  ctx.fill();
+
+  // The grains. Back half first so the haze sits inside the ball.
+  const glow = moteBase * (0.35 + orbEnergy * 2.2);
+  for (const pass of [false, true]) {
+    for (const m of ORB_LAYOUT) {
+      const angle = (orbSpin + m.phase) * ORB_TAU;
+      // cos gives depth: +1 is the front of the ball, -1 the back.
+      const depth = (Math.cos(angle) + 1) / 2;
+      if (pass !== depth >= 0.5) continue;
+
+      const f = bins ? frequencyData[Math.min(bins - 1, Math.floor(m.binFrac * bins))] / 255 : 0;
+      // Its own band lifts the grain off the sphere, so the ball has a surface
+      // that moves with the music instead of a body that scales with it.
+      const push = 1 + f * 0.22;
+      const x = m.ringRadius * R * Math.sin(angle) * push;
+      const y = m.y * R * push;
+
+      const dot = (m.bright ? moteBase * 1.45 : moteBase) * (0.55 + 0.45 * depth) * (1 + f * 0.55);
+      const base = m.bright ? 0.95 : orbLerp(0.68, 0.8, orbEnergy);
+      const alpha = Math.min(1, (0.2 + 0.8 * depth) * base * (0.75 + f * 0.5));
+
+      ctx.beginPath();
+      ctx.arc(x, y, dot / 2, 0, ORB_TAU);
+      ctx.fillStyle = dust(mono ? 100 : orbLerp(72, 92, f), alpha);
+      ctx.shadowColor = dust(mono ? 100 : 68, Math.min(1, alpha * (0.6 + f * 0.8)));
+      ctx.shadowBlur = glow * (0.5 + depth * 0.5) * (0.6 + f);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  ctx.restore();
+}
+
+export function resetOrb() {
+  orbSpin = 0;
+  orbHaze = 0;
+  orbHazeDir = 1;
+  orbEnergy = 0;
+  orbBass = 0;
+  orbLastFrame = 0;
 }
