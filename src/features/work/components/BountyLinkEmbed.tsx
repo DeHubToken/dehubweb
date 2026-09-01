@@ -67,7 +67,7 @@ export function BountyLinkEmbed({ jobKey, path, fallback = null }: BountyLinkEmb
             {job.currency === 'DHB' ? (
               <>
                 <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                {Math.ceil(budgetDhb).toLocaleString()} DHB
+                {Math.ceil(budgetDhb).toLocaleString()}
               </>
             ) : (
               `$${budget.toLocaleString(undefined, { maximumFractionDigits: 2 })} USDC`

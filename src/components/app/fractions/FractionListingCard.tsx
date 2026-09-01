@@ -10,6 +10,7 @@
  */
 
 import { memo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { ImageIcon, Music, Video, Users } from 'lucide-react';
 import { cdnImage } from '@/lib/media-url';
 import { truncateAddress } from '@/lib/api/token-holders';
@@ -91,7 +92,7 @@ export const FractionListingCard = memo(function FractionListingCard({
           <span className="text-[10px] font-normal text-zinc-500">/ fraction</span>
         </p>
         <p className="text-[10px] text-zinc-500">
-          {totalDhb.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB for {sharePct.toFixed(1)}% of the post
+          {totalDhb.toLocaleString(undefined, { maximumFractionDigits: 2 })} <DhbCoin /> for {sharePct.toFixed(1)}% of the post
           {dhbUsd > 0 && ` · $${(totalDhb * dhbUsd).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
         </p>
 

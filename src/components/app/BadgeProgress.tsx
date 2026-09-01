@@ -17,6 +17,7 @@
  */
 
 import { useContext, useMemo } from 'react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -110,7 +111,7 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
             {standing.tier ?? 'No badge yet'}
           </div>
           <div className="text-[11px] sm:text-xs text-white/50 font-mono truncate">
-            {formatDhb(standing.balance)} DHB
+            {formatDhb(standing.balance)} <DhbCoin />
             {price ? <span className="text-white/30"> · {formatUsd(standing.balance * price)}</span> : null}
           </div>
         </div>
@@ -160,7 +161,11 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
         <span className="font-mono text-white/40">{percent}%</span>
         <span className="text-white/60 truncate">
           {standing.nextTier
-            ? `${formatDhb(standing.remaining)} DHB to ${standing.nextTier}`
+            ? (
+              <>
+                <DhbAmount amount={formatDhb(standing.remaining)} /> to {standing.nextTier}
+              </>
+            )
             : 'Every tier unlocked'}
         </span>
       </div>
@@ -191,7 +196,7 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
       {standing.grandfathered && (
         <p className="mt-1.5 text-[10px] leading-relaxed text-white/50">
           {standing.tier} is locked in. You keep it while you hold at least{' '}
-          <span className="font-mono text-white/70">{formatDhb(effectiveLock?.requirement ?? 0)} DHB</span> — what it
+          <span className="font-mono text-white/70">{formatDhb(effectiveLock?.requirement ?? 0)} <DhbCoin /></span> — what it
           cost when you earned it — whatever the ladder does after.
         </p>
       )}
@@ -282,7 +287,7 @@ function BadgeLadderRail({
               <span className="font-medium">{rung.name}</span>
               <span className="text-white/50">
                 {' '}
-                · {formatDhb(rung.min)} DHB
+                · {formatDhb(rung.min)} <DhbCoin />
                 {price ? ` · ${formatUsd(rung.min * price)}` : ''}
               </span>
             </TooltipContent>

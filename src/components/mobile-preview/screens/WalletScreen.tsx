@@ -1,4 +1,5 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
@@ -21,7 +22,7 @@ export function WalletScreen() {
       {/* Balance card */}
       <div className="mx-4 my-3 p-5 rounded-2xl border border-white/[0.1] bg-white/[0.03] backdrop-blur-xl">
         <p className="text-zinc-500 text-xs mb-1">Total Balance</p>
-        <h2 className="text-white text-3xl font-bold">4,250.00 <span className="text-lg text-zinc-400">DHB</span></h2>
+        <h2 className="text-white text-3xl font-bold">4,250.00 <span className="text-lg text-zinc-400"><DhbCoin /></span></h2>
         <p className="text-zinc-500 text-sm mt-0.5">≈ $1,275.00 USD</p>
 
         <div className="flex gap-3 mt-5">

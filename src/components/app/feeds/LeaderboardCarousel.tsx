@@ -5,6 +5,7 @@
  */
 
 import { memo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -97,7 +98,7 @@ const LeaderboardCard = memo(function LeaderboardCard({
           displayName={displayName}
           size="sm"
         />
-        <span className="text-xs text-zinc-500 tabular-nums">{formatNumber(entry.total)} DHB</span>
+        <span className="text-xs text-zinc-500 tabular-nums">{formatNumber(entry.total)} <DhbCoin /></span>
       </div>
     </div>
   );

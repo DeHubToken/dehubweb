@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search } from 'lucide-react';
@@ -475,7 +476,7 @@ export default function BuyCoinsPage() {
                 })}
               </span>
               <span className="text-emerald-400 font-semibold">
-                +{bonusTokens.toLocaleString(undefined, { maximumFractionDigits: 0 })} DHB
+                +{bonusTokens.toLocaleString(undefined, { maximumFractionDigits: 0 })} <DhbCoin />
               </span>
             </div>
           )}
@@ -490,7 +491,7 @@ export default function BuyCoinsPage() {
                 <div className="flex items-center gap-2">
                   <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
                   <span className="text-white font-semibold">
-                    {Math.floor(availableSupply).toLocaleString()} DHB
+                    {Math.floor(availableSupply).toLocaleString()}
                   </span>
                 </div>
               </div>

@@ -14,6 +14,7 @@
  */
 
 import { Captions, CaptionsOff, Check, Headphones, Volume2 } from 'lucide-react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -248,7 +249,7 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
                 {dubbing.bill?.minutes} minute{dubbing.bill?.minutes === 1 ? '' : 's'}
               </span>{' '}
               of dubbed audio. That comes to{' '}
-              <span className="font-medium text-foreground tabular-nums">{dubbing.bill?.owedDhb} DHB</span>,
+              <span className="font-medium text-foreground tabular-nums">{dubbing.bill?.owedDhb} <DhbCoin /></span>,
               sent from your wallet in one transfer.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -257,7 +258,13 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
                 the next one. Saying so here beats a confusing refusal later. */}
             <AlertDialogCancel>Not now</AlertDialogCancel>
             <AlertDialogAction disabled={dubbing.settling} onClick={(event) => { event.preventDefault(); void dubbing.settle(); }}>
-              {dubbing.settling ? 'Paying…' : `Pay ${dubbing.bill?.owedDhb} DHB`}
+              {dubbing.settling ? (
+                'Paying…'
+              ) : (
+                <>
+                  Pay <DhbAmount amount={dubbing.bill?.owedDhb} />
+                </>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins, ShoppingBag } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
@@ -576,7 +577,7 @@ export function PostAccessToggles({
             <Gift className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Bounty</span>
             {isWatch2Earn && w2eTotal && (
-              <span className="text-xs text-white/50">({w2eTotal} DHB)</span>
+              <span className="text-xs text-white/50">({w2eTotal} <DhbCoin />)</span>
             )}
           </div>
           <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
@@ -589,7 +590,7 @@ export function PostAccessToggles({
             <Shield className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Token Gated</span>
             {isTokenGated && tokenAmount && (
-              <span className="text-xs text-white/50">({tokenAmount} {tokenSymbol || 'DHB'})</span>
+              <span className="text-xs text-white/50">(<DhbAmount amount={tokenAmount} currency={tokenSymbol} />)</span>
             )}
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />

@@ -1,4 +1,5 @@
 import { useLaunchpadTrades } from '@/hooks/use-launchpad-trades';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 export function LiveActivityTicker() {
@@ -18,7 +19,7 @@ export function LiveActivityTicker() {
               : <ArrowDownRight className="h-3.5 w-3.5 text-white/60" />}
             <span className="text-white/80 font-mono truncate">{t.trader_address.slice(0,6)}…{t.trader_address.slice(-4)}</span>
             <span className="text-white/50">{t.side === 'buy' ? 'bought' : 'sold'}</span>
-            <span className="text-white font-semibold tabular-nums ml-auto">{Number(t.dhb_in).toFixed(2)} DHB</span>
+            <span className="text-white font-semibold tabular-nums ml-auto">{Number(t.dhb_in).toFixed(2)} <DhbCoin /></span>
           </div>
         ))}
       </div>

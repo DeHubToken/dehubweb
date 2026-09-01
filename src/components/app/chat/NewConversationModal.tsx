@@ -21,6 +21,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useCallback, useEffect } from 'react';
 import { Search, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -122,7 +123,7 @@ function UserSearchResult({
         {!dmDisabled && !isLoading && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
             <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
-            {perMessageFee.toLocaleString()} DHB to message
+            {perMessageFee.toLocaleString()} to message
           </p>
         )}
         {isLoading && (
@@ -274,7 +275,7 @@ function FeePaymentStep({
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>
           <p className="text-zinc-400 text-xs leading-relaxed">
             {displayName} requires a minimum tip of{' '}
-            <span className="text-white font-medium">{fee.toLocaleString()} DHB</span> to start a conversation.
+            <span className="text-white font-medium">{fee.toLocaleString()} <DhbCoin /></span> to start a conversation.
           </p>
         </div>
       </div>
@@ -289,12 +290,12 @@ function FeePaymentStep({
         <div className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
           <AlertCircle className="w-4 h-4 text-zinc-400 flex-shrink-0" />
           <p className="text-xs text-zinc-300">
-            Insufficient balance. You have {Math.floor(balanceInfo.balance).toLocaleString()} DHB but need {fee.toLocaleString()} DHB.
+            Insufficient balance. You have {Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin /> but need {fee.toLocaleString()} <DhbCoin />.
           </p>
         </div>
       ) : balanceInfo.checked ? (
         <p className="text-xs text-zinc-500 text-center">
-          Your balance: {Math.floor(balanceInfo.balance).toLocaleString()} DHB
+          Your balance: {Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin />
         </p>
       ) : null}
 
@@ -326,7 +327,7 @@ function FeePaymentStep({
         ) : (
           <>
             <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
-            Pay {fee.toLocaleString()} DHB & Start Chat
+            Pay {fee.toLocaleString()} & Start Chat
           </>
         )}
       </Button>
@@ -369,7 +370,7 @@ function FeePaymentStep({
 
       {customAmount && isValidAmount && tipAmount > fee && (
         <p className="text-[10px] text-zinc-400 text-center">
-          🔥 Tipping {tipAmount.toLocaleString()} DHB will rank you higher in {displayName}'s inbox
+          🔥 Tipping {tipAmount.toLocaleString()} <DhbCoin /> will rank you higher in {displayName}'s inbox
         </p>
       )}
     </div>

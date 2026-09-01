@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader2, AlertCircle, ChevronDown } from 'lucide-react';
@@ -186,7 +187,7 @@ export function AiToolPaywallModal({
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-sm font-medium text-white">${optionCostUsd.toFixed(2)}</p>
-                          <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} DHB</p>
+                          <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin /></p>
                         </div>
                       </button>
                     );
@@ -242,7 +243,7 @@ export function AiToolPaywallModal({
                     <span className="text-white font-medium">Pay with DHB</span>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-white">{formatDhb(costDhb)} DHB</p>
+                    <p className="text-xl font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
                     <p className="text-xs text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
                   </div>
                 </div>
@@ -265,7 +266,7 @@ export function AiToolPaywallModal({
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               ) : (
                 <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
-                  {formatDhb(walletDhb)} DHB
+                  {formatDhb(walletDhb)} <DhbCoin />
                 </span>
               )}
             </div>

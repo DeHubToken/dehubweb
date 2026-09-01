@@ -30,6 +30,7 @@
  * quote it cannot pay against would only invent a disagreement.
  */
 import { useEffect, useState } from 'react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import {
   Drawer,
   DrawerContent,
@@ -226,7 +227,7 @@ export function AudioPaywallModal({
                 <span className="text-zinc-400">Total</span>
                 <span className="flex items-center gap-1.5 font-semibold text-white">
                   <img src={dhbCoinImage} alt="" className="h-4 w-4" />
-                  {isPriceLoading ? '…' : `${formatDhb(costDhb)} DHB`}
+                  {isPriceLoading ? '…' : formatDhb(costDhb)}
                   <span className="text-xs font-normal text-zinc-500">
                     (${costUsd.toFixed(2)})
                   </span>
@@ -235,7 +236,7 @@ export function AudioPaywallModal({
               <div className="mt-1.5 flex items-center justify-between text-xs">
                 <span className="text-zinc-500">Your balance</span>
                 <span className={hasEnoughBalance ? 'text-zinc-400' : 'text-red-400'}>
-                  {formatDhb(userBalance)} DHB
+                  {formatDhb(userBalance)} <DhbCoin />
                 </span>
               </div>
             </div>
@@ -261,7 +262,9 @@ export function AudioPaywallModal({
                 Processing
               </>
             ) : hasEnoughBalance ? (
-              `Pay ${formatDhb(costDhb)} DHB`
+              <>
+                Pay <DhbAmount amount={formatDhb(costDhb)} />
+              </>
             ) : (
               'Insufficient DHB'
             )}
