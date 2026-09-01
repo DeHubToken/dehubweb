@@ -118,7 +118,7 @@ export function SellTab() {
             <p className="text-xl font-bold text-white break-all">
               <span className="text-zinc-500">@</span>{username}
             </p>
-            <p className="text-[11px] text-zinc-500">{t('accounts.followersCount', { count: compactCount(followers) })}</p>
+            <p className="text-[11px] text-zinc-500">{t('accounts.followersCount', { value: compactCount(followers) })}</p>
           </div>
         </div>
 

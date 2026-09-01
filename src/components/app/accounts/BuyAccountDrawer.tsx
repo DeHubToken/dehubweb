@@ -146,8 +146,8 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
           <div className="px-4 pb-6 space-y-4 max-h-[70vh] overflow-y-auto">
             {/* What is being bought. */}
             <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-400">
-              <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{t('accounts.followersCount', { count: compactCount(listing.seller.followers) })}</span>
-              <span className="flex items-center gap-1"><Upload className="w-3.5 h-3.5" />{t('accounts.uploadsCount', { count: compactCount(listing.seller.uploads) })}</span>
+              <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{t('accounts.followersCount', { value: compactCount(listing.seller.followers) })}</span>
+              <span className="flex items-center gap-1"><Upload className="w-3.5 h-3.5" />{t('accounts.uploadsCount', { value: compactCount(listing.seller.uploads) })}</span>
               {since && <span className="flex items-center gap-1"><CalendarClock className="w-3.5 h-3.5" />{since}</span>}
             </div>
 
