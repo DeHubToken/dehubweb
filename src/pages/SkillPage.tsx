@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Bot, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 
 export default function SkillPage() {
+  const { t } = useTranslation();
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -18,14 +20,15 @@ export default function SkillPage() {
         setIsLoading(false);
       })
       .catch(() => {
-        setContent('# Error\nFailed to load skill documentation.');
+        setContent(t('skills.docsLoadFailed'));
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div data-glass-page className="min-h-screen bg-black text-white">
-      <SEOHead title="AI Skill Instructions — DeHub" description="Reference documentation for DeHub's AI assistant skills and prompt library." url="https://dehub.io/skill.md" />
+      <SEOHead title={t('skills.docsSeoTitle')} description={t('skills.docsSeoDescription')} url="https://dehub.io/skill.md" />
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black border-b border-white/10 px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
@@ -49,7 +52,7 @@ export default function SkillPage() {
             className="flex items-center gap-1 text-sm text-white/60 hover:text-white"
           >
             <ExternalLink className="w-4 h-4" />
-            Raw
+            {t('skills.raw')}
           </a>
         </div>
       </header>
