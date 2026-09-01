@@ -162,7 +162,6 @@ export function HomeIntro() {
       return false;
     }
   });
-  const [expanded, setExpanded] = useState(false);
   const [active, setActive] = useState(0);
   const [runId, setRunId] = useState(0);
   const paused = useRef(false);
@@ -416,28 +415,26 @@ export function HomeIntro() {
           </Button>
         </div>
 
-        {/* Entity + disambiguation copy. Clamped on mobile only — unclamped the
-            panel pushed the feed and both CTAs off a 390x844 screen. Height
-            clamp, not conditional rendering, so every word stays in the DOM. */}
+        {/* Entity + disambiguation copy. Clamped on narrow containers only —
+            unclamped, the panel pushed the feed and both CTAs off a 390x844
+            screen. A line clamp rather than conditional rendering, so every
+            word stays in the DOM at every width and matches the worker's HTML.
+
+            There is deliberately NO expander. The `// read_more` button that
+            used to sit here was dead weight: on a wide container the copy is
+            already unclamped and index.css hid the button outright, and on a
+            narrow one it bought three more lines of text nobody was asking for
+            while pushing the CTAs further down the very screen the clamp exists
+            to protect. Removing it also drops the panel's last piece of local
+            state. If the truncation ever needs undoing, unclamp — don't
+            reintroduce a toggle. */}
         <div className="mt-6 border-t border-white/10 pt-4">
           {/* line-clamp, not a height clamp with a fade: the plate is a silk
               texture, so a to-black fade rendered as a grey bar across it.
-              Clamping to whole lines cuts cleanly and needs no scrim. Still a
-              clamp rather than conditional rendering — every word stays in the
-              DOM in both states, matching the worker's HTML. */}
+              Clamping to whole lines cuts cleanly and needs no scrim. */}
           <div className="text-[13px] leading-relaxed text-zinc-300">
-            <p className={cn(expanded ? '' : 'dehub-intro-clamp')}>{ENTITY_COPY}</p>
+            <p className="dehub-intro-clamp">{ENTITY_COPY}</p>
           </div>
-          {!expanded && (
-            <button
-              type="button"
-              onClick={() => setExpanded(true)}
-              className="dehub-intro-readmore mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-400 hover:text-white"
-              style={{ fontFamily: MONO }}
-            >
-              // read_more
-            </button>
-          )}
         </div>
 
         {/* --- featured in --------------------------------------------------
