@@ -1728,13 +1728,28 @@ export function GoLiveBroadcaster({
         </div>
       )}
 
+      {/* A shade, not a slab. The chat used to open as a blurred black card
+          sitting on top of the broadcast; on a phone that is a third of the
+          picture gone. Instead the foot of the frame darkens into a gradient
+          and the messages read straight off it. Pointer-transparent, so the
+          control row underneath still takes taps. */}
+      {openPanel === 'chat' && tokenId && fullBleed && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-3/5 bg-gradient-to-t from-black/85 via-black/45 to-transparent"
+        />
+      )}
+
       {openPanel === 'chat' && tokenId && (
         <div
           className={cn(
-            'max-h-[45vh] overflow-hidden rounded-xl border border-white/10',
             // Above the floating controls, not below the video — there is no
-            // "below the video" once the video is the whole screen.
-            fullBleed && 'absolute inset-x-3 bottom-24 z-20 bg-black/80 backdrop-blur-xl'
+            // "below the video" once the video is the whole screen. Bottom-
+            // aligned so a quiet room keeps the composer where a busy one has
+            // it, rather than floating the pair up the frame.
+            fullBleed
+              ? 'absolute inset-x-3 bottom-24 z-20 flex max-h-[55vh] flex-col justify-end'
+              : 'max-h-[45vh] overflow-hidden rounded-xl border border-white/10'
           )}
         >
           <Suspense
@@ -1750,7 +1765,7 @@ export function GoLiveBroadcaster({
                 ObjectId, so host and audience named different rooms and only
                 shared a conversation because the backend ignored the room and
                 put everyone in the platform chat. */}
-            <LivePostChat tokenId={tokenId} isHost />
+            <LivePostChat tokenId={tokenId} isHost overlay={fullBleed} />
           </Suspense>
         </div>
       )}
