@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, MapPin, Share2 } from 'lucide-react';
 import { useStoreById, useStoreListings, useStoreListing } from '@/hooks/use-stores';
 import { StoreListingCard } from '@/components/app/stores/StoreListingCard';
@@ -18,6 +19,7 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function StoreDetailPage() {
   const { storeId } = useParams<{ storeId: string }>();
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { data: store, isLoading: storeLoading } = useStoreById(storeId);
@@ -57,8 +59,8 @@ export default function StoreDetailPage() {
     return (
       <div className="p-4 text-center py-20">
         <ThemedIcon icon="stores" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
-        <p className="text-muted-foreground">Store not found</p>
-        <Button variant="outline" onClick={() => navigate(-1)} className="mt-4">Go Back</Button>
+        <p className="text-muted-foreground">{t('stores.storeNotFound')}</p>
+        <Button variant="outline" onClick={() => navigate(-1)} className="mt-4">{t('stores.goBack')}</Button>
       </div>
     );
   }
@@ -70,7 +72,7 @@ export default function StoreDetailPage() {
         <button
           onClick={() => navigate(-1)}
           className="absolute top-3 left-3 z-10 bg-black/50 backdrop-blur-sm rounded-full p-2"
-          aria-label="Go back"
+          aria-label={t('stores.goBackLabel')}
         >
           <ArrowLeft className="w-4 h-4 text-white" />
         </button>
@@ -78,7 +80,7 @@ export default function StoreDetailPage() {
         <button
           onClick={() => setShareOpen(true)}
           className="absolute top-3 right-3 z-10 bg-black/50 backdrop-blur-sm rounded-full p-2"
-          aria-label="Share store"
+          aria-label={t('stores.shareStore')}
         >
           <Share2 className="w-4 h-4 text-white" />
         </button>
@@ -107,8 +109,8 @@ export default function StoreDetailPage() {
           </div>
 
           <div className="mt-3">
-            <h1 className="text-lg sm:text-xl font-bold text-primary-foreground">{store.name || 'Store'}</h1>
-            <p className="text-xs text-muted-foreground">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
+            <h1 className="text-lg sm:text-xl font-bold text-primary-foreground">{store.name || t('stores.store')}</h1>
+            <p className="text-xs text-muted-foreground">{t('stores.listingCount', { count: listings.length })}</p>
             {store.description && (
               <p className="mt-2 text-sm text-primary-foreground/80">{store.description}</p>
             )}
@@ -118,7 +120,7 @@ export default function StoreDetailPage() {
 
       {/* Listings grid */}
       <div className="px-2 sm:px-1">
-        <h2 className="text-sm font-semibold text-primary-foreground mb-3">Listings</h2>
+        <h2 className="text-sm font-semibold text-primary-foreground mb-3">{t('stores.listings')}</h2>
         {listingsLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -132,7 +134,7 @@ export default function StoreDetailPage() {
             ))}
           </div>
         ) : listings.length === 0 ? (
-          <p className="text-center py-12 text-muted-foreground text-sm">No listings yet</p>
+          <p className="text-center py-12 text-muted-foreground text-sm">{t('stores.noListingsYet')}</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {listings.map((listing: any) => (
@@ -156,7 +158,7 @@ export default function StoreDetailPage() {
         open={shareOpen}
         onOpenChange={setShareOpen}
         url={dehubLinkFor.store(store.id)}
-        shareTitle={store.name || 'Store'}
+        shareTitle={store.name || t('stores.store')}
       />
     </div>
   );

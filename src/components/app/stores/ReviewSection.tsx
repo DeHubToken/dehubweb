@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Star, MessageSquarePlus, ThumbsUp, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { StarRating } from './StarRating';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -19,6 +20,7 @@ interface ReviewSectionProps {
 }
 
 export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data: reviews = [], isLoading } = useListingReviews(listingId);
   const { data: hasPurchased } = useHasPurchased(listingId);
@@ -105,7 +107,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
           {/* Write review button */}
           {canReview && !showForm && (
             <LiquidGlassBubble2
-              label="Write a Review"
+              label={t('stores.writeReview')}
               icon={<MessageSquarePlus className="w-4 h-4" />}
               onClick={() => setShowForm(true)}
               width="100%"
@@ -117,14 +119,14 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
           {showForm && (
             <LiquidGlassBubble shimmer noBorder className="[&>div]:!rounded-xl">
               <div className="p-3 space-y-3">
-                <p className="text-xs font-medium text-primary-foreground">Your Rating</p>
+                <p className="text-xs font-medium text-primary-foreground">{t('stores.yourRating')}</p>
                 <div className="flex justify-center">
                   <StarRating value={rating} onChange={setRating} size="lg" />
                 </div>
                 <Textarea
                   value={comment}
                   onChange={e => setComment(e.target.value)}
-                  placeholder="Share your experience with this product..."
+                  placeholder={t('stores.reviewPlaceholder')}
                   className="bg-white/5 border-white/10 min-h-[80px] text-sm resize-none"
                   maxLength={500}
                 />
@@ -132,13 +134,13 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                   <span className="text-[10px] text-zinc-500">{comment.length}/500</span>
                   <div className="flex gap-2">
                     <LiquidGlassBubble2
-                      label="Cancel"
+                      label={t('stores.cancel')}
                       onClick={() => { setShowForm(false); setRating(0); setComment(''); }}
                       width="80px"
                       height="36px"
                     />
                     <LiquidGlassBubble2
-                      label="Submit"
+                      label={t('stores.submit')}
                       icon={<Star className="w-3.5 h-3.5" />}
                       loading={createReview.isPending}
                       loadingLabel="Posting..."
@@ -159,7 +161,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
               <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
             </div>
           ) : reviews.length === 0 ? (
-            <p className="text-xs text-zinc-500 text-center py-3">No reviews yet — be the first!</p>
+            <p className="text-xs text-zinc-500 text-center py-3">{t('stores.noReviews')}</p>
           ) : (
             <div className="space-y-2">
               {reviews.map(review => (
@@ -184,7 +186,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                     )}
                     {review.seller_response && (
                       <div className="mt-2 pl-3 border-l-2 border-amber-400/30">
-                        <p className="text-[10px] text-amber-400 font-medium mb-0.5">Seller Response</p>
+                        <p className="text-[10px] text-amber-400 font-medium mb-0.5">{t('stores.sellerResponse')}</p>
                         <p className="text-xs text-zinc-300">{review.seller_response}</p>
                       </div>
                     )}

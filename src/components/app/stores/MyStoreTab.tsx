@@ -5,6 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil, Settings, Store as StoreIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ interface MyStoreTabProps {
 }
 
 export function MyStoreTab({ createListingOpen = false, onCreateListingClose, createStoreOpen = false, onCreateStoreClose }: MyStoreTabProps) {
+  const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
   const { data: stores = [], isLoading: loadingStores } = useMyStores();
   const { data: listings = [] } = useMyListings();
@@ -66,14 +68,14 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
   if (!isAuthenticated) {
     return (
       <div className="text-center py-16">
-        <p className="text-muted-foreground text-sm mb-4">Sign in to manage your store</p>
-        <Button onClick={() => openLoginModal()}>Sign In</Button>
+        <p className="text-muted-foreground text-sm mb-4">{t('stores.signInToManage')}</p>
+        <Button onClick={() => openLoginModal()}>{t('stores.signIn')}</Button>
       </div>
     );
   }
 
   if (loadingStores) {
-    return <div className="py-16 text-center text-muted-foreground text-sm">Loading...</div>;
+    return <div className="py-16 text-center text-muted-foreground text-sm">{t('stores.loading')}</div>;
   }
 
   // Show setup flow if no stores or explicitly requested
@@ -87,17 +89,17 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
   }
 
   const handleArchive = (id: string) => {
-    updateListing.mutate({ id, status: 'archived' }, { onSuccess: () => toast.success('Listing archived') });
+    updateListing.mutate({ id, status: 'archived' }, { onSuccess: () => toast.success(t('stores.listingArchived')) });
   };
 
   const handleMarkSold = (id: string) => {
-    updateListing.mutate({ id, status: 'sold' }, { onSuccess: () => toast.success('Marked as sold') });
+    updateListing.mutate({ id, status: 'sold' }, { onSuccess: () => toast.success(t('stores.markedAsSold')) });
   };
 
   const TABS: { key: StoreSubTab; label: string; count: number }[] = [
-    { key: 'listings', label: 'My Listings', count: storeListings.length },
-    { key: 'orders', label: 'Orders', count: sellerOrders.length },
-    { key: 'purchases', label: 'Purchases', count: buyerOrders.length },
+    { key: 'listings', label: t('stores.tabMyListings'), count: storeListings.length },
+    { key: 'orders', label: t('stores.tabOrders'), count: sellerOrders.length },
+    { key: 'purchases', label: t('stores.tabPurchases'), count: buyerOrders.length },
   ];
 
   return (
@@ -127,7 +129,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
             {stores.length > 1 ? (
               <Select value={activeStoreId || ''} onValueChange={setSelectedStoreId}>
                 <SelectTrigger className="bg-white/5 border-white/10 text-white w-full h-8 text-sm">
-                  <SelectValue placeholder="Select store" />
+                  <SelectValue placeholder={t('stores.selectStore')} />
                 </SelectTrigger>
                 <SelectContent className="bg-zinc-900 border-white/10">
                   {stores.map((s: any) => (
@@ -139,11 +141,11 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
               <h2 className="text-sm font-semibold text-white truncate">{activeStore?.name}</h2>
             )}
             <p className="text-[10px] text-zinc-300 mt-0.5 flex items-center gap-2">
-              <span>{storeListings.length} listing{storeListings.length !== 1 ? 's' : ''}</span>
+              <span>{t('stores.listingCount', { count: storeListings.length })}</span>
               <span>·</span>
-              <span>{sellerOrders.reduce((sum: number, o: any) => sum + Number(o.amount || 0), 0).toLocaleString()} <DhbCoin /> earned</span>
+              <span>{sellerOrders.reduce((sum: number, o: any) => sum + Number(o.amount || 0), 0).toLocaleString()} <DhbCoin /> {t('stores.earned')}</span>
               <span>·</span>
-              <span>Since {activeStore?.created_at ? new Date(activeStore.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'}</span>
+              <span>{t('stores.since', { date: activeStore?.created_at ? new Date(activeStore.created_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : '—' })}</span>
             </p>
           </div>
           <button
@@ -206,13 +208,13 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => setEditListing(l)}>
-                      <Pencil className="w-4 h-4 mr-2" /> Edit
+                      <Pencil className="w-4 h-4 mr-2" /> {t('stores.edit')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleMarkSold(l.id)}>
-                      <CheckCircle className="w-4 h-4 mr-2" /> Mark Sold
+                      <CheckCircle className="w-4 h-4 mr-2" /> {t('stores.markSold')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleArchive(l.id)}>
-                      <Archive className="w-4 h-4 mr-2" /> Archive
+                      <Archive className="w-4 h-4 mr-2" /> {t('stores.archive')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -224,7 +226,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
 
       {subTab === 'orders' && (
         sellerOrders.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">No orders received yet</div>
+          <div className="text-center py-12 text-muted-foreground text-sm">{t('stores.noOrders')}</div>
         ) : (
           <div className="space-y-2">
             {sellerOrders.map((o: any) => (
@@ -236,7 +238,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
 
       {subTab === 'purchases' && (
         buyerOrders.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">No purchases yet</div>
+          <div className="text-center py-12 text-muted-foreground text-sm">{t('stores.noPurchases')}</div>
         ) : (
           <div className="space-y-2">
             {buyerOrders.map((o: any) => (
@@ -258,7 +260,17 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
 }
 
 function OrderRow({ order, type, onUpdateStatus }: { order: any; type: 'buyer' | 'seller'; onUpdateStatus: (id: string, status: string) => void }) {
+  const { t } = useTranslation();
   const listing = order.store_listings;
+  /** Order status is a database slug; the pill wants the reader's language. */
+  const statusKeys: Record<string, string> = {
+    paid: 'stores.orderPaid',
+    shipped: 'stores.orderShipped',
+    completed: 'stores.orderCompleted',
+    cancelled: 'stores.orderCancelled',
+    disputed: 'stores.orderDisputed',
+    pending: 'stores.orderPending',
+  };
   const statusColors: Record<string, string> = {
     paid: 'bg-yellow-500/20 text-yellow-400',
     shipped: 'bg-blue-500/20 text-blue-400',
@@ -273,20 +285,20 @@ function OrderRow({ order, type, onUpdateStatus }: { order: any; type: 'buyer' |
         {(listing?.images as string[])?.[0] && <img src={(listing.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate text-primary-foreground">{listing?.title || 'Listing'}</p>
+        <p className="text-sm font-medium truncate text-primary-foreground">{listing?.title || t('stores.listing')}</p>
         <p className="text-xs text-muted-foreground">{Number(order.amount).toLocaleString()} <DhbCoin /></p>
       </div>
       <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${statusColors[order.status] || 'bg-white/10 text-muted-foreground'}`}>
-        {order.status}
+        {statusKeys[order.status] ? t(statusKeys[order.status]) : order.status}
       </span>
       {type === 'seller' && order.status === 'paid' && (
         <Button size="sm" variant="outline" onClick={() => onUpdateStatus(order.id, 'shipped')} className="text-xs h-7">
-          <Package className="w-3 h-3 mr-1" /> Ship
+          <Package className="w-3 h-3 mr-1" /> {t('stores.ship')}
         </Button>
       )}
       {type === 'buyer' && order.status === 'shipped' && (
         <Button size="sm" variant="outline" onClick={() => onUpdateStatus(order.id, 'completed')} className="text-xs h-7">
-          <ShoppingBag className="w-3 h-3 mr-1" /> Received
+          <ShoppingBag className="w-3 h-3 mr-1" /> {t('stores.received')}
         </Button>
       )}
     </div>
