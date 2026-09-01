@@ -142,3 +142,21 @@ export interface PostFormComputed {
   /** e.g. "7 of 10 free posts left today". Null when there is nothing to say. */
   postQuotaLabel: string | null;
 }
+
+/**
+ * The stream a live post's mint provisioned, on its way to the broadcaster.
+ *
+ * `mintPost` creates the stream alongside the post and returns these in the
+ * same response, so nothing has to be asked for twice or polled for. Shaped to
+ * match GoLiveModal's own streamData exactly — it is handed straight in.
+ */
+export interface LiveStreamHandoff {
+  tokenId: string;
+  streamKey: string;
+  ingestUrl: string;
+  playbackUrl: string;
+  streamId: string;
+  hlsUrl?: string;
+  playbackId?: string;
+  provider?: string;
+}

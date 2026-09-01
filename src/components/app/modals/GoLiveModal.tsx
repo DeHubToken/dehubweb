@@ -74,6 +74,24 @@ const logger = createLogger('GoLiveModal');
 interface GoLiveModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /**
+   * A stream the post composer's mint already provisioned.
+   *
+   * When present this sheet has no setup step at all: it opens straight onto
+   * the broadcast console for that stream. The setup form below is what going
+   * live used to mean here, and it duplicated the composer's title,
+   * description and cover fields on a second sheet stacked over the first.
+   */
+  initialStream?: {
+    tokenId: string;
+    streamKey: string;
+    ingestUrl: string;
+    playbackUrl: string;
+    streamId: string;
+    hlsUrl?: string;
+    playbackId?: string;
+    provider?: string;
+  } | null;
 }
 
 type Step = 'setup' | 'ready' | 'broadcasting';
@@ -121,7 +139,7 @@ function formatGb(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / (1024 * 1024)))} MB`;
 }
 
-export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
+export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps) {
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
   const [confirmEnd, setConfirmEnd] = useState(false);
@@ -304,6 +322,47 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         .catch(() => undefined);
     }, 60_000);
   };
+
+  /*
+   * The composer already made the stream — walk straight onto the console.
+   *
+   * `mintPost` provisions the stream alongside a live post and returns the key,
+   * playback id and ingest URL in the same response, so by the time this sheet
+   * opens there is nothing left to ask for. Everything handleStartStream does
+   * after its own mint is mirrored here: mark the row live in Supabase and keep
+   * the heartbeat going, because the API's /start is not what the feed reads.
+   *
+   * Guarded on `step` rather than `streamData` so a re-render mid-broadcast
+   * cannot re-enter it, and so ending a stream (which clears streamData) does
+   * not immediately start it again from the same prop.
+   */
+  useEffect(() => {
+    if (!isOpen || !initialStream || step === 'broadcasting') return;
+
+    setStreamData(initialStream);
+    setStep('broadcasting');
+    // The title lives on the published post now, so a pending copy of it must
+    // not resurface in the next go-live.
+    draft.clear();
+
+    const token = getAuthToken();
+    const addr = walletAddress;
+    if (token && addr) {
+      markLivePromiseRef.current = supabase.functions
+        .invoke('mark-stream-live', {
+          body: { tokenId: initialStream.tokenId, streamId: initialStream.streamId },
+          headers: { 'x-wallet-address': addr.toLowerCase(), 'x-dehub-token': token },
+        })
+        .then(({ error }) => {
+          if (error) logger.warn('mark-stream-live failed (non-blocking)', error);
+        });
+      startHeartbeat(String(initialStream.tokenId), initialStream.streamId);
+    }
+    logger.info('Broadcast handed over from the composer', {
+      tokenId: initialStream.tokenId,
+      streamId: initialStream.streamId,
+    });
+  }, [isOpen, initialStream, step, walletAddress]);
 
   const clearLiveSession = (tokenId: string) => {
     // Before anything else: a beat that fires after the delete would re-upsert
