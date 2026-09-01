@@ -189,21 +189,9 @@ const MessageBubble = memo(function MessageBubble({
     // pendingAgeMs is time-derived; the timer only needs scheduling while visible
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPaymentPending, message._id]);
-  // Call message — detect by emoji prefix in content (📞/📹/📵)
+  // Call message — detect by emoji prefix in content (📞/📹/📵). The branch
+  // it drives lives below the hooks; see the note there.
   const isCallMessage = message.msgType === 'msg' && /^[📞📹📵]/.test(message.content || '');
-  if (isCallMessage) {
-    return (
-      <div id={`dm-msg-${message._id}`} className="flex justify-center py-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/50 text-zinc-300 text-xs">
-          <Phone className="w-3 h-3 text-zinc-400 flex-shrink-0" />
-          <span>{message.content}</span>
-          <span className="text-zinc-500 text-[10px] ml-0.5">
-            · {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
-          </span>
-        </div>
-      </div>
-    );
-  }
 
   const avatarUrl = buildAvatarUrl(message.sender?.address || '', message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
@@ -271,6 +259,29 @@ const MessageBubble = memo(function MessageBubble({
     isPostShare ? '' : (isTranslated ? translatedText : message.content) || '',
     1,
   );
+
+  // A call notice: a centred pill, none of the bubble chrome.
+  //
+  // This return sits below every hook above deliberately. It used to sit right
+  // after the payment-pending effect, which left this component calling two
+  // hooks for a call notice and eight for anything else — and `isCallMessage`
+  // is read off `message.content`, which now changes in place when someone
+  // edits or deletes a message. The same React key flipping branch is
+  // "Rendered more hooks than during the previous render", i.e. the whole
+  // thread white-screens. Keep it here.
+  if (isCallMessage) {
+    return (
+      <div id={`dm-msg-${message._id}`} className="flex justify-center py-2">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/50 text-zinc-300 text-xs">
+          <Phone className="w-3 h-3 text-zinc-400 flex-shrink-0" />
+          <span>{message.content}</span>
+          <span className="text-zinc-500 text-[10px] ml-0.5">
+            · {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
