@@ -11,6 +11,7 @@
  * @module components/app/tv/TVChat
  */
 
+import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import { useTVChat } from '@/hooks/use-tv-chat';
 import { RealtimeChatPanel, type ChatSenderProfile } from '@/components/app/chat/RealtimeChatPanel';
@@ -27,6 +28,7 @@ interface TVChatProps {
 }
 
 export function TVChat({ channelId, channelName, enabled = true }: TVChatProps) {
+  const { t } = useTranslation();
   const {
     messages,
     isLoading,
@@ -52,7 +54,7 @@ export function TVChat({ channelId, channelName, enabled = true }: TVChatProps) 
       onDelete={deleteMessage}
       onReact={addReaction}
       onRemoveReaction={removeReaction}
-      title="Live chat"
+      title={t('tv.liveChat')}
       subtitle={channelName}
       listClassName="h-56"
       draftKey={channelId ? `tv:${channelId}` : null}

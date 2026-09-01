@@ -10,6 +10,7 @@
  * @module components/app/tv/TVChannelCard
  */
 
+import { useTranslation } from 'react-i18next';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
@@ -39,6 +40,7 @@ interface TVChannelCardProps {
 const MAX_RETRIES = 2;
 
 export function TVChannelCard({ channel }: TVChannelCardProps) {
+  const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -502,22 +504,22 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {/* Live Badge */}
         <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-600 text-white text-xs font-semibold">
           <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-          LIVE
+          {t('tv.live')}
         </div>
         
         {/* Error State */}
         {hasError && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
             <Tv className="w-8 h-8 text-zinc-500 mb-2" />
-            <p className="text-zinc-400 text-sm">Stream geo-blocked or unavailable</p>
-            <p className="text-zinc-500 text-xs mb-3">Sorry for the inconvenience</p>
+            <p className="text-zinc-400 text-sm">{t('tv.geoBlocked')}</p>
+            <p className="text-zinc-500 text-xs mb-3">{t('tv.sorryInconvenience')}</p>
             {canRetry && (
               <button
                 onClick={handleRetry}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
-                Retry ({MAX_RETRIES - retryCount} left)
+                {t('tv.retryCount', { count: MAX_RETRIES - retryCount })}
               </button>
             )}
           </div>

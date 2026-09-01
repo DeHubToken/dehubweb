@@ -980,6 +980,26 @@
     "joined": "Joined"
   },
   "tv": {
+    "seoTitle": "TV Langsung — Kanal gratis dari seluruh dunia",
+    "seoDescription": "Tonton kanal TV langsung gratis dari seluruh dunia di DeHub. Berita, olahraga, hiburan, dan lainnya — disiarkan di peramban, tanpa langganan.",
+    "srHeading": "DeHub TV Langsung — Media sosial terdesentralisasi, tahan sensor, dan bebas berpendapat",
+    "searchPlaceholder": "Cari di ratusan kanal TV gratis...",
+    "filterAll": "Semua",
+    "resultsFor": "Hasil untuk “{{query}}”",
+    "channelCount_one": "({{count}} kanal)",
+    "channelCount_other": "({{count}} kanal)",
+    "loadFailed": "Gagal memuat kanal",
+    "loadFailedHint": "Silakan periksa koneksi Anda lalu coba lagi.",
+    "noChannelsFound": "Kanal tidak ditemukan",
+    "noChannelsAvailable": "Tidak ada kanal yang tersedia",
+    "tryDifferentSearch": "Coba kata pencarian lain.",
+    "tryDifferentCountry": "Coba pilih negara lain.",
+    "live": "LANGSUNG",
+    "geoBlocked": "Siaran diblokir secara wilayah atau tidak tersedia",
+    "sorryInconvenience": "Mohon maaf atas ketidaknyamanannya",
+    "retryCount_one": "Coba lagi (sisa {{count}})",
+    "retryCount_other": "Coba lagi (sisa {{count}})",
+    "liveChat": "Obrolan langsung",
     "title": "TV"
   },
   "buyCoins": {

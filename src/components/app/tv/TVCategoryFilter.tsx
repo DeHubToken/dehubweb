@@ -7,6 +7,7 @@
  * @module components/app/tv/TVCategoryFilter
  */
 
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import type { TVCategory, TVCountryFilter } from '@/lib/api/live-tv';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -22,6 +23,7 @@ export function TVCategoryFilter({
   onCountryChange,
   countries,
 }: TVCategoryFilterProps) {
+  const { t } = useTranslation();
   return (
     <div className="relative">
       {/* The scroll classes live on the carousel itself so it is the element
@@ -39,7 +41,8 @@ export function TVCategoryFilter({
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               )}
             >
-              {cat.label}
+              {/* Country names come from the channel data; only "All" is ours. */}
+              {cat.id === 'all' ? t('tv.filterAll') : cat.label}
               {cat.id !== 'all' && (
                 <span className={cn(
                   'ml-1 text-[10px]',
