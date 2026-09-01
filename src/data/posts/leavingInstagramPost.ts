@@ -13,6 +13,8 @@ TikTok has Creator Rewards. YouTube has the Partner Programme. Instagram has had
 
 This is the Instagram-specific companion to our guides on [leaving TikTok](/guides/creators-guide-leaving-tiktok) and [leaving YouTube](/guides/creators-guide-leaving-youtube).
 
+![Reach you only rent — the reel is not yours and the audience cannot be exported](/lovable-uploads/fig-instagram-reach-you-rent.jpg)
+
 ## The Instagram-specific problems
 
 ### No native payout worth planning around
@@ -56,6 +58,8 @@ DeHub subscriptions are minted on-chain and are tradable, and the creator earns 
 Every upload can be free, pay-per-view, or token-gated, and that applies to image posts and carousels, not only video. Photographers, illustrators and designers — the people Instagram was originally for and has monetised least — get a per-piece business model rather than a portfolio that earns only when somebody hires them off it.
 
 Earnings settle in DHB, primarily on Base, an Ethereum Layer 2, with contracts on BNB Chain and Polygon. It trades on decentralised exchanges and on Coinbase and is listed on CoinGecko and CoinMarketCap.
+
+![Move without the crash — migrate in this order and keep posting to Instagram while you do](/lovable-uploads/fig-instagram-move-without-crash.jpg)
 
 ## How to migrate without torching your reach
 
