@@ -24,6 +24,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2, Info } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -175,10 +176,10 @@ export function EarningsComparison() {
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
               <p className="text-zinc-500 text-[11px]">Earned on DeHub</p>
               <p className="text-white text-lg font-bold mt-0.5">
-                {priceKnown ? usd(dehubUsd) : `${compact(tipsEarnedDhb)} DHB`}
+                {priceKnown ? usd(dehubUsd) : <DhbAmount amount={compact(tipsEarnedDhb)} />}
               </p>
               <p className="text-zinc-600 text-[10px] mt-0.5">
-                {priceKnown ? `${compact(tipsEarnedDhb)} DHB` : 'USD price unavailable'}
+                {priceKnown ? <DhbAmount amount={compact(tipsEarnedDhb)} /> : 'USD price unavailable'}
               </p>
             </div>
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">

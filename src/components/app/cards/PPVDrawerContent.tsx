@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { usePPVPayment } from '@/hooks/use-ppv-payment';
 import { PPVTopUpStep } from './PPVTopUpStep';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import {
   DrawerContent,
   DrawerHeader,
@@ -88,7 +89,11 @@ export function PPVDrawerContent({
           <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
             <span className="text-white text-sm">{t('drawers.unlockPrice')}</span>
             <span className="text-white text-lg font-bold">
-              {formatCompact(Number(price))} {currency || 'USDC'}
+              <DhbAmount
+                amount={formatCompact(Number(price))}
+                currency={currency}
+                iconClassName="h-5 w-5"
+              />
             </span>
           </div>
           <div className="flex gap-3 mt-2">

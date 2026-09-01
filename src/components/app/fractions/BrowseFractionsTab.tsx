@@ -9,6 +9,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Search, Tag, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -79,7 +80,7 @@ export function BrowseFractionsTab() {
       {floor !== null && (
         <p className="text-xs text-white/40">
           {listings.length} listing{listings.length === 1 ? '' : 's'} · floor{' '}
-          <span className="text-white/70">{floor.toLocaleString(undefined, { maximumFractionDigits: 4 })} DHB</span>{' '}
+          <span className="text-white/70">{floor.toLocaleString(undefined, { maximumFractionDigits: 4 })} <DhbCoin /></span>{' '}
           per fraction
         </p>
       )}

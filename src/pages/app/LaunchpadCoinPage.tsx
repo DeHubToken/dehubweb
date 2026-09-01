@@ -1,4 +1,5 @@
 import { useParams, Link, useLocation } from 'react-router-dom';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { SEOHead } from '@/components/SEOHead';
 import { ChevronLeft } from 'lucide-react';
@@ -99,7 +100,7 @@ export default function LaunchpadCoinPage() {
                 <div key={t.id} className="px-4 py-2 grid grid-cols-4 text-xs">
                   <span className={t.side === 'buy' ? 'text-white' : 'text-white/60'}>{t.side}</span>
                   <span className="text-white/70 font-mono">{t.trader_address.slice(0,6)}…{t.trader_address.slice(-4)}</span>
-                  <span className="text-white tabular-nums text-right">{Number(t.dhb_in).toFixed(2)} DHB</span>
+                  <span className="text-white tabular-nums text-right">{Number(t.dhb_in).toFixed(2)} <DhbCoin /></span>
                   <span className="text-white/50 tabular-nums text-right">{new Date(t.created_at).toLocaleTimeString()}</span>
                 </div>
               ))}

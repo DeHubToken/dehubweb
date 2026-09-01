@@ -175,7 +175,6 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                 <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                <span className="text-sm text-zinc-400">DHB</span>
               </div>
             </div>
           </div>

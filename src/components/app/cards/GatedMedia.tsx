@@ -28,7 +28,7 @@ import { Lock, Ticket, Star, Loader2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
-import dehubCoinSmall from '@/assets/dehub-coin.png';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { PPVDrawerContent } from './PPVDrawerContent';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
@@ -120,8 +120,8 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
   /** Every gate is the same tile: blurred poster, glass icon, two lines, one tap. */
   const panel = (
     icon: React.ReactNode,
-    heading: string,
-    detail: string,
+    heading: React.ReactNode,
+    detail: React.ReactNode,
     onOpen: () => void,
   ) => (
     <>
@@ -143,8 +143,8 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
         <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
           {icon}
         </div>
-        <p className="text-white font-semibold text-sm mb-1">{heading}</p>
-        <p className="text-white/70 text-xs">{detail}</p>
+        <p className="text-white font-semibold text-sm mb-1 flex items-center justify-center gap-1 flex-wrap">{heading}</p>
+        <p className="text-white/70 text-xs flex items-center justify-center gap-1 flex-wrap">{detail}</p>
       </button>
     </>
   );
@@ -163,31 +163,48 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
             <Ticket className="h-5 w-5 text-white" />
             <Lock className="h-5 w-5 text-white" />
           </div>,
-          `${t('drawers.unlockFor')} ${formatCompact(Number(gate.ppvPrice))} ${gate.ppvCurrency || 'DHB'}`,
-          `Must be holding ${formatCompact(Number(gate.lockedPrice))} ${gate.lockedCurrency || 'DHB'}`,
+          <>
+            {t('drawers.unlockFor')}
+            <DhbAmount amount={formatCompact(Number(gate.ppvPrice))} currency={gate.ppvCurrency} iconClassName="h-3.5 w-3.5" />
+          </>,
+          <>
+            Must be holding
+            <DhbAmount amount={formatCompact(Number(gate.lockedPrice))} currency={gate.lockedCurrency} iconClassName="h-3.5 w-3.5" />
+          </>,
           () => setShowPPVDrawer(true),
         )
       ) : isPPVLocked ? (
         panel(
           <Ticket className="h-7 w-7 text-white" />,
           t('drawers.ppvTitle'),
-          `${t('drawers.unlockFor')} ${formatCompact(Number(gate.ppvPrice))} ${gate.ppvCurrency || 'DHB'}`,
+          <>
+            {t('drawers.unlockFor')}
+            <DhbAmount amount={formatCompact(Number(gate.ppvPrice))} currency={gate.ppvCurrency} iconClassName="h-3.5 w-3.5" />
+          </>,
           () => setShowPPVDrawer(true),
         )
       ) : isSubGated ? (
         panel(
           <Star className="h-7 w-7 text-white" />,
           'Subscribers only',
-          cheapestPlanPrice !== undefined
-            ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB`
-            : `Subscribe to ${gate.creatorName || 'this creator'}`,
+          cheapestPlanPrice !== undefined ? (
+            <>
+              Subscribe from
+              <DhbAmount amount={formatCompact(cheapestPlanPrice)} iconClassName="h-3.5 w-3.5" />
+            </>
+          ) : (
+            `Subscribe to ${gate.creatorName || 'this creator'}`
+          ),
           () => setShowSubDrawer(true),
         )
       ) : (
         panel(
           <Lock className="h-7 w-7 text-white" />,
           'Holdings Required',
-          `Must be holding ${formatCompact(Number(gate.lockedPrice))} ${gate.lockedCurrency || 'DHB'}`,
+          <>
+            Must be holding
+            <DhbAmount amount={formatCompact(Number(gate.lockedPrice))} currency={gate.lockedCurrency} iconClassName="h-3.5 w-3.5" />
+          </>,
           () => setShowLockedDrawer(true),
         )
       )}
@@ -224,9 +241,12 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
               <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                 <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                 <div className="flex items-center gap-2">
-                  <img src={dehubCoinSmall} alt="" className="w-5 h-5" />
                   <span className="text-white text-lg font-bold">
-                    {formatCompact(gate.lockedPrice)} {gate.lockedCurrency || 'DHB'}
+                    <DhbAmount
+                      amount={formatCompact(gate.lockedPrice)}
+                      currency={gate.lockedCurrency}
+                      iconClassName="h-5 w-5"
+                    />
                   </span>
                 </div>
               </div>

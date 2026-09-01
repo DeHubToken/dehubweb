@@ -20,6 +20,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Mic, Square, Upload, Loader2, ChevronLeft, Check, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -248,7 +249,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
         ) : (
           <>
             <p className="text-sm text-white">
-              {status.priceDhb.toLocaleString()} DHB, once.
+              {status.priceDhb.toLocaleString()} <DhbCoin />, once.
             </p>
             <p className="text-xs text-white/50">
               {status.owned
@@ -337,8 +338,15 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
             : status.owned
               // Nothing is cloned on this path — the voice already exists and
               // the fee is for dubbing stages in it.
-              ? `Pay ${status.priceDhb.toLocaleString()} DHB and switch on`
-              : `Pay ${status.priceDhb.toLocaleString()} DHB and clone`}
+              ? (
+                <>
+                  Pay <DhbAmount amount={status.priceDhb.toLocaleString()} /> and switch on
+                </>
+              ) : (
+                <>
+                  Pay <DhbAmount amount={status.priceDhb.toLocaleString()} /> and clone
+                </>
+              )}
       </Button>
 
       <Button

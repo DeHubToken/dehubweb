@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -25,7 +26,6 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
-import dehubCoinSmall from '@/assets/dehub-coin.png';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
@@ -933,10 +933,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                   </div>
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">
-                  Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'DHB'}
+                  Unlock for <DhbAmount amount={formatCompact(Number(post.ppvPrice))} currency={post.ppvCurrency} />
                 </p>
                 <p className="text-white/70 text-xs">
-                  Must be holding {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'}
+                  Must be holding <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
                 </p>
               </div>
             </div>
@@ -993,7 +993,13 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
                 <p className="text-white/70 text-xs">
-                  {cheapestPlanPrice !== undefined ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB` : `Subscribe to ${post.username}`}
+                  {cheapestPlanPrice !== undefined ? (
+                    <>
+                      Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                    </>
+                  ) : (
+                    `Subscribe to ${post.username}`
+                  )}
                 </p>
               </div>
             </div>
@@ -1020,7 +1026,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">Holdings Required</p>
                 <p className="text-white/70 text-xs">
-                  Must be holding {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'}
+                  Must be holding <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
                 </p>
               </div>
             </div>
@@ -1326,8 +1332,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{post.bountyAmount} {post.bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={post.bountyAmount} currency={post.bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -1378,8 +1383,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(post.lockedPrice)} currency={post.lockedCurrency} /></span>
                   </div>
                 </div>
               )}

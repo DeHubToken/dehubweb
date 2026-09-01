@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { AlertCircle, ArrowRight, CreditCard, Loader2, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BASE_CHAIN_ID, getChainConfig, toWei } from '@/lib/contracts/dhb-token';
-import dehubCoin from '@/assets/dehub-coin.png';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import type { PPVShortfall } from '@/hooks/use-ppv-payment';
 import type { DhbBuyRoute } from '@/lib/contracts/uniswap-swap';
 
@@ -229,19 +229,20 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
       <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 space-y-2.5">
         <div className="flex items-center justify-between text-sm">
           <span className="text-zinc-400">Unlock price</span>
-          <span className="text-zinc-300">{formatCompact(shortfall.priceDhb)} DHB</span>
+          <DhbAmount amount={formatCompact(shortfall.priceDhb)} className="text-zinc-300" />
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-zinc-400">Your balance</span>
-          <span className="text-zinc-300">{formatCompact(shortfall.balanceDhb)} DHB</span>
+          <DhbAmount amount={formatCompact(shortfall.balanceDhb)} className="text-zinc-300" />
         </div>
         <div className="h-px bg-white/10" />
         <div className="flex items-center justify-between">
           <span className="text-white text-sm">You need</span>
-          <span className="flex items-center gap-1.5 text-white text-lg font-bold">
-            <img src={dehubCoin} alt="" className="w-4 h-4" />
-            {formatCompact(shortfall.needDhb)} DHB
-          </span>
+          <DhbAmount
+            amount={formatCompact(shortfall.needDhb)}
+            className="text-white text-lg font-bold"
+            iconClassName="h-5 w-5"
+          />
         </div>
       </div>
 

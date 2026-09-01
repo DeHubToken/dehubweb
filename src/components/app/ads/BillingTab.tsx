@@ -7,6 +7,7 @@
  */
 
 import { useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Wallet, Plus, ArrowDownToLine, Loader2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,7 +84,7 @@ export function BillingTab() {
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-foreground">+{formatUsd(p.usd_value)}</p>
                   <p className="text-xs text-muted-foreground">
-                    {formatCompact(Number(p.dhb_amount))} DHB · {p.chain} · {new Date(p.created_at).toLocaleDateString()}
+                    {formatCompact(Number(p.dhb_amount))} <DhbCoin /> · {p.chain} · {new Date(p.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <a

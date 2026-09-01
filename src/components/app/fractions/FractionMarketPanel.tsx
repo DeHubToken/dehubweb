@@ -11,6 +11,7 @@
  */
 
 import { useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Loader2, Tag, HandCoins, Plus } from 'lucide-react';
@@ -161,7 +162,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                         <div className="min-w-0">
                           <p className="text-white font-medium">{available} fractions</p>
                           <p className="text-xs text-white/60">
-                            {listing.price_per_fraction} DHB each ·{' '}
+                            {listing.price_per_fraction} <DhbCoin /> each ·{' '}
                             {((available / TOTAL_FRACTIONS) * 100).toFixed(1)}% of the post
                           </p>
                         </div>
@@ -260,7 +261,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                         <div className="min-w-0">
                           <p className="text-white font-medium">{offer.quantity} fractions</p>
                           <p className="text-xs text-white/60">
-                            {offer.price_per_fraction} DHB each
+                            {offer.price_per_fraction} <DhbCoin /> each
                           </p>
                         </div>
                         <div className="text-right shrink-0">

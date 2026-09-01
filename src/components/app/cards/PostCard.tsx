@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type ReactNode } from 'react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -56,7 +57,6 @@ import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
-import dehubCoinSmall from '@/assets/dehub-coin.png';
 import {
   Drawer,
   DrawerContent,
@@ -650,9 +650,13 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                     className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
                   >
                     <Star className="w-3.5 h-3.5" />
-                    {cheapestPlanPrice !== undefined
-                      ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB`
-                      : 'Subscribe to read'}
+                    {cheapestPlanPrice !== undefined ? (
+                      <>
+                        Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                      </>
+                    ) : (
+                      'Subscribe to read'
+                    )}
                   </button>
                 )}
                 {isLocked && (
@@ -664,7 +668,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                     {/* Deliberately not "Subscribe" — isLockContent is "hold N
                         of this token", which is a different gate to the one
                         above and has no subscription anywhere in it. */}
-                    Hold {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'} to read
+                    Hold <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} /> to read
                   </button>
                 )}
               </div>
@@ -902,8 +906,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(post.lockedPrice)} currency={post.lockedCurrency} /></span>
                   </div>
                 </div>
               )}

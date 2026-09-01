@@ -1,4 +1,5 @@
 import React from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 /**
@@ -91,7 +92,7 @@ const PostingAllowanceChart = () => (
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="font-medium text-foreground font-exo truncate">{tier.name}</span>
                   <span className="text-xs text-muted-foreground font-mono flex-shrink-0">
-                    {tier.threshold} DHB
+                    {tier.threshold} <DhbCoin />
                   </span>
                 </div>
 
@@ -117,8 +118,8 @@ const PostingAllowanceChart = () => (
                     <span className="text-muted-foreground"> text posts</span>
                   </span>
                   <span className="text-xs text-muted-foreground font-mono">
-                    then {tier.dhbPerGb.toLocaleString()} DHB/GB ({usd(tier.dhbPerGb)}) ·{' '}
-                    {tier.dhbPerTextPost} DHB/post ({usd(tier.dhbPerTextPost)})
+                    then {tier.dhbPerGb.toLocaleString()} <DhbCoin />/GB ({usd(tier.dhbPerGb)}) ·{' '}
+                    {tier.dhbPerTextPost} <DhbCoin />/post ({usd(tier.dhbPerTextPost)})
                   </span>
                 </div>
               </div>

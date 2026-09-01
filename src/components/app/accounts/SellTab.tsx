@@ -16,6 +16,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { AlertTriangle, Loader2, RotateCcw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -255,7 +256,7 @@ function HistoryRow({ listing }: { listing: MyAccountListing }) {
           {listing.status === 'cancelled' ? listing.cancelReason || 'Withdrawn' : 'Sold'}
         </p>
       </div>
-      <p className="text-xs text-zinc-500 shrink-0">{listing.priceDhb.toLocaleString()} DHB</p>
+      <p className="text-xs text-zinc-500 shrink-0">{listing.priceDhb.toLocaleString()} <DhbCoin /></p>
     </div>
   );
 }

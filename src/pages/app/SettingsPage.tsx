@@ -1,5 +1,6 @@
 ﻿import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -1771,7 +1772,7 @@ function PrivacySettings() {
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
-              <span className="text-zinc-400 text-sm">DHB</span>
+              <span className="text-zinc-400 text-sm"><DhbCoin /></span>
               {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
                 <Button
                   size="sm"
@@ -3017,7 +3018,7 @@ function AssetsSettings() {
             <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
               <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
             </div>
-            <span className="text-white font-semibold">{coinBalance.toLocaleString()} DHB</span>
+            <span className="text-white font-semibold">{coinBalance.toLocaleString()}</span>
           </div>
           <span className="text-zinc-500 group-hover:text-white transition-colors text-sm">{t('settings.manage')}</span>
         </button>
@@ -3202,7 +3203,7 @@ function MessagesSettings() {
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
-              <span className="text-zinc-400 text-sm">DHB</span>
+              <span className="text-zinc-400 text-sm"><DhbCoin /></span>
               {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
                 <Button
                   size="sm"

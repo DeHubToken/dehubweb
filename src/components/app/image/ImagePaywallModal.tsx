@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader2, ImageIcon, AlertCircle, ChevronDown } from 'lucide-react';
@@ -150,7 +151,7 @@ export function ImagePaywallModal({
                       </div>
                       <div className="text-right shrink-0">
                         <p className="text-sm font-medium text-white">${optionCostUsd.toFixed(2)}</p>
-                        <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} DHB</p>
+                        <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin /></p>
                       </div>
                     </button>
                   );
@@ -194,7 +195,7 @@ export function ImagePaywallModal({
                     <span className="text-white font-medium">Pay with DHB</span>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-white">{formatDhb(costDhb)} DHB</p>
+                    <p className="text-xl font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
                     <p className="text-xs text-zinc-500">≈ ${costUsd.toFixed(3)}</p>
                   </div>
                 </div>
@@ -218,7 +219,7 @@ export function ImagePaywallModal({
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               ) : (
                 <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
-                  {formatDhb(walletDhb)} DHB
+                  {formatDhb(walletDhb)} <DhbCoin />
                 </span>
               )}
             </div>
@@ -234,7 +235,7 @@ export function ImagePaywallModal({
           {needsTokens && !isQuoting && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
               <p className="text-red-400 text-sm text-center">
-                This costs {formatDhb(costDhb)} DHB and you hold {formatDhb(walletDhb)}.
+                This costs {formatDhb(costDhb)} <DhbCoin /> and you hold {formatDhb(walletDhb)}.
               </p>
             </div>
           )}
