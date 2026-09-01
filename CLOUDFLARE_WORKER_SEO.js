@@ -2028,6 +2028,113 @@ async function resolveNewPostTokenId(n) {
   }
 }
 
+/** The sitemap spec's own cap, and the page size the API is asked for. */
+const PROFILE_SITEMAP_PAGE_SIZE = 50000;
+
+/**
+ * One page of the profile list, or null.
+ *
+ * The API decides who is in it — accounts with at least one post a signed-out
+ * visitor can see. That threshold lives there rather than here because it is an
+ * indexation policy, not a rendering detail: submitting a few thousand empty
+ * profile pages is a thin-content signal Google applies to the whole site.
+ *
+ * The generous timeout is deliberate. This runs at most twice an hour per
+ * colo (the responses carry s-maxage=3600) and the first uncached call behind
+ * it aggregates every published post; giving up early would mean publishing the
+ * fifty-URL fallback for an hour to save a few seconds nobody is waiting on.
+ */
+async function dehubProfileSitemap(page, limit) {
+  try {
+    const res = await fetch(
+      `https://api.dehub.io/api/sitemap/profiles?page=${page}&limit=${limit}`,
+      { signal: AbortSignal.timeout(20000) },
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !Array.isArray(data.profiles)) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * A page of profile rows as sitemap XML.
+ *
+ * Exported for its tests: the two filters below are the difference between a
+ * sitemap of real pages and a sitemap of 404s, and neither is visible in a
+ * response anyone reads.
+ *
+ *  - `couldBeProfileSegment` is the same test the SSR path uses to decide a URL
+ *    IS a profile. A handful of accounts pre-date the reserved-name list and
+ *    hold names like `admin` and `explore`; `dehub.io/<that>` serves the route,
+ *    not the person, so submitting it asks Google to index a page that will
+ *    never exist. It also drops anything with a dot, which is the same rule
+ *    that keeps `/favicon.ico` from being read as a username.
+ *  - Case-insensitive de-duplication, because the router matches
+ *    case-insensitively: `/Alice` and `/alice` are one page, and submitting
+ *    both is a self-inflicted duplicate.
+ *
+ * `changefreq` is weekly rather than the old daily. Fifty hand-picked accounts
+ * could honestly claim daily; several thousand cannot, and a sitemap whose
+ * hints are contradicted by every recrawl is one whose hints get ignored.
+ */
+export function profileSitemapXml(profiles, systemRoutes) {
+  const seen = new Set();
+  const urls = [];
+  for (const p of profiles || []) {
+    const username = typeof p?.username === 'string' ? p.username.trim().replace(/^@+/, '') : '';
+    if (!username) continue;
+    const key = username.toLowerCase();
+    if (seen.has(key) || !couldBeProfileSegment(key, systemRoutes)) continue;
+    seen.add(key);
+    // Anything not an exact YYYY-MM-DD is dropped rather than passed through:
+    // a malformed lastmod invalidates the whole file for some parsers, and the
+    // date is the least important thing in the entry.
+    const lastmod = /^\d{4}-\d{2}-\d{2}$/.test(p?.lastmod ?? '') ? `<lastmod>${p.lastmod}</lastmod>` : '';
+    urls.push(
+      `  <url><loc>${APP_URL}/${encodeURIComponent(username)}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.5</priority></url>`,
+    );
+  }
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
+}
+
+/**
+ * Correct the profile entries in a sitemap index built by the Supabase
+ * function: give chunk 1 the real newest-profile date, and add the chunks the
+ * function does not know exist.
+ *
+ * Exported for its tests, and every step is guarded — a null `meta`, a changed
+ * upstream shape or a missing closing tag all leave the index exactly as it
+ * arrived. Publishing a broken index costs every sitemap on the site; missing
+ * chunk 2 costs the profiles above 50,000.
+ */
+export function patchProfileChunks(indexXml, meta) {
+  if (!indexXml || !meta || !indexXml.includes('</sitemapindex>')) return indexXml;
+
+  let out = indexXml;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(meta.lastmod ?? '')) {
+    out = out.replace(
+      /<sitemap><loc>[^<]*\/sitemap-profiles-1\.xml<\/loc>(?:<lastmod>[^<]*<\/lastmod>)?<\/sitemap>/,
+      `<sitemap><loc>${APP_URL}/sitemap-profiles-1.xml</loc><lastmod>${meta.lastmod}</lastmod></sitemap>`,
+    );
+  }
+
+  const total = Number(meta.total);
+  if (!Number.isFinite(total) || total <= 0) return out;
+  const chunks = Math.ceil(total / PROFILE_SITEMAP_PAGE_SIZE);
+  for (let i = 2; i <= chunks; i++) {
+    if (out.includes(`/sitemap-profiles-${i}.xml`)) continue;
+    out = out.replace(
+      '</sitemapindex>',
+      `  <sitemap><loc>${APP_URL}/sitemap-profiles-${i}.xml</loc></sitemap>\n</sitemapindex>`,
+    );
+  }
+  return out;
+}
+
 function shouldServeSSR(pathname) {
   // Feed section pages (/explore, /videos, /shorts) + their /app twins — bot
   // HTML built at the edge. Must be checked before the profile fall-through so
@@ -2785,6 +2892,31 @@ async function handleRequest(request, env) {
     );
   }
 
+  // Profiles, from the API that actually holds them. The Supabase function
+  // this replaces read `suggested_profiles_cache` — the fifty rows behind the
+  // "who to follow" rail — so the sitemap offered Google fifty profile URLs
+  // against several thousand accounts, and the rest were crawlable only where
+  // something happened to link to them. That table was never a census; it was
+  // reused as one because profiles live in Mongo and nothing on the Supabase
+  // side could see them.
+  //
+  // Falls through to the proxy below on any failure, so a slow or broken API
+  // degrades to the fifty-URL sitemap rather than to a 503.
+  const profileSitemapMatch = pathname.match(/^\/sitemap-profiles-(\d+)\.xml$/);
+  if (profileSitemapMatch) {
+    const meta = await dehubProfileSitemap(Number(profileSitemapMatch[1]) || 1, PROFILE_SITEMAP_PAGE_SIZE);
+    if (meta) {
+      return new Response(profileSitemapXml(meta.profiles, SYSTEM_ROUTES), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      });
+    }
+    console.error(`[Edge] profile sitemap unavailable for ${pathname}, falling back`);
+  }
+
   const sitemapMatch = pathname.match(/^\/sitemap(?:-(posts|profiles)-(\d+))?\.xml$/);
   if (sitemapMatch) {
     const [, kind, page] = sitemapMatch;
@@ -2805,6 +2937,15 @@ async function handleRequest(request, env) {
             '</sitemapindex>',
             `  <sitemap><loc>${APP_URL}/sitemap-bounties.xml</loc></sitemap>\n</sitemapindex>`,
           );
+        }
+        // The same function counts profile chunks from that 50-row suggestion
+        // cache and dates them by when the cache was rebuilt, so it advertises
+        // exactly one chunk however many profiles exist, stamped with a date
+        // that moves for no reason. Correct both from the real list. Costs one
+        // small request on a path Google reads rarely and the edge holds for an
+        // hour; a null answer leaves the index exactly as the function built it.
+        if (!kind) {
+          body = patchProfileChunks(body, await dehubProfileSitemap(1, 1));
         }
         return new Response(body, {
           status: 200,
