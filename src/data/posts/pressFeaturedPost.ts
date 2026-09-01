@@ -24,9 +24,9 @@ With a readership that spans all four corners of the globe, Yahoo Finance is the
 
 ### Entrepreneur
 
-One of the most recognised names in business media, Entrepreneur reaches more than 20 million unique users each month and over 15 million followers across social. Our founders Malik, Mike and Indi sat down for an interview and review of DeHub's "redefining vision" for the creator economy.
+One of the most recognised names in business media, Entrepreneur reaches more than 20 million unique users each month and over 15 million followers across social. Entrepreneur Asia Pacific covered DeHub's vision for a creator-owned entertainment economy — VR-ready sport, film, music and gaming built on NFT infrastructure. Entrepreneur has since taken the piece down, so the link below opens the Wayback Machine capture.
 
-**Read it:** [DeHub's "Redefining Vision" — Entrepreneur](https://www.entrepreneur.com/article/420564)
+**Read it:** [A User-Centric Entertainment EcoSystem that Empowers Creators and Consumers — Entrepreneur (archived)](https://web.archive.org/web/20220702152228/https://www.entrepreneur.com/article/420564)
 
 ### Investing.com
 
