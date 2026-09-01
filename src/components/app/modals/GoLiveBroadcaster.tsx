@@ -24,6 +24,8 @@ import {
   Move,
   Wand2,
   MessageSquare,
+  Eye,
+  X,
   Users,
   Heart,
   Gift,
@@ -77,6 +79,26 @@ const LivePostChat = lazy(() =>
 );
 
 const logger = createLogger('GoLiveBroadcaster');
+
+/**
+ * Where the top edge of the broadcast chrome sits, on both sides.
+ *
+ * A single value because the live chip, the audience and the close button all
+ * have to share a baseline — they were on three different offsets, which is
+ * what made the corner look crooked. The env() term keeps all of it clear of a
+ * notch or a punch-hole camera; on a phone the status bar was sitting on top of
+ * the live chip.
+ */
+const TOP_CHROME_Y = 'top-[max(0.75rem,env(safe-area-inset-top))]';
+
+/**
+ * The glass a floating pill is made of, per the design system block at the top
+ * of index.css: white-on-white translucency and a blur, never a colour fill.
+ * Monochrome is the rule here — the only hue on this screen is the live dot,
+ * because "on air" is semantic state.
+ */
+const GLASS_PILL =
+  'inline-flex h-8 items-center rounded-full border border-white/20 bg-white/10 px-3 backdrop-blur-xl';
 
 /**
  * How often the console asks the API for viewers, likes and tips.
@@ -1487,7 +1509,13 @@ export function GoLiveBroadcaster({
         )}
 
         {(phase === 'live' || phase === 'reconnecting') && (
-          <div className="absolute left-3 top-3 flex items-center gap-2">
+          /* One row, one baseline. This used to be three absolutely-positioned
+             clusters at top-3, top-12 and top-[4.75rem] with three different
+             heights, so nothing on the top edge lined up with anything else and
+             the right-hand control sat lower than the left. Everything that
+             belongs on that edge is now h-8 and shares TOP_CHROME_Y, which also
+             clears the notch — a phone's status bar was landing on the chip. */
+          <div className={cn('absolute left-3 z-20 flex h-9 items-center gap-2', TOP_CHROME_Y)}>
             {/* data-live-pulse marks this as a meaningful live indicator (the
                 themes map it to their live colour and exempt it from skeleton
                 rules); data-keep-dark exempts it from the portal palette
@@ -1498,7 +1526,9 @@ export function GoLiveBroadcaster({
               data-live-pulse
               data-keep-dark
               className={cn(
-                'flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide',
+                'flex h-8 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold tracking-wide',
+                // The one place hue is allowed on this screen: "on air" is a
+                // state, not decoration. Everything else here is glass.
                 phase === 'live'
                   ? 'bg-red-500 text-white'
                   : 'bg-amber-500/90 text-black'
@@ -1516,14 +1546,25 @@ export function GoLiveBroadcaster({
               />
               {statusLabel}
             </span>
-            <span className="rounded-full bg-black/60 px-2.5 py-1 font-mono text-[11px] text-white">
+
+            {/* The audience rides beside the live chip rather than on its own
+                line below it — it is the number a host looks for first, and a
+                second row of floating text over a moving picture is noise. */}
+            {streamId && (
+              <span className={cn(GLASS_PILL, 'gap-1.5 text-[11px] text-white')}>
+                <Eye className="h-3.5 w-3.5" />
+                {watching}
+              </span>
+            )}
+
+            <span className={cn(GLASS_PILL, 'font-mono text-[11px] text-white')}>
               {formatElapsed(elapsed)}
             </span>
           </div>
         )}
 
         {isScreen && phase !== 'error' && (
-          <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[11px] text-white">
+          <span className="absolute right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] text-white backdrop-blur-xl">
             <ScreenShare className="h-3 w-3" />
             Sharing screen
           </span>
@@ -1662,21 +1703,27 @@ export function GoLiveBroadcaster({
       </div>
 
       {/* The room, at a glance. Only once media is flowing — before that every
-          number is zero and reads as a failure rather than a fresh start. */}
+          number is zero and reads as a failure rather than a fresh start.
+          Full-bleed drops `watching` from this row: it has moved up beside the
+          live chip, where a host looks first, and printing it twice on one
+          screen is how the two numbers came to disagree in the first place. */}
       {streamId && (phase === 'live' || phase === 'reconnecting') && (
         <div
           className={cn(
             'flex items-center justify-center gap-4 text-[11px] text-zinc-400',
-            // Under the live chip rather than under the video, and light on its
-            // own — these are glanceable numbers, not a panel.
+            // A second line under the top row, on the same left margin and the
+            // same 8px rhythm, so the corner reads as one stack rather than
+            // three things that happen to be near each other.
             fullBleed &&
-              'absolute left-3 top-12 z-10 justify-start text-white/80 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]'
+              'absolute left-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] z-20 justify-start text-white/80 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]'
           )}
         >
-          <span className="flex items-center gap-1.5">
-            <Users className="h-3.5 w-3.5" />
-            {watching} watching
-          </span>
+          {!fullBleed && (
+            <span className="flex items-center gap-1.5">
+              <Users className="h-3.5 w-3.5" />
+              {watching} watching
+            </span>
+          )}
           <span className="flex items-center gap-1.5">
             <Heart className="h-3.5 w-3.5" />
             {room?.likes ?? 0}
@@ -1695,7 +1742,8 @@ export function GoLiveBroadcaster({
         <div
           className={cn(
             'flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-200',
-            fullBleed && 'absolute left-3 right-3 top-[4.75rem] z-10'
+            fullBleed &&
+              'absolute left-3 right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+5.5rem)] z-20'
           )}
         >
           <SignalLow className="mt-px h-3.5 w-3.5 shrink-0" />
@@ -1776,27 +1824,38 @@ export function GoLiveBroadcaster({
         errorMessage="Could not play that — your microphone feed is not running"
       />
 
-      {/* Full-bleed puts this top-right as a compact pill rather than a bar at
-          the foot of the screen: the foot belongs to the controls, and two
-          stacked bars over a portrait video eats the picture. It keeps a solid
-          fill where the controls do not — ending a broadcast is the one action
-          that should never be missed against a bright frame. */}
+      {/* Leaving the broadcast, top-right, on the same baseline as the live
+          chip opposite it.
+          This was a red "End" pill, which broke the design system twice over:
+          coloured button fills are not used anywhere on DeHub, and it made the
+          most destructive control on the screen the brightest thing on it. It
+          is a glass circle now, the same glass as every other floating control,
+          and the confirmation dialog is what stops an accidental end — not a
+          loud colour. Square h-9/w-9 so it is a real 36px tap target and
+          matches the h-8 pills' optical weight rather than sitting lower than
+          them. */}
       <button
         onClick={() => setConfirmEnd(true)}
         disabled={isEnding}
+        aria-label="End the broadcast"
         className={cn(
           'flex items-center justify-center gap-2 font-medium transition-colors disabled:opacity-60',
           fullBleed
-            ? 'absolute right-3 top-3 z-20 h-9 rounded-full bg-red-500/90 px-4 text-xs text-white active:bg-red-500'
+            ? cn(
+                'absolute right-3 z-20 h-9 w-9 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-xl active:bg-white/20',
+                TOP_CHROME_Y
+              )
             : 'h-14 w-full gap-2 rounded-xl border border-red-500/30 bg-red-500/10 text-sm text-red-300 hover:bg-red-500/20'
         )}
       >
         {isEnding ? (
           <Loader2 className="h-4 w-4 animate-spin" />
+        ) : fullBleed ? (
+          <X className="h-[18px] w-[18px]" />
         ) : (
           <Radio className="h-4 w-4" />
         )}
-        {isEnding ? 'Ending…' : fullBleed ? 'End' : 'End Stream'}
+        {fullBleed ? null : isEnding ? 'Ending…' : 'End Stream'}
       </button>
 
       <EndStreamConfirmDialog
