@@ -333,7 +333,18 @@ export function AudioVisualizer({
       // A drag paints where the finger is, not where the audio is, so the
       // waveform tracks the scrub instead of lagging a whole gesture behind.
       const progress = scrubRatioRef.current ?? played;
-      drawStatic(ctx, EMPTY_DATA, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
+      // Default reads the analyser too now — it blooms out of the playhead —
+      // but only while actually playing. The synthesised idle frame the other
+      // styles fall back on would leave a frozen lump in the waveform on a
+      // paused card, and this is the style people scrub against.
+      let staticData = EMPTY_DATA;
+      const staticAnalyser = analyserRef.current;
+      if (staticAnalyser && isPlayingRef.current) {
+        const freq = new Uint8Array(staticAnalyser.frequencyBinCount);
+        staticAnalyser.getByteFrequencyData(freq);
+        staticData = freq;
+      }
+      drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
       return;
     }
 
