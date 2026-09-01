@@ -11,6 +11,8 @@
  */
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { CalendarClock, Upload, Users } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -30,11 +32,16 @@ function handleClass(length: number): string {
   return 'text-base sm:text-lg';
 }
 
-/** "since 2021", off the account's creation date. */
-export function accountSince(accountCreatedAt: string | null): string | null {
+/**
+ * "since 2021", off the account's creation date.
+ *
+ * Takes the translator rather than calling the hook: this is a plain helper,
+ * not a component, and the buy drawer calls it too.
+ */
+export function accountSince(accountCreatedAt: string | null, t: TFunction): string | null {
   if (!accountCreatedAt) return null;
   const year = new Date(accountCreatedAt).getFullYear();
-  return Number.isFinite(year) ? `since ${year}` : null;
+  return Number.isFinite(year) ? t('accounts.sinceYear', { year }) : null;
 }
 
 export function compactCount(n: number): string {
@@ -44,8 +51,9 @@ export function compactCount(n: number): string {
 }
 
 export const AccountCard = memo(function AccountCard({ listing, onClick, isOwn }: Props) {
+  const { t } = useTranslation();
   const avatar = buildAvatarUrl(listing.seller.address, listing.seller.avatarUrl);
-  const since = accountSince(listing.seller.accountCreatedAt);
+  const since = accountSince(listing.seller.accountCreatedAt, t);
 
   return (
     <button
@@ -71,10 +79,10 @@ export const AccountCard = memo(function AccountCard({ listing, onClick, isOwn }
         </p>
 
         <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-          <Chip icon={<Users className="w-3 h-3" />} label={`${compactCount(listing.seller.followers)} followers`} />
-          <Chip icon={<Upload className="w-3 h-3" />} label={`${compactCount(listing.seller.uploads)} uploads`} />
+          <Chip icon={<Users className="w-3 h-3" />} label={t('accounts.followersCount', { count: compactCount(listing.seller.followers) })} />
+          <Chip icon={<Upload className="w-3 h-3" />} label={t('accounts.uploadsCount', { count: compactCount(listing.seller.uploads) })} />
           {since && <Chip icon={<CalendarClock className="w-3 h-3" />} label={since} />}
-          {isOwn && <Chip label="Yours" />}
+          {isOwn && <Chip label={t('accounts.yours')} />}
         </div>
 
         {listing.description && (
