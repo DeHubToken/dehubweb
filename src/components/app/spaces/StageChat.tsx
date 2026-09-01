@@ -18,6 +18,7 @@
 
 import { MessageSquare } from 'lucide-react';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RealtimeChatPanel, type ChatSenderProfile } from '@/components/app/chat/RealtimeChatPanel';
 import { useStageChat } from '@/hooks/use-stage-chat';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -44,6 +45,7 @@ export function StageChat({
   className,
   listClassName = 'h-56',
 }: StageChatProps) {
+  const { t } = useTranslation();
   const {
     messages,
     isLoading,
@@ -80,19 +82,19 @@ export function StageChat({
       canModerate={isHost}
       draftKey={`stage:${space.id}`}
       icon={MessageSquare}
-      title={ended ? 'Comments' : 'Live chat'}
+      title={ended ? t('stages.chatComments') : t('stages.chatLive')}
       emptyHint={
         ended
-          ? 'No comments yet — leave the first.'
+          ? t('stages.chatEmptyEnded')
           : scheduled
-            ? 'Nothing yet — say hello before it starts.'
-            : 'No messages yet — say something to the room.'
+            ? t('stages.chatEmptyScheduled')
+            : t('stages.chatEmptyLive')
       }
-      placeholder={ended ? 'Leave a comment...' : 'Message the room...'}
-      signInLabel={ended ? 'Sign in to comment' : 'Sign in to chat'}
+      placeholder={ended ? t('stages.chatPlaceholderEnded') : t('stages.chatPlaceholderLive')}
+      signInLabel={ended ? t('stages.chatSignInComment') : t('stages.chatSignInChat')}
       error={
         unavailable
-          ? 'Chat is not available for this stage yet.'
+          ? t('stages.chatUnavailable')
           : null
       }
       listClassName={listClassName}
