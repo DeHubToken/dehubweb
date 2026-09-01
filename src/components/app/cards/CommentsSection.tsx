@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext } from 'react';
+import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -35,7 +35,11 @@ import { TranslatableText, useTranslation } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
-import { AudioVisualizer } from '../audio';
+/** Lazy for the same reason VideoCard is: the visualizer only appears once a
+ *  voice note has been recorded, and it drags ~50 KB of canvas painters. */
+const AudioVisualizer = lazy(() =>
+  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
+);
 import { checkImpersonation } from '@/lib/impersonation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
@@ -1887,13 +1891,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           {/* Voice note preview with visualizer */}
           {voiceNote && (
             <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800">
-              <AudioVisualizer
-                audioUrl={voiceNote.url}
-                isPlaying={isPlayingPreview}
-                onPlayPause={togglePreviewPlayback}
-                className="w-full h-32"
-                showStylePicker={true}
-              />
+              <Suspense fallback={<div className="w-full h-32 rounded-xl bg-black/40" />}>
+                <AudioVisualizer
+                  audioUrl={voiceNote.url}
+                  isPlaying={isPlayingPreview}
+                  onPlayPause={togglePreviewPlayback}
+                  className="w-full h-32"
+                  showStylePicker={true}
+                />
+              </Suspense>
               <div className="flex items-center justify-between px-3 py-2 bg-zinc-800">
                 <span className="text-xs text-zinc-400">{voiceNote.duration}s voice note</span>
                 <button

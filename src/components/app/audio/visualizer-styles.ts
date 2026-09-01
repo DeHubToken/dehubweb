@@ -592,7 +592,16 @@ export function resetTerrain() {
 
 /** Cached decoded waveform data per URL */
 const waveformCache = new Map<string, number[]>();
-let activeDecodeUrl: string | null = null;
+/**
+ * Decodes currently in flight, keyed by URL, each holding the cards waiting on
+ * it. This used to be a single `activeDecodeUrl` string: a card whose track
+ * started decoding while a *different* track was in flight returned early and
+ * its `onReady` was never called, so its peaks stayed null forever and it
+ * painted an empty box. A feed with more than one audio post hit that every
+ * time. One entry per URL fixes it and still collapses repeat requests for the
+ * same URL into a single fetch.
+ */
+const activeDecodes = new Map<string, ((peaks: number[]) => void)[]>();
 
 /**
  * Decode an audio URL and cache its per-bar amplitude peaks.
@@ -610,9 +619,20 @@ export async function decodeAudioWaveform(
     return;
   }
 
-  // Avoid duplicate decodes
-  if (activeDecodeUrl === audioUrl) return;
-  activeDecodeUrl = audioUrl;
+  // Same URL already decoding — wait on that one rather than fetching twice.
+  const waiting = activeDecodes.get(audioUrl);
+  if (waiting) {
+    waiting.push(onReady);
+    return;
+  }
+  const subscribers: ((peaks: number[]) => void)[] = [onReady];
+  activeDecodes.set(audioUrl, subscribers);
+
+  const settle = (peaks: number[]) => {
+    waveformCache.set(audioUrl, peaks);
+    activeDecodes.delete(audioUrl);
+    for (const fn of subscribers) fn(peaks);
+  };
 
   try {
     const response = await fetch(audioUrl);
@@ -635,18 +655,11 @@ export async function decodeAudioWaveform(
 
     // Normalize to 0–1
     const max = Math.max(...peaks, 0.001);
-    const normalized = peaks.map(p => p / max);
-
-    waveformCache.set(audioUrl, normalized);
-    activeDecodeUrl = null;
-    onReady(normalized);
+    settle(peaks.map(p => p / max));
   } catch (err) {
     console.error('Failed to decode audio waveform:', err);
-    activeDecodeUrl = null;
     // Fallback: generate a seeded pattern
-    const fallback = generateFallbackPattern(audioUrl, barCount);
-    waveformCache.set(audioUrl, fallback);
-    onReady(fallback);
+    settle(generateFallbackPattern(audioUrl, barCount));
   }
 }
 
@@ -677,6 +690,53 @@ function generateFallbackPattern(seed: string, count: number): number[] {
 }
 
 /**
+ * A stable, per-post waveform shape to paint before (or instead of) the real
+ * decode. The decode needs the whole file, so a card that is far from the
+ * viewport, offline or serving a track the browser cannot decode has nothing —
+ * and a waveform of nothing is a black rectangle. Every style falls back to
+ * this so an audio post always looks like an audio post.
+ */
+const seededPeaksCache = new Map<string, number[]>();
+export function seededPeaks(seed: string, count: number): number[] {
+  const key = `${seed}:${count}`;
+  let cached = seededPeaksCache.get(key);
+  if (!cached) {
+    cached = generateFallbackPattern(seed, count);
+    seededPeaksCache.set(key, cached);
+  }
+  return cached;
+}
+
+/**
+ * Frequency-domain frame synthesised from a waveform shape, so the analyser
+ * styles have something to draw while paused. Without it, switching style with
+ * the audio stopped left the previous style's last frame on the canvas and the
+ * picker looked dead.
+ */
+export function idleFrequencyData(peaks: number[], length: number): Uint8Array {
+  const out = new Uint8Array(length);
+  if (!peaks.length) return out;
+  for (let i = 0; i < length; i++) {
+    const p = peaks[Math.floor((i / length) * peaks.length)] ?? 0;
+    // Tilt down across the spectrum the way real music does, so bars/spectrum
+    // read as a plausible frozen frame rather than a flat wall.
+    const tilt = 1 - (i / length) * 0.75;
+    out[i] = Math.round(Math.min(1, p * 0.7 * tilt) * 255);
+  }
+  return out;
+}
+
+/** Time-domain counterpart of `idleFrequencyData`, centred on the 128 zero line. */
+export function idleTimeData(peaks: number[], length: number): Uint8Array {
+  const out = new Uint8Array(length);
+  for (let i = 0; i < length; i++) {
+    const p = peaks.length ? (peaks[Math.floor((i / length) * peaks.length)] ?? 0) : 0;
+    out[i] = Math.round(128 + Math.sin((i / length) * Math.PI * 8) * p * 40);
+  }
+  return out;
+}
+
+/**
  * Draw the full-track waveform. `progress` is 0–1 representing playback position.
  */
 export function drawStatic(
@@ -685,15 +745,18 @@ export function drawStatic(
   width: number,
   height: number,
   hue: number = 0,
-  _seed: string = 'default',
+  seed: string = 'default',
   progress: number = 0,
-  peaks: number[] | null = null
+  peaks: number[] | null = null,
+  barCountHint = 100
 ) {
   ctx.clearRect(0, 0, width, height);
 
-  if (!peaks || peaks.length === 0) return;
+  // Never return without drawing: an audio card with no decoded peaks yet used
+  // to be an empty black box until the whole file had downloaded.
+  const shape = peaks && peaks.length ? peaks : seededPeaks(seed, barCountHint);
 
-  const barCount = peaks.length;
+  const barCount = shape.length;
   const gap = 2;
   const barWidth = Math.max(1, (width - gap * (barCount - 1)) / barCount);
   const centerY = height / 2;
@@ -702,7 +765,7 @@ export function drawStatic(
   const progressX = progress * (barCount * (barWidth + gap));
 
   for (let i = 0; i < barCount; i++) {
-    const barH = Math.max(2, peaks[i] * maxBarH);
+    const barH = Math.max(2, shape[i] * maxBarH);
     const x = i * (barWidth + gap);
     const y = centerY - barH / 2;
     const barEnd = x + barWidth;

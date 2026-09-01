@@ -53,8 +53,11 @@ describe('feed video — a tap on the media reveals controls, it does not naviga
     // the only control that can start the clip unrenderable — and now that a tap
     // no longer escapes to the post page, that is a dead end rather than a
     // detour. Only the scrubber and timestamps may wait for real metadata.
+    // `!video.isAudio` is the one other permitted condition: that bar drives the
+    // <video> element, and an audio post has none — it carries the visualizer's
+    // own transport instead.
     const bar = VIDEO_CARD.match(
-      /\{showControls && \(\n\s*<div data-video-controls className="absolute bottom-0([\s\S]*?)\n {8}\)\}/
+      /\{showControls && !video\.isAudio && \(\n\s*<div data-video-controls className="absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
     expect(bar, 'transport bar is not gated on showControls alone').not.toBeNull();
     expect(bar![1]).toContain('handlePlayClick()');
