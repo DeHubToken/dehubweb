@@ -1364,6 +1364,15 @@ function entityImageMetaTags(imageUrl, alt) {
  * belong in.
  */
 function entityHtml({ canonicalUrl, title, description, image, jsonLd, breadcrumb, heading, bodyHtml, ogType = 'website', noindex = false }) {
+  // Every title here is `${name} — DeHub <section>` with `name` straight out
+  // of a user-editable column, so it inherits that column's newlines and
+  // length. Callers already cap the description; capping both in one place is
+  // what makes that true of the next renderer too. The looser title cap is on
+  // purpose — these end in a brand suffix, and cutting at TITLE_MAX would eat
+  // the suffix rather than the name, which reads worse than a title Google
+  // truncates for itself. It exists to catch the pathological case only.
+  title = truncate(title, ENTITY_TITLE_MAX);
+  description = truncate(description, DESCRIPTION_MAX);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1394,6 +1403,59 @@ ${bodyHtml}
 function truncate(text, max) {
   const t = String(text || '').replace(/\s+/g, ' ').trim();
   return t.length > max ? `${t.slice(0, max - 1)}…` : t;
+}
+
+/** Longest <title> Google will render before it writes its own. Applied to
+ *  post text, which is a snippet with no brand suffix to protect. */
+const TITLE_MAX = 70;
+/** Guard for `${name} — DeHub <section>` titles: pathological lengths only. */
+const ENTITY_TITLE_MAX = 110;
+/** Matches the cap the entity renderers below already pass to truncate(). */
+const DESCRIPTION_MAX = 200;
+
+/**
+ * Whitespace-collapse and cap a string the deployed ssr-seo fn already escaped.
+ *
+ * That fn escapes exactly `"`, `<` and `>` and nothing else, so decoding those
+ * three, truncating, then re-escaping them is lossless — and it is the only way
+ * to cut safely, since slicing the escaped form can land inside a `&quot;` and
+ * emit `&qu…`.
+ */
+function reclamp(escaped, max) {
+  const plain = String(escaped)
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+  return truncate(plain, max)
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/**
+ * The deployed fn interpolates raw post text and profile bios straight into
+ * <title> and the meta content attributes, with no whitespace collapsing and
+ * no length cap. A post has no title of its own, so its body text *is* the
+ * title there: /app/post/3809 shipped 137 characters of a multi-paragraph
+ * Turkish post as its <title>, /app/post/4676 shipped four lines of hashtags,
+ * and bios ran to ~300 characters in the description. Embedded newlines in an
+ * attribute value are legal but every consumer renders them differently.
+ *
+ * Repairing it here rather than in the fn is deliberate: that fn only moves on
+ * a manual `supabase functions deploy` nobody runs, so every other correction
+ * in this proxy branch is a rewrite too.
+ */
+function normalizeProxiedMeta(html) {
+  return html
+    .replace(/(<title>)([^<]*)(<\/title>)/i, (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX)}${b}`)
+    .replace(
+      /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")([^"]*)(">)/g,
+      (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX)}${b}`,
+    )
+    .replace(
+      /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")([^"]*)(">)/g,
+      (m, a, v, b) => `${a}${reclamp(v, DESCRIPTION_MAX)}${b}`,
+    );
 }
 
 function buildStoreHtml(store) {
@@ -3362,6 +3424,12 @@ async function handleRequest(request, env) {
     // Profile titles from the deployed fn are CTA-first ("Join @x on DeHub
     // today!") — entity-led titles rank and read better in SERPs.
     html = html.replace(/Join @([A-Za-z0-9_.-]+) on DeHub today!/g, '@$1 on DeHub — posts, videos &amp; profile');
+
+    // …and its titles/descriptions are raw post text and bios: unbounded and
+    // full of newlines. Runs after the rewrite above so the profile title it
+    // installs is measured, and before the card swap, which matches on
+    // og:image only.
+    html = normalizeProxiedMeta(html);
 
 
     // The deployed fn points og:image at the 200-square logo, and for its own
