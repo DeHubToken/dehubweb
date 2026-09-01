@@ -72,7 +72,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality } from '@/hooks/use-connection-quality';
-import { AudioVisualizer } from '../audio';
+/** Lazy: nine canvas painters and a decoder, ~50 KB, for a minority post type
+ *  — none of it belongs in the bytes parsed before first paint. */
+const AudioVisualizer = lazy(() =>
+  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
+);
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
@@ -1839,17 +1843,19 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <div className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
                 {/* Live AudioVisualizer */}
                 <div className="absolute inset-0">
-                  <AudioVisualizer
-                    audioUrl={video.audioUrl}
-                    isPlaying={isPlaying}
-                    onPlayPause={handlePlayClick}
-                    className="w-full h-full"
-                    showStylePicker={true}
-                    muted={isMuted}
-                    seed={video.id}
-                    decodeEnabled={nearViewport}
-                    durationHint={video.audioDuration || video.durationSeconds || 0}
-                  />
+                  <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>
+                    <AudioVisualizer
+                      audioUrl={video.audioUrl}
+                      isPlaying={isPlaying}
+                      onPlayPause={handlePlayClick}
+                      className="w-full h-full"
+                      showStylePicker={true}
+                      muted={isMuted}
+                      seed={video.id}
+                      decodeEnabled={nearViewport}
+                      durationHint={video.audioDuration || video.durationSeconds || 0}
+                    />
+                  </Suspense>
                 </div>
               </div>
             ) : video.transcodingStatus === 'failed' ? (
