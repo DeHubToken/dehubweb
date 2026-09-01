@@ -437,6 +437,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // at all, so it re-asked the moment the state settled. Held until the next
   // deliberate tap, so a refusal ends the attempt instead of restarting it.
   const rejectedSignatureAddressRef = useRef<string | null>(null);
+  /**
+   * The address a wagmi login just landed on, and when.
+   *
+   * The session address and wagmi's own copy are not written by the same thing.
+   * completeDeHubAuthWagmi signs as the account the WALLET reports holding
+   * (#873 — the remembered one can be an account the extension will not sign
+   * with), while wagmi's `address` only catches up when the provider emits
+   * `accountsChanged`, a tick or more later. In that window the two disagree
+   * for a reason that has nothing to do with the user, and CASE B below reads
+   * any disagreement as "the extension switched accounts underneath a live
+   * session" — so a perfectly good login could end in the switched-accounts
+   * toast, or worse, in switchToProfile carrying them back to the account they
+   * had just moved off.
+   *
+   * Cleared the moment wagmi agrees (CASE A), so the allowance only exists
+   * while the two are actually out of step.
+   */
+  const wagmiAuthSettleRef = useRef<{ address: string; at: number } | null>(null);
   // Guards double-processing of a landed Supabase session (OAuth return fires
   // both INITIAL_SESSION and SIGNED_IN).
   const supaLoginHandledRef = useRef(false);
@@ -1295,6 +1313,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // CASE A: Already authed with same address -> Sync state
         if (isAuthenticated && walletAddress?.toLowerCase() === wagmiAddress.toLowerCase()) {
+            // The two agree, so nothing is settling any more.
+            wagmiAuthSettleRef.current = null;
             if (connectionSource !== 'wagmi') {
               setConnectionSource('wagmi');
             }
@@ -1314,6 +1334,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               wagmiDisconnect();
               return;
             }
+            // A login that has only just landed is still settling: the session
+            // holds the account the wallet said it was on, and wagmi has not
+            // caught up yet. That is our own write racing itself, not the user
+            // touching anything, and reading it as an account switch is how a
+            // successful sign-in could end in a toast saying it had not worked
+            // — or, if the address wagmi is still holding happens to be a saved
+            // profile, in switchToProfile carrying them back to the account
+            // they had just moved off. Short, and cancelled by CASE A the
+            // instant wagmi agrees.
+            const settle = wagmiAuthSettleRef.current;
+            const WAGMI_SETTLE_MS = 8_000;
+            if (
+              settle &&
+              settle.address === walletAddress.toLowerCase() &&
+              Date.now() - settle.at < WAGMI_SETTLE_MS
+            ) {
+              return;
+            }
+
             // An explicit tap means this wallet IS the login the user asked
             // for. Fall through to CASE C, which hands the session over
             // properly (snapshot the outgoing account, wipe its keys as one
@@ -1343,10 +1382,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               // connection rather than the session, and say what happened —
               // silently ignoring it is what made the old behaviour feel like
               // a bug either way.
-              console.log('[Auth] Wallet switched to an unknown account — keeping the current session');
+              // console.log only, until now — so the one branch people actually
+              // see a toast from was the one branch that wrote no row, and
+              // "why does this keep coming back" could not be answered from
+              // the logs at all.
+              authLogger.warn('Wallet switched to an account this device has not signed in as', {
+                sessionAddress: walletAddress.toLowerCase(),
+                incoming,
+                connectorId: wagmiConnector?.id,
+                connectorName: wagmiConnector?.name,
+                savedProfiles: listProfiles().length,
+                buildId: getRunningBuildId(),
+              });
               clearWagmiStorage();
               wagmiDisconnect();
+              // Keyed, so a wallet that re-attaches and mismatches again
+              // replaces this toast instead of stacking another copy on top of
+              // it. The same notice arriving three times reads as three
+              // separate faults.
               toast('Your wallet switched accounts', {
+                id: 'wallet-switched-accounts',
                 description: 'You are still signed in here. Add that wallet as another profile to use it.',
                 action: {
                   label: 'Add profile',
@@ -1784,6 +1839,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const normalizedUser = normalizeUser(authResponse.user, authAddress);
+
+    // From here the session's address is `authAddress`, which is whatever the
+    // wallet said it was holding — not necessarily what wagmi is still
+    // reporting. Stamped so the wagmi effect can tell that gap apart from an
+    // account switch; see wagmiAuthSettleRef.
+    wagmiAuthSettleRef.current = { address: authAddress, at: Date.now() };
 
     localStorage.setItem('dehub_wallet', authAddress);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
