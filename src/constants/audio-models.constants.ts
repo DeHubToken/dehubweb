@@ -49,13 +49,13 @@ export type AudioOutput = 'audio' | 'text' | 'voice';
 
 export interface AudioTaskSpec {
   id: AudioTask;
-  label: string;
-  /** Shown on the task chip's popover row. */
-  description: string;
+  labelKey: string;
+  /** i18n key shown on the task chip's popover row. */
+  descriptionKey: string;
   emoji: string;
   promptRole: PromptRole;
-  /** Placeholder for the composer's text box. Ignored when promptRole is 'none'. */
-  placeholder: string;
+  /** i18n key for the composer's placeholder. Empty when promptRole is 'none'. */
+  placeholderKey: string;
   /**
    * Needs a media file to work from. These four are transformations of
    * something the creator already has, not generations from nothing.
@@ -102,11 +102,11 @@ export const AUDIO_GENERATION_MARKUP = 0.2;
 export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   speech: {
     id: 'speech',
-    label: 'Speech',
-    description: 'Text to speech in any voice',
+    labelKey: 'creator.audioTaskSpeechLabel',
+    descriptionKey: 'creator.audioTaskSpeechDesc',
     emoji: '🎙️',
     promptRole: 'text',
-    placeholder: 'Type what the voice should say',
+    placeholderKey: 'creator.audioTaskSpeechPlaceholder',
     needsMedia: false,
     usesVoice: true,
     output: 'audio',
@@ -121,11 +121,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   dialogue: {
     id: 'dialogue',
-    label: 'Dialogue',
-    description: 'Multi-speaker scene, one voice per line',
+    labelKey: 'creator.audioTaskDialogueLabel',
+    descriptionKey: 'creator.audioTaskDialogueDesc',
     emoji: '🎭',
     promptRole: 'script',
-    placeholder: 'Alice: We should go.\nBob: [laughs] After you.',
+    placeholderKey: 'creator.audioTaskDialoguePlaceholder',
     needsMedia: false,
     usesVoice: true,
     output: 'audio',
@@ -140,11 +140,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   sfx: {
     id: 'sfx',
-    label: 'Sound effect',
-    description: 'Describe a sound and get it',
+    labelKey: 'creator.audioTaskSfxLabel',
+    descriptionKey: 'creator.audioTaskSfxDesc',
     emoji: '💥',
     promptRole: 'description',
-    placeholder: 'Describe the sound, for example "heavy door slamming in a stone hall"',
+    placeholderKey: 'creator.audioTaskSfxPlaceholder',
     needsMedia: false,
     usesVoice: false,
     output: 'audio',
@@ -159,11 +159,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   music: {
     id: 'music',
-    label: 'Music',
-    description: 'Full track from a description',
+    labelKey: 'creator.audioTaskMusicLabel',
+    descriptionKey: 'creator.audioTaskMusicDesc',
     emoji: '🎵',
     promptRole: 'description',
-    placeholder: 'Describe the track, for example "slow lo-fi beat, warm rhodes, vinyl crackle"',
+    placeholderKey: 'creator.audioTaskMusicPlaceholder',
     needsMedia: false,
     usesVoice: false,
     output: 'audio',
@@ -183,11 +183,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   'voice-design': {
     id: 'voice-design',
-    label: 'Voice design',
-    description: 'Invent a voice from a description',
+    labelKey: 'creator.audioTaskVoiceDesignLabel',
+    descriptionKey: 'creator.audioTaskVoiceDesignDesc',
     emoji: '🧬',
     promptRole: 'description',
-    placeholder: 'Describe the voice, for example "gravelly old sailor, slow, warm, faint Irish lilt"',
+    placeholderKey: 'creator.audioTaskVoiceDesignPlaceholder',
     needsMedia: false,
     usesVoice: false,
     output: 'voice',
@@ -202,11 +202,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   'voice-changer': {
     id: 'voice-changer',
-    label: 'Voice changer',
-    description: 'Re-perform your recording in another voice',
+    labelKey: 'creator.audioTaskVoiceChangerLabel',
+    descriptionKey: 'creator.audioTaskVoiceChangerDesc',
     emoji: '🔄',
     promptRole: 'none',
-    placeholder: '',
+    placeholderKey: '',
     needsMedia: true,
     mediaAccept: 'audio/*',
     usesVoice: true,
@@ -223,11 +223,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   dubbing: {
     id: 'dubbing',
-    label: 'Dubbing',
-    description: 'Translate a clip, keeping the speaker’s voice',
+    labelKey: 'creator.audioTaskDubbingLabel',
+    descriptionKey: 'creator.audioTaskDubbingDesc',
     emoji: '🌍',
     promptRole: 'none',
-    placeholder: '',
+    placeholderKey: '',
     needsMedia: true,
     mediaAccept: 'audio/*,video/*',
     usesVoice: false,
@@ -244,11 +244,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   transcribe: {
     id: 'transcribe',
-    label: 'Transcribe',
-    description: 'Speech to text with speaker labels',
+    labelKey: 'creator.audioTaskTranscribeLabel',
+    descriptionKey: 'creator.audioTaskTranscribeDesc',
     emoji: '📝',
     promptRole: 'none',
-    placeholder: '',
+    placeholderKey: '',
     needsMedia: true,
     mediaAccept: 'audio/*,video/*',
     usesVoice: false,
@@ -264,11 +264,11 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   },
   isolate: {
     id: 'isolate',
-    label: 'Clean up',
-    description: 'Strip background noise from a recording',
+    labelKey: 'creator.audioTaskIsolateLabel',
+    descriptionKey: 'creator.audioTaskIsolateDesc',
     emoji: '🧹',
     promptRole: 'none',
-    placeholder: '',
+    placeholderKey: '',
     needsMedia: true,
     mediaAccept: 'audio/*,video/*',
     usesVoice: false,
