@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, X, Video, MonitorPlay, ScreenShare } from 'lucide-react';
+import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -123,6 +124,7 @@ function formatGb(bytes: number): string {
 export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
+  const [confirmEnd, setConfirmEnd] = useState(false);
   const [source, setSource] = useState<StreamSource>('camera');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -1250,7 +1252,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             </div>
           ) : step === 'broadcasting' ? (
             streamData && (
-              <BroadcasterBoundary onEnd={handleEndStream}>
+              <BroadcasterBoundary onEnd={() => setConfirmEnd(true)}>
                 <Suspense
                   fallback={
                     <div className="flex items-center justify-center py-16">
@@ -1325,7 +1327,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           ) : (
             <div className="flex gap-2">
               <button
-                onClick={handleEndStream}
+                onClick={() => setConfirmEnd(true)}
                 className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 transition-colors"
               >
                 <Radio className="w-4 h-4" /> End Stream
@@ -1339,6 +1341,15 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             </div>
           )}
         </div>
+
+      <EndStreamConfirmDialog
+        open={confirmEnd}
+        onOpenChange={setConfirmEnd}
+        onConfirm={() => {
+          setConfirmEnd(false);
+          void handleEndStream();
+        }}
+      />
       </DrawerContent>
     </Drawer>
   );
