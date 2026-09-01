@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import {
   mintPost,
@@ -377,6 +378,14 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
    */
   const mintRequired = isWatch2Earn;
   const effectiveShouldMint = shouldMint || mintRequired;
+
+  /**
+   * Broadcasting from a phone: the sheet becomes the screen. Only while
+   * actually on air — the setup form still wants to be a normal sheet, and
+   * desktop keeps the card at every step.
+   */
+  const isMobile = useIsMobile();
+  const liveFullScreen = isMobile && step === 'broadcasting';
 
   /** Published plans only — an unpublished plan gates a stream nobody can open. */
   const { planIds: myPlanIds } = useCreatorPlansLite(walletAddress);
@@ -962,8 +971,31 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     // user had already paid gas for. The header X stays active as the
     // explicit cancel.
     <Drawer open={isOpen} onOpenChange={handleDismiss} dismissible={!isLoading}>
-      <DrawerContent column glass className="max-h-[90vh] px-4 pb-8">
-        <DrawerHeader className="border-b border-white/10 mb-4 relative">
+      <DrawerContent
+        column
+        glass
+        className={cn(
+          // Broadcasting from a phone takes the whole device. The sheet's own
+          // chrome — height cap, padding, title bar — is what turned a portrait
+          // camera into a wide strip with two thirds of the screen given over
+          // to furniture, so on that one step it all comes off and the
+          // broadcaster fills the frame. Every other step, and every desktop,
+          // keeps the sheet it has always been.
+          // mt-0 and rounded-none are not cosmetic: DrawerContent ships
+          // `mt-24 rounded-t-[20px]`, and with bottom:0 plus a full-viewport
+          // height that margin resolves to top:-96px, clipping the first 96px
+          // of the broadcast off the top of the screen.
+          liveFullScreen
+            ? 'h-[100dvh] max-h-[100dvh] mt-0 rounded-none px-0 pb-0'
+            : 'max-h-[90vh] px-4 pb-8'
+        )}
+      >
+        <DrawerHeader
+          className={cn(
+            'border-b border-white/10 mb-4 relative',
+            liveFullScreen && 'sr-only'
+          )}
+        >
           <DrawerTitle className="text-white flex items-center gap-2">
             <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             {step === 'setup' ? 'Go Live' : step === 'broadcasting' ? "You're Live" : 'Stream Ready'}
@@ -979,7 +1011,15 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           </button>
         </DrawerHeader>
 
-        <div className="flex-1 overflow-y-auto px-1 custom-scrollbar">
+        <div
+          className={cn(
+            'flex-1 custom-scrollbar',
+            // The broadcaster positions itself against this box, and a
+            // scrolling parent would let the floating controls drift off the
+            // bottom of a portrait video.
+            liveFullScreen ? 'relative overflow-hidden' : 'overflow-y-auto px-1'
+          )}
+        >
           {step === 'setup' ? (
             <div className="space-y-4 pb-4">
               <div className="space-y-2">
