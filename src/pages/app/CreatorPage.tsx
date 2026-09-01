@@ -1,5 +1,6 @@
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -54,9 +55,9 @@ type ToolAction = { kind: 'assistant'; preset: Preset } | { kind: 'navigate'; to
 
 interface Tool {
   id: string;
-  name: string;
-  label: string;
-  description: string;
+  nameKey: string;
+  labelKey: string;
+  descriptionKey: string;
   icon: React.ComponentType<{ className?: string }>;
   category: 'Image' | 'Video' | 'Audio' | 'Studio' | 'Agents';
   badge?: 'TRENDING';
@@ -66,32 +67,49 @@ interface Tool {
 const navItems = ['Explore', 'Image', 'Video', 'Audio', 'Studio', 'Marketing', 'Agents', 'Apps'] as const;
 const categories = ['All', 'Image', 'Video', 'Audio', 'Studio', 'Agents'] as const;
 
+/*
+ * The nav and category values double as filter keys — `activeCategory === category`
+ * decides which tools render — so they stay English and are translated only at
+ * the point they are drawn.
+ */
+const NAV_KEYS: Record<string, string> = {
+  Explore: 'creator.navExplore',
+  Image: 'creator.navImage',
+  Video: 'creator.navVideo',
+  Audio: 'creator.navAudio',
+  Studio: 'creator.navStudio',
+  Marketing: 'creator.navMarketing',
+  Agents: 'creator.navAgents',
+  Apps: 'creator.navApps',
+  All: 'creator.navAll',
+};
+
 const heroCards = [
   {
     id: 'dehub-originals',
-    title: 'DEHUB ORIGINALS',
-    subtitle: 'Community created and curated content',
+    titleKey: 'creator.heroOriginalsTitle',
+    subtitleKey: 'creator.heroOriginalsSubtitle',
     kind: 'originals',
     action: { kind: 'navigate', to: 'https://dehub.io/originals' } satisfies ToolAction,
   },
   {
     id: 'video-timeline',
-    title: 'HOLLYWOOD STUDIO',
-    subtitle: 'Create cinema grade productions',
+    titleKey: 'creator.heroHollywoodTitle',
+    subtitleKey: 'creator.heroHollywoodSubtitle',
     kind: 'timeline',
     action: { kind: 'navigate', to: '/editor' } satisfies ToolAction,
   },
   {
     id: 'skill-library',
-    title: 'SKILLS LIBRARY',
-    subtitle: 'Reusable creative systems and brand brains',
+    titleKey: 'creator.heroSkillsTitle',
+    subtitleKey: 'creator.heroSkillsSubtitle',
     kind: 'poster',
     action: { kind: 'assistant', preset: 'skills' } satisfies ToolAction,
   },
   {
     id: 'agents',
-    title: 'AI AGENTS',
-    subtitle: 'Chat, create, publish, remix and automate',
+    titleKey: 'creator.heroAgentsTitle',
+    subtitleKey: 'creator.heroAgentsSubtitle',
     kind: 'mist',
     action: { kind: 'assistant', preset: 'chat' } satisfies ToolAction,
   },
@@ -100,90 +118,90 @@ const heroCards = [
 const tools: Tool[] = [
   {
     id: 'builder',
-    name: 'Builder',
-    label: 'Apps',
-    description: 'Describe an app and get it live — AI builds it, DeHub hosts it, you share the link.',
+    nameKey: 'creator.toolBuilder',
+    labelKey: 'creator.navApps',
+    descriptionKey: 'creator.toolBuilderDesc',
     icon: PanelsTopLeft,
     category: 'Studio',
     action: { kind: 'navigate', to: '/builder' },
   },
   {
     id: 'poster',
-    name: 'DeHub Poster',
-    label: 'Brand',
-    description: 'Campaign posters, launch assets and social posts with DeHub logo rules.',
+    nameKey: 'creator.toolPoster',
+    labelKey: 'creator.labelBrand',
+    descriptionKey: 'creator.toolPosterDesc',
     icon: Megaphone,
     category: 'Studio',
     action: { kind: 'assistant', preset: 'poster' },
   },
   {
     id: 'image',
-    name: 'Image Generator',
-    label: 'Image',
-    description: 'High-quality visuals, product scenes, thumbnails and references.',
+    nameKey: 'creator.toolImageGenerator',
+    labelKey: 'creator.navImage',
+    descriptionKey: 'creator.toolImageGeneratorDesc',
     icon: ImageIcon,
     category: 'Image',
     action: { kind: 'assistant', preset: 'image' },
   },
   {
     id: 'video',
-    name: 'Video Generator',
-    label: 'Video',
-    description: 'Cinematic clips from text, references and creator prompts.',
+    nameKey: 'creator.toolVideoGenerator',
+    labelKey: 'creator.navVideo',
+    descriptionKey: 'creator.toolVideoGeneratorDesc',
     icon: Film,
     category: 'Video',
     action: { kind: 'assistant', preset: 'video' },
   },
   {
     id: 'skills',
-    name: 'Skills',
-    label: 'Agents',
-    description: 'Save reusable prompts, models, assets and workflows.',
+    nameKey: 'creator.toolSkills',
+    labelKey: 'creator.navAgents',
+    descriptionKey: 'creator.toolSkillsDesc',
     icon: Blocks,
     category: 'Agents',
     action: { kind: 'assistant', preset: 'skills' },
   },
   {
     id: 'edit',
-    name: 'Image Edit',
-    label: 'Image',
-    description: 'Upload a shot, describe the change, preserve the intent.',
+    nameKey: 'creator.toolImageEdit',
+    labelKey: 'creator.navImage',
+    descriptionKey: 'creator.toolImageEditDesc',
     icon: Wand2,
     category: 'Image',
     action: { kind: 'assistant', preset: 'edit' },
   },
   {
     id: 'song',
-    name: 'Song Studio',
-    label: 'Audio',
-    description: 'Tracks, hooks, lyrics and production prompts in one flow.',
+    nameKey: 'creator.toolSongStudio',
+    labelKey: 'creator.navAudio',
+    descriptionKey: 'creator.toolSongStudioDesc',
     icon: Music2,
     category: 'Audio',
     action: { kind: 'assistant', preset: 'song' },
   },
   {
     id: 'voice',
-    name: 'Voice Assistant',
-    label: 'Audio',
-    description: 'Hands-free creation, search and publishing controls.',
+    nameKey: 'creator.toolVoiceAssistant',
+    labelKey: 'creator.navAudio',
+    descriptionKey: 'creator.toolVoiceAssistantDesc',
     icon: Mic2,
     category: 'Audio',
     action: { kind: 'assistant', preset: 'voice' },
   },
   {
     id: 'chat',
-    name: 'Creative Chat',
-    label: 'Agents',
-    description: 'Talk through concepts, captions, briefs and launch plans.',
+    nameKey: 'creator.toolCreativeChat',
+    labelKey: 'creator.navAgents',
+    descriptionKey: 'creator.toolCreativeChatDesc',
     icon: Bot,
     category: 'Agents',
     action: { kind: 'assistant', preset: 'chat' },
   },
   {
     id: 'characters',
-    name: 'Characters',
-    label: 'Studio',
-    description: 'Reference saved characters across image and video prompts.',
+    nameKey: 'creator.toolCharacters',
+    labelKey: 'creator.navStudio',
+    descriptionKey: 'creator.toolCharactersDesc',
     icon: PenTool,
     category: 'Studio',
     action: { kind: 'navigate', to: '/app/settings?tab=characters' },
@@ -191,18 +209,18 @@ const tools: Tool[] = [
 
   {
     id: 'editor',
-    name: 'Video Editor',
-    label: 'Studio',
-    description: 'Timeline editing, layers, text, audio and browser export.',
+    nameKey: 'creator.toolVideoEditor',
+    labelKey: 'creator.navStudio',
+    descriptionKey: 'creator.toolVideoEditorDesc',
     icon: Clapperboard,
     category: 'Video',
     action: { kind: 'navigate', to: '/editor' },
   },
   {
     id: 'automations',
-    name: 'AI Agents',
-    label: 'Agents',
-    description: 'Autonomous creative workflows connected to DeHub actions.',
+    nameKey: 'creator.toolAgentFlows',
+    labelKey: 'creator.navAgents',
+    descriptionKey: 'creator.toolAgentFlowsDesc',
     icon: Sparkles,
     category: 'Agents',
     badge: 'TRENDING',
@@ -211,6 +229,7 @@ const tools: Tool[] = [
 ];
 
 export default function CreatorPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
@@ -275,16 +294,16 @@ export default function CreatorPage() {
           header included. `clip` contains the same horizontal overflow while
           leaving overflow-y `visible`, so sticky resolves against `body`. */}
       <main className="min-h-screen overflow-x-clip text-white" style={{ backgroundColor: '#090a0b' }}>
-        <h1 className="sr-only">DeHub Creator Studio</h1>
+        <h1 className="sr-only">{t('creator.srHeading')}</h1>
 
         <div ref={headerRef} className="sticky top-0 z-50">
         {!bannerDismissed && (
           <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
-            <span>Launch creative campaigns faster with DeHub AI tools</span>
+            <span>{t('creator.bannerCopy')}</span>
             <button
               type="button"
               onClick={() => setBannerDismissed(true)}
-              aria-label="Close creator banner"
+              aria-label={t('creator.closeBanner')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-black/80 hover:text-black"
             >
               ×
@@ -298,7 +317,7 @@ export default function CreatorPage() {
                 type="button"
                 onClick={() => navigate('/app')}
                 className="group flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.06] hover:bg-white/[0.10]"
-                aria-label="Open DeHub app"
+                aria-label={t('creator.openApp')}
               >
                 <div
                   className="h-5 w-5 bg-cover bg-center bg-no-repeat transition-transform duration-200 group-hover:scale-105"
@@ -335,7 +354,7 @@ export default function CreatorPage() {
                     style={activeNav === item ? { color: accent } : undefined}
                   >
                     {index === 4 && <span className="mr-2 text-white/40">••</span>}
-                    {item}
+                    {t(NAV_KEYS[item])}
                   </button>
                 ))}
               </nav>
@@ -346,15 +365,15 @@ export default function CreatorPage() {
                   onClick={() => navigate('/premium')}
                   className="relative rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
                 >
-                  Pricing
-                  <span className="absolute -bottom-2 left-4 rounded px-1.5 py-0.5 text-[9px] font-black leading-none text-white" style={{ backgroundColor: hot }}>30% OFF</span>
+                  {t('creator.pricing')}
+                  <span className="absolute -bottom-2 left-4 rounded px-1.5 py-0.5 text-[9px] font-black leading-none text-white" style={{ backgroundColor: hot }}>{t('creator.thirtyOff')}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => navigate('/editor')}
                   className="rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
                 >
-                  Editor
+                  {t('creator.editor')}
                 </button>
                 <button
                   type="button"
@@ -362,7 +381,7 @@ export default function CreatorPage() {
                   className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
                   style={{ color: accent }}
                 >
-                  Login
+                  {t('creator.login')}
                 </button>
                 <button
                   type="button"
@@ -370,7 +389,7 @@ export default function CreatorPage() {
                   className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
                   style={metallicStyle}
                 >
-                  Sign up
+                  {t('creator.signUp')}
                 </button>
               </div>
             </div>
@@ -392,8 +411,8 @@ export default function CreatorPage() {
               >
                 <MediaCardVisual kind={card.kind} />
                 <div className="pt-3">
-                  <h2 className="text-sm font-black uppercase leading-tight text-white">{card.title}</h2>
-                  <p className="mt-1 truncate text-sm text-white/45">{card.subtitle}</p>
+                  <h2 className="text-sm font-black uppercase leading-tight text-white">{t(card.titleKey)}</h2>
+                  <p className="mt-1 truncate text-sm text-white/45">{t(card.subtitleKey)}</p>
                 </div>
               </button>
             ))}
@@ -420,21 +439,21 @@ export default function CreatorPage() {
           >
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
-                <img src={openaiLogo} alt="OpenAI logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={openaiLogo} alt={t('creator.logoAlt', { brand: 'OpenAI' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
-                <img src={dehubIcon} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={dehubIcon} alt={t('creator.logoAlt', { brand: 'DeHub' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
             </div>
             <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
-              Use DeHub inside ChatGPT
+              {t('creator.insideChatgpt')}
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              DeHub is a native ChatGPT app. See how to enable the connector and start prompting.
+              {t('creator.insideChatgptCopy')}
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-white/10">
-              Read the ChatGPT guide
+              {t('creator.readChatgptGuide')}
               <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>
             <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
@@ -446,21 +465,21 @@ export default function CreatorPage() {
           >
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
-                <img src={anthropicLogo} alt="Anthropic logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={anthropicLogo} alt={t('creator.logoAlt', { brand: 'Anthropic' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
-                <img src={dehubIcon} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={dehubIcon} alt={t('creator.logoAlt', { brand: 'DeHub' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
             </div>
             <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
-              Use DeHub inside Claude
+              {t('creator.insideClaude')}
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              DeHub is a native Claude connector. Learn how to enable it and pull DeHub content live.
+              {t('creator.insideClaudeCopy')}
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-white/10">
-              Read the Claude guide
+              {t('creator.readClaudeGuide')}
               <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>
             <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
@@ -492,11 +511,11 @@ export default function CreatorPage() {
                   )}
                   <div className="mb-6 flex items-center gap-3">
                     <Icon className="h-6 w-6 text-white/[0.85]" />
-                    <span className="rounded-full bg-white/[0.08] px-2 py-1 text-xs text-white/60">{tool.label}</span>
+                    <span className="rounded-full bg-white/[0.08] px-2 py-1 text-xs text-white/60">{t(tool.labelKey)}</span>
                   </div>
                   <div className="pr-8">
-                    <h3 className="text-lg font-black text-white">{tool.name}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-white/45">{tool.description}</p>
+                    <h3 className="text-lg font-black text-white">{t(tool.nameKey)}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-white/45">{t(tool.descriptionKey)}</p>
                   </div>
                   <ArrowUpRight className="absolute bottom-4 right-4 h-4 w-4 text-white/30 transition-colors group-hover:text-white" />
                 </button>
@@ -519,7 +538,7 @@ export default function CreatorPage() {
                   activeCategory === category ? 'bg-white text-black' : 'bg-white/[0.08] text-white/55 hover:text-white'
                 )}
               >
-                {category}
+                {t(NAV_KEYS[category])}
               </button>
             ))}
           </div>
@@ -531,7 +550,7 @@ export default function CreatorPage() {
           >
             <img
               src={showcaseImage}
-              alt="DeHub creator studio interface inside a laptop display"
+              alt={t('creator.showcaseAlt')}
               width={1920}
               height={1080}
               loading="lazy"
@@ -542,10 +561,10 @@ export default function CreatorPage() {
             <div className="absolute left-5 top-5 rounded px-4 py-2 text-4xl font-black italic leading-none text-black sm:right-8 sm:left-auto sm:text-6xl" style={metallicStyle}>4K</div>
             <div className="absolute bottom-6 left-5 max-w-3xl sm:bottom-10 sm:left-8">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white/80 backdrop-blur-xl">
-                <PanelsTopLeft className="h-4 w-4" /> Creator workspace
+                <PanelsTopLeft className="h-4 w-4" /> {t('creator.workspaceBadge')}
               </div>
               <p className="text-5xl font-black uppercase leading-[0.92] tracking-tight text-white sm:text-7xl lg:text-8xl">
-                One studio for every creative drop
+                {t('creator.oneStudioHeadline')}
               </p>
             </div>
           </button>
@@ -562,9 +581,9 @@ export default function CreatorPage() {
 
         <MountOnVisible minHeight={200} rootMargin="600px">
         <section className="grid gap-3 px-3 pb-10 sm:px-4 lg:grid-cols-3">
-          <FeatureStrip icon={Crown} title="Premium campaigns" copy="Poster, video, image and audio assets built around the same idea." />
-          <FeatureStrip icon={Sparkles} title="Creator memory" copy="Characters, skills and brand rules stay available across prompts." />
-          <FeatureStrip icon={ArrowUpRight} title="Connected to DeHub" copy="Jump from a tool into assistant, editor, TV, agents or settings." />
+          <FeatureStrip icon={Crown} title={t('creator.featurePremiumTitle')} copy={t('creator.featurePremiumCopy')} />
+          <FeatureStrip icon={Sparkles} title={t('creator.featureMemoryTitle')} copy={t('creator.featureMemoryCopy')} />
+          <FeatureStrip icon={ArrowUpRight} title={t('creator.featureConnectedTitle')} copy={t('creator.featureConnectedCopy')} />
         </section>
         </MountOnVisible>
         </div>
@@ -574,19 +593,20 @@ export default function CreatorPage() {
 }
 
 function MediaCardVisual({ kind }: { kind: string }) {
+  const { t } = useTranslation();
   if (kind === 'originals') {
     return (
       <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10 bg-black">
         <BrandIcon
           src={dehubOriginals}
-          alt="DeHub Originals — cinematic post-apocalyptic wasteland with the DeHub wordmark"
+          alt={t('creator.originalsAlt')}
           className="h-full w-full object-cover object-center"
           loading="lazy"
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
         <span className="absolute left-3 top-3 rounded px-2 py-1 text-[10px] font-black uppercase italic tracking-wide text-black" style={metallicStyle}>
-          Originals
+          {t('creator.originalsBadge')}
         </span>
       </div>
     );
@@ -700,6 +720,7 @@ function getGalleryColumns(): number {
 }
 
 function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryItem) => void }) {
+  const { t } = useTranslation();
   const ref = useRef<HTMLButtonElement | null>(null);
   const [visible, setVisible] = useState(false);
   const isVideo = !!item.video_url;
@@ -737,7 +758,7 @@ function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryI
       ) : (
         <img
           src={thumbUrl(url, 400)}
-          alt="AI generation from the DeHub community"
+          alt={t('creator.aiGenerationCommunityAlt')}
           loading="lazy"
           decoding="async"
           className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
@@ -753,6 +774,7 @@ function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryI
 }
 
 function CommunityGallery() {
+  const { t } = useTranslation();
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -854,16 +876,16 @@ function CommunityGallery() {
     <section ref={sectionRef} className="px-3 pb-10 sm:px-4">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
-          <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Community Feed</div>
+          <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">{t('creator.communityFeed')}</div>
           <h2 className="mt-1 text-2xl font-black uppercase tracking-tight text-white sm:text-3xl">
-            USER CREATIONS
+            {t('creator.userCreations')}
           </h2>
           <p className="mt-1 max-w-xl text-sm text-white/50">
-            A live wall of the newest AI-generated images and videos made across the platform.
+            {t('creator.userCreationsCopy')}
           </p>
         </div>
         <span className="hidden shrink-0 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase text-black sm:inline-flex" style={metallicStyle}>
-          Live
+          {t('creator.live')}
         </span>
       </div>
 
@@ -875,7 +897,7 @@ function CommunityGallery() {
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-2xl border border-white/10 p-10 text-center text-sm text-white/50" style={{ backgroundColor: '#1b1c1f' }}>
-          No AI creations yet. Be the first to generate one.
+          {t('creator.noCreationsYet')}
         </div>
       ) : (
         <div className="relative">
@@ -911,12 +933,12 @@ function CommunityGallery() {
         >
           <button
             type="button"
-            aria-label="Close"
+            aria-label={t('creator.close')}
             data-keep-dark
             onClick={() => setLightbox(null)}
             className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-xs font-bold uppercase text-white hover:bg-white/10"
           >
-            Close
+            {t('creator.close')}
           </button>
           <div className="max-h-[92vh] max-w-[92vw]" onClick={(e) => e.stopPropagation()}>
             {lightbox.video_url ? (
@@ -931,7 +953,7 @@ function CommunityGallery() {
             ) : (
               <img
                 src={lightbox.image_url || ''}
-                alt="AI generation"
+                alt={t('creator.aiGenerationAlt')}
                 className="max-h-[92vh] max-w-[92vw] rounded-xl object-contain"
               />
             )}
