@@ -25,6 +25,8 @@ Consider what a student who graduated into the 2017–2019 "Adpocalypse" actuall
 
 That is a curriculum question, and it is almost never on the syllabus, because it is not a *tactic*. It is a structural property of how the creator set themselves up years earlier.
 
+![The hidden curriculum — platform tactics expire fast, the underlying structure does not](/lovable-uploads/fig-teaching-hidden-curriculum.jpg)
+
 ## Three questions that generalise
 
 The tactics will change. The following will not, and they can be taught rigorously:
@@ -46,6 +48,8 @@ We build one of the alternatives, so treat the following as an argument rather t
 We are not suggesting a course should teach DeHub. We are suggesting that a course which never examines *any* structural alternative has, by omission, taught students that the current arrangement is the only possible one. That is a claim about the world, and it is not obviously true.
 
 A useful classroom exercise, and one that does not require endorsing anything: take one creator business and model it twice. Once under a conventional platform's terms — undisclosed rate, revocable access, no portability. Once under terms where ownership is recorded, the share is fixed and published, and the audience relationship can move. Ask what changes about valuation, risk, negotiating leverage and exit. Students find the results genuinely surprising, largely because the second model has a terminal value and the first mostly does not.
+
+![Teach the structure, not this year’s algorithm — three questions that generalise](/lovable-uploads/fig-teaching-structure.jpg)
 
 ## The objection worth taking seriously
 
