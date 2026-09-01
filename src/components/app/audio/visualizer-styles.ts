@@ -825,11 +825,75 @@ export function idleTimeData(peaks: number[], length: number): Uint8Array {
 }
 
 /**
- * Draw the full-track waveform. `progress` is 0–1 representing playback position.
+ * Brushed-chrome ramp down the bar field, as [position, lightness] pairs.
+ *
+ * The near-black step at the halfway mark is the horizon a polished surface
+ * reflects, and it is the one thing that makes a fill read as metal rather
+ * than as paint. Smooth it out and you are back to a white bar with a gradient
+ * on it, which is what this style was.
+ *
+ * Two things about where the numbers sit. The step is at exactly 0.5 because
+ * every bar is centred on the same line, so half-way down the *field* is
+ * half-way down each bar however tall it is — one horizon across the whole
+ * waveform, the way chrome lettering works. And the ramp is brightest at both
+ * ends rather than darkest, because a short bar only ever spans the middle of
+ * the field: ends-dark leaves every quiet passage a band of grey, ends-bright
+ * gives short and tall bars alike the highlight-horizon-highlight sequence.
+ */
+const CHROME_RAMP: [number, number][] = [
+  [0, 82],
+  [0.2, 100],
+  [0.44, 72],
+  [0.5, 38],
+  [0.57, 80],
+  [0.76, 99],
+  [1, 70],
+];
+
+/**
+ * One gradient for the whole bar field rather than one per bar. Real chrome
+ * lettering shares a single horizon across every letter; a per-bar gradient
+ * gives each bar its own, and the field reads as a row of separate objects.
+ */
+function chromeFill(
+  ctx: CanvasRenderingContext2D,
+  top: number,
+  bottom: number,
+  hue: number,
+  alpha: number
+) {
+  const mono = hue === 0;
+  const gradient = ctx.createLinearGradient(0, top, 0, bottom);
+  for (const [at, l] of CHROME_RAMP) {
+    gradient.addColorStop(
+      at,
+      mono
+        ? `hsla(0, 0%, ${l}%, ${alpha})`
+        : // Anodised, not pastel: the ramp keeps its shape but sits low enough
+          // in the lightness range that the hue still reads as a colour.
+          `hsla(${hue}, 72%, ${(20 + l * 0.5).toFixed(1)}%, ${alpha})`
+    );
+  }
+  return gradient;
+}
+
+/**
+ * Draw the full-track waveform. `progress` is 0–1 through the file.
+ *
+ * Two things at once. The bar shape is the decoded track, which is what makes
+ * this the one style you can scrub against — it has to stay recognisable and
+ * stay put. The live analyser is layered on top of that rather than replacing
+ * it: energy blooms out of the playhead and fades within a dozen bars either
+ * side, so the waveform breathes where the needle is and holds its shape
+ * everywhere else.
+ *
+ * Pass an empty `frequencyData` to get the pure shape with nothing added —
+ * that is what a paused card draws, because a frozen bloom on a stopped track
+ * is just a lump in the waveform.
  */
 export function drawStatic(
   ctx: CanvasRenderingContext2D,
-  _frequencyData: Uint8Array,
+  frequencyData: Uint8Array,
   width: number,
   height: number,
   hue: number = 0,
@@ -847,52 +911,102 @@ export function drawStatic(
   const barCount = shape.length;
   const gap = 2;
   const barWidth = Math.max(1, (width - gap * (barCount - 1)) / barCount);
-  const centerY = height / 2;
+  const centreY = height / 2;
   const maxBarH = height * 0.8;
-  // Use fractional progress for smooth sweep instead of snapping bar-by-bar
+  const radius = Math.min(barWidth / 2, 1.5);
+  // Fractional, so the playhead sweeps smoothly instead of snapping bar to bar.
   const progressX = progress * (barCount * (barWidth + gap));
 
+  const top = centreY - maxBarH / 2;
+  const bottom = centreY + maxBarH / 2;
+
+  const live = frequencyData.length > 0;
+  const level = live ? bandLevel(frequencyData, 0, 48) : 0;
+  const bass = live ? bandLevel(frequencyData, 0, 8) : 0;
+  const headIndex = progress * barCount;
+  /** How many bars either side of the needle the bloom reaches. */
+  const span = Math.max(6, barCount * 0.14);
+
+  // One path for the whole field. The played side is then a single clip and a
+  // single fill — this used to be a save/clip/restore per bar, a hundred clips
+  // a frame, to draw the same shape twice.
+  const bars = new Path2D();
   for (let i = 0; i < barCount; i++) {
-    const barH = Math.max(2, shape[i] * maxBarH);
-    const x = i * (barWidth + gap);
-    const y = centerY - barH / 2;
-    const barEnd = x + barWidth;
-
-    // Determine how "played" this bar is (0 = unplayed, 1 = fully played, 0-1 = partial)
-    let playedRatio = 0;
-    if (progressX >= barEnd) {
-      playedRatio = 1;
-    } else if (progressX > x) {
-      playedRatio = (progressX - x) / barWidth;
+    let h = shape[i];
+    if (live) {
+      const d = Math.abs(i - headIndex) / span;
+      if (d < 1) {
+        /* Distance from the needle picks the band, so the spectrum opens out
+           of the playhead symmetrically — bass at the needle, treble at the
+           edges of the bloom. Squared falloff, so the lift dies out well
+           inside the span and the track's own shape is never in doubt. */
+        const bin = Math.min(
+          frequencyData.length - 1,
+          Math.floor(d * frequencyData.length * 0.5)
+        );
+        h += (frequencyData[bin] / 255) * (1 - d) * (1 - d) * 0.6;
+      }
     }
+    const barH = Math.max(2, Math.min(h, 1.12) * maxBarH);
+    bars.roundRect(i * (barWidth + gap), centreY - barH / 2, barWidth, barH, radius);
+  }
 
-    // Draw unplayed portion (full bar, dim)
-    ctx.fillStyle = `hsla(0, 0%, 100%, 0.2)`;
+  // Unplayed: the same metal, unlit.
+  ctx.fillStyle = chromeFill(ctx, top, bottom, hue, 0.26);
+  ctx.fill(bars);
+
+  if (progressX > 0) {
+    // Played: lit, clipped at the playhead so a part-played bar is cut at the
+    // exact fraction rather than rounded to the whole bar.
+    ctx.save();
     ctx.beginPath();
-    ctx.roundRect(x, y, barWidth, barH, 1);
-    ctx.fill();
+    ctx.rect(0, 0, progressX, height);
+    ctx.clip();
 
-    // Draw played portion on top
-    if (playedRatio > 0) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(x, y, barWidth * playedRatio, barH);
-      ctx.clip();
+    ctx.fillStyle = chromeFill(ctx, top, bottom, hue, 1);
+    ctx.shadowColor = hue === 0 ? 'hsla(0, 0%, 100%, 0.3)' : `hsla(${hue}, 80%, 62%, 0.4)`;
+    ctx.shadowBlur = Math.min(10, height * 0.06) * (1 + level);
+    ctx.fill(bars);
+    ctx.shadowBlur = 0;
 
-      if (hue === 0) {
-        ctx.fillStyle = `hsla(0, 0%, 100%, 0.85)`;
-      } else {
-        const gradient = ctx.createLinearGradient(x, y, x, y + barH);
-        gradient.addColorStop(0, `hsla(${hue}, 80%, 75%, 0.9)`);
-        gradient.addColorStop(0.5, `hsla(${hue}, 85%, 60%, 0.95)`);
-        gradient.addColorStop(1, `hsla(${hue}, 80%, 75%, 0.9)`);
-        ctx.fillStyle = gradient;
+    // The glint where the polish runs out. It is the specular highlight that
+    // sells the material, it doubles as the one thing the old flat fill never
+    // showed — where in the track you actually are — and it widens and
+    // brightens with the level, so the metal catches more light when the track
+    // is loud.
+    const glintW = Math.max(3, width * (0.018 + level * 0.03));
+    const glint = ctx.createLinearGradient(progressX - glintW, 0, progressX, 0);
+    const glintA = (0.6 + level * 0.4).toFixed(2);
+    glint.addColorStop(0, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 72%, 0)`);
+    glint.addColorStop(1, hue === 0 ? `hsla(0, 0%, 100%, ${glintA})` : `hsla(${hue}, 90%, 82%, ${glintA})`);
+    ctx.fillStyle = glint;
+    ctx.fill(bars);
+    ctx.restore();
+
+    if (progressX < width) {
+      // Bloom at the needle, on the bass. Unclipped, because a glow that stops
+      // dead at the playhead is a rectangle, not a glow.
+      if (bass > 0.02) {
+        const bloomR = maxBarH * (0.3 + bass * 0.55);
+        const bloom = ctx.createRadialGradient(progressX, centreY, 0, progressX, centreY, bloomR);
+        const bloomA = 0.1 + bass * 0.3;
+        bloom.addColorStop(0, hue === 0 ? `hsla(0, 0%, 100%, ${bloomA})` : `hsla(${hue}, 85%, 78%, ${bloomA})`);
+        bloom.addColorStop(1, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 70%, 0)`);
+        ctx.fillStyle = bloom;
+        ctx.beginPath();
+        ctx.arc(progressX, centreY, bloomR, 0, TAU);
+        ctx.fill();
       }
 
-      ctx.beginPath();
-      ctx.roundRect(x, y, barWidth, barH, 1);
-      ctx.fill();
-      ctx.restore();
+      // Playhead hairline, faded out at both ends so it reads as a cursor on
+      // the waveform rather than a rule drawn across the card.
+      const line = ctx.createLinearGradient(0, top, 0, bottom);
+      const lineA = (0.45 + level * 0.4).toFixed(2);
+      line.addColorStop(0, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 78%, 0)`);
+      line.addColorStop(0.5, hue === 0 ? `hsla(0, 0%, 100%, ${lineA})` : `hsla(${hue}, 90%, 84%, ${lineA})`);
+      line.addColorStop(1, hue === 0 ? 'hsla(0, 0%, 100%, 0)' : `hsla(${hue}, 85%, 78%, 0)`);
+      ctx.fillStyle = line;
+      ctx.fillRect(progressX - 0.5, top, 1, maxBarH);
     }
   }
 }
