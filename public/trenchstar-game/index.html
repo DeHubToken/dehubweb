@@ -6292,12 +6292,96 @@ const deskMons=[];
      standing on it, brighter than the wall the room is named after.
      A desk is not a mirror. 0.78/0.06 is matte, and the surface finally reads
      as the dark slab its colour has always said it was. */
-  const top=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.09,1.7),
-    new THREE.MeshStandardMaterial({color:0x0e131a,roughness:0.78,metalness:0.06}));
+  /* A SURFACE, NOT A TONE.
+     The desk is the largest single object in the lower half of the frame and
+     it was one flat value of grey across the whole 4.8 m — no grain, no edge,
+     nothing for a light to break up on. Everything around it is dense: the
+     wall, the city, the character. It read as untextured placeholder geometry
+     sitting in a finished room, which is exactly what it was.
+     Fixed with a roughness map rather than a colour one. Colour would fight
+     the room's lighting, and it is not what is missing — what is missing is
+     variation in HOW the surface takes light, so the three area lights above
+     it land as brushed grain instead of one even sheet. The same canvas drives
+     a shallow bump so the grain has relief at a grazing angle. */
+  const grainCv=document.createElement('canvas');grainCv.width=grainCv.height=512;
+  {
+    const g=grainCv.getContext('2d');
+    g.fillStyle='#9a9a9a';g.fillRect(0,0,512,512);
+    /* brushed along the desk's length */
+    for(let i=0;i<2600;i++){
+      const y=Math.random()*512,len=40+Math.random()*300,x=Math.random()*512;
+      g.strokeStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.02+Math.random()*0.05)+')';
+      g.lineWidth=Math.random()<0.85?1:2;
+      g.beginPath();g.moveTo(x,y);g.lineTo(x+len,y+(Math.random()-0.5)*1.5);g.stroke();
+    }
+    /* and a coarse mottle, so it is not pure corduroy */
+    for(let i=0;i<700;i++){
+      const r=6+Math.random()*26;
+      g.fillStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.012+Math.random()*0.022)+')';
+      g.beginPath();g.arc(Math.random()*512,Math.random()*512,r,0,6.3);g.fill();
+    }
+  }
+  const grainTex=new THREE.CanvasTexture(grainCv);
+  grainTex.wrapS=grainTex.wrapT=THREE.RepeatWrapping;
+  grainTex.repeat.set(6,2.2);
+  grainTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  const deskMat=new THREE.MeshStandardMaterial({
+    color:0x0e131a,roughness:0.78,metalness:0.06,
+    roughnessMap:grainTex,bumpMap:grainTex,bumpScale:0.012});
+  const top=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.09,1.7),deskMat);
   top.position.y=1.12;desk.add(top);
-  const ped=new THREE.Mesh(new THREE.BoxGeometry(3.6,1.06,1.2),
-    new THREE.MeshStandardMaterial({color:0x0a0d12,roughness:0.82,metalness:0.06}));
-  ped.position.y=0.55;desk.add(ped);
+  /* THE PEDESTAL FASCIA.
+     This is the biggest single area of the opening shot after the wall, and it
+     was one dead flat charcoal rectangle running straight into the floor: no
+     seam, no plinth, no falloff, nothing to say how big it is or what it is
+     made of. A surface that large with no information on it reads as a hole,
+     and it was the last thing in the room still doing that.
+     Two panel seams and a gradient, painted rather than modelled — at this
+     distance an engraved line is three pixels and geometry would be waste. */
+  const pedCv=document.createElement('canvas');pedCv.width=256;pedCv.height=512;
+  {
+    const p=pedCv.getContext('2d');
+    /* Darker toward the floor. Light in this room comes from above, so the
+       bottom of a tall face should fall off — the flat version was lit as
+       though it were floating in open space. */
+    const grd=p.createLinearGradient(0,0,0,512);
+    grd.addColorStop(0,'#141c26');grd.addColorStop(0.55,'#0d131b');grd.addColorStop(1,'#05080c');
+    p.fillStyle=grd;p.fillRect(0,0,256,512);
+    /* Two seams. An engraved line is a dark groove with a lit edge under it —
+       one line on its own reads as a scratch. */
+    for(const y of [176,352]){
+      p.fillStyle='rgba(0,0,0,0.85)';p.fillRect(0,y,256,3);
+      p.fillStyle='rgba(150,190,215,0.16)';p.fillRect(0,y+3,256,1);
+    }
+    for(let i=0;i<2200;i++){
+      p.fillStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.015+Math.random()*0.03)+')';
+      p.fillRect(Math.random()*256,Math.random()*512,1,1);
+    }
+  }
+  const pedTex=new THREE.CanvasTexture(pedCv);
+  pedTex.colorSpace=THREE.SRGBColorSpace;
+  pedTex.wrapS=pedTex.wrapT=THREE.ClampToEdgeWrapping;
+  pedTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  const ped=new THREE.Mesh(new THREE.BoxGeometry(3.6,0.92,1.2),
+    new THREE.MeshStandardMaterial({color:0xffffff,map:pedTex,roughness:0.84,metalness:0.05}));
+  ped.position.y=0.62;desk.add(ped);
+  /* A RECESSED PLINTH. The pedestal used to meet the floor flush, which is the
+     one thing furniture never does — every cabinet has a toe-kick, and the
+     dark line it throws is what sets the object down on the ground instead of
+     leaving it pasted against it. Inset on all four sides so the fascia
+     overhangs it. */
+  const plinth=new THREE.Mesh(new THREE.BoxGeometry(3.34,0.18,1.04),
+    new THREE.MeshStandardMaterial({color:0x05070a,roughness:0.9,metalness:0.04}));
+  plinth.position.y=0.09;desk.add(plinth);
+  /* A LIP ON THE FRONT EDGE. A box has one hard 90 degree corner and reads as
+     a slab; every real worktop has a few millimetres of chamfer, and that
+     chamfer is the bit that catches a light and tells you where the surface
+     ends. Slightly brighter and slightly glossier than the top so it reads as
+     an edge rather than a seam. */
+  const lip=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.035,0.05),
+    new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.42,metalness:0.28}));
+  lip.position.set(0,1.145,0.845);desk.add(lip);
+  const lipBack=lip.clone();lipBack.position.z=-0.845;desk.add(lipBack);
   const strip=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.02,0.02),
     new THREE.MeshBasicMaterial({color:new THREE.Color(CYAN).multiplyScalar(1.2)}));
   strip.position.set(0,1.075,0.86);desk.add(strip);
