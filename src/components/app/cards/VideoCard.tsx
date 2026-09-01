@@ -72,7 +72,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality } from '@/hooks/use-connection-quality';
-import { AudioVisualizer } from '../audio';
+/** Lazy: nine canvas painters and a decoder, ~50 KB, for a minority post type
+ *  — none of it belongs in the bytes parsed before first paint. */
+const AudioVisualizer = lazy(() =>
+  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
+);
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
@@ -1839,16 +1843,19 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <div className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
                 {/* Live AudioVisualizer */}
                 <div className="absolute inset-0">
-                  <AudioVisualizer
-                    audioUrl={video.audioUrl}
-                    isPlaying={isPlaying}
-                    onPlayPause={handlePlayClick}
-                    className="w-full h-full"
-                    showStylePicker={true}
-                    muted={isMuted}
-                    seed={video.id}
-                    decodeEnabled={nearViewport}
-                  />
+                  <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>
+                    <AudioVisualizer
+                      audioUrl={video.audioUrl}
+                      isPlaying={isPlaying}
+                      onPlayPause={handlePlayClick}
+                      className="w-full h-full"
+                      showStylePicker={true}
+                      muted={isMuted}
+                      seed={video.id}
+                      decodeEnabled={nearViewport}
+                      durationHint={video.audioDuration || video.durationSeconds || 0}
+                    />
+                  </Suspense>
                 </div>
               </div>
             ) : video.transcodingStatus === 'failed' ? (
@@ -1981,8 +1988,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <TapReactionBurst postId={video.id} />
         )}
 
-        {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
-        {showControls && (
+        {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass.
+            Never for audio posts: speed, loop, PiP and fullscreen have nothing
+            to act on there, and the row appeared on hover over a visualizer
+            that already carries its own transport. */}
+        {showControls && !video.isAudio && (
           <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
 
             <button
@@ -2038,8 +2048,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             duration stays 0 until something calls play() — gating the whole bar
             on it left the one control that can start the clip unreachable from
             the feed, where a tap now reveals controls instead of opening the
-            post. The scrubber and timestamps still wait for real metadata. */}
-        {showControls && (
+            post. The scrubber and timestamps still wait for real metadata.
+            Audio posts are excluded: this bar is driven by the <video> element,
+            so over a visualizer it painted a black gradient and a second,
+            non-functional play button on top of the audio controls — the
+            "hovering brings up a play/pause button" complaint. */}
+        {showControls && !video.isAudio && (
           <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
 
             <div className="flex items-center gap-2">
