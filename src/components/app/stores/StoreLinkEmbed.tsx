@@ -10,6 +10,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 import { useStoreById, useStoreListing } from '@/hooks/use-stores';
 import { useTokenPrices } from '@/hooks/use-token-prices';
@@ -45,6 +46,7 @@ export function StoreLinkEmbed({ storeId, listingId, fallback = null }: Props) {
 
 // ── Listing card ────────────────────────────────────────────
 function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: ReactNode }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: listing, isLoading } = useStoreListing(listingId);
   const { data: prices } = useTokenPrices();
@@ -56,7 +58,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
 
   const images = (listing.images as string[]) || [];
   const firstImage = images[0];
-  const storeName = (listing as any).stores?.name || 'Store';
+  const storeName = (listing as any).stores?.name || t('stores.store');
   const dhbPrice = prices?.DHB ?? 0;
   const priceUsd = Number(listing.price);
   const priceDhb = dhbPrice > 0 ? priceUsd / dhbPrice : 0;
@@ -78,7 +80,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
         )}
         {listing.stock_quantity === 0 && (
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <span className="text-[10px] font-bold text-white/80">SOLD OUT</span>
+            <span className="text-[10px] font-bold text-white/80">{t('stores.soldOut')}</span>
           </div>
         )}
       </div>
@@ -108,6 +110,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
 
 // ── Store card ──────────────────────────────────────────────
 function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNode }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: store, isLoading } = useStoreById(storeId);
 
@@ -146,13 +149,13 @@ function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNo
         )}
       </div>
       <div className="flex-1 min-w-0 relative">
-        <p className="text-sm font-semibold text-white truncate">{store.name || 'Store'}</p>
+        <p className="text-sm font-semibold text-white truncate">{store.name || t('stores.store')}</p>
         {store.description && (
           <p className="text-xs truncate mt-0.5 text-slate-50">{store.description}</p>
         )}
         <div className="flex items-center gap-1.5 mt-1">
           <ThemedIcon icon="stores" alt="" className="w-4 h-4 object-contain opacity-70" />
-          <span className="text-xs text-zinc-500">View store</span>
+          <span className="text-xs text-zinc-500">{t('stores.viewStore')}</span>
         </div>
       </div>
     </button>

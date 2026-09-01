@@ -6,6 +6,7 @@
  */
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
@@ -16,9 +17,10 @@ interface StoreListingCardProps {
 }
 
 export const StoreListingCard = memo(function StoreListingCard({ listing, onClick }: StoreListingCardProps) {
+  const { t } = useTranslation();
   const images = (listing.images as string[]) || [];
   const firstImage = images[0];
-  const storeName = listing.stores?.name || 'Unknown Store';
+  const storeName = listing.stores?.name || t('stores.unknownStore');
   const { data: prices } = useTokenPrices();
   const dhbPrice = prices?.DHB ?? 0;
   const priceUsd = Number(listing.price);
@@ -39,11 +41,11 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
           </div>
         )}
         {listing.is_digital && (
-          <span className="absolute top-2 left-2 text-[10px] font-semibold bg-primary/80 text-primary-foreground px-1.5 py-0.5 rounded">Digital</span>
+          <span className="absolute top-2 left-2 text-[10px] font-semibold bg-primary/80 text-primary-foreground px-1.5 py-0.5 rounded">{t('stores.digital')}</span>
         )}
         {listing.stock_quantity === 0 && (
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <span className="text-xs font-bold text-white/80">SOLD OUT</span>
+            <span className="text-xs font-bold text-white/80">{t('stores.soldOut')}</span>
           </div>
         )}
       </div>

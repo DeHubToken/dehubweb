@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,11 +19,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const CATEGORIES = [
-  { value: 'digital', label: 'Digital' },
-  { value: 'merch', label: 'Merch' },
-  { value: 'art', label: 'Art' },
-  { value: 'service', label: 'Service' },
-  { value: 'other', label: 'Other' },
+  { value: 'digital', labelKey: 'stores.catDigital' },
+  { value: 'merch', labelKey: 'stores.catMerch' },
+  { value: 'art', labelKey: 'stores.catArt' },
+  { value: 'service', labelKey: 'stores.catService' },
+  { value: 'other', labelKey: 'stores.catOther' },
 ];
 
 interface Props {
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export function CreateListingDrawer({ open, onClose, storeId }: Props) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -61,7 +63,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
         setImages(prev => [...prev, urlData.publicUrl]);
       }
     } catch (err: any) {
-      toast.error('Upload failed: ' + err.message);
+      toast.error(t('stores.uploadFailedWith', { message: err.message }));
     } finally {
       setUploading(false);
     }
@@ -74,7 +76,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
     try {
       for (const file of Array.from(files).slice(0, 2 - videos.length)) {
         if (file.size > 50 * 1024 * 1024) {
-          toast.error('Video must be under 50MB');
+          toast.error(t('stores.videoTooLarge'));
           continue;
         }
         const ext = file.name.split('.').pop();
@@ -85,7 +87,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
         setVideos(prev => [...prev, urlData.publicUrl]);
       }
     } catch (err: any) {
-      toast.error('Video upload failed: ' + err.message);
+      toast.error(t('stores.videoUploadFailed', { message: err.message }));
     } finally {
       setUploadingVideo(false);
     }
@@ -93,7 +95,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
 
   const handleSubmit = () => {
     if (!title.trim() || !price) {
-      toast.error('Title and price are required');
+      toast.error(t('stores.titlePriceRequired'));
       return;
     }
     createListing.mutate({
@@ -122,63 +124,63 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
       <DrawerContent column glass className="border-t border-white/10">
         <DrawerHeader>
-          <DrawerTitle className="text-white">Create Listing</DrawerTitle>
+          <DrawerTitle className="text-white">{t('stores.createListing')}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-6 space-y-4 max-h-[70vh] overflow-y-auto">
           <div>
-            <Label className="text-zinc-300">Title *</Label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Item name" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
+            <Label className="text-zinc-300">{t('stores.titleLabel')}</Label>
+            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder={t('stores.titlePlaceholder')} className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
           </div>
           <div>
-            <Label className="text-zinc-300">Description</Label>
-            <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe your item..." className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 min-h-[80px]" />
+            <Label className="text-zinc-300">{t('stores.descriptionLabel')}</Label>
+            <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder={t('stores.describePlaceholder')} className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 min-h-[80px]" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-zinc-300">Price (USD) *</Label>
-              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
+              <Label className="text-zinc-300">{t('stores.priceLabel')}</Label>
+              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder={t('stores.pricePlaceholder')} className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
             </div>
             <div>
-              <Label className="text-zinc-300">Stock Qty</Label>
-              <Input type="number" value={stockQty} onChange={e => setStockQty(e.target.value)} placeholder="Unlimited" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
+              <Label className="text-zinc-300">{t('stores.stockLabel')}</Label>
+              <Input type="number" value={stockQty} onChange={e => setStockQty(e.target.value)} placeholder={t('stores.stockPlaceholder')} className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-zinc-300">Category</Label>
+              <Label className="text-zinc-300">{t('stores.categoryLabel')}</Label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger className="bg-white/5 border-white/10 text-white"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {CATEGORIES.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
+                  {CATEGORIES.map(c => <SelectItem key={c.value} value={c.value}>{t(c.labelKey)}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label className="text-zinc-300">Condition</Label>
+              <Label className="text-zinc-300">{t('stores.conditionLabel')}</Label>
               <Select value={condition} onValueChange={setCondition}>
                 <SelectTrigger className="bg-white/5 border-white/10 text-white"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="new">New</SelectItem>
-                  <SelectItem value="like_new">Like New</SelectItem>
-                  <SelectItem value="used">Used</SelectItem>
+                  <SelectItem value="new">{t('stores.condNew')}</SelectItem>
+                  <SelectItem value="like_new">{t('stores.condLikeNew')}</SelectItem>
+                  <SelectItem value="used">{t('stores.condUsed')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <label className="flex items-center gap-3 cursor-pointer">
             <Switch checked={isDigital} onCheckedChange={setIsDigital} />
-            <Label className="text-zinc-300 cursor-pointer">Digital Item</Label>
+            <Label className="text-zinc-300 cursor-pointer">{t('stores.digitalItem')}</Label>
           </label>
           {!isDigital && (
             <div>
-              <Label className="text-zinc-300">Shipping Info</Label>
-              <Input value={shippingInfo} onChange={e => setShippingInfo(e.target.value)} placeholder="e.g. Free worldwide shipping" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
+              <Label className="text-zinc-300">{t('stores.shippingInfo')}</Label>
+              <Input value={shippingInfo} onChange={e => setShippingInfo(e.target.value)} placeholder={t('stores.shippingInfoPlaceholder')} className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
             </div>
           )}
 
           {/* Images */}
           <div>
-            <Label className="text-zinc-300">Images (up to 5)</Label>
+            <Label className="text-zinc-300">{t('stores.imagesLabel')}</Label>
             <div className="flex flex-wrap gap-2 mt-1">
               {images.map((url, i) => (
                 <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10">
@@ -199,7 +201,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
 
           {/* Videos */}
           <div>
-            <Label className="text-zinc-300">Videos (up to 2, max 50MB each)</Label>
+            <Label className="text-zinc-300">{t('stores.videosLabel')}</Label>
             <div className="flex flex-wrap gap-2 mt-1">
               {videos.map((url, i) => (
                 <div key={i} className="relative w-24 h-16 rounded-lg overflow-hidden border border-white/10">
@@ -220,7 +222,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
 
           <Button onClick={handleSubmit} disabled={createListing.isPending} className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/10">
             {createListing.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            Publish Listing
+            {t('stores.publishListing')}
           </Button>
         </div>
       </DrawerContent>
