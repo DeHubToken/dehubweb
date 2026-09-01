@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Volume2, Send, Loader2, Search, Play, Square, Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ interface VoiceOption {
 }
 
 export function StageTTS() {
+  const { t } = useTranslation();
   const [text, setText] = useState('');
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -90,7 +92,7 @@ export function StageTTS() {
     const SpeechRecognitionAPI =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognitionAPI) {
-      toast.error('Speech recognition not supported in this browser');
+      toast.error(t('stages.speechNotSupported'));
       return;
     }
     const recognition = new SpeechRecognitionAPI();
@@ -123,9 +125,9 @@ export function StageTTS() {
       const res = await fetch(voice.preview_url);
       if (!res.ok) throw new Error('fetch failed');
       const blob = await res.blob();
-      await injectAudio(blob, { kind: 'ai', source: 'tts-preview', label: `AI · ${voice.name || 'Voice preview'}` });
+      await injectAudio(blob, { kind: 'ai', source: 'tts-preview', label: `AI · ${voice.name || t('stages.voicePreview')}` });
     } catch {
-      toast.error('Could not play preview on stage');
+      toast.error(t('stages.previewFailed'));
     } finally {
       setPreviewingId(null);
     }
@@ -184,8 +186,8 @@ export function StageTTS() {
       setText('');
     } catch (err) {
       console.error('TTS error:', err);
-      const msg = err instanceof Error ? err.message : 'Failed to generate speech';
-      toast.error(msg.length > 120 ? 'Failed to generate speech' : msg);
+      const msg = err instanceof Error ? err.message : t('stages.speechFailed');
+      toast.error(msg.length > 120 ? t('stages.speechFailed') : msg);
     } finally {
       setIsGenerating(false);
     }
@@ -214,13 +216,13 @@ export function StageTTS() {
       <div className="space-y-2 p-3 bg-white/5 rounded-xl border border-white/10">
         <h3 className="text-sm font-medium text-white flex items-center gap-2">
           <Volume2 className="w-4 h-4" />
-          Text-to-Speech
+          {t('stages.textToSpeech')}
         </h3>
 
         {/* Custom voices section */}
         {customVoices.length > 0 && !search && (
           <div className="space-y-1">
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">Your Voices</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('stages.yourVoices')}</p>
             {customVoices.map((cv) => (
               <button
                 key={cv.elevenlabs_voice_id}
@@ -245,7 +247,7 @@ export function StageTTS() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search voices..."
+            placeholder={t('stages.searchVoices')}
             className="pl-8 h-8 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-lg text-xs"
           />
         </div>
@@ -257,7 +259,7 @@ export function StageTTS() {
               <Loader2 className="w-4 h-4 animate-spin text-white/40" />
             </div>
           ) : voices.length === 0 ? (
-            <p className="text-xs text-white/40 text-center py-4">No voices found</p>
+            <p className="text-xs text-white/40 text-center py-4">{t('stages.noVoicesFound')}</p>
           ) : (
             <div className="space-y-1 pr-2">
               {voices.map((voice) => (
@@ -299,7 +301,7 @@ export function StageTTS() {
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white/70 hover:text-white transition-all"
         >
           <Mic className="w-3.5 h-3.5" />
-          Train Custom Voice
+          {t('stages.trainCustomVoice')}
         </button>
 
         {/* Text input + speech-to-text + send */}
@@ -308,7 +310,7 @@ export function StageTTS() {
             <Input
               value={text}
               onChange={(e) => setText(e.target.value.slice(0, 500))}
-              placeholder={isListening ? 'Listening…' : 'Type or speak a message…'}
+              placeholder={isListening ? t('stages.listening') : t('stages.typeOrSpeak')}
               className="w-full bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl text-sm pr-14"
               onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
               disabled={isGenerating}
@@ -320,7 +322,7 @@ export function StageTTS() {
             onClick={toggleListening}
             disabled={isGenerating}
             size="icon"
-            title={isListening ? 'Stop listening' : 'Dictate text'}
+            title={isListening ? t('stages.stopListening') : t('stages.dictateText')}
             className={cn(
               'rounded-xl border-0 shrink-0',
               isListening
@@ -358,18 +360,16 @@ export function StageTTS() {
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="w-[90%] max-w-md rounded-2xl bg-black/95 border border-white/10 p-6 space-y-4">
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-white">Voice Cloning Access</h3>
+              <h3 className="text-lg font-semibold text-white">{t('stages.voiceCloningAccess')}</h3>
+              <p className="text-sm text-white/60">{t('stages.voiceCloningFree')}</p>
               <p className="text-sm text-white/60">
-                Voice cloning is free for <span className="text-amber-400 font-medium">Blue Whale</span> and <span className="text-amber-400 font-medium">Megalodon</span> badge holders.
-              </p>
-              <p className="text-sm text-white/60">
-                You can still clone voices by providing your own ElevenLabs API key. Get one free at{' '}
+                {t('stages.voiceCloningByo')}{' '}
                 <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300">elevenlabs.io</a>
               </p>
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs text-white/50">ElevenLabs API Key</label>
+              <label className="text-xs text-white/50">{t('stages.elevenLabsApiKey')}</label>
               <Input
                 value={apiKeyInput}
                 onChange={(e) => setApiKeyInput(e.target.value)}
@@ -385,12 +385,12 @@ export function StageTTS() {
                 variant="outline"
                 className="flex-1 bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
               >
-                Cancel
+                {t('stages.cancel')}
               </Button>
               <Button
                 onClick={() => {
                   if (!apiKeyInput.trim()) {
-                    toast.error('Please enter your ElevenLabs API key');
+                    toast.error(t('stages.enterApiKey'));
                     return;
                   }
                   setCustomElevenLabsKey(apiKeyInput.trim());
@@ -400,13 +400,11 @@ export function StageTTS() {
                 }}
                 className="flex-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30"
               >
-                Continue
+                {t('stages.continue')}
               </Button>
             </div>
 
-            <p className="text-[10px] text-white/25 text-center">
-              Your key is stored locally and never shared. It's only used for voice cloning requests.
-            </p>
+            <p className="text-[10px] text-white/25 text-center">{t('stages.keyStoredLocally')}</p>
           </div>
         </div>
       )}

@@ -20,6 +20,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Mic, Square, Upload, Loader2, ChevronLeft, Check, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,7 @@ interface StageVoiceSetupProps {
 }
 
 export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: StageVoiceSetupProps) {
+  const { t } = useTranslation();
   const [status, setStatus] = useState<VoiceCloneStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [recording, setRecording] = useState(false);
@@ -118,8 +120,8 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
         if (elapsed >= MAX_SECONDS) stopRecording();
       }, 1000);
     } catch {
-      toast.error('Could not reach your microphone.', {
-        description: 'Allow microphone access and try again.',
+      toast.error(t('stages.micUnreachable'), {
+        description: t('stages.allowMicAccess'),
       });
     }
   }, [stopRecording]);
@@ -128,7 +130,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('That file is too large. Keep it under 10MB.');
+      toast.error(t('stages.sampleTooLarge'));
       return;
     }
     setSample(file);
@@ -153,9 +155,9 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
       // wallet, no rate-limit slot on the cloning route.
       if (status.entitled && status.owned) {
         const enabled = await enableStageVoice(wallet);
-        if (!enabled?.enabled) throw new VoiceCloneError('Could not switch on your voice.');
-        toast.success('Your voice is switched on.', {
-          description: 'Listeners in other languages will hear you.',
+        if (!enabled?.enabled) throw new VoiceCloneError(t('stages.couldNotSwitchOn'));
+        toast.success(t('stages.voiceSwitchedOn'), {
+          description: t('stages.listenersWillHear'),
         });
         onReady();
         return;
@@ -168,8 +170,8 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
         status,
       );
 
-      toast.success(result.adopted ? 'Your voice is switched on.' : 'Your voice is ready.', {
-        description: 'Every stage from now on is dubbed in it — you only pay for this once.',
+      toast.success(result.adopted ? t('stages.voiceSwitchedOn') : t('stages.voiceReady'), {
+        description: t('stages.everyStageDubbed'),
       });
       onReady();
     } catch (err) {
@@ -178,14 +180,14 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
         // The transfer is on chain. Telling them to try again here would take
         // payment twice for one voice.
         toast.error(error.message, {
-          description: 'Your DHB has already been taken for this. Try again — you will not be charged a second time.',
+          description: t('stages.alreadyCharged'),
         });
         // Re-read: the server is now holding a credit, and the next attempt
         // must go down the free path.
         const refreshed = await fetchVoiceCloneStatus(wallet);
         if (refreshed) setStatus(refreshed);
       } else {
-        toast.error(error.message || 'Could not set up your voice.');
+        toast.error(error.message || t('stages.couldNotSetUpVoice'));
       }
     } finally {
       setSubmitting(false);
@@ -206,12 +208,11 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
     return (
       <div className="space-y-4">
         <p className="text-sm text-white/60">
-          Your voice could not be set up right now. Your stage will still be dubbed for
-          international listeners, using a stock voice.
+          {t('stages.voiceSetupFailedBody')}
         </p>
         <Button variant="ghost" onClick={onCancel} className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl">
           <ChevronLeft className="w-4 h-4 mr-1" />
-          Back
+          {t('stages.back')}
         </Button>
       </div>
     );
@@ -220,11 +221,9 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
   return (
     <div className="space-y-4">
       <div className="space-y-1.5">
-        <h3 className="text-base font-medium text-white">Dub this stage in your voice</h3>
+        <h3 className="text-base font-medium text-white">{t('stages.dubThisStageInYourVoice')}</h3>
         <p className="text-sm text-white/60">
-          Listeners who turn on dubbing hear your stage in their own language, spoken in
-          your voice instead of a narrator's. Record yourself once and every stage you host
-          from now on uses it.
+          {t('stages.dubBlurb')}
         </p>
       </div>
 
@@ -232,18 +231,18 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
       <div className="p-3 rounded-xl bg-white/[0.06] space-y-1">
         {status.entitled ? (
           <>
-            <p className="text-sm text-white">Already paid for — this is free.</p>
+            <p className="text-sm text-white">{t('stages.alreadyPaidFree')}</p>
             <p className="text-xs text-white/50">
               {status.voiceName
                 ? `Switching "${status.voiceName}" back on. You can turn it off and on whenever you like.`
-                : 'Switching your voice back on.'}
+                : t('stages.switchingBackOn')}
             </p>
           </>
         ) : status.creditedRetry ? (
           <>
-            <p className="text-sm text-white">Already paid — finish setting it up.</p>
+            <p className="text-sm text-white">{t('stages.alreadyPaidFinish')}</p>
             <p className="text-xs text-white/50">
-              Your last attempt was charged but did not complete. This one costs nothing.
+              {t('stages.lastAttemptCharged')}
             </p>
           </>
         ) : (
@@ -253,8 +252,8 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
             </p>
             <p className="text-xs text-white/50">
               {status.owned
-                ? 'You already have a voice, so there is nothing to record — this buys stage dubbing in it. One charge, ever.'
-                : 'One charge, ever. Hosting stays free — listeners pay for their own dubbing.'}
+                ? t('stages.alreadyHaveVoice')
+                : t('stages.oneChargeEver')}
             </p>
           </>
         )}
@@ -264,8 +263,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 space-y-3">
             <p className="text-xs text-white/50">
-              Read anything at a normal speaking pace for at least {MIN_SECONDS} seconds —
-              what you say does not matter, only how you sound.
+              {t('stages.readAnything', { seconds: MIN_SECONDS })}
             </p>
 
             <div className="flex items-center gap-3">
@@ -278,7 +276,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
                 )}
               >
                 {recording ? <Square className="w-4 h-4 mr-2" /> : <Mic className="w-4 h-4 mr-2" />}
-                {recording ? `Stop — ${format(seconds)}` : sample ? 'Record again' : 'Record'}
+                {recording ? t('stages.stopAt', { time: format(seconds) }) : sample ? t('stages.recordAgain') : t('stages.record')}
               </Button>
 
               <input
@@ -300,7 +298,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
 
             {recording && seconds < MIN_SECONDS && (
               <p className="text-xs text-white/40">
-                {MIN_SECONDS - seconds}s more to go.
+                {t('stages.secondsToGo', { seconds: MIN_SECONDS - seconds })}
               </p>
             )}
 
@@ -309,13 +307,13 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
                 <span className={cn('flex items-center gap-1.5', sampleSeconds >= MIN_SECONDS ? 'text-white/70' : 'text-white/40')}>
                   {sampleSeconds >= MIN_SECONDS ? <Check className="w-3.5 h-3.5" /> : null}
                   {sampleSeconds >= MIN_SECONDS
-                    ? 'Sample ready.'
-                    : `Too short — record at least ${MIN_SECONDS} seconds.`}
+                    ? t('stages.sampleReady')
+                    : t('stages.tooShort', { seconds: MIN_SECONDS })}
                 </span>
                 <button
                   onClick={() => { setSample(null); setSampleSeconds(0); }}
                   className="p-1 rounded-lg text-white/40 hover:text-white hover:bg-white/10"
-                  aria-label="Discard recording"
+                  aria-label={t('stages.discardRecording')}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -332,19 +330,19 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
       >
         {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Check className="w-4 h-4 mr-2" />}
         {submitting
-          ? 'Setting up your voice...'
+          ? t('stages.settingUpVoice')
           : free
-            ? 'Use this voice'
+            ? t('stages.useThisVoice')
             : status.owned
               // Nothing is cloned on this path — the voice already exists and
               // the fee is for dubbing stages in it.
               ? (
                 <>
-                  Pay <DhbAmount amount={status.priceDhb.toLocaleString()} /> and switch on
+                  {t('stages.payAndSwitchOn')} <DhbAmount amount={status.priceDhb.toLocaleString()} />
                 </>
               ) : (
                 <>
-                  Pay <DhbAmount amount={status.priceDhb.toLocaleString()} /> and clone
+                  {t('stages.payAndClone')} <DhbAmount amount={status.priceDhb.toLocaleString()} />
                 </>
               )}
       </Button>
@@ -356,7 +354,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
         className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
       >
         <ChevronLeft className="w-4 h-4 mr-1" />
-        Not now — use a stock voice
+        {t('stages.notNowStockVoice')}
       </Button>
     </div>
   );
