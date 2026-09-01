@@ -14,6 +14,7 @@
  * header from the browser, and the edge function has no wallet-scoped client.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Drawer,
   DrawerContent,
@@ -60,6 +61,7 @@ export function VoiceDesignDrawer({
   const [selected, setSelected] = useState<string | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
   const [name, setName] = useState('');
+  const { t } = useTranslation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { walletAddress } = useAuth();
   const { refetch } = useCustomVoices();
@@ -103,26 +105,24 @@ export function VoiceDesignDrawer({
   const run = useCallback(async () => {
     const trimmed = description.trim();
     if (trimmed.length < MIN_DESCRIPTION_CHARS) {
-      toast.error(
-        `Describe the voice in at least ${MIN_DESCRIPTION_CHARS} characters — age, accent, pace and texture.`,
-      );
+      toast.error(t('creator.voiceDescribeMin', { count: MIN_DESCRIPTION_CHARS }));
       return;
     }
     setDesigning(true);
     try {
       const next = await designVoice(trimmed);
-      if (!next.length) throw new Error('No voices came back. Try a fuller description.');
+      if (!next.length) throw new Error(t('creator.voiceNoneReturned'));
       setPreviews((current) => {
         releasePreviews(current);
         return next;
       });
       setSelected(next[0]?.generatedVoiceId ?? null);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Voice design failed.');
+      toast.error(e instanceof Error ? e.message : t('creator.voiceDesignFailed'));
     } finally {
       setDesigning(false);
     }
-  }, [description, releasePreviews]);
+  }, [description, releasePreviews, t]);
 
   const play = useCallback(
     (preview: DesignedVoicePreview) => {
@@ -144,11 +144,11 @@ export function VoiceDesignDrawer({
     if (!selected) return;
     const trimmedName = name.trim();
     if (trimmedName.length < 1 || trimmedName.length > 50) {
-      toast.error('Give the voice a name, 1-50 characters.');
+      toast.error(t('creator.voiceNameLength'));
       return;
     }
     if (!walletAddress) {
-      toast.error('Sign in to save a voice.');
+      toast.error(t('creator.voiceSignInToSave'));
       return;
     }
     setSaving(true);
@@ -173,19 +173,19 @@ export function VoiceDesignDrawer({
       );
       if (error) {
         console.error('[voice-design] could not record the voice locally', error);
-        toast.warning('Voice created, but it may not appear in your list until you refresh.');
+        toast.warning(t('creator.voiceCreatedNotListed'));
       } else {
-        toast.success(`"${saved.name}" saved to your voices.`);
+        toast.success(t('creator.voiceSaved', { name: saved.name }));
       }
 
       await refetch();
       onSaved(saved.voiceId);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not save that voice.');
+      toast.error(e instanceof Error ? e.message : t('creator.voiceSaveFailed'));
     } finally {
       setSaving(false);
     }
-  }, [selected, name, walletAddress, description, refetch, onSaved]);
+  }, [selected, name, walletAddress, description, refetch, onSaved, t]);
 
   return (
     <Drawer
@@ -199,21 +199,21 @@ export function VoiceDesignDrawer({
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Sparkles className="h-5 w-5 text-cyan-400" />
-            Design a voice
+            {t('creator.designAVoice')}
           </DrawerTitle>
           <DrawerDescription className="text-zinc-400">
-            Three takes from your description. Keep the one you want.
+            {t('creator.designAVoiceHint')}
           </DrawerDescription>
         </DrawerHeader>
 
         <ScrollArea className="flex-1 overflow-y-auto px-4">
           <div className="space-y-3 pb-4">
             <div className="rounded-xl bg-zinc-800/50 p-3">
-              <p className="text-xs font-medium text-zinc-400">Your description</p>
+              <p className="text-xs font-medium text-zinc-400">{t('creator.yourDescription')}</p>
               <p className="mt-1 text-sm leading-relaxed text-white">
                 {description.trim() || (
                   <span className="text-zinc-500">
-                    Type a description in the composer first — age, accent, pace, texture and mood.
+                    {t('creator.typeDescriptionFirst')}
                   </span>
                 )}
               </p>
@@ -234,7 +234,7 @@ export function VoiceDesignDrawer({
                   <span
                     role="button"
                     tabIndex={0}
-                    aria-label={playing === preview.generatedVoiceId ? 'Stop' : 'Play'}
+                    aria-label={t(playing === preview.generatedVoiceId ? 'creator.stop' : 'creator.play')}
                     onClick={(e) => {
                       e.stopPropagation();
                       play(preview);
@@ -255,9 +255,9 @@ export function VoiceDesignDrawer({
                     )}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-white">Take {i + 1}</p>
+                    <p className="text-sm font-medium text-white">{t('creator.take', { number: i + 1 })}</p>
                     <p className="text-xs text-zinc-500">
-                      {preview.durationSecs ? `${Math.round(preview.durationSecs)}s` : 'Preview'}
+                      {preview.durationSecs ? t('creator.seconds', { count: Math.round(preview.durationSecs) }) : t('creator.preview')}
                     </p>
                   </div>
                 </button>
@@ -267,14 +267,14 @@ export function VoiceDesignDrawer({
             {!!previews.length && (
               <div>
                 <label htmlFor="voice-design-name" className="text-xs font-medium text-zinc-400">
-                  Name this voice
+                  {t('creator.nameThisVoice')}
                 </label>
                 <Input
                   id="voice-design-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   maxLength={50}
-                  placeholder="e.g. Gravel Narrator"
+                  placeholder={t('creator.voiceNamePlaceholder')}
                   className="mt-1"
                 />
               </div>
@@ -291,12 +291,12 @@ export function VoiceDesignDrawer({
             {designing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Designing
+                {t('creator.designing')}
               </>
             ) : previews.length ? (
-              'Try three more'
+              t('creator.tryThreeMore')
             ) : (
-              'Design three voices'
+              t('creator.designThreeVoices')
             )}
           </Button>
 
@@ -305,10 +305,10 @@ export function VoiceDesignDrawer({
               {saving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving
+                  {t('creator.saving')}
                 </>
               ) : (
-                'Save and use this voice'
+                t('creator.saveAndUseVoice')
               )}
             </Button>
           )}
