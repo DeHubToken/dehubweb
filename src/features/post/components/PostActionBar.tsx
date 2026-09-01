@@ -12,7 +12,7 @@ import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
 import { openStageModal } from '@/contexts/StageContext';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
-import type { LiveMode } from '../types';
+import type { LiveMode, LiveStreamHandoff } from '../types';
 import type { AttachedSound } from '../hooks/usePostSound';
 
 interface PostActionBarProps {
@@ -25,6 +25,12 @@ interface PostActionBarProps {
   onStartRecording: () => void;
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
+  /**
+   * A stream the composer's own mint just provisioned. Its arrival is what
+   * opens the broadcast sheet — there is no setup step any more, so the sheet
+   * is only ever entered already on air.
+   */
+  liveStream?: LiveStreamHandoff | null;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   onInsertEmoji: (emoji: string) => void;
   onInsertGif: (gifUrl: string) => void;
@@ -63,6 +69,7 @@ export function PostActionBar({
   onStartRecording,
   liveMode,
   setLiveMode,
+  liveStream,
   onInsertFormatting,
   onInsertEmoji,
   onInsertGif,
@@ -92,7 +99,6 @@ export function PostActionBar({
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
-  const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
   const navigate = useNavigate();
   const isLive = liveMode !== null;
   const attachmentInputRef = useRef<HTMLInputElement>(null);
@@ -117,9 +123,10 @@ export function PostActionBar({
       // Close the post modal and open the Stages modal globally
       onCloseModal?.();
       openStageModal('create');
-    } else {
-      setGoLiveModalOpen(true);
     }
+    // A video stream opens nothing: picking Live just puts the composer in live
+    // mode, and the composer itself is the setup form. The Go Live sheet now
+    // only ever appears already broadcasting, handed a provisioned stream.
   };
 
   const handleSpellCheck = () => {
@@ -212,16 +219,10 @@ export function PostActionBar({
     </div>
   );
 
-  const handleGoLiveClick = () => {
-    if (isLive) {
-      // Open the Go Live modal
-      setGoLiveModalOpen(true);
-    }
-  };
-
   const handleGoLiveModalClose = () => {
-    setGoLiveModalOpen(false);
     setLiveMode(null);
+    // Closes the composer behind it too: the broadcast is over, and the post it
+    // was made from was published before the camera ever came on.
     onCloseModal?.();
   };
 
@@ -229,9 +230,12 @@ export function PostActionBar({
 
   return (
     <>
+      {/* Opened by the arrival of a provisioned stream, never by a button. The
+          setup form it used to carry is gone — the composer above is the form. */}
       <GoLiveModal
-        isOpen={goLiveModalOpen}
+        isOpen={!!liveStream}
         onClose={handleGoLiveModalClose}
+        initialStream={liveStream}
       />
 
       {/* Upload progress bar — liquid glass bubble style */}
@@ -521,7 +525,11 @@ export function PostActionBar({
         </Drawer>
         
         <Button
-          onClick={isLive ? handleGoLiveClick : onPost}
+          // One button, one form. This used to branch to a second Go Live
+          // sheet that asked for the title, description and cover all over
+          // again — the composer already has them, and the mint provisions the
+          // stream, so going live is just posting a live post.
+          onClick={onPost}
           disabled={(!canPost && !isLive) || isPosting}
           className={cn(
             "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",

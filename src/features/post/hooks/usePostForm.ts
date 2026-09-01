@@ -30,7 +30,7 @@ import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildStreamInfo } from '../lib/stream-info';
 import { attachShopListings } from '@/lib/attach-shop-listings';
-import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
+import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData, LiveStreamHandoff } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -250,7 +250,15 @@ interface UsePostFormReturn {
   };
 }
 
-export function usePostForm(onClose: () => void): UsePostFormReturn {
+export function usePostForm(
+  onClose: () => void,
+  /**
+   * Called instead of closing when a live post's mint comes back with a
+   * stream. The composer stays where it is and the broadcast console opens
+   * over it — going live is one form now, not two.
+   */
+  onLiveStreamReady?: (stream: LiveStreamHandoff) => void,
+): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
@@ -1981,7 +1989,38 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       } catch (catErr) {
         console.warn('[Mint] Failed to increment category counts:', catErr);
       }
+
+      /*
+       * A live post does not end at the feed — it ends on air.
+       *
+       * The same mint that published the post provisioned the stream and
+       * handed back its key, so there is nothing left to set up: the console
+       * opens over the composer on these credentials. Going live used to mean
+       * filling this form and then filling a second sheet that asked for the
+       * title, description and cover all over again.
+       *
+       * Falls through to the normal close if the server sent no stream back,
+       * which is a live post with no stream behind it — better to land on the
+       * feed than on a console with nothing to publish to.
+       */
+      const provisioned = mintResponse.stream;
+      if (liveMode && onLiveStreamReady && provisioned?.streamKey && provisioned?._id) {
+        onLiveStreamReady({
+          tokenId: String(mintResponse.createdTokenId),
+          streamKey: provisioned.streamKey,
+          ingestUrl: provisioned.ingestUrl || '',
+          playbackUrl: `https://dehub.io/app/post/${mintResponse.createdTokenId}`,
+          streamId: String(provisioned._id),
+          playbackId: provisioned.playbackId,
+          provider: provisioned.provider,
+        });
+        return;
+      }
+
       onClose();
+
+      // Navigate to home to show the new post
+      navigate('/app');
       
       // Navigate to home to show the new post
       navigate('/app');
