@@ -7,7 +7,6 @@
  */
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getLiveStream } from '@/lib/api/dehub/livestream';
 
 /**
  * How often the audience figure is re-read from the API.
@@ -79,7 +78,12 @@ export function useStreamAudience(streamId: string | undefined, enabled = true):
   // on first paint rather than at the next join.
   const { data } = useQuery({
     queryKey: ['stream-audience', streamId],
-    queryFn: () => getLiveStream(streamId as string),
+    // Dynamically imported for the same reason the socket below is: this file
+    // sits in the post page's static graph, and a static import here drags the
+    // livestream API module — and everything it reaches — onto the boot path
+    // (scripts/boot-path-report.mjs).
+    queryFn: () =>
+      import('@/lib/api/dehub/livestream').then((m) => m.getLiveStream(streamId as string)),
     enabled: active,
     refetchInterval: AUDIENCE_POLL_MS,
     staleTime: AUDIENCE_POLL_MS,
