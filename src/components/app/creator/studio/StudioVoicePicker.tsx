@@ -11,6 +11,7 @@
  * are the ones somebody came here for.
  */
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCustomVoices } from '@/hooks/use-custom-voices';
 import { DEFAULT_VOICE_ID } from '@/lib/creator/generationEngine';
 import { SelectChip, type ChipOption } from './StudioChip';
@@ -32,6 +33,7 @@ interface StudioVoicePickerProps {
 const DESIGN_SENTINEL = '__design__';
 
 export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoicePickerProps) {
+  const { t } = useTranslation();
   const [library, setLibrary] = useState<LibraryVoice[]>([]);
   const { voices: customVoices } = useCustomVoices();
 
@@ -69,7 +71,7 @@ export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoic
     const mine: ChipOption<string>[] = customVoices.map((v) => ({
       value: v.elevenlabs_voice_id,
       label: v.name,
-      detail: 'Your voice',
+      detail: t('creator.yourVoice'),
     }));
 
     const stock: ChipOption<string>[] = library
@@ -87,28 +89,28 @@ export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoic
     // The chip must always be able to display its current value. Until the
     // library loads that is nothing, and the chip would read as empty.
     const fallback: ChipOption<string>[] =
-      mine.length || stock.length ? [] : [{ value: DEFAULT_VOICE_ID, label: 'Aria', detail: 'Default' }];
+      mine.length || stock.length ? [] : [{ value: DEFAULT_VOICE_ID, label: 'Aria', detail: t('creator.voiceDefault') }];
 
     return [
       ...mine,
       ...stock,
       ...fallback,
-      { value: DESIGN_SENTINEL, label: '✨ Design a new voice', detail: 'Describe one in words' },
+      { value: DESIGN_SENTINEL, label: t('creator.designNewVoice'), detail: t('creator.designNewVoiceDetail') },
     ];
-  }, [customVoices, library]);
+  }, [customVoices, library, t]);
 
   const current = options.find((o) => o.value === value);
 
   return (
     <SelectChip
-      label="Voice"
+      label={t('creator.voice')}
       width="md"
       searchable
-      searchPlaceholder="Search voices…"
+      searchPlaceholder={t('creator.searchVoices')}
       value={value}
       // A voice selected on another surface, or one that has since been
       // deleted, would otherwise leave the chip face blank.
-      display={current?.label ?? 'Voice'}
+      display={current?.label ?? t('creator.voice')}
       options={options}
       onChange={(next) => {
         if (next === DESIGN_SENTINEL) {

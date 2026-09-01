@@ -22,6 +22,7 @@
  * up to full size; clicking away, or scrolling back to the top, closes it again.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Film,
@@ -449,6 +450,7 @@ interface CreatorStudioProps {
 }
 
 export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
+  const { t } = useTranslation();
   const { walletAddress, isAuthenticated } = useAuth() as {
     walletAddress: string | null;
     isAuthenticated: boolean;
@@ -769,7 +771,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     if (next?.requiresImage && !reference) {
       // Adopting its model anyway would swap in a different engine at a
       // different price than the tile advertised.
-      toast.error(`${next.name} needs an attached image. Attach one first.`);
+      toast.error(t('creator.presetNeedsImage', { name: t(next.nameKey) }));
       return;
     }
     setPresetId(next?.id ?? null);
@@ -796,7 +798,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       }
     }
     textareaRef.current?.focus();
-  }, [reference, setPresetId]);
+  }, [reference, setPresetId, t]);
 
   /**
    * Switching mode now only switches mode. Each workspace keeps its own prompt,
@@ -1421,14 +1423,14 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           : activeVideoModel?.name ?? videoModel;
 
   const placeholder = preset
-    ? `${preset.name}: describe the subject, for example "${preset.sample}"`
+    ? t('creator.presetPlaceholder', { name: t(preset.nameKey), sample: preset.sample })
     : mode === 'image'
-      ? 'Describe the image you want'
+      ? t('creator.placeholderImage')
       : mode === '3d'
-        ? 'Describe the object to model, or attach a photo of it'
+        ? t('creator.placeholder3d')
         : mode === 'audio'
           ? activeAudioTask.placeholder
-          : 'Describe the shot you want';
+          : t('creator.placeholderVideo');
 
   const generateDisabled = promptMissing || !!blockingIssue || staging;
   const undoEnhance = beforeEnhance[mode];
