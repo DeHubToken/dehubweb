@@ -4,6 +4,7 @@
  * Selecting a skill replaces the `/query` token with `/slug ` in the textarea.
  */
 import { useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sparkles, LayoutGrid, ImageIcon, MessageSquare } from 'lucide-react';
 import type { UserSkill } from '@/hooks/use-user-skills';
 
@@ -54,6 +55,7 @@ export function SlashSkillDropdown({
   onOpenAll,
   onClose,
 }: Props) {
+  const { t } = useTranslation();
   const results = useMemo(() => filterSkills(query, skills), [query, skills]);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -80,19 +82,19 @@ export function SlashSkillDropdown({
     >
       <div className="px-3 py-2 flex items-center justify-between border-b border-white/5">
         <div className="text-[11px] uppercase tracking-wider text-white/50 flex items-center gap-1.5">
-          <Sparkles className="w-3 h-3" /> Skills {query && <span className="normal-case tracking-normal text-white/40">— "{query}"</span>}
+          <Sparkles className="w-3 h-3" /> {t('skills.skills')} {query && <span className="normal-case tracking-normal text-white/40">— "{query}"</span>}
         </div>
         <button
           type="button"
           onMouseDown={(e) => { e.preventDefault(); onOpenAll(); }}
           className="text-[11px] px-2 py-1 rounded-md bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 flex items-center gap-1"
         >
-          <LayoutGrid className="w-3 h-3" /> Show all
+          <LayoutGrid className="w-3 h-3" /> {t('skills.showAll')}
         </button>
       </div>
       {results.length === 0 ? (
         <div className="px-3 py-4 text-xs text-white/50">
-          No skills match. <button type="button" onMouseDown={(e) => { e.preventDefault(); onOpenAll(); }} className="underline text-white/80">Browse all skills</button>
+          {t('skills.noSkillsMatch')} <button type="button" onMouseDown={(e) => { e.preventDefault(); onOpenAll(); }} className="underline text-white/80">{t('skills.browseAllSkills')}</button>
         </div>
       ) : (
         <div className="max-h-72 overflow-y-auto py-1">
@@ -118,7 +120,7 @@ export function SlashSkillDropdown({
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-white truncate">{s.name}</span>
                     <span className="text-[10px] text-white/40 font-mono truncate">/{s.slug}</span>
-                    {s.is_featured && <span className="text-[9px] uppercase tracking-wide text-white/60 border border-white/15 rounded px-1">Feat</span>}
+                    {s.is_featured && <span className="text-[9px] uppercase tracking-wide text-white/60 border border-white/15 rounded px-1">{t('skills.featShort')}</span>}
                   </div>
                   {s.description && <div className="text-[11px] text-white/50 truncate">{s.description}</div>}
                 </div>
