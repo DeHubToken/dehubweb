@@ -41,39 +41,78 @@ const EVENT = {
   viewCountUpdate: 'stream.viewers.update',
 } as const;
 
-let socket: Socket | null = null;
-let socketToken: string | null = null;
+interface StreamConnection {
+  socket: Socket;
+  /** The session token its handshake was built with. */
+  token: string | null;
+  /** How many presences are still holding it. */
+  refs: number;
+}
+
+/** The connection new presences are handed. Retired ones are not tracked here. */
+let active: StreamConnection | null = null;
 
 /**
- * The root-namespace socket, shared by every stream this tab has open.
+ * Take a share of the root-namespace socket, shared by every stream this tab
+ * has open.
  *
- * Rebuilt when the session token changes: the gateway reads the viewer's
- * address off the handshake, and a stale token would keep counting the
- * previous account.
+ * A new session needs a new socket — the gateway reads the viewer's address off
+ * the handshake, and a stale token would keep counting the previous account.
+ * What it must NOT do is disconnect the old one: this used to, and every
+ * presence opened before the token rotated kept a reference to a socket that
+ * had just been closed under it. Those viewers stopped being counted, their
+ * number froze at whatever it last was, and their `leave` became a no-op —
+ * silently, on the very screens these counts exist for. A manual `disconnect()`
+ * also cancels reconnection, so the socket never came back.
+ *
+ * So a rotated token retires the connection instead: it stops being handed out,
+ * and closes itself once its last holder leaves.
  */
-function getStreamSocket(): Socket {
+function acquireStreamSocket(): StreamConnection {
   const token = getAuthToken();
 
-  if (socket && socketToken !== token) {
-    socket.disconnect();
-    socket = null;
+  // Retire, don't close. Whoever still holds it keeps a working socket.
+  if (active && active.token !== token) active = null;
+
+  if (!active) {
+    active = {
+      token,
+      refs: 0,
+      socket: io(DEHUB_API_BASE, {
+        auth: token ? { token } : {},
+        query: token ? { token } : {},
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        reconnectionAttempts: 20,
+        timeout: 20000,
+      }),
+    };
   }
 
-  if (!socket) {
-    socket = io(DEHUB_API_BASE, {
-      auth: token ? { token } : {},
-      query: token ? { token } : {},
-      transports: ['websocket', 'polling'],
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: 20,
-      timeout: 20000,
-    });
-    socketToken = token;
-  }
+  active.refs += 1;
+  return active;
+}
 
-  return socket;
+/** Give a share back. The socket closes when the last one is returned. */
+function releaseStreamSocket(conn: StreamConnection): void {
+  conn.refs -= 1;
+  if (conn.refs > 0) return;
+  if (active === conn) active = null;
+  conn.socket.disconnect();
+}
+
+/**
+ * Is this count update about the stream a presence is watching?
+ *
+ * One socket carries every stream this tab has open, so a handler hears the
+ * other streams' updates too. Permissive when the payload carries no
+ * `streamId`: the gateway does not always send one, and dropping those would
+ * throw away the only number some surfaces ever get.
+ */
+function isForStream(data: { streamId?: string } | undefined, streamId: string): boolean {
+  return !data?.streamId || data.streamId === streamId;
 }
 
 export interface StreamPresence {
@@ -112,14 +151,16 @@ export function joinStreamPresence(
   const joinEvent = identified ? EVENT.joinStream : EVENT.anonJoinStream;
   const leaveEvent = identified ? EVENT.leaveStream : EVENT.anonLeaveStream;
 
-  const s = getStreamSocket();
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
   let left = false;
 
   const join = () => {
     if (!left) s.emit(joinEvent, { streamId });
   };
 
-  const handleCount = (data: { viewerCount?: number }) => {
+  const handleCount = (data: { viewerCount?: number; streamId?: string }) => {
+    if (!isForStream(data, streamId)) return;
     if (typeof data?.viewerCount === 'number') onViewerCount?.(data.viewerCount);
   };
 
@@ -144,6 +185,7 @@ export function joinStreamPresence(
       // Best-effort: if the socket is already gone the server has dropped this
       // viewer on disconnect anyway, which is the case this design leans on.
       if (s.connected) s.emit(leaveEvent, { streamId });
+      releaseStreamSocket(conn);
     },
   };
 }
@@ -168,14 +210,16 @@ export function watchStreamPresence(
 ): StreamPresence {
   if (!streamId) return { leave: () => undefined };
 
-  const s = getStreamSocket();
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
   let left = false;
 
   const join = () => {
     if (!left) s.emit(EVENT.joinRoom, { streamId });
   };
 
-  const handleCount = (data: { viewerCount?: number }) => {
+  const handleCount = (data: { viewerCount?: number; streamId?: string }) => {
+    if (!isForStream(data, streamId)) return;
     if (typeof data?.viewerCount === 'number') onViewerCount(data.viewerCount);
   };
 
@@ -195,6 +239,7 @@ export function watchStreamPresence(
       s.off(EVENT.leaveStream, handleCount);
       // No counterpart emit: nothing was counted, and the socket leaves the
       // room on disconnect anyway.
+      releaseStreamSocket(conn);
     },
   };
 }
