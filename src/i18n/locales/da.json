@@ -1789,5 +1789,25 @@
     "stakeDhb": "Indsæt DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} låses op ved {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kameralooks",
+    "title": "Look",
+    "hint": "Anvendes, før din video forlader denne enhed — seerne ser præcis det, du ser her.",
+    "backgroundBlur": "Slør min baggrund",
+    "on": "Til",
+    "off": "Fra",
+    "none": "Ingen",
+    "soft": "Blød",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Varm",
+    "cool": "Kold",
+    "vivid": "Levende",
+    "dream": "Drøm",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Slør",
+    "pixelate": "Pixelér"
   }
 }

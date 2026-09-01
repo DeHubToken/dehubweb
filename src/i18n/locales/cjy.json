@@ -1812,5 +1812,25 @@
     "stakeDhb": "存 DHB",
     "title": "超能力",
     "unlocksAt": "{{power}} 在 {{tier}} 解锁"
+  },
+  "videoLooks": {
+    "button": "摄像头滤镜",
+    "title": "滤镜",
+    "hint": "在视频离开这个设备之前应用 — 观众看见的正是你在这搭看见的画面。",
+    "backgroundBlur": "虚化我的背景",
+    "on": "开",
+    "off": "关",
+    "none": "无",
+    "soft": "柔和",
+    "mono": "黑白",
+    "noir": "黑色电影",
+    "warm": "暖色",
+    "cool": "冷色",
+    "vivid": "鲜艳",
+    "dream": "梦幻",
+    "vhs": "VHS",
+    "neon": "霓虹",
+    "blur": "模糊",
+    "pixelate": "像素化"
   }
 }

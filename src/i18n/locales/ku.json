@@ -1785,5 +1785,25 @@
     "stakeDhb": "DHB Deyne",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} li {{tier}} vedibe"
+  },
+  "videoLooks": {
+    "button": "Dîmenên kamerayê",
+    "title": "Dîmen",
+    "hint": "Berî ku vîdyoya te ji vê amûrê derkeve tê sepandin — temaşevan tam wê yekê dibînin ku tu li vir dibînî.",
+    "backgroundBlur": "Paşxana min tarî bike",
+    "on": "Vekirî",
+    "off": "Girtî",
+    "none": "Tune",
+    "soft": "Nerm",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Germ",
+    "cool": "Sar",
+    "vivid": "Zindî",
+    "dream": "Xewn",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Tarîtî",
+    "pixelate": "Piksel"
   }
 }

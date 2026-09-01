@@ -1771,5 +1771,25 @@
     "stakeDhb": "Stakovat DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} se odemyká na úrovni {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Vzhledy kamery",
+    "title": "Vzhled",
+    "hint": "Použije se dřív, než video opustí toto zařízení — diváci vidí přesně to, co vidíte vy.",
+    "backgroundBlur": "Rozostřit pozadí",
+    "on": "Zapnuto",
+    "off": "Vypnuto",
+    "none": "Žádný",
+    "soft": "Jemný",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Teplý",
+    "cool": "Studený",
+    "vivid": "Živý",
+    "dream": "Sen",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Rozostření",
+    "pixelate": "Pixelace"
   }
 }

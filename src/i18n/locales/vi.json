@@ -2046,5 +2046,25 @@
     "disputeTotal": "Tổng: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "Giải quyết & trả",
     "resolve": "Giải quyết"
+  },
+  "videoLooks": {
+    "button": "Kiểu camera",
+    "title": "Kiểu",
+    "hint": "Được áp dụng trước khi video rời khỏi thiết bị này — người xem thấy đúng những gì bạn thấy ở đây.",
+    "backgroundBlur": "Làm mờ nền của tôi",
+    "on": "Bật",
+    "off": "Tắt",
+    "none": "Không có",
+    "soft": "Mềm",
+    "mono": "Đơn sắc",
+    "noir": "Noir",
+    "warm": "Ấm",
+    "cool": "Lạnh",
+    "vivid": "Rực rỡ",
+    "dream": "Mơ",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Làm mờ",
+    "pixelate": "Điểm ảnh"
   }
 }

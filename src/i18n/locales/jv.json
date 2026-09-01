@@ -1785,5 +1785,25 @@
     "stakeDhb": "Setor DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} kabukak ing {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Tampilan kamera",
+    "title": "Tampilan",
+    "hint": "Ditrapake sadurunge video metu saka piranti iki — sing nonton ndeleng persis kaya sing sampeyan deleng ing kene.",
+    "backgroundBlur": "Burem-ake latar mburiku",
+    "on": "Urip",
+    "off": "Mati",
+    "none": "Ora ana",
+    "soft": "Alus",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Anget",
+    "cool": "Adhem",
+    "vivid": "Cerah",
+    "dream": "Ngimpi",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Burem",
+    "pixelate": "Piksel"
   }
 }

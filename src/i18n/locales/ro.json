@@ -1799,5 +1799,25 @@
     "stakeDhb": "Pune DHB în staking",
     "title": "SuperPuteri",
     "unlocksAt": "{{power}} se deblochează la {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Aspecte ale camerei",
+    "title": "Aspect",
+    "hint": "Se aplică înainte ca videoclipul să părăsească acest dispozitiv — spectatorii văd exact ce vezi tu aici.",
+    "backgroundBlur": "Estompează-mi fundalul",
+    "on": "Activat",
+    "off": "Dezactivat",
+    "none": "Niciunul",
+    "soft": "Blând",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Cald",
+    "cool": "Rece",
+    "vivid": "Viu",
+    "dream": "Vis",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Estompare",
+    "pixelate": "Pixelare"
   }
 }

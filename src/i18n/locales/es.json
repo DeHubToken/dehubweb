@@ -3154,5 +3154,25 @@
     "noTraining": "No entrenamos con tus datos",
     "soc2": "Seguridad SOC 2 (próximamente)",
     "aiEducator": "AI Educator y soporte por Slack"
+  },
+  "videoLooks": {
+    "button": "Estilos de cámara",
+    "title": "Estilo",
+    "hint": "Se aplica antes de que tu vídeo salga de este dispositivo: los espectadores ven exactamente lo que ves aquí.",
+    "backgroundBlur": "Difuminar mi fondo",
+    "on": "Activado",
+    "off": "Desactivado",
+    "none": "Ninguno",
+    "soft": "Suave",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Cálido",
+    "cool": "Frío",
+    "vivid": "Vivo",
+    "dream": "Sueño",
+    "vhs": "VHS",
+    "neon": "Neón",
+    "blur": "Desenfoque",
+    "pixelate": "Pixelado"
   }
 }

@@ -1789,5 +1789,25 @@
     "stakeDhb": "DHB stakelése",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} a(z) {{tier}} szinten oldódik fel"
+  },
+  "videoLooks": {
+    "button": "Kameramegjelenések",
+    "title": "Megjelenés",
+    "hint": "Még azelőtt érvényesül, hogy a videó elhagyná ezt az eszközt — a nézők pontosan azt látják, amit te itt látsz.",
+    "backgroundBlur": "Háttér elmosása",
+    "on": "Be",
+    "off": "Ki",
+    "none": "Nincs",
+    "soft": "Lágy",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Meleg",
+    "cool": "Hideg",
+    "vivid": "Élénk",
+    "dream": "Álom",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Elmosás",
+    "pixelate": "Pixeles"
   }
 }

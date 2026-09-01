@@ -1789,5 +1789,25 @@
     "stakeDhb": "Staka DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} låses upp vid {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kameralooks",
+    "title": "Look",
+    "hint": "Tillämpas innan din video lämnar den här enheten — tittarna ser exakt det du ser här.",
+    "backgroundBlur": "Gör min bakgrund suddig",
+    "on": "På",
+    "off": "Av",
+    "none": "Ingen",
+    "soft": "Mjuk",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Varm",
+    "cool": "Kall",
+    "vivid": "Livlig",
+    "dream": "Dröm",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Oskärpa",
+    "pixelate": "Pixla"
   }
 }

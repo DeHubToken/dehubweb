@@ -1840,5 +1840,25 @@
     "stakeDhb": "DHB kiritish",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} {{tier}} darajasida ochiladi"
+  },
+  "videoLooks": {
+    "button": "Kamera koʻrinishlari",
+    "title": "Koʻrinish",
+    "hint": "Video ushbu qurilmadan chiqishidan oldin qoʻllanadi — tomoshabinlar aynan siz shu yerda koʻrayotgan narsani koʻradi.",
+    "backgroundBlur": "Fonimni xiralashtir",
+    "on": "Yoniq",
+    "off": "Oʻchiq",
+    "none": "Yoʻq",
+    "soft": "Yumshoq",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Iliq",
+    "cool": "Sovuq",
+    "vivid": "Yorqin",
+    "dream": "Tush",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Xiralik",
+    "pixelate": "Piksel"
   }
 }

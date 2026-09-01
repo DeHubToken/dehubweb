@@ -1763,5 +1763,25 @@
     "stakeDhb": "ايدع DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} تنفتح عند {{tier}}"
+  },
+  "videoLooks": {
+    "button": "مظاهر الكاميرا",
+    "title": "المظهر",
+    "hint": "ينطبق قبل ما يطلع الفيديو من هالجهاز — المشاهدين يشوفون بالضبط اللي تشوفه هنا.",
+    "backgroundBlur": "طمس الخلفية",
+    "on": "شغال",
+    "off": "مطفي",
+    "none": "بدون",
+    "soft": "ناعم",
+    "mono": "أحادي",
+    "noir": "نوار",
+    "warm": "دافي",
+    "cool": "بارد",
+    "vivid": "زاهي",
+    "dream": "حلم",
+    "vhs": "VHS",
+    "neon": "نيون",
+    "blur": "طمس",
+    "pixelate": "بكسلة"
   }
 }

@@ -1869,5 +1869,25 @@
     "disputeTotal": "Totale: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "Risolvi e paga",
     "resolve": "Risolvi"
+  },
+  "videoLooks": {
+    "button": "Effetti fotocamera",
+    "title": "Effetto",
+    "hint": "Applicato prima che il video lasci questo dispositivo — gli spettatori vedono esattamente ciò che vedi tu.",
+    "backgroundBlur": "Sfoca lo sfondo",
+    "on": "Attivo",
+    "off": "Disattivato",
+    "none": "Nessuno",
+    "soft": "Morbido",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Caldo",
+    "cool": "Freddo",
+    "vivid": "Vivido",
+    "dream": "Sogno",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Sfocatura",
+    "pixelate": "Pixelato"
   }
 }

@@ -1785,5 +1785,25 @@
     "stakeDhb": "Diposita DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} es desbloqueja a {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Aspectes de la càmera",
+    "title": "Aspecte",
+    "hint": "S aplica abans que el vídeo surti d aquest dispositiu: els espectadors veuen exactament el que veus aquí.",
+    "backgroundBlur": "Difumina el meu fons",
+    "on": "Activat",
+    "off": "Desactivat",
+    "none": "Cap",
+    "soft": "Suau",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Càlid",
+    "cool": "Fred",
+    "vivid": "Viu",
+    "dream": "Somni",
+    "vhs": "VHS",
+    "neon": "Neó",
+    "blur": "Difuminat",
+    "pixelate": "Pixelat"
   }
 }
