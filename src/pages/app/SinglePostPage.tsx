@@ -1226,7 +1226,7 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
           {isLivePost && id && post && (
             <Suspense fallback={null}>
               <LivePostChat
-                streamId={id}
+                tokenId={id}
                 isOffline={!('isLive' in post ? (post as any).isLive : true)}
                 isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
               />

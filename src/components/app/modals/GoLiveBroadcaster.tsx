@@ -114,6 +114,12 @@ interface GoLiveBroadcasterProps {
    * show and the chat has nothing to key on.
    */
   streamId?: string;
+  /**
+   * The POST's tokenId. Distinct from `streamId` above and not
+   * interchangeable: the chat room is keyed on the post, because that is the
+   * id the viewers' side has too.
+   */
+  tokenId?: string;
   /** Fired when the creator ends the broadcast; the parent runs API teardown. */
   onEnd: () => void;
   /**
@@ -304,6 +310,7 @@ export function GoLiveBroadcaster({
   provider,
   initialScreenStream = null,
   streamId,
+  tokenId,
   onEnd,
   onLive,
 }: GoLiveBroadcasterProps) {
@@ -1570,7 +1577,7 @@ export function GoLiveBroadcaster({
         </div>
       )}
 
-      {openPanel === 'chat' && streamId && (
+      {openPanel === 'chat' && tokenId && (
         <div
           className={cn(
             'max-h-[45vh] overflow-hidden rounded-xl border border-white/10',
@@ -1587,9 +1594,12 @@ export function GoLiveBroadcaster({
             }
           >
             {/* isHost: the same panel viewers see on the post page, plus the
-                host's pin control. One global livechat room backs both, so
-                what shows here is exactly what the audience is reading. */}
-            <LivePostChat streamId={streamId} isHost />
+                host's pin control. Keyed on the POST's tokenId, which is what
+                the post page uses — this panel used to pass the stream's Mongo
+                ObjectId, so host and audience named different rooms and only
+                shared a conversation because the backend ignored the room and
+                put everyone in the platform chat. */}
+            <LivePostChat tokenId={tokenId} isHost />
           </Suspense>
         </div>
       )}
