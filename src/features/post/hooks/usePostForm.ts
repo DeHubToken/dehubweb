@@ -28,6 +28,7 @@ import { confirmEvmMint, getSolanaStatus } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStage, openStageModal } from '@/contexts/StageContext';
 import { buildStreamInfo } from '../lib/stream-info';
 import { attachShopListings } from '@/lib/attach-shop-listings';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData, LiveStreamHandoff } from '../types';
@@ -262,6 +263,8 @@ export function usePostForm(
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
+  // Opening a stage is the composer's job now — there is no second create form.
+  const { createSpace } = useStage();
   // The creator's own plans are what a subscriber-gated post is gated on.
   const { planIds: myPlanIds } = useCreatorPlansLite(user?.address);
 
@@ -1185,7 +1188,63 @@ export function usePostForm(
     }
 
     setIsPosting(true);
-    
+
+    /*
+     * A stage opens from this form, not from a second one.
+     *
+     * Picking Stages used to close the composer and hand over the Stages
+     * create sheet, which asked for the title and description all over again.
+     * It is the same setup — a name, a blurb, a cover — so it happens here,
+     * exactly like a live video stream does. The one difference is that a
+     * stage is a room, not a post: nothing is minted, so this returns before
+     * the mint path below rather than running through it.
+     */
+    if (liveMode === 'townhall') {
+      try {
+        const stageTitle = (titleText.trim() || text.trim().split('\n')[0] || '').slice(0, 100);
+        if (!stageTitle) {
+          toast.error('Give the stage a title first');
+          return;
+        }
+        const stageDescription = titleText.trim() ? text.trim() : '';
+
+        // The attached image or clip becomes the room's cover. A failed upload
+        // must not cost the host the stage — open it bare and say so.
+        let coverImageUrl: string | null = null;
+        const image = media.find((m) => m.type === 'image');
+        const clip = media.find((m) => m.type === 'video');
+        // A clip stands in as its own poster frame: the room shows a still,
+        // and the frame the composer already generated is that still.
+        const coverFile: Blob | undefined = image?.file ?? clip?.thumbnailBlob;
+        if (coverFile) {
+          try {
+            const ext = image ? (image.file.name.split('.').pop()?.toLowerCase() || 'jpg') : 'jpg';
+            const path = `stages/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+            const { error: uploadErr } = await supabase.storage
+              .from('community-media')
+              .upload(path, coverFile, { cacheControl: '31536000' });
+            if (uploadErr) throw uploadErr;
+            coverImageUrl = supabase.storage.from('community-media').getPublicUrl(path).data.publicUrl;
+          } catch (err) {
+            console.error('[Stage] Cover upload failed:', err);
+            toast.error('Cover image failed to upload — going live without it');
+          }
+        }
+
+        const space = await createSpace(stageTitle, stageDescription || undefined, coverImageUrl);
+        if (!space) return;
+
+        resetForm();
+        onClose();
+        // Straight into the room, already on air — same shape as the video
+        // console opening over the composer.
+        openStageModal('live');
+      } finally {
+        setIsPosting(false);
+      }
+      return;
+    }
+
     try {
       // Determine post type based on media
       let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'feed-audio' = 'feed-simple';
@@ -2155,7 +2214,7 @@ export function usePostForm(
   }, [
     text, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
-    isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate, createSpace,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
     refreshSession, openLoginModal, requestWalletUnlock,
