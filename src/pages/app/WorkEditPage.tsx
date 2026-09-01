@@ -1,40 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Lock } from 'lucide-react';
 import { useWorkJob, useUpdateJob, isJobEditable, isBudgetEditable } from '@/features/work/hooks/use-work';
 import type { WorkJob, WorkCurrency, WorkJobType, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
 import { bountyPath, bountyUrl } from '@/features/work/seo';
+import { statusLabelKey } from '@/features/work/components/TxLink';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const PLATFORMS: WorkPlatform[] = ['x', 'youtube', 'instagram', 'tiktok', 'facebook', 'reddit', 'other'];
 
-const UNIT_LABELS: Record<WorkJobType, string> = {
-  shill: 'comment',
-  clipping: '1k views',
-  contract: 'job',
+const UNIT_KEYS: Record<WorkJobType, string> = {
+  shill: 'work.unitComment',
+  clipping: 'work.unitViews',
+  contract: 'work.unitJob',
 };
 
-const TYPE_LABELS: Record<WorkJobType, string> = {
-  shill: 'Comments / Shill',
-  clipping: 'Clipping',
-  contract: 'Contract',
+const TYPE_KEYS: Record<WorkJobType, string> = {
+  shill: 'work.typeShill',
+  clipping: 'work.typeClipping',
+  contract: 'work.typeContract',
 };
 
 /** Why the money fields are frozen, in the order the poster would hit them. */
-function budgetLockReason(job: WorkJob): string {
-  if (job.fund_tx_hash) return 'Escrow is already funded on-chain, so the terms are locked.';
+function budgetLockReasonKey(job: WorkJob): string {
+  if (job.fund_tx_hash) return 'work.lockedFunded';
   if (job.application_count > 0 || job.submission_count > 0) {
-    return 'People have already applied or submitted work, so the terms are locked.';
+    return 'work.lockedApplied';
   }
-  return 'This bounty is already under way, so the terms are locked.';
+  return 'work.lockedUnderway';
 }
 
 export default function WorkEditPage() {
   // /bounty/<n> or the legacy /work/<uuid> — useWorkJob resolves either.
   const { jobKey } = useParams<{ jobKey: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { walletAddress, isLoading: authLoading, openLoginModal } = useAuth();
   const { data: job, isLoading } = useWorkJob(jobKey);
   const updateJob = useUpdateJob();
@@ -67,13 +70,13 @@ export default function WorkEditPage() {
   }, [job, seededId]);
 
   if (isLoading || authLoading) {
-    return <div className="max-w-2xl mx-auto px-4 py-10 text-white/60">Loading…</div>;
+    return <div className="max-w-2xl mx-auto px-4 py-10 text-white/60">{t('work.loading')}</div>;
   }
   if (!job) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center text-white/60">
         <ThemedIcon icon="bounties" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
-        Bounty not found.
+        {t('work.bountyNotFound')}
       </div>
     );
   }
@@ -84,22 +87,22 @@ export default function WorkEditPage() {
       <div className="max-w-2xl mx-auto px-4 py-10">
         <p className="text-white/60 mb-4">
           {!walletAddress
-            ? 'Sign in to edit a bounty you posted.'
+            ? t('work.signInToEdit')
             : !isPoster
-              ? 'Only the poster can edit this bounty.'
-              : `A ${job.status} bounty can no longer be edited.`}
+              ? t('work.onlyPosterCanEdit')
+              : t('work.statusNotEditable', { status: t(statusLabelKey(job.status)) })}
         </p>
         <div className="flex gap-2">
           {!walletAddress && (
             <button onClick={() => openLoginModal()} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">
-              Sign in
+              {t('work.signIn')}
             </button>
           )}
           <button
             onClick={() => navigate(bountyPath(job))}
             className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm"
           >
-            Back to bounty
+            {t('work.backToBounty')}
           </button>
         </div>
       </div>
@@ -107,7 +110,7 @@ export default function WorkEditPage() {
   }
 
   const budgetEditable = isBudgetEditable(job);
-  const unitLabel = UNIT_LABELS[job.job_type];
+  const unitLabel = t(UNIT_KEYS[job.job_type]);
   const priceNum = Number(pricePerUnit) || 0;
   const unitsNum = job.job_type === 'contract' ? 1 : Number(maxUnits) || 0;
   const total = priceNum * unitsNum;
@@ -150,44 +153,44 @@ export default function WorkEditPage() {
         onClick={() => navigate(bountyPath(job))}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to bounty
+        <ArrowLeft className="w-4 h-4" /> {t('work.backToBounty')}
       </button>
 
       <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-6">
         <div className="mb-6 flex items-center gap-3">
           <ThemedIcon icon="bounties" alt="" className="w-12 h-12 shrink-0 object-contain" />
           <div>
-            <h1 className="text-xl font-bold text-white">Edit Bounty</h1>
+            <h1 className="text-xl font-bold text-white">{t('work.editTitle')}</h1>
             <p className="text-sm text-white/60">
-              {TYPE_LABELS[job.job_type]} · the bounty type can’t be changed after posting.
+              {t('work.typeLockedNote', { type: t(TYPE_KEYS[job.job_type]) })}
             </p>
           </div>
         </div>
 
         <div className="space-y-4">
-          <Field label="Title">
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="What needs to be done?" className={inputCls} />
+          <Field label={t('work.fieldTitle')}>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('work.titlePlaceholder')} className={inputCls} />
           </Field>
-          <Field label="Description">
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={5} placeholder="Be specific. Include hashtags, talking points, links to assets, etc." className={inputCls} />
+          <Field label={t('work.fieldDescription')}>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={5} placeholder={t('work.descriptionPlaceholder')} className={inputCls} />
           </Field>
 
           {job.job_type !== 'contract' && (
             <>
-              <Field label="Platform">
+              <Field label={t('work.fieldPlatform')}>
                 <select value={platform} onChange={(e) => setPlatform(e.target.value as WorkPlatform)} className={inputCls}>
                   {PLATFORMS.map((p) => <option key={p} value={p}>{p.toUpperCase()}</option>)}
                 </select>
               </Field>
-              <Field label={job.job_type === 'clipping' ? 'Original content URL (clip from)' : 'Target post / channel URL'}>
-                <input value={targetUrl} onChange={(e) => setTargetUrl(e.target.value)} placeholder="https://…" className={inputCls} />
+              <Field label={job.job_type === 'clipping' ? t('work.fieldTargetUrlClip') : t('work.fieldTargetUrl')}>
+                <input value={targetUrl} onChange={(e) => setTargetUrl(e.target.value)} placeholder={t('work.urlPlaceholder')} className={inputCls} />
               </Field>
             </>
           )}
 
           {budgetEditable ? (
             <>
-              <Field label="Currency">
+              <Field label={t('work.fieldCurrency')}>
                 <div className="flex gap-2">
                   {(['DHB', 'USDC'] as WorkCurrency[]).map((c) => (
                     <button
@@ -200,17 +203,17 @@ export default function WorkEditPage() {
                   ))}
                 </div>
               </Field>
-              <Field label={job.job_type === 'contract' ? 'Total budget' : `Price per ${unitLabel}`}>
-                <input type="number" min="0" step="0.01" value={pricePerUnit} onChange={(e) => setPricePerUnit(e.target.value)} placeholder="0.00" className={inputCls} />
+              <Field label={job.job_type === 'contract' ? t('work.fieldTotalBudget') : t('work.pricePerUnit', { unit: unitLabel })}>
+                <input type="number" min="0" step="0.01" value={pricePerUnit} onChange={(e) => setPricePerUnit(e.target.value)} placeholder={t('work.amountPlaceholder')} className={inputCls} />
               </Field>
               {job.job_type !== 'contract' && (
-                <Field label={`Max ${unitLabel}s`}>
-                  <input type="number" min="1" step="1" value={maxUnits} onChange={(e) => setMaxUnits(e.target.value)} placeholder="100" className={inputCls} />
+                <Field label={t('work.maxUnits', { unit: unitLabel })}>
+                  <input type="number" min="1" step="1" value={maxUnits} onChange={(e) => setMaxUnits(e.target.value)} placeholder={t('work.maxUnitsPlaceholder')} className={inputCls} />
                 </Field>
               )}
               <div className="rounded-xl bg-white/5 border border-white/10 p-4">
                 <div className="flex items-center justify-between text-sm text-white/70">
-                  <span>Total to escrow</span>
+                  <span>{t('work.totalToEscrow')}</span>
                   <span className="text-white font-semibold tabular-nums">
                     {total.toLocaleString(undefined, { maximumFractionDigits: 4 })} {currency}
                   </span>
@@ -220,29 +223,29 @@ export default function WorkEditPage() {
           ) : (
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <div className="flex items-center justify-between text-sm text-white/70 mb-1">
-                <span className="inline-flex items-center gap-1.5"><Lock className="w-3.5 h-3.5" /> Total</span>
+                <span className="inline-flex items-center gap-1.5"><Lock className="w-3.5 h-3.5" /> {t('work.lockedTotal')}</span>
                 <span className="text-white font-semibold tabular-nums">
                   {job.total_budget.toLocaleString(undefined, { maximumFractionDigits: 4 })} {job.currency}
                 </span>
               </div>
-              <div className="text-xs text-white/50">{budgetLockReason(job)}</div>
+              <div className="text-xs text-white/50">{t(budgetLockReasonKey(job))}</div>
             </div>
           )}
 
-          <Field label="Deadline (optional)">
+          <Field label={t('work.fieldDeadline')}>
             <input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} className={inputCls} />
           </Field>
 
           <div className="flex gap-2 pt-1">
             <button onClick={() => navigate(bountyPath(job))} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white">
-              Cancel
+              {t('work.cancel')}
             </button>
             <button
               onClick={handleSave}
               disabled={!canSave}
               className="flex-1 px-4 py-3 rounded-2xl bg-white text-black font-semibold disabled:opacity-40"
             >
-              {updateJob.isPending ? 'Saving…' : 'Save changes'}
+              {updateJob.isPending ? t('work.saving') : t('work.saveChanges')}
             </button>
           </div>
         </div>
