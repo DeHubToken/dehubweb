@@ -12,6 +12,7 @@
  *  - Quote-as-post on text selection (prefills composer with deep-link)
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -101,6 +102,22 @@ const speakerColors = [
   'text-pink-300', 'text-violet-300', 'text-rose-300',
 ];
 
+/**
+ * The privacy pill prints the database slug; these give it the reader's word
+ * for it without changing what is stored.
+ */
+const PRIVACY_KEYS: Record<string, string> = {
+  public: 'stages.privacyPublic',
+  members: 'stages.privacyMembers',
+  private: 'stages.privacyPrivate',
+};
+
+/**
+ * Every language is named in its own language — that is what a language picker
+ * is for, and translating "Español" into Spanish would just say "Español".
+ * Only "Original" is a word about the transcript rather than a language name,
+ * so only it is translated, at the point of use.
+ */
 const LANGUAGES = [
   { code: 'original', name: 'Original' },
   { code: 'en', name: 'English' },
@@ -140,6 +157,7 @@ function SpeakerHeader({
   isHost: boolean;
   onRename: () => void;
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const overrideUser = override?.username;
   const isUser = !overrideUser && entry?.type === 'user' && !!entry.wallet;
@@ -153,7 +171,7 @@ function SpeakerHeader({
     <button
       onClick={onRename}
       className="ml-1 p-1 rounded-md hover:bg-white/10 text-white/40 hover:text-white/80 transition"
-      title="Rename speaker"
+      title={t('stages.renameSpeaker')}
     >
       <Pencil className="w-3 h-3" />
     </button>
@@ -196,7 +214,7 @@ function SpeakerHeader({
           <Bot className="w-3.5 h-3.5 text-white/80" />
         </div>
         <span className="text-xs font-semibold text-white/90 truncate max-w-[200px]">
-          {entry.label || 'AI voice'}
+          {entry.label || t('stages.aiVoice')}
         </span>
         <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-white/10 text-white/70 border border-white/10">
           AI
@@ -239,7 +257,7 @@ function SpeakerHeader({
         <User className="w-3 h-3 text-white/60" />
       </div>
       <span className={cn('text-xs font-semibold', colorClass)}>
-        Speaker {fallbackIndex + 1}
+        {t('stages.speakerN', { n: fallbackIndex + 1 })}
       </span>
       {renameButton}
       {tsButton}
@@ -355,6 +373,7 @@ function InlinePlayer({
 /* ────────────────────────────── Main Drawer ────────────────────────────── */
 
 export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -471,11 +490,11 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
         body: { kind: 'stage', ref: stageId, action: 'start', force },
       });
       if (error) throw error;
-      if (!silent) toast.success('Transcribing — this may take a moment');
+      if (!silent) toast.success(t('stages.transcribing'));
       queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
       refetch();
     } catch (e) {
-      if (!silent) toast.error((e as Error).message || 'Failed to start transcription');
+      if (!silent) toast.error((e as Error).message || t('stages.transcribeFailed'));
     } finally {
       setRequesting(false);
     }
@@ -543,7 +562,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     if (entry?.type === 'ai') return entry.label || 'AI';
     if (entry?.type === 'user' && entry.wallet) return `${entry.wallet.slice(0, 6)}…${entry.wallet.slice(-4)}`;
     const idx = fallbackIndexMap.get(speakerId) ?? 0;
-    return `Speaker ${idx + 1}`;
+    return t('stages.speakerN', { n: idx + 1 });
   };
 
   /* ────── seek helpers ────── */
@@ -567,7 +586,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(formatTxt(segments, speakerName));
-    toast.success('Transcript copied');
+    toast.success(t('stages.transcriptCopied'));
   };
 
   const handleDownloadTxt = () => {
@@ -581,13 +600,13 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   const handleShare = async () => {
     const url = stageDeepLink();
     await navigator.clipboard.writeText(url);
-    toast.success('Stage link copied');
+    toast.success(t('stages.stageLinkCopied'));
   };
 
   const handleQuoteAsPost = (seg: Segment, text: string) => {
     const quoted = `> "${text}"\n— ${speakerName(seg.speaker)} on ${space?.title || 'a stage'}\n${stageDeepLink(seg.start)}`;
     sessionStorage.setItem('composer-prefill', quoted);
-    toast.success('Opening composer with your quote');
+    toast.success(t('stages.openingComposer'));
     window.dispatchEvent(new CustomEvent('open-composer', { detail: { content: quoted } }));
     setQuoteFor(null);
   };
@@ -617,8 +636,8 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
       .update({ speaker_overrides: next as never })
       .eq('source_kind', 'stage')
       .eq('source_ref', stageId!);
-    if (error) toast.error('Could not save: ' + error.message);
-    else toast.success('Speaker updated');
+    if (error) toast.error(t('stages.couldNotSave', { error: error.message }));
+    else toast.success(t('stages.speakerUpdated'));
     setRenamingFor(null);
     queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
   };
@@ -631,7 +650,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
       .update({ visibility: next })
       .eq('source_kind', 'stage')
       .eq('source_ref', stageId);
-    if (error) toast.error('Could not update privacy');
+    if (error) toast.error(t('stages.couldNotUpdatePrivacy'));
     else toast.success(`Transcript is now ${next}`);
     queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
   };
@@ -646,7 +665,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
           <div className="flex items-center justify-between gap-2">
             <DrawerTitle className="text-white flex items-center gap-2 min-w-0">
               <FileText className="w-5 h-5 shrink-0" />
-              <span className="truncate">Transcript</span>
+              <span className="truncate">{t('stages.transcript')}</span>
             </DrawerTitle>
             <div className="flex items-center gap-1">
               {isHost && transcript && (
@@ -658,18 +677,18 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                       className="rounded-lg text-white/80 hover:bg-white/10 h-8 px-2"
                     >
                       <PrivacyIcon className="w-3.5 h-3.5 mr-1.5" />
-                      <span className="text-xs capitalize">{transcript.privacy}</span>
+                      <span className="text-xs capitalize">{t(PRIVACY_KEYS[transcript.privacy] ?? 'stages.privacyPublic')}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-black/80 backdrop-blur-[24px] border-white/10 text-white">
                     <DropdownMenuItem onClick={() => setPrivacy('public')}>
-                      <Eye className="w-3.5 h-3.5 mr-2" /> Public
+                      <Eye className="w-3.5 h-3.5 mr-2" /> {t('stages.privacyPublic')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setPrivacy('members')}>
-                      <UsersIcon className="w-3.5 h-3.5 mr-2" /> Members
+                      <UsersIcon className="w-3.5 h-3.5 mr-2" /> {t('stages.privacyMembers')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setPrivacy('private')}>
-                      <Lock className="w-3.5 h-3.5 mr-2" /> Private
+                      <Lock className="w-3.5 h-3.5 mr-2" /> {t('stages.privacyPrivate')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -693,28 +712,32 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
           {!hasRecording ? (
             <div className="text-center text-white/60 py-12">
               <FileText className="w-10 h-10 mx-auto mb-2 opacity-40" />
-              <p>No recording available for this stage.</p>
+              <p>{t('stages.noRecording')}</p>
             </div>
           ) : !transcript || status === 'pending' || status === 'failed' || status === 'empty' ? (
             <div className="text-center text-white/60 py-12 space-y-4">
               {status === 'empty' ? (
                 <>
                   <FileText className="w-10 h-10 mx-auto opacity-40" />
-                  <p>Nobody spoke in this recording, so there is nothing to transcribe.</p>
+                  <p>{t('stages.nothingSpoken')}</p>
                 </>
               ) : status === 'failed' ? (
                 <>
                   <Sparkles className="w-10 h-10 mx-auto opacity-50" />
-                  <p>Transcript unavailable{transcript?.error ? `: ${transcript.error}` : ''}</p>
+                  <p>
+                    {transcript?.error
+                      ? t('stages.transcriptUnavailableWith', { error: transcript.error })
+                      : t('stages.transcriptUnavailable')}
+                  </p>
                   <Button
                     onClick={() => handleTranscribe(false, true)}
                     disabled={requesting}
                     className="rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/10"
                   >
                     {requesting ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Retrying…</>
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {t('stages.retrying')}</>
                     ) : (
-                      <><RefreshCw className="w-4 h-4 mr-2" /> Try again</>
+                      <><RefreshCw className="w-4 h-4 mr-2" /> {t('stages.tryAgain')}</>
                     )}
                   </Button>
                 </>
@@ -738,10 +761,10 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                 <div className="bg-white/5 border border-white/10 rounded-xl p-3 space-y-2">
                   <div className="flex items-center gap-2 text-white/80">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span className="text-xs font-semibold uppercase tracking-wider">Summary</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider">{t('stages.summary')}</span>
                     {transcript.summary_status === 'processing' && (
                       <span className="text-[10px] text-white/40 flex items-center gap-1">
-                        <Loader2 className="w-3 h-3 animate-spin" /> generating…
+                        <Loader2 className="w-3 h-3 animate-spin" /> {t('stages.generating')}
                       </span>
                     )}
                   </div>
@@ -774,7 +797,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                   <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search transcript…"
+                    placeholder={t('stages.searchTranscript')}
                     className="pl-8 h-8 text-xs bg-white/5 border-white/10 text-white placeholder:text-white/40 rounded-lg"
                   />
                 </div>
@@ -786,7 +809,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                   <SelectContent className="bg-black/80 backdrop-blur-[24px] border-white/10 text-white">
                     {LANGUAGES.map((l) => (
                       <SelectItem key={l.code} value={l.code} className="text-xs">
-                        {l.name}
+                        {l.code === 'original' ? t('stages.languageOriginal') : l.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -799,16 +822,16 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-black/80 backdrop-blur-[24px] border-white/10 text-white">
                     <DropdownMenuItem onClick={handleCopy}>
-                      <Copy className="w-3.5 h-3.5 mr-2" /> Copy transcript
+                      <Copy className="w-3.5 h-3.5 mr-2" /> {t('stages.copyTranscript')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleDownloadTxt}>
-                      <Download className="w-3.5 h-3.5 mr-2" /> Download .txt
+                      <Download className="w-3.5 h-3.5 mr-2" /> {t('stages.downloadTxt')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleDownloadSrt}>
-                      <Download className="w-3.5 h-3.5 mr-2" /> Download .srt
+                      <Download className="w-3.5 h-3.5 mr-2" /> {t('stages.downloadSrt')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleShare}>
-                      <Share2 className="w-3.5 h-3.5 mr-2" /> Share stage link
+                      <Share2 className="w-3.5 h-3.5 mr-2" /> {t('stages.shareStageLink')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -816,17 +839,17 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
 
               {language !== 'original' && translation?.status === 'processing' && (
                 <p className="text-[11px] text-white/50 flex items-center gap-1.5">
-                  <Loader2 className="w-3 h-3 animate-spin" /> Translating…
+                  <Loader2 className="w-3 h-3 animate-spin" /> {t('stages.translating')}
                 </p>
               )}
               {language !== 'original' && translation?.status === 'failed' && (
-                <p className="text-[11px] text-rose-300/80">Translation failed. Try another language.</p>
+                <p className="text-[11px] text-rose-300/80">{t('stages.translationFailed')}</p>
               )}
 
               <ScrollArea className="h-[50vh] pr-2">
                 {transcript.source_language && language === 'original' && (
                   <p className="text-[10px] uppercase tracking-wider text-white/40 mb-3">
-                    Detected language: {transcript.source_language}
+                    {t('stages.detectedLanguage', { language: transcript.source_language })}
                   </p>
                 )}
                 <div className="space-y-3">
@@ -863,7 +886,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                     );
                   }) : (
                     <p className="text-sm text-white/50 text-center py-8">
-                      {search ? 'No matches' : 'No segments'}
+                      {search ? t('stages.noMatches') : t('stages.noSegments')}
                     </p>
                   )}
                 </div>
@@ -880,7 +903,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
               className="rounded-2xl bg-white/15 hover:bg-white/25 text-white border border-white/20 backdrop-blur-[24px] shadow-lg"
             >
               <Quote className="w-4 h-4 mr-2" />
-              Quote as post
+              {t('stages.quoteAsPost')}
             </Button>
           </div>
         )}
@@ -895,14 +918,14 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
               className="bg-black/80 backdrop-blur-[24px] border border-white/10 rounded-2xl p-4 w-full max-w-xs space-y-3"
               onClick={(e) => e.stopPropagation()}
             >
-              <p className="text-sm font-semibold text-white">Rename speaker</p>
+              <p className="text-sm font-semibold text-white">{t('stages.renameSpeaker')}</p>
               <p className="text-xs text-white/60">
-                Enter a username to label this speaker across the whole transcript.
+                {t('stages.renameSpeakerHint')}
               </p>
               <Input
                 value={renameValue}
                 onChange={(e) => setRenameValue(e.target.value)}
-                placeholder="@username"
+                placeholder={t('stages.usernamePlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 rounded-lg h-9"
                 autoFocus
               />
@@ -912,13 +935,13 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                   className="rounded-xl text-white/70 hover:bg-white/10 h-8 text-xs"
                   onClick={() => setRenamingFor(null)}
                 >
-                  Cancel
+                  {t('stages.cancel')}
                 </Button>
                 <Button
                   className="rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/15 h-8 text-xs"
                   onClick={saveRename}
                 >
-                  Save
+                  {t('stages.save')}
                 </Button>
               </div>
             </div>

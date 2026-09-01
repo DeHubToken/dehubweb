@@ -21,6 +21,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import { useQuery } from '@tanstack/react-query';
 import {
   Radio, Search, Play, Pause, Square, SkipBack, SkipForward, Loader2, Music,
@@ -74,7 +76,7 @@ function secureLogo(favicon?: string): string | undefined {
 function toStageRadioStation(station: RadioStation): StageRadioStation {
   return {
     id: station.stationuuid,
-    name: station.name?.trim() || 'Unknown station',
+    name: station.name?.trim() || i18n.t('stages.unknownStation'),
     url: station.url_resolved || station.url,
     kind: 'station',
     favicon: secureLogo(station.favicon),
@@ -92,7 +94,7 @@ function prettyClipName(fileName: string): string {
       .replace(/^\d+-/, '')
       .replace(/\.[^.]+$/, '')
       .replace(/[-_]+/g, ' ')
-      .trim() || 'Untitled clip'
+      .trim() || i18n.t('stages.untitledClip')
   );
 }
 
@@ -144,6 +146,7 @@ function SourceArt({
 }
 
 export function StageRadioPanel() {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const {
     radioStation,
@@ -288,7 +291,7 @@ export function StageRadioPanel() {
     setIsUploading(false);
 
     if (added) {
-      toast.success(added === 1 ? 'Clip added' : `${added} clips added`);
+      toast.success(t('stages.clipsAdded', { count: added }));
       await loadClips();
     }
   };
@@ -299,7 +302,7 @@ export function StageRadioPanel() {
     if (radioStation?.id === clip.id) await stopRadio();
     const { error } = await supabase.storage.from(MUSIC_BUCKET).remove([clip.path]);
     if (error) {
-      toast.error('Could not delete that clip');
+      toast.error(t('stages.couldNotDeleteClip'));
       return;
     }
     setClips((prev) => prev.filter((c) => c.path !== clip.path));
@@ -322,7 +325,7 @@ export function StageRadioPanel() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
               </span>
-              <span className="text-[10px] font-medium text-white tracking-wide">ON AIR</span>
+              <span className="text-[10px] font-medium text-white tracking-wide">{t('stages.onAir')}</span>
             </span>
           )}
           <Button
@@ -336,7 +339,7 @@ export function StageRadioPanel() {
                 : 'text-white/50 hover:text-white hover:bg-white/10',
             )}
           >
-            {browseOpen ? 'Hide' : 'Browse'}
+            {browseOpen ? t('stages.hide') : t('stages.browse')}
           </Button>
         </div>
       </div>
@@ -354,17 +357,17 @@ export function StageRadioPanel() {
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{radioStation.name}</p>
               <p className="text-[11px] text-white/50 truncate">
-                {radioStatus === 'connecting' && (onAirIsTrack ? 'Loading…' : 'Tuning in…')}
-                {radioStatus === 'paused' && 'Held — the room hears silence'}
+                {radioStatus === 'connecting' && (onAirIsTrack ? t('stages.loadingClip') : t('stages.tuningIn'))}
+                {radioStatus === 'paused' && t('stages.held')}
                 {radioStatus === 'error' &&
-                  (onAirIsTrack ? 'That clip would not play' : 'Stream dropped — pick another')}
-                {radioStatus === 'idle' && 'Stopped'}
+                  (onAirIsTrack ? t('stages.clipWouldNotPlay') : t('stages.streamDropped'))}
+                {radioStatus === 'idle' && t('stages.stopped')}
                 {radioStatus === 'live' &&
                   (onAirIsTrack
                     ? `Playing to the room${canSkip ? ` · ${positionInSet + 1} of ${radioQueue.length}` : ''}`
                     : [
                         getCountryFlag(radioStation.countrycode || ''),
-                        describe(radioStation.tags, radioStation.bitrate) || 'Playing to the room',
+                        describe(radioStation.tags, radioStation.bitrate) || t('stages.playingToRoom'),
                       ].join(' '))}
               </p>
             </div>
@@ -375,7 +378,7 @@ export function StageRadioPanel() {
                   type="button"
                   onClick={radioPrev}
                   className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-                  title="Previous"
+                  title={t('stages.previous')}
                 >
                   <SkipBack className="w-3.5 h-3.5" />
                 </button>
@@ -387,7 +390,7 @@ export function StageRadioPanel() {
                   type="button"
                   onClick={toggleRadioPause}
                   className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-                  title={radioStatus === 'paused' ? 'Resume' : 'Pause'}
+                  title={radioStatus === 'paused' ? t('stages.resume') : t('stages.pause')}
                 >
                   {radioStatus === 'paused' ? (
                     <Play className="w-3.5 h-3.5" />
@@ -401,7 +404,7 @@ export function StageRadioPanel() {
                   type="button"
                   onClick={radioNext}
                   className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-                  title="Next"
+                  title={t('stages.next')}
                 >
                   <SkipForward className="w-3.5 h-3.5" />
                 </button>
@@ -413,7 +416,7 @@ export function StageRadioPanel() {
                   void stopRadio();
                 }}
                 className="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors"
-                title="Take it off air"
+                title={t('stages.takeOffAir')}
               >
                 <Square className="w-3.5 h-3.5" />
               </button>
@@ -449,8 +452,8 @@ export function StageRadioPanel() {
               )}
               title={
                 radioMonitor
-                  ? 'You can hear it — turn this off if your mic is picking it up'
-                  : 'You cannot hear it; the room still can'
+                  ? t('stages.monitorOn')
+                  : t('stages.monitorOff')
               }
             >
               {radioMonitor ? (
@@ -458,7 +461,7 @@ export function StageRadioPanel() {
               ) : (
                 <HeadphoneOff className="w-3 h-3" />
               )}
-              <span className="text-[10px]">Monitor</span>
+              <span className="text-[10px]">{t('stages.monitor')}</span>
             </button>
           </div>
         </div>
@@ -480,7 +483,7 @@ export function StageRadioPanel() {
                 )}
               >
                 {key === 'stations' ? <Radio className="w-3 h-3" /> : <Music className="w-3 h-3" />}
-                {key === 'stations' ? 'Stations' : 'My music'}
+                {key === 'stations' ? t('stages.stations') : t('stages.myMusic')}
               </button>
             ))}
           </div>
@@ -493,7 +496,7 @@ export function StageRadioPanel() {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search stations, or a country…"
+                  placeholder={t('stages.searchStations')}
                   className="pl-9 h-9 rounded-xl bg-white/5 border-white/10 text-white text-sm placeholder:text-white/30"
                 />
               </div>
@@ -508,7 +511,7 @@ export function StageRadioPanel() {
                 />
               ) : (
                 <p className="text-[11px] text-white/40">
-                  {parsed.name ? `“${parsed.name}”` : 'All stations'}
+                  {parsed.name ? `“${parsed.name}”` : t('stages.allStations')}
                   {parsed.countryName && ` in ${parsed.countryName}`}
                   {!isLoadingStations && ` · ${stations.length} found`}
                 </p>
@@ -517,7 +520,7 @@ export function StageRadioPanel() {
           ) : (
             <div className="flex items-center justify-between gap-2">
               <p className="text-[11px] text-white/40">
-                {clips.length}/{MAX_MUSIC_CLIPS} clips · up to {MAX_MUSIC_MB}MB each
+                {t('stages.clipsCount', { count: clips.length, max: MAX_MUSIC_CLIPS, mb: MAX_MUSIC_MB })}
               </p>
               <Button
                 variant="ghost"
@@ -531,7 +534,7 @@ export function StageRadioPanel() {
                 ) : (
                   <Plus className="w-3 h-3" />
                 )}
-                <span className="ml-1.5">{isUploading ? 'Uploading…' : 'Add music'}</span>
+                <span className="ml-1.5">{isUploading ? t('stages.uploading') : t('stages.addMusic')}</span>
               </Button>
               <input
                 ref={fileInputRef}
@@ -562,10 +565,10 @@ export function StageRadioPanel() {
             {!isLoadingList && list.length === 0 && (
               <p className="text-[11px] text-white/40 text-center py-4 px-3 leading-relaxed">
                 {tab === 'music'
-                  ? 'No clips yet. Add your own music and it plays to the room like a station — one after another, and it keeps going while you talk.'
+                  ? t('stages.noClipsYet')
                   : isSearching
-                    ? 'No stations match that. Try a genre or a country.'
-                    : 'No stations available right now.'}
+                    ? t('stages.noStationsMatch')
+                    : t('stages.noStationsAvailable')}
               </p>
             )}
 
@@ -574,7 +577,7 @@ export function StageRadioPanel() {
                 const isOnAir = radioStation?.id === source.id;
                 const meta =
                   source.kind === 'track'
-                    ? 'Your music'
+                    ? t('stages.yourMusic')
                     : `${getCountryFlag(source.countrycode || '')} ${describe(source.tags, source.bitrate)}`.trim();
                 return (
                   <div
