@@ -980,6 +980,26 @@
     "loginDescription": "Log in to view and manage your profile."
   },
   "tv": {
+    "seoTitle": "Live TV — Free Channels From Around the World",
+    "seoDescription": "Watch free live TV channels from around the world on DeHub. News, sports, entertainment and more — streamed in the browser, no subscription needed.",
+    "srHeading": "DeHub Live TV — Decentralised Social Media, Censorship Resistant & Freedom of Speech",
+    "searchPlaceholder": "Search hundreds of free TV channels...",
+    "filterAll": "All",
+    "resultsFor": "Results for \"{{query}}\"",
+    "channelCount_one": "({{count}} channel)",
+    "channelCount_other": "({{count}} channels)",
+    "loadFailed": "Failed to load channels",
+    "loadFailedHint": "Please check your connection and try again.",
+    "noChannelsFound": "No channels found",
+    "noChannelsAvailable": "No channels available",
+    "tryDifferentSearch": "Try a different search term.",
+    "tryDifferentCountry": "Try selecting a different country.",
+    "live": "LIVE",
+    "geoBlocked": "Stream geo-blocked or unavailable",
+    "sorryInconvenience": "Sorry for the inconvenience",
+    "retryCount_one": "Retry ({{count}} left)",
+    "retryCount_other": "Retry ({{count}} left)",
+    "liveChat": "Live chat",
     "title": "TV"
   },
   "buyCoins": {

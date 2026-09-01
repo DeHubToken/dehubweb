@@ -889,6 +889,26 @@
     "returnHome": "العودة للرئيسية"
   },
   "tv": {
+    "seoTitle": "بث تلفزيوني مباشر — قنوات مجانية من كل أنحاء العالم",
+    "seoDescription": "شاهد قنوات تلفزيونية مباشرة ومجانية من كل أنحاء العالم على DeHub. أخبار ورياضة وترفيه وأكثر — تُبثّ في المتصفح دون أي اشتراك.",
+    "srHeading": "DeHub للبث التلفزيوني المباشر — وسائط اجتماعية لامركزية، مقاومة للرقابة وحرة التعبير",
+    "searchPlaceholder": "ابحث في مئات القنوات التلفزيونية المجانية...",
+    "filterAll": "الكل",
+    "resultsFor": "نتائج «{{query}}»",
+    "channelCount_one": "(قناة واحدة)",
+    "channelCount_other": "({{count}} قناة)",
+    "loadFailed": "تعذّر تحميل القنوات",
+    "loadFailedHint": "يرجى التحقق من اتصالك والمحاولة مجدداً.",
+    "noChannelsFound": "لم يُعثر على قنوات",
+    "noChannelsAvailable": "لا توجد قنوات متاحة",
+    "tryDifferentSearch": "جرّب كلمة بحث أخرى.",
+    "tryDifferentCountry": "جرّب اختيار بلد آخر.",
+    "live": "مباشر",
+    "geoBlocked": "البث محجوب جغرافياً أو غير متاح",
+    "sorryInconvenience": "نعتذر عن الإزعاج",
+    "retryCount_one": "أعد المحاولة (بقيت محاولة واحدة)",
+    "retryCount_other": "أعد المحاولة (بقيت {{count}} محاولات)",
+    "liveChat": "دردشة مباشرة",
     "title": "تلفزيون"
   },
   "buyCoins": {
