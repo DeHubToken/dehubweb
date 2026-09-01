@@ -19,7 +19,7 @@ import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
-import { pinLiveChatMessage, unpinLiveChatMessage } from '@/lib/api/dehub/livechat';
+import { pinLiveChatMessage, unpinLiveChatMessage, streamChatRoomId } from '@/lib/api/dehub/livechat';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '@/components/app/chat/VoiceWaveformPlayer';
 import { toast } from 'sonner';
@@ -94,13 +94,25 @@ function TranslatableChatMsg({ content }: { content: string }) {
 }
 
 interface LivePostChatProps {
-  streamId: string;
+  /**
+   * The post's tokenId — what the stream's chat room is keyed on.
+   *
+   * It used to be whatever each caller happened to have: the post page passed
+   * the tokenId, the broadcaster passed the stream's Mongo ObjectId, and the
+   * two never matched. Nobody noticed, because the backend discarded the room
+   * id and put every message in the platform's global room — so host and
+   * viewers were in the same conversation by accident, along with everyone
+   * else on DeHub. Now that rooms are real, both ends have to name the same
+   * one, and the tokenId is the only id both callers have.
+   */
+  tokenId: string;
   isOffline?: boolean;
   /** Whether the current user is the stream host (can pin messages) */
   isHost?: boolean;
 }
 
-export function LivePostChat({ streamId, isOffline = false, isHost = false }: LivePostChatProps) {
+export function LivePostChat({ tokenId, isOffline = false, isHost = false }: LivePostChatProps) {
+  const streamId = tokenId ? streamChatRoomId(tokenId) : '';
   // The card unmounts every time the post scrolls out of the feed, so without
   // this a line typed under a stream is gone the moment you look away.
   const [newMessage, setNewMessage] = useDraft(streamId ? `live:${streamId}` : null);
