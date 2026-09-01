@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
@@ -54,6 +55,7 @@ function PlanNotice({ children }: { children: React.ReactNode }) {
 }
 
 export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const buyPlanMutation = useBuyPlan();
   const publishMutation = usePublishPlan();
@@ -114,12 +116,12 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               the tab shows which plans still need a step to become real. */}
           {isOwner && !published && (
             <span className="px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/60 text-xs font-medium">
-              Draft
+              {t('subscriptions.draft')}
             </span>
           )}
           {isSubscribed && (
             <span className="px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white text-xs font-medium">
-              Subscribed
+              {t('subscriptions.subscribed')}
             </span>
           )}
         </div>
@@ -134,7 +136,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
         <span className="text-zinc-500">/</span>
         <div className="flex items-center gap-1 text-zinc-400">
           <Clock className="w-3.5 h-3.5" />
-          <span className="text-sm">{formatDuration(plan.duration)}</span>
+          <span className="text-sm">{formatDuration(plan.duration, t)}</span>
         </div>
       </div>
 
@@ -155,7 +157,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
         <div className="flex items-center gap-1.5 text-xs text-zinc-500 mb-4">
           <Users className="w-3.5 h-3.5" />
           <span>
-            {subscriberCount} subscriber{subscriberCount === 1 ? '' : 's'}
+            {t('subscriptions.subscriberCount', { count: subscriberCount })}
           </span>
         </div>
       )}
@@ -165,16 +167,16 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       {!published && isBuyable && (
         <PlanNotice>
           {isOwner
-            ? 'This plan is a draft. Publish it on chain and people can subscribe — it is one transaction from your wallet.'
-            : 'This plan is not available to buy yet.'}
+            ? t('subscriptions.draftNoticeOwner')
+            : t('subscriptions.draftNoticeViewer')}
         </PlanNotice>
       )}
 
       {!isBuyable && (
         <PlanNotice>
           {isOwner
-            ? 'This plan was set up before the current duration rules, so the chain will never accept it. Start again to pick a new duration — the name, price and benefits are kept.'
-            : 'This plan is not available to buy.'}
+            ? t('subscriptions.unbuyableNoticeOwner')
+            : t('subscriptions.unbuyableNoticeViewer')}
         </PlanNotice>
       )}
 
@@ -193,7 +195,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                 : 'flex-1 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white font-semibold'
             }
           >
-            {isBuyable ? 'Edit Plan' : 'Start again'}
+            {t(isBuyable ? 'subscriptions.editPlan' : 'subscriptions.startAgain')}
           </Button>
           {!published && isBuyable && (
             <Button
@@ -209,7 +211,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               ) : (
                 <>
                   <Upload className="w-4 h-4" />
-                  Publish
+                  {t('subscriptions.publish')}
                 </>
               )}
             </Button>
@@ -221,7 +223,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
           className="w-full rounded-xl bg-white/10 text-zinc-400 cursor-not-allowed"
         >
           <Check className="w-4 h-4 mr-2" />
-          Subscribed
+          {t('subscriptions.subscribed')}
         </Button>
       ) : (
         <AlertDialog onOpenChange={setQuoteOpen}>
@@ -233,40 +235,40 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               {busy ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {buyPlanMutation.stageLabel || 'Subscribing...'}
+                  {buyPlanMutation.stageLabel || t('subscriptions.subscribing')}
                 </>
               ) : (
                 <>
                   <Star className="w-4 h-4 mr-2" />
-                  Subscribe
+                  {t('subscriptions.subscribe')}
                 </>
               )}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-white">Confirm Subscription</AlertDialogTitle>
+              <AlertDialogTitle className="text-white">{t('subscriptions.confirmSubscription')}</AlertDialogTitle>
               <AlertDialogDescription className="text-zinc-400">
                 Subscribe to <span className="text-white font-medium">{plan.name}</span> for{' '}
                 <span className="text-white font-medium">{formatDhb(price)} <DhbCoin /></span> /{' '}
-                {formatDuration(plan.duration)}.
+                {formatDuration(plan.duration, t)}.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 text-sm">
               <div className="flex justify-between text-zinc-400">
-                <span>Plan price</span>
+                <span>{t('subscriptions.planPrice')}</span>
                 <span className="text-white">{formatDhb(price)} <DhbCoin /></span>
               </div>
               <div className="flex justify-between text-zinc-400 mt-1.5 pt-1.5 border-t border-white/10">
-                <span>You pay (incl. platform fee)</span>
+                <span>{t('subscriptions.youPayInclFee')}</span>
                 <span className="text-white font-medium">
-                  {total ? formatDhb(Number(total)) + ' DHB' : 'calculating…'}
+                  {total ? formatDhb(Number(total)) + ' DHB' : t('subscriptions.calculating')}
                 </span>
               </div>
             </div>
             <AlertDialogFooter>
               <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
-                Cancel
+                {t('subscriptions.cancel')}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleSubscribe}
@@ -278,7 +280,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                 ) : (
                   <Star className="w-4 h-4 mr-2" />
                 )}
-                Confirm
+                {t('subscriptions.confirm')}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
