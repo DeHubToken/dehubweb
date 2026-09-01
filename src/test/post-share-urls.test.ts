@@ -50,7 +50,7 @@ describe('post share URLs', () => {
    * all: the SPA shell goes out with the homepage card and a noindex.
    */
   it('lets the off-chain slug and the short shapes past the SSR gate', () => {
-    expect(gate()).toContain(String.raw`/^\/newpost\/\d+\/?$/`);
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?newpost\/\d+\/?$/`);
     expect(gate()).toContain(String.raw`/^\/posts\/\d+(?:\/b(?:\/[^/]+)?)?\/?$/`);
   });
 
@@ -63,7 +63,7 @@ describe('post share URLs', () => {
   it('normalises every shape onto /app/post/<tokenId> before proxying', () => {
     expect(WORKER).toContain('let ssrPath = pathname;');
     expect(WORKER).toContain('encodeURIComponent(ssrPath)');
-    expect(WORKER).toContain(String.raw`/^\/newpost\/(\d+)\/?$/`);
+    expect(WORKER).toContain(String.raw`/^\/(?:app\/)?newpost\/(\d+)\/?$/`);
     expect(WORKER).toContain(String.raw`/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/`);
     expect(WORKER).toContain(String.raw`/^\/post\/(\d+)\/?$/`);
     // /app/video/<tokenId> renders SinglePostPage and parseDehubLink reads it
@@ -84,6 +84,7 @@ describe('post share URLs', () => {
    */
   it('classifies the normalised path as an entity route', () => {
     expect(WORKER).toContain("ssrPath.includes('/post/')");
-    expect(WORKER).toContain("pathname.includes('/newpost/')");
+    // Unanchored: /newpost/<n> and its /app twin both have to count.
+    expect(WORKER).toContain("pathname.includes('newpost/')");
   });
 });

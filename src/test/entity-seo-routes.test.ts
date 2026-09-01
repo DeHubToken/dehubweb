@@ -44,6 +44,21 @@ describe('entity SEO routes', () => {
   });
 
   /**
+   * Sub-paths with no metadata of their own fall back to their section card
+   * under a noindex — better than the homepage card, and without minting an
+   * indexable page per id that says the same thing as the section.
+   */
+  it('falls back to the section card for launchpad coins and the chess lobby', () => {
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?launchpad\/[^/]+\/?$/`);
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?arcade\/kings-gambit\/online\/?$/`);
+    expect(WORKER).toContain('const SECTION_FALLBACKS = [');
+  });
+
+  it('accepts the /app twin of an off-chain post slug', () => {
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?newpost\/\d+\/?$/`);
+  });
+
+  /**
    * `/communities/<slug>` and `/app/communities/<slug>` are both real routes,
    * but the deployed fn has no `communities` entry in its system-route list,
    * so the bare twin was read as a username and 404'd. Normalising to the

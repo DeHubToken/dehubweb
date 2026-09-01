@@ -1979,6 +1979,9 @@ function shouldServeSSR(pathname) {
   // the profile fall-through rejected the path and the SPA shell went out
   // before the branch was reached.
   if (/^\/cinema\/(?:film|series)\/\d+\/?$/.test(pathname)) return true;
+  // Sub-paths that fall back to their section's card below.
+  if (/^\/(?:app\/)?launchpad\/[^/]+\/?$/.test(pathname)) return true;
+  if (/^\/(?:app\/)?arcade\/kings-gambit\/online\/?$/.test(pathname)) return true;
   // /app/video/<tokenId> is a post — SinglePostPage renders it, and
   // parseDehubLink reads it as one — so it needs the post treatment. It is
   // normalised onto /app/post/<tokenId> before the proxy.
@@ -2006,7 +2009,7 @@ function shouldServeSSR(pathname) {
   // renderer was reached. This one was the widest of the three — minting is
   // optional, so a post that never mints is only ever shared as /newpost/<n>,
   // from web and from the app alike.
-  if (/^\/newpost\/\d+\/?$/.test(pathname)) return true;
+  if (/^\/(?:app\/)?newpost\/\d+\/?$/.test(pathname)) return true;
   if (/^\/posts\/\d+(?:\/b(?:\/[^/]+)?)?\/?$/.test(pathname)) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
@@ -2999,6 +3002,27 @@ async function handleRequest(request, env) {
     }));
   }
 
+  // Two more sub-paths with no metadata of their own, handled the same way:
+  // the section's card beats the homepage's, and a `noindex` keeps them out of
+  // the index rather than minting a page per id that says the same thing.
+  //
+  // A launchpad coin deserves its own card — name, ticker, chart — and
+  // launchpad_tokens is anon-readable, so the shape to copy is the stores
+  // branch below. Not written yet because the table is empty: there would be
+  // no way to check it against a real coin. Revisit at the first launch.
+  const SECTION_FALLBACKS = [
+    [/^launchpad\/[^/]+$/, 'launchpad'],
+    [/^arcade\/kings-gambit\/online$/, 'arcade/kings-gambit'],
+  ];
+  for (const [re, key] of SECTION_FALLBACKS) {
+    if (re.test(sectionKey) && Object.hasOwn(MARKETING_PAGES, key)) {
+      return guard(new Response(buildMarketingHtml(key, MARKETING_PAGES[key]), {
+        status: 200,
+        headers: { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
+      }));
+    }
+  }
+
   // A single request or bug report, /features?feature=<id>. Same PostgREST-
   // direct shape as stores/events/stages/bounties below — checked ahead of the
   // generic MARKETING_PAGES dispatch two blocks down so a resolvable id gets
@@ -3193,7 +3217,7 @@ async function handleRequest(request, env) {
   // never heard of at all. The fn emits its own canonical at the /app twin, so
   // the alternate shapes consolidate there instead of competing.
   let ssrPath = pathname;
-  const newPostSlug = pathname.match(/^\/newpost\/(\d+)\/?$/);
+  const newPostSlug = pathname.match(/^\/(?:app\/)?newpost\/(\d+)\/?$/);
   const shortPostPath = pathname.match(/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/);
   const barePostPath = pathname.match(/^\/post\/(\d+)\/?$/);
   const videoPath = pathname.match(/^\/app\/video\/(\d+)\/?$/);
@@ -3270,7 +3294,7 @@ async function handleRequest(request, env) {
     // A future fn deploy can signal explicitly via X-DeHub-NotFound: 1.
     const isEntityRoute =
       ssrPath.includes('/post/') ||
-      pathname.includes('/newpost/') ||
+      pathname.includes('newpost/') ||
       pathname.includes('/communities/') ||
       couldBeProfileSegment(firstSegmentOf(pathname), SYSTEM_ROUTES);
     const fnSaysNotFound =
