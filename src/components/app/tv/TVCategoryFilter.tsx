@@ -7,6 +7,7 @@
  * @module components/app/tv/TVCategoryFilter
  */
 
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import type { TVCategory, TVCountryFilter } from '@/lib/api/live-tv';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';

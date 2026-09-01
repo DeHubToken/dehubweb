@@ -234,7 +234,10 @@ vi.mock('@/assets/glossary-icon.png', () => ({ default: '' }));
 // List of pages that should have SEOHead + hidden H1
 const PAGE_CASES: { name: string; path: string; h1Substring: string }[] = [
   { name: 'Home', path: 'src/pages/app/HomePage.tsx', h1Substring: 'Home' },
-  { name: 'TV', path: 'src/pages/app/TVPage.tsx', h1Substring: 'Live TV' },
+  // Translated pages carry an i18n key rather than English prose, so the
+  // substring pins the key. It still identifies THIS page's heading — a
+  // different page's key would not match.
+  { name: 'TV', path: 'src/pages/app/TVPage.tsx', h1Substring: "t('tv.srHeading')" },
   { name: 'Governance', path: 'src/pages/app/GovernancePage.tsx', h1Substring: 'Governance' },
   { name: 'Leaderboard', path: 'src/pages/app/LeaderboardPage.tsx', h1Substring: 'Leaderboard' },
   { name: 'Music', path: 'src/pages/app/MusicPage.tsx', h1Substring: 'Music' },
@@ -282,10 +285,12 @@ describe('SEO: Every page has SEOHead with title and description', () => {
       // Check SEOHead import
       expect(source).toContain("import { SEOHead }");
       
-      // Check SEOHead usage with title and description props
+      // Check SEOHead usage with title and description props. Either form
+      // counts: a literal on an English-only page, or `{t('…')}` on a
+      // translated one. What is being guarded is that the props are there.
       expect(source).toMatch(/<SEOHead\s/);
-      expect(source).toMatch(/title="/);
-      expect(source).toMatch(/description="/);
+      expect(source).toMatch(/title=["{]/);
+      expect(source).toMatch(/description=["{]/);
     });
   }
 });
