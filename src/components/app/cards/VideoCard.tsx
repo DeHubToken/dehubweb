@@ -1854,6 +1854,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                       seed={video.id}
                       decodeEnabled={nearViewport}
                       durationHint={video.audioDuration || video.durationSeconds || 0}
+                      /* The card's own fullscreen, so the element that goes to
+                         the top layer is the media container — the one holding
+                         the visualizer AND its controls. `videoRef` is null on
+                         an audio post, so the hook takes the container path
+                         rather than iOS's system player. */
+                      onFullscreen={handleFullscreen}
+                      isFullscreen={isFullscreen}
                     />
                   </Suspense>
                 </div>

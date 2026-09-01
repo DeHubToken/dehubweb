@@ -1,9 +1,11 @@
+import * as React from 'react';
 import { useRef, useEffect, useState, useCallback, useMemo, useId } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
+import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
   VisualizerStyle,
   drawBars,
@@ -49,6 +51,22 @@ interface AudioVisualizerProps {
    * anything has been downloaded.
    */
   durationHint?: number;
+  /**
+   * Fullscreen, owned by the caller. It has to be, because only the caller
+   * knows which element carries the chrome — `use-video-fullscreen` puts one
+   * element in the top layer and everything outside it stops painting, so
+   * fullscreening the canvas alone would strand these controls on the hidden
+   * page. VideoCard passes its media container, which holds both. Without
+   * `onFullscreen` the button is not drawn at all.
+   */
+  onFullscreen?: (e: React.MouseEvent) => void;
+  isFullscreen?: boolean;
+  /**
+   * Off for a caller that already draws its own top-left overlay — the
+   * composer preview puts the file name and a Music badge exactly there, and
+   * two things in one corner is worse than no volume control.
+   */
+  showVolume?: boolean;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
@@ -62,6 +80,14 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'pulse', label: 'Pulse' },
   { value: 'terrain', label: 'Terrain' },
 ];
+
+/** One height for every control in the bottom row, so they line up. */
+const CONTROL_H = 'h-7';
+/** The liquid-glass surface all three controls share. */
+const GLASS_PILL =
+  'rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30';
+const HUE_GRADIENT =
+  'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))';
 
 const STATIC_BAR_COUNT = 100;
 /** Matches `fftSize: 256` below — an idle frame has to be the analyser's size. */
@@ -92,6 +118,9 @@ export function AudioVisualizer({
   seed = 'default',
   decodeEnabled = true,
   durationHint = 0,
+  onFullscreen,
+  isFullscreen = false,
+  showVolume = true,
 }: AudioVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -107,6 +136,10 @@ export function AudioVisualizer({
   // single selection pill — picking a style on one card yanked the pill off
   // another, and the picker read as broken. One id per instance.
   const instanceId = useId();
+  // Nine styles do not fit a narrow card. Mask whichever edge is actually
+  // hiding one — a painted gradient strip would have to guess the colour of
+  // the artwork behind it, which is why they are banned repo-wide.
+  const { ref: chipScrollRef, style: chipFadeStyle } = useScrollFadeMask<HTMLDivElement>();
 
   const [style, setStyle] = useState<VisualizerStyle>('static');
   const [hue, setHue] = useState(0);
@@ -114,6 +147,8 @@ export function AudioVisualizer({
   const [duration, setDuration] = useState(durationHint);
   const [currentTime, setCurrentTime] = useState(0);
   const [scrubRatio, setScrubRatio] = useState<number | null>(null);
+  const [volume, setVolume] = useState(1);
+  const [selfMuted, setSelfMuted] = useState(false);
   // Bumped when the <audio> element is created, so the listener effect below
   // attaches no matter which path built it (near-viewport, play, or a seek).
   const [audioElVersion, setAudioElVersion] = useState(0);
@@ -411,12 +446,16 @@ export function AudioVisualizer({
     }
   }, [isPlaying, audioElVersion]);
 
-  // Sync muted state
+  // Sync muted + volume. The caller's `muted` and the visualizer's own control
+  // are OR'd rather than one overwriting the other: VideoCard mutes for its own
+  // reasons, and a listener dragging this to zero should not be undone by an
+  // unrelated re-render from the card.
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.muted = muted;
-    }
-  }, [muted]);
+    const el = audioRef.current;
+    if (!el) return;
+    el.muted = muted || selfMuted;
+    el.volume = volume;
+  }, [muted, selfMuted, volume, audioElVersion]);
 
   /* ─── Seeking ─────────────────────────────────────────────────────────────
      Two surfaces share it: the slim bar under the controls, and the canvas
@@ -529,6 +568,10 @@ export function AudioVisualizer({
   const displayRatio = scrubRatio ?? playedRatio;
   const displayTime = scrubRatio !== null ? scrubRatio * duration : currentTime;
   const accent = hue === 0 ? 'hsla(0, 0%, 100%, 0.9)' : `hsla(${hue}, 85%, 65%, 0.95)`;
+  const isEffectivelyMuted = muted || selfMuted || volume === 0;
+  const glassShadow = isLightTheme
+    ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]'
+    : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]';
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
@@ -545,6 +588,83 @@ export function AudioVisualizer({
         onPointerUp={(e) => endScrub(e.currentTarget, e)}
         onPointerCancel={cancelScrub}
       />
+
+      {/* Top chrome: volume left, fullscreen right. Always drawn, never on
+          hover — the whole point of the last pass was that chrome appearing
+          under the cursor is what made this card unusable. */}
+      <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-2 px-2 pt-2 pointer-events-none">
+        {showVolume && (
+        <div
+          className={cn('pointer-events-auto shrink-0 flex items-center gap-1.5 pl-1.5 pr-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
+          onClick={stopBubble}
+          onPointerDown={stopBubble}
+        >
+          <button
+            type="button"
+            aria-label={isEffectivelyMuted ? 'Unmute' : 'Mute'}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isEffectivelyMuted) { setSelfMuted(true); return; }
+              setSelfMuted(false);
+              // Unmuting a slider dragged to zero has to put the level back,
+              // or the icon flips and the track stays silent.
+              if (volume === 0) setVolume(1);
+            }}
+            className="shrink-0 w-5 h-5 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+          >
+            {isEffectivelyMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+          </button>
+          {/* The fill is Slider's own Range, not a div sized to the value:
+              Radix insets the thumb by half its width so it never overhangs the
+              track, so a hand-painted fill and the thumb drift apart at both
+              ends. The Track clips the Range for us and leaves the thumb alone
+              — it is a sibling, not a child. */}
+          <div className="relative w-12 h-1.5">
+            <Slider
+              value={[isEffectivelyMuted ? 0 : Math.round(volume * 100)]}
+              min={0}
+              max={100}
+              step={1}
+              aria-label="Volume"
+              onValueChange={(value) => {
+                setVolume(value[0] / 100);
+                if (value[0] > 0) setSelfMuted(false);
+              }}
+              className={cn(
+                'absolute -inset-y-2.5 inset-x-0 w-full py-0',
+                '[&_[data-slider-track]]:bg-white/25 [&_[data-slider-range]]:bg-white/85',
+                '[&_[data-slider-thumb]]:h-3 [&_[data-slider-thumb]]:w-3',
+                '[&_[data-slider-thumb]]:border-2 [&_[data-slider-thumb]]:border-white',
+                '[&_[data-slider-thumb]]:bg-white',
+                '[&_[data-slider-thumb]]:shadow-[0_1px_4px_rgba(0,0,0,0.45)]',
+              )}
+            />
+          </div>
+        </div>
+        )}
+
+        {onFullscreen && (
+          <button
+            type="button"
+            aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            onClick={(e) => { e.stopPropagation(); onFullscreen(e); }}
+            onPointerDown={stopBubble}
+            className={cn(
+              'pointer-events-auto shrink-0 w-7 ml-auto flex items-center justify-center transition-colors',
+              CONTROL_H,
+              GLASS_PILL,
+              glassShadow,
+              'hover:from-white/35 hover:via-white/25 hover:to-white/15',
+            )}
+          >
+            {isFullscreen ? (
+              <Minimize className="w-3.5 h-3.5 text-white" />
+            ) : (
+              <Maximize className="w-3.5 h-3.5 text-white" />
+            )}
+          </button>
+        )}
+      </div>
 
       {/* Controls. There is no centre overlay any more: the play button used to
           sit invisibly in the middle of the canvas and appear on hover, so a
@@ -588,9 +708,12 @@ export function AudioVisualizer({
           </span>
         </div>
 
-        {/* Play, colour and style, bottom left */}
+        {/* Play, colour and style, bottom left. Every control is CONTROL_H tall
+            and centred on one line — the play button used to be 32px against a
+            22px colour bubble and 24px chips, which read as three sizes dropped
+            on a baseline rather than one strip. */}
         <div
-          className="flex items-end gap-2 pointer-events-auto"
+          className="flex items-center gap-1.5 pointer-events-auto"
           style={{ touchAction: 'pan-x' }}
           onClick={stopBubble}
           onPointerDown={stopBubble}
@@ -600,18 +723,17 @@ export function AudioVisualizer({
             aria-label={isPlaying ? 'Pause' : 'Play'}
             onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
             className={cn(
-              'shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors',
-              'bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30',
+              'shrink-0 w-7 flex items-center justify-center transition-colors',
+              CONTROL_H,
+              GLASS_PILL,
+              glassShadow,
               'hover:from-white/35 hover:via-white/25 hover:to-white/15',
-              isLightTheme
-                ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]'
-                : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]',
             )}
           >
             {isPlaying ? (
-              <Pause className="w-4 h-4 text-white fill-white" />
+              <Pause className="w-3.5 h-3.5 text-white fill-white" />
             ) : (
-              <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+              <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
             )}
           </button>
 
@@ -619,30 +741,48 @@ export function AudioVisualizer({
             <>
               {/* Colour slider - liquid glass bubble style */}
               <div
-                className="relative px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] shrink-0"
+                className={cn('shrink-0 flex items-center px-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
+                style={{ '--hue-thumb': hue === 0 ? 'hsl(0, 0%, 100%)' : `hsl(${hue}, 80%, 60%)` } as React.CSSProperties}
                 onClick={stopBubble}
                 onPointerDown={stopBubble}
               >
-                <div
-                  className="w-16 h-2 rounded-full relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))'
-                  }}
-                >
+                {/* No overflow-hidden: the 12px thumb lives in a 6px track, so
+                    clipping to the track cut the grab handle in half — which is
+                    exactly what you see the moment you drag it. The gradient is
+                    a background, and border-radius clips that on its own. */}
+                <div className="relative w-14 h-1.5 rounded-full" style={{ background: HUE_GRADIENT }}>
                   <Slider
                     value={[hue]}
                     min={0}
                     max={360}
                     step={1}
                     onValueChange={(value) => setHue(value[0])}
-                    className="absolute inset-0 w-full [&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:-top-0.5 [&_[role=slider]]:border-2 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-md [&_.relative]:bg-transparent [&_[data-orientation=horizontal]]:h-2 [&_[class*=Range]]:bg-transparent [&_[class*=Track]]:bg-transparent"
+                    aria-label="Visualizer colour"
+                    /* Root overflows the track vertically so the grab area is
+                       26px rather than 6px. Targets Slider's own data-* hooks —
+                       the old [class*=Track] selectors matched nothing, since
+                       those are utility classes, not component names. */
+                    className={cn(
+                      'absolute -inset-y-2.5 inset-x-0 w-full py-0',
+                      '[&_[data-slider-track]]:bg-transparent [&_[data-slider-range]]:bg-transparent',
+                      '[&_[data-slider-thumb]]:h-3 [&_[data-slider-thumb]]:w-3',
+                      '[&_[data-slider-thumb]]:border-2 [&_[data-slider-thumb]]:border-white',
+                      '[&_[data-slider-thumb]]:bg-[var(--hue-thumb)]',
+                      '[&_[data-slider-thumb]]:shadow-[0_1px_4px_rgba(0,0,0,0.45)]',
+                    )}
                   />
                 </div>
               </div>
 
-              {/* Style picker - scrollable */}
-              <div className="flex-1 min-w-0 overflow-x-auto scrollbar-none">
-                <div className="flex gap-1 w-max">
+              {/* Style picker - scrolls when the card is too narrow for all
+                  nine, masked at whichever edge is actually hiding one so a
+                  half-chip dissolves instead of being sliced. */}
+              <div
+                ref={chipScrollRef}
+                className="flex-1 min-w-0 overflow-x-auto scrollbar-none"
+                style={chipFadeStyle}
+              >
+                <div className="flex gap-0.5 w-max">
                   {STYLES.map((s) => (
                     <button
                       key={s.value}
@@ -654,17 +794,15 @@ export function AudioVisualizer({
                       }}
                       onPointerDown={stopBubble}
                       onTouchStart={stopBubble}
-                      className="relative px-2.5 py-1 text-[10px] font-medium rounded-lg whitespace-nowrap transition-colors text-white/60 hover:text-white/80"
+                      className={cn(
+                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-lg whitespace-nowrap transition-colors text-white/60 hover:text-white/80',
+                        CONTROL_H,
+                      )}
                     >
                       {style === s.value && (
                         <motion.div
                           layoutId={`audio-style-indicator-${instanceId}`}
-                          className={cn(
-                            "absolute inset-0 rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30",
-                            isLightTheme
-                              ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]"
-                              : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]"
-                          )}
+                          className={cn('absolute inset-0', GLASS_PILL, glassShadow)}
                           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                         />
                       )}

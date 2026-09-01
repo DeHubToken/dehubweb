@@ -655,6 +655,10 @@ export function PostMediaPreview({
                           onPlayPause={() => setPlayingIndex(prev => prev === index ? null : index)}
                           className="h-full w-auto min-w-[200px] aspect-[2/1]"
                           showStylePicker={true}
+                          /* This preview draws its own Music badge and file
+                             name at top-left, which is where the visualizer's
+                             volume pill would land. */
+                          showVolume={false}
                         />
                         
                         <div className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
