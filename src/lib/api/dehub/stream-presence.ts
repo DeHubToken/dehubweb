@@ -29,6 +29,15 @@ const EVENT = {
   joinRoom: 'stream.join.room',
   joinStream: 'stream.join',
   leaveStream: 'stream.left',
+  /**
+   * The same join and leave for a viewer with no account. Separate events
+   * because the signed-in pair is auth-guarded and keyed on a wallet address —
+   * which is exactly why a logged-out viewer used to be counted as nobody. The
+   * gateway counts these by socket id instead, and refuses one that already
+   * authenticated so a tab cannot occupy both seats.
+   */
+  anonJoinStream: 'stream.join.anon',
+  anonLeaveStream: 'stream.left.anon',
   viewCountUpdate: 'stream.viewers.update',
 } as const;
 
@@ -79,23 +88,35 @@ export interface StreamPresence {
  * the NFT tokenId — the gateway looks the stream up by it and a tokenId simply
  * matches nothing.
  *
- * Anonymous viewers are not counted: the gateway's join handler is auth-guarded
- * and returns early without an address. Rather than open a socket that will be
- * ignored, this reports that up front by doing nothing.
+ * Signed in or not, this tab is counted. Which pair of events it uses is the
+ * only difference: `stream.join` is auth-guarded and keys the viewer by wallet
+ * address, so a logged-out tab used to bail out here and be counted as nobody —
+ * a creator whose audience was not signed in read "0 watching" over a stream
+ * people were watching. `stream.join.anon` counts by socket id instead.
+ *
+ * The choice is made once, at join, from whether a token is on disk. It is not
+ * re-evaluated if the viewer signs in mid-stream: they keep the anonymous seat
+ * until the socket closes, which counts them exactly once either way. Claiming
+ * the second seat is the failure worth avoiding, and the gateway refuses it
+ * anyway.
  */
 export function joinStreamPresence(
   streamId: string,
   onViewerCount?: (count: number) => void,
 ): StreamPresence {
-  if (!streamId || !getAuthToken()) {
+  if (!streamId) {
     return { leave: () => undefined };
   }
+
+  const identified = !!getAuthToken();
+  const joinEvent = identified ? EVENT.joinStream : EVENT.anonJoinStream;
+  const leaveEvent = identified ? EVENT.leaveStream : EVENT.anonLeaveStream;
 
   const s = getStreamSocket();
   let left = false;
 
   const join = () => {
-    if (!left) s.emit(EVENT.joinStream, { streamId });
+    if (!left) s.emit(joinEvent, { streamId });
   };
 
   const handleCount = (data: { viewerCount?: number }) => {
@@ -104,7 +125,8 @@ export function joinStreamPresence(
 
   // Re-join on every connect, not just the first: a reconnect starts a new
   // socket id server-side, and the viewer row was dropped when the old one
-  // disconnected.
+  // disconnected. That is doubly true anonymously, where the socket id IS the
+  // identity — the old one counts for nothing the moment it drops.
   s.on('connect', join);
   s.on(EVENT.viewCountUpdate, handleCount);
   s.on(EVENT.joinStream, handleCount);
@@ -121,7 +143,7 @@ export function joinStreamPresence(
       s.off(EVENT.leaveStream, handleCount);
       // Best-effort: if the socket is already gone the server has dropped this
       // viewer on disconnect anyway, which is the case this design leans on.
-      if (s.connected) s.emit(EVENT.leaveStream, { streamId });
+      if (s.connected) s.emit(leaveEvent, { streamId });
     },
   };
 }
