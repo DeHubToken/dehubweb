@@ -112,6 +112,11 @@ const OG_CARD_ROUTES = new Set([
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
   'arcade/trenchstar',
+  // App surfaces that had no card of their own and unfurled as the homepage.
+  // `superpowers` art was rendered when the page shipped and was never added
+  // here, so the file has been sitting in public/og unreferenced.
+  'superpowers', 'converter', 'launchpad', 'stats',
+  'accounts', 'fractions', 'stores', 'events',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -1126,10 +1131,98 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>DeHub is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
 <p>Looking for paid work rather than a role? See <a href="${APP_URL}/work" style="color:#9f9">DeHub bounties</a>.</p>`,
   },
+
+  // --- app surfaces that had no crawler copy at all --------------------------
+  // Each of these is a real page with its own SEOHead in the SPA, so browsers
+  // saw the right title and crawlers saw the homepage. Copy is taken from the
+  // page's own SEOHead so the two variants cannot drift, per the rule the
+  // /music, /jobs and /bridge divergence taught. `path` is set where the route
+  // lives only under /app — without it the canonical would name a URL the
+  // router does not have.
+  'superpowers': {
+    path: '/app/superpowers',
+    title: 'SuperPowers — Spend Your DeHub Badge on Reach',
+    description: 'Badge holders get boosts every fortnight: put a post in the slot at the top of the DeHub home feed. Thirteen tiers, thirteen powers, one unlock per rung.',
+    heading: 'DeHub SuperPowers',
+    bodyHtml: `<p>A DeHub staking badge is not only the art beside your name. Each tier carries powers, and the first of them is reach: a boost that lifts one of your posts into the slot at the top of the home feed.</p>
+<h2>Refilled, not bought</h2>
+<p>Boosts arrive with the badge and refill every fortnight. They are earned by staking rather than sold, so the top of the feed cannot simply be paid for.</p>
+<h2>Thirteen rungs</h2>
+<p>Powers unlock one per tier across the thirteen badges, and higher rungs both hold more boosts and hold them for longer. See <a href="${APP_URL}/stake" style="color:#9f9">staking</a> for how a badge is earned.</p>`,
+  },
+  'converter': {
+    title: 'Import from YouTube — DeHub',
+    description: 'Paste a YouTube link and publish it as a DeHub post. The video is fetched, transcoded and posted to your feed with its title, description and thumbnail.',
+    heading: 'Import from YouTube',
+    bodyHtml: `<p>Paste a YouTube URL and DeHub fetches the video, transcodes it and publishes it as a post on your profile — title, description and thumbnail carried across.</p>
+<h2>Your back catalogue, in one place</h2>
+<p>Imports run in a queue, so a batch can be started and left alone. Each finished import becomes an ordinary DeHub post: it can be minted, tipped, fractionalised and monetised like anything else you upload.</p>
+<p>Importing needs a DeHub account and applies to videos you have the right to publish.</p>`,
+  },
+  'launchpad': {
+    // The page ships `noindex` in its own SEOHead; the crawler variant has to
+    // say the same thing or the two describe the same URL differently.
+    noindex: true,
+    title: 'Launchpad — DeHub',
+    description: 'Tokenise a business on the DeHub launchpad: browse live coins or create your own.',
+    heading: 'DeHub Launchpad',
+    bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on DeHub. Live launches are listed with their activity, and creating one runs from the same page.</p>
+<p>Coins are speculative assets and can lose their value entirely. Nothing here is investment advice.</p>`,
+  },
+  'stats': {
+    title: 'Live Site Stats — DeHub Visitors and Members in Real Time',
+    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database.",
+    heading: 'DeHub Live Stats',
+    bodyHtml: `<p>Visitor numbers come from Cloudflare's own analytics for this zone, counted at the edge before a request reaches the app. They are not a client-side counter the page could inflate, and they are not a number anyone typed.</p>
+<h2>Members as well as traffic</h2>
+<p>Alongside traffic the page publishes DeHub's own community figures — total members, daily, weekly and monthly active users, new signups and growth — read straight from the platform database.</p>`,
+  },
+  'accounts': {
+    title: 'Account Marketplace — DeHub',
+    description: 'Buy and sell established DeHub accounts for DHB. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
+    heading: 'DeHub Account Marketplace',
+    bodyHtml: `<p>An established DeHub account can be sold whole. Listings are browsable by follower count, uploads and account age, and what transfers is everything the account is: the handle, the posts, the followers and the badge entitlements.</p>
+<h2>Settled on-chain</h2>
+<p>Payment is in DHB and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames" style="color:#9f9">username market</a> for selling a handle alone rather than a whole account.</p>`,
+  },
+  'fractions': {
+    path: '/app/fractions',
+    title: 'Fractions | DeHub',
+    description: 'Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.',
+    heading: 'DeHub Fractions',
+    bodyHtml: `<p>Every DeHub upload is divisible into 1000 on-chain fractions. A creator can sell part of a post and keep the rest, and anyone else can buy a slice of a video, track or image and hold it like any other asset.</p>
+<h2>An open order book</h2>
+<p>Fractions trade in DHB against open orders, so a holder can exit without asking the creator's permission and a buyer can build a position over time.</p>
+<p>Fractions are speculative and their value can fall to nothing. Nothing here is investment advice.</p>`,
+  },
+  'stores': {
+    path: '/app/stores',
+    title: 'Stores | DeHub',
+    description: 'Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB.',
+    heading: 'DeHub Stores',
+    bodyHtml: `<p>Stores are creator-run shops on DeHub. Anyone can open one and list digital goods, merch, art or services, priced in DHB and paid peer to peer.</p>
+<h2>The shop is part of the profile</h2>
+<p>A store sits beside the creator's posts rather than off on another site, so the audience that already follows the work is the audience that sees what is for sale.</p>`,
+  },
+  'events': {
+    // EventsPage ships `noindex`; the crawler variant matches it.
+    noindex: true,
+    title: 'Events — Meetups & Community Events on DeHub',
+    description: 'Browse upcoming DeHub community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform.',
+    heading: 'DeHub Events',
+    bodyHtml: `<p>Events are community meetups, AMAs and calls listed on DeHub. Browse what is coming up, RSVP to anything open, and host your own — each event gets its own page and share card.</p>`,
+  },
 };
 
 function buildMarketingHtml(key, meta) {
-  const canonicalUrl = `${APP_URL}/${key}`;
+  // `path` for the pages that live only under /app: `/${key}` would name a URL
+  // the router has no route for, and a canonical pointing at a page that does
+  // not exist is worse than none.
+  const canonicalUrl = `${APP_URL}${meta.path || `/${key}`}`;
+  // Pages the SPA marks noindex in their own SEOHead must say the same here,
+  // or bot and browser describe one URL two different ways. The card still
+  // matters: a noindexed page is still pasted into chats.
+  const robots = meta.noindex ? '<meta name="robots" content="noindex, follow">\n' : '';
   // A page whose subject is a *thing* rather than a document can name its own
   // schema type (`meta.jsonLdType` + `jsonLdExtra`); everything else stays a
   // plain WebPage. Must mirror the type the SPA writes for the same route, or
@@ -1150,7 +1243,7 @@ function buildMarketingHtml(key, meta) {
 <meta charset="UTF-8">
 <title>${escHtml(meta.title)}</title>
 <meta name="description" content="${escHtml(meta.description)}">
-<link rel="canonical" href="${canonicalUrl}">
+${robots}<link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DeHub">
 <meta property="og:url" content="${canonicalUrl}">
@@ -1799,6 +1892,12 @@ const SSR_STATIC_ROUTES = new Set([
   // duplicate of /arcade. The page itself is rendered from MARKETING_PAGES,
   // which is checked before the fn is ever consulted (same as 'features').
   'arcade',
+  // Same again: each of these is one page with a top-level route AND an /app
+  // twin, both rendered from MARKETING_PAGES. `superpowers`, `stores` and
+  // `fractions` are deliberately NOT here — they exist only under /app, so
+  // collapsing the twin would canonicalize them onto a URL the router does not
+  // have. Those name their own `path` in MARKETING_PAGES instead.
+  'accounts', 'converter', 'events', 'launchpad', 'stats',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
   //
@@ -2942,7 +3041,12 @@ async function handleRequest(request, env) {
         html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Open bounties</h2><ul style="list-style:none;padding:0">${items}</ul></section></body>`);
       }
     }
-    return guard(new Response(html, { status: 200, headers: blogHeaders }));
+    return guard(new Response(html, {
+      status: 200,
+      headers: MARKETING_PAGES[sectionKey].noindex
+        ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' }
+        : blogHeaders,
+    }));
   }
 
   // Stores and shop items. `?listing=<id>` is the item; the bare path is the

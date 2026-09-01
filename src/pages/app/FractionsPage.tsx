@@ -46,6 +46,7 @@ export default function FractionsPage() {
         title="Fractions | DeHub"
         description="Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB."
         url="https://dehub.io/app/fractions"
+        image="https://dehub.io/og/fractions.jpg"
       />
 
       {/* Sticky nav pill */}

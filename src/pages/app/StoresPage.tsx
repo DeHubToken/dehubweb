@@ -32,7 +32,12 @@ export default function StoresPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Stores | DeHub" description="Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB." />
+      <SEOHead
+        title="Stores | DeHub"
+        description="Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB."
+        url="https://dehub.io/app/stores"
+        image="https://dehub.io/og/stores.jpg"
+      />
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-4xl mx-auto">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
