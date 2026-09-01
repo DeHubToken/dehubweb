@@ -20,6 +20,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
+import { LiveFeedPreview } from './LiveFeedPreview';
 import { GatedMedia } from './GatedMedia';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -186,7 +187,14 @@ export function LiveCard({ stream }: LiveCardProps) {
           preview={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
           className="rounded-lg"
         >
-        {stream.isLive && stream.thumbnail ? (
+        {stream.isLive && (stream.playbackUrl || stream.playbackUrls?.length) ? (
+          /* On air: the carousel card plays the stream, not a still of it. */
+          <LiveFeedPreview
+            urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
+            thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
+            fallbackLabel="Live"
+          />
+        ) : stream.isLive && stream.thumbnail ? (
           <img
             /* Live thumbnails come straight off the API as raw CDN paths, so
                they never passed through the media-url builders. 720 covers the
