@@ -25,6 +25,8 @@ import { DEHUB_API_BASE, getAuthToken } from './core';
 
 /** Matches LivestreamEvents on the backend. These strings are the contract. */
 const EVENT = {
+  /** Subscribes the socket to a stream's broadcasts. Counts nobody. */
+  joinRoom: 'stream.join.room',
   joinStream: 'stream.join',
   leaveStream: 'stream.left',
   viewCountUpdate: 'stream.viewers.update',
@@ -120,6 +122,57 @@ export function joinStreamPresence(
       // Best-effort: if the socket is already gone the server has dropped this
       // viewer on disconnect anyway, which is the case this design leans on.
       if (s.connected) s.emit(EVENT.leaveStream, { streamId });
+    },
+  };
+}
+
+/**
+ * Read the audience without joining it.
+ *
+ * A host is not a viewer. `joinStreamPresence` above emits `stream.join`,
+ * which adds a viewer row, bumps `totalViews` and moves `peakViewers` — so
+ * pointing the broadcaster's own console at it would have the creator counting
+ * themselves and inflating their own numbers on every reconnect. The gateway
+ * has a separate, unguarded `stream.join.room` that only subscribes the socket
+ * to the stream's broadcasts, which is exactly what a spectator of the count
+ * needs.
+ *
+ * The count arrives on the next join or leave, not on subscribe — there is no
+ * "tell me now" event — so the caller keeps whatever it had until then.
+ */
+export function watchStreamPresence(
+  streamId: string,
+  onViewerCount: (count: number) => void,
+): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
+
+  const s = getStreamSocket();
+  let left = false;
+
+  const join = () => {
+    if (!left) s.emit(EVENT.joinRoom, { streamId });
+  };
+
+  const handleCount = (data: { viewerCount?: number }) => {
+    if (typeof data?.viewerCount === 'number') onViewerCount(data.viewerCount);
+  };
+
+  s.on('connect', join);
+  s.on(EVENT.viewCountUpdate, handleCount);
+  s.on(EVENT.joinStream, handleCount);
+  s.on(EVENT.leaveStream, handleCount);
+  if (s.connected) join();
+
+  return {
+    leave: () => {
+      if (left) return;
+      left = true;
+      s.off('connect', join);
+      s.off(EVENT.viewCountUpdate, handleCount);
+      s.off(EVENT.joinStream, handleCount);
+      s.off(EVENT.leaveStream, handleCount);
+      // No counterpart emit: nothing was counted, and the socket leaves the
+      // room on disconnect anyway.
     },
   };
 }

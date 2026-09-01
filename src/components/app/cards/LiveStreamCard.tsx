@@ -130,6 +130,14 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Records the view once the player has been on screen long enough to mean it.
   const viewRef = useFeedViewTracking(stream.tokenId || stream.id);
+  // Read here rather than below the presence hook: whether this viewer is the
+  // creator decides whether presence runs at all.
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
+  const isOwnStream = Boolean(
+    walletAddress &&
+      stream.creatorId &&
+      walletAddress.toLowerCase() === stream.creatorId.toLowerCase()
+  );
   /*
    * Counts this tab among the people watching, and reads the live number back.
    *
@@ -140,18 +148,24 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
    *
    * Falls back to the API's stored total when the socket has nothing to say
    * yet, so the card never flashes a zero over a busy stream.
+   *
+   * The creator is never counted among their own audience. Joining bumps
+   * `totalViews` and moves `peakViewers`, so a host who scrolls past their own
+   * live post — or opens it to check how it looks — was inflating the figure
+   * they then read back off their broadcast console.
    */
-  const livePresence = useStreamPresence(stream.streamId, !!stream.isLive);
+  const livePresence = useStreamPresence(
+    stream.streamId,
+    !!stream.isLive && !isOwnStream
+  );
   const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
   const hlsRef = useRef<Hls | null>(null);
   /** One WebRTC attempt per card: once it fails, HLS keeps the element. */
   const whepFailedRef = useRef(false);
   const videoId = `live-${stream.id}`;
 
-  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
-  const isStreamOwner = walletAddress && stream.creatorId &&
-    walletAddress.toLowerCase() === stream.creatorId.toLowerCase();
+  const isStreamOwner = isOwnStream;
   const { like, gift, end, isLiking, isEnding } = useStreamActions();
   const { blockAuthor } = useBlockAuthor();
   // Every /api/live/{id}/* interaction route takes the Mongo ObjectId, never
