@@ -21,6 +21,8 @@ Meanwhile, athlete-hosted shows — the Kelce brothers, Draymond Green, Angel Re
 
 Note what that sentence implies for the league as well as the marketer.
 
+![The moat moved — distribution is not the asset, the direct relationship with the fan is](/lovable-uploads/fig-athlete-moat-moved.jpg)
+
 ## Distribution was never the moat
 
 The instinct in a lot of front offices is to treat this as a control problem — tighten the media clauses, define the windows more narrowly, restrict what a player can publish and when. That instinct will feel prudent and will lose.
@@ -48,6 +50,8 @@ Applied to sport, three things follow that are not available on a conventional p
 **The relationship is portable, which cuts both ways.** An audience that belongs to the athlete can leave with the athlete. It can also be brought *into* a league ecosystem rather than built entirely outside it. The strategic move is not to prevent portability — you cannot — but to be the environment worth staying in.
 
 **The monetisation is per-piece.** Free, pay-per-view, or token-gated, decided upload by upload. A league does not have to choose between "everything behind the rights deal" and "everything free for reach". Access tiers become an editorial decision rather than a contractual one.
+
+![Who owns the fan? — the ownership question written into the contract](/lovable-uploads/fig-athlete-who-owns-the-fan.jpg)
 
 ## The clause worth writing instead
 

@@ -25,6 +25,8 @@ Then there is the children's-content layer specifically. After the FTC's $170 mi
 
 The pattern is worth naming precisely, because it recurs: **the risk to a young creator is almost never that they fail. It is that they succeed on ground they were only ever renting.**
 
+![The deal nobody signs — the default platform arrangement, on terms a creator never negotiated](/lovable-uploads/fig-young-creators-contract.jpg)
+
 ## The contract nobody would sign on paper
 
 Here is a thought experiment for the adults in the room.
@@ -62,6 +64,8 @@ Two things, said directly.
 The first is that a young creator's leverage is highest before they need it. The time to establish an owned home base is while the channel is small and nothing depends on it — not after a strike, a demonetisation, or a policy change makes it urgent. Everything in this article is easy at 500 followers and painful at 500,000.
 
 The second is harder. When a child's content is the household's income, the incentive to keep feeding whichever platform is currently paying becomes extremely strong, and the incentive to diversify becomes weak precisely when diversifying matters most. The trust laws exist because that pressure has, in documented cases, not resolved in the child's favour. Assume it applies to you too, and build the alternative early, while the decision is still cheap.
+
+![Scoreboard, not asset — a follower count is not ownership; the archive, the list and the wallet are](/lovable-uploads/fig-young-creators-scoreboard.jpg)
 
 ## For the young creator reading this
 

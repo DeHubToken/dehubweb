@@ -13,6 +13,8 @@ This is the country-agnostic version of our [UK creator guide to leaving TikTok]
 
 DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish, who also built First Class Agency, the United Kingdom's number-one official TikTok LIVE partner agency with more than 1,200 live streamers on its books. The people behind this platform spent years inside TikTok's monetisation machine. That is why this guide is specific about where the money goes rather than vague about it.
 
+![You do not own these — the account, the audience and the income are all TikTok’s to withdraw](/lovable-uploads/fig-tiktok-not-yours.jpg)
+
 ## The three things you do not own
 
 **Your audience.** Every follower is a row in TikTok's database. You cannot export the list, you cannot message it directly, and you cannot take it anywhere. When an account is restricted, shadow-limited or removed, the audience does not move with you — it simply stops existing from your side. Creators discover this at the worst possible moment, which is the only moment it ever gets discovered.
@@ -28,6 +30,8 @@ Most TikTok alternatives swap one landlord for another. The feed is different, t
 The change worth making is structural. On [DeHub, the decentralised social network](/guides/what-is-dehub), an upload is minted on-chain to your wallet at the moment you post it. That record is yours, independently of the platform. The feed is chronological and transparent rather than algorithmically opaque. The code is open-source, so no single company can quietly rewrite the rules underneath you.
 
 If the whole category is new to you, our explainer on [decentralised social media](/guides/decentralised-social-media-explained-uk) covers the mechanics without the jargon, and our roundup of [the best decentralised social platforms in 2026](/guides/best-decentralised-social-media-platforms-2026) puts DeHub next to its peers.
+
+![Paid from view one — no creator fund, no follower threshold, up to a 90% revenue share](/lovable-uploads/fig-tiktok-paid-from-view-one.jpg)
 
 ## What changes about the money
 

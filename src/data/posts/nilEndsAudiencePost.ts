@@ -25,6 +25,8 @@ But be clear about what kind of money it is. Revenue share is compensation for p
 
 A wage is not an asset. You can earn a lot of money and own nothing, and athletes have been doing exactly that for a century.
 
+![A wage, not an asset — NIL pays while you play and stops when you do](/lovable-uploads/fig-nil-wage-not-asset.jpg)
+
 ## What an asset looks like
 
 An asset produces after you stop working. For an athlete in 2026, there is really only one candidate that is available *now*, costs nothing to start, and does not depend on going pro: an audience with a direct relationship to you.
@@ -60,6 +62,8 @@ None of this requires you to leave anywhere. Keep every account you have. The po
 This is the part where most articles wave vaguely, so: NIL rules vary by state, by conference and by institution, disclosure requirements are real, and the House-era clearing process for third-party deals is active and being enforced. Earning money from your own content is generally NIL activity, crypto-denominated earnings raise tax questions, and none of this is legal or tax advice.
 
 Talk to your compliance office before you monetise anything, and keep records. The build-an-audience part — posting, publishing, owning your work — is not the part that creates compliance risk. Getting paid is. Do that deliberately.
+
+![Eligibility ends, the audience does not — the five-year view of an athlete’s media career](/lovable-uploads/fig-nil-eligibility-ends.jpg)
 
 ## The five-year version
 
