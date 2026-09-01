@@ -6,8 +6,8 @@
  * same frame as the click, while this (wagmi, the wallet steps, RainbowKit)
  * arrives behind it. See the note at the top of LoginModal.tsx.
  */
-import React, { useEffect, useState } from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useAccount, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { Mail, Phone, Wallet, Loader2 } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -18,8 +18,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
+import { requestAccountPicker } from '@/lib/wallet-accounts';
+import { LoginSavedProfiles } from './LoginSavedProfiles';
 import type { LoginStep } from './steps';
-import type { WalletId } from './LoginWalletsStep';
+import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
 
 // The wallet list carries RainbowKit — ~270 KB that has to be evaluated before
 // it can render, for a step most people never open. It loads when they do.
@@ -36,6 +38,9 @@ const WalletCreateStep = React.lazy(() =>
 const WalletUnlockStep = React.lazy(() =>
   import('@/components/app/wallet-setup/WalletUnlockStep').then(m => ({ default: m.WalletUnlockStep })),
 );
+
+/** The wallets that already have a button of their own. */
+const NAMED_WALLETS: WalletId[] = ['metamask', 'phantom', 'trust'];
 
 // Social provider icons
 const GoogleIcon = () => (
@@ -64,7 +69,7 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
-    supabaseUserId, disconnect,
+    supabaseUserId, disconnect, isAuthenticated, switchToProfile,
   } = useAuth();
   const {
     isConnected: isWagmiAlreadyConnected,
@@ -72,7 +77,61 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
     connector: wagmiCurrentConnector,
   } = useAccount();
   const { disconnectAsync: wagmiDisconnectAsync } = useDisconnect();
+  const allConnectors = useConnectors();
   const { t } = useTranslation();
+
+  /**
+   * The wallets actually installed here, minus the ones that already have a
+   * named button.
+   *
+   * wagmi discovers these over EIP-6963 (`multiInjectedProviderDiscovery` is on
+   * by default) and has been doing so all along — the sheet just dropped them
+   * and offered three fixed names. Anyone running Rabby, Coinbase Wallet, OKX
+   * or Brave had to guess that "MetaMask" would reach their wallet, which it
+   * does only when that extension happens to win the injection race.
+   *
+   * `injected` is the deliberately-hidden in-app-browser fallback (see
+   * lib/wagmi.ts) and never belongs in a list of choices.
+   */
+  const discoveredWallets = useMemo<DiscoveredWallet[]>(() => {
+    const seen = new Set<string>();
+    return allConnectors
+      .filter(connector => {
+        if (connector.type !== 'injected') return false;
+        if (connector.id === 'injected') return false;
+        // One extension reaches wagmi twice — as the curated RainbowKit
+        // connector and as its own EIP-6963 announcement — and the two carry
+        // different ids, so the match has to go through the shared mapping
+        // (which also checks the name) rather than an id comparison. Without
+        // it Trust announces as `com.trustwallet.app` and gets a second row
+        // directly under its own button.
+        if (NAMED_WALLETS.some(wallet => connectorMatchesWallet(connector, wallet))) return false;
+        const key = connector.name.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .map(connector => ({
+        id: connector.id,
+        name: connector.name,
+        icon: connector.icon,
+      }));
+  }, [allConnectors]);
+
+  /**
+   * Which row in the list owns the live connection, so its address chip can be
+   * rendered under that row rather than floating above the whole list.
+   */
+  const connectedWalletId = useMemo<string | null>(() => {
+    if (!isWagmiAlreadyConnected || !wagmiCurrentConnector) return null;
+    for (const wallet of NAMED_WALLETS) {
+      if (connectorMatchesWallet(wagmiCurrentConnector, wallet)) return wallet;
+    }
+    if (wagmiCurrentConnector.id === 'walletConnect') return 'walletconnect';
+    return discoveredWallets.some(w => w.id === wagmiCurrentConnector.id)
+      ? wagmiCurrentConnector.id
+      : null;
+  }, [isWagmiAlreadyConnected, wagmiCurrentConnector, discoveredWallets]);
 
   const [email, setEmail] = useState('');
   const [emailCode, setEmailCode] = useState('');
@@ -129,6 +188,13 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
     setPhoneCode('');
     setPhoneError('');
     setActiveProvider(null);
+  };
+
+  // Restores that account's stored session and reloads. Resolves without
+  // reloading only when the snapshot could not be restored, in which case
+  // switchToProfile has already opened the sheet on a real login.
+  const handleSwitchProfile = (id: string) => {
+    void switchToProfile(id);
   };
 
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
@@ -286,8 +352,52 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
     connect();
   };
 
+  const handleDiscoveredWalletConnect = (connectorId: string) => {
+    // Same path as the named buttons — connectWithWallet resolves a connector
+    // id it doesn't recognise as a wallet name by matching the id directly.
+    handleWalletConnect(connectorId as WalletId, () => {});
+  };
+
+  /**
+   * Ask the connected wallet to re-offer its account picker.
+   *
+   * This is the way out of the dead end that made people delete the site from
+   * inside MetaMask: the extension holds account B, the sheet asks it to sign
+   * as account A, and it refuses with an error that is neither a rejection nor
+   * a timeout. Nothing a site can do picks an account on someone's behalf —
+   * `wallet_requestPermissions` opening the wallet's own picker is the entire
+   * available surface.
+   *
+   * Once an account comes back the connection is already the right wallet, so
+   * this only has to raise the auth intent: AuthProvider's wagmi effect signs,
+   * and it reads the wallet's live account first, so it uses the account just
+   * chosen even before `accountsChanged` has reached wagmi.
+   */
+  // WalletConnect has no account picker to open — the accounts come from a
+  // remote wallet over a relay, and nothing in the protocol re-opens its
+  // chooser. Offering the control there would only ever produce a no-op.
+  const canSwitchAccount =
+    !!connectedWalletId && wagmiCurrentConnector?.id !== 'walletConnect';
+
+  const handleSwitchAccount = async () => {
+    if (!wagmiCurrentConnector || !connectedWalletId) return;
+    setActiveProvider(connectedWalletId);
+    const chosen = await requestAccountPicker(wagmiCurrentConnector);
+    if (!chosen) {
+      setActiveProvider(null);
+      return;
+    }
+    handleWalletConnect(connectedWalletId as WalletId, () => {});
+  };
+
   const renderMainStep = () => (
     <div className="space-y-4">
+      {/* Signed-out only. Over a live session this sheet is "Add a profile",
+          where the accounts already on the device are the one thing it is not
+          offering to do. */}
+      {!isAuthenticated && (
+        <LoginSavedProfiles disabled={isConnecting} onSwitch={handleSwitchProfile} />
+      )}
       <div className="space-y-3">
         <Button
           onClick={() => setStep('email')}
@@ -569,8 +679,12 @@ export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
             activeProvider={activeProvider}
             connectedAddress={isWagmiAlreadyConnected ? wagmiCurrentAddress ?? null : null}
             connectedWalletName={wagmiCurrentConnector?.name ?? null}
+            connectedWalletId={connectedWalletId}
+            discoveredWallets={discoveredWallets}
             onUseDifferentWallet={handleUseDifferentWallet}
+            onSwitchAccount={canSwitchAccount ? handleSwitchAccount : undefined}
             onWalletConnect={handleWalletConnect}
+            onDiscoveredWalletConnect={handleDiscoveredWalletConnect}
             onWalletConnectConnect={handleWalletConnectConnect}
           />
         </React.Suspense>
