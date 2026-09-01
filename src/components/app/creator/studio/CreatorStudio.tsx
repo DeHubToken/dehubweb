@@ -406,6 +406,7 @@ function ModeToggle({
   onChange: (next: Mode) => void;
   compact?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     // Toggle buttons, not ARIA tabs: there is no tabpanel to control and no
     // arrow-key navigation, so aria-pressed is the honest semantic.
@@ -432,7 +433,7 @@ function ModeToggle({
             )}
           >
             <Icon className="h-3.5 w-3.5" />
-            {!compact && <span className="hidden sm:inline">{m.label}</span>}
+            {!compact && <span className="hidden sm:inline">{t(m.labelKey)}</span>}
           </button>
         );
       })}
