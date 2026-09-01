@@ -145,7 +145,7 @@ export function EventChat({ eventId }: EventChatProps) {
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) { openLoginModal(); return; }
     const toastId = 'event-voice-upload';
-    toast.loading('Uploading voice note...', { id: toastId });
+    toast.loading(t('events.uploadingVoiceNote'), { id: toastId });
     try {
       const token = getAuthToken();
       const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
@@ -168,10 +168,10 @@ export function EventChat({ eventId }: EventChatProps) {
         badgeBalance: user?.badgeBalance || undefined,
       });
       setReplyTo(null);
-      toast.success('Voice note sent!', { id: toastId });
+      toast.success(t('events.voiceNoteSent'), { id: toastId });
     } catch (err: any) {
       console.error('[EventChat] Voice upload failed:', err);
-      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+      toast.error(err?.message || t('events.voiceNoteFailed'), { id: toastId });
     }
   }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal]);
 
@@ -279,7 +279,7 @@ export function EventChat({ eventId }: EventChatProps) {
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent side="top">Edit</TooltipContent>
+                              <TooltipContent side="top">{t('events.edit')}</TooltipContent>
                             </Tooltip>
                           )}
                           <Tooltip>
@@ -288,7 +288,7 @@ export function EventChat({ eventId }: EventChatProps) {
                                 <Reply className="w-3.5 h-3.5" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent side="top">Reply</TooltipContent>
+                            <TooltipContent side="top">{t('events.reply')}</TooltipContent>
                           </Tooltip>
                           <Popover>
                             <Tooltip>
@@ -299,7 +299,7 @@ export function EventChat({ eventId }: EventChatProps) {
                                   </button>
                                 </PopoverTrigger>
                               </TooltipTrigger>
-                              <TooltipContent side="top">React</TooltipContent>
+                              <TooltipContent side="top">{t('events.react')}</TooltipContent>
                             </Tooltip>
                             <PopoverContent side="top" align="end" className="w-auto p-1 bg-zinc-800 border-zinc-700 rounded-xl">
                               <div className="flex gap-0.5">
@@ -348,7 +348,7 @@ export function EventChat({ eventId }: EventChatProps) {
             <span className="absolute top-2 right-3 text-[10px] text-zinc-600">{newMessage.length}/500</span>
             <Textarea
               ref={textareaRef}
-              placeholder="Type a message..."
+              placeholder={t('events.typeMessage')}
               value={newMessage}
               onChange={(e) => {
                 const val = e.target.value;
@@ -385,7 +385,7 @@ export function EventChat({ eventId }: EventChatProps) {
         <div className="px-1 py-3">
           <button onClick={() => openLoginModal()} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-sm hover:text-white transition-colors">
             <LogIn className="w-4 h-4" />
-            Log in to chat
+            {t('events.logInToChat')}
           </button>
         </div>
       )}
