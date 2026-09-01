@@ -1575,6 +1575,52 @@ ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 }
 
 /**
+ * A single DAO proposal, /app/governance/<uuid>. Proposals carry no art of
+ * their own, so the governance card stands in — that is still the page's
+ * subject, unlike the homepage card it was getting.
+ */
+function buildProposalHtml(proposal) {
+  const canonicalUrl = `${APP_URL}/app/governance/${proposal.id}`;
+  const name = proposal.title || 'Proposal';
+  const author = proposal.author_username
+    ? `@${proposal.author_username}`
+    : `${String(proposal.author_wallet_address || '').slice(0, 6)}...${String(proposal.author_wallet_address || '').slice(-4)}`;
+  const status = String(proposal.status || 'open').replace(/_/g, ' ');
+  const votes = Number(proposal.vote_count) || 0;
+  const description = truncate(
+    proposal.description || `${name} — a governance proposal on DeHub, ${status}, with ${votes} votes.`,
+    200,
+  );
+  return entityHtml({
+    canonicalUrl,
+    title: `${name} — DeHub Governance`,
+    description,
+    image: shareImage('governance'),
+    ogType: 'article',
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/governance" style="color:#9f9">Governance</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><strong>${escHtml(status)}</strong> · ${votes} votes · ${Number(proposal.comment_count) || 0} comments · proposed by ${escHtml(author)}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'DiscussionForumPosting',
+      headline: name,
+      text: description,
+      url: canonicalUrl,
+      datePublished: proposal.created_at,
+      ...(proposal.updated_at ? { dateModified: proposal.updated_at } : {}),
+      author: { '@type': 'Person', name: author },
+      commentCount: Number(proposal.comment_count) || 0,
+      interactionStatistic: {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/LikeAction',
+        userInteractionCount: votes,
+      },
+    },
+  });
+}
+
+/**
  * A single request or bug report on the community board, /features?feature=<id>
  * (also reachable as /app/features?...). FeaturesPage never mints a per-request
  * URL of its own — `?feature=<id>` is read purely client-side to scrollIntoView
@@ -1827,6 +1873,17 @@ function shouldServeSSR(pathname) {
   // a shared listing unfurled as the SPA shell, i.e. as the homepage.
   if (/^\/app\/stores\/[^/]+/.test(pathname)) return true;
   if (/^\/app\/events\/\d+/.test(pathname)) return true;
+  // A single governance proposal, rendered from PostgREST below.
+  if (/^\/app\/governance\/[0-9a-fA-F-]{8,}\/?$/.test(pathname)) return true;
+  // One film or series. The renderer for these has existed since /cinema
+  // shipped and had never run once: `cinema` is a reserved ROUTE_SEGMENT, so
+  // the profile fall-through rejected the path and the SPA shell went out
+  // before the branch was reached.
+  if (/^\/cinema\/(?:film|series)\/\d+\/?$/.test(pathname)) return true;
+  // /app/video/<tokenId> is a post — SinglePostPage renders it, and
+  // parseDehubLink reads it as one — so it needs the post treatment. It is
+  // normalised onto /app/post/<tokenId> before the proxy.
+  if (/^\/app\/video\/\d+\/?$/.test(pathname)) return true;
   // Stage invite links, both shapes. Needed here and not only at the renderer
   // below: `stage` and `stages` are both reserved ROUTE_SEGMENTS, so the
   // profile fall-through at the foot of this function rejects them, and the
@@ -2925,6 +2982,26 @@ async function handleRequest(request, env) {
     }));
   }
 
+  const proposalMatch = cleanPath.match(/^\/app\/governance\/([0-9a-fA-F-]{8,})$/);
+  if (proposalMatch) {
+    const proposal = await supabaseRow(
+      `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
+    );
+    if (proposal) {
+      return guard(new Response(buildProposalHtml(proposal), { status: 200, headers: blogHeaders }));
+    }
+    // Row missing or Supabase unreachable — indistinguishable from here, so
+    // the generic stub rather than a 404, same as stores and events.
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    }));
+  }
+
   const eventMatch = cleanPath.match(/^\/app\/events\/(\d+)$/);
   if (eventMatch) {
     const event = await supabaseRow(
@@ -3015,6 +3092,11 @@ async function handleRequest(request, env) {
   const newPostSlug = pathname.match(/^\/newpost\/(\d+)\/?$/);
   const shortPostPath = pathname.match(/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/);
   const barePostPath = pathname.match(/^\/post\/(\d+)\/?$/);
+  const videoPath = pathname.match(/^\/app\/video\/(\d+)\/?$/);
+  // The bare /communities/<slug> twin has the same problem one level up: the
+  // fn's own system-route list has no `communities` entry, so it read the
+  // segment as a username, missed, and 404'd every share of that shape.
+  const bareCommunity = pathname.match(/^\/communities\/([^/]+)\/?$/);
   if (newPostSlug) {
     const tokenId = await resolveNewPostTokenId(newPostSlug[1]);
     // Unresolvable slug: leave the path alone so the fn's miss lands on the
@@ -3024,6 +3106,10 @@ async function handleRequest(request, env) {
     ssrPath = `/app/post/${shortPostPath[1]}`;
   } else if (barePostPath) {
     ssrPath = `/app/post/${barePostPath[1]}`;
+  } else if (videoPath) {
+    ssrPath = `/app/post/${videoPath[1]}`;
+  } else if (bareCommunity && bareCommunity[1] !== 'join') {
+    ssrPath = `/app/communities/${bareCommunity[1]}`;
   }
 
   const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(ssrPath)}&original_url=${encodeURIComponent(request.url)}`;
