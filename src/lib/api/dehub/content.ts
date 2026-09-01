@@ -71,6 +71,14 @@ export interface MintPostParams {
    * this is a request, not a guarantee.
    */
   shopLinks?: ShopLink[];
+  /**
+   * How many of the creator's own store listings are about to go on the board.
+   *
+   * A render hint for the feed cards, nothing more — the listings themselves
+   * are attached in Supabase after this call returns a tokenId, because there
+   * is nothing to attach to before then.
+   */
+  shopListingCount?: number;
 }
 
 export interface MintResponse {
@@ -182,6 +190,10 @@ export async function mintPost(
   // it" instruction on a post that has nothing to clear.
   if (params.shopLinks && params.shopLinks.length > 0) {
     formData.append('shopLinks', JSON.stringify(params.shopLinks));
+  }
+
+  if (params.shopListingCount) {
+    formData.append('shopListingCount', String(params.shopListingCount));
   }
 
   const streamInfo: StreamInfo = params.streamInfo || {
@@ -300,6 +312,12 @@ export interface EditPostParams {
    * the board already on the post but cannot save a longer one.
    */
   shopLinks?: ShopLink[];
+  /**
+   * Re-sync the store-listing count on the post. The attach/detach itself goes
+   * through the stream-products function; this is only the number the feed
+   * cards read, so 0 is meaningful — it says the listings came off.
+   */
+  shopListingCount?: number;
 }
 
 export interface EditPostResponse {

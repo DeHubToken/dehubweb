@@ -29,6 +29,7 @@ import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildStreamInfo } from '../lib/stream-info';
+import { attachShopListings } from '@/lib/attach-shop-listings';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
@@ -74,6 +75,8 @@ interface ActiveDraft {
   isMature?: boolean;
   /** The Shop board. Absent on drafts saved before it existed. */
   shopLinks?: ShopLink[];
+  /** Store listings picked for the board, by id. */
+  shopListingIds?: string[];
   selectedCategory: string;
   /** Absent on drafts saved while the switch was removed. */
   isSubscribersOnly?: boolean;
@@ -214,6 +217,7 @@ interface UsePostFormReturn {
     shouldMint: boolean;
     isMature: boolean;
     shopLinks: ShopLink[];
+    shopListingIds: string[];
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -228,6 +232,7 @@ interface UsePostFormReturn {
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
     setShopLinks: (links: ShopLink[]) => void;
+    setShopListingIds: (ids: string[]) => void;
     setTitleText: (text: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
@@ -376,6 +381,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   );
 
   /**
+   * The creator's own store listings picked for the board, by id.
+   *
+   * Held as ids rather than rows because they are attached in Supabase after
+   * the mint returns a tokenId — there is nothing to attach to before then, so
+   * the composer only carries the choice.
+   */
+  const [shopListingIds, setShopListingIds] = useState<string[]>(
+    Array.isArray(d?.shopListingIds) ? d.shopListingIds : [],
+  );
+
+  /**
    * Bounty locks DHB through the mint transaction itself, so a post that never
    * goes on-chain cannot carry one. Rather than let the two settings contradict
    * each other, bounty wins and the mint row goes read-only.
@@ -449,7 +465,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   useEffect(() => {
     const persistDraft = () => {
       const draft: ActiveDraft = {
-        text, titleText, showTitle, isMature, shopLinks,
+        text, titleText, showTitle, isMature, shopLinks, shopListingIds,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
@@ -457,7 +473,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Only save if there's meaningful content
       const hasContent = text.trim() || titleText.trim() ||
         selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly ||
-        shopLinks.length > 0;
+        shopLinks.length > 0 || shopListingIds.length > 0;
       if (hasContent) {
         saveActiveDraft(draft);
       } else {
@@ -470,7 +486,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // clear the timer here, never persist, or the debounce is defeated. The
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
-  }, [text, titleText, showTitle, isMature, shopLinks,
+  }, [text, titleText, showTitle, isMature, shopLinks, shopListingIds,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
@@ -1017,10 +1033,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as PostChainId);
     setTitleText('');
-    // Cleared per post, deliberately. Links are usually specific to what was
-    // just posted, and a board that quietly carries over is one that ends up
-    // on content it has nothing to do with.
+    // Cleared per post, deliberately. A board is usually specific to what was
+    // just posted, and one that quietly carries over ends up on content it has
+    // nothing to do with.
     setShopLinks([]);
+    setShopListingIds([]);
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
       setSelectedCategory('');
@@ -1565,6 +1582,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           // Sent with the mint rather than PATCHed after it, so a live post is
           // already carrying its board when the stream comes up.
           shopLinks: shopLinks.length ? shopLinks : undefined,
+          // What we are ABOUT to attach. The attach itself needs the tokenId
+          // this call returns, so the count goes on the token now and the rows
+          // land a moment later — see the attach step below.
+          shopListingCount: shopListingIds.length || undefined,
           plans: subscriberPlanIds,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
@@ -1575,6 +1596,34 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       if (!mintResponse.createdTokenId) {
         console.error('[Mint] Missing token ID in API response');
         throw new Error('Invalid response from backend - missing token ID');
+      }
+
+      /**
+       * Put the picked store listings on the post, now that it has a tokenId.
+       *
+       * Not awaited into the failure path on purpose: the post is published by
+       * this point, and a Supabase hiccup must not throw a creator onto an
+       * error screen for something they can fix from the post's edit sheet.
+       * A partial result is reported rather than swallowed, so nobody is left
+       * wondering where their products went.
+       *
+       * Skipped for a `duplicate` — that post is the earlier send's, and its
+       * listings were attached then.
+       */
+      if (shopListingIds.length && !mintResponse.duplicate) {
+        // The account address, not `minterAddress` — on a Solana post that is
+        // a base58 mint wallet, while the token's `minter` and the identity
+        // stream-products checks against are both the EVM account.
+        void attachShopListings(mintResponse.createdTokenId, shopListingIds, user?.address || null)
+          .then(({ failed }) => {
+            if (failed > 0) {
+              toast.error(
+                failed === shopListingIds.length
+                  ? 'Your post is up, but its shop items could not be attached. Add them from Edit post.'
+                  : `Your post is up. ${failed} shop ${failed === 1 ? 'item' : 'items'} could not be attached — add them from Edit post.`,
+              );
+            }
+          });
       }
 
       // A repeat of a post this composer already published: the first attempt's
@@ -2101,6 +2150,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       shouldMint,
       isMature,
       shopLinks,
+      shopListingIds,
     },
     actions: {
       setText,
@@ -2152,6 +2202,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setShouldMint: handleSetShouldMint,
       setIsMature,
       setShopLinks,
+      setShopListingIds,
       setTitleText,
       insertEmoji,
       insertGif,
