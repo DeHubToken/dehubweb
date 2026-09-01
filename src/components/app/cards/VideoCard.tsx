@@ -1848,6 +1848,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     muted={isMuted}
                     seed={video.id}
                     decodeEnabled={nearViewport}
+                    durationHint={video.audioDuration || video.durationSeconds || 0}
                   />
                 </div>
               </div>
@@ -1981,8 +1982,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <TapReactionBurst postId={video.id} />
         )}
 
-        {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
-        {showControls && (
+        {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass.
+            Never for audio posts: speed, loop, PiP and fullscreen have nothing
+            to act on there, and the row appeared on hover over a visualizer
+            that already carries its own transport. */}
+        {showControls && !video.isAudio && (
           <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
 
             <button
@@ -2038,8 +2042,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             duration stays 0 until something calls play() — gating the whole bar
             on it left the one control that can start the clip unreachable from
             the feed, where a tap now reveals controls instead of opening the
-            post. The scrubber and timestamps still wait for real metadata. */}
-        {showControls && (
+            post. The scrubber and timestamps still wait for real metadata.
+            Audio posts are excluded: this bar is driven by the <video> element,
+            so over a visualizer it painted a black gradient and a second,
+            non-functional play button on top of the audio controls — the
+            "hovering brings up a play/pause button" complaint. */}
+        {showControls && !video.isAudio && (
           <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
 
             <div className="flex items-center gap-2">
