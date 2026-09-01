@@ -1,142 +1,150 @@
 /**
  * DeHub LiveChat Socket.IO client
- * 
- * Connects to root namespace with polling transport.
- * Uses non-prefixed event names (sendMessage, joinRoom, etc.)
- * with redundant payload fields for API compatibility.
+ *
+ * Connects to the `/livechat` namespace with polling transport, upgrading to
+ * websocket. Uses non-prefixed event names (sendMessage, joinRoom, …) with
+ * redundant payload fields for API compatibility.
+ *
+ * ── One connection per room, and why ──────────────────────────────────────
+ * The gateway keeps a SINGLE room per socket: `joinRoom` leaves whatever the
+ * connection was in before, and `sendMessage` posts to `socket.data.roomId`,
+ * ignoring any room named in the payload (deliberately — otherwise a client
+ * could post into a stream it is not watching).
+ *
+ * So a tab cannot be in two rooms on one connection. It has to be: the
+ * platform chat sits in the sidebar while a live stream's own chat is open on
+ * the page, and with a shared socket the last surface to join silently stole
+ * the room from the other — a line typed under a broadcast landed in the
+ * global chat, and platform traffic appeared under the stream. That is the
+ * "mixing up two chats" viewers were reporting.
+ *
+ * Each room therefore gets its own connection, keyed by room id. Listeners are
+ * registered per room too, so a live chat never sees the platform's messages.
  */
 
 import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 
-let socket: Socket | null = null;
+export const GLOBAL_ROOM = 'global';
+
+/** roomId → its own connection. */
+const sockets = new Map<string, Socket>();
 let currentToken: string | null = null;
 
-/** Get or create the livechat socket connection */
-export function getSocket(): Socket {
+const keyOf = (roomId?: string) => roomId || GLOBAL_ROOM;
+
+/** Get or create the connection that carries one room. */
+export function getSocket(roomId?: string): Socket {
+  const key = keyOf(roomId);
   const token = getAuthToken();
 
-  // Reconnect if token changed
-  if (socket && currentToken !== token) {
-    socket.disconnect();
-    socket = null;
-  }
-
-  if (!socket) {
-    socket = io(`${DEHUB_API_BASE}/livechat`, {
-      auth: token ? { token } : {},
-      query: token ? { token } : {},
-      transports: ['polling', 'websocket'],
-      upgrade: true,
-      forceNew: true,
-      autoConnect: true,
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: 20,
-      timeout: 20000,
-    });
-
+  // A token change re-authenticates every room, not just the one asked for.
+  if (currentToken !== token) {
+    for (const s of sockets.values()) s.disconnect();
+    sockets.clear();
     currentToken = token;
-
-    socket.on('connect', () => {
-      console.log('[LiveChat Socket] Connected:', socket?.id);
-      // Auto-join on connect
-      rejoinActiveRooms();
-    });
-
-    socket.on('disconnect', (reason) => {
-      console.log('[LiveChat Socket] Disconnected:', reason);
-    });
-
-    socket.on('connect_error', (err) => {
-      console.warn('[LiveChat Socket] Connection error:', err.message);
-    });
-
-    // Handle pong (both prefixed and non-prefixed)
-    const pongHandler = (data: any) => {
-      console.log('[LiveChat Socket] Pong:', data);
-      if (data?.connected) {
-        rejoinActiveRooms();
-      }
-    };
-    socket.on('pong', pongHandler);
-    socket.on('livechat:pong', pongHandler);
-
-    // Handle errors (both prefixed and non-prefixed)
-    const errorHandler = (data: any) => {
-      console.error('[LiveChat Socket] Error:', data);
-    };
-    socket.on('error', errorHandler);
-    socket.on('livechat:error', errorHandler);
   }
+
+  const existing = sockets.get(key);
+  if (existing) return existing;
+
+  const socket = io(`${DEHUB_API_BASE}/livechat`, {
+    auth: token ? { token } : {},
+    query: token ? { token } : {},
+    transports: ['polling', 'websocket'],
+    upgrade: true,
+    forceNew: true,
+    autoConnect: true,
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    reconnectionAttempts: 20,
+    timeout: 20000,
+  });
+
+  sockets.set(key, socket);
+
+  socket.on('connect', () => {
+    console.log('[LiveChat Socket] Connected:', key, socket.id);
+    // A reconnect drops the server-side room membership, so re-join. Only this
+    // connection's own room — it can hold no other.
+    if (roomRefCounts.get(key)) emitJoin(socket, key);
+  });
+
+  socket.on('disconnect', (reason) => {
+    console.log('[LiveChat Socket] Disconnected:', key, reason);
+  });
+
+  socket.on('connect_error', (err) => {
+    console.warn('[LiveChat Socket] Connection error:', key, err.message);
+  });
+
+  const pongHandler = (data: any) => {
+    if (data?.connected && roomRefCounts.get(key)) emitJoin(socket, key);
+  };
+  socket.on('pong', pongHandler);
+  socket.on('livechat:pong', pongHandler);
+
+  const errorHandler = (data: any) => {
+    console.error('[LiveChat Socket] Error:', key, data);
+  };
+  socket.on('error', errorHandler);
+  socket.on('livechat:error', errorHandler);
 
   return socket;
 }
 
+// Support both legacy and namespaced event names — the backend listens on both.
+function emitJoin(socket: Socket, key: string) {
+  socket.emit('joinRoom', { roomId: key });
+  socket.emit('livechat:joinRoom', { roomId: key });
+}
+
 /**
  * Reference-counted room membership.
- * Multiple components (e.g. SidebarChat + PublicChat) can subscribe to the same
- * room concurrently. We only emit `leaveRoom` when the last subscriber leaves,
- * so unmounting one chat surface doesn't kill realtime updates for the others.
+ *
+ * Several components can render the same room at once (SidebarChat and the
+ * public chat page both show `global`), and they share that room's connection,
+ * so the join/leave only fires for the first and last of them.
  */
 const roomRefCounts = new Map<string, number>();
 
-/**
- * Join a livechat room (ref-counted).
- *
- * The room id now rides in the payload. It always should have: this client has
- * passed one for years and the gateway discarded it, joining `global`
- * unconditionally — which is why a message typed under a live stream went to
- * the entire platform. Ids the backend does not recognise still resolve to
- * `global` there, so nothing that was working changes.
- */
+/** Join a livechat room (ref-counted). */
 export function joinRoom(roomId?: string) {
-  const key = roomId || 'global';
+  const key = keyOf(roomId);
   const next = (roomRefCounts.get(key) || 0) + 1;
   roomRefCounts.set(key, next);
   if (next === 1) {
-    const s = getSocket();
     console.log('[LiveChat Socket] Joining room', key);
-    // Support both legacy and namespaced event names – backend may listen on either.
-    s.emit('joinRoom', { roomId: key });
-    s.emit('livechat:joinRoom', { roomId: key });
+    emitJoin(getSocket(key), key);
   }
 }
 
-/** Leave the livechat room (ref-counted — only leaves when last subscriber unmounts) */
+/** Leave the room (ref-counted — only leaves when the last subscriber goes). */
 export function leaveRoom(roomId?: string) {
-  const key = roomId || 'global';
+  const key = keyOf(roomId);
   const current = roomRefCounts.get(key) || 0;
   const next = Math.max(0, current - 1);
   if (next === 0) {
     roomRefCounts.delete(key);
+    const socket = sockets.get(key);
     if (socket) {
       console.log('[LiveChat Socket] Leaving room', key);
       socket.emit('leaveRoom', { roomId: key });
+      // A stream's room is done with when its last viewer surface unmounts, and
+      // the tab may open a great many of them over a session. The platform room
+      // stays connected: it is opened and closed constantly from the sidebar.
+      if (key !== GLOBAL_ROOM) {
+        socket.disconnect();
+        sockets.delete(key);
+      }
     }
   } else {
     roomRefCounts.set(key, next);
   }
 }
 
-/**
- * Re-join whatever this tab is subscribed to.
- *
- * A reconnect used to emit a bare `joinRoom`, which now means the platform
- * room — so a dropped connection under a live stream would have silently moved
- * the viewer into global chat and started showing them platform traffic under
- * the broadcast.
- */
-function rejoinActiveRooms() {
-  const rooms = roomRefCounts.size > 0 ? Array.from(roomRefCounts.keys()) : ['global'];
-  for (const key of rooms) {
-    socket?.emit('joinRoom', { roomId: key });
-    socket?.emit('livechat:joinRoom', { roomId: key });
-  }
-}
-
-/** Send a livechat message */
+/** Send a message into one room. */
 export function emitSendMessage(payload: {
   roomId?: string;
   content: string;
@@ -147,14 +155,11 @@ export function emitSendMessage(payload: {
   replyTo?: string;
   mentions?: Array<{ address: string; username?: string }>;
 }) {
-  const s = getSocket();
+  const roomId = keyOf(payload.roomId);
+  const s = getSocket(roomId);
 
-  // DeHub livechat history API returns `roomId: "global"`.
-  // Some backend paths require an explicit room identifier in the socket payload
-  // to persist the message (otherwise UI-only optimistic messages "disappear" on refresh).
-  const roomId = payload.roomId || 'global';
-
-  // Redundant fields for API compatibility
+  // Redundant fields for API compatibility. The server posts to the room this
+  // connection joined and ignores these, but older builds read them.
   const sendPayload: Record<string, unknown> = {
     roomId,
     room_id: roomId,
@@ -177,132 +182,100 @@ export function emitSendMessage(payload: {
   }
 
   console.log('[LiveChat Socket] Sending message:', sendPayload);
-  // Emit on both generic and namespaced channels to match mobile / backend expectations.
   s.emit('sendMessage', sendPayload);
   s.emit('livechat:sendMessage', sendPayload);
 }
 
-/** Subscribe to new messages. Returns unsubscribe fn. */
-export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
-  const s = getSocket();
-  const handler = (data: unknown) => cb(data);
-  // Listen on both prefixed and non-prefixed
-  s.on('newMessage', handler);
-  s.on('livechat:newMessage', handler);
-  return () => {
-    s.off('newMessage', handler);
-    s.off('livechat:newMessage', handler);
-  };
+/** Subscribe to one room's events on both the prefixed and bare event names. */
+function subscribe(roomId: string | undefined, events: string[], cb: (...args: any[]) => void): () => void {
+  const s = getSocket(keyOf(roomId));
+  for (const e of events) s.on(e, cb);
+  return () => { for (const e of events) s.off(e, cb); };
 }
 
-/** Subscribe to room joined event (initial data). Returns unsubscribe fn. */
-export function onRoomJoined(cb: (data: {
+/** Subscribe to new messages in a room. Returns unsubscribe fn. */
+export function onLiveChatMessage(roomId: string | undefined, cb: (msg: unknown) => void): () => void {
+  return subscribe(roomId, ['newMessage', 'livechat:newMessage'], (data: unknown) => cb(data));
+}
+
+/** Subscribe to the room-joined event (initial data). Returns unsubscribe fn. */
+export function onRoomJoined(roomId: string | undefined, cb: (data: {
   room: unknown;
   messages: unknown[];
   yourUser: unknown;
   isBanned: boolean;
   canSendMessages: boolean;
 }) => void): () => void {
-  const s = getSocket();
-  // Listen on both prefixed and non-prefixed
-  s.on('roomJoined', cb);
-  s.on('livechat:roomJoined', cb);
-  return () => {
-    s.off('roomJoined', cb);
-    s.off('livechat:roomJoined', cb);
-  };
+  return subscribe(roomId, ['roomJoined', 'livechat:roomJoined'], cb);
 }
 
 /** Subscribe to message deleted events */
-export function onMessageDeleted(cb: (data: { messageId: string }) => void): () => void {
-  const s = getSocket();
-  s.on('messageDeleted', cb);
-  s.on('livechat:messageDeleted', cb);
-  return () => {
-    s.off('messageDeleted', cb);
-    s.off('livechat:messageDeleted', cb);
-  };
+export function onMessageDeleted(roomId: string | undefined, cb: (data: { messageId: string }) => void): () => void {
+  return subscribe(roomId, ['messageDeleted', 'livechat:messageDeleted'], cb);
 }
 
 /** Subscribe to reaction updates */
-export function onReactionUpdated(cb: (data: unknown) => void): () => void {
-  const s = getSocket();
-  s.on('reactionUpdated', cb);
-  s.on('livechat:reactionUpdated', cb);
-  return () => {
-    s.off('reactionUpdated', cb);
-    s.off('livechat:reactionUpdated', cb);
-  };
+export function onReactionUpdated(roomId: string | undefined, cb: (data: unknown) => void): () => void {
+  return subscribe(roomId, ['reactionUpdated', 'livechat:reactionUpdated'], cb);
 }
 
 /** Subscribe to ban/unban events */
-export function onUserBanned(cb: (data: { message: string }) => void): () => void {
-  const s = getSocket();
-  s.on('userBanned', cb);
-  s.on('livechat:userBanned', cb);
-  return () => {
-    s.off('userBanned', cb);
-    s.off('livechat:userBanned', cb);
-  };
+export function onUserBanned(roomId: string | undefined, cb: (data: { message: string }) => void): () => void {
+  return subscribe(roomId, ['userBanned', 'livechat:userBanned'], cb);
 }
 
-export function onUserUnbanned(cb: (data: { message: string }) => void): () => void {
-  const s = getSocket();
-  s.on('userUnbanned', cb);
-  s.on('livechat:userUnbanned', cb);
-  return () => {
-    s.off('userUnbanned', cb);
-    s.off('livechat:userUnbanned', cb);
-  };
+export function onUserUnbanned(roomId: string | undefined, cb: (data: { message: string }) => void): () => void {
+  return subscribe(roomId, ['userUnbanned', 'livechat:userUnbanned'], cb);
 }
 
 /** Add/remove reactions — backend may require roomId and namespaced events */
 export function emitAddReaction(roomId: string, messageId: string, emoji: string) {
-  const s = getSocket();
-  const payload = { roomId: roomId || 'global', room_id: roomId || 'global', messageId, emoji };
-  // eslint-disable-next-line no-console
+  const key = keyOf(roomId);
+  const s = getSocket(key);
+  const payload = { roomId: key, room_id: key, messageId, emoji };
   console.log('[LiveChat Socket] Emitting addReaction', payload);
   s.emit('addReaction', payload);
   s.emit('livechat:addReaction', payload);
 }
 
 export function emitRemoveReaction(roomId: string, messageId: string, emoji: string) {
-  const s = getSocket();
-  const payload = { roomId: roomId || 'global', room_id: roomId || 'global', messageId, emoji };
+  const key = keyOf(roomId);
+  const s = getSocket(key);
+  const payload = { roomId: key, room_id: key, messageId, emoji };
   s.emit('removeReaction', payload);
   s.emit('livechat:removeReaction', payload);
 }
 
 /** Typing indicator */
-export function emitTyping(isTyping: boolean) {
-  const s = getSocket();
-  s.emit('typing', { isTyping });
+export function emitTyping(roomId: string | undefined, isTyping: boolean) {
+  getSocket(keyOf(roomId)).emit('typing', { isTyping });
 }
 
 /** Ping keep-alive */
-export function emitPing() {
-  const s = getSocket();
-  s.emit('ping');
+export function emitPing(roomId?: string) {
+  getSocket(keyOf(roomId)).emit('ping');
 }
 
-/** Subscribe to all socket events for debugging. Returns unsubscribe fn. */
-export function debugSocketEvents(): () => void {
-  const s = getSocket();
+/** Subscribe to all of one room's socket events for debugging. */
+export function debugSocketEvents(roomId?: string): () => void {
+  const key = keyOf(roomId);
+  const s = getSocket(key);
   const handler = (eventName: string, ...args: unknown[]) => {
-    console.log(`[LiveChat DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
+    console.log(`[LiveChat DEBUG ${key}] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
   };
   s.onAny(handler);
   // Pass the specific handler to offAny so we don't strip other listeners.
   return () => { s.offAny(handler); };
 }
 
-/** Disconnect and clear the singleton */
+/** Disconnect every room's connection. */
 export function disconnectSocket() {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-    console.log('[LiveChat Socket] Disconnected and cleared');
+  for (const [key, s] of sockets) {
+    s.disconnect();
+    console.log('[LiveChat Socket] Disconnected and cleared', key);
   }
+  sockets.clear();
+  roomRefCounts.clear();
   currentToken = null;
 }
 

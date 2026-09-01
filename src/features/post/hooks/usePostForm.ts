@@ -28,7 +28,6 @@ import { confirmEvmMint, getSolanaStatus } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
-import { useStage, openStageModal } from '@/contexts/StageContext';
 import { buildStreamInfo } from '../lib/stream-info';
 import { attachShopListings } from '@/lib/attach-shop-listings';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData, LiveStreamHandoff } from '../types';
@@ -263,8 +262,6 @@ export function usePostForm(
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
-  // Opening a stage is the composer's job now — there is no second create form.
-  const { createSpace } = useStage();
   // The creator's own plans are what a subscriber-gated post is gated on.
   const { planIds: myPlanIds } = useCreatorPlansLite(user?.address);
 
@@ -1231,7 +1228,11 @@ export function usePostForm(
           }
         }
 
-        const space = await createSpace(stageTitle, stageDescription || undefined, coverImageUrl);
+        // Imported on use, never statically: the composer is measured against
+        // the entry bundle, and a static edge into the stage stack puts Agora
+        // and the whole room on the boot path.
+        const { createStageNow, openStageModal } = await import('@/contexts/StageContext');
+        const space = await createStageNow(stageTitle, stageDescription || undefined, coverImageUrl);
         if (!space) return;
 
         resetForm();
@@ -2214,7 +2215,7 @@ export function usePostForm(
   }, [
     text, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
-    isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate, createSpace,
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
     refreshSession, openLoginModal, requestWalletUnlock,

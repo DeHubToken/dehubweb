@@ -474,14 +474,14 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
 /**
  * Live post wrapper: merges Supabase live status when api.dehub.io /start fails
  */
-function LivePostWithStatus({ liveData, post }: { liveData: LiveStream; post: DeHubNFT }) {
+function LivePostWithStatus({ liveData, post, chatSlot }: { liveData: LiveStream; post: DeHubNFT; chatSlot?: React.ReactNode }) {
   const tokenId = String(post.tokenId ?? (post as any).tokenId ?? liveData.id);
   const { data: isLiveFromSupabase } = useStreamLiveStatus(tokenId);
   const mergedStream: LiveStream = {
     ...liveData,
     isLive: liveData.isLive || !!isLiveFromSupabase,
   };
-  return <LiveStreamCard stream={mergedStream} />;
+  return <LiveStreamCard stream={mergedStream} chatSlot={chatSlot} />;
 }
 
 /**
@@ -995,7 +995,25 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
       case 'live': {
         if (!liveData) return <NotFoundState />;
         return (
-          <LivePostWithStatus liveData={liveData} post={post} />
+          <LivePostWithStatus
+            liveData={liveData}
+            post={post}
+            chatSlot={
+              id ? (
+                <Suspense fallback={null}>
+                  {/* streamId is the ObjectId the live routes take; it resolves
+                      the audience figure in the chat header, which without it
+                      used to fall back to the platform-wide chat online count. */}
+                  <LivePostChat
+                    tokenId={id}
+                    streamId={(post as any)?.stream?._id || (post as any)?.stream?.streamId || undefined}
+                    isOffline={!('isLive' in post ? (post as any).isLive : true)}
+                    isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
+                  />
+                </Suspense>
+              ) : undefined
+            }
+          />
         );
       }
       default:
@@ -1234,19 +1252,10 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
               ? <StreamShopManager tokenId={id} />
               : <StreamShopRail tokenId={id} />
           )}
-          {isLivePost && id && post && (
-            <Suspense fallback={null}>
-              {/* streamId is the ObjectId the live routes take; it resolves the
-                  audience figure in the chat header, which without it used to
-                  fall back to the platform-wide chat online count. */}
-              <LivePostChat
-                tokenId={id}
-                streamId={(post as any)?.stream?._id || (post as any)?.stream?.streamId || undefined}
-                isOffline={!('isLive' in post ? (post as any).isLive : true)}
-                isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
-              />
-            </Suspense>
-          )}
+          {/* The chat is no longer a panel down here. It hangs off the message
+              button in the stream's own action bar (see `chatSlot` above), so a
+              broadcast has one conversation in one place instead of a chat
+              slab under the player that read as the platform's. */}
           {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
           {showRelated && isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
           {showRelated && !isImagePost && !isVideoPost && !isAudioPost && !isLivePost && id && <RelatedPostsFeed currentPostId={id} />}

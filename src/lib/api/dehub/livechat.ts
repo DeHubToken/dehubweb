@@ -226,7 +226,7 @@ export async function sendLiveChatMessage(
   imageUrl?: string
 ): Promise<LiveChatMessage> {
   const { emitSendMessage, getSocket } = await import('./socket');
-  const socket = getSocket();
+  const socket = getSocket(roomId);
   if (!socket.connected) {
     await new Promise<void>((resolve, reject) => {
       const timeout = setTimeout(() => reject(new Error('Socket not connected')), 5000);
