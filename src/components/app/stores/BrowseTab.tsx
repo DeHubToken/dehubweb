@@ -5,6 +5,7 @@
  */
 
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,29 +18,30 @@ import { ListingDetailDrawer } from './ListingDetailDrawer';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const CATEGORIES = [
-  { value: 'all', label: 'All' },
-  { value: 'digital', label: 'Digital' },
-  { value: 'merch', label: 'Merch' },
-  { value: 'art', label: 'Art' },
-  { value: 'service', label: 'Services' },
-  { value: 'other', label: 'Other' },
+  { value: 'all', labelKey: 'stores.catAll' },
+  { value: 'digital', labelKey: 'stores.catDigital' },
+  { value: 'merch', labelKey: 'stores.catMerch' },
+  { value: 'art', labelKey: 'stores.catArt' },
+  { value: 'service', labelKey: 'stores.catServices' },
+  { value: 'other', labelKey: 'stores.catOther' },
 ];
 
 const PRICE_PRESETS = [
-  { label: 'Under $10', min: 0, max: 10 },
-  { label: '$10 – $50', min: 10, max: 50 },
-  { label: '$50 – $100', min: 50, max: 100 },
-  { label: '$100 – $500', min: 100, max: 500 },
-  { label: '$500+', min: 500, max: Infinity },
+  { labelKey: 'stores.priceUnder10', min: 0, max: 10 },
+  { labelKey: 'stores.price10to50', min: 10, max: 50 },
+  { labelKey: 'stores.price50to100', min: 50, max: 100 },
+  { labelKey: 'stores.price100to500', min: 100, max: 500 },
+  { labelKey: 'stores.price500plus', min: 500, max: Infinity },
 ];
 
 const SORT_OPTIONS = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'price_asc', label: 'Price: Low → High' },
-  { value: 'price_desc', label: 'Price: High → Low' },
+  { value: 'newest', labelKey: 'stores.sortNewest' },
+  { value: 'price_asc', labelKey: 'stores.sortPriceAsc' },
+  { value: 'price_desc', labelKey: 'stores.sortPriceDesc' },
 ];
 
 export function BrowseTab() {
+  const { t } = useTranslation();
   const [category, setCategory] = useState('all');
   const [sort, setSort] = useState('newest');
   const [search, setSearch] = useState('');
@@ -90,7 +92,7 @@ export function BrowseTab() {
         <Input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search listings..."
+          placeholder={t('stores.searchListings')}
           className="pl-9 bg-black/60 backdrop-blur-2xl border-white/10 rounded-xl text-white placeholder:text-zinc-500"
         />
       </div>
@@ -109,7 +111,7 @@ export function BrowseTab() {
             style={{ height: '32px', width: 'auto' }}
           >
             <span className="text-white text-xs font-medium px-3 whitespace-nowrap">
-              {c.label}
+              {t(c.labelKey)}
             </span>
           </LiquidGlassBubble>
         ))}
@@ -139,7 +141,7 @@ export function BrowseTab() {
           <PopoverContent className="w-72 bg-black/80 backdrop-blur-2xl border-white/10 p-4 space-y-4" align="end">
             {/* Sort */}
             <div className="space-y-2">
-              <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">Sort By</p>
+              <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">{t('stores.sortBy')}</p>
               <div className="flex flex-wrap gap-1.5">
                 {SORT_OPTIONS.map(o => (
                   <button
@@ -151,7 +153,7 @@ export function BrowseTab() {
                         : 'bg-white/5 text-muted-foreground hover:bg-white/10'
                     }`}
                   >
-                    {o.label}
+                    {t(o.labelKey)}
                   </button>
                 ))}
               </div>
@@ -159,11 +161,11 @@ export function BrowseTab() {
 
             {/* Price range */}
             <div className="space-y-2">
-              <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">Price Range (USD)</p>
+              <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">{t('stores.priceRange')}</p>
               <div className="flex flex-wrap gap-1.5">
                 {PRICE_PRESETS.map(p => (
                   <button
-                    key={p.label}
+                    key={p.labelKey}
                     onClick={() => applyPreset(p)}
                     className={`px-2 py-1.5 rounded-lg text-[10px] font-medium transition-colors ${
                       minPrice === String(p.min) && (p.max === Infinity ? maxPrice === '' : maxPrice === String(p.max))
@@ -171,7 +173,7 @@ export function BrowseTab() {
                         : 'bg-white/5 text-muted-foreground hover:bg-white/10'
                     }`}
                   >
-                    {p.label}
+                    {t(p.labelKey)}
                   </button>
                 ))}
               </div>
@@ -179,7 +181,7 @@ export function BrowseTab() {
               {/* Custom inputs */}
               <div className="flex items-center gap-2">
                 <div className="flex-1">
-                  <Label className="text-[10px] text-zinc-400">Min</Label>
+                  <Label className="text-[10px] text-zinc-400">{t('stores.min')}</Label>
                   <Input
                     type="number"
                     placeholder="0"
@@ -190,10 +192,10 @@ export function BrowseTab() {
                 </div>
                 <span className="text-zinc-500 mt-4">–</span>
                 <div className="flex-1">
-                  <Label className="text-[10px] text-zinc-400">Max</Label>
+                  <Label className="text-[10px] text-zinc-400">{t('stores.max')}</Label>
                   <Input
                     type="number"
-                    placeholder="Any"
+                    placeholder={t('stores.anyPlaceholder')}
                     value={maxPrice}
                     onChange={e => setMaxPrice(e.target.value)}
                     className="h-8 text-xs bg-white/5 border-white/10"
@@ -205,10 +207,10 @@ export function BrowseTab() {
             {/* Actions */}
             <div className="flex gap-2 pt-1">
               <Button size="sm" variant="ghost" onClick={clearAll} className="flex-1 text-xs h-7 text-muted-foreground">
-                Reset
+                {t('stores.reset')}
               </Button>
               <Button size="sm" onClick={() => setFilterOpen(false)} className="flex-1 text-xs h-7">
-                Done
+                {t('stores.done')}
               </Button>
             </div>
           </PopoverContent>
@@ -223,7 +225,7 @@ export function BrowseTab() {
               onClick={() => setSort('newest')}
               className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 text-white"
             >
-              {SORT_OPTIONS.find(o => o.value === sort)?.label}
+              {t(SORT_OPTIONS.find(o => o.value === sort)?.labelKey ?? 'stores.sortNewest')}
               <X className="w-3 h-3" />
             </button>
           )}
@@ -237,7 +239,7 @@ export function BrowseTab() {
             </button>
           )}
           <button onClick={clearAll} className="text-[11px] text-muted-foreground hover:text-white transition-colors">
-            Clear all
+            {t('stores.clearAll')}
           </button>
         </div>
       )}
@@ -258,7 +260,7 @@ export function BrowseTab() {
       ) : filteredListings.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground text-sm">
           <ThemedIcon icon="stores" alt="" className="w-14 h-14 mx-auto mb-3 object-contain opacity-70" />
-          {hasPriceFilter ? 'No listings in this price range.' : 'No listings found. Be the first to sell something!'}
+          {hasPriceFilter ? t('stores.emptyPriceRange') : t('stores.emptyNoListings')}
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">

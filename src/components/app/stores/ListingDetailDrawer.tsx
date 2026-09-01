@@ -14,6 +14,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
@@ -35,7 +36,23 @@ interface Props {
   onClose: () => void;
 }
 
+/** Condition and category are database slugs; the pills want the reader's language. */
+const CONDITION_KEYS: Record<string, string> = {
+  new: 'stores.condNew',
+  like_new: 'stores.condLikeNew',
+  used: 'stores.condUsed',
+};
+
+const CATEGORY_KEYS: Record<string, string> = {
+  digital: 'stores.catDigital',
+  merch: 'stores.catMerch',
+  art: 'stores.catArt',
+  service: 'stores.catService',
+  other: 'stores.catOther',
+};
+
 export function ListingDetailDrawer({ listing, open, onClose }: Props) {
+  const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   // No stream attached: same quote → pay → verify path the live rail uses.
   const { getQuote, buy } = useProductCheckout(null);
@@ -117,7 +134,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           <button
             type="button"
             onClick={() => setShareOpen(true)}
-            aria-label="Share item"
+            aria-label={t('stores.shareItem')}
             className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
           >
             <Share2 className="w-4 h-4" />
@@ -159,9 +176,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
               <p className="text-xs text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</p>
             </div>
             <div className="flex gap-2">
-              {listing.is_digital && <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">Digital</span>}
-              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{listing.condition}</span>
-              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{listing.category}</span>
+              {listing.is_digital && <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">{t('stores.digital')}</span>}
+              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{t(CONDITION_KEYS[listing.condition] ?? 'stores.condUsed')}</span>
+              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{t(CATEGORY_KEYS[listing.category] ?? 'stores.catOther')}</span>
             </div>
           </div>
 
@@ -173,7 +190,11 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Stock */}
           <div className="flex items-center gap-2 text-xs text-primary-foreground">
             <Package className="w-3.5 h-3.5" />
-            {listing.stock_quantity === null ? 'Unlimited stock' : listing.stock_quantity === 0 ? 'Sold out' : `${listing.stock_quantity} available`}
+            {listing.stock_quantity === null
+              ? t('stores.unlimitedStock')
+              : listing.stock_quantity === 0
+                ? t('stores.soldOutStatus')
+                : t('stores.availableCount', { count: listing.stock_quantity })}
           </div>
 
           {/* Shipping */}
@@ -196,7 +217,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                 {(listing.stores?.name || 'S')[0].toUpperCase()}
               </div>
             )}
-            {listing.stores?.name || 'Store'}
+            {listing.stores?.name || t('stores.store')}
           </button>
 
           {/* Reviews */}
@@ -222,9 +243,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
             <div className="flex gap-2.5 p-3 rounded-xl border border-amber-500/30 bg-amber-500/10">
               <PauseCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <div className="text-xs text-amber-200/90">
-                <p className="font-semibold text-amber-300">DHB transfers are paused</p>
+                <p className="font-semibold text-amber-300">{t('stores.transfersPaused')}</p>
                 <p className="mt-0.5">
-                  Buying is unavailable until trading resumes. Nothing has been charged.
+                  {t('stores.buyingUnavailable')}
                 </p>
               </div>
             </div>
@@ -237,8 +258,8 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                 <ShippingAddressForm onChange={setShippingAddress} />
               )}
               <div>
-                <Label>Note to seller (optional)</Label>
-                <Input value={notes} onChange={e => setNotes(e.target.value)} placeholder="Any special requests..." className="bg-white/5 border-white/10" />
+                <Label>{t('stores.noteToSeller')}</Label>
+                <Input value={notes} onChange={e => setNotes(e.target.value)} placeholder={t('stores.notePlaceholder')} className="bg-white/5 border-white/10" />
               </div>
             </>
           )}
@@ -248,7 +269,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
             {!isSelf && (
               <Button onClick={handleBuy} disabled={!canBuy} className="flex-1">
                 {buy.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
-                {soldOut ? 'Sold Out' : buy.isPending ? 'Confirming payment…' : 'Buy Now'}
+                {soldOut ? t('stores.soldOutButton') : buy.isPending ? t('stores.confirmingPayment') : t('stores.buyNow')}
               </Button>
             )}
             {/* '/app/messages' has no child route — the peer is handed over in
@@ -256,7 +277,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                 entry point does it. A path segment here 404s. */}
             <Button variant="outline" onClick={() => { onClose(); navigate('/app/messages', { state: { openDmWith: sellerAddress } }); }} className="flex-1">
               <MessageSquare className="w-4 h-4 mr-2" />
-              Message Seller
+              {t('stores.messageSeller')}
             </Button>
           </div>
 

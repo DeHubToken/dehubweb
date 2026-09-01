@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export function EditStoreDrawer({ store, open, onClose }: Props) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const updateStore = useUpdateStore();
   const [name, setName] = useState('');
@@ -55,14 +57,14 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
       if (type === 'avatar') setAvatarUrl(url);
       else setBannerUrl(url);
     } catch (err: any) {
-      toast.error(err.message || 'Upload failed');
+      toast.error(err.message || t('stores.uploadFailed'));
     } finally {
       setter(false);
     }
   };
 
   const handleSave = () => {
-    if (!name.trim()) { toast.error('Store name is required'); return; }
+    if (!name.trim()) { toast.error(t('stores.storeNameRequired')); return; }
     updateStore.mutate({
       id: store.id,
       name: name.trim(),
@@ -76,12 +78,12 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
       <DrawerContent column className={GLASS_STYLES.drawer}>
         <DrawerHeader>
-          <DrawerTitle>Edit Store</DrawerTitle>
+          <DrawerTitle>{t('stores.editStore')}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-6 space-y-5 max-h-[75vh] overflow-y-auto">
           {/* Banner */}
           <div>
-            <Label className="text-zinc-300 text-xs mb-1.5 block">Banner Image</Label>
+            <Label className="text-zinc-300 text-xs mb-1.5 block">{t('stores.bannerImage')}</Label>
             <div
               onClick={() => bannerInputRef.current?.click()}
               className="relative w-full aspect-[3/1] rounded-xl overflow-hidden bg-white/5 border border-white/10 cursor-pointer group"
@@ -101,7 +103,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
           {/* Avatar */}
           <div className="flex items-center gap-4">
             <div>
-              <Label className="text-zinc-300 text-xs mb-1.5 block">Avatar</Label>
+              <Label className="text-zinc-300 text-xs mb-1.5 block">{t('stores.avatar')}</Label>
               <div
                 onClick={() => avatarInputRef.current?.click()}
                 className="relative w-16 h-16 rounded-lg overflow-hidden bg-white/10 border border-white/10 cursor-pointer group"
@@ -120,25 +122,25 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
               <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleUpload(e.target.files[0], 'avatar')} />
             </div>
             <div className="flex-1">
-              <Label className="text-zinc-300 text-xs">Store Name *</Label>
+              <Label className="text-zinc-300 text-xs">{t('stores.storeNameLabel')}</Label>
               <Input value={name} onChange={e => setName(e.target.value)} className="bg-white/5 border-white/10 text-primary-foreground" />
             </div>
           </div>
 
           {/* Description */}
           <div>
-            <Label className="text-zinc-300 text-xs">Description</Label>
+            <Label className="text-zinc-300 text-xs">{t('stores.descriptionLabel')}</Label>
             <Textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
-              placeholder="What do you sell?"
+              placeholder={t('stores.sellPlaceholder')}
               className="bg-white/5 border-white/10 min-h-[80px] resize-none text-primary-foreground"
             />
           </div>
 
           {/* Save */}
           <LiquidGlassBubble2
-            label="Save Changes"
+            label={t('stores.saveChanges')}
             loading={updateStore.isPending}
             loadingLabel="Saving..."
             disabled={!name.trim() || uploadingAvatar || uploadingBanner}
