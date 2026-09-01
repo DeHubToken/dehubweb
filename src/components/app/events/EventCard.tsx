@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { MapPin, Users, Flame, Calendar, Lock } from 'lucide-react';
 import type { CommunityEvent } from '@/hooks/use-events';
@@ -11,6 +12,7 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, onClick }: EventCardProps) {
+  const { t } = useTranslation();
   const startDate = new Date(event.starts_at);
   const isPast = startDate < new Date();
 
@@ -36,7 +38,7 @@ export function EventCard({ event, onClick }: EventCardProps) {
         {event.is_private && (
           <div className="absolute top-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-sm">
             <Lock className="w-2.5 h-2.5 text-zinc-300" />
-            <span className="text-[9px] font-medium text-zinc-300">Private</span>
+            <span className="text-[9px] font-medium text-zinc-300">{t('events.private')}</span>
           </div>
         )}
         <FriendsAtEvent eventId={event.id} mode="overlay" />
@@ -59,11 +61,11 @@ export function EventCard({ event, onClick }: EventCardProps) {
         <div className="flex items-center gap-3 text-xs text-zinc-500 pt-1">
           <span className="flex items-center gap-1">
             <Users className="w-3 h-3" />
-            {event.going_count} going
+            {t('events.goingCount', { count: event.going_count })}
           </span>
           <span className="flex items-center gap-1">
             <Flame className="w-3 h-3" />
-            {event.interested_count} interested
+            {t('events.interestedCount', { count: event.interested_count })}
           </span>
           {(event.gate_fee ?? 0) > 0 && (
             <span className="flex items-center gap-1 ml-auto text-amber-400/80">

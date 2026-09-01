@@ -120,20 +120,20 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[90vh]')}>
         <DrawerHeader>
-          <DrawerTitle className="text-white">Create Event</DrawerTitle>
+          <DrawerTitle className="text-white">{t('events.createEvent')}</DrawerTitle>
         </DrawerHeader>
 
         <div className="px-4 pb-6 space-y-4 overflow-y-auto">
           {/* Cover Image */}
           <div>
-            <Label className="text-zinc-400 text-xs">Cover Image</Label>
+            <Label className="text-zinc-400 text-xs">{t('events.coverImage')}</Label>
             <label className="mt-1 flex items-center justify-center h-32 rounded-xl border border-dashed border-white/10 cursor-pointer hover:bg-white/[0.03] transition-colors overflow-hidden">
               {coverPreview ? (
                 <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
               ) : (
                 <div className="flex flex-col items-center text-zinc-500">
                   <ImagePlus className="w-6 h-6 mb-1" />
-                  <span className="text-xs">Add cover photo</span>
+                  <span className="text-xs">{t('events.addCoverPhoto')}</span>
                 </div>
               )}
               <input type="file" accept="image/*" className="hidden" onChange={handleCoverChange} />
@@ -142,11 +142,11 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
 
           {/* Title */}
           <div>
-            <Label className="text-zinc-400 text-xs">Event Name *</Label>
+            <Label className="text-zinc-400 text-xs">{t('events.eventName')}</Label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Give your event a name"
+              placeholder={t('events.eventNamePlaceholder')}
               className="mt-1 bg-white/5 border-white/10 text-white"
               maxLength={120}
             />
@@ -155,7 +155,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
           {/* Start Date + Time */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-zinc-400 text-xs">Start Date *</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.startDate')}</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -166,7 +166,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {startDate ? format(startDate, 'MMM d, yyyy') : 'Pick date'}
+                    {startDate ? format(startDate, 'MMM d, yyyy') : t('events.pickDate')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className={cn('w-auto p-0', GLASS_STYLES.popover)} align="start">
@@ -181,7 +181,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
               </Popover>
             </div>
             <div>
-              <Label className="text-zinc-400 text-xs">Start Time</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.startTime')}</Label>
               <Input
                 type="time"
                 value={startTime}
@@ -194,7 +194,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
           {/* End Date + Time */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-zinc-400 text-xs">End Date</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.endDate')}</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -205,7 +205,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {endDate ? format(endDate, 'MMM d, yyyy') : 'Optional'}
+                    {endDate ? format(endDate, 'MMM d, yyyy') : t('events.optional')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className={cn('w-auto p-0', GLASS_STYLES.popover)} align="start">
@@ -220,7 +220,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
               </Popover>
             </div>
             <div>
-              <Label className="text-zinc-400 text-xs">End Time</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.endTime')}</Label>
               <Input
                 type="time"
                 value={endTime}
@@ -232,11 +232,11 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
 
           {/* Location */}
           <div>
-            <Label className="text-zinc-400 text-xs">Location</Label>
+            <Label className="text-zinc-400 text-xs">{t('events.location')}</Label>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Add a place or link"
+              placeholder={t('events.locationPlaceholder')}
               className="mt-1 bg-white/5 border-white/10 text-white"
               maxLength={200}
             />
@@ -244,11 +244,11 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
 
           {/* Description */}
           <div>
-            <Label className="text-zinc-400 text-xs">Description</Label>
+            <Label className="text-zinc-400 text-xs">{t('events.description')}</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Tell people about this event..."
+              placeholder={t('events.descriptionPlaceholder')}
               className="mt-1 bg-white/5 border-white/10 text-white min-h-[80px] resize-none"
               maxLength={2000}
             />
@@ -264,8 +264,8 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
                   <Globe className="w-4 h-4 text-zinc-400" />
                 )}
                 <div>
-                  <span className="text-sm font-medium text-white">Private event</span>
-                  <p className="text-xs text-zinc-500">Guests must request to attend</p>
+                  <span className="text-sm font-medium text-white">{t('events.privateEvent')}</span>
+                  <p className="text-xs text-zinc-500">{t('events.privateEventHint')}</p>
                 </div>
               </div>
               <Switch checked={isPrivate} onCheckedChange={setIsPrivate} />
@@ -277,7 +277,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-2">
                 <img src={dehubCoin} alt="Coins" className="w-5 h-5" />
-                <span className="text-sm font-medium text-white">Charge entry fee</span>
+                <span className="text-sm font-medium text-white">{t('events.chargeEntryFee')}</span>
               </div>
               <Switch checked={hasGateFee} onCheckedChange={setHasGateFee} />
             </label>
@@ -288,7 +288,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
                 step="1"
                 value={gateFee}
                 onChange={(e) => setGateFee(e.target.value)}
-                placeholder="Amount"
+                placeholder={t('events.amount')}
                 className="bg-white/5 border-white/10 text-white"
               />
             )}
@@ -300,7 +300,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
             className="w-full rounded-xl"
           >
             {(createEvent.isPending || uploading) && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            Create Event
+            {t('events.createEvent')}
           </Button>
         </div>
       </DrawerContent>

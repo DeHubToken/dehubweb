@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 /**
  * EditEventDrawer
  * ================
@@ -26,6 +27,7 @@ interface EditEventDrawerProps {
 }
 
 export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerProps) {
+  const { t } = useTranslation();
   const updateEvent = useUpdateEvent();
 
   const [title, setTitle] = useState(event.title);
@@ -87,17 +89,17 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[90vh]')}>
         <DrawerHeader>
-          <DrawerTitle className="text-white">Edit Event</DrawerTitle>
+          <DrawerTitle className="text-white">{t('events.editEvent')}</DrawerTitle>
         </DrawerHeader>
 
         <div className="px-4 pb-6 space-y-4 overflow-y-auto">
           {/* Title */}
           <div>
-            <Label className="text-zinc-400 text-xs">Event Name *</Label>
+            <Label className="text-zinc-400 text-xs">{t('events.eventName')}</Label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Give your event a name"
+              placeholder={t('events.eventNamePlaceholder')}
               className="mt-1 bg-white/5 border-white/10 text-white"
               maxLength={120}
             />
@@ -106,7 +108,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
           {/* Start Date + Time */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-zinc-400 text-xs">Start Date *</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.startDate')}</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -128,7 +130,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
               </Popover>
             </div>
             <div>
-              <Label className="text-zinc-400 text-xs">Start Time</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.startTime')}</Label>
               <Input
                 type="time"
                 value={startTime}
@@ -141,7 +143,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
           {/* End Date + Time */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-zinc-400 text-xs">End Date</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.endDate')}</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -152,7 +154,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {endDate ? format(endDate, 'MMM d, yyyy') : 'Optional'}
+                    {endDate ? format(endDate, 'MMM d, yyyy') : t('events.optional')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className={cn('w-auto p-0', GLASS_STYLES.popover)} align="start">
@@ -167,7 +169,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
               </Popover>
             </div>
             <div>
-              <Label className="text-zinc-400 text-xs">End Time</Label>
+              <Label className="text-zinc-400 text-xs">{t('events.endTime')}</Label>
               <Input
                 type="time"
                 value={endTime}
@@ -179,11 +181,11 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
 
           {/* Location */}
           <div>
-            <Label className="text-zinc-400 text-xs">Location</Label>
+            <Label className="text-zinc-400 text-xs">{t('events.location')}</Label>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Add a place or link"
+              placeholder={t('events.locationPlaceholder')}
               className="mt-1 bg-white/5 border-white/10 text-white"
               maxLength={200}
             />
@@ -191,11 +193,11 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
 
           {/* Description */}
           <div>
-            <Label className="text-zinc-400 text-xs">Description</Label>
+            <Label className="text-zinc-400 text-xs">{t('events.description')}</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Tell people about this event..."
+              placeholder={t('events.descriptionPlaceholder')}
               className="mt-1 bg-white/5 border-white/10 text-white min-h-[80px] resize-none"
               maxLength={2000}
             />
@@ -207,7 +209,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
               className="flex-1 rounded-xl border-white/10 text-zinc-300"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t('events.cancel')}
             </Button>
             <Button
               onClick={handleSubmit}
@@ -215,7 +217,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
               className="flex-1 rounded-xl"
             >
               {updateEvent.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Save Changes
+              {t('events.saveChanges')}
             </Button>
           </div>
         </div>

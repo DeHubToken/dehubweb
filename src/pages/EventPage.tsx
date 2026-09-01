@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,6 +9,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function EventPage() {
+  const { t } = useTranslation();
   const { eventNumber } = useParams<{ eventNumber: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -68,7 +70,7 @@ export default function EventPage() {
       {event && (
         <SEOHead
           title={`${event.title} — DeHub Events`}
-          description={(event.description || 'Community event on DeHub.').slice(0, 155)}
+          description={(event.description || t('events.defaultSeoDescription')).slice(0, 155)}
           url={`https://dehub.io/app/events/${event.event_number}`}
           type="article"
         />

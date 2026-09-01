@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useState, useCallback } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -89,6 +90,7 @@ interface EventDetailDrawerProps {
 }
 
 export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDrawerProps) {
+  const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { data: myRsvp } = useEventRsvp(event?.id);
   const { data: allRsvps = [] } = useEventRsvps(event?.id);
@@ -138,11 +140,11 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const handleRsvp = (status: 'going' | 'interested') => {
     if (!isAuthenticated) { openLoginModal(); return; }
     if (isGated) {
-      toast.error('Pay the entry fee to join this event');
+      toast.error(t('events.payFeeToJoin'));
       return;
     }
     if (isPrivate && !isCreator && !isApproved) {
-      toast.error('You need to be approved to RSVP');
+      toast.error(t('events.needApproval'));
       return;
     }
     if (myRsvp?.status === status) {
@@ -159,7 +161,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
       toggleRsvp.mutate({ eventId: event.id, status: 'remove' });
     } else {
       toggleRsvp.mutate({ eventId: event.id, status: 'pending' });
-      toast.success('Request sent to the event creator');
+      toast.success(t('events.requestSent'));
     }
   };
 
@@ -209,7 +211,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {isPrivate && (
                 <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-sm">
                   <Lock className="w-3 h-3 text-zinc-300" />
-                  <span className="text-[10px] font-medium text-zinc-300">Private</span>
+                  <span className="text-[10px] font-medium text-zinc-300">{t('events.private')}</span>
                 </div>
               )}
             </div>
@@ -258,11 +260,11 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                     <div className="flex items-center gap-2">
                       <img src={dehubCoin} alt="Coins" className="w-5 h-5" />
                       <span className="text-sm font-medium text-white">
-                        {event.gate_fee} {event.gate_fee === 1 ? 'Coin' : 'Coins'} entry fee
+                        {t('events.entryFeeCoins', { count: event.gate_fee })}
                       </span>
                     </div>
                     {isCreator ? (
-                      <span className="text-xs text-zinc-500">You're the creator</span>
+                      <span className="text-xs text-zinc-500">{t('events.youAreCreator')}</span>
                     ) : hasPaid ? (
                       <span className="text-xs text-green-400 flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Paid
@@ -279,7 +281,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                         ) : (
                           <Lock className="w-3.5 h-3.5" />
                         )}
-                        Pay to join
+                        {t('events.payToJoin')}
                       </Button>
                     )}
                   </div>
@@ -293,9 +295,9 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                     <div className="flex items-center gap-2">
                       <Lock className="w-4 h-4 text-zinc-400" />
                       <div>
-                        <span className="text-sm font-medium text-white">Private event</span>
+                        <span className="text-sm font-medium text-white">{t('events.privateEvent')}</span>
                         <p className="text-xs text-zinc-500">
-                          {isApproved ? 'You\'re approved' : isPending ? 'Request pending' : isDenied ? 'Request denied' : 'Request access to attend'}
+                          {t(isApproved ? 'events.youreApproved' : isPending ? 'events.requestPending' : isDenied ? 'events.requestDenied' : 'events.requestAccessToAttend')}
                         </p>
                       </div>
                     </div>
@@ -312,7 +314,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                         className="rounded-xl gap-1.5 border-white/10 text-zinc-300"
                       >
                         <Clock className="w-3.5 h-3.5" />
-                        Pending
+                        {t('events.pending')}
                       </Button>
                     ) : isDenied ? (
                       <span className="text-xs text-red-400 flex items-center gap-1">
@@ -325,7 +327,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                         disabled={toggleRsvp.isPending}
                         className="rounded-xl gap-1.5"
                       >
-                        Request Access
+                        {t('events.requestAccess')}
                       </Button>
                     )}
                   </div>
@@ -355,7 +357,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {/* RSVP Buttons */}
               <div className="flex gap-2">
                 <LiquidGlassBubble2
-                  label={`Going (${goingList.length})`}
+                  label={t('events.goingWithCount', { count: goingList.length })}
                   icon={<CheckCircle2 className="w-4 h-4" />}
                   onClick={() => handleRsvp('going')}
                   disabled={toggleRsvp.isPending || !canInteract}
@@ -368,7 +370,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   )}
                 />
                 <LiquidGlassBubble2
-                  label={`Interested (${interestedList.length})`}
+                  label={t('events.interestedWithCount', { count: interestedList.length })}
                   icon={<Flame className="w-4 h-4" />}
                   onClick={() => handleRsvp('interested')}
                   disabled={toggleRsvp.isPending || !canInteract}
@@ -385,7 +387,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {/* Description */}
               {event.description && (
                 <div>
-                  <h3 className="text-sm font-medium text-white mb-1">Details</h3>
+                  <h3 className="text-sm font-medium text-white mb-1">{t('events.details')}</h3>
                   <p className="text-sm text-zinc-400 whitespace-pre-wrap">{event.description}</p>
                 </div>
               )}
@@ -394,7 +396,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {(goingList.length > 0 || interestedList.length > 0) && (
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-medium text-white">Guests</h3>
+                    <h3 className="text-sm font-medium text-white">{t('events.guests')}</h3>
                     <FriendsAtEvent eventId={event.id} mode="inline" />
                   </div>
                   <div className="flex gap-4 text-xs text-zinc-400">
@@ -403,14 +405,14 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                       className="flex items-center gap-1 hover:text-white transition-colors"
                     >
                       <Users className="w-3.5 h-3.5" />
-                      {goingList.length} going
+                      {t('events.goingCount', { count: goingList.length })}
                     </button>
                     <button
                       onClick={() => setAttendeesType('interested')}
                       className="flex items-center gap-1 hover:text-white transition-colors"
                     >
                       <Flame className="w-3.5 h-3.5" />
-                      {interestedList.length} interested
+                      {t('events.interestedCount', { count: interestedList.length })}
                     </button>
                   </div>
                 </div>
@@ -427,12 +429,12 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 <div className="text-center py-6 text-zinc-500 text-sm">
                   <Lock className="w-5 h-5 mx-auto mb-2 text-zinc-600" />
                   {isGated
-                    ? 'Pay the entry fee to access the chat and RSVP'
+                    ? t('events.payFeeForChat')
                     : isPending
-                    ? 'Your request is pending — the creator will review it'
+                    ? t('events.requestPendingReview')
                     : isDenied
-                    ? 'Your request was denied'
-                    : 'Request access to view the chat and RSVP'
+                    ? t('events.requestWasDenied')
+                    : t('events.requestAccessForChat')
                   }
                 </div>
       )}
@@ -458,7 +460,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                       className="text-zinc-400 hover:text-white hover:bg-white/5"
                     >
                       <Pencil className="w-4 h-4 mr-1" />
-                      Edit
+                      {t('events.edit')}
                     </Button>
                     <Button
                       variant="ghost"
@@ -468,7 +470,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                       className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
-                      Delete
+                      {t('events.delete')}
                     </Button>
                   </div>
                 )}
