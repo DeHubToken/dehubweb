@@ -2213,13 +2213,21 @@ export function usePostForm(
       setUploadProgress(0);
     }
   }, [
-    text, media, isSubscribersOnly, isPPV, ppvAmount,
+    // Everything the body reads. handlePost is only rebuilt when one of these
+    // changes, so anything left out is frozen at whatever it was when the last
+    // listed value moved — usually the creator's final keystroke. That is how a
+    // shop link added after the caption was typed reached the mint as
+    // `undefined`: the post went up with an empty board and nothing said so.
+    // Add the dependency when you read new state in here.
+    text, media, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
     refreshSession, openLoginModal, requestWalletUnlock,
-    effectiveShouldMint, mintFee, isMature
+    effectiveShouldMint, mintFee, isMature,
+    selectedCategory, shopLinks, shopListingIds, myPlanIds,
+    postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
   ]);
 
   return {
