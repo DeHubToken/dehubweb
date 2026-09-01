@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockTrade } from '@/hooks/use-launchpad-trades';
 import { toast } from 'sonner';
@@ -7,6 +8,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import type { LaunchpadToken } from '@/hooks/use-launchpad-tokens';
 
 export function TradePanel({ token }: { token: LaunchpadToken }) {
+  const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth() as { walletAddress?: string; openLoginModal: () => void };
   const [side, setSide] = useState<'buy' | 'sell'>('buy');
   const [amount, setAmount] = useState('');
@@ -16,14 +18,14 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
   async function submit() {
     if (!walletAddress) { openLoginModal(); return; }
     const n = Number(amount);
-    if (!(n > 0)) { toast.error('Enter an amount'); return; }
+    if (!(n > 0)) { toast.error(t('launchpad.enterAmount')); return; }
     setBusy(true);
     try {
       await mockTrade({ tokenId: token.id, side, amount: n, traderAddress: walletAddress });
       setAmount('');
-      toast.success(side === 'buy' ? `Bought ${token.symbol} (mock)` : `Sold ${token.symbol} (mock)`);
+      toast.success(t(side === 'buy' ? 'launchpad.boughtMock' : 'launchpad.soldMock', { symbol: token.symbol }));
     } catch (e) {
-      toast.error((e as Error)?.message ?? 'Trade failed');
+      toast.error((e as Error)?.message ?? t('launchpad.tradeFailed'));
     } finally { setBusy(false); }
   }
 
@@ -41,13 +43,13 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
                   : '[&>div]:!text-white/70 [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent'
               }`}
             >
-              <span className="text-sm font-semibold capitalize">{s}</span>
+              <span className="text-sm font-semibold">{t(s === 'buy' ? 'launchpad.sideBuy' : 'launchpad.sideSell')}</span>
             </LiquidGlassBubble>
           </button>
         ))}
       </div>
       <div>
-        <label className="text-[11px] uppercase text-white/50">{side === 'buy' ? 'Amount in DHB' : `Amount in ${token.symbol}`}</label>
+        <label className="text-[11px] uppercase text-white/50">{t('launchpad.amountIn', { symbol: side === 'buy' ? 'DHB' : token.symbol })}</label>
         <input value={amount} onChange={e => setAmount(e.target.value.replace(/[^0-9.]/g,''))}
           inputMode="decimal" placeholder="0.00"
           className="mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-white text-lg font-semibold focus:outline-none focus:border-white/30" />
@@ -66,15 +68,15 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
         ))}
       </div>
       <LiquidGlassBubble2
-        label={disabled ? 'Trading closed' : busy ? 'Submitting…' : side === 'buy' ? `Buy ${token.symbol}` : `Sell ${token.symbol}`}
+        label={disabled ? t('launchpad.tradingClosed') : busy ? t('launchpad.submitting') : t(side === 'buy' ? 'launchpad.buySymbol' : 'launchpad.sellSymbol', { symbol: token.symbol })}
         loading={busy}
-        loadingLabel="Submitting…"
+        loadingLabel={t('launchpad.submitting')}
         onClick={submit}
         disabled={disabled || busy}
         width="100%"
         height="48px"
       />
-      <p className="text-[10px] text-white/40 text-center">Mock trade — no on-chain transaction. Phase 1.</p>
+      <p className="text-[10px] text-white/40 text-center">{t('launchpad.mockTradeNote')}</p>
     </div>
   );
 }

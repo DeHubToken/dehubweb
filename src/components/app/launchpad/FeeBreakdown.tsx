@@ -1,20 +1,23 @@
+import { useTranslation } from 'react-i18next';
+
 export function FeeBreakdown() {
+  const { t } = useTranslation();
   const rows = [
-    { label: 'Burn DHB', pct: 40 },
-    { label: 'Stakers', pct: 30 },
-    { label: 'Creator', pct: 20 },
-    { label: 'Platform', pct: 10 },
+    { labelKey: 'launchpad.feeBurn', pct: 40 },
+    { labelKey: 'launchpad.feeStakers', pct: 30 },
+    { labelKey: 'launchpad.feeCreator', pct: 20 },
+    { labelKey: 'launchpad.feePlatform', pct: 10 },
   ];
   return (
     <div className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-white text-sm font-semibold">Fee split</h3>
-        <span className="text-white/50 text-xs">1% per trade</span>
+        <h3 className="text-white text-sm font-semibold">{t('launchpad.feeSplit')}</h3>
+        <span className="text-white/50 text-xs">{t('launchpad.feePerTrade')}</span>
       </div>
       <div className="space-y-2">
         {rows.map(r => (
-          <div key={r.label} className="flex items-center gap-3">
-            <span className="text-white/70 text-xs w-20">{r.label}</span>
+          <div key={r.labelKey} className="flex items-center gap-3">
+            <span className="text-white/70 text-xs w-20">{t(r.labelKey)}</span>
             <div className="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
               <div className="h-full bg-white/60" style={{ width: `${r.pct}%` }} />
             </div>
