@@ -53,6 +53,7 @@ import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
 import { DhbAmount } from '@/components/app/DhbAmount';
+import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { getLiveStream, updateStreamThumbnail } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
 import { createLogger } from '@/lib/logger';
@@ -357,6 +358,7 @@ export function GoLiveBroadcaster({
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
+  const [confirmEnd, setConfirmEnd] = useState(false);
   /*
    * What viewers are actually receiving.
    *
@@ -1424,6 +1426,7 @@ export function GoLiveBroadcaster({
   };
 
   const handleEnd = async () => {
+    setConfirmEnd(false);
     setIsEnding(true);
     await teardown();
     onEnd();
@@ -1802,7 +1805,7 @@ export function GoLiveBroadcaster({
           fill where the controls do not — ending a broadcast is the one action
           that should never be missed against a bright frame. */}
       <button
-        onClick={handleEnd}
+        onClick={() => setConfirmEnd(true)}
         disabled={isEnding}
         className={cn(
           'flex items-center justify-center gap-2 font-medium transition-colors disabled:opacity-60',
@@ -1818,6 +1821,12 @@ export function GoLiveBroadcaster({
         )}
         {isEnding ? 'Ending…' : fullBleed ? 'End' : 'End Stream'}
       </button>
+
+      <EndStreamConfirmDialog
+        open={confirmEnd}
+        onOpenChange={setConfirmEnd}
+        onConfirm={() => void handleEnd()}
+      />
     </div>
   );
 }

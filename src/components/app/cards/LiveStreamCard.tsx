@@ -74,6 +74,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
+import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import type { LiveStream } from '@/types/feed.types';
 
 const logger = createLogger('LiveStreamCard');
@@ -123,6 +124,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   );
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
+  const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [giftAmount, setGiftAmount] = useState('');
@@ -835,7 +837,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               {/* End stream - only for the stream creator while live */}
               {!streamEnded && isAuthenticated && isStreamOwner && (
                 <DropdownMenuItem
-                  onClick={handleEndStream}
+                  onSelect={(e) => {
+                    // Keep the menu's own close from unmounting the dialog it
+                    // opens — Radix closes the content on select by default.
+                    e.preventDefault();
+                    setConfirmEnd(true);
+                  }}
                   disabled={isEnding}
                   className="text-red-400 hover:bg-zinc-700 cursor-pointer gap-2"
                 >
@@ -1154,6 +1161,15 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         onOpenChange={setShowReportModal}
         tokenId={stream.id}
         contentType="video"
+      />
+
+      <EndStreamConfirmDialog
+        open={confirmEnd}
+        onOpenChange={setConfirmEnd}
+        onConfirm={() => {
+          setConfirmEnd(false);
+          void handleEndStream();
+        }}
       />
     </div>
   );
