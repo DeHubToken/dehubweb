@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Eye, Users, Coins, Clock } from 'lucide-react';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import type { WorkJob, WorkJobType } from '../types';
 import { bountyPath } from '../seo';
 
-const TYPE_LABEL: Record<string, string> = {
-  shill: 'Comment / Shill',
-  clipping: 'Clipping',
-  contract: 'Contract',
+const TYPE_LABEL_KEY: Record<string, string> = {
+  shill: 'work.typeShillShort',
+  clipping: 'work.typeClipping',
+  contract: 'work.typeContract',
 };
 
 const TYPE_ICON: Record<WorkJobType, ThemeIconKey> = {
@@ -17,6 +18,7 @@ const TYPE_ICON: Record<WorkJobType, ThemeIconKey> = {
 };
 
 export function JobCard({ job }: { job: WorkJob }) {
+  const { t } = useTranslation();
   const isBoosted = job.boost_expires_at && new Date(job.boost_expires_at) > new Date();
   return (
     <Link
@@ -26,12 +28,12 @@ export function JobCard({ job }: { job: WorkJob }) {
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 text-xs">
           <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/80 inline-flex items-center gap-1">
-            <ThemedIcon icon={TYPE_ICON[job.job_type] ?? 'bounties'} alt="" className="w-4 h-4 object-contain" /> {TYPE_LABEL[job.job_type]}
+            <ThemedIcon icon={TYPE_ICON[job.job_type] ?? 'bounties'} alt="" className="w-4 h-4 object-contain" /> {t(TYPE_LABEL_KEY[job.job_type] ?? 'work.typeContract')}
           </span>
           {job.platform && (
             <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>
           )}
-          {isBoosted && <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-200">Boosted</span>}
+          {isBoosted && <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-200">{t('work.boosted')}</span>}
         </div>
         <div className="text-right">
           <div className="text-lg font-semibold text-white tabular-nums">
@@ -39,7 +41,7 @@ export function JobCard({ job }: { job: WorkJob }) {
           </div>
           {job.job_type !== 'contract' && (
             <div className="text-[11px] text-white/50">
-              {job.price_per_unit} {job.currency}/{job.job_type === 'clipping' ? '1k views' : 'task'}
+              {job.price_per_unit} {job.currency}/{job.job_type === 'clipping' ? t('work.unitViews') : t('work.unitTask')}
             </div>
           )}
         </div>
@@ -49,8 +51,8 @@ export function JobCard({ job }: { job: WorkJob }) {
       <p className="text-sm text-white/60 line-clamp-2 mb-4">{job.description}</p>
 
       <div className="flex items-center gap-4 text-xs text-white/50">
-        <span className="inline-flex items-center gap-1"><Users className="w-3.5 h-3.5" />{job.application_count} apps</span>
-        <span className="inline-flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{job.submission_count} subs</span>
+        <span className="inline-flex items-center gap-1"><Users className="w-3.5 h-3.5" />{t('work.appsCount', { count: job.application_count })}</span>
+        <span className="inline-flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{t('work.subsCount', { count: job.submission_count })}</span>
         <span className="inline-flex items-center gap-1"><Coins className="w-3.5 h-3.5" />{job.units_approved}/{job.max_units}</span>
         {job.deadline && (
           <span className="inline-flex items-center gap-1 ml-auto"><Clock className="w-3.5 h-3.5" />

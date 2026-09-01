@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ShieldAlert, ExternalLink, Wallet } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { isWorkAdmin } from '@/constants/app.constants';
@@ -20,6 +21,7 @@ type DisputeRow = {
 };
 
 export default function WorkDisputesPage() {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data: disputes = [], isLoading } = useAdminDisputes();
   const resolve = useAdminResolveDispute();
@@ -35,10 +37,11 @@ export default function WorkDisputesPage() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 text-center">
         <ShieldAlert className="w-10 h-10 text-white/40 mx-auto mb-3" />
-        <h1 className="text-xl font-bold text-white mb-1">Admins only</h1>
+        <h1 className="text-xl font-bold text-white mb-1">{t('work.adminsOnly')}</h1>
         <p className="text-sm text-white/60">
-          This wallet isn't on the arbiter list. Add it to <code className="text-white/80">WORK_ADMIN_ARBITERS</code> in{' '}
-          <code className="text-white/80">src/constants/app.constants.ts</code> to arbitrate disputes.
+          {t('work.adminsOnlyBody')}{' '}
+          <code className="text-white/80">WORK_ADMIN_ARBITERS</code>{' '}
+          <code className="text-white/80">src/constants/app.constants.ts</code>
         </p>
       </div>
     );
@@ -46,17 +49,17 @@ export default function WorkDisputesPage() {
 
   return (
     <div data-work-surface className="max-w-4xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-white mb-1">Work â€” Open Disputes</h1>
+      <h1 className="text-2xl font-bold text-white mb-1">{t('work.disputesTitle')}</h1>
       <p className="text-sm text-white/60 mb-6">
         {escrowed
-          ? 'Split the escrowed funds between worker and poster. The on-chain call and the database state update happen together.'
-          : 'Record how each dispute was settled. No bounty is escrowed on-chain, so the split below is the written decision â€” tick â€œpay the worker nowâ€ to send their share from your own wallet as part of resolving.'}
+          ? t('work.disputesIntroEscrowed')
+          : t('work.disputesIntroLedger')}
       </p>
 
       {isLoading ? (
-        <div className="text-white/60 text-sm">Loadingâ€¦</div>
+        <div className="text-white/60 text-sm">{t('work.loading')}</div>
       ) : disputes.length === 0 ? (
-        <div className="text-white/60 text-sm">No open disputes ðŸŽ‰</div>
+        <div className="text-white/60 text-sm">{t('work.noDisputes')}</div>
       ) : (disputes as DisputeRow[]).map(d => {
         const j = d.job;
         const k = d.id;
@@ -71,18 +74,18 @@ export default function WorkDisputesPage() {
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="min-w-0">
                 <Link to={j ? bountyPath(j) : `/work/${d.job_id}`} className="text-lg font-semibold text-white hover:underline inline-flex items-center gap-1">
-                  {j?.title || 'Untitled'} <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                  {j?.title || t('work.untitled')} <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                 </Link>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="text-[11px] text-white/40">opened by</span>
+                  <span className="text-[11px] text-white/40">{t('work.openedBy')}</span>
                   <WorkUser address={d.opened_by_address} />
                   <span className="text-[11px] text-white/40">Â· {new Date(d.created_at).toLocaleString()}</span>
                 </div>
               </div>
               {j && (
                 <div className="text-right text-xs text-white/60 shrink-0">
-                  <div>{remaining.toLocaleString(undefined, { maximumFractionDigits: 4 })} {j.currency} unreleased</div>
-                  <div className="text-[11px] text-white/40">{escrowed ? `on-chain id: ${j.onchain_job_id ?? 'â€”'}` : 'not escrowed'}</div>
+                  <div>{t('work.unreleased', { amount: remaining.toLocaleString(undefined, { maximumFractionDigits: 4 }), currency: j.currency })}</div>
+                  <div className="text-[11px] text-white/40">{escrowed ? t('work.onchainId', { id: j.onchain_job_id ?? '—' }) : t('work.notEscrowed')}</div>
                 </div>
               )}
             </div>
@@ -98,22 +101,22 @@ export default function WorkDisputesPage() {
                 as 42 hex characters the arbiter has to eyeball. */}
             {v.workerAddr?.length === 42 && (
               <div className="flex items-center gap-2 mt-3 mb-1">
-                <span className="text-[11px] uppercase tracking-wide text-white/40">Paying</span>
+                <span className="text-[11px] uppercase tracking-wide text-white/40">{t('work.paying')}</span>
                 <WorkUser address={v.workerAddr.toLowerCase()} showAddress />
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-              <Field label="Worker address">
-                <input value={v.workerAddr} onChange={(e) => set({ workerAddr: e.target.value })} placeholder="0xâ€¦" className={inputCls} />
+              <Field label={t('work.workerAddress')}>
+                <input value={v.workerAddr} onChange={(e) => set({ workerAddr: e.target.value })} placeholder={t('work.addressPlaceholder')} className={inputCls} />
               </Field>
-              <Field label={`Worker amount (${j?.currency || ''})`}>
+              <Field label={t('work.workerAmount', { currency: j?.currency || '' })}>
                 <input type="number" min={0} step="0.0001" value={v.worker} onChange={(e) => set({ worker: Number(e.target.value) })} className={inputCls} />
               </Field>
-              <Field label={`Poster refund (${j?.currency || ''})`}>
+              <Field label={t('work.posterRefund', { currency: j?.currency || '' })}>
                 <input type="number" min={0} step="0.0001" value={v.poster} onChange={(e) => set({ poster: Number(e.target.value) })} className={inputCls} />
               </Field>
-              <Field label="Notes (optional)">
+              <Field label={t('work.notesOptional')}>
                 <input value={v.notes} onChange={(e) => set({ notes: e.target.value })} className={inputCls} />
               </Field>
             </div>
@@ -127,15 +130,15 @@ export default function WorkDisputesPage() {
                   className="mt-0.5 accent-emerald-400"
                 />
                 <span className="text-xs text-white/70">
-                  Send {v.worker.toLocaleString(undefined, { maximumFractionDigits: 4 })} {j?.currency} to the worker
-                  <span className="text-white/40"> â€” from your wallet, now, as part of resolving.</span>
+                  {t('work.sendToWorker', { amount: v.worker.toLocaleString(undefined, { maximumFractionDigits: 4 }), currency: j?.currency })}
+                  <span className="text-white/40">{t('work.fromYourWalletNow')}</span>
                 </span>
               </label>
             )}
 
             <div className="flex items-center justify-between gap-3 mt-4">
               <div className="text-[11px] text-white/40">
-                Total: {total.toLocaleString(undefined, { maximumFractionDigits: 4 })} / {remaining.toLocaleString(undefined, { maximumFractionDigits: 4 })} {j?.currency}
+                {t('work.disputeTotal', { total: total.toLocaleString(undefined, { maximumFractionDigits: 4 }), remaining: remaining.toLocaleString(undefined, { maximumFractionDigits: 4 }), currency: j?.currency })}
               </div>
               <button
                 disabled={!valid || resolve.isPending}
@@ -153,7 +156,7 @@ export default function WorkDisputesPage() {
                 className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40 inline-flex items-center gap-1.5"
               >
                 {v.pay && !escrowed && <Wallet className="w-3.5 h-3.5" />}
-                {v.pay && !escrowed ? 'Resolve & pay' : 'Resolve'}
+                {v.pay && !escrowed ? t('work.resolveAndPay') : t('work.resolve')}
               </button>
             </div>
           </div>
