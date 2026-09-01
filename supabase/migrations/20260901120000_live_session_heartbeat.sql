@@ -14,12 +14,14 @@
 ALTER TABLE public.live_stream_sessions
   ADD COLUMN IF NOT EXISTS heartbeat_at TIMESTAMPTZ NOT NULL DEFAULT now();
 
--- Existing rows predate the heartbeat. Seeding them from started_at means the
--- stale ones read as stale immediately rather than getting a fresh lease.
+-- Existing rows predate the heartbeat, and `DEFAULT now()` hands every one of
+-- them a fresh lease on the way in — which is the opposite of what is wanted,
+-- since these are precisely the rows that have been claiming to be live for
+-- months. Seed them from started_at so a stale row reads as stale immediately.
+-- Unconditional on purpose: the default guarantees heartbeat_at is NEWER than
+-- started_at here, so any condition comparing the two matches nothing.
 UPDATE public.live_stream_sessions
-   SET heartbeat_at = started_at
- WHERE heartbeat_at IS NULL
-    OR heartbeat_at < started_at;
+   SET heartbeat_at = started_at;
 
 -- The read path filters on this column on every post page load.
 CREATE INDEX IF NOT EXISTS idx_live_stream_sessions_heartbeat_at

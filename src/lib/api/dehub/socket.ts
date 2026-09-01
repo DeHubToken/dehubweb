@@ -42,7 +42,7 @@ export function getSocket(): Socket {
     socket.on('connect', () => {
       console.log('[LiveChat Socket] Connected:', socket?.id);
       // Auto-join on connect
-      socket?.emit('joinRoom');
+      rejoinActiveRooms();
     });
 
     socket.on('disconnect', (reason) => {
@@ -57,7 +57,7 @@ export function getSocket(): Socket {
     const pongHandler = (data: any) => {
       console.log('[LiveChat Socket] Pong:', data);
       if (data?.connected) {
-        socket?.emit('joinRoom');
+        rejoinActiveRooms();
       }
     };
     socket.on('pong', pongHandler);
@@ -82,7 +82,15 @@ export function getSocket(): Socket {
  */
 const roomRefCounts = new Map<string, number>();
 
-/** Join the global livechat room (ref-counted) */
+/**
+ * Join a livechat room (ref-counted).
+ *
+ * The room id now rides in the payload. It always should have: this client has
+ * passed one for years and the gateway discarded it, joining `global`
+ * unconditionally — which is why a message typed under a live stream went to
+ * the entire platform. Ids the backend does not recognise still resolve to
+ * `global` there, so nothing that was working changes.
+ */
 export function joinRoom(roomId?: string) {
   const key = roomId || 'global';
   const next = (roomRefCounts.get(key) || 0) + 1;
@@ -91,8 +99,8 @@ export function joinRoom(roomId?: string) {
     const s = getSocket();
     console.log('[LiveChat Socket] Joining room', key);
     // Support both legacy and namespaced event names – backend may listen on either.
-    s.emit('joinRoom');
-    s.emit('livechat:joinRoom');
+    s.emit('joinRoom', { roomId: key });
+    s.emit('livechat:joinRoom', { roomId: key });
   }
 }
 
@@ -105,10 +113,26 @@ export function leaveRoom(roomId?: string) {
     roomRefCounts.delete(key);
     if (socket) {
       console.log('[LiveChat Socket] Leaving room', key);
-      socket.emit('leaveRoom');
+      socket.emit('leaveRoom', { roomId: key });
     }
   } else {
     roomRefCounts.set(key, next);
+  }
+}
+
+/**
+ * Re-join whatever this tab is subscribed to.
+ *
+ * A reconnect used to emit a bare `joinRoom`, which now means the platform
+ * room — so a dropped connection under a live stream would have silently moved
+ * the viewer into global chat and started showing them platform traffic under
+ * the broadcast.
+ */
+function rejoinActiveRooms() {
+  const rooms = roomRefCounts.size > 0 ? Array.from(roomRefCounts.keys()) : ['global'];
+  for (const key of rooms) {
+    socket?.emit('joinRoom', { roomId: key });
+    socket?.emit('livechat:joinRoom', { roomId: key });
   }
 }
 

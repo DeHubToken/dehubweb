@@ -93,6 +93,7 @@ export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
   try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/room', {
       requiresAuth: false,
+      params: { roomId },
     });
     const raw = (response && typeof response === 'object' && 'result' in response)
       ? response.result
@@ -115,11 +116,16 @@ export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
  * Params: limit (max 100, default 50), before (message ID), after (message ID)
  */
 export async function getLiveChatMessages(
-  _roomId: string,
+  roomId: string,
   params?: { page?: number; limit?: number; before?: string; after?: string }
 ): Promise<LiveChatMessage[]> {
   const queryParams: Record<string, string | number | undefined> = {
     limit: Math.min(params?.limit ?? 100, 100),
+    // The room was named `_roomId` and thrown away, because the backend threw
+    // it away too — history came from the platform room whatever was asked
+    // for. Both ends honour it now; anything unrecognised still resolves to
+    // `global` server-side, so old callers are unaffected.
+    roomId,
   };
   if (params?.before) queryParams.before = params.before;
   if (params?.after) queryParams.after = params.after;
@@ -152,7 +158,7 @@ export async function getLiveChatMessages(
   // Fallback: spec endpoint from `doc.md` (may be enabled in newer backends)
   try {
     const response = await apiCall<Record<string, unknown>>(
-      `/api/livechat/rooms/${_roomId}/messages`,
+      `/api/livechat/rooms/${roomId}/messages`,
       { params: queryParams, requiresAuth: false }
     );
     return parse(response);
@@ -332,3 +338,15 @@ export async function uploadLiveChatVoice(audioBlob: Blob, filename = 'voice.web
   );
 }
 
+
+/**
+ * The chat room belonging to a live post.
+ *
+ * Namespaced to match the backend's allow-list: it accepts `global` or
+ * `stream:<tokenId>` and quietly resolves anything else to `global`. A bare
+ * tokenId therefore lands everyone in the platform room, which is exactly the
+ * bug this replaces — so the prefix is not decoration.
+ */
+export function streamChatRoomId(tokenId: string | number): string {
+  return `stream:${tokenId}`;
+}

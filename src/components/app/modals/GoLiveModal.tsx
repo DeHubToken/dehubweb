@@ -1223,6 +1223,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                     provider={streamData.provider}
                     initialScreenStream={screenStream}
                     streamId={streamData.streamId}
+                    tokenId={String(streamData.tokenId)}
                     onEnd={handleEndStream}
                     onLive={() => { wentLiveRef.current = true; }}
                   />
