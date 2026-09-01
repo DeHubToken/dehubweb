@@ -47,10 +47,11 @@ describe('bounty URLs', () => {
    * broken for exactly this reason and nobody noticed for months.
    */
   it('lets /bounty/<n> past the SSR gate', () => {
-    const gate = WORKER.slice(
-      WORKER.indexOf('function shouldServeSSR'),
-      WORKER.indexOf('function shouldServeSSR') + 3000,
-    );
+    // Slice the whole function rather than a fixed byte count: every rule
+    // added above the bounty one pushed it further down, and a short window
+    // failed on the next arrival rather than on a real regression.
+    const start = WORKER.indexOf('function shouldServeSSR');
+    const gate = WORKER.slice(start, WORKER.indexOf('\n}\n', start));
     expect(gate).toContain(String.raw`/^\/bounty\/\d+\/?$/`);
   });
 

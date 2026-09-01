@@ -27,7 +27,10 @@ const APP_TSX = readFileSync(resolve(ROOT, 'src/App.tsx'), 'utf8');
 const gate = () => {
   const start = WORKER.indexOf('function shouldServeSSR');
   expect(start).toBeGreaterThan(-1);
-  return WORKER.slice(start, start + 4000);
+  // The whole function, not a byte window: each new rule pushes the older
+  // ones down, and a fixed slice starts failing on arrivals rather than on
+  // regressions.
+  return WORKER.slice(start, WORKER.indexOf('\n}\n', start));
 };
 
 describe('post share URLs', () => {
