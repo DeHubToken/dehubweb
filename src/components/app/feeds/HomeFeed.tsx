@@ -123,6 +123,13 @@ interface HomeFeedProps {
   pinnedPostId?: string;
   /** DOM node or ref to render the filter panel into; when omitted, the panel renders in-flow */
   filtersPortalRef?: React.RefObject<HTMLElement | null> | HTMLElement | null;
+  /**
+   * Where the active-filter chips go. Separate from `filtersPortalRef` because
+   * the two want different places: the filter panel drops out of the bottom of
+   * the nav pill, the chips sit underneath the pill entirely. Falls back to the
+   * filter target when omitted.
+   */
+  chipsPortalRef?: React.RefObject<HTMLElement | null> | HTMLElement | null;
 }
 
 // ============================================================================
@@ -315,11 +322,12 @@ function SortFilterSection({
 // MAIN COMPONENT
 // ============================================================================
 
-export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef }: HomeFeedProps) {
+export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef, chipsPortalRef }: HomeFeedProps) {
   const { t } = useI18n();
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const portalTarget = resolvePortalTarget(filtersPortalRef);
+  const chipsTarget = resolvePortalTarget(chipsPortalRef) ?? portalTarget;
   const { isCollapsed } = useSidebarCollapse();
   const { shortsEnabled } = useShortsEnabled();
   const queryClient = useQueryClient();
@@ -432,15 +440,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       return null;
     };
 
+    // A tapped hashtag asks to be the filter, not to join one. Only a single
+    // selected category is filtered by the API; a second falls back to sifting
+    // one page of twenty unfiltered posts on the client, which is how tapping
+    // a tag while another was still active came back all but empty.
+    const wantsReplace = (detail: unknown): boolean =>
+      !!detail && typeof detail === 'object' && (detail as { replace?: unknown }).replace === true;
+
     const handler = (e: Event) => {
-      const categoryId = getCategoryId((e as CustomEvent).detail);
+      const detail = (e as CustomEvent).detail;
+      const categoryId = getCategoryId(detail);
       if (!categoryId) return;
 
       // Invalidate instead of removing — keeps existing data visible during refetch
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       // Add category to selection (toggle if already present)
       setSelectedCategories(prev => (
-        prev.includes(categoryId) ? prev : [...prev, categoryId]
+        wantsReplace(detail)
+          ? (prev.length === 1 && prev[0] === categoryId ? prev : [categoryId])
+          : prev.includes(categoryId) ? prev : [...prev, categoryId]
       ));
       scrollDocumentTo(0);
     };
@@ -448,6 +466,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     window.addEventListener('category-filter-changed', handler);
     return () => window.removeEventListener('category-filter-changed', handler);
   }, [setSelectedCategories, queryClient]);
+
+  // `/app?category=tag` is the real href behind every hashtag, so it has to
+  // mean something on its own: opened in a new tab, pasted to somebody, or
+  // followed by a crawler, none of which get the click handler's event. Read
+  // once and drop the param, otherwise a pull-to-refresh remount (this feed is
+  // keyed on refreshKey) would reinstate a filter the reader had cleared.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get('category');
+    if (!fromUrl) return;
+    setSelectedCategories([fromUrl.toLowerCase()]);
+    params.delete('category');
+    const query = params.toString();
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`,
+    );
+  }, [setSelectedCategories]);
 
   // Safety: normalize any legacy/corrupted persisted category entries (e.g. { categoryId: 'music' })
   useEffect(() => {
@@ -1824,7 +1861,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         if (!hasChips) return null;
 
         const chipsBar = (
-          <div className={cn("flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2", portalTarget && "order-2")}>
+          <div className={cn(
+            "flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2",
+            // Below the pill rather than in it, so the row needs its own breathing
+            // space above and none below — the sticky wrapper already pads there.
+            chipsTarget && "pt-2 pb-0",
+          )}>
             {optimisticSort.value !== 'latest' && (
               <button
                 data-filter-chip
@@ -1917,8 +1959,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </div>
         );
 
-        if (portalTarget) {
-          return createPortal(chipsBar, portalTarget);
+        if (chipsTarget) {
+          return createPortal(chipsBar, chipsTarget);
         }
         return chipsBar;
       })()}

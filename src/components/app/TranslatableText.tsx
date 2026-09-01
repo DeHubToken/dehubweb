@@ -19,6 +19,7 @@ import { autoTranslateEnabled, setAutoTranslateEnabled } from '@/lib/auto-transl
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
+import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { parseDehubLink } from '@/lib/dehub-links';
 
 export { LANGUAGE_NAMES };
@@ -204,8 +205,21 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            // Dispatch category filter event that HomeFeed listens for
-            window.dispatchEvent(new CustomEvent('category-filter-changed', { detail: tag }));
+            // Two deliveries, because a hashtag is tapped from places the home
+            // feed is not mounted at all — a directly-loaded post page, a
+            // profile, explore. The event reaches a mounted feed; the write to
+            // the persisted filters is what a feed mounting a moment later
+            // reads. Without the second one the tap navigated home and dropped
+            // the tag on the floor.
+            //
+            // `replace` because the feed only filters server-side while ONE
+            // category is selected: a second tag falls back to filtering a
+            // page of twenty unfiltered posts on the client, which shows
+            // almost nothing and reads as the tag being broken.
+            setFilterValue('home', 'categories', [tag]);
+            window.dispatchEvent(new CustomEvent('category-filter-changed', {
+              detail: { categoryId: tag, replace: true },
+            }));
             clientNavigate('/app');
           }}
           data-no-navigate="true"
