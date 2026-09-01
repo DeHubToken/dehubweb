@@ -19,7 +19,10 @@ import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { MusicFeedSkeleton, MusicVideoCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
-import { RadioSection } from '@/components/app/radio';
+// Direct, not through the radio barrel: that barrel also re-exports the
+// fullscreen visualizer, so importing one component through it pulled the whole
+// canvas visualizer module onto the boot path.
+import { RadioSection } from '@/components/app/radio/RadioSection';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
 import { openStageModal } from '@/contexts/StageContext';
 

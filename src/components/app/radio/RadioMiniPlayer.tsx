@@ -14,8 +14,16 @@ import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks/use-radio-player';
 import { Slider } from '@/components/ui/slider';
 import { getCountryFlag } from '@/lib/api/radio-browser';
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { RadioFullscreenVisualizer } from './RadioFullscreenVisualizer';
+import { useState, useRef, useCallback, useEffect, lazy, Suspense } from 'react';
+
+// The fullscreen visualizer only exists once someone expands the player, and it
+// pulls the whole audio visualizer-styles module along with it. Statically
+// imported here, that landed on the boot path: AppLayout renders this mini
+// player on every route, so every first paint downloaded and parsed nine
+// canvas visualizers nobody had asked for yet.
+const RadioFullscreenVisualizer = lazy(() =>
+  import('./RadioFullscreenVisualizer').then((m) => ({ default: m.RadioFullscreenVisualizer })),
+);
 
 /** Isolated volume control — marked with data-volume-zone for drag exclusion */
 function VolumeControl({ volume, isMuted, setVolume }: { volume: number; isMuted: boolean; setVolume: (v: number) => void }) {
@@ -54,6 +62,13 @@ export function RadioMiniPlayer() {
   
   const [showVolume, setShowVolume] = useState(false);
   const [showVisualizer, setShowVisualizer] = useState(false);
+  // Latched, not mirrored: the visualizer runs its own AnimatePresence off
+  // `isOpen`, so unmounting it on close would swallow its exit animation. Once
+  // opened it stays mounted, exactly as it did before it was lazy.
+  const [visualizerMounted, setVisualizerMounted] = useState(false);
+  useEffect(() => {
+    if (showVisualizer) setVisualizerMounted(true);
+  }, [showVisualizer]);
   const [isMinimized, setIsMinimized] = useState(false);
   const [pinchScale, setPinchScale] = useState(1);
   const [isResizing, setIsResizing] = useState(false);
@@ -368,12 +383,17 @@ export function RadioMiniPlayer() {
         </motion.div>
       </AnimatePresence>
       
-      {/* Fullscreen Visualizer */}
-      <RadioFullscreenVisualizer 
-        isOpen={showVisualizer} 
-        onClose={() => setShowVisualizer(false)}
-        getAnalyser={getAnalyser}
-      />
+      {/* Fullscreen Visualizer. Nothing to fall back to — it is a full-screen
+          overlay, so a placeholder would be a black rectangle over the app. */}
+      {visualizerMounted && (
+        <Suspense fallback={null}>
+          <RadioFullscreenVisualizer
+            isOpen={showVisualizer}
+            onClose={() => setShowVisualizer(false)}
+            getAnalyser={getAnalyser}
+          />
+        </Suspense>
+      )}
     </>
   );
 }
