@@ -513,7 +513,18 @@ export function useLiveChatMessages(roomId: string | null) {
 }
 
 /**
- * Presence hook
+ * How many people are connected to the ONE global platform chat.
+ *
+ * NOT a room figure and NOT a stream figure, despite the argument: the id is
+ * accepted for call-site symmetry and then ignored, because the endpoint behind
+ * it — `GET /api/livechat/online` — has no room dimension at all. It was being
+ * rendered beside a live stream under a people icon, where it read as "this
+ * many people are watching"; a host with an empty stream saw three, because
+ * three people were in the platform chat.
+ *
+ * For a stream's actual audience use `useStreamAudience`
+ * (src/hooks/use-stream-presence.ts). Only the global chat surfaces
+ * (PublicChat, SidebarChat) should be reading this.
  */
 export function useLiveChatPresence(_roomId: string | null) {
   const [onlineCount, setOnlineCount] = useState(0);

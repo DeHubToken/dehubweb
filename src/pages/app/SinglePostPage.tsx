@@ -1236,8 +1236,12 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
           )}
           {isLivePost && id && post && (
             <Suspense fallback={null}>
+              {/* streamId is the ObjectId the live routes take; it resolves the
+                  audience figure in the chat header, which without it used to
+                  fall back to the platform-wide chat online count. */}
               <LivePostChat
                 tokenId={id}
+                streamId={(post as any)?.stream?._id || (post as any)?.stream?.streamId || undefined}
                 isOffline={!('isLive' in post ? (post as any).isLive : true)}
                 isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
               />

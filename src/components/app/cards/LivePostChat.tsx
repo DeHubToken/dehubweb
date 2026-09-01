@@ -8,7 +8,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw, Pin, X } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Eye, Mic, Languages, RotateCcw, Pin, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
@@ -16,7 +16,8 @@ import { useDraft } from '@/hooks/use-draft';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
-import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
+import { useLiveChatMessages } from '@/hooks/use-livechat';
+import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
@@ -107,6 +108,13 @@ interface LivePostChatProps {
    * one, and the tokenId is the only id both callers have.
    */
   tokenId: string;
+  /**
+   * The stream's Mongo ObjectId — the id every /api/live/{id}/* route takes,
+   * NOT the numeric tokenId above. Only used to resolve the audience figure in
+   * the header; the chat itself is keyed by tokenId. Omit it and the header
+   * simply carries no number.
+   */
+  streamId?: string;
   isOffline?: boolean;
   /** Whether the current user is the stream host (can pin messages) */
   isHost?: boolean;
@@ -123,7 +131,7 @@ interface LivePostChatProps {
   overlay?: boolean;
 }
 
-export function LivePostChat({ tokenId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
+export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
   const streamId = tokenId ? streamChatRoomId(tokenId) : '';
   // The card unmounts every time the post scrolls out of the feed, so without
   // this a line typed under a stream is gone the moment you look away.
@@ -146,7 +154,13 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false, overl
   });
 
   const { messages, isLoading, isSending, send } = useLiveChatMessages(streamId);
-  const { onlineCount } = useLiveChatPresence(streamId);
+  // The stream's real audience, shared with the host's broadcast console. This
+  // slot used to hold `useLiveChatPresence`, which ignores the room it is given
+  // and returns the number of people connected to the ONE global platform chat
+  // — so a stream with nobody watching read "3" here beside a truthful "0" on
+  // the host's own overlay. Null when the caller has no stream ObjectId to
+  // resolve, and then nothing is drawn: no number beats a wrong one.
+  const watching = useStreamAudience(liveStreamId, !isOffline);
 
   // Sync pinned message from server data
   useEffect(() => {
@@ -286,10 +300,15 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false, overl
             <span className="text-xs text-zinc-500 px-2 py-0.5 rounded-full bg-zinc-800">Offline</span>
           )}
         </div>
-        <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
-          <Users className="w-3.5 h-3.5" />
-          <span>{onlineCount}</span>
-        </div>
+        {/* The audience, not the platform. A bare people-icon-plus-number is
+            exactly what the old global count looked like, so this one says
+            what it is counting. */}
+        {watching !== null && (
+          <div className="flex items-center gap-1.5 text-zinc-500 text-xs" title="People watching this stream right now">
+            <Eye className="w-3.5 h-3.5" />
+            <span>{watching} watching</span>
+          </div>
+        )}
       </div>
 
       {/* Pinned message banner (Telegram style) */}

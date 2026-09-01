@@ -56,6 +56,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { getLiveStream, updateStreamThumbnail } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
+import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { createLogger } from '@/lib/logger';
 import {
   whipEndpointFor,
@@ -493,38 +494,14 @@ export function GoLiveBroadcaster({
    * This used to read `peakViewers ?? totalViews` under the word "watching",
    * and neither is that. `peakViewers` is a high-water mark that only climbs;
    * `totalViews` counts JOINS, so one viewer whose connection drops and comes
-   * back is two people, then three. On 2026-09-01 a host watched their
-   * console say three while a single viewer reconnected twice — and read it
-   * as an audience that could not see them.
+   * back is two people, then three.
    *
-   * The socket carries the live figure and is the fast path; the poll now
-   * carries `viewerCount` too, which seeds the number before anyone next
-   * joins or leaves (the gateway only broadcasts on change).
+   * Computed in the shared hook rather than here, because the chat panel two
+   * inches below this used to print a completely different number under a
+   * people icon — the platform-wide chat online count — and a host reading the
+   * two together had no way to tell which one was their audience.
    */
-  const [liveViewers, setLiveViewers] = useState<number | null>(null);
-  useEffect(() => {
-    if (!streamId || (phase !== 'live' && phase !== 'reconnecting')) return;
-    let cancelled = false;
-    let presence: { leave: () => void } | null = null;
-
-    import('@/lib/api/dehub/stream-presence')
-      .then(({ watchStreamPresence }) => {
-        if (cancelled) return;
-        // Watch, never join: the host is not one of their own viewers, and
-        // joining would inflate the very number this is here to report.
-        presence = watchStreamPresence(streamId, (count) => {
-          if (!cancelled) setLiveViewers(count);
-        });
-      })
-      .catch(() => undefined);
-
-    return () => {
-      cancelled = true;
-      presence?.leave();
-    };
-  }, [streamId, phase]);
-
-  const watching = liveViewers ?? room?.viewerCount ?? 0;
+  const watching = useStreamAudience(streamId, phase === 'live' || phase === 'reconnecting') ?? 0;
 
   // The Stages voice-effect graph, reused as-is: mic → effect chain →
   // MediaStreamDestination. The broadcast publishes that destination rather
@@ -1768,7 +1745,7 @@ export function GoLiveBroadcaster({
                 ObjectId, so host and audience named different rooms and only
                 shared a conversation because the backend ignored the room and
                 put everyone in the platform chat. */}
-            <LivePostChat tokenId={tokenId} isHost overlay={fullBleed} />
+            <LivePostChat tokenId={tokenId} streamId={streamId ?? undefined} isHost overlay={fullBleed} />
           </Suspense>
         </div>
       )}
