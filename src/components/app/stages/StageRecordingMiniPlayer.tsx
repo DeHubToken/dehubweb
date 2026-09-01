@@ -26,6 +26,7 @@
  */
 
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Loader2, Pause, Play, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -40,6 +41,7 @@ import {
 } from '@/lib/stage-playback';
 
 export function StageRecordingMiniPlayer() {
+  const { t } = useTranslation();
   const { spaceId, title, loading, paused, popout, progress, volume, timeLeft } =
     useStagePlayback();
   const { pathname } = useLocation();
@@ -66,7 +68,7 @@ export function StageRecordingMiniPlayer() {
         'w-[calc(100vw-2rem)] max-w-sm',
       )}
       role="region"
-      aria-label="Stage recording playback"
+      aria-label={t('stages.recordingPlayback')}
     >
       <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl p-3">
         {/* Title and close share a line: the X wants the corner it is always
@@ -78,8 +80,8 @@ export function StageRecordingMiniPlayer() {
           <button
             type="button"
             onClick={stopStageRecording}
-            aria-label="Stop and close the player"
-            title="Stop and close"
+            aria-label={t('stages.stopAndCloseLabel')}
+            title={t('stages.stopAndClose')}
             className="shrink-0 -mr-1 -mt-0.5 w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-4 h-4" />
@@ -90,8 +92,8 @@ export function StageRecordingMiniPlayer() {
           <button
             type="button"
             onClick={togglePauseStageRecording}
-            aria-label={paused ? 'Resume recording' : 'Pause recording'}
-            title={paused ? 'Resume' : 'Pause'}
+            aria-label={paused ? t('stages.resumeRecording') : t('stages.pauseRecording')}
+            title={paused ? t('stages.resume') : t('stages.pause')}
             className="shrink-0 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
           >
             {loading ? (

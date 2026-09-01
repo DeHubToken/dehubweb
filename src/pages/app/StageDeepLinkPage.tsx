@@ -32,6 +32,7 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
@@ -74,6 +75,7 @@ import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 export default function StageDeepLinkPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
@@ -217,9 +219,9 @@ export default function StageDeepLinkPage() {
         idempotencyKey: crypto.randomUUID(),
       });
       if (!res.createdTokenId) throw new Error('missing createdTokenId');
-      toast.success('Reposted to your feed');
+      toast.success(t('stages.repostedToFeed'));
     } catch (err) {
-      toast.error('Failed to repost');
+      toast.error(t('stages.repostFailed'));
       throw err;
     }
   }, [stage, isAuthenticated, walletAddress, openLoginModal]);
@@ -321,28 +323,28 @@ export default function StageDeepLinkPage() {
                   className="flex-1 h-auto py-2.5"
                 >
                   {hasReminder ? <BellRing className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
-                  {hasReminder ? 'Reminder set' : 'Remind me'}
+                  {hasReminder ? t('stages.reminderSet') : t('stages.remindMeShort')}
                 </Button>
               ) : (
                 <button
                   onClick={() => navigate('/app')}
                   className="flex-1 px-4 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-sm font-medium transition-colors"
                 >
-                  Log in to get notified
+                  {t('stages.logInToGetNotified')}
                 </button>
               )}
               <button
                 onClick={() => downloadStageIcs(stage)}
-                title="Add to calendar"
-                aria-label="Add to calendar"
+                title={t('stages.addToCalendar')}
+                aria-label={t('stages.addToCalendar')}
                 className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
               >
                 <CalendarPlus className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setShareOpen(true)}
-                title="Share stage"
-                aria-label="Share stage"
+                title={t('stages.shareStage')}
+                aria-label={t('stages.shareStage')}
                 className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
               >
                 <Share2 className="w-4 h-4" />
@@ -366,7 +368,7 @@ export default function StageDeepLinkPage() {
           onOpenChange={setShareOpen}
           url={dehubLinkFor.stage(stage)}
           shareTitle={stage.title}
-          repost={{ detail: 'Post this stage to your feed as-is', onRepost: handleRepostStage }}
+          repost={{ detail: t('stages.postAsIs'), onRepost: handleRepostStage }}
         />
       </div>
     );
@@ -409,7 +411,7 @@ export default function StageDeepLinkPage() {
           <div className="relative p-6 bg-zinc-900">
             <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10 mb-3">
               <Clock className="w-3 h-3 text-zinc-400" />
-              <span className="text-zinc-400 text-[11px] font-medium">ENDED</span>
+              <span className="text-zinc-400 text-[11px] font-medium">{t('stages.ended')}</span>
             </div>
 
             <h1 className="text-white text-xl font-semibold">{stage.title}</h1>
@@ -473,7 +475,7 @@ export default function StageDeepLinkPage() {
                 <div className="flex items-center gap-3 mt-5">
                   <button
                     onClick={() => toggleStageRecording(stage)}
-                    aria-label={isPlaying ? 'Pause recording' : 'Play recording'}
+                    aria-label={isPlaying ? t('stages.pauseRecording') : t('stages.playRecording')}
                     className="shrink-0 w-11 h-11 rounded-xl bg-white text-black hover:bg-white/90 flex items-center justify-center transition-colors"
                   >
                     {isLoaded && playback.loading ? (
@@ -509,8 +511,8 @@ export default function StageDeepLinkPage() {
                   <button
                     onClick={() => (isPoppedOut ? closeStagePopout() : popOutStageRecording(stage))}
                     aria-pressed={isPoppedOut}
-                    aria-label={isPoppedOut ? 'Close the corner player' : 'Pop out the player'}
-                    title={isPoppedOut ? 'Close the corner player' : 'Pop out the player'}
+                    aria-label={isPoppedOut ? t('stages.closeCornerPlayer') : t('stages.popOutPlayer')}
+                    title={isPoppedOut ? t('stages.closeCornerPlayer') : t('stages.popOutPlayer')}
                     className={cn(
                       'shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors',
                       isPoppedOut
@@ -532,8 +534,8 @@ export default function StageDeepLinkPage() {
                   </button>
                   <button
                     onClick={() => setShareOpen(true)}
-                    title="Share stage"
-                    aria-label="Share stage"
+                    title={t('stages.shareStage')}
+                    aria-label={t('stages.shareStage')}
                     className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
                   >
                     <Share2 className="w-4 h-4" />
@@ -550,8 +552,8 @@ export default function StageDeepLinkPage() {
                 </p>
                 <button
                   onClick={() => setShareOpen(true)}
-                  title="Share stage"
-                  aria-label="Share stage"
+                  title={t('stages.shareStage')}
+                  aria-label={t('stages.shareStage')}
                   className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
                 >
                   <Share2 className="w-4 h-4" />
@@ -577,7 +579,7 @@ export default function StageDeepLinkPage() {
           onOpenChange={setShareOpen}
           url={dehubLinkFor.stage(stage)}
           shareTitle={stage.title}
-          repost={{ detail: 'Post this stage to your feed as-is', onRepost: handleRepostStage }}
+          repost={{ detail: t('stages.postAsIs'), onRepost: handleRepostStage }}
         />
       </div>
     );
@@ -611,7 +613,7 @@ export default function StageDeepLinkPage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
                 </span>
-                <span className="text-red-400 text-[11px] font-medium">LIVE NOW</span>
+                <span className="text-red-400 text-[11px] font-medium">{t('stages.liveNowBadge')}</span>
               </div>
               <span className="flex items-center gap-1 text-zinc-400 text-xs">
                 <Users className="w-3.5 h-3.5" />
@@ -694,12 +696,12 @@ export default function StageDeepLinkPage() {
                 ) : (
                   <Headphones className="w-4 h-4" />
                 )}
-                {listening ? 'Stop listening' : 'Listen in'}
+                {listening ? t('stages.stopListening') : t('stages.listenIn')}
               </button>
               <button
                 onClick={() => setShareOpen(true)}
-                title="Share stage"
-                aria-label="Share stage"
+                title={t('stages.shareStage')}
+                aria-label={t('stages.shareStage')}
                 className="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
               >
                 <Share2 className="w-4 h-4" />
@@ -736,7 +738,7 @@ export default function StageDeepLinkPage() {
           onOpenChange={setShareOpen}
           url={dehubLinkFor.stage(stage)}
           shareTitle={stage.title}
-          repost={{ detail: 'Post this stage to your feed as-is', onRepost: handleRepostStage }}
+          repost={{ detail: t('stages.postAsIs'), onRepost: handleRepostStage }}
         />
       </div>
     );
@@ -752,12 +754,12 @@ export default function StageDeepLinkPage() {
           self-canonical (a cross-URL canonical alongside noindex is a mixed
           signal). */}
       <SEOHead
-        title="Join a Live Stage — DeHub"
+        title={t('stages.joinSeoTitle')}
         description="You've been invited to a live audio Stage on DeHub. Join the room, listen in and take the mic on the decentralized social platform."
         noindex
       />
       <BrandIcon src={stagesMicIcon} alt="" className="w-16 h-16 object-contain opacity-80" />
-      <DeHubPageLoader size={48} minHeight="0" label="Joining stage..." />
+      <DeHubPageLoader size={48} minHeight="0" label={t('stages.joiningStage')} />
     </div>
   );
 }
