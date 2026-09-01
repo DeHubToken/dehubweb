@@ -2126,5 +2126,25 @@
     "disputeTotal": "Kabuuan: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "Ayusin at bayaran",
     "resolve": "Ayusin"
+  },
+  "videoLooks": {
+    "button": "Mga look ng camera",
+    "title": "Look",
+    "hint": "Nailalapat bago umalis ang video mo sa device na ito — eksaktong nakikita ng manonood ang nakikita mo rito.",
+    "backgroundBlur": "I-blur ang background ko",
+    "on": "Naka-on",
+    "off": "Naka-off",
+    "none": "Wala",
+    "soft": "Malambot",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Mainit",
+    "cool": "Malamig",
+    "vivid": "Matingkad",
+    "dream": "Panaginip",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Blur",
+    "pixelate": "Pixelate"
   }
 }

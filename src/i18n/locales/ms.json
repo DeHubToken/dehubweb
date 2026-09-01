@@ -2053,5 +2053,25 @@
     "stakeDhb": "Staking DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} terbuka pada {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Gaya kamera",
+    "title": "Gaya",
+    "hint": "Digunakan sebelum video meninggalkan peranti ini — penonton melihat tepat apa yang anda lihat di sini.",
+    "backgroundBlur": "Kaburkan latar belakang saya",
+    "on": "Hidup",
+    "off": "Mati",
+    "none": "Tiada",
+    "soft": "Lembut",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Hangat",
+    "cool": "Sejuk",
+    "vivid": "Terang",
+    "dream": "Mimpi",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Kabur",
+    "pixelate": "Piksel"
   }
 }

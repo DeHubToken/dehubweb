@@ -1785,5 +1785,25 @@
     "stakeDhb": "Talleta DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} avautuu tasolla {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kameratyylit",
+    "title": "Tyyli",
+    "hint": "Käytetään ennen kuin video lähtee tästä laitteesta — katsojat näkevät täsmälleen sen, minkä sinä näet tässä.",
+    "backgroundBlur": "Sumenna taustani",
+    "on": "Päällä",
+    "off": "Pois",
+    "none": "Ei mitään",
+    "soft": "Pehmeä",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Lämmin",
+    "cool": "Viileä",
+    "vivid": "Kirkas",
+    "dream": "Uni",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Sumennus",
+    "pixelate": "Pikselöi"
   }
 }

@@ -3014,5 +3014,25 @@
     "aiGenerationAlt": "AI generation",
     "aiGenerationCommunityAlt": "AI generation from the DeHub community",
     "close": "Close"
+  },
+  "videoLooks": {
+    "button": "Camera looks",
+    "title": "Look",
+    "hint": "Applied before your video leaves this device — viewers see exactly what you see here.",
+    "backgroundBlur": "Blur my background",
+    "on": "On",
+    "off": "Off",
+    "none": "Off",
+    "soft": "Soft",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Warm",
+    "cool": "Cool",
+    "vivid": "Vivid",
+    "dream": "Dream",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Blur",
+    "pixelate": "Pixelate"
   }
 }

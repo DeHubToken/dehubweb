@@ -3014,5 +3014,25 @@
     "aiGenerationAlt": "Creación con IA",
     "aiGenerationCommunityAlt": "Creación con IA de la comunidad de DeHub",
     "close": "Cerrar"
+  },
+  "videoLooks": {
+    "button": "Estilos de cámara",
+    "title": "Estilo",
+    "hint": "Se aplica antes de que tu vídeo salga de este dispositivo: los espectadores ven exactamente lo que ves aquí.",
+    "backgroundBlur": "Difuminar mi fondo",
+    "on": "Activado",
+    "off": "Desactivado",
+    "none": "Ninguno",
+    "soft": "Suave",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Cálido",
+    "cool": "Frío",
+    "vivid": "Vivo",
+    "dream": "Sueño",
+    "vhs": "VHS",
+    "neon": "Neón",
+    "blur": "Desenfoque",
+    "pixelate": "Pixelado"
   }
 }

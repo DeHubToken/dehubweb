@@ -3014,5 +3014,25 @@
     "aiGenerationAlt": "Karya AI",
     "aiGenerationCommunityAlt": "Karya AI dari komunitas DeHub",
     "close": "Tutup"
+  },
+  "videoLooks": {
+    "button": "Gaya kamera",
+    "title": "Gaya",
+    "hint": "Diterapkan sebelum video keluar dari perangkat ini — penonton melihat persis seperti yang Anda lihat di sini.",
+    "backgroundBlur": "Buramkan latar belakang",
+    "on": "Aktif",
+    "off": "Nonaktif",
+    "none": "Tidak ada",
+    "soft": "Lembut",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Hangat",
+    "cool": "Dingin",
+    "vivid": "Cerah",
+    "dream": "Mimpi",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Buram",
+    "pixelate": "Piksel"
   }
 }

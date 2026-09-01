@@ -1785,5 +1785,25 @@
     "stakeDhb": "Uloži DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} otključava se na {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Izgledi kamere",
+    "title": "Izgled",
+    "hint": "Primjenjuje se prije nego što videozapis napusti ovaj uređaj — gledatelji vide točno ono što vidite vi.",
+    "backgroundBlur": "Zamuti moju pozadinu",
+    "on": "Uključeno",
+    "off": "Isključeno",
+    "none": "Nijedan",
+    "soft": "Mekano",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Toplo",
+    "cool": "Hladno",
+    "vivid": "Živo",
+    "dream": "San",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Zamućenje",
+    "pixelate": "Pikselizacija"
   }
 }

@@ -3014,5 +3014,25 @@
     "aiGenerationAlt": "Yapay zekâ üretimi",
     "aiGenerationCommunityAlt": "DeHub topluluğundan bir yapay zekâ üretimi",
     "close": "Kapat"
+  },
+  "videoLooks": {
+    "button": "Kamera görünümleri",
+    "title": "Görünüm",
+    "hint": "Videonuz bu cihazdan çıkmadan önce uygulanır — izleyiciler tam olarak burada gördüğünüzü görür.",
+    "backgroundBlur": "Arka planımı bulanıklaştır",
+    "on": "Açık",
+    "off": "Kapalı",
+    "none": "Kapalı",
+    "soft": "Yumuşak",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Sıcak",
+    "cool": "Soğuk",
+    "vivid": "Canlı",
+    "dream": "Rüya",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Bulanıklık",
+    "pixelate": "Pikselli"
   }
 }

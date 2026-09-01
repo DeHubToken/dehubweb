@@ -1835,5 +1835,25 @@
     "stakeDhb": "DHB kaa'i",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} sadarkaa {{tier}} tti banama"
+  },
+  "videoLooks": {
+    "button": "Bifannoota kaameraa",
+    "title": "Bifa",
+    "hint": "Viidiyoon kee meeshaa kana keessaa osoo hin bahin dura hojiirra oola — ilaaltonni waan ati asitti argitu sirriitti argu.",
+    "backgroundBlur": "Duubbee koo dhoksi",
+    "on": "Banaa",
+    "off": "Cufaa",
+    "none": "Homaa",
+    "soft": "Laafaa",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Ho aa",
+    "cool": "Qorraa",
+    "vivid": "Ifaa",
+    "dream": "Abjuu",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Dhoksuu",
+    "pixelate": "Piksel"
   }
 }

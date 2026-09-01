@@ -1853,5 +1853,25 @@
     "stakeDhb": "Zastakuj DHB",
     "title": "SuperMoce",
     "unlocksAt": "{{power}} odblokowuje się na poziomie {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Wyglądy kamery",
+    "title": "Wygląd",
+    "hint": "Stosowane, zanim wideo opuści to urządzenie — widzowie widzą dokładnie to, co widzisz tutaj.",
+    "backgroundBlur": "Rozmyj moje tło",
+    "on": "Włączone",
+    "off": "Wyłączone",
+    "none": "Brak",
+    "soft": "Miękki",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Ciepły",
+    "cool": "Chłodny",
+    "vivid": "Żywy",
+    "dream": "Sen",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Rozmycie",
+    "pixelate": "Pikselizacja"
   }
 }

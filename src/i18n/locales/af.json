@@ -1911,5 +1911,25 @@
     "stakeDhb": "Deponeer DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} ontsluit by {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kameravoorkomste",
+    "title": "Voorkoms",
+    "hint": "Word toegepas voordat jou video hierdie toestel verlaat — kykers sien presies wat jy hier sien.",
+    "backgroundBlur": "Vervaag my agtergrond",
+    "on": "Aan",
+    "off": "Af",
+    "none": "Geen",
+    "soft": "Sag",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Warm",
+    "cool": "Koel",
+    "vivid": "Helder",
+    "dream": "Droom",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Vervaag",
+    "pixelate": "Pixeleer"
   }
 }
