@@ -201,7 +201,8 @@ import {
 import { useAppTheme, DEFAULT_THEME_HUES } from '@/contexts/ThemeContext';
 import { THEME_COLOR, isSpecialThemeColor } from '@/lib/theme-color';
 import { extractBrandColors } from '@/lib/brand-colors';
-import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { DeHubPageLoader, ButtonLoader } from '@/components/app/DeHubLoader';
+import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 
 export default function SettingsPage() {
@@ -270,6 +271,10 @@ export default function SettingsPage() {
     }
   };
 
+  // Signing out is a network round trip plus a session teardown, so the button
+  // holds the DeHub mark until it lands rather than looking like a missed tap.
+  const { pending: isLoggingOut, run: runLogout } = usePendingAction(handleLogout);
+
   // Drag-to-swipe for settings tab indicator (before conditional return to satisfy hooks rules)
   const settingsTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
 
@@ -308,10 +313,12 @@ export default function SettingsPage() {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={handleLogout}
-              className="flex items-center justify-center gap-2 px-3 h-10 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white"
+              onClick={() => void runLogout()}
+              disabled={isLoggingOut}
+              aria-busy={isLoggingOut || undefined}
+              className="flex items-center justify-center gap-2 px-3 h-10 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white disabled:opacity-60"
             >
-              <LogOut className="w-4 h-4" />
+              {isLoggingOut ? <ButtonLoader /> : <LogOut className="w-4 h-4" />}
               <span className="hidden sm:inline text-sm font-medium">{t('settings.logOut')}</span>
             </button>
           </div>
