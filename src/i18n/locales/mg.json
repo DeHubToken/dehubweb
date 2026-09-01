@@ -1884,5 +1884,25 @@
     "stakeDhb": "Apetraho ny DHB",
     "title": "SuperPowers",
     "unlocksAt": "Mivoha ny {{power}} amin'ny {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Endrik ny fakan-tsary",
+    "title": "Endrika",
+    "hint": "Ampiharina alohan ny hivoahan ny lahatsary amin ity fitaovana ity — mahita mitovy amin izay hitanao eto ny mpijery.",
+    "backgroundBlur": "Hamanify ny afara",
+    "on": "Mandeha",
+    "off": "Mihidy",
+    "none": "Tsy misy",
+    "soft": "Malefaka",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Mafana",
+    "cool": "Mangatsiaka",
+    "vivid": "Mamiratra",
+    "dream": "Nofy",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Manjavozavo",
+    "pixelate": "Piksely"
   }
 }

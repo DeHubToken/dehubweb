@@ -1785,5 +1785,25 @@
     "stakeDhb": "Ajiye DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} yana buɗewa a {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kamannin kamara",
+    "title": "Kamanni",
+    "hint": "Ana amfani da shi kafin bidiyon ka ya bar wannan na ura — masu kallo suna ganin daidai abin da kake gani a nan.",
+    "backgroundBlur": "Rufa bayan gareyana",
+    "on": "Kunna",
+    "off": "Kashe",
+    "none": "Babu",
+    "soft": "Mai laushi",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Dumi",
+    "cool": "Sanyi",
+    "vivid": "Haske",
+    "dream": "Mafarki",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Rufewa",
+    "pixelate": "Pixel"
   }
 }

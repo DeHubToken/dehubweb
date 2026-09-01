@@ -1763,5 +1763,25 @@
     "stakeDhb": "Tinye DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} na-emeghe na {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Ụdị igwefoto",
+    "title": "Ụdị",
+    "hint": "A na-etinye ya tupu vidiyo gị apụọ na ngwaọrụ a — ndị na-ekiri na-ahụ kpọmkwem ihe ị na-ahụ ebe a.",
+    "backgroundBlur": "Mee ka azụ m gbaa ọchịchịrị",
+    "on": "Gbanyere",
+    "off": "Gbanyụọ",
+    "none": "Ọ dịghị",
+    "soft": "Dị nro",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Ọkụ",
+    "cool": "Oyi",
+    "vivid": "Nke na-egbuke",
+    "dream": "Nrọ",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Ọchịchịrị",
+    "pixelate": "Piksel"
   }
 }

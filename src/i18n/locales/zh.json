@@ -3158,5 +3158,25 @@
     "noTraining": "不使用你的数据训练模型",
     "soc2": "SOC 2 安全认证（即将推出）",
     "aiEducator": "AI Educator 与 Slack 支持"
+  },
+  "videoLooks": {
+    "button": "摄像头滤镜",
+    "title": "滤镜",
+    "hint": "在视频离开此设备之前应用 — 观众看到的正是你在这里看到的画面。",
+    "backgroundBlur": "虚化我的背景",
+    "on": "开",
+    "off": "关",
+    "none": "无",
+    "soft": "柔和",
+    "mono": "黑白",
+    "noir": "黑色电影",
+    "warm": "暖色",
+    "cool": "冷色",
+    "vivid": "鲜艳",
+    "dream": "梦幻",
+    "vhs": "VHS",
+    "neon": "霓虹",
+    "blur": "模糊",
+    "pixelate": "像素化"
   }
 }

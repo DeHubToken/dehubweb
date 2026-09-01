@@ -1793,5 +1793,25 @@
     "stakeDhb": "DHB ያስቀምጡ",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} በ{{tier}} ይከፈታል"
+  },
+  "videoLooks": {
+    "button": "የካሜራ መልኮች",
+    "title": "መልክ",
+    "hint": "ቪዲዮዎ ከዚህ መሣሪያ ከመውጣቱ በፊት ይተገበራል — ተመልካቾች እርስዎ እዚህ የሚያዩትን በትክክል ያያሉ።",
+    "backgroundBlur": "ዳራዬን አደብዝዝ",
+    "on": "በርቷል",
+    "off": "ጠፍቷል",
+    "none": "የለም",
+    "soft": "ለስላሳ",
+    "mono": "ሞኖ",
+    "noir": "ኑዋር",
+    "warm": "ሙቅ",
+    "cool": "ቀዝቃዛ",
+    "vivid": "ደማቅ",
+    "dream": "ሕልም",
+    "vhs": "VHS",
+    "neon": "ኒዮን",
+    "blur": "ብዥታ",
+    "pixelate": "ፒክሰል"
   }
 }

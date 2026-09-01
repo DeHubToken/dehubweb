@@ -2046,5 +2046,25 @@
     "stakeDhb": "DHB staken",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} wordt ontgrendeld bij {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Cameralooks",
+    "title": "Look",
+    "hint": "Wordt toegepast voordat je video dit apparaat verlaat — kijkers zien precies wat jij hier ziet.",
+    "backgroundBlur": "Mijn achtergrond vervagen",
+    "on": "Aan",
+    "off": "Uit",
+    "none": "Geen",
+    "soft": "Zacht",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Warm",
+    "cool": "Koel",
+    "vivid": "Levendig",
+    "dream": "Droom",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Vervaging",
+    "pixelate": "Pixelen"
   }
 }
