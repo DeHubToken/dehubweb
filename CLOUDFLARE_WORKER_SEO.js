@@ -1794,6 +1794,23 @@ const NOT_FOUND_TITLES = [
   '<title>DeHub — Open Source, User Owned & Censorship Resistant Media</title>',
 ];
 
+/** Resolve an off-chain post slug (/newpost/<n>) to the tokenId every other
+ *  surface addresses that post by. The mapping lives behind the API and
+ *  survives minting, so a link shared before the mint keeps resolving. */
+async function resolveNewPostTokenId(n) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/newpost/${encodeURIComponent(n)}`, {
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const id = data?.tokenId ?? data?.result?.tokenId;
+    return Number.isFinite(Number(id)) ? String(Number(id)) : null;
+  } catch {
+    return null;
+  }
+}
+
 function shouldServeSSR(pathname) {
   // Feed section pages (/explore, /videos, /shorts) + their /app twins — bot
   // HTML built at the edge. Must be checked before the profile fall-through so
@@ -1826,6 +1843,15 @@ function shouldServeSSR(pathname) {
   // the foot of this function rejects it and the SPA shell would go out under
   // a noindex long before the renderer below is reached.
   if (/^\/bounty\/\d+\/?$/.test(pathname)) return true;
+  // Off-chain post slugs (/newpost/<n>) and the short post shapes (/posts/<n>,
+  // /posts/<n>/b, /posts/<n>/b/<commentId>). Same trap a third time: `newpost`
+  // and `posts` are both reserved ROUTE_SEGMENTS, so the profile fall-through
+  // rejected them and the SPA shell went out under a noindex before any
+  // renderer was reached. This one was the widest of the three — minting is
+  // optional, so a post that never mints is only ever shared as /newpost/<n>,
+  // from web and from the app alike.
+  if (/^\/newpost\/\d+\/?$/.test(pathname)) return true;
+  if (/^\/posts\/\d+(?:\/b(?:\/[^/]+)?)?\/?$/.test(pathname)) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
   // Always SSR for the blog: index + posts at both URL schemes
@@ -2978,7 +3004,29 @@ async function handleRequest(request, env) {
     }));
   }
 
-  const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(pathname)}&original_url=${encodeURIComponent(request.url)}`;
+  // Every post shape is normalised onto /app/post/<tokenId> before the proxy,
+  // because that is the only one the deployed fn renders. Bare /post/<id>
+  // predates `post` joining its system-route list, so it reads the segment as
+  // a username and answers 404 — the canonical URL of every post page was
+  // being handed to crawlers as a dead end. /posts/<n> and /newpost/<n> it has
+  // never heard of at all. The fn emits its own canonical at the /app twin, so
+  // the alternate shapes consolidate there instead of competing.
+  let ssrPath = pathname;
+  const newPostSlug = pathname.match(/^\/newpost\/(\d+)\/?$/);
+  const shortPostPath = pathname.match(/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/);
+  const barePostPath = pathname.match(/^\/post\/(\d+)\/?$/);
+  if (newPostSlug) {
+    const tokenId = await resolveNewPostTokenId(newPostSlug[1]);
+    // Unresolvable slug: leave the path alone so the fn's miss lands on the
+    // 404 below rather than a 200 carrying the homepage card.
+    if (tokenId) ssrPath = `/app/post/${tokenId}`;
+  } else if (shortPostPath) {
+    ssrPath = `/app/post/${shortPostPath[1]}`;
+  } else if (barePostPath) {
+    ssrPath = `/app/post/${barePostPath[1]}`;
+  }
+
+  const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(ssrPath)}&original_url=${encodeURIComponent(request.url)}`;
 
 
   try {
@@ -3031,7 +3079,8 @@ async function handleRequest(request, env) {
     // pages (this is exactly what killed /guides/best-web3-social-media-dapps).
     // A future fn deploy can signal explicitly via X-DeHub-NotFound: 1.
     const isEntityRoute =
-      pathname.includes('/post/') ||
+      ssrPath.includes('/post/') ||
+      pathname.includes('/newpost/') ||
       pathname.includes('/communities/') ||
       couldBeProfileSegment(firstSegmentOf(pathname), SYSTEM_ROUTES);
     const fnSaysNotFound =
