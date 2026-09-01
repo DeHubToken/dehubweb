@@ -1,7 +1,15 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { BondingCurveProgress } from './BondingCurveProgress';
 import type { LaunchpadToken } from '@/hooks/use-launchpad-tokens';
+
+/** Status is a database slug; the card wants the reader's language. */
+const STATUS_KEYS: Record<string, string> = {
+  bonding: 'launchpad.statusBonding',
+  graduating: 'launchpad.statusGraduating',
+  graduated: 'launchpad.statusGraduated',
+};
 
 function fmtUsd(n: number) {
   if (n >= 1_000_000) return `$${(n/1_000_000).toFixed(2)}M`;
@@ -17,6 +25,7 @@ function fmtAge(iso: string) {
 }
 
 export function CoinCard({ token }: { token: LaunchpadToken }) {
+  const { t } = useTranslation();
   const base = getLaunchpadBase(useLocation().pathname);
   return (
     <Link to={`${base}/${token.id}`}
@@ -32,23 +41,23 @@ export function CoinCard({ token }: { token: LaunchpadToken }) {
             <span className="text-white font-semibold truncate">{token.name}</span>
             <span className="text-white/50 text-xs uppercase">${token.symbol}</span>
           </div>
-          <div className="text-white/50 text-xs mt-0.5">{fmtAge(token.created_at)} ago</div>
+          <div className="text-white/50 text-xs mt-0.5">{t('launchpad.ago', { age: fmtAge(token.created_at) })}</div>
           {token.description && <p className="text-white/70 text-xs mt-1.5 line-clamp-2">{token.description}</p>}
         </div>
         <BondingCurveProgress progressBps={token.progress_bps} />
       </div>
       <div className="mt-3 grid grid-cols-3 gap-2 text-center">
         <div className="rounded-lg bg-white/5 py-1.5">
-          <div className="text-[10px] text-white/50 uppercase">Mcap</div>
+          <div className="text-[10px] text-white/50 uppercase">{t('launchpad.mcap')}</div>
           <div className="text-white text-xs font-semibold tabular-nums">{fmtUsd(token.market_cap_usd)}</div>
         </div>
         <div className="rounded-lg bg-white/5 py-1.5">
-          <div className="text-[10px] text-white/50 uppercase">24h Vol</div>
+          <div className="text-[10px] text-white/50 uppercase">{t('launchpad.vol24h')}</div>
           <div className="text-white text-xs font-semibold tabular-nums">{fmtUsd(token.volume_24h)}</div>
         </div>
         <div className="rounded-lg bg-white/5 py-1.5">
-          <div className="text-[10px] text-white/50 uppercase">Status</div>
-          <div className="text-white text-xs font-semibold capitalize">{token.status}</div>
+          <div className="text-[10px] text-white/50 uppercase">{t('launchpad.status')}</div>
+          <div className="text-white text-xs font-semibold">{t(STATUS_KEYS[token.status] ?? 'launchpad.statusBonding')}</div>
         </div>
       </div>
     </Link>
