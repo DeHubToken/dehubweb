@@ -9,6 +9,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Search, Tag, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -18,14 +19,15 @@ import { useAuth } from '@/contexts/AuthContext';
 import { FractionListingCard } from './FractionListingCard';
 import { BuyFractionDrawer } from './BuyFractionDrawer';
 
-const SORTS: { value: MarketSort; label: string }[] = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'price_asc', label: 'Cheapest' },
-  { value: 'price_desc', label: 'Priciest' },
-  { value: 'quantity_desc', label: 'Biggest stake' },
+const SORTS: { value: MarketSort; labelKey: string }[] = [
+  { value: 'newest', labelKey: 'fractions.sortNewest' },
+  { value: 'price_asc', labelKey: 'fractions.sortCheapest' },
+  { value: 'price_desc', labelKey: 'fractions.sortPriciest' },
+  { value: 'quantity_desc', labelKey: 'fractions.sortBiggestStake' },
 ];
 
 export function BrowseFractionsTab() {
+  const { t } = useTranslation();
   const [sort, setSort] = useState<MarketSort>('newest');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<FractionListing | null>(null);
@@ -58,7 +60,7 @@ export function BrowseFractionsTab() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search posts, creators, or a post number"
+            placeholder={t('fractions.searchPlaceholder')}
             className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-white/30"
           />
         </div>
@@ -66,7 +68,7 @@ export function BrowseFractionsTab() {
           {SORTS.map((s) => (
             <LiquidGlassBubble2
               key={s.value}
-              label={s.label}
+              label={t(s.labelKey)}
               onClick={() => setSort(s.value)}
               width="auto"
               height="34px"
@@ -79,9 +81,9 @@ export function BrowseFractionsTab() {
 
       {floor !== null && (
         <p className="text-xs text-white/40">
-          {listings.length} listing{listings.length === 1 ? '' : 's'} · floor{' '}
+          {t('fractions.listingsFloor', { count: listings.length })}{' '}
           <span className="text-white/70">{floor.toLocaleString(undefined, { maximumFractionDigits: 4 })} <DhbCoin /></span>{' '}
-          per fraction
+          {t('fractions.perFraction')}
         </p>
       )}
 
@@ -93,11 +95,11 @@ export function BrowseFractionsTab() {
         <div className="text-center py-16">
           <Tag className="w-10 h-10 text-white/15 mx-auto mb-3" />
           <p className="text-white/40 text-sm">
-            {search ? 'Nothing matches that search' : 'No fractions are for sale right now'}
+            {t(search ? 'fractions.noSearchMatch' : 'fractions.noneForSale')}
           </p>
           {!search && (
             <p className="text-white/25 text-xs mt-1">
-              Every upload is 1000 fractions — list some of yours to start the market.
+              {t('fractions.startTheMarketHint')}
             </p>
           )}
         </div>

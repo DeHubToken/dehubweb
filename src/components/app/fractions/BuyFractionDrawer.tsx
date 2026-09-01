@@ -20,6 +20,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -42,6 +43,7 @@ interface BuyFractionDrawerProps {
 }
 
 export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: BuyFractionDrawerProps) {
+  const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [quote, setQuote] = useState<FractionQuote | null>(null);
@@ -103,7 +105,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
       <DrawerContent column glass className="px-4 pb-8">
         <DrawerHeader className="px-0">
           <DrawerTitle className="text-white text-lg">
-            {listing.post_title || `Post #${listing.token_id}`}
+            {listing.post_title || t('fractions.postNumber', { id: listing.token_id })}
           </DrawerTitle>
         </DrawerHeader>
 
@@ -111,8 +113,8 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
           {/* Quantity */}
           <div className="space-y-3">
             <div className="flex items-baseline justify-between">
-              <label className="text-sm text-white/60">How many</label>
-              <span className="text-xs text-white/40">{available} available</span>
+              <label className="text-sm text-white/60">{t('fractions.howMany')}</label>
+              <span className="text-xs text-white/40">{t('fractions.availableCount', { count: available })}</span>
             </div>
             <div className="flex items-center gap-3">
               <Slider
@@ -140,24 +142,24 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
           {/* Summary */}
           <div className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-white/60">Seller</span>
+              <span className="text-white/60">{t('fractions.seller')}</span>
               <span className="text-white font-mono text-xs flex items-center gap-2">
                 {truncateAddress(listing.seller_address)}
                 <SellerTrustBadge stats={sellerStats} compact />
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-white/60">Price per fraction</span>
+              <span className="text-white/60">{t('fractions.pricePerFraction')}</span>
               <span className="text-white">
                 {listing.price_per_fraction.toLocaleString(undefined, { maximumFractionDigits: 4 })} <DhbCoin />
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-white/60">Share of the post</span>
+              <span className="text-white/60">{t('fractions.shareOfPost')}</span>
               <span className="text-white">{sharePct.toFixed(1)}%</span>
             </div>
             <div className="border-t border-white/10 pt-3 flex justify-between items-center">
-              <span className="text-white font-medium">Total</span>
+              <span className="text-white font-medium">{t('fractions.total')}</span>
               <span className="text-white font-bold flex items-center gap-1.5">
                 {getQuote.isPending && !quote ? (
                   <Loader2 className="w-4 h-4 animate-spin text-white/40" />
@@ -181,9 +183,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
           <div className="flex items-start gap-2 bg-white/5 border border-white/10 rounded-xl p-3">
             <Info className="w-4 h-4 text-white/40 shrink-0 mt-0.5" />
             <p className="text-xs text-white/50">
-              Your DHB goes straight to the seller and we verify it on-chain. The seller then has{' '}
-              {quote?.settleWindowHours ?? 24} hours to send the fractions — you'll see the trade
-              in your portfolio until they do, and their record is public.
+              {t('fractions.settlementNote', { hours: quote?.settleWindowHours ?? 24 })}
             </p>
           </div>
 
@@ -191,8 +191,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
             <div className="flex items-start gap-2 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <p className="text-xs text-amber-200/80">
-                DHB transfers are paused right now, so this payment would revert. Try again once
-                trading resumes.
+                {t('fractions.paymentsFrozen')}
               </p>
             </div>
           )}
@@ -201,8 +200,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
             <div className="flex items-start gap-2 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <p className="text-xs text-amber-200/80">
-                The seller only holds {quote.sellerBalance} fractions right now — lower the
-                quantity or pick another listing.
+                {t('fractions.sellerOnlyHolds', { count: quote.sellerBalance })}
               </p>
             </div>
           )}
@@ -219,15 +217,15 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
             className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 disabled:opacity-40"
           >
             {buy.isPending ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Paying…</>
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('fractions.paying')}</>
             ) : isMine ? (
-              'This is your own listing'
+              t('fractions.ownListing')
             ) : !walletAddress ? (
-              'Sign in to buy'
+              t('fractions.signInToBuy')
             ) : (
               <>
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                Buy {quantity} for {displayTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                {t('fractions.buyForTotal', { quantity, total: displayTotal.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}
               </>
             )}
           </Button>
