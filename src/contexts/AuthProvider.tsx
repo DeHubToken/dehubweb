@@ -87,6 +87,7 @@ import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
+import { resolveSigningAccount, requestAccountPicker, isWrongAccountError } from '@/lib/wallet-accounts';
 import { getRunningBuildId, isRunningStaleBuild } from '@/lib/version-check';
 import {
   initProfileTracking,
@@ -1495,11 +1496,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const completeDeHubAuthWagmi = async (address: string, trigger: WagmiAuthTrigger = 'user') => {
     const timestamp = Math.floor(Date.now() / 1000);
-    const authAddress = address.toLowerCase();
     const connectorId = wagmiConnector?.id;
     const connectorName = wagmiConnector?.name;
-
-    const message = buildDeHubLoginMessage(authAddress, timestamp);
 
     toast.info(
       trigger === 'user'
@@ -1521,6 +1519,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await new Promise(r => setTimeout(r, POST_CONNECT_SIGN_GAP_MS - sinceConnect));
     }
 
+    // Ask the wallet who it is actually holding rather than trusting what
+    // wagmi wrote down. The remembered address outlives the permission behind
+    // it — switch accounts in MetaMask, or approve a different wallet, and the
+    // signature request goes to an account the extension will not sign with.
+    // It answers -32602 "must provide an Ethereum address", which reads as
+    // neither a rejection nor a timeout, so none of the branches below fitted
+    // it and the only escape was removing the site from inside the extension.
+    // See lib/wallet-accounts.ts.
+    //
+    // Costs no prompt (eth_accounts reads what was already granted) and sits
+    // after the popup gap above, so an account changed in the connect popup
+    // itself is the one this reads.
+    const resolved = await resolveSigningAccount(wagmiConnector, address);
+    let authAddress = resolved.address;
+    if (resolved.corrected) {
+      authLogger.warn('Wallet is holding a different account than the one connected', {
+        remembered: address.toLowerCase(),
+        signingWith: authAddress,
+        liveAccounts: resolved.live,
+        connectorId,
+        connectorName,
+        buildId: getRunningBuildId(),
+      });
+    }
+
+    // Rebuilt whenever the account changes — the address is inside the signed
+    // text, so a message built for the old one proves nothing about the new.
+    let message = buildDeHubLoginMessage(authAddress, timestamp);
+
     // Time-box the signature. When the request never settles (see the gap
     // wait above — the popup-race case queues it invisibly), no catch and no
     // finally ever runs, which is what used to leave isConnecting latched and
@@ -1530,17 +1557,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const SIGN_TIMEOUT_MS = 60_000;
     let signature: string;
     let signTimeoutTimer: ReturnType<typeof setTimeout> | undefined;
-    try {
+
+    const requestSignature = (): Promise<string> => {
       const signPromise = signMessageAsync({
         message,
-        account: address as `0x${string}`,
+        account: authAddress as `0x${string}`,
       });
       // If the timeout wins the race this promise is orphaned, and a
       // dismissal arriving after that must not surface as an unhandled
       // rejection. (A signature arriving late is dropped the same way — the
       // flow has already told the user to retry.)
       signPromise.catch(() => {});
-      signature = await Promise.race([
+      return Promise.race([
         signPromise,
         new Promise<never>((_, reject) => {
           signTimeoutTimer = setTimeout(
@@ -1549,6 +1577,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           );
         }),
       ]);
+    };
+
+    try {
+      try {
+        signature = await requestSignature();
+      } catch (firstSignError: any) {
+        // The wallet refused the account rather than the request. Sending them
+        // to the extension to delete the site — the only previous way out —
+        // costs the login; its own account picker is one prompt and stays
+        // inside the sheet.
+        if (!isWrongAccountError(firstSignError)) throw firstSignError;
+
+        clearTimeout(signTimeoutTimer);
+        authLogger.warn('Wallet refused the connected account — opening its account picker', {
+          refusedAddress: authAddress,
+          connectorId,
+          connectorName,
+          buildId: getRunningBuildId(),
+          ...describeWalletError(firstSignError),
+        });
+        toast.info('Your wallet is on a different account', {
+          description: 'Choose the account you want to sign in with.',
+        });
+
+        const chosen = await requestAccountPicker(wagmiConnector);
+        // Dismissed, or a wallet with no picker to open. The original refusal
+        // is the honest answer and the handler below already words it.
+        if (!chosen) throw firstSignError;
+
+        authAddress = chosen;
+        message = buildDeHubLoginMessage(authAddress, timestamp);
+        signature = await requestSignature();
+      }
     } catch (signError: any) {
       const rejected = isUserRejection(signError);
       const alreadyPending = isRequestAlreadyPending(signError);
@@ -2552,6 +2613,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     writeConnectionSource('wagmi');
 
     try {
+      // Either one of the three curated buttons, or the connector id of a
+      // wallet the machine announced over EIP-6963 — connectorMatchesWallet
+      // falls back to an exact id match for those.
       let connector = connectors.find(c => connectorMatchesWallet(c, wallet));
 
       if (!connector && isWalletInAppBrowser()) {
@@ -2610,7 +2674,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error('Connection rejected');
       } else {
         const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet' };
-        toast.error(`Failed to connect to ${names[wallet] || wallet}. Please try again.`);
+        const discovered = connectors.find(c => c.id === wallet)?.name;
+        toast.error(`Failed to connect to ${names[wallet] || discovered || wallet}. Please try again.`);
       }
       return false;
     }
