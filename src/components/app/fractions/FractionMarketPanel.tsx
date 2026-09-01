@@ -11,6 +11,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -44,6 +45,7 @@ interface FractionMarketPanelProps {
 }
 
 export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionMarketPanelProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [sellOpen, setSellOpen] = useState(false);
   const [offerOpen, setOfferOpen] = useState(false);
@@ -64,18 +66,18 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
   const handleCancelListing = async (listing: FractionListing) => {
     try {
       await cancelListing.mutateAsync({ listingId: listing.id, tokenId: listing.token_id });
-      toast.success('Listing cancelled');
+      toast.success(t('fractions.listingCancelled'));
     } catch (err) {
-      toast.error((err as Error)?.message || 'Failed to cancel');
+      toast.error((err as Error)?.message || t('fractions.cancelFailed'));
     }
   };
 
   const handleCancelOffer = async (offer: FractionOffer) => {
     try {
       await cancelOffer.mutateAsync({ offerId: offer.id, tokenId: offer.token_id });
-      toast.success('Offer withdrawn');
+      toast.success(t('fractions.offerWithdrawn'));
     } catch (err) {
-      toast.error((err as Error)?.message || 'Failed to withdraw');
+      toast.error((err as Error)?.message || t('fractions.withdrawFailed'));
     }
   };
 
@@ -114,7 +116,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
               className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
             >
               <Tag className="w-4 h-4 mr-2" />
-              For sale {listings.length > 0 && `(${listings.length})`}
+              {t('fractions.forSaleTab')} {listings.length > 0 && `()`}
             </TabsTrigger>
             <TabsTrigger
               value="offers"
@@ -122,7 +124,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
               className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
             >
               <HandCoins className="w-4 h-4 mr-2" />
-              Offers {offers.length > 0 && `(${offers.length})`}
+              {t('fractions.offersTab')} {offers.length > 0 && `()`}
             </TabsTrigger>
           </TabsList>
 
@@ -135,7 +137,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
             ) : listings.length === 0 ? (
               <div className="text-center py-8">
                 <Tag className="w-8 h-8 text-white/20 mx-auto mb-2" />
-                <p className="text-white/40 text-sm">Nothing for sale yet</p>
+                <p className="text-white/40 text-sm">{t('fractions.nothingForSaleYet')}</p>
               </div>
             ) : (
               <div className="space-y-3 mb-4">
@@ -151,7 +153,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                       <div className="flex items-center justify-between mb-2 gap-2">
                         <span className="text-xs font-mono text-white/60 flex items-center gap-2 min-w-0">
                           <span className="truncate">{truncateAddress(listing.seller_address)}</span>
-                          {isMine && <span className="text-primary shrink-0">(you)</span>}
+                          {isMine && <span className="text-primary shrink-0">{t('fractions.you')}</span>}
                         </span>
                         <SellerTrustBadge
                           stats={sellerStats[listing.seller_address.toLowerCase()]}
@@ -160,10 +162,10 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                       </div>
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="text-white font-medium">{available} fractions</p>
+                          <p className="text-white font-medium">{t('fractions.fractionCount', { count: available })}</p>
                           <p className="text-xs text-white/60">
-                            {listing.price_per_fraction} <DhbCoin /> each ·{' '}
-                            {((available / TOTAL_FRACTIONS) * 100).toFixed(1)}% of the post
+                            {listing.price_per_fraction} <DhbCoin /> {t('fractions.eachDot')}{' '}
+                            {t('fractions.pctOfPost', { pct: ((available / TOTAL_FRACTIONS) * 100).toFixed(1) })}
                           </p>
                         </div>
                         <div className="text-right shrink-0">
@@ -181,7 +183,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                               onClick={() => handleCancelListing(listing)}
                               disabled={cancelListing.isPending}
                             >
-                              Cancel
+                              {t('fractions.cancel')}
                             </Button>
                           ) : (
                             <Button
@@ -189,7 +191,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                               className="bg-white/10 hover:bg-white/20 text-white text-xs mt-1 h-7 px-3"
                               onClick={() => setBuyListing(listing)}
                             >
-                              Buy
+                              {t('fractions.buy')}
                             </Button>
                           )}
                         </div>
@@ -207,7 +209,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                   className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Sell your fractions ({held} held)
+                  {t('fractions.sellYourFractions', { held })}
                 </Button>
               )}
               {!holdsEverything && (
@@ -217,7 +219,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                   className="w-full text-white/60 hover:text-white"
                 >
                   <HandCoins className="w-4 h-4 mr-2" />
-                  Make an offer
+                  {t('fractions.makeAnOfferAction')}
                 </Button>
               )}
             </div>
@@ -232,7 +234,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
             ) : offers.length === 0 ? (
               <div className="text-center py-8">
                 <HandCoins className="w-8 h-8 text-white/20 mx-auto mb-2" />
-                <p className="text-white/40 text-sm">No offers yet</p>
+                <p className="text-white/40 text-sm">{t('fractions.noOffersYet')}</p>
               </div>
             ) : (
               <div className="space-y-3 mb-4">
@@ -249,7 +251,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-mono text-white/60">
                           {truncateAddress(offer.buyer_address)}
-                          {isBuyer && <span className="text-primary ml-1">(you)</span>}
+                          {isBuyer && <span className="text-primary ml-1">{t('fractions.you')}</span>}
                         </span>
                         {offer.target_seller && (
                           <span className="px-2 py-0.5 text-[10px] rounded-full bg-white/10 text-white/50">
@@ -259,9 +261,9 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                       </div>
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="text-white font-medium">{offer.quantity} fractions</p>
+                          <p className="text-white font-medium">{t('fractions.fractionCount', { count: offer.quantity })}</p>
                           <p className="text-xs text-white/60">
-                            {offer.price_per_fraction} <DhbCoin /> each
+                            {offer.price_per_fraction} <DhbCoin /> {t('fractions.each')}
                           </p>
                         </div>
                         <div className="text-right shrink-0">
@@ -279,7 +281,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                               onClick={() => handleCancelOffer(offer)}
                               disabled={cancelOffer.isPending}
                             >
-                              Withdraw
+                              {t('fractions.withdraw')}
                             </Button>
                           ) : canFill ? (
                             <div className="flex gap-1 mt-1 justify-end">
@@ -292,7 +294,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                                 {isAccepting ? (
                                   <Loader2 className="w-3 h-3 animate-spin" />
                                 ) : (
-                                  'Sell'
+                                  t('fractions.sell')
                                 )}
                               </Button>
                               <Button
@@ -304,12 +306,12 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                                 }
                                 disabled={isAccepting || reject.isPending}
                               >
-                                Reject
+                                {t('fractions.reject')}
                               </Button>
                             </div>
                           ) : holdsFractions && !isBuyer ? (
                             <p className="text-[10px] text-white/30 mt-1">
-                              Needs {offer.quantity}, you hold {held}
+                              {t('fractions.needsYouHold', { needed: offer.quantity, held })}
                             </p>
                           ) : null}
                         </div>
@@ -327,7 +329,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                   className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Make an offer
+                  {t('fractions.makeAnOfferAction')}
                 </Button>
               )}
               {holdsFractions && (
@@ -337,7 +339,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                   className="w-full text-white/60 hover:text-white"
                 >
                   <Tag className="w-4 h-4 mr-2" />
-                  Sell your fractions ({held} held)
+                  {t('fractions.sellYourFractions', { held })}
                 </Button>
               )}
             </div>

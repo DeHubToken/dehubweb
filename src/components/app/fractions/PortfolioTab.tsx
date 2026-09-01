@@ -10,6 +10,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Tag, Wallet, ImageIcon, HandCoins, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ function PositionCard({
   onSell: () => void;
   onOpen: () => void;
 }) {
+  const { t } = useTranslation();
   const thumb = position.imageUrl ? cdnImage(position.imageUrl, { width: 300 }) : '';
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
@@ -45,7 +47,7 @@ function PositionCard({
           {thumb ? (
             <img
               src={thumb}
-              alt={position.title || `Post #${position.tokenId}`}
+              alt={position.title || t('fractions.postNumber', { id: position.tokenId })}
               className="w-full h-full object-cover"
               loading="lazy"
             />
@@ -59,15 +61,15 @@ function PositionCard({
           </span>
           {position.isCreator && (
             <span className="absolute top-2 right-2 text-[10px] font-semibold bg-white/90 text-black px-1.5 py-0.5 rounded">
-              Yours
+              {t('fractions.yours')}
             </span>
           )}
         </div>
         <div className="p-3 pb-1.5">
           <h3 className="text-sm font-medium text-white truncate">
-            {position.title || `Post #${position.tokenId}`}
+            {position.title || t('fractions.postNumber', { id: position.tokenId })}
           </h3>
-          <p className="text-xs text-zinc-400">{position.percentage.toFixed(1)}% of the post</p>
+          <p className="text-xs text-zinc-400">{t('fractions.pctOfPost', { pct: position.percentage.toFixed(1) })}</p>
         </div>
       </button>
       <div className="px-3 pb-3">
@@ -77,7 +79,7 @@ function PositionCard({
           className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs h-8"
         >
           <Tag className="w-3.5 h-3.5 mr-1.5" />
-          Sell
+          {t('fractions.sell')}
         </Button>
       </div>
     </div>
@@ -85,6 +87,7 @@ function PositionCard({
 }
 
 export function PortfolioTab() {
+  const { t } = useTranslation();
   const { walletAddress, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [selling, setSelling] = useState<PortfolioPosition | null>(null);
@@ -102,7 +105,7 @@ export function PortfolioTab() {
     return (
       <div className="text-center py-16">
         <Wallet className="w-10 h-10 text-white/15 mx-auto mb-3" />
-        <p className="text-white/40 text-sm">Sign in to see the fractions you hold</p>
+        <p className="text-white/40 text-sm">{t('fractions.signInToSee')}</p>
       </div>
     );
   }
@@ -128,11 +131,10 @@ export function PortfolioTab() {
       {/* Holdings */}
       <section className="space-y-3">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-sm font-medium text-white/60">Your fractions</h2>
+          <h2 className="text-sm font-medium text-white/60">{t('fractions.yourFractions')}</h2>
           {totalHeld > 0 && (
             <span className="text-xs text-white/30">
-              {totalHeld.toLocaleString()} across {positions.length} post
-              {positions.length === 1 ? '' : 's'}
+              {totalHeld.toLocaleString()} {t('fractions.acrossPosts', { count: positions.length })}
             </span>
           )}
         </div>
@@ -144,9 +146,9 @@ export function PortfolioTab() {
         ) : positions.length === 0 ? (
           <div className="text-center py-12 rounded-xl border border-white/10 bg-white/5">
             <ImageIcon className="w-8 h-8 text-white/15 mx-auto mb-2" />
-            <p className="text-white/40 text-sm">You don't hold any fractions yet</p>
+            <p className="text-white/40 text-sm">{t('fractions.noneHeldYet')}</p>
             <p className="text-white/25 text-xs mt-1">
-              Upload a post to be minted 1000, or buy into someone else's.
+              {t('fractions.noneHeldHint')}
             </p>
           </div>
         ) : (
@@ -166,7 +168,7 @@ export function PortfolioTab() {
       {/* Your asks */}
       {activeListings.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-white/60">Listed for sale</h2>
+          <h2 className="text-sm font-medium text-white/60">{t('fractions.listedForSale')}</h2>
           <div className="space-y-2">
             {activeListings.map((listing) => {
               const available = listing.quantity - listing.filled_quantity;
@@ -177,12 +179,12 @@ export function PortfolioTab() {
                 >
                   <div className="min-w-0">
                     <p className="text-sm text-white truncate">
-                      {listing.post_title || `Post #${listing.token_id}`}
+                      {listing.post_title || t('fractions.postNumber', { id: listing.token_id })}
                     </p>
                     <p className="text-xs text-white/50 flex items-center gap-1">
-                      {available} fractions ·
+                      {t('fractions.fractionCountDot', { count: available })}
                       <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
-                      {listing.price_per_fraction} each
+                      {t('fractions.priceEach', { price: listing.price_per_fraction })}
                     </p>
                   </div>
                   <Button
@@ -196,14 +198,14 @@ export function PortfolioTab() {
                           listingId: listing.id,
                           tokenId: listing.token_id,
                         });
-                        toast.success('Listing cancelled');
+                        toast.success(t('fractions.listingCancelled'));
                       } catch (err) {
-                        toast.error((err as Error)?.message || 'Failed to cancel');
+                        toast.error((err as Error)?.message || t('fractions.cancelFailed'));
                       }
                     }}
                   >
                     <X className="w-3.5 h-3.5 mr-1" />
-                    Cancel
+                    {t('fractions.cancel')}
                   </Button>
                 </div>
               );
@@ -215,7 +217,7 @@ export function PortfolioTab() {
       {/* Your bids */}
       {!!offers?.made.length && (
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-white/60">Offers you've made</h2>
+          <h2 className="text-sm font-medium text-white/60">{t('fractions.offersYouMade')}</h2>
           <div className="space-y-2">
             {offers.made.map((offer) => (
               <div
@@ -223,11 +225,11 @@ export function PortfolioTab() {
                 className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 p-3"
               >
                 <div className="min-w-0">
-                  <p className="text-sm text-white truncate">Post #{offer.token_id}</p>
+                  <p className="text-sm text-white truncate">{t('fractions.postNumber', { id: offer.token_id })}</p>
                   <p className="text-xs text-white/50 flex items-center gap-1">
-                    {offer.quantity} fractions ·
+                    {t('fractions.fractionCountDot', { count: offer.quantity })}
                     <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
-                    {offer.price_per_fraction} each
+                    {t('fractions.priceEach', { price: offer.price_per_fraction })}
                   </p>
                 </div>
                 <Button
@@ -241,14 +243,14 @@ export function PortfolioTab() {
                         offerId: offer.id,
                         tokenId: offer.token_id,
                       });
-                      toast.success('Offer withdrawn');
+                      toast.success(t('fractions.offerWithdrawn'));
                     } catch (err) {
-                      toast.error((err as Error)?.message || 'Failed to withdraw');
+                      toast.error((err as Error)?.message || t('fractions.withdrawFailed'));
                     }
                   }}
                 >
                   <X className="w-3.5 h-3.5 mr-1" />
-                  Withdraw
+                  {t('fractions.withdraw')}
                 </Button>
               </div>
             ))}
@@ -259,7 +261,7 @@ export function PortfolioTab() {
       {/* Bids aimed at you */}
       {!!offers?.received.length && (
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-white/60">Offers for your fractions</h2>
+          <h2 className="text-sm font-medium text-white/60">{t('fractions.offersForYourFractions')}</h2>
           <div className="space-y-2">
             {offers.received.map((offer) => (
               <button
@@ -268,16 +270,16 @@ export function PortfolioTab() {
                 className="w-full flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-left hover:border-white/20 transition-colors"
               >
                 <div className="min-w-0">
-                  <p className="text-sm text-white truncate">Post #{offer.token_id}</p>
+                  <p className="text-sm text-white truncate">{t('fractions.postNumber', { id: offer.token_id })}</p>
                   <p className="text-xs text-white/50 flex items-center gap-1">
-                    {offer.quantity} fractions ·
+                    {t('fractions.fractionCountDot', { count: offer.quantity })}
                     <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
-                    {offer.price_per_fraction} each
+                    {t('fractions.priceEach', { price: offer.price_per_fraction })}
                   </p>
                 </div>
                 <span className="text-xs text-white/40 flex items-center gap-1 shrink-0">
                   <HandCoins className="w-3.5 h-3.5" />
-                  Review
+                  {t('fractions.review')}
                 </span>
               </button>
             ))}

@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ interface MakeOfferDrawerProps {
 }
 
 export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenChange, onSuccess }: MakeOfferDrawerProps) {
+  const { t } = useTranslation();
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,11 +39,11 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
 
   const handleSubmit = async () => {
     if (!walletAddress) {
-      toast.error('Please sign in first');
+      toast.error(t('fractions.signInFirst'));
       return;
     }
     if (targetSeller && walletAddress.toLowerCase() === targetSeller.toLowerCase()) {
-      toast.error('You cannot make an offer on your own fractions');
+      toast.error(t('fractions.cannotOfferOwn'));
       return;
     }
     if (!isValid) return;
@@ -55,14 +57,14 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
         targetSeller,
         chainId,
       });
-      toast.success(`Offer submitted for ${qty} fraction${qty > 1 ? 's' : ''} at ${prc} DHB each`);
+      toast.success(t('fractions.offerSubmitted', { count: qty, price: prc }));
       onOpenChange(false);
       setQuantity('');
       setPrice('');
       onSuccess?.();
     } catch (err) {
       console.error('Make offer error:', err);
-      toast.error((err as Error)?.message || 'Failed to submit offer');
+      toast.error((err as Error)?.message || t('fractions.offerSubmitFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -72,12 +74,12 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column glass className="px-4 pb-8">
         <DrawerHeader className="px-0">
-          <DrawerTitle className="text-white text-lg">Make an Offer</DrawerTitle>
+          <DrawerTitle className="text-white text-lg">{t('fractions.makeAnOffer')}</DrawerTitle>
         </DrawerHeader>
         <div className="space-y-4">
           {/* Quantity */}
           <div>
-            <label className="text-sm text-white/60 mb-1.5 block">Number of Fractions</label>
+            <label className="text-sm text-white/60 mb-1.5 block">{t('fractions.numberOfFractions')}</label>
             <input
               type="number"
               min={1}
@@ -91,7 +93,7 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
 
           {/* Price per fraction */}
           <div>
-            <label className="text-sm text-white/60 mb-1.5 block">Your Offer (DHB per Fraction)</label>
+            <label className="text-sm text-white/60 mb-1.5 block">{t('fractions.yourOfferLabel')}</label>
             <div className="relative">
               <input
                 type="number"
@@ -110,7 +112,7 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
           {qty > 0 && prc > 0 && (
             <div className="bg-white/5 rounded-xl p-3 border border-white/10">
               <div className="flex justify-between text-sm">
-                <span className="text-white/60">Total offer value</span>
+                <span className="text-white/60">{t('fractions.totalOfferValue')}</span>
                 <span className="text-white font-medium flex items-center gap-1.5">
                   <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
                   {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
@@ -120,7 +122,7 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
           )}
 
           <p className="text-xs text-white/40 text-center">
-            Your offer will be visible to all holders. They can accept or reject it.
+            {t('fractions.offerVisibleNote')}
           </p>
 
           <Button
@@ -129,9 +131,9 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
             className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 disabled:opacity-40"
           >
             {isSubmitting ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Submitting...</>
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('fractions.submitting')}</>
             ) : (
-              <><HandCoins className="w-4 h-4 mr-2" />Submit Offer</>
+              <><HandCoins className="w-4 h-4 mr-2" />{t('fractions.submitOffer')}</>
             )}
           </Button>
         </div>
