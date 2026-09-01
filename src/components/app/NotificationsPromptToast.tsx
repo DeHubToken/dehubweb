@@ -9,13 +9,7 @@ import {
   setStoredEnabled,
   requestNotificationPermission,
 } from '@/hooks/use-browser-notifications';
-import {
-  TOAST_CLASSES,
-  TITLE_CLASSES,
-  CONTENT_CLASSES,
-  CLOSE_CLASSES,
-  BUTTON_CLASSES,
-} from '@/components/app/NewVersionToast';
+import { BUTTON_CLASSES } from '@/components/ui/toast-classes';
 
 /**
  * Soft-ask for browser notifications, styled and positioned like the
@@ -131,12 +125,6 @@ function showPrompt(): void {
     // The X counts as "not now". `snooze` no-ops after `markDone`, so the
     // dismiss that follows an answer doesn't downgrade it to a snooze.
     onDismiss: () => snooze(),
-    classNames: {
-      toast: TOAST_CLASSES,
-      title: TITLE_CLASSES,
-      content: CONTENT_CLASSES,
-      closeButton: CLOSE_CLASSES,
-    },
     description: (
       <span className="flex flex-col gap-3">
         <span>

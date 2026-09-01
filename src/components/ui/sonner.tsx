@@ -1,9 +1,27 @@
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  TOAST_CLASSES,
+  TITLE_CLASSES,
+  CONTENT_CLASSES,
+  DESCRIPTION_CLASSES,
+  ICON_CLASSES,
+  SLOT_BUTTON_CLASSES,
+  CLOSE_CLASSES,
+} from "@/components/ui/toast-classes";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
+/**
+ * The app's single toaster. Every toast in the app is raised through sonner and
+ * lands here, so the classes below are the whole look — see ui/toast-classes
+ * for why each one is what it is.
+ *
+ * The glass card is set on the toast alongside the shared layout classes rather
+ * than in that file: the surface is this toaster's, while the layout and the
+ * type are the contract any toast body is written against.
+ */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
   const isMobile = useIsMobile();
@@ -18,11 +36,21 @@ const Toaster = ({ ...props }: ToasterProps) => {
       expand={false}
       toastOptions={{
         classNames: {
-          toast: "group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:text-center has-[[data-button]]:flex-wrap",
-          description: "group-[.toast]:text-white/70 group-[.toast]:text-center",
-          actionButton: "group-[.toast]:bg-white/20 group-[.toast]:text-white group-[.toast]:hover:bg-white/30 group-[.toast]:!ms-0 group-[.toast]:mt-2 group-[.toast]:w-full group-[.toast]:basis-full group-[.toast]:justify-center",
-          cancelButton: "group-[.toast]:bg-white/10 group-[.toast]:text-white/70 group-[.toast]:hover:bg-white/20 group-[.toast]:!ms-0 group-[.toast]:mt-2 group-[.toast]:w-full group-[.toast]:basis-full group-[.toast]:justify-center",
-          loader: "group-[.toast]:text-white",
+          // `group` is what ICON_CLASSES selects the loading case from.
+          toast: [
+            "group toast",
+            "bg-white/10 backdrop-blur-xl border border-white/20 text-white",
+            "shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-2xl",
+            TOAST_CLASSES,
+          ].join(" "),
+          title: TITLE_CLASSES,
+          content: CONTENT_CLASSES,
+          description: DESCRIPTION_CLASSES,
+          icon: ICON_CLASSES,
+          actionButton: SLOT_BUTTON_CLASSES,
+          cancelButton: SLOT_BUTTON_CLASSES,
+          closeButton: CLOSE_CLASSES,
+          loader: "text-white",
         },
       }}
       {...props}
