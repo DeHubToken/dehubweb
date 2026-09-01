@@ -28,7 +28,26 @@ export function statusBadgeClass(status: WorkJobStatus): string {
   return 'bg-white/10 text-white/60';
 }
 
-/** `in_progress` reads as a slug everywhere it is printed; the UI wants a phrase. */
-export function statusLabel(status: string): string {
-  return status.replace(/_/g, ' ');
+/**
+ * `in_progress` reads as a slug everywhere it is printed; the UI wants a phrase,
+ * and a translated one. Callers pass the returned key through `t()`, so every
+ * surface that prints a status — board, history, detail, link embed — spells it
+ * the same way in every language.
+ */
+export function statusLabelKey(status: string): string {
+  const keys: Record<string, string> = {
+    draft: 'work.statusDraft',
+    open: 'work.statusOpen',
+    in_progress: 'work.statusInProgress',
+    completed: 'work.statusCompleted',
+    disputed: 'work.statusDisputed',
+    cancelled: 'work.statusCancelled',
+    expired: 'work.statusExpired',
+    pending: 'work.statusPending',
+    approved: 'work.statusApproved',
+    rejected: 'work.statusRejected',
+    awarded: 'work.statusAwarded',
+    paid: 'work.statusPaid',
+  };
+  return keys[status] ?? status.replace(/_/g, ' ');
 }

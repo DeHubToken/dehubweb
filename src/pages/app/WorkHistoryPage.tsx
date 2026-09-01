@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Search, Wallet, AlertTriangle, Plus } from 'lucide-react';
 import { useMyPostedJobs, useMyWorkSubmissions } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';
-import { TxLink, statusBadgeClass, statusLabel } from '@/features/work/components/TxLink';
+import { TxLink, statusBadgeClass, statusLabelKey } from '@/features/work/components/TxLink';
 import type { WorkJob, WorkJobStatus, WorkSubmission } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { isWorkContractDeployed } from '@/lib/contracts/dehub-work';
@@ -24,6 +25,7 @@ const STATUS_OPTIONS: Record<Tab, Array<WorkJobStatus | 'all'>> = {
 
 export default function WorkHistoryPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth();
   const [tab, setTab] = useState<Tab>('posted');
   const [status, setStatus] = useState<WorkJobStatus | 'all'>('all');
@@ -68,41 +70,41 @@ export default function WorkHistoryPage() {
       />
 
       <button onClick={() => navigate('/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">
-        <ArrowLeft className="w-4 h-4" /> Back
+        <ArrowLeft className="w-4 h-4" /> {t('work.back')}
       </button>
 
       <div className="flex items-center gap-3 mb-4">
         <ThemedIcon icon="bounties" alt="" className="w-10 h-10 shrink-0 object-contain" />
         <div className="min-w-0">
-          <h1 className="text-xl font-bold text-white">My Bounties</h1>
-          <p className="text-sm text-white/60">Every bounty you've posted or worked on, including completed ones.</p>
+          <h1 className="text-xl font-bold text-white">{t('work.myBounties')}</h1>
+          <p className="text-sm text-white/60">{t('work.historySubtitle')}</p>
         </div>
       </div>
 
       {!walletAddress ? (
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
           <Wallet className="w-8 h-8 text-white/40 mx-auto mb-2" />
-          <h2 className="text-base font-semibold text-white mb-1">Connect your wallet</h2>
-          <p className="text-sm text-white/60 max-w-md mx-auto mb-4">Connect to see the bounties you've posted or worked on.</p>
-          <button onClick={() => openLoginModal()} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">Connect wallet</button>
+          <h2 className="text-base font-semibold text-white mb-1">{t('work.connectTitle')}</h2>
+          <p className="text-sm text-white/60 max-w-md mx-auto mb-4">{t('work.connectBody')}</p>
+          <button onClick={() => openLoginModal()} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">{t('work.connectCta')}</button>
         </div>
       ) : (
         <>
           {/* Tabs */}
-          <div role="tablist" aria-label="Bounty history" className="flex items-center gap-2 mb-3">
-            {(['posted', 'worked'] as const).map((t) => (
+          <div role="tablist" aria-label={t('work.historyTabsLabel')} className="flex items-center gap-2 mb-3">
+            {(['posted', 'worked'] as const).map((tabId) => (
               <button
-                key={t}
+                key={tabId}
                 role="tab"
-                aria-selected={tab === t}
-                onClick={() => switchTab(t)}
+                aria-selected={tab === tabId}
+                onClick={() => switchTab(tabId)}
                 className={`px-4 py-2 rounded-xl text-sm transition-colors ${
-                  tab === t
+                  tab === tabId
                     ? 'bg-white/15 text-white border border-white/20'
                     : 'bg-white/5 text-white/60 border border-transparent hover:bg-white/10'
                 }`}
               >
-                {t === 'posted' ? 'Posted by me' : 'Worked on'}
+                {tabId === 'posted' ? t('work.tabPosted') : t('work.tabWorked')}
               </button>
             ))}
           </div>
@@ -114,19 +116,19 @@ export default function WorkHistoryPage() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                aria-label="Search your bounties by title"
-                placeholder="Search by title…"
+                aria-label={t('work.searchYourBounties')}
+                placeholder={t('work.searchByTitle')}
                 className="w-full pl-10 pr-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
               />
             </div>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as WorkJobStatus | 'all')}
-              aria-label="Filter by status"
+              aria-label={t('work.filterByStatus')}
               className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
             >
               {STATUS_OPTIONS[tab].map((s) => (
-                <option key={s} value={s}>{s === 'all' ? 'All statuses' : statusLabel(s)}</option>
+                <option key={s} value={s}>{s === 'all' ? t('work.allStatuses') : t(statusLabelKey(s))}</option>
               ))}
             </select>
           </div>
@@ -142,9 +144,9 @@ export default function WorkHistoryPage() {
                state and tells a poster with 40 bounties they have none. */
             <div className="text-center py-16">
               <AlertTriangle className="w-8 h-8 text-white/40 mx-auto mb-3" />
-              <p className="text-sm text-white/60 mb-4">Couldn't load your bounties.</p>
+              <p className="text-sm text-white/60 mb-4">{t('work.loadFailed')}</p>
               <button onClick={() => refetch()} className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/15 transition-colors">
-                Try again
+                {t('work.tryAgain')}
               </button>
             </div>
           ) : isEmpty ? (
@@ -166,28 +168,29 @@ export default function WorkHistoryPage() {
 
 function EmptyState({ tab, hasFilters, onClear }: { tab: Tab; hasFilters: boolean; onClear: () => void }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <div className="text-center py-16">
       <ThemedIcon icon="bounties" alt="" className="w-12 h-12 object-contain mx-auto mb-3 opacity-60" />
       <p className="text-white/60 mb-4">
         {hasFilters
-          ? 'No bounties match these filters.'
+          ? t('work.emptyFilteredHistory')
           : tab === 'posted'
-            ? "You haven't posted a bounty yet."
-            : "You haven't submitted work on a bounty yet."}
+            ? t('work.emptyPosted')
+            : t('work.emptyWorked')}
       </p>
       <div className="flex items-center justify-center gap-3">
         {hasFilters ? (
           <button onClick={onClear} className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/15 transition-colors">
-            Clear filters
+            {t('work.clearFilters')}
           </button>
         ) : tab === 'posted' ? (
           <button onClick={() => navigate('/work/post')} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold inline-flex items-center gap-1.5">
-            <Plus className="w-4 h-4" /> Post a Bounty
+            <Plus className="w-4 h-4" /> {t('work.postBounty')}
           </button>
         ) : (
           <button onClick={() => navigate('/work')} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">
-            Browse bounties
+            {t('work.browseBounties')}
           </button>
         )}
       </div>
@@ -196,11 +199,12 @@ function EmptyState({ tab, hasFilters, onClear }: { tab: Tab; hasFilters: boolea
 }
 
 function PostedRow({ job }: { job: WorkJob }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-4">
       <div className="flex items-start justify-between gap-3 mb-1">
         <Link to={bountyPath(job)} className="text-sm font-semibold text-white hover:underline line-clamp-1">{job.title}</Link>
-        <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</span>
+        <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${statusBadgeClass(job.status)}`}>{t(statusLabelKey(job.status))}</span>
       </div>
       <div className="text-xs text-white/50">
         {job.total_budget.toLocaleString('en-US', { maximumFractionDigits: 4 })} {job.currency} · {new Date(job.created_at).toLocaleDateString()}
@@ -208,15 +212,16 @@ function PostedRow({ job }: { job: WorkJob }) {
       {/* Until the escrow contract is deployed nothing ever writes a hash, so
           the "no tx" note would be the most-repeated line on the page. */}
       {job.fund_tx_hash ? (
-        <div className="mt-2"><TxLink label="Escrow tx" txHash={job.fund_tx_hash} /></div>
+        <div className="mt-2"><TxLink label={t('work.escrowTx')} txHash={job.fund_tx_hash} /></div>
       ) : isWorkContractDeployed() ? (
-        <div className="mt-2 text-[11px] text-white/30">Not escrowed on-chain</div>
+        <div className="mt-2 text-[11px] text-white/30">{t('work.notEscrowedOnChain')}</div>
       ) : null}
     </div>
   );
 }
 
 function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: WorkJob | null } }) {
+  const { t } = useTranslation();
   const job = s.job;
   // Approved is not paid. Treating the two as one status is what let ~500k DHB
   // of accepted work show a green "paid" tick on this very page while no
@@ -231,17 +236,17 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
         {job ? (
           <Link to={bountyPath(job)} className="text-sm font-semibold text-white hover:underline line-clamp-1">{job.title}</Link>
         ) : (
-          <span className="text-sm font-semibold text-white/60">Untitled bounty</span>
+          <span className="text-sm font-semibold text-white/60">{t('work.untitledBounty')}</span>
         )}
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          {job && <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</span>}
+          {job && <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${statusBadgeClass(job.status)}`}>{t(statusLabelKey(job.status))}</span>}
           <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${
             paid ? 'bg-emerald-500/20 text-emerald-300' :
             awaitingPayment ? 'bg-amber-400/20 text-amber-200' :
             s.approval_status === 'rejected' ? 'bg-red-500/20 text-red-300' :
             'bg-white/10 text-white/60'
           }`}>
-            {paid ? 'paid' : awaitingPayment ? 'awaiting payment' : s.approval_status}
+            {paid ? t('work.statusPaid') : awaitingPayment ? t('work.statusAwaitingPayment') : t(statusLabelKey(s.approval_status))}
           </span>
         </div>
       </div>
@@ -250,10 +255,10 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
         {(paid || awaitingPayment) && due > 0 && job && ` · ${due.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${job.currency}`}
       </div>
       {s.payout_tx_hash ? (
-        <div className="mt-2"><TxLink label="Payout tx" txHash={s.payout_tx_hash} /></div>
+        <div className="mt-2"><TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} /></div>
       ) : awaitingPayment ? (
         <div className="mt-2 text-[11px] text-amber-200/70">
-          Accepted — payment not sent yet.
+          {t('work.acceptedNotSent')}
         </div>
       ) : null}
     </div>
