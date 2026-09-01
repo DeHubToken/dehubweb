@@ -51,6 +51,7 @@ import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { GatedMedia } from './GatedMedia';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
+import { useStreamPresence } from '@/hooks/use-stream-presence';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -128,6 +129,19 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Records the view once the player has been on screen long enough to mean it.
   const viewRef = useFeedViewTracking(stream.tokenId || stream.id);
+  /*
+   * Counts this tab among the people watching, and reads the live number back.
+   *
+   * Web viewers were never counted at all — `addViewer` is reachable only
+   * through the stream gateway and only the mobile app connected, so the
+   * "tuned in" figure has always been mobile-only. Production streams show
+   * peaks of 0, 1 and 3 for exactly that reason.
+   *
+   * Falls back to the API's stored total when the socket has nothing to say
+   * yet, so the card never flashes a zero over a busy stream.
+   */
+  const livePresence = useStreamPresence(stream.streamId, !!stream.isLive);
+  const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
   const hlsRef = useRef<Hls | null>(null);
   /** One WebRTC attempt per card: once it fails, HLS keeps the element. */
   const whepFailedRef = useRef(false);
@@ -927,7 +941,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                   <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">
                     LIVE
                   </span>
-                  <span className="text-white text-sm">{stream.viewers} tuned in</span>
+                  <span className="text-white text-sm">{viewersLabel} tuned in</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -970,7 +984,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           onTip={() => setShowGiftDrawer(true)}
         />
         {!streamEnded && (
-          <p className="font-semibold text-white text-sm">{stream.viewers} tuned in</p>
+          <p className="font-semibold text-white text-sm">{viewersLabel} tuned in</p>
         )}
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
