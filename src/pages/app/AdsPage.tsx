@@ -37,7 +37,7 @@ export default function AdsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={t('ads.seoTitle')}| DeHub"
+        title={t('ads.seoTitle')}
         description="Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in DHB."
       />
 
