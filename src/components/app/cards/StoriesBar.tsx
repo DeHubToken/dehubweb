@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -53,6 +54,7 @@ interface StoriesBarProps {
 }
 
 export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: StoriesBarProps) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
 
@@ -151,7 +153,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
           <Video className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Go Live</span>
+        <span className="text-white font-medium">{t('stories.goLive')}</span>
       </button>
       <button
         onClick={handleAddStory}
@@ -162,7 +164,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
           <Camera className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">
-          {isUploading ? 'Uploading...' : 'Add Story'}
+          {t(isUploading ? 'stories.uploading' : 'stories.addStory')}
         </span>
       </button>
       <button
@@ -172,7 +174,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
           <PenSquare className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Create Post</span>
+        <span className="text-white font-medium">{t('stories.createPost')}</span>
       </button>
     </div>
   );
@@ -187,8 +189,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
           <Video className="w-4 h-4 text-white" />
         </div>
         <div>
-          <span className="text-white font-medium block">Video</span>
-          <span className="text-zinc-400 text-xs">Start a livestream</span>
+          <span className="text-white font-medium block">{t('stories.video')}</span>
+          <span className="text-zinc-400 text-xs">{t('stories.startLivestream')}</span>
         </div>
       </button>
       <button
@@ -199,8 +201,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
           <Mic className="w-4 h-4 text-white" />
         </div>
         <div>
-          <span className="text-white font-medium block">Audio</span>
-          <span className="text-zinc-400 text-xs">Start a Stage</span>
+          <span className="text-white font-medium block">{t('stories.audio')}</span>
+          <span className="text-zinc-400 text-xs">{t('stories.startStage')}</span>
         </div>
       </button>
     </div>
@@ -213,7 +215,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
           <Plus className="w-5 h-5 md:w-6 md:h-6 text-white" />
         </div>
       </div>
-      <span className="text-[10px] md:text-xs text-zinc-400 truncate w-14 md:w-16 text-center">Create</span>
+      <span className="text-[10px] md:text-xs text-zinc-400 truncate w-14 md:w-16 text-center">{t('stories.create')}</span>
     </div>
   );
 
@@ -334,9 +336,9 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               </div>
               <DrawerContent column glass className="px-4 pb-8" hideHandle>
                 <DrawerHeader className="mb-2">
-                  <DrawerTitle className="text-white">Create</DrawerTitle>
+                  <DrawerTitle className="text-white">{t('stories.create')}</DrawerTitle>
                   <DrawerDescription className="sr-only">
-                    Choose what you want to create: a livestream, a story, or a post.
+                    {t('stories.createDescription')}
                   </DrawerDescription>
                 </DrawerHeader>
                 {menuContent}
@@ -347,9 +349,9 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
             <Drawer open={showLiveOptions} onOpenChange={setShowLiveOptions}>
               <DrawerContent column glass className="px-4 pb-8" hideHandle>
                 <DrawerHeader className="mb-2">
-                  <DrawerTitle className="text-white">Go Live</DrawerTitle>
+                  <DrawerTitle className="text-white">{t('stories.goLive')}</DrawerTitle>
                   <DrawerDescription className="sr-only">
-                    Choose between starting a video livestream or an audio stage.
+                    {t('stories.goLiveDescription')}
                   </DrawerDescription>
                 </DrawerHeader>
                 {liveOptionsContent}
@@ -412,7 +414,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                     <Plus className="w-5 h-5 md:w-6 md:h-6 text-zinc-400" />
                   </div>
                 </div>
-                <span className="text-[10px] md:text-xs text-zinc-500 truncate w-14 md:w-16 text-center">Create</span>
+                <span className="text-[10px] md:text-xs text-zinc-500 truncate w-14 md:w-16 text-center">{t('stories.create')}</span>
               </div>
             )}
           </SwipeableCarousel>

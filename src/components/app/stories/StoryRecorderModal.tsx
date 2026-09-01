@@ -7,6 +7,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Camera, Trash2, Square, Check, Loader2, RotateCcw, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -23,6 +24,7 @@ interface StoryRecorderModalProps {
 const MAX_DURATION = 30; // seconds
 
 export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded, onPhotoCaptured }: StoryRecorderModalProps) {
+  const { t } = useTranslation();
   const [isInitializing, setIsInitializing] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -73,7 +75,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded, onPhotoCa
       }
     } catch (error) {
       console.error('Camera access error:', error);
-      toast.error('Could not access camera. Please check permissions.');
+      toast.error(t('stories.cameraAccessFailed'));
       onClose();
     } finally {
       setIsInitializing(false);
@@ -131,7 +133,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded, onPhotoCa
           a.download = `story-photo-${Date.now()}.png`;
           a.click();
           URL.revokeObjectURL(url);
-          toast.success('Photo captured!');
+          toast.success(t('stories.photoCaptured'));
         }
       }
     }, 'image/png');
