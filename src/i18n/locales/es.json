@@ -972,6 +972,26 @@
     "loginDescription": "Inicia sesión para ver y gestionar tu perfil."
   },
   "tv": {
+    "seoTitle": "TV en directo — Canales gratuitos de todo el mundo",
+    "seoDescription": "Mira canales de TV en directo y gratuitos de todo el mundo en DeHub. Noticias, deportes, entretenimiento y más, en el navegador y sin suscripción.",
+    "srHeading": "DeHub TV en directo — Red social descentralizada, resistente a la censura y con libertad de expresión",
+    "searchPlaceholder": "Busca entre cientos de canales de TV gratuitos...",
+    "filterAll": "Todos",
+    "resultsFor": "Resultados de «{{query}}»",
+    "channelCount_one": "({{count}} canal)",
+    "channelCount_other": "({{count}} canales)",
+    "loadFailed": "No se pudieron cargar los canales",
+    "loadFailedHint": "Comprueba tu conexión e inténtalo de nuevo.",
+    "noChannelsFound": "No se encontraron canales",
+    "noChannelsAvailable": "No hay canales disponibles",
+    "tryDifferentSearch": "Prueba con otro término de búsqueda.",
+    "tryDifferentCountry": "Prueba a seleccionar otro país.",
+    "live": "EN DIRECTO",
+    "geoBlocked": "Emisión bloqueada por región o no disponible",
+    "sorryInconvenience": "Sentimos las molestias",
+    "retryCount_one": "Reintentar (queda {{count}})",
+    "retryCount_other": "Reintentar (quedan {{count}})",
+    "liveChat": "Chat en directo",
     "title": "TV"
   },
   "buyCoins": {

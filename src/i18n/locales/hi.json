@@ -836,6 +836,26 @@
     "joined": "Joined"
   },
   "tv": {
+    "seoTitle": "लाइव TV — दुनिया भर के मुफ़्त चैनल",
+    "seoDescription": "DeHub पर दुनिया भर के मुफ़्त लाइव TV चैनल देखिए। समाचार, खेल, मनोरंजन और भी बहुत कुछ — ब्राउज़र में ही, बिना किसी सब्सक्रिप्शन के।",
+    "srHeading": "DeHub लाइव TV — विकेंद्रीकृत सोशल मीडिया, सेंसरशिप-प्रतिरोधी और अभिव्यक्ति की स्वतंत्रता",
+    "searchPlaceholder": "सैकड़ों मुफ़्त TV चैनलों में खोजें...",
+    "filterAll": "सभी",
+    "resultsFor": "“{{query}}” के परिणाम",
+    "channelCount_one": "({{count}} चैनल)",
+    "channelCount_other": "({{count}} चैनल)",
+    "loadFailed": "चैनल लोड नहीं हो सके",
+    "loadFailedHint": "कृपया अपना कनेक्शन जाँचिए और फिर कोशिश कीजिए।",
+    "noChannelsFound": "कोई चैनल नहीं मिला",
+    "noChannelsAvailable": "कोई चैनल उपलब्ध नहीं",
+    "tryDifferentSearch": "कोई और खोज शब्द आज़माइए।",
+    "tryDifferentCountry": "कोई दूसरा देश चुनकर देखिए।",
+    "live": "लाइव",
+    "geoBlocked": "यह स्ट्रीम आपके क्षेत्र में उपलब्ध नहीं है",
+    "sorryInconvenience": "असुविधा के लिए खेद है",
+    "retryCount_one": "फिर कोशिश करें ({{count}} बची)",
+    "retryCount_other": "फिर कोशिश करें ({{count}} बचीं)",
+    "liveChat": "लाइव चैट",
     "title": "टीवी"
   },
   "buyCoins": {
