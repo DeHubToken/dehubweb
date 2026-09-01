@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -129,7 +130,6 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
         <div className="flex items-center gap-1.5">
           <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
           <span className="text-2xl font-bold text-white">{formatDhb(price)}</span>
-          <span className="text-zinc-400">DHB</span>
         </div>
         <span className="text-zinc-500">/</span>
         <div className="flex items-center gap-1 text-zinc-400">
@@ -248,14 +248,14 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               <AlertDialogTitle className="text-white">Confirm Subscription</AlertDialogTitle>
               <AlertDialogDescription className="text-zinc-400">
                 Subscribe to <span className="text-white font-medium">{plan.name}</span> for{' '}
-                <span className="text-white font-medium">{formatDhb(price)} DHB</span> /{' '}
+                <span className="text-white font-medium">{formatDhb(price)} <DhbCoin /></span> /{' '}
                 {formatDuration(plan.duration)}.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 text-sm">
               <div className="flex justify-between text-zinc-400">
                 <span>Plan price</span>
-                <span className="text-white">{formatDhb(price)} DHB</span>
+                <span className="text-white">{formatDhb(price)} <DhbCoin /></span>
               </div>
               <div className="flex justify-between text-zinc-400 mt-1.5 pt-1.5 border-t border-white/10">
                 <span>You pay (incl. platform fee)</span>

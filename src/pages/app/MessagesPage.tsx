@@ -1,4 +1,5 @@
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -650,7 +651,7 @@ export default function MessagesPage() {
                         )}
                         {!dmDisabled && perMessageFee && perMessageFee > 0 && (
                           <p className="text-xs text-amber-400 mt-0.5">
-                            {perMessageFee.toLocaleString()} DHB to message
+                            {perMessageFee.toLocaleString()} <DhbCoin /> to message
                           </p>
                         )}
                       </div>

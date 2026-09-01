@@ -20,6 +20,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -148,7 +149,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
             <div className="flex justify-between text-sm">
               <span className="text-white/60">Price per fraction</span>
               <span className="text-white">
-                {listing.price_per_fraction.toLocaleString(undefined, { maximumFractionDigits: 4 })} DHB
+                {listing.price_per_fraction.toLocaleString(undefined, { maximumFractionDigits: 4 })} <DhbCoin />
               </span>
             </div>
             <div className="flex justify-between text-sm">
@@ -163,7 +164,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
                 ) : (
                   <>
                     <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                    {displayTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                    {displayTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </>
                 )}
               </span>
@@ -226,7 +227,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
             ) : (
               <>
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                Buy {quantity} for {displayTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                Buy {quantity} for {displayTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </>
             )}
           </Button>

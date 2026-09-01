@@ -6,6 +6,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState } from 'react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
@@ -49,7 +50,7 @@ export function DmFeeInfoBanner({
             <h3 className="text-white font-semibold text-sm mb-1">Tip to Message</h3>
             <p className="text-zinc-400 text-xs leading-relaxed">
               {recipientName} requires a minimum tip of{' '}
-              <span className="text-white font-semibold">{fee.toLocaleString()} DHB</span>{' '}
+              <span className="text-white font-semibold">{fee.toLocaleString()} <DhbCoin /></span>{' '}
               per message. Each message you send will deduct this amount.
             </p>
           </div>
@@ -68,7 +69,7 @@ export function DmFeeInfoBanner({
               <span className="text-xs text-zinc-400">Your balance:</span>
               {totalBalance !== null ? (
                 <span className={`text-xs font-medium ${hasSufficientBalance ? 'text-white' : 'text-zinc-400'}`}>
-                  {totalBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                  {totalBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })} <DhbCoin />
                 </span>
               ) : (
                 <span className="text-xs text-zinc-500">Unavailable</span>
@@ -106,12 +107,12 @@ export function DmFeeInfoBanner({
 
         {isAboveMinimum && hasCustomSufficient && (
           <p className="text-[10px] text-zinc-400 text-center mt-2">
-            🔥 Tipping {tipAmount.toLocaleString()} DHB per message will rank you higher in {recipientName}'s inbox
+            🔥 Tipping {tipAmount.toLocaleString()} <DhbCoin /> per message will rank you higher in {recipientName}'s inbox
           </p>
         )}
         {isAboveMinimum && !hasCustomSufficient && (
           <p className="text-[10px] text-zinc-500 text-center mt-2">
-            Insufficient balance for {tipAmount.toLocaleString()} DHB tip
+            Insufficient balance for {tipAmount.toLocaleString()} <DhbCoin /> tip
           </p>
         )}
       </div>

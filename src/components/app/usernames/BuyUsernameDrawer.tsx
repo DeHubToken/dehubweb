@@ -99,7 +99,6 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
               <p className="text-2xl font-bold text-white flex items-center gap-2">
                 <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
                 {(quote?.priceDhb ?? listing.priceDhb).toLocaleString()}
-                <span className="text-sm font-normal text-zinc-500">DHB</span>
               </p>
               <p className="text-xs text-zinc-500 mt-1">
                 ≈ ${(quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { maximumFractionDigits: 2 })} · paid

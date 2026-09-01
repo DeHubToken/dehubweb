@@ -11,6 +11,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -186,7 +187,7 @@ export function SellFractionsDrawer({
                       onClick={() => setPrice(String(floorPrice))}
                       className="text-xs text-white/40 hover:text-white/70 transition-colors"
                     >
-                      Match floor · {floorPrice} DHB
+                      Match floor · {floorPrice} <DhbCoin />
                     </button>
                   )}
                 </div>
@@ -216,7 +217,7 @@ export function SellFractionsDrawer({
                   <span className="text-white font-medium">You receive</span>
                   <span className="text-white font-bold flex items-center gap-1.5">
                     <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                    {total.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                    {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </span>
                 </div>
                 {dhbUsd > 0 && total > 0 && (

@@ -52,6 +52,7 @@ import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { getLiveStream, updateStreamThumbnail } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
 import { createLogger } from '@/lib/logger';
@@ -1702,7 +1703,7 @@ export function GoLiveBroadcaster({
           </span>
           <span className="flex items-center gap-1.5">
             <Gift className="h-3.5 w-3.5" />
-            {room?.totalTips ?? 0} DHB
+            <DhbAmount amount={room?.totalTips ?? 0} iconClassName="h-3.5 w-3.5" />
           </span>
         </div>
       )}

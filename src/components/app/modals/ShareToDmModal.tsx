@@ -17,6 +17,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate } from 'react-router-dom';
 import { Search, Send, Check, Loader2, X, Gem } from 'lucide-react';
 import { toast } from 'sonner';
@@ -331,7 +332,7 @@ function RecipientRow({
         {fee > 0 && (
           <p className="text-[11px] text-amber-400 mt-0.5 flex items-center gap-1">
             <Gem className="w-3 h-3" />
-            {fee.toLocaleString()} DHB to message
+            {fee.toLocaleString()} <DhbCoin /> to message
           </p>
         )}
       </div>
