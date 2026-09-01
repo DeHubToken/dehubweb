@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,21 +20,28 @@ const metallicStyle: React.CSSProperties = {
     'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.12), 0 4px 18px rgba(0,0,0,0.35)',
 };
 
+/** A translated line: a key plus whatever numbers or model names it interpolates. */
+interface Line {
+  key: string;
+  vars?: Record<string, string | number>;
+}
+
 interface Plan {
   id: string;
+  /** Product tier name. Not translated — it is what the plan is called. */
   name: string;
-  discount: string;
-  tagline: string;
-  headline: string;
-  breakdown: string[];
+  discountPct: number;
+  taglineKey?: string;
+  headlineKey: string;
+  breakdown: Line[];
   monthly: number;
   annual: number;
-  perLabel: string;
-  cta: string;
-  savings?: string;
-  seats?: string;
+  perLabelKey: string;
+  cta: Line;
+  savingsUsd?: number;
+  seats?: number;
   featured?: boolean;
-  groups: { title: string; items: string[] }[];
+  groups: { titleKey: string; items: Line[] }[];
   monthlyPriceId: string;
   annualPriceId: string;
 }
@@ -52,6 +60,9 @@ interface Plan {
  * gateway peg of 1,000 DHB = $1 of generation. The per-model counts in each
  * breakdown are at current server pricing (ai-pricing.ts, including the veo
  * markup band) and go stale if a provider reprices — recompute, don't copy.
+ *
+ * Every number is a variable rather than part of the sentence, so a translator
+ * never has to retype a price to translate the line it sits in.
  */
 const plans: Plan[] = [
   {
@@ -59,26 +70,25 @@ const plans: Plan[] = [
     name: 'Creator',
     monthlyPriceId: 'creator_monthly',
     annualPriceId: 'creator_annual',
-    discount: '21% OFF',
-    tagline: '',
-    headline: 'For getting started with AI creation',
+    discountPct: 21,
+    headlineKey: 'pricing.headlineCreator',
     breakdown: [
-      '23,000 DHB/mo, sent to your wallet',
-      '= 54 Veo 3.1 Fast videos  ·  212 Nano Banana Pro images',
-      'Real DHB in your wallet — spend it anywhere, it never expires',
+      { key: 'pricing.dhbPerMonth', vars: { amount: '23,000' } },
+      { key: 'pricing.equivalence', vars: { videos: 54, videoModel: 'Veo 3.1 Fast', images: 212, imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.realDhbSpendAnywhere' },
     ],
     monthly: 19,
     annual: 15,
-    perLabel: 'per month, billed annually',
-    cta: 'Get Creator',
+    perLabelKey: 'pricing.perMonthBilledAnnually',
+    cta: { key: 'pricing.ctaGet', vars: { plan: 'Creator' } },
     groups: [
       {
-        title: 'Included',
+        titleKey: 'pricing.groupIncluded',
         items: [
-          'Access to all models & features',
-          'Parallel generations: up to 4 videos, 4 images',
-          'Top up any time with your own DHB',
-          'Publish straight to DeHub',
+          { key: 'pricing.accessAllModels' },
+          { key: 'pricing.parallelGenerations', vars: { videos: 4, images: 4 } },
+          { key: 'pricing.topUpAnyTime' },
+          { key: 'pricing.publishStraightToDehub' },
         ],
       },
     ],
@@ -88,37 +98,40 @@ const plans: Plan[] = [
     name: 'Ultra',
     monthlyPriceId: 'ultra_monthly',
     annualPriceId: 'ultra_annual',
-    discount: '23% OFF',
-    tagline: 'Best value',
-    headline: 'For creators building AI projects',
+    discountPct: 23,
+    taglineKey: 'pricing.bestValue',
+    headlineKey: 'pricing.headlineUltra',
     breakdown: [
-      '130,000 DHB/mo, sent to your wallet',
-      '= 78 Veo 3.1 videos  ·  1,203 Nano Banana Pro images',
-      'Real DHB in your wallet — it never expires',
+      { key: 'pricing.dhbPerMonth', vars: { amount: '130,000' } },
+      { key: 'pricing.equivalence', vars: { videos: 78, videoModel: 'Veo 3.1', images: '1,203', imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.realDhbNeverExpires' },
     ],
     monthly: 129,
     annual: 99,
-    perLabel: 'per month, billed annually',
-    cta: 'Change Commitment',
+    perLabelKey: 'pricing.perMonthBilledAnnually',
+    cta: { key: 'pricing.ctaChangeCommitment' },
     featured: true,
     groups: [
       {
-        title: 'Included',
+        titleKey: 'pricing.groupIncluded',
         items: [
-          'Parallel generations: up to 8 videos, 8 images',
-          'Access to Supercomputer',
-          'Access to all Seedance models',
-          'Access to all models & features',
-          'Early access to advanced AI features',
-          'Access to unlimited marketplace',
+          { key: 'pricing.parallelGenerations', vars: { videos: 8, images: 8 } },
+          { key: 'pricing.accessSupercomputer' },
+          { key: 'pricing.accessAllSeedance' },
+          { key: 'pricing.accessAllModels' },
+          { key: 'pricing.earlyAccess' },
+          { key: 'pricing.unlimitedMarketplace' },
           // 'Lowest cost per credit' used to sit here. Creator at $15 for
           // 23,000 DHB beats Ultra's $99 for 130,000 per credit, so the
           // claim became false the day Creator was listed.
         ],
       },
       {
-        title: 'Seedance 2.0',
-        items: ['Seedance 2.0 — Full access', 'Seedance 2.0 Fast — Full access'],
+        titleKey: 'pricing.groupSeedance20',
+        items: [
+          { key: 'pricing.seedanceFullAccess', vars: { model: 'Seedance 2.0' } },
+          { key: 'pricing.seedanceFullAccess', vars: { model: 'Seedance 2.0 Fast' } },
+        ],
       },
     ],
   },
@@ -127,50 +140,49 @@ const plans: Plan[] = [
     name: 'Team',
     monthlyPriceId: 'team_monthly',
     annualPriceId: 'team_annual',
-    discount: '18% OFF',
-    tagline: '',
-    headline: 'For agencies and small teams to create faster',
+    discountPct: 18,
+    headlineKey: 'pricing.headlineTeam',
     breakdown: [
-      '88,000 DHB per seat/mo, sent to your wallet',
-      '= 53 Veo 3.1 videos  ·  814 Nano Banana Pro images',
-      'Pooled across the workspace — never expires',
+      { key: 'pricing.dhbPerSeat', vars: { amount: '88,000' } },
+      { key: 'pricing.equivalence', vars: { videos: 53, videoModel: 'Veo 3.1', images: 814, imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.pooledNeverExpires' },
     ],
     monthly: 79,
     annual: 65,
-    perLabel: 'per seat/mo, billed annually',
-    cta: 'Get Team',
-    savings: 'Save $168 compared to monthly',
-    seats: '2 seats',
+    perLabelKey: 'pricing.perSeatBilledAnnually',
+    cta: { key: 'pricing.ctaGet', vars: { plan: 'Team' } },
+    savingsUsd: 168,
+    seats: 2,
     groups: [
       {
-        title: 'Workspace & Collaboration',
+        titleKey: 'pricing.groupWorkspace',
         items: [
-          '2 to 9 members in one shared workspace',
-          'Parallel generations: up to 16 video & 16 image',
-          'Access to all features & models',
-          'Shared DHB pool',
-          'Shared workspace for your team',
-          'Early access to advanced AI features',
-          'Access to Seedance 2.0',
-          'Access to Supercomputer',
+          { key: 'pricing.membersRange', vars: { min: 2, max: 9 } },
+          { key: 'pricing.parallelGenerations', vars: { videos: 16, images: 16 } },
+          { key: 'pricing.accessAllFeatures' },
+          { key: 'pricing.sharedDhbPool' },
+          { key: 'pricing.sharedWorkspace' },
+          { key: 'pricing.earlyAccess' },
+          { key: 'pricing.accessSeedance20' },
+          { key: 'pricing.accessSupercomputer' },
         ],
       },
       {
-        title: 'Analytics & Support',
-        items: ['Basic analytics', 'Priority support'],
+        titleKey: 'pricing.groupAnalytics',
+        items: [{ key: 'pricing.basicAnalytics' }, { key: 'pricing.prioritySupport' }],
       },
       {
-        title: 'Admin & Control',
-        items: ['SSO', 'Admin spend control', 'Priority queue'],
+        titleKey: 'pricing.groupAdmin',
+        items: [{ key: 'pricing.sso' }, { key: 'pricing.adminSpendControl' }, { key: 'pricing.priorityQueue' }],
       },
       {
-        title: 'Security & Compliance',
+        titleKey: 'pricing.groupSecurity',
         items: [
-          'Delegated top-up access',
-          'Indemnification',
-          'No training on your data',
-          'SOC 2 security (coming soon)',
-          'AI Educator & Slack support',
+          { key: 'pricing.delegatedTopUp' },
+          { key: 'pricing.indemnification' },
+          { key: 'pricing.noTraining' },
+          { key: 'pricing.soc2' },
+          { key: 'pricing.aiEducator' },
         ],
       },
     ],
@@ -180,52 +192,51 @@ const plans: Plan[] = [
     name: 'Scale',
     monthlyPriceId: 'scale_monthly',
     annualPriceId: 'scale_annual',
-    discount: '30% OFF',
-    tagline: '',
-    headline: 'Designed for growing creative teams',
+    discountPct: 30,
+    headlineKey: 'pricing.headlineScale',
     breakdown: [
-      '210,000 DHB per seat/mo, sent to your wallet',
-      '= 126 Veo 3.1 videos  ·  1,944 Nano Banana Pro images',
-      'Pooled across the workspace — never expires',
+      { key: 'pricing.dhbPerSeat', vars: { amount: '210,000' } },
+      { key: 'pricing.equivalence', vars: { videos: 126, videoModel: 'Veo 3.1', images: '1,944', imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.pooledNeverExpires' },
     ],
     monthly: 215,
     annual: 150,
-    perLabel: 'per seat/mo, billed annually',
-    cta: 'Get Scale',
+    perLabelKey: 'pricing.perSeatBilledAnnually',
+    cta: { key: 'pricing.ctaGet', vars: { plan: 'Scale' } },
     // (215 − 150) × 12 — the $228 that sat here before reconciled with
     // nothing on the card.
-    savings: 'Save $780 compared to monthly',
-    seats: '5 seats',
+    savingsUsd: 780,
+    seats: 5,
     groups: [
       {
-        title: 'Workspace & Collaboration',
+        titleKey: 'pricing.groupWorkspace',
         items: [
-          '5 to 15 members in one shared workspace',
-          'Parallel generations: up to 20 videos & 24 images',
-          'Access to all features & models',
-          'Shared DHB pool',
-          'Shared workspace for your team',
-          'Early access to advanced AI features',
-          'Access to Seedance 2.0',
-          'Access to Supercomputer',
+          { key: 'pricing.membersRange', vars: { min: 5, max: 15 } },
+          { key: 'pricing.parallelGenerations', vars: { videos: 20, images: 24 } },
+          { key: 'pricing.accessAllFeatures' },
+          { key: 'pricing.sharedDhbPool' },
+          { key: 'pricing.sharedWorkspace' },
+          { key: 'pricing.earlyAccess' },
+          { key: 'pricing.accessSeedance20' },
+          { key: 'pricing.accessSupercomputer' },
         ],
       },
       {
-        title: 'Analytics & Support',
-        items: ['Detailed analytics', 'Priority support'],
+        titleKey: 'pricing.groupAnalytics',
+        items: [{ key: 'pricing.detailedAnalytics' }, { key: 'pricing.prioritySupport' }],
       },
       {
-        title: 'Admin & Control',
-        items: ['SSO', 'Admin spend control', 'Priority queue for faster task processing'],
+        titleKey: 'pricing.groupAdmin',
+        items: [{ key: 'pricing.sso' }, { key: 'pricing.adminSpendControl' }, { key: 'pricing.priorityQueueFast' }],
       },
       {
-        title: 'Security & Compliance',
+        titleKey: 'pricing.groupSecurity',
         items: [
-          'Delegated top-up access',
-          'Indemnification',
-          'No training on your data',
-          'SOC 2 security (coming soon)',
-          'AI Educator & Slack support',
+          { key: 'pricing.delegatedTopUp' },
+          { key: 'pricing.indemnification' },
+          { key: 'pricing.noTraining' },
+          { key: 'pricing.soc2' },
+          { key: 'pricing.aiEducator' },
         ],
       },
     ],
@@ -237,13 +248,14 @@ interface Props {
 }
 
 export function PricingSection({ showHeader = true }: Props) {
+  const { t } = useTranslation();
   const [billing, setBilling] = useState<Billing>('annual');
   const { walletAddress, user, openLoginModal } = useAuth() as any;
   const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
 
   const handleSelect = (priceId: string) => {
     if (!walletAddress) {
-      toast.error('Please sign in to subscribe');
+      toast.error(t('pricing.signInToSubscribe'));
       openLoginModal?.();
       return;
     }
@@ -255,17 +267,17 @@ export function PricingSection({ showHeader = true }: Props) {
       {showHeader && (
         <div className="mx-auto mb-8 max-w-3xl text-center">
           <h2 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
-            Plans for every workflow
+            {t('pricing.plansForEveryWorkflow')}
           </h2>
           <p className="mt-3 text-sm text-white/60 sm:text-base">
-            From individuals to enterprise teams, find the right fit
+            {t('pricing.findTheRightFit')}
           </p>
 
           <div
             className="mx-auto mt-6 inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1 backdrop-blur-xl"
           >
-            <BillingToggle billing={billing} setBilling={setBilling} value="monthly" label="Monthly" />
-            <BillingToggle billing={billing} setBilling={setBilling} value="annual" label="Annual" />
+            <BillingToggle billing={billing} setBilling={setBilling} value="monthly" label={t('pricing.monthly')} />
+            <BillingToggle billing={billing} setBilling={setBilling} value="annual" label={t('pricing.annual')} />
           </div>
         </div>
       )}
@@ -306,6 +318,7 @@ function BillingToggle({
   value: Billing;
   label: string;
 }) {
+  const { t } = useTranslation();
   const active = billing === value;
   return (
     <button
@@ -322,7 +335,7 @@ function BillingToggle({
         <span className={cn('ml-2 text-[10px] font-bold', active ? 'text-black/70' : 'text-white/50')}>
           {/* Annual discounts range 18–30% across the tiers (each card wears
               its own), so the toggle can only honestly claim the ceiling. */}
-          up to −30%
+          {t('pricing.upToDiscount', { pct: 30 })}
         </span>
       )}
     </button>
@@ -330,6 +343,7 @@ function BillingToggle({
 }
 
 function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; onSelect: (priceId: string) => void }) {
+  const { t } = useTranslation();
   const price = billing === 'annual' ? plan.annual : plan.monthly;
   const strike = billing === 'annual' ? plan.monthly : null;
   const priceId = billing === 'annual' ? plan.annualPriceId : plan.monthlyPriceId;
@@ -348,22 +362,22 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
           className="absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black"
           style={metallicStyle}
         >
-          {plan.tagline || 'Featured'}
+          {t(plan.taglineKey ?? 'pricing.featured')}
         </div>
       )}
 
       <div className="flex items-center gap-2">
         <h3 className="text-2xl font-black uppercase tracking-tight text-white">{plan.name}</h3>
         <span className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-bold text-white/80">
-          {plan.discount}
+          {t('pricing.percentOff', { pct: plan.discountPct })}
         </span>
       </div>
 
-      <p className="mt-2 text-sm text-white/60">{plan.headline}</p>
+      <p className="mt-2 text-sm text-white/60">{t(plan.headlineKey)}</p>
 
       <div className="mt-5 space-y-1 text-xs text-white/70">
         {plan.breakdown.map((line) => (
-          <div key={line}>{line}</div>
+          <div key={line.key + JSON.stringify(line.vars ?? {})}>{t(line.key, line.vars)}</div>
         ))}
       </div>
 
@@ -373,9 +387,13 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
         )}
         <span className="text-4xl font-black text-white">${price}</span>
       </div>
-      <div className="text-xs text-white/50">{plan.perLabel}</div>
-      {plan.savings && <div className="mt-1 text-xs text-white/60">{plan.savings}</div>}
-      {plan.seats && <div className="mt-1 text-xs text-white/60">{plan.seats}</div>}
+      <div className="text-xs text-white/50">{t(plan.perLabelKey)}</div>
+      {plan.savingsUsd !== undefined && (
+        <div className="mt-1 text-xs text-white/60">{t('pricing.savings', { amount: plan.savingsUsd })}</div>
+      )}
+      {plan.seats !== undefined && (
+        <div className="mt-1 text-xs text-white/60">{t('pricing.seats', { count: plan.seats })}</div>
+      )}
 
       <button
         type="button"
@@ -388,20 +406,20 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
         )}
         style={plan.featured ? metallicStyle : undefined}
       >
-        {plan.cta}
+        {t(plan.cta.key, plan.cta.vars)}
       </button>
 
       <div className="mt-6 space-y-5">
         {plan.groups.map((group) => (
-          <div key={group.title}>
+          <div key={group.titleKey}>
             <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-white/40">
-              {group.title}
+              {t(group.titleKey)}
             </div>
             <ul className="space-y-1.5">
               {group.items.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-xs text-white/75">
+                <li key={item.key + JSON.stringify(item.vars ?? {})} className="flex items-start gap-2 text-xs text-white/75">
                   <Check className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-white/60" />
-                  <span>{item}</span>
+                  <span>{t(item.key, item.vars)}</span>
                 </li>
               ))}
             </ul>
