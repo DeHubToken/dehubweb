@@ -2784,18 +2784,21 @@ export type Database = {
       live_stream_sessions: {
         Row: {
           address: string
+          heartbeat_at: string
           started_at: string
           stream_id: string | null
           token_id: string
         }
         Insert: {
           address: string
+          heartbeat_at?: string
           started_at?: string
           stream_id?: string | null
           token_id: string
         }
         Update: {
           address?: string
+          heartbeat_at?: string
           started_at?: string
           stream_id?: string | null
           token_id?: string
@@ -4511,6 +4514,7 @@ export type Database = {
       }
       user_wallet_passkeys: {
         Row: {
+          backed_up: boolean | null
           created_at: string
           credential_id: string
           encrypted_seed: string
@@ -4521,9 +4525,11 @@ export type Database = {
           last_used_at: string | null
           prf_salt: string
           salt: string
+          transports: string[] | null
           user_id: string
         }
         Insert: {
+          backed_up?: boolean | null
           created_at?: string
           credential_id: string
           encrypted_seed: string
@@ -4534,9 +4540,11 @@ export type Database = {
           last_used_at?: string | null
           prf_salt: string
           salt: string
+          transports?: string[] | null
           user_id: string
         }
         Update: {
+          backed_up?: boolean | null
           created_at?: string
           credential_id?: string
           encrypted_seed?: string
@@ -4547,6 +4555,7 @@ export type Database = {
           last_used_at?: string | null
           prf_salt?: string
           salt?: string
+          transports?: string[] | null
           user_id?: string
         }
         Relationships: []
