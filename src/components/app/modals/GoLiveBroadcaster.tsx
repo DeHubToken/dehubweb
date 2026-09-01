@@ -33,6 +33,7 @@ import {
   Radio,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { publishToWhip, WhipHttpError, type WhipSession, type WhipState } from '@/lib/livepeer/whip';
 import {
   composeCameraBubble,
@@ -132,6 +133,33 @@ const VIDEO_CONSTRAINTS: MediaTrackConstraints = {
   height: { ideal: 720 },
   frameRate: { ideal: 30 },
 };
+
+/**
+ * The same 720p, stood on its end.
+ *
+ * A phone asked for 1280×720 hands back a landscape frame, so a creator
+ * holding their phone upright published a wide picture with themselves in a
+ * letterboxed strip down the middle — and every viewer got that shape too,
+ * because what the camera captures is what goes on the wire. Asking for
+ * 720×1280 on a portrait screen makes the broadcast the shape of the phone
+ * that is filming it.
+ */
+const PORTRAIT_VIDEO_CONSTRAINTS: MediaTrackConstraints = {
+  width: { ideal: 720 },
+  height: { ideal: 1280 },
+  frameRate: { ideal: 30 },
+};
+
+/**
+ * Read at capture time rather than once at module load: a phone rotated to
+ * landscape mid-session should film landscape, and the constraint is only
+ * consulted when a track is (re)opened.
+ */
+function cameraConstraints(): MediaTrackConstraints {
+  if (typeof window === 'undefined') return VIDEO_CONSTRAINTS;
+  const portrait = window.innerHeight > window.innerWidth;
+  return portrait ? PORTRAIT_VIDEO_CONSTRAINTS : VIDEO_CONSTRAINTS;
+}
 
 /**
  * Screens ask for 1080p where the camera asks for 720p: a downscaled desktop
@@ -586,7 +614,7 @@ export function GoLiveBroadcaster({
         ? null
         : await navigator.mediaDevices
             .getUserMedia({
-              video: { ...VIDEO_CONSTRAINTS, facingMode: facingModeRef.current },
+              video: { ...cameraConstraints(), facingMode: facingModeRef.current },
               audio: false,
             })
             .catch(() => null);
@@ -697,7 +725,7 @@ export function GoLiveBroadcaster({
 
       const capture = await navigator.mediaDevices
         .getUserMedia({
-          video: { ...VIDEO_CONSTRAINTS, facingMode: facingModeRef.current },
+          video: { ...cameraConstraints(), facingMode: facingModeRef.current },
           audio: false,
         })
         .catch(() => null);
@@ -775,7 +803,7 @@ export function GoLiveBroadcaster({
         } else {
           if (handed) handed.getTracks().forEach((t) => t.stop());
           const capture = await navigator.mediaDevices.getUserMedia({
-            video: { ...VIDEO_CONSTRAINTS, facingMode },
+            video: { ...cameraConstraints(), facingMode },
             audio: AUDIO_CONSTRAINTS,
           });
           if (cancelled) {
@@ -1235,7 +1263,7 @@ export function GoLiveBroadcaster({
     let newTrack: MediaStreamTrack | null = null;
     try {
       const replacement = await navigator.mediaDevices.getUserMedia({
-        video: { ...VIDEO_CONSTRAINTS, facingMode: next },
+        video: { ...cameraConstraints(), facingMode: next },
         audio: false,
       });
       newTrack = replacement.getVideoTracks()[0] ?? null;
@@ -1278,9 +1306,30 @@ export function GoLiveBroadcaster({
             ? 'LIVE'
             : 'Offline';
 
+  /*
+   * On a phone the broadcast IS the screen.
+   *
+   * The preview used to be a 16:9 card in a sheet with the controls stacked
+   * under it, which on a phone meant a wide letterboxed strip of the creator
+   * with two thirds of the display given over to chrome. Full-bleed instead:
+   * the camera fills the device, in the device's own shape, and the controls
+   * float over the picture. A screen share keeps `object-contain` even here —
+   * cropping a desktop to a phone's aspect would cut the sides off the thing
+   * being demonstrated.
+   *
+   * Desktop is untouched: there the card is the right answer, and a portrait
+   * video filling a monitor is not.
+   */
+  const fullBleed = useIsMobile();
+
   return (
-    <div className="space-y-4 pb-4">
-      <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black">
+    <div className={cn(fullBleed ? 'absolute inset-0 bg-black' : 'space-y-4 pb-4')}>
+      <div
+        className={cn(
+          'overflow-hidden bg-black',
+          fullBleed ? 'absolute inset-0' : 'relative aspect-video w-full rounded-2xl'
+        )}
+      >
         {/* muted + playsInline: iOS Safari refuses to autoplay otherwise, and
             without playsInline it hijacks the video into fullscreen.
             object-contain for a screen share — cover crops a 16:10 desktop's
@@ -1363,8 +1412,18 @@ export function GoLiveBroadcaster({
         )}
       </div>
 
-      <div className="flex items-center justify-center gap-3">
+      <div
+        className={cn(
+          'flex items-center justify-center gap-3',
+          // Floating over the picture, nothing behind them. The row can outgrow
+          // a narrow phone once screen share, bubble and flip are all showing,
+          // so it scrolls sideways rather than wrapping into the video.
+          fullBleed &&
+            'absolute inset-x-0 bottom-0 z-10 overflow-x-auto px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+        )}
+      >
         <ControlButton
+          floating={fullBleed}
           active={micOn}
           onClick={toggleMic}
           disabled={phase === 'error' || !hasMic}
@@ -1380,6 +1439,7 @@ export function GoLiveBroadcaster({
         </ControlButton>
 
         <ControlButton
+          floating={fullBleed}
           active={videoOn}
           onClick={toggleVideo}
           disabled={phase === 'error'}
@@ -1398,6 +1458,7 @@ export function GoLiveBroadcaster({
 
         {canShareScreen && (
           <ControlButton
+            floating={fullBleed}
             active={!isScreen}
             onClick={isScreen ? stopScreenShare : startScreenShare}
             disabled={phase === 'error'}
@@ -1413,6 +1474,7 @@ export function GoLiveBroadcaster({
 
         {isScreen && (
           <ControlButton
+            floating={fullBleed}
             // Same convention as the share button: the tinted state is the
             // one you click to switch off, not an error.
             active={!bubbleOn}
@@ -1426,6 +1488,7 @@ export function GoLiveBroadcaster({
 
         {isScreen && bubbleOn && (
           <ControlButton
+            floating={fullBleed}
             active
             onClick={cycleBubbleCorner}
             disabled={phase === 'error'}
@@ -1437,6 +1500,7 @@ export function GoLiveBroadcaster({
 
         {hasMultipleCameras && !isScreen && (
           <ControlButton
+            floating={fullBleed}
             active
             onClick={flipCamera}
             disabled={phase === 'error' || !videoOn}
@@ -1447,6 +1511,7 @@ export function GoLiveBroadcaster({
         )}
 
         <ControlButton
+          floating={fullBleed}
           active={openPanel !== 'voice'}
           onClick={() => setOpenPanel((p) => (p === 'voice' ? 'none' : 'voice'))}
           disabled={phase === 'error' || !hasMic}
@@ -1456,6 +1521,7 @@ export function GoLiveBroadcaster({
         </ControlButton>
 
         <ControlButton
+          floating={fullBleed}
           active={openPanel !== 'sounds'}
           onClick={() => setOpenPanel((p) => (p === 'sounds' ? 'none' : 'sounds'))}
           disabled={phase === 'error' || !hasMic}
@@ -1466,6 +1532,7 @@ export function GoLiveBroadcaster({
 
         {streamId && (
           <ControlButton
+            floating={fullBleed}
             active={openPanel !== 'chat'}
             onClick={() => setOpenPanel((p) => (p === 'chat' ? 'none' : 'chat'))}
             disabled={phase === 'error'}
@@ -1479,7 +1546,15 @@ export function GoLiveBroadcaster({
       {/* The room, at a glance. Only once media is flowing — before that every
           number is zero and reads as a failure rather than a fresh start. */}
       {streamId && (phase === 'live' || phase === 'reconnecting') && (
-        <div className="flex items-center justify-center gap-4 text-[11px] text-zinc-400">
+        <div
+          className={cn(
+            'flex items-center justify-center gap-4 text-[11px] text-zinc-400',
+            // Under the live chip rather than under the video, and light on its
+            // own — these are glanceable numbers, not a panel.
+            fullBleed &&
+              'absolute left-3 top-12 z-10 justify-start text-white/80 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]'
+          )}
+        >
           <span className="flex items-center gap-1.5">
             <Users className="h-3.5 w-3.5" />
             {room?.peakViewers ?? room?.totalViews ?? 0} watching
@@ -1496,7 +1571,14 @@ export function GoLiveBroadcaster({
       )}
 
       {openPanel === 'chat' && streamId && (
-        <div className="max-h-[45vh] overflow-hidden rounded-xl border border-white/10">
+        <div
+          className={cn(
+            'max-h-[45vh] overflow-hidden rounded-xl border border-white/10',
+            // Above the floating controls, not below the video — there is no
+            // "below the video" once the video is the whole screen.
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 bg-black/80 backdrop-blur-xl'
+          )}
+        >
           <Suspense
             fallback={
               <div className="flex items-center justify-center py-10">
@@ -1516,6 +1598,7 @@ export function GoLiveBroadcaster({
         <div
           className={cn(
             'rounded-xl border border-white/10 bg-white/5 p-3',
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 bg-black/80 backdrop-blur-xl',
             switchingEffect && 'pointer-events-none opacity-60'
           )}
         >
@@ -1537,17 +1620,27 @@ export function GoLiveBroadcaster({
         errorMessage="Could not play that — your microphone feed is not running"
       />
 
+      {/* Full-bleed puts this top-right as a compact pill rather than a bar at
+          the foot of the screen: the foot belongs to the controls, and two
+          stacked bars over a portrait video eats the picture. It keeps a solid
+          fill where the controls do not — ending a broadcast is the one action
+          that should never be missed against a bright frame. */}
       <button
         onClick={handleEnd}
         disabled={isEnding}
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 text-sm font-medium text-red-300 transition-colors hover:bg-red-500/20 disabled:opacity-60"
+        className={cn(
+          'flex items-center justify-center gap-2 font-medium transition-colors disabled:opacity-60',
+          fullBleed
+            ? 'absolute right-3 top-3 z-20 h-9 rounded-full bg-red-500/90 px-4 text-xs text-white active:bg-red-500'
+            : 'h-14 w-full gap-2 rounded-xl border border-red-500/30 bg-red-500/10 text-sm text-red-300 hover:bg-red-500/20'
+        )}
       >
         {isEnding ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
           <Radio className="h-4 w-4" />
         )}
-        {isEnding ? 'Ending…' : 'End Stream'}
+        {isEnding ? 'Ending…' : fullBleed ? 'End' : 'End Stream'}
       </button>
     </div>
   );
@@ -1558,12 +1651,20 @@ function ControlButton({
   onClick,
   disabled,
   label,
+  floating,
   children,
 }: {
   active: boolean;
   onClick: () => void;
   disabled?: boolean;
   label: string;
+  /**
+   * Sitting on top of the video rather than under it. The pill and its border
+   * are dropped — over a moving picture they read as clutter — and the icon
+   * carries a shadow instead, which is what keeps it legible against a bright
+   * frame now that nothing is behind it.
+   */
+  floating?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -1574,10 +1675,18 @@ function ControlButton({
       aria-label={label}
       title={label}
       className={cn(
-        'flex h-12 w-12 items-center justify-center rounded-full border transition-colors disabled:opacity-40',
-        active
-          ? 'border-white/20 bg-white/10 text-white hover:bg-white/20'
-          : 'border-red-500/40 bg-red-500/20 text-red-300 hover:bg-red-500/30'
+        'flex shrink-0 items-center justify-center rounded-full transition-colors disabled:opacity-40',
+        floating
+          ? cn(
+              'h-12 w-12 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]',
+              active ? 'text-white active:text-white/70' : 'text-red-400 active:text-red-300'
+            )
+          : cn(
+              'h-12 w-12 border',
+              active
+                ? 'border-white/20 bg-white/10 text-white hover:bg-white/20'
+                : 'border-red-500/40 bg-red-500/20 text-red-300 hover:bg-red-500/30'
+            )
       )}
     >
       {children}
