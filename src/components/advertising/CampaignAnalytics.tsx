@@ -3,8 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Users, Target, DollarSign } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { fill } from './utils/fill';
 
 const CampaignAnalytics = () => {
+  const { t } = useLanguage();
+
   const performanceData = [
     { date: '1/1', impressions: 12000, clicks: 384, spend: 180 },
     { date: '1/2', impressions: 15000, clicks: 450, spend: 225 },
@@ -15,6 +19,7 @@ const CampaignAnalytics = () => {
     { date: '1/7', impressions: 19000, clicks: 665, spend: 285 }
   ];
 
+  // Tier names are the badge artwork's own names — they are not translated.
   const tierPerformance = [
     { tier: 'Crab', impressions: 15000, clicks: 480, ctr: '3.2%', cost: '$300' },
     { tier: 'Lobster', impressions: 12000, clicks: 420, ctr: '3.5%', cost: '$450' },
@@ -24,11 +29,18 @@ const CampaignAnalytics = () => {
   ];
 
   const audienceBreakdown = [
-    { name: 'Crab Badge', value: 35, color: '#f97316' },
-    { name: 'Lobster Badge', value: 25, color: '#ef4444' },
-    { name: 'Piranha Badge', value: 20, color: '#8b5cf6' },
-    { name: 'Tortoise Badge', value: 12, color: '#22c55e' },
-    { name: 'Cobra Badge', value: 8, color: '#374151' }
+    { tier: 'Crab', value: 35, color: '#f97316' },
+    { tier: 'Lobster', value: 25, color: '#ef4444' },
+    { tier: 'Piranha', value: 20, color: '#8b5cf6' },
+    { tier: 'Tortoise', value: 12, color: '#22c55e' },
+    { tier: 'Cobra', value: 8, color: '#374151' }
+  ].map((entry) => ({ ...entry, name: fill(t('adTools.tierBadge'), { tier: entry.tier }) }));
+
+  const headlineStats = [
+    { icon: Users, labelKey: 'totalImpressions', value: '120K', delta: '+12%', deltaClass: 'text-green-600' },
+    { icon: Target, labelKey: 'clickThroughRate', value: '3.8%', delta: '+0.5%', deltaClass: 'text-green-600' },
+    { icon: DollarSign, labelKey: 'totalSpend', value: '$1,687', delta: '+$200', deltaClass: 'text-red-600' },
+    { icon: TrendingUp, labelKey: 'roas', value: '4.2x', delta: '+0.3x', deltaClass: 'text-green-600' },
   ];
 
   const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
@@ -38,11 +50,11 @@ const CampaignAnalytics = () => {
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-      <text 
-        x={x} 
-        y={y} 
-        fill="white" 
-        textAnchor={x > cx ? 'start' : 'end'} 
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
         fontSize="12"
         fontWeight="bold"
@@ -55,63 +67,26 @@ const CampaignAnalytics = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Impressions</p>
-                <p className="text-2xl font-bold text-royal-blue">120K</p>
-                <p className="text-xs text-green-600">+12% vs last week</p>
+        {headlineStats.map(({ icon: Icon, labelKey, value, delta, deltaClass }) => (
+          <Card key={labelKey}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">{t(`adTools.${labelKey}`)}</p>
+                  <p className="text-2xl font-bold text-royal-blue">{value}</p>
+                  <p className={`text-xs ${deltaClass}`}>{fill(t('adTools.vsLastWeek'), { delta })}</p>
+                </div>
+                <Icon className="w-8 h-8 text-middle-blue" />
               </div>
-              <Users className="w-8 h-8 text-middle-blue" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Click-through Rate</p>
-                <p className="text-2xl font-bold text-royal-blue">3.8%</p>
-                <p className="text-xs text-green-600">+0.5% vs last week</p>
-              </div>
-              <Target className="w-8 h-8 text-middle-blue" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Spend</p>
-                <p className="text-2xl font-bold text-royal-blue">$1,687</p>
-                <p className="text-xs text-red-600">+$200 vs last week</p>
-              </div>
-              <DollarSign className="w-8 h-8 text-middle-blue" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">ROAS</p>
-                <p className="text-2xl font-bold text-royal-blue">4.2x</p>
-                <p className="text-xs text-green-600">+0.3x vs last week</p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-middle-blue" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Performance Over Time</CardTitle>
+            <CardTitle>{t('adTools.performanceOverTime')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -129,7 +104,7 @@ const CampaignAnalytics = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Audience Distribution</CardTitle>
+            <CardTitle>{t('adTools.audienceDistribution')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -148,14 +123,14 @@ const CampaignAnalytics = () => {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                <Tooltip formatter={(value) => [`${value}%`, t('adTools.percentage')]} />
               </PieChart>
             </ResponsiveContainer>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              {audienceBreakdown.map((entry, index) => (
+              {audienceBreakdown.map((entry) => (
                 <div key={entry.name} className="flex items-center gap-2">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
+                  <div
+                    className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: entry.color }}
                   />
                   <span className="text-xs text-muted-foreground">{entry.name}: {entry.value}%</span>
@@ -168,32 +143,34 @@ const CampaignAnalytics = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Performance by Badge Tier</CardTitle>
+          <CardTitle>{t('adTools.performanceByTier')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {tierPerformance.map((tier, index) => (
+            {tierPerformance.map((tier) => (
               <div key={tier.tier} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center space-x-4">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-middle-blue to-royal-blue flex items-center justify-center text-white text-sm font-bold">
                     {tier.tier[0]}
                   </div>
                   <div>
-                    <h3 className="font-semibold">{tier.tier} Badge</h3>
-                    <p className="text-sm text-muted-foreground">{tier.impressions.toLocaleString()} impressions</p>
+                    <h3 className="font-semibold">{fill(t('adTools.tierBadge'), { tier: tier.tier })}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {fill(t('adTools.impressionsCount'), { count: tier.impressions.toLocaleString() })}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-6 text-right">
                   <div>
-                    <p className="text-sm text-muted-foreground">Clicks</p>
+                    <p className="text-sm text-muted-foreground">{t('adTools.clicks')}</p>
                     <p className="font-semibold">{tier.clicks}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">CTR</p>
+                    <p className="text-sm text-muted-foreground">{t('adTools.ctr')}</p>
                     <Badge variant="outline">{tier.ctr}</Badge>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Cost</p>
+                    <p className="text-sm text-muted-foreground">{t('adTools.cost')}</p>
                     <p className="font-semibold">{tier.cost}</p>
                   </div>
                 </div>
