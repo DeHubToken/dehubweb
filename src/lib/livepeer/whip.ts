@@ -84,6 +84,32 @@ export interface WhipSession {
   replaceTrack: (kind: 'video' | 'audio', track: MediaStreamTrack | null) => Promise<void>;
 }
 
+/**
+ * What the broadcast is actually putting on the wire, sampled from the sender.
+ *
+ * A creator's preview is the CAMERA, not the stream, so it stays perfect while
+ * viewers watch a frozen frame — the encoder starves, the capture does not. On
+ * 2026-09-01 a phone published 74 frames in 77 seconds at ~37 kbit/s while its
+ * host saw a flawless self-view and could not work out why the room had gone
+ * quiet. These are the numbers that would have said it out loud.
+ *
+ * `limitation` is the browser's own verdict on WHY it throttled: 'bandwidth'
+ * is the uplink, 'cpu' is the phone. They call for opposite advice, and
+ * guessing between them from a bitrate alone is how the wrong one gets given.
+ */
+export interface WhipHealth {
+  /** Outbound video, kilobits per second across the last sample window. */
+  videoKbps: number;
+  /** Frames per second actually ENCODED AND SENT, not captured. */
+  fps: number;
+  /** Outbound audio, kilobits per second. Near zero on silence even when well. */
+  audioKbps: number;
+  /** qualityLimitationReason: 'none' | 'bandwidth' | 'cpu' | 'other' | ''. */
+  limitation: string;
+  /** Round trip to the ingest in ms, where the candidate pair reports one. */
+  rttMs: number | null;
+}
+
 export interface PublishOptions {
   streamKey: string;
   stream: MediaStream;
@@ -103,7 +129,16 @@ export interface PublishOptions {
    */
   iceServers?: RTCIceServer[];
   onStateChange?: (state: WhipState, detail?: string) => void;
+  /**
+   * Sampled every few seconds while the session is connected. Purely
+   * observational: nothing in the publish path reads it back, and the call is
+   * wrapped, so a throwing callback can never take a broadcast down.
+   */
+  onHealth?: (health: WhipHealth) => void;
 }
+
+/** How often the sender is asked what it is really sending. */
+const HEALTH_SAMPLE_MS = 3000;
 
 /**
  * Put H.264 at the front of the video codec list.
@@ -149,6 +184,7 @@ export async function publishToWhip({
   token,
   iceServers: extraIceServers,
   onStateChange,
+  onHealth,
 }: PublishOptions): Promise<WhipSession> {
   if (!streamKey) throw new Error('A stream key is required to go live.');
 
@@ -178,11 +214,81 @@ export async function publishToWhip({
     onStateChange?.(state, detail);
   };
 
+  /*
+   * Outbound sampler.
+   *
+   * getStats reports counters that only ever climb, so every figure here is a
+   * DELTA against the previous sample — a running average over a whole
+   * broadcast would flatten exactly the minute-long collapse this exists to
+   * catch. The first sample has nothing to subtract from and is skipped
+   * rather than reported as a spike.
+   */
+  let healthTimer: ReturnType<typeof setInterval> | undefined;
+  let previous: { at: number; videoBytes: number; audioBytes: number; frames: number } | null =
+    null;
+
+  const sampleHealth = async () => {
+    if (stopped || !onHealth) return;
+    let report: RTCStatsReport;
+    try {
+      report = await pc.getStats();
+    } catch {
+      return; // A closing connection refuses stats; nothing to report.
+    }
+
+    let videoBytes = 0;
+    let audioBytes = 0;
+    let frames = 0;
+    let limitation = '';
+    let rttMs: number | null = null;
+
+    // Record<string, any> rather than a typed stats union: the shape differs
+    // per browser and per stat type, and every field read here is coerced.
+    report.forEach((entry: Record<string, any>) => {
+      if (entry.type === 'outbound-rtp') {
+        const bytes = Number(entry.bytesSent) || 0;
+        if (entry.kind === 'video') {
+          videoBytes += bytes;
+          frames += Number(entry.framesSent) || 0;
+          if (typeof entry.qualityLimitationReason === 'string') {
+            limitation = entry.qualityLimitationReason;
+          }
+        } else if (entry.kind === 'audio') {
+          audioBytes += bytes;
+        }
+      } else if (entry.type === 'candidate-pair' && entry.state === 'succeeded') {
+        const rtt = entry.currentRoundTripTime;
+        if (typeof rtt === 'number') rttMs = Math.round(rtt * 1000);
+      }
+    });
+
+    const now = Date.now();
+    const last = previous;
+    previous = { at: now, videoBytes, audioBytes, frames };
+    if (!last) return;
+
+    const seconds = (now - last.at) / 1000;
+    if (seconds <= 0) return;
+
+    try {
+      onHealth({
+        videoKbps: Math.round(((videoBytes - last.videoBytes) * 8) / seconds / 1000),
+        audioKbps: Math.round(((audioBytes - last.audioBytes) * 8) / seconds / 1000),
+        fps: Math.round(((frames - last.frames) / seconds) * 10) / 10,
+        limitation,
+        rttMs,
+      });
+    } catch {
+      /* a broken indicator must never end a broadcast */
+    }
+  };
+
   emit('connecting');
 
   const stop = async (): Promise<void> => {
     if (stopped) return;
     stopped = true;
+    clearInterval(healthTimer);
 
     // Close the peer connection first: it stops media immediately even if the
     // DELETE is slow or the network has already gone away.
@@ -235,6 +341,12 @@ export async function publishToWhip({
       switch (pc.connectionState) {
         case 'connected':
           emit('live');
+          // Started here rather than at setup: before the pair is connected
+          // there is nothing sent to measure, and a reconnect keeps the
+          // counters it already has (they are cumulative for the session).
+          if (onHealth && !healthTimer) {
+            healthTimer = setInterval(() => void sampleHealth(), HEALTH_SAMPLE_MS);
+          }
           break;
         case 'disconnected':
           // Often transient (a network handover on mobile). WebRTC retries ICE
