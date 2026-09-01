@@ -29,6 +29,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { AlertCircle, ArrowRight, CreditCard, ExternalLink, Loader2, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BASE_CHAIN_ID, getChainConfig, toWei } from '@/lib/contracts/dhb-token';
@@ -320,14 +321,14 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
       <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 space-y-2.5">
         <div className="flex items-center justify-between text-sm">
           <span className="text-zinc-400">Your DHB on Base</span>
-          <span className="text-zinc-300">{formatCompact(haveDhb)} DHB</span>
+          <span className="text-zinc-300">{formatCompact(haveDhb)} <DhbCoin /></span>
         </div>
         <div className="h-px bg-white/10" />
         <div className="flex items-center justify-between">
           <span className="text-white text-sm">Still needed</span>
           <span className="flex items-center gap-1.5 text-white text-lg font-bold">
             <img src={dehubCoin} alt="" className="w-4 h-4" />
-            {formatCompact(needDhb)} DHB
+            {formatCompact(needDhb)}
           </span>
         </div>
       </div>

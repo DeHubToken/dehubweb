@@ -25,6 +25,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, AlertCircle, Check } from 'lucide-react';
@@ -224,7 +225,7 @@ export function AdTopUpPanel({
               >
                 <span className="block text-white font-semibold">${amt}</span>
                 {dhbPrice && (
-                  <span className="block text-[11px] text-zinc-500">{formatCompact((amt / dhbPrice) * TRANSFER_HEADROOM)} DHB</span>
+                  <span className="block text-[11px] text-zinc-500">{formatCompact((amt / dhbPrice) * TRANSFER_HEADROOM)} <DhbCoin /></span>
                 )}
                 {selected && <Check className="w-3.5 h-3.5 text-white mx-auto mt-1" />}
               </button>
@@ -263,7 +264,7 @@ export function AdTopUpPanel({
                 <span className="text-white font-medium">You send</span>
               </div>
               <div className="text-right">
-                <p className="text-xl font-bold text-white">{formatCompact(costDhb)} DHB</p>
+                <p className="text-xl font-bold text-white">{formatCompact(costDhb)} <DhbCoin /></p>
                 <p className="text-xs text-zinc-500">@ ${dhbPrice.toFixed(7)}/DHB → ${effectiveUsd.toFixed(2)} credit</p>
               </div>
             </div>

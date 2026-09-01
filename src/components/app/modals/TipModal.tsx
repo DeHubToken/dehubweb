@@ -19,6 +19,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { Gem, Loader2 } from 'lucide-react';
@@ -213,7 +214,7 @@ export function TipModal({
               <p className="text-white/60 text-xs">{t('tip.customAmount', 'Or enter amount')}</p>
               {dhbBalance != null && (
                 <p className="text-white/30 text-xs">
-                  {dhbBalance.toLocaleString()} DHB · via {chainName}
+                  {dhbBalance.toLocaleString()} <DhbCoin /> · via {chainName}
                 </p>
               )}
             </div>

@@ -7,6 +7,7 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -115,7 +116,7 @@ export function DmFeeGate({
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>
           <p className="text-zinc-400 text-xs leading-relaxed">
             {recipientName} requires a minimum tip of{' '}
-            <span className="text-white font-medium">{fee.toLocaleString()} DHB</span>.
+            <span className="text-white font-medium">{fee.toLocaleString()} <DhbCoin /></span>.
             The more you tip, the higher you rank in their inbox — more chance of a reply.
           </p>
         </div>
@@ -150,7 +151,7 @@ export function DmFeeGate({
           ) : (
             <>
               <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
-              Pay {fee.toLocaleString()} DHB & Send
+              Pay {fee.toLocaleString()} & Send
             </>
           )}
         </Button>
@@ -193,7 +194,7 @@ export function DmFeeGate({
 
         {isAboveMinimum && (
           <p className="text-[10px] text-zinc-400 text-center">
-            🔥 Tipping {tipAmount.toLocaleString()} DHB will rank you higher in {recipientName}'s inbox
+            🔥 Tipping {tipAmount.toLocaleString()} <DhbCoin /> will rank you higher in {recipientName}'s inbox
           </p>
         )}
       </div>

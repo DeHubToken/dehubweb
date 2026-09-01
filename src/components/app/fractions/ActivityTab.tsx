@@ -10,6 +10,7 @@
  */
 
 import { useMemo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Activity, ArrowRight, Clock } from 'lucide-react';
 import { useRecentTrades, type FractionTrade } from '@/hooks/use-fraction-marketplace';
@@ -106,7 +107,7 @@ export function ActivityTab() {
             <p className="text-[10px] text-white/40 uppercase tracking-wide">Volume</p>
             <p className="text-white font-semibold">
               {summary.volume.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              <span className="text-[10px] text-white/40 ml-1">DHB</span>
+              <span className="text-[10px] text-white/40 ml-1"><DhbCoin /></span>
             </p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-3">

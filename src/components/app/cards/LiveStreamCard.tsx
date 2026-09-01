@@ -71,6 +71,8 @@ import { fromWei, DHB_TOKEN } from '@/lib/contracts/dhb-token';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { supabase } from '@/integrations/supabase/client';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { DhbAmount } from '@/components/app/DhbAmount';
+import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 import type { LiveStream } from '@/types/feed.types';
 
@@ -673,7 +675,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     }
     const amount = parseFloat(giftAmount);
     if (!amount || amount < MIN_TIP_DHB) {
-      toast.error(`Minimum gift is ${MIN_TIP_DHB} DHB`);
+      toast.error(dhbText(`Minimum gift is ${MIN_TIP_DHB} DHB`));
       return;
     }
     // Full on-chain flow with its own progress/error toasts; onSuccess above
@@ -1036,12 +1038,14 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                 <span className="text-sm font-medium text-white">
                   {balanceLoading ? '...' : (dhbBalance ?? '—')}
                 </span>
-                <span className="text-xs text-zinc-500">DHB</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Amount (DHB)</label>
+              <label className="text-sm text-zinc-400 flex items-center gap-1.5">
+                Amount
+                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              </label>
               <Input
                 type="number"
                 value={giftAmount}
@@ -1100,7 +1104,16 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                     </span>
                     <span className="text-sm text-zinc-400 ml-1.5">
                       {activity.type === 'gift'
-                        ? `sent ${activity.giftAmount} ${activity.giftCurrency}`
+                        ? (
+                          <>
+                            sent
+                            <DhbAmount
+                              amount={activity.giftAmount}
+                              currency={activity.giftCurrency}
+                              iconClassName="h-3.5 w-3.5"
+                            />
+                          </>
+                        )
                         : activity.type === 'like'
                         ? 'liked the stream'
                         : activity.type === 'join'

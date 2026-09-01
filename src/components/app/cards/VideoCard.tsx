@@ -10,6 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense } from 'react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +38,6 @@ import { Button } from '@/components/ui/button';
 import dehubCoin from '@/assets/dehub-coin.png';
 import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 
-import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
@@ -395,8 +395,7 @@ function MobileCreatorInfo({
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(bountyAmount)} {bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(bountyAmount)} currency={bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -405,8 +404,7 @@ function MobileCreatorInfo({
                 <div className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.totalBountyPool')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-4 h-4" />
-                    <span className="text-white text-sm font-medium">{formatCompact(totalBountyPool)} {bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-sm font-medium"><DhbAmount amount={formatCompact(totalBountyPool)} currency={bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -449,8 +447,7 @@ function MobileCreatorInfo({
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(lockedPrice)} {lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(lockedPrice)} currency={lockedCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -1721,10 +1718,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </div>
               </div>
               <p className="text-white font-semibold text-sm mb-1">
-                {t('drawers.unlockFor')} {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'DHB'}
+                {t('drawers.unlockFor')} <DhbAmount amount={formatCompact(Number(video.ppvPrice))} currency={video.ppvCurrency} />
               </p>
               <p className="text-white/70 text-xs">
-                Must be holding {formatCompact(Number(video.lockedPrice))} {video.lockedCurrency || 'DHB'}
+                Must be holding <DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
               </p>
             </div>
           </>
@@ -1775,7 +1772,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
               <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
               <p className="text-white/70 text-xs">
-                {cheapestPlanPrice !== undefined ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB` : `Subscribe to ${video.channel}`}
+                {cheapestPlanPrice !== undefined ? (
+                  <>
+                    Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                  </>
+                ) : (
+                  `Subscribe to ${video.channel}`
+                )}
               </p>
             </div>
           </>
@@ -1799,7 +1802,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
               <p className="text-white font-semibold text-sm mb-1">Holdings Required</p>
               <p className="text-white/70 text-xs">
-                Must be holding {formatCompact(Number(video.lockedPrice))} {video.lockedCurrency || 'DHB'}
+                Must be holding <DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
               </p>
             </div>
           </>
@@ -2595,8 +2598,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={video.bountyAmount} currency={video.bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -2672,8 +2674,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(video.lockedPrice)} {video.lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(video.lockedPrice)} currency={video.lockedCurrency} /></span>
                   </div>
                 </div>
               )}

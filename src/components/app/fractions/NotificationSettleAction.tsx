@@ -19,6 +19,7 @@
  */
 
 import { Loader2, Send, Coins, Check } from 'lucide-react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOpenTrades } from '@/hooks/use-fraction-marketplace';
 import { useSettleTrade } from '@/hooks/use-fraction-checkout';
@@ -92,7 +93,11 @@ export function NotificationSettleAction({ type, tokenId }: NotificationSettleAc
         )}
         {isSale
           ? `Send ${trade.quantity} fraction${trade.quantity === 1 ? '' : 's'}`
-          : `Pay ${(trade.quantity * trade.price_per_fraction).toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB`}
+          : (
+            <>
+              Pay <DhbAmount amount={(trade.quantity * trade.price_per_fraction).toLocaleString(undefined, { maximumFractionDigits: 2 })} />
+            </>
+          )}
       </button>
     </div>
   );
