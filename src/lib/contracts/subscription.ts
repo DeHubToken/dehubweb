@@ -24,6 +24,7 @@
  * buyer's actual fee — it varies with the badges they hold.
  */
 
+import type { TFunction } from 'i18next';
 import { Interface } from 'ethers';
 import {
   writeContractAA,
@@ -82,13 +83,16 @@ export function normaliseDuration(duration: unknown): number | null {
   return n;
 }
 
-export function formatDuration(duration: number): string {
+/**
+ * Takes the translator rather than importing i18n: this is a contracts helper,
+ * and its only caller is a component that already has one.
+ */
+export function formatDuration(duration: number, t: TFunction): string {
   const n = normaliseDuration(duration);
-  if (n === null) return `${duration} months`;
-  if (n === LIFETIME_DURATION) return 'lifetime';
-  if (n === 1) return '1 month';
-  if (n === 12) return '1 year';
-  return `${n} months`;
+  if (n === null) return t('subscriptions.durationMonths', { count: duration });
+  if (n === LIFETIME_DURATION) return t('subscriptions.durationLifetime');
+  if (n === 12) return t('subscriptions.durationOneYear');
+  return t('subscriptions.durationMonths', { count: n });
 }
 
 // ── Reads ──
