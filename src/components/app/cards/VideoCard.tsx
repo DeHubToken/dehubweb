@@ -43,7 +43,7 @@ import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
-import { ShopBoard } from '../live/ShopBoard';
+import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
@@ -2300,7 +2300,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 this card runs an immersive mode that reflows the video, and an
                 absolutely-positioned board would have to track it. Live keeps
                 the overlay, where not leaving the stream is the point. */}
-            <ShopBoard tokenId={video.id} links={video.shopLinks} listingCount={video.shopListingCount} variant="inline" />
+            <ShopBoardLazy tokenId={video.id} links={video.shopLinks} listingCount={video.shopListingCount} variant="inline" />
             <ActionBar
               postId={video.id}
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
