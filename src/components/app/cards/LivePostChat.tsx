@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw, Pin, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
@@ -109,9 +110,20 @@ interface LivePostChatProps {
   isOffline?: boolean;
   /** Whether the current user is the stream host (can pin messages) */
   isHost?: boolean;
+  /**
+   * Render over the video instead of inside a card.
+   *
+   * The broadcaster's phone layout is full-bleed — the camera IS the screen —
+   * so a bordered slab with its own header sat on the picture like a sticker,
+   * and its viewer count repeated the one already in the corner. Overlay mode
+   * drops the chrome: no panel, no header, messages ride the shade that
+   * darkens the foot of the screen, and the list masks out as it climbs so
+   * old lines dissolve into the frame instead of meeting a hard edge.
+   */
+  overlay?: boolean;
 }
 
-export function LivePostChat({ tokenId, isOffline = false, isHost = false }: LivePostChatProps) {
+export function LivePostChat({ tokenId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
   const streamId = tokenId ? streamChatRoomId(tokenId) : '';
   // The card unmounts every time the post scrolls out of the feed, so without
   // this a line typed under a stream is gone the moment you look away.
@@ -256,9 +268,17 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
   };
 
   return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+    <div
+      className={cn(
+        overlay
+          ? 'flex min-h-0 flex-1 flex-col justify-end'
+          : 'rounded-xl border border-white/[0.12] bg-white/[0.03] p-3'
+      )}
+    >
+      {/* Header — the overlay has none. The host already has the room's
+          numbers over the picture, and a title bar is the panel this layout
+          is trying not to be. */}
+      <div className={cn('flex items-center justify-between mb-3', overlay && 'hidden')}>
         <div className="flex items-center gap-2">
           <MessageSquare className="w-4 h-4 text-zinc-400" />
           <h3 className="font-semibold text-white text-sm">Live Chat</h3>
@@ -276,7 +296,12 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
       {pinnedMessage && (
         <button
           onClick={() => scrollToMessage(pinnedMessage.id)}
-          className="w-full flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-white/[0.06] border-l-2 border-blue-400 text-left hover:bg-white/10 transition-colors group"
+          className={cn(
+            'w-full flex items-center gap-2 mb-2 px-3 py-2 border-l-2 border-blue-400 text-left transition-colors group',
+            overlay
+              ? 'rounded-xl bg-black/40 backdrop-blur-md hover:bg-black/50'
+              : 'rounded-lg bg-white/[0.06] hover:bg-white/10'
+          )}
         >
           <Pin className="w-3.5 h-3.5 text-blue-400 shrink-0 fill-current" />
           <div className="flex-1 min-w-0">
@@ -298,7 +323,18 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
       )}
 
       {/* Messages */}
-      <div ref={messagesContainerRef} className="h-64 overflow-y-auto space-y-1 mb-3 scrollbar-hide">
+      <div
+        ref={messagesContainerRef}
+        className={cn(
+          'overflow-y-auto scrollbar-hide',
+          overlay
+            // The mask lives on the scroller, so the dissolve stays pinned to
+            // the top edge while messages travel under it. -webkit- kept for
+            // the iOS Safari this layout exists for.
+            ? 'min-h-0 flex-1 max-h-[42vh] space-y-0.5 mb-2 pr-1 [text-shadow:0_1px_3px_rgb(0_0_0/0.85)] [mask-image:linear-gradient(to_bottom,transparent,#000_3.5rem)] [-webkit-mask-image:linear-gradient(to_bottom,transparent,#000_3.5rem)]'
+            : 'h-64 space-y-1 mb-3'
+        )}
+      >
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
@@ -390,7 +426,7 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
       )}
 
       {/* Input */}
-      <div className="pt-2">
+      <div className={overlay ? '' : 'pt-2'}>
         <div className="relative">
           <Textarea
             ref={textareaRef}
@@ -404,8 +440,13 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
             onKeyDown={handleKeyDown}
             placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}
             disabled={isOffline || !isAuthenticated}
-            className="min-h-[56px] max-h-32 resize-none bg-white/5 border-white/10 text-white placeholder:text-zinc-500 text-sm rounded-xl pr-24"
-            rows={2}
+            className={cn(
+              'max-h-32 resize-none text-white text-sm pr-24',
+              overlay
+                ? 'min-h-[46px] rounded-full border-white/15 bg-black/40 py-3 pl-4 backdrop-blur-md placeholder:text-white/50'
+                : 'min-h-[56px] rounded-xl border-white/10 bg-white/5 placeholder:text-zinc-500'
+            )}
+            rows={overlay ? 1 : 2}
           />
           <UserMentionDropdown
             query={mention.query}
@@ -424,7 +465,10 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
             <button
               onClick={handleSend}
               disabled={isSending || !newMessage.trim() || isOffline}
-              className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className={cn(
+                'p-2 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed',
+                overlay ? 'rounded-full bg-white/15 hover:bg-white/25' : 'rounded-xl bg-white/10 hover:bg-white/20'
+              )}
             >
               {isSending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
