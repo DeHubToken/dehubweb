@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,18 @@ import { SkillDetailDrawer } from './SkillDetailDrawer';
 
 type Filter = 'all' | 'featured' | 'mine';
 
+/**
+ * The filter values are compared against, not printed — `filter === f` decides
+ * what renders — so they stay English and map to keys at the point of drawing.
+ */
+const FILTER_KEYS: Record<Filter, string> = {
+  all: 'skills.filterAll',
+  featured: 'skills.filterFeatured',
+  mine: 'skills.filterMine',
+};
+
 export function SkillsLibrary() {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const navigate = useNavigate();
   const { data: skills = [], isLoading } = useUserSkills();
@@ -51,14 +63,14 @@ export function SkillsLibrary() {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Sparkles className="w-4 h-4" /> Skills
+            <Sparkles className="w-4 h-4" /> {t('skills.skills')}
           </h2>
-          <p className="text-xs text-zinc-500">Reusable prompt + brand kits for the AI assistant. Anyone can create or use them.</p>
+          <p className="text-xs text-zinc-500">{t('skills.librarySubtitle')}</p>
         </div>
         <LiquidGlassBubble2
           onClick={() => { setEditing(null); setCreateOpen(true); }}
           disabled={!walletAddress}
-          label="Create Skill"
+          label={t('skills.createSkill')}
           icon={<Plus className="w-4 h-4" />}
           width="150px"
         />
@@ -69,14 +81,14 @@ export function SkillsLibrary() {
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name, trigger phrase, or creator…"
+          placeholder={t('skills.searchPlaceholder')}
           className="pl-9 bg-white/5 border-white/10"
         />
       </div>
 
       {/* Filter — full-width segmented control, one row of its own so it never
           crowds the search field or the Create button. */}
-      <div role="tablist" aria-label="Filter skills" className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/10">
+      <div role="tablist" aria-label={t('skills.filterSkills')} className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/10">
         {(['all', 'featured', 'mine'] as const).map((f) => {
           const active = filter === f;
           return (
@@ -85,13 +97,13 @@ export function SkillsLibrary() {
               role="tab"
               aria-selected={active}
               onClick={() => setFilter(f)}
-              className={`flex items-center justify-center gap-1.5 h-9 rounded-lg text-xs font-medium capitalize transition-all active:scale-[0.98] ${
+              className={`flex items-center justify-center gap-1.5 h-9 rounded-lg text-xs font-medium transition-all active:scale-[0.98] ${
                 active
                   ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]'
                   : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
-              {f}
+              {t(FILTER_KEYS[f])}
               <span className={`text-[10px] tabular-nums px-1.5 py-0.5 rounded-md ${active ? 'bg-white/20 text-white' : 'bg-white/5 text-zinc-500'}`}>
                 {counts[f]}
               </span>
@@ -108,7 +120,7 @@ export function SkillsLibrary() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-2xl bg-white/[0.02] border border-white/5 p-10 text-center text-zinc-500 text-sm">
-          {query ? 'No skills match your search.' : filter === 'mine' ? 'You haven\'t created any skills yet.' : 'No skills yet.'}
+          {query ? t('skills.noSearchMatch') : filter === 'mine' ? t('skills.noneCreatedYet') : t('skills.noneYet')}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

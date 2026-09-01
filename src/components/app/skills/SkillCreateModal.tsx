@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
+  const { t } = useTranslation();
   const create = useCreateSkill();
   const update = useUpdateSkill();
   const [name, setName] = useState(editing?.name ?? '');
@@ -29,7 +31,7 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
     const files = Array.from(e.target.files ?? []);
     if (!files.length) return;
     if (assets.length + files.length > 5) {
-      toast.error('Max 5 assets per skill');
+      toast.error(t('skills.maxAssets'));
       return;
     }
     setUploading(true);
@@ -38,7 +40,7 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
       const urls = await Promise.all(files.map((f) => uploadSkillAsset(f, slug)));
       setAssets((prev) => [...prev, ...urls]);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Upload failed');
+      toast.error(err instanceof Error ? err.message : t('skills.uploadFailed'));
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -47,7 +49,7 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
 
   const handleSave = async () => {
     if (!name.trim() || !systemPrompt.trim()) {
-      toast.error('Name and system prompt are required');
+      toast.error(t('skills.nameAndPromptRequired'));
       return;
     }
     const phrases = phrasesText.split(',').map((s) => s.trim()).filter(Boolean);
@@ -63,14 +65,14 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
     try {
       if (editing) {
         await update.mutateAsync({ id: editing.id, patch: payload });
-        toast.success('Skill updated');
+        toast.success(t('skills.skillUpdated'));
       } else {
         await create.mutateAsync(payload);
-        toast.success('Skill created');
+        toast.success(t('skills.skillCreated'));
       }
       onOpenChange(false);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to save');
+      toast.error(err instanceof Error ? err.message : t('skills.failedToSave'));
     }
   };
 
@@ -81,24 +83,24 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
       <DrawerContent column className="bg-zinc-900 border-white/10 max-h-[92vh]">
         <div className="mx-auto w-full max-w-xl px-4 pb-6 overflow-y-auto">
         <DrawerHeader className="px-0">
-          <DrawerTitle>{editing ? 'Edit Skill' : 'Create Skill'}</DrawerTitle>
+          <DrawerTitle>{t(editing ? 'skills.editSkill' : 'skills.createSkill')}</DrawerTitle>
         </DrawerHeader>
         <div className="space-y-4">
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Name</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="DeHub Poster" />
+            <label className="text-xs text-zinc-400 mb-1 block">{t('skills.name')}</label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('skills.namePlaceholder')} />
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Description</label>
-            <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="When should this skill be used?" />
+            <label className="text-xs text-zinc-400 mb-1 block">{t('skills.description')}</label>
+            <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('skills.descriptionPlaceholder')} />
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Trigger phrases (comma-separated)</label>
-            <Input value={phrasesText} onChange={(e) => setPhrasesText(e.target.value)} placeholder="dehub poster, dehub social, dehub banner" />
-            <p className="text-[11px] text-zinc-500 mt-1">When user messages contain one of these, this skill auto-activates.</p>
+            <label className="text-xs text-zinc-400 mb-1 block">{t('skills.triggerPhrasesComma')}</label>
+            <Input value={phrasesText} onChange={(e) => setPhrasesText(e.target.value)} placeholder={t('skills.triggerPhrasesPlaceholder')} />
+            <p className="text-[11px] text-zinc-500 mt-1">{t('skills.autoActivateHint')}</p>
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Type</label>
+            <label className="text-xs text-zinc-400 mb-1 block">{t('skills.type')}</label>
             <div className="flex gap-2">
               {(['image', 'chat'] as const).map((k) => (
                 <button
@@ -109,23 +111,23 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
                     kind === k ? 'bg-white/15 border-white/30 text-white' : 'bg-white/5 border-white/10 text-zinc-400'
                   }`}
                 >
-                  {k === 'image' ? 'Image generation' : 'Chat / prompt'}
+                  {t(k === 'image' ? 'skills.kindImage' : 'skills.kindChat')}
                 </button>
               ))}
             </div>
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">System prompt</label>
+            <label className="text-xs text-zinc-400 mb-1 block">{t('skills.systemPrompt')}</label>
             <Textarea
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}
               rows={6}
-              placeholder="Style rules, brand guidelines, voice…"
+              placeholder={t('skills.systemPromptPlaceholder')}
               className="resize-none"
             />
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-2 block">Brand assets ({assets.length}/5)</label>
+            <label className="text-xs text-zinc-400 mb-2 block">{t('skills.brandAssets', { count: assets.length })}</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {assets.map((url, i) => (
                 <div key={url} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10">
@@ -146,15 +148,15 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
                 </label>
               )}
             </div>
-            <p className="text-[11px] text-zinc-500">Logos, references, or style anchors. Used as reference images during generation.</p>
+            <p className="text-[11px] text-zinc-500">{t('skills.brandAssetsHint')}</p>
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button variant="ghost" onClick={() => onOpenChange(false)}>{t('skills.cancel')}</Button>
             <LiquidGlassBubble2
               onClick={handleSave}
               disabled={isSaving}
               loading={isSaving}
-              label={editing ? 'Save changes' : 'Create skill'}
+              label={t(editing ? 'skills.saveChanges' : 'skills.createSkillAction')}
               width="160px"
             />
           </div>
