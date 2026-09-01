@@ -22,6 +22,7 @@
  * to the ones that can actually be bought.
  */
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Loader2, Star } from 'lucide-react';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { PlanCard } from '@/components/app/subscriptions/PlanCard';
@@ -54,6 +55,7 @@ export function SubscriberGateDrawer({
   previewPlans,
   onSubscribed,
 }: SubscriberGateDrawerProps) {
+  const { t } = useTranslation();
   const { plans, isLoading } = useCreatorPlans(creatorAddress);
   // PlanCard's buy flow invalidates this key when a purchase lands, so the
   // gate opens on its own without the sheet having to know it happened.
@@ -83,10 +85,10 @@ export function SubscriberGateDrawer({
       <DrawerHeader className="pb-3">
         <DrawerTitle className="text-white text-lg flex items-center gap-2">
           <Star className="w-5 h-5 text-white" />
-          Subscribers only
+          {t('subscriptions.subscribersOnly')}
         </DrawerTitle>
         <p className="text-white/60 text-sm text-left">
-          {creatorName} keeps this post for their subscribers.
+          {t('subscriptions.creatorKeepsPost', { creator: creatorName })}
         </p>
       </DrawerHeader>
 
@@ -105,7 +107,7 @@ export function SubscriberGateDrawer({
         // an empty list here means the creator deleted the plan after posting.
         // Saying so beats an empty sheet, which is what the old gate did.
         <p className="text-center text-white/60 text-sm py-8">
-          {creatorName} has no subscription open right now.
+          {t('subscriptions.creatorNoPlans', { creator: creatorName })}
         </p>
       )}
     </>
