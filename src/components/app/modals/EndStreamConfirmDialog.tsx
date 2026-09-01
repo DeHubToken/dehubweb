@@ -7,6 +7,7 @@
  * pixels from the controls on a phone. This is the gate they all share.
  */
 
+import { useTranslation } from 'react-i18next';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,22 +28,23 @@ export function EndStreamConfirmDialog({
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="z-[10000]">
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to end the stream?</AlertDialogTitle>
+          <AlertDialogTitle>{t('goLive.endStreamConfirmTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Your broadcast stops for everyone watching and cannot be resumed.
+            {t('goLive.endStreamConfirmBody')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep streaming</AlertDialogCancel>
+          <AlertDialogCancel>{t('goLive.keepStreaming')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="bg-red-500/90 text-white hover:bg-red-500"
           >
-            End Stream
+            {t('goLive.endStream')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

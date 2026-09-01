@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, X, Video, MonitorPlay, ScreenShare } from 'lucide-react';
 import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
@@ -140,6 +142,7 @@ function formatGb(bytes: number): string {
 }
 
 export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
   const [confirmEnd, setConfirmEnd] = useState(false);
@@ -610,7 +613,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
 
   const handleStartStream = async () => {
     if (!title.trim()) {
-      toast.error('Please enter a stream title');
+      toast.error(t('goLive.enterTitle'));
       return;
     }
 
@@ -654,7 +657,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
         pendingScreenRef.current = capture;
       } catch (error) {
         logger.info('Screen picker dismissed', error);
-        toast.error('Screen sharing was cancelled.');
+        toast.error(t('goLive.screenShareCancelled'));
         return;
       }
     }
@@ -797,9 +800,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
       if (shopListingIds.length) {
         void attachShopListings(tokenId, shopListingIds, walletAddress).then(({ failed }) => {
           if (failed > 0) {
-            toast.error(
-              `${failed} shop ${failed === 1 ? 'item' : 'items'} could not be attached — add them from the shop panel.`,
-            );
+            toast.error(t('goLive.shopItemsNotAttached', { count: failed }));
           }
         });
       }
@@ -814,7 +815,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
         }
 
         logger.info('Executing on-chain mint...', { tokenId });
-        toast.loading('Publishing to decentralized database...', { id: 'golive-progress', duration: Infinity });
+        toast.loading(t('goLive.publishing'), { id: 'golive-progress', duration: Infinity });
 
         const chainMint = {
           tokenId,
@@ -1006,7 +1007,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
       // credentials screen so the creator can paste them into their encoder.
       setStep(source !== 'rtmp' ? 'broadcasting' : 'ready');
       logger.info('Stream setup ready', { streamId, tokenId, source });
-      toast.success(source !== 'rtmp' ? 'You are going live!' : 'Live stream is ready!');
+      toast.success(t(source !== 'rtmp' ? 'goLive.youAreGoingLive' : 'goLive.streamIsReady'));
 
       // Mark stream as live in Supabase (api.dehub.io /start fails with 404).
       // The promise is kept so end paths can sequence their delete after it —
@@ -1039,11 +1040,11 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
       const isSigningError = errorMsg.includes('overflow') || errorMsg.includes('INVALID_ARGUMENT') || errorMsg.includes('user rejected');
 
       if (isWeb3AuthError) {
-        toast.error('Web3Auth service is currently slow or timing out. Please check your internet or try refreshing.');
+        toast.error(t('goLive.web3AuthSlow'));
       } else if (isSigningError) {
-        toast.error('Blockchain signing failed. Please check your wallet or refresh the page.');
+        toast.error(t('goLive.signingFailed'));
       } else {
-        toast.error(errorMsg || 'Failed to create stream');
+        toast.error(errorMsg || t('goLive.createStreamFailed'));
       }
     } finally {
       setIsLoading(false);
@@ -1054,10 +1055,10 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
     try {
       await navigator.clipboard.writeText(text);
       setCopiedField(field);
-      toast.success('Copied to clipboard');
+      toast.success(t('goLive.copied'));
       setTimeout(() => setCopiedField(null), 2000);
     } catch {
-      toast.error('Failed to copy');
+      toast.error(t('goLive.copyFailed'));
     }
   };
 
@@ -1110,10 +1111,10 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
             {!liveFullScreen && (
               <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             )}
-            {step === 'setup' ? 'Go Live' : step === 'broadcasting' ? "You're Live" : 'Stream Ready'}
+            {t(step === 'setup' ? 'goLive.goLive' : step === 'broadcasting' ? 'goLive.youAreLive' : 'goLive.streamReady')}
           </DrawerTitle>
           <DrawerDescription className="sr-only">
-            Configure your livestream settings or get your RTMP credentials.
+            {t('goLive.drawerDescription')}
           </DrawerDescription>
           {!liveFullScreen && (
             <button
@@ -1137,75 +1138,71 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
           {step === 'setup' ? (
             <div className="space-y-4 pb-4">
               <div className="space-y-2">
-                <label className="text-sm text-zinc-400">How do you want to stream?</label>
+                <label className="text-sm text-zinc-400">{t('goLive.howToStream')}</label>
                 <div className={cn('grid gap-2', canShareScreen ? 'grid-cols-3' : 'grid-cols-2')}>
                   <SourceOption
                     selected={source === 'camera'}
                     onClick={() => setSource('camera')}
                     icon={<Video className="w-4 h-4" />}
-                    title="Camera"
-                    subtitle="Straight from this device"
+                    title={t('goLive.sourceCamera')}
+                    subtitle={t('goLive.sourceCameraHint')}
                   />
                   {canShareScreen && (
                     <SourceOption
                       selected={source === 'screen'}
                       onClick={() => setSource('screen')}
                       icon={<ScreenShare className="w-4 h-4" />}
-                      title="Screen"
-                      subtitle="Share a game, app or tab"
+                      title={t('goLive.sourceScreen')}
+                      subtitle={t('goLive.sourceScreenHint')}
                     />
                   )}
                   <SourceOption
                     selected={source === 'rtmp'}
                     onClick={() => setSource('rtmp')}
                     icon={<MonitorPlay className="w-4 h-4" />}
-                    title="OBS / Encoder"
-                    subtitle="Get RTMP details"
+                    title={t('goLive.sourceEncoder')}
+                    subtitle={t('goLive.sourceEncoderHint')}
                   />
                 </div>
                 {source === 'screen' && (
                   <p className="text-[11px] text-zinc-500">
-                    You'll pick the screen, window or tab next — then it goes live
-                    with your mic and the tab's own sound.
+                    {t('goLive.screenPickHint')}
                   </p>
                 )}
                 {replayBudget && (
                   replayBudget.remaining <= 0 ? (
                     <p className="text-[11px] text-amber-400/90">
-                      You've used today's upload allowance, so this stream won't
-                      keep a replay. The allowance resets at midnight UTC.
+                      {t('goLive.replayAllowanceUsed')}
                     </p>
                   ) : replayBudget.tier == null ? (
                     <p className="text-[11px] text-amber-400/90">
-                      Free accounts keep the first {formatGb(replayBudget.remaining)} of
-                      a stream as a replay — staking badges raises the limit.
+                      {t('goLive.replayFreeTier', { size: formatGb(replayBudget.remaining) })}
                     </p>
                   ) : (
                     <p className="text-[11px] text-zinc-500">
-                      Up to {formatGb(replayBudget.remaining)} of this stream is kept
-                      as a replay ({replayBudget.tier} daily allowance).
+                      {t('goLive.replayTiered', { size: formatGb(replayBudget.remaining), tier: replayBudget.tier })}
                     </p>
                   )
                 )}
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-zinc-400">Stream Title *</label>
+                <label className="text-sm text-zinc-400">{t('goLive.streamTitle')}</label>
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="What's your stream about?"
+                  placeholder={t('goLive.titlePlaceholder')}
                   className="bg-zinc-800 border-zinc-700 text-white"
                   maxLength={100}
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-zinc-400">Description</label>
+                <label className="text-sm text-zinc-400">{t('goLive.description')}</label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Tell viewers what to expect..."
+                  placeholder={t('goLive.descriptionPlaceholder')}
                   className="bg-zinc-800 border-zinc-700 text-white resize-none"
                   rows={3}
                   maxLength={500}
@@ -1220,7 +1217,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                 <div className="flex items-center justify-between">
                   <label className="text-sm text-zinc-400 flex items-center gap-2">
                     <ImagePlus className="w-4 h-4" />
-                    Cover image
+                    {t('goLive.coverImage')}
                   </label>
                   {cover ? (
                     <button
@@ -1228,10 +1225,10 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                       onClick={() => chooseCover(null)}
                       className="text-xs text-white/50 hover:text-white"
                     >
-                      Remove
+                      {t('goLive.remove')}
                     </button>
                   ) : (
-                    <span className="text-xs text-white/30">Optional</span>
+                    <span className="text-xs text-white/30">{t('goLive.optional')}</span>
                   )}
                 </div>
                 <input
@@ -1242,7 +1239,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
                     if (file && file.size > MAX_COVER_BYTES) {
-                      toast.error('Cover image must be under 8 MB');
+                      toast.error(t('goLive.coverTooLarge'));
                       e.target.value = '';
                       return;
                     }
@@ -1264,7 +1261,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                   ) : (
                     <span className="flex flex-col items-center gap-1 text-xs">
                       <ImagePlus className="w-5 h-5" />
-                      Add a cover
+                      {t('goLive.addCover')}
                     </span>
                   )}
                 </button>
@@ -1354,7 +1351,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                 <>
 
                   <div className="space-y-2">
-                    <label className="text-sm text-white font-medium">Stream Key</label>
+                    <label className="text-sm text-white font-medium">{t('goLive.streamKey')}</label>
                     <div className="flex gap-2">
                       <Input value={streamData.streamKey} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
                       <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.streamKey, 'key')}>
@@ -1364,7 +1361,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm text-white font-medium">Ingest URL</label>
+                    <label className="text-sm text-white font-medium">{t('goLive.ingestUrl')}</label>
                     <div className="flex gap-2">
                       <Input value={streamData.ingestUrl} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
                       <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.ingestUrl, 'url')}>
@@ -1374,12 +1371,12 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                   </div>
 
                   <div className="bg-zinc-800/50 rounded-xl p-4 space-y-2">
-                    <p className="text-white font-medium text-xs uppercase tracking-wider">Quick Setup Guide:</p>
+                    <p className="text-white font-medium text-xs uppercase tracking-wider">{t('goLive.quickSetupGuide')}</p>
                     <ol className="text-xs text-zinc-400 space-y-1 list-decimal list-inside">
-                      <li>Open OBS → Settings → Stream</li>
-                      <li>Select "Custom" Service</li>
-                      <li>Paste Ingest URL & Stream Key</li>
-                      <li>Click "Start Streaming"</li>
+                      <li>{t('goLive.obsStep1')}</li>
+                      <li>{t('goLive.obsStep2')}</li>
+                      <li>{t('goLive.obsStep3')}</li>
+                      <li>{t('goLive.obsStep4')}</li>
                     </ol>
                   </div>
                 </>
@@ -1392,7 +1389,7 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
         <div className={cn('pt-4 mt-2', step === 'broadcasting' && 'hidden')}>
           {step === 'setup' ? (
             <LiquidGlassBubble2
-              label={isLoading ? '' : 'Go Live'}
+              label={isLoading ? '' : t('goLive.goLive')}
               icon={isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Radio className="w-5 h-5" />}
               onClick={handleStartStream}
               disabled={!title.trim() || isLoading}
@@ -1405,13 +1402,13 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
                 onClick={() => setConfirmEnd(true)}
                 className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 transition-colors"
               >
-                <Radio className="w-4 h-4" /> End Stream
+                <Radio className="w-4 h-4" /> {t('goLive.endStream')}
               </button>
               <button
                 onClick={() => window.open(streamData?.playbackUrl, '_blank')}
                 className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 transition-colors"
               >
-                <ExternalLink className="w-4 h-4" /> View Stream
+                <ExternalLink className="w-4 h-4" /> {t('goLive.viewStream')}
               </button>
             </div>
           )}
@@ -1456,16 +1453,14 @@ class BroadcasterBoundary extends React.Component<
     if (!this.state.failed) return this.props.children;
     return (
       <div className="flex flex-col items-center gap-4 py-10 px-6 text-center">
-        <p className="text-sm text-white">
-          The broadcaster failed to load, so nothing was ever captured — but the
-          stream was already created. End it below, then refresh the page and go
-          live again.
-        </p>
+        {/* A class component, so no hook — the i18n singleton is how a
+            non-hook scope reads a translation. */}
+        <p className="text-sm text-white">{i18n.t('goLive.broadcasterFailed')}</p>
         <button
           onClick={this.props.onEnd}
           className="h-12 px-6 rounded-xl border border-red-500/30 bg-red-500/10 text-sm font-medium text-red-300 hover:bg-red-500/20 transition-colors"
         >
-          End Stream
+          {i18n.t('goLive.endStream')}
         </button>
       </div>
     );
