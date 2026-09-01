@@ -295,8 +295,8 @@ export function useLiveChatMessages(roomId: string | null) {
 
     initialLoadDone.current = false;
 
-    const unsubDebug = debugSocketEvents();
-    const socket = getSocket();
+    const unsubDebug = debugSocketEvents(roomId);
+    const socket = getSocket(roomId);
     setIsConnected(socket.connected);
 
     const onConnect = () => {
@@ -312,13 +312,13 @@ export function useLiveChatMessages(roomId: string | null) {
       joinRoom(roomId);
     }
 
-    const unsubJoined = onRoomJoined((data) => {
+    const unsubJoined = onRoomJoined(roomId, (data) => {
       console.log('[LiveChat] Room joined, banned:', data.isBanned);
       setIsBanned(data.isBanned || false);
       initialLoadDone.current = true;
     });
 
-    const unsubMsg = onLiveChatMessage((msg) => {
+    const unsubMsg = onLiveChatMessage(roomId, (msg) => {
       const local = socketMsgToLocal(msg, roomId);
       if (local) {
         setMessages((prev) => {
@@ -332,12 +332,12 @@ export function useLiveChatMessages(roomId: string | null) {
       }
     });
 
-    const unsubDeleted = onMessageDeleted((data) => {
+    const unsubDeleted = onMessageDeleted(roomId, (data) => {
       setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
     });
 
     // Handle reaction updates from other users
-    const unsubReaction = onReactionUpdated((data: unknown) => {
+    const unsubReaction = onReactionUpdated(roomId, (data: unknown) => {
       const d = data as Record<string, unknown>;
       const messageId = String(d.messageId || d.message_id || '');
       if (!messageId) return;
@@ -349,11 +349,11 @@ export function useLiveChatMessages(roomId: string | null) {
       );
     });
 
-    const unsubBanned = onUserBanned((data) => {
+    const unsubBanned = onUserBanned(roomId, (data) => {
       setIsBanned(true);
       toast.error(data.message || 'You have been banned from chat');
     });
-    const unsubUnbanned = onUserUnbanned((data) => {
+    const unsubUnbanned = onUserUnbanned(roomId, (data) => {
       setIsBanned(false);
       toast.success(data.message || 'You have been unbanned');
     });
@@ -426,7 +426,7 @@ export function useLiveChatMessages(roomId: string | null) {
       });
 
       try {
-        const socket = getSocket();
+        const socket = getSocket(roomId);
         if (!socket.connected) {
           await new Promise<void>((resolve, reject) => {
             const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 5000);
