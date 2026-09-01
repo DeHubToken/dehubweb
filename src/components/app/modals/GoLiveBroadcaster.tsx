@@ -31,10 +31,17 @@ import {
   Loader2,
   AlertTriangle,
   Radio,
+  SignalLow,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { publishToWhip, WhipHttpError, type WhipSession, type WhipState } from '@/lib/livepeer/whip';
+import {
+  publishToWhip,
+  WhipHttpError,
+  type WhipHealth,
+  type WhipSession,
+  type WhipState,
+} from '@/lib/livepeer/whip';
 import {
   composeCameraBubble,
   BUBBLE_CORNERS,
@@ -77,6 +84,20 @@ const logger = createLogger('GoLiveBroadcaster');
  * cannot be used as a live feed.
  */
 const CONSOLE_POLL_MS = 15_000;
+
+/*
+ * When the outgoing picture counts as starved.
+ *
+ * Under about five frames a second a viewer is not watching a stream, they
+ * are watching a slideshow; under ~150 kbit/s the encoder has given up on
+ * the picture to protect the voice, which is what WebRTC does first. The
+ * numbers are deliberately far below "not great" — this warning is for a
+ * broadcast that is failing, not one that is merely soft.
+ */
+const STARVED_FPS = 5;
+const STARVED_KBPS = 150;
+/** Consecutive bad samples before it is called (3s each — see whip.ts). */
+const STARVED_SAMPLES = 2;
 
 /**
  * Poster-frame capture cadence.
@@ -335,6 +356,18 @@ export function GoLiveBroadcaster({
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
+  /*
+   * What viewers are actually receiving.
+   *
+   * The preview above is the camera, not the broadcast, so it stays flawless
+   * while the encoder starves — and the host has no way to tell. On
+   * 2026-09-01 a phone published 74 frames in 77 seconds at ~37 kbit/s and
+   * its one viewer watched a frozen picture, left after seventeen seconds and
+   * came back twice; the console showed a healthy stream throughout. Null
+   * until the first sample lands, which is a couple of seconds after 'live'.
+   */
+  const [health, setHealth] = useState<WhipHealth | null>(null);
+  const [starved, setStarved] = useState(false);
   // Only one drawer of extras at a time — the broadcast preview is the point
   // of this panel and two open boards would push it off a laptop screen.
   const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'sounds' | 'chat'>('none');
@@ -380,6 +413,55 @@ export function GoLiveBroadcaster({
   /** Feature detection, not a device check: undefined on iOS and on Android. */
   const canShareScreen = typeof navigator?.mediaDevices?.getDisplayMedia === 'function';
 
+  /*
+   * Turns samples into a verdict.
+   *
+   * Two consecutive bad samples, not one: a keyframe request, a camera flip
+   * and the first seconds after 'live' all dip briefly, and a warning that
+   * blinks on every hiccup is one a host learns to ignore. Recovery is
+   * immediate on the other hand — a stream that has come back should say so
+   * at once.
+   *
+   * The first slide into starvation is logged at warn level so it reaches
+   * client_error_logs. `limitation` is the part worth having: it separates
+   * an uplink that cannot carry the picture from a phone that cannot encode
+   * it, which no amount of reasoning from a bitrate alone can do.
+   */
+  const badSamplesRef = useRef(0);
+  const reportedStarvedRef = useRef(false);
+  const reportHealth = useCallback((sample: WhipHealth) => {
+    setHealth(sample);
+
+    // A camera the host deliberately switched off sends zero frames, which is
+    // the same reading as a collapsed uplink and none of the same problem.
+    const bad =
+      videoOnRef.current && (sample.fps < STARVED_FPS || sample.videoKbps < STARVED_KBPS);
+    badSamplesRef.current = bad ? badSamplesRef.current + 1 : 0;
+
+    if (!bad) {
+      reportedStarvedRef.current = false;
+      setStarved(false);
+      return;
+    }
+    if (badSamplesRef.current < STARVED_SAMPLES) return;
+
+    setStarved(true);
+    if (!reportedStarvedRef.current) {
+      reportedStarvedRef.current = true;
+      logger.warn('broadcast starved', {
+        fps: sample.fps,
+        videoKbps: sample.videoKbps,
+        audioKbps: sample.audioKbps,
+        limitation: sample.limitation,
+        rttMs: sample.rttMs,
+      });
+    }
+  }, []);
+  // Held in a ref because the publish closure is built once per attempt and
+  // must not be rebuilt (and the ingest restarted) when this identity changes.
+  const reportHealthRef = useRef(reportHealth);
+  useEffect(() => { reportHealthRef.current = reportHealth; }, [reportHealth]);
+
   /**
    * The room, from the host's side: who is watching, what they have given.
    * Until now the only way to see any of it was to open the post in a second
@@ -393,8 +475,53 @@ export function GoLiveBroadcaster({
     staleTime: CONSOLE_POLL_MS,
   });
   const room = console_?.result as
-    | { totalViews?: number; peakViewers?: number; likes?: number; totalTips?: number }
+    | {
+        totalViews?: number;
+        peakViewers?: number;
+        viewerCount?: number;
+        likes?: number;
+        totalTips?: number;
+      }
     | undefined;
+
+  /*
+   * How many people are in the room right now.
+   *
+   * This used to read `peakViewers ?? totalViews` under the word "watching",
+   * and neither is that. `peakViewers` is a high-water mark that only climbs;
+   * `totalViews` counts JOINS, so one viewer whose connection drops and comes
+   * back is two people, then three. On 2026-09-01 a host watched their
+   * console say three while a single viewer reconnected twice — and read it
+   * as an audience that could not see them.
+   *
+   * The socket carries the live figure and is the fast path; the poll now
+   * carries `viewerCount` too, which seeds the number before anyone next
+   * joins or leaves (the gateway only broadcasts on change).
+   */
+  const [liveViewers, setLiveViewers] = useState<number | null>(null);
+  useEffect(() => {
+    if (!streamId || (phase !== 'live' && phase !== 'reconnecting')) return;
+    let cancelled = false;
+    let presence: { leave: () => void } | null = null;
+
+    import('@/lib/api/dehub/stream-presence')
+      .then(({ watchStreamPresence }) => {
+        if (cancelled) return;
+        // Watch, never join: the host is not one of their own viewers, and
+        // joining would inflate the very number this is here to report.
+        presence = watchStreamPresence(streamId, (count) => {
+          if (!cancelled) setLiveViewers(count);
+        });
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+      presence?.leave();
+    };
+  }, [streamId, phase]);
+
+  const watching = liveViewers ?? room?.viewerCount ?? 0;
 
   // The Stages voice-effect graph, reused as-is: mic → effect chain →
   // MediaStreamDestination. The broadcast publishes that destination rather
@@ -927,6 +1054,9 @@ export function GoLiveBroadcaster({
             endpoint: endpointBits.url,
             token: endpointBits.token,
             iceServers: relayIce,
+            onHealth: (sample) => {
+              if (!cancelled) reportHealthRef.current(sample);
+            },
             onStateChange: (state: WhipState, detail) => {
               if (cancelled) return;
               if (state === 'live') {
@@ -1564,7 +1694,7 @@ export function GoLiveBroadcaster({
         >
           <span className="flex items-center gap-1.5">
             <Users className="h-3.5 w-3.5" />
-            {room?.peakViewers ?? room?.totalViews ?? 0} watching
+            {watching} watching
           </span>
           <span className="flex items-center gap-1.5">
             <Heart className="h-3.5 w-3.5" />
@@ -1573,6 +1703,26 @@ export function GoLiveBroadcaster({
           <span className="flex items-center gap-1.5">
             <Gift className="h-3.5 w-3.5" />
             {room?.totalTips ?? 0} DHB
+          </span>
+        </div>
+      )}
+
+      {/* What viewers are getting, when it stops being what the preview shows.
+          Sits in the same place on both layouts, under the room numbers, so a
+          host glancing at the corner sees it without hunting. */}
+      {starved && (phase === 'live' || phase === 'reconnecting') && (
+        <div
+          className={cn(
+            'flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-200',
+            fullBleed && 'absolute left-3 right-3 top-[4.75rem] z-10'
+          )}
+        >
+          <SignalLow className="mt-px h-3.5 w-3.5 shrink-0" />
+          <span>
+            {health?.limitation === 'cpu'
+              ? 'This device cannot encode the video fast enough — viewers are seeing a frozen picture. Closing other apps will help.'
+              : 'Your upload has dropped — viewers are seeing a frozen picture even though your preview looks fine. Moving closer to the router or switching networks will help.'}
+            {health ? ` (${health.fps} fps · ${health.videoKbps} kbps)` : ''}
           </span>
         </div>
       )}
