@@ -240,6 +240,10 @@ export interface VideoItem extends BaseFeedItem {
   livePlaybackId?: string;
   /** Cached playback URL for live post navigation */
   livePlaybackUrl?: string;
+  /** HLS ladder for the in-feed live preview. */
+  livePlaybackUrls?: string[];
+  /** Whether the stream is on air right now — the feed only plays a live one. */
+  isLiveNow?: boolean;
   /** Cached MongoDB stream ID for live post navigation */
   liveStreamId?: string;
   /** Soundtrack URL (plays over the video via synced audio overlay) */

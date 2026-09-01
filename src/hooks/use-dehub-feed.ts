@@ -230,6 +230,24 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
+    // Live posts: the card plays the HLS ladder inline rather than sitting on
+    // a poster until somebody clicks through.
+    isLivePost,
+    liveStatus: (nft as any).stream?.status,
+    liveIsActive: (nft as any).stream?.isActive,
+    livePlaybackId: (nft as any).stream?.playbackId,
+    livePlaybackUrl: (nft as any).stream?.playbackUrl,
+    livePlaybackUrls: (() => {
+      const hls = hlsUrlFor((nft as any).stream);
+      if (!hls) return (nft as any).stream?.playbackUrl ? [(nft as any).stream.playbackUrl] : undefined;
+      return liveProviderOf((nft as any).stream) === 'mediamtx'
+        ? [hls]
+        : [hls, `https://livepeercdn.com/hls/${(nft as any).stream?.playbackId}/index.m3u8`];
+    })(),
+    isLiveNow: isLivePost
+      && (nft as any).stream?.isActive !== false
+      && ['live', 'active'].includes(String((nft as any).stream?.status || '').toLowerCase()),
+    liveStreamId: (nft as any).stream?._id || (nft as any).stream?.streamId,
     soundtrackUrl,
     soundtrackTitle,
     soundtrackCreator,
