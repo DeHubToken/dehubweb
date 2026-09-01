@@ -29,6 +29,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { AlertCircle, ArrowRight, CreditCard, ExternalLink, Loader2, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -114,6 +115,7 @@ interface AdFundingStepProps {
 }
 
 export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundingStepProps) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>('scanning');
   const [pick, setPick] = useState<Pick | null>(null);
   const [card, setCard] = useState<GatewayReadiness | null>(null);
@@ -196,7 +198,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
       } catch (err) {
         console.error('[Ads] Funding scan failed:', err);
         if (!cancelled) {
-          setError('Could not check your wallet just now.');
+          setError(t('ads.couldNotCheckWallet'));
           setPhase('error');
         }
       }
@@ -219,7 +221,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
       try {
         await buyDhbViaRoute(pick.route, needWei, pick.maxIn, addressRef.current);
       } catch (err) {
-        setError(parseTxError(err, 'swap') || 'Could not buy DHB.');
+        setError(parseTxError(err, 'swap') || t('ads.couldNotBuyDhb'));
         setPhase('error');
         return;
       }
@@ -231,7 +233,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
       onFunded();
     } catch (err) {
       console.error('[Ads] Funding swap failed:', err);
-      setError('Could not buy DHB.');
+      setError(t('ads.couldNotBuyDhb'));
       setPhase('error');
     }
   }, [pick, needWei, dhbToken, onFunded]);
@@ -240,7 +242,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
   const handleCard = useCallback(async () => {
     setPhase('card');
     setError('');
-    setCardStatus('Opening secure checkout…');
+    setCardStatus(t('ads.openingCheckout'));
     try {
       const address = addressRef.current || (await getWalletAddress());
       const before = await getERC20Balance(dhbToken, address, BASE_CHAIN_ID).catch(() => BigInt(0));
@@ -254,9 +256,9 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
         redirect: `${window.location.origin}/app/ads?payment=success&session_id=__SESSION_ID__`,
       });
 
-      if (!session.checkoutUrl) throw new Error('Checkout unavailable, try again shortly.');
+      if (!session.checkoutUrl) throw new Error(t('ads.checkoutUnavailable'));
       window.open(session.checkoutUrl, '_blank', 'noopener,noreferrer');
-      setCardStatus('Complete payment in the checkout tab — this stays open.');
+      setCardStatus(t('ads.completeInCheckoutTab'));
 
       let attempts = 0;
       let paid = false;
@@ -265,7 +267,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
         attempts++;
         if (attempts > CARD_POLL_ATTEMPTS) {
           stopPolling();
-          setError('Still waiting on the payment. Your DHB will land in your wallet — reopen the top-up once it does.');
+          setError(t('ads.stillWaitingOnPayment'));
           setPhase('error');
           return;
         }
@@ -287,13 +289,13 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
 
           if (send === 'failed' || stripe === 'failed' || stripe === 'canceled' || stripe === 'expired') {
             stopPolling();
-            setError('The payment did not go through. Nothing was charged — try again or pay with crypto.');
+            setError(t('ads.paymentDidNotGoThrough'));
             setPhase('error');
             return;
           }
           if (!paid && (stripe === 'succeeded' || stripe === 'complete' || stripe === 'paid')) {
             paid = true;
-            setCardStatus('Payment received — delivering DHB to your wallet…');
+            setCardStatus(t('ads.paymentReceived'));
           }
         } catch {
           /* session lookups are flaky mid-checkout; the balance check above is authoritative */
@@ -301,16 +303,16 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
       }, CARD_POLL_MS);
     } catch (err) {
       console.error('[Ads] Card funding failed:', err);
-      setError(err instanceof Error ? err.message : 'Could not start checkout.');
+      setError(err instanceof Error ? err.message : t('ads.couldNotStartCheckout'));
       setPhase('error');
     }
   }, [cardUsd, cardTokens, dhbToken, needWei, onFunded, stopPolling]);
 
   const cardBlockedReason =
     !getAuthToken()
-      ? 'Card checkout needs you signed in to DeHub.'
+      ? t('ads.cardNeedsSignIn')
       : card?.reason === 'low_gas'
-        ? 'Card checkout is offline right now — the payment gateway is out of gas for delivery.'
+        ? t('ads.cardCheckoutOffline')
         : card?.reason === 'no_supply'
           ? `Card checkout can only deliver ${formatCompact(card.supply)} DHB right now, less than this top-up needs.`
           : null;
@@ -320,12 +322,12 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
       {/* What is missing */}
       <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 space-y-2.5">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-zinc-400">Your DHB on Base</span>
+          <span className="text-zinc-400">{t('ads.yourDhbOnBase')}</span>
           <span className="text-zinc-300">{formatCompact(haveDhb)} <DhbCoin /></span>
         </div>
         <div className="h-px bg-white/10" />
         <div className="flex items-center justify-between">
-          <span className="text-white text-sm">Still needed</span>
+          <span className="text-white text-sm">{t('ads.stillNeeded')}</span>
           <span className="flex items-center gap-1.5 text-white text-lg font-bold">
             <img src={dehubCoin} alt="" className="w-4 h-4" />
             {formatCompact(needDhb)}
@@ -344,9 +346,9 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
         <>
           <div className="flex items-start gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2.5 text-xs text-amber-200">
             <AlertCircle className="w-4 h-4 shrink-0 mt-px" />
-            <span>DHB transfers are paused on-chain right now, so this top-up can't go through yet. Try again shortly.</span>
+            <span>{t('ads.transfersPausedTopUp')}</span>
           </div>
-          <Button variant="glass" className="w-full" onClick={onCancel}>Close</Button>
+          <Button variant="glass" className="w-full" onClick={onCancel}>{t('ads.close')}</Button>
         </>
       )}
 
@@ -388,7 +390,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
                   : <Wallet className="w-5 h-5 text-white/70" />}
                 <div className="text-left flex-1">
                   <span className="text-sm font-medium text-white">
-                    {phase === 'swapping' ? 'Buying DHB…' : `Pay with ${pick.token.symbol} you already hold`}
+                    {phase === 'swapping' ? t('ads.buyingDhb') : `Pay with ${pick.token.symbol} you already hold`}
                   </span>
                   <p className="text-xs text-white/40">
                     About {formatToken(pick.route.amountIn, pick.token.decimals)} {pick.token.symbol} · instant
@@ -400,8 +402,8 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
               <div className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/10">
                 <Wallet className="w-5 h-5 text-white/30" />
                 <div className="text-left flex-1">
-                  <span className="text-sm font-medium text-white/50">Pay from your wallet</span>
-                  <p className="text-xs text-white/30">Nothing on Base big enough to cover it</p>
+                  <span className="text-sm font-medium text-white/50">{t('ads.payFromWallet')}</span>
+                  <p className="text-xs text-white/30">{t('ads.nothingOnBase')}</p>
                 </div>
               </div>
             )}
@@ -417,7 +419,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
                 <CreditCard className="w-5 h-5 text-white/70" />
                 <div className="text-left flex-1">
                   <span className="text-sm font-medium text-white">Pay ${cardUsd} by card</span>
-                  <p className="text-xs text-white/40">Visa, Mastercard, Apple Pay · opens in a new tab</p>
+                  <p className="text-xs text-white/40">{t('ads.cardMethods')}</p>
                 </div>
                 <ExternalLink className="w-4 h-4 text-white/40" />
               </button>
@@ -425,8 +427,8 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
               <div className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/10">
                 <CreditCard className="w-5 h-5 text-white/30" />
                 <div className="text-left flex-1">
-                  <span className="text-sm font-medium text-white/50">Pay by card</span>
-                  <p className="text-xs text-white/30">{cardBlockedReason ?? 'Checking availability…'}</p>
+                  <span className="text-sm font-medium text-white/50">{t('ads.payByCard')}</span>
+                  <p className="text-xs text-white/30">{cardBlockedReason ?? t('ads.checkingAvailability')}</p>
                 </div>
               </div>
             )}
