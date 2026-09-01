@@ -286,7 +286,10 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       className={cn(
         overlay
           ? 'flex min-h-0 flex-1 flex-col justify-end'
-          : 'rounded-xl border border-white/[0.12] bg-white/[0.03] p-3'
+          // mt-3 and the 2xl radius match the post page's bento rhythm: without
+          // the margin this card butts straight onto the post above it and the
+          // two glass surfaces read as one slab with a seam through them.
+          : 'mt-3 rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3'
       )}
     >
       {/* Header — the overlay has none. The host already has the room's

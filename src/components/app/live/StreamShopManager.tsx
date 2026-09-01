@@ -174,6 +174,13 @@ export function StreamShopManager({ tokenId }: Props) {
 
   const attachedIds = new Set(products.map(p => p.listing_id));
 
+  // Nothing attached: draw nothing. The empty board was
+  // showing on every live post the host opened, and an empty bento above the
+  // chat reads as a broken section rather than an invitation. The way in is the
+  // composer's shop row (and the post's edit sheet), which is where a creator
+  // attaches listings in the first place.
+  if (!products.length) return null;
+
   return (
     <div className="mt-3 rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
       <div className="flex items-center gap-2 mb-3">

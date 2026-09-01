@@ -9,11 +9,12 @@
 
 import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient, keepPreviousData, type QueryClient } from '@tanstack/react-query';
-import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
+import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, getMediaUrl, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { mergeLiveCounts, type RawFeedRow } from '@/lib/live-counts';
+import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
@@ -216,7 +217,12 @@ function isBlockedPost(item: UnifiedFeedItem): boolean {
 export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
   const id = String(item.tokenId);
   
-  const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
+  // A live post carries no imageUrl of its own — its poster lives on the
+  // nested stream, refreshed by the broadcaster while the stream runs. Reading
+  // only the token fields is what left live cards with a blank cover.
+  const thumbnail =
+    (item.postType === 'live' ? getMediaUrl((item.stream as any)?.thumbnail) : undefined) ||
+    buildImageUrl(item.tokenId, item.imageUrl);
 
   const isAudioPost = item.postType === 'audio' || item.postType === 'feed-audio';
   const videoUrl = item.postType === 'live'
@@ -296,6 +302,20 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     liveIsActive: item.stream?.isActive,
     livePlaybackId: item.stream?.playbackId,
     livePlaybackUrl: item.stream?.playbackUrl,
+    // The HLS ladder the feed card plays. `playbackUrl` off the API is often
+    // absent for a self-hosted stream, so derive from the playbackId the same
+    // way the post page does — otherwise the card falls back to a poster and
+    // the stream only appears after a click-through.
+    livePlaybackUrls: (() => {
+      const hls = hlsUrlFor(item.stream as any);
+      if (!hls) return item.stream?.playbackUrl ? [item.stream.playbackUrl] : undefined;
+      return liveProviderOf(item.stream as any) === 'mediamtx'
+        ? [hls]
+        : [hls, `https://livepeercdn.com/hls/${item.stream?.playbackId}/index.m3u8`];
+    })(),
+    isLiveNow: item.postType === 'live'
+      && (item.stream as any)?.isActive !== false
+      && ['live', 'active'].includes(String(item.stream?.status || '').toLowerCase()),
     liveStreamId: item.stream?._id || item.stream?.streamId,
     totalTips: item.totalTips ?? 0,
   };
