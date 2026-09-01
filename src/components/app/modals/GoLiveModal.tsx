@@ -1020,13 +1020,19 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           // to furniture, so on that one step it all comes off and the
           // broadcaster fills the frame. Every other step, and every desktop,
           // keeps the sheet it has always been.
+          // 90dvh, not 90vh, for the setup step: vh is the LARGE viewport — the
+          // height the page would have with the browser's URL bar hidden — so a
+          // sheet pinned to bottom:0 and capped at 90vh is taller than what is
+          // actually visible while that bar is up, and the overflow goes off the
+          // TOP. The reported symptom was the "Go Live" title sliced in half by
+          // the address bar. dvh measures what the reader can see.
           // mt-0 and rounded-none are not cosmetic: DrawerContent ships
           // `mt-24 rounded-t-[20px]`, and with bottom:0 plus a full-viewport
           // height that margin resolves to top:-96px, clipping the first 96px
           // of the broadcast off the top of the screen.
           liveFullScreen
             ? 'h-[100dvh] max-h-[100dvh] mt-0 rounded-none px-0 pb-0'
-            : 'max-h-[90vh] px-4 pb-8'
+            : 'max-h-[90dvh] px-4 pb-8'
         )}
       >
         <DrawerHeader
