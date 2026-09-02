@@ -97,10 +97,10 @@ export function BadgeDelegationSection() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <Award className="size-5 text-zinc-400" />
-        <h3 className="font-semibold text-white">Badge delegation</h3>
-      </div>
+      <h3 className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+        <Award className="size-4" />
+        Badge delegation
+      </h3>
 
       <p className="text-sm leading-5 text-zinc-500">
         {data.ownTier ? (
@@ -126,12 +126,12 @@ export function BadgeDelegationSection() {
             placeholder="Username or wallet address"
             aria-label="Account to lend your badge to"
             disabled={!canGrant || grant.isPending}
-            className="min-w-0 flex-1 rounded-xl bg-zinc-800 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-600 disabled:opacity-50"
+            className="h-10 min-w-0 flex-1 rounded-xl border border-zinc-700 bg-zinc-800 px-3 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-600 disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={!canGrant || !recipient.trim() || grant.isPending}
-            className="shrink-0 rounded-xl bg-white px-4 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-90 disabled:opacity-40"
+            className="flex h-10 shrink-0 items-center justify-center rounded-xl bg-white px-4 text-sm font-medium text-black transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             {grant.isPending ? <Loader2 className="size-4 animate-spin" /> : 'Lend'}
           </button>
