@@ -22,7 +22,7 @@ import {
 // hooks barrel which eager AppLayout imports). See setupHLSPlayback below.
 import type Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { createLogger } from '@/lib/logger';
 
@@ -179,10 +179,8 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
                   isLoading: false,
                   isPlaying: false,
                 }));
-                toast({
-                  title: 'Stream Error',
+                toast.error('Stream Error', {
                   description: 'Unable to play this channel. Try another one.',
-                  variant: 'destructive',
                 });
                 break;
             }
@@ -202,10 +200,8 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
           error: 'HLS not supported',
           isLoading: false,
         }));
-        toast({
-          title: 'Playback Error',
+        toast.error('Playback Error', {
           description: 'Your browser does not support HLS streaming.',
-          variant: 'destructive',
         });
       }
     })().catch(() => {

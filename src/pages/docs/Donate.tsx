@@ -2,11 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heart, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Donate = () => {
-  const { toast } = useToast();
   const { t } = useLanguage();
   const [copiedAddress, setCopiedAddress] = React.useState<string | null>(null);
 
@@ -26,8 +25,7 @@ const Donate = () => {
   const copyToClipboard = (address: string, network: string) => {
     navigator.clipboard.writeText(address);
     setCopiedAddress(address);
-    toast({
-      title: t('donate.addressCopied'),
+    toast.success(t('donate.addressCopied'), {
       description: `${network} ${t('donate.addressCopiedDesc')}`,
     });
     setTimeout(() => setCopiedAddress(null), 2000);
