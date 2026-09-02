@@ -837,6 +837,8 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "encrypted": "Mã hóa đầu cuối",
+    "cannotDecrypt": "Tin nhắn đã mã hóa — không thể mở trên thiết bị này",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "tryAgain": "Try Again"

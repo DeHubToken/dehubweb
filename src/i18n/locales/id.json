@@ -943,6 +943,8 @@
     "shippingAppearHere": "Permintaan yang sedang dibangun akan muncul di sini."
   },
   "messages": {
+    "encrypted": "Terenkripsi end-to-end",
+    "cannotDecrypt": "Pesan terenkripsi — tidak dapat dibuka di perangkat ini",
     "title": "Pesan",
     "searchConversations": "Cari percakapan...",
     "failedToLoad": "Gagal memuat percakapan",

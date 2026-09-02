@@ -943,6 +943,8 @@
     "loginRequired": "Login necessário"
   },
   "messages": {
+    "encrypted": "Criptografado de ponta a ponta",
+    "cannotDecrypt": "Mensagem criptografada — não pode ser aberta neste dispositivo",
     "title": "Mensagens",
     "searchConversations": "Buscar conversas...",
     "failedToLoad": "Falha ao carregar conversas",

@@ -839,6 +839,8 @@
     "stores": "Butikker"
   },
   "messages": {
+    "encrypted": "Ende-til-ende-kryptert",
+    "cannotDecrypt": "Kryptert melding — kan ikke åpnes på denne enheten",
     "title": "Meldinger",
     "searchConversations": "Søk i samtaler...",
     "failedToLoad": "Kunne ikke laste samtaler",

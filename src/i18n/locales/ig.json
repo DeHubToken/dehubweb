@@ -943,6 +943,8 @@
     "shippingAppearHere": "Arịrịọ ndị a na-ewu ga-apụta ebe a."
   },
   "messages": {
+    "encrypted": "Ezoro ezo site na njedebe ruo njedebe",
+    "cannotDecrypt": "Ozi ezoro ezo — enweghị ike imeghe ya na ngwaọrụ a",
     "title": "Ozi",
     "searchConversations": "Chọọ mkparịta ụka...",
     "failedToLoad": "Enweghị ike ibudata mkparịta ụka",

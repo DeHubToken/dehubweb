@@ -943,6 +943,8 @@
     "loginRequired": "Accesso richiesto"
   },
   "messages": {
+    "encrypted": "Crittografato end-to-end",
+    "cannotDecrypt": "Messaggio crittografato — non può essere aperto su questo dispositivo",
     "title": "Messaggi",
     "searchConversations": "Cerca nelle conversazioni...",
     "failedToLoad": "Caricamento conversazioni fallito",

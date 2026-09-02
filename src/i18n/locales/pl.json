@@ -943,6 +943,8 @@
     "loginRequired": "Wymagane logowanie"
   },
   "messages": {
+    "encrypted": "Szyfrowane end-to-end",
+    "cannotDecrypt": "Zaszyfrowana wiadomość — nie można jej otworzyć na tym urządzeniu",
     "title": "Wiadomości",
     "searchConversations": "Szukaj konwersacji...",
     "failedToLoad": "Nie udało się załadować konwersacji",
