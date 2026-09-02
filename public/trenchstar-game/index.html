@@ -3156,9 +3156,23 @@ const skinAlpha=(()=>{
 })();
 const floorMat=new THREE.MeshStandardMaterial({color:0x0a0e14,roughness:0.30,metalness:0.55,
   envMapIntensity:0.14,transparent:true,alphaMap:skinAlpha,depthWrite:false});
+/* The skin keeps the lamps' DIFFUSE light and loses their SPECULAR image.
+   Three RectAreaLights hang over the wall, and on a skin the themes push to
+   metalness 0.85 / roughness 0.16 each one came back as a sharp coloured
+   rectangle lying on the floor — three slabs, tinted red and green by the
+   market mood, in front of the true reflection the Reflector underneath is
+   already drawing. A floor reflects the room, not three invisible lamps.
+   The diffuse term is what gives the floor its pools of colour and stays. */
+floorMat.onBeforeCompile=sh=>{
+  const chunk=THREE.ShaderChunk.lights_fragment_begin;
+  sh.fragmentShader=sh.fragmentShader.replace('#include <lights_fragment_begin>',
+    chunk.replace(/RE_Direct_RectArea\(([^;]*)\);/,
+      '{vec3 _s=reflectedLight.directSpecular;RE_Direct_RectArea($1);reflectedLight.directSpecular=_s;}'));
+};
+floorMat.customProgramCacheKey=()=>'floor-skin-no-lamp-specular';
 let mirror=null,mirrorTint=0x8d99a6,FLOOR_Q='mirror';
 /* The quality ladder's cheap rungs for the reflection: 1 is a smaller target,
-   2 is smaller again with every other refresh skipped while things move.
+   2 is smaller again.
    There is no rung after this. The floor used to drop to a plain
    MeshStandardMaterial disc when the GPU struggled, and what that disc
    reflects is scene.environment — the room probe, a 128px prefiltered cube
@@ -3311,18 +3325,20 @@ function buildFloor(){
        frame. That was the jolt on every step. A frame that moved the camera
        or has a character in it — a body animates even standing still —
        reflects; the rest keep the previous target, so the floor never
-       flickers the way hiding the mesh would. The lowest rung skips every
-       other moving frame too; it is a smaller judder than a plain floor was
-       an insult. */
+       flickers the way hiding the mesh would. No rung skips a moving frame:
+       the lowest one tried, and a frame-difference of two consecutive
+       walking frames showed the entire floor reflection jumping every other
+       frame while the wall above it glided — a judder on every step. Fewer
+       pixels are cheap; a stale frame is not. */
     const reflect=mirror.onBeforeRender;
     const lastCam=new THREE.Matrix4();
     let phase=0;
-    const stillEvery=GFX.phone?3:2,moveEvery=MIRROR_LITE>=2?2:1;
+    const stillEvery=GFX.phone?3:2;
     mirror.onBeforeRender=function(renderer,scene,cam,...a){
       const moved=!cam.matrixWorld.equals(lastCam)||(walk.obj&&walk.obj.visible);
       if(!cam.matrixWorld.equals(lastCam))lastCam.copy(cam.matrixWorld);
       phase++;
-      if(phase%(moved?moveEvery:stillEvery)===0)reflect.call(this,renderer,scene,cam,...a);
+      if(moved||phase%stillEvery===0)reflect.call(this,renderer,scene,cam,...a);
     };
     floorGrp.add(mirror);
   }else{
@@ -12954,6 +12970,8 @@ const gfx=(()=>{
     level--;
   }
   function sample(dt){
+    /* A hidden tab is throttled, not slow: nothing it measures is a GPU verdict. */
+    if(document.hidden){dts=[];winT=0;return;}
     dts.push(dt);winT+=dt;
     if(winT<2)return;
     /* Fewer than ten frames in two seconds is a tab that is not really
