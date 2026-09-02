@@ -1049,6 +1049,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Resume a pending smart-wallet login when the Supabase session lands
   // (OAuth redirect return, or email OTP verified in another effect tick).
+  // Held in refs so the subscription below can depend on nothing.
+  //
+  // These three are rebuilt whenever isConnecting or walletAddress changes,
+  // which is constantly during a login. With them in the dependency array the
+  // effect tore the listener down and made a new one mid-flow — and supabase-js
+  // replays INITIAL_SESSION to every new subscriber. So while a login was
+  // pending, each re-subscribe re-entered the resume: a second pass over the
+  // wallet lookup and exchange, and in the worst case a third running
+  // concurrently with the real sign-in, minting two sessions and racing
+  // lockWallet against activateWalletKey.
+  const proceedRef = useRef(proceedToWalletPhase);
+  proceedRef.current = proceedToWalletPhase;
+  const openLoginModalRef = useRef(openLoginModal);
+  openLoginModalRef.current = openLoginModal;
+  const closeLoginModalRef = useRef(closeLoginModal);
+  closeLoginModalRef.current = closeLoginModal;
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session?.user) return;
@@ -1073,7 +1090,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (resumeOpenedAtBootRef.current) {
           resumeOpenedAtBootRef.current = false;
           setIsProcessingRedirect(false);
-          closeLoginModal();
+          closeLoginModalRef.current();
         }
         return;
       }
@@ -1089,18 +1106,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // wallet handoff happens inside the sheet instead of popping onto it
       // after the feed has already rendered. On a redirect return this is a
       // no-op: first paint already opened it.
-      openLoginModal();
+      openLoginModalRef.current();
       // Defer so this runs outside the auth-state callback (supabase-js
       // deadlocks if you call its own APIs synchronously inside the callback).
       setTimeout(() => {
-        proceedToWalletPhase(session.user.id).finally(() => {
+        proceedRef.current(session.user.id).finally(() => {
           setIsProcessingRedirect(false);
           supaLoginHandledRef.current = false;
         });
       }, 0);
     });
     return () => sub.subscription.unsubscribe();
-  }, [proceedToWalletPhase, openLoginModal, closeLoginModal]);
+  // Empty: everything it needs is behind a ref, so the listener is created once
+  // and lives for the provider. See the refs above.
+  }, []);
 
   // A resume expected at first paint must not hold the loader forever. If no
   // session lands within a generous window — consent abandoned, provider
