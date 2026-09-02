@@ -84,5 +84,6 @@ scripts/*
 !scripts/boot-path-report.mjs
 !scripts/boot-path-baseline.json
 !scripts/i18n-coverage.mjs
+!scripts/i18n-fanout.mjs
 !scripts/edge-cors-check.mjs
 !scripts/edge-imports-check.mjs
