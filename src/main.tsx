@@ -10,7 +10,7 @@ import "./lib/toast-i18n-interceptor";
 // locales/en.json and other languages are merged lazily by loadLanguage()
 // (see src/i18n/index.ts). The old static import evaluated a 600-line
 // all-language map on the main thread at boot.
-import App from "./App.tsx";
+import App, { preloadWalletProviders } from "./App.tsx";
 import { loadThemeCss } from "./lib/theme-css";
 import "./i18n";
 import "./index.css";
@@ -45,10 +45,20 @@ window.addEventListener('vite:preloadError', () => {
   if (shouldReloadForChunkError()) window.location.reload();
 });
 
-// The inline head script stamped data-theme from localStorage at parse time.
-// If that theme has its own stylesheet chunk, fetch it before the first render
-// so a war/osaka/jungle user never sees the default chrome first. Every other
-// theme renders in the same tick as before.
+// Two things are awaited before the first render, both so that the HTML shell
+// (the boot skeleton with the prerendered welcome panel) is replaced by the
+// finished app in ONE commit rather than by an intermediate state:
+//
+// - the theme's stylesheet chunk, when the theme stamped on <html> by the
+//   inline head script has one (war / osaka / jungle), so those users never
+//   see the default chrome first;
+// - the wallet/auth provider chunk, which wraps every route behind a Suspense
+//   boundary. Rendering before it has resolved makes React's first commit that
+//   boundary's fallback: the prerendered panel vanishes into a loading skeleton
+//   and reappears a beat later. The chunk is modulepreloaded from index.html
+//   and its download is kicked at App's module evaluation, so this wait is
+//   normally a few milliseconds; a failure still renders (the retry / reload
+//   handling inside lazyWithRetry and the ErrorBoundary take it from there).
 const render = () => {
   createRoot(document.getElementById("root")!).render(
     <ErrorBoundary>
@@ -57,8 +67,7 @@ const render = () => {
   );
 };
 const bootThemeCss = loadThemeCss(document.documentElement.dataset.theme);
-if (bootThemeCss) bootThemeCss.then(render, render);
-else render();
+Promise.all([bootThemeCss, preloadWalletProviders()]).then(render, render);
 
 // Register the offline-shell / asset-cache service worker (production only,
 // deferred to `load` so it doesn't compete with first paint). See lib/register-sw.ts.
