@@ -42,6 +42,20 @@ jobs:
       - name: Report the gap before
         run: node scripts/i18n-fanout.mjs --check | head -30
 
+
+      # Runs BEFORE the fill, not after. Pruning turns a padded English value
+      # into a missing key, and only the fill that follows can translate it —
+      # pruning last leaves those holes open and costs every locale a second
+      # pass. It also catches English that older runs left behind, not just
+      # this run's output.
+      - name: Drop values that came back as English
+        run: |
+          if [ -n "${{ inputs.locales }}" ]; then
+            node scripts/i18n-fanout.mjs --prune --locales ${{ inputs.locales }}
+          else
+            node scripts/i18n-fanout.mjs --prune
+          fi
+
       - name: Fill
         run: |
           ARGS=""
@@ -52,16 +66,6 @@ jobs:
           fi
           if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
           node scripts/i18n-fanout.mjs $ARGS
-
-      # Also catches English that older runs (and the mobile-style merge) left
-      # behind, not just this run's output.
-      - name: Drop values that came back as English
-        run: |
-          if [ -n "${{ inputs.locales }}" ]; then
-            node scripts/i18n-fanout.mjs --prune --locales ${{ inputs.locales }}
-          else
-            node scripts/i18n-fanout.mjs --prune
-          fi
 
       - name: Report the gap after
         run: |
