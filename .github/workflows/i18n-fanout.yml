@@ -1,0 +1,81 @@
+name: i18n fan-out
+
+# Fills the locales that are behind en.json and opens a PR with the result.
+#
+# Run in batches rather than all 109 at once: each locale is ~75 calls to the
+# translate-text function, so a handful per run keeps a job to a few minutes and
+# keeps the PR small enough to actually look at.
+#
+# No secret is needed. The function is called with the publishable key the
+# browser bundle already ships.
+
+on:
+  workflow_dispatch:
+    inputs:
+      locales:
+        description: 'Comma-separated locale codes (blank = the furthest behind)'
+        required: false
+        default: ''
+      count:
+        description: 'How many locales to fill when none are named'
+        required: false
+        default: '8'
+      keys:
+        description: 'Max keys per locale in one run (blank = all missing)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fanout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Report the gap before
+        run: node scripts/i18n-fanout.mjs --check | head -30
+
+      - name: Fill
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.locales }}" ]; then
+            ARGS="--locales ${{ inputs.locales }}"
+          else
+            ARGS="--all --limit ${{ inputs.count }}"
+          fi
+          if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
+          node scripts/i18n-fanout.mjs $ARGS
+
+      - name: Report the gap after
+        run: |
+          node scripts/i18n-fanout.mjs --check | head -30
+          node scripts/i18n-coverage.mjs --floor || true
+
+      - name: Open a pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: i18n-fanout-${{ github.run_number }}
+          commit-message: 'Translate the outstanding keys into more locales'
+          title: 'Translate the outstanding keys into more locales'
+          body: |
+            Filled by `scripts/i18n-fanout.mjs`.
+
+            **Intent** — close the gap between what is translatable and what is
+            translated. Extraction made these pages use `t()`; until a locale
+            carries the key it still renders English.
+
+            **Constraints** — an existing translation is never overwritten, and a
+            string whose placeholders do not survive the round trip is dropped
+            rather than written, so a bad translation falls back to English
+            instead of shipping literal `{{count}}` to a user.
+
+            **Result** — see the before/after coverage in the run log.
+          add-paths: |
+            src/i18n/locales/*.json

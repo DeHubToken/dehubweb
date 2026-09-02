@@ -94,6 +94,49 @@ if (one) {
   process.exit(0);
 }
 
+/**
+ * The zero-locale rule below cannot see the fault that actually happens: a key
+ * translated into one or two languages passes it while 108 render English. A
+ * run of 20 such PRs took this repo from ~100% coverage to ~41% without a
+ * single red check. The floor watches the aggregate instead.
+ *
+ * It warns on ordinary drift and only fails when coverage falls more than
+ * SLACK points below the recorded floor, so a normal feature PR that adds a few
+ * English keys reports the cost without blocking the merge.
+ */
+const FLOOR_FILE = path.join(I18N, 'coverage-floor.json');
+const SLACK = 5;
+
+if (args.includes('--floor')) {
+  const median = rows.map((r) => r.pct).sort((a, b) => a - b)[Math.floor(rows.length / 2)];
+  const recorded = fs.existsSync(FLOOR_FILE)
+    ? JSON.parse(fs.readFileSync(FLOOR_FILE, 'utf8')).medianPct
+    : null;
+
+  if (args.includes('--set-floor')) {
+    fs.writeFileSync(FLOOR_FILE, `${JSON.stringify({ medianPct: median }, null, 2)}\n`);
+    console.log(`\ncoverage floor set to ${median}%`);
+    process.exit(0);
+  }
+
+  console.log(`\nmedian locale coverage: ${median}%${recorded === null ? '' : ` (floor ${recorded}%)`}`);
+  if (recorded !== null && median < recorded - SLACK) {
+    console.log(
+      `\nCoverage fell ${(recorded - median).toFixed(1)} points below the floor.\n` +
+      `Keys were added to en.json without being translated. Fill them:\n` +
+      `  node scripts/i18n-fanout.mjs --all --limit 10\n` +
+      `Then re-run. Raise the floor with --floor --set-floor once coverage improves.`,
+    );
+    process.exit(1);
+  }
+  if (recorded !== null && median < recorded) {
+    console.log(`warning: coverage slipped ${(recorded - median).toFixed(1)} points (tolerated, under ${SLACK})`);
+  }
+  if (median > (recorded ?? 0)) {
+    console.log(`coverage improved — run --floor --set-floor to lock it in`);
+  }
+}
+
 const orphans = [...missingIn.entries()].filter(([, n]) => n === codes.length).map(([k]) => k);
 
 console.log(`en.json: ${enKeys.length} keys across ${codes.length} locales`);
