@@ -1046,6 +1046,14 @@ export function usePostForm(
     // nothing to do with.
     setShopLinks([]);
     setShopListingIds([]);
+    // Same reasoning, and it matters more here: this decides whether the post
+    // is shown at all. The composer is mounted behind a one-way latch, so hook
+    // state outlives publish-close-reopen — leaving this set meant the post
+    // after a mature one was minted contentRating: 'mature' and kept off every
+    // public feed, with the switch reading off unless the composer was looked
+    // at closely. The file's own note on this switch says a sticky flag is the
+    // failure to avoid.
+    setIsMature(false);
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
       setSelectedCategory('');
@@ -1266,6 +1274,20 @@ export function usePostForm(
 
       if (postingOnSolana && isWatch2Earn) {
         toast.error('Bounty is not available on Solana');
+        setIsPosting(false);
+        return;
+      }
+
+      // Same guard, and it needs to be here for the same reason bounty's is.
+      //
+      // buildStreamInfo drops the plan ids on Solana and PostAccessToggles
+      // hides the Subscribers row there, but neither resets the state — so
+      // turning it on while composing on Base and then switching the chain
+      // published subscriber-only content publicly, with no error and nothing
+      // on screen still claiming it was gated. Refusing is right rather than
+      // silently posting it open: the creator asked for a gate.
+      if (postingOnSolana && isSubscribersOnly) {
+        toast.error('Subscriber-only posts are not available on Solana');
         setIsPosting(false);
         return;
       }
