@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { readFunctionError } from '@/lib/ai-invoke';
 
 /**
@@ -49,23 +49,107 @@ describe('paid AI error recovery', () => {
     expect(response.bodyUsed, 'readFunctionError must clone, not consume').toBe(false);
   });
 
-  it('records a transfer as unspent instead of losing the hash', () => {
-    const source = readFileSync(resolve(__dirname, '../lib/ai-payment.ts'), 'utf8');
+  /**
+   * The unspent ledger, exercised rather than pattern-matched.
+   *
+   * This block used to assert against the source text of ai-payment.ts, so it
+   * broke on a reformat and said nothing about what the code did. The rules it
+   * was reaching for are behaviours, and they are checked as behaviours here.
+   */
+  describe('the unspent ledger', () => {
+    const WALLET = '0xAAaaAAaaAAaaAAaaAAaaAAaaAAaaAAaaAAaaAAaa';
+    const OTHER = '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+    const KEY = 'dehub.ai.unspentPayments';
 
-    // The hash must be recorded before it is returned, or a job that dies
-    // between the signature and the provider costs a second transfer.
-    expect(source).toMatch(/writeUnspent\(\[\.\.\.readUnspent\(\), \{ txHash/);
-    // And a new payment must spend what is already paid for before charging.
-    expect(source).toMatch(/const reusable = remember \? reusablePayment\(/);
+    const seed = (entries: Record<string, unknown>[]) =>
+      localStorage.setItem(KEY, JSON.stringify(entries));
+    const stored = (): Record<string, unknown>[] =>
+      JSON.parse(localStorage.getItem(KEY) || '[]');
+    const entry = (over: Record<string, unknown> = {}) => ({
+      txHash: '0xdead',
+      dhb: 100,
+      paidAt: Date.now(),
+      wallet: WALLET.toLowerCase(),
+      ...over,
+    });
 
-    // Keyed on the wallet, not only the hash. localStorage outlives a profile
-    // switch, and the server answers a hash belonging to someone else with a
-    // 403 rather than the "already spent" the client recovers from — so a
-    // payment the previous account abandoned blocked every generation for the
-    // next person on that browser until the reuse window expired.
-    expect(source).toMatch(/function reusablePayment\(priceDhb: number, wallet: string\)/);
-    expect(source).toMatch(/p\.wallet === holder/);
-    expect(source).toMatch(/wallet: payer\.toLowerCase\(\)/);
+    beforeEach(() => localStorage.clear());
+
+    it('offers a paid transfer back to the wallet that paid it', async () => {
+      const { reusablePayment } = await import('@/lib/ai-payment');
+      seed([entry()]);
+      expect(reusablePayment(50, WALLET)?.txHash).toBe('0xdead');
+    });
+
+    it('does not offer one wallet the payment another made', async () => {
+      const { reusablePayment } = await import('@/lib/ai-payment');
+      seed([entry()]);
+      // The server answers somebody else's hash with a 403, which the client
+      // cannot recover from — so one abandoned payment used to block every
+      // generation for the next person on the browser.
+      expect(reusablePayment(50, OTHER)).toBeNull();
+    });
+
+    it('does not offer a transfer smaller than the job', async () => {
+      const { reusablePayment } = await import('@/lib/ai-payment');
+      seed([entry({ dhb: 10 })]);
+      expect(reusablePayment(50, WALLET)).toBeNull();
+    });
+
+    it('does not offer one that has aged out of the reuse window', async () => {
+      const { reusablePayment } = await import('@/lib/ai-payment');
+      seed([entry({ paidAt: Date.now() - 60 * 60 * 1000 })]);
+      expect(reusablePayment(50, WALLET)).toBeNull();
+    });
+
+    /**
+     * The bug: the server keeps a balance per transfer and hands the remainder
+     * back for the next job, but the client dropped the whole hash on any
+     * success. A refunded 100 DHB job followed by a 10 DHB one that worked
+     * threw away the handle to the other 90.
+     */
+    it('debits what the job drew and keeps the rest of the transfer', async () => {
+      const { forgetPayment, reusablePayment } = await import('@/lib/ai-payment');
+      seed([entry({ dhb: 100, pendingDhb: 10 })]);
+
+      forgetPayment('0xdead');
+
+      expect(stored()).toHaveLength(1);
+      expect(stored()[0].dhb).toBe(90);
+      expect(stored()[0].pendingDhb).toBeUndefined();
+      expect(reusablePayment(90, WALLET)?.txHash).toBe('0xdead');
+    });
+
+    it('drops it once the job has drawn the lot', async () => {
+      const { forgetPayment } = await import('@/lib/ai-payment');
+      seed([entry({ dhb: 100, pendingDhb: 100 })]);
+      forgetPayment('0xdead');
+      expect(stored()).toHaveLength(0);
+    });
+
+    it('drops it when the server says the balance is gone', async () => {
+      const { forgetPayment } = await import('@/lib/ai-payment');
+      // Exhausted beats whatever this side believed was left on it.
+      seed([entry({ dhb: 100, pendingDhb: 10 })]);
+      forgetPayment('0xdead', true);
+      expect(stored()).toHaveLength(0);
+    });
+
+    it('spends the lot when it never learned the price', async () => {
+      const { forgetPayment } = await import('@/lib/ai-payment');
+      // An entry written before pendingDhb existed. Costing one re-paid job is
+      // the safe direction; a phantom balance the server refuses is not.
+      seed([entry({ dhb: 100 })]);
+      forgetPayment('0xdead');
+      expect(stored()).toHaveLength(0);
+    });
+
+    it('leaves other transfers alone', async () => {
+      const { forgetPayment } = await import('@/lib/ai-payment');
+      seed([entry(), entry({ txHash: '0xbeef', pendingDhb: 100 })]);
+      forgetPayment('0xbeef');
+      expect(stored().map((p) => p.txHash)).toEqual(['0xdead']);
+    });
   });
 
   it('bounds the chain switch so the paywall cannot wedge', () => {

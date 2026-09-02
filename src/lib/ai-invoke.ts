@@ -47,17 +47,22 @@ export async function invokeAi<T = any>(
     headers: { ...dehubAuthHeaders(), ...options.headers },
   });
 
-  // Retire the payment this call carried. It happens here rather than in a
-  // paywall because a paywall hands over before the job runs and never learns
-  // whether its hash was accepted: a job that succeeds has spent the whole
-  // transfer, and one refused as exhausted had it spent already.
+  // Retire what this call drew from the payment. It happens here rather than
+  // in a paywall because a paywall hands over before the job runs and never
+  // learns whether its hash was accepted.
+  //
+  // A job that succeeds draws its own price, not the whole transfer — the
+  // server keeps the rest as the payer's — so `forgetPayment` debits rather
+  // than deleting. Exhausted is the one case where the balance really is gone,
+  // and it says so.
   //
   // A voice session is the exception — one transfer buys a block of exchanges
   // and has to survive them — so it says so and keeps its hash.
   const body = options.body as { txHash?: unknown; purpose?: unknown } | undefined;
   if (typeof body?.txHash === 'string' && body.purpose !== 'voice') {
-    const spent = !result.error || isPaymentExhausted(await readFunctionError(result.error, result.data));
-    if (spent) forgetPayment(body.txHash);
+    const exhausted = !!result.error
+      && isPaymentExhausted(await readFunctionError(result.error, result.data));
+    if (!result.error || exhausted) forgetPayment(body.txHash, exhausted);
   }
 
   return result;
