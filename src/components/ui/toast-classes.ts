@@ -95,8 +95,8 @@ export const BUTTON_CLASSES = [
  * plain.
  *
  * `!ms-0` releases `--toast-button-margin-start: auto`, which in a stacked
- * toast would otherwise shove a shrink-wrapped button to the trailing edge, and
- * the toast is a column, so each slot is already on its own row. No
+ * toast would otherwise shove a shrink-wrapped button to the trailing edge.
+ * The toast is a column, so each slot is already on its own row. No
  * `basis-full`: in a column that is 100% of the toast's height, and sonner
  * gives the toast a definite height while the stack is hovered, so the button
  * grew to the card's full height and spilled out of it.
