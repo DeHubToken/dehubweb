@@ -358,7 +358,21 @@ describe('surfaces are wired consistently', () => {
     // has no lag. Tapping the rest of the card still opens the post at once.
     expect(POST).toContain('const tapGestures = useTapGestures({');
     expect(POST).not.toMatch(/useTapGestures\(\{[^}]*onSingleTap/s);
-    expect(POST).toMatch(/data-no-navigate\s*\n\s*\{\.\.\.tapGestures\}/);
+    // The body sits inside `data-no-navigate` and carries the ladder.
+    expect(POST).toMatch(/data-no-navigate\s*\n\s*>\s*\n[\s\S]*?\{\.\.\.tapGestures\}/);
+
+    // ...but the ladder stops at the body. It used to sit on the wrapper that
+    // also holds the action bar, the shop board and the comments block, so
+    // double-clicking to select a word in a comment cast a like and a
+    // triple-click cast a love. Whatever carries tapGestures must close before
+    // ActionBar, or that comes back.
+    const ladderStart = POST.indexOf('{...tapGestures}');
+    const ladderEnd = POST.indexOf('</div>', POST.indexOf('<FeedLinkPreviews'));
+    const actionBar = POST.indexOf('<ActionBar');
+    const comments = POST.indexOf('<CommentsWrapper');
+    expect(ladderStart).toBeGreaterThan(-1);
+    expect(actionBar).toBeGreaterThan(ladderEnd);
+    expect(comments).toBeGreaterThan(ladderEnd);
   });
 
   it('leaves a hold on post text alone, so it can still be selected', () => {
