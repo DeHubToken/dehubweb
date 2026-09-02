@@ -100,7 +100,11 @@ export interface AuthContextType {
    * logged out" to somebody who wasn't.
    */
   loginIntent: 'login' | 'add-profile';
-  openLoginModal: (options?: { intent?: 'login' | 'add-profile' }) => void;
+  openLoginModal: (options?: {
+    intent?: 'login' | 'add-profile';
+    /** A saved profile being signed back into, which the allowance already counts. */
+    forProfileId?: string;
+  }) => void;
   closeLoginModal: () => void;
   /**
    * Ask for the wallet password now, for built-in-wallet sessions whose key is
