@@ -40,7 +40,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           toast: [
             "group toast",
             "bg-white/10 backdrop-blur-xl border border-white/20 text-white",
-            "shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-2xl",
+            "shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-xl",
             TOAST_CLASSES,
           ].join(" "),
           title: TITLE_CLASSES,
