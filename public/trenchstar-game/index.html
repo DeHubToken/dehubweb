@@ -2428,10 +2428,15 @@ const skinAlpha=(()=>{
 const floorMat=new THREE.MeshStandardMaterial({color:0x0a0e14,roughness:0.30,metalness:0.55,
   envMapIntensity:0.14,transparent:true,alphaMap:skinAlpha,depthWrite:false});
 let mirror=null,mirrorTint=0x8d99a6,FLOOR_Q='mirror';
-/* The quality ladder's cheap rung for the reflection: half the target and a
-   quarter of the refreshes. Roughly an eighth of the mirror's cost for a
-   floor that still reflects the wall — the plain floor is the rung after. */
-let MIRROR_LITE=false;
+/* The quality ladder's cheap rungs for the reflection: 1 is a smaller target,
+   2 is smaller again with every other refresh skipped while things move.
+   There is no rung after this. The floor used to drop to a plain
+   MeshStandardMaterial disc when the GPU struggled, and what that disc
+   reflects is scene.environment — the room probe, a 128px prefiltered cube
+   of the wall — so it painted the screens back as smeared red and green
+   bands. A floor does not reflect like that. A real mirror at a quarter of
+   the pixels still reflects the wall as the wall. */
+let MIRROR_LITE=0;
 const FLOOR_R=17;   /* was 27 — the excess just read as empty space */
 
 /* ---- GLOSS, NOT A MIRROR --------------------------------------------------
@@ -2546,8 +2551,8 @@ function buildFloor(){
        it gets a target a quarter the area and nobody can tell. */
     const px=(host.clientWidth||innerWidth)*dpr;
     const res=GFX.phone
-      ?(MIRROR_LITE?clamp(Math.floor(px*0.25),240,400):clamp(Math.floor(px*0.4),320,640))
-      :(MIRROR_LITE?clamp(Math.floor(px*0.3),400,720):clamp(Math.floor(px*0.5),640,1280));
+      ?[clamp(Math.floor(px*0.4),320,640),clamp(Math.floor(px*0.25),240,400),clamp(Math.floor(px*0.18),180,300)][MIRROR_LITE]
+      :[clamp(Math.floor(px*0.5),640,1280),clamp(Math.floor(px*0.3),400,720),clamp(Math.floor(px*0.2),280,480)][MIRROR_LITE];
     mirror=new Reflector(geo,{textureWidth:res,textureHeight:res,color:mirrorTint,clipBias:0.0015,
       shader:GlossShader});
     /* Reflector deep-clones the uniforms, so the roughness map and the knobs
@@ -2567,33 +2572,41 @@ function buildFloor(){
     rt.texture.generateMipmaps=true;
     rt.texture.minFilter=THREE.LinearMipmapLinearFilter;
     rt.texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-    /* Re-render the reflection every OTHER frame. The reflected image is the
-       wall, which only changes when a screen repaints or the camera moves,
-       and one frame of lag in a floor reflection is not a thing the eye can
-       resolve. Skipping keeps the previous target, so the floor never
-       flickers the way hiding the mesh would. */
+    /* Re-render the reflection every OTHER frame while nothing moves, and
+       EVERY frame while something does. The reflected image is the wall,
+       which only changes when a screen repaints, so at rest a skipped frame
+       costs nothing anyone can see. But a skipped frame keeps the previous
+       target AND the previous projection: the floor is then drawn from this
+       frame's camera with last frame's reflection, and the moment the chase
+       camera is following a walk the mirror lands a frame behind every other
+       frame. That was the jolt on every step. A frame that moved the camera
+       or has a character in it — a body animates even standing still —
+       reflects; the rest keep the previous target, so the floor never
+       flickers the way hiding the mesh would. The lowest rung skips every
+       other moving frame too; it is a smaller judder than a plain floor was
+       an insult. */
     const reflect=mirror.onBeforeRender;
+    const lastCam=new THREE.Matrix4();
     let phase=0;
-    const every=(GFX.phone?3:2)*(MIRROR_LITE?2:1);
-    mirror.onBeforeRender=function(...a){
-      if((phase++ % every)===0)reflect.apply(this,a);
+    const stillEvery=GFX.phone?3:2,moveEvery=MIRROR_LITE>=2?2:1;
+    mirror.onBeforeRender=function(renderer,scene,cam,...a){
+      const moved=!cam.matrixWorld.equals(lastCam)||(walk.obj&&walk.obj.visible);
+      if(!cam.matrixWorld.equals(lastCam))lastCam.copy(cam.matrixWorld);
+      phase++;
+      if(phase%(moved?moveEvery:stillEvery)===0)reflect.call(this,renderer,scene,cam,...a);
     };
     floorGrp.add(mirror);
   }else{
     geo.dispose();
-    /* The fallback floor has to READ as a floor, because this is what the room
-       drops to the moment the GPU struggles — and it is a one-way trip, there
-       is nothing that ever puts the mirror back.
-         It used to be colour 0x0c1016 at metalness 0.7 with envMapIntensity
-       0.16, which is a void rather than a surface: metalness that high leaves
-       a material with no diffuse term at all, so the room's RectAreaLights had
-       nothing to land on, and the 0.16 environment cut the only other source
-       of light it had. The screens stayed lit, the ground under them went
-       black, and the whole lower half of the frame read as a hole in the
-       world. Mostly diffuse with a real environment contribution instead: it
-       is still a dark polished floor, it just exists. */
+    /* VR only, now. The quality ladder no longer comes down here — it keeps
+       the Reflector and shrinks its target instead — because this disc's
+       reflection is scene.environment, the room probe, and a prefiltered
+       128px cube of the wall comes back as smeared red and green bands.
+       Inside a headset the mirror is too dear, so this is what the floor is;
+       rough enough that the probe reads as a soft glow underfoot rather than
+       as bands, and mostly diffuse so the area lights still land on it. */
     const plain=new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),
-      new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.34,metalness:0.22,envMapIntensity:0.95}));
+      new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.62,metalness:0.18,envMapIntensity:0.45}));
     plain.receiveShadow=true;
     floorGrp.add(plain);
   }
@@ -11773,22 +11786,24 @@ let firstFrame=false;
      · the MEDIAN frame time decides, so a stall is one slow sample among a
        hundred normal ones and does not register. A GPU that is really over
        budget is slow on EVERY frame, which is exactly what a median sees.
-     · a rung between "mirror" and "plain": the reflection at half the
-       target and a quarter of the refreshes, for a floor that still reflects.
+     · the floor never stops being a mirror. Two rungs shrink the reflection
+       target instead — the old plain-floor rung reflected the room probe as
+       red and green smears across the floor, which was worse than any frame
+       rate.
      · it climbs back. Comfortably fast for three windows in a row and the
        ladder steps up one rung; every time it has to come down again the
        climb needs twice as many windows, so a machine that sits on the line
        settles on the rung below it instead of flickering across it. */
 const PIXEL_RATIO=Math.min(devicePixelRatio,GFX.phone?1.25:1.5);
 const gfx=(()=>{
-  const RUNGS=['full','noShadow','mirrorLite','noBloom','plainFloor'];
+  const RUNGS=['full','noShadow','mirrorLite','noBloom','mirrorLow'];
   let level=0,bloomSaved=null,probeSaved=null;
   let dts=[],winT=0,slow=0,fast=0,upNeed=3;
   function down(){
     if(level>=RUNGS.length-1)return;
     level++;
     if(level===1){probeSaved=envProbe.period;setShadows(false);envProbe.period=Math.max(envProbe.period,20);}
-    else if(level===2){MIRROR_LITE=true;if(FLOOR_Q==='mirror')buildFloor();}
+    else if(level===2){MIRROR_LITE=1;if(FLOOR_Q==='mirror')buildFloor();}
     else if(level===3){
       bloomSaved=bloom.strength;bloom.strength=0;
       /* The composer keeps its OWN pixel ratio and owns the expensive
@@ -11799,18 +11814,18 @@ const gfx=(()=>{
       if(composer.setPixelRatio)composer.setPixelRatio(1);
       composer.setSize(...viewport());
     }
-    else if(level===4){if(FLOOR_Q==='mirror'){FLOOR_Q='plain';buildFloor();}}
+    else if(level===4){MIRROR_LITE=2;if(FLOOR_Q==='mirror')buildFloor();}
   }
   function up(){
     if(level<=0)return;
-    if(level===4){if(FLOOR_Q==='plain'){FLOOR_Q='mirror';buildFloor();}}
+    if(level===4){MIRROR_LITE=1;if(FLOOR_Q==='mirror')buildFloor();}
     else if(level===3){
       if(bloomSaved!==null)bloom.strength=bloomSaved;
       renderer.setPixelRatio(PIXEL_RATIO);
       if(composer.setPixelRatio)composer.setPixelRatio(PIXEL_RATIO);
       composer.setSize(...viewport());
     }
-    else if(level===2){MIRROR_LITE=false;if(FLOOR_Q==='mirror')buildFloor();}
+    else if(level===2){MIRROR_LITE=0;if(FLOOR_Q==='mirror')buildFloor();}
     else if(level===1){
       if(!GFX.phone)setShadows(true);
       if(probeSaved!==null)envProbe.period=probeSaved;
