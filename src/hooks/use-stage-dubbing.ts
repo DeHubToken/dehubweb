@@ -39,6 +39,7 @@ import {
   type StageDubAudio,
 } from '@/lib/stage-dub';
 import { stageCaptionChannel } from '@/lib/stage-captions';
+import { leaseChannel } from '@/lib/realtime-channel-lease';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface DubQuote {
@@ -395,16 +396,20 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
   useEffect(() => {
     if (!spaceId || !language) return;
 
-    const channel: RealtimeChannel = supabase
-      .channel(`${stageCaptionChannel(spaceId)}:audio`)
-      .on('broadcast', { event: DUB_AUDIO_EVENT }, ({ payload }) => {
-        const clip = payload as StageDubAudio | undefined;
-        if (!clip?.audio || clip.lang !== languageRef.current) return;
-        playerRef.current?.enqueue(clip.id, clip.audio);
-      })
-      .subscribe();
+    // Leased: the caption publisher holds this same clip topic, so on a speaker
+    // who is also dubbing both are on one object and either cleanup would close
+    // it for the other.
+    const lease = leaseChannel(`${stageCaptionChannel(spaceId)}:audio`, {
+      bind: (chan) => {
+        chan.on('broadcast', { event: DUB_AUDIO_EVENT }, ({ payload }) => {
+          const clip = payload as StageDubAudio | undefined;
+          if (!clip?.audio || clip.lang !== languageRef.current) return;
+          playerRef.current?.enqueue(clip.id, clip.audio);
+        });
+      },
+    });
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { lease.release(); };
   }, [spaceId, language]);
 
   // Unmounting stops the audio and the ticking. It cannot raise the bill: the

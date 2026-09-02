@@ -16,6 +16,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { leaseChannel } from '@/lib/realtime-channel-lease';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import {
   CAPTION_EVENT,
@@ -159,41 +160,48 @@ export function useStageCaptionPublisher(options: CaptionPublisherOptions): Capt
   // fourteen languages on offer cost whatever two or three people chose.
   useEffect(() => {
     if (!spaceId || !isSpeaker) return;
-    const channel = supabase.channel(stageCaptionChannel(spaceId), {
+    // Leased, not opened: the caption feed below names this same topic, and a
+    // host runs both. On the plain client call they would share one object and
+    // whichever unmounted first would close it for the other — the host closing
+    // the captions panel would stop their own outbound captions.
+    const lease = leaseChannel(stageCaptionChannel(spaceId), {
       config: { presence: { key: `speaker-${Math.random().toString(36).slice(2, 10)}` } },
+      bind: (chan) => {
+        chan.on('presence', { event: 'sync' }, () => {
+          const state = chan.presenceState<{ lang?: string }>();
+          const languages = new Set<string>();
+          for (const entries of Object.values(state)) {
+            for (const entry of entries) {
+              if (entry.lang && entry.lang !== CAPTION_SOURCE_LANGUAGE) languages.add(entry.lang);
+            }
+          }
+          // Separately: which of those languages has a live paid block behind it.
+          const tokens: Record<string, string> = {};
+          for (const entries of Object.values(state)) {
+            for (const entry of entries) {
+              const paid = (entry as { lang?: string; dub?: string }).dub;
+              if (entry.lang && paid) tokens[entry.lang] = paid;
+            }
+          }
+          dubTokensRef.current = tokens;
+          activeLanguagesRef.current = [...languages];
+        });
+      },
     });
-    channel.on('presence', { event: 'sync' }, () => {
-      const state = channel.presenceState<{ lang?: string }>();
-      const languages = new Set<string>();
-      for (const entries of Object.values(state)) {
-        for (const entry of entries) {
-          if (entry.lang && entry.lang !== CAPTION_SOURCE_LANGUAGE) languages.add(entry.lang);
-        }
-      }
-      // Separately: which of those languages has a live paid block behind it.
-      const tokens: Record<string, string> = {};
-      for (const entries of Object.values(state)) {
-        for (const entry of entries) {
-          const paid = (entry as { lang?: string; dub?: string }).dub;
-          if (entry.lang && paid) tokens[entry.lang] = paid;
-        }
-      }
-      dubTokensRef.current = tokens;
-      activeLanguagesRef.current = [...languages];
-    });
-    channel.subscribe();
-    channelRef.current = channel;
+    channelRef.current = lease.channel;
 
     // Clips are tens of kilobytes where a caption line is tens of bytes, so
     // they get their own channel — a listener reading subtitles should not be
-    // made to receive audio it is neither paying for nor able to play.
-    const audioChannel = supabase.channel(stageCaptionChannel(spaceId) + ':audio').subscribe();
-    audioChannelRef.current = audioChannel;
+    // made to receive audio it is neither paying for nor able to play. Leased
+    // for the same reason: the dubbing hook listens on this topic, and on a
+    // speaker who is also dubbing both run at once.
+    const audioLease = leaseChannel(stageCaptionChannel(spaceId) + ':audio');
+    audioChannelRef.current = audioLease.channel;
     return () => {
-      supabase.removeChannel(audioChannel);
+      audioLease.release();
       audioChannelRef.current = null;
       dubTokensRef.current = {};
-      supabase.removeChannel(channel);
+      lease.release();
       channelRef.current = null;
       activeLanguagesRef.current = [];
     };
@@ -725,45 +733,52 @@ export function useStageCaptionFeed(
 
     void refreshRoster();
 
-    const channel = supabase.channel(stageCaptionChannel(spaceId), {
+    // Leased: the publisher above holds this same topic, and a host runs both.
+    // See the note there.
+    const lease = leaseChannel(stageCaptionChannel(spaceId), {
       config: { presence: { key: `viewer-${Math.random().toString(36).slice(2, 10)}` } },
-    });
+      bind: (chan) => {
+        chan
+          .on('broadcast', { event: CAPTION_EVENT }, ({ payload }) => {
+            const message = payload as StageCaptionMessage | undefined;
+            if (!message?.id || typeof message.text !== 'string') return;
 
-    channel
-      .on('broadcast', { event: CAPTION_EVENT }, ({ payload }) => {
-        const message = payload as StageCaptionMessage | undefined;
-        if (!message?.id || typeof message.text !== 'string') return;
+            const wallet = String(message.wallet || '').toLowerCase();
+            if (!allowedRef.current.has(wallet)) {
+              // Probably somebody promoted since the last roster read rather
+              // than an impostor. Re-read (at most every 10s) and let their next
+              // interim through — that costs the speaker under a second of
+              // caption, where trusting the payload would cost everyone the
+              // guarantee.
+              if (Date.now() - lastRosterFetchRef.current > 10_000) void refreshRoster();
+              return;
+            }
 
-        const wallet = String(message.wallet || '').toLowerCase();
-        if (!allowedRef.current.has(wallet)) {
-          // Probably somebody promoted since the last roster read rather than
-          // an impostor. Re-read (at most every 10s) and let their next interim
-          // through — that costs the speaker under a second of caption, where
-          // trusting the payload would cost everyone the guarantee.
-          if (Date.now() - lastRosterFetchRef.current > 10_000) void refreshRoster();
-          return;
-        }
-
-        setLines((prev) => foldCaption(prev, toLine(message, wallet)));
-      })
-      .on('broadcast', { event: CAPTION_TRANSLATION_EVENT }, ({ payload }) => {
-        const translation = payload as StageCaptionTranslation | undefined;
-        if (!translation?.id || !translation.translations) return;
-        // No roster check needed: a translation can only attach to a line that
-        // already passed one, and it cannot create a line of its own.
-        setLines((prev) => foldTranslation(prev, translation));
-      })
-      .subscribe((status) => {
-        if (status !== 'SUBSCRIBED') return;
-        void channel.track({
+            setLines((prev) => foldCaption(prev, toLine(message, wallet)));
+          })
+          .on('broadcast', { event: CAPTION_TRANSLATION_EVENT }, ({ payload }) => {
+            const translation = payload as StageCaptionTranslation | undefined;
+            if (!translation?.id || !translation.translations) return;
+            // No roster check needed: a translation can only attach to a line
+            // that already passed one, and it cannot create a line of its own.
+            setLines((prev) => foldTranslation(prev, translation));
+          });
+      },
+      // Fires immediately if the publisher already joined this topic, which is
+      // the case on a host — otherwise a second holder waits for a subscribe
+      // callback that has already been and gone, and never publishes its
+      // language.
+      onJoin: (chan) => {
+        void chan.track({
           lang: languageRef.current ?? CAPTION_SOURCE_LANGUAGE,
           // Present only while this listener holds a paid block. It is what
           // authorises a speaker's client to spend on speaking this language.
           dub: getDubToken() ?? undefined,
         });
-      });
+      },
+    });
 
-    channelRef.current = channel;
+    channelRef.current = lease.channel;
 
     const unsubscribeCaption = onLocalCaption((localSpaceId, message) => {
       if (localSpaceId !== spaceId || !message?.id) return;
@@ -789,7 +804,7 @@ export function useStageCaptionFeed(
       clearInterval(sweeper);
       unsubscribeCaption();
       unsubscribeTranslation();
-      supabase.removeChannel(channel);
+      lease.release();
       channelRef.current = null;
       setLines([]);
     };
