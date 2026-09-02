@@ -647,6 +647,45 @@ export default function AssistantPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
 
+  /**
+   * How long a generation is given before we stop asking about it.
+   *
+   * Every poller here ran on a bare setInterval with no cap and a catch that
+   * only logged, so a job that never reached a terminal status — a 429, a 500,
+   * an expired prediction id — was asked about every five seconds forever.
+   * PersistentPageCache keeps this page mounted, so the unmount cleanup never
+   * ran, and the pending keys in localStorage restarted the same loop on every
+   * later page load. One dead job became a permanent background request.
+   *
+   * Fifteen minutes is well past the slowest of these (video), so a job that
+   * has not finished by then is not going to.
+   */
+  const POLL_DEADLINE_MS = 15 * 60 * 1000;
+
+  /**
+   * Poll `tick` every 5s until something clears it or the deadline passes.
+   *
+   * Giving up clears the stored interval and calls `onTimeout`, which is where
+   * the pending key gets dropped — otherwise the next page load starts it again
+   * and the deadline buys nothing.
+   */
+  const startBoundedPoll = useCallback(
+    (key: string, tick: () => void, onTimeout: () => void) => {
+      if (pollingRef.current[key]) return;
+      const startedAt = Date.now();
+      pollingRef.current[key] = setInterval(() => {
+        if (Date.now() - startedAt > POLL_DEADLINE_MS) {
+          clearInterval(pollingRef.current[key]);
+          delete pollingRef.current[key];
+          onTimeout();
+          return;
+        }
+        tick();
+      }, 5000);
+    },
+    [],
+  );
+
   // Persist/restore pending AI tool requests across reloads
   const PENDING_TOOL_KEY = 'dehub-pending-ai-tool';
   const savePendingTool = useCallback((data: {
@@ -669,6 +708,34 @@ export default function AssistantPage() {
   const clearPendingVideo = useCallback(() => {
     try { localStorage.removeItem(PENDING_VIDEO_KEY); } catch {}
   }, []);
+
+  /**
+   * Stop waiting on a job and say so.
+   *
+   * Reached only from the poll deadline. Dropping the pending key is the part
+   * that matters as much as the message: leaving it means the next page load
+   * restores the job and starts polling it all over again, which is how one
+   * dead request became a permanent background loop.
+   */
+  const giveUpOnTool = useCallback((messageId: string) => {
+    clearPendingTool();
+    setIsAiToolProcessing(false);
+    setMessages(prev => prev.map(m =>
+      m.id === messageId
+        ? { ...m, isToolProcessing: false, content: '❌ Gave up waiting on this one. Nothing was charged twice — try again.' }
+        : m,
+    ));
+  }, [clearPendingTool]);
+
+  const giveUpOnVideo = useCallback((messageId: string) => {
+    clearPendingVideo();
+    setMessages(prev => prev.map(m =>
+      m.id === messageId
+        ? { ...m, isVideoGenerating: false, content: '❌ Gave up waiting on this video. Nothing was charged twice — try again.' }
+        : m,
+    ));
+  }, [clearPendingVideo]);
+
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress, user } = useAuth();
@@ -1054,9 +1121,11 @@ export default function AssistantPage() {
 
       // Resume polling
       if (!pollingRef.current[pending.requestId]) {
-        pollingRef.current[pending.requestId] = setInterval(() => {
-          pollAiToolStatus(pending.requestId, pending.appId, pending.messageId, pending.toolKey, pending.statusUrl, pending.responseUrl);
-        }, 5000);
+        startBoundedPoll(
+          pending.requestId,
+          () => pollAiToolStatus(pending.requestId, pending.appId, pending.messageId, pending.toolKey, pending.statusUrl, pending.responseUrl),
+          () => giveUpOnTool(pending.messageId),
+        );
         // Fire one immediately
         pollAiToolStatus(pending.requestId, pending.appId, pending.messageId, pending.toolKey, pending.statusUrl, pending.responseUrl);
       }
@@ -1084,9 +1153,11 @@ export default function AssistantPage() {
         setIsVideoLoading(true);
 
         if (!pollingRef.current[pending.predictionId]) {
-          pollingRef.current[pending.predictionId] = setInterval(() => {
-            pollVideoStatus(pending.predictionId, pending.messageId, pending.provider, pending.falAppId);
-          }, 5000);
+          startBoundedPoll(
+            pending.predictionId,
+            () => pollVideoStatus(pending.predictionId, pending.messageId, pending.provider, pending.falAppId),
+            () => giveUpOnVideo(pending.messageId),
+          );
           pollVideoStatus(pending.predictionId, pending.messageId, pending.provider, pending.falAppId);
         }
         console.log('[Video] Restored pending video from localStorage:', pending.predictionId);
@@ -1266,9 +1337,11 @@ export default function AssistantPage() {
       setMessages(prev => [...prev, assistantMessage]);
 
       // Start polling for video status
-      pollingRef.current[data.predictionId] = setInterval(() => {
-        pollVideoStatus(data.predictionId, messageId, data.provider, data.falAppId);
-      }, 5000);
+      startBoundedPoll(
+        data.predictionId,
+        () => pollVideoStatus(data.predictionId, messageId, data.provider, data.falAppId),
+        () => giveUpOnVideo(messageId),
+      );
 
       // Persist so it survives reloads
       savePendingVideo({
@@ -1522,9 +1595,11 @@ export default function AssistantPage() {
           content: assistantMessage.content,
         });
 
-        pollingRef.current[data.requestId] = setInterval(() => {
-          pollAiToolStatus(data.requestId, data.appId, messageId, tool, data.statusUrl, data.responseUrl);
-        }, 5000);
+        startBoundedPoll(
+          data.requestId,
+          () => pollAiToolStatus(data.requestId, data.appId, messageId, tool, data.statusUrl, data.responseUrl),
+          () => giveUpOnTool(messageId),
+        );
       }
     } catch (err) {
       console.error('[AI Tool] Error:', err);

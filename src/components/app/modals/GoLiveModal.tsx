@@ -602,10 +602,16 @@ export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps
    * Dismissing the drawer mid-broadcast has to run the same teardown as the
    * End Stream button — otherwise the camera is released on unmount but the
    * post stays flagged live on the backend with nothing feeding it.
+   *
+   * And it has to ask first, for the same reason the button does. This ran the
+   * teardown outright, so Escape, a click on the scrim, or a downward swipe on
+   * the phone sheet ended a live broadcast with no prompt — and if the stream
+   * had not reached `live` yet, discarded the post with it. #866 put the
+   * confirmation on the button and left this path going straight through.
    */
   const handleDismiss = () => {
     if (step === 'broadcasting') {
-      void handleEndStream();
+      setConfirmEnd(true);
       return;
     }
     handleClose();
