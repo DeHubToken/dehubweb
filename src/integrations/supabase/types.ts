@@ -1700,75 +1700,6 @@ export type Database = {
         }
         Relationships: []
       }
-      custom_notifications: {
-        Row: {
-          actor_address: string
-          actor_avatar: string | null
-          actor_username: string | null
-          content: string
-          created_at: string
-          id: string
-          read: boolean
-          recipient_address: string
-          reference_id: string | null
-          reference_title: string | null
-          type: string
-        }
-        Insert: {
-          actor_address: string
-          actor_avatar?: string | null
-          actor_username?: string | null
-          content?: string
-          created_at?: string
-          id?: string
-          read?: boolean
-          recipient_address: string
-          reference_id?: string | null
-          reference_title?: string | null
-          type?: string
-        }
-        Update: {
-          actor_address?: string
-          actor_avatar?: string | null
-          actor_username?: string | null
-          content?: string
-          created_at?: string
-          id?: string
-          read?: boolean
-          recipient_address?: string
-          reference_id?: string | null
-          reference_title?: string | null
-          type?: string
-        }
-        Relationships: []
-      }
-      custom_voices: {
-        Row: {
-          created_at: string | null
-          elevenlabs_voice_id: string
-          id: string
-          is_stage_voice: boolean
-          name: string
-          wallet_address: string
-        }
-        Insert: {
-          created_at?: string | null
-          elevenlabs_voice_id: string
-          id?: string
-          is_stage_voice?: boolean
-          name: string
-          wallet_address: string
-        }
-        Update: {
-          created_at?: string | null
-          elevenlabs_voice_id?: string
-          id?: string
-          is_stage_voice?: boolean
-          name?: string
-          wallet_address?: string
-        }
-        Relationships: []
-      }
       creator_flows: {
         Row: {
           cover_url: string | null
@@ -1871,6 +1802,102 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      custom_notifications: {
+        Row: {
+          actor_address: string
+          actor_avatar: string | null
+          actor_username: string | null
+          content: string
+          created_at: string
+          id: string
+          read: boolean
+          recipient_address: string
+          reference_id: string | null
+          reference_title: string | null
+          type: string
+        }
+        Insert: {
+          actor_address: string
+          actor_avatar?: string | null
+          actor_username?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_address: string
+          reference_id?: string | null
+          reference_title?: string | null
+          type?: string
+        }
+        Update: {
+          actor_address?: string
+          actor_avatar?: string | null
+          actor_username?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_address?: string
+          reference_id?: string | null
+          reference_title?: string | null
+          type?: string
+        }
+        Relationships: []
+      }
+      custom_voices: {
+        Row: {
+          created_at: string | null
+          elevenlabs_voice_id: string
+          id: string
+          is_stage_voice: boolean
+          name: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string | null
+          elevenlabs_voice_id: string
+          id?: string
+          is_stage_voice?: boolean
+          name: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string | null
+          elevenlabs_voice_id?: string
+          id?: string
+          is_stage_voice?: boolean
+          name?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      dhb_payment_claims: {
+        Row: {
+          chain: string | null
+          claimed_at: string
+          dhb: number
+          purpose: string
+          tx_hash: string
+          wallet_address: string
+        }
+        Insert: {
+          chain?: string | null
+          claimed_at?: string
+          dhb: number
+          purpose: string
+          tx_hash: string
+          wallet_address: string
+        }
+        Update: {
+          chain?: string | null
+          claimed_at?: string
+          dhb?: number
+          purpose?: string
+          tx_hash?: string
+          wallet_address?: string
+        }
+        Relationships: []
       }
       dub_jobs: {
         Row: {
@@ -3411,6 +3438,7 @@ export type Database = {
           created_at: string
           id: string
           language: string
+          last_started_at: string | null
           minutes: number
           price_dhb_per_min: number
           settled_at: string | null
@@ -3423,6 +3451,7 @@ export type Database = {
           created_at?: string
           id?: string
           language: string
+          last_started_at?: string | null
           minutes?: number
           price_dhb_per_min: number
           settled_at?: string | null
@@ -3435,6 +3464,7 @@ export type Database = {
           created_at?: string
           id?: string
           language?: string
+          last_started_at?: string | null
           minutes?: number
           price_dhb_per_min?: number
           settled_at?: string | null
@@ -5829,12 +5859,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5858,11 +5888,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5883,11 +5913,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5908,11 +5938,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5925,11 +5955,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
