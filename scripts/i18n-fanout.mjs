@@ -133,6 +133,26 @@ function looksUnfinished(candidate) {
   return candidate.includes('@@') || /@\s@/.test(candidate) || candidate.trim() === '';
 }
 
+/**
+ * A sentence of English function words. Used to tell "the translator handed the
+ * source straight back" from "this string is the same in both languages" —
+ * "Visa, Mastercard, Apple Pay" and "$42,000 market cap" are legitimately
+ * unchanged, "Introducing DeHub Premium" is a silent failure.
+ *
+ * Writing the English back into a locale file is worse than leaving the key
+ * out: the value renders identically either way, but a written key counts as
+ * translated in the coverage report, so nobody ever finds it again. dehub-mobile
+ * is full of exactly this — 187 English sentences sitting in de.json.
+ */
+const ENGLISH_FUNCTION_WORDS =
+  /\b(the|a|an|is|are|was|be|to|for|your|you|and|or|not|no|with|of|in|on|at|can|will|please|cannot|this|that|from|have|has|it|we|our)\b/i;
+
+function isUntranslatedProse(source, candidate) {
+  if (candidate !== source) return false;
+  const words = source.trim().split(/\s+/).filter((w) => /[a-zA-Z]{3}/.test(w));
+  return words.length >= 4 && ENGLISH_FUNCTION_WORDS.test(source);
+}
+
 /* ---------- network ---------- */
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -213,6 +233,34 @@ if (CHECK_ONLY) {
   process.exit(0);
 }
 
+/**
+ * Strip keys whose value is the English source verbatim. Rendering does not
+ * change — the key falls back to en.json either way — but the coverage report
+ * stops counting them as translated, which is the whole point.
+ */
+if (flag('prune')) {
+  for (const locale of targets) {
+    const raw = JSON.parse(fs.readFileSync(path.join(LOCALES_DIR, `${locale}.json`), 'utf8'));
+    const flat = flatten(raw);
+    let pruned = 0;
+    for (const [k, v] of flat) {
+      if (typeof v !== 'string') continue;
+      const source = enFlat.get(k);
+      if (typeof source === 'string' && isUntranslatedProse(source, v)) {
+        const parts = k.split('.');
+        let node = raw;
+        for (const p of parts.slice(0, -1)) node = node?.[p];
+        if (node) { delete node[parts.at(-1)]; pruned++; }
+      }
+    }
+    if (pruned) {
+      fs.writeFileSync(path.join(LOCALES_DIR, `${locale}.json`), JSON.stringify(reorderLike(en, raw), null, 2) + '\n');
+    }
+    console.log(`${locale}: pruned ${pruned} English-verbatim value(s)`);
+  }
+  process.exit(0);
+}
+
 const key = anonKey();
 
 for (const locale of targets) {
@@ -247,6 +295,7 @@ for (const locale of targets) {
       if (
         candidate == null ||
         looksUnfinished(candidate) ||
+        isUntranslatedProse(sources[j], candidate) ||
         !placeholdersMatch(sources[j], candidate)
       ) {
         dropped++;

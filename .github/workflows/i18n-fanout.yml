@@ -53,6 +53,16 @@ jobs:
           if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
           node scripts/i18n-fanout.mjs $ARGS
 
+      # Also catches English that older runs (and the mobile-style merge) left
+      # behind, not just this run's output.
+      - name: Drop values that came back as English
+        run: |
+          if [ -n "${{ inputs.locales }}" ]; then
+            node scripts/i18n-fanout.mjs --prune --locales ${{ inputs.locales }}
+          else
+            node scripts/i18n-fanout.mjs --prune
+          fi
+
       - name: Report the gap after
         run: |
           node scripts/i18n-fanout.mjs --check | head -30
