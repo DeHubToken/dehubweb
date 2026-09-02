@@ -17,8 +17,9 @@
 export const WIDGET_FALLBACK_LOCALES: readonly string[] = [
   'acm', 'acw', 'aec', 'ajp', 'am', 'apd', 'ary', 'arz', 'ayn', 'bho',
   'cjy', 'ctg', 'dcc', 'dyu', 'gsw', 'gu', 'ha', 'hne', 'ig', 'jv',
-  'mag', 'mi', 'mn', 'mnp', 'my', 'no', 'om', 'or', 'pa', 'pbt',
-  'pcm', 'qu', 'rkt', 'sa', 'sd', 'sdr', 'sk', 'skr', 'so', 'sq',
-  'sr', 'syl', 'tg', 'ti', 'tk', 'tts', 'ug', 'uz', 'wes', 'wuu',
-  'yo', 'yue', 'zu',
+  'ka', 'kk', 'km', 'kn', 'ku', 'ky', 'lo', 'lt', 'lv', 'mag',
+  'mg', 'mi', 'ml', 'mn', 'mnp', 'mr', 'my', 'ne', 'no', 'om',
+  'or', 'pa', 'pbt', 'pcm', 'qu', 'rkt', 'sa', 'sd', 'sdr', 'si',
+  'sk', 'skr', 'so', 'sq', 'sr', 'syl', 'te', 'tg', 'th', 'ti',
+  'tk', 'tts', 'ug', 'uk', 'uz', 'wes', 'wuu', 'yo', 'yue', 'zu',
 ];
