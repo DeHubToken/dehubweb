@@ -58,6 +58,11 @@ All colors MUST be HSL.
     font-family: 'Exo', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
   }
   :root {
+    /* zinc-500 for text-zinc-500 & co (tailwind.config.ts). #808089: the
+       lightest step that still reads as the same muted grey and clears 4.5:1
+       on the #080808 cards and the zinc-900 strips. The light theme and docs
+       paper set it back to stock #71717a below, which passes on white. */
+    --zinc-500: 128 128 137;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -2261,6 +2266,7 @@ html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]:last-child::bef
  * ========================================================================== */
 html[data-theme="light"] {
   --paper: #f9f8f4;
+  --zinc-500: 113 113 122; /* stock zinc-500 (#71717a): 4.9:1 on paper; the dark-surface value in :root would drop to 3.9:1 here */
   --paper-deep: #ece8df;
   --ink: #1a1a1a;
   --ink-muted: #5a5a5a;
@@ -3917,6 +3923,7 @@ html.dark .docs-root {
 
 html:not(.dark) .docs-root {
   --background: 48 31% 96.7%;        /* paper #f9f8f4 */
+  --zinc-500: 113 113 122;           /* stock zinc-500: 4.9:1 on paper */
   --foreground: 0 0% 10%;            /* ink #1a1a1a */
   --card: 48 31% 96.7%;
   --card-foreground: 0 0% 10%;
