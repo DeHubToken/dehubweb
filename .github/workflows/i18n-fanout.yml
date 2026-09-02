@@ -32,7 +32,7 @@ permissions:
 jobs:
   fanout:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -72,7 +72,12 @@ jobs:
           node scripts/i18n-fanout.mjs --check | head -30
           node scripts/i18n-coverage.mjs --floor || true
 
+      # always(), because the expensive thing here is the translation, not the
+      # job. A run that dies part-way has still written whole locale files to
+      # disk; without this the PR step is skipped and every completed locale is
+      # thrown away. One timeout cost six finished locales before this existed.
       - name: Open a pull request
+        if: always()
         uses: peter-evans/create-pull-request@v6
         with:
           branch: i18n-fanout-${{ github.run_number }}
