@@ -52,6 +52,22 @@ interface UnspentPayment {
    * re-paid job at worst.
    */
   wallet?: string;
+  /**
+   * What the job this hash was last handed to is about to draw.
+   *
+   * The server keeps a balance per transfer — `ai_payments.remaining_dhb`,
+   * whose own comment says an overpayment "stays the payer's to spend on the
+   * next job rather than being kept". The client did not: any job that
+   * succeeded forgot the whole hash. So a failed 100 DHB job that the server
+   * refunded, followed by a 10 DHB job that worked, threw away the handle to
+   * the other 90, and the next large job paid in full again.
+   *
+   * Recorded when the hash is handed out, because that is the only moment the
+   * price is known here. Absent means the old behaviour — spend the lot — which
+   * is the safe direction: it can cost one re-paid job, never a phantom
+   * balance the server will refuse.
+   */
+  pendingDhb?: number;
 }
 
 function readUnspent(): UnspentPayment[] {
@@ -80,16 +96,51 @@ function writeUnspent(payments: UnspentPayment[]): void {
 }
 
 /**
- * Forget a transfer that has been used.
+ * Retire what a job drew from a transfer, and the transfer with it if that was
+ * the last of it.
  *
  * Called from invokeAi rather than from a paywall, because the paywall hands
  * over before the job runs and never learns whether the hash was accepted.
- * A job that succeeds spends its whole payment; one refused as exhausted has
- * had it spent already. Either way the hash is finished.
+ *
+ * It used to drop the whole entry on any success, which threw away the rest of
+ * an overpayment — see `pendingDhb`. `exhausted` is the server saying the
+ * balance is gone regardless, which is the one case where dropping it is right.
  */
-export function forgetPayment(txHash: string): void {
+export function forgetPayment(txHash: string, exhausted = false): void {
   const wanted = txHash.toLowerCase();
-  writeUnspent(readUnspent().filter((p) => p.txHash !== wanted));
+  const kept: UnspentPayment[] = [];
+  for (const p of readUnspent()) {
+    if (p.txHash !== wanted) {
+      kept.push(p);
+      continue;
+    }
+    // The server said there is nothing left on it, whatever we thought.
+    if (exhausted || p.pendingDhb === undefined) continue;
+    const left = p.dhb - p.pendingDhb;
+    // Below the smallest thing anyone can buy, a remainder is not worth
+    // offering: it would be found by `reusablePayment`, refused as exhausted,
+    // and cost the player a round trip before they paid anyway.
+    if (left < MIN_REUSABLE_DHB) continue;
+    kept.push({ ...p, dhb: left, pendingDhb: undefined });
+  }
+  writeUnspent(kept);
+}
+
+/**
+ * A remainder smaller than this is dropped rather than offered.
+ *
+ * `reusablePayment` only ever hands back a hash worth at least the price, so a
+ * small remainder is never wrongly spent — this just stops a dust entry
+ * outliving its usefulness in a list capped at ten.
+ */
+const MIN_REUSABLE_DHB = 1;
+
+/** Note what the job this hash is being handed to will draw from it. */
+function markPending(txHash: string, priceDhb: number): void {
+  const wanted = txHash.toLowerCase();
+  writeUnspent(
+    readUnspent().map((p) => (p.txHash === wanted ? { ...p, pendingDhb: priceDhb } : p)),
+  );
 }
 
 /**
@@ -101,8 +152,12 @@ export function forgetPayment(txHash: string): void {
  * rather than the "already spent" the client knows how to recover from. So an
  * abandoned payment by the previous account used to block every generation for
  * the next one, on that browser, until the window expired.
+ *
+ * Exported so the reuse rule can be checked directly — it is the half of the
+ * paywall that needs no wallet, and it used to be asserted against as source
+ * text instead.
  */
-function reusablePayment(priceDhb: number, wallet: string): UnspentPayment | null {
+export function reusablePayment(priceDhb: number, wallet: string): UnspentPayment | null {
   const now = Date.now();
   const holder = wallet.toLowerCase();
   return readUnspent().find((p) =>
@@ -196,7 +251,12 @@ export async function payForJob(
   // more. This is what stops a generation that failed after payment from
   // costing a second transfer.
   const reusable = remember ? reusablePayment(priceDhb, payer) : null;
-  if (reusable) return reusable.txHash;
+  if (reusable) {
+    // What this job will draw, so forgetPayment debits it rather than binning
+    // the whole hash and stranding the rest of the transfer server-side.
+    markPending(reusable.txHash, priceDhb);
+    return reusable.txHash;
+  }
 
   // Round up: the treasury must receive at least the price, and a fractional
   // wei short would leave the transfer one unit under it.
@@ -260,7 +320,14 @@ export async function payForJob(
     throw new Error(parseTxError(err) || 'Payment failed.');
   }
 
-  if (remember) writeUnspent([...readUnspent(), { txHash, dhb: amount, paidAt: Date.now(), wallet: payer.toLowerCase() }]);
+  // pendingDhb is this job's price, not the transfer: the amount is rounded up
+  // to a whole DHB, so anything over the price is the payer's for the next one.
+  if (remember) {
+    writeUnspent([
+      ...readUnspent(),
+      { txHash, dhb: amount, paidAt: Date.now(), wallet: payer.toLowerCase(), pendingDhb: priceDhb },
+    ]);
+  }
   return txHash;
 }
 
