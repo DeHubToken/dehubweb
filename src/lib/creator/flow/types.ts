@@ -1,8 +1,7 @@
 /**
  * Creator Flow — shared types.
  * ============================
- * Adapted from HeliosGen (MIT) — see LICENSE-HeliosGen. The node/edge shapes
- * are React Flow's; `NodeData` is the bag every node type reads its settings
+ * The node/edge shapes are React Flow's; `NodeData` is the bag every node type reads its settings
  * and outputs from, kept flat so the whole graph serialises as one jsonb blob.
  */
 import type { Node, Edge } from '@xyflow/react';
@@ -83,7 +82,7 @@ export interface Viewport {
   zoom: number;
 }
 
-/** One canvas. HeliosGen calls these spaces; the UI calls them flows. */
+/** One canvas. */
 export interface Flow {
   id: string;
   name: string;

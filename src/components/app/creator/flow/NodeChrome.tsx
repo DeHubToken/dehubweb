@@ -1,7 +1,6 @@
 /**
  * Creator Flow — pieces every node shares.
  * ========================================
- * Adapted from HeliosGen's node components (MIT) — see LICENSE-HeliosGen.
  * The card shell, the label floating above it, the action pill that appears
  * when selected, the corner resize grip, typed input/output handles and the
  * warning shown when a required input is missing.

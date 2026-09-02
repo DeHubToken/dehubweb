@@ -1,8 +1,7 @@
 /**
  * Creator Flow — the "+" menu.
  * ============================
- * Adapted from HeliosGen's AddNodeMenu (MIT) — see LICENSE-HeliosGen. Lists
- * every node type with a search box, and places the chosen one next to the
+ * Lists every node type with a search box, and places the chosen one next to the
  * node nearest the middle of the view (or in the middle, on an empty canvas).
  */
 import { useCallback, useEffect, useRef, useState } from 'react';

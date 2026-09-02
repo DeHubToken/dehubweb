@@ -1,7 +1,6 @@
 /**
  * Creator Flow — the floating left toolbar.
  * =========================================
- * Adapted from HeliosGen's CanvasToolbar (MIT) — see LICENSE-HeliosGen.
  */
 import { Hand, MousePointer2, Plus, Redo2, Share2, Undo2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

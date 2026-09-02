@@ -1,7 +1,6 @@
 /**
  * Creator Flow — node catalogue.
  * ==============================
- * Adapted from HeliosGen's lib/nodeTypes.tsx (MIT) — see LICENSE-HeliosGen.
  * The sidebar, the add menu and the edge-drop picker all read from this one
  * list, so a node type is declared once.
  */

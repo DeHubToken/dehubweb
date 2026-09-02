@@ -1,7 +1,6 @@
 /**
  * Creator Flow — text node.
  * =========================
- * Adapted from HeliosGen's PromptNode (MIT) — see LICENSE-HeliosGen.
  * A prompt source with a JSON/YAML mode: flip it and the body is validated
  * and pretty-printed as structured data, which is how several models want
  * their prompts. `@Label` mentions of wired image nodes order the references.

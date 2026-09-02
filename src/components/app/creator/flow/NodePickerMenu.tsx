@@ -1,7 +1,6 @@
 /**
  * Creator Flow — the picker that appears when a wire is dropped on empty canvas.
  * ==============================================================================
- * Adapted from HeliosGen's NodePickerMenu (MIT) — see LICENSE-HeliosGen.
  * Offers only the node types the dragged handle can connect to, creates the
  * chosen one under the cursor and wires it up in one move.
  */

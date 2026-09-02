@@ -1,7 +1,7 @@
 /**
  * Creator Flow — client for the creator-prompt-assistant edge function.
  * =====================================================================
- * Streams tokens from the assistant persona (HeliosGen's prompt crafter).
+ * Streams tokens from the assistant persona (the prompt-crafter persona).
  * Works signed out; the function is IP-limited rather than wallet-gated.
  */
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1/creator-prompt-assistant`;
