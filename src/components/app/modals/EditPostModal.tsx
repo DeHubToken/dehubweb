@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/drawer';
 import { editPost, replaceVideoFile } from '@/lib/api/dehub';
 import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
-import { ShopSheet, type ShopBoardDraft } from '@/features/post/components/ShopSheet';
+import { ShopSheetLazy, type ShopBoardDraft } from '@/features/post/components/ShopSheetLazy';
 import { useStreamProducts, useStreamProductActions } from '@/hooks/use-stream-shopping';
 import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { cn } from '@/lib/utils';
@@ -456,7 +456,7 @@ export function EditPostModal({
     {/* A sibling of the edit drawer, not a child of it: a vaul root nested
         inside another root fights over the body scroll lock, and the inner
         sheet inherits the outer one's dismiss handling. */}
-    <ShopSheet
+    <ShopSheetLazy
       open={shopSheetOpen}
       onOpenChange={setShopSheetOpen}
       value={{ links: shopLinks, listingIds: pickedListingIds }}
