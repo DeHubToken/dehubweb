@@ -8844,26 +8844,49 @@ function dropRoot(clip){
    to the SAME model untouched drops the hand 0.43 m and animates.
    So check first. Identical bone names mean identical rig, and the honest
    thing to do with a clip that already fits is nothing at all. */
+/* NAMES DO NOT IDENTIFY A RIG — REST POSE DOES.
+   The first version of this compared bone names and called a 90% overlap the
+   same rig. That is wrong on Mixamo in the worst possible way: EVERY Mixamo
+   character names its joints identically, which is the entire reason
+   retargetByBindPose exists ("two rigs can both use mixamorig* names and still
+   not bind"). So a character borrowing the donor's idle — Fat Chad, who has no
+   anim of his own — matched 65/65 and skipped the retarget, and wore a clip
+   authored for a completely different body.
+   What actually separates them is the REST ORIENTATION of the shared joints.
+   Measured over 65 shared bones:
+       pete + his own idle      mean  4.95 deg, max  19.71
+       pete + xbot (borrowed)   mean 17.52 deg, max 175.27
+       fat-chad + xbot          mean 16.17 deg, max 174.16
+   The max is decisive — a borrowed rig always has at least one joint near
+   flipped — so 60 degrees sits clear of both populations. Names still have to
+   match too, or there is nothing to compare in the first place. */
+const SAME_RIG_DEG=60;
 function sameRig(srcRoot,dstMesh){
   /* Compare against the WHOLE MODEL, not dstMesh.skeleton. On a Mixamo rig
      partitioned across garment meshes the chosen skeleton is only a slice of
      the hierarchy — Pete's body skeleton is 52 of his 127 bones and starts at
-     Spine2, with Hips, both legs and the lower spine owned by the pants. A
-     65-bone clip authored on that exact character then matched only 52/65,
-     fell under the threshold, and was retargeted onto the slice: the torso
-     stayed in bind pose and he stood in a T-pose wearing an animated shirt.
-     The mixer binds tracks by NAME against the whole model, so that is the set
+     Spine2, with Hips, both legs and the lower spine owned by the pants. The
+     mixer binds tracks by NAME against the whole model, so that is the set
      that decides whether the clip already fits. */
   let root=dstMesh;
   while(root.parent&&!root.parent.isScene)root=root.parent;
-  const dst=new Set();
-  root.traverse(o=>{if(o.isBone)dst.add(o.name);});
-  dstMesh.skeleton.bones.forEach(b=>dst.add(b.name));
-  let n=0,hit=0;
-  srcRoot.traverse(o=>{if(o.isBone){n++;if(dst.has(o.name))hit++;}});
-  /* Not 100%: an animation rig can carry a helper joint the character does not
-     skin. Nine in ten naming the same joints is one rig, not two. */
-  return n>0&&hit/n>=0.9;
+  const dst={};
+  root.traverse(o=>{if(o.isBone&&!dst[o.name])dst[o.name]=o;});
+  dstMesh.skeleton.bones.forEach(b=>{if(!dst[b.name])dst[b.name]=b;});
+  let n=0,hit=0,worst=0;
+  srcRoot.traverse(o=>{
+    if(!o.isBone)return;
+    n++;
+    const d=dst[o.name];
+    if(!d)return;
+    hit++;
+    /* angle between the two rest rotations; abs(dot) so q and -q are the same */
+    const deg=2*Math.acos(Math.min(1,Math.abs(o.quaternion.dot(d.quaternion))))*180/Math.PI;
+    if(deg>worst)worst=deg;
+  });
+  /* Not 100% on names: an animation rig can carry a helper joint the character
+     does not skin. */
+  return n>0&&hit/n>=0.9&&worst<SAME_RIG_DEG;
 }
 async function borrowClip(file,re,dstMesh){
   const rec=await loadAnimSource(file);
@@ -9428,7 +9451,15 @@ const rosterReady=(async()=>{
 const PREVIEW_TEX=128;                    /* colour maps are resampled to this */
 const PV_FILL_H=0.86,PV_FILL_W=0.82;      /* share of the tile a character fills */
 const PV_PITCH=0.24;                      /* camera lift, in half-heights */
-const PREVIEW_KEY=id=>id+'@1';            /* bump the number to invalidate every bake */
+/* Bumped to @2: every bake written before the roster's skeletons were fixed is
+   now unreachable. Those bakes are not merely old, they are WRONG — a preview
+   baked while unifySkeletons was choosing the wrong skeleton carries a clip of
+   13 tracks for a 127-bone character, which poses the trousers and leaves the
+   arms in bind pose, so the picker showed a T-pose that no amount of fixing
+   the character could shift. A bake is cached for good on the visitor's
+   machine, so the code that made it being correct now is not enough — the key
+   has to move or they keep reading the old one forever. */
+const PREVIEW_KEY=id=>id+'@2';            /* bump the number to invalidate every bake */
 
 const pv={renderer:null,scene:null,camera:null,cards:[],queue:[],
           busy:false,on:false,raf:0,last:0,w:0,h:0,
