@@ -8,6 +8,7 @@ import { NAV_ITEMS } from '@/constants/app.constants';
 import { MobileHeader } from './navigation/MobileHeader';
 import { DesktopSidebar } from './navigation/DesktopSidebar';
 import { SidebarNavItem } from './navigation/SidebarNavItem';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { filterNavItems, exploreSearchHref } from './navigation/nav-search';
 import { useSearchHistory } from '@/hooks/use-search-history';
 // Lazy: PostModal drags in usePostForm → minting/wallet contract code. A
@@ -36,6 +37,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, disconnect } = useAuth();
+  const isDesktop = useIsDesktopViewport();
 
   const { t } = useTranslation();
   // Menu search. Unlike the desktop rail this field is always shown: the sheet
@@ -194,8 +196,14 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         {mobileNavContent}
       </MobileHeader>
 
-      {/* Desktop Sidebar */}
-      <DesktopSidebar onPostClick={() => setIsPostModalOpen(true)} />
+      {/* Desktop Sidebar. Its root is `hidden lg:flex`, so below lg it was a
+          fully rendered, fully hidden tree: on a phone 563 of the home page's
+          3,672 DOM nodes sat inside display:none desktop chrome, all built and
+          diffed by React on every boot. Mounting it only on a desktop viewport
+          skips that work; the hook is live, so a rotation or resize past lg
+          mounts it at that moment, exactly where the CSS would have revealed
+          it. Same gate the right rail uses. */}
+      {isDesktop && <DesktopSidebar onPostClick={() => setIsPostModalOpen(true)} />}
 
       {/* Post Modal */}
       {postModalMounted && (
