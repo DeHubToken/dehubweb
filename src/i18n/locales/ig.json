@@ -1990,5 +1990,12 @@
     "foldersInFolder_other": "Na nchekwa {{count}}",
     "foldersNoItems": "Enweghị ihe ọ bụla na nchekwa a ugbu a",
     "foldersNoItemsHint": "Meghee nsonaazụ ma họrọ \"Tinye na nchekwa\" iji debanye aha ya ebe a."
+  },
+  "dub": {
+    "audio": "Odu",
+    "original": "Mbụ ọdịyo",
+    "dubbed": "Egwú a dọgburu adọ",
+    "preparing": "Ịkwadebe ụda a na-akpọ dubbed...",
+    "unavailable": "E nweghị ụda dọbbed maka ihe onyonyo a."
   }
 }

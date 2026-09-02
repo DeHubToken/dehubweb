@@ -4268,5 +4268,12 @@
     "foldersInFolder_other": "Ve složkách {{count}}",
     "foldersNoItems": "V této složce zatím nic není",
     "foldersNoItemsHint": "Otevřete výsledek a zvolte \"Přidat do složky\" pro jeho uložení zde."
+  },
+  "dub": {
+    "audio": "Zvuk",
+    "original": "Originální zvuk",
+    "dubbed": "Dabovaný zvuk",
+    "preparing": "Připravuje se dabovaný zvuk...",
+    "unavailable": "Pro toto video není k dispozici dabovaný zvuk."
   }
 }

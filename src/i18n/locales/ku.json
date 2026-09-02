@@ -1990,5 +1990,12 @@
     "foldersInFolder_other": "لە فۆڵدەرەکانى {{count}}",
     "foldersNoItems": "هێشتا هیچ شتێک لەم فۆڵدەرەدا نییە",
     "foldersNoItemsHint": "ئەنجامێک بکەرەوە و \"زیادکردن بۆ فۆڵدەر\" هەڵبژێرە بۆ ئەوەی لێرە دایبنێیت."
+  },
+  "dub": {
+    "audio": "Deng",
+    "original": "Dengê orîjînal",
+    "dubbed": "Dengê dublajkirî",
+    "preparing": "Dengê dublajkirî tê amadekirin…",
+    "unavailable": "Dengê dublajkirî ji bo vê vîdyoyê peyda nabe."
   }
 }

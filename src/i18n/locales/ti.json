@@ -1991,5 +1991,12 @@
     "foldersInFolder_other": "ኣብ ፎልደርታት {{count}}",
     "foldersNoItems": "ኣብዚ ፎልደር ገለ የለን።",
     "foldersNoItemsHint": "ውጽኢት ክፈትሕን \"ናብ ፎልደር ኣወፍር\" ክመርጽን ብምግባር ኣብዚ ጽረፎ።"
+  },
+  "dub": {
+    "audio": "ድምፂ",
+    "original": "ኦሪጅናል ኦዲዮ",
+    "dubbed": "ብድምጺ እተጻሕፈ",
+    "preparing": "ንድምጺ ምድላው...",
+    "unavailable": "እዚ ቪድዮ እዚ ገና ኣይተራእየን ።"
   }
 }

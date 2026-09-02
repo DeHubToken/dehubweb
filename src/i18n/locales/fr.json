@@ -4326,5 +4326,12 @@
     "foldersInFolder_other": "Dans {{count}} dossiers",
     "foldersNoItems": "Rien dans ce dossier pour l'instant",
     "foldersNoItemsHint": "Ouvrez un résultat et choisissez « Ajouter au dossier » pour le classer ici."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Audio original",
+    "dubbed": "Audio doublé",
+    "preparing": "Préparation du doublage audio…",
+    "unavailable": "Le doublage audio n'est pas disponible pour cette vidéo."
   }
 }

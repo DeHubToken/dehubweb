@@ -1978,5 +1978,12 @@
     "foldersInFolder_other": "في {{count}} مجلدات",
     "foldersNoItems": "ما في حاجة بالمجلد هيدا لسع",
     "foldersNoItemsHint": "افتح النتيجة واختر \"إضافة إلى مجلد\" لحفظها هون."
+  },
+  "dub": {
+    "audio": "صوت",
+    "original": "صوت أصلي",
+    "dubbed": "صوت مدبلج",
+    "preparing": "عم نجهز الصوت المدبلج...",
+    "unavailable": "ما في صوت مدبلج لهالفيديو."
   }
 }

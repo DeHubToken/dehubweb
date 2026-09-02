@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "في {{count}} مجاليد",
     "foldersNoItems": "ما في شي في هالمجلد بعد",
     "foldersNoItemsHint": "افتح نتيجة واختار \"اضف للمجلد\" عشان تحطها هنا."
+  },
+  "dub": {
+    "audio": "صوت",
+    "original": "صوت أصلي",
+    "dubbed": "صوت مدبلج",
+    "preparing": "جاي نجهز الصوت المدبلج...",
+    "unavailable": "ماكو صوت مدبلج لهذا الفيديو."
   }
 }

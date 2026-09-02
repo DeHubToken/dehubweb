@@ -4127,5 +4127,12 @@
     "foldersInFolder_other": "Trong {{count}} thư mục",
     "foldersNoItems": "Chưa có nội dung nào trong thư mục này",
     "foldersNoItemsHint": "Mở kết quả và chọn \"Thêm vào thư mục\" để gửi kết quả tại đây."
+  },
+  "dub": {
+    "audio": "Âm thanh",
+    "original": "Âm thanh gốc",
+    "dubbed": "Âm thanh được lồng tiếng",
+    "preparing": "Đang chuẩn bị âm thanh lồng tiếng...",
+    "unavailable": "Âm thanh được lồng tiếng không khả dụng cho video này."
   }
 }

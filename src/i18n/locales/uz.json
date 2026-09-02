@@ -2072,5 +2072,12 @@
     "foldersInFolder_other": "{{count}} papkalarida",
     "foldersNoItems": "Bu papkada hali hech narsa yo&#39;q",
     "foldersNoItemsHint": "Natijani oching va uni shu yerga saqlash uchun &quot;Papkaga qo&#39;shish&quot; ni tanlang."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Asl audio",
+    "dubbed": "Dublyaj qilingan audio",
+    "preparing": "Dublyaj qilingan audio tayyorlanmoqda…",
+    "unavailable": "Bu video uchun dublyaj qilingan audio mavjud emas."
   }
 }

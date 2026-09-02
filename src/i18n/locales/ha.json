@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "A cikin babban fayil ɗin {{count}}",
     "foldersNoItems": "Babu komai a cikin wannan babban fayil tukuna",
     "foldersNoItemsHint": "Bude sakamako kuma zaɓi \"Ƙara zuwa babban fayil\" don adana shi anan."
+  },
+  "dub": {
+    "audio": "Sauti",
+    "original": "Sauti na asali",
+    "dubbed": "Sauti mai ban sha'awa",
+    "preparing": "Shirya sautin da aka yi wa lakabi...",
+    "unavailable": "Dubbed audio ba samuwa ga wannan video."
   }
 }

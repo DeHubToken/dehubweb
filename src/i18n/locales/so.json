@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "Galka {{count}}",
     "foldersNoItems": "Waxba kuma jiraan galkan weli",
     "foldersNoItemsHint": "Fur natiijo oo dooro \"Ku dar galka\" si aad halkan ugu kaydiso."
+  },
+  "dub": {
+    "audio": "Cod",
+    "original": "Maqalka asalka ah",
+    "dubbed": "Maqalka la dubay",
+    "preparing": "Diyaarinta maqalka loo yaqaan...",
+    "unavailable": "Codadka codka ah ee la duubay lama heli karo fiidiyowgaan."
   }
 }
