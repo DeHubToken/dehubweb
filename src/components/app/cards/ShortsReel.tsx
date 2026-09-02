@@ -113,6 +113,10 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   <AutoplayVideo
                     src={short.videoUrl}
                     poster={short.thumbnail}
+                    /* This reel sits in the first viewport of the home page;
+                       see the prop for why it holds the poster until the
+                       visitor's first scroll. */
+                    deferUntilInteraction
                     className="w-full h-full group-hover:scale-105 transition-transform duration-300"
                     threshold={0.3}
                     playbackGroup="shorts-reel"
