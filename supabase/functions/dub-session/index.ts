@@ -22,7 +22,7 @@
 // bill is closed only against a transfer confirmed on chain — `settle` believes
 // the chain, not the caller.
 import { handleCorsPreflight, jsonResponse, serviceClient, guardPaidEndpoint } from '../_shared/auth.ts';
-import { verifyDhbPayment, DHB_TREASURY } from '../_shared/dhb-transfer.ts';
+import { claimDhbPayment, DHB_TREASURY } from '../_shared/dhb-transfer.ts';
 import { signEntitlement } from '../_shared/dub-entitlement.ts';
 import { quotePriceDhb } from '../_shared/ai-pricing.ts';
 
@@ -251,7 +251,7 @@ Deno.serve(async (req) => {
 
       // The chain is the authority. A caller claiming to have paid proves it
       // with a hash, and this refuses everything it cannot confirm.
-      const payment = await verifyDhbPayment(txHash, wallet, owed);
+      const payment = await claimDhbPayment(txHash, wallet, owed, 'dub', admin);
       if (!payment.ok) {
         return jsonResponse({ error: payment.reason, code: 'PAYMENT_UNVERIFIED', owedDhb: owed, minutes }, 402);
       }
