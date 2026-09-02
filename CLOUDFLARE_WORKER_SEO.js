@@ -3792,6 +3792,11 @@ async function handleRequest(request, env) {
         /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
         (m, a, b) => `${a}${escFnAttr(HOME_DESCRIPTION)}${b}`,
       );
+      // The fn's WebSite node carries the old sentence too.
+      html = html.replace(
+        /("@type":"WebSite"[^}]*?"description":")[^"]*(")/,
+        (m, a, b) => `${a}${escJsonText(HOME_DESCRIPTION)}${b}`,
+      );
       // Search Console ownership. The tag lives in index.html, which only
       // browsers ever receive — every bot UA gets this rendered HTML instead,
       // and it had no tag at all. Verification survives today purely because

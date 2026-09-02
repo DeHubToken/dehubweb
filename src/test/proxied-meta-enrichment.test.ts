@@ -243,5 +243,6 @@ describe('wiring', () => {
     const descAlign = WORKER.indexOf('escFnAttr(HOME_DESCRIPTION)');
     expect(titleAlign).toBeGreaterThan(-1);
     expect(descAlign).toBeGreaterThan(titleAlign);
+    expect(WORKER.indexOf('escJsonText(HOME_DESCRIPTION)')).toBeGreaterThan(descAlign);
   });
 });
