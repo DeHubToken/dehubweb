@@ -376,9 +376,15 @@
          that during the load window costs bandwidth for glyphs that are, by
          definition, never the largest contentful paint. `display=swap` already
          means emoji paint in the platform font first and upgrade on arrival,
-         so deferring changes only WHEN the upgrade lands, not whether. -->
+         so deferring changes only WHEN the upgrade lands, not whether.
+         Windows only: it is the one platform whose emoji font has the gaps
+         this fills. Android, iOS and macOS never used the download, and Linux
+         (which is what Lighthouse and most headless audits run as) pulled the
+         whole set — 694 KB on the 2026-09-02 run — to draw a handful of
+         glyphs the monochrome fallback handles fine. -->
     <script>
       (function () {
+        if (!/Windows/.test(navigator.userAgent)) return;
         var href = 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap';
         function loadEmojiFont() {
           var l = document.createElement('link');

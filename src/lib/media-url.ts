@@ -118,6 +118,38 @@ export function cdnImage(
   return `${IMAGE_TRANSFORM_ORIGIN}/cdn-cgi/image/${params.join(',')}/${url}`;
 }
 
+/**
+ * The same image at several widths, as a `srcset` value — so the browser picks
+ * one that fits the slot it actually renders into, instead of the single width
+ * the caller guessed. Accepts either a raw CDN URL or one `cdnImage()` has
+ * already wrapped (the quality/fit it carried are kept), and returns undefined
+ * for anything it cannot resize, so the caller just omits the attribute.
+ *
+ * Why: the feed's image slot is 1080 device px wide on a desktop and ~650 on a
+ * phone, and every phone was fetching the 1080 — 300 KB of the "improve image
+ * delivery" savings on the 2026-09-02 Lighthouse run.
+ */
+export function cdnImageSrcSet(url: string | undefined, widths: number[]): string | undefined {
+  if (!url) return undefined;
+  const prefix = `${IMAGE_TRANSFORM_ORIGIN}/cdn-cgi/image/`;
+  let source = url;
+  let quality: number | undefined;
+  let fit: CdnImageOptions['fit'];
+  if (url.startsWith(prefix)) {
+    const rest = url.slice(prefix.length);
+    const slash = rest.indexOf('/');
+    if (slash === -1) return undefined;
+    source = rest.slice(slash + 1);
+    for (const param of rest.slice(0, slash).split(',')) {
+      const [key, value] = param.split('=');
+      if (key === 'quality' && value) quality = Number(value);
+      if (key === 'fit' && value) fit = value as CdnImageOptions['fit'];
+    }
+  }
+  if (!source.startsWith(DEHUB_CDN_BASE) || NON_TRANSFORMABLE.test(source)) return undefined;
+  return widths.map((width) => `${cdnImage(source, { width, quality, fit })} ${width}w`).join(', ');
+}
+
 // ── Sizing by what the element actually renders at ──────────────────────
 //
 // The first pass at this shipped one fixed width per media kind, each sized for

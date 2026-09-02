@@ -200,7 +200,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
         muted
         playsInline
         {...{"webkit-playsinline": ""}}
-        preload={shouldLoad ? (groupAllowed ? 'auto' : 'metadata') : 'none'}
+        preload={shouldLoad ? 'metadata' : 'none'}
         onLoadedData={() => setHasLoaded(true)}
         onError={() => setHasError(true)}
       />

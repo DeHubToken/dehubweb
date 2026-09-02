@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { useBootSettled } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
@@ -811,8 +812,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // only once the card drifts beyond ~2500px — the gap avoids preload thrash
   // on scroll-back while stopping a long session from accumulating hundreds of
   // media elements holding decoded buffers (the long-scroll tab-kill on 4GB
-  // phones). aboveFold (LCP) videos are warm from the start and never release.
+  // phones). aboveFold (LCP) videos never release — but they do not warm until
+  // the page has loaded and idled once: a Lighthouse run of the signed-out home
+  // on 2026-09-02 showed the two above-fold clips (14.7 MB + 12.3 MB) downloading
+  // in full during the load window, ahead of the hero the LCP is measured on.
+  // The poster is a separate eager <img>, so nothing the visitor sees waits on
+  // this; only the bytes behind an autoplay that has not started yet do.
   const [nearViewport, setNearViewport] = useState(aboveFold);
+  const bootSettled = useBootSettled();
   useEffect(() => {
     if (aboveFold) return;
     const el = containerRef.current;
@@ -841,7 +848,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Releasing the src attribute alone doesn't free the decoder/buffer — an
   // explicit load() after React removes it does.
-  const mediaAttached = aboveFold || nearViewport;
+  const mediaAttached = aboveFold ? bootSettled : nearViewport;
   useEffect(() => {
     if (mediaAttached) return;
     const vid = videoRef.current;
@@ -851,13 +858,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [mediaAttached]);
 
   // In Lite mode nothing preloads (tap-to-play still forces a load via play()).
+  // Never `auto`: with a muted autoplay clip Chrome reads that as "fetch the
+  // whole file", and play() streams whatever it needs regardless — metadata is
+  // enough to start on the first frame and costs one small range request.
   const videoPreload: 'none' | 'metadata' | 'auto' = liteMode
     ? 'none'
-    : aboveFold
-      ? 'auto'
-      : nearViewport
-        ? 'metadata'
-        : 'none';
+    : mediaAttached
+      ? 'metadata'
+      : 'none';
   const hasErrorRef = useRef(hasError);
   hasErrorRef.current = hasError;
   // Transcode still running or dead — videoUrl is the optimistic CDN guess
