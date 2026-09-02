@@ -6,12 +6,12 @@
 // guarded it only compared the author address to the caller's own header.
 //
 // Both halves move here. The wallet comes from a verified DeHub token, the
-// transfer is confirmed against the chain by `verifyDhbPayment`, and the hash
+// transfer is confirmed against the chain by `claimDhbPayment`, and the hash
 // is stored on the row: `governance_proposals.fee_tx_hash` is unique, so one
 // transfer buys exactly one proposal even inside the claim window.
 
 import { handleCorsPreflight, jsonResponse, guardPaidEndpoint, serviceClient } from "../_shared/auth.ts";
-import { verifyDhbPayment } from "../_shared/dhb-transfer.ts";
+import { claimDhbPayment } from "../_shared/dhb-transfer.ts";
 
 const PROPOSAL_FEE_DHB = 10000;
 const VOTING_WINDOW_DAYS = 7;
@@ -42,10 +42,10 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "A description of up to 5000 characters is required." }, 400);
   }
 
-  const payment = await verifyDhbPayment(txHash, wallet, PROPOSAL_FEE_DHB);
-  if (!payment.ok) return jsonResponse({ error: payment.reason }, 402);
-
   const supabase = serviceClient();
+
+  const payment = await claimDhbPayment(txHash, wallet, PROPOSAL_FEE_DHB, "governance", supabase);
+  if (!payment.ok) return jsonResponse({ error: payment.reason }, 402);
 
   // The API holds the display fields; taking them from the request would let a
   // proposal be posted under someone else's name and avatar.
