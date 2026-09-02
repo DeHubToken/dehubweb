@@ -47,6 +47,7 @@ import { toastTxError } from '@/lib/tx-error-toast';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
+import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
 
 interface NewConversationModalProps {
   open: boolean;
@@ -416,7 +417,8 @@ export function NewConversationModal({
           recipientUser: user,
         });
         if (conversation.id) {
-          emitSendMessage({ dmId: conversation.id, content: firstMessage, type: 'msg' });
+          const wire = await prepareOutgoing(userAddress, firstMessage);
+          emitSendMessage({ dmId: conversation.id, content: wire.content, type: 'msg' });
         }
         onConversationCreated(conversation);
         onOpenChange(false);
@@ -432,9 +434,10 @@ export function NewConversationModal({
 
       // Fee-paid first message goes through the socket immediately (fee tx already settled)
       if (firstMessage && conversation.id && feeTxHash) {
+        const wire = await prepareOutgoing(userAddress, firstMessage);
         emitSendMessage({
           dmId: conversation.id,
-          content: firstMessage,
+          content: wire.content,
           type: 'msg',
           txHash: feeTxHash,
         });

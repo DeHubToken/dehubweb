@@ -961,6 +961,8 @@
     "loginDescription": "Profilinizi görüntülemek ve yönetmek için giriş yapın."
   },
   "messages": {
+    "encrypted": "Uçtan uca şifreli",
+    "cannotDecrypt": "Şifreli mesaj — bu cihazda açılamıyor",
     "title": "Mesajlar",
     "searchConversations": "Sohbetlerde ara...",
     "failedToLoad": "Sohbetler yüklenemedi",

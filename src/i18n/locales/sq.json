@@ -943,6 +943,8 @@
     "loginRequired": "Kërkohet hyrja"
   },
   "messages": {
+    "encrypted": "I enkriptuar nga skaji në skaj",
+    "cannotDecrypt": "Mesazh i enkriptuar — nuk mund të hapet në këtë pajisje",
     "title": "Mesazhet",
     "searchConversations": "Kërko bisedat...",
     "failedToLoad": "Dështoi ngarkimi i bisedave",

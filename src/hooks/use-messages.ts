@@ -50,6 +50,9 @@ import {
   onReadReceipt,
   type SendMessagePayload,
 } from '@/lib/api/dehub/dm-socket';
+import type { QueryClient } from '@tanstack/react-query';
+import { isEncryptedContent } from '@/lib/dm-e2ee/crypto';
+import { decryptFromPeer, decryptMessageInPlace, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
 
 /**
  * Blob URL for an optimistic message with auto-revoke. The optimistic entry is
@@ -156,6 +159,18 @@ export function useConversations(searchQuery: string = '') {
         console.error('[useConversations] Error:', error);
         throw error;
       }
+      // The list preview is the newest line of each thread; open the encrypted
+      // ones so the row shows text rather than an envelope.
+      const me = (walletAddress || '').toLowerCase();
+      items = await Promise.all(items.map(async (conv) => {
+        const lm = conv.lastMessage;
+        if (!lm || !isEncryptedContent(lm.content)) return conv;
+        const peer =
+          conv.otherUser?.address ||
+          conv.participants?.find((p) => p.address && p.address.toLowerCase() !== me)?.address;
+        const plain = peer ? await decryptFromPeer(peer, lm.content) : null;
+        return { ...conv, lastMessage: { ...lm, content: plain ?? '', encrypted: true, undecryptable: plain === null } };
+      }));
       // Apply localStorage read overrides so unread badges don't reappear after refresh
       const readOverrides = getReadConversations();
       return items.map(conv => {
@@ -217,6 +232,66 @@ export function useConversations(searchQuery: string = '') {
   };
 }
 
+// ─── Encryption helpers ───────────────────────────────────────────────────────
+
+/**
+ * The address a conversation's messages are encrypted with. A DM has exactly
+ * two participants and the session key is symmetric, so the peer is whoever
+ * is not me — for messages they sent and for messages I sent alike. Sources:
+ * a virtual `new_0x…`/`0x…` id, the conversations cache, then any sender in
+ * the thread cache who is not me.
+ */
+export function peerAddressForConversation(
+  queryClient: QueryClient,
+  conversationId: string | null | undefined,
+  myAddress: string | null | undefined,
+): string | null {
+  if (!conversationId) return null;
+  if (conversationId.startsWith('new_')) return conversationId.slice(4).toLowerCase();
+  if (/^0x[0-9a-fA-F]{40}$/.test(conversationId)) return conversationId.toLowerCase();
+  const me = (myAddress || '').toLowerCase();
+
+  for (const [, data] of queryClient.getQueriesData<DeHubConversation[]>({ queryKey: messagesKeys.conversations() })) {
+    const conv = data?.find((c) => (c.id || (c as any)._id) === conversationId);
+    if (!conv) continue;
+    const addr =
+      conv.otherUser?.address ||
+      conv.participants?.find((p) => p.address && p.address.toLowerCase() !== me)?.address;
+    if (addr) return addr.toLowerCase();
+  }
+
+  const thread = queryClient.getQueryData<any>(messagesKeys.messages(conversationId));
+  for (const page of thread?.pages ?? []) {
+    for (const m of page?.items ?? []) {
+      const a = m?.sender?.address?.toLowerCase();
+      if (a && a !== me) return a;
+    }
+  }
+  return null;
+}
+
+/**
+ * Decrypt every encrypted line in a batch before it reaches the cache. The
+ * cache must never hold ciphertext: the optimistic reconcile compares text,
+ * search filters on it, and every bubble renders it.
+ */
+export async function decryptThread(
+  queryClient: QueryClient,
+  conversationId: string,
+  myAddress: string | null | undefined,
+  items: DmMessage[],
+): Promise<DmMessage[]> {
+  const needs = items.some((m) => isEncryptedContent(m?.content) || isEncryptedContent(m?.replyTo?.content));
+  if (!needs) return items;
+  const me = (myAddress || '').toLowerCase();
+  let peer = peerAddressForConversation(queryClient, conversationId, me);
+  if (!peer) {
+    const other = items.find((m) => m.sender?.address && m.sender.address.toLowerCase() !== me);
+    peer = other?.sender?.address?.toLowerCase() || null;
+  }
+  return Promise.all(items.map((m) => decryptMessageInPlace(m, peer)));
+}
+
 // ─── Messages ─────────────────────────────────────────────────────────────────
 
 export function useMessages(conversationId: string | null) {
@@ -243,6 +318,7 @@ export function useMessages(conversationId: string | null) {
     queryFn: async ({ pageParam = 0 }) => {
       if (!conversationId) return { items: [], totalCount: 0, hasMore: false };
       const result = await getMessages(conversationId, pageParam, 30);
+      result.items = await decryptThread(queryClient, conversationId, walletAddressRef.current, result.items);
       // Preserve isRead:true from local cache — server may lag behind readReceipt socket events.
       // Same pattern as mobile dm.store: "Preserve local isRead:true — server may not persist read status"
       if (pageParam === 0) {
@@ -283,11 +359,25 @@ export function useMessages(conversationId: string | null) {
     .flatMap(page => page.items)
     .reverse() || [];
 
+  // Once the encryption identity comes online (first signature on this
+  // device), lines fetched before it are sitting in the cache as
+  // "undecryptable" — refetch so they open.
+  useEffect(() => {
+    if (!conversationId) return;
+    return onIdentityChange(() => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    });
+  }, [conversationId, queryClient]);
+
   // Real-time: new messages from socket
   useEffect(() => {
     if (!isAuthenticated || !conversationId) return;
 
-    const unsubSend = onDmSendMessage((msg) => {
+    const unsubSend = onDmSendMessage((incoming) => {
+      // Decrypt before anything looks at `content`: the optimistic reconcile
+      // below compares text, and the cache must never hold ciphertext.
+      void decryptThread(queryClient, conversationId, walletAddressRef.current, [incoming]).then(([msg]) => {
       // The server sometimes sends `conversation` as a populated object (after HTTP upload)
       // rather than a plain ID string (like client-emitted text messages).
       // Normalise to a string so the match check works in both cases.
@@ -441,10 +531,11 @@ export function useMessages(conversationId: string | null) {
           return { ...old, pages: newPages };
         }
       );
+      });
     });
 
     const unsubEdit = onEditMessage((data) => {
-      queryClient.setQueryData(
+      const applyEdit = (content: string, undecryptable = false) => queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
           if (!old?.pages) return old;
@@ -452,12 +543,26 @@ export function useMessages(conversationId: string | null) {
             ...page,
             items: page.items.map((m: DmMessage) =>
               m._id === data._id
-                ? { ...m, content: data.content, isEdited: true, editedAt: data.editedAt }
+                ? {
+                    ...m,
+                    content,
+                    isEdited: true,
+                    editedAt: data.editedAt,
+                    ...(isEncryptedContent(data.content) ? { encrypted: true, undecryptable } : {}),
+                  }
                 : m
             ),
           }));
           return { ...old, pages };
         }
+      );
+      if (!isEncryptedContent(data.content)) {
+        applyEdit(data.content);
+        return;
+      }
+      const peer = peerAddressForConversation(queryClient, conversationId, walletAddressRef.current);
+      void (peer ? decryptFromPeer(peer, data.content) : Promise.resolve(null)).then((plain) =>
+        applyEdit(plain ?? '', plain === null),
       );
     });
 
@@ -483,8 +588,9 @@ export function useMessages(conversationId: string | null) {
       }
     });
 
-    const unsubRevalidate = onReValidateMessage(({ dmId, message }) => {
+    const unsubRevalidate = onReValidateMessage(({ dmId, message: rawMessage }) => {
       if (dmId !== conversationId) return;
+      void decryptThread(queryClient, conversationId, walletAddressRef.current, [rawMessage]).then(([message]) =>
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
@@ -497,7 +603,7 @@ export function useMessages(conversationId: string | null) {
           }));
           return { ...old, pages };
         }
-      );
+      ));
     });
 
     // When the other person reads, mark all our sent messages as read
@@ -632,6 +738,7 @@ export function useSendMessage(conversationId: string) {
       voiceDuration,
       replyTo,
       txHash,
+      forwardedFrom,
     }: {
       content: string;
       msgType?: DmMsgType;
@@ -640,6 +747,7 @@ export function useSendMessage(conversationId: string) {
       voiceDuration?: number;
       replyTo?: string;
       txHash?: string;
+      forwardedFrom?: { messageId: string };
     }): Promise<DmMessage> => {
       // Virtual conversations need createAndStart first to get real ID (applies to all message types)
       const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
@@ -661,17 +769,26 @@ export function useSendMessage(conversationId: string) {
         }
       }
 
+      // Text (and captions) travel encrypted when both sides have keys. The
+      // peer is resolved from the conversation, not the message, because the
+      // session key is the same in both directions.
+      const peerAddress = peerAddressForConversation(queryClient, conversationId, walletAddress)
+        || peerAddressForConversation(queryClient, resolvedId, walletAddress);
+      const wire = await prepareOutgoing(peerAddress, content);
+
       // Media/voice: upload file then return — resolvedId is now guaranteed real
       if (msgType === 'media' || msgType === 'voice') {
         if (!mediaFile) throw new Error('No file provided for media/voice message');
         const senderId = user?._id || walletAddress || '';
-        return uploadAndSendMedia(mediaFile, resolvedId, senderId, {
-          content,
+        const sent = await uploadAndSendMedia(mediaFile, resolvedId, senderId, {
+          content: wire.content,
           msgType,
           voiceDuration,
           replyTo,
           txHash,
         });
+        // The upload response echoes what we sent; keep the plaintext caption.
+        return wire.encrypted ? { ...sent, content, encrypted: true } : sent;
       }
 
       /*
@@ -688,12 +805,13 @@ export function useSendMessage(conversationId: string) {
       // back, and that echo is what reconciles the optimistic entry below.
       const payload: SendMessagePayload = {
         dmId: resolvedId,
-        content,
+        content: wire.content,
         type: msgType,
         gif: gifUrl,
         replyTo,
         txHash,
         voiceDuration,
+        forwardedFrom,
       };
       emitSendMessage(payload);
 
@@ -709,13 +827,14 @@ export function useSendMessage(conversationId: string) {
           avatarImageUrl: user?.avatarImageUrl || '',
         },
         content,
+        encrypted: wire.encrypted,
         msgType,
         mediaUrls: gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
         voiceDuration: null,
         isRead: false,
         isEdited: false,
         editedAt: null,
-        isForwarded: false,
+        isForwarded: !!forwardedFrom,
         replyTo: null,
         paymentStatus: null,
         paymentTxHash: null,

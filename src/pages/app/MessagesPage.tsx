@@ -25,6 +25,7 @@ import { conversationIdentity } from '@/lib/conversation-identity';
 import { useDraftText } from '@/hooks/use-draft';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
+import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
@@ -61,13 +62,16 @@ function ConversationItem({
   onClick: () => void;
   isSelected: boolean;
 }) {
+  const { t } = useTranslation();
   const otherUser = conversation.otherUser || conversation.participants?.[0];
   const avatarUrl = buildAvatarUrl(otherUser?.address || '', otherUser?.avatarImageUrl || otherUser?.avatarUrl);
   const displayName = otherUser?.displayName || otherUser?.display_name || '';
   const username = otherUser?.username || '';
   const fallbackName = displayName || username ||
     (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
-  const lastMessagePreview = conversation.lastMessage?.content || 'No messages yet';
+  const lastMessagePreview = conversation.lastMessage?.undecryptable
+    ? `🔒 ${t('messages.cannotDecrypt')}`
+    : conversation.lastMessage?.content || 'No messages yet';
   const lastMessageTime = conversation.lastMessage?.createdAt 
     ? formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: false })
     : '';
@@ -436,7 +440,9 @@ export default function MessagesPage() {
     const isVirtual = dmId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(dmId);
     if (isVirtual) return; // wait for real dmId
     pendingAutoSendRef.current = null;
-    emitSendMessage({ dmId, content: pending.body, type: 'msg' });
+    void prepareOutgoing(selectedConversation.otherUser?.address, pending.body).then((wire) => {
+      emitSendMessage({ dmId, content: wire.content, type: 'msg' });
+    });
   }, [selectedConversation]);
 
   // Drop a queued draft into the composer once the right chat is on screen.
