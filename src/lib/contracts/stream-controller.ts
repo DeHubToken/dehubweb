@@ -82,7 +82,11 @@ export interface MintWithBountyParams {
  */
 export async function getDHBBalance(address: string, chainId: ChainId = BASE_CHAIN_ID): Promise<bigint> {
   const chainConfig = getChainConfig(chainId);
-  return getERC20Balance(chainConfig.dhbToken, address);
+  // The chain has to go with the address. Without it the read defaults to Base
+  // while carrying the requested chain's token address, so asking for a BNB
+  // balance called a contract that does not exist on Base: empty data back, a
+  // decode error, and every caller read that as a zero balance.
+  return getERC20Balance(chainConfig.dhbToken, address, chainId);
 }
 
 /**
@@ -90,7 +94,7 @@ export async function getDHBBalance(address: string, chainId: ChainId = BASE_CHA
  */
 export async function getDHBAllowance(owner: string, chainId: ChainId = BASE_CHAIN_ID): Promise<bigint> {
   const chainConfig = getChainConfig(chainId);
-  return getERC20Allowance(chainConfig.dhbToken, owner, chainConfig.streamController);
+  return getERC20Allowance(chainConfig.dhbToken, owner, chainConfig.streamController, chainId);
 }
 
 /**
@@ -199,8 +203,8 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
   const [balance, allowance] = await Promise.all([
     params.skipBalanceCheck
       ? Promise.resolve(amountWei)
-      : getERC20Balance(tokenAddress, signerAddress),
-    getERC20Allowance(tokenAddress, signerAddress, chainConfig.streamController),
+      : getERC20Balance(tokenAddress, signerAddress, chainId),
+    getERC20Allowance(tokenAddress, signerAddress, chainConfig.streamController, chainId),
   ]);
   const tokenLabel = params.tokenAddress ? 'token' : 'DHB';
 
