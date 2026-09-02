@@ -18,7 +18,7 @@
 
 import { guardPaidEndpoint, jsonResponse, serviceClient, type RateLimit } from './auth.ts';
 import { quotePriceDhb, type JobKind, type QuoteOptions } from './ai-pricing.ts';
-import { verifyDhbPayment } from './dhb-transfer.ts';
+import { claimDhbPayment } from './dhb-transfer.ts';
 
 export interface ChargeRequest extends QuoteOptions {
   kind: JobKind;
@@ -125,7 +125,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   } else {
     // First job on this hash. The chain is the authority — a caller claiming
     // to have paid proves it, and everything unconfirmable is refused.
-    const payment = await verifyDhbPayment(txHash, guard.wallet, priceDhb);
+    const payment = await claimDhbPayment(txHash, guard.wallet, priceDhb, 'ai', supabase);
     if (!payment.ok) {
       return {
         ok: false,

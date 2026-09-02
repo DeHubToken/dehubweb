@@ -117,3 +117,74 @@ export async function verifyDhbPayment(
 
   return { ok: true, chain, dhb, hash: match.hash };
 }
+
+/**
+ * What a transfer was spent on. One transfer buys one of these.
+ */
+export type DhbPaymentPurpose = 'ai' | 'dub' | 'voice-clone' | 'governance' | 'ads';
+
+/**
+ * Verify a transfer AND claim it, so it cannot pay for something else.
+ *
+ * `verifyDhbPayment` on its own answers "did this wallet send N DHB in the last
+ * hour" and writes nothing down. Every feature that asked kept its own private
+ * ledger of spent hashes, and none could see the others — so one transfer was
+ * redeemable once per feature. Send a governance fee, then present the same
+ * hash for an AI receipt, a stage voice and a dubbing tab, all inside the hour.
+ *
+ * The claim is keyed on the hash and records the purpose. Re-presenting the
+ * same hash for the SAME purpose is a retry and passes through: the feature's
+ * own table already decides whether that retry is legitimate, at the
+ * granularity it cares about. A different purpose is a replay and is refused.
+ *
+ * Falls back to verify-only if the table is not there yet — the migration is
+ * applied by hand, and taking every payment offline until it runs would be a
+ * worse failure than the one being fixed.
+ */
+export async function claimDhbPayment(
+  txHash: string,
+  wallet: string,
+  minimumDhb: number,
+  purpose: DhbPaymentPurpose,
+  admin: { from: (t: string) => any },
+): Promise<DhbPaymentResult> {
+  const payment = await verifyDhbPayment(txHash, wallet, minimumDhb);
+  if (!payment.ok) return payment;
+
+  const hash = payment.hash.toLowerCase();
+  const holder = wallet.toLowerCase();
+
+  const { error } = await admin.from('dhb_payment_claims').insert({
+    tx_hash: hash,
+    purpose,
+    wallet_address: holder,
+    dhb: Math.floor(payment.dhb),
+    chain: payment.chain,
+  });
+
+  if (!error) return payment;
+
+  // Already claimed. Whose, and for what?
+  const { data: existing, error: readError } = await admin
+    .from('dhb_payment_claims')
+    .select('purpose, wallet_address')
+    .eq('tx_hash', hash)
+    .maybeSingle();
+
+  if (readError || !existing) {
+    // The table is missing (migration not yet applied) or unreadable. Say so
+    // once and behave as before rather than refusing a real payment.
+    console.warn('[dhb-transfer] claim ledger unavailable, falling back to verify-only', error.message);
+    return payment;
+  }
+
+  if (existing.purpose === purpose && String(existing.wallet_address).toLowerCase() === holder) {
+    return payment; // same wallet, same feature — a retry, not a replay
+  }
+
+  console.warn(`[dhb-transfer] replay refused: ${hash} claimed for ${existing.purpose}, presented for ${purpose}`);
+  return {
+    ok: false,
+    reason: 'That transfer has already paid for something else. Send a new one.',
+  };
+}

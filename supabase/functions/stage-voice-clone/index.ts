@@ -35,7 +35,7 @@
 // The wallet comes from the verified DeHub token, never the header — see
 // requireDeHubAuth. Everything that spends is keyed on that.
 import { handleCorsPreflight, jsonResponse, serviceClient, guardPaidEndpoint, requireDeHubAuth } from '../_shared/auth.ts';
-import { verifyDhbPayment, DHB_TREASURY } from '../_shared/dhb-transfer.ts';
+import { claimDhbPayment, DHB_TREASURY } from '../_shared/dhb-transfer.ts';
 import { quotePriceDhb } from '../_shared/ai-pricing.ts';
 
 const MODEL_ID = 'voice-clone';
@@ -256,7 +256,7 @@ Deno.serve(async (req) => {
     if (credit) {
       paymentId = credit.id;
       if (txHash) {
-        const payment = await verifyDhbPayment(txHash, wallet, priceDhb);
+        const payment = await claimDhbPayment(txHash, wallet, priceDhb, 'voice-clone', admin);
         if (payment.ok) {
           await admin.from('voice_clone_payments').insert({
             wallet_address: wallet,
@@ -284,7 +284,7 @@ Deno.serve(async (req) => {
         }
         paymentId = seen.id;
       } else {
-        const payment = await verifyDhbPayment(txHash, wallet, priceDhb);
+        const payment = await claimDhbPayment(txHash, wallet, priceDhb, 'voice-clone', admin);
         if (!payment.ok) {
           return jsonResponse({ error: payment.reason, code: 'PAYMENT_UNVERIFIED', priceDhb }, 402);
         }
