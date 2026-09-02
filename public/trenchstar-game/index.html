@@ -272,29 +272,104 @@
   #setFoot{display:flex;gap:7px;margin:12px 0 4px}
   #setFoot .btn{flex:1;text-align:center;padding:7px 0}
 
-  /* wallet + buy */
-  #walletPanel{display:none;pointer-events:auto;width:288px;max-height:66vh;overflow-y:auto;
-    padding:13px 14px 12px;margin-bottom:8px;background:rgba(5,10,16,.9);
-    border:1px solid rgba(56,224,255,.28);border-radius:6px;backdrop-filter:blur(10px)}
+  /* ============================ wallet + trade ============================
+     The panel is a trading desk now, sized like one: the bag, the ticket, and
+     a button you can hit from across the room. It used to be a 288px readout
+     with a buy box bolted on. */
+  #walletPanel{display:none;pointer-events:auto;width:min(460px,96vw);max-height:82vh;overflow-y:auto;
+    padding:13px 16px 14px;margin-bottom:8px;background:rgba(5,10,16,.92);
+    border:1px solid rgba(56,224,255,.28);border-radius:8px;backdrop-filter:blur(12px)}
   #walletPanel.on{display:block}
   #walletPanel h4{font-size:10px;letter-spacing:.3em;color:var(--cyan);margin-bottom:8px}
+  #wlTop{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
   #wlAddr{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--dim);letter-spacing:.06em}
-  #wlTotal{font-size:26px;font-weight:700;color:#fff;margin-top:7px;letter-spacing:.02em}
-  #wlChange{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;margin-top:2px}
-  #wlList{margin-top:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:7px}
+  #wlSrc{font-size:8px;letter-spacing:.28em;color:var(--cyan);margin-top:4px}
+  #wlSum{text-align:right}
+  #wlTotal{font-size:28px;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1}
+  #wlChange{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;margin-top:4px}
+  #wlConnRow{display:flex;gap:6px;margin-top:10px}
+  #wlConnRow .btn{flex:1;text-align:center;padding:9px 8px;font-size:9px}
+  #wlTabs{display:flex;gap:4px;margin-top:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .wtab{flex:1;text-align:center;padding:7px 4px;font-size:9px;letter-spacing:.26em;color:var(--dim);
+    cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+  .wtab:hover{color:var(--ink)}
+  .wtab.on{color:#fff;border-bottom-color:var(--cyan)}
+  .wpane{display:none;padding-top:10px}
+  .wpane.on{display:block}
   .wlRow{display:flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;
-    font-size:10px;color:var(--ink);padding:4px 0}
-  .wlRow b{color:#fff;font-weight:700;min-width:56px;font-family:"Chakra Petch",sans-serif;
+    font-size:10px;color:var(--ink);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .wlRow b{color:#fff;font-weight:700;min-width:64px;font-family:"Chakra Petch",sans-serif;
     letter-spacing:.08em}
-  .wlRow .v{margin-left:auto;color:var(--dim)}
+  .wlRow .ch{font-size:7px;letter-spacing:.2em;color:var(--dim);border:1px solid rgba(255,255,255,.14);
+    border-radius:3px;padding:2px 4px}
+  .wlRow .v{margin-left:auto;color:var(--dim);text-align:right}
+  .wlRow .v i{display:block;font-style:normal;font-size:8px}
+  .wlRow .go{cursor:pointer;color:var(--cyan);border:1px solid rgba(56,224,255,.3);border-radius:3px;
+    padding:3px 6px;font-size:8px;letter-spacing:.18em;font-family:"Chakra Petch",sans-serif}
+  .wlRow .go:hover{background:rgba(56,224,255,.16)}
   #wlNote{margin-top:9px;font-size:8px;line-height:1.7;letter-spacing:.1em;color:var(--dim)}
-  #buyBox{margin-top:11px;pointer-events:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
-  #buyBox label{display:block;font-size:8px;letter-spacing:.3em;color:var(--dim);margin-bottom:4px}
-  #buyRow{display:flex;gap:6px}
-  #buyAmt{flex:1;min-width:0;padding:7px;font-family:"JetBrains Mono",monospace;font-size:11px;
-    color:var(--ink);background:#0a121b;border:1px solid rgba(56,224,255,.3);border-radius:3px;outline:none}
-  #buyGo{flex:0 0 auto;padding:7px 12px}
-  #buyQuote{margin-top:6px;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);line-height:1.7}
+  /* the ticket */
+  #tdSel{width:100%;padding:8px;font-size:10px;font-family:"JetBrains Mono",monospace;color:var(--ink);
+    background:#0a121b;border:1px solid rgba(56,224,255,.25);border-radius:4px;outline:none}
+  #tdHead{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px}
+  #tdSym{font-size:22px;font-weight:700;color:#fff;letter-spacing:.04em}
+  #tdSym small{font-size:8px;letter-spacing:.28em;color:var(--cyan);margin-left:8px;vertical-align:middle}
+  #tdPx{font-family:"JetBrains Mono",monospace;font-size:16px;font-weight:700;color:#fff}
+  #tdStats{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  #tdStats span{flex:1 1 18%;font-size:7px;letter-spacing:.24em;color:var(--dim);background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:6px 6px 5px;min-width:60px}
+  #tdStats b{display:block;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;color:var(--ink);
+    letter-spacing:0;margin-top:3px}
+  #tdRisk{margin-top:7px;font-size:8px;letter-spacing:.14em;line-height:1.7;color:var(--dim)}
+  #tdRisk b{color:var(--amber)}
+  #tdRisk b.bad{color:var(--down)}
+  #tdRisk b.ok{color:var(--up)}
+  #tdSide{display:flex;gap:5px;margin-top:11px}
+  .sd{flex:1;text-align:center;padding:8px;font-size:10px;letter-spacing:.3em;font-weight:700;cursor:pointer;
+    border:1px solid rgba(255,255,255,.12);border-radius:4px;color:var(--dim);transition:all .15s}
+  .sd:hover{color:var(--ink)}
+  .sd.on[data-side=buy]{color:#04121c;background:var(--up);border-color:var(--up)}
+  .sd.on[data-side=sell]{color:#fff;background:var(--down);border-color:var(--down)}
+  #tdAmts{display:flex;gap:5px;margin-top:8px}
+  .amt{flex:1;text-align:center;padding:8px 2px;font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:700;
+    color:var(--ink);background:#0a121b;border:1px solid rgba(56,224,255,.22);border-radius:4px;cursor:pointer;
+    transition:border-color .15s,background .15s}
+  .amt:hover{border-color:rgba(56,224,255,.55)}
+  .amt.on{color:#04121c;background:var(--cyan);border-color:var(--cyan)}
+  #tdCustomRow{display:flex;align-items:center;gap:6px;margin-top:6px}
+  #tdAmt{flex:1;min-width:0;padding:8px;font-family:"JetBrains Mono",monospace;font-size:11px;
+    color:var(--ink);background:#0a121b;border:1px solid rgba(56,224,255,.22);border-radius:4px;outline:none}
+  #tdAmt:focus{border-color:var(--cyan)}
+  #tdUnit{font-size:9px;letter-spacing:.24em;color:var(--dim);min-width:34px;text-align:right}
+  #tdSlipRow{display:flex;align-items:center;gap:4px;margin-top:8px}
+  #tdSlipRow label{font-size:7px;letter-spacing:.28em;color:var(--dim);margin-right:auto}
+  .sl{font-family:"JetBrains Mono",monospace;font-size:9px;padding:4px 7px;border:1px solid rgba(255,255,255,.1);
+    border-radius:3px;color:var(--dim);cursor:pointer}
+  .sl.on{color:#fff;border-color:rgba(56,224,255,.6);background:rgba(56,224,255,.12)}
+  #tdHold{margin-top:8px;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);letter-spacing:.06em;
+    min-height:1em}
+  #tdGo{width:100%;text-align:center;margin-top:10px;padding:14px 12px;font-size:12px;letter-spacing:.3em}
+  #tdGo[data-side=buy]{border-color:rgba(47,232,140,.65);color:#d8ffee}
+  #tdGo[data-side=sell]{border-color:rgba(255,77,106,.65);color:#ffd0d8}
+  #tdGo[data-armed="1"]{animation:tdPulse 1s ease-in-out infinite;color:#fff}
+  #tdGo[data-side=buy][data-armed="1"]{background:rgba(47,232,140,.22);border-color:var(--up)}
+  #tdGo[data-side=sell][data-armed="1"]{background:rgba(255,77,106,.22);border-color:var(--down)}
+  #tdGo[disabled]{opacity:.45;cursor:default}
+  @keyframes tdPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 22px 2px rgba(255,255,255,.18)}}
+  #tdMsg{margin-top:8px;font-family:"JetBrains Mono",monospace;font-size:9px;line-height:1.75;color:var(--ink);
+    min-height:1.2em;word-break:break-word}
+  #tdMsg a{color:var(--cyan);text-decoration:none}
+  #tdMsg b{color:var(--amber)}
+  /* fills */
+  .fill{display:flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:9px;
+    padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);color:var(--ink)}
+  .fill .side{font-family:"Chakra Petch",sans-serif;font-weight:700;letter-spacing:.2em;font-size:8px;min-width:34px}
+  .fill .side.buy{color:var(--up)} .fill .side.sell{color:var(--down)}
+  .fill .st{margin-left:auto;font-size:7px;letter-spacing:.2em;color:var(--dim)}
+  .fill .st.ok{color:var(--up)} .fill .st.bad{color:var(--down)}
+  .fill a{color:var(--cyan);text-decoration:none}
+  #tdEmpty{font-size:8px;letter-spacing:.2em;color:var(--dim);padding:14px 0;text-align:center}
+  /* exchange (binance) */
   #bnWarn{font-size:8px;line-height:1.75;letter-spacing:.08em;color:var(--dim);
     background:rgba(255,194,75,.07);border:1px solid rgba(255,194,75,.3);
     border-radius:4px;padding:8px 9px;margin-bottom:8px}
@@ -303,9 +378,14 @@
   #walletPanel input[type=number]{width:100%;padding:7px;margin-bottom:6px;font-size:10px;
     font-family:"JetBrains Mono",monospace;color:var(--ink);background:#0a121b;
     border:1px solid rgba(56,224,255,.25);border-radius:3px;outline:none}
+  #walletPanel #tdAmt,#walletPanel #tdSel{margin-bottom:0}
   #bnRemLbl{display:flex;align-items:center;gap:6px;font-size:8px;letter-spacing:.12em;
-    color:var(--dim);margin:2px 0 9px;cursor:pointer}
+    color:var(--dim);margin:2px 0 6px;cursor:pointer}
   #bnRemLbl input{width:auto;margin:0}
+  #bnPinRow{display:none;gap:6px;align-items:center;margin-bottom:6px}
+  #bnPinRow.on{display:flex}
+  #walletPanel #bnPinRow input{margin:0;flex:1}
+  #bnPinRow small{font-size:7px;letter-spacing:.18em;color:var(--dim);flex:0 0 auto}
   #bnStat{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);margin-top:8px}
   #bnTotal{font-size:20px;font-weight:700;color:#fff;margin-top:5px}
   #bnPnl{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;color:var(--dim)}
@@ -317,6 +397,10 @@
   #bnSend[data-armed="1"]{border-color:rgba(255,77,106,.7);color:#ffb3c0}
   #bnOrderMsg{margin-top:7px;font-family:"JetBrains Mono",monospace;font-size:9px;
     line-height:1.75;color:var(--ink)}
+  /* the focus HUD hands off to the ticket rather than carrying its own box */
+  #buyBox{margin-top:11px;pointer-events:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
+  #buyBox .btn{width:100%;text-align:center}
+  #buyQuote{margin-top:6px;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);line-height:1.7}
 
   /* floating preview bar */
   #prev{position:fixed;left:50%;bottom:112px;transform:translateX(-50%);z-index:10;
@@ -631,6 +715,11 @@
   #walletPanel,#setPanel,#alertPanel{
     width:min(300px,calc(100vw - 24px));
     max-height:min(52vh,470px)}
+  /* The wallet is the exception: it is a trading desk, not a side panel. A
+     ticket you can hit from across the room needs the width for a symbol,
+     a price and four preset buttons on one line, and the height for the
+     bag beneath it — it is the one panel meant to be looked at, not past. */
+  #walletPanel{width:min(460px,calc(100vw - 24px));max-height:min(74vh,720px)}
 
   /* narrow laptop: the centred row is now wide enough to reach the panel */
   @media (max-width:1320px){
@@ -661,6 +750,7 @@
     #btnRow{gap:6px}
     .btn{font-size:10px;letter-spacing:.06em;padding:10px 11px;border-radius:10px}
     #walletPanel,#setPanel,#alertPanel{margin:0 0 8px;max-height:min(46vh,390px)}
+    #walletPanel{max-height:min(70vh,560px)}
     #hint{bottom:146px;font-size:8px}
     #guide{bottom:92px}
     #guidePanel{font-size:8px}
@@ -835,11 +925,7 @@
   <div id="fpTfWrap"><label>CANDLE TIMEFRAME <span style="opacity:.5">[ ] TO STEP</span></label><div id="fpTf"></div>
     <button class="btn" id="fpTfAll">⇉ APPLY TO EVERY CHART</button></div>
   <div id="buyBox" style="display:none">
-    <label>BUY WITH ETH ON BASE</label>
-    <div id="buyRow">
-      <input id="buyAmt" type="number" step="any" min="0" placeholder="0.01">
-      <button class="btn" id="buyGo">BUY</button>
-    </div>
+    <button class="btn" id="buyGo">⇄ TRADE THIS</button>
     <div id="buyQuote"></div>
   </div>
   <div id="fpEsc"><span id="fpFlick">&larr; &rarr; &uarr; &darr; NEXT SCREEN &middot; &darr; EXITS<br></span>ESC / SCROLL TO RELEASE</div>
@@ -956,14 +1042,73 @@
   <div id="walletPanel">
     <div class="panelHead"><h4>WALLET</h4>
       <div class="panelX" data-close="wallet" title="Close">✕</div></div>
-    <div id="wlAddr">NOT CONNECTED</div>
-    <div id="wlTotal">—</div>
-    <div id="wlChange">—</div>
-    <div id="wlList"></div>
-    <div id="wlNote"></div>
-    <button class="btn" id="wlConnect" style="width:100%;text-align:center;margin-top:10px">CONNECT WALLET</button>
+    <div id="wlTop">
+      <div id="wlWho">
+        <div id="wlAddr">NOT CONNECTED</div>
+        <div id="wlSrc"></div>
+      </div>
+      <div id="wlSum">
+        <div id="wlTotal">—</div>
+        <div id="wlChange">—</div>
+      </div>
+    </div>
+    <div id="wlConnRow">
+      <button class="btn" id="wlConnect">CONNECT WALLET</button>
+      <button class="btn" id="wlSol">◎ CONNECT PHANTOM</button>
+    </div>
+    <div id="wlTabs">
+      <span class="wtab on" data-tab="trade">TRADE</span>
+      <span class="wtab" data-tab="bag">BAG</span>
+      <span class="wtab" data-tab="fills">FILLS</span>
+      <span class="wtab" data-tab="cex">EXCHANGE</span>
+    </div>
 
-    <h4 style="margin-top:16px">BINANCE</h4>
+    <!-- THE TICKET. One token, one side, one amount, one button — the shape
+         every trench terminal has settled on, because a trade is a reflex and
+         a form is not. The token follows whatever screen is focused; the list
+         is everything on the wall that can actually be bought. -->
+    <div class="wpane on" id="wpTrade">
+      <select id="tdSel"><option value="">SELECT A TOKEN ON THE WALL</option></select>
+      <div id="tdHead">
+        <div id="tdSym">—<small id="tdChain"></small></div>
+        <div id="tdPx">—</div>
+      </div>
+      <div id="tdStats">
+        <span>24H<b id="tdCh">—</b></span>
+        <span>LIQ<b id="tdLiq">—</b></span>
+        <span>MCAP<b id="tdMc">—</b></span>
+        <span>VOL<b id="tdVol">—</b></span>
+        <span>AGE<b id="tdAge">—</b></span>
+      </div>
+      <div id="tdRisk"></div>
+      <div id="tdSide">
+        <span class="sd on" data-side="buy">BUY</span>
+        <span class="sd" data-side="sell">SELL</span>
+      </div>
+      <div id="tdAmts"></div>
+      <div id="tdCustomRow">
+        <input id="tdAmt" type="number" step="any" min="0" placeholder="CUSTOM AMOUNT">
+        <span id="tdUnit">ETH</span>
+      </div>
+      <div id="tdSlipRow"><label>SLIPPAGE</label>
+        <span class="sl" data-s="1">1%</span><span class="sl on" data-s="3">3%</span>
+        <span class="sl" data-s="10">10%</span><span class="sl" data-s="25">25%</span>
+      </div>
+      <div id="tdHold"></div>
+      <button class="btn" id="tdGo" data-side="buy" disabled>SELECT A TOKEN</button>
+      <div id="tdMsg"></div>
+    </div>
+
+    <div class="wpane" id="wpBag">
+      <div id="wlList"></div>
+      <div id="wlNote"></div>
+    </div>
+
+    <div class="wpane" id="wpFills">
+      <div id="tdLog"></div>
+    </div>
+
+    <div class="wpane" id="wpCex">
     <div id="bnWarn">SIGNED REST IS BLOCKED BY CORS IN EVERY BROWSER — THIS USES BINANCE'S
       WEBSOCKET API. KEYS STAY ON THIS MACHINE AND GO ONLY TO BINANCE.
       <b>USE A KEY WITH WITHDRAWALS DISABLED AND YOUR IP ALLOWLISTED.</b></div>
@@ -973,7 +1118,8 @@
     </select>
     <input id="bnKey" type="password" autocomplete="off" placeholder="API KEY">
     <input id="bnSecret" type="password" autocomplete="off" placeholder="API SECRET">
-    <label id="bnRemLbl"><input type="checkbox" id="bnRemember"> REMEMBER ON THIS MACHINE (LESS SAFE)</label>
+    <label id="bnRemLbl"><input type="checkbox" id="bnRemember"> REMEMBER ON THIS MACHINE (ENCRYPTED WITH A PIN)</label>
+    <div id="bnPinRow"><input id="bnPin" type="password" autocomplete="off" inputmode="numeric" placeholder="PIN (4+ DIGITS)"><small id="bnPinNote">LOCKS THE SAVED KEYS</small></div>
     <button class="btn" id="bnLoad" style="width:100%;text-align:center">LOAD ACCOUNT</button>
     <div id="bnStat">NOT CONNECTED</div>
     <div id="bnTotal">—</div>
@@ -990,6 +1136,8 @@
       </div>
       <div id="bnOrderMsg"></div>
     </div>
+    </div>
+  </div>
   </div>
   <div id="btnRow">
     <button class="btn" id="btnWallet">⛓ WALLET</button>
@@ -1733,12 +1881,35 @@ const SEL={               /* standard selectors; the swap is simulated before it
   exactInputSingle:'0x04e45aaf',       /* SwapRouter02 */
   quoteExactInputSingle:'0xc6a5026a'   /* QuoterV2 */
 };
-const BASE={
-  router:'0x2626664c2603336E57B271c5C0b26F421741e481',
-  quoter:'0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a',
-  weth:'0x4200000000000000000000000000000000000006',
-  rpc:'https://mainnet.base.org'
+/* THE CHAINS THE ROOM CAN TRADE ON.
+   Two EVM chains with Uniswap's SwapRouter02 and QuoterV2 deployed — Base,
+   and Robinhood Chain (an Arbitrum Orbit L2, ETH gas, chain 4663 whatever its
+   docs print) — and Solana, routed through Jupiter. `dsId` is the DexScreener
+   chain id, which is what every market on the wall carries in `m.chain`, so a
+   market is tradable exactly when CHAINS[m.chain] exists.
+   Every RPC here answers a browser with Access-Control-Allow-Origin: *, which
+   was measured, not assumed — see the trade engine below for the ones that
+   did not. */
+const CHAINS={
+  base:{key:'base',id:8453,hex:'0x2105',label:'BASE',name:'Base',gas:'ETH',dec:18,
+    router:'0x2626664c2603336E57B271c5C0b26F421741e481',
+    quoter:'0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a',
+    weth:'0x4200000000000000000000000000000000000006',
+    rpc:'https://mainnet.base.org',explorer:'https://basescan.org',
+    presets:[0.01,0.05,0.1,0.25]},
+  robinhood:{key:'robinhood',id:4663,hex:'0x1237',label:'ROBINHOOD',name:'Robinhood Chain',gas:'ETH',dec:18,
+    router:'0xcaf681a66d020601342297493863e78c959e5cb2',
+    quoter:'0x33e885ed0ec9bf04ecfb19341582aadcb4c8a9e7',
+    weth:'0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73',
+    rpc:'https://rpc.mainnet.chain.robinhood.com',explorer:'https://robinhoodchain.blockscout.com',
+    presets:[0.01,0.05,0.1,0.25]},
+  solana:{key:'solana',id:'solana',label:'SOLANA',name:'Solana',gas:'SOL',dec:9,sol:true,
+    wsol:'So11111111111111111111111111111111111111112',
+    rpc:'https://solana-rpc.publicnode.com',explorer:'https://solscan.io',
+    presets:[0.1,0.5,1,2]}
 };
+const EVM_CHAINS=[CHAINS.base,CHAINS.robinhood];
+const BASE=CHAINS.base;   /* the name the older code reads */
 const FEE_TIERS=[500,3000,10000];
 const wallet={eip6963:[],provider:null,addr:null,chainId:null,
   assets:[],usd:0,pnl24:0,pnlReal:null,connecting:false};
@@ -1755,16 +1926,23 @@ function toUnits(n,d){
   const [i,f='']=String(n).split('.');
   return BigInt(i+ (f+'0'.repeat(d)).slice(0,d));
 }
+/* Reads go to a chain's public endpoint, never through the wallet: a wallet
+   provider answers on whichever chain IT is switched to, and a balance read
+   on Base through a wallet parked on Ethereum used to come back as zero. */
+async function rpcPublic(url,method,params){
+  const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})});
+  const j=await r.json();
+  if(j.error)throw new Error(j.error.message||('rpc '+j.error.code));
+  return j.result;
+}
 async function rpc(method,params,prov){
   const p=prov||wallet.provider;
   if(p)return p.request({method,params});
-  const r=await fetch(BASE.rpc,{method:'POST',headers:{'content-type':'application/json'},
-    body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})});
-  const j=await r.json();
-  if(j.error)throw new Error(j.error.message);
-  return j.result;
+  return rpcPublic(BASE.rpc,method,params);
 }
 const ethCall=(to,data)=>rpc('eth_call',[{to,data},'latest']);
+const ethCallOn=(ch,to,data)=>rpcPublic(ch.rpc,'eth_call',[{to,data},'latest']);
 
 /* EIP-6963: wallets announce themselves, no window.ethereum scramble */
 addEventListener('eip6963:announceProvider',e=>{
@@ -1792,22 +1970,29 @@ async function connectWallet(){
     toast(e.code===4001?'Connection rejected.':'Wallet error — '+(e.message||'').slice(0,60));
   }finally{wallet.connecting=false;}
 }
-async function switchToBase(){
-  try{await wallet.provider.request({method:'wallet_switchEthereumChain',params:[{chainId:BASE_HEX}]});}
+async function switchTo(ch){
+  if(wallet.chainId===ch.id)return;
+  try{await wallet.provider.request({method:'wallet_switchEthereumChain',params:[{chainId:ch.hex}]});}
   catch(e){
     if(e.code===4902)await wallet.provider.request({method:'wallet_addEthereumChain',params:[{
-      chainId:BASE_HEX,chainName:'Base',nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},
-      rpcUrls:[BASE.rpc],blockExplorerUrls:['https://basescan.org']}]});
+      chainId:ch.hex,chainName:ch.name,nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},
+      rpcUrls:[ch.rpc],blockExplorerUrls:[ch.explorer]}]});
     else throw e;
   }
-  wallet.chainId=BASE_CHAIN;
+  wallet.chainId=ch.id;
 }
+const switchToBase=()=>switchTo(BASE);
 
-/* which tokens to look at: whatever is on the wall, plus what they already hold */
-function watchedTokens(){
+/* which tokens to look at on a chain: whatever is on the wall, plus anything
+   this desk has bought — a fill has to show up in the bag even after the
+   screen that sold it has rotated off the wall */
+function watchedTokens(ch){
   const out=new Map();
   for(const m of [...memes,...pinned])
-    if(m.tokenAddr&&m.chain==='base')out.set(m.tokenAddr.toLowerCase(),m);
+    if(m.tokenAddr&&m.chain===ch.key)out.set(ch.sol?m.tokenAddr:m.tokenAddr.toLowerCase(),m);
+  for(const f of fills)
+    if(f.chain===ch.key&&f.token&&!out.has(ch.sol?f.token:f.token.toLowerCase()))
+      out.set(ch.sol?f.token:f.token.toLowerCase(),{sym:f.sym,tokenAddr:f.token,chain:ch.key,pairAddr:f.pair,v4:!!f.v4});
   return out;
 }
 /* WHOSE BAG THE ROOM IS VALUING.
@@ -1836,46 +2021,104 @@ function dehubAddr(){
 function watchAddr(){
   return wallet.addr||(dhData.me&&dhData.me.address)||dehubAddr()||'';
 }
-async function refreshWallet(){
-  const who=watchAddr();
-  if(!who){wallet.assets=[];wallet.usd=0;return;}
-  try{
-    const nativeHex=await rpc('eth_getBalance',[who,'latest']);
-    const eth=Number(hexToBig(nativeHex))/1e18;
-    const toks=[...watchedTokens().keys()].slice(0,25);
-    const bals=await Promise.all(toks.map(async a=>{
-      try{
-        const [b,d]=await Promise.all([
-          ethCall(a,SEL.balanceOf+encAddr(who)),
-          ethCall(a,SEL.decimals)]);
-        const dec=Number(hexToBig(d))||18;
-        return {addr:a,qty:Number(hexToBig(b))/Math.pow(10,dec),dec};
-      }catch(e){return null;}
-    }));
-    const held=bals.filter(b=>b&&b.qty>0);
-    /* price everything in one DexScreener call, newest prices + 24h change */
+/* Price a native coin off the wall itself. ETH and SOL are majors with a live
+   exchange feed in this room, which is a better print than any DEX pool. */
+function nativePx(sym){
+  const m=markets[sym];
+  return m&&m.fed?{px:m.price,ch:m.pct24||0}:null;
+}
+/* DexScreener prices for a set of tokens on one chain, deepest pool per token */
+async function dsPrices(ch,addrs){
+  const best={};
+  for(let i=0;i<addrs.length;i+=30){
     let rows=[];
-    const addrs=[BASE.weth,...held.map(h=>h.addr)];
     try{
-      const j=await fget('https://api.dexscreener.com/tokens/v1/base/'+addrs.join(','));
+      const j=await fget('https://api.dexscreener.com/tokens/v1/'+ch.key+'/'+addrs.slice(i,i+30).join(','));
       if(Array.isArray(j))rows=j;
     }catch(e){}
-    const best={};
     for(const p of rows){
-      const a=p.baseToken&&p.baseToken.address&&p.baseToken.address.toLowerCase();
-      if(!a||!p.priceUsd)continue;
+      const raw=p.baseToken&&p.baseToken.address;
+      if(!raw||!p.priceUsd)continue;
+      const a=ch.sol?raw:raw.toLowerCase();
       const liq=(p.liquidity&&p.liquidity.usd)||0;
       /* one row per PAIR — take the deepest, or you price off a dead pool */
       if(!best[a]||liq>best[a].liq)best[a]={px:+p.priceUsd,ch:+((p.priceChange||{}).h24||0),liq,
         sym:p.baseToken.symbol};
     }
+  }
+  return best;
+}
+async function evmBag(ch,who){
+  const nativeHex=await rpcPublic(ch.rpc,'eth_getBalance',[who,'latest']);
+  const eth=Number(hexToBig(nativeHex))/1e18;
+  const toks=[...watchedTokens(ch).keys()].slice(0,40);
+  const bals=await Promise.all(toks.map(async a=>{
+    try{
+      const [b,d]=await Promise.all([
+        ethCallOn(ch,a,SEL.balanceOf+encAddr(who)),
+        ethCallOn(ch,a,SEL.decimals)]);
+      const dec=Number(hexToBig(d))||18;
+      return {addr:a,raw:hexToBig(b),qty:Number(hexToBig(b))/Math.pow(10,dec),dec};
+    }catch(e){return null;}
+  }));
+  const held=bals.filter(b=>b&&b.qty>0);
+  const best=held.length?await dsPrices(ch,held.map(h=>h.addr)):{};
+  const assets=[];
+  const w=nativePx('ETH');
+  if(eth>0)assets.push({sym:'ETH',qty:eth,px:w?w.px:0,ch:w?w.ch:0,chain:ch.key,dec:18,native:true});
+  for(const h of held){
+    const b=best[h.addr];
+    if(b&&b.liq>1000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr,chain:ch.key,dec:h.dec,raw:h.raw});
+  }
+  return assets;
+}
+async function solBag(who){
+  const ch=CHAINS.solana;
+  const lam=await rpcPublic(ch.rpc,'getBalance',[who]);
+  const solQty=Number(lam&&lam.value!=null?lam.value:lam)/1e9;
+  const accts=[];
+  for(const prog of ['TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb']){
+    try{
+      const r=await rpcPublic(ch.rpc,'getTokenAccountsByOwner',[who,{programId:prog},{encoding:'jsonParsed'}]);
+      for(const a of (r&&r.value)||[]){
+        const info=a.account&&a.account.data&&a.account.data.parsed&&a.account.data.parsed.info;
+        if(!info||!info.tokenAmount)continue;
+        const raw=BigInt(info.tokenAmount.amount||'0');
+        if(raw<=0n)continue;
+        accts.push({addr:info.mint,raw,dec:info.tokenAmount.decimals,qty:Number(raw)/Math.pow(10,info.tokenAmount.decimals)});
+      }
+    }catch(e){}
+  }
+  /* the same mint can sit in several accounts; the bag is the sum */
+  const byMint=new Map();
+  for(const a of accts){
+    const cur=byMint.get(a.addr);
+    if(cur){cur.raw+=a.raw;cur.qty+=a.qty;}else byMint.set(a.addr,a);
+  }
+  const held=[...byMint.values()];
+  const best=held.length?await dsPrices(ch,held.map(h=>h.addr)):{};
+  const assets=[];
+  const s=nativePx('SOL');
+  if(solQty>0)assets.push({sym:'SOL',qty:solQty,px:s?s.px:0,ch:s?s.ch:0,chain:'solana',dec:9,native:true});
+  for(const h of held){
+    const b=best[h.addr];
+    if(b&&b.liq>1000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr,chain:'solana',dec:h.dec,raw:h.raw});
+  }
+  return assets;
+}
+let refreshing=false;
+async function refreshWallet(){
+  const who=watchAddr(),sol=solAddr();
+  if(!who&&!sol){wallet.assets=[];wallet.usd=0;syncWalletUI();return;}
+  if(refreshing)return;
+  refreshing=true;
+  try{
     const assets=[];
-    const w=best[BASE.weth.toLowerCase()];
-    if(eth>0)assets.push({sym:'ETH',qty:eth,px:w?w.px:0,ch:w?w.ch:0});
-    for(const h of held){
-      const b=best[h.addr];
-      if(b&&b.liq>3000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr});
-    }
+    const jobs=[];
+    if(who)for(const ch of EVM_CHAINS)jobs.push(evmBag(ch,who).then(a=>assets.push(...a)).catch(()=>{}));
+    if(sol)jobs.push(solBag(sol).then(a=>assets.push(...a)).catch(()=>{}));
+    await Promise.all(jobs);
+    assets.sort((a,b)=>b.qty*b.px-a.qty*a.px);
     wallet.assets=assets;
     wallet.usd=assets.reduce((s,a)=>s+a.qty*a.px,0);
     /* mark-to-market: holdings held constant, valued now vs 24h-ago prices.
@@ -1885,9 +2128,10 @@ async function refreshWallet(){
     wallet.pnl24=wallet.usd-then;
     snapshotWallet();
     syncWalletUI();
+    tdRender();
   }catch(e){}
+  refreshing=false;
 }
-/* A daily snapshot turns the approximation into real PnL from tomorrow on. */
 function snapshotWallet(){
   try{
     const key='trenchstar.snaps';
@@ -1903,49 +2147,375 @@ function snapshotWallet(){
     wallet.pnlReal=old?wallet.usd-old.usd:null;
   }catch(e){}
 }
-setInterval(()=>{if(watchAddr())refreshWallet();},45000);
+setInterval(()=>{if(watchAddr()||solAddr())refreshWallet();},45000);
 
-/* ============================== swap =================================
+/* ============================== trade ================================
    Quote, then SIMULATE, then ask, then send. The simulation is the safety
-   net: a bad encoding or a dead pool reverts here, before anything is signed. */
+   net: a bad encoding or a dead pool reverts here, before anything is signed.
+
+   WHO SIGNS. Three signers, chosen in this order and never mixed:
+   - a wallet connected in here (MetaMask & co, via EIP-6963) signs EVM
+     itself, after switching to the market's chain;
+   - inside the app, with nobody connected in here, the app's OWN wallet
+     signs. The frame is same-origin with dehub.io (it is a first-party game)
+     but it still never touches a key: it sends the chain, the token, the
+     amount and the floor over the bridge, and the host builds the calldata
+     and signs with the smart account — gas sponsored, one press;
+   - Solana is Phantom (or whatever announces itself as window.solana).
+     Jupiter builds the transaction, the wallet signs and sends it.
+   Nothing is sent without the ticket being armed and pressed a second time. */
+const SEL2={
+  multicall:'0x5ae401dc',       /* multicall(uint256 deadline, bytes[] data) */
+  unwrapWETH9:'0x49404b7c'      /* unwrapWETH9(uint256 amountMinimum, address recipient) */
+};
+/* SwapRouter02's "keep the output here for the next call" recipient */
+const ROUTER_SELF='0x0000000000000000000000000000000000000002';
 function encExactInputSingle(a){
   return SEL.exactInputSingle+
     encAddr(a.tokenIn)+encAddr(a.tokenOut)+encUint(a.fee)+encAddr(a.recipient)+
     encUint(a.amountIn)+encUint(a.amountOutMin)+encUint(0);
 }
-async function quoteBest(tokenIn,tokenOut,amountIn){
+function encBytes(hex){
+  const h=hex.replace(/^0x/,'');
+  return encUint(h.length/2)+h.padEnd(Math.ceil(h.length/64)*64,'0');
+}
+function encMulticall(deadline,calls){
+  const heads=[],tails=[];
+  let off=calls.length*32;
+  for(const c of calls){const b=encBytes(c);heads.push(encUint(off));tails.push(b);off+=b.length/2;}
+  return SEL2.multicall+encUint(deadline)+encUint(64)+encUint(calls.length)+heads.join('')+tails.join('');
+}
+const encUnwrap=(min,to)=>SEL2.unwrapWETH9+encUint(min)+encAddr(to);
+const hexBig=v=>'0x'+BigInt(v).toString(16);
+
+async function quoteEvm(ch,tokenIn,tokenOut,amountIn){
   let best=null;
   for(const fee of FEE_TIERS){
-    try{
-      const data=SEL.quoteExactInputSingle+
-        encAddr(tokenIn)+encAddr(tokenOut)+encUint(amountIn)+encUint(fee)+encUint(0);
-      const r=await ethCall(BASE.quoter,data);
-      const out=hexToBig('0x'+r.slice(2,66));
-      if(out>0n&&(!best||out>best.out))best={out,fee};
-    }catch(e){}
+    const data=SEL.quoteExactInputSingle+
+      encAddr(tokenIn)+encAddr(tokenOut)+encUint(amountIn)+encUint(fee)+encUint(0);
+    /* one retry: Robinhood's public RPC rate-limits a burst of three */
+    for(let t=0;t<2;t++){
+      try{
+        const r=await ethCallOn(ch,ch.quoter,data);
+        const out=hexToBig('0x'+r.slice(2,66));
+        if(out>0n&&(!best||out>best.out))best={out,fee};
+        break;
+      }catch(e){
+        if(!/too many|429/i.test(String(e.message||e)))break;
+        await new Promise(r=>setTimeout(r,450));
+      }
+    }
   }
   return best;
 }
-async function buyToken(tokenOut,ethAmount,slipPct){
-  if(!wallet.addr){toast('Connect a wallet first.');return;}
-  if(wallet.chainId!==BASE_CHAIN){
-    toast('Switching to Base…');
-    try{await switchToBase();}catch(e){toast('Could not switch network.');return;}
-  }
-  const amountIn=toUnits(ethAmount,18);
-  const q=await quoteBest(BASE.weth,tokenOut,amountIn);
-  if(!q){toast('No route for that token on Base.');return;}
-  const slip=BigInt(Math.round((slipPct||3)*100));
-  const amountOutMin=q.out*(10000n-slip)/10000n;
-  const tx={from:wallet.addr,to:BASE.router,
-    value:'0x'+amountIn.toString(16),
-    data:encExactInputSingle({tokenIn:BASE.weth,tokenOut,fee:q.fee,
-      recipient:wallet.addr,amountIn,amountOutMin})};
-  /* dry run — never offer to sign something that already fails */
-  try{await rpc('eth_call',[tx,'latest']);}
-  catch(e){toast('Swap would fail: '+String(e.message||e).slice(0,70));return null;}
-  return {tx,quote:q,amountOutMin};
+const quoteBest=(tokenIn,tokenOut,amountIn)=>quoteEvm(BASE,tokenIn,tokenOut,amountIn);
+/* ---- Uniswap v4 ----
+   Most of Robinhood Chain's trench pairs are v4 pools behind a launchpad
+   hook, which the v3 quoter and SwapRouter02 cannot see at all. A v4 pool is
+   keyed by (currency0, currency1, fee, tickSpacing, hooks), and DexScreener
+   hands over only the pool id — the keccak of that key — so the key is read
+   back off the PoolManager's Initialize log for that id. Robinhood's RPC
+   answers a getLogs from genesis; Base's caps the range at 10k blocks, so a
+   v4 wall pair on Base falls back to whatever v3 pool the token also has.
+   Swaps go through the Universal Router: one V4_SWAP command carrying
+   SWAP_EXACT_IN_SINGLE, SETTLE_ALL, TAKE_ALL. A sell settles through Permit2,
+   which is the one extra approval a v4 sell costs over a v3 one.
+   The router addresses are from universal-router-sdk, not sdk-core: on
+   Robinhood sdk-core's two "router" entries are the V2 factory and V2 router,
+   and both revert this calldata. Measured. */
+const V4={
+  base:{ur:'0x6ff5693b99212da76ad316178a184ab56d299b43',quoter:'0x0d5e0f971ed27fbff6c2837bf31316121532048d',
+    pm:'0x498581ff718922c3f8e6a244956af099b2652b2b',logs:false},
+  robinhood:{ur:'0x8876789976decbfcbbbe364623c63652db8c0904',quoter:'0x8dc178efb8111bb0973dd9d722ebeff267c98f94',
+    pm:'0x8366a39cc670b4001a1121b8f6a443a643e40951',logs:true}
+};
+const PERMIT2='0x000000000022D473030F116dDEE9F6B43aC78BA3';
+const ZERO='0x0000000000000000000000000000000000000000';
+const V4_INIT='0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438';
+const SEL4={
+  quote:'0xaa9d21cb',      /* quoteExactInputSingle(((address,address,uint24,int24,address),bool,uint128,bytes)) */
+  execute:'0x3593564c',    /* execute(bytes,bytes[],uint256) */
+  p2allow:'0x927da105',    /* Permit2 allowance(address,address,address) */
+  p2approve:'0x87517c45'   /* Permit2 approve(address,address,uint160,uint48) */
+};
+const v4Keys=(()=>{try{return JSON.parse(localStorage.getItem('trenchstar.v4keys')||'{}');}catch(e){return {};}})();
+async function v4Key(ch,m){
+  const id=(m.pairAddr||'').toLowerCase();
+  if(!/^0x[0-9a-f]{64}$/.test(id))return null;
+  if(v4Keys[id])return v4Keys[id];
+  const v=V4[ch.key];if(!v||!v.logs)return null;
+  let logs=null;
+  try{logs=await rpcPublic(ch.rpc,'eth_getLogs',[{address:v.pm,fromBlock:'0x0',toBlock:'latest',topics:[V4_INIT,id]}]);}
+  catch(e){return null;}
+  const l=logs&&logs[0];if(!l||!l.topics||l.topics.length<4)return null;
+  const w=i=>l.data.slice(2+i*64,66+i*64);
+  const key={c0:'0x'+l.topics[2].slice(26),c1:'0x'+l.topics[3].slice(26),
+    fee:parseInt(w(0),16),ts:parseInt(w(1),16),hooks:'0x'+w(2).slice(24)};
+  /* only ETH-quoted pools: the ticket buys with the gas coin and sells back to it */
+  if(key.c0!==ZERO)return null;
+  v4Keys[id]=key;try{localStorage.setItem('trenchstar.v4keys',JSON.stringify(v4Keys));}catch(e){}
+  return key;
 }
+const encV4Key=k=>encAddr(k.c0)+encAddr(k.c1)+encUint(k.fee)+encUint(k.ts)+encAddr(k.hooks);
+async function quoteV4(ch,key,zfo,amount){
+  const data=SEL4.quote+encUint(32)+encV4Key(key)+encUint(zfo?1:0)+encUint(amount)+encUint(256)+encUint(0);
+  try{
+    const r=await ethCallOn(ch,V4[ch.key].quoter,data);
+    const out=hexToBig('0x'+r.slice(2,66));
+    return out>0n?{out,key,fee:key.fee,v4:true}:null;
+  }catch(e){return null;}
+}
+/* a small ABI encoder for the dynamic shapes the Universal Router wants */
+function abiEnc(items){
+  const heads=[],tails=[];let off=items.length*32;
+  for(const [t,v] of items){
+    if(t==='uint'){heads.push(encUint(v));continue;}
+    if(t==='addr'){heads.push(encAddr(v));continue;}
+    const body=t==='bytes'?encBytes(v):encBytesArr(v);
+    heads.push(encUint(off));tails.push(body);off+=body.length/2;
+  }
+  return heads.join('')+tails.join('');
+}
+function encBytesArr(arr){
+  const heads=[],tails=[];let off=arr.length*32;
+  for(const h of arr){const b=encBytes(h);heads.push(encUint(off));tails.push(b);off+=b.length/2;}
+  return encUint(arr.length)+heads.join('')+tails.join('');
+}
+function encV4Swap(key,zfo,amountIn,minOut,deadline){
+  const cIn=zfo?key.c0:key.c1,cOut=zfo?key.c1:key.c0;
+  /* ExactInputSingleParams: key(5) + zeroForOne + amountIn + amountOutMinimum + hookData(bytes) */
+  const p0=encUint(32)+encV4Key(key)+encUint(zfo?1:0)+encUint(amountIn)+encUint(minOut)+encUint(288)+encUint(0);
+  const p1=encAddr(cIn)+encUint(amountIn),p2=encAddr(cOut)+encUint(minOut);
+  const input0=abiEnc([['bytes','060c0f'],['bytes[]',[p0,p1,p2]]]);   /* SWAP_EXACT_IN_SINGLE · SETTLE_ALL · TAKE_ALL */
+  return SEL4.execute+abiEnc([['bytes','10'],['bytes[]',[input0]],['uint',deadline]]);  /* V4_SWAP */
+}
+/* Permit2 is how the Universal Router pulls a token in: the token approves
+   Permit2 once, then Permit2 grants the router an allowance with an expiry. */
+async function permit2Ready(ch,token,who,amount,send){
+  const allow=hexToBig(await ethCallOn(ch,token,SEL.allowance+encAddr(who)+encAddr(PERMIT2)));
+  if(allow<amount)await send({to:token,data:SEL.approve+encAddr(PERMIT2)+encUint((1n<<256n)-1n)});
+  const r=await ethCallOn(ch,PERMIT2,SEL4.p2allow+encAddr(who)+encAddr(token)+encAddr(V4[ch.key].ur));
+  const amt=hexToBig('0x'+r.slice(2,66)),exp=Number(hexToBig('0x'+r.slice(66,130)));
+  if(amt<amount||exp<Math.floor(Date.now()/1000)+120)
+    await send({to:PERMIT2,data:SEL4.p2approve+encAddr(token)+encAddr(V4[ch.key].ur)+
+      encUint((1n<<160n)-1n)+encUint(Math.floor(Date.now()/1000)+30*86400)});
+}
+
+/* ---- the host, when the app's own wallet is the signer ---- */
+const tradeWaits=new Map();
+function tradeKey(){return 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function hostTrade(msg,onStage){
+  return new Promise((res,rej)=>{
+    const key=tradeKey();
+    tradeWaits.set(key,{res,rej,onStage,at:Date.now()});
+    dhSend('trade',Object.assign({key},msg));
+    setTimeout(()=>{
+      const w=tradeWaits.get(key);
+      if(w&&!w.sent){tradeWaits.delete(key);rej(new Error('no answer from the app'));}
+    },240000);
+  });
+}
+function hostTraded(d){
+  const w=tradeWaits.get(d.key);
+  if(!w)return;
+  if(!d.ok){tradeWaits.delete(d.key);if(w.sent)w.onStage&&w.onStage('failed',d);else w.rej(new Error(d.reason||'rejected'));return;}
+  if(d.stage==='approved'){w.onStage&&w.onStage('approved',d);return;}
+  if(d.stage==='sent'){w.sent=true;w.res(d.hash);return;}
+  if(d.stage==='mined'){tradeWaits.delete(d.key);w.onStage&&w.onStage('mined',d);}
+}
+function evmSigner(){
+  if(wallet.addr)return 'injected';
+  if(dhFramed&&watchAddr())return 'native';
+  return null;
+}
+function evmAddr(){return wallet.addr||watchAddr();}
+
+/* Which pool. A v4 wall pair is tried first through its recovered key, and
+   whatever cannot be keyed (or quoted) falls through to v3. */
+async function routeEvm(ch,m,side,amount){
+  let q=null;
+  if(m.v4){const key=await v4Key(ch,m);if(key)q=await quoteV4(ch,key,side==='buy',amount);}
+  if(!q)q=side==='buy'?await quoteEvm(ch,ch.weth,m.tokenAddr,amount):await quoteEvm(ch,m.tokenAddr,ch.weth,amount);
+  if(!q)throw new Error(m.v4?'no route on '+ch.label+' — v4 pool could not be keyed':'no route on '+ch.label);
+  return q;
+}
+function hostMsg(ch,side,m,q,amountIn,minOut){
+  const msg={chain:ch.id,side,token:m.tokenAddr,fee:q.v4?0:q.fee,amountIn:amountIn.toString(),minOut:minOut.toString()};
+  if(q.v4)msg.v4={fee:q.key.fee,ts:q.key.ts,hooks:q.key.hooks,pool:(m.pairAddr||'').toLowerCase()};
+  return msg;
+}
+/* ---- EVM buy: ETH in, token out ---- */
+async function planBuyEvm(m,ethAmount,slipPct){
+  const ch=CHAINS[m.chain];
+  const amountIn=toUnits(ethAmount,18);
+  const q=await routeEvm(ch,m,'buy',amountIn);
+  const slip=BigInt(Math.round((slipPct||3)*100));
+  const minOut=q.out*(10000n-slip)/10000n;
+  return {ch,q,amountIn,minOut,side:'buy',m,
+    async send(onStage){
+      if(evmSigner()==='native')return hostTrade(hostMsg(ch,'buy',m,q,amountIn,minOut),onStage);
+      await switchTo(ch);
+      const tx=q.v4
+        ?{from:wallet.addr,to:V4[ch.key].ur,value:hexBig(amountIn),
+          data:encV4Swap(q.key,true,amountIn,minOut,Math.floor(Date.now()/1000)+120)}
+        :{from:wallet.addr,to:ch.router,value:hexBig(amountIn),
+          data:encExactInputSingle({tokenIn:ch.weth,tokenOut:m.tokenAddr,fee:q.fee,
+            recipient:wallet.addr,amountIn,amountOutMin:minOut})};
+      /* dry run — never offer to sign something that already fails */
+      await rpc('eth_call',[tx,'latest']);
+      const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[tx]});
+      watchEvmTx(ch,hash,onStage);
+      return hash;
+    }};
+}
+/* ---- EVM sell: token in, ETH out, unwrapped in the same call ---- */
+async function planSellEvm(m,rawAmount,slipPct){
+  const ch=CHAINS[m.chain];
+  const q=await routeEvm(ch,m,'sell',rawAmount);
+  const slip=BigInt(Math.round((slipPct||3)*100));
+  const minOut=q.out*(10000n-slip)/10000n;
+  return {ch,q,amountIn:rawAmount,minOut,side:'sell',m,
+    async send(onStage){
+      if(evmSigner()==='native')return hostTrade(hostMsg(ch,'sell',m,q,rawAmount,minOut),onStage);
+      await switchTo(ch);
+      const who=wallet.addr;
+      const sendTx=async t=>{
+        onStage&&onStage('approving');
+        const h=await wallet.provider.request({method:'eth_sendTransaction',params:[Object.assign({from:who},t)]});
+        await waitEvmTx(ch,h);
+      };
+      let tx;
+      if(q.v4){
+        await permit2Ready(ch,m.tokenAddr,who,rawAmount,sendTx);
+        tx={from:who,to:V4[ch.key].ur,data:encV4Swap(q.key,false,rawAmount,minOut,Math.floor(Date.now()/1000)+120)};
+      }else{
+        const allow=hexToBig(await ethCallOn(ch,m.tokenAddr,SEL.allowance+encAddr(who)+encAddr(ch.router)));
+        if(allow<rawAmount)await sendTx({to:m.tokenAddr,data:SEL.approve+encAddr(ch.router)+encUint(rawAmount)});
+        const deadline=Math.floor(Date.now()/1000)+60;
+        tx={from:who,to:ch.router,
+          data:encMulticall(deadline,[
+            encExactInputSingle({tokenIn:m.tokenAddr,tokenOut:ch.weth,fee:q.fee,
+              recipient:ROUTER_SELF,amountIn:rawAmount,amountOutMin:minOut}),
+            encUnwrap(minOut,who)])};
+      }
+      await rpc('eth_call',[tx,'latest']);
+      const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[tx]});
+      watchEvmTx(ch,hash,onStage);
+      return hash;
+    }};
+}
+async function waitEvmTx(ch,hash){
+  for(let i=0;i<90;i++){
+    await new Promise(r=>setTimeout(r,2000));
+    try{
+      const r=await rpcPublic(ch.rpc,'eth_getTransactionReceipt',[hash]);
+      if(r)return r;
+    }catch(e){}
+  }
+  return null;
+}
+function watchEvmTx(ch,hash,onStage){
+  waitEvmTx(ch,hash).then(r=>{
+    if(!r)onStage&&onStage('lost');
+    else onStage&&onStage(parseInt(r.status,16)===1?'mined':'failed',{hash,reason:'reverted'});
+  });
+}
+
+/* ---- Solana ---- */
+const sol={prov:null,addr:null,connecting:false};
+function solProvider(){
+  const p=(window.phantom&&window.phantom.solana)||window.solana;
+  return p&&typeof p.request==='function'?p:null;
+}
+async function solConnect(){
+  if(sol.connecting)return;
+  const p=solProvider();
+  if(!p){toast('No Solana wallet found — install Phantom, then reload.');return;}
+  sol.connecting=true;
+  try{
+    const r=await p.connect();
+    const pk=(r&&r.publicKey)||p.publicKey;
+    sol.prov=p;sol.addr=pk.toString();
+    p.on&&p.on('disconnect',()=>{sol.addr=null;syncWalletUI();});
+    p.on&&p.on('accountChanged',pk=>{sol.addr=pk?pk.toString():null;refreshWallet();});
+    toast('PHANTOM CONNECTED · '+sol.addr.slice(0,4)+'…'+sol.addr.slice(-4));
+    syncWalletUI();refreshWallet();
+  }catch(e){toast(e.code===4001?'Connection rejected.':'Phantom error — '+String(e.message||'').slice(0,60));}
+  finally{sol.connecting=false;}
+}
+function solAddr(){return sol.addr||(dhData.me&&dhData.me.solana)||'';}
+const JUP='https://lite-api.jup.ag/swap/v1';
+function b64ToBytes(b64){const s=atob(b64);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u;}
+const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+function bs58(bytes){
+  const digits=[0];
+  for(const b of bytes){
+    let carry=b;
+    for(let j=0;j<digits.length;j++){carry+=digits[j]<<8;digits[j]=carry%58;carry=(carry/58)|0;}
+    while(carry){digits.push(carry%58);carry=(carry/58)|0;}
+  }
+  let out='';
+  for(const b of bytes){if(b)break;out+='1';}
+  for(let i=digits.length-1;i>=0;i--)out+=B58[digits[i]];
+  return out;
+}
+async function jupQuote(inMint,outMint,amount,slipBps){
+  const j=await fget(JUP+'/quote?inputMint='+inMint+'&outputMint='+outMint+'&amount='+amount+
+    '&slippageBps='+slipBps+'&restrictIntermediateTokens=true',12000);
+  if(!j||j.error||!j.outAmount)throw new Error((j&&j.error)||'no route on Solana');
+  return j;
+}
+async function jupSwap(quote,who){
+  const r=await fetch(JUP+'/swap',{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({quoteResponse:quote,userPublicKey:who,wrapAndUnwrapSol:true,
+      dynamicComputeUnitLimit:true,dynamicSlippage:false,
+      prioritizationFeeLamports:{priorityLevelWithMaxLamports:{maxLamports:1500000,priorityLevel:'high'}}})});
+  const j=await r.json();
+  if(!j||!j.swapTransaction)throw new Error((j&&j.error)||'Jupiter could not build the swap');
+  return j.swapTransaction;
+}
+async function solSend(txB64){
+  if(!sol.prov||!sol.addr)throw new Error('connect Phantom to trade on Solana');
+  const r=await sol.prov.request({method:'signAndSendTransaction',params:{message:bs58(b64ToBytes(txB64))}});
+  return (r&&r.signature)||r;
+}
+async function waitSolTx(sig){
+  for(let i=0;i<45;i++){
+    await new Promise(r=>setTimeout(r,2000));
+    try{
+      const r=await rpcPublic(CHAINS.solana.rpc,'getSignatureStatuses',[[sig],{searchTransactionHistory:true}]);
+      const s=r&&r.value&&r.value[0];
+      if(s){if(s.err)return {ok:false};if(s.confirmationStatus==='confirmed'||s.confirmationStatus==='finalized')return {ok:true};}
+    }catch(e){}
+  }
+  return null;
+}
+async function planSol(m,side,amountRaw,slipPct){
+  const ch=CHAINS.solana;
+  const inMint=side==='buy'?ch.wsol:m.tokenAddr,outMint=side==='buy'?m.tokenAddr:ch.wsol;
+  const q=await jupQuote(inMint,outMint,amountRaw.toString(),Math.round((slipPct||3)*100));
+  return {ch,q,amountIn:amountRaw,minOut:BigInt(q.otherAmountThreshold||q.outAmount),side,m,
+    async send(onStage){
+      if(!sol.addr){await solConnect();if(!sol.addr)throw new Error('connect Phantom to trade on Solana');}
+      const tx=await jupSwap(q,sol.addr);
+      const sig=await solSend(tx);
+      waitSolTx(sig).then(r=>{
+        if(!r)onStage&&onStage('lost');
+        else onStage&&onStage(r.ok?'mined':'failed',{hash:sig,reason:'failed on chain'});
+      });
+      return sig;
+    }};
+}
+
+/* ---- the book of what this desk actually did ---- */
+const fills=(()=>{try{return JSON.parse(localStorage.getItem('trenchstar.fills')||'[]');}catch(e){return [];}})();
+function saveFills(){try{localStorage.setItem('trenchstar.fills',JSON.stringify(fills.slice(0,60)));}catch(e){}}
+function recordFill(f){fills.unshift(f);saveFills();renderFills();return f;}
+function updateFill(hash,patch){
+  const f=fills.find(x=>x.hash===hash);
+  if(f){Object.assign(f,patch);saveFills();renderFills();}
+}
+function txUrl(chainKey,hash){return CHAINS[chainKey].explorer+'/tx/'+hash;}
 const positions=[];
 function openPaperBook(){
   /* The book is openly PAPER — the panel says so on a chip — but an entry
@@ -4459,6 +5029,7 @@ function applyPair(m,p){
   m.chain=p.chainId;
   m.pairAddr=p.pairAddress;
   m.tokenAddr=p.baseToken&&p.baseToken.address;
+  m.liq=(p.liquidity&&+p.liquidity.usd)||0;m.pairAt=+p.pairCreatedAt||0;m.v4=Array.isArray(p.labels)&&p.labels.includes('v4');
   const pc=p.priceChange||{};
   m.pushSample(+p.priceUsd,{h24:+pc.h24,h1:+pc.h1,m5:+pc.m5,
     vol:(p.volume&&+p.volume.h24)||0,mcap:+(p.marketCap||p.fdv||0)});
@@ -6481,6 +7052,9 @@ window.addEventListener('message',e=>{
   const d=e.data;
   if(!d||d.source!=='dehub')return;
 
+  /* a trade the app signed on our behalf — see hostTrade */
+  if(d.type==='traded'){hostTraded(d);return;}
+
   if(d.type!=='desk')return;
   if(Array.isArray(d.posts)&&d.posts.length)dhData.posts=d.posts.slice(0,4);
   dhData.me=d.me||null;
@@ -6544,7 +7118,8 @@ async function dhPullLocal(){
       likes:+u.likes||0,
       tips:+u.receivedTips||0,
       badge:+u.badgeBalance||0,
-      avatar:dhAvatarUrl(u.avatarImageUrl,64)}:null;
+      avatar:dhAvatarUrl(u.avatarImageUrl,64),
+      solana:typeof u.solanaAddress==='string'?u.solanaAddress:''}:null;
     dhData.mine=mine&&Array.isArray(mine.result)
       ?mine.result.map(r=>({id:r.tokenId,img:dhPostImg(r,192)})):null;
     if(!rows.length){dhData.failed++;dhPullViaHost();return;}
@@ -8473,6 +9048,7 @@ async function pollDex(){
         m.chain=p.chainId;
         m.pairAddr=p.pairAddress;          /* the pool GeckoTerminal keys its candles on */
         m.tokenAddr=p.baseToken.address;
+        m.liq=(p.liquidity&&+p.liquidity.usd)||0;m.pairAt=+p.pairCreatedAt||0;m.v4=Array.isArray(p.labels)&&p.labels.includes('v4');
         m.boosted=dexBoosted.has(p.baseToken.address);
         const pc=p.priceChange||{};
         m.pushSample(+p.priceUsd,{h24:+pc.h24,h1:+pc.h1,m5:+pc.m5,
@@ -10844,10 +11420,18 @@ syncCustomUI();
 
 /* ---------------------------- wallet UI ------------------------------ */
 function syncWalletUI(){
-  const on=!!wallet.addr;
-  $('#wlAddr').textContent=on?wallet.addr.slice(0,10)+'…'+wallet.addr.slice(-6)+
-    (wallet.chainId===BASE_CHAIN?'  ·  BASE':'  ·  CHAIN '+(wallet.chainId||'?')):'NOT CONNECTED';
-  $('#wlConnect').textContent=on?'REFRESH':'CONNECT WALLET';
+  const evm=evmAddr(),sa=solAddr();
+  const on=!!(evm||sa);
+  const short=a=>a.length>20?a.slice(0,8)+'…'+a.slice(-6):a;
+  $('#wlAddr').textContent=on?[evm?short(evm):'',sa?'◎ '+short(sa):''].filter(Boolean).join('   '):'NOT CONNECTED';
+  /* say who signs, because it is not always the same wallet the bag is read from */
+  const signer=evmSigner();
+  $('#wlSrc').textContent=on?[
+    signer==='native'?'DEHUB WALLET · GAS SPONSORED':signer==='injected'?'BROWSER WALLET':'READ ONLY',
+    sol.addr?'PHANTOM':(sa?'SOLANA READ ONLY':'')].filter(Boolean).join(' · '):'';
+  $('#wlConnect').textContent=wallet.addr?'↻ REFRESH':(signer==='native'?'＋ BROWSER WALLET':'CONNECT WALLET');
+  $('#wlSol').textContent=sol.addr?'◎ PHANTOM · '+sol.addr.slice(0,4)+'…':'◎ CONNECT PHANTOM';
+  $('#wlSol').classList.toggle('live',!!sol.addr);
   $('#btnWallet').classList.toggle('live',on);
   $('#wlTotal').textContent=on?'$'+fmtBig(wallet.usd):'—';
   const v=wallet.pnlReal!=null?wallet.pnlReal:wallet.pnl24;
@@ -10856,26 +11440,289 @@ function syncWalletUI(){
     (wallet.pnlReal!=null?'  REAL 24H':'  24H MARKET MOVE')):'—';
   el.style.color=v>=0?'var(--up)':'var(--down)';
   const list=$('#wlList');list.innerHTML='';
-  for(const a of wallet.assets.slice(0,8)){
+  for(const a of wallet.assets.slice(0,24)){
     const d=document.createElement('div');d.className='wlRow';
-    d.innerHTML='<b>'+a.sym+'</b><span>'+(+a.qty.toPrecision(5))+'</span>'+
-      '<span class="v">$'+fmtBig(a.qty*a.px)+'</span>';
+    const chLabel=CHAINS[a.chain]?CHAINS[a.chain].label:a.chain;
+    d.innerHTML='<b>'+a.sym+'</b><span class="ch">'+chLabel+'</span><span>'+(+a.qty.toPrecision(5))+'</span>'+
+      '<span class="v">$'+fmtBig(a.qty*a.px)+'<i style="color:'+((a.ch||0)>=0?'var(--up)':'var(--down)')+'">'+
+      ((a.ch||0)>=0?'+':'')+(+(a.ch||0)).toFixed(1)+'%</i></span>'+
+      (a.addr&&CHAINS[a.chain]?'<span class="go" data-sell="1">SELL</span>':'');
+    const go=d.querySelector('.go');
+    if(go)go.addEventListener('click',()=>{tdTarget(marketFor(a),'sell');});
     list.appendChild(d);
   }
+  if(!wallet.assets.length)list.innerHTML='<div id="tdEmpty">'+(on?'NOTHING HELD ON BASE, ROBINHOOD OR SOLANA YET':'CONNECT A WALLET, OR SIGN IN TO DEHUB')+'</div>';
   $('#wlNote').innerHTML=on&&wallet.pnlReal==null
     ? 'REAL 24H PNL NEEDS A DAY OF SNAPSHOTS. UNTIL THEN THIS IS THE MARKET MOVE ON YOUR CURRENT BAG, NOT TRADING PERFORMANCE.'
     : '';
   /* the desk is signed in to the same wallet — don't make it wait for the tick */
   syncDesk();
+  tdFillSelect();
+}
+/* A held token that is not on the wall still needs a market to be sold
+   through: a stub carrying just what the ticket reads. */
+function marketFor(a){
+  const found=[...memes,...pinned].find(m=>m.chain===a.chain&&m.tokenAddr&&
+    (CHAINS[a.chain].sol?m.tokenAddr===a.addr:m.tokenAddr.toLowerCase()===a.addr));
+  if(found)return found;
+  /* a fill remembers the pool it went through, which is what a v4 sell needs */
+  const f=fills.find(x=>x.chain===a.chain&&x.token&&(CHAINS[a.chain].sol?x.token===a.addr:x.token.toLowerCase()===a.addr));
+  return {sym:a.sym,chain:a.chain,tokenAddr:a.addr,price:a.px,pct24:a.ch,fed:true,stub:true,
+    vol24:0,mcap:0,liq:0,pairAt:0,pairAddr:f?f.pair:'',v4:!!(f&&f.v4)};
 }
 $('#btnWallet').addEventListener('click',()=>{
   const p=$('#walletPanel');p.classList.toggle('on');
-  if(p.classList.contains('on')){syncWalletUI();if(wallet.addr)refreshWallet();}
+  if(p.classList.contains('on')){syncWalletUI();tdRender();refreshWallet();}
 });
 $('#wlConnect').addEventListener('click',()=>{
   if(wallet.addr)refreshWallet();else connectWallet();
 });
+$('#wlSol').addEventListener('click',()=>{
+  if(sol.addr)refreshWallet();else solConnect();
+});
+document.querySelectorAll('.wtab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.wtab').forEach(x=>x.classList.toggle('on',x===t));
+  const tab=t.dataset.tab;
+  document.querySelectorAll('.wpane').forEach(p=>p.classList.toggle('on',p.id==='wp'+tab[0].toUpperCase()+tab.slice(1)));
+  if(tab==='fills')renderFills();
+  if(tab==='cex')ac();
+}));
+
+/* ------------------------------ the ticket ------------------------------ */
+const td={m:null,side:'buy',amt:null,pct:null,slip:3,plan:null,busy:false,armTimer:0};
+function tradable(m){return !!(m&&m.fed&&m.tokenAddr&&CHAINS[m.chain]);}
+function tdFillSelect(){
+  const sel=$('#tdSel');
+  const cur=td.m;
+  const rows=allMarkets().filter(tradable);
+  /* held bags the wall no longer shows still deserve a SELL */
+  for(const a of wallet.assets)if(a.addr&&CHAINS[a.chain]){
+    const m=marketFor(a);
+    if(!rows.includes(m)&&!rows.some(r=>r.chain===m.chain&&r.tokenAddr===m.tokenAddr))rows.push(m);
+  }
+  const key=m=>m.chain+':'+m.tokenAddr;
+  const want=rows.map(key).join('|');
+  if(sel.dataset.want===want)return;
+  sel.dataset.want=want;
+  sel.innerHTML='<option value="">SELECT A TOKEN ON THE WALL</option>';
+  for(const m of rows){
+    const o=document.createElement('option');
+    o.value=key(m);o.textContent=m.sym+' · '+CHAINS[m.chain].label+(m.stub?' · HELD':'');
+    sel.appendChild(o);
+  }
+  sel.value=cur?key(cur):'';
+  td.rows=rows;
+}
+$('#tdSel').addEventListener('change',()=>{
+  const m=(td.rows||[]).find(x=>x.chain+':'+x.tokenAddr===$('#tdSel').value);
+  if(m)tdTarget(m,td.side);
+});
+/* Load a token into the ticket and put the panel up. `side` is a hint —
+   SELL from the bag, BUY from a screen. */
+function tdTarget(m,side){
+  if(!tradable(m)){toast('THAT SCREEN CANNOT BE TRADED FROM HERE');return;}
+  td.m=m;td.side=side||td.side;td.plan=null;td.amt=null;td.pct=null;tdDisarm();
+  tdSideUI();
+  const p=$('#walletPanel');
+  if(!p.classList.contains('on')){p.classList.add('on');syncWalletUI();refreshWallet();}
+  document.querySelectorAll('.wtab').forEach(x=>x.classList.toggle('on',x.dataset.tab==='trade'));
+  document.querySelectorAll('.wpane').forEach(x=>x.classList.toggle('on',x.id==='wpTrade'));
+  tdFillSelect();
+  $('#tdSel').value=m.chain+':'+m.tokenAddr;
+  tdRender();
+}
+function tdSideUI(){
+  document.querySelectorAll('.sd').forEach(x=>x.classList.toggle('on',x.dataset.side===td.side));
+  $('#tdGo').dataset.side=td.side;
+  const ch=td.m&&CHAINS[td.m.chain];
+  const box=$('#tdAmts');box.innerHTML='';
+  const opts=td.side==='buy'?(ch?ch.presets:[]):[25,50,75,100];
+  for(const v of opts){
+    const b=document.createElement('span');b.className='amt';
+    b.textContent=td.side==='buy'?v+' '+(ch?ch.gas:''):v+'%';
+    b.classList.toggle('on',td.side==='buy'?td.amt===v:td.pct===v);
+    b.addEventListener('click',()=>{
+      if(td.side==='buy'){td.amt=v;$('#tdAmt').value='';}else{td.pct=v;$('#tdAmt').value='';}
+      tdDisarm();tdSideUI();tdRender();
+    });
+    box.appendChild(b);
+  }
+  $('#tdUnit').textContent=td.side==='buy'?(ch?ch.gas:''):'%';
+  $('#tdAmt').placeholder=td.side==='buy'?'CUSTOM AMOUNT':'CUSTOM %';
+}
+document.querySelectorAll('.sd').forEach(x=>x.addEventListener('click',()=>{
+  td.side=x.dataset.side;td.amt=null;td.pct=null;$('#tdAmt').value='';tdDisarm();tdSideUI();tdRender();
+}));
+document.querySelectorAll('.sl').forEach(x=>x.addEventListener('click',()=>{
+  td.slip=+x.dataset.s;
+  document.querySelectorAll('.sl').forEach(y=>y.classList.toggle('on',y===x));
+  tdDisarm();tdRender();
+}));
+$('#tdAmt').addEventListener('input',()=>{
+  const v=parseFloat($('#tdAmt').value);
+  if(td.side==='buy')td.amt=isFinite(v)&&v>0?v:null;else td.pct=isFinite(v)&&v>0?Math.min(100,v):null;
+  document.querySelectorAll('.amt').forEach(b=>b.classList.remove('on'));
+  tdDisarm();tdRender();
+});
+function tdHeld(){
+  const m=td.m;if(!m)return null;
+  const ch=CHAINS[m.chain];
+  return wallet.assets.find(a=>a.addr&&a.chain===m.chain&&
+    (ch.sol?a.addr===m.tokenAddr:a.addr===m.tokenAddr.toLowerCase()))||null;
+}
+function tdGas(){
+  const m=td.m;if(!m)return null;
+  return wallet.assets.find(a=>a.native&&a.chain===m.chain)||null;
+}
+function ageOf(t){
+  if(!t)return '—';
+  const h=(Date.now()-t)/3600e3;
+  return h<1?Math.max(1,Math.round(h*60))+'M':h<48?Math.round(h)+'H':Math.round(h/24)+'D';
+}
+function tdRisk(m){
+  const out=[];
+  const liq=m.liq||0,vol=m.vol24||0,age=m.pairAt?(Date.now()-m.pairAt)/3600e3:null;
+  if(!m.stub){
+    if(liq<5000)out.push('<b class="bad">THIN POOL</b> UNDER $5K — A SELL MOVES THE PRICE');
+    else if(liq<25000)out.push('<b>LOW LIQUIDITY</b> UNDER $25K');
+    if(age!=null&&age<24)out.push('<b>NEW PAIR</b> '+ageOf(m.pairAt)+' OLD');
+    if(liq>0&&vol/liq>20)out.push('<b>VOLUME '+Math.round(vol/liq)+'× LIQUIDITY</b> — WASH OR MANIA');
+    if(!out.length)out.push('<b class="ok">NO RED FLAGS</b> ON DEPTH, AGE OR TURNOVER');
+  }else out.push('HELD · NOT ON THE WALL RIGHT NOW');
+  const signer=CHAINS[m.chain].sol?(sol.addr?null:'CONNECT PHANTOM TO SIGN'):(evmSigner()?null:'CONNECT A WALLET, OR OPEN THIS INSIDE DEHUB');
+  if(signer)out.push('<b>'+signer+'</b>');
+  return out.join('<br>');
+}
+function tdRender(){
+  const m=td.m;
+  const go=$('#tdGo');
+  if(!m){
+    $('#tdSym').innerHTML='—<small id="tdChain"></small>';$('#tdPx').textContent='—';
+    for(const id of ['tdCh','tdLiq','tdMc','tdVol','tdAge'])$('#'+id).textContent='—';
+    $('#tdRisk').textContent='';$('#tdHold').textContent='';
+    go.disabled=true;go.textContent='SELECT A TOKEN';
+    return;
+  }
+  const ch=CHAINS[m.chain];
+  $('#tdSym').innerHTML=m.sym+'<small id="tdChain">'+ch.label+'</small>';
+  $('#tdPx').textContent=m.price?'$'+fmtPx(m.price):'—';
+  const c=m.pct24||0;
+  $('#tdCh').textContent=(c>=0?'+':'')+c.toFixed(1)+'%';$('#tdCh').style.color=c>=0?'var(--up)':'var(--down)';
+  $('#tdLiq').textContent=m.liq?'$'+fmtBig(m.liq):'—';
+  $('#tdMc').textContent=m.mcap?'$'+fmtBig(m.mcap):'—';
+  $('#tdVol').textContent=m.vol24?'$'+fmtBig(m.vol24):'—';
+  $('#tdAge').textContent=ageOf(m.pairAt);
+  $('#tdRisk').innerHTML=tdRisk(m);
+  const held=tdHeld(),gas=tdGas();
+  if(td.side==='buy'){
+    $('#tdHold').textContent=(gas?'BALANCE '+(+gas.qty.toPrecision(5))+' '+ch.gas+' · $'+fmtBig(gas.qty*gas.px):'')+
+      (held?'   ·   HOLDING '+(+held.qty.toPrecision(5))+' '+m.sym:'');
+  }else{
+    $('#tdHold').textContent=held?'HOLDING '+(+held.qty.toPrecision(6))+' '+m.sym+' · $'+fmtBig(held.qty*held.px)+
+      (td.pct?'   →   SELLING '+(+(held.qty*td.pct/100).toPrecision(5)):''):'NOTHING HELD';
+  }
+  if(td.plan&&go.dataset.armed==='1')return;   /* armed text stays until it fires */
+  const amtOk=td.side==='buy'?td.amt>0:(td.pct>0&&held);
+  const canSign=ch.sol?true:!!evmSigner();     /* Phantom connects on press */
+  go.disabled=!(amtOk&&canSign)||td.busy;
+  go.textContent=td.busy?'WORKING…':td.side==='buy'
+    ?(td.amt?'BUY '+m.sym+' FOR '+td.amt+' '+ch.gas:'PICK AN AMOUNT')
+    :(td.pct&&held?'SELL '+td.pct+'% '+m.sym+' → '+ch.gas:held?'PICK A SIZE':'NOTHING TO SELL');
+}
+function fmtPx(p){return p>=1?p.toLocaleString(undefined,{maximumFractionDigits:2}):(+p.toPrecision(4)).toString();}
+function tdDisarm(){
+  td.plan=null;clearTimeout(td.armTimer);
+  const go=$('#tdGo');go.dataset.armed='';
+}
+/* Two presses: the first quotes and shows exactly what will happen, the
+   second is the only thing that sends. An armed ticket that sits for a while
+   is a stale quote — it disarms itself. */
+$('#tdGo').addEventListener('click',async()=>{
+  const m=td.m;if(!m||td.busy)return;
+  const go=$('#tdGo'),msg=$('#tdMsg');
+  if(go.dataset.armed==='1'&&td.plan){
+    const plan=td.plan;tdDisarm();
+    td.busy=true;tdRender();
+    const ch=plan.ch;
+    const inUnit=plan.side==='buy'?ch.gas:m.sym,outUnit=plan.side==='buy'?m.sym:ch.gas;
+    const inQty=fmtUnits(plan.amountIn,plan.side==='buy'?ch.dec:(tdHeld()||{dec:18}).dec);
+    msg.innerHTML='SENDING…';
+    let fill=null;
+    const onStage=(stage,d)=>{
+      if(stage==='approving'||stage==='approved')msg.innerHTML='APPROVING '+m.sym+' FOR THE ROUTER…';
+      if(stage==='mined'){updateFill(fill&&fill.hash,{status:'CONFIRMED'});playSound('cash');toast((plan.side==='buy'?'BOUGHT ':'SOLD ')+m.sym);
+        msg.innerHTML='CONFIRMED · <a href="'+txUrl(ch.key,fill.hash)+'" target="_blank" rel="noopener">'+fill.hash.slice(0,14)+'…</a>';
+        setTimeout(refreshWallet,4000);}
+      if(stage==='failed'){updateFill(fill&&fill.hash,{status:'FAILED'});msg.innerHTML='<b>FAILED ON CHAIN</b> · '+((d&&d.reason)||'');}
+      if(stage==='lost')updateFill(fill&&fill.hash,{status:'UNKNOWN'});
+    };
+    try{
+      const hash=await plan.send(onStage);
+      fill=recordFill({t:Date.now(),chain:ch.key,side:plan.side,sym:m.sym,token:m.tokenAddr,pair:m.pairAddr||'',v4:!!m.v4,
+        inQty,inUnit,outUnit,hash,status:'SENT',usd:plan.side==='buy'?td.amt*((tdGas()||{px:0}).px||0):0});
+      msg.innerHTML='SENT · <a href="'+txUrl(ch.key,hash)+'" target="_blank" rel="noopener">'+hash.slice(0,14)+'…</a> · WAITING FOR THE CHAIN';
+      td.amt=null;td.pct=null;$('#tdAmt').value='';
+    }catch(e){
+      const s=String(e&&e.message||e);
+      msg.innerHTML='<b>'+(e&&e.code===4001?'REJECTED IN WALLET':'NOT SENT')+'</b> · '+s.slice(0,90);
+    }
+    td.busy=false;tdSideUI();tdRender();
+    return;
+  }
+  /* first press: quote */
+  td.busy=true;tdRender();msg.textContent='QUOTING…';
+  try{
+    const ch=CHAINS[m.chain];
+    let plan;
+    if(td.side==='buy'){
+      if(!(td.amt>0))throw new Error('pick an amount');
+      plan=ch.sol?await planSol(m,'buy',toUnits(td.amt,9),td.slip):await planBuyEvm(m,td.amt,td.slip);
+    }else{
+      const held=tdHeld();
+      if(!held||!(td.pct>0))throw new Error('nothing to sell');
+      const raw=td.pct>=100?held.raw:held.raw*BigInt(Math.round(td.pct*100))/10000n;
+      if(raw<=0n)throw new Error('nothing to sell');
+      plan=ch.sol?await planSol(m,'sell',raw,td.slip):await planSellEvm(m,raw,td.slip);
+    }
+    td.plan=plan;
+    const outDec=plan.side==='buy'?(ch.sol?(plan.q.outAmount&&m.dec)||null:null):ch.dec;
+    const minOut=plan.side==='buy'
+      ? (ch.sol?'':'')+(outDec!=null?(+fmtUnits(plan.minOut,outDec).toPrecision(6)):'')
+      : (+fmtUnits(plan.minOut,ch.dec).toPrecision(6))+' '+ch.gas;
+    const route=ch.sol?(plan.q.routePlan||[]).map(r=>r.swapInfo&&r.swapInfo.label).filter(Boolean).slice(0,3).join(' → ')||'JUPITER'
+      :'UNISWAP V3 · '+(plan.q.fee/10000)+'% POOL';
+    const impact=ch.sol&&plan.q.priceImpactPct!=null?' · IMPACT '+(+plan.q.priceImpactPct*100).toFixed(2)+'%':'';
+    const who=ch.sol?'PHANTOM':(evmSigner()==='native'?'DEHUB WALLET · GAS SPONSORED':'YOUR WALLET');
+    msg.innerHTML='ROUTE '+route+impact+'<br>MIN RECEIVED '+(minOut||('per quote, '+td.slip+'% slippage'))+
+      '<br>SIGNS WITH '+who+' · <b>PRESS AGAIN TO SEND</b>';
+    go.dataset.armed='1';
+    go.textContent=(plan.side==='buy'?'CONFIRM BUY ':'CONFIRM SELL ')+m.sym;
+    clearTimeout(td.armTimer);
+    td.armTimer=setTimeout(()=>{if(td.plan===plan){tdDisarm();msg.textContent='QUOTE EXPIRED — PRESS AGAIN';tdRender();}},20000);
+  }catch(e){
+    msg.innerHTML='<b>NO QUOTE</b> · '+String(e&&e.message||e).slice(0,90);
+  }
+  td.busy=false;tdRender();
+});
+function renderFills(){
+  const box=$('#tdLog');box.innerHTML='';
+  if(!fills.length){box.innerHTML='<div id="tdEmpty">NO FILLS FROM THIS DESK YET</div>';return;}
+  for(const f of fills.slice(0,40)){
+    const d=document.createElement('div');d.className='fill';
+    const st=f.status||'SENT';
+    d.innerHTML='<span class="side '+f.side+'">'+f.side.toUpperCase()+'</span><b>'+f.sym+'</b>'+
+      '<span>'+f.inQty+' '+f.inUnit+' → '+f.outUnit+'</span>'+
+      '<span class="ch">'+(CHAINS[f.chain]?CHAINS[f.chain].label:f.chain)+'</span>'+
+      '<a href="'+txUrl(f.chain,f.hash)+'" target="_blank" rel="noopener">'+f.hash.slice(0,8)+'…</a>'+
+      '<span class="st '+(st==='CONFIRMED'?'ok':st==='FAILED'?'bad':'')+'">'+st+'</span>';
+    box.appendChild(d);
+  }
+}
 syncWalletUI();
+tdSideUI();
+tdRender();
+/* the ticket reads live numbers; keep it honest while it is open */
+setInterval(()=>{if($('#walletPanel').classList.contains('on')&&td.m&&!td.busy&&$('#tdGo').dataset.armed!=='1')tdRender();},2000);
 
 /* binance controls */
 function bnxUI(){
@@ -10894,16 +11741,21 @@ $('#bnNet').addEventListener('change',()=>{
     ? 'LIVE SELECTED — ORDERS WILL SPEND REAL FUNDS'
     : 'TESTNET SELECTED';
 });
-$('#bnLoad').addEventListener('click',()=>{
-  bnx.key=$('#bnKey').value.trim();
-  bnx.secret=$('#bnSecret').value.trim();
-  bnx.net=$('#bnNet').value;
-  if(!bnx.key||!bnx.secret){$('#bnStat').textContent='ENTER BOTH KEY AND SECRET.';return;}
+$('#bnLoad').addEventListener('click',async()=>{
   if(!crypto.subtle){
     $('#bnStat').textContent='NEEDS localhost — OPEN VIA "TRENCHSTAR (start here).cmd"';
     return;
   }
-  bnxRemember();
+  bnx.net=$('#bnNet').value;
+  let key=$('#bnKey').value.trim(),secret=$('#bnSecret').value.trim();
+  /* nothing typed but a locked save on disk: the PIN opens it */
+  if((!key||!secret)&&$('#bnRemember').checked){
+    if(!(await bnxUnlock()))return;
+    key=bnx.key;secret=bnx.secret;
+  }
+  bnx.key=key;bnx.secret=secret;
+  if(!bnx.key||!bnx.secret){$('#bnStat').textContent='ENTER BOTH KEY AND SECRET.';return;}
+  if(!(await bnxRemember()))return;
   bnxLoadAccount();
 });
 $('#bnSend').addEventListener('click',()=>{
@@ -10912,39 +11764,21 @@ $('#bnSend').addEventListener('click',()=>{
 bnxRestore();
 
 /* ------------------------------ buy ---------------------------------- */
+/* The focus HUD used to carry its own ETH-on-Base buy box. The ticket in the
+   wallet panel does every chain now, so this hands the focused market over. */
 let buyTarget=null;
 function syncBuyBox(){
   const s=focus.screen,m=s&&s.market;
-  const ok=m&&m.kind==='dex'&&m.chain==='base'&&m.tokenAddr;
+  const ok=tradable(m);
   buyTarget=ok?m:null;
   $('#buyBox').style.display=ok?'':'none';
-  $('#buyQuote').textContent='';
+  $('#buyQuote').textContent=ok?m.sym+' · '+CHAINS[m.chain].label+(m.liq?' · LIQ $'+fmtBig(m.liq):''):'';
+  if(ok)$('#buyGo').textContent='⇄ TRADE '+m.sym;
 }
-$('#buyGo').addEventListener('click',async()=>{
+$('#buyGo').addEventListener('click',()=>{
   const m=buyTarget;if(!m)return;
-  const amt=parseFloat($('#buyAmt').value);
-  if(!isFinite(amt)||amt<=0){toast('Enter an ETH amount.');return;}
-  if(!wallet.addr){connectWallet();return;}
-  const q=$('#buyQuote');
-  q.textContent='QUOTING…';
-  const plan=await buyToken(m.tokenAddr,amt,3);
-  if(!plan){q.textContent='';return;}
-  const outMin=fmtUnits(plan.amountOutMin,18);
-  q.innerHTML='ROUTE '+(plan.quote.fee/10000)+'% POOL<br>MIN RECEIVED '+
-    (+outMin.toPrecision(6))+' '+m.sym+'<br>SIMULATED OK — CONFIRM IN YOUR WALLET';
-  /* the send itself is the wallet's own confirmation dialog; we never
-     auto-submit and we never hold a key */
-  try{
-    const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[plan.tx]});
-    q.innerHTML='SENT · '+hash.slice(0,14)+'…';
-    toast('SWAP SENT · '+m.sym);
-    playSound('cash');
-    setTimeout(refreshWallet,9000);
-  }catch(e){
-    q.textContent=e.code===4001?'REJECTED IN WALLET.':'FAILED · '+String(e.message||'').slice(0,54);
-  }
+  tdTarget(m,'buy');
 });
-
 /* ============================ binance ================================
    Signed REST is impossible from a page: the preflight for /api/v3/account
    returns no Access-Control-Allow-Headers at all, so X-MBX-APIKEY can never
@@ -10969,24 +11803,70 @@ const bnx={ws:null,key:'',secret:'',net:'test',offset:0,ready:false,
    whole stablecoin balance the moment the stream connects. */
 const BNX_STABLE=/^(USDT|BUSD|USDC|FDUSD|TUSD|DAI|USDP)$/;
 
-function bnxRemember(){
+/* SAVED KEYS ARE CIPHERTEXT.
+   "Remember on this machine" used to write the API key and secret to
+   localStorage in the clear — and inside the app the frame shares dehub.io's
+   storage, so live exchange credentials sat in the social app's own store.
+   Now they are wrapped under a PIN: PBKDF2 (200k rounds) into an AES-GCM key,
+   and only the wrapped blob touches disk. Without the PIN the blob is noise;
+   a v1 plaintext entry found on load is used once and deleted, never kept. */
+const hexOf=u=>[...new Uint8Array(u)].map(b=>b.toString(16).padStart(2,'0')).join('');
+const unhex=h=>new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));
+async function pinKey(pin,salt){
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},base,
+    {name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function bnxRemember(){
   /* opt-in only, and we say what it costs */
   try{
-    if($('#bnRemember').checked)
-      localStorage.setItem('trenchstar.bnx',JSON.stringify({k:bnx.key,s:bnx.secret,n:bnx.net}));
-    else localStorage.removeItem('trenchstar.bnx');
-  }catch(e){}
+    if(!$('#bnRemember').checked){localStorage.removeItem('trenchstar.bnx');return true;}
+    const pin=$('#bnPin').value;
+    if(pin.length<4){$('#bnStat').textContent='A PIN OF 4+ DIGITS LOCKS THE SAVED KEYS.';return false;}
+    const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+    const key=await pinKey(pin,salt);
+    const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,
+      new TextEncoder().encode(JSON.stringify({k:bnx.key,s:bnx.secret})));
+    localStorage.setItem('trenchstar.bnx',JSON.stringify({v:2,n:bnx.net,salt:hexOf(salt),iv:hexOf(iv),ct:hexOf(ct)}));
+    return true;
+  }catch(e){return false;}
+}
+async function bnxUnlock(){
+  try{
+    const j=JSON.parse(localStorage.getItem('trenchstar.bnx')||'null');
+    if(!j||j.v!==2)return false;
+    const pin=$('#bnPin').value;
+    if(pin.length<4){$('#bnStat').textContent='ENTER THE PIN THAT LOCKED THE SAVED KEYS.';return false;}
+    const key=await pinKey(pin,unhex(j.salt));
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(j.iv)},key,unhex(j.ct));
+    const o=JSON.parse(new TextDecoder().decode(pt));
+    bnx.key=o.k||'';bnx.secret=o.s||'';
+    $('#bnKey').value=bnx.key;$('#bnSecret').value=bnx.secret;
+    return true;
+  }catch(e){$('#bnStat').textContent='WRONG PIN.';return false;}
 }
 function bnxRestore(){
   try{
     const j=JSON.parse(localStorage.getItem('trenchstar.bnx')||'null');
-    if(j){bnx.key=j.k||'';bnx.secret=j.s||'';bnx.net=j.n||'test';
-      $('#bnKey').value=bnx.key;$('#bnSecret').value=bnx.secret;
-      $('#bnRemember').checked=true;$('#bnNet').value=bnx.net;}
+    if(!j)return;
+    if(j.k){
+      /* a plaintext save from before: use it this once and take it off disk */
+      bnx.key=j.k||'';bnx.secret=j.s||'';bnx.net=j.n||'test';
+      $('#bnKey').value=bnx.key;$('#bnSecret').value=bnx.secret;$('#bnNet').value=bnx.net;
+      localStorage.removeItem('trenchstar.bnx');
+      $('#bnRemember').checked=true;$('#bnPinRow').classList.add('on');
+      $('#bnStat').textContent='SAVED KEYS WERE UNENCRYPTED — SET A PIN AND LOAD TO KEEP THEM.';
+      return;
+    }
+    if(j.v===2){
+      bnx.net=j.n||'test';$('#bnNet').value=bnx.net;
+      $('#bnRemember').checked=true;$('#bnPinRow').classList.add('on');
+      $('#bnPinNote').textContent='UNLOCKS SAVED KEYS';
+      $('#bnStat').textContent='SAVED KEYS FOUND — ENTER THE PIN AND LOAD.';
+    }
   }catch(e){}
 }
-/* Binance rejects anything outside [serverTime-recvWindow, serverTime+1000],
-   and laptop clock drift is the usual cause of -1021 */
+$('#bnRemember').addEventListener('change',()=>{$('#bnPinRow').classList.toggle('on',$('#bnRemember').checked);});
 async function bnxSyncClock(){
   try{
     const host=bnx.net==='test'?'https://testnet.binance.vision':'https://api.binance.com';
@@ -11582,7 +12462,9 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   pnlSource,paperPnl,bnx,bnxRevalue,bnxStartStream,bnxStopStream,bnxSnapshot,
   get cityRing(){return cityRing;},buildCityRing,clearCityRing,dressPlate,cityLife,life,
   get skyMesh(){return skyMesh;},
-  wallet,dehubAddr,watchAddr,connectWallet,refreshWallet,quoteBest,buyToken,encExactInputSingle,
+  wallet,dehubAddr,watchAddr,connectWallet,refreshWallet,quoteBest,quoteEvm,encExactInputSingle,encMulticall,
+  CHAINS,td,tdTarget,tdRender,fills,sol,solConnect,solAddr,planBuyEvm,planSellEvm,planSol,bs58,hostTrade,tradeWaits,
+  V4,v4Key,quoteV4,encV4Swap,abiEnc,routeEvm,bnxRemember,bnxUnlock,bnxRestore,syncWalletUI,tdFillSelect,
   fmtUnits,toUnits,SEL,BASE,
   get mode(){return MODE;},
   get layout(){return LAYOUT;},
