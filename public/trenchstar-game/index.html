@@ -2428,6 +2428,10 @@ const skinAlpha=(()=>{
 const floorMat=new THREE.MeshStandardMaterial({color:0x0a0e14,roughness:0.30,metalness:0.55,
   envMapIntensity:0.14,transparent:true,alphaMap:skinAlpha,depthWrite:false});
 let mirror=null,mirrorTint=0x8d99a6,FLOOR_Q='mirror';
+/* The quality ladder's cheap rung for the reflection: half the target and a
+   quarter of the refreshes. Roughly an eighth of the mirror's cost for a
+   floor that still reflects the wall — the plain floor is the rung after. */
+let MIRROR_LITE=false;
 const FLOOR_R=17;   /* was 27 — the excess just read as empty space */
 
 /* ---- GLOSS, NOT A MIRROR --------------------------------------------------
@@ -2540,9 +2544,10 @@ function buildFloor(){
     const dpr=Math.min(devicePixelRatio||1,2);
     /* A phone's reflection is blurred harder by the gloss shader anyway, so
        it gets a target a quarter the area and nobody can tell. */
+    const px=(host.clientWidth||innerWidth)*dpr;
     const res=GFX.phone
-      ?clamp(Math.floor((host.clientWidth||innerWidth)*dpr*0.4),320,640)
-      :clamp(Math.floor((host.clientWidth||innerWidth)*dpr*0.5),640,1280);
+      ?(MIRROR_LITE?clamp(Math.floor(px*0.25),240,400):clamp(Math.floor(px*0.4),320,640))
+      :(MIRROR_LITE?clamp(Math.floor(px*0.3),400,720):clamp(Math.floor(px*0.5),640,1280));
     mirror=new Reflector(geo,{textureWidth:res,textureHeight:res,color:mirrorTint,clipBias:0.0015,
       shader:GlossShader});
     /* Reflector deep-clones the uniforms, so the roughness map and the knobs
@@ -2569,7 +2574,7 @@ function buildFloor(){
        flickers the way hiding the mesh would. */
     const reflect=mirror.onBeforeRender;
     let phase=0;
-    const every=GFX.phone?3:2;
+    const every=(GFX.phone?3:2)*(MIRROR_LITE?2:1);
     mirror.onBeforeRender=function(...a){
       if((phase++ % every)===0)reflect.apply(this,a);
     };
@@ -11510,7 +11515,7 @@ const repaintAll=()=>screens.forEach(s=>{s.paint(s);s.tex.needsUpdate=true;});
 window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   GFX,envProbe,GlossShader,floorRough,glassScreenMat,SCREEN_GLASS,get mirror(){return mirror;},
   buildFloor,get FLOOR_Q(){return FLOOR_Q;},set FLOOR_Q(v){FLOOR_Q=v;},
-  get bloom(){return bloom;},setShadows,
+  get bloom(){return bloom;},setShadows,get gfx(){return gfx;},get MIRROR_LITE(){return MIRROR_LITE;},
   get firstFrame(){return firstFrame;},set firstFrame(v){firstFrame=!!v;},
   focusOn,release,repaint:repaintAll,
   focus,flickTarget,flickFocus,flickPool,flickLaneOf,flickAny,syncFocusHud,
@@ -11752,7 +11757,83 @@ renderer.xr.addEventListener('sessionend',vrEnd);
 
 /* ============================== main loop ============================= */
 let frame=0,lastT=performance.now();
-let fpsAcc=0,fpsN=0,slowSince=0,firstFrame=false;
+let firstFrame=false;
+/* ---- ADAPTIVE QUALITY -----------------------------------------------------
+   A ladder, not a cliff. The old path averaged frames over two seconds and
+   took a permanent step down whenever that average fell under 28 fps — and
+   an AVERAGE cannot tell a struggling GPU from a busy main thread. Picking a
+   character parses a 2 MB GLB, converts its materials and bakes four preview
+   cards; the first walk uploads its skin. Each of those is a stall of a few
+   hundred milliseconds that dragged the mean under the line, so the room
+   opened on the mirror floor, looked perfect, and then — right as you started
+   moving — dropped its shadows, its bloom, its pixel ratio and finally the
+   mirror itself, with nothing that ever put any of them back.
+
+   Three changes:
+     · the MEDIAN frame time decides, so a stall is one slow sample among a
+       hundred normal ones and does not register. A GPU that is really over
+       budget is slow on EVERY frame, which is exactly what a median sees.
+     · a rung between "mirror" and "plain": the reflection at half the
+       target and a quarter of the refreshes, for a floor that still reflects.
+     · it climbs back. Comfortably fast for three windows in a row and the
+       ladder steps up one rung; every time it has to come down again the
+       climb needs twice as many windows, so a machine that sits on the line
+       settles on the rung below it instead of flickering across it. */
+const PIXEL_RATIO=Math.min(devicePixelRatio,GFX.phone?1.25:1.5);
+const gfx=(()=>{
+  const RUNGS=['full','noShadow','mirrorLite','noBloom','plainFloor'];
+  let level=0,bloomSaved=null,probeSaved=null;
+  let dts=[],winT=0,slow=0,fast=0,upNeed=3;
+  function down(){
+    if(level>=RUNGS.length-1)return;
+    level++;
+    if(level===1){probeSaved=envProbe.period;setShadows(false);envProbe.period=Math.max(envProbe.period,20);}
+    else if(level===2){MIRROR_LITE=true;if(FLOOR_Q==='mirror')buildFloor();}
+    else if(level===3){
+      bloomSaved=bloom.strength;bloom.strength=0;
+      /* The composer keeps its OWN pixel ratio and owns the expensive
+         full-screen passes; dropping only the renderer's barely moved. Size
+         off viewport(), not the window — inside the arcade's iframe they
+         differ, and resize() early-returns while the window itself is still. */
+      renderer.setPixelRatio(1);
+      if(composer.setPixelRatio)composer.setPixelRatio(1);
+      composer.setSize(...viewport());
+    }
+    else if(level===4){if(FLOOR_Q==='mirror'){FLOOR_Q='plain';buildFloor();}}
+  }
+  function up(){
+    if(level<=0)return;
+    if(level===4){if(FLOOR_Q==='plain'){FLOOR_Q='mirror';buildFloor();}}
+    else if(level===3){
+      if(bloomSaved!==null)bloom.strength=bloomSaved;
+      renderer.setPixelRatio(PIXEL_RATIO);
+      if(composer.setPixelRatio)composer.setPixelRatio(PIXEL_RATIO);
+      composer.setSize(...viewport());
+    }
+    else if(level===2){MIRROR_LITE=false;if(FLOOR_Q==='mirror')buildFloor();}
+    else if(level===1){
+      if(!GFX.phone)setShadows(true);
+      if(probeSaved!==null)envProbe.period=probeSaved;
+    }
+    level--;
+  }
+  function sample(dt){
+    dts.push(dt);winT+=dt;
+    if(winT<2)return;
+    /* Fewer than ten frames in two seconds is a tab that is not really
+       running — hidden, or throttled — not a GPU verdict. Throw it away. */
+    const n=dts.length;
+    if(n>=10){
+      dts.sort((a,b)=>a-b);
+      const fps=1/Math.max(dts[n>>1],1e-4);
+      if(fps<28){fast=0;if(++slow>=2){slow=0;down();upNeed=Math.min(24,upNeed*2);}}
+      else if(fps>52){slow=0;if(++fast>=upNeed){fast=0;up();}}
+      else{slow=0;fast=0;}
+    }
+    dts=[];winT=0;
+  }
+  return {sample,down,up,get level(){return level;},get rung(){return RUNGS[level];},RUNGS};
+})();
 /* setAnimationLoop, not requestAnimationFrame: it is the only loop WebXR can drive,
    so a headset session is a small step from here rather than a rewrite. */
 function tick(t){
@@ -11818,44 +11899,11 @@ function tick(t){
   else composer.render();
   if(!firstFrame){firstFrame=true;boot.stage('paint',1);warmAvatars();}
 
-  /* auto-degrade bloom if the GPU is struggling */
-  fpsAcc+=dt;fpsN++;
   /* Not while presenting: entry already took both levers (bloom off, mirror
      off), and resizing the composer mid-session would fight three for the
-     framebuffer it is handing to the headset. */
-  if(fpsAcc>=2&&!vr.on){
-    const fps=fpsN/fpsAcc;fpsAcc=0;fpsN=0;
-    if(fps<28){
-      slowSince++;
-      if(slowSince>=2){
-        /* SHADOWS GO FIRST — before bloom, before the mirror. The shadow map
-           is a second pass over every caster in the room, and it is the newest
-           and least load-bearing thing here: dropping it puts the painted blob
-           back under the trader and costs the desk its contact with the floor,
-           which is a smaller loss than a flat room or a stuttering one. */
-        if(renderer.shadowMap.enabled){setShadows(false);envProbe.period=Math.max(envProbe.period,20);}
-        /* The composer keeps its OWN pixel ratio, and it owns the expensive
-           full-screen passes — dropping only the renderer's left the post
-           chain rendering at the old resolution, so the one lever that was
-           supposed to buy back a struggling GPU barely moved. */
-        else if(bloom.strength>0){
-          bloom.strength=0;
-          renderer.setPixelRatio(1);
-          if(composer.setPixelRatio)composer.setPixelRatio(1);
-          /* viewport(), not innerWidth/innerHeight. Everything else sizes off
-             the host element, and inside the arcade's iframe the two are not
-             the same number — sizing the post chain to the window while the
-             canvas follows the host leaves the composer resolving to a
-             different shape than the thing it is blitted into. resize() then
-             early-returns because the window itself never changed, so it stays
-             wrong until something else forces a resize. */
-          composer.setSize(...viewport());
-        }
-        else if(FLOOR_Q==='mirror'){FLOOR_Q='plain';buildFloor();}   /* mirror goes second */
-      }
-    }
-    else slowSince=0;
-  }
+     framebuffer it is handing to the headset. Not before the first frame
+     either — boot is one long stall by design. */
+  if(!vr.on&&firstFrame)gfx.sample(dt);
 }
 renderer.setAnimationLoop(tick);
 </script>
