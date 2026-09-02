@@ -73,6 +73,35 @@ async function mayPublish(channelName: string, wallet: string): Promise<boolean>
     { auth: { persistSession: false } },
   );
 
+  /**
+   * A one-to-one call is not a stage and has no row in `audio_spaces`.
+   *
+   * Its channel is named `dm-call-<call session id>` by the client, so the
+   * stage lookup below finds nothing and the answer would be a flat no — which
+   * means turning the gate on would have 403'd every voice and video call in
+   * direct messages, on a code path whose whole point is to be switched from
+   * report to enforce once the logs go quiet. The logs would have been quiet:
+   * the report branch is only reached for a caller with a verified DeHub
+   * token, and this refusal would have shown up there as one more line to
+   * scroll past rather than as anything obviously fatal.
+   *
+   * Both parties to a call publish — that is what a call is — so entitlement is
+   * simply being one of the two on the session.
+   */
+  const dmCall = channelName.match(/^dm-call-([0-9a-fA-F-]{36})$/);
+  if (dmCall) {
+    const { data: call } = await admin
+      .from("call_sessions")
+      .select("caller_address, recipient_address")
+      .eq("id", dmCall[1])
+      .maybeSingle();
+    if (!call) return false;
+    return (
+      (call.caller_address || "").toLowerCase() === wallet ||
+      (call.recipient_address || "").toLowerCase() === wallet
+    );
+  }
+
   const { data: stage } = await admin
     .from("audio_spaces")
     .select("id, host_wallet_address")
@@ -146,7 +175,7 @@ serve(async (req) => {
           const auth = await requireDeHubAuth(req);
           if (!auth.ok) return "no valid DeHub token";
           if (!(await mayPublish(channelName, auth.wallet))) {
-            return `wallet ${auth.wallet} holds no host/speaker seat`;
+            return `wallet ${auth.wallet} is not a party to this channel`;
           }
           return null;
         })();
@@ -164,7 +193,7 @@ serve(async (req) => {
         if (mode === "enforce") {
           console.warn(`[agora-token] refused publisher for ${channelName}: ${refusal}`);
           return new Response(
-            JSON.stringify({ error: "Not entitled to speak in this stage." }),
+            JSON.stringify({ error: "Not entitled to publish to this channel." }),
             { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
           );
         }
