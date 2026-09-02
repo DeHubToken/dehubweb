@@ -60,7 +60,38 @@ export function useMuteAuthor() {
         queryClient.invalidateQueries({ queryKey: ['mute-list'] });
         // Says what a mute does and does not do — the point of it being its own
         // control rather than a softer word for Block.
-        toast.success(`Muted ${displayName || 'account'} — they won't know`);
+        //
+        // Undo lives here because there is nowhere else. Once muted, the
+        // author's posts are gone from every feed, so the ⋯ menu that muted
+        // them cannot be reached again — and there is no muted-accounts screen
+        // in Settings to go to. Without this the action is one-way, which is
+        // not what a mute should be. unmuteUser has existed and been reachable
+        // from nothing since it was written.
+        toast.success(`Muted ${displayName || 'account'} — they won't know`, {
+          action: {
+            label: 'Undo',
+            onClick: () => {
+              void (async () => {
+                try {
+                  const { unmuteUser } = await import('@/lib/api/dehub/mutes');
+                  await unmuteUser(target);
+                  queryClient.setQueryData<MutedUser[]>(['mute-list'], (old) =>
+                    (old ?? []).filter((user) => lowerAddress(user.address) !== target));
+                  queryClient.invalidateQueries({ queryKey: ['mute-list'] });
+                  // The pruned pages are gone from the cache, so refetch to
+                  // bring the author's posts back rather than leaving a mute
+                  // that reads as undone and still looks applied.
+                  queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+                  queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
+                  toast.success(`Unmuted ${displayName || 'account'}`);
+                } catch (error) {
+                  console.error('[unmuteAuthor]', error);
+                  toast.error('Failed to unmute account');
+                }
+              })();
+            },
+          },
+        });
       } catch (error) {
         console.error('[muteAuthor]', error);
         toast.error('Failed to mute account');
