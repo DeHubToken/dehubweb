@@ -5,6 +5,7 @@
  */
 
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -21,6 +22,7 @@ interface SetupStoreFlowProps {
 }
 
 export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -39,7 +41,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
       const url = await uploadStoreMedia(file, walletAddress);
       setAvatarUrl(url);
     } catch (err: any) {
-      toast.error(err.message || 'Upload failed');
+      toast.error(err.message || t('stores.uploadFailed'));
     } finally {
       setUploading(false);
     }
@@ -52,7 +54,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
       const url = await uploadStoreMedia(file, walletAddress);
       setBannerUrl(url);
     } catch (err: any) {
-      toast.error(err.message || 'Upload failed');
+      toast.error(err.message || t('stores.uploadFailed'));
     } finally {
       setUploadingBanner(false);
     }
@@ -76,7 +78,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
 
       {/* Banner upload */}
       <div>
-        <Label className="text-zinc-300 text-xs mb-1.5 block">Banner Image</Label>
+        <Label className="text-zinc-300 text-xs mb-1.5 block">{t('stores.bannerImage')}</Label>
         <div
           onClick={() => bannerRef.current?.click()}
           className="relative w-full aspect-[3/1] rounded-xl overflow-hidden bg-white/5 border border-white/10 cursor-pointer group"
@@ -114,23 +116,23 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleAvatarUpload(e.target.files[0])} />
 
       <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold text-primary-foreground">{onCancel ? 'Create New Store' : 'Set up your Store'}</h2>
-        <p className="text-sm text-zinc-400">Create your store to start selling items.</p>
+        <h2 className="text-xl font-bold text-primary-foreground">{onCancel ? t('stores.createNewStore') : t('stores.setUpYourStore')}</h2>
+        <p className="text-sm text-zinc-400">{t('stores.createStoreBlurb')}</p>
       </div>
       <div className="w-full space-y-3">
         <div>
-          <Label className="text-zinc-300">Store Name *</Label>
-          <Input value={name} onChange={e => setName(e.target.value)} placeholder="My Store" className="bg-white/5 border-white/10 placeholder:text-zinc-500" />
+          <Label className="text-zinc-300">{t('stores.storeNameLabel')}</Label>
+          <Input value={name} onChange={e => setName(e.target.value)} placeholder={t('stores.storeNamePlaceholder')} className="bg-white/5 border-white/10 placeholder:text-zinc-500" />
         </div>
         <div>
-          <Label className="text-zinc-300">Description</Label>
-          <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="What do you sell?" className="bg-white/5 border-white/10 placeholder:text-zinc-500" />
+          <Label className="text-zinc-300">{t('stores.descriptionLabel')}</Label>
+          <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder={t('stores.sellPlaceholder')} className="bg-white/5 border-white/10 placeholder:text-zinc-500" />
         </div>
         <LiquidGlassBubble2
-          label="Create Store"
+          label={t('stores.createStore')}
           icon={<ThemedIcon icon="stores" alt="" className="w-5 h-5 object-contain" />}
           loading={createStore.isPending}
-          loadingLabel="Creating..."
+          loadingLabel={t('stores.creating')}
           disabled={!name.trim() || uploading || uploadingBanner}
           onClick={handleCreate}
           width="100%"

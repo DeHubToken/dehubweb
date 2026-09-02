@@ -48,6 +48,11 @@
 /brand/*
   Cache-Control: public, max-age=31536000, immutable
 
+# The welcome panel's art (bg-16.jpg, the globe, the wordmark) — on the LCP
+# path of every signed-out visit and revalidated every time until now.
+/brand-kit/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /osaka/*
   Cache-Control: public, max-age=31536000, immutable
 

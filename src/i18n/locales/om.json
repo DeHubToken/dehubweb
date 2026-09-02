@@ -43,6 +43,7 @@
     "connectAi": "AI walqunnamsiisi"
   },
   "feed": {
+    "viewProfile": "{{name}}'s profile ilaali",
     "home": "Mana",
     "videos": "Viidiyoowwan",
     "images": "Suuraalee",
@@ -955,6 +956,8 @@
     "loginRequired": "Seeninuun barbaachisa"
   },
   "messages": {
+    "encrypted": "Fiixee hanga fiixeetti icciteeffame",
+    "cannotDecrypt": "Ergaa icciteeffame — meeshaa kana irratti banamuu hin danda'u",
     "title": "Ergaawwan",
     "searchConversations": "Haasawa barbaadi...",
     "failedToLoad": "Haasawa fe'uun hin milkoofne",
@@ -1835,5 +1838,25 @@
     "stakeDhb": "DHB kaa'i",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} sadarkaa {{tier}} tti banama"
+  },
+  "videoLooks": {
+    "button": "Bifannoota kaameraa",
+    "title": "Bifa",
+    "hint": "Viidiyoon kee meeshaa kana keessaa osoo hin bahin dura hojiirra oola — ilaaltonni waan ati asitti argitu sirriitti argu.",
+    "backgroundBlur": "Duubbee koo dhoksi",
+    "on": "Banaa",
+    "off": "Cufaa",
+    "none": "Homaa",
+    "soft": "Laafaa",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Ho aa",
+    "cool": "Qorraa",
+    "vivid": "Ifaa",
+    "dream": "Abjuu",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Dhoksuu",
+    "pixelate": "Piksel"
   }
 }

@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import robotAvatar from '@/assets/robot-avatar.png';
 
 type Message = {
@@ -113,7 +113,6 @@ export const DocsChatBot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -221,9 +220,7 @@ export const DocsChatBot = () => {
       await streamChat(newMessages.slice(1)); // Skip the initial greeting
     } catch (error) {
       console.error('Chat error:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: error instanceof Error ? error.message : "Failed to send message. Please try again.",
       });
     } finally {

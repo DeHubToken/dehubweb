@@ -7,22 +7,14 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Briefcase, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import type { ReactNode } from 'react';
 import { useWorkJob } from '@/features/work/hooks/use-work';
 import { useTokenPrices } from '@/hooks/use-token-prices';
+import { statusLabelKey } from '@/features/work/components/TxLink';
 import dehubCoin from '@/assets/dehub-coin.png';
-
-const STATUS_LABEL: Record<string, string> = {
-  draft: 'Draft',
-  open: 'Open',
-  in_progress: 'In progress',
-  completed: 'Completed',
-  disputed: 'Disputed',
-  cancelled: 'Cancelled',
-  expired: 'Expired',
-};
 
 interface BountyLinkEmbedProps {
   jobKey: string;
@@ -33,6 +25,7 @@ interface BountyLinkEmbedProps {
 
 export function BountyLinkEmbed({ jobKey, path, fallback = null }: BountyLinkEmbedProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { data: job, isLoading } = useWorkJob(jobKey);
   const { data: prices } = useTokenPrices();
 
@@ -60,14 +53,14 @@ export function BountyLinkEmbed({ jobKey, path, fallback = null }: BountyLinkEmb
       <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
         <p className="text-sm font-semibold text-white truncate">{job.title}</p>
         <p className="text-xs text-zinc-500 truncate capitalize">
-          {STATUS_LABEL[job.status] ?? job.status} bounty · {job.job_type}
+          {t('work.embedStatus', { status: t(statusLabelKey(job.status)), type: job.job_type })}
         </p>
         <div className="flex items-center gap-3 mt-0.5">
           <p className="text-sm font-semibold text-white flex items-center gap-1">
             {job.currency === 'DHB' ? (
               <>
                 <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                {Math.ceil(budgetDhb).toLocaleString()} DHB
+                {Math.ceil(budgetDhb).toLocaleString()}
               </>
             ) : (
               `$${budget.toLocaleString(undefined, { maximumFractionDigits: 2 })} USDC`

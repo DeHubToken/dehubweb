@@ -5,8 +5,8 @@
  * Only visible to the post creator (minter).
  */
 
-import { useState, useEffect, useRef } from 'react';
-import { Pencil, Loader2, X, Upload } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { Pencil, Loader2, X, Upload, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,7 +19,10 @@ import {
   DrawerDescription,
 } from '@/components/ui/drawer';
 import { editPost, replaceVideoFile } from '@/lib/api/dehub';
-import type { ContentRating } from '@/lib/api/dehub/types';
+import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
+import { ShopSheetLazy, type ShopBoardDraft } from '@/features/post/components/ShopSheetLazy';
+import { useStreamProducts, useStreamProductActions } from '@/hooks/use-stream-shopping';
+import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -29,6 +32,8 @@ export interface EditPostResult {
   categories: string[];
   commentsDisabled: boolean;
   contentRating: ContentRating;
+  shopLinks: ShopLink[];
+  shopListingCount: number;
 }
 
 interface EditPostModalProps {
@@ -40,6 +45,8 @@ interface EditPostModalProps {
   currentCategories?: string[];
   currentCommentsDisabled?: boolean;
   currentContentRating?: ContentRating;
+  /** The Shop board already on the post. Empty means the toggle is off. */
+  currentShopLinks?: ShopLink[];
   /** The post has a video file to swap. False for text and image posts, which have none. */
   canReplaceVideo?: boolean;
   onSuccess?: (edited: EditPostResult) => void;
@@ -54,6 +61,7 @@ export function EditPostModal({
   currentCategories = [],
   currentCommentsDisabled = false,
   currentContentRating,
+  currentShopLinks,
   canReplaceVideo = false,
   onSuccess,
 }: EditPostModalProps) {
@@ -63,6 +71,21 @@ export function EditPostModal({
   const [categories, setCategories] = useState<string[]>(currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
   const [isMature, setIsMature] = useState(currentContentRating === 'mature');
+  const [shopLinks, setShopLinks] = useState<ShopLink[]>(currentShopLinks ?? []);
+  const [shopSheetOpen, setShopSheetOpen] = useState(false);
+  const shopAllowance = useShopLinkAllowance();
+  /**
+   * The post exists here, so its listings are read and written directly rather
+   * than deferred the way the composer has to defer them. Only fetched while
+   * the modal is open — this component is mounted by every feed card.
+   */
+  const { products: attachedListings } = useStreamProducts(String(tokenId), open);
+  const { attach, detach } = useStreamProductActions(String(tokenId));
+  const attachedIds = useMemo(() => attachedListings.map(p => p.listing_id), [attachedListings]);
+  const [shopListingIds, setShopListingIds] = useState<string[] | null>(null);
+  // Null until the attached rows land, so an opening modal cannot momentarily
+  // read as "the creator deselected everything" and detach a live rail.
+  const pickedListingIds = shopListingIds ?? attachedIds;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const [isReplacing, setIsReplacing] = useState(false);
@@ -117,6 +140,20 @@ export function EditPostModal({
     // The API stores nothing for a safe post, so an unrated one arrives as
     // undefined — compare against the rating it means rather than the field.
     if (nextRating !== (currentContentRating ?? 'safe')) params.contentRating = nextRating;
+    // Sent whole, including `[]` — that is the only way to clear a board, and
+    // the server treats an empty array as exactly that.
+    if (JSON.stringify(shopLinks) !== JSON.stringify(currentShopLinks ?? [])) {
+      params.shopLinks = shopLinks;
+    }
+
+    // Listings are Supabase rows written by the stream-products function, not
+    // fields on the post — so they are reconciled separately, and only the
+    // count goes on the token for the cards to read.
+    const toAttach = pickedListingIds.filter(id => !attachedIds.includes(id));
+    const toDetach = attachedIds.filter(id => !pickedListingIds.includes(id));
+    if (toAttach.length || toDetach.length) {
+      params.shopListingCount = pickedListingIds.length;
+    }
 
     if (Object.keys(params).length === 0) {
       toast.message('No changes to save');
@@ -134,10 +171,15 @@ export function EditPostModal({
 
     setIsSubmitting(true);
     try {
+      // Before the post update, so a failure to reconcile the rail is a visible
+      // error rather than a count on the token that nothing backs.
+      for (const id of toDetach) await detach.mutateAsync(id);
+      for (const id of toAttach) await attach.mutateAsync({ listingId: id });
+
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled, contentRating: nextRating });
+        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled, contentRating: nextRating, shopLinks, shopListingCount: pickedListingIds.length });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');
@@ -151,6 +193,7 @@ export function EditPostModal({
   };
 
   return (
+    <>
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column glass className="max-h-[90vh]">
         <DrawerHeader className="text-left">
@@ -280,6 +323,29 @@ export function EditPostModal({
             </button>
           </div>
 
+          {/* Shop board — the creator's own listings and affiliate links */}
+          <div>
+            <label className="text-zinc-400 text-sm mb-2 block">Shop</label>
+            <button
+              type="button"
+              onClick={() => setShopSheetOpen(true)}
+              className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors text-left"
+            >
+              <span className="min-w-0">
+                <span className="block text-white text-sm font-medium">
+                  {shopLinks.length + pickedListingIds.length
+                    ? `${shopLinks.length + pickedListingIds.length} on the Shop board`
+                    : 'Add to the Shop board'}
+                </span>
+                <span className="block text-zinc-500 text-xs mt-0.5">
+                  Your shop listings and affiliate links, opened from the Shop button. You can
+                  add {shopAllowance.allowance}.
+                </span>
+              </span>
+              <ShoppingBag className="w-4 h-4 text-zinc-400 shrink-0" />
+            </button>
+          </div>
+
           {/* Mature content */}
           <div>
             <label className="text-zinc-400 text-sm mb-2 block">Content rating</label>
@@ -386,5 +452,18 @@ export function EditPostModal({
         </div>
       </DrawerContent>
     </Drawer>
+
+    {/* A sibling of the edit drawer, not a child of it: a vaul root nested
+        inside another root fights over the body scroll lock, and the inner
+        sheet inherits the outer one's dismiss handling. */}
+    <ShopSheetLazy
+      open={shopSheetOpen}
+      onOpenChange={setShopSheetOpen}
+      value={{ links: shopLinks, listingIds: pickedListingIds }}
+      onSave={(next: ShopBoardDraft) => { setShopLinks(next.links); setShopListingIds(next.listingIds); }}
+      allowance={shopAllowance.allowance}
+      tier={shopAllowance.tier}
+    />
+    </>
   );
 }

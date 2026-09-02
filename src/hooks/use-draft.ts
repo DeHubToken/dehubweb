@@ -64,8 +64,22 @@ export function useDraft(key: string | null | undefined, fallback = ''): [string
     return subscribeDrafts(() => {
       const stored = readDraft(key);
       if (!stored || stored === lastSynced.current) return;
-      lastSynced.current = stored;
-      setText(stored);
+      setText((current) => {
+        // Never over an empty composer's worth of someone else's typing.
+        //
+        // The case this exists for is a send that failed handing the message
+        // back, and the composer is empty then because Send cleared it. But a
+        // DM send waits up to eight seconds for the socket, which is long
+        // enough to have started the next message — and the restore then
+        // replaced it with the one that failed. Same for a second tab writing
+        // while this one is mid-sentence.
+        //
+        // Whoever is typing here wins. The failed message is still in the
+        // store, and the toast says what happened.
+        if (current.trim()) return current;
+        lastSynced.current = stored;
+        return stored;
+      });
     });
   }, [key]);
 

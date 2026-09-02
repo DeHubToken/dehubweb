@@ -13,6 +13,7 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -27,7 +28,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
-import { walletScopedClient } from '@/lib/supabase-wallet-client';
+import { deleteStageRecordings } from '@/lib/stage-recording-delete';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
@@ -80,14 +81,19 @@ function stageDuration(space: AudioSpace): string | null {
 export function PastStagesList({
   spaces,
   isLoading: isLoadingProp,
-  emptyTitle = 'No recorded stages yet',
-  emptyHint = 'Stages you host are recorded and show up here once they end.',
+  emptyTitle,
+  emptyHint,
 }: {
   spaces?: AudioSpace[];
   isLoading?: boolean;
   emptyTitle?: string;
   emptyHint?: string;
 } = {}) {
+  const { t } = useTranslation();
+  // Defaulted here rather than in the signature: a default parameter cannot
+  // call the hook that translates it.
+  const emptyTitleText = emptyTitle ?? t('stages.noRecordedStages');
+  const emptyHintText = emptyHint ?? t('stages.noRecordedStagesHint');
   const { walletAddress } = useAuth();
   const { theme } = useAppTheme();
   const navigate = useNavigate();
@@ -162,31 +168,38 @@ export function PastStagesList({
 
   const handleDelete = useCallback(
     async (space: AudioSpace) => {
-      if (!confirm('Delete this stage recording?')) return;
+      if (!confirm(t('stages.deleteRecordingConfirm'))) return;
       if (playingStageId === space.id) stopStageRecording();
-      if (space.recording_url && walletAddress) {
-        const path = space.recording_url.split('/stage-recordings/')[1];
-        if (path) {
-          // Through a wallet-scoped client: the bucket's DELETE policy now
-          // checks who owns the stage, and the Storage API has no per-call
-          // header to carry that on the shared one.
-          await walletScopedClient(walletAddress)
-            .storage.from('stage-recordings')
-            .remove([decodeURIComponent(path)]);
+      if (walletAddress) {
+        // Everything under the stage's folder, not only the object the URL
+        // names. Finalising writes an indexed copy beside the original and
+        // repoints the URL at it, so removing just that left the original
+        // recording in a public bucket after the host was told it was gone.
+        const { error } = await deleteStageRecordings(space.id, walletAddress);
+        if (error) {
+          // Stop here rather than deleting the row on top of files that are
+          // still there — that would leave them with nothing pointing at them
+          // and no way to find them again.
+          toast.error(t('stages.deleteRecordingFailed', 'Could not delete the recording'));
+          return;
         }
       }
-      await supabase
+      const { error: rowError } = await supabase
         .from('audio_spaces')
         .delete()
         .eq('id', space.id)
         .setHeader('x-wallet-address', (walletAddress || '').toLowerCase());
+      if (rowError) {
+        toast.error(t('stages.deleteStageFailed', 'Could not delete the stage'));
+        return;
+      }
       queryClient.invalidateQueries({ queryKey: ['past-stages'] });
       // The Hosting tab reads its own list, so it would keep showing a
       // recording that no longer exists.
       queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
-      toast.success('Stage deleted');
+      toast.success(t('stages.stageDeleted'));
     },
-    [playingStageId, walletAddress, queryClient],
+    [playingStageId, walletAddress, queryClient, t],
   );
 
   // Skeleton rows while the first load is in flight — without this the list
@@ -208,8 +221,8 @@ export function PastStagesList({
     return (
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
         <BrandIcon src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50 object-contain" />
-        <p className="text-white font-medium">{emptyTitle}</p>
-        <p className="text-zinc-500 text-sm mt-1">{emptyHint}</p>
+        <p className="text-white font-medium">{emptyTitleText}</p>
+        <p className="text-zinc-500 text-sm mt-1">{emptyHintText}</p>
       </div>
     );
   }
@@ -251,7 +264,7 @@ export function PastStagesList({
                         ? 'bg-zinc-800/60 hover:bg-zinc-700/60 text-white'
                         : 'bg-zinc-800/60 text-zinc-600',
                   )}
-                  aria-label={isPlaying ? 'Pause' : 'Play recording'}
+                  aria-label={isPlaying ? t('stages.pause') : t('stages.playRecording')}
                 >
                   {isPlaying ? (
                     <Pause className="w-3.5 h-3.5" fill="currentColor" />
@@ -282,7 +295,7 @@ export function PastStagesList({
                           </span>
                         )}
                         <BadgedName lookupId={space.host_username || space.host_wallet_address}>
-                          @{space.host_username || 'Anonymous'}
+                          @{space.host_username || t('stages.anonymous')}
                         </BadgedName>
                       </button>
                     </ProfileHoverCard>
@@ -349,7 +362,7 @@ export function PastStagesList({
                         ? 'text-white bg-zinc-800/60'
                         : 'text-zinc-500 hover:text-white hover:bg-zinc-800/60',
                     )}
-                    title={isPoppedOut ? 'Close the corner player' : 'Pop out the player'}
+                    title={isPoppedOut ? t('stages.closeCornerPlayer') : t('stages.popOutPlayer')}
                   >
                     <PictureInPicture2 className="w-4 h-4" />
                   </button>
@@ -363,7 +376,7 @@ export function PastStagesList({
                       ? 'text-white bg-zinc-800/60'
                       : 'text-zinc-500 hover:text-white hover:bg-zinc-800/60',
                   )}
-                  title="Comments"
+                  title={t('stages.comments')}
                 >
                   <MessageSquare className="w-4 h-4" />
                 </button>
@@ -371,7 +384,7 @@ export function PastStagesList({
                   <button
                     onClick={() => setTranscriptStage(space)}
                     className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-500 hover:text-white hover:bg-zinc-800/60 transition-all"
-                    title="View transcript"
+                    title={t('stages.viewTranscript')}
                   >
                     <FileText className="w-4 h-4" />
                   </button>
@@ -380,7 +393,7 @@ export function PastStagesList({
                   <button
                     onClick={() => handleDelete(space)}
                     className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                    title="Delete stage"
+                    title={t('stages.deleteStage')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

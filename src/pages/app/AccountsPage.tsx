@@ -10,6 +10,7 @@
  */
 
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Search, Tag, Users } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -27,6 +28,7 @@ const JSON_LD = {
 };
 
 export default function AccountsPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<'browse' | 'sell'>('browse');
 
   // Swallow the content at the sticky header bento's top edge under the glass
@@ -37,9 +39,9 @@ export default function AccountsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Account Marketplace — DeHub"
-        description="Buy and sell established DeHub accounts for DHB. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller."
-        image="https://dehub.io/og/dehub-social-share.png"
+        title={t('accounts.seoTitle')}
+        description={t('accounts.seoDescription')}
+        image="https://dehub.io/og/accounts.jpg"
         url="https://dehub.io/accounts"
         jsonLd={JSON_LD}
       />
@@ -56,14 +58,14 @@ export default function AccountsPage() {
               <Users className="w-5 h-5 text-white" />
             </span>
             <div className="min-w-0">
-              <h1 className="text-xl font-bold text-white">Accounts</h1>
-              <p className="text-[11px] text-zinc-500 truncate">Whole accounts for sale, priced in DHB</p>
+              <h1 className="text-xl font-bold text-white">{t('accounts.title')}</h1>
+              <p className="text-[11px] text-zinc-500 truncate">{t('accounts.subtitle')}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <LiquidGlassBubble2
-              label="Browse"
+              label={t('accounts.tabBrowse')}
               icon={<Search className="w-4 h-4" />}
               onClick={() => setTab('browse')}
               width="auto"
@@ -72,7 +74,7 @@ export default function AccountsPage() {
               className={tab === 'browse' ? undefined : 'opacity-60'}
             />
             <LiquidGlassBubble2
-              label="Sell"
+              label={t('accounts.tabSell')}
               icon={<Tag className="w-4 h-4" />}
               onClick={() => setTab('sell')}
               width="auto"

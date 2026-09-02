@@ -43,6 +43,7 @@
     "connectAi": "Lidh IA-në"
   },
   "feed": {
+    "viewProfile": "Shfaq profilin e {{name}}",
     "home": "Kryefaqja",
     "videos": "Video",
     "images": "Imazhe",
@@ -942,6 +943,8 @@
     "loginRequired": "Kërkohet hyrja"
   },
   "messages": {
+    "encrypted": "I enkriptuar nga skaji në skaj",
+    "cannotDecrypt": "Mesazh i enkriptuar — nuk mund të hapet në këtë pajisje",
     "title": "Mesazhet",
     "searchConversations": "Kërko bisedat...",
     "failedToLoad": "Dështoi ngarkimi i bisedave",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "Depozito DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} zhbllokohet në nivelin {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Pamjet e kamerës",
+    "title": "Pamja",
+    "hint": "Zbatohet para se videoja të largohet nga kjo pajisje — shikuesit shohin saktësisht atë që sheh ti këtu.",
+    "backgroundBlur": "Turbullo sfondin tim",
+    "on": "Ndezur",
+    "off": "Fikur",
+    "none": "Asnjë",
+    "soft": "I butë",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "I ngrohtë",
+    "cool": "I ftohtë",
+    "vivid": "I gjallë",
+    "dream": "Ëndërr",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Turbullim",
+    "pixelate": "Pikselizim"
   }
 }

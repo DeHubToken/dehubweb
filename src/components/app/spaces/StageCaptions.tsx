@@ -14,6 +14,7 @@
  */
 
 import { Captions, CaptionsOff, Check, Headphones, Volume2 } from 'lucide-react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -34,6 +35,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 import { useStageCaptionFeed } from '@/hooks/use-stage-captions';
 import { useStageDubbing } from '@/hooks/use-stage-dubbing';
 import {
@@ -118,6 +120,7 @@ interface StageCaptionsButtonProps {
 }
 
 export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: StageCaptionsButtonProps) {
+  const { t } = useTranslation();
   const show = useShowCaptions();
   const send = useSendCaptions();
   const language = useCaptionLanguage();
@@ -140,8 +143,8 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
               : 'bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 text-white',
             className,
           )}
-          title={active ? `Subtitles · ${active.name}` : 'Subtitles'}
-          aria-label="Subtitles"
+          title={active ? t('stages.subtitlesIn', { language: active.name }) : t('stages.subtitles')}
+          aria-label={t('stages.subtitles')}
         >
           {show ? <Captions className="w-5 h-5" /> : <CaptionsOff className="w-5 h-5" />}
           {/* Which language you are reading, without opening the menu. */}
@@ -158,21 +161,21 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
       <DropdownMenuContent align="center" className="w-56 max-h-[60vh] overflow-y-auto">
         <DropdownMenuItem onSelect={() => setShowCaptions(!show)}>
           <Check className={cn('w-4 h-4 mr-2 shrink-0', show ? 'opacity-100' : 'opacity-0')} />
-          Show subtitles
+          {t('stages.showSubtitles')}
         </DropdownMenuItem>
         {isSpeaker && (
           <DropdownMenuItem onSelect={() => setSendCaptions(!send)}>
             <Check className={cn('w-4 h-4 mr-2 shrink-0', send ? 'opacity-100' : 'opacity-0')} />
-            Subtitle my voice
+            {t('stages.subtitleMyVoice')}
           </DropdownMenuItem>
         )}
 
         <DropdownMenuSeparator />
-        <DropdownMenuLabel className="text-xs text-muted-foreground">Language</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs text-muted-foreground">{t('stages.language')}</DropdownMenuLabel>
 
         <DropdownMenuItem onSelect={() => setCaptionLanguage(null)}>
           <Check className={cn('w-4 h-4 mr-2 shrink-0', language ? 'opacity-0' : 'opacity-100')} />
-          As spoken
+          {t('stages.asSpoken')}
         </DropdownMenuItem>
         {CAPTION_LANGUAGES.map((option) => (
           <DropdownMenuItem key={option.code} onSelect={() => setCaptionLanguage(option.code)}>
@@ -197,14 +200,14 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
             wrong — including expensively, since this one is metered. */}
         {!language ? (
           <DropdownMenuItem disabled className="text-xs">
-            Pick a language above to hear it dubbed
+            {t('stages.pickLanguageToDub')}
           </DropdownMenuItem>
         ) : dubbing.language ? (
           <DropdownMenuItem onSelect={() => dubbing.stop()}>
             <Volume2 className="w-4 h-4 mr-2 shrink-0 text-primary" />
-            <span className="flex-1">Stop dubbing</span>
+            <span className="flex-1">{t('stages.stopDubbing')}</span>
             <span className="ml-2 text-[10px] font-mono text-muted-foreground tabular-nums">
-              {dubbing.minutes} min
+              {t('stages.minutesShort', { count: dubbing.minutes })}
             </span>
           </DropdownMenuItem>
         ) : (
@@ -215,11 +218,19 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
               // the price and the failure toast land on the same surface the
               // decision was made on.
               event.preventDefault();
+              // Subtitles carry the entitlement. The token that tells speakers
+              // to generate this language rides the caption feed's presence,
+              // and that feed is only subscribed while subtitles are shown — so
+              // starting with them hidden billed by the minute for audio no
+              // speaker was ever asked to produce. Turning them on is the fix
+              // rather than refusing: the listener asked to hear the stage in
+              // their language, and this is what delivers it.
+              if (!show) setShowCaptions(true);
               void dubbing.start(language);
             }}
           >
             <Headphones className="w-4 h-4 mr-2 shrink-0" />
-            <span className="flex-1">Hear it in {active?.name ?? language}</span>
+            <span className="flex-1">{t('stages.hearItIn', { language: active?.name ?? language })}</span>
             {dubQuote && (
               <span className="ml-2 text-[10px] font-mono text-muted-foreground tabular-nums">
                 {dubQuote.pricePerMinuteDhb}/min
@@ -229,7 +240,7 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
         )}
         {dubQuote && !dubQuote.clonedVoice && language && (
           <DropdownMenuLabel className="text-[10px] font-normal text-muted-foreground pt-0">
-            Stock voice — the host has not recorded theirs
+            {t('stages.stockVoiceNote')}
           </DropdownMenuLabel>
         )}
       </DropdownMenuContent>
@@ -241,23 +252,30 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
       <AlertDialog open={!!dubbing.bill} onOpenChange={(open) => { if (!open) dubbing.dismissBill(); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Pay for dubbing?</AlertDialogTitle>
+            <AlertDialogTitle>{t('stages.payForDubbing')}</AlertDialogTitle>
+            {/* One sentence, one key. Splitting it around the styled spans put
+                three fragments in the JSON and left every translator guessing
+                at the word order between them. */}
             <AlertDialogDescription>
-              You listened to{' '}
-              <span className="font-medium text-foreground tabular-nums">
-                {dubbing.bill?.minutes} minute{dubbing.bill?.minutes === 1 ? '' : 's'}
-              </span>{' '}
-              of dubbed audio. That comes to{' '}
-              <span className="font-medium text-foreground tabular-nums">{dubbing.bill?.owedDhb} DHB</span>,
-              sent from your wallet in one transfer.
+              {t('stages.dubbingBill', {
+                count: dubbing.bill?.minutes ?? 0,
+                amount: dubbing.bill?.owedDhb,
+              })}{' '}
+              <DhbCoin />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             {/* Not paying leaves the session open, and an open session blocks
                 the next one. Saying so here beats a confusing refusal later. */}
-            <AlertDialogCancel>Not now</AlertDialogCancel>
+            <AlertDialogCancel>{t('stages.notNow')}</AlertDialogCancel>
             <AlertDialogAction disabled={dubbing.settling} onClick={(event) => { event.preventDefault(); void dubbing.settle(); }}>
-              {dubbing.settling ? 'Paying…' : `Pay ${dubbing.bill?.owedDhb} DHB`}
+              {dubbing.settling ? (
+                t('stages.paying')
+              ) : (
+                <>
+                  {t('stages.pay')} <DhbAmount amount={dubbing.bill?.owedDhb} />
+                </>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

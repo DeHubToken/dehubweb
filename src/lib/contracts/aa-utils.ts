@@ -1003,11 +1003,18 @@ export async function waitForERC20Balance(
 export async function getERC20Allowance(
   tokenAddress: string,
   ownerAddress: string,
-  spenderAddress: string
+  spenderAddress: string,
+  chainId?: ChainId
 ): Promise<bigint> {
   const erc20Interface = new Interface([
     'function allowance(address owner, address spender) view returns (uint256)',
   ]);
 
-  return readContract<bigint>(tokenAddress, erc20Interface, 'allowance', [ownerAddress, spenderAddress]);
+  return readContract<bigint>(
+    tokenAddress,
+    erc20Interface,
+    'allowance',
+    [ownerAddress, spenderAddress],
+    chainId
+  );
 }

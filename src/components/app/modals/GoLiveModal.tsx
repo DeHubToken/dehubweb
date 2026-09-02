@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, X, Video, MonitorPlay, ScreenShare } from 'lucide-react';
+import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +20,8 @@ import {
   type PostQuotaStatus,
   type MintFeeQuoteResponse,
 } from '@/lib/api/dehub/content';
+import type { ShopLink } from '@/lib/api/dehub/types';
+import { attachShopListings } from '@/lib/attach-shop-listings';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import {
   probeIngestReachable,
@@ -71,6 +76,24 @@ const logger = createLogger('GoLiveModal');
 interface GoLiveModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /**
+   * A stream the post composer's mint already provisioned.
+   *
+   * When present this sheet has no setup step at all: it opens straight onto
+   * the broadcast console for that stream. The setup form below is what going
+   * live used to mean here, and it duplicated the composer's title,
+   * description and cover fields on a second sheet stacked over the first.
+   */
+  initialStream?: {
+    tokenId: string;
+    streamKey: string;
+    ingestUrl: string;
+    playbackUrl: string;
+    streamId: string;
+    hlsUrl?: string;
+    playbackId?: string;
+    provider?: string;
+  } | null;
 }
 
 type Step = 'setup' | 'ready' | 'broadcasting';
@@ -118,9 +141,11 @@ function formatGb(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / (1024 * 1024)))} MB`;
 }
 
-export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
+export function GoLiveModal({ isOpen, onClose, initialStream }: GoLiveModalProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
+  const [confirmEnd, setConfirmEnd] = useState(false);
   const [source, setSource] = useState<StreamSource>('camera');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -150,6 +175,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [tokenSymbol, setTokenSymbol] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
   const [isMature, setIsMature] = useState(false);
+  /** The Shop board this stream goes on air with. Empty means no Shop button. */
+  const [shopLinks, setShopLinks] = useState<ShopLink[]>([]);
+  /** Own store listings picked for the board, attached once the mint returns. */
+  const [shopListingIds, setShopListingIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string; playbackId?: string; provider?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -205,6 +234,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       tokenSymbol,
       tokenAmount,
       isMature,
+      shopLinks,
+      shopListingIds,
     },
     (saved) => {
       if (saved.title) setTitle(saved.title);
@@ -227,6 +258,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       if (saved.tokenSymbol) setTokenSymbol(saved.tokenSymbol);
       if (saved.tokenAmount) setTokenAmount(saved.tokenAmount);
       if (saved.isMature) setIsMature(true);
+      // Restored on the same truthy rule, and worth more than the switches:
+      // these are URLs somebody typed by hand.
+      if (Array.isArray(saved.shopLinks) && saved.shopLinks.length) setShopLinks(saved.shopLinks);
+      if (Array.isArray(saved.shopListingIds) && saved.shopListingIds.length) setShopListingIds(saved.shopListingIds);
     },
   );
 
@@ -290,6 +325,47 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         .catch(() => undefined);
     }, 60_000);
   };
+
+  /*
+   * The composer already made the stream — walk straight onto the console.
+   *
+   * `mintPost` provisions the stream alongside a live post and returns the key,
+   * playback id and ingest URL in the same response, so by the time this sheet
+   * opens there is nothing left to ask for. Everything handleStartStream does
+   * after its own mint is mirrored here: mark the row live in Supabase and keep
+   * the heartbeat going, because the API's /start is not what the feed reads.
+   *
+   * Guarded on `step` rather than `streamData` so a re-render mid-broadcast
+   * cannot re-enter it, and so ending a stream (which clears streamData) does
+   * not immediately start it again from the same prop.
+   */
+  useEffect(() => {
+    if (!isOpen || !initialStream || step === 'broadcasting') return;
+
+    setStreamData(initialStream);
+    setStep('broadcasting');
+    // The title lives on the published post now, so a pending copy of it must
+    // not resurface in the next go-live.
+    draft.clear();
+
+    const token = getAuthToken();
+    const addr = walletAddress;
+    if (token && addr) {
+      markLivePromiseRef.current = supabase.functions
+        .invoke('mark-stream-live', {
+          body: { tokenId: initialStream.tokenId, streamId: initialStream.streamId },
+          headers: { 'x-wallet-address': addr.toLowerCase(), 'x-dehub-token': token },
+        })
+        .then(({ error }) => {
+          if (error) logger.warn('mark-stream-live failed (non-blocking)', error);
+        });
+      startHeartbeat(String(initialStream.tokenId), initialStream.streamId);
+    }
+    logger.info('Broadcast handed over from the composer', {
+      tokenId: initialStream.tokenId,
+      streamId: initialStream.streamId,
+    });
+  }, [isOpen, initialStream, step, walletAddress]);
 
   const clearLiveSession = (tokenId: string) => {
     // Before anything else: a beat that fires after the delete would re-upsert
@@ -479,6 +555,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setTokenSymbol('');
     setTokenAmount('');
     setIsMature(false);
+    setShopLinks([]);
+    setShopListingIds([]);
     setStreamData(null);
     // The broadcaster stops the tracks it adopted in its own teardown; this
     // only drops the reference so a reopened modal starts from a clean slate.
@@ -524,10 +602,16 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
    * Dismissing the drawer mid-broadcast has to run the same teardown as the
    * End Stream button — otherwise the camera is released on unmount but the
    * post stays flagged live on the backend with nothing feeding it.
+   *
+   * And it has to ask first, for the same reason the button does. This ran the
+   * teardown outright, so Escape, a click on the scrim, or a downward swipe on
+   * the phone sheet ended a live broadcast with no prompt — and if the stream
+   * had not reached `live` yet, discarded the post with it. #866 put the
+   * confirmation on the button and left this path going straight through.
    */
   const handleDismiss = () => {
     if (step === 'broadcasting') {
-      void handleEndStream();
+      setConfirmEnd(true);
       return;
     }
     handleClose();
@@ -535,7 +619,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
   const handleStartStream = async () => {
     if (!title.trim()) {
-      toast.error('Please enter a stream title');
+      toast.error(t('goLive.enterTitle'));
       return;
     }
 
@@ -579,7 +663,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         pendingScreenRef.current = capture;
       } catch (error) {
         logger.info('Screen picker dismissed', error);
-        toast.error('Screen sharing was cancelled.');
+        toast.error(t('goLive.screenShareCancelled'));
         return;
       }
     }
@@ -698,6 +782,12 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         streamInfo: access.streamInfo,
         plans: access.subscriberPlanIds,
         contentRating: isMature ? 'mature' : undefined,
+        // On the mint, so the Shop button has something behind it for the
+        // people who arrive in the first seconds of the stream.
+        shopLinks: shopLinks.length ? shopLinks : undefined,
+        // What we are about to attach — the attach needs the tokenId this call
+        // returns, so the count lands now and the rows a moment later.
+        shopListingCount: shopListingIds.length || undefined,
         mintOptOut: !mintingThisStream,
       });
 
@@ -705,6 +795,21 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       mintedTokenId = String(tokenId);
       logger.info('Live post created', { tokenId, mint: mintingThisStream });
       if (wasDismissed()) return;
+
+      /**
+       * Put the picked store listings on the stream, now that it has a
+       * tokenId. Not awaited: going live must not wait on Supabase, and the
+       * board resolves whatever landed when a viewer opens it. A failure is
+       * reported rather than swallowed — the host can add them from the shop
+       * manager beside the player.
+       */
+      if (shopListingIds.length) {
+        void attachShopListings(tokenId, shopListingIds, walletAddress).then(({ failed }) => {
+          if (failed > 0) {
+            toast.error(t('goLive.shopItemsNotAttached', { count: failed }));
+          }
+        });
+      }
 
       // Step 3: Execute the on-chain mint — skipped wholesale when the creator
       // turned minting off. The post is already published (the server serves
@@ -716,7 +821,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         }
 
         logger.info('Executing on-chain mint...', { tokenId });
-        toast.loading('Publishing to decentralized database...', { id: 'golive-progress', duration: Infinity });
+        toast.loading(t('goLive.publishing'), { id: 'golive-progress', duration: Infinity });
 
         const chainMint = {
           tokenId,
@@ -908,7 +1013,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       // credentials screen so the creator can paste them into their encoder.
       setStep(source !== 'rtmp' ? 'broadcasting' : 'ready');
       logger.info('Stream setup ready', { streamId, tokenId, source });
-      toast.success(source !== 'rtmp' ? 'You are going live!' : 'Live stream is ready!');
+      toast.success(t(source !== 'rtmp' ? 'goLive.youAreGoingLive' : 'goLive.streamIsReady'));
 
       // Mark stream as live in Supabase (api.dehub.io /start fails with 404).
       // The promise is kept so end paths can sequence their delete after it —
@@ -941,11 +1046,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       const isSigningError = errorMsg.includes('overflow') || errorMsg.includes('INVALID_ARGUMENT') || errorMsg.includes('user rejected');
 
       if (isWeb3AuthError) {
-        toast.error('Web3Auth service is currently slow or timing out. Please check your internet or try refreshing.');
+        toast.error(t('goLive.web3AuthSlow'));
       } else if (isSigningError) {
-        toast.error('Blockchain signing failed. Please check your wallet or refresh the page.');
+        toast.error(t('goLive.signingFailed'));
       } else {
-        toast.error(errorMsg || 'Failed to create stream');
+        toast.error(errorMsg || t('goLive.createStreamFailed'));
       }
     } finally {
       setIsLoading(false);
@@ -956,10 +1061,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedField(field);
-      toast.success('Copied to clipboard');
+      toast.success(t('goLive.copied'));
       setTimeout(() => setCopiedField(null), 2000);
     } catch {
-      toast.error('Failed to copy');
+      toast.error(t('goLive.copyFailed'));
     }
   };
 
@@ -981,13 +1086,19 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           // to furniture, so on that one step it all comes off and the
           // broadcaster fills the frame. Every other step, and every desktop,
           // keeps the sheet it has always been.
+          // 90dvh, not 90vh, for the setup step: vh is the LARGE viewport — the
+          // height the page would have with the browser's URL bar hidden — so a
+          // sheet pinned to bottom:0 and capped at 90vh is taller than what is
+          // actually visible while that bar is up, and the overflow goes off the
+          // TOP. The reported symptom was the "Go Live" title sliced in half by
+          // the address bar. dvh measures what the reader can see.
           // mt-0 and rounded-none are not cosmetic: DrawerContent ships
           // `mt-24 rounded-t-[20px]`, and with bottom:0 plus a full-viewport
           // height that margin resolves to top:-96px, clipping the first 96px
           // of the broadcast off the top of the screen.
           liveFullScreen
             ? 'h-[100dvh] max-h-[100dvh] mt-0 rounded-none px-0 pb-0'
-            : 'max-h-[90vh] px-4 pb-8'
+            : 'max-h-[90dvh] px-4 pb-8'
         )}
       >
         <DrawerHeader
@@ -996,19 +1107,29 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             liveFullScreen && 'sr-only'
           )}
         >
-          <DrawerTitle className="text-white flex items-center gap-2">
-            <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-            {step === 'setup' ? 'Go Live' : step === 'broadcasting' ? "You're Live" : 'Stream Ready'}
+          <DrawerTitle className={cn('text-white flex items-center gap-2', liveFullScreen && 'sr-only')}>
+            {/* Both the pulse dot and the close button are absolutely
+                positioned children, so `sr-only` on the header does not hide
+                them — they escaped its 1px clip and landed as a stray red dot
+                and a second ✕ in the top-left corner of the full-screen
+                broadcast, over a picture that already has its own close in the
+                top-right. Withhold them outright instead of hiding the box. */}
+            {!liveFullScreen && (
+              <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+            )}
+            {t(step === 'setup' ? 'goLive.goLive' : step === 'broadcasting' ? 'goLive.youAreLive' : 'goLive.streamReady')}
           </DrawerTitle>
           <DrawerDescription className="sr-only">
-            Configure your livestream settings or get your RTMP credentials.
+            {t('goLive.drawerDescription')}
           </DrawerDescription>
-          <button
-            onClick={handleDismiss}
-            className="absolute top-1/2 -translate-y-1/2 right-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          {!liveFullScreen && (
+            <button
+              onClick={handleDismiss}
+              className="absolute top-1/2 -translate-y-1/2 right-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </DrawerHeader>
 
         <div
@@ -1023,75 +1144,71 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           {step === 'setup' ? (
             <div className="space-y-4 pb-4">
               <div className="space-y-2">
-                <label className="text-sm text-zinc-400">How do you want to stream?</label>
+                <label className="text-sm text-zinc-400">{t('goLive.howToStream')}</label>
                 <div className={cn('grid gap-2', canShareScreen ? 'grid-cols-3' : 'grid-cols-2')}>
                   <SourceOption
                     selected={source === 'camera'}
                     onClick={() => setSource('camera')}
                     icon={<Video className="w-4 h-4" />}
-                    title="Camera"
-                    subtitle="Straight from this device"
+                    title={t('goLive.sourceCamera')}
+                    subtitle={t('goLive.sourceCameraHint')}
                   />
                   {canShareScreen && (
                     <SourceOption
                       selected={source === 'screen'}
                       onClick={() => setSource('screen')}
                       icon={<ScreenShare className="w-4 h-4" />}
-                      title="Screen"
-                      subtitle="Share a game, app or tab"
+                      title={t('goLive.sourceScreen')}
+                      subtitle={t('goLive.sourceScreenHint')}
                     />
                   )}
                   <SourceOption
                     selected={source === 'rtmp'}
                     onClick={() => setSource('rtmp')}
                     icon={<MonitorPlay className="w-4 h-4" />}
-                    title="OBS / Encoder"
-                    subtitle="Get RTMP details"
+                    title={t('goLive.sourceEncoder')}
+                    subtitle={t('goLive.sourceEncoderHint')}
                   />
                 </div>
                 {source === 'screen' && (
                   <p className="text-[11px] text-zinc-500">
-                    You'll pick the screen, window or tab next — then it goes live
-                    with your mic and the tab's own sound.
+                    {t('goLive.screenPickHint')}
                   </p>
                 )}
                 {replayBudget && (
                   replayBudget.remaining <= 0 ? (
                     <p className="text-[11px] text-amber-400/90">
-                      You've used today's upload allowance, so this stream won't
-                      keep a replay. The allowance resets at midnight UTC.
+                      {t('goLive.replayAllowanceUsed')}
                     </p>
                   ) : replayBudget.tier == null ? (
                     <p className="text-[11px] text-amber-400/90">
-                      Free accounts keep the first {formatGb(replayBudget.remaining)} of
-                      a stream as a replay — staking badges raises the limit.
+                      {t('goLive.replayFreeTier', { size: formatGb(replayBudget.remaining) })}
                     </p>
                   ) : (
                     <p className="text-[11px] text-zinc-500">
-                      Up to {formatGb(replayBudget.remaining)} of this stream is kept
-                      as a replay ({replayBudget.tier} daily allowance).
+                      {t('goLive.replayTiered', { size: formatGb(replayBudget.remaining), tier: replayBudget.tier })}
                     </p>
                   )
                 )}
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-zinc-400">Stream Title *</label>
+                <label className="text-sm text-zinc-400">{t('goLive.streamTitle')}</label>
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="What's your stream about?"
+                  placeholder={t('goLive.titlePlaceholder')}
                   className="bg-zinc-800 border-zinc-700 text-white"
                   maxLength={100}
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-zinc-400">Description</label>
+                <label className="text-sm text-zinc-400">{t('goLive.description')}</label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Tell viewers what to expect..."
+                  placeholder={t('goLive.descriptionPlaceholder')}
                   className="bg-zinc-800 border-zinc-700 text-white resize-none"
                   rows={3}
                   maxLength={500}
@@ -1106,7 +1223,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                 <div className="flex items-center justify-between">
                   <label className="text-sm text-zinc-400 flex items-center gap-2">
                     <ImagePlus className="w-4 h-4" />
-                    Cover image
+                    {t('goLive.coverImage')}
                   </label>
                   {cover ? (
                     <button
@@ -1114,10 +1231,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                       onClick={() => chooseCover(null)}
                       className="text-xs text-white/50 hover:text-white"
                     >
-                      Remove
+                      {t('goLive.remove')}
                     </button>
                   ) : (
-                    <span className="text-xs text-white/30">Optional</span>
+                    <span className="text-xs text-white/30">{t('goLive.optional')}</span>
                   )}
                 </div>
                 <input
@@ -1128,7 +1245,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
                     if (file && file.size > MAX_COVER_BYTES) {
-                      toast.error('Cover image must be under 8 MB');
+                      toast.error(t('goLive.coverTooLarge'));
                       e.target.value = '';
                       return;
                     }
@@ -1150,7 +1267,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   ) : (
                     <span className="flex flex-col items-center gap-1 text-xs">
                       <ImagePlus className="w-5 h-5" />
-                      Add a cover
+                      {t('goLive.addCover')}
                     </span>
                   )}
                 </button>
@@ -1200,6 +1317,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   hasVideoOrAudio
                   isMature={isMature}
                   setIsMature={setIsMature}
+                  shopLinks={shopLinks}
+                  setShopLinks={setShopLinks}
+                  shopListingIds={shopListingIds}
+                  setShopListingIds={setShopListingIds}
                   shouldMint={effectiveShouldMint}
                   setShouldMint={setShouldMint}
                   mintFeeLabel={mintFeeLabel}
@@ -1209,7 +1330,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             </div>
           ) : step === 'broadcasting' ? (
             streamData && (
-              <BroadcasterBoundary onEnd={handleEndStream}>
+              <BroadcasterBoundary onEnd={() => setConfirmEnd(true)}>
                 <Suspense
                   fallback={
                     <div className="flex items-center justify-center py-16">
@@ -1236,7 +1357,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                 <>
 
                   <div className="space-y-2">
-                    <label className="text-sm text-white font-medium">Stream Key</label>
+                    <label className="text-sm text-white font-medium">{t('goLive.streamKey')}</label>
                     <div className="flex gap-2">
                       <Input value={streamData.streamKey} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
                       <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.streamKey, 'key')}>
@@ -1246,7 +1367,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm text-white font-medium">Ingest URL</label>
+                    <label className="text-sm text-white font-medium">{t('goLive.ingestUrl')}</label>
                     <div className="flex gap-2">
                       <Input value={streamData.ingestUrl} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
                       <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.ingestUrl, 'url')}>
@@ -1256,12 +1377,12 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   </div>
 
                   <div className="bg-zinc-800/50 rounded-xl p-4 space-y-2">
-                    <p className="text-white font-medium text-xs uppercase tracking-wider">Quick Setup Guide:</p>
+                    <p className="text-white font-medium text-xs uppercase tracking-wider">{t('goLive.quickSetupGuide')}</p>
                     <ol className="text-xs text-zinc-400 space-y-1 list-decimal list-inside">
-                      <li>Open OBS → Settings → Stream</li>
-                      <li>Select "Custom" Service</li>
-                      <li>Paste Ingest URL & Stream Key</li>
-                      <li>Click "Start Streaming"</li>
+                      <li>{t('goLive.obsStep1')}</li>
+                      <li>{t('goLive.obsStep2')}</li>
+                      <li>{t('goLive.obsStep3')}</li>
+                      <li>{t('goLive.obsStep4')}</li>
                     </ol>
                   </div>
                 </>
@@ -1274,7 +1395,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         <div className={cn('pt-4 mt-2', step === 'broadcasting' && 'hidden')}>
           {step === 'setup' ? (
             <LiquidGlassBubble2
-              label={isLoading ? '' : 'Go Live'}
+              label={isLoading ? '' : t('goLive.goLive')}
               icon={isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Radio className="w-5 h-5" />}
               onClick={handleStartStream}
               disabled={!title.trim() || isLoading}
@@ -1284,20 +1405,29 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           ) : (
             <div className="flex gap-2">
               <button
-                onClick={handleEndStream}
+                onClick={() => setConfirmEnd(true)}
                 className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 transition-colors"
               >
-                <Radio className="w-4 h-4" /> End Stream
+                <Radio className="w-4 h-4" /> {t('goLive.endStream')}
               </button>
               <button
                 onClick={() => window.open(streamData?.playbackUrl, '_blank')}
                 className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 transition-colors"
               >
-                <ExternalLink className="w-4 h-4" /> View Stream
+                <ExternalLink className="w-4 h-4" /> {t('goLive.viewStream')}
               </button>
             </div>
           )}
         </div>
+
+      <EndStreamConfirmDialog
+        open={confirmEnd}
+        onOpenChange={setConfirmEnd}
+        onConfirm={() => {
+          setConfirmEnd(false);
+          void handleEndStream();
+        }}
+      />
       </DrawerContent>
     </Drawer>
   );
@@ -1329,16 +1459,14 @@ class BroadcasterBoundary extends React.Component<
     if (!this.state.failed) return this.props.children;
     return (
       <div className="flex flex-col items-center gap-4 py-10 px-6 text-center">
-        <p className="text-sm text-white">
-          The broadcaster failed to load, so nothing was ever captured — but the
-          stream was already created. End it below, then refresh the page and go
-          live again.
-        </p>
+        {/* A class component, so no hook — the i18n singleton is how a
+            non-hook scope reads a translation. */}
+        <p className="text-sm text-white">{i18n.t('goLive.broadcasterFailed')}</p>
         <button
           onClick={this.props.onEnd}
           className="h-12 px-6 rounded-xl border border-red-500/30 bg-red-500/10 text-sm font-medium text-red-300 hover:bg-red-500/20 transition-colors"
         >
-          End Stream
+          {i18n.t('goLive.endStream')}
         </button>
       </div>
     );

@@ -1,11 +1,10 @@
 import SEO from '@/components/SEO';
 import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function TokenBridge() {
-  const { toast } = useToast();
   const { t } = useLanguage();
   const [copiedAddress, setCopiedAddress] = useState<string>('');
 
@@ -13,16 +12,13 @@ export default function TokenBridge() {
     try {
       await navigator.clipboard.writeText(address);
       setCopiedAddress(address);
-      toast({
-        title: t('tokenBridge.addressCopied'),
+      toast.success(t('tokenBridge.addressCopied'), {
         description: t('tokenBridge.addressCopiedDesc'),
       });
       setTimeout(() => setCopiedAddress(''), 2000);
     } catch (err) {
-      toast({
-        title: t('tokenBridge.copyFailed'),
+      toast.error(t('tokenBridge.copyFailed'), {
         description: t('tokenBridge.copyFailedDesc'),
-        variant: "destructive",
       });
     }
   };

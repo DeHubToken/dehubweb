@@ -19,6 +19,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Loader2, ShieldCheck, Share2 } from 'lucide-react';
@@ -37,6 +38,7 @@ interface Props {
 }
 
 export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
+  const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { getQuote, buy, stage } = useBuyUsername();
   const [quote, setQuote] = useState<UsernameQuote | null>(null);
@@ -95,22 +97,22 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
 
             {/* Price */}
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
-              <p className="text-xs text-zinc-500 mb-1">Asking price</p>
+              <p className="text-xs text-zinc-500 mb-1">{t('usernames.askingPrice')}</p>
               <p className="text-2xl font-bold text-white flex items-center gap-2">
                 <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
                 {(quote?.priceDhb ?? listing.priceDhb).toLocaleString()}
-                <span className="text-sm font-normal text-zinc-500">DHB</span>
               </p>
               <p className="text-xs text-zinc-500 mt-1">
-                ≈ ${(quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { maximumFractionDigits: 2 })} · paid
-                straight to the seller, DeHub takes no cut
+                {t('usernames.paidStraightToSeller', {
+                  usd: (quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { maximumFractionDigits: 2 }),
+                })}
               </p>
             </div>
 
             {/* The swap, said out loud. */}
             {quote && (
               <div className="rounded-xl bg-white/5 border border-white/10 p-4">
-                <p className="text-xs text-zinc-500 mb-2">Your handle changes</p>
+                <p className="text-xs text-zinc-500 mb-2">{t('usernames.yourHandleChanges')}</p>
                 <div className="flex items-center gap-2 text-sm min-w-0">
                   <span className="text-zinc-400 line-through break-all">
                     @{quote.currentUsername || '—'}
@@ -119,8 +121,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
                   <span className="text-white font-semibold break-all">@{quote.username}</span>
                 </div>
                 <p className="text-[11px] text-zinc-500 mt-2">
-                  Your old handle is released and anyone can take it. Posts, followers and your wallet are
-                  untouched.
+                  {t('usernames.oldHandleReleased')}
                 </p>
               </div>
             )}
@@ -129,9 +130,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
             {payChainMeta && (
               <p className="text-xs text-zinc-500 flex items-center gap-2">
                 <img src={payChainMeta.icon} alt="" className="w-4 h-4 rounded-full" />
-                {payChain?.covered
-                  ? `Paying with DHB on ${payChainMeta.name}`
-                  : `You are short of DHB — this will be paid on ${payChainMeta.name}`}
+                {t(payChain?.covered ? 'usernames.payingWithDhbOn' : 'usernames.shortOfDhbPaidOn', { chain: payChainMeta.name })}
               </p>
             )}
 
@@ -141,7 +140,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
 
             {isOwn && (
               <p className="text-sm text-zinc-400">
-                This is your listing. Manage it from the Sell tab.
+                {t('usernames.yourOwnListing')}
               </p>
             )}
 
@@ -154,12 +153,12 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
               >
                 {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {stage === 'paying'
-                  ? 'Confirm in your wallet…'
+                  ? t('usernames.confirmInWallet')
                   : stage === 'confirming'
-                    ? 'Confirming on-chain…'
+                    ? t('usernames.confirmingOnChain')
                     : !isAuthenticated
-                      ? 'Sign in to buy'
-                      : `Buy @${listing.username}`}
+                      ? t('usernames.signInToBuy')
+                      : t('usernames.buyHandle', { handle: listing.username })}
               </Button>
               <Button variant="outline" size="icon" onClick={() => setShareOpen(true)} disabled={busy}>
                 <Share2 className="w-4 h-4" />
@@ -168,8 +167,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
 
             <p className="text-[11px] text-zinc-500 flex items-start gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-px" />
-              The handle moves only after DeHub reads your DHB transfer back off the chain. If it cannot,
-              the payment is recorded against the sale so the seller can refund you.
+              {t('usernames.transferGuarantee')}
             </p>
           </div>
         </DrawerContent>
@@ -179,7 +177,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
         open={shareOpen}
         onOpenChange={setShareOpen}
         url={`${window.location.origin}/usernames?handle=${encodeURIComponent(listing.username)}`}
-        shareTitle={`@${listing.username} is for sale on DeHub`}
+        shareTitle={t('usernames.shareTitle', { handle: listing.username })}
       />
     </>
   );

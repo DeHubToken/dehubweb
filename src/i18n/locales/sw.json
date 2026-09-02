@@ -43,6 +43,7 @@
     "connectAi": "Unganisha AI"
   },
   "feed": {
+    "viewProfile": "Angalia wasifu wa {{name}}",
     "home": "Nyumbani",
     "videos": "Video",
     "images": "Picha",
@@ -943,6 +944,8 @@
     "loginRequired": "Kuingia kunahitajika"
   },
   "messages": {
+    "encrypted": "Imesimbwa kutoka mwanzo hadi mwisho",
+    "cannotDecrypt": "Ujumbe uliosimbwa — hauwezi kufunguliwa kwenye kifaa hiki",
     "title": "Ujumbe",
     "searchConversations": "Tafuta mazungumzo...",
     "failedToLoad": "Imeshindwa kupakia mazungumzo",
@@ -1786,5 +1789,25 @@
     "stakeDhb": "Weka DHB Amana",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} hufunguliwa katika {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Mionekano ya kamera",
+    "title": "Mwonekano",
+    "hint": "Hutumika kabla video yako haijaondoka kwenye kifaa hiki — watazamaji huona hasa unachokiona hapa.",
+    "backgroundBlur": "Ficha mandharinyuma yangu",
+    "on": "Imewashwa",
+    "off": "Imezimwa",
+    "none": "Hakuna",
+    "soft": "Laini",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Joto",
+    "cool": "Baridi",
+    "vivid": "Angavu",
+    "dream": "Ndoto",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Ukungu",
+    "pixelate": "Pikseli"
   }
 }

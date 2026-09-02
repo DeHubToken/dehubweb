@@ -19,9 +19,11 @@
  */
 
 import { useState, useEffect } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import { Gem, Loader2 } from 'lucide-react';
+import { Gem } from 'lucide-react';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -213,7 +215,7 @@ export function TipModal({
               <p className="text-white/60 text-xs">{t('tip.customAmount', 'Or enter amount')}</p>
               {dhbBalance != null && (
                 <p className="text-white/30 text-xs">
-                  {dhbBalance.toLocaleString()} DHB · via {chainName}
+                  {dhbBalance.toLocaleString()} <DhbCoin /> · via {chainName}
                 </p>
               )}
             </div>
@@ -257,7 +259,7 @@ export function TipModal({
             >
               {isTipping ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <ButtonLoader className="mr-2" />
                   {t('tip.sending', 'Sending...')}
                 </>
               ) : (

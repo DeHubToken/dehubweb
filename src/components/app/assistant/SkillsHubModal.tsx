@@ -9,6 +9,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -42,6 +43,7 @@ const MODELS: { value: string; label: string; kind: 'image' | 'chat' }[] = [
 ];
 
 export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModalProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const wallet = walletAddress?.toLowerCase();
   const { data: skills = [], isLoading } = useUserSkills();
@@ -69,7 +71,7 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
     return list.filter(s =>
       s.name.toLowerCase().includes(q) ||
       s.description.toLowerCase().includes(q) ||
-      s.trigger_phrases.some(t => t.toLowerCase().includes(q))
+      s.trigger_phrases.some(phrase => phrase.toLowerCase().includes(q))
     );
   }, [skills, tab, query, wallet]);
 
@@ -80,7 +82,7 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
 
   const handleCreate = async () => {
     if (!form.name.trim() || !form.systemPrompt.trim()) {
-      toast.error('Name and instructions are required');
+      toast.error(t('skills.nameAndInstructionsRequired'));
       return;
     }
     try {
@@ -89,24 +91,24 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
         description: form.description.trim() || form.name.trim(),
         kind: form.kind,
         model: form.model,
-        trigger_phrases: form.triggers.split(',').map(t => t.trim()).filter(Boolean),
+        trigger_phrases: form.triggers.split(',').map(phrase => phrase.trim()).filter(Boolean),
         system_prompt: form.systemPrompt.trim(),
         asset_urls: form.assetUrls.split('\n').map(s => s.trim()).filter(Boolean),
       });
-      toast.success(`Created "${created.name}"`);
+      toast.success(t('skills.createdNamed', { name: created.name }));
       resetForm();
       setTab('mine');
     } catch (e: any) {
-      toast.error(e?.message || 'Could not create skill');
+      toast.error(e?.message || t('skills.couldNotCreate'));
     }
   };
 
   const handleUse = (s: UserSkill) => { onUseSkill(s); onOpenChange(false); };
 
   const handleDelete = async (s: UserSkill) => {
-    if (!confirm(`Delete "${s.name}"?`)) return;
-    try { await deleteSkill.mutateAsync(s.id); toast.success('Deleted'); }
-    catch (e: any) { toast.error(e?.message || 'Failed'); }
+    if (!confirm(t('skills.deleteConfirm', { name: s.name }))) return;
+    try { await deleteSkill.mutateAsync(s.id); toast.success(t('skills.deleted')); }
+    catch (e: any) { toast.error(e?.message || t('skills.failed')); }
   };
 
   return (
@@ -120,12 +122,12 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
               </button>
             )}
             <Wand2 className="w-4 h-4 text-white/80" />
-            {tab === 'create' ? 'Create a skill' : 'Skills library'}
+            {t(tab === 'create' ? 'skills.createASkill' : 'skills.skillsLibrary')}
           </DialogTitle>
           <p className="text-xs text-white/50 mt-1">
             {tab === 'create'
-              ? 'Package instructions, references, and a preferred model into a reusable skill.'
-              : 'Reusable AI recipes — like GPTs or Claude Projects. Pick one to load its context into the composer.'}
+              ? t('skills.createHint')
+              : t('skills.libraryHint')}
           </p>
         </DialogHeader>
 
@@ -137,21 +139,22 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
                 <Input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search skills…"
+                  placeholder={t('skills.searchSkills')}
                   className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-white/40 rounded-xl"
                 />
               </div>
               <div className="flex gap-1 rounded-xl bg-white/5 border border-white/10 p-1">
-                {(['browse', 'mine'] as Tab[]).map(t => (
+                {/* Named `value`, not `t` — `t` is the translator in this scope. */}
+                {(['browse', 'mine'] as Tab[]).map(value => (
                   <button
-                    key={t}
-                    onClick={() => setTab(t)}
+                    key={value}
+                    onClick={() => setTab(value)}
                     className={cn(
                       'text-xs px-3 py-1.5 rounded-lg transition-colors',
-                      tab === t ? 'bg-white/15 text-white' : 'text-white/50 hover:text-white'
+                      tab === value ? 'bg-white/15 text-white' : 'text-white/50 hover:text-white'
                     )}
                   >
-                    {t === 'browse' ? 'All' : 'Mine'}
+                    {t(value === 'browse' ? 'skills.filterAll' : 'skills.filterMine')}
                   </button>
                 ))}
               </div>
@@ -159,18 +162,18 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
                 onClick={() => setTab('create')}
                 className="text-xs text-white bg-white/10 hover:bg-white/20 rounded-xl px-3 py-2 flex items-center gap-1.5 transition-colors"
               >
-                <Plus className="w-3.5 h-3.5" /> New
+                <Plus className="w-3.5 h-3.5" /> {t('skills.new')}
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 pt-2 space-y-3">
               {isLoading ? (
                 <div className="flex items-center justify-center py-12 text-white/50 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" /> Loading skills…
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" /> {t('skills.loadingSkills')}
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="text-center py-12 text-white/50 text-sm">
-                  No skills yet. <button className="underline hover:text-white" onClick={() => setTab('create')}>Create the first one</button>.
+                  {t('skills.noneYet')} <button className="underline hover:text-white" onClick={() => setTab('create')}>{t('skills.createTheFirst')}</button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -191,26 +194,26 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
         {tab === 'create' && (
           <div className="flex-1 overflow-y-auto p-5 space-y-4">
             <div>
-              <label className="text-xs text-white/60 mb-1 block">Name *</label>
+              <label className="text-xs text-white/60 mb-1 block">{t('skills.nameRequired')}</label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="e.g. Startup Landing Copywriter"
+                placeholder={t('skills.hubNamePlaceholder')}
                 className="bg-white/5 border-white/10 text-white rounded-xl"
               />
             </div>
             <div>
-              <label className="text-xs text-white/60 mb-1 block">Short description</label>
+              <label className="text-xs text-white/60 mb-1 block">{t('skills.shortDescription')}</label>
               <Input
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="What this skill does in one line"
+                placeholder={t('skills.shortDescriptionPlaceholder')}
                 className="bg-white/5 border-white/10 text-white rounded-xl"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-white/60 mb-1 block">Kind</label>
+                <label className="text-xs text-white/60 mb-1 block">{t('skills.kind')}</label>
                 <div className="flex gap-1 rounded-xl bg-white/5 border border-white/10 p-1">
                   {(['chat', 'image'] as const).map(k => (
                     <button
@@ -221,13 +224,13 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
                         form.kind === k ? 'bg-white/15 text-white' : 'text-white/50 hover:text-white'
                       )}
                     >
-                      {k}
+                      {t(k === 'image' ? 'skills.kindImageShort' : 'skills.kindChatShort')}
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <label className="text-xs text-white/60 mb-1 block">Model</label>
+                <label className="text-xs text-white/60 mb-1 block">{t('skills.model')}</label>
                 <select
                   value={form.model}
                   onChange={(e) => setForm({ ...form, model: e.target.value })}
@@ -240,26 +243,26 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
               </div>
             </div>
             <div>
-              <label className="text-xs text-white/60 mb-1 block">Trigger phrases <span className="text-white/30">(comma-separated, used with /)</span></label>
+              <label className="text-xs text-white/60 mb-1 block">{t('skills.triggerPhrases')} <span className="text-white/30">{t('skills.triggerPhrasesHint')}</span></label>
               <Input
                 value={form.triggers}
                 onChange={(e) => setForm({ ...form, triggers: e.target.value })}
-                placeholder="e.g. landing, headline, copywriter"
+                placeholder={t('skills.hubTriggersPlaceholder')}
                 className="bg-white/5 border-white/10 text-white rounded-xl"
               />
             </div>
             <div>
-              <label className="text-xs text-white/60 mb-1 block">System instructions *</label>
+              <label className="text-xs text-white/60 mb-1 block">{t('skills.systemInstructionsRequired')}</label>
               <Textarea
                 value={form.systemPrompt}
                 onChange={(e) => setForm({ ...form, systemPrompt: e.target.value })}
-                placeholder="You are a world-class landing page copywriter. Always…"
+                placeholder={t('skills.systemInstructionsPlaceholder')}
                 rows={7}
                 className="bg-white/5 border-white/10 text-white rounded-xl resize-none"
               />
             </div>
             <div>
-              <label className="text-xs text-white/60 mb-1 block">Reference asset URLs <span className="text-white/30">(one per line, optional)</span></label>
+              <label className="text-xs text-white/60 mb-1 block">{t('skills.referenceAssetUrls')} <span className="text-white/30">{t('skills.referenceAssetUrlsHint')}</span></label>
               <Textarea
                 value={form.assetUrls}
                 onChange={(e) => setForm({ ...form, assetUrls: e.target.value })}
@@ -273,10 +276,10 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
                 onClick={() => { resetForm(); setTab('browse'); }}
                 className="text-xs text-white/60 hover:text-white px-3 py-2"
               >
-                Cancel
+                {t('skills.cancel')}
               </button>
               <LiquidGlassBubble2
-                label={createSkill.isPending ? 'Creating…' : 'Create skill'}
+                label={t(createSkill.isPending ? 'skills.creating' : 'skills.createSkillAction')}
                 onClick={handleCreate}
                 width="auto"
                 height="36px"

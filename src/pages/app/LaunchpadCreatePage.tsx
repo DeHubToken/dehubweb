@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { SEOHead } from '@/components/SEOHead';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -12,6 +13,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 export default function LaunchpadCreatePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const base = getLaunchpadBase(location.pathname);
@@ -55,8 +57,8 @@ export default function LaunchpadCreatePage() {
 
   async function handleImageUpload(file: File) {
     if (!file) return;
-    if (!file.type.startsWith('image/')) { toast.error('Image files only'); return; }
-    if (file.size > 5 * 1024 * 1024) { toast.error('Max 5MB'); return; }
+    if (!file.type.startsWith('image/')) { toast.error(t('launchpad.imageFilesOnly')); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error(t('launchpad.max5mb')); return; }
     setUploading(true);
     try {
       const ext = file.name.split('.').pop() || 'png';
@@ -68,7 +70,7 @@ export default function LaunchpadCreatePage() {
       const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
       setImageUrl(data.publicUrl);
     } catch (e) {
-      toast.error((e as Error)?.message ?? 'Upload failed');
+      toast.error((e as Error)?.message ?? t('launchpad.uploadFailed'));
     } finally { setUploading(false); }
   }
 
@@ -92,20 +94,20 @@ export default function LaunchpadCreatePage() {
         curve_type: curveType,
       }).select().single();
       if (error) throw error;
-      toast.success(`${symbol} launched`);
+      toast.success(t('launchpad.launched', { symbol }));
       // The coin exists; its draft must not reappear pre-filled next time.
       draft.clear();
       navigate(`${base}/${data.id}`);
     } catch (e) {
-      toast.error((e as Error)?.message ?? 'Failed to create');
+      toast.error((e as Error)?.message ?? t('launchpad.createFailed'));
     } finally { setSubmitting(false); }
   }
 
   return (
     <>
       <SEOHead
-        title="Create coin — Launchpad"
-        description="Create a coin on the DeHub launchpad."
+        title={t('launchpad.createSeoTitle')}
+        description={t('launchpad.createSeoDescription')}
         noindex
       />
 
@@ -119,10 +121,10 @@ export default function LaunchpadCreatePage() {
         >
           <div className="flex items-center justify-between px-5 pt-3 pb-2">
             <div>
-              <div className="text-white text-lg font-bold leading-tight">Create a coin</div>
-              <div className="text-white/50 text-xs mt-0.5">Step {step} of 3</div>
+              <div className="text-white text-lg font-bold leading-tight">{t('launchpad.createTitle')}</div>
+              <div className="text-white/50 text-xs mt-0.5">{t('launchpad.stepOf', { step })}</div>
             </div>
-            <button onClick={close} aria-label="Close"
+            <button onClick={close} aria-label={t('launchpad.close')}
               className="rounded-lg p-1.5 text-white/60 hover:text-white hover:bg-white/5">
               <X className="h-5 w-5" />
             </button>
@@ -131,19 +133,19 @@ export default function LaunchpadCreatePage() {
           <div className="px-5 pb-5 space-y-4 overflow-y-auto">
             {step === 1 && (
               <>
-                <Field label="Name">
+                <Field label={t('launchpad.fieldName')}>
                   <input value={name} onChange={e => setName(e.target.value)} maxLength={48}
-                    placeholder="e.g. Pepe Coin" className={inputCls} />
+                    placeholder={t('launchpad.namePlaceholder')} className={inputCls} />
                 </Field>
-                <Field label="Ticker" hint="2–8 chars, A–Z, 0–9">
+                <Field label={t('launchpad.fieldTicker')} hint={t('launchpad.tickerHint')}>
                   <input value={symbol} onChange={e => setSymbol(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,''))}
                     maxLength={8} placeholder="PEPE" className={inputCls} />
                 </Field>
-                <Field label="Description (optional)">
+                <Field label={t('launchpad.fieldDescription')}>
                   <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} maxLength={280}
-                    placeholder="Tell the world what this is" className={inputCls} />
+                    placeholder={t('launchpad.descriptionPlaceholder')} className={inputCls} />
                 </Field>
-                <Field label="Image (optional)">
+                <Field label={t('launchpad.fieldImage')}>
                   <label className={`flex items-center gap-3 rounded-xl border border-dashed border-white/15 bg-white/5 px-3 py-3 cursor-pointer hover:border-white/30 transition-colors ${uploading ? 'opacity-60 pointer-events-none' : ''}`}>
                     {imageUrl ? (
                       <img src={imageUrl} alt="" className="h-12 w-12 rounded-lg object-cover" />
@@ -153,8 +155,8 @@ export default function LaunchpadCreatePage() {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm text-white">{imageUrl ? 'Replace image' : 'Upload image'}</div>
-                      <div className="text-[11px] text-white/40">PNG/JPG/GIF · up to 5MB</div>
+                      <div className="text-sm text-white">{t(imageUrl ? 'launchpad.replaceImage' : 'launchpad.uploadImage')}</div>
+                      <div className="text-[11px] text-white/40">{t('launchpad.imageHint')}</div>
                     </div>
                     {imageUrl && (
                       <button type="button" onClick={(e) => { e.preventDefault(); setImageUrl(''); }}
@@ -167,15 +169,15 @@ export default function LaunchpadCreatePage() {
                   </label>
                 </Field>
                 <div className="grid grid-cols-3 gap-2">
-                  <input value={website} onChange={e => setWebsite(e.target.value)} placeholder="Website" className={inputCls} />
-                  <input value={twitter} onChange={e => setTwitter(e.target.value)} placeholder="X / Twitter" className={inputCls} />
-                  <input value={telegram} onChange={e => setTelegram(e.target.value)} placeholder="Telegram" className={inputCls} />
+                  <input value={website} onChange={e => setWebsite(e.target.value)} placeholder={t('launchpad.website')} className={inputCls} />
+                  <input value={twitter} onChange={e => setTwitter(e.target.value)} placeholder={t('launchpad.twitter')} className={inputCls} />
+                  <input value={telegram} onChange={e => setTelegram(e.target.value)} placeholder={t('launchpad.telegram')} className={inputCls} />
                 </div>
               </>
             )}
             {step === 2 && (
               <>
-                <Field label="Chain">
+                <Field label={t('launchpad.fieldChain')}>
                   <div className="grid grid-cols-2 gap-2">
                     {([[8453,'Base'],[56,'BNB']] as const).map(([id,label]) => (
                   <button key={id} onClick={() => setChainId(id)} className="shrink-0">
@@ -194,7 +196,7 @@ export default function LaunchpadCreatePage() {
                     ))}
                   </div>
                 </Field>
-                <Field label="Curve">
+                <Field label={t('launchpad.fieldCurve')}>
                   <div className="grid grid-cols-3 gap-2">
                     {(['standard','fair','stealth'] as const).map(c => (
                   <button key={c} onClick={() => setCurveType(c)} className="shrink-0">
@@ -207,37 +209,37 @@ export default function LaunchpadCreatePage() {
                           : '[&>div]:!text-white/70 [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent'
                       }`}
                     >
-                      <span className="text-sm font-semibold capitalize">{c}</span>
+                      <span className="text-sm font-semibold">{t(CURVE_KEYS[c])}</span>
                     </LiquidGlassBubble>
                   </button>
                     ))}
                   </div>
                 </Field>
                 <div className="rounded-xl bg-white/5 border border-white/10 p-3 text-xs text-white/60 space-y-1">
-                  <div>Base pair: <span className="text-white">DHB</span></div>
-                  <div>Graduation target: <span className="text-white">$42,000 market cap</span></div>
-                  <div>Fee: <span className="text-white">1% per trade</span> (40% burn / 30% stakers / 20% creator / 10% platform)</div>
+                  <div>{t('launchpad.basePair')} <span className="text-white">DHB</span></div>
+                  <div>{t('launchpad.graduationTarget')} <span className="text-white">{t('launchpad.graduationTargetValue')}</span></div>
+                  <div>{t('launchpad.fee')} <span className="text-white">{t('launchpad.feePerTrade')}</span> {t('launchpad.feeSplitInline')}</div>
                 </div>
               </>
             )}
             {step === 3 && (
               <>
-                <div className="text-white text-sm font-semibold">Review</div>
+                <div className="text-white text-sm font-semibold">{t('launchpad.review')}</div>
                 <div className="rounded-xl bg-white/5 border border-white/10 p-3 text-sm space-y-1.5">
-                  <Row k="Name" v={name} />
-                  <Row k="Ticker" v={`$${symbol}`} />
-                  <Row k="Chain" v={chainId === 8453 ? 'Base' : 'BNB'} />
-                  <Row k="Curve" v={curveType} />
-                  <Row k="Pair" v="DHB" />
-                  <Row k="Graduates at" v="$42,000 mcap" />
+                  <Row k={t('launchpad.fieldName')} v={name} />
+                  <Row k={t('launchpad.fieldTicker')} v={`$${symbol}`} />
+                  <Row k={t('launchpad.fieldChain')} v={chainId === 8453 ? 'Base' : 'BNB'} />
+                  <Row k={t('launchpad.fieldCurve')} v={t(CURVE_KEYS[curveType])} />
+                  <Row k={t('launchpad.pair')} v="DHB" />
+                  <Row k={t('launchpad.graduatesAt')} v={t('launchpad.graduatesAtValue')} />
                 </div>
-                <p className="text-[11px] text-white/40">Phase 1 mock — no on-chain transaction is sent.</p>
+                <p className="text-[11px] text-white/40">{t('launchpad.mockNote')}</p>
               </>
             )}
 
             <div className="flex items-center justify-between pt-2 gap-3">
               <LiquidGlassBubble2
-                label="Back"
+                label={t('launchpad.back')}
                 icon={<ChevronLeft className="h-4 w-4" />}
                 onClick={() => setStep(s => Math.max(1, s - 1))}
                 disabled={step === 1}
@@ -245,16 +247,16 @@ export default function LaunchpadCreatePage() {
               />
               {step < 3
                 ? <LiquidGlassBubble2
-                    label="Next"
+                    label={t('launchpad.next')}
                     icon={<ChevronRight className="h-4 w-4" />}
                     onClick={() => setStep(s => s + 1)}
                     disabled={step === 1 && !canNext1}
                     width="90px"
                   />
                 : <LiquidGlassBubble2
-                    label={submitting ? 'Launching…' : 'Launch'}
+                    label={submitting ? t('launchpad.launching') : t('launchpad.launch')}
                     loading={submitting}
-                    loadingLabel="Launching…"
+                    loadingLabel={t('launchpad.launching')}
                     onClick={submit}
                     disabled={!canSubmit || submitting}
                     width="120px"
@@ -266,6 +268,12 @@ export default function LaunchpadCreatePage() {
     </>
   );
 }
+
+const CURVE_KEYS: Record<string, string> = {
+  standard: 'launchpad.curveStandard',
+  fair: 'launchpad.curveFair',
+  stealth: 'launchpad.curveStealth',
+};
 
 const inputCls = "w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 text-sm";
 

@@ -8,6 +8,7 @@
  * so an empty result simply means nothing matched.
  */
 
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, Check } from 'lucide-react';
@@ -23,22 +24,27 @@ import { AccountCard } from './AccountCard';
 import { BuyAccountDrawer } from './BuyAccountDrawer';
 import type { AccountListing } from '@/lib/api/dehub/account-market';
 
-const SORTS: { value: AccountSort; label: string }[] = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'price_asc', label: 'Price: Low → High' },
-  { value: 'price_desc', label: 'Price: High → Low' },
-  { value: 'followers', label: 'Most followers' },
-  { value: 'uploads', label: 'Most uploads' },
+const SORTS: { value: AccountSort; labelKey: string }[] = [
+  { value: 'newest', labelKey: 'accounts.sortNewest' },
+  { value: 'price_asc', labelKey: 'accounts.sortPriceAsc' },
+  { value: 'price_desc', labelKey: 'accounts.sortPriceDesc' },
+  { value: 'followers', labelKey: 'accounts.sortFollowers' },
+  { value: 'uploads', labelKey: 'accounts.sortUploads' },
 ];
 
+/**
+ * The band labels are read back as the key for the selected preset, so they
+ * carry a stable `id` rather than being identified by their own display text.
+ */
 const PRICE_PRESETS = [
-  { label: 'Under 10k', min: undefined, max: 10_000 },
-  { label: '10k – 100k', min: 10_000, max: 100_000 },
-  { label: '100k – 1M', min: 100_000, max: 1_000_000 },
-  { label: '1M+', min: 1_000_000, max: undefined },
+  { id: 'under10k', labelKey: 'accounts.bandUnder10k', min: undefined, max: 10_000 },
+  { id: '10kTo100k', labelKey: 'accounts.band10kTo100k', min: 10_000, max: 100_000 },
+  { id: '100kTo1m', labelKey: 'accounts.band100kTo1m', min: 100_000, max: 1_000_000 },
+  { id: '1mPlus', labelKey: 'accounts.band1mPlus', min: 1_000_000, max: undefined },
 ];
 
 export function BrowseTab() {
+  const { t } = useTranslation();
   const { isAuthenticated, walletAddress } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   // A shared listing link lands here with the handle already in the box.
@@ -86,7 +92,7 @@ export function BrowseTab() {
         <Input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search a handle…"
+          placeholder={t('accounts.searchPlaceholder')}
           spellCheck={false}
           autoCapitalize="none"
           className="pl-9 bg-black/60 backdrop-blur-2xl border-white/10 rounded-xl text-white placeholder:text-zinc-500"
@@ -106,32 +112,32 @@ export function BrowseTab() {
               >
                 <span className="text-white text-xs font-medium px-3 whitespace-nowrap flex items-center gap-1.5">
                   <SlidersHorizontal className="w-3 h-3" />
-                  Filter{activeFilters ? ` (${activeFilters})` : ''}
+                  {activeFilters ? t('accounts.filterCount', { count: activeFilters }) : t('accounts.filter')}
                 </span>
               </LiquidGlassBubble>
             </div>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-64 bg-zinc-900 border-white/10 space-y-4">
             <div className="space-y-2">
-              <Label className="text-xs text-zinc-400">Sort</Label>
+              <Label className="text-xs text-zinc-400">{t('accounts.sort')}</Label>
               {SORTS.map(option => (
                 <button
                   key={option.value}
                   onClick={() => setSort(option.value)}
                   className="w-full flex items-center justify-between text-sm text-white py-1"
                 >
-                  {option.label}
+                  {t(option.labelKey)}
                   {sort === option.value && <Check className="w-3.5 h-3.5" />}
                 </button>
               ))}
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-zinc-400">Price (DHB)</Label>
+              <Label className="text-xs text-zinc-400">{t('accounts.priceDhb')}</Label>
               <div className="grid grid-cols-2 gap-1.5">
                 {PRICE_PRESETS.map(preset => (
                   <button
-                    key={preset.label}
+                    key={preset.id}
                     onClick={() => { setMinPriceDhb(preset.min); setMaxPriceDhb(preset.max); }}
                     className={`text-xs rounded-lg border px-2 py-1.5 ${
                       minPriceDhb === preset.min && maxPriceDhb === preset.max
@@ -139,7 +145,7 @@ export function BrowseTab() {
                         : 'border-white/10 bg-white/5 text-zinc-400'
                     }`}
                   >
-                    {preset.label}
+                    {t(preset.labelKey)}
                   </button>
                 ))}
               </div>
@@ -147,7 +153,7 @@ export function BrowseTab() {
 
             {activeFilters > 0 && (
               <Button variant="ghost" size="sm" className="w-full" onClick={clearFilters}>
-                Clear
+                {t('accounts.clear')}
               </Button>
             )}
           </PopoverContent>
@@ -155,7 +161,7 @@ export function BrowseTab() {
 
         {data && (
           <span className="text-xs text-zinc-500 ml-auto">
-            {data.total.toLocaleString()} for sale
+            {t('accounts.forSaleCount', { count: data.total })}
           </span>
         )}
       </div>
@@ -169,7 +175,7 @@ export function BrowseTab() {
         </div>
       ) : listings.length === 0 ? (
         <div className="text-center py-12 text-sm text-zinc-500">
-          {debouncedSearch ? 'No accounts for sale match that.' : 'No accounts are for sale yet.'}
+          {t(debouncedSearch ? 'accounts.noSearchMatch' : 'accounts.noneForSale')}
         </div>
       ) : (
         <div className={`space-y-2.5 ${isFetching ? "opacity-60" : ""}`}>

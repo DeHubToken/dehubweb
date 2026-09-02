@@ -20,6 +20,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict, isPast } from 'date-fns';
 import { Calendar, Radio, Users, Clock, Headphones } from 'lucide-react';
@@ -40,6 +41,7 @@ interface StageLinkEmbedProps {
 }
 
 export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: StageLinkEmbedProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { data: stage, isLoading } = useQuery({
@@ -114,12 +116,12 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
               </span>
-              <span className="text-red-400 text-[11px] font-medium">LIVE NOW</span>
+              <span className="text-red-400 text-[11px] font-medium">{t('stages.liveNowBadge')}</span>
             </span>
           ) : isEnded ? (
             <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
               <Clock className="w-3 h-3 text-zinc-400" />
-              <span className="text-zinc-400 text-[11px] font-medium">ENDED</span>
+              <span className="text-zinc-400 text-[11px] font-medium">{t('stages.ended')}</span>
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
@@ -195,7 +197,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
               )}
             >
               <Radio className="w-3 h-3" />
-              {isLive ? 'Join' : isEnded ? 'Listen back' : 'View stage'}
+              {isLive ? t('stages.join') : isEnded ? t('stages.listenBack') : t('stages.viewStage')}
             </span>
           )}
         </div>

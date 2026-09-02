@@ -11,6 +11,8 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -40,6 +42,7 @@ export function SellFractionsDrawer({
   onOpenChange,
   onSuccess,
 }: SellFractionsDrawerProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState('');
@@ -99,7 +102,7 @@ export function SellFractionsDrawer({
         chainId,
         post,
       });
-      toast.success(`Listed ${quantity} fraction${quantity === 1 ? '' : 's'} at ${prc} DHB each`);
+      toast.success(t('fractions.listedToast', { count: quantity, price: prc }));
       onOpenChange(false);
       onSuccess?.();
     } catch {
@@ -111,7 +114,7 @@ export function SellFractionsDrawer({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column glass className="px-4 pb-8">
         <DrawerHeader className="px-0">
-          <DrawerTitle className="text-white text-lg">Sell fractions</DrawerTitle>
+          <DrawerTitle className="text-white text-lg">{t('fractions.sellFractions')}</DrawerTitle>
         </DrawerHeader>
 
         <div className="space-y-5">
@@ -123,25 +126,24 @@ export function SellFractionsDrawer({
             <div className="flex items-start gap-2 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <p className="text-xs text-amber-200/80">
-                Couldn't read your fraction balance just now. Close this and try again — listing
-                without it risks selling fractions you no longer hold.
+                {t('fractions.balanceReadFailed')}
               </p>
             </div>
           ) : sellable === 0 ? (
             <p className="text-sm text-white/50 text-center py-6">
               {held === 0
-                ? "You don't hold any fractions of this post."
-                : `All ${held} of your fractions are already listed.`}
+                ? t('fractions.dontHoldAnyOfPost')
+                : t('fractions.allAlreadyListed', { count: held })}
             </p>
           ) : (
             <>
               {/* Quantity */}
               <div className="space-y-3">
                 <div className="flex items-baseline justify-between">
-                  <label className="text-sm text-white/60">How many</label>
+                  <label className="text-sm text-white/60">{t('fractions.howMany')}</label>
                   <span className="text-xs text-white/40">
-                    {sellable} available
-                    {alreadyListed > 0 && ` · ${alreadyListed} already listed`}
+                    {t('fractions.availableCount', { count: sellable })}
+                    {alreadyListed > 0 && t('fractions.alsoAlreadyListed', { count: alreadyListed })}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -171,7 +173,7 @@ export function SellFractionsDrawer({
                       onClick={() => setQuantity(Math.max(1, Math.floor(sellable * f)))}
                       className="flex-1 text-xs py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white border border-white/10 transition-colors"
                     >
-                      {f === 1 ? 'All' : `${f * 100}%`}
+                      {f === 1 ? t('fractions.all') : `-e%`}
                     </button>
                   ))}
                 </div>
@@ -180,13 +182,13 @@ export function SellFractionsDrawer({
               {/* Price */}
               <div>
                 <div className="flex items-baseline justify-between mb-1.5">
-                  <label className="text-sm text-white/60">Price per fraction</label>
+                  <label className="text-sm text-white/60">{t('fractions.pricePerFraction')}</label>
                   {floorPrice !== null && (
                     <button
                       onClick={() => setPrice(String(floorPrice))}
                       className="text-xs text-white/40 hover:text-white/70 transition-colors"
                     >
-                      Match floor · {floorPrice} DHB
+                      {t('fractions.matchFloor', { price: floorPrice })} <DhbCoin />
                     </button>
                   )}
                 </div>
@@ -209,14 +211,14 @@ export function SellFractionsDrawer({
               {/* Summary */}
               <div className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-white/60">Share of the post</span>
+                  <span className="text-white/60">{t('fractions.shareOfPost')}</span>
                   <span className="text-white">{sharePct.toFixed(1)}%</span>
                 </div>
                 <div className="flex justify-between text-sm border-t border-white/10 pt-2">
-                  <span className="text-white font-medium">You receive</span>
+                  <span className="text-white font-medium">{t('fractions.youReceive')}</span>
                   <span className="text-white font-bold flex items-center gap-1.5">
                     <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                    {total.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                    {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </span>
                 </div>
                 {dhbUsd > 0 && total > 0 && (
@@ -227,8 +229,7 @@ export function SellFractionsDrawer({
               </div>
 
               <p className="text-xs text-white/40 text-center">
-                Listing is free. When someone buys, you'll be asked to send the fractions —
-                you have 24 hours, and your delivery record is shown on every listing you make.
+                {t('fractions.listingFreeNote')}
               </p>
 
               <Button
@@ -237,9 +238,9 @@ export function SellFractionsDrawer({
                 className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 disabled:opacity-40"
               >
                 {createListing.isPending ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Listing…</>
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('fractions.listingInProgress')}</>
                 ) : (
-                  <><Tag className="w-4 h-4 mr-2" />List {quantity} fraction{quantity === 1 ? '' : 's'}</>
+                  <><Tag className="w-4 h-4 mr-2" />{t('fractions.listNFractions', { count: quantity })}</>
                 )}
               </Button>
             </>

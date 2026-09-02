@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Book, Code, Zap, Shield, Users, Database, Rocket, Star, CheckCircle, ExternalLink, Copy, Check } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { usePerformance } from '@/hooks/usePerformance';
 import { getLatestPost } from '@/utils/blogUtils';
 import SEO from '@/components/SEO';
@@ -10,9 +10,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 // Declare the global build time variable
 declare const __BUILD_TIME__: string;
 const DocsHome = () => {
-  const {
-    toast
-  } = useToast();
   const [copiedAddress, setCopiedAddress] = useState<string>('');
   const { t } = useLanguage();
 
@@ -48,23 +45,19 @@ const DocsHome = () => {
     try {
       await navigator.clipboard.writeText(address);
       setCopiedAddress(address);
-      toast({
-        title: t('common.contractAddressCopied'),
+      toast.success(t('common.contractAddressCopied'), {
         description: t('common.contractAddressCopiedDesc'),
       });
       setTimeout(() => setCopiedAddress(''), 2000);
     } catch (err) {
-      toast({
-        title: t('common.copyFailed'),
+      toast.error(t('common.copyFailed'), {
         description: t('common.copyFailedDesc'),
-        variant: "destructive"
       });
     }
   };
   const handleComingSoonClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    toast({
-      title: t('common.comingSoon'),
+    toast.message(t('common.comingSoon'), {
       description: t('common.comingSoonDesc'),
     });
   };

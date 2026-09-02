@@ -9,6 +9,7 @@
  * mid-transfer).
  */
 import { useEffect, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import {
   Drawer,
   DrawerContent,
@@ -267,7 +268,7 @@ export function Model3dPaywallModal({
                           <p className="text-xs font-medium text-white">
                             ${getModel3dCostUsd(optionModel).toFixed(2)}
                           </p>
-                          <p className="text-[10px] text-zinc-500">{formatDhb(optionCostDhb)} DHB</p>
+                          <p className="text-[10px] text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin /></p>
                         </div>
                       </button>
                     );
@@ -456,7 +457,7 @@ export function Model3dPaywallModal({
                       <span className="text-white font-medium text-sm">Pay with DHB</span>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-white">{formatDhb(costDhb)} DHB</p>
+                      <p className="text-lg font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
                       <p className="text-[10px] text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
                     </div>
                   </div>
@@ -479,7 +480,7 @@ export function Model3dPaywallModal({
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
                 ) : (
                   <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
-                    {formatDhb(walletDhb)} DHB
+                    {formatDhb(walletDhb)} <DhbCoin />
                   </span>
                 )}
               </div>

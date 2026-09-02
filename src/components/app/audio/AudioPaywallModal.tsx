@@ -30,6 +30,8 @@
  * quote it cannot pay against would only invent a disagreement.
  */
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import {
   Drawer,
   DrawerContent,
@@ -77,6 +79,7 @@ export function AudioPaywallModal({
   quantityLabel,
   onConfirm,
 }: AudioPaywallModalProps) {
+  const { t } = useTranslation();
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -100,11 +103,11 @@ export function AudioPaywallModal({
       const { data, error: fetchError } = await supabase.functions.invoke('get-dhb-price');
       if (fetchError) throw fetchError;
       const price = data?.prices?.DHB;
-      if (!price) throw new Error('Failed to get DHB price');
+      if (!price) throw new Error(t('creator.dhbPriceFailed'));
       setDhbPrice(price);
     } catch (err) {
       console.error('Error fetching DHB price:', err);
-      setError('Failed to fetch DHB price. Using fallback.');
+      setError(t('creator.dhbPriceFallback'));
       setDhbPrice(0.0006191);
     } finally {
       setLoading(false);
@@ -146,18 +149,18 @@ export function AudioPaywallModal({
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
-      toast.loading('Processing payment...', { id: 'audio-gen-payment' });
+      toast.loading(t('creator.processingPayment'), { id: 'audio-gen-payment' });
       // payForJob is the shared path the 3D paywall uses, and it carries the
       // things this drawer's own copy had drifted away from: a bounded chain
       // switch, the receipt status check, and reuse of a transfer that was paid
       // for a generation that then never ran.
       const txHash = await payForJob(costDhb);
-      toast.success('Payment confirmed! Starting…', { id: 'audio-gen-payment' });
+      toast.success(t('creator.paymentConfirmed'), { id: 'audio-gen-payment' });
       onConfirm(txHash);
     } catch (err: unknown) {
       console.error('[AudioPaywall] Payment failed:', err);
       toast.dismiss('audio-gen-payment');
-      toastTxError(err, 'Payment failed.');
+      toastTxError(err, t('creator.paymentFailed'));
     } finally {
       setIsPaying(false);
     }
@@ -178,10 +181,10 @@ export function AudioPaywallModal({
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Music2 className="w-5 h-5 text-cyan-400" />
-            {spec.label}
+            {t(spec.labelKey)}
           </DrawerTitle>
           <DrawerDescription className="text-zinc-400">
-            Confirm payment to start
+            {t('creator.confirmPaymentToStart')}
           </DrawerDescription>
         </DrawerHeader>
 
@@ -191,8 +194,8 @@ export function AudioPaywallModal({
               <div className="flex items-center gap-3">
                 <span className="text-xl">{spec.emoji}</span>
                 <div className="min-w-0">
-                  <p className="font-medium text-white text-sm">{spec.label}</p>
-                  <p className="text-xs text-zinc-500">{spec.description}</p>
+                  <p className="font-medium text-white text-sm">{t(spec.labelKey)}</p>
+                  <p className="text-xs text-zinc-500">{t(spec.descriptionKey)}</p>
                 </div>
               </div>
             </div>
@@ -201,7 +204,7 @@ export function AudioPaywallModal({
               <div className="rounded-xl bg-zinc-800/30 p-3">
                 <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-zinc-300">
                   <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
-                  Tips
+                  {t('creator.tips')}
                 </p>
                 <ul className="space-y-1">
                   {spec.tips.map((tip) => (
@@ -215,27 +218,27 @@ export function AudioPaywallModal({
 
             <div className="rounded-xl bg-zinc-800/50 p-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-400">Length</span>
+                <span className="text-zinc-400">{t('creator.length')}</span>
                 <span className="font-medium text-white">{quantityLabel}</span>
               </div>
               <div className="mt-2 flex items-center justify-between text-sm">
-                <span className="text-zinc-400">Estimated time</span>
+                <span className="text-zinc-400">{t('creator.estimatedTime')}</span>
                 <span className="font-medium text-white">{spec.typicalDuration}</span>
               </div>
               <div className="mt-2 flex items-center justify-between border-t border-zinc-700/60 pt-2 text-sm">
-                <span className="text-zinc-400">Total</span>
+                <span className="text-zinc-400">{t('creator.total')}</span>
                 <span className="flex items-center gap-1.5 font-semibold text-white">
                   <img src={dhbCoinImage} alt="" className="h-4 w-4" />
-                  {isPriceLoading ? '…' : `${formatDhb(costDhb)} DHB`}
+                  {isPriceLoading ? '…' : formatDhb(costDhb)}
                   <span className="text-xs font-normal text-zinc-500">
                     (${costUsd.toFixed(2)})
                   </span>
                 </span>
               </div>
               <div className="mt-1.5 flex items-center justify-between text-xs">
-                <span className="text-zinc-500">Your balance</span>
+                <span className="text-zinc-500">{t('creator.yourBalance')}</span>
                 <span className={hasEnoughBalance ? 'text-zinc-400' : 'text-red-400'}>
-                  {formatDhb(userBalance)} DHB
+                  {formatDhb(userBalance)} <DhbCoin />
                 </span>
               </div>
             </div>
@@ -258,12 +261,14 @@ export function AudioPaywallModal({
             {isPaying ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Processing
+                {t('creator.processing')}
               </>
             ) : hasEnoughBalance ? (
-              `Pay ${formatDhb(costDhb)} DHB`
+              <>
+                {t('creator.payAction')} <DhbAmount amount={formatDhb(costDhb)} />
+              </>
             ) : (
-              'Insufficient DHB'
+              t('creator.insufficientDhb')
             )}
           </Button>
         </div>

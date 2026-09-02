@@ -1,4 +1,5 @@
 import { Loader2 } from 'lucide-react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -134,7 +135,7 @@ export function IncomeChart() {
         <div className="flex items-center gap-2 mr-auto">
           <span className="text-white font-semibold">{t('commandCentre.incomeChart')}</span>
           {totalEarned > 0 && (
-            <span className="text-emerald-400 text-sm font-semibold">{totalEarned.toLocaleString()} DHB</span>
+            <span className="text-emerald-400 text-sm font-semibold">{totalEarned.toLocaleString()} <DhbCoin /></span>
           )}
         </div>
         <GlassFilterRow

@@ -317,6 +317,16 @@ i18n.use(initReactI18next).init({
 // LanguageContext manages dir independently on /docs routes.
 i18n.on('languageChanged', applyDocumentDirection);
 
+// Languages whose locale file is not filled in fall back to Google's translate
+// widget rather than to English. Loaded lazily and only when one of those
+// languages is actually selected — a viewer on a translated language never
+// fetches it, never contacts Google, and never gets its DOM patch.
+i18n.on('languageChanged', (lang) => {
+  import('./translate-widget-fallback')
+    .then((m) => m.syncTranslateWidget(lang))
+    .catch(() => undefined);
+});
+
 // If user's preferred language isn't English, lazy-load it immediately.
 // Guard: only apply startup language if the user hasn't manually changed it in the meantime.
 if (defaultLang && defaultLang !== 'en') {

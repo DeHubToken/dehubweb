@@ -10,6 +10,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Tag, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ interface ProfileFractionsPanelProps {
 }
 
 export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const navigate = useNavigate();
   const [selling, setSelling] = useState<PortfolioPosition | null>(null);
@@ -44,18 +46,17 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
   if (positions.length === 0) {
     return (
       <div className="text-center py-16 px-4">
-        <img src={fractions3dIcon} alt="Fractions" className="w-16 h-16 mx-auto mb-3 opacity-60" />
-        <p className="text-white/60 text-sm font-medium">No fractions yet</p>
+        <img src={fractions3dIcon} alt={t('fractions.title')} className="w-16 h-16 mx-auto mb-3 opacity-60" />
+        <p className="text-white/60 text-sm font-medium">{t('fractions.noFractionsYet')}</p>
         <p className="text-white/35 text-xs mt-1 max-w-xs mx-auto">
-          Every upload is minted as 1000 fractions. {isOwnProfile ? 'Post something, or buy' : 'This profile holds none of'}{' '}
-          {isOwnProfile ? 'into a post you believe in.' : 'any post right now.'}
+          {t(isOwnProfile ? 'fractions.profileEmptyOwn' : 'fractions.profileEmptyOther')}
         </p>
         {isOwnProfile && (
           <Button
             onClick={() => navigate('/app/fractions')}
             className="mt-4 bg-white/10 hover:bg-white/20 text-white border border-white/20"
           >
-            Browse the market
+            {t('fractions.browseTheMarket')}
           </Button>
         )}
       </div>
@@ -81,8 +82,8 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
       )}
 
       <p className="text-xs text-white/40">
-        {totalHeld.toLocaleString()} fraction{totalHeld === 1 ? '' : 's'} across {positions.length}{' '}
-        post{positions.length === 1 ? '' : 's'}
+        {t('fractions.fractionCount', { count: totalHeld })}{' '}
+        {t('fractions.acrossPosts', { count: positions.length })}
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -101,7 +102,7 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
                   {thumb ? (
                     <img
                       src={thumb}
-                      alt={position.title || `Post #${position.tokenId}`}
+                      alt={position.title || t('fractions.postNumber', { id: position.tokenId })}
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
@@ -116,10 +117,10 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
                 </div>
                 <div className="p-2.5 pb-1.5">
                   <h3 className="text-xs font-medium text-white truncate">
-                    {position.title || `Post #${position.tokenId}`}
+                    {position.title || t('fractions.postNumber', { id: position.tokenId })}
                   </h3>
                   <p className="text-[11px] text-zinc-400">
-                    {position.percentage.toFixed(1)}% of the post
+                    {t('fractions.pctOfPost', { pct: position.percentage.toFixed(1) })}
                   </p>
                 </div>
               </button>
@@ -131,7 +132,7 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
                     className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 text-[11px] h-7"
                   >
                     <Tag className="w-3 h-3 mr-1" />
-                    Sell
+                    {t('fractions.sell')}
                   </Button>
                 </div>
               )}

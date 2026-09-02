@@ -19,6 +19,7 @@
  *   { source: '<game id>', type: 'feed', limit: 2 }
  *   { source: '<game id>', type: 'desk', limit: 4 }
  *   { source: '<game id>', type: 'post', text: 'gm', key: '…' }
+ *   { source: '<game id>', type: 'trade', chain: 8453, side: 'buy', token, fee, amountIn, minOut, key }
  *   { source: '<game id>', type: 'compose', text: 'gm' }
  *
  * and the replies, which are the only things this side ever sends:
@@ -26,6 +27,7 @@
  *   { source: 'dehub', type: 'feed', items: [...] }        // raw rows
  *   { source: 'dehub', type: 'desk', posts, me, mine }     // painted straight
  *   { source: 'dehub', type: 'posted', ok, id?, reason? }
+ *   { source: 'dehub', type: 'traded', ok, key, stage?, hash?, reason? }
  *
  * WHY `desk` WHEN `feed` ALREADY EXISTS
  * -------------------------------------
@@ -59,21 +61,44 @@
  * cost is shown and the wallet is a tap away. The frame never gets the
  * session, the token or the ability to spend anything.
  *
- * `source` is checked on arrival exactly as the exit bridge checks it: any
- * frame on the page can post to us, and opaque frames all post with
- * `origin: "null"`, so the name in the payload is the only discriminator
- * available. Nothing in a payload is ever used as an address, a path or a
- * lookup key: `desk` reports on the wallet THIS side is signed in as, never on
- * one the frame names, or a game could farm profiles by asking.
+ * WHO IS ALLOWED TO SEND
+ * ----------------------
+ * The sending WINDOW is the gate: `event.source` has to be the game frame's
+ * own `contentWindow`. That test holds whatever the frame's origin is, which
+ * is why it is the one used here — `event.origin` cannot do the job, because
+ * an opaque frame posts with `origin: "null"` and so does every other
+ * sandboxed frame on the page.
+ *
+ * The `source` name in the payload is NOT that gate and never was. It only
+ * says which game is talking, so a page hosting more than one routes to the
+ * right bridge. On its own it is written by the sender: any window holding a
+ * handle to this one — a popup opener, or a page the game mounted in a nested
+ * frame — can put that name in a payload. `post` publishes as the signed-in
+ * wallet and `desk` answers with their address and their posts, so the window
+ * check is what keeps both out of reach.
+ *
+ * Nothing in a payload is ever used as an address, a path or a lookup key:
+ * `desk` reports on the wallet THIS side is signed in as, never on one the
+ * frame names, or a game could farm profiles by asking.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { mintPost, quotePostCharge } from '@/lib/api/dehub';
-// Chain-config constants only — the same light import usePostForm takes, and
-// deliberately not the contract helpers beside them.
-import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+// The trade relay signs with the same helpers every spend surface in the app
+// uses, so a swap from the room is a swap from anywhere else.
+import { BASE_CHAIN_ID, ROBINHOOD_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { AbiCoder, Interface, keccak256 } from 'ethers';
+import {
+  approveERC20,
+  getERC20Allowance,
+  readContract,
+  parseTxError,
+  writeContractAA,
+  type AAWriteResult,
+} from '@/lib/contracts/aa-utils';
+import type { ChainId } from '@/components/app/ChainSelector';
 import { buildAvatarUrl, buildFeedImageUrls, buildImageUrl, extractAvatarPath } from '@/lib/media-url';
 
 export interface GameHostMessage {
@@ -82,8 +107,17 @@ export interface GameHostMessage {
   to?: string;
   limit?: number;
   text?: string;
-  /** Idempotency key for `post`, so a retry cannot publish twice. */
+  /** Idempotency key for `post` and `trade`, so a retry cannot double up. */
   key?: string;
+  /** `trade`: the chain, side, token, best fee tier, and amounts in base units as decimal strings. */
+  chain?: number;
+  side?: string;
+  token?: string;
+  fee?: number;
+  amountIn?: string;
+  minOut?: string;
+  /** `trade` on a Uniswap v4 pool: its key, and the pool id it must hash to. */
+  v4?: unknown;
 }
 
 /** One feed post, painted onto a monitor exactly as it arrives. */
@@ -113,6 +147,8 @@ export interface DeskMe {
   likes: number;
   tips: number;
   badge: number;
+  /** The Solana account linked to the profile, if one is. Public, like the address. */
+  solana: string;
   avatar?: string;
 }
 
@@ -313,6 +349,7 @@ async function relayDesk(
         likes: num(user.likes),
         tips: num(user.receivedTips),
         badge: num(user.badgeBalance),
+        solana: typeof user.solanaAddress === 'string' ? user.solanaAddress : '',
         avatar,
       }
     : null;
@@ -418,13 +455,255 @@ async function relayPost(
 }
 
 /**
- * Honour `navigate`, `feed`, `desk`, `compose` and `post` from the game
+ * A swap, signed by the wallet THIS side is signed in as.
+ *
+ * Trenchstar's wallet panel is a trading desk, and the desk wants to buy and
+ * sell without a second wallet: the app's own smart account, gas-sponsored,
+ * one confirmation press inside the room. The frame never gets a key. It
+ * names the token, the amount and the floor it will accept, and the host
+ * builds the calldata itself — nothing that arrives from the frame is ever
+ * forwarded as bytes to sign.
+ *
+ * Chains are the two where Uniswap's SwapRouter02 is deployed AND the smart
+ * account exists: Base and Robinhood Chain. Both are ETH-gas chains, so a buy
+ * is ETH in and a sell is token → WETH → ETH, unwrapped in the same call.
+ */
+const TRADE_CHAINS: Record<number, { router: string; weth: string }> = {
+  [BASE_CHAIN_ID]: {
+    router: '0x2626664c2603336E57B271c5C0b26F421741e481',
+    weth: '0x4200000000000000000000000000000000000006',
+  },
+  [ROBINHOOD_CHAIN_ID]: {
+    router: '0xcaf681a66d020601342297493863e78c959e5cb2',
+    weth: '0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73',
+  },
+};
+const TRADE_FEES = new Set([100, 500, 3000, 10000]);
+/** SwapRouter02's "send the output to me, the router" sentinel. */
+const ROUTER_SELF = '0x0000000000000000000000000000000000000002';
+const TRADE_DEADLINE_SECONDS = 60;
+
+const tradeRouterInterface = new Interface([
+  'function exactInputSingle((address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 amountIn, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96)) external payable returns (uint256 amountOut)',
+  'function unwrapWETH9(uint256 amountMinimum, address recipient) external payable',
+  'function multicall(uint256 deadline, bytes[] data) external payable returns (bytes[] results)',
+]);
+
+function bigFrom(value: unknown): bigint | null {
+  if (typeof value !== 'string' || !/^\d{1,78}$/.test(value)) return null;
+  try {
+    const n = BigInt(value);
+    return n > 0n ? n : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Uniswap v4, for the pools v3 cannot see.
+ *
+ * Robinhood Chain's trench pairs are mostly v4 pools behind a launchpad hook.
+ * The frame recovers the pool key (fee, tick spacing, hook) from the
+ * PoolManager's Initialize log and sends it along; this side rebuilds the
+ * calldata for the Universal Router itself — one V4_SWAP command carrying
+ * SWAP_EXACT_IN_SINGLE, SETTLE_ALL and TAKE_ALL — and checks that the key
+ * really hashes to the pool the frame named before signing anything against
+ * it. A sell settles through Permit2, which is one extra approval.
+ *
+ * Router addresses are universal-router-sdk's, not sdk-core's: on Robinhood
+ * the two sdk-core "router" entries are the V2 factory and V2 router.
+ */
+const V4_CHAINS: Record<number, { router: string; quoter: string }> = {
+  [BASE_CHAIN_ID]: {
+    router: '0x6ff5693b99212da76ad316178a184ab56d299b43',
+    quoter: '0x0d5e0f971ed27fbff6c2837bf31316121532048d',
+  },
+  [ROBINHOOD_CHAIN_ID]: {
+    router: '0x8876789976decbfcbbbe364623c63652db8c0904',
+    quoter: '0x8dc178efb8111bb0973dd9d722ebeff267c98f94',
+  },
+};
+const PERMIT2 = '0x000000000022D473030F116dDEE9F6B43aC78BA3';
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+const MAX_UINT160 = (1n << 160n) - 1n;
+const MAX_UINT256 = (1n << 256n) - 1n;
+
+const universalRouterInterface = new Interface([
+  'function execute(bytes commands, bytes[] inputs, uint256 deadline) external payable',
+]);
+const permit2Interface = new Interface([
+  'function allowance(address owner, address token, address spender) view returns (uint160 amount, uint48 expiration, uint48 nonce)',
+  'function approve(address token, address spender, uint160 amount, uint48 expiration)',
+]);
+
+interface V4Key {
+  fee: number;
+  ts: number;
+  hooks: string;
+  pool: string;
+}
+
+function v4KeyFrom(raw: unknown): V4Key | null {
+  const v = raw as Record<string, unknown> | null;
+  if (!v || typeof v !== 'object') return null;
+  const fee = typeof v.fee === 'number' && Number.isInteger(v.fee) && v.fee >= 0 && v.fee < 1 << 24 ? v.fee : -1;
+  const ts = typeof v.ts === 'number' && Number.isInteger(v.ts) && v.ts > 0 && v.ts < 1 << 23 ? v.ts : -1;
+  const hooks = typeof v.hooks === 'string' && /^0x[0-9a-fA-F]{40}$/.test(v.hooks) ? v.hooks : '';
+  const pool = typeof v.pool === 'string' && /^0x[0-9a-f]{64}$/.test(v.pool) ? v.pool : '';
+  if (fee < 0 || ts < 0 || !hooks || !pool) return null;
+  return { fee, ts, hooks, pool };
+}
+
+/** The V4_SWAP calldata for an ETH-quoted pool: buy is ETH → token, sell is token → ETH. */
+function v4SwapArgs(token: string, key: V4Key, buy: boolean, amountIn: bigint, minOut: bigint): [string, string[], bigint] {
+  const coder = AbiCoder.defaultAbiCoder();
+  const poolKey = [ZERO_ADDRESS, token, key.fee, key.ts, key.hooks];
+  const swap = coder.encode(
+    ['tuple(tuple(address,address,uint24,int24,address),bool,uint128,uint128,bytes)'],
+    [[poolKey, buy, amountIn, minOut, '0x']],
+  );
+  const settle = coder.encode(['address', 'uint256'], [buy ? ZERO_ADDRESS : token, amountIn]);
+  const take = coder.encode(['address', 'uint256'], [buy ? token : ZERO_ADDRESS, minOut]);
+  // SWAP_EXACT_IN_SINGLE (0x06), SETTLE_ALL (0x0c), TAKE_ALL (0x0f)
+  const input = coder.encode(['bytes', 'bytes[]'], ['0x060c0f', [swap, settle, take]]);
+  const deadline = BigInt(Math.floor(Date.now() / 1000) + 120);
+  // V4_SWAP (0x10)
+  return ['0x10', [input], deadline];
+}
+
+async function tradeV4(
+  chainId: number,
+  address: string,
+  token: string,
+  key: V4Key,
+  buy: boolean,
+  amountIn: bigint,
+  minOut: bigint,
+  say: (ok: boolean, extra?: Record<string, unknown>) => void,
+): Promise<AAWriteResult> {
+  const v4 = V4_CHAINS[chainId];
+  const coder = AbiCoder.defaultAbiCoder();
+  const poolId = keccak256(
+    coder.encode(['address', 'address', 'uint24', 'int24', 'address'], [ZERO_ADDRESS, token, key.fee, key.ts, key.hooks]),
+  );
+  if (poolId.toLowerCase() !== key.pool) throw new Error('pool key does not match the pool');
+
+  if (!buy) {
+    const allowance = await getERC20Allowance(token, address, PERMIT2, chainId as ChainId);
+    if (allowance < amountIn) {
+      const approval = await approveERC20(token, PERMIT2, MAX_UINT256, chainId as ChainId);
+      say(true, { stage: 'approved', hash: approval.hash });
+      await approval.wait();
+    }
+    const [granted, expiration] = await readContract<[bigint, bigint, bigint]>(
+      PERMIT2, permit2Interface, 'allowance', [address, token, v4.router], chainId as ChainId,
+    );
+    const now = Math.floor(Date.now() / 1000);
+    if (granted < amountIn || Number(expiration) < now + 120) {
+      const grant = await writeContractAA(
+        PERMIT2, permit2Interface, 'approve',
+        [token, v4.router, MAX_UINT160, now + 30 * 86400],
+        { chainId, context: 'token approval' },
+      );
+      say(true, { stage: 'approved', hash: grant.hash });
+      await grant.wait();
+    }
+  }
+
+  return writeContractAA(
+    v4.router, universalRouterInterface, 'execute', v4SwapArgs(token, key, buy, amountIn, minOut),
+    { value: buy ? amountIn : 0n, chainId, context: 'swap' },
+  );
+}
+
+async function relayTrade(
+  to: MessageEventSource | null,
+  data: GameHostMessage,
+  address: string | null | undefined,
+): Promise<void> {
+  const key = typeof data.key === 'string' ? data.key.slice(0, 64) : '';
+  const say = (ok: boolean, extra: Record<string, unknown> = {}) => {
+    if (to) (to as Window).postMessage({ source: 'dehub', type: 'traded', ok, key, ...extra }, '*');
+  };
+  if (!address) return say(false, { reason: 'signin' });
+
+  const chainId = typeof data.chain === 'number' ? data.chain : NaN;
+  const chain = TRADE_CHAINS[chainId];
+  const token = typeof data.token === 'string' && /^0x[0-9a-fA-F]{40}$/.test(data.token) ? data.token : '';
+  const fee = typeof data.fee === 'number' && TRADE_FEES.has(data.fee) ? data.fee : 0;
+  const amountIn = bigFrom(data.amountIn);
+  const minOut = bigFrom(data.minOut);
+  const side = data.side === 'buy' || data.side === 'sell' ? data.side : '';
+  const v4 = data.v4 !== undefined ? v4KeyFrom(data.v4) : null;
+  if (data.v4 !== undefined && !v4) return say(false, { reason: 'bad request' });
+  if (!chain || !token || (!fee && !v4) || !amountIn || !minOut || !side) return say(false, { reason: 'bad request' });
+
+  try {
+    let result: AAWriteResult;
+    if (v4) {
+      result = await tradeV4(chainId, address, token, v4, side === 'buy', amountIn, minOut, say);
+    } else if (side === 'buy') {
+      result = await writeContractAA(
+        chain.router,
+        tradeRouterInterface,
+        'exactInputSingle',
+        [{
+          tokenIn: chain.weth,
+          tokenOut: token,
+          fee,
+          recipient: address,
+          amountIn,
+          amountOutMinimum: minOut,
+          sqrtPriceLimitX96: 0n,
+        }],
+        { value: amountIn, chainId, context: 'swap' },
+      );
+    } else {
+      const allowance = await getERC20Allowance(token, address, chain.router, chainId as ChainId);
+      if (allowance < amountIn) {
+        const approval = await approveERC20(token, chain.router, amountIn, chainId as ChainId);
+        say(true, { stage: 'approved', hash: approval.hash });
+        await approval.wait();
+      }
+      const swap = tradeRouterInterface.encodeFunctionData('exactInputSingle', [{
+        tokenIn: token,
+        tokenOut: chain.weth,
+        fee,
+        recipient: ROUTER_SELF,
+        amountIn,
+        amountOutMinimum: minOut,
+        sqrtPriceLimitX96: 0n,
+      }]);
+      const unwrap = tradeRouterInterface.encodeFunctionData('unwrapWETH9', [minOut, address]);
+      const deadline = BigInt(Math.floor(Date.now() / 1000) + TRADE_DEADLINE_SECONDS);
+      result = await writeContractAA(
+        chain.router,
+        tradeRouterInterface,
+        'multicall',
+        [deadline, [swap, unwrap]],
+        { chainId, context: 'swap' },
+      );
+    }
+    say(true, { stage: 'sent', hash: result.hash });
+    const receipt = await result.wait();
+    say(receipt.status === 1, { stage: 'mined', hash: result.hash, reason: receipt.status === 1 ? undefined : 'reverted' });
+  } catch (error) {
+    say(false, { reason: parseTxError(error, 'swap') });
+  }
+}
+
+/**
+ * Honour `navigate`, `feed`, `desk`, `compose`, `post` and `trade` from the game
  * identified by `source`.
  *
  * Pass `undefined` for `source` to listen for nothing — the caller may not
  * know which game it is hosting yet.
  */
-export function useGameHostBridge(source: string | undefined, options?: GameHostOptions): void {
+export function useGameHostBridge(
+  source: string | undefined,
+  frame: RefObject<HTMLIFrameElement>,
+  options?: GameHostOptions,
+): void {
   const navigate = useNavigate();
   // The listener is bound once per game. Reading these through a ref keeps a
   // new wallet or a new callback from tearing it down and rebinding mid-play.
@@ -434,6 +713,7 @@ export function useGameHostBridge(source: string | undefined, options?: GameHost
   // seconds; anything asking faster than this is either broken or using the
   // host as the network it was denied, and neither deserves the requests.
   const last = useRef<Record<string, number>>({});
+  const tradeBusy = useRef(false);
 
   useEffect(() => {
     if (!source) return;
@@ -449,6 +729,10 @@ export function useGameHostBridge(source: string | undefined, options?: GameHost
     const onMessage = (event: MessageEvent<GameHostMessage | null>) => {
       const data = event.data;
       if (!data || data.source !== source) return;
+      // The game frame itself, not any other window that knows the name. A
+      // popup opener or a page the game mounted in a nested frame can post the
+      // same payload, and `post` mints as the signed-in wallet.
+      if (event.source !== frame.current?.contentWindow) return;
 
       if (data.type === 'navigate') {
         const to = typeof data.to === 'string' ? data.to : '';
@@ -470,6 +754,17 @@ export function useGameHostBridge(source: string | undefined, options?: GameHost
         if (tooSoon('compose')) return;
         const text = cleanCompose(data.text);
         opts.current?.onCompose?.(text);
+        return;
+      }
+
+      if (data.type === 'trade') {
+        // One at a time. A second press while the first is in the wallet is
+        // the classic double-buy, and the frame already disarms its button.
+        if (tradeBusy.current) return;
+        tradeBusy.current = true;
+        void relayTrade(event.source, data, opts.current?.address).finally(() => {
+          tradeBusy.current = false;
+        });
         return;
       }
 

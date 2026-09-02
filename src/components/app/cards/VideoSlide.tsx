@@ -22,7 +22,7 @@ interface VideoSlideProps {
   isActive: boolean;
   isMuted: boolean;
   playbackRate?: number;
-  onTimeUpdate?: (currentTime: number, duration: number) => void;
+  onTimeUpdate?: (currentTime: number, duration: number, loops?: boolean) => void;
   onTap?: () => void;
   /**
    * Reverses `onTap` silently. Supplying it is what lets the first tap act
@@ -190,7 +190,7 @@ export const VideoSlide = memo(function VideoSlide({
       const dur = videoRef.current.duration;
       if (dur > 0) {
         setProgress(ct / dur);
-        onTimeUpdate?.(ct, dur);
+        onTimeUpdate?.(ct, dur, videoRef.current.loop);
       }
     }
   }, [onTimeUpdate, isSeeking]);

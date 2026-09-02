@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import qrcode from 'qrcode-generator';
 import { useQuery } from '@tanstack/react-query';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
@@ -336,20 +337,20 @@ export default function FullWalletPage() {
                 <>
                   <div className="flex justify-between text-xs">
                     <span className="text-zinc-500">Base</span>
-                    <span className="text-white font-medium">{Math.floor(baseVal).toLocaleString()} DHB</span>
+                    <span className="text-white font-medium">{Math.floor(baseVal).toLocaleString()} <DhbCoin /></span>
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-zinc-500">BNB Chain</span>
-                    <span className="text-white font-medium">{Math.floor(bnbVal).toLocaleString()} DHB</span>
+                    <span className="text-white font-medium">{Math.floor(bnbVal).toLocaleString()} <DhbCoin /></span>
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-zinc-500">Staked</span>
-                    <span className="text-white font-medium">{Math.floor(stakedVal).toLocaleString()} DHB</span>
+                    <span className="text-white font-medium">{Math.floor(stakedVal).toLocaleString()} <DhbCoin /></span>
                   </div>
                   {giveaway && (
                     <div className="flex justify-between text-xs">
                       <span className="text-zinc-500">Giveaway (locked)</span>
-                      <span className="text-white font-medium">{Math.floor(giveaway.amount).toLocaleString()} DHB</span>
+                      <span className="text-white font-medium">{Math.floor(giveaway.amount).toLocaleString()} <DhbCoin /></span>
                     </div>
                   )}
                 </>

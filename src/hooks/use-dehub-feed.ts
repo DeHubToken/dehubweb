@@ -190,6 +190,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   return {
     id,
     type: 'video',
+    shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     thumbnail,
     videoUrl,
     transcodingStatus: nft.transcodingStatus,
@@ -228,6 +230,24 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
+    // Live posts: the card plays the HLS ladder inline rather than sitting on
+    // a poster until somebody clicks through.
+    isLivePost,
+    liveStatus: (nft as any).stream?.status,
+    liveIsActive: (nft as any).stream?.isActive,
+    livePlaybackId: (nft as any).stream?.playbackId,
+    livePlaybackUrl: (nft as any).stream?.playbackUrl,
+    livePlaybackUrls: (() => {
+      const hls = hlsUrlFor((nft as any).stream);
+      if (!hls) return (nft as any).stream?.playbackUrl ? [(nft as any).stream.playbackUrl] : undefined;
+      return liveProviderOf((nft as any).stream) === 'mediamtx'
+        ? [hls]
+        : [hls, `https://livepeercdn.com/hls/${(nft as any).stream?.playbackId}/index.m3u8`];
+    })(),
+    isLiveNow: isLivePost
+      && (nft as any).stream?.isActive !== false
+      && ['live', 'active'].includes(String((nft as any).stream?.status || '').toLowerCase()),
+    liveStreamId: (nft as any).stream?._id || (nft as any).stream?.streamId,
     soundtrackUrl,
     soundtrackTitle,
     soundtrackCreator,
@@ -284,6 +304,8 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   return {
     id,
     type: 'image',
+    shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     username,
     verified,
     avatar,
@@ -389,6 +411,8 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
     subscriberPlans: (nft as any).plansDetails,
     contentRating: nft.contentRating,
+    shopLinks: nft.shopLinks,
+    shopListingCount: nft.shopListingCount,
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     ...(streamId ? { streamId } : {}),
@@ -645,6 +669,10 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
      */
     contentRating: (stream as any).contentRating,
     subscriberPlans: (stream as any).plansDetails,
+    // Flattened onto the row by applyLiveAccess, like contentRating — the
+    // board lives on the token, and /api/live only serves the stream.
+    shopLinks: (stream as any).shopLinks,
+    shopListingCount: (stream as any).shopListingCount,
     isUnlocked: (stream as any).isUnlocked ?? false,
     isPPV: liveStreamInfo?.isPayPerView || false,
     ppvPrice: liveStreamInfo?.payPerViewAmount,

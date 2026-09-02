@@ -10,9 +10,8 @@ import { GLASS_STYLES } from '@/constants/app.constants';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
-import { openStageModal } from '@/contexts/StageContext';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
-import type { LiveMode } from '../types';
+import type { LiveMode, LiveStreamHandoff } from '../types';
 import type { AttachedSound } from '../hooks/usePostSound';
 
 interface PostActionBarProps {
@@ -25,6 +24,12 @@ interface PostActionBarProps {
   onStartRecording: () => void;
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
+  /**
+   * A stream the composer's own mint just provisioned. Its arrival is what
+   * opens the broadcast sheet — there is no setup step any more, so the sheet
+   * is only ever entered already on air.
+   */
+  liveStream?: LiveStreamHandoff | null;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   onInsertEmoji: (emoji: string) => void;
   onInsertGif: (gifUrl: string) => void;
@@ -63,6 +68,7 @@ export function PostActionBar({
   onStartRecording,
   liveMode,
   setLiveMode,
+  liveStream,
   onInsertFormatting,
   onInsertEmoji,
   onInsertGif,
@@ -92,7 +98,6 @@ export function PostActionBar({
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
-  const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
   const navigate = useNavigate();
   const isLive = liveMode !== null;
   const attachmentInputRef = useRef<HTMLInputElement>(null);
@@ -113,13 +118,11 @@ export function PostActionBar({
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
     setLivePopoverOpen(false);
-    if (mode === 'townhall') {
-      // Close the post modal and open the Stages modal globally
-      onCloseModal?.();
-      openStageModal('create');
-    } else {
-      setGoLiveModalOpen(true);
-    }
+    // Neither mode opens anything. Picking Live — video or stage — just puts
+    // the composer in live mode, and the composer itself is the setup form.
+    // Stages used to close this modal and hand over a second create form asking
+    // for the same title and description again; the room is now opened by the
+    // Go Live button below, off what was typed here.
   };
 
   const handleSpellCheck = () => {
@@ -212,16 +215,10 @@ export function PostActionBar({
     </div>
   );
 
-  const handleGoLiveClick = () => {
-    if (isLive) {
-      // Open the Go Live modal
-      setGoLiveModalOpen(true);
-    }
-  };
-
   const handleGoLiveModalClose = () => {
-    setGoLiveModalOpen(false);
     setLiveMode(null);
+    // Closes the composer behind it too: the broadcast is over, and the post it
+    // was made from was published before the camera ever came on.
     onCloseModal?.();
   };
 
@@ -229,9 +226,12 @@ export function PostActionBar({
 
   return (
     <>
+      {/* Opened by the arrival of a provisioned stream, never by a button. The
+          setup form it used to carry is gone — the composer above is the form. */}
       <GoLiveModal
-        isOpen={goLiveModalOpen}
+        isOpen={!!liveStream}
         onClose={handleGoLiveModalClose}
+        initialStream={liveStream}
       />
 
       {/* Upload progress bar — liquid glass bubble style */}
@@ -340,8 +340,10 @@ export function PostActionBar({
           </Tooltip>
         )}
 
-        {/* Attachment button — image and video share one control */}
-        {!isLive && (
+        {/* Attachment button — image and video share one control. It stays put
+            in live mode: the file picked there is the stream's preview media —
+            a thumbnail, a GIF or a short clip — not a second post. */}
+        {(
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -353,7 +355,9 @@ export function PostActionBar({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              {hasImage ? 'Add image' : hasVideo ? 'Replace video' : 'Add image or video'}
+              {isLive
+                ? 'Set live preview image or video'
+                : hasImage ? 'Add image' : hasVideo ? 'Replace video' : 'Add image or video'}
             </TooltipContent>
           </Tooltip>
         )}
@@ -416,7 +420,10 @@ export function PostActionBar({
           </Popover>
         )}
         
-        {!hasImage && (
+        {/* Always present. Hiding it once an image was attached left live mode
+            with no way back off it, now that a cover is a normal thing to
+            attach to a stream. */}
+        {(
           <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen} modal={true}>
             <PopoverTrigger asChild>
               <button 
@@ -521,7 +528,11 @@ export function PostActionBar({
         </Drawer>
         
         <Button
-          onClick={isLive ? handleGoLiveClick : onPost}
+          // One button, one form. This used to branch to a second Go Live
+          // sheet that asked for the title, description and cover all over
+          // again — the composer already has them, and the mint provisions the
+          // stream, so going live is just posting a live post.
+          onClick={onPost}
           disabled={(!canPost && !isLive) || isPosting}
           className={cn(
             "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",

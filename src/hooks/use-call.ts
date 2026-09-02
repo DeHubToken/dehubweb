@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast as sonnerToast } from 'sonner';
 import { simpleCallCheck, testCallDetection, debugAllCalls } from '@/utils/simple-call-check';
@@ -127,8 +128,20 @@ export const useCall = (): UseCallReturn => {
 
   const getAgoraToken = useCallback(async (channelName: string): Promise<{ token: string; appId: string; uid: number } | null> => {
     try {
+      // Say who is asking. Publisher tokens are behind a gate that reads these
+      // two headers, and this call sent neither — so the day the gate is
+      // switched from report to enforce, every call in messages would have been
+      // refused for having no identity at all. Stages have sent them since the
+      // gate was written; this is the caller that was missed.
+      const authToken = getAuthToken();
+      const headers =
+        authToken && userAddress
+          ? { 'x-dehub-token': authToken, 'x-wallet-address': userAddress.toLowerCase() }
+          : undefined;
+
       const { data, error } = await supabase.functions.invoke('agora-token', {
         body: { channelName, role: 'publisher' },
+        ...(headers ? { headers } : {}),
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -139,7 +152,7 @@ export const useCall = (): UseCallReturn => {
       callToast({ title: 'Call Error', description: msg, variant: 'destructive' });
       return null;
     }
-  }, []);
+  }, [userAddress]);
 
   // ── Agora cleanup ────────────────────────────────────────────────────────────
 

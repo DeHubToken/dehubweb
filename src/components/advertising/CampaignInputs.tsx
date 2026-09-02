@@ -5,7 +5,9 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { badgeTiers } from './utils/badgeTiers';
+import { fill } from './utils/fill';
 
 interface CampaignInputsProps {
   budget: number;
@@ -24,10 +26,11 @@ const CampaignInputs = ({
   targetTiers,
   setTargetTiers
 }: CampaignInputsProps) => {
+  const { t } = useLanguage();
   const selectedTiers = badgeTiers.slice(targetTiers[0], targetTiers[1] + 1);
   const totalAudience = selectedTiers.reduce((sum, tier) => sum + tier.audience, 0);
   const totalBudget = budget * campaignDuration;
-  
+
   // Warning conditions
   const showAudienceWarning = totalAudience < 1000 && budget > 100;
   const showBudgetWarning = budget > 1000 && totalAudience < 10000;
@@ -40,7 +43,7 @@ const CampaignInputs = ({
   return (
     <div className="space-y-6">
       <div>
-        <Label htmlFor="budget">Daily Budget ($)</Label>
+        <Label htmlFor="budget">{t('adTools.dailyBudget')}</Label>
         <Input
           id="budget"
           type="number"
@@ -52,13 +55,13 @@ const CampaignInputs = ({
         />
         {campaignDuration > 0 && (
           <p className="text-sm text-muted-foreground mt-1">
-            Total campaign budget: ${totalBudget.toFixed(2)}
+            {fill(t('adTools.totalCampaignBudget'), { amount: `$${totalBudget.toFixed(2)}` })}
           </p>
         )}
       </div>
 
       <div>
-        <Label>Campaign Duration (days)</Label>
+        <Label>{t('adTools.campaignDuration')}</Label>
         <div className="mt-2 px-2">
           <Slider
             value={[campaignDuration]}
@@ -69,15 +72,17 @@ const CampaignInputs = ({
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground mt-1">
-            <span>1 day</span>
-            <span className="font-semibold">{campaignDuration} days</span>
-            <span>30 days</span>
+            <span>{fill(t('adTools.dayCountOne'), { count: 1 })}</span>
+            <span className="font-semibold">
+              {fill(t(campaignDuration === 1 ? 'adTools.dayCountOne' : 'adTools.dayCountOther'), { count: campaignDuration })}
+            </span>
+            <span>{fill(t('adTools.dayCountOther'), { count: 30 })}</span>
           </div>
         </div>
       </div>
 
       <div>
-        <Label>Target Badge Tiers (Range)</Label>
+        <Label>{t('adTools.targetBadgeTiers')}</Label>
         <div className="mt-2 px-2">
           <Slider
             value={targetTiers}
@@ -88,14 +93,14 @@ const CampaignInputs = ({
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground mt-1">
-            <span>{badgeTiers[targetTiers[0]]?.name || 'No Badge'}</span>
+            <span>{badgeTiers[targetTiers[0]]?.name || t('adTools.noBadge')}</span>
             <span className="font-semibold">
-              {selectedTiers.length} tier{selectedTiers.length !== 1 ? 's' : ''} selected
+              {fill(t(selectedTiers.length === 1 ? 'adTools.tiersSelectedOne' : 'adTools.tiersSelectedOther'), { count: selectedTiers.length })}
             </span>
-            <span>{badgeTiers[targetTiers[1]]?.name || 'No Badge'}</span>
+            <span>{badgeTiers[targetTiers[1]]?.name || t('adTools.noBadge')}</span>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Total audience: {totalAudience.toLocaleString()}
+            {fill(t('adTools.totalAudienceCount'), { count: totalAudience.toLocaleString() })}
           </p>
         </div>
       </div>
@@ -105,7 +110,7 @@ const CampaignInputs = ({
         <Alert>
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Small audience ({totalAudience.toLocaleString()}) for this budget. Consider targeting more tiers or reducing budget.
+            {fill(t('adTools.audienceWarning'), { count: totalAudience.toLocaleString() })}
           </AlertDescription>
         </Alert>
       )}
@@ -114,7 +119,7 @@ const CampaignInputs = ({
         <Alert>
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            High daily budget (${budget.toFixed(2)}) for this audience size. Results may not be realistic.
+            {fill(t('adTools.budgetWarning'), { amount: `$${budget.toFixed(2)}` })}
           </AlertDescription>
         </Alert>
       )}

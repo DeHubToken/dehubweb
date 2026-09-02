@@ -218,6 +218,10 @@ function CategoryFilterSection({
   const { t } = useI18n();
   const [search, setSearch] = useState('');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
+  // A hook, so it is called once here rather than inside the branches and the
+  // .map below — a per-item, per-condition hook call is a render-count crash
+  // waiting for the category list to change length.
+  const activeFilterClass = useActiveFilterClass();
 
   const selectedObj = useMemo(() => {
     if (!selectedCategory) return null;
@@ -265,7 +269,7 @@ function CategoryFilterSection({
               data-feed-filter-button
               data-active="true"
               onClick={() => { onSelect(null); setSearch(''); }}
-              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", useActiveFilterClass())}
+              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", activeFilterClass)}
             >
               {selectedObj.name}
               <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
@@ -277,7 +281,7 @@ function CategoryFilterSection({
             onClick={() => { onSelect(null); setSearch(''); }}
             className={cn(
               'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-              selectedCategory === null ? useActiveFilterClass() : INACTIVE_FILTER_CLASS
+              selectedCategory === null ? activeFilterClass : INACTIVE_FILTER_CLASS
             )}
           >
             {t('filters.all')}
@@ -290,7 +294,7 @@ function CategoryFilterSection({
               onClick={() => { onSelect(cat.id); setSearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selectedCategory === cat.id ? useActiveFilterClass() : INACTIVE_FILTER_CLASS
+                selectedCategory === cat.id ? activeFilterClass : INACTIVE_FILTER_CLASS
               )}
             >
               {cat.name}

@@ -7,6 +7,7 @@
  * @module components/app/tv/TVPreviewCard
  */
 
+import { useTranslation } from 'react-i18next';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Tv, Volume2, VolumeX, Maximize, Minimize, Play, Pause, PictureInPicture2 } from 'lucide-react';
@@ -32,6 +33,7 @@ interface TVPreviewCardProps {
 }
 
 export function TVPreviewCard({ channel }: TVPreviewCardProps) {
+  const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -360,7 +362,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
         {/* LIVE badge */}
         <div className="absolute top-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-600 text-white text-[10px] font-semibold">
           <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-          LIVE
+          {t('tv.live')}
         </div>
 
         {/* Play/Pause center overlay on hover */}

@@ -22,6 +22,8 @@
  * up to full size; clicking away, or scrolling back to the top, closes it again.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import {
   Box,
   Film,
@@ -121,11 +123,11 @@ const MODEL3D_ASPECT = '1:1';
 /** Audio has no framing either, and the results grid still needs one per card. */
 const AUDIO_ASPECT = '1:1';
 
-const MODES: { id: Mode; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 'image', label: 'Image', icon: ImageIcon },
-  { id: 'video', label: 'Video', icon: Film },
-  { id: 'audio', label: 'Audio', icon: Music2 },
-  { id: '3d', label: '3D', icon: Box },
+const MODES: { id: Mode; labelKey: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { id: 'image', labelKey: 'creator.navImage', icon: ImageIcon },
+  { id: 'video', labelKey: 'creator.navVideo', icon: Film },
+  { id: 'audio', labelKey: 'creator.navAudio', icon: Music2 },
+  { id: '3d', labelKey: 'creator.kind3d', icon: Box },
 ];
 
 // ─── Cached workspace state ─────────────────────────────────────────────────
@@ -389,7 +391,7 @@ function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(new Error('Could not read that file'));
+    reader.onerror = () => reject(new Error(i18n.t('creator.couldNotReadFile')));
     reader.readAsDataURL(file);
   });
 }
@@ -404,12 +406,13 @@ function ModeToggle({
   onChange: (next: Mode) => void;
   compact?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     // Toggle buttons, not ARIA tabs: there is no tabpanel to control and no
     // arrow-key navigation, so aria-pressed is the honest semantic.
     <div
       role="group"
-      aria-label="What to create"
+      aria-label={t('creator.whatToCreate')}
       className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-white/20 bg-white/10 p-0.5 backdrop-blur-xl"
     >
       {MODES.map((m) => {
@@ -420,8 +423,8 @@ function ModeToggle({
             key={m.id}
             type="button"
             aria-pressed={active}
-            aria-label={m.label}
-            title={m.label}
+            aria-label={t(m.labelKey)}
+            title={t(m.labelKey)}
             onClick={() => onChange(m.id)}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-full text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
@@ -430,7 +433,7 @@ function ModeToggle({
             )}
           >
             <Icon className="h-3.5 w-3.5" />
-            {!compact && <span className="hidden sm:inline">{m.label}</span>}
+            {!compact && <span className="hidden sm:inline">{t(m.labelKey)}</span>}
           </button>
         );
       })}
@@ -449,6 +452,7 @@ interface CreatorStudioProps {
 }
 
 export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
+  const { t } = useTranslation();
   const { walletAddress, isAuthenticated } = useAuth() as {
     walletAddress: string | null;
     isAuthenticated: boolean;
@@ -769,7 +773,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     if (next?.requiresImage && !reference) {
       // Adopting its model anyway would swap in a different engine at a
       // different price than the tile advertised.
-      toast.error(`${next.name} needs an attached image. Attach one first.`);
+      toast.error(t('creator.presetNeedsImage', { name: t(next.nameKey) }));
       return;
     }
     setPresetId(next?.id ?? null);
@@ -796,7 +800,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       }
     }
     textareaRef.current?.focus();
-  }, [reference, setPresetId]);
+  }, [reference, setPresetId, t]);
 
   /**
    * Switching mode now only switches mode. Each workspace keeps its own prompt,
@@ -817,10 +821,10 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         // Also the response when the edge function has not been redeployed with
         // the prompt-assist modes yet: it falls through to spellcheck and hands
         // the text straight back.
-        toast.info('No changes suggested for that prompt.');
+        toast.info(t('creator.noChangesSuggested'));
       }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not enhance that prompt.');
+      toast.error(e instanceof Error ? e.message : t('creator.enhanceFailed'));
     } finally {
       setEnhancing(false);
     }
@@ -846,7 +850,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
    */
   const attachAudioFile = useCallback(async (file: File) => {
     if (file.size > MAX_AUDIO_UPLOAD_BYTES) {
-      toast.error('That file is over 100 MB. Use a shorter or smaller one.');
+      toast.error(t('creator.fileTooLarge'));
       return;
     }
     setAttaching(true);
@@ -862,14 +866,14 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
   const attachFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      toast.error('Attach an image to use as a reference.');
+      toast.error(t('creator.attachImageReference'));
       return;
     }
     // Reject here rather than after payment: anything past this is staged in
     // storage, and a 40 MB original is slow to upload and pointless as a
     // reference at generation resolutions.
     if (file.size > MAX_REFERENCE_BYTES) {
-      toast.error('That image is over 20 MB. Use a smaller version as the reference.');
+      toast.error(t('creator.imageTooLarge'));
       return;
     }
     setAttaching(true);
@@ -877,7 +881,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       const url = await fileToDataUrl(file);
       setReference({ url, label: file.name });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not attach that image.');
+      toast.error(e instanceof Error ? e.message : t('creator.attachFailed'));
     } finally {
       setAttaching(false);
     }
@@ -915,7 +919,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       // leaving a stale filename in the composer.
       setAudioFile(null);
     } else if (job.kind === 'image' && job.status === 'done' && job.url) {
-      setReferenceFor('video', { url: job.url, label: 'Generated still' });
+      setReferenceFor('video', { url: job.url, label: t('creator.generatedStill') });
       setVideoModel('runway-gen4');
       setPresetFor('video', 'animate-still');
     } else if (job.kind === 'video') {
@@ -924,7 +928,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       // Put the original reference back BEFORE the model, or the legality
       // effect sees an empty attachment and swaps in a text-only model at a
       // different price than the one that was paid for.
-      if (job.sourceImage) setReferenceFor('3d', { url: job.sourceImage, label: 'Original reference' });
+      if (job.sourceImage) setReferenceFor('3d', { url: job.sourceImage, label: t('creator.originalReference') });
       if (job.model in MODEL3D_MODELS) setModel3dModel(job.model as Model3dModelKey);
     } else {
       if (job.model in IMAGE_MODELS) setImageModel(job.model as ImageModelKey);
@@ -936,7 +940,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const model3dFromJob = useCallback((job: GenerationJob) => {
     if (!job.url) return;
     setMode('3d');
-    setReferenceFor('3d', { url: job.url, label: 'Generated still' });
+    setReferenceFor('3d', { url: job.url, label: t('creator.generatedStill') });
     setPromptFor('3d', job.prompt);
     // Hunyuan3D is the image-only specialist and the cheapest honest choice for
     // reconstructing something that already exists as a picture.
@@ -978,7 +982,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
-    if (!isAuthenticated) return 'Sign in to generate.';
+    if (!isAuthenticated) return t('creator.signInToGenerate');
     if (mode === 'image') {
       const model = IMAGE_MODELS[imageModel];
       if (model && reference && !imageModelSupportsEdit(model)) {
@@ -987,7 +991,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     }
     if (mode === 'video') {
       const model = VIDEO_MODELS[videoModel];
-      if (!model) return 'Pick a video model.';
+      if (!model) return t('creator.pickVideoModel');
       if (!model.supports.includes('image-to-video') && reference) {
         return `${model.name} cannot use a reference image. Remove it or pick another model.`;
       }
@@ -997,16 +1001,16 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     }
     if (mode === '3d') {
       const model = MODEL3D_MODELS[model3dModel];
-      if (!model) return 'Pick a 3D model.';
+      if (!model) return t('creator.pick3dModel');
       if (!model.supports.includes('text-to-3d') && !reference) {
         return `${model.name} needs an image to work from. Attach one first.`;
       }
     }
     if (mode === 'audio') {
       if (activeAudioTask.needsMedia && !audioFile) {
-        return `${activeAudioTask.label} needs a file to work from. Attach one first.`;
+        return t('creator.taskNeedsFile', { task: t(activeAudioTask.labelKey) });
       }
-      if (activeAudioTask.usesVoice && !voiceId) return 'Pick a voice first.';
+      if (activeAudioTask.usesVoice && !voiceId) return t('creator.pickVoiceFirst');
       // Caught here rather than at the edge function: two of these tasks are
       // charged for before the call, so an over-length script must fail while
       // it is still free to say no.
@@ -1014,7 +1018,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         return `That is ${resolvedPrompt.length.toLocaleString()} characters. The limit is ${MAX_SPEECH_CHARS.toLocaleString()}.`;
       }
       if (audioTask === 'dialogue' && !parseDialogue(resolvedPrompt, voiceId).length) {
-        return 'Write the scene as "Name: line", one speaker per line.';
+        return t('creator.dialogueFormat');
       }
     }
     return null;
@@ -1045,7 +1049,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const audioQuantityLabel = useMemo(() => {
     if (audioTask === 'music') return `${musicSeconds}s track`;
     const seconds = audioFile?.seconds;
-    if (seconds == null) return 'Length unknown — billed as 1 min';
+    if (seconds == null) return t('creator.lengthUnknown');
     const mins = Math.floor(seconds / 60);
     const rest = Math.round(seconds % 60);
     return mins ? `${mins}m ${rest}s` : `${rest}s`;
@@ -1134,20 +1138,20 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     startAudio(request, {
       // The media tasks have no prompt, so the filename is the only honest
       // caption for the card — 'Untitled' on all four told you nothing.
-      prompt: prompt.trim() || preset?.sample || audioFile?.file.name || activeAudioTask.label,
+      prompt: prompt.trim() || preset?.sample || audioFile?.file.name || t(activeAudioTask.labelKey),
       resolvedPrompt,
       modelName:
         audioTask === 'speech'
-          ? (TTS_MODELS[ttsModel]?.name ?? activeAudioTask.label)
-          : activeAudioTask.label,
+          ? (TTS_MODELS[ttsModel]?.name ?? t(activeAudioTask.labelKey))
+          : t(activeAudioTask.labelKey),
       presetId: presetId ?? undefined,
       aspect: AUDIO_ASPECT,
     });
 
     toast.success(
       audioTask === 'dubbing'
-        ? 'Dub queued. It keeps running if you leave the page.'
-        : 'Generation started.',
+        ? t('creator.dubQueued')
+        : t('creator.generationStarted'),
     );
   }, [
     audioTask,
@@ -1216,7 +1220,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         setReferenceFor('3d', { ...reference, url: hosted });
       } catch (e) {
         toast.error(
-          e instanceof Error ? e.message : 'Could not upload that reference. Nothing was charged.',
+          e instanceof Error ? e.message : t('creator.referenceUploadFailed'),
         );
         return;
       } finally {
@@ -1240,7 +1244,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const runImage = useCallback((txHash: string) => {
     setImagePaywallOpen(false);
     const meta = {
-      prompt: prompt.trim() || preset?.sample || 'Untitled',
+      prompt: prompt.trim() || preset?.sample || t('creator.untitled'),
       resolvedPrompt,
       modelName: IMAGE_MODELS[imageModel]?.name ?? imageModel,
       presetId: presetId ?? undefined,
@@ -1258,7 +1262,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         meta,
       );
     }
-    toast.success(batch > 1 ? `${batch} images queued.` : 'Generation started.');
+    toast.success(batch > 1 ? t('creator.imagesQueued', { count: batch }) : t('creator.generationStarted'));
   }, [prompt, preset, resolvedPrompt, imageModel, imageAspect, batch, reference, presetId, startImage]);
 
   const runVideo = useCallback(
@@ -1286,14 +1290,14 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           ...(reference ? { sourceImage: reference.url } : {}),
         },
         {
-          prompt: prompt.trim() || preset?.sample || 'Untitled',
+          prompt: prompt.trim() || preset?.sample || t('creator.untitled'),
           resolvedPrompt,
           modelName: VIDEO_MODELS[videoModel]?.name ?? videoModel,
           presetId: presetId ?? undefined,
           aspect: videoAspect,
         },
       );
-      toast.success('Render queued. It will appear below when it lands.');
+      toast.success(t('creator.renderQueued'));
     },
     [
       resolvedPrompt,
@@ -1341,7 +1345,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           aspect: MODEL3D_ASPECT,
         },
       );
-      toast.success('Mesh queued. It will appear below when it lands.');
+      toast.success(t('creator.meshQueued'));
     },
     [resolvedPrompt, model3dModel, preset, reference, prompt, presetId, startModel3d],
   );
@@ -1356,7 +1360,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             detail: m.description,
             meta: `$${getImageCostUsd(m).toFixed(2)}`,
             disabled: !canEdit && !!reference,
-            disabledReason: 'Cannot edit an attached image',
+            disabledReason: t('creator.cannotEditAttached'),
           };
         })
       : mode === '3d'
@@ -1368,7 +1372,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             detail: m.description,
             meta: `$${getModel3dCostUsd(m).toFixed(2)}`,
             disabled: needsImage && !reference,
-            disabledReason: 'Needs an attached image',
+            disabledReason: t('creator.needsAttachedImage'),
           };
         })
       : mode === 'audio'
@@ -1387,16 +1391,17 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             detail: m.description,
             meta: `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
             disabled: (needsImage && !reference) || (rejectsImage && !!reference),
-            disabledReason: needsImage ? 'Needs an attached image' : 'Cannot use an attached image',
+            disabledReason: t(needsImage ? 'creator.needsAttachedImage' : 'creator.cannotUseAttached'),
           };
         });
 
   /** The nine audio tools, priced where they cost anything. */
-  const audioTaskOptions: ChipOption<string>[] = AUDIO_TASK_OPTIONS.map((t) => ({
-    value: t.id,
-    label: t.label,
-    detail: t.description,
-    meta: t.paid ? `from $${getAudioCostUsd(t, 1).toFixed(2)}` : 'Free',
+  // Named `task`, not `t` — `t` is the translator in this scope.
+  const audioTaskOptions: ChipOption<string>[] = AUDIO_TASK_OPTIONS.map((task) => ({
+    value: task.id,
+    label: t(task.labelKey),
+    detail: t(task.descriptionKey),
+    meta: task.paid ? t('creator.fromPrice', { price: getAudioCostUsd(task, 1).toFixed(2) }) : t('creator.free'),
   }));
 
   const languageOptions: ChipOption<string>[] = AUDIO_LANGUAGES.map((l) => ({
@@ -1417,18 +1422,18 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           ? // The heading reads "Start creating with X", so it names the tool
             // rather than the engine — nobody picked "Eleven v3" to clean up a
             // recording, and eight of the nine tasks have no model chip at all.
-            activeAudioTask.label
+            t(activeAudioTask.labelKey)
           : activeVideoModel?.name ?? videoModel;
 
   const placeholder = preset
-    ? `${preset.name}: describe the subject, for example "${preset.sample}"`
+    ? t('creator.presetPlaceholder', { name: t(preset.nameKey), sample: preset.sample })
     : mode === 'image'
-      ? 'Describe the image you want'
+      ? t('creator.placeholderImage')
       : mode === '3d'
-        ? 'Describe the object to model, or attach a photo of it'
+        ? t('creator.placeholder3d')
         : mode === 'audio'
-          ? activeAudioTask.placeholder
-          : 'Describe the shot you want';
+          ? t(activeAudioTask.placeholderKey)
+          : t('creator.placeholderVideo');
 
   const generateDisabled = promptMissing || !!blockingIssue || staging;
   const undoEnhance = beforeEnhance[mode];
@@ -1440,8 +1445,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       type="button"
       onClick={() => void enhance()}
       disabled={!prompt.trim() || enhancing}
-      aria-label="Expand this prompt with more detail"
-      title="Expand this prompt with more detail"
+      aria-label={t('creator.expandPrompt')}
+      title={t('creator.expandPrompt')}
       className={cn(
         'shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white/70 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40',
         compact ? 'hidden h-8 w-8 sm:inline-flex' : 'inline-flex p-2.5',
@@ -1461,8 +1466,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       onClick={() => void openPaywall()}
       aria-disabled={generateDisabled}
       aria-describedby={blockingIssue && !compact ? 'studio-blocking-reason' : undefined}
-      aria-label={compact ? 'Generate' : undefined}
-      title={compact ? (blockingIssue ?? 'Generate') : undefined}
+      aria-label={compact ? t('creator.generate') : undefined}
+      title={compact ? (blockingIssue ?? t('creator.generate')) : undefined}
       className={cn(
         'inline-flex shrink-0 items-center gap-2 rounded-xl border text-[13px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
         compact ? 'px-3 py-2 sm:px-4' : 'px-5 py-2.5',
@@ -1473,7 +1478,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     >
       {staging ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
       <span className={compact ? 'hidden sm:inline' : undefined}>
-        {staging ? 'Preparing' : 'Generate'}
+        {t(staging ? 'creator.preparing' : 'creator.generate')}
       </span>
     </button>
   );
@@ -1492,18 +1497,17 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
             <h2 className="text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
-              Start creating with {currentModelName}
+              {t('creator.startCreatingWith', { model: currentModelName })}
             </h2>
             <p className="mt-1.5 max-w-xl text-sm text-white/45">
-              Describe a scene, character, mood or style. Results land below and carry straight
-              into the editor.
+              {t('creator.studioSubtitle')}
             </p>
           </div>
 
           {runningCount > 0 && (
             <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[12px] font-medium text-white/75 backdrop-blur-xl">
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              {runningCount} running
+              {t('creator.countRunning', { count: runningCount })}
             </span>
           )}
         </div>
@@ -1564,7 +1568,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                   }
                 }}
                 placeholder={placeholder}
-                aria-label="Prompt"
+                aria-label={t('creator.promptLabel')}
                 className="min-w-0 flex-1 bg-transparent px-1 py-1.5 text-[14px] text-white outline-none placeholder:text-white/35"
               />
 
@@ -1582,7 +1586,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                   type="button"
                   onClick={() => fileRef.current?.click()}
                   disabled={attaching}
-                  aria-label={mode === 'audio' ? 'Attach a recording' : 'Attach a reference image'}
+                  aria-label={t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')}
                   className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/[0.10] hover:text-white disabled:opacity-40 sm:inline-flex"
                 >
                   {attaching ? (
@@ -1609,14 +1613,14 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                     </p>
                     <p className="text-[11px] text-white/40">
                       {audioFile.seconds == null
-                        ? 'Length could not be read — billed as one minute'
+                        ? t('creator.lengthUnreadable')
                         : `${audioQuantityLabel}${activeAudioTask.paid ? ' — billed on this' : ''}`}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setAudioFile(null)}
-                    aria-label="Remove attached file"
+                    aria-label={t('creator.removeAttachedFile')}
                     className="rounded-full p-1.5 text-white/50 transition hover:bg-white/10 hover:text-white"
                   >
                     <X className="h-4 w-4" />
@@ -1635,18 +1639,18 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                     <p className="truncate text-[12px] font-medium text-white/85">{reference.label}</p>
                     <p className="text-[11px] text-white/40">
                       {mode === 'image'
-                        ? 'Used as an edit reference'
+                        ? t('creator.usedAsEditReference')
                         : mode === '3d'
                           ? activeModel3d?.usesPromptWithImage
-                            ? 'Object to reconstruct — your prompt guides it'
+                            ? t('creator.objectToReconstruct')
                             : `Object to reconstruct — ${activeModel3d?.name ?? 'this model'} ignores the prompt`
-                          : 'First frame to animate'}
+                          : t('creator.firstFrameToAnimate')}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setReference(null)}
-                    aria-label="Remove reference image"
+                    aria-label={t('creator.removeReferenceImage')}
                     className="rounded-full p-1.5 text-white/50 transition hover:bg-white/10 hover:text-white"
                   >
                     <X className="h-4 w-4" />
@@ -1664,7 +1668,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                     onClick={() => fileRef.current?.click()}
                     disabled={attaching}
                     aria-label={
-                      mode === 'audio' ? 'Attach a recording' : 'Attach a reference image'
+                      t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
                     }
                     className="mt-0.5 shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2.5 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
                   >
@@ -1682,13 +1686,13 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                   // with a placeholder nobody can act on.
                   <p className="flex min-h-[3.25rem] flex-1 items-center text-[14px] text-white/45">
                     {audioFile
-                      ? `Ready — ${activeAudioTask.label.toLowerCase()} this recording.`
-                      : 'Attach a recording to start.'}
+                      ? t('creator.readyToProcess', { task: t(activeAudioTask.labelKey).toLowerCase() })
+                      : t('creator.attachRecordingToStart')}
                   </p>
                 ) : (
                   <>
                     <label htmlFor="studio-prompt" className="sr-only">
-                      Prompt
+                      {t('creator.promptLabel')}
                     </label>
                     <textarea
                       id="studio-prompt"
@@ -1738,7 +1742,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       nine is running decides every other chip on the rail. */}
                   {mode === 'audio' && (
                     <SelectChip
-                      label="Tool"
+                      label={t('creator.tool')}
                       width="md"
                       value={audioTask}
                       options={audioTaskOptions}
@@ -1751,10 +1755,10 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       model chip there would be a control over nothing. */}
                   {(mode !== 'audio' || audioTask === 'speech') && (
                     <SelectChip
-                      label="Model"
+                      label={t('creator.model')}
                       width="md"
                       searchable
-                      searchPlaceholder="Search models…"
+                      searchPlaceholder={t('creator.searchModels')}
                       value={
                         mode === 'image'
                           ? imageModel
@@ -1777,7 +1781,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       aspect chip is meaningless in both. */}
                   {mode !== '3d' && mode !== 'audio' && (
                     <SelectChip
-                      label="Aspect ratio"
+                      label={t('creator.aspectRatio')}
                       value={aspect}
                       options={aspectOptions}
                       onChange={(v) => (mode === 'image' ? setImageAspect(v) : setVideoAspect(v))}
@@ -1800,37 +1804,37 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       {(audioTask === 'speech' || audioTask === 'dialogue') && (
                         <>
                           <SelectChip
-                            label="Delivery"
+                            label={t('creator.delivery')}
                             value={String(stability)}
                             display={
-                              stability <= 0.35 ? 'Expressive' : stability >= 0.7 ? 'Consistent' : 'Natural'
+                              t(stability <= 0.35 ? 'creator.expressive' : stability >= 0.7 ? 'creator.consistent' : 'creator.natural')
                             }
                             options={[
                               {
                                 value: '0.3',
-                                label: 'Expressive',
-                                detail: 'Varies take to take, more emotion',
+                                label: t('creator.expressive'),
+                                detail: t('creator.expressiveDetail'),
                               },
-                              { value: '0.5', label: 'Natural', detail: 'The safe middle' },
+                              { value: '0.5', label: t('creator.natural'), detail: t('creator.naturalDetail') },
                               {
                                 value: '0.75',
-                                label: 'Consistent',
-                                detail: 'Repeatable, flatter delivery',
+                                label: t('creator.consistent'),
+                                detail: t('creator.consistentDetail'),
                               },
                             ]}
                             onChange={(v) => setStability(Number(v))}
                           />
                           <SelectChip
-                            label="Style"
+                            label={t('creator.style')}
                             value={String(style)}
-                            display={style <= 0.1 ? 'None' : style >= 0.6 ? 'Heavy' : 'Some'}
+                            display={t(style <= 0.1 ? 'creator.styleNone' : style >= 0.6 ? 'creator.styleHeavy' : 'creator.styleSome')}
                             options={[
-                              { value: '0', label: 'None', detail: 'Neutral read, most stable' },
-                              { value: '0.3', label: 'Some', detail: 'A little exaggeration' },
+                              { value: '0', label: t('creator.styleNone'), detail: t('creator.styleNoneDetail') },
+                              { value: '0.3', label: t('creator.styleSome'), detail: t('creator.styleSomeDetail') },
                               {
                                 value: '0.7',
-                                label: 'Heavy',
-                                detail: 'Strong delivery — can destabilise',
+                                label: t('creator.styleHeavy'),
+                                detail: t('creator.styleHeavyDetail'),
                               },
                             ]}
                             onChange={(v) => setStyle(Number(v))}
@@ -1842,13 +1846,13 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                           rejects a speed multiplier outright. */}
                       {audioTask === 'speech' && TTS_MODELS[ttsModel]?.supportsSpeed && (
                         <SelectChip
-                          label="Pace"
+                          label={t('creator.pace')}
                           value={String(speed)}
-                          display={speed < 1 ? 'Slower' : speed > 1 ? 'Faster' : 'Normal'}
+                          display={t(speed < 1 ? 'creator.slower' : speed > 1 ? 'creator.faster' : 'creator.normal')}
                           options={[
-                            { value: '0.85', label: 'Slower' },
-                            { value: '1', label: 'Normal' },
-                            { value: '1.15', label: 'Faster' },
+                            { value: '0.85', label: t('creator.slower') },
+                            { value: '1', label: t('creator.normal') },
+                            { value: '1.15', label: t('creator.faster') },
                           ]}
                           onChange={(v) => setSpeed(Number(v))}
                         />
@@ -1856,18 +1860,18 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
                       {audioTask === 'speech' && (
                         <SelectChip
-                          label="Language"
+                          label={t('creator.language')}
                           searchable
-                          searchPlaceholder="Search languages…"
+                          searchPlaceholder={t('creator.searchLanguages')}
                           value={speechLang}
                           display={
-                            AUDIO_LANGUAGES.find((l) => l.code === speechLang)?.label ?? 'Auto'
+                            AUDIO_LANGUAGES.find((l) => l.code === speechLang)?.label ?? t('creator.auto')
                           }
                           options={[
                             {
                               value: '',
-                              label: 'Auto',
-                              detail: 'Read the language from the text',
+                              label: t('creator.auto'),
+                              detail: t('creator.autoDetectLanguage'),
                             },
                             ...languageOptions,
                           ]}
@@ -1878,38 +1882,38 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       {audioTask === 'sfx' && (
                         <>
                           <SelectChip
-                            label="Length"
+                            label={t('creator.length')}
                             value={String(sfxSeconds)}
-                            display={sfxSeconds ? `${sfxSeconds}s` : 'Auto'}
+                            display={sfxSeconds ? `${sfxSeconds}s` : t('creator.auto')}
                             options={[
-                              { value: '0', label: 'Auto', detail: 'Let the model choose' },
+                              { value: '0', label: t('creator.auto'), detail: t('creator.autoLetModelChoose') },
                               { value: '2', label: '2s' },
                               { value: '5', label: '5s' },
                               { value: '10', label: '10s' },
                               { value: '22', label: '22s' },
-                              { value: '30', label: '30s', detail: 'Maximum' },
+                              { value: '30', label: '30s', detail: t('creator.maximum') },
                             ]}
                             onChange={(v) => setSfxSeconds(Number(v))}
                           />
                           <SelectChip
-                            label="Follow prompt"
+                            label={t('creator.followPrompt')}
                             value={String(promptInfluence)}
                             display={
                               promptInfluence >= 0.7
-                                ? 'Literally'
+                                ? t('creator.literally')
                                 : promptInfluence <= 0.2
-                                  ? 'Loosely'
-                                  : 'Balanced'
+                                  ? t('creator.loosely')
+                                  : t('creator.balanced')
                             }
                             options={[
-                              { value: '0.1', label: 'Loosely', detail: 'More creative licence' },
-                              { value: '0.3', label: 'Balanced' },
-                              { value: '0.8', label: 'Literally', detail: 'Stick to the words' },
+                              { value: '0.1', label: t('creator.loosely'), detail: t('creator.looselyDetail') },
+                              { value: '0.3', label: t('creator.balanced') },
+                              { value: '0.8', label: t('creator.literally'), detail: t('creator.literallyDetail') },
                             ]}
                             onChange={(v) => setPromptInfluence(Number(v))}
                           />
                           <ToggleChip
-                            label="Loop"
+                            label={t('creator.loop')}
                             active={loopSfx}
                             onClick={() => setLoopSfx((v) => !v)}
                           />
@@ -1919,7 +1923,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       {audioTask === 'music' && (
                         <>
                           <SelectChip
-                            label="Length"
+                            label={t('creator.length')}
                             value={String(musicSeconds)}
                             display={`${musicSeconds}s`}
                             options={[10, 30, 60, 90, 120, 180, 240, 300]
@@ -1934,7 +1938,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                             onChange={(v) => setMusicSeconds(Number(v))}
                           />
                           <ToggleChip
-                            label="Instrumental"
+                            label={t('creator.instrumental')}
                             active={instrumental}
                             onClick={() => setInstrumental((v) => !v)}
                           />
@@ -1943,9 +1947,9 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
                       {audioTask === 'dubbing' && (
                         <SelectChip
-                          label="Dub into"
+                          label={t('creator.dubInto')}
                           searchable
-                          searchPlaceholder="Search languages…"
+                          searchPlaceholder={t('creator.searchLanguages')}
                           value={dubTargetLang}
                           display={AUDIO_LANGUAGES.find((l) => l.code === dubTargetLang)?.label}
                           options={languageOptions}
@@ -1957,8 +1961,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
                   {mode === 'image' && (
                     <CounterChip
-                      label="images"
-                      singular="image"
+                      label={t('creator.imagesUnit')}
+                      singular={t('creator.imageUnit')}
                       value={batch}
                       min={1}
                       max={MAX_IMAGE_BATCH}
@@ -1974,7 +1978,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                           this number. */}
                       {activeVideoModel?.allowedDurations?.length ? (
                         <SelectChip
-                          label="Duration"
+                          label={t('creator.duration')}
                           value={String(duration)}
                           options={activeVideoModel.allowedDurations.map((d) => ({
                             value: String(d),
@@ -1984,8 +1988,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                         />
                       ) : (
                         <CounterChip
-                          label="seconds"
-                          singular="second"
+                          label={t('creator.secondsUnit')}
+                          singular={t('creator.secondUnit')}
                           value={duration}
                           min={activeVideoModel?.minDuration ?? 5}
                           max={activeVideoModel?.maxDuration ?? 10}
@@ -1994,17 +1998,17 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       )}
                       {activeVideoModel?.supportsResolution && (
                         <SelectChip
-                          label="Resolution"
+                          label={t('creator.resolution')}
                           value={resolution}
                           options={videoResolutions.map((r) => ({
                             value: r,
                             label: r,
                             detail:
                               r === '480p'
-                                ? 'Fastest'
+                                ? t('creator.fastest')
                                 : r === '720p'
-                                  ? 'Balanced'
-                                  : 'Highest quality',
+                                  ? t('creator.balanced')
+                                  : t('creator.highestQuality'),
                           }))}
                           onChange={(v) => setResolution(v as Resolution)}
                         />

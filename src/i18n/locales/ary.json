@@ -43,6 +43,7 @@
     "connectAi": "ربط الذكاء الاصطناعي"
   },
   "feed": {
+    "viewProfile": "عرض ملف {{name}} الشخصي",
     "home": "الصفحة الرئيسية",
     "videos": "فيديوهات",
     "images": "تصاور",
@@ -942,6 +943,8 @@
     "loginRequired": "خاصك تدخل"
   },
   "messages": {
+    "encrypted": "مشفّر من طرف إلى طرف",
+    "cannotDecrypt": "رسالة مشفّرة — ما كتحلّش فهاد الجهاز",
     "title": "الرسائل",
     "searchConversations": "قلب فالمحادثات...",
     "failedToLoad": "ما قدرش يحمل المحادثات",
@@ -1815,5 +1818,25 @@
     "stakeDhb": "ايدع DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} كتفتح عند {{tier}}"
+  },
+  "videoLooks": {
+    "button": "مظاهر الكاميرا",
+    "title": "المظهر",
+    "hint": "كيتطبق قبل ما يخرج الفيديو من هاد الجهاز — المشاهدين كيشوفو بالضبط اللي كتشوف هنا.",
+    "backgroundBlur": "طمس الخلفية ديالي",
+    "on": "مشعل",
+    "off": "مطفي",
+    "none": "بلا",
+    "soft": "ناعم",
+    "mono": "أحادي",
+    "noir": "نوار",
+    "warm": "دافي",
+    "cool": "بارد",
+    "vivid": "زاهي",
+    "dream": "حلم",
+    "vhs": "VHS",
+    "neon": "نيون",
+    "blur": "طمس",
+    "pixelate": "بكسلة"
   }
 }

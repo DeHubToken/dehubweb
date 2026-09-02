@@ -74,4 +74,31 @@ export const DeHubPageLoader = ({
   </div>
 );
 
+
+/**
+ * Inline button preloader — the same DeHub mark, icon-sized, for the moment
+ * between a click and the thing it asked for finishing.
+ *
+ * Why not `DeHubLoader`: that one fades in on a 250 ms delay so a fast route
+ * chunk never flashes a loading stage. A button is the opposite case — the
+ * whole point is to answer the click *immediately*, on a slow phone or a slow
+ * connection, so this one paints on frame one and skips `.dehub-loader-mark`.
+ *
+ * Default 16 px matches the button primitive's `[&_svg]:size-4`, so it drops
+ * into an icon slot without moving anything around it.
+ */
+export const ButtonLoader = ({ size = 16, className = "" }: DeHubLoaderProps) => (
+  <img
+    src="/dehub-loader.gif"
+    alt=""
+    aria-hidden="true"
+    decoding="async"
+    width={size}
+    height={size}
+    style={{ width: size, height: size }}
+    data-dehub-loader
+    className={`select-none pointer-events-none shrink-0 ${className}`}
+  />
+);
+
 export default DeHubPageLoader;

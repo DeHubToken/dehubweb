@@ -5,9 +5,15 @@
  * and returns the provider's JSON response verbatim.
  */
 
+// No allow-list for the secret header, deliberately.
+//
+// This is server-to-server, like jarvis-tts and infra-stats, and neither of
+// those emits CORS at all. Naming x-jarvis-stt-secret as a browser-sendable
+// header invited someone to call this from the client, which would put the
+// service secret in a shipped bundle. Nothing in src/ calls it.
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer, x-jarvis-stt-secret',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer',
 };
 
 const MAX_BYTES = 3 * 1024 * 1024;
@@ -25,7 +31,10 @@ Deno.serve(async (req) => {
   }
 
   const secret = req.headers.get('x-jarvis-stt-secret');
-  const expected = Deno.env.get('CDN_PURGE_SERVICE_SECRET');
+  // Own secret first, shared one as a fallback until it is provisioned. See
+  // the note in cdn-purge.
+  const expected = Deno.env.get('JARVIS_STT_SERVICE_SECRET')
+    || Deno.env.get('CDN_PURGE_SERVICE_SECRET');
   if (!secret || !expected || secret !== expected) {
     return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), {
       status: 401,

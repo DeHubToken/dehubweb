@@ -10,10 +10,12 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense } from 'react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
@@ -37,12 +39,12 @@ import { Button } from '@/components/ui/button';
 import dehubCoin from '@/assets/dehub-coin.png';
 import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 
-import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
+import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
@@ -63,6 +65,9 @@ import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
+// Lazy: only a live post ever renders it, and a static import would put the
+// preview (and its HLS glue) in the boot path for every card.
+const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ default: m.LiveFeedPreview })));
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -71,7 +76,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality } from '@/hooks/use-connection-quality';
-import { AudioVisualizer } from '../audio';
+/** Lazy: nine canvas painters and a decoder, ~50 KB, for a minority post type
+ *  — none of it belongs in the bytes parsed before first paint. */
+const AudioVisualizer = lazy(() =>
+  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
+);
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
@@ -394,8 +403,7 @@ function MobileCreatorInfo({
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(bountyAmount)} {bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(bountyAmount)} currency={bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -404,8 +412,7 @@ function MobileCreatorInfo({
                 <div className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.totalBountyPool')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-4 h-4" />
-                    <span className="text-white text-sm font-medium">{formatCompact(totalBountyPool)} {bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-sm font-medium"><DhbAmount amount={formatCompact(totalBountyPool)} currency={bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -448,8 +455,7 @@ function MobileCreatorInfo({
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(lockedPrice)} {lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(lockedPrice)} currency={lockedCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -806,8 +812,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // only once the card drifts beyond ~2500px — the gap avoids preload thrash
   // on scroll-back while stopping a long session from accumulating hundreds of
   // media elements holding decoded buffers (the long-scroll tab-kill on 4GB
-  // phones). aboveFold (LCP) videos are warm from the start and never release.
+  // phones). aboveFold (LCP) videos never release — but they do not warm until
+  // the page has loaded and idled once AND the visitor has scrolled or tapped:
+  // a Lighthouse run of the signed-out home on 2026-09-02 showed the two
+  // above-fold clips (14.7 MB + 12.3 MB) downloading in full during the load
+  // window, ahead of the hero the LCP is measured on — and waiting for load
+  // alone did not help, because a playing muted clip streams its whole file
+  // regardless of preload. The poster is a separate eager <img>, so nothing the
+  // visitor sees waits on this; the first scroll is what starts the clip.
   const [nearViewport, setNearViewport] = useState(aboveFold);
+  const bootSettled = useBootSettled();
+  const interacted = useFirstInteraction();
   useEffect(() => {
     if (aboveFold) return;
     const el = containerRef.current;
@@ -836,7 +851,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Releasing the src attribute alone doesn't free the decoder/buffer — an
   // explicit load() after React removes it does.
-  const mediaAttached = aboveFold || nearViewport;
+  const mediaAttached = aboveFold ? bootSettled && interacted : nearViewport;
   useEffect(() => {
     if (mediaAttached) return;
     const vid = videoRef.current;
@@ -846,13 +861,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [mediaAttached]);
 
   // In Lite mode nothing preloads (tap-to-play still forces a load via play()).
+  // Never `auto`: with a muted autoplay clip Chrome reads that as "fetch the
+  // whole file", and play() streams whatever it needs regardless — metadata is
+  // enough to start on the first frame and costs one small range request.
   const videoPreload: 'none' | 'metadata' | 'auto' = liteMode
     ? 'none'
-    : aboveFold
-      ? 'auto'
-      : nearViewport
-        ? 'metadata'
-        : 'none';
+    : mediaAttached
+      ? 'metadata'
+      : 'none';
   const hasErrorRef = useRef(hasError);
   hasErrorRef.current = hasError;
   // Transcode still running or dead — videoUrl is the optimistic CDN guess
@@ -1229,7 +1245,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
       // Track video view progress (fires view when threshold met)
       if (dur > 0) {
-        trackView(ct, dur);
+        trackView(ct, dur, videoRef.current.loop);
       }
 
       // Crowdsourced sponsor reads and intros, if the viewer asked for them to
@@ -1720,10 +1736,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </div>
               </div>
               <p className="text-white font-semibold text-sm mb-1">
-                {t('drawers.unlockFor')} {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'DHB'}
+                {t('drawers.unlockFor')} <DhbAmount amount={formatCompact(Number(video.ppvPrice))} currency={video.ppvCurrency} />
               </p>
               <p className="text-white/70 text-xs">
-                Must be holding {formatCompact(Number(video.lockedPrice))} {video.lockedCurrency || 'DHB'}
+                Must be holding <DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
               </p>
             </div>
           </>
@@ -1774,7 +1790,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
               <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
               <p className="text-white/70 text-xs">
-                {cheapestPlanPrice !== undefined ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB` : `Subscribe to ${video.channel}`}
+                {cheapestPlanPrice !== undefined ? (
+                  <>
+                    Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                  </>
+                ) : (
+                  `Subscribe to ${video.channel}`
+                )}
               </p>
             </div>
           </>
@@ -1798,7 +1820,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
               <p className="text-white font-semibold text-sm mb-1">Holdings Required</p>
               <p className="text-white/70 text-xs">
-                Must be holding {formatCompact(Number(video.lockedPrice))} {video.lockedCurrency || 'DHB'}
+                Must be holding <DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
               </p>
             </div>
           </>
@@ -1835,16 +1857,26 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <div className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
                 {/* Live AudioVisualizer */}
                 <div className="absolute inset-0">
-                  <AudioVisualizer
-                    audioUrl={video.audioUrl}
-                    isPlaying={isPlaying}
-                    onPlayPause={handlePlayClick}
-                    className="w-full h-full"
-                    showStylePicker={true}
-                    muted={isMuted}
-                    seed={video.id}
-                    decodeEnabled={nearViewport}
-                  />
+                  <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>
+                    <AudioVisualizer
+                      audioUrl={video.audioUrl}
+                      isPlaying={isPlaying}
+                      onPlayPause={handlePlayClick}
+                      className="w-full h-full"
+                      showStylePicker={true}
+                      muted={isMuted}
+                      seed={video.id}
+                      decodeEnabled={nearViewport}
+                      durationHint={video.audioDuration || video.durationSeconds || 0}
+                      /* The card's own fullscreen, so the element that goes to
+                         the top layer is the media container — the one holding
+                         the visualizer AND its controls. `videoRef` is null on
+                         an audio post, so the hook takes the container path
+                         rather than iOS's system player. */
+                      onFullscreen={handleFullscreen}
+                      isFullscreen={isFullscreen}
+                    />
+                  </Suspense>
                 </div>
               </div>
             ) : video.transcodingStatus === 'failed' ? (
@@ -1906,6 +1938,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 )}
                 <div ref={attachVideoSlot} className="absolute inset-0 w-full h-full" />
               </>
+            ) : video.isLivePost && video.isLiveNow ? (
+              /* On air: play the stream right here. The feed used to show only
+                 a poster for a live post, so a stream that was actually running
+                 read as a dead card until you opened it. */
+              <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
+                <LiveFeedPreview
+                  urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
+                  thumbnail={thumbnail}
+                  fallbackLabel="Live"
+                />
+              </Suspense>
             ) : (
               /* No playable URL — a past live (or url-less video). Show the
                  cover image if there is one, otherwise a staticy TV screen.
@@ -1977,8 +2020,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <TapReactionBurst postId={video.id} />
         )}
 
-        {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
-        {showControls && (
+        {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass.
+            Never for audio posts: speed, loop, PiP and fullscreen have nothing
+            to act on there, and the row appeared on hover over a visualizer
+            that already carries its own transport. */}
+        {showControls && !video.isAudio && (
           <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
 
             <button
@@ -2034,8 +2080,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             duration stays 0 until something calls play() — gating the whole bar
             on it left the one control that can start the clip unreachable from
             the feed, where a tap now reveals controls instead of opening the
-            post. The scrubber and timestamps still wait for real metadata. */}
-        {showControls && (
+            post. The scrubber and timestamps still wait for real metadata.
+            Audio posts are excluded: this bar is driven by the <video> element,
+            so over a visualizer it painted a black gradient and a second,
+            non-functional play button on top of the audio controls — the
+            "hovering brings up a play/pause button" complaint. */}
+        {showControls && !video.isAudio && (
           <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
 
             <div className="flex items-center gap-2">
@@ -2257,6 +2307,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {!hideActions && (
           <>
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
+            {/* The creator's Shop board. Inline rather than over the player:
+                this card runs an immersive mode that reflows the video, and an
+                absolutely-positioned board would have to track it. Live keeps
+                the overlay, where not leaving the stream is the point. */}
+            <ShopBoardLazy tokenId={video.id} links={video.shopLinks} listingCount={video.shopListingCount} variant="inline" />
             <ActionBar
               postId={video.id}
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
@@ -2510,6 +2565,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         currentDescription={video.description ?? ''}
         currentCategories={video.categories ?? []}
         currentContentRating={video.contentRating}
+        currentShopLinks={video.shopLinks}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, video.id, edited);
         }}
@@ -2588,8 +2644,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={video.bountyAmount} currency={video.bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -2665,8 +2720,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(video.lockedPrice)} {video.lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(video.lockedPrice)} currency={video.lockedCurrency} /></span>
                   </div>
                 </div>
               )}

@@ -9,6 +9,7 @@
  * rounded-xl, panels are rounded-2xl.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Check, ChevronDown, Minus, Plus, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
@@ -58,8 +59,12 @@ export function SelectChip<T extends string>({
   disabled,
   width = 'sm',
   searchable = false,
-  searchPlaceholder = 'Search…',
+  searchPlaceholder,
 }: SelectChipProps<T>) {
+  const { t } = useTranslation();
+  // Defaulted here rather than in the signature: a default parameter cannot
+  // call the hook that translates it.
+  const searchPlaceholderText = searchPlaceholder ?? t('creator.searchEllipsis');
   const current = options.find((o) => o.value === value);
 
   // Controlled so the popover can be closed from outside. Radix portals it to
@@ -123,8 +128,8 @@ export function SelectChip<T extends string>({
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={searchPlaceholder}
-                aria-label={`Search ${label.toLowerCase()}`}
+                placeholder={searchPlaceholderText}
+                aria-label={t('creator.searchField', { field: label.toLowerCase() })}
                 className="w-full rounded-lg border border-white/15 bg-white/[0.06] py-1.5 pl-8 pr-2.5 text-[13px] text-white outline-none transition placeholder:text-white/35 focus:border-white/35 focus:bg-white/[0.10]"
               />
             </div>
@@ -132,7 +137,7 @@ export function SelectChip<T extends string>({
         </div>
         {visible.length === 0 && (
           <p className="px-2.5 py-6 text-center text-[12px] text-white/40">
-            Nothing matches “{query.trim()}”.
+            {t('creator.nothingMatches', { query: query.trim() })}
           </p>
         )}
         {visible.map((option) => (
@@ -198,6 +203,7 @@ export function CounterChip({
   onChange,
   disabled,
 }: CounterChipProps) {
+  const { t } = useTranslation();
   const step = (delta: number) => onChange(Math.min(max, Math.max(min, value + delta)));
   const unit = value === 1 ? (singular ?? label) : label;
 
@@ -214,7 +220,7 @@ export function CounterChip({
         type="button"
         onClick={() => step(-1)}
         disabled={disabled || value <= min}
-        aria-label={`Decrease ${label.toLowerCase()}`}
+        aria-label={t('creator.decrease', { field: label.toLowerCase() })}
         className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30"
       >
         <Minus className="h-3.5 w-3.5" />
@@ -227,7 +233,7 @@ export function CounterChip({
         type="button"
         onClick={() => step(1)}
         disabled={disabled || value >= max}
-        aria-label={`Increase ${label.toLowerCase()}`}
+        aria-label={t('creator.increase', { field: label.toLowerCase() })}
         className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30"
       >
         <Plus className="h-3.5 w-3.5" />

@@ -13,6 +13,7 @@
  * device. Ported from the Pixcellor CreateWalletDialog.
  */
 import { useEffect, useRef, useState } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine, Fingerprint, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -486,7 +487,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
               <div key={i} className="flex items-center justify-between text-xs text-white/70 bg-black/20 rounded-lg px-2.5 py-1.5">
                 <span>{a.signupMethod ? OLD_LOGIN_LABELS[a.signupMethod] ?? a.signupMethod : 'Unknown login'}{a.username ? ` — @${a.username}` : ''}</span>
                 {typeof a.badgeBalance === 'number' && (
-                  <span className="text-white/50">{a.badgeBalance.toLocaleString()} DHB</span>
+                  <span className="text-white/50">{a.badgeBalance.toLocaleString()} <DhbCoin /></span>
                 )}
               </div>
             ))}

@@ -9,7 +9,7 @@
 
 import type { User } from './app.types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
-import type { ContentRating } from '@/lib/api/dehub/types';
+import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import type { SubscriberPlan } from '@/lib/content-gate';
 
 /**
@@ -47,6 +47,22 @@ export interface BaseFeedItem {
    *  which uses this as a floor so a client-side recording gap never shows
    *  fewer tips than the backend actually knows about. */
   totalTips?: number;
+  /**
+   * The creator's Shop board — affiliate and shop links attached to this post.
+   * Absent or empty means no Shop button draws.
+   *
+   * On BaseFeedItem rather than on LiveStream alone: the board is a property
+   * of the post, and a video or an image card is as good a place to offer it
+   * as a stream. Live is simply where it ships first.
+   */
+  shopLinks?: ShopLink[];
+  /**
+   * How many of the creator's own store listings are on this post's Shop
+   * board. A render hint from the feed payload, so a card can draw the button
+   * without querying Supabase; the rows themselves come from stream_products
+   * when the board opens.
+   */
+  shopListingCount?: number;
 }
 
 /**
@@ -224,6 +240,10 @@ export interface VideoItem extends BaseFeedItem {
   livePlaybackId?: string;
   /** Cached playback URL for live post navigation */
   livePlaybackUrl?: string;
+  /** HLS ladder for the in-feed live preview. */
+  livePlaybackUrls?: string[];
+  /** Whether the stream is on air right now — the feed only plays a live one. */
+  isLiveNow?: boolean;
   /** Cached MongoDB stream ID for live post navigation */
   liveStreamId?: string;
   /** Soundtrack URL (plays over the video via synced audio overlay) */

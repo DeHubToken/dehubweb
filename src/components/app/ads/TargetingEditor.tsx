@@ -10,6 +10,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Users, Loader2, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -30,11 +31,15 @@ import {
 } from '@/lib/ads/povr';
 import { getBadgeUrl } from '@/lib/staking-badges';
 
+/**
+ * Named in the advertiser's own language, not in the target language: this is a
+ * filter an advertiser picks, not a language picker for a reader.
+ */
 const LANGUAGE_OPTIONS = [
-  ['en', 'English'], ['es', 'Spanish'], ['pt', 'Portuguese'], ['fr', 'French'],
-  ['de', 'German'], ['ru', 'Russian'], ['hi', 'Hindi'], ['zh', 'Chinese'],
-  ['ja', 'Japanese'], ['ko', 'Korean'], ['ar', 'Arabic'], ['tr', 'Turkish'],
-  ['id', 'Indonesian'], ['vi', 'Vietnamese'], ['th', 'Thai'],
+  ['en', 'ads.langEnglish'], ['es', 'ads.langSpanish'], ['pt', 'ads.langPortuguese'], ['fr', 'ads.langFrench'],
+  ['de', 'ads.langGerman'], ['ru', 'ads.langRussian'], ['hi', 'ads.langHindi'], ['zh', 'ads.langChinese'],
+  ['ja', 'ads.langJapanese'], ['ko', 'ads.langKorean'], ['ar', 'ads.langArabic'], ['tr', 'ads.langTurkish'],
+  ['id', 'ads.langIndonesian'], ['vi', 'ads.langVietnamese'], ['th', 'ads.langThai'],
 ] as const;
 
 interface TargetingEditorProps {
@@ -43,6 +48,7 @@ interface TargetingEditorProps {
 }
 
 export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
+  const { t } = useTranslation();
   const [creatorInput, setCreatorInput] = useState('');
   const [communitySearch, setCommunitySearch] = useState('');
 
@@ -136,7 +142,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
 
       {/* Badge tiers */}
       <div>
-        <Label className="text-foreground">POVR badge tiers</Label>
+        <Label className="text-foreground">{t('ads.povrBadgeTiers')}</Label>
         <p className="text-xs text-muted-foreground mb-3">
           Target by verified DHB holdings. You pay each tier's CPM only when that tier sees your ad. Leave empty to reach everyone.
         </p>
@@ -184,24 +190,24 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
       {/* Follower band */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <Label htmlFor="ads-follower-min" className="text-foreground">Min followers</Label>
+          <Label htmlFor="ads-follower-min" className="text-foreground">{t('ads.minFollowers')}</Label>
           <Input
             id="ads-follower-min"
             type="number"
             min={0}
-            placeholder="Any"
+            placeholder={t('ads.anyPlaceholder')}
             value={value.followerMin ?? ''}
             onChange={(e) => patch({ followerMin: e.target.value === '' ? undefined : Math.max(0, Number(e.target.value)) })}
             className="mt-1"
           />
         </div>
         <div>
-          <Label htmlFor="ads-follower-max" className="text-foreground">Max followers</Label>
+          <Label htmlFor="ads-follower-max" className="text-foreground">{t('ads.maxFollowers')}</Label>
           <Input
             id="ads-follower-max"
             type="number"
             min={0}
-            placeholder="Any"
+            placeholder={t('ads.anyPlaceholder')}
             value={value.followerMax ?? ''}
             onChange={(e) => patch({ followerMax: e.target.value === '' ? undefined : Math.max(0, Number(e.target.value)) })}
             className="mt-1"
@@ -211,8 +217,8 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
 
       {/* Behaviors */}
       <div>
-        <Label className="text-foreground">Behaviors</Label>
-        <p className="text-xs text-muted-foreground mb-2">Match users with real on-platform activity (all selected must match).</p>
+        <Label className="text-foreground">{t('ads.behaviors')}</Label>
+        <p className="text-xs text-muted-foreground mb-2">{t('ads.behaviorsHint')}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {AD_BEHAVIOR_OPTIONS.map((b) => {
             const selected = (value.behaviors ?? []).includes(b.value);
@@ -247,15 +253,15 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
         )}>
           <Checkbox checked={!!value.premium} onCheckedChange={(c) => patch({ premium: c === true ? true : undefined })} className="mt-0.5" />
           <span>
-            <span className="block text-sm font-medium text-foreground">Premium subscribers only</span>
-            <span className="block text-xs text-muted-foreground">Active DeHub Premium members</span>
+            <span className="block text-sm font-medium text-foreground">{t('ads.premiumOnly')}</span>
+            <span className="block text-xs text-muted-foreground">{t('ads.premiumOnlyHint')}</span>
           </span>
         </label>
 
         <div>
-          <Label className="text-foreground">Languages</Label>
+          <Label className="text-foreground">{t('ads.languages')}</Label>
           <div className="flex flex-wrap gap-1.5 mt-2">
-            {LANGUAGE_OPTIONS.map(([code, name]) => {
+            {LANGUAGE_OPTIONS.map(([code, nameKey]) => {
               const selected = (value.languages ?? []).includes(code);
               return (
                 <button
@@ -269,7 +275,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
                       : 'border-foreground/10 text-muted-foreground hover:bg-foreground/5',
                   )}
                 >
-                  {name}
+                  {t(nameKey)}
                 </button>
               );
             })}
@@ -279,10 +285,10 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
 
       {/* Communities */}
       <div>
-        <Label className="text-foreground">Communities</Label>
-        <p className="text-xs text-muted-foreground mb-2">Reach active members of specific DeHub communities.</p>
+        <Label className="text-foreground">{t('ads.communities')}</Label>
+        <p className="text-xs text-muted-foreground mb-2">{t('ads.communitiesHint')}</p>
         <Input
-          placeholder="Search communities…"
+          placeholder={t('ads.searchCommunities')}
           value={communitySearch}
           onChange={(e) => setCommunitySearch(e.target.value)}
           className="mb-2"
@@ -307,7 +313,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
             );
           })}
           {filteredCommunities.length === 0 && (
-            <span className="text-xs text-muted-foreground">No communities found</span>
+            <span className="text-xs text-muted-foreground">{t('ads.noCommunitiesFound')}</span>
           )}
         </div>
       </div>
@@ -315,8 +321,8 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
       {/* Contextual categories */}
       {categories.length > 0 && (
         <div>
-          <Label className="text-foreground">Content categories (contextual)</Label>
-          <p className="text-xs text-muted-foreground mb-2">Prefer placements next to matching content.</p>
+          <Label className="text-foreground">{t('ads.contentCategories')}</Label>
+          <p className="text-xs text-muted-foreground mb-2">{t('ads.contentCategoriesHint')}</p>
           <div className="flex flex-wrap gap-1.5">
             {categories.map((cat) => {
               const selected = (value.categories ?? []).includes(cat);
@@ -342,7 +348,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
 
       {/* Followers of creators */}
       <div>
-        <Label htmlFor="ads-creator-input" className="text-foreground">Followers of creators</Label>
+        <Label htmlFor="ads-creator-input" className="text-foreground">{t('ads.followersOfCreators')}</Label>
         <p className="text-xs text-muted-foreground mb-2">
           Target the follower base of specific creators (wallet addresses). Audiences are materialized when your campaign is approved.
         </p>

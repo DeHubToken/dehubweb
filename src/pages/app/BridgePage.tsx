@@ -6,6 +6,7 @@
  */
 
 import { useState, useMemo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { formatUnits } from 'viem';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -255,7 +256,7 @@ export default function BridgePage() {
 
         {/* Available balance */}
         <p className="text-xs text-white/40 mb-4">
-          Available: <span className="text-white/70 font-medium">{formatNumber(sourceBalance, 2)} DHB</span> on {sourceChainLabel}
+          Available: <span className="text-white/70 font-medium">{formatNumber(sourceBalance, 2)} <DhbCoin /></span> on {sourceChainLabel}
         </p>
 
         {/* Input + Bridge button */}
@@ -474,7 +475,7 @@ function BridgeQueue() {
 
               {/* Amount + status + time */}
               <div className="text-right flex-shrink-0">
-                <p className="text-xs font-semibold text-white">{t.amount} DHB</p>
+                <p className="text-xs font-semibold text-white">{t.amount} <DhbCoin /></p>
                 <div className="flex items-center justify-end gap-1.5 mt-0.5">
                   <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     {t.status || 'Complete'}

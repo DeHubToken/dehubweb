@@ -43,6 +43,7 @@
     "connectAi": "AI birikdir"
   },
   "feed": {
+    "viewProfile": "Açylýan profily: {{name}}",
     "home": "Baş sahypa",
     "videos": "Wideolar",
     "images": "Suratlar",
@@ -838,6 +839,8 @@
     "stores": "Dükanlar"
   },
   "messages": {
+    "encrypted": "Uçdan-uca şifrlenen",
+    "cannotDecrypt": "Şifrlenen habar — bu enjamda açyp bolmaýar",
     "title": "Habarlar",
     "searchConversations": "Söhbetleri gözle...",
     "failedToLoad": "Söhbetleri ýüklemek başa barmady",
@@ -1763,5 +1766,25 @@
     "stakeDhb": "DHB Goý",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} {{tier}} derejesinde açylýar"
+  },
+  "videoLooks": {
+    "button": "Kamera görnüşleri",
+    "title": "Görnüş",
+    "hint": "Wideoňyz bu enjamdan çykmazdan öň ulanylýar — tomaşaçylar edil şu ýerde görýän zadyňyzy görýärler.",
+    "backgroundBlur": "Fonumy bulaşdyr",
+    "on": "Açyk",
+    "off": "Ýapyk",
+    "none": "Ýok",
+    "soft": "Ýumşak",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Ýyly",
+    "cool": "Sowuk",
+    "vivid": "Janly",
+    "dream": "Düýş",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Bulaşyklyk",
+    "pixelate": "Piksel"
   }
 }

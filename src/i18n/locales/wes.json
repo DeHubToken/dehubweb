@@ -43,6 +43,7 @@
     "connectAi": "Connect AI"
   },
   "feed": {
+    "viewProfile": "Luk {{name}} profil",
     "home": "Home",
     "videos": "Videos",
     "images": "Images",
@@ -942,6 +943,8 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "encrypted": "Encrypted from end to end",
+    "cannotDecrypt": "Encrypted message — e no fit open for dis device",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "failedToLoad": "E no fit load conversations",
@@ -1763,5 +1766,25 @@
     "stakeDhb": "Put DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} di unlock fo {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Camera looks",
+    "title": "Look",
+    "hint": "E di apply bifo yua video komot fo dis divais — pipul dem go si exactly weti yu di si hia.",
+    "backgroundBlur": "Blur ma bakgraund",
+    "on": "On",
+    "off": "Off",
+    "none": "Notin",
+    "soft": "Soft",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Warm",
+    "cool": "Cool",
+    "vivid": "Vivid",
+    "dream": "Dream",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Blur",
+    "pixelate": "Pixelate"
   }
 }

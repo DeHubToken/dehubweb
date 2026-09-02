@@ -5,6 +5,7 @@
  * Resolves profile info (avatar, username, display name) from the DeHub API.
  */
 
+import { useTranslation } from 'react-i18next';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -39,6 +40,7 @@ interface EventAttendeesDrawerProps {
 const PAGE_SIZE = 20;
 
 export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: EventAttendeesDrawerProps) {
+  const { t } = useTranslation();
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -123,12 +125,12 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column className={cn(GLASS_STYLES.drawer, 'max-h-[80vh]')}>
         <DrawerHeader>
-          <DrawerTitle className="text-white capitalize">{type} ({attendees.length}{hasMore ? '+' : ''})</DrawerTitle>
+          <DrawerTitle className="text-white">{t(type === 'going' ? 'events.going' : 'events.interested')} ({attendees.length}{hasMore ? '+' : ''})</DrawerTitle>
         </DrawerHeader>
 
         <div className="px-4 pb-6 overflow-y-auto max-h-[60vh] space-y-1">
           {attendees.length === 0 && !loading && (
-            <p className="text-center text-zinc-500 text-sm py-8">No one yet</p>
+            <p className="text-center text-zinc-500 text-sm py-8">{t('events.noOneYet')}</p>
           )}
 
           {attendees.map((a) => {

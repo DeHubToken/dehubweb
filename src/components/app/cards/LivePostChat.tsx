@@ -6,8 +6,9 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw, Pin, X } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Eye, Mic, Languages, RotateCcw, Pin, Pencil, Trash2, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
@@ -15,7 +16,8 @@ import { useDraft } from '@/hooks/use-draft';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
-import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
+import { useLiveChatMessages } from '@/hooks/use-livechat';
+import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
@@ -106,12 +108,30 @@ interface LivePostChatProps {
    * one, and the tokenId is the only id both callers have.
    */
   tokenId: string;
+  /**
+   * The stream's Mongo ObjectId — the id every /api/live/{id}/* route takes,
+   * NOT the numeric tokenId above. Only used to resolve the audience figure in
+   * the header; the chat itself is keyed by tokenId. Omit it and the header
+   * simply carries no number.
+   */
+  streamId?: string;
   isOffline?: boolean;
   /** Whether the current user is the stream host (can pin messages) */
   isHost?: boolean;
+  /**
+   * Render over the video instead of inside a card.
+   *
+   * The broadcaster's phone layout is full-bleed — the camera IS the screen —
+   * so a bordered slab with its own header sat on the picture like a sticker,
+   * and its viewer count repeated the one already in the corner. Overlay mode
+   * drops the chrome: no panel, no header, messages ride the shade that
+   * darkens the foot of the screen, and the list masks out as it climbs so
+   * old lines dissolve into the frame instead of meeting a hard edge.
+   */
+  overlay?: boolean;
 }
 
-export function LivePostChat({ tokenId, isOffline = false, isHost = false }: LivePostChatProps) {
+export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
   const streamId = tokenId ? streamChatRoomId(tokenId) : '';
   // The card unmounts every time the post scrolls out of the feed, so without
   // this a line typed under a stream is gone the moment you look away.
@@ -127,14 +147,22 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
   const [isPinning, setIsPinning] = useState(false);
   const [contextMenuMsg, setContextMenuMsg] = useState<SupabaseLiveChatMessage | null>(null);
   const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState('');
 
   const mention = useMention({
     inputRef: textareaRef,
     onMentionInsert: (_user, newText) => setNewMessage(newText),
   });
 
-  const { messages, isLoading, isSending, send } = useLiveChatMessages(streamId);
-  const { onlineCount } = useLiveChatPresence(streamId);
+  const { messages, isLoading, isSending, send, editMessage, deleteMessage } = useLiveChatMessages(streamId);
+  // The stream's real audience, shared with the host's broadcast console. This
+  // slot used to hold `useLiveChatPresence`, which ignores the room it is given
+  // and returns the number of people connected to the ONE global platform chat
+  // — so a stream with nobody watching read "3" here beside a truthful "0" on
+  // the host's own overlay. Null when the caller has no stream ObjectId to
+  // resolve, and then nothing is drawn: no number beats a wrong one.
+  const watching = useStreamAudience(liveStreamId, !isOffline);
 
   // Sync pinned message from server data
   useEffect(() => {
@@ -198,12 +226,38 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
     }
   }, [streamId, pinnedMessageId]);
 
+  /** Your own line, whoever is hosting — the test the edit and delete controls hang off. */
+  const isMine = useCallback(
+    (msg: SupabaseLiveChatMessage) =>
+      !!walletAddress && msg.sender_address?.toLowerCase() === walletAddress.toLowerCase(),
+    [walletAddress]
+  );
+
+  const startEditing = useCallback((msg: SupabaseLiveChatMessage) => {
+    setContextMenuMsg(null);
+    setEditingId(msg.id);
+    setEditDraft(msg.content || '');
+  }, []);
+
+  const commitEdit = useCallback((msg: SupabaseLiveChatMessage) => {
+    const next = editDraft.trim();
+    setEditingId(null);
+    if (next && next !== msg.content) void editMessage(msg.id, next);
+  }, [editDraft, editMessage]);
+
+  const handleDeleteMessage = useCallback((msg: SupabaseLiveChatMessage) => {
+    setContextMenuMsg(null);
+    void deleteMessage(msg.id);
+  }, [deleteMessage]);
+
   const handleMessageContextMenu = useCallback((e: React.MouseEvent, msg: SupabaseLiveChatMessage) => {
-    if (!isHost) return;
+    // Opens for the host (pinning) and for whoever wrote the line (edit,
+    // delete). Everyone else keeps the browser's own menu.
+    if (!isHost && !isMine(msg)) return;
     e.preventDefault();
     setContextMenuPos({ x: e.clientX, y: e.clientY });
     setContextMenuMsg(msg);
-  }, [isHost]);
+  }, [isHost, isMine]);
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
@@ -256,9 +310,20 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
   };
 
   return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+    <div
+      className={cn(
+        overlay
+          ? 'flex min-h-0 flex-1 flex-col justify-end'
+          // mt-3 and the 2xl radius match the post page's bento rhythm: without
+          // the margin this card butts straight onto the post above it and the
+          // two glass surfaces read as one slab with a seam through them.
+          : 'mt-3 rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3'
+      )}
+    >
+      {/* Header — the overlay has none. The host already has the room's
+          numbers over the picture, and a title bar is the panel this layout
+          is trying not to be. */}
+      <div className={cn('flex items-center justify-between mb-3', overlay && 'hidden')}>
         <div className="flex items-center gap-2">
           <MessageSquare className="w-4 h-4 text-zinc-400" />
           <h3 className="font-semibold text-white text-sm">Live Chat</h3>
@@ -266,17 +331,27 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
             <span className="text-xs text-zinc-500 px-2 py-0.5 rounded-full bg-zinc-800">Offline</span>
           )}
         </div>
-        <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
-          <Users className="w-3.5 h-3.5" />
-          <span>{onlineCount}</span>
-        </div>
+        {/* The audience, not the platform. A bare people-icon-plus-number is
+            exactly what the old global count looked like, so this one says
+            what it is counting. */}
+        {watching !== null && (
+          <div className="flex items-center gap-1.5 text-zinc-500 text-xs" title="People watching this stream right now">
+            <Eye className="w-3.5 h-3.5" />
+            <span>{watching} watching</span>
+          </div>
+        )}
       </div>
 
       {/* Pinned message banner (Telegram style) */}
       {pinnedMessage && (
         <button
           onClick={() => scrollToMessage(pinnedMessage.id)}
-          className="w-full flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-white/[0.06] border-l-2 border-blue-400 text-left hover:bg-white/10 transition-colors group"
+          className={cn(
+            'w-full flex items-center gap-2 mb-2 px-3 py-2 border-l-2 border-blue-400 text-left transition-colors group',
+            overlay
+              ? 'rounded-xl bg-black/40 backdrop-blur-md hover:bg-black/50'
+              : 'rounded-lg bg-white/[0.06] hover:bg-white/10'
+          )}
         >
           <Pin className="w-3.5 h-3.5 text-blue-400 shrink-0 fill-current" />
           <div className="flex-1 min-w-0">
@@ -298,7 +373,18 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
       )}
 
       {/* Messages */}
-      <div ref={messagesContainerRef} className="h-64 overflow-y-auto space-y-1 mb-3 scrollbar-hide">
+      <div
+        ref={messagesContainerRef}
+        className={cn(
+          'overflow-y-auto scrollbar-hide',
+          overlay
+            // The mask lives on the scroller, so the dissolve stays pinned to
+            // the top edge while messages travel under it. -webkit- kept for
+            // the iOS Safari this layout exists for.
+            ? 'min-h-0 flex-1 max-h-[42vh] space-y-0.5 mb-2 pr-1 [text-shadow:0_1px_3px_rgb(0_0_0/0.85)] [mask-image:linear-gradient(to_bottom,transparent,#000_3.5rem)] [-webkit-mask-image:linear-gradient(to_bottom,transparent,#000_3.5rem)]'
+            : 'h-64 space-y-1 mb-3'
+        )}
+      >
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
@@ -337,7 +423,31 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
                       </span>
                       {isPinned && <Pin className="w-2.5 h-2.5 text-blue-400 fill-current shrink-0" />}
                     </div>
-                    {(msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
+                    {editingId === msg.id ? (
+                      <div className="mt-0.5">
+                        <textarea
+                          autoFocus
+                          value={editDraft}
+                          onChange={(e) => setEditDraft(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              commitEdit(msg);
+                            } else if (e.key === 'Escape') {
+                              e.preventDefault();
+                              setEditingId(null);
+                            }
+                          }}
+                          rows={2}
+                          maxLength={500}
+                          className="w-full resize-none rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none focus:border-white/30"
+                        />
+                        <div className="mt-0.5 flex items-center gap-2 text-[10px] text-zinc-400">
+                          <button onClick={() => commitEdit(msg)} className="text-white hover:underline">Save</button>
+                          <button onClick={() => setEditingId(null)} className="hover:text-white">Cancel</button>
+                        </div>
+                      </div>
+                    ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
                       <div className="mt-1">
                         <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />
                       </div>
@@ -350,8 +460,30 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
                     )}
                     <span className="text-[10px] text-zinc-600 mt-0.5 block">
                       {format(new Date(msg.created_at), 'HH:mm')}
+                      {msg.is_edited && <span className="ml-1">(edited)</span>}
                     </span>
                   </div>
+                  {/* Your own line — edit and remove, on hover like the host's pin */}
+                  {isMine(msg) && editingId !== msg.id && (
+                    <>
+                      {(!msg.message_type || msg.message_type === 'text') && (
+                        <button
+                          onClick={() => startEditing(msg)}
+                          className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-white mt-0.5"
+                          title="Edit message"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDeleteMessage(msg)}
+                        className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400 mt-0.5"
+                        title="Delete message"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </>
+                  )}
                   {/* Pin button on hover (host only) */}
                   {isHost && (
                     <button
@@ -372,25 +504,45 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
       </div>
 
       {/* Right-click context menu for host */}
-      {contextMenuMsg && isHost && (
+      {contextMenuMsg && (isHost || isMine(contextMenuMsg)) && (
         <div
           className="fixed z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-2xl py-1 min-w-[140px]"
           style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            onClick={() => contextMenuMsg.id === pinnedMessageId ? handleUnpinMessage() : handlePinMessage(contextMenuMsg)}
-            disabled={isPinning}
-            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-          >
-            <Pin className="w-3.5 h-3.5" />
-            {contextMenuMsg.id === pinnedMessageId ? 'Unpin message' : 'Pin message'}
-          </button>
+          {isHost && (
+            <button
+              onClick={() => contextMenuMsg.id === pinnedMessageId ? handleUnpinMessage() : handlePinMessage(contextMenuMsg)}
+              disabled={isPinning}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+            >
+              <Pin className="w-3.5 h-3.5" />
+              {contextMenuMsg.id === pinnedMessageId ? 'Unpin message' : 'Pin message'}
+            </button>
+          )}
+          {isMine(contextMenuMsg) && (!contextMenuMsg.message_type || contextMenuMsg.message_type === 'text') && (
+            <button
+              onClick={() => startEditing(contextMenuMsg)}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              Edit message
+            </button>
+          )}
+          {isMine(contextMenuMsg) && (
+            <button
+              onClick={() => handleDeleteMessage(contextMenuMsg)}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Delete message
+            </button>
+          )}
         </div>
       )}
 
       {/* Input */}
-      <div className="pt-2">
+      <div className={overlay ? '' : 'pt-2'}>
         <div className="relative">
           <Textarea
             ref={textareaRef}
@@ -404,8 +556,13 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
             onKeyDown={handleKeyDown}
             placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}
             disabled={isOffline || !isAuthenticated}
-            className="min-h-[56px] max-h-32 resize-none bg-white/5 border-white/10 text-white placeholder:text-zinc-500 text-sm rounded-xl pr-24"
-            rows={2}
+            className={cn(
+              'max-h-32 resize-none text-white text-sm pr-24',
+              overlay
+                ? 'min-h-[46px] rounded-full border-white/15 bg-black/40 py-3 pl-4 backdrop-blur-md placeholder:text-white/50'
+                : 'min-h-[56px] rounded-xl border-white/10 bg-white/5 placeholder:text-zinc-500'
+            )}
+            rows={overlay ? 1 : 2}
           />
           <UserMentionDropdown
             query={mention.query}
@@ -424,7 +581,10 @@ export function LivePostChat({ tokenId, isOffline = false, isHost = false }: Liv
             <button
               onClick={handleSend}
               disabled={isSending || !newMessage.trim() || isOffline}
-              className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className={cn(
+                'p-2 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed',
+                overlay ? 'rounded-full bg-white/15 hover:bg-white/25' : 'rounded-xl bg-white/10 hover:bg-white/20'
+              )}
             >
               {isSending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

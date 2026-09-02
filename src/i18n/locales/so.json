@@ -43,6 +43,7 @@
     "connectAi": "Ku xir AI"
   },
   "feed": {
+    "viewProfile": "Eeg astaanta {{name}}",
     "home": "Guriga",
     "videos": "Fiidiyowyada",
     "images": "Sawirrada",
@@ -942,6 +943,8 @@
     "loginRequired": "Soo galitaan waa loo baahan yahay"
   },
   "messages": {
+    "encrypted": "Si dhammaystiran loo sireeyay",
+    "cannotDecrypt": "Fariin sir ah — laguma furi karo qalabkan",
     "title": "Fariimaha",
     "searchConversations": "Raadi wada-sheekeysiyada...",
     "failedToLoad": "Soo dejinta wada-sheekeysiyadu wuu fashilmay",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "Dhig DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} wuxuu ku furmaa {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Muuqaallada kaamirada",
+    "title": "Muuqaal",
+    "hint": "Waxaa la adeegsadaa ka hor inta uusan fiidiyowgaagu ka bixin qalabkan — daawadayaashu waxay arkaan si sax ah waxaad halkan ku aragto.",
+    "backgroundBlur": "Indho-sarcaadi asalkayga",
+    "on": "Shid",
+    "off": "Dami",
+    "none": "Midna",
+    "soft": "Jilicsan",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Diiran",
+    "cool": "Qabow",
+    "vivid": "Dhalaalaya",
+    "dream": "Riyo",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Indho-sarcaad",
+    "pixelate": "Piksel"
   }
 }

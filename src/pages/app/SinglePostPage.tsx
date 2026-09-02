@@ -143,6 +143,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     videoUrl: isAudioPost ? undefined : (nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined),
@@ -224,6 +226,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'image',
     username: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
     verified: false,
@@ -299,6 +303,8 @@ function toTextPost(nft: DeHubNFT): TextPost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'post',
     createdAt: timestamp || '',
     views,
@@ -420,6 +426,10 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    // The Shop board rides straight through to LiveStreamCard, which is what
+    // renders the player here — the button lives inside it.
+    shopLinks: (nft as any).shopLinks,
+    shopListingCount: (nft as any).shopListingCount,
     type: 'live',
     // The Mongo ObjectId every /api/live/{id}/* route requires. Without it the
     // card falls back to the numeric tokenId and like/gift/activities/end all
@@ -464,14 +474,14 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
 /**
  * Live post wrapper: merges Supabase live status when api.dehub.io /start fails
  */
-function LivePostWithStatus({ liveData, post }: { liveData: LiveStream; post: DeHubNFT }) {
+function LivePostWithStatus({ liveData, post, chatSlot }: { liveData: LiveStream; post: DeHubNFT; chatSlot?: React.ReactNode }) {
   const tokenId = String(post.tokenId ?? (post as any).tokenId ?? liveData.id);
   const { data: isLiveFromSupabase } = useStreamLiveStatus(tokenId);
   const mergedStream: LiveStream = {
     ...liveData,
     isLive: liveData.isLive || !!isLiveFromSupabase,
   };
-  return <LiveStreamCard stream={mergedStream} />;
+  return <LiveStreamCard stream={mergedStream} chatSlot={chatSlot} />;
 }
 
 /**
@@ -878,6 +888,20 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
   
   // Determine content type
   const contentType = post ? getContentType(post) : null;
+
+  /**
+   * The room key for everything hanging off a live post: its chat and its shop.
+   *
+   * Not the URL param. `/api/live` hands out Mongo ObjectIds, so a viewer who
+   * opened the stream from the Live tab or the home carousel arrives on
+   * /app/post/<ObjectId>, while the host and anyone arriving from the feed use
+   * the numeric tokenId. Keying on the param put those two groups in different
+   * rooms for the same broadcast — the host never saw Live-tab messages and
+   * pins did not reach them. The loader already resolves both shapes to
+   * `post.tokenId`, which is the id LivePostChat documents as the only one
+   * every caller can produce.
+   */
+  const liveRoomTokenId = String((post as any)?.tokenId ?? id ?? '');
   // toLiveStream builds fresh playbackUrls arrays; called inline in render it
   // handed LiveStreamCard new array identities on every page re-render, and
   // the playback effect (keyed on urlsToTry) tore down and re-created the
@@ -970,7 +994,7 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
     // to "Post Not Found" even though we still hold valid data — the classic
     // "not found on back-nav, fine after refresh" bug. If `post` exists, render it.
     if (!post) return <NotFoundState />;
-    
+
     // Handle processing posts. 'signed' is NOT transient: it is the for-life
     // status of a post published with mint opt-out, and those must render.
     if (post.status === 'pending') {
@@ -985,7 +1009,25 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
       case 'live': {
         if (!liveData) return <NotFoundState />;
         return (
-          <LivePostWithStatus liveData={liveData} post={post} />
+          <LivePostWithStatus
+            liveData={liveData}
+            post={post}
+            chatSlot={
+              id ? (
+                <Suspense fallback={null}>
+                  {/* streamId is the ObjectId the live routes take; it resolves
+                      the audience figure in the chat header, which without it
+                      used to fall back to the platform-wide chat online count. */}
+                  <LivePostChat
+                    tokenId={liveRoomTokenId}
+                    streamId={(post as any)?.stream?._id || (post as any)?.stream?.streamId || undefined}
+                    isOffline={!('isLive' in post ? (post as any).isLive : true)}
+                    isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
+                  />
+                </Suspense>
+              ) : undefined
+            }
+          />
         );
       }
       default:
@@ -1167,6 +1209,7 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
           currentTitle={videoData.title}
           currentDescription={videoData.description}
           currentContentRating={videoData.contentRating}
+          currentShopLinks={videoData.shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, id || '', edited);
           }}
@@ -1220,18 +1263,13 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
               are not a customer of their own broadcast. */}
           {isLivePost && id && post && (
             walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase()
-              ? <StreamShopManager tokenId={id} />
-              : <StreamShopRail tokenId={id} />
+              ? <StreamShopManager tokenId={liveRoomTokenId} />
+              : <StreamShopRail tokenId={liveRoomTokenId} />
           )}
-          {isLivePost && id && post && (
-            <Suspense fallback={null}>
-              <LivePostChat
-                tokenId={id}
-                isOffline={!('isLive' in post ? (post as any).isLive : true)}
-                isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
-              />
-            </Suspense>
-          )}
+          {/* The chat is no longer a panel down here. It hangs off the message
+              button in the stream's own action bar (see `chatSlot` above), so a
+              broadcast has one conversation in one place instead of a chat
+              slab under the player that read as the platform's. */}
           {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
           {showRelated && isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
           {showRelated && !isImagePost && !isVideoPost && !isAudioPost && !isLivePost && id && <RelatedPostsFeed currentPostId={id} />}

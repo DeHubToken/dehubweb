@@ -43,6 +43,7 @@
     "connectAi": "AI जोड़व"
   },
   "feed": {
+    "viewProfile": "प्रोफाइल खोलव: {{name}}",
     "home": "घर",
     "videos": "वीडियो",
     "images": "तसवीर",
@@ -942,6 +943,8 @@
     "loginRequired": "लॉग इन जरूरी हे"
   },
   "messages": {
+    "encrypted": "एंड-टू-एंड एन्क्रिप्टेड",
+    "cannotDecrypt": "एन्क्रिप्टेड संदेस — ए डिवाइस म नइ खुल सकय",
     "title": "संदेश",
     "searchConversations": "बातचीत खोजव...",
     "failedToLoad": "बातचीत लोड नइ होइस",
@@ -1829,5 +1832,25 @@
     "stakeDhb": "DHB स्टेक करव",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} {{tier}} म अनलॉक होथे"
+  },
+  "videoLooks": {
+    "button": "कैमरा लुक",
+    "title": "लुक",
+    "hint": "तोर वीडियो ये डिवाइस ले निकले के पहिली लागथे — देखइया ओहीच देखथें जऊन तंय इहाँ देखत हस।",
+    "backgroundBlur": "मोर बैकग्राउंड धुंधला कर",
+    "on": "चालू",
+    "off": "बंद",
+    "none": "कुछू नइ",
+    "soft": "नरम",
+    "mono": "मोनो",
+    "noir": "नोयर",
+    "warm": "गरम",
+    "cool": "ठंडा",
+    "vivid": "चटक",
+    "dream": "सपना",
+    "vhs": "VHS",
+    "neon": "नियॉन",
+    "blur": "धुंधला",
+    "pixelate": "पिक्सेल"
   }
 }

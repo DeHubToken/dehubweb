@@ -17,6 +17,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate } from 'react-router-dom';
 import { Search, Send, Check, Loader2, X, Gem } from 'lucide-react';
 import { toast } from 'sonner';
@@ -28,6 +29,7 @@ import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { useConversations, useUserSearchForDM } from '@/hooks/use-messages';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { emitCreateAndStart, emitSendMessage } from '@/lib/api/dehub/dm-socket';
+import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import { getAccountInfo, type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { parseDehubLink, dehubLinkLabel } from '@/lib/dehub-links';
@@ -136,7 +138,8 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
     }
     setRowStatus(s => ({ ...s, [key]: 'sending' }));
     try {
-      emitSendMessage({ dmId: conv.id, content: buildContent(), type: 'msg' });
+      const wire = await prepareOutgoing(conv.otherUser?.address, buildContent());
+      emitSendMessage({ dmId: conv.id, content: wire.content, type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
       toast.success(`${sentLabel} sent to ${conv.otherUser?.displayName || conv.otherUser?.username || 'chat'}`);
     } catch (err) {
@@ -167,7 +170,8 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
       if (!userId) throw new Error('Missing recipient id');
       const conv = await emitCreateAndStart(userId);
       if (!conv?._id) throw new Error('Could not open conversation');
-      emitSendMessage({ dmId: conv._id, content: buildContent(), type: 'msg' });
+      const wire = await prepareOutgoing(user.address, buildContent());
+      emitSendMessage({ dmId: conv._id, content: wire.content, type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
       toast.success(`${sentLabel} sent to ${user.displayName || user.username || 'user'}`);
     } catch (err) {
@@ -331,7 +335,7 @@ function RecipientRow({
         {fee > 0 && (
           <p className="text-[11px] text-amber-400 mt-0.5 flex items-center gap-1">
             <Gem className="w-3 h-3" />
-            {fee.toLocaleString()} DHB to message
+            {fee.toLocaleString()} <DhbCoin /> to message
           </p>
         )}
       </div>

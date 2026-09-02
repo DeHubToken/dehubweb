@@ -3,7 +3,7 @@ import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
 import { usePostSound } from './hooks/usePostSound';
-import type { PollData } from './types';
+import type { PollData, LiveStreamHandoff } from './types';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
@@ -24,7 +24,11 @@ interface PostModalProps {
 }
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll }: PostModalProps) {
-  const { state, actions, computed, refs } = usePostForm(onClose);
+  // Where a live post goes once its mint has provisioned the stream. Held here
+  // rather than in the action bar so it survives the bar's own re-renders, and
+  // cleared on close so reopening the composer never reopens a dead broadcast.
+  const [liveStream, setLiveStream] = useState<LiveStreamHandoff | null>(null);
+  const { state, actions, computed, refs } = usePostForm(onClose, setLiveStream);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
@@ -80,6 +84,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   }, [isOpen, initialFiles, actions.handleFileDrop, onFilesProcessed]);
 
   const handleClose = () => {
+    // A finished broadcast must not be able to reopen itself the next time the
+    // composer is opened.
+    setLiveStream(null);
     onClose();
   };
 
@@ -164,6 +171,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         setShowTitle={actions.setShowTitle}
         isMature={state.isMature}
         setIsMature={actions.setIsMature}
+        shopLinks={state.shopLinks}
+        setShopLinks={actions.setShopLinks}
+        shopListingIds={state.shopListingIds}
+        setShopListingIds={actions.setShopListingIds}
         hasVideoOrAudio={computed.hasVideo || computed.hasAudio}
         categoryDrawerOpen={categoryDrawerOpen}
         setCategoryDrawerOpen={setCategoryDrawerOpen}
@@ -182,6 +193,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onAudioSelect={actions.handleAudioSelect}
         onStartRecording={actions.startRecording}
         liveMode={state.liveMode}
+        liveStream={liveStream}
         setLiveMode={actions.setLiveMode}
         onInsertFormatting={actions.insertFormatting}
         onInsertEmoji={actions.insertEmoji}

@@ -6,6 +6,7 @@
  * typing a subject is the whole job.
  */
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { presetsFor, type CreatorPreset, type PresetKind } from '@/lib/creator/presets';
@@ -26,7 +27,31 @@ interface PresetStripProps {
   audioTask?: AudioTask;
 }
 
+/**
+ * Preset groups are display-only headings on the tile, so they map straight to
+ * keys — unlike `kind` and `audioTask`, which decide which presets render.
+ */
+const GROUP_KEYS: Record<string, string> = {
+  Abstract: 'creator.presetGroupAbstract',
+  Camera: 'creator.presetGroupCamera',
+  Characters: 'creator.presetGroupCharacters',
+  Commercial: 'creator.presetGroupCommercial',
+  Design: 'creator.presetGroupDesign',
+  Drafts: 'creator.presetGroupDrafts',
+  Environments: 'creator.presetGroupEnvironments',
+  Film: 'creator.presetGroupFilm',
+  Games: 'creator.presetGroupGames',
+  'Image to 3D': 'creator.presetGroupImageTo3d',
+  'Image to video': 'creator.presetGroupImageToVideo',
+  Music: 'creator.presetGroupMusic',
+  Portrait: 'creator.presetGroupPortrait',
+  Social: 'creator.presetGroupSocial',
+  Sound: 'creator.presetGroupSound',
+  Voiceover: 'creator.presetGroupVoiceover',
+};
+
 export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripProps) {
+  const { t } = useTranslation();
   const presets = useMemo(() => {
     const all = presetsFor(kind);
     if (kind !== 'audio') return all;
@@ -40,14 +65,14 @@ export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripPr
   return (
     <div className="w-full">
       <div className="mb-2 flex items-baseline justify-between gap-3 px-0.5">
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/45">Presets</h2>
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/45">{t('creator.presets')}</h2>
         {activeId && (
           <button
             type="button"
             onClick={() => onPick(null)}
             className="rounded-full px-2 py-0.5 text-[11px] font-medium text-white/50 transition hover:bg-white/10 hover:text-white"
           >
-            Clear preset
+            {t('creator.clearPreset')}
           </button>
         )}
       </div>
@@ -61,7 +86,7 @@ export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripPr
               type="button"
               onClick={() => onPick(active ? null : preset)}
               aria-pressed={active}
-              aria-label={`${preset.name} preset. ${preset.hint}`}
+              aria-label={t('creator.presetAria', { name: t(preset.nameKey), hint: t(preset.hintKey) })}
               className={cn(
                 'group relative w-[10.5rem] shrink-0 rounded-xl border p-3 text-left transition',
                 active
@@ -75,13 +100,13 @@ export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripPr
                 </span>
               )}
               <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
-                {preset.group}
+                {t(GROUP_KEYS[preset.group] ?? preset.group)}
               </span>
               <span className="mt-1 block truncate pr-4 text-[13px] font-semibold text-white">
-                {preset.name}
+                {t(preset.nameKey)}
               </span>
               <span className="mt-0.5 block text-[11px] leading-snug text-white/45 line-clamp-2">
-                {preset.hint}
+                {t(preset.hintKey)}
               </span>
             </button>
           );

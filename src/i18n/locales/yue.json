@@ -43,6 +43,7 @@
     "connectAi": "連接 AI"
   },
   "feed": {
+    "viewProfile": "睇下 {{name}} 嘅個人檔案",
     "home": "主頁",
     "videos": "影片",
     "images": "圖片",
@@ -942,6 +943,8 @@
     "loginRequired": "需要登入"
   },
   "messages": {
+    "encrypted": "端到端加密",
+    "cannotDecrypt": "加密訊息 — 喺呢部裝置打唔開",
     "title": "訊息",
     "searchConversations": "搜尋對話...",
     "failedToLoad": "載入對話失敗",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "存 DHB",
     "title": "超能力",
     "unlocksAt": "{{power}} 喺 {{tier}} 解鎖"
+  },
+  "videoLooks": {
+    "button": "鏡頭效果",
+    "title": "效果",
+    "hint": "喺條片離開呢部裝置之前套用 — 觀眾睇到嘅同你喺度睇到嘅一模一樣。",
+    "backgroundBlur": "模糊我嘅背景",
+    "on": "開",
+    "off": "閂",
+    "none": "冇",
+    "soft": "柔和",
+    "mono": "黑白",
+    "noir": "黑色電影",
+    "warm": "暖色",
+    "cool": "冷色",
+    "vivid": "鮮艷",
+    "dream": "夢幻",
+    "vhs": "VHS",
+    "neon": "霓虹",
+    "blur": "模糊",
+    "pixelate": "像素化"
   }
 }

@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { motion } from 'framer-motion';
 import { Interface, parseUnits } from 'ethers';
 import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy, ChevronRight } from 'lucide-react';
@@ -865,7 +866,7 @@ export default function StakingPage() {
                   : `https://basescan.org/tx/${rec.tx_hash}`;
                 return (
                   <div key={idx} className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-5 py-3 text-xs text-white/70 items-center">
-                    <span className="font-medium">{formatNumber(rec.amount)} DHB</span>
+                    <span className="font-medium">{formatNumber(rec.amount)} <DhbCoin /></span>
                     <span className="text-white/50">{rec.chain}</span>
                     <span className="text-white/40 hidden sm:block">{new Date(rec.created_at).toLocaleDateString()}</span>
                     <a
@@ -926,7 +927,7 @@ export default function StakingPage() {
                   : `https://basescan.org/tx/${rec.tx_hash}`;
                 return (
                   <div key={idx} className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-5 py-3 text-xs text-white/70 items-center">
-                    <span className="font-medium">{formatNumber(rec.amount)} DHB</span>
+                    <span className="font-medium">{formatNumber(rec.amount)} <DhbCoin /></span>
                     <span className="text-white/50">{rec.chain}</span>
                     <span className="text-white/40 hidden sm:block">{new Date(rec.created_at).toLocaleDateString()}</span>
                     <a

@@ -8,7 +8,7 @@ import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
-import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -29,7 +29,8 @@ import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildStreamInfo } from '../lib/stream-info';
-import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
+import { attachShopListings } from '@/lib/attach-shop-listings';
+import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData, LiveStreamHandoff } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -72,6 +73,10 @@ interface ActiveDraft {
   showTitle: boolean;
   /** Absent on drafts saved before ratings existed, which read as safe. */
   isMature?: boolean;
+  /** The Shop board. Absent on drafts saved before it existed. */
+  shopLinks?: ShopLink[];
+  /** Store listings picked for the board, by id. */
+  shopListingIds?: string[];
   selectedCategory: string;
   /** Absent on drafts saved while the switch was removed. */
   isSubscribersOnly?: boolean;
@@ -211,6 +216,8 @@ interface UsePostFormReturn {
     titleText: string;
     shouldMint: boolean;
     isMature: boolean;
+    shopLinks: ShopLink[];
+    shopListingIds: string[];
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -224,6 +231,8 @@ interface UsePostFormReturn {
     setShowTitle: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
+    setShopLinks: (links: ShopLink[]) => void;
+    setShopListingIds: (ids: string[]) => void;
     setTitleText: (text: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
@@ -241,7 +250,15 @@ interface UsePostFormReturn {
   };
 }
 
-export function usePostForm(onClose: () => void): UsePostFormReturn {
+export function usePostForm(
+  onClose: () => void,
+  /**
+   * Called instead of closing when a live post's mint comes back with a
+   * stream. The composer stays where it is and the broadcast console opens
+   * over it — going live is one form now, not two.
+   */
+  onLiveStreamReady?: (stream: LiveStreamHandoff) => void,
+): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
   const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
@@ -361,6 +378,28 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isMature, setIsMature] = useState(d?.isMature === true);
 
   /**
+   * The creator's Shop board — affiliate and shop links for this post.
+   *
+   * Restored from the draft, unlike the mature switch: these are URLs somebody
+   * typed by hand, and losing three of them to a reload is exactly what a
+   * draft exists to prevent.
+   */
+  const [shopLinks, setShopLinks] = useState<ShopLink[]>(
+    Array.isArray(d?.shopLinks) ? d.shopLinks : [],
+  );
+
+  /**
+   * The creator's own store listings picked for the board, by id.
+   *
+   * Held as ids rather than rows because they are attached in Supabase after
+   * the mint returns a tokenId — there is nothing to attach to before then, so
+   * the composer only carries the choice.
+   */
+  const [shopListingIds, setShopListingIds] = useState<string[]>(
+    Array.isArray(d?.shopListingIds) ? d.shopListingIds : [],
+  );
+
+  /**
    * Bounty locks DHB through the mint transaction itself, so a post that never
    * goes on-chain cannot carry one. Rather than let the two settings contradict
    * each other, bounty wins and the mint row goes read-only.
@@ -434,14 +473,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   useEffect(() => {
     const persistDraft = () => {
       const draft: ActiveDraft = {
-        text, titleText, showTitle, isMature,
+        text, titleText, showTitle, isMature, shopLinks, shopListingIds,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
         isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
         isTokenGated, tokenContract, tokenSymbol, tokenAmount,
       };
       // Only save if there's meaningful content
       const hasContent = text.trim() || titleText.trim() ||
-        selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
+        selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly ||
+        shopLinks.length > 0 || shopListingIds.length > 0;
       if (hasContent) {
         saveActiveDraft(draft);
       } else {
@@ -454,7 +494,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // clear the timer here, never persist, or the debounce is defeated. The
     // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
-  }, [text, titleText, showTitle, isMature,
+  }, [text, titleText, showTitle, isMature, shopLinks, shopListingIds,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
@@ -1001,6 +1041,19 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as PostChainId);
     setTitleText('');
+    // Cleared per post, deliberately. A board is usually specific to what was
+    // just posted, and one that quietly carries over ends up on content it has
+    // nothing to do with.
+    setShopLinks([]);
+    setShopListingIds([]);
+    // Same reasoning, and it matters more here: this decides whether the post
+    // is shown at all. The composer is mounted behind a one-way latch, so hook
+    // state outlives publish-close-reopen — leaving this set meant the post
+    // after a mature one was minted contentRating: 'mature' and kept off every
+    // public feed, with the switch reading off unless the composer was looked
+    // at closely. The file's own note on this switch says a sticky flag is the
+    // failure to avoid.
+    setIsMature(false);
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
       setSelectedCategory('');
@@ -1140,7 +1193,67 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     }
 
     setIsPosting(true);
-    
+
+    /*
+     * A stage opens from this form, not from a second one.
+     *
+     * Picking Stages used to close the composer and hand over the Stages
+     * create sheet, which asked for the title and description all over again.
+     * It is the same setup — a name, a blurb, a cover — so it happens here,
+     * exactly like a live video stream does. The one difference is that a
+     * stage is a room, not a post: nothing is minted, so this returns before
+     * the mint path below rather than running through it.
+     */
+    if (liveMode === 'townhall') {
+      try {
+        const stageTitle = (titleText.trim() || text.trim().split('\n')[0] || '').slice(0, 100);
+        if (!stageTitle) {
+          toast.error('Give the stage a title first');
+          return;
+        }
+        const stageDescription = titleText.trim() ? text.trim() : '';
+
+        // The attached image or clip becomes the room's cover. A failed upload
+        // must not cost the host the stage — open it bare and say so.
+        let coverImageUrl: string | null = null;
+        const image = media.find((m) => m.type === 'image');
+        const clip = media.find((m) => m.type === 'video');
+        // A clip stands in as its own poster frame: the room shows a still,
+        // and the frame the composer already generated is that still.
+        const coverFile: Blob | undefined = image?.file ?? clip?.thumbnailBlob;
+        if (coverFile) {
+          try {
+            const ext = image ? (image.file.name.split('.').pop()?.toLowerCase() || 'jpg') : 'jpg';
+            const path = `stages/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+            const { error: uploadErr } = await supabase.storage
+              .from('community-media')
+              .upload(path, coverFile, { cacheControl: '31536000' });
+            if (uploadErr) throw uploadErr;
+            coverImageUrl = supabase.storage.from('community-media').getPublicUrl(path).data.publicUrl;
+          } catch (err) {
+            console.error('[Stage] Cover upload failed:', err);
+            toast.error('Cover image failed to upload — going live without it');
+          }
+        }
+
+        // Imported on use, never statically: the composer is measured against
+        // the entry bundle, and a static edge into the stage stack puts Agora
+        // and the whole room on the boot path.
+        const { createStageNow, openStageModal } = await import('@/contexts/StageContext');
+        const space = await createStageNow(stageTitle, stageDescription || undefined, coverImageUrl);
+        if (!space) return;
+
+        resetForm();
+        onClose();
+        // Straight into the room, already on air — same shape as the video
+        // console opening over the composer.
+        openStageModal('live');
+      } finally {
+        setIsPosting(false);
+      }
+      return;
+    }
+
     try {
       // Determine post type based on media
       let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'feed-audio' = 'feed-simple';
@@ -1161,6 +1274,20 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       if (postingOnSolana && isWatch2Earn) {
         toast.error('Bounty is not available on Solana');
+        setIsPosting(false);
+        return;
+      }
+
+      // Same guard, and it needs to be here for the same reason bounty's is.
+      //
+      // buildStreamInfo drops the plan ids on Solana and PostAccessToggles
+      // hides the Subscribers row there, but neither resets the state — so
+      // turning it on while composing on Base and then switching the chain
+      // published subscriber-only content publicly, with no error and nothing
+      // on screen still claiming it was gated. Refusing is right rather than
+      // silently posting it open: the creator asked for a gate.
+      if (postingOnSolana && isSubscribersOnly) {
+        toast.error('Subscriber-only posts are not available on Solana');
         setIsPosting(false);
         return;
       }
@@ -1369,7 +1496,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           : extra.soundtrackTag;
       }
 
-      // Extract hashtags from description and title, use as augmented categories
+      // Hashtags the author typed become categories as well, so the tag is
+      // filterable — but the text goes out exactly as written.
+      //
+      // This used to strip them out and tidy the whitespace they left behind,
+      // which made a typed tag indistinguishable from one picked in the
+      // category selector: both ended up as invisible metadata, and the tags
+      // an author had deliberately written simply vanished from their own
+      // post. Where a tag appears is the author's decision, not ours — a
+      // picked category stays out of sight, a typed one stays where it was
+      // put, and the feed renders it as a link.
       const hashtagRegex = /#([A-Za-z][A-Za-z0-9_]{0,49})/g;
       const extractedTags = new Set<string>();
       for (const match of (postDescription.matchAll(hashtagRegex))) {
@@ -1379,9 +1515,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         extractedTags.add(match[1]);
       }
 
-      // Strip hashtags from the text sent to API
-      const cleanDescription = postDescription.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
-      const cleanTitle = postTitle.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim() || postTitle;
+      const submittedDescription = postDescription;
+      const submittedTitle = postTitle;
 
       // Merge extracted hashtags into categories
       const baseCategories = selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'];
@@ -1501,8 +1636,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const attemptSignature = [
         postType,
         chainId,
-        cleanTitle,
-        cleanDescription,
+        submittedTitle,
+        submittedDescription,
         media
           .map((m) =>
             [
@@ -1529,8 +1664,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       const mintResponse = await mintPost(
         {
-          name: cleanTitle,
-          description: cleanDescription,
+          name: submittedTitle,
+          description: submittedDescription,
           postType,
           chainId,
           category: mergedCategories,
@@ -1542,6 +1677,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
           contentRating: isMature ? 'mature' : undefined,
+          // Sent with the mint rather than PATCHed after it, so a live post is
+          // already carrying its board when the stream comes up.
+          shopLinks: shopLinks.length ? shopLinks : undefined,
+          // What we are ABOUT to attach. The attach itself needs the tokenId
+          // this call returns, so the count goes on the token now and the rows
+          // land a moment later — see the attach step below.
+          shopListingCount: shopListingIds.length || undefined,
           plans: subscriberPlanIds,
         },
         (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
@@ -1552,6 +1694,34 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       if (!mintResponse.createdTokenId) {
         console.error('[Mint] Missing token ID in API response');
         throw new Error('Invalid response from backend - missing token ID');
+      }
+
+      /**
+       * Put the picked store listings on the post, now that it has a tokenId.
+       *
+       * Not awaited into the failure path on purpose: the post is published by
+       * this point, and a Supabase hiccup must not throw a creator onto an
+       * error screen for something they can fix from the post's edit sheet.
+       * A partial result is reported rather than swallowed, so nobody is left
+       * wondering where their products went.
+       *
+       * Skipped for a `duplicate` — that post is the earlier send's, and its
+       * listings were attached then.
+       */
+      if (shopListingIds.length && !mintResponse.duplicate) {
+        // The account address, not `minterAddress` — on a Solana post that is
+        // a base58 mint wallet, while the token's `minter` and the identity
+        // stream-products checks against are both the EVM account.
+        void attachShopListings(mintResponse.createdTokenId, shopListingIds, user?.address || null)
+          .then(({ failed }) => {
+            if (failed > 0) {
+              toast.error(
+                failed === shopListingIds.length
+                  ? 'Your post is up, but its shop items could not be attached. Add them from Edit post.'
+                  : `Your post is up. ${failed} shop ${failed === 1 ? 'item' : 'items'} could not be attached — add them from Edit post.`,
+              );
+            }
+          });
       }
 
       // A repeat of a post this composer already published: the first attempt's
@@ -1901,7 +2071,38 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       } catch (catErr) {
         console.warn('[Mint] Failed to increment category counts:', catErr);
       }
+
+      /*
+       * A live post does not end at the feed — it ends on air.
+       *
+       * The same mint that published the post provisioned the stream and
+       * handed back its key, so there is nothing left to set up: the console
+       * opens over the composer on these credentials. Going live used to mean
+       * filling this form and then filling a second sheet that asked for the
+       * title, description and cover all over again.
+       *
+       * Falls through to the normal close if the server sent no stream back,
+       * which is a live post with no stream behind it — better to land on the
+       * feed than on a console with nothing to publish to.
+       */
+      const provisioned = mintResponse.stream;
+      if (liveMode && onLiveStreamReady && provisioned?.streamKey && provisioned?._id) {
+        onLiveStreamReady({
+          tokenId: String(mintResponse.createdTokenId),
+          streamKey: provisioned.streamKey,
+          ingestUrl: provisioned.ingestUrl || '',
+          playbackUrl: `https://dehub.io/app/post/${mintResponse.createdTokenId}`,
+          streamId: String(provisioned._id),
+          playbackId: provisioned.playbackId,
+          provider: provisioned.provider,
+        });
+        return;
+      }
+
       onClose();
+
+      // Navigate to home to show the new post
+      navigate('/app');
       
       // Navigate to home to show the new post
       navigate('/app');
@@ -2034,13 +2235,21 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setUploadProgress(0);
     }
   }, [
-    text, media, isSubscribersOnly, isPPV, ppvAmount,
+    // Everything the body reads. handlePost is only rebuilt when one of these
+    // changes, so anything left out is frozen at whatever it was when the last
+    // listed value moved — usually the creator's final keystroke. That is how a
+    // shop link added after the caption was typed reached the mint as
+    // `undefined`: the post went up with an empty board and nothing said so.
+    // Add the dependency when you read new state in here.
+    text, media, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
     refreshSession, openLoginModal, requestWalletUnlock,
-    effectiveShouldMint, mintFee, isMature
+    effectiveShouldMint, mintFee, isMature,
+    selectedCategory, shopLinks, shopListingIds, myPlanIds,
+    postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
   ]);
 
   return {
@@ -2077,6 +2286,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       titleText,
       shouldMint,
       isMature,
+      shopLinks,
+      shopListingIds,
     },
     actions: {
       setText,
@@ -2127,6 +2338,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setShowTitle: handleSetShowTitle,
       setShouldMint: handleSetShouldMint,
       setIsMature,
+      setShopLinks,
+      setShopListingIds,
       setTitleText,
       insertEmoji,
       insertGif,
