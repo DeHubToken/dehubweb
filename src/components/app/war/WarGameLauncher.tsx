@@ -313,6 +313,7 @@ function checkCapability(): Capability {
  * of game code out of the entry bundle until a player actually deploys.
  */
 function WarGameOverlay({ onExit }: { onExit: () => void }) {
+  const frameRef = useRef<HTMLIFrameElement>(null);
   // Resolved once: re-picking on a re-render would reload the iframe and
   // restart the bake from zero.
   const [gameUrl] = useState(() => {
@@ -429,7 +430,7 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
   // this path: a keydown inside the frame never reaches this document, so while
   // the game holds the pointer the listener above cannot see Escape at all and
   // the overlay's own exit button cannot be aimed at. The message can.
-  useGameExitRequest('war-game', onExit);
+  useGameExitRequest('war-game', frameRef, onExit);
 
   return (
     <div data-war-game-overlay role="dialog" aria-modal="true" aria-label="Combat zone">
@@ -445,6 +446,7 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         </div>
       ) : (
       <iframe
+        ref={frameRef}
         src={gameUrl}
         title="Claude of Duty"
         data-war-game-frame

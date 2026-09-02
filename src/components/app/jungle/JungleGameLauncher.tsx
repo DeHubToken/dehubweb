@@ -289,6 +289,7 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
   const [cap] = useState(checkCapability);
 
   const [ready, setReady] = useState(false);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   // Only surfaced if something actually breaks. A walk-in that is merely slow
   // gets the percentage and nothing else to read.
   const [fault, setFault] = useState('');
@@ -422,7 +423,7 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
   // above only ever sees Escape when this document has focus, which it does not
   // while the walk holds the pointer — so the in-frame button is the reliable
   // way out, not a convenience.
-  useGameExitRequest('jungle-game', onExit);
+  useGameExitRequest('jungle-game', frameRef, onExit);
 
   return (
     <div data-jungle-game-overlay role="dialog" aria-modal="true" aria-label="Jungle trail">
@@ -438,6 +439,7 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
         </div>
       ) : (
         <iframe
+          ref={frameRef}
           src={gameUrl}
           title="Jungle Trail"
           data-jungle-game-frame
