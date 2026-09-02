@@ -34,7 +34,10 @@ import { PostAIChat } from './PostAIChat';
 import { buildPostShareImage } from '@/lib/build-post-share-image';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
-import { EditPostModal } from '../modals/EditPostModal';
+// Lazy, mounted on demand — see the note on the same pair in VideoCard.
+const EditPostModal = lazy(() =>
+  import('../modals/EditPostModal').then((m) => ({ default: m.EditPostModal }))
+);
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -123,6 +126,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [editModalMounted, setEditModalMounted] = useState(false);
+  useEffect(() => {
+    if (showEditModal) setEditModalMounted(true);
+  }, [showEditModal]);
   const [showBoostModal, setShowBoostModal] = useState(false);
 
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
@@ -970,20 +977,25 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         }}
       />
 
-      {/* Edit Post Modal */}
-      <EditPostModal
-        open={showEditModal}
-        onOpenChange={setShowEditModal}
-        tokenId={post.id}
-        currentTitle={post.rawName ?? post.title ?? ''}
-        currentDescription={post.rawDescription ?? post.content ?? ''}
-        currentCategories={post.categories ?? []}
-        currentContentRating={post.contentRating}
-        currentShopLinks={post.shopLinks}
-        onSuccess={(edited) => {
-          applyOptimisticEdit(queryClient, post.id, edited);
-        }}
-      />
+      {/* Edit Post Modal — mounted on first open and kept, so the drawer's
+          close animation still runs. */}
+      {editModalMounted && (
+        <Suspense fallback={null}>
+          <EditPostModal
+            open={showEditModal}
+            onOpenChange={setShowEditModal}
+            tokenId={post.id}
+            currentTitle={post.rawName ?? post.title ?? ''}
+            currentDescription={post.rawDescription ?? post.content ?? ''}
+            currentCategories={post.categories ?? []}
+            currentContentRating={post.contentRating}
+            currentShopLinks={post.shopLinks}
+            onSuccess={(edited) => {
+              applyOptimisticEdit(queryClient, post.id, edited);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Boost Modal — mounted only while open, so the chunk is fetched on the
           tap that opens it rather than with the feed. */}

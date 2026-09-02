@@ -41,8 +41,13 @@ import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
-import { EditPostModal } from '../modals/EditPostModal';
-import { BoostModal } from '../modals/BoostModal';
+// Lazy, mounted on demand — see the note on the same pair in VideoCard.
+const EditPostModal = lazy(() =>
+  import('../modals/EditPostModal').then((m) => ({ default: m.EditPostModal }))
+);
+const BoostModal = lazy(() =>
+  import('../modals/BoostModal').then((m) => ({ default: m.BoostModal }))
+);
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
@@ -481,6 +486,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [editModalMounted, setEditModalMounted] = useState(false);
+  useEffect(() => {
+    if (showEditModal) setEditModalMounted(true);
+  }, [showEditModal]);
   const [showBoostModal, setShowBoostModal] = useState(false);
 
   // caption holds the raw API description including any [soundtrack:...] tag
@@ -1249,27 +1258,38 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         }}
       />
 
-      {/* Edit Post Modal */}
-      <BoostModal
-        open={showBoostModal}
-        onOpenChange={setShowBoostModal}
-        tokenId={postTokenId}
-        postTitle={post.title ?? post.caption ?? ''}
-      />
+      {/* Boost Modal — mounted only while open, so the chunk is fetched on the
+          tap that opens it rather than with the feed. */}
+      {showBoostModal && (
+        <Suspense fallback={null}>
+          <BoostModal
+            open={showBoostModal}
+            onOpenChange={setShowBoostModal}
+            tokenId={postTokenId}
+            postTitle={post.title ?? post.caption ?? ''}
+          />
+        </Suspense>
+      )}
 
-      <EditPostModal
-        open={showEditModal}
-        onOpenChange={setShowEditModal}
-        tokenId={post.id}
-        currentTitle={post.title ?? ''}
-        currentDescription={editDescription}
-        currentCategories={post.categories ?? []}
-        currentContentRating={post.contentRating}
-        currentShopLinks={post.shopLinks}
-        onSuccess={(edited) => {
-          applyOptimisticEdit(queryClient, post.id, edited);
-        }}
-      />
+      {/* Edit Post Modal — mounted on first open and kept, so the drawer's
+          close animation still runs. */}
+      {editModalMounted && (
+        <Suspense fallback={null}>
+          <EditPostModal
+            open={showEditModal}
+            onOpenChange={setShowEditModal}
+            tokenId={post.id}
+            currentTitle={post.title ?? ''}
+            currentDescription={editDescription}
+            currentCategories={post.categories ?? []}
+            currentContentRating={post.contentRating}
+            currentShopLinks={post.shopLinks}
+            onSuccess={(edited) => {
+              applyOptimisticEdit(queryClient, post.id, edited);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Tip Modal */}
       <TipModal
