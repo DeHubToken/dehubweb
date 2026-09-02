@@ -1,0 +1,11 @@
+/* War theme chunk (see src/lib/theme-css.ts). Order matters: war-frame.css owns
+   the design tokens and the reusable HUD primitives; war-theme.css consumes
+   them; war-coverage.css closes the portal gap; war-comments.css ties
+   war-theme.css section 6 on specificity and wins on source order; war-logo.css
+   is last so the phosphor mark overrides the shared canvas-theme filter. */
+@import "./war-frame.css";
+@import "./war-theme.css";
+@import "./war-nav.css";
+@import "./war-coverage.css";
+@import "./war-comments.css";
+@import "./war-logo.css";
