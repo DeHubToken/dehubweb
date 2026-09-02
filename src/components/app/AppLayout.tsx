@@ -217,8 +217,13 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // Scroll to top when navigating between cached pages (not the home feed,
   // which keeps its position). `window.scrollTo` alone is a no-op in this app —
   // body is the scrolling element — hence the shared helper.
+  //
+  // Layout effect, not an effect: an effect runs after paint, so the incoming
+  // page rendered one frame at the outgoing page's scroll offset and only then
+  // snapped to the top. That single frame is the lurch people read as the app
+  // stuttering on every navigation.
   const prevCachedPathRef = useRef(location.pathname);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const prev = prevCachedPathRef.current;
     const curr = location.pathname;
     prevCachedPathRef.current = curr;
@@ -266,13 +271,20 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   return (
     <div id="app-root" className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
       <div
-        className="flex w-full relative min-h-screen mx-auto transition-[max-width] duration-500 ease-in-out motion-reduce:transition-none"
+        className="flex w-full relative min-h-screen mx-auto"
         style={{
           // Full-bleed width only where the mosaic uses it (home feed).
           // Other pages keep the readable 80rem cap even when collapsed,
           // so long-form content doesn't stretch across ultrawide screens.
+          //
+          // Deliberately not transitioned. This carried
+          // `transition-[max-width] duration-500`, and max-width is a layout
+          // property: with the sidebar collapsed, every trip on or off the home
+          // feed relaid out the whole visible page on every frame for half a
+          // second — during the navigation that most needs to feel immediate.
+          // `will-change` could not help either, since the property is not
+          // compositable. The width now changes on the same frame as the route.
           maxWidth: isCollapsed && (isHomeFeedRoute(location.pathname) || showHomePagePersisted) ? '100%' : '80rem',
-          willChange: 'max-width',
         }}
       >
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />

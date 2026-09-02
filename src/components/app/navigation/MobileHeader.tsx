@@ -96,15 +96,24 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   // IntersectionObserver sentinel misses body-scroll here.
   const [scrolled, setScrolled] = useState(false);
   const scrolledRef = useRef(false);
+
+  // The post layer scrolls itself rather than the document, so its offset has
+  // to be read too or the header stays clear over a scrolled post. Resolved
+  // here, once per route, instead of inside the scroll handler: the layer
+  // mounts and unmounts with the route, and the old code ran a document-wide
+  // querySelector on every scroll event — six times over, once per listener.
+  const scrollSourceRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    scrollSourceRef.current = document.querySelector<HTMLElement>(`[${SCROLL_NAV_SOURCE_ATTR}]`);
+  }, [location.pathname]);
+
   useEffect(() => {
     const getY = () =>
       window.scrollY || document.documentElement.scrollTop || document.body.scrollTop ||
       document.getElementById('app-root')?.scrollTop || 0;
-    // The post layer scrolls itself rather than the document, so read it too —
-    // otherwise the header stays clear over a scrolled post.
     const getSourceY = () => {
-      const source = document.querySelector<HTMLElement>(`[${SCROLL_NAV_SOURCE_ATTR}]`);
-      return Math.max(getY(), source?.scrollTop ?? 0);
+      const source = scrollSourceRef.current;
+      return Math.max(getY(), source?.isConnected ? source.scrollTop : 0);
     };
     const onScroll = () => {
       const next = getSourceY() > 8;
@@ -114,16 +123,14 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       }
     };
     onScroll();
-    const targets: EventTarget[] = [window, document, document.documentElement, document.body];
-    const appRoot = document.getElementById('app-root');
-    if (appRoot) targets.push(appRoot);
-    targets.forEach((t) => t.addEventListener('scroll', onScroll, { passive: true }));
-    // Capture phase: the post layer mounts and unmounts with the route, and
-    // scroll events reach a document capture listener even though they do not
-    // bubble.
+    // Two listeners, not six. Scroll events do not bubble, but they do reach a
+    // capture listener on document whatever the target is — <html>, <body>,
+    // #app-root or the post layer — so the capture listener alone covers every
+    // element scroller, and `window` covers the viewport case.
+    window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('scroll', onScroll, { passive: true, capture: true });
     return () => {
-      targets.forEach((t) => t.removeEventListener('scroll', onScroll));
+      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('scroll', onScroll, { capture: true });
     };
   }, []);

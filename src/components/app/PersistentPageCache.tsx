@@ -18,7 +18,6 @@ import { preloadPriorityPages } from '@/lib/preload-priority-pages';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import HomePage from '@/pages/app/HomePage';
-import { scrollDocumentTo } from '@/lib/document-scroll';
 import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import {
   FeedSkeleton,
@@ -236,9 +235,6 @@ const CachedPage = memo(function CachedPage({
   return !visible || prev.resetToken === next.resetToken;
 });
 
-// Pages that should always scroll to top when navigated to
-const SCROLL_TO_TOP_PAGES = new Set(['settings', 'leaderboard', 'bookmarks', 'command-centre', 'wallet']);
-
 export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisible?: boolean }) {
   const location = useLocation();
   const pathname = location.pathname;
@@ -285,13 +281,6 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
       setMountedPages(prev => new Set(prev).add('home'));
     }
   }, [keepHomeVisible, mountedPages]);
-
-  // Scroll to top for specific pages when they become active
-  useEffect(() => {
-    if (activeCachedPage && SCROLL_TO_TOP_PAGES.has(activeCachedPage.key)) {
-      scrollDocumentTo(0);
-    }
-  }, [activeCachedPage?.key]);
 
   // Is current route a cached page or a dynamic route (post, video, profile)?
   const isCachedRoute = !!activeCachedPage;
