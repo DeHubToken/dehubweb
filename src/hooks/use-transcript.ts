@@ -132,9 +132,14 @@ export function useTranscript(
   }, [active, kind, ref, inFlight, status, qc]);
 
   const start = useMutation({
-    mutationFn: async (opts: { force?: boolean } = {}) => {
+    // No `force`. It is an internal lever that skips the attempt ceiling and
+    // the backoff, and the server now ignores it from anything but the service
+    // key — those limits are the answer to "has this had enough tries", and
+    // the retry button is asking that question, not overriding it. `canRetry`
+    // below already only offers the button when another try is allowed.
+    mutationFn: async () => {
       const { data, error } = await supabase.functions.invoke('transcribe', {
-        body: { kind, ref, action: 'start', force: opts?.force === true },
+        body: { kind, ref, action: 'start' },
       });
       if (error) throw error;
       return data;

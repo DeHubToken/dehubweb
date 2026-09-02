@@ -345,7 +345,25 @@ Deno.serve(async (req) => {
     if (!target) return json({ error: 'a valid { kind, ref } is required' }, 400);
 
     const action = String(body?.action ?? (body?.stageId ? 'start' : 'status'));
-    const force = body?.force === true;
+
+    /**
+     * `force` is an internal lever, not a request parameter.
+     *
+     * It skips every guard below it: the ready check, the processing check,
+     * the attempt ceiling and the backoff. Those are the only things standing
+     * between this endpoint and an unbounded transcription bill, and the
+     * function answers a publishable key that ships in the browser bundle — so
+     * `force: true` in a loop against one long video spends real credits until
+     * somebody notices the invoice.
+     *
+     * Nothing legitimate loses anything. Every internal caller already
+     * presents the service key, and the only one that forces is the admin
+     * panel's retry. A visitor's "Try again" is an ordinary start, which is
+     * what it was always meant to be: the attempt ceiling and the backoff are
+     * the answer to "has this had enough tries", not an obstacle to route past.
+     */
+    const bearer = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '').trim();
+    const force = body?.force === true && bearer === SERVICE_KEY;
     const timeline: TimelineWindow[] = Array.isArray(body?.timeline) ? body.timeline : [];
 
     const db = admin();
