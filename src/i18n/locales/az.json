@@ -43,6 +43,7 @@
     "connectAi": "Süni intellekti qoş"
   },
   "feed": {
+    "viewProfile": "{{name}} adlı şəxsin profilinə baxın",
     "home": "Ana səhifə",
     "videos": "Videolar",
     "images": "Şəkillər",

@@ -43,6 +43,7 @@
     "connectAi": "ភ្ជាប់ AI"
   },
   "feed": {
+    "viewProfile": "មើលប្រវត្តិរូបរបស់ {{name}}",
     "home": "ទំព័រដើម",
     "videos": "វីដេអូ",
     "images": "រូបភាព",

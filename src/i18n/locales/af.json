@@ -43,6 +43,7 @@
     "connectAi": "Koppel KI"
   },
   "feed": {
+    "viewProfile": "Bekyk {{name}} se profiel",
     "home": "Tuis",
     "videos": "Video's",
     "images": "Prente",

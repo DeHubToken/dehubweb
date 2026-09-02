@@ -43,6 +43,7 @@
     "connectAi": "AI جوڑو"
   },
   "feed": {
+    "viewProfile": "{{name}} के प्रोफाइल को देखें",
     "home": "گھر",
     "videos": "ویڈیو",
     "images": "تصویر",

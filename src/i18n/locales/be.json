@@ -43,6 +43,7 @@
     "connectAi": "Падлучыць ШІ"
   },
   "feed": {
+    "viewProfile": "Праглядзець профіль {{name}}",
     "home": "Галоўная",
     "videos": "Відэа",
     "images": "Выявы",

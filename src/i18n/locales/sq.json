@@ -43,6 +43,7 @@
     "connectAi": "Lidh IA-në"
   },
   "feed": {
+    "viewProfile": "Shfaq profilin e {{name}}",
     "home": "Kryefaqja",
     "videos": "Video",
     "images": "Imazhe",

@@ -43,6 +43,7 @@
     "connectAi": "KI verbinden"
   },
   "feed": {
+    "viewProfile": "Profil von {{name}} anzeigen",
     "home": "Startseite",
     "videos": "Videos",
     "images": "Bilder",

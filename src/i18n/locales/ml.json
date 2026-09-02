@@ -43,6 +43,7 @@
     "connectAi": "AI ബന്ധിപ്പിക്കുക"
   },
   "feed": {
+    "viewProfile": "{{name}} ന്റെ പ്രൊഫൈൽ കാണുക",
     "home": "ഹോം",
     "videos": "വീഡിയോകൾ",
     "images": "ചിത്രങ്ങൾ",

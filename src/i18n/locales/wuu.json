@@ -43,6 +43,7 @@
     "connectAi": "连接 AI"
   },
   "feed": {
+    "viewProfile": "看 {{name}} 的资料",
     "home": "主页",
     "videos": "视频",
     "images": "图片",

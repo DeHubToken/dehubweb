@@ -43,6 +43,7 @@
     "connectAi": "AI walqunnamsiisi"
   },
   "feed": {
+    "viewProfile": "{{name}}'s profile ilaali",
     "home": "Mana",
     "videos": "Viidiyoowwan",
     "images": "Suuraalee",

@@ -43,6 +43,7 @@
     "connectAi": "Conectează AI"
   },
   "feed": {
+    "viewProfile": "Afișează profilul lui {{name}}",
     "home": "Acasă",
     "videos": "Videoclipuri",
     "images": "Imagini",

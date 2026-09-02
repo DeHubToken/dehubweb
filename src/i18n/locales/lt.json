@@ -43,6 +43,7 @@
     "connectAi": "Prijungti DI"
   },
   "feed": {
+    "viewProfile": "Peržiūrėti profilį, kurį sukūrė {{name}}",
     "home": "Pradžia",
     "videos": "Vaizdo įrašai",
     "images": "Nuotraukos",

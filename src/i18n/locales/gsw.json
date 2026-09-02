@@ -43,6 +43,7 @@
     "connectAi": "KI verbinde"
   },
   "feed": {
+    "viewProfile": "Lueg {{name}}'s Profil aa",
     "home": "Hei",
     "videos": "Videos",
     "images": "Bilder",

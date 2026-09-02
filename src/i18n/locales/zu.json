@@ -43,6 +43,7 @@
     "connectAi": "Xhuma i-AI"
   },
   "feed": {
+    "viewProfile": "Buka iphrofayili ka- {{name}}",
     "home": "Ekhaya",
     "videos": "Vidiyo",
     "images": "Zithombe",

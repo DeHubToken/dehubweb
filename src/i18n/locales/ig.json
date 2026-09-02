@@ -43,6 +43,7 @@
     "connectAi": "Jikọọ AI"
   },
   "feed": {
+    "viewProfile": "Gosi profaịlụ {{name}}",
     "home": "Ụlọ",
     "videos": "Vidio",
     "images": "Onyonyo",

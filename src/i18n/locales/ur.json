@@ -43,6 +43,7 @@
     "connectAi": "AI جوڑیں"
   },
   "feed": {
+    "viewProfile": "{{name}} کی پروفائل دیکھیں",
     "home": "ہوم",
     "videos": "ویڈیوز",
     "images": "تصاویر",

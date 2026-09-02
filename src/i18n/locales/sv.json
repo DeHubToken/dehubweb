@@ -43,6 +43,7 @@
     "connectAi": "Anslut AI"
   },
   "feed": {
+    "viewProfile": "Visa profilen för {{name}}",
     "home": "Hem",
     "videos": "Videor",
     "images": "Bilder",
