@@ -7,7 +7,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getCategories, type DeHubCategory, type ShopLink } from '@/lib/api/dehub';
-import { ShopSheet, type ShopBoardDraft } from './ShopSheet';
+import { ShopSheetLazy, type ShopBoardDraft } from './ShopSheetLazy';
 import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { toast } from 'sonner';
 import { useUserCommunities } from '@/hooks/use-communities';
@@ -809,7 +809,7 @@ export function PostAccessToggles({
 
       {/* PPV Drawer */}
       {setShopLinks && (
-        <ShopSheet
+        <ShopSheetLazy
           open={shopDrawerOpen}
           onOpenChange={setShopDrawerOpen}
           value={{ links: shopLinks ?? [], listingIds: shopListingIds ?? [] }}
