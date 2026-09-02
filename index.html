@@ -84,20 +84,28 @@
           // Desktop only — the blur read as an unexplained delay on mobile
           // first load with no payoff. 767px matches the mobile breakpoint
           // used elsewhere in index.css.
+          // "Would HomeIntro render?" — shared by the prerendered panel below and
+          // the frost. Signed in means an sb-* Supabase session OR a live wallet
+          // token (see the note above on why dehub_token alone is not enough).
+          var introDismissed = localStorage.getItem('dehub.homeIntroDismissed') === '1';
+          var introSignedIn = false;
+          for (var fi = 0; fi < localStorage.length; fi++) {
+            var fk = localStorage.key(fi);
+            if (fk && /^sb-.*-auth-token/.test(fk) && localStorage.getItem(fk)) { introSignedIn = true; break; }
+          }
+          if (!introSignedIn) {
+            var ftk = localStorage.getItem('dehub_token');
+            var fex = parseInt(localStorage.getItem('dehub_token_expires_at') || '0', 10);
+            introSignedIn = !!ftk && (!fex || Date.now() < fex);
+          }
+          // The welcome panel is prerendered into the boot skeleton at build
+          // (prerenderHomeIntroPlugin, vite.config.ts) so its plate — the page's
+          // LCP element — paints with the first frame instead of after the
+          // bundle. Hide it exactly when HomeIntro itself would return null.
+          if (location.pathname !== '/' || introDismissed || introSignedIn) d.dataset.homeIntro = 'off';
+
           if (location.pathname === '/' && window.innerWidth > 767) {
-            var skip = localStorage.getItem('dehub.introFrostSeen') === '1'
-                    || localStorage.getItem('dehub.homeIntroDismissed') === '1';
-            if (!skip) {
-              for (var fi = 0; fi < localStorage.length; fi++) {
-                var fk = localStorage.key(fi);
-                if (fk && /^sb-.*-auth-token/.test(fk) && localStorage.getItem(fk)) { skip = true; break; }
-              }
-            }
-            if (!skip) {
-              var ftk = localStorage.getItem('dehub_token');
-              var fex = parseInt(localStorage.getItem('dehub_token_expires_at') || '0', 10);
-              skip = !!ftk && (!fex || Date.now() < fex);
-            }
+            var skip = localStorage.getItem('dehub.introFrostSeen') === '1' || introDismissed || introSignedIn;
 
             if (!skip) {
               d.dataset.feedLoading = 'on';
@@ -459,6 +467,10 @@
                     background: var(--bskel, rgba(255,255,255,.06));
                     border: 1px solid var(--bskel-b, rgba(255,255,255,.08)); }
       .bskel-post { height: 180px; margin: 0 8px 12px; border-radius: 16px; background: var(--bskel, rgba(255,255,255,.06)); }
+      /* The welcome panel prerendered into the card slot at build (vite.config.ts
+         prerenderHomeIntroPlugin). The boot script sets data-home-intro="off"
+         when HomeIntro would not render: off "/", signed in, or dismissed. */
+      html[data-home-intro="off"] [data-prerendered-intro] { display: none; }
       @media (min-width: 640px) {
         .bskel-tabs { margin: 4px 12px 12px; }
         .bskel-card, .bskel-post { margin: 0 12px 12px; }
@@ -501,7 +513,7 @@
       </div>
       <div class="bskel-main">
         <div class="bskel-tabs"></div>
-        <div class="bskel-card"></div>
+        <div class="bskel-card" data-home-intro-slot></div>
         <div class="bskel-post"></div>
         <div class="bskel-post"></div>
       </div>

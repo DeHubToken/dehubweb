@@ -241,6 +241,51 @@ function preloadWalletChunkPlugin() {
   };
 }
 
+/**
+ * Prerender the signed-out welcome panel into index.html.
+ *
+ * The panel is the home page's LCP element and used to be painted only once the
+ * entry chunk had downloaded and run. scripts/build-home-intro-html.mjs renders
+ * the real component (home-intro/HomeIntroPanel.tsx) to static HTML; it goes
+ * into the boot skeleton's slot so the plate is on screen from the first HTML
+ * paint, and React's first render replaces it with identical DOM. The inline
+ * boot script hides it (data-home-intro="off") under the same conditions
+ * HomeIntro itself would not render: off the root route, signed in, dismissed.
+ *
+ * Fails soft: any error keeps the grey skeleton card and warns, so a broken
+ * prerender degrades the first paint rather than the build. If the panel is
+ * missing from a deploy, look for this warning in the build log.
+ */
+function prerenderHomeIntroPlugin() {
+  const slot = '<div class="bskel-card" data-home-intro-slot></div>';
+  return {
+    name: 'prerender-home-intro',
+    apply: 'build' as const,
+    transformIndexHtml: {
+      order: 'pre' as const,
+      handler(html: string) {
+        if (!html.includes(slot)) {
+          console.warn('[prerender-home-intro] slot not found in index.html — panel not prerendered');
+          return html;
+        }
+        try {
+          const markup = execFileSync(process.execPath, ['scripts/build-home-intro-html.mjs'], {
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'inherit'],
+            maxBuffer: 8 * 1024 * 1024,
+          });
+          if (!markup.includes('dehub-intro')) throw new Error('no panel markup in output');
+          console.log(`[prerender-home-intro] injected ${(markup.length / 1024).toFixed(1)} KB of welcome-panel HTML`);
+          return html.replace(slot, `<div data-prerendered-intro>${markup}</div>`);
+        } catch (e) {
+          console.warn('[prerender-home-intro] failed — keeping the skeleton card', e);
+          return html;
+        }
+      },
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -265,6 +310,7 @@ export default defineConfig(({ mode }) => ({
     blogManifestPlugin(),
     buildVersionPlugin(),
     preloadWalletChunkPlugin(),
+    prerenderHomeIntroPlugin(),
     warGameCorsPlugin(),
     mcpPlugin(),
     mode === "development" && componentTagger(),
