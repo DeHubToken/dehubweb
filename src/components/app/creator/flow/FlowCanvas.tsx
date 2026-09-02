@@ -123,7 +123,7 @@ const TARGET_RULES: Record<string, Record<string, { kind: 'prompt' | 'image' | '
 interface CanvasProps {
   onOpenLogin: () => void;
   signedIn: boolean;
-  onSyncNow: () => void;
+  onSyncNow: () => void | Promise<void>;
 }
 
 function FlowCanvasInner({ onOpenLogin, signedIn, onSyncNow }: CanvasProps) {

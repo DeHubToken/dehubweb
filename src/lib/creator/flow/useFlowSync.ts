@@ -97,9 +97,9 @@ export function useFlowSync(wallet: string | null) {
     }
   }, [wallet, loadedFor]);
 
-  const syncNow = useCallback(() => {
+  const syncNow = useCallback((): Promise<void> => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    void save();
+    return save();
   }, [save]);
 
   // Debounced write after any change to the flows.

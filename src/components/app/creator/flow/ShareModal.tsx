@@ -19,7 +19,7 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   /** Whether the flow can be published right now (signed in and synced). */
   canPublish: boolean;
-  onSyncNow: () => void;
+  onSyncNow: () => void | Promise<void>;
 }
 
 export default function ShareModal({ flowId, open, onOpenChange, canPublish, onSyncNow }: Props) {
@@ -40,8 +40,7 @@ export default function ShareModal({ flowId, open, onOpenChange, canPublish, onS
     try {
       // The row must exist before it can be flipped public; a flow that has
       // only ever lived in localStorage is written first.
-      onSyncNow();
-      await new Promise((r) => setTimeout(r, 400));
+      await onSyncNow();
       const res = await publishFlow(flowId, !isPublic);
       setFlowPublic(flowId, res.isPublic);
     } catch (e) {
