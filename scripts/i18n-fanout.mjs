@@ -54,6 +54,12 @@ const value = (name) => {
 
 const CHECK_ONLY = flag('check');
 const KEY_BUDGET = Number(value('keys') || Infinity);
+/**
+ * `--prefix creatorFlow.` restricts the run to keys under one namespace, so a
+ * feature branch can fill its own strings in every locale without touching
+ * the wider backlog (and without a 2,000-key run per locale to get there).
+ */
+const KEY_PREFIX = value('prefix') || '';
 
 /** The publishable key the browser bundle already ships — not a secret. */
 function anonKey() {
@@ -235,6 +241,7 @@ function missingFor(locale) {
   const missing = [];
   for (const [k, v] of enFlat) {
     if (typeof v !== 'string') continue;
+    if (KEY_PREFIX && !k.startsWith(KEY_PREFIX)) continue;
     const have = flat.get(k);
     if (typeof have !== 'string' || have.trim() === '') missing.push(k);
   }

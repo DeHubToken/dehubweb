@@ -1,0 +1,47 @@
+Creator Flow — the node-based generation canvas at /creator/flow
+(src/pages/app/CreatorFlowPage.tsx, src/pages/app/CreatorFlowPublicPage.tsx,
+src/components/app/creator/flow/*, src/lib/creator/flow/*,
+src/store/creatorFlowStore.ts, src/store/creatorFolderStore.ts, and the
+creator-flows and creator-prompt-assistant edge functions) — is adapted from
+HeliosGen (https://github.com/segfault42/heliosgen), an open-source visual
+pipeline builder for AI image and video generation released under the MIT
+license.
+
+The graph model (spaces of nodes and edges with per-type counters), the
+execution helpers (topological order, parallel waves, upstream input
+resolution, @mention ordering of reference images), the store shape with
+undo/redo and inherited node defaults, the debounced database sync with
+immediate flush on discrete edits, the folder store, the public read-only
+viewer, the alignment snapping, copy/paste and edge-drop node picker on the
+canvas, and the prompt-crafting assistant persona are derived from that
+project. The implementation has been re-written for this Vite + React +
+Supabase stack: DeHub's own model catalogue, wallet-native auth and per-job
+DHB payment replace HeliosGen's Next.js API routes and kie.ai credits, frame
+capture runs in the browser instead of ffmpeg, and the styling follows DeHub's
+monochrome design system.
+
+The original HeliosGen MIT License notice is reproduced below.
+
+----------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2026 segfault42
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

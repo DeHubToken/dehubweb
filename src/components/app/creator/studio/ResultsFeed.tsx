@@ -27,6 +27,8 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
+import { useCreatorFolderStore } from '@/store/creatorFolderStore';
+import { FolderBar, FolderPicker } from './LibraryFolders';
 import { sendJobToEditor } from '@/lib/creator/sendToEditor';
 import { useCloseOnSurfaceSwitch } from '@/hooks/use-surface-switch';
 
@@ -95,14 +97,19 @@ interface ResultsFeedProps {
 
 export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: ResultsFeedProps) {
   const { t } = useTranslation();
-  const jobs = useGenerationStore((s) => s.jobs);
+  const allJobs = useGenerationStore((s) => s.jobs);
+  const selectedFolderId = useCreatorFolderStore((s) => s.selectedFolderId);
+  const itemFolderMap = useCreatorFolderStore((s) => s.itemFolderMap);
+  // A folder filters what the grid shows; the running/finished counts stay
+  // library-wide so "clear" and the live region keep describing the whole.
+  const jobs = selectedFolderId ? allJobs.filter((j) => itemFolderMap[j.id]?.includes(selectedFolderId)) : allJobs;
   const focusedId = useGenerationStore((s) => s.focusedId);
   const focus = useGenerationStore((s) => s.focus);
   const clearFinished = useGenerationStore((s) => s.clearFinished);
 
-  const focused = jobs.find((j) => j.id === focusedId) ?? null;
-  const finishedCount = jobs.filter((j) => j.status !== 'running').length;
-  const runningCount = jobs.length - finishedCount;
+  const focused = allJobs.find((j) => j.id === focusedId) ?? null;
+  const finishedCount = allJobs.filter((j) => j.status !== 'running').length;
+  const runningCount = allJobs.length - finishedCount;
 
   /**
    * Stable identity matters here. The viewer's focus-and-scroll-lock effect is
@@ -140,6 +147,8 @@ export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: Resu
         )}
       </div>
 
+      <FolderBar />
+
       {/* Jobs settle in the store with no toast, so without this a screen
           reader never learns a render finished. */}
       <p aria-live="polite" className="sr-only">
@@ -150,7 +159,15 @@ export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: Resu
             : ''}
       </p>
 
-      {jobs.length === 0 ? (
+      {jobs.length === 0 && selectedFolderId && allJobs.length > 0 ? (
+        <div className="rounded-2xl border border-dashed border-white/12 px-6 py-10 text-center">
+          <Clapperboard className="mx-auto h-6 w-6 text-white/25" />
+          <p className="mt-3 text-sm font-medium text-white/70">{t('creatorFlow.foldersNoItems')}</p>
+          <p className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed text-white/40">
+            {t('creatorFlow.foldersNoItemsHint')}
+          </p>
+        </div>
+      ) : jobs.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-white/12 px-6 py-10 text-center">
           <Clapperboard className="mx-auto h-6 w-6 text-white/25" />
           <p className="mt-3 text-sm font-medium text-white/70">{t('creator.nothingGeneratedYet')}</p>
@@ -648,6 +665,8 @@ function ResultViewer({
                     </button>
                   </>
                 )}
+
+                <FolderPicker itemId={job.id} />
 
                 <button
                   type="button"
