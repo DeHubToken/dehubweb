@@ -2394,7 +2394,16 @@ function shouldServeSSR(pathname) {
   // shipped and had never run once: `cinema` is a reserved ROUTE_SEGMENT, so
   // the profile fall-through rejected the path and the SPA shell went out
   // before the branch was reached.
-  if (/^\/cinema\/(?:film|series)\/\d+\/?$/.test(pathname)) return true;
+  //
+  // The id is not always digits. It is whatever the JustWatch partner API
+  // hands back for a title, which for a good part of the catalogue is a node
+  // id like `tm12345` — so a `\d+` gate dropped those links to the SPA shell
+  // and the share button produced a blank unfurl for them. `movie` and `show`
+  // are the object-type names the client passes around internally; they reach
+  // this route from older links, and the renderer canonicalizes them onto
+  // /cinema like every other title path, so there is no reason to card one
+  // spelling and not the other.
+  if (/^\/cinema\/(?:film|series|movie|show)\/[A-Za-z0-9_-]{1,64}\/?$/.test(pathname)) return true;
   // Sub-paths that fall back to their section's card below.
   if (/^\/(?:app\/)?launchpad\/[^/]+\/?$/.test(pathname)) return true;
   if (/^\/(?:app\/)?arcade\/kings-gambit\/online\/?$/.test(pathname)) return true;
@@ -3445,7 +3454,10 @@ async function handleRequest(request, env) {
   // behind the JustWatch partner API, which needs a token the worker does not
   // have. Revisit when that is provisioned — the shape to copy is the stores
   // branch below, which reads PostgREST directly.
-  if (/^cinema\/(film|series)\/\d+$/.test(sectionKey) && Object.hasOwn(MARKETING_PAGES, 'cinema')) {
+  if (
+    /^cinema\/(?:film|series|movie|show)\/[A-Za-z0-9_-]{1,64}$/.test(sectionKey) &&
+    Object.hasOwn(MARKETING_PAGES, 'cinema')
+  ) {
     return guard(new Response(buildMarketingHtml('cinema', MARKETING_PAGES['cinema']), {
       status: 200,
       headers: blogHeaders,

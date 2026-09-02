@@ -48,7 +48,17 @@ export default function CinemaPage() {
   // address of its own cannot be shared, linked, carded or indexed, and every
   // one of those is the point of the share button below.
   const { filmType, filmId } = useParams<{ filmType?: string; filmId?: string }>();
-  const openObjectType: ObjectType = filmType === 'series' ? 'show' : 'movie';
+  // `series` and `show` are one thing under two names: the first is the URL
+  // spelling, the second is what the API calls it. Matching only the first
+  // meant /cinema/show/<id> quietly looked the title up as a movie and found
+  // nothing.
+  const openObjectType: ObjectType =
+    filmType === 'series' || filmType === 'show' ? 'show' : 'movie';
+  // One address per title. The route still answers to the other spellings so
+  // existing links keep working, but everything that names the page — the
+  // canonical, the share link, the structured data — uses this one, or the
+  // same title gets indexed twice under two URLs.
+  const canonicalFilmType = openObjectType === 'show' ? 'series' : 'film';
 
   const [query, setQuery] = useState('');
   const [searchType, setSearchType] = useState<ObjectType>('movie');
@@ -78,7 +88,9 @@ export default function CinemaPage() {
         description:
           openTitle.shortDescription ??
           `Where to stream, rent or buy ${openTitle.title} in ${current.country} and 140+ other countries.`,
-        url: `https://dehub.io/cinema/${filmType}/${filmId}`,
+        // Pinned to the production origin on purpose: shareOrigin() reads the
+        // current one, which on staging would point every canonical there.
+        url: `https://dehub.io/cinema/${canonicalFilmType}/${encodeURIComponent(filmId ?? '')}`,
       }
     : {
         title: 'Cinema | Where to Stream, Rent or Buy Any Film | DeHub',
