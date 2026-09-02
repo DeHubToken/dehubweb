@@ -182,7 +182,10 @@ function hasTranslatableWords(source) {
 
 function isUntranslatedProse(source, candidate, locale) {
   const script = SCRIPT_OF[locale];
-  if (script) return hasTranslatableWords(source) && !script.test(candidate);
+  // A script check needs no word threshold: two Latin words in a Cyrillic
+  // locale are as untranslated as ten. Only the word rule below needs the
+  // cushion, because there "unchanged" is weak evidence on its own.
+  if (script) return /[a-zA-Z]{3}/.test(source) && !script.test(candidate);
   if (candidate !== source) return false;
   return hasTranslatableWords(source) && ENGLISH_FUNCTION_WORDS.test(source);
 }
