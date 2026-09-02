@@ -53,6 +53,10 @@ export function prefetchLoginModal(): void {
 export function warmLoginSheet(): void {
   warmDeferredSheets();
   prefetchLoginModal();
+  // The wallet connectors (RainbowKit, MetaMask SDK, WalletConnect) left the
+  // boot path — see lib/wagmi-wallets. On intent, not on idle: pulling them
+  // for every visitor at idle would put ~500 KB back on every visit.
+  void import('@/lib/wagmi-wallets').catch(() => {});
 }
 
 interface LoginModalProps {
