@@ -48,7 +48,7 @@ const GOOGLE_CODE: Record<string, string> = {
   sk: 'sk', so: 'so', sq: 'sq', sr: 'sr', tg: 'tg', ti: 'ti', tk: 'tk',
   ug: 'ug', uz: 'uz', yo: 'yo', zu: 'zu', af: 'af', az: 'az', be: 'be',
   bg: 'bg', ca: 'ca', et: 'et', hr: 'hr', hy: 'hy', he: 'iw', tl: 'fil',
-  dyu: 'dyu', yue: 'yue',
+  dyu: 'dyu', yue: 'yue', th: 'th',
 
   // Arabic dialects → Modern Standard Arabic. Google has one Arabic, not seven.
   acm: 'ar', acw: 'ar', aec: 'ar', ajp: 'ar', ayn: 'ar', apd: 'ar',
