@@ -28,6 +28,7 @@ import {
   type Target,
   TargetError,
 } from '../_shared/transcripts.ts';
+import { nextVisibility } from '../_shared/transcript-visibility.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -397,13 +398,17 @@ Deno.serve(async (req) => {
       if (error) throw new Error(`could not write the transcript row: ${error.message}`);
     };
 
+    // Never looser than what the row already carries — see the module for why
+    // a flat write republished transcripts an admin had locked.
+    const visibilityForWrite = nextVisibility((existing as any)?.visibility, media.visibility);
+
     // "Not yet" is not "no". A post asked for seconds after upload is still
     // transcoding; the sweeper will come back for it, and the attempt counter
     // is deliberately not touched so waiting never burns a retry.
     if (media.notReady || !media.url) {
       await claim({
         status: 'pending',
-        visibility: media.visibility,
+        visibility: visibilityForWrite,
         duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
         // Stamped but attempts untouched: waiting is not a failed try, and the
         // backoff needs something to measure from or it re-queues every pass.
@@ -417,7 +422,7 @@ Deno.serve(async (req) => {
     if (!reach.ok) {
       await claim({
         status: 'pending',
-        visibility: media.visibility,
+        visibility: visibilityForWrite,
         duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
         last_attempt_at: new Date().toISOString(),
         error: `media not reachable yet (${reach.status})`,
@@ -428,7 +433,7 @@ Deno.serve(async (req) => {
     const attempts = (existing as any)?.attempts ?? 0;
     await claim({
       status: 'processing',
-      visibility: media.visibility,
+      visibility: visibilityForWrite,
       // The API reports fractional seconds and the column is an integer.
       duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
       attempts: attempts + 1,
