@@ -1,4 +1,5 @@
-import { useEffect, type RefObject } from 'react';
+import { useContext, useEffect, type RefObject } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 /** Themes whose sticky feed nav is a glass surface (pill or bento). */
 const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'system'];
@@ -37,7 +38,17 @@ export function useFeedSwallowClip(
   deps: unknown[] = [],
   opts: { allThemes?: boolean } = {},
 ) {
+  // False while this page sits in PersistentPageCache but is not the route on
+  // screen. Those pages are never unmounted, so without this gate every page
+  // the visitor has opened keeps a capture-phase scroll listener and its own
+  // rAF loop alive for the rest of the session, each running a document-wide
+  // querySelectorAll and two forced layouts per frame to clip a container
+  // nobody can see. Measured on staging: 26 such listeners, none ever removed,
+  // and 4-10ms of wasted work per scroll frame after a fifteen-page session.
+  const isActivePage = useContext(CachedPageActiveContext);
+
   useEffect(() => {
+    if (!isActivePage) return;
     const el = containerRef.current;
     if (!el) return;
     const pageScope = el.closest<HTMLElement>('[data-cached-page]');
@@ -138,5 +149,5 @@ export function useFeedSwallowClip(
       el.style.clipPath = '';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef, cutSelector, opts.allThemes, ...deps]);
+  }, [containerRef, cutSelector, opts.allThemes, isActivePage, ...deps]);
 }

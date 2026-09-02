@@ -87,7 +87,12 @@ export function MobileBottomNav() {
   const [isHomeRefreshing, setIsHomeRefreshing] = useState(false);
   const homeRefreshTimerRef = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  // The centre button's glass fades out as the strip is scrolled. Written
+  // straight to the node rather than held in state: this used to setState on
+  // every scroll event of the pill, re-rendering the whole bar — thirty
+  // NavLinks and their icons — on every frame of the drag, to animate one
+  // opacity.
+  const createGlassRef = useRef<HTMLDivElement>(null);
 
   // First-visit scroll hint: nudge right then back to show more options
   useEffect(() => {
@@ -144,24 +149,31 @@ export function MobileBottomNav() {
     setIsPostModalOpen(true);
   };
 
-  // Track scroll progress
+  // Fades quickly on scroll — gone by roughly 10% of the strip's travel.
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
 
-    const handleScroll = () => {
+    let frame = 0;
+    const apply = () => {
+      frame = 0;
       const maxScroll = container.scrollWidth - container.clientWidth;
       const progress = maxScroll > 0 ? Math.min(container.scrollLeft / maxScroll, 1) : 0;
-      setScrollProgress(progress);
+      const glass = createGlassRef.current;
+      if (glass) glass.style.opacity = String(Math.max(0, 1 - progress * 10));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(apply);
     };
 
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
+    apply();
+    container.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      container.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
-  // Calculate opacity: fades quickly on scroll (reaches 0 at ~10% scroll)
-  const buttonOpacity = Math.max(0, 1 - scrollProgress * 10);
-  
 
   return (
     <>
@@ -171,7 +183,7 @@ export function MobileBottomNav() {
         style={{ transform: navVisible && !keyboardOpen && !chatOpen ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
       >
         <nav
-          className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000"
+          className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl"
         >
           {/* Nav items container */}
           <div 
@@ -194,7 +206,7 @@ export function MobileBottomNav() {
                     onTouchStart={() => preloadRoute(item.path)}
                     onPointerEnter={() => preloadRoute(item.path)}
                     className={cn(
-                      'relative flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
+                      'relative flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white',
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
@@ -208,7 +220,7 @@ export function MobileBottomNav() {
                       ) : (
                         <item.icon
                           className={cn(
-                            'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                            'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                             isActive
                               ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
                               : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
@@ -233,12 +245,12 @@ export function MobileBottomNav() {
               aria-label="Create post"
               className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white"
             >
-                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 active:scale-95">
+                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
                   <div
+                    ref={createGlassRef}
                     aria-hidden="true"
                     className="absolute inset-0 rounded-xl border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.3)] transition-opacity duration-300"
                     style={{
-                      opacity: buttonOpacity,
                       // Solid-ish white fallback for iOS 15 / browsers without backdrop-filter
                       backgroundColor: 'rgba(255,255,255,0.18)',
                       backdropFilter: 'blur(24px)',
@@ -263,11 +275,11 @@ export function MobileBottomNav() {
                     to={item.path}
                     onTouchStart={() => preloadRoute(item.path)}
                     onPointerEnter={() => preloadRoute(item.path)}
-                    className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white"
+                    className="flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white"
                   >
                       <item.icon 
                         className={cn(
-                          'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                          'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                           isActive 
                             ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                             : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
@@ -283,11 +295,11 @@ export function MobileBottomNav() {
                 to="/app/explore"
                 onTouchStart={() => preloadRoute('/app/explore')}
                 onPointerEnter={() => preloadRoute('/app/explore')}
-                className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
+                className="flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white rounded-r-2xl"
               >
                   <Search 
                     className={cn(
-                      'w-5 h-5 md:w-6 md:h-6 transition-all duration-200 ml-[4px] lg:ml-0',
+                      'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 ml-[4px] lg:ml-0',
                       location.pathname.startsWith('/app/explore')
                         ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                         : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
@@ -308,10 +320,10 @@ export function MobileBottomNav() {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                     style={{ width: 'calc((50% - 24px) / 2)' }}
                   >
-                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
                   </a>
                 );
               }
@@ -321,10 +333,10 @@ export function MobileBottomNav() {
                   <button
                     key={item.label}
                     onClick={() => openStageModal()}
-                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                     style={{ width: 'calc((50% - 24px) / 2)' }}
                   >
-                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
                   </button>
                 );
               }
@@ -336,13 +348,13 @@ export function MobileBottomNav() {
                   onClick={(e) => handleProtectedNavClick(e, item.path, (item as any).requiresAuth)}
                   onTouchStart={() => preloadRoute(item.path)}
                   onPointerEnter={() => preloadRoute(item.path)}
-                  className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                  className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
                   <div className="relative">
                     <item.icon
                       className={cn(
-                        'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                        'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                         isActive
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
