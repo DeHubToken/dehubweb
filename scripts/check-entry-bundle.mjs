@@ -102,9 +102,16 @@ const HEAVY_MARKERS = [
 const html = readFileSync(join(DIST, 'index.html'), 'utf8');
 const eagerFiles = new Set();
 
-const entryMatch = html.match(/<script[^>]*type="module"[^>]*src="\/(assets\/[^"]+\.js)"/);
+// The entry is either Vite's plain <script type="module" src> or, after
+// startEntryAfterFirstPaintPlugin (vite.config.ts) has rewritten it, a
+// modulepreload link tagged data-entry plus an inline starter that import()s
+// it once the first frame has painted. Either way it is the file that
+// executes first.
+const entryMatch =
+  html.match(/<link[^>]*data-entry[^>]*href="\/(assets\/[^"]+\.js)"/) ||
+  html.match(/<script[^>]*type="module"[^>]*src="\/(assets\/[^"]+\.js)"/);
 if (!entryMatch) {
-  console.error('[check-entry-bundle] Could not find entry <script> in dist/index.html');
+  console.error('[check-entry-bundle] Could not find the entry chunk in dist/index.html');
   process.exit(1);
 }
 const entryFile = entryMatch[1];
