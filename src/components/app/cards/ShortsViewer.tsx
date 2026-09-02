@@ -8,7 +8,7 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -309,6 +309,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [isFullscreen, toggleFullscreen]);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // The viewer is portalled to document.body, so it does not unmount with the
+  // page that opened it and no route change touches it. Anything that navigates
+  // from inside — a commenter's name, a link card, an @mention, browser Back —
+  // would otherwise leave it on screen and audible over the destination. The
+  // comments sheet's own onClose only hides the sheet, not this.
+  //
+  // Skipped on the first render so opening the viewer does not immediately shut
+  // it: the effect has to see the path actually change.
+  const openedAt = useRef(location.pathname);
+  useEffect(() => {
+    if (location.pathname === openedAt.current) return;
+    onClose();
+  }, [location.pathname, onClose]);
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   // What one reaction from this viewer counts for — their badge multiplier.
   const voteWeight = useEngagementWeight();
