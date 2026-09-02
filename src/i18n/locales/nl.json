@@ -4590,5 +4590,12 @@
     "foldersInFolder_other": "In {{count}} mappen",
     "foldersNoItems": "Nog niets in deze map",
     "foldersNoItemsHint": "Open een resultaat en kies \"Toevoegen aan map\" om het hier op te slaan."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Origineel geluid",
+    "dubbed": "Gesynchroniseerde audio",
+    "preparing": "Voorbereiden van nagesynchroniseerde audio...",
+    "unavailable": "Gesynchroniseerde audio is niet beschikbaar voor deze video."
   }
 }

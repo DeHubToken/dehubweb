@@ -4262,5 +4262,12 @@
     "foldersInFolder_other": "I {{count}} mappar",
     "foldersNoItems": "Inget i den här mappen ännu",
     "foldersNoItemsHint": "Öppna ett resultat och välj \"Lägg till i mapp\" för att spara det här."
+  },
+  "dub": {
+    "audio": "Ljud",
+    "original": "Originalljud",
+    "dubbed": "Dubbade ljud",
+    "preparing": "Förbereder dubbat ljud...",
+    "unavailable": "Dubbat ljud är inte tillgängligt för den här videon."
   }
 }

@@ -2047,5 +2047,12 @@
     "foldersInFolder_other": "\"{{count}}\" k'itipikunapi",
     "foldersNoItems": "Kay k'itipim mana imapas kanchu",
     "foldersNoItemsHint": "Huk kaqta kichariy chaymanta \"K'itiman yapay\" nisqata akllariy kaypi waqaychanaykipaq."
+  },
+  "dub": {
+    "audio": "Audio nisqa",
+    "original": "Original uyarinapaq",
+    "dubbed": "Doblado audio nisqa",
+    "preparing": "Doblado audiota wakichispa...",
+    "unavailable": "Kay videopaqqa manam kanchu doblado audio."
   }
 }

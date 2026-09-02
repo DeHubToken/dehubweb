@@ -1995,5 +1995,12 @@
     "foldersInFolder_other": "{{count}} gutapçasynyň içinde",
     "foldersNoItems": "Bu gutapçada heniz hiç zat ýok",
     "foldersNoItemsHint": "Netijäni açyň we ony şu ýere ýerleşdirmek üçin \"Gutapçany goş\" saýlaň."
+  },
+  "dub": {
+    "audio": "Ses",
+    "original": "Aslynda ses",
+    "dubbed": "Saýlamalary nusgalamak",
+    "preparing": "Saýlanan sesleri tapmak üçin...",
+    "unavailable": "Désolé, bu video indi ýok."
   }
 }

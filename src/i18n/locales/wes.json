@@ -1988,5 +1988,12 @@
     "foldersInFolder_other": "In {{count}} folders",
     "foldersNoItems": "No tin for inside dis folder yet",
     "foldersNoItemsHint": "Open one result and choose \"Add to folder\" for file am for here."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Audio original",
+    "dubbed": "Audio wey dem dub",
+    "preparing": "Prepare audio wey dem go dub…",
+    "unavailable": "Dubbed audio no dey for this video."
   }
 }

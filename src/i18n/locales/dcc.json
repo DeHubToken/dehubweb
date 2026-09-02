@@ -1884,5 +1884,12 @@
     "foldersDelete": "ফোল्डर हटाओ",
     "foldersDeleteConfirm": "\"{{name}}\" फोल्डर हटवायचा? त्यातले जनरेशन्स तुमच्या लायब्ररीत राहतील.",
     "foldersInFolder_other": "{{count}} फोल्डरांमध्ये"
+  },
+  "dub": {
+    "audio": "آڈیو",
+    "original": "Original audio",
+    "dubbed": "డబ్బింగ్ ఆడియో",
+    "preparing": "డబ్బింగ్ ఆడియో తయారుచేస్తున్నాం…",
+    "unavailable": "Ee video ki dubbed audio available ga ledu."
   }
 }

@@ -4269,5 +4269,12 @@
     "foldersInFolder_other": "Kaustades {{count}}",
     "foldersNoItems": "Selles kaustas pole veel midagi",
     "foldersNoItemsHint": "Avage tulemus ja valige \"Lisa kausta\", et see siia salvestada."
+  },
+  "dub": {
+    "audio": "Heli",
+    "original": "Originaalheli",
+    "dubbed": "Dubleeritud heli",
+    "preparing": "Dubleeritud heli ettevalmistamine...",
+    "unavailable": "Selle video jaoks pole dubleeritud heli saadaval."
   }
 }

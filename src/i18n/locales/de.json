@@ -4314,5 +4314,12 @@
     "foldersInFolder_other": "In {{count}} Ordnern",
     "foldersNoItems": "Nichts in diesem Ordner",
     "foldersNoItemsHint": "Öffnen Sie ein Ergebnis und wählen Sie \"Zu Ordner hinzufügen\", um es hier abzulegen."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Original-Audio",
+    "dubbed": "Synchronisiertes Audio",
+    "preparing": "Synchronisiertes Audio wird vorbereitet...",
+    "unavailable": "Synchronisiertes Audio ist für dieses Video nicht verfügbar."
   }
 }

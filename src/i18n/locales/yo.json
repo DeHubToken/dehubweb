@@ -2011,5 +2011,12 @@
     "foldersInFolder_other": "Ni {{count}} awọn folda",
     "foldersNoItems": "Ko si nkankan ninu folda yii sibẹsibẹ",
     "foldersNoItemsHint": "Ṣí àbájáde kan kí o sì yan \"Ṣafikun sí àkájọ ìwé\" láti fi sílẹ̀ níbí."
+  },
+  "dub": {
+    "audio": "Ohùn",
+    "original": "Oríṣìíríṣìí ohun afetigbọ",
+    "dubbed": "Ohun afetigbọ ti a pe ni",
+    "preparing": "Ṣíṣe ìmúrasílẹ̀ ohun afetigbọ méjì...",
+    "unavailable": "Oríṣìíríṣìí ohùn kò sí fún fídíò yìí."
   }
 }

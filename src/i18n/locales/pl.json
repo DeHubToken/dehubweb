@@ -4394,5 +4394,12 @@
     "foldersInFolder_other": "W folderach {{count}}",
     "foldersNoItems": "Nic w tym folderze",
     "foldersNoItemsHint": "Otwórz wynik i wybierz „Dodaj do folderu”, aby go tutaj umieścić."
+  },
+  "dub": {
+    "audio": "Dźwięk",
+    "original": "Oryginalny dźwięk",
+    "dubbed": "Dźwięk dubbingowany",
+    "preparing": "Przygotowywanie dubbingowanego dźwięku…",
+    "unavailable": "Dźwięk dubbingowany nie jest dostępny dla tego filmu."
   }
 }

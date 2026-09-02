@@ -4265,5 +4265,12 @@
     "foldersInFolder_other": "Kansioissa {{count}}",
     "foldersNoItems": "Tässä kansiossa ei ole vielä mitään",
     "foldersNoItemsHint": "Avaa tulos ja valitse \"Lisää kansioon\" tallentaaksesi sen tänne."
+  },
+  "dub": {
+    "audio": "Ääni",
+    "original": "Alkuperäinen ääni",
+    "dubbed": "Kutsuttu ääni",
+    "preparing": "Valmistellaan dubattua ääntä...",
+    "unavailable": "Toistettu ääni ei ole käytettävissä tälle videolle."
   }
 }

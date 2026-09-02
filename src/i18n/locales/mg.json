@@ -2082,5 +2082,12 @@
     "foldersEmpty": "Tsy mbola misy lahatahiry.",
     "foldersNoItems": "Tsy misy na inona na inona ato amin'ity laha-tahiry ity hatreto",
     "foldersNoItemsHint": "Sokafy ny vokatra ary safidio ny \"Add to folder\" raha hametraka izany eto."
+  },
+  "dub": {
+    "audio": "Raki-peo",
+    "original": "Raki-peo tany am-boalohany",
+    "dubbed": "Feo misy anarana",
+    "preparing": "Manomana raki-peo misy lohateny...",
+    "unavailable": "Tsy hita ato amin'ity lahatsary ity ny saripika."
   }
 }

@@ -4331,5 +4331,12 @@
     "foldersInFolder_other": "Em pastas {{count}}",
     "foldersNoItems": "Nada nesta pasta ainda",
     "foldersNoItemsHint": "Abra um resultado e escolha \"Adicionar à pasta\" para arquivá-lo aqui."
+  },
+  "dub": {
+    "audio": "Áudio",
+    "original": "áudio original",
+    "dubbed": "Áudio dublado",
+    "preparing": "A preparar áudio dublado...",
+    "unavailable": "O áudio dublado não está disponível para este vídeo."
   }
 }
