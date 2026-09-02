@@ -1769,6 +1769,109 @@ export type Database = {
         }
         Relationships: []
       }
+      creator_flows: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          data: Json
+          id: string
+          is_public: boolean
+          name: string
+          node_count: number
+          updated_at: string
+          wallet: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          data?: Json
+          id: string
+          is_public?: boolean
+          name?: string
+          node_count?: number
+          updated_at?: string
+          wallet: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          data?: Json
+          id?: string
+          is_public?: boolean
+          name?: string
+          node_count?: number
+          updated_at?: string
+          wallet?: string
+        }
+        Relationships: []
+      }
+      creator_folder_items: {
+        Row: {
+          created_at: string
+          folder_id: string
+          item_id: string
+          wallet: string
+        }
+        Insert: {
+          created_at?: string
+          folder_id: string
+          item_id: string
+          wallet: string
+        }
+        Update: {
+          created_at?: string
+          folder_id?: string
+          item_id?: string
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_folder_items_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "creator_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creator_folders: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          order_index: number
+          parent_id: string | null
+          updated_at: string
+          wallet: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          order_index?: number
+          parent_id?: string | null
+          updated_at?: string
+          wallet: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          order_index?: number
+          parent_id?: string | null
+          updated_at?: string
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "creator_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dub_jobs: {
         Row: {
           created_at: string

@@ -66,6 +66,13 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.community-admin-chat]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth;
+  # the one public read is IP-limited inside the function.
+  [functions.creator-flows]
+    verify_jwt = false
+  # Unauthenticated by design (the canvas works signed-out); IP-limited.
+  [functions.creator-prompt-assistant]
+    verify_jwt = false
   [functions.dehub-mcp]
     verify_jwt = false
   [functions.dhb-buy-bot]
