@@ -946,6 +946,8 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "encrypted": "End-tot-end geënkripteer",
+    "cannotDecrypt": "Geënkripteerde boodskap — kan nie op hierdie toestel oopgemaak word nie",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "tryAgain": "Try Again"

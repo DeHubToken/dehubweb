@@ -25,6 +25,7 @@ import { toastTxError } from '@/lib/tx-error-toast';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
+import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
 
 interface DmFeeGateProps {
   fee: number;
@@ -77,9 +78,10 @@ export function DmFeeGate({
       const txHash = tipResult.hash;
 
       // Send the message with txHash — backend verifies fee inline via sendMessage socket event.
+      const wire = await prepareOutgoing(recipientAddress, messageText.trim());
       emitSendMessage({
         dmId: conversationId,
-        content: messageText.trim(),
+        content: wire.content,
         type: 'msg',
         txHash,
       });

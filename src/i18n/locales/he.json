@@ -870,6 +870,8 @@
     "loginDescription": "התחבר כדי לצפות ולנהל את הפרופיל שלך."
   },
   "messages": {
+    "encrypted": "מוצפן מקצה לקצה",
+    "cannotDecrypt": "הודעה מוצפנת — לא ניתן לפתוח במכשיר זה",
     "title": "הודעות",
     "searchConversations": "חפש שיחות...",
     "failedToLoad": "טעינת השיחות נכשלה",

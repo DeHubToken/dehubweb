@@ -974,6 +974,8 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "encrypted": "Naka-encrypt end-to-end",
+    "cannotDecrypt": "Naka-encrypt na mensahe — hindi mabubuksan sa device na ito",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "tryAgain": "Try Again"
