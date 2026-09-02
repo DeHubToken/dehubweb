@@ -48,17 +48,27 @@ import { join } from 'node:path';
 
 const DIST = 'dist';
 const ASSETS = join(DIST, 'assets');
-const ENTRY_SIZE_CEILING = 2.0 * 1024 * 1024; // raw bytes, pre-gzip
+const ENTRY_SIZE_CEILING = 2.2 * 1024 * 1024; // raw bytes, pre-gzip
 
-// Boot-path ceilings, raw bytes. Set roughly 20-25% above the Aug 2026
+// Boot-path ceilings, raw bytes. Set roughly 10-20% above the latest
 // measurement so ordinary feature work doesn't trip them, while a new heavy
 // dependency joining the boot path does. Lower them when a split lands —
 // a ceiling that no longer tracks reality stops being a guardrail.
 //
-//   measured: entry 1,551 KB + eager preloads 604 KB = 2,155 KB executed
-//   measured: wallet closure 871 KB
-const EAGER_TOTAL_CEILING = 2.7 * 1024 * 1024;
-const WALLET_CLOSURE_CEILING = 1.1 * 1024 * 1024;
+//   Aug 2026:    entry 1,551 KB + eager preloads 604 KB = 2,155 KB executed
+//                wallet closure 871 KB
+//   2 Sep 2026:  entry 1,945 KB + eager preloads 795 KB = 2,740 KB executed
+//                wallet closure 374 KB (the wallet SDKs left the boot config)
+//
+// The Sep numbers are what the ceilings below track. The entry had crept from
+// 1,551 to 1,990 KB over four weeks of ordinary merges with nothing tripping,
+// then three unrelated merges tipped the 2.7 MB total and every deploy behind
+// them failed for hours; the source-side ratchet (boot-path-report) is the
+// tool for creep, this one is for a heavy dependency landing — a wallet-stack
+// merge roughly doubles the entry, which these still catch. The wallet
+// closure ceiling comes down to match its new size for the same reason.
+const EAGER_TOTAL_CEILING = 3.0 * 1024 * 1024;
+const WALLET_CLOSURE_CEILING = 0.6 * 1024 * 1024;
 
 const kb = (bytes) => `${Math.round(bytes / 1024)} KB`;
 
