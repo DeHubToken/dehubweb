@@ -107,8 +107,12 @@ const eagerFiles = new Set();
 // modulepreload link tagged data-entry plus an inline starter that import()s
 // it once the first frame has painted. Either way it is the file that
 // executes first.
+// Attribute order inside the tag is not something to depend on (the first
+// version of this pattern wanted data-entry BEFORE href, the plugin wrote it
+// after, and every deploy failed here): find the tagged link, then its href.
+const entryLinkTag = html.match(/<link\b[^>]*\bdata-entry\b[^>]*>/);
 const entryMatch =
-  html.match(/<link[^>]*data-entry[^>]*href="\/(assets\/[^"]+\.js)"/) ||
+  (entryLinkTag && entryLinkTag[0].match(/href="\/(assets\/[^"]+\.js)"/)) ||
   html.match(/<script[^>]*type="module"[^>]*src="\/(assets\/[^"]+\.js)"/);
 if (!entryMatch) {
   console.error('[check-entry-bundle] Could not find the entry chunk in dist/index.html');
