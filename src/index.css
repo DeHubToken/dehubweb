@@ -1661,6 +1661,11 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-800:hover {
   background-color: rgb(255 255 255 / 0.12) !important;
 }
+/* Same for the zinc-700 hover the settings controls (select triggers, small
+   buttons) use — otherwise the frosted resting state snaps to a solid slab. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-700:hover {
+  background-color: rgb(255 255 255 / 0.12) !important;
+}
 
 /* Near-opaque zinc-900/90 and /80 cards (sidebar assistant CTA, "view all"
    footers, comments wrapper) — thin them to smoke so they sit in the same
