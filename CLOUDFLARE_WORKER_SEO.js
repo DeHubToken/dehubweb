@@ -424,6 +424,13 @@ function buildDocsIndexHtml() {
 <meta property="og:title" content="DeHub Documentation">
 ${shareMetaTags('docs', 'DeHub Documentation')}
 <meta name="twitter:site" content="@dehub_official">
+<script type="application/ld+json">${jsonLdScript({
+  '@context': 'https://schema.org', '@type': 'CollectionPage',
+  name: 'DeHub Documentation', url: canonicalUrl,
+  description: 'Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.',
+  publisher: ORG_JSONLD,
+  hasPart: Object.entries(DOCS_PAGES).map(([r, m]) => ({ '@type': 'TechArticle', headline: m.title, url: `${APP_URL}/docs/${r}` })),
+})}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › Docs</p>
@@ -1619,6 +1626,73 @@ async function fetchPostRecord(tokenId) {
   } catch {
     return null;
   }
+}
+
+/**
+ * Share images the deployed fn advertises that do not resolve to an image.
+ * A sweep of all 2,000 sitemap posts on 2026-09-02 found 434 (22%) whose
+ * og:image was one of three things:
+ *
+ * - 336 pointed at `<cdn>/nfts/images/<id>.<ext>`, which the CDN answers
+ *   403 (AccessDenied is its "missing key"). The API still carries that
+ *   path in `imageUrl`, but every one of those files now lives at
+ *   `<cdn>/images/<id>.<ext>` — 336 of 336 checked.
+ * - 57 resolved, but as `application/octet-stream`: avatars saved with an
+ *   `.octet-stream` extension, and `.jpg` uploads whose object has no
+ *   content type. Crawlers that trust the header draw nothing.
+ * - 39 text posts pointed at the fn's own text-card renderer
+ *   (`/functions/v1/og-image?post_id=`), which 302s to the 200-square logo
+ *   on every call now.
+ *
+ * Repairs, in that order: move the legacy path; route every CDN image through
+ * Cloudflare's image transform on this zone, which re-encodes to JPEG with a
+ * real content type (and sizes avatars to the 400×400 the fn declares); and
+ * swap the dead renderer for the brand card. Only image contexts are touched —
+ * og:video and the mp4 behind it stay as they are — and only the CDN host is
+ * transformed, since the transform refuses the Supabase origin.
+ */
+const CDN_ORIGIN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
+const IMAGE_TRANSFORM_BASE = `${APP_URL}/cdn-cgi/image/`;
+
+function transformedImageUrl(url) {
+  if (!url.startsWith(`${CDN_ORIGIN}/`)) return url;
+  const options = url.startsWith(`${CDN_ORIGIN}/avatars/`)
+    ? 'format=jpeg,width=400,height=400,fit=cover'
+    : 'format=jpeg,width=1200,fit=scale-down';
+  return `${IMAGE_TRANSFORM_BASE}${options}/${url}`;
+}
+
+function repairProxiedImages(html) {
+  let out = html.split(`${CDN_ORIGIN}/nfts/images/`).join(`${CDN_ORIGIN}/images/`);
+
+  const deadCard = /\/functions\/v1\/og-image\?/;
+  let transformed = false;
+  const swap = (value) => {
+    if (deadCard.test(value)) return SHARE_IMAGE;
+    const next = transformedImageUrl(value);
+    if (next !== value) transformed = true;
+    return next;
+  };
+  out = out
+    .replace(
+      /(<meta (?:property="og:image(?::secure_url)?"|name="twitter:image") content=")([^"]*)(">)/g,
+      (m, a, v, b) => `${a}${swap(v)}${b}`,
+    )
+    .replace(/("(?:image|thumbnailUrl)":")([^"\\]*)(")/g, (m, a, v, b) => `${a}${swap(v)}${b}`);
+
+  if (transformed) {
+    out = out.replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, (m, a, b) => `${a}image/jpeg${b}`);
+  }
+  if (deadCard.test(html)) {
+    // The brand card is 1200×630; the fn declared the renderer's card and a
+    // summary_large_image, so only the dimensions and type need saying.
+    out = out
+      .replace(/(<meta property="og:image:width" content=")[^"]*(">)/g, (m, a, b) => `${a}1200${b}`)
+      .replace(/(<meta property="og:image:height" content=")[^"]*(">)/g, (m, a, b) => `${a}630${b}`)
+      .replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, (m, a, b) => `${a}image/png${b}`)
+      .replace(/(<meta name="twitter:card" content=")[^"]*(">)/g, (m, a, b) => `${a}summary_large_image${b}`);
+  }
+  return out;
 }
 
 function buildStoreHtml(store) {
@@ -3749,6 +3823,11 @@ async function handleRequest(request, env) {
       html = enrichPostMeta(html, proxiedPostId, await fetchPostRecord(proxiedPostId));
     } else if (proxiedHandle) {
       html = enrichProfileMeta(html, proxiedHandle);
+    }
+    // Share images the fn points at that 403, carry no content type, or
+    // redirect to the logo (see repairProxiedImages).
+    if (isEntityRoute) {
+      html = repairProxiedImages(html);
     }
 
 
