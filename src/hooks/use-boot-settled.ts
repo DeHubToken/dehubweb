@@ -52,7 +52,7 @@ export function useBootSettled(): boolean {
 }
 
 /**
- * "The visitor has done something" — one scroll, tap, click, wheel or key.
+ * "The visitor has done something" — one tap, click, wheel or key.
  *
  * Deferring an autoplay clip to after load turned out not to be enough: the
  * moment a muted clip starts playing, Chrome streams the whole file, and a
@@ -61,15 +61,23 @@ export function useBootSettled(): boolean {
  * scroll — which is how anyone uses a feed — is what starts the video, and
  * a page nobody touches costs nobody 27 MB. Same module-level latch pattern
  * as above, one set of passive listeners for the whole app.
+ *
+ * Deliberately NOT `scroll`: a capture listener on window hears every element
+ * that scrolls, including the ones the page scrolls itself while it boots (a
+ * carousel settling, a list restoring its position), and that is how the
+ * first version of this latch tripped on a page nobody had touched —
+ * Lighthouse kept measuring the full 27 MB. A person scrolling always
+ * produces one of the four below first (finger, wheel, key, or a grab of the
+ * scrollbar), and `isTrusted` keeps a synthetic dispatch from counting.
  */
 let interacted = false;
 const interactionListeners = new Set<() => void>();
-const INTERACTION_EVENTS = ['pointerdown', 'touchstart', 'wheel', 'keydown', 'scroll'] as const;
+const INTERACTION_EVENTS = ['pointerdown', 'touchstart', 'wheel', 'keydown'] as const;
 
-function markInteracted() {
-  if (interacted) return;
+function markInteracted(event: Event) {
+  if (interacted || !event.isTrusted) return;
   interacted = true;
-  for (const ev of INTERACTION_EVENTS) window.removeEventListener(ev, markInteracted);
+  for (const ev of INTERACTION_EVENTS) window.removeEventListener(ev, markInteracted, { capture: true });
   for (const l of interactionListeners) l();
   interactionListeners.clear();
 }
