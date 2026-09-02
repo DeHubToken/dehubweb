@@ -8,6 +8,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore, ReactNode } from 'react';
 import { useFrontRow } from '@/hooks/use-superpowers';
 import { supabase } from '@/integrations/supabase/client';
+import { stopStageRecording } from '@/lib/stage-playback';
 // Deliberately the narrow module and not the `@/lib/api/dehub` barrel: this
 // context is mounted app-wide, and the barrel drags the whole API surface in.
 import { getAuthToken } from '@/lib/api/dehub/core';
@@ -659,6 +660,23 @@ export function StageProvider({ children }: { children: ReactNode }) {
     stageModalOpener = openModal;
     return () => { stageModalOpener = null; };
   }, [openModal]);
+
+  // ─── One stage at a time, live or recorded ──────────────────────────────
+  //
+  // A recording plays through a module-level `<audio>` and a live room plays
+  // through Agora, so neither engine knows the other exists. Pressing play on
+  // a recording stops any other recording, and joining a room stops any other
+  // room, but nothing stood between the two — and a popped-out recording is
+  // built to survive its drawer closing, which is exactly the one that was
+  // still going when a room started. Both came out of the speakers at once,
+  // with the live room's own controls giving no way to silence the other.
+  //
+  // Placed on `currentSpace` rather than at each entry point: joining,
+  // creating, starting a scheduled stage and a guest starting to listen all
+  // arrive here, and a fifth way in later gets this for free.
+  useEffect(() => {
+    if (currentSpace) stopStageRecording();
+  }, [currentSpace?.id]);
 
   // ─── Keep a live host from silently killing their own recording ─────────
   //
