@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import { cn } from '@/lib/utils';
+import { SETTINGS_CONTROL_CLASS } from '@/components/app/settings/SettingsRow';
 import { Check, ChevronDown, Search } from 'lucide-react';
 import {
   Drawer,
@@ -55,11 +57,18 @@ export function SettingDrawerSelect({
     <Drawer open={open} onOpenChange={(v) => { setOpen(v); if (!v) setSearch(''); }}>
       <DrawerTrigger asChild disabled={disabled}>
         <button
-          className={`flex h-9 max-w-[10rem] items-center justify-between gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-3 text-sm text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50 sm:max-w-[13rem] ${className}`}
+          type="button"
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          className={cn(
+            SETTINGS_CONTROL_CLASS,
+            'flex min-w-[6.5rem] max-w-[10rem] items-center justify-between gap-2 sm:max-w-[14rem]',
+            className,
+          )}
           disabled={disabled}
         >
           <span className="truncate">{displayLabel}</span>
-          <ChevronDown className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+          <ChevronDown className="size-4 shrink-0 text-zinc-500" aria-hidden="true" />
         </button>
       </DrawerTrigger>
       <DrawerContent column className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10" hideHandle={searchable}>
@@ -87,6 +96,8 @@ export function SettingDrawerSelect({
             <button
               key={option.value}
               onClick={() => handleSelect(option.value)}
+              type="button"
+              aria-pressed={value === option.value}
               className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-colors text-left ${
                 value === option.value
                   ? 'bg-white/10 border border-white/20'

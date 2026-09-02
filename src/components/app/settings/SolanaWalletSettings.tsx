@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Check, Copy, Loader2 } from 'lucide-react';
+import { Check, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { SettingsRow, SETTINGS_CONTROL_CLASS } from '@/components/app/settings/SettingsRow';
 import { useAuth } from '@/contexts/AuthContext';
 import { linkSolanaWallet, unlinkSolanaWallet } from '@/lib/api/dehub/solana';
 import { buildDeHubLoginMessage } from '@/lib/dehub-login-message';
@@ -122,56 +123,38 @@ export function SolanaWalletSettings() {
   };
 
   return (
-    <div data-setting-anchor="solana-wallet">
-      <div className="flex items-center justify-between gap-3 p-4 bg-zinc-800 rounded-xl">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 shrink-0 bg-zinc-700 rounded-xl flex items-center justify-center">
-            <img src={solanaLogo} alt="" className="w-5 h-5 object-contain" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-white font-medium">
-              {t('settings.solanaWallet', 'Solana wallet')}
-            </p>
-            {linked ? (
-              <p className="text-zinc-500 text-sm flex flex-wrap items-center gap-2">
-                <span className="font-mono">{shorten(linked)}</span>
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  className="inline-flex items-center gap-1 hover:text-white"
-                  aria-label={t('settings.solanaCopy', 'Copy Solana address')}
-                >
-                  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                </button>
-              </p>
-            ) : (
-              <p className="text-zinc-500 text-sm">
-                {t(
-                  'settings.solanaWalletHint',
-                  'Connect Phantom to receive tips and paid unlocks on Solana.',
-                )}
-              </p>
-            )}
-          </div>
-        </div>
+    <SettingsRow
+      anchor="solana-wallet"
+      icon={<img src={solanaLogo} alt="" className="object-contain" />}
+      title={t('settings.solanaWallet', 'Solana wallet')}
+      description={linked ? (
+        <span className="inline-flex flex-wrap items-center gap-2">
+          <span className="font-mono">{shorten(linked)}</span>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="inline-flex items-center gap-1 hover:text-white"
+            aria-label={t('settings.solanaCopy', 'Copy Solana address')}
+          >
+            {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+          </button>
+        </span>
+      ) : (
+        t('settings.solanaWalletHint', 'Connect Phantom to receive tips and paid unlocks on Solana.')
+      )}
+      action={
         <Button
           type="button"
           size="sm"
           variant={linked ? 'outline' : 'default'}
-          disabled={busy}
+          loading={busy}
           onClick={linked ? handleDisconnect : handleConnect}
-          className="shrink-0"
+          className={linked ? SETTINGS_CONTROL_CLASS : undefined}
         >
-          {busy ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : linked ? (
-            t('settings.solanaDisconnect', 'Disconnect')
-          ) : (
-            t('settings.solanaConnect', 'Connect')
-          )}
+          {linked ? t('settings.solanaDisconnect', 'Disconnect') : t('settings.solanaConnect', 'Connect')}
         </Button>
-      </div>
-    </div>
+      }
+    />
   );
 }
 
