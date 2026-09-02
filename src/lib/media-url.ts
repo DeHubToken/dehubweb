@@ -176,7 +176,10 @@ export function cdnImageSrcSet(url: string | undefined, widths: number[]): strin
  * arbitrary viewport arithmetic reach the URL would shred the edge hit rate
  * across the device population for pixels nobody can see.
  */
-const WIDTH_LADDER = [64, 96, 128, 192, 256, 360, 480, 720, 1080, 1440, 1920];
+// 736 / 1100 rather than 720 / 1080: common phones ask for 721 (412 CSS px at
+// 1.75x) and 1081 (412 at 2.625x) device px, one over the old rungs, and the
+// pick is the first rung >= needed, so those phones jumped a whole rung.
+const WIDTH_LADDER = [64, 96, 128, 192, 256, 360, 480, 736, 1100, 1440, 1920];
 
 /**
  * Device pixels needed to render `cssPx` crisply here, snapped up to the ladder.
