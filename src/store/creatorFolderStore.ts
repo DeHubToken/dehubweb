@@ -1,7 +1,6 @@
 /**
  * Creator folders.
  * ================
- * Adapted from HeliosGen's lib/folderStore.ts (MIT) — see LICENSE-HeliosGen.
  *
  * Folders the creator sorts the generation library into. Membership is a map
  * of job id → folder ids, mirrored to creator_folders / creator_folder_items

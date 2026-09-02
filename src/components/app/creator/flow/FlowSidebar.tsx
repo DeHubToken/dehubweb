@@ -1,8 +1,7 @@
 /**
  * Creator Flow — the flows list.
  * ==============================
- * Adapted from HeliosGen's AppSidebar (MIT) — see LICENSE-HeliosGen. Every
- * flow the creator has, the one that is open, sync state, and a way to start
+ * Every flow the creator has, the one that is open, sync state, and a way to start
  * a fresh canvas or the UGC starter.
  */
 import { useState } from 'react';

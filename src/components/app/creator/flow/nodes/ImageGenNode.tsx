@@ -1,7 +1,6 @@
 /**
  * Creator Flow — image generator node.
  * ====================================
- * Adapted from HeliosGen's GenerateNode (MIT) — see LICENSE-HeliosGen.
  * Takes a text prompt and up to one reference, renders through the shared
  * generation queue (so the result also lands in the studio library), and
  * keeps a carousel of everything it has produced.

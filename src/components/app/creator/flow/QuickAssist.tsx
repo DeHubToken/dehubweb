@@ -1,7 +1,6 @@
 /**
  * Creator Flow — the ⌘K prompt assistant.
  * ========================================
- * Adapted from HeliosGen's QuickAssist (MIT) — see LICENSE-HeliosGen.
  * A small chat that only ever answers with prompts: give it an idea and it
  * hands back a better one, streamed token by token. Works signed out.
  */
