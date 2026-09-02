@@ -1970,7 +1970,29 @@ function paperPnl(){
 
 /* ================================ three =============================== */
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+/* ---- QUALITY TIER ---------------------------------------------------------
+   Two tiers, decided once at boot. The degrade path below still runs on top
+   of either — this only picks where it STARTS, so a phone does not spend its
+   first six seconds at desktop settings before the fps counter notices.
+     · phone — a coarse pointer on a small viewport: pixel ratio capped at
+       1.25 (a dpr-3 phone at 1.5 is a 4K frame through a post chain), no
+       shadow map (the painted blob comes back), a smaller and rarer floor
+       reflection, a 64px room probe refreshed every 8 s, no screen glass.
+     · high — everything else.
+   `?q=phone` / `?q=high` (or the same in the hash) overrides the guess, and
+   is what the mobile app passes so the tier never depends on a media query
+   inside a WebView. */
+const GFX=(()=>{
+  let q=null;
+  try{
+    q=new URLSearchParams(location.search).get('q')||new URLSearchParams(location.hash.slice(1)).get('q');
+  }catch(e){}
+  const coarse=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+  const small=Math.min(innerWidth,innerHeight)<=820;
+  const tier=(q==='phone'||q==='low')?'phone':(q==='high'||q==='ultra')?'high':(coarse&&small)?'phone':'high';
+  return {tier,phone:tier==='phone'};
+})();
+renderer.setPixelRatio(Math.min(devicePixelRatio,GFX.phone?1.25:1.5));
 /* FILMIC RESPONSE. Without tone mapping every value above 1 simply clipped,
    so a wall of saturated monitors came back as flat blocks of pure colour and
    the floor caught a grey wash instead of light. ACES rolls those highlights
@@ -1984,7 +2006,7 @@ renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.15;
 /* PCFSoft, not the default: a hard shadow edge on a floor lit this softly
    reads as a decal. See keyLight — one directional light does all of it. */
-renderer.shadowMap.enabled=true;
+renderer.shadowMap.enabled=!GFX.phone;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const host=$('#gl');
 host.appendChild(renderer.domElement);
@@ -2006,6 +2028,15 @@ const camera=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,0.1,260);
    can be taken out of it without being taken out of the room. */
 const NO_REFLECT=2;
 camera.layers.enable(NO_REFLECT);
+/* Layer 5 is "the eye sees this and nothing else does": not the floor, not
+   the room probe. It exists for the screen glass. Seen from BELOW the floor,
+   which is where the mirror's virtual camera stands, a glossy sheet on the
+   wall reflects the area lamps hanging above it straight back — a 7 m
+   highlight that bloomed into a white blob on the floor and lifted the
+   whole frame grey. From eye level the same sheet reflects the room behind
+   you, which is the glint it is there for. */
+const EYE_ONLY=5;
+camera.layers.enable(EYE_ONLY);
 /* Seated-operator eyeline. Previously the camera sat high and far, which put the
    wall in the upper half and left the lower half as empty floor. */
 const EYE_Y=2.9;
@@ -2025,6 +2056,80 @@ let camTouched=false;
 const pmrem=new THREE.PMREMGenerator(renderer);
 scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
 RectAreaLightUniformsLib.init();
+
+/* ---- THE ROOM LIGHTS ITSELF ----------------------------------------------
+   Every reflective thing in here — the monitor bezels, the desk, the glazing,
+   the trader's jacket — used to reflect RoomEnvironment: a generic studio of
+   white light boxes that exists nowhere in this scene. So the frames carried
+   bright white highlights in a room whose only light is thirty-nine monitors,
+   and nothing metallic ever picked up the wall it was standing in front of.
+
+   This is a cube probe at eye height in the middle of the floor. It renders
+   the actual room — wall, city, glazing, desk — into a small cube map, three
+   prefilters it (needsPMREMUpdate) and it becomes scene.environment. From
+   then on the environment IS the wall: bezels reflect the charts beside them,
+   the desk top catches the colour of whatever is on the big board, the
+   glazing carries the city, and diffuse image-based light on the character
+   comes from the screens they are looking at.
+
+   Cost is spread rather than paid at once: ONE cube face per frame, so a
+   refresh is six frames of a 128px render plus one prefilter, never a hitch.
+   The floor, the grid and the character are hidden while it looks — a mirror
+   inside a probe is a hall of mirrors, and a probe that includes the character
+   lights the character with themselves. RoomEnvironment stays as the seed so
+   nothing is unlit before the first refresh lands. */
+const envProbe=(()=>{
+  const size=GFX.phone?64:128;
+  const rt=new THREE.WebGLCubeRenderTarget(size,{type:THREE.HalfFloatType,
+    generateMipmaps:true,minFilter:THREE.LinearMipmapLinearFilter});
+  const cam=new THREE.CubeCamera(0.3,220,rt);
+  cam.position.set(0,EYE_Y,-1.5);
+  cam.layers.enable(NO_REFLECT);     /* the city belongs in the glazing */
+  scene.add(cam);
+  /* A face is a scene traversal — measured at roughly half a frame, because
+     the cost is draw submission, not the 128px of fill. Six of them in a row
+     every few seconds is a visible hitch on a machine that is already near
+     budget, so the refresh is rare: the wall's average colour moves over
+     minutes, not frames. The degrade path stretches it further. */
+  let period=GFX.phone?10:4;
+  let face=-1,since=period,refreshes=0;
+  function step(dt){
+    if(face<0){
+      since+=dt;
+      if(since<period||!firstFrame)return;
+      face=0;since=0;
+    }
+    const hidden=[];
+    for(const o of [floorGrp,grid,walk.obj])if(o&&o.visible){o.visible=false;hidden.push(o);}
+    const xr=renderer.xr.enabled;renderer.xr.enabled=false;
+    const auto=renderer.shadowMap.autoUpdate;renderer.shadowMap.autoUpdate=false;
+    const cur=renderer.getRenderTarget();
+    const gm=rt.texture.generateMipmaps;
+    rt.texture.generateMipmaps=face===5?gm:false;   /* mips once, on the last face */
+    cam.updateMatrixWorld();
+    renderer.setRenderTarget(rt,face);
+    renderer.render(scene,cam.children[face]);
+    rt.texture.generateMipmaps=gm;
+    renderer.setRenderTarget(cur);
+    renderer.shadowMap.autoUpdate=auto;
+    renderer.xr.enabled=xr;
+    for(const o of hidden)o.visible=true;
+    if(++face>5){
+      face=-1;refreshes++;
+      rt.texture.needsPMREMUpdate=true;
+      if(scene.environment!==rt.texture){
+        scene.environment=rt.texture;
+        /* The wall tops out at 1.0 where the studio boxes sat at 50, so the
+           probe is a darker map by an order of magnitude. This is the gain
+           that puts the bezels' highlights back where they were — now in the
+           wall's colours instead of white. */
+        scene.environmentIntensity=GFX.phone?2.0:2.4;
+      }
+    }
+  }
+  return {rt,cam,step,size,get period(){return period;},set period(v){period=v;},
+    get refreshes(){return refreshes;},get face(){return face;}};
+})();
 
 /* ------------------------- free camera -------------------------------
    Orbiting a fixed point meant "forward" was always the room's forward, so
@@ -2222,7 +2327,7 @@ const keyLight=new THREE.DirectionalLight(0xbcd8ff,0.55);
 keyLight.position.set(4.5,9.5,7.5);
 keyLight.target.position.set(0,0.6,3.2);
 scene.add(keyLight,keyLight.target);
-keyLight.castShadow=true;
+keyLight.castShadow=renderer.shadowMap.enabled;
 keyLight.shadow.mapSize.set(1024,1024);
 const sc=keyLight.shadow.camera;
 sc.left=-SHADOW_R;sc.right=SHADOW_R;sc.top=SHADOW_R;sc.bottom=-SHADOW_R;
@@ -2324,10 +2429,105 @@ const floorMat=new THREE.MeshStandardMaterial({color:0x0a0e14,roughness:0.30,met
   envMapIntensity:0.14,transparent:true,alphaMap:skinAlpha,depthWrite:false});
 let mirror=null,mirrorTint=0x8d99a6,FLOOR_Q='mirror';
 const FLOOR_R=17;   /* was 27 — the excess just read as empty space */
+
+/* ---- GLOSS, NOT A MIRROR --------------------------------------------------
+   A Reflector is a perfect mirror: the wall came back on the floor as sharp
+   at twenty metres as at one, which is what a puddle does and no stone floor
+   does. Real gloss goes soft with distance, because the reflected ray has
+   travelled further through a surface that is rough at the micron scale, and
+   it goes BRIGHTER at a grazing angle (Fresnel) — the two things the eye uses
+   to tell "polished floor" from "the wall, upside down".
+
+   Both happen in the reflector's own fragment, from the mipmaps the target
+   already carries. `lod` climbs with distance from the eye, so what is
+   underfoot stays sharp and the far wall dissolves into colour; a streaky
+   roughness map breaks that up into the scratches a walked-on floor has. The
+   Fresnel term keeps the straight-down view at 55% and runs to full at the
+   horizon. Nothing here costs a second pass. */
+const floorRough=(()=>{
+  const c=document.createElement('canvas');c.width=c.height=256;
+  const x=c.getContext('2d');
+  x.fillStyle='#606060';x.fillRect(0,0,256,256);
+  /* coarse mottle underneath, fine directional scratches on top */
+  for(let i=0;i<700;i++){
+    const g=Math.round(rnd(40,140));
+    x.fillStyle='rgba('+g+','+g+','+g+',0.18)';
+    x.beginPath();x.arc(rnd(0,256),rnd(0,256),rnd(3,14),0,Math.PI*2);x.fill();
+  }
+  for(let i=0;i<900;i++){
+    const g=Math.round(rnd(30,200));
+    x.strokeStyle='rgba('+g+','+g+','+g+',0.35)';
+    x.lineWidth=rnd(0.4,1.2);
+    const px=rnd(0,256),py=rnd(0,256),l=rnd(8,60),a=rnd(-0.18,0.18);
+    x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.cos(a)*l,py+Math.sin(a)*l);x.stroke();
+  }
+  const t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping;
+  t.generateMipmaps=true;t.minFilter=THREE.LinearMipmapLinearFilter;
+  return t;
+})();
+const GlossShader={
+  name:'GlossReflector',
+  uniforms:{
+    color:{value:null},tDiffuse:{value:null},textureMatrix:{value:null},
+    uRough:{value:floorRough},
+    uBlur:{value:GFX.phone?0.22:0.17},   /* mip levels per metre of distance */
+    uFresnel:{value:0.55},               /* reflectance looking straight down */
+  },
+  vertexShader:`
+    uniform mat4 textureMatrix;
+    varying vec4 vUv;
+    varying vec3 vWorld;
+    #include <common>
+    #include <logdepthbuf_pars_vertex>
+    void main(){
+      vUv=textureMatrix*vec4(position,1.0);
+      vWorld=(modelMatrix*vec4(position,1.0)).xyz;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+      #include <logdepthbuf_vertex>
+    }`,
+  fragmentShader:`
+    uniform vec3 color;
+    uniform sampler2D tDiffuse;
+    uniform sampler2D uRough;
+    uniform float uBlur,uFresnel;
+    varying vec4 vUv;
+    varying vec3 vWorld;
+    #include <logdepthbuf_pars_fragment>
+    float blendOverlay(float base,float blend){
+      return (base<0.5?(2.0*base*blend):(1.0-2.0*(1.0-base)*(1.0-blend)));
+    }
+    vec3 blendOverlay(vec3 base,vec3 blend){
+      return vec3(blendOverlay(base.r,blend.r),blendOverlay(base.g,blend.g),blendOverlay(base.b,blend.b));
+    }
+    void main(){
+      #include <logdepthbuf_fragment>
+      vec3 V=cameraPosition-vWorld;
+      float d=length(V);
+      V/=max(d,1e-4);
+      float r=texture2D(uRough,vWorld.xz*0.32).r;          /* 0.12..0.8, mean ~0.38 */
+      float lod=clamp((d-1.0)*uBlur+(r-0.38)*2.2,0.0,5.0);
+      vec4 base=textureProjLod(tDiffuse,vUv,lod);
+      float NoV=clamp(V.y,0.0,1.0);
+      float f=mix(uFresnel,1.0,pow(1.0-NoV,3.0));
+      gl_FragColor=vec4(blendOverlay(base.rgb,color)*f,1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`
+};
 function buildFloor(){
   if(mirror){mirror.dispose();mirror=null;}
   floorGrp.clear();
-  const geo=new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2);
+  /* NOT pre-rotated, unlike every other disc in this function. A Reflector
+     takes its mirror plane from the MESH's local +Z, not from the vertices —
+     so a disc laid flat in geometry space under an unrotated mesh reflects
+     through a VERTICAL plane at z=0. That is what this floor did for the
+     whole life of the app: the virtual camera looked at the half of the room
+     BEHIND you, mirrored front-to-back, and the wall's reflection you saw was
+     the glazing and the city ring smeared across the floor at the wrong
+     angle — which is also why it aliased into streaks, and why the floor
+     never looked like a floor. Rotate the mesh; leave the geometry alone. */
+  const geo=new THREE.CircleGeometry(FLOOR_R,64);
   if(FLOOR_Q==='mirror'){
     /* Reflection sharpness is this number — at 512 the screens come back as
        coloured blocks rather than readable charts.
@@ -2338,8 +2538,19 @@ function buildFloor(){
        skin. Halving the resolution is a quarter of the fill for a difference
        nobody can point at, and the throttle below halves it again. */
     const dpr=Math.min(devicePixelRatio||1,2);
-    const res=clamp(Math.floor((host.clientWidth||innerWidth)*dpr*0.5),640,1280);
-    mirror=new Reflector(geo,{textureWidth:res,textureHeight:res,color:mirrorTint,clipBias:0.0015});
+    /* A phone's reflection is blurred harder by the gloss shader anyway, so
+       it gets a target a quarter the area and nobody can tell. */
+    const res=GFX.phone
+      ?clamp(Math.floor((host.clientWidth||innerWidth)*dpr*0.4),320,640)
+      :clamp(Math.floor((host.clientWidth||innerWidth)*dpr*0.5),640,1280);
+    mirror=new Reflector(geo,{textureWidth:res,textureHeight:res,color:mirrorTint,clipBias:0.0015,
+      shader:GlossShader});
+    /* Reflector deep-clones the uniforms, so the roughness map and the knobs
+       have to be pointed at again on the live material. */
+    mirror.material.uniforms.uRough.value=floorRough;
+    mirror.material.uniforms.uBlur.value=GlossShader.uniforms.uBlur.value;
+    mirror.material.uniforms.uFresnel.value=GlossShader.uniforms.uFresnel.value;
+    mirror.rotation.x=-Math.PI/2;
     /* Filter the reflection properly instead of buying sharpness with pixels.
        A floor is seen at a grazing angle, which is the exact case a single
        full-res sample cannot handle: the city ring's thin vertical strips
@@ -2358,8 +2569,9 @@ function buildFloor(){
        flickers the way hiding the mesh would. */
     const reflect=mirror.onBeforeRender;
     let phase=0;
+    const every=GFX.phone?3:2;
     mirror.onBeforeRender=function(...a){
-      if((phase++ & 1)===0)reflect.apply(this,a);
+      if((phase++ % every)===0)reflect.apply(this,a);
     };
     floorGrp.add(mirror);
   }else{
@@ -4816,6 +5028,17 @@ const PAINT_BUDGET=4;   /* canvas repaints allowed per frame */
    the corners of the wall the lights do not reach. */
 const frameMat=new THREE.MeshStandardMaterial({color:0x1a212b,roughness:0.32,metalness:0.88,
   emissive:0x0b1d26,emissiveIntensity:0.5});
+/* The glass front of every monitor — see addScreen. Black base, additive, so
+   it can only ever ADD the glint: a clearcoat lobe catching the room probe
+   and the lamps. One material shared by every screen (disposeScreen skips
+   it, like frameMat). Not on a phone: it is a transparent draw per screen
+   over the most expensive thing on the wall. */
+const SCREEN_GLASS=!GFX.phone;
+const glassScreenMat=new THREE.MeshPhysicalMaterial({
+  color:0x000000,roughness:0.10,metalness:0.0,
+  clearcoat:1.0,clearcoatRoughness:0.12,
+  envMapIntensity:0.5,
+  transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,fog:false});
 /* Half the border, either side, has to fit inside the gap between screens or
    the frames overlap — at 0.07 against a 0.06 gap every neighbour intersected
    its neighbour, at slightly different radii, which is what made the wall
@@ -4885,6 +5108,21 @@ function addScreen(o){
   tex.magFilter=THREE.LinearFilter;
   tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
   const mesh=new THREE.Mesh(screenGeo(o.w,o.h),new THREE.MeshBasicMaterial({map:tex}));
+  /* A sheet of glass over the panel. The picture itself is unlit canvas and
+     must stay that way (a lit chart is an unreadable chart), but a real
+     monitor has a glossy front that catches the room: a clearcoat sheet
+     drawn ADDITIVELY over it adds only that glint — the lamps' highlights and
+     the neighbouring screens via the room probe — and can never darken or
+     tint a pixel of the chart beneath. A child of the picture, so the media
+     fit's scale and the resize's geometry reach it for free; not in
+     `clickable`, so picking never sees it. */
+  if(SCREEN_GLASS){
+    const glass=new THREE.Mesh(mesh.geometry,glassScreenMat);
+    glass.position.z=0.004;
+    glass.userData.glass=true;
+    glass.layers.set(EYE_ONLY);
+    mesh.add(glass);
+  }
   const frame=new THREE.Mesh(screenGeo(o.w+frameEdge()*2,o.h+frameEdge()*2),frameMat);
   frame.position.z=-0.03;
   const group=new THREE.Group();group.add(frame,mesh);
@@ -4993,7 +5231,7 @@ function disposeScreen(s){
   s.group.traverse(o=>{
     if(!o.isMesh)return;
     o.geometry.dispose();
-    if(o.material!==frameMat)o.material.dispose();
+    if(o.material!==frameMat&&o.material!==glassScreenMat)o.material.dispose();
   });
   s.tex.dispose();
 }
@@ -7127,6 +7365,7 @@ function resizeScreen(s,w,h){
   s.w=clamp(w,0.7,14);s.h=clamp(h,0.45,9);
   s.mesh.geometry.dispose();
   s.mesh.geometry=screenGeo(s.w,s.h);
+  for(const c of s.mesh.children)if(c.userData.glass)c.geometry=s.mesh.geometry;
   const frame=s.group.children.find(m=>m.isMesh&&m.material===frameMat);
   if(frame){frame.geometry.dispose();frame.geometry=screenGeo(s.w+frameEdge()*2,s.h+frameEdge()*2);}
   if(s.kind==='tpl'||s.kind==='empty'){
@@ -11269,6 +11508,10 @@ loadSounds();
 /* poke at the world from the console: TRENCHSTAR.focusOn(TRENCHSTAR.screens[3]) */
 const repaintAll=()=>screens.forEach(s=>{s.paint(s);s.tex.needsUpdate=true;});
 window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
+  GFX,envProbe,GlossShader,floorRough,glassScreenMat,SCREEN_GLASS,get mirror(){return mirror;},
+  buildFloor,get FLOOR_Q(){return FLOOR_Q;},set FLOOR_Q(v){FLOOR_Q=v;},
+  get bloom(){return bloom;},setShadows,
+  get firstFrame(){return firstFrame;},set firstFrame(v){firstFrame=!!v;},
   focusOn,release,repaint:repaintAll,
   focus,flickTarget,flickFocus,flickPool,flickLaneOf,flickAny,syncFocusHud,
   get flickLane(){return flickLane;},set flickLane(v){flickLane=v;},
@@ -11568,6 +11811,9 @@ function tick(t){
 
   /* The composer is monoscopic — its full-screen blit would paint one eye
      across both — so a presenting frame goes straight to the renderer. */
+  /* One face of the room probe, before the frame that will use it. Not while
+     presenting: the headset owns the render target between frames. */
+  if(!vr.on)envProbe.step(dt);
   if(vr.on)renderer.render(scene,camera);
   else composer.render();
   if(!firstFrame){firstFrame=true;boot.stage('paint',1);warmAvatars();}
@@ -11587,7 +11833,7 @@ function tick(t){
            and least load-bearing thing here: dropping it puts the painted blob
            back under the trader and costs the desk its contact with the floor,
            which is a smaller loss than a flat room or a stuttering one. */
-        if(renderer.shadowMap.enabled)setShadows(false);
+        if(renderer.shadowMap.enabled){setShadows(false);envProbe.period=Math.max(envProbe.period,20);}
         /* The composer keeps its OWN pixel ratio, and it owns the expensive
            full-screen passes — dropping only the renderer's left the post
            chain rendering at the old resolution, so the one lever that was
