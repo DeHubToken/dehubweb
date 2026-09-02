@@ -25,9 +25,13 @@ interface DeHubLoaderProps {
   className?: string;
 }
 
+// dehub-loader.webp: the same 240px GIF (61 KB, 33 fps) re-encoded as a
+// 144px, 16 fps animated WebP (23 KB). The mark renders at 64 CSS px at most
+// (16 in buttons), so 144 covers a 2x screen; Lighthouse flagged the GIF as
+// four times the pixels it needed and it sat on the boot path of every page.
 export const DeHubLoader = ({ size = 64, className = "" }: DeHubLoaderProps) => (
   <img
-    src="/dehub-loader.gif"
+    src="/dehub-loader.webp"
     alt=""
     aria-hidden="true"
     decoding="async"
@@ -89,7 +93,7 @@ export const DeHubPageLoader = ({
  */
 export const ButtonLoader = ({ size = 16, className = "" }: DeHubLoaderProps) => (
   <img
-    src="/dehub-loader.gif"
+    src="/dehub-loader.webp"
     alt=""
     aria-hidden="true"
     decoding="async"

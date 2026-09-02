@@ -133,7 +133,10 @@ function cacheAspectRatio(url: string, ratio: number) {
  * sidebars, so a 1x desktop takes the 720 and a 3x phone the 1080 or 1440 —
  * instead of every device taking the 1080 the URL was built with.
  */
-const FEED_IMAGE_WIDTHS = [480, 720, 1080, 1440];
+// Widths sit just above what common phones ask for at sizes=100vw, or the
+// browser rounds up to the next rung: 412 CSS px at 1.75x is 721 device px,
+// so a 720 rung loses to 1080; 412 at 2.625x is 1081.5, so 1080 lost to 1440.
+const FEED_IMAGE_WIDTHS = [480, 736, 1100, 1440];
 const FEED_IMAGE_SIZES = '(max-width: 767px) 100vw, 640px';
 
 function ImageSlide({
