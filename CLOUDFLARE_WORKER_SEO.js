@@ -1101,6 +1101,7 @@ const MARKETING_PAGES = {
 <p>The same film can be included with a subscription in one country, a paid rental in another, and unavailable in a third. Cinema asks per territory rather than showing one global answer, so switching country re-checks availability and price.</p>`,
   },
   'glossary': {
+    path: '/app/glossary',
     title: 'Glossary — Icons, Features & Web3 Terms',
     description: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
     heading: 'DeHub Glossary',
@@ -1972,7 +1973,7 @@ const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|tele
 const SSR_STATIC_ROUTES = new Set([
   'features', 'pricing', 'depin', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
-  'music', 'radio', 'tv', 'glossary', 'bridge', 'agents',
+  'music', 'radio', 'tv', 'bridge', 'agents',
   'assistant', 'creators', 'jobs',
   // Same reason as 'arcade' below: /app/usernames and /usernames are the same
   // page, and without this the /app twin self-canonicalizes and indexes as a
