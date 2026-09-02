@@ -71,7 +71,7 @@ import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/aud
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
-import { walletScopedClient } from '@/lib/supabase-wallet-client';
+import { deleteStageRecordings } from '@/lib/stage-recording-delete';
 import { formatDistanceToNow } from 'date-fns';
 
 type View = 'browse' | 'create' | 'live' | 'voice';
@@ -609,19 +609,23 @@ export function AudioSpacesModalBody() {
                               if (playingStageId === space.id) {
                                 stopStageRecording();
                               }
-                              if (space.recording_url && walletAddress) {
-                                const path = space.recording_url.split('/stage-recordings/')[1];
-                                if (path) {
-                                  // Through a wallet-scoped client: the bucket's DELETE policy
-                                  // now checks who owns the stage, and the Storage API has no
-                                  // per-call header to carry that on the shared one.
-                                  await walletScopedClient(walletAddress)
-                                    .storage.from('stage-recordings')
-                                    .remove([decodeURIComponent(path)]);
+                              if (walletAddress) {
+                                // Everything under the stage's folder — see
+                                // deleteStageRecordings. Finalising leaves the
+                                // original beside the indexed copy, and only
+                                // the copy was being removed.
+                                const { error } = await deleteStageRecordings(space.id, walletAddress);
+                                if (error) {
+                                  toast.error(t('stages.deleteRecordingFailed', 'Could not delete the recording'));
+                                  return;
                                 }
                               }
-                              await supabase.from('audio_spaces').delete().eq('id', space.id)
+                              const { error: rowError } = await supabase.from('audio_spaces').delete().eq('id', space.id)
                                 .setHeader('x-wallet-address', (walletAddress || '').toLowerCase());
+                              if (rowError) {
+                                toast.error(t('stages.deleteStageFailed', 'Could not delete the stage'));
+                                return;
+                              }
                               queryClient.invalidateQueries({ queryKey: ['past-stages'] });
                               toast.success(t('stages.stageDeleted'));
                             }}
