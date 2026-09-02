@@ -272,7 +272,16 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
       onClick={(e) => {
         if (isEditing) return;
         const target = e.target as HTMLElement;
-        if (target.closest('button, a, img, input, textarea, select, [role="button"], [contenteditable="true"]')) return;
+        // `role="menuitem"` and the app's own `data-no-navigate` are here for
+        // the same reason as the tags: they are interactive and they are not a
+        // tap on the row. Radix renders a menu item as a div, not a button, and
+        // portals it — but React events still bubble through a portal to this
+        // handler, so picking "Copy link" or "Report" from a comment's ⋯ menu
+        // also opened a reply and replaced whatever was half-typed in the
+        // composer with "@name ".
+        if (target.closest(
+          'button, a, img, input, textarea, select, [role="button"], [role="menuitem"], [contenteditable="true"], [data-no-navigate]',
+        )) return;
         const selection = window.getSelection();
         if (selection && selection.toString().length > 0) return;
         onReply(comment.id);
