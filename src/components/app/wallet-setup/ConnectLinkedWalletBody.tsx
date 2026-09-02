@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { LoginWalletsStep, type WalletId } from '../login/LoginWalletsStep';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { clearWagmiStorage, wagmiConfig } from '@/lib/wagmi';
+import { WagmiScope } from '@/components/app/WagmiScope';
 import { writeConnectionSource } from '@/lib/connection-source';
 import { setWalletReconnectGuard } from '@/lib/wallet-reconnect';
 import { isUserRejection } from '@/lib/wallet-errors';
@@ -30,7 +31,20 @@ interface ConnectLinkedWalletBodyProps {
 
 const shortenAddress = (address: string) => `${address.slice(0, 6)}…${address.slice(-4)}`;
 
-export function ConnectLinkedWalletBody({ expectedAddress, onConnected }: ConnectLinkedWalletBodyProps) {
+/**
+ * WagmiProvider no longer wraps the app (see WagmiRuntime.tsx); this body calls
+ * wagmi hooks, so it provides one for its own subtree. Lazy file, so the wagmi
+ * import stays off the boot path.
+ */
+export function ConnectLinkedWalletBody(props: ConnectLinkedWalletBodyProps) {
+  return (
+    <WagmiScope>
+      <ConnectLinkedWalletBodyInner {...props} />
+    </WagmiScope>
+  );
+}
+
+function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectLinkedWalletBodyProps) {
   const { connectAsync } = useConnect();
   const { disconnectAsync } = useDisconnect();
   const { address: connectedAddress } = useAccount();

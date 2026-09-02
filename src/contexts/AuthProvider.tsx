@@ -19,8 +19,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
-import { wagmiConfig, clearWagmiStorage } from '@/lib/wagmi';
+import { useWalletRuntime } from '@/lib/wallet-runtime';
+import { clearWagmiStorage } from '@/lib/wagmi-session';
 import { setBackgroundPaused } from '@/lib/background-gate';
 
 import type { SolanaLoginProof } from '@/lib/api/dehub/auth';
@@ -389,11 +389,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('dehub:token-refreshed', handler);
   }, [queryClient]);
 
-  // Wagmi hooks
-  const { address: wagmiAddress, isConnected: isWagmiConnected, connector: wagmiConnector } = useAccount();
-  const { signMessageAsync } = useSignMessage();
-  const { disconnect: wagmiDisconnect, disconnectAsync: wagmiDisconnectAsync } = useDisconnect();
-  const { connectAsync, connectors } = useConnect();
+  // The wagmi hook quartet, read through lib/wallet-runtime so this provider —
+  // which wraps every route — no longer imports wagmi. The values are wagmi's
+  // own once the lazily mounted runtime has published, and the signed-out
+  // defaults before that; connectAsync / signMessageAsync mount it on demand.
+  const {
+    address: wagmiAddress,
+    isConnected: isWagmiConnected,
+    connector: wagmiConnector,
+    connectors,
+    signMessageAsync,
+    disconnect: wagmiDisconnect,
+    disconnectAsync: wagmiDisconnectAsync,
+    connectAsync,
+  } = useWalletRuntime();
 
   const connectionAbortedRef = useRef(false);
   // The wallet this browser was signed in as when the sheet opened — null on an
@@ -2698,6 +2707,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // rather than the snapshot this render's useConnect() handed out.
       const { ensureWalletConnectors } = await import('@/lib/wagmi-wallets');
       ensureWalletConnectors();
+      // Dynamic on purpose: lib/wagmi creates the config on import, and this
+      // provider is on every visitor's boot path. The module is already loaded
+      // here — ensureWalletConnectors just used it — so this costs nothing.
+      const { wagmiConfig } = await import('@/lib/wagmi');
       const liveConnectors = wagmiConfig.connectors;
 
       // Either one of the three curated buttons, or the connector id of a
