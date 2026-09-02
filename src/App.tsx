@@ -22,6 +22,7 @@ import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
 import { LoginModal, prefetchLoginModal } from "@/components/app/LoginModal";
+import { useFirstInteraction } from "@/hooks/use-boot-settled";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
@@ -327,16 +328,24 @@ function AppContent() {
   // A pushed notification focuses this tab and posts where it wanted to go.
   useNotificationClickRouting();
 
-  // Warm the sheet's contents so the skeleton inside it stays theoretical. The
-  // timeout matters: a feed that never goes idle used to starve this
-  // altogether, which is precisely when a cold first open hurts most.
+  // Warm the sheet's contents so the skeleton inside it stays theoretical —
+  // but only once the visitor has touched the page, or after ten quiet
+  // seconds. The body chunk carries wagmi (WagmiScope), so warming it on a
+  // 1.5 s timer put wagmi back into every first visit's boot window right
+  // after the work of keeping it out of the entry bundle; a scroll or tap
+  // comes long before a sign-in tap in practice, and the sign-in buttons
+  // themselves warm it on hover / pointer-down (warmLoginSheet). The
+  // ten-second backstop keeps the cold-open case rare for someone who reads
+  // without touching anything.
+  const interacted = useFirstInteraction();
   useEffect(() => {
-    const idle = (cb: () => void) =>
-      "requestIdleCallback" in window
-        ? requestIdleCallback(cb, { timeout: 1500 })
-        : setTimeout(cb, 1500);
-    idle(() => prefetchLoginModal());
-  }, []);
+    if (interacted) {
+      prefetchLoginModal();
+      return;
+    }
+    const timer = window.setTimeout(() => prefetchLoginModal(), 10_000);
+    return () => window.clearTimeout(timer);
+  }, [interacted]);
 
   // While the login flow is active (modal open, or a connect/redirect in
   // flight just after it closes), center toasts in the middle app panel —
