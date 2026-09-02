@@ -1,7 +1,6 @@
 /**
  * Creator Flow — arrange a selection into a grid.
  * ===============================================
- * Adapted from HeliosGen's lib/arrangeNodes.ts (MIT) — see LICENSE-HeliosGen.
  * The overall centre never moves: with a group id it centres on the group
  * rectangle, otherwise on the selection's current bounding box.
  */

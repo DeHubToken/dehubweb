@@ -1,7 +1,6 @@
 /**
  * Folders over the generation library.
  * ====================================
- * Adapted from HeliosGen's gallery folders (MIT) — see LICENSE-HeliosGen.
  * A chip row that filters "Your generations" by folder, and a picker on a
  * result that files it. Folder membership syncs to the account when signed
  * in and stays on the device otherwise, like the library itself.

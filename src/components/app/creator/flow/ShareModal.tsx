@@ -1,7 +1,6 @@
 /**
  * Creator Flow — make a flow public and copy its link.
  * ====================================================
- * Adapted from HeliosGen's ShareModal (MIT) — see LICENSE-HeliosGen.
  * Public means read-only: visitors pan and zoom, and can open a copy in
  * their own editor, but never edit or generate on the owner's flow.
  */

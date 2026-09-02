@@ -1,8 +1,7 @@
 /**
  * Creator Flow — group frame.
  * ===========================
- * Adapted from HeliosGen's GroupNode (MIT) — see LICENSE-HeliosGen. A
- * rectangle behind a set of nodes: moving it moves them, it can be locked so
+ * A rectangle behind a set of nodes: moving it moves them, it can be locked so
  * none of them drag, arranged into a grid, or dissolved.
  */
 import { useRef } from 'react';

@@ -1,7 +1,6 @@
 /**
  * Creator Flow — starter templates.
  * =================================
- * Adapted from HeliosGen's lib/templates.ts (MIT) — see LICENSE-HeliosGen.
  * Their UGC starter ships four pre-rendered avatar clips from their own CDN;
  * this one ships the same shape (four image generators feeding four video
  * generators, one shared reference) with the prompts, and lets the creator

@@ -1,7 +1,6 @@
 /**
  * Creator Flow — graph execution helpers.
  * =======================================
- * Adapted from HeliosGen's lib/executor.ts (MIT) — see LICENSE-HeliosGen.
  *
  * Pure functions over the node/edge arrays: execution order, parallel waves,
  * and resolving what a generator node is wired to. Nothing here touches the

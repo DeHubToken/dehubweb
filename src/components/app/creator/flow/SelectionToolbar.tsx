@@ -1,7 +1,6 @@
 /**
  * Creator Flow — floating actions over a multi-selection.
  * =======================================================
- * Adapted from HeliosGen's SelectionToolbar (MIT) — see LICENSE-HeliosGen.
  * Arrange into a grid, wrap in a group, duplicate or delete the lot.
  */
 import { useCallback, useEffect, useState } from 'react';

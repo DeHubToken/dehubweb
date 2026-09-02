@@ -1,7 +1,7 @@
 /**
  * Creator Flow — pull a still out of a video, in the browser.
  * ===========================================================
- * HeliosGen does this server-side with ffmpeg (/api/extract-frame). DeHub has
+ * Other tools do this server-side with ffmpeg. DeHub has
  * no such function and does not need one: a <video> element can seek and a
  * canvas can read the frame, as long as the clip is served with CORS — which
  * every URL that reaches a node here is (Supabase storage, or the provider

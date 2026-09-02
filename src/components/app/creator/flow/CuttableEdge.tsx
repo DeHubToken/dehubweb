@@ -1,7 +1,6 @@
 /**
  * Creator Flow — the edge with a scissors button on hover.
  * ========================================================
- * Adapted from HeliosGen's CuttableEdge (MIT) — see LICENSE-HeliosGen.
  * A bezier that dims when unrelated to the selection, fades out while its
  * node is being deleted, and grows a cut button under the cursor.
  */

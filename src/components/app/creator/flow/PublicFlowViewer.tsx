@@ -1,7 +1,6 @@
 /**
  * Creator Flow — read-only view of a shared flow.
  * ===============================================
- * Adapted from HeliosGen's PublicWorkflowViewer (MIT) — see LICENSE-HeliosGen.
  * Visitors pan, zoom and inspect; nothing edits or generates. "Open a copy"
  * drops the whole graph into the visitor's own flows.
  */

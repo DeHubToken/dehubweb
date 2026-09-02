@@ -1,8 +1,7 @@
 /**
  * Creator Flow — tiny event bus between the store and the sync hook.
  * ==================================================================
- * Adapted from HeliosGen's lib/workflowSyncBus.ts (MIT). Store actions ask the
- * mounted `useFlowSync` to flush a pending edit right away instead of waiting
+ * Store actions ask the mounted `useFlowSync` to flush a pending edit right away instead of waiting
  * out the debounce. Standalone so the store and the hook do not import each
  * other.
  *

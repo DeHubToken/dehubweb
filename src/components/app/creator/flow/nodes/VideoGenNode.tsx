@@ -1,7 +1,6 @@
 /**
  * Creator Flow — video generator node.
  * ====================================
- * Adapted from HeliosGen's VideoGeneratorNode (MIT) — see LICENSE-HeliosGen.
  * Text plus optional start frame, end frame, reference images and reference
  * clips, rendered through the shared queue. Its output is both the clip and,
  * on demand, a still from it — so one generator can feed the next.
