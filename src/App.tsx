@@ -27,6 +27,7 @@ import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
+import { ClientNavigateBridge } from "@/components/app/ClientNavigateBridge";
 import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
 import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 import { ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
@@ -751,6 +752,9 @@ const App = () => (
          * can render immediately without waiting for the ~1.5 MB wallet chunk.
          */}
         <BrowserRouter>
+          {/* Publishes the router's navigate() to lib/client-navigate, so post
+              bodies can route without hand-rolling a history push. */}
+          <ClientNavigateBridge />
           <SEOHead />
           <Sonner />
           {/* Watches /version.json for a newer deploy; renders nothing itself. */}
