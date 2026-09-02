@@ -308,7 +308,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
                 No transcript for this video yet. One is written automatically shortly
                 after a video is posted.
               </p>
-              <Button className="rounded-xl" onClick={() => start.mutate({})} disabled={start.isPending}>
+              <Button className="rounded-xl" onClick={() => start.mutate()} disabled={start.isPending}>
                 {start.isPending
                   ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   : <FileText className="w-4 h-4 mr-2" />}
@@ -335,7 +335,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
             <div className="space-y-2">
               <p className="text-sm text-red-300">Transcription failed: {transcript?.error}</p>
               {canRetry && (
-                <Button variant="secondary" className="rounded-xl" onClick={() => start.mutate({ force: true })}>
+                <Button variant="secondary" className="rounded-xl" onClick={() => start.mutate()}>
                   <RefreshCw className="w-4 h-4 mr-2" /> Try again
                 </Button>
               )}

@@ -298,7 +298,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     if (!isReady && !isWorking) {
       // Nothing to switch on yet. Asking again is only worth it while the run
       // has attempts left — an exhausted one would just spin the spinner.
-      if (canRetry) start.mutate({});
+      if (canRetry) start.mutate();
       setEnabled(true);
       return;
     }

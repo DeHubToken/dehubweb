@@ -380,7 +380,6 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const [requesting, setRequesting] = useState(false);
-  const [hasRetriedLegacy, setHasRetriedLegacy] = useState(false);
   const [search, setSearch] = useState('');
   const [language, setLanguage] = useState<string>('original');
   const [currentTime, setCurrentTime] = useState(0);
@@ -483,12 +482,14 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     return () => a.removeEventListener('timeupdate', onTime);
   }, [open, transcript]);
 
-  const handleTranscribe = async (silent = false, force = false) => {
+  // No `force`. It skipped the attempt ceiling and the backoff on a paid
+  // transcriber, and the server now takes it only from the service key.
+  const handleTranscribe = async (silent = false) => {
     if (!stageId) return;
     setRequesting(true);
     try {
       const { error } = await supabase.functions.invoke('transcribe', {
-        body: { kind: 'stage', ref: stageId, action: 'start', force },
+        body: { kind: 'stage', ref: stageId, action: 'start' },
       });
       if (error) throw error;
       if (!silent) toast.success(t('stages.transcribing'));
@@ -509,21 +510,20 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     if (!open || !stageId || !space?.recording_url) return;
     if (transcript === undefined) return;
     if (!transcript || transcript.status === 'failed') {
-      if (!transcript || (transcript.attempts ?? 0) < 5) handleTranscribe(true, false);
-      return;
+      if (!transcript || (transcript.attempts ?? 0) < 5) handleTranscribe(true);
     }
-    const hasMap = transcript.speaker_map && Object.keys(transcript.speaker_map).length > 0;
-    if (transcript.status === 'ready' && !hasMap && !hasRetriedLegacy) {
-      setHasRetriedLegacy(true);
-      handleTranscribe(true, true);
-    }
+    // A transcript that is ready but carries no speaker map is an old one from
+    // before the map existed. This used to force a full re-transcription of it
+    // on open, guarded only by component state — so every visitor to every
+    // legacy stage paid for one, once per mount, silently. Backfilling those is
+    // an operator's job with the admin panel's retry behind it, not something
+    // to spend on whoever happens to look.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, stageId, transcript?.status, space?.recording_url, hasRetriedLegacy]);
+  }, [open, stageId, transcript?.status, space?.recording_url]);
 
   useEffect(() => {
     if (!open) {
       setRequesting(false);
-      setHasRetriedLegacy(false);
       setSearch('');
       setLanguage('original');
       setCurrentTime(0);
@@ -735,7 +735,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                       : t('stages.transcriptUnavailable')}
                   </p>
                   <Button
-                    onClick={() => handleTranscribe(false, true)}
+                    onClick={() => handleTranscribe(false)}
                     disabled={requesting}
                     className="rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/10"
                   >
