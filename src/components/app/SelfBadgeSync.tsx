@@ -23,6 +23,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { useBadgeLadderSync } from '@/hooks/use-badge-scale';
 import { getBadgeName, parseBadgeLock } from '@/lib/staking-badges';
+import { setLiveBadgeBalanceForProfiles } from '@/lib/profiles';
 
 export function SelfBadgeSync() {
   const { user, refreshUser } = useAuth();
@@ -43,6 +44,15 @@ export function SelfBadgeSync() {
 
   /** The tier we last reconciled, so a stale API answer can't loop us. */
   const reconciled = useRef<string | null>(null);
+
+  // Hand the live balance to the profile allowance, which is checked from two
+  // plain functions that cannot call a hook — the adopt gate and the session
+  // restore. Without this they priced the allowance off the stored snapshot
+  // alone while Settings priced it off the live balance, so the button offered
+  // a slot the action then refused.
+  useEffect(() => {
+    setLiveBadgeBalanceForProfiles(live);
+  }, [live]);
 
   useEffect(() => {
     if (live === undefined) return;
