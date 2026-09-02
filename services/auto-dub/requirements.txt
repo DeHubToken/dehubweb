@@ -1,0 +1,5 @@
+runpod>=1.7.0
+coqui-tts[zh,ja,ko]==0.25.3
+numpy<2.0
+soundfile>=0.12
+requests>=2.31

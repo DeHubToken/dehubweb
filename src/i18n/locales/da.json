@@ -4294,5 +4294,12 @@
     "foldersInFolder_other": "I {{count}} mapper",
     "foldersNoItems": "Intet i denne mappe endnu",
     "foldersNoItemsHint": "Åbn et resultat, og vælg \"Tilføj til mappe\" for at arkivere det her."
+  },
+  "dub": {
+    "audio": "Lyd",
+    "original": "Original lyd",
+    "dubbed": "Døbt lyd",
+    "preparing": "Forbereder døbt lyd...",
+    "unavailable": "Døbt lyd er ikke tilgængelig for denne video."
   }
 }

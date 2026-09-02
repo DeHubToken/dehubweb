@@ -2043,5 +2043,12 @@
     "foldersEmpty": "No folders yet.",
     "foldersInFolder_one": "In {{count}} folder",
     "foldersInFolder_other": "In {{count}} folders"
+  },
+  "dub": {
+    "audio": "آڈیو",
+    "original": "Original audio",
+    "dubbed": "Dubbed audio",
+    "preparing": "Dabbed audio tayar kar rahey hain…",
+    "unavailable": "ई वीडियो खातिर डबेड ऑडियो उपलब्ध नइखे।"
   }
 }

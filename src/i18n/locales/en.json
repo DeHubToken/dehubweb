@@ -4331,5 +4331,12 @@
     "foldersInFolder_other": "In {{count}} folders",
     "foldersNoItems": "Nothing in this folder yet",
     "foldersNoItemsHint": "Open a result and choose \"Add to folder\" to file it here."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Original audio",
+    "dubbed": "Dubbed audio",
+    "preparing": "Preparing dubbed audio…",
+    "unavailable": "Dubbed audio is not available for this video."
   }
 }

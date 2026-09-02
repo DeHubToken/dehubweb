@@ -4153,5 +4153,12 @@
     "foldersInFolder_other": "În dosarele {{count}}",
     "foldersNoItems": "Nimic în acest dosar încă",
     "foldersNoItemsHint": "Deschide un rezultat și alege „Adaugă în dosar” pentru a-l salva aici."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Sunet original",
+    "dubbed": "Sunet dublat",
+    "preparing": "Se pregătește sunetul dublat...",
+    "unavailable": "Sunetul dublat nu este disponibil pentru acest videoclip."
   }
 }

@@ -15,6 +15,7 @@
  *   attempt budget is respected here rather than spinning forever.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
@@ -29,10 +30,12 @@ import { applyCorrections, useTranscriptCorrections } from '@/hooks/use-transcri
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
+import { useVideoDub, useDubbedAudio, dubLangFor, type DubStatus } from '@/hooks/use-video-dub';
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
 const LS_SIZE = 'video-subs:size';
+const LS_DUB = 'video-dubs:on';
 
 const SIZE_PRESETS = [
   { key: 'xs', label: 'XS', px: 11 },
@@ -63,6 +66,9 @@ function readLang(): string {
   // a non-English language. Avoids junk en→en AI "translations".
   try { return localStorage.getItem(LS_LANG) || 'original'; } catch { return 'original'; }
 }
+function readDub(): boolean {
+  try { return localStorage.getItem(LS_DUB) === '1'; } catch { return false; }
+}
 function readSize(): SizeKey {
   try {
     const v = localStorage.getItem(LS_SIZE) as SizeKey | null;
@@ -80,13 +86,15 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const [enabled, setEnabled] = useState<boolean>(readEnabled);
   const [lang, setLang] = useState<string>(readLang);
   const [size, setSize] = useState<SizeKey>(readSize);
+  const [dubOn, setDubOn] = useState<boolean>(readDub);
   const [showSettings, setShowSettings] = useState(false);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [currentText, setCurrentText] = useState('');
 
-  // Only fetch transcript once user has shown intent (open popover or enabled subs)
-  const wantTranscript = enabled || open;
+  // Only fetch transcript once user has shown intent (open popover, enabled
+  // subs, or asked for dubbed audio — a dub is keyed on the transcript too).
+  const wantTranscript = enabled || open || dubOn;
 
   const { transcript, status: rowStatus, inFlight, canRetry, start, isLoading: transcriptLoading } =
     useVideoTranscript(numericId || null, !!numericId && wantTranscript);
@@ -131,6 +139,28 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     if (translationStatus === 'ready' || translationStatus === 'processing') return;
     void requestTranslation();
   }, [enabled, isReady, normalizedLang, translationStatus, requestTranslation]);
+
+  // ── Dubbed audio ──
+  // The dub follows the subtitle language: pick Spanish captions and "Dubbed"
+  // plays Spanish speech. Only languages the synthesiser knows qualify.
+  const dubLang = normalizedLang === 'original' ? null : dubLangFor(normalizedLang);
+  const wantDub = dubOn && isReady && !!dubLang;
+  const { dub, request: requestDub } = useVideoDub(transcript?.id ?? null, dubLang, wantDub);
+
+  // Ask once for a language nobody has rendered yet. A failed row is asked
+  // again — the function owns the attempt ceiling and backoff, not the client.
+  const askedDubRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!wantDub || !transcript?.id) return;
+    if (dub && dub.status !== 'failed') return;
+    const token = `${transcript.id}:${dubLang}`;
+    if (askedDubRef.current === token) return;
+    askedDubRef.current = token;
+    requestDub().catch(() => undefined);
+  }, [wantDub, transcript?.id, dubLang, dub, requestDub]);
+
+  useDubbedAudio(videoRef, wantDub && dub?.status === 'ready' && dub.audio_url ? dub.audio_url : null);
+  const dubStatus: DubStatus | 'absent' | null = !wantDub ? null : (dub?.status ?? 'absent');
 
   // Viewer corrections to the original-language lines. Only fetched once
   // captions are actually wanted, and only applied to the original: a
@@ -270,6 +300,19 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   useEffect(() => {
     try { localStorage.setItem(LS_SIZE, size); } catch { /* noop */ }
   }, [size]);
+  useEffect(() => {
+    try { localStorage.setItem(LS_DUB, dubOn ? '1' : '0'); } catch { /* noop */ }
+  }, [dubOn]);
+
+  // "Dubbed" with captions still on Original: switch to the viewer's own
+  // language if it can be voiced, otherwise there is nothing to dub into.
+  const handleDubToggle = (next: boolean) => {
+    if (next && normalizedLang === 'original') {
+      const guess = detectLocaleLang();
+      if (dubLangFor(guess) && dubLangFor(guess) !== sourceLang) setLang(guess);
+    }
+    setDubOn(next);
+  };
 
   // Inject ::cue size styles for native <track> rendering
   const sizePxValue = SIZE_PRESETS.find((s) => s.key === size)?.px ?? 15;
@@ -360,6 +403,10 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         filteredLangs={filteredLangs}
         lang={lang}
         setLang={setLang}
+        dubOn={dubOn}
+        setDubOn={handleDubToggle}
+        dubStatus={dubStatus}
+        dubPossible={!!dubLang || normalizedLang === 'original'}
       />
     </>
   );
@@ -389,6 +436,11 @@ interface SubtitleMenuProps {
   filteredLangs: typeof SUBTITLE_LANGUAGES;
   lang: string;
   setLang: React.Dispatch<React.SetStateAction<string>>;
+  dubOn: boolean;
+  setDubOn: (next: boolean) => void;
+  dubStatus: DubStatus | 'absent' | null;
+  /** False when the chosen caption language has no voice. */
+  dubPossible: boolean;
 }
 
 function SubtitleMenu(props: SubtitleMenuProps) {
@@ -396,8 +448,17 @@ function SubtitleMenu(props: SubtitleMenuProps) {
     open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
     isReady, isWorking, isEmpty, isFailed, langLabel, query, setQuery, filteredLangs, lang, setLang,
+    dubOn, setDubOn, dubStatus, dubPossible,
   } = props;
   const isTouch = useIsTouchDevice();
+  const { t } = useTranslation();
+
+  const dubHint =
+    dubStatus === 'ready' || dubStatus === null
+      ? null
+      : dubStatus === 'failed'
+      ? t('dub.unavailable')
+      : t('dub.preparing');
 
   const triggerButton = (
     <button
@@ -475,6 +536,44 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       {isReady && (
         <p className="text-[11px] text-white/50">
           Language: <span className="text-white/80">{langLabel}</span>
+        </p>
+      )}
+      {/* Audio: the original track, or the same lines spoken in the caption
+          language in the creator's cloned voice. */}
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-[11px] text-white/60">{t('dub.audio')}</span>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setDubOn(false); }}
+            className={cn(
+              'text-[10px] px-2 py-0.5 rounded-md border',
+              !dubOn
+                ? 'bg-white/15 text-white border-white/20'
+                : 'bg-transparent text-white/60 border-white/10',
+            )}
+          >
+            {t('dub.original')}
+          </button>
+          <button
+            type="button"
+            disabled={!dubPossible}
+            onClick={(e) => { e.stopPropagation(); setDubOn(true); }}
+            className={cn(
+              'text-[10px] px-2 py-0.5 rounded-md border disabled:opacity-40',
+              dubOn
+                ? 'bg-white/15 text-white border-white/20'
+                : 'bg-transparent text-white/60 border-white/10',
+            )}
+          >
+            {t('dub.dubbed')}
+          </button>
+        </div>
+      </div>
+      {dubOn && dubHint && (
+        <p className="mt-1 text-[11px] text-white/50 flex items-center gap-1">
+          {dubStatus !== 'failed' && <Loader2 className="w-3 h-3 animate-spin" />}
+          {dubHint}
         </p>
       )}
     </div>

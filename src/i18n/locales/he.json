@@ -4079,5 +4079,12 @@
     "foldersInFolder_other": "בתיקיות {{count}}",
     "foldersNoItems": "אין עדיין כלום בתיקיה זו",
     "foldersNoItemsHint": "פתח תוצאה ובחר \"הוסף לתיקיה\" כדי לשמור אותה כאן."
+  },
+  "dub": {
+    "audio": "אודיו",
+    "original": "שמע מקורי",
+    "dubbed": "שמע מדובב",
+    "preparing": "מכין אודיו שזכה לכינוי...",
+    "unavailable": "אודיו מדובב אינו זמין עבור סרטון זה."
   }
 }

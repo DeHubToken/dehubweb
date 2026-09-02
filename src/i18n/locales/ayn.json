@@ -1995,5 +1995,12 @@
     "foldersInFolder_other": "في {{count}} مجلدات",
     "foldersNoItems": "ما في حاجة في الفولدر هذا لسه",
     "foldersNoItemsHint": "افتح النتيجة واختر \"إضافة إلى مجلد\" لحفظها هنا."
+  },
+  "dub": {
+    "audio": "صوت",
+    "original": "الصوت الأصلي",
+    "dubbed": "صوت مدبلج",
+    "preparing": "تجهيز صوت مدبلج...",
+    "unavailable": "ما فيش صوت مدبلج للفيديو ده."
   }
 }

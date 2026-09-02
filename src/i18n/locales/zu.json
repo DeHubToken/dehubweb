@@ -2048,5 +2048,12 @@
     "foldersInFolder_other": "Ku-{{count}} ifolda",
     "foldersNoItems": "Akukho lutho kufolda eli okwamanje",
     "foldersNoItemsHint": "Vula umphumela futhi khetha \"Engeza kufolda\" ukuze ulungisele lapha."
+  },
+  "dub": {
+    "audio": "Okwemisindo",
+    "original": "Umsindo wasekuqaleni",
+    "dubbed": "Umsindo obhalwe kabili",
+    "preparing": "Ilungiselela umsindo obizwa ngegama...",
+    "unavailable": "Umsindo onama-dubbed awutholakali kule vidiyo."
   }
 }

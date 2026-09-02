@@ -4310,5 +4310,12 @@
     "foldersInFolder_other": "{{count}}フォルダ内",
     "foldersNoItems": "このフォルダにはまだ何もありません",
     "foldersNoItemsHint": "結果を開き、「フォルダに追加」を選択してここに保存してください。"
+  },
+  "dub": {
+    "audio": "オーディオ",
+    "original": "オリジナルの音声",
+    "dubbed": "吹き替え音声",
+    "preparing": "吹き替え音声を準備しています…",
+    "unavailable": "吹き替え音声はこの動画では使用できません。"
   }
 }

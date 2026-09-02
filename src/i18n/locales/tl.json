@@ -4274,5 +4274,12 @@
     "foldersInFolder_other": "Sa mga folder na {{count}}",
     "foldersNoItems": "Wala pa sa folder na ito",
     "foldersNoItemsHint": "Magbukas ng resulta at piliin ang \"Idagdag sa folder\" upang ilagay ito dito."
+  },
+  "dub": {
+    "audio": "ay maaaring maging sa anyo ng",
+    "original": "Orihinal na audio",
+    "dubbed": "Audio na may Dubbed",
+    "preparing": "Inihahanda ang tinaguriang audio...",
+    "unavailable": "Hindi available ang Dubbed audio para sa video na ito."
   }
 }

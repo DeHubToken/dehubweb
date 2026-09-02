@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "Mapēs {{count}}",
     "foldersNoItems": "Šajā mapē vēl nav nekā",
     "foldersNoItemsHint": "Atveriet rezultātu un izvēlieties \"Pievienot mapei\", lai to šeit saglabātu."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Oriģinālais audio",
+    "dubbed": "Dublēts audio",
+    "preparing": "Notiek dublētā audio sagatavošana...",
+    "unavailable": "Šim videoklipam dublētais audio nav pieejams."
   }
 }

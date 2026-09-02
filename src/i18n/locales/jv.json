@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "Ing folder {{count}}",
     "foldersNoItems": "Durung ana apa-apa ing folder iki",
     "foldersNoItemsHint": "Bukak asil lan pilih \"Tambahake menyang folder\" kanggo nyimpen ing kene."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Swara asli",
+    "dubbed": "Audio dubbing",
+    "preparing": "Nyiapake swara dubbing…",
+    "unavailable": "Audio dubbing ora kasedhiya kanggo video iki."
   }
 }

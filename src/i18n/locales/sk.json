@@ -2191,5 +2191,12 @@
     "foldersInFolder_other": "V priečinkoch {{count}}",
     "foldersNoItems": "V tomto priečinku zatiaľ nič nie je",
     "foldersNoItemsHint": "Otvorte výsledok a vyberte „Pridať do priečinka“, aby ste ho sem zaradili."
+  },
+  "dub": {
+    "audio": "Zvuk",
+    "original": "Originálny zvuk",
+    "dubbed": "Dabovaný zvuk",
+    "preparing": "Pripravuje sa dabovaný zvuk...",
+    "unavailable": "Pre toto video nie je k dispozícii dabovaný zvuk."
   }
 }

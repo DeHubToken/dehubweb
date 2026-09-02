@@ -4331,5 +4331,12 @@
     "foldersInFolder_other": "Di folder {{count}}",
     "foldersNoItems": "Belum ada apa pun di folder ini",
     "foldersNoItemsHint": "Buka hasil dan pilih \"Tambahkan ke folder\" untuk menyimpannya di sini."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Audio asli",
+    "dubbed": "Dijuluki audio",
+    "preparing": "Mempersiapkan audio yang dijuluki…",
+    "unavailable": "Audio yang dijuluki tidak tersedia untuk video ini."
   }
 }

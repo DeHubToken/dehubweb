@@ -4264,5 +4264,12 @@
     "foldersInFolder_other": "U mapama {{count}}",
     "foldersNoItems": "Ovdje još nema ničega",
     "foldersNoItemsHint": "Otvorite rezultat i odaberite \"Dodaj u mapu\" da biste ga ovdje spremili."
+  },
+  "dub": {
+    "audio": "Zvuk",
+    "original": "Izvorni zvuk",
+    "dubbed": "Dijagnosticirani zvuk",
+    "preparing": "Priprema sinkroniziranog zvuka…",
+    "unavailable": "Diferencirani zvuk nije dostupan za ovaj videozapis."
   }
 }

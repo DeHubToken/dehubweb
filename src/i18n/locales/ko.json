@@ -4316,5 +4316,12 @@
     "foldersInFolder_other": "{{count}} 폴더들에",
     "foldersNoItems": "이 폴더에 아무것도 없습니다",
     "foldersNoItemsHint": "결과를 열고 \"폴더에 추가\"를 선택하여 여기에 저장하세요."
+  },
+  "dub": {
+    "audio": "오디오",
+    "original": "원본 오디오",
+    "dubbed": "더빙된 오디오",
+    "preparing": "더빙된 오디오 준비 중...",
+    "unavailable": "이 동영상에는 더빙된 오디오를 사용할 수 없습니다."
   }
 }
