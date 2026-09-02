@@ -1,69 +1,46 @@
 /**
- * Wagmi Configuration with RainbowKit
- * =====================================
- * Only 4 wallets: Rabby, MetaMask, Trust, Phantom.
- * RainbowKit handles mobile deep links, SDK relay, and "sign → return to browser" flow.
- * Generic injected() for auto-connect in wallet in-app browsers.
+ * Wagmi configuration — the part that boots.
+ * ==========================================
+ * The config every visitor pays for at first paint, so it carries exactly one
+ * connector: the generic `injected()` that reaches whatever wallet a mobile
+ * in-app browser exposes as window.ethereum. Everything a visitor might *pick*
+ * — MetaMask (and its SDK), Phantom, Trust, WalletConnect, all built through
+ * RainbowKit — lives in lib/wagmi-wallets and is added to this same config the
+ * first time the login sheet, a linked-wallet connect, or a returning
+ * external-wallet session asks for it.
+ *
+ * Why the split: wagmi runs each connector's setup() when the config is
+ * created, and MetaMask's connector setup() imports and initialises the whole
+ * MetaMask SDK. Together with RainbowKit's barrel and WalletConnect that was
+ * ~500 KB of JavaScript evaluated on every visit to the home page, for a
+ * modal most visitors never open — the biggest single item in the 2026-09-02
+ * Lighthouse run. EIP-6963 discovery of installed extensions is unaffected;
+ * wagmi adds those connectors on its own, and the sheet lists them.
  */
 
-import { http, createConfig, createConnector } from 'wagmi'
+import { http, createConfig } from 'wagmi'
 import { injected } from 'wagmi/connectors'
 import { base, bsc, mainnet } from 'wagmi/chains'
 import { robinhood, ROBINHOOD_PUBLIC_RPC } from '@/lib/chains/robinhood'
-import { connectorsForWallets } from '@rainbow-me/rainbowkit'
-import type { Wallet } from '@rainbow-me/rainbowkit'
-import {
-  metaMaskWallet,
-  phantomWallet,
-  trustWallet,
-  walletConnectWallet
-} from '@rainbow-me/rainbowkit/wallets'
+
+export const WALLET_CONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
+
+const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
 
 /**
- * RainbowKit's phantomWallet()/trustWallet() resolve the injected provider
- * ONCE, synchronously, when connectorsForWallets() runs at module load —
- * before some extensions have finished injecting. With multiple wallet
- * extensions installed, whichever hasn't injected yet at that instant loses
- * the race, and RainbowKit's internal fallback (window.ethereum.providers[0])
- * silently binds this button to a DIFFERENT wallet (e.g. clicking "Phantom"
- * connects to Trust). Re-resolve lazily, at connect-click time, instead.
+ * This browser last logged in through an external wallet and still holds a
+ * live DeHub token — so wagmi's reconnect-on-mount has a connection to
+ * restore, and the connector it was made with has to exist before the
+ * provider mounts. Same test clearStaleWagmiState has always used.
  */
-function findTrustProvider(): any {
-  const eth = (window as any).ethereum
-  const providers = eth?.providers as any[] | undefined
-  const isTrust = (p: any) => !!p && (p.isTrustWallet || p.isTrust)
-  if (providers) return providers.find(isTrust)
-  return isTrust(eth) ? eth : undefined
+export function hasReturningWagmiSession(): boolean {
+  if (typeof window === 'undefined') return false;
+  const savedSource = localStorage.getItem('dehub_connection_source');
+  const token = localStorage.getItem('dehub_token');
+  const timestamp = localStorage.getItem('dehub_token_timestamp');
+  const isExpired = !timestamp || (Date.now() - parseInt(timestamp, 10)) >= TOKEN_EXPIRY_MS;
+  return savedSource === 'wagmi' && !!token && !isExpired;
 }
-
-function withLazyInjectedTarget(
-  wallet: Wallet,
-  resolve: () => any,
-): Wallet {
-  return {
-    ...wallet,
-    createConnector: (walletDetails) =>
-      createConnector((config) => ({
-        ...injected({ target: () => ({ id: wallet.id, name: wallet.name, provider: resolve() }) })(config),
-        ...walletDetails,
-      })),
-  }
-}
-
-function lazyPhantomWallet(): Wallet {
-  // phantomWallet() never falls back to WalletConnect — always safe to override.
-  return withLazyInjectedTarget(phantomWallet(), () => (window as any).phantom?.ethereum)
-}
-
-function lazyTrustWallet(params: { projectId: string }): Wallet {
-  const base = trustWallet(params)
-  // Only override when RainbowKit itself detected an injected Trust provider
-  // at call time — otherwise leave its WalletConnect/QR fallback untouched.
-  if (!base.installed) return base
-  return withLazyInjectedTarget(base, findTrustProvider)
-}
-
-const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
 
 /**
  * Prevent wagmi auto-reconnect on page load when there's no valid DeHub session.
@@ -71,14 +48,7 @@ const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
 function clearStaleWagmiState() {
   if (typeof window === 'undefined') return;
 
-  const savedSource = localStorage.getItem('dehub_connection_source');
-  const token = localStorage.getItem('dehub_token');
-  const timestamp = localStorage.getItem('dehub_token_timestamp');
-  const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
-  const isExpired = !timestamp || (Date.now() - parseInt(timestamp, 10)) >= TOKEN_EXPIRY_MS;
-  const hasValidToken = !!token && !isExpired;
-
-  if (savedSource !== 'wagmi' || !hasValidToken) {
+  if (!hasReturningWagmiSession()) {
     const keysToRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -96,26 +66,7 @@ function clearStaleWagmiState() {
 // NOTE: clearStaleWagmiState() is NOT called at module scope anymore.
 // Wagmi state is only cleared during explicit disconnect (clearWagmiStorage).
 // This preserves connector state so returning users can re-sign without a fresh connection.
-
-// RainbowKit connectors: MetaMask, Phantom, Trust, Rabby only
-// These handle desktop extension AND mobile (SDK relay / deep link → sign → return to browser)
-const rainbowKitConnectors = connectorsForWallets(
-  [
-    {
-      groupName: 'Popular',
-      wallets: [
-        metaMaskWallet,
-        lazyPhantomWallet,
-        lazyTrustWallet,
-        walletConnectWallet,
-      ],
-    },
-  ],
-  {
-    appName: 'DeHub',
-    projectId,
-  }
-)
+void clearStaleWagmiState;
 
 export const wagmiConfig = createConfig({
   // Robinhood Chain is registered even while its stream contracts are still
@@ -124,10 +75,10 @@ export const wagmiConfig = createConfig({
   // pickers is ROBINHOOD_ENABLED in lib/chains/constants.
   chains: [base, bsc, mainnet, robinhood],
   connectors: [
-    ...rainbowKitConnectors,
     // Hidden fallback for mobile in-app browsers (Trust, MetaMask, etc.)
     // that inject window.ethereum but may not support EIP-6963 discovery.
     // Not shown in RainbowKit UI — only used programmatically for auto-connect.
+    // The curated wallets are prepended by lib/wagmi-wallets on demand.
     injected(),
   ],
   transports: {

@@ -16,7 +16,7 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { toast } from 'sonner';
 import { LoginWalletsStep, type WalletId } from '../login/LoginWalletsStep';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
-import { clearWagmiStorage } from '@/lib/wagmi';
+import { clearWagmiStorage, wagmiConfig } from '@/lib/wagmi';
 import { writeConnectionSource } from '@/lib/connection-source';
 import { setWalletReconnectGuard } from '@/lib/wallet-reconnect';
 import { isUserRejection } from '@/lib/wallet-errors';
@@ -31,7 +31,7 @@ interface ConnectLinkedWalletBodyProps {
 const shortenAddress = (address: string) => `${address.slice(0, 6)}…${address.slice(-4)}`;
 
 export function ConnectLinkedWalletBody({ expectedAddress, onConnected }: ConnectLinkedWalletBodyProps) {
-  const { connectAsync, connectors } = useConnect();
+  const { connectAsync } = useConnect();
   const { disconnectAsync } = useDisconnect();
   const { address: connectedAddress } = useAccount();
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
@@ -94,9 +94,13 @@ export function ConnectLinkedWalletBody({ expectedAddress, onConnected }: Connec
     void (async () => {
       setBusy(true);
       try {
-        let connector = connectors.find((c) => connectorMatchesWallet(c, wallet));
+        // Curated connectors are added to the config on demand (lib/wagmi-wallets).
+        const { ensureWalletConnectors } = await import('@/lib/wagmi-wallets');
+        ensureWalletConnectors();
+        const liveConnectors = wagmiConfig.connectors;
+        let connector = liveConnectors.find((c) => connectorMatchesWallet(c, wallet));
         if (!connector && isWalletInAppBrowser()) {
-          connector = connectors.find((c) => c.id === 'injected');
+          connector = liveConnectors.find((c) => c.id === 'injected');
         }
         if (!connector) {
           throw new Error('That wallet was not detected in this browser.');

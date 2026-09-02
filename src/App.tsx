@@ -43,7 +43,7 @@ import { SurfaceTransition } from "@/components/transitions/SurfaceTransition";
 // it gets one extra same-page retry before falling back to the ErrorBoundary's
 // reload-once handling.
 const WalletProviders = lazyWithRetry(() =>
-  import("./components/app/WalletProviders").then(m => ({ default: m.WalletProviders }))
+  import("./components/app/WalletProviders").then(m => m.loadWalletProviders())
 );
 // Kick off the wallet chunk download at module-eval time (before React even
 // mounts) so it arrives as early as possible; React.lazy above reuses the

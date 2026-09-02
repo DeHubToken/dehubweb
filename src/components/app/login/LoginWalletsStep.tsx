@@ -14,6 +14,7 @@
  * stylesheet, which is document-global wherever the provider renders, and its
  * connect modal portals to `document.body` and stamps `data-rk` on its own root.
  */
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, ChevronRight } from 'lucide-react';
 import { WalletButton, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
@@ -90,6 +91,21 @@ export function LoginWalletsStep({
 }: LoginWalletsStepProps) {
   const { t } = useTranslation();
 
+  // The curated connectors are not in the boot config (lib/wagmi-wallets):
+  // WalletButton throws "Connector not found" for a wallet that is missing,
+  // so the rows wait for them. One skeleton frame on a warm cache.
+  const [connectorsReady, setConnectorsReady] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    import('@/lib/wagmi-wallets').then((m) => {
+      m.ensureWalletConnectors();
+      if (alive) setConnectorsReady(true);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   /*
     Reaching this step with a wallet already attached is normal — a previous
     session, or an attempt whose signature went unanswered. The buttons below
@@ -143,6 +159,16 @@ export function LoginWalletsStep({
   /** The chip belongs under whichever row owns the live connection. */
   const chipFor = (walletId: string) =>
     connectedChip && connectedWalletId === walletId ? connectedChip : null;
+
+  if (!connectorsReady) {
+    return (
+      <div className="space-y-3" aria-hidden>
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="w-full h-12 rounded-xl bg-white/10 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <RainbowKitProvider theme={darkTheme()} modalSize="compact">
