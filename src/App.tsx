@@ -46,11 +46,21 @@ import { SurfaceTransition } from "@/components/transitions/SurfaceTransition";
 const WalletProviders = lazyWithRetry(() =>
   import("./components/app/WalletProviders").then(m => m.loadWalletProviders())
 );
+/**
+ * Resolve the wallet/auth chunk without rendering. main.tsx awaits this before
+ * mounting: this boundary wraps every route, so when its chunk is still in
+ * flight React's FIRST commit is the Suspense fallback below — and that commit
+ * replaces the HTML shell, prerendered welcome panel included, with a loading
+ * skeleton for the few hundred ms until the chunk lands. Waiting here instead
+ * keeps the shell on screen and makes the first commit the app itself; once
+ * preloaded, lazyWithRetry renders the boundary without suspending at all.
+ */
+export const preloadWalletProviders = (): Promise<unknown> => WalletProviders.preload();
 // Kick off the wallet chunk download at module-eval time (before React even
-// mounts) so it arrives as early as possible; React.lazy above reuses the
-// same in-flight request.
+// mounts) so it arrives as early as possible; the lazy boundary above joins
+// the same in-flight request.
 if (typeof window !== "undefined") {
-  import("./components/app/WalletProviders").catch(() => {});
+  preloadWalletProviders().catch(() => {});
 }
 
 // Login modal — imported eagerly, and deliberately so. The sheet has to be on
