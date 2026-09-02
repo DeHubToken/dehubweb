@@ -120,7 +120,11 @@ function unstick(): string[] {
   const body = document.body;
   const undone: string[] = [];
 
-  for (const prop of ['position', 'top', 'left', 'right', 'height', 'overflow', 'overflow-y', 'pointer-events']) {
+  // `touch-action` belongs here as much as the other three: the story viewer
+  // sets it to `none` on <body>, and that is the one lock that produces exactly
+  // "the finger moved and the page did not" while leaving position, overflow
+  // and pointer-events looking clean.
+  for (const prop of ['position', 'top', 'left', 'right', 'height', 'overflow', 'overflow-y', 'pointer-events', 'touch-action']) {
     if (body.style.getPropertyValue(prop)) {
       body.style.removeProperty(prop);
       undone.push(prop);
@@ -188,6 +192,7 @@ function checkBodyState() {
   if (s.position === 'fixed') locks.push('position:fixed');
   if (s.overflowY === 'hidden' || s.overflowY === 'clip') locks.push(`overflow-y:${s.overflowY}`);
   if (s.pointerEvents === 'none') locks.push('pointer-events:none');
+  if (s.touchAction === 'none') locks.push('touch-action:none');
   if (!locks.length) return;
 
   report('Page left locked with nothing on screen holding it', { locks }, true);
@@ -213,6 +218,11 @@ function hasOwnScroller(start: Element | null): boolean {
   return false;
 }
 
+function endDrag() {
+  dragArmed = false;
+  dragTarget = null;
+}
+
 function onTouchStart(e: TouchEvent) {
   dragArmed = e.touches.length === 1;
   if (!dragArmed) return;
@@ -221,14 +231,36 @@ function onTouchStart(e: TouchEvent) {
   dragTarget = e.target instanceof Element ? e.target : null;
 }
 
+/**
+ * Could the page have moved the way the finger asked?
+ *
+ * A drag down is a request to scroll UP, and at the top there is nowhere to go
+ * — the page is right to stay still. Without this the watchdog reports every
+ * flick at the top of the feed as a freeze, which is most of them: of the 1,303
+ * reports in the first five days, 55% were at scrollTop 0. Android shows it and
+ * iOS does not, because iOS rubber-band drives the scroll position past the
+ * edge and trips the "it moved" check above.
+ *
+ * `dy` is the finger's travel: positive is downward, which scrolls toward the
+ * top of the document.
+ */
+function couldHaveScrolled(dy: number): boolean {
+  const top = getDocumentScrollTop();
+  if (dy > 0) return top > SLACK_PX; // dragging down: needs room above
+  const max = document.body.scrollHeight - window.innerHeight;
+  return top < max - SLACK_PX; // dragging up: needs room below
+}
+
 function onTouchMove(e: TouchEvent) {
   if (!dragArmed || e.touches.length !== 1) return;
-  if (Math.abs(e.touches[0].clientY - dragStartY) < DRAG_PX) return;
+  const dy = e.touches[0].clientY - dragStartY;
+  if (Math.abs(dy) < DRAG_PX) return;
   dragArmed = false; // one verdict per gesture
 
   if (getDocumentScrollTop() !== dragStartScroll) return; // it moved — nothing wrong
   if (reports >= MAX_REPORTS) return;
   if (!pageIsTallerThanViewport()) return;
+  if (!couldHaveScrolled(dy)) return; // already at that end — staying put is correct
   if (overlayIsOpen()) return;
   if (hasOwnScroller(dragTarget)) return;
 
@@ -240,7 +272,11 @@ function onTouchMove(e: TouchEvent) {
     return;
   }
 
-  report('A drag moved the finger but not the page', { target: dragTarget ? describe(dragTarget) : null }, true);
+  // Reported, not cleared — see the header. What is eating the touches is not
+  // on <body>, so there is nothing here to undo, and stripping body's styles on
+  // a guess tears the lock off a fullscreen viewer that is legitimately holding
+  // the page. The body-state check above is the path that recovers.
+  report('A drag moved the finger but not the page', { target: dragTarget ? describe(dragTarget) : null }, false);
 }
 
 /**
@@ -253,5 +289,10 @@ export function installScrollFreezeWatchdog(): void {
 
   window.addEventListener('touchstart', onTouchStart, { passive: true });
   window.addEventListener('touchmove', onTouchMove, { passive: true });
+  // Drop the target when the gesture ends. Feed video elements are pooled and
+  // reused across cards, so a retained node makes the next report name whichever
+  // card happens to own it now — which is why these logs read as video-heavy.
+  window.addEventListener('touchend', endDrag, { passive: true });
+  window.addEventListener('touchcancel', endDrag, { passive: true });
   window.setInterval(checkBodyState, POLL_MS);
 }
