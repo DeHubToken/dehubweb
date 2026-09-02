@@ -265,7 +265,12 @@ export async function isSubscribedToCreator(creatorAddress: string): Promise<boo
     return subscriptions.some(
       (sub) =>
         (sub.creatorAddress || sub.plan?.address || '').toLowerCase() ===
-          creatorAddress.toLowerCase() && sub.isActive,
+          creatorAddress.toLowerCase() &&
+        // isLiveSubscription, not isActive — the reason is written above it.
+        // This is what the gate drawer reads to decide whether to unlock and
+        // show "Subscribed", so on `isActive` alone a lapsed subscriber kept
+        // both, and an unconfirmed purchase with no end date counted too.
+        isLiveSubscription(sub),
     );
   } catch {
     return false;
