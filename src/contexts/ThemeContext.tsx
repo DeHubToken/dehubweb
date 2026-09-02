@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { loadThemeCss } from '@/lib/theme-css';
 import { THEME_COLOR } from '@/lib/theme-color';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 
@@ -223,7 +224,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [pushDimStrength]);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
+    // War / Osaka / Jungle chrome is a separate CSS chunk (src/lib/theme-css.ts):
+    // fetch it before stamping data-theme, or the switch paints the default
+    // chrome for a beat. The token guards against a slow fetch landing after a
+    // later switch.
+    let cancelled = false;
+    const pending = loadThemeCss(theme);
+    if (!pending) {
+      document.documentElement.dataset.theme = theme;
+      return;
+    }
+    const apply = () => {
+      if (!cancelled) document.documentElement.dataset.theme = theme;
+    };
+    pending.then(apply, apply);
+    return () => {
+      cancelled = true;
+    };
   }, [theme]);
 
   useEffect(() => {
