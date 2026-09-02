@@ -35,6 +35,50 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import dehubCoin from '@/assets/dehub-coin.png';
+
+/**
+ * A migration transfer that has been signed but not yet settled.
+ *
+ * The DHB leaves the wallet, and only then does settleMigration get told about
+ * it. Anything that fails in that gap must not send a second transfer for the
+ * same charge, so the receipt is kept until settle has acknowledged it. The
+ * post-quota path stashes its settlement for the same reason.
+ */
+interface SentMigrationPayment {
+  txHash: string;
+  chainId: number;
+}
+
+const MIGRATION_PAID_KEY = 'dehub.migrate.sentPayment';
+
+function sentMigrationPayments(): Record<string, SentMigrationPayment> {
+  try {
+    return JSON.parse(localStorage.getItem(MIGRATION_PAID_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function readSentMigrationPayment(chargeId: string): SentMigrationPayment | null {
+  return sentMigrationPayments()[chargeId] ?? null;
+}
+
+function rememberSentMigrationPayment(chargeId: string, payment: SentMigrationPayment): void {
+  try {
+    localStorage.setItem(
+      MIGRATION_PAID_KEY,
+      JSON.stringify({ ...sentMigrationPayments(), [chargeId]: { txHash: payment.txHash, chainId: payment.chainId } }),
+    );
+  } catch { /* private mode — the retry inside this page load still reuses it */ }
+}
+
+function forgetSentMigrationPayment(chargeId: string): void {
+  try {
+    const all = sentMigrationPayments();
+    delete all[chargeId];
+    localStorage.setItem(MIGRATION_PAID_KEY, JSON.stringify(all));
+  } catch { /* nothing to clean up */ }
+}
 import {
   listChannelVideos,
   quoteMigration,
@@ -355,14 +399,21 @@ export default function YoutubeMigratePage() {
           id: 'migration-pay',
           duration: Infinity,
         });
-        const payment = await payDhb(q.amountDhb, q.recipient, {
+        // A transfer already sent for this charge is reused rather than
+        // repeated. The DHB leaves the wallet before settleMigration is called,
+        // so a failure in that gap — a blip, a 5xx — used to drop back to a
+        // live Pay button and send a second transfer for the same charge.
+        const alreadySent = readSentMigrationPayment(q.chargeId);
+        const payment = alreadySent ?? await payDhb(q.amountDhb, q.recipient, {
           context: 'YouTube migration',
           expectedSigner: user?.address,
           shortfallMessage: (amount, has) =>
             `This migration costs ${amount.toLocaleString()} DHB and you hold ${has.toLocaleString()}.`,
         });
+        if (!alreadySent) rememberSentMigrationPayment(q.chargeId, payment);
         toast.dismiss('migration-pay');
         await settleMigration(q.chargeId, payment.txHash, payment.chainId);
+        forgetSentMigrationPayment(q.chargeId);
       }
       setCharge(null);
       setStage('processing');
@@ -370,7 +421,15 @@ export default function YoutubeMigratePage() {
     } catch (err) {
       toast.dismiss('migration-pay');
       toast.error(err instanceof Error ? err.message : 'Payment failed');
-      setStage(payFallback);
+      // Back to the quote, not to the stage before it.
+      //
+      // payFallback is 'listing', and the picker only renders when there is no
+      // quote while the quote card only renders while quoting or paying — so
+      // dropping to 'listing' with the quote still set hid both, leaving the
+      // page with nothing on it but the sample grid and no way back short of a
+      // reload. 'quoting' is the state that shows the quote with a live Pay
+      // button, which is what someone whose signature failed wants next.
+      setStage(quote ? 'quoting' : payFallback);
     }
   };
 
