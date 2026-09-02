@@ -22,6 +22,14 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // Muted grey. Stock zinc-500 (#71717a) measures 4.15:1 on the near-black
+        // cards, under the 4.5:1 WCAG AA floor, and it is the colour of every
+        // timestamp, handle and count in the feed. Backed by a CSS var so the
+        // light canvas theme and the docs paper surface keep the stock value,
+        // where the lighter grey would be the one that fails (see index.css).
+        zinc: {
+          500: "rgb(var(--zinc-500) / <alpha-value>)",
+        },
         // DeHub "brand blue" docs palette. These class names (text-royal-blue,
         // bg-sky-blue, from-middle-blue, text-jet-black, bg-plain-white …) are
         // used across the docs/blog + a few app components but were never

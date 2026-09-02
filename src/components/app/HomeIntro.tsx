@@ -480,7 +480,7 @@ export function HomeIntro() {
                       to="/docs/featured-in"
                       title={`${p.outlet} — ${p.reach}`}
                       tabIndex={copy === 1 ? -1 : undefined}
-                      className="font-exo text-sm font-semibold uppercase tracking-[0.06em] text-white/45 transition-colors hover:text-white/85"
+                      className="font-exo text-sm font-semibold uppercase tracking-[0.06em] text-white/50 transition-colors hover:text-white/85"
                     >
                       {p.outlet}
                     </Link>
@@ -505,7 +505,7 @@ export function HomeIntro() {
             className="rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
             style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
           >
-            <span style={{ color: 'rgba(255,255,255,.38)' }}>//</span>dehub.io
+            <span style={{ color: 'rgba(255,255,255,.5)' }}>//</span>dehub.io
           </span>
           <img
             src="/brand-kit/brand/qr-dehub-io.png"
