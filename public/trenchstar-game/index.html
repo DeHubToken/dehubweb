@@ -853,6 +853,165 @@
   #boot.failed #bootFail{display:block}
   #bootFail b{color:var(--amber);font-weight:400}
   #noscript-warn{color:var(--down);font-family:monospace;padding:40px}
+  /* ============================= HOLO CHROME =============================
+     One material for every menu in the room. The panels used to be eight
+     slightly different dark boxes; now they are all the same object — a sheet
+     of the wall's own glass: chamfer brackets at two corners, the CRT scanline
+     grain the screens are painted with, a light edge where the room catches
+     it, and a bloom behind it so it reads as lit rather than laid over.
+     A panel BOOTS rather than appears: a scan band sweeps down it as it
+     unfolds, the same way a screen on the wall powers up. And it is a thing
+     in the room, not a window on top of it — the floating panels tilt a
+     couple of degrees with the pointer, in perspective, so they sit in the
+     same space as the desk. Everything animated is transform or opacity, so
+     none of it competes with the renderer for the main thread.
+     This block comes AFTER every per-panel rule above and wins on purpose:
+     it restyles the material, and the rules above keep the sizes. */
+  :root{--tx:0;--ty:0;--holo:56,224,255;--holoEdge:rgba(56,224,255,.34)}
+  .holo{
+    position:relative;
+    background:
+      repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px),
+      linear-gradient(165deg,rgba(14,26,38,.94),rgba(5,10,16,.94) 55%,rgba(6,14,22,.96));
+    border:1px solid var(--holoEdge)!important;
+    border-radius:4px!important;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,.35),
+      0 18px 50px rgba(0,6,14,.62),
+      0 0 46px rgba(var(--holo),.12),
+      inset 0 1px 0 rgba(255,255,255,.14),
+      inset 0 0 40px rgba(var(--holo),.05);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    backdrop-filter:blur(14px) saturate(160%);
+    transform-style:preserve-3d;
+  }
+  /* the chamfer brackets: two L-shaped corner marks, hairline, lit */
+  .holo::before,.holo::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none;
+    z-index:4;border-color:rgb(var(--holo));border-style:solid;opacity:.85;
+    filter:drop-shadow(0 0 4px rgba(var(--holo),.8))}
+  .holo::before{top:-1px;left:-1px;border-width:1.5px 0 0 1.5px;border-radius:3px 0 0 0}
+  .holo::after{bottom:-1px;right:-1px;border-width:0 1.5px 1.5px 0;border-radius:0 0 3px 0}
+  /* the power-up: a scan band travelling down a sheet that unfolds from its
+     centre line, with a brightness flash as it lands */
+  @keyframes holoIn{
+    0%{opacity:0;transform:var(--holoT,none) scaleY(.06) scaleX(.985);filter:brightness(2.6)}
+    38%{opacity:1;transform:var(--holoT,none) scaleY(1.012) scaleX(1);filter:brightness(1.55)}
+    62%{transform:var(--holoT,none) scaleY(.996)}
+    100%{opacity:1;transform:var(--holoT,none) scaleY(1);filter:brightness(1)}
+  }
+  @keyframes holoScan{0%{transform:translateY(-110%)}100%{transform:translateY(110%)}}
+  .holo.on,.holoModal.on .holo{animation:holoIn .46s cubic-bezier(.2,.9,.25,1) both}
+  .holoScan{position:absolute;left:0;right:0;top:0;height:100%;pointer-events:none;z-index:5;
+    overflow:hidden;border-radius:inherit;opacity:0}
+  .holoScan i{position:absolute;left:0;right:0;top:0;height:38%;
+    background:linear-gradient(180deg,transparent,rgba(var(--holo),.22) 45%,rgba(255,255,255,.28) 50%,rgba(var(--holo),.22) 55%,transparent)}
+  .holo.on>.holoScan,.holoModal.on .holo>.holoScan{opacity:1;animation:holoFade .9s linear both}
+  .holo.on>.holoScan i,.holoModal.on .holo>.holoScan i{animation:holoScan .75s cubic-bezier(.3,0,.2,1) both}
+  @keyframes holoFade{0%,80%{opacity:1}100%{opacity:0}}
+  /* the floating panels sit in the room: a pointer-driven tilt in perspective.
+     --holoT carries the panel's own base transform through the animation. */
+  .holoTilt{--holoT:perspective(1100px) rotateX(calc(var(--ty) * -1.6deg)) rotateY(calc(var(--tx) * 2.2deg));
+    transform:var(--holoT);transform-origin:50% 100%;will-change:transform}
+  /* touch has no hover to steer by and phones cannot afford the layer */
+  @media (hover:none),(prefers-reduced-motion:reduce){.holoTilt{--holoT:none;transform:none}}
+  #setPanel .panelHead,#alertPanel .panelHead{margin-left:-14px;margin-right:-14px}
+  @media (prefers-reduced-motion:reduce){
+    .holo.on,.holoModal.on .holo,.holo.on>.holoScan,.holo.on>.holoScan i{animation:none}
+  }
+  /* headers: a system caption strip, the title as a readout */
+  .panelHead{margin:-13px -16px 10px;padding:10px 14px 8px;
+    background:linear-gradient(180deg,rgba(var(--holo),.10),rgba(var(--holo),.02));
+    border-bottom:1px solid rgba(var(--holo),.22)}
+  .panelHead h4{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.36em;color:#eaf7ff;
+    text-shadow:0 0 12px rgba(var(--holo),.55)}
+  .panelHead h4::before{content:"";width:6px;height:6px;border-radius:1px;background:rgb(var(--holo));
+    box-shadow:0 0 10px rgb(var(--holo));transform:rotate(45deg);flex:0 0 auto}
+  .panelX{border-radius:3px;background:rgba(var(--holo),.06);border-color:rgba(var(--holo),.3)}
+  .panelX:hover{background:rgba(var(--holo),.22);box-shadow:0 0 12px rgba(var(--holo),.45)}
+  #setPanel h4,#alertPanel h4,#pkBox h4,#walletPanel h4{text-transform:uppercase}
+  #alertPanel{--holo:255,194,75;--holoEdge:rgba(255,194,75,.36)}
+  #prevSym{--holo:56,224,255}
+  /* ---- controls: one family ----
+     Chips are the same object everywhere — timeframes, scenes, presets,
+     slippage, sides, tabs. Inputs are recessed glass with a lit focus. */
+  .scn,.tf,.amt,.sl,.pkMode,.pkQuickBtn,.sd,.wtab,.pk{
+    position:relative;border-radius:3px!important;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015)),#0a121b!important;
+    border:1px solid rgba(var(--holo),.2)!important;color:var(--dim);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    transition:transform .14s cubic-bezier(.2,.9,.3,1),box-shadow .18s,border-color .18s,color .14s,background .18s!important}
+  .scn:hover,.tf:hover,.amt:hover,.sl:hover,.pkMode:hover,.pkQuickBtn:hover,.sd:hover,.pk:hover,.wtab:hover{
+    color:#fff;border-color:rgba(var(--holo),.6)!important;transform:translateY(-1px);
+    box-shadow:0 0 14px rgba(var(--holo),.25),inset 0 1px 0 rgba(255,255,255,.12)}
+  .scn.on,.tf.on,.amt.on,.sl.on,.pkMode.on{
+    color:#04121c!important;background:rgb(var(--holo))!important;border-color:rgb(var(--holo))!important;
+    box-shadow:0 0 18px rgba(var(--holo),.55),inset 0 1px 0 rgba(255,255,255,.5);font-weight:700}
+  .sd.on[data-side=buy]{color:#04121c!important;background:var(--up)!important;border-color:var(--up)!important;
+    box-shadow:0 0 18px rgba(47,232,140,.5)}
+  .sd.on[data-side=sell]{color:#fff!important;background:var(--down)!important;border-color:var(--down)!important;
+    box-shadow:0 0 18px rgba(255,77,106,.5)}
+  .wtab{border:0!important;background:none!important;box-shadow:none;border-radius:0!important}
+  .wtab:hover{transform:none;box-shadow:none}
+  .wtab.on{color:#fff;text-shadow:0 0 10px rgba(var(--holo),.6)}
+  .wtab.on::after{content:"";position:absolute;left:18%;right:18%;bottom:-1px;height:2px;background:rgb(var(--holo));
+    box-shadow:0 0 10px rgb(var(--holo))}
+  .holo input[type=text],.holo input[type=number],.holo input[type=password],.holo select,
+  #srInput,#pkQ,#pkUrl,#fpTpl{
+    background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.08)),#08101a!important;
+    border:1px solid rgba(var(--holo),.24)!important;border-radius:3px!important;color:#eaf7ff!important;
+    box-shadow:inset 0 2px 8px rgba(0,0,0,.45),inset 0 -1px 0 rgba(255,255,255,.04);
+    transition:border-color .15s,box-shadow .15s}
+  .holo input:focus,.holo select:focus,#srInput:focus,#pkQ:focus,#pkUrl:focus,#fpTpl:focus{
+    border-color:rgb(var(--holo))!important;
+    box-shadow:0 0 0 1px rgba(var(--holo),.35),0 0 18px rgba(var(--holo),.28),inset 0 2px 8px rgba(0,0,0,.45)!important}
+  .holo select,#fpTpl{-webkit-appearance:none;appearance:none;padding-right:26px!important;cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,rgb(var(--holo)) 50%),linear-gradient(135deg,rgb(var(--holo)) 50%,transparent 50%)!important;
+    background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%!important;background-size:5px 5px,5px 5px!important;
+    background-repeat:no-repeat!important}
+  .holo select option{background:#08101a;color:#eaf7ff}
+  /* sliders: a lit track that fills behind the thumb */
+  .row input[type=range]{height:3px;border-radius:2px;
+    background:linear-gradient(90deg,rgb(var(--holo)) 0,rgb(var(--holo)) calc(var(--p,50)*1%),#16222e calc(var(--p,50)*1%))}
+  .row input[type=range]::-webkit-slider-thumb{width:13px;height:13px;border:2px solid #04121c;
+    box-shadow:0 0 10px rgba(var(--holo),.8),0 0 0 1px rgb(var(--holo))}
+  /* checkboxes read as switches */
+  .holo input[type=checkbox]{-webkit-appearance:none;appearance:none;width:26px!important;height:14px;margin:0;
+    border-radius:99px!important;background:#16222e!important;border:1px solid rgba(var(--holo),.3)!important;
+    position:relative;cursor:pointer;transition:background .15s;box-shadow:none;padding:0!important}
+  .holo input[type=checkbox]::after{content:"";position:absolute;top:2px;left:2px;width:8px;height:8px;border-radius:50%;
+    background:var(--dim);transition:transform .15s,background .15s}
+  .holo input[type=checkbox]:checked{background:rgba(var(--holo),.35)!important}
+  .holo input[type=checkbox]:checked::after{transform:translateX(12px);background:rgb(var(--holo));
+    box-shadow:0 0 8px rgb(var(--holo))}
+  /* list rows: an accent bar slides in on hover */
+  .wlRow,.fill,.aItem,.sr,.pkRow{position:relative;transition:background .15s,padding-left .15s}
+  .wlRow:hover,.fill:hover,.aItem:hover{background:rgba(var(--holo),.05);padding-left:6px}
+  .sr::before,.pkRow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+    background:rgb(var(--holo));box-shadow:0 0 8px rgb(var(--holo));transform:scaleY(0);transition:transform .15s}
+  .sr:hover::before,.sr.sel::before,.pkRow:hover::before,.pkRow.sel::before{transform:scaleY(1)}
+  /* the big action buttons in the ticket and the focus HUD get the glass too,
+     with the side colour lighting the film */
+  #tdGo[data-side=buy]::before{background:conic-gradient(from 210deg,rgba(47,232,140,.4),rgba(120,220,255,.2),rgba(47,232,140,.4))}
+  #tdGo[data-side=sell]::before{background:conic-gradient(from 210deg,rgba(255,77,106,.4),rgba(255,180,120,.2),rgba(255,77,106,.4))}
+  /* toast: a readout chip with a bracket, not a bare line of text */
+  #hint{padding:7px 14px 7px 16px;background:rgba(6,11,18,.86);border:1px solid rgba(var(--holo),.28);
+    border-left:2px solid rgb(var(--holo));border-radius:3px;color:#eaf7ff;pointer-events:none;
+    box-shadow:0 0 22px rgba(var(--holo),.18);backdrop-filter:blur(8px)}
+  /* the guide pill and the preview bar are the same material */
+  #guidePanel,#guideTab{background:
+      repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px),
+      linear-gradient(165deg,rgba(14,26,38,.9),rgba(5,10,16,.92));
+    border:1px solid rgba(var(--holo),.28);box-shadow:0 12px 34px rgba(0,6,14,.5),0 0 30px rgba(var(--holo),.1)}
+  #prev{--holoT:translateX(-50%)}
+  #prev.on{animation:holoIn .46s cubic-bezier(.2,.9,.25,1) both}
+  /* the modals' boxes boot the same way the side panels do */
+  #search.on #srInput{animation:holoIn .4s cubic-bezier(.2,.9,.25,1) both}
+  /* the character picker's cards and arrows join the family */
+  .csArrow{border-radius:3px;border-color:rgba(var(--holo),.3)}
+  .cs{border-radius:3px}
+  .cs.act{box-shadow:0 0 26px rgba(var(--holo),.28),0 0 0 1px rgba(var(--holo),.35)}
+  /* focus ring for keyboard users, in the same light */
+  .holo :focus-visible,.btn:focus-visible{outline:1px solid rgb(var(--holo));outline-offset:2px}
 </style>
 <!-- Where the character library loads from. Blank = these folders,
      which is how it runs locally and offline. Point it at the bucket's public
@@ -12405,6 +12564,86 @@ loadSounds();
 
 /* poke at the world from the console: TRENCHSTAR.focusOn(TRENCHSTAR.screens[3]) */
 const repaintAll=()=>screens.forEach(s=>{s.paint(s);s.tex.needsUpdate=true;});
+/* ============================= holo chrome =============================
+   The behaviour half of the HOLO CHROME block in the stylesheet: the scan
+   sheet every panel boots with, the pointer tilt that puts the floating
+   panels in the room, the lit half of every slider, and the two synthesised
+   UI sounds. All of it is additive — a panel is still opened and closed by
+   the same `on` class it always was. */
+const HOLO_PANELS=['#walletPanel','#setPanel','#alertPanel','#focusPanel','#prev','#pkBox','#csBox','#srResults'];
+for(const sel of HOLO_PANELS){
+  const el=$(sel);if(!el)continue;
+  el.classList.add('holo');
+  const s=document.createElement('div');s.className='holoScan';s.innerHTML='<i></i>';
+  el.appendChild(s);
+}
+for(const sel of ['#walletPanel','#setPanel','#alertPanel','#focusPanel'])$(sel)&&$(sel).classList.add('holoTilt');
+for(const sel of ['#picker','#charSel','#search'])$(sel)&&$(sel).classList.add('holoModal');
+
+/* the tilt: one pointer listener, one pair of variables, written only while
+   something that tilts is actually on screen */
+let tiltRaf=0,tiltX=0,tiltY=0;
+function tiltLive(){return document.querySelector('.holoTilt.on');}
+addEventListener('pointermove',e=>{
+  if(e.pointerType==='touch'||!tiltLive())return;
+  tiltX=(e.clientX/innerWidth-0.5)*2;tiltY=(e.clientY/innerHeight-0.5)*2;
+  if(!tiltRaf)tiltRaf=requestAnimationFrame(()=>{
+    tiltRaf=0;
+    document.documentElement.style.setProperty('--tx',tiltX.toFixed(3));
+    document.documentElement.style.setProperty('--ty',tiltY.toFixed(3));
+  });
+},{passive:true});
+
+/* sliders: the track lights up behind the thumb */
+function sliderFill(i){
+  const min=+i.min||0,max=+i.max||100,v=+i.value;
+  i.style.setProperty('--p',(((v-min)/(max-min||1))*100).toFixed(1));
+}
+document.querySelectorAll('.row input[type=range]').forEach(i=>{
+  sliderFill(i);i.addEventListener('input',()=>sliderFill(i));
+});
+/* the WALL panel writes slider values from code (reset, restore) — keep the
+   fill honest without asking every writer to remember */
+setInterval(()=>{if($('#setPanel').classList.contains('on'))document.querySelectorAll('.row input[type=range]').forEach(sliderFill);},400);
+
+/* two sounds, tiny and synthesised like the soundboard's: a sheet powering
+   up, and a tick on hover. Off by a click on the WALL panel's UI SOUND chip,
+   remembered. They only sound once the AudioContext has been unlocked by a
+   real gesture, which is how browsers want it anyway. */
+const holoSnd={on:(()=>{try{return localStorage.getItem('trenchstar.uiSound')!=='0';}catch(e){return true;}})(),last:0};
+function holoTone(kind){
+  if(!holoSnd.on||!AC||AC.state!=='running')return;
+  const c=AC,t=c.currentTime;
+  if(kind==='open'){tone(t,880,0.09,'triangle',0.05);tone(t+0.06,1760,0.14,'sine',0.04);}
+  else if(kind==='close'){tone(t,660,0.08,'triangle',0.04);}
+  else if(kind==='tick'){if(t-holoSnd.last<0.05)return;holoSnd.last=t;tone(t,2400,0.025,'square',0.012);}
+}
+/* open/close: watch the `on` class on every panel and modal */
+const holoWatch=new MutationObserver(list=>{
+  for(const r of list){
+    const was=r.oldValue||'',now=r.target.className||'';
+    const a=/\bon\b/.test(was),b=/\bon\b/.test(now);
+    if(a!==b)holoTone(b?'open':'close');
+  }
+});
+for(const sel of ['#walletPanel','#setPanel','#alertPanel','#focusPanel','#prev','#picker','#charSel','#search']){
+  const el=$(sel);if(el)holoWatch.observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true});
+}
+addEventListener('pointerover',e=>{
+  const t=e.target.closest&&e.target.closest('.btn,.scn,.tf,.amt,.sl,.pkMode,.pkQuickBtn,.sd,.wtab,.pk,.sr,.pkRow,.cs,.panelX');
+  if(t&&e.pointerType!=='touch')holoTone('tick');
+},{passive:true});
+/* the toggle lives with the rest of the WALL panel's scene chips */
+(()=>{
+  const foot=$('#setFoot');if(!foot)return;
+  const b=document.createElement('button');b.className='btn';b.id='uiSnd';
+  const paint=()=>{b.textContent=holoSnd.on?'♪ UI SOUND ON':'♪ UI SOUND OFF';b.classList.toggle('live',holoSnd.on);};
+  paint();
+  b.addEventListener('click',()=>{holoSnd.on=!holoSnd.on;try{localStorage.setItem('trenchstar.uiSound',holoSnd.on?'1':'0');}catch(e){}ac();paint();if(holoSnd.on)holoTone('open');});
+  foot.parentNode.insertBefore(b,foot);
+  b.style.cssText='width:100%;text-align:center;margin:8px 0 0;padding:7px 0';
+})();
+
 window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   GFX,envProbe,GlossShader,floorRough,glassScreenMat,SCREEN_GLASS,get mirror(){return mirror;},
   buildFloor,get FLOOR_Q(){return FLOOR_Q;},set FLOOR_Q(v){FLOOR_Q=v;},
