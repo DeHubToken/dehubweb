@@ -50,3 +50,48 @@ export function useBootSettled(): boolean {
   }, []);
   return value;
 }
+
+/**
+ * "The visitor has done something" — one scroll, tap, click, wheel or key.
+ *
+ * Deferring an autoplay clip to after load turned out not to be enough: the
+ * moment a muted clip starts playing, Chrome streams the whole file, and a
+ * 15-second feed clip here is 12–15 MB. So on first paint the above-the-fold
+ * clips wait for this as well. The poster is already on screen; the first
+ * scroll — which is how anyone uses a feed — is what starts the video, and
+ * a page nobody touches costs nobody 27 MB. Same module-level latch pattern
+ * as above, one set of passive listeners for the whole app.
+ */
+let interacted = false;
+const interactionListeners = new Set<() => void>();
+const INTERACTION_EVENTS = ['pointerdown', 'touchstart', 'wheel', 'keydown', 'scroll'] as const;
+
+function markInteracted() {
+  if (interacted) return;
+  interacted = true;
+  for (const ev of INTERACTION_EVENTS) window.removeEventListener(ev, markInteracted);
+  for (const l of interactionListeners) l();
+  interactionListeners.clear();
+}
+
+if (typeof window !== 'undefined') {
+  for (const ev of INTERACTION_EVENTS) {
+    window.addEventListener(ev, markInteracted, { passive: true, capture: true });
+  }
+}
+
+export function useFirstInteraction(): boolean {
+  const [value, setValue] = useState(interacted);
+  useEffect(() => {
+    if (interacted) {
+      setValue(true);
+      return;
+    }
+    const l = () => setValue(true);
+    interactionListeners.add(l);
+    return () => {
+      interactionListeners.delete(l);
+    };
+  }, []);
+  return value;
+}
