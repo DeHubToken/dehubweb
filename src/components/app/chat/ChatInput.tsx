@@ -143,17 +143,26 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
    * The drafter handles both directions: an incoming tail gets replies, the
    * user's own last word gets follow-ups.
    */
+  // The composer being empty is a dependency, not just a condition.
+  //
+  // Held back while there is text, then run when it clears. Reading it out of
+  // the ref alone meant the effect returned early and never came back: neither
+  // hasThread nor tailKey changes when someone deletes what they typed, so the
+  // draft for that tail was skipped for good. The rail then sat on 'idle',
+  // which it renders as busy with the orb disabled — a pulsing skeleton over a
+  // call that was never made, until the next message arrived.
+  const composerEmpty = !message.trim();
+
   useEffect(() => {
-    if (!hasThread) return;
-    const { smartReplies: sr, message: msg } = latest.current;
-    if (msg.trim()) return;
+    if (!hasThread || !composerEmpty) return;
+    const { smartReplies: sr } = latest.current;
     if (draftedFor.current === sr.tailKey) return;
     draftedFor.current = sr.tailKey;
     // 'error' as well as 'idle': the hook only rewinds itself to idle when a
     // SUCCESSFUL draft goes stale, so a single failure would otherwise leave
     // the rail showing that failure for every message after it.
     if (sr.status === 'idle' || sr.status === 'error') sr.generate();
-  }, [hasThread, smartReplies.tailKey]);
+  }, [hasThread, composerEmpty, smartReplies.tailKey]);
 
   // A new message re-arms a dismissed rail. Dismissing is "not for this
   // message", not "never again" — the alternative is a feature the user can
