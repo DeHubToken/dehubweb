@@ -88,10 +88,10 @@ const sharedViewObserver = new SharedViewObserver();
  * ```
  */
 export function useVideoViewTracking(tokenId: string) {
-  const onTimeUpdate = useCallback((currentTime: number, duration: number) => {
+  const onTimeUpdate = useCallback((currentTime: number, duration: number, loops = false) => {
     if (!tokenId || !duration || duration <= 0) return;
 
-    videoViewTracker.updateProgress(tokenId, currentTime, duration);
+    videoViewTracker.updateProgress(tokenId, currentTime, duration, loops);
   }, [tokenId]);
   
   // Cleanup on unmount

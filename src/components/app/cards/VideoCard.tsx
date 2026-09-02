@@ -1234,7 +1234,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
       // Track video view progress (fires view when threshold met)
       if (dur > 0) {
-        trackView(ct, dur);
+        trackView(ct, dur, videoRef.current.loop);
       }
 
       // Crowdsourced sponsor reads and intros, if the viewer asked for them to
