@@ -2039,5 +2039,12 @@
     "foldersInFolder_other": "在 {{count}} 个文件夹中",
     "foldersNoItems": "此文件夹中尚无内容",
     "foldersNoItemsHint": "打开一个结果并选择“添加到文件夹”以在此处归档。"
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "原聲",
+    "dubbed": "配音",
+    "preparing": "準備配音音檔…",
+    "unavailable": "此视频无配音版本。"
   }
 }

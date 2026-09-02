@@ -4590,5 +4590,12 @@
     "foldersInFolder_other": "Dalam folder {{count}}",
     "foldersNoItems": "Tiada apa-apa dalam folder ini lagi",
     "foldersNoItemsHint": "Buka hasil dan pilih \"Tambah ke folder\" untuk menyimpannya di sini."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Audio asal",
+    "dubbed": "Audio bergelar",
+    "preparing": "Menyediakan audio yang digelar...",
+    "unavailable": "Audio bergelar tidak tersedia untuk video ini."
   }
 }

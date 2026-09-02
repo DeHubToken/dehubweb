@@ -1987,5 +1987,12 @@
     "foldersInFolder_other": "{{count}} فولڊرن ۾",
     "foldersNoItems": "هن فولڊر ۾ اڃا تائين ڪجهه به ناهي",
     "foldersNoItemsHint": "هڪ نتيجو کوليو ۽ ان کي هتي فائل ڪرڻ لاءِ \"فولڊر ۾ شامل ڪريو\" چونڊيو."
+  },
+  "dub": {
+    "audio": "آڈیو",
+    "original": "اصل آڊيو",
+    "dubbed": "ڈب آڈیو",
+    "preparing": "ڈب شدہ آڈیو تیار کر رہے ہیں…",
+    "unavailable": "Azi video da dubbed audio available nai."
   }
 }

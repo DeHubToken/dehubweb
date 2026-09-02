@@ -2025,5 +2025,12 @@
     "foldersInFolder_other": "በ {{count}} ፎልደሮች ውስጥ",
     "foldersNoItems": "በዚህ ፎልደር ውስጥ ምንም የለም",
     "foldersNoItemsHint": "ውጤት ክፈት እና \"ወደ ፎልደር ጨምር\" ይምረጡ ወደ ここ ለማስገባት።"
+  },
+  "dub": {
+    "audio": "ኦዲዮ",
+    "original": "ኦሪጅናል ኦዲዮ",
+    "dubbed": "የተነደፈ ኦዲዮ",
+    "preparing": "የተሰየመ ኦዲዮ ማዘጋጀት…",
+    "unavailable": "በዚህ ቪዲዮ ላይ የተነደፈ ኦዲዮ አይገኝም ።"
   }
 }

@@ -4257,5 +4257,12 @@
     "foldersInFolder_other": "In {{count}}@ gidse",
     "foldersNoItems": "Niks in hierdie gids nog nie",
     "foldersNoItemsHint": "Maak 'n resultaat oop en kies \"Voeg by die gids\" om dit hier in te dien."
+  },
+  "dub": {
+    "audio": "Klank",
+    "original": "Oorspronklike klank",
+    "dubbed": "Dubbele klank",
+    "preparing": "Voorbereiding van benoemde oudio...",
+    "unavailable": "Dubbele klank is nie beskikbaar vir hierdie video nie."
   }
 }

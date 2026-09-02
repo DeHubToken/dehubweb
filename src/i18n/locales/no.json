@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "I {{count}} mapper",
     "foldersNoItems": "Ingenting i denne mappen ennå",
     "foldersNoItemsHint": "Åpne et resultat og velg \"Legg til i mappe\" for å arkivere det her."
+  },
+  "dub": {
+    "audio": "Lyd",
+    "original": "Original lyd",
+    "dubbed": "Dubbet lyd",
+    "preparing": "Forbereder dubbet lyd …",
+    "unavailable": "Dubbet lyd er ikke tilgjengelig for denne videoen."
   }
 }

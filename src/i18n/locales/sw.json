@@ -4322,5 +4322,12 @@
     "foldersInFolder_other": "Kwenye folda {{count}}",
     "foldersNoItems": "Hakuna chochote kwenye folda hii bado",
     "foldersNoItemsHint": "Fungua matokeo na uchague \"Ongeza kwenye folda\" ili uihifadhi hapa."
+  },
+  "dub": {
+    "audio": "Sauti",
+    "original": "Sauti ya awali",
+    "dubbed": "Sauti iliyochapishwa mara mbili",
+    "preparing": "Inaandaa sauti iliyopewa jina...",
+    "unavailable": "Sauti iliyosambazwa haipatikani kwa video hii."
   }
 }

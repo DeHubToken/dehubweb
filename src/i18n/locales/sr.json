@@ -1991,5 +1991,12 @@
     "foldersInFolder_other": "У фолдерима {{count}}",
     "foldersNoItems": "Ништа у овом фолдеру још увек",
     "foldersNoItemsHint": "Отворите резултат и изаберите „Додај у фолдер” да бисте га овде сачували."
+  },
+  "dub": {
+    "audio": "Аудио",
+    "original": "Originalni zvuk",
+    "dubbed": "Dijagnostikovani zvuk",
+    "preparing": "Pripremanje sinhronizovanog zvuka…",
+    "unavailable": "Nazvani zvuk nije dostupan za ovaj video."
   }
 }

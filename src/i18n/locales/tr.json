@@ -4331,5 +4331,12 @@
     "foldersInFolder_other": "{{count}} klasörlerinde",
     "foldersNoItems": "Bu klasörde henüz bir şey yok",
     "foldersNoItemsHint": "Bir sonucu açın ve buraya kaydetmek için \"Klasöre ekle\" seçeneğini belirleyin."
+  },
+  "dub": {
+    "audio": "Ses",
+    "original": "Orijinal ses",
+    "dubbed": "Dublajlı ses",
+    "preparing": "Dublajlı ses hazırlanıyor…",
+    "unavailable": "Bu video için dublajlı ses mevcut değil."
   }
 }

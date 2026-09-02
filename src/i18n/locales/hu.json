@@ -4267,5 +4267,12 @@
     "foldersInFolder_other": "{{count}} mappában",
     "foldersNoItems": "Ebben a mappában még nincs semmi",
     "foldersNoItemsHint": "Nyiss meg egy eredményt, és válaszd a \"Hozzáadás a mappához\" lehetőséget a mentéshez."
+  },
+  "dub": {
+    "audio": "Audió",
+    "original": "Eredeti hang",
+    "dubbed": "Szinkronizált hang",
+    "preparing": "Szinkronizált hang előkészítése…",
+    "unavailable": "Ehhez a videóhoz nem áll rendelkezésre szinkronizált hang."
   }
 }

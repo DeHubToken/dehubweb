@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "Në dosjet {{count}}",
     "foldersNoItems": "Asgjë në këtë dosje akoma",
     "foldersNoItemsHint": "Hap një rezultat dhe zgjidh \"Shto në dosje\" për ta ruajtur këtu."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Orgjinali Gjerësia:",
+    "dubbed": "Audio e quajtur",
+    "preparing": "Duke përgatitur audion e quajtur...",
+    "unavailable": "Audio e quajtur nuk është e disponueshme për këtë video."
   }
 }

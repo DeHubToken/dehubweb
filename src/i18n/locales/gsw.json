@@ -2030,5 +2030,12 @@
     "foldersInFolder_other": "I {{count}} Ordner",
     "foldersNoItems": "Nüt i dim Ordner",
     "foldersNoItemsHint": "Öffne e Resultat und wähle \"Ordner zuefüge\", zum es do ablaage."
+  },
+  "dub": {
+    "audio": "Audio",
+    "original": "Original Audio",
+    "dubbed": "Dübbedi Tohn",
+    "preparing": "Tön vorbereite zum Synchronisiere...",
+    "unavailable": "Für das Video isch kei synchronisierti Audio verfügbar."
   }
 }

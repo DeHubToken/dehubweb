@@ -2017,5 +2017,12 @@
     "foldersInFolder_other": "I roto i ngā kōpaki {{count}}",
     "foldersNoItems": "Kāore anō kia whai mea kei roto i tēnei kōpaki",
     "foldersNoItemsHint": "Whakatuwherahia tētahi hua ka tīpakohia te \"Tāpiri ki te kōpaki\" hei penapena ki konei."
+  },
+  "dub": {
+    "audio": "Ororongo",
+    "original": "Oro taketake",
+    "dubbed": "Oro reo irirangi",
+    "preparing": "Te whakarite i te oro e kiia nei ko...",
+    "unavailable": "E kore e wātea ana te oro o te kōpaki mō tēnei ataata."
   }
 }
