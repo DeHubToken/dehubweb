@@ -7742,8 +7742,8 @@ function radiusTick(dt){
 
 addEventListener('keydown',e=>{
   if(e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
-  const k=e.key.toLowerCase();
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undoLast();return;}
+  const k=(e.key||"").toLowerCase();   /* synthetic events can arrive with no key at all */
+  if((e.ctrlKey||e.metaKey)&&k==='z'){e.preventDefault();undoLast();return;}
   /* A held key repeats. Everything below except movement is a one-shot
      ACTION, and a repeat arrives AFTER the first one has changed the state it
      was dispatched against — holding F exited walk mode and then, now that
@@ -7833,7 +7833,7 @@ addEventListener('keydown',e=>{
   else if(k==='w')$('#btnSet').click();
 });
 addEventListener('keyup',e=>{
-  const k=e.key.toLowerCase();
+  const k=(e.key||"").toLowerCase();   /* synthetic events can arrive with no key at all */
   if('wasdqe'.includes(k)&&k.length===1)delete walk.keys[k];
   if(e.key===' ')delete walk.keys[' '];
   if(!e.shiftKey)freeCam.boost=0;
