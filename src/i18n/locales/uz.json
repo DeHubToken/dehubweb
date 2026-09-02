@@ -43,6 +43,7 @@
     "connectAi": "SI ulash"
   },
   "feed": {
+    "viewProfile": "{{name}} profilini ko&#39;rish",
     "home": "Bosh sahifa",
     "videos": "Videolar",
     "images": "Rasmlar",

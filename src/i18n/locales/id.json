@@ -43,6 +43,7 @@
     "connectAi": "Hubungkan AI"
   },
   "feed": {
+    "viewProfile": "Lihat profil {{name}}",
     "home": "Beranda",
     "videos": "Video",
     "images": "Gambar",

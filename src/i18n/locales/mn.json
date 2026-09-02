@@ -43,6 +43,7 @@
     "connectAi": "AI холбох"
   },
   "feed": {
+    "viewProfile": "{{name}}-н профайлыг харах",
     "home": "Нүүр",
     "videos": "Видео",
     "images": "Зураг",

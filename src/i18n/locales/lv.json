@@ -43,6 +43,7 @@
     "connectAi": "Savienot MI"
   },
   "feed": {
+    "viewProfile": "Skatīt lietotāja {{name}} profilu",
     "home": "Sākums",
     "videos": "Video",
     "images": "Attēli",

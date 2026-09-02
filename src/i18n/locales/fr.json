@@ -43,6 +43,7 @@
     "connectAi": "Connecter l'IA"
   },
   "feed": {
+    "viewProfile": "Afficher le profil de {{name}}",
     "home": "Accueil",
     "videos": "Vidéos",
     "images": "Images",

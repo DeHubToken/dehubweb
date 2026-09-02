@@ -39,6 +39,7 @@
     "connectAi": "Σύνδεση AI"
   },
   "feed": {
+    "viewProfile": "Προβολή προφίλ του/της {{name}}",
     "home": "Αρχική",
     "videos": "Βίντεο",
     "images": "Εικόνες",

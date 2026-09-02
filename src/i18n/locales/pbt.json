@@ -43,6 +43,7 @@
     "connectAi": "AI ونښلوئ"
   },
   "feed": {
+    "viewProfile": "د {{name}} پروفایل ته مراجعه وکړئ",
     "home": "کور",
     "videos": "ویډیوګانې",
     "images": "انځورونه",

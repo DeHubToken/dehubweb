@@ -43,6 +43,7 @@
     "connectAi": "Unganisha AI"
   },
   "feed": {
+    "viewProfile": "Angalia wasifu wa {{name}}",
     "home": "Nyumbani",
     "videos": "Video",
     "images": "Picha",

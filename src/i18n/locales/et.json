@@ -43,6 +43,7 @@
     "connectAi": "Ühenda AI"
   },
   "feed": {
+    "viewProfile": "Vaata kasutaja {{name}} profiili",
     "home": "Avaleht",
     "videos": "Videod",
     "images": "Pildid",

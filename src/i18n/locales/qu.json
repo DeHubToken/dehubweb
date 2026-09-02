@@ -43,6 +43,7 @@
     "connectAi": "IA-wan t'inkiy"
   },
   "feed": {
+    "viewProfile": "{{name}} pa perfilninta qhaway",
     "home": "Qallariy",
     "videos": "Video",
     "images": "Siqi",

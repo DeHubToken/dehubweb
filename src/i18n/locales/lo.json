@@ -43,6 +43,7 @@
     "connectAi": "ເຊື່ອມຕໍ່ AI"
   },
   "feed": {
+    "viewProfile": "ເບິ່ງໂປຣໄຟລ໌ຂອງ {{name}}",
     "home": "ໜ້າຫຼັກ",
     "videos": "ວິດີໂອ",
     "images": "ຮູບພາບ",

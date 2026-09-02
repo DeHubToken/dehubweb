@@ -43,6 +43,7 @@
     "connectAi": "Ampifandraiso ny AI"
   },
   "feed": {
+    "viewProfile": "Hijery ny mombamomba an'i {{name}}",
     "home": "Fandraisana",
     "videos": "Horonan-tsary",
     "images": "Sary",

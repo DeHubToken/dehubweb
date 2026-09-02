@@ -6,7 +6,20 @@ import { cn } from "@/lib/utils";
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> & { variant?: "default" | "lava" }
->(({ className, variant = "default", ...props }, ref) => (
+>(({
+  className,
+  variant = "default",
+  // The accessible name belongs on the Thumb — that is the element carrying
+  // role="slider" — and Radix does not pass it down from the Root. Every
+  // caller put `aria-label` on <Slider>, so every slider in the app announced
+  // as unnamed (the two on the signed-out home in the 2026-09-02 Lighthouse
+  // run). Lift the three naming attributes off the Root and hand them to the
+  // Thumb; everything else still spreads onto the Root as before.
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
+  "aria-valuetext": ariaValueText,
+  ...props
+}, ref) => (
   <SliderPrimitive.Root
     ref={ref}
     className={cn("relative flex w-full touch-none select-none items-center py-2 cursor-pointer", className)}
@@ -26,7 +39,7 @@ const Slider = React.forwardRef<
         } : undefined}
       />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb data-slider-thumb className={cn(
+    <SliderPrimitive.Thumb data-slider-thumb aria-label={ariaLabel} aria-labelledby={ariaLabelledBy} aria-valuetext={ariaValueText} className={cn(
       "block h-3.5 w-3.5 rounded-full border-2 bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
       variant === "lava" ? "border-white/40" : "border-primary"
     )} />

@@ -43,6 +43,7 @@
     "connectAi": "Poveži AI"
   },
   "feed": {
+    "viewProfile": "Pogledaj profil korisnika {{name}}",
     "home": "Početna",
     "videos": "Videozapisi",
     "images": "Slike",

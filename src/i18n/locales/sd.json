@@ -43,6 +43,7 @@
     "connectAi": "AI ڳنڍيو"
   },
   "feed": {
+    "viewProfile": "{{name}} جو پروفائل ڏسو",
     "home": "گھر",
     "videos": "وڊيو",
     "images": "تصويرون",

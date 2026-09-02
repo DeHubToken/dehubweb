@@ -539,6 +539,7 @@
     "not_now": "Bukan sekarang"
   },
   "feed": {
+    "viewProfile": "Lihat profil {{name}}",
     "home": "Laman Utama",
     "videos": "Video",
     "images": "Imej",

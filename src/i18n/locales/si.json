@@ -43,6 +43,7 @@
     "connectAi": "AI සම්බන්ධ කරන්න"
   },
   "feed": {
+    "viewProfile": "{{name}} හි පැතිකඩ බලන්න",
     "home": "මුල් පිටුව",
     "videos": "වීඩියෝ",
     "images": "පින්තූර",

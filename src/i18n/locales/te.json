@@ -43,6 +43,7 @@
     "connectAi": "AI కనెక్ట్ చేయండి"
   },
   "feed": {
+    "viewProfile": "{{name}} ప్రొఫైల్ ‌ ను చూడండి",
     "home": "హోమ్",
     "videos": "వీడియోలు",
     "images": "చిత్రాలు",

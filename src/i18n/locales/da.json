@@ -43,6 +43,7 @@
     "connectAi": "Forbind AI"
   },
   "feed": {
+    "viewProfile": "Se profilen for {{name}}",
     "home": "Hjem",
     "videos": "Videoer",
     "images": "Billeder",

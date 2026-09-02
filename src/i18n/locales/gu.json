@@ -43,6 +43,7 @@
     "connectAi": "AI જોડો"
   },
   "feed": {
+    "viewProfile": "{{name}} ની પ્રોફાઇલ જુઓ",
     "home": "હોમ",
     "videos": "વીડિયો",
     "images": "છબીઓ",

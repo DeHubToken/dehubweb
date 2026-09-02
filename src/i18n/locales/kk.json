@@ -43,6 +43,7 @@
     "connectAi": "AI қосу"
   },
   "feed": {
+    "viewProfile": "{{name}} профилін көру",
     "home": "Басты бет",
     "videos": "Бейнелер",
     "images": "Суреттер",

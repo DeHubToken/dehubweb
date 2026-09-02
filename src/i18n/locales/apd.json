@@ -43,6 +43,7 @@
     "connectAi": "ربط AI"
   },
   "feed": {
+    "viewProfile": "شوف بروفايل {{name}}",
     "home": "الرئيسية",
     "videos": "فيديوهات",
     "images": "صور",

@@ -43,6 +43,7 @@
     "connectAi": "Kết nối AI"
   },
   "feed": {
+    "viewProfile": "Xem hồ sơ của {{name}}",
     "home": "Home",
     "videos": "Videos",
     "images": "Images",

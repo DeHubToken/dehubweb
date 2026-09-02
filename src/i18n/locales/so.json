@@ -43,6 +43,7 @@
     "connectAi": "Ku xir AI"
   },
   "feed": {
+    "viewProfile": "Eeg astaanta {{name}}",
     "home": "Guriga",
     "videos": "Fiidiyowyada",
     "images": "Sawirrada",

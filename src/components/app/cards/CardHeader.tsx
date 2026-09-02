@@ -19,6 +19,7 @@ import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -81,6 +82,7 @@ export function CardHeader({
   badgeLookupId,
 }: CardHeaderProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { walletAddress: viewerAddress } = useAuth();
   const [imageError, setImageError] = useState(false);
@@ -147,6 +149,10 @@ export function CardHeader({
           onClick={handleProfileClick}
           onMouseDown={handleProfileMouseDown}
           disabled={!isClickable}
+          /* The avatar inside has no alt (it is decorative beside the name),
+             so the button needs a name of its own — one per card on the feed,
+             and all of them were nameless on the 2026-09-02 Lighthouse run. */
+          aria-label={t('feed.viewProfile', { name: username })}
           className={`shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
         >
           <Avatar className="w-9 h-9 rounded-md">

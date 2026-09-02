@@ -43,6 +43,7 @@
     "connectAi": "Yapay Zekâyı Bağla"
   },
   "feed": {
+    "viewProfile": "{{name}} adlı kişinin profilini görüntüleyin",
     "home": "Ana Sayfa",
     "videos": "Videolar",
     "images": "Görseller",

@@ -43,6 +43,7 @@
     "connectAi": "Haɗa AI"
   },
   "feed": {
+    "viewProfile": "Duba bayanan {{name}}",
     "home": "Gida",
     "videos": "Bidiyo",
     "images": "Hotuna",

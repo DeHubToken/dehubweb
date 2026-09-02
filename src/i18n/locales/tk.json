@@ -43,6 +43,7 @@
     "connectAi": "AI birikdir"
   },
   "feed": {
+    "viewProfile": "Açylýan profily: {{name}}",
     "home": "Baş sahypa",
     "videos": "Wideolar",
     "images": "Suratlar",

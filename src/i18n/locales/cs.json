@@ -43,6 +43,7 @@
     "connectAi": "Připojit AI"
   },
   "feed": {
+    "viewProfile": "Zobrazit profil uživatele {{name}}",
     "home": "Domů",
     "videos": "Videa",
     "images": "Obrázky",

@@ -43,6 +43,7 @@
     "connectAi": "Yhdistä tekoäly"
   },
   "feed": {
+    "viewProfile": "Näytä henkilön {{name}} profiili",
     "home": "Koti",
     "videos": "Videot",
     "images": "Kuvat",

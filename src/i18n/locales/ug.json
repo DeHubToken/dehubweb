@@ -43,6 +43,7 @@
     "connectAi": "AI ئۇلاش"
   },
   "feed": {
+    "viewProfile": "{{name}} نىڭ پروفىلىسىنى كۆرۈش",
     "home": "باش بەت",
     "videos": "ۋىدىئولار",
     "images": "رەسىملەر",
