@@ -84,6 +84,28 @@ const isSpeechSynthesisSupported = () => {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
 };
 
+/**
+ * The installed voices, or an empty list.
+ *
+ * `getVoices()` is not safe to call bare. Privacy browsers shim it to defeat
+ * fingerprinting — Brave on iOS wraps each voice and throws out of the wrapper
+ * — and the throw escapes whatever effect called it. This runs from a mount
+ * effect in a hook the AI chat panel uses, and that panel is on every feed
+ * card, so a throw took the whole home feed down through the error boundary.
+ * It was the single largest crash on iOS in the 2026-08 logs.
+ *
+ * There is nothing to recover: no voices means the browser picks its own, and
+ * speech still works. So swallow it and carry on.
+ */
+const safeGetVoices = (): SpeechSynthesisVoice[] => {
+  if (!isSpeechSynthesisSupported()) return [];
+  try {
+    return window.speechSynthesis.getVoices() ?? [];
+  } catch {
+    return [];
+  }
+};
+
 export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatReturn {
   const { onTranscript, onError, voicePreference = 'female' } = options;
   
@@ -111,7 +133,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     if (!isSpeechSynthesisSupported()) return;
     
     const loadVoices = () => {
-      const availableVoices = window.speechSynthesis.getVoices();
+      const availableVoices = safeGetVoices();
       if (availableVoices.length > 0) {
         setVoices(availableVoices);
       }
@@ -274,7 +296,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     utterance.volume = 1.0;
     
     // Use cached voices for consistent selection
-    const voicesToUse = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+    const voicesToUse = voices.length > 0 ? voices : safeGetVoices();
     
     let preferredVoice: SpeechSynthesisVoice | undefined;
     
