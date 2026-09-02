@@ -365,7 +365,7 @@ function faqJsonLd(contentHtml) {
     if (name && text) pairs.push({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } });
   }
   if (pairs.length < 3) return '';
-  return `\n<script type="application/ld+json">${JSON.stringify({
+  return `\n<script type="application/ld+json">${jsonLdScript({
     '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pairs,
   })}</script>`;
 }
@@ -389,7 +389,7 @@ function buildDocsHtml(route, meta, contentHtml) {
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(`docs/${route}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify({
+<script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'TechArticle',
   headline: meta.title, description: meta.description,
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
@@ -436,6 +436,25 @@ function escHtml(s = '') {
   return String(s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/**
+ * Serialise a value for a <script type="application/ld+json"> body.
+ *
+ * JSON.stringify escapes what JSON needs and nothing else, so a `</script>`
+ * inside any string comes out verbatim and closes the element early —
+ * everything after it is then parsed as markup, in <head>, on a dehub.io URL.
+ * Every entity card puts a user-editable string in here (a store name, a
+ * listing or event or stage or bounty title, a proposal author), so this is
+ * reachable by anyone who can name something.
+ *
+ * `<` is the only character that has to go: escaping it kills `</script>` and
+ * `<!--` together. < is valid JSON and parses back to the same string, so
+ * consumers see the original text. Ampersand and quote need no treatment
+ * inside a script element — it has no entity parsing.
+ */
+function jsonLdScript(value) {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
 function absolutize(url) {
@@ -577,7 +596,7 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
 <meta name="twitter:description" content="${escHtml(description)}">
 <meta name="twitter:image" content="${escHtml(image)}">
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/docs/blog" style="color:#9f9">Blog</a></p>
@@ -627,7 +646,7 @@ function buildBlogIndexHtml(manifest) {
 <meta property="og:title" content="DeHub Blog — News, Guides &amp; Product Updates">
 ${shareMetaTags('blog', 'DeHub Blog — news, guides and product updates')}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › Blog</p>
@@ -722,7 +741,7 @@ function buildSectionHtml(key, meta) {
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › ${escHtml(meta.heading)}</p>
@@ -1261,7 +1280,7 @@ ${robots}<link rel="canonical" href="${canonicalUrl}">
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › ${escHtml(meta.heading)}</p>
@@ -1388,7 +1407,7 @@ ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
 <meta property="og:description" content="${escHtml(description)}">
 ${entityImageMetaTags(image, title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p>${breadcrumb}</p>
@@ -1860,7 +1879,7 @@ function buildGuidePageHtml(slug, meta) {
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(`guides/${slug}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify({
+<script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'Article',
   headline: meta.title, description: meta.description,
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
@@ -3625,7 +3644,7 @@ async function handleRequest(request, env) {
       if (html.includes('"sameAs"')) {
         html = html.replace(/"sameAs":\s*\[[^\]]*\]/, JSON.stringify({ sameAs: ORG_SAME_AS }).slice(1, -1));
       } else {
-        html = html.replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
+        html = html.replace('</head>', `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
       }
       // What DeHub IS, in prose. Injected before the nav so it is the first
       // body content a crawler reads — this is the copy the "dehub" brand term
