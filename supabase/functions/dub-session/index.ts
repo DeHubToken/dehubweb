@@ -9,8 +9,10 @@
 //
 // Because we speak before we are paid, three things bound the exposure:
 //
-//   * `start` refuses unless the listener's wallet already holds
-//     MIN_START_MINUTES of DHB, so nobody opens a tab they cannot pay.
+//   * the client checks the wallet holds MIN_START_MINUTES of DHB before
+//     starting, so nobody opens a tab they obviously cannot pay. That is a
+//     courtesy, not a bound — it runs on the caller's side and a modified
+//     client skips it. The real bounds are the two below.
 //   * minutes stop accruing past MAX_UNSETTLED_MINUTES.
 //   * an unsettled tab blocks starting another, so exposure per wallet is one
 //     stage rather than however many they open.
@@ -129,11 +131,43 @@ Deno.serve(async (req) => {
         }, 409);
       }
 
+      // Open the tab here rather than waiting for the first tick.
+      //
+      // `start` hands out an entitlement block, so it is airtime and has to be
+      // accounted for like any other. It was the one path that granted time
+      // without touching the counter: re-starting just inside the token's life
+      // never ticked, so a client doing that dubbed indefinitely for nothing.
+      // The RPC charges nothing for the first start on a stage and a block for
+      // every start after it, which is exactly what a tick costs.
+      //
+      // A failure here is not allowed to hand out the token — that is the whole
+      // point — but it is reported as a start failure rather than swallowed.
+      let minutes = 0;
+      try {
+        const { data, error } = await serviceClient().rpc('stage_dub_tick', {
+          p_space_id: spaceId,
+          p_wallet: wallet,
+          p_language: language,
+          p_price_per_min: perMinute,
+          p_start: true,
+        });
+        if (error) throw error;
+        minutes = Number(data ?? 0);
+      } catch (e) {
+        // Until 20260902100000 is applied the function has no `p_start`, and
+        // PostgREST answers "function does not exist" rather than running the
+        // old one. Falling through leaves the pre-existing behaviour — the tab
+        // opens on the first tick — instead of taking dubbing off the air.
+        const message = String((e as { message?: string })?.message ?? e);
+        if (!/p_start|does not exist|schema cache/i.test(message)) throw e;
+        console.warn('[dub-session] start could not open the tab; awaiting migration 20260902100000');
+      }
+
       const { token, expiresAt } = await mintToken(spaceId, language);
       return jsonResponse({
         token,
         expiresAt,
-        minutes: 0,
+        minutes,
         pricePerMinuteDhb: perMinute,
         treasury: DHB_TREASURY,
         clonedVoice: await hasClonedVoice(spaceId),
