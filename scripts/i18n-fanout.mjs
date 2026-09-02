@@ -271,6 +271,31 @@ if (CHECK_ONLY) {
 }
 
 /**
+ * Rewrite the list the runtime widget fallback reads. A locale drops off it the
+ * moment its file is genuinely translated, so the widget is never loaded for a
+ * language that no longer needs it.
+ */
+if (flag('emit-fallback-list')) {
+  const THRESHOLD = 0.9;
+  const behind = allLocales
+    .filter((l) => (translatableTotal - missingFor(l).missing.length) / translatableTotal < THRESHOLD)
+    .sort();
+  const rows = [];
+  for (let i = 0; i < behind.length; i += 10) {
+    rows.push('  ' + behind.slice(i, i + 10).map((l) => `'${l}'`).join(', ') + ',');
+  }
+  const header = fs
+    .readFileSync('src/i18n/widget-fallback-locales.ts', 'utf8')
+    .split('export const')[0];
+  fs.writeFileSync(
+    'src/i18n/widget-fallback-locales.ts',
+    `${header}export const WIDGET_FALLBACK_LOCALES: readonly string[] = [\n${rows.join('\n')}\n];\n`,
+  );
+  console.log(`fallback list: ${behind.length} locale(s) below ${THRESHOLD * 100}%`);
+  process.exit(0);
+}
+
+/**
  * Strip keys whose value is the English source verbatim. Rendering does not
  * change — the key falls back to en.json either way — but the coverage report
  * stops counting them as translated, which is the whole point.

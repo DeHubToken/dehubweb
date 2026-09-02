@@ -67,6 +67,12 @@ jobs:
           if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
           node scripts/i18n-fanout.mjs $ARGS
 
+      # A locale drops off the widget fallback list the moment its file is
+      # genuinely translated, so this has to run after the fill, not before.
+      - name: Refresh the widget fallback list
+        if: always()
+        run: node scripts/i18n-fanout.mjs --emit-fallback-list
+
       - name: Report the gap after
         run: |
           node scripts/i18n-fanout.mjs --check | head -30
@@ -98,3 +104,4 @@ jobs:
             **Result** — see the before/after coverage in the run log.
           add-paths: |
             src/i18n/locales/*.json
+            src/i18n/widget-fallback-locales.ts
