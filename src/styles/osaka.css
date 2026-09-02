@@ -1,0 +1,5 @@
+/* Osaka theme chunk (see src/lib/theme-css.ts). osaka-frame.css owns the tokens
+   and the wet-glass primitives; osaka-theme.css consumes them. Swapping these
+   leaves every var(--osaka-*) unresolved. */
+@import "./osaka-frame.css";
+@import "./osaka-theme.css";
