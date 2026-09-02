@@ -30,6 +30,7 @@ import {
   profileAllowance,
   canAddProfile,
   preserveOutgoingProfile,
+  setLiveBadgeBalanceForProfiles,
 } from '@/lib/profiles';
 
 const SB_KEY = 'sb-testproject-auth-token';
@@ -62,6 +63,8 @@ function seedAccountB(): void {
 beforeEach(() => {
   localStorage.clear();
   vi.clearAllMocks();
+  // Module state, so it outlives a test that publishes one.
+  setLiveBadgeBalanceForProfiles(undefined);
 });
 
 afterEach(() => {
@@ -418,6 +421,43 @@ describe('badge-tier profile allowance', () => {
     expect(adoptCurrentProfile()).toBe(true);
     seedAccount(4);
     expect(adoptCurrentProfile()).toBe(false);
+  });
+
+  /**
+   * Settings priced the allowance off the live badge balance and the adopt
+   * gate priced it off the stored snapshot, so somebody who had just staked
+   * into a tier was offered a slot the action then refused. SelfBadgeSync
+   * publishes the live number and both read the same one.
+   */
+  it('takes the published live balance into account, not just the snapshots', () => {
+    seedAccount(1);
+    adoptCurrentProfile();
+    seedAccount(2);
+    adoptCurrentProfile();
+
+    // Two no-badge profiles: full.
+    expect(profileAllowance().maxProfiles).toBe(2);
+    expect(canAddProfile()).toBe(false);
+
+    // The stake lands. The stored rows still say nothing.
+    setLiveBadgeBalanceForProfiles(10_000);
+
+    const allowance = profileAllowance();
+    expect(allowance.maxProfiles).toBe(3);
+    expect(allowance.tierName).toBe('Crab');
+    expect(canAddProfile()).toBe(true);
+
+    // And the gate that actually saves agrees with the button.
+    seedAccount(3);
+    expect(adoptCurrentProfile()).toBe(true);
+  });
+
+  it('only ever promotes on the live balance', () => {
+    seedAccount(1, 10_000);
+    adoptCurrentProfile();
+    // A balance below the saved snapshot must not strip the tier it bought.
+    setLiveBadgeBalanceForProfiles(0);
+    expect(profileAllowance().maxProfiles).toBe(3);
   });
 
   it('gives the top tier fifty and names no tier beyond it', () => {

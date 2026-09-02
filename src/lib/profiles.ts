@@ -154,9 +154,31 @@ function parseBadgeBalance(value: number | string | null | undefined): number | 
  * the slot it buys immediately. Like every other badge surface, live only ever
  * promotes.
  */
+/**
+ * The live balance, last time anything knew it.
+ *
+ * The allowance is checked from two kinds of place: a component, which can
+ * read the live balance through `useSelfBadge`, and a plain function like the
+ * adopt gate below or the session-restore path in AuthProvider, which cannot
+ * call a hook. Those took the stored snapshot alone, so someone who had just
+ * staked into a tier saw Settings offer them the slot and then watched the
+ * action refuse it — the button and the gate were pricing the same allowance
+ * two different ways.
+ *
+ * `SelfBadgeSync` owns the fetch and publishes here, so both kinds of caller
+ * answer from the same number. Like every other badge surface this only ever
+ * promotes: it is one more holder in the list, and the allowance takes the
+ * best tier among them.
+ */
+let publishedLiveBadgeBalance: number | undefined;
+
+export function setLiveBadgeBalanceForProfiles(balance: number | undefined): void {
+  publishedLiveBadgeBalance = typeof balance === 'number' && balance >= 0 ? balance : undefined;
+}
+
 export function profileAllowance(
   profiles: StoredProfile[] = readStore(),
-  liveBadgeBalance?: number,
+  liveBadgeBalance: number | undefined = publishedLiveBadgeBalance,
 ): ProfileAllowance {
   return getProfileAllowance([
     ...profiles.map((p) => ({ badgeBalance: p.badgeBalance, username: p.username })),
