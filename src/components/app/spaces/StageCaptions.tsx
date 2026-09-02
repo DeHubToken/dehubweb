@@ -218,6 +218,14 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
               // the price and the failure toast land on the same surface the
               // decision was made on.
               event.preventDefault();
+              // Subtitles carry the entitlement. The token that tells speakers
+              // to generate this language rides the caption feed's presence,
+              // and that feed is only subscribed while subtitles are shown — so
+              // starting with them hidden billed by the minute for audio no
+              // speaker was ever asked to produce. Turning them on is the fix
+              // rather than refusing: the listener asked to hear the stage in
+              // their language, and this is what delivers it.
+              if (!show) setShowCaptions(true);
               void dubbing.start(language);
             }}
           >
