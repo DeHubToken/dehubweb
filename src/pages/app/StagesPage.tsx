@@ -480,6 +480,39 @@ export default function StagesPage() {
     }
   };
 
+  /**
+   * Starting and cancelling a scheduled stage, shared by the Upcoming list and
+   * the Hosting tab.
+   *
+   * These lived inline at both call sites as identical copies, and neither
+   * refreshed the Hosting query — the same gap `handleEndLive` above documents
+   * and closes for ending. So a host who started a scheduled stage went live
+   * and then found it still sitting under Scheduled, and cancelling one left it
+   * listed as though it were still going to happen. The row only corrected
+   * itself on a reload.
+   */
+  const handleStartScheduled = async (space: AudioSpace) => {
+    setBusyScheduledId(space.id);
+    try {
+      const ok = await startScheduledSpace(space.id);
+      if (ok) openModal('live');
+    } finally {
+      setBusyScheduledId(null);
+      await queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
+    }
+  };
+
+  const handleCancelScheduled = async (space: AudioSpace) => {
+    if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
+    setBusyScheduledId(space.id);
+    try {
+      await cancelScheduledSpace(space.id);
+    } finally {
+      setBusyScheduledId(null);
+      await queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
+    }
+  };
+
   const renderUpcoming = () => {
     if (scheduledSpaces.length === 0) {
       return (
@@ -512,24 +545,8 @@ export default function StagesPage() {
               space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase()
             }
             isBusy={busyScheduledId === space.id}
-            onStart={async () => {
-              setBusyScheduledId(space.id);
-              try {
-                const ok = await startScheduledSpace(space.id);
-                if (ok) openModal('live');
-              } finally {
-                setBusyScheduledId(null);
-              }
-            }}
-            onCancel={async () => {
-              if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
-              setBusyScheduledId(space.id);
-              try {
-                await cancelScheduledSpace(space.id);
-              } finally {
-                setBusyScheduledId(null);
-              }
-            }}
+            onStart={() => handleStartScheduled(space)}
+            onCancel={() => handleCancelScheduled(space)}
             onShare={() => setShareSpace(space)}
           />
         ))}
@@ -674,24 +691,8 @@ export default function StagesPage() {
                   space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase()
                 }
                 isBusy={busyScheduledId === space.id}
-                onStart={async () => {
-                  setBusyScheduledId(space.id);
-                  try {
-                    const ok = await startScheduledSpace(space.id);
-                    if (ok) openModal('live');
-                  } finally {
-                    setBusyScheduledId(null);
-                  }
-                }}
-                onCancel={async () => {
-                  if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
-                  setBusyScheduledId(space.id);
-                  try {
-                    await cancelScheduledSpace(space.id);
-                  } finally {
-                    setBusyScheduledId(null);
-                  }
-                }}
+                onStart={() => handleStartScheduled(space)}
+                onCancel={() => handleCancelScheduled(space)}
                 onShare={() => setShareSpace(space)}
               />
             ))}
