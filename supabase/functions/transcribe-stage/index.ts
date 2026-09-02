@@ -24,7 +24,12 @@ Deno.serve(async (req) => {
         kind: 'stage',
         ref: target.ref,
         action: 'start',
-        force: body?.force === true,
+        // Deliberately not forwarding `force`. This shim runs with verify_jwt
+        // off and calls onward with the service key, so passing a caller's
+        // force through would let anyone at all skip the attempt ceiling and
+        // the backoff on the real transcriber — the shim would be the widest
+        // door to the bill in the building. The mobile build this exists for
+        // wants an ordinary start, which is what it gets.
         timeline: Array.isArray(body?.timeline) ? body.timeline : [],
       }),
     });
