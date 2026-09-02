@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Twitter, Facebook, Linkedin, Share2, Send } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface ShareButtonsProps {
   shareUrl: string;
@@ -11,7 +11,6 @@ interface ShareButtonsProps {
 }
 
 export const ShareButtons: React.FC<ShareButtonsProps> = ({ shareUrl, postTitle, imageUrl, variant = 'icons' }) => {
-  const { toast } = useToast();
 
   const handleShare = (platform: string) => {
     let url = '';
@@ -34,9 +33,8 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ shareUrl, postTitle,
         break;
       case 'copy':
         navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "Link Copied",
-          description: "Blog post link copied to clipboard"
+        toast.success("Link Copied", {
+          description: "Blog post link copied to clipboard",
         });
         return;
     }

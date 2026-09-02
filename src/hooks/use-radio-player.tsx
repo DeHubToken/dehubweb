@@ -18,7 +18,7 @@ import {
 } from 'react';
 import type { RadioStation } from '@/lib/api/radio-browser';
 import { registerStationClick } from '@/lib/api/radio-browser';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import {
   claimMediaSession,
   releaseMediaSession,
@@ -170,10 +170,8 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
         isLoading: false,
         error: 'Stream unavailable'
       }));
-      toast({
-        title: 'Stream Error',
+      toast.error('Stream Error', {
         description: 'Unable to play this station. Try another one.',
-        variant: 'destructive',
       });
     };
     
@@ -212,10 +210,8 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     const streamUrl = station.url_resolved || station.url;
     
     if (!streamUrl) {
-      toast({
-        title: 'No Stream URL',
+      toast.error('No Stream URL', {
         description: 'This station does not have a valid stream.',
-        variant: 'destructive',
       });
       return;
     }
