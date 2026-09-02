@@ -8,18 +8,18 @@
  * The fan-out workflow regenerates this after every run, so a locale drops off
  * the list the moment its file is actually translated.
  *
- * A locale here is not automatically machine-translated: see GOOGLE_CODE in
- * translate-widget-fallback.ts, which has no entry for the ones Google does not
- * support (Chittagonian, Sylheti, Jinyu, Min Bei, Nigerian Pidgin and several
- * others). Those keep the English fallback, which is the honest outcome when no
- * translation of any kind exists.
+ * Every locale here maps to a real language in GOOGLE_CODE — none is left on
+ * English. Where Google has no code for one, it goes to the nearest language it
+ * does have: the Arabic dialects to Modern Standard Arabic, Chittagonian and
+ * Sylheti to Bengali, Jinyu and Min Bei to Mandarin, the West African pidgins
+ * to Krio.
  */
 export const WIDGET_FALLBACK_LOCALES: readonly string[] = [
-  'acm', 'acw', 'aec', 'ajp', 'am', 'apd', 'ary', 'arz', 'ayn', 'bho',
-  'cjy', 'ctg', 'dcc', 'dyu', 'gsw', 'gu', 'ha', 'hne', 'ig', 'jv',
-  'ka', 'kk', 'km', 'kn', 'ku', 'ky', 'lo', 'lt', 'lv', 'mag',
-  'mg', 'mi', 'ml', 'mn', 'mnp', 'mr', 'my', 'ne', 'no', 'om',
-  'or', 'pa', 'pbt', 'pcm', 'qu', 'rkt', 'sa', 'sd', 'sdr', 'si',
-  'sk', 'skr', 'so', 'sq', 'sr', 'syl', 'te', 'tg', 'th', 'ti',
-  'tk', 'tts', 'ug', 'uk', 'uz', 'wes', 'wuu', 'yo', 'yue', 'zu',
+  'acm', 'acw', 'aec', 'ajp', 'am', 'apd', 'ary', 'arz', 'ayn',
+  'bho', 'cjy', 'ctg', 'dcc', 'dyu', 'gsw', 'gu', 'ha', 'hne',
+  'ig', 'jv', 'ka', 'kk', 'km', 'kn', 'ku', 'ky', 'lo', 'lt', 'lv',
+  'mag', 'mg', 'mi', 'mn', 'mnp', 'my', 'no', 'om', 'or', 'pa',
+  'pbt', 'pcm', 'qu', 'rkt', 'sa', 'sd', 'sdr', 'sk', 'skr', 'so',
+  'sq', 'sr', 'syl', 'tg', 'th', 'ti', 'tk', 'tts', 'ug', 'uz',
+  'wes', 'wuu', 'yo', 'yue', 'zu',
 ];
