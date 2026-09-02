@@ -888,6 +888,20 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
   
   // Determine content type
   const contentType = post ? getContentType(post) : null;
+
+  /**
+   * The room key for everything hanging off a live post: its chat and its shop.
+   *
+   * Not the URL param. `/api/live` hands out Mongo ObjectIds, so a viewer who
+   * opened the stream from the Live tab or the home carousel arrives on
+   * /app/post/<ObjectId>, while the host and anyone arriving from the feed use
+   * the numeric tokenId. Keying on the param put those two groups in different
+   * rooms for the same broadcast — the host never saw Live-tab messages and
+   * pins did not reach them. The loader already resolves both shapes to
+   * `post.tokenId`, which is the id LivePostChat documents as the only one
+   * every caller can produce.
+   */
+  const liveRoomTokenId = String((post as any)?.tokenId ?? id ?? '');
   // toLiveStream builds fresh playbackUrls arrays; called inline in render it
   // handed LiveStreamCard new array identities on every page re-render, and
   // the playback effect (keyed on urlsToTry) tore down and re-created the
@@ -980,7 +994,7 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
     // to "Post Not Found" even though we still hold valid data — the classic
     // "not found on back-nav, fine after refresh" bug. If `post` exists, render it.
     if (!post) return <NotFoundState />;
-    
+
     // Handle processing posts. 'signed' is NOT transient: it is the for-life
     // status of a post published with mint opt-out, and those must render.
     if (post.status === 'pending') {
@@ -1005,7 +1019,7 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
                       the audience figure in the chat header, which without it
                       used to fall back to the platform-wide chat online count. */}
                   <LivePostChat
-                    tokenId={id}
+                    tokenId={liveRoomTokenId}
                     streamId={(post as any)?.stream?._id || (post as any)?.stream?.streamId || undefined}
                     isOffline={!('isLive' in post ? (post as any).isLive : true)}
                     isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
@@ -1249,8 +1263,8 @@ export default function SinglePostPage({ inOverlay = false, overrideId }: Single
               are not a customer of their own broadcast. */}
           {isLivePost && id && post && (
             walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase()
-              ? <StreamShopManager tokenId={id} />
-              : <StreamShopRail tokenId={id} />
+              ? <StreamShopManager tokenId={liveRoomTokenId} />
+              : <StreamShopRail tokenId={liveRoomTokenId} />
           )}
           {/* The chat is no longer a panel down here. It hangs off the message
               button in the stream's own action bar (see `chatSlot` above), so a
