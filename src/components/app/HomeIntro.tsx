@@ -252,6 +252,10 @@ export function HomeIntro() {
         <div className="absolute inset-0" style={{ background: GLOW, borderRadius: '50%' }} />
         <img
           src="/brand-kit/icons/globe-480.webp"
+          /* The hero renders at 96–260 CSS px (see .dehub-intro-hero); a phone
+             was pulling the 480 for a 112 px slot. */
+          srcSet="/brand-kit/icons/globe-240.webp 240w, /brand-kit/icons/globe-480.webp 480w"
+          sizes="(max-width: 519px) 112px, (max-width: 759px) 180px, 260px"
           alt=""
           width={480}
           height={471}

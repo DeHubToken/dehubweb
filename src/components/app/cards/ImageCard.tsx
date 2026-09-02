@@ -24,6 +24,7 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { cdnImageSrcSet } from '@/lib/media-url';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -121,6 +122,15 @@ function cacheAspectRatio(url: string, ratio: number) {
  * safely call the double-tap-to-like hook per-image (hooks may not run
  * inside a .map callback).
  */
+/**
+ * Candidate widths (device px) for a feed image and the slot it renders into
+ * (CSS px). The card is edge-to-edge on a phone and ~640 px wide beside the
+ * sidebars, so a 1x desktop takes the 720 and a 3x phone the 1080 or 1440 —
+ * instead of every device taking the 1080 the URL was built with.
+ */
+const FEED_IMAGE_WIDTHS = [480, 720, 1080, 1440];
+const FEED_IMAGE_SIZES = '(max-width: 767px) 100vw, 640px';
+
 function ImageSlide({
   img,
   idx,
@@ -168,6 +178,8 @@ function ImageSlide({
           up front so there's no layout shift on load. */}
       <img
         src={img}
+        srcSet={cdnImageSrcSet(img, FEED_IMAGE_WIDTHS)}
+        sizes={FEED_IMAGE_SIZES}
         alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
