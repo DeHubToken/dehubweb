@@ -14,11 +14,17 @@
  */
 
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
-import { CommentsSection } from './CommentsSection';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
-import { useState, useEffect, useRef } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef } from 'react';
+
+// The thread itself is a lazy chunk. This wrapper sits inside every feed card,
+// so CommentsSection (the composer, reactions, likers drawer, translation…)
+// was in the entry bundle for a thread most cards never open. All three
+// surfaces below only render it once `open` is true, so the first open on a
+// page fetches it; the section's own loading state covers the beat.
+const CommentsSection = lazy(() => import('./CommentsSection').then(m => ({ default: m.CommentsSection })));
 
 interface CommentsWrapperProps {
   open: boolean;
@@ -195,13 +201,15 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 12px)' }}
             data-vaul-no-drag
           >
-            <CommentsSection
-              tokenId={tokenId}
-              onClose={() => onOpenChange(false)}
-              initialTab={initialTab}
-              commentsDisabled={commentsDisabled}
-              postAuthorAddress={postAuthorAddress}
-            />
+            <Suspense fallback={null}>
+              <CommentsSection
+                tokenId={tokenId}
+                onClose={() => onOpenChange(false)}
+                initialTab={initialTab}
+                commentsDisabled={commentsDisabled}
+                postAuthorAddress={postAuthorAddress}
+              />
+            </Suspense>
           </div>
         </DrawerContent>
       </Drawer>
@@ -228,13 +236,15 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
           }}
         >
           <div className="flex-1 min-h-0 px-3 pb-3 h-full" data-vaul-no-drag>
-            <CommentsSection
-              tokenId={tokenId}
-              onClose={() => onOpenChange(false)}
-              initialTab={initialTab}
-              commentsDisabled={commentsDisabled}
-              postAuthorAddress={postAuthorAddress}
-            />
+            <Suspense fallback={null}>
+              <CommentsSection
+                tokenId={tokenId}
+                onClose={() => onOpenChange(false)}
+                initialTab={initialTab}
+                commentsDisabled={commentsDisabled}
+                postAuthorAddress={postAuthorAddress}
+              />
+            </Suspense>
           </div>
         </DrawerContent>
       </Drawer>
@@ -275,13 +285,15 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
               isCompact ? 'px-2 pb-2 pt-1 md:max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2 md:max-h-[70vh]'
             }`}
           >
-            <CommentsSection
-              tokenId={tokenId}
-              onClose={() => onOpenChange(false)}
-              initialTab={initialTab}
-              commentsDisabled={commentsDisabled}
-              postAuthorAddress={postAuthorAddress}
-            />
+            <Suspense fallback={null}>
+              <CommentsSection
+                tokenId={tokenId}
+                onClose={() => onOpenChange(false)}
+                initialTab={initialTab}
+                commentsDisabled={commentsDisabled}
+                postAuthorAddress={postAuthorAddress}
+              />
+            </Suspense>
           </div>
         </motion.div>
       )}

@@ -1,8 +1,30 @@
 import React, { Suspense, useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
 import { Outlet, useLocation, useMatch } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
-import { RightSidebar } from './RightSidebar';
 import { MobileBottomNav } from './MobileBottomNav';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
+
+// The right rail (search, chat, trending, suggestions) renders only from lg up
+// and already returned null below that — but as a static import its code sat
+// in every phone's entry bundle. Lazy, and mounted only on a desktop viewport,
+// so a phone never downloads it. Desktop kicks the fetch off here, at module
+// evaluation, so the chunk is in flight before React mounts and the rail
+// arrives a beat behind the rest of the shell instead of a round trip later.
+const loadRightSidebar = () => import('./RightSidebar').then(m => ({ default: m.RightSidebar }));
+const RightSidebar = React.lazy(loadRightSidebar);
+if (typeof window !== 'undefined' && window.matchMedia?.('(min-width: 1024px)').matches) {
+  loadRightSidebar().catch(() => { /* React.lazy retries on render */ });
+}
+
+function DesktopRightRail() {
+  const isDesktop = useIsDesktopViewport();
+  if (!isDesktop) return null;
+  return (
+    <Suspense fallback={null}>
+      <RightSidebar />
+    </Suspense>
+  );
+}
 import { StickyNavHideSync } from './StickyNavHideSync';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 // Direct import, NOT the '@/hooks' barrel: the barrel re-exports every hook
@@ -404,8 +426,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             </ErrorBoundary>
           )}
         </main>
-        
-        <RightSidebar />
+
+        <DesktopRightRail />
       </div>
       
       <MobileBottomNav />
