@@ -522,7 +522,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setWagmiAuthIntentState(prev => (prev === value ? !prev : value));
   }, []);
 
-  const openLoginModal = useCallback((options?: { intent?: 'login' | 'add-profile' }) => {
+  const openLoginModal = useCallback((options?: {
+    intent?: 'login' | 'add-profile';
+    /**
+     * The saved profile this sign-in is meant to restore, when there is one.
+     * An account already on the device is not a new one, so it is not held
+     * against the allowance.
+     */
+    forProfileId?: string;
+  }) => {
     connectionAbortedRef.current = false;
     // Read off storage, not state: this callback closes over the first render's
     // walletAddress and never rebuilds.
@@ -548,9 +556,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // sheet opens: the add-profile flow takes the live session down on its
       // way through, so discovering the limit at the end would mean signing
       // somebody out of an account they cannot then save.
+      //
+      // Signing back into a profile that is already saved is not adding one.
+      // A stored session that has expired or been revoked lands here through
+      // switchToProfile's failure path, and at the limit the allowance refused
+      // it — telling somebody to remove a profile in order to add an account
+      // they already have on the device, and leaving that account unreachable.
       const saved = listProfiles();
+      const alreadySaved =
+        !!options?.forProfileId && saved.some((p) => p.id === options.forProfileId);
       const allowance = profileAllowance(saved);
-      if (saved.length >= allowance.maxProfiles) {
+      if (!alreadySaved && saved.length >= allowance.maxProfiles) {
         toast.error(`You can keep ${allowance.maxProfiles} profiles on this device`, {
           description: allowance.nextTierName
             ? `${allowance.tierName} tier holds ${allowance.maxProfiles}. Stake for ${allowance.nextTierName} to add another.`
@@ -2891,7 +2907,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const prevId = currentProfileId();
     const plan = beginProfileSwitch(id);
     if (!plan) {
-      openLoginModal({ intent: 'add-profile' });
+      // Restoring this profile, not adding a new one — see openLoginModal.
+      openLoginModal({ intent: 'add-profile', forProfileId: id });
       return;
     }
     try {
@@ -2923,7 +2940,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.warn('[Auth] Profile switch failed to restore its session:', e);
       abortProfileSwitch(prevId);
-      openLoginModal({ intent: 'add-profile' });
+      openLoginModal({ intent: 'add-profile', forProfileId: id });
     }
   };
 
