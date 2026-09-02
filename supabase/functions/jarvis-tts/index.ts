@@ -1,6 +1,10 @@
-// Jarvis text-to-speech bridge. Server-to-server only: authenticated with the
-// existing CDN_PURGE_SERVICE_SECRET shared secret (x-jarvis-tts-secret header),
-// not a Supabase JWT — so verify_jwt is off in config.toml, same as infra-stats.
+// Jarvis text-to-speech bridge. Server-to-server only: authenticated with
+// JARVIS_TTS_SERVICE_SECRET (x-jarvis-tts-secret header), not a Supabase JWT —
+// so verify_jwt is off in config.toml, same as infra-stats.
+//
+// Falls back to CDN_PURGE_SERVICE_SECRET while the dedicated one is unset. This
+// used to read that shared value outright, so the string that flushes the CDN
+// also bought unmetered synthesis here — no per-caller cap, no rate limit.
 //
 // The ElevenLabs API key never leaves this function: it is not logged, echoed
 // or shaped into any response.
@@ -21,7 +25,10 @@ Deno.serve(async (req) => {
     return json(405, { ok: false, error: 'method_not_allowed' })
   }
 
-  const secret = Deno.env.get('CDN_PURGE_SERVICE_SECRET')
+  // Own secret first, shared one as a fallback until it is provisioned. See
+  // the note in cdn-purge.
+  const secret = Deno.env.get('JARVIS_TTS_SERVICE_SECRET')
+    || Deno.env.get('CDN_PURGE_SERVICE_SECRET')
   if (!secret || req.headers.get('x-jarvis-tts-secret') !== secret) {
     return json(401, { ok: false, error: 'unauthorized' })
   }
