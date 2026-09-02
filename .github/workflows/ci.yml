@@ -33,6 +33,16 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: node scripts/i18n-coverage.mjs --floor
       - run: node scripts/i18n-fanout.mjs --check | tail -5
+      - name: PROBE ONLY - google keyless endpoint reachability
+        run: |
+          echo "single:"
+          curl -s --max-time 20 -G "https://translate.googleapis.com/translate_a/single" --data-urlencode "q=Campaign Budget Calculator" -d "client=gtx" -d "sl=en" -d "tl=de" -d "dt=t" | head -c 300
+          echo
+          echo "multiline:"
+          curl -s --max-time 20 -G "https://translate.googleapis.com/translate_a/single" --data-urlencode "q=Daily Budget
+          Campaign Duration
+          Apply as BDM" -d "client=gtx" -d "sl=en" -d "tl=de" -d "dt=t" | head -c 400
+          echo
 
   # A request header missing from a function's Access-Control-Allow-Headers
   # makes the BROWSER drop the request — no network row, no function log, and a
