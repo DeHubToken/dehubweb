@@ -325,7 +325,8 @@ function handleEnded() {
   publish({ progress: 1, volume: 0, timeLeft: '-0:00' });
   endTimeout = setTimeout(() => {
     endTimeout = null;
-    publish(IDLE);
+    // Same reason as the stop path below: IDLE.rate is a page-load snapshot.
+    publish({ ...IDLE, rate: state.rate });
   }, 380);
 }
 
@@ -373,7 +374,13 @@ export function stopStageRecording() {
   estimatedDuration = 0;
   forcingDuration = false;
   pendingSeekRatio = null;
-  publish(IDLE);
+  // Everything IDLE holds except the speed. IDLE is built once when this module
+  // is imported, so its `rate` is whatever was stored at page load — publishing
+  // it whole put the picker back to that value on every stop, and the next
+  // recording then played at the old speed while the control and localStorage
+  // both said otherwise. The rate is app-wide and outlives a session; it
+  // certainly outlives one stop.
+  publish({ ...IDLE, rate: state.rate });
   // Releasing checks ownership, so stopping a recording after the radio has
   // taken the session over leaves the radio's lock screen intact.
   releaseMediaSession(MEDIA_SESSION_OWNER);
