@@ -323,7 +323,7 @@ function startEntryAfterFirstPaintPlugin() {
         }
         const entry = m[1];
         const starter = [
-          `<link rel="modulepreload" crossorigin href="${entry}" data-entry>`,
+          `<link rel="modulepreload" data-entry crossorigin href="${entry}">`,
           '<script>(function(){var s=0,e=' + JSON.stringify(entry) + ';',
           'function go(){if(s)return;s=1;import(e).catch(function(){});}',
           'function afterPaint(){requestAnimationFrame(function(){setTimeout(go,0);});}',
