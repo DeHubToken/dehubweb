@@ -20,8 +20,15 @@ import {
 } from '@/components/ui/drawer';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { GoLiveModal } from '@/components/app/modals';
 import { openStageModal } from '@/contexts/StageContext';
+// Lazy, and NOT through the @/components/app/modals barrel: this row renders
+// on the home feed for every visitor, and that one barrel import put the whole
+// go-live flow plus its five sibling modals — 89 files, ~890 KB of source — in
+// the entry chunk. It tipped the build's eager-JS ceiling on 2026-09-02 and
+// blocked every deploy behind it. Same shape as WhatsHappening's copy.
+const GoLiveModal = lazy(() =>
+  import('@/components/app/modals/GoLiveModal').then(m => ({ default: m.GoLiveModal }))
+);
 import { StoryRecorderModal, StoryViewerModal, ShimmerBorder } from '@/components/app/stories';
 // Lazy for the same reason as the other call sites — see ShortsFeed.
 const ShortsViewer = lazy(() =>
@@ -83,6 +90,12 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   // Show skeleton if external loading OR stories are loading
   const showSkeleton = externalLoading || storiesLoading;
 
+  // Mounted on first open and kept mounted after, so the chunk loads once and
+  // the close animation runs.
+  const [goLiveMounted, setGoLiveMounted] = useState(false);
+  useEffect(() => {
+    if (isGoLiveOpen) setGoLiveMounted(true);
+  }, [isGoLiveOpen]);
   useEffect(() => {
     if (isStoryViewerOpen) setStoryViewerMounted(true);
   }, [isStoryViewerOpen]);
@@ -279,10 +292,14 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   return (
     <>
       <AuthPromptComponent />
-      <GoLiveModal 
-        isOpen={isGoLiveOpen} 
-        onClose={() => setIsGoLiveOpen(false)} 
-      />
+      {goLiveMounted && (
+        <Suspense fallback={null}>
+          <GoLiveModal
+            isOpen={isGoLiveOpen}
+            onClose={() => setIsGoLiveOpen(false)}
+          />
+        </Suspense>
+      )}
       <StoryRecorderModal
         isOpen={isStoryRecorderOpen}
         onClose={() => setIsStoryRecorderOpen(false)}
