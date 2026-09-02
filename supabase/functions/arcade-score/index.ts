@@ -57,6 +57,7 @@ import {
   requireDeHubAuth,
   serviceClient,
 } from '../_shared/auth.ts';
+import { runBounds, runFlags } from '../_shared/arcade-run-bounds.ts';
 
 /** A run left open longer than this is over, whatever the client thinks. */
 const RUN_TTL_MS = 6 * 60 * 60 * 1000;
@@ -161,22 +162,23 @@ function accrue(
   now: number,
   allowancePermille: number,
 ): { next: RunState; flags: string[] } {
-  const elapsed = Math.max(0, now - new Date(run.started_at).getTime());
-  const cap = Math.floor(elapsed / board.msPerPermille) + allowancePermille;
+  // The clock and the reports, whichever binds first — see the module for why
+  // the clock alone let a script sleep for under a minute and claim the lot.
+  const bounds = runBounds({
+    elapsedMs: now - new Date(run.started_at).getTime(),
+    msPerPermille: board.msPerPermille,
+    checkpointPermille: board.checkpointPermille,
+    checkpoints: run.checkpoints,
+    allowancePermille,
+  });
 
   const wants = claimed(body?.progress, 1000);
   const wantsLife = claimed(body?.life, board.maxLife);
-  const flags: string[] = [];
-
-  // Flagged only when the claim is ahead of the clock by more than a whole
-  // checkpoint. A good player sprinting a quiet stretch is briefly ahead of the
-  // bound and catches up on the next fight; flagging that would fill the ledger
-  // with the players it exists to distinguish cheats from.
-  if (wants > cap + board.checkpointPermille) flags.push('ahead-of-clock');
+  const flags: string[] = runFlags(wants, bounds, board.checkpointPermille);
 
   // Monotone: progress never falls. Restarting the stage rewinds the camera,
   // and a run's reach is the furthest it ever got, not where it ended.
-  const progress = Math.max(run.progress, Math.min(wants, cap));
+  const progress = Math.max(run.progress, Math.min(wants, bounds.cap));
 
   // Health may fall freely and rise only as fast as the game can heal it. The
   // first report has nothing to compare against, so it is taken as given.
