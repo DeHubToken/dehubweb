@@ -462,7 +462,10 @@
       .bskel-panel { height: 150px; margin-bottom: 12px; border-radius: 16px; background: var(--bskel, rgba(255,255,255,.06)); }
       .bskel-search { height: 36px; margin-bottom: 12px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
       .bskel-main { flex: 1 1 auto; min-width: 0; width: 100%; padding-top: 44px; }
-      .bskel-tabs { height: 35px; margin: 4px 8px 8px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
+      /* Bottom margins are one px over the tab bar's: measured on the live
+         site, the app's welcome panel sits at y=92 (phone) / y=56 (desktop)
+         and the prerendered one in this skeleton sat one px above both. */
+      .bskel-tabs { height: 35px; margin: 4px 8px 9px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
       .bskel-card { height: 300px; margin: 0 8px 12px; border-radius: 16px;
                     background: var(--bskel, rgba(255,255,255,.06));
                     border: 1px solid var(--bskel-b, rgba(255,255,255,.08)); }
@@ -472,7 +475,7 @@
          when HomeIntro would not render: off "/", signed in, or dismissed. */
       html[data-home-intro="off"] [data-prerendered-intro] { display: none; }
       @media (min-width: 640px) {
-        .bskel-tabs { margin: 4px 12px 12px; }
+        .bskel-tabs { margin: 4px 12px 13px; }
         .bskel-card, .bskel-post { margin: 0 12px 12px; }
       }
       @media (min-width: 1024px) {
