@@ -842,7 +842,7 @@
     </div>
     <div id="buyQuote"></div>
   </div>
-  <div id="fpEsc">ESC / SCROLL TO RELEASE</div>
+  <div id="fpEsc"><span id="fpFlick">&larr; &rarr; NEXT SCREEN<br></span>ESC / SCROLL TO RELEASE</div>
 </div>
 
 <div id="prev">
@@ -1816,8 +1816,25 @@ function watchedTokens(){
    their own PnL on their own desk. Reading a balance needs no keys and no
    provider: rpc() falls back to a public endpoint, so an address is enough.
    Signing anything still needs wallet.addr, which this deliberately is not. */
+/* WHO THE APP IS SIGNED IN AS.
+   Standalone at /trenchstar-game/ this document IS dehub.io, so the app's
+   own session is sitting in localStorage right next to ours: `dehub_wallet`
+   is the address AuthProvider writes on sign-in and removes on sign-out.
+   Reading it is not a login and it buys this room nothing on its own -- a
+   public key, on every post the account has ever made -- but it is the whole
+   difference between a room that knows whose desk it is and one that tells a
+   signed-in user they have no account.
+   Inside the arcade the frame is an opaque origin, so its storage is a
+   private partition and this is always empty; that case comes down the host
+   bridge instead, which sends the same address as `me.address`. */
+function dehubAddr(){
+  try{
+    const a=localStorage.getItem('dehub_wallet')||'';
+    return /^0x[0-9a-fA-F]{40}$/.test(a)?a.toLowerCase():'';
+  }catch(e){return '';}
+}
 function watchAddr(){
-  return wallet.addr||(dhData.me&&dhData.me.address)||'';
+  return wallet.addr||(dhData.me&&dhData.me.address)||dehubAddr()||'';
 }
 async function refreshWallet(){
   const who=watchAddr();
@@ -5689,20 +5706,21 @@ function drawCoin(ctx,cx,cy,r){
    the bag still gets the coin and a 0, because "0 DHB" is a true statement and
    a missing row is just a missing row. Signed out there is no account to state
    a balance for, so it is left off. */
-function paintPnlCoin(ctx,w,y){
+function paintPnlCoin(ctx,w,y,k){
   if(!dhData.me)return;
   const bal=isFinite(dhData.me.badge)?dhData.me.badge:0;
-  const r=29;
+  k=k||1;                             /* full size when it IS the headline */
+  const r=29*k;
   const label=fmtBig(bal)+' DHB';
-  ctx.font='700 54px "Chakra Petch"';
+  ctx.font='700 '+Math.round(54*k)+'px "Chakra Petch"';
   const tw=ctx.measureText(label).width;
-  const total=r*2+18+tw;
+  const total=r*2+18*k+tw;
   const cx=w/2-total/2+r;
   drawCoin(ctx,cx,y,r);
   ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.shadowColor='#f3c44f';ctx.shadowBlur=34;
+  ctx.shadowColor='#f3c44f';ctx.shadowBlur=34*k;
   ctx.fillStyle='#ffe9a3';
-  ctx.fillText(label,cx+r+18,y+2);
+  ctx.fillText(label,cx+r+18*k,y+2*k);
   ctx.shadowBlur=0;
   ctx.textAlign='center';
 }
@@ -5736,6 +5754,11 @@ function paintPnl(v,meta){
     ctx.shadowBlur=0;ctx.globalAlpha=1;
     paintPnlLabel(ctx,w,199,'NO ACCOUNT CONNECTED','#7fd4e8');
     paintPnlLabel(ctx,w,238,'WALLET OR BINANCE FOR LIVE PNL','#4b7d8c');
+  }else if(meta.noPnl){
+    /* Signed in, nothing to value. The bag IS the statement, so it takes the
+       number's place rather than hanging in small type under a dash. */
+    paintPnlCoin(ctx,w,my,2.1);
+    paintPnlLabel(ctx,w,222,meta.label,'#e8c87a');
   }else{
     const up=v>=0;
     const col=up?'#4dffa6':'#ff5c7a';
@@ -5750,8 +5773,8 @@ function paintPnl(v,meta){
     ctx.fillStyle='#ffffff';ctx.fillText(txt,w/2,my);
     ctx.shadowBlur=0;
     paintPnlLabel(ctx,w,199,meta.label,up?'#7fe8bd':'#ff9fb4');
+    paintPnlCoin(ctx,w,268);
   }
-  paintPnlCoin(ctx,w,268);
   /* interlace so it reads as a projection, not a decal */
   ctx.globalCompositeOperation='destination-out';
   ctx.fillStyle='rgba(0,0,0,0.5)';
@@ -5803,6 +5826,14 @@ function pnlSource(){
     return {v:real?wallet.pnlReal:wallet.pnl24,
       label:'WALLET · '+(real?'REAL 24H':'24H MARKET MOVE')};
   }
+  /* Signed in on DeHub with nothing this room can price. The account is not
+     in doubt here -- the handle, the bag and the badge balance are all on the
+     desk already -- so NO ACCOUNT CONNECTED was simply false, and it was the
+     loudest thing in the room. There is still no dollar figure to show and
+     none is invented: the hologram falls back to the coin row, which states
+     the DHB balance and is true at zero. */
+  if(dhData.me)return {v:0,noPnl:true,
+    label:dhData.me.handle?('DEHUB · @'+dhData.me.handle).toUpperCase():'DEHUB ACCOUNT'};
   return null;
 }
 function pnlTick(dt,t){
@@ -6231,7 +6262,12 @@ async function dhGet(path){
   }catch(err){return null;}
 }
 async function dhPullLocal(){
-  const addr=wallet&&wallet.addr?wallet.addr.toLowerCase():'';
+  /* A wallet connected in here first, then whoever the app is signed in as.
+     This used to be the game's own wallet and nothing else, so standalone it
+     never asked the API who you were unless you connected a second time --
+     and the whole desk, the profile monitor and the hologram all sat empty
+     in front of a signed-in user. */
+  const addr=(wallet&&wallet.addr?wallet.addr:dehubAddr()).toLowerCase();
   try{
     const [feed,acct,mine]=await Promise.all([
       dhGet('/api/feed?page=1&limit=4'),
@@ -6241,6 +6277,9 @@ async function dhPullLocal(){
     if(rows.length)dhData.posts=rows.map(dhCard);
     const u=acct&&(acct.result||acct);
     dhData.me=u&&(u.username||u.address)?{
+      /* the same shape the host bridge sends, address included -- watchAddr
+         reads it, and a bag cannot be valued without one */
+      address:addr,
       handle:u.username||'',
       name:u.displayName||u.username||'',
       followers:+u.followers||0,
@@ -6781,8 +6820,9 @@ const focus={screen:null,savedP:new V3(),savedT:new V3()};
 const rc=new THREE.Raycaster(),ptr=new THREE.Vector2();
 const wp=new V3(),wq=new THREE.Quaternion(),nrm=new V3();
 
-function focusOn(s){
+function focusOn(s,dur){
   hideAff();
+  flickLane=null;      /* the row you chose by clicking IS the row you are on */
   walk.goto=null;                   /* don't wander off while you read a chart */
   if(!focus.screen){focus.savedP.copy(camera.position);focus.savedT.copy(controls.target);}
   focus.screen=s;
@@ -6790,7 +6830,7 @@ function focusOn(s){
   nrm.set(0,0,1).applyQuaternion(wq);
   const vf=camera.fov*Math.PI/180;
   const d=Math.max((s.w/2)/(0.72*Math.tan(vf/2)*camera.aspect),(s.h/2)/(0.72*Math.tan(vf/2)),0.9);
-  flyTo(wp.clone().addScaledVector(nrm,d),wp.clone(),1.25);
+  flyTo(wp.clone().addScaledVector(nrm,d),wp.clone(),dur||1.25);
   /* set once here, not on the HUD tick — rewriting it every 250ms would fight
      the user while the dropdown is open */
   if(s.tpl)$('#fpTpl').value=s.tpl;
@@ -6803,7 +6843,10 @@ function focusOn(s){
   if(s.kind==='desk')deskMount(s);
   syncTfRow();
   $('#focusPanel').classList.add('on');
-  syncBuyBox();syncSiteFocus();
+  /* Only promise the arrows do something when they actually do -- one desk
+     monitor has nothing beside it to step to. */
+  $('#fpFlick').style.display=(flickTarget(s,-1)||flickTarget(s,1))?'':'none';
+  syncBuyBox();syncSiteFocus();syncFocusHud();
 }
 function release(){
   if(!focus.screen)return;
@@ -6813,6 +6856,84 @@ function release(){
   /* in walk mode the chase camera takes straight over — no fly-back */
   if(MODE==='walk'){setCtl();return;}
   flyTo(focus.savedP,focus.savedT,1.05,()=>{setCtl();});
+}
+
+/* ==================== flick between screens ====================
+   Left and right step to the screen beside the one you are reading. Zoomed
+   in, a chart fills the view and the rest of the wall is off-frame, so
+   comparing two of them meant releasing, hunting for the next one and
+   clicking it. The arrow keys are free to do this because they do nothing at
+   all while a screen is focused: controls.enabled goes false, freeCamTick
+   never runs, and the strafe they normally drive is already dead.
+
+   "Beside" is measured along the row IN METRES, off the arc position every
+   wall screen already carries. Projecting world positions onto the focused
+   screen's right axis instead gives R*sin(dTheta), which folds back on itself
+   once the wall wraps past a right angle -- and would then call the far left
+   edge a step to the right. Desk monitors are flat and carry no arc, so they
+   are measured off world x; the desk faces the wall, so that is the same
+   "right" the arc runs in.
+
+   Distances are EDGE gaps, never centre distances. The big board is 8.6m
+   wide and full height: centre to centre it sits further from a bottom-row
+   screen than the whole opposite side of the wall does, so a naive metric
+   jumps clean over it. Edge to edge it is 60mm away, which is what the eye
+   sees -- and overlapping spans give zero, so a double-height panel is
+   beside every row it covers. */
+const FLICK_UP_COST=3;      /* a row up costs three metres of shuffling sideways */
+const FLICK_ROW_BIAS=0.05;  /* ...and among equals, the nearest row still wins */
+const FLICK_DUR=0.45;       /* a step is a flick, not the 1.25s arrival shot */
+const FLICK_REPEAT=300;     /* ms between steps while an arrow is held down */
+const flickTmp=new V3();
+const flickX=s=>s.kind==='desk'?s.mesh.getWorldPosition(flickTmp).x:s.aX;
+const flickY=s=>s.kind==='desk'?s.mesh.getWorldPosition(flickTmp).y:s.yPos;
+const spanGap=(a,as,b,bs)=>Math.max(0,Math.abs(a-b)-(as+bs)/2);
+/* Stay inside the family you are reading. The desk monitor is a page at
+   arm's length and the wall is the market across the room; getting from one
+   to the other is a different move -- a click -- not a flick. */
+function flickPool(s){
+  if(s.kind==='desk')return deskMons;
+  if(s.floating)return [];        /* a preview is not on the wall yet */
+  return screens.filter(o=>!o.floating);
+}
+function flickTarget(s,dir,lane){
+  if(!s)return null;
+  const x=flickX(s),y=flickY(s),row=lane==null?y:lane;
+  let best=null,bestCost=Infinity;
+  for(const o of flickPool(s)){
+    if(o===s)continue;
+    const ox=flickX(o),oy=flickY(o);
+    if((ox-x)*dir<=0.02)continue;             /* same column, or the wrong way */
+    const cost=spanGap(x,s.w,ox,o.w)
+      +spanGap(y,s.h,oy,o.h)*FLICK_UP_COST
+      +Math.abs(oy-row)*FLICK_ROW_BIAS;
+    if(cost<bestCost){bestCost=cost;best=o;}
+  }
+  return best;
+}
+/* THE LANE. Walk the bottom row rightwards and you cross the big board --
+   8.6m wide and the full height of the wall -- which has no row of its own
+   to hand back on the way out. Judged on its centre you come out three rows
+   up from where you went in, which is not what walking in a straight line
+   means. So the row you were reading is remembered for as long as you are
+   passing through something tall enough to cover it, and given back at the
+   far side. The gap term still measures off the panel you are actually on,
+   because that is a question about what is physically next to what; only
+   the tiebreak between rows a tall panel spans looks at the lane. */
+let flickAt=0,flickLane=null;
+const flickLaneOf=s=>(flickLane!=null&&Math.abs(flickLane-flickY(s))<=s.h/2)?flickLane:flickY(s);
+function flickFocus(dir){
+  const s=focus.screen;
+  const lane=s?flickLaneOf(s):null;
+  const next=flickTarget(s,dir,lane);
+  if(!next)return false;                      /* the end of the row */
+  flickAt=performance.now();
+  playSound('blip');
+  focusOn(next,FLICK_DUR);
+  /* focusOn just cleared it. Carry it only while the screen you landed on
+     still covers it -- step off the lane and the new row IS the lane. */
+  flickLane=Math.abs(lane-flickY(next))<=next.h/2?lane:null;
+  return true;
 }
 
 /* pointer input is handled by the direct-manipulation controller further down */
@@ -7386,6 +7507,16 @@ addEventListener('keydown',e=>{
     e.preventDefault();
     const i=TF_ORDER.indexOf(focus.screen.tf||'auto');
     setScreenTf(focus.screen,TF_ORDER[clamp(i+(e.key===']'?1:-1),0,TF_ORDER.length-1)]);
+    return;
+  }
+  /* Left and right step to the screen beside the one you are reading. A held
+     arrow repeats about thirty times a second, and stepping the wall at that
+     rate is a blur -- so a repeat waits for the last hop to land, while a
+     deliberate tap never does and steps as fast as you can tap. */
+  if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&focus.screen){
+    e.preventDefault();
+    if(!(e.repeat&&performance.now()-flickAt<FLICK_REPEAT))
+      flickFocus(e.key==='ArrowRight'?1:-1);
     return;
   }
   /* V is the body toggle; F is a second key for LEAVING one, because that is
@@ -8154,6 +8285,13 @@ function hudTick(){
 }
 setInterval(()=>{
   document.title=(markets.BTC.fed&&markets.BTC.price?'BTC '+fmtPrice(markets.BTC.price)+' · ':'')+'TRENCHSTAR';
+  syncFocusHud();
+},250);
+/* What the focus panel says, as a function and not only as a tick. Flicking
+   from one screen to the next changes what the panel is describing, and up
+   to 250ms of the last screen's ticker sitting under the new one's chart is
+   exactly the kind of wrong that gets read as a bug. */
+function syncFocusHud(){
   if(focus.screen&&focus.screen.market){
     const m=focus.screen.market;
     $('#fpSym').textContent=(m.kind==='dex'?'$':'')+m.sym;
@@ -8167,7 +8305,7 @@ setInterval(()=>{
     $('#fpSrc').textContent=focus.screen.src||'SYSTEM FEED';
     $('#fpPx').textContent='';$('#fp24').textContent='—';$('#fpVol').textContent='—';$('#fpMc').textContent='—';
   }
-},250);
+}
 
 /* ================================ cast ================================
    Mirror one of the user's real browser tabs onto a screen of their choosing. */
@@ -11094,6 +11232,8 @@ loadSounds();
 const repaintAll=()=>screens.forEach(s=>{s.paint(s);s.tex.needsUpdate=true;});
 window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   focusOn,release,repaint:repaintAll,
+  focus,flickTarget,flickFocus,flickPool,flickLaneOf,syncFocusHud,
+  get flickLane(){return flickLane;},set flickLane(v){flickLane=v;},
   WALL,buildWall,cast,startCast,stopCast,mountCast,unmountCast,beginPlacement,attachStream,fitCast,
   stats,alerts,SOUNDS,playSound,TEMPLATES,applyTemplate,SCENES,buildBackdrop,
   samplesToCandles,
@@ -11143,7 +11283,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   pnlSource,paperPnl,bnx,bnxRevalue,bnxStartStream,bnxStopStream,bnxSnapshot,
   get cityRing(){return cityRing;},buildCityRing,clearCityRing,dressPlate,cityLife,life,
   get skyMesh(){return skyMesh;},
-  wallet,connectWallet,refreshWallet,quoteBest,buyToken,encExactInputSingle,
+  wallet,dehubAddr,watchAddr,connectWallet,refreshWallet,quoteBest,buyToken,encExactInputSingle,
   fmtUnits,toUnits,SEL,BASE,
   get mode(){return MODE;},
   get layout(){return LAYOUT;},
