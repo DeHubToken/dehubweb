@@ -244,6 +244,84 @@ export function useGovernanceUserVotes() {
 
 const GOVERNANCE_PROPOSAL_FEE = 10000; // DHB per proposal
 
+/**
+ * A proposal fee that is on chain but whose proposal has not been recorded yet.
+ *
+ * The 10,000 DHB leaves the wallet before the edge function is told about it,
+ * and that function verifies through an indexer which can lag a transfer by a
+ * few seconds — so its own answer is "not on chain yet, wait a moment and
+ * retry". The mutation threw on that, and pressing Submit again sent a second
+ * 10,000 DHB while the first sat unclaimed with a one-hour window to be used
+ * in and no way for the user to reach it.
+ *
+ * Keyed on the proposal's own text, because there is no id until the row
+ * exists. Cleared the moment the proposal is recorded.
+ */
+const PENDING_FEE_KEY = 'dehub.governance.pendingFee';
+
+/** JSON rather than a joined string, so no title and body can collide. */
+function proposalKey(title: string, description: string): string {
+  return JSON.stringify([title.trim(), description.trim()]);
+}
+
+function rememberProposalFee(title: string, description: string, txHash: string): void {
+  try {
+    localStorage.setItem(PENDING_FEE_KEY, JSON.stringify({ key: proposalKey(title, description), txHash }));
+  } catch { /* private mode — the in-flight retries below still reuse it */ }
+}
+
+function readProposalFee(title: string, description: string): string | null {
+  try {
+    const raw = JSON.parse(localStorage.getItem(PENDING_FEE_KEY) || 'null');
+    if (raw?.key !== proposalKey(title, description)) return null;
+    return typeof raw.txHash === 'string' ? raw.txHash : null;
+  } catch {
+    return null;
+  }
+}
+
+function forgetProposalFee(): void {
+  try {
+    localStorage.removeItem(PENDING_FEE_KEY);
+  } catch { /* nothing to clean up */ }
+}
+
+/** The indexer lag the server tells us to wait out. */
+const FEE_RETRY_DELAYS_MS = [2000, 4000, 8000];
+
+/**
+ * Record the proposal against a fee already paid, waiting out indexer lag.
+ *
+ * The server distinguishes "not indexed yet" from a real refusal, and only the
+ * first is worth retrying — a wrong amount or a spent hash will not become
+ * right by asking again.
+ */
+async function submitWithPaidFee(
+  title: string,
+  description: string,
+  txHash: string,
+): Promise<{ proposal: GovernanceProposal }> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= FEE_RETRY_DELAYS_MS.length; attempt++) {
+    try {
+      return await callGovernance<{ proposal: GovernanceProposal }>('governance-proposal', {
+        title: title.trim(),
+        description: description.trim(),
+        txHash,
+      });
+    } catch (err) {
+      lastError = err;
+      const message = err instanceof Error ? err.message : String(err);
+      if (!/not on chain yet|wait a moment/i.test(message)) throw err;
+      const wait = FEE_RETRY_DELAYS_MS[attempt];
+      if (wait === undefined) break;
+      toast.loading('Confirming your fee on chain…', { id: 'governance-proposal-fee' });
+      await new Promise((resolve) => setTimeout(resolve, wait));
+    }
+  }
+  throw lastError;
+}
+
 export function useSubmitGovernanceProposal() {
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
@@ -251,6 +329,16 @@ export function useSubmitGovernanceProposal() {
   return useMutation({
     mutationFn: async ({ title, description }: { title: string; description: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      // A fee already paid for this exact proposal is reused rather than paid
+      // again. Reached when the first attempt's fee landed but recording the
+      // proposal did not — the retry below is the same call, not a new charge.
+      const alreadyPaid = readProposalFee(title, description);
+      if (alreadyPaid) {
+        const retried = await submitWithPaidFee(title, description, alreadyPaid);
+        forgetProposalFee();
+        return retried.proposal;
+      }
 
       // ── Charge 10,000 DHB proposal fee ─────────────────────
       const chainConfig = getChainConfig(BASE_CHAIN_ID);
@@ -278,16 +366,15 @@ export function useSubmitGovernanceProposal() {
 
       const receipt = await txResult.wait(1);
       toast.dismiss('governance-proposal-fee');
+      const feeTxHash = receipt?.hash || txResult.hash;
+      rememberProposalFee(title, description, feeTxHash);
 
       // ── Record proposal, once the chain agrees the fee was paid ──
       // The row is written by the edge function, not from here: the insert
       // this replaced had no idea a fee existed, so posting straight to
       // PostgREST created a free proposal.
-      const result = await callGovernance<{ proposal: GovernanceProposal }>('governance-proposal', {
-        title: title.trim(),
-        description: description.trim(),
-        txHash: receipt?.hash || txResult.hash,
-      });
+      const result = await submitWithPaidFee(title, description, feeTxHash);
+      forgetProposalFee();
       return result.proposal;
     },
     onSuccess: () => {
