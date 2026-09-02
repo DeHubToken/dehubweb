@@ -1,7 +1,6 @@
 -- 'members' should not mean 'public'.
 --
--- NOT YET APPLIED. Migrations here are run by hand in the SQL editor. Nothing
--- in the app depends on this, so it can be applied whenever.
+-- Applied 2026-09-02.
 --
 -- The read policy added in 20260825090000 allows `visibility IN ('public',
 -- 'members')` and the grant covers anon and authenticated alike, so the two
