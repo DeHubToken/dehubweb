@@ -48,6 +48,44 @@ export interface DubQuote {
   clonedVoice: boolean;
 }
 
+/**
+ * A transfer that has been signed for a tab but not yet confirmed by the
+ * server, kept where a reload cannot lose it.
+ *
+ * The money leaves the wallet before the server is told about it, so the gap
+ * between those two is the dangerous one: a dropped response, a closed tab, a
+ * refresh. Anything that sends a fresh transfer to cover that gap charges the
+ * listener twice for one session. The hash is the receipt, so it is kept until
+ * the server acknowledges it and only then thrown away.
+ */
+const SENT_HASH_KEY = 'dehub.dub.sentHash';
+
+function sentHashes(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem(SENT_HASH_KEY) || '{}') as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+function readSentHash(spaceId: string): string | null {
+  return sentHashes()[spaceId] ?? null;
+}
+
+function rememberSentHash(spaceId: string, txHash: string): void {
+  try {
+    localStorage.setItem(SENT_HASH_KEY, JSON.stringify({ ...sentHashes(), [spaceId]: txHash }));
+  } catch { /* private mode — the in-flight settle below still uses the hash */ }
+}
+
+function forgetSentHash(spaceId: string): void {
+  try {
+    const all = sentHashes();
+    delete all[spaceId];
+    localStorage.setItem(SENT_HASH_KEY, JSON.stringify(all));
+  } catch { /* nothing to clean up */ }
+}
+
 /** What the listener is asked to confirm once the stage ends. */
 export interface DubBill {
   spaceId: string;
@@ -124,6 +162,41 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
   }, [spaceId]);
 
   /**
+   * Ask the server what is owed and put that in front of the listener.
+   *
+   * The authority on the amount is the server's own count, not this hook's.
+   * A tick whose response was lost still accrued a minute over there, so
+   * billing `minutes × price` from here asks for less than is owed, the
+   * transfer fails verification, and the DHB is gone with the tab still open.
+   *
+   * It is also how a stranded tab is recovered. The stage ending unmounts this
+   * hook, so anything it held in state is gone; `bill` reads the tab back.
+   */
+  const raiseOpenTab = useCallback(
+    async (forSpaceId?: string) => {
+      const target = forSpaceId ?? spaceId;
+      if (!target || !wallet) return false;
+
+      const { data } = await callDub<{
+        minutes: number;
+        owedDhb: number;
+        treasury: string;
+        settled: boolean;
+      }>({ action: 'bill', spaceId: target }, wallet);
+
+      if (!data || data.settled || data.minutes <= 0 || data.owedDhb <= 0) return false;
+      setBill({
+        spaceId: target,
+        minutes: data.minutes,
+        owedDhb: data.owedDhb,
+        treasury: data.treasury,
+      });
+      return true;
+    },
+    [spaceId, wallet],
+  );
+
+  /**
    * Stop listening. Deliberately does NOT settle — the tab stays open so the
    * listener confirms it deliberately rather than being charged by the act of
    * closing a drawer.
@@ -139,16 +212,19 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
 
       const used = minutesRef.current;
       if (raiseBill && used > 0 && spaceId && quote) {
+        // Shown at once so the prompt does not lag the click, then corrected
+        // from the server, which is the only party whose count is authoritative.
         setBill({
           spaceId,
           minutes: used,
           owedDhb: used * quote.pricePerMinuteDhb,
           treasury: quote.treasury,
         });
+        void raiseOpenTab(spaceId);
       }
       setMinutes(0);
     },
-    [spaceId, quote],
+    [spaceId, quote, raiseOpenTab],
   );
 
   const tick = useCallback(async () => {
@@ -197,11 +273,16 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
         );
 
         if (error || !data?.token) {
-          toast.error(
-            code === 'UNSETTLED'
-              ? 'Settle your last dubbing session first.'
-              : error ?? 'Could not start dubbing.',
-          );
+          if (code === 'UNSETTLED') {
+            // The refusal carries the open tab, so turn it into something the
+            // listener can act on. Without this the message was a dead end: the
+            // tab that blocks them is usually one the stage ended out from
+            // under, so there is no way back to the drawer that raised it and
+            // dubbing stays refused on every stage, forever.
+            await raiseOpenTab();
+          } else {
+            toast.error(error ?? 'Could not start dubbing.');
+          }
           return;
         }
 
@@ -238,26 +319,38 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
     if (!bill || settling) return;
     setSettling(true);
     try {
-      // One signature, for the minutes actually heard, in the DHB the listener
-      // already holds. The chain confirms it; we do not take their word.
+      // A transfer already sent for this tab is reused rather than repeated.
+      // Confirmation can fail after the DHB has left — a lost response, an
+      // amount short of what the server counted — and the old code left the
+      // Pay button live with the bill still on screen, which invited a second
+      // transfer for the same session. The server takes the same hash twice
+      // quite happily; the wallet does not get its money back.
+      const sent = readSentHash(bill.spaceId);
       const { payForDubbing } = await import('@/lib/stage-dub-payment');
-      const payment = await payForDubbing(bill.owedDhb, bill.treasury);
+      const txHash = sent ?? (await payForDubbing(bill.owedDhb, bill.treasury)).txHash;
+      if (!sent) rememberSentHash(bill.spaceId, txHash);
 
       const { data, error } = await callDub<{ ok: boolean; minutes: number; paidDhb: number }>(
-        { action: 'settle', spaceId: bill.spaceId, txHash: payment.txHash },
+        { action: 'settle', spaceId: bill.spaceId, txHash },
         wallet,
       );
 
       if (error || !data?.ok) {
         // The transfer is on chain either way — never tell them to send it
-        // again, or they will pay twice for one session.
+        // again, or they will pay twice for one session. The hash is kept, so
+        // pressing Pay again retries confirmation with it rather than paying.
         toast.error(error ?? 'Payment sent but not confirmed yet.', {
-          description: 'Your DHB has left your wallet. Reopen the stage to confirm it.',
+          description: 'Your DHB has left your wallet. Press Pay again to retry confirming it.',
         });
         return;
       }
 
-      toast.success(`Paid ${data.paidDhb} DHB for ${data.minutes} minutes of dubbing.`);
+      forgetSentHash(bill.spaceId);
+      toast.success(
+        data.paidDhb > 0
+          ? `Paid ${data.paidDhb} DHB for ${data.minutes} minutes of dubbing.`
+          : 'Dubbing session closed.',
+      );
       setBill(null);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Payment failed.');
@@ -268,6 +361,35 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
 
   /** Close the prompt without paying. The tab stays open and blocks the next session. */
   const dismissBill = useCallback(() => setBill(null), []);
+
+  /**
+   * A tab left open on this stage is put back in front of the listener when
+   * they return to it.
+   *
+   * Without this the only way back to an unpaid tab was to be holding the
+   * drawer that raised it, which the stage ending takes away. Wallet-gated, so
+   * a signed-out visitor is asked nothing.
+   */
+  useEffect(() => {
+    if (!spaceId || !wallet) return;
+    let cancelled = false;
+    void (async () => {
+      const { data } = await callDub<{
+        minutes: number;
+        owedDhb: number;
+        treasury: string;
+        settled: boolean;
+      }>({ action: 'bill', spaceId }, wallet);
+      if (cancelled || !data || data.settled || data.minutes <= 0 || data.owedDhb <= 0) return;
+      setBill({
+        spaceId,
+        minutes: data.minutes,
+        owedDhb: data.owedDhb,
+        treasury: data.treasury,
+      });
+    })();
+    return () => { cancelled = true; };
+  }, [spaceId, wallet]);
 
   // ─── Receive and play ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -285,13 +407,23 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
     return () => { supabase.removeChannel(channel); };
   }, [spaceId, language]);
 
-  // Unmounting must stop the audio and the ticking, and raise the bill — a
-  // listener who closes the drawer mid-stage still owes what they heard.
+  // Unmounting stops the audio and the ticking. It cannot raise the bill: the
+  // host ending the stage clears the current space, which unmounts the button
+  // this hook lives in, so there is no longer anything on screen to show a
+  // prompt in. The tab stays open on the server and is picked up again by
+  // `raiseOpenTab` — on the next visit to this stage, or on the next attempt to
+  // start dubbing anywhere, which the server refuses while a tab is open.
+  //
+  // The language is cleared alongside the token. Leaving it set was what put
+  // "Stop dubbing" in the menu after a stage ended, with no player, no timer
+  // and no entitlement behind it.
   useEffect(() => {
     return () => {
       if (tickTimerRef.current) clearInterval(tickTimerRef.current);
       playerRef.current?.stop();
       setDubToken(null);
+      setDubLanguage(null);
+      try { setRoomVolumeRef.current(DUB_FULL_VOLUME); } catch { /* already left the stage */ }
     };
   }, []);
 
