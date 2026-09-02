@@ -31,7 +31,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: node scripts/i18n-coverage.mjs
+      - run: node scripts/i18n-coverage.mjs --floor
+      - run: node scripts/i18n-fanout.mjs --check | tail -5
 
   # A request header missing from a function's Access-Control-Allow-Headers
   # makes the BROWSER drop the request — no network row, no function log, and a
