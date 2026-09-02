@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
-import { useBootSettled } from '@/hooks/use-boot-settled';
+import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
@@ -813,13 +813,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // on scroll-back while stopping a long session from accumulating hundreds of
   // media elements holding decoded buffers (the long-scroll tab-kill on 4GB
   // phones). aboveFold (LCP) videos never release — but they do not warm until
-  // the page has loaded and idled once: a Lighthouse run of the signed-out home
-  // on 2026-09-02 showed the two above-fold clips (14.7 MB + 12.3 MB) downloading
-  // in full during the load window, ahead of the hero the LCP is measured on.
-  // The poster is a separate eager <img>, so nothing the visitor sees waits on
-  // this; only the bytes behind an autoplay that has not started yet do.
+  // the page has loaded and idled once AND the visitor has scrolled or tapped:
+  // a Lighthouse run of the signed-out home on 2026-09-02 showed the two
+  // above-fold clips (14.7 MB + 12.3 MB) downloading in full during the load
+  // window, ahead of the hero the LCP is measured on — and waiting for load
+  // alone did not help, because a playing muted clip streams its whole file
+  // regardless of preload. The poster is a separate eager <img>, so nothing the
+  // visitor sees waits on this; the first scroll is what starts the clip.
   const [nearViewport, setNearViewport] = useState(aboveFold);
   const bootSettled = useBootSettled();
+  const interacted = useFirstInteraction();
   useEffect(() => {
     if (aboveFold) return;
     const el = containerRef.current;
@@ -848,7 +851,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Releasing the src attribute alone doesn't free the decoder/buffer — an
   // explicit load() after React removes it does.
-  const mediaAttached = aboveFold ? bootSettled : nearViewport;
+  const mediaAttached = aboveFold ? bootSettled && interacted : nearViewport;
   useEffect(() => {
     if (mediaAttached) return;
     const vid = videoRef.current;
