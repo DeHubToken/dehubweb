@@ -21,6 +21,9 @@ import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from '
 import { isQuietNow } from '@/lib/quiet-hours';
 import { subscribeToWebPush, unsubscribeFromWebPush } from '@/lib/web-push';
 
+/** The hook mounts on several surfaces; the reconcile below is once per load. */
+let reconciledThisLoad = false;
+
 const STORAGE_KEY = 'dehub_browser_notifications';
 const LAST_SEEN_KEY = 'dehub_notifications_last_seen';
 
@@ -47,6 +50,26 @@ export function setStoredEnabled(enabled: boolean): void {
       localStorage.removeItem(STORAGE_KEY);
     }
   } catch {}
+
+  // Subscribe the browser itself, not just this tab.
+  //
+  // This lives here rather than in the hook's setEnabled because every surface
+  // that flips the switch calls this function directly — the soft-ask toast,
+  // Settings, the notifications sheet — and none of them called setEnabled.
+  // So the subscribe existed and never once ran: turning notifications on gave
+  // you the test notification and then silence, because `new Notification()`
+  // needs the page open and nothing had registered for push. Putting it at the
+  // one place the flag actually changes is what stops that happening again.
+  //
+  // Fire-and-forget: push either works or it does not, and the in-tab path is
+  // unaffected either way.
+  try {
+    if (enabled) {
+      void subscribeToWebPush();
+    } else {
+      void unsubscribeFromWebPush();
+    }
+  } catch { /* unsupported browser — isWebPushSupported guards inside */ }
   // The flag is now driven from three surfaces (the soft-ask toast, Settings →
   // Notifications, the notifications-page sheet). Without this they only
   // re-read on mount, so one would sit showing the opposite of the truth.
@@ -143,20 +166,26 @@ export function useBrowserNotifications() {
   // Track shown notification IDs to avoid duplicates within a session
   const shownRef = useRef<Set<string>>(new Set());
 
+  // Subscribing moved into setStoredEnabled, which is what every surface
+  // actually calls. This stays as the hook-shaped way in.
   const setEnabled = useCallback((enabled: boolean) => {
     setStoredEnabled(enabled);
-
-    // Subscribe the browser itself, not just this tab. `new Notification()`
-    // needs the page open, so without this the switch only ever worked while
-    // DeHub was on screen — which is the opposite of what a notification is
-    // for. Fire-and-forget: web push either works or it does not, and either
-    // way the in-tab path above is unaffected.
-    if (enabled) {
-      void subscribeToWebPush();
-    } else {
-      void unsubscribeFromWebPush();
-    }
   }, []);
+
+  // Re-assert the subscription once per page load.
+  //
+  // A push subscription is not permanent: the browser rotates it, clearing site
+  // data drops it, and a rotated VAPID key invalidates it. The event for that
+  // is `pushsubscriptionchange` in the service worker, but the worker cannot
+  // act on it — re-registering needs the DeHub bearer token, which lives in
+  // localStorage where a worker cannot reach. So it is reconciled here instead,
+  // on the next visit. subscribeToWebPush already reuses a subscription that is
+  // still valid, so the usual case is one cheap check and no network write.
+  useEffect(() => {
+    if (!isEnabled || reconciledThisLoad) return;
+    reconciledThisLoad = true;
+    void subscribeToWebPush();
+  }, [isEnabled]);
 
   /**
    * @param onClick Where clicking the notification should take the reader.
