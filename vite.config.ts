@@ -371,11 +371,19 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('@radix-ui/')) {
             return 'vendor-radix';
           }
-          // React core
+          // React core. Anchored on /node_modules/<pkg>/ on purpose: a bare
+          // '/react/' also matched @xyflow/react, zustand/react, valtio/react
+          // and @lit/react, so the whole React Flow canvas (plus its d3-zoom,
+          // d3-drag and d3-interpolate) shipped inside the eagerly preloaded
+          // React chunk for every visitor, and Lighthouse traced d3's transform
+          // parser forcing layout at boot. The chunk is meant to be React, the
+          // DOM renderer, the scheduler and the router — nothing else.
           if (
-            id.includes('/react/') ||
-            id.includes('/react-dom/') ||
-            id.includes('/react-router')
+            id.includes('/node_modules/react/') ||
+            id.includes('/node_modules/react-dom/') ||
+            id.includes('/node_modules/scheduler/') ||
+            id.includes('/node_modules/react-router/') ||
+            id.includes('/node_modules/react-router-dom/')
           ) {
             return 'vendor-react';
           }
