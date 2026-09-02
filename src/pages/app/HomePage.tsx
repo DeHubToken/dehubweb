@@ -8,7 +8,7 @@
  * @module pages/app/HomePage
  */
 
-import { useState, useEffect, useRef, useCallback, useDeferredValue, memo } from 'react';
+import { useState, useEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -36,29 +36,43 @@ import { HomeIntro } from '@/components/app/HomeIntro';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 
 
-// Feed components
-import {
-  HomeFeed,
-  ImagesFeed,
-  VideosFeed,
-  ShortsFeed,
-  LiveFeed,
-  PPVFeed,
-  W2EFeed,
-  MusicFeed,
-} from '@/components/app/feeds';
+// Feed components. HomeFeed is the tab every visit opens on, so it stays a
+// static import; the other seven are lazy chunks. This page is on every
+// visitor's boot path (PersistentPageCache imports it statically), and the
+// feeds barrel used to put all eight tabs' code in the entry bundle for a
+// visitor who may never leave the first one. Tabs stay instant in practice:
+// the chunks are warmed two seconds after the home feed, alongside the data
+// prefetch below, so a tap after that finds them in cache. Direct file
+// imports, not the barrel — the barrel would drag the other seven back in.
+import { HomeFeed } from '@/components/app/feeds/HomeFeed';
+import { FeedSkeleton } from '@/components/app/PageSkeletons';
+
+const loadVideosFeed = () => import('@/components/app/feeds/VideosFeed').then(m => ({ default: m.VideosFeed }));
+const loadImagesFeed = () => import('@/components/app/feeds/ImagesFeed').then(m => ({ default: m.ImagesFeed }));
+const loadShortsFeed = () => import('@/components/app/feeds/ShortsFeed').then(m => ({ default: m.ShortsFeed }));
+const loadLiveFeed   = () => import('@/components/app/feeds/LiveFeed').then(m => ({ default: m.LiveFeed }));
+const loadMusicFeed  = () => import('@/components/app/feeds/MusicFeed').then(m => ({ default: m.MusicFeed }));
+const loadPPVFeed    = () => import('@/components/app/feeds/PPVFeed').then(m => ({ default: m.PPVFeed }));
+const loadW2EFeed    = () => import('@/components/app/feeds/W2EFeed').then(m => ({ default: m.W2EFeed }));
+
+/** Warm every other tab's chunk once the home feed has had its head start. */
+function prefetchFeedChunks() {
+  for (const load of [loadVideosFeed, loadImagesFeed, loadShortsFeed, loadLiveFeed, loadMusicFeed, loadPPVFeed, loadW2EFeed]) {
+    load().catch(() => { /* a tab tap retries through React.lazy */ });
+  }
+}
 
 // Memoized wrappers — prevent feed re-renders during drag tab switches.
 // React.memo skips re-render when props are unchanged, so heavy feeds
 // (infinite scroll lists, media cards, etc.) stay frozen during drag.
 const MemoHomeFeed    = memo(HomeFeed);
-const MemoVideosFeed  = memo(VideosFeed);
-const MemoImagesFeed  = memo(ImagesFeed);
-const MemoShortsFeed  = memo(ShortsFeed);
-const MemoLiveFeed    = memo(LiveFeed);
-const MemoMusicFeed   = memo(MusicFeed);
-const MemoPPVFeed     = memo(PPVFeed);
-const MemoW2EFeed     = memo(W2EFeed);
+const MemoVideosFeed  = memo(lazy(loadVideosFeed));
+const MemoImagesFeed  = memo(lazy(loadImagesFeed));
+const MemoShortsFeed  = memo(lazy(loadShortsFeed));
+const MemoLiveFeed    = memo(lazy(loadLiveFeed));
+const MemoMusicFeed   = memo(lazy(loadMusicFeed));
+const MemoPPVFeed     = memo(lazy(loadPPVFeed));
+const MemoW2EFeed     = memo(lazy(loadW2EFeed));
 
 // ============================================================================
 // CONSTANTS
@@ -441,7 +455,11 @@ export default function HomePage() {
   // Delay other-tab prefetching so the home feed query gets network priority
   // The home feed's own useUnifiedFeed fires on mount; give it 2s head start
   useEffect(() => {
-    const timer = setTimeout(() => setIsHomeFeedLoaded(true), 2000);
+    const timer = setTimeout(() => {
+      setIsHomeFeedLoaded(true);
+      // The other tabs' code, on the same schedule as their data.
+      prefetchFeedChunks();
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1065,46 +1083,64 @@ export default function HomePage() {
             <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
           </div>
         )}
+        {/* Every tab but home is a lazy chunk (see the imports): the Suspense
+            fallback is the same skeleton the feeds show while their first page
+            loads, so a first tap that beats the prefetch reads as loading, not
+            as an empty tab. */}
         {visitedTabs.has('videos') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'videos' ? 'block' : 'none' }}>
-            <MemoVideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            <Suspense fallback={<FeedSkeleton />}>
+              <MemoVideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            </Suspense>
           </div>
         )}
         {visitedTabs.has('images') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'images' ? 'block' : 'none' }}>
-            <MemoImagesFeed
-              showCollage={showImagesCollage}
-              showFilters={showImagesFilters}
-              isRefreshing={isRefreshing}
-              refreshKey={refreshKey}
-              selectedPostId={selectedImageId}
-              onPostSelected={handleImageSelected}
-            />
+            <Suspense fallback={<FeedSkeleton />}>
+              <MemoImagesFeed
+                showCollage={showImagesCollage}
+                showFilters={showImagesFilters}
+                isRefreshing={isRefreshing}
+                refreshKey={refreshKey}
+                selectedPostId={selectedImageId}
+                onPostSelected={handleImageSelected}
+              />
+            </Suspense>
           </div>
         )}
         {visitedTabs.has('shorts') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
-            <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            <Suspense fallback={<FeedSkeleton />}>
+              <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            </Suspense>
           </div>
         )}
         {visitedTabs.has('live') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
-            <MemoLiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
+            <Suspense fallback={<FeedSkeleton />}>
+              <MemoLiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
+            </Suspense>
           </div>
         )}
         {visitedTabs.has('music') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'music' ? 'block' : 'none' }}>
-            <MemoMusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            <Suspense fallback={<FeedSkeleton />}>
+              <MemoMusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            </Suspense>
           </div>
         )}
         {visitedTabs.has('ppv') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'ppv' ? 'block' : 'none' }}>
-            <MemoPPVFeed />
+            <Suspense fallback={<FeedSkeleton />}>
+              <MemoPPVFeed />
+            </Suspense>
           </div>
         )}
         {visitedTabs.has('w2e') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'w2e' ? 'block' : 'none' }}>
-            <MemoW2EFeed />
+            <Suspense fallback={<FeedSkeleton />}>
+              <MemoW2EFeed />
+            </Suspense>
           </div>
         )}
         {/* end feed tabs */}
