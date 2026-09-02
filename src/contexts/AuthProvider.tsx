@@ -2754,13 +2754,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     writeConnectionSource('wagmi');
 
     try {
+      // The curated connectors (MetaMask SDK, Phantom, Trust, WalletConnect)
+      // are not part of the boot config — lib/wagmi-wallets adds them on
+      // demand — so make sure they exist, and read the config's live list
+      // rather than the snapshot this render's useConnect() handed out.
+      const { ensureWalletConnectors } = await import('@/lib/wagmi-wallets');
+      ensureWalletConnectors();
+      const liveConnectors = wagmiConfig.connectors;
+
       // Either one of the three curated buttons, or the connector id of a
       // wallet the machine announced over EIP-6963 — connectorMatchesWallet
       // falls back to an exact id match for those.
-      let connector = connectors.find(c => connectorMatchesWallet(c, wallet));
+      let connector = liveConnectors.find(c => connectorMatchesWallet(c, wallet));
 
       if (!connector && isWalletInAppBrowser()) {
-        connector = connectors.find(c => c.id === 'injected');
+        connector = liveConnectors.find(c => c.id === 'injected');
       }
 
       if (!connector) {
