@@ -25,22 +25,12 @@ import { robinhood, ROBINHOOD_PUBLIC_RPC } from '@/lib/chains/robinhood'
 
 export const WALLET_CONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
 
-const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
-
-/**
- * This browser last logged in through an external wallet and still holds a
- * live DeHub token — so wagmi's reconnect-on-mount has a connection to
- * restore, and the connector it was made with has to exist before the
- * provider mounts. Same test clearStaleWagmiState has always used.
- */
-export function hasReturningWagmiSession(): boolean {
-  if (typeof window === 'undefined') return false;
-  const savedSource = localStorage.getItem('dehub_connection_source');
-  const token = localStorage.getItem('dehub_token');
-  const timestamp = localStorage.getItem('dehub_token_timestamp');
-  const isExpired = !timestamp || (Date.now() - parseInt(timestamp, 10)) >= TOKEN_EXPIRY_MS;
-  return savedSource === 'wagmi' && !!token && !isExpired;
-}
+import { hasReturningWagmiSession, clearWagmiStorage } from '@/lib/wagmi-session'
+// Re-exported so existing importers keep working. Both live in a wagmi-free
+// module because the boot path (WalletProviders, AuthProvider) must answer
+// "is there a wallet session?" and forget one without loading wagmi — this
+// module creates the wagmi config on import.
+export { hasReturningWagmiSession, clearWagmiStorage }
 
 /**
  * Prevent wagmi auto-reconnect on page load when there's no valid DeHub session.
@@ -90,21 +80,3 @@ export const wagmiConfig = createConfig({
   // Default is 4000ms — way too aggressive. We don't watch blocks actively.
   pollingInterval: 30_000,
 })
-
-/**
- * Clear all wagmi stored state. Call on disconnect to prevent
- * auto-reconnect on next page load.
- */
-export function clearWagmiStorage() {
-  if (typeof window === 'undefined') return;
-
-  const keysToRemove: string[] = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && (key.startsWith('wagmi') || key.startsWith('@appkit') || key.startsWith('@w3m') || key.startsWith('wc@') || key.startsWith('WCM@') || key.startsWith('W3M'))) {
-      keysToRemove.push(key);
-    }
-  }
-  keysToRemove.forEach(key => localStorage.removeItem(key));
-  console.log('[Wagmi] Cleared storage:', keysToRemove.length, 'keys');
-}

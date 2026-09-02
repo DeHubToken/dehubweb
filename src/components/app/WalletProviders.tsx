@@ -4,16 +4,16 @@
  * Groups heavy wallet/auth providers so they load in a separate chunk
  * and don't block the initial page paint.
  *
- * Kept separate from the main App bundle so wagmi and the auth system are
- * fetched in parallel with the React core chunk and only parsed after the
- * first frame is displayed. The wallet SDKs themselves (MetaMask, WalletConnect,
- * RainbowKit) are not even in this chunk any more — see loadWalletProviders.
+ * Kept separate from the main App bundle so the auth system is fetched in
+ * parallel with the React core chunk and only parsed after the first frame is
+ * displayed. wagmi and viem are not in this chunk either — see WagmiRuntime —
+ * and the wallet SDKs (MetaMask, WalletConnect, RainbowKit) load with the
+ * login sheet's wallet step.
  */
 
-import type { ReactNode } from 'react';
-import { hasReturningWagmiSession } from '@/lib/wagmi';
-import { WagmiProvider } from 'wagmi';
-import { wagmiConfig } from '@/lib/wagmi';
+import { lazy, Suspense, type ReactNode } from 'react';
+import { hasReturningWagmiSession } from '@/lib/wagmi-session';
+import { requestWalletRuntime, useWalletRuntimeRequested } from '@/lib/wallet-runtime';
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { CallProvider } from '@/contexts/CallContext';
 import { StageProvider } from '@/contexts/StageContext';
@@ -23,9 +23,30 @@ interface WalletProvidersProps {
   children: ReactNode;
 }
 
+// wagmi + viem live behind this boundary. Nothing in this file, AuthProvider,
+// or anything else on the first-paint path may import 'wagmi' or '@/lib/wagmi'
+// (which creates the config on import) — src/test/wagmi-boot-split.test.ts
+// pins that.
+const WagmiRuntime = lazy(() => import('@/components/app/WagmiRuntime'));
+
 /**
- * RainbowKitProvider deliberately does NOT live here — it wraps LoginModal
- * instead (see RainbowKitScope there).
+ * Mounts the wagmi runtime once something has asked for it: a returning
+ * external-wallet session at boot (loadWalletProviders), or the first wallet
+ * surface to open (WagmiScope). Every other visitor never loads wagmi at all.
+ */
+function WalletRuntimeHost() {
+  const requested = useWalletRuntimeRequested();
+  if (!requested) return null;
+  return (
+    <Suspense fallback={null}>
+      <WagmiRuntime />
+    </Suspense>
+  );
+}
+
+/**
+ * RainbowKitProvider deliberately does NOT live here — it wraps the wallet
+ * step inside the login sheet (see LoginWalletsStep).
  *
  * This component wraps the whole app tree, so everything it statically imports
  * is on the first-paint path. RainbowKit's only consumer in the app is
@@ -38,14 +59,16 @@ interface WalletProvidersProps {
  * 37-65 KB lazy chunk — the difference being the shared modal UI, which Rollup
  * merged into whichever chunk the eager graph reached first.
  *
- * WagmiProvider stays, but `wagmiConfig` now boots with the injected connector
- * alone: the RainbowKit barrel, the MetaMask SDK and WalletConnect moved to
- * lib/wagmi-wallets and are added to the config on demand, so none of them is
- * on the first-paint path any more.
+ * WagmiProvider used to stay here, with the injected connector alone, which
+ * still put wagmi + viem in front of every visitor's first render. It is now
+ * a sibling of the app tree (WagmiRuntime), mounted on demand: AuthProvider
+ * reads wagmi's account state through lib/wallet-runtime, and the surfaces
+ * that call wagmi hooks themselves wrap their own subtree in WagmiScope.
  */
 export function WalletProviders({ children }: WalletProvidersProps) {
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <>
+      <WalletRuntimeHost />
       <AuthProvider>
         <CallProvider>
           <StageProvider>
@@ -54,7 +77,7 @@ export function WalletProviders({ children }: WalletProvidersProps) {
           </StageProvider>
         </CallProvider>
       </AuthProvider>
-    </WagmiProvider>
+    </>
   );
 }
 
@@ -62,14 +85,16 @@ export function WalletProviders({ children }: WalletProvidersProps) {
  * What App.tsx lazy-loads. A browser holding a live external-wallet session
  * needs the connector that session was made with present BEFORE wagmi mounts,
  * or reconnect-on-mount finds nothing to restore and the user is signed in
- * without a wallet to sign with. Everyone else — every signed-out visitor,
- * every passkey and social login — boots without the wallet SDKs, and the
- * login sheet adds them the moment it needs them.
+ * without a wallet to sign with — so the curated connectors are built and the
+ * runtime is requested here, before the tree renders. Everyone else — every
+ * signed-out visitor, every passkey and social login — boots without wagmi,
+ * and the login sheet mounts it the moment it needs it.
  */
 export async function loadWalletProviders(): Promise<{ default: typeof WalletProviders }> {
   if (hasReturningWagmiSession()) {
     const { ensureWalletConnectors } = await import('@/lib/wagmi-wallets');
     ensureWalletConnectors();
+    requestWalletRuntime();
   }
   return { default: WalletProviders };
 }

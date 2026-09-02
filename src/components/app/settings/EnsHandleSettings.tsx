@@ -3,6 +3,7 @@ import { Check, Copy, Globe, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useSignMessage } from 'wagmi';
+import { WagmiScope } from '@/components/app/WagmiScope';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SettingsRow } from './SettingsRow';
@@ -45,6 +46,16 @@ import {
  *    out because the key is offline would be the real failure.
  */
 export function EnsHandleSettings() {
+  // WagmiProvider no longer wraps the app (see WagmiRuntime.tsx); this section
+  // calls wagmi hooks, so it provides one for its own subtree.
+  return (
+    <WagmiScope>
+      <EnsHandleSettingsInner />
+    </WagmiScope>
+  );
+}
+
+function EnsHandleSettingsInner() {
   const { t } = useTranslation();
   const { address: connectedAddress } = useAccount();
   const { signMessageAsync } = useSignMessage();
