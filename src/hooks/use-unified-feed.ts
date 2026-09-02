@@ -767,10 +767,29 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     gcTime: 30 * 60 * 1000,
   });
 
+  // Muted authors are hidden from the feed the same way blocked ones are.
+  //
+  // The mute hook prunes the cached pages so the post vanishes where it sits,
+  // but nothing read the list afterwards — so the next refetch (pull to
+  // refresh, the new-posts pill, a filter change, any post reaction that
+  // invalidates the feed) brought them straight back. A mute that survives
+  // until the next refresh is not a mute.
+  const { data: muteList } = useQuery({
+    queryKey: ['mute-list'],
+    queryFn: async () => (await import('@/lib/api/dehub/mutes')).getMuteList(),
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
   const blockedAddresses = useMemo(() => {
-    if (!blockList?.length) return undefined;
-    return new Set(blockList.map(u => u.address.toLowerCase()));
-  }, [blockList]);
+    const hidden = new Set<string>();
+    for (const u of blockList ?? []) hidden.add(u.address.toLowerCase());
+    for (const u of muteList ?? []) hidden.add(u.address.toLowerCase());
+    if (!hidden.size) return undefined;
+    return hidden;
+  }, [blockList, muteList]);
+
   
   // Track shuffleSeed across pages for random sort stable pagination
   const shuffleSeedRef = { current: '' };
@@ -888,10 +907,15 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
     // drops it) yet sits at the head of the chronological sort indefinitely —
     // counting it would make the pill claim new posts that clicking can never
     // surface.
+    // Both lists, for the same reason the feed itself reads both: a muted
+    // author's post counted towards the pill and then was not there when it
+    // was tapped.
     const blockList = queryClient.getQueryData<Array<{ address: string }>>(['block-list']);
-    const blockedAddresses = blockList?.length
-      ? new Set(blockList.map(u => u.address.toLowerCase()))
-      : undefined;
+    const muteList = queryClient.getQueryData<Array<{ address: string }>>(['mute-list']);
+    const hidden = new Set<string>();
+    for (const u of blockList ?? []) hidden.add(u.address.toLowerCase());
+    for (const u of muteList ?? []) hidden.add(u.address.toLowerCase());
+    const blockedAddresses = hidden.size ? hidden : undefined;
 
     const newer = (data.result || []).filter((item) => {
       if (
