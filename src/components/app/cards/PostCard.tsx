@@ -603,8 +603,15 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
       <div
         className="relative pt-3 space-y-2"
         data-no-navigate
-        {...tapGestures}
       >
+        {/* The tap ladder covers the post's body and nothing else.
+            It used to sit on the wrapper above, which also holds the action
+            bar, the shop board and the whole comments block — so a double-click
+            to select a word in a comment or the composer counted as a double
+            tap and cast a like, and a triple-click to select a paragraph cast a
+            love. Radix portals the phone comments drawer but React events still
+            bubble through it, so the drawer was in range too. */}
+        <div className="space-y-2" {...tapGestures}>
         <TapReactionBurst postId={post.id} />
         {/* A text post's body is its content, so the warning covers the text
             and its embeds. Metadata and the action bar stay below it, so the
@@ -706,6 +713,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         {post.content && dehubLinks.length === 0 && <FeedLinkPreviews text={post.content} />}
         </>
         )}
+        </div>
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
