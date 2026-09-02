@@ -1,0 +1,6 @@
+/* Jungle theme chunk (see src/lib/theme-css.ts). jungle-frame.css owns the
+   tokens and the carved-wood primitives; jungle-theme.css consumes them;
+   jungle-coverage.css binds them onto the portalled surfaces. */
+@import "./jungle-frame.css";
+@import "./jungle-theme.css";
+@import "./jungle-coverage.css";
