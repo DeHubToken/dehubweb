@@ -839,6 +839,8 @@
     "stores": "Dükanlar"
   },
   "messages": {
+    "encrypted": "Uçdan-uca şifrlenen",
+    "cannotDecrypt": "Şifrlenen habar — bu enjamda açyp bolmaýar",
     "title": "Habarlar",
     "searchConversations": "Söhbetleri gözle...",
     "failedToLoad": "Söhbetleri ýüklemek başa barmady",

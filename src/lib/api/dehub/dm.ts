@@ -40,6 +40,8 @@ export interface DeHubDMMessage {
   conversationId: string;
   sender: DeHubUser;
   content: string;
+  encrypted?: boolean;
+  undecryptable?: boolean;
   type: DMMessageType;
   mediaUrl?: string;
   createdAt: string;
@@ -75,6 +77,10 @@ export interface DmMessage {
   conversation: string;
   sender: DmSender;
   content: string;
+  /** Set once an `e2e:` envelope has been opened (or failed to open) client-side. */
+  encrypted?: boolean;
+  /** Encrypted, but this device holds no key for it — render a placeholder, never the envelope. */
+  undecryptable?: boolean;
   msgType: DmMsgType;
   mediaUrls: Array<{ url: string; type: string; mimeType?: string; name?: string; size?: number }>;
   uploadStatus?: 'pending' | 'success' | 'failed' | 'simple';

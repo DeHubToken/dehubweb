@@ -838,7 +838,10 @@
     "shippingAppearHere": "คำขอที่กำลังถูกสร้างจะปรากฏที่นี่"
   },
   "auth": {},
-  "messages": {},
+  "messages": {
+    "encrypted": "เข้ารหัสแบบต้นทางถึงปลายทาง",
+    "cannotDecrypt": "ข้อความที่เข้ารหัส — ไม่สามารถเปิดบนอุปกรณ์นี้ได้"
+  },
   "music": {},
   "notFound": {},
   "profile": {},
