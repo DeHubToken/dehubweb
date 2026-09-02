@@ -164,6 +164,8 @@ const ORG_JSONLD = {
 // the two variants never diverge (cloaking-suspicion surface).
 const HOME_TITLE = 'DeHub — Open Source, User Owned Social Media';
 const HOME_TITLE_LEGACY = 'DeHub — Open Source, User Owned & Censorship Resistant Media';
+// Browser SPA <meta name="description"> in index.html, for the same reason.
+const HOME_DESCRIPTION = 'DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.';
 
 // Signed-out introduction on "/". MIRRORS src/components/app/HomeIntro.tsx —
 // keep the prose identical in both, or the bot and browser variants diverge and
@@ -1476,6 +1478,147 @@ function normalizeProxiedMeta(html) {
       /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")([^"]*)(">)/g,
       (m, a, v, b) => `${a}${reclamp(v, DESCRIPTION_MAX)}${b}`,
     );
+}
+
+/**
+ * The deployed fn describes a post with its body text and a profile with its
+ * bio — sound, except that neither is required. A post with no body (every
+ * plain video upload, most photo posts) gets
+ * `Post by <author> on DeHub — join the decentralized creator network.`, so
+ * one account's whole back-catalogue carries an identical description: the
+ * 2026-09-02 sitemap crawl found 128 of 400 posts sharing theirs, 33 of them
+ * one author's. A profile with no bio gets `Connect with <name> on DeHub…`,
+ * which collides whenever two accounts share a display name, and a
+ * five-character bio ("DHB ❤") ships as the whole description.
+ *
+ * These rewrite that templated copy into something specific to the page —
+ * the post's own title, format, author and topics; the profile's handle —
+ * and leave a real body or a real bio alone. Same deploy-track reasoning as
+ * normalizeProxiedMeta above: the fn does not move, so the fix is a rewrite.
+ * Pure string functions, tested in src/test/proxied-meta-enrichment.test.ts.
+ */
+const POST_DESCRIPTION_TEMPLATE = /Post by (.+?) on DeHub — join the decentralized creator network\./;
+const PROFILE_DESCRIPTION_TEMPLATE = /Connect with (.+?) on DeHub, the open source alternative to legacy media\./;
+/** A bio shorter than this says nothing about the page on its own. */
+const PROFILE_DESCRIPTION_MIN = 40;
+/** What the composer stores for an upload with no caption. */
+const UNTITLED_POST_TITLES = new Set(['', 'untitled']);
+
+/** The fn escapes exactly `"`, `<`, `>` in attributes and JSON.stringifies
+ *  its JSON-LD; both decode to the same plain text. */
+function decodeFnText(s) {
+  return String(s || '')
+    .replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+}
+
+function escFnAttr(s) {
+  return String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escJsonText(s) {
+  return JSON.stringify(String(s)).slice(1, -1);
+}
+
+/** [noun, verb] for a post's format; the og:video sniff covers a missing record. */
+function postKind(nft, html) {
+  const type = String((nft && nft.postType) || '').toLowerCase();
+  if (type === 'video' || type === 'feed-video') return ['video', 'Watch'];
+  if (type === 'feed-audio') return ['audio post', 'Listen to'];
+  if (type === 'feed-images' || type === 'feed-image') return ['photo post', 'See'];
+  if (type) return ['post', 'Read'];
+  return /property="og:video"/.test(html) ? ['video', 'Watch'] : ['post', 'Read'];
+}
+
+function enrichPostMeta(html, postId, nft) {
+  const templated = html.match(POST_DESCRIPTION_TEMPLATE);
+  if (!templated) return html;
+  const author = decodeFnText(templated[1]).replace(/\s+/g, ' ').trim() || 'someone';
+  const titleTag = html.match(/<title>([^<]*)<\/title>/i);
+  const title = decodeFnText(titleTag ? titleTag[1] : '').replace(/\s+/g, ' ').trim();
+  const [kind, verb] = postKind(nft, html);
+  const topics = (Array.isArray(nft && nft.category) ? nft.category : [])
+    .map((c) => String(c || '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .slice(0, 5);
+  const untitled = UNTITLED_POST_TITLES.has(title.toLowerCase());
+  let out = html;
+
+  if (untitled) {
+    // "Untitled" is what the composer stores for a captionless upload, so
+    // three of those from one account are three identical <title>s. The fn's
+    // own fallback shape, with the id keeping siblings apart.
+    const newTitle = `${kind.charAt(0).toUpperCase()}${kind.slice(1)} #${postId} by ${author} on DeHub`;
+    const attr = escFnAttr(newTitle);
+    out = out
+      .replace(/(<title>)[^<]*(<\/title>)/i, (m, a, b) => `${a}${attr}${b}`)
+      .replace(
+        /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")[^"]*(">)/g,
+        (m, a, b) => `${a}${attr}${b}`,
+      );
+    const oldJson = escJsonText(title);
+    const newJson = escJsonText(newTitle);
+    out = out.split(`"headline":"${oldJson}"`).join(`"headline":"${newJson}"`);
+    if (oldJson) out = out.split(`"name":"${oldJson}"`).join(`"name":"${newJson}"`);
+  }
+
+  const lead = untitled
+    ? `${verb} ${kind} #${postId} by ${author} on DeHub`
+    : `${verb} "${title}" — a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on DeHub`;
+  const topicsText = topics.length ? ` Topics: ${topics.join(', ')}.` : '';
+  const description = truncate(`${lead}, the open source, user-owned social network.${topicsText}`, DESCRIPTION_MAX);
+  const attrDesc = escFnAttr(description);
+  const jsonDesc = escJsonText(description);
+  return out
+    .replace(
+      /(content=")Post by .+? on DeHub — join the decentralized creator network\.(")/g,
+      (m, a, b) => `${a}${attrDesc}${b}`,
+    )
+    .replace(
+      /("description":")Post by .+? on DeHub — join the decentralized creator network\.(")/g,
+      (m, a, b) => `${a}${jsonDesc}${b}`,
+    );
+}
+
+function enrichProfileMeta(html, username) {
+  const handle = String(username || '').replace(/^@/, '').trim();
+  if (!handle) return html;
+  const templated = html.match(PROFILE_DESCRIPTION_TEMPLATE);
+  let description;
+  if (templated) {
+    const name = decodeFnText(templated[1]).replace(/\s+/g, ' ').trim();
+    const who = name && name.toLowerCase() !== handle.toLowerCase() ? `${name} (@${handle})` : `@${handle}`;
+    description = `Connect with ${who} on DeHub — posts, videos, music and live streams on the open source, user-owned social network.`;
+  } else {
+    const current = html.match(/<meta name="description" content="([^"]*)">/);
+    if (!current) return html;
+    const bio = decodeFnText(current[1]).replace(/\s+/g, ' ').trim();
+    if (bio.length >= PROFILE_DESCRIPTION_MIN) return html;
+    description = bio
+      ? `${bio} — @${handle} on DeHub, the open source, user-owned social network.`
+      : `@${handle} on DeHub — posts, videos, music and live streams on the open source, user-owned social network.`;
+  }
+  const attr = escFnAttr(truncate(description, DESCRIPTION_MAX));
+  return html.replace(
+    /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
+    (m, a, b) => `${a}${attr}${b}`,
+  );
+}
+
+/** The post record behind /app/post/<tokenId>, for the two fields the fn's
+ *  HTML does not carry (format, topics). Null on any failure — the rewrite
+ *  still runs on what the HTML holds. */
+async function fetchPostRecord(tokenId) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/nft_info/${encodeURIComponent(tokenId)}`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.result || (data?.tokenId ? data : null);
+  } catch {
+    return null;
+  }
 }
 
 function buildStoreHtml(store) {
@@ -3592,6 +3735,22 @@ async function handleRequest(request, env) {
     // og:image only.
     html = normalizeProxiedMeta(html);
 
+    // …and where the fn had no body or bio to describe the page with, it
+    // fell back to one sentence per author; build a page-specific one (see
+    // enrichPostMeta). The post branch costs one API read, only for a post
+    // with no body.
+    const proxiedPostId = (ssrPath.match(/^\/app\/post\/([^/?#]+)/) || [])[1];
+    const proxiedSegments = cleanPath.split('/').filter(Boolean);
+    const proxiedHandle =
+      proxiedSegments.length === 1 && couldBeProfileSegment(firstSegmentOf(cleanPath), SYSTEM_ROUTES)
+        ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
+        : '';
+    if (proxiedPostId && POST_DESCRIPTION_TEMPLATE.test(html)) {
+      html = enrichPostMeta(html, proxiedPostId, await fetchPostRecord(proxiedPostId));
+    } else if (proxiedHandle) {
+      html = enrichProfileMeta(html, proxiedHandle);
+    }
+
 
     // The deployed fn points og:image at the 200-square logo, and for its own
     // static routes at Lovable CDN paths (`/__l5e/assets-v1/...`) that nothing
@@ -3627,6 +3786,17 @@ async function handleRequest(request, env) {
     if (pathname === '/') {
       // Bot and browser titles must not diverge; align to the SPA title.
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
+      // …and the description: the fn's is a different sentence from the one
+      // in index.html, so the two variants disagreed on what DeHub is.
+      html = html.replace(
+        /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
+        (m, a, b) => `${a}${escFnAttr(HOME_DESCRIPTION)}${b}`,
+      );
+      // The fn's WebSite node carries the old sentence too.
+      html = html.replace(
+        /("@type":"WebSite"[^}]*?"description":")[^"]*(")/,
+        (m, a, b) => `${a}${escJsonText(HOME_DESCRIPTION)}${b}`,
+      );
       // Search Console ownership. The tag lives in index.html, which only
       // browsers ever receive — every bot UA gets this rendered HTML instead,
       // and it had no tag at all. Verification survives today purely because
