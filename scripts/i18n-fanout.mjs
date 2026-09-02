@@ -145,12 +145,46 @@ function looksUnfinished(candidate) {
  * is full of exactly this — 187 English sentences sitting in de.json.
  */
 const ENGLISH_FUNCTION_WORDS =
-  /\b(the|a|an|is|are|was|be|to|for|your|you|and|or|not|no|with|of|in|on|at|can|will|please|cannot|this|that|from|have|has|it|we|our)\b/i;
+  /\b(the|a|an|is|are|was|be|to|for|your|you|and|or|not|no|with|of|in|on|at|can|will|please|cannot|this|that|from|have|has|it|we|our|out|up|off|back|when|what|how|all|more|new|now)\b/i;
 
-function isUntranslatedProse(source, candidate) {
+/**
+ * Locales written in a script other than Latin. For these there is a far
+ * stronger test than word-counting: a Russian string containing no Cyrillic at
+ * all was not translated, whatever it says. Word heuristics miss short ones
+ * like "Introducing DeHub Premium" and "Comment cannot be empty"; this does not.
+ */
+const SCRIPT_OF = {
+  ru: /[Ѐ-ӿ]/, uk: /[Ѐ-ӿ]/, be: /[Ѐ-ӿ]/, bg: /[Ѐ-ӿ]/,
+  sr: /[Ѐ-ӿ]/, mk: /[Ѐ-ӿ]/, kk: /[Ѐ-ӿ]/, mn: /[Ѐ-ӿ]/,
+  ja: /[぀-ヿ一-鿿]/, zh: /[一-鿿]/, zh_tw: /[一-鿿]/,
+  yue: /[一-鿿]/, wuu: /[一-鿿]/, cjy: /[一-鿿]/, mnp: /[一-鿿]/,
+  ko: /[가-힯]/, th: /[฀-๿]/, lo: /[຀-໿]/, my: /[က-႟]/,
+  km: /[ក-៿]/, si: /[඀-෿]/, ka: /[Ⴀ-ჿ]/, am: /[ሀ-፿]/,
+  ti: /[ሀ-፿]/, he: /[֐-׿]/, el: /[Ͱ-Ͽ]/, bo: /[ༀ-࿿]/,
+  hi: /[ऀ-ॿ]/, mr: /[ऀ-ॿ]/, ne: /[ऀ-ॿ]/, bho: /[ऀ-ॿ]/,
+  hne: /[ऀ-ॿ]/, mag: /[ऀ-ॿ]/, dcc: /[؀-ۿऀ-ॿ]/,
+  bn: /[ঀ-৿]/, ctg: /[ঀ-৿]/, syl: /[ঀ-৿]/, rkt: /[ঀ-৿]/,
+  as: /[ঀ-৿]/, pa: /[਀-੿]/, gu: /[઀-૿]/, ta: /[஀-௿]/,
+  te: /[ఀ-౿]/, kn: /[ಀ-೿]/, ml: /[ഀ-ൿ]/,
+  ar: /[؀-ۿ]/, fa: /[؀-ۿ]/, ur: /[؀-ۿ]/, ps: /[؀-ۿ]/,
+  skr: /[؀-ۿ]/, pbt: /[؀-ۿ]/, sd: /[؀-ۿ]/, ku: /[؀-ۿ]/,
+  acm: /[؀-ۿ]/, acw: /[؀-ۿ]/, aec: /[؀-ۿ]/, ajp: /[؀-ۿ]/,
+  ayn: /[؀-ۿ]/, apd: /[؀-ۿ]/, arz: /[؀-ۿ]/, ary: /[؀-ۿ]/,
+};
+
+/**
+ * Numbers, punctuation and brand names are the same in every language, so a
+ * string with no letters of its own to translate is not evidence of anything.
+ */
+function hasTranslatableWords(source) {
+  return source.trim().split(/\s+/).filter((w) => /[a-zA-Z]{3}/.test(w)).length >= 3;
+}
+
+function isUntranslatedProse(source, candidate, locale) {
+  const script = SCRIPT_OF[locale];
+  if (script) return hasTranslatableWords(source) && !script.test(candidate);
   if (candidate !== source) return false;
-  const words = source.trim().split(/\s+/).filter((w) => /[a-zA-Z]{3}/.test(w));
-  return words.length >= 4 && ENGLISH_FUNCTION_WORDS.test(source);
+  return hasTranslatableWords(source) && ENGLISH_FUNCTION_WORDS.test(source);
 }
 
 /* ---------- network ---------- */
@@ -246,7 +280,7 @@ if (flag('prune')) {
     for (const [k, v] of flat) {
       if (typeof v !== 'string') continue;
       const source = enFlat.get(k);
-      if (typeof source === 'string' && isUntranslatedProse(source, v)) {
+      if (typeof source === 'string' && isUntranslatedProse(source, v, locale)) {
         const parts = k.split('.');
         let node = raw;
         for (const p of parts.slice(0, -1)) node = node?.[p];
@@ -295,7 +329,7 @@ for (const locale of targets) {
       if (
         candidate == null ||
         looksUnfinished(candidate) ||
-        isUntranslatedProse(sources[j], candidate) ||
+        isUntranslatedProse(sources[j], candidate, locale) ||
         !placeholdersMatch(sources[j], candidate)
       ) {
         dropped++;
