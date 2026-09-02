@@ -4756,6 +4756,72 @@ export type Database = {
         }
         Relationships: []
       }
+      video_dubs: {
+        Row: {
+          attempts: number
+          audio_url: string | null
+          created_at: string
+          duration_seconds: number | null
+          error: string | null
+          id: string
+          job_id: string | null
+          language: string
+          last_attempt_at: string | null
+          provider: string | null
+          status: string
+          transcript_id: string
+          updated_at: string
+          voice: string | null
+        }
+        Insert: {
+          attempts?: number
+          audio_url?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          error?: string | null
+          id?: string
+          job_id?: string | null
+          language: string
+          last_attempt_at?: string | null
+          provider?: string | null
+          status?: string
+          transcript_id: string
+          updated_at?: string
+          voice?: string | null
+        }
+        Update: {
+          attempts?: number
+          audio_url?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          error?: string | null
+          id?: string
+          job_id?: string | null
+          language?: string
+          last_attempt_at?: string | null
+          provider?: string | null
+          status?: string
+          transcript_id?: string
+          updated_at?: string
+          voice?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_dubs_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "stage_transcripts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "video_dubs_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "transcripts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       video_segment_votes: {
         Row: {
           address: string
