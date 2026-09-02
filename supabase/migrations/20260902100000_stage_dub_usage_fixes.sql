@@ -1,10 +1,7 @@
 -- Dubbing tabs: let a paid stage be listened to again, and make a replayed
 -- transfer collide instead of closing a second tab.
 --
--- NOT YET APPLIED. Migrations in this repo do not auto-apply — run this in the
--- SQL editor, then note the date here as 20260821000000_stage_dub_usage.sql
--- does. The dub-session function keeps working against the old shape until it
--- is run; nothing here is required by code already on main.
+-- Applied 2026-09-02.
 --
 -- Three problems in 20260821000000, all of them in the constraints rather than
 -- the logic:

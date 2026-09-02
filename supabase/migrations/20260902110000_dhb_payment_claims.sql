@@ -1,6 +1,6 @@
 -- One DHB transfer pays for one thing.
 --
--- NOT YET APPLIED. Migrations in this repo are run by hand in the SQL editor.
+-- Applied 2026-09-02.
 -- `claimDhbPayment` falls back to verify-only while this is missing, so the
 -- code that uses it is safe to ship first; the hole below just stays open
 -- until the table exists.
