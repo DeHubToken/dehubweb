@@ -193,8 +193,18 @@ async function fractionBalance(
 
 interface TxReceipt {
   status: string;
+  blockNumber?: string;
   logs: Array<{ address: string; topics: string[]; data: string }>;
 }
+
+/**
+ * How recent a transfer has to be to pay for a trade.
+ *
+ * Same reasoning and same figure as the treasury path in `_shared/dhb-transfer`:
+ * far longer than sign-then-confirm needs, short enough that nothing already
+ * spent is still in range.
+ */
+const RECEIPT_WINDOW_MS = 60 * 60 * 1000;
 
 /** Strip an indexed-address topic back to a 0x-address. */
 function topicToAddress(topic: string): string {
@@ -214,7 +224,7 @@ type ReceiptCheck =
   | { ok: false; error: string; status: number; retryable?: boolean };
 
 /**
- * Fetch a receipt and assert it succeeded.
+ * Fetch a receipt, assert it succeeded, and assert it is recent.
  *
  * Deliberately no check on `receipt.from`. A DeHub account is a smart wallet,
  * so `tx.from` is the bundler that relayed the userOp, not the person acting —
@@ -237,6 +247,29 @@ async function loadReceipt(
   if (BigInt(receipt.status) !== 1n) {
     return { ok: false, error: "That transaction failed on-chain", status: 400 };
   }
+
+  // When it was mined, not just that it was.
+  //
+  // Without this any historical transfer between the same two wallets paid for
+  // a trade. A buyer who bought a product from this seller last month holds a
+  // receipt for DHB moving buyer to seller, which is the whole of what dhbPaid
+  // checks — so they could accept delivery of fractions and settle with it. The
+  // per-table unique index does not help: that hash lives in store_orders, and
+  // nothing here looks there.
+  //
+  // A missing timestamp is treated as unclaimable rather than fresh, so a node
+  // that stops answering fails closed.
+  const block = receipt.blockNumber
+    ? await rpc<{ timestamp?: string }>(chainId, "eth_getBlockByNumber", [receipt.blockNumber, false])
+    : null;
+  const minedAt = block?.timestamp ? Number(BigInt(block.timestamp)) * 1000 : NaN;
+  if (!Number.isFinite(minedAt)) {
+    return { ok: false, error: "Could not establish when that transaction was mined", status: 400 };
+  }
+  if (Date.now() - minedAt > RECEIPT_WINDOW_MS) {
+    return { ok: false, error: "That transfer is too old to use. Send a new one.", status: 400 };
+  }
+
   return { ok: true, receipt };
 }
 
