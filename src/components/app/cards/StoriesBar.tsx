@@ -29,7 +29,17 @@ import { openStageModal } from '@/contexts/StageContext';
 const GoLiveModal = lazy(() =>
   import('@/components/app/modals/GoLiveModal').then(m => ({ default: m.GoLiveModal }))
 );
-import { StoryRecorderModal, StoryViewerModal, ShimmerBorder } from '@/components/app/stories';
+import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
+// Lazy, and NOT through the @/components/app/stories barrel: the recorder is
+// camera + media capture and the viewer is a full-screen player, and this row
+// renders on the home feed for everyone — 13 modules, ~95 KB of source, that
+// had no business in the entry chunk.
+const StoryRecorderModal = lazy(() =>
+  import('@/components/app/stories/StoryRecorderModal').then(m => ({ default: m.StoryRecorderModal }))
+);
+const StoryViewerModal = lazy(() =>
+  import('@/components/app/stories/StoryViewerModal').then(m => ({ default: m.StoryViewerModal }))
+);
 // Lazy for the same reason as the other call sites — see ShortsFeed.
 const ShortsViewer = lazy(() =>
   import('@/components/app/cards/ShortsViewer').then(m => ({ default: m.ShortsViewer })),
@@ -96,6 +106,10 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   useEffect(() => {
     if (isGoLiveOpen) setGoLiveMounted(true);
   }, [isGoLiveOpen]);
+  const [storyRecorderMounted, setStoryRecorderMounted] = useState(false);
+  useEffect(() => {
+    if (isStoryRecorderOpen) setStoryRecorderMounted(true);
+  }, [isStoryRecorderOpen]);
   useEffect(() => {
     if (isStoryViewerOpen) setStoryViewerMounted(true);
   }, [isStoryViewerOpen]);
@@ -300,26 +314,32 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
           />
         </Suspense>
       )}
-      <StoryRecorderModal
-        isOpen={isStoryRecorderOpen}
-        onClose={() => setIsStoryRecorderOpen(false)}
-        onStoryRecorded={handleStoryRecorded}
-      />
+      {storyRecorderMounted && (
+        <Suspense fallback={null}>
+          <StoryRecorderModal
+            isOpen={isStoryRecorderOpen}
+            onClose={() => setIsStoryRecorderOpen(false)}
+            onStoryRecorded={handleStoryRecorded}
+          />
+        </Suspense>
+      )}
       {storyViewerMounted && (
-        <StoryViewerModal
-          isOpen={isStoryViewerOpen}
-          onClose={() => setIsStoryViewerOpen(false)}
-          stories={stories}
-          initialIndex={viewerStartIndex}
-          onStoryWatched={markWatched}
-          onSwitchToShorts={() => {
-            // Close stories and open shorts viewer
-            setIsStoryViewerOpen(false);
-            if (shorts.length > 0) {
-              setIsShortsViewerOpen(true);
-            }
-          }}
-        />
+        <Suspense fallback={null}>
+          <StoryViewerModal
+            isOpen={isStoryViewerOpen}
+            onClose={() => setIsStoryViewerOpen(false)}
+            stories={stories}
+            initialIndex={viewerStartIndex}
+            onStoryWatched={markWatched}
+            onSwitchToShorts={() => {
+              // Close stories and open shorts viewer
+              setIsStoryViewerOpen(false);
+              if (shorts.length > 0) {
+                setIsShortsViewerOpen(true);
+              }
+            }}
+          />
+        </Suspense>
       )}
       
       {/* Shorts Viewer - opens when transitioning from stories */}
