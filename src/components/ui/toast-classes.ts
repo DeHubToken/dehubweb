@@ -60,7 +60,7 @@ export const DESCRIPTION_CLASSES = 'text-white/70';
 export const ICON_CLASSES = 'hidden group-[[data-type=loading]]:flex';
 
 /**
- * Both buttons borrow the feed nav's active pill (see feeds/GlassIndicator):
+ * Both buttons borrow the feed filter chip (see feeds/GlassFilterRow):
  * the same top-left gradient, hairline border, and the pair of inset
  * highlights — bright along the top edge, faint along the bottom — that give it
  * the raised edge. Heights match too (the nav pill is pinned to 35px).
@@ -71,7 +71,7 @@ export const ICON_CLASSES = 'hidden group-[[data-type=loading]]:flex';
  */
 export const BUTTON_CLASSES = [
   'inline-flex h-9 w-full items-center justify-center px-4',
-  'rounded-xl border border-white/30',
+  'rounded-lg border border-white/30',
   'bg-gradient-to-br from-white/20 via-white/10 to-white/5',
   'backdrop-blur-xl',
   'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]',
@@ -95,13 +95,19 @@ export const BUTTON_CLASSES = [
  * plain.
  *
  * `!ms-0` releases `--toast-button-margin-start: auto`, which in a stacked
- * toast would otherwise shove a shrink-wrapped button to the trailing edge, and
- * `basis-full` keeps each on its own row when both slots are rendered.
+ * toast would otherwise shove a shrink-wrapped button to the trailing edge.
+ * The toast is a column, so each slot is already on its own row. No
+ * `basis-full`: in a column that is 100% of the toast's height, and sonner
+ * gives the toast a definite height while the stack is hovered, so the button
+ * grew to the card's full height and spilled out of it.
  */
 export const SLOT_BUTTON_CLASSES = [
-  'inline-flex !ms-0 mt-2 !h-9 w-full basis-full items-center justify-center !px-4',
-  '!rounded-xl !border !border-white/30',
-  '!bg-gradient-to-br from-white/20 via-white/10 to-white/5',
+  'inline-flex !ms-0 mt-2 !h-9 w-full items-center justify-center !px-4',
+  '!rounded-lg !border !border-white/30',
+  // `!bg-transparent` clears the colour layer of sonner's `background`
+  // shorthand — white in the dark theme, so without it the gradient sat on a
+  // solid white slab and the white label vanished into it.
+  '!bg-transparent !bg-gradient-to-br from-white/20 via-white/10 to-white/5',
   'backdrop-blur-xl',
   'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]',
   '!text-sm !font-medium !text-white no-underline',

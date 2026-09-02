@@ -119,39 +119,6 @@ const authLogger = createLogger('Auth');
  */
 type WagmiAuthTrigger = 'user' | 'background';
 
-/**
- * The one-per-pairing memory behind the "wallet switched accounts" notice.
- *
- * The toast id only dedupes within a page: a wallet left on the other account
- * mismatches again on every reload, so the same notice fired on every single
- * refresh. It is information, not an error — worth saying once, noise the
- * second time. Keyed on session address -> incoming address, so a different
- * switch still gets its own notice, and cleared when the pairing is resolved
- * (the account gets added as a profile, or the session changes hands).
- */
-const WALLET_SWITCH_NOTICE_KEY = 'dehub_wallet_switch_notified';
-
-function walletSwitchNoticeAlreadyShown(sessionAddress: string, incoming: string): boolean {
-  const pair = `${sessionAddress}->${incoming}`;
-  try {
-    if (localStorage.getItem(WALLET_SWITCH_NOTICE_KEY) === pair) return true;
-    localStorage.setItem(WALLET_SWITCH_NOTICE_KEY, pair);
-  } catch {
-    // Storage denied (private mode, blocked cookies). Falling back to the old
-    // every-refresh behaviour beats swallowing the notice entirely.
-  }
-  return false;
-}
-
-function clearWalletSwitchNotice(): void {
-  try {
-    localStorage.removeItem(WALLET_SWITCH_NOTICE_KEY);
-  } catch {
-    // Nothing to do — the key is replaced anyway the next time a different
-    // pairing shows up.
-  }
-}
-
 // Set before a Supabase OAuth redirect / email OTP so that, when the session
 // lands (possibly after a full page reload), we know to resume the wallet
 // login flow instead of ignoring a stray Supabase session.
@@ -1443,20 +1410,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Both accounts are saved here, so honour the wallet's choice:
                 // switching accounts in MetaMask switches DeHub accounts, and
                 // switching back switches back. Neither session is destroyed.
-                // The pairing is resolved — this account is a profile now, so
-                // a future switch back to an unknown one deserves its notice.
-                clearWalletSwitchNotice();
                 void switchToProfileRef.current?.(saved.id);
                 return;
               }
               // An account this device has never signed in as. Drop the
-              // connection rather than the session, and say what happened —
-              // silently ignoring it is what made the old behaviour feel like
-              // a bug either way.
-              // console.log only, until now — so the one branch people actually
-              // see a toast from was the one branch that wrote no row, and
-              // "why does this keep coming back" could not be answered from
-              // the logs at all.
+              // connection, keep the session, and say nothing: the switch is
+              // the wallet's business, not a fault to announce. The log row is
+              // what answers "why did my wallet disconnect".
               authLogger.warn('Wallet switched to an account this device has not signed in as', {
                 sessionAddress: walletAddress.toLowerCase(),
                 incoming,
@@ -1467,26 +1427,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               });
               clearWagmiStorage();
               wagmiDisconnect();
-              // Said once per pairing. The mismatch survives a reload, so
-              // without the stored pair this fired again on every refresh for
-              // as long as the wallet stayed on the other account. The log row
-              // above is unconditional, so the frequency is still visible.
-              if (walletSwitchNoticeAlreadyShown(walletAddress.toLowerCase(), incoming)) {
-                return;
-              }
-              // Keyed, so a wallet that re-attaches and mismatches again
-              // replaces this toast instead of stacking another copy on top of
-              // it. The same notice arriving three times reads as three
-              // separate faults.
-              toast('Your wallet switched accounts', {
-                id: 'wallet-switched-accounts',
-                description: 'You are still signed in here. Add that wallet as another profile to use it.',
-                action: {
-                  label: 'Add profile',
-                  onClick: () => openLoginModal({ intent: 'add-profile' }),
-                },
-                duration: 10_000,
-              });
               return;
             }
         }
@@ -1516,8 +1456,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // connector plus a surviving token is enough. That is a signature
           // request the user did not ask for, so it must not be reported as one.
           await completeDeHubAuthWagmi(wagmiAddress, hasUserIntent ? 'user' : 'background');
-          // A signed-in address is no longer an unexplained switch.
-          clearWalletSwitchNotice();
           setWagmiAuthIntent(false);
           closeLoginModal();
         } catch (err) {
