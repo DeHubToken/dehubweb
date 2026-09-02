@@ -1977,6 +1977,42 @@ ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 }
 
 /**
+ * A shared Creator Flow, /creator/flow/<id>. The row's cover_url is the first
+ * finished still in the graph; a flow that has not rendered anything yet
+ * falls back to the creator card, which is still the page's subject.
+ */
+function buildCreatorFlowHtml(flow) {
+  const canonicalUrl = `${APP_URL}/creator/flow/${flow.id}`;
+  const name = flow.name || 'Creator Flow';
+  const nodeCount = Number(flow.node_count) || 0;
+  const description = truncate(
+    `${name} — a shared AI generation flow on DeHub with ${nodeCount} node${nodeCount === 1 ? '' : 's'}. Open a copy in Creator Flow to run it with your own prompts and references.`,
+    200,
+  );
+  return entityHtml({
+    canonicalUrl,
+    title: `${name} — DeHub Creator Flow`,
+    description,
+    image: absolutize(flow.cover_url) || shareImage('creator'),
+    ogType: 'article',
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/creator" style="color:#9f9">Creator</a> › <a href="${APP_URL}/creator/flow" style="color:#9f9">Flow</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><a href="${canonicalUrl}" style="color:#9f9">Open this flow</a> · <a href="${APP_URL}/creator/flow" style="color:#9f9">Build your own</a></p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name,
+      description,
+      url: canonicalUrl,
+      ...(flow.created_at ? { dateCreated: flow.created_at } : {}),
+      ...(flow.updated_at ? { dateModified: flow.updated_at } : {}),
+      isPartOf: { '@type': 'SoftwareApplication', name: 'DeHub Creator Flow', url: `${APP_URL}/creator/flow` },
+    },
+  });
+}
+
+/**
  * A single DAO proposal, /app/governance/<uuid>. Proposals carry no art of
  * their own, so the governance card stands in — that is still the page's
  * subject, unlike the homepage card it was getting.
@@ -2390,6 +2426,10 @@ function shouldServeSSR(pathname) {
   if (/^\/app\/events\/\d+/.test(pathname)) return true;
   // A single governance proposal, rendered from PostgREST below.
   if (/^\/app\/governance\/[0-9a-fA-F-]{8,}\/?$/.test(pathname)) return true;
+  // A shared Creator Flow, /creator/flow/<id>. `creator` is a reserved
+  // ROUTE_SEGMENT, so without this rule the share link unfurls as the SPA
+  // shell — the flow renderer below would never run.
+  if (/^\/creator\/flow\/[a-z0-9]{6,32}\/?$/.test(pathname)) return true;
   // One film or series. The renderer for these has existed since /cinema
   // shipped and had never run once: `cinema` is a reserved ROUTE_SEGMENT, so
   // the profile fall-through rejected the path and the SPA shell went out
@@ -3562,6 +3602,27 @@ async function handleRequest(request, env) {
     }
     // Row missing or Supabase unreachable: fall through to the generic stub
     // rather than 404, because we cannot tell those two apart from here.
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    }));
+  }
+
+  // A shared Creator Flow. Public rows are readable with the anon key (RLS
+  // select policy on is_public), so this reads PostgREST directly like
+  // proposals do; a private or missing flow gets the generic stub.
+  const flowMatch = cleanPath.match(/^\/creator\/flow\/([a-z0-9]{6,32})$/);
+  if (flowMatch) {
+    const flow = await supabaseRow(
+      `creator_flows?id=eq.${encodeURIComponent(flowMatch[1])}&is_public=eq.true&select=id,name,cover_url,node_count,created_at,updated_at&limit=1`,
+    );
+    if (flow) {
+      return guard(new Response(buildCreatorFlowHtml(flow), { status: 200, headers: blogHeaders }));
+    }
     return guard(new Response(buildFallbackHtml(pathname, request.url), {
       status: 200,
       headers: {

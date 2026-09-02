@@ -16,6 +16,7 @@ import { lazyWithRetry } from "@/lib/lazy-with-retry";
 import { SEOHead } from "@/components/SEOHead";
 import { emitSurfaceSwitch } from "@/hooks/use-surface-switch";
 import { useGenerationStore } from "@/store/generationStore";
+import { useCreatorFolderStore } from "@/store/creatorFolderStore";
 import { useAuth } from "@/contexts/AuthContext";
 
 const CreatorPage = lazyWithRetry(() => import("@/pages/app/CreatorPage"));
@@ -73,6 +74,9 @@ export default function CreatorEditorHost() {
    */
   useEffect(() => {
     useGenerationStore.getState().setScope(walletAddress ?? null);
+    // Library folders follow the wallet too: pull the account's folders and
+    // memberships so the "Your generations" chips match across devices.
+    if (walletAddress) void useCreatorFolderStore.getState().loadFromServer();
   }, [walletAddress]);
 
   useEffect(() => {

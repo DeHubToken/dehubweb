@@ -170,6 +170,10 @@ const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage")
 const WorkHistoryPage = React.lazy(() => import("./pages/app/WorkHistoryPage"));
 const BountyLegacyRedirect = React.lazy(() => import("./pages/app/BountyLegacyRedirect"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
+// Creator Flow (node canvas) is its own chunk: React Flow and its d3 deps are
+// only worth downloading once someone opens the canvas, not with /creator.
+const CreatorFlowPage = React.lazy(() => import("./pages/app/CreatorFlowPage"));
+const CreatorFlowPublicPage = React.lazy(() => import("./pages/app/CreatorFlowPublicPage"));
 // Eager import — the referral lander is a new user's first touch of DeHub and
 // must paint instantly; it renders outside WalletProviders (see App below) so
 // it never waits on the ~1.5 MB wallet chunk either.
@@ -467,6 +471,8 @@ function AppContent() {
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
+          <Route path="/creator/flow" element={<Suspense fallback={<PageLoader />}><CreatorFlowPage /></Suspense>} />
+          <Route path="/creator/flow/:id" element={<Suspense fallback={<PageLoader />}><CreatorFlowPublicPage /></Suspense>} />
           {/* /r/:code renders in the top-level Routes (outside WalletProviders) — see App below */}
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />

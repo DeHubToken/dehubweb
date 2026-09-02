@@ -31,6 +31,7 @@ import {
   PenTool,
   Sparkles,
   Wand2,
+  Workflow,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MountOnVisible } from '@/components/util/MountOnVisible';
@@ -60,7 +61,7 @@ interface Tool {
   descriptionKey: string;
   icon: React.ComponentType<{ className?: string }>;
   category: 'Image' | 'Video' | 'Audio' | 'Studio' | 'Agents';
-  badge?: 'TRENDING';
+  badge?: 'TRENDING' | 'NEW';
   action: ToolAction;
 }
 
@@ -225,6 +226,16 @@ const tools: Tool[] = [
     category: 'Agents',
     badge: 'TRENDING',
     action: { kind: 'navigate', to: '/app/agents' },
+  },
+  {
+    id: 'flow',
+    nameKey: 'creator.toolFlow',
+    labelKey: 'creator.navStudio',
+    descriptionKey: 'creator.toolFlowDesc',
+    icon: Workflow,
+    category: 'Studio',
+    badge: 'NEW',
+    action: { kind: 'navigate', to: '/creator/flow' },
   },
 ];
 

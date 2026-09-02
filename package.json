@@ -70,6 +70,7 @@
     "@web3auth/ethereum-provider": "9.7.0",
     "@web3auth/modal": "10.5.6",
     "@web3auth/no-modal": "10.5.6",
+    "@xyflow/react": "^12.11.6",
     "agora-rtc-sdk-ng": "^4.24.2",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.1",
