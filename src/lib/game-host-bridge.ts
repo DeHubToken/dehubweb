@@ -59,15 +59,28 @@
  * cost is shown and the wallet is a tap away. The frame never gets the
  * session, the token or the ability to spend anything.
  *
- * `source` is checked on arrival exactly as the exit bridge checks it: any
- * frame on the page can post to us, and opaque frames all post with
- * `origin: "null"`, so the name in the payload is the only discriminator
- * available. Nothing in a payload is ever used as an address, a path or a
- * lookup key: `desk` reports on the wallet THIS side is signed in as, never on
- * one the frame names, or a game could farm profiles by asking.
+ * WHO IS ALLOWED TO SEND
+ * ----------------------
+ * The sending WINDOW is the gate: `event.source` has to be the game frame's
+ * own `contentWindow`. That test holds whatever the frame's origin is, which
+ * is why it is the one used here — `event.origin` cannot do the job, because
+ * an opaque frame posts with `origin: "null"` and so does every other
+ * sandboxed frame on the page.
+ *
+ * The `source` name in the payload is NOT that gate and never was. It only
+ * says which game is talking, so a page hosting more than one routes to the
+ * right bridge. On its own it is written by the sender: any window holding a
+ * handle to this one — a popup opener, or a page the game mounted in a nested
+ * frame — can put that name in a payload. `post` publishes as the signed-in
+ * wallet and `desk` answers with their address and their posts, so the window
+ * check is what keeps both out of reach.
+ *
+ * Nothing in a payload is ever used as an address, a path or a lookup key:
+ * `desk` reports on the wallet THIS side is signed in as, never on one the
+ * frame names, or a game could farm profiles by asking.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { mintPost, quotePostCharge } from '@/lib/api/dehub';
@@ -424,7 +437,11 @@ async function relayPost(
  * Pass `undefined` for `source` to listen for nothing — the caller may not
  * know which game it is hosting yet.
  */
-export function useGameHostBridge(source: string | undefined, options?: GameHostOptions): void {
+export function useGameHostBridge(
+  source: string | undefined,
+  frame: RefObject<HTMLIFrameElement>,
+  options?: GameHostOptions,
+): void {
   const navigate = useNavigate();
   // The listener is bound once per game. Reading these through a ref keeps a
   // new wallet or a new callback from tearing it down and rebinding mid-play.
@@ -449,6 +466,10 @@ export function useGameHostBridge(source: string | undefined, options?: GameHost
     const onMessage = (event: MessageEvent<GameHostMessage | null>) => {
       const data = event.data;
       if (!data || data.source !== source) return;
+      // The game frame itself, not any other window that knows the name. A
+      // popup opener or a page the game mounted in a nested frame can post the
+      // same payload, and `post` mints as the signed-in wallet.
+      if (event.source !== frame.current?.contentWindow) return;
 
       if (data.type === 'navigate') {
         const to = typeof data.to === 'string' ? data.to : '';

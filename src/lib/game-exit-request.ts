@@ -34,7 +34,7 @@
  * feed. Both call this with their own handler.
  */
 
-import { useEffect } from 'react';
+import { useEffect, type RefObject } from 'react';
 
 export interface GameExitMessage {
   source?: string;
@@ -47,16 +47,22 @@ export interface GameExitMessage {
  * Pass `undefined` for `source` to listen for nothing — the caller may not know
  * which game it is hosting yet.
  */
-export function useGameExitRequest(source: string | undefined, onExit: () => void): void {
+export function useGameExitRequest(
+  source: string | undefined,
+  frame: RefObject<HTMLIFrameElement>,
+  onExit: () => void,
+): void {
   useEffect(() => {
     if (!source) return;
     const onMessage = (event: MessageEvent<GameExitMessage | null>) => {
       const data = event.data;
-      // Opaque-origin frames post with `origin: "null"`, so the origin check
-      // that would normally guard this cannot distinguish our game from any
-      // other sandboxed frame. The `source` name does that job instead, and it
-      // is why the payload carries one.
+      // Opaque-origin frames post with `origin: "null"`, so an origin check
+      // cannot tell our game from any other sandboxed frame. The sending
+      // WINDOW can, and does: it has to be the game frame's own contentWindow.
+      // The `source` name only says which game is talking — anyone holding a
+      // handle to this window can write it into a payload.
       if (!data || data.source !== source || data.type !== 'exit') return;
+      if (event.source !== frame.current?.contentWindow) return;
       onExit();
     };
     window.addEventListener('message', onMessage);
