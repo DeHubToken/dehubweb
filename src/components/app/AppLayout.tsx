@@ -16,11 +16,22 @@ if (typeof window !== 'undefined' && window.matchMedia?.('(min-width: 1024px)').
   loadRightSidebar().catch(() => { /* React.lazy retries on render */ });
 }
 
+/**
+ * Same width as the rail's root (RightSidebar.tsx: `w-72 xl:w-80 2xl:w-88`),
+ * so the column layout is final from the first commit. With a null fallback
+ * the middle column briefly took the rail's width too and snapped back when
+ * the chunk landed — a visible jump of the welcome panel on every desktop
+ * first visit, and Lighthouse desktop scored it as 0.125 of layout shift.
+ */
+const RailPlaceholder = () => (
+  <aside aria-hidden="true" className="hidden lg:block w-72 xl:w-80 2xl:w-88 shrink-0" />
+);
+
 function DesktopRightRail() {
   const isDesktop = useIsDesktopViewport();
   if (!isDesktop) return null;
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<RailPlaceholder />}>
       <RightSidebar />
     </Suspense>
   );
