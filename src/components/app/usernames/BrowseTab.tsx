@@ -11,6 +11,8 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, Check, Lock, User, Tag } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -25,21 +27,26 @@ import { UsernameCard } from './UsernameCard';
 import { BuyUsernameDrawer } from './BuyUsernameDrawer';
 import type { UsernameListing } from '@/lib/api/dehub/username-market';
 
-const SORTS: { value: UsernameSort; label: string }[] = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'price_asc', label: 'Price: Low → High' },
-  { value: 'price_desc', label: 'Price: High → Low' },
-  { value: 'shortest', label: 'Shortest first' },
+const SORTS: { value: UsernameSort; labelKey: string }[] = [
+  { value: 'newest', labelKey: 'usernames.sortNewest' },
+  { value: 'price_asc', labelKey: 'usernames.sortPriceAsc' },
+  { value: 'price_desc', labelKey: 'usernames.sortPriceDesc' },
+  { value: 'shortest', labelKey: 'usernames.sortShortest' },
 ];
 
+/**
+ * The band labels are read back as the key for the selected preset, so they
+ * carry a stable `id` rather than being identified by their own display text.
+ */
 const PRICE_PRESETS = [
-  { label: 'Under 10k', min: undefined, max: 10_000 },
-  { label: '10k – 100k', min: 10_000, max: 100_000 },
-  { label: '100k – 1M', min: 100_000, max: 1_000_000 },
-  { label: '1M+', min: 1_000_000, max: undefined },
+  { id: 'under10k', labelKey: 'usernames.bandUnder10k', min: undefined, max: 10_000 },
+  { id: '10kTo100k', labelKey: 'usernames.band10kTo100k', min: 10_000, max: 100_000 },
+  { id: '100kTo1m', labelKey: 'usernames.band100kTo1m', min: 100_000, max: 1_000_000 },
+  { id: '1mPlus', labelKey: 'usernames.band1mPlus', min: 1_000_000, max: undefined },
 ];
 
 export function BrowseTab() {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   // A shared listing link lands here with the handle already in the box.
@@ -79,7 +86,7 @@ export function BrowseTab() {
     setSort('newest');
   };
 
-  const banner = useMemo(() => exactBanner(data?.exact ?? null, listings), [data?.exact, listings]);
+  const banner = useMemo(() => exactBanner(data?.exact ?? null, listings, t), [data?.exact, listings, t]);
 
   return (
     <div className="space-y-4">
@@ -89,7 +96,7 @@ export function BrowseTab() {
         <Input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search a handle…"
+          placeholder={t('usernames.searchPlaceholder')}
           spellCheck={false}
           autoCapitalize="none"
           className="pl-9 bg-black/60 backdrop-blur-2xl border-white/10 rounded-xl text-white placeholder:text-zinc-500"
@@ -109,32 +116,32 @@ export function BrowseTab() {
               >
                 <span className="text-white text-xs font-medium px-3 whitespace-nowrap flex items-center gap-1.5">
                   <SlidersHorizontal className="w-3 h-3" />
-                  Filter{activeFilters ? ` (${activeFilters})` : ''}
+                  {activeFilters ? t('usernames.filterCount', { count: activeFilters }) : t('usernames.filter')}
                 </span>
               </LiquidGlassBubble>
             </div>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-64 bg-zinc-900 border-white/10 space-y-4">
             <div className="space-y-2">
-              <Label className="text-xs text-zinc-400">Sort</Label>
+              <Label className="text-xs text-zinc-400">{t('usernames.sort')}</Label>
               {SORTS.map(option => (
                 <button
                   key={option.value}
                   onClick={() => setSort(option.value)}
                   className="w-full flex items-center justify-between text-sm text-white py-1"
                 >
-                  {option.label}
+                  {t(option.labelKey)}
                   {sort === option.value && <Check className="w-3.5 h-3.5" />}
                 </button>
               ))}
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-zinc-400">Price (DHB)</Label>
+              <Label className="text-xs text-zinc-400">{t('usernames.priceDhb')}</Label>
               <div className="grid grid-cols-2 gap-1.5">
                 {PRICE_PRESETS.map(preset => (
                   <button
-                    key={preset.label}
+                    key={preset.id}
                     onClick={() => { setMinPriceDhb(preset.min); setMaxPriceDhb(preset.max); }}
                     className={`text-xs rounded-lg border px-2 py-1.5 ${
                       minPriceDhb === preset.min && maxPriceDhb === preset.max
@@ -142,7 +149,7 @@ export function BrowseTab() {
                         : 'border-white/10 bg-white/5 text-zinc-400'
                     }`}
                   >
-                    {preset.label}
+                    {t(preset.labelKey)}
                   </button>
                 ))}
               </div>
@@ -150,7 +157,7 @@ export function BrowseTab() {
 
             {activeFilters > 0 && (
               <Button variant="ghost" size="sm" className="w-full" onClick={clearFilters}>
-                Clear
+                {t('usernames.clear')}
               </Button>
             )}
           </PopoverContent>
@@ -158,7 +165,7 @@ export function BrowseTab() {
 
         {data && (
           <span className="text-xs text-zinc-500 ml-auto">
-            {data.total.toLocaleString()} for sale
+            {t('usernames.forSaleCount', { count: data.total })}
           </span>
         )}
       </div>
@@ -174,7 +181,7 @@ export function BrowseTab() {
         </div>
       ) : listings.length === 0 ? (
         <div className="text-center py-12 text-sm text-zinc-500">
-          {debouncedSearch ? 'No handles for sale match that.' : 'No handles are for sale yet.'}
+          {t(debouncedSearch ? 'usernames.noSearchMatch' : 'usernames.noneForSale')}
         </div>
       ) : (
         <div className={`space-y-2.5 ${isFetching ? "opacity-60" : ""}`}>
@@ -206,19 +213,31 @@ export function BrowseTab() {
 function exactBanner(
   exact: { username: string; state: string } | null,
   listings: UsernameListing[],
+  // Takes the translator rather than calling the hook: this is a plain helper,
+  // not a component.
+  t: TFunction,
 ) {
   if (!exact) return null;
   if (exact.state === 'listed' && listings.some(l => l.username === exact.username)) return null;
 
   const shell = 'rounded-xl border p-3 flex items-start gap-2.5 text-sm';
 
+  // Each sentence stays one key with the handle and the link inline, so a
+  // translator can move the link to wherever their grammar wants it rather
+  // than being handed three fragments in a fixed English order.
   if (exact.state === 'available') {
     return (
       <div className={`${shell} border-emerald-500/30 bg-emerald-500/10`}>
         <Tag className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
         <p className="text-emerald-100">
-          <span className="font-semibold break-all">@{exact.username}</span> is not taken. Claim it for free in{' '}
-          <a href="/app/settings" className="underline">Settings → Profile</a> — there is nothing to buy.
+          <Trans
+            i18nKey="usernames.exactAvailable"
+            values={{ handle: exact.username }}
+            components={{
+              handle: <span className="font-semibold break-all" />,
+              settings: <a href="/app/settings" className="underline" />,
+            }}
+          />
         </p>
       </div>
     );
@@ -229,8 +248,14 @@ function exactBanner(
       <div className={`${shell} border-white/10 bg-white/5`}>
         <User className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
         <p className="text-zinc-300">
-          <span className="font-semibold break-all">@{exact.username}</span> belongs to someone who has not
-          listed it. You could <a href={`/${exact.username}`} className="underline">ask them</a>.
+          <Trans
+            i18nKey="usernames.exactTaken"
+            values={{ handle: exact.username }}
+            components={{
+              handle: <span className="font-semibold break-all" />,
+              profile: <a href={`/${exact.username}`} className="underline" />,
+            }}
+          />
         </p>
       </div>
     );
@@ -241,8 +266,11 @@ function exactBanner(
       <div className={`${shell} border-white/10 bg-white/5`}>
         <Lock className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
         <p className="text-zinc-300">
-          <span className="font-semibold break-all">@{exact.username}</span> is a DeHub route, so nobody can
-          hold it or sell it.
+          <Trans
+            i18nKey="usernames.exactReserved"
+            values={{ handle: exact.username }}
+            components={{ handle: <span className="font-semibold break-all" /> }}
+          />
         </p>
       </div>
     );

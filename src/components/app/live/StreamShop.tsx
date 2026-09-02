@@ -12,6 +12,7 @@
  * the live-checkout function at the moment they press Buy.
  */
 
+import { useTranslation } from 'react-i18next';
 import { memo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ImageIcon, ShoppingBag, X, ChevronRight } from 'lucide-react';
@@ -55,12 +56,13 @@ function PriceTag({ product, className }: { product: StreamProduct; className?: 
 }
 
 function StockNote({ product }: { product: StreamProduct }) {
+  const { t } = useTranslation();
   const stock = product.store_listings?.stock_quantity;
   if (stock === null || stock === undefined) return null;
   if (stock > LOW_STOCK_THRESHOLD) return null;
   return (
     <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-400">
-      {stock === 1 ? 'Last one' : `${stock} left`}
+      {stock === 1 ? t('live.lastOne') : t('live.stockLeft', { count: stock })}
     </span>
   );
 }
@@ -88,6 +90,7 @@ function ProductThumb({ product, className }: { product: StreamProduct; classNam
  * intended rather than a viewer being re-nagged about the same item.
  */
 export function StreamShopPinnedCard({ tokenId }: { tokenId: string | null }) {
+  const { t } = useTranslation();
   const { pinned } = useStreamProducts(tokenId);
   const [dismissedId, setDismissedId] = useState<string | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -120,11 +123,11 @@ export function StreamShopPinnedCard({ tokenId }: { tokenId: string | null }) {
                 onClick={() => setCheckoutOpen(true)}
                 className="shrink-0 px-3 py-1.5 rounded-lg bg-white text-black text-xs font-semibold hover:bg-white/90 transition-colors"
               >
-                Buy
+                {t('live.buy')}
               </button>
               <button
                 onClick={() => setDismissedId(pinned.id)}
-                aria-label="Hide this product"
+                aria-label={t('live.hideProduct')}
                 className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
@@ -153,6 +156,7 @@ const RailCard = memo(function RailCard({
   product: StreamProduct;
   onBuy: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <button
       onClick={onBuy}
@@ -162,7 +166,7 @@ const RailCard = memo(function RailCard({
         <ProductThumb product={product} className="w-full aspect-square" />
         {product.is_pinned && (
           <span className="absolute top-1.5 left-1.5 text-[9px] font-bold uppercase tracking-wide bg-white text-black px-1.5 py-0.5 rounded">
-            On air
+            {t('live.onAir')}
           </span>
         )}
       </div>
@@ -183,6 +187,7 @@ const RailCard = memo(function RailCard({
  * use.
  */
 export function StreamShopRail({ tokenId }: { tokenId: string | null }) {
+  const { t } = useTranslation();
   const { sellable } = useStreamProducts(tokenId);
   const [checkoutFor, setCheckoutFor] = useState<StreamProduct | null>(null);
 
@@ -193,7 +198,7 @@ export function StreamShopRail({ tokenId }: { tokenId: string | null }) {
       <div className="mt-3 rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
         <div className="flex items-center gap-2 mb-2.5">
           <ShoppingBag className="w-4 h-4 text-zinc-400" />
-          <h3 className="text-sm font-semibold text-white">Shop this stream</h3>
+          <h3 className="text-sm font-semibold text-white">{t('live.shopThisStream')}</h3>
           <span className="text-xs text-zinc-500">{sellable.length}</span>
           <ChevronRight className="w-3.5 h-3.5 text-zinc-600 ml-auto sm:hidden" />
         </div>

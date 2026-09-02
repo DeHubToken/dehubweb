@@ -43,6 +43,7 @@
     "connectAi": "IA-wan t'inkiy"
   },
   "feed": {
+    "viewProfile": "{{name}} pa perfilninta qhaway",
     "home": "Qallariy",
     "videos": "Video",
     "images": "Siqi",
@@ -943,6 +944,8 @@
     "loginRequired": "Yaykuy munakun"
   },
   "messages": {
+    "encrypted": "Puntamanta puntakama pakasqa",
+    "cannotDecrypt": "Pakasqa willay — kay aparichapi mana kichay atikunchu",
     "title": "Willakuy",
     "searchConversations": "Rimanakuykuna maskay...",
     "failedToLoad": "Mana rimanakuykunata churayta atirqanchu",
@@ -1816,5 +1819,25 @@
     "stakeDhb": "DHB-ta churay",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} {{tier}} hawapi kichakun"
+  },
+  "videoLooks": {
+    "button": "Kamara rikchaykuna",
+    "title": "Rikchay",
+    "hint": "Videoyki kay antamanta lloqsinanpaq ñawpaqta churakun — qhawaqkunaqa kaypi qhawasqaykitapuni qhawanku.",
+    "backgroundBlur": "Qhipaymanta chiqnichiy",
+    "on": "Kichasqa",
+    "off": "Wichqasqa",
+    "none": "Manam",
+    "soft": "Llampu",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Qoñi",
+    "cool": "Chiri",
+    "vivid": "Llipipiq",
+    "dream": "Musquy",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Chiqnisqa",
+    "pixelate": "Piksil"
   }
 }

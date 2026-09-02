@@ -40,7 +40,7 @@ type AvatarImageProps = Omit<
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   AvatarImageProps
->(({ className, loading, decoding, onError, onLoadingStatusChange, ...props }, ref) => {
+>(({ className, loading, decoding, onError, onLoadingStatusChange, alt, ...props }, ref) => {
   const handleLoadingStatusChange = React.useCallback(
     (status: ImageLoadingStatus) => {
       onLoadingStatusChange?.(status);
@@ -63,6 +63,13 @@ const AvatarImage = React.forwardRef<
          inert for avatars that are actually visible. */
       loading={loading ?? "lazy"}
       decoding={decoding ?? "async"}
+      /* Decorative by default. An avatar sits beside the name it belongs to
+         everywhere it is rendered, so a screen reader announcing "image" (or
+         the CDN filename) for each one is noise — and an <img> with NO alt at
+         all is what it does. 17 of them on the signed-out home in the
+         2026-09-02 Lighthouse run. A caller with a lone avatar (a profile
+         link with nothing else in it) still passes its own alt. */
+      alt={alt ?? ""}
       onLoadingStatusChange={handleLoadingStatusChange}
       {...props}
     />

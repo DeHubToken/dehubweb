@@ -43,6 +43,7 @@
     "connectAi": "Haɗa AI"
   },
   "feed": {
+    "viewProfile": "Duba bayanan {{name}}",
     "home": "Gida",
     "videos": "Bidiyo",
     "images": "Hotuna",
@@ -942,6 +943,8 @@
     "loginRequired": "Ana buƙatar shiga"
   },
   "messages": {
+    "encrypted": "An ɓoye daga ƙarshe zuwa ƙarshe",
+    "cannotDecrypt": "Saƙon da aka ɓoye — ba za a iya buɗewa a wannan na'urar ba",
     "title": "Saƙonni",
     "searchConversations": "Bincika tattaunawa...",
     "failedToLoad": "Ba a iya ɗora tattaunawa ba",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "Ajiye DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} yana buɗewa a {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kamannin kamara",
+    "title": "Kamanni",
+    "hint": "Ana amfani da shi kafin bidiyon ka ya bar wannan na ura — masu kallo suna ganin daidai abin da kake gani a nan.",
+    "backgroundBlur": "Rufa bayan gareyana",
+    "on": "Kunna",
+    "off": "Kashe",
+    "none": "Babu",
+    "soft": "Mai laushi",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Dumi",
+    "cool": "Sanyi",
+    "vivid": "Haske",
+    "dream": "Mafarki",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Rufewa",
+    "pixelate": "Pixel"
   }
 }

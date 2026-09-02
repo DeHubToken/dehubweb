@@ -43,6 +43,7 @@
     "connectAi": "AI ونښلوئ"
   },
   "feed": {
+    "viewProfile": "د {{name}} پروفایل ته مراجعه وکړئ",
     "home": "کور",
     "videos": "ویډیوګانې",
     "images": "انځورونه",
@@ -942,6 +943,8 @@
     "loginRequired": "ننوتل اړین دي"
   },
   "messages": {
+    "encrypted": "له سره تر سره کوډ شوی",
+    "cannotDecrypt": "کوډ شوی پیغام — په دې وسیله کې نه شي پرانیستل کېدای",
     "title": "پیغامونه",
     "searchConversations": "خبرې اترې ولټوئ...",
     "failedToLoad": "خبرې اترې نشي لوډ کیدلی",
@@ -1763,5 +1766,25 @@
     "stakeDhb": "DHB زیرمه کړئ",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} {{tier}} کې خلاصیږي"
+  },
+  "videoLooks": {
+    "button": "د کامرې بڼې",
+    "title": "بڼه",
+    "hint": "ستاسو ویډیو د دې وسیلې څخه د وتلو دمخه پلي کیږي — لیدونکي هغه څه ګوري چې تاسو دلته ګورئ.",
+    "backgroundBlur": "زما شاليد ډنډوره کړه",
+    "on": "فعال",
+    "off": "غیرفعال",
+    "none": "هیڅ",
+    "soft": "نرم",
+    "mono": "مونو",
+    "noir": "نوار",
+    "warm": "ګرم",
+    "cool": "سوړ",
+    "vivid": "روښانه",
+    "dream": "خوب",
+    "vhs": "VHS",
+    "neon": "نیون",
+    "blur": "ډنډوره",
+    "pixelate": "پکسل"
   }
 }

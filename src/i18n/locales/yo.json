@@ -43,6 +43,7 @@
     "connectAi": "So AI pọ̀"
   },
   "feed": {
+    "viewProfile": "Wo fáìlì {{name}}",
     "home": "Ilé",
     "videos": "Fídíò",
     "images": "Àwòrán",
@@ -943,6 +944,8 @@
     "loginRequired": "Wíwọlé ni a nílò"
   },
   "messages": {
+    "encrypted": "Ìpamọ́ láti ìbẹ̀rẹ̀ dé òpin",
+    "cannotDecrypt": "Ìfiránṣẹ́ tí a fi pamọ́ — kò lè ṣí lórí ẹ̀rọ yìí",
     "title": "Ìfiránṣẹ́",
     "searchConversations": "Wá àwọn ìfọ̀rọ̀wérọ̀...",
     "failedToLoad": "Kò le gbé àwọn ìfọ̀rọ̀wérọ̀",
@@ -1786,5 +1789,25 @@
     "stakeDhb": "Fi DHB pamọ́",
     "title": "Agbára Àkànṣe",
     "unlocksAt": "{{power}} ń ṣí payé ní {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Àwọn ìrísí kámẹ́rà",
+    "title": "Ìrísí",
+    "hint": "A ń lò ó kí fídíò rẹ tó kúrò ní ẹ̀rọ yìí — àwọn olùwòran rí gan-an ohun tí o rí níbí.",
+    "backgroundBlur": "Ṣe àbẹ̀yìn mi ní àìlẹ́sẹ̀",
+    "on": "Ṣíṣí",
+    "off": "Pípa",
+    "none": "Kò sí",
+    "soft": "Rírọ̀",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Gbóná",
+    "cool": "Tútù",
+    "vivid": "Dídán",
+    "dream": "Àlá",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Àìlẹ́sẹ̀",
+    "pixelate": "Píksẹ̀lì"
   }
 }

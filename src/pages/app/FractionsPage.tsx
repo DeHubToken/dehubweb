@@ -12,6 +12,7 @@
  */
 
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShoppingBag, Wallet, Activity } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -26,6 +27,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 type Tab = 'browse' | 'portfolio' | 'activity';
 
 export default function FractionsPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>('browse');
   const { walletAddress } = useAuth();
   const { data: openTrades } = useOpenTrades(walletAddress);
@@ -43,9 +45,10 @@ export default function FractionsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Fractions | DeHub"
-        description="Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB."
+        title={t('fractions.seoTitle')}
+        description={t('fractions.seoDescription')}
         url="https://dehub.io/app/fractions"
+        image="https://dehub.io/og/fractions.jpg"
       />
 
       {/* Sticky nav pill */}
@@ -60,13 +63,13 @@ export default function FractionsPage() {
               alt=""
               className="w-10 h-10 shrink-0 object-contain"
             />
-            <h1 className="text-xl font-bold text-white">Fractions</h1>
-            <span className="text-xs text-white/40">1000 per upload</span>
+            <h1 className="text-xl font-bold text-white">{t('fractions.title')}</h1>
+            <span className="text-xs text-white/40">{t('fractions.perUpload')}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <LiquidGlassBubble2
-              label="Browse"
+              label={t('fractions.tabBrowse')}
               icon={<ShoppingBag className="w-4 h-4" />}
               onClick={() => setTab('browse')}
               width="auto"
@@ -75,7 +78,7 @@ export default function FractionsPage() {
               className={tab === 'browse' ? undefined : 'opacity-60'}
             />
             <LiquidGlassBubble2
-              label={needsAction > 0 ? `Portfolio (${needsAction})` : 'Portfolio'}
+              label={needsAction > 0 ? t('fractions.tabPortfolioCount', { count: needsAction }) : t('fractions.tabPortfolio')}
               icon={<Wallet className="w-4 h-4" />}
               onClick={() => setTab('portfolio')}
               width="auto"
@@ -84,7 +87,7 @@ export default function FractionsPage() {
               className={tab === 'portfolio' ? undefined : 'opacity-60'}
             />
             <LiquidGlassBubble2
-              label="Activity"
+              label={t('fractions.tabActivity')}
               icon={<Activity className="w-4 h-4" />}
               onClick={() => setTab('activity')}
               width="auto"

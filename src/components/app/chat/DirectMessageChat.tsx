@@ -5,9 +5,13 @@
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo } from 'react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock } from 'lucide-react';
+import { useTranslation as useI18n } from 'react-i18next';
+import { useDmEncryption } from '@/hooks/use-dm-encryption';
+import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -18,7 +22,7 @@ import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { conversationIdentity } from '@/lib/conversation-identity';
 import { writeDraft } from '@/lib/draft-cache';
 import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
-import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
+import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
@@ -61,6 +65,8 @@ import {
   emitReadReceipt,
   emitForwardMessage,
   emitEditMessage,
+  emitSendMessage,
+  waitForDmSocket,
   onConversationDeleted,
   onDmSendMessage,
   onForwardMessage,
@@ -188,21 +194,9 @@ const MessageBubble = memo(function MessageBubble({
     // pendingAgeMs is time-derived; the timer only needs scheduling while visible
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPaymentPending, message._id]);
-  // Call message — detect by emoji prefix in content (📞/📹/📵)
+  // Call message — detect by emoji prefix in content (📞/📹/📵). The branch
+  // it drives lives below the hooks; see the note there.
   const isCallMessage = message.msgType === 'msg' && /^[📞📹📵]/.test(message.content || '');
-  if (isCallMessage) {
-    return (
-      <div id={`dm-msg-${message._id}`} className="flex justify-center py-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/50 text-zinc-300 text-xs">
-          <Phone className="w-3 h-3 text-zinc-400 flex-shrink-0" />
-          <span>{message.content}</span>
-          <span className="text-zinc-500 text-[10px] ml-0.5">
-            · {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
-          </span>
-        </div>
-      </div>
-    );
-  }
 
   const avatarUrl = buildAvatarUrl(message.sender?.address || '', message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
@@ -262,6 +256,7 @@ const MessageBubble = memo(function MessageBubble({
     // and the free tier is a shared translation memory. The translate control is
     // still here for anyone who wants it.
   } = useTranslation(textContent, false);
+  const { t: tr } = useI18n();
 
   // A contract address or a $TICKER in a plain message cards up the same way it
   // does in a post. Entity shares are left alone — they already have a card, and
@@ -270,6 +265,29 @@ const MessageBubble = memo(function MessageBubble({
     isPostShare ? '' : (isTranslated ? translatedText : message.content) || '',
     1,
   );
+
+  // A call notice: a centred pill, none of the bubble chrome.
+  //
+  // This return sits below every hook above deliberately. It used to sit right
+  // after the payment-pending effect, which left this component calling two
+  // hooks for a call notice and eight for anything else — and `isCallMessage`
+  // is read off `message.content`, which now changes in place when someone
+  // edits or deletes a message. The same React key flipping branch is
+  // "Rendered more hooks than during the previous render", i.e. the whole
+  // thread white-screens. Keep it here.
+  if (isCallMessage) {
+    return (
+      <div id={`dm-msg-${message._id}`} className="flex justify-center py-2">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/50 text-zinc-300 text-xs">
+          <Phone className="w-3 h-3 text-zinc-400 flex-shrink-0" />
+          <span>{message.content}</span>
+          <span className="text-zinc-500 text-[10px] ml-0.5">
+            · {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -348,7 +366,7 @@ const MessageBubble = memo(function MessageBubble({
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.16] text-zinc-200 text-sm">
             <Gem className="w-4 h-4 text-white" />
             <span>
-              Tip: {message.tipAmount} {message.tipSymbol || 'DHB'}
+              Tip: <DhbAmount amount={message.tipAmount} currency={message.tipSymbol} />
             </span>
           </div>
         )}
@@ -537,7 +555,7 @@ const MessageBubble = memo(function MessageBubble({
             {message.tipAmount != null && (message.msgType as string) !== 'tip' && (
               <div className="inline-flex items-center gap-1 mt-1 text-xs text-zinc-300">
                 <Gem className="w-3 h-3 text-zinc-300" />
-                {message.tipAmount} {message.tipSymbol || 'DHB'}
+                <DhbAmount amount={message.tipAmount} currency={message.tipSymbol} />
               </div>
             )}
           </div>
@@ -547,6 +565,14 @@ const MessageBubble = memo(function MessageBubble({
         {message.isDeleted && (
           <div className={`inline-block rounded-xl px-4 py-2 border border-white/[0.10] text-zinc-500 text-sm italic ${isOwnMessage ? 'rounded-br-sm' : 'rounded-bl-sm'}`}>
             Message deleted
+          </div>
+        )}
+
+        {/* Encrypted on another device's key — never show the envelope */}
+        {!message.isDeleted && message.undecryptable && (
+          <div className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 border border-white/[0.10] text-zinc-500 text-sm italic ${isOwnMessage ? 'rounded-br-sm' : 'rounded-bl-sm'}`}>
+            <Lock className="w-3.5 h-3.5 flex-shrink-0" />
+            {tr('messages.cannotDecrypt')}
           </div>
         )}
 
@@ -581,6 +607,9 @@ const MessageBubble = memo(function MessageBubble({
             </button>
           )}
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
+          {message.encrypted && (
+            <Lock className="w-3 h-3 text-zinc-600" aria-label={tr('messages.encrypted')} />
+          )}
           {showPaymentPending && (
             <Loader2 className="w-3 h-3 animate-spin text-zinc-400" />
           )}
@@ -694,6 +723,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const { user, walletAddress, openLoginModal } = useAuth();
   const { setCallMessageHandler } = useCall();
   const queryClient = useQueryClient();
+  const { t: tr } = useI18n();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
@@ -962,6 +992,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     markAsRead,
   } = useMessages(resolvedConversationId);
 
+  // Silent when this device already holds the key; one wallet signature the
+  // first time. Opening a chat is the moment to ask, not page load.
+  useDmEncryption();
+
   // Lets handleSaveEdit read current content without depending on `messages` —
   // that array changes on every incoming socket message, and putting it in a
   // useCallback dep list would break the bubble-level memoization documented
@@ -1199,8 +1233,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       return;
     }
 
+    let wire: { content: string; encrypted: boolean };
     try {
-      await emitEditMessage({ dmId: resolvedConversationId, messageId, content: trimmed });
+      // Same rule as a fresh send: encrypted when both sides have keys.
+      wire = await prepareOutgoing(otherUser?.address, trimmed);
+      await emitEditMessage({ dmId: resolvedConversationId, messageId, content: wire.content });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Could not save the edit.');
       return;
@@ -1212,14 +1249,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         ...page,
         items: page.items.map((m: DmMessage) =>
           m._id === messageId
-            ? { ...m, content: trimmed, isEdited: true, editedAt: new Date().toISOString() }
+            ? { ...m, content: trimmed, encrypted: wire.encrypted || m.encrypted, undecryptable: false, isEdited: true, editedAt: new Date().toISOString() }
             : m
         ),
       }));
       return { ...old, pages };
     });
     setEditingMessageId(null);
-  }, [queryClient, resolvedConversationId]);
+  }, [queryClient, resolvedConversationId, otherUser?.address]);
 
   const handleForwardSelect = useCallback(
     async (targetConversationId: string) => {
@@ -1236,10 +1273,29 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
        * the message.
        */
       try {
-        await emitForwardMessage({
-          messageId: forwardMessageTarget._id,
-          targetDmId: targetConversationId,
-        });
+        if (forwardMessageTarget.encrypted) {
+          // The server cannot re-encrypt for another conversation, so an
+          // encrypted line is re-sent from here: plaintext from the cache,
+          // encrypted again for the target's peer, citing the original.
+          if (forwardMessageTarget.undecryptable) {
+            toast.error(tr('messages.cannotDecrypt'));
+            return;
+          }
+          const targetPeer = peerAddressForConversation(queryClient, targetConversationId, walletAddress);
+          const wire = await prepareOutgoing(targetPeer, forwardMessageTarget.content);
+          await waitForDmSocket();
+          emitSendMessage({
+            dmId: targetConversationId,
+            content: wire.content,
+            type: 'msg',
+            forwardedFrom: { messageId: forwardMessageTarget._id },
+          });
+        } else {
+          await emitForwardMessage({
+            messageId: forwardMessageTarget._id,
+            targetDmId: targetConversationId,
+          });
+        }
       } catch (err) {
         toast.error(err instanceof Error ? err.message : 'Could not forward the message.');
         return;
@@ -1247,7 +1303,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       toast.success('Message forwarded');
       setForwardMessageTarget(null);
     },
-    [forwardMessageTarget],
+    [forwardMessageTarget, queryClient, walletAddress, tr],
   );
 
   // Handle scroll
@@ -1941,7 +1997,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             <AlertDialogTitle className="text-white">Messages cost DHB</AlertDialogTitle>
             <AlertDialogDescription className="text-zinc-400">
               The messages you send to {displayName} are paid and will cost{' '}
-              <span className="text-white font-semibold">{activeFee.toLocaleString()} DHB</span> each.
+              <span className="text-white font-semibold">{activeFee.toLocaleString()} <DhbCoin /></span> each.
               Are you sure you want to continue?
             </AlertDialogDescription>
           </AlertDialogHeader>

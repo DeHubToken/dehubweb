@@ -14,6 +14,7 @@
  */
 
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { stageUtcClock } from '@/lib/stage-time';
 import { Calendar, Loader2, ImagePlus, X, Check, Copy, Send } from 'lucide-react';
@@ -50,6 +51,7 @@ export function ScheduleStagePanel({
   setDescription: (v: string) => void;
   onDone: () => void;
 }) {
+  const { t } = useTranslation();
   const { scheduleSpace, isLoading } = useStage();
   const { openPostModal } = useGlobalDropZone();
 
@@ -71,11 +73,11 @@ export function ScheduleStagePanel({
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      toast.error('That file is not an image');
+      toast.error(t('stages.notAnImage'));
       return;
     }
     if (file.size > MAX_COVER_BYTES) {
-      toast.error('Cover must be under 8 MB');
+      toast.error(t('stages.coverTooLarge'));
       return;
     }
     setCoverFile(file);
@@ -114,7 +116,7 @@ export function ScheduleStagePanel({
         console.error('[Stage] Cover upload failed:', err);
         // A failed graphic must not cost the host the stage — carry on without
         // it and say so, rather than throwing the whole form away.
-        toast.error('Cover image failed to upload — scheduling without it');
+        toast.error(t('stages.coverUploadFailed'));
       } finally {
         setUploading(false);
       }
@@ -129,7 +131,7 @@ export function ScheduleStagePanel({
 
     if (space) {
       setScheduled(space);
-      toast.success('Stage scheduled');
+      toast.success(t('stages.stageScheduledToast'));
     }
   };
 
@@ -145,7 +147,7 @@ export function ScheduleStagePanel({
           <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
             <Check className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-white font-semibold">Stage scheduled</h3>
+          <h3 className="text-white font-semibold">{t('stages.stageScheduled')}</h3>
           {at && (
             <p className="text-sm text-white/60">
               {format(at, 'EEEE, d MMMM · h:mm a')}
@@ -178,8 +180,8 @@ export function ScheduleStagePanel({
           variant="ghost"
           onClick={() => {
             navigator.clipboard.writeText(link).then(
-              () => toast.success('Link copied'),
-              () => toast.error('Could not copy link'),
+              () => toast.success(t('stages.linkCopied')),
+              () => toast.error(t('stages.couldNotCopyLink')),
             );
           }}
           className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
@@ -204,22 +206,22 @@ export function ScheduleStagePanel({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <label className="text-sm text-white/60">Stage Title *</label>
+        <label className="text-sm text-white/60">{t('stages.stageTitleLabel')}</label>
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="What's this stage about?"
+          placeholder={t('stages.stageTitlePlaceholder')}
           className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
           maxLength={100}
         />
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm text-white/60">Description (optional)</label>
+        <label className="text-sm text-white/60">{t('stages.descriptionLabel')}</label>
         <Textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Add more details..."
+          placeholder={t('stages.descriptionPlaceholder')}
           className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl resize-none"
           rows={2}
           maxLength={280}
@@ -239,7 +241,7 @@ export function ScheduleStagePanel({
           className="bg-white/10 border-white/10 text-white rounded-xl [color-scheme:dark]"
         />
         {when && !isValidTime && (
-          <p className="text-xs text-red-400">Pick a time in the future.</p>
+          <p className="text-xs text-red-400">{t('stages.pickFutureTime')}</p>
         )}
         {/* The input is in the host's own timezone with nothing saying so —
             echo the UTC the audience will be told, while it can still be changed. */}
@@ -252,7 +254,7 @@ export function ScheduleStagePanel({
 
       {/* Cover graphic */}
       <div className="space-y-2">
-        <label className="text-sm text-white/60">Cover graphic (optional)</label>
+        <label className="text-sm text-white/60">{t('stages.coverGraphic')}</label>
         {coverPreview ? (
           <div className="relative rounded-xl overflow-hidden border border-white/10">
             <img src={coverPreview} alt="Stage cover preview" className="w-full h-28 object-cover" />
@@ -261,13 +263,13 @@ export function ScheduleStagePanel({
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/50" />
             <div className="absolute inset-0 flex items-end p-3">
               <span className="text-white text-sm font-semibold line-clamp-1">
-                {title.trim() || 'Your stage title'}
+                {title.trim() || t('stages.yourStageTitle')}
               </span>
             </div>
             <button
               type="button"
               onClick={clearCover}
-              aria-label="Remove cover graphic"
+              aria-label={t('stages.removeCover')}
               className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/60 hover:bg-black/80 flex items-center justify-center transition-colors"
             >
               <X className="w-4 h-4 text-white" />
@@ -284,7 +286,7 @@ export function ScheduleStagePanel({
             )}
           >
             <ImagePlus className="w-5 h-5" />
-            <span className="text-xs">Add a graphic</span>
+            <span className="text-xs">{t('stages.addGraphic')}</span>
           </button>
         )}
         <input
@@ -306,7 +308,7 @@ export function ScheduleStagePanel({
         ) : (
           <Calendar className="w-4 h-4 mr-2" />
         )}
-        {uploading ? 'Uploading cover...' : 'Schedule stage'}
+        {uploading ? t('stages.uploadingCover') : t('stages.scheduleStage')}
       </Button>
     </div>
   );

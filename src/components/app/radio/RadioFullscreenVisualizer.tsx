@@ -24,9 +24,11 @@ import {
   drawRings,
   drawPulse,
   drawTerrain,
+  drawOrb,
   resetRings,
   resetPulse,
   resetTerrain,
+  resetOrb,
 } from '@/components/app/audio/visualizer-styles';
 
 interface RadioFullscreenVisualizerProps {
@@ -43,6 +45,7 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'rings', label: 'Rings' },
   { value: 'pulse', label: 'Pulse' },
   { value: 'terrain', label: 'Terrain' },
+  { value: 'orb', label: 'Orb' },
 ];
 
 export function RadioFullscreenVisualizer({ 
@@ -154,6 +157,9 @@ export function RadioFullscreenVisualizer({
       case 'terrain':
         drawTerrain(ctx, frequencyData, cssW, cssH, activeHue);
         break;
+      case 'orb':
+        drawOrb(ctx, frequencyData, cssW, cssH, activeHue);
+        break;
     }
 
     animationRef.current = requestAnimationFrame(draw);
@@ -211,6 +217,7 @@ export function RadioFullscreenVisualizer({
     resetRings();
     resetPulse();
     resetTerrain();
+    resetOrb();
   }, [style]);
 
   useEffect(() => {
@@ -222,6 +229,7 @@ export function RadioFullscreenVisualizer({
       resetRings();
       resetPulse();
       resetTerrain();
+      resetOrb();
     };
   }, []);
 

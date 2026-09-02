@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -12,7 +13,20 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 type Filter = 'upcoming' | 'past' | 'my';
 
+/**
+ * The filter values are compared against, not printed — `filter === f` decides
+ * which events load — so they stay English and map to keys where drawn. The
+ * `capitalize` class that used to do the display casing is gone with them: a
+ * CSS transform cannot translate a word.
+ */
+const FILTER_KEYS: Record<Filter, string> = {
+  upcoming: 'events.filterUpcoming',
+  past: 'events.filterPast',
+  my: 'events.filterMine',
+};
+
 export default function EventsPage() {
+  const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
   const [filter, setFilter] = useState<Filter>('upcoming');
   const [createOpen, setCreateOpen] = useState(false);
@@ -36,9 +50,10 @@ export default function EventsPage() {
           (noindex, follow). If events should rank later, flip BOTH here and in
           the worker (MARKETING_PAGES + sitemap) so the layers agree. */}
       <SEOHead
-        title="Events — Meetups & Community Events on DeHub"
-        description="Browse upcoming DeHub community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform."
+        title={t('events.seoTitle')}
+        description={t('events.seoDescription')}
         url="https://dehub.io/events"
+        image="https://dehub.io/og/events.jpg"
         noindex
       />
 
@@ -47,7 +62,7 @@ export default function EventsPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <h1 className="text-xl font-bold text-white mb-3 flex items-center gap-3">
             <ThemedIcon icon="events" alt="" className="w-10 h-10 shrink-0 object-contain" />
-            Events
+            {t('events.title')}
           </h1>
 
           {/* Filter tabs + create */}
@@ -57,13 +72,13 @@ export default function EventsPage() {
                 key={f}
                 onClick={() => setFilter(f)}
                 className={cn(
-                  'px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-[1px] capitalize',
+                  'px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-[1px]',
                   filter === f
                     ? 'text-white border-white'
                     : 'text-zinc-500 border-transparent hover:text-white'
                 )}
               >
-                {f === 'my' ? 'My Events' : f}
+                {t(FILTER_KEYS[f])}
               </button>
             ))}
             <button
@@ -86,18 +101,18 @@ export default function EventsPage() {
           </div>
         ) : isError ? (
           <div className="text-center py-12">
-            <p className="text-zinc-500 text-sm mb-3">Couldn't load events</p>
+            <p className="text-zinc-500 text-sm mb-3">{t('events.loadFailed')}</p>
             <button
               onClick={() => refetch()}
               className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/[0.06] hover:bg-white/10 transition-colors"
             >
-              Retry
+              {t('events.retry')}
             </button>
           </div>
         ) : events.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-zinc-500 text-sm">
-              {filter === 'upcoming' ? 'No upcoming events yet' : filter === 'past' ? 'No past events' : 'You haven\'t created any events'}
+              {t(filter === 'upcoming' ? 'events.noUpcoming' : filter === 'past' ? 'events.noPast' : 'events.noneCreated')}
             </p>
           </div>
         ) : (

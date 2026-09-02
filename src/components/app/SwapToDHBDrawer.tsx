@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -209,7 +210,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
               <CheckCircle2 className="w-12 h-12 text-emerald-400" />
               <p className="text-white font-medium">Swap Successful!</p>
               <p className="text-sm text-zinc-400">
-                {Math.floor(parseFloat(dhbAmount)).toLocaleString()} DHB added to your wallet
+                {Math.floor(parseFloat(dhbAmount)).toLocaleString()} <DhbCoin /> added to your wallet
               </p>
               <Button variant="glass" className="mt-2 rounded-xl" onClick={() => handleClose(false)}>
                 Done
@@ -232,7 +233,6 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                     onChange={e => setDhbAmount(e.target.value)}
                     className="bg-transparent border-none text-white text-xl font-semibold p-0 h-auto focus-visible:ring-0"
                   />
-                  <span className="text-sm text-zinc-400 font-medium shrink-0">DHB</span>
                 </div>
                 <div className="grid grid-cols-4 gap-1.5">
                   {PRESETS.map(p => (

@@ -13,6 +13,7 @@ import {
   Play, Volume2, VolumeX, Maximize, Minimize,
   Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info
 } from 'lucide-react';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~400 kB raw) loads dynamically at attach time
@@ -23,6 +24,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { StreamShopPinnedCard } from '../live/StreamShop';
+import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -70,7 +72,10 @@ import { fromWei, DHB_TOKEN } from '@/lib/contracts/dhb-token';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { supabase } from '@/integrations/supabase/client';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { DhbAmount } from '@/components/app/DhbAmount';
+import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
+import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import type { LiveStream } from '@/types/feed.types';
 
 const logger = createLogger('LiveStreamCard');
@@ -84,9 +89,17 @@ const WHEP_START_TIMEOUT_MS = 6000;
 
 interface LiveStreamCardProps {
   stream: LiveStream;
+  /**
+   * The stream's own chat, dropped down by the message button in the action
+   * bar. When it is given, that button opens the chat rather than the post's
+   * comments: a broadcast has one conversation, and it is the live one — the
+   * chat used to be a second panel bolted under the player, which read as the
+   * platform's chat sitting on somebody's stream.
+   */
+  chatSlot?: React.ReactNode;
 }
 
-export function LiveStreamCard({ stream }: LiveStreamCardProps) {
+export function LiveStreamCard({ stream, chatSlot }: LiveStreamCardProps) {
   const [showComments, setShowComments] = useState(false);
   const { t } = useI18n();
   const navigate = useNavigate();
@@ -120,6 +133,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   );
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!stream.isLive);
+  const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [giftAmount, setGiftAmount] = useState('');
@@ -129,6 +143,14 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Records the view once the player has been on screen long enough to mean it.
   const viewRef = useFeedViewTracking(stream.tokenId || stream.id);
+  // Read here rather than below the presence hook: whether this viewer is the
+  // creator decides whether presence runs at all.
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
+  const isOwnStream = Boolean(
+    walletAddress &&
+      stream.creatorId &&
+      walletAddress.toLowerCase() === stream.creatorId.toLowerCase()
+  );
   /*
    * Counts this tab among the people watching, and reads the live number back.
    *
@@ -139,18 +161,24 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
    *
    * Falls back to the API's stored total when the socket has nothing to say
    * yet, so the card never flashes a zero over a busy stream.
+   *
+   * The creator is never counted among their own audience. Joining bumps
+   * `totalViews` and moves `peakViewers`, so a host who scrolls past their own
+   * live post — or opens it to check how it looks — was inflating the figure
+   * they then read back off their broadcast console.
    */
-  const livePresence = useStreamPresence(stream.streamId, !!stream.isLive);
+  const livePresence = useStreamPresence(
+    stream.streamId,
+    !!stream.isLive && !isOwnStream
+  );
   const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
   const hlsRef = useRef<Hls | null>(null);
   /** One WebRTC attempt per card: once it fails, HLS keeps the element. */
   const whepFailedRef = useRef(false);
   const videoId = `live-${stream.id}`;
 
-  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
-  const isStreamOwner = walletAddress && stream.creatorId &&
-    walletAddress.toLowerCase() === stream.creatorId.toLowerCase();
+  const isStreamOwner = isOwnStream;
   const { like, gift, end, isLiking, isEnding } = useStreamActions();
   const { blockAuthor } = useBlockAuthor();
   // Every /api/live/{id}/* interaction route takes the Mongo ObjectId, never
@@ -658,7 +686,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     }
     const amount = parseFloat(giftAmount);
     if (!amount || amount < MIN_TIP_DHB) {
-      toast.error(`Minimum gift is ${MIN_TIP_DHB} DHB`);
+      toast.error(dhbText(`Minimum gift is ${MIN_TIP_DHB} DHB`));
       return;
     }
     // Full on-chain flow with its own progress/error toasts; onSuccess above
@@ -735,7 +763,11 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               whileTap={{ scale: 0.95 }}
               aria-label="Like stream"
             >
-              <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              {isLiking ? (
+                <ButtonLoader size={20} />
+              ) : (
+                <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              )}
             </motion.button>
           )}
           {/* Gift button */}
@@ -818,7 +850,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               {/* End stream - only for the stream creator while live */}
               {!streamEnded && isAuthenticated && isStreamOwner && (
                 <DropdownMenuItem
-                  onClick={handleEndStream}
+                  onSelect={(e) => {
+                    // Keep the menu's own close from unmounting the dialog it
+                    // opens — Radix closes the content on select by default.
+                    e.preventDefault();
+                    setConfirmEnd(true);
+                  }}
                   disabled={isEnding}
                   className="text-red-400 hover:bg-zinc-700 cursor-pointer gap-2"
                 >
@@ -965,6 +1002,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                 so it never covers play/mute. Renders nothing until something
                 is pinned. */}
             <StreamShopPinnedCard tokenId={stream.id} />
+
+            {/* The creator's affiliate board. Inside the player container for
+                the same reason as the pinned card — it has to survive
+                fullscreen — and anchored bottom-left, clear of the mute and
+                fullscreen controls on the right. */}
+            <ShopBoardLazy tokenId={stream.tokenId || stream.id} links={stream.shopLinks} listingCount={stream.shopListingCount} />
           </>
         )}
         </GatedMedia>
@@ -990,12 +1033,21 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments */}
-      <CommentsWrapper
-        open={showComments}
-        onOpenChange={setShowComments}
-        tokenId={stream.id}
-      />
+      {/* The chat, or the comments when there is no chat to show — same
+          button, same drop-down position under the action bar. */}
+      {chatSlot ? (
+        showComments && (
+          <div className="mt-3" data-no-navigate onClick={(e) => e.stopPropagation()}>
+            {chatSlot}
+          </div>
+        )
+      ) : (
+        <CommentsWrapper
+          open={showComments}
+          onOpenChange={setShowComments}
+          tokenId={stream.id}
+        />
+      )}
 
       {/* Gift Drawer */}
       <Drawer open={showGiftDrawer} onOpenChange={setShowGiftDrawer}>
@@ -1015,12 +1067,14 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                 <span className="text-sm font-medium text-white">
                   {balanceLoading ? '...' : (dhbBalance ?? '—')}
                 </span>
-                <span className="text-xs text-zinc-500">DHB</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Amount (DHB)</label>
+              <label className="text-sm text-zinc-400 flex items-center gap-1.5">
+                Amount
+                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              </label>
               <Input
                 type="number"
                 value={giftAmount}
@@ -1079,7 +1133,16 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                     </span>
                     <span className="text-sm text-zinc-400 ml-1.5">
                       {activity.type === 'gift'
-                        ? `sent ${activity.giftAmount} ${activity.giftCurrency}`
+                        ? (
+                          <>
+                            sent
+                            <DhbAmount
+                              amount={activity.giftAmount}
+                              currency={activity.giftCurrency}
+                              iconClassName="h-3.5 w-3.5"
+                            />
+                          </>
+                        )
                         : activity.type === 'like'
                         ? 'liked the stream'
                         : activity.type === 'join'
@@ -1120,6 +1183,15 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         onOpenChange={setShowReportModal}
         tokenId={stream.id}
         contentType="video"
+      />
+
+      <EndStreamConfirmDialog
+        open={confirmEnd}
+        onOpenChange={setConfirmEnd}
+        onConfirm={() => {
+          setConfirmEnd(false);
+          void handleEndStream();
+        }}
       />
     </div>
   );

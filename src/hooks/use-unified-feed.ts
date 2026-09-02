@@ -9,11 +9,13 @@
 
 import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient, keepPreviousData, type QueryClient } from '@tanstack/react-query';
-import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
+import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, getMediaUrl, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { mergeLiveCounts, type RawFeedRow } from '@/lib/live-counts';
+import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+import { extractReplayUrl } from '@/lib/live-replay';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
@@ -152,6 +154,15 @@ export interface UnifiedFeedItem {
     title?: string;
     category?: string;
     playbackUrl?: string;
+    /** Set the first time the stream went on air — absent means it never did. */
+    startedAt?: string;
+    /** Captured replay of a finished stream; playable only at status 'ready'. */
+    recording?: {
+      status?: string;
+      url?: string;
+      durationSec?: number;
+      truncated?: boolean;
+    };
   };
   createdAt: string;
   updatedAt?: string;
@@ -216,11 +227,21 @@ function isBlockedPost(item: UnifiedFeedItem): boolean {
 export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
   const id = String(item.tokenId);
   
-  const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
+  // A live post carries no imageUrl of its own — its poster lives on the
+  // nested stream, refreshed by the broadcaster while the stream runs. Reading
+  // only the token fields is what left live cards with a blank cover.
+  const thumbnail =
+    (item.postType === 'live' ? getMediaUrl((item.stream as any)?.thumbnail) : undefined) ||
+    buildImageUrl(item.tokenId, item.imageUrl);
 
   const isAudioPost = item.postType === 'audio' || item.postType === 'feed-audio';
+  // A finished stream leaves a plain mp4 replay on the CDN once its capture
+  // reports ready. Handing that to the card is what makes a past live playable
+  // in the feed instead of a permanent "Live ended" poster.
+  const replayUrl = item.postType === 'live' ? extractReplayUrl(item.stream) : undefined;
+  const replayDurationSec = item.postType === 'live' ? item.stream?.recording?.durationSec : undefined;
   const videoUrl = item.postType === 'live'
-    ? undefined
+    ? replayUrl
     : isAudioPost
       ? undefined
       : (item.videoUrl?.startsWith('http') ? item.videoUrl : buildVideoUrl(item.tokenId));
@@ -247,8 +268,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     audioUrl,
     audioDuration: isAudioPost ? item.audioDuration : undefined,
     isAudio: isAudioPost,
-    duration: formatDuration(isAudioPost ? item.audioDuration : item.videoDuration),
-    durationSeconds: (isAudioPost ? item.audioDuration : item.videoDuration) || 0,
+    duration: formatDuration(isAudioPost ? item.audioDuration : (item.videoDuration ?? replayDurationSec)),
+    durationSeconds: (isAudioPost ? item.audioDuration : (item.videoDuration ?? replayDurationSec)) || 0,
     title: item.name || item.description?.split('\n')[0] || '',
     description: item.description,
     channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
@@ -296,6 +317,20 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     liveIsActive: item.stream?.isActive,
     livePlaybackId: item.stream?.playbackId,
     livePlaybackUrl: item.stream?.playbackUrl,
+    // The HLS ladder the feed card plays. `playbackUrl` off the API is often
+    // absent for a self-hosted stream, so derive from the playbackId the same
+    // way the post page does — otherwise the card falls back to a poster and
+    // the stream only appears after a click-through.
+    livePlaybackUrls: (() => {
+      const hls = hlsUrlFor(item.stream as any);
+      if (!hls) return item.stream?.playbackUrl ? [item.stream.playbackUrl] : undefined;
+      return liveProviderOf(item.stream as any) === 'mediamtx'
+        ? [hls]
+        : [hls, `https://livepeercdn.com/hls/${item.stream?.playbackId}/index.m3u8`];
+    })(),
+    isLiveNow: item.postType === 'live'
+      && (item.stream as any)?.isActive !== false
+      && ['live', 'active'].includes(String(item.stream?.status || '').toLowerCase()),
     liveStreamId: item.stream?._id || item.stream?.streamId,
     totalTips: item.totalTips ?? 0,
   };
@@ -444,6 +479,17 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
 // ===========================================================================
 // API CALL
 // ===========================================================================
+
+/**
+ * A live post whose stream never went on air — the shape a failed or abandoned
+ * Go Live launch leaves behind: a minted token with a stream row that has no
+ * `startedAt`. Those are the only live posts the feed hides. A stream that
+ * aired belongs in the feed like any other post, live while it runs and as its
+ * replay afterwards.
+ */
+function isUnairedLivePost(item: { postType?: string; stream?: { startedAt?: string } }): boolean {
+  return item.postType === 'live' && !item.stream?.startedAt;
+}
 
 /**
  * True when `params` describe exactly the request the index.html boot script
@@ -621,14 +667,14 @@ async function loadUnifiedFeedPage(args: {
     shuffleSeedRef.current = response.shuffleSeed;
   }
 
-  // Filter out blocked creators and ended live streams (live content is shown in the carousel instead)
+  // Filter out blocked creators and live posts that never aired.
   // Normalize timestamp fields so downstream mappers/cache always get a real ISO date.
   const filteredItems = (response.result || [])
     .map(item => ({
       ...item,
       createdAt: item.createdAt || item.updatedAt || (item as any).created_at || (item as any).updated_at || '',
     }))
-    .filter(item => !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live');
+    .filter(item => !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && !isUnairedLivePost(item));
 
   // Enrich quote posts that are missing their quotedPost data
   const needsEnrich: { idx: number; item: any }[] = [];
@@ -721,10 +767,29 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     gcTime: 30 * 60 * 1000,
   });
 
+  // Muted authors are hidden from the feed the same way blocked ones are.
+  //
+  // The mute hook prunes the cached pages so the post vanishes where it sits,
+  // but nothing read the list afterwards — so the next refetch (pull to
+  // refresh, the new-posts pill, a filter change, any post reaction that
+  // invalidates the feed) brought them straight back. A mute that survives
+  // until the next refresh is not a mute.
+  const { data: muteList } = useQuery({
+    queryKey: ['mute-list'],
+    queryFn: async () => (await import('@/lib/api/dehub/mutes')).getMuteList(),
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
   const blockedAddresses = useMemo(() => {
-    if (!blockList?.length) return undefined;
-    return new Set(blockList.map(u => u.address.toLowerCase()));
-  }, [blockList]);
+    const hidden = new Set<string>();
+    for (const u of blockList ?? []) hidden.add(u.address.toLowerCase());
+    for (const u of muteList ?? []) hidden.add(u.address.toLowerCase());
+    if (!hidden.size) return undefined;
+    return hidden;
+  }, [blockList, muteList]);
+
   
   // Track shuffleSeed across pages for random sort stable pagination
   const shuffleSeedRef = { current: '' };
@@ -837,19 +902,24 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
     const newest = chronological && newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
     if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false };
 
-    // Only count rows the list would actually render. Live rows never enter
-    // the feed (loadUnifiedFeedPage drops them for the carousel), and a
-    // stranded "live" post from a failed stream launch sits at the head of the
-    // chronological sort indefinitely — counting it makes the pill claim new
-    // posts that clicking can never surface.
+    // Only count rows the list would actually render. A stranded "live" post
+    // from a failed stream launch never enters the feed (loadUnifiedFeedPage
+    // drops it) yet sits at the head of the chronological sort indefinitely —
+    // counting it would make the pill claim new posts that clicking can never
+    // surface.
+    // Both lists, for the same reason the feed itself reads both: a muted
+    // author's post counted towards the pill and then was not there when it
+    // was tapped.
     const blockList = queryClient.getQueryData<Array<{ address: string }>>(['block-list']);
-    const blockedAddresses = blockList?.length
-      ? new Set(blockList.map(u => u.address.toLowerCase()))
-      : undefined;
+    const muteList = queryClient.getQueryData<Array<{ address: string }>>(['mute-list']);
+    const hidden = new Set<string>();
+    for (const u of blockList ?? []) hidden.add(u.address.toLowerCase());
+    for (const u of muteList ?? []) hidden.add(u.address.toLowerCase());
+    const blockedAddresses = hidden.size ? hidden : undefined;
 
     const newer = (data.result || []).filter((item) => {
       if (
-        item.postType === 'live' ||
+        isUnairedLivePost(item) ||
         isBlockedPost(item) ||
         isBlockedCreator(item, blockedAddresses)
       ) {

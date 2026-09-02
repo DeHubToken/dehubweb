@@ -4,6 +4,7 @@
  * Detects event URLs in post content and renders them as rich event preview cards.
  */
 
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -30,6 +31,7 @@ interface EventLinkEmbedProps {
 }
 
 export function EventLinkEmbed({ eventNumber, fallback = null }: EventLinkEmbedProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const num = parseInt(eventNumber, 10);
   const { data: event, isLoading } = useQuery({
@@ -81,7 +83,7 @@ export function EventLinkEmbed({ eventNumber, fallback = null }: EventLinkEmbedP
         {event.is_private && (
           <div className="absolute top-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-sm">
             <Lock className="w-2.5 h-2.5 text-zinc-300" />
-            <span className="text-[9px] font-medium text-zinc-300">Private</span>
+            <span className="text-[9px] font-medium text-zinc-300">{t('events.private')}</span>
           </div>
         )}
         <FriendsAtEvent eventId={event.id} mode="overlay" />
@@ -104,11 +106,11 @@ export function EventLinkEmbed({ eventNumber, fallback = null }: EventLinkEmbedP
         <div className="flex items-center gap-3 text-xs text-zinc-500 pt-1">
           <span className="flex items-center gap-1">
             <Users className="w-3 h-3" />
-            {goingCount} going
+            {t('events.goingCount', { count: goingCount })}
           </span>
           <span className="flex items-center gap-1">
             <Flame className="w-3 h-3" />
-            {interestedCount} interested
+            {t('events.interestedCount', { count: interestedCount })}
           </span>
         </div>
       </div>

@@ -16,6 +16,8 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { AlertTriangle, Loader2, RotateCcw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +37,7 @@ import { compactCount } from './AccountCard';
 import type { AccountSale, MyAccountListing } from '@/lib/api/dehub/account-market';
 
 export function SellTab() {
+  const { t } = useTranslation();
   const { user, walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { data: config } = useAccountMarketConfig();
   const { data: mine, isLoading } = useMyAccountMarket();
@@ -59,8 +62,8 @@ export function SellTab() {
   if (!isAuthenticated) {
     return (
       <div className="text-center py-12 space-y-3">
-        <p className="text-sm text-zinc-400">Sign in to put your account on the market.</p>
-        <Button onClick={() => openLoginModal()}>Sign in</Button>
+        <p className="text-sm text-zinc-400">{t('accounts.signInToSell')}</p>
+        <Button onClick={() => openLoginModal()}>{t('accounts.signIn')}</Button>
       </div>
     );
   }
@@ -73,8 +76,10 @@ export function SellTab() {
   if (!username) {
     return (
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-300">
-        Set a username on your profile before you can sell your account.{' '}
-        <a href="/app/settings" className="underline">Settings → Profile</a>
+        <Trans
+          i18nKey="accounts.setUsernameFirst"
+          components={{ settings: <a href="/app/settings" className="underline" /> }}
+        />
       </div>
     );
   }
@@ -109,16 +114,16 @@ export function SellTab() {
             <span className="w-11 h-11 rounded-full bg-white/10 shrink-0" />
           )}
           <div className="min-w-0">
-            <p className="text-xs text-zinc-500">You are selling your whole account</p>
+            <p className="text-xs text-zinc-500">{t('accounts.youAreSellingWhole')}</p>
             <p className="text-xl font-bold text-white break-all">
               <span className="text-zinc-500">@</span>{username}
             </p>
-            <p className="text-[11px] text-zinc-500">{compactCount(followers)} followers</p>
+            <p className="text-[11px] text-zinc-500">{t('accounts.followersCount', { value: compactCount(followers) })}</p>
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">Asking price in DHB</Label>
+          <Label className="text-xs text-zinc-400">{t('accounts.askingPriceDhb')}</Label>
           <div className="relative">
             <img src={dehubCoin} alt="" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
             <Input
@@ -131,19 +136,24 @@ export function SellTab() {
           </div>
           <p className="text-[11px] text-zinc-500">
             {priceValid && config
-              ? `≈ $${(priceNumber * config.dhbUsdPeg).toLocaleString(undefined, { maximumFractionDigits: 2 })}. The buyer pays you directly — DeHub takes no cut.`
-              : `Between ${(config?.minPriceDhb ?? 1000).toLocaleString()} and ${(config?.maxPriceDhb ?? 0).toLocaleString()} DHB.`}
+              ? t('accounts.priceApprox', {
+                  usd: (priceNumber * config.dhbUsdPeg).toLocaleString(undefined, { maximumFractionDigits: 2 }),
+                })
+              : t('accounts.priceRange', {
+                  min: (config?.minPriceDhb ?? 1000).toLocaleString(),
+                  max: (config?.maxPriceDhb ?? 0).toLocaleString(),
+                })}
           </p>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">Pitch (optional)</Label>
+          <Label className="text-xs text-zinc-400">{t('accounts.pitchOptional')}</Label>
           <Textarea
             value={description}
             onChange={e => setDescription(e.target.value)}
             maxLength={config?.maxDescriptionLength ?? 280}
             rows={2}
-            placeholder="Established 2021 account, active audience…"
+            placeholder={t('accounts.pitchPlaceholder')}
             className="bg-black/60 border-white/10 rounded-xl text-white resize-none"
           />
         </div>
@@ -151,17 +161,14 @@ export function SellTab() {
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="text-[11px] text-amber-100">
-            A sale is final and moves everything — handle, posts, followers, tips history and badge
-            entitlements. Your wallet and what is in it (DHB, staked badges, minted collectibles) stays
-            yours; afterwards this wallet signs into a brand-new blank account. Payment goes straight to
-            you — DeHub takes no cut.
+            {t('accounts.saleFinalWarning')}
           </p>
         </div>
 
         <div className="flex gap-2">
           <Button className="flex-1" disabled={!canSubmit} onClick={submit}>
             {createListing.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {active ? 'Update listing' : 'List for sale'}
+            {t(active ? 'accounts.updateListing' : 'accounts.listForSale')}
           </Button>
           {active && (
             <Button
@@ -169,7 +176,7 @@ export function SellTab() {
               size="icon"
               disabled={cancelListing.isPending}
               onClick={() => cancelListing.mutate(active.id)}
-              title="Withdraw listing"
+              title={t('accounts.withdrawListing')}
             >
               <Trash2 className="w-4 h-4" />
             </Button>
@@ -179,7 +186,7 @@ export function SellTab() {
 
       {((mine?.sold.length ?? 0) > 0 || (mine?.bought.length ?? 0) > 0 || history.length > 0) && (
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-white">History</h2>
+          <h2 className="text-sm font-semibold text-white">{t('accounts.history')}</h2>
           {mine!.sold.map(sale => <SaleRow key={sale.id} sale={sale} kind="sold" />)}
           {mine!.bought.map(sale => <SaleRow key={sale.id} sale={sale} kind="bought" />)}
           {history.map(listing => <HistoryRow key={listing.id} listing={listing} />)}
@@ -190,6 +197,7 @@ export function SellTab() {
 }
 
 function SaleRow({ sale, kind }: { sale: AccountSale; kind: 'sold' | 'bought' }) {
+  const { t } = useTranslation();
   const resume = useResumeAccountClaim();
   const failed = kind === 'bought' && sale.status === 'failed';
 
@@ -202,12 +210,12 @@ function SaleRow({ sale, kind }: { sale: AccountSale; kind: 'sold' | 'bought' })
           </p>
           <p className="text-[11px] text-zinc-500">
             {kind === 'sold'
-              ? 'Sold'
+              ? t('accounts.sold')
               : sale.status === 'completed'
-                ? 'Bought'
+                ? t('accounts.bought')
                 : sale.status === 'transferring'
-                  ? 'Bought — transfer in progress'
-                  : 'Bought — transfer failed'}
+                  ? t('accounts.boughtTransferring')
+                  : t('accounts.boughtTransferFailed')}
             {failed && sale.failureReason ? ` · ${sale.failureReason}` : ''}
           </p>
         </div>
@@ -237,7 +245,7 @@ function SaleRow({ sale, kind }: { sale: AccountSale; kind: 'sold' | 'bought' })
           {resume.isPending
             ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             : <RotateCcw className="w-4 h-4 mr-2" />}
-          Resume transfer
+          {t('accounts.resumeTransfer')}
         </Button>
       )}
     </div>
@@ -245,6 +253,7 @@ function SaleRow({ sale, kind }: { sale: AccountSale; kind: 'sold' | 'bought' })
 }
 
 function HistoryRow({ listing }: { listing: MyAccountListing }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-between gap-3">
       <div className="min-w-0">
@@ -252,10 +261,10 @@ function HistoryRow({ listing }: { listing: MyAccountListing }) {
           <span className="text-zinc-500">@</span>{listing.username}
         </p>
         <p className="text-[11px] text-zinc-500">
-          {listing.status === 'cancelled' ? listing.cancelReason || 'Withdrawn' : 'Sold'}
+          {listing.status === 'cancelled' ? listing.cancelReason || t('accounts.withdrawn') : t('accounts.sold')}
         </p>
       </div>
-      <p className="text-xs text-zinc-500 shrink-0">{listing.priceDhb.toLocaleString()} DHB</p>
+      <p className="text-xs text-zinc-500 shrink-0">{listing.priceDhb.toLocaleString()} <DhbCoin /></p>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Flame, TrendingUp } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -55,6 +56,7 @@ function CoinCard({
 }
 
 export function TrendingBar() {
+  const { t } = useTranslation();
   const base = getLaunchpadBase(useLocation().pathname);
   const trackRef = useRef<HTMLDivElement>(null);
   const isPaused = useRef(false);
@@ -122,10 +124,10 @@ export function TrendingBar() {
       <div className="flex items-center gap-2 px-3 py-2 border-b border-white/10">
         <Flame className="h-3.5 w-3.5 text-white/80" />
         <span className="text-white text-xs font-semibold uppercase tracking-wide">
-          Trending
+          {t('launchpad.trending')}
         </span>
         <span className="text-white/40 text-[10px]">
-          Top 20 · Volume & community activity
+          {t('launchpad.trendingHint')}
         </span>
       </div>
       <div

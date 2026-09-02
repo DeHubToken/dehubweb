@@ -112,6 +112,11 @@ const OG_CARD_ROUTES = new Set([
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
   'arcade/trenchstar',
+  // App surfaces that had no card of their own and unfurled as the homepage.
+  // `superpowers` art was rendered when the page shipped and was never added
+  // here, so the file has been sitting in public/og unreferenced.
+  'superpowers', 'converter', 'launchpad', 'stats',
+  'accounts', 'fractions', 'stores', 'events',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -159,6 +164,8 @@ const ORG_JSONLD = {
 // the two variants never diverge (cloaking-suspicion surface).
 const HOME_TITLE = 'DeHub — Open Source, User Owned Social Media';
 const HOME_TITLE_LEGACY = 'DeHub — Open Source, User Owned & Censorship Resistant Media';
+// Browser SPA <meta name="description"> in index.html, for the same reason.
+const HOME_DESCRIPTION = 'DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.';
 
 // Signed-out introduction on "/". MIRRORS src/components/app/HomeIntro.tsx —
 // keep the prose identical in both, or the bot and browser variants diverge and
@@ -191,11 +198,21 @@ const HOME_INTRO_SLIDES = [
   ['You Will Own Everything, And Be Happy', 'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.'],
 ];
 
+// Outlets that have covered DeHub — mirrors PRESS in HomeIntro.tsx, where they
+// render as a wordmark marquee under the entity copy. Worth emitting at the
+// edge rather than leaving to the SPA: naming four established publishers in
+// crawlable body copy is corroboration for a contested brand string, which is
+// the same job the disambiguation sentence below is doing. Like the panel
+// itself, this links INWARD to /docs/featured-in — that page holds the outbound
+// article links, so the home page spends none of its own equity on them.
+const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investing.com'];
+
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left">
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
 <p>DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs" style="color:#9f9">Read the docs</a></p>
+<p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in" style="color:#9f9">DeHub press coverage</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
   HOME_INTRO_LINKS.map(([href, label]) =>
     `<li style="margin:6px 0"><a href="${APP_URL}${href}" style="color:#9f9">${label}</a></li>`
@@ -350,7 +367,7 @@ function faqJsonLd(contentHtml) {
     if (name && text) pairs.push({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } });
   }
   if (pairs.length < 3) return '';
-  return `\n<script type="application/ld+json">${JSON.stringify({
+  return `\n<script type="application/ld+json">${jsonLdScript({
     '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pairs,
   })}</script>`;
 }
@@ -374,7 +391,7 @@ function buildDocsHtml(route, meta, contentHtml) {
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(`docs/${route}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify({
+<script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'TechArticle',
   headline: meta.title, description: meta.description,
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
@@ -407,6 +424,13 @@ function buildDocsIndexHtml() {
 <meta property="og:title" content="DeHub Documentation">
 ${shareMetaTags('docs', 'DeHub Documentation')}
 <meta name="twitter:site" content="@dehub_official">
+<script type="application/ld+json">${jsonLdScript({
+  '@context': 'https://schema.org', '@type': 'CollectionPage',
+  name: 'DeHub Documentation', url: canonicalUrl,
+  description: 'Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.',
+  publisher: ORG_JSONLD,
+  hasPart: Object.entries(DOCS_PAGES).map(([r, m]) => ({ '@type': 'TechArticle', headline: m.title, url: `${APP_URL}/docs/${r}` })),
+})}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › Docs</p>
@@ -421,6 +445,25 @@ function escHtml(s = '') {
   return String(s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/**
+ * Serialise a value for a <script type="application/ld+json"> body.
+ *
+ * JSON.stringify escapes what JSON needs and nothing else, so a `</script>`
+ * inside any string comes out verbatim and closes the element early —
+ * everything after it is then parsed as markup, in <head>, on a dehub.io URL.
+ * Every entity card puts a user-editable string in here (a store name, a
+ * listing or event or stage or bounty title, a proposal author), so this is
+ * reachable by anyone who can name something.
+ *
+ * `<` is the only character that has to go: escaping it kills `</script>` and
+ * `<!--` together. < is valid JSON and parses back to the same string, so
+ * consumers see the original text. Ampersand and quote need no treatment
+ * inside a script element — it has no entity parsing.
+ */
+function jsonLdScript(value) {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
 function absolutize(url) {
@@ -562,7 +605,7 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
 <meta name="twitter:description" content="${escHtml(description)}">
 <meta name="twitter:image" content="${escHtml(image)}">
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/docs/blog" style="color:#9f9">Blog</a></p>
@@ -612,7 +655,7 @@ function buildBlogIndexHtml(manifest) {
 <meta property="og:title" content="DeHub Blog — News, Guides &amp; Product Updates">
 ${shareMetaTags('blog', 'DeHub Blog — news, guides and product updates')}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › Blog</p>
@@ -707,7 +750,7 @@ function buildSectionHtml(key, meta) {
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › ${escHtml(meta.heading)}</p>
@@ -1067,6 +1110,7 @@ const MARKETING_PAGES = {
 <p>The same film can be included with a subscription in one country, a paid rental in another, and unavailable in a third. Cinema asks per territory rather than showing one global answer, so switching country re-checks availability and price.</p>`,
   },
   'glossary': {
+    path: '/app/glossary',
     title: 'Glossary — Icons, Features & Web3 Terms',
     description: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
     heading: 'DeHub Glossary',
@@ -1126,10 +1170,98 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>DeHub is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
 <p>Looking for paid work rather than a role? See <a href="${APP_URL}/work" style="color:#9f9">DeHub bounties</a>.</p>`,
   },
+
+  // --- app surfaces that had no crawler copy at all --------------------------
+  // Each of these is a real page with its own SEOHead in the SPA, so browsers
+  // saw the right title and crawlers saw the homepage. Copy is taken from the
+  // page's own SEOHead so the two variants cannot drift, per the rule the
+  // /music, /jobs and /bridge divergence taught. `path` is set where the route
+  // lives only under /app — without it the canonical would name a URL the
+  // router does not have.
+  'superpowers': {
+    path: '/app/superpowers',
+    title: 'SuperPowers — Spend Your DeHub Badge on Reach',
+    description: 'Badge holders get boosts every fortnight: put a post in the slot at the top of the DeHub home feed. Thirteen tiers, thirteen powers, one unlock per rung.',
+    heading: 'DeHub SuperPowers',
+    bodyHtml: `<p>A DeHub staking badge is not only the art beside your name. Each tier carries powers, and the first of them is reach: a boost that lifts one of your posts into the slot at the top of the home feed.</p>
+<h2>Refilled, not bought</h2>
+<p>Boosts arrive with the badge and refill every fortnight. They are earned by staking rather than sold, so the top of the feed cannot simply be paid for.</p>
+<h2>Thirteen rungs</h2>
+<p>Powers unlock one per tier across the thirteen badges, and higher rungs both hold more boosts and hold them for longer. See <a href="${APP_URL}/stake" style="color:#9f9">staking</a> for how a badge is earned.</p>`,
+  },
+  'converter': {
+    title: 'Import from YouTube — DeHub',
+    description: 'Paste a YouTube link and publish it as a DeHub post. The video is fetched, transcoded and posted to your feed with its title, description and thumbnail.',
+    heading: 'Import from YouTube',
+    bodyHtml: `<p>Paste a YouTube URL and DeHub fetches the video, transcodes it and publishes it as a post on your profile — title, description and thumbnail carried across.</p>
+<h2>Your back catalogue, in one place</h2>
+<p>Imports run in a queue, so a batch can be started and left alone. Each finished import becomes an ordinary DeHub post: it can be minted, tipped, fractionalised and monetised like anything else you upload.</p>
+<p>Importing needs a DeHub account and applies to videos you have the right to publish.</p>`,
+  },
+  'launchpad': {
+    // The page ships `noindex` in its own SEOHead; the crawler variant has to
+    // say the same thing or the two describe the same URL differently.
+    noindex: true,
+    title: 'Launchpad — DeHub',
+    description: 'Tokenise a business on the DeHub launchpad: browse live coins or create your own.',
+    heading: 'DeHub Launchpad',
+    bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on DeHub. Live launches are listed with their activity, and creating one runs from the same page.</p>
+<p>Coins are speculative assets and can lose their value entirely. Nothing here is investment advice.</p>`,
+  },
+  'stats': {
+    title: 'Live Site Stats — DeHub Visitors and Members in Real Time',
+    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database.",
+    heading: 'DeHub Live Stats',
+    bodyHtml: `<p>Visitor numbers come from Cloudflare's own analytics for this zone, counted at the edge before a request reaches the app. They are not a client-side counter the page could inflate, and they are not a number anyone typed.</p>
+<h2>Members as well as traffic</h2>
+<p>Alongside traffic the page publishes DeHub's own community figures — total members, daily, weekly and monthly active users, new signups and growth — read straight from the platform database.</p>`,
+  },
+  'accounts': {
+    title: 'Account Marketplace — DeHub',
+    description: 'Buy and sell established DeHub accounts for DHB. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
+    heading: 'DeHub Account Marketplace',
+    bodyHtml: `<p>An established DeHub account can be sold whole. Listings are browsable by follower count, uploads and account age, and what transfers is everything the account is: the handle, the posts, the followers and the badge entitlements.</p>
+<h2>Settled on-chain</h2>
+<p>Payment is in DHB and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames" style="color:#9f9">username market</a> for selling a handle alone rather than a whole account.</p>`,
+  },
+  'fractions': {
+    path: '/app/fractions',
+    title: 'Fractions | DeHub',
+    description: 'Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.',
+    heading: 'DeHub Fractions',
+    bodyHtml: `<p>Every DeHub upload is divisible into 1000 on-chain fractions. A creator can sell part of a post and keep the rest, and anyone else can buy a slice of a video, track or image and hold it like any other asset.</p>
+<h2>An open order book</h2>
+<p>Fractions trade in DHB against open orders, so a holder can exit without asking the creator's permission and a buyer can build a position over time.</p>
+<p>Fractions are speculative and their value can fall to nothing. Nothing here is investment advice.</p>`,
+  },
+  'stores': {
+    path: '/app/stores',
+    title: 'Stores | DeHub',
+    description: 'Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB.',
+    heading: 'DeHub Stores',
+    bodyHtml: `<p>Stores are creator-run shops on DeHub. Anyone can open one and list digital goods, merch, art or services, priced in DHB and paid peer to peer.</p>
+<h2>The shop is part of the profile</h2>
+<p>A store sits beside the creator's posts rather than off on another site, so the audience that already follows the work is the audience that sees what is for sale.</p>`,
+  },
+  'events': {
+    // EventsPage ships `noindex`; the crawler variant matches it.
+    noindex: true,
+    title: 'Events — Meetups & Community Events on DeHub',
+    description: 'Browse upcoming DeHub community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform.',
+    heading: 'DeHub Events',
+    bodyHtml: `<p>Events are community meetups, AMAs and calls listed on DeHub. Browse what is coming up, RSVP to anything open, and host your own — each event gets its own page and share card.</p>`,
+  },
 };
 
 function buildMarketingHtml(key, meta) {
-  const canonicalUrl = `${APP_URL}/${key}`;
+  // `path` for the pages that live only under /app: `/${key}` would name a URL
+  // the router has no route for, and a canonical pointing at a page that does
+  // not exist is worse than none.
+  const canonicalUrl = `${APP_URL}${meta.path || `/${key}`}`;
+  // Pages the SPA marks noindex in their own SEOHead must say the same here,
+  // or bot and browser describe one URL two different ways. The card still
+  // matters: a noindexed page is still pasted into chats.
+  const robots = meta.noindex ? '<meta name="robots" content="noindex, follow">\n' : '';
   // A page whose subject is a *thing* rather than a document can name its own
   // schema type (`meta.jsonLdType` + `jsonLdExtra`); everything else stays a
   // plain WebPage. Must mirror the type the SPA writes for the same route, or
@@ -1150,7 +1282,7 @@ function buildMarketingHtml(key, meta) {
 <meta charset="UTF-8">
 <title>${escHtml(meta.title)}</title>
 <meta name="description" content="${escHtml(meta.description)}">
-<link rel="canonical" href="${canonicalUrl}">
+${robots}<link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DeHub">
 <meta property="og:url" content="${canonicalUrl}">
@@ -1158,7 +1290,7 @@ function buildMarketingHtml(key, meta) {
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › ${escHtml(meta.heading)}</p>
@@ -1261,6 +1393,15 @@ function entityImageMetaTags(imageUrl, alt) {
  * belong in.
  */
 function entityHtml({ canonicalUrl, title, description, image, jsonLd, breadcrumb, heading, bodyHtml, ogType = 'website', noindex = false }) {
+  // Every title here is `${name} — DeHub <section>` with `name` straight out
+  // of a user-editable column, so it inherits that column's newlines and
+  // length. Callers already cap the description; capping both in one place is
+  // what makes that true of the next renderer too. The looser title cap is on
+  // purpose — these end in a brand suffix, and cutting at TITLE_MAX would eat
+  // the suffix rather than the name, which reads worse than a title Google
+  // truncates for itself. It exists to catch the pathological case only.
+  title = truncate(title, ENTITY_TITLE_MAX);
+  description = truncate(description, DESCRIPTION_MAX);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1276,7 +1417,7 @@ ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
 <meta property="og:description" content="${escHtml(description)}">
 ${entityImageMetaTags(image, title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
 <p>${breadcrumb}</p>
@@ -1291,6 +1432,267 @@ ${bodyHtml}
 function truncate(text, max) {
   const t = String(text || '').replace(/\s+/g, ' ').trim();
   return t.length > max ? `${t.slice(0, max - 1)}…` : t;
+}
+
+/** Longest <title> Google will render before it writes its own. Applied to
+ *  post text, which is a snippet with no brand suffix to protect. */
+const TITLE_MAX = 70;
+/** Guard for `${name} — DeHub <section>` titles: pathological lengths only. */
+const ENTITY_TITLE_MAX = 110;
+/** Matches the cap the entity renderers below already pass to truncate(). */
+const DESCRIPTION_MAX = 200;
+
+/**
+ * Whitespace-collapse and cap a string the deployed ssr-seo fn already escaped.
+ *
+ * That fn escapes exactly `"`, `<` and `>` and nothing else, so decoding those
+ * three, truncating, then re-escaping them is lossless — and it is the only way
+ * to cut safely, since slicing the escaped form can land inside a `&quot;` and
+ * emit `&qu…`.
+ */
+function reclamp(escaped, max) {
+  const plain = String(escaped)
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+  return truncate(plain, max)
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/**
+ * The deployed fn interpolates raw post text and profile bios straight into
+ * <title> and the meta content attributes, with no whitespace collapsing and
+ * no length cap. A post has no title of its own, so its body text *is* the
+ * title there: /app/post/3809 shipped 137 characters of a multi-paragraph
+ * Turkish post as its <title>, /app/post/4676 shipped four lines of hashtags,
+ * and bios ran to ~300 characters in the description. Embedded newlines in an
+ * attribute value are legal but every consumer renders them differently.
+ *
+ * Repairing it here rather than in the fn is deliberate: that fn only moves on
+ * a manual `supabase functions deploy` nobody runs, so every other correction
+ * in this proxy branch is a rewrite too.
+ */
+function normalizeProxiedMeta(html) {
+  return html
+    .replace(/(<title>)([^<]*)(<\/title>)/i, (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX)}${b}`)
+    .replace(
+      /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")([^"]*)(">)/g,
+      (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX)}${b}`,
+    )
+    .replace(
+      /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")([^"]*)(">)/g,
+      (m, a, v, b) => `${a}${reclamp(v, DESCRIPTION_MAX)}${b}`,
+    );
+}
+
+/**
+ * The deployed fn describes a post with its body text and a profile with its
+ * bio — sound, except that neither is required. A post with no body (every
+ * plain video upload, most photo posts) gets
+ * `Post by <author> on DeHub — join the decentralized creator network.`, so
+ * one account's whole back-catalogue carries an identical description: the
+ * 2026-09-02 sitemap crawl found 128 of 400 posts sharing theirs, 33 of them
+ * one author's. A profile with no bio gets `Connect with <name> on DeHub…`,
+ * which collides whenever two accounts share a display name, and a
+ * five-character bio ("DHB ❤") ships as the whole description.
+ *
+ * These rewrite that templated copy into something specific to the page —
+ * the post's own title, format, author and topics; the profile's handle —
+ * and leave a real body or a real bio alone. Same deploy-track reasoning as
+ * normalizeProxiedMeta above: the fn does not move, so the fix is a rewrite.
+ * Pure string functions, tested in src/test/proxied-meta-enrichment.test.ts.
+ */
+const POST_DESCRIPTION_TEMPLATE = /Post by (.+?) on DeHub — join the decentralized creator network\./;
+const PROFILE_DESCRIPTION_TEMPLATE = /Connect with (.+?) on DeHub, the open source alternative to legacy media\./;
+/** A bio shorter than this says nothing about the page on its own. */
+const PROFILE_DESCRIPTION_MIN = 40;
+/** What the composer stores for an upload with no caption. */
+const UNTITLED_POST_TITLES = new Set(['', 'untitled']);
+
+/** The fn escapes exactly `"`, `<`, `>` in attributes and JSON.stringifies
+ *  its JSON-LD; both decode to the same plain text. */
+function decodeFnText(s) {
+  return String(s || '')
+    .replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+}
+
+function escFnAttr(s) {
+  return String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escJsonText(s) {
+  return JSON.stringify(String(s)).slice(1, -1);
+}
+
+/** [noun, verb] for a post's format; the og:video sniff covers a missing record. */
+function postKind(nft, html) {
+  const type = String((nft && nft.postType) || '').toLowerCase();
+  if (type === 'video' || type === 'feed-video') return ['video', 'Watch'];
+  if (type === 'feed-audio') return ['audio post', 'Listen to'];
+  if (type === 'feed-images' || type === 'feed-image') return ['photo post', 'See'];
+  if (type) return ['post', 'Read'];
+  return /property="og:video"/.test(html) ? ['video', 'Watch'] : ['post', 'Read'];
+}
+
+function enrichPostMeta(html, postId, nft) {
+  const templated = html.match(POST_DESCRIPTION_TEMPLATE);
+  if (!templated) return html;
+  const author = decodeFnText(templated[1]).replace(/\s+/g, ' ').trim() || 'someone';
+  const titleTag = html.match(/<title>([^<]*)<\/title>/i);
+  const title = decodeFnText(titleTag ? titleTag[1] : '').replace(/\s+/g, ' ').trim();
+  const [kind, verb] = postKind(nft, html);
+  const topics = (Array.isArray(nft && nft.category) ? nft.category : [])
+    .map((c) => String(c || '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .slice(0, 5);
+  const untitled = UNTITLED_POST_TITLES.has(title.toLowerCase());
+  let out = html;
+
+  if (untitled) {
+    // "Untitled" is what the composer stores for a captionless upload, so
+    // three of those from one account are three identical <title>s. The fn's
+    // own fallback shape, with the id keeping siblings apart.
+    const newTitle = `${kind.charAt(0).toUpperCase()}${kind.slice(1)} #${postId} by ${author} on DeHub`;
+    const attr = escFnAttr(newTitle);
+    out = out
+      .replace(/(<title>)[^<]*(<\/title>)/i, (m, a, b) => `${a}${attr}${b}`)
+      .replace(
+        /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")[^"]*(">)/g,
+        (m, a, b) => `${a}${attr}${b}`,
+      );
+    const oldJson = escJsonText(title);
+    const newJson = escJsonText(newTitle);
+    out = out.split(`"headline":"${oldJson}"`).join(`"headline":"${newJson}"`);
+    if (oldJson) out = out.split(`"name":"${oldJson}"`).join(`"name":"${newJson}"`);
+  }
+
+  const lead = untitled
+    ? `${verb} ${kind} #${postId} by ${author} on DeHub`
+    : `${verb} "${title}" — a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on DeHub`;
+  const topicsText = topics.length ? ` Topics: ${topics.join(', ')}.` : '';
+  const description = truncate(`${lead}, the open source, user-owned social network.${topicsText}`, DESCRIPTION_MAX);
+  const attrDesc = escFnAttr(description);
+  const jsonDesc = escJsonText(description);
+  return out
+    .replace(
+      /(content=")Post by .+? on DeHub — join the decentralized creator network\.(")/g,
+      (m, a, b) => `${a}${attrDesc}${b}`,
+    )
+    .replace(
+      /("description":")Post by .+? on DeHub — join the decentralized creator network\.(")/g,
+      (m, a, b) => `${a}${jsonDesc}${b}`,
+    );
+}
+
+function enrichProfileMeta(html, username) {
+  const handle = String(username || '').replace(/^@/, '').trim();
+  if (!handle) return html;
+  const templated = html.match(PROFILE_DESCRIPTION_TEMPLATE);
+  let description;
+  if (templated) {
+    const name = decodeFnText(templated[1]).replace(/\s+/g, ' ').trim();
+    const who = name && name.toLowerCase() !== handle.toLowerCase() ? `${name} (@${handle})` : `@${handle}`;
+    description = `Connect with ${who} on DeHub — posts, videos, music and live streams on the open source, user-owned social network.`;
+  } else {
+    const current = html.match(/<meta name="description" content="([^"]*)">/);
+    if (!current) return html;
+    const bio = decodeFnText(current[1]).replace(/\s+/g, ' ').trim();
+    if (bio.length >= PROFILE_DESCRIPTION_MIN) return html;
+    description = bio
+      ? `${bio} — @${handle} on DeHub, the open source, user-owned social network.`
+      : `@${handle} on DeHub — posts, videos, music and live streams on the open source, user-owned social network.`;
+  }
+  const attr = escFnAttr(truncate(description, DESCRIPTION_MAX));
+  return html.replace(
+    /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
+    (m, a, b) => `${a}${attr}${b}`,
+  );
+}
+
+/** The post record behind /app/post/<tokenId>, for the two fields the fn's
+ *  HTML does not carry (format, topics). Null on any failure — the rewrite
+ *  still runs on what the HTML holds. */
+async function fetchPostRecord(tokenId) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/nft_info/${encodeURIComponent(tokenId)}`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.result || (data?.tokenId ? data : null);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Share images the deployed fn advertises that do not resolve to an image.
+ * A sweep of all 2,000 sitemap posts on 2026-09-02 found 434 (22%) whose
+ * og:image was one of three things:
+ *
+ * - 336 pointed at `<cdn>/nfts/images/<id>.<ext>`, which the CDN answers
+ *   403 (AccessDenied is its "missing key"). The API still carries that
+ *   path in `imageUrl`, but every one of those files now lives at
+ *   `<cdn>/images/<id>.<ext>` — 336 of 336 checked.
+ * - 57 resolved, but as `application/octet-stream`: avatars saved with an
+ *   `.octet-stream` extension, and `.jpg` uploads whose object has no
+ *   content type. Crawlers that trust the header draw nothing.
+ * - 39 text posts pointed at the fn's own text-card renderer
+ *   (`/functions/v1/og-image?post_id=`), which 302s to the 200-square logo
+ *   on every call now.
+ *
+ * Repairs, in that order: move the legacy path; route every CDN image through
+ * Cloudflare's image transform on this zone, which re-encodes to JPEG with a
+ * real content type (and sizes avatars to the 400×400 the fn declares); and
+ * swap the dead renderer for the brand card. Only image contexts are touched —
+ * og:video and the mp4 behind it stay as they are — and only the CDN host is
+ * transformed, since the transform refuses the Supabase origin.
+ */
+const CDN_ORIGIN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
+const IMAGE_TRANSFORM_BASE = `${APP_URL}/cdn-cgi/image/`;
+
+function transformedImageUrl(url) {
+  if (!url.startsWith(`${CDN_ORIGIN}/`)) return url;
+  const options = url.startsWith(`${CDN_ORIGIN}/avatars/`)
+    ? 'format=jpeg,width=400,height=400,fit=cover'
+    : 'format=jpeg,width=1200,fit=scale-down';
+  return `${IMAGE_TRANSFORM_BASE}${options}/${url}`;
+}
+
+function repairProxiedImages(html) {
+  let out = html.split(`${CDN_ORIGIN}/nfts/images/`).join(`${CDN_ORIGIN}/images/`);
+
+  const deadCard = /\/functions\/v1\/og-image\?/;
+  let transformed = false;
+  const swap = (value) => {
+    if (deadCard.test(value)) return SHARE_IMAGE;
+    const next = transformedImageUrl(value);
+    if (next !== value) transformed = true;
+    return next;
+  };
+  out = out
+    .replace(
+      /(<meta (?:property="og:image(?::secure_url)?"|name="twitter:image") content=")([^"]*)(">)/g,
+      (m, a, v, b) => `${a}${swap(v)}${b}`,
+    )
+    .replace(/("(?:image|thumbnailUrl)":")([^"\\]*)(")/g, (m, a, v, b) => `${a}${swap(v)}${b}`);
+
+  if (transformed) {
+    out = out.replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, (m, a, b) => `${a}image/jpeg${b}`);
+  }
+  if (deadCard.test(html)) {
+    // The brand card is 1200×630; the fn declared the renderer's card and a
+    // summary_large_image, so only the dimensions and type need saying.
+    out = out
+      .replace(/(<meta property="og:image:width" content=")[^"]*(">)/g, (m, a, b) => `${a}1200${b}`)
+      .replace(/(<meta property="og:image:height" content=")[^"]*(">)/g, (m, a, b) => `${a}630${b}`)
+      .replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, (m, a, b) => `${a}image/png${b}`)
+      .replace(/(<meta name="twitter:card" content=")[^"]*(">)/g, (m, a, b) => `${a}summary_large_image${b}`);
+  }
+  return out;
 }
 
 function buildStoreHtml(store) {
@@ -1575,6 +1977,52 @@ ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 }
 
 /**
+ * A single DAO proposal, /app/governance/<uuid>. Proposals carry no art of
+ * their own, so the governance card stands in — that is still the page's
+ * subject, unlike the homepage card it was getting.
+ */
+function buildProposalHtml(proposal) {
+  const canonicalUrl = `${APP_URL}/app/governance/${proposal.id}`;
+  const name = proposal.title || 'Proposal';
+  const author = proposal.author_username
+    ? `@${proposal.author_username}`
+    : `${String(proposal.author_wallet_address || '').slice(0, 6)}...${String(proposal.author_wallet_address || '').slice(-4)}`;
+  const status = String(proposal.status || 'open').replace(/_/g, ' ');
+  const votes = Number(proposal.vote_count) || 0;
+  const description = truncate(
+    proposal.description || `${name} — a governance proposal on DeHub, ${status}, with ${votes} votes.`,
+    200,
+  );
+  return entityHtml({
+    canonicalUrl,
+    title: `${name} — DeHub Governance`,
+    description,
+    image: shareImage('governance'),
+    ogType: 'article',
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/governance" style="color:#9f9">Governance</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><strong>${escHtml(status)}</strong> · ${votes} votes · ${Number(proposal.comment_count) || 0} comments · proposed by ${escHtml(author)}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'DiscussionForumPosting',
+      headline: name,
+      text: description,
+      url: canonicalUrl,
+      datePublished: proposal.created_at,
+      ...(proposal.updated_at ? { dateModified: proposal.updated_at } : {}),
+      author: { '@type': 'Person', name: author },
+      commentCount: Number(proposal.comment_count) || 0,
+      interactionStatistic: {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/LikeAction',
+        userInteractionCount: votes,
+      },
+    },
+  });
+}
+
+/**
  * A single request or bug report on the community board, /features?feature=<id>
  * (also reachable as /app/features?...). FeaturesPage never mints a per-request
  * URL of its own — `?feature=<id>` is read purely client-side to scrollIntoView
@@ -1649,7 +2097,7 @@ function buildGuidePageHtml(slug, meta) {
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${shareMetaTags(`guides/${slug}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
-<script type="application/ld+json">${JSON.stringify({
+<script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'Article',
   headline: meta.title, description: meta.description,
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
@@ -1742,7 +2190,7 @@ const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|tele
 const SSR_STATIC_ROUTES = new Set([
   'features', 'pricing', 'depin', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
-  'music', 'radio', 'tv', 'glossary', 'bridge', 'agents',
+  'music', 'radio', 'tv', 'bridge', 'agents',
   'assistant', 'creators', 'jobs',
   // Same reason as 'arcade' below: /app/usernames and /usernames are the same
   // page, and without this the /app twin self-canonicalizes and indexes as a
@@ -1753,6 +2201,12 @@ const SSR_STATIC_ROUTES = new Set([
   // duplicate of /arcade. The page itself is rendered from MARKETING_PAGES,
   // which is checked before the fn is ever consulted (same as 'features').
   'arcade',
+  // Same again: each of these is one page with a top-level route AND an /app
+  // twin, both rendered from MARKETING_PAGES. `superpowers`, `stores` and
+  // `fractions` are deliberately NOT here — they exist only under /app, so
+  // collapsing the twin would canonicalize them onto a URL the router does not
+  // have. Those name their own `path` in MARKETING_PAGES instead.
+  'accounts', 'converter', 'events', 'launchpad', 'stats',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
   //
@@ -1794,6 +2248,130 @@ const NOT_FOUND_TITLES = [
   '<title>DeHub — Open Source, User Owned & Censorship Resistant Media</title>',
 ];
 
+/** Resolve an off-chain post slug (/newpost/<n>) to the tokenId every other
+ *  surface addresses that post by. The mapping lives behind the API and
+ *  survives minting, so a link shared before the mint keeps resolving. */
+async function resolveNewPostTokenId(n) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/newpost/${encodeURIComponent(n)}`, {
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const id = data?.tokenId ?? data?.result?.tokenId;
+    return Number.isFinite(Number(id)) ? String(Number(id)) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** The sitemap spec's own cap, and the page size the API is asked for. */
+const PROFILE_SITEMAP_PAGE_SIZE = 50000;
+
+/**
+ * One page of the profile list, or null.
+ *
+ * The API decides who is in it — accounts with at least one post a signed-out
+ * visitor can see. That threshold lives there rather than here because it is an
+ * indexation policy, not a rendering detail: submitting a few thousand empty
+ * profile pages is a thin-content signal Google applies to the whole site.
+ *
+ * The generous timeout is deliberate. This runs at most twice an hour per
+ * colo (the responses carry s-maxage=3600) and the first uncached call behind
+ * it aggregates every published post; giving up early would mean publishing the
+ * fifty-URL fallback for an hour to save a few seconds nobody is waiting on.
+ */
+async function dehubProfileSitemap(page, limit) {
+  try {
+    const res = await fetch(
+      `https://api.dehub.io/api/sitemap/profiles?page=${page}&limit=${limit}`,
+      { signal: AbortSignal.timeout(20000) },
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !Array.isArray(data.profiles)) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * A page of profile rows as sitemap XML.
+ *
+ * Exported for its tests: the two filters below are the difference between a
+ * sitemap of real pages and a sitemap of 404s, and neither is visible in a
+ * response anyone reads.
+ *
+ *  - `couldBeProfileSegment` is the same test the SSR path uses to decide a URL
+ *    IS a profile. A handful of accounts pre-date the reserved-name list and
+ *    hold names like `admin` and `explore`; `dehub.io/<that>` serves the route,
+ *    not the person, so submitting it asks Google to index a page that will
+ *    never exist. It also drops anything with a dot, which is the same rule
+ *    that keeps `/favicon.ico` from being read as a username.
+ *  - Case-insensitive de-duplication, because the router matches
+ *    case-insensitively: `/Alice` and `/alice` are one page, and submitting
+ *    both is a self-inflicted duplicate.
+ *
+ * `changefreq` is weekly rather than the old daily. Fifty hand-picked accounts
+ * could honestly claim daily; several thousand cannot, and a sitemap whose
+ * hints are contradicted by every recrawl is one whose hints get ignored.
+ */
+export function profileSitemapXml(profiles, systemRoutes) {
+  const seen = new Set();
+  const urls = [];
+  for (const p of profiles || []) {
+    const username = typeof p?.username === 'string' ? p.username.trim().replace(/^@+/, '') : '';
+    if (!username) continue;
+    const key = username.toLowerCase();
+    if (seen.has(key) || !couldBeProfileSegment(key, systemRoutes)) continue;
+    seen.add(key);
+    // Anything not an exact YYYY-MM-DD is dropped rather than passed through:
+    // a malformed lastmod invalidates the whole file for some parsers, and the
+    // date is the least important thing in the entry.
+    const lastmod = /^\d{4}-\d{2}-\d{2}$/.test(p?.lastmod ?? '') ? `<lastmod>${p.lastmod}</lastmod>` : '';
+    urls.push(
+      `  <url><loc>${APP_URL}/${encodeURIComponent(username)}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.5</priority></url>`,
+    );
+  }
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
+}
+
+/**
+ * Correct the profile entries in a sitemap index built by the Supabase
+ * function: give chunk 1 the real newest-profile date, and add the chunks the
+ * function does not know exist.
+ *
+ * Exported for its tests, and every step is guarded — a null `meta`, a changed
+ * upstream shape or a missing closing tag all leave the index exactly as it
+ * arrived. Publishing a broken index costs every sitemap on the site; missing
+ * chunk 2 costs the profiles above 50,000.
+ */
+export function patchProfileChunks(indexXml, meta) {
+  if (!indexXml || !meta || !indexXml.includes('</sitemapindex>')) return indexXml;
+
+  let out = indexXml;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(meta.lastmod ?? '')) {
+    out = out.replace(
+      /<sitemap><loc>[^<]*\/sitemap-profiles-1\.xml<\/loc>(?:<lastmod>[^<]*<\/lastmod>)?<\/sitemap>/,
+      `<sitemap><loc>${APP_URL}/sitemap-profiles-1.xml</loc><lastmod>${meta.lastmod}</lastmod></sitemap>`,
+    );
+  }
+
+  const total = Number(meta.total);
+  if (!Number.isFinite(total) || total <= 0) return out;
+  const chunks = Math.ceil(total / PROFILE_SITEMAP_PAGE_SIZE);
+  for (let i = 2; i <= chunks; i++) {
+    if (out.includes(`/sitemap-profiles-${i}.xml`)) continue;
+    out = out.replace(
+      '</sitemapindex>',
+      `  <sitemap><loc>${APP_URL}/sitemap-profiles-${i}.xml</loc></sitemap>\n</sitemapindex>`,
+    );
+  }
+  return out;
+}
+
 function shouldServeSSR(pathname) {
   // Feed section pages (/explore, /videos, /shorts) + their /app twins — bot
   // HTML built at the edge. Must be checked before the profile fall-through so
@@ -1810,6 +2388,29 @@ function shouldServeSSR(pathname) {
   // a shared listing unfurled as the SPA shell, i.e. as the homepage.
   if (/^\/app\/stores\/[^/]+/.test(pathname)) return true;
   if (/^\/app\/events\/\d+/.test(pathname)) return true;
+  // A single governance proposal, rendered from PostgREST below.
+  if (/^\/app\/governance\/[0-9a-fA-F-]{8,}\/?$/.test(pathname)) return true;
+  // One film or series. The renderer for these has existed since /cinema
+  // shipped and had never run once: `cinema` is a reserved ROUTE_SEGMENT, so
+  // the profile fall-through rejected the path and the SPA shell went out
+  // before the branch was reached.
+  //
+  // The id is not always digits. It is whatever the JustWatch partner API
+  // hands back for a title, which for a good part of the catalogue is a node
+  // id like `tm12345` — so a `\d+` gate dropped those links to the SPA shell
+  // and the share button produced a blank unfurl for them. `movie` and `show`
+  // are the object-type names the client passes around internally; they reach
+  // this route from older links, and the renderer canonicalizes them onto
+  // /cinema like every other title path, so there is no reason to card one
+  // spelling and not the other.
+  if (/^\/cinema\/(?:film|series|movie|show)\/[A-Za-z0-9_-]{1,64}\/?$/.test(pathname)) return true;
+  // Sub-paths that fall back to their section's card below.
+  if (/^\/(?:app\/)?launchpad\/[^/]+\/?$/.test(pathname)) return true;
+  if (/^\/(?:app\/)?arcade\/kings-gambit\/online\/?$/.test(pathname)) return true;
+  // /app/video/<tokenId> is a post — SinglePostPage renders it, and
+  // parseDehubLink reads it as one — so it needs the post treatment. It is
+  // normalised onto /app/post/<tokenId> before the proxy.
+  if (/^\/app\/video\/\d+\/?$/.test(pathname)) return true;
   // Stage invite links, both shapes. Needed here and not only at the renderer
   // below: `stage` and `stages` are both reserved ROUTE_SEGMENTS, so the
   // profile fall-through at the foot of this function rejects them, and the
@@ -1826,6 +2427,15 @@ function shouldServeSSR(pathname) {
   // the foot of this function rejects it and the SPA shell would go out under
   // a noindex long before the renderer below is reached.
   if (/^\/bounty\/\d+\/?$/.test(pathname)) return true;
+  // Off-chain post slugs (/newpost/<n>) and the short post shapes (/posts/<n>,
+  // /posts/<n>/b, /posts/<n>/b/<commentId>). Same trap a third time: `newpost`
+  // and `posts` are both reserved ROUTE_SEGMENTS, so the profile fall-through
+  // rejected them and the SPA shell went out under a noindex before any
+  // renderer was reached. This one was the widest of the three — minting is
+  // optional, so a post that never mints is only ever shared as /newpost/<n>,
+  // from web and from the app alike.
+  if (/^\/(?:app\/)?newpost\/\d+\/?$/.test(pathname)) return true;
+  if (/^\/posts\/\d+(?:\/b(?:\/[^/]+)?)?\/?$/.test(pathname)) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
   // Always SSR for the blog: index + posts at both URL schemes
@@ -2528,6 +3138,31 @@ async function handleRequest(request, env) {
     );
   }
 
+  // Profiles, from the API that actually holds them. The Supabase function
+  // this replaces read `suggested_profiles_cache` — the fifty rows behind the
+  // "who to follow" rail — so the sitemap offered Google fifty profile URLs
+  // against several thousand accounts, and the rest were crawlable only where
+  // something happened to link to them. That table was never a census; it was
+  // reused as one because profiles live in Mongo and nothing on the Supabase
+  // side could see them.
+  //
+  // Falls through to the proxy below on any failure, so a slow or broken API
+  // degrades to the fifty-URL sitemap rather than to a 503.
+  const profileSitemapMatch = pathname.match(/^\/sitemap-profiles-(\d+)\.xml$/);
+  if (profileSitemapMatch) {
+    const meta = await dehubProfileSitemap(Number(profileSitemapMatch[1]) || 1, PROFILE_SITEMAP_PAGE_SIZE);
+    if (meta) {
+      return new Response(profileSitemapXml(meta.profiles, SYSTEM_ROUTES), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      });
+    }
+    console.error(`[Edge] profile sitemap unavailable for ${pathname}, falling back`);
+  }
+
   const sitemapMatch = pathname.match(/^\/sitemap(?:-(posts|profiles)-(\d+))?\.xml$/);
   if (sitemapMatch) {
     const [, kind, page] = sitemapMatch;
@@ -2548,6 +3183,15 @@ async function handleRequest(request, env) {
             '</sitemapindex>',
             `  <sitemap><loc>${APP_URL}/sitemap-bounties.xml</loc></sitemap>\n</sitemapindex>`,
           );
+        }
+        // The same function counts profile chunks from that 50-row suggestion
+        // cache and dates them by when the cache was rebuilt, so it advertises
+        // exactly one chunk however many profiles exist, stamped with a date
+        // that moves for no reason. Correct both from the real list. Costs one
+        // small request on a path Google reads rarely and the edge holds for an
+        // hour; a null answer leaves the index exactly as the function built it.
+        if (!kind) {
+          body = patchProfileChunks(body, await dehubProfileSitemap(1, 1));
         }
         return new Response(body, {
           status: 200,
@@ -2810,11 +3454,35 @@ async function handleRequest(request, env) {
   // behind the JustWatch partner API, which needs a token the worker does not
   // have. Revisit when that is provisioned — the shape to copy is the stores
   // branch below, which reads PostgREST directly.
-  if (/^cinema\/(film|series)\/\d+$/.test(sectionKey) && Object.hasOwn(MARKETING_PAGES, 'cinema')) {
+  if (
+    /^cinema\/(?:film|series|movie|show)\/[A-Za-z0-9_-]{1,64}$/.test(sectionKey) &&
+    Object.hasOwn(MARKETING_PAGES, 'cinema')
+  ) {
     return guard(new Response(buildMarketingHtml('cinema', MARKETING_PAGES['cinema']), {
       status: 200,
       headers: blogHeaders,
     }));
+  }
+
+  // Two more sub-paths with no metadata of their own, handled the same way:
+  // the section's card beats the homepage's, and a `noindex` keeps them out of
+  // the index rather than minting a page per id that says the same thing.
+  //
+  // A launchpad coin deserves its own card — name, ticker, chart — and
+  // launchpad_tokens is anon-readable, so the shape to copy is the stores
+  // branch below. Not written yet because the table is empty: there would be
+  // no way to check it against a real coin. Revisit at the first launch.
+  const SECTION_FALLBACKS = [
+    [/^launchpad\/[^/]+$/, 'launchpad'],
+    [/^arcade\/kings-gambit\/online$/, 'arcade/kings-gambit'],
+  ];
+  for (const [re, key] of SECTION_FALLBACKS) {
+    if (re.test(sectionKey) && Object.hasOwn(MARKETING_PAGES, key)) {
+      return guard(new Response(buildMarketingHtml(key, MARKETING_PAGES[key]), {
+        status: 200,
+        headers: { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
+      }));
+    }
   }
 
   // A single request or bug report, /features?feature=<id>. Same PostgREST-
@@ -2859,7 +3527,12 @@ async function handleRequest(request, env) {
         html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Open bounties</h2><ul style="list-style:none;padding:0">${items}</ul></section></body>`);
       }
     }
-    return guard(new Response(html, { status: 200, headers: blogHeaders }));
+    return guard(new Response(html, {
+      status: 200,
+      headers: MARKETING_PAGES[sectionKey].noindex
+        ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' }
+        : blogHeaders,
+    }));
   }
 
   // Stores and shop items. `?listing=<id>` is the item; the bare path is the
@@ -2889,6 +3562,26 @@ async function handleRequest(request, env) {
     }
     // Row missing or Supabase unreachable: fall through to the generic stub
     // rather than 404, because we cannot tell those two apart from here.
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    }));
+  }
+
+  const proposalMatch = cleanPath.match(/^\/app\/governance\/([0-9a-fA-F-]{8,})$/);
+  if (proposalMatch) {
+    const proposal = await supabaseRow(
+      `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
+    );
+    if (proposal) {
+      return guard(new Response(buildProposalHtml(proposal), { status: 200, headers: blogHeaders }));
+    }
+    // Row missing or Supabase unreachable — indistinguishable from here, so
+    // the generic stub rather than a 404, same as stores and events.
     return guard(new Response(buildFallbackHtml(pathname, request.url), {
       status: 200,
       headers: {
@@ -2978,7 +3671,38 @@ async function handleRequest(request, env) {
     }));
   }
 
-  const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(pathname)}&original_url=${encodeURIComponent(request.url)}`;
+  // Every post shape is normalised onto /app/post/<tokenId> before the proxy,
+  // because that is the only one the deployed fn renders. Bare /post/<id>
+  // predates `post` joining its system-route list, so it reads the segment as
+  // a username and answers 404 — the canonical URL of every post page was
+  // being handed to crawlers as a dead end. /posts/<n> and /newpost/<n> it has
+  // never heard of at all. The fn emits its own canonical at the /app twin, so
+  // the alternate shapes consolidate there instead of competing.
+  let ssrPath = pathname;
+  const newPostSlug = pathname.match(/^\/(?:app\/)?newpost\/(\d+)\/?$/);
+  const shortPostPath = pathname.match(/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/);
+  const barePostPath = pathname.match(/^\/post\/(\d+)\/?$/);
+  const videoPath = pathname.match(/^\/app\/video\/(\d+)\/?$/);
+  // The bare /communities/<slug> twin has the same problem one level up: the
+  // fn's own system-route list has no `communities` entry, so it read the
+  // segment as a username, missed, and 404'd every share of that shape.
+  const bareCommunity = pathname.match(/^\/communities\/([^/]+)\/?$/);
+  if (newPostSlug) {
+    const tokenId = await resolveNewPostTokenId(newPostSlug[1]);
+    // Unresolvable slug: leave the path alone so the fn's miss lands on the
+    // 404 below rather than a 200 carrying the homepage card.
+    if (tokenId) ssrPath = `/app/post/${tokenId}`;
+  } else if (shortPostPath) {
+    ssrPath = `/app/post/${shortPostPath[1]}`;
+  } else if (barePostPath) {
+    ssrPath = `/app/post/${barePostPath[1]}`;
+  } else if (videoPath) {
+    ssrPath = `/app/post/${videoPath[1]}`;
+  } else if (bareCommunity && bareCommunity[1] !== 'join') {
+    ssrPath = `/app/communities/${bareCommunity[1]}`;
+  }
+
+  const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(ssrPath)}&original_url=${encodeURIComponent(request.url)}`;
 
 
   try {
@@ -3031,7 +3755,8 @@ async function handleRequest(request, env) {
     // pages (this is exactly what killed /guides/best-web3-social-media-dapps).
     // A future fn deploy can signal explicitly via X-DeHub-NotFound: 1.
     const isEntityRoute =
-      pathname.includes('/post/') ||
+      ssrPath.includes('/post/') ||
+      pathname.includes('newpost/') ||
       pathname.includes('/communities/') ||
       couldBeProfileSegment(firstSegmentOf(pathname), SYSTEM_ROUTES);
     const fnSaysNotFound =
@@ -3090,6 +3815,33 @@ async function handleRequest(request, env) {
     // today!") — entity-led titles rank and read better in SERPs.
     html = html.replace(/Join @([A-Za-z0-9_.-]+) on DeHub today!/g, '@$1 on DeHub — posts, videos &amp; profile');
 
+    // …and its titles/descriptions are raw post text and bios: unbounded and
+    // full of newlines. Runs after the rewrite above so the profile title it
+    // installs is measured, and before the card swap, which matches on
+    // og:image only.
+    html = normalizeProxiedMeta(html);
+
+    // …and where the fn had no body or bio to describe the page with, it
+    // fell back to one sentence per author; build a page-specific one (see
+    // enrichPostMeta). The post branch costs one API read, only for a post
+    // with no body.
+    const proxiedPostId = (ssrPath.match(/^\/app\/post\/([^/?#]+)/) || [])[1];
+    const proxiedSegments = cleanPath.split('/').filter(Boolean);
+    const proxiedHandle =
+      proxiedSegments.length === 1 && couldBeProfileSegment(firstSegmentOf(cleanPath), SYSTEM_ROUTES)
+        ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
+        : '';
+    if (proxiedPostId && POST_DESCRIPTION_TEMPLATE.test(html)) {
+      html = enrichPostMeta(html, proxiedPostId, await fetchPostRecord(proxiedPostId));
+    } else if (proxiedHandle) {
+      html = enrichProfileMeta(html, proxiedHandle);
+    }
+    // Share images the fn points at that 403, carry no content type, or
+    // redirect to the logo (see repairProxiedImages).
+    if (isEntityRoute) {
+      html = repairProxiedImages(html);
+    }
+
 
     // The deployed fn points og:image at the 200-square logo, and for its own
     // static routes at Lovable CDN paths (`/__l5e/assets-v1/...`) that nothing
@@ -3125,6 +3877,17 @@ async function handleRequest(request, env) {
     if (pathname === '/') {
       // Bot and browser titles must not diverge; align to the SPA title.
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
+      // …and the description: the fn's is a different sentence from the one
+      // in index.html, so the two variants disagreed on what DeHub is.
+      html = html.replace(
+        /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
+        (m, a, b) => `${a}${escFnAttr(HOME_DESCRIPTION)}${b}`,
+      );
+      // The fn's WebSite node carries the old sentence too.
+      html = html.replace(
+        /("@type":"WebSite"[^}]*?"description":")[^"]*(")/,
+        (m, a, b) => `${a}${escJsonText(HOME_DESCRIPTION)}${b}`,
+      );
       // Search Console ownership. The tag lives in index.html, which only
       // browsers ever receive — every bot UA gets this rendered HTML instead,
       // and it had no tag at all. Verification survives today purely because
@@ -3143,7 +3906,7 @@ async function handleRequest(request, env) {
       if (html.includes('"sameAs"')) {
         html = html.replace(/"sameAs":\s*\[[^\]]*\]/, JSON.stringify({ sameAs: ORG_SAME_AS }).slice(1, -1));
       } else {
-        html = html.replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
+        html = html.replace('</head>', `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
       }
       // What DeHub IS, in prose. Injected before the nav so it is the first
       // body content a crawler reads — this is the copy the "dehub" brand term

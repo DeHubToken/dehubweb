@@ -8,6 +8,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore, ReactNode } from 'react';
 import { useFrontRow } from '@/hooks/use-superpowers';
 import { supabase } from '@/integrations/supabase/client';
+import { stopStageRecording } from '@/lib/stage-playback';
 // Deliberately the narrow module and not the `@/lib/api/dehub` barrel: this
 // context is mounted app-wide, and the barrel drags the whole API surface in.
 import { getAuthToken } from '@/lib/api/dehub/core';
@@ -80,7 +81,7 @@ interface StageContextType {
   initialModalView: 'browse' | 'create' | 'live';
 
   // Actions
-  createSpace: (title: string, description?: string) => Promise<AudioSpace | null>;
+  createSpace: (title: string, description?: string, coverImageUrl?: string | null) => Promise<AudioSpace | null>;
   scheduleSpace: (input: ScheduleSpaceInput) => Promise<AudioSpace | null>;
   startScheduledSpace: (spaceId: string) => Promise<boolean>;
   cancelScheduledSpace: (spaceId: string) => Promise<void>;
@@ -483,6 +484,24 @@ export function openStageModal(view: 'browse' | 'create' | 'live' = 'browse') {
   stageModalOpener?.(view);
 }
 
+let stageCreator: ((title: string, description?: string, coverImageUrl?: string | null) => Promise<AudioSpace | null>) | null = null;
+
+/**
+ * Open a stage from outside the stage tree.
+ *
+ * The post composer is the setup form for a stage, and it reaches this through
+ * `await import()` rather than the context: it is on the module graph the entry
+ * bundle is measured against, and a static edge from the composer into the
+ * stage stack drags the whole thing onto the boot path.
+ */
+export function createStageNow(
+  title: string,
+  description?: string,
+  coverImageUrl?: string | null,
+): Promise<AudioSpace | null> {
+  return stageCreator ? stageCreator(title, description, coverImageUrl) : Promise.resolve(null);
+}
+
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function StageProvider({ children }: { children: ReactNode }) {
@@ -641,6 +660,23 @@ export function StageProvider({ children }: { children: ReactNode }) {
     stageModalOpener = openModal;
     return () => { stageModalOpener = null; };
   }, [openModal]);
+
+  // ─── One stage at a time, live or recorded ──────────────────────────────
+  //
+  // A recording plays through a module-level `<audio>` and a live room plays
+  // through Agora, so neither engine knows the other exists. Pressing play on
+  // a recording stops any other recording, and joining a room stops any other
+  // room, but nothing stood between the two — and a popped-out recording is
+  // built to survive its drawer closing, which is exactly the one that was
+  // still going when a room started. Both came out of the speakers at once,
+  // with the live room's own controls giving no way to silence the other.
+  //
+  // Placed on `currentSpace` rather than at each entry point: joining,
+  // creating, starting a scheduled stage and a guest starting to listen all
+  // arrive here, and a fifth way in later gets this for free.
+  useEffect(() => {
+    if (currentSpace) stopStageRecording();
+  }, [currentSpace?.id]);
 
   // ─── Keep a live host from silently killing their own recording ─────────
   //
@@ -1157,7 +1193,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   );
 
   const createSpace = useCallback(
-    async (title: string, description?: string): Promise<AudioSpace | null> => {
+    async (title: string, description?: string, coverImageUrl?: string | null): Promise<AudioSpace | null> => {
       if (!walletAddress) { toast.error('Please log in first'); return null; }
       setIsLoading(true);
       try {
@@ -1174,6 +1210,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
               host_username: user?.username || null,
               host_avatar: persistableAvatar(user?.avatarImageUrl),
               status: 'live',
+              // The composer can hand over a cover — the image or clip it was
+              // holding when Go Live was pressed. Scheduled stages already
+              // carried one; a stage opened now had nowhere to put it.
+              cover_image_url: coverImageUrl ?? null,
               speaker_count: 1,
               listener_count: 0,
             })
@@ -1198,6 +1238,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
     },
     [walletAddress, user, goLiveAsHost, signed],
   );
+
+  // Feed the module-level opener the composer uses (see createStageNow above).
+  useEffect(() => {
+    stageCreator = createSpace;
+    return () => { stageCreator = null; };
+  }, [createSpace]);
 
   // ─── Schedule a stage for later ──────────────────────────────────────────
 

@@ -402,7 +402,7 @@ export function BiometricUnlockSettings() {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md w-full"
+                className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl w-full"
                 onClick={() => setBackupOpen(true)}
               >
                 Add

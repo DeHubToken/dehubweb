@@ -28,6 +28,7 @@ import {
   type Target,
   TargetError,
 } from '../_shared/transcripts.ts';
+import { nextVisibility } from '../_shared/transcript-visibility.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -344,7 +345,25 @@ Deno.serve(async (req) => {
     if (!target) return json({ error: 'a valid { kind, ref } is required' }, 400);
 
     const action = String(body?.action ?? (body?.stageId ? 'start' : 'status'));
-    const force = body?.force === true;
+
+    /**
+     * `force` is an internal lever, not a request parameter.
+     *
+     * It skips every guard below it: the ready check, the processing check,
+     * the attempt ceiling and the backoff. Those are the only things standing
+     * between this endpoint and an unbounded transcription bill, and the
+     * function answers a publishable key that ships in the browser bundle — so
+     * `force: true` in a loop against one long video spends real credits until
+     * somebody notices the invoice.
+     *
+     * Nothing legitimate loses anything. Every internal caller already
+     * presents the service key, and the only one that forces is the admin
+     * panel's retry. A visitor's "Try again" is an ordinary start, which is
+     * what it was always meant to be: the attempt ceiling and the backoff are
+     * the answer to "has this had enough tries", not an obstacle to route past.
+     */
+    const bearer = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '').trim();
+    const force = body?.force === true && bearer === SERVICE_KEY;
     const timeline: TimelineWindow[] = Array.isArray(body?.timeline) ? body.timeline : [];
 
     const db = admin();
@@ -397,13 +416,17 @@ Deno.serve(async (req) => {
       if (error) throw new Error(`could not write the transcript row: ${error.message}`);
     };
 
+    // Never looser than what the row already carries — see the module for why
+    // a flat write republished transcripts an admin had locked.
+    const visibilityForWrite = nextVisibility((existing as any)?.visibility, media.visibility);
+
     // "Not yet" is not "no". A post asked for seconds after upload is still
     // transcoding; the sweeper will come back for it, and the attempt counter
     // is deliberately not touched so waiting never burns a retry.
     if (media.notReady || !media.url) {
       await claim({
         status: 'pending',
-        visibility: media.visibility,
+        visibility: visibilityForWrite,
         duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
         // Stamped but attempts untouched: waiting is not a failed try, and the
         // backoff needs something to measure from or it re-queues every pass.
@@ -417,7 +440,7 @@ Deno.serve(async (req) => {
     if (!reach.ok) {
       await claim({
         status: 'pending',
-        visibility: media.visibility,
+        visibility: visibilityForWrite,
         duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
         last_attempt_at: new Date().toISOString(),
         error: `media not reachable yet (${reach.status})`,
@@ -428,7 +451,7 @@ Deno.serve(async (req) => {
     const attempts = (existing as any)?.attempts ?? 0;
     await claim({
       status: 'processing',
-      visibility: media.visibility,
+      visibility: visibilityForWrite,
       // The API reports fractional seconds and the column is an integer.
       duration_seconds: media.durationSeconds === null ? null : Math.round(media.durationSeconds),
       attempts: attempts + 1,

@@ -46,14 +46,29 @@ const walletButtonClass = "w-full h-12 bg-white/10 hover:bg-white/15 text-white 
 
 export type WalletId = 'metamask' | 'phantom' | 'trust';
 
+/** A wallet found on this machine that isn't one of the three named buttons. */
+export interface DiscoveredWallet {
+  /** wagmi connector id — also what gets passed back to connect with. */
+  id: string;
+  name: string;
+  /** The extension's own icon, as announced over EIP-6963. */
+  icon?: string;
+}
+
 interface LoginWalletsStepProps {
   isConnecting: boolean;
   activeProvider: string | null;
   /** The wallet wagmi is holding right now, if any — shown so it can be dropped. */
   connectedAddress?: string | null;
   connectedWalletName?: string | null;
+  /** Which button that live connection belongs to, so the chip sits under it. */
+  connectedWalletId?: string | null;
+  /** Everything else installed here, discovered rather than hardcoded. */
+  discoveredWallets?: DiscoveredWallet[];
   onUseDifferentWallet?: () => void;
+  onSwitchAccount?: () => void;
   onWalletConnect: (wallet: WalletId, connect: () => void) => void;
+  onDiscoveredWalletConnect?: (connectorId: string) => void;
   onWalletConnectConnect: (connect: () => void) => void;
 }
 
@@ -65,43 +80,73 @@ export function LoginWalletsStep({
   activeProvider,
   connectedAddress,
   connectedWalletName,
+  connectedWalletId,
+  discoveredWallets = [],
   onUseDifferentWallet,
+  onSwitchAccount,
   onWalletConnect,
+  onDiscoveredWalletConnect,
   onWalletConnectConnect,
 }: LoginWalletsStepProps) {
   const { t } = useTranslation();
 
+  /*
+    Reaching this step with a wallet already attached is normal — a previous
+    session, or an attempt whose signature went unanswered. The buttons below
+    then sign with THAT wallet, which is invisible unless we say so.
+
+    It used to sit above the list, where it read as a header rather than as
+    something belonging to one of the wallets. Rendered under the button it
+    actually belongs to, "MetaMask · 0x12…ab" is obviously the state of the
+    MetaMask row, and the two ways out sit with it:
+
+      Switch account          opens the wallet's own account picker. The wallet
+                              is the only thing that can change which account it
+                              offers — a site cannot enumerate the others, let
+                              alone choose one — so this is the whole of what
+                              "use my other address" can mean. It is also the
+                              escape from the dead end where the extension
+                              refuses to sign for the address we remembered.
+      Use a different wallet  drops the connection, so the next tap starts clean.
+  */
+  const connectedChip = connectedAddress ? (
+    <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 space-y-2">
+      <p className="text-white text-xs truncate">
+        {connectedWalletName ? `${connectedWalletName} · ` : ''}
+        <span className="text-white/60">{shortenAddress(connectedAddress)}</span>
+      </p>
+      <div className="flex items-center gap-4">
+        {onSwitchAccount && (
+          <button
+            type="button"
+            onClick={onSwitchAccount}
+            disabled={isConnecting}
+            className="text-xs text-white/70 hover:text-white underline underline-offset-2 disabled:opacity-40"
+          >
+            {t('loginModal.switchWalletAccount', 'Switch account')}
+          </button>
+        )}
+        {onUseDifferentWallet && (
+          <button
+            type="button"
+            onClick={onUseDifferentWallet}
+            disabled={isConnecting}
+            className="text-xs text-white/50 hover:text-white underline underline-offset-2 disabled:opacity-40"
+          >
+            {t('loginModal.useDifferentWallet', 'Use a different wallet')}
+          </button>
+        )}
+      </div>
+    </div>
+  ) : null;
+
+  /** The chip belongs under whichever row owns the live connection. */
+  const chipFor = (walletId: string) =>
+    connectedChip && connectedWalletId === walletId ? connectedChip : null;
+
   return (
     <RainbowKitProvider theme={darkTheme()} modalSize="compact">
       <div className="space-y-3">
-        {/*
-          Reaching this step with a wallet already attached is normal — a
-          previous session, or an attempt whose signature went unanswered. The
-          buttons below then sign with THAT wallet, which is invisible unless we
-          say so, and the only way out used to be a page refresh.
-        */}
-        {connectedAddress && onUseDifferentWallet && (
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5">
-            <div className="min-w-0">
-              <p className="text-white/40 text-[10px] uppercase tracking-wide">
-                {t('loginModal.walletConnectedAs', 'Connected')}
-              </p>
-              <p className="text-white text-xs truncate">
-                {connectedWalletName ? `${connectedWalletName} · ` : ''}
-                {shortenAddress(connectedAddress)}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onUseDifferentWallet}
-              disabled={isConnecting}
-              className="flex-shrink-0 text-xs text-white/60 hover:text-white underline underline-offset-2 disabled:opacity-40"
-            >
-              {t('loginModal.useDifferentWallet', 'Use a different wallet')}
-            </button>
-          </div>
-        )}
-
         <WalletButton.Custom wallet="metamask">
           {({ mounted, connect }) => (
             <Button
@@ -119,6 +164,7 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
+        {chipFor('metamask')}
 
         <WalletButton.Custom wallet="phantom">
           {({ mounted, connect }) => (
@@ -137,6 +183,7 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
+        {chipFor('phantom')}
 
         <WalletButton.Custom wallet={isMobileDevice() && !isWalletInAppBrowser() ? "walletconnect" : "trust"}>
           {({ mounted, connect }) => (
@@ -155,6 +202,41 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
+        {chipFor('trust')}
+
+        {/*
+          Everything else this browser announced over EIP-6963. wagmi has been
+          discovering these all along — the sheet simply threw them away and
+          offered three names, so a Rabby or Coinbase user had to know that
+          "MetaMask" would sometimes reach their wallet and sometimes reach
+          whichever extension won the injection race.
+        */}
+        {discoveredWallets.map((wallet) => (
+          <div key={wallet.id} className="space-y-3">
+            <Button
+              disabled={isConnecting}
+              onClick={() => onDiscoveredWalletConnect?.(wallet.id)}
+              className={walletButtonClass}
+            >
+              {activeProvider === wallet.id && isConnecting ? (
+                <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+              ) : wallet.icon ? (
+                <img
+                  src={wallet.icon}
+                  width="20"
+                  height="20"
+                  alt=""
+                  className="flex-shrink-0 rounded-full object-contain"
+                />
+              ) : (
+                <div className="w-5 h-5 flex-shrink-0 rounded-full bg-white/10" />
+              )}
+              <span className="flex-1 text-left truncate">{wallet.name}</span>
+              <ChevronRight className="w-4 h-4 text-white/40" />
+            </Button>
+            {chipFor(wallet.id)}
+          </div>
+        ))}
 
         <WalletButton.Custom wallet="walletconnect">
           {({ connect }) => (
@@ -173,6 +255,12 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
+        {chipFor('walletconnect')}
+
+        {/* A connection through something not listed above — a wallet's own
+            in-app browser reaches us as the generic injected connector — still
+            has to be visible and still has to be escapable. */}
+        {connectedChip && !connectedWalletId && connectedChip}
 
         <p className="text-white/40 text-[10px] text-center mt-2 px-2">
           {isMobileDevice()

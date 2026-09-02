@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type ReactNode } from 'react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
+import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
@@ -55,7 +57,6 @@ import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
-import dehubCoinSmall from '@/assets/dehub-coin.png';
 import {
   Drawer,
   DrawerContent,
@@ -602,8 +603,15 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
       <div
         className="relative pt-3 space-y-2"
         data-no-navigate
-        {...tapGestures}
       >
+        {/* The tap ladder covers the post's body and nothing else.
+            It used to sit on the wrapper above, which also holds the action
+            bar, the shop board and the whole comments block — so a double-click
+            to select a word in a comment or the composer counted as a double
+            tap and cast a like, and a triple-click to select a paragraph cast a
+            love. Radix portals the phone comments drawer but React events still
+            bubble through it, so the drawer was in range too. */}
+        <div className="space-y-2" {...tapGestures}>
         <TapReactionBurst postId={post.id} />
         {/* A text post's body is its content, so the warning covers the text
             and its embeds. Metadata and the action bar stay below it, so the
@@ -649,9 +657,13 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                     className="flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 rounded-full px-3.5 py-1.5 transition-colors w-fit"
                   >
                     <Star className="w-3.5 h-3.5" />
-                    {cheapestPlanPrice !== undefined
-                      ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB`
-                      : 'Subscribe to read'}
+                    {cheapestPlanPrice !== undefined ? (
+                      <>
+                        Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                      </>
+                    ) : (
+                      'Subscribe to read'
+                    )}
                   </button>
                 )}
                 {isLocked && (
@@ -663,7 +675,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                     {/* Deliberately not "Subscribe" — isLockContent is "hold N
                         of this token", which is a different gate to the one
                         above and has no subscription anywhere in it. */}
-                    Hold {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'} to read
+                    Hold <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} /> to read
                   </button>
                 )}
               </div>
@@ -701,6 +713,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         {post.content && dehubLinks.length === 0 && <FeedLinkPreviews text={post.content} />}
         </>
         )}
+        </div>
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
@@ -717,6 +730,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         />
 
         {!isLocked && !isSubGated && parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
+
+        {/* The creator's Shop board — affiliate links, opened in place. */}
+        <ShopBoardLazy tokenId={post.id} links={post.shopLinks} listingCount={post.shopListingCount} variant="inline" />
 
         <div className="pt-1">
           <ActionBar
@@ -898,8 +914,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(post.lockedPrice)} currency={post.lockedCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -964,6 +979,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot }: PostCardPro
         currentDescription={post.rawDescription ?? post.content ?? ''}
         currentCategories={post.categories ?? []}
         currentContentRating={post.contentRating}
+        currentShopLinks={post.shopLinks}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, post.id, edited);
         }}

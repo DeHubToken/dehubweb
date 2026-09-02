@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,7 +39,29 @@ const initialBDMForm: BDMFormData = {
   why_hire_you: '',
 };
 
+/** Bullet lists are key stems so a translator gets one flat list per section. */
+const BDM_RESPONSIBILITIES = [
+  { icon: <Handshake className="w-4 h-4" />, key: 'bdmResp1' },
+  { icon: <Target className="w-4 h-4" />, key: 'bdmResp2' },
+  { icon: <Globe className="w-4 h-4" />, key: 'bdmResp3' },
+  { icon: <TrendingUp className="w-4 h-4" />, key: 'bdmResp4' },
+  { icon: <Sparkles className="w-4 h-4" />, key: 'bdmResp5' },
+];
+
+const BDM_LOOKING_FOR = ['bdmWant1', 'bdmWant2', 'bdmWant3', 'bdmWant4', 'bdmWant5'];
+
+const AMBASSADOR_RESPONSIBILITIES = [
+  { icon: <Megaphone className="w-4 h-4" />, key: 'ambResp1' },
+  { icon: <Heart className="w-4 h-4" />, key: 'ambResp2' },
+  { icon: <Globe className="w-4 h-4" />, key: 'ambResp3' },
+  { icon: <Users className="w-4 h-4" />, key: 'ambResp4' },
+  { icon: <Sparkles className="w-4 h-4" />, key: 'ambResp5' },
+];
+
+const AMBASSADOR_LOOKING_FOR = ['ambWant1', 'ambWant2', 'ambWant3', 'ambWant4', 'ambWant5'];
+
 export default function JobsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [bdmFormOpen, setBdmFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,7 +76,7 @@ export default function JobsPage() {
     e.preventDefault();
 
     if (!formData.name.trim() || !formData.email.trim()) {
-      toast.error('Name and email are required');
+      toast.error(t('jobs.nameEmailRequired'));
       return;
     }
 
@@ -63,6 +86,7 @@ export default function JobsPage() {
       const { error } = await supabase
         .from('job_applications')
         .insert({
+          // Stored, then read back by the admin panel — stays English.
           role: 'Business Development Manager',
           name: formData.name.trim(),
           email: formData.email.trim(),
@@ -77,12 +101,12 @@ export default function JobsPage() {
 
       if (error) throw error;
 
-      toast.success('Application submitted successfully! We\'ll be in touch.');
+      toast.success(t('jobs.applicationSubmitted'));
       setFormData(initialBDMForm);
       setBdmFormOpen(false);
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error('Failed to submit. Please try again.');
+      toast.error(t('jobs.submitFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -105,10 +129,12 @@ export default function JobsPage() {
   return (
     <div data-glass-page className="min-h-screen bg-black text-white relative overflow-hidden">
       <SEOHead
-        title="Careers at DeHub — Open Roles in Web3 Social Media"
-        description="Join the DeHub team — open positions in business development, marketing and more."
+        title={t('jobs.seoTitle')}
+        description={t('jobs.seoDescription')}
         url="https://dehub.io/jobs"
         jsonLd={{
+          // Structured data describes the postings to crawlers, which are
+          // served English — it deliberately stays untranslated.
           '@context': 'https://schema.org',
           '@graph': [
             {
@@ -169,17 +195,18 @@ export default function JobsPage() {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div className="text-center sm:text-left flex-1">
-            <h1 className="text-2xl font-bold">Careers at DeHub</h1>
-            <p className="text-zinc-500 text-sm">Join the team building the future of decentralised social media</p>
+            <h1 className="text-2xl font-bold">{t('jobs.heading')}</h1>
+            <p className="text-zinc-500 text-sm">{t('jobs.subheading')}</p>
           </div>
         </div>
 
         {/* Intro section */}
         <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/5 rounded-2xl p-6 mb-8">
           <p className="text-zinc-300 text-sm leading-relaxed">
-            We're looking for passionate individuals who want to be part of the next wave of social media — 
-            one that puts creators and communities first. All roles are <span className="text-white font-medium">fully remote</span> with 
-            <span className="text-white font-medium"> flexible hours</span>, giving you the freedom to work from anywhere in the world.
+            <Trans
+              i18nKey="jobs.intro"
+              components={{ b: <span className="text-white font-medium" /> }}
+            />
           </p>
         </div>
 
@@ -192,62 +219,51 @@ export default function JobsPage() {
               {/* Title row */}
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div>
-                  <h2 className="text-xl font-bold text-white">Business Development Managers</h2>
-                  <p className="text-zinc-400 text-sm mt-1">Partnerships &amp; Growth</p>
+                  <h2 className="text-xl font-bold text-white">{t('jobs.bdmTitle')}</h2>
+                  <p className="text-zinc-400 text-sm mt-1">{t('jobs.bdmSubtitle')}</p>
                 </div>
                 <div className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-xs font-medium text-white shrink-0">
-                  Open
+                  {t('jobs.open')}
                 </div>
               </div>
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-5">
-                <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label="Negotiable Salary + OTE Commission" />
-                <Tag icon={<Clock className="w-3.5 h-3.5" />} label="Flexible Hours" />
-                <Tag icon={<MapPin className="w-3.5 h-3.5" />} label="Fully Remote" />
+                <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label={t('jobs.tagBdmPay')} />
+                <Tag icon={<Clock className="w-3.5 h-3.5" />} label={t('jobs.tagFlexibleHours')} />
+                <Tag icon={<MapPin className="w-3.5 h-3.5" />} label={t('jobs.tagFullyRemote')} />
               </div>
 
               {/* About the role */}
-              <Section title="About the Role">
-                <p>
-                  As one of our Business Development Managers at DeHub, you will be part of the driving force behind our partnership 
-                  strategy. Your mission is to identify, engage, and close deals with companies across both Web2 
-                  and Web3 — from gaming studios and content platforms to blockchain projects and DeFi protocols. 
-                  This is an OTE (On-Target Earnings) commission-based position: the harder you hustle, the more you earn. 
-                  The role is simple, bring on companies, projects, communities or any large profile accounts on to DeHub, and get paid. 
-                  The idea is, more awareness drives more growth to our ecosystem, which pays you more bonuses for successful campaigns. 
-                  It's a infinite loop of growth with uncapped earning potential. Bringing advertisers to the platform unlocks additional bonuses and an industry-leading commission structure — the more value you drive, the more you earn. Even those without experience are invited to apply, if the attitude is right for the role.
-                </p>
+              <Section title={t('jobs.aboutTheRole')}>
+                <p>{t('jobs.bdmAbout')}</p>
               </Section>
 
               {/* Responsibilities */}
-              <Section title="Key Responsibilities">
+              <Section title={t('jobs.keyResponsibilities')}>
                 <ul className="space-y-2.5">
-                  <BulletItem icon={<Handshake className="w-4 h-4" />} text="Identify and secure strategic partnerships with Web2 and Web3 companies that align with DeHub's mission" />
-                  <BulletItem icon={<Target className="w-4 h-4" />} text="Build and manage a pipeline of prospective partners, sponsors, and integration opportunities" />
-                  <BulletItem icon={<Globe className="w-4 h-4" />} text="Represent DeHub at industry events, conferences, and virtual summits" />
-                  <BulletItem icon={<TrendingUp className="w-4 h-4" />} text="Negotiate partnership terms, revenue-sharing models, and co-marketing agreements" />
-                  <BulletItem icon={<Sparkles className="w-4 h-4" />} text="Collaborate with the product and marketing teams to develop joint campaigns and integrations" />
+                  {BDM_RESPONSIBILITIES.map((r) => (
+                    <BulletItem key={r.key} icon={r.icon} text={t(`jobs.${r.key}`)} />
+                  ))}
                 </ul>
               </Section>
 
               {/* What we're looking for */}
-              <Section title="What We're Looking For">
+              <Section title={t('jobs.whatWereLookingFor')}>
                 <ul className="space-y-2.5">
-                  <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Proven experience in business development, partnerships, or sales within tech, gaming, or Web3" />
-                  <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Strong existing network in the crypto/Web3 or creator economy space is a huge plus" />
-                  <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Excellent communication and negotiation skills — you can close deals and build lasting relationships" />
-                  <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Self-motivated and comfortable working autonomously in a remote-first environment" />
-                  <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Genuine interest in decentralised social media, NFTs, or blockchain technology" />
+                  {BDM_LOOKING_FOR.map((k) => (
+                    <BulletItem key={k} icon={<CheckCircle2 className="w-4 h-4" />} text={t(`jobs.${k}`)} />
+                  ))}
                 </ul>
               </Section>
 
               {/* Compensation */}
-              <Section title="Compensation">
+              <Section title={t('jobs.compensation')}>
                 <p>
-                  This role offers a <span className="text-white font-medium">negotiable base salary</span> plus 
-                  an <span className="text-white font-medium">uncapped OTE commission structure</span> tied directly 
-                  to the partnerships you bring in. Top performers have unlimited earning potential.
+                  <Trans
+                    i18nKey="jobs.bdmCompensation"
+                    components={{ b: <span className="text-white font-medium" /> }}
+                  />
                 </p>
               </Section>
 
@@ -259,12 +275,12 @@ export default function JobsPage() {
                 {bdmFormOpen ? (
                   <>
                     <ChevronUp className="w-4 h-4 mr-2" />
-                    Close Application
+                    {t('jobs.closeApplication')}
                   </>
                 ) : (
                   <>
                     <Briefcase className="w-4 h-4 mr-2" />
-                    Apply as BDM
+                    {t('jobs.applyAsBdm')}
                   </>
                 )}
               </Button>
@@ -273,13 +289,13 @@ export default function JobsPage() {
             {/* ─── BDM Application Form ─── */}
             {bdmFormOpen && (
               <form onSubmit={handleBDMSubmit} className="border-t border-white/10 p-6 space-y-5">
-                <h3 className="text-white font-semibold text-sm mb-1">Your Application</h3>
+                <h3 className="text-white font-semibold text-sm mb-1">{t('jobs.yourApplication')}</h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormField label="Full Name" required>
+                  <FormField label={t('jobs.fullName')} required>
                     <Input
                       name="name"
-                      placeholder="Jane Smith"
+                      placeholder={t('jobs.fullNamePlaceholder')}
                       value={formData.name}
                       onChange={handleChange}
                       required
@@ -287,7 +303,7 @@ export default function JobsPage() {
                       className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500 text-white"
                     />
                   </FormField>
-                  <FormField label="Email" required>
+                  <FormField label={t('jobs.email')} required>
                     <Input
                       name="email"
                       type="email"
@@ -347,10 +363,10 @@ export default function JobsPage() {
                   </FormField>
                 </div>
 
-                <FormField label="Other Socials">
+                <FormField label={t('jobs.otherSocials')}>
                   <Input
                     name="other_socials"
-                    placeholder="TikTok, YouTube, Discord, etc."
+                    placeholder={t('jobs.otherSocialsPlaceholder')}
                     value={formData.other_socials}
                     onChange={handleChange}
                     maxLength={500}
@@ -358,10 +374,10 @@ export default function JobsPage() {
                   />
                 </FormField>
 
-                <FormField label="Past Experience">
+                <FormField label={t('jobs.pastExperience')}>
                   <Textarea
                     name="past_experience"
-                    placeholder="Tell us about your relevant BD, partnerships, or sales experience. Include companies, industries, and notable deals if applicable..."
+                    placeholder={t('jobs.pastExperiencePlaceholder')}
                     value={formData.past_experience}
                     onChange={handleChange}
                     maxLength={2000}
@@ -369,10 +385,10 @@ export default function JobsPage() {
                   />
                 </FormField>
 
-                <FormField label="Why should we hire you?">
+                <FormField label={t('jobs.whyHireYou')}>
                   <Textarea
                     name="why_hire_you"
-                    placeholder="What makes you the right person for this role? What unique value do you bring to DeHub?"
+                    placeholder={t('jobs.whyHireYouPlaceholder')}
                     value={formData.why_hire_you}
                     onChange={handleChange}
                     maxLength={2000}
@@ -388,12 +404,12 @@ export default function JobsPage() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Submitting...
+                      {t('jobs.submitting')}
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Submit Application
+                      {t('jobs.submitApplication')}
                     </>
                   )}
                 </Button>
@@ -406,60 +422,51 @@ export default function JobsPage() {
             {/* Title row */}
             <div className="flex items-start justify-between gap-4 mb-2">
               <div>
-                <h2 className="text-xl font-bold text-white">Brand Ambassador</h2>
-                <p className="text-zinc-400 text-sm mt-1">Community &amp; Evangelism</p>
+                <h2 className="text-xl font-bold text-white">{t('jobs.ambassadorTitle')}</h2>
+                <p className="text-zinc-400 text-sm mt-1">{t('jobs.ambassadorSubtitle')}</p>
               </div>
               <div className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-xs font-medium text-white shrink-0">
-                Open
+                {t('jobs.open')}
               </div>
             </div>
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mb-5">
-              <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label="Negotiable Monthly Salary" />
-              <Tag icon={<Clock className="w-3.5 h-3.5" />} label="Flexible Hours" />
-              <Tag icon={<MapPin className="w-3.5 h-3.5" />} label="Fully Remote" />
+              <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label={t('jobs.tagAmbassadorPay')} />
+              <Tag icon={<Clock className="w-3.5 h-3.5" />} label={t('jobs.tagFlexibleHours')} />
+              <Tag icon={<MapPin className="w-3.5 h-3.5" />} label={t('jobs.tagFullyRemote')} />
             </div>
 
             {/* About the role */}
-            <Section title="About the Role">
-              <p>
-                As a DeHub Brand Ambassador you are the face and voice of the platform in your community. 
-                Your job is to spread the word about DeHub across every channel you touch — social media, 
-                IRL meetups, gaming events, university campuses, and beyond. This is a paid monthly salary role, 
-                not commission-based; you'll earn a consistent income while growing alongside the platform.
-              </p>
+            <Section title={t('jobs.aboutTheRole')}>
+              <p>{t('jobs.ambassadorAbout')}</p>
             </Section>
 
             {/* Responsibilities */}
-            <Section title="Key Responsibilities">
+            <Section title={t('jobs.keyResponsibilities')}>
               <ul className="space-y-2.5">
-                <BulletItem icon={<Megaphone className="w-4 h-4" />} text="Create and share authentic content about DeHub across your personal social channels (X, TikTok, Instagram, YouTube, etc.)" />
-                <BulletItem icon={<Heart className="w-4 h-4" />} text="Actively engage with the DeHub community on the app — post, comment, and interact with other users" />
-                <BulletItem icon={<Globe className="w-4 h-4" />} text="Attend and represent DeHub at real-life events, meetups, and conferences in your area" />
-                <BulletItem icon={<Users className="w-4 h-4" />} text="Onboard new users and creators to the platform through your personal network" />
-                <BulletItem icon={<Sparkles className="w-4 h-4" />} text="Provide feedback and ideas from the community to help shape the product roadmap" />
+                {AMBASSADOR_RESPONSIBILITIES.map((r) => (
+                  <BulletItem key={r.key} icon={r.icon} text={t(`jobs.${r.key}`)} />
+                ))}
               </ul>
             </Section>
 
             {/* What we're looking for */}
-            <Section title="What We're Looking For">
+            <Section title={t('jobs.whatWereLookingFor')}>
               <ul className="space-y-2.5">
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Active social media presence with genuine engagement (follower count matters less than authenticity)" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Passion for Web3, crypto, gaming, or creator culture" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Strong communication skills and ability to explain complex concepts simply" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Self-starter who can plan and execute campaigns independently" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Previous ambassador, influencer, or community management experience is a bonus" />
+                {AMBASSADOR_LOOKING_FOR.map((k) => (
+                  <BulletItem key={k} icon={<CheckCircle2 className="w-4 h-4" />} text={t(`jobs.${k}`)} />
+                ))}
               </ul>
             </Section>
 
             {/* Compensation */}
-            <Section title="Compensation">
+            <Section title={t('jobs.compensation')}>
               <p>
-                Brand Ambassadors receive a <span className="text-white font-medium">negotiable monthly salary</span> paid 
-                consistently. Additional bonuses may be awarded based on campaign performance, user sign-ups, 
-                and community growth milestones. You'll also receive exclusive DeHub merch, early feature access, 
-                and token allocations as the ecosystem grows.
+                <Trans
+                  i18nKey="jobs.ambassadorCompensation"
+                  components={{ b: <span className="text-white font-medium" /> }}
+                />
               </p>
             </Section>
 
@@ -468,7 +475,7 @@ export default function JobsPage() {
               className="w-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white font-semibold rounded-xl h-11 transition-all mt-2"
             >
               <Users className="w-4 h-4 mr-2" />
-              Apply as Brand Ambassador
+              {t('jobs.applyAsAmbassador')}
               <ExternalLink className="w-3.5 h-3.5 ml-2 opacity-50" />
             </Button>
           </div>
@@ -477,11 +484,17 @@ export default function JobsPage() {
         {/* Footer */}
         <div className="mt-10 text-center space-y-2">
           <p className="text-zinc-500 text-xs">
-            Don't see a role that fits? Reach out to us on{' '}
-            <a href="mailto:dev@dehub.io" className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors">
-              dev@dehub.io
-            </a>{' '}
-            — we're always looking for talented people.
+            <Trans
+              i18nKey="jobs.noRoleFits"
+              components={{
+                mail: (
+                  <a
+                    href="mailto:dev@dehub.io"
+                    className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors"
+                  />
+                ),
+              }}
+            />
           </p>
         </div>
       </div>

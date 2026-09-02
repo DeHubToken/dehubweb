@@ -43,6 +43,7 @@
     "connectAi": "Pripojiť AI"
   },
   "feed": {
+    "viewProfile": "Zobraziť profil používateľa {{name}}",
     "home": "Domov",
     "videos": "Videá",
     "images": "Obrázky",
@@ -449,6 +450,8 @@
     "stores": "Obchody"
   },
   "messages": {
+    "encrypted": "Šifrované end-to-end",
+    "cannotDecrypt": "Šifrovaná správa — na tomto zariadení sa nedá otvoriť",
     "title": "Správy",
     "search": "Hľadať správy",
     "newMessage": "Nová správa",
@@ -1959,5 +1962,25 @@
     "stakeDhb": "Vlož DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} sa odomyká na úrovni {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Vzhľady kamery",
+    "title": "Vzhľad",
+    "hint": "Použije sa skôr, než video opustí toto zariadenie — diváci vidia presne to, čo vidíte vy.",
+    "backgroundBlur": "Rozmazať pozadie",
+    "on": "Zapnuté",
+    "off": "Vypnuté",
+    "none": "Žiadny",
+    "soft": "Jemný",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Teplý",
+    "cool": "Studený",
+    "vivid": "Živý",
+    "dream": "Sen",
+    "vhs": "VHS",
+    "neon": "Neón",
+    "blur": "Rozmazanie",
+    "pixelate": "Pixelizácia"
   }
 }

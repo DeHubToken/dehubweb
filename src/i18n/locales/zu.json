@@ -43,6 +43,7 @@
     "connectAi": "Xhuma i-AI"
   },
   "feed": {
+    "viewProfile": "Buka iphrofayili ka- {{name}}",
     "home": "Ekhaya",
     "videos": "Vidiyo",
     "images": "Zithombe",
@@ -943,6 +944,8 @@
     "loginRequired": "Ukungena kuyadingeka"
   },
   "messages": {
+    "encrypted": "Kubethelwe kusukela ekuqaleni kuya ekugcineni",
+    "cannotDecrypt": "Umlayezo obethelwe — awukwazi ukuvulwa kule divayisi",
     "title": "Layezo",
     "searchConversations": "Sesha izingxoxo...",
     "failedToLoad": "Kuhlulekile ukulayisha izingxoxo",
@@ -1816,5 +1819,25 @@
     "stakeDhb": "Faka i-DHB",
     "title": "Amandla",
     "unlocksAt": "I-{{power}} ivulwa ku-{{tier}}"
+  },
+  "videoLooks": {
+    "button": "Ukubukeka kwekhamera",
+    "title": "Ukubukeka",
+    "hint": "Kusetshenziswa ngaphambi kokuba ividiyo yakho ishiye le divayisi — ababukeli babona ncamashi lokho okubonayo lapha.",
+    "backgroundBlur": "Fifiyeza ingemuva lami",
+    "on": "Vuliwe",
+    "off": "Valiwe",
+    "none": "Lutho",
+    "soft": "Thambile",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Fudumele",
+    "cool": "Bandayo",
+    "vivid": "Gqamile",
+    "dream": "Iphupho",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Ukufiphala",
+    "pixelate": "Iphikseli"
   }
 }

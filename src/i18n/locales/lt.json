@@ -43,6 +43,7 @@
     "connectAi": "Prijungti DI"
   },
   "feed": {
+    "viewProfile": "Peržiūrėti profilį, kurį sukūrė {{name}}",
     "home": "Pradžia",
     "videos": "Vaizdo įrašai",
     "images": "Nuotraukos",
@@ -942,6 +943,8 @@
     "loginRequired": "Reikia prisijungti"
   },
   "messages": {
+    "encrypted": "Užšifruota ištisai",
+    "cannotDecrypt": "Užšifruota žinutė — šiame įrenginyje jos atidaryti negalima",
     "title": "Žinutės",
     "searchConversations": "Ieškoti pokalbių...",
     "failedToLoad": "Nepavyko įkelti pokalbių",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "Įnešti DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} atsirakina pasiekus {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kameros stiliai",
+    "title": "Stilius",
+    "hint": "Pritaikoma prieš vaizdo įrašui paliekant šį įrenginį — žiūrovai mato būtent tai, ką matote jūs.",
+    "backgroundBlur": "Suliet mano foną",
+    "on": "Įjungta",
+    "off": "Išjungta",
+    "none": "Nėra",
+    "soft": "Švelnus",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Šiltas",
+    "cool": "Šaltas",
+    "vivid": "Ryškus",
+    "dream": "Sapnas",
+    "vhs": "VHS",
+    "neon": "Neonas",
+    "blur": "Suliejimas",
+    "pixelate": "Pikseliai"
   }
 }

@@ -15,6 +15,8 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { AlertTriangle, ArrowRight, Loader2, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +33,7 @@ import {
 import type { MyUsernameListing, UsernameSale } from '@/lib/api/dehub/username-market';
 
 export function SellTab() {
+  const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
   const { data: config } = useUsernameMarketConfig();
   const { data: mine, isLoading } = useMyUsernameMarket();
@@ -55,8 +58,8 @@ export function SellTab() {
   if (!isAuthenticated) {
     return (
       <div className="text-center py-12 space-y-3">
-        <p className="text-sm text-zinc-400">Sign in to put your handle on the market.</p>
-        <Button onClick={() => openLoginModal()}>Sign in</Button>
+        <p className="text-sm text-zinc-400">{t('usernames.signInToSell')}</p>
+        <Button onClick={() => openLoginModal()}>{t('usernames.signIn')}</Button>
       </div>
     );
   }
@@ -68,8 +71,10 @@ export function SellTab() {
   if (!mine?.currentUsername) {
     return (
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-300">
-        Set a username on your profile before you can sell one.{' '}
-        <a href="/app/settings" className="underline">Settings → Profile</a>
+        <Trans
+          i18nKey="usernames.setUsernameFirst"
+          components={{ settings: <a href="/app/settings" className="underline" /> }}
+        />
       </div>
     );
   }
@@ -95,14 +100,14 @@ export function SellTab() {
       {/* The listing form, which doubles as the editor for a live listing. */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-4">
         <div>
-          <p className="text-xs text-zinc-500">You are selling</p>
+          <p className="text-xs text-zinc-500">{t('usernames.youAreSelling')}</p>
           <p className="text-xl font-bold text-white break-all">
             <span className="text-zinc-500">@</span>{mine.currentUsername}
           </p>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">Asking price in DHB</Label>
+          <Label className="text-xs text-zinc-400">{t('usernames.askingPriceDhb')}</Label>
           <div className="relative">
             <img src={dehubCoin} alt="" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
             <Input
@@ -115,13 +120,18 @@ export function SellTab() {
           </div>
           <p className="text-[11px] text-zinc-500">
             {priceValid && config
-              ? `≈ $${(priceNumber * config.dhbUsdPeg).toLocaleString(undefined, { maximumFractionDigits: 2 })}. The buyer pays you directly — DeHub takes no cut.`
-              : `Between ${(config?.minPriceDhb ?? 1000).toLocaleString()} and ${(config?.maxPriceDhb ?? 0).toLocaleString()} DHB.`}
+              ? t('usernames.priceApprox', {
+                  usd: (priceNumber * config.dhbUsdPeg).toLocaleString(undefined, { maximumFractionDigits: 2 }),
+                })
+              : t('usernames.priceRange', {
+                  min: (config?.minPriceDhb ?? 1000).toLocaleString(),
+                  max: (config?.maxPriceDhb ?? 0).toLocaleString(),
+                })}
           </p>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">Your new handle when it sells</Label>
+          <Label className="text-xs text-zinc-400">{t('usernames.newHandleWhenSold')}</Label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">@</span>
             <Input
@@ -136,19 +146,18 @@ export function SellTab() {
           </div>
           <p className="text-[11px] text-zinc-500 flex items-start gap-1.5">
             <ArrowRight className="w-3 h-3 shrink-0 mt-0.5" />
-            You become @{replacement || '…'} the moment somebody buys. If that name has been taken by then, a
-            numbered variant is used and you are told which.
+            {t('usernames.youBecomeHandle', { handle: replacement || '…' })}
           </p>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">Pitch (optional)</Label>
+          <Label className="text-xs text-zinc-400">{t('usernames.pitchOptional')}</Label>
           <Textarea
             value={description}
             onChange={e => setDescription(e.target.value)}
             maxLength={config?.maxDescriptionLength ?? 280}
             rows={2}
-            placeholder="Original 2021 handle, clean history…"
+            placeholder={t('usernames.pitchPlaceholder')}
             className="bg-black/60 border-white/10 rounded-xl text-white resize-none"
           />
         </div>
@@ -156,15 +165,14 @@ export function SellTab() {
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="text-[11px] text-amber-100">
-            A sale is final and instant. Your posts, followers and wallet stay with you — only the handle
-            moves, and the buyer's old one is released.
+            {t('usernames.saleFinalWarning')}
           </p>
         </div>
 
         <div className="flex gap-2">
           <Button className="flex-1" disabled={!canSubmit} onClick={submit}>
             {createListing.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {active ? 'Update listing' : 'List for sale'}
+            {t(active ? 'usernames.updateListing' : 'usernames.listForSale')}
           </Button>
           {active && (
             <Button
@@ -172,7 +180,7 @@ export function SellTab() {
               size="icon"
               disabled={cancelListing.isPending}
               onClick={() => cancelListing.mutate(active.id)}
-              title="Withdraw listing"
+              title={t('usernames.withdrawListing')}
             >
               <Trash2 className="w-4 h-4" />
             </Button>
@@ -182,15 +190,17 @@ export function SellTab() {
 
       {active && !active.live && (
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
-          This listing is for <span className="font-semibold">@{active.username}</span>, but you are now
-          @{mine.currentUsername}. It will not sell until you re-list under your current handle — updating
-          above does that.
+          <Trans
+            i18nKey="usernames.staleListingWarning"
+            values={{ listed: active.username, current: mine.currentUsername }}
+            components={{ handle: <span className="font-semibold" /> }}
+          />
         </div>
       )}
 
       {(mine.sold.length > 0 || mine.bought.length > 0 || history.length > 0) && (
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-white">History</h2>
+          <h2 className="text-sm font-semibold text-white">{t('usernames.history')}</h2>
           {mine.sold.map(sale => <SaleRow key={sale.id} sale={sale} kind="sold" />)}
           {mine.bought.map(sale => <SaleRow key={sale.id} sale={sale} kind="bought" />)}
           {history.map(listing => <HistoryRow key={listing.id} listing={listing} />)}
@@ -201,13 +211,14 @@ export function SellTab() {
 }
 
 function SaleRow({ sale, kind }: { sale: UsernameSale; kind: 'sold' | 'bought' }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-between gap-3">
       <div className="min-w-0">
         <p className="text-sm text-white break-all">
           <span className="text-zinc-500">@</span>{sale.username}
         </p>
-        <p className="text-[11px] text-zinc-500">{kind === 'sold' ? 'Sold' : 'Bought'}</p>
+        <p className="text-[11px] text-zinc-500">{t(kind === 'sold' ? 'usernames.sold' : 'usernames.bought')}</p>
       </div>
       <p className="text-sm font-semibold text-white flex items-center gap-1.5 shrink-0">
         <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
@@ -218,6 +229,7 @@ function SaleRow({ sale, kind }: { sale: UsernameSale; kind: 'sold' | 'bought' }
 }
 
 function HistoryRow({ listing }: { listing: MyUsernameListing }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-between gap-3">
       <div className="min-w-0">
@@ -225,10 +237,10 @@ function HistoryRow({ listing }: { listing: MyUsernameListing }) {
           <span className="text-zinc-500">@</span>{listing.username}
         </p>
         <p className="text-[11px] text-zinc-500">
-          {listing.status === 'cancelled' ? listing.cancelReason || 'Withdrawn' : 'Sold'}
+          {listing.status === 'cancelled' ? listing.cancelReason || t('usernames.withdrawn') : t('usernames.sold')}
         </p>
       </div>
-      <p className="text-xs text-zinc-500 shrink-0">{listing.priceDhb.toLocaleString()} DHB</p>
+      <p className="text-xs text-zinc-500 shrink-0">{listing.priceDhb.toLocaleString()} <DhbCoin /></p>
     </div>
   );
 }

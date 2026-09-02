@@ -87,6 +87,7 @@ import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
+import { resolveSigningAccount, requestAccountPicker, isWrongAccountError } from '@/lib/wallet-accounts';
 import { getRunningBuildId, isRunningStaleBuild } from '@/lib/version-check';
 import {
   initProfileTracking,
@@ -117,6 +118,39 @@ const authLogger = createLogger('Auth');
  * asked for. The distinction has to reach both the copy and the log row.
  */
 type WagmiAuthTrigger = 'user' | 'background';
+
+/**
+ * The one-per-pairing memory behind the "wallet switched accounts" notice.
+ *
+ * The toast id only dedupes within a page: a wallet left on the other account
+ * mismatches again on every reload, so the same notice fired on every single
+ * refresh. It is information, not an error — worth saying once, noise the
+ * second time. Keyed on session address -> incoming address, so a different
+ * switch still gets its own notice, and cleared when the pairing is resolved
+ * (the account gets added as a profile, or the session changes hands).
+ */
+const WALLET_SWITCH_NOTICE_KEY = 'dehub_wallet_switch_notified';
+
+function walletSwitchNoticeAlreadyShown(sessionAddress: string, incoming: string): boolean {
+  const pair = `${sessionAddress}->${incoming}`;
+  try {
+    if (localStorage.getItem(WALLET_SWITCH_NOTICE_KEY) === pair) return true;
+    localStorage.setItem(WALLET_SWITCH_NOTICE_KEY, pair);
+  } catch {
+    // Storage denied (private mode, blocked cookies). Falling back to the old
+    // every-refresh behaviour beats swallowing the notice entirely.
+  }
+  return false;
+}
+
+function clearWalletSwitchNotice(): void {
+  try {
+    localStorage.removeItem(WALLET_SWITCH_NOTICE_KEY);
+  } catch {
+    // Nothing to do — the key is replaced anyway the next time a different
+    // pairing shows up.
+  }
+}
 
 // Set before a Supabase OAuth redirect / email OTP so that, when the session
 // lands (possibly after a full page reload), we know to resume the wallet
@@ -436,6 +470,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // at all, so it re-asked the moment the state settled. Held until the next
   // deliberate tap, so a refusal ends the attempt instead of restarting it.
   const rejectedSignatureAddressRef = useRef<string | null>(null);
+  /**
+   * The address a wagmi login just landed on, and when.
+   *
+   * The session address and wagmi's own copy are not written by the same thing.
+   * completeDeHubAuthWagmi signs as the account the WALLET reports holding
+   * (#873 — the remembered one can be an account the extension will not sign
+   * with), while wagmi's `address` only catches up when the provider emits
+   * `accountsChanged`, a tick or more later. In that window the two disagree
+   * for a reason that has nothing to do with the user, and CASE B below reads
+   * any disagreement as "the extension switched accounts underneath a live
+   * session" — so a perfectly good login could end in the switched-accounts
+   * toast, or worse, in switchToProfile carrying them back to the account they
+   * had just moved off.
+   *
+   * Cleared the moment wagmi agrees (CASE A), so the allowance only exists
+   * while the two are actually out of step.
+   */
+  const wagmiAuthSettleRef = useRef<{ address: string; at: number } | null>(null);
   // Guards double-processing of a landed Supabase session (OAuth return fires
   // both INITIAL_SESSION and SIGNED_IN).
   const supaLoginHandledRef = useRef(false);
@@ -997,6 +1049,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Resume a pending smart-wallet login when the Supabase session lands
   // (OAuth redirect return, or email OTP verified in another effect tick).
+  // Held in refs so the subscription below can depend on nothing.
+  //
+  // These three are rebuilt whenever isConnecting or walletAddress changes,
+  // which is constantly during a login. With them in the dependency array the
+  // effect tore the listener down and made a new one mid-flow — and supabase-js
+  // replays INITIAL_SESSION to every new subscriber. So while a login was
+  // pending, each re-subscribe re-entered the resume: a second pass over the
+  // wallet lookup and exchange, and in the worst case a third running
+  // concurrently with the real sign-in, minting two sessions and racing
+  // lockWallet against activateWalletKey.
+  const proceedRef = useRef(proceedToWalletPhase);
+  proceedRef.current = proceedToWalletPhase;
+  const openLoginModalRef = useRef(openLoginModal);
+  openLoginModalRef.current = openLoginModal;
+  const closeLoginModalRef = useRef(closeLoginModal);
+  closeLoginModalRef.current = closeLoginModal;
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session?.user) return;
@@ -1021,7 +1090,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (resumeOpenedAtBootRef.current) {
           resumeOpenedAtBootRef.current = false;
           setIsProcessingRedirect(false);
-          closeLoginModal();
+          closeLoginModalRef.current();
         }
         return;
       }
@@ -1037,18 +1106,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // wallet handoff happens inside the sheet instead of popping onto it
       // after the feed has already rendered. On a redirect return this is a
       // no-op: first paint already opened it.
-      openLoginModal();
+      openLoginModalRef.current();
       // Defer so this runs outside the auth-state callback (supabase-js
       // deadlocks if you call its own APIs synchronously inside the callback).
       setTimeout(() => {
-        proceedToWalletPhase(session.user.id).finally(() => {
+        proceedRef.current(session.user.id).finally(() => {
           setIsProcessingRedirect(false);
           supaLoginHandledRef.current = false;
         });
       }, 0);
     });
     return () => sub.subscription.unsubscribe();
-  }, [proceedToWalletPhase, openLoginModal, closeLoginModal]);
+  // Empty: everything it needs is behind a ref, so the listener is created once
+  // and lives for the provider. See the refs above.
+  }, []);
 
   // A resume expected at first paint must not hold the loader forever. If no
   // session lands within a generous window — consent abandoned, provider
@@ -1294,6 +1365,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // CASE A: Already authed with same address -> Sync state
         if (isAuthenticated && walletAddress?.toLowerCase() === wagmiAddress.toLowerCase()) {
+            // The two agree, so nothing is settling any more.
+            wagmiAuthSettleRef.current = null;
             if (connectionSource !== 'wagmi') {
               setConnectionSource('wagmi');
             }
@@ -1313,6 +1386,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               wagmiDisconnect();
               return;
             }
+            // A login that has only just landed is still settling: the session
+            // holds the account the wallet said it was on, and wagmi has not
+            // caught up yet. That is our own write racing itself, not the user
+            // touching anything, and reading it as an account switch is how a
+            // successful sign-in could end in a toast saying it had not worked
+            // — or, if the address wagmi is still holding happens to be a saved
+            // profile, in switchToProfile carrying them back to the account
+            // they had just moved off. Short, and cancelled by CASE A the
+            // instant wagmi agrees.
+            const settle = wagmiAuthSettleRef.current;
+            const WAGMI_SETTLE_MS = 8_000;
+            if (
+              settle &&
+              settle.address === walletAddress.toLowerCase() &&
+              Date.now() - settle.at < WAGMI_SETTLE_MS
+            ) {
+              return;
+            }
+
             // An explicit tap means this wallet IS the login the user asked
             // for. Fall through to CASE C, which hands the session over
             // properly (snapshot the outgoing account, wipe its keys as one
@@ -1335,6 +1427,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Both accounts are saved here, so honour the wallet's choice:
                 // switching accounts in MetaMask switches DeHub accounts, and
                 // switching back switches back. Neither session is destroyed.
+                // The pairing is resolved — this account is a profile now, so
+                // a future switch back to an unknown one deserves its notice.
+                clearWalletSwitchNotice();
                 void switchToProfileRef.current?.(saved.id);
                 return;
               }
@@ -1342,10 +1437,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               // connection rather than the session, and say what happened —
               // silently ignoring it is what made the old behaviour feel like
               // a bug either way.
-              console.log('[Auth] Wallet switched to an unknown account — keeping the current session');
+              // console.log only, until now — so the one branch people actually
+              // see a toast from was the one branch that wrote no row, and
+              // "why does this keep coming back" could not be answered from
+              // the logs at all.
+              authLogger.warn('Wallet switched to an account this device has not signed in as', {
+                sessionAddress: walletAddress.toLowerCase(),
+                incoming,
+                connectorId: wagmiConnector?.id,
+                connectorName: wagmiConnector?.name,
+                savedProfiles: listProfiles().length,
+                buildId: getRunningBuildId(),
+              });
               clearWagmiStorage();
               wagmiDisconnect();
+              // Said once per pairing. The mismatch survives a reload, so
+              // without the stored pair this fired again on every refresh for
+              // as long as the wallet stayed on the other account. The log row
+              // above is unconditional, so the frequency is still visible.
+              if (walletSwitchNoticeAlreadyShown(walletAddress.toLowerCase(), incoming)) {
+                return;
+              }
+              // Keyed, so a wallet that re-attaches and mismatches again
+              // replaces this toast instead of stacking another copy on top of
+              // it. The same notice arriving three times reads as three
+              // separate faults.
               toast('Your wallet switched accounts', {
+                id: 'wallet-switched-accounts',
                 description: 'You are still signed in here. Add that wallet as another profile to use it.',
                 action: {
                   label: 'Add profile',
@@ -1382,6 +1500,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // connector plus a surviving token is enough. That is a signature
           // request the user did not ask for, so it must not be reported as one.
           await completeDeHubAuthWagmi(wagmiAddress, hasUserIntent ? 'user' : 'background');
+          // A signed-in address is no longer an unexplained switch.
+          clearWalletSwitchNotice();
           setWagmiAuthIntent(false);
           closeLoginModal();
         } catch (err) {
@@ -1495,11 +1615,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const completeDeHubAuthWagmi = async (address: string, trigger: WagmiAuthTrigger = 'user') => {
     const timestamp = Math.floor(Date.now() / 1000);
-    const authAddress = address.toLowerCase();
     const connectorId = wagmiConnector?.id;
     const connectorName = wagmiConnector?.name;
-
-    const message = buildDeHubLoginMessage(authAddress, timestamp);
 
     toast.info(
       trigger === 'user'
@@ -1521,6 +1638,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await new Promise(r => setTimeout(r, POST_CONNECT_SIGN_GAP_MS - sinceConnect));
     }
 
+    // Ask the wallet who it is actually holding rather than trusting what
+    // wagmi wrote down. The remembered address outlives the permission behind
+    // it — switch accounts in MetaMask, or approve a different wallet, and the
+    // signature request goes to an account the extension will not sign with.
+    // It answers -32602 "must provide an Ethereum address", which reads as
+    // neither a rejection nor a timeout, so none of the branches below fitted
+    // it and the only escape was removing the site from inside the extension.
+    // See lib/wallet-accounts.ts.
+    //
+    // Costs no prompt (eth_accounts reads what was already granted) and sits
+    // after the popup gap above, so an account changed in the connect popup
+    // itself is the one this reads.
+    const resolved = await resolveSigningAccount(wagmiConnector, address);
+    let authAddress = resolved.address;
+    if (resolved.corrected) {
+      authLogger.warn('Wallet is holding a different account than the one connected', {
+        remembered: address.toLowerCase(),
+        signingWith: authAddress,
+        liveAccounts: resolved.live,
+        connectorId,
+        connectorName,
+        buildId: getRunningBuildId(),
+      });
+    }
+
+    // Rebuilt whenever the account changes — the address is inside the signed
+    // text, so a message built for the old one proves nothing about the new.
+    let message = buildDeHubLoginMessage(authAddress, timestamp);
+
     // Time-box the signature. When the request never settles (see the gap
     // wait above — the popup-race case queues it invisibly), no catch and no
     // finally ever runs, which is what used to leave isConnecting latched and
@@ -1530,17 +1676,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const SIGN_TIMEOUT_MS = 60_000;
     let signature: string;
     let signTimeoutTimer: ReturnType<typeof setTimeout> | undefined;
-    try {
+
+    const requestSignature = (): Promise<string> => {
       const signPromise = signMessageAsync({
         message,
-        account: address as `0x${string}`,
+        account: authAddress as `0x${string}`,
       });
       // If the timeout wins the race this promise is orphaned, and a
       // dismissal arriving after that must not surface as an unhandled
       // rejection. (A signature arriving late is dropped the same way — the
       // flow has already told the user to retry.)
       signPromise.catch(() => {});
-      signature = await Promise.race([
+      return Promise.race([
         signPromise,
         new Promise<never>((_, reject) => {
           signTimeoutTimer = setTimeout(
@@ -1549,6 +1696,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           );
         }),
       ]);
+    };
+
+    try {
+      try {
+        signature = await requestSignature();
+      } catch (firstSignError: any) {
+        // The wallet refused the account rather than the request. Sending them
+        // to the extension to delete the site — the only previous way out —
+        // costs the login; its own account picker is one prompt and stays
+        // inside the sheet.
+        if (!isWrongAccountError(firstSignError)) throw firstSignError;
+
+        clearTimeout(signTimeoutTimer);
+        authLogger.warn('Wallet refused the connected account — opening its account picker', {
+          refusedAddress: authAddress,
+          connectorId,
+          connectorName,
+          buildId: getRunningBuildId(),
+          ...describeWalletError(firstSignError),
+        });
+        toast.info('Your wallet is on a different account', {
+          description: 'Choose the account you want to sign in with.',
+        });
+
+        const chosen = await requestAccountPicker(wagmiConnector);
+        // Dismissed, or a wallet with no picker to open. The original refusal
+        // is the honest answer and the handler below already words it.
+        if (!chosen) throw firstSignError;
+
+        authAddress = chosen;
+        message = buildDeHubLoginMessage(authAddress, timestamp);
+        signature = await requestSignature();
+      }
     } catch (signError: any) {
       const rejected = isUserRejection(signError);
       const alreadyPending = isRequestAlreadyPending(signError);
@@ -1723,6 +1903,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const normalizedUser = normalizeUser(authResponse.user, authAddress);
+
+    // From here the session's address is `authAddress`, which is whatever the
+    // wallet said it was holding — not necessarily what wagmi is still
+    // reporting. Stamped so the wagmi effect can tell that gap apart from an
+    // account switch; see wagmiAuthSettleRef.
+    wagmiAuthSettleRef.current = { address: authAddress, at: Date.now() };
 
     localStorage.setItem('dehub_wallet', authAddress);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
@@ -2552,6 +2738,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     writeConnectionSource('wagmi');
 
     try {
+      // Either one of the three curated buttons, or the connector id of a
+      // wallet the machine announced over EIP-6963 — connectorMatchesWallet
+      // falls back to an exact id match for those.
       let connector = connectors.find(c => connectorMatchesWallet(c, wallet));
 
       if (!connector && isWalletInAppBrowser()) {
@@ -2610,7 +2799,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error('Connection rejected');
       } else {
         const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet' };
-        toast.error(`Failed to connect to ${names[wallet] || wallet}. Please try again.`);
+        const discovered = connectors.find(c => c.id === wallet)?.name;
+        toast.error(`Failed to connect to ${names[wallet] || discovered || wallet}. Please try again.`);
       }
       return false;
     }

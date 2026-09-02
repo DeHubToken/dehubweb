@@ -13,6 +13,7 @@
  * open would eventually blank every canvas on the page.
  */
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -44,7 +45,10 @@ interface Model3dViewerProps {
 export function Model3dViewer({ url, className, autoRotate = true }: Model3dViewerProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
+  // An i18n key, not a sentence: the scene effect sets this and must not
+  // re-run the whole three.js setup just because the language changed.
+  const [errorKey, setErrorKey] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   /** Bumped to force a full scene rebuild after the GL context is restored. */
   const [epoch, setEpoch] = useState(0);
@@ -63,7 +67,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
     if (!mount) return;
 
     setLoading(true);
-    setError(null);
+    setErrorKey(null);
     setProgress(0);
 
     let disposed = false;
@@ -80,7 +84,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
       });
     } catch (e) {
       console.error('[3d] WebGL unavailable', e);
-      setError('3D preview is not available in this browser. The model can still be downloaded.');
+      setErrorKey('creator.model3dNoWebgl');
       setLoading(false);
       return;
     }
@@ -196,7 +200,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
         model = gltf.scene;
         scene.add(model);
         if (!frameModel(model)) {
-          setError('This model came back empty — it has no geometry to display.');
+          setErrorKey('creator.model3dEmpty');
           setLoading(false);
           return;
         }
@@ -215,9 +219,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
       (err) => {
         if (disposed) return;
         console.error('[3d] Could not load mesh', err);
-        setError(
-          'Could not load this model. It may still be downloadable — try the Download button.',
-        );
+        setErrorKey('creator.model3dLoadFailed');
         setLoading(false);
       },
     );
@@ -243,7 +245,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
     // swallowed every orbit and zoom.
     const onContextLost = (e: Event) => {
       e.preventDefault();
-      setError('The 3D view lost its graphics context. Trying to recover…');
+      setErrorKey('creator.model3dContextLost');
     };
     const onContextRestored = () => setEpoch((n) => n + 1);
     renderer.domElement.addEventListener('webglcontextlost', onContextLost);
@@ -290,34 +292,34 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
     <div className={cn('relative h-full w-full', className)}>
       <div ref={mountRef} className="h-full w-full touch-none [&>canvas]:block" />
 
-      {loading && !error && (
+      {loading && !errorKey && (
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
           <Loader2 className="h-5 w-5 animate-spin text-white/70" />
           <p className="text-[11px] font-medium text-white/70">
-            {progress > 0 ? `Loading model ${progress}%` : 'Loading model'}
+            {progress > 0 ? t('creator.loadingModelPercent', { percent: progress }) : t('creator.loadingModel')}
           </p>
         </div>
       )}
 
-      {error && (
+      {errorKey && (
         <div className="absolute inset-0 flex items-center justify-center p-6">
-          <p className="max-w-xs text-center text-[13px] leading-relaxed text-white/60">{error}</p>
+          <p className="max-w-xs text-center text-[13px] leading-relaxed text-white/60">{t(errorKey)}</p>
         </div>
       )}
 
-      {!loading && !error && (
+      {!loading && !errorKey && (
         <>
           <button
             type="button"
             onClick={() => resetViewRef.current?.()}
-            aria-label="Reset the camera to the starting view"
-            title="Reset view"
+            aria-label={t('creator.resetCameraAria')}
+            title={t('creator.resetView')}
             className="absolute right-2 top-2 rounded-lg border border-white/15 bg-black/50 p-2 text-white/70 backdrop-blur transition hover:border-white/30 hover:bg-black/70 hover:text-white"
           >
             <RotateCcw className="h-3.5 w-3.5" />
           </button>
           <p className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-medium text-white/35">
-            Drag to orbit · scroll to zoom
+            {t('creator.dragToOrbit')}
           </p>
         </>
       )}

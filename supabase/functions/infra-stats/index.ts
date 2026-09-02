@@ -1,7 +1,13 @@
 // Read-only DigitalOcean infrastructure stats: account balance and droplet
-// costs. Called server-to-server, authenticated with the existing
-// CDN_PURGE_SERVICE_SECRET shared secret (x-infra-stats-secret header), not a
-// Supabase JWT — so verify_jwt is off in config.toml, same as cdn-purge.
+// costs. Called server-to-server, authenticated with INFRA_STATS_SERVICE_SECRET
+// (x-infra-stats-secret header), not a Supabase JWT — so verify_jwt is off in
+// config.toml, same as cdn-purge.
+//
+// Falls back to CDN_PURGE_SERVICE_SECRET while the dedicated one is unset.
+// This used to read that shared value outright, along with jarvis-tts and
+// jarvis-stt, so one leaked string reached a CDN flush, this inventory, and
+// unmetered speech synthesis and transcription. Set the dedicated secret and
+// the fallback stops mattering; drop the fallback once all four are set.
 //
 // The DO API token never leaves this function: it is not logged, echoed or
 // shaped into any response.
@@ -20,7 +26,11 @@ Deno.serve(async (req) => {
     return json(405, { ok: false, error: 'method_not_allowed' })
   }
 
-  const secret = Deno.env.get('CDN_PURGE_SERVICE_SECRET')
+  // Own secret first, shared one as a fallback until it is provisioned. See
+  // the note in cdn-purge: four unrelated functions shared one value, so a
+  // single leak reached the CDN, the DO inventory and unmetered speech.
+  const secret = Deno.env.get('INFRA_STATS_SERVICE_SECRET')
+    || Deno.env.get('CDN_PURGE_SERVICE_SECRET')
   if (!secret || req.headers.get('x-infra-stats-secret') !== secret) {
     return json(401, { ok: false, error: 'unauthorized' })
   }

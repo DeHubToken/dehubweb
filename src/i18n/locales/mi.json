@@ -43,6 +43,7 @@
     "connectAi": "Honoa te AI"
   },
   "feed": {
+    "viewProfile": "Mātakitaki i a {{name}}'s profile",
     "home": "Kāinga",
     "videos": "Ataata",
     "images": "Whakaahua",
@@ -942,6 +943,8 @@
     "loginRequired": "Me takiuru"
   },
   "messages": {
+    "encrypted": "Whakamunatia mai i tētahi pito ki tētahi",
+    "cannotDecrypt": "Karere whakamuna — kāore e taea te whakatuwhera i runga i tēnei pūrere",
     "title": "Karere",
     "searchConversations": "Rapu kōrerorero...",
     "failedToLoad": "Kāore i taea te uta kōrerorero",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "Whakatakoto DHB",
     "title": "SuperPowers",
     "unlocksAt": "Ka wātea a {{power}} i te {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Ngā āhua kāmera",
+    "title": "Āhua",
+    "hint": "Ka whakamahia i mua i te wehenga o tō ataata i tēnei pūrere — ka kite ngā kaimātakitaki i te mea tonu e kite nei koe.",
+    "backgroundBlur": "Whakapōuri i taku papamuri",
+    "on": "Kā",
+    "off": "Weto",
+    "none": "Kāore",
+    "soft": "Ngāwari",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Mahana",
+    "cool": "Makariri",
+    "vivid": "Kanapa",
+    "dream": "Moemoeā",
+    "vhs": "VHS",
+    "neon": "Neon",
+    "blur": "Pōuri",
+    "pixelate": "Pika"
   }
 }

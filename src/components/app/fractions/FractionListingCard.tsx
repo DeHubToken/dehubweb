@@ -10,6 +10,8 @@
  */
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { ImageIcon, Music, Video, Users } from 'lucide-react';
 import { cdnImage } from '@/lib/media-url';
 import { truncateAddress } from '@/lib/api/token-holders';
@@ -37,6 +39,7 @@ export const FractionListingCard = memo(function FractionListingCard({
   isMine,
   onClick,
 }: FractionListingCardProps) {
+  const { t } = useTranslation();
   const available = listing.quantity - listing.filled_quantity;
   const totalDhb = available * listing.price_per_fraction;
   const { data: prices } = useTokenPrices();
@@ -57,7 +60,7 @@ export const FractionListingCard = memo(function FractionListingCard({
         {thumbnail ? (
           <img
             src={thumbnail}
-            alt={listing.post_title || `Post #${listing.token_id}`}
+            alt={listing.post_title || t('fractions.postNumber', { id: listing.token_id })}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
@@ -71,14 +74,14 @@ export const FractionListingCard = memo(function FractionListingCard({
         </span>
         {isMine && (
           <span className="absolute top-2 right-2 text-[10px] font-semibold bg-white/90 text-black px-1.5 py-0.5 rounded">
-            Yours
+            {t('fractions.yours')}
           </span>
         )}
       </div>
 
       <div className="p-3 space-y-1">
         <h3 className="text-sm font-medium text-white truncate">
-          {listing.post_title || `Post #${listing.token_id}`}
+          {listing.post_title || t('fractions.postNumber', { id: listing.token_id })}
         </h3>
         <p className="text-xs text-zinc-400 truncate flex items-center gap-1">
           <Users className="w-3 h-3 shrink-0" />
@@ -88,10 +91,10 @@ export const FractionListingCard = memo(function FractionListingCard({
         <p className="text-sm font-semibold text-white flex items-center gap-1 pt-0.5">
           <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
           {listing.price_per_fraction.toLocaleString(undefined, { maximumFractionDigits: 4 })}
-          <span className="text-[10px] font-normal text-zinc-500">/ fraction</span>
+          <span className="text-[10px] font-normal text-zinc-500">{t('fractions.perFractionShort')}</span>
         </p>
         <p className="text-[10px] text-zinc-500">
-          {totalDhb.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB for {sharePct.toFixed(1)}% of the post
+          {totalDhb.toLocaleString(undefined, { maximumFractionDigits: 2 })} <DhbCoin /> {t('fractions.forShareOfPost', { pct: sharePct.toFixed(1) })}
           {dhbUsd > 0 && ` · $${(totalDhb * dhbUsd).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
         </p>
 

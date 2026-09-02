@@ -757,7 +757,7 @@ export default function PostInfoPage() {
               <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
                 <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
                 <div>
-                  <p className="text-lg font-bold text-white">{postTipTotal.toLocaleString()} DHB</p>
+                  <p className="text-lg font-bold text-white">{postTipTotal.toLocaleString()}</p>
                   <p className="text-xs text-white/60">{t('postInfo.tipsOnPost', 'Tips on this Post')}</p>
                 </div>
               </div>
@@ -766,7 +766,7 @@ export default function PostInfoPage() {
               <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
                 <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
                 <div>
-                  <p className="text-lg font-bold text-white">{totalTips.toLocaleString()} DHB</p>
+                  <p className="text-lg font-bold text-white">{totalTips.toLocaleString()}</p>
                   <p className="text-xs text-white/60">{t('postInfo.totalTipsCreator')}</p>
                 </div>
               </div>
@@ -865,6 +865,7 @@ export default function PostInfoPage() {
           currentDescription={nftInfo.description || ''}
           currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}
           currentContentRating={nftInfo.contentRating}
+          currentShopLinks={(nftInfo as any).shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, nftInfo.tokenId, edited);
           }}

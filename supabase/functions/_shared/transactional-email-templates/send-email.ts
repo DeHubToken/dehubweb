@@ -2,6 +2,8 @@ import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { EmailAPIError, sendLovableEmail } from 'npm:@lovable.dev/email-js@0.1.0'
 import { TEMPLATES } from './registry.ts'
+import { getOrCreateUnsubscribeToken } from '../unsubscribe-token.ts'
+import { serviceClient } from '../auth.ts'
 
 // Server-only: reads LOVABLE_API_KEY. Import from edge functions only — never
 // expose sending to the browser.
@@ -66,6 +68,18 @@ export async function sendTemplateEmail(
       ? template.subject(templateData)
       : template.subject
 
+  // Every send from here is transactional, which is exactly the category the
+  // send API refuses without an unsubscribe token — 400 missing_unsubscribe.
+  // Auth-hook sends are the exemption and they do not come through this
+  // function; they carry a run_id instead. So all three templates registered
+  // here need one: the email sign-in code, the admin invite and the support
+  // ticket, which are the same three that were failing before #612 added this
+  // and started failing again when the 2026-09-01 rewrite removed it.
+  //
+  // A null token is not fatal here. Passing undefined lets the API answer, and
+  // its 400 is a clearer signal than a failure this function invented.
+  const unsubscribeToken = await getOrCreateUnsubscribeToken(serviceClient(), recipient)
+
   try {
     await sendLovableEmail(
       {
@@ -79,6 +93,7 @@ export async function sendTemplateEmail(
         label: templateName,
         idempotency_key: options.idempotencyKey || crypto.randomUUID(),
         reply_to: options.replyTo,
+        unsubscribe_token: unsubscribeToken ?? undefined,
       },
       { apiKey, sendUrl: Deno.env.get('LOVABLE_SEND_URL') }
     )

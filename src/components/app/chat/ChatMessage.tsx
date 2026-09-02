@@ -1,5 +1,5 @@
 import { useState, useCallback, memo } from 'react';
-import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, X } from 'lucide-react';
+import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, Pencil, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -70,6 +70,8 @@ export interface Message {
   audioDuration?: number;
   reactions?: ReactionData;
   replyTo?: ReplyToData;
+  /** Rewritten after it was posted — labelled so nobody is quoted on words they replaced. */
+  isEdited?: boolean;
 }
 
 interface ChatMessageProps {
@@ -80,6 +82,8 @@ interface ChatMessageProps {
   onBan?: (userId: string, userName: string) => void;
   onUnban?: (userId: string, userName: string) => void;
   onDelete?: (messageId: string) => void;
+  /** Save a rewritten body. Only offered on your own text messages. */
+  onEdit?: (messageId: string, content: string) => void;
   onReact?: (messageId: string, emoji: string) => void;
   onRemoveReaction?: (messageId: string, emoji: string) => void;
   onReply?: (message: Message) => void;
@@ -176,12 +180,33 @@ export const ChatMessage = memo(function ChatMessage({
   onBan,
   onUnban,
   onDelete,
+  onEdit,
   onReact,
   onRemoveReaction,
   onReply,
 }: ChatMessageProps) {
   const navigate = useNavigate();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState(message.content);
+
+  const isMine = !!currentUserAddress && message.userId.toLowerCase() === currentUserAddress.toLowerCase();
+  // Only the words are editable. A caption swap under an image or a voice note
+  // changes what people think they are looking at, so those are delete-only.
+  const canEdit = isMine && !!onEdit && message.type === 'text';
+  const canDelete = isMine && !!onDelete;
+
+  const startEditing = useCallback(() => {
+    setDraft(message.content);
+    setIsEditing(true);
+  }, [message.content]);
+
+  const commitEdit = useCallback(() => {
+    const next = draft.trim();
+    setIsEditing(false);
+    if (!next || next === message.content) return;
+    onEdit?.(message.id, next);
+  }, [draft, message.content, message.id, onEdit]);
   const {
     isTranslated,
     translatedText,
@@ -337,6 +362,34 @@ export const ChatMessage = memo(function ChatMessage({
               </Popover>
             )}
 
+            {/* Your own message — edit and remove, no moderator rights needed */}
+            {canEdit && !isEditing && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={startEditing}
+                    className="p-1 text-zinc-500 hover:text-white transition-colors rounded-lg hover:bg-zinc-700/50"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Edit</TooltipContent>
+              </Tooltip>
+            )}
+            {canDelete && !showActions && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => onDelete?.(message.id)}
+                    className="p-1 text-zinc-500 hover:text-red-400 transition-colors rounded-lg hover:bg-zinc-700/50"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Delete</TooltipContent>
+              </Tooltip>
+            )}
+
             {/* Mod actions */}
             {showActions && (
               <DropdownMenu>
@@ -377,7 +430,34 @@ export const ChatMessage = memo(function ChatMessage({
           </div>
         </div>
         
-        {message.type === 'text' && (
+        {message.type === 'text' && isEditing && (
+          <div className="mt-1">
+            <textarea
+              autoFocus
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  commitEdit();
+                } else if (e.key === 'Escape') {
+                  e.preventDefault();
+                  setIsEditing(false);
+                }
+              }}
+              rows={2}
+              maxLength={500}
+              className="w-full resize-none rounded-lg border border-white/15 bg-white/[0.06] px-2 py-1.5 text-sm text-white outline-none focus:border-white/30"
+            />
+            <div className="mt-1 flex items-center gap-2 text-[10px] text-zinc-500">
+              <button onClick={commitEdit} className="text-white hover:underline">Save</button>
+              <button onClick={() => setIsEditing(false)} className="hover:text-zinc-300">Cancel</button>
+              <span className="hidden sm:inline">Enter to save · Esc to cancel</span>
+            </div>
+          </div>
+        )}
+
+        {message.type === 'text' && !isEditing && (
             <div>
               {chatDisplayText && (
                 <p className="text-zinc-300 text-sm break-words whitespace-pre-wrap">
@@ -388,6 +468,7 @@ export const ChatMessage = memo(function ChatMessage({
               <AssetRefCards refs={chatAssetRefs} />
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+                {message.isEdited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
                 {!isTooShort && (
                   isTranslateLoading ? (
                     <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -422,6 +503,7 @@ export const ChatMessage = memo(function ChatMessage({
             )}
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+                {message.isEdited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
               {message.content && !isTooShort && (
                 isTranslateLoading ? (
                   <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -454,6 +536,7 @@ export const ChatMessage = memo(function ChatMessage({
             <VoiceWaveformPlayer src={message.audioUrl} />
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+                {message.isEdited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
             </div>
           </div>
         )}

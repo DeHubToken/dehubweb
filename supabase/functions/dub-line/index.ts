@@ -59,33 +59,40 @@ async function maySpeak(stageId: string, wallet: string): Promise<boolean> {
   return seat?.role === 'host' || seat?.role === 'speaker';
 }
 
-/** The host's cloned voice, or the stock one. Never taken from the request. */
-async function resolveVoiceId(stageId: string): Promise<string> {
+/**
+ * The cloned voice of the person who said this line, or the stock one.
+ *
+ * Keyed on the speaker, not on the stage's host. It used to look the host up
+ * for every line whoever spoke it, so a co-host or an invited guest had their
+ * words dubbed in the host's cloned voice — a listener in another language
+ * heard the host say things the host never said. The mark below is a personal
+ * consent switch, and one person cannot tick it on another's behalf.
+ *
+ * Never taken from the request: the wallet is the one the paid-endpoint guard
+ * authenticated, and `maySpeak` has already established it holds a seat.
+ */
+async function resolveVoiceId(speakerWallet: string): Promise<string> {
+  const wallet = (speakerWallet || '').toLowerCase();
+  if (!wallet) return FALLBACK_VOICE_ID;
+
   const admin = serviceClient();
-  const { data: stage } = await admin
-    .from('audio_spaces')
-    .select('host_wallet_address')
-    .eq('id', stageId)
-    .maybeSingle();
-  const hostWallet = (stage?.host_wallet_address || '').toLowerCase();
-  if (!hostWallet) return FALLBACK_VOICE_ID;
 
   // Only the voice explicitly MARKED for stages, never just the newest one the
   // wallet happens to own. Two things turn on that.
   //
-  // A host can hold several voices — the Studio's designer writes here too —
+  // Someone can hold several voices — the Studio's designer writes here too —
   // so "newest wins" meant a monster preset trained for a video on Tuesday
-  // became the host's voice on Wednesday's stage.
+  // became their voice on Wednesday's stage.
   //
   // And the mark is the live consent switch. "Dub me in my own voice" is a box
-  // the host can untick, and unticking has to actually stop it; if this fell
+  // that can be unticked, and unticking has to actually stop it; if this fell
   // back to any voice on the account, turning it off would change nothing.
   // No mark means the stock narrator, which is the correct default for someone
   // who never asked.
   const { data: voice } = await admin
     .from('custom_voices')
     .select('elevenlabs_voice_id')
-    .ilike('wallet_address', hostWallet)
+    .ilike('wallet_address', wallet)
     .eq('is_stage_voice', true)
     .limit(1)
     .maybeSingle();
@@ -180,7 +187,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ id: lineId, audio: {} });
     }
 
-    const voiceId = await resolveVoiceId(spaceId);
+    const voiceId = await resolveVoiceId(guard.wallet);
 
     const results = await Promise.all(
       paid.map(async ({ lang, text }) => [lang, await speak(text, voiceId, lang)] as const),

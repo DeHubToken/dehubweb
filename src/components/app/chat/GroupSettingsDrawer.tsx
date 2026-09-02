@@ -29,6 +29,8 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
+import { usePendingAction } from '@/hooks/use-pending-action';
 
 interface GroupSettingsDrawerProps {
   open: boolean;
@@ -172,6 +174,10 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
       toast.error('Failed to join group');
     }
   };
+
+  // Joining is a write plus a refetch of the whole group — long enough on a
+  // slow link that an un-marked button reads as a dead tap and gets re-fired.
+  const { pending: isJoining, run: runJoin } = usePendingAction(handleJoin);
 
   const isCreator = info?.creatorAddress && walletAddress &&
     info.creatorAddress.toLowerCase() === walletAddress.toLowerCase();
@@ -402,10 +408,12 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                 ) && (
                   <Button
                     variant="glass"
-                    onClick={handleJoin}
+                    onClick={() => void runJoin()}
+                    disabled={isJoining}
+                    aria-busy={isJoining || undefined}
                     className="w-full rounded-xl gap-2"
                   >
-                    <UserPlus className="w-4 h-4" />
+                    {isJoining ? <ButtonLoader /> : <UserPlus className="w-4 h-4" />}
                     Join Group
                   </Button>
                 )}

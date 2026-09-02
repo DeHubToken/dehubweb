@@ -159,6 +159,7 @@ export default function HomePage() {
   }, [shortsEnabled, activeTab]);
   const homeIsDraggingRef = useRef(false);
   const homeFiltersRef = useRef<HTMLDivElement>(null);
+  const homeChipsRef = useRef<HTMLDivElement>(null);
   const globalFeedNav = useGlobalFeedNav();
   const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef, 5);
 
@@ -509,9 +510,13 @@ export default function HomePage() {
     };
 
     const handleCategoryFilter = () => {
-      // Switch to home tab and refresh feed when a category is selected from sidebar
+      // Switch to the home tab, and nothing else. This used to call
+      // triggerRefresh(), which clears the persisted feed filters and then
+      // remounts the feed 800ms later on a bumped refreshKey — throwing away
+      // the category the tap had just set. The feed invalidates its own
+      // queries and scrolls to the top when it takes the category, so there is
+      // nothing left here to refresh.
       setActiveTab('home');
-      triggerRefresh();
     };
 
     const handleSwitchTab = (e: Event) => {
@@ -979,7 +984,10 @@ export default function HomePage() {
             </div>
         </div>
         <div ref={homeFiltersRef} className="contents" />
-      </div>
+        </div>
+        {/* Active-filter chips — a sibling of the pill, not a row inside it.
+            Still within the sticky chrome, so they travel with the nav. */}
+        <div ref={homeChipsRef} className="contents" />
       </div>
 
       {/* Signed-out only: the prose the "dehub" brand term has to land on.
@@ -1054,7 +1062,7 @@ export default function HomePage() {
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
-            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} />
+            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
           </div>
         )}
         {visitedTabs.has('videos') && (

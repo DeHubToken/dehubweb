@@ -19,8 +19,9 @@
  * Rendered ONLY when signed out, so the existing community's feed is untouched.
  * Googlebot is signed out AND starts with empty localStorage, so it always sees
  * the panel — and so does every first-time human visitor. The copy is therefore
- * never bot-only, and there is no bot/browser divergence to defend. Keep SLIDES
- * and ENTITY_COPY in sync with HOME_INTRO_HTML in CLOUDFLARE_WORKER_SEO.js.
+ * never bot-only, and there is no bot/browser divergence to defend. Keep SLIDES,
+ * ENTITY_COPY and PRESS in sync with HOME_INTRO_HTML / HOME_INTRO_PRESS in
+ * CLOUDFLARE_WORKER_SEO.js.
  *
  * Every slide's text stays mounted — slides are stacked in one grid cell and
  * cross-faded, never conditionally rendered. All three stay indexable whichever
@@ -99,6 +100,32 @@ const LINKS: { to: string; label: string }[] = [
   { to: '/guides/tokenized-subscriptions-explained', label: 'Tokenised subscriptions' },
 ];
 
+/* Press strip under the entity copy. Four outlets, set as WORDMARKS rather than
+   logo images on purpose:
+
+   - There are no publisher logo files in this repo, and there should not be.
+     Shipping four third-party trademarks as raster assets means hosting other
+     people's marks, at every DPR, forever, and re-cutting them whenever an
+     outlet rebrands. Type we already load costs nothing and never goes stale.
+   - The panel is monochrome. Real press logos arrive in four different brand
+     colours and would be the only colour on the plate; greyscaling them just
+     makes them look broken rather than deliberate.
+
+   Every item links INTERNALLY to /docs/featured-in, not out to the article.
+   This panel exists to rank the signed-out home page, and four external
+   dofollow links on it would bleed the exact equity it is here to gather —
+   /docs/featured-in already carries the real article links, so a wordmark is
+   one hop from the piece and the crawl stays in-site.
+
+   `reach` is title-attribute text only. It is on /docs/featured-in already and
+   the strip is far too small to carry it visually. */
+const PRESS = [
+  { outlet: 'US Weekly', reach: '50M+ readers' },
+  { outlet: 'Yahoo Finance', reach: "World's largest business news platform" },
+  { outlet: 'Entrepreneur', reach: '20M+ monthly users' },
+  { outlet: 'Investing.com', reach: '46M+ monthly users' },
+] as const;
+
 /* --- design tokens, lifted verbatim from kit/compose.mjs ------------------ */
 const MONO = "'Cascadia Mono','Consolas','DejaVu Sans Mono','Menlo',monospace";
 const HEAD_FILL = 'linear-gradient(180deg,#fff 4%,#dcdcdf 38%,#8b8b92 78%,#6f6f76 100%)';
@@ -135,7 +162,6 @@ export function HomeIntro() {
       return false;
     }
   });
-  const [expanded, setExpanded] = useState(false);
   const [active, setActive] = useState(0);
   const [runId, setRunId] = useState(0);
   const paused = useRef(false);
@@ -226,6 +252,10 @@ export function HomeIntro() {
         <div className="absolute inset-0" style={{ background: GLOW, borderRadius: '50%' }} />
         <img
           src="/brand-kit/icons/globe-480.webp"
+          /* The hero renders at 96–260 CSS px (see .dehub-intro-hero); a phone
+             was pulling the 480 for a 112 px slot. */
+          srcSet="/brand-kit/icons/globe-240.webp 240w, /brand-kit/icons/globe-480.webp 480w"
+          sizes="(max-width: 519px) 112px, (max-width: 759px) 180px, 260px"
           alt=""
           width={480}
           height={471}
@@ -389,28 +419,76 @@ export function HomeIntro() {
           </Button>
         </div>
 
-        {/* Entity + disambiguation copy. Clamped on mobile only — unclamped the
-            panel pushed the feed and both CTAs off a 390x844 screen. Height
-            clamp, not conditional rendering, so every word stays in the DOM. */}
+        {/* Entity + disambiguation copy. Clamped on narrow containers only —
+            unclamped, the panel pushed the feed and both CTAs off a 390x844
+            screen. A line clamp rather than conditional rendering, so every
+            word stays in the DOM at every width and matches the worker's HTML.
+
+            There is deliberately NO expander. The `// read_more` button that
+            used to sit here was dead weight: on a wide container the copy is
+            already unclamped and index.css hid the button outright, and on a
+            narrow one it bought three more lines of text nobody was asking for
+            while pushing the CTAs further down the very screen the clamp exists
+            to protect. Removing it also drops the panel's last piece of local
+            state. If the truncation ever needs undoing, unclamp — don't
+            reintroduce a toggle. */}
         <div className="mt-6 border-t border-white/10 pt-4">
           {/* line-clamp, not a height clamp with a fade: the plate is a silk
               texture, so a to-black fade rendered as a grey bar across it.
-              Clamping to whole lines cuts cleanly and needs no scrim. Still a
-              clamp rather than conditional rendering — every word stays in the
-              DOM in both states, matching the worker's HTML. */}
+              Clamping to whole lines cuts cleanly and needs no scrim. */}
           <div className="text-[13px] leading-relaxed text-zinc-300">
-            <p className={cn(expanded ? '' : 'dehub-intro-clamp')}>{ENTITY_COPY}</p>
+            <p className="dehub-intro-clamp">{ENTITY_COPY}</p>
           </div>
-          {!expanded && (
-            <button
-              type="button"
-              onClick={() => setExpanded(true)}
-              className="dehub-intro-readmore mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-400 hover:text-white"
-              style={{ fontFamily: MONO }}
-            >
-              // read_more
-            </button>
-          )}
+        </div>
+
+        {/* --- featured in --------------------------------------------------
+            A marquee, not a static row. Four wordmarks at a legible size
+            overflow the narrow column this panel is built for — it is
+            container-queried down to ~320px — and letting them wrap turned a
+            one-line credential strip into a three-line block that pushed both
+            CTAs further off a small screen. Scrolling keeps it one line at
+            every width.
+
+            The track holds the list TWICE and translates exactly -50%, which is
+            what makes the loop seamless. The second copy is aria-hidden and
+            untabbable so each outlet is announced and focused once, not twice.
+
+            Motion is CSS-only and pauses on hover; prefers-reduced-motion turns
+            it off entirely and hands the strip back as a normal scroller (see
+            index.css) — a permanently moving element is exactly what that
+            setting is for. */}
+        <div className="dehub-press mt-4">
+          <span
+            className="text-[11px] uppercase tracking-[0.12em] text-zinc-500"
+            style={{ fontFamily: MONO }}
+          >
+            // featured_in
+          </span>
+          {/* <nav>, not a div: this is a labelled set of links, and aria-label
+              on a generic element is ignored by most screen readers. */}
+          <nav className="dehub-press-viewport mt-2" aria-label="DeHub in the press">
+            <div className="dehub-press-track">
+              {[0, 1].map((copy) => (
+                <div
+                  key={copy}
+                  className="dehub-press-set"
+                  aria-hidden={copy === 1 ? 'true' : undefined}
+                >
+                  {PRESS.map((p) => (
+                    <Link
+                      key={p.outlet}
+                      to="/docs/featured-in"
+                      title={`${p.outlet} — ${p.reach}`}
+                      tabIndex={copy === 1 ? -1 : undefined}
+                      className="font-exo text-sm font-semibold uppercase tracking-[0.06em] text-white/45 transition-colors hover:text-white/85"
+                    >
+                      {p.outlet}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </nav>
         </div>
 
         <nav aria-label="Learn more about DeHub" className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">

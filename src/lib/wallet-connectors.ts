@@ -29,8 +29,12 @@ export function connectorMatchesWallet(
   connector: ConnectorLike | null | undefined,
   wallet: string,
 ): boolean {
+  if (!connector) return false;
   const ids = WALLET_CONNECTOR_IDS[wallet as WalletConnectorKey];
-  if (!connector || !ids) return false;
+  // Not one of the curated three: the sheet also lists whatever else the
+  // machine announced over EIP-6963 (Rabby, Coinbase, OKX, Brave…), and those
+  // buttons carry the connector's own id rather than a name we mapped.
+  if (!ids) return connector.id === wallet;
   const name = (connector.name || '').toLowerCase();
   return ids.some(id => connector.id === id || name.includes(id.toLowerCase()));
 }

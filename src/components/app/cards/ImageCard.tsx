@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -23,13 +24,14 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { cdnImageSrcSet } from '@/lib/media-url';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
-import dehubCoinSmall from '@/assets/dehub-coin.png';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
+import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
@@ -120,6 +122,15 @@ function cacheAspectRatio(url: string, ratio: number) {
  * safely call the double-tap-to-like hook per-image (hooks may not run
  * inside a .map callback).
  */
+/**
+ * Candidate widths (device px) for a feed image and the slot it renders into
+ * (CSS px). The card is edge-to-edge on a phone and ~640 px wide beside the
+ * sidebars, so a 1x desktop takes the 720 and a 3x phone the 1080 or 1440 —
+ * instead of every device taking the 1080 the URL was built with.
+ */
+const FEED_IMAGE_WIDTHS = [480, 720, 1080, 1440];
+const FEED_IMAGE_SIZES = '(max-width: 767px) 100vw, 640px';
+
 function ImageSlide({
   img,
   idx,
@@ -167,6 +178,8 @@ function ImageSlide({
           up front so there's no layout shift on load. */}
       <img
         src={img}
+        srcSet={cdnImageSrcSet(img, FEED_IMAGE_WIDTHS)}
+        sizes={FEED_IMAGE_SIZES}
         alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
@@ -932,10 +945,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                   </div>
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">
-                  Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'DHB'}
+                  Unlock for <DhbAmount amount={formatCompact(Number(post.ppvPrice))} currency={post.ppvCurrency} />
                 </p>
                 <p className="text-white/70 text-xs">
-                  Must be holding {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'}
+                  Must be holding <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
                 </p>
               </div>
             </div>
@@ -992,7 +1005,13 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
                 <p className="text-white/70 text-xs">
-                  {cheapestPlanPrice !== undefined ? `Subscribe from ${formatCompact(cheapestPlanPrice)} DHB` : `Subscribe to ${post.username}`}
+                  {cheapestPlanPrice !== undefined ? (
+                    <>
+                      Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                    </>
+                  ) : (
+                    `Subscribe to ${post.username}`
+                  )}
                 </p>
               </div>
             </div>
@@ -1019,7 +1038,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">Holdings Required</p>
                 <p className="text-white/70 text-xs">
-                  Must be holding {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'}
+                  Must be holding <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
                 </p>
               </div>
             </div>
@@ -1102,7 +1121,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
             onShowOriginal: handleShowOriginal,
           }}
         />
-        
+
+        {/* The creator's Shop board — affiliate links, opened in place. */}
+        <ShopBoardLazy tokenId={post.id} links={post.shopLinks} listingCount={post.shopListingCount} variant="inline" />
+
         <ActionBar
           postId={post.id}
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
@@ -1243,6 +1265,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         currentDescription={editDescription}
         currentCategories={post.categories ?? []}
         currentContentRating={post.contentRating}
+        currentShopLinks={post.shopLinks}
         onSuccess={(edited) => {
           applyOptimisticEdit(queryClient, post.id, edited);
         }}
@@ -1321,8 +1344,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{post.bountyAmount} {post.bountyCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={post.bountyAmount} currency={post.bountyCurrency} /></span>
                   </div>
                 </div>
               )}
@@ -1373,8 +1395,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
                   <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
-                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                    <span className="text-white text-lg font-bold"><DhbAmount amount={formatCompact(post.lockedPrice)} currency={post.lockedCurrency} /></span>
                   </div>
                 </div>
               )}

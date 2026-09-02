@@ -11,6 +11,7 @@ import { useRef, useEffect, useState, memo } from 'react';
 import { cn } from '@/lib/utils';
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 import { useResolvedThumbnail, DEFAULT_POSTER_WIDTH } from '@/lib/thumbnail-fallback';
+import { useFirstInteraction } from '@/hooks/use-boot-settled';
 
 interface AutoplayVideoProps {
   src: string;
@@ -36,6 +37,16 @@ interface AutoplayVideoProps {
    * component also renders into need, so those should state their own size.
    */
   posterWidth?: number;
+  /**
+   * Hold the poster until the visitor has scrolled or tapped once. For a
+   * surface that sits in the first viewport of a landing page: a playing
+   * muted clip streams its whole file (12–15 MB here), and the home page's
+   * shorts reel was pulling two of them before anyone had touched the page —
+   * the whole 27 MB Lighthouse kept measuring after the feed cards were
+   * gated. A surface the visitor navigated to (the shorts feed) has already
+   * had its interaction and leaves this off.
+   */
+  deferUntilInteraction?: boolean;
 }
 
 // ─── Playback group arbiter (module-level) ──────────────────────────────────
@@ -77,7 +88,10 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   disabled = false,
   playbackGroup,
   posterWidth = DEFAULT_POSTER_WIDTH,
+  deferUntilInteraction = false,
 }: AutoplayVideoProps) {
+  const interacted = useFirstInteraction();
+  const engaged = !deferUntilInteraction || interacted;
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
   const poster = useResolvedThumbnail(posterProp, posterWidth);
@@ -143,7 +157,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     const video = videoRef.current;
     if (!video) return;
 
-    if (isVisible && !disabled && groupAllowed) {
+    if (isVisible && !disabled && groupAllowed && engaged) {
       // Delay lets src settle after layout shifts (sidebar collapse etc.)
       const timer = setTimeout(async () => {
         try {
@@ -158,7 +172,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     } else {
       video.pause();
     }
-  }, [isVisible, disabled, groupAllowed, src]);
+  }, [isVisible, disabled, groupAllowed, engaged, src]);
 
   // Reset state when src changes or becomes disabled
   useEffect(() => {
@@ -168,7 +182,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     }
   }, [disabled, src]);
 
-  const shouldLoad = isVisible && !disabled;
+  const shouldLoad = isVisible && !disabled && engaged;
 
   // If video has a format error (H.265/HEVC), just show poster
   if (hasError) {
@@ -200,7 +214,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
         muted
         playsInline
         {...{"webkit-playsinline": ""}}
-        preload={shouldLoad ? (groupAllowed ? 'auto' : 'metadata') : 'none'}
+        preload={shouldLoad ? 'metadata' : 'none'}
         onLoadedData={() => setHasLoaded(true)}
         onError={() => setHasError(true)}
       />

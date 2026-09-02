@@ -43,6 +43,7 @@
     "connectAi": "חיבור AI"
   },
   "feed": {
+    "viewProfile": "הצגת הפרופיל של {{name}}",
     "home": "דף הבית",
     "videos": "סרטונים",
     "images": "תמונות",
@@ -869,6 +870,8 @@
     "loginDescription": "התחבר כדי לצפות ולנהל את הפרופיל שלך."
   },
   "messages": {
+    "encrypted": "מוצפן מקצה לקצה",
+    "cannotDecrypt": "הודעה מוצפנת — לא ניתן לפתוח במכשיר זה",
     "title": "הודעות",
     "searchConversations": "חפש שיחות...",
     "failedToLoad": "טעינת השיחות נכשלה",
@@ -1789,5 +1792,25 @@
     "stakeDhb": "הפקידו DHB",
     "title": "כוחות־על",
     "unlocksAt": "{{power}} נפתח בדרגת {{tier}}"
+  },
+  "videoLooks": {
+    "button": "מראות מצלמה",
+    "title": "מראה",
+    "hint": "מוחל לפני שהווידאו יוצא מהמכשיר הזה — הצופים רואים בדיוק את מה שאתה רואה כאן.",
+    "backgroundBlur": "טשטש את הרקע שלי",
+    "on": "פועל",
+    "off": "כבוי",
+    "none": "ללא",
+    "soft": "רך",
+    "mono": "מונו",
+    "noir": "נואר",
+    "warm": "חם",
+    "cool": "קר",
+    "vivid": "רווי",
+    "dream": "חלום",
+    "vhs": "VHS",
+    "neon": "ניאון",
+    "blur": "טשטוש",
+    "pixelate": "פיקסול"
   }
 }

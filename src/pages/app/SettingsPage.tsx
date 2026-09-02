@@ -1,5 +1,6 @@
 ﻿import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -74,6 +75,7 @@ import {
   Radio,
   LifeBuoy,
   Trash2,
+  ChevronDown,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -86,7 +88,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
 import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
-import { SettingsRow } from '@/components/app/settings/SettingsRow';
+import {
+  SettingsRow,
+  SETTINGS_CONTROL_CLASS,
+  SETTINGS_FIELD_CLASS,
+  SETTINGS_HEADING_CLASS,
+  SETTINGS_LABEL_CLASS,
+} from '@/components/app/settings/SettingsRow';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
@@ -174,6 +182,53 @@ const DM_ACCESS_OPTIONS = (t: TFunction) => [
   },
 ];
 
+/**
+ * The message-fee field, rendered in both the Privacy and Messages tabs. One
+ * component so the two can never drift again (they had: one copy lost its DHB
+ * mark, the other its wording). The hook is react-query backed, so a second
+ * instance reads the same cache as the tab around it.
+ */
+function MessageFeeControl() {
+  const { t } = useTranslation();
+  const { messageFee, isUpdating, updateMessageFee } = useDmSettings();
+  const [feeInput, setFeeInput] = useState('');
+  const dirty = feeInput !== '' && parseFloat(feeInput) !== messageFee;
+  const commit = () => {
+    const val = parseFloat(feeInput);
+    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput(''));
+    else setFeeInput('');
+  };
+  return (
+    <div className="flex items-center gap-2">
+      <Input
+        type="number"
+        inputMode="decimal"
+        min={0}
+        placeholder="0"
+        aria-label={t('settings.messageFee', 'Message fee')}
+        value={feeInput !== '' ? feeInput : (messageFee > 0 ? String(messageFee) : '')}
+        onChange={(e) => setFeeInput(e.target.value)}
+        onKeyDown={(e) => { if (e.key === 'Enter') commit(); }}
+        className="h-9 w-24 rounded-xl border-zinc-700 bg-zinc-800 text-right text-white [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        disabled={isUpdating}
+      />
+      <DhbCoin className="size-5" />
+      {dirty && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className={SETTINGS_CONTROL_CLASS}
+          loading={isUpdating}
+          onClick={commit}
+        >
+          {t('settings.save', 'Save')}
+        </Button>
+      )}
+    </div>
+  );
+}
+
 const tabs = [
   { icon: User, value: 'profile', label: 'settings.profile' },
   { icon: Palette, value: 'appearance', label: 'settings.appearance' },
@@ -200,7 +255,8 @@ import {
 import { useAppTheme, DEFAULT_THEME_HUES } from '@/contexts/ThemeContext';
 import { THEME_COLOR, isSpecialThemeColor } from '@/lib/theme-color';
 import { extractBrandColors } from '@/lib/brand-colors';
-import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { DeHubPageLoader, ButtonLoader } from '@/components/app/DeHubLoader';
+import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 
 export default function SettingsPage() {
@@ -218,7 +274,7 @@ export default function SettingsPage() {
     return SETTINGS_SEARCH_INDEX.find((entry) => entry.anchor === highlight)?.tab ?? 'profile';
   });
   const settingsIsDraggingRef = useRef(false);
-  const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
+  const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect, onScroll: onSettingsTabScroll } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
 
   // Swallow the settings content at the sticky header bento's top edge under
   // the glass themes, exactly like the bento feed pages (Notifications/Music).
@@ -269,6 +325,10 @@ export default function SettingsPage() {
     }
   };
 
+  // Signing out is a network round trip plus a session teardown, so the button
+  // holds the DeHub mark until it lands rather than looking like a missed tap.
+  const { pending: isLoggingOut, run: runLogout } = usePendingAction(handleLogout);
+
   // Drag-to-swipe for settings tab indicator (before conditional return to satisfy hooks rules)
   const settingsTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
 
@@ -307,10 +367,12 @@ export default function SettingsPage() {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={handleLogout}
-              className="flex items-center justify-center gap-2 px-3 h-10 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white"
+              onClick={() => void runLogout()}
+              disabled={isLoggingOut}
+              aria-busy={isLoggingOut || undefined}
+              className="flex items-center justify-center gap-2 px-3 h-10 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white disabled:opacity-60"
             >
-              <LogOut className="w-4 h-4" />
+              {isLoggingOut ? <ButtonLoader /> : <LogOut className="w-4 h-4" />}
               <span className="hidden sm:inline text-sm font-medium">{t('settings.logOut')}</span>
             </button>
           </div>
@@ -338,7 +400,7 @@ export default function SettingsPage() {
               }
             }}
             placeholder={t('settings.searchPlaceholder', 'Search settings')}
-            className="pl-9 bg-white/5 border-white/10"
+            className="h-10 rounded-xl pl-9 bg-white/5 border-white/10"
             role="combobox"
             aria-expanded={settingsSearchFocused && settingsSearchResults.length > 0}
             aria-controls="settings-search-results"
@@ -372,8 +434,11 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* Tab Icons */}
-        <div ref={settingsTabLayerRef} className="relative overflow-visible">
+        {/* Tab Icons. Ten of them no longer fit a phone-width bento, so the
+            row scrolls (same layer/scroller split as Bookmarks and Music: the
+            layer clips x so the indicator is not painted past the edge, the
+            row scrolls and reports scroll so the indicator follows). */}
+        <div ref={settingsTabLayerRef} className="relative overflow-x-clip overflow-y-visible">
           <GlassIndicator ref={settingsIndicatorRef} rect={settingsTabRect} enableTransition={!isSettingsDragging} />
           {settingsTabRect.ready && (
             <div
@@ -389,18 +454,22 @@ export default function SettingsPage() {
               onPointerCancel={handleSettingsDragEnd}
             />
           )}
-          <div className="relative z-20 flex gap-[6px] sm:gap-2">
+          <div role="tablist" className="relative z-20 flex gap-[6px] overflow-x-auto scrollbar-hide sm:gap-2" onScroll={onSettingsTabScroll}>
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === tab.value}
+                  aria-label={t(tab.label)}
                   ref={(el) => {
                     setSettingsTabRef(tab.value)(el);
                     settingsTabPositions.current[tab.value] = el;
                   }}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`relative z-40 p-[11px] sm:p-3 rounded-xl transition-colors ${
+                  className={`relative z-40 shrink-0 p-[11px] sm:p-3 rounded-xl transition-colors ${
                     activeTab === tab.value
                       ? 'text-white'
                       : 'text-zinc-500 hover:text-white'
@@ -834,7 +903,7 @@ function ProfileSettings() {
           loadingLabel={t('settings.saving', 'Saving...')}
           disabled={!canSave}
           width="auto"
-          height="38px"
+          height="36px"
           className={cn(
             hasChanges ? 'opacity-100' : 'opacity-0 pointer-events-none'
           )}
@@ -864,11 +933,18 @@ function ProfileSettings() {
         {coverPreview && (
           <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
         )}
+        {/* The cover used to sit under a permanent 30% black wash; now it is
+            shown as uploaded and only dims on hover, with the camera in its
+            own chip so it stays legible over any picture. */}
         <button
+          type="button"
           onClick={() => coverInputRef.current?.click()}
-          className="absolute inset-0 bg-black/30 transition-opacity hover:bg-black/50 flex items-center justify-center"
+          aria-label={t('settings.clickCameraUpload')}
+          className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors hover:bg-black/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
-          <Camera className="w-6 h-6 text-white/70" />
+          <span className="flex size-10 items-center justify-center rounded-xl bg-black/50 backdrop-blur-sm transition-colors group-hover:bg-black/70">
+            <Camera className="size-5 text-white" />
+          </span>
         </button>
         <input
           ref={coverInputRef}
@@ -906,8 +982,10 @@ function ProfileSettings() {
             </AvatarFallback>
           </Avatar>
           <button
+            type="button"
             onClick={() => avatarInputRef.current?.click()}
-            className="absolute bottom-0 right-0 w-8 h-8 bg-zinc-700 rounded-xl flex items-center justify-center hover:bg-zinc-600 transition-colors"
+            aria-label={t('settings.clickCameraUpload')}
+            className="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800 transition-colors hover:bg-zinc-700"
           >
             <Camera className="w-4 h-4 text-white" />
           </button>
@@ -928,23 +1006,27 @@ function ProfileSettings() {
       {/* Display Name & Username */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div data-setting-anchor="display-name">
-          <label className="block text-sm font-medium text-white mb-2">{t('settings.displayName')}</label>
-          <Input 
+          <label htmlFor="settings-display-name" className={SETTINGS_LABEL_CLASS}>{t('settings.displayName')}</label>
+          <Input
+            id="settings-display-name"
             placeholder={t('settings.enterDisplayName')}
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+            className={SETTINGS_FIELD_CLASS}
           />
         </div>
         <div data-setting-anchor="username">
-          <label className="block text-sm font-medium text-white mb-2">{t('settings.username')}</label>
-          <Input 
+          <label htmlFor="settings-username" className={SETTINGS_LABEL_CLASS}>{t('settings.username')}</label>
+          <Input
+            id="settings-username"
             placeholder={t('settings.usernamePlaceholder')}
             value={username}
             onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            className={`bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 ${
-              usernameAvailable === false ? 'border-red-500' : usernameAvailable === true ? 'border-green-500' : ''
-            }`}
+            aria-invalid={usernameAvailable === false || undefined}
+            className={cn(
+              SETTINGS_FIELD_CLASS,
+              usernameAvailable === false ? 'border-red-500' : usernameAvailable === true ? 'border-green-500' : '',
+            )}
           />
           <div className="mt-1 flex items-center gap-1 min-h-[18px]">
             {isCheckingUsername && (
@@ -978,12 +1060,13 @@ function ProfileSettings() {
 
       {/* Bio */}
       <div data-setting-anchor="bio">
-        <label className="block text-sm font-medium text-white mb-2">{t('settings.bio')}</label>
-        <Textarea 
+        <label htmlFor="settings-bio" className={SETTINGS_LABEL_CLASS}>{t('settings.bio')}</label>
+        <Textarea
+          id="settings-bio"
           placeholder={t('settings.bioPlaceholder')}
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 min-h-[100px]"
+          className="min-h-[100px] rounded-xl border-zinc-700 bg-zinc-800 text-white placeholder:text-zinc-500"
         />
       </div>
 
@@ -994,7 +1077,7 @@ function ProfileSettings() {
             hiding them is what made them impossible to find in the first
             place. */}
         <div data-setting-anchor="social-links">
-          <h3 className="font-medium text-white mb-4">{t('settings.socialLinks')}</h3>
+          <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.socialLinks')}</h3>
           <CollapsibleStack>
             <SocialLinkInput 
               label="X (Twitter)" 
@@ -1067,13 +1150,13 @@ function ProfileSettings() {
 
         {/* How you get back in. */}
         <div data-setting-anchor="sign-in">
-          <h3 className="font-medium text-white mb-4">{t('settings.signIn', 'Sign-in')}</h3>
+          <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.signIn', 'Sign-in')}</h3>
           <EmailSignInSettings />
         </div>
 
         {/* An ENS name is an alias for the profile URL, not a rename. */}
         <div data-setting-anchor="ens">
-          <h3 className="font-medium text-white mb-4">{t('settings.ensSection', 'ENS')}</h3>
+          <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.ensSection', 'ENS')}</h3>
           <EnsHandleSettings />
         </div>
 
@@ -1108,8 +1191,9 @@ function SupportSettings() {
   const { user: authUser } = useAuthContext();
   const username = authUser?.username || 'Anonymous';
 
-  const rowClass =
-    'w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group text-left';
+  // Same row as every other tab — these were zinc cards with a
+  // hover:bg-zinc-750 that is not a Tailwind colour, so they never lit up.
+  const arrow = <ExternalLink className="size-4 text-zinc-500" />;
 
   return (
     <div className="space-y-6">
@@ -1118,54 +1202,41 @@ function SupportSettings() {
         <h2 className="text-lg font-semibold text-white">{t('settings.support', 'Support')}</h2>
       </div>
 
-      <div className="space-y-3">
-        <button
-          data-setting-anchor="report-bug"
-          className={rowClass}
+      <div className="space-y-4">
+        <SettingsRow
+          as="button"
+          anchor="report-bug"
+          icon={<Bug />}
+          title={t('settings.reportBug', 'Report a Bug')}
+          description={t('settings.reportBugDesc', 'Help us fix issues by reporting bugs')}
           onClick={() => navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`)}
-        >
-          <div className="flex items-center gap-3">
-            <Bug className="w-5 h-5 text-zinc-500" />
-            <div>
-              <p className="text-white font-medium">{t('settings.reportBug', 'Report a Bug')}</p>
-              <p className="text-zinc-500 text-sm">
-                {t('settings.reportBugDesc', 'Help us fix issues by reporting bugs')}
-              </p>
-            </div>
-          </div>
-          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
-        </button>
-
-        <button data-setting-anchor="terms" className={rowClass} onClick={() => navigate('/docs/terms-of-service')}>
-          <div className="flex items-center gap-3">
-            <FileText className="w-5 h-5 text-zinc-500" />
-            <p className="text-white font-medium">{t('settings.termsOfService', 'Terms of Service')}</p>
-          </div>
-          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
-        </button>
-
-        <button data-setting-anchor="privacy-policy" className={rowClass} onClick={() => navigate('/docs/privacy')}>
-          <div className="flex items-center gap-3">
-            <Shield className="w-5 h-5 text-zinc-500" />
-            <p className="text-white font-medium">{t('settings.privacyPolicy', 'Privacy Policy')}</p>
-          </div>
-          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
-        </button>
-
-        <button data-setting-anchor="delete-account" className={rowClass} onClick={() => navigate('/delete-account')}>
-          <div className="flex items-center gap-3">
-            <Trash2 className="w-5 h-5 text-red-500/70" />
-            <div>
-              <p className="text-white font-medium">
-                {t('settings.deleteAccountData', 'Delete account or data')}
-              </p>
-              <p className="text-zinc-500 text-sm">
-                {t('settings.deleteAccountDataDesc', 'Request removal of your account or your data')}
-              </p>
-            </div>
-          </div>
-          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
-        </button>
+          action={arrow}
+        />
+        <SettingsRow
+          as="button"
+          anchor="terms"
+          icon={<FileText />}
+          title={t('settings.termsOfService', 'Terms of Service')}
+          onClick={() => navigate('/docs/terms-of-service')}
+          action={arrow}
+        />
+        <SettingsRow
+          as="button"
+          anchor="privacy-policy"
+          icon={<Shield />}
+          title={t('settings.privacyPolicy', 'Privacy Policy')}
+          onClick={() => navigate('/docs/privacy')}
+          action={arrow}
+        />
+        <SettingsRow
+          as="button"
+          anchor="delete-account"
+          icon={<Trash2 />}
+          title={t('settings.deleteAccountData', 'Delete account or data')}
+          description={t('settings.deleteAccountDataDesc', 'Request removal of your account or your data')}
+          onClick={() => navigate('/delete-account')}
+          action={arrow}
+        />
       </div>
     </div>
   );
@@ -1403,7 +1474,8 @@ function NotificationSettings() {
   );
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
+const fmtHour = (h: number) => `${String(h).padStart(2, '0')}:00`;
+const HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => ({ value: String(i), label: fmtHour(i) }));
 
 function QuietHoursSection() {
   const { t } = useTranslation();
@@ -1412,6 +1484,7 @@ function QuietHoursSection() {
   const [enabled, setEnabled] = useState(() => getQuietHours().enabled);
   const [start, setStart] = useState<number>(() => getQuietHours().start);
   const [end, setEnd] = useState<number>(() => getQuietHours().end);
+  const fmt = fmtHour;
 
   const handleToggle = (checked: boolean) => {
     setEnabled(checked);
@@ -1429,59 +1502,44 @@ function QuietHoursSection() {
     try { localStorage.setItem(QH_END_KEY, String(h)); } catch {}
   };
 
-  const fmt = (h: number) => `${String(h).padStart(2, '0')}:00`;
-
   return (
     <div data-setting-anchor="quiet-hours">
-      <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quietHours')}</h3>
-      <div className="bg-zinc-800/50 rounded-xl overflow-hidden border border-zinc-700/50">
-        <label className="flex items-center justify-between px-4 py-3.5 cursor-pointer">
-          <div className="flex items-center gap-3">
-            <Clock className="w-5 h-5 text-zinc-500" />
-            <div>
-              <p className="text-white font-medium">{t('settings.enableQuietHours')}</p>
-              <p className="text-zinc-500 text-sm">
-                {enabled ? `Silenced ${fmt(start)} → ${fmt(end)}` : t('settings.quietHoursDesc')}
-              </p>
-            </div>
-          </div>
-          <Switch checked={enabled} onCheckedChange={handleToggle} />
-        </label>
+      <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.quietHours')}</h3>
+      <div className="space-y-4">
+        {/* Same row as every other toggle on the page — this used to be the
+            one card-shaped setting with native <select>s inside it. The hour
+            pickers are the same drawer select every other choice here uses. */}
+        <SettingsRow
+          as="label"
+          className="cursor-pointer"
+          icon={<Clock />}
+          title={t('settings.enableQuietHours')}
+          description={enabled ? `Silenced ${fmt(start)} → ${fmt(end)}` : t('settings.quietHoursDesc')}
+          action={<Switch checked={enabled} onCheckedChange={handleToggle} />}
+        />
 
         {enabled && (
-          <>
-            <div className="h-px bg-zinc-700/50 mx-4" />
-            <div className="px-4 py-3 flex items-center gap-4">
-              <div className="flex-1">
-                <label className="block text-xs text-zinc-400 mb-1.5">From</label>
-                <select
-                  value={start}
-                  onChange={(e) => handleStartChange(Number(e.target.value))}
-                  className="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-3 py-2 focus:outline-none"
-                >
-                  {HOURS.map(h => (
-                    <option key={h} value={h}>{fmt(h)}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="pt-4 text-zinc-500">→</div>
-              <div className="flex-1">
-                <label className="block text-xs text-zinc-400 mb-1.5">To</label>
-                <select
-                  value={end}
-                  onChange={(e) => handleEndChange(Number(e.target.value))}
-                  className="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-3 py-2 focus:outline-none"
-                >
-                  {HOURS.map(h => (
-                    <option key={h} value={h}>{fmt(h)}</option>
-                  ))}
-                </select>
-              </div>
+          <div className="pl-8">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <span className="text-sm text-zinc-400">From</span>
+              <SettingDrawerSelect
+                value={String(start)}
+                onValueChange={(v) => handleStartChange(Number(v))}
+                title="From"
+                options={HOUR_OPTIONS}
+              />
+              <span className="text-sm text-zinc-400">To</span>
+              <SettingDrawerSelect
+                value={String(end)}
+                onValueChange={(v) => handleEndChange(Number(v))}
+                title="To"
+                options={HOUR_OPTIONS}
+              />
             </div>
-            <p className="text-zinc-500 text-xs px-4 pb-3">
+            <p className="mt-2 text-xs text-zinc-500">
               Push notifications will be silenced during these hours.
             </p>
-          </>
+          </div>
         )}
       </div>
     </div>
@@ -1491,9 +1549,8 @@ function QuietHoursSection() {
 function PrivacySettings() {
   const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
-  const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
+  const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
   const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
-  const [feeInput, setFeeInput] = useState('');
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const { user } = useAuthContext();
   const [followRequestsOpen, setFollowRequestsOpen] = useState(false);
@@ -1629,14 +1686,17 @@ function PrivacySettings() {
             disabled={isUpdating || isLoading}
           />
           {isPrivate && (
-            <div className="ml-8">
-              <button
+            <div className="pl-8">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
                 onClick={() => setFollowRequestsOpen(true)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white text-sm font-medium"
+                className={SETTINGS_CONTROL_CLASS}
               >
-                <UserPlus className="w-4 h-4" />
+                <UserPlus />
                 {t('settings.viewFollowRequests')}
-              </button>
+              </Button>
               <FollowRequestsDrawer open={followRequestsOpen} onOpenChange={setFollowRequestsOpen} />
             </div>
           )}
@@ -1725,7 +1785,7 @@ function PrivacySettings() {
               ]}
             />}
           />
-          <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
+          <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4 text-sm text-zinc-400">
             <p><strong className="text-white">{t('settings.note')}:</strong> {t('settings.postVisibilityNote')}</p>
           </div>
         </div>
@@ -1754,38 +1814,7 @@ function PrivacySettings() {
             icon={<img src={dehubCoin} alt="" />}
             title={t('settings.messageFee', 'Message fee')}
             description={t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}
-            action={<div className="flex items-center gap-2">
-              <Input
-                type="number"
-                min={0}
-                placeholder="0"
-                value={feeInput !== '' ? feeInput : (messageFee > 0 ? String(messageFee) : '')}
-                onChange={(e) => setFeeInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput(''));
-                    else setFeeInput('');
-                  }
-                }}
-                className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
-                disabled={isDmUpdating}
-              />
-              <span className="text-zinc-400 text-sm">DHB</span>
-              {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
-                <Button
-                  size="sm"
-                  className="h-9 px-3 text-xs"
-                  disabled={isDmUpdating}
-                  onClick={() => {
-                    const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0) updateMessageFee(val, () => setFeeInput(''));
-                  }}
-                >
-                  {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
-                </Button>
-              )}
-            </div>}
+            action={<MessageFeeControl />}
           />
 
           {/* Do Not Disturb */}
@@ -1813,7 +1842,7 @@ function PrivacySettings() {
             anchor="two-factor"
             title={t('settings.twoFactorAuth')}
             description={t('settings.twoFactorAuthDesc')}
-            action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
+            action={<Button type="button" variant="outline" size="sm" className={SETTINGS_CONTROL_CLASS} onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
               {t('settings.enable')}
             </Button>}
           />
@@ -1864,41 +1893,44 @@ function PrivacySettings() {
 
       {/* Geo-Blocking */}
       <div data-setting-anchor="geo-blocking">
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.geoBlocking')}</h3>
+        <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.geoBlocking')}</h3>
         <p className="text-zinc-500 text-sm mb-4">{t('settings.geoBlockingDesc')}</p>
         <GeoBlockingSelector />
       </div>
 
-      {/* Go Public Security Gate Modal */}
+      {/* Go Public Security Gate Modal — monochrome glass like every other
+          dialog; the blue/red pair it shipped with is not in the palette. */}
       {goPublicModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div role="dialog" aria-modal="true" className="bg-zinc-900 border border-white/10 rounded-2xl max-w-sm w-full p-6 space-y-4">
-            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-amber-500/20 mx-auto">
-              <Users className="w-7 h-7 text-amber-400" />
+          <div role="dialog" aria-modal="true" aria-labelledby="go-public-title" className="w-full max-w-sm space-y-4 rounded-2xl border border-white/10 bg-zinc-950/90 p-6 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full border border-white/10 bg-white/10">
+              <Users className="size-7 text-white" />
             </div>
-            <h3 className="text-white font-bold text-lg text-center">Switch to Public?</h3>
+            <h3 id="go-public-title" className="text-white font-bold text-lg text-center">Switch to Public?</h3>
             <p className="text-zinc-300 text-sm text-center">
               You have <span className="text-white font-semibold">{pendingRequestCount}</span> pending follow {pendingRequestCount === 1 ? 'request' : 'requests'}.
               What would you like to do before going public?
             </p>
             <div className="space-y-2 pt-1">
-              <button
+              <Button
+                type="button"
                 onClick={handleAcceptAllAndGoPublic}
-                disabled={goPublicBusy}
-                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                loading={goPublicBusy}
+                className="h-11 w-full font-semibold"
               >
-                {goPublicBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                 Accept All & Go Public
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
                 onClick={handleDeclineAllAndGoPublic}
-                disabled={goPublicBusy}
-                className="w-full py-3 rounded-xl bg-red-500/20 border border-red-500/30 hover:bg-red-500/30 text-red-400 font-semibold text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                loading={goPublicBusy}
+                className={cn(SETTINGS_CONTROL_CLASS, 'h-11 w-full font-semibold')}
               >
-                {goPublicBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                 Decline All & Go Public
-              </button>
+              </Button>
               <button
+                type="button"
                 onClick={() => setGoPublicModalOpen(false)}
                 disabled={goPublicBusy}
                 className="w-full py-3 rounded-xl text-zinc-400 hover:text-white text-sm transition-colors"
@@ -1945,8 +1977,8 @@ function BlockedUsersSection() {
 
   return (
     <div>
-      <h3 className="font-medium text-zinc-400 text-sm mb-4">
-        <Ban className="w-4 h-4 inline mr-2" />
+      <h3 className={SETTINGS_HEADING_CLASS}>
+        <Ban className="size-4" />
         Blocked Users
       </h3>
       {isLoading ? (
@@ -1961,10 +1993,10 @@ function BlockedUsersSection() {
           {items.map((user) => (
             <div
               key={user.blockId || user.address}
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10"
+              className="flex items-center justify-between gap-3 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-3"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <Avatar className="w-8 h-8">
+                <Avatar className="size-9">
                   <AvatarImage src={user.avatarImageUrl} />
                   <AvatarFallback className="bg-zinc-700 text-white text-xs">
                     {(user.username || user.address)?.[0]?.toUpperCase() || '?'}
@@ -1980,15 +2012,13 @@ function BlockedUsersSection() {
                 </div>
               </div>
               <Button
+                type="button"
                 variant="outline"
                 size="sm"
-                className="bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20 rounded-lg text-xs"
+                className={cn(SETTINGS_CONTROL_CLASS, 'shrink-0')}
                 onClick={() => handleUnblock(user)}
-                disabled={unblockingId === user.address}
+                loading={unblockingId === user.address}
               >
-                {unblockingId === user.address ? (
-                  <Loader2 className="w-3 h-3 animate-spin mr-1" />
-                ) : null}
                 Unblock
               </Button>
             </div>
@@ -2233,17 +2263,14 @@ function ThemeColorPicker({ theme }: { theme: string }) {
   ];
 
   return (
-    <div className="mt-4 p-4 rounded-xl bg-zinc-800/50 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Paintbrush className="w-5 h-5 text-zinc-500" />
-          <div>
-            <p className="text-white font-medium">{t('settings.themeColor', 'Theme Color')}</p>
-            <p className="text-zinc-500 text-sm">{t('settings.themeColorDesc', 'Pick a custom color for this theme')}</p>
-          </div>
-        </div>
-        {value !== defaultValue && (
+    <div className="mt-4 space-y-4 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
+      <SettingsRow
+        icon={<Paintbrush />}
+        title={t('settings.themeColor', 'Theme Color')}
+        description={t('settings.themeColorDesc', 'Pick a custom color for this theme')}
+        action={value !== defaultValue ? (
           <button
+            type="button"
             onClick={() => {
               setThemeHue(theme, null);
               setHexDraft(null);
@@ -2252,8 +2279,8 @@ function ThemeColorPicker({ theme }: { theme: string }) {
           >
             {t('settings.themeColorReset', 'Reset')}
           </button>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       {/* Preset modes: White, Black, Rainbow, Brand */}
       <div className="flex flex-wrap gap-2">
@@ -2334,7 +2361,7 @@ function ThemeColorPicker({ theme }: { theme: string }) {
             if (parsed !== null) setThemeHue(theme, parsed);
           }}
           onBlur={() => setHexDraft(null)}
-          className="w-24 flex-shrink-0 bg-zinc-900 border-zinc-700 text-white font-mono text-sm text-center"
+          className="h-9 w-24 shrink-0 rounded-xl border-zinc-700 bg-zinc-900 text-center font-mono text-sm text-white"
         />
       </div>
     </div>
@@ -2506,8 +2533,7 @@ function LanguageSelector() {
 
 function ContentSettings() {
   const { t } = useTranslation();
-  const [postVisibility, setPostVisibility] = useState('public');
-  
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -2515,26 +2541,13 @@ function ContentSettings() {
         <h2 className="text-lg font-semibold text-white">{t('settings.contentPreferences')}</h2>
       </div>
 
-      {/* Post Settings */}
+      {/* Post Settings. The "Default post visibility" select that sat here
+          was a second copy of the Privacy tab's real one, except this copy
+          never saved — it toasted "coming soon" and snapped back. Two
+          identical controls, one of them fake, is worse than one. */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.postSettings')}</h3>
         <div className="space-y-4">
-          <SettingsRow
-            icon={<Globe />}
-            anchor="content-post-visibility"
-            title={t('settings.defaultPostVisibility')}
-            description={t('settings.whoCanSeeDefault')}
-            action={<SettingDrawerSelect
-              value={postVisibility}
-              onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
-              title={t('settings.defaultPostVisibility')}
-              options={[
-                { value: 'public', label: t('settings.public'), description: t('settings.publicDesc') },
-                { value: 'followers', label: t('settings.followers'), description: t('settings.followersDesc') },
-                { value: 'private', label: t('settings.private'), description: t('settings.privateDesc') },
-              ]}
-            />}
-          />
           <SettingToggle
             icon={FileText}
             anchor="auto-save-drafts"
@@ -2612,11 +2625,11 @@ function FreeAccessListSection() {
 
   return (
     <div data-setting-anchor="free-dm-access">
-      <h3 className="font-medium text-zinc-400 text-sm mb-4">
-        <Gift className="w-4 h-4 inline mr-2" />
+      <h3 className={SETTINGS_HEADING_CLASS}>
+        <Gift className="size-4" />
         {t('settings.freeAccessList', 'Free DM Access')}
       </h3>
-      <p className="text-zinc-500 text-xs mb-3">{t('settings.freeAccessListDesc', 'Users who can message you for free, bypassing your message fee.')}</p>
+      <p className="text-zinc-500 text-sm mb-4">{t('settings.freeAccessListDesc', 'Users who can message you for free, bypassing your message fee.')}</p>
       
       {isLoadingList ? (
         <div className="flex items-center justify-center py-6">
@@ -2634,29 +2647,26 @@ function FreeAccessListSection() {
               ? (u.avatarImageUrl.startsWith('http') ? u.avatarImageUrl : `https://cdn.dehub.io/${u.avatarImageUrl}`)
               : undefined;
             return (
-              <div key={u.address} className="flex items-center justify-between p-3 rounded-xl bg-zinc-800/50">
-                <div className="flex items-center gap-3">
-                  <Avatar className="w-9 h-9">
+              <div key={u.address} className="flex items-center justify-between gap-3 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Avatar className="size-9">
                     {avatarUrl && <AvatarImage src={avatarUrl} />}
                     <AvatarFallback className="bg-zinc-700 text-white text-sm">{name.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <div>
-                    <p className="text-white text-sm font-medium">{name}</p>
-                    {u.username && <p className="text-zinc-500 text-xs">@{u.username}</p>}
+                  <div className="min-w-0">
+                    <p className="text-white text-sm font-medium truncate">{name}</p>
+                    {u.username && <p className="text-zinc-500 text-xs truncate">@{u.username}</p>}
                   </div>
                 </div>
                 <Button
-                  variant="ghost"
+                  type="button"
+                  variant="outline"
                   size="sm"
-                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                  className={cn(SETTINGS_CONTROL_CLASS, 'shrink-0')}
                   onClick={() => handleRevoke(u.address)}
-                  disabled={revokingAddress === u.address}
+                  loading={revokingAddress === u.address}
                 >
-                  {revokingAddress === u.address ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>{t('settings.revoke', 'Revoke')}</>
-                  )}
+                  {t('settings.revoke', 'Revoke')}
                 </Button>
               </div>
             );
@@ -2688,20 +2698,35 @@ function SettingToggle({
   anchor?: string;
 }) {
   const { t } = useTranslation();
+  // A switch that only ever toasts used to look exactly like one that works.
+  // Say so on the row, and dim the control, so nobody flips it three times
+  // wondering why nothing sticks.
+  const soon = t('settings.comingSoon', 'Coming soon');
   return (
     <SettingsRow
       as="label"
       anchor={anchor}
       icon={<Icon />}
-      title={title}
+      title={
+        comingSoon ? (
+          <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>{title}</span>
+            <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-4 tracking-wide text-zinc-300">
+              {soon}
+            </span>
+          </span>
+        ) : title
+      }
       description={description}
       className={disabled ? undefined : 'cursor-pointer'}
       disabled={disabled}
       action={<Switch
         defaultChecked={defaultChecked}
         checked={onCheckedChange ? defaultChecked : undefined}
-        onCheckedChange={comingSoon ? () => toast.info(t('settings.comingSoon', 'Coming soon')) : onCheckedChange}
+        onCheckedChange={comingSoon ? () => toast.info(soon) : onCheckedChange}
         disabled={disabled}
+        aria-label={typeof title === 'string' ? title : undefined}
+        className={comingSoon ? 'opacity-50' : undefined}
       />}
     />
   );
@@ -2945,17 +2970,19 @@ function SocialLinkInput({
   onChange?: (value: string) => void;
 }) {
   return (
-    <div className="space-y-1.5">
-      <label className="block text-sm text-zinc-400">{label}</label>
+    <div>
+      <label className={SETTINGS_LABEL_CLASS}>{label}</label>
+      {/* Icon column matches SettingsRow (20px + 12px gap) so the field's
+          left edge lines up with every title on the page. */}
       <div className="flex items-center gap-3">
-        <div className="flex-shrink-0 w-5 h-5 [&_svg]:w-5 [&_svg]:h-5">
+        <div className="flex size-5 shrink-0 items-center justify-center [&_svg]:size-5">
           {icon}
         </div>
-        <Input 
+        <Input
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
-          className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+          className={SETTINGS_FIELD_CLASS}
         />
       </div>
     </div>
@@ -2990,104 +3017,73 @@ function AssetsSettings() {
         <h2 className="text-lg font-semibold text-white">{t('settings.assets')}</h2>
       </div>
 
-      {/* Wallet Address */}
-      <div data-setting-anchor="wallet-address">
-        <button
+      {/* These were the one tab built as a stack of zinc cards with 40px icon
+          tiles; every other tab is bare rows on the bento. Same row contract
+          now, with the clickable ones getting the row hover wash. The
+          hover:bg-zinc-750 the cards asked for is not a Tailwind colour, so
+          they never had a hover at all. */}
+      <div className="space-y-4">
+        {/* Wallet Address */}
+        <SettingsRow
+          as="button"
+          anchor="wallet-address"
+          icon={<Wallet />}
+          title={<span className="font-mono">{truncatedAddress}</span>}
           onClick={handleCopyWallet}
           disabled={!walletAddress}
-          className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-white font-mono">{truncatedAddress}</span>
-          </div>
-          <Copy className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
-        </button>
-      </div>
+          action={<Copy className="size-5 text-zinc-500" />}
+        />
 
-      {/* DHB Balance */}
-      <div data-setting-anchor="dhb-balance">
-        <button
+        {/* DHB Balance */}
+        <SettingsRow
+          as="button"
+          anchor="dhb-balance"
+          icon={<img src={dehubCoin} alt="DHB" />}
+          title={coinBalance.toLocaleString()}
           onClick={() => setWalletDrawerOpen(true)}
-          className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
-              <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
-            </div>
-            <span className="text-white font-semibold">{coinBalance.toLocaleString()} DHB</span>
-          </div>
-          <span className="text-zinc-500 group-hover:text-white transition-colors text-sm">{t('settings.manage')}</span>
-        </button>
-      </div>
+          action={<span className="text-sm text-zinc-500">{t('settings.manage')}</span>}
+        />
 
-      {/* Wallet */}
-      <div data-setting-anchor="wallet">
-        <button
+        {/* Wallet */}
+        <SettingsRow
+          as="button"
+          anchor="wallet"
+          icon={<Wallet />}
+          title="Wallet"
           onClick={() => navigate('/app/wallet')}
-          className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-white font-semibold">Wallet</span>
-          </div>
-          <ExternalLink className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
-        </button>
-      </div>
+          action={<ExternalLink className="size-5 text-zinc-500" />}
+        />
 
-      {/* Gas Sponsorship */}
-      <div data-setting-anchor="gas-fees">
-        <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
-              <Coins className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-white font-medium">Gas Fees</p>
-              <p className="text-zinc-500 text-sm">
-                {isGasSponsored
-                  ? 'Transaction gas fees are sponsored'
-                  : 'You pay gas fees via your external wallet'}
-              </p>
-            </div>
-          </div>
-          <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-            isGasSponsored
-              ? 'bg-emerald-500/20 text-emerald-400'
-              : 'bg-zinc-700/60 text-zinc-400'
-          }`}>
+        {/* Gas Sponsorship */}
+        <SettingsRow
+          anchor="gas-fees"
+          icon={<Coins />}
+          title="Gas Fees"
+          description={isGasSponsored
+            ? 'Transaction gas fees are sponsored'
+            : 'You pay gas fees via your external wallet'}
+          action={<span className={cn(
+            'rounded-full px-2.5 py-1 text-xs font-semibold',
+            isGasSponsored ? 'border border-white/20 bg-white/10 text-white' : 'border border-zinc-700 bg-zinc-800 text-zinc-400',
+          )}>
             {isGasSponsored ? 'Sponsored' : 'Self-paid'}
-          </span>
-        </div>
-      </div>
+          </span>}
+        />
 
-      {/* Where Solana money arrives. Sits with Tip network because both answer
-          "how does value move", and an account without this simply cannot be
-          paid on Solana at all. */}
-      <SolanaWalletSettings />
+        {/* Where Solana money arrives. Sits with Tip network because both answer
+            "how does value move", and an account without this simply cannot be
+            paid on Solana at all. */}
+        <SolanaWalletSettings />
 
-      {/* Tip network. Tucked in here rather than on the tip drawer: almost
-          nobody needs it, and asking on the way to sending money made the
-          choice look consequential when Automatic is right for them. */}
-      <div data-setting-anchor="tip-network">
-        <div className="flex items-center justify-between gap-3 p-4 bg-zinc-800 rounded-xl">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 shrink-0 bg-zinc-700 rounded-xl flex items-center justify-center">
-              <Gem className="w-5 h-5 text-white" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-white font-medium">Tip network</p>
-              <p className="text-zinc-500 text-sm">
-                Which chain your tips are paid from. Automatic uses whichever holds enough,
-                Base first.
-              </p>
-            </div>
-          </div>
-          <SettingDrawerSelect
+        {/* Tip network. Tucked in here rather than on the tip drawer: almost
+            nobody needs it, and asking on the way to sending money made the
+            choice look consequential when Automatic is right for them. */}
+        <SettingsRow
+          anchor="tip-network"
+          icon={<Gem />}
+          title="Tip network"
+          description="Which chain your tips are paid from. Automatic uses whichever holds enough, Base first."
+          action={<SettingDrawerSelect
             value={tipNetwork}
             onValueChange={value => setTipNetwork(value as TipNetworkOption)}
             title="Tip network"
@@ -3096,8 +3092,8 @@ function AssetsSettings() {
               { value: 'base', label: 'Always Base' },
               { value: 'bnb', label: 'Always BNB' },
             ]}
-          />
-        </div>
+          />}
+        />
       </div>
 
       {/* Wallet Drawer */}
@@ -3112,8 +3108,8 @@ function AssetsSettings() {
 
       {/* Fractions */}
       <div data-setting-anchor="fractions">
-        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
-          <PieChart className="w-4 h-4" />
+        <h3 className={SETTINGS_HEADING_CLASS}>
+          <PieChart className="size-4" />
           {t('settings.fractionsOwn')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -3124,8 +3120,8 @@ function AssetsSettings() {
 
       {/* Owned Usernames */}
       <div data-setting-anchor="owned-usernames">
-        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
-          <AtSign className="w-4 h-4" />
+        <h3 className={SETTINGS_HEADING_CLASS}>
+          <AtSign className="size-4" />
           {t('settings.usernamesOwn')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -3136,8 +3132,8 @@ function AssetsSettings() {
 
       {/* Offers Made */}
       <div data-setting-anchor="offers-made">
-        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
-          <Handshake className="w-4 h-4" />
+        <h3 className={SETTINGS_HEADING_CLASS}>
+          <Handshake className="size-4" />
           {t('settings.offersMade')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -3151,9 +3147,8 @@ function AssetsSettings() {
 
 function MessagesSettings() {
   const { t } = useTranslation();
-  const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
-  const [feeInput, setFeeInput] = useState('');
-  
+  const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -3181,46 +3176,12 @@ function MessagesSettings() {
 
           {/* Message Fee */}
           <SettingsRow
-            icon={<Coins />}
+            icon={<img src={dehubCoin} alt="" />}
             anchor="message-fee"
             title={t('settings.messageFee', 'Message fee')}
             description={t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}
-            action={<div className="flex items-center gap-2">
-              <Input
-                type="number"
-                min={0}
-                placeholder="0"
-                value={feeInput !== '' ? feeInput : (messageFee > 0 ? String(messageFee) : '')}
-                onChange={(e) => setFeeInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput(''));
-                    else setFeeInput('');
-                  }
-                }}
-                className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
-                disabled={isDmUpdating}
-              />
-              <span className="text-zinc-400 text-sm">DHB</span>
-              {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
-                <Button
-                  size="sm"
-                  className="h-9 px-3 text-xs"
-                  disabled={isDmUpdating}
-                  onClick={() => {
-                    const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0) updateMessageFee(val, () => setFeeInput(''));
-                  }}
-                >
-                  {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
-                </Button>
-              )}
-            </div>}
+            action={<MessageFeeControl />}
           />
-
-          {/* Free DM Access List */}
-          <FreeAccessListSection />
 
           {/* Do Not Disturb */}
           <SettingToggle
@@ -3233,7 +3194,7 @@ function MessagesSettings() {
             disabled={isDmUpdating}
           />
 
-          <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
+          <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4 text-sm text-zinc-400">
             {/* One line per state the API actually supports — "Followers" was
                 listed here but has never been a selectable option. */}
             <p className="mb-2"><strong className="text-white">{t('settings.everyone', 'Everyone')}:</strong> {t('settings.dmEveryoneHelp', 'Anyone on the platform can message you')}</p>
@@ -3242,6 +3203,10 @@ function MessagesSettings() {
           </div>
         </div>
       </div>
+
+      {/* Free DM Access List — its own section (it has its own heading), not
+          a row inside the access list above. */}
+      <FreeAccessListSection />
 
       {/* Message Preferences */}
       <div>
@@ -3284,7 +3249,7 @@ function MessagesSettings() {
       {/* Storage */}
       <div data-setting-anchor="message-storage">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.storage')}</h3>
-        <div className="bg-zinc-800 rounded-xl p-4">
+        <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
           <div className="flex justify-between text-sm mb-2">
             <span className="text-white font-medium">{t('settings.storageUsed')}</span>
             <span className="text-zinc-400">{t('settings.storageAmount')}</span>
@@ -3306,13 +3271,13 @@ function MessagesSettings() {
       <div data-setting-anchor="quick-actions">
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quickActions')}</h3>
         <div className="grid grid-cols-2 gap-3">
-          <button onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
-            <FileText className="w-6 h-6 text-zinc-400" />
-            <span className="text-zinc-300 text-sm">{t('settings.archivedChats')}</span>
+          <button type="button" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 p-4 transition-colors hover:bg-zinc-700">
+            <FileText className="size-6 text-zinc-400" />
+            <span className="text-sm text-zinc-300">{t('settings.archivedChats')}</span>
           </button>
-          <button onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
-            <Save className="w-6 h-6 text-zinc-400" />
-            <span className="text-zinc-300 text-sm">{t('settings.exportChats')}</span>
+          <button type="button" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 p-4 transition-colors hover:bg-zinc-700">
+            <Save className="size-6 text-zinc-400" />
+            <span className="text-sm text-zinc-300">{t('settings.exportChats')}</span>
           </button>
         </div>
       </div>
@@ -3405,17 +3370,19 @@ function GeoBlockingSelector() {
           {blockedCountries.map(code => {
             const country = COUNTRIES.find(c => c.code === code);
             return (
-              <span 
+              <span
                 key={code}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-sm"
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 pl-2.5 pr-1.5 text-sm text-white"
               >
-                <MapPin className="w-3 h-3" />
+                <MapPin className="size-3.5 text-zinc-400" />
                 {country?.name}
-                <button 
+                <button
+                  type="button"
                   onClick={() => removeCountry(code)}
-                  className="ml-1 hover:text-red-300"
+                  aria-label={`${country?.name}: ×`}
+                  className="flex size-5 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
                 >
-                  ×
+                  <X className="size-3.5" />
                 </button>
               </span>
             );
@@ -3425,26 +3392,22 @@ function GeoBlockingSelector() {
 
       {/* Trigger Button */}
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
         data-keep-dark
-        className="w-full flex items-center justify-between px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white hover:bg-zinc-700 transition-colors"
+        className={cn(SETTINGS_CONTROL_CLASS, 'flex h-10 w-full items-center justify-between gap-2 px-4 font-normal')}
       >
-        <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-zinc-500" />
-          <span className="text-zinc-400">
-            {blockedCountries.length === 0 
+        <span className="flex min-w-0 items-center gap-2">
+          <MapPin className="size-4 shrink-0 text-zinc-500" />
+          <span className="truncate text-zinc-400">
+            {blockedCountries.length === 0
               ? t('settings.selectCountries')
               : `${blockedCountries.length} ${blockedCountries.length === 1 ? t('settings.countryBlocked') : t('settings.countriesBlocked')}`}
           </span>
-        </div>
-        <svg 
-          className="w-4 h-4 text-zinc-500" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        </span>
+        <ChevronDown className="size-4 shrink-0 text-zinc-500" aria-hidden="true" />
       </button>
 
       {/* Drawer */}
@@ -3487,9 +3450,9 @@ function GeoBlockingSelector() {
                 >
                   <span className="text-white text-sm">{country.name}</span>
                   {blockedCountries.includes(country.code) && (
-                    <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
+                    <span className="flex size-5 items-center justify-center rounded-md bg-white">
+                      <Check className="size-3 text-black" />
+                    </span>
                   )}
                 </button>
               ))

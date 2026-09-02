@@ -24,6 +24,7 @@
  * buyer's actual fee — it varies with the badges they hold.
  */
 
+import type { TFunction } from 'i18next';
 import { Interface } from 'ethers';
 import {
   writeContractAA,
@@ -82,13 +83,16 @@ export function normaliseDuration(duration: unknown): number | null {
   return n;
 }
 
-export function formatDuration(duration: number): string {
+/**
+ * Takes the translator rather than importing i18n: this is a contracts helper,
+ * and its only caller is a component that already has one.
+ */
+export function formatDuration(duration: number, t: TFunction): string {
   const n = normaliseDuration(duration);
-  if (n === null) return `${duration} months`;
-  if (n === LIFETIME_DURATION) return 'lifetime';
-  if (n === 1) return '1 month';
-  if (n === 12) return '1 year';
-  return `${n} months`;
+  if (n === null) return t('subscriptions.durationMonths', { count: duration });
+  if (n === LIFETIME_DURATION) return t('subscriptions.durationLifetime');
+  if (n === 12) return t('subscriptions.durationOneYear');
+  return t('subscriptions.durationMonths', { count: n });
 }
 
 // ── Reads ──
@@ -333,7 +337,7 @@ export async function buySubscriptionOnChain(
   const [balance, allowance] = await Promise.all([
     params.skipBalanceCheck
       ? Promise.resolve(cost.total)
-      : getERC20Balance(chainConfig.dhbToken, subscriber),
+      : getERC20Balance(chainConfig.dhbToken, subscriber, params.chainId),
     readContract<bigint>(
       chainConfig.dhbToken,
       new Interface(['function allowance(address owner, address spender) view returns (uint256)']),
@@ -352,8 +356,18 @@ export async function buySubscriptionOnChain(
   }
 
   if (allowance < cost.total) {
-    const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-    const approval = await approveERC20(chainConfig.dhbToken, contract, maxApproval, params.chainId);
+    // What this purchase costs, not everything the wallet will ever hold.
+    //
+    // An unlimited approval is a standing claim on the whole balance for as
+    // long as it is left in place, and this contract does not need one: a
+    // subscription is bought or renewed occasionally, so the saved approval is
+    // worth far less here than it is for tips, where the same wallet spends
+    // several times in a session and stream-controller caches the approval for
+    // exactly that reason. The swap and work paths already approve the amount.
+    //
+    // cost.total is the price including fees — the same figure the balance
+    // check above rejects against — so this cannot come up short.
+    const approval = await approveERC20(chainConfig.dhbToken, contract, cost.total, params.chainId);
     await approval.wait(1);
   }
 

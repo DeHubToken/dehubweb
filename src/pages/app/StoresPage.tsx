@@ -5,6 +5,7 @@
  */
 
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { BrowseTab } from '@/components/app/stores/BrowseTab';
@@ -17,13 +18,14 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function StoresPage() {
   const [tab, setTab] = useState('browse');
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const { data: stores = [] } = useMyStores();
   const [createListingOpen, setCreateListingOpen] = useState(false);
   const [createStoreOpen, setCreateStoreOpen] = useState(false);
 
   const hasStores = stores.length > 0;
-  const storeLabel = stores.length > 1 ? 'My Stores' : 'My Store';
+  const storeLabel = stores.length > 1 ? t('stores.myStores') : t('stores.myStore');
 
   // Swallow the store content at the sticky header bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
@@ -32,19 +34,24 @@ export default function StoresPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Stores | DeHub" description="Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB." />
+      <SEOHead
+        title="Stores | DeHub"
+        description="Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB."
+        url="https://dehub.io/app/stores"
+        image="https://dehub.io/og/stores.jpg"
+      />
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-4xl mx-auto">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
             <ThemedIcon icon="stores" alt="" className="w-10 h-10 shrink-0 object-contain" />
-            <h1 className="text-xl font-bold text-white">Stores</h1>
+            <h1 className="text-xl font-bold text-white">{t('stores.title')}</h1>
           </div>
 
           {/* Tab buttons + create menu */}
           <div className="flex items-center gap-2">
             <LiquidGlassBubble2
-              label="Browse"
+              label={t('stores.browse')}
               icon={<ThemedIcon icon="stores" alt="" className="w-5 h-5 object-contain" />}
               onClick={() => setTab('browse')}
               width="auto"
@@ -78,11 +85,11 @@ export default function StoresPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="bg-zinc-900 border-white/10">
                     <DropdownMenuItem onClick={() => { setCreateStoreOpen(true); setTab('my-store'); }}>
-                      <ThemedIcon icon="stores" alt="" className="w-5 h-5 mr-2 object-contain" /> New Store
+                      <ThemedIcon icon="stores" alt="" className="w-5 h-5 mr-2 object-contain" /> {t('stores.newStore')}
                     </DropdownMenuItem>
                     {hasStores && (
                       <DropdownMenuItem onClick={() => { setCreateListingOpen(true); setTab('my-store'); }}>
-                        <ThemedIcon icon="stores" alt="" className="w-5 h-5 mr-2 object-contain" /> New Listing
+                        <ThemedIcon icon="stores" alt="" className="w-5 h-5 mr-2 object-contain" /> {t('stores.newListing')}
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>

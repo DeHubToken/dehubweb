@@ -43,6 +43,7 @@
     "connectAi": "AI ኣራኽብ"
   },
   "feed": {
+    "viewProfile": "መገለጺ {{name}} ርአ",
     "home": "ገዛ",
     "videos": "ቪድዮታት",
     "images": "ስእልታት",
@@ -942,6 +943,8 @@
     "loginRequired": "ብዓል ዝድሊ"
   },
   "messages": {
+    "encrypted": "ካብ ጫፍ ናብ ጫፍ ዝተመስጠረ",
+    "cannotDecrypt": "ዝተመስጠረ መልእኽቲ — ኣብዚ መሳርሒ ክኽፈት ኣይክእልን",
     "title": "መልእኽትታት",
     "searchConversations": "ዕላላት ድለ...",
     "failedToLoad": "ዕላላት ምጽዓን ኣይተዓወተን",
@@ -1768,5 +1771,25 @@
     "stakeDhb": "DHB ኣቐምጥ",
     "title": "ሱፐርፓወርስ",
     "unlocksAt": "{{power}} ኣብ {{tier}} ይኽፈት"
+  },
+  "videoLooks": {
+    "button": "ናይ ካሜራ ትርኢታት",
+    "title": "ትርኢት",
+    "hint": "ቪድዮኻ ካብዚ መሳርሒ ቅድሚ ምውጻኡ ይትግበር — ተዓዘብቲ ልክዕ ከምቲ ንስኻ ኣብዚ እትርእዮ ይርእዩ።",
+    "backgroundBlur": "ድሕረ ባይታይ ኣደብዝዞ",
+    "on": "ውሉዕ",
+    "off": "ጠፊኡ",
+    "none": "የለን",
+    "soft": "ልስሉስ",
+    "mono": "ሞኖ",
+    "noir": "ኑዋር",
+    "warm": "ውዑይ",
+    "cool": "ዝሑል",
+    "vivid": "ብሩህ",
+    "dream": "ሕልሚ",
+    "vhs": "VHS",
+    "neon": "ኒዮን",
+    "blur": "ብዥታ",
+    "pixelate": "ፒክሰል"
   }
 }

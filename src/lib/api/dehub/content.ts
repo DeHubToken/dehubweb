@@ -1,5 +1,5 @@
 import { apiCall, authedUpload } from './core';
-import type { ContentRating } from './types';
+import type { ContentRating, ShopLink } from './types';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -62,6 +62,23 @@ export interface MintPostParams {
    * turned mature content on in their own settings. Omitted means safe.
    */
   contentRating?: ContentRating;
+  /**
+   * The Shop board — affiliate and shop links shown behind the Shop button.
+   *
+   * Sent at mint rather than PATCHed afterwards so a live stream is already
+   * carrying its links when it goes on air. The server re-checks the count
+   * against the creator's badge tier and refuses a board that is too long, so
+   * this is a request, not a guarantee.
+   */
+  shopLinks?: ShopLink[];
+  /**
+   * How many of the creator's own store listings are about to go on the board.
+   *
+   * A render hint for the feed cards, nothing more — the listings themselves
+   * are attached in Supabase after this call returns a tokenId, because there
+   * is nothing to attach to before then.
+   */
+  shopListingCount?: number;
 }
 
 export interface MintResponse {
@@ -167,6 +184,16 @@ export async function mintPost(
   // and deliberately stores nothing for it.
   if (params.contentRating === 'mature') {
     formData.append('contentRating', 'mature');
+  }
+
+  // Only sent when there is a board. An empty array would be a valid "clear
+  // it" instruction on a post that has nothing to clear.
+  if (params.shopLinks && params.shopLinks.length > 0) {
+    formData.append('shopLinks', JSON.stringify(params.shopLinks));
+  }
+
+  if (params.shopListingCount) {
+    formData.append('shopListingCount', String(params.shopListingCount));
   }
 
   const streamInfo: StreamInfo = params.streamInfo || {
@@ -277,6 +304,20 @@ export interface EditPostParams {
   commentsDisabled?: boolean;
   /** Re-rate a published post. Refused with 403 once a moderator has rated it. */
   contentRating?: ContentRating;
+  /**
+   * Replace the Shop board. `[]` clears it, which is how the toggle is turned
+   * off after publishing.
+   *
+   * Re-sized against what the editor holds now: somebody who unstaked keeps
+   * the board already on the post but cannot save a longer one.
+   */
+  shopLinks?: ShopLink[];
+  /**
+   * Re-sync the store-listing count on the post. The attach/detach itself goes
+   * through the stream-products function; this is only the number the feed
+   * cards read, so 0 is meaningful — it says the listings came off.
+   */
+  shopListingCount?: number;
 }
 
 export interface EditPostResponse {
@@ -287,7 +328,56 @@ export interface EditPostResponse {
     description?: string;
     category?: string[];
     contentRating?: ContentRating;
+    shopLinks?: ShopLink[];
   };
+}
+
+export interface ShopLinkAllowance {
+  /** How many links this account may publish, badge tier included. */
+  allowance: number;
+  /** What everybody gets before any badge. */
+  base: number;
+  /** The top of the ladder, for "3 of 4" style copy. */
+  max: number;
+  /** The tier the allowance was sized by, or null for no badge. */
+  tier: string | null;
+}
+
+/** What a badgeless creator gets, and what we fall back to when the ask fails. */
+export const SHOP_LINK_BASE_ALLOWANCE = 3;
+
+/**
+ * How many Shop links the signed-in creator may publish.
+ *
+ * Asked rather than derived. The client's own badge resolution deliberately
+ * over-reports a tier so a badge does not vanish mid-stake, and the ladder
+ * scales with the DHB price — computing this here would offer a slot the mint
+ * is about to refuse.
+ *
+ * Degrades to the base three rather than throwing: a failed lookup must not
+ * cost somebody the links everybody gets.
+ */
+export async function getShopLinkAllowance(): Promise<ShopLinkAllowance> {
+  const fallback: ShopLinkAllowance = {
+    allowance: SHOP_LINK_BASE_ALLOWANCE,
+    base: SHOP_LINK_BASE_ALLOWANCE,
+    max: SHOP_LINK_BASE_ALLOWANCE,
+    tier: null,
+  };
+  try {
+    const res = await apiCall<Partial<ShopLinkAllowance>>('/api/shop-links/allowance', {
+      requiresAuth: true,
+    });
+    if (!res || typeof res.allowance !== 'number') return fallback;
+    return {
+      allowance: Math.max(SHOP_LINK_BASE_ALLOWANCE, res.allowance),
+      base: res.base ?? SHOP_LINK_BASE_ALLOWANCE,
+      max: res.max ?? res.allowance,
+      tier: res.tier ?? null,
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 export async function editPost(

@@ -14,6 +14,7 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -44,12 +45,12 @@ import type { AudioSpace } from '@/types/audio-spaces.types';
 
 type StagesTab = 'live' | 'upcoming' | 'recorded' | 'hosting';
 
-type StagesTabDef = { icon: typeof Radio; label: string; value: StagesTab };
+type StagesTabDef = { icon: typeof Radio; labelKey: string; value: StagesTab };
 
 const STAGES_TABS: StagesTabDef[] = [
-  { icon: Radio, label: 'Live', value: 'live' },
-  { icon: CalendarDays, label: 'Upcoming', value: 'upcoming' },
-  { icon: Clock, label: 'Recorded', value: 'recorded' },
+  { icon: Radio, labelKey: 'stages.tabLive', value: 'live' },
+  { icon: CalendarDays, labelKey: 'stages.tabUpcoming', value: 'upcoming' },
+  { icon: Clock, labelKey: 'stages.tabRecorded', value: 'recorded' },
 ];
 
 /**
@@ -57,7 +58,7 @@ const STAGES_TABS: StagesTabDef[] = [
  * listener has nothing to put in it, and a fourth tab that is always empty
  * costs everyone else width on a strip that already scrolls on mobile.
  */
-const HOSTING_TAB: StagesTabDef = { icon: Mic, label: 'Hosting', value: 'hosting' };
+const HOSTING_TAB: StagesTabDef = { icon: Mic, labelKey: 'stages.tabHosting', value: 'hosting' };
 
 /**
  * A stage that has been announced but has not started.
@@ -83,6 +84,7 @@ function ScheduledStageCard({
   onCancel: () => void;
   onShare: () => void;
 }) {
+  const { t } = useTranslation();
   const startsAt = space.scheduled_at ? new Date(space.scheduled_at) : null;
   const isOverdue = !!startsAt && startsAt.getTime() < Date.now();
   const avatar =
@@ -105,7 +107,7 @@ function ScheduledStageCard({
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
             <CalendarDays className="w-3 h-3 text-zinc-300" />
             <span className="text-zinc-300 text-xs font-medium">
-              {isOverdue ? 'Starting soon' : 'Upcoming'}
+              {isOverdue ? t('stages.startingSoon') : t('stages.upcoming')}
             </span>
           </div>
           <div className="flex items-center gap-1">
@@ -113,8 +115,8 @@ function ScheduledStageCard({
               <button
                 onClick={toggleReminder}
                 disabled={isToggling}
-                title={hasReminder ? 'Remove reminder' : 'Remind me when it starts'}
-                aria-label={hasReminder ? 'Remove reminder' : 'Remind me when it starts'}
+                title={hasReminder ? t('stages.removeReminder') : t('stages.remindMe')}
+                aria-label={hasReminder ? t('stages.removeReminder') : t('stages.remindMe')}
                 aria-pressed={hasReminder}
                 className={cn(
                   // ui/button's default 3D glass variant at icon-chip size —
@@ -131,8 +133,8 @@ function ScheduledStageCard({
             )}
             <button
               onClick={onShare}
-              title="Share stage"
-              aria-label="Share stage"
+              title={t('stages.shareStage')}
+              aria-label={t('stages.shareStage')}
               className="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
             >
               <Share2 className="w-3.5 h-3.5" />
@@ -156,7 +158,7 @@ function ScheduledStageCard({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-zinc-500 text-[10px]">Hosted by</p>
+              <p className="text-zinc-500 text-[10px]">{t('stages.hostedBy')}</p>
               <BadgedName
                 lookupId={space.host_username || space.host_wallet_address}
                 className="text-white text-xs font-medium group-hover/host:underline"
@@ -191,14 +193,14 @@ function ScheduledStageCard({
               className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white text-black hover:bg-white/90 text-sm font-medium transition-colors disabled:opacity-60"
             >
               {isBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radio className="w-4 h-4" />}
-              Start now
+              {t('stages.startNow')}
             </button>
             <button
               onClick={onCancel}
               disabled={isBusy}
               className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-sm transition-colors disabled:opacity-60"
             >
-              Cancel
+              {t('stages.cancel')}
             </button>
           </div>
         )}
@@ -229,6 +231,7 @@ function LiveStageCard({
    */
   onEnd?: () => void;
 }) {
+  const { t } = useTranslation();
   const totalListeners = Math.max(1, (space.speaker_count || 1) + (space.listener_count || 0));
   const avatar =
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
@@ -257,7 +260,7 @@ function LiveStageCard({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
             </span>
             <span className="text-red-400 text-xs font-medium">
-              {isCurrent ? 'IN THIS STAGE' : 'LIVE'}
+              {isCurrent ? t('stages.inThisStage') : t('stages.live')}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -271,8 +274,8 @@ function LiveStageCard({
             <span
               role="button"
               tabIndex={0}
-              title="Share stage"
-              aria-label="Share stage"
+              title={t('stages.shareStage')}
+              aria-label={t('stages.shareStage')}
               onClick={(e) => {
                 e.stopPropagation();
                 onShare();
@@ -291,8 +294,8 @@ function LiveStageCard({
               <span
                 role="button"
                 tabIndex={0}
-                title="End this stage"
-                aria-label="End this stage"
+                title={t('stages.endThisStage')}
+                aria-label={t('stages.endThisStage')}
                 onClick={(e) => {
                   e.stopPropagation();
                   onEnd();
@@ -305,7 +308,7 @@ function LiveStageCard({
                 }}
                 className="px-2 h-7 rounded-lg flex items-center text-[11px] font-medium text-red-400/70 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
               >
-                End
+                {t('stages.end')}
               </span>
             )}
           </div>
@@ -328,7 +331,7 @@ function LiveStageCard({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-zinc-500 text-[10px]">Hosted by</p>
+              <p className="text-zinc-500 text-[10px]">{t('stages.hostedBy')}</p>
               <BadgedName
                 lookupId={space.host_username || space.host_wallet_address}
                 className="text-white text-xs font-medium group-hover/host:underline"
@@ -358,6 +361,7 @@ function LiveStageCard({
 }
 
 export default function StagesPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<StagesTab>('live');
   const {
     liveSpaces,
@@ -476,12 +480,45 @@ export default function StagesPage() {
     }
   };
 
+  /**
+   * Starting and cancelling a scheduled stage, shared by the Upcoming list and
+   * the Hosting tab.
+   *
+   * These lived inline at both call sites as identical copies, and neither
+   * refreshed the Hosting query — the same gap `handleEndLive` above documents
+   * and closes for ending. So a host who started a scheduled stage went live
+   * and then found it still sitting under Scheduled, and cancelling one left it
+   * listed as though it were still going to happen. The row only corrected
+   * itself on a reload.
+   */
+  const handleStartScheduled = async (space: AudioSpace) => {
+    setBusyScheduledId(space.id);
+    try {
+      const ok = await startScheduledSpace(space.id);
+      if (ok) openModal('live');
+    } finally {
+      setBusyScheduledId(null);
+      await queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
+    }
+  };
+
+  const handleCancelScheduled = async (space: AudioSpace) => {
+    if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
+    setBusyScheduledId(space.id);
+    try {
+      await cancelScheduledSpace(space.id);
+    } finally {
+      setBusyScheduledId(null);
+      await queryClient.invalidateQueries({ queryKey: myStagesKeys.all });
+    }
+  };
+
   const renderUpcoming = () => {
     if (scheduledSpaces.length === 0) {
       return (
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
           <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
-          <h2 className="text-white font-semibold">Nothing scheduled yet</h2>
+          <h2 className="text-white font-semibold">{t('stages.nothingScheduled')}</h2>
           <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
             Announce a stage ahead of time and it shows up here — with a card
             people can share before you go live.
@@ -491,7 +528,7 @@ export default function StagesPage() {
             className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
           >
             <CalendarDays className="w-4 h-4" />
-            Schedule a Stage
+            {t('stages.scheduleAStage')}
           </button>
         </div>
       );
@@ -508,24 +545,8 @@ export default function StagesPage() {
               space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase()
             }
             isBusy={busyScheduledId === space.id}
-            onStart={async () => {
-              setBusyScheduledId(space.id);
-              try {
-                const ok = await startScheduledSpace(space.id);
-                if (ok) openModal('live');
-              } finally {
-                setBusyScheduledId(null);
-              }
-            }}
-            onCancel={async () => {
-              if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
-              setBusyScheduledId(space.id);
-              try {
-                await cancelScheduledSpace(space.id);
-              } finally {
-                setBusyScheduledId(null);
-              }
-            }}
+            onStart={() => handleStartScheduled(space)}
+            onCancel={() => handleCancelScheduled(space)}
             onShare={() => setShareSpace(space)}
           />
         ))}
@@ -546,7 +567,7 @@ export default function StagesPage() {
         <div className="space-y-3">
           <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
             <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
-            <h2 className="text-white font-semibold">No live stages right now</h2>
+            <h2 className="text-white font-semibold">{t('stages.noLiveStages')}</h2>
             <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
               Start a stage and go live with your audience, or listen back to a recorded one below.
             </p>
@@ -555,19 +576,19 @@ export default function StagesPage() {
               className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
             >
               <Plus className="w-4 h-4" />
-              Start a Stage
+              {t('stages.startAStageButton')}
             </button>
           </div>
 
           {recentPastStages.length > 0 && (
             <div>
               <div className="flex items-center justify-between px-1 mb-2">
-                <h3 className="text-white font-semibold text-sm">Past Stages</h3>
+                <h3 className="text-white font-semibold text-sm">{t('stages.pastStages')}</h3>
                 <button
                   onClick={() => chooseTab('recorded')}
                   className="text-zinc-400 hover:text-white text-sm transition-colors"
                 >
-                  See all
+                  {t('stages.seeAll')}
                 </button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
@@ -642,7 +663,7 @@ export default function StagesPage() {
       <div className="space-y-5">
         {mine.live.length > 0 && (
           <div className="space-y-2 sm:space-y-3">
-            <h3 className="text-white font-semibold text-sm px-1">Live now</h3>
+            <h3 className="text-white font-semibold text-sm px-1">{t('stages.liveNow')}</h3>
             {mine.live.map((space) => (
               <LiveStageCard
                 key={space.id}
@@ -660,7 +681,7 @@ export default function StagesPage() {
 
         {mine.scheduled.length > 0 && (
           <div className="space-y-2 sm:space-y-3">
-            <h3 className="text-white font-semibold text-sm px-1">Scheduled</h3>
+            <h3 className="text-white font-semibold text-sm px-1">{t('stages.scheduled')}</h3>
             {mine.scheduled.map((space) => (
               <ScheduledStageCard
                 key={space.id}
@@ -670,24 +691,8 @@ export default function StagesPage() {
                   space.host_wallet_address?.toLowerCase() === walletAddress.toLowerCase()
                 }
                 isBusy={busyScheduledId === space.id}
-                onStart={async () => {
-                  setBusyScheduledId(space.id);
-                  try {
-                    const ok = await startScheduledSpace(space.id);
-                    if (ok) openModal('live');
-                  } finally {
-                    setBusyScheduledId(null);
-                  }
-                }}
-                onCancel={async () => {
-                  if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
-                  setBusyScheduledId(space.id);
-                  try {
-                    await cancelScheduledSpace(space.id);
-                  } finally {
-                    setBusyScheduledId(null);
-                  }
-                }}
+                onStart={() => handleStartScheduled(space)}
+                onCancel={() => handleCancelScheduled(space)}
                 onShare={() => setShareSpace(space)}
               />
             ))}
@@ -697,11 +702,11 @@ export default function StagesPage() {
         {/* Past rooms go through the shared player so "Hosting" can play a
             recording back without bouncing you to the Recorded tab. */}
         <div className="space-y-2 sm:space-y-3">
-          <h3 className="text-white font-semibold text-sm px-1">Past</h3>
+          <h3 className="text-white font-semibold text-sm px-1">{t('stages.past')}</h3>
           <PastStagesList
             spaces={mine.ended}
-            emptyTitle="Nothing in the archive yet"
-            emptyHint="Rooms you host are recorded, and land here once they end."
+            emptyTitle={t('stages.hostingEmptyTitle')}
+            emptyHint={t('stages.hostingEmptyHint')}
           />
         </div>
       </div>
@@ -734,7 +739,7 @@ export default function StagesPage() {
   return (
     <div className="min-h-screen" data-stages-page>
       <SEOHead
-        title="Stages — Live Audio Rooms on DeHub"
+        title={t('stages.seoTitle')}
         description="Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform."
         url="https://dehub.io/stages"
         jsonLd={{
@@ -746,7 +751,7 @@ export default function StagesPage() {
           isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
         }}
       />
-      <h1 className="sr-only">DeHub Stages — Live Audio Rooms, Decentralised & Censorship Resistant</h1>
+      <h1 className="sr-only">{t('stages.seoHeading')}</h1>
 
       {/* Sticky glass header — branding + tab strip (the swallowing pill) */}
       <div
@@ -759,18 +764,18 @@ export default function StagesPage() {
               <BrandIcon src={stagesMicIcon} alt="" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
               Stages
               {liveSpaces.length > 0 ? (
-                <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length} live)</span>
+                <span className="text-zinc-500 font-normal text-sm">{t('stages.liveCount', { count: liveSpaces.length })}</span>
               ) : scheduledSpaces.length > 0 ? (
                 <span className="text-zinc-500 font-normal text-sm">
-                  ({scheduledSpaces.length} upcoming)
+                  {t('stages.upcomingCount', { count: scheduledSpaces.length })}
                 </span>
               ) : null}
             </h2>
             <button
               onClick={() => openModal('create')}
               className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white transition-colors"
-              title={isAuthenticated ? 'Start a stage' : 'Log in to start a stage'}
-              aria-label={isAuthenticated ? 'Start a stage' : 'Log in to start a stage'}
+              title={isAuthenticated ? t('stages.startAStage') : t('stages.logInToStart')}
+              aria-label={isAuthenticated ? t('stages.startAStage') : t('stages.logInToStart')}
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -814,7 +819,7 @@ export default function StagesPage() {
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       <tab.icon className="w-4 h-4" />
-                      {tab.label}
+                      {t(tab.labelKey)}
                     </span>
                   </button>
                 );

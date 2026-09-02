@@ -272,29 +272,104 @@
   #setFoot{display:flex;gap:7px;margin:12px 0 4px}
   #setFoot .btn{flex:1;text-align:center;padding:7px 0}
 
-  /* wallet + buy */
-  #walletPanel{display:none;pointer-events:auto;width:288px;max-height:66vh;overflow-y:auto;
-    padding:13px 14px 12px;margin-bottom:8px;background:rgba(5,10,16,.9);
-    border:1px solid rgba(56,224,255,.28);border-radius:6px;backdrop-filter:blur(10px)}
+  /* ============================ wallet + trade ============================
+     The panel is a trading desk now, sized like one: the bag, the ticket, and
+     a button you can hit from across the room. It used to be a 288px readout
+     with a buy box bolted on. */
+  #walletPanel{display:none;pointer-events:auto;width:min(460px,96vw);max-height:82vh;overflow-y:auto;
+    padding:13px 16px 14px;margin-bottom:8px;background:rgba(5,10,16,.92);
+    border:1px solid rgba(56,224,255,.28);border-radius:8px;backdrop-filter:blur(12px)}
   #walletPanel.on{display:block}
   #walletPanel h4{font-size:10px;letter-spacing:.3em;color:var(--cyan);margin-bottom:8px}
+  #wlTop{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
   #wlAddr{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--dim);letter-spacing:.06em}
-  #wlTotal{font-size:26px;font-weight:700;color:#fff;margin-top:7px;letter-spacing:.02em}
-  #wlChange{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;margin-top:2px}
-  #wlList{margin-top:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:7px}
+  #wlSrc{font-size:8px;letter-spacing:.28em;color:var(--cyan);margin-top:4px}
+  #wlSum{text-align:right}
+  #wlTotal{font-size:28px;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1}
+  #wlChange{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;margin-top:4px}
+  #wlConnRow{display:flex;gap:6px;margin-top:10px}
+  #wlConnRow .btn{flex:1;text-align:center;padding:9px 8px;font-size:9px}
+  #wlTabs{display:flex;gap:4px;margin-top:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .wtab{flex:1;text-align:center;padding:7px 4px;font-size:9px;letter-spacing:.26em;color:var(--dim);
+    cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+  .wtab:hover{color:var(--ink)}
+  .wtab.on{color:#fff;border-bottom-color:var(--cyan)}
+  .wpane{display:none;padding-top:10px}
+  .wpane.on{display:block}
   .wlRow{display:flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;
-    font-size:10px;color:var(--ink);padding:4px 0}
-  .wlRow b{color:#fff;font-weight:700;min-width:56px;font-family:"Chakra Petch",sans-serif;
+    font-size:10px;color:var(--ink);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .wlRow b{color:#fff;font-weight:700;min-width:64px;font-family:"Chakra Petch",sans-serif;
     letter-spacing:.08em}
-  .wlRow .v{margin-left:auto;color:var(--dim)}
+  .wlRow .ch{font-size:7px;letter-spacing:.2em;color:var(--dim);border:1px solid rgba(255,255,255,.14);
+    border-radius:3px;padding:2px 4px}
+  .wlRow .v{margin-left:auto;color:var(--dim);text-align:right}
+  .wlRow .v i{display:block;font-style:normal;font-size:8px}
+  .wlRow .go{cursor:pointer;color:var(--cyan);border:1px solid rgba(56,224,255,.3);border-radius:3px;
+    padding:3px 6px;font-size:8px;letter-spacing:.18em;font-family:"Chakra Petch",sans-serif}
+  .wlRow .go:hover{background:rgba(56,224,255,.16)}
   #wlNote{margin-top:9px;font-size:8px;line-height:1.7;letter-spacing:.1em;color:var(--dim)}
-  #buyBox{margin-top:11px;pointer-events:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
-  #buyBox label{display:block;font-size:8px;letter-spacing:.3em;color:var(--dim);margin-bottom:4px}
-  #buyRow{display:flex;gap:6px}
-  #buyAmt{flex:1;min-width:0;padding:7px;font-family:"JetBrains Mono",monospace;font-size:11px;
-    color:var(--ink);background:#0a121b;border:1px solid rgba(56,224,255,.3);border-radius:3px;outline:none}
-  #buyGo{flex:0 0 auto;padding:7px 12px}
-  #buyQuote{margin-top:6px;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);line-height:1.7}
+  /* the ticket */
+  #tdSel{width:100%;padding:8px;font-size:10px;font-family:"JetBrains Mono",monospace;color:var(--ink);
+    background:#0a121b;border:1px solid rgba(56,224,255,.25);border-radius:4px;outline:none}
+  #tdHead{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px}
+  #tdSym{font-size:22px;font-weight:700;color:#fff;letter-spacing:.04em}
+  #tdSym small{font-size:8px;letter-spacing:.28em;color:var(--cyan);margin-left:8px;vertical-align:middle}
+  #tdPx{font-family:"JetBrains Mono",monospace;font-size:16px;font-weight:700;color:#fff}
+  #tdStats{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  #tdStats span{flex:1 1 18%;font-size:7px;letter-spacing:.24em;color:var(--dim);background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:6px 6px 5px;min-width:60px}
+  #tdStats b{display:block;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;color:var(--ink);
+    letter-spacing:0;margin-top:3px}
+  #tdRisk{margin-top:7px;font-size:8px;letter-spacing:.14em;line-height:1.7;color:var(--dim)}
+  #tdRisk b{color:var(--amber)}
+  #tdRisk b.bad{color:var(--down)}
+  #tdRisk b.ok{color:var(--up)}
+  #tdSide{display:flex;gap:5px;margin-top:11px}
+  .sd{flex:1;text-align:center;padding:8px;font-size:10px;letter-spacing:.3em;font-weight:700;cursor:pointer;
+    border:1px solid rgba(255,255,255,.12);border-radius:4px;color:var(--dim);transition:all .15s}
+  .sd:hover{color:var(--ink)}
+  .sd.on[data-side=buy]{color:#04121c;background:var(--up);border-color:var(--up)}
+  .sd.on[data-side=sell]{color:#fff;background:var(--down);border-color:var(--down)}
+  #tdAmts{display:flex;gap:5px;margin-top:8px}
+  .amt{flex:1;text-align:center;padding:8px 2px;font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:700;
+    color:var(--ink);background:#0a121b;border:1px solid rgba(56,224,255,.22);border-radius:4px;cursor:pointer;
+    transition:border-color .15s,background .15s}
+  .amt:hover{border-color:rgba(56,224,255,.55)}
+  .amt.on{color:#04121c;background:var(--cyan);border-color:var(--cyan)}
+  #tdCustomRow{display:flex;align-items:center;gap:6px;margin-top:6px}
+  #tdAmt{flex:1;min-width:0;padding:8px;font-family:"JetBrains Mono",monospace;font-size:11px;
+    color:var(--ink);background:#0a121b;border:1px solid rgba(56,224,255,.22);border-radius:4px;outline:none}
+  #tdAmt:focus{border-color:var(--cyan)}
+  #tdUnit{font-size:9px;letter-spacing:.24em;color:var(--dim);min-width:34px;text-align:right}
+  #tdSlipRow{display:flex;align-items:center;gap:4px;margin-top:8px}
+  #tdSlipRow label{font-size:7px;letter-spacing:.28em;color:var(--dim);margin-right:auto}
+  .sl{font-family:"JetBrains Mono",monospace;font-size:9px;padding:4px 7px;border:1px solid rgba(255,255,255,.1);
+    border-radius:3px;color:var(--dim);cursor:pointer}
+  .sl.on{color:#fff;border-color:rgba(56,224,255,.6);background:rgba(56,224,255,.12)}
+  #tdHold{margin-top:8px;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);letter-spacing:.06em;
+    min-height:1em}
+  #tdGo{width:100%;text-align:center;margin-top:10px;padding:14px 12px;font-size:12px;letter-spacing:.3em}
+  #tdGo[data-side=buy]{border-color:rgba(47,232,140,.65);color:#d8ffee}
+  #tdGo[data-side=sell]{border-color:rgba(255,77,106,.65);color:#ffd0d8}
+  #tdGo[data-armed="1"]{animation:tdPulse 1s ease-in-out infinite;color:#fff}
+  #tdGo[data-side=buy][data-armed="1"]{background:rgba(47,232,140,.22);border-color:var(--up)}
+  #tdGo[data-side=sell][data-armed="1"]{background:rgba(255,77,106,.22);border-color:var(--down)}
+  #tdGo[disabled]{opacity:.45;cursor:default}
+  @keyframes tdPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 22px 2px rgba(255,255,255,.18)}}
+  #tdMsg{margin-top:8px;font-family:"JetBrains Mono",monospace;font-size:9px;line-height:1.75;color:var(--ink);
+    min-height:1.2em;word-break:break-word}
+  #tdMsg a{color:var(--cyan);text-decoration:none}
+  #tdMsg b{color:var(--amber)}
+  /* fills */
+  .fill{display:flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:9px;
+    padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);color:var(--ink)}
+  .fill .side{font-family:"Chakra Petch",sans-serif;font-weight:700;letter-spacing:.2em;font-size:8px;min-width:34px}
+  .fill .side.buy{color:var(--up)} .fill .side.sell{color:var(--down)}
+  .fill .st{margin-left:auto;font-size:7px;letter-spacing:.2em;color:var(--dim)}
+  .fill .st.ok{color:var(--up)} .fill .st.bad{color:var(--down)}
+  .fill a{color:var(--cyan);text-decoration:none}
+  #tdEmpty{font-size:8px;letter-spacing:.2em;color:var(--dim);padding:14px 0;text-align:center}
+  /* exchange (binance) */
   #bnWarn{font-size:8px;line-height:1.75;letter-spacing:.08em;color:var(--dim);
     background:rgba(255,194,75,.07);border:1px solid rgba(255,194,75,.3);
     border-radius:4px;padding:8px 9px;margin-bottom:8px}
@@ -303,9 +378,14 @@
   #walletPanel input[type=number]{width:100%;padding:7px;margin-bottom:6px;font-size:10px;
     font-family:"JetBrains Mono",monospace;color:var(--ink);background:#0a121b;
     border:1px solid rgba(56,224,255,.25);border-radius:3px;outline:none}
+  #walletPanel #tdAmt,#walletPanel #tdSel{margin-bottom:0}
   #bnRemLbl{display:flex;align-items:center;gap:6px;font-size:8px;letter-spacing:.12em;
-    color:var(--dim);margin:2px 0 9px;cursor:pointer}
+    color:var(--dim);margin:2px 0 6px;cursor:pointer}
   #bnRemLbl input{width:auto;margin:0}
+  #bnPinRow{display:none;gap:6px;align-items:center;margin-bottom:6px}
+  #bnPinRow.on{display:flex}
+  #walletPanel #bnPinRow input{margin:0;flex:1}
+  #bnPinRow small{font-size:7px;letter-spacing:.18em;color:var(--dim);flex:0 0 auto}
   #bnStat{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);margin-top:8px}
   #bnTotal{font-size:20px;font-weight:700;color:#fff;margin-top:5px}
   #bnPnl{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;color:var(--dim)}
@@ -317,6 +397,10 @@
   #bnSend[data-armed="1"]{border-color:rgba(255,77,106,.7);color:#ffb3c0}
   #bnOrderMsg{margin-top:7px;font-family:"JetBrains Mono",monospace;font-size:9px;
     line-height:1.75;color:var(--ink)}
+  /* the focus HUD hands off to the ticket rather than carrying its own box */
+  #buyBox{margin-top:11px;pointer-events:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
+  #buyBox .btn{width:100%;text-align:center}
+  #buyQuote{margin-top:6px;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--dim);line-height:1.7}
 
   /* floating preview bar */
   #prev{position:fixed;left:50%;bottom:112px;transform:translateX(-50%);z-index:10;
@@ -631,6 +715,11 @@
   #walletPanel,#setPanel,#alertPanel{
     width:min(300px,calc(100vw - 24px));
     max-height:min(52vh,470px)}
+  /* The wallet is the exception: it is a trading desk, not a side panel. A
+     ticket you can hit from across the room needs the width for a symbol,
+     a price and four preset buttons on one line, and the height for the
+     bag beneath it — it is the one panel meant to be looked at, not past. */
+  #walletPanel{width:min(460px,calc(100vw - 24px));max-height:min(74vh,720px)}
 
   /* narrow laptop: the centred row is now wide enough to reach the panel */
   @media (max-width:1320px){
@@ -661,6 +750,7 @@
     #btnRow{gap:6px}
     .btn{font-size:10px;letter-spacing:.06em;padding:10px 11px;border-radius:10px}
     #walletPanel,#setPanel,#alertPanel{margin:0 0 8px;max-height:min(46vh,390px)}
+    #walletPanel{max-height:min(70vh,560px)}
     #hint{bottom:146px;font-size:8px}
     #guide{bottom:92px}
     #guidePanel{font-size:8px}
@@ -835,14 +925,10 @@
   <div id="fpTfWrap"><label>CANDLE TIMEFRAME <span style="opacity:.5">[ ] TO STEP</span></label><div id="fpTf"></div>
     <button class="btn" id="fpTfAll">⇉ APPLY TO EVERY CHART</button></div>
   <div id="buyBox" style="display:none">
-    <label>BUY WITH ETH ON BASE</label>
-    <div id="buyRow">
-      <input id="buyAmt" type="number" step="any" min="0" placeholder="0.01">
-      <button class="btn" id="buyGo">BUY</button>
-    </div>
+    <button class="btn" id="buyGo">⇄ TRADE THIS</button>
     <div id="buyQuote"></div>
   </div>
-  <div id="fpEsc">ESC / SCROLL TO RELEASE</div>
+  <div id="fpEsc"><span id="fpFlick">&larr; &rarr; &uarr; &darr; NEXT SCREEN &middot; &darr; EXITS<br></span>ESC / SCROLL TO RELEASE</div>
 </div>
 
 <div id="prev">
@@ -956,14 +1042,73 @@
   <div id="walletPanel">
     <div class="panelHead"><h4>WALLET</h4>
       <div class="panelX" data-close="wallet" title="Close">✕</div></div>
-    <div id="wlAddr">NOT CONNECTED</div>
-    <div id="wlTotal">—</div>
-    <div id="wlChange">—</div>
-    <div id="wlList"></div>
-    <div id="wlNote"></div>
-    <button class="btn" id="wlConnect" style="width:100%;text-align:center;margin-top:10px">CONNECT WALLET</button>
+    <div id="wlTop">
+      <div id="wlWho">
+        <div id="wlAddr">NOT CONNECTED</div>
+        <div id="wlSrc"></div>
+      </div>
+      <div id="wlSum">
+        <div id="wlTotal">—</div>
+        <div id="wlChange">—</div>
+      </div>
+    </div>
+    <div id="wlConnRow">
+      <button class="btn" id="wlConnect">CONNECT WALLET</button>
+      <button class="btn" id="wlSol">◎ CONNECT PHANTOM</button>
+    </div>
+    <div id="wlTabs">
+      <span class="wtab on" data-tab="trade">TRADE</span>
+      <span class="wtab" data-tab="bag">BAG</span>
+      <span class="wtab" data-tab="fills">FILLS</span>
+      <span class="wtab" data-tab="cex">EXCHANGE</span>
+    </div>
 
-    <h4 style="margin-top:16px">BINANCE</h4>
+    <!-- THE TICKET. One token, one side, one amount, one button — the shape
+         every trench terminal has settled on, because a trade is a reflex and
+         a form is not. The token follows whatever screen is focused; the list
+         is everything on the wall that can actually be bought. -->
+    <div class="wpane on" id="wpTrade">
+      <select id="tdSel"><option value="">SELECT A TOKEN ON THE WALL</option></select>
+      <div id="tdHead">
+        <div id="tdSym">—<small id="tdChain"></small></div>
+        <div id="tdPx">—</div>
+      </div>
+      <div id="tdStats">
+        <span>24H<b id="tdCh">—</b></span>
+        <span>LIQ<b id="tdLiq">—</b></span>
+        <span>MCAP<b id="tdMc">—</b></span>
+        <span>VOL<b id="tdVol">—</b></span>
+        <span>AGE<b id="tdAge">—</b></span>
+      </div>
+      <div id="tdRisk"></div>
+      <div id="tdSide">
+        <span class="sd on" data-side="buy">BUY</span>
+        <span class="sd" data-side="sell">SELL</span>
+      </div>
+      <div id="tdAmts"></div>
+      <div id="tdCustomRow">
+        <input id="tdAmt" type="number" step="any" min="0" placeholder="CUSTOM AMOUNT">
+        <span id="tdUnit">ETH</span>
+      </div>
+      <div id="tdSlipRow"><label>SLIPPAGE</label>
+        <span class="sl" data-s="1">1%</span><span class="sl on" data-s="3">3%</span>
+        <span class="sl" data-s="10">10%</span><span class="sl" data-s="25">25%</span>
+      </div>
+      <div id="tdHold"></div>
+      <button class="btn" id="tdGo" data-side="buy" disabled>SELECT A TOKEN</button>
+      <div id="tdMsg"></div>
+    </div>
+
+    <div class="wpane" id="wpBag">
+      <div id="wlList"></div>
+      <div id="wlNote"></div>
+    </div>
+
+    <div class="wpane" id="wpFills">
+      <div id="tdLog"></div>
+    </div>
+
+    <div class="wpane" id="wpCex">
     <div id="bnWarn">SIGNED REST IS BLOCKED BY CORS IN EVERY BROWSER — THIS USES BINANCE'S
       WEBSOCKET API. KEYS STAY ON THIS MACHINE AND GO ONLY TO BINANCE.
       <b>USE A KEY WITH WITHDRAWALS DISABLED AND YOUR IP ALLOWLISTED.</b></div>
@@ -973,7 +1118,8 @@
     </select>
     <input id="bnKey" type="password" autocomplete="off" placeholder="API KEY">
     <input id="bnSecret" type="password" autocomplete="off" placeholder="API SECRET">
-    <label id="bnRemLbl"><input type="checkbox" id="bnRemember"> REMEMBER ON THIS MACHINE (LESS SAFE)</label>
+    <label id="bnRemLbl"><input type="checkbox" id="bnRemember"> REMEMBER ON THIS MACHINE (ENCRYPTED WITH A PIN)</label>
+    <div id="bnPinRow"><input id="bnPin" type="password" autocomplete="off" inputmode="numeric" placeholder="PIN (4+ DIGITS)"><small id="bnPinNote">LOCKS THE SAVED KEYS</small></div>
     <button class="btn" id="bnLoad" style="width:100%;text-align:center">LOAD ACCOUNT</button>
     <div id="bnStat">NOT CONNECTED</div>
     <div id="bnTotal">—</div>
@@ -990,6 +1136,8 @@
       </div>
       <div id="bnOrderMsg"></div>
     </div>
+    </div>
+  </div>
   </div>
   <div id="btnRow">
     <button class="btn" id="btnWallet">⛓ WALLET</button>
@@ -1733,12 +1881,35 @@ const SEL={               /* standard selectors; the swap is simulated before it
   exactInputSingle:'0x04e45aaf',       /* SwapRouter02 */
   quoteExactInputSingle:'0xc6a5026a'   /* QuoterV2 */
 };
-const BASE={
-  router:'0x2626664c2603336E57B271c5C0b26F421741e481',
-  quoter:'0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a',
-  weth:'0x4200000000000000000000000000000000000006',
-  rpc:'https://mainnet.base.org'
+/* THE CHAINS THE ROOM CAN TRADE ON.
+   Two EVM chains with Uniswap's SwapRouter02 and QuoterV2 deployed — Base,
+   and Robinhood Chain (an Arbitrum Orbit L2, ETH gas, chain 4663 whatever its
+   docs print) — and Solana, routed through Jupiter. `dsId` is the DexScreener
+   chain id, which is what every market on the wall carries in `m.chain`, so a
+   market is tradable exactly when CHAINS[m.chain] exists.
+   Every RPC here answers a browser with Access-Control-Allow-Origin: *, which
+   was measured, not assumed — see the trade engine below for the ones that
+   did not. */
+const CHAINS={
+  base:{key:'base',id:8453,hex:'0x2105',label:'BASE',name:'Base',gas:'ETH',dec:18,
+    router:'0x2626664c2603336E57B271c5C0b26F421741e481',
+    quoter:'0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a',
+    weth:'0x4200000000000000000000000000000000000006',
+    rpc:'https://mainnet.base.org',explorer:'https://basescan.org',
+    presets:[0.01,0.05,0.1,0.25]},
+  robinhood:{key:'robinhood',id:4663,hex:'0x1237',label:'ROBINHOOD',name:'Robinhood Chain',gas:'ETH',dec:18,
+    router:'0xcaf681a66d020601342297493863e78c959e5cb2',
+    quoter:'0x33e885ed0ec9bf04ecfb19341582aadcb4c8a9e7',
+    weth:'0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73',
+    rpc:'https://rpc.mainnet.chain.robinhood.com',explorer:'https://robinhoodchain.blockscout.com',
+    presets:[0.01,0.05,0.1,0.25]},
+  solana:{key:'solana',id:'solana',label:'SOLANA',name:'Solana',gas:'SOL',dec:9,sol:true,
+    wsol:'So11111111111111111111111111111111111111112',
+    rpc:'https://solana-rpc.publicnode.com',explorer:'https://solscan.io',
+    presets:[0.1,0.5,1,2]}
 };
+const EVM_CHAINS=[CHAINS.base,CHAINS.robinhood];
+const BASE=CHAINS.base;   /* the name the older code reads */
 const FEE_TIERS=[500,3000,10000];
 const wallet={eip6963:[],provider:null,addr:null,chainId:null,
   assets:[],usd:0,pnl24:0,pnlReal:null,connecting:false};
@@ -1755,16 +1926,23 @@ function toUnits(n,d){
   const [i,f='']=String(n).split('.');
   return BigInt(i+ (f+'0'.repeat(d)).slice(0,d));
 }
+/* Reads go to a chain's public endpoint, never through the wallet: a wallet
+   provider answers on whichever chain IT is switched to, and a balance read
+   on Base through a wallet parked on Ethereum used to come back as zero. */
+async function rpcPublic(url,method,params){
+  const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})});
+  const j=await r.json();
+  if(j.error)throw new Error(j.error.message||('rpc '+j.error.code));
+  return j.result;
+}
 async function rpc(method,params,prov){
   const p=prov||wallet.provider;
   if(p)return p.request({method,params});
-  const r=await fetch(BASE.rpc,{method:'POST',headers:{'content-type':'application/json'},
-    body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})});
-  const j=await r.json();
-  if(j.error)throw new Error(j.error.message);
-  return j.result;
+  return rpcPublic(BASE.rpc,method,params);
 }
 const ethCall=(to,data)=>rpc('eth_call',[{to,data},'latest']);
+const ethCallOn=(ch,to,data)=>rpcPublic(ch.rpc,'eth_call',[{to,data},'latest']);
 
 /* EIP-6963: wallets announce themselves, no window.ethereum scramble */
 addEventListener('eip6963:announceProvider',e=>{
@@ -1792,22 +1970,29 @@ async function connectWallet(){
     toast(e.code===4001?'Connection rejected.':'Wallet error — '+(e.message||'').slice(0,60));
   }finally{wallet.connecting=false;}
 }
-async function switchToBase(){
-  try{await wallet.provider.request({method:'wallet_switchEthereumChain',params:[{chainId:BASE_HEX}]});}
+async function switchTo(ch){
+  if(wallet.chainId===ch.id)return;
+  try{await wallet.provider.request({method:'wallet_switchEthereumChain',params:[{chainId:ch.hex}]});}
   catch(e){
     if(e.code===4902)await wallet.provider.request({method:'wallet_addEthereumChain',params:[{
-      chainId:BASE_HEX,chainName:'Base',nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},
-      rpcUrls:[BASE.rpc],blockExplorerUrls:['https://basescan.org']}]});
+      chainId:ch.hex,chainName:ch.name,nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},
+      rpcUrls:[ch.rpc],blockExplorerUrls:[ch.explorer]}]});
     else throw e;
   }
-  wallet.chainId=BASE_CHAIN;
+  wallet.chainId=ch.id;
 }
+const switchToBase=()=>switchTo(BASE);
 
-/* which tokens to look at: whatever is on the wall, plus what they already hold */
-function watchedTokens(){
+/* which tokens to look at on a chain: whatever is on the wall, plus anything
+   this desk has bought — a fill has to show up in the bag even after the
+   screen that sold it has rotated off the wall */
+function watchedTokens(ch){
   const out=new Map();
   for(const m of [...memes,...pinned])
-    if(m.tokenAddr&&m.chain==='base')out.set(m.tokenAddr.toLowerCase(),m);
+    if(m.tokenAddr&&m.chain===ch.key)out.set(ch.sol?m.tokenAddr:m.tokenAddr.toLowerCase(),m);
+  for(const f of fills)
+    if(f.chain===ch.key&&f.token&&!out.has(ch.sol?f.token:f.token.toLowerCase()))
+      out.set(ch.sol?f.token:f.token.toLowerCase(),{sym:f.sym,tokenAddr:f.token,chain:ch.key,pairAddr:f.pair,v4:!!f.v4});
   return out;
 }
 /* WHOSE BAG THE ROOM IS VALUING.
@@ -1816,49 +2001,124 @@ function watchedTokens(){
    their own PnL on their own desk. Reading a balance needs no keys and no
    provider: rpc() falls back to a public endpoint, so an address is enough.
    Signing anything still needs wallet.addr, which this deliberately is not. */
-function watchAddr(){
-  return wallet.addr||(dhData.me&&dhData.me.address)||'';
-}
-async function refreshWallet(){
-  const who=watchAddr();
-  if(!who){wallet.assets=[];wallet.usd=0;return;}
+/* WHO THE APP IS SIGNED IN AS.
+   Standalone at /trenchstar-game/ this document IS dehub.io, so the app's
+   own session is sitting in localStorage right next to ours: `dehub_wallet`
+   is the address AuthProvider writes on sign-in and removes on sign-out.
+   Reading it is not a login and it buys this room nothing on its own -- a
+   public key, on every post the account has ever made -- but it is the whole
+   difference between a room that knows whose desk it is and one that tells a
+   signed-in user they have no account.
+   Inside the arcade the frame is an opaque origin, so its storage is a
+   private partition and this is always empty; that case comes down the host
+   bridge instead, which sends the same address as `me.address`. */
+function dehubAddr(){
   try{
-    const nativeHex=await rpc('eth_getBalance',[who,'latest']);
-    const eth=Number(hexToBig(nativeHex))/1e18;
-    const toks=[...watchedTokens().keys()].slice(0,25);
-    const bals=await Promise.all(toks.map(async a=>{
-      try{
-        const [b,d]=await Promise.all([
-          ethCall(a,SEL.balanceOf+encAddr(who)),
-          ethCall(a,SEL.decimals)]);
-        const dec=Number(hexToBig(d))||18;
-        return {addr:a,qty:Number(hexToBig(b))/Math.pow(10,dec),dec};
-      }catch(e){return null;}
-    }));
-    const held=bals.filter(b=>b&&b.qty>0);
-    /* price everything in one DexScreener call, newest prices + 24h change */
+    const a=localStorage.getItem('dehub_wallet')||'';
+    return /^0x[0-9a-fA-F]{40}$/.test(a)?a.toLowerCase():'';
+  }catch(e){return '';}
+}
+function watchAddr(){
+  return wallet.addr||(dhData.me&&dhData.me.address)||dehubAddr()||'';
+}
+/* Price a native coin off the wall itself. ETH and SOL are majors with a live
+   exchange feed in this room, which is a better print than any DEX pool. */
+function nativePx(sym){
+  const m=markets[sym];
+  return m&&m.fed?{px:m.price,ch:m.pct24||0}:null;
+}
+/* DexScreener prices for a set of tokens on one chain, deepest pool per token */
+async function dsPrices(ch,addrs){
+  const best={};
+  for(let i=0;i<addrs.length;i+=30){
     let rows=[];
-    const addrs=[BASE.weth,...held.map(h=>h.addr)];
     try{
-      const j=await fget('https://api.dexscreener.com/tokens/v1/base/'+addrs.join(','));
+      const j=await fget('https://api.dexscreener.com/tokens/v1/'+ch.key+'/'+addrs.slice(i,i+30).join(','));
       if(Array.isArray(j))rows=j;
     }catch(e){}
-    const best={};
     for(const p of rows){
-      const a=p.baseToken&&p.baseToken.address&&p.baseToken.address.toLowerCase();
-      if(!a||!p.priceUsd)continue;
+      const raw=p.baseToken&&p.baseToken.address;
+      if(!raw||!p.priceUsd)continue;
+      const a=ch.sol?raw:raw.toLowerCase();
       const liq=(p.liquidity&&p.liquidity.usd)||0;
       /* one row per PAIR — take the deepest, or you price off a dead pool */
       if(!best[a]||liq>best[a].liq)best[a]={px:+p.priceUsd,ch:+((p.priceChange||{}).h24||0),liq,
         sym:p.baseToken.symbol};
     }
+  }
+  return best;
+}
+async function evmBag(ch,who){
+  const nativeHex=await rpcPublic(ch.rpc,'eth_getBalance',[who,'latest']);
+  const eth=Number(hexToBig(nativeHex))/1e18;
+  const toks=[...watchedTokens(ch).keys()].slice(0,40);
+  const bals=await Promise.all(toks.map(async a=>{
+    try{
+      const [b,d]=await Promise.all([
+        ethCallOn(ch,a,SEL.balanceOf+encAddr(who)),
+        ethCallOn(ch,a,SEL.decimals)]);
+      const dec=Number(hexToBig(d))||18;
+      return {addr:a,raw:hexToBig(b),qty:Number(hexToBig(b))/Math.pow(10,dec),dec};
+    }catch(e){return null;}
+  }));
+  const held=bals.filter(b=>b&&b.qty>0);
+  const best=held.length?await dsPrices(ch,held.map(h=>h.addr)):{};
+  const assets=[];
+  const w=nativePx('ETH');
+  if(eth>0)assets.push({sym:'ETH',qty:eth,px:w?w.px:0,ch:w?w.ch:0,chain:ch.key,dec:18,native:true});
+  for(const h of held){
+    const b=best[h.addr];
+    if(b&&b.liq>1000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr,chain:ch.key,dec:h.dec,raw:h.raw});
+  }
+  return assets;
+}
+async function solBag(who){
+  const ch=CHAINS.solana;
+  const lam=await rpcPublic(ch.rpc,'getBalance',[who]);
+  const solQty=Number(lam&&lam.value!=null?lam.value:lam)/1e9;
+  const accts=[];
+  for(const prog of ['TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA','TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb']){
+    try{
+      const r=await rpcPublic(ch.rpc,'getTokenAccountsByOwner',[who,{programId:prog},{encoding:'jsonParsed'}]);
+      for(const a of (r&&r.value)||[]){
+        const info=a.account&&a.account.data&&a.account.data.parsed&&a.account.data.parsed.info;
+        if(!info||!info.tokenAmount)continue;
+        const raw=BigInt(info.tokenAmount.amount||'0');
+        if(raw<=0n)continue;
+        accts.push({addr:info.mint,raw,dec:info.tokenAmount.decimals,qty:Number(raw)/Math.pow(10,info.tokenAmount.decimals)});
+      }
+    }catch(e){}
+  }
+  /* the same mint can sit in several accounts; the bag is the sum */
+  const byMint=new Map();
+  for(const a of accts){
+    const cur=byMint.get(a.addr);
+    if(cur){cur.raw+=a.raw;cur.qty+=a.qty;}else byMint.set(a.addr,a);
+  }
+  const held=[...byMint.values()];
+  const best=held.length?await dsPrices(ch,held.map(h=>h.addr)):{};
+  const assets=[];
+  const s=nativePx('SOL');
+  if(solQty>0)assets.push({sym:'SOL',qty:solQty,px:s?s.px:0,ch:s?s.ch:0,chain:'solana',dec:9,native:true});
+  for(const h of held){
+    const b=best[h.addr];
+    if(b&&b.liq>1000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr,chain:'solana',dec:h.dec,raw:h.raw});
+  }
+  return assets;
+}
+let refreshing=false;
+async function refreshWallet(){
+  const who=watchAddr(),sol=solAddr();
+  if(!who&&!sol){wallet.assets=[];wallet.usd=0;syncWalletUI();return;}
+  if(refreshing)return;
+  refreshing=true;
+  try{
     const assets=[];
-    const w=best[BASE.weth.toLowerCase()];
-    if(eth>0)assets.push({sym:'ETH',qty:eth,px:w?w.px:0,ch:w?w.ch:0});
-    for(const h of held){
-      const b=best[h.addr];
-      if(b&&b.liq>3000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr});
-    }
+    const jobs=[];
+    if(who)for(const ch of EVM_CHAINS)jobs.push(evmBag(ch,who).then(a=>assets.push(...a)).catch(()=>{}));
+    if(sol)jobs.push(solBag(sol).then(a=>assets.push(...a)).catch(()=>{}));
+    await Promise.all(jobs);
+    assets.sort((a,b)=>b.qty*b.px-a.qty*a.px);
     wallet.assets=assets;
     wallet.usd=assets.reduce((s,a)=>s+a.qty*a.px,0);
     /* mark-to-market: holdings held constant, valued now vs 24h-ago prices.
@@ -1868,9 +2128,10 @@ async function refreshWallet(){
     wallet.pnl24=wallet.usd-then;
     snapshotWallet();
     syncWalletUI();
+    tdRender();
   }catch(e){}
+  refreshing=false;
 }
-/* A daily snapshot turns the approximation into real PnL from tomorrow on. */
 function snapshotWallet(){
   try{
     const key='trenchstar.snaps';
@@ -1886,49 +2147,375 @@ function snapshotWallet(){
     wallet.pnlReal=old?wallet.usd-old.usd:null;
   }catch(e){}
 }
-setInterval(()=>{if(watchAddr())refreshWallet();},45000);
+setInterval(()=>{if(watchAddr()||solAddr())refreshWallet();},45000);
 
-/* ============================== swap =================================
+/* ============================== trade ================================
    Quote, then SIMULATE, then ask, then send. The simulation is the safety
-   net: a bad encoding or a dead pool reverts here, before anything is signed. */
+   net: a bad encoding or a dead pool reverts here, before anything is signed.
+
+   WHO SIGNS. Three signers, chosen in this order and never mixed:
+   - a wallet connected in here (MetaMask & co, via EIP-6963) signs EVM
+     itself, after switching to the market's chain;
+   - inside the app, with nobody connected in here, the app's OWN wallet
+     signs. The frame is same-origin with dehub.io (it is a first-party game)
+     but it still never touches a key: it sends the chain, the token, the
+     amount and the floor over the bridge, and the host builds the calldata
+     and signs with the smart account — gas sponsored, one press;
+   - Solana is Phantom (or whatever announces itself as window.solana).
+     Jupiter builds the transaction, the wallet signs and sends it.
+   Nothing is sent without the ticket being armed and pressed a second time. */
+const SEL2={
+  multicall:'0x5ae401dc',       /* multicall(uint256 deadline, bytes[] data) */
+  unwrapWETH9:'0x49404b7c'      /* unwrapWETH9(uint256 amountMinimum, address recipient) */
+};
+/* SwapRouter02's "keep the output here for the next call" recipient */
+const ROUTER_SELF='0x0000000000000000000000000000000000000002';
 function encExactInputSingle(a){
   return SEL.exactInputSingle+
     encAddr(a.tokenIn)+encAddr(a.tokenOut)+encUint(a.fee)+encAddr(a.recipient)+
     encUint(a.amountIn)+encUint(a.amountOutMin)+encUint(0);
 }
-async function quoteBest(tokenIn,tokenOut,amountIn){
+function encBytes(hex){
+  const h=hex.replace(/^0x/,'');
+  return encUint(h.length/2)+h.padEnd(Math.ceil(h.length/64)*64,'0');
+}
+function encMulticall(deadline,calls){
+  const heads=[],tails=[];
+  let off=calls.length*32;
+  for(const c of calls){const b=encBytes(c);heads.push(encUint(off));tails.push(b);off+=b.length/2;}
+  return SEL2.multicall+encUint(deadline)+encUint(64)+encUint(calls.length)+heads.join('')+tails.join('');
+}
+const encUnwrap=(min,to)=>SEL2.unwrapWETH9+encUint(min)+encAddr(to);
+const hexBig=v=>'0x'+BigInt(v).toString(16);
+
+async function quoteEvm(ch,tokenIn,tokenOut,amountIn){
   let best=null;
   for(const fee of FEE_TIERS){
-    try{
-      const data=SEL.quoteExactInputSingle+
-        encAddr(tokenIn)+encAddr(tokenOut)+encUint(amountIn)+encUint(fee)+encUint(0);
-      const r=await ethCall(BASE.quoter,data);
-      const out=hexToBig('0x'+r.slice(2,66));
-      if(out>0n&&(!best||out>best.out))best={out,fee};
-    }catch(e){}
+    const data=SEL.quoteExactInputSingle+
+      encAddr(tokenIn)+encAddr(tokenOut)+encUint(amountIn)+encUint(fee)+encUint(0);
+    /* one retry: Robinhood's public RPC rate-limits a burst of three */
+    for(let t=0;t<2;t++){
+      try{
+        const r=await ethCallOn(ch,ch.quoter,data);
+        const out=hexToBig('0x'+r.slice(2,66));
+        if(out>0n&&(!best||out>best.out))best={out,fee};
+        break;
+      }catch(e){
+        if(!/too many|429/i.test(String(e.message||e)))break;
+        await new Promise(r=>setTimeout(r,450));
+      }
+    }
   }
   return best;
 }
-async function buyToken(tokenOut,ethAmount,slipPct){
-  if(!wallet.addr){toast('Connect a wallet first.');return;}
-  if(wallet.chainId!==BASE_CHAIN){
-    toast('Switching to Base…');
-    try{await switchToBase();}catch(e){toast('Could not switch network.');return;}
-  }
-  const amountIn=toUnits(ethAmount,18);
-  const q=await quoteBest(BASE.weth,tokenOut,amountIn);
-  if(!q){toast('No route for that token on Base.');return;}
-  const slip=BigInt(Math.round((slipPct||3)*100));
-  const amountOutMin=q.out*(10000n-slip)/10000n;
-  const tx={from:wallet.addr,to:BASE.router,
-    value:'0x'+amountIn.toString(16),
-    data:encExactInputSingle({tokenIn:BASE.weth,tokenOut,fee:q.fee,
-      recipient:wallet.addr,amountIn,amountOutMin})};
-  /* dry run — never offer to sign something that already fails */
-  try{await rpc('eth_call',[tx,'latest']);}
-  catch(e){toast('Swap would fail: '+String(e.message||e).slice(0,70));return null;}
-  return {tx,quote:q,amountOutMin};
+const quoteBest=(tokenIn,tokenOut,amountIn)=>quoteEvm(BASE,tokenIn,tokenOut,amountIn);
+/* ---- Uniswap v4 ----
+   Most of Robinhood Chain's trench pairs are v4 pools behind a launchpad
+   hook, which the v3 quoter and SwapRouter02 cannot see at all. A v4 pool is
+   keyed by (currency0, currency1, fee, tickSpacing, hooks), and DexScreener
+   hands over only the pool id — the keccak of that key — so the key is read
+   back off the PoolManager's Initialize log for that id. Robinhood's RPC
+   answers a getLogs from genesis; Base's caps the range at 10k blocks, so a
+   v4 wall pair on Base falls back to whatever v3 pool the token also has.
+   Swaps go through the Universal Router: one V4_SWAP command carrying
+   SWAP_EXACT_IN_SINGLE, SETTLE_ALL, TAKE_ALL. A sell settles through Permit2,
+   which is the one extra approval a v4 sell costs over a v3 one.
+   The router addresses are from universal-router-sdk, not sdk-core: on
+   Robinhood sdk-core's two "router" entries are the V2 factory and V2 router,
+   and both revert this calldata. Measured. */
+const V4={
+  base:{ur:'0x6ff5693b99212da76ad316178a184ab56d299b43',quoter:'0x0d5e0f971ed27fbff6c2837bf31316121532048d',
+    pm:'0x498581ff718922c3f8e6a244956af099b2652b2b',logs:false},
+  robinhood:{ur:'0x8876789976decbfcbbbe364623c63652db8c0904',quoter:'0x8dc178efb8111bb0973dd9d722ebeff267c98f94',
+    pm:'0x8366a39cc670b4001a1121b8f6a443a643e40951',logs:true}
+};
+const PERMIT2='0x000000000022D473030F116dDEE9F6B43aC78BA3';
+const ZERO='0x0000000000000000000000000000000000000000';
+const V4_INIT='0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438';
+const SEL4={
+  quote:'0xaa9d21cb',      /* quoteExactInputSingle(((address,address,uint24,int24,address),bool,uint128,bytes)) */
+  execute:'0x3593564c',    /* execute(bytes,bytes[],uint256) */
+  p2allow:'0x927da105',    /* Permit2 allowance(address,address,address) */
+  p2approve:'0x87517c45'   /* Permit2 approve(address,address,uint160,uint48) */
+};
+const v4Keys=(()=>{try{return JSON.parse(localStorage.getItem('trenchstar.v4keys')||'{}');}catch(e){return {};}})();
+async function v4Key(ch,m){
+  const id=(m.pairAddr||'').toLowerCase();
+  if(!/^0x[0-9a-f]{64}$/.test(id))return null;
+  if(v4Keys[id])return v4Keys[id];
+  const v=V4[ch.key];if(!v||!v.logs)return null;
+  let logs=null;
+  try{logs=await rpcPublic(ch.rpc,'eth_getLogs',[{address:v.pm,fromBlock:'0x0',toBlock:'latest',topics:[V4_INIT,id]}]);}
+  catch(e){return null;}
+  const l=logs&&logs[0];if(!l||!l.topics||l.topics.length<4)return null;
+  const w=i=>l.data.slice(2+i*64,66+i*64);
+  const key={c0:'0x'+l.topics[2].slice(26),c1:'0x'+l.topics[3].slice(26),
+    fee:parseInt(w(0),16),ts:parseInt(w(1),16),hooks:'0x'+w(2).slice(24)};
+  /* only ETH-quoted pools: the ticket buys with the gas coin and sells back to it */
+  if(key.c0!==ZERO)return null;
+  v4Keys[id]=key;try{localStorage.setItem('trenchstar.v4keys',JSON.stringify(v4Keys));}catch(e){}
+  return key;
 }
+const encV4Key=k=>encAddr(k.c0)+encAddr(k.c1)+encUint(k.fee)+encUint(k.ts)+encAddr(k.hooks);
+async function quoteV4(ch,key,zfo,amount){
+  const data=SEL4.quote+encUint(32)+encV4Key(key)+encUint(zfo?1:0)+encUint(amount)+encUint(256)+encUint(0);
+  try{
+    const r=await ethCallOn(ch,V4[ch.key].quoter,data);
+    const out=hexToBig('0x'+r.slice(2,66));
+    return out>0n?{out,key,fee:key.fee,v4:true}:null;
+  }catch(e){return null;}
+}
+/* a small ABI encoder for the dynamic shapes the Universal Router wants */
+function abiEnc(items){
+  const heads=[],tails=[];let off=items.length*32;
+  for(const [t,v] of items){
+    if(t==='uint'){heads.push(encUint(v));continue;}
+    if(t==='addr'){heads.push(encAddr(v));continue;}
+    const body=t==='bytes'?encBytes(v):encBytesArr(v);
+    heads.push(encUint(off));tails.push(body);off+=body.length/2;
+  }
+  return heads.join('')+tails.join('');
+}
+function encBytesArr(arr){
+  const heads=[],tails=[];let off=arr.length*32;
+  for(const h of arr){const b=encBytes(h);heads.push(encUint(off));tails.push(b);off+=b.length/2;}
+  return encUint(arr.length)+heads.join('')+tails.join('');
+}
+function encV4Swap(key,zfo,amountIn,minOut,deadline){
+  const cIn=zfo?key.c0:key.c1,cOut=zfo?key.c1:key.c0;
+  /* ExactInputSingleParams: key(5) + zeroForOne + amountIn + amountOutMinimum + hookData(bytes) */
+  const p0=encUint(32)+encV4Key(key)+encUint(zfo?1:0)+encUint(amountIn)+encUint(minOut)+encUint(288)+encUint(0);
+  const p1=encAddr(cIn)+encUint(amountIn),p2=encAddr(cOut)+encUint(minOut);
+  const input0=abiEnc([['bytes','060c0f'],['bytes[]',[p0,p1,p2]]]);   /* SWAP_EXACT_IN_SINGLE · SETTLE_ALL · TAKE_ALL */
+  return SEL4.execute+abiEnc([['bytes','10'],['bytes[]',[input0]],['uint',deadline]]);  /* V4_SWAP */
+}
+/* Permit2 is how the Universal Router pulls a token in: the token approves
+   Permit2 once, then Permit2 grants the router an allowance with an expiry. */
+async function permit2Ready(ch,token,who,amount,send){
+  const allow=hexToBig(await ethCallOn(ch,token,SEL.allowance+encAddr(who)+encAddr(PERMIT2)));
+  if(allow<amount)await send({to:token,data:SEL.approve+encAddr(PERMIT2)+encUint((1n<<256n)-1n)});
+  const r=await ethCallOn(ch,PERMIT2,SEL4.p2allow+encAddr(who)+encAddr(token)+encAddr(V4[ch.key].ur));
+  const amt=hexToBig('0x'+r.slice(2,66)),exp=Number(hexToBig('0x'+r.slice(66,130)));
+  if(amt<amount||exp<Math.floor(Date.now()/1000)+120)
+    await send({to:PERMIT2,data:SEL4.p2approve+encAddr(token)+encAddr(V4[ch.key].ur)+
+      encUint((1n<<160n)-1n)+encUint(Math.floor(Date.now()/1000)+30*86400)});
+}
+
+/* ---- the host, when the app's own wallet is the signer ---- */
+const tradeWaits=new Map();
+function tradeKey(){return 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function hostTrade(msg,onStage){
+  return new Promise((res,rej)=>{
+    const key=tradeKey();
+    tradeWaits.set(key,{res,rej,onStage,at:Date.now()});
+    dhSend('trade',Object.assign({key},msg));
+    setTimeout(()=>{
+      const w=tradeWaits.get(key);
+      if(w&&!w.sent){tradeWaits.delete(key);rej(new Error('no answer from the app'));}
+    },240000);
+  });
+}
+function hostTraded(d){
+  const w=tradeWaits.get(d.key);
+  if(!w)return;
+  if(!d.ok){tradeWaits.delete(d.key);if(w.sent)w.onStage&&w.onStage('failed',d);else w.rej(new Error(d.reason||'rejected'));return;}
+  if(d.stage==='approved'){w.onStage&&w.onStage('approved',d);return;}
+  if(d.stage==='sent'){w.sent=true;w.res(d.hash);return;}
+  if(d.stage==='mined'){tradeWaits.delete(d.key);w.onStage&&w.onStage('mined',d);}
+}
+function evmSigner(){
+  if(wallet.addr)return 'injected';
+  if(dhFramed&&watchAddr())return 'native';
+  return null;
+}
+function evmAddr(){return wallet.addr||watchAddr();}
+
+/* Which pool. A v4 wall pair is tried first through its recovered key, and
+   whatever cannot be keyed (or quoted) falls through to v3. */
+async function routeEvm(ch,m,side,amount){
+  let q=null;
+  if(m.v4){const key=await v4Key(ch,m);if(key)q=await quoteV4(ch,key,side==='buy',amount);}
+  if(!q)q=side==='buy'?await quoteEvm(ch,ch.weth,m.tokenAddr,amount):await quoteEvm(ch,m.tokenAddr,ch.weth,amount);
+  if(!q)throw new Error(m.v4?'no route on '+ch.label+' — v4 pool could not be keyed':'no route on '+ch.label);
+  return q;
+}
+function hostMsg(ch,side,m,q,amountIn,minOut){
+  const msg={chain:ch.id,side,token:m.tokenAddr,fee:q.v4?0:q.fee,amountIn:amountIn.toString(),minOut:minOut.toString()};
+  if(q.v4)msg.v4={fee:q.key.fee,ts:q.key.ts,hooks:q.key.hooks,pool:(m.pairAddr||'').toLowerCase()};
+  return msg;
+}
+/* ---- EVM buy: ETH in, token out ---- */
+async function planBuyEvm(m,ethAmount,slipPct){
+  const ch=CHAINS[m.chain];
+  const amountIn=toUnits(ethAmount,18);
+  const q=await routeEvm(ch,m,'buy',amountIn);
+  const slip=BigInt(Math.round((slipPct||3)*100));
+  const minOut=q.out*(10000n-slip)/10000n;
+  return {ch,q,amountIn,minOut,side:'buy',m,
+    async send(onStage){
+      if(evmSigner()==='native')return hostTrade(hostMsg(ch,'buy',m,q,amountIn,minOut),onStage);
+      await switchTo(ch);
+      const tx=q.v4
+        ?{from:wallet.addr,to:V4[ch.key].ur,value:hexBig(amountIn),
+          data:encV4Swap(q.key,true,amountIn,minOut,Math.floor(Date.now()/1000)+120)}
+        :{from:wallet.addr,to:ch.router,value:hexBig(amountIn),
+          data:encExactInputSingle({tokenIn:ch.weth,tokenOut:m.tokenAddr,fee:q.fee,
+            recipient:wallet.addr,amountIn,amountOutMin:minOut})};
+      /* dry run — never offer to sign something that already fails */
+      await rpc('eth_call',[tx,'latest']);
+      const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[tx]});
+      watchEvmTx(ch,hash,onStage);
+      return hash;
+    }};
+}
+/* ---- EVM sell: token in, ETH out, unwrapped in the same call ---- */
+async function planSellEvm(m,rawAmount,slipPct){
+  const ch=CHAINS[m.chain];
+  const q=await routeEvm(ch,m,'sell',rawAmount);
+  const slip=BigInt(Math.round((slipPct||3)*100));
+  const minOut=q.out*(10000n-slip)/10000n;
+  return {ch,q,amountIn:rawAmount,minOut,side:'sell',m,
+    async send(onStage){
+      if(evmSigner()==='native')return hostTrade(hostMsg(ch,'sell',m,q,rawAmount,minOut),onStage);
+      await switchTo(ch);
+      const who=wallet.addr;
+      const sendTx=async t=>{
+        onStage&&onStage('approving');
+        const h=await wallet.provider.request({method:'eth_sendTransaction',params:[Object.assign({from:who},t)]});
+        await waitEvmTx(ch,h);
+      };
+      let tx;
+      if(q.v4){
+        await permit2Ready(ch,m.tokenAddr,who,rawAmount,sendTx);
+        tx={from:who,to:V4[ch.key].ur,data:encV4Swap(q.key,false,rawAmount,minOut,Math.floor(Date.now()/1000)+120)};
+      }else{
+        const allow=hexToBig(await ethCallOn(ch,m.tokenAddr,SEL.allowance+encAddr(who)+encAddr(ch.router)));
+        if(allow<rawAmount)await sendTx({to:m.tokenAddr,data:SEL.approve+encAddr(ch.router)+encUint(rawAmount)});
+        const deadline=Math.floor(Date.now()/1000)+60;
+        tx={from:who,to:ch.router,
+          data:encMulticall(deadline,[
+            encExactInputSingle({tokenIn:m.tokenAddr,tokenOut:ch.weth,fee:q.fee,
+              recipient:ROUTER_SELF,amountIn:rawAmount,amountOutMin:minOut}),
+            encUnwrap(minOut,who)])};
+      }
+      await rpc('eth_call',[tx,'latest']);
+      const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[tx]});
+      watchEvmTx(ch,hash,onStage);
+      return hash;
+    }};
+}
+async function waitEvmTx(ch,hash){
+  for(let i=0;i<90;i++){
+    await new Promise(r=>setTimeout(r,2000));
+    try{
+      const r=await rpcPublic(ch.rpc,'eth_getTransactionReceipt',[hash]);
+      if(r)return r;
+    }catch(e){}
+  }
+  return null;
+}
+function watchEvmTx(ch,hash,onStage){
+  waitEvmTx(ch,hash).then(r=>{
+    if(!r)onStage&&onStage('lost');
+    else onStage&&onStage(parseInt(r.status,16)===1?'mined':'failed',{hash,reason:'reverted'});
+  });
+}
+
+/* ---- Solana ---- */
+const sol={prov:null,addr:null,connecting:false};
+function solProvider(){
+  const p=(window.phantom&&window.phantom.solana)||window.solana;
+  return p&&typeof p.request==='function'?p:null;
+}
+async function solConnect(){
+  if(sol.connecting)return;
+  const p=solProvider();
+  if(!p){toast('No Solana wallet found — install Phantom, then reload.');return;}
+  sol.connecting=true;
+  try{
+    const r=await p.connect();
+    const pk=(r&&r.publicKey)||p.publicKey;
+    sol.prov=p;sol.addr=pk.toString();
+    p.on&&p.on('disconnect',()=>{sol.addr=null;syncWalletUI();});
+    p.on&&p.on('accountChanged',pk=>{sol.addr=pk?pk.toString():null;refreshWallet();});
+    toast('PHANTOM CONNECTED · '+sol.addr.slice(0,4)+'…'+sol.addr.slice(-4));
+    syncWalletUI();refreshWallet();
+  }catch(e){toast(e.code===4001?'Connection rejected.':'Phantom error — '+String(e.message||'').slice(0,60));}
+  finally{sol.connecting=false;}
+}
+function solAddr(){return sol.addr||(dhData.me&&dhData.me.solana)||'';}
+const JUP='https://lite-api.jup.ag/swap/v1';
+function b64ToBytes(b64){const s=atob(b64);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u;}
+const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+function bs58(bytes){
+  const digits=[0];
+  for(const b of bytes){
+    let carry=b;
+    for(let j=0;j<digits.length;j++){carry+=digits[j]<<8;digits[j]=carry%58;carry=(carry/58)|0;}
+    while(carry){digits.push(carry%58);carry=(carry/58)|0;}
+  }
+  let out='';
+  for(const b of bytes){if(b)break;out+='1';}
+  for(let i=digits.length-1;i>=0;i--)out+=B58[digits[i]];
+  return out;
+}
+async function jupQuote(inMint,outMint,amount,slipBps){
+  const j=await fget(JUP+'/quote?inputMint='+inMint+'&outputMint='+outMint+'&amount='+amount+
+    '&slippageBps='+slipBps+'&restrictIntermediateTokens=true',12000);
+  if(!j||j.error||!j.outAmount)throw new Error((j&&j.error)||'no route on Solana');
+  return j;
+}
+async function jupSwap(quote,who){
+  const r=await fetch(JUP+'/swap',{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({quoteResponse:quote,userPublicKey:who,wrapAndUnwrapSol:true,
+      dynamicComputeUnitLimit:true,dynamicSlippage:false,
+      prioritizationFeeLamports:{priorityLevelWithMaxLamports:{maxLamports:1500000,priorityLevel:'high'}}})});
+  const j=await r.json();
+  if(!j||!j.swapTransaction)throw new Error((j&&j.error)||'Jupiter could not build the swap');
+  return j.swapTransaction;
+}
+async function solSend(txB64){
+  if(!sol.prov||!sol.addr)throw new Error('connect Phantom to trade on Solana');
+  const r=await sol.prov.request({method:'signAndSendTransaction',params:{message:bs58(b64ToBytes(txB64))}});
+  return (r&&r.signature)||r;
+}
+async function waitSolTx(sig){
+  for(let i=0;i<45;i++){
+    await new Promise(r=>setTimeout(r,2000));
+    try{
+      const r=await rpcPublic(CHAINS.solana.rpc,'getSignatureStatuses',[[sig],{searchTransactionHistory:true}]);
+      const s=r&&r.value&&r.value[0];
+      if(s){if(s.err)return {ok:false};if(s.confirmationStatus==='confirmed'||s.confirmationStatus==='finalized')return {ok:true};}
+    }catch(e){}
+  }
+  return null;
+}
+async function planSol(m,side,amountRaw,slipPct){
+  const ch=CHAINS.solana;
+  const inMint=side==='buy'?ch.wsol:m.tokenAddr,outMint=side==='buy'?m.tokenAddr:ch.wsol;
+  const q=await jupQuote(inMint,outMint,amountRaw.toString(),Math.round((slipPct||3)*100));
+  return {ch,q,amountIn:amountRaw,minOut:BigInt(q.otherAmountThreshold||q.outAmount),side,m,
+    async send(onStage){
+      if(!sol.addr){await solConnect();if(!sol.addr)throw new Error('connect Phantom to trade on Solana');}
+      const tx=await jupSwap(q,sol.addr);
+      const sig=await solSend(tx);
+      waitSolTx(sig).then(r=>{
+        if(!r)onStage&&onStage('lost');
+        else onStage&&onStage(r.ok?'mined':'failed',{hash:sig,reason:'failed on chain'});
+      });
+      return sig;
+    }};
+}
+
+/* ---- the book of what this desk actually did ---- */
+const fills=(()=>{try{return JSON.parse(localStorage.getItem('trenchstar.fills')||'[]');}catch(e){return [];}})();
+function saveFills(){try{localStorage.setItem('trenchstar.fills',JSON.stringify(fills.slice(0,60)));}catch(e){}}
+function recordFill(f){fills.unshift(f);saveFills();renderFills();return f;}
+function updateFill(hash,patch){
+  const f=fills.find(x=>x.hash===hash);
+  if(f){Object.assign(f,patch);saveFills();renderFills();}
+}
+function txUrl(chainKey,hash){return CHAINS[chainKey].explorer+'/tx/'+hash;}
 const positions=[];
 function openPaperBook(){
   /* The book is openly PAPER — the panel says so on a chip — but an entry
@@ -1953,7 +2540,29 @@ function paperPnl(){
 
 /* ================================ three =============================== */
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+/* ---- QUALITY TIER ---------------------------------------------------------
+   Two tiers, decided once at boot. The degrade path below still runs on top
+   of either — this only picks where it STARTS, so a phone does not spend its
+   first six seconds at desktop settings before the fps counter notices.
+     · phone — a coarse pointer on a small viewport: pixel ratio capped at
+       1.25 (a dpr-3 phone at 1.5 is a 4K frame through a post chain), no
+       shadow map (the painted blob comes back), a smaller and rarer floor
+       reflection, a 64px room probe refreshed every 8 s, no screen glass.
+     · high — everything else.
+   `?q=phone` / `?q=high` (or the same in the hash) overrides the guess, and
+   is what the mobile app passes so the tier never depends on a media query
+   inside a WebView. */
+const GFX=(()=>{
+  let q=null;
+  try{
+    q=new URLSearchParams(location.search).get('q')||new URLSearchParams(location.hash.slice(1)).get('q');
+  }catch(e){}
+  const coarse=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+  const small=Math.min(innerWidth,innerHeight)<=820;
+  const tier=(q==='phone'||q==='low')?'phone':(q==='high'||q==='ultra')?'high':(coarse&&small)?'phone':'high';
+  return {tier,phone:tier==='phone'};
+})();
+renderer.setPixelRatio(Math.min(devicePixelRatio,GFX.phone?1.25:1.5));
 /* FILMIC RESPONSE. Without tone mapping every value above 1 simply clipped,
    so a wall of saturated monitors came back as flat blocks of pure colour and
    the floor caught a grey wash instead of light. ACES rolls those highlights
@@ -1965,6 +2574,10 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
    uses exposure as a per-tile dimmer.) */
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.15;
+/* PCFSoft, not the default: a hard shadow edge on a floor lit this softly
+   reads as a decal. See keyLight — one directional light does all of it. */
+renderer.shadowMap.enabled=!GFX.phone;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const host=$('#gl');
 host.appendChild(renderer.domElement);
 /* the host can be 0x0 at load (hidden tab, iframe not yet laid out); never bake that in */
@@ -1985,6 +2598,15 @@ const camera=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,0.1,260);
    can be taken out of it without being taken out of the room. */
 const NO_REFLECT=2;
 camera.layers.enable(NO_REFLECT);
+/* Layer 5 is "the eye sees this and nothing else does": not the floor, not
+   the room probe. It exists for the screen glass. Seen from BELOW the floor,
+   which is where the mirror's virtual camera stands, a glossy sheet on the
+   wall reflects the area lamps hanging above it straight back — a 7 m
+   highlight that bloomed into a white blob on the floor and lifted the
+   whole frame grey. From eye level the same sheet reflects the room behind
+   you, which is the glint it is there for. */
+const EYE_ONLY=5;
+camera.layers.enable(EYE_ONLY);
 /* Seated-operator eyeline. Previously the camera sat high and far, which put the
    wall in the upper half and left the lower half as empty floor. */
 const EYE_Y=2.9;
@@ -2004,6 +2626,80 @@ let camTouched=false;
 const pmrem=new THREE.PMREMGenerator(renderer);
 scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
 RectAreaLightUniformsLib.init();
+
+/* ---- THE ROOM LIGHTS ITSELF ----------------------------------------------
+   Every reflective thing in here — the monitor bezels, the desk, the glazing,
+   the trader's jacket — used to reflect RoomEnvironment: a generic studio of
+   white light boxes that exists nowhere in this scene. So the frames carried
+   bright white highlights in a room whose only light is thirty-nine monitors,
+   and nothing metallic ever picked up the wall it was standing in front of.
+
+   This is a cube probe at eye height in the middle of the floor. It renders
+   the actual room — wall, city, glazing, desk — into a small cube map, three
+   prefilters it (needsPMREMUpdate) and it becomes scene.environment. From
+   then on the environment IS the wall: bezels reflect the charts beside them,
+   the desk top catches the colour of whatever is on the big board, the
+   glazing carries the city, and diffuse image-based light on the character
+   comes from the screens they are looking at.
+
+   Cost is spread rather than paid at once: ONE cube face per frame, so a
+   refresh is six frames of a 128px render plus one prefilter, never a hitch.
+   The floor, the grid and the character are hidden while it looks — a mirror
+   inside a probe is a hall of mirrors, and a probe that includes the character
+   lights the character with themselves. RoomEnvironment stays as the seed so
+   nothing is unlit before the first refresh lands. */
+const envProbe=(()=>{
+  const size=GFX.phone?64:128;
+  const rt=new THREE.WebGLCubeRenderTarget(size,{type:THREE.HalfFloatType,
+    generateMipmaps:true,minFilter:THREE.LinearMipmapLinearFilter});
+  const cam=new THREE.CubeCamera(0.3,220,rt);
+  cam.position.set(0,EYE_Y,-1.5);
+  cam.layers.enable(NO_REFLECT);     /* the city belongs in the glazing */
+  scene.add(cam);
+  /* A face is a scene traversal — measured at roughly half a frame, because
+     the cost is draw submission, not the 128px of fill. Six of them in a row
+     every few seconds is a visible hitch on a machine that is already near
+     budget, so the refresh is rare: the wall's average colour moves over
+     minutes, not frames. The degrade path stretches it further. */
+  let period=GFX.phone?10:4;
+  let face=-1,since=period,refreshes=0;
+  function step(dt){
+    if(face<0){
+      since+=dt;
+      if(since<period||!firstFrame)return;
+      face=0;since=0;
+    }
+    const hidden=[];
+    for(const o of [floorGrp,grid,walk.obj])if(o&&o.visible){o.visible=false;hidden.push(o);}
+    const xr=renderer.xr.enabled;renderer.xr.enabled=false;
+    const auto=renderer.shadowMap.autoUpdate;renderer.shadowMap.autoUpdate=false;
+    const cur=renderer.getRenderTarget();
+    const gm=rt.texture.generateMipmaps;
+    rt.texture.generateMipmaps=face===5?gm:false;   /* mips once, on the last face */
+    cam.updateMatrixWorld();
+    renderer.setRenderTarget(rt,face);
+    renderer.render(scene,cam.children[face]);
+    rt.texture.generateMipmaps=gm;
+    renderer.setRenderTarget(cur);
+    renderer.shadowMap.autoUpdate=auto;
+    renderer.xr.enabled=xr;
+    for(const o of hidden)o.visible=true;
+    if(++face>5){
+      face=-1;refreshes++;
+      rt.texture.needsPMREMUpdate=true;
+      if(scene.environment!==rt.texture){
+        scene.environment=rt.texture;
+        /* The wall tops out at 1.0 where the studio boxes sat at 50, so the
+           probe is a darker map by an order of magnitude. This is the gain
+           that puts the bezels' highlights back where they were — now in the
+           wall's colours instead of white. */
+        scene.environmentIntensity=GFX.phone?2.0:2.4;
+      }
+    }
+  }
+  return {rt,cam,step,size,get period(){return period;},set period(v){period=v;},
+    get refreshes(){return refreshes;},get face(){return face;}};
+})();
 
 /* ------------------------- free camera -------------------------------
    Orbiting a fixed point meant "forward" was always the room's forward, so
@@ -2181,6 +2877,45 @@ areaLight(0x66d9ff,0,-11);        /* [0] centre */
 areaLight(0x8fb8ff,-7.5,-9.0);    /* [1] left   */
 areaLight(0xff9ad5,7.5,-9.0);     /* [2] right  */
 
+/* ------------------------- THE ONE HARD LIGHT -------------------------
+   Everything above is a RectAreaLight, and three cannot cast a shadow from
+   one. So nothing in this room had a shadow: the desk met the floor with no
+   contact at all, the monitor stood on it without touching it, and the trader
+   carried a painted blob under their feet that stayed the same size and shape
+   whatever they did. That reads as a set of props hovering over a backdrop,
+   and it is the single biggest thing between this room and a rendered one.
+
+   One directional light, over the shoulder of where you actually stand, aimed
+   at the desk. Deliberately dim — 0.55 — because the room's LOOK is already
+   authored and this is here for the shadow, not to relight anything. Its
+   frustum is drawn tight around the floor you can walk on rather than the
+   whole 60 m room: at 1024 that is ~1.6 cm per shadow texel where it matters,
+   instead of 6 cm of mush everywhere. */
+const SHADOW_R=11;                 /* the walkable floor, not the whole room */
+let blobShadow=null;               /* the painted fallback, see loadAvatar */
+const keyLight=new THREE.DirectionalLight(0xbcd8ff,0.55);
+keyLight.position.set(4.5,9.5,7.5);
+keyLight.target.position.set(0,0.6,3.2);
+scene.add(keyLight,keyLight.target);
+keyLight.castShadow=renderer.shadowMap.enabled;
+keyLight.shadow.mapSize.set(1024,1024);
+const sc=keyLight.shadow.camera;
+sc.left=-SHADOW_R;sc.right=SHADOW_R;sc.top=SHADOW_R;sc.bottom=-SHADOW_R;
+sc.near=1;sc.far=30;sc.updateProjectionMatrix();
+/* Acne on a floor this glancing is all slope, not depth — normalBias fixes it
+   where a flat `bias` only trades it for the shadow detaching from the feet. */
+keyLight.shadow.bias=-0.0008;
+keyLight.shadow.normalBias=0.035;
+/* Cheap, and the only lever worth having: turning this off is the first thing
+   the degrade path does, before it touches bloom or the mirror. */
+function setShadows(on){
+  if(renderer.shadowMap.enabled===on)return;
+  renderer.shadowMap.enabled=on;
+  keyLight.castShadow=on;
+  if(blobShadow)blobShadow.visible=!on;     /* never both */
+  scene.traverse(o=>{if(o.isMesh)o.material&&(o.material.needsUpdate=true);});
+}
+
 /* ---- the room takes its colour from the wall -------------------------
    The brightest thing in this room is 39 monitors, and until now they cast
    no light at all: three lamps sat at fixed colours with no causal relation
@@ -2263,11 +2998,115 @@ const skinAlpha=(()=>{
 const floorMat=new THREE.MeshStandardMaterial({color:0x0a0e14,roughness:0.30,metalness:0.55,
   envMapIntensity:0.14,transparent:true,alphaMap:skinAlpha,depthWrite:false});
 let mirror=null,mirrorTint=0x8d99a6,FLOOR_Q='mirror';
+/* The quality ladder's cheap rungs for the reflection: 1 is a smaller target,
+   2 is smaller again with every other refresh skipped while things move.
+   There is no rung after this. The floor used to drop to a plain
+   MeshStandardMaterial disc when the GPU struggled, and what that disc
+   reflects is scene.environment — the room probe, a 128px prefiltered cube
+   of the wall — so it painted the screens back as smeared red and green
+   bands. A floor does not reflect like that. A real mirror at a quarter of
+   the pixels still reflects the wall as the wall. */
+let MIRROR_LITE=0;
 const FLOOR_R=17;   /* was 27 — the excess just read as empty space */
+
+/* ---- GLOSS, NOT A MIRROR --------------------------------------------------
+   A Reflector is a perfect mirror: the wall came back on the floor as sharp
+   at twenty metres as at one, which is what a puddle does and no stone floor
+   does. Real gloss goes soft with distance, because the reflected ray has
+   travelled further through a surface that is rough at the micron scale, and
+   it goes BRIGHTER at a grazing angle (Fresnel) — the two things the eye uses
+   to tell "polished floor" from "the wall, upside down".
+
+   Both happen in the reflector's own fragment, from the mipmaps the target
+   already carries. `lod` climbs with distance from the eye, so what is
+   underfoot stays sharp and the far wall dissolves into colour; a streaky
+   roughness map breaks that up into the scratches a walked-on floor has. The
+   Fresnel term keeps the straight-down view at 55% and runs to full at the
+   horizon. Nothing here costs a second pass. */
+const floorRough=(()=>{
+  const c=document.createElement('canvas');c.width=c.height=256;
+  const x=c.getContext('2d');
+  x.fillStyle='#606060';x.fillRect(0,0,256,256);
+  /* coarse mottle underneath, fine directional scratches on top */
+  for(let i=0;i<700;i++){
+    const g=Math.round(rnd(40,140));
+    x.fillStyle='rgba('+g+','+g+','+g+',0.18)';
+    x.beginPath();x.arc(rnd(0,256),rnd(0,256),rnd(3,14),0,Math.PI*2);x.fill();
+  }
+  for(let i=0;i<900;i++){
+    const g=Math.round(rnd(30,200));
+    x.strokeStyle='rgba('+g+','+g+','+g+',0.35)';
+    x.lineWidth=rnd(0.4,1.2);
+    const px=rnd(0,256),py=rnd(0,256),l=rnd(8,60),a=rnd(-0.18,0.18);
+    x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.cos(a)*l,py+Math.sin(a)*l);x.stroke();
+  }
+  const t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping;
+  t.generateMipmaps=true;t.minFilter=THREE.LinearMipmapLinearFilter;
+  return t;
+})();
+const GlossShader={
+  name:'GlossReflector',
+  uniforms:{
+    color:{value:null},tDiffuse:{value:null},textureMatrix:{value:null},
+    uRough:{value:floorRough},
+    uBlur:{value:GFX.phone?0.22:0.17},   /* mip levels per metre of distance */
+    uFresnel:{value:0.55},               /* reflectance looking straight down */
+  },
+  vertexShader:`
+    uniform mat4 textureMatrix;
+    varying vec4 vUv;
+    varying vec3 vWorld;
+    #include <common>
+    #include <logdepthbuf_pars_vertex>
+    void main(){
+      vUv=textureMatrix*vec4(position,1.0);
+      vWorld=(modelMatrix*vec4(position,1.0)).xyz;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+      #include <logdepthbuf_vertex>
+    }`,
+  fragmentShader:`
+    uniform vec3 color;
+    uniform sampler2D tDiffuse;
+    uniform sampler2D uRough;
+    uniform float uBlur,uFresnel;
+    varying vec4 vUv;
+    varying vec3 vWorld;
+    #include <logdepthbuf_pars_fragment>
+    float blendOverlay(float base,float blend){
+      return (base<0.5?(2.0*base*blend):(1.0-2.0*(1.0-base)*(1.0-blend)));
+    }
+    vec3 blendOverlay(vec3 base,vec3 blend){
+      return vec3(blendOverlay(base.r,blend.r),blendOverlay(base.g,blend.g),blendOverlay(base.b,blend.b));
+    }
+    void main(){
+      #include <logdepthbuf_fragment>
+      vec3 V=cameraPosition-vWorld;
+      float d=length(V);
+      V/=max(d,1e-4);
+      float r=texture2D(uRough,vWorld.xz*0.32).r;          /* 0.12..0.8, mean ~0.38 */
+      float lod=clamp((d-1.0)*uBlur+(r-0.38)*2.2,0.0,5.0);
+      vec4 base=textureProjLod(tDiffuse,vUv,lod);
+      float NoV=clamp(V.y,0.0,1.0);
+      float f=mix(uFresnel,1.0,pow(1.0-NoV,3.0));
+      gl_FragColor=vec4(blendOverlay(base.rgb,color)*f,1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`
+};
 function buildFloor(){
   if(mirror){mirror.dispose();mirror=null;}
   floorGrp.clear();
-  const geo=new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2);
+  /* NOT pre-rotated, unlike every other disc in this function. A Reflector
+     takes its mirror plane from the MESH's local +Z, not from the vertices —
+     so a disc laid flat in geometry space under an unrotated mesh reflects
+     through a VERTICAL plane at z=0. That is what this floor did for the
+     whole life of the app: the virtual camera looked at the half of the room
+     BEHIND you, mirrored front-to-back, and the wall's reflection you saw was
+     the glazing and the city ring smeared across the floor at the wrong
+     angle — which is also why it aliased into streaks, and why the floor
+     never looked like a floor. Rotate the mesh; leave the geometry alone. */
+  const geo=new THREE.CircleGeometry(FLOOR_R,64);
   if(FLOOR_Q==='mirror'){
     /* Reflection sharpness is this number — at 512 the screens come back as
        coloured blocks rather than readable charts.
@@ -2278,8 +3117,20 @@ function buildFloor(){
        skin. Halving the resolution is a quarter of the fill for a difference
        nobody can point at, and the throttle below halves it again. */
     const dpr=Math.min(devicePixelRatio||1,2);
-    const res=clamp(Math.floor((host.clientWidth||innerWidth)*dpr*0.5),640,1280);
-    mirror=new Reflector(geo,{textureWidth:res,textureHeight:res,color:mirrorTint,clipBias:0.0015});
+    /* A phone's reflection is blurred harder by the gloss shader anyway, so
+       it gets a target a quarter the area and nobody can tell. */
+    const px=(host.clientWidth||innerWidth)*dpr;
+    const res=GFX.phone
+      ?[clamp(Math.floor(px*0.4),320,640),clamp(Math.floor(px*0.25),240,400),clamp(Math.floor(px*0.18),180,300)][MIRROR_LITE]
+      :[clamp(Math.floor(px*0.5),640,1280),clamp(Math.floor(px*0.3),400,720),clamp(Math.floor(px*0.2),280,480)][MIRROR_LITE];
+    mirror=new Reflector(geo,{textureWidth:res,textureHeight:res,color:mirrorTint,clipBias:0.0015,
+      shader:GlossShader});
+    /* Reflector deep-clones the uniforms, so the roughness map and the knobs
+       have to be pointed at again on the live material. */
+    mirror.material.uniforms.uRough.value=floorRough;
+    mirror.material.uniforms.uBlur.value=GlossShader.uniforms.uBlur.value;
+    mirror.material.uniforms.uFresnel.value=GlossShader.uniforms.uFresnel.value;
+    mirror.rotation.x=-Math.PI/2;
     /* Filter the reflection properly instead of buying sharpness with pixels.
        A floor is seen at a grazing angle, which is the exact case a single
        full-res sample cannot handle: the city ring's thin vertical strips
@@ -2291,36 +3142,64 @@ function buildFloor(){
     rt.texture.generateMipmaps=true;
     rt.texture.minFilter=THREE.LinearMipmapLinearFilter;
     rt.texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-    /* Re-render the reflection every OTHER frame. The reflected image is the
-       wall, which only changes when a screen repaints or the camera moves,
-       and one frame of lag in a floor reflection is not a thing the eye can
-       resolve. Skipping keeps the previous target, so the floor never
-       flickers the way hiding the mesh would. */
+    /* Re-render the reflection every OTHER frame while nothing moves, and
+       EVERY frame while something does. The reflected image is the wall,
+       which only changes when a screen repaints, so at rest a skipped frame
+       costs nothing anyone can see. But a skipped frame keeps the previous
+       target AND the previous projection: the floor is then drawn from this
+       frame's camera with last frame's reflection, and the moment the chase
+       camera is following a walk the mirror lands a frame behind every other
+       frame. That was the jolt on every step. A frame that moved the camera
+       or has a character in it — a body animates even standing still —
+       reflects; the rest keep the previous target, so the floor never
+       flickers the way hiding the mesh would. The lowest rung skips every
+       other moving frame too; it is a smaller judder than a plain floor was
+       an insult. */
     const reflect=mirror.onBeforeRender;
+    const lastCam=new THREE.Matrix4();
     let phase=0;
-    mirror.onBeforeRender=function(...a){
-      if((phase++ & 1)===0)reflect.apply(this,a);
+    const stillEvery=GFX.phone?3:2,moveEvery=MIRROR_LITE>=2?2:1;
+    mirror.onBeforeRender=function(renderer,scene,cam,...a){
+      const moved=!cam.matrixWorld.equals(lastCam)||(walk.obj&&walk.obj.visible);
+      if(!cam.matrixWorld.equals(lastCam))lastCam.copy(cam.matrixWorld);
+      phase++;
+      if(phase%(moved?moveEvery:stillEvery)===0)reflect.call(this,renderer,scene,cam,...a);
     };
     floorGrp.add(mirror);
   }else{
     geo.dispose();
-    /* The fallback floor has to READ as a floor, because this is what the room
-       drops to the moment the GPU struggles — and it is a one-way trip, there
-       is nothing that ever puts the mirror back.
-         It used to be colour 0x0c1016 at metalness 0.7 with envMapIntensity
-       0.16, which is a void rather than a surface: metalness that high leaves
-       a material with no diffuse term at all, so the room's RectAreaLights had
-       nothing to land on, and the 0.16 environment cut the only other source
-       of light it had. The screens stayed lit, the ground under them went
-       black, and the whole lower half of the frame read as a hole in the
-       world. Mostly diffuse with a real environment contribution instead: it
-       is still a dark polished floor, it just exists. */
-    floorGrp.add(new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),
-      new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.34,metalness:0.22,envMapIntensity:0.95})));
+    /* VR only, now. The quality ladder no longer comes down here — it keeps
+       the Reflector and shrinks its target instead — because this disc's
+       reflection is scene.environment, the room probe, and a prefiltered
+       128px cube of the wall comes back as smeared red and green bands.
+       Inside a headset the mirror is too dear, so this is what the floor is;
+       rough enough that the probe reads as a soft glow underfoot rather than
+       as bands, and mostly diffuse so the area lights still land on it. */
+    const plain=new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),
+      new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.62,metalness:0.18,envMapIntensity:0.45}));
+    plain.receiveShadow=true;
+    floorGrp.add(plain);
   }
   const skin=new THREE.Mesh(new THREE.CircleGeometry(FLOOR_R,64).rotateX(-Math.PI/2),floorMat);
   skin.position.y=0.02;
   floorGrp.add(skin);
+  /* A SHADOW CATCHER, not a lit surface.
+     Marking the floor receiveShadow and pointing a light at it does almost
+     nothing here, and the reason is worth writing down: a shadow can only
+     remove the light it blocks, and this room is lit by 39 emissive monitors
+     plus three area lights. Measured — one directional key at 0.55 over a
+     receiveShadow floor darkened SIXTEEN PIXELS of a 1.34-million-pixel frame.
+     A stronger key would show up, but it would also relight a room whose look
+     is deliberately authored by the wall.
+     ShadowMaterial draws the shadow and nothing else, at an opacity of its own
+     choosing, so the contact is visible without touching the light balance. It
+     sits above the skin and below nothing. */
+  const catcher=new THREE.Mesh(new THREE.CircleGeometry(SHADOW_R+2,64).rotateX(-Math.PI/2),
+    new THREE.ShadowMaterial({opacity:0.42,transparent:true,depthWrite:false}));
+  catcher.position.y=0.026;
+  catcher.renderOrder=1;
+  catcher.receiveShadow=true;
+  floorGrp.add(catcher);
 }
 let grid=null;
 function setGrid(c1,c2,op){
@@ -4150,6 +5029,7 @@ function applyPair(m,p){
   m.chain=p.chainId;
   m.pairAddr=p.pairAddress;
   m.tokenAddr=p.baseToken&&p.baseToken.address;
+  m.liq=(p.liquidity&&+p.liquidity.usd)||0;m.pairAt=+p.pairCreatedAt||0;m.v4=Array.isArray(p.labels)&&p.labels.includes('v4');
   const pc=p.priceChange||{};
   m.pushSample(+p.priceUsd,{h24:+pc.h24,h1:+pc.h1,m5:+pc.m5,
     vol:(p.volume&&+p.volume.h24)||0,mcap:+(p.marketCap||p.fdv||0)});
@@ -4737,6 +5617,17 @@ const PAINT_BUDGET=4;   /* canvas repaints allowed per frame */
    the corners of the wall the lights do not reach. */
 const frameMat=new THREE.MeshStandardMaterial({color:0x1a212b,roughness:0.32,metalness:0.88,
   emissive:0x0b1d26,emissiveIntensity:0.5});
+/* The glass front of every monitor — see addScreen. Black base, additive, so
+   it can only ever ADD the glint: a clearcoat lobe catching the room probe
+   and the lamps. One material shared by every screen (disposeScreen skips
+   it, like frameMat). Not on a phone: it is a transparent draw per screen
+   over the most expensive thing on the wall. */
+const SCREEN_GLASS=!GFX.phone;
+const glassScreenMat=new THREE.MeshPhysicalMaterial({
+  color:0x000000,roughness:0.10,metalness:0.0,
+  clearcoat:1.0,clearcoatRoughness:0.12,
+  envMapIntensity:0.5,
+  transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,fog:false});
 /* Half the border, either side, has to fit inside the gap between screens or
    the frames overlap — at 0.07 against a 0.06 gap every neighbour intersected
    its neighbour, at slightly different radii, which is what made the wall
@@ -4806,6 +5697,21 @@ function addScreen(o){
   tex.magFilter=THREE.LinearFilter;
   tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
   const mesh=new THREE.Mesh(screenGeo(o.w,o.h),new THREE.MeshBasicMaterial({map:tex}));
+  /* A sheet of glass over the panel. The picture itself is unlit canvas and
+     must stay that way (a lit chart is an unreadable chart), but a real
+     monitor has a glossy front that catches the room: a clearcoat sheet
+     drawn ADDITIVELY over it adds only that glint — the lamps' highlights and
+     the neighbouring screens via the room probe — and can never darken or
+     tint a pixel of the chart beneath. A child of the picture, so the media
+     fit's scale and the resize's geometry reach it for free; not in
+     `clickable`, so picking never sees it. */
+  if(SCREEN_GLASS){
+    const glass=new THREE.Mesh(mesh.geometry,glassScreenMat);
+    glass.position.z=0.004;
+    glass.userData.glass=true;
+    glass.layers.set(EYE_ONLY);
+    mesh.add(glass);
+  }
   const frame=new THREE.Mesh(screenGeo(o.w+frameEdge()*2,o.h+frameEdge()*2),frameMat);
   frame.position.z=-0.03;
   const group=new THREE.Group();group.add(frame,mesh);
@@ -4914,7 +5820,7 @@ function disposeScreen(s){
   s.group.traverse(o=>{
     if(!o.isMesh)return;
     o.geometry.dispose();
-    if(o.material!==frameMat)o.material.dispose();
+    if(o.material!==frameMat&&o.material!==glassScreenMat)o.material.dispose();
   });
   s.tex.dispose();
 }
@@ -5622,44 +6528,80 @@ function drawCoin(ctx,cx,cy,r){
     ctx.globalAlpha=1;
   }
 }
-/* The coin row: what this account holds, under what it made today. Drawn only
-   when there is a real number — an empty DHB line under the PnL would be one
-   more thing on this screen that is not true. */
-function paintPnlCoin(ctx,w){
-  const bal=dhData.me&&isFinite(dhData.me.badge)?dhData.me.badge:0;
-  if(!bal)return;
-  const y=300,r=34;
+/* The coin row: the DeHub coin and what this account holds, under what it made
+   today. Drawn whenever there is a DeHub session — a holder with nothing in
+   the bag still gets the coin and a 0, because "0 DHB" is a true statement and
+   a missing row is just a missing row. Signed out there is no account to state
+   a balance for, so it is left off. */
+function paintPnlCoin(ctx,w,y,k){
+  if(!dhData.me)return;
+  const bal=isFinite(dhData.me.badge)?dhData.me.badge:0;
+  k=k||1;                             /* full size when it IS the headline */
+  const r=29*k;
   const label=fmtBig(bal)+' DHB';
-  ctx.font='700 62px "Chakra Petch"';
+  ctx.font='700 '+Math.round(54*k)+'px "Chakra Petch"';
   const tw=ctx.measureText(label).width;
-  const total=r*2+18+tw;
+  const total=r*2+18*k+tw;
   const cx=w/2-total/2+r;
   drawCoin(ctx,cx,y,r);
   ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.shadowColor='#f3c44f';ctx.shadowBlur=34;
+  ctx.shadowColor='#f3c44f';ctx.shadowBlur=34*k;
   ctx.fillStyle='#ffe9a3';
-  ctx.fillText(label,cx+r+18,y+2);
+  ctx.fillText(label,cx+r+18*k,y+2*k);
   ctx.shadowBlur=0;
   ctx.textAlign='center';
 }
-function paintPnl(v){
+/* One caption line under the number saying WHOSE money it is and WHICH
+   measure. The number used to hang there at screen height with nothing
+   attached to it, which is how a paper-trading figure passed for a balance. */
+function paintPnlLabel(ctx,w,y,text,col){
+  ctx.font='700 26px "Chakra Petch"';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.letterSpacing&&(ctx.letterSpacing='6px');
+  ctx.shadowColor=col;ctx.shadowBlur=18;
+  ctx.fillStyle=col;
+  ctx.fillText(text,w/2,y);
+  ctx.shadowBlur=0;
+  ctx.letterSpacing&&(ctx.letterSpacing='0px');
+}
+/* `meta` is null when no account is connected. There is deliberately no
+   fallback number in that branch: the room used to project the PAPER book's
+   running total, at screen height, in the same colours and the same font as a
+   real balance, with nothing to say it was not one. See the note on pnlTick. */
+function paintPnl(v,meta){
   const ctx=pnlCtx,w=pnlCv.width,h=pnlCv.height;
   ctx.clearRect(0,0,w,h);
-  const up=v>=0;
-  const col=up?'#4dffa6':'#ff5c7a';
-  const txt=(up?'+$':'-$')+fmtBig(Math.abs(v));
-  const my=128;                       /* the number keeps the place it had */
+  const my=118;                       /* the number keeps the place it had */
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.font='700 150px "Chakra Petch"';
-  /* chromatic split, like a mis-converged projector */
-  ctx.globalAlpha=0.5;
-  ctx.fillStyle=up?'#00ffd0':'#ff2f6a';ctx.fillText(txt,w/2-4,my);
-  ctx.fillStyle=up?'#7dff6b':'#ff9a5c';ctx.fillText(txt,w/2+4,my);
-  ctx.globalAlpha=1;
-  ctx.shadowColor=col;ctx.shadowBlur=52;
-  ctx.fillStyle='#ffffff';ctx.fillText(txt,w/2,my);
-  ctx.shadowBlur=0;
-  paintPnlCoin(ctx,w);
+  if(!meta){
+    ctx.font='700 132px "Chakra Petch"';
+    ctx.globalAlpha=0.55;
+    ctx.shadowColor='#38e0ff';ctx.shadowBlur=44;
+    ctx.fillStyle='#cfe9f5';ctx.fillText('$ —',w/2,my);
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+    paintPnlLabel(ctx,w,199,'NO ACCOUNT CONNECTED','#7fd4e8');
+    paintPnlLabel(ctx,w,238,'WALLET OR BINANCE FOR LIVE PNL','#4b7d8c');
+  }else if(meta.noPnl){
+    /* Signed in, nothing to value. The bag IS the statement, so it takes the
+       number's place rather than hanging in small type under a dash. */
+    paintPnlCoin(ctx,w,my,2.1);
+    paintPnlLabel(ctx,w,222,meta.label,'#e8c87a');
+  }else{
+    const up=v>=0;
+    const col=up?'#4dffa6':'#ff5c7a';
+    const txt=(up?'+$':'-$')+fmtBig(Math.abs(v));
+    ctx.font='700 150px "Chakra Petch"';
+    /* chromatic split, like a mis-converged projector */
+    ctx.globalAlpha=0.5;
+    ctx.fillStyle=up?'#00ffd0':'#ff2f6a';ctx.fillText(txt,w/2-4,my);
+    ctx.fillStyle=up?'#7dff6b':'#ff9a5c';ctx.fillText(txt,w/2+4,my);
+    ctx.globalAlpha=1;
+    ctx.shadowColor=col;ctx.shadowBlur=52;
+    ctx.fillStyle='#ffffff';ctx.fillText(txt,w/2,my);
+    ctx.shadowBlur=0;
+    paintPnlLabel(ctx,w,199,meta.label,up?'#7fe8bd':'#ff9fb4');
+    paintPnlCoin(ctx,w,268);
+  }
   /* interlace so it reads as a projection, not a decal */
   ctx.globalCompositeOperation='destination-out';
   ctx.fillStyle='rgba(0,0,0,0.5)';
@@ -5672,20 +6614,61 @@ function placePnl(){
   let top=WALL.baseY,R=WALL.radius;
   for(const s of wallScreens)top=Math.max(top,s.yPos+s.h/2);
   /* The plane grew downward to make room for the coin row, so the group drops
-     by half that growth and the NUMBER stays exactly where it always hung. */
+     by half that growth and the NUMBER stays exactly where it always hung.
+     Raising the whole group to clear the ticker was tried and is wrong: the
+     number is already close to the top of the frame on a 16:9 window and it
+     started clipping. The rows below it were moved UP the canvas instead —
+     see paintPnl — which costs nothing, because the bottom of that texture was
+     empty. */
   const y=top+2.35-0.5625;
   pnlGroup.position.set(0,y,-(R-1.2));
   pnlGroup.lookAt(0,y,0);
 }
+/* ------------------------- WHOSE MONEY THIS IS -------------------------
+   The hologram shows REAL money or it shows nothing. It used to fall back to
+   paperPnl() — the running total of a book of six positions the room opened
+   for itself at random size, random side and random leverage — and drew it at
+   two metres tall in exactly the palette and font a real balance gets. Nothing
+   on the surface said "paper". Walk in signed out and the room told you that
+   you were up three hundred dollars.
+
+   That is the same failure as SIM_SEED (see the note above simTick): a
+   fabricated number is far more dangerous when it is PLAUSIBLE and moving than
+   when it is obviously stale, because there is no moment where it looks wrong.
+   So this returns null rather than inventing a figure, and paintPnl draws a
+   connect prompt. The paper book still exists and still runs — it just has to
+   live on a panel that says PAPER, not on the biggest surface in the room.
+
+   Exactly one source wins, ordered by how directly it is the user's own money:
+   an exchange account they authenticated to, then an address the room can
+   read on-chain, then nothing. */
+function pnlSource(){
+  if(bnx.ready&&bnx.balances.length&&isFinite(bnx.pnl)){
+    const real=bnx.pnlReal!=null;
+    return {v:real?bnx.pnlReal:bnx.pnl,
+      label:(bnx.net==='test'?'BINANCE TESTNET · ':'BINANCE · ')+(real?'24H':'24H MARKET MOVE')};
+  }
+  if(watchAddr()&&(wallet.assets.length||wallet.usd>0)){
+    const real=wallet.pnlReal!=null;
+    return {v:real?wallet.pnlReal:wallet.pnl24,
+      label:'WALLET · '+(real?'REAL 24H':'24H MARKET MOVE')};
+  }
+  /* Signed in on DeHub with nothing this room can price. The account is not
+     in doubt here -- the handle, the bag and the badge balance are all on the
+     desk already -- so NO ACCOUNT CONNECTED was simply false, and it was the
+     loudest thing in the room. There is still no dollar figure to show and
+     none is invented: the hologram falls back to the coin row, which states
+     the DHB balance and is true at zero. */
+  if(dhData.me)return {v:0,noPnl:true,
+    label:dhData.me.handle?('DEHUB · @'+dhData.me.handle).toUpperCase():'DEHUB ACCOUNT'};
+  return null;
+}
 function pnlTick(dt,t){
-  /* Real money once there is an account to value — connected in here or
-     signed in on DeHub. The paper book is only the fallback. */
-  const target=watchAddr()
-    ? (wallet.pnlReal!=null?wallet.pnlReal:wallet.pnl24)
-    : paperPnl();
+  const src=pnlSource();
+  const target=src?src.v:0;
   pnlShown=lerp(pnlShown,target,Math.min(1,dt*2.2));
   if(Math.abs(pnlShown-target)<0.5)pnlShown=target;
-  paintPnl(pnlShown);
+  paintPnl(pnlShown,src);
   /* a slow breathing flicker so it feels projected */
   const flick=0.88+Math.sin(t/140)*0.05+Math.sin(t/37)*0.025;
   pnlGroup.children.forEach((m,i)=>{
@@ -5830,10 +6813,14 @@ function dhSeed(str,mod){
 
    A page mounts when you first zoom its monitor and stays mounted. Three
    React apps booting behind a WebGL room is not something to do at load. */
+/* ONE monitor, not three. Three framed React apps behind a WebGL room is
+   three page loads, three compositor layers and three projective transforms
+   per frame for a surface nobody reads at that size — and on a slow machine
+   it was the difference between a room that holds 60fps and one that does
+   not. The home feed is the page worth having in front of you; the composer
+   and the profile are one click away inside it. */
 const DESK_PAGES=[
-  {key:'home',   label:'DEHUB',           title:'HOME',     path:'/app'},
-  {key:'upload', label:'DEHUB · POST',    title:'NEW POST', path:'/app/upload'},
-  {key:'profile',label:'DEHUB · PROFILE', title:'PROFILE',  path:'/app/profile'}];
+  {key:'home',   label:'DEHUB',           title:'HOME',     path:'/app'}];
 /* The CSS size the iframe is laid out at before the matrix maps it onto the
    monitor. Bigger than the monitor's texture on purpose: the page inside is a
    real desktop app and wants a desktop viewport, and the projection scales it
@@ -5882,10 +6869,25 @@ function deskCorners(d){
     d.mesh.localToWorld(deskQuad[k]);
   }
 }
-/* Pin each mounted page to its monitor, every frame. Same projection the wall
-   sites use: four corners into screen space, then one projective matrix. */
+/* Pin the mounted page to its monitor, every frame. Same projection the wall
+   sites use: four corners into screen space, then one projective matrix.
+
+   THE CAMERA MATRIX HAS TO BE REFRESHED FIRST, and for a long time it was not.
+   `Vector3.project(camera)` reads `camera.matrixWorldInverse` — it does not
+   recompute it. That matrix is only rebuilt inside `renderer.render()`, which
+   runs at the END of the frame, so this function was pinning a DOM iframe with
+   the camera pose from the PREVIOUS frame while the monitor underneath it was
+   about to be drawn with THIS one. At 60fps the mismatch is 16ms and nobody
+   sees it. On a machine holding 15fps it is 67ms — and the page visibly floats
+   off the monitor, lagging behind every camera move and swimming back when you
+   stop. That is what "the screens hover off the computer on slow devices" was:
+   not a layout bug, one stale matrix.
+
+   siteTick() has always called this for the wall's live sites, which is why
+   they never drifted and the desk did. */
 function deskSiteTick(){
   const cv=renderer.domElement,W=cv.clientWidth,H=cv.clientHeight;
+  camera.updateMatrixWorld(true);
   for(const d of deskMons){
     const el=d.frame;
     if(!el)continue;
@@ -6050,6 +7052,9 @@ window.addEventListener('message',e=>{
   const d=e.data;
   if(!d||d.source!=='dehub')return;
 
+  /* a trade the app signed on our behalf — see hostTrade */
+  if(d.type==='traded'){hostTraded(d);return;}
+
   if(d.type!=='desk')return;
   if(Array.isArray(d.posts)&&d.posts.length)dhData.posts=d.posts.slice(0,4);
   dhData.me=d.me||null;
@@ -6087,7 +7092,12 @@ async function dhGet(path){
   }catch(err){return null;}
 }
 async function dhPullLocal(){
-  const addr=wallet&&wallet.addr?wallet.addr.toLowerCase():'';
+  /* A wallet connected in here first, then whoever the app is signed in as.
+     This used to be the game's own wallet and nothing else, so standalone it
+     never asked the API who you were unless you connected a second time --
+     and the whole desk, the profile monitor and the hologram all sat empty
+     in front of a signed-in user. */
+  const addr=(wallet&&wallet.addr?wallet.addr:dehubAddr()).toLowerCase();
   try{
     const [feed,acct,mine]=await Promise.all([
       dhGet('/api/feed?page=1&limit=4'),
@@ -6097,6 +7107,9 @@ async function dhPullLocal(){
     if(rows.length)dhData.posts=rows.map(dhCard);
     const u=acct&&(acct.result||acct);
     dhData.me=u&&(u.username||u.address)?{
+      /* the same shape the host bridge sends, address included -- watchAddr
+         reads it, and a bag cannot be valued without one */
+      address:addr,
       handle:u.username||'',
       name:u.displayName||u.username||'',
       followers:+u.followers||0,
@@ -6105,7 +7118,8 @@ async function dhPullLocal(){
       likes:+u.likes||0,
       tips:+u.receivedTips||0,
       badge:+u.badgeBalance||0,
-      avatar:dhAvatarUrl(u.avatarImageUrl,64)}:null;
+      avatar:dhAvatarUrl(u.avatarImageUrl,64),
+      solana:typeof u.solanaAddress==='string'?u.solanaAddress:''}:null;
     dhData.mine=mine&&Array.isArray(mine.result)
       ?mine.result.map(r=>({id:r.tokenId,img:dhPostImg(r,192)})):null;
     if(!rows.length){dhData.failed++;dhPullViaHost();return;}
@@ -6140,16 +7154,104 @@ function hit(x,y,w,h,label,fn){if(dhHits)dhHits.push({x,y,w,h,label,fn});}
 const deskMons=[];
 {
   const desk=new THREE.Group();
-  /* Rougher and less metallic than it was: at 0.35/0.55 the three area lights
-     smeared one broad hot reflection across the whole surface and the desk
-     read as a slab of grey plastic brighter than anything else in the room —
-     including the monitors standing on it. */
-  const top=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.09,1.7),
-    new THREE.MeshStandardMaterial({color:0x0e131a,roughness:0.52,metalness:0.38}));
+  /* Rougher and less metallic AGAIN. 0.35/0.55 was the original, 0.52/0.38 was
+     the first attempt at fixing it, and both still blew out: three 7x4.5m area
+     emitters hang 2.3 m directly above this surface, and at any metalness worth
+     the name their specular lobe covers the whole desk at once. Turned to the
+     desk you were looking at a sheet of white — brighter than the monitor
+     standing on it, brighter than the wall the room is named after.
+     A desk is not a mirror. 0.78/0.06 is matte, and the surface finally reads
+     as the dark slab its colour has always said it was. */
+  /* A SURFACE, NOT A TONE.
+     The desk is the largest single object in the lower half of the frame and
+     it was one flat value of grey across the whole 4.8 m — no grain, no edge,
+     nothing for a light to break up on. Everything around it is dense: the
+     wall, the city, the character. It read as untextured placeholder geometry
+     sitting in a finished room, which is exactly what it was.
+     Fixed with a roughness map rather than a colour one. Colour would fight
+     the room's lighting, and it is not what is missing — what is missing is
+     variation in HOW the surface takes light, so the three area lights above
+     it land as brushed grain instead of one even sheet. The same canvas drives
+     a shallow bump so the grain has relief at a grazing angle. */
+  const grainCv=document.createElement('canvas');grainCv.width=grainCv.height=512;
+  {
+    const g=grainCv.getContext('2d');
+    g.fillStyle='#9a9a9a';g.fillRect(0,0,512,512);
+    /* brushed along the desk's length */
+    for(let i=0;i<2600;i++){
+      const y=Math.random()*512,len=40+Math.random()*300,x=Math.random()*512;
+      g.strokeStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.02+Math.random()*0.05)+')';
+      g.lineWidth=Math.random()<0.85?1:2;
+      g.beginPath();g.moveTo(x,y);g.lineTo(x+len,y+(Math.random()-0.5)*1.5);g.stroke();
+    }
+    /* and a coarse mottle, so it is not pure corduroy */
+    for(let i=0;i<700;i++){
+      const r=6+Math.random()*26;
+      g.fillStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.012+Math.random()*0.022)+')';
+      g.beginPath();g.arc(Math.random()*512,Math.random()*512,r,0,6.3);g.fill();
+    }
+  }
+  const grainTex=new THREE.CanvasTexture(grainCv);
+  grainTex.wrapS=grainTex.wrapT=THREE.RepeatWrapping;
+  grainTex.repeat.set(6,2.2);
+  grainTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  const deskMat=new THREE.MeshStandardMaterial({
+    color:0x0e131a,roughness:0.78,metalness:0.06,
+    roughnessMap:grainTex,bumpMap:grainTex,bumpScale:0.012});
+  const top=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.09,1.7),deskMat);
   top.position.y=1.12;desk.add(top);
-  const ped=new THREE.Mesh(new THREE.BoxGeometry(3.6,1.06,1.2),
-    new THREE.MeshStandardMaterial({color:0x0a0d12,roughness:0.7,metalness:0.3}));
-  ped.position.y=0.55;desk.add(ped);
+  /* THE PEDESTAL FASCIA.
+     This is the biggest single area of the opening shot after the wall, and it
+     was one dead flat charcoal rectangle running straight into the floor: no
+     seam, no plinth, no falloff, nothing to say how big it is or what it is
+     made of. A surface that large with no information on it reads as a hole,
+     and it was the last thing in the room still doing that.
+     Two panel seams and a gradient, painted rather than modelled — at this
+     distance an engraved line is three pixels and geometry would be waste. */
+  const pedCv=document.createElement('canvas');pedCv.width=256;pedCv.height=512;
+  {
+    const p=pedCv.getContext('2d');
+    /* Darker toward the floor. Light in this room comes from above, so the
+       bottom of a tall face should fall off — the flat version was lit as
+       though it were floating in open space. */
+    const grd=p.createLinearGradient(0,0,0,512);
+    grd.addColorStop(0,'#141c26');grd.addColorStop(0.55,'#0d131b');grd.addColorStop(1,'#05080c');
+    p.fillStyle=grd;p.fillRect(0,0,256,512);
+    /* Two seams. An engraved line is a dark groove with a lit edge under it —
+       one line on its own reads as a scratch. */
+    for(const y of [176,352]){
+      p.fillStyle='rgba(0,0,0,0.85)';p.fillRect(0,y,256,3);
+      p.fillStyle='rgba(150,190,215,0.16)';p.fillRect(0,y+3,256,1);
+    }
+    for(let i=0;i<2200;i++){
+      p.fillStyle='rgba('+(Math.random()<0.5?'255,255,255,':'0,0,0,')+(0.015+Math.random()*0.03)+')';
+      p.fillRect(Math.random()*256,Math.random()*512,1,1);
+    }
+  }
+  const pedTex=new THREE.CanvasTexture(pedCv);
+  pedTex.colorSpace=THREE.SRGBColorSpace;
+  pedTex.wrapS=pedTex.wrapT=THREE.ClampToEdgeWrapping;
+  pedTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  const ped=new THREE.Mesh(new THREE.BoxGeometry(3.6,0.92,1.2),
+    new THREE.MeshStandardMaterial({color:0xffffff,map:pedTex,roughness:0.84,metalness:0.05}));
+  ped.position.y=0.62;desk.add(ped);
+  /* A RECESSED PLINTH. The pedestal used to meet the floor flush, which is the
+     one thing furniture never does — every cabinet has a toe-kick, and the
+     dark line it throws is what sets the object down on the ground instead of
+     leaving it pasted against it. Inset on all four sides so the fascia
+     overhangs it. */
+  const plinth=new THREE.Mesh(new THREE.BoxGeometry(3.34,0.18,1.04),
+    new THREE.MeshStandardMaterial({color:0x05070a,roughness:0.9,metalness:0.04}));
+  plinth.position.y=0.09;desk.add(plinth);
+  /* A LIP ON THE FRONT EDGE. A box has one hard 90 degree corner and reads as
+     a slab; every real worktop has a few millimetres of chamfer, and that
+     chamfer is the bit that catches a light and tells you where the surface
+     ends. Slightly brighter and slightly glossier than the top so it reads as
+     an edge rather than a seam. */
+  const lip=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.035,0.05),
+    new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.42,metalness:0.28}));
+  lip.position.set(0,1.145,0.845);desk.add(lip);
+  const lipBack=lip.clone();lipBack.position.z=-0.845;desk.add(lipBack);
   const strip=new THREE.Mesh(new THREE.BoxGeometry(4.8,0.02,0.02),
     new THREE.MeshBasicMaterial({color:new THREE.Color(CYAN).multiplyScalar(1.2)}));
   strip.position.set(0,1.075,0.86);desk.add(strip);
@@ -6175,20 +7277,25 @@ const deskMons=[];
     mug.material);
   handle.position.set(1.73,1.25,0.35);handle.rotation.y=Math.PI/2;desk.add(handle);
 
-  /* Three desk monitors, each with a canvas of its own — they no longer borrow
-     a wall screen's texture, which used to mean a wall rebuild could leave a
-     disposed map pointed at the desk. */
+  /* The desk monitor carries a canvas of its own — it does not borrow a wall
+     screen's texture, which used to mean a wall rebuild could leave a disposed
+     map pointed at the desk. */
+  const DESK_MON_W=1.74,DESK_MON_H=DESK_MON_W*DH_H/DH_W;   /* 640x364, kept exact */
   const deskMon=(page,x,ry)=>{
     const g=new THREE.Group();
     const cv=document.createElement('canvas');cv.width=DH_W;cv.height=DH_H;
     const tex=new THREE.CanvasTexture(cv);
     tex.colorSpace=THREE.SRGBColorSpace;tex.generateMipmaps=false;
     tex.minFilter=THREE.LinearFilter;
-    const p=new THREE.Mesh(new THREE.PlaneGeometry(1.02,0.58),
+    const p=new THREE.Mesh(new THREE.PlaneGeometry(DESK_MON_W,DESK_MON_H),
       new THREE.MeshBasicMaterial({map:tex}));
-    const f=new THREE.Mesh(new THREE.PlaneGeometry(1.1,0.66),frameMat);f.position.z=-0.012;
-    const stand=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.22,0.06),frameMat);stand.position.set(0,-0.4,-0.02);
-    g.add(f,p,stand);g.position.set(x,1.62,-0.35);g.rotation.y=ry;
+    const f=new THREE.Mesh(new THREE.PlaneGeometry(DESK_MON_W+0.08,DESK_MON_H+0.08),frameMat);
+    f.position.z=-0.012;
+    const stand=new THREE.Mesh(new THREE.BoxGeometry(0.09,0.26,0.07),frameMat);
+    stand.position.set(0,-DESK_MON_H/2-0.13,-0.02);
+    const foot=new THREE.Mesh(new THREE.BoxGeometry(0.44,0.02,0.18),frameMat);
+    foot.position.set(0,-DESK_MON_H/2-0.26,-0.02);
+    g.add(f,p,stand,foot);g.position.set(x,1.78,-0.35);g.rotation.y=ry;
     desk.add(g);
     /* A desk monitor is a SCREEN, not a special case. It carries the same
        fields a wall screen carries, so focusOn zooms it with the same code
@@ -6196,18 +7303,19 @@ const deskMons=[];
        used. `kind` is what keeps the chart chrome (template picker,
        timeframes, the buy box) off a screen none of it applies to. */
     deskMons.push({mesh:p,ctx:cv.getContext('2d'),tex,page,
-      w:1.02,h:0.58,kind:'desk',label:page.label,src:'DEHUB',
+      w:DESK_MON_W,h:DESK_MON_H,kind:'desk',label:page.label,src:'DEHUB',
       frame:null,blocked:false,mounted:0});
   };
-  /* Home dead ahead, the composer on your left, your profile on your right —
-     and note the desk group is turned to face the wall, so the x that puts a
-     monitor on YOUR left is the positive one. */
+  /* Dead ahead, and bigger than the three it replaced — a single monitor can
+     have the width they were splitting between them. */
   deskMon(DESK_PAGES[0],0,Math.PI);
-  deskMon(DESK_PAGES[1],-1.18,Math.PI-0.32);
-  deskMon(DESK_PAGES[2],1.18,Math.PI+0.32);
 
   desk.position.set(0,0,4.7);
   desk.rotation.y=Math.PI;   /* face the wall */
+  /* The desk is the only thing in the room with a floor under it and a light
+     over it, so it is where a shadow does the most work — it is what turns a
+     grey slab hovering over a grid into a desk standing on a floor. */
+  desk.traverse(o=>{if(o.isMesh)o.castShadow=true;});
   scene.add(desk);
 }
 
@@ -6543,8 +7651,9 @@ const focus={screen:null,savedP:new V3(),savedT:new V3()};
 const rc=new THREE.Raycaster(),ptr=new THREE.Vector2();
 const wp=new V3(),wq=new THREE.Quaternion(),nrm=new V3();
 
-function focusOn(s){
+function focusOn(s,dur){
   hideAff();
+  flickLane=null;      /* the row you chose by clicking IS the row you are on */
   walk.goto=null;                   /* don't wander off while you read a chart */
   if(!focus.screen){focus.savedP.copy(camera.position);focus.savedT.copy(controls.target);}
   focus.screen=s;
@@ -6552,7 +7661,7 @@ function focusOn(s){
   nrm.set(0,0,1).applyQuaternion(wq);
   const vf=camera.fov*Math.PI/180;
   const d=Math.max((s.w/2)/(0.72*Math.tan(vf/2)*camera.aspect),(s.h/2)/(0.72*Math.tan(vf/2)),0.9);
-  flyTo(wp.clone().addScaledVector(nrm,d),wp.clone(),1.25);
+  flyTo(wp.clone().addScaledVector(nrm,d),wp.clone(),dur||1.25);
   /* set once here, not on the HUD tick — rewriting it every 250ms would fight
      the user while the dropdown is open */
   if(s.tpl)$('#fpTpl').value=s.tpl;
@@ -6565,7 +7674,10 @@ function focusOn(s){
   if(s.kind==='desk')deskMount(s);
   syncTfRow();
   $('#focusPanel').classList.add('on');
-  syncBuyBox();syncSiteFocus();
+  /* Only promise the arrows do something when they actually do -- one desk
+     monitor has nothing beside it to step to. */
+  $('#fpFlick').style.display=flickAny(s)?'':'none';
+  syncBuyBox();syncSiteFocus();syncFocusHud();
 }
 function release(){
   if(!focus.screen)return;
@@ -6575,6 +7687,120 @@ function release(){
   /* in walk mode the chase camera takes straight over — no fly-back */
   if(MODE==='walk'){setCtl();return;}
   flyTo(focus.savedP,focus.savedT,1.05,()=>{setCtl();});
+}
+
+/* ==================== flick between screens ====================
+   The arrow keys walk the wall a screen at a time. Zoomed in, a chart fills
+   the view and the rest of the wall is off-frame, so comparing two of them
+   meant releasing, hunting for the next one and clicking it. The keys are
+   free to do this because they do nothing at all while a screen is focused:
+   controls.enabled goes false, freeCamTick never runs, and the strafe they
+   normally drive is already dead.
+
+   DOWN OFF THE BOTTOM ROW LEAVES. Nothing is below the bottom row, so the
+   key keeps meaning down: it takes you back out to the room rather than
+   dying against the floor. Up at the top has nowhere to go and nothing else
+   to mean, so it stays put -- exiting upward, deeper into the wall, is not a
+   direction anybody presses for that.
+
+   "Beside" is measured along the row IN METRES, off the arc position every
+   wall screen already carries. Projecting world positions onto the focused
+   screen's right axis instead gives R*sin(dTheta), which folds back on itself
+   once the wall wraps past a right angle -- and would then call the far left
+   edge a step to the right. Desk monitors are flat and carry no arc, so they
+   are measured off world x; the desk faces the wall, so that is the same
+   "right" the arc runs in.
+
+   Distances are EDGE gaps, never centre distances. The big board is 8.6m
+   wide and full height: centre to centre it sits further from a bottom-row
+   screen than the whole opposite side of the wall does, so a naive metric
+   jumps clean over it. Edge to edge it is 60mm away, which is what the eye
+   sees -- and overlapping spans give zero, so a double-height panel is
+   beside every row it covers. */
+const FLICK_CROSS_COST=3;   /* drifting off your row (or column) costs three metres */
+const FLICK_ROW_BIAS=0.05;  /* ...and among equals, the nearest one still wins */
+const FLICK_DUR=0.45;       /* a step is a flick, not the 1.25s arrival shot */
+const FLICK_REPEAT=300;     /* ms between steps while an arrow is held down */
+const flickTmp=new V3();
+const flickX=s=>s.kind==='desk'?s.mesh.getWorldPosition(flickTmp).x:s.aX;
+const flickY=s=>s.kind==='desk'?s.mesh.getWorldPosition(flickTmp).y:s.yPos;
+const spanGap=(a,as,b,bs)=>Math.max(0,Math.abs(a-b)-(as+bs)/2);
+/* Stay inside the family you are reading. The desk monitor is a page at
+   arm's length and the wall is the market across the room; getting from one
+   to the other is a different move -- a click -- not a flick. */
+function flickPool(s){
+  if(s.kind==='desk')return deskMons;
+  if(s.floating)return [];        /* a preview is not on the wall yet */
+  return screens.filter(o=>!o.floating);
+}
+/* One function for both axes, because they are the same question turned
+   ninety degrees: step along one, stay put on the other. `vert` swaps which
+   is which; `lane` is the row memory below, and only means anything
+   sideways. */
+function flickTarget(s,dir,vert,lane){
+  if(!s)return null;
+  const x=flickX(s),y=flickY(s);
+  const along=vert?y:x, cross=vert?x:y;
+  const alongSz=vert?s.h:s.w, crossSz=vert?s.w:s.h;
+  const keep=(!vert&&lane!=null)?lane:cross;   /* the line you are trying to hold */
+  let best=null,bestCost=Infinity;
+  for(const o of flickPool(s)){
+    if(o===s)continue;
+    const ox=flickX(o),oy=flickY(o);
+    const oAlong=vert?oy:ox, oCross=vert?ox:oy;
+    const oAlongSz=vert?o.h:o.w, oCrossSz=vert?o.w:o.h;
+    const d=oAlong-along;
+    if(d*dir<=0)continue;                    /* the wrong way, or dead level */
+    /* A screen that OVERLAPS you is not below you, it is around you. The
+       double-height HEAT and LIQ panels stand flush on the bottom row, so by
+       centres alone the bottom row reads as beneath them and DOWN stepped
+       diagonally into the next column instead of leaving. Same for the big
+       board, which covers every row there is. Measured against the taller of
+       the two, both of those correctly have nothing under them.
+       Deliberately not a gap test: gapX and gapY can both be set to zero,
+       and a wall with its screens touching still has rows and columns. */
+    if(Math.abs(d)<=Math.max(alongSz,oAlongSz)/2)continue;
+    const cost=spanGap(along,alongSz,oAlong,oAlongSz)
+      +spanGap(cross,crossSz,oCross,oCrossSz)*FLICK_CROSS_COST
+      +Math.abs(oCross-keep)*FLICK_ROW_BIAS;
+    if(cost<bestCost){bestCost=cost;best=o;}
+  }
+  return best;
+}
+/* Is any of the four a real screen? A monitor with nothing around it should
+   not advertise a key that only backs out of it. */
+const flickAny=s=>!!(flickTarget(s,1,false)||flickTarget(s,-1,false)
+  ||flickTarget(s,1,true)||flickTarget(s,-1,true));
+/* THE LANE. Walk the bottom row rightwards and you cross the big board --
+   8.6m wide and the full height of the wall -- which has no row of its own
+   to hand back on the way out. Judged on its centre you come out three rows
+   up from where you went in, which is not what walking in a straight line
+   means. So the row you were reading is remembered for as long as you are
+   passing through something tall enough to cover it, and given back at the
+   far side. The gap term still measures off the panel you are actually on,
+   because that is a question about what is physically next to what; only
+   the tiebreak between rows a tall panel spans looks at the lane. */
+let flickAt=0,flickLane=null;
+const flickLaneOf=s=>(flickLane!=null&&Math.abs(flickLane-flickY(s))<=s.h/2)?flickLane:flickY(s);
+function flickFocus(dir,vert){
+  const s=focus.screen;
+  if(!s)return false;
+  /* The lane is a ROW memory, so it has no meaning on a vertical step -- the
+     row you land on becomes the row you are on. */
+  const lane=vert?null:flickLaneOf(s);
+  const next=flickTarget(s,dir,vert,lane);
+  if(!next){
+    /* off the bottom of the wall: down keeps meaning down, and takes you out */
+    if(vert&&dir<0){release();return true;}
+    return false;                             /* the end of the row */
+  }
+  flickAt=performance.now();
+  playSound('blip');
+  focusOn(next,FLICK_DUR);
+  /* focusOn just cleared it. Carry it only while the screen you landed on
+     still covers it -- step off the lane and the new row IS the lane. */
+  flickLane=(lane!=null&&Math.abs(lane-flickY(next))<=next.h/2)?lane:null;
+  return true;
 }
 
 /* pointer input is handled by the direct-manipulation controller further down */
@@ -6732,6 +7958,7 @@ function resizeScreen(s,w,h){
   s.w=clamp(w,0.7,14);s.h=clamp(h,0.45,9);
   s.mesh.geometry.dispose();
   s.mesh.geometry=screenGeo(s.w,s.h);
+  for(const c of s.mesh.children)if(c.userData.glass)c.geometry=s.mesh.geometry;
   const frame=s.group.children.find(m=>m.isMesh&&m.material===frameMat);
   if(frame){frame.geometry.dispose();frame.geometry=screenGeo(s.w+frameEdge()*2,s.h+frameEdge()*2);}
   if(s.kind==='tpl'||s.kind==='empty'){
@@ -7103,8 +8330,8 @@ function radiusTick(dt){
 
 addEventListener('keydown',e=>{
   if(e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
-  const k=e.key.toLowerCase();
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undoLast();return;}
+  const k=(e.key||"").toLowerCase();   /* synthetic events can arrive with no key at all */
+  if((e.ctrlKey||e.metaKey)&&k==='z'){e.preventDefault();undoLast();return;}
   /* A held key repeats. Everything below except movement is a one-shot
      ACTION, and a repeat arrives AFTER the first one has changed the state it
      was dispatched against — holding F exited walk mode and then, now that
@@ -7150,6 +8377,18 @@ addEventListener('keydown',e=>{
     setScreenTf(focus.screen,TF_ORDER[clamp(i+(e.key===']'?1:-1),0,TF_ORDER.length-1)]);
     return;
   }
+  /* The arrows walk the wall while you are reading it. A held arrow repeats
+     about thirty times a second, and stepping the wall at that rate is a
+     blur -- so a repeat waits for the last hop to land, while a deliberate
+     tap never does and steps as fast as you can tap. */
+  if(focus.screen&&/^Arrow(Left|Right|Up|Down)$/.test(e.key)){
+    e.preventDefault();
+    if(!(e.repeat&&performance.now()-flickAt<FLICK_REPEAT)){
+      const vert=e.key==='ArrowUp'||e.key==='ArrowDown';
+      flickFocus((e.key==='ArrowRight'||e.key==='ArrowUp')?1:-1,vert);
+    }
+    return;
+  }
   /* V is the body toggle; F is a second key for LEAVING one, because that is
      the half people reach for in a hurry. F only means this while walking —
      at the desk it still opens search, further down.
@@ -7182,7 +8421,7 @@ addEventListener('keydown',e=>{
   else if(k==='w')$('#btnSet').click();
 });
 addEventListener('keyup',e=>{
-  const k=e.key.toLowerCase();
+  const k=(e.key||"").toLowerCase();   /* synthetic events can arrive with no key at all */
   if('wasdqe'.includes(k)&&k.length===1)delete walk.keys[k];
   if(e.key===' ')delete walk.keys[' '];
   if(!e.shiftKey)freeCam.boost=0;
@@ -7809,6 +9048,7 @@ async function pollDex(){
         m.chain=p.chainId;
         m.pairAddr=p.pairAddress;          /* the pool GeckoTerminal keys its candles on */
         m.tokenAddr=p.baseToken.address;
+        m.liq=(p.liquidity&&+p.liquidity.usd)||0;m.pairAt=+p.pairCreatedAt||0;m.v4=Array.isArray(p.labels)&&p.labels.includes('v4');
         m.boosted=dexBoosted.has(p.baseToken.address);
         const pc=p.priceChange||{};
         m.pushSample(+p.priceUsd,{h24:+pc.h24,h1:+pc.h1,m5:+pc.m5,
@@ -7916,6 +9156,13 @@ function hudTick(){
 }
 setInterval(()=>{
   document.title=(markets.BTC.fed&&markets.BTC.price?'BTC '+fmtPrice(markets.BTC.price)+' · ':'')+'TRENCHSTAR';
+  syncFocusHud();
+},250);
+/* What the focus panel says, as a function and not only as a tick. Flicking
+   from one screen to the next changes what the panel is describing, and up
+   to 250ms of the last screen's ticker sitting under the new one's chart is
+   exactly the kind of wrong that gets read as a bug. */
+function syncFocusHud(){
   if(focus.screen&&focus.screen.market){
     const m=focus.screen.market;
     $('#fpSym').textContent=(m.kind==='dex'?'$':'')+m.sym;
@@ -7929,7 +9176,7 @@ setInterval(()=>{
     $('#fpSrc').textContent=focus.screen.src||'SYSTEM FEED';
     $('#fpPx').textContent='';$('#fp24').textContent='—';$('#fpVol').textContent='—';$('#fpMc').textContent='—';
   }
-},250);
+}
 
 /* ================================ cast ================================
    Mirror one of the user's real browser tabs onto a screen of their choosing. */
@@ -8225,6 +9472,13 @@ function retargetByBindPose(clip,srcRoot,dstMesh){
      since one such file animates every character you own. */
   const srcByKey={},dstByKey={};
   srcRoot.traverse(o=>{if(o.isBone){const k=rigKey(o.name);if(!srcByKey[k])srcByKey[k]=o;}});
+  /* One skeleton, one set of targets. A Mixamo character whose rig is
+     PARTITIONED across its garment meshes breaks this — the body skeleton may
+     hold no Hips and no legs at all — but that is fixed where it belongs, in
+     the conversion, by merging every mesh onto one skeleton before export
+     (see convert.js). Retargeting against a whole bone TREE instead was tried
+     and is worse: it pairs joints across skeletons that were never bound
+     together and the arms come out visibly torn. */
   dstMesh.skeleton.bones.forEach(b=>{const k=rigKey(b.name);if(!dstByKey[k])dstByKey[k]=b;});
   /* pair up by joint, but emit under the TARGET's own bone names — those are
      what the mixer has to resolve against */
@@ -8395,9 +9649,22 @@ function unifySkeletons(model){
   model.traverse(o=>{if(o.isSkinnedMesh)meshes.push(o);});
   if(!meshes.length)return null;
   if(meshes.length===1)return meshes[0];
-  let firstBone=null;
-  model.traverse(o=>{if(o.isBone&&!firstBone)firstBone=o;});
-  const primary=meshes.find(m=>m.skeleton.bones.indexOf(firstBone)>=0)||meshes[0];
+  /* THE PRIMARY IS THE BIGGEST SKELETON, not whichever mesh happens to own the
+     root bone. That test was written for a character whose meshes each carry an
+     identical FULL copy of the rig (Erika: 4 meshes x 67 bones), where any of
+     them is as good as any other. Mixamo also ships the opposite shape — one
+     hierarchy PARTITIONED across the meshes, each binding only the joints it
+     needs. Measured on Pete: 8 meshes over 127 bones as body:52, boots:10,
+     helmet:6, vest:12, shirt:20, pants:13, eyelashes:6, hair:8. The root
+     `Hips` belongs to the PANTS there, so the old rule handed every retarget a
+     13-bone target: 52 of the character's joints had nowhere to land, and he
+     stood in a T-pose wearing animated trousers.
+     The mesh with the most bones is the body on both shapes — on the identical
+     -copies shape every candidate ties, and the tie goes to the first, which is
+     the mesh the old rule picked anyway. */
+  let primary=meshes[0];
+  for(const m of meshes)
+    if(m.skeleton.bones.length>primary.skeleton.bones.length)primary=m;
   const want=primary.skeleton.bones.map(b=>b.name).join('|');
   for(const m of meshes){
     if(m.skeleton===primary.skeleton)continue;
@@ -8575,11 +9842,67 @@ function dropRoot(clip){
   }
   return clip;
 }
+/* DO NOT RETARGET A CLIP ONTO THE RIG IT WAS AUTHORED ON.
+   Downloading a Mixamo animation with a character selected gives you that
+   character's own skeleton, bone for bone — the clip already fits. Pushing it
+   through the bind-pose retarget anyway is not a harmless no-op: it re-derives
+   every joint from rest orientations, and on a rig whose bones were merged
+   from several skinned meshes it produced 65 tracks that bound to nothing.
+   Measured on Pete: retargeted, his arms sat at bind height (0.013 m of hand
+   drop) and did not move between frame 0 and mid-clip. The SAME clip applied
+   to the SAME model untouched drops the hand 0.43 m and animates.
+   So check first. Identical bone names mean identical rig, and the honest
+   thing to do with a clip that already fits is nothing at all. */
+/* NAMES DO NOT IDENTIFY A RIG — REST POSE DOES.
+   The first version of this compared bone names and called a 90% overlap the
+   same rig. That is wrong on Mixamo in the worst possible way: EVERY Mixamo
+   character names its joints identically, which is the entire reason
+   retargetByBindPose exists ("two rigs can both use mixamorig* names and still
+   not bind"). So a character borrowing the donor's idle — Fat Chad, who has no
+   anim of his own — matched 65/65 and skipped the retarget, and wore a clip
+   authored for a completely different body.
+   What actually separates them is the REST ORIENTATION of the shared joints.
+   Measured over 65 shared bones:
+       pete + his own idle      mean  4.95 deg, max  19.71
+       pete + xbot (borrowed)   mean 17.52 deg, max 175.27
+       fat-chad + xbot          mean 16.17 deg, max 174.16
+   The max is decisive — a borrowed rig always has at least one joint near
+   flipped — so 60 degrees sits clear of both populations. Names still have to
+   match too, or there is nothing to compare in the first place. */
+const SAME_RIG_DEG=60;
+function sameRig(srcRoot,dstMesh){
+  /* Compare against the WHOLE MODEL, not dstMesh.skeleton. On a Mixamo rig
+     partitioned across garment meshes the chosen skeleton is only a slice of
+     the hierarchy — Pete's body skeleton is 52 of his 127 bones and starts at
+     Spine2, with Hips, both legs and the lower spine owned by the pants. The
+     mixer binds tracks by NAME against the whole model, so that is the set
+     that decides whether the clip already fits. */
+  let root=dstMesh;
+  while(root.parent&&!root.parent.isScene)root=root.parent;
+  const dst={};
+  root.traverse(o=>{if(o.isBone&&!dst[o.name])dst[o.name]=o;});
+  dstMesh.skeleton.bones.forEach(b=>{if(!dst[b.name])dst[b.name]=b;});
+  let n=0,hit=0,worst=0;
+  srcRoot.traverse(o=>{
+    if(!o.isBone)return;
+    n++;
+    const d=dst[o.name];
+    if(!d)return;
+    hit++;
+    /* angle between the two rest rotations; abs(dot) so q and -q are the same */
+    const deg=2*Math.acos(Math.min(1,Math.abs(o.quaternion.dot(d.quaternion))))*180/Math.PI;
+    if(deg>worst)worst=deg;
+  });
+  /* Not 100% on names: an animation rig can carry a helper joint the character
+     does not skin. */
+  return n>0&&hit/n>=0.9&&worst<SAME_RIG_DEG;
+}
 async function borrowClip(file,re,dstMesh){
   const rec=await loadAnimSource(file);
   if(!rec)return null;
   const c=liveClip(rec.clips,re)||soleClip(rec.clips);
   if(!c)return null;
+  if(sameRig(rec.root,dstMesh))return c;
   return retargetByBindPose(c,rec.root,dstMesh);
 }
 /* ======================== where assets live ===========================
@@ -8687,6 +10010,11 @@ async function loadAvatar(id){
   const blob=new THREE.Mesh(new THREE.PlaneGeometry(1.1,1.1).rotateX(-Math.PI/2),
     new THREE.MeshBasicMaterial({map:blobTex,transparent:true,depthWrite:false}));
   blob.position.y=0.045;
+  /* Kept as the fallback for machines that drop shadows, and hidden the moment
+     a real one is being cast — a painted ellipse under a body that already has
+     a shadow reads as a second, wrong one. */
+  blob.visible=!renderer.shadowMap.enabled;
+  blobShadow=blob;
   root.add(blob);
 
   /* Do this BEFORE anything asks for "the" skinned mesh: on a multi-mesh
@@ -8700,16 +10028,28 @@ async function loadAvatar(id){
      They vanish at particular camera angles and come back at others, which
      reads as the model failing to load. Two meshes cost nothing to draw
      unconditionally. */
-  model.traverse(o=>{if(o.isMesh||o.isSkinnedMesh)o.frustumCulled=false;});
+  model.traverse(o=>{if(o.isMesh||o.isSkinnedMesh){o.frustumCulled=false;o.castShadow=true;}});
   walk.obj=root;walk.inner=inner;walk.groundY=0;
   root.position.set(0,0,2.0);
   walk.yaw=Math.PI;walk.camYaw=0;
   root.rotation.y=walk.yaw;
   scene.add(root);
 
-  if(gltf.animations&&gltf.animations.length){
+  /* A CHARACTER FILE DOES NOT HAVE TO CARRY CLIPS, and gating on that was a
+     silent trap. Everything below borrows its walk, idle and lean from the
+     manifest and retargets them, so a file with no animations of its own is
+     the NORMAL case — but this block used to be entered only when the file
+     shipped at least one clip. The Mixamo FBX downloads happen to carry a
+     motionless T-pose stack, which satisfied the test by accident and hid it
+     for the whole life of the roster. Export a clean GLB with no clips in it
+     — which is what every converted character now is — and the mixer was never
+     built, `acts` stayed empty, and the character stood in a T-pose forever
+     with nothing logged and nothing to see but the pose.
+     Ask the real question instead: is there anything to animate WITH? */
+  const cmeta=CHARACTERS.find(c=>c.id===id)||{};
+  if((gltf.animations&&gltf.animations.length)||cmeta.anim||cmeta.idleAnim||cmeta.leanAnim){
     walk.mixer=new THREE.AnimationMixer(model);
-    const clips=gltf.animations.map(cleanClip);
+    const clips=(gltf.animations||[]).map(cleanClip);
     const find=re=>clips.find(c=>re.test(c.name));
     /* prefer an actual walk: a rig that ships idle/run/walk would otherwise
        hand back `run`, whichever happened to be listed first, and the whole
@@ -8723,7 +10063,7 @@ async function loadAvatar(id){
        insists on curves that actually move. */
     let wc=liveClip(clips,/\bwalk\b|walk/i)||liveClip(clips,/run|jog|move/i);
     let ic=liveClip(clips,/idle|stand|breath/i);
-    const meta=CHARACTERS.find(c=>c.id===id)||{};
+    const meta=cmeta;
     const tgt=walk.skin;
     if(tgt){
       /* `anim` in the manifest, else the donor rig. Either goes through the
@@ -9120,7 +10460,15 @@ const rosterReady=(async()=>{
 const PREVIEW_TEX=128;                    /* colour maps are resampled to this */
 const PV_FILL_H=0.86,PV_FILL_W=0.82;      /* share of the tile a character fills */
 const PV_PITCH=0.24;                      /* camera lift, in half-heights */
-const PREVIEW_KEY=id=>id+'@1';            /* bump the number to invalidate every bake */
+/* Bumped to @2: every bake written before the roster's skeletons were fixed is
+   now unreachable. Those bakes are not merely old, they are WRONG — a preview
+   baked while unifySkeletons was choosing the wrong skeleton carries a clip of
+   13 tracks for a 127-bone character, which poses the trousers and leaves the
+   arms in bind pose, so the picker showed a T-pose that no amount of fixing
+   the character could shift. A bake is cached for good on the visitor's
+   machine, so the code that made it being correct now is not enough — the key
+   has to move or they keep reading the old one forever. */
+const PREVIEW_KEY=id=>id+'@2';            /* bump the number to invalidate every bake */
 
 const pv={renderer:null,scene:null,camera:null,cards:[],queue:[],
           busy:false,on:false,raf:0,last:0,w:0,h:0,
@@ -10072,10 +11420,18 @@ syncCustomUI();
 
 /* ---------------------------- wallet UI ------------------------------ */
 function syncWalletUI(){
-  const on=!!wallet.addr;
-  $('#wlAddr').textContent=on?wallet.addr.slice(0,10)+'…'+wallet.addr.slice(-6)+
-    (wallet.chainId===BASE_CHAIN?'  ·  BASE':'  ·  CHAIN '+(wallet.chainId||'?')):'NOT CONNECTED';
-  $('#wlConnect').textContent=on?'REFRESH':'CONNECT WALLET';
+  const evm=evmAddr(),sa=solAddr();
+  const on=!!(evm||sa);
+  const short=a=>a.length>20?a.slice(0,8)+'…'+a.slice(-6):a;
+  $('#wlAddr').textContent=on?[evm?short(evm):'',sa?'◎ '+short(sa):''].filter(Boolean).join('   '):'NOT CONNECTED';
+  /* say who signs, because it is not always the same wallet the bag is read from */
+  const signer=evmSigner();
+  $('#wlSrc').textContent=on?[
+    signer==='native'?'DEHUB WALLET · GAS SPONSORED':signer==='injected'?'BROWSER WALLET':'READ ONLY',
+    sol.addr?'PHANTOM':(sa?'SOLANA READ ONLY':'')].filter(Boolean).join(' · '):'';
+  $('#wlConnect').textContent=wallet.addr?'↻ REFRESH':(signer==='native'?'＋ BROWSER WALLET':'CONNECT WALLET');
+  $('#wlSol').textContent=sol.addr?'◎ PHANTOM · '+sol.addr.slice(0,4)+'…':'◎ CONNECT PHANTOM';
+  $('#wlSol').classList.toggle('live',!!sol.addr);
   $('#btnWallet').classList.toggle('live',on);
   $('#wlTotal').textContent=on?'$'+fmtBig(wallet.usd):'—';
   const v=wallet.pnlReal!=null?wallet.pnlReal:wallet.pnl24;
@@ -10084,26 +11440,289 @@ function syncWalletUI(){
     (wallet.pnlReal!=null?'  REAL 24H':'  24H MARKET MOVE')):'—';
   el.style.color=v>=0?'var(--up)':'var(--down)';
   const list=$('#wlList');list.innerHTML='';
-  for(const a of wallet.assets.slice(0,8)){
+  for(const a of wallet.assets.slice(0,24)){
     const d=document.createElement('div');d.className='wlRow';
-    d.innerHTML='<b>'+a.sym+'</b><span>'+(+a.qty.toPrecision(5))+'</span>'+
-      '<span class="v">$'+fmtBig(a.qty*a.px)+'</span>';
+    const chLabel=CHAINS[a.chain]?CHAINS[a.chain].label:a.chain;
+    d.innerHTML='<b>'+a.sym+'</b><span class="ch">'+chLabel+'</span><span>'+(+a.qty.toPrecision(5))+'</span>'+
+      '<span class="v">$'+fmtBig(a.qty*a.px)+'<i style="color:'+((a.ch||0)>=0?'var(--up)':'var(--down)')+'">'+
+      ((a.ch||0)>=0?'+':'')+(+(a.ch||0)).toFixed(1)+'%</i></span>'+
+      (a.addr&&CHAINS[a.chain]?'<span class="go" data-sell="1">SELL</span>':'');
+    const go=d.querySelector('.go');
+    if(go)go.addEventListener('click',()=>{tdTarget(marketFor(a),'sell');});
     list.appendChild(d);
   }
+  if(!wallet.assets.length)list.innerHTML='<div id="tdEmpty">'+(on?'NOTHING HELD ON BASE, ROBINHOOD OR SOLANA YET':'CONNECT A WALLET, OR SIGN IN TO DEHUB')+'</div>';
   $('#wlNote').innerHTML=on&&wallet.pnlReal==null
     ? 'REAL 24H PNL NEEDS A DAY OF SNAPSHOTS. UNTIL THEN THIS IS THE MARKET MOVE ON YOUR CURRENT BAG, NOT TRADING PERFORMANCE.'
     : '';
   /* the desk is signed in to the same wallet — don't make it wait for the tick */
   syncDesk();
+  tdFillSelect();
+}
+/* A held token that is not on the wall still needs a market to be sold
+   through: a stub carrying just what the ticket reads. */
+function marketFor(a){
+  const found=[...memes,...pinned].find(m=>m.chain===a.chain&&m.tokenAddr&&
+    (CHAINS[a.chain].sol?m.tokenAddr===a.addr:m.tokenAddr.toLowerCase()===a.addr));
+  if(found)return found;
+  /* a fill remembers the pool it went through, which is what a v4 sell needs */
+  const f=fills.find(x=>x.chain===a.chain&&x.token&&(CHAINS[a.chain].sol?x.token===a.addr:x.token.toLowerCase()===a.addr));
+  return {sym:a.sym,chain:a.chain,tokenAddr:a.addr,price:a.px,pct24:a.ch,fed:true,stub:true,
+    vol24:0,mcap:0,liq:0,pairAt:0,pairAddr:f?f.pair:'',v4:!!(f&&f.v4)};
 }
 $('#btnWallet').addEventListener('click',()=>{
   const p=$('#walletPanel');p.classList.toggle('on');
-  if(p.classList.contains('on')){syncWalletUI();if(wallet.addr)refreshWallet();}
+  if(p.classList.contains('on')){syncWalletUI();tdRender();refreshWallet();}
 });
 $('#wlConnect').addEventListener('click',()=>{
   if(wallet.addr)refreshWallet();else connectWallet();
 });
+$('#wlSol').addEventListener('click',()=>{
+  if(sol.addr)refreshWallet();else solConnect();
+});
+document.querySelectorAll('.wtab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.wtab').forEach(x=>x.classList.toggle('on',x===t));
+  const tab=t.dataset.tab;
+  document.querySelectorAll('.wpane').forEach(p=>p.classList.toggle('on',p.id==='wp'+tab[0].toUpperCase()+tab.slice(1)));
+  if(tab==='fills')renderFills();
+  if(tab==='cex')ac();
+}));
+
+/* ------------------------------ the ticket ------------------------------ */
+const td={m:null,side:'buy',amt:null,pct:null,slip:3,plan:null,busy:false,armTimer:0};
+function tradable(m){return !!(m&&m.fed&&m.tokenAddr&&CHAINS[m.chain]);}
+function tdFillSelect(){
+  const sel=$('#tdSel');
+  const cur=td.m;
+  const rows=allMarkets().filter(tradable);
+  /* held bags the wall no longer shows still deserve a SELL */
+  for(const a of wallet.assets)if(a.addr&&CHAINS[a.chain]){
+    const m=marketFor(a);
+    if(!rows.includes(m)&&!rows.some(r=>r.chain===m.chain&&r.tokenAddr===m.tokenAddr))rows.push(m);
+  }
+  const key=m=>m.chain+':'+m.tokenAddr;
+  const want=rows.map(key).join('|');
+  if(sel.dataset.want===want)return;
+  sel.dataset.want=want;
+  sel.innerHTML='<option value="">SELECT A TOKEN ON THE WALL</option>';
+  for(const m of rows){
+    const o=document.createElement('option');
+    o.value=key(m);o.textContent=m.sym+' · '+CHAINS[m.chain].label+(m.stub?' · HELD':'');
+    sel.appendChild(o);
+  }
+  sel.value=cur?key(cur):'';
+  td.rows=rows;
+}
+$('#tdSel').addEventListener('change',()=>{
+  const m=(td.rows||[]).find(x=>x.chain+':'+x.tokenAddr===$('#tdSel').value);
+  if(m)tdTarget(m,td.side);
+});
+/* Load a token into the ticket and put the panel up. `side` is a hint —
+   SELL from the bag, BUY from a screen. */
+function tdTarget(m,side){
+  if(!tradable(m)){toast('THAT SCREEN CANNOT BE TRADED FROM HERE');return;}
+  td.m=m;td.side=side||td.side;td.plan=null;td.amt=null;td.pct=null;tdDisarm();
+  tdSideUI();
+  const p=$('#walletPanel');
+  if(!p.classList.contains('on')){p.classList.add('on');syncWalletUI();refreshWallet();}
+  document.querySelectorAll('.wtab').forEach(x=>x.classList.toggle('on',x.dataset.tab==='trade'));
+  document.querySelectorAll('.wpane').forEach(x=>x.classList.toggle('on',x.id==='wpTrade'));
+  tdFillSelect();
+  $('#tdSel').value=m.chain+':'+m.tokenAddr;
+  tdRender();
+}
+function tdSideUI(){
+  document.querySelectorAll('.sd').forEach(x=>x.classList.toggle('on',x.dataset.side===td.side));
+  $('#tdGo').dataset.side=td.side;
+  const ch=td.m&&CHAINS[td.m.chain];
+  const box=$('#tdAmts');box.innerHTML='';
+  const opts=td.side==='buy'?(ch?ch.presets:[]):[25,50,75,100];
+  for(const v of opts){
+    const b=document.createElement('span');b.className='amt';
+    b.textContent=td.side==='buy'?v+' '+(ch?ch.gas:''):v+'%';
+    b.classList.toggle('on',td.side==='buy'?td.amt===v:td.pct===v);
+    b.addEventListener('click',()=>{
+      if(td.side==='buy'){td.amt=v;$('#tdAmt').value='';}else{td.pct=v;$('#tdAmt').value='';}
+      tdDisarm();tdSideUI();tdRender();
+    });
+    box.appendChild(b);
+  }
+  $('#tdUnit').textContent=td.side==='buy'?(ch?ch.gas:''):'%';
+  $('#tdAmt').placeholder=td.side==='buy'?'CUSTOM AMOUNT':'CUSTOM %';
+}
+document.querySelectorAll('.sd').forEach(x=>x.addEventListener('click',()=>{
+  td.side=x.dataset.side;td.amt=null;td.pct=null;$('#tdAmt').value='';tdDisarm();tdSideUI();tdRender();
+}));
+document.querySelectorAll('.sl').forEach(x=>x.addEventListener('click',()=>{
+  td.slip=+x.dataset.s;
+  document.querySelectorAll('.sl').forEach(y=>y.classList.toggle('on',y===x));
+  tdDisarm();tdRender();
+}));
+$('#tdAmt').addEventListener('input',()=>{
+  const v=parseFloat($('#tdAmt').value);
+  if(td.side==='buy')td.amt=isFinite(v)&&v>0?v:null;else td.pct=isFinite(v)&&v>0?Math.min(100,v):null;
+  document.querySelectorAll('.amt').forEach(b=>b.classList.remove('on'));
+  tdDisarm();tdRender();
+});
+function tdHeld(){
+  const m=td.m;if(!m)return null;
+  const ch=CHAINS[m.chain];
+  return wallet.assets.find(a=>a.addr&&a.chain===m.chain&&
+    (ch.sol?a.addr===m.tokenAddr:a.addr===m.tokenAddr.toLowerCase()))||null;
+}
+function tdGas(){
+  const m=td.m;if(!m)return null;
+  return wallet.assets.find(a=>a.native&&a.chain===m.chain)||null;
+}
+function ageOf(t){
+  if(!t)return '—';
+  const h=(Date.now()-t)/3600e3;
+  return h<1?Math.max(1,Math.round(h*60))+'M':h<48?Math.round(h)+'H':Math.round(h/24)+'D';
+}
+function tdRisk(m){
+  const out=[];
+  const liq=m.liq||0,vol=m.vol24||0,age=m.pairAt?(Date.now()-m.pairAt)/3600e3:null;
+  if(!m.stub){
+    if(liq<5000)out.push('<b class="bad">THIN POOL</b> UNDER $5K — A SELL MOVES THE PRICE');
+    else if(liq<25000)out.push('<b>LOW LIQUIDITY</b> UNDER $25K');
+    if(age!=null&&age<24)out.push('<b>NEW PAIR</b> '+ageOf(m.pairAt)+' OLD');
+    if(liq>0&&vol/liq>20)out.push('<b>VOLUME '+Math.round(vol/liq)+'× LIQUIDITY</b> — WASH OR MANIA');
+    if(!out.length)out.push('<b class="ok">NO RED FLAGS</b> ON DEPTH, AGE OR TURNOVER');
+  }else out.push('HELD · NOT ON THE WALL RIGHT NOW');
+  const signer=CHAINS[m.chain].sol?(sol.addr?null:'CONNECT PHANTOM TO SIGN'):(evmSigner()?null:'CONNECT A WALLET, OR OPEN THIS INSIDE DEHUB');
+  if(signer)out.push('<b>'+signer+'</b>');
+  return out.join('<br>');
+}
+function tdRender(){
+  const m=td.m;
+  const go=$('#tdGo');
+  if(!m){
+    $('#tdSym').innerHTML='—<small id="tdChain"></small>';$('#tdPx').textContent='—';
+    for(const id of ['tdCh','tdLiq','tdMc','tdVol','tdAge'])$('#'+id).textContent='—';
+    $('#tdRisk').textContent='';$('#tdHold').textContent='';
+    go.disabled=true;go.textContent='SELECT A TOKEN';
+    return;
+  }
+  const ch=CHAINS[m.chain];
+  $('#tdSym').innerHTML=m.sym+'<small id="tdChain">'+ch.label+'</small>';
+  $('#tdPx').textContent=m.price?'$'+fmtPx(m.price):'—';
+  const c=m.pct24||0;
+  $('#tdCh').textContent=(c>=0?'+':'')+c.toFixed(1)+'%';$('#tdCh').style.color=c>=0?'var(--up)':'var(--down)';
+  $('#tdLiq').textContent=m.liq?'$'+fmtBig(m.liq):'—';
+  $('#tdMc').textContent=m.mcap?'$'+fmtBig(m.mcap):'—';
+  $('#tdVol').textContent=m.vol24?'$'+fmtBig(m.vol24):'—';
+  $('#tdAge').textContent=ageOf(m.pairAt);
+  $('#tdRisk').innerHTML=tdRisk(m);
+  const held=tdHeld(),gas=tdGas();
+  if(td.side==='buy'){
+    $('#tdHold').textContent=(gas?'BALANCE '+(+gas.qty.toPrecision(5))+' '+ch.gas+' · $'+fmtBig(gas.qty*gas.px):'')+
+      (held?'   ·   HOLDING '+(+held.qty.toPrecision(5))+' '+m.sym:'');
+  }else{
+    $('#tdHold').textContent=held?'HOLDING '+(+held.qty.toPrecision(6))+' '+m.sym+' · $'+fmtBig(held.qty*held.px)+
+      (td.pct?'   →   SELLING '+(+(held.qty*td.pct/100).toPrecision(5)):''):'NOTHING HELD';
+  }
+  if(td.plan&&go.dataset.armed==='1')return;   /* armed text stays until it fires */
+  const amtOk=td.side==='buy'?td.amt>0:(td.pct>0&&held);
+  const canSign=ch.sol?true:!!evmSigner();     /* Phantom connects on press */
+  go.disabled=!(amtOk&&canSign)||td.busy;
+  go.textContent=td.busy?'WORKING…':td.side==='buy'
+    ?(td.amt?'BUY '+m.sym+' FOR '+td.amt+' '+ch.gas:'PICK AN AMOUNT')
+    :(td.pct&&held?'SELL '+td.pct+'% '+m.sym+' → '+ch.gas:held?'PICK A SIZE':'NOTHING TO SELL');
+}
+function fmtPx(p){return p>=1?p.toLocaleString(undefined,{maximumFractionDigits:2}):(+p.toPrecision(4)).toString();}
+function tdDisarm(){
+  td.plan=null;clearTimeout(td.armTimer);
+  const go=$('#tdGo');go.dataset.armed='';
+}
+/* Two presses: the first quotes and shows exactly what will happen, the
+   second is the only thing that sends. An armed ticket that sits for a while
+   is a stale quote — it disarms itself. */
+$('#tdGo').addEventListener('click',async()=>{
+  const m=td.m;if(!m||td.busy)return;
+  const go=$('#tdGo'),msg=$('#tdMsg');
+  if(go.dataset.armed==='1'&&td.plan){
+    const plan=td.plan;tdDisarm();
+    td.busy=true;tdRender();
+    const ch=plan.ch;
+    const inUnit=plan.side==='buy'?ch.gas:m.sym,outUnit=plan.side==='buy'?m.sym:ch.gas;
+    const inQty=fmtUnits(plan.amountIn,plan.side==='buy'?ch.dec:(tdHeld()||{dec:18}).dec);
+    msg.innerHTML='SENDING…';
+    let fill=null;
+    const onStage=(stage,d)=>{
+      if(stage==='approving'||stage==='approved')msg.innerHTML='APPROVING '+m.sym+' FOR THE ROUTER…';
+      if(stage==='mined'){updateFill(fill&&fill.hash,{status:'CONFIRMED'});playSound('cash');toast((plan.side==='buy'?'BOUGHT ':'SOLD ')+m.sym);
+        msg.innerHTML='CONFIRMED · <a href="'+txUrl(ch.key,fill.hash)+'" target="_blank" rel="noopener">'+fill.hash.slice(0,14)+'…</a>';
+        setTimeout(refreshWallet,4000);}
+      if(stage==='failed'){updateFill(fill&&fill.hash,{status:'FAILED'});msg.innerHTML='<b>FAILED ON CHAIN</b> · '+((d&&d.reason)||'');}
+      if(stage==='lost')updateFill(fill&&fill.hash,{status:'UNKNOWN'});
+    };
+    try{
+      const hash=await plan.send(onStage);
+      fill=recordFill({t:Date.now(),chain:ch.key,side:plan.side,sym:m.sym,token:m.tokenAddr,pair:m.pairAddr||'',v4:!!m.v4,
+        inQty,inUnit,outUnit,hash,status:'SENT',usd:plan.side==='buy'?td.amt*((tdGas()||{px:0}).px||0):0});
+      msg.innerHTML='SENT · <a href="'+txUrl(ch.key,hash)+'" target="_blank" rel="noopener">'+hash.slice(0,14)+'…</a> · WAITING FOR THE CHAIN';
+      td.amt=null;td.pct=null;$('#tdAmt').value='';
+    }catch(e){
+      const s=String(e&&e.message||e);
+      msg.innerHTML='<b>'+(e&&e.code===4001?'REJECTED IN WALLET':'NOT SENT')+'</b> · '+s.slice(0,90);
+    }
+    td.busy=false;tdSideUI();tdRender();
+    return;
+  }
+  /* first press: quote */
+  td.busy=true;tdRender();msg.textContent='QUOTING…';
+  try{
+    const ch=CHAINS[m.chain];
+    let plan;
+    if(td.side==='buy'){
+      if(!(td.amt>0))throw new Error('pick an amount');
+      plan=ch.sol?await planSol(m,'buy',toUnits(td.amt,9),td.slip):await planBuyEvm(m,td.amt,td.slip);
+    }else{
+      const held=tdHeld();
+      if(!held||!(td.pct>0))throw new Error('nothing to sell');
+      const raw=td.pct>=100?held.raw:held.raw*BigInt(Math.round(td.pct*100))/10000n;
+      if(raw<=0n)throw new Error('nothing to sell');
+      plan=ch.sol?await planSol(m,'sell',raw,td.slip):await planSellEvm(m,raw,td.slip);
+    }
+    td.plan=plan;
+    const outDec=plan.side==='buy'?(ch.sol?(plan.q.outAmount&&m.dec)||null:null):ch.dec;
+    const minOut=plan.side==='buy'
+      ? (ch.sol?'':'')+(outDec!=null?(+fmtUnits(plan.minOut,outDec).toPrecision(6)):'')
+      : (+fmtUnits(plan.minOut,ch.dec).toPrecision(6))+' '+ch.gas;
+    const route=ch.sol?(plan.q.routePlan||[]).map(r=>r.swapInfo&&r.swapInfo.label).filter(Boolean).slice(0,3).join(' → ')||'JUPITER'
+      :'UNISWAP V3 · '+(plan.q.fee/10000)+'% POOL';
+    const impact=ch.sol&&plan.q.priceImpactPct!=null?' · IMPACT '+(+plan.q.priceImpactPct*100).toFixed(2)+'%':'';
+    const who=ch.sol?'PHANTOM':(evmSigner()==='native'?'DEHUB WALLET · GAS SPONSORED':'YOUR WALLET');
+    msg.innerHTML='ROUTE '+route+impact+'<br>MIN RECEIVED '+(minOut||('per quote, '+td.slip+'% slippage'))+
+      '<br>SIGNS WITH '+who+' · <b>PRESS AGAIN TO SEND</b>';
+    go.dataset.armed='1';
+    go.textContent=(plan.side==='buy'?'CONFIRM BUY ':'CONFIRM SELL ')+m.sym;
+    clearTimeout(td.armTimer);
+    td.armTimer=setTimeout(()=>{if(td.plan===plan){tdDisarm();msg.textContent='QUOTE EXPIRED — PRESS AGAIN';tdRender();}},20000);
+  }catch(e){
+    msg.innerHTML='<b>NO QUOTE</b> · '+String(e&&e.message||e).slice(0,90);
+  }
+  td.busy=false;tdRender();
+});
+function renderFills(){
+  const box=$('#tdLog');box.innerHTML='';
+  if(!fills.length){box.innerHTML='<div id="tdEmpty">NO FILLS FROM THIS DESK YET</div>';return;}
+  for(const f of fills.slice(0,40)){
+    const d=document.createElement('div');d.className='fill';
+    const st=f.status||'SENT';
+    d.innerHTML='<span class="side '+f.side+'">'+f.side.toUpperCase()+'</span><b>'+f.sym+'</b>'+
+      '<span>'+f.inQty+' '+f.inUnit+' → '+f.outUnit+'</span>'+
+      '<span class="ch">'+(CHAINS[f.chain]?CHAINS[f.chain].label:f.chain)+'</span>'+
+      '<a href="'+txUrl(f.chain,f.hash)+'" target="_blank" rel="noopener">'+f.hash.slice(0,8)+'…</a>'+
+      '<span class="st '+(st==='CONFIRMED'?'ok':st==='FAILED'?'bad':'')+'">'+st+'</span>';
+    box.appendChild(d);
+  }
+}
 syncWalletUI();
+tdSideUI();
+tdRender();
+/* the ticket reads live numbers; keep it honest while it is open */
+setInterval(()=>{if($('#walletPanel').classList.contains('on')&&td.m&&!td.busy&&$('#tdGo').dataset.armed!=='1')tdRender();},2000);
 
 /* binance controls */
 function bnxUI(){
@@ -10112,20 +11731,31 @@ function bnxUI(){
 $('#bnNet').addEventListener('change',()=>{
   bnx.net=$('#bnNet').value;
   if(bnx.ws){try{bnx.ws.close();}catch(e){}bnx.ws=null;bnx.ready=false;}
+  /* Drop the balances too, not just the sockets. Leaving a testnet book in
+     place while the panel says LIVE would put testnet money on the hologram
+     under a LIVE caption — the exact confusion this whole pass is about. */
+  bnxStopStream();
+  bnx.balances=[];bnx.px={};bnx.usd=0;bnx.pnl=null;bnx.pnlReal=null;
+  bnxRenderBalances();
   $('#bnStat').textContent=bnx.net==='live'
     ? 'LIVE SELECTED — ORDERS WILL SPEND REAL FUNDS'
     : 'TESTNET SELECTED';
 });
-$('#bnLoad').addEventListener('click',()=>{
-  bnx.key=$('#bnKey').value.trim();
-  bnx.secret=$('#bnSecret').value.trim();
-  bnx.net=$('#bnNet').value;
-  if(!bnx.key||!bnx.secret){$('#bnStat').textContent='ENTER BOTH KEY AND SECRET.';return;}
+$('#bnLoad').addEventListener('click',async()=>{
   if(!crypto.subtle){
     $('#bnStat').textContent='NEEDS localhost — OPEN VIA "TRENCHSTAR (start here).cmd"';
     return;
   }
-  bnxRemember();
+  bnx.net=$('#bnNet').value;
+  let key=$('#bnKey').value.trim(),secret=$('#bnSecret').value.trim();
+  /* nothing typed but a locked save on disk: the PIN opens it */
+  if((!key||!secret)&&$('#bnRemember').checked){
+    if(!(await bnxUnlock()))return;
+    key=bnx.key;secret=bnx.secret;
+  }
+  bnx.key=key;bnx.secret=secret;
+  if(!bnx.key||!bnx.secret){$('#bnStat').textContent='ENTER BOTH KEY AND SECRET.';return;}
+  if(!(await bnxRemember()))return;
   bnxLoadAccount();
 });
 $('#bnSend').addEventListener('click',()=>{
@@ -10134,39 +11764,21 @@ $('#bnSend').addEventListener('click',()=>{
 bnxRestore();
 
 /* ------------------------------ buy ---------------------------------- */
+/* The focus HUD used to carry its own ETH-on-Base buy box. The ticket in the
+   wallet panel does every chain now, so this hands the focused market over. */
 let buyTarget=null;
 function syncBuyBox(){
   const s=focus.screen,m=s&&s.market;
-  const ok=m&&m.kind==='dex'&&m.chain==='base'&&m.tokenAddr;
+  const ok=tradable(m);
   buyTarget=ok?m:null;
   $('#buyBox').style.display=ok?'':'none';
-  $('#buyQuote').textContent='';
+  $('#buyQuote').textContent=ok?m.sym+' · '+CHAINS[m.chain].label+(m.liq?' · LIQ $'+fmtBig(m.liq):''):'';
+  if(ok)$('#buyGo').textContent='⇄ TRADE '+m.sym;
 }
-$('#buyGo').addEventListener('click',async()=>{
+$('#buyGo').addEventListener('click',()=>{
   const m=buyTarget;if(!m)return;
-  const amt=parseFloat($('#buyAmt').value);
-  if(!isFinite(amt)||amt<=0){toast('Enter an ETH amount.');return;}
-  if(!wallet.addr){connectWallet();return;}
-  const q=$('#buyQuote');
-  q.textContent='QUOTING…';
-  const plan=await buyToken(m.tokenAddr,amt,3);
-  if(!plan){q.textContent='';return;}
-  const outMin=fmtUnits(plan.amountOutMin,18);
-  q.innerHTML='ROUTE '+(plan.quote.fee/10000)+'% POOL<br>MIN RECEIVED '+
-    (+outMin.toPrecision(6))+' '+m.sym+'<br>SIMULATED OK — CONFIRM IN YOUR WALLET';
-  /* the send itself is the wallet's own confirmation dialog; we never
-     auto-submit and we never hold a key */
-  try{
-    const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[plan.tx]});
-    q.innerHTML='SENT · '+hash.slice(0,14)+'…';
-    toast('SWAP SENT · '+m.sym);
-    playSound('cash');
-    setTimeout(refreshWallet,9000);
-  }catch(e){
-    q.textContent=e.code===4001?'REJECTED IN WALLET.':'FAILED · '+String(e.message||'').slice(0,54);
-  }
+  tdTarget(m,'buy');
 });
-
 /* ============================ binance ================================
    Signed REST is impossible from a page: the preflight for /api/v3/account
    returns no Access-Control-Allow-Headers at all, so X-MBX-APIKEY can never
@@ -10182,26 +11794,79 @@ const BNX={
   test:'wss://ws-api.testnet.binance.vision/ws-api/v3'
 };
 const bnx={ws:null,key:'',secret:'',net:'test',offset:0,ready:false,
-  reqs:new Map(),seq:0,balances:[],usd:0,pending:null};
+  reqs:new Map(),seq:0,balances:[],usd:0,pending:null,
+  /* live revaluation, see bnxStartStream */
+  px:{},pxWs:null,streamKey:'',pnl:null,pnlReal:null,at:0,poll:0};
+/* Anything that is already a dollar. Kept in one place because the account
+   loader and the live revaluation have to agree on it — if one of them treats
+   FDUSD as a coin to price and the other as cash, the PnL gains or loses the
+   whole stablecoin balance the moment the stream connects. */
+const BNX_STABLE=/^(USDT|BUSD|USDC|FDUSD|TUSD|DAI|USDP)$/;
 
-function bnxRemember(){
+/* SAVED KEYS ARE CIPHERTEXT.
+   "Remember on this machine" used to write the API key and secret to
+   localStorage in the clear — and inside the app the frame shares dehub.io's
+   storage, so live exchange credentials sat in the social app's own store.
+   Now they are wrapped under a PIN: PBKDF2 (200k rounds) into an AES-GCM key,
+   and only the wrapped blob touches disk. Without the PIN the blob is noise;
+   a v1 plaintext entry found on load is used once and deleted, never kept. */
+const hexOf=u=>[...new Uint8Array(u)].map(b=>b.toString(16).padStart(2,'0')).join('');
+const unhex=h=>new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));
+async function pinKey(pin,salt){
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},base,
+    {name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function bnxRemember(){
   /* opt-in only, and we say what it costs */
   try{
-    if($('#bnRemember').checked)
-      localStorage.setItem('trenchstar.bnx',JSON.stringify({k:bnx.key,s:bnx.secret,n:bnx.net}));
-    else localStorage.removeItem('trenchstar.bnx');
-  }catch(e){}
+    if(!$('#bnRemember').checked){localStorage.removeItem('trenchstar.bnx');return true;}
+    const pin=$('#bnPin').value;
+    if(pin.length<4){$('#bnStat').textContent='A PIN OF 4+ DIGITS LOCKS THE SAVED KEYS.';return false;}
+    const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+    const key=await pinKey(pin,salt);
+    const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,
+      new TextEncoder().encode(JSON.stringify({k:bnx.key,s:bnx.secret})));
+    localStorage.setItem('trenchstar.bnx',JSON.stringify({v:2,n:bnx.net,salt:hexOf(salt),iv:hexOf(iv),ct:hexOf(ct)}));
+    return true;
+  }catch(e){return false;}
+}
+async function bnxUnlock(){
+  try{
+    const j=JSON.parse(localStorage.getItem('trenchstar.bnx')||'null');
+    if(!j||j.v!==2)return false;
+    const pin=$('#bnPin').value;
+    if(pin.length<4){$('#bnStat').textContent='ENTER THE PIN THAT LOCKED THE SAVED KEYS.';return false;}
+    const key=await pinKey(pin,unhex(j.salt));
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(j.iv)},key,unhex(j.ct));
+    const o=JSON.parse(new TextDecoder().decode(pt));
+    bnx.key=o.k||'';bnx.secret=o.s||'';
+    $('#bnKey').value=bnx.key;$('#bnSecret').value=bnx.secret;
+    return true;
+  }catch(e){$('#bnStat').textContent='WRONG PIN.';return false;}
 }
 function bnxRestore(){
   try{
     const j=JSON.parse(localStorage.getItem('trenchstar.bnx')||'null');
-    if(j){bnx.key=j.k||'';bnx.secret=j.s||'';bnx.net=j.n||'test';
-      $('#bnKey').value=bnx.key;$('#bnSecret').value=bnx.secret;
-      $('#bnRemember').checked=true;$('#bnNet').value=bnx.net;}
+    if(!j)return;
+    if(j.k){
+      /* a plaintext save from before: use it this once and take it off disk */
+      bnx.key=j.k||'';bnx.secret=j.s||'';bnx.net=j.n||'test';
+      $('#bnKey').value=bnx.key;$('#bnSecret').value=bnx.secret;$('#bnNet').value=bnx.net;
+      localStorage.removeItem('trenchstar.bnx');
+      $('#bnRemember').checked=true;$('#bnPinRow').classList.add('on');
+      $('#bnStat').textContent='SAVED KEYS WERE UNENCRYPTED — SET A PIN AND LOAD TO KEEP THEM.';
+      return;
+    }
+    if(j.v===2){
+      bnx.net=j.n||'test';$('#bnNet').value=bnx.net;
+      $('#bnRemember').checked=true;$('#bnPinRow').classList.add('on');
+      $('#bnPinNote').textContent='UNLOCKS SAVED KEYS';
+      $('#bnStat').textContent='SAVED KEYS FOUND — ENTER THE PIN AND LOAD.';
+    }
   }catch(e){}
 }
-/* Binance rejects anything outside [serverTime-recvWindow, serverTime+1000],
-   and laptop clock drift is the usual cause of -1021 */
+$('#bnRemember').addEventListener('change',()=>{$('#bnPinRow').classList.toggle('on',$('#bnRemember').checked);});
 async function bnxSyncClock(){
   try{
     const host=bnx.net==='test'?'https://testnet.binance.vision':'https://api.binance.com';
@@ -10255,9 +11920,13 @@ function bnxCall(method,params,signed){
     }catch(e){rej(e);}
   });
 }
-async function bnxLoadAccount(){
+/* `quiet` is the 60s refresh: same call, but it must not stamp CONNECTING… over
+   a healthy panel once a minute, and a blip must not report the account as
+   FAILED when the balances on screen are still the ones that were loaded. */
+async function bnxLoadAccount(quiet){
   const st=$('#bnStat');
-  st.textContent='CONNECTING…';
+  if(!quiet)st.textContent='CONNECTING…';
+  bnx.poll=Date.now();
   try{
     await bnxSyncClock();
     const acct=await bnxCall('account.status',{omitZeroBalances:true},true);
@@ -10270,22 +11939,128 @@ async function bnxLoadAccount(){
       const t=await fget(host+'/api/v3/ticker/24hr',20000);
       for(const r of t)px[r.symbol]={p:+r.lastPrice,c:+r.priceChangePercent};
     }catch(e){}
-    let usd=0,then=0;
     for(const b of bal){
       const q=b.free+b.locked;
-      if(/^(USDT|BUSD|USDC|FDUSD)$/.test(b.asset)){usd+=q;then+=q;b.usd=q;continue;}
+      if(BNX_STABLE.test(b.asset)){b.usd=q;continue;}
       const k=px[b.asset+'USDT'];
-      if(k){b.usd=q*k.p;usd+=b.usd;then+=q*(k.p/(1+(k.c||0)/100));}
+      /* Seed the live table from the same 24hr snapshot, so the number is
+         right for the second between the account landing and the first
+         miniTicker frame rather than starting at zero and jumping. */
+      if(k){b.usd=q*k.p;bnx.px[b.asset+'USDT']={p:k.p,o:k.p/(1+(k.c||0)/100)};}
       else b.usd=0;
     }
     bnx.balances=bal.sort((a,b)=>(b.usd||0)-(a.usd||0));
-    bnx.usd=usd;bnx.pnl=usd-then;
+    bnxRevalue();
+    bnxStartStream();
     st.textContent=(bnx.net==='test'?'TESTNET':'LIVE')+' · '+bal.length+' ASSETS';
     bnxRenderBalances();
   }catch(e){
-    st.textContent='FAILED · '+String(e.message||e).slice(0,58);
+    if(!quiet||!bnx.balances.length)
+      st.textContent='FAILED · '+String(e.message||e).slice(0,58);
   }
 }
+/* ---------------------- live, not once-per-button ----------------------
+   `account.status` is a snapshot, and a PnL that only moves when you press
+   LOAD ACCOUNT is not a PnL — it is a receipt. So the balances are revalued
+   from a public price stream: one combined subscription, no key and no
+   signature, carrying a miniTicker for each held asset.
+
+   The host matters. Per the REST notes at the top of this file api.binance.com
+   and fstream.binance.com are 451 from a US IP, and fstream is the worse of
+   the two because the socket OPENS and then delivers nothing — a feed that
+   looks connected forever. data-stream.binance.vision is the one that answers.
+
+   A miniTicker carries the last price AND the 24h open, which is the whole
+   reason this works: the 24h move is recomputed from the stream itself rather
+   than being interpolated from a figure that was true a minute ago. */
+const BNX_STREAM={live:'wss://data-stream.binance.vision/stream?streams=',
+                  test:'wss://stream.testnet.binance.vision/stream?streams='};
+function bnxStopStream(){
+  if(bnx.pxWs){try{bnx.pxWs.onclose=null;bnx.pxWs.close();}catch(e){}bnx.pxWs=null;}
+  bnx.streamKey='';
+}
+function bnxStartStream(){
+  const syms=bnx.balances.filter(b=>!BNX_STABLE.test(b.asset))
+    /* Binance caps a combined stream's URL; the tail of a very long book is
+       not worth a refused socket, and those rows are the smallest holdings
+       anyway — the list is already sorted by value. */
+    .map(b=>b.asset.toLowerCase()+'usdt').slice(0,48);
+  const key=bnx.net+'|'+syms.join(',');
+  /* Idempotent on purpose. The 60s account refresh calls this every time, and
+     tearing a healthy socket down and rebuilding it once a minute would put a
+     gap in the live number for no reason — the symbols only change when the
+     book does. */
+  if(bnx.pxWs&&bnx.streamKey===key)return;
+  bnxStopStream();
+  bnx.streamKey=key;
+  if(!syms.length)return;
+  const url=(bnx.net==='test'?BNX_STREAM.test:BNX_STREAM.live)+
+    syms.map(s=>s+'@miniTicker').join('/');
+  let ws;try{ws=new WebSocket(url);}catch(e){return;}
+  bnx.pxWs=ws;
+  ws.onmessage=ev=>{
+    let m;try{m=JSON.parse(ev.data);}catch(e){return;}
+    const d=m.data||m;
+    if(!d||!d.s||!d.c)return;
+    bnx.px[d.s]={p:+d.c,o:+d.o};
+    bnxRevalue();
+  };
+  /* Reconnect for as long as the panel is open. A dropped price socket used to
+     be indistinguishable from a flat market. */
+  ws.onclose=()=>{
+    if(bnx.pxWs!==ws)return;
+    bnx.pxWs=null;bnx.streamKey='';
+    if(bnx.ready)setTimeout(bnxStartStream,4000);
+  };
+  ws.onerror=()=>{};
+}
+/* Pure arithmetic — it runs on every frame the stream delivers, so it does no
+   DOM work and touches no storage. Those are on a 1s timer below. */
+function bnxRevalue(){
+  if(!bnx.balances.length)return;
+  let usd=0,then=0;
+  for(const b of bnx.balances){
+    const q=b.free+b.locked;
+    if(BNX_STABLE.test(b.asset)){b.usd=q;usd+=q;then+=q;continue;}
+    const k=bnx.px[b.asset+'USDT'];
+    if(k&&k.p>0){b.usd=q*k.p;usd+=b.usd;then+=q*(k.o||k.p);}
+    /* No price is not a loss. An asset the stream cannot quote is carried at
+       its last known value on BOTH sides, so it contributes zero to the move
+       instead of silently marking the book down to nothing. */
+    else if(b.usd>0){usd+=b.usd;then+=b.usd;}
+  }
+  bnx.usd=usd;bnx.pnl=usd-then;bnx.at=Date.now();
+}
+/* An hourly snapshot turns the 24h market move into real day-over-day PnL from
+   tomorrow on — the same trick the on-chain wallet uses, and the same honesty
+   about which of the two is on screen until then. Keyed by network so a testnet
+   session can never be differenced against a live one. */
+function bnxSnapshot(){
+  try{
+    const key='trenchstar.bnxsnaps';
+    const snaps=JSON.parse(localStorage.getItem(key)||'[]');
+    const now=Date.now();
+    if(!snaps.length||now-snaps[snaps.length-1].t>3600e3){
+      snaps.push({t:now,usd:bnx.usd,n:bnx.net});
+      while(snaps.length>72)snaps.shift();
+      localStorage.setItem(key,JSON.stringify(snaps));
+    }
+    const old=snaps.filter(s=>s.t<=now-86400e3&&s.n===bnx.net).pop();
+    bnx.pnlReal=old?bnx.usd-old.usd:null;
+  }catch(e){}
+}
+/* The stream can deliver dozens of frames a second; the panel and localStorage
+   do not need that, and the hologram reads bnx.pnl straight off every frame
+   anyway — so the big number is genuinely realtime while the cheap surfaces
+   settle at 1 Hz. The 60s reload catches what prices cannot: a fill, a deposit,
+   a withdrawal — anything that changes WHAT is held rather than what it is
+   worth. */
+setInterval(()=>{
+  if(!bnx.ready||!bnx.balances.length)return;
+  bnxSnapshot();
+  bnxRenderBalances();
+  if(Date.now()-bnx.poll>60000)bnxLoadAccount(true);
+},1000);
 function bnxRenderBalances(){
   const box=$('#bnList');box.innerHTML='';
   for(const b of bnx.balances.slice(0,8)){
@@ -10296,10 +12071,16 @@ function bnxRenderBalances(){
   }
   $('#bnTotal').textContent=bnx.usd?'$'+fmtBig(bnx.usd):'—';
   const el=$('#bnPnl');
-  if(bnx.pnl!=null){
-    el.textContent=(bnx.pnl>=0?'+$':'-$')+fmtBig(Math.abs(bnx.pnl))+'  24H MARKET MOVE';
-    el.style.color=bnx.pnl>=0?'var(--up)':'var(--down)';
-  }
+  if(bnx.pnl==null){el.textContent='—';el.style.color='';return;}
+  /* Say which of the two measures this is. They are not the same claim: one is
+     what the market did to the bag you are holding right now, the other is what
+     the account is actually worth against yesterday — which includes anything
+     you traded, deposited or withdrew in between. */
+  const real=bnx.pnlReal!=null;
+  const v=real?bnx.pnlReal:bnx.pnl;
+  el.textContent=(v>=0?'+$':'-$')+fmtBig(Math.abs(v))+
+    (real?'  REAL 24H':'  24H MARKET MOVE')+(bnx.pxWs?'  · LIVE':'');
+  el.style.color=v>=0?'var(--up)':'var(--down)';
 }
 /* Two-step: the first press prepares and shows exactly what will happen,
    the second press is the only thing that sends an order. */
@@ -10625,7 +12406,13 @@ loadSounds();
 /* poke at the world from the console: TRENCHSTAR.focusOn(TRENCHSTAR.screens[3]) */
 const repaintAll=()=>screens.forEach(s=>{s.paint(s);s.tex.needsUpdate=true;});
 window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
+  GFX,envProbe,GlossShader,floorRough,glassScreenMat,SCREEN_GLASS,get mirror(){return mirror;},
+  buildFloor,get FLOOR_Q(){return FLOOR_Q;},set FLOOR_Q(v){FLOOR_Q=v;},
+  get bloom(){return bloom;},setShadows,get gfx(){return gfx;},get MIRROR_LITE(){return MIRROR_LITE;},
+  get firstFrame(){return firstFrame;},set firstFrame(v){firstFrame=!!v;},
   focusOn,release,repaint:repaintAll,
+  focus,flickTarget,flickFocus,flickPool,flickLaneOf,flickAny,syncFocusHud,
+  get flickLane(){return flickLane;},set flickLane(v){flickLane=v;},
   WALL,buildWall,cast,startCast,stopCast,mountCast,unmountCast,beginPlacement,attachStream,fitCast,
   stats,alerts,SOUNDS,playSound,TEMPLATES,applyTemplate,SCENES,buildBackdrop,
   samplesToCandles,
@@ -10658,7 +12445,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   syncDesk,deskMons,pickDesk,deskFire,deskToWall,dhGo,buildWall,
   /* the desk's DeHub data and its composer, exposed so a change here can be
      asserted on without a screenshot: dhData holds what the app sent back,
-     dhPix the pictures it drew, and the three desk pages are DESK_PAGES */
+     dhPix the pictures it drew, and the desk page is DESK_PAGES */
   dhData,dhPull,dhPix,dhPostImg,dhAvatarUrl,deskAction,DESK_PAGES,deskMount,deskProbe,deskSiteTick,
   pickFloor,goToFloor,pingFloor,fly,flyTo,
   /* renderer/composer are exposed so a frame can be drawn on demand and read
@@ -10668,9 +12455,16 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   mountStream,streamKind,
   undoLast,undoStack,
   THEME_SCENES,pnlGroup,paintPnl,placePnl,buildFloor,
+  /* The hologram's source resolution, and the exchange state behind it. Both
+     are here so "is that number real, and whose is it?" can be answered from
+     the console instead of from a screenshot — pnlSource() returning null IS
+     the assertion that nothing is being invented. */
+  pnlSource,paperPnl,bnx,bnxRevalue,bnxStartStream,bnxStopStream,bnxSnapshot,
   get cityRing(){return cityRing;},buildCityRing,clearCityRing,dressPlate,cityLife,life,
   get skyMesh(){return skyMesh;},
-  wallet,connectWallet,refreshWallet,quoteBest,buyToken,encExactInputSingle,
+  wallet,dehubAddr,watchAddr,connectWallet,refreshWallet,quoteBest,quoteEvm,encExactInputSingle,encMulticall,
+  CHAINS,td,tdTarget,tdRender,fills,sol,solConnect,solAddr,planBuyEvm,planSellEvm,planSol,bs58,hostTrade,tradeWaits,
+  V4,v4Key,quoteV4,encV4Swap,abiEnc,routeEvm,bnxRemember,bnxUnlock,bnxRestore,syncWalletUI,tdFillSelect,
   fmtUnits,toUnits,SEL,BASE,
   get mode(){return MODE;},
   get layout(){return LAYOUT;},
@@ -10858,7 +12652,85 @@ renderer.xr.addEventListener('sessionend',vrEnd);
 
 /* ============================== main loop ============================= */
 let frame=0,lastT=performance.now();
-let fpsAcc=0,fpsN=0,slowSince=0,firstFrame=false;
+let firstFrame=false;
+/* ---- ADAPTIVE QUALITY -----------------------------------------------------
+   A ladder, not a cliff. The old path averaged frames over two seconds and
+   took a permanent step down whenever that average fell under 28 fps — and
+   an AVERAGE cannot tell a struggling GPU from a busy main thread. Picking a
+   character parses a 2 MB GLB, converts its materials and bakes four preview
+   cards; the first walk uploads its skin. Each of those is a stall of a few
+   hundred milliseconds that dragged the mean under the line, so the room
+   opened on the mirror floor, looked perfect, and then — right as you started
+   moving — dropped its shadows, its bloom, its pixel ratio and finally the
+   mirror itself, with nothing that ever put any of them back.
+
+   Three changes:
+     · the MEDIAN frame time decides, so a stall is one slow sample among a
+       hundred normal ones and does not register. A GPU that is really over
+       budget is slow on EVERY frame, which is exactly what a median sees.
+     · the floor never stops being a mirror. Two rungs shrink the reflection
+       target instead — the old plain-floor rung reflected the room probe as
+       red and green smears across the floor, which was worse than any frame
+       rate.
+     · it climbs back. Comfortably fast for three windows in a row and the
+       ladder steps up one rung; every time it has to come down again the
+       climb needs twice as many windows, so a machine that sits on the line
+       settles on the rung below it instead of flickering across it. */
+const PIXEL_RATIO=Math.min(devicePixelRatio,GFX.phone?1.25:1.5);
+const gfx=(()=>{
+  const RUNGS=['full','noShadow','mirrorLite','noBloom','mirrorLow'];
+  let level=0,bloomSaved=null,probeSaved=null;
+  let dts=[],winT=0,slow=0,fast=0,upNeed=3;
+  function down(){
+    if(level>=RUNGS.length-1)return;
+    level++;
+    if(level===1){probeSaved=envProbe.period;setShadows(false);envProbe.period=Math.max(envProbe.period,20);}
+    else if(level===2){MIRROR_LITE=1;if(FLOOR_Q==='mirror')buildFloor();}
+    else if(level===3){
+      bloomSaved=bloom.strength;bloom.strength=0;
+      /* The composer keeps its OWN pixel ratio and owns the expensive
+         full-screen passes; dropping only the renderer's barely moved. Size
+         off viewport(), not the window — inside the arcade's iframe they
+         differ, and resize() early-returns while the window itself is still. */
+      renderer.setPixelRatio(1);
+      if(composer.setPixelRatio)composer.setPixelRatio(1);
+      composer.setSize(...viewport());
+    }
+    else if(level===4){MIRROR_LITE=2;if(FLOOR_Q==='mirror')buildFloor();}
+  }
+  function up(){
+    if(level<=0)return;
+    if(level===4){MIRROR_LITE=1;if(FLOOR_Q==='mirror')buildFloor();}
+    else if(level===3){
+      if(bloomSaved!==null)bloom.strength=bloomSaved;
+      renderer.setPixelRatio(PIXEL_RATIO);
+      if(composer.setPixelRatio)composer.setPixelRatio(PIXEL_RATIO);
+      composer.setSize(...viewport());
+    }
+    else if(level===2){MIRROR_LITE=0;if(FLOOR_Q==='mirror')buildFloor();}
+    else if(level===1){
+      if(!GFX.phone)setShadows(true);
+      if(probeSaved!==null)envProbe.period=probeSaved;
+    }
+    level--;
+  }
+  function sample(dt){
+    dts.push(dt);winT+=dt;
+    if(winT<2)return;
+    /* Fewer than ten frames in two seconds is a tab that is not really
+       running — hidden, or throttled — not a GPU verdict. Throw it away. */
+    const n=dts.length;
+    if(n>=10){
+      dts.sort((a,b)=>a-b);
+      const fps=1/Math.max(dts[n>>1],1e-4);
+      if(fps<28){fast=0;if(++slow>=2){slow=0;down();upNeed=Math.min(24,upNeed*2);}}
+      else if(fps>52){slow=0;if(++fast>=upNeed){fast=0;up();}}
+      else{slow=0;fast=0;}
+    }
+    dts=[];winT=0;
+  }
+  return {sample,down,up,get level(){return level;},get rung(){return RUNGS[level];},RUNGS};
+})();
 /* setAnimationLoop, not requestAnimationFrame: it is the only loop WebXR can drive,
    so a headset session is a small step from here rather than a rewrite. */
 function tick(t){
@@ -10917,42 +12789,18 @@ function tick(t){
 
   /* The composer is monoscopic — its full-screen blit would paint one eye
      across both — so a presenting frame goes straight to the renderer. */
+  /* One face of the room probe, before the frame that will use it. Not while
+     presenting: the headset owns the render target between frames. */
+  if(!vr.on)envProbe.step(dt);
   if(vr.on)renderer.render(scene,camera);
   else composer.render();
   if(!firstFrame){firstFrame=true;boot.stage('paint',1);warmAvatars();}
 
-  /* auto-degrade bloom if the GPU is struggling */
-  fpsAcc+=dt;fpsN++;
   /* Not while presenting: entry already took both levers (bloom off, mirror
      off), and resizing the composer mid-session would fight three for the
-     framebuffer it is handing to the headset. */
-  if(fpsAcc>=2&&!vr.on){
-    const fps=fpsN/fpsAcc;fpsAcc=0;fpsN=0;
-    if(fps<28){
-      slowSince++;
-      if(slowSince>=2){
-        /* The composer keeps its OWN pixel ratio, and it owns the expensive
-           full-screen passes — dropping only the renderer's left the post
-           chain rendering at the old resolution, so the one lever that was
-           supposed to buy back a struggling GPU barely moved. */
-        if(bloom.strength>0){
-          bloom.strength=0;
-          renderer.setPixelRatio(1);
-          if(composer.setPixelRatio)composer.setPixelRatio(1);
-          /* viewport(), not innerWidth/innerHeight. Everything else sizes off
-             the host element, and inside the arcade's iframe the two are not
-             the same number — sizing the post chain to the window while the
-             canvas follows the host leaves the composer resolving to a
-             different shape than the thing it is blitted into. resize() then
-             early-returns because the window itself never changed, so it stays
-             wrong until something else forces a resize. */
-          composer.setSize(...viewport());
-        }
-        else if(FLOOR_Q==='mirror'){FLOOR_Q='plain';buildFloor();}   /* mirror goes second */
-      }
-    }
-    else slowSince=0;
-  }
+     framebuffer it is handing to the headset. Not before the first frame
+     either — boot is one long stall by design. */
+  if(!vr.on&&firstFrame)gfx.sample(dt);
 }
 renderer.setAnimationLoop(tick);
 </script>

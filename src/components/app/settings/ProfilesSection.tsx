@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { buildAvatarUrl, deviceWidth } from '@/lib/media-url';
+import { ButtonLoader } from '@/components/app/DeHubLoader';
 import {
   listProfiles,
   currentProfileId,
@@ -82,15 +83,19 @@ export function ProfilesSection() {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-1">
-        <Users className="w-5 h-5 text-zinc-400" />
-        <h3 className="font-medium text-white">{t('settings.profiles', 'Profiles')}</h3>
-        <p className="text-zinc-500 text-sm">{t('settings.profilesDesc', 'Accounts saved on this device')}</p>
-      </div>
+      {/* Same heading as every other section on the page; the description
+          and allowance sit under it as body copy rather than trailing the
+          title on one line. */}
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-400">
+        <Users className="size-4" />
+        {t('settings.profiles', 'Profiles')}
+      </h3>
       {/* The allowance is stated whether or not it has been reached — finding
           out only at the moment you are refused is what makes a limit feel
           arbitrary. */}
-      <p className="text-zinc-500 text-xs mb-4 pl-8">
+      <p className="mb-4 text-sm text-zinc-500">
+        {t('settings.profilesDesc', 'Accounts saved on this device')}
+        {' · '}
         {t('settings.profilesUsed', '{{used}} of {{max}} used', {
           used: profiles.length,
           max: allowance.maxProfiles,
@@ -139,6 +144,12 @@ export function ProfilesSection() {
                     {profile.session ? '' : ` · ${t('settings.profileSignedOut', 'sign in to switch')}`}
                   </span>
                 </span>
+                {switchingId === profile.id && (
+                  /* Switching profile tears down one session and restores
+                     another — seconds on a slow link, so the row that was
+                     tapped carries the mark instead of just dimming. */
+                  <ButtonLoader className="shrink-0" />
+                )}
                 {isActive && (
                   <span className="flex items-center gap-1 text-xs text-emerald-400 shrink-0 pr-6">
                     <Check className="w-3.5 h-3.5" />

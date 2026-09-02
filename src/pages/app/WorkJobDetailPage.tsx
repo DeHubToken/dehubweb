@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Star, AlertTriangle, ExternalLink, Check, X, Pencil, Wallet, Clock } from 'lucide-react';
 import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,
@@ -12,7 +13,7 @@ import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { bountyPath, bountyTitle, bountyDescription, bountyUrl, isBountyIndexable } from '@/features/work/seo';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
-import { TxLink, statusBadgeClass, statusLabel } from '@/features/work/components/TxLink';
+import { TxLink, statusBadgeClass, statusLabelKey } from '@/features/work/components/TxLink';
 import { WorkUser } from '@/features/work/components/WorkUser';
 import type { WorkJob, WorkSubmission } from '@/features/work/types';
 
@@ -46,6 +47,7 @@ export default function WorkJobDetailPage() {
   // off the row's real uuid, which is what the child tables' job_id holds.
   const { jobKey } = useParams<{ jobKey: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth();
   const { data: job, isLoading } = useWorkJob(jobKey);
   const jobId = job?.id;
@@ -71,11 +73,11 @@ export default function WorkJobDetailPage() {
   const [disputeReason, setDisputeReason] = useState('');
   const [showDispute, setShowDispute] = useState(false);
 
-  if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">Loadingâ€¦</div>;
+  if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">{t('work.loading')}</div>;
   if (!job) return (
     <div className="max-w-3xl mx-auto px-4 py-16 text-center text-white/60">
       <ThemedIcon icon="bounties" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
-      Job not found.
+      {t('work.jobNotFound')}
     </div>
   );
 
@@ -106,7 +108,7 @@ export default function WorkJobDetailPage() {
         noindex={!isBountyIndexable(job)}
       />
       <button onClick={() => navigate('/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">
-        <ArrowLeft className="w-4 h-4" /> Back
+        <ArrowLeft className="w-4 h-4" /> {t('work.back')}
       </button>
 
       {/* Header */}
@@ -117,14 +119,14 @@ export default function WorkJobDetailPage() {
               <ThemedIcon icon={TYPE_ICON[job.job_type] ?? 'bounties'} alt="" className="w-4 h-4 object-contain" /> {job.job_type}
             </span>
             {job.platform && <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>}
-            <span className={`px-2 py-0.5 rounded-md ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</span>
+            <span className={`px-2 py-0.5 rounded-md ${statusBadgeClass(job.status)}`}>{t(statusLabelKey(job.status))}</span>
           </div>
           {isPoster && isJobEditable(job) && (
             <button
               onClick={() => navigate(`${bountyPath(job)}/edit`)}
               className="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-medium inline-flex items-center gap-1.5 transition-colors"
             >
-              <Pencil className="w-3 h-3" /> Edit
+              <Pencil className="w-3 h-3" /> {t('work.edit')}
             </button>
           )}
         </div>
@@ -136,18 +138,18 @@ export default function WorkJobDetailPage() {
           </a>
         )}
         <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/10">
-          <Stat label="Total" value={amount(job.total_budget, job.currency)} />
+          <Stat label={t('work.statTotal')} value={amount(job.total_budget, job.currency)} />
           {job.job_type !== 'contract' ? (
-            <Stat label="Per unit" value={amount(job.price_per_unit, job.currency)} />
-          ) : <Stat label="Type" value="Contract" />}
-          <Stat label="Slots" value={`${job.units_approved}/${job.max_units}`} />
+            <Stat label={t('work.statPerUnit')} value={amount(job.price_per_unit, job.currency)} />
+          ) : <Stat label={t('work.statType')} value={t('work.typeContract')} />}
+          <Stat label={t('work.statSlots')} value={`${job.units_approved}/${job.max_units}`} />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-white/10">
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-[11px] text-white/40 shrink-0">Posted by</span>
+            <span className="text-[11px] text-white/40 shrink-0">{t('work.postedBy')}</span>
             <WorkUser address={job.poster_address} />
           </div>
-          {job.fund_tx_hash && <TxLink label="Escrow funded" txHash={job.fund_tx_hash} />}
+          {job.fund_tx_hash && <TxLink label={t('work.escrowFunded')} txHash={job.fund_tx_hash} />}
         </div>
       </div>
 
@@ -157,21 +159,20 @@ export default function WorkJobDetailPage() {
         <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-amber-400/25 bg-amber-400/[0.07] px-4 py-3">
           <Clock className="w-4 h-4 text-amber-300 shrink-0" />
           <span className="text-sm text-amber-100">
-            {unpaid.length} approved {unpaid.length === 1 ? 'submission is' : 'submissions are'} awaiting payment â€”{' '}
-            <strong className="font-semibold">{amount(owed, job.currency)}</strong>
+            {t('work.awaitingPayment', { count: unpaid.length, amount: amount(owed, job.currency) })}
           </span>
         </div>
       )}
 
       {/* Contract: applications */}
       {job.job_type === 'contract' && (
-        <Section title={`Applicants (${applications.length})`}>
+        <Section title={t('work.applicants', { count: applications.length })}>
           {!isPoster && !myApp && !isAwarded && job.status === 'open' && (
             <div className="mb-4 space-y-2">
               <textarea
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
-                placeholder="Why are you a good fit?"
+                placeholder={t('work.coverLetterPlaceholder')}
                 rows={3}
                 className={inputCls}
               />
@@ -180,17 +181,17 @@ export default function WorkJobDetailPage() {
                 onClick={() => { if (!requireAuth()) return; applyMutation.mutate({ job_id: job.id, cover_letter: coverLetter.trim() }, { onSuccess: () => setCoverLetter('') }); }}
                 className="px-4 py-2 rounded-xl bg-white text-black font-semibold disabled:opacity-40"
               >
-                Apply
+                {t('work.apply')}
               </button>
             </div>
           )}
           {applications.length === 0 ? (
-            <p className="text-sm text-white/50">No applicants yet.</p>
+            <p className="text-sm text-white/50">{t('work.noApplicants')}</p>
           ) : applications.map(a => (
             <div key={a.id} className="p-3 rounded-xl bg-white/5 border border-white/10 mb-2">
               <div className="flex items-center justify-between gap-3 mb-2">
                 <WorkUser address={a.applicant_address} />
-                <span className={`shrink-0 text-[11px] px-2 py-0.5 rounded-md ${a.status === 'awarded' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-white/10 text-white/60'}`}>{a.status}</span>
+                <span className={`shrink-0 text-[11px] px-2 py-0.5 rounded-md ${a.status === 'awarded' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-white/10 text-white/60'}`}>{t(statusLabelKey(a.status))}</span>
               </div>
               <p className="text-sm text-white/70 whitespace-pre-wrap">{a.cover_letter}</p>
               {isPoster && a.status === 'pending' && job.status === 'open' && (
@@ -199,7 +200,7 @@ export default function WorkJobDetailPage() {
                   disabled={awardMutation.isPending}
                   className="mt-2 px-3 py-1.5 rounded-lg bg-white text-black text-xs font-semibold disabled:opacity-40"
                 >
-                  Award this applicant
+                  {t('work.awardApplicant')}
                 </button>
               )}
             </div>
@@ -209,11 +210,11 @@ export default function WorkJobDetailPage() {
 
       {/* Submissions / proof feed */}
       {(job.job_type !== 'contract' || isAwarded || isPoster) && (
-        <Section title={`Submissions (${submissions.length})`}>
+        <Section title={t('work.submissions', { count: submissions.length })}>
           {((job.job_type !== 'contract' && !isPoster) || isAwarded) && job.status !== 'completed' && job.status !== 'cancelled' && (
             <div className="mb-4 space-y-2">
-              <input value={proofUrl} onChange={(e) => setProofUrl(e.target.value)} placeholder="Proof URL (link to post / clip / comment)" className={inputCls} />
-              <textarea value={proofText} onChange={(e) => setProofText(e.target.value)} rows={2} placeholder="Notes (optional)" className={inputCls} />
+              <input value={proofUrl} onChange={(e) => setProofUrl(e.target.value)} placeholder={t('work.proofUrlPlaceholder')} className={inputCls} />
+              <textarea value={proofText} onChange={(e) => setProofText(e.target.value)} rows={2} placeholder={t('work.notesPlaceholder')} className={inputCls} />
               <button
                 disabled={!proofUrl.trim() || submitMutation.isPending}
                 onClick={() => {
@@ -224,12 +225,12 @@ export default function WorkJobDetailPage() {
                 }}
                 className="px-4 py-2 rounded-xl bg-white text-black font-semibold disabled:opacity-40"
               >
-                Submit proof
+                {t('work.submitProof')}
               </button>
             </div>
           )}
           {submissions.length === 0 ? (
-            <p className="text-sm text-white/50">No submissions yet.</p>
+            <p className="text-sm text-white/50">{t('work.noSubmissions')}</p>
           ) : submissions.map(s => (
             <SubmissionCard
               key={s.id}
@@ -262,7 +263,7 @@ export default function WorkJobDetailPage() {
       )}
 
       {/* Reviews */}
-      <Section title={`Reviews (${reviews.length})`}>
+      <Section title={t('work.reviews', { count: reviews.length })}>
         {canReview && !myReview && (
           <div className="mb-4 space-y-2">
             <div className="flex gap-1">
@@ -272,13 +273,13 @@ export default function WorkJobDetailPage() {
                 </button>
               ))}
             </div>
-            <textarea value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} rows={2} placeholder="Share your experienceâ€¦" className={inputCls} />
+            <textarea value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} rows={2} placeholder={t('work.reviewPlaceholder')} className={inputCls} />
             <button
               onClick={() => {
                 const reviewee = isPoster
                   ? submissions.find(s => s.approval_status === 'approved' || s.approval_status === 'paid')?.worker_address ?? job.awarded_worker_address
                   : job.poster_address;
-                if (!reviewee) { toast.error('No counterparty to review'); return; }
+                if (!reviewee) { toast.error(t('work.noCounterparty')); return; }
                 reviewMutation.mutate({
                   job_id: job.id,
                   reviewee_address: reviewee,
@@ -289,12 +290,12 @@ export default function WorkJobDetailPage() {
               }}
               className="px-4 py-2 rounded-xl bg-white text-black font-semibold"
             >
-              Post review
+              {t('work.postReview')}
             </button>
           </div>
         )}
         {reviews.length === 0 ? (
-          <p className="text-sm text-white/50">No reviews yet.</p>
+          <p className="text-sm text-white/50">{t('work.noReviews')}</p>
         ) : reviews.map(r => (
           <div key={r.id} className="p-3 rounded-xl bg-white/5 border border-white/10 mb-2">
             <div className="flex items-center justify-between gap-3">
@@ -319,32 +320,32 @@ export default function WorkJobDetailPage() {
               // backlog was created â€” the status said completed and the worker
               // was never paid. Make the poster say it out loud.
               if (unpaid.length > 0 && !window.confirm(
-                `${unpaid.length} approved ${unpaid.length === 1 ? 'submission has' : 'submissions have'} not been paid (${amount(owed, job.currency)}). Mark this bounty complete anyway?`
+                t('work.markCompleteConfirm', { count: unpaid.length, amount: amount(owed, job.currency) })
               )) return;
               completeMutation.mutate(job.id);
             }}
             disabled={completeMutation.isPending}
             className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40"
           >
-            Mark complete
+            {t('work.markComplete')}
           </button>
         )}
         {(isPoster || isAwarded) && job.status !== 'completed' && job.status !== 'disputed' && (
           <button onClick={() => setShowDispute(s => !s)} className="px-4 py-2 rounded-xl bg-red-500/20 text-red-200 text-sm inline-flex items-center gap-1">
-            <AlertTriangle className="w-3.5 h-3.5" /> Open dispute
+            <AlertTriangle className="w-3.5 h-3.5" /> {t('work.openDispute')}
           </button>
         )}
       </div>
 
       {showDispute && (
         <div className="mt-4 p-4 rounded-xl bg-red-500/5 border border-red-500/20 space-y-2">
-          <textarea value={disputeReason} onChange={(e) => setDisputeReason(e.target.value)} rows={3} placeholder="Explain the issueâ€¦" className={inputCls} />
+          <textarea value={disputeReason} onChange={(e) => setDisputeReason(e.target.value)} rows={3} placeholder={t('work.disputePlaceholder')} className={inputCls} />
           <button
             disabled={!disputeReason.trim()}
             onClick={() => { disputeMutation.mutate({ job_id: job.id, onchain_job_id: job.onchain_job_id, reason: disputeReason.trim() }); setShowDispute(false); setDisputeReason(''); }}
             className="px-4 py-2 rounded-xl bg-red-500/30 text-red-100 text-sm font-semibold"
           >
-            Submit dispute to admin
+            {t('work.submitDispute')}
           </button>
         </div>
       )}
@@ -381,6 +382,7 @@ function SubmissionCard({
   onReject: (reason: string) => void;
   busy: boolean;
 }) {
+  const { t } = useTranslation();
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
 
@@ -400,7 +402,7 @@ function SubmissionCard({
           s.approval_status === 'rejected' ? 'bg-red-500/20 text-red-300' :
           'bg-white/10 text-white/60'
         }`}>
-          {paid ? 'paid' : awaiting ? 'awaiting payment' : s.approval_status}
+          {paid ? t('work.statusPaid') : awaiting ? t('work.statusAwaitingPayment') : t(statusLabelKey(s.approval_status))}
         </span>
       </div>
 
@@ -409,21 +411,21 @@ function SubmissionCard({
       </a>
       {s.proof_text && <p className="text-xs text-white/60 mt-1 whitespace-pre-wrap">{s.proof_text}</p>}
       {s.rejection_reason && (
-        <p className="text-xs text-red-300/80 mt-1">Rejected: {s.rejection_reason}</p>
+        <p className="text-xs text-red-300/80 mt-1">{t('work.rejectedReason', { reason: s.rejection_reason })}</p>
       )}
 
       {paid && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-2">
-          <span className="text-[11px] text-emerald-300">Paid {amount(Number(s.payout_amount), job.currency)}</span>
-          {s.payout_tx_hash && <TxLink label="Payout tx" txHash={s.payout_tx_hash} />}
+          <span className="text-[11px] text-emerald-300">{t('work.paidAmount', { amount: amount(Number(s.payout_amount), job.currency) })}</span>
+          {s.payout_tx_hash && <TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} />}
         </div>
       )}
 
       {awaiting && (
         <p className="mt-2 text-[11px] text-amber-200/80">
           {isMine
-            ? `Accepted â€” ${amount(due, job.currency)} has not been sent yet.`
-            : `Accepted, not paid â€” ${amount(due, job.currency)} outstanding.`}
+            ? t('work.acceptedMine', { amount: amount(due, job.currency) })
+            : t('work.acceptedOther', { amount: amount(due, job.currency) })}
         </p>
       )}
 
@@ -435,21 +437,21 @@ function SubmissionCard({
             disabled={busy}
             className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
-            <Wallet className="w-3 h-3" /> Approve &amp; pay {amount(due, job.currency)}
+            <Wallet className="w-3 h-3" /> {t('work.approveAndPay', { amount: amount(due, job.currency) })}
           </button>
           <button
             onClick={() => onApprove(false)}
             disabled={busy}
             className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/70 text-xs font-medium inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
-            <Check className="w-3 h-3" /> Approve only
+            <Check className="w-3 h-3" /> {t('work.approveOnly')}
           </button>
           <button
             onClick={() => setRejecting(true)}
             disabled={busy}
             className="px-3 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
-            <X className="w-3 h-3" /> Reject
+            <X className="w-3 h-3" /> {t('work.reject')}
           </button>
         </div>
       )}
@@ -461,7 +463,7 @@ function SubmissionCard({
           disabled={busy}
           className="mt-3 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
         >
-          <Wallet className="w-3 h-3" /> Pay {amount(due, job.currency)}
+          <Wallet className="w-3 h-3" /> {t('work.payAmount', { amount: amount(due, job.currency) })}
         </button>
       )}
 
@@ -474,7 +476,7 @@ function SubmissionCard({
             onChange={(e) => setReason(e.target.value)}
             rows={2}
             autoFocus
-            placeholder="Why is this being rejected?"
+            placeholder={t('work.rejectReasonPlaceholder')}
             className={inputCls}
           />
           <div className="flex gap-2">
@@ -483,13 +485,13 @@ function SubmissionCard({
               disabled={!reason.trim() || busy}
               className="px-3 py-1.5 rounded-lg bg-red-500/30 text-red-100 text-xs font-semibold disabled:opacity-40"
             >
-              Confirm rejection
+              {t('work.confirmRejection')}
             </button>
             <button
               onClick={() => { setRejecting(false); setReason(''); }}
               className="px-3 py-1.5 rounded-lg bg-white/10 text-white/70 text-xs font-medium"
             >
-              Cancel
+              {t('work.cancel')}
             </button>
           </div>
         </div>

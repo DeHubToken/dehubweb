@@ -7,6 +7,8 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { Wallet, Plus, ArrowDownToLine, Loader2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +22,7 @@ const EXPLORERS: Record<string, string> = {
 };
 
 export function BillingTab() {
+  const { t } = useTranslation();
   const { data: account } = useAdAccount();
   const { data: payments = [], isLoading } = useAdPayments();
   const topUp = useTopUpCredit();
@@ -48,7 +51,7 @@ export function BillingTab() {
 
       {/* Manual credit recovery */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-        <p className="text-sm font-semibold text-foreground mb-1">Credit a transaction</p>
+        <p className="text-sm font-semibold text-foreground mb-1">{t('ads.creditATransaction')}</p>
         <p className="text-xs text-muted-foreground mb-3">
           Sent DHB to the ads treasury but it didn't credit? Paste the transaction hash — we verify it on-chain.
         </p>
@@ -71,11 +74,11 @@ export function BillingTab() {
 
       {/* Payment history */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-        <p className="text-sm font-semibold text-foreground mb-3">Payment history</p>
+        <p className="text-sm font-semibold text-foreground mb-3">{t('ads.paymentHistory')}</p>
         {isLoading ? (
-          <p className="text-sm text-muted-foreground py-4 text-center">Loading…</p>
+          <p className="text-sm text-muted-foreground py-4 text-center">{t('ads.loading')}</p>
         ) : payments.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-4 text-center">No top-ups yet.</p>
+          <p className="text-sm text-muted-foreground py-4 text-center">{t('ads.noTopUpsYet')}</p>
         ) : (
           <div className="space-y-2">
             {payments.map((p) => (
@@ -83,7 +86,7 @@ export function BillingTab() {
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-foreground">+{formatUsd(p.usd_value)}</p>
                   <p className="text-xs text-muted-foreground">
-                    {formatCompact(Number(p.dhb_amount))} DHB · {p.chain} · {new Date(p.created_at).toLocaleDateString()}
+                    {formatCompact(Number(p.dhb_amount))} <DhbCoin /> · {p.chain} · {new Date(p.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <a
@@ -91,7 +94,7 @@ export function BillingTab() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                  aria-label="View transaction"
+                  aria-label={t('ads.viewTransaction')}
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>

@@ -18,7 +18,9 @@
  * safe to drop into every notification row.
  */
 
+import { useTranslation } from 'react-i18next';
 import { Loader2, Send, Coins, Check } from 'lucide-react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOpenTrades } from '@/hooks/use-fraction-marketplace';
 import { useSettleTrade } from '@/hooks/use-fraction-checkout';
@@ -33,6 +35,7 @@ interface NotificationSettleActionProps {
 }
 
 export function NotificationSettleAction({ type, tokenId }: NotificationSettleActionProps) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data: open } = useOpenTrades(walletAddress);
   const { deliver, pay } = useSettleTrade();
@@ -56,7 +59,7 @@ export function NotificationSettleAction({ type, tokenId }: NotificationSettleAc
     return (
       <span className="mt-2 inline-flex items-center gap-1 text-xs text-emerald-300/80">
         <Check className="w-3 h-3" />
-        Settled
+        {t('fractions.settled')}
       </span>
     );
   }
@@ -91,8 +94,12 @@ export function NotificationSettleAction({ type, tokenId }: NotificationSettleAc
           <Coins className="w-3 h-3" />
         )}
         {isSale
-          ? `Send ${trade.quantity} fraction${trade.quantity === 1 ? '' : 's'}`
-          : `Pay ${(trade.quantity * trade.price_per_fraction).toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB`}
+          ? t('fractions.sendFractionsCount', { count: trade.quantity })
+          : (
+            <>
+              {t('fractions.payAction')} <DhbAmount amount={(trade.quantity * trade.price_per_fraction).toLocaleString(undefined, { maximumFractionDigits: 2 })} />
+            </>
+          )}
       </button>
     </div>
   );

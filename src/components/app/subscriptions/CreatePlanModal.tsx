@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { Plus, X, Loader2, Star, Clock, DollarSign, FileText, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -30,11 +31,11 @@ interface CreatePlanModalProps {
  * The `tier` alongside is only a label; the API keys plans by duration.
  */
 const DURATION_PRESETS = [
-  { label: '1 Month', months: 1, tier: 1 },
-  { label: '3 Months', months: 3, tier: 2 },
-  { label: '6 Months', months: 6, tier: 3 },
-  { label: '1 Year', months: 12, tier: 4 },
-  { label: 'Lifetime', months: 0, tier: 5 },
+  { labelKey: 'subscriptions.preset1Month', months: 1, tier: 1 },
+  { labelKey: 'subscriptions.preset3Months', months: 3, tier: 2 },
+  { labelKey: 'subscriptions.preset6Months', months: 6, tier: 3 },
+  { labelKey: 'subscriptions.preset1Year', months: 12, tier: 4 },
+  { labelKey: 'subscriptions.presetLifetime', months: 0, tier: 5 },
 ];
 
 const CHAIN_OPTIONS: { chainId: ChainId; label: string; icon: string }[] = [
@@ -70,6 +71,7 @@ function clearDraft() {
 }
 
 export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
+  const { t } = useTranslation();
   const draft = loadDraft();
   const [name, setName] = useState(draft?.name ?? '');
   const [description, setDescription] = useState(draft?.description ?? '');
@@ -150,13 +152,13 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
           <div className="flex items-center justify-between gap-2">
             <DrawerTitle className="flex items-center gap-2 text-xl text-white">
               <Star className="w-5 h-5 text-white" />
-              Create Subscription Plan
+              {t('subscriptions.createPlanTitle')}
             </DrawerTitle>
             {/* Drawer has no built-in close affordance the way Dialog did, and the
                 scrim alone is not discoverable enough for a form this long. */}
             <button
               onClick={() => onOpenChange(false)}
-              aria-label="Close"
+              aria-label={t('subscriptions.close')}
               className="p-2 -mr-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
             >
               <X className="w-5 h-5" />
@@ -167,11 +169,11 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
         <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pt-4">
           {/* Plan Name */}
           <div>
-            <label className="text-sm text-zinc-400 mb-1.5 block">Plan Name</label>
+            <label className="text-sm text-zinc-400 mb-1.5 block">{t('subscriptions.planName')}</label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Basic, Premium, VIP"
+              placeholder={t('subscriptions.planNamePlaceholder')}
               className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500"
             />
           </div>
@@ -180,12 +182,12 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <FileText className="w-3.5 h-3.5" />
-              Description (optional)
+              {t('subscriptions.descriptionOptional')}
             </label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe what subscribers get..."
+              placeholder={t('subscriptions.descriptionPlaceholder')}
               rows={3}
               className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 resize-none"
             />
@@ -195,7 +197,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <DollarSign className="w-3.5 h-3.5" />
-              Price
+              {t('subscriptions.price')}
             </label>
             <div className="relative">
               <Input
@@ -209,17 +211,16 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                 <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                <span className="text-sm text-zinc-400">DHB</span>
               </div>
             </div>
             <p className="text-xs text-zinc-500 mt-1.5">
-              You receive this in full. Subscribers pay a platform fee on top.
+              {t('subscriptions.youReceiveInFull')}
             </p>
           </div>
 
           {/* Chain */}
           <div>
-            <label className="text-sm text-zinc-400 mb-1.5 block">Chain</label>
+            <label className="text-sm text-zinc-400 mb-1.5 block">{t('subscriptions.chain')}</label>
             <div className="grid grid-cols-2 gap-2">
               {CHAIN_OPTIONS.map((option) => (
                 <button
@@ -242,7 +243,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
-              Duration
+              {t('subscriptions.duration')}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {DURATION_PRESETS.map((preset) => (
@@ -255,12 +256,12 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
                       : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10'
                   } border`}
                 >
-                  {preset.label}
+                  {t(preset.labelKey)}
                 </button>
               ))}
             </div>
             <p className="text-xs text-zinc-500 mt-1.5">
-              One plan per duration — the chain stores plans by creator and duration.
+              {t('subscriptions.onePlanPerDuration')}
             </p>
           </div>
 
@@ -268,7 +269,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block flex items-center gap-1">
               <Gift className="w-3.5 h-3.5" />
-              Benefits (optional)
+              {t('subscriptions.benefitsOptional')}
             </label>
             <div className="space-y-2">
               {benefits.map((benefit, index) => (
@@ -276,7 +277,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
                   <Input
                     value={benefit}
                     onChange={(e) => handleBenefitChange(index, e.target.value)}
-                    placeholder={`Benefit ${index + 1}`}
+                    placeholder={t('subscriptions.benefitN', { number: index + 1 })}
                     className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 flex-1"
                   />
                   {benefits.length > 1 && (
@@ -298,7 +299,7 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
                 className="text-zinc-400 hover:text-white gap-1"
               >
                 <Plus className="w-4 h-4" />
-                Add benefit
+                {t('subscriptions.addBenefit')}
               </Button>
             </div>
           </div>
@@ -314,18 +315,18 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
               {busy ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  {createPlanMutation.stageLabel || 'Creating...'}
+                  {createPlanMutation.stageLabel || t('subscriptions.creating')}
                 </>
               ) : (
                 <>
                   <Star className="w-4 h-4" />
-                  Create &amp; Publish
+                  {t('subscriptions.createAndPublish')}
                 </>
               )}
             </span>
           </button>
           <p className="text-xs text-zinc-500 text-center">
-            Publishing is an on-chain transaction — you'll be asked to confirm it in your wallet.
+            {t('subscriptions.publishingIsOnChain')}
           </p>
         </div>
       </DrawerContent>

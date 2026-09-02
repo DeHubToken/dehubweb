@@ -25,6 +25,12 @@ export interface SendMessagePayload {
   txHash?: string;
   tipTxHash?: string;
   voiceDuration?: number;
+  /**
+   * Client-side forward: an encrypted message cannot be copied by the server
+   * (its ciphertext is bound to the source conversation), so the client
+   * decrypts, re-encrypts for the target and cites the original here.
+   */
+  forwardedFrom?: { messageId: string };
 }
 
 export interface EditedMessage {

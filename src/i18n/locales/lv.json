@@ -43,6 +43,7 @@
     "connectAi": "Savienot MI"
   },
   "feed": {
+    "viewProfile": "Skatīt lietotāja {{name}} profilu",
     "home": "Sākums",
     "videos": "Video",
     "images": "Attēli",
@@ -942,6 +943,8 @@
     "loginRequired": "Nepieciešama pieteikšanās"
   },
   "messages": {
+    "encrypted": "Pilnībā šifrēts",
+    "cannotDecrypt": "Šifrēta ziņa — šajā ierīcē to nevar atvērt",
     "title": "Ziņojumi",
     "searchConversations": "Meklēt sarunas...",
     "failedToLoad": "Sarunu ielāde neizdevās",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "Iemaksā DHB",
     "title": "SuperSpējas",
     "unlocksAt": "{{power}} atslēdzas līmenī {{tier}}"
+  },
+  "videoLooks": {
+    "button": "Kameras izskati",
+    "title": "Izskats",
+    "hint": "Tiek lietots, pirms video pamet šo ierīci — skatītāji redz tieši to, ko redzat jūs.",
+    "backgroundBlur": "Aizmiglot manu fonu",
+    "on": "Ieslēgts",
+    "off": "Izslēgts",
+    "none": "Nav",
+    "soft": "Maigs",
+    "mono": "Mono",
+    "noir": "Noir",
+    "warm": "Silts",
+    "cool": "Vēss",
+    "vivid": "Spilgts",
+    "dream": "Sapnis",
+    "vhs": "VHS",
+    "neon": "Neons",
+    "blur": "Aizmiglojums",
+    "pixelate": "Pikseļi"
   }
 }

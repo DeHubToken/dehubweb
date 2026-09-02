@@ -20,6 +20,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,6 +45,7 @@ interface Props {
 const ADDRESS_SHAPE = /^0x[0-9a-fA-F]{40}$/;
 
 export function BuyAccountDrawer({ listing, open, onClose }: Props) {
+  const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { getQuote, buy, stage } = useBuyAccount();
   const checkReceive = useCheckReceiveAddress();
@@ -109,7 +111,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
 
   const busy = stage === 'paying' || stage === 'confirming';
   const payChainMeta = SUPPORTED_CHAINS.find(c => c.id === payChain?.chainId);
-  const since = accountSince(listing.seller.accountCreatedAt);
+  const since = accountSince(listing.seller.accountCreatedAt, t);
 
   const usingSelf = deliverToSelf && !!quote?.selfReceivable;
   const receiveOk =
@@ -144,8 +146,8 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
           <div className="px-4 pb-6 space-y-4 max-h-[70vh] overflow-y-auto">
             {/* What is being bought. */}
             <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-400">
-              <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{compactCount(listing.seller.followers)} followers</span>
-              <span className="flex items-center gap-1"><Upload className="w-3.5 h-3.5" />{compactCount(listing.seller.uploads)} uploads</span>
+              <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{t('accounts.followersCount', { value: compactCount(listing.seller.followers) })}</span>
+              <span className="flex items-center gap-1"><Upload className="w-3.5 h-3.5" />{t('accounts.uploadsCount', { value: compactCount(listing.seller.uploads) })}</span>
               {since && <span className="flex items-center gap-1"><CalendarClock className="w-3.5 h-3.5" />{since}</span>}
             </div>
 
@@ -155,22 +157,22 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
 
             {/* Price */}
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
-              <p className="text-xs text-zinc-500 mb-1">Asking price</p>
+              <p className="text-xs text-zinc-500 mb-1">{t('accounts.askingPrice')}</p>
               <p className="text-2xl font-bold text-white flex items-center gap-2">
                 <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
                 {(quote?.priceDhb ?? listing.priceDhb).toLocaleString()}
-                <span className="text-sm font-normal text-zinc-500">DHB</span>
               </p>
               <p className="text-xs text-zinc-500 mt-1">
-                ≈ ${(quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { maximumFractionDigits: 2 })} · paid
-                straight to the seller, DeHub takes no cut
+                {t('accounts.paidStraightToSeller', {
+                  usd: (quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { maximumFractionDigits: 2 }),
+                })}
               </p>
             </div>
 
             {/* Where the account will land. */}
             {quote && (
               <div className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-2.5">
-                <p className="text-xs text-zinc-500">Deliver the account to</p>
+                <p className="text-xs text-zinc-500">{t('accounts.deliverAccountTo')}</p>
 
                 {quote.selfReceivable && (
                   <button
@@ -183,14 +185,14 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
                     }`}
                   >
                     <Wallet className="w-4 h-4 shrink-0" />
-                    This wallet
+                    {t('accounts.thisWallet')}
                     {deliverToSelf && <Check className="w-4 h-4 ml-auto" />}
                   </button>
                 )}
 
                 {!usingSelf && (
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-zinc-400">Receiving wallet address</Label>
+                    <Label className="text-xs text-zinc-400">{t('accounts.receivingWalletAddress')}</Label>
                     <div className="relative">
                       <Input
                         value={receiveAddress}
@@ -215,8 +217,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
                       <p className="text-[11px] text-red-400">{check.problem}</p>
                     ) : (
                       <p className="text-[11px] text-zinc-500">
-                        The account arrives on a vacant wallet that has signed in to DeHub at least once.
-                        Sign in once with a fresh wallet, then paste its address here.
+                        {t('accounts.receivingWalletHint')}
                       </p>
                     )}
                   </div>
@@ -228,9 +229,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
             {payChainMeta && (
               <p className="text-xs text-zinc-500 flex items-center gap-2">
                 <img src={payChainMeta.icon} alt="" className="w-4 h-4 rounded-full" />
-                {payChain?.covered
-                  ? `Paying with DHB on ${payChainMeta.name}`
-                  : `You are short of DHB — this will be paid on ${payChainMeta.name}`}
+                {t(payChain?.covered ? 'accounts.payingWithDhbOn' : 'accounts.shortOfDhbPaidOn', { chain: payChainMeta.name })}
               </p>
             )}
 
@@ -240,7 +239,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
 
             {isOwn && (
               <p className="text-sm text-zinc-400">
-                This is your listing. Manage it from the Sell tab.
+                {t('accounts.yourOwnListing')}
               </p>
             )}
 
@@ -253,12 +252,12 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
               >
                 {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {stage === 'paying'
-                  ? 'Confirm in your wallet…'
+                  ? t('accounts.confirmInWallet')
                   : stage === 'confirming'
-                    ? 'Transferring the account…'
+                    ? t('accounts.transferringAccount')
                     : !isAuthenticated
-                      ? 'Sign in to buy'
-                      : `Buy @${listing.username}`}
+                      ? t('accounts.signInToBuy')
+                      : t('accounts.buyHandle', { handle: listing.username })}
               </Button>
               <Button variant="outline" size="icon" onClick={() => setShareOpen(true)} disabled={busy}>
                 <Share2 className="w-4 h-4" />
@@ -267,9 +266,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
 
             <p className="text-[11px] text-zinc-500 flex items-start gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-px" />
-              You get the whole account — handle, posts, followers, tips history and badge entitlements.
-              The seller keeps their wallet and everything in it. The transfer runs only after DeHub reads
-              your DHB payment back off the chain; if it is interrupted, retrying the purchase resumes it.
+              {t('accounts.transferGuarantee')}
             </p>
           </div>
         </DrawerContent>
@@ -279,7 +276,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
         open={shareOpen}
         onOpenChange={setShareOpen}
         url={`${window.location.origin}/accounts?handle=${encodeURIComponent(listing.username)}`}
-        shareTitle={`@${listing.username} is for sale on DeHub`}
+        shareTitle={t('accounts.shareTitle', { handle: listing.username })}
       />
     </>
   );

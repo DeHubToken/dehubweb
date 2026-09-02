@@ -43,6 +43,7 @@
     "connectAi": "连 AI"
   },
   "feed": {
+    "viewProfile": "看 {{name}} 的个人资料",
     "home": "首页",
     "videos": "视频",
     "images": "图片",
@@ -942,6 +943,8 @@
     "loginRequired": "须登录"
   },
   "messages": {
+    "encrypted": "端到端加密",
+    "cannotDecrypt": "加密消息 — 无法在此设备上打开",
     "title": "消息",
     "searchConversations": "搜索对话...",
     "failedToLoad": "加载对话失败",
@@ -1807,5 +1810,25 @@
     "stakeDhb": "存 DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{tier}} 会解锁 {{power}}"
+  },
+  "videoLooks": {
+    "button": "摄像头滤镜",
+    "title": "滤镜",
+    "hint": "在视频离开只台设备之前应用 — 观众看着个正是汝在只搭看着个画面。",
+    "backgroundBlur": "虚化我个背景",
+    "on": "开",
+    "off": "关",
+    "none": "无",
+    "soft": "柔和",
+    "mono": "黑白",
+    "noir": "黑色电影",
+    "warm": "暖色",
+    "cool": "冷色",
+    "vivid": "鲜艳",
+    "dream": "梦幻",
+    "vhs": "VHS",
+    "neon": "霓虹",
+    "blur": "模糊",
+    "pixelate": "像素化"
   }
 }

@@ -131,6 +131,7 @@ export default function ArcadeGamePage() {
   // the one that works while a pointer lock is held — see lib/game-exit-request.
   useGameExitRequest(
     game?.exitSource,
+    frameRef,
     useCallback(() => navigate('/arcade'), [navigate]),
   );
 
@@ -154,6 +155,7 @@ export default function ArcadeGamePage() {
   }, []);
   useGameHostBridge(
     game?.exitSource,
+    frameRef,
     useMemo(() => ({ address: wallet, onCompose: openComposer }), [wallet, openComposer]),
   );
 

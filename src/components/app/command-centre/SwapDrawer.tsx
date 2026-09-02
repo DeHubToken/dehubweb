@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { ArrowDownUp, Loader2, ExternalLink, AlertTriangle } from 'lucide-react';
 import { SlippageSettings } from '@/components/app/SlippageSettings';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
@@ -194,7 +195,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                 <ArrowDownUp className="w-6 h-6 text-emerald-400" />
               </div>
               <p className="text-sm text-white font-medium">Swap Successful!</p>
-              <p className="text-xs text-white/40">{dhbAmount} DHB received</p>
+              <p className="text-xs text-white/40">{dhbAmount} <DhbCoin /> received</p>
               {txHash && (
                 <button
                   onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}

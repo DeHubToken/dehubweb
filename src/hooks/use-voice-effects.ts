@@ -35,6 +35,52 @@ interface AudioGraph {
   nodes: AudioNode[];
   /** Scheduled sources (ring-mod oscillators, pitch-shifter LFOs) to stop on teardown */
   sources?: AudioScheduledSourceNode[];
+  /** Removes the keep-running listeners. Set by keepRunning below. */
+  detachKeeper?: () => void;
+}
+
+/**
+ * Keeps the context running for as long as the broadcast does.
+ *
+ * Everything published — the voice, the soundboard, a screen share's system
+ * audio — leaves through this context's MediaStreamDestination. A suspended
+ * context produces no samples, so the track stays connected and carries
+ * silence, and nothing in the app notices: no error, no state change on the
+ * track, no reconnect. The listener simply stops hearing anything.
+ *
+ * Phones suspend it readily — an incoming call, another app taking audio
+ * focus, the screen going off, a backgrounded tab — and it does NOT come back
+ * on its own. Until now it was resumed at exactly three moments (creation, an
+ * effect switch, a soundboard clip), none of which a host performs while
+ * simply talking, so a single interruption could take a stream or a Stage
+ * silent for the rest of its life.
+ *
+ * A resume attempted while the page is hidden is rejected by some browsers,
+ * which is why visibility is a trigger of its own rather than a substitute
+ * for the statechange listener.
+ */
+function keepRunning(ctx: AudioContext): () => void {
+  const resume = () => {
+    if (ctx.state === 'closed' || ctx.state === 'running') return;
+    void ctx.resume().catch(() => {
+      /* refused (usually: page hidden, or no user gesture yet) — the
+         visibility handler below gets the next go */
+    });
+  };
+
+  const onVisible = () => {
+    if (document.visibilityState === 'visible') resume();
+  };
+
+  ctx.addEventListener('statechange', resume);
+  document.addEventListener('visibilitychange', onVisible);
+  window.addEventListener('focus', onVisible);
+
+  return () => {
+    ctx.removeEventListener('statechange', resume);
+    document.removeEventListener('visibilitychange', onVisible);
+    window.removeEventListener('focus', onVisible);
+  };
 }
 
 function createDistortionCurve(amount: number): Float32Array {
@@ -257,7 +303,14 @@ export function useVoiceEffects() {
     output.connect(monitorGain);
     monitorGain.connect(ctx.destination);
 
-    graphRef.current = { ctx, source, destination, nodes: [...nodes, monitorGain], sources };
+    graphRef.current = {
+      ctx,
+      source,
+      destination,
+      nodes: [...nodes, monitorGain],
+      sources,
+      detachKeeper: keepRunning(ctx),
+    };
     return destination.stream.getAudioTracks()[0];
   }, []);
 
@@ -287,6 +340,9 @@ export function useVoiceEffects() {
     const graph = graphRef.current;
     if (graph) {
       disconnectEntireGraph(graph);
+      // Detached here rather than in disconnectEntireGraph: switchEffect calls
+      // that and then rebuilds on the SAME context, which must keep its keeper.
+      graph.detachKeeper?.();
       try {
         graph.ctx.close();
       } catch {
@@ -312,6 +368,7 @@ export function useVoiceEffects() {
     const graph = graphRef.current;
     if (graph) {
       disconnectEntireGraph(graph);
+      graph.detachKeeper?.();
       try { graph.ctx.close(); } catch { /* noop */ }
       graphRef.current = null;
     }

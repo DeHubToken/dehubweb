@@ -43,6 +43,7 @@
     "connectAi": "ربط AI"
   },
   "feed": {
+    "viewProfile": "شوف بروفايل {{name}}",
     "home": "البيت",
     "videos": "فيديوهات",
     "images": "صور",
@@ -942,6 +943,8 @@
     "loginRequired": "مطلوب تسجيل دخول"
   },
   "messages": {
+    "encrypted": "مشفّر من طرف إلى طرف",
+    "cannotDecrypt": "رسالة مشفّرة — ما تنفتح على هذا الجهاز",
     "title": "الرسائل",
     "searchConversations": "ابحث بالمحادثات...",
     "failedToLoad": "فشل تحميل المحادثات",
@@ -1785,5 +1788,25 @@
     "stakeDhb": "ايدع DHB",
     "title": "SuperPowers",
     "unlocksAt": "{{power}} تنفتح عند {{tier}}"
+  },
+  "videoLooks": {
+    "button": "مظاهر الكامرة",
+    "title": "المظهر",
+    "hint": "يتطبق قبل ما يطلع الفيديو من هذا الجهاز — المشاهدين يشوفون بالضبط اللي تشوفه هنا.",
+    "backgroundBlur": "طمس الخلفية",
+    "on": "شغال",
+    "off": "مطفي",
+    "none": "بدون",
+    "soft": "ناعم",
+    "mono": "أحادي",
+    "noir": "نوار",
+    "warm": "دافي",
+    "cool": "بارد",
+    "vivid": "زاهي",
+    "dream": "حلم",
+    "vhs": "VHS",
+    "neon": "نيون",
+    "blur": "طمس",
+    "pixelate": "بكسلة"
   }
 }

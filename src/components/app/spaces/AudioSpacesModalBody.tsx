@@ -19,6 +19,7 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
@@ -70,12 +71,13 @@ import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/aud
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
-import { walletScopedClient } from '@/lib/supabase-wallet-client';
+import { deleteStageRecordings } from '@/lib/stage-recording-delete';
 import { formatDistanceToNow } from 'date-fns';
 
 type View = 'browse' | 'create' | 'live' | 'voice';
 
 export function AudioSpacesModalBody() {
+  const { t } = useTranslation();
   const { isAuthenticated, walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
   const {
@@ -248,7 +250,7 @@ export function AudioSpacesModalBody() {
 
   const handleEndOrLeave = () => {
     if (myRole === 'host') {
-      if (window.confirm('End this stage for everyone?')) {
+      if (window.confirm(t('stages.endForEveryone'))) {
         endSpace();
         setView('browse');
       }
@@ -284,7 +286,7 @@ export function AudioSpacesModalBody() {
         onSuccess: booking =>
           toast.success(`Front row for ${booking.minutes} minutes`),
         // The server writes these for a person to read.
-        onError: (error: any) => toast.error(error?.message || 'Could not take the front row'),
+        onError: (error: any) => toast.error(error?.message || t('stages.frontRowFailed')),
       },
     );
   };
@@ -293,7 +295,7 @@ export function AudioSpacesModalBody() {
     if (!currentSpace) return;
     const url = dehubLinkFor.stage(currentSpace);
     navigator.clipboard.writeText(url).then(() => {
-      toast.success('Invite link copied!');
+      toast.success(t('stages.inviteLinkCopied'));
     }).catch(() => {
       toast.info(`Share this link: ${url}`);
     });
@@ -365,7 +367,7 @@ export function AudioSpacesModalBody() {
                 onClick={handleFrontRow}
                 disabled={bookFrontRow.isPending}
                 className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
-                title="Front Row — top of the stages rail"
+                title={t('stages.frontRowTitle')}
               >
                 <Crown className="w-4 h-4" />
               </Button>
@@ -375,7 +377,7 @@ export function AudioSpacesModalBody() {
               size="icon"
               onClick={handleCopyInviteLink}
               className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
-              title="Share invite link"
+              title={t('stages.shareInviteLink')}
             >
               <Link className="w-4 h-4" />
             </Button>
@@ -384,7 +386,7 @@ export function AudioSpacesModalBody() {
               size="icon"
               onClick={handleMinimize}
               className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
-              title="Minimize — stage keeps running"
+              title={t('stages.minimizeKeepsRunning')}
             >
               <Minimize2 className="w-4 h-4" />
             </Button>
@@ -403,8 +405,8 @@ export function AudioSpacesModalBody() {
                 {liveSpaces.length === 0 ? (
                   <div className="text-center py-8 text-white/50">
                     <BrandIcon src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p className="text-white">No stages</p>
-                    <p className="text-sm text-white/50">Be the first to start one!</p>
+                    <p className="text-white">{t('stages.noStages')}</p>
+                    <p className="text-sm text-white/50">{t('stages.beTheFirst')}</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -429,7 +431,7 @@ export function AudioSpacesModalBody() {
 
               {isAuthenticated && (
                 <LiquidGlassBubble2
-                  label="Start Stage"
+                  label={t('stages.startStage')}
                   icon={<Mic className="w-4 h-4" />}
                   onClick={() => setView('create')}
                   width="100%"
@@ -440,7 +442,7 @@ export function AudioSpacesModalBody() {
               {/* Past Stages */}
               {pastStages.length > 0 && (
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium text-white/60">Past Stages</h3>
+                  <h3 className="text-sm font-medium text-white/60">{t('stages.pastStages')}</h3>
                   <div className="space-y-2">
                     {pastStages.map((space) => (
                       <div
@@ -482,7 +484,7 @@ export function AudioSpacesModalBody() {
                                   );
                                 })()}
                                 <BadgedName lookupId={space.host_username || space.host_wallet_address}>
-                                  @{space.host_username || 'Anonymous'}
+                                  @{space.host_username || t('stages.anonymous')}
                                 </BadgedName>
                               </span>
                               {space.ended_at && (
@@ -577,8 +579,8 @@ export function AudioSpacesModalBody() {
                             )}
                             title={
                               playingStageId === space.id && playbackPopout
-                                ? 'Close the corner player'
-                                : 'Pop out the player'
+                                ? t('stages.closeCornerPlayer')
+                                : t('stages.popOutPlayer')
                             }
                           >
                             <PictureInPicture2 className="w-4 h-4" />
@@ -592,7 +594,7 @@ export function AudioSpacesModalBody() {
                               setTranscriptStage(space);
                             }}
                             className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
-                            title="View transcript"
+                            title={t('stages.viewTranscript')}
                           >
                             <FileText className="w-4 h-4" />
                           </button>
@@ -603,28 +605,32 @@ export function AudioSpacesModalBody() {
                           <button
                             onClick={async (e) => {
                               e.stopPropagation();
-                              if (!confirm('Delete this stage recording?')) return;
+                              if (!confirm(t('stages.deleteRecordingConfirm'))) return;
                               if (playingStageId === space.id) {
                                 stopStageRecording();
                               }
-                              if (space.recording_url && walletAddress) {
-                                const path = space.recording_url.split('/stage-recordings/')[1];
-                                if (path) {
-                                  // Through a wallet-scoped client: the bucket's DELETE policy
-                                  // now checks who owns the stage, and the Storage API has no
-                                  // per-call header to carry that on the shared one.
-                                  await walletScopedClient(walletAddress)
-                                    .storage.from('stage-recordings')
-                                    .remove([decodeURIComponent(path)]);
+                              if (walletAddress) {
+                                // Everything under the stage's folder — see
+                                // deleteStageRecordings. Finalising leaves the
+                                // original beside the indexed copy, and only
+                                // the copy was being removed.
+                                const { error } = await deleteStageRecordings(space.id, walletAddress);
+                                if (error) {
+                                  toast.error(t('stages.deleteRecordingFailed', 'Could not delete the recording'));
+                                  return;
                                 }
                               }
-                              await supabase.from('audio_spaces').delete().eq('id', space.id)
+                              const { error: rowError } = await supabase.from('audio_spaces').delete().eq('id', space.id)
                                 .setHeader('x-wallet-address', (walletAddress || '').toLowerCase());
+                              if (rowError) {
+                                toast.error(t('stages.deleteStageFailed', 'Could not delete the stage'));
+                                return;
+                              }
                               queryClient.invalidateQueries({ queryKey: ['past-stages'] });
-                              toast.success('Stage deleted');
+                              toast.success(t('stages.stageDeleted'));
                             }}
                             className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                            title="Delete stage"
+                            title={t('stages.deleteStage')}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -655,7 +661,7 @@ export function AudioSpacesModalBody() {
                     )}
                   >
                     {mode === 'now' ? <Mic className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
-                    {mode === 'now' ? 'Go live now' : 'Schedule'}
+                    {mode === 'now' ? t('stages.goLiveNow') : t('stages.schedule')}
                   </button>
                 ))}
               </div>
@@ -681,28 +687,28 @@ export function AudioSpacesModalBody() {
                     className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
                   >
                     <ChevronLeft className="w-4 h-4 mr-1" />
-                    Back
+                    {t('stages.back')}
                   </Button>
                 </>
               ) : (
               <>
               <div className="space-y-2">
-                <label className="text-sm text-white/60">Stage Title *</label>
+                <label className="text-sm text-white/60">{t('stages.stageTitleLabel')}</label>
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="What's this stage about?"
+                  placeholder={t('stages.stageTitlePlaceholder')}
                   className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
                   maxLength={100}
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm text-white/60">Description (optional)</label>
+                <label className="text-sm text-white/60">{t('stages.descriptionLabel')}</label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Add more details..."
+                  placeholder={t('stages.descriptionPlaceholder')}
                   className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl resize-none"
                   rows={3}
                   maxLength={280}
@@ -741,11 +747,11 @@ export function AudioSpacesModalBody() {
                   className="mt-0.5 w-4 h-4 rounded accent-white/80 shrink-0"
                 />
                 <span className="min-w-0">
-                  <span className="block text-sm text-white">Dub me in my own voice</span>
+                  <span className="block text-sm text-white">{t('stages.dubMeInMyVoice')}</span>
                   <span className="block text-xs text-white/50 mt-0.5">
                     {dubVoice
-                      ? 'Your voice is set up. Listeners in other languages hear you, not a narrator.'
-                      : 'Listeners in other languages hear you, not a narrator. Takes a fifteen-second recording and a one-off fee.'}
+                      ? t('stages.dubOnHint')
+                      : t('stages.dubOffHint')}
                   </span>
                 </span>
               </label>
@@ -756,7 +762,7 @@ export function AudioSpacesModalBody() {
                 className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Mic className="w-4 h-4 mr-2" />}
-                Go Live
+                {t('stages.goLive')}
               </Button>
 
               <Button
@@ -801,7 +807,7 @@ export function AudioSpacesModalBody() {
           {view === 'live' && !currentSpace && isLoading && (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-white/60">
               <Loader2 className="w-6 h-6 animate-spin" />
-              <p className="text-sm">Joining stage…</p>
+              <p className="text-sm">{t('stages.joiningStageRoom')}</p>
             </div>
           )}
 
@@ -837,7 +843,7 @@ export function AudioSpacesModalBody() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
                   </span>
-                  <span className="text-xs font-medium text-white">LIVE</span>
+                  <span className="text-xs font-medium text-white">{t('stages.liveBadge')}</span>
                   <h2 className="text-lg font-semibold text-white">{currentSpace.title}</h2>
                 </div>
                 {currentSpace.description && (
@@ -1062,7 +1068,7 @@ export function AudioSpacesModalBody() {
                       ? 'bg-white/20 hover:bg-white/30 text-white ring-2 ring-white/30'
                       : 'bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 text-white',
                   )}
-                  title={isScreenSharing ? 'Stop sharing your screen' : 'Share your screen'}
+                  title={isScreenSharing ? t('stages.stopSharingScreen') : t('stages.shareYourScreen')}
                 >
                   {isScreenSharing ? <ScreenShareOff className="w-5 h-5" /> : <ScreenShare className="w-5 h-5" />}
                 </Button>
@@ -1082,7 +1088,7 @@ export function AudioSpacesModalBody() {
                 size="lg"
                 variant="outline"
                 className="rounded-xl border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
-                title="Minimize"
+                title={t('stages.minimize')}
               >
                 <Minimize2 className="w-4 h-4" />
               </Button>
@@ -1124,6 +1130,7 @@ function StageCard({
   onEnd?: () => void;
   isLoading: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <button
       onClick={onJoin}
@@ -1135,7 +1142,7 @@ function StageCard({
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
         </span>
-        <span className="text-xs text-white font-medium">LIVE</span>
+        <span className="text-xs text-white font-medium">{t('stages.liveBadge')}</span>
         {isLoading && <Loader2 className="w-3 h-3 animate-spin text-white/50" />}
         {onEnd && (
           // A <span>, because the whole card is already a <button> and the
@@ -1143,7 +1150,7 @@ function StageCard({
           <span
             role="button"
             tabIndex={0}
-            title="End this stage"
+            title={t('stages.endThisStage')}
             onClick={(e) => {
               e.stopPropagation();
               onEnd();
@@ -1156,7 +1163,7 @@ function StageCard({
             }}
             className="ml-auto px-2 py-0.5 rounded-lg text-[11px] font-medium text-red-400/70 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
           >
-            End
+            {t('stages.end')}
           </span>
         )}
       </div>
@@ -1178,7 +1185,7 @@ function StageCard({
             );
           })()}
           <BadgedName lookupId={space.host_username || space.host_wallet_address}>
-            @{space.host_username || 'Anonymous'}
+            @{space.host_username || t('stages.anonymous')}
           </BadgedName>
         </span>
         <span className="flex items-center gap-1">
@@ -1372,6 +1379,7 @@ function HandRequestItem({
   request: RaiseHandRequest;
   onApprove: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between gap-2 p-2 bg-white/5 rounded-xl">
       <div className="flex items-center gap-2">
@@ -1381,7 +1389,7 @@ function HandRequestItem({
             {request.username?.[0]?.toUpperCase() || '?'}
           </AvatarFallback>
         </Avatar>
-        <span className="text-sm text-white">{request.username || 'Anonymous'}</span>
+        <span className="text-sm text-white">{request.username || t('stages.anonymous')}</span>
       </div>
       <Button onClick={onApprove} size="sm" className="bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl">
         Approve

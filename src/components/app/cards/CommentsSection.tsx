@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext } from 'react';
+import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -35,7 +35,11 @@ import { TranslatableText, useTranslation } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbed';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
-import { AudioVisualizer } from '../audio';
+/** Lazy for the same reason VideoCard is: the visualizer only appears once a
+ *  voice note has been recorded, and it drags ~50 KB of canvas painters. */
+const AudioVisualizer = lazy(() =>
+  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
+);
 import { checkImpersonation } from '@/lib/impersonation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
@@ -268,7 +272,16 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onRepl
       onClick={(e) => {
         if (isEditing) return;
         const target = e.target as HTMLElement;
-        if (target.closest('button, a, img, input, textarea, select, [role="button"], [contenteditable="true"]')) return;
+        // `role="menuitem"` and the app's own `data-no-navigate` are here for
+        // the same reason as the tags: they are interactive and they are not a
+        // tap on the row. Radix renders a menu item as a div, not a button, and
+        // portals it — but React events still bubble through a portal to this
+        // handler, so picking "Copy link" or "Report" from a comment's ⋯ menu
+        // also opened a reply and replaced whatever was half-typed in the
+        // composer with "@name ".
+        if (target.closest(
+          'button, a, img, input, textarea, select, [role="button"], [role="menuitem"], [contenteditable="true"], [data-no-navigate]',
+        )) return;
         const selection = window.getSelection();
         if (selection && selection.toString().length > 0) return;
         onReply(comment.id);
@@ -830,6 +843,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   );
 
   // Record comment views when visible (#9)
+  const sectionRef = useRef<HTMLDivElement>(null);
   const viewedIdsRef = useRef(new Set<number>());
   const pendingViewsRef = useRef<number[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -851,8 +865,38 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         }, 2000);
       });
     }, { threshold: 0.5 });
-    document.querySelectorAll('[data-comment-id]').forEach(el => observer.observe(el));
-    return () => observer.disconnect();
+    // This section's own rows, not every row in the document.
+    //
+    // Two sections can be mounted at once — a feed card with comments open
+    // beside the desktop shorts panel, or the panel and its fullscreen rail —
+    // and each keeps a separate viewedIdsRef. A document-wide query had each
+    // one observing the other's rows, so one scroll past a comment recorded a
+    // view from both.
+    const root = sectionRef.current;
+    if (!root) return;
+
+    const observeRows = (within: ParentNode) =>
+      within.querySelectorAll('[data-comment-id]').forEach(el => observer.observe(el));
+    observeRows(root);
+
+    // Rows that appear later. The effect is keyed on the fetched page, so
+    // replies revealed by "show more" were never picked up and never counted
+    // until something refetched.
+    const watcher = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        m.addedNodes.forEach((node) => {
+          if (!(node instanceof Element)) return;
+          if (node.matches('[data-comment-id]')) observer.observe(node);
+          observeRows(node);
+        });
+      }
+    });
+    watcher.observe(root, { childList: true, subtree: true });
+
+    return () => {
+      watcher.disconnect();
+      observer.disconnect();
+    };
   }, [apiComments]);
 
   // Group comments into threads. Nesting is unbounded: a reply can have replies,
@@ -1505,6 +1549,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   return (
     <PostCreatorContext.Provider value={postCreator}>
     <motion.div
+      ref={sectionRef}
       data-comments-section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -1887,13 +1932,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           {/* Voice note preview with visualizer */}
           {voiceNote && (
             <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800">
-              <AudioVisualizer
-                audioUrl={voiceNote.url}
-                isPlaying={isPlayingPreview}
-                onPlayPause={togglePreviewPlayback}
-                className="w-full h-32"
-                showStylePicker={true}
-              />
+              <Suspense fallback={<div className="w-full h-32 rounded-xl bg-black/40" />}>
+                <AudioVisualizer
+                  audioUrl={voiceNote.url}
+                  isPlaying={isPlayingPreview}
+                  onPlayPause={togglePreviewPlayback}
+                  className="w-full h-32"
+                  showStylePicker={true}
+                />
+              </Suspense>
               <div className="flex items-center justify-between px-3 py-2 bg-zinc-800">
                 <span className="text-xs text-zinc-400">{voiceNote.duration}s voice note</span>
                 <button

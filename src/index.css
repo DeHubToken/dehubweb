@@ -500,7 +500,48 @@ html {
   .dehub-intro-stage { padding-right: 302px; }
   .dehub-intro-head { font-size: 50px; }
   .dehub-intro-clamp { display: block; overflow: visible; -webkit-line-clamp: none; }
-  .dehub-intro-readmore { display: none; }
+}
+
+/* "Featured in" press marquee inside the welcome panel (HomeIntro.tsx).
+
+   The viewport clips; the track scrolls. The track carries the outlet list
+   TWICE and animates to exactly -50%, so the moment copy 1 leaves the left edge
+   copy 2 is sitting where copy 1 began and the seam is invisible. Any other
+   distance visibly jumps — do not "tidy" the -50% to a pixel value, it is tied
+   to the duplication, not to the content width.
+
+   width: max-content on the track is load-bearing: without it the flex track
+   shrinks to the panel and the two copies overlap instead of queueing. */
+.dehub-press-viewport {
+  overflow: hidden;
+  /* Fade both ends into the plate rather than cutting the wordmarks dead at the
+     card's inset frame. -webkit- prefix included: iOS Safari still needs it. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.dehub-press-track {
+  display: flex;
+  width: max-content;
+  animation: dehub-press-marquee 30s linear infinite;
+}
+.dehub-press-set { display: flex; gap: 28px; padding-right: 28px; }
+/* Pause on hover so a wordmark can actually be read and clicked — a link that
+   slides out from under the cursor is not a link. */
+.dehub-press:hover .dehub-press-track,
+.dehub-press:focus-within .dehub-press-track { animation-play-state: paused; }
+
+@keyframes dehub-press-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Reduced motion: stop it dead and hand the strip back as an ordinary
+   scroller. Leaving it animated is the whole thing this setting exists to
+   prevent, and simply hiding the strip would drop the credential entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .dehub-press-track { animation: none; }
+  .dehub-press-viewport { overflow-x: auto; scrollbar-width: none; }
+  .dehub-press-viewport::-webkit-scrollbar { display: none; }
 }
 
 /* Frost the app shell so the welcome panel is the one thing in focus while
@@ -1618,6 +1659,11 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   background-color: rgb(255 255 255 / 0.08) !important;
 }
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-800:hover {
+  background-color: rgb(255 255 255 / 0.12) !important;
+}
+/* Same for the zinc-700 hover the settings controls (select triggers, small
+   buttons) use — otherwise the frosted resting state snaps to a solid slab. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-700:hover {
   background-color: rgb(255 255 255 / 0.12) !important;
 }
 

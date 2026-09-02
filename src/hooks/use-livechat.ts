@@ -13,8 +13,9 @@ import {
 import {
   getSocket, joinRoom, leaveRoom, emitSendMessage,
   onLiveChatMessage, onRoomJoined, onMessageDeleted,
-  onUserBanned, onUserUnbanned, onReactionUpdated,
-  emitAddReaction, emitRemoveReaction, debugSocketEvents,
+  onUserBanned, onUserUnbanned, onReactionUpdated, onMessageEdited,
+  emitAddReaction, emitRemoveReaction, emitEditMessage, emitDeleteMessage,
+  onLiveChatError, debugSocketEvents,
 } from '@/lib/api/dehub/socket';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
@@ -32,6 +33,7 @@ export interface SupabaseLiveChatMessage {
   message_type: string;
   image_url: string | null;
   is_pinned: boolean;
+  is_edited?: boolean;
   created_at: string;
   reactions?: ReactionData;
   reply_to?: {
@@ -135,6 +137,7 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     message_type: normalizeMsgType(msg.type || msg.messageType),
     image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null) || ((raw as any).media?.[0]?.url ?? null),
     is_pinned: msg.isPinned || false,
+    is_edited: Boolean((raw as any).isEdited ?? (raw as any).is_edited),
     created_at: msg.createdAt,
     reactions: parseReactions(msg.reactions || (raw as any).reactions),
     reply_to: parseReplyTo((raw as any).replyTo || (raw as any).reply_to || (raw as any).parentMessage),
@@ -231,6 +234,7 @@ function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage
     message_type: normalizeMsgType((m.type ?? m.messageType ?? m.message_type) as string | undefined),
     image_url: (m.imageUrl ?? m.image_url ?? (Array.isArray(m.media) ? (m.media as any[])[0]?.url : null) ?? null) as string | null,
     is_pinned: (m.isPinned ?? m.is_pinned ?? false) as boolean,
+    is_edited: Boolean(m.isEdited ?? m.is_edited),
     created_at: (m.createdAt ?? m.created_at ?? new Date().toISOString()) as string,
     reactions: parseReactions(m.reactions),
     reply_to: parseReplyTo(m.replyTo || m.reply_to || m.parentMessage),
@@ -295,8 +299,8 @@ export function useLiveChatMessages(roomId: string | null) {
 
     initialLoadDone.current = false;
 
-    const unsubDebug = debugSocketEvents();
-    const socket = getSocket();
+    const unsubDebug = debugSocketEvents(roomId);
+    const socket = getSocket(roomId);
     setIsConnected(socket.connected);
 
     const onConnect = () => {
@@ -312,13 +316,13 @@ export function useLiveChatMessages(roomId: string | null) {
       joinRoom(roomId);
     }
 
-    const unsubJoined = onRoomJoined((data) => {
+    const unsubJoined = onRoomJoined(roomId, (data) => {
       console.log('[LiveChat] Room joined, banned:', data.isBanned);
       setIsBanned(data.isBanned || false);
       initialLoadDone.current = true;
     });
 
-    const unsubMsg = onLiveChatMessage((msg) => {
+    const unsubMsg = onLiveChatMessage(roomId, (msg) => {
       const local = socketMsgToLocal(msg, roomId);
       if (local) {
         setMessages((prev) => {
@@ -332,12 +336,43 @@ export function useLiveChatMessages(roomId: string | null) {
       }
     });
 
-    const unsubDeleted = onMessageDeleted((data) => {
-      setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
+    const unsubEdited = onMessageEdited(roomId, (msg) => {
+      const local = socketMsgToLocal(msg, roomId);
+      if (!local) return;
+      setMessages((prev) => {
+        // Merged onto the row we already hold, not swapped for it: the edit
+        // payload is a fresh format of the message and carries no reply_to
+        // sender name, so a straight replace would blank the reply header on
+        // an edited line.
+        const next = prev.map((m) =>
+          m.id === local.id ? { ...m, ...local, is_edited: true, reply_to: local.reply_to || m.reply_to } : m
+        );
+        cacheRoomMessages(roomId, next);
+        return next;
+      });
+    });
+
+    const unsubDeleted = onMessageDeleted(roomId, (data) => {
+      setMessages((prev) => {
+        const next = prev.filter((m) => m.id !== data.messageId);
+        cacheRoomMessages(roomId, next);
+        return next;
+      });
+    });
+
+    // Edits and deletes are fire-and-forget emits — a refusal only ever
+    // arrives here, so without this the row silently snaps back on the next
+    // refetch with nothing said.
+    const unsubError = onLiveChatError(roomId, (data) => {
+      const message = data?.message || '';
+      if (/edit|delete|not authorised|not authorized|own messages/i.test(message)) {
+        toast.error(message);
+        fetchMessages(false);
+      }
     });
 
     // Handle reaction updates from other users
-    const unsubReaction = onReactionUpdated((data: unknown) => {
+    const unsubReaction = onReactionUpdated(roomId, (data: unknown) => {
       const d = data as Record<string, unknown>;
       const messageId = String(d.messageId || d.message_id || '');
       if (!messageId) return;
@@ -349,11 +384,11 @@ export function useLiveChatMessages(roomId: string | null) {
       );
     });
 
-    const unsubBanned = onUserBanned((data) => {
+    const unsubBanned = onUserBanned(roomId, (data) => {
       setIsBanned(true);
       toast.error(data.message || 'You have been banned from chat');
     });
-    const unsubUnbanned = onUserUnbanned((data) => {
+    const unsubUnbanned = onUserUnbanned(roomId, (data) => {
       setIsBanned(false);
       toast.success(data.message || 'You have been unbanned');
     });
@@ -362,7 +397,9 @@ export function useLiveChatMessages(roomId: string | null) {
       leaveRoom(roomId);
       unsubJoined();
       unsubMsg();
+      unsubEdited();
       unsubDeleted();
+      unsubError();
       unsubReaction();
       unsubBanned();
       unsubUnbanned();
@@ -371,6 +408,7 @@ export function useLiveChatMessages(roomId: string | null) {
       socket.off('disconnect', onDisconnect);
       setIsConnected(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
 
   const send = useCallback(
@@ -426,7 +464,7 @@ export function useLiveChatMessages(roomId: string | null) {
       });
 
       try {
-        const socket = getSocket();
+        const socket = getSocket(roomId);
         if (!socket.connected) {
           await new Promise<void>((resolve, reject) => {
             const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 5000);
@@ -462,6 +500,47 @@ export function useLiveChatMessages(roomId: string | null) {
     },
     [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages, messages]
   );
+
+  /**
+   * Rewrite one of your own lines.
+   *
+   * Optimistic: the gateway acknowledges nothing, it just re-broadcasts the
+   * message, so waiting would leave the row stale for a round trip. A refusal
+   * comes back on the error channel and puts the room straight again.
+   */
+  const editMessage = useCallback(async (messageId: string, content: string) => {
+    const trimmed = content.trim();
+    if (!trimmed || !walletAddress) return;
+    const target = messages.find((m) => m.id === messageId);
+    if (!target) return;
+    if (target.sender_address?.toLowerCase() !== walletAddress.toLowerCase()) {
+      toast.error('You can only edit your own messages');
+      return;
+    }
+    if (messageId.startsWith('temp-')) {
+      toast.error('Message is still sending');
+      return;
+    }
+    if (trimmed === target.content) return;
+
+    setMessages((prev) => {
+      const next = prev.map((m) => (m.id === messageId ? { ...m, content: trimmed, is_edited: true } : m));
+      if (roomId) cacheRoomMessages(roomId, next);
+      return next;
+    });
+    emitEditMessage(roomId ?? undefined, messageId, trimmed);
+  }, [messages, walletAddress, roomId]);
+
+  /** Remove a message — your own, or anyone's if you moderate the room. */
+  const deleteMessage = useCallback(async (messageId: string) => {
+    if (messageId.startsWith('temp-')) return;
+    setMessages((prev) => {
+      const next = prev.filter((m) => m.id !== messageId);
+      if (roomId) cacheRoomMessages(roomId, next);
+      return next;
+    });
+    emitDeleteMessage(roomId ?? undefined, messageId);
+  }, [roomId]);
 
   const addReaction = useCallback((messageId: string, emoji: string) => {
     // eslint-disable-next-line no-console
@@ -507,13 +586,24 @@ export function useLiveChatMessages(roomId: string | null) {
 
   return {
     messages, isLoading, isSending, isConnected, isBanned,
-    send, addReaction, removeReaction,
+    send, addReaction, removeReaction, editMessage, deleteMessage,
     refetch: () => fetchMessages(false),
   };
 }
 
 /**
- * Presence hook
+ * How many people are connected to the ONE global platform chat.
+ *
+ * NOT a room figure and NOT a stream figure, despite the argument: the id is
+ * accepted for call-site symmetry and then ignored, because the endpoint behind
+ * it — `GET /api/livechat/online` — has no room dimension at all. It was being
+ * rendered beside a live stream under a people icon, where it read as "this
+ * many people are watching"; a host with an empty stream saw three, because
+ * three people were in the platform chat.
+ *
+ * For a stream's actual audience use `useStreamAudience`
+ * (src/hooks/use-stream-presence.ts). Only the global chat surfaces
+ * (PublicChat, SidebarChat) should be reading this.
  */
 export function useLiveChatPresence(_roomId: string | null) {
   const [onlineCount, setOnlineCount] = useState(0);

@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins } from 'lucide-react';
+import { Ticket, Gift, Shield, Eye, EyeOff, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users, Coins, ShoppingBag } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { getCategories, type DeHubCategory } from '@/lib/api/dehub';
+import { getCategories, type DeHubCategory, type ShopLink } from '@/lib/api/dehub';
+import { ShopSheetLazy, type ShopBoardDraft } from './ShopSheetLazy';
+import { useShopLinkAllowance } from '@/hooks/use-shop-links';
 import { toast } from 'sonner';
 import { useUserCommunities } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
@@ -59,6 +62,21 @@ interface PostAccessTogglesProps {
   /** Marks the post adult or graphic — see the row's copy for what that costs. */
   isMature: boolean;
   setIsMature: (value: boolean) => void;
+  /**
+   * The Shop board: affiliate and shop links viewers open from the post or the
+   * live player. An empty array is the toggle being off — there is no separate
+   * boolean, because a board with no links in it and no board are the same
+   * post.
+   */
+  shopLinks?: ShopLink[];
+  setShopLinks?: (links: ShopLink[]) => void;
+  /**
+   * Ids of the creator's own store listings on this board. They are attached
+   * in Supabase after the post has a tokenId, so the composer only carries the
+   * choice — see the attach step in usePostForm.
+   */
+  shopListingIds?: string[];
+  setShopListingIds?: (ids: string[]) => void;
   hasVideoOrAudio: boolean;
   categoryDrawerOpen?: boolean;
   setCategoryDrawerOpen?: (value: boolean) => void;
@@ -109,6 +127,10 @@ export function PostAccessToggles({
   setShowTitle,
   isMature,
   setIsMature,
+  shopLinks,
+  setShopLinks,
+  shopListingIds,
+  setShopListingIds,
   hasVideoOrAudio,
   categoryDrawerOpen: categoryDrawerOpenProp,
   setCategoryDrawerOpen: setCategoryDrawerOpenProp,
@@ -126,6 +148,7 @@ export function PostAccessToggles({
   const { data: userCommunities = [] } = useUserCommunities();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
+  const [shopDrawerOpen, setShopDrawerOpen] = useState(false);
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
   const [tokenDrawerOpen, setTokenDrawerOpen] = useState(false);
   const [communityDrawerOpen, setCommunityDrawerOpen] = useState(false);
@@ -333,6 +356,33 @@ export function PostAccessToggles({
 
   const inputClass = "w-full h-12 px-4 text-base bg-zinc-800/50 border border-white/20 rounded-xl text-white placeholder:text-zinc-500 outline-none focus:border-white/50";
 
+  // Shop board. The row is only rendered when the composer wired it up, so
+  // surfaces that have not adopted it yet are unchanged.
+  const shopAllowance = useShopLinkAllowance();
+  const shopRows = (shopLinks?.length ?? 0) + (shopListingIds?.length ?? 0);
+  const shopEnabled = shopRows > 0;
+  /**
+   * Toggling on opens the editor rather than writing an empty board: a switch
+   * that turns green and does nothing is the shape of a bug report. Toggling
+   * off clears the board — there is no separate flag to park it behind, and
+   * keeping an invisible board on a post is worse than making somebody pick
+   * three things again.
+   */
+  const handleShopToggle = (next: boolean) => {
+    if (!setShopLinks) return;
+    if (next) {
+      setShopDrawerOpen(true);
+      return;
+    }
+    setShopLinks([]);
+    setShopListingIds?.([]);
+  };
+
+  const saveShopBoard = (value: ShopBoardDraft) => {
+    setShopLinks?.(value.links);
+    setShopListingIds?.(value.listingIds);
+  };
+
   return (
     <>
       <div className="relative border-t border-white/10">
@@ -527,7 +577,7 @@ export function PostAccessToggles({
             <Gift className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Bounty</span>
             {isWatch2Earn && w2eTotal && (
-              <span className="text-xs text-white/50">({w2eTotal} DHB)</span>
+              <span className="text-xs text-white/50">({w2eTotal} <DhbCoin />)</span>
             )}
           </div>
           <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
@@ -540,11 +590,34 @@ export function PostAccessToggles({
             <Shield className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Token Gated</span>
             {isTokenGated && tokenAmount && (
-              <span className="text-xs text-white/50">({tokenAmount} {tokenSymbol || 'DHB'})</span>
+              <span className="text-xs text-white/50">(<DhbAmount amount={tokenAmount} currency={tokenSymbol} />)</span>
             )}
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
+
+        {/* Shop — the creator's own listings and affiliate links. Tapping the row
+            anywhere opens the editor, including when it is already on, so
+            "add another link" is one tap rather than off-then-on. */}
+        {setShopLinks && (
+        <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => setShopDrawerOpen(true)}>
+          <div className="flex items-center gap-2 min-w-0">
+            <ShoppingBag className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">Shop</span>
+            {shopEnabled && (
+              <span className="text-xs text-white/50 truncate">
+                ({shopRows} of {shopAllowance.allowance})
+              </span>
+            )}
+          </div>
+          <Switch
+            checked={shopEnabled}
+            onCheckedChange={handleShopToggle}
+            className="data-[state=checked]:bg-white scale-75"
+            onClick={e => e.stopPropagation()}
+          />
+        </label>
+        )}
 
         {/* Mature content — the creator's own declaration. Marking it keeps the
             post off the public feeds; it still reaches followers, the profile
@@ -735,6 +808,17 @@ export function PostAccessToggles({
       </Drawer>
 
       {/* PPV Drawer */}
+      {setShopLinks && (
+        <ShopSheetLazy
+          open={shopDrawerOpen}
+          onOpenChange={setShopDrawerOpen}
+          value={{ links: shopLinks ?? [], listingIds: shopListingIds ?? [] }}
+          onSave={saveShopBoard}
+          allowance={shopAllowance.allowance}
+          tier={shopAllowance.tier}
+        />
+      )}
+
       <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>
         <DrawerContent column glass className="max-h-[90dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left shrink-0">

@@ -12,6 +12,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Mic,
   MicOff,
@@ -23,30 +24,45 @@ import {
   PictureInPicture2,
   Move,
   Wand2,
+  Palette,
   MessageSquare,
+  Eye,
+  X,
   Users,
   Heart,
-  Gift,
   Music,
   Loader2,
   AlertTriangle,
   Radio,
+  SignalLow,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { publishToWhip, WhipHttpError, type WhipSession, type WhipState } from '@/lib/livepeer/whip';
+import {
+  publishToWhip,
+  WhipHttpError,
+  type WhipHealth,
+  type WhipSession,
+  type WhipState,
+} from '@/lib/livepeer/whip';
 import {
   composeCameraBubble,
   BUBBLE_CORNERS,
   type BubbleCorner,
   type CameraBubble,
 } from '@/lib/livepeer/compositor';
+import { startVideoEffect, type VideoEffectStage } from '@/lib/livepeer/video-effects';
+import type { VideoEffectId } from '@/constants/video-effects.constants';
+import { VideoEffectSelector } from '@/components/app/live/VideoEffectSelector';
 import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
+import { DhbAmount } from '@/components/app/DhbAmount';
+import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { getLiveStream, updateStreamThumbnail } from '@/lib/api/dehub/livestream';
 import { useQuery } from '@tanstack/react-query';
+import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { createLogger } from '@/lib/logger';
 import {
   whipEndpointFor,
@@ -69,6 +85,26 @@ const LivePostChat = lazy(() =>
 const logger = createLogger('GoLiveBroadcaster');
 
 /**
+ * Where the top edge of the broadcast chrome sits, on both sides.
+ *
+ * A single value because the live chip, the audience and the close button all
+ * have to share a baseline — they were on three different offsets, which is
+ * what made the corner look crooked. The env() term keeps all of it clear of a
+ * notch or a punch-hole camera; on a phone the status bar was sitting on top of
+ * the live chip.
+ */
+const TOP_CHROME_Y = 'top-[max(0.75rem,env(safe-area-inset-top))]';
+
+/**
+ * The glass a floating pill is made of, per the design system block at the top
+ * of index.css: white-on-white translucency and a blur, never a colour fill.
+ * Monochrome is the rule here — the only hue on this screen is the live dot,
+ * because "on air" is semantic state.
+ */
+const GLASS_PILL =
+  'inline-flex h-8 items-center rounded-xl border border-white/20 bg-white/10 px-3 backdrop-blur-xl';
+
+/**
  * How often the console asks the API for viewers, likes and tips.
  *
  * Deliberately unhurried: these are glanceable numbers on a panel the host has
@@ -77,6 +113,20 @@ const logger = createLogger('GoLiveBroadcaster');
  * cannot be used as a live feed.
  */
 const CONSOLE_POLL_MS = 15_000;
+
+/*
+ * When the outgoing picture counts as starved.
+ *
+ * Under about five frames a second a viewer is not watching a stream, they
+ * are watching a slideshow; under ~150 kbit/s the encoder has given up on
+ * the picture to protect the voice, which is what WebRTC does first. The
+ * numbers are deliberately far below "not great" — this warning is for a
+ * broadcast that is failing, not one that is merely soft.
+ */
+const STARVED_FPS = 5;
+const STARVED_KBPS = 150;
+/** Consecutive bad samples before it is called (3s each — see whip.ts). */
+const STARVED_SAMPLES = 2;
 
 /**
  * Poster-frame capture cadence.
@@ -314,6 +364,7 @@ export function GoLiveBroadcaster({
   onEnd,
   onLive,
 }: GoLiveBroadcasterProps) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>('starting');
   const [errorMessage, setErrorMessage] = useState('');
   const [micOn, setMicOn] = useState(true);
@@ -335,11 +386,36 @@ export function GoLiveBroadcaster({
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
+  const [confirmEnd, setConfirmEnd] = useState(false);
+  /*
+   * What viewers are actually receiving.
+   *
+   * The preview above is the camera, not the broadcast, so it stays flawless
+   * while the encoder starves — and the host has no way to tell. On
+   * 2026-09-01 a phone published 74 frames in 77 seconds at ~37 kbit/s and
+   * its one viewer watched a frozen picture, left after seventeen seconds and
+   * came back twice; the console showed a healthy stream throughout. Null
+   * until the first sample lands, which is a couple of seconds after 'live'.
+   */
+  const [health, setHealth] = useState<WhipHealth | null>(null);
+  const [starved, setStarved] = useState(false);
   // Only one drawer of extras at a time — the broadcast preview is the point
   // of this panel and two open boards would push it off a laptop screen.
-  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'sounds' | 'chat'>('none');
+  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'looks' | 'sounds' | 'chat'>(
+    'none'
+  );
   const [effect, setEffect] = useState<VoiceEffectId>('none');
   const [switchingEffect, setSwitchingEffect] = useState(false);
+  const [videoLook, setVideoLook] = useState<VideoEffectId>('none');
+  const [switchingLook, setSwitchingLook] = useState(false);
+  /*
+   * System background blur, which is a capability of the camera rather than
+   * one of our looks: the OS separates the person from the room and we only
+   * ask for it. Null until a camera reports on it, and stays null on hardware
+   * that cannot — which is most of it, so the row is hidden by default rather
+   * than shown broken.
+   */
+  const [backgroundBlur, setBackgroundBlur] = useState<boolean | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -364,14 +440,24 @@ export function GoLiveBroadcaster({
   // screen track and this camera are sources rather than senders.
   const bubbleRef = useRef<CameraBubble | null>(null);
   const bubbleCameraRef = useRef<MediaStreamTrack | null>(null);
+  // The look canvas and the camera it draws, on the same borrowing terms as the
+  // bubble: while a look is on, what goes out is the canvas and the camera
+  // underneath is a source rather than a sender. Stopping the wrong one of
+  // these blanks the broadcast, so they are held apart on purpose.
+  const lookStageRef = useRef<VideoEffectStage | null>(null);
+  const lookSourceRef = useRef<MediaStreamTrack | null>(null);
   // The handed-over capture is consumed exactly once, on mount.
   const initialScreenRef = useRef<MediaStream | null>(initialScreenStream);
   // Mirrors for the async swap paths, which run long after their closures were
   // created and must not act on a stale toggle.
   const videoOnRef = useRef(true);
   const facingModeRef = useRef<'user' | 'environment'>('user');
+  const videoLookRef = useRef<VideoEffectId>('none');
+  const captureModeRef = useRef<CaptureMode>(initialScreenStream ? 'screen' : 'camera');
   useEffect(() => { videoOnRef.current = videoOn; }, [videoOn]);
   useEffect(() => { facingModeRef.current = facingMode; }, [facingMode]);
+  useEffect(() => { videoLookRef.current = videoLook; }, [videoLook]);
+  useEffect(() => { captureModeRef.current = captureMode; }, [captureMode]);
   // Read through a ref so the connect effect (whose dep list is deliberately
   // frozen) never restarts the ingest because the parent re-rendered.
   const onLiveRef = useRef(onLive);
@@ -379,6 +465,55 @@ export function GoLiveBroadcaster({
 
   /** Feature detection, not a device check: undefined on iOS and on Android. */
   const canShareScreen = typeof navigator?.mediaDevices?.getDisplayMedia === 'function';
+
+  /*
+   * Turns samples into a verdict.
+   *
+   * Two consecutive bad samples, not one: a keyframe request, a camera flip
+   * and the first seconds after 'live' all dip briefly, and a warning that
+   * blinks on every hiccup is one a host learns to ignore. Recovery is
+   * immediate on the other hand — a stream that has come back should say so
+   * at once.
+   *
+   * The first slide into starvation is logged at warn level so it reaches
+   * client_error_logs. `limitation` is the part worth having: it separates
+   * an uplink that cannot carry the picture from a phone that cannot encode
+   * it, which no amount of reasoning from a bitrate alone can do.
+   */
+  const badSamplesRef = useRef(0);
+  const reportedStarvedRef = useRef(false);
+  const reportHealth = useCallback((sample: WhipHealth) => {
+    setHealth(sample);
+
+    // A camera the host deliberately switched off sends zero frames, which is
+    // the same reading as a collapsed uplink and none of the same problem.
+    const bad =
+      videoOnRef.current && (sample.fps < STARVED_FPS || sample.videoKbps < STARVED_KBPS);
+    badSamplesRef.current = bad ? badSamplesRef.current + 1 : 0;
+
+    if (!bad) {
+      reportedStarvedRef.current = false;
+      setStarved(false);
+      return;
+    }
+    if (badSamplesRef.current < STARVED_SAMPLES) return;
+
+    setStarved(true);
+    if (!reportedStarvedRef.current) {
+      reportedStarvedRef.current = true;
+      logger.warn('broadcast starved', {
+        fps: sample.fps,
+        videoKbps: sample.videoKbps,
+        audioKbps: sample.audioKbps,
+        limitation: sample.limitation,
+        rttMs: sample.rttMs,
+      });
+    }
+  }, []);
+  // Held in a ref because the publish closure is built once per attempt and
+  // must not be rebuilt (and the ingest restarted) when this identity changes.
+  const reportHealthRef = useRef(reportHealth);
+  useEffect(() => { reportHealthRef.current = reportHealth; }, [reportHealth]);
 
   /**
    * The room, from the host's side: who is watching, what they have given.
@@ -393,8 +528,29 @@ export function GoLiveBroadcaster({
     staleTime: CONSOLE_POLL_MS,
   });
   const room = console_?.result as
-    | { totalViews?: number; peakViewers?: number; likes?: number; totalTips?: number }
+    | {
+        totalViews?: number;
+        peakViewers?: number;
+        viewerCount?: number;
+        likes?: number;
+        totalTips?: number;
+      }
     | undefined;
+
+  /*
+   * How many people are in the room right now.
+   *
+   * This used to read `peakViewers ?? totalViews` under the word "watching",
+   * and neither is that. `peakViewers` is a high-water mark that only climbs;
+   * `totalViews` counts JOINS, so one viewer whose connection drops and comes
+   * back is two people, then three.
+   *
+   * Computed in the shared hook rather than here, because the chat panel two
+   * inches below this used to print a completely different number under a
+   * people icon — the platform-wide chat online count — and a host reading the
+   * two together had no way to tell which one was their audience.
+   */
+  const watching = useStreamAudience(streamId, phase === 'live' || phase === 'reconnecting') ?? 0;
 
   // The Stages voice-effect graph, reused as-is: mic → effect chain →
   // MediaStreamDestination. The broadcast publishes that destination rather
@@ -465,9 +621,47 @@ export function GoLiveBroadcaster({
     bubbleCameraRef.current = null;
   }, []);
 
+  /**
+   * Retires the look canvas.
+   *
+   * `restore` puts the camera underneath back on air first, which is what
+   * turning a look off means. Teardown passes false: the session is closing,
+   * so the camera has nowhere to go back to and is stopped here instead — or
+   * its light stays on until the page unloads.
+   *
+   * The order matters. The camera is spliced back into the sender BEFORE the
+   * canvas track is stopped, so there is no frame where the session is holding
+   * a dead track.
+   */
+  const releaseLook = useCallback(async (restore: boolean) => {
+    const stage = lookStageRef.current;
+    const source = lookSourceRef.current;
+    if (!stage) return;
+    lookStageRef.current = null;
+    lookSourceRef.current = null;
+
+    const stream = streamRef.current;
+    const session = sessionRef.current;
+    if (restore && stream && session && source) {
+      await session.replaceTrack('video', source);
+      const canvasTrack = stream.getVideoTracks()[0];
+      if (canvasTrack) stream.removeTrack(canvasTrack);
+      stream.addTrack(source);
+      source.enabled = videoOnRef.current;
+      if (videoRef.current) videoRef.current.srcObject = stream;
+    } else {
+      source?.stop();
+    }
+    stage.stop();
+  }, []);
+
   const teardown = useCallback(async () => {
     releaseWakeLock();
     releaseBubble();
+    // Before the stream's own tracks are stopped below: with a look on, the
+    // camera is NOT in that stream — the canvas is — so it would otherwise
+    // survive the teardown with its light on.
+    await releaseLook(false);
     await sessionRef.current?.stop();
     sessionRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -488,7 +682,7 @@ export function GoLiveBroadcaster({
     audioMixRef.current?.track.stop();
     void audioMixRef.current?.ctx.close().catch(() => undefined);
     audioMixRef.current = null;
-  }, [releaseWakeLock, releaseBubble, cleanupVoice]);
+  }, [releaseWakeLock, releaseBubble, releaseLook, cleanupVoice]);
 
   /**
    * Captures the mic and runs it through the voice-effect graph. What comes
@@ -575,6 +769,22 @@ export function GoLiveBroadcaster({
       const session = sessionRef.current;
       if (!stream || !session) return false;
 
+      /*
+       * With a look on, the published track is the look's canvas and it never
+       * changes hands: a camera flip hands the canvas a new SOURCE instead, so
+       * viewers keep the same sender and the look survives the switch. The
+       * canvas track must not be retired down there — it is what is on air.
+       */
+      const stage = lookStageRef.current;
+      if (stage) {
+        await stage.setSource(track);
+        const previousSource = lookSourceRef.current;
+        lookSourceRef.current = track;
+        if (stopPrevious) previousSource?.stop();
+        track.enabled = videoOnRef.current;
+        return true;
+      }
+
       // Into the live session first so viewers never see a gap, then retire the
       // old track and splice the new one into the preview.
       await session.replaceTrack('video', track);
@@ -592,6 +802,123 @@ export function GoLiveBroadcaster({
     []
   );
 
+
+  /**
+   * Turns a look on, off, or swaps one for another.
+   *
+   * Only the first and last of those touch the published track. Changing look
+   * while one is already running is an assignment inside the canvas, which is
+   * why the picker feels instant and why viewers never see a reconnect for it.
+   */
+  const applyLook = useCallback(
+    async (next: VideoEffectId) => {
+      setVideoLook(next);
+      videoLookRef.current = next;
+
+      // A look is a camera treatment. The picker is not rendered during a
+      // share, so this only catches the race where one starts under an open
+      // panel — the look is re-applied when the share ends. Read through the
+      // ref because stopScreenShare calls this in the same tick it flips the
+      // mode, when the state closure still says 'screen'.
+      if (captureModeRef.current === 'screen') return;
+      if (videoSwapRef.current) return;
+      if (!streamRef.current || !sessionRef.current) return;
+
+      const running = lookStageRef.current;
+      if (running && next !== 'none') {
+        running.setEffect(next);
+        return;
+      }
+
+      videoSwapRef.current = true;
+      setSwitchingLook(true);
+      try {
+        if (next === 'none') {
+          await releaseLook(true);
+          return;
+        }
+
+        const camera = streamRef.current.getVideoTracks()[0];
+        if (!camera) return;
+
+        const stage = await startVideoEffect({ source: camera, effect: next });
+        // No permission prompt here, but the first frame is still a tick away:
+        // End Stream may have run underneath it.
+        if (!streamRef.current || !sessionRef.current) {
+          stage.stop();
+          return;
+        }
+
+        await sessionRef.current.replaceTrack('video', stage.track);
+        streamRef.current.removeTrack(camera);
+        streamRef.current.addTrack(stage.track);
+        stage.track.enabled = videoOnRef.current;
+        if (videoRef.current) videoRef.current.srcObject = streamRef.current;
+
+        lookStageRef.current = stage;
+        // Borrowed, not adopted: the camera keeps running as the canvas's
+        // source and is only stopped by releaseLook or by teardown.
+        lookSourceRef.current = camera;
+      } catch (error) {
+        logger.warn('Could not apply that look', error);
+        setVideoLook('none');
+        videoLookRef.current = 'none';
+      } finally {
+        setSwitchingLook(false);
+        videoSwapRef.current = false;
+      }
+    },
+    [releaseLook]
+  );
+
+  /** The camera itself, wherever it currently sits in the chain. */
+  const liveCameraTrack = useCallback(
+    (): MediaStreamTrack | null =>
+      lookSourceRef.current ?? streamRef.current?.getVideoTracks()[0] ?? null,
+    []
+  );
+
+  /*
+   * System background blur.
+   *
+   * Read when the panel opens rather than at capture: it is the only moment
+   * the answer is needed and it is always current, since flipping to a
+   * different camera changes it. A capability list with fewer than two entries
+   * means the camera has an opinion we cannot change, which is the common case
+   * — so the row stays hidden rather than rendering a dead toggle.
+   */
+  useEffect(() => {
+    if (openPanel !== 'looks') return;
+    const camera = liveCameraTrack();
+    const capabilities = (
+      camera as unknown as { getCapabilities?: () => { backgroundBlur?: boolean[] } } | null
+    )?.getCapabilities?.();
+    if (!capabilities?.backgroundBlur || capabilities.backgroundBlur.length < 2) {
+      setBackgroundBlur(null);
+      return;
+    }
+    const settings = (
+      camera as unknown as { getSettings?: () => { backgroundBlur?: boolean } } | null
+    )?.getSettings?.();
+    setBackgroundBlur(Boolean(settings?.backgroundBlur));
+  }, [openPanel, liveCameraTrack]);
+
+  const toggleBackgroundBlur = useCallback(async () => {
+    const camera = liveCameraTrack();
+    if (!camera || backgroundBlur === null) return;
+    const next = !backgroundBlur;
+    try {
+      await camera.applyConstraints({
+        advanced: [{ backgroundBlur: next }],
+      } as unknown as MediaTrackConstraints);
+      setBackgroundBlur(next);
+    } catch (error) {
+      // The OS can refuse — another app holding the effect, or a camera that
+      // advertised the control and then declined it. Leave the toggle where it
+      // was rather than lying about the picture going out.
+      logger.warn('The camera refused the background blur request', error);
+    }
+  }, [backgroundBlur, liveCameraTrack]);
 
   const releaseScreenCapture = useCallback(() => {
     screenStreamRef.current?.getTracks().forEach((t) => t.stop());
@@ -644,6 +971,7 @@ export function GoLiveBroadcaster({
       setBubbleOn(false);
       await applySystemAudio(null);
       releaseScreenCapture();
+      captureModeRef.current = 'camera';
       setCaptureMode('camera');
     } catch (error) {
       logger.warn('Returning to the camera failed', error);
@@ -651,7 +979,13 @@ export function GoLiveBroadcaster({
       camera?.stop();
       videoSwapRef.current = false;
     }
-  }, [swapVideoTrack, applySystemAudio, releaseScreenCapture, releaseBubble]);
+
+    // Re-dress the camera in whatever look the creator was wearing before the
+    // share. Outside the lock above, because applyLook takes it too.
+    if (videoLookRef.current !== 'none' && captureModeRef.current === 'camera') {
+      await applyLook(videoLookRef.current);
+    }
+  }, [swapVideoTrack, applySystemAudio, releaseScreenCapture, releaseBubble, applyLook]);
 
   /** Ends the share when the creator uses the browser's own stop-sharing bar. */
   const watchForShareStop = useCallback(
@@ -688,6 +1022,10 @@ export function GoLiveBroadcaster({
       // Sharing implies showing: without this the swap would inherit a paused
       // video toggle and publish a black frame the controls claim is live.
       videoOnRef.current = true;
+      // A look treats a camera, not a desktop — and swapVideoTrack would
+      // otherwise feed the share straight into the canvas. Released only now
+      // the picker has returned, so dismissing it leaves the look untouched.
+      await releaseLook(true);
       if (!(await swapVideoTrack(track))) return;
 
       screenStreamRef.current = display;
@@ -696,6 +1034,7 @@ export function GoLiveBroadcaster({
 
       setMirror(false);
       setVideoOn(true);
+      captureModeRef.current = 'screen';
       setCaptureMode('screen');
       display = null; // adopted — must not be stopped below
     } catch (error) {
@@ -705,7 +1044,7 @@ export function GoLiveBroadcaster({
       display?.getTracks().forEach((t) => t.stop());
       videoSwapRef.current = false;
     }
-  }, [swapVideoTrack, applySystemAudio, watchForShareStop]);
+  }, [swapVideoTrack, applySystemAudio, watchForShareStop, releaseLook]);
 
   /**
    * The camera bubble: your face in the corner of the share, which is the
@@ -927,6 +1266,9 @@ export function GoLiveBroadcaster({
             endpoint: endpointBits.url,
             token: endpointBits.token,
             iceServers: relayIce,
+            onHealth: (sample) => {
+              if (!cancelled) reportHealthRef.current(sample);
+            },
             onStateChange: (state: WhipState, detail) => {
               if (cancelled) return;
               if (state === 'live') {
@@ -1255,6 +1597,10 @@ export function GoLiveBroadcaster({
     const track = streamRef.current?.getVideoTracks()[0];
     if (!track) return;
     track.enabled = !track.enabled;
+    // With a look on, the published track is a canvas: disabling that alone
+    // would leave the camera capturing — and its indicator light on — behind a
+    // black frame. The source has to follow it down.
+    if (lookSourceRef.current) lookSourceRef.current.enabled = track.enabled;
     setVideoOn(track.enabled);
   };
 
@@ -1293,6 +1639,7 @@ export function GoLiveBroadcaster({
   };
 
   const handleEnd = async () => {
+    setConfirmEnd(false);
     setIsEnding(true);
     await teardown();
     onEnd();
@@ -1376,7 +1723,13 @@ export function GoLiveBroadcaster({
         )}
 
         {(phase === 'live' || phase === 'reconnecting') && (
-          <div className="absolute left-3 top-3 flex items-center gap-2">
+          /* One row, one baseline. This used to be three absolutely-positioned
+             clusters at top-3, top-12 and top-[4.75rem] with three different
+             heights, so nothing on the top edge lined up with anything else and
+             the right-hand control sat lower than the left. Everything that
+             belongs on that edge is now h-8 and shares TOP_CHROME_Y, which also
+             clears the notch — a phone's status bar was landing on the chip. */
+          <div className={cn('absolute left-3 z-20 flex h-9 items-center gap-2', TOP_CHROME_Y)}>
             {/* data-live-pulse marks this as a meaningful live indicator (the
                 themes map it to their live colour and exempt it from skeleton
                 rules); data-keep-dark exempts it from the portal palette
@@ -1387,7 +1740,9 @@ export function GoLiveBroadcaster({
               data-live-pulse
               data-keep-dark
               className={cn(
-                'flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide',
+                'flex h-8 items-center gap-1.5 rounded-xl px-3 text-[11px] font-semibold tracking-wide',
+                // The one place hue is allowed on this screen: "on air" is a
+                // state, not decoration. Everything else here is glass.
                 phase === 'live'
                   ? 'bg-red-500 text-white'
                   : 'bg-amber-500/90 text-black'
@@ -1405,14 +1760,25 @@ export function GoLiveBroadcaster({
               />
               {statusLabel}
             </span>
-            <span className="rounded-full bg-black/60 px-2.5 py-1 font-mono text-[11px] text-white">
+
+            {/* The audience rides beside the live chip rather than on its own
+                line below it — it is the number a host looks for first, and a
+                second row of floating text over a moving picture is noise. */}
+            {streamId && (
+              <span className={cn(GLASS_PILL, 'gap-1.5 text-[11px] text-white')}>
+                <Eye className="h-3.5 w-3.5" />
+                {watching}
+              </span>
+            )}
+
+            <span className={cn(GLASS_PILL, 'font-mono text-[11px] text-white')}>
               {formatElapsed(elapsed)}
             </span>
           </div>
         )}
 
         {isScreen && phase !== 'error' && (
-          <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[11px] text-white">
+          <span className="absolute right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] text-white backdrop-blur-xl">
             <ScreenShare className="h-3 w-3" />
             Sharing screen
           </span>
@@ -1517,6 +1883,20 @@ export function GoLiveBroadcaster({
           </ControlButton>
         )}
 
+        {/* Looks treat the camera, so the button goes where the camera controls
+            are and leaves with them when a share takes the frame. */}
+        {!isScreen && (
+          <ControlButton
+            floating={fullBleed}
+            active={openPanel !== 'looks'}
+            onClick={() => setOpenPanel((p) => (p === 'looks' ? 'none' : 'looks'))}
+            disabled={phase === 'error'}
+            label={t('videoLooks.button')}
+          >
+            <Palette className="h-5 w-5" />
+          </ControlButton>
+        )}
+
         <ControlButton
           floating={fullBleed}
           active={openPanel !== 'voice'}
@@ -1551,39 +1931,84 @@ export function GoLiveBroadcaster({
       </div>
 
       {/* The room, at a glance. Only once media is flowing — before that every
-          number is zero and reads as a failure rather than a fresh start. */}
+          number is zero and reads as a failure rather than a fresh start.
+          Full-bleed drops `watching` from this row: it has moved up beside the
+          live chip, where a host looks first, and printing it twice on one
+          screen is how the two numbers came to disagree in the first place. */}
       {streamId && (phase === 'live' || phase === 'reconnecting') && (
         <div
           className={cn(
             'flex items-center justify-center gap-4 text-[11px] text-zinc-400',
-            // Under the live chip rather than under the video, and light on its
-            // own — these are glanceable numbers, not a panel.
+            // A second line under the top row, on the same left margin and the
+            // same 8px rhythm, so the corner reads as one stack rather than
+            // three things that happen to be near each other.
             fullBleed &&
-              'absolute left-3 top-12 z-10 justify-start text-white/80 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]'
+              'absolute left-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] z-20 justify-start text-white/80 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]'
           )}
         >
-          <span className="flex items-center gap-1.5">
-            <Users className="h-3.5 w-3.5" />
-            {room?.peakViewers ?? room?.totalViews ?? 0} watching
+          {!fullBleed && (
+            <span className="flex items-center gap-1.5">
+              <Users className="h-3.5 w-3.5" />
+              {watching} watching
+            </span>
+          )}
+          <span className="flex items-center gap-1.5 leading-none">
+            <Heart className="h-3.5 w-3.5 shrink-0" />
+            <span className="tabular-nums">{room?.likes ?? 0}</span>
           </span>
-          <span className="flex items-center gap-1.5">
-            <Heart className="h-3.5 w-3.5" />
-            {room?.likes ?? 0}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Gift className="h-3.5 w-3.5" />
-            {room?.totalTips ?? 0} DHB
+          {/* No gift icon: the DHB coin already says what this number is, and
+              two glyphs around one figure read as two separate stats. */}
+          <DhbAmount
+            amount={<span className="tabular-nums">{room?.totalTips ?? 0}</span>}
+            iconClassName="h-3.5 w-3.5"
+            className="gap-1.5 leading-none"
+          />
+        </div>
+      )}
+
+      {/* What viewers are getting, when it stops being what the preview shows.
+          Sits in the same place on both layouts, under the room numbers, so a
+          host glancing at the corner sees it without hunting. */}
+      {starved && (phase === 'live' || phase === 'reconnecting') && (
+        <div
+          className={cn(
+            'flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-200',
+            fullBleed &&
+              'absolute left-3 right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+5.5rem)] z-20'
+          )}
+        >
+          <SignalLow className="mt-px h-3.5 w-3.5 shrink-0" />
+          <span>
+            {health?.limitation === 'cpu'
+              ? 'This device cannot encode the video fast enough — viewers are seeing a frozen picture. Closing other apps will help.'
+              : 'Your upload has dropped — viewers are seeing a frozen picture even though your preview looks fine. Moving closer to the router or switching networks will help.'}
+            {health ? ` (${health.fps} fps · ${health.videoKbps} kbps)` : ''}
           </span>
         </div>
+      )}
+
+      {/* A shade, not a slab. The chat used to open as a blurred black card
+          sitting on top of the broadcast; on a phone that is a third of the
+          picture gone. Instead the foot of the frame darkens into a gradient
+          and the messages read straight off it. Pointer-transparent, so the
+          control row underneath still takes taps. */}
+      {openPanel === 'chat' && tokenId && fullBleed && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-3/5 bg-gradient-to-t from-black/85 via-black/45 to-transparent"
+        />
       )}
 
       {openPanel === 'chat' && tokenId && (
         <div
           className={cn(
-            'max-h-[45vh] overflow-hidden rounded-xl border border-white/10',
             // Above the floating controls, not below the video — there is no
-            // "below the video" once the video is the whole screen.
-            fullBleed && 'absolute inset-x-3 bottom-24 z-20 bg-black/80 backdrop-blur-xl'
+            // "below the video" once the video is the whole screen. Bottom-
+            // aligned so a quiet room keeps the composer where a busy one has
+            // it, rather than floating the pair up the frame.
+            fullBleed
+              ? 'absolute inset-x-3 bottom-24 z-20 flex max-h-[55vh] flex-col justify-end'
+              : 'max-h-[45vh] overflow-hidden rounded-xl border border-white/10'
           )}
         >
           <Suspense
@@ -1599,7 +2024,7 @@ export function GoLiveBroadcaster({
                 ObjectId, so host and audience named different rooms and only
                 shared a conversation because the backend ignored the room and
                 put everyone in the platform chat. */}
-            <LivePostChat tokenId={tokenId} isHost />
+            <LivePostChat tokenId={tokenId} streamId={streamId ?? undefined} isHost overlay={fullBleed} />
           </Suspense>
         </div>
       )}
@@ -1620,6 +2045,24 @@ export function GoLiveBroadcaster({
         </div>
       )}
 
+      {openPanel === 'looks' && (
+        <div
+          className={cn(
+            'rounded-xl border border-white/10 bg-white/5 p-3',
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 bg-black/80 backdrop-blur-xl',
+            switchingLook && 'pointer-events-none opacity-60'
+          )}
+        >
+          <VideoEffectSelector
+            activeEffect={videoLook}
+            onSelect={(id) => void applyLook(id)}
+            backgroundBlur={backgroundBlur}
+            onToggleBackgroundBlur={() => void toggleBackgroundBlur()}
+          />
+          <p className="mt-2 text-[11px] text-zinc-500">{t('videoLooks.hint')}</p>
+        </div>
+      )}
+
       {/* Kept mounted while hidden so the custom-sound list and the volume the
           host set survive closing the board mid-broadcast. */}
       <SoundboardPanel
@@ -1630,28 +2073,45 @@ export function GoLiveBroadcaster({
         errorMessage="Could not play that — your microphone feed is not running"
       />
 
-      {/* Full-bleed puts this top-right as a compact pill rather than a bar at
-          the foot of the screen: the foot belongs to the controls, and two
-          stacked bars over a portrait video eats the picture. It keeps a solid
-          fill where the controls do not — ending a broadcast is the one action
-          that should never be missed against a bright frame. */}
+      {/* Leaving the broadcast, top-right, on the same baseline as the live
+          chip opposite it.
+          This was a red "End" pill, which broke the design system twice over:
+          coloured button fills are not used anywhere on DeHub, and it made the
+          most destructive control on the screen the brightest thing on it. It
+          is a glass circle now, the same glass as every other floating control,
+          and the confirmation dialog is what stops an accidental end — not a
+          loud colour. Square h-9/w-9 so it is a real 36px tap target and
+          matches the h-8 pills' optical weight rather than sitting lower than
+          them. */}
       <button
-        onClick={handleEnd}
+        onClick={() => setConfirmEnd(true)}
         disabled={isEnding}
+        aria-label="End the broadcast"
         className={cn(
           'flex items-center justify-center gap-2 font-medium transition-colors disabled:opacity-60',
           fullBleed
-            ? 'absolute right-3 top-3 z-20 h-9 rounded-full bg-red-500/90 px-4 text-xs text-white active:bg-red-500'
+            ? cn(
+                'absolute right-3 z-20 h-9 w-9 rounded-xl border border-white/20 bg-white/10 text-white backdrop-blur-xl active:bg-white/20',
+                TOP_CHROME_Y
+              )
             : 'h-14 w-full gap-2 rounded-xl border border-red-500/30 bg-red-500/10 text-sm text-red-300 hover:bg-red-500/20'
         )}
       >
         {isEnding ? (
           <Loader2 className="h-4 w-4 animate-spin" />
+        ) : fullBleed ? (
+          <X className="h-[18px] w-[18px]" />
         ) : (
           <Radio className="h-4 w-4" />
         )}
-        {isEnding ? 'Ending…' : fullBleed ? 'End' : 'End Stream'}
+        {fullBleed ? null : isEnding ? 'Ending…' : 'End Stream'}
       </button>
+
+      <EndStreamConfirmDialog
+        open={confirmEnd}
+        onOpenChange={setConfirmEnd}
+        onConfirm={() => void handleEnd()}
+      />
     </div>
   );
 }
@@ -1685,7 +2145,7 @@ function ControlButton({
       aria-label={label}
       title={label}
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-full transition-colors disabled:opacity-40',
+        'flex shrink-0 items-center justify-center rounded-xl transition-colors disabled:opacity-40',
         floating
           ? cn(
               'h-12 w-12 [filter:drop-shadow(0_1px_3px_rgb(0_0_0/0.9))]',
