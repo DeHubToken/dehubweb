@@ -286,6 +286,58 @@ function prerenderHomeIntroPlugin() {
   };
 }
 
+/**
+ * Let the first frame paint before the entry chunk runs.
+ *
+ * Vite emits `<script type="module" src=entry>`. A module script is deferred,
+ * so it runs the moment parsing ends — and this document parses in a few ms.
+ * On a fast connection the entry (≈530 KB compressed) is often in hand before
+ * the render-blocking stylesheet has resolved, so the browser's first chance to
+ * paint arrives with the entry already queued: it evaluates the bundle and
+ * React's first render BEFORE painting anything, including the welcome panel
+ * that index.html now carries prerendered precisely so it can paint first.
+ * Lighthouse (which models from an unthrottled trace) then reports a first
+ * paint of 6 s on a phone with the panel sitting in the HTML the whole time.
+ *
+ * This swaps the tag for a `modulepreload` (the download starts just as early,
+ * at the same priority) plus an inline starter that import()s the entry after
+ * the first frame has painted: requestAnimationFrame fires before that frame
+ * paints, a zero-delay timeout inside it lands after. A background tab never
+ * gets a frame, so a 1.5 s timer and a visibility listener start it there;
+ * import() of the same module twice is one evaluation, so both paths are safe.
+ *
+ * scripts/check-entry-bundle.mjs finds the entry through the data-entry link.
+ */
+function startEntryAfterFirstPaintPlugin() {
+  return {
+    name: 'start-entry-after-first-paint',
+    apply: 'build' as const,
+    transformIndexHtml: {
+      order: 'post' as const,
+      handler(html: string) {
+        const tag = /<script type="module" crossorigin src="(\/assets\/index-[^"]+\.js)"><\/script>/;
+        const m = html.match(tag);
+        if (!m) {
+          console.warn('[start-entry-after-first-paint] entry <script> not found — leaving index.html as Vite wrote it');
+          return html;
+        }
+        const entry = m[1];
+        const starter = [
+          `<link rel="modulepreload" crossorigin href="${entry}" data-entry>`,
+          '<script>(function(){var s=0,e=' + JSON.stringify(entry) + ';',
+          'function go(){if(s)return;s=1;import(e).catch(function(){});}',
+          'function afterPaint(){requestAnimationFrame(function(){setTimeout(go,0);});}',
+          'if(document.visibilityState==="hidden"){document.addEventListener("visibilitychange",function v(){if(document.visibilityState==="visible"){document.removeEventListener("visibilitychange",v);afterPaint();}});}',
+          'else{afterPaint();}',
+          'setTimeout(go,1500);})();</script>',
+        ].join('');
+        console.log(`[start-entry-after-first-paint] ${entry} now starts after the first frame`);
+        return html.replace(tag, starter);
+      },
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -311,6 +363,7 @@ export default defineConfig(({ mode }) => ({
     buildVersionPlugin(),
     preloadWalletChunkPlugin(),
     prerenderHomeIntroPlugin(),
+    startEntryAfterFirstPaintPlugin(),
     warGameCorsPlugin(),
     mcpPlugin(),
     mode === "development" && componentTagger(),
