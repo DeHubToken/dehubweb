@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
-import { walletScopedClient } from '@/lib/supabase-wallet-client';
+import { deleteStageRecordings } from '@/lib/stage-recording-delete';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
@@ -170,22 +170,29 @@ export function PastStagesList({
     async (space: AudioSpace) => {
       if (!confirm(t('stages.deleteRecordingConfirm'))) return;
       if (playingStageId === space.id) stopStageRecording();
-      if (space.recording_url && walletAddress) {
-        const path = space.recording_url.split('/stage-recordings/')[1];
-        if (path) {
-          // Through a wallet-scoped client: the bucket's DELETE policy now
-          // checks who owns the stage, and the Storage API has no per-call
-          // header to carry that on the shared one.
-          await walletScopedClient(walletAddress)
-            .storage.from('stage-recordings')
-            .remove([decodeURIComponent(path)]);
+      if (walletAddress) {
+        // Everything under the stage's folder, not only the object the URL
+        // names. Finalising writes an indexed copy beside the original and
+        // repoints the URL at it, so removing just that left the original
+        // recording in a public bucket after the host was told it was gone.
+        const { error } = await deleteStageRecordings(space.id, walletAddress);
+        if (error) {
+          // Stop here rather than deleting the row on top of files that are
+          // still there — that would leave them with nothing pointing at them
+          // and no way to find them again.
+          toast.error(t('stages.deleteRecordingFailed', 'Could not delete the recording'));
+          return;
         }
       }
-      await supabase
+      const { error: rowError } = await supabase
         .from('audio_spaces')
         .delete()
         .eq('id', space.id)
         .setHeader('x-wallet-address', (walletAddress || '').toLowerCase());
+      if (rowError) {
+        toast.error(t('stages.deleteStageFailed', 'Could not delete the stage'));
+        return;
+      }
       queryClient.invalidateQueries({ queryKey: ['past-stages'] });
       // The Hosting tab reads its own list, so it would keep showing a
       // recording that no longer exists.
