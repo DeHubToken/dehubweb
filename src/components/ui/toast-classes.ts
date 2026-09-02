@@ -101,7 +101,10 @@ export const BUTTON_CLASSES = [
 export const SLOT_BUTTON_CLASSES = [
   'inline-flex !ms-0 mt-2 !h-9 w-full basis-full items-center justify-center !px-4',
   '!rounded-xl !border !border-white/30',
-  '!bg-gradient-to-br from-white/20 via-white/10 to-white/5',
+  // `!bg-transparent` clears the colour layer of sonner's `background`
+  // shorthand — white in the dark theme, so without it the gradient sat on a
+  // solid white slab and the white label vanished into it.
+  '!bg-transparent !bg-gradient-to-br from-white/20 via-white/10 to-white/5',
   'backdrop-blur-xl',
   'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]',
   '!text-sm !font-medium !text-white no-underline',
