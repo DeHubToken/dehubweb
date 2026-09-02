@@ -1,7 +1,6 @@
 /**
  * Creator Flow — the canvas.
  * ==========================
- * Adapted from HeliosGen's WorkflowCanvas (MIT) — see LICENSE-HeliosGen.
  *
  * React Flow with the store as its source of truth, plus everything that
  * makes a canvas feel finished: alignment snapping with guide lines, ancestor

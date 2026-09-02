@@ -1,7 +1,6 @@
 /**
  * Creator Flow store.
  * ===================
- * Adapted from HeliosGen's lib/store.ts (MIT) — see LICENSE-HeliosGen.
  *
  * Every flow the creator has (nodes, edges, viewport, counters) plus the live
  * copy of the active one, undo/redo, and the per-type defaults new nodes

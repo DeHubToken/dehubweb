@@ -1,8 +1,7 @@
 /**
  * Creator Flow — running the graph.
  * =================================
- * Adapted from HeliosGen's usePipelineRunner + the per-node generate paths
- * (MIT) — see LICENSE-HeliosGen — on top of DeHub's pay-per-job model.
+ * The pipeline runner, on top of DeHub's pay-per-job model.
  *
  * A run is priced first and paid ONCE: every paid node in the run is quoted
  * by the server, the total is signed as a single DHB transfer, and each job

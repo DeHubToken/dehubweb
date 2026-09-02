@@ -1,7 +1,6 @@
 /**
  * Creator Flow — reference video node.
  * ====================================
- * Adapted from HeliosGen's VideoInputNode (MIT) — see LICENSE-HeliosGen.
  * A clip from disk or a URL, with two outputs: the video itself, and a still
  * captured at a chosen second so a video can feed an image handle. Capture
  * happens in the browser (see lib/creator/flow/frames.ts).

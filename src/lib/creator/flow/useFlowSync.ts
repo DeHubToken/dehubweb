@@ -1,7 +1,6 @@
 /**
  * Creator Flow — keep the store and creator_flows in step.
  * ========================================================
- * Adapted from HeliosGen's lib/useSpaceSync.ts (MIT) — see LICENSE-HeliosGen.
  *
  * Signed out, nothing happens: flows live in localStorage and that is the
  * whole guest mode. Once a wallet is in, the DB copy is loaded and merged,

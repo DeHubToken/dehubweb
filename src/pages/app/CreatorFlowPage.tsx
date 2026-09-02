@@ -1,8 +1,7 @@
 /**
  * /creator/flow — Creator Flow, the node-based generation canvas.
  * ===============================================================
- * Adapted from HeliosGen (MIT) — see LICENSE-HeliosGen. Build a pipeline of
- * text, reference and generator nodes, run it as one priced-and-paid job,
+ * Build a pipeline of text, reference and generator nodes, run it as one priced-and-paid job,
  * share it read-only, and keep every result in the studio library.
  *
  * Works signed out: flows live in localStorage until a wallet is connected,

@@ -1,7 +1,6 @@
 /**
  * Creator Flow — reference image node.
  * ====================================
- * Adapted from HeliosGen's ImageInputNode (MIT) — see LICENSE-HeliosGen.
  * A picture from disk or a URL. Shown at once from a local data URL and
  * hosted in the background so the durable link is what gets saved and sent.
  */

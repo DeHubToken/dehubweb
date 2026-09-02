@@ -1,7 +1,6 @@
 /**
  * Creator Flow — assistant (text-to-text) node.
  * =============================================
- * Adapted from HeliosGen's AssistantNode (MIT) — see LICENSE-HeliosGen.
  * Rewrites a prompt — typed here or wired in from a text node — into a
  * sharper one, streamed as it arrives. Free, and works signed out.
  */
