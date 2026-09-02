@@ -842,7 +842,7 @@
     </div>
     <div id="buyQuote"></div>
   </div>
-  <div id="fpEsc"><span id="fpFlick">&larr; &rarr; NEXT SCREEN<br></span>ESC / SCROLL TO RELEASE</div>
+  <div id="fpEsc"><span id="fpFlick">&larr; &rarr; &uarr; &darr; NEXT SCREEN &middot; &darr; EXITS<br></span>ESC / SCROLL TO RELEASE</div>
 </div>
 
 <div id="prev">
@@ -6845,7 +6845,7 @@ function focusOn(s,dur){
   $('#focusPanel').classList.add('on');
   /* Only promise the arrows do something when they actually do -- one desk
      monitor has nothing beside it to step to. */
-  $('#fpFlick').style.display=(flickTarget(s,-1)||flickTarget(s,1))?'':'none';
+  $('#fpFlick').style.display=flickAny(s)?'':'none';
   syncBuyBox();syncSiteFocus();syncFocusHud();
 }
 function release(){
@@ -6859,12 +6859,18 @@ function release(){
 }
 
 /* ==================== flick between screens ====================
-   Left and right step to the screen beside the one you are reading. Zoomed
-   in, a chart fills the view and the rest of the wall is off-frame, so
-   comparing two of them meant releasing, hunting for the next one and
-   clicking it. The arrow keys are free to do this because they do nothing at
-   all while a screen is focused: controls.enabled goes false, freeCamTick
-   never runs, and the strafe they normally drive is already dead.
+   The arrow keys walk the wall a screen at a time. Zoomed in, a chart fills
+   the view and the rest of the wall is off-frame, so comparing two of them
+   meant releasing, hunting for the next one and clicking it. The keys are
+   free to do this because they do nothing at all while a screen is focused:
+   controls.enabled goes false, freeCamTick never runs, and the strafe they
+   normally drive is already dead.
+
+   DOWN OFF THE BOTTOM ROW LEAVES. Nothing is below the bottom row, so the
+   key keeps meaning down: it takes you back out to the room rather than
+   dying against the floor. Up at the top has nowhere to go and nothing else
+   to mean, so it stays put -- exiting upward, deeper into the wall, is not a
+   direction anybody presses for that.
 
    "Beside" is measured along the row IN METRES, off the arc position every
    wall screen already carries. Projecting world positions onto the focused
@@ -6880,8 +6886,8 @@ function release(){
    jumps clean over it. Edge to edge it is 60mm away, which is what the eye
    sees -- and overlapping spans give zero, so a double-height panel is
    beside every row it covers. */
-const FLICK_UP_COST=3;      /* a row up costs three metres of shuffling sideways */
-const FLICK_ROW_BIAS=0.05;  /* ...and among equals, the nearest row still wins */
+const FLICK_CROSS_COST=3;   /* drifting off your row (or column) costs three metres */
+const FLICK_ROW_BIAS=0.05;  /* ...and among equals, the nearest one still wins */
 const FLICK_DUR=0.45;       /* a step is a flick, not the 1.25s arrival shot */
 const FLICK_REPEAT=300;     /* ms between steps while an arrow is held down */
 const flickTmp=new V3();
@@ -6896,21 +6902,44 @@ function flickPool(s){
   if(s.floating)return [];        /* a preview is not on the wall yet */
   return screens.filter(o=>!o.floating);
 }
-function flickTarget(s,dir,lane){
+/* One function for both axes, because they are the same question turned
+   ninety degrees: step along one, stay put on the other. `vert` swaps which
+   is which; `lane` is the row memory below, and only means anything
+   sideways. */
+function flickTarget(s,dir,vert,lane){
   if(!s)return null;
-  const x=flickX(s),y=flickY(s),row=lane==null?y:lane;
+  const x=flickX(s),y=flickY(s);
+  const along=vert?y:x, cross=vert?x:y;
+  const alongSz=vert?s.h:s.w, crossSz=vert?s.w:s.h;
+  const keep=(!vert&&lane!=null)?lane:cross;   /* the line you are trying to hold */
   let best=null,bestCost=Infinity;
   for(const o of flickPool(s)){
     if(o===s)continue;
     const ox=flickX(o),oy=flickY(o);
-    if((ox-x)*dir<=0.02)continue;             /* same column, or the wrong way */
-    const cost=spanGap(x,s.w,ox,o.w)
-      +spanGap(y,s.h,oy,o.h)*FLICK_UP_COST
-      +Math.abs(oy-row)*FLICK_ROW_BIAS;
+    const oAlong=vert?oy:ox, oCross=vert?ox:oy;
+    const oAlongSz=vert?o.h:o.w, oCrossSz=vert?o.w:o.h;
+    const d=oAlong-along;
+    if(d*dir<=0)continue;                    /* the wrong way, or dead level */
+    /* A screen that OVERLAPS you is not below you, it is around you. The
+       double-height HEAT and LIQ panels stand flush on the bottom row, so by
+       centres alone the bottom row reads as beneath them and DOWN stepped
+       diagonally into the next column instead of leaving. Same for the big
+       board, which covers every row there is. Measured against the taller of
+       the two, both of those correctly have nothing under them.
+       Deliberately not a gap test: gapX and gapY can both be set to zero,
+       and a wall with its screens touching still has rows and columns. */
+    if(Math.abs(d)<=Math.max(alongSz,oAlongSz)/2)continue;
+    const cost=spanGap(along,alongSz,oAlong,oAlongSz)
+      +spanGap(cross,crossSz,oCross,oCrossSz)*FLICK_CROSS_COST
+      +Math.abs(oCross-keep)*FLICK_ROW_BIAS;
     if(cost<bestCost){bestCost=cost;best=o;}
   }
   return best;
 }
+/* Is any of the four a real screen? A monitor with nothing around it should
+   not advertise a key that only backs out of it. */
+const flickAny=s=>!!(flickTarget(s,1,false)||flickTarget(s,-1,false)
+  ||flickTarget(s,1,true)||flickTarget(s,-1,true));
 /* THE LANE. Walk the bottom row rightwards and you cross the big board --
    8.6m wide and the full height of the wall -- which has no row of its own
    to hand back on the way out. Judged on its centre you come out three rows
@@ -6922,17 +6951,24 @@ function flickTarget(s,dir,lane){
    the tiebreak between rows a tall panel spans looks at the lane. */
 let flickAt=0,flickLane=null;
 const flickLaneOf=s=>(flickLane!=null&&Math.abs(flickLane-flickY(s))<=s.h/2)?flickLane:flickY(s);
-function flickFocus(dir){
+function flickFocus(dir,vert){
   const s=focus.screen;
-  const lane=s?flickLaneOf(s):null;
-  const next=flickTarget(s,dir,lane);
-  if(!next)return false;                      /* the end of the row */
+  if(!s)return false;
+  /* The lane is a ROW memory, so it has no meaning on a vertical step -- the
+     row you land on becomes the row you are on. */
+  const lane=vert?null:flickLaneOf(s);
+  const next=flickTarget(s,dir,vert,lane);
+  if(!next){
+    /* off the bottom of the wall: down keeps meaning down, and takes you out */
+    if(vert&&dir<0){release();return true;}
+    return false;                             /* the end of the row */
+  }
   flickAt=performance.now();
   playSound('blip');
   focusOn(next,FLICK_DUR);
   /* focusOn just cleared it. Carry it only while the screen you landed on
      still covers it -- step off the lane and the new row IS the lane. */
-  flickLane=Math.abs(lane-flickY(next))<=next.h/2?lane:null;
+  flickLane=(lane!=null&&Math.abs(lane-flickY(next))<=next.h/2)?lane:null;
   return true;
 }
 
@@ -7509,14 +7545,16 @@ addEventListener('keydown',e=>{
     setScreenTf(focus.screen,TF_ORDER[clamp(i+(e.key===']'?1:-1),0,TF_ORDER.length-1)]);
     return;
   }
-  /* Left and right step to the screen beside the one you are reading. A held
-     arrow repeats about thirty times a second, and stepping the wall at that
-     rate is a blur -- so a repeat waits for the last hop to land, while a
-     deliberate tap never does and steps as fast as you can tap. */
-  if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&focus.screen){
+  /* The arrows walk the wall while you are reading it. A held arrow repeats
+     about thirty times a second, and stepping the wall at that rate is a
+     blur -- so a repeat waits for the last hop to land, while a deliberate
+     tap never does and steps as fast as you can tap. */
+  if(focus.screen&&/^Arrow(Left|Right|Up|Down)$/.test(e.key)){
     e.preventDefault();
-    if(!(e.repeat&&performance.now()-flickAt<FLICK_REPEAT))
-      flickFocus(e.key==='ArrowRight'?1:-1);
+    if(!(e.repeat&&performance.now()-flickAt<FLICK_REPEAT)){
+      const vert=e.key==='ArrowUp'||e.key==='ArrowDown';
+      flickFocus((e.key==='ArrowRight'||e.key==='ArrowUp')?1:-1,vert);
+    }
     return;
   }
   /* V is the body toggle; F is a second key for LEAVING one, because that is
@@ -11232,7 +11270,7 @@ loadSounds();
 const repaintAll=()=>screens.forEach(s=>{s.paint(s);s.tex.needsUpdate=true;});
 window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   focusOn,release,repaint:repaintAll,
-  focus,flickTarget,flickFocus,flickPool,flickLaneOf,syncFocusHud,
+  focus,flickTarget,flickFocus,flickPool,flickLaneOf,flickAny,syncFocusHud,
   get flickLane(){return flickLane;},set flickLane(v){flickLane=v;},
   WALL,buildWall,cast,startCast,stopCast,mountCast,unmountCast,beginPlacement,attachStream,fitCast,
   stats,alerts,SOUNDS,playSound,TEMPLATES,applyTemplate,SCENES,buildBackdrop,
