@@ -834,6 +834,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   );
 
   // Record comment views when visible (#9)
+  const sectionRef = useRef<HTMLDivElement>(null);
   const viewedIdsRef = useRef(new Set<number>());
   const pendingViewsRef = useRef<number[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -855,8 +856,38 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         }, 2000);
       });
     }, { threshold: 0.5 });
-    document.querySelectorAll('[data-comment-id]').forEach(el => observer.observe(el));
-    return () => observer.disconnect();
+    // This section's own rows, not every row in the document.
+    //
+    // Two sections can be mounted at once — a feed card with comments open
+    // beside the desktop shorts panel, or the panel and its fullscreen rail —
+    // and each keeps a separate viewedIdsRef. A document-wide query had each
+    // one observing the other's rows, so one scroll past a comment recorded a
+    // view from both.
+    const root = sectionRef.current;
+    if (!root) return;
+
+    const observeRows = (within: ParentNode) =>
+      within.querySelectorAll('[data-comment-id]').forEach(el => observer.observe(el));
+    observeRows(root);
+
+    // Rows that appear later. The effect is keyed on the fetched page, so
+    // replies revealed by "show more" were never picked up and never counted
+    // until something refetched.
+    const watcher = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        m.addedNodes.forEach((node) => {
+          if (!(node instanceof Element)) return;
+          if (node.matches('[data-comment-id]')) observer.observe(node);
+          observeRows(node);
+        });
+      }
+    });
+    watcher.observe(root, { childList: true, subtree: true });
+
+    return () => {
+      watcher.disconnect();
+      observer.disconnect();
+    };
   }, [apiComments]);
 
   // Group comments into threads. Nesting is unbounded: a reply can have replies,
@@ -1509,6 +1540,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   return (
     <PostCreatorContext.Provider value={postCreator}>
     <motion.div
+      ref={sectionRef}
       data-comments-section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

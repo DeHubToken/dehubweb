@@ -194,8 +194,9 @@ class VideoViewTracker {
    * @param tokenId - The video token ID
    * @param currentTime - Current playback time in seconds
    * @param duration - Total video duration in seconds
+   * @param loops - Whether the element replays itself. A wrap is not a watch.
    */
-  updateProgress(tokenId: string, currentTime: number, duration: number): void {
+  updateProgress(tokenId: string, currentTime: number, duration: number, loops = false): void {
     // One view per watch, not one view ever. `watchedVideos` closes the current
     // watch so a single play fires once; `reset()` re-arms it, so a replay or a
     // fresh open of the same video is another view. The 24-hour localStorage
@@ -205,10 +206,19 @@ class VideoViewTracker {
     // 30-second per-viewer-per-post rate limit.
 
     // Playback has jumped back to the top after a real watch — a replay, in the
-    // same mounted player. Re-arm, or a looping video counts once and never
-    // again however long it runs.
+    // same mounted player. Re-arm, so pressing play again counts again.
+    //
+    // Not when the element loops. A loop wraps on its own, with nobody
+    // deciding anything: a short left on screen wrapped every few seconds, each
+    // wrap read as a replay, and the API's 30-second per-viewer limit turned
+    // that into a view every 30 seconds for as long as the tab stayed open. A
+    // phone put down on the desk was manufacturing view counts.
+    //
+    // A deliberate replay of a looping short is indistinguishable from a wrap,
+    // so it counts once per mount there. Leaving and coming back is a fresh
+    // mount and does count again.
     const priorProgress = this.watchProgress.get(tokenId) || 0;
-    if (priorProgress > this.MIN_WATCH_SECONDS && currentTime < 1) {
+    if (!loops && priorProgress > this.MIN_WATCH_SECONDS && currentTime < 1) {
       this.reset(tokenId);
     }
 
