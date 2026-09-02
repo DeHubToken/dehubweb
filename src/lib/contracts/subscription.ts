@@ -337,7 +337,7 @@ export async function buySubscriptionOnChain(
   const [balance, allowance] = await Promise.all([
     params.skipBalanceCheck
       ? Promise.resolve(cost.total)
-      : getERC20Balance(chainConfig.dhbToken, subscriber),
+      : getERC20Balance(chainConfig.dhbToken, subscriber, params.chainId),
     readContract<bigint>(
       chainConfig.dhbToken,
       new Interface(['function allowance(address owner, address spender) view returns (uint256)']),
