@@ -78,10 +78,34 @@ describe('per-route OG cards', () => {
    * /app twin onto the bare path.
    */
   it('keeps /app-only marketing pages out of the /app-collapsing set', () => {
+    // Derived from the router, not a hand-kept list. The hard-coded trio here
+    // named superpowers, stores and fractions and missed `glossary`, which sat
+    // in SSR_STATIC_ROUTES with no `path` for as long as it existed: crawlers
+    // were handed a canonical /glossary that the router has no route for, while
+    // the page itself canonicalized to /app/glossary. Anything added under /app
+    // from now on is checked by construction.
+    const APP = readFileSync(resolve(ROOT, 'src/App.tsx'), 'utf8');
     const staticRoutes = keysIn(setBody('SSR_STATIC_ROUTES'));
-    for (const key of ['superpowers', 'stores', 'fractions']) {
-      expect(staticRoutes.has(key)).toBe(false);
-      expect(WORKER).toContain(`path: '/app/${key}'`);
+
+    // MARKETING_PAGES is an object literal, not a Set, so setBody cannot read it.
+    const mp = WORKER.slice(WORKER.indexOf('const MARKETING_PAGES'));
+    const marketingKeys = [...mp.slice(0, mp.indexOf('\n};')).matchAll(/^ {2}'([^']+)':\s*\{/gm)]
+      .map((m) => m[1]);
+
+    const appOnly = marketingKeys.filter((key) => {
+      // A leading slash is a top-level route; a bare path is nested under
+      // AppLayout and therefore only reachable at /app/<key>.
+      const topLevel = APP.includes(`path="/${key}"`);
+      const nested = APP.includes(`path="${key}"`);
+      return nested && !topLevel;
+    });
+
+    // If this is empty the derivation broke — it must never silently pass.
+    expect(appOnly.length).toBeGreaterThan(0);
+
+    for (const key of appOnly) {
+      expect(staticRoutes.has(key), `${key} is /app-only and must not collapse`).toBe(false);
+      expect(WORKER, `${key} is /app-only and needs its own path`).toContain(`path: '/app/${key}'`);
     }
   });
 });
