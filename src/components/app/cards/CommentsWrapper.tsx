@@ -17,6 +17,7 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { CommentsSection } from './CommentsSection';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useState, useEffect, useRef } from 'react';
 
 interface CommentsWrapperProps {
@@ -150,6 +151,22 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   const isPhone = useIsPhone();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
   const { isCollapsed } = useSidebarCollapse();
+
+  // This sheet holds the page itself.
+  //
+  // Every other drawer gets it for free: `noBodyStyles` turns vaul's own lock
+  // off on the grounds that Radix's modal Dialog wraps the overlay in
+  // RemoveScroll. True at modal={true}, and this is the one sheet in the app
+  // that passes modal={false} — so neither lock engaged and the feed scrolled
+  // behind the open sheet. Shorts happens to be covered because the viewer
+  // locks the body itself; immersive video does not, so there it was visible.
+  //
+  // Counted, so it nests with the viewer's own lock instead of fighting it.
+  const immersiveSheet = isTabletOrMobile && immersive;
+  useEffect(() => {
+    if (!immersiveSheet || !open) return;
+    return lockBodyScroll();
+  }, [immersiveSheet, open]);
   // Inline expansion only — the immersive drawer sits over fullscreen media and
   // should keep the scroll to itself.
   const wheelChainRef = useWheelChaining(open && !isPhone && !(isTabletOrMobile && immersive));

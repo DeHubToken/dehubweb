@@ -52,6 +52,7 @@ import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { createWheelGesture } from '@/lib/wheel-gesture';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
@@ -713,7 +714,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // viewer and get frosted by its backdrop-blur instead of poking through sharp.
   // See the `body.shorts-viewer-open` rules in index.css.
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    const releaseScrollLock = lockBodyScroll();
     // NB: do NOT set `touch-action: none` on <body>. It cascades to the whole
     // subtree and kills touch-scrolling inside the inline comments panel
     // (which is a descendant, not a portalled drawer), leaving the sheet
@@ -722,7 +723,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     document.body.classList.add('shorts-viewer-open');
 
     return () => {
-      document.body.style.overflow = '';
+      releaseScrollLock();
       document.body.classList.remove('shorts-viewer-open');
     };
   }, []);

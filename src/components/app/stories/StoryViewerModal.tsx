@@ -31,6 +31,7 @@ import { StoryCommentsDrawer } from './StoryCommentsDrawer';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { OverlayOpenTracker } from '@/lib/overlay-open';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 
 interface StoryViewerModalProps {
   isOpen: boolean;
@@ -134,10 +135,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
   // Lock body scroll when open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      const release = lockBodyScroll();
+      // touch-action is this component's own and is not counted: nothing else
+      // sets it, and the freeze watchdog now inspects and clears it too.
       document.body.style.touchAction = 'none';
       return () => {
-        document.body.style.overflow = '';
+        release();
         document.body.style.touchAction = '';
       };
     }
