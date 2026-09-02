@@ -56,7 +56,16 @@ describe('paid AI error recovery', () => {
     // between the signature and the provider costs a second transfer.
     expect(source).toMatch(/writeUnspent\(\[\.\.\.readUnspent\(\), \{ txHash/);
     // And a new payment must spend what is already paid for before charging.
-    expect(source).toMatch(/const reusable = remember \? reusablePayment\(priceDhb\) : null;/);
+    expect(source).toMatch(/const reusable = remember \? reusablePayment\(/);
+
+    // Keyed on the wallet, not only the hash. localStorage outlives a profile
+    // switch, and the server answers a hash belonging to someone else with a
+    // 403 rather than the "already spent" the client recovers from — so a
+    // payment the previous account abandoned blocked every generation for the
+    // next person on that browser until the reuse window expired.
+    expect(source).toMatch(/function reusablePayment\(priceDhb: number, wallet: string\)/);
+    expect(source).toMatch(/p\.wallet === holder/);
+    expect(source).toMatch(/wallet: payer\.toLowerCase\(\)/);
   });
 
   it('bounds the chain switch so the paywall cannot wedge', () => {

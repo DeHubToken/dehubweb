@@ -45,6 +45,13 @@ interface UnspentPayment {
   txHash: string;
   dhb: number;
   paidAt: number;
+  /**
+   * Who paid. Entries written before this existed have none and are ignored
+   * rather than assumed to belong to whoever is signed in now — they expire
+   * inside the reuse window anyway, so the cost of dropping them is one
+   * re-paid job at worst.
+   */
+  wallet?: string;
 }
 
 function readUnspent(): UnspentPayment[] {
@@ -85,10 +92,21 @@ export function forgetPayment(txHash: string): void {
   writeUnspent(readUnspent().filter((p) => p.txHash !== wanted));
 }
 
-/** A paid-but-unused transfer big enough for `priceDhb`, if there is one. */
-function reusablePayment(priceDhb: number): UnspentPayment | null {
+/**
+ * A paid-but-unused transfer big enough for `priceDhb`, if this wallet has one.
+ *
+ * Keyed on the wallet, not just the hash. localStorage belongs to the browser
+ * and the browser can change hands — a profile switch, a second person signing
+ * in — and the server refuses a hash that belongs to someone else with a 403
+ * rather than the "already spent" the client knows how to recover from. So an
+ * abandoned payment by the previous account used to block every generation for
+ * the next one, on that browser, until the window expired.
+ */
+function reusablePayment(priceDhb: number, wallet: string): UnspentPayment | null {
   const now = Date.now();
-  return readUnspent().find((p) => p.dhb >= priceDhb && now - p.paidAt < REUSE_WINDOW_MS) ?? null;
+  const holder = wallet.toLowerCase();
+  return readUnspent().find((p) =>
+    p.wallet === holder && p.dhb >= priceDhb && now - p.paidAt < REUSE_WINDOW_MS) ?? null;
 }
 
 /**
@@ -170,17 +188,21 @@ export async function payForJob(
     throw new Error('Nothing to pay.');
   }
 
+  // Resolved before the reuse check, because the cache is keyed on it. One
+  // extra read on the reuse path, and the same call the transfer below makes.
+  const payer = await getWalletAddress();
+
   // Money already sent for a job that never ran is spent before asking for
   // more. This is what stops a generation that failed after payment from
   // costing a second transfer.
-  const reusable = remember ? reusablePayment(priceDhb) : null;
+  const reusable = remember ? reusablePayment(priceDhb, payer) : null;
   if (reusable) return reusable.txHash;
 
   // Round up: the treasury must receive at least the price, and a fractional
   // wei short would leave the transfer one unit under it.
   const amount = Math.ceil(priceDhb);
   const amountWei = toWei(amount, 18);
-  const signerAddress = await getWalletAddress();
+  const signerAddress = payer;
 
   // Treat a flaky RPC as a zero balance rather than aborting.
   const baseConfig = getChainConfig(BASE_CHAIN_ID);
@@ -238,7 +260,7 @@ export async function payForJob(
     throw new Error(parseTxError(err) || 'Payment failed.');
   }
 
-  if (remember) writeUnspent([...readUnspent(), { txHash, dhb: amount, paidAt: Date.now() }]);
+  if (remember) writeUnspent([...readUnspent(), { txHash, dhb: amount, paidAt: Date.now(), wallet: payer.toLowerCase() }]);
   return txHash;
 }
 
