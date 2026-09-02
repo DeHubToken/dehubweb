@@ -43,6 +43,7 @@
     "connectAi": "AI جوڑو"
   },
   "feed": {
+    "viewProfile": "{{name}} ಚೆ ಪ್ರೊಫೈಲ್ ನೋಡಿ",
     "home": "گھر",
     "videos": "ویڈیو",
     "images": "تصویر",

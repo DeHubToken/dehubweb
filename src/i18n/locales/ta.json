@@ -43,6 +43,7 @@
     "connectAi": "AI இணை"
   },
   "feed": {
+    "viewProfile": "{{name}} இன் சுயவிவரத்தைக் காண்க",
     "home": "முகப்பு",
     "videos": "காணொளிகள்",
     "images": "படங்கள்",

@@ -43,6 +43,7 @@
     "connectAi": "Nyambungake AI"
   },
   "feed": {
+    "viewProfile": "Deleng profil {{name}}",
     "home": "Beranda",
     "videos": "Video",
     "images": "Gambar",

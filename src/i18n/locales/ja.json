@@ -43,6 +43,7 @@
     "connectAi": "AI を接続"
   },
   "feed": {
+    "viewProfile": "{{name}}のプロフィールを表示",
     "home": "ホーム",
     "videos": "動画",
     "images": "画像",

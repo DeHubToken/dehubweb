@@ -43,6 +43,7 @@
     "connectAi": "AI Girêde"
   },
   "feed": {
+    "viewProfile": "Profîla {{name}} bibîne",
     "home": "Mal",
     "videos": "Vîdyo",
     "images": "Wêne",

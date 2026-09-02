@@ -43,6 +43,7 @@
     "connectAi": "AI সংযুক্ত গরন"
   },
   "feed": {
+    "viewProfile": "{{name}} এর প্রোফাইল দেখুন",
     "home": "ঘর",
     "videos": "ভিডিও",
     "images": "ছবি",

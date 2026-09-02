@@ -43,6 +43,7 @@
     "connectAi": "AI সংযুক্ত করউক্কা"
   },
   "feed": {
+    "viewProfile": "{{name}}'র প্রোফাইল দেখ",
     "home": "ঘর",
     "videos": "ভিডিও",
     "images": "ছবি",

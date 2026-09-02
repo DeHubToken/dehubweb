@@ -43,6 +43,7 @@
     "connectAi": "Honoa te AI"
   },
   "feed": {
+    "viewProfile": "Mātakitaki i a {{name}}'s profile",
     "home": "Kāinga",
     "videos": "Ataata",
     "images": "Whakaahua",

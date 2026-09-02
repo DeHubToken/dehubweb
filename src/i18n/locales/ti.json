@@ -43,6 +43,7 @@
     "connectAi": "AI ኣራኽብ"
   },
   "feed": {
+    "viewProfile": "መገለጺ {{name}} ርአ",
     "home": "ገዛ",
     "videos": "ቪድዮታት",
     "images": "ስእልታት",

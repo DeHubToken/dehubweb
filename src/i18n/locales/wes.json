@@ -43,6 +43,7 @@
     "connectAi": "Connect AI"
   },
   "feed": {
+    "viewProfile": "Luk {{name}} profil",
     "home": "Home",
     "videos": "Videos",
     "images": "Images",

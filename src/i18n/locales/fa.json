@@ -43,6 +43,7 @@
     "connectAi": "اتصال هوش مصنوعی"
   },
   "feed": {
+    "viewProfile": "مشاهده پروفایل {{name}}",
     "home": "خانه",
     "videos": "ویدیوها",
     "images": "تصاویر",

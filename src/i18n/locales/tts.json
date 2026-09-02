@@ -43,6 +43,7 @@
     "connectAi": "เชื่อมต่อ AI"
   },
   "feed": {
+    "viewProfile": "ดูโปรไฟล์ {{name}}",
     "home": "บ้าน",
     "videos": "วิดีโอ",
     "images": "ฮูป",

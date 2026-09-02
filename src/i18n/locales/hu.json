@@ -43,6 +43,7 @@
     "connectAi": "MI csatlakoztatása"
   },
   "feed": {
+    "viewProfile": "{{name}} profiljának megtekintése",
     "home": "Kezdőlap",
     "videos": "Videók",
     "images": "Képek",

@@ -43,6 +43,7 @@
     "connectAi": "连 AI"
   },
   "feed": {
+    "viewProfile": "看 {{name}} 的个人资料",
     "home": "首页",
     "videos": "视频",
     "images": "图片",

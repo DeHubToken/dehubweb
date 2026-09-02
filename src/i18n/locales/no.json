@@ -43,6 +43,7 @@
     "connectAi": "Koble til KI"
   },
   "feed": {
+    "viewProfile": "Vis profilen til {{name}}",
     "home": "Hjem",
     "videos": "Videoer",
     "images": "Bilder",

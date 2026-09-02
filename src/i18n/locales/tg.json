@@ -43,6 +43,7 @@
     "connectAi": "Пайвасти AI"
   },
   "feed": {
+    "viewProfile": "Намоиши профили {{name}}",
     "home": "Асосӣ",
     "videos": "Видеоҳо",
     "images": "Тасвирҳо",

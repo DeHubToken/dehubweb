@@ -19,8 +19,39 @@ import { useTotalUnreadCount } from '@/hooks/use-messages';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
+import { useTranslation } from 'react-i18next';
 
-
+// Every link in this bar is an icon and nothing else, so without a name each
+// one reads to a screen reader as "link" — 25 of them on the 2026-09-02
+// Lighthouse run. The English `label` below is the lookup key for the
+// existing nav strings, which is also what the desktop sidebar shows.
+const NAV_LABEL_KEYS: Record<string, string> = {
+  Home: 'nav.home',
+  Messages: 'nav.messages',
+  AI: 'nav.assistant',
+  Profile: 'nav.profile',
+  Notifications: 'nav.notifications',
+  Arcade: 'nav.arcade',
+  Events: 'nav.events',
+  // The feature's own title, so the nav says what the page it opens says.
+  Stages: 'stages.title',
+  Command: 'nav.commandCentre',
+  Wallet: 'nav.wallet',
+  Staking: 'nav.staking',
+  Governance: 'nav.governance',
+  Leaderboard: 'nav.leaderboard',
+  Bookmarks: 'nav.bookmarks',
+  Settings: 'nav.settings',
+  Features: 'nav.featureRequests',
+  Guide: 'nav.guide',
+  Stats: 'nav.stats',
+  Docs: 'nav.docs',
+  Blog: 'nav.blog',
+  Careers: 'nav.careers',
+  Glossary: 'nav.glossary',
+  Prompt: 'nav.prompt',
+  Communities: 'nav.communities',
+};
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
@@ -61,6 +92,8 @@ export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
+  const navLabel = (label: string) => t(NAV_LABEL_KEYS[label] ?? label);
 
   const dmUnread = useTotalUnreadCount();
   // Same badge sources as DesktopSidebar — keep the two navs in sync
@@ -205,6 +238,7 @@ export function MobileBottomNav() {
                     onClick={(e) => handleNavClick(e, item.path)}
                     onTouchStart={() => preloadRoute(item.path)}
                     onPointerEnter={() => preloadRoute(item.path)}
+                    aria-label={navLabel(item.label)}
                     className={cn(
                       'relative flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white',
                       index === 0 && 'rounded-l-2xl'
@@ -275,6 +309,7 @@ export function MobileBottomNav() {
                     to={item.path}
                     onTouchStart={() => preloadRoute(item.path)}
                     onPointerEnter={() => preloadRoute(item.path)}
+                    aria-label={navLabel(item.label)}
                     className="flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white"
                   >
                       <item.icon 
@@ -295,6 +330,7 @@ export function MobileBottomNav() {
                 to="/app/explore"
                 onTouchStart={() => preloadRoute('/app/explore')}
                 onPointerEnter={() => preloadRoute('/app/explore')}
+                aria-label={t('nav.explore')}
                 className="flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white rounded-r-2xl"
               >
                   <Search 
@@ -320,6 +356,7 @@ export function MobileBottomNav() {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={navLabel(item.label)}
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                     style={{ width: 'calc((50% - 24px) / 2)' }}
                   >
@@ -333,6 +370,7 @@ export function MobileBottomNav() {
                   <button
                     key={item.label}
                     onClick={() => openStageModal()}
+                    aria-label={navLabel(item.label)}
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                     style={{ width: 'calc((50% - 24px) / 2)' }}
                   >
@@ -348,6 +386,7 @@ export function MobileBottomNav() {
                   onClick={(e) => handleProtectedNavClick(e, item.path, (item as any).requiresAuth)}
                   onTouchStart={() => preloadRoute(item.path)}
                   onPointerEnter={() => preloadRoute(item.path)}
+                  aria-label={navLabel(item.label)}
                   className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >

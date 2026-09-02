@@ -43,6 +43,7 @@
     "connectAi": "AI አገናኝ"
   },
   "feed": {
+    "viewProfile": "የ {{name}} መገለጫ ይመልከቱ",
     "home": "መነሻ",
     "videos": "ቪዲዮዎች",
     "images": "ምስሎች",

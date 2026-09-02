@@ -43,6 +43,7 @@
     "connectAi": "Ikonekta ang AI"
   },
   "feed": {
+    "viewProfile": "Tingnan ang profile ni {{name}}",
     "home": "Home",
     "videos": "Mga Video",
     "images": "Mga Larawan",

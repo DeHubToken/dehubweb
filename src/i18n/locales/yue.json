@@ -43,6 +43,7 @@
     "connectAi": "連接 AI"
   },
   "feed": {
+    "viewProfile": "睇下 {{name}} 嘅個人檔案",
     "home": "主頁",
     "videos": "影片",
     "images": "圖片",
