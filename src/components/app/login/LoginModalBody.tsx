@@ -17,6 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { clearWagmiStorage } from '@/lib/wagmi';
+import { WagmiScope } from '@/components/app/WagmiScope';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
 import { requestAccountPicker } from '@/lib/wallet-accounts';
 import { LoginSavedProfiles } from './LoginSavedProfiles';
@@ -65,7 +66,20 @@ interface LoginModalBodyProps {
   setStep: (step: LoginStep) => void;
 }
 
-export function LoginModalBody({ open, step, setStep }: LoginModalBodyProps) {
+/**
+ * WagmiProvider no longer wraps the app (see WagmiRuntime.tsx), so this body —
+ * which calls wagmi hooks — provides it for its own subtree. This file is
+ * lazy, so the import of wagmi here stays off the boot path.
+ */
+export function LoginModalBody(props: LoginModalBodyProps) {
+  return (
+    <WagmiScope>
+      <LoginModalBodyInner {...props} />
+    </WagmiScope>
+  );
+}
+
+function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,

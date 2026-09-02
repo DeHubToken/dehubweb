@@ -67,6 +67,36 @@ describe('wagmi boot split', () => {
     const providers = read('src/components/app/WalletProviders.tsx');
     expect(providers).toContain('export async function loadWalletProviders');
     expect(providers).toContain('hasReturningWagmiSession()');
+    expect(providers.indexOf('ensureWalletConnectors()')).toBeLessThan(providers.indexOf('requestWalletRuntime()'));
     expect(read('src/App.tsx')).toContain('m.loadWalletProviders()');
+  });
+
+  // wagmi + viem themselves left the first-paint path: WagmiProvider is a
+  // lazily mounted sibling (WagmiRuntime) and AuthProvider reads its state
+  // through lib/wallet-runtime. One static import puts ~140 KB back in front
+  // of every visitor.
+  it('nothing on the first-paint path imports wagmi at runtime', () => {
+    const files = [
+      'src/components/app/WalletProviders.tsx',
+      'src/contexts/AuthProvider.tsx',
+      'src/lib/wallet-runtime.ts',
+      'src/lib/wagmi-session.ts',
+    ];
+    for (const f of files) {
+      const src = read(f);
+      expect(src, f).not.toMatch(/^import (?!type )[^;]*from 'wagmi[^']*'/m);
+      expect(src, f).not.toMatch(/^import [^;]*from '@\/lib\/wagmi'/m);
+    }
+    expect(read('src/components/app/WalletProviders.tsx')).toContain("import('@/components/app/WagmiRuntime')");
+  });
+
+  it('the surfaces that call wagmi hooks provide their own WagmiScope', () => {
+    for (const f of [
+      'src/components/app/login/LoginModalBody.tsx',
+      'src/components/app/wallet-setup/ConnectLinkedWalletBody.tsx',
+      'src/components/app/settings/EnsHandleSettings.tsx',
+    ]) {
+      expect(read(f), f).toContain('<WagmiScope>');
+    }
   });
 });
