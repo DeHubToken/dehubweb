@@ -108,4 +108,28 @@ describe('useDraft — external hand-back', () => {
     h.rerender('dm:0xaaa');
     expect(h.current[0]).toBe('parked for A');
   });
+
+  it('does not overwrite what the user has typed since the send failed', () => {
+    const h = render((k: string) => useDraft(k), 'dm:0xabc');
+
+    // Send clears the box, then the user starts the next message while the
+    // send is still in flight — a DM send waits up to eight seconds for the
+    // socket, so this window is real.
+    act(() => { h.current[1](''); });
+    act(() => { h.current[1]('the next thing I want to say'); });
+
+    // The send fails and hands the original message back.
+    act(() => { writeDraft('dm:0xabc', 'the message that failed'); });
+
+    expect(h.current[0]).toBe('the next thing I want to say');
+  });
+
+  it('still hands the message back when the composer is empty', () => {
+    const h = render((k: string) => useDraft(k), 'dm:0xdef');
+    act(() => { h.current[1](''); });
+
+    act(() => { writeDraft('dm:0xdef', 'the message that failed'); });
+
+    expect(h.current[0]).toBe('the message that failed');
+  });
 });
