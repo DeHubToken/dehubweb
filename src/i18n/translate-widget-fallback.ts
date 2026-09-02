@@ -31,13 +31,13 @@ const SCRIPT_ID = 'google-translate-script';
 const HOST_ID = 'google_translate_element';
 
 /**
- * Our locale code → Google's, which is not ISO in several places (`zh-CN`,
- * `iw` for Hebrew, `jw` for Javanese, `fil` for Filipino). A locale absent
- * from this map has no Google support and keeps the English fallback.
+ * Our locale code → Google's, which is not ISO in several places (`iw` for
+ * Hebrew, `jw` for Javanese, `fil` for Filipino, `zh-CN`).
  *
- * Dialects map to their parent: Google has one Arabic, not seven, and one
- * Simplified Chinese rather than Jinyu and Min Bei. A Sa'idi speaker reading
- * Modern Standard Arabic is better served than one reading English.
+ * Every locale in the fallback list has an entry. Where Google has no code for
+ * a language, it maps to the nearest one Google does have rather than to
+ * English: a Sa'idi speaker reading Modern Standard Arabic, or a Chittagonian
+ * speaker reading Bengali, is far better served than either reading English.
  */
 const GOOGLE_CODE: Record<string, string> = {
   am: 'am', ay: 'ay', bho: 'bho', ceb: 'ceb', gu: 'gu', ha: 'ha', ht: 'ht',
@@ -48,12 +48,33 @@ const GOOGLE_CODE: Record<string, string> = {
   sk: 'sk', so: 'so', sq: 'sq', sr: 'sr', tg: 'tg', ti: 'ti', tk: 'tk',
   ug: 'ug', uz: 'uz', yo: 'yo', zu: 'zu', af: 'af', az: 'az', be: 'be',
   bg: 'bg', ca: 'ca', et: 'et', hr: 'hr', hy: 'hy', he: 'iw', tl: 'fil',
+  dyu: 'dyu', yue: 'yue',
 
-  // Dialects, folded onto the parent language Google does support.
+  // Arabic dialects → Modern Standard Arabic. Google has one Arabic, not seven.
   acm: 'ar', acw: 'ar', aec: 'ar', ajp: 'ar', ayn: 'ar', apd: 'ar',
-  arz: 'ar', ary: 'ar', skr: 'ur', pbt: 'ps', dcc: 'ur', hne: 'hi',
-  mag: 'hi', rkt: 'bn', syl: 'bn', ctg: 'bn', cjy: 'zh-CN', mnp: 'zh-CN',
-  wuu: 'zh-CN', yue: 'zh-TW', zh_tw: 'zh-TW', gsw: 'de', pcm: 'en',
+  arz: 'ar', ary: 'ar',
+
+  // Chinese varieties → Mandarin, in the script each is written with.
+  cjy: 'zh-CN', mnp: 'zh-CN', wuu: 'zh-CN', zh_tw: 'zh-TW',
+
+  // Indo-Aryan lects → their nearest literary language. Script decides where
+  // linguistic distance is close either way: Saraiki and Deccani are written in
+  // the Arabic script, so Urdu suits them better than Devanagari Hindi does.
+  hne: 'hi', mag: 'mai', rkt: 'bn', syl: 'bn', ctg: 'bn',
+  skr: 'ur', dcc: 'ur', pbt: 'ps',
+
+  // Sadri is Indo-Aryan, but this app lists it in Arabic script and lays it out
+  // RTL, so Urdu keeps script and direction consistent with the shell around it.
+  sdr: 'ur',
+
+  // West African English-lexified creoles → Krio, their closest relative with
+  // Google support. English is the lexifier but reads as no translation at all.
+  pcm: 'kri', wes: 'kri',
+
+  // Isan is a Lao variety written in Thai script; Thai matches what renders.
+  tts: 'th',
+
+  gsw: 'de',
 };
 
 function readCookieTarget(): string | null {
