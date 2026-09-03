@@ -2,8 +2,6 @@ import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { EmailAPIError, sendLovableEmail } from 'npm:@lovable.dev/email-js@0.1.0'
 import { TEMPLATES } from './registry.ts'
-import { getOrCreateUnsubscribeToken } from '../unsubscribe-token.ts'
-import { serviceClient } from '../auth.ts'
 
 // Server-only: reads LOVABLE_API_KEY. Import from edge functions only — never
 // expose sending to the browser.
@@ -68,17 +66,20 @@ export async function sendTemplateEmail(
       ? template.subject(templateData)
       : template.subject
 
-  // Every send from here is transactional, which is exactly the category the
-  // send API refuses without an unsubscribe token — 400 missing_unsubscribe.
-  // Auth-hook sends are the exemption and they do not come through this
-  // function; they carry a run_id instead. So all three templates registered
-  // here need one: the email sign-in code, the admin invite and the support
-  // ticket, which are the same three that were failing before #612 added this
-  // and started failing again when the 2026-09-01 rewrite removed it.
+  // No unsubscribe_token here, deliberately.
   //
-  // A null token is not fatal here. Passing undefined lets the API answer, and
-  // its 400 is a clearer signal than a failure this function invented.
-  const unsubscribeToken = await getOrCreateUnsubscribeToken(serviceClient(), recipient)
+  // The send API used to refuse a transactional send that carried no token
+  // (400 missing_unsubscribe), which is why #612 added one and the
+  // 2026-09-01 rewrite had to put it back. On 2026-09-03 the rule reversed:
+  // unsubscribe handling is now managed for the project, and a manually
+  // supplied token is refused with the SAME `missing_unsubscribe` type —
+  // "do not set unsubscribe_token manually". Every email sign-in code, admin
+  // invite and support ticket failed for a day behind that one 400.
+  //
+  // The error type is therefore useless on its own; only the message says
+  // which side of the rule you are on. If these sends start failing with
+  // missing_unsubscribe again, read `error_message` in `email_send_log`
+  // before changing this — it names the direction.
 
   try {
     await sendLovableEmail(
@@ -93,7 +94,6 @@ export async function sendTemplateEmail(
         label: templateName,
         idempotency_key: options.idempotencyKey || crypto.randomUUID(),
         reply_to: options.replyTo,
-        unsubscribe_token: unsubscribeToken ?? undefined,
       },
       { apiKey, sendUrl: Deno.env.get('LOVABLE_SEND_URL') }
     )
