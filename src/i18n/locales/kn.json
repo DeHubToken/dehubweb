@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "ನಿಮ್ಮ ಬಳಿ ಕೇವಲ {{amount}} ಠೇವಣಿ ಇಡಲಾಗಿದೆ.",
     "unstake_request_submitted": "ಹಿಂಪಡೆಯುವಿಕೆ ವಿನಂತಿ ಸಲ್ಲಿಸಲಾಗಿದೆ! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ಹಿಂಪಡೆಯುವಿಕೆ ಕ್ಯೂಗೆ ಸೇರಿಸಲಾಗಿದೆ.",
+    "only_have_dhb_withdrawable": "ಸದ್ಯಕ್ಕೆ {{amount}} DHB ಮಾತ್ರ ಹಿಂಪಡೆಯಬಹುದು.",
+    "early_withdrawal_fee": "ಮುಂಚಿತವಾಗಿ ಹಿಂಪಡೆಯುವ ಶುಲ್ಕ",
+    "early_withdrawal_fee_detail": "{{date}} ವರೆಗೆ ಲಾಕ್ ಆಗಿದೆ. ಈಗ ಹಿಂಪಡೆದರೆ {{percent}}% — ಸುಮಾರು {{amount}} DHB ಶುಲ್ಕ ಬೀಳುತ್ತದೆ. ದೃಢೀಕರಿಸಲು ಮತ್ತೆ ಹಿಂಪಡೆ ಒತ್ತಿರಿ.",
+    "unstaked_successfully": "ಯಶಸ್ವಿಯಾಗಿ ಹಿಂಪಡೆಯಲಾಗಿದೆ! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} ನಲ್ಲಿ {{amount}} DHB ಹಿಂಪಡೆಯಲಾಗಿದೆ.",
+    "not_enough_gas_token": "ನೆಟ್‌ವರ್ಕ್ ಶುಲ್ಕ ಪಾವತಿಸಲು ಈ ವಾಲೆಟ್‌ನಲ್ಲಿ {{token}} ಬೇಕು.",
     "unstake_failed": "ಹಿಂಪಡೆಯುವಿಕೆ ವಿಫಲವಾಗಿದೆ",
     "unstake_cancelled": "ಹಿಂಪಡೆಯುವಿಕೆ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ",
     "unstake_request_removed": "ನಿಮ್ಮ ಹಿಂಪಡೆಯುವಿಕೆ ವಿನಂತಿಯನ್ನು ತೆಗೆದುಹಾಕಲಾಗಿದೆ.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} ನಿಮಿಷಗಳ ಹಿಂದೆ",
     "hoursAgo": "{{count}} ಗಂಟೆಗಳ ಹಿಂದೆ",
     "daysAgo": "{{count}} ದಿನಗಳ ಹಿಂದೆ",
+    "withdrawableNow": "ಈಗ ಹಿಂಪಡೆಯಬಹುದು",
+    "poolNotWithdrawable": "{{amount}} DHB ಠೇವಣಿ ಪೂಲ್ ವಾಲೆಟ್‌ನಲ್ಲಿದೆ, ಅದಕ್ಕೆ ಇನ್ನೂ ಹಿಂಪಡೆಯುವ ಒಪ್ಪಂದವಿಲ್ಲ — ಸ್ಥಳಾಂತರಿಸಲು ಬೆಂಬಲವನ್ನು ಸಂಪರ್ಕಿಸಿ.",
     "cancelUnstake": "ಹಿಂಪಡೆಯುವಿಕೆ ರದ್ದುಗೊಳಿಸಿ"
   },
   "communities": {

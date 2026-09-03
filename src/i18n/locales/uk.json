@@ -1325,6 +1325,12 @@
     "only_have_dhb_staked": "У вас внесено лише {{amount}}.",
     "unstake_request_submitted": "Запит на виведення надіслано! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} додано до черги виведення.",
+    "only_have_dhb_withdrawable": "Зараз можна вивести лише {{amount}} DHB.",
+    "early_withdrawal_fee": "Комісія за дострокове виведення",
+    "early_withdrawal_fee_detail": "Заблоковано до {{date}}. Виведення зараз коштує {{percent}}% — близько {{amount}} DHB. Натисніть «Вивести» ще раз для підтвердження.",
+    "unstaked_successfully": "Успішно виведено! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB виведено в мережі {{chain}}.",
+    "not_enough_gas_token": "Для оплати мережевої комісії в цьому гаманці потрібен {{token}}.",
     "unstake_failed": "Помилка виведення",
     "unstake_cancelled": "Виведення скасовано",
     "unstake_request_removed": "Ваш запит на виведення видалено.",
@@ -1401,6 +1407,8 @@
     "minutesAgo": "{{count}} хв. тому",
     "hoursAgo": "{{count}} год. тому",
     "daysAgo": "{{count}} дн. тому",
+    "withdrawableNow": "Доступно до виведення",
+    "poolNotWithdrawable": "{{amount}} DHB перебувають у гаманці депозитного пулу, який поки не має контракту виведення — зверніться до підтримки, щоб їх перемістити.",
     "cancelUnstake": "Скасувати виведення"
   },
   "communities": {

@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "भवतः केवलं {{amount}} निक्षिप्तम् अस्ति।",
     "unstake_request_submitted": "निष्कासनप्रार्थना प्रेषिता! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} निष्कासनपङ्क्त्यां योजितम्।",
+    "only_have_dhb_withdrawable": "सम्प्रति केवलं {{amount}} DHB एव निष्कासयितुं शक्यते।",
+    "early_withdrawal_fee": "शीघ्रनिष्कासनशुल्कम्",
+    "early_withdrawal_fee_detail": "{{date}} पर्यन्तं अवरुद्धम्। अधुना निष्कासने {{percent}}% — प्रायः {{amount}} DHB शुल्कं भवति। संपुष्ट्यर्थं पुनः निष्कासयतु इति नुदतु।",
+    "unstaked_successfully": "सफलतया निष्कासितम्! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} इत्यत्र {{amount}} DHB निष्कासितम्।",
+    "not_enough_gas_token": "जालशुल्कं दातुं अस्मिन् कोशे {{token}} आवश्यकम्।",
     "unstake_failed": "निष्कासनं विफलम्",
     "unstake_cancelled": "निष्कासनं रद्दम्",
     "unstake_request_removed": "भवतः निष्कासनप्रार्थना निष्कासिता।",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} निमेषेभ्यः पूर्वम्",
     "hoursAgo": "{{count}} होराभ्यः पूर्वम्",
     "daysAgo": "{{count}} दिनेभ्यः पूर्वम्",
+    "withdrawableNow": "अधुना निष्कासनयोग्यम्",
+    "poolNotWithdrawable": "{{amount}} DHB निक्षेपकोषस्य कोशे सन्ति, यस्मिन् अद्यापि निष्कासनसंविदा नास्ति — स्थानान्तरणार्थं सहाय्यं सम्पर्कयतु।",
     "cancelUnstake": "निष्कासनं रद्दं करोतु"
   },
   "communities": {

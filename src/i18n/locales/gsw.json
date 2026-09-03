@@ -1496,6 +1496,12 @@
     "only_have_dhb_staked": "Du hesch nume {{amount}} yglait.",
     "unstake_request_submitted": "Uszahligs-Aafrog yygreicht! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} zur Uszahligs-Warteschlange dezuegfüegt.",
+    "only_have_dhb_withdrawable": "Im Momänt chöi nume {{amount}} DHB abzoge werde.",
+    "early_withdrawal_fee": "Gebühr für früezitigi Uszahlig",
+    "early_withdrawal_fee_detail": "Gsperrt bis {{date}}. Jetz uszahle choscht {{percent}}% — öppe {{amount}} DHB. Zum Bestätige nomol uf Abhebe drücke.",
+    "unstaked_successfully": "Erfolgrich abghobe! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB uf {{chain}} abghobe.",
+    "not_enough_gas_token": "Du bruchsch {{token}} i dere Wallet zum d Netzwärchgebühr zahle.",
     "unstake_failed": "Uszahlig fehlgschlage",
     "unstake_cancelled": "Uszahlig abbroche",
     "unstake_request_removed": "Dini Uszahligs-Aafrog isch entfernt worde.",
@@ -1594,6 +1600,8 @@
     "minutesAgo": "vor {{count}}Min",
     "hoursAgo": "vor {{count}}Std",
     "daysAgo": "vor {{count}}T",
+    "withdrawableNow": "Jetz abhebbar",
+    "poolNotWithdrawable": "{{amount}} DHB liget im Wallet vom Ilag-Pool, wo no kei Uszahligs-Vertrag het — mäld di bim Support zum si verschiebe.",
     "cancelUnstake": "Uszahlig abbräche"
   },
   "communities": {

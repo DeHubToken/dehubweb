@@ -1482,6 +1482,12 @@
     "only_have_dhb_staked": "თქვენ მხოლოდ {{amount}} გაქვთ შეტანილი.",
     "unstake_request_submitted": "გატანის მოთხოვნა გაიგზავნა! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} დაემატა გატანის რიგს.",
+    "only_have_dhb_withdrawable": "ამჟამად შესაძლებელია მხოლოდ {{amount}} DHB-ის გატანა.",
+    "early_withdrawal_fee": "ვადამდელი გატანის საკომისიო",
+    "early_withdrawal_fee_detail": "დაბლოკილია {{date}}-მდე. ახლა გატანა ღირს {{percent}}% — დაახლოებით {{amount}} DHB. დასადასტურებლად კიდევ ერთხელ დააჭირეთ „გატანას“.",
+    "unstaked_successfully": "წარმატებით გატანილია! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB გატანილია {{chain}}-ზე.",
+    "not_enough_gas_token": "ქსელის საკომისიოს გადასახდელად ამ საფულეში საჭიროა {{token}}.",
     "unstake_failed": "გატანა ვერ მოხერხდა",
     "unstake_cancelled": "გატანა გაუქმდა",
     "unstake_request_removed": "თქვენი გატანის მოთხოვნა წაიშალა.",
@@ -1619,6 +1625,8 @@
     "minutesAgo": "{{count}} წუთის წინ",
     "hoursAgo": "{{count}} საათის წინ",
     "daysAgo": "{{count}} დღის წინ",
+    "withdrawableNow": "ახლა გასატანი",
+    "poolNotWithdrawable": "{{amount}} DHB დეპოზიტების პულის საფულეშია, რომელსაც ჯერ არ აქვს გატანის კონტრაქტი — გადასატანად დაუკავშირდით მხარდაჭერას.",
     "cancelUnstake": "გატანის გაუქმება"
   },
   "communities": {

@@ -1454,6 +1454,12 @@
     "only_have_dhb_staked": "Diňe {{amount}} goýuldy.",
     "unstake_request_submitted": "Yzyna alma haýyşy iberildi! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} yzyna alma nobatyna goşuldy.",
+    "only_have_dhb_withdrawable": "Häzirlikçe diňe {{amount}} DHB yzyna alyp bolýar.",
+    "early_withdrawal_fee": "Möhletinden öň yzyna almak tölegi",
+    "early_withdrawal_fee_detail": "{{date}} çenli gulplanan. Häzir yzyna almak {{percent}}% — takmynan {{amount}} DHB durýar. Tassyklamak üçin Yzyna al düwmesine ýene bir gezek basyň.",
+    "unstaked_successfully": "Üstünlikli yzyna alyndy! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} torunda {{amount}} DHB yzyna alyndy.",
+    "not_enough_gas_token": "Tor tölegini tölemek üçin bu gapjykda {{token}} gerek.",
     "unstake_failed": "Yzyna alma şowsuz boldy",
     "unstake_cancelled": "Yzyna alma ýatyryldy",
     "unstake_request_removed": "Yzyna alma haýyşyňyz aýryldy.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}}min öň",
     "hoursAgo": "{{count}}sag öň",
     "daysAgo": "{{count}}g öň",
+    "withdrawableNow": "Häzir yzyna alyp bolýar",
+    "poolNotWithdrawable": "{{amount}} DHB goýum howzunyň gapjygynda, onuň entek yzyna almak şertnamasy ýok — geçirmek üçin goldaw gullugyna ýüz tutuň.",
     "cancelUnstake": "Yzyna almagy ýatyr"
   },
   "communities": {

@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "ଆପଣଙ୍କର କେବଳ {{amount}} ଜମା ଅଛି।",
     "unstake_request_submitted": "ଉଠାଣ ଅନୁରୋଧ ଦାଖଲ ହେଲା! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ଉଠାଣ ଧାଡ଼ିରେ ଯୋଡ଼ାଗଲା।",
+    "only_have_dhb_withdrawable": "ବର୍ତ୍ତମାନ କେବଳ {{amount}} DHB ଉଠାଯାଇପାରିବ।",
+    "early_withdrawal_fee": "ଶୀଘ୍ର ଉଠାଣ ଶୁଳ୍କ",
+    "early_withdrawal_fee_detail": "{{date}} ପର୍ଯ୍ୟନ୍ତ ଲକ୍ ଅଛି। ବର୍ତ୍ତମାନ ଉଠାଇଲେ {{percent}}% — ପ୍ରାୟ {{amount}} DHB ଶୁଳ୍କ ଲାଗିବ। ନିଶ୍ଚିତ କରିବାକୁ ପୁଣି ଉଠାନ୍ତୁ ଦବାନ୍ତୁ।",
+    "unstaked_successfully": "ସଫଳତାର ସହ ଉଠାଗଲା! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} ରେ {{amount}} DHB ଉଠାଗଲା।",
+    "not_enough_gas_token": "ନେଟୱାର୍କ ଶୁଳ୍କ ଦେବାକୁ ଏହି ୱାଲେଟରେ {{token}} ଆବଶ୍ୟକ।",
     "unstake_failed": "ଉଠାଣ ବିଫଳ ହେଲା",
     "unstake_cancelled": "ଉଠାଣ ବାତିଲ ହେଲା",
     "unstake_request_removed": "ଆପଣଙ୍କ ଉଠାଣ ଅନୁରୋଧ ହଟାଗଲା।",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}}ମିନିଟ ପୂର୍ବେ",
     "hoursAgo": "{{count}}ଘଣ୍ଟା ପୂର୍ବେ",
     "daysAgo": "{{count}}ଦିନ ପୂର୍ବେ",
+    "withdrawableNow": "ବର୍ତ୍ତମାନ ଉଠାଯୋଗ୍ୟ",
+    "poolNotWithdrawable": "{{amount}} DHB ଜମା ପୁଲ୍ ୱାଲେଟରେ ଅଛି, ଯାହାର ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଉଠାଣ କଣ୍ଟ୍ରାକ୍ଟ ନାହିଁ — ସ୍ଥାନାନ୍ତର ପାଇଁ ସହାୟତାକୁ ଯୋଗାଯୋଗ କରନ୍ତୁ।",
     "cancelUnstake": "ଉଠାଣ ବାତିଲ କରନ୍ତୁ"
   },
   "communities": {

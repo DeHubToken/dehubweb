@@ -1465,6 +1465,12 @@
     "only_have_dhb_staked": "تاسو یوازې {{amount}} زیرمه شوی لرئ.",
     "unstake_request_submitted": "د ایستلو غوښتنه وسپارل شوه! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} د ایستلو لړۍ ته ورزیات شول.",
+    "only_have_dhb_withdrawable": "اوس مهال يوازې {{amount}} DHB ایستل کېدی شي.",
+    "early_withdrawal_fee": "د وخت نه مخکې ایستلو فیس",
+    "early_withdrawal_fee_detail": "تر {{date}} پورې بند دی. اوس ایستل {{percent}}% — نږدې {{amount}} DHB لګښت لري. د تایید لپاره بیا ایستل کېکاږئ.",
+    "unstaked_successfully": "په بریالیتوب سره وویستل شو! ✅",
+    "dhb_unstaked_on_chain": "په {{chain}} کې {{amount}} DHB وویستل شول.",
+    "not_enough_gas_token": "د شبکې فیس ورکولو لپاره پدې والټ کې {{token}} ته اړتیا لرئ.",
     "unstake_failed": "ایستل ناکام شول",
     "unstake_cancelled": "ایستل لغوه شول",
     "unstake_request_removed": "ستاسو د ایستلو غوښتنه لرې شوه.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} دقیقې مخکې",
     "hoursAgo": "{{count}} ساعته مخکې",
     "daysAgo": "{{count}} ورځې مخکې",
+    "withdrawableNow": "اوس د ایستلو وړ",
+    "poolNotWithdrawable": "{{amount}} DHB د زیرمې د حوض په والټ کې دي، چې لا تر اوسه د ایستلو تړون نه لري — د لېږدولو لپاره له ملاتړ سره اړیکه ونیسئ.",
     "cancelUnstake": "ایستل لغوه کړئ"
   },
   "communities": {

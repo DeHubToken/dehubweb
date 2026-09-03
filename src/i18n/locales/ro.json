@@ -1309,6 +1309,12 @@
     "only_have_dhb_staked": "Ai depus doar {{amount}}.",
     "unstake_request_submitted": "Cerere de retragere trimisă! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} adăugat în coada de retrageri.",
+    "only_have_dhb_withdrawable": "În acest moment se pot retrage doar {{amount}} DHB.",
+    "early_withdrawal_fee": "Comision de retragere anticipată",
+    "early_withdrawal_fee_detail": "Blocat până la {{date}}. Retragerea acum costă {{percent}}% — aproximativ {{amount}} DHB. Apasă din nou Retrage pentru a confirma.",
+    "unstaked_successfully": "Retragere reușită! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB retrași pe {{chain}}.",
+    "not_enough_gas_token": "Ai nevoie de {{token}} în acest portofel pentru a plăti comisionul de rețea.",
     "unstake_failed": "Retragerea a eșuat",
     "unstake_cancelled": "Retragere anulată",
     "unstake_request_removed": "Cererea ta de retragere a fost eliminată.",
@@ -1385,6 +1391,8 @@
     "minutesAgo": "acum {{count}} min",
     "hoursAgo": "acum {{count}} h",
     "daysAgo": "acum {{count}} zile",
+    "withdrawableNow": "Disponibil pentru retragere",
+    "poolNotWithdrawable": "{{amount}} DHB se află în portofelul fondului de depozite, care nu are încă un contract de retragere — contactează asistența pentru a-i muta.",
     "cancelUnstake": "Anulează retragerea"
   },
   "communities": {

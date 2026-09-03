@@ -1490,6 +1490,12 @@
     "only_have_dhb_staked": "तपाईंले {{amount}} मात्र जम्मा गर्नुभएको छ।",
     "unstake_request_submitted": "झिकाइ अनुरोध पेस भयो! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} झिकाइ लाइनमा थपियो।",
+    "only_have_dhb_withdrawable": "अहिले केवल {{amount}} DHB मात्र निकाल्न सकिन्छ।",
+    "early_withdrawal_fee": "समयअघि निकाल्ने शुल्क",
+    "early_withdrawal_fee_detail": "{{date}} सम्म लक गरिएको छ। अहिले निकाल्दा {{percent}}% — करिब {{amount}} DHB शुल्क लाग्छ। पुष्टि गर्न फेरि निकाल्नुहोस् थिच्नुहोस्।",
+    "unstaked_successfully": "सफलतापूर्वक निकालियो! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} मा {{amount}} DHB निकालियो।",
+    "not_enough_gas_token": "नेटवर्क शुल्क तिर्न यो वालेटमा {{token}} चाहिन्छ।",
     "unstake_failed": "अनस्टेक असफल",
     "unstake_cancelled": "अनस्टेक रद्द भयो",
     "unstake_request_removed": "तपाईंको अनस्टेक अनुरोध हटाइएको छ।",
@@ -1566,6 +1572,8 @@
     "minutesAgo": "{{count}} मिनेट अघि",
     "hoursAgo": "{{count}} घण्टा अघि",
     "daysAgo": "{{count}} दिन अघि",
+    "withdrawableNow": "अहिले निकाल्न मिल्ने",
+    "poolNotWithdrawable": "{{amount}} DHB निक्षेप पूल वालेटमा छन्, जसमा अझै निकासी कन्ट्र्याक्ट छैन — सार्न सहायतासँग सम्पर्क गर्नुहोस्।",
     "cancelUnstake": "झिकाइ रद्द गर्नुहोस्"
   },
   "communities": {

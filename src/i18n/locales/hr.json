@@ -1419,6 +1419,12 @@
     "only_have_dhb_staked": "Imate samo {{amount}} uloženo.",
     "unstake_request_submitted": "Zahtjev za povlačenje poslan! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} dodano u red za povlačenje.",
+    "only_have_dhb_withdrawable": "Trenutačno se može podići samo {{amount}} DHB.",
+    "early_withdrawal_fee": "Naknada za prijevremeno podizanje",
+    "early_withdrawal_fee_detail": "Zaključano do {{date}}. Podizanje sada stoji {{percent}} % — otprilike {{amount}} DHB. Pritisnite Podigni ponovno za potvrdu.",
+    "unstaked_successfully": "Uspješno podignuto! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB podignuto na mreži {{chain}}.",
+    "not_enough_gas_token": "Za plaćanje mrežne naknade trebate {{token}} u ovom novčaniku.",
     "unstake_failed": "Povlačenje nije uspjelo",
     "unstake_cancelled": "Povlačenje otkazano",
     "unstake_request_removed": "Vaš zahtjev za povlačenje je uklonjen.",
@@ -1495,6 +1501,8 @@
     "minutesAgo": "prije {{count}} min",
     "hoursAgo": "prije {{count}} h",
     "daysAgo": "prije {{count}} d",
+    "withdrawableNow": "Dostupno za podizanje",
+    "poolNotWithdrawable": "{{amount}} DHB nalazi se u novčaniku depozitnog fonda koji još nema ugovor za podizanje — obratite se podršci za premještanje.",
     "cancelUnstake": "Otkaži povlačenje"
   },
   "communities": {
