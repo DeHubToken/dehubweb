@@ -1424,6 +1424,12 @@
     "only_have_dhb_staked": "Դուք ունեք միայն {{amount}} ավանդադրված։",
     "unstake_request_submitted": "Դուրսբերման հայտն ուղարկված է! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ավելացվեց դուրսբերման հերթին։",
+    "only_have_dhb_withdrawable": "Այս պահին կարելի է հանել միայն {{amount}} DHB։",
+    "early_withdrawal_fee": "Վաղաժամ հանման վճար",
+    "early_withdrawal_fee_detail": "Կողպված է մինչև {{date}}։ Հիմա հանելը արժե {{percent}}% — մոտ {{amount}} DHB։ Հաստատելու համար կրկին սեղմեք «Հանել»։",
+    "unstaked_successfully": "Հաջողությամբ հանվեց! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB հանվել է {{chain}}-ում։",
+    "not_enough_gas_token": "Ցանցի վճարը վճարելու համար այս դրամապանակում անհրաժեշտ է {{token}}։",
     "unstake_failed": "Դուրսբերումը ձախողվեց",
     "unstake_cancelled": "Դուրսբերումը չեղարկվեց",
     "unstake_request_removed": "Ձեր դուրսբերման հայտը հեռացվել է։",
@@ -1500,6 +1506,8 @@
     "minutesAgo": "{{count}} ր առաջ",
     "hoursAgo": "{{count}} ժ առաջ",
     "daysAgo": "{{count}} օր առաջ",
+    "withdrawableNow": "Հիմա հանելի",
+    "poolNotWithdrawable": "{{amount}} DHB գտնվում է ավանդային պուլի դրամապանակում, որը դեռ չունի հանման պայմանագիր — տեղափոխելու համար կապվեք աջակցության հետ։",
     "cancelUnstake": "Չեղարկել դուրսբերումը"
   },
   "communities": {

@@ -1424,6 +1424,12 @@
     "only_have_dhb_staked": "Csak {{amount}} befizetésed van.",
     "unstake_request_submitted": "Kivonási kérelem elküldve! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} hozzáadva a kivonási sorhoz.",
+    "only_have_dhb_withdrawable": "Jelenleg csak {{amount}} DHB vehető ki.",
+    "early_withdrawal_fee": "Korai kivétel díja",
+    "early_withdrawal_fee_detail": "Zárolva {{date}}-ig. A mostani kivétel {{percent}}%-ba kerül — körülbelül {{amount}} DHB. A megerősítéshez nyomd meg újra a Kivétel gombot.",
+    "unstaked_successfully": "Sikeres kivétel! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB kivéve a(z) {{chain}} hálózaton.",
+    "not_enough_gas_token": "A hálózati díj kifizetéséhez {{token}} kell ebbe a tárcába.",
     "unstake_failed": "A kivonás sikertelen",
     "unstake_cancelled": "Kivonás megszakítva",
     "unstake_request_removed": "A kivonási kérelmed eltávolítva.",
@@ -1500,6 +1506,8 @@
     "minutesAgo": "{{count}} perce",
     "hoursAgo": "{{count}} órája",
     "daysAgo": "{{count}} napja",
+    "withdrawableNow": "Most kivehető",
+    "poolNotWithdrawable": "{{amount}} DHB a betéti pool tárcájában van, amelyhez még nincs kivételi szerződés — a mozgatáshoz fordulj az ügyfélszolgálathoz.",
     "cancelUnstake": "Kivonás megszakítása"
   },
   "communities": {

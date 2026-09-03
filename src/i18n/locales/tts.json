@@ -1462,6 +1462,12 @@
     "only_have_dhb_staked": "เจ้าฝากไว้แค่ {{amount}} เท่านั้น.",
     "unstake_request_submitted": "ส่งคำขอถอนแล้ว! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ถืกเพิ่มเข้าคิวการถอนแล้ว.",
+    "only_have_dhb_withdrawable": "ตอนนี้ถอนได้แค่ {{amount}} DHB เท่านั้น",
+    "early_withdrawal_fee": "ค่าธรรมเนียมถอนก่อนกำหนด",
+    "early_withdrawal_fee_detail": "ล็อกไว้เถิง {{date}} ถอนตอนนี้เสีย {{percent}}% — ประมาณ {{amount}} DHB กด ถอน อีกเทื่อเพื่อยืนยัน",
+    "unstaked_successfully": "ถอนสำเร็จแล้ว! ✅",
+    "dhb_unstaked_on_chain": "ถอน {{amount}} DHB อยู่ {{chain}} แล้ว",
+    "not_enough_gas_token": "เจ้าต้องมี {{token}} ในกระเป๋านี้เพื่อจ่ายค่าธรรมเนียมเครือข่าย",
     "unstake_failed": "การถอนบ่สำเร็จ",
     "unstake_cancelled": "ยกเลิกการถอนแล้ว",
     "unstake_request_removed": "คำขอถอนของเจ้าถืกเอาออกแล้ว.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} นาทีก่อน",
     "hoursAgo": "{{count}} ซั่วโมงก่อน",
     "daysAgo": "{{count}} มื้อก่อน",
+    "withdrawableNow": "ถอนได้ตอนนี้",
+    "poolNotWithdrawable": "{{amount}} DHB อยู่ในกระเป๋าพูลเงินฝาก ซึ่งยังบ่มีสัญญาการถอน — ติดต่อฝ่ายสนับสนุนเพื่อโอนออก",
     "cancelUnstake": "ยกเลิกการถอน"
   },
   "communities": {

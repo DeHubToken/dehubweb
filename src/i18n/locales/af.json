@@ -1343,6 +1343,12 @@
     "only_have_dhb_staked": "Jy het slegs {{amount}} gedeponeer.",
     "unstake_request_submitted": "Onttrekkingsversoek ingedien! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} by onttrekkingstou gevoeg.",
+    "only_have_dhb_withdrawable": "Op die oomblik kan slegs {{amount}} DHB onttrek word.",
+    "early_withdrawal_fee": "Vroeë onttrekkingsfooi",
+    "early_withdrawal_fee_detail": "Gesluit tot {{date}}. Om nou te onttrek kos {{percent}}% — ongeveer {{amount}} DHB. Druk weer Onttrek om te bevestig.",
+    "unstaked_successfully": "Suksesvol onttrek! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB onttrek op {{chain}}.",
+    "not_enough_gas_token": "Jy het {{token}} in hierdie beursie nodig om die netwerkfooi te betaal.",
     "unstake_failed": "Onttrekking misluk",
     "unstake_cancelled": "Onttrekking gekanselleer",
     "unstake_request_removed": "Jou onttrekkingsversoek is verwyder.",
@@ -1419,6 +1425,8 @@
     "minutesAgo": "{{count}}m gelede",
     "hoursAgo": "{{count}}u gelede",
     "daysAgo": "{{count}}d gelede",
+    "withdrawableNow": "Nou onttrekbaar",
+    "poolNotWithdrawable": "{{amount}} DHB is in die depositopoel-beursie, wat nog nie 'n onttrekkingskontrak het nie — kontak ondersteuning om dit te skuif.",
     "cancelUnstake": "Kanselleer onttrekking"
   },
   "communities": {

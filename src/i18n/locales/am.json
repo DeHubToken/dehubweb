@@ -1496,6 +1496,12 @@
     "only_have_dhb_staked": "{{amount}} ብቻ ተቀማጭ አድርገዋል።",
     "unstake_request_submitted": "የማውጣት ጥያቄ ቀርቧል! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ወደ ማውጫ ወረፋ ታክሏል።",
+    "only_have_dhb_withdrawable": "አሁን ማውጣት የሚቻለው {{amount}} DHB ብቻ ነው።",
+    "early_withdrawal_fee": "ቀድሞ የማውጣት ክፍያ",
+    "early_withdrawal_fee_detail": "እስከ {{date}} ድረስ ተቆልፏል። አሁን ማውጣት {{percent}}% — በግምት {{amount}} DHB ያስከፍላል። ለማረጋገጥ እንደገና አውጣ ይጫኑ።",
+    "unstaked_successfully": "በተሳካ ሁኔታ ወጥቷል! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB በ{{chain}} ላይ ወጥቷል።",
+    "not_enough_gas_token": "የኔትወርክ ክፍያ ለመክፈል በዚህ ቦርሳ ውስጥ {{token}} ያስፈልጋል።",
     "unstake_failed": "ማውጣት አልተሳካም",
     "unstake_cancelled": "ማውጣት ተሰርዟል",
     "unstake_request_removed": "የማውጣት ጥያቄዎ ተወግዷል።",
@@ -1594,6 +1600,8 @@
     "minutesAgo": "{{count}} ደቂቃዎች በፊት",
     "hoursAgo": "{{count}} ሰዓታት በፊት",
     "daysAgo": "{{count}} ቀናት በፊት",
+    "withdrawableNow": "አሁን ማውጣት ይቻላል",
+    "poolNotWithdrawable": "{{amount}} DHB በተቀማጭ ገንዳ ቦርሳ ውስጥ ነው፣ እሱም እስካሁን የማውጣት ውል የለውም — ለማዘዋወር ድጋፍን ያግኙ።",
     "cancelUnstake": "ማውጣት ሰርዝ"
   },
   "communities": {

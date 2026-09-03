@@ -1462,6 +1462,12 @@
     "only_have_dhb_staked": "I bilala {{amount}} dɔrɔn.",
     "unstake_request_submitted": "Bɔli ɲinini cira! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} farala bɔli makɔnɔnicogo la.",
+    "only_have_dhb_withdrawable": "Sisan, {{amount}} DHB dɔrɔn de bɛ se ka bɔ.",
+    "early_withdrawal_fee": "Joona bɔli sara",
+    "early_withdrawal_fee_detail": "A datugulen don fo {{date}}. Ni i y'a bɔ sisan, a bɛ {{percent}}% ta — {{amount}} DHB ɲɔgɔn. I ka Bɔli digi tugun walisa ka a sɛmɛntiya.",
+    "unstaked_successfully": "A bɔra ka ɲɛ! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB bɔra {{chain}} kan.",
+    "not_enough_gas_token": "I mako bɛ {{token}} la nin wari foroko kɔnɔ walisa ka rezo sara sara.",
     "unstake_failed": "Bɔli ma se",
     "unstake_cancelled": "Bɔli bɔsira",
     "unstake_request_removed": "I ka bɔli ɲinini bɔra.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "a bɛ miniti {{count}} bɔ",
     "hoursAgo": "a bɛ lɛrɛ {{count}} bɔ",
     "daysAgo": "a bɛ tile {{count}} bɔ",
+    "withdrawableNow": "A bɛ se ka bɔ sisan",
+    "poolNotWithdrawable": "{{amount}} DHB bɛ marali dalen wari foroko kɔnɔ, bɔli bɛnkan tɛ min na fɔlɔ — aw ka dɛmɛbagaw wele walisa u k'a yɛlɛma.",
     "cancelUnstake": "Bɔli bali"
   },
   "communities": {

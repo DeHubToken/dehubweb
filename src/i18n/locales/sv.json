@@ -1416,6 +1416,12 @@
     "only_have_dhb_staked": "Du har bara {{amount}} insatt.",
     "unstake_request_submitted": "Uttagsbegäran skickad! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} tillagt i uttagskön.",
+    "only_have_dhb_withdrawable": "Just nu går det bara att ta ut {{amount}} DHB.",
+    "early_withdrawal_fee": "Avgift för tidigt uttag",
+    "early_withdrawal_fee_detail": "Låst till {{date}}. Att ta ut nu kostar {{percent}} % — cirka {{amount}} DHB. Tryck på Ta ut igen för att bekräfta.",
+    "unstaked_successfully": "Uttaget lyckades! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB uttaget på {{chain}}.",
+    "not_enough_gas_token": "Du behöver {{token}} i den här plånboken för att betala nätverksavgiften.",
     "unstake_failed": "Uttaget misslyckades",
     "unstake_cancelled": "Uttaget avbrutet",
     "unstake_request_removed": "Din uttagsbegäran har tagits bort.",
@@ -1492,6 +1498,8 @@
     "minutesAgo": "{{count}}m sedan",
     "hoursAgo": "{{count}}h sedan",
     "daysAgo": "{{count}}d sedan",
+    "withdrawableNow": "Kan tas ut nu",
+    "poolNotWithdrawable": "{{amount}} DHB ligger i insättningspoolens plånbok, som ännu inte har något uttagskontrakt — kontakta supporten för att flytta dem.",
     "cancelUnstake": "Avbryt uttag"
   },
   "communities": {

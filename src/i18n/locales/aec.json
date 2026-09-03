@@ -1510,6 +1510,12 @@
     "only_have_dhb_staked": "بس عندك {{amount}} متحطة.",
     "unstake_request_submitted": "طلب السحب اتبعت! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} اتضافت لطابور السحب.",
+    "only_have_dhb_withdrawable": "دلوقتي تقدر تسحب {{amount}} DHB بس.",
+    "early_withdrawal_fee": "رسوم السحب المبكر",
+    "early_withdrawal_fee_detail": "مقفول لغاية {{date}}. السحب دلوقتي بيكلف {{percent}}% — حوالي {{amount}} DHB. اضغط سحب تاني عشان تأكد.",
+    "unstaked_successfully": "تم السحب بنجاح! ✅",
+    "dhb_unstaked_on_chain": "اتسحب {{amount}} DHB على {{chain}}.",
+    "not_enough_gas_token": "محتاج {{token}} في المحفظة دي عشان تدفع رسوم الشبكة.",
     "unstake_failed": "السحب فشل",
     "unstake_cancelled": "السحب اتلغى",
     "unstake_request_removed": "طلب السحب بتاعك اتشال.",
@@ -1608,6 +1614,8 @@
     "minutesAgo": "من {{count}} دقيقة",
     "hoursAgo": "من {{count}} ساعة",
     "daysAgo": "من {{count}} يوم",
+    "withdrawableNow": "ينفع تسحبه دلوقتي",
+    "poolNotWithdrawable": "{{amount}} DHB في محفظة مجمع الإيداع، ولسه ما لهاش عقد سحب — كلم الدعم عشان تنقلها.",
     "cancelUnstake": "إلغاء السحب"
   },
   "communities": {

@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "તમારી પાસે ફક્ત {{amount}} ડિપોઝિટ છે.",
     "unstake_request_submitted": "ઉપાડ વિનંતી સબમિટ થઈ! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ઉપાડ કતારમાં ઉમેરાયા.",
+    "only_have_dhb_withdrawable": "અત્યારે માત્ર {{amount}} DHB જ ઉપાડી શકાય છે.",
+    "early_withdrawal_fee": "વહેલા ઉપાડની ફી",
+    "early_withdrawal_fee_detail": "{{date}} સુધી લૉક છે. અત્યારે ઉપાડવા પર {{percent}}% — આશરે {{amount}} DHB ફી લાગશે. પુષ્ટિ કરવા ફરીથી ઉપાડો દબાવો.",
+    "unstaked_successfully": "સફળતાપૂર્વક ઉપાડ્યું! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} પર {{amount}} DHB ઉપાડ્યા.",
+    "not_enough_gas_token": "નેટવર્ક ફી ચૂકવવા આ વૉલેટમાં {{token}} જોઈએ.",
     "unstake_failed": "અનસ્ટેક નિષ્ફળ",
     "unstake_cancelled": "અનસ્ટેક રદ થયું",
     "unstake_request_removed": "તમારી અનસ્ટેક વિનંતી દૂર કરાઈ છે.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} મિનિટ પહેલાં",
     "hoursAgo": "{{count}} કલાક પહેલાં",
     "daysAgo": "{{count}} દિવસ પહેલાં",
+    "withdrawableNow": "અત્યારે ઉપાડી શકાય",
+    "poolNotWithdrawable": "{{amount}} DHB થાપણ પૂલ વૉલેટમાં છે, જેમાં હજી ઉપાડનો કૉન્ટ્રાક્ટ નથી — ખસેડવા માટે સપોર્ટનો સંપર્ક કરો.",
     "cancelUnstake": "ઉપાડ રદ કરો"
   },
   "communities": {

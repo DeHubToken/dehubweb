@@ -1482,6 +1482,12 @@
     "only_have_dhb_staked": "Сізде тек {{amount}} салынған.",
     "unstake_request_submitted": "Шығару сұрауы жіберілді! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} шығару кезегіне қосылды.",
+    "only_have_dhb_withdrawable": "Қазір тек {{amount}} DHB ғана шығаруға болады.",
+    "early_withdrawal_fee": "Мерзімінен бұрын шығару комиссиясы",
+    "early_withdrawal_fee_detail": "{{date}} дейін құлыпталған. Қазір шығару {{percent}}% — шамамен {{amount}} DHB тұрады. Растау үшін «Шығару» түймесін қайта басыңыз.",
+    "unstaked_successfully": "Сәтті шығарылды! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} желісінде {{amount}} DHB шығарылды.",
+    "not_enough_gas_token": "Желі комиссиясын төлеу үшін бұл әмиянда {{token}} қажет.",
     "unstake_failed": "Шығару сәтсіз аяқталды",
     "unstake_cancelled": "Шығару болдырылмады",
     "unstake_request_removed": "Шығару сұрауыңыз жойылды.",
@@ -1619,6 +1625,8 @@
     "minutesAgo": "{{count}} минут бұрын",
     "hoursAgo": "{{count}} сағат бұрын",
     "daysAgo": "{{count}} күн бұрын",
+    "withdrawableNow": "Қазір шығаруға болады",
+    "poolNotWithdrawable": "{{amount}} DHB депозит пулының әмиянында, оның әзірге шығару келісімшарты жоқ — көшіру үшін қолдау қызметіне хабарласыңыз.",
     "cancelUnstake": "Шығаруды болдырмау"
   },
   "communities": {

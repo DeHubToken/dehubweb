@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "Yu get {{amount}} nomo weh yu don put.",
     "unstake_request_submitted": "Dem don submit di withdrawal request! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} don enta di withdrawal queue.",
+    "only_have_dhb_withdrawable": "Fo nau, na only {{amount}} DHB yu fit komot.",
+    "early_withdrawal_fee": "Fee fo komot moni bifo taim",
+    "early_withdrawal_fee_detail": "E lok sotee {{date}}. If yu komot nau, e go kost {{percent}}% — sote {{amount}} DHB. Pres Komot agen fo konfam.",
+    "unstaked_successfully": "Dem don komot am fain! ✅",
+    "dhb_unstaked_on_chain": "Dem komot {{amount}} DHB fo {{chain}}.",
+    "not_enough_gas_token": "Yu nid {{token}} fo dis wallet fo pay di netwok fee.",
     "unstake_failed": "Withdraw no work",
     "unstake_cancelled": "Dem don cancel di withdraw",
     "unstake_request_removed": "Dem don remove yua withdraw request.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} minit dem bifo",
     "hoursAgo": "{{count}} awa dem bifo",
     "daysAgo": "{{count}} dei dem bifo",
+    "withdrawableNow": "Yu fit komot am nau",
+    "poolNotWithdrawable": "{{amount}} DHB dey inside di deposit pool wallet, weh e neva get komot kontrakt — tok wit support mek dem muv am.",
     "cancelUnstake": "Cancel di withdrawal"
   },
   "communities": {

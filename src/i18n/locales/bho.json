@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "रउरा लगे खाली {{amount}} जमा बा।",
     "unstake_request_submitted": "निकासी के अनुरोध भेजल गइल! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} निकासी कतार में जोड़ल गइल।",
+    "only_have_dhb_withdrawable": "अभी खाली {{amount}} DHB निकालल जा सकेला।",
+    "early_withdrawal_fee": "जल्दी निकाले के फीस",
+    "early_withdrawal_fee_detail": "{{date}} तक लॉक बा। अभी निकाले पर {{percent}}% — करीब {{amount}} DHB फीस लागी। पुष्टि खातिर फेर से निकालीं दबाईं।",
+    "unstaked_successfully": "सफलतापूर्वक निकाल लिहल गइल! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} पर {{amount}} DHB निकालल गइल।",
+    "not_enough_gas_token": "नेटवर्क फीस देवे खातिर ई वॉलेट में {{token}} चाहीं।",
     "unstake_failed": "निकासी विफल भइल",
     "unstake_cancelled": "निकासी रद्द भइल",
     "unstake_request_removed": "रउरा निकासी के अनुरोध हटा दिहल गइल।",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} मिनट पहिले",
     "hoursAgo": "{{count}} घंटा पहिले",
     "daysAgo": "{{count}} दिन पहिले",
+    "withdrawableNow": "अभी निकाले लायक",
+    "poolNotWithdrawable": "{{amount}} DHB जमा पूल वॉलेट में बा, जेकरा में अभी ले कवनो निकासी कॉन्ट्रैक्ट नइखे — हटावे खातिर सपोर्ट से संपर्क करीं।",
     "cancelUnstake": "निकासी रद्द करीं"
   },
   "communities": {

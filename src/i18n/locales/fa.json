@@ -1510,6 +1510,12 @@
     "only_have_dhb_staked": "شما فقط {{amount}} واریز کرده‌اید.",
     "unstake_request_submitted": "درخواست برداشت ثبت شد! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} به صف برداشت افزوده شد.",
+    "only_have_dhb_withdrawable": "در حال حاضر فقط {{amount}} DHB قابل برداشت است.",
+    "early_withdrawal_fee": "کارمزد برداشت زودهنگام",
+    "early_withdrawal_fee_detail": "تا {{date}} قفل است. برداشت اکنون {{percent}}% هزینه دارد — حدود {{amount}} DHB. برای تأیید دوباره روی برداشت بزنید.",
+    "unstaked_successfully": "با موفقیت برداشت شد! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB در {{chain}} برداشت شد.",
+    "not_enough_gas_token": "برای پرداخت کارمزد شبکه به {{token}} در این کیف پول نیاز دارید.",
     "unstake_failed": "لغو استیک ناموفق بود",
     "unstake_cancelled": "لغو استیک لغو شد",
     "unstake_request_removed": "درخواست لغو استیک شما حذف شد.",
@@ -1586,6 +1592,8 @@
     "minutesAgo": "{{count}} دقیقه پیش",
     "hoursAgo": "{{count}} ساعت پیش",
     "daysAgo": "{{count}} روز پیش",
+    "withdrawableNow": "اکنون قابل برداشت",
+    "poolNotWithdrawable": "{{amount}} DHB در کیف پول استخر سپرده است که هنوز قرارداد برداشت ندارد — برای انتقال با پشتیبانی تماس بگیرید.",
     "cancelUnstake": "لغو برداشت"
   },
   "communities": {

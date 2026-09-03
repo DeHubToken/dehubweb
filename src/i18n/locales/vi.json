@@ -1224,6 +1224,12 @@
     "only_have_dhb_staked": "Bạn chỉ có {{amount}} đã gửi.",
     "unstake_request_submitted": "Đã gửi yêu cầu rút! ✅",
     "dhb_added_to_unstake_queue": "Đã thêm {{amount}} {{tokenWord}} vào hàng đợi rút.",
+    "only_have_dhb_withdrawable": "Hiện chỉ có thể rút {{amount}} DHB.",
+    "early_withdrawal_fee": "Phí rút sớm",
+    "early_withdrawal_fee_detail": "Bị khóa đến {{date}}. Rút bây giờ mất {{percent}}% — khoảng {{amount}} DHB. Nhấn Rút lần nữa để xác nhận.",
+    "unstaked_successfully": "Rút thành công! ✅",
+    "dhb_unstaked_on_chain": "Đã rút {{amount}} DHB trên {{chain}}.",
+    "not_enough_gas_token": "Bạn cần {{token}} trong ví này để trả phí mạng.",
     "unstake_failed": "Rút stake thất bại",
     "unstake_cancelled": "Đã hủy rút stake",
     "unstake_request_removed": "Yêu cầu rút stake của bạn đã được gỡ bỏ.",
@@ -1300,6 +1306,8 @@
     "minutesAgo": "{{count}} phút trước",
     "hoursAgo": "{{count}} giờ trước",
     "daysAgo": "{{count}} ngày trước",
+    "withdrawableNow": "Có thể rút ngay",
+    "poolNotWithdrawable": "{{amount}} DHB đang nằm trong ví bể gửi, nơi chưa có hợp đồng rút — hãy liên hệ hỗ trợ để chuyển đi.",
     "cancelUnstake": "Hủy rút tiền"
   },
   "communities": {

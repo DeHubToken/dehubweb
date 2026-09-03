@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "توهان وٽ رڳو {{amount}} اسٽيڪ ٿيل آهي.",
     "unstake_request_submitted": "واپسي جي درخواست جمع ٿي وئي! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} واپسي جي قطار ۾ شامل ٿيو.",
+    "only_have_dhb_withdrawable": "هن وقت رڳو {{amount}} DHB ڪڍي سگهجن ٿا.",
+    "early_withdrawal_fee": "جلدي ڪڍڻ جي فيس",
+    "early_withdrawal_fee_detail": "{{date}} تائين بند آهي. هاڻي ڪڍڻ تي {{percent}}% — لڳ ڀڳ {{amount}} DHB فيس لڳندي. تصديق لاءِ ٻيهر ڪڍو دٻايو.",
+    "unstaked_successfully": "ڪاميابيءَ سان ڪڍيو ويو! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} تي {{amount}} DHB ڪڍيا ويا.",
+    "not_enough_gas_token": "نيٽ ورڪ فيس ڏيڻ لاءِ هن واليٽ ۾ {{token}} گهرجي.",
     "unstake_failed": "ان اسٽيڪ ناڪام ٿيو",
     "unstake_cancelled": "ان اسٽيڪ رد ٿيو",
     "unstake_request_removed": "توهان جي ان اسٽيڪ درخواست هٽائي وئي آهي.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} منٽ اڳ",
     "hoursAgo": "{{count}} ڪلاڪ اڳ",
     "daysAgo": "{{count}}ڏينهن اڳ",
+    "withdrawableNow": "هاڻي ڪڍي سگهجي ٿو",
+    "poolNotWithdrawable": "{{amount}} DHB ڊپازٽ پول واليٽ ۾ آهن، جنهن جو اڃا ڪو نڪرڻ وارو ڪانٽريڪٽ ناهي — منتقلي لاءِ سپورٽ سان رابطو ڪريو.",
     "cancelUnstake": "واپسي رد ڪريو"
   },
   "communities": {
