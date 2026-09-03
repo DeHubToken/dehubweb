@@ -8,6 +8,35 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "how-monetization-works-on-social-media-apps",
+    "slug": "how-monetization-works-on-social-media-apps",
+    "title": "How monetization works on social media apps",
+    "excerpt": "Follower minimums, activity tests, invitation walls and payout floors for Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, with the 2026 and 2027 rule changes that reset the numbers.",
+    "content": "",
+    "bannerImage": "/lovable-uploads/social-media-monetization-2026-banner.jpg",
+    "bannerImageAlt": "Who pays and when: creator monetization rules across seven social platforms in 2026",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-09-03T09:00:00.000Z",
+    "tags": [
+      "Creator Economy",
+      "Monetization",
+      "Instagram",
+      "TikTok",
+      "YouTube",
+      "Facebook",
+      "X",
+      "Snap",
+      "Twitch"
+    ],
+    "readingTime": 13,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "How Monetization Works on Social Media Apps: 2026 Rules for Every Platform | DeHub",
+    "seoDescription": "Follower minimums, activity tests, invite walls and payout floors on Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, plus the 2026 and 2027 changes that reset the numbers."
+  },
+  {
     "id": "young-creators-ground-you-own",
     "slug": "young-creators-ground-you-own",
     "title": "A Note for Young Creators, and the Adults Helping Them",
@@ -3336,32 +3365,33 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "young-creators-ground-you-own",
-  "slug": "young-creators-ground-you-own",
-  "title": "A Note for Young Creators, and the Adults Helping Them",
-  "seoTitle": "Young Creators: Build on Ground That Cannot Be Taken Away | DeHub",
-  "seoDescription": "New laws protect a child creator’s earnings. Nothing protects the asset. A guide for young creators, parents and managers on building where the work is owned.",
-  "excerpt": "Illinois and California now force a share of a child creator’s earnings into trust. Nobody has legislated the harder problem: the account itself was never theirs.",
+  "id": "how-monetization-works-on-social-media-apps",
+  "slug": "how-monetization-works-on-social-media-apps",
+  "title": "How monetization works on social media apps",
+  "excerpt": "Follower minimums, activity tests, invitation walls and payout floors for Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, with the 2026 and 2027 rule changes that reset the numbers.",
   "content": "",
-  "bannerImage": "/lovable-uploads/young-creators-ground-you-own-banner.png",
-  "bannerImageAlt": "A young creator publishing on ground they own rather than rent",
+  "bannerImage": "/lovable-uploads/social-media-monetization-2026-banner.jpg",
+  "bannerImageAlt": "Who pays and when: creator monetization rules across seven social platforms in 2026",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-08-28T13:00:00.000Z",
-  "updatedAt": "2026-08-28T13:00:00.000Z",
+  "publishedAt": "2026-09-03T09:00:00.000Z",
   "tags": [
-    "young creators",
-    "child influencers",
-    "creator parents",
-    "demonetisation",
-    "digital ownership",
-    "creator economy",
-    "dehub"
+    "Creator Economy",
+    "Monetization",
+    "Instagram",
+    "TikTok",
+    "YouTube",
+    "Facebook",
+    "X",
+    "Snap",
+    "Twitch"
   ],
-  "readingTime": 10,
-  "featured": false,
-  "status": "published"
+  "readingTime": 13,
+  "featured": true,
+  "status": "published",
+  "seoTitle": "How Monetization Works on Social Media Apps: 2026 Rules for Every Platform | DeHub",
+  "seoDescription": "Follower minimums, activity tests, invite walls and payout floors on Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, plus the 2026 and 2027 changes that reset the numbers."
 };
 
 export const excludedTitles: string[] = [
