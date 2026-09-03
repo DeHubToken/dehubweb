@@ -4756,6 +4756,30 @@ export type Database = {
         }
         Relationships: []
       }
+      video_dub_worker: {
+        Row: {
+          id: number
+          runpod_api_key: string | null
+          runpod_endpoint_id: string | null
+          secret: string
+          updated_at: string
+        }
+        Insert: {
+          id: number
+          runpod_api_key?: string | null
+          runpod_endpoint_id?: string | null
+          secret: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          runpod_api_key?: string | null
+          runpod_endpoint_id?: string | null
+          secret?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       video_dubs: {
         Row: {
           attempts: number
