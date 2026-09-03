@@ -348,6 +348,46 @@ export async function switchChain(chainId: ChainId): Promise<void> {
 }
 
 /**
+ * Make sure whatever is about to sign is actually on `chainId`, or throw.
+ *
+ * `writeContractAA`'s `chainId` option only reaches the wagmi branch. A
+ * smart-account session signs with whichever AA provider is loaded, and the
+ * default one is built for Base — so a call built for another chain goes out
+ * on Base unless a provider for that chain has been set up first. That is not
+ * a failed transaction: the contract address it names has no code on Base, so
+ * a call carrying value succeeds, the receipt comes back status 1, and the
+ * value is gone. Anything that writes on a chain the caller chose at runtime
+ * goes through here before it builds calldata.
+ */
+export async function ensureSignerOnChain(chainId: ChainId): Promise<void> {
+  const { isWeb3Auth } = await getActiveProvider(chainId);
+
+  // External wallet: wagmi carries the chain id on the call itself and the
+  // connector prompts for the switch.
+  if (!isWeb3Auth) {
+    await switchChain(chainId);
+    return;
+  }
+
+  // The session's default AA provider is Base's; every other chain needs one
+  // of its own, which exists only for the chains in AA_CHAIN_CONFIGS.
+  if (chainId === BASE_CHAIN_ID) return;
+
+  let chainAA = getAAProviderForChain(chainId);
+  if (!chainAA) {
+    try {
+      chainAA = await setupAAProviderForChain(chainId);
+    } catch (error) {
+      console.warn('[AA] Chain-specific AA provider failed for', chainId, error);
+      chainAA = null;
+    }
+  }
+  if (!chainAA) {
+    throw new Error(`NO_SIGNER_ON_CHAIN:${chainId}`);
+  }
+}
+
+/**
  * Check if the current session is a Web3Auth embedded wallet (smart account)
  * vs an external EOA wallet
  */
