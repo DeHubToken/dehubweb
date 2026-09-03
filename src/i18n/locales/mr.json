@@ -1454,6 +1454,12 @@
     "only_have_dhb_staked": "तुमच्याकडे फक्त {{amount}} जमा आहे.",
     "unstake_request_submitted": "पैसे काढण्याची विनंती सबमिट झाली! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} पैसे काढण्याच्या रांगेत जोडले.",
+    "only_have_dhb_withdrawable": "सध्या फक्त {{amount}} DHB काढता येतील.",
+    "early_withdrawal_fee": "लवकर काढण्याचे शुल्क",
+    "early_withdrawal_fee_detail": "{{date}} पर्यंत लॉक आहे. आत्ता काढल्यास {{percent}}% — सुमारे {{amount}} DHB शुल्क लागेल. पुष्टी करण्यासाठी पुन्हा काढा दाबा.",
+    "unstaked_successfully": "यशस्वीरित्या काढले! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} वर {{amount}} DHB काढले.",
+    "not_enough_gas_token": "नेटवर्क शुल्क भरण्यासाठी या वॉलेटमध्ये {{token}} हवे.",
     "unstake_failed": "अनस्टेक अयशस्वी",
     "unstake_cancelled": "अनस्टेक रद्द केले",
     "unstake_request_removed": "तुमची अनस्टेक विनंती काढून टाकली आहे.",
@@ -1530,6 +1536,8 @@
     "minutesAgo": "{{count}} मिनिटांपूर्वी",
     "hoursAgo": "{{count}} तासांपूर्वी",
     "daysAgo": "{{count}} दिवसांपूर्वी",
+    "withdrawableNow": "आत्ता काढता येईल",
+    "poolNotWithdrawable": "{{amount}} DHB ठेव पूल वॉलेटमध्ये आहेत, ज्यासाठी अजून काढण्याचा कॉन्ट्रॅक्ट नाही — हलवण्यासाठी सपोर्टशी संपर्क साधा.",
     "cancelUnstake": "पैसे काढणे रद्द करा"
   },
   "communities": {

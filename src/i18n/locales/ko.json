@@ -1485,6 +1485,12 @@
     "only_have_dhb_staked": "예치된 금액이 {{amount}}뿐입니다.",
     "unstake_request_submitted": "출금 요청이 제출되었습니다! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}}이(가) 출금 대기열에 추가되었습니다.",
+    "only_have_dhb_withdrawable": "현재 {{amount}} DHB만 출금할 수 있습니다.",
+    "early_withdrawal_fee": "조기 출금 수수료",
+    "early_withdrawal_fee_detail": "{{date}}까지 잠겨 있습니다. 지금 출금하면 {{percent}}% — 약 {{amount}} DHB의 수수료가 발생합니다. 확인하려면 출금을 다시 누르세요.",
+    "unstaked_successfully": "출금 완료! ✅",
+    "dhb_unstaked_on_chain": "{{chain}}에서 {{amount}} DHB를 출금했습니다.",
+    "not_enough_gas_token": "네트워크 수수료를 지불하려면 이 지갑에 {{token}}이(가) 필요합니다.",
     "unstake_failed": "언스테이킹에 실패했습니다",
     "unstake_cancelled": "언스테이킹이 취소되었습니다",
     "unstake_request_removed": "언스테이킹 요청이 삭제되었습니다.",
@@ -1561,6 +1567,8 @@
     "minutesAgo": "{{count}}분 전",
     "hoursAgo": "{{count}}시간 전",
     "daysAgo": "{{count}}일 전",
+    "withdrawableNow": "지금 출금 가능",
+    "poolNotWithdrawable": "{{amount}} DHB는 예치 풀 지갑에 있으며 아직 출금 컨트랙트가 없습니다 — 옮기려면 고객지원에 문의하세요.",
     "cancelUnstake": "출금 취소"
   },
   "communities": {

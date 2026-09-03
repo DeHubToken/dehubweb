@@ -1407,6 +1407,12 @@
     "only_have_dhb_staked": "У вас укладзена толькі {{amount}}.",
     "unstake_request_submitted": "Запыт на вывад адпраўлены! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} дададзена ў чаргу вываду.",
+    "only_have_dhb_withdrawable": "Зараз можна вывесці толькі {{amount}} DHB.",
+    "early_withdrawal_fee": "Камісія за датэрміновы вывад",
+    "early_withdrawal_fee_detail": "Заблакіравана да {{date}}. Вывад зараз каштуе {{percent}}% — прыкладна {{amount}} DHB. Націсніце «Вывесці» яшчэ раз, каб пацвердзіць.",
+    "unstaked_successfully": "Паспяхова выведзена! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB выведзена ў сетцы {{chain}}.",
+    "not_enough_gas_token": "Для аплаты сеткавай камісіі ў гэтым гаманцы патрэбны {{token}}.",
     "unstake_failed": "Вывад не выкананы",
     "unstake_cancelled": "Вывад скасаваны",
     "unstake_request_removed": "Ваш запыт на вывад выдалены.",
@@ -1483,6 +1489,8 @@
     "minutesAgo": "{{count}} хв. таму",
     "hoursAgo": "{{count}} г. таму",
     "daysAgo": "{{count}} дз. таму",
+    "withdrawableNow": "Даступна да вываду",
+    "poolNotWithdrawable": "{{amount}} DHB знаходзяцца ў гаманцы дэпазітнага пула, у якога пакуль няма кантракта вываду — звярніцеся ў падтрымку, каб іх перамясціць.",
     "cancelUnstake": "Скасаваць вывад"
   },
   "communities": {

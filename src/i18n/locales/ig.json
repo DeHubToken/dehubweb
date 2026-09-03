@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "Ị nwere naanị {{amount}} etinyere.",
     "unstake_request_submitted": "Ezigala arịrịọ mwepụta! ✅",
     "dhb_added_to_unstake_queue": "A gbakwunyela {{amount}} {{tokenWord}} n'ndoro mwepụta.",
+    "only_have_dhb_withdrawable": "Ugbu a, naanị {{amount}} DHB ka enwere ike iwepụ.",
+    "early_withdrawal_fee": "Ụgwọ mwepụ ngwa ngwa",
+    "early_withdrawal_fee_detail": "Kpọchiri ya ruo {{date}}. Iwepụ ugbu a na-efu {{percent}}% — ihe dịka {{amount}} DHB. Pịa Wepụ ọzọ iji kwado.",
+    "unstaked_successfully": "Ewepụtara nke ọma! ✅",
+    "dhb_unstaked_on_chain": "Ewepụtara {{amount}} DHB na {{chain}}.",
+    "not_enough_gas_token": "Ị chọrọ {{token}} n'obere akpa ego a iji kwụọ ụgwọ netwọk.",
     "unstake_failed": "Mwepụta dara",
     "unstake_cancelled": "Akagbuola mwepụta",
     "unstake_request_removed": "Ewepụla arịrịọ mwepụta gị.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}}nk gara aga",
     "hoursAgo": "{{count}}aw gara aga",
     "daysAgo": "{{count}}ụb gara aga",
+    "withdrawableNow": "Enwere ike iwepụ ugbu a",
+    "poolNotWithdrawable": "{{amount}} DHB dị n'obere akpa ego nke ọdọ nkwụnye, nke na-enwebeghị nkwekọrịta mwepụ — kpọtụrụ nkwado ka ị kwaga ya.",
     "cancelUnstake": "Kagbuo mwepụta"
   },
   "communities": {

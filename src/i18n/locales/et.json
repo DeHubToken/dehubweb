@@ -1424,6 +1424,12 @@
     "only_have_dhb_staked": "Sul on sisse makstud vaid {{amount}}.",
     "unstake_request_submitted": "Väljamaksetaotlus esitatud! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} lisatud väljamaksejärjekorda.",
+    "only_have_dhb_withdrawable": "Praegu saab välja võtta ainult {{amount}} DHB.",
+    "early_withdrawal_fee": "Ennetähtaegse väljavõtmise tasu",
+    "early_withdrawal_fee_detail": "Lukus kuni {{date}}. Praegu väljavõtmine maksab {{percent}} % — umbes {{amount}} DHB. Kinnitamiseks vajuta uuesti Võta välja.",
+    "unstaked_successfully": "Väljavõtmine õnnestus! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB võeti välja võrgus {{chain}}.",
+    "not_enough_gas_token": "Võrgutasu maksmiseks on selles rahakotis vaja {{token}}.",
     "unstake_failed": "Panuse eemaldamine ebaõnnestus",
     "unstake_cancelled": "Panuse eemaldamine tühistatud",
     "unstake_request_removed": "Sinu panuse eemaldamise taotlus on eemaldatud.",
@@ -1500,6 +1506,8 @@
     "minutesAgo": "{{count}} min tagasi",
     "hoursAgo": "{{count}} t tagasi",
     "daysAgo": "{{count}} p tagasi",
+    "withdrawableNow": "Praegu väljavõetav",
+    "poolNotWithdrawable": "{{amount}} DHB on hoiusefondi rahakotis, millel pole veel väljavõtmislepingut — nende liigutamiseks võta ühendust toega.",
     "cancelUnstake": "Tühista väljamakse"
   },
   "communities": {

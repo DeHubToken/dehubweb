@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "Танд ердөө {{amount}} байршуулсан байна.",
     "unstake_request_submitted": "Татан авах хүсэлт илгээгдлээ! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} татан авалтын дараалалд нэмэгдлээ.",
+    "only_have_dhb_withdrawable": "Одоогоор зөвхөн {{amount}} DHB татаж авах боломжтой.",
+    "early_withdrawal_fee": "Эрт татах шимтгэл",
+    "early_withdrawal_fee_detail": "{{date}} хүртэл түгжээтэй. Одоо татахад {{percent}}% — ойролцоогоор {{amount}} DHB шимтгэл авна. Баталгаажуулахын тулд Татах товчийг дахин дарна уу.",
+    "unstaked_successfully": "Амжилттай татлаа! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} дээр {{amount}} DHB татлаа.",
+    "not_enough_gas_token": "Сүлжээний шимтгэлийг төлөхийн тулд энэ хэтэвчинд {{token}} хэрэгтэй.",
     "unstake_failed": "Барьцаанаас гаргах амжилтгүй боллоо",
     "unstake_cancelled": "Барьцаанаас гаргахыг цуцаллаа",
     "unstake_request_removed": "Таны барьцаанаас гаргах хүсэлтийг устгалаа.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} минутын өмнө",
     "hoursAgo": "{{count}} цагийн өмнө",
     "daysAgo": "{{count}} хоногийн өмнө",
+    "withdrawableNow": "Одоо татаж болно",
+    "poolNotWithdrawable": "{{amount}} DHB нь хадгаламжийн сангийн хэтэвчинд байгаа бөгөөд одоогоор татах гэрээ байхгүй — шилжүүлэхийн тулд дэмжлэгийн албатай холбогдоно уу.",
     "cancelUnstake": "Татан авалтыг цуцлах"
   },
   "communities": {

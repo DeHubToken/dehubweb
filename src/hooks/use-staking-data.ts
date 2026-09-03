@@ -3,7 +3,7 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
-import { fetchStakingStats, getUserStakedBNB, getUserEarnedBNB, getStakingAllowance, getUserStakingTransfers } from '@/lib/contracts/staking';
+import { fetchStakingStats, getUserLegacyStake, getUserEarnedBNB, getStakingAllowance, getUserStakingTransfers } from '@/lib/contracts/staking';
 import { useTokenPrices } from './use-token-prices';
 import { supabase } from '@/integrations/supabase/client';
 import { fromWei, CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
@@ -24,6 +24,18 @@ const erc20BalanceInterface = new Interface([
   'function balanceOf(address owner) view returns (uint256)',
 ]);
 
+/**
+ * True for a row that is still a *request* rather than a settled withdrawal.
+ *
+ * Queue rows are written with a synthetic `unstake-request-<ts>` hash and wait
+ * on a manual treasury payout. A withdrawal from the legacy BNB contract lands
+ * with its real transaction hash and has already moved the tokens, so counting
+ * one as queued would subtract the same DHB twice — once on-chain and once here.
+ */
+function isPendingQueueRow(txHash: string | null | undefined): boolean {
+  return !(txHash ?? '').startsWith('0x');
+}
+
 async function fetchUnstakeQueue(): Promise<UnstakeEvent[]> {
   try {
     const { data, error } = await supabase
@@ -35,7 +47,7 @@ async function fetchUnstakeQueue(): Promise<UnstakeEvent[]> {
 
     if (error || !data) return [];
 
-    return data.map((r): UnstakeEvent => ({
+    return data.filter(r => isPendingQueueRow(r.tx_hash)).map((r): UnstakeEvent => ({
       wallet: r.wallet_address,
       amount: String(r.amount),
       txHash: r.tx_hash,
@@ -110,6 +122,15 @@ export interface UserStakingData {
   bnbEarned: string;
   bnbEarnedRaw: bigint;
   bnbAllowance: bigint;
+  /**
+   * The slice of `totalStaked` sitting in the legacy BNB contract — the only
+   * part a user can withdraw themselves. Everything else is in the transfer
+   * pool, which is a wallet with no `unstake()` behind it.
+   */
+  legacyStaked: number;
+  legacyStakedRaw: bigint;
+  /** Unix seconds the legacy position unlocks; before it, withdrawing costs a fee. */
+  legacyUnlockAt: number;
   // Base
   baseBalance: string;
   baseBalanceRaw: bigint;
@@ -146,7 +167,7 @@ export function useUserStakingData() {
         baseBalanceRaw,
         bnbEarnedRaw,
         bnbAllowance,
-        legacyStaked,
+        legacyPosition,
         bnbTransfers,
         baseTransfers,
         { data: stakingRecords },
@@ -155,12 +176,12 @@ export function useUserStakingData() {
         getUserDHBBalance(walletAddress, BASE_CHAIN_ID),
         getUserEarnedBNB(walletAddress),
         getStakingAllowance(walletAddress),
-        getUserStakedBNB(walletAddress),
+        getUserLegacyStake(walletAddress),
         getUserStakingTransfers(walletAddress, BNB_CHAIN_ID),
         getUserStakingTransfers(walletAddress, BASE_CHAIN_ID),
         supabase
           .from('staking_records')
-          .select('amount, action')
+          .select('amount, action, tx_hash')
           .eq('wallet_address', addr),
       ]);
 
@@ -171,7 +192,7 @@ export function useUserStakingData() {
       if (stakingRecords) {
         for (const r of stakingRecords) {
           if (r.action === 'stake') dbStaked += Number(r.amount);
-          else if (r.action === 'unstake') {
+          else if (r.action === 'unstake' && isPendingQueueRow(r.tx_hash)) {
             dbStaked -= Number(r.amount);
             dbUnstakeTotal += Number(r.amount);
           }
@@ -179,7 +200,7 @@ export function useUserStakingData() {
       }
       if (dbStaked < 0) dbStaked = 0;
 
-      const legacyStakedNum = parseFloat(fromWei(legacyStaked));
+      const legacyStakedNum = parseFloat(fromWei(legacyPosition.amountRaw));
 
       let totalStakedNum: number;
       let unstakeQueuedNum: number;
@@ -208,12 +229,15 @@ export function useUserStakingData() {
 
       return {
         bnbStaked: totalStakedNum.toString(),
-        bnbStakedRaw: legacyStaked,
+        bnbStakedRaw: legacyPosition.amountRaw,
         bnbBalance,
         bnbBalanceRaw,
         bnbEarned,
         bnbEarnedRaw,
         bnbAllowance,
+        legacyStaked: legacyStakedNum,
+        legacyStakedRaw: legacyPosition.amountRaw,
+        legacyUnlockAt: legacyPosition.unlockAt,
         baseBalance,
         baseBalanceRaw,
         totalStaked: totalStakedNum,

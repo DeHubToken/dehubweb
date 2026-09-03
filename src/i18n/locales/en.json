@@ -1482,7 +1482,13 @@
     "only_have_dhb_staked": "You only have {{amount}} deposited.",
     "unstake_request_submitted": "Withdrawal request submitted! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} added to withdrawal queue.",
+    "not_enough_gas_token": "You need {{token}} in this wallet to pay the network fee.",
     "unstake_failed": "Unstake failed",
+    "only_have_dhb_withdrawable": "Only {{amount}} DHB can be withdrawn right now.",
+    "early_withdrawal_fee": "Early withdrawal fee",
+    "early_withdrawal_fee_detail": "Locked until {{date}}. Withdrawing now costs {{percent}}% — about {{amount}} DHB. Press Withdraw again to confirm.",
+    "unstaked_successfully": "Withdrawn successfully! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB withdrawn on {{chain}}.",
     "unstake_cancelled": "Unstake cancelled",
     "unstake_request_removed": "Your unstake request has been removed.",
     "failed_to_cancel": "Failed to cancel",
@@ -1558,7 +1564,9 @@
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
-    "cancelUnstake": "Cancel withdrawal"
+    "cancelUnstake": "Cancel withdrawal",
+    "withdrawableNow": "Withdrawable now",
+    "poolNotWithdrawable": "{{amount}} DHB sits in the deposit pool wallet, which has no withdrawal contract yet — contact support to move it."
   },
   "communities": {
     "title": "Communities",

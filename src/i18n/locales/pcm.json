@@ -1467,6 +1467,12 @@
     "only_have_dhb_staked": "You only get {{amount}} wey you deposit.",
     "unstake_request_submitted": "Withdrawal request don submit! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} don enter di withdrawal queue.",
+    "only_have_dhb_withdrawable": "Right now, na only {{amount}} DHB you fit withdraw.",
+    "early_withdrawal_fee": "Early withdrawal fee",
+    "early_withdrawal_fee_detail": "E lock until {{date}}. If you withdraw now, e go cost {{percent}}% — around {{amount}} DHB. Press Withdraw again to confirm.",
+    "unstaked_successfully": "You don withdraw am well well! ✅",
+    "dhb_unstaked_on_chain": "Dem withdraw {{amount}} DHB for {{chain}}.",
+    "not_enough_gas_token": "You need {{token}} for dis wallet to pay di network fee.",
     "unstake_failed": "Withdrawal no work",
     "unstake_cancelled": "Withdrawal don cancel",
     "unstake_request_removed": "Dem don remove your withdrawal request.",
@@ -1565,6 +1571,8 @@
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
+    "withdrawableNow": "You fit withdraw am now",
+    "poolNotWithdrawable": "{{amount}} DHB dey inside di deposit pool wallet, wey never get withdrawal contract — talk to support make dem move am.",
     "cancelUnstake": "Cancel di withdrawal"
   },
   "communities": {

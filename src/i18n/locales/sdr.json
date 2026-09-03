@@ -1533,6 +1533,12 @@
     "only_have_dhb_staked": "تہار پاس کیول {{amount}} جمع ہے۔",
     "unstake_request_submitted": "واپسی کے درخواست جمع ہوئل! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} واپسی کے قطار میں جوڑل گیل۔",
+    "only_have_dhb_withdrawable": "ابھی صرف {{amount}} DHB نکالل جا سکہ ہے۔",
+    "early_withdrawal_fee": "جلدی نکالے کے فیس",
+    "early_withdrawal_fee_detail": "{{date}} تک بند ہے۔ ابھی نکالے پر {{percent}}% — تقریباً {{amount}} DHB فیس لگی۔ تصدیق کے واسطے دوبارہ نکالو دباوو۔",
+    "unstaked_successfully": "کامیابی سے نکالل گیل! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} پر {{amount}} DHB نکالل گیل۔",
+    "not_enough_gas_token": "نیٹ ورک فیس دیئے کے واسطے ای والیٹ میں {{token}} چاہیں۔",
     "unstake_failed": "واپسی ناکام ہوئل",
     "unstake_cancelled": "واپسی رد ہوئل",
     "unstake_request_removed": "تہار واپسی کے درخواست ہٹائل گیل ہے۔",
@@ -1635,6 +1641,8 @@
     "minutesAgo": "{{count}} منٹ پہلے",
     "hoursAgo": "{{count}} گھنٹا پہلے",
     "daysAgo": "{{count}} دن پہلے",
+    "withdrawableNow": "ابھی نکالے لائق",
+    "poolNotWithdrawable": "{{amount}} DHB جمع پول والیٹ میں ہے، جیکر ابھی تک کوئی نکاسی کنٹریکٹ نہیں ہے — ہٹاوے کے واسطے سپورٹ سے رابطہ کرو۔",
     "cancelUnstake": "واپسی رد کرو"
   },
   "communities": {

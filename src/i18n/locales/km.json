@@ -1505,6 +1505,12 @@
     "only_have_dhb_staked": "អ្នកមានប្រាក់បានដាក់តែ {{amount}} ប៉ុណ្ណោះ។",
     "unstake_request_submitted": "សំណើដកប្រាក់ត្រូវបានដាក់ស្នើ! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ត្រូវបានបន្ថែមទៅជួរដកប្រាក់។",
+    "only_have_dhb_withdrawable": "ពេលនេះអាចដកបានតែ {{amount}} DHB ប៉ុណ្ណោះ។",
+    "early_withdrawal_fee": "ថ្លៃដកមុនកំណត់",
+    "early_withdrawal_fee_detail": "ជាប់សោរហូតដល់ {{date}}។ ការដកឥឡូវនេះត្រូវបង់ {{percent}}% — ប្រហែល {{amount}} DHB។ ចុច ដក ម្តងទៀតដើម្បីបញ្ជាក់។",
+    "unstaked_successfully": "ដកបានជោគជ័យ! ✅",
+    "dhb_unstaked_on_chain": "បានដក {{amount}} DHB នៅលើ {{chain}}។",
+    "not_enough_gas_token": "អ្នកត្រូវការ {{token}} នៅក្នុងកាបូបនេះ ដើម្បីបង់ថ្លៃបណ្តាញ។",
     "unstake_failed": "ការដកប្រាក់បរាជ័យ",
     "unstake_cancelled": "ការដកប្រាក់ត្រូវបានលុបចោល",
     "unstake_request_removed": "សំណើដកប្រាក់របស់អ្នកត្រូវបានដកចេញ។",
@@ -1604,6 +1610,8 @@
     "minutesAgo": "{{count}}នាទីមុន",
     "hoursAgo": "{{count}}ម៉ោងមុន",
     "daysAgo": "{{count}}ថ្ងៃមុន",
+    "withdrawableNow": "អាចដកបានឥឡូវនេះ",
+    "poolNotWithdrawable": "{{amount}} DHB ស្ថិតនៅក្នុងកាបូបអាងបញ្ញើ ដែលមិនទាន់មានកិច្ចសន្យាដកនៅឡើយ — សូមទាក់ទងផ្នែកជំនួយដើម្បីផ្លាស់ទី។",
     "cancelUnstake": "បោះបង់ការដកប្រាក់"
   },
   "communities": {

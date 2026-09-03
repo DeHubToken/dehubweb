@@ -1509,6 +1509,12 @@
     "only_have_dhb_staked": "你光存咾 {{amount}}。",
     "unstake_request_submitted": "取现请求交上去咾！✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} 添进取现队列咾。",
+    "only_have_dhb_withdrawable": "眼下只能提取 {{amount}} DHB。",
+    "early_withdrawal_fee": "提前提取手续费",
+    "early_withdrawal_fee_detail": "锁到 {{date}}。这会儿提取得付 {{percent}}% — 大约 {{amount}} DHB。再按一下「提取」确认。",
+    "unstaked_successfully": "提取成咧！✅",
+    "dhb_unstaked_on_chain": "在 {{chain}} 上提取咧 {{amount}} DHB。",
+    "not_enough_gas_token": "支付网络手续费得这钱包里头有 {{token}}。",
     "unstake_failed": "取没成",
     "unstake_cancelled": "取现取消咾",
     "unstake_request_removed": "你嘞取现请求撤咾。",
@@ -1608,6 +1614,8 @@
     "minutesAgo": "{{count}} 分钟前",
     "hoursAgo": "{{count}} 钟头前",
     "daysAgo": "{{count}} 天前",
+    "withdrawableNow": "眼下能提取",
+    "poolNotWithdrawable": "{{amount}} DHB 在存款池钱包里头，这钱包还没提取合约 — 请联系客服转出。",
     "cancelUnstake": "取消取现"
   },
   "communities": {

@@ -1428,6 +1428,12 @@
     "only_have_dhb_staked": "У вас внесено только {{amount}}.",
     "unstake_request_submitted": "Запрос на вывод отправлен! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} добавлено в очередь на вывод.",
+    "only_have_dhb_withdrawable": "Сейчас можно вывести только {{amount}} DHB.",
+    "early_withdrawal_fee": "Комиссия за досрочный вывод",
+    "early_withdrawal_fee_detail": "Заблокировано до {{date}}. Вывод сейчас стоит {{percent}}% — около {{amount}} DHB. Нажмите «Вывести» ещё раз для подтверждения.",
+    "unstaked_successfully": "Успешно выведено! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB выведено в сети {{chain}}.",
+    "not_enough_gas_token": "Для оплаты сетевой комиссии в этом кошельке нужен {{token}}.",
     "unstake_failed": "Ошибка анстейкинга",
     "unstake_cancelled": "Анстейкинг отменён",
     "unstake_request_removed": "Ваша заявка на вывод удалена.",
@@ -1504,6 +1510,8 @@
     "minutesAgo": "{{count}}m назад",
     "hoursAgo": "{{count}}h назад",
     "daysAgo": "{{count}}d назад",
+    "withdrawableNow": "Доступно к выводу",
+    "poolNotWithdrawable": "{{amount}} DHB находятся в кошельке депозитного пула, у которого пока нет контракта вывода — обратитесь в поддержку, чтобы их перевести.",
     "cancelUnstake": "Отменить вывод"
   },
   "communities": {

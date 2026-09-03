@@ -1329,6 +1329,12 @@
     "only_have_dhb_staked": "আপনার জমা আছে কেবল {{amount}}।",
     "unstake_request_submitted": "উত্তোলনের অনুরোধ জমা হয়েছে! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} উত্তোলনের সারিতে যোগ হয়েছে।",
+    "only_have_dhb_withdrawable": "এই মুহূর্তে কেবল {{amount}} DHB তোলা যাবে।",
+    "early_withdrawal_fee": "আগাম উত্তোলনের ফি",
+    "early_withdrawal_fee_detail": "{{date}} পর্যন্ত লক করা। এখন তুললে {{percent}}% ফি লাগবে — প্রায় {{amount}} DHB। নিশ্চিত করতে আবার উত্তোলন চাপুন।",
+    "unstaked_successfully": "সফলভাবে তোলা হয়েছে! ✅",
+    "dhb_unstaked_on_chain": "{{chain}}-এ {{amount}} DHB তোলা হয়েছে।",
+    "not_enough_gas_token": "নেটওয়ার্ক ফি দিতে এই ওয়ালেটে {{token}} প্রয়োজন।",
     "unstake_failed": "উত্তোলন ব্যর্থ",
     "unstake_cancelled": "উত্তোলন বাতিল হয়েছে",
     "unstake_request_removed": "আপনার উত্তোলনের অনুরোধ সরিয়ে দেওয়া হয়েছে।",
@@ -1405,6 +1411,8 @@
     "minutesAgo": "{{count}} মিনিট আগে",
     "hoursAgo": "{{count}} ঘণ্টা আগে",
     "daysAgo": "{{count}} দিন আগে",
+    "withdrawableNow": "এখন তোলা যাবে",
+    "poolNotWithdrawable": "{{amount}} DHB জমা পুল ওয়ালেটে রয়েছে, যেখানে এখনও কোনো উত্তোলন কনট্র্যাক্ট নেই — সরাতে সহায়তার সঙ্গে যোগাযোগ করুন।",
     "cancelUnstake": "উত্তোলন বাতিল করুন"
   },
   "communities": {

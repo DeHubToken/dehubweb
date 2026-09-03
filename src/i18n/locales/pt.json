@@ -1486,6 +1486,12 @@
     "only_have_dhb_staked": "Você só tem {{amount}} depositado.",
     "unstake_request_submitted": "Solicitação de retirada enviada! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} adicionado à fila de retirada.",
+    "only_have_dhb_withdrawable": "Só é possível sacar {{amount}} DHB neste momento.",
+    "early_withdrawal_fee": "Taxa de saque antecipado",
+    "early_withdrawal_fee_detail": "Bloqueado até {{date}}. Sacar agora custa {{percent}}% — cerca de {{amount}} DHB. Toque em Sacar novamente para confirmar.",
+    "unstaked_successfully": "Saque realizado com sucesso! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB sacados na {{chain}}.",
+    "not_enough_gas_token": "Você precisa de {{token}} nesta carteira para pagar a taxa de rede.",
     "unstake_failed": "Falha na retirada",
     "unstake_cancelled": "Retirada cancelada",
     "unstake_request_removed": "Sua solicitação de retirada foi removida.",
@@ -1562,6 +1568,8 @@
     "minutesAgo": "há {{count}}m",
     "hoursAgo": "há {{count}}h",
     "daysAgo": "há {{count}}d",
+    "withdrawableNow": "Disponível para saque",
+    "poolNotWithdrawable": "{{amount}} DHB estão na carteira do pool de depósitos, que ainda não tem contrato de saque — fale com o suporte para movê-los.",
     "cancelUnstake": "Cancelar retirada"
   },
   "communities": {

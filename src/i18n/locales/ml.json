@@ -1442,6 +1442,12 @@
     "only_have_dhb_staked": "നിങ്ങൾക്ക് {{amount}} മാത്രമേ ഡെപ്പോസിറ്റ് ചെയ്തിട്ടുള്ളൂ.",
     "unstake_request_submitted": "പിൻവലിക്കൽ അഭ്യർത്ഥന സമർപ്പിച്ചു! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} പിൻവലിക്കൽ ക്യൂവിലേക്ക് ചേർത്തു.",
+    "only_have_dhb_withdrawable": "ഇപ്പോൾ {{amount}} DHB മാത്രമേ പിൻവലിക്കാൻ കഴിയൂ.",
+    "early_withdrawal_fee": "നേരത്തെയുള്ള പിൻവലിക്കൽ ഫീസ്",
+    "early_withdrawal_fee_detail": "{{date}} വരെ ലോക്ക് ചെയ്തിരിക്കുന്നു. ഇപ്പോൾ പിൻവലിച്ചാൽ {{percent}}% — ഏകദേശം {{amount}} DHB ഫീസ് ഈടാക്കും. സ്ഥിരീകരിക്കാൻ വീണ്ടും പിൻവലിക്കുക അമർത്തുക.",
+    "unstaked_successfully": "വിജയകരമായി പിൻവലിച്ചു! ✅",
+    "dhb_unstaked_on_chain": "{{chain}}-ൽ {{amount}} DHB പിൻവലിച്ചു.",
+    "not_enough_gas_token": "നെറ്റ്‌വർക്ക് ഫീസ് അടയ്ക്കാൻ ഈ വാലറ്റിൽ {{token}} വേണം.",
     "unstake_failed": "അൺസ്റ്റേക്ക് പരാജയപ്പെട്ടു",
     "unstake_cancelled": "അൺസ്റ്റേക്ക് റദ്ദാക്കി",
     "unstake_request_removed": "നിങ്ങളുടെ അൺസ്റ്റേക്ക് അഭ്യർത്ഥന നീക്കം ചെയ്തു.",
@@ -1518,6 +1524,8 @@
     "minutesAgo": "{{count}} മിനിറ്റ് മുമ്പ്",
     "hoursAgo": "{{count}} മണിക്കൂർ മുമ്പ്",
     "daysAgo": "{{count}} ദിവസം മുമ്പ്",
+    "withdrawableNow": "ഇപ്പോൾ പിൻവലിക്കാവുന്നത്",
+    "poolNotWithdrawable": "{{amount}} DHB ഡിപ്പോസിറ്റ് പൂൾ വാലറ്റിലാണ്, അതിന് ഇതുവരെ പിൻവലിക്കൽ കരാർ ഇല്ല — മാറ്റാൻ പിന്തുണയുമായി ബന്ധപ്പെടുക.",
     "cancelUnstake": "പിൻവലിക്കൽ റദ്ദാക്കുക"
   },
   "communities": {

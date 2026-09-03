@@ -1458,6 +1458,12 @@
     "only_have_dhb_staked": "سىزدە پەقەت {{amount}} ئامانەت بار.",
     "unstake_request_submitted": "قايتۇرۇۋېلىش تەلىپى يوللاندى! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} قايتۇرۇۋېلىش نۆۋىتىگە قوشۇلدى.",
+    "only_have_dhb_withdrawable": "ھازىر پەقەت {{amount}} DHB نىلا قايتۇرۇۋالغىلى بولىدۇ.",
+    "early_withdrawal_fee": "بۇرۇن قايتۇرۇۋېلىش ھەققى",
+    "early_withdrawal_fee_detail": "{{date}} گىچە قۇلۇپلانغان. ھازىر قايتۇرۇۋالسىڭىز {{percent}}% — تەخمىنەن {{amount}} DHB ھەق ئېلىنىدۇ. جەزملەش ئۈچۈن قايتۇرۇۋېلىش نى يەنە بىر قېتىم بېسىڭ.",
+    "unstaked_successfully": "مۇۋەپپەقىيەتلىك قايتۇرۇۋېلىندى! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} دا {{amount}} DHB قايتۇرۇۋېلىندى.",
+    "not_enough_gas_token": "تور ھەققىنى تۆلەش ئۈچۈن بۇ ھەميانغا {{token}} كېرەك.",
     "unstake_failed": "قايتۇرۇۋېلىش مەغلۇپ بولدى",
     "unstake_cancelled": "قايتۇرۇۋېلىش بىكار قىلىندى",
     "unstake_request_removed": "قايتۇرۇۋېلىش تەلىپىڭىز ئۆچۈرۈلدى.",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "{{count}} مىنۇت ئىلگىرى",
     "hoursAgo": "{{count}} سائەت ئىلگىرى",
     "daysAgo": "{{count}} كۈن ئىلگىرى",
+    "withdrawableNow": "ھازىر قايتۇرۇۋالغىلى بولىدۇ",
+    "poolNotWithdrawable": "{{amount}} DHB ئامانەت ھەويۇزى ھەميانىدا، ئۇنىڭدا تېخى قايتۇرۇۋېلىش كېلىشىمى يوق — يۆتكەش ئۈچۈن قوللاش بىلەن ئالاقىلىشىڭ.",
     "cancelUnstake": "قايتۇرۇۋېلىشنى بىكار قىلىش"
   },
   "communities": {

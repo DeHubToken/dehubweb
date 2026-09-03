@@ -1506,6 +1506,12 @@
     "only_have_dhb_staked": "သင့်တွင် {{amount}} သာ အပ်နှံထားသည်။",
     "unstake_request_submitted": "ငွေထုတ် တောင်းဆိုချက် တင်သွင်းပြီး! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ကို ငွေထုတ် တန်းစီသို့ ထည့်ပြီးပါပြီ။",
+    "only_have_dhb_withdrawable": "ယခုအချိန်တွင် {{amount}} DHB သာ ထုတ်ယူနိုင်ပါသည်။",
+    "early_withdrawal_fee": "စောစီးစွာထုတ်ယူခ",
+    "early_withdrawal_fee_detail": "{{date}} အထိ လော့ခ်ချထားသည်။ ယခုထုတ်ယူပါက {{percent}}% — ခန့်မှန်း {{amount}} DHB ကုန်ကျပါမည်။ အတည်ပြုရန် ထုတ်ယူရန် ကို ထပ်နှိပ်ပါ။",
+    "unstaked_successfully": "အောင်မြင်စွာ ထုတ်ယူပြီးပါပြီ! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} တွင် {{amount}} DHB ထုတ်ယူပြီးပါပြီ။",
+    "not_enough_gas_token": "ကွန်ရက်ကြေး ပေးဆောင်ရန် ဤပိုက်ဆံအိတ်တွင် {{token}} လိုအပ်ပါသည်။",
     "unstake_failed": "Unstake မအောင်မြင်ပါ",
     "unstake_cancelled": "Unstake ပယ်ဖျက်ပြီး",
     "unstake_request_removed": "သင့် Unstake တောင်းဆိုချက်ကို ဖယ်ရှားပြီးပါပြီ။",
@@ -1604,6 +1610,8 @@
     "minutesAgo": "{{count}} မိနစ်က",
     "hoursAgo": "{{count}} နာရီက",
     "daysAgo": "{{count}} ရက်က",
+    "withdrawableNow": "ယခုထုတ်ယူနိုင်သည်",
+    "poolNotWithdrawable": "{{amount}} DHB သည် အပ်ငွေရေကန် ပိုက်ဆံအိတ်တွင် ရှိပြီး ထုတ်ယူမှုစာချုပ် မရှိသေးပါ — ရွှေ့ပြောင်းရန် ပံ့ပိုးမှုကို ဆက်သွယ်ပါ။",
     "cancelUnstake": "ငွေထုတ်ခြင်း ပယ်ဖျက်ရန်"
   },
   "communities": {

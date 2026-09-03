@@ -1486,6 +1486,12 @@
     "only_have_dhb_staked": "Du har kun {{amount}} indbetalt.",
     "unstake_request_submitted": "Udbetalingsanmodning indsendt! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} tilføjet til udbetalingskøen.",
+    "only_have_dhb_withdrawable": "Lige nu kan der kun hæves {{amount}} DHB.",
+    "early_withdrawal_fee": "Gebyr for tidlig udbetaling",
+    "early_withdrawal_fee_detail": "Låst indtil {{date}}. At hæve nu koster {{percent}} % — omkring {{amount}} DHB. Tryk på Hæv igen for at bekræfte.",
+    "unstaked_successfully": "Hævet med succes! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB hævet på {{chain}}.",
+    "not_enough_gas_token": "Du skal bruge {{token}} i denne wallet for at betale netværksgebyret.",
     "unstake_failed": "Unstake mislykkedes",
     "unstake_cancelled": "Unstake annulleret",
     "unstake_request_removed": "Din unstake-anmodning er fjernet.",
@@ -1562,6 +1568,8 @@
     "minutesAgo": "{{count}} min. siden",
     "hoursAgo": "{{count}} t. siden",
     "daysAgo": "{{count}} d. siden",
+    "withdrawableNow": "Kan hæves nu",
+    "poolNotWithdrawable": "{{amount}} DHB ligger i indbetalingspuljens wallet, som endnu ikke har en udbetalingskontrakt — kontakt support for at flytte dem.",
     "cancelUnstake": "Annuller udbetaling"
   },
   "communities": {

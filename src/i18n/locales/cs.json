@@ -1424,6 +1424,12 @@
     "only_have_dhb_staked": "Máš vloženo jen {{amount}}.",
     "unstake_request_submitted": "Žádost o výběr odeslána! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} přidáno do fronty výběrů.",
+    "only_have_dhb_withdrawable": "Právě teď lze vybrat pouze {{amount}} DHB.",
+    "early_withdrawal_fee": "Poplatek za předčasný výběr",
+    "early_withdrawal_fee_detail": "Uzamčeno do {{date}}. Výběr nyní stojí {{percent}} % — přibližně {{amount}} DHB. Potvrďte opětovným stisknutím Vybrat.",
+    "unstaked_successfully": "Úspěšně vybráno! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB vybráno na síti {{chain}}.",
+    "not_enough_gas_token": "K zaplacení síťového poplatku potřebujete v této peněžence {{token}}.",
     "unstake_failed": "Výběr selhal",
     "unstake_cancelled": "Výběr zrušen",
     "unstake_request_removed": "Tvoje žádost o výběr byla odebrána.",
@@ -1500,6 +1506,8 @@
     "minutesAgo": "před {{count}} min",
     "hoursAgo": "před {{count}} h",
     "daysAgo": "před {{count}} d",
+    "withdrawableNow": "Nyní k výběru",
+    "poolNotWithdrawable": "{{amount}} DHB je v peněžence vkladového poolu, která zatím nemá výběrový kontrakt — pro přesun kontaktujte podporu.",
     "cancelUnstake": "Zrušit výběr"
   },
   "communities": {
