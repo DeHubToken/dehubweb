@@ -92,7 +92,9 @@ import { BASE_CHAIN_ID, ROBINHOOD_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { AbiCoder, Interface, keccak256 } from 'ethers';
 import {
   approveERC20,
+  ensureSignerOnChain,
   getERC20Allowance,
+  getERC20Balance,
   readContract,
   parseTxError,
   writeContractAA,
@@ -638,6 +640,31 @@ async function relayTrade(
   if (data.v4 !== undefined && !v4) return say(false, { reason: 'bad request' });
   if (!chain || !token || (!fee && !v4) || !amountIn || !minOut || !side) return say(false, { reason: 'bad request' });
 
+  // Nothing is built until something can sign on THIS chain. Reads here are
+  // chain-correct on their own, so without this a trade priced against
+  // Robinhood pools was signed by the Base provider and sent to Base — where
+  // the router it names has no code, so ETH left the account and the receipt
+  // still said success.
+  try {
+    await ensureSignerOnChain(chainId as ChainId);
+  } catch (error) {
+    console.warn('[game-host-bridge] no signer on chain', chainId, error);
+    return say(false, {
+      reason: chainId === BASE_CHAIN_ID
+        ? 'wallet not ready'
+        : 'the DeHub wallet cannot sign on this chain yet — connect a wallet to trade here',
+    });
+  }
+
+  // A fill is the balance moving, not a receipt coming back. A call that mines
+  // without swapping anything otherwise reports to the desk as a completed
+  // trade, which is the worst way for any of this to fail.
+  const readBalance = (): Promise<bigint | null> =>
+    getERC20Balance(token, address, chainId as ChainId).catch(() => null);
+  const balanceBefore = await readBalance();
+  const moved = (after: bigint | null) =>
+    balanceBefore === null || after === null || (side === 'buy' ? after > balanceBefore : after < balanceBefore);
+
   try {
     let result: AAWriteResult;
     if (v4) {
@@ -686,7 +713,22 @@ async function relayTrade(
     }
     say(true, { stage: 'sent', hash: result.hash });
     const receipt = await result.wait();
-    say(receipt.status === 1, { stage: 'mined', hash: result.hash, reason: receipt.status === 1 ? undefined : 'reverted' });
+    if (receipt.status !== 1) {
+      say(false, { stage: 'mined', hash: result.hash, reason: 'reverted' });
+      return;
+    }
+    let after = await readBalance();
+    if (!moved(after)) {
+      // a public endpoint can still be answering from the block before the receipt
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      after = await readBalance();
+    }
+    const filled = moved(after);
+    say(filled, {
+      stage: 'mined',
+      hash: result.hash,
+      reason: filled ? undefined : 'mined without moving any tokens',
+    });
   } catch (error) {
     say(false, { reason: parseTxError(error, 'swap') });
   }
