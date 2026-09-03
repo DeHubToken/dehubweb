@@ -27,6 +27,12 @@ project_id = "aigxuutjaqsywioxjefr"
   [functions.agora-token]
     verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, not a Supabase JWT, so the
+  # platform check stays off and requireDeHubAuth does the work. Mobile calls
+  # this with a bare fetch and no Authorization header at all, so leaving the
+  # platform check on would 401 every phone before requireDeHubAuth ran.
+  [functions.ai-payment-record]
+    verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, not a Supabase JWT, so the
   # platform check stays off and requireDeHubAuth does the work.
   [functions.ai-quote]
     verify_jwt = false
