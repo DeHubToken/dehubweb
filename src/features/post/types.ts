@@ -81,6 +81,8 @@ export interface PostFormState {
   isEnhancing: boolean;
   isPosting: boolean;
   uploadProgress: number; // 0–100 stage-based progress
+  /** The mint is waiting on a wallet that has not answered yet. */
+  mintAwaitingWallet: boolean;
   
 }
 
@@ -120,6 +122,8 @@ export interface PostFormActions {
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: (extra?: { soundtrackTag?: string }) => void;
+  /** Give up on the wallet and publish the post off-chain. */
+  abandonMint: () => void;
   resetForm: () => void;
   markCategorySaved: () => void;
 }
