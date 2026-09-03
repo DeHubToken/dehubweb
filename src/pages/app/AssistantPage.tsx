@@ -13,7 +13,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines, LifeBuoy } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
@@ -69,6 +69,7 @@ import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioP
 import { MusicConfirmDialog, type MusicParams } from '@/components/app/assistant/MusicConfirmDialog';
 import { PosterConfigDialog, type PosterConfig } from '@/components/app/assistant/PosterConfigDialog';
 import { SkillsHubModal } from '@/components/app/assistant/SkillsHubModal';
+import { SupportTicketDrawer, useMySupportTickets } from '@/components/app/assistant/SupportTicketDrawer';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
@@ -641,6 +642,7 @@ export default function AssistantPage() {
   const [showPinModal, setShowPinModal] = useState(false); // PIN setup modal
   const [pinInput, setPinInput] = useState(''); // PIN input value
   const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false); // History drawer state
+  const [supportDrawerOpen, setSupportDrawerOpen] = useState(false); // Support ticket drawer state
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -739,6 +741,10 @@ export default function AssistantPage() {
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress, user } = useAuth();
+  // Read once for the header badge. The drawer runs the same query, so opening
+  // it costs no second request — and the badge is the point: somebody with an
+  // open ticket should see that without clicking anything.
+  const { data: supportTickets } = useMySupportTickets(isAuthenticated);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { language: userLanguage } = useUserLanguage();
@@ -2125,6 +2131,23 @@ export default function AssistantPage() {
             <History className="w-5 h-5" />
           </button>
 
+          {/* Support Button — the desk, not the model. Opens the ticket drawer
+              directly: no quote, no DHB transfer, no paid round trip. The badge
+              counts tickets still waiting on a human. */}
+          <button
+            onClick={() => setSupportDrawerOpen(true)}
+            className="relative p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
+            title={t('support.title')}
+            aria-label={t('support.title')}
+          >
+            <LifeBuoy className="w-5 h-5" />
+            {!!supportTickets?.openCount && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-white text-black text-[10px] font-semibold flex items-center justify-center">
+                {supportTickets.openCount}
+              </span>
+            )}
+          </button>
+
           {/* Settings Button */}
           <button
             onClick={() => setSettingsSheetOpen(true)}
@@ -3255,6 +3278,12 @@ export default function AssistantPage() {
       )}
 
       {/* Skills library */}
+      <SupportTicketDrawer
+        open={supportDrawerOpen}
+        onOpenChange={setSupportDrawerOpen}
+        enabled={isAuthenticated}
+      />
+
       <SkillsHubModal
         open={skillsHubOpen}
         onOpenChange={setSkillsHubOpen}
