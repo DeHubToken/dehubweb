@@ -215,6 +215,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
         uploadProgress={state.uploadProgress}
+        mintAwaitingWallet={state.mintAwaitingWallet}
+        onAbandonMint={actions.abandonMint}
         
         hasText={!!state.text.trim()}
         hasImage={computed.hasImage}
