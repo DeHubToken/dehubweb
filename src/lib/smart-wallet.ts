@@ -31,6 +31,7 @@ import type { AccountAbstractionProvider } from "@web3auth/account-abstraction-p
 import { supabase } from "@/integrations/supabase/client";
 import { getWalletUnlockIntervalMs } from "@/hooks/use-wallet-unlock-interval";
 import { saveVaultSession, readVaultSession, clearVaultSession } from "@/lib/wallet-core/key-vault";
+import { ROBINHOOD_CHAIN_ID, ROBINHOOD_PUBLIC_RPC, ROBINHOOD_EXPLORER_URL } from "@/lib/chains/robinhood";
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
 
@@ -76,6 +77,19 @@ const AA_CHAIN_CONFIGS: Record<number, {
     rpcTarget: "https://ethereum-rpc.publicnode.com",
     displayName: "Ethereum Mainnet",
     blockExplorerUrl: "https://etherscan.io",
+    ticker: "ETH",
+    tickerName: "Ethereum",
+  },
+  // Robinhood Chain. Safe 1.4.1, its proxy factory and both EntryPoints are
+  // deployed there, so the account side needs nothing — this entry is what
+  // lets a session build a provider for 4663 instead of silently signing with
+  // Base's. If Pimlico does not relay this chain the setup throws and the
+  // caller refuses the write; nothing falls back to another chain.
+  [ROBINHOOD_CHAIN_ID]: {
+    chainIdHex: "0x1237",
+    rpcTarget: ROBINHOOD_PUBLIC_RPC,
+    displayName: "Robinhood Chain",
+    blockExplorerUrl: ROBINHOOD_EXPLORER_URL,
     ticker: "ETH",
     tickerName: "Ethereum",
   },

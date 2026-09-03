@@ -2410,8 +2410,9 @@ async function v4Key(ch,m){
   const w=i=>l.data.slice(2+i*64,66+i*64);
   const key={c0:'0x'+l.topics[2].slice(26),c1:'0x'+l.topics[3].slice(26),
     fee:parseInt(w(0),16),ts:parseInt(w(1),16),hooks:'0x'+w(2).slice(24)};
-  /* only ETH-quoted pools: the ticket buys with the gas coin and sells back to it */
-  if(key.c0!==ZERO)return null;
+  /* Non-ETH-quoted pools are keyed and cached like any other — the ticket
+     cannot route them, because it pays in the gas coin and sells back to it,
+     but knowing WHY beats reporting a missing pool. routeEvm does the telling. */
   v4Keys[id]=key;try{localStorage.setItem('trenchstar.v4keys',JSON.stringify(v4Keys));}catch(e){}
   return key;
 }
@@ -2493,7 +2494,12 @@ function evmAddr(){return wallet.addr||watchAddr();}
    whatever cannot be keyed (or quoted) falls through to v3. */
 async function routeEvm(ch,m,side,amount){
   let q=null;
-  if(m.v4){const key=await v4Key(ch,m);if(key)q=await quoteV4(ch,key,side==='buy',amount);}
+  if(m.v4){
+    const key=await v4Key(ch,m);
+    if(key&&key.c0!==ZERO)
+      throw new Error('no '+ch.gas+' route on '+ch.label+' — that pool is quoted in '+(m.quoteSym||'another token'));
+    if(key)q=await quoteV4(ch,key,side==='buy',amount);
+  }
   if(!q)q=side==='buy'?await quoteEvm(ch,ch.weth,m.tokenAddr,amount):await quoteEvm(ch,m.tokenAddr,ch.weth,amount);
   if(!q)throw new Error(m.v4?'no route on '+ch.label+' — v4 pool could not be keyed':'no route on '+ch.label);
   return q;
@@ -5204,6 +5210,7 @@ function applyPair(m,p){
   m.chain=p.chainId;
   m.pairAddr=p.pairAddress;
   m.tokenAddr=p.baseToken&&p.baseToken.address;
+  m.quoteSym=(p.quoteToken&&p.quoteToken.symbol)||'';   /* what the pool prices in, for the no-route line */
   m.liq=(p.liquidity&&+p.liquidity.usd)||0;m.pairAt=+p.pairCreatedAt||0;m.v4=Array.isArray(p.labels)&&p.labels.includes('v4');
   const pc=p.priceChange||{};
   m.pushSample(+p.priceUsd,{h24:+pc.h24,h1:+pc.h1,m5:+pc.m5,
@@ -9223,6 +9230,7 @@ async function pollDex(){
         m.chain=p.chainId;
         m.pairAddr=p.pairAddress;          /* the pool GeckoTerminal keys its candles on */
         m.tokenAddr=p.baseToken.address;
+        m.quoteSym=(p.quoteToken&&p.quoteToken.symbol)||'';
         m.liq=(p.liquidity&&+p.liquidity.usd)||0;m.pairAt=+p.pairCreatedAt||0;m.v4=Array.isArray(p.labels)&&p.labels.includes('v4');
         m.boosted=dexBoosted.has(p.baseToken.address);
         const pc=p.priceChange||{};
@@ -11800,7 +11808,9 @@ function tdRender(){
   const amtOk=td.side==='buy'?td.amt>0:(td.pct>0&&held);
   const canSign=ch.sol?true:!!evmSigner();     /* Phantom connects on press */
   go.disabled=!(amtOk&&canSign)||td.busy;
-  go.textContent=td.busy?'WORKING…':td.side==='buy'
+  /* a dead button with no reason on it is why nobody knew the desk needs a
+     signer at the standalone URL */
+  go.textContent=td.busy?'WORKING…':!canSign?'CONNECT A WALLET TO TRADE':td.side==='buy'
     ?(td.amt?'BUY '+m.sym+' FOR '+td.amt+' '+ch.gas:'PICK AN AMOUNT')
     :(td.pct&&held?'SELL '+td.pct+'% '+m.sym+' → '+ch.gas:held?'PICK A SIZE':'NOTHING TO SELL');
 }
@@ -11864,7 +11874,10 @@ $('#tdGo').addEventListener('click',async()=>{
     const minOut=plan.side==='buy'
       ? (ch.sol?'':'')+(outDec!=null?(+fmtUnits(plan.minOut,outDec).toPrecision(6)):'')
       : (+fmtUnits(plan.minOut,ch.dec).toPrecision(6))+' '+ch.gas;
+    /* a hooked v4 pool carries fee 0, so the old v3 wording described the
+       majority of Robinhood's pairs as a zero-fee v3 pool */
     const route=ch.sol?(plan.q.routePlan||[]).map(r=>r.swapInfo&&r.swapInfo.label).filter(Boolean).slice(0,3).join(' → ')||'JUPITER'
+      :plan.q.v4?'UNISWAP V4 · '+(plan.q.key.hooks&&plan.q.key.hooks!==ZERO?'HOOKED':'HOOKLESS')+' POOL'
       :'UNISWAP V3 · '+(plan.q.fee/10000)+'% POOL';
     const impact=ch.sol&&plan.q.priceImpactPct!=null?' · IMPACT '+(+plan.q.priceImpactPct*100).toFixed(2)+'%':'';
     const who=ch.sol?'PHANTOM':(evmSigner()==='native'?'DEHUB WALLET · GAS SPONSORED':'YOUR WALLET');
