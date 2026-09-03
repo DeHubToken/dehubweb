@@ -19,12 +19,20 @@ import { forgetPayment } from '@/lib/ai-payment';
 /** Headers the paid AI functions authenticate against. Empty when signed out. */
 export function dehubAuthHeaders(): Record<string, string> {
   const token = getAuthToken();
+  if (!token) return {};
+  // The token is the identity. `requireDeHubAuth` takes the wallet off the
+  // verified token and reads this header only to detect a mismatch, so sending
+  // it is a cross-check rather than a requirement.
+  //
+  // It used to return {} whenever `dehub_wallet` was absent, which turned a
+  // paid, signed-in call into an anonymous one — a 401 AFTER the DHB had left
+  // the wallet, and the same silent 401 mobile was fixed for. A signed-in
+  // session with that key missing is rare but it happens: a storage clear that
+  // leaves the token, a profile switch mid-session.
   const wallet = localStorage.getItem('dehub_wallet');
-  if (!token || !wallet) return {};
-  return {
-    'x-wallet-address': wallet.toLowerCase(),
-    'x-dehub-token': token,
-  };
+  const headers: Record<string, string> = { 'x-dehub-token': token };
+  if (wallet) headers['x-wallet-address'] = wallet.toLowerCase();
+  return headers;
 }
 
 /**
