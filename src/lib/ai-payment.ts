@@ -20,6 +20,7 @@ import { Interface } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/api/dehub';
+import { supabase } from '@/integrations/supabase/client';
 import { writeContractAA, getERC20Balance, getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
 import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
@@ -258,6 +259,19 @@ export async function payForJob(
     return reusable.txHash;
   }
 
+  // Nothing locally — but this browser is not the record. The server holds a
+  // receipt for every transfer that reached it, with what is left on it, and
+  // it survives a closed tab, a cleared cache and a different device. Asking
+  // before signing is the difference between a payment that failed once and a
+  // user paying twice for one result.
+  if (remember) {
+    const banked = (await fetchUnspentPayments()).find((p) => p.dhb >= priceDhb);
+    if (banked) {
+      rememberHash(banked.txHash, banked.dhb, priceDhb, payer, true);
+      return banked.txHash;
+    }
+  }
+
   // Round up: the treasury must receive at least the price, and a fractional
   // wei short would leave the transfer one unit under it.
   const amount = Math.ceil(priceDhb);
@@ -300,7 +314,13 @@ export async function payForJob(
     `Could not switch to ${chain}. Unlock your wallet and try again.`,
   );
 
-  let txHash: string;
+  // Submitted, but not yet known to be mined. Kept out here so the catch below
+  // can tell "the wallet refused to sign" — nothing sent, nothing owed — from
+  // "we lost sight of a transfer that is already on chain".
+  let submittedHash = '';
+  let txHash = '';
+  let reverted = false;
+
   try {
     const result = await writeContractAA(
       chainConfig.dhbToken,
@@ -309,26 +329,156 @@ export async function payForJob(
       [AI_TREASURY, amountWei],
       { context: 'AI generation payment', chainId: payChainId },
     );
+    submittedHash = (result.hash || '').toLowerCase();
+    // Written down BEFORE the receipt is awaited. `wait()` rejects on a dropped
+    // socket or a provider hiccup as readily as on a real failure, and the
+    // transfer is in the mempool either way — recording only after it resolved
+    // is how four payments reached the treasury with no record of who sent
+    // them. A hash here costs nothing if the transfer never lands: the server
+    // refuses to record one it cannot find on chain.
+    if (submittedHash) rememberHash(submittedHash, amount, priceDhb, payer, remember);
+
     // wait() resolves with status 0 for a REVERTED transaction rather than
     // throwing, so ignoring the receipt would send a hash that paid nothing.
     const receipt = await result.wait(1);
-    if (receipt?.status !== 1) {
-      throw new Error('The DHB transfer did not go through. Nothing has been charged.');
-    }
-    txHash = (receipt?.hash ?? result.hash).toLowerCase();
+    // Flagged rather than thrown: a revert is a settled answer — no DHB moved
+    // — and must not fall into the catch below, which exists for the opposite
+    // case and would go looking for the transfer on chain.
+    reverted = receipt?.status !== 1;
+    txHash = ((receipt?.hash ?? result.hash) || '').toLowerCase();
   } catch (err) {
+    // The transfer was signed and broadcast; we just could not watch it land.
+    // Asking the server settles it against the chain, and if it is real the
+    // receipt now exists whatever happens to this tab. Reporting "payment
+    // failed" here is what turned a mined transfer into lost money.
+    if (submittedHash) {
+      const recorded = await recordPayment(submittedHash, remember ? 'job' : 'voice');
+      if (recorded) return submittedHash;
+      throw new Error(
+        'Your DHB transfer was sent but we could not confirm it. It is saved and will pay for your next attempt — do not send it again.',
+      );
+    }
     throw new Error(parseTxError(err) || 'Payment failed.');
   }
 
-  // pendingDhb is this job's price, not the transfer: the amount is rounded up
-  // to a whole DHB, so anything over the price is the payer's for the next one.
-  if (remember) {
-    writeUnspent([
-      ...readUnspent(),
-      { txHash, dhb: amount, paidAt: Date.now(), wallet: payer.toLowerCase(), pendingDhb: priceDhb },
-    ]);
+  if (reverted) {
+    // No DHB moved, so drop the hash rather than leaving a phantom payment for
+    // the next job to offer.
+    if (submittedHash) forgetPayment(submittedHash, true);
+    throw new Error('The DHB transfer did not go through. Nothing has been charged.');
   }
+
+  // A provider can hand back a different hash than it first reported — a
+  // replacement, or a smart-account bundle. Bank the one that actually mined.
+  if (txHash && submittedHash && txHash !== submittedHash) {
+    forgetPayment(submittedHash, true);
+    rememberHash(txHash, amount, priceDhb, payer, remember);
+  }
+  if (!txHash) txHash = submittedHash;
+
+  // The receipt is the point of no return, so record it here too: from now on
+  // the money is the payer's to spend even if this page never reaches the
+  // generation function.
+  await recordPayment(txHash, remember ? 'job' : 'voice');
+
   return txHash;
+}
+
+/**
+ * Keep a hash where the next job can find it.
+ *
+ * `pendingDhb` is this job's price, not the transfer: the amount is rounded up
+ * to a whole DHB, so anything over the price is the payer's for the next one.
+ */
+function rememberHash(
+  txHash: string,
+  amount: number,
+  priceDhb: number,
+  payer: string,
+  remember: boolean,
+): void {
+  if (!remember) return;
+  writeUnspent([
+    ...readUnspent().filter((p) => p.txHash !== txHash),
+    { txHash, dhb: amount, paidAt: Date.now(), wallet: payer.toLowerCase(), pendingDhb: priceDhb },
+  ]);
+}
+
+/**
+ * Tell the server about a mined transfer so a receipt exists independently of
+ * this browser.
+ *
+ * localStorage is not a record. It is one device, one profile, cleared by a
+ * private window, and it expires in `REUSE_WINDOW_MS`. The receipt this writes
+ * outlives all of that and is what `chargeForJob` draws from, so a job that
+ * dies anywhere after payment leaves spendable DHB rather than nothing.
+ *
+ * Never throws. A payment that is already made must not be reported as failed
+ * because the bookkeeping call did not get through — the hash is still in
+ * localStorage, and `chargeForJob` records it the old way if it gets there
+ * first.
+ */
+async function recordPayment(txHash: string, purpose: 'job' | 'voice'): Promise<boolean> {
+  try {
+    const { error } = await callPaymentLedger({ txHash, purpose });
+    if (error) {
+      console.warn('[ai-payment] could not record payment yet:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.warn('[ai-payment] could not record payment yet:', err);
+    return false;
+  }
+}
+
+/**
+ * Call the payment ledger function.
+ *
+ * Deliberately not `invokeAi`: that retires a hash from the local list on a
+ * successful call, which is exactly wrong for a call whose whole purpose is to
+ * bank one. It also imports from here, and a cycle between the two modules is
+ * not worth the shared header helper — which is four lines.
+ */
+async function callPaymentLedger<T>(body: Record<string, unknown>) {
+  const token = getAuthToken();
+  const wallet = localStorage.getItem('dehub_wallet');
+  const headers: Record<string, string> = {};
+  if (token) headers['x-dehub-token'] = token;
+  if (wallet) headers['x-wallet-address'] = wallet.toLowerCase();
+  return supabase.functions.invoke<T>('ai-payment-record', { body, headers });
+}
+
+/**
+ * Paid-but-unspent DHB this wallet has on the server, newest first.
+ *
+ * The local list only knows what this browser did. This is the same question
+ * asked of the only place that actually knows the answer, which is what makes
+ * a payment survive a closed tab, a cleared cache or a different device.
+ */
+export async function fetchUnspentPayments(): Promise<UnspentPayment[]> {
+  try {
+    const { data, error } = await callPaymentLedger<{ payments?: ServerPayment[] }>({ action: 'list' });
+    if (error || !data?.payments) return [];
+    return data.payments
+      .filter((p) => p.purpose !== 'voice' && Number(p.remainingDhb) > 0)
+      .map((p) => ({
+        txHash: String(p.txHash).toLowerCase(),
+        dhb: Number(p.remainingDhb),
+        paidAt: Date.parse(p.createdAt) || Date.now(),
+      }));
+  } catch {
+    return [];
+  }
+}
+
+interface ServerPayment {
+  txHash: string;
+  chain: string;
+  paidDhb: number;
+  remainingDhb: number;
+  purpose: string;
+  createdAt: string;
 }
 
 /** DHB per voice exchange: Whisper 60 + Dia 80, at the server's prices. */
