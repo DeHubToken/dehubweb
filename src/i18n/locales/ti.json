@@ -1466,6 +1466,12 @@
     "only_have_dhb_staked": "ጥራይ {{amount}} ኣቐሚጥካ ኣለኻ።",
     "unstake_request_submitted": "ናይ ምውጻእ ሕቶ ተላኢኹ! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ናብ መሰለፍ ምውጻእ ተወሲኹ።",
+    "only_have_dhb_withdrawable": "ሕጂ ክውጻእ ዝኽእል {{amount}} DHB ጥራይ እዩ።",
+    "early_withdrawal_fee": "ቅድሚ ግዜኡ ናይ ምውጻእ ክፍሊት",
+    "early_withdrawal_fee_detail": "ክሳብ {{date}} ተዓጽዩ ኣሎ። ሕጂ ምውጻእ {{percent}}% — ኣስታት {{amount}} DHB የኽፍል። ንምርግጋጽ ደጊምካ ኣውጽእ ጠውቕ።",
+    "unstaked_successfully": "ብዓወት ወጺኡ! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB ኣብ {{chain}} ወጺኡ።",
+    "not_enough_gas_token": "ናይ መርበብ ክፍሊት ንምኽፋል ኣብዚ ማሕፉዳ {{token}} የድሊ።",
     "unstake_failed": "ምውጻእ ኣይሰለጠን",
     "unstake_cancelled": "ምውጻእ ተሰሪዙ",
     "unstake_request_removed": "ናይ ምውጻእ ሕቶኻ ተኣልዩ ኣሎ።",
@@ -1564,6 +1570,8 @@
     "minutesAgo": "ቅድሚ {{count}}ደ",
     "hoursAgo": "ቅድሚ {{count}}ሰ",
     "daysAgo": "ቅድሚ {{count}}መ",
+    "withdrawableNow": "ሕጂ ክውጻእ ዝኽእል",
+    "poolNotWithdrawable": "{{amount}} DHB ኣብ ዓቕሪ ገንዘብ ማሕፉዳ ኣሎ፣ ንሱ ግና ክሳብ ሕጂ ናይ ምውጻእ ውዕል የብሉን — ንምግዓዝ ንደገፍ ተወከስ።",
     "cancelUnstake": "ምውጻእ ኣቋርጽ"
   },
   "communities": {

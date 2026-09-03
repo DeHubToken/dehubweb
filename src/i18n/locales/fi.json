@@ -1424,6 +1424,12 @@
     "only_have_dhb_staked": "Sinulla on talletettuna vain {{amount}}.",
     "unstake_request_submitted": "Nostopyyntö lähetetty! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} lisätty nostojonoon.",
+    "only_have_dhb_withdrawable": "Tällä hetkellä voit nostaa vain {{amount}} DHB.",
+    "early_withdrawal_fee": "Ennenaikaisen noston maksu",
+    "early_withdrawal_fee_detail": "Lukittu {{date}} asti. Nosto nyt maksaa {{percent}} % — noin {{amount}} DHB. Vahvista painamalla Nosta uudelleen.",
+    "unstaked_successfully": "Nosto onnistui! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB nostettu verkossa {{chain}}.",
+    "not_enough_gas_token": "Tarvitset {{token}} tässä lompakossa verkkomaksun maksamiseen.",
     "unstake_failed": "Steikkauksen purku epäonnistui",
     "unstake_cancelled": "Steikkauksen purku peruutettu",
     "unstake_request_removed": "Steikkauksen purkupyyntösi on poistettu.",
@@ -1500,6 +1506,8 @@
     "minutesAgo": "{{count}} min sitten",
     "hoursAgo": "{{count}} t sitten",
     "daysAgo": "{{count}} pv sitten",
+    "withdrawableNow": "Nostettavissa nyt",
+    "poolNotWithdrawable": "{{amount}} DHB on talletuspoolin lompakossa, jolla ei vielä ole nostosopimusta — ota yhteyttä tukeen siirtääksesi ne.",
     "cancelUnstake": "Peruuta nosto"
   },
   "communities": {

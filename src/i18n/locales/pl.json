@@ -1482,6 +1482,12 @@
     "only_have_dhb_staked": "Masz wpłacone tylko {{amount}}.",
     "unstake_request_submitted": "Prośba o wypłatę wysłana! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} dodano do kolejki wypłat.",
+    "only_have_dhb_withdrawable": "W tej chwili można wypłacić tylko {{amount}} DHB.",
+    "early_withdrawal_fee": "Opłata za wcześniejszą wypłatę",
+    "early_withdrawal_fee_detail": "Zablokowane do {{date}}. Wypłata teraz kosztuje {{percent}}% — około {{amount}} DHB. Naciśnij Wypłać ponownie, aby potwierdzić.",
+    "unstaked_successfully": "Wypłacono pomyślnie! ✅",
+    "dhb_unstaked_on_chain": "Wypłacono {{amount}} DHB w sieci {{chain}}.",
+    "not_enough_gas_token": "Potrzebujesz {{token}} w tym portfelu, aby zapłacić opłatę sieciową.",
     "unstake_failed": "Wypłata nie powiodła się",
     "unstake_cancelled": "Wypłata anulowana",
     "unstake_request_removed": "Twoja prośba o wypłatę została usunięta.",
@@ -1558,6 +1564,8 @@
     "minutesAgo": "{{count}} min temu",
     "hoursAgo": "{{count}} godz. temu",
     "daysAgo": "{{count}} dni temu",
+    "withdrawableNow": "Dostępne do wypłaty",
+    "poolNotWithdrawable": "{{amount}} DHB znajduje się w portfelu puli depozytów, który nie ma jeszcze kontraktu wypłat — skontaktuj się z pomocą techniczną, aby je przenieść.",
     "cancelUnstake": "Anuluj wypłatę"
   },
   "communities": {

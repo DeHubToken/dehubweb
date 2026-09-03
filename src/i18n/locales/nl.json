@@ -1679,6 +1679,12 @@
     "only_have_dhb_staked": "Je hebt maar {{amount}} ingelegd.",
     "unstake_request_submitted": "Opnameverzoek ingediend! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} toegevoegd aan de opnamewachtrij.",
+    "only_have_dhb_withdrawable": "Op dit moment kan er slechts {{amount}} DHB worden opgenomen.",
+    "early_withdrawal_fee": "Kosten voor vervroegde opname",
+    "early_withdrawal_fee_detail": "Vergrendeld tot {{date}}. Nu opnemen kost {{percent}}% — ongeveer {{amount}} DHB. Druk nogmaals op Opnemen om te bevestigen.",
+    "unstaked_successfully": "Succesvol opgenomen! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB opgenomen op {{chain}}.",
+    "not_enough_gas_token": "Je hebt {{token}} in deze wallet nodig om de netwerkkosten te betalen.",
     "unstake_failed": "Unstaken mislukt",
     "unstake_cancelled": "Unstake geannuleerd",
     "unstake_request_removed": "Je unstake-verzoek is verwijderd.",
@@ -1755,6 +1761,8 @@
     "minutesAgo": "{{count}}m geleden",
     "hoursAgo": "{{count}}u geleden",
     "daysAgo": "{{count}}d geleden",
+    "withdrawableNow": "Nu opneembaar",
+    "poolNotWithdrawable": "{{amount}} DHB staat in de wallet van de stortingspool, die nog geen opnamecontract heeft — neem contact op met support om het te verplaatsen.",
     "cancelUnstake": "Opname annuleren"
   },
   "communities": {

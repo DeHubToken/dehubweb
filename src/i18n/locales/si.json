@@ -1417,6 +1417,12 @@
     "only_have_dhb_staked": "ඔබ තැන්පත් කර ඇත්තේ {{amount}} ක් පමණි.",
     "unstake_request_submitted": "ආපසු ගැනීමේ ඉල්ලීම ඉදිරිපත් විය! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ආපසු ගැනීමේ පෝලිමට එක් විය.",
+    "only_have_dhb_withdrawable": "මේ මොහොතේ ආපසු ගත හැක්කේ {{amount}} DHB පමණි.",
+    "early_withdrawal_fee": "කලින් ආපසු ගැනීමේ ගාස්තුව",
+    "early_withdrawal_fee_detail": "{{date}} දක්වා අගුළු දමා ඇත. දැන් ආපසු ගැනීමට {{percent}}% — දළ වශයෙන් {{amount}} DHB ගාස්තුවක් අය වේ. තහවුරු කිරීමට නැවත ආපසු ගන්න ඔබන්න.",
+    "unstaked_successfully": "සාර්ථකව ආපසු ගන්නා ලදී! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} හි {{amount}} DHB ආපසු ගන්නා ලදී.",
+    "not_enough_gas_token": "ජාල ගාස්තුව ගෙවීමට මෙම පසුම්බියේ {{token}} අවශ්‍යයි.",
     "unstake_failed": "ආපසු ගැනීම අසාර්ථකයි",
     "unstake_cancelled": "ආපසු ගැනීම අවලංගු විය",
     "unstake_request_removed": "ඔබේ ආපසු ගැනීමේ ඉල්ලීම ඉවත් කර ඇත.",
@@ -1493,6 +1499,8 @@
     "minutesAgo": "මිනිත්තු {{count}}කට පෙර",
     "hoursAgo": "පැය {{count}}කට පෙර",
     "daysAgo": "දින {{count}}කට පෙර",
+    "withdrawableNow": "දැන් ආපසු ගත හැකි",
+    "poolNotWithdrawable": "{{amount}} DHB තැන්පතු සංචිත පසුම්බියේ ඇති අතර, එයට තවම ආපසු ගැනීමේ ගිවිසුමක් නැත — ගෙනයාමට සහාය අමතන්න.",
     "cancelUnstake": "ආපසු ගැනීම අවලංගු කරන්න"
   },
   "communities": {

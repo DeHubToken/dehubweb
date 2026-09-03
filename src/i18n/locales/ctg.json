@@ -1639,6 +1639,12 @@
     "only_have_dhb_staked": "আঁর খালি {{amount}} জমা আছে।",
     "unstake_request_submitted": "তোলার অনুরোধ পাঠানো অইয়ে! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} তোলার সারিত যোগ অইয়ে।",
+    "only_have_dhb_withdrawable": "অন খালি {{amount}} DHB তোলা যাইব।",
+    "early_withdrawal_fee": "আগে তোলার ফি",
+    "early_withdrawal_fee_detail": "{{date}} পর্যন্ত লক অইয়ে। অন তুইল্লে {{percent}}% — প্রায় {{amount}} DHB ফি লাগিব। নিশ্চিত গইত্তে আবার তোলো চাপন।",
+    "unstaked_successfully": "সফলভাবে তোলা অইয়ে! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} ত {{amount}} DHB তোলা অইয়ে।",
+    "not_enough_gas_token": "নেটওয়ার্ক ফি দিত এই ওয়ালেটত {{token}} লাগিব।",
     "unstake_failed": "তোলা ব্যর্থ অইয়ে",
     "unstake_cancelled": "তোলা বাতিল অইয়ে",
     "unstake_request_removed": "আঁর তোলার অনুরোধ সরানো অইয়ে।",
@@ -1737,6 +1743,8 @@
     "minutesAgo": "{{count}} মিনিট আগে",
     "hoursAgo": "{{count}} ঘণ্টা আগে",
     "daysAgo": "{{count}} দিন আগে",
+    "withdrawableNow": "অন তোলা যাইব",
+    "poolNotWithdrawable": "{{amount}} DHB জমা পুল ওয়ালেটত আছে, যেতার অন পর্যন্ত কোনো উত্তোলন কনট্র্যাক্ট নাই — সরাইতে সাপোর্টর লগে যোগাযোগ গরন।",
     "cancelUnstake": "তোলা বাতিল গরন"
   },
   "communities": {

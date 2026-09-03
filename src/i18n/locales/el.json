@@ -1322,6 +1322,12 @@
     "only_have_dhb_staked": "Έχετε καταθέσει μόνο {{amount}}.",
     "unstake_request_submitted": "Το αίτημα ανάληψης υποβλήθηκε! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} προστέθηκαν στην ουρά αναλήψεων.",
+    "only_have_dhb_withdrawable": "Αυτή τη στιγμή μπορούν να αναληφθούν μόνο {{amount}} DHB.",
+    "early_withdrawal_fee": "Χρέωση πρόωρης ανάληψης",
+    "early_withdrawal_fee_detail": "Κλειδωμένο έως {{date}}. Η ανάληψη τώρα κοστίζει {{percent}}% — περίπου {{amount}} DHB. Πατήστε ξανά Ανάληψη για επιβεβαίωση.",
+    "unstaked_successfully": "Η ανάληψη ολοκληρώθηκε! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB αναλήφθηκαν στο {{chain}}.",
+    "not_enough_gas_token": "Χρειάζεστε {{token}} σε αυτό το πορτοφόλι για να πληρώσετε το τέλος δικτύου.",
     "unstake_failed": "Το unstake απέτυχε",
     "unstake_cancelled": "Το unstake ακυρώθηκε",
     "unstake_request_removed": "Το αίτημα unstake αφαιρέθηκε.",
@@ -1396,6 +1402,8 @@
     "minutesAgo": "πριν {{count}}λ",
     "hoursAgo": "πριν {{count}}ω",
     "daysAgo": "πριν {{count}}ημ",
+    "withdrawableNow": "Διαθέσιμα για ανάληψη",
+    "poolNotWithdrawable": "{{amount}} DHB βρίσκονται στο πορτοφόλι της δεξαμενής καταθέσεων, που δεν έχει ακόμη συμβόλαιο ανάληψης — επικοινωνήστε με την υποστήριξη για μεταφορά.",
     "cancelUnstake": "Ακύρωση ανάληψης"
   },
   "communities": {

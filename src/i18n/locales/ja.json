@@ -1483,6 +1483,12 @@
     "only_have_dhb_staked": "預け入れ額は {{amount}} のみです。",
     "unstake_request_submitted": "出金リクエストを送信しました！✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} を出金キューに追加しました。",
+    "only_have_dhb_withdrawable": "現在引き出せるのは {{amount}} DHB のみです。",
+    "early_withdrawal_fee": "早期引き出し手数料",
+    "early_withdrawal_fee_detail": "{{date}} までロックされています。今引き出すと {{percent}}% — 約 {{amount}} DHB の手数料がかかります。確認するにはもう一度「引き出す」を押してください。",
+    "unstaked_successfully": "引き出しに成功しました！✅",
+    "dhb_unstaked_on_chain": "{{chain}} で {{amount}} DHB を引き出しました。",
+    "not_enough_gas_token": "ネットワーク手数料の支払いに、このウォレットに {{token}} が必要です。",
     "unstake_failed": "アンステークに失敗しました",
     "unstake_cancelled": "アンステークをキャンセルしました",
     "unstake_request_removed": "アンステークのリクエストを削除しました。",
@@ -1559,6 +1565,8 @@
     "minutesAgo": "{{count}}分前",
     "hoursAgo": "{{count}}時間前",
     "daysAgo": "{{count}}日前",
+    "withdrawableNow": "現在引き出し可能",
+    "poolNotWithdrawable": "{{amount}} DHB は預入プールのウォレットにあり、まだ引き出しコントラクトがありません — 移動するにはサポートにご連絡ください。",
     "cancelUnstake": "出金をキャンセル"
   },
   "communities": {

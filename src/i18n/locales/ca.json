@@ -1424,6 +1424,12 @@
     "only_have_dhb_staked": "Només tens {{amount}} dipositat.",
     "unstake_request_submitted": "Sol·licitud de retirada enviada! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} afegit a la cua de retirada.",
+    "only_have_dhb_withdrawable": "Ara mateix només es poden retirar {{amount}} DHB.",
+    "early_withdrawal_fee": "Comissió per retirada anticipada",
+    "early_withdrawal_fee_detail": "Bloquejat fins al {{date}}. Retirar ara costa un {{percent}}% — uns {{amount}} DHB. Torna a prémer Retira per confirmar.",
+    "unstaked_successfully": "Retirada correcta! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB retirats a {{chain}}.",
+    "not_enough_gas_token": "Necessites {{token}} en aquesta cartera per pagar la comissió de xarxa.",
     "unstake_failed": "La retirada ha fallat",
     "unstake_cancelled": "Retirada cancel·lada",
     "unstake_request_removed": "La teva sol·licitud de retirada s'ha eliminat.",
@@ -1500,6 +1506,8 @@
     "minutesAgo": "fa {{count}} min",
     "hoursAgo": "fa {{count}} h",
     "daysAgo": "fa {{count}} d",
+    "withdrawableNow": "Retirable ara",
+    "poolNotWithdrawable": "{{amount}} DHB són a la cartera del fons de dipòsits, que encara no té contracte de retirada — contacta amb el suport per moure'ls.",
     "cancelUnstake": "Cancel·la la retirada"
   },
   "communities": {

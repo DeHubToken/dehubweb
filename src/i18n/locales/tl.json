@@ -1360,6 +1360,12 @@
     "only_have_dhb_staked": "{{amount}} lang ang naideposito mo.",
     "unstake_request_submitted": "Naisumite ang kahilingang mag-withdraw! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ang naidagdag sa pila ng withdrawal.",
+    "only_have_dhb_withdrawable": "{{amount}} DHB lang ang puwedeng i-withdraw ngayon.",
+    "early_withdrawal_fee": "Bayad sa maagang pag-withdraw",
+    "early_withdrawal_fee_detail": "Naka-lock hanggang {{date}}. Ang pag-withdraw ngayon ay may bayad na {{percent}}% — humigit-kumulang {{amount}} DHB. Pindutin ulit ang Withdraw para kumpirmahin.",
+    "unstaked_successfully": "Matagumpay na na-withdraw! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB ang na-withdraw sa {{chain}}.",
+    "not_enough_gas_token": "Kailangan mo ng {{token}} sa wallet na ito para bayaran ang network fee.",
     "unstake_failed": "Nabigo ang withdrawal",
     "unstake_cancelled": "Kinansela ang withdrawal",
     "unstake_request_removed": "Inalis na ang kahilingan mong mag-withdraw.",
@@ -1436,6 +1442,8 @@
     "minutesAgo": "{{count}}m ang nakalipas",
     "hoursAgo": "{{count}}h ang nakalipas",
     "daysAgo": "{{count}}d ang nakalipas",
+    "withdrawableNow": "Puwedeng i-withdraw ngayon",
+    "poolNotWithdrawable": "Nasa wallet ng deposit pool ang {{amount}} DHB, at wala pa itong withdrawal contract — makipag-ugnayan sa suporta para mailipat ito.",
     "cancelUnstake": "Kanselahin ang withdrawal"
   },
   "communities": {

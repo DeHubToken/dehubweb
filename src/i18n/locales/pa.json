@@ -1470,6 +1470,12 @@
     "only_have_dhb_staked": "ਤੁਹਾਡੇ ਕੋਲ ਸਿਰਫ਼ {{amount}} ਜਮ੍ਹਾਂ ਹੈ।",
     "unstake_request_submitted": "ਕਢਵਾਈ ਬੇਨਤੀ ਜਮ੍ਹਾਂ ਹੋਈ! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ਕਢਵਾਈ ਕਤਾਰ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਏ।",
+    "only_have_dhb_withdrawable": "ਇਸ ਵੇਲੇ ਸਿਰਫ਼ {{amount}} DHB ਹੀ ਕਢਾਏ ਜਾ ਸਕਦੇ ਹਨ।",
+    "early_withdrawal_fee": "ਜਲਦੀ ਕਢਵਾਉਣ ਦੀ ਫੀਸ",
+    "early_withdrawal_fee_detail": "{{date}} ਤੱਕ ਲਾਕ ਹੈ। ਹੁਣ ਕਢਵਾਉਣ 'ਤੇ {{percent}}% — ਲਗਭਗ {{amount}} DHB ਫੀਸ ਲੱਗੇਗੀ। ਪੁਸ਼ਟੀ ਲਈ ਦੁਬਾਰਾ ਕਢਵਾਓ ਦਬਾਓ।",
+    "unstaked_successfully": "ਸਫਲਤਾਪੂਰਵਕ ਕਢਵਾ ਲਿਆ! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} 'ਤੇ {{amount}} DHB ਕਢਵਾਏ ਗਏ।",
+    "not_enough_gas_token": "ਨੈੱਟਵਰਕ ਫੀਸ ਭਰਨ ਲਈ ਇਸ ਵਾਲਿਟ ਵਿੱਚ {{token}} ਚਾਹੀਦਾ ਹੈ।",
     "unstake_failed": "ਕਢਵਾਈ ਅਸਫਲ",
     "unstake_cancelled": "ਕਢਵਾਈ ਰੱਦ ਹੋਈ",
     "unstake_request_removed": "ਤੁਹਾਡੀ ਕਢਵਾਈ ਬੇਨਤੀ ਹਟਾਈ ਗਈ ਹੈ।",
@@ -1568,6 +1574,8 @@
     "minutesAgo": "{{count}} ਮਿੰਟ ਪਹਿਲਾਂ",
     "hoursAgo": "{{count}} ਘੰਟੇ ਪਹਿਲਾਂ",
     "daysAgo": "{{count}} ਦਿਨ ਪਹਿਲਾਂ",
+    "withdrawableNow": "ਹੁਣ ਕਢਵਾਉਣਯੋਗ",
+    "poolNotWithdrawable": "{{amount}} DHB ਜਮ੍ਹਾਂ ਪੂਲ ਵਾਲਿਟ ਵਿੱਚ ਹਨ, ਜਿਸ ਦਾ ਹਾਲੇ ਕੋਈ ਨਿਕਾਸੀ ਕੰਟਰੈਕਟ ਨਹੀਂ ਹੈ — ਹਿਲਾਉਣ ਲਈ ਸਹਾਇਤਾ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।",
     "cancelUnstake": "ਕਢਵਾਈ ਰੱਦ ਕਰੋ"
   },
   "communities": {

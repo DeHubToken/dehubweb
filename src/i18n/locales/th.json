@@ -993,6 +993,12 @@
     "only_have_dhb_staked": "คุณฝากไว้เพียง {{amount}} เท่านั้น",
     "unstake_request_submitted": "ส่งคำขอถอนแล้ว! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} เข้าคิวการถอนแล้ว",
+    "only_have_dhb_withdrawable": "ขณะนี้ถอนได้เพียง {{amount}} DHB เท่านั้น",
+    "early_withdrawal_fee": "ค่าธรรมเนียมการถอนก่อนกำหนด",
+    "early_withdrawal_fee_detail": "ล็อกไว้จนถึง {{date}} การถอนตอนนี้มีค่าธรรมเนียม {{percent}}% — ประมาณ {{amount}} DHB กด ถอน อีกครั้งเพื่อยืนยัน",
+    "unstaked_successfully": "ถอนสำเร็จแล้ว! ✅",
+    "dhb_unstaked_on_chain": "ถอน {{amount}} DHB บน {{chain}} แล้ว",
+    "not_enough_gas_token": "คุณต้องมี {{token}} ในกระเป๋านี้เพื่อจ่ายค่าธรรมเนียมเครือข่าย",
     "unstake_failed": "ยกเลิกสเตกล้มเหลว",
     "unstake_cancelled": "ยกเลิกการถอนแล้ว",
     "unstake_request_removed": "คำขอถอนของคุณถูกลบแล้ว",
@@ -1066,6 +1072,8 @@
     "airdrops": "การแจกจ่ายโทเค็น",
     "airdropsDesc": "ผู้ฝากเงินมีสิทธิ์ได้รับการแจกจ่ายโทเค็นพิเศษและการจัดสรรรางวัลโบนัส ยิ่งคุณฝากมากเท่าไหร่ คุณก็จะได้รับมากขึ้นเท่านั้น",
     "justNow": "เมื่อสักครู่",
+    "withdrawableNow": "ถอนได้ตอนนี้",
+    "poolNotWithdrawable": "{{amount}} DHB อยู่ในกระเป๋าพูลเงินฝาก ซึ่งยังไม่มีสัญญาการถอน — ติดต่อฝ่ายสนับสนุนเพื่อโอนออก",
     "cancelUnstake": "ยกเลิกการถอน"
   },
   "communities": {

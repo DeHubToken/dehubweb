@@ -1349,6 +1349,12 @@
     "only_have_dhb_staked": "Имате внесени само {{amount}}.",
     "unstake_request_submitted": "Заявката за теглене е изпратена! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} са добавени към опашката за теглене.",
+    "only_have_dhb_withdrawable": "В момента могат да бъдат изтеглени само {{amount}} DHB.",
+    "early_withdrawal_fee": "Такса за предсрочно теглене",
+    "early_withdrawal_fee_detail": "Заключено до {{date}}. Тегленето сега струва {{percent}}% — около {{amount}} DHB. Натиснете Теглене отново, за да потвърдите.",
+    "unstaked_successfully": "Успешно изтеглено! ✅",
+    "dhb_unstaked_on_chain": "{{amount}} DHB изтеглени в {{chain}}.",
+    "not_enough_gas_token": "Нужен ви е {{token}} в този портфейл, за да платите мрежовата такса.",
     "unstake_failed": "Тегленето не бе успешно",
     "unstake_cancelled": "Тегленето е отменено",
     "unstake_request_removed": "Заявката ви за теглене беше премахната.",
@@ -1425,6 +1431,8 @@
     "minutesAgo": "преди {{count}} мин",
     "hoursAgo": "преди {{count}} ч",
     "daysAgo": "преди {{count}} д",
+    "withdrawableNow": "Може да се тегли сега",
+    "poolNotWithdrawable": "{{amount}} DHB са в портфейла на депозитния пул, който все още няма договор за теглене — свържете се с поддръжката, за да ги преместите.",
     "cancelUnstake": "Отказ на тегленето"
   },
   "communities": {

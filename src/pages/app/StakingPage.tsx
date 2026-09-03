@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import { STAKING_ADDRESS, claimBNBRewards } from '@/lib/contracts/staking';
+import { STAKING_ADDRESS, claimBNBRewards, unstakeBNB, getForceUnstakeFeeBps, DEFAULT_FORCE_UNSTAKE_FEE_BPS } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS, fromWei } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
@@ -141,6 +141,9 @@ export default function StakingPage() {
   const [isApproving, setIsApproving] = useState(false);
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
+  // The early-withdrawal fee has been quoted for the amount currently in the
+  // box and the user pressed Withdraw again anyway.
+  const [earlyFeeAccepted, setEarlyFeeAccepted] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
   const [stakingChainLabel, setStakingChainLabel] = useState('');
   const [currentWallet, setCurrentWallet] = useState('');
@@ -243,6 +246,12 @@ export default function StakingPage() {
       })
       .catch(() => { /* locked or signed out — nothing to show */ });
   }, []);
+
+  // A fee someone accepted for one amount is not a fee they accepted for
+  // another, so any edit puts the confirmation back.
+  useEffect(() => {
+    setEarlyFeeAccepted(false);
+  }, [unstakeAmount]);
 
   const handleRefresh = () => {
     refetchStats();
@@ -485,9 +494,37 @@ export default function StakingPage() {
       return;
     }
 
-    const userStakedNow = userData?.totalStaked ?? 0;
-    if (amount > userStakedNow) {
-      toast.error(t('toasts.insufficient_staked_balance'), { description: t('toasts.only_have_dhb_staked', { amount: userStakedNow.toFixed(2) }) });
+    // Only the legacy BNB contract can be withdrawn from. The unified staking
+    // address is a plain wallet: it has no `unstake()`, and the request queue
+    // that used to be written here has never been paid out, so offering it
+    // again would just bank another promise nobody can keep.
+    const withdrawable = userData?.legacyStaked ?? 0;
+    if (amount > withdrawable) {
+      toast.error(t('toasts.insufficient_staked_balance'), {
+        description: withdrawable > 0
+          ? t('toasts.only_have_dhb_withdrawable', { amount: formatNumber(withdrawable, 2) })
+          : t('staking.poolNotWithdrawable', { amount: formatNumber(userData?.totalStaked ?? 0, 2) }),
+      });
+      return;
+    }
+
+    // Withdrawing before the unlock date is allowed and costs a fee — the
+    // contract simply returns less. Blocking it would deny something the
+    // contract supports; letting it through on one click would take the fee
+    // out of someone who never saw it mentioned. So quote it, then allow.
+    const unlockAt = userData?.legacyUnlockAt ?? 0;
+    const isLocked = unlockAt > Date.now() / 1000;
+    if (isLocked && !earlyFeeAccepted) {
+      const feeBps = await getForceUnstakeFeeBps().catch(() => DEFAULT_FORCE_UNSTAKE_FEE_BPS);
+      setEarlyFeeAccepted(true);
+      toast.warning(t('toasts.early_withdrawal_fee'), {
+        description: t('toasts.early_withdrawal_fee_detail', {
+          date: new Date(unlockAt * 1000).toLocaleDateString(),
+          percent: (feeBps / 100).toFixed(feeBps % 100 === 0 ? 0 : 2),
+          amount: formatNumber((amount * feeBps) / 10000, 2),
+        }),
+        duration: 10000,
+      });
       return;
     }
 
@@ -499,28 +536,70 @@ export default function StakingPage() {
         return;
       }
 
-      const { error } = await supabase
-        .from('staking_records')
-        .insert({
+      // Withdrawing the whole position uses the exact wei the contract holds,
+      // so a rounded display value can never leave dust behind or overshoot.
+      // Otherwise parse the typed string to keep its precision, falling back
+      // to the parsed float for input parseUnits rejects (`1e5`, 20 decimals).
+      let amountWei: bigint;
+      if (amount >= withdrawable && userData?.legacyStakedRaw) {
+        amountWei = userData.legacyStakedRaw;
+      } else {
+        try {
+          amountWei = parseUnits(unstakeAmount.trim(), 18);
+        } catch {
+          amountWei = parseUnits(amount.toFixed(18), 18);
+        }
+      }
+
+      toast.loading(t('toasts.confirming_transaction'), { description: t('toasts.please_confirm_transaction') });
+      const result = await unstakeBNB(amountWei);
+
+      toast.loading(t('toasts.transaction_submitted'), { description: t('toasts.waiting_for_confirmation') });
+      const receipt = await result.wait();
+      toast.dismiss();
+
+      if (receipt.status !== 1) {
+        toast.error(t('toasts.unstake_failed'), { description: t('toasts.transaction_reverted') });
+        return;
+      }
+
+      // Recorded for the withdrawal history only. The real hash is what keeps
+      // it out of the pending queue — see isPendingQueueRow in
+      // use-staking-data: the on-chain position has already dropped, so
+      // counting this row again would subtract the same DHB twice.
+      try {
+        await supabase.from('staking_records').insert({
           wallet_address: walletAddress.toLowerCase(),
           amount,
-          chain: 'Base',
+          chain: 'BNB',
           action: 'unstake',
-          tx_hash: `unstake-request-${Date.now()}`,
+          tx_hash: receipt.hash,
         });
+      } catch (dbErr) {
+        console.error('[Staking] Failed to record withdrawal in DB:', dbErr);
+      }
 
-      if (error) throw error;
-
-      toast.success(t('toasts.unstake_request_submitted'), { description: t('toasts.dhb_added_to_unstake_queue', { amount: unstakeAmount, tokenWord: parseFloat(unstakeAmount) === 1 ? 'token' : 'tokens' }) });
+      toast.success(t('toasts.unstaked_successfully'), {
+        description: t('toasts.dhb_unstaked_on_chain', { amount: unstakeAmount, chain: 'BNB Chain' }),
+      });
       setUnstakeAmount('');
       refetchStats();
       refetchUser();
       refetchQueue();
     } catch (err: any) {
       console.error('[Staking] Unstake error:', err);
+      toast.dismiss();
       // Locked wallet: the unlock sheet and its toast are already up, and
       // nothing failed — this would just tell them to stop.
-      if (!isWalletLockedError(err)) {
+      if (isWalletLockedError(err)) return;
+      // Legacy stakers arrive with an external wallet and a position they made
+      // years ago; plenty of them hold no BNB at all now. The sentinel on its
+      // own reads as a bug, so name the token they actually need.
+      if (err?.message === 'INSUFFICIENT_GAS_FUNDS') {
+        toast.error(t('toasts.insufficient_balance'), {
+          description: t('toasts.not_enough_gas_token', { token: 'BNB' }),
+        });
+      } else {
         toast.error(t('toasts.unstake_failed'), { description: err?.message || 'Unknown error' });
       }
     } finally {
@@ -565,6 +644,10 @@ export default function StakingPage() {
   const userStaked = userData?.totalStaked ?? 0;
   const userUnstaked = userData?.totalUnstaked ?? 0;
   const userEarned = userData ? parseFloat(userData.bnbEarned) : 0;
+  // What the user can actually pull out themselves: the legacy BNB contract
+  // position. The rest of `userStaked` is in the transfer pool wallet.
+  const userWithdrawable = userData?.legacyStaked ?? 0;
+  const poolOnlyStake = Math.max(0, userStaked - userWithdrawable);
 
   return (
     <div className={cn("min-h-screen pb-24 px-3 sm:px-4 max-w-5xl mx-auto", isCollapsed && "pt-16 md:pt-0")}>
@@ -725,14 +808,14 @@ export default function StakingPage() {
                 <div className="relative flex items-center h-full">
                   <input
                     type="number"
-                    placeholder={formatNumber(userStaked)}
+                    placeholder={formatNumber(userWithdrawable)}
                     value={unstakeAmount}
                     onChange={(e) => setUnstakeAmount(e.target.value)}
                     className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10"
                   />
                   <button
                     type="button"
-                    onClick={() => setUnstakeAmount(userStaked.toString())}
+                    onClick={() => setUnstakeAmount(String(userWithdrawable))}
                     className="absolute right-0 top-1/2 -translate-y-1/2 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
                   >
                     {t('staking.max')}
@@ -743,9 +826,27 @@ export default function StakingPage() {
                 label={t('staking.unstake')}
                 icon={<ArrowUpFromLine className="w-[22px] h-[22px]" />}
                 loading={isUnstaking}
-                disabled={!unstakeAmount}
+                disabled={!unstakeAmount || userWithdrawable <= 0}
                 onClick={handleUnstake}
               />
+            </div>
+
+            {/* Say up front which half of the position this button can move.
+                Everything outside the legacy BNB contract sits in a wallet
+                with no withdrawal function, and the queue that used to stand
+                in for one was never paid. */}
+            <div className="mt-3 space-y-1">
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-white/40">{t('staking.withdrawableNow')}</span>
+                <span className="text-white/70 font-medium">
+                  {formatNumber(userWithdrawable, 2)} DHB <span className="text-white/40">· BNB</span>
+                </span>
+              </div>
+              {poolOnlyStake > 0 && (
+                <p className="text-[11px] text-white/40 leading-snug">
+                  {t('staking.poolNotWithdrawable', { amount: formatNumber(poolOnlyStake, 2) })}
+                </p>
+              )}
             </div>
           </motion.div>
         )}

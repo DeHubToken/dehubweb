@@ -5,7 +5,7 @@
  */
 
 import { Interface } from 'ethers';
-import { readContract, rpcRequest, writeContractAA, switchChain, type AAWriteResult } from './aa-utils';
+import { readContract, readContractAll, rpcRequest, writeContractAA, switchChain, type AAWriteResult } from './aa-utils';
 import { CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 
@@ -34,6 +34,7 @@ const legacyStakingInterface = new Interface([
   'function pendingHarvest(address account) view returns (uint256)',
   'function totalStaked() view returns (uint256)',
   'function userInfos(address) view returns (uint256 totalAmount, uint256 unlockAt, uint256 lastTierIndex, uint256 lastRewardIndex, uint256 harvestTotal, uint256 harvestClaimed, uint256 lastStakeAt)',
+  'function pool() view returns (uint256 stakingStartAt, uint256 rewardPeriod, uint256 lastRewardIndex, uint256 forceUnstakeFee, uint256 minPeriod)',
 ]);
 
 // keccak256("Transfer(address,address,uint256)")
@@ -70,26 +71,6 @@ export async function getTotalStaked(chainId: ChainId): Promise<bigint> {
     return newBalance + legacyBalance;
   } catch (err) {
     console.error(`[Staking] Failed to read totalStaked on chain ${chainId}:`, err);
-    return BigInt(0);
-  }
-}
-
-/**
- * Get user's staked balance on the legacy BNB staking contract
- * (userInfos(staker).totalAmount — same read the dehub.net staking app uses)
- */
-export async function getUserStakedBNB(userAddress: string): Promise<bigint> {
-  try {
-    // readContract returns the first decoded output, which is totalAmount
-    return await readContract<bigint>(
-      BNB_STAKING_CONTRACT,
-      legacyStakingInterface,
-      'userInfos',
-      [userAddress],
-      BNB_CHAIN_ID
-    );
-  } catch (err) {
-    console.error('[Staking] Failed to read user staked balance:', err);
     return BigInt(0);
   }
 }
@@ -215,4 +196,72 @@ export async function fetchStakingStats() {
     baseStaked,
     totalStaked: bnbStaked + baseStaked,
   };
+}
+
+/** Basis points of a force-unstake charged by the legacy BNB contract (12%). */
+export const DEFAULT_FORCE_UNSTAKE_FEE_BPS = 1200;
+
+export interface LegacyStakePosition {
+  /** Wei still held by the legacy BNB staking contract for this wallet. */
+  amountRaw: bigint;
+  /** Unix seconds the position unlocks; 0 when nothing is staked. */
+  unlockAt: number;
+}
+
+/**
+ * Read the user's whole legacy BNB position, not just the amount.
+ *
+ * `unlockAt` is the half that decides what pressing Withdraw actually does:
+ * before it, `unstake()` still succeeds but the contract keeps
+ * `forceUnstakeFee` basis points of the amount.
+ */
+export async function getUserLegacyStake(userAddress: string): Promise<LegacyStakePosition> {
+  try {
+    const info = await readContractAll<readonly [bigint, bigint, bigint, bigint, bigint, bigint, bigint]>(
+      BNB_STAKING_CONTRACT,
+      legacyStakingInterface,
+      'userInfos',
+      [userAddress],
+      BNB_CHAIN_ID
+    );
+    return { amountRaw: info[0], unlockAt: Number(info[1] ?? 0) };
+  } catch (err) {
+    console.error('[Staking] Failed to read legacy position:', err);
+    return { amountRaw: BigInt(0), unlockAt: 0 };
+  }
+}
+
+/** Live force-unstake fee in basis points, falling back to the deployed 12%. */
+export async function getForceUnstakeFeeBps(): Promise<number> {
+  try {
+    const pool = await readContractAll<readonly [bigint, bigint, bigint, bigint, bigint]>(
+      BNB_STAKING_CONTRACT,
+      legacyStakingInterface,
+      'pool',
+      [],
+      BNB_CHAIN_ID
+    );
+    const fee = Number(pool[3]);
+    return Number.isFinite(fee) && fee >= 0 && fee < 10000 ? fee : DEFAULT_FORCE_UNSTAKE_FEE_BPS;
+  } catch {
+    return DEFAULT_FORCE_UNSTAKE_FEE_BPS;
+  }
+}
+
+/**
+ * Withdraw from the legacy BNB staking contract.
+ *
+ * This is the only staked DHB a user can move themselves: the BNB contract is
+ * a real UUPS deployment with an `unstake()`, while the unified
+ * STAKING_ADDRESS is a plain wallet with no code to call.
+ */
+export async function unstakeBNB(amountWei: bigint): Promise<AAWriteResult> {
+  await switchChain(BNB_CHAIN_ID);
+  return writeContractAA(
+    BNB_STAKING_CONTRACT,
+    legacyStakingInterface,
+    'unstake',
+    [amountWei],
+    { context: 'withdraw staked DHB', chainId: BNB_CHAIN_ID }
+  );
 }

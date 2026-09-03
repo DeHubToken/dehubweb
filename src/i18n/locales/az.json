@@ -1424,6 +1424,12 @@
     "only_have_dhb_staked": "Yalnız {{amount}} depozitiniz var.",
     "unstake_request_submitted": "Çıxarış sorğusu göndərildi! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} çıxarış növbəsinə əlavə edildi.",
+    "only_have_dhb_withdrawable": "Hazırda yalnız {{amount}} DHB çıxarıla bilər.",
+    "early_withdrawal_fee": "Vaxtından əvvəl çıxarış haqqı",
+    "early_withdrawal_fee_detail": "{{date}} tarixinədək kilidlidir. İndi çıxarmaq {{percent}}% — təxminən {{amount}} DHB baha başa gəlir. Təsdiqləmək üçün yenidən Çıxar düyməsinə basın.",
+    "unstaked_successfully": "Uğurla çıxarıldı! ✅",
+    "dhb_unstaked_on_chain": "{{chain}} şəbəkəsində {{amount}} DHB çıxarıldı.",
+    "not_enough_gas_token": "Şəbəkə haqqını ödəmək üçün bu pulqabda {{token}} lazımdır.",
     "unstake_failed": "Çıxarış alınmadı",
     "unstake_cancelled": "Çıxarış ləğv edildi",
     "unstake_request_removed": "Çıxarış sorğunuz silindi.",
@@ -1500,6 +1506,8 @@
     "minutesAgo": "{{count}} dəq əvvəl",
     "hoursAgo": "{{count}} saat əvvəl",
     "daysAgo": "{{count}} gün əvvəl",
+    "withdrawableNow": "İndi çıxarıla bilər",
+    "poolNotWithdrawable": "{{amount}} DHB depozit hovuzunun pulqabındadır və onun hələ çıxarış müqaviləsi yoxdur — köçürmək üçün dəstəklə əlaqə saxlayın.",
     "cancelUnstake": "Çıxarışı ləğv et"
   },
   "communities": {
