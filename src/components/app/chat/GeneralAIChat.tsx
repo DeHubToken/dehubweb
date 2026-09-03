@@ -27,13 +27,11 @@ import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
 import { SwapActionCard } from './SwapActionCard';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-
-const DEHUB_BRAND_IMAGE_KEYWORDS = [
-  'poster', 'posters', 'banner', 'banners', 'thumbnail', 'thumbnails', 'content',
-  'card', 'cards', 'announcement', 'announcements', 'flyer', 'flyers', 'artwork',
-  'social', 'cover', 'graphic', 'graphics', 'ad', 'advert', 'image', 'wallpaper',
-  'meme', 'promo', 'campaign'
-];
+import {
+  isDeHubBrandedImageRequest,
+  requiresImageGeneration,
+  requiresLogoAsset,
+} from '@/lib/ai-intent';
 
 interface SwapAction {
   tokenIn: string;
@@ -51,41 +49,6 @@ interface Message {
   imageUrl?: string;
   attachedImage?: string;
   swapAction?: SwapAction;
-}
-
-// Keywords that indicate image generation/editing request
-const IMAGE_KEYWORDS = [
-  'generate image', 'create image', 'make image', 'draw', 'design',
-  'create a picture', 'make a picture', 'generate a picture',
-  'create artwork', 'make art', 'edit this image', 'modify this',
-  'change this image', 'put', 'add to this image', 'remove from',
-  'generate an image', 'create an image', 'make an image',
-  'generate a', 'create a', 'draw a', 'draw me', 'make me',
-  'photo of', 'picture of', 'image of', 'illustration of'
-];
-
-// Keywords that indicate user wants to use the official logo in their image
-const LOGO_KEYWORDS = [
-  'dehub logo', 'the dehub logo', 'ftv logo', 'the ftv logo',
-  'your logo', 'the logo', 'official logo', 'dehub brand', 
-  'ftv brand', 'brand logo', 'company logo'
-];
-
-function requiresImageGeneration(message: string, hasAttachedImage: boolean): boolean {
-  const lower = message.toLowerCase();
-  if (hasAttachedImage) return true;
-  return IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
-}
-
-function requiresLogoAsset(message: string): boolean {
-  const lower = message.toLowerCase();
-  return LOGO_KEYWORDS.some(keyword => lower.includes(keyword));
-}
-
-function isDeHubBrandedImageRequest(message: string): boolean {
-  const lower = message.toLowerCase();
-  const mentionsDeHub = /\bde\s*hub\b/.test(lower) || /\bdhb\b/.test(lower);
-  return mentionsDeHub && DEHUB_BRAND_IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
 function buildDeHubBrandPrompt(userRequest: string): string {
