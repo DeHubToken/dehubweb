@@ -38,6 +38,13 @@ import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 import { createLogger } from '@/lib/logger';
 import { fetchJobQuote, formatDhb } from '@/hooks/use-ai-quote';
 import { payForJob } from '@/lib/ai-payment';
+import {
+  detectAiToolRequest,
+  isDeHubBrandedImageRequest,
+  requiresImageGeneration,
+  requiresLogoAsset,
+  requiresVideoGeneration,
+} from '@/lib/ai-intent';
 import { SEOHead } from '@/components/SEOHead';
 import { MarkdownText } from '@/lib/markdown';
 
@@ -83,11 +90,6 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 const imageGenLogger = createLogger('AssistantPage.imageGen');
 
 const DEHUB_BRAND_IMAGE_MODEL: ImageModelKey = 'gemini-3.1-flash-image';
-const DEHUB_BRAND_IMAGE_KEYWORDS = [
-  'poster', 'banner', 'thumbnail', 'content', 'card', 'announce', 'announcement',
-  'flyer', 'artwork', 'social', 'cover', 'graphic', 'ad', 'advert', 'image',
-  'wallpaper', 'meme', 'creative', 'promo', 'promotion', 'campaign'
-];
 
 // Simulation data for token transactions
 interface SimulationData {
@@ -127,46 +129,6 @@ interface Message {
   simulationStatus?: 'pending' | 'approved' | 'rejected';
   isError?: boolean;
   swapAction?: SwapAction;
-}
-
-// Keywords that indicate image generation/editing request
-const IMAGE_KEYWORDS = [
-  'generate image', 'create image', 'make image', 'draw', 'design',
-  'create a picture', 'make a picture', 'generate a picture',
-  'create artwork', 'make art', 'edit this image', 'modify this',
-  'change this image', 'put', 'add to this image', 'remove from',
-  'generate an image', 'create an image', 'make an image',
-  'generate a', 'create a', 'draw a', 'draw me', 'make me',
-  'photo of', 'picture of', 'image of', 'illustration of',
-  'show me', 'show a', 'give me', 'i want', 'can you show',
-  'what does', 'look like', 'visualize', 'render', 'depict'
-];
-
-// Keywords that indicate video generation request
-const VIDEO_KEYWORDS = [
-  'generate video', 'create video', 'make video', 'make a video',
-  'generate a video', 'create a video', 'animate', 'animation',
-  'video of', 'clip of', 'footage of', 'motion', 'moving',
-  'bring to life', 'make it move', 'make this move', 'animate this',
-  'into a video', 'into video', 'turn into', 'as a video', 'turn this into'
-];
-
-// Keywords that indicate user wants to use the official logo in their image
-const LOGO_KEYWORDS = [
-  'dehub logo', 'the dehub logo', 'ftv logo', 'the ftv logo',
-  'your logo', 'the logo', 'official logo', 'dehub brand', 
-  'ftv brand', 'brand logo', 'company logo'
-];
-
-function requiresLogoAsset(message: string): boolean {
-  const lower = message.toLowerCase();
-  return LOGO_KEYWORDS.some(keyword => lower.includes(keyword));
-}
-
-function isDeHubBrandedImageRequest(message: string): boolean {
-  const lower = message.toLowerCase();
-  const mentionsDeHub = /\bde\s*hub\b/.test(lower) || /\bdhb\b/.test(lower);
-  return mentionsDeHub && DEHUB_BRAND_IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
 function buildDeHubBrandPrompt(userRequest: string): string {
@@ -225,70 +187,6 @@ async function imageUrlToBase64(url: string): Promise<string> {
   });
 }
 
-function requiresImageGeneration(message: string, hasAttachedImage: boolean): boolean {
-  const lower = message.toLowerCase();
-  // Don't trigger image gen if it's a video request
-  if (VIDEO_KEYWORDS.some(keyword => lower.includes(keyword))) return false;
-  // If user attached an image, any instruction likely means they want to edit it
-  if (hasAttachedImage) return true;
-  return IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
-}
-
-function requiresVideoGeneration(message: string): boolean {
-  const lower = message.toLowerCase();
-  return VIDEO_KEYWORDS.some(keyword => lower.includes(keyword));
-}
-
-// ─── AI Tool Keywords ───
-
-
-const MUSIC_KEYWORDS = [
-  'generate music', 'create music', 'make music', 'compose', 'song',
-  'create a song', 'make a song', 'generate a song', 'write a song',
-  'music for', 'beat', 'track', 'melody', 'instrumental',
-  'make me a beat', 'create a beat', 'generate a beat',
-  'write music', 'compose music', 'create a track'
-];
-
-const TTS_KEYWORDS = [
-  'text to speech', 'text-to-speech', 'tts', 'read this aloud',
-  'say this', 'speak this', 'convert to speech', 'voice over',
-  'voiceover', 'narrate', 'narration', 'read out loud',
-  'generate speech', 'create speech', 'make speech',
-  'dialogue', 'voice this', 'read this text'
-];
-
-const BG_REMOVAL_KEYWORDS = [
-  'remove background', 'remove the background', 'remove bg',
-  'background removal', 'cut out', 'cutout', 'transparent background',
-  'make transparent', 'isolate subject', 'extract subject',
-  'no background', 'delete background', 'erase background'
-];
-
-const UPSCALE_KEYWORDS = [
-  'upscale', 'upscale this', 'enhance image', 'increase resolution',
-  'make higher resolution', 'make hd', 'make 4k', 'sharpen image',
-  'improve quality', 'super resolution', 'enlarge image',
-  'make bigger', 'enhance this', 'enhance quality'
-];
-
-const STT_KEYWORDS = [
-  'transcribe', 'transcription', 'speech to text', 'speech-to-text',
-  'stt', 'convert audio', 'audio to text', 'what does this say',
-  'what is being said', 'convert speech', 'transcribe audio',
-  'transcribe this'
-];
-
-function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory | null {
-  const lower = message.toLowerCase();
-  if (MUSIC_KEYWORDS.some(k => lower.includes(k))) return 'music';
-  if (TTS_KEYWORDS.some(k => lower.includes(k))) return 'tts';
-  if (STT_KEYWORDS.some(k => lower.includes(k))) return 'speech-to-text';
-  if (hasImage && BG_REMOVAL_KEYWORDS.some(k => lower.includes(k))) return 'background-removal';
-  if (hasImage && UPSCALE_KEYWORDS.some(k => lower.includes(k))) return 'upscale';
-  return null;
-}
-
 const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
   'music': 'minimax-music',
   'tts': 'dia-tts',
@@ -296,6 +194,7 @@ const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
   'upscale': 'creative-upscaler',
   'speech-to-text': 'whisper',
 };
+
 function ImageGenerationLoader({ startTime }: { startTime: number }) {
   const [phase, setPhase] = useState<'spinner' | 'skeleton'>('spinner');
   const [progress, setProgress] = useState(0);
@@ -1371,7 +1270,15 @@ export default function AssistantPage() {
   // Handle image generation after payment confirmation
   const handleImageGenerationConfirm = async (txHash: string, override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string; headline?: string; bannerRenderer?: 'template' | 'scene'; bannerFormat?: 'landscape' | 'square' | 'portrait' }) => {
     const req = override ?? pendingImageRequest;
-    if (!req) return;
+    // Reaching here with nothing to generate used to return in silence — but
+    // the paywall has already signed the transfer by then, so that was money
+    // gone with no request, no error and no line in any log. The hash stays
+    // reusable for the next job either way; say so instead of vanishing.
+    if (!req) {
+      imageGenLogger.error('Paid for an image with no pending request', { hasTxHash: !!txHash });
+      if (txHash) toast.error(t('assistant.errorImageGenFailed'));
+      return;
+    }
 
     const { prompt, model, sourceImage } = req;
     const logoImage = override?.logoImage;
@@ -1722,7 +1629,10 @@ export default function AssistantPage() {
       // Check request type — AI tools first, then video/image
       const aiToolCategory = detectAiToolRequest(currentInput, !!currentAttachedImage);
       const isVideoRequest = !aiToolCategory && requiresVideoGeneration(currentInput);
-      const isImageRequest = !aiToolCategory && (isCreativeLogo || matchedSkill?.kind === 'image' || charMatch.hasMentions || requiresImageGeneration(currentInput, !!currentAttachedImage));
+      // `conversational` opts this surface into the looser phrasing ("show me",
+      // "what does … look like"). It is safe here and not in the chat bubble
+      // because the paywall below asks before anything is signed.
+      const isImageRequest = !aiToolCategory && (isCreativeLogo || matchedSkill?.kind === 'image' || charMatch.hasMentions || requiresImageGeneration(currentInput, !!currentAttachedImage, { conversational: true }));
       
       if (aiToolCategory) {
         // For music requests, show confirm dialog first
