@@ -8,7 +8,7 @@ import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
-import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, keepPostOffChain, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -39,6 +39,19 @@ import type { PostChainId } from '@/components/app/ChainSelector';
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
 const ACTIVE_DRAFT_KEY = 'post_active_draft';
+
+/**
+ * How long the chain step waits on the wallet before it says so, and before it
+ * stops waiting altogether.
+ *
+ * The hint has to arrive while the creator is still watching the bar — long
+ * enough that a wallet answering normally never shows it, short enough that
+ * nobody sits on 99% wondering. The give-up point is generous by comparison:
+ * a slow bundler or a user reading the transaction in their wallet must not
+ * lose a mint that was always going to land.
+ */
+const MINT_STALL_HINT_MS = 12_000;
+const MINT_WALLET_TIMEOUT_MS = 90_000;
 
 /**
  * A fee is a price, so it reads as one: trailing zeros trimmed, and never in
@@ -292,6 +305,20 @@ export function usePostForm(
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  /**
+   * The mint has been waiting on the wallet long enough to say so.
+   *
+   * Drives the progress bar text and the escape hatch beside it; false the
+   * moment the wallet answers, the wait is abandoned, or the post fails.
+   */
+  const [mintAwaitingWallet, setMintAwaitingWallet] = useState(false);
+  /**
+   * Set for as long as a mint is in flight. Calling it publishes the post
+   * off-chain and lets the composer close — see the chain step in handlePost.
+   * A ref because the resolver belongs to one attempt, and rebuilding
+   * handlePost every time a mint starts would be a real cost for no gain.
+   */
+  const abandonMintRef = useRef<(() => void) | null>(null);
   /**
    * Idempotency key for the post currently being submitted, kept next to the
    * payload it belongs to — see the `attemptSignature` block in handlePost.
@@ -1774,6 +1801,11 @@ export function usePostForm(
       // everything after this block — the optimistic feed entry, the poll, the
       // category counts — runs exactly the same either way.
       let txHash: string | undefined;
+      /**
+       * The wallet never came back and we stopped waiting. The post is still
+       * published — only the chain leg is missing.
+       */
+      let mintAbandoned = false;
 
       if (mintingThisPost) {
         setUploadProgress(65);
@@ -1796,9 +1828,35 @@ export function usePostForm(
           setUploadProgress(Math.round(simulatedProgress));
         }, 1200);
 
+        /**
+         * A way out of a wallet prompt that never arrives.
+         *
+         * Nothing in this leg has a wall clock of its own. An external wallet
+         * signs through wagmi's sendTransaction, which resolves when the user
+         * taps confirm and otherwise never — so a prompt that opened behind
+         * the browser, or in a wallet app that was swapped away from, parks
+         * the composer on 99% for good. That is what creators reported, and
+         * three minutes later the expiry sweep takes the post down with it.
+         *
+         * So: after MINT_STALL_HINT_MS the bar says what it is waiting for and
+         * offers a way out, and after MINT_WALLET_TIMEOUT_MS the wait ends on
+         * its own. Either way the post is kept, and everything after this
+         * block runs exactly as it does for a post published off-chain by
+         * choice.
+         */
+        const stallHint = setTimeout(() => setMintAwaitingWallet(true), MINT_STALL_HINT_MS);
+        let abandon: () => void = () => {};
+        const abandoned = new Promise<'abandoned'>((resolve) => {
+          abandon = () => resolve('abandoned');
+        });
+        abandonMintRef.current = abandon;
+        const giveUp = setTimeout(abandon, MINT_WALLET_TIMEOUT_MS);
+
         let mintConfirmed: Promise<string> | undefined;
 
-        try {
+        // The wallet leg as one promise, so it can be raced against the two
+        // timers above instead of awaited with no way to stop.
+        const signMint = (async (): Promise<{ hash: string; confirmed?: Promise<string> }> => {
           if (isSolanaMint) {
             toast.loading('Sign with Phantom to publish', { id: 'mint-progress', duration: Infinity });
             const solResult = await broadcastSolanaMint({
@@ -1808,46 +1866,77 @@ export function usePostForm(
               chainId,
               walletAddress: minterAddress,
             });
-            txHash = solResult.signature;
             if (solResult.confirmWarning) {
               toast.warning(solResult.confirmWarning, { duration: 10000 });
             }
-          } else if (hasBounty) {
+            return { hash: solResult.signature };
+          }
+
+          if (hasBounty) {
             toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
-            
-            txHash = await mintWithBounty({
-              tokenId: mintResponse.createdTokenId,
-              timestamp: mintResponse.timestamp!,
-              v: mintResponse.v!,
-              r: mintResponse.r!,
-              s: mintResponse.s!,
-              uri: mintResponse.uri,
-              bountyAmount: parseFloat(w2eTotal),
-              countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
-              countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
-              chainId: chainId as import('@/components/app/ChainSelector').ChainId,
-            });
-          } else {
-            // The fee, when there is one, rides in the same user operation as
-            // the mint — one signature, one sponsored transaction. With nothing
-            // to charge this is exactly the old mintOnChain call.
-            const mintResult = await mintOnChainWithFee(
-              {
+
+            return {
+              hash: await mintWithBounty({
                 tokenId: mintResponse.createdTokenId,
                 timestamp: mintResponse.timestamp!,
                 v: mintResponse.v!,
                 r: mintResponse.r!,
                 s: mintResponse.s!,
                 uri: mintResponse.uri,
+                bountyAmount: parseFloat(w2eTotal),
+                countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
+                countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
                 chainId: chainId as import('@/components/app/ChainSelector').ChainId,
-              },
-              feeForMint,
-            );
-            txHash = mintResult.hash;
-            mintConfirmed = mintResult.confirmed;
+              }),
+            };
+          }
+
+          // The fee, when there is one, rides in the same user operation as
+          // the mint — one signature, one sponsored transaction. With nothing
+          // to charge this is exactly the old mintOnChain call.
+          const mintResult = await mintOnChainWithFee(
+            {
+              tokenId: mintResponse.createdTokenId,
+              timestamp: mintResponse.timestamp!,
+              v: mintResponse.v!,
+              r: mintResponse.r!,
+              s: mintResponse.s!,
+              uri: mintResponse.uri,
+              chainId: chainId as import('@/components/app/ChainSelector').ChainId,
+            },
+            feeForMint,
+          );
+          return { hash: mintResult.hash, confirmed: mintResult.confirmed };
+        })();
+
+        // Once the race is lost nothing is awaiting this promise, so a late
+        // rejection would land as an unhandled one. A late *success* is fine
+        // and needs nothing from us: the mint is on chain, and the indexer
+        // clears mintOptOut when it confirms.
+        signMint.catch(() => {});
+
+        try {
+          const outcome = await Promise.race([signMint, abandoned]);
+          if (outcome === 'abandoned') {
+            mintAbandoned = true;
+          } else {
+            txHash = outcome.hash;
+            mintConfirmed = outcome.confirmed;
           }
         } finally {
           clearInterval(progressInterval);
+          clearTimeout(stallHint);
+          clearTimeout(giveUp);
+          abandonMintRef.current = null;
+          setMintAwaitingWallet(false);
+        }
+
+        if (mintAbandoned) {
+          // Awaited, unlike most of the tidying in this function: until the
+          // backend knows the mint is not coming, the post is a 'signed' token
+          // on a three-minute fuse.
+          console.log('[Mint] Gave up waiting on the wallet — keeping the post off-chain');
+          await keepPostOffChain(mintResponse.createdTokenId);
         }
 
         // Fire-and-forget: EVM confirmation + backend polling
@@ -1878,10 +1967,18 @@ export function usePostForm(
 
         console.log('[Mint] Transaction hash:', txHash);
       } // end of the on-chain mint
-
       setUploadProgress(100);
       toast.dismiss('mint-progress');
-      toast.success('Posted successfully');
+      if (mintAbandoned) {
+        // Not an error, and deliberately not phrased as one: the post is up.
+        toast.success('Posted, but not minted', {
+          description:
+            'Your wallet never confirmed the mint, so the post was published without it. Mint it any time from the post menu.',
+          duration: 12000,
+        });
+      } else {
+        toast.success('Posted successfully');
+      }
 
       /**
        * The bill, for a post that went past the free allowance.
@@ -2233,6 +2330,10 @@ export function usePostForm(
     } finally {
       setIsPosting(false);
       setUploadProgress(0);
+      // Belt and braces for the paths that never reached the chain step's own
+      // cleanup — a failed upload leaves no wallet to wait for.
+      abandonMintRef.current = null;
+      setMintAwaitingWallet(false);
     }
   }, [
     // Everything the body reads. handlePost is only rebuilt when one of these
@@ -2251,6 +2352,16 @@ export function usePostForm(
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
   ]);
+
+  /**
+   * Stop waiting for the wallet and publish the post as it stands.
+   *
+   * A no-op unless a mint is actually in flight, so a stale click after the
+   * wallet answered cannot un-mint anything.
+   */
+  const abandonMint = useCallback(() => {
+    abandonMintRef.current?.();
+  }, []);
 
   return {
     state: {
@@ -2274,6 +2385,7 @@ export function usePostForm(
       isEnhancing,
       isPosting,
       uploadProgress,
+      mintAwaitingWallet,
 
       scheduledDate,
       drafts,
@@ -2325,6 +2437,7 @@ export function usePostForm(
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,
+      abandonMint,
       resetForm,
       setScheduledDate,
       saveDraft,

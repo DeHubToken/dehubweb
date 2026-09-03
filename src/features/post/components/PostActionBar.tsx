@@ -40,6 +40,10 @@ interface PostActionBarProps {
   isEnhancing: boolean;
   isPosting?: boolean;
   uploadProgress?: number;
+  /** The mint is waiting on a wallet that has not answered yet. */
+  mintAwaitingWallet?: boolean;
+  /** Give up on the wallet and publish the post off-chain. */
+  onAbandonMint?: () => void;
   
   hasText: boolean;
   hasImage?: boolean;
@@ -79,6 +83,8 @@ export function PostActionBar({
   isEnhancing,
   isPosting,
   uploadProgress,
+  mintAwaitingWallet,
+  onAbandonMint,
   
   hasText,
   hasImage,
@@ -240,7 +246,13 @@ export function PostActionBar({
           <LiquidGlassBubble shimmer={false} noBorder={false} className="w-full">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs text-white/60">
-                {(uploadProgress ?? 0) < 60 ? 'Uploading...' : (uploadProgress ?? 0) < 100 ? 'Publishing...' : 'Done!'}
+                {mintAwaitingWallet
+                  ? 'Waiting for your wallet…'
+                  : (uploadProgress ?? 0) < 60
+                    ? 'Uploading...'
+                    : (uploadProgress ?? 0) < 100
+                      ? 'Publishing...'
+                      : 'Done!'}
               </span>
               <span className="text-xs text-white/60 tabular-nums">{uploadProgress ?? 0}%</span>
             </div>
@@ -264,6 +276,29 @@ export function PostActionBar({
                 />
               </div>
             </div>
+            {/*
+              The way out of a wallet prompt that never arrived.
+
+              Only appears once the mint has actually stalled, so a normal post
+              never sees it. It does not cancel anything — the post is already
+              published by this point — it stops waiting for the signature and
+              lets the composer close, which is the difference between losing
+              the post and losing only the mint.
+            */}
+            {mintAwaitingWallet && onAbandonMint && (
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <span className="text-[11px] leading-tight text-white/45">
+                  Your post is saved. If your wallet has not asked you to confirm, publish it without minting.
+                </span>
+                <button
+                  type="button"
+                  onClick={onAbandonMint}
+                  className="shrink-0 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] text-white/80 transition-colors hover:bg-white/[0.12]"
+                >
+                  Post without minting
+                </button>
+              </div>
+            )}
           </LiquidGlassBubble>
         </div>
       )}
