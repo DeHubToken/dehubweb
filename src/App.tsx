@@ -357,11 +357,9 @@ function AppContent() {
     return () => window.clearTimeout(timer);
   }, [interacted]);
 
-  // While the login flow is active (modal open, or a connect/redirect in
-  // flight just after it closes), center toasts in the middle app panel —
-  // matching the login drawer's position — instead of the full viewport.
-  // See --app-main-center-x, measured in AppLayout, and the matching
-  // [data-login-active] rule in index.css.
+  // The login flow is "active" from the modal opening until any
+  // connect/redirect it started has finished, which is a little past the sheet
+  // closing. `data-login-active` publishes that on <html> for CSS to hang off.
   //
   // The same condition drives the background render gate: openLoginModal
   // pauses the WebGL backgrounds synchronously at tap time; here it stays

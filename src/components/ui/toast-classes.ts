@@ -30,6 +30,44 @@
 export const TOAST_CLASSES = 'flex-col items-stretch text-start';
 
 /**
+ * Desktop only: the card shrinks to its own text, and stays centred while it
+ * does.
+ *
+ * Sonner gives every toast a fixed `width: var(--width)` — 356px — so a
+ * one-word "Copied" drew the same wide slab as a two-line explanation, with the
+ * text stranded at the leading edge of a mostly empty card.
+ *
+ * `w-fit` is what changes that. On an absolutely positioned box, `width: auto`
+ * with both insets set stretches to fill the space, so shrink-to-fit has to be
+ * asked for by name. With a definite width, `inset-x-0` and two `auto` margins,
+ * the leftover room then splits evenly and the card centres itself — the one
+ * way to centre it that does not touch `transform`, which sonner drives its
+ * enter, exit and swipe animations through and which would fight anything set
+ * there.
+ *
+ * `max-w-full` is the old 356px, kept as a ceiling rather than a fixed size:
+ * past it the text wraps exactly where it always did.
+ *
+ * Desktop only because sonner's own `max-width: 600px` block takes the toast
+ * edge to edge with real specificity, which is already right on a phone.
+ */
+export const TOAST_FIT_CLASSES = 'w-fit max-w-full inset-x-0 mx-auto';
+
+/**
+ * Desktop only: the toaster stacks over the middle app panel rather than the
+ * whole viewport, so a shrink-wrapped toast reads as centred on the column it
+ * is about instead of drifting over the left sidebar's share of the screen.
+ *
+ * `--app-main-center-x` is `<main>`'s live centre, measured in AppLayout and
+ * removed on unmount — so the `50%` fallback is true viewport centre, which is
+ * what the routes without sidebars (docs, marketing) want anyway. Sonner's own
+ * `left: 50%` is `:where()`-wrapped, so this needs no `!`, and the
+ * `translateX(-50%)` it pairs with still does the work of pulling the stack
+ * back over that point.
+ */
+export const TOASTER_COLUMN_CLASSES = 'left-[var(--app-main-center-x,50%)]';
+
+/**
  * The heading has to read as a heading against a 13px/400 description, so it is
  * sized and weighted well clear of it. Sonner's own `[data-title]` rule is
  * `:where()`-wrapped, so no `!` is needed to beat its 500 weight.

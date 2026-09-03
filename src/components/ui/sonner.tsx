@@ -3,6 +3,8 @@ import { Toaster as Sonner, toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   TOAST_CLASSES,
+  TOAST_FIT_CLASSES,
+  TOASTER_COLUMN_CLASSES,
   TITLE_CLASSES,
   CONTENT_CLASSES,
   DESCRIPTION_CLASSES,
@@ -21,6 +23,10 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
  * The glass card is set on the toast alongside the shared layout classes rather
  * than in that file: the surface is this toaster's, while the layout and the
  * type are the contract any toast body is written against.
+ *
+ * The two desktop-only entries hang off the same `isMobile` that picks the
+ * corner, rather than a `md:` variant, so the width and the anchor can never
+ * disagree with `position` on the frame the hook resolves.
  */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
@@ -29,7 +35,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
-      className="toaster group"
+      className={["toaster group", isMobile ? "" : TOASTER_COLUMN_CLASSES].join(" ")}
       position={isMobile ? "top-right" : "top-center"}
       duration={3000}
       visibleToasts={3}
@@ -42,6 +48,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "bg-white/10 backdrop-blur-xl border border-white/20 text-white",
             "shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-xl",
             TOAST_CLASSES,
+            isMobile ? "" : TOAST_FIT_CLASSES,
           ].join(" "),
           title: TITLE_CLASSES,
           content: CONTENT_CLASSES,
