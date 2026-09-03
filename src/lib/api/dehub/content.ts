@@ -293,6 +293,32 @@ export async function mintExistingPost(tokenId: number | string): Promise<MintRe
   });
 }
 
+/**
+ * Tell the backend to stop expecting a mint for this post.
+ *
+ * A post is live at status 'signed' the moment it is published, and the
+ * backend's expiry sweep marks any 'signed' token older than three minutes
+ * failed unless it is flagged deliberately off-chain. A creator whose wallet
+ * never answered would otherwise lose the post along with the mint.
+ *
+ * Best-effort: the post is already published, so a failure here costs the
+ * creator nothing they can see until the sweep runs, and there is nothing
+ * useful to say about it in the composer.
+ */
+export async function keepPostOffChain(tokenId: number | string): Promise<boolean> {
+  try {
+    await apiCall('/api/keep_offchain', {
+      method: 'POST',
+      body: { tokenId: Number(tokenId) },
+      requiresAuth: true,
+    });
+    return true;
+  } catch (error) {
+    console.warn('[Mint] keep_offchain failed:', error);
+    return false;
+  }
+}
+
 // Edit & Delete
 
 export interface EditPostParams {
