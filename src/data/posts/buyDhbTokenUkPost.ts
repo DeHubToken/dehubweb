@@ -112,7 +112,7 @@ Yes. Buying, holding and trading cryptoassets is legal in the UK. Since 2023 the
 ---
 
 *This guide is for information only and is not financial advice. Cryptoassets are high-risk and unregulated in the UK. Do your own research and consider independent, FCA-authorised advice before making any decision. Learn more about the wider ecosystem at [DeHub, the decentralised social network](/guides/what-is-dehub) or explore how it all fits together on [the DeHub app](https://dehub.io/app).*`,
-  bannerImage: '/lovable-uploads/how-to-buy-dhb-token-uk-banner.png',
+  bannerImage: '/media/how-to-buy-dhb-token-uk-banner.png',
   bannerImageAlt: 'A guide to buying the DHB token in the UK on the Base network, with the DeHub logo',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-07-03T11:30:00.000Z',

@@ -56,7 +56,7 @@
 /osaka/*
   Cache-Control: public, max-age=31536000, immutable
 
-/lovable-uploads/*
+/media/*
   Cache-Control: public, max-age=31536000, immutable
 
 # Icons + install art. manifest.json deliberately stays short-lived: it is the

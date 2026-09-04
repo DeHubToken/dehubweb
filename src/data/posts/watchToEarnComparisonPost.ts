@@ -95,7 +95,7 @@ XCAD rewards you for watching participating creators on YouTube through an exten
 ### Can you really earn by watching videos in 2026?
 
 You can earn small, ongoing rewards, but treat any promise of large passive income with caution. Earnings depend on the platform's model, fees, token value and how much you engage. Platforms with on-chain-verifiable payouts and no purchase requirement, such as DeHub, let you check the mechanics yourself rather than trusting an in-app balance. Compare the field in our [best watch-to-earn platforms of 2026](/guides/best-watch-to-earn-platforms-2026) guide.`,
-  bannerImage: '/lovable-uploads/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner.png',
+  bannerImage: '/media/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner.png',
   bannerImageAlt: 'DeHub compared with Cheelee, Theta.tv and XCAD Network as watch-to-earn alternatives in 2026',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-05-12T10:00:00.000Z',

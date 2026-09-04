@@ -113,7 +113,7 @@ Livepeer is an open, decentralised network for video transcoding, the expensive 
 
 Open the DeHub app or install it from Google Play, connect a wallet to create your on-chain identity, point your broadcast software at the ingest endpoint or go live from the app, then enable tips and tokenised subscriptions. Because your stream sits on a social feed, viewers who find you live can follow and subscribe so your audience compounds over time.
 `,
-  bannerImage: '/lovable-uploads/web3-live-streaming-decentralised-twitch-alternative-banner.png',
+  bannerImage: '/media/web3-live-streaming-decentralised-twitch-alternative-banner.png',
   bannerImageAlt: 'DeHub web3 live streaming platform: a decentralised Twitch alternative with on-chain tips',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-02-26T11:20:00.000Z',

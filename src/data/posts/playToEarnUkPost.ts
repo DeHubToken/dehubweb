@@ -101,7 +101,7 @@ The best fit is one with no forced upfront spend and a genuinely tradable token.
 ### Can I play-to-earn without spending any money?
 
 Yes. Free-to-start games avoid the "pay to play to earn" trap entirely. DeHub's arcade and watch-to-earn bounties let you test the full earn-and-withdraw cycle at zero risk, and our guide to [free play-to-earn games with no investment](/guides/free-play-to-earn-games-no-investment-2026) lists more options for UK players.`,
-  bannerImage: '/lovable-uploads/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png',
+  bannerImage: '/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png',
   bannerImageAlt: 'Play-to-earn gaming in the UK with DeHub, showing crypto rewards and HMRC tax considerations',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-02-19T10:00:00.000Z',

@@ -25,7 +25,7 @@ export const dubaiEventPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">This was more than just a trip; it was a statement. DeHub is a global project, and our presence in Dubai has solidified our position in one of the world's most dynamic tech hubs. Thank you to everyone who connected with us. The future is bright, and we're just getting started!</p>
   `,
-  bannerImage: '/lovable-uploads/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
+  bannerImage: '/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
   bannerImageAlt: 'DeHub DeTour Dubai event banner',
   author: {
     name: 'DeHub Team',

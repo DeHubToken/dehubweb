@@ -230,7 +230,7 @@ Keep the feed excerpt below the substance rather than as the substance.
 - **Unknown URLs return a true 404**, with an explicit guard against the upstream function's soft-404 titles
   minting thin indexable pages.
 - **Legacy domain handled.** `dehub.net` 301s cleanly to `dehub.io` with a self-referencing canonical.
-- **Mirror hosts defended.** Lovable preview domains flip to `noindex, nofollow` client-side.
+- **Mirror hosts defended.** Preview mirror domains flip to `noindex, nofollow` client-side.
 - **Entity graph is properly built.** Organization, WebSite and SoftwareApplication with a Wikidata `sameAs`.
 - **Caching is deliberate.** Hashed assets immutable for a year, unhashed art given explicit rules, service
   worker and version manifest correctly never cached.

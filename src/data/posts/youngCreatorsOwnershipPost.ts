@@ -25,7 +25,7 @@ Then there is the children's-content layer specifically. After the FTC's $170 mi
 
 The pattern is worth naming precisely, because it recurs: **the risk to a young creator is almost never that they fail. It is that they succeed on ground they were only ever renting.**
 
-![The deal nobody signs — the default platform arrangement, on terms a creator never negotiated](/lovable-uploads/fig-young-creators-contract.jpg)
+![The deal nobody signs — the default platform arrangement, on terms a creator never negotiated](/media/fig-young-creators-contract.jpg)
 
 ## The contract nobody would sign on paper
 
@@ -65,7 +65,7 @@ The first is that a young creator's leverage is highest before they need it. The
 
 The second is harder. When a child's content is the household's income, the incentive to keep feeding whichever platform is currently paying becomes extremely strong, and the incentive to diversify becomes weak precisely when diversifying matters most. The trust laws exist because that pressure has, in documented cases, not resolved in the child's favour. Assume it applies to you too, and build the alternative early, while the decision is still cheap.
 
-![Scoreboard, not asset — a follower count is not ownership; the archive, the list and the wallet are](/lovable-uploads/fig-young-creators-scoreboard.jpg)
+![Scoreboard, not asset — a follower count is not ownership; the archive, the list and the wallet are](/media/fig-young-creators-scoreboard.jpg)
 
 ## For the young creator reading this
 
@@ -96,7 +96,7 @@ No. Sign-in works through Google, Apple, email or SMS with a wallet created in t
 ### What is the single most important step?
 
 Keep the original files, off-platform, from day one. It is free, it takes minutes, and it is the one thing that makes recovery possible after any of the failures described above.`,
-  bannerImage: '/lovable-uploads/young-creators-ground-you-own-banner.png',
+  bannerImage: '/media/young-creators-ground-you-own-banner.png',
   bannerImageAlt: 'A young creator publishing on ground they own rather than rent',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-08-28T13:00:00.000Z',

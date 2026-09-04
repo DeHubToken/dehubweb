@@ -13,7 +13,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "title": "How monetization works on social media apps",
     "excerpt": "Follower minimums, activity tests, invitation walls and payout floors for Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, with the 2026 and 2027 rule changes that reset the numbers.",
     "content": "",
-    "bannerImage": "/lovable-uploads/social-media-monetization-2026-banner.jpg",
+    "bannerImage": "/media/social-media-monetization-2026-banner.jpg",
     "bannerImageAlt": "Who pays and when: creator monetization rules across seven social platforms in 2026",
     "author": {
       "name": "DeHub Team"
@@ -44,7 +44,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "New laws protect a child creator’s earnings. Nothing protects the asset. A guide for young creators, parents and managers on building where the work is owned.",
     "excerpt": "Illinois and California now force a share of a child creator’s earnings into trust. Nobody has legislated the harder problem: the account itself was never theirs.",
     "content": "",
-    "bannerImage": "/lovable-uploads/young-creators-ground-you-own-banner.png",
+    "bannerImage": "/media/young-creators-ground-you-own-banner.png",
     "bannerImageAlt": "A young creator publishing on ground they own rather than rent",
     "author": {
       "name": "DeHub Team"
@@ -72,7 +72,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Revenue sharing and NIL pay you while you are eligible. The audience you build is the only asset that outlives your last game. A guide for college athletes.",
     "excerpt": "Your NIL deal has an expiry date written into it: eligibility. The audience you build during those years does not. Here is the difference, and what to do about it now.",
     "content": "",
-    "bannerImage": "/lovable-uploads/nil-ends-your-audience-does-not-banner.png",
+    "bannerImage": "/media/nil-ends-your-audience-does-not-banner.png",
     "bannerImageAlt": "A college athlete building an audience that outlasts NIL eligibility",
     "author": {
       "name": "DeHub Team"
@@ -100,7 +100,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Creator economy courses teach students to succeed inside platforms whose terms they will never control. A case for teaching ownership structure, not platform tactics.",
     "excerpt": "A syllabus is a claim about what will still be true when the student graduates. Most creator economy courses quietly teach one company’s business model as though it were physics.",
     "content": "",
-    "bannerImage": "/lovable-uploads/teaching-the-creator-economy-banner.png",
+    "bannerImage": "/media/teaching-the-creator-economy-banner.png",
     "bannerImageAlt": "A creator economy syllabus examined for what survives a platform change",
     "author": {
       "name": "DeHub Team"
@@ -128,7 +128,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Leagues spent forty years perfecting the sale of distribution rights. The one asset they never acquired is the fan relationship — and the athlete now holds it.",
     "excerpt": "Media rights are a lease on attention. The athlete now holds the freehold. A piece for league and team executives on the asset nobody put on the balance sheet.",
     "content": "",
-    "bannerImage": "/lovable-uploads/athlete-is-becoming-a-media-platform-banner.png",
+    "bannerImage": "/media/athlete-is-becoming-a-media-platform-banner.png",
     "bannerImageAlt": "An athlete as a media property, with the fan relationship owned rather than licensed",
     "author": {
       "name": "DeHub Team"
@@ -156,7 +156,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.",
     "excerpt": "Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight — it is the model.",
     "content": "",
-    "bannerImage": "/lovable-uploads/creators-guide-leaving-instagram-banner.png",
+    "bannerImage": "/media/creators-guide-leaving-instagram-banner.png",
     "bannerImageAlt": "A creator moving from Instagram to a Web3 platform they own on DeHub",
     "author": {
       "name": "DeHub Team"
@@ -184,7 +184,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "A YouTube alternative creators actually own. What the 55% AdSense split, demonetisation and Content ID really cost you, and how a 90% revenue-share Web3 platform compares.",
     "excerpt": "YouTube pays better than most platforms and still keeps 45% of your ad revenue, the right to demonetise you, and the deed to your channel. Here is the alternative.",
     "content": "",
-    "bannerImage": "/lovable-uploads/creators-guide-leaving-youtube-banner.png",
+    "bannerImage": "/media/creators-guide-leaving-youtube-banner.png",
     "bannerImageAlt": "A creator moving from YouTube to a Web3 platform they own on DeHub",
     "author": {
       "name": "DeHub Team"
@@ -212,7 +212,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "A TikTok alternative creators actually own. How Creator Rewards really pays, why your audience is not yours, and how a 90% revenue-share Web3 platform compares in 2026.",
     "excerpt": "Wherever you post from, the TikTok trade is the same: enormous reach you do not control, on top of an audience you cannot take with you. Here is what to do about it.",
     "content": "",
-    "bannerImage": "/lovable-uploads/creators-guide-leaving-tiktok-banner.png",
+    "bannerImage": "/media/creators-guide-leaving-tiktok-banner.png",
     "bannerImageAlt": "A creator moving from TikTok to a Web3 platform they own on DeHub",
     "author": {
       "name": "DeHub Team"
@@ -237,7 +237,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "title": "DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
     "excerpt": "Veo 3.1, Seedance, Kling and Nano Banana in one studio — priced per job in DHB, with credit that never expires and a free allowance that accrues instead of vanishing at midnight. Here is the honest head-to-head.",
     "content": "",
-    "bannerImage": "/lovable-uploads/ai-creator-studio-banner.jpg",
+    "bannerImage": "/media/ai-creator-studio-banner.jpg",
     "bannerImageAlt": "DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live",
     "author": {
       "name": "DeHub Team"
@@ -267,7 +267,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Three different things share the name dehub. Here is how to tell the DeHub Web3 social network apart from DePaul and Rowan university portals.",
     "excerpt": "Searching for \"dehub\" returns three unrelated things. Here is a quick, factual guide to telling the DeHub Web3 social network apart from the DePaul and Rowan university portals.",
     "content": "",
-    "bannerImage": "/lovable-uploads/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png",
+    "bannerImage": "/media/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png",
     "bannerImageAlt": "DeHub disambiguation: the DeHub Web3 social network at dehub.io compared with DePaul and Rowan university portals of the same name",
     "author": {
       "name": "DeHub Team"
@@ -295,7 +295,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "How to buy DHB token in the UK, explained clearly: what $DHB does, which chains it runs on, where it trades, and a careful step-by-step for UK buyers.",
     "excerpt": "A plain-English UK guide to the DHB token: what it does, which chains it runs on, where it trades, and a careful, non-advisory step-by-step for buying it safely.",
     "content": "",
-    "bannerImage": "/lovable-uploads/how-to-buy-dhb-token-uk-banner.png",
+    "bannerImage": "/media/how-to-buy-dhb-token-uk-banner.png",
     "bannerImageAlt": "A guide to buying the DHB token in the UK on the Base network, with the DeHub logo",
     "author": {
       "name": "DeHub Team"
@@ -323,7 +323,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Who we are, how it works, the DHB token, and how creators earn.",
     "excerpt": "DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Here is who we are, what that actually means, how it works, and why it exists.",
     "content": "",
-    "bannerImage": "/lovable-uploads/what-is-dehub-banner.png",
+    "bannerImage": "/media/what-is-dehub-banner.png",
     "bannerImageAlt": "DeHub — the open source, user-owned social platform for creators and communities",
     "author": {
       "name": "DeHub Team"
@@ -348,7 +348,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how DeHub pays you to watch on-chain.",
     "excerpt": "Watch-to-earn pays viewers a share of the value their attention creates. Here is what watch to earn actually means, how it works, and how DeHub does it honestly.",
     "content": "",
-    "bannerImage": "/lovable-uploads/what-is-watch-to-earn-banner.png",
+    "bannerImage": "/media/what-is-watch-to-earn-banner.png",
     "bannerImageAlt": "DeHub watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network",
     "author": {
       "name": "DeHub Team"
@@ -376,7 +376,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "An honest ranking of the best watch to earn platforms 2026: which watch-to-earn apps pay real money, which have quietly pivoted, and which to avoid.",
     "excerpt": "A fair, up-to-date look at the best watch-to-earn platforms of 2026 — which apps still pay real crypto, which have gone quiet, and how to avoid the scams.",
     "content": "",
-    "bannerImage": "/lovable-uploads/best-watch-to-earn-platforms-2026-banner.png",
+    "bannerImage": "/media/best-watch-to-earn-platforms-2026-banner.png",
     "bannerImageAlt": "Illustration ranking the best watch-to-earn platforms of 2026 with DeHub, Theta, XCAD and others",
     "author": {
       "name": "DeHub Team"
@@ -404,7 +404,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Is watch to earn legit or a scam? An honest 2026 breakdown of realistic earnings, the red flags to avoid, and a checklist to vet any platform before you sign up.",
     "excerpt": "Some watch-to-earn is legitimate and some is not. Here is the honest 2026 picture: what you can realistically earn, the red flags to spot, and how to vet any platform.",
     "content": "",
-    "bannerImage": "/lovable-uploads/is-watch-to-earn-legit-banner.png",
+    "bannerImage": "/media/is-watch-to-earn-legit-banner.png",
     "bannerImageAlt": "A viewer weighing up whether watch-to-earn crypto rewards are legitimate on the DeHub decentralised social network",
     "author": {
       "name": "DeHub Team"
@@ -431,7 +431,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Looking for a Cheelee alternative? Compare DeHub vs Cheelee, Theta.tv and XCAD Network on cost, payouts and features to pick the best watch-to-earn app in 2026.",
     "excerpt": "A head-to-head comparison of DeHub, Cheelee, Theta.tv and XCAD Network on entry cost, payout transparency and features to help you choose the best watch-to-earn app in 2026.",
     "content": "",
-    "bannerImage": "/lovable-uploads/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner.png",
+    "bannerImage": "/media/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner.png",
     "bannerImageAlt": "DeHub compared with Cheelee, Theta.tv and XCAD Network as watch-to-earn alternatives in 2026",
     "author": {
       "name": "DeHub Team"
@@ -459,7 +459,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Tokenised subscriptions are on-chain memberships you own, resell on a secondary market, and that pay the creator a royalty on every resale. Here is how they work.",
     "excerpt": "Tokenised subscriptions turn a creator membership into an on-chain asset you own outright, can resell, and that pays the creator a royalty each time it changes hands.",
     "content": "",
-    "bannerImage": "/lovable-uploads/tokenized-subscriptions-explained-banner.png",
+    "bannerImage": "/media/tokenized-subscriptions-explained-banner.png",
     "bannerImageAlt": "Tokenised subscriptions on DeHub: an on-chain creator membership held in a wallet, resellable with creator royalties",
     "author": {
       "name": "DeHub Team"
@@ -487,7 +487,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Looking for a TikTok alternative UK creators actually own? See how a 90% revenue-share, crypto-paying Web3 platform beats TikTok Creator Rewards in 2026.",
     "excerpt": "A practical guide for British creators leaving TikTok in 2026: why you do not own your audience, what the numbers really are, and where to go instead.",
     "content": "",
-    "bannerImage": "/lovable-uploads/uk-creators-guide-leaving-tiktok-banner.png",
+    "bannerImage": "/media/uk-creators-guide-leaving-tiktok-banner.png",
     "bannerImageAlt": "A UK creator moving from TikTok to a Web3 platform they own on DeHub",
     "author": {
       "name": "DeHub Team"
@@ -515,7 +515,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "The honest 2026 guide to play to earn games without investment: which free P2E titles actually pay, which hide NFT gates, and how to start earning with no deposit.",
     "excerpt": "An honest 2026 rundown of play to earn games without investment: which titles are genuinely free to start, which hide an NFT gate, and how to begin with no deposit.",
     "content": "",
-    "bannerImage": "/lovable-uploads/free-play-to-earn-games-no-investment-2026-banner.png",
+    "bannerImage": "/media/free-play-to-earn-games-no-investment-2026-banner.png",
     "bannerImageAlt": "DeHub free play-to-earn arcade featuring the Last Chad Standing MMA battle royale on Base",
     "author": {
       "name": "DeHub Team"
@@ -543,7 +543,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Last Chad Standing is the MMA play to earn game from DeHub: a licensed-fighter battle royale where you earn $DHB on Base. How it works and how to play.",
     "excerpt": "Last Chad Standing is DeHub's flagship MMA play-to-earn game, a licensed-fighter battle royale where skill in the cage converts into $DHB rewards on Base.",
     "content": "",
-    "bannerImage": "/lovable-uploads/last-chad-standing-mma-battle-royale-play-to-earn-banner.png",
+    "bannerImage": "/media/last-chad-standing-mma-battle-royale-play-to-earn-banner.png",
     "bannerImageAlt": "Last Chad Standing, the DeHub MMA battle-royale play-to-earn game with licensed fighters",
     "author": {
       "name": "DeHub Team"
@@ -571,7 +571,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Watch to earn vs play to earn vs move-to-earn, explained. What x-to-earn means in 2026, the honest pros, cons and which models actually last.",
     "excerpt": "A plain-English guide to the x-to-earn category: how watch-to-earn, play-to-earn and move-to-earn differ, which models are sustainable, and why real utility wins.",
     "content": "",
-    "bannerImage": "/lovable-uploads/watch-to-earn-vs-play-to-earn-vs-move-to-earn-banner.png",
+    "bannerImage": "/media/watch-to-earn-vs-play-to-earn-vs-move-to-earn-banner.png",
     "bannerImageAlt": "Illustration comparing watch-to-earn, play-to-earn and move-to-earn as branches of x-to-earn",
     "author": {
       "name": "DeHub Team"
@@ -599,7 +599,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "What is decentralised social media, how does it work, and why it matters for UK creators in 2026. A plain-English guide to user-owned, Web3 social media.",
     "excerpt": "A plain-English British guide to decentralised social media in 2026: what it is, how it works, the federated versus Web3 models, the honest trade-offs, and where DeHub fits.",
     "content": "",
-    "bannerImage": "/lovable-uploads/decentralised-social-media-explained-uk-banner.png",
+    "bannerImage": "/media/decentralised-social-media-explained-uk-banner.png",
     "bannerImageAlt": "Illustration of a decentralised social media network with user-owned nodes connected across an open protocol",
     "author": {
       "name": "DeHub Team"
@@ -627,7 +627,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "The best decentralized social media platforms of 2026 compared: Bluesky, Mastodon, Farcaster, Lens and DeHub. Which decentralised network actually pays creators?",
     "excerpt": "A clear, honest comparison of the best decentralised social media platforms in 2026 — Bluesky, Mastodon, Farcaster, Lens and DeHub — ranked by what each actually does for creators.",
     "content": "",
-    "bannerImage": "/lovable-uploads/best-decentralised-social-media-platforms-2026-banner.png",
+    "bannerImage": "/media/best-decentralised-social-media-platforms-2026-banner.png",
     "bannerImageAlt": "Comparison of the best decentralised social media platforms in 2026 including DeHub, Bluesky, Farcaster, Lens and Mastodon",
     "author": {
       "name": "DeHub Team"
@@ -655,7 +655,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "A web3 live streaming platform lets creators own their channel, take on-chain tips and avoid sudden demonetisation. How the decentralised Twitch alternative works.",
     "excerpt": "A web3 live streaming platform gives creators ownership, on-chain tips and no surprise demonetisation. Here is how the decentralised Twitch alternative actually works.",
     "content": "",
-    "bannerImage": "/lovable-uploads/web3-live-streaming-decentralised-twitch-alternative-banner.png",
+    "bannerImage": "/media/web3-live-streaming-decentralised-twitch-alternative-banner.png",
     "bannerImageAlt": "DeHub web3 live streaming platform: a decentralised Twitch alternative with on-chain tips",
     "author": {
       "name": "DeHub Team"
@@ -683,7 +683,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "seoDescription": "Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from DeHub.",
     "excerpt": "Is play-to-earn legal in the UK, which games genuinely pay British players in 2026, and how does HMRC tax the rewards? A practical guide, not tax advice.",
     "content": "",
-    "bannerImage": "/lovable-uploads/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png",
+    "bannerImage": "/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png",
     "bannerImageAlt": "Play-to-earn gaming in the UK with DeHub, showing crypto rewards and HMRC tax considerations",
     "author": {
       "name": "DeHub Team"
@@ -709,7 +709,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "title": "We're Finally Here — A Major DeHub Update",
     "excerpt": "After 5 years of development, we're proud to be in a position to finally challenge the behemoths of legacy media. What was always holding us back is now a superpower.",
     "content": "",
-    "bannerImage": "/lovable-uploads/town-hall-feb-2026-banner.png",
+    "bannerImage": "/media/town-hall-feb-2026-banner.png",
     "bannerImageAlt": "DeHub Town Hall Overview February 2026 - A Major DeHub Update",
     "author": {
       "name": "DeHub Team"
@@ -736,7 +736,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "google-play-store-listing-confirmed",
     "excerpt": "DApp has been approved and is now live on the Google Play Store, conducting main testing.",
     "content": "",
-    "bannerImage": "/lovable-uploads/google-playstore-banner.png",
+    "bannerImage": "/media/google-playstore-banner.png",
     "bannerImageAlt": "DeHub Google Play Store listing announcement banner",
     "author": {
       "name": "DeHub Team"
@@ -761,7 +761,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "privacy-first-open-source-e2ee-dehub",
     "excerpt": "Military-grade End-to-End Encryption ensures your conversations remain completely private. Learn how DeHub protects your messages with battle-tested cryptography.",
     "content": "",
-    "bannerImage": "/lovable-uploads/e2ee-banner.png",
+    "bannerImage": "/media/e2ee-banner.png",
     "bannerImageAlt": "DeHub End-to-End Encryption Banner - Privacy First Technology",
     "author": {
       "name": "DeHub Team"
@@ -786,7 +786,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "dhb-tradable-on-coinbase-soon",
     "excerpt": "In a landmark move for accessibility, $DHB, along with other Base tokens, will soon be tradable directly on Coinbase, bridging the gap between DEX and CEX liquidity.",
     "content": "",
-    "bannerImage": "/lovable-uploads/435d9da9-f69a-405a-92e1-73c030728cd5.png",
+    "bannerImage": "/media/435d9da9-f69a-405a-92e1-73c030728cd5.png",
     "bannerImageAlt": "Base logo on a blue background, representing the Coinbase integration",
     "author": {
       "name": "DeHub Team"
@@ -809,7 +809,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "community-champions-ugc-ambassadorship-program-launched---a-dehub-milestone-from-q2-2025",
     "excerpt": "A Q2 2025 milestone from DeHub's roadmap: Launched UGC ambassadorship program with 50 vacancies.",
     "content": "",
-    "bannerImage": "/lovable-uploads/443805df-744b-4ab4-80a7-ae59cafe8baa.png",
+    "bannerImage": "/media/443805df-744b-4ab4-80a7-ae59cafe8baa.png",
     "bannerImageAlt": "DeHub UGC Programme banner",
     "author": {
       "name": "DeHub Team"
@@ -834,7 +834,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "fresh-experience-revamped-app-feed-with-audio-replies--live-talk-spaces---a-dehub-milestone-from-q2-2025",
     "excerpt": "A rebuilt feed, audio replies, and live talk spaces — aimed squarely at the discovery problem users had been reporting for years.",
     "content": "",
-    "bannerImage": "/lovable-uploads/eeb2e5c9-2347-4865-876e-31f38fe4412a.png",
+    "bannerImage": "/media/eeb2e5c9-2347-4865-876e-31f38fe4412a.png",
     "bannerImageAlt": "DeHub Revamped App Feed",
     "author": {
       "name": "DeHub Team"
@@ -859,7 +859,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025",
     "excerpt": "dhbscan.com — every DHB contract in one place, so verifying us does not require knowing which addresses to look at.",
     "content": "",
-    "bannerImage": "/lovable-uploads/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png",
+    "bannerImage": "/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png",
     "bannerImageAlt": "DHBScan.com banner",
     "author": {
       "name": "DeHub Team"
@@ -884,7 +884,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "get-ready-players-final-snapshot-for-last-chad-standing-airdrop---a-dehub-milestone-from-q2-2025",
     "excerpt": "A Q2 2025 milestone from DeHub's roadmap: Final snapshot for Last Chad Standing game airdrop, for both holders and stakers.",
     "content": "",
-    "bannerImage": "/lovable-uploads/6d868478-769e-4981-b285-4ca5fa215dc5.png",
+    "bannerImage": "/media/6d868478-769e-4981-b285-4ca5fa215dc5.png",
     "bannerImageAlt": "Last Chad Standing helicopter",
     "author": {
       "name": "DeHub Team"
@@ -909,7 +909,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "reliability-perfected-9999-uptime-for-dehub-streaming---a-dehub-milestone-from-q1-2025",
     "excerpt": "99.99% across all streaming services. The fourth nine costs more than the first three combined, and here is why we paid for it.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-uptime-banner.jpg",
+    "bannerImage": "/media/milestone-uptime-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Reliability Perfected: 99.99% Uptime for DeHub Streaming",
     "author": {
       "name": "DeHub Team"
@@ -934,7 +934,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025",
     "excerpt": "Livepeer integration taking us to 50,000+ concurrent viewers, with headroom beyond that on higher tiers — and a delivery layer that is not one company.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-livepeer-banner.jpg",
+    "bannerImage": "/media/milestone-livepeer-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers",
     "author": {
       "name": "DeHub Team"
@@ -959,7 +959,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "interactive-streaming-on-chain-live-streams-with-animated-tips---a-dehub-milestone-from-q1-2025",
     "excerpt": "Live streams where the tip settles on-chain and the animation fires in the same moment. The hard part was making those two things feel like one.",
     "content": "",
-    "bannerImage": "/lovable-uploads/a6275c3d-1dab-43a4-9362-93dd9d96f41c.png",
+    "bannerImage": "/media/a6275c3d-1dab-43a4-9362-93dd9d96f41c.png",
     "bannerImageAlt": "DeHub Live Streaming logo",
     "author": {
       "name": "DeHub Team"
@@ -984,7 +984,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "connect-and-converse-advanced-messaging-system-with-paidfree-dms---a-dehub-milestone-from-q1-2025",
     "excerpt": "Paid or free DMs and unlockable chat content — a creator-side answer to an inbox that is 95% noise.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-messaging-banner.jpg",
+    "bannerImage": "/media/milestone-messaging-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Connect and Converse: Advanced Messaging System with Paid/Free DMs",
     "author": {
       "name": "DeHub Team"
@@ -1009,7 +1009,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb---a-dehub-milestone-from-q1-2025",
     "excerpt": "We ended Ethereum mainnet support a year after adding it, and concentrated on Base. Fees, not ideology.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-ethereum-exit-banner.jpg",
+    "bannerImage": "/media/milestone-ethereum-exit-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB",
     "author": {
       "name": "DeHub Team"
@@ -1034,7 +1034,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention---a-dehub-milestone-from-q1-2025",
     "excerpt": "The full trailer landed, and the people who noticed were MMA promoters rather than crypto media. That was the entire objective.",
     "content": "",
-    "bannerImage": "/lovable-uploads/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png",
+    "bannerImage": "/media/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png",
     "bannerImageAlt": "Last Chad Standing character helmet",
     "author": {
       "name": "DeHub Team"
@@ -1059,7 +1059,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "speed-of-light-custom-cdn-achieves-sub-200ms-global-latency---a-dehub-milestone-from-q1-2025",
     "excerpt": "Sub-200ms globally, from our own CDN. The word doing the work in that sentence is \"globally\".",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-cdn-banner.jpg",
+    "bannerImage": "/media/milestone-cdn-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Speed of Light: Custom CDN Achieves Sub-200ms Global Latency",
     "author": {
       "name": "DeHub Team"
@@ -1084,7 +1084,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-future-of-infrastructure-depin-phase-1-goes-live---a-dehub-milestone-from-q4-2024",
     "excerpt": "Phase 1 of decentralised physical infrastructure. The point where \"decentralised streaming\" stops being a description of the token and starts being one of the delivery.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-depin-banner.jpg",
+    "bannerImage": "/media/milestone-depin-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: The Future of Infrastructure: DePIN Phase 1 Goes Live",
     "author": {
       "name": "DeHub Team"
@@ -1109,7 +1109,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "leading-the-way-dehub-agency-becomes-uk-1-with-1000-streamers---a-dehub-milestone-from-q4-2024",
     "excerpt": "1,000 exclusively signed live streamers and the UK's number one position. Covered at length elsewhere — this is what it meant for the platform.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-agency-uk-banner.jpg",
+    "bannerImage": "/media/milestone-agency-uk-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: Leading the Way: DeHub Agency Becomes UK #1 with 1,000 Streamers",
     "author": {
       "name": "DeHub Team"
@@ -1134,7 +1134,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "1-year-review-a-quick-look-back",
     "excerpt": "A year ago, we took a bold step and decided to delist from gate.io. This is a look back at that decision and our commitment to decentralization.",
     "content": "",
-    "bannerImage": "/lovable-uploads/ffb3a54c-cb66-4856-b9ff-491567ce3324.png",
+    "bannerImage": "/media/ffb3a54c-cb66-4856-b9ff-491567ce3324.png",
     "bannerImageAlt": "A Look Back In Time",
     "author": {
       "name": "DeHub"
@@ -1160,7 +1160,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-hype-is-real-last-chad-standing-teaser-hits-1m-views---a-dehub-milestone-from-q4-2024",
     "excerpt": "A million views on the teaser for the first MMA-inspired battle royale. The audience it reached was mostly not a crypto audience.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-teaser-1m-banner.jpg",
+    "bannerImage": "/media/milestone-teaser-1m-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views",
     "author": {
       "name": "DeHub Team"
@@ -1185,7 +1185,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "revolutionizing-access-on-chain-tradable-subscriptions-launch---a-dehub-milestone-from-q4-2024",
     "excerpt": "A Q4 2024 milestone from DeHub's roadmap: Released onchain tradable subscriptions.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-subscriptions-banner.jpg",
+    "bannerImage": "/media/milestone-subscriptions-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: Revolutionizing Access: On-Chain Tradable Subscriptions Launch",
     "author": {
       "name": "DeHub Team"
@@ -1210,7 +1210,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "town-hall-ama-october-2024",
     "excerpt": "A summary of our recent Town Hall & AMA session, covering roadmap updates, platform enhancements, and answers to your top questions.",
     "content": "",
-    "bannerImage": "/lovable-uploads/ea33e3a2-72d6-4be8-8648-07293e8b806f.png",
+    "bannerImage": "/media/ea33e3a2-72d6-4be8-8648-07293e8b806f.png",
     "bannerImageAlt": "DeHub Town Hall & AMA banner",
     "author": {
       "name": "DeHub Team"
@@ -1236,7 +1236,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "developments-overview",
     "excerpt": "A summary of major upcoming enhancements, including a platform overhaul, BASE tax removal, new LP initiatives, and a major push in community and marketing efforts.",
     "content": "",
-    "bannerImage": "/lovable-uploads/0932e5d5-086f-4e27-aa97-7f5bdcfd31de.png",
+    "bannerImage": "/media/0932e5d5-086f-4e27-aa97-7f5bdcfd31de.png",
     "bannerImageAlt": "DeHub Developments Overview",
     "author": {
       "name": "DeHub Team"
@@ -1261,7 +1261,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "faster-and-sleeker-ui-overhaul-and-200-backend-speed-boost---a-dehub-milestone-from-q3-2024",
     "excerpt": "A full interface overhaul and a backend three times faster. Shipped together, because either one alone would have been worse than nothing.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-ui-overhaul-banner.jpg",
+    "bannerImage": "/media/milestone-ui-overhaul-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2024 update: Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost",
     "author": {
       "name": "DeHub Team"
@@ -1286,7 +1286,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "leveling-up-major-app-upgrade-earns-95-positive-feedback---a-dehub-milestone-from-q3-2024",
     "excerpt": "95% positive feedback on a major app upgrade — and the 5% is the part that shaped the following year.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-positive-feedback-banner.jpg",
+    "bannerImage": "/media/milestone-positive-feedback-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2024 update: Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
     "author": {
       "name": "DeHub Team"
@@ -1311,7 +1311,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "worldwide-creators-partnerships-spanning-15-countries---a-dehub-milestone-from-q2-2024",
     "excerpt": "Creator partnerships across 15 countries. The interesting part was how differently each market treats a platform that pays in tokens.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-15-countries-banner.jpg",
+    "bannerImage": "/media/milestone-15-countries-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Worldwide Creators: Partnerships Spanning 15 Countries",
     "author": {
       "name": "DeHub Team"
@@ -1336,7 +1336,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "entrepreneurial-spirit-co-founders-launch-tiktok-agency---a-dehub-milestone-from-q2-2024",
     "excerpt": "Mike Hales and Indi Cammish opened a TikTok agency with TikTok executives directly, after a year topping the UK stream charts at around £1k a day.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-tiktok-agency-banner.jpg",
+    "bannerImage": "/media/milestone-tiktok-agency-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Entrepreneurial Spirit: Co-Founders Launch TikTok Agency",
     "author": {
       "name": "DeHub Team"
@@ -1361,7 +1361,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "global-footprint-dehub-expands-middle-east-presence-via-dubai-event---a-dehub-milestone-from-q2-2024",
     "excerpt": "A Dubai event and the Middle East expansion behind it. Written up in more detail separately — this is what it was for.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-dubai-banner.jpg",
+    "bannerImage": "/media/milestone-dubai-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Global Footprint: DeHub Expands Middle East Presence via Dubai Event",
     "author": {
       "name": "DeHub Team"
@@ -1386,7 +1386,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "layer-2-expansion-sdhb-lists-on-base---a-dehub-milestone-from-q2-2024",
     "excerpt": "sDHB on Base. The chain where the transaction costs less than the thing you are buying — which is the entire requirement.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-base-listing-banner.jpg",
+    "bannerImage": "/media/milestone-base-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Layer 2 Expansion: SDHB Lists on Base",
     "author": {
       "name": "DeHub Team"
@@ -1411,7 +1411,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "1-million-dollar-raise-completed",
     "excerpt": "DeHub's adult fork, Blocjerk (now fan.site) has completed a $1,000,000 raise backed by several notable VCs, influencers, and launchpads.",
     "content": "",
-    "bannerImage": "/lovable-uploads/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png",
+    "bannerImage": "/media/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png",
     "bannerImageAlt": "$1,000,000 Fundraise",
     "author": {
       "name": "DeHub Team"
@@ -1436,7 +1436,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "q1-overview-a-birds-eye-view",
     "excerpt": "A bird’s eye view of plans for the rest of this quarter.",
     "content": "",
-    "bannerImage": "/lovable-uploads/ed0c4e36-5a13-4043-9c5f-725f4985cc91.png",
+    "bannerImage": "/media/ed0c4e36-5a13-4043-9c5f-725f4985cc91.png",
     "bannerImageAlt": "Q1 Overview: A Bird's Eye View",
     "author": {
       "name": "DeHub Team"
@@ -1461,7 +1461,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "fueling-growth-1m-raised-for-fansite-bj-fork---a-dehub-milestone-from-q1-2024",
     "excerpt": "$1,000,000 raised for the fork, from VCs, launchpads and public sales. A fork of our app, funded independently, with our stakers airdropped.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-fansite-raise-banner.jpg",
+    "bannerImage": "/media/milestone-fansite-raise-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2024 update: Fueling Growth: $1M Raised for Fan.site (BJ Fork)",
     "author": {
       "name": "DeHub Team"
@@ -1486,7 +1486,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "expanding-reach-dhb-lists-on-ethereum-mainnet---a-dehub-milestone-from-q1-2024",
     "excerpt": "DHB listed on Ethereum mainnet. A year later we discontinued it — this post is where the reasoning for both starts.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-eth-listing-banner.jpg",
+    "bannerImage": "/media/milestone-eth-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2024 update: Expanding Reach: DHB Lists on Ethereum Mainnet",
     "author": {
       "name": "DeHub Team"
@@ -1511,7 +1511,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "expanding-horizons-partner-airdrop-for-fansite-bj-fork---a-dehub-milestone-from-q3-2023",
     "excerpt": "A Q3 2023 milestone from DeHub's roadmap: Announced partner airdrop for BJ (now fan.site), the adult fork of DeHub.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-partner-airdrop-banner.jpg",
+    "bannerImage": "/media/milestone-partner-airdrop-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)",
     "author": {
       "name": "DeHub Team"
@@ -1536,7 +1536,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "full-disclosure-dehubs-comprehensive-transparency-reports---a-dehub-milestone-from-q4-2023",
     "excerpt": "A quick overview of exciting updates coming before the end of 2023, including Streaming, Arcade, Shop, and more.",
     "content": "",
-    "bannerImage": "/lovable-uploads/131924d4-97f2-468e-9b52-cbf384e718ea.png",
+    "bannerImage": "/media/131924d4-97f2-468e-9b52-cbf384e718ea.png",
     "bannerImageAlt": "Bird's Eye Overview",
     "author": {
       "name": "DeHub Team"
@@ -1561,7 +1561,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023",
     "excerpt": "Liquidity management moved out of the contract and into a rules-based process — the opposite of where it lived when it broke everything.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-auto-liquidity-banner.jpg",
+    "bannerImage": "/media/milestone-auto-liquidity-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Smarter Liquidity: Automated Liquidity Provision on DEXs",
     "author": {
       "name": "DeHub Team"
@@ -1586,7 +1586,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023",
     "excerpt": "A published, specific DEX policy — written so that the next person handling treasury cannot quietly do something different.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-dex-policy-banner.jpg",
+    "bannerImage": "/media/milestone-dex-policy-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Open and Clear: DEX Policy Implementation and Transparency Commitment",
     "author": {
       "name": "DeHub Team"
@@ -1611,7 +1611,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "prioritizing-principles-voluntary-delisting-from-gateio-for-decentralization---a-dehub-milestone-from-q4-2023",
     "excerpt": "We asked to be delisted. Projects do not usually do that, and the reasoning was practical as well as ideological.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-gate-delisting-banner.jpg",
+    "bannerImage": "/media/milestone-gate-delisting-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization",
     "author": {
       "name": "DeHub Team"
@@ -1636,7 +1636,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "feature-spotlight-ad-tech",
     "excerpt": "Taking digital advertising to new horizons.",
     "content": "",
-    "bannerImage": "/lovable-uploads/79e6faf5-f135-410b-babd-d2d8611e2d5c.png",
+    "bannerImage": "/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png",
     "bannerImageAlt": "DeHub ad tech ecosystem stakeholders",
     "author": {
       "name": "DeHub Team"
@@ -1658,7 +1658,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "paving-the-way-framework-for-community-driven-forks---a-dehub-milestone-from-q3-2023",
     "excerpt": "After one fork went well, we wrote down how it should go — so the next group is not negotiating from scratch.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-fork-framework-banner.jpg",
+    "bannerImage": "/media/milestone-fork-framework-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Paving the Way: Framework for Community-Driven Forks",
     "author": {
       "name": "DeHub Team"
@@ -1683,7 +1683,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "decentralization-in-practice-the-fansite-fork-story---a-dehub-milestone-from-q3-2023",
     "excerpt": "Large holders forked our app to target the adult market. We did not stop them, and could not have. Here is why we think that is correct.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-fork-story-banner.jpg",
+    "bannerImage": "/media/milestone-fork-story-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Decentralization in Practice: The Fan.site Fork Story",
     "author": {
       "name": "DeHub Team"
@@ -1708,7 +1708,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "supporting-growth-knowledge-transfer-to-fansite-team---a-dehub-milestone-from-q3-2023",
     "excerpt": "We handed engineering knowledge to the team that forked us. The alternative was a worse product carrying our code and our holders.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-knowledge-transfer-banner.jpg",
+    "bannerImage": "/media/milestone-knowledge-transfer-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Supporting Growth: Knowledge Transfer to Fan.site Team",
     "author": {
       "name": "DeHub Team"
@@ -1733,7 +1733,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "protecting-innovation-patent-applications-for-streaming--watch2earn-tech---a-dehub-milestone-from-q2-2023",
     "excerpt": "Patent applications on the streaming and watch-to-earn mechanics — filed by a team that also open-sources, which needs explaining.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-patents-banner.jpg",
+    "bannerImage": "/media/milestone-patents-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
     "author": {
       "name": "DeHub Team"
@@ -1758,7 +1758,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "in-the-spotlight-dehub-featured-in-techcrunch-and-venturebeat---a-dehub-milestone-from-q2-2023",
     "excerpt": "Coverage in major tech publications. Useful, and a much weaker signal than the industry treats it as.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-press-banner.jpg",
+    "bannerImage": "/media/milestone-press-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: In the Spotlight: DeHub Featured in TechCrunch and VentureBeat",
     "author": {
       "name": "DeHub Team"
@@ -1783,7 +1783,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "innovation-recognized-dehub-wins-corporate-livewire-award---a-dehub-milestone-from-q2-2023",
     "excerpt": "Most Innovative Company at Corporate Livewire, from a field of 900+ in a vote-based process backed by Sony, Samsung and others.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-award-banner.jpg",
+    "bannerImage": "/media/milestone-award-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: Innovation Recognized: DeHub Wins Corporate Livewire Award",
     "author": {
       "name": "DeHub Team"
@@ -1808,7 +1808,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-vision-unfolds-alpha-launch-of-dehubs-integrated-dapp---a-dehub-milestone-from-q1-2023",
     "excerpt": "A Q1 2023 milestone from DeHub's roadmap: Alpha launch of complete d'app integrating all ecosystem components.",
     "content": "",
-    "bannerImage": "/lovable-uploads/c1cb14e2-cd34-452e-99c2-ad402724885e.png",
+    "bannerImage": "/media/c1cb14e2-cd34-452e-99c2-ad402724885e.png",
     "bannerImageAlt": "DeHub D'App Test Beta Launch",
     "author": {
       "name": "DeHub Team"
@@ -1833,7 +1833,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "back-in-action-dehub-v2-trading-resumes-on-gateio---a-dehub-milestone-from-q1-2023",
     "excerpt": "Trading resumed on Gate.io after the v2 relaunch. Ten months later we left voluntarily — both decisions are in this archive.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-gate-resume-banner.jpg",
+    "bannerImage": "/media/milestone-gate-resume-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Back in Action: DeHub V2 Trading Resumes on Gate.io",
     "author": {
       "name": "DeHub Team"
@@ -1858,7 +1858,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "insights-for-creators-advanced-analytics-dashboard-development-begins---a-dehub-milestone-from-q1-2023",
     "excerpt": "Work started on creator analytics in Q1 2023. On a platform paying out 90% on-chain, the numbers have to reconcile with the chain exactly.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-analytics-banner.jpg",
+    "bannerImage": "/media/milestone-analytics-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Insights for Creators: Advanced Analytics Dashboard Development Begins",
     "author": {
       "name": "DeHub Team"
@@ -1883,7 +1883,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023",
     "excerpt": "Creators keep 90% of ad revenue, settled on-chain. The number is the easy part — making it structural rather than promotional is not.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-tokenized-uploads-banner.jpg",
+    "bannerImage": "/media/milestone-tokenized-uploads-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
     "author": {
       "name": "DeHub Team"
@@ -1908,7 +1908,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "dehub-development-update-dapp-dec-2022",
     "excerpt": "Streaming d'app upgrade scheduled for private beta this Friday the 16th, further major developments pipelined for imminent release, and $DHB token listing date proposed for early January.",
     "content": "",
-    "bannerImage": "/lovable-uploads/09d36738-4fac-4bec-93ca-12b75da186ae.png",
+    "bannerImage": "/media/09d36738-4fac-4bec-93ca-12b75da186ae.png",
     "bannerImageAlt": "DeHub and Binance logos with lightning",
     "author": {
       "name": "DeHub Team"
@@ -1930,7 +1930,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022",
     "excerpt": "No tax triggers, no reflections, nothing in the transfer path. The boring choice, made immediately after the interesting one broke.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-erc20-banner.jpg",
+    "bannerImage": "/media/milestone-erc20-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: Stability First: Adopting Standard ERC20 Tokenomics",
     "author": {
       "name": "DeHub Team"
@@ -1955,7 +1955,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "moving-forward-successful-migration-of-25000-holders-to-v2---a-dehub-milestone-from-q4-2022",
     "excerpt": "Moving 25,000+ holders onto a new contract, after a failure that was ours, at the point where we had the least credibility to ask anything of them.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-v2-migration-banner.jpg",
+    "bannerImage": "/media/milestone-v2-migration-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: Moving Forward: Successful Migration of 25,000+ Holders to V2",
     "author": {
       "name": "DeHub Team"
@@ -1980,7 +1980,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-unforeseen-navigating-a-contract-malfunction-and-v2-relaunch---a-dehub-milestone-from-q4-2022",
     "excerpt": "The contract's tax triggers malfunctioned and froze both the token and our liquidity pool. There was no fix short of relaunching.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-contract-malfunction-banner.jpg",
+    "bannerImage": "/media/milestone-contract-malfunction-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch",
     "author": {
       "name": "DeHub Team"
@@ -2005,7 +2005,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "trust-and-transparency-on-chain-verified-raffle-mechanics---a-dehub-milestone-from-q3-2022",
     "excerpt": "The verification layer built for a $1,000,000 raffle — including the part that proved the draw could not be run.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-raffle-mechanics-banner.jpg",
+    "bannerImage": "/media/milestone-raffle-mechanics-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Trust and Transparency: On-Chain Verified Raffle Mechanics",
     "author": {
       "name": "DeHub Team"
@@ -2030,7 +2030,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "strategic-alliances-partnering-with-real-estate-and-legal-experts---a-dehub-milestone-from-q3-2022",
     "excerpt": "The advisers behind the property venture. They did not save it — but they are the reason it ended cleanly rather than badly.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-alliances-banner.jpg",
+    "bannerImage": "/media/milestone-alliances-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Strategic Alliances: Partnering with Real Estate and Legal Experts",
     "author": {
       "name": "DeHub Team"
@@ -2055,7 +2055,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "ambitious-ventures-the-palawan-real-estate-tokenization-attempt---a-dehub-milestone-from-q3-2022",
     "excerpt": "Power of attorney over islands and a sea-front strip worth $15m+, and a plan to tokenise the sales. The Philippine SEC ended it.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-palawan-banner.jpg",
+    "bannerImage": "/media/milestone-palawan-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Ambitious Ventures: The Palawan Real Estate Tokenization Attempt",
     "author": {
       "name": "DeHub Team"
@@ -2080,7 +2080,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022",
     "excerpt": "A $1,000,000 house, 15,000+ participants, and a raffle that did not hit its minimum. Everyone was refunded and the NFT kept its place in the app.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-home-raffle-banner.jpg",
+    "bannerImage": "/media/milestone-home-raffle-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Dream Big: The $1M Home Crypto Raffle by DeHub",
     "author": {
       "name": "DeHub Team"
@@ -2105,7 +2105,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "empowering-creators-dehub-nft-marketplace-with-royalties---a-dehub-milestone-from-q2-2022",
     "excerpt": "A marketplace where royalties are enforced by the contract rather than requested by the marketplace. In 2022 that distinction was about to matter enormously.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-nft-marketplace-banner.jpg",
+    "bannerImage": "/media/milestone-nft-marketplace-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Empowering Creators: DeHub NFT Marketplace with Royalties",
     "author": {
       "name": "DeHub Team"
@@ -2130,7 +2130,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "efficient-streaming-advanced-video-compression-reduces-costs---a-dehub-milestone-from-q2-2022",
     "excerpt": "A 60% cut in bandwidth costs. Unglamorous, invisible to users, and the reason the streaming product was viable at all.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-compression-banner.jpg",
+    "bannerImage": "/media/milestone-compression-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Efficient Streaming: Advanced Video Compression Reduces Costs",
     "author": {
       "name": "DeHub Team"
@@ -2155,7 +2155,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "building-bridges-philippine-sec-registration-secured---a-dehub-milestone-from-q2-2022",
     "excerpt": "SEC registration in the Philippines for real estate, construction and brokerage. It was necessary, it was slow, and it was not sufficient.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-sec-banner.jpg",
+    "bannerImage": "/media/milestone-sec-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Building Bridges: Philippine SEC Registration Secured",
     "author": {
       "name": "DeHub Team"
@@ -2180,7 +2180,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "the-chads-arrive-genesis-mint-of-the-chads-nft-collection---a-dehub-milestone-from-q2-2022",
     "excerpt": "The genesis mint of the Chads. What the collection was for, and what we would not do again.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-chads-banner.jpg",
+    "bannerImage": "/media/milestone-chads-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: The Chads Arrive: Genesis Mint of the Chads NFT Collection",
     "author": {
       "name": "DeHub Team"
@@ -2205,7 +2205,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "lights-camera-blockchain-dehubs-first-tokenized-documentary---a-dehub-milestone-from-q2-2022",
     "excerpt": "A documentary by Luke Barnatt featuring Jorge Masvidal and Brad Pickett — and the first time we tokenised something that already had an audience.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-documentary-banner.jpg",
+    "bannerImage": "/media/milestone-documentary-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Lights, Camera, Blockchain: DeHub's First Tokenized Documentary",
     "author": {
       "name": "DeHub Team"
@@ -2230,7 +2230,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "crystal-clear-dehub-stream-app-with-4k-support--high-uptime---a-dehub-milestone-from-q2-2022",
     "excerpt": "4K streaming at 99.9% uptime. The uptime figure was the difficult one, and it is the one creators actually judged us on.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-4k-streams-banner.jpg",
+    "bannerImage": "/media/milestone-4k-streams-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Crystal Clear: DeHub Stream App with 4K Support & High Uptime",
     "author": {
       "name": "DeHub Team"
@@ -2255,7 +2255,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "powering-play-dehubs-custom-mobile-game-engine---a-dehub-milestone-from-q1-2022",
     "excerpt": "Building our own engine is normally the wrong answer. Here is the specific reason it was not, and what it cost us.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-game-engine-banner.jpg",
+    "bannerImage": "/media/milestone-game-engine-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Powering Play: DeHub's Custom Mobile Game Engine",
     "author": {
       "name": "DeHub Team"
@@ -2280,7 +2280,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "challenge-accepted-social-features-and-friend-challenges-arrive---a-dehub-milestone-from-q1-2022",
     "excerpt": "Friend challenges, built deliberately as a light layer over solo play rather than a competitive mode — because that is what the data said people wanted.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-challenges-banner.jpg",
+    "bannerImage": "/media/milestone-challenges-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Challenge Accepted: Social Features and Friend Challenges Arrive",
     "author": {
       "name": "DeHub Team"
@@ -2305,7 +2305,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade---a-dehub-milestone-from-q1-2022",
     "excerpt": "Once a score decides a reward, the score is a financial record. It has to be checkable by the person who came second.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-leaderboards-banner.jpg",
+    "bannerImage": "/media/milestone-leaderboards-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade",
     "author": {
       "name": "DeHub Team"
@@ -2330,7 +2330,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022",
     "excerpt": "5,000 monthly active gamers in the arcade's first quarter. The number that mattered was how many came back on quiet days.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-5000-players-banner.jpg",
+    "bannerImage": "/media/milestone-5000-players-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: High Score: DeHub Gaming Hits 5,000+ Monthly Active Users",
     "author": {
       "name": "DeHub Team"
@@ -2355,7 +2355,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "level-up-dehub-arcade-launches-with-5-games--predictions---a-dehub-milestone-from-q1-2022",
     "excerpt": "Five games — Super Robin Hood and Tomb Runner among them — plus predictions, shipped as one arcade rather than five separate apps.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-arcade-launch-banner.jpg",
+    "bannerImage": "/media/milestone-arcade-launch-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Level Up: DeHub Arcade Launches with 5 Games & Predictions",
     "author": {
       "name": "DeHub Team"
@@ -2380,7 +2380,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "strength-in-numbers-dehub-community-exceeds-8000-active-members---a-dehub-milestone-from-q4-2021",
     "excerpt": "Past 8,000 active members — in the same quarter the chart was manipulated by our own listing agent. That is when a community is actually tested.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-8000-members-banner.jpg",
+    "bannerImage": "/media/milestone-8000-members-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Strength in Numbers: DeHub Community Exceeds 8,000 Active Members",
     "author": {
       "name": "DeHub Team"
@@ -2405,7 +2405,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "fair-play-provably-fair-randomization-in-dehub-games---a-dehub-milestone-from-q4-2021",
     "excerpt": "The test is not whether we picked the winner. It is whether we could have. Provable fairness is what makes that question answerable.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-provably-fair-banner.jpg",
+    "bannerImage": "/media/milestone-provably-fair-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Fair Play: Provably Fair Randomization in DeHub Games",
     "author": {
       "name": "DeHub Team"
@@ -2430,7 +2430,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "trials-and-tribulations-the-gateio-listing-agent-incident---a-dehub-milestone-from-q4-2021",
     "excerpt": "Our listing agent took the fundraise and dumped our chart instead of airdropping Gate users. Gate investigated, apologised, and said the records were lost.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-gate-incident-banner.jpg",
+    "bannerImage": "/media/milestone-gate-incident-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Trials and Tribulations: The Gate.io Listing Agent Incident",
     "author": {
       "name": "DeHub Team"
@@ -2455,7 +2455,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "to-the-moon-gateio-listing-and-10m-lp-milestone---a-dehub-milestone-from-q4-2021",
     "excerpt": "A near-1000x run, close to $10m in the pool, and a Gate.io listing. This is the high point — and it is inseparable from what happened during it.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-gate-listing-banner.jpg",
+    "bannerImage": "/media/milestone-gate-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: To the Moon: Gate.io Listing and $10M LP Milestone",
     "author": {
       "name": "DeHub Team"
@@ -2480,7 +2480,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "game-on-dehub-launches-prediction-and-raffle-games---a-dehub-milestone-from-q4-2021",
     "excerpt": "Predictions and raffles were the first things on DeHub where the outcome had to be provable, not promised.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-prediction-games-banner.jpg",
+    "bannerImage": "/media/milestone-prediction-games-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Game On: DeHub Launches Prediction and Raffle Games",
     "author": {
       "name": "DeHub Team"
@@ -2505,7 +2505,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "global-reach-dehub-team-grows-to-15-strong---a-dehub-milestone-from-q3-2021",
     "excerpt": "Fifteen people across three time zones. The distribution was the point, and it came with costs worth naming.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-team-15-banner.jpg",
+    "bannerImage": "/media/milestone-team-15-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Global Reach: DeHub Team Grows to 15 Strong",
     "author": {
       "name": "DeHub Team"
@@ -2530,7 +2530,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "fortifying-our-walls-v1-security-hardened-with-certik-audit---a-dehub-milestone-from-q3-2021",
     "excerpt": "A full Certik audit after a v1 vulnerability. Worth being precise about what an audit does and does not buy you.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-certik-banner.jpg",
+    "bannerImage": "/media/milestone-certik-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Fortifying Our Walls: V1 Security Hardened with Certik Audit",
     "author": {
       "name": "DeHub Team"
@@ -2555,7 +2555,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "rewarding-loyalty-automatic-airdrop-for-all-holders---a-dehub-milestone-from-q3-2021",
     "excerpt": "Every v1 holder was made whole 1:1, automatically, with no claim page and no deadline. This is what the security fix looked like from the holder side.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-auto-airdrop-banner.jpg",
+    "bannerImage": "/media/milestone-auto-airdrop-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Rewarding Loyalty: Automatic Airdrop for All Holders",
     "author": {
       "name": "DeHub Team"
@@ -2580,7 +2580,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "building-for-all-app-rebuild-with-react-native---a-dehub-milestone-from-q3-2021",
     "excerpt": "The beta proved people wanted it. Rebuilding the whole app in React Native was the admission that the beta could not carry them.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-react-native-banner.jpg",
+    "bannerImage": "/media/milestone-react-native-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Building for All: App Rebuild with React Native",
     "author": {
       "name": "DeHub Team"
@@ -2605,7 +2605,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "a-new-era-the-rebranding-to-dehub---a-dehub-milestone-from-q3-2021",
     "excerpt": "A rename is usually cosmetic. This one was an argument about what we were building, settled in public.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-rebrand-banner.jpg",
+    "bannerImage": "/media/milestone-rebrand-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: A New Era: The Rebranding to DeHub",
     "author": {
       "name": "DeHub Team"
@@ -2630,7 +2630,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "navigating-challenges-addressing-a-v1-smart-contract-security-issue---a-dehub-milestone-from-q2-2021",
     "excerpt": "A Q2 2021 milestone from DeHub's roadmap: Smart contract security issue discovered.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-v1-security-banner.jpg",
+    "bannerImage": "/media/milestone-v1-security-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Navigating Challenges: Addressing a V1 Smart Contract Security Issue",
     "author": {
       "name": "DeHub Team"
@@ -2655,7 +2655,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "diving-in-first-dehub-liquidity-pools-on-pancake-swap---a-dehub-milestone-from-q2-2021",
     "excerpt": "The community had already voted on the chain, the price, the supply and the market cap. PancakeSwap is where those decisions became real.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-pancake-pools-banner.jpg",
+    "bannerImage": "/media/milestone-pancake-pools-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Diving In: First DeHub Liquidity Pools on Pancake Swap",
     "author": {
       "name": "DeHub Team"
@@ -2680,7 +2680,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "power-to-the-people-community-governed-listings---a-dehub-milestone-from-q2-2021",
     "excerpt": "A Q2 2021 milestone from DeHub's roadmap: Community governed listing chain, price / market cap.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-governed-listings-banner.jpg",
+    "bannerImage": "/media/milestone-governed-listings-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Power to the People: Community Governed Listings",
     "author": {
       "name": "DeHub Team"
@@ -2705,7 +2705,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "early-traction-dehubs-beta-app-hits-2000-daus---a-dehub-milestone-from-q1-2021",
     "excerpt": "500 testers, 2,000 people opening the app every day, and no token yet. The order we did that in explains most of what came after.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-2000-daus-banner.jpg",
+    "bannerImage": "/media/milestone-2000-daus-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Early Traction: DeHub's Beta App Hits 2,000 DAUs",
     "author": {
       "name": "DeHub Team"
@@ -2730,7 +2730,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "listening-to-our-users-50-interviews-shape-dehub---a-dehub-milestone-from-q1-2021",
     "excerpt": "We sat down with more than 50 users one at a time. Several features we were certain about did not survive the conversations.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-interviews-banner.jpg",
+    "bannerImage": "/media/milestone-interviews-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Listening to Our Users: 50+ Interviews Shape DeHub",
     "author": {
       "name": "DeHub Team"
@@ -2755,7 +2755,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "mvp-app-released-listed-on-google-play-store",
     "excerpt": "The DeHub MVP app is now live on the Google Play Store, featuring OTT streaming, protocol-uploaded content, and a YouTube aggregator. Discover what's next on our roadmap.",
     "content": "",
-    "bannerImage": "/lovable-uploads/7c5ce318-2248-49d4-bb92-dc686c8609f1.png",
+    "bannerImage": "/media/7c5ce318-2248-49d4-bb92-dc686c8609f1.png",
     "bannerImageAlt": "FTV - Futurov app on Google Play Store",
     "author": {
       "name": "DeHub Team"
@@ -2777,7 +2777,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "slug": "building-the-dream-dehubs-core-team-assembled---a-dehub-milestone-from-q1-2021",
     "excerpt": "A Q1 2021 milestone from DeHub's roadmap: Assembled core development team.",
     "content": "",
-    "bannerImage": "/lovable-uploads/milestone-core-team-banner.jpg",
+    "bannerImage": "/media/milestone-core-team-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Building the Dream: DeHub's Core Team Assembled",
     "author": {
       "name": "DeHub Team"
@@ -2809,7 +2809,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Q3 Development Overview",
     "excerpt": "Every distinct thing we shipped since July across dehubweb, dehub-mobile and dehub-stream-backend — stages, AI, ten themes, the arcade, wallets, economy, mobile parity and the plumbing underneath, with the commit next to each entry.",
     "content": "",
-    "bannerImage": "/lovable-uploads/q3-development-overview-banner.png",
+    "bannerImage": "/media/q3-development-overview-banner.png",
     "bannerImageAlt": "Q3 Development Overview - DeHub rocket banner",
     "author": {
       "name": "DeHub Team"
@@ -2835,7 +2835,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Development Update: The DeHub Era Starts - Final Updates and Bug Fixes Shipping in Coming Days",
     "excerpt": "As we prepare to cut the rope and begin app promotions after years of building, there has never been a more exciting time to be here. Final updates and bug fixes are shipping in the coming days.",
     "content": "",
-    "bannerImage": "/lovable-uploads/dev-update-jan-2026-banner.png",
+    "bannerImage": "/media/dev-update-jan-2026-banner.png",
     "bannerImageAlt": "DeHub Development Update January 2026 - The DeHub Era Starts",
     "author": {
       "name": "DeHub Team"
@@ -2861,7 +2861,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Town Hall Overview: $200,000 Private Sale Complete, Partner TGE March, New Pools, Added LP and More!",
     "excerpt": "The DeHub team provides a detailed update following the recent Town Hall — covering the completed $200,000 private sale, confirmed TGE timeline, public sale mechanics, and an accelerated growth strategy for 2026.",
     "content": "",
-    "bannerImage": "/lovable-uploads/town-hall-jan-2026-banner.png",
+    "bannerImage": "/media/town-hall-jan-2026-banner.png",
     "bannerImageAlt": "DeHub Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement",
     "author": {
       "name": "DeHub Team"
@@ -2888,7 +2888,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Yearly Wrap Up and 2026 Roadmap",
     "excerpt": "A look back at a defining year for DeHub — from the Coinbase listing and Google Play launch to BNB Chain recognition and the First Class partnership — and a deep dive into the explosive 2026 roadmap ahead.",
     "content": "",
-    "bannerImage": "/lovable-uploads/yearly-wrap-up-2025-banner.png",
+    "bannerImage": "/media/yearly-wrap-up-2025-banner.png",
     "bannerImageAlt": "DeHub 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration",
     "author": {
       "name": "DeHub Team"
@@ -2917,7 +2917,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "DeHub in the Press: Featured Across Global Publications",
     "excerpt": "It's been a landmark run for DeHub in the media. From US Weekly to Yahoo Finance, Entrepreneur and Investing.com, some of the world's biggest publications have put a spotlight on our mission to democratise media. Here are the articles.",
     "content": "",
-    "bannerImage": "/lovable-uploads/dehub-featured-in-press-banner.png",
+    "bannerImage": "/media/dehub-featured-in-press-banner.png",
     "bannerImageAlt": "DeHub featured in the press — US Weekly, Yahoo Finance, Entrepreneur and Investing.com",
     "author": {
       "name": "DeHub Team"
@@ -2942,7 +2942,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "The Countdown Begins!",
     "excerpt": "DeHub's app launch across stores is imminent. The countdown is live on dehub.io and the moment we've been building towards for 4 years is finally here.",
     "content": "",
-    "bannerImage": "/lovable-uploads/countdown-clock-banner.png",
+    "bannerImage": "/media/countdown-clock-banner.png",
     "bannerImageAlt": "Countdown clock for DeHub app store launch",
     "author": {
       "name": "DeHub Team"
@@ -2967,7 +2967,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "DeHub's Special Week: BNB Recognition, First Class Partnership, App Store Launch, and a Pipeline of Game-Changing Features",
     "excerpt": "What a week! DeHub finally earned serious recognition from the BNB Chain team, launched an official partnership with First Class Agency onboarding 1,200+ streamers, submitted to app stores, and unveiled a special pipeline of game-changing features.",
     "content": "",
-    "bannerImage": "/lovable-uploads/town-hall-ama-banner-new.png",
+    "bannerImage": "/media/town-hall-ama-banner-new.png",
     "bannerImageAlt": "DeHub Town Hall and AMA Highlights showcasing major announcements",
     "author": {
       "name": "DeHub Team"
@@ -2994,7 +2994,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Leading the Way: DeHub Founder's Official TikTok Partner Agency Becomes UK #1 with 1,000 Streamers",
     "excerpt": "From a bold idea to a national force in livestreaming, Team First Class Agency has officially hit a milestone worth celebrating. Co-founded by Mike Hales and Indi Jay Cammish, the TikTok official partner agency has now grown to over 1,000 active live streamers.",
     "content": "",
-    "bannerImage": "/lovable-uploads/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png",
+    "bannerImage": "/media/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png",
     "bannerImageAlt": "Mike Hales at TikTok Live Fest event, representing Team First Class Agency's official partnership with TikTok",
     "author": {
       "name": "DeHub Team"
@@ -3020,7 +3020,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Off-Ramp Service Revealed: DeHub Card Coming Soon!",
     "excerpt": "With our on-ramp service now live, we're introducing something revolutionary: the DeHub Card. Rather than traditional bank transfers, spend crypto directly anywhere cards are accepted.",
     "content": "",
-    "bannerImage": "/lovable-uploads/bde80bf2-8f1d-4c14-9938-1a3080777203.png",
+    "bannerImage": "/media/bde80bf2-8f1d-4c14-9938-1a3080777203.png",
     "bannerImageAlt": "DeHub Cards in premium gold finish showcasing modern crypto payment solution",
     "author": {
       "name": "DeHub Team"
@@ -3047,7 +3047,7 @@ export const newPostsMetadata: BlogPost[] = [
     "content": "",
     "author": {
       "name": "DeHub Team",
-      "avatar": "/lovable-uploads/6ad34788-b3fe-4094-bf1b-e930af8eaf62.png"
+      "avatar": "/media/6ad34788-b3fe-4094-bf1b-e930af8eaf62.png"
     },
     "publishedAt": "2025-05-03T00:00:00Z",
     "readingTime": 6,
@@ -3058,7 +3058,7 @@ export const newPostsMetadata: BlogPost[] = [
       "Interface",
       "User Experience"
     ],
-    "bannerImage": "/lovable-uploads/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png",
+    "bannerImage": "/media/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png",
     "bannerImageAlt": "DeHub's new revamped app interface showing dark theme, navigation sidebar, content feed, and trending sections",
     "featured": false,
     "seoTitle": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces - DeHub",
@@ -3070,7 +3070,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Interactive Streaming: On-Chain Live Streams with Animated Tip",
     "excerpt": "The digital content landscape is evolving rapidly, and live streaming has become the cornerstone of real-time audience engagement. At DeHub, we're introducing Interactive On-Chain Live Streaming - a groundbreaking feature that combines the immediacy of live content with blockchain technology.",
     "content": "",
-    "bannerImage": "/lovable-uploads/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png",
+    "bannerImage": "/media/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png",
     "bannerImageAlt": "Interactive live streaming with animated tips - DeHub's revolutionary approach to on-chain content creation",
     "author": {
       "name": "DeHub Team"
@@ -3095,7 +3095,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "2022 Wrap Up",
     "excerpt": "Diving back through the year just passed as well as into the one ahead. Thanks to each and every one of the team, community and contributors we have been ploughing through our roadmap and setting ourself up for the biggest year yet.",
     "content": "",
-    "bannerImage": "/lovable-uploads/4476fbc3-58ec-467b-8c1b-30570349940c.png",
+    "bannerImage": "/media/4476fbc3-58ec-467b-8c1b-30570349940c.png",
     "bannerImageAlt": "2022 Wrap Up - DeHub year in review with fireworks celebration",
     "author": {
       "name": "DeHub Team"
@@ -3120,7 +3120,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Tokenised uploads are here!",
     "excerpt": "Discover how we've integrated a unique fan token experience into our app. Every upload is now a fractionalised NFT, sharing ad revenue with its owners!",
     "content": "",
-    "bannerImage": "/lovable-uploads/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png",
+    "bannerImage": "/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png",
     "bannerImageAlt": "A glowing DeHub token representing tokenized uploads.",
     "author": {
       "name": "DeHub Team"
@@ -3145,7 +3145,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Award Winning Innovation! DeHub recognised for pioneering efforts",
     "excerpt": "After 27k votes over the last 12 months, DeHub is officially Corporate LiveWire’s 2023 Innovation and Excellence Winner in the \"Gaming\" category.",
     "content": "",
-    "bannerImage": "/lovable-uploads/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png",
+    "bannerImage": "/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png",
     "bannerImageAlt": "Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.",
     "author": {
       "name": "DeHub Team"
@@ -3169,7 +3169,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Global Footprint: DeHub Expands Middle East Presence via Dubai Event",
     "excerpt": "Hard work and innovation deserve to be recognized. We were incredibly honored in Q2 2024 when DeHub achieved a significant external milestone, expanding our global footprint into the Middle East.",
     "content": "",
-    "bannerImage": "/lovable-uploads/2dc5ff27-15fe-4181-b199-8f6941fa3913.png",
+    "bannerImage": "/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png",
     "bannerImageAlt": "DeHub DeTour Dubai event banner",
     "author": {
       "name": "DeHub Team"
@@ -3194,7 +3194,7 @@ export const newPostsMetadata: BlogPost[] = [
     "slug": "base-pool-going-live-soon",
     "excerpt": "Get ready DeHubbers! We are thrilled to announce that we will be deploying on Uniswap on the Base network imminently. Find out how to bridge your tokens for free!",
     "content": "",
-    "bannerImage": "/lovable-uploads/068250b6-b4b6-42fc-8633-f686a94990c7.png",
+    "bannerImage": "/media/068250b6-b4b6-42fc-8633-f686a94990c7.png",
     "bannerImageAlt": "DeHub launching on Base network announcement banner",
     "author": {
       "name": "DeHub Team"
@@ -3218,7 +3218,7 @@ export const newPostsMetadata: BlogPost[] = [
     "slug": "dehub-takeover",
     "excerpt": "We've been focused on building, but now it's time to turbocharge the DeHub Army. Find out about our new community growth initiatives and how we plan to take over.",
     "content": "",
-    "bannerImage": "/lovable-uploads/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png",
+    "bannerImage": "/media/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png",
     "bannerImageAlt": "DeHub Takeover announcement banner",
     "author": {
       "name": "DeHub Team"
@@ -3242,7 +3242,7 @@ export const newPostsMetadata: BlogPost[] = [
     "slug": "new-multi-year-sponsorship-crusaders",
     "excerpt": "We're delighted to reveal a multi-year sponsorship agreement with the only Rugby League club in Wales, The North Wales Crusaders.",
     "content": "",
-    "bannerImage": "/lovable-uploads/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png",
+    "bannerImage": "/media/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png",
     "bannerImageAlt": "DeHub announces new multi-year sponsorship with North Wales Crusaders rugby team",
     "author": {
       "name": "DeHub Team"
@@ -3266,7 +3266,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Public Beta D'app Report",
     "excerpt": "An overview of the beta launch for our main d'app. Our biggest and final core d'app launch now sets us up to focus on scaling users and growth.",
     "content": "",
-    "bannerImage": "/lovable-uploads/c799219d-e9da-43e4-938f-54cfbc3a242f.png",
+    "bannerImage": "/media/c799219d-e9da-43e4-938f-54cfbc3a242f.png",
     "bannerImageAlt": "DeHub Beta Overview banner",
     "author": {
       "name": "DeHub Team"
@@ -3291,7 +3291,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "DeHub's Flag Ship Game Launch & Partner Airdrop",
     "excerpt": "We're thrilled to officially confirm the airdrop allocation for our flagship game, Last Chad Standing (LCS) — and our most anticipated partner launch yet.",
     "content": "",
-    "bannerImage": "/lovable-uploads/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png",
+    "bannerImage": "/media/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png",
     "bannerImageAlt": "Military helicopter in flight representing the flagship game launch and strategic partnerships",
     "author": {
       "name": "DeHub Team"
@@ -3316,7 +3316,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "$DHB now trading on Coinbase!",
     "excerpt": "Coinbase officially lists all Base tokens, including $DHB with direct access to hundreds of millions of investors. A monumental step forward for decentralized trading.",
     "content": "",
-    "bannerImage": "/lovable-uploads/coinbase-dhb-banner.png",
+    "bannerImage": "/media/coinbase-dhb-banner.png",
     "bannerImageAlt": "$DHB now trading on Coinbase - DeHub leads the decentralized trading revolution",
     "author": {
       "name": "DeHub Team"
@@ -3342,7 +3342,7 @@ export const newPostsMetadata: BlogPost[] = [
     "title": "Old BNB Pool Update",
     "excerpt": "The road to recovering 876 BNB stuck in our old pool from 2022, & what happens if we do.",
     "content": "",
-    "bannerImage": "/lovable-uploads/bnb-pool-update-banner-new.png",
+    "bannerImage": "/media/bnb-pool-update-banner-new.png",
     "bannerImageAlt": "BNB Pool Update - DeHub's journey to recover 876 BNB stuck from 2022 contract issue",
     "author": {
       "name": "DeHub Team"
@@ -3370,7 +3370,7 @@ export const latestPostMetadata: BlogPost | undefined = {
   "title": "How monetization works on social media apps",
   "excerpt": "Follower minimums, activity tests, invitation walls and payout floors for Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, with the 2026 and 2027 rule changes that reset the numbers.",
   "content": "",
-  "bannerImage": "/lovable-uploads/social-media-monetization-2026-banner.jpg",
+  "bannerImage": "/media/social-media-monetization-2026-banner.jpg",
   "bannerImageAlt": "Who pays and when: creator monetization rules across seven social platforms in 2026",
   "author": {
     "name": "DeHub Team"

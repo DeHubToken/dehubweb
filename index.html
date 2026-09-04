@@ -165,7 +165,7 @@
       })();
     </script>
     <!-- Belt and braces for the line above: if the inline script is stripped
-         (the Lovable mirror hosts do this) the meta still gets the browser off
+         (the preview mirror hosts do this) the meta still gets the browser off
          its white canvas default. The script wins where both run, because it
          can tell the light theme apart. -->
     <meta name="color-scheme" content="dark light" />
@@ -173,7 +173,7 @@
     <meta name="description" content="DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.">
     <meta name="author" content="DeHub" />
     <meta name="robots" content="index, follow">
-    <!-- Mirror hosts (cosmic-echo-hero.lovable.app etc.) serve this same build
+    <!-- Preview mirror hosts serve this same build
          outside our Cloudflare worker, so they can't get an X-Robots-Tag header;
          flip robots to noindex client-side so rendered crawls never index a
          duplicate of dehub.io. -->
@@ -284,7 +284,7 @@
          routes that DO need them, and skips them everywhere else. Wallet origins
          (web3auth / web3modal / walletconnect) are warmed separately, on login
          intent (warmWalletOrigins in AuthProvider), so they no longer sit unused
-         here either. Lovable mirror hosts strip inline scripts — the app's hooks
+         here either. Preview mirror hosts strip inline scripts — the app's hooks
          then connect normally, so the only loss is the head-start, never correctness. -->
     <script>
       (function () {

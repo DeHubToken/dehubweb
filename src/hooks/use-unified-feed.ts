@@ -543,7 +543,7 @@ async function fetchUnifiedFeedFromAPI(
   // Adopt the boot-time feed fetch from index.html (started at HTML-parse time,
   // ~1.5s before React mounts — LCP audit 7/14) for the first default page-1
   // request. One-shot: on param mismatch, HTTP error, or stripped inline script
-  // (Lovable mirrors) the promise is null/absent and we fall through to fetch.
+  // (preview mirrors) the promise is null/absent and we fall through to fetch.
   if (typeof window !== 'undefined') {
     const w = window as unknown as {
       __DEHUB_FEED__?: Promise<UnifiedFeedResponse | null> | null;

@@ -410,7 +410,7 @@ const DEFAULT_MIN_TOPUP_USD = 25;
  * CoinGecko second, exactly as the function does it.
  *
  * This is the standby, not the source of truth. Edge functions here only go
- * live when Lovable's agent redeploys them — merging does nothing — so a
+ * live when the deploy agent redeploys them — merging does nothing — so a
  * client that could only ask the function would have its top-up button dead
  * from the moment this ships until somebody runs a build turn. Reading the
  * same two sources in the same order keeps the quote and the credit on the

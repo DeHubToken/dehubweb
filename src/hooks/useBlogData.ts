@@ -46,7 +46,7 @@ export const useBlogData = () => {
           ...post,
           title: 'Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost',
           publishedAt: '2024-10-28T12:00:00.000Z',
-          bannerImage: '/lovable-uploads/e9632af0-07c2-4ca8-9b82-fc255191358b.png',
+          bannerImage: '/media/e9632af0-07c2-4ca8-9b82-fc255191358b.png',
           bannerImageAlt: 'Screenshot of the new DeHub application UI'
         };
       }

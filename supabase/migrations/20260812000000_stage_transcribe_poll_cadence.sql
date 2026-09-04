@@ -51,9 +51,9 @@ begin
 end
 $$;
 
--- Note for whoever migrates this project off Lovable: the edge function this
+-- Note for whoever migrates this project off the hosted platform: the edge function this
 -- job calls, `auto-transcribe-ended-stages`, is deployed but exists nowhere in
--- this repository — it was created directly by the Lovable agent and never
+-- this repository — it was created directly by the platform agent and never
 -- committed. `git grep auto-transcribe-ended-stages` returns nothing but this
 -- file. It will not survive a cutover unless it is exported first, and there
 -- may be other functions in the same state.

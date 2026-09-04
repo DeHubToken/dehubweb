@@ -153,7 +153,7 @@ For a like-for-like Twitter replacement — short posts, a familiar feed, a larg
 ## Try a decentralised network that pays you
 
 The fastest way to understand the difference is to use one. Explore the feed, tokenise an upload, or go live at [dehub.io](https://dehub.io), open [the DeHub app](https://dehub.io/app) in your browser, or download it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Own your content, keep your audience, and get paid for the attention you already create.`,
-  bannerImage: '/lovable-uploads/best-decentralised-social-media-platforms-2026-banner.png',
+  bannerImage: '/media/best-decentralised-social-media-platforms-2026-banner.png',
   bannerImageAlt: 'Comparison of the best decentralised social media platforms in 2026 including DeHub, Bluesky, Farcaster, Lens and Mastodon',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-03-06T14:50:00.000Z',

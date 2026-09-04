@@ -103,7 +103,7 @@ They can, but there is no guarantee. An early-supporter pass may appreciate if a
 
 On DeHub, which runs on-chain tradable subscriptions and token-gated content as core features across its content, live streaming and creator tools. You can explore it at https://dehub.io.
 `,
-  bannerImage: '/lovable-uploads/tokenized-subscriptions-explained-banner.png',
+  bannerImage: '/media/tokenized-subscriptions-explained-banner.png',
   bannerImageAlt: 'Tokenised subscriptions on DeHub: an on-chain creator membership held in a wallet, resellable with creator royalties',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-05-02T13:15:00.000Z',

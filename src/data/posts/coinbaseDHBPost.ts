@@ -18,7 +18,7 @@ export const coinbaseDHBPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">This is just the beginning of DeHub's expansion into mainstream cryptocurrency trading platforms. Stay tuned for more exciting developments!</p>
   `,
-  bannerImage: '/lovable-uploads/c238e114-80c3-42ac-9e7a-d4617111466c.png',
+  bannerImage: '/media/c238e114-80c3-42ac-9e7a-d4617111466c.png',
   bannerImageAlt: 'Coinbase logo on mobile device with trading charts in background',
   author: {
     name: 'DeHub Team',

@@ -30,9 +30,9 @@ installSupabaseInterceptor();
 // See src/i18n/translator-dom-guard.ts.
 installTranslatorDomGuard();
 
-// Mirror hosts (cosmic-echo-hero.lovable.app etc.) must never index as
+// Preview mirror hosts must never index as
 // duplicates of dehub.io. index.html carries an inline flip script, but
-// Lovable's published snapshot strips inline scripts — the app bundle is the
+// The published preview snapshot strips inline scripts — the app bundle is the
 // only code guaranteed to ship everywhere, so repeat the guard here and
 // CREATE the meta if the host HTML lacks it.
 const dhHost = location.hostname;

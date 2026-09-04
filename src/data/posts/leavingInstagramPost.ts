@@ -13,7 +13,7 @@ TikTok has Creator Rewards. YouTube has the Partner Programme. Instagram has had
 
 This is the Instagram-specific companion to our guides on [leaving TikTok](/guides/creators-guide-leaving-tiktok) and [leaving YouTube](/guides/creators-guide-leaving-youtube).
 
-![Reach you only rent — the reel is not yours and the audience cannot be exported](/lovable-uploads/fig-instagram-reach-you-rent.jpg)
+![Reach you only rent — the reel is not yours and the audience cannot be exported](/media/fig-instagram-reach-you-rent.jpg)
 
 ## The Instagram-specific problems
 
@@ -59,7 +59,7 @@ Every upload can be free, pay-per-view, or token-gated, and that applies to imag
 
 Earnings settle in DHB, primarily on Base, an Ethereum Layer 2, with contracts on BNB Chain and Polygon. It trades on decentralised exchanges and on Coinbase and is listed on CoinGecko and CoinMarketCap.
 
-![Move without the crash — migrate in this order and keep posting to Instagram while you do](/lovable-uploads/fig-instagram-move-without-crash.jpg)
+![Move without the crash — migrate in this order and keep posting to Instagram while you do](/media/fig-instagram-move-without-crash.jpg)
 
 ## How to migrate without torching your reach
 
@@ -92,7 +92,7 @@ Posts pointing at an external link tend to under-perform, which is a reason to b
 ### What happens to my content if the platform goes away?
 
 Uploads are minted on-chain to your wallet, so the ownership record does not depend on the platform continuing to exist. That is the difference between owning your work and renting somewhere to keep it.`,
-  bannerImage: '/lovable-uploads/creators-guide-leaving-instagram-banner.png',
+  bannerImage: '/media/creators-guide-leaving-instagram-banner.png',
   bannerImageAlt: 'A creator moving from Instagram to a Web3 platform they own on DeHub',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-08-27T13:00:00.000Z',

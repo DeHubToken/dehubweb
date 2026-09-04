@@ -23,7 +23,7 @@ The model catalogue is the same names you would cross-shop anywhere in 2026:
 
 No model on that list is decorative. Every one of them is selectable in the composer and priced before you run it.
 
-![DeHub AI generation is priced per job in DHB, not in plan-dependent credits](/lovable-uploads/ai-creator-pay-per-job-banner.jpg)
+![DeHub AI generation is priced per job in DHB, not in plan-dependent credits](/media/ai-creator-pay-per-job-banner.jpg)
 
 ### How DeHub credits work — and why the unit matters
 
@@ -38,7 +38,7 @@ DeHub prices in **DHB, pegged at 1,000 DHB = $1 of generation**. That gives you 
 
 And the big one: **DeHub credit never expires.** Top up 50,000 DHB today and it is all still there in a year. That single property changes what every "price per credit" figure in the next section really means.
 
-![DeHub gives 400 DHB of free AI credit every day, accruing to a 12,000 cap](/lovable-uploads/ai-creator-daily-credits-banner.jpg)
+![DeHub gives 400 DHB of free AI credit every day, accruing to a 12,000 cap](/media/ai-creator-daily-credits-banner.jpg)
 
 ### Free every day — and it adds up while you sleep
 
@@ -109,7 +109,7 @@ Provider prices move, and when they do, DeHub's per-job quotes move with them �
 
 Every DeHub account starts with **1,400 DHB free on day one** — the 1,000 starter plus the first daily 400 — and no card is required. That is a Veo 3.1 Fast video with change to spare, or a stack of premium images, and the daily 400 keeps arriving and banking either way. Head to [dehub.io/creator](/creator), sign in, and make something.
   `,
-  bannerImage: '/lovable-uploads/ai-creator-studio-banner.jpg',
+  bannerImage: '/media/ai-creator-studio-banner.jpg',
   bannerImageAlt: 'DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live',
   author: {
     name: 'DeHub Team',
