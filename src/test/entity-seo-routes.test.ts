@@ -82,13 +82,23 @@ describe('entity SEO routes', () => {
   });
 
   it('lets a governance proposal past the gate and renders it', () => {
-    expect(gate()).toContain(String.raw`/^\/app\/governance\/[0-9a-fA-F-]{8,}\/?$/`);
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?governance\/[0-9a-fA-F-]{8,}\/?$/`);
     expect(WORKER).toContain('function buildProposalHtml');
     expect(WORKER).toMatch(/governance_proposals\?id=eq\./);
   });
 
-  it('lets /app/video/<tokenId> past the gate', () => {
-    expect(gate()).toContain(String.raw`/^\/app\/video\/\d+\/?$/`);
+  it('lets /video/<tokenId> and its /app twin past the gate', () => {
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?video\/\d+\/?$/`);
+  });
+
+  /**
+   * Every /app section answers at the bare path as well, so the gates that
+   * decide "this is an entity, render it" have to accept both spellings — the
+   * bare one is the form the worker itself canonicalises onto and shares.
+   */
+  it('accepts the bare spelling of the store and event gates', () => {
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?stores\/[^/]+/`);
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?events\/\d+/`);
   });
 
   /**

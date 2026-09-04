@@ -1110,7 +1110,6 @@ const MARKETING_PAGES = {
 <p>The same film can be included with a subscription in one country, a paid rental in another, and unavailable in a third. Cinema asks per territory rather than showing one global answer, so switching country re-checks availability and price.</p>`,
   },
   'glossary': {
-    path: '/app/glossary',
     title: 'Glossary — Icons, Features & Web3 Terms',
     description: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
     heading: 'DeHub Glossary',
@@ -2373,7 +2372,7 @@ const SSR_STATIC_ROUTES = new Set([
   // router did not have. The router has it now: every /app child answers at the
   // bare path as well, so they canonicalize the same way as everything above
   // and their `path` overrides are gone.
-  'stores', 'fractions', 'superpowers',
+  'stores', 'fractions', 'superpowers', 'glossary',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
   //
