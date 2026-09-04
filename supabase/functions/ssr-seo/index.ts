@@ -9,6 +9,15 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const APP_URL = "https://dehub.io"; // Change to actual production URL if different
 
+// This page is prerendered HTML, and its "View on DeHub" button points at the
+// page's own URL. Anything classified as a crawler therefore gets the same
+// page back when it taps that button — which is what in-app browsers on X,
+// LinkedIn and WhatsApp were doing to real people. `?app=1` tells the
+// Cloudflare worker to serve the React SPA regardless of user agent.
+function appUrl(url: string): string {
+    return url.includes("app=1") ? url : `${url}${url.includes("?") ? "&" : "?"}app=1`;
+}
+
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://aigxuutjaqsywioxjefr.supabase.co";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I";
 const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
@@ -337,7 +346,7 @@ function generateMetaHTML(data: {
     <p>${description}</p>
     <img src="${imageUrl}" style="max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" alt="${title}" />
     ${data.bodyContent ? `<div style="margin-top: 32px; text-align: left; line-height: 1.65; font-size: 15px; color: #ddd;">${data.bodyContent}</div>` : ""}
-    <p style="margin-top: 30px;"><a href="${data.url}" style="color: #00ff00; text-decoration: none; font-weight: bold; border: 1px solid #00ff00; padding: 10px 20px; border-radius: 5px;">View on DeHub</a></p>
+    <p style="margin-top: 30px;"><a href="${appUrl(data.url)}" style="color: #00ff00; text-decoration: none; font-weight: bold; border: 1px solid #00ff00; padding: 10px 20px; border-radius: 5px;">View on DeHub</a></p>
     <nav style="margin-top: 20px; font-size: 14px;">
       <a href="${APP_URL}/app/explore" style="color: #aaa; margin: 0 8px;">Explore</a>
       <a href="${APP_URL}/app/stages" style="color: #aaa; margin: 0 8px;">Stages</a>

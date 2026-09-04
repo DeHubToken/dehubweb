@@ -374,7 +374,7 @@ function faqJsonLd(contentHtml) {
 
 function buildDocsHtml(route, meta, contentHtml) {
   const canonicalUrl = `${APP_URL}/docs/${route}`;
-  const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a href="${canonicalUrl}">Open this page in the DeHub docs</a>.</p>`;
+  const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a href="${appHref(canonicalUrl)}" rel="nofollow">Open this page in the DeHub docs</a>.</p>`;
   const nav = Object.entries(DOCS_PAGES).slice(0, 12).map(([r, m]) =>
     `<li><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — DeHub( Docs)?$/, ''))}</a></li>`).join('');
   return `<!DOCTYPE html>
@@ -758,7 +758,7 @@ ${shareMetaTags(key, meta.title)}
 <p>${escHtml(meta.intro)}</p>
 ${meta.bodyHtml || ''}
 ${primaryNavHtml(`/${key}`)}
-<p style="margin-top:24px"><a href="${canonicalUrl}" style="color:#9f9">Open ${escHtml(meta.heading)} on DeHub</a></p>
+<p style="margin-top:24px"><a href="${appHref(canonicalUrl)}" rel="nofollow" style="color:#9f9">Open ${escHtml(meta.heading)} on DeHub</a></p>
 </body>
 </html>`;
 }
@@ -1297,7 +1297,7 @@ ${shareMetaTags(key, meta.title)}
 <h1>${escHtml(meta.heading)}</h1>
 ${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}
 ${primaryNavHtml()}
-<p style="margin-top:24px"><a href="${canonicalUrl}" style="color:#9f9">Open ${escHtml(meta.heading)} on DeHub</a></p>
+<p style="margin-top:24px"><a href="${appHref(canonicalUrl)}" rel="nofollow" style="color:#9f9">Open ${escHtml(meta.heading)} on DeHub</a></p>
 </body>
 </html>`;
 }
@@ -1424,7 +1424,7 @@ ${entityImageMetaTags(image, title)}
 <h1>${escHtml(heading)}</h1>
 ${image ? `<img src="${escHtml(image)}" alt="${escHtml(heading)}" style="max-width:100%">` : ''}
 ${bodyHtml}
-<p style="margin-top:24px"><a href="${escHtml(canonicalUrl)}" style="color:#9f9">Open on DeHub</a></p>
+<p style="margin-top:24px"><a href="${escHtml(appHref(canonicalUrl))}" rel="nofollow" style="color:#9f9">Open on DeHub</a></p>
 </body>
 </html>`;
 }
@@ -1998,7 +1998,7 @@ function buildCreatorFlowHtml(flow) {
     heading: name,
     breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/creator" style="color:#9f9">Creator</a> › <a href="${APP_URL}/creator/flow" style="color:#9f9">Flow</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
-<p><a href="${canonicalUrl}" style="color:#9f9">Open this flow</a> · <a href="${APP_URL}/creator/flow" style="color:#9f9">Build your own</a></p>`,
+<p><a href="${appHref(canonicalUrl)}" rel="nofollow" style="color:#9f9">Open this flow</a> · <a href="${APP_URL}/creator/flow" style="color:#9f9">Build your own</a></p>`,
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'CreativeWork',
@@ -2220,6 +2220,50 @@ const SYSTEM_ROUTES = new Set([
 // served the real SPA. Every UA added here is a non-rendering fetcher, so the
 // prerendered HTML is strictly more than it could otherwise see.
 const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber|google-inspectiontool|googleother|apis-google|feedfetcher|curl|wget|python-requests|python-urllib|axios|node-fetch|got |okhttp|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie/i;
+
+// A link-preview crawler and a social app's in-app browser are not the same
+// thing, and the brand words above cannot tell them apart. "Twitter for
+// iPhone/10.31", "LinkedInApp" and "WhatsApp/2.24.1.75 A" each sit at the end
+// of an ordinary WebView user agent belonging to a PERSON who tapped a shared
+// link — and they matched `twitter`, `linkedin` and `whatsapp`, so everyone
+// arriving from those apps was served the prerendered crawler page instead of
+// DeHub. The only control on that page is a link back to its own URL, which is
+// classified the same way and answers with the same page — the reported
+// "View on DeHub does nothing". It covered every shared post, profile, doc and
+// referral landing, which is the whole point of sharing a link.
+//
+// The tell is the rendering engine. A fetcher either omits it entirely
+// (`Twitterbot/1.0`, `WhatsApp/2.23.20.0 A`, `facebookexternalhit/1.1`) or
+// declares itself behind `compatible;` (`Mozilla/5.0 (compatible;
+// LinkedInBot/1.0)`, Googlebot, Google-InspectionTool, Discordbot). A WebView
+// sends the real AppleWebKit/Gecko token and never says `compatible;`.
+//
+// Anything that still names itself a crawler inside a browser-shaped UA
+// (Applebot, Chrome-Lighthouse, SkypeUriPreview) stays on the bot side.
+const CRAWLER_TOKEN_PATTERN = /\b(?:bot|crawler|spider|scraper)\b|(?:bot|crawler|spider)[/-]|externalhit|externalagent|externalfetcher|oggrabber|lighthouse|inspectiontool|preview/i;
+
+function looksLikeRenderingBrowser(ua) {
+  if (!/AppleWebKit\/[\d.]|Gecko\/\d/i.test(ua)) return false;
+  if (/compatible[;)]/i.test(ua)) return false;
+  return !CRAWLER_TOKEN_PATTERN.test(ua);
+}
+
+export function isCrawlerUa(ua) {
+  return BOT_UA_PATTERN.test(ua) && !looksLikeRenderingBrowser(ua);
+}
+
+// The escape hatch out of a prerendered page. Every self-referencing CTA in
+// crawler HTML ("View on DeHub", "Open X on DeHub") points at the page's own
+// URL, so without a marker the link re-requests that URL, is judged the same
+// way and renders the same page again. `?app=1` forces the React SPA for any
+// user agent, and its response carries a noindex so the query-string twin
+// never enters the index.
+const APP_ESCAPE_PARAM = 'app';
+
+export function appHref(url) {
+  if (url.includes(`${APP_ESCAPE_PARAM}=1`)) return url;
+  return `${url}${url.includes('?') ? '&' : '?'}${APP_ESCAPE_PARAM}=1`;
+}
 
 // Static marketing/app routes that need per-route OG meta (bots only).
 // Kept in sync with the STATIC_ROUTES map inside supabase/functions/ssr-seo.
@@ -3321,7 +3365,8 @@ async function handleRequest(request, env) {
   }
 
   const userAgent = request.headers.get('User-Agent') || '';
-  const isBot = BOT_UA_PATTERN.test(userAgent);
+  const forceApp = url.searchParams.get(APP_ESCAPE_PARAM) === '1';
+  const isBot = !forceApp && isCrawlerUa(userAgent);
 
   // Non-bots (regular browsers) always get the React SPA directly.
   // The SSR HTML contains `window.location.href = '<same-url>'` for non-bots,
@@ -3334,6 +3379,9 @@ async function handleRequest(request, env) {
     const resp = await guardNext();
     const varied = new Response(resp.body, resp);
     varied.headers.append('Vary', 'User-Agent');
+    // ?app=1 is a duplicate of the canonical URL: keep it out of the index,
+    // while still letting a crawler follow the links on the page it lands on.
+    if (forceApp) varied.headers.set('X-Robots-Tag', 'noindex, follow');
     return varied;
   }
 
@@ -3855,6 +3903,15 @@ async function handleRequest(request, env) {
         },
       }));
     }
+
+    // The prerendered page's only control is a link to its own URL. For a
+    // crawler that is harmless; for anything else it is a button that reloads
+    // the page it is already on — the reported dead "View on DeHub". Point it
+    // at the escape hatch, which forces the SPA for any user agent.
+    html = html.replace(
+      /<a href="(https:\/\/[^"]+)"([^>]*)>(View on DeHub)<\/a>/g,
+      (m, href, attrs, label) => `<a href="${appHref(href)}" rel="nofollow"${attrs}>${label}</a>`,
+    );
 
     if (!html.includes('og:url')) {
       html = html.replace('</head>', `<meta property="og:url" content="${request.url}"></head>`);
