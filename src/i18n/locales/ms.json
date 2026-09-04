@@ -1367,6 +1367,11 @@
     "failedSubmit": "Gagal menghantar permohonan. Sila cuba lagi."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Tiada akaun DeHub yang lebih awal pada log masuk ini, jadi tiada apa yang perlu dibawa. Kembali ke Akaun baharu untuk menyelesaikan tetapan ini.",
+    "migrateUnmatchedWarning": "Log masuk ini tidak mempunyai akaun DeHub dalam rekod. Meneruskan tidak memulihkan apa-apa — ia mencipta akaun kedua dengan nama pengguna baharu, dan meninggalkan akaun yang anda sudah ada.",
+    "migrateUnmatchedDetail": "Tiada profil wujud di alamat dompet ini. Jika anda mendaftar masuk semula, kembali dan gunakan log masuk yang anda daftar.",
+    "migrateGoBack": "Kembali",
+    "migrateContinueAnyway": "Cipta akaun baharu juga",
     "title": "Log in",
     "addProfileTitle": "Tambah profil",
     "continueEmail": "Teruskan dengan E-mel",
@@ -1750,13 +1755,13 @@
     "only_have_dhb_staked": "Anda hanya mempunyai {{amount}} dideposit.",
     "unstake_request_submitted": "Permintaan pengeluaran dihantar! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ditambah ke barisan pengeluaran.",
+    "not_enough_gas_token": "Anda perlukan {{token}} dalam dompet ini untuk membayar yuran rangkaian.",
+    "unstake_failed": "Unstake gagal",
     "only_have_dhb_withdrawable": "Buat masa ini hanya {{amount}} DHB boleh dikeluarkan.",
     "early_withdrawal_fee": "Yuran pengeluaran awal",
     "early_withdrawal_fee_detail": "Dikunci sehingga {{date}}. Pengeluaran sekarang dikenakan {{percent}}% — kira-kira {{amount}} DHB. Tekan Keluarkan sekali lagi untuk mengesahkan.",
     "unstaked_successfully": "Berjaya dikeluarkan! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB dikeluarkan di {{chain}}.",
-    "not_enough_gas_token": "Anda perlukan {{token}} dalam dompet ini untuk membayar yuran rangkaian.",
-    "unstake_failed": "Unstake gagal",
     "unstake_cancelled": "Unstake dibatalkan",
     "unstake_request_removed": "Permintaan unstake anda telah dialih keluar.",
     "failed_to_cancel": "Gagal membatalkan",
@@ -1832,9 +1837,9 @@
     "minutesAgo": "{{count}}m lalu",
     "hoursAgo": "{{count}}j lalu",
     "daysAgo": "{{count}}h lalu",
+    "cancelUnstake": "Batalkan pengeluaran",
     "withdrawableNow": "Boleh dikeluarkan sekarang",
-    "poolNotWithdrawable": "{{amount}} DHB berada dalam dompet kumpulan deposit, yang belum mempunyai kontrak pengeluaran — hubungi sokongan untuk memindahkannya.",
-    "cancelUnstake": "Batalkan pengeluaran"
+    "poolNotWithdrawable": "{{amount}} DHB berada dalam dompet kumpulan deposit, yang belum mempunyai kontrak pengeluaran — hubungi sokongan untuk memindahkannya."
   },
   "communities": {
     "title": "Komuniti",
@@ -3126,8 +3131,6 @@
     "sellYourFractions": "Jual pecahan anda ({{held}} dipegang)"
   },
   "creator": {
-    "toolFlow": "Aliran Pengkarya",
-    "toolFlowDesc": "Teks rantaian, rujukan, model imej dan video pada kanvas, jalankannya dalam satu bayaran, kongsi dengan pautan.",
     "whatToCreate": "Apa yang hendak dibuat",
     "startCreatingWith": "Mulai membuat dengan {{model}}",
     "studioSubtitle": "Terangkan pemandangan, watak, suasana atau gaya. Hasil muncul di bawah dan terus ke editor.",
@@ -3522,7 +3525,9 @@
     "noCreationsYet": "Tiada ciptaan AI lagi. Jadilah yang pertama menjana satu.",
     "aiGenerationAlt": "Penjanaan AI",
     "aiGenerationCommunityAlt": "Penjanaan AI daripada komuniti DeHub",
-    "close": "Tutup"
+    "close": "Tutup",
+    "toolFlow": "Aliran Pengkarya",
+    "toolFlowDesc": "Teks rantaian, rujukan, model imej dan video pada kanvas, jalankannya dalam satu bayaran, kongsi dengan pautan."
   },
   "pricing": {
     "plansForEveryWorkflow": "Rancangan untuk setiap aliran kerja",

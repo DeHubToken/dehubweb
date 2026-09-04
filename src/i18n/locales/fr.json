@@ -1103,6 +1103,11 @@
     "email": "Email"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Il n'y a pas de compte DeHub antérieur sur cette connexion, il n'y a donc rien à apporter. Revenez à Nouveau compte pour terminer la configuration de celui-ci.",
+    "migrateUnmatchedWarning": "Cette connexion n'a pas de compte DeHub enregistré. Continuer ne récupère rien — il crée un deuxième compte avec un nouveau nom d'utilisateur et laisse celui que vous avez déjà derrière vous.",
+    "migrateUnmatchedDetail": "Aucun profil n'existe à cette adresse de portefeuille. Si vous vous reconnectiez, revenez en arrière et utilisez plutôt la connexion avec laquelle vous vous êtes inscrit.",
+    "migrateGoBack": "Revenir en arrière",
+    "migrateContinueAnyway": "Créez quand même un nouveau compte",
     "title": "Se connecter",
     "addProfileTitle": "Ajouter un profil",
     "continueEmail": "Continuer avec Email",
@@ -1486,13 +1491,13 @@
     "only_have_dhb_staked": "Vous n'avez que {{amount}} déposés.",
     "unstake_request_submitted": "Demande de retrait envoyée ! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ajoutés à la file de retrait.",
+    "not_enough_gas_token": "Vous avez besoin de {{token}} dans ce portefeuille pour payer les frais de réseau.",
+    "unstake_failed": "Échec de l'unstaking",
     "only_have_dhb_withdrawable": "Seuls {{amount}} DHB peuvent être retirés pour le moment.",
     "early_withdrawal_fee": "Frais de retrait anticipé",
     "early_withdrawal_fee_detail": "Bloqué jusqu'au {{date}}. Un retrait maintenant coûte {{percent}} % — environ {{amount}} DHB. Appuyez à nouveau sur Retirer pour confirmer.",
     "unstaked_successfully": "Retrait effectué ! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB retirés sur {{chain}}.",
-    "not_enough_gas_token": "Vous avez besoin de {{token}} dans ce portefeuille pour payer les frais de réseau.",
-    "unstake_failed": "Échec de l'unstaking",
     "unstake_cancelled": "Unstaking annulé",
     "unstake_request_removed": "Votre demande d'unstaking a été supprimée.",
     "failed_to_cancel": "Échec de l'annulation",
@@ -1568,9 +1573,9 @@
     "minutesAgo": "il y a {{count}} min",
     "hoursAgo": "il y a {{count}} h",
     "daysAgo": "il y a {{count}} j",
+    "cancelUnstake": "Annuler le retrait",
     "withdrawableNow": "Retirable maintenant",
-    "poolNotWithdrawable": "{{amount}} DHB se trouvent dans le portefeuille du pool de dépôts, qui n'a pas encore de contrat de retrait — contactez le support pour les déplacer.",
-    "cancelUnstake": "Annuler le retrait"
+    "poolNotWithdrawable": "{{amount}} DHB se trouvent dans le portefeuille du pool de dépôts, qui n'a pas encore de contrat de retrait — contactez le support pour les déplacer."
   },
   "communities": {
     "title": "Communautés",
@@ -2862,8 +2867,6 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
-    "toolFlow": "Flux de créateur",
-    "toolFlowDesc": "Chaînez du texte, des références, des images et des modèles vidéo sur un canevas, exécutez-le en un seul paiement, partagez-le avec un lien.",
     "whatToCreate": "Quoi créer",
     "startCreatingWith": "Commencez à créer avec {{model}}",
     "studioSubtitle": "Décrivez une scène, un personnage, une ambiance ou un style. Les résultats apparaissent ci-dessous et vont directement dans l'éditeur.",
@@ -3258,7 +3261,9 @@
     "noCreationsYet": "Aucune création IA pour le moment. Soyez le premier à en générer une.",
     "aiGenerationAlt": "Génération IA",
     "aiGenerationCommunityAlt": "Génération IA de la communauté DeHub",
-    "close": "Fermer"
+    "close": "Fermer",
+    "toolFlow": "Flux de créateur",
+    "toolFlowDesc": "Chaînez du texte, des références, des images et des modèles vidéo sur un canevas, exécutez-le en un seul paiement, partagez-le avec un lien."
   },
   "pricing": {
     "plansForEveryWorkflow": "Plans pour chaque flux de travail",

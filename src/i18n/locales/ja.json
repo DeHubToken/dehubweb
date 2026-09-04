@@ -1100,6 +1100,11 @@
     "emailRequired": "メールは必須です"
   },
   "loginModal": {
+    "migrateNothingToRecover": "このログインには以前のDeHubアカウントがないため、持ち込むものはありません。 新しいアカウントに戻り、このアカウントの設定を完了してください。",
+    "migrateUnmatchedWarning": "このログインには記録されたDeHubアカウントがありません。 継続しても何も復元されません。新しいユーザー名を持つ2つ目のアカウントが作成され、すでに持っているアカウントが残されます。",
+    "migrateUnmatchedDetail": "このウォレットアドレスにはプロファイルが存在しません。 再度サインインする場合は、戻ってサインアップしたログインを使用してください。",
+    "migrateGoBack": "戻る",
+    "migrateContinueAnyway": "とにかく新しいアカウントを作成する",
     "title": "ログイン",
     "addProfileTitle": "プロフィールを追加",
     "continueEmail": "メールで続ける",
@@ -1483,13 +1488,13 @@
     "only_have_dhb_staked": "預け入れ額は {{amount}} のみです。",
     "unstake_request_submitted": "出金リクエストを送信しました！✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} を出金キューに追加しました。",
+    "not_enough_gas_token": "ネットワーク手数料の支払いに、このウォレットに {{token}} が必要です。",
+    "unstake_failed": "アンステークに失敗しました",
     "only_have_dhb_withdrawable": "現在引き出せるのは {{amount}} DHB のみです。",
     "early_withdrawal_fee": "早期引き出し手数料",
     "early_withdrawal_fee_detail": "{{date}} までロックされています。今引き出すと {{percent}}% — 約 {{amount}} DHB の手数料がかかります。確認するにはもう一度「引き出す」を押してください。",
     "unstaked_successfully": "引き出しに成功しました！✅",
     "dhb_unstaked_on_chain": "{{chain}} で {{amount}} DHB を引き出しました。",
-    "not_enough_gas_token": "ネットワーク手数料の支払いに、このウォレットに {{token}} が必要です。",
-    "unstake_failed": "アンステークに失敗しました",
     "unstake_cancelled": "アンステークをキャンセルしました",
     "unstake_request_removed": "アンステークのリクエストを削除しました。",
     "failed_to_cancel": "キャンセルに失敗しました",
@@ -1565,9 +1570,9 @@
     "minutesAgo": "{{count}}分前",
     "hoursAgo": "{{count}}時間前",
     "daysAgo": "{{count}}日前",
+    "cancelUnstake": "出金をキャンセル",
     "withdrawableNow": "現在引き出し可能",
-    "poolNotWithdrawable": "{{amount}} DHB は預入プールのウォレットにあり、まだ引き出しコントラクトがありません — 移動するにはサポートにご連絡ください。",
-    "cancelUnstake": "出金をキャンセル"
+    "poolNotWithdrawable": "{{amount}} DHB は預入プールのウォレットにあり、まだ引き出しコントラクトがありません — 移動するにはサポートにご連絡ください。"
   },
   "communities": {
     "title": "コミュニティ",
@@ -2856,8 +2861,6 @@
     "sellYourFractions": "あなたの分数を売却してください({{held}}保有)"
   },
   "creator": {
-    "toolFlow": "クリエイターフロー",
-    "toolFlowDesc": "キャンバス上のチェーンテキスト、参照、画像、ビデオモデルを1回の支払いで実行し、リンクで共有します。",
     "whatToCreate": "何を作成するか",
     "startCreatingWith": "{{model}}で作成を開始してください",
     "studioSubtitle": "シーン、キャラクター、ムード、またはスタイルを説明してください。結果は以下に表示され、エディターに直接移動します。",
@@ -3241,7 +3244,9 @@
     "noCreationsYet": "まだAI作成がありません。最初に生成してください。",
     "aiGenerationAlt": "AI生成",
     "aiGenerationCommunityAlt": "DeHubコミュニティからのAI生成",
-    "close": "閉じる"
+    "close": "閉じる",
+    "toolFlow": "クリエイターフロー",
+    "toolFlowDesc": "キャンバス上のチェーンテキスト、参照、画像、ビデオモデルを1回の支払いで実行し、リンクで共有します。"
   },
   "pricing": {
     "plansForEveryWorkflow": "すべてのワークフロー向けプラン",

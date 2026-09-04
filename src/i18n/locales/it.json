@@ -1099,6 +1099,11 @@
     "failedSubmit": "Invio candidatura fallito. Riprova."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Non esiste un account DeHub precedente su questo accesso, quindi non c'è nulla da portare. Torna su Nuovo account per completare la configurazione.",
+    "migrateUnmatchedWarning": "Questo accesso non ha un account DeHub registrato. Continuare non recupera nulla: crea un secondo account con un nuovo nome utente e lascia quello che hai già.",
+    "migrateUnmatchedDetail": "Non esiste alcun profilo a questo indirizzo di portafoglio. Se stavi accedendo di nuovo, torna indietro e utilizza invece l'accesso con cui ti sei registrato.",
+    "migrateGoBack": "Torna indietro",
+    "migrateContinueAnyway": "Crea comunque un nuovo account",
     "title": "Accedi",
     "addProfileTitle": "Aggiungi un profilo",
     "continueEmail": "Continua con Email",
@@ -1482,13 +1487,13 @@
     "only_have_dhb_staked": "Hai depositato solo {{amount}}.",
     "unstake_request_submitted": "Richiesta di prelievo inviata! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} aggiunti alla coda di prelievo.",
+    "not_enough_gas_token": "Ti serve {{token}} in questo wallet per pagare la commissione di rete.",
+    "unstake_failed": "Unstake non riuscito",
     "only_have_dhb_withdrawable": "Al momento è possibile prelevare solo {{amount}} DHB.",
     "early_withdrawal_fee": "Commissione di prelievo anticipato",
     "early_withdrawal_fee_detail": "Bloccato fino al {{date}}. Prelevare ora costa il {{percent}}% — circa {{amount}} DHB. Premi di nuovo Preleva per confermare.",
     "unstaked_successfully": "Prelievo riuscito! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB prelevati su {{chain}}.",
-    "not_enough_gas_token": "Ti serve {{token}} in questo wallet per pagare la commissione di rete.",
-    "unstake_failed": "Unstake non riuscito",
     "unstake_cancelled": "Unstake annullato",
     "unstake_request_removed": "La tua richiesta di prelievo è stata rimossa.",
     "failed_to_cancel": "Impossibile annullare",
@@ -1564,9 +1569,9 @@
     "minutesAgo": "{{count}}m fa",
     "hoursAgo": "{{count}}h fa",
     "daysAgo": "{{count}}d fa",
+    "cancelUnstake": "Annulla prelievo",
     "withdrawableNow": "Prelevabile ora",
-    "poolNotWithdrawable": "{{amount}} DHB si trovano nel wallet del pool di deposito, che non ha ancora un contratto di prelievo — contatta il supporto per spostarli.",
-    "cancelUnstake": "Annulla prelievo"
+    "poolNotWithdrawable": "{{amount}} DHB si trovano nel wallet del pool di deposito, che non ha ancora un contratto di prelievo — contatta il supporto per spostarli."
   },
   "communities": {
     "title": "Comunità",
@@ -2851,8 +2856,6 @@
     "sellYourFractions": "Vendi le tue frazioni ({{held}} possedute)"
   },
   "creator": {
-    "toolFlow": "Creator Flow",
-    "toolFlowDesc": "Testo a catena, riferimenti, modelli di immagini e video su tela, eseguilo in un unico pagamento, condividilo con un link.",
     "whatToCreate": "Cosa creare",
     "startCreatingWith": "Inizia a creare con {{model}}",
     "studioSubtitle": "Descrivi una scena, un personaggio, un'atmosfera o uno stile. I risultati appariranno di seguito e passeranno direttamente all'editor.",
@@ -3238,7 +3241,9 @@
     "noCreationsYet": "Nessuna creazione IA ancora. Sii il primo a generarne una.",
     "aiGenerationAlt": "Generazione IA",
     "aiGenerationCommunityAlt": "Generazione IA dalla comunità DeHub",
-    "close": "Chiudi"
+    "close": "Chiudi",
+    "toolFlow": "Creator Flow",
+    "toolFlowDesc": "Testo a catena, riferimenti, modelli di immagini e video su tela, eseguilo in un unico pagamento, condividilo con un link."
   },
   "pricing": {
     "plansForEveryWorkflow": "Piani per ogni flusso di lavoro",

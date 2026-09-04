@@ -1100,6 +1100,11 @@
     "failedSubmit": "Imeshindwa kuwasilisha ombi. Tafadhali jaribu tena."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Hakuna akaunti ya awali ya DeHub kwenye kuingia hii, kwa hivyo hakuna kitu cha kuleta. Rudi kwenye akaunti Mpya ili ukamilishe kuweka hii.",
+    "migrateUnmatchedWarning": "Kuingia huku hakuna akaunti ya DeHub kwenye rekodi. Kuendelea hakurejeshi chochote — huunda akaunti ya pili iliyo na jina jipya la mtumiaji na kuacha ile ambayo tayari unayo.",
+    "migrateUnmatchedDetail": "Hakuna wasifu uliopo kwenye anwani hii ya pochi. Ikiwa ulikuwa unaingia tena, rudi na utumie ingia uliyojisajili nayo badala yake.",
+    "migrateGoBack": "Rudi nyuma",
+    "migrateContinueAnyway": "Fungua akaunti mpya hata hivyo",
     "title": "Ingia",
     "addProfileTitle": "Ongeza wasifu",
     "continueEmail": "Endelea na Email",
@@ -1483,13 +1488,13 @@
     "only_have_dhb_staked": "Una {{amount}} tu iliyowekwa amana.",
     "unstake_request_submitted": "Ombi la utoaji limewasilishwa! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} imeongezwa kwenye foleni ya utoaji.",
+    "not_enough_gas_token": "Unahitaji {{token}} kwenye pochi hii ili kulipa ada ya mtandao.",
+    "unstake_failed": "Utoaji umeshindwa",
     "only_have_dhb_withdrawable": "Kwa sasa ni {{amount}} DHB pekee zinazoweza kutolewa.",
     "early_withdrawal_fee": "Ada ya kutoa mapema",
     "early_withdrawal_fee_detail": "Imefungwa hadi {{date}}. Kutoa sasa kunagharimu {{percent}}% — takriban {{amount}} DHB. Bonyeza Toa tena ili kuthibitisha.",
     "unstaked_successfully": "Imetolewa kwa mafanikio! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB zimetolewa kwenye {{chain}}.",
-    "not_enough_gas_token": "Unahitaji {{token}} kwenye pochi hii ili kulipa ada ya mtandao.",
-    "unstake_failed": "Utoaji umeshindwa",
     "unstake_cancelled": "Utoaji umeghairiwa",
     "unstake_request_removed": "Ombi lako la utoaji limeondolewa.",
     "failed_to_cancel": "Imeshindwa kughairi",
@@ -1565,9 +1570,9 @@
     "minutesAgo": "dakika {{count}} zilizopita",
     "hoursAgo": "saa {{count}} zilizopita",
     "daysAgo": "siku {{count}} zilizopita",
+    "cancelUnstake": "Ghairi utoaji",
     "withdrawableNow": "Inaweza kutolewa sasa",
-    "poolNotWithdrawable": "{{amount}} DHB ziko kwenye pochi ya bwawa la amana, ambalo bado halina mkataba wa kutoa — wasiliana na msaada ili kuzihamisha.",
-    "cancelUnstake": "Ghairi utoaji"
+    "poolNotWithdrawable": "{{amount}} DHB ziko kwenye pochi ya bwawa la amana, ambalo bado halina mkataba wa kutoa — wasiliana na msaada ili kuzihamisha."
   },
   "communities": {
     "title": "Jumuiya",
@@ -2854,8 +2859,6 @@
     "sellYourFractions": "Uza sehemu zako ({{held}} inayoshikiliwa)"
   },
   "creator": {
-    "toolFlow": "Mtiririko wa Muumba",
-    "toolFlowDesc": "Maandishi ya mnyororo, marejeleo, mifano ya picha na video kwenye turubai, iendeshe kwa malipo moja, shiriki na kiunganishi.",
     "whatToCreate": "Nini cha kuunda",
     "startCreatingWith": "Anza kuunda na {{model}}",
     "studioSubtitle": "Eleza mabango, tabia, hali au mtindo. Matokeo yanaanguka hapa chini na yanaingia moja kwa moja kwenye hariri.",
@@ -3250,7 +3253,9 @@
     "noCreationsYet": "Hakuna uundaji wa AI bado. Kuwa wa kwanza kuunda mmoja.",
     "aiGenerationAlt": "AI generation",
     "aiGenerationCommunityAlt": "AI generation kutoka kwa jamii ya DeHub",
-    "close": "Close"
+    "close": "Close",
+    "toolFlow": "Mtiririko wa Muumba",
+    "toolFlowDesc": "Maandishi ya mnyororo, marejeleo, mifano ya picha na video kwenye turubai, iendeshe kwa malipo moja, shiriki na kiunganishi."
   },
   "pricing": {
     "plansForEveryWorkflow": "Mipango kwa kila workflow",

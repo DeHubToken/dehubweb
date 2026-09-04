@@ -1103,6 +1103,11 @@
     "email": "E-mail"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Der er ingen tidligere DeHub-konto på dette login, så der er intet at overføre. Gå tilbage til Ny konto for at afslutte opsætningen af denne.",
+    "migrateUnmatchedWarning": "Dette login har ingen registreret DeHub-konto. Fortsættelse genopretter ikke noget — det opretter en anden konto med et nyt brugernavn og efterlader den, du allerede har.",
+    "migrateUnmatchedDetail": "Der findes ingen profil på denne tegnebogsadresse. Hvis du loggede ind igen, skal du gå tilbage og bruge det login, du tilmeldte dig med, i stedet.",
+    "migrateGoBack": "Gå tilbage",
+    "migrateContinueAnyway": "Opret en ny konto alligevel",
     "title": "Log ind",
     "addProfileTitle": "Tilføj profil",
     "continueEmail": "Fortsæt med e-mail",
@@ -1486,13 +1491,13 @@
     "only_have_dhb_staked": "Du har kun {{amount}} indbetalt.",
     "unstake_request_submitted": "Udbetalingsanmodning indsendt! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} tilføjet til udbetalingskøen.",
+    "not_enough_gas_token": "Du skal bruge {{token}} i denne wallet for at betale netværksgebyret.",
+    "unstake_failed": "Unstake mislykkedes",
     "only_have_dhb_withdrawable": "Lige nu kan der kun hæves {{amount}} DHB.",
     "early_withdrawal_fee": "Gebyr for tidlig udbetaling",
     "early_withdrawal_fee_detail": "Låst indtil {{date}}. At hæve nu koster {{percent}} % — omkring {{amount}} DHB. Tryk på Hæv igen for at bekræfte.",
     "unstaked_successfully": "Hævet med succes! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB hævet på {{chain}}.",
-    "not_enough_gas_token": "Du skal bruge {{token}} i denne wallet for at betale netværksgebyret.",
-    "unstake_failed": "Unstake mislykkedes",
     "unstake_cancelled": "Unstake annulleret",
     "unstake_request_removed": "Din unstake-anmodning er fjernet.",
     "failed_to_cancel": "Kunne ikke annullere",
@@ -1568,9 +1573,9 @@
     "minutesAgo": "{{count}} min. siden",
     "hoursAgo": "{{count}} t. siden",
     "daysAgo": "{{count}} d. siden",
+    "cancelUnstake": "Annuller udbetaling",
     "withdrawableNow": "Kan hæves nu",
-    "poolNotWithdrawable": "{{amount}} DHB ligger i indbetalingspuljens wallet, som endnu ikke har en udbetalingskontrakt — kontakt support for at flytte dem.",
-    "cancelUnstake": "Annuller udbetaling"
+    "poolNotWithdrawable": "{{amount}} DHB ligger i indbetalingspuljens wallet, som endnu ikke har en udbetalingskontrakt — kontakt support for at flytte dem."
   },
   "communities": {
     "title": "Fællesskaber",
@@ -2859,8 +2864,6 @@
     "sellYourFractions": "Sælg dine brøkdele ({{held}} holdt)"
   },
   "creator": {
-    "toolFlow": "Kreatørflow",
-    "toolFlowDesc": "Kædetekst, referencer, billed- og videomodeller på et lærred, kør det i én betaling, del det med et link.",
     "whatToCreate": "Hvad skal der oprettes",
     "studioSubtitle": "Beskriv en scene, karakter, stemning eller stil. Resultater vises nedenfor og går direkte ind i editoren.",
     "countRunning_one": "{{count}} running",
@@ -3241,7 +3244,9 @@
     "noCreationsYet": "Ingen AI-kreationer endnu. Vær den første til at generere en.",
     "aiGenerationAlt": "AI-generering",
     "aiGenerationCommunityAlt": "AI-generering fra DeHub-fællesskabet",
-    "close": "Luk"
+    "close": "Luk",
+    "toolFlow": "Kreatørflow",
+    "toolFlowDesc": "Kædetekst, referencer, billed- og videomodeller på et lærred, kør det i én betaling, del det med et link."
   },
   "pricing": {
     "plansForEveryWorkflow": "Planer for hvert arbejdsflow",

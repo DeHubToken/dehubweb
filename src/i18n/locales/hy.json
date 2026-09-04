@@ -1090,6 +1090,11 @@
     "failedSubmit": "Chehaghordagrvats ougharkuhr haytse. Khndreum enq photsek nor angam."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Այս մուտքի վրա չկա DeHub - ի ավելի վաղ հաշիվ, ուստի ոչինչ չկա փոխանցելու: Վերադառնալ Նոր հաշիվ ՝ այս հաշիվը կարգավորելու համար ։",
+    "migrateUnmatchedWarning": "Այս մուտքի հաշիվը գրանցված չէ DeHub - ում: Շարունակելը ոչինչ չի վերականգնում. այն ստեղծում է երկրորդ հաշիվ ՝ նոր օգտանունով, և թողնում է այն հաշիվը, որն արդեն ունեք:",
+    "migrateUnmatchedDetail": "Այս դրամապանակի հասցեում պրոֆիլ գոյություն չունի: Եթե կրկին մուտք եք գործել, վերադարձեք և փոխարենը օգտագործեք այն մուտքը, որով գրանցվել եք:",
+    "migrateGoBack": "Հետ գնալ",
+    "migrateContinueAnyway": "Ամեն դեպքում ստեղծել նոր հաշիվ",
     "title": "Mouqtq",
     "addProfileTitle": "Ավելացնել պրոֆիլ",
     "continueEmail": "Sharunakek Email-ov",
@@ -1424,13 +1429,13 @@
     "only_have_dhb_staked": "Դուք ունեք միայն {{amount}} ավանդադրված։",
     "unstake_request_submitted": "Դուրսբերման հայտն ուղարկված է! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} ավելացվեց դուրսբերման հերթին։",
+    "not_enough_gas_token": "Ցանցի վճարը վճարելու համար այս դրամապանակում անհրաժեշտ է {{token}}։",
+    "unstake_failed": "Դուրսբերումը ձախողվեց",
     "only_have_dhb_withdrawable": "Այս պահին կարելի է հանել միայն {{amount}} DHB։",
     "early_withdrawal_fee": "Վաղաժամ հանման վճար",
     "early_withdrawal_fee_detail": "Կողպված է մինչև {{date}}։ Հիմա հանելը արժե {{percent}}% — մոտ {{amount}} DHB։ Հաստատելու համար կրկին սեղմեք «Հանել»։",
     "unstaked_successfully": "Հաջողությամբ հանվեց! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB հանվել է {{chain}}-ում։",
-    "not_enough_gas_token": "Ցանցի վճարը վճարելու համար այս դրամապանակում անհրաժեշտ է {{token}}։",
-    "unstake_failed": "Դուրսբերումը ձախողվեց",
     "unstake_cancelled": "Դուրսբերումը չեղարկվեց",
     "unstake_request_removed": "Ձեր դուրսբերման հայտը հեռացվել է։",
     "failed_to_cancel": "Չհաջողվեց չեղարկել",
@@ -1506,9 +1511,9 @@
     "minutesAgo": "{{count}} ր առաջ",
     "hoursAgo": "{{count}} ժ առաջ",
     "daysAgo": "{{count}} օր առաջ",
+    "cancelUnstake": "Չեղարկել դուրսբերումը",
     "withdrawableNow": "Հիմա հանելի",
-    "poolNotWithdrawable": "{{amount}} DHB գտնվում է ավանդային պուլի դրամապանակում, որը դեռ չունի հանման պայմանագիր — տեղափոխելու համար կապվեք աջակցության հետ։",
-    "cancelUnstake": "Չեղարկել դուրսբերումը"
+    "poolNotWithdrawable": "{{amount}} DHB գտնվում է ավանդային պուլի դրամապանակում, որը դեռ չունի հանման պայմանագիր — տեղափոխելու համար կապվեք աջակցության հետ։"
   },
   "communities": {
     "title": "Համայնքներ",
@@ -2795,8 +2800,6 @@
     "sellYourFractions": "Վաճառեք ձեր կոտորակները ({{held}} պահվածք)"
   },
   "creator": {
-    "toolFlow": "Ստեղծողի հոսք",
-    "toolFlowDesc": "Շղթայական տեքստ, երաշխավորագրեր, պատկեր և վիդեո մոդելներ կտավի վրա, գործարկեք այն մեկ վճարումով, կիսվեք հղումով ։",
     "whatToCreate": "Ինչ ստեղծել",
     "startCreatingWith": "Սկսեք ստեղծել {{model}}-ի հետ",
     "studioSubtitle": "Նկարագրեք տեսարան, կերպար, տրամադրություն կամ ոճ: Արդյունքները հայտնվում են ստորև և անմիջապես անցնում խմբագրիչ:",
@@ -3190,7 +3193,9 @@
     "noCreationsYet": "Դեռ AI ստեղծումներ չկան: Լбудьте առաջինը, որ ստեղծեք մեկը:",
     "aiGenerationAlt": "AI ստեղծում",
     "aiGenerationCommunityAlt": "AI ստեղծում DeHub համայնքից",
-    "close": "Փակել"
+    "close": "Փակել",
+    "toolFlow": "Ստեղծողի հոսք",
+    "toolFlowDesc": "Շղթայական տեքստ, երաշխավորագրեր, պատկեր և վիդեո մոդելներ կտավի վրա, գործարկեք այն մեկ վճարումով, կիսվեք հղումով ։"
   },
   "pricing": {
     "plansForEveryWorkflow": "Պլաններ յուրաքանչյուր workflow-ի համար",

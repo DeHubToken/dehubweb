@@ -1217,6 +1217,11 @@
   },
   "creators": {},
   "loginModal": {
+    "migrateNothingToRecover": "У цьому обліковому записі немає попереднього облікового запису DeHub, тому немає чого приносити. Поверніться до нового акаунта, щоб завершити налаштування.",
+    "migrateUnmatchedWarning": "Цей логін не має облікового запису DeHub. Продовження нічого не відновлює — він створює другий обліковий запис з новим ім 'ям користувача і залишає той, який у вас вже є.",
+    "migrateUnmatchedDetail": "За цією адресою гаманця не існує профілю. Якщо ви знову ввійшли в обліковий запис, поверніться назад і скористайтеся зареєстрованим логіном.",
+    "migrateGoBack": "Назад",
+    "migrateContinueAnyway": "Усе одно створіть новий акаунт",
     "addProfileTitle": "Додати профіль",
     "or": "or",
     "walletConnectedAs": "Підключено",
@@ -1325,13 +1330,13 @@
     "only_have_dhb_staked": "У вас внесено лише {{amount}}.",
     "unstake_request_submitted": "Запит на виведення надіслано! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} додано до черги виведення.",
+    "not_enough_gas_token": "Для оплати мережевої комісії в цьому гаманці потрібен {{token}}.",
+    "unstake_failed": "Помилка виведення",
     "only_have_dhb_withdrawable": "Зараз можна вивести лише {{amount}} DHB.",
     "early_withdrawal_fee": "Комісія за дострокове виведення",
     "early_withdrawal_fee_detail": "Заблоковано до {{date}}. Виведення зараз коштує {{percent}}% — близько {{amount}} DHB. Натисніть «Вивести» ще раз для підтвердження.",
     "unstaked_successfully": "Успішно виведено! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB виведено в мережі {{chain}}.",
-    "not_enough_gas_token": "Для оплати мережевої комісії в цьому гаманці потрібен {{token}}.",
-    "unstake_failed": "Помилка виведення",
     "unstake_cancelled": "Виведення скасовано",
     "unstake_request_removed": "Ваш запит на виведення видалено.",
     "failed_to_cancel": "Не вдалося скасувати",
@@ -1407,9 +1412,9 @@
     "minutesAgo": "{{count}} хв. тому",
     "hoursAgo": "{{count}} год. тому",
     "daysAgo": "{{count}} дн. тому",
+    "cancelUnstake": "Скасувати виведення",
     "withdrawableNow": "Доступно до виведення",
-    "poolNotWithdrawable": "{{amount}} DHB перебувають у гаманці депозитного пулу, який поки не має контракту виведення — зверніться до підтримки, щоб їх перемістити.",
-    "cancelUnstake": "Скасувати виведення"
+    "poolNotWithdrawable": "{{amount}} DHB перебувають у гаманці депозитного пулу, який поки не має контракту виведення — зверніться до підтримки, щоб їх перемістити."
   },
   "communities": {
     "title": "Спільноти",
@@ -2678,8 +2683,6 @@
     "sellYourFractions": "Продайте свої частки ({{held}} утримується)"
   },
   "creator": {
-    "toolFlow": "Потік авторів",
-    "toolFlowDesc": "Текстовий ланцюжок, посилання, графічні та відеомоделі на полотні, запустіть його одним платежем, поділіться посиланням.",
     "whatToCreate": "Що створити",
     "startCreatingWith": "Почніть створювати з {{model}}",
     "studioSubtitle": "Опишіть сцену, персонажа, настрій або стиль. Результати з'являються нижче і переходять прямо в редактор.",
@@ -3031,7 +3034,9 @@
     "noCreationsYet": "Поки немає створень AI. Будьте першим, хто створить одне.",
     "aiGenerationAlt": "Генерація AI",
     "aiGenerationCommunityAlt": "Генерація AI від спільноти DeHub",
-    "close": "Закрити"
+    "close": "Закрити",
+    "toolFlow": "Потік авторів",
+    "toolFlowDesc": "Текстовий ланцюжок, посилання, графічні та відеомоделі на полотні, запустіть його одним платежем, поділіться посиланням."
   },
   "pricing": {
     "plansForEveryWorkflow": "Плани для кожного робочого процесу",
@@ -3893,129 +3898,6 @@
     "ctaBody": "Резервне походження, зашифрована захищена медіа та перевірена робота передують публічним винагородам вузлів.",
     "footerNote": "Участь у DePin — це служба внеску, а не інвестиційний продукт. Доступність, придатність та винагороди можуть змінюватися."
   },
-  "pages": {
-    "home": {
-      "title": "Головна",
-      "description": "Опис головної сторінки"
-    },
-    "explore": {
-      "title": "Огляд",
-      "description": "Опис сторінки огляду"
-    },
-    "notifications": {
-      "title": "Сповіщення",
-      "description": "Опис сторінки сповіщень"
-    },
-    "messages": {
-      "encrypted": "Наскрізне шифрування",
-      "cannotDecrypt": "Зашифроване повідомлення — не можна відкрити на цьому пристрої",
-      "title": "Повідомлення",
-      "description": "Опис сторінки повідомлень"
-    },
-    "profile": {
-      "title": "Профіль",
-      "description": "Опис сторінки профілю"
-    },
-    "settings": {
-      "title": "Налаштування",
-      "description": "Опис сторінки налаштувань"
-    },
-    "blog": {
-      "title": "Блог",
-      "description": "Опис сторінки блогу"
-    },
-    "careers": {
-      "title": "Вакансії",
-      "description": "Опис сторінки вакансій"
-    },
-    "glossary": {
-      "title": "Глосарій",
-      "description": "Опис сторінки глосарію"
-    }
-  },
-  "components": {
-    "navbar": {
-      "home": "Головна",
-      "explore": "Огляд",
-      "notifications": "Сповіщення",
-      "messages": "Повідомлення",
-      "profile": "Профіль",
-      "settings": "Налаштування",
-      "blog": "Блог",
-      "careers": "Вакансії",
-      "glossary": "Глосарій"
-    },
-    "footer": {
-      "allRightsReserved": "Всі права захищені"
-    }
-  },
-  "glossary": {
-    "tortoise": {
-      "name": "Черепаха",
-      "description": "Опис черепахи",
-      "badge": "Білий"
-    },
-    "crab": {
-      "name": "Краб",
-      "description": "Опис краба",
-      "badge": "Білий"
-    },
-    "piranha": {
-      "name": "Піранья",
-      "description": "Опис піраньї",
-      "badge": "Білий"
-    },
-    "lobster": {
-      "name": "Лобстер",
-      "description": "Опис лобстера",
-      "badge": "Білий"
-    },
-    "cobra": {
-      "name": "Кобра",
-      "description": "Опис кобри",
-      "badge": "Білий"
-    },
-    "octopus": {
-      "name": "Восьминіг",
-      "description": "Опис восьминога",
-      "badge": "Білий"
-    },
-    "crocodite": {
-      "name": "Крокодил",
-      "description": "Опис крокодила",
-      "badge": "Білий"
-    },
-    "dolphin": {
-      "name": "Дельфін",
-      "description": "Опис дельфіна",
-      "badge": "Білий"
-    },
-    "tigershark": {
-      "name": "Тигрова акула",
-      "description": "Опис тигрової акули",
-      "badge": "Білий"
-    },
-    "killerwhale": {
-      "name": "Косатка",
-      "description": "Опис косатки",
-      "badge": "Білий"
-    },
-    "greatwhiteshark": {
-      "name": "Велика біла акула",
-      "description": "Опис великої білої акули",
-      "badge": "Білий"
-    },
-    "bluewhale": {
-      "name": "Синій кит",
-      "description": "Опис синього кита",
-      "badge": "Білий"
-    },
-    "meglodon": {
-      "name": "Меглодон",
-      "description": "Опис меглодона",
-      "badge": "Білий"
-    }
-  },
   "creatorFlow": {
     "title": "Потік авторів",
     "backToStudio": "Повернутися до Creator Studio",
@@ -4229,5 +4111,128 @@
     "dubbed": "Аудіо з дубляжем",
     "preparing": "Підготовка дубльованого аудіо…",
     "unavailable": "Дубльований аудіо недоступний для цього відео."
+  },
+  "pages": {
+    "home": {
+      "title": "Головна",
+      "description": "Опис головної сторінки"
+    },
+    "explore": {
+      "title": "Огляд",
+      "description": "Опис сторінки огляду"
+    },
+    "notifications": {
+      "title": "Сповіщення",
+      "description": "Опис сторінки сповіщень"
+    },
+    "messages": {
+      "encrypted": "Наскрізне шифрування",
+      "cannotDecrypt": "Зашифроване повідомлення — не можна відкрити на цьому пристрої",
+      "title": "Повідомлення",
+      "description": "Опис сторінки повідомлень"
+    },
+    "profile": {
+      "title": "Профіль",
+      "description": "Опис сторінки профілю"
+    },
+    "settings": {
+      "title": "Налаштування",
+      "description": "Опис сторінки налаштувань"
+    },
+    "blog": {
+      "title": "Блог",
+      "description": "Опис сторінки блогу"
+    },
+    "careers": {
+      "title": "Вакансії",
+      "description": "Опис сторінки вакансій"
+    },
+    "glossary": {
+      "title": "Глосарій",
+      "description": "Опис сторінки глосарію"
+    }
+  },
+  "components": {
+    "navbar": {
+      "home": "Головна",
+      "explore": "Огляд",
+      "notifications": "Сповіщення",
+      "messages": "Повідомлення",
+      "profile": "Профіль",
+      "settings": "Налаштування",
+      "blog": "Блог",
+      "careers": "Вакансії",
+      "glossary": "Глосарій"
+    },
+    "footer": {
+      "allRightsReserved": "Всі права захищені"
+    }
+  },
+  "glossary": {
+    "tortoise": {
+      "name": "Черепаха",
+      "description": "Опис черепахи",
+      "badge": "Білий"
+    },
+    "crab": {
+      "name": "Краб",
+      "description": "Опис краба",
+      "badge": "Білий"
+    },
+    "piranha": {
+      "name": "Піранья",
+      "description": "Опис піраньї",
+      "badge": "Білий"
+    },
+    "lobster": {
+      "name": "Лобстер",
+      "description": "Опис лобстера",
+      "badge": "Білий"
+    },
+    "cobra": {
+      "name": "Кобра",
+      "description": "Опис кобри",
+      "badge": "Білий"
+    },
+    "octopus": {
+      "name": "Восьминіг",
+      "description": "Опис восьминога",
+      "badge": "Білий"
+    },
+    "crocodite": {
+      "name": "Крокодил",
+      "description": "Опис крокодила",
+      "badge": "Білий"
+    },
+    "dolphin": {
+      "name": "Дельфін",
+      "description": "Опис дельфіна",
+      "badge": "Білий"
+    },
+    "tigershark": {
+      "name": "Тигрова акула",
+      "description": "Опис тигрової акули",
+      "badge": "Білий"
+    },
+    "killerwhale": {
+      "name": "Косатка",
+      "description": "Опис косатки",
+      "badge": "Білий"
+    },
+    "greatwhiteshark": {
+      "name": "Велика біла акула",
+      "description": "Опис великої білої акули",
+      "badge": "Білий"
+    },
+    "bluewhale": {
+      "name": "Синій кит",
+      "description": "Опис синього кита",
+      "badge": "Білий"
+    },
+    "meglodon": {
+      "name": "Меглодон",
+      "description": "Опис меглодона",
+      "badge": "Білий"
+    }
   }
 }

@@ -1085,6 +1085,11 @@
     "failedSubmit": "Slanje prijave nije uspjelo. Pokušajte ponovo."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Nema ranijeg DeHub računa na ovoj prijavi, tako da nema ništa za prenijeti. Vratite se na Novi račun kako biste dovršili uređivanje postavki.",
+    "migrateUnmatchedWarning": "Ova prijava nema DeHub račun u evidenciji. Nastavak ne oporavlja ništa — stvara drugi račun s novim korisničkim imenom i ostavlja onaj koji već imate.",
+    "migrateUnmatchedDetail": "Na ovoj adresi novčanika ne postoji profil. Ako si se ponovno prijavljivao/la, vrati se i upotrijebi način na koji si se prijavio/la.",
+    "migrateGoBack": "Natrag",
+    "migrateContinueAnyway": "Svejedno kreirajte novi račun",
     "title": "Prijava",
     "addProfileTitle": "Dodaj profil",
     "continueEmail": "Nastavi s e-mailom",
@@ -1419,13 +1424,13 @@
     "only_have_dhb_staked": "Imate samo {{amount}} uloženo.",
     "unstake_request_submitted": "Zahtjev za povlačenje poslan! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} dodano u red za povlačenje.",
+    "not_enough_gas_token": "Za plaćanje mrežne naknade trebate {{token}} u ovom novčaniku.",
+    "unstake_failed": "Povlačenje nije uspjelo",
     "only_have_dhb_withdrawable": "Trenutačno se može podići samo {{amount}} DHB.",
     "early_withdrawal_fee": "Naknada za prijevremeno podizanje",
     "early_withdrawal_fee_detail": "Zaključano do {{date}}. Podizanje sada stoji {{percent}} % — otprilike {{amount}} DHB. Pritisnite Podigni ponovno za potvrdu.",
     "unstaked_successfully": "Uspješno podignuto! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB podignuto na mreži {{chain}}.",
-    "not_enough_gas_token": "Za plaćanje mrežne naknade trebate {{token}} u ovom novčaniku.",
-    "unstake_failed": "Povlačenje nije uspjelo",
     "unstake_cancelled": "Povlačenje otkazano",
     "unstake_request_removed": "Vaš zahtjev za povlačenje je uklonjen.",
     "failed_to_cancel": "Otkazivanje nije uspjelo",
@@ -1501,9 +1506,9 @@
     "minutesAgo": "prije {{count}} min",
     "hoursAgo": "prije {{count}} h",
     "daysAgo": "prije {{count}} d",
+    "cancelUnstake": "Otkaži povlačenje",
     "withdrawableNow": "Dostupno za podizanje",
-    "poolNotWithdrawable": "{{amount}} DHB nalazi se u novčaniku depozitnog fonda koji još nema ugovor za podizanje — obratite se podršci za premještanje.",
-    "cancelUnstake": "Otkaži povlačenje"
+    "poolNotWithdrawable": "{{amount}} DHB nalazi se u novčaniku depozitnog fonda koji još nema ugovor za podizanje — obratite se podršci za premještanje."
   },
   "communities": {
     "title": "Zajednice",
@@ -2796,8 +2801,6 @@
     "sellYourFractions": "Prodajte svoje razlomke ({{held}} držite)"
   },
   "creator": {
-    "toolFlow": "Tijek rada kreatora",
-    "toolFlowDesc": "Lančani tekst, reference, modeli slika i videozapisa na platnu, pokrenite ga u jednom plaćanju, podijelite ga s poveznicom.",
     "whatToCreate": "Što stvoriti",
     "startCreatingWith": "Počni stvarati s {{model}}",
     "studioSubtitle": "Opiši scenu, lik, raspoloženje ili stil. Rezultati se pojavljuju dolje i direktno se prenose u uređivač.",
@@ -3192,7 +3195,9 @@
     "noCreationsYet": "Nema AI kreacija još. Budi prvi koji će generirati jednu.",
     "aiGenerationAlt": "AI generiranje",
     "aiGenerationCommunityAlt": "AI generiranje iz DeHub zajednice",
-    "close": "Zatvori"
+    "close": "Zatvori",
+    "toolFlow": "Tijek rada kreatora",
+    "toolFlowDesc": "Lančani tekst, reference, modeli slika i videozapisa na platnu, pokrenite ga u jednom plaćanju, podijelite ga s poveznicom."
   },
   "pricing": {
     "plansForEveryWorkflow": "Planovi za svaki radni tok",

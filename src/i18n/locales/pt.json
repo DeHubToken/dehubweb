@@ -1103,6 +1103,11 @@
     "email": "Email"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Não há nenhuma conta DeHub anterior neste login, então não há nada para trazer. Volte para Nova conta para concluir a configuração desta.",
+    "migrateUnmatchedWarning": "Este início de sessão não tem nenhuma conta DeHub registada. Continuar não recupera nada — cria uma segunda conta com um novo nome de utilizador e deixa a que já tem.",
+    "migrateUnmatchedDetail": "Não existe nenhum perfil neste endereço da carteira. Se estava a iniciar sessão novamente, volte e use o início de sessão com o qual se inscreveu.",
+    "migrateGoBack": "Voltar",
+    "migrateContinueAnyway": "Criar uma nova conta mesmo assim",
     "title": "Entrar",
     "addProfileTitle": "Adicionar um perfil",
     "continueEmail": "Continuar com Email",
@@ -1486,13 +1491,13 @@
     "only_have_dhb_staked": "Você só tem {{amount}} depositado.",
     "unstake_request_submitted": "Solicitação de retirada enviada! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} adicionado à fila de retirada.",
+    "not_enough_gas_token": "Você precisa de {{token}} nesta carteira para pagar a taxa de rede.",
+    "unstake_failed": "Falha na retirada",
     "only_have_dhb_withdrawable": "Só é possível sacar {{amount}} DHB neste momento.",
     "early_withdrawal_fee": "Taxa de saque antecipado",
     "early_withdrawal_fee_detail": "Bloqueado até {{date}}. Sacar agora custa {{percent}}% — cerca de {{amount}} DHB. Toque em Sacar novamente para confirmar.",
     "unstaked_successfully": "Saque realizado com sucesso! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB sacados na {{chain}}.",
-    "not_enough_gas_token": "Você precisa de {{token}} nesta carteira para pagar a taxa de rede.",
-    "unstake_failed": "Falha na retirada",
     "unstake_cancelled": "Retirada cancelada",
     "unstake_request_removed": "Sua solicitação de retirada foi removida.",
     "failed_to_cancel": "Falha ao cancelar",
@@ -1568,9 +1573,9 @@
     "minutesAgo": "há {{count}}m",
     "hoursAgo": "há {{count}}h",
     "daysAgo": "há {{count}}d",
+    "cancelUnstake": "Cancelar retirada",
     "withdrawableNow": "Disponível para saque",
-    "poolNotWithdrawable": "{{amount}} DHB estão na carteira do pool de depósitos, que ainda não tem contrato de saque — fale com o suporte para movê-los.",
-    "cancelUnstake": "Cancelar retirada"
+    "poolNotWithdrawable": "{{amount}} DHB estão na carteira do pool de depósitos, que ainda não tem contrato de saque — fale com o suporte para movê-los."
   },
   "communities": {
     "title": "Comunidades",
@@ -2863,8 +2868,6 @@
     "sellYourFractions": "Venda suas frações ({{held}} mantidas)"
   },
   "creator": {
-    "toolFlow": "Fluxo do criador",
-    "toolFlowDesc": "Cadeia de texto, referências, modelos de imagem e vídeo em uma tela, executá-lo em um pagamento, compartilhá-lo com um link.",
     "whatToCreate": "O que criar",
     "startCreatingWith": "Comece a criar com {{model}}",
     "studioSubtitle": "Descreva uma cena, personagem, clima ou estilo. Os resultados aparecem abaixo e vão direto para o editor.",
@@ -3259,7 +3262,9 @@
     "noCreationsYet": "Nenhuma criação de IA ainda. Seja o primeiro a gerar uma.",
     "aiGenerationAlt": "Geração de IA",
     "aiGenerationCommunityAlt": "Geração de IA da comunidade DeHub",
-    "close": "Fechar"
+    "close": "Fechar",
+    "toolFlow": "Fluxo do criador",
+    "toolFlowDesc": "Cadeia de texto, referências, modelos de imagem e vídeo em uma tela, executá-lo em um pagamento, compartilhá-lo com um link."
   },
   "pricing": {
     "plansForEveryWorkflow": "Planos para cada fluxo de trabalho",
