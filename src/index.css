@@ -57,6 +57,31 @@ All colors MUST be HSL.
   * {
     font-family: 'Exo', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
   }
+
+  /* Touch chrome we never styled, so every engine drew its own. iOS Safari
+     focuses a <button> on tap and keeps that focus, and Radix hands focus back
+     to a drawer's trigger when the drawer closes — so the header avatar sat
+     inside Safari's system-blue focus ring for the rest of the session. Blue
+     is not in this palette at all (see the rules at the top of this file), and
+     the ring is painted on the trigger, which carries no radius, so it also
+     squared off the rounded-lg tile inside it. Chrome never showed it because
+     it only paints the UA ring for real keyboard focus.
+
+     Keyboard focus is restyled, never removed. currentColor rather than a fixed
+     white: the light and minimal themes put dark text on a pale ground, where a
+     white ring would be invisible. `outline` follows border-radius
+     in every engine we support, so the ring traces the shape it is around.
+     jungle/osaka/war set their own focus rules with !important and still win. */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
   :root {
     /* zinc-500 for text-zinc-500 & co (tailwind.config.ts). #808089: the
        lightest step that still reads as the same muted grey and clears 4.5:1

@@ -174,7 +174,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
             <DrawerTrigger asChild>
               {user ? (
                 <button
-                  className="hover:opacity-80 transition-opacity"
+                  className="rounded-lg hover:opacity-80 transition-opacity"
                   aria-label="Toggle menu"
                 >
                   <Avatar className="w-[27px] h-[27px]">
