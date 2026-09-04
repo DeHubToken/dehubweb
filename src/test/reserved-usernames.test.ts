@@ -92,3 +92,47 @@ describe('reserved usernames', () => {
     }
   });
 });
+
+/**
+ * The other half of the same rule. The worker canonicalises `/app/<x>` onto
+ * `/<x>`, links the bare form in bot HTML and puts it in the sitemap — so a
+ * section that exists only under `/app` hands searchers and sharers a URL that
+ * falls through to `/:username` and renders the empty profile of a user who
+ * does not exist. That was fixed one section at a time for years, each time
+ * somebody noticed it; this asserts the whole set instead.
+ */
+describe('/app children answer at the bare path too', () => {
+  /** Every `<Route path="x">` nested inside the `<Route path="/app">` block. */
+  function appChildSegments(): string[] {
+    const block = APP_TSX.slice(APP_TSX.indexOf('<Route path="/app">'));
+    // The `/app` element closes at the same indent it opened at; its children
+    // are one level deeper, so this is the first line that can end the block.
+    const end = block.indexOf('\n            </Route>');
+    const segments = new Set<string>();
+    // Immediate children only — matched by indent. Anything deeper is nested
+    // under a child that has its own twin (launchpad/create and friends).
+    for (const line of (end > 0 ? block.slice(0, end) : block).split('\n')) {
+      const match = line.match(/^ {14}<Route path="([^"]+)"/);
+      if (!match) continue;
+      const first = match[1].split('/')[0];
+      if (!first || first.startsWith(':')) continue;
+      segments.add(first.toLowerCase());
+    }
+    return [...segments].sort();
+  }
+
+  // `wallet` is held by a real account. Routing the bare path would take that
+  // profile away from its owner, so /app/wallet keeps its one spelling. Any
+  // other name added here needs the same kind of reason.
+  const APP_ONLY = new Set(['wallet']);
+
+  it('gives every /app child a top-level twin', () => {
+    const topLevel = new Set(routerTopLevelSegments());
+    const missing = appChildSegments().filter((s) => !topLevel.has(s) && !APP_ONLY.has(s));
+    expect(missing, `/app-only sections: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('found children to check', () => {
+    expect(appChildSegments().length).toBeGreaterThan(20);
+  });
+});

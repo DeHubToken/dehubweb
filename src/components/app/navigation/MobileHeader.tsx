@@ -135,8 +135,9 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
     };
   }, []);
 
-  const isNotificationsActive = location.pathname === '/app/notifications';
-  const isPostPage = location.pathname.startsWith('/app/post/') || location.pathname.startsWith('/app/video/');
+  const isNotificationsActive = location.pathname === '/app/notifications' || location.pathname === '/notifications';
+  // With or without the /app prefix — both spellings reach the same page.
+  const isPostPage = /^\/(?:app\/)?(?:post|video)\//.test(location.pathname);
   // When the post overlay is opened from the feed, the home page's sticky tab bar hosts
   // the back button (settings-toggle slot). The top DEHUB bar stays exactly as it was on the feed.
   const isOverlayFromFeed = isPostPage && !!(location.state as any)?.fromFeed;

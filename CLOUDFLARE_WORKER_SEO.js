@@ -1175,11 +1175,10 @@ const MARKETING_PAGES = {
   // Each of these is a real page with its own SEOHead in the SPA, so browsers
   // saw the right title and crawlers saw the homepage. Copy is taken from the
   // page's own SEOHead so the two variants cannot drift, per the rule the
-  // /music, /jobs and /bridge divergence taught. `path` is set where the route
-  // lives only under /app — without it the canonical would name a URL the
-  // router does not have.
+  // /music, /jobs and /bridge divergence taught. `path` used to be set on the
+  // three that lived only under /app; all three answer at the bare URL now, so
+  // the default canonical (`/<key>`) is the right one and the overrides are out.
   'superpowers': {
-    path: '/app/superpowers',
     title: 'SuperPowers — Spend Your DeHub Badge on Reach',
     description: 'Badge holders get boosts every fortnight: put a post in the slot at the top of the DeHub home feed. Thirteen tiers, thirteen powers, one unlock per rung.',
     heading: 'DeHub SuperPowers',
@@ -1225,7 +1224,6 @@ const MARKETING_PAGES = {
 <p>Payment is in DHB and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
   },
   'fractions': {
-    path: '/app/fractions',
     title: 'Fractions | DeHub',
     description: 'Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.',
     heading: 'DeHub Fractions',
@@ -1235,7 +1233,6 @@ const MARKETING_PAGES = {
 <p>Fractions are speculative and their value can fall to nothing. Nothing here is investment advice.</p>`,
   },
   'stores': {
-    path: '/app/stores',
     title: 'Stores | DeHub',
     description: 'Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB.',
     heading: 'DeHub Stores',
@@ -1696,7 +1693,7 @@ function repairProxiedImages(html) {
 }
 
 function buildStoreHtml(store) {
-  const canonicalUrl = `${APP_URL}/app/stores/${store.id}`;
+  const canonicalUrl = `${APP_URL}/stores/${store.id}`;
   const name = store.name || 'Store';
   const title = `${name} — DeHub Stores`;
   const description = truncate(
@@ -1711,7 +1708,7 @@ function buildStoreHtml(store) {
     image,
     ogType: 'profile',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/stores">Stores</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stores">Stores</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>`,
     jsonLd: {
       '@context': 'https://schema.org',
@@ -1727,7 +1724,7 @@ function buildStoreHtml(store) {
 
 function buildListingHtml(listing) {
   const storeId = listing.store_id;
-  const canonicalUrl = `${APP_URL}/app/stores/${storeId}?listing=${listing.id}`;
+  const canonicalUrl = `${APP_URL}/stores/${storeId}?listing=${listing.id}`;
   const name = listing.title || 'Item';
   const storeName = (listing.stores && listing.stores.name) || 'a DeHub store';
   const price = Number(listing.price) || 0;
@@ -1751,7 +1748,7 @@ function buildListingHtml(listing) {
     // link still unfurls for anyone who shares it.
     noindex: listing.status !== 'active',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/stores/${escHtml(storeId)}">${escHtml(storeName)}</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stores/${escHtml(storeId)}">${escHtml(storeName)}</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${price.toLocaleString('en-US', { style: 'currency', currency: currency === 'DHB' ? 'USD' : currency })}</strong>${listing.is_digital ? ' · digital' : ''}${inStock ? '' : ' · sold out'}</p>`,
     jsonLd: {
@@ -2369,11 +2366,14 @@ const SSR_STATIC_ROUTES = new Set([
   // which is checked before the fn is ever consulted (same as 'features').
   'arcade',
   // Same again: each of these is one page with a top-level route AND an /app
-  // twin, both rendered from MARKETING_PAGES. `superpowers`, `stores` and
-  // `fractions` are deliberately NOT here — they exist only under /app, so
-  // collapsing the twin would canonicalize them onto a URL the router does not
-  // have. Those name their own `path` in MARKETING_PAGES instead.
+  // twin, both rendered from MARKETING_PAGES.
   'accounts', 'converter', 'events', 'launchpad', 'stats',
+  // These three used to be the exception — /app-only pages that named their own
+  // `path` in MARKETING_PAGES so the canonical would not point at a URL the
+  // router did not have. The router has it now: every /app child answers at the
+  // bare path as well, so they canonicalize the same way as everything above
+  // and their `path` overrides are gone.
+  'stores', 'fractions', 'superpowers',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
   //
@@ -2553,10 +2553,13 @@ function shouldServeSSR(pathname) {
   if (pathname.includes('/communities/')) return true;
   // Stores, shop items and events — rendered at the edge below. Without these
   // a shared listing unfurled as the SPA shell, i.e. as the homepage.
-  if (/^\/app\/stores\/[^/]+/.test(pathname)) return true;
-  if (/^\/app\/events\/\d+/.test(pathname)) return true;
+  // The /app prefix is optional throughout: every one of these pages answers at
+  // the bare path too, and a share link written the short way must get the same
+  // card as the long one rather than the SPA shell.
+  if (/^\/(?:app\/)?stores\/[^/]+/.test(pathname)) return true;
+  if (/^\/(?:app\/)?events\/\d+/.test(pathname)) return true;
   // A single governance proposal, rendered from PostgREST below.
-  if (/^\/app\/governance\/[0-9a-fA-F-]{8,}\/?$/.test(pathname)) return true;
+  if (/^\/(?:app\/)?governance\/[0-9a-fA-F-]{8,}\/?$/.test(pathname)) return true;
   // A shared Creator Flow, /creator/flow/<id>. `creator` is a reserved
   // ROUTE_SEGMENT, so without this rule the share link unfurls as the SPA
   // shell — the flow renderer below would never run.
@@ -2581,7 +2584,7 @@ function shouldServeSSR(pathname) {
   // /app/video/<tokenId> is a post — SinglePostPage renders it, and
   // parseDehubLink reads it as one — so it needs the post treatment. It is
   // normalised onto /app/post/<tokenId> before the proxy.
-  if (/^\/app\/video\/\d+\/?$/.test(pathname)) return true;
+  if (/^\/(?:app\/)?video\/\d+\/?$/.test(pathname)) return true;
   // Stage invite links, both shapes. Needed here and not only at the renderer
   // below: `stage` and `stages` are both reserved ROUTE_SEGMENTS, so the
   // profile fall-through at the foot of this function rejects them, and the
@@ -3022,7 +3025,7 @@ async function handleRequest(request, env) {
     ['/web/legal/careers', '/jobs'],
     ['/web/news', '/docs/featured-in'],
     ['/web/learn', '/docs'],
-    ['/web/shop', '/app/stores'],
+    ['/web/shop', '/stores'],
     ['/web/stream', '/videos'],
     ['/web/game', '/arcade'],
   ];
@@ -3738,7 +3741,7 @@ async function handleRequest(request, env) {
   // Stores and shop items. `?listing=<id>` is the item; the bare path is the
   // store. Read straight from PostgREST rather than through the ssr-seo
   // function, which has never been redeployed and does not know these routes.
-  const storeMatch = cleanPath.match(/^\/app\/stores\/([0-9a-fA-F-]{8,})$/);
+  const storeMatch = cleanPath.match(/^\/(?:app\/)?stores\/([0-9a-fA-F-]{8,})$/);
   if (storeMatch) {
     const listingId = url.searchParams.get('listing');
     if (listingId && /^[0-9a-fA-F-]{8,}$/.test(listingId)) {
@@ -3793,7 +3796,7 @@ async function handleRequest(request, env) {
     }));
   }
 
-  const proposalMatch = cleanPath.match(/^\/app\/governance\/([0-9a-fA-F-]{8,})$/);
+  const proposalMatch = cleanPath.match(/^\/(?:app\/)?governance\/([0-9a-fA-F-]{8,})$/);
   if (proposalMatch) {
     const proposal = await supabaseRow(
       `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
@@ -3813,7 +3816,7 @@ async function handleRequest(request, env) {
     }));
   }
 
-  const eventMatch = cleanPath.match(/^\/app\/events\/(\d+)$/);
+  const eventMatch = cleanPath.match(/^\/(?:app\/)?events\/(\d+)$/);
   if (eventMatch) {
     const event = await supabaseRow(
       `community_events?event_number=eq.${eventMatch[1]}&select=*&limit=1`,
@@ -3903,7 +3906,7 @@ async function handleRequest(request, env) {
   const newPostSlug = pathname.match(/^\/(?:app\/)?newpost\/(\d+)\/?$/);
   const shortPostPath = pathname.match(/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/);
   const barePostPath = pathname.match(/^\/post\/(\d+)\/?$/);
-  const videoPath = pathname.match(/^\/app\/video\/(\d+)\/?$/);
+  const videoPath = pathname.match(/^\/(?:app\/)?video\/(\d+)\/?$/);
   // The bare /communities/<slug> twin has the same problem one level up: the
   // fn's own system-route list has no `communities` entry, so it read the
   // segment as a username, missed, and 404'd every share of that shape.
