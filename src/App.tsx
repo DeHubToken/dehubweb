@@ -677,6 +677,10 @@ function AppContent() {
             <Route path="/fractions" element={null} />
             <Route path="/superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />
             <Route path="/ads" element={null} />
+            {/* PersistentPageCache had already been given the `/glossary` alias
+                and the router never got the matching route, so the bare URL
+                went to the /:username catch-all anyway. */}
+            <Route path="/glossary" element={null} />
             <Route path="/buy" element={null} />
             <Route path="/settings" element={null} />
             <Route path="/notifications" element={null} />
