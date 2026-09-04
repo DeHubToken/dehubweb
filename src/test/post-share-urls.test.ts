@@ -69,9 +69,10 @@ describe('post share URLs', () => {
     expect(WORKER).toContain(String.raw`/^\/(?:app\/)?newpost\/(\d+)\/?$/`);
     expect(WORKER).toContain(String.raw`/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/`);
     expect(WORKER).toContain(String.raw`/^\/post\/(\d+)\/?$/`);
-    // /app/video/<tokenId> renders SinglePostPage and parseDehubLink reads it
-    // as a post, so it is a fifth spelling of the same page.
-    expect(WORKER).toContain(String.raw`/^\/app\/video\/(\d+)\/?$/`);
+    // /video/<tokenId> renders SinglePostPage and parseDehubLink reads it as a
+    // post, so it is a fifth spelling of the same page — with or without the
+    // /app prefix, since every section answers both ways.
+    expect(WORKER).toContain(String.raw`/^\/(?:app\/)?video\/(\d+)\/?$/`);
   });
 
   it('resolves the slug through the API that owns the mapping', () => {

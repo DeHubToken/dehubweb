@@ -73,11 +73,13 @@ describe('per-route OG cards', () => {
   /**
    * A page that lives only under /app cannot take the default canonical of
    * `/${key}` — that URL has no route, and a canonical pointing at nothing is
-   * worse than no canonical. Those entries name their own `path` instead, and
-   * must therefore stay out of SSR_STATIC_ROUTES, which would collapse the
-   * /app twin onto the bare path.
+   * worse than no canonical. There are none left: every /app section answers at
+   * the bare path now, so the right shape for all of them is the default
+   * canonical plus an SSR_STATIC_ROUTES entry that collapses the twin onto it.
+   * The derivation is kept rather than deleted, inverted to assert the absence —
+   * an /app-only page reappearing is the bug, and this is what would see it.
    */
-  it('keeps /app-only marketing pages out of the /app-collapsing set', () => {
+  it('leaves no marketing page reachable only under /app', () => {
     // Derived from the router, not a hand-kept list. The hard-coded trio here
     // named superpowers, stores and fractions and missed `glossary`, which sat
     // in SSR_STATIC_ROUTES with no `path` for as long as it existed: crawlers
@@ -100,12 +102,18 @@ describe('per-route OG cards', () => {
       return nested && !topLevel;
     });
 
-    // If this is empty the derivation broke — it must never silently pass.
-    expect(appOnly.length).toBeGreaterThan(0);
+    expect(appOnly, `${appOnly.join(', ')} needs a top-level route`).toEqual([]);
 
-    for (const key of appOnly) {
-      expect(staticRoutes.has(key), `${key} is /app-only and must not collapse`).toBe(false);
-      expect(WORKER, `${key} is /app-only and needs its own path`).toContain(`path: '/app/${key}'`);
+    // The derivation itself still has to be measuring something.
+    expect(marketingKeys.length).toBeGreaterThan(10);
+
+    // …and with no /app-only pages left, no entry should be naming its own
+    // /app path any more: that override is what pins a canonical to the twin.
+    expect(WORKER).not.toContain("path: '/app/");
+
+    // The three that used to be the exception collapse onto the bare URL now.
+    for (const key of ['stores', 'fractions', 'superpowers', 'glossary']) {
+      expect(staticRoutes.has(key), `${key} should collapse onto /${key}`).toBe(true);
     }
   });
 });

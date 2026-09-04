@@ -25,6 +25,8 @@
  *    still lands where it pointed even though the card is chosen by `kind`.
  */
 
+import { RESERVED_LINK_SEGMENTS } from '@/lib/reserved-usernames';
+
 export type DehubLinkKind =
   | 'post'
   | 'profile'
@@ -93,19 +95,16 @@ function isDehubHost(host: string): boolean {
  *
  * `/:username` is the last route in the table, so every one of these would
  * otherwise parse as a profile — and a profile card that resolves to nothing is
- * worse than the link it replaced. Kept in sync with the top-level routes in
- * App.tsx; a name missing from here costs a fallback chip, not a broken page.
+ * worse than the link it replaced.
+ *
+ * This used to be a hand-typed list "kept in sync with App.tsx", which is the
+ * same promise the worker's SYSTEM_ROUTES made before PR #224 folded it into
+ * one file, and it drifted the same way: it was missing about forty of the
+ * routes that actually exist, so `dehub.io/settings`, `/wallet`, `/fractions`,
+ * `/superpowers` and the rest all carded as profiles of nobody. It reads the
+ * shared list now.
  */
-const RESERVED_ROOT_SEGMENTS = new Set([
-  'app', 'admin', 'affiliate', 'agents', 'arcade', 'assistant', 'auth', 'blog',
-  'bridge', 'cinema', 'communities', 'connect', 'creator', 'creators', 'delete-account',
-  'docs', 'dpay', 'editor', 'events', 'explore', 'features', 'governance',
-  'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'mcp', 'mobile-preview',
-  'music', 'premium', 'pricing', 'prompt', 'posts', 'r', 'radio', 'robots.txt',
-  'shorts',
-  'sitemap.xml', 'skill.md', 'stage', 'stages', 'stake', 'stats', 'stores',
-  'top-100', 'tv', 'videos', 'work', 'bounty',
-]);
+const RESERVED_ROOT_SEGMENTS = RESERVED_LINK_SEGMENTS;
 
 // ── Tokenising ──────────────────────────────────────────────────────────────
 

@@ -79,7 +79,8 @@ export function useServedAds(surface: string, options: UseServedAdsOptions = {})
   const isFeedSurfaceVisible =
     normalizedPath === '/' || normalizedPath === '/app' ||
     normalizedPath === '/videos' || normalizedPath === '/shorts' ||
-    normalizedPath.startsWith('/app/post/') || normalizedPath.startsWith('/app/video/') ||
+    // /post/ and /video/ answer with and without the /app prefix.
+    /^\/(?:app\/)?(?:post|video)\//.test(normalizedPath) ||
     normalizedPath.startsWith('/posts/');
 
   return useQuery({

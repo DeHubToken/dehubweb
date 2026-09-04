@@ -82,20 +82,24 @@ const CACHED_PAGES: CachedPageConfig[] = [
   // all three — no duplicate mount.
   { key: 'home', path: ['/', '/app', '/videos', '/shorts'], component: HomePage, skeleton: FeedSkeleton },
   { key: 'explore', path: ['/app/explore', '/explore'], component: ExplorePage, skeleton: ExploreSkeleton },
-  { key: 'notifications', path: '/app/notifications', component: NotificationsPage, skeleton: NotificationsSkeleton },
-  { key: 'messages', path: '/app/messages', component: MessagesPage, skeleton: MessagesSkeleton },
+  { key: 'notifications', path: ['/app/notifications', '/notifications'], component: NotificationsPage, skeleton: NotificationsSkeleton },
+  { key: 'messages', path: ['/app/messages', '/messages'], component: MessagesPage, skeleton: MessagesSkeleton },
   { key: 'assistant', path: ['/app/assistant', '/assistant'], component: AssistantPage, skeleton: GenericPageSkeleton },
   { key: 'leaderboard', path: ['/app/leaderboard', '/leaderboard'], component: LeaderboardPage, skeleton: LeaderboardSkeleton },
-  { key: 'bookmarks', path: '/app/bookmarks', component: BookmarksPage, skeleton: FeedSkeleton },
-  { key: 'settings', path: '/app/settings', component: SettingsPage, skeleton: SettingsSkeleton },
-  { key: 'command-centre', path: '/app/command-centre', component: CommandCentrePage, skeleton: GenericPageSkeleton },
+  { key: 'bookmarks', path: ['/app/bookmarks', '/bookmarks'], component: BookmarksPage, skeleton: FeedSkeleton },
+  { key: 'settings', path: ['/app/settings', '/settings'], component: SettingsPage, skeleton: SettingsSkeleton },
+  { key: 'command-centre', path: ['/app/command-centre', '/command-centre'], component: CommandCentrePage, skeleton: GenericPageSkeleton },
   { key: 'wallet', path: '/app/wallet', component: FullWalletPage, skeleton: GenericPageSkeleton },
   // Bare aliases (/music, /tv, …) match the worker's canonical URLs — the bot
   // layer links and sitemaps the bare form, so the SPA must serve it too.
+  // Every /app child now carries its twin, private pages included: the pair is
+  // one cached instance either way, and without it dehub.io/<x> fell through to
+  // the /:username catch-all and rendered an empty profile. `wallet` is the one
+  // exception — a real account holds that handle, so /wallet stays a profile.
   { key: 'music', path: ['/app/music', '/music'], component: MusicPage, skeleton: GridSkeleton },
   { key: 'stages', path: ['/app/stages', '/stages'], component: StagesPage, skeleton: GenericPageSkeleton },
   { key: 'tv', path: ['/app/tv', '/tv'], component: TVPage, skeleton: GridSkeleton },
-  { key: 'buy', path: '/app/buy', component: BuyCoinsPage, skeleton: GenericPageSkeleton },
+  { key: 'buy', path: ['/app/buy', '/buy'], component: BuyCoinsPage, skeleton: GenericPageSkeleton },
   { key: 'agents', path: ['/app/agents', '/agents'], component: AgentsPage, skeleton: GenericPageSkeleton },
   { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeleton },
   { key: 'governance', path: ['/app/governance', '/governance'], component: GovernancePage, skeleton: FeaturesSkeleton },
@@ -107,15 +111,15 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'top-100', path: ['/app/top-100', '/top-100'], component: Top100CryptosPage, skeleton: LeaderboardSkeleton },
   { key: 'communities', path: ['/app/communities', '/communities'], component: CommunitiesPage, skeleton: GenericPageSkeleton },
   { key: 'events', path: ['/app/events', '/events'], component: EventsPage, skeleton: GenericPageSkeleton },
-  { key: 'stores', path: '/app/stores', component: StoresPage, skeleton: GenericPageSkeleton },
-  { key: 'fractions', path: '/app/fractions', component: FractionsPage, skeleton: GridSkeleton },
+  { key: 'stores', path: ['/app/stores', '/stores'], component: StoresPage, skeleton: GenericPageSkeleton },
+  { key: 'fractions', path: ['/app/fractions', '/fractions'], component: FractionsPage, skeleton: GridSkeleton },
   { key: 'usernames', path: ['/app/usernames', '/usernames'], component: UsernamesPage, skeleton: GridSkeleton },
   { key: 'accounts', path: ['/app/accounts', '/accounts'], component: AccountsPage, skeleton: GridSkeleton },
   { key: 'work', path: ['/app/work', '/work'], component: WorkPage, skeleton: GenericPageSkeleton },
   { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
-  { key: 'ads', path: '/app/ads', component: AdsPage, skeleton: GenericPageSkeleton },
+  { key: 'ads', path: ['/app/ads', '/ads'], component: AdsPage, skeleton: GenericPageSkeleton },
   { key: 'arcade', path: ['/arcade', '/app/arcade'], component: ArcadePage, skeleton: GridSkeleton },
-  { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
+  { key: 'profile', path: ['/app/profile', '/profile'], component: ProfilePage, skeleton: ProfileSkeleton },
 ];
 
 function matchesPath(config: CachedPageConfig, pathname: string): boolean {

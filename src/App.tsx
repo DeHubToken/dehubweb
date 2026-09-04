@@ -658,6 +658,48 @@ function AppContent() {
             {/* /accounts alias — same shape as /usernames above. */}
             <Route path="/accounts" element={null} />
 
+            {/* The rest of the /app children, at the bare address as well.
+                Every section above had already been given its twin one at a
+                time, each after someone noticed a shared dehub.io/<x> link
+                landing on the /:username catch-all and rendering the empty
+                profile of a user who does not exist. These are the ones that
+                had not had that moment yet — /stores, /fractions and
+                /superpowers are public pages people link at, and the private
+                ones are what a support answer or a bookmark gets typed as.
+                All of these names are reserved in reserved-usernames.js, so
+                the bare path is ours to take.
+
+                `/wallet` is deliberately absent: a real account registered
+                that handle in Feb 2026, and routing the bare path would take
+                their profile away. /app/wallet still works. */}
+            <Route path="/stores" element={null} />
+            <Route path="/stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
+            <Route path="/fractions" element={null} />
+            <Route path="/superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />
+            <Route path="/ads" element={null} />
+            {/* PersistentPageCache had already been given the `/glossary` alias
+                and the router never got the matching route, so the bare URL
+                went to the /:username catch-all anyway. */}
+            <Route path="/glossary" element={null} />
+            <Route path="/buy" element={null} />
+            <Route path="/settings" element={null} />
+            <Route path="/notifications" element={null} />
+            <Route path="/messages" element={null} />
+            <Route path="/bookmarks" element={null} />
+            <Route path="/command-centre" element={null} />
+            <Route path="/profile" element={null} />
+            <Route path="/upload" element={<Suspense fallback={null}><UploadPage /></Suspense>} />
+            <Route path="/migrate-youtube" element={<Suspense fallback={<PageLoader />}><YoutubeMigratePage /></Suspense>} />
+
+            {/* Detail pages under a section that already had its bare twin but
+                whose children were still /app-only. A share link to one of
+                these is the whole point of the page having an address. */}
+            <Route path="/events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
+            <Route path="/governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
+            <Route path="/post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+            <Route path="/post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
+            <Route path="/video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+
 
             {/* Stage invite links. /stages/:id is the short numeric share form
                 (audio_spaces.short_id); the exact /stages path below still opens
