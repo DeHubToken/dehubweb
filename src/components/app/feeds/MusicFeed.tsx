@@ -28,6 +28,11 @@ import { openStageModal } from '@/contexts/StageContext';
 
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+} from '@/lib/media-session';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { searchNFTs, getNFTInfo, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
@@ -268,6 +273,42 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
       setIsPlaying(true);
     }
   };
+
+  /**
+   * Hold the OS media session while this preview is audible.
+   *
+   * The carousel starts muted from the global default, so `!isMuted` is the
+   * test as everywhere else — a silent thumbnail must not take the lock
+   * screen off whatever is actually playing.
+   */
+  useEffect(() => {
+    if (!isPlaying || isMuted) {
+      releaseMediaSession(instanceId);
+      return;
+    }
+    claimMediaSession(
+      instanceId,
+      {
+        title: video.title || "DeHub music",
+        artist: video.channel || "DeHub",
+        artwork: video.thumbnail || null,
+      },
+      {
+        play: () => {
+          videoRef.current?.play().catch(() => {});
+          setIsPlaying(true);
+        },
+        pause: () => {
+          videoRef.current?.pause();
+          setIsPlaying(false);
+          videoPlaybackManager.stop(instanceId);
+        },
+      },
+    );
+    setMediaSessionPlaying(instanceId, true);
+  }, [isPlaying, isMuted, instanceId, video.title, video.channel, video.thumbnail]);
+
+  useEffect(() => () => releaseMediaSession(instanceId), [instanceId]);
 
   const handleMuteClick = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -6,7 +6,12 @@
  * Uses Framer Motion for smooth translateY animations.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, useId } from 'react';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+} from '@/lib/media-session';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe } from 'lucide-react';
@@ -188,6 +193,7 @@ const CORNER_CONTROL =
   "absolute top-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center text-white transition-[background-color,opacity] duration-300";
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
+  const instanceId = useId();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -904,6 +910,44 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setIsPaused(prev => !prev);
     setShowPlayIndicator(null);
   }, []);
+
+  /**
+   * Hold the OS media session while a short is actually audible.
+   *
+   * Unlike the feed, the viewer opens unmuted — but the mute button is right
+   * there, and a muted short claiming the session would mean the headphone
+   * pause button stops a silent video instead of whatever the viewer is
+   * really listening to. Same `!isMuted` test the feed cards apply.
+   *
+   * previous/next are wired to the swipe navigation rather than to seeking:
+   * a short is a few seconds long, so skipping between them is what the
+   * transport buttons are actually good for here.
+   */
+  useEffect(() => {
+    if (!currentShort || isPaused || isMuted) {
+      releaseMediaSession(instanceId);
+      return;
+    }
+    claimMediaSession(
+      instanceId,
+      {
+        title: currentShort.description?.split(String.fromCharCode(10))[0] || "DeHub short",
+        artist: currentShort.displayName || currentShort.creatorUsername || currentShort.username,
+        artwork: currentShort.thumbnail || null,
+      },
+      {
+        play: togglePlayPause,
+        pause: togglePlayPause,
+        previoustrack: () => goToPrevRef.current(),
+        nexttrack: () => goToNextRef.current(),
+      },
+    );
+    setMediaSessionPlaying(instanceId, true);
+  }, [currentShort, isPaused, isMuted, instanceId, togglePlayPause, goToPrevRef, goToNextRef]);
+
+  // Closing the viewer must not leave the OS holding a session for a player
+  // that is no longer on the page.
+  useEffect(() => () => releaseMediaSession(instanceId), [instanceId]);
 
   // Prevent touch events from bubbling to parent page
   const handleTouchStart = (e: React.TouchEvent) => {

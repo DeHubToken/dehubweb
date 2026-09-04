@@ -5,11 +5,16 @@
  * Supports mute/unmute and close. Renders as a fixed overlay.
  */
 
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, useId } from 'react';
 import { X, Volume2, VolumeX, GripHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import type { PiPChannel } from '@/contexts/PiPContext';
+import {
+  claimMediaSession,
+  releaseMediaSession,
+  setMediaSessionPlaying,
+} from '@/lib/media-session';
 
 interface FloatingPiPPlayerProps {
   channel: PiPChannel;
@@ -22,6 +27,7 @@ const PLAYER_HEIGHT = 158; // 16:9
 const MARGIN = 12;
 
 export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayerProps) {
+  const instanceId = useId();
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -122,6 +128,39 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
       videoRef.current.muted = isMuted;
     }
   }, [isMuted]);
+
+  /**
+   * Hold the OS media session while this window is audible.
+   *
+   * The PiP player starts muted so autoplay is allowed at all, and only
+   * unmutes if the browser lets it — so `!isMuted` is the test, exactly as it
+   * is on the feed cards. A muted mini-player claiming the lock screen would
+   * mean the headphone pause button stops a silent corner of the page.
+   *
+   * There is no seek: a channel is live, so there is nowhere to scrub to.
+   */
+  useEffect(() => {
+    if (isMuted) {
+      releaseMediaSession(instanceId);
+      return;
+    }
+    claimMediaSession(
+      instanceId,
+      { title: channel.name, artist: 'DeHub TV', artwork: channel.logo || null },
+      {
+        play: () => {
+          videoRef.current?.play().catch(() => {});
+        },
+        pause: () => videoRef.current?.pause(),
+        stop: () => onClose(channel.id),
+      },
+    );
+    setMediaSessionPlaying(instanceId, true);
+  }, [isMuted, instanceId, channel.name, channel.logo, channel.id, onClose]);
+
+  // Closing the window, or the page navigating away, must not leave the OS
+  // holding a session for a player that no longer exists.
+  useEffect(() => () => releaseMediaSession(instanceId), [instanceId]);
 
   // Dragging
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
