@@ -207,7 +207,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     const v = videoRef.current;
     if (!v) return;
     // Remove any prior subtitle tracks we added
-    Array.from(v.querySelectorAll('track[data-lovable-subtitle]')).forEach((n) => n.remove());
+    Array.from(v.querySelectorAll('track[data-dh-subtitle]')).forEach((n) => n.remove());
 
     if (!useNativeTrack || !vttBlobUrl) {
       // Disable any text tracks we previously toggled on
@@ -224,7 +224,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     track.srclang = sourceLang || 'en';
     track.src = vttBlobUrl;
     track.default = true;
-    track.setAttribute('data-lovable-subtitle', '1');
+    track.setAttribute('data-dh-subtitle', '1');
     v.appendChild(track);
 
     // Force-show the track once it loads
@@ -317,7 +317,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   // Inject ::cue size styles for native <track> rendering
   const sizePxValue = SIZE_PRESETS.find((s) => s.key === size)?.px ?? 15;
   useEffect(() => {
-    const id = 'lovable-cue-size-style';
+    const id = 'dh-cue-size-style';
     let el = document.getElementById(id) as HTMLStyleElement | null;
     if (!el) {
       el = document.createElement('style');

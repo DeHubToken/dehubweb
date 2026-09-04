@@ -74,7 +74,7 @@ const SURFACE_LIGHT = 'bg-[#2c2c2e]';
 const TEXT_DIM = 'text-[#949499]';
 const STROKE = 'border-[rgba(255,255,255,0.09)]';
 
-/** The Lovable home-screen bloom: black melting into blue, pink, then orange. */
+/** The builder home-screen bloom: black melting into blue, pink, then orange. */
 const BLOOM_BG: React.CSSProperties = {
   background: [
     'radial-gradient(90% 30% at 50% 102%, rgba(255,107,33,0.9), transparent 72%)',

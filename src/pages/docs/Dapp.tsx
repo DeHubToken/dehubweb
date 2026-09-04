@@ -172,19 +172,19 @@ const Dapp = () => {
 
   const feeReductions = [
     { badgeKey: 'badgeNone', threshold: "< 10,000 $DHB", fee: "10.00%", color: "bg-muted", image: null },
-    { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-muted", image: "/lovable-uploads/60bc125c-8efd-4058-9e12-7ca393df4fce.png" },
-    { badgeKey: 'badgeLobster', threshold: "25k+ $DHB", fee: "8.62%", color: "bg-muted", image: "/lovable-uploads/2c7200c2-681e-4499-863b-ea24fdbdb70c.png" },
-    { badgeKey: 'badgePiranha', threshold: "50k+ $DHB", fee: "7.93%", color: "bg-muted", image: "/lovable-uploads/38387f75-fd38-4380-9588-1f19f68d8435.png" },
-    { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-muted", image: "/lovable-uploads/fc47a759-390a-4f41-ba96-5bc0066e82b9.png" },
-    { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-muted", image: "/lovable-uploads/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png" },
-    { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-muted", image: "/lovable-uploads/8fcbb3f6-223d-4e2f-9d82-30082a175491.png" },
-    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: "/lovable-uploads/c84eee0a-97c7-4938-9b9c-c991c802593e.png" },
-    { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: "/lovable-uploads/4558c158-75d9-40fc-adfa-41125344a48e.png" },
-    { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: "/lovable-uploads/6be493f1-51b4-481b-9ca1-340c030b2ef8.png" },
-    { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: "/lovable-uploads/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png" },
-    { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: "/lovable-uploads/dfcc3420-f654-486b-bc94-f84f0209ba5c.png" },
-    { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: "/lovable-uploads/bc6b4bb7-aa43-4015-adb0-194568cc0858.png" },
-    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: "/lovable-uploads/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png" },
+    { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-muted", image: "/media/60bc125c-8efd-4058-9e12-7ca393df4fce.png" },
+    { badgeKey: 'badgeLobster', threshold: "25k+ $DHB", fee: "8.62%", color: "bg-muted", image: "/media/2c7200c2-681e-4499-863b-ea24fdbdb70c.png" },
+    { badgeKey: 'badgePiranha', threshold: "50k+ $DHB", fee: "7.93%", color: "bg-muted", image: "/media/38387f75-fd38-4380-9588-1f19f68d8435.png" },
+    { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-muted", image: "/media/fc47a759-390a-4f41-ba96-5bc0066e82b9.png" },
+    { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-muted", image: "/media/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png" },
+    { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-muted", image: "/media/8fcbb3f6-223d-4e2f-9d82-30082a175491.png" },
+    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: "/media/c84eee0a-97c7-4938-9b9c-c991c802593e.png" },
+    { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: "/media/4558c158-75d9-40fc-adfa-41125344a48e.png" },
+    { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: "/media/6be493f1-51b4-481b-9ca1-340c030b2ef8.png" },
+    { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: "/media/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png" },
+    { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: "/media/dfcc3420-f654-486b-bc94-f84f0209ba5c.png" },
+    { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: "/media/bc6b4bb7-aa43-4015-adb0-194568cc0858.png" },
+    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: "/media/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png" },
   ];
 
   return <div className="space-y-8">
@@ -195,7 +195,7 @@ const Dapp = () => {
       </div>
       
       <div className="my-6">
-        <img src="/lovable-uploads/docs-hero-videos.png" alt="The DeHub video feed, with the format tabs, creator leaderboard and trending topics" width={1440} height={940} className="w-full h-auto rounded-lg border border-border shadow-sm" />
+        <img src="/media/docs-hero-videos.png" alt="The DeHub video feed, with the format tabs, creator leaderboard and trending topics" width={1440} height={940} className="w-full h-auto rounded-lg border border-border shadow-sm" />
       </div>
       
       {/* On-this-page quick nav. Frosted with the docs header's own recipe
@@ -259,7 +259,7 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro3')}</p>
           
           <div className="my-6">
-            <img src="/lovable-uploads/docs-connect-wallet.png" alt="Signing in to DeHub with Google, Apple, email or SMS, or by connecting a wallet" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
+            <img src="/media/docs-connect-wallet.png" alt="Signing in to DeHub with Google, Apple, email or SMS, or by connecting a wallet" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
             <p className="text-center text-sm text-muted-foreground mt-3 italic font-exo">{t('dapp.walletCaption')}</p>
           </div>
           
@@ -283,7 +283,7 @@ const Dapp = () => {
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc2')}</p>
-          <Shot src="/lovable-uploads/docs-feed-home.png" alt="The DeHub home feed, with format tabs across the top and full post controls on every card." />
+          <Shot src="/media/docs-feed-home.png" alt="The DeHub home feed, with format tabs across the top and full post controls on every card." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.feedsHome')}</strong> {t('dapp.feedsHomeDesc')}</li>
@@ -304,7 +304,7 @@ const Dapp = () => {
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.uploadTitle')}</h2>
           
           <div className="my-6">
-            <img src="/lovable-uploads/docs-upload.png" alt="The post composer, with title, category, community and subscriber-only options" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
+            <img src="/media/docs-upload.png" alt="The post composer, with title, category, community and subscriber-only options" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
           </div>
           
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.uploadDesc')}</p>
@@ -639,13 +639,13 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.profileDesc')}</p>
           
           <div className="my-6">
-            <img src="/lovable-uploads/docs-profile.png" alt="A DeHub profile page" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
+            <img src="/media/docs-profile.png" alt="A DeHub profile page" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
           </div>
         </section>
 
         <section id="top-up" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.topUpTitle')}</h2>
-          <Shot src="/lovable-uploads/docs-buy.png" alt="Buying DHB directly inside the app." />
+          <Shot src="/media/docs-buy.png" alt="Buying DHB directly inside the app." />
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.topUpDesc')}</p>
           
           <Card>
@@ -724,7 +724,7 @@ const Dapp = () => {
         </section>
 
         <div className="my-6">
-          <img src="/lovable-uploads/docs-explore.png" alt="The Explore page, searching people, posts and media across DeHub" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
+          <img src="/media/docs-explore.png" alt="The Explore page, searching people, posts and media across DeHub" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
         </div>
 
         <section id="badges" className="scroll-mt-32">
@@ -890,7 +890,7 @@ const Dapp = () => {
           <div className="mt-8">
             <h3 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.architecture')}</h3>
             <div className="my-6">
-              <img src="/lovable-uploads/a083bba0-a7c6-4c03-9a01-2402717f9f20.png" alt="Decentralized Streaming App Architecture" className="w-full rounded-lg border border-border shadow-sm" />
+              <img src="/media/a083bba0-a7c6-4c03-9a01-2402717f9f20.png" alt="Decentralized Streaming App Architecture" className="w-full rounded-lg border border-border shadow-sm" />
             </div>
           </div>
         </section>
@@ -1633,7 +1633,7 @@ const Dapp = () => {
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.communitiesDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.communitiesDesc2')}</p>
-          <Shot src="/lovable-uploads/docs-communities.png" alt="The Communities page, listing public communities with their member counts." />
+          <Shot src="/media/docs-communities.png" alt="The Communities page, listing public communities with their member counts." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.communitiesB1')}</strong> {t('dapp.communitiesB1Desc')}</li>
@@ -1650,7 +1650,7 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc2')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc3')}</p>
-          <Shot src="/lovable-uploads/docs-stages.png" alt="The Stages page, with Live and Recorded tabs and a control to start a stage." />
+          <Shot src="/media/docs-stages.png" alt="The Stages page, with Live and Recorded tabs and a control to start a stage." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.stagesB1')}</strong> {t('dapp.stagesB1Desc')}</li>
@@ -1675,8 +1675,8 @@ const Dapp = () => {
             <li><strong>{t('dapp.tvRadioB2')}</strong> {t('dapp.tvRadioB2Desc')}</li>
             <li><strong>{t('dapp.tvRadioB3')}</strong> {t('dapp.tvRadioB3Desc')}</li>
           </ul>
-          <Shot src="/lovable-uploads/docs-tv.png" alt="DeHub TV, with continuously running live channels." />
-          <Shot src="/lovable-uploads/docs-music.png" alt="The Music hub, covering tracks, videos, podcasts and radio stations." />
+          <Shot src="/media/docs-tv.png" alt="DeHub TV, with continuously running live channels." />
+          <Shot src="/media/docs-music.png" alt="The Music hub, covering tracks, videos, podcasts and radio stations." />
         </section>
 
         <section id="wallet" className="scroll-mt-32">
@@ -1686,8 +1686,8 @@ const Dapp = () => {
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.walletHubDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.walletHubDesc2')}</p>
-          <Shot src="/lovable-uploads/docs-wallet.png" alt="The built-in wallet, showing token balances and the Receive, Send, Buy, Stake, Bridge and Cash Out actions." />
-          <Shot src="/lovable-uploads/docs-command-centre.png" alt="The Command Centre, the creator finance dashboard for income and transactions." />
+          <Shot src="/media/docs-wallet.png" alt="The built-in wallet, showing token balances and the Receive, Send, Buy, Stake, Bridge and Cash Out actions." />
+          <Shot src="/media/docs-command-centre.png" alt="The Command Centre, the creator finance dashboard for income and transactions." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.walletHubB1')}</strong> {t('dapp.walletHubB1Desc')}</li>
@@ -1709,7 +1709,7 @@ const Dapp = () => {
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.workDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.workDesc2')}</p>
-          <Shot src="/lovable-uploads/docs-bounties.png" alt="The Bounties board, filterable by category and currency, with Post a Bounty." />
+          <Shot src="/media/docs-bounties.png" alt="The Bounties board, filterable by category and currency, with Post a Bounty." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.workB1')}</strong> {t('dapp.workB1Desc')}</li>
@@ -1724,7 +1724,7 @@ const Dapp = () => {
         <section id="stores" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.storesTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.storesDesc')}</p>
-          <Shot src="/lovable-uploads/docs-stores.png" alt="The Stores page, where creators and businesses run a native storefront." />
+          <Shot src="/media/docs-stores.png" alt="The Stores page, where creators and businesses run a native storefront." />
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.storesB1')}</strong> {t('dapp.storesB1Desc')}</li>
             <li><strong>{t('dapp.storesB2')}</strong> {t('dapp.storesB2Desc')}</li>
@@ -1757,7 +1757,7 @@ const Dapp = () => {
           </ul>
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.aiSuiteCreditsTitle')}</h3>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.aiSuiteCreditsDesc')}</p>
-          <Shot src="/lovable-uploads/docs-assistant.png" alt="The AI Assistant, available to every account inside the app." />
+          <Shot src="/media/docs-assistant.png" alt="The AI Assistant, available to every account inside the app." />
           {/* Full AI Toolkits reference, folded in from /docs/ai-toolkits */}
           <div className="mt-8">
             <AIToolkits />
@@ -1806,7 +1806,7 @@ const Dapp = () => {
         <section id="advertising" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.adsPortalTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.adsPortalDesc')}</p>
-          <Shot src="/lovable-uploads/docs-ads.png" alt="The self-serve advertising portal for creating and funding campaigns." />
+          <Shot src="/media/docs-ads.png" alt="The self-serve advertising portal for creating and funding campaigns." />
           <p className="text-foreground/80 font-exo">
             <Link to="/docs/advertising" className="text-primary hover:underline inline-flex items-center gap-1">
               {t('dapp.adsPortalLink')} <ExternalLink className="w-3.5 h-3.5" />
@@ -1817,13 +1817,13 @@ const Dapp = () => {
         <section id="feature-requests" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.featureBoardTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.featureBoardDesc')}</p>
-          <Shot src="/lovable-uploads/docs-features.png" alt="The feature request board, where the community submits and votes on ideas." />
+          <Shot src="/media/docs-features.png" alt="The feature request board, where the community submits and votes on ideas." />
         </section>
 
         <section id="connect" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.connectTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.connectDesc')}</p>
-          <Shot src="/lovable-uploads/docs-connect.png" alt="The Connect page, for linking DeHub to ChatGPT or Claude over MCP." />
+          <Shot src="/media/docs-connect.png" alt="The Connect page, for linking DeHub to ChatGPT or Claude over MCP." />
         </section>
 
         <section id="notifications" className="scroll-mt-32">

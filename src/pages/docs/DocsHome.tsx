@@ -22,22 +22,22 @@ const DocsHome = () => {
   let bannerImageAlt = latestPost?.bannerImageAlt;
   if (latestPost) {
     if (latestPost.slug === '1-million-dollar-raise-completed') {
-      bannerImage = '/lovable-uploads/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png';
+      bannerImage = '/media/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png';
       bannerImageAlt = '$1,000,000 Fundraise';
     } else if (latestPost.slug === 'get-ready-players-final-snapshot-for-last-chad-standing-airdrop---a-dehub-milestone-from-q2-2025') {
-      bannerImage = '/lovable-uploads/6d868478-769e-4981-b285-4ca5fa215dc5.png';
+      bannerImage = '/media/6d868478-769e-4981-b285-4ca5fa215dc5.png';
       bannerImageAlt = 'Last Chad Standing helicopter';
     } else if (latestPost.slug === 'main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention---a-dehub-milestone-from-q1-2025') {
-      bannerImage = '/lovable-uploads/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png';
+      bannerImage = '/media/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png';
       bannerImageAlt = 'Last Chad Standing character helmet';
     } else if (latestPost.slug === 'fresh-experience-revamped-app-feed-with-audio-replies--live-talk-spaces---a-dehub-milestone-from-q2-2025') {
-      bannerImage = '/lovable-uploads/eeb2e5c9-2347-4865-876e-31f38fe4412a.png';
+      bannerImage = '/media/eeb2e5c9-2347-4865-876e-31f38fe4412a.png';
       bannerImageAlt = 'DeHub Revamped App Feed';
     } else if (latestPost.slug === 'transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025') {
-      bannerImage = '/lovable-uploads/3b0272d6-6cae-4b9a-a303-5fdf970d17e7.png';
+      bannerImage = '/media/3b0272d6-6cae-4b9a-a303-5fdf970d17e7.png';
       bannerImageAlt = 'DHBScan Metrics';
     } else if (latestPost.slug === 'dhb-tradable-on-coinbase-soon') {
-      bannerImage = '/lovable-uploads/c238e114-80c3-42ac-9e7a-d4617111466c.png';
+      bannerImage = '/media/c238e114-80c3-42ac-9e7a-d4617111466c.png';
       bannerImageAlt = 'Coinbase logo on mobile device with trading charts in background';
     }
   }
@@ -113,7 +113,7 @@ const DocsHome = () => {
     description: t('home.featureCommunityDesc'),
   }];
   return <>
-      <SEO title="DeHub Documentation - Build on the Decentralized Future" description="Everything you need to use, integrate, build, and scale with DeHub platform. From quick start guides to advanced configurations for decentralized applications." image="/lovable-uploads/7668607f-3b0b-4512-ab17-e7ba5fce395f.png" url="/docs" type="website" tags={['DeHub', 'documentation', 'blockchain', 'decentralized', 'DHB token', 'developer tools']} />
+      <SEO title="DeHub Documentation - Build on the Decentralized Future" description="Everything you need to use, integrate, build, and scale with DeHub platform. From quick start guides to advanced configurations for decentralized applications." image="/media/7668607f-3b0b-4512-ab17-e7ba5fce395f.png" url="/docs" type="website" tags={['DeHub', 'documentation', 'blockchain', 'decentralized', 'DHB token', 'developer tools']} />
       <div className="space-y-12">
         {/* Hero Section */}
         <div className="text-center space-y-6">

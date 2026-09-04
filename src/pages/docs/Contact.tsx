@@ -8,7 +8,7 @@ const Contact = () => {
 
   const contactOptions = [
     { title: t('contact.telegram'), description: t('contact.telegramDesc'), link: 'https://t.me/dehub_dhb', icon: Send, color: 'from-sky-blue to-middle-blue' },
-    { title: t('contact.discord'), description: t('contact.discordDesc'), link: 'https://discord.gg/dehub', iconImage: '/lovable-uploads/71547e53-6be8-428a-b088-3c07a9c9a1ff.png', color: 'from-middle-blue to-royal-blue' },
+    { title: t('contact.discord'), description: t('contact.discordDesc'), link: 'https://discord.gg/dehub', iconImage: '/media/71547e53-6be8-428a-b088-3c07a9c9a1ff.png', color: 'from-middle-blue to-royal-blue' },
     { title: t('contact.directMessage'), description: t('contact.directMessageDesc'), link: 'https://dehub.io/d', icon: MessageCircle, color: 'from-royal-blue to-sky-blue' },
   ];
 

@@ -551,7 +551,7 @@ Sales did not reach the required minimum.
 
 That threshold existed for a reason: below it, the raffle cannot fairly be drawn, because the prize is worth more than the pot and completing the draw would mean funding it from somewhere other than the entries. Setting a minimum and honouring it is the difference between a raffle and a promise.
 
-![DeHub card reading "refunded in full" — the $1m house raffle missed its published minimum](/lovable-uploads/inbody-raffle-minimum.jpg)
+![DeHub card reading "refunded in full" — the $1m house raffle missed its published minimum](/media/inbody-raffle-minimum.jpg)
 
 ### What we did about it
 
@@ -609,7 +609,7 @@ Being accurate about this matters: our registration was legitimate and remained 
 
 We stopped rather than pushing. Land, in a jurisdiction where the regulator has stated a position, is not a place to find out how much interpretation you can get away with.
 
-![DeHub card reading "ask the regulator" — registration is not the same as permission](/lovable-uploads/inbody-palawan.jpg)
+![DeHub card reading "ask the regulator" — registration is not the same as permission](/media/inbody-palawan.jpg)
 
 ### What it cost, and what we kept
 
@@ -770,7 +770,7 @@ That meant a new contract and [migrating more than 25,000 holders](/guides/movin
 
 It also meant deciding what the new contract should be, and we [went to plain standard ERC-20 tokenomics](/guides/stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022) with nothing clever in the transfer path at all. No tax triggers. No conditional logic between a holder and their own tokens.
 
-![DeHub card reading "no admin key" — an immutable contract cannot be patched after it fails](/lovable-uploads/inbody-contract-freeze.jpg)
+![DeHub card reading "no admin key" — an immutable contract cannot be patched after it fails](/media/inbody-contract-freeze.jpg)
 
 ### What we actually learned
 
@@ -816,7 +816,7 @@ The fix required them to act — to move to a new contract — at the exact mome
 
 **One route, stated plainly.** During a token incident, every additional path is an opportunity for someone to be phished. We kept it to a single documented process and repeated it rather than diversifying it.
 
-![DeHub card reading "25,000 decisions" — every holder had to act during the v2 migration](/lovable-uploads/inbody-migration-25k.jpg)
+![DeHub card reading "25,000 decisions" — every holder had to act during the v2 migration](/media/inbody-migration-25k.jpg)
 
 ### The scam problem
 
@@ -876,7 +876,7 @@ Genuine things, and we should not pretend otherwise:
 - **Passive operational funding.** Replaced by explicit treasury management, which is more visible and harder to obscure. That fed directly into the [DEX policy](/guides/open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023) and [transparency reports](/guides/full-disclosure-dehubs-comprehensive-transparency-reports---a-dehub-milestone-from-q4-2023) published that year.
 - **A holding incentive.** Replaced by utility — staking, airdrops, and access — which is slower to build and does not evaporate when volume does.
 
-![DeHub card reading "nothing in the path" — v2 moved to plain standard ERC-20 tokenomics](/lovable-uploads/inbody-plain-erc20.jpg)
+![DeHub card reading "nothing in the path" — v2 moved to plain standard ERC-20 tokenomics](/media/inbody-plain-erc20.jpg)
 
 ### What we gained
 

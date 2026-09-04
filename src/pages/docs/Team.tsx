@@ -22,7 +22,7 @@ export default function Team() {
     experience: [t('team.malExp1'), t('team.malExp2'), t('team.malExp3'), t('team.malExp4')],
     socials: [{ platform: 'LinkedIn', url: 'https://uk.linkedin.com/in/malik-jan-turkistani-842b4b195' }, { platform: 'X', url: 'https://x.com/maldoteth' }],
     initials: 'MJ',
-    photo: '/lovable-uploads/361bb373-38ee-4888-a4b1-ab8239941261.png'
+    photo: '/media/361bb373-38ee-4888-a4b1-ab8239941261.png'
   }, {
     name: t('team.mikeName'),
     role: t('team.mikeRole'),
@@ -30,7 +30,7 @@ export default function Team() {
     experience: [t('team.mikeExp1'), t('team.mikeExp2'), t('team.mikeExp3'), t('team.mikeExp4')],
     socials: [{ platform: 'TikTok', url: 'https://www.tiktok.com/@mikehalesmma?lang=en' }, { platform: 'X', url: 'https://x.com/Mikehalesmma' }, { platform: 'Instagram', url: 'https://www.instagram.com/mikehalesmma' }],
     initials: 'MH',
-    photo: '/lovable-uploads/4cc7ad51-0d4d-49fd-9307-b932b6dc7246.png'
+    photo: '/media/4cc7ad51-0d4d-49fd-9307-b932b6dc7246.png'
   }, {
     name: t('team.indiName'),
     role: t('team.indiRole'),
@@ -38,7 +38,7 @@ export default function Team() {
     experience: [t('team.indiExp1'), t('team.indiExp2'), t('team.indiExp3')],
     socials: [{ platform: 'Instagram', url: 'https://www.instagram.com/indijayofficial/?hl=es' }, { platform: 'X', url: 'https://x.com/indijaycammish' }, { platform: 'TikTok', url: 'https://www.tiktok.com/@indijaycammish' }],
     initials: 'IC',
-    photo: '/lovable-uploads/e06bb6aa-5093-4691-98a1-7bf09b02a71d.png'
+    photo: '/media/e06bb6aa-5093-4691-98a1-7bf09b02a71d.png'
   }, {
     name: t('team.baileyName'),
     role: t('team.baileyRole'),
@@ -46,7 +46,7 @@ export default function Team() {
     experience: [t('team.baileyExp1'), t('team.baileyExp2'), t('team.baileyExp3')],
     socials: [],
     initials: 'BY',
-    photo: '/lovable-uploads/980e65e0-cae8-4ed4-86da-c11e3d42fa69.png'
+    photo: '/media/980e65e0-cae8-4ed4-86da-c11e3d42fa69.png'
   }];
 
   return (

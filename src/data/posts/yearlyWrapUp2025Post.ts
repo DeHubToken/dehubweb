@@ -64,7 +64,7 @@ The rest of the year focuses on expansion: consistent new features, publicity st
 
 2026 is the year DeHub goes from building to expanding, with real utility, massive reach, and unstoppable momentum. Thank you to the community for the continued support. We're just getting started, so stay tuned, stay engaged, and let's make this year legendary.
   `,
-  bannerImage: '/lovable-uploads/yearly-wrap-up-2025-banner.png',
+  bannerImage: '/media/yearly-wrap-up-2025-banner.png',
   bannerImageAlt: 'DeHub 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration',
   author: {
     name: 'DeHub Team',

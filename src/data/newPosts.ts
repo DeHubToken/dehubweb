@@ -37,7 +37,7 @@ const countdownBeginsPost: BlogPostType = {
 
     The wait is almost over. Visit dehub.io to see the countdown and be part of this historic moment. The future starts now!
   `,
-  bannerImage: '/lovable-uploads/countdown-clock-banner.png',
+  bannerImage: '/media/countdown-clock-banner.png',
   bannerImageAlt: 'Countdown clock for DeHub app store launch',
   author: {
     name: 'DeHub Team',
@@ -127,7 +127,7 @@ const massiveWeekPost: BlogPostType = {
 
     We had no questions submitted, and nobody has raised their hand to speak for the open mic, so we'll wrap it up there everyone. **Have an amazing night, DeHub family. The best is yet to come.**
   `,
-  bannerImage: '/lovable-uploads/town-hall-ama-banner-new.png',
+  bannerImage: '/media/town-hall-ama-banner-new.png',
   bannerImageAlt: 'DeHub Town Hall and AMA Highlights showcasing major announcements',
   author: {
     name: 'DeHub Team',
@@ -244,7 +244,7 @@ const teamFirstClassAgencyPost: BlogPostType = {
 
     The journey from startup to market leader is never easy, but Team First Class Agency has proven that with the right vision, dedication, and creator-first approach, anything is possible. Here's to the next 1,000 streamers and beyond!
   `,
-  bannerImage: '/lovable-uploads/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png',
+  bannerImage: '/media/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png',
   bannerImageAlt: 'Mike Hales at TikTok Live Fest event, representing Team First Class Agency\'s official partnership with TikTok',
   author: {
     name: 'DeHub Team',
@@ -355,7 +355,7 @@ const interactiveStreamingPost: BlogPostType = {
 
     **The future of live streaming is decentralized, interactive, and built on principles of fairness and transparency. Join us as we reshape the digital content landscape, one stream at a time.**
   `,
-  bannerImage: '/lovable-uploads/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png',
+  bannerImage: '/media/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png',
   bannerImageAlt: 'Interactive live streaming with animated tips - DeHub\'s revolutionary approach to on-chain content creation',
   author: {
     name: 'DeHub Team',
@@ -428,7 +428,7 @@ const wrapUp2022Post: BlogPostType = {
       <p><strong>March 1:</strong> Official release of first original production trailer for Way of The Warrior series and featured in BigFish Boxing.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/8faad241-a6fa-4977-88ff-e598de72c045.png" alt="Way of the Warrior - DeHub Originals series" class="w-full h-auto" />
+        <img src="/media/8faad241-a6fa-4977-88ff-e598de72c045.png" alt="Way of the Warrior - DeHub Originals series" class="w-full h-auto" />
       </div>
       
       <p><strong>March 14:</strong> Way of the Warrior pilot released onto our own custom streaming d'app for stakers.</p>
@@ -438,7 +438,7 @@ const wrapUp2022Post: BlogPostType = {
       <p><strong>March 26:</strong> Puso Group, the company part owned by Malik and overseeing initial development of the d'app officially receives SEC licenses & registration in the Philippines.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/715fd439-ee9d-4308-bf2a-d706da2ce3be.png" alt="Puso Group International Corporation Certificate of Registration" class="w-full h-auto" />
+        <img src="/media/715fd439-ee9d-4308-bf2a-d706da2ce3be.png" alt="Puso Group International Corporation Certificate of Registration" class="w-full h-auto" />
       </div>
       
       <p><strong>April 1:</strong> Genesis rewards unlocked from V1 staking with over 50,000,000 in DeHub tokens distributed to all stakers.</p>
@@ -454,7 +454,7 @@ const wrapUp2022Post: BlogPostType = {
       <p><strong>May 27:</strong> Partnership secured with Raceline bringing Lamborghinis and a host of other super cars onto our marketplace while offering their customers a chance to claim a free dehub.net minted NFT with every purchase.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/68257c55-c4a8-4aef-9df6-e6cb7c25b28e.png" alt="The future is phygital - DeHub marketplace with Lamborghini" class="w-full h-auto" />
+        <img src="/media/68257c55-c4a8-4aef-9df6-e6cb7c25b28e.png" alt="The future is phygital - DeHub marketplace with Lamborghini" class="w-full h-auto" />
       </div>
       
       <p><strong>June 6:</strong> Marketplace goes live on mainnet, and with it DeHub officially becomes the world's first dedicated phygital NFT marketplace with a transaction on chain. Our marketplace is custom built to host our own product lines but also opening up to public use in later stages.</p>
@@ -462,7 +462,7 @@ const wrapUp2022Post: BlogPostType = {
       <p><strong>June 15:</strong> Released "Whack A Schiff" onto our arcade, a play and win to earn game where users fight for high scores for whacking the mole version of Peter Schiff on the head while avoiding the bombs!</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/55751848-fa12-432a-a72e-a17ca857c52b.png" alt="Whack A Schiff - DeHub Arcade game" class="w-full h-auto" />
+        <img src="/media/55751848-fa12-432a-a72e-a17ca857c52b.png" alt="Whack A Schiff - DeHub Arcade game" class="w-full h-auto" />
       </div>
       
       <p><strong>July 14:</strong> Way of the Warrior Episode 2 featuring Jorge Masvidal and Brad Pickett released to rave reviews and expecting retweets from the legend Gamebred himself prior to facing technical difficulties with our stake to access d'app. This also played a role in DeHub's transformation to a free public streaming app where anyone can view content. We are working closely with all past partners to bring this to life.</p>
@@ -498,13 +498,13 @@ const wrapUp2022Post: BlogPostType = {
       <p><strong>November 11:</strong> Official release of Gas Guzzler, a play and win to earn game where users collect DeHub coins while avoiding other moonboys around a track in their Lambos making sure to keep the Ethereum Gas topped up and hitting the NOS for a boost!</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/c67683cf-6df1-4c93-83d4-1e0461855fc4.png" alt="Gas Guzzler - DeHub Arcade game" class="w-full h-auto" />
+        <img src="/media/c67683cf-6df1-4c93-83d4-1e0461855fc4.png" alt="Gas Guzzler - DeHub Arcade game" class="w-full h-auto" />
       </div>
       
       <p><strong>Nov 18:</strong> Banking on Zero (BOZ) trailer goes live and promises to be the most uncensored deep dive into the FTX saga and all of the victims that fell along with it.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/ba73d1dd-db12-4a09-8503-225f95ae7505.png" alt="Banking on Zero - DeHub Originals documentary" class="w-full h-auto" />
+        <img src="/media/ba73d1dd-db12-4a09-8503-225f95ae7505.png" alt="Banking on Zero - DeHub Originals documentary" class="w-full h-auto" />
       </div>
       
       <p><strong>November 23:</strong> Malik's younger brother and team member in our gaming division secures dream job at Binance working as an investment advisor for institutional clients.</p>
@@ -512,13 +512,13 @@ const wrapUp2022Post: BlogPostType = {
       <p><strong>November 25:</strong> Released first gameplay teasers for LCFC's genesis 2D game "Street Slayer" including officially licensed UFC stars and more set for launch on IOS and Android stores as well as DeHub's arcade.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/a4ae39d5-b2b6-4d79-a4d0-70101370ac82.png" alt="Street Slayer - LCFC game coming soon" class="w-full h-auto" />
+        <img src="/media/a4ae39d5-b2b6-4d79-a4d0-70101370ac82.png" alt="Street Slayer - LCFC game coming soon" class="w-full h-auto" />
       </div>
       
       <p><strong>December 2:</strong> Streaming d'app upgrade whitepaper release and technical reveal.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/1adc74f0-a3ee-416c-b1f3-3f692e4796d4.png" alt="DeDocs - DeHub documentation" class="w-full h-auto" />
+        <img src="/media/1adc74f0-a3ee-416c-b1f3-3f692e4796d4.png" alt="DeDocs - DeHub documentation" class="w-full h-auto" />
       </div>
       
       <p><strong>December 12:</strong> Sheriff finally secures 1 token from Malik on his Birthday.</p>
@@ -526,7 +526,7 @@ const wrapUp2022Post: BlogPostType = {
       <p><strong>December 16:</strong> Private beta goes live on testnet to outstanding reviews and feedback all contributing to further development prior to public launch.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/7d1af569-0064-46dd-b326-f8eabeb4a252.png" alt="DeHub V1, V2, V3 evolution" class="w-full h-auto" />
+        <img src="/media/7d1af569-0064-46dd-b326-f8eabeb4a252.png" alt="DeHub V1, V2, V3 evolution" class="w-full h-auto" />
       </div>
       
       <p><strong>December 27:</strong> We closed the year with key updates on our latest test d'app, new token listing and marketing partner update where you will see me and the team regularly on Crypto Jamie's channel, currently ranked number 3 on Binance Live.</p>
@@ -534,7 +534,7 @@ const wrapUp2022Post: BlogPostType = {
     
     <p class="mt-8 font-bold text-royal-blue text-xl">Bring on 2023.</p>
   `,
-  bannerImage: '/lovable-uploads/4476fbc3-58ec-467b-8c1b-30570349940c.png',
+  bannerImage: '/media/4476fbc3-58ec-467b-8c1b-30570349940c.png',
   bannerImageAlt: '2022 Wrap Up - DeHub year in review with fireworks celebration',
   author: {
     name: 'DeHub Team',
@@ -573,7 +573,7 @@ const tokenisedUploadsPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">We believe Tokenised Uploads are the future of the creator economy. It's a system built on transparency, ownership, and shared success. Start exploring this new feature today and be a part of the revolution!</p>
   `,
-  bannerImage: '/lovable-uploads/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png',
+  bannerImage: '/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png',
   bannerImageAlt: 'A glowing DeHub token representing tokenized uploads.',
   author: {
     name: 'DeHub Team',
@@ -605,7 +605,7 @@ const awardWinningInnovationPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">The London awards ceremony is on the 27th of August, and we'd like to extend an invitation to whoever nominated us for this amazing prize. Please reach out to us via any social media, community group, or by direct email to <a href="mailto:marketing@dehub.net" class="text-middle-blue hover:underline">marketing@dehub.net</a>. A special thanks to you for making this journey more fruitful every day.</p>
   `,
-  bannerImage: '/lovable-uploads/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png',
+  bannerImage: '/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png',
   bannerImageAlt: 'Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.',
   author: {
     name: 'DeHub Team',
@@ -653,7 +653,7 @@ const dubaiEventPost: BlogPostType = {
 
     <p class="mt-8 font-semibold text-royal-blue">This was more than just a trip; it was a statement. DeHub is a global project, and our presence in Dubai has solidified our position in one of the world's most dynamic tech hubs. Thank you to everyone who connected with us. The future is bright, and we're just getting started!</p>
   `,
-  bannerImage: '/lovable-uploads/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
+  bannerImage: '/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
   bannerImageAlt: 'DeHub DeTour Dubai event banner',
   author: {
     name: 'DeHub Team',
@@ -705,7 +705,7 @@ const basePoolPost: BlogPostType = {
 
     <p class="mt-8 font-semibold text-royal-blue">This is just the beginning. Stay tuned for the official announcement when the Uniswap pool goes live. We're incredibly excited for this next chapter and couldn't have done it without our amazing community!</p>
   `,
-  bannerImage: '/lovable-uploads/068250b6-b4b6-42fc-8633-f686a94990c7.png',
+  bannerImage: '/media/068250b6-b4b6-42fc-8633-f686a94990c7.png',
   bannerImageAlt: 'DeHub launching on Base network announcement banner',
   author: {
     name: 'DeHub Team',
@@ -743,7 +743,7 @@ const dehubTakeoverPost: BlogPostType = {
     
     <p class="mt-8 font-semibold text-royal-blue">Furthermore, we will be kick-starting these campaigns with the private token gated groups launching this weekend, in preparation for the app upgrade. So stay tuned for more information and reach out to any of the team or hr@dehub.net for hiring opportunities as it's all kicking off soon here.</p>
   `,
-  bannerImage: '/lovable-uploads/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png',
+  bannerImage: '/media/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png',
   bannerImageAlt: 'DeHub Takeover announcement banner',
   author: {
     name: 'DeHub Team',
@@ -789,7 +789,7 @@ const crusadersSponsorshipPost: BlogPostType = {
 
     <p class="mt-8 font-semibold text-royal-blue">Stay tuned for more details on how we're reaching their 15,000 capacity stadium full of fans on a weekly basis!</p>
   `,
-  bannerImage: '/lovable-uploads/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png',
+  bannerImage: '/media/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png',
   bannerImageAlt: 'DeHub announces new multi-year sponsorship with North Wales Crusaders rugby team',
   author: {
     name: 'DeHub Team',
@@ -864,7 +864,7 @@ const publicBetaDappReportPost: BlogPostType = {
     <p class="mb-4 text-lg text-royal-blue/80">Now, how many of you would buy a token or use an app because your favourite influencer was now making content on that platform? Drastically more.</p>
     <p class="mb-4 text-lg text-royal-blue/80">Once this flywheel spins, it won't stop, and we're more confident than ever now we've seen our final core d'app working fully out in the wild.</p>
   `,
-  bannerImage: '/lovable-uploads/c799219d-e9da-43e4-938f-54cfbc3a242f.png',
+  bannerImage: '/media/c799219d-e9da-43e4-938f-54cfbc3a242f.png',
   bannerImageAlt: 'DeHub Beta Overview banner',
   author: {
     name: 'DeHub Team',
@@ -940,12 +940,12 @@ This is just the beginning. We're planning updates to include:
 Your feedback drives this platform — so let us know what you love (or want improved) and help us shape the next generation of decentralized content discovery.`,
   author: {
     name: 'DeHub Team',
-    avatar: '/lovable-uploads/6ad34788-b3fe-4094-bf1b-e930af8eaf62.png'
+    avatar: '/media/6ad34788-b3fe-4094-bf1b-e930af8eaf62.png'
   },
   publishedAt: '2025-05-03T00:00:00Z',
   readingTime: 6,
   tags: ['UI/UX', 'Product Update', 'Features', 'Interface', 'User Experience'],
-  bannerImage: '/lovable-uploads/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png',
+  bannerImage: '/media/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png',
   bannerImageAlt: 'DeHub\'s new revamped app interface showing dark theme, navigation sidebar, content feed, and trending sections',
   featured: false,
   seoTitle: 'Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces - DeHub',
@@ -1056,7 +1056,7 @@ const offRampServicePost: BlogPostType = {
 
     **Ready to skip the banks and spend crypto directly? The DeHub Card is coming soon. Stay tuned for more details and be among the first to experience the future of crypto spending.**
   `,
-  bannerImage: '/lovable-uploads/bde80bf2-8f1d-4c14-9938-1a3080777203.png',
+  bannerImage: '/media/bde80bf2-8f1d-4c14-9938-1a3080777203.png',
   bannerImageAlt: 'DeHub Cards in premium gold finish showcasing modern crypto payment solution',
   author: {
     name: 'DeHub Team',
@@ -1133,7 +1133,7 @@ const flagshipGameLaunchPost: BlogPostType = {
 
     Check your allocations here: https://lastchadstanding.com/docs#airdrop-calculator
   `,
-  bannerImage: '/lovable-uploads/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png',
+  bannerImage: '/media/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png',
   bannerImageAlt: 'Military helicopter in flight representing the flagship game launch and strategic partnerships',
   author: {
     name: 'DeHub Team',
@@ -1257,7 +1257,7 @@ const coinbaseDHBPost: BlogPostType = {
 
     **The revolution is here. The future is decentralized. And $DHB is leading the way.**
   `,
-  bannerImage: '/lovable-uploads/coinbase-dhb-banner.png',
+  bannerImage: '/media/coinbase-dhb-banner.png',
   bannerImageAlt: '$DHB now trading on Coinbase - DeHub leads the decentralized trading revolution',
   author: {
     name: 'DeHub Team',
@@ -1401,7 +1401,7 @@ const bnbPoolUpdatePost: BlogPostType = {
 
     The road to recovery may be complex, but our destination remains clear: building the best possible ecosystem for our community while contributing meaningfully to the broader landscape on BNB Chain.
   `,
-  bannerImage: '/lovable-uploads/bnb-pool-update-banner-new.png',
+  bannerImage: '/media/bnb-pool-update-banner-new.png',
   bannerImageAlt: 'BNB Pool Update - DeHub\'s journey to recover 876 BNB stuck from 2022 contract issue',
   author: {
     name: 'DeHub Team',

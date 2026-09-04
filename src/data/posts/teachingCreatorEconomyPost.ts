@@ -25,7 +25,7 @@ Consider what a student who graduated into the 2017–2019 "Adpocalypse" actuall
 
 That is a curriculum question, and it is almost never on the syllabus, because it is not a *tactic*. It is a structural property of how the creator set themselves up years earlier.
 
-![The hidden curriculum — platform tactics expire fast, the underlying structure does not](/lovable-uploads/fig-teaching-hidden-curriculum.jpg)
+![The hidden curriculum — platform tactics expire fast, the underlying structure does not](/media/fig-teaching-hidden-curriculum.jpg)
 
 ## Three questions that generalise
 
@@ -49,7 +49,7 @@ We are not suggesting a course should teach DeHub. We are suggesting that a cour
 
 A useful classroom exercise, and one that does not require endorsing anything: take one creator business and model it twice. Once under a conventional platform's terms — undisclosed rate, revocable access, no portability. Once under terms where ownership is recorded, the share is fixed and published, and the audience relationship can move. Ask what changes about valuation, risk, negotiating leverage and exit. Students find the results genuinely surprising, largely because the second model has a terminal value and the first mostly does not.
 
-![Teach the structure, not this year’s algorithm — three questions that generalise](/lovable-uploads/fig-teaching-structure.jpg)
+![Teach the structure, not this year’s algorithm — three questions that generalise](/media/fig-teaching-structure.jpg)
 
 ## The objection worth taking seriously
 
@@ -82,7 +82,7 @@ Two sessions. One mapping asset ownership and operational control for a real cre
 ### Does DeHub work with universities?
 
 Yes — the platform is open source, and we are glad to support course material, guest sessions or student projects, including ones that argue against us. If you are building a creator economy programme and want a structural alternative to examine, get in touch.`,
-  bannerImage: '/lovable-uploads/teaching-the-creator-economy-banner.png',
+  bannerImage: '/media/teaching-the-creator-economy-banner.png',
   bannerImageAlt: 'A creator economy syllabus examined for what survives a platform change',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-08-28T11:00:00.000Z',

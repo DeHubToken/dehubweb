@@ -19,7 +19,7 @@ export const PostSpecificContent: React.FC = () => {
 
             <div className="mt-8 mb-8">
               <img 
-                src="/lovable-uploads/0b942277-3ce4-450a-95cc-116ccdb1aa7b.png" 
+                src="/media/0b942277-3ce4-450a-95cc-116ccdb1aa7b.png" 
                 alt="DeHub advanced messaging interface showing user conversations and paid content sharing" 
                 className="w-full rounded-lg shadow-lg border border-sky-blue/20"
               />

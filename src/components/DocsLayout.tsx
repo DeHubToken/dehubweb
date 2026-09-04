@@ -209,37 +209,37 @@ const getMenuItems = (t: (key: string) => string) => [{
     {
       title: 'App',
       path: 'https://dehub.io',
-      icon: '/lovable-uploads/dhb-icon-white-logo-2.png',
+      icon: '/media/dhb-icon-white-logo-2.png',
       external: true,
       isImage: true
     }, {
       title: 'Twitter',
       path: 'https://x.com/dehub_official',
-      icon: '/lovable-uploads/4c5f32a0-dc0b-4846-a78d-cd3381206fa9.png',
+      icon: '/media/4c5f32a0-dc0b-4846-a78d-cd3381206fa9.png',
       external: true,
       isImage: true
     }, {
       title: 'Instagram',
       path: 'https://www.instagram.com/dehub_official/',
-      icon: '/lovable-uploads/3fb7f494-e111-4949-b66d-9269f163c74e.png',
+      icon: '/media/3fb7f494-e111-4949-b66d-9269f163c74e.png',
       external: true,
       isImage: true
     }, {
       title: 'GitHub',
       path: 'https://github.com/dehubtoken',
-      icon: '/lovable-uploads/b39e5777-ed91-489c-a58a-3639ea5bf3bc.png',
+      icon: '/media/b39e5777-ed91-489c-a58a-3639ea5bf3bc.png',
       external: true,
       isImage: true
     }, {
       title: 'CoinMarketCap',
       path: 'https://coinmarketcap.com/currencies/dehub/',
-      icon: '/lovable-uploads/df505550-7e48-4148-acbb-1617520a6abc.png',
+      icon: '/media/df505550-7e48-4148-acbb-1617520a6abc.png',
       external: true,
       isImage: true
     }, {
       title: 'CoinGecko',
       path: 'https://www.coingecko.com/en/coins/dehub',
-      icon: '/lovable-uploads/coingecko-logo.png',
+      icon: '/media/coingecko-logo.png',
       external: true,
       isImage: true
     }
@@ -359,7 +359,7 @@ const DocsLayoutContent = () => {
             {/* Center: Logo */}
             <div className="flex-1 flex justify-center">
               <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
-                <img src="/lovable-uploads/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
+                <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
               </Link>
             </div>
             
@@ -377,7 +377,7 @@ const DocsLayoutContent = () => {
           {/* Desktop Layout */}
           <div className="hidden lg:flex items-center space-x-3">
             <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
-              <img src="/lovable-uploads/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
+              <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
             </Link>
           </div>
 

@@ -37,7 +37,7 @@ interface StageChatData {
 
 /**
  * PostgREST's answer when the table is not there. The migration for this
- * feature has to be run by hand in the Lovable SQL editor, and the last time a
+ * feature has to be run by hand in the hosted SQL editor, and the last time a
  * stage feature shipped ahead of its DDL it presented as two unrelated UI bugs
  * that cost half a day — so this one says so instead of rendering an eternally
  * empty room.

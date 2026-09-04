@@ -74,7 +74,7 @@ const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/function
 // `summary_large_image` cards rendered it as a thumbnail rather than a banner;
 // this is the 1200x630 the format actually wants. Served from public/ (and so
 // from the ASSETS binding) on purpose — the previous per-route cards pointed at
-// Lovable CDN paths (`/__l5e/assets-v1/...`) that nothing serves since the
+// Legacy CDN paths (`/__l5e/assets-v1/...`) that nothing serves since the
 // Cloudflare migration, and the SPA catch-all answered them 200 text/html, so
 // crawlers downloaded the React shell where a PNG should be and drew no image.
 const SHARE_IMAGE = `${APP_URL}/og/dehub-social-share.png`;
@@ -3332,6 +3332,22 @@ async function handleRequest(request, env) {
     return resp;
   }
 
+  // Legacy upload prefix. Those files now live under /media/, but the old URLs
+  // are baked into shared links, OG cards Google and the social crawlers have
+  // already cached, and every post body written before the move. Served as a
+  // rewrite rather than a 301 so a cached card keeps resolving to a 200 image.
+  if (pathname.startsWith('/lovable-uploads/')) {
+    const aliased = new URL(request.url);
+    aliased.pathname = pathname.replace('/lovable-uploads/', '/media/');
+    const resp = await env.ASSETS.fetch(new Request(aliased, request));
+    if (!isCanonicalHost) {
+      const r = new Response(resp.body, resp);
+      r.headers.set('X-Robots-Tag', 'noindex');
+      return r;
+    }
+    return resp;
+  }
+
   // Skip static assets immediately.
   //
   // This is the gate that actually decided `dehub.io/mal.eth` was a file: it
@@ -3962,7 +3978,7 @@ async function handleRequest(request, env) {
 
 
     // The deployed fn points og:image at the 200-square logo, and for its own
-    // static routes at Lovable CDN paths (`/__l5e/assets-v1/...`) that nothing
+    // static routes at Legacy CDN paths (`/__l5e/assets-v1/...`) that nothing
     // has served since the Cloudflare migration — the SPA catch-all answers
     // those 200 text/html, so crawlers download the React shell where a PNG
     // should be. Swap in the route's card. Entity routes are left alone: a post

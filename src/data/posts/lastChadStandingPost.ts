@@ -85,7 +85,7 @@ The DeHub ecosystem token, **$DHB**, runs primarily on **Base**, an Ethereum Lay
 
 You earn by competing and performing well, outlasting the field in the battle royale converts into **$DHB** rewards that settle to your wallet on-chain. Because the token is a real, tradable asset rather than internal points, what you earn can be traded or spent across the DeHub platform. If you are earning in the UK, read our [play-to-earn and HMRC tax guide](/guides/play-to-earn-uk-2026-earnings-hmrc-tax) first.
 `,
-  bannerImage: '/lovable-uploads/last-chad-standing-mma-battle-royale-play-to-earn-banner.png',
+  bannerImage: '/media/last-chad-standing-mma-battle-royale-play-to-earn-banner.png',
   bannerImageAlt: 'Last Chad Standing, the DeHub MMA battle-royale play-to-earn game with licensed fighters',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-04-03T10:15:00.000Z',
