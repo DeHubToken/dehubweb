@@ -1090,6 +1090,11 @@
     "failedSubmit": "Avalduse esitamine ebaõnnestus. Palun proovi uuesti."
   },
   "loginModal": {
+    "migrateNothingToRecover": "Sellel sisselogimisel pole varasemat DeHubi kontot, seega pole midagi kaasa võtta. Selle konto seadistamise lõpetamiseks mine tagasi jaotisse Uus konto.",
+    "migrateUnmatchedWarning": "Sellel sisselogimisel pole registreeritud DeHubi kontot. Jätkamine ei taasta midagi — see loob uue kasutajanimega teise konto ja jätab maha selle, mis sul juba olemas on.",
+    "migrateUnmatchedDetail": "Sellel rahakoti aadressil pole profiili. Kui logisid uuesti sisse, mine tagasi ja kasuta selle asemel sisselogimisnime, millega registreerusid.",
+    "migrateGoBack": "Mine tagasi",
+    "migrateContinueAnyway": "Loo siiski uus konto",
     "title": "Logi sisse",
     "addProfileTitle": "Lisa profiil",
     "continueEmail": "Jätka e-postiga",
@@ -1424,13 +1429,13 @@
     "only_have_dhb_staked": "Sul on sisse makstud vaid {{amount}}.",
     "unstake_request_submitted": "Väljamaksetaotlus esitatud! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} lisatud väljamaksejärjekorda.",
+    "not_enough_gas_token": "Võrgutasu maksmiseks on selles rahakotis vaja {{token}}.",
+    "unstake_failed": "Panuse eemaldamine ebaõnnestus",
     "only_have_dhb_withdrawable": "Praegu saab välja võtta ainult {{amount}} DHB.",
     "early_withdrawal_fee": "Ennetähtaegse väljavõtmise tasu",
     "early_withdrawal_fee_detail": "Lukus kuni {{date}}. Praegu väljavõtmine maksab {{percent}} % — umbes {{amount}} DHB. Kinnitamiseks vajuta uuesti Võta välja.",
     "unstaked_successfully": "Väljavõtmine õnnestus! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB võeti välja võrgus {{chain}}.",
-    "not_enough_gas_token": "Võrgutasu maksmiseks on selles rahakotis vaja {{token}}.",
-    "unstake_failed": "Panuse eemaldamine ebaõnnestus",
     "unstake_cancelled": "Panuse eemaldamine tühistatud",
     "unstake_request_removed": "Sinu panuse eemaldamise taotlus on eemaldatud.",
     "failed_to_cancel": "Tühistamine ebaõnnestus",
@@ -1506,9 +1511,9 @@
     "minutesAgo": "{{count}} min tagasi",
     "hoursAgo": "{{count}} t tagasi",
     "daysAgo": "{{count}} p tagasi",
+    "cancelUnstake": "Tühista väljamakse",
     "withdrawableNow": "Praegu väljavõetav",
-    "poolNotWithdrawable": "{{amount}} DHB on hoiusefondi rahakotis, millel pole veel väljavõtmislepingut — nende liigutamiseks võta ühendust toega.",
-    "cancelUnstake": "Tühista väljamakse"
+    "poolNotWithdrawable": "{{amount}} DHB on hoiusefondi rahakotis, millel pole veel väljavõtmislepingut — nende liigutamiseks võta ühendust toega."
   },
   "communities": {
     "title": "Kogukonnad",
@@ -2800,8 +2805,6 @@
     "sellYourFractions": "Müüge oma fraktsioonid ({{held}} hoitud)"
   },
   "creator": {
-    "toolFlow": "Looja voog",
-    "toolFlowDesc": "Keti tekst, viited, pildi- ja videomudelid lõuendil, käivitage see ühe maksega, jagage seda lingiga.",
     "whatToCreate": "Mida luua",
     "startCreatingWith": "Alusta loomisega {{model}}",
     "studioSubtitle": "Kirjelda stseeni, tegelast, meeleolu või stiili. Tulemused ilmuvad allpool ja jätkavad otse redaktorisse.",
@@ -3196,7 +3199,9 @@
     "noCreationsYet": "Pole veel AI-loominguid. Ole esimene, kes loob ühe.",
     "aiGenerationAlt": "AI-loomine",
     "aiGenerationCommunityAlt": "AI-loomine DeHub kogukonnast",
-    "close": "Sulge"
+    "close": "Sulge",
+    "toolFlow": "Looja voog",
+    "toolFlowDesc": "Keti tekst, viited, pildi- ja videomudelid lõuendil, käivitage see ühe maksega, jagage seda lingiga."
   },
   "pricing": {
     "plansForEveryWorkflow": "Plaanid igale töövoogule",

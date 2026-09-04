@@ -896,6 +896,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (await completeLoginWithoutUnlock(userId, '')) {
           return;
         }
+        // …and "no wallet row" is not even reliably an answer. user_wallets is
+        // RLS-scoped, so a read made without a live Supabase session for THIS
+        // uid comes back as zero rows and no error — indistinguishable from a
+        // genuinely empty account. Sending that case to 'create' mints a second
+        // wallet for someone who already has one: the address the backend knows
+        // is left behind, the signature login registers a SIGNUP, and the user
+        // lands on a brand-new account with a generated username. Prove the
+        // read was authenticated before believing it, and trust this device's
+        // ciphertext cache over an unproven empty answer.
+        const { data: sessionData } = await supabase.auth.getSession();
+        const readWasAuthed = sessionData?.session?.user?.id === userId;
+        if (!readWasAuthed) {
+          const cached = getCachedWallet();
+          authLogger.warn(
+            'Wallet lookup ran without a session for this identity — not treating it as a new account',
+            { hasCachedWallet: !!cached },
+          );
+          if (cached?.ethAddress && await finishLoginWithLiveUnlock(userId, cached.ethAddress)) {
+            return;
+          }
+          setWalletPhase('unlock');
+          openLoginModal();
+          return;
+        }
         setWalletPhase('create');
       }
     } catch (e) {

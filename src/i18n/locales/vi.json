@@ -956,6 +956,11 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Không có tài khoản DeHub trước đó về thông tin đăng nhập này, vì vậy không có gì để mang lại. Quay lại Tài khoản mới để hoàn tất thiết lập tài khoản này.",
+    "migrateUnmatchedWarning": "Thông tin đăng nhập này không có tài khoản DeHub trong hồ sơ. Việc tiếp tục không khôi phục được gì — nó tạo một tài khoản thứ hai với tên người dùng mới và để lại tài khoản bạn đã có.",
+    "migrateUnmatchedDetail": "Không có hồ sơ nào tồn tại tại địa chỉ ví này. Nếu bạn đăng nhập lại, hãy quay lại và sử dụng thông tin đăng nhập mà bạn đã đăng ký.",
+    "migrateGoBack": "Quay lại",
+    "migrateContinueAnyway": "Vẫn tạo tài khoản mới",
     "title": "Log in",
     "addProfileTitle": "Thêm hồ sơ",
     "continueX": "Continue with X",
@@ -1224,13 +1229,13 @@
     "only_have_dhb_staked": "Bạn chỉ có {{amount}} đã gửi.",
     "unstake_request_submitted": "Đã gửi yêu cầu rút! ✅",
     "dhb_added_to_unstake_queue": "Đã thêm {{amount}} {{tokenWord}} vào hàng đợi rút.",
+    "not_enough_gas_token": "Bạn cần {{token}} trong ví này để trả phí mạng.",
+    "unstake_failed": "Rút stake thất bại",
     "only_have_dhb_withdrawable": "Hiện chỉ có thể rút {{amount}} DHB.",
     "early_withdrawal_fee": "Phí rút sớm",
     "early_withdrawal_fee_detail": "Bị khóa đến {{date}}. Rút bây giờ mất {{percent}}% — khoảng {{amount}} DHB. Nhấn Rút lần nữa để xác nhận.",
     "unstaked_successfully": "Rút thành công! ✅",
     "dhb_unstaked_on_chain": "Đã rút {{amount}} DHB trên {{chain}}.",
-    "not_enough_gas_token": "Bạn cần {{token}} trong ví này để trả phí mạng.",
-    "unstake_failed": "Rút stake thất bại",
     "unstake_cancelled": "Đã hủy rút stake",
     "unstake_request_removed": "Yêu cầu rút stake của bạn đã được gỡ bỏ.",
     "failed_to_cancel": "Hủy thất bại",
@@ -1306,9 +1311,9 @@
     "minutesAgo": "{{count}} phút trước",
     "hoursAgo": "{{count}} giờ trước",
     "daysAgo": "{{count}} ngày trước",
+    "cancelUnstake": "Hủy rút tiền",
     "withdrawableNow": "Có thể rút ngay",
-    "poolNotWithdrawable": "{{amount}} DHB đang nằm trong ví bể gửi, nơi chưa có hợp đồng rút — hãy liên hệ hỗ trợ để chuyển đi.",
-    "cancelUnstake": "Hủy rút tiền"
+    "poolNotWithdrawable": "{{amount}} DHB đang nằm trong ví bể gửi, nơi chưa có hợp đồng rút — hãy liên hệ hỗ trợ để chuyển đi."
   },
   "communities": {
     "title": "Cộng đồng",
@@ -2599,8 +2604,6 @@
     "sellYourFractions": "Bán các phần của bạn ({{held}} được giữ)"
   },
   "creator": {
-    "toolFlow": "Quy trình của người sáng tạo",
-    "toolFlowDesc": "Chuỗi văn bản, tài liệu tham khảo, mô hình hình ảnh và video trên canvas, chạy nó trong một khoản thanh toán, chia sẻ nó với một liên kết.",
     "whatToCreate": "Cái gì để tạo",
     "startCreatingWith": "Bắt đầu tạo với {{model}}",
     "studioSubtitle": "Mô tả một cảnh, nhân vật, tâm trạng hoặc phong cách. Kết quả xuất hiện dưới đây và đi thẳng vào trình chỉnh sửa.",
@@ -2987,7 +2990,9 @@
     "noCreationsYet": "Chưa có tác phẩm AI nào. Hãy là người đầu tiên tạo một tác phẩm.",
     "aiGenerationAlt": "AI generation",
     "aiGenerationCommunityAlt": "AI generation từ cộng đồng DeHub",
-    "close": "Close"
+    "close": "Close",
+    "toolFlow": "Quy trình của người sáng tạo",
+    "toolFlowDesc": "Chuỗi văn bản, tài liệu tham khảo, mô hình hình ảnh và video trên canvas, chạy nó trong một khoản thanh toán, chia sẻ nó với một liên kết."
   },
   "pricing": {
     "findTheRightFit": "Từ cá nhân đến các đội enterprise, tìm sự phù hợp",
@@ -3852,81 +3857,6 @@
     "ctaBody": "Dự phòng ban đầu, phương tiện được bảo vệ được mã hóa và công việc được xác minh đến trước phần thưởng nút công khai.",
     "footerNote": "Sự tham gia của DePin là một dịch vụ đóng góp, không phải là một sản phẩm đầu tư. Tình trạng còn phòng, tính đủ điều kiện và phần thưởng có thể thay đổi."
   },
-  "glossary": {
-    "title": "Bảng thuật ngữ",
-    "description": "Giải thích các thuật ngữ và khái niệm quan trọng trong ứng dụng.",
-    "badges": {
-      "title": "Huy hiệu",
-      "description": "Huy hiệu được trao dựa trên số lượng token DHB mà người dùng đã stake.",
-      "tiers": [
-        {
-          "name": "Tortoise",
-          "min": 0,
-          "color": "white"
-        },
-        {
-          "name": "Crab",
-          "min": 10000,
-          "color": "white"
-        },
-        {
-          "name": "Lobster",
-          "min": 25000,
-          "color": "white"
-        },
-        {
-          "name": "Piranha",
-          "min": 50000,
-          "color": "white"
-        },
-        {
-          "name": "Cobra",
-          "min": 250000,
-          "color": "white"
-        },
-        {
-          "name": "Octopus",
-          "min": 500000,
-          "color": "white"
-        },
-        {
-          "name": "Crocodite",
-          "min": 1000000,
-          "color": "white"
-        },
-        {
-          "name": "Dolphin",
-          "min": 2000000,
-          "color": "white"
-        },
-        {
-          "name": "Tiger Shark",
-          "min": 3000000,
-          "color": "white"
-        },
-        {
-          "name": "Killer Whale",
-          "min": 5000000,
-          "color": "white"
-        },
-        {
-          "name": "Great White Shark",
-          "min": 10000000,
-          "color": "white"
-        },
-        {
-          "name": "Blue Whale",
-          "min": 25000000,
-          "color": "white"
-        },
-        {
-          "name": "Meglodon",
-          "min": 50000000,
-          "color": "white"
-        }
-      ]
-    }
-  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Quay lại Creator Studio",
@@ -4142,5 +4072,80 @@
     "dubbed": "Âm thanh được lồng tiếng",
     "preparing": "Đang chuẩn bị âm thanh lồng tiếng...",
     "unavailable": "Âm thanh được lồng tiếng không khả dụng cho video này."
+  },
+  "glossary": {
+    "title": "Bảng thuật ngữ",
+    "description": "Giải thích các thuật ngữ và khái niệm quan trọng trong ứng dụng.",
+    "badges": {
+      "title": "Huy hiệu",
+      "description": "Huy hiệu được trao dựa trên số lượng token DHB mà người dùng đã stake.",
+      "tiers": [
+        {
+          "name": "Tortoise",
+          "min": 0,
+          "color": "white"
+        },
+        {
+          "name": "Crab",
+          "min": 10000,
+          "color": "white"
+        },
+        {
+          "name": "Lobster",
+          "min": 25000,
+          "color": "white"
+        },
+        {
+          "name": "Piranha",
+          "min": 50000,
+          "color": "white"
+        },
+        {
+          "name": "Cobra",
+          "min": 250000,
+          "color": "white"
+        },
+        {
+          "name": "Octopus",
+          "min": 500000,
+          "color": "white"
+        },
+        {
+          "name": "Crocodite",
+          "min": 1000000,
+          "color": "white"
+        },
+        {
+          "name": "Dolphin",
+          "min": 2000000,
+          "color": "white"
+        },
+        {
+          "name": "Tiger Shark",
+          "min": 3000000,
+          "color": "white"
+        },
+        {
+          "name": "Killer Whale",
+          "min": 5000000,
+          "color": "white"
+        },
+        {
+          "name": "Great White Shark",
+          "min": 10000000,
+          "color": "white"
+        },
+        {
+          "name": "Blue Whale",
+          "min": 25000000,
+          "color": "white"
+        },
+        {
+          "name": "Meglodon",
+          "min": 50000000,
+          "color": "white"
+        }
+      ]
+    }
   }
 }

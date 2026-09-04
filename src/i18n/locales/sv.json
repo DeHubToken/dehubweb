@@ -1085,6 +1085,11 @@
     "email": "E-post"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Det finns inget tidigare DeHub-konto för denna inloggning, så det finns inget att ta med sig. Gå tillbaka till Nytt konto för att slutföra konfigurationen av det här.",
+    "migrateUnmatchedWarning": "Denna inloggning har inget registrerat DeHub-konto. Att fortsätta återställer ingenting — det skapar ett andra konto med ett nytt användarnamn och lämnar det du redan har bakom dig.",
+    "migrateUnmatchedDetail": "Det finns ingen profil på den här portföljadressen. Om du loggade in igen går du tillbaka och använder inloggningen du registrerade dig med istället.",
+    "migrateGoBack": "Gå tillbaka",
+    "migrateContinueAnyway": "Skapa ett nytt konto ändå",
     "title": "Logga in",
     "addProfileTitle": "Lägg till profil",
     "continueEmail": "Fortsätt med e-post",
@@ -1416,13 +1421,13 @@
     "only_have_dhb_staked": "Du har bara {{amount}} insatt.",
     "unstake_request_submitted": "Uttagsbegäran skickad! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} tillagt i uttagskön.",
+    "not_enough_gas_token": "Du behöver {{token}} i den här plånboken för att betala nätverksavgiften.",
+    "unstake_failed": "Uttaget misslyckades",
     "only_have_dhb_withdrawable": "Just nu går det bara att ta ut {{amount}} DHB.",
     "early_withdrawal_fee": "Avgift för tidigt uttag",
     "early_withdrawal_fee_detail": "Låst till {{date}}. Att ta ut nu kostar {{percent}} % — cirka {{amount}} DHB. Tryck på Ta ut igen för att bekräfta.",
     "unstaked_successfully": "Uttaget lyckades! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB uttaget på {{chain}}.",
-    "not_enough_gas_token": "Du behöver {{token}} i den här plånboken för att betala nätverksavgiften.",
-    "unstake_failed": "Uttaget misslyckades",
     "unstake_cancelled": "Uttaget avbrutet",
     "unstake_request_removed": "Din uttagsbegäran har tagits bort.",
     "failed_to_cancel": "Kunde inte avbryta",
@@ -1498,9 +1503,9 @@
     "minutesAgo": "{{count}}m sedan",
     "hoursAgo": "{{count}}h sedan",
     "daysAgo": "{{count}}d sedan",
+    "cancelUnstake": "Avbryt uttag",
     "withdrawableNow": "Kan tas ut nu",
-    "poolNotWithdrawable": "{{amount}} DHB ligger i insättningspoolens plånbok, som ännu inte har något uttagskontrakt — kontakta supporten för att flytta dem.",
-    "cancelUnstake": "Avbryt uttag"
+    "poolNotWithdrawable": "{{amount}} DHB ligger i insättningspoolens plånbok, som ännu inte har något uttagskontrakt — kontakta supporten för att flytta dem."
   },
   "communities": {
     "title": "Communities",
@@ -2793,8 +2798,6 @@
     "sellYourFractions": "Sälj dina fraktioner ({{held}} innehålls)"
   },
   "creator": {
-    "toolFlow": "Kreatörsflöde",
-    "toolFlowDesc": "Kedjetext, referenser, bild- och videomodeller på en duk, kör den i en betalning, dela den med en länk.",
     "whatToCreate": "Vad ska skapas",
     "startCreatingWith": "Börja skapa med {{model}}",
     "studioSubtitle": "Beskriv en scen, karaktär, stämning eller stil. Resultaten visas nedan och går direkt in i redigeraren.",
@@ -3189,7 +3192,9 @@
     "noCreationsYet": "Ingen AI-skapelser än. Var den första att generera en.",
     "aiGenerationAlt": "AI-generering",
     "aiGenerationCommunityAlt": "AI-generering från DeHub-gemenskapen",
-    "close": "Stäng"
+    "close": "Stäng",
+    "toolFlow": "Kreatörsflöde",
+    "toolFlowDesc": "Kedjetext, referenser, bild- och videomodeller på en duk, kör den i en betalning, dela den med en länk."
   },
   "pricing": {
     "plansForEveryWorkflow": "Planer för varje arbetsflöde",

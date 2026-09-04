@@ -1041,6 +1041,11 @@
     "submitted": "Application submitted successfully!"
   },
   "loginModal": {
+    "migrateNothingToRecover": "Nu există un cont DeHub anterior pentru această autentificare, deci nu este nimic de adus. Revino la Cont nou pentru a finaliza configurarea acestuia.",
+    "migrateUnmatchedWarning": "Această autentificare nu are un cont DeHub înregistrat. Continuarea nu recuperează nimic — creează un al doilea cont cu un nou nume de utilizator și îl lasă în urmă pe cel pe care îl aveți deja.",
+    "migrateUnmatchedDetail": "Nu există profil la această adresă de portofel. Dacă v-ați conectat din nou, reveniți și utilizați în schimb datele de conectare cu care v-ați înscris.",
+    "migrateGoBack": "Înapoi",
+    "migrateContinueAnyway": "Creează un cont nou oricum",
     "title": "Log in",
     "addProfileTitle": "Adaugă un profil",
     "continueX": "Continue with X",
@@ -1309,13 +1314,13 @@
     "only_have_dhb_staked": "Ai depus doar {{amount}}.",
     "unstake_request_submitted": "Cerere de retragere trimisă! ✅",
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} adăugat în coada de retrageri.",
+    "not_enough_gas_token": "Ai nevoie de {{token}} în acest portofel pentru a plăti comisionul de rețea.",
+    "unstake_failed": "Retragerea a eșuat",
     "only_have_dhb_withdrawable": "În acest moment se pot retrage doar {{amount}} DHB.",
     "early_withdrawal_fee": "Comision de retragere anticipată",
     "early_withdrawal_fee_detail": "Blocat până la {{date}}. Retragerea acum costă {{percent}}% — aproximativ {{amount}} DHB. Apasă din nou Retrage pentru a confirma.",
     "unstaked_successfully": "Retragere reușită! ✅",
     "dhb_unstaked_on_chain": "{{amount}} DHB retrași pe {{chain}}.",
-    "not_enough_gas_token": "Ai nevoie de {{token}} în acest portofel pentru a plăti comisionul de rețea.",
-    "unstake_failed": "Retragerea a eșuat",
     "unstake_cancelled": "Retragere anulată",
     "unstake_request_removed": "Cererea ta de retragere a fost eliminată.",
     "failed_to_cancel": "Anularea a eșuat",
@@ -1391,9 +1396,9 @@
     "minutesAgo": "acum {{count}} min",
     "hoursAgo": "acum {{count}} h",
     "daysAgo": "acum {{count}} zile",
+    "cancelUnstake": "Anulează retragerea",
     "withdrawableNow": "Disponibil pentru retragere",
-    "poolNotWithdrawable": "{{amount}} DHB se află în portofelul fondului de depozite, care nu are încă un contract de retragere — contactează asistența pentru a-i muta.",
-    "cancelUnstake": "Anulează retragerea"
+    "poolNotWithdrawable": "{{amount}} DHB se află în portofelul fondului de depozite, care nu are încă un contract de retragere — contactează asistența pentru a-i muta."
   },
   "communities": {
     "title": "Comunități",
@@ -2682,8 +2687,6 @@
     "sellYourFractions": "Vinde-ți fracțiunile ({{held}} deținute)"
   },
   "creator": {
-    "toolFlow": "Flux creator",
-    "toolFlowDesc": "Text în lanț, referințe, modele de imagini și video pe o pânză, rulați-o într-o singură plată, partajați-o cu un link.",
     "whatToCreate": "Ce să creezi",
     "startCreatingWith": "Începeți să creați cu {{model}}",
     "studioSubtitle": "Descrieți o scenă, personaj, stare de spirit sau stil. Rezultatele apar mai jos și se duc direct în editor.",
@@ -3065,7 +3068,9 @@
     "noCreationsYet": "Nicio creație AI încă. Fii primul care să genereze una.",
     "aiGenerationAlt": "Generare AI",
     "aiGenerationCommunityAlt": "Generare AI din comunitatea DeHub",
-    "close": "Închide"
+    "close": "Închide",
+    "toolFlow": "Flux creator",
+    "toolFlowDesc": "Text în lanț, referințe, modele de imagini și video pe o pânză, rulați-o într-o singură plată, partajați-o cu un link."
   },
   "pricing": {
     "plansForEveryWorkflow": "Planuri pentru fiecare flux de lucru",
@@ -3939,20 +3944,6 @@
     "ctaBody": "Revenirea originală, media protejată criptată și munca verificată vin înainte de recompensele nodurilor publice.",
     "footerNote": "Participarea DePin este un serviciu de contribuție, nu un produs de investiție. Disponibilitatea, eligibilitatea și recompensele pot se schimba."
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
-  "glossary": {
-    "title": "Glosar",
-    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
-    "badge": {
-      "white": "Alb",
-      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
-    }
-  },
   "creatorFlow": {
     "title": "Creator Flow",
     "backToStudio": "Înapoi la Studioul de creație",
@@ -4168,5 +4159,19 @@
     "dubbed": "Sunet dublat",
     "preparing": "Se pregătește sunetul dublat...",
     "unavailable": "Sunetul dublat nu este disponibil pentru acest videoclip."
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
+  },
+  "glossary": {
+    "title": "Glosar",
+    "description": "Termeni și definiții pentru a înțelege mai bine platforma.",
+    "badge": {
+      "white": "Alb",
+      "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
+    }
   }
 }
