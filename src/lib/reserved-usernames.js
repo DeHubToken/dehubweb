@@ -54,7 +54,7 @@ export const ROUTE_SEGMENTS = [
   // already in the worker's list for exactly this reason. ---
   'ads', 'bookmarks', 'buy', 'command-centre', 'fractions', 'glossary', 'messages',
   'migrate-youtube', 'notifications', 'post', 'profile', 'settings', 'stores', 'superpowers',
-  'video', 'wallet',
+  'upload', 'video', 'wallet',
 
   // --- Edge-only surfaces: served by the worker, never reach the router ---
   'blog', 'rss', 'sitemap', 'robots',
@@ -84,6 +84,28 @@ export const RESERVED_VANITY_NAMES = [
 export const RESERVED_USERNAMES = new Set([
   ...ROUTE_SEGMENTS,
   ...RESERVED_VANITY_NAMES,
+]);
+
+/**
+ * Single-segment paths that are never a person when a dehub.io link is parsed.
+ *
+ * A pasted `dehub.io/stores` was turned into a profile card for an account that
+ * does not exist, because the link parser in src/lib/dehub-links.ts kept its own
+ * hand-typed list of route names — a fourth copy of this set, and the one nobody
+ * remembered to update. It reads this instead, so a route added above is a route
+ * the link parser knows about on the same commit. Mobile already does the same
+ * thing with `RESERVED_LINK_SEGMENTS` in libs/reserved-usernames.ts; this is the
+ * matching export, kept in the same shape so the two are easy to diff.
+ *
+ * The extras are routing-only. They have no business being username
+ * reservations, but they are equally not people.
+ */
+export const RESERVED_LINK_SEGMENTS = new Set([
+  ...RESERVED_USERNAMES,
+  'dpay',
+  'robots.txt',
+  'sitemap.xml',
+  'skill.md',
 ]);
 
 /**
