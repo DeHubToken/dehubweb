@@ -107,18 +107,29 @@ export async function getAffiliateLeaderboard(
     })
   );
 
-  return ranked.map((row, index) => {
-    const profile = index < profiles.length ? profiles[index] : null;
-    return {
-      account: row.account,
-      total: row.directReferrals,
-      username: profile?.username ?? undefined,
-      userDisplayName: profile?.displayName ?? undefined,
-      avatarUrl: profile?.avatarImageUrl ?? undefined,
-      sentTips: 0,
-      receivedTips: 0,
-      directReferrals: row.directReferrals,
-      secondaryReferrals: row.secondaryReferrals,
-    };
-  });
+  return ranked
+    .map((row, index) => {
+      const profile = index < profiles.length ? profiles[index] : null;
+      return {
+        account: row.account,
+        total: row.directReferrals,
+        username: profile?.username ?? undefined,
+        userDisplayName: profile?.displayName ?? undefined,
+        avatarUrl: profile?.avatarImageUrl ?? undefined,
+        sentTips: 0,
+        receivedTips: 0,
+        directReferrals: row.directReferrals,
+        secondaryReferrals: row.secondaryReferrals,
+        isBanned: profile?.isBanned === true,
+      };
+    })
+    // Every other category comes from `/api/leaderboard`, which leaves banned
+    // accounts out of its own query. This one is ranked here, from referral
+    // rows the API does not hold, so the ban has to be applied here too or a
+    // moderated handle keeps a place on the board that nothing else gives it.
+    // Only the profiles actually resolved above can be judged; an account far
+    // enough down the list to be unresolved renders as an address and carries
+    // no name to hide.
+    .filter((entry) => !entry.isBanned)
+    .map(({ isBanned: _isBanned, ...entry }) => entry);
 }
