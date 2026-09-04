@@ -75,6 +75,13 @@ export interface DeHubUser {
   isPending?: boolean;
   isFollowRequestPending?: boolean;
   isPrivate?: boolean;
+  /**
+   * The account is banned. The API already leaves banned accounts out of every
+   * list it builds itself, so this matters to the lists we build here — an
+   * account ranked from data the API does not hold has to be checked against
+   * its profile instead.
+   */
+  isBanned?: boolean;
   /** This viewer asked to be served mature posts in the public feeds. */
   showMatureContent?: boolean;
   youBlocked?: boolean;
