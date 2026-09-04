@@ -42,6 +42,16 @@ const POLL_MS = 5_000;
 const MAX_REPORTS = 3;
 /** Room below the fold before "it did not scroll" means anything. */
 const SLACK_PX = 80;
+/**
+ * How long the page gets to move before a drag counts as a freeze.
+ *
+ * The verdict used to be taken on the first touchmove past the threshold,
+ * inside the gesture. A feed that stalls for a frame — an image decoding, a
+ * video attaching — scrolls a moment late, and every one of those was filed as
+ * a dead page. A freeze is still exactly where it started 400ms later; a
+ * stutter is not.
+ */
+const SETTLE_MS = 400;
 
 const OPEN_OVERLAY_SELECTOR = [
   '[data-vaul-drawer][data-state="open"]',
@@ -83,6 +93,11 @@ function coveringLayer(): { el: Element; position: string } | null {
 function describe(el: Element): string {
   const cls = typeof el.className === 'string' ? el.className : '';
   return `${el.tagName.toLowerCase()}${cls ? `.${cls.trim().split(/\s+/).slice(0, 4).join('.')}` : ''}`;
+}
+
+/** `describe` for a place the element may legitimately be missing. */
+function describeMaybe(el: Element | null): string | null {
+  return el ? describe(el) : null;
 }
 
 function pageIsTallerThanViewport(): boolean {
@@ -206,6 +221,7 @@ let dragStartY = 0;
 let dragStartScroll = 0;
 let dragTarget: Element | null = null;
 let dragArmed = false;
+let settleTimer = 0;
 
 /** The nearest ancestor that scrolls on its own — dragging inside one is not a freeze. */
 function hasOwnScroller(start: Element | null): boolean {
@@ -216,6 +232,27 @@ function hasOwnScroller(start: Element | null): boolean {
     }
   }
   return false;
+}
+
+/**
+ * Ancestors that forbid a vertical pan, from the touched element up.
+ *
+ * This is the evidence the drag reports were missing. `target` says where the
+ * finger was and never what ate the touch, and the two ways to eat one without
+ * leaving a mark on `<body>` are a `touch-action` that rules panning out and a
+ * layer sitting over the page. `auto`, `manipulation` and anything containing
+ * `pan-y` all allow the scroll, so only the rest is worth sending.
+ */
+function blockingTouchActions(start: Element | null): string[] {
+  const out: string[] = [];
+  for (let el = start; el; el = el.parentElement) {
+    const ta = getComputedStyle(el).touchAction;
+    if (ta && ta !== 'auto' && ta !== 'manipulation' && !ta.includes('pan-y')) {
+      out.push(`${describe(el)}:${ta}`);
+      if (out.length === 6) break;
+    }
+  }
+  return out;
 }
 
 function endDrag() {
@@ -264,19 +301,37 @@ function onTouchMove(e: TouchEvent) {
   if (overlayIsOpen()) return;
   if (hasOwnScroller(dragTarget)) return;
 
-  // Something on top of the page is entitled to swallow the drag; say what it
-  // is rather than tearing it off.
-  const covering = coveringLayer();
-  if (covering) {
-    report('A full-screen layer is swallowing the page scroll', { target: dragTarget ? describe(dragTarget) : null }, false);
-    return;
-  }
+  // Do not decide inside the gesture. Hold the candidate and look again once
+  // the drag has had time to land: a page that was merely a frame behind has
+  // moved by then, and a dead one is still exactly where it started.
+  const { clientX, clientY } = e.touches[0];
+  const target = dragTarget;
+  const startScroll = dragStartScroll;
 
-  // Reported, not cleared — see the header. What is eating the touches is not
-  // on <body>, so there is nothing here to undo, and stripping body's styles on
-  // a guess tears the lock off a fullscreen viewer that is legitimately holding
-  // the page. The body-state check above is the path that recovers.
-  report('A drag moved the finger but not the page', { target: dragTarget ? describe(dragTarget) : null }, false);
+  window.clearTimeout(settleTimer);
+  settleTimer = window.setTimeout(() => {
+    if (getDocumentScrollTop() !== startScroll) return; // it scrolled, late — a stutter, not a freeze
+    if (overlayIsOpen()) return; // something opened under the finger and is holding the page on purpose
+
+    const evidence = {
+      target: describeMaybe(target),
+      blockedBy: blockingTouchActions(target),
+      atFinger: describeMaybe(document.elementFromPoint(clientX, clientY)),
+    };
+
+    // Something on top of the page is entitled to swallow the drag; say what it
+    // is rather than tearing it off.
+    if (coveringLayer()) {
+      report('A full-screen layer is swallowing the page scroll', evidence, false);
+      return;
+    }
+
+    // Reported, not cleared — see the header. What is eating the touches is not
+    // on <body>, so there is nothing here to undo, and stripping body's styles on
+    // a guess tears the lock off a fullscreen viewer that is legitimately holding
+    // the page. The body-state check above is the path that recovers.
+    report('A drag moved the finger but not the page', evidence, false);
+  }, SETTLE_MS);
 }
 
 /**
