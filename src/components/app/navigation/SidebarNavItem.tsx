@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
+import { isHomePath } from '@/lib/home-path';
+import { resolveHomeNavIntent } from '@/lib/home-nav-intent';
+import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
@@ -100,7 +103,15 @@ export function SidebarNavItem({
     
     if (isHome) {
       e.preventDefault();
-      window.dispatchEvent(new CustomEvent('home-refresh'));
+      // Coming from another page, Home is a plain move — it lands on a fresh
+      // render already. On Home the first click only returns to the top; a
+      // second click refreshes. See lib/home-nav-intent.
+      const intent = resolveHomeNavIntent(isHomePath(currentPath));
+      if (intent === 'refresh') {
+        window.dispatchEvent(new CustomEvent('home-refresh'));
+      } else if (intent === 'scrollToTop') {
+        scrollDocumentToSmooth();
+      }
       navigate('/app');
     }
     onNavigate?.();
