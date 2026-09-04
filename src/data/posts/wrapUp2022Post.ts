@@ -60,7 +60,7 @@ export const wrapUp2022Post: BlogPostType = {
       <p><strong>March 1:</strong> Official release of first original production trailer for Way of The Warrior series and featured in BigFish Boxing.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/8faad241-a6fa-4977-88ff-e598de72c045.png" alt="Way of the Warrior - DeHub Originals series" class="w-full h-auto" />
+        <img src="/media/8faad241-a6fa-4977-88ff-e598de72c045.png" alt="Way of the Warrior - DeHub Originals series" class="w-full h-auto" />
       </div>
       
       <p><strong>March 14:</strong> Way of the Warrior pilot released onto our own custom streaming d'app for stakers.</p>
@@ -70,7 +70,7 @@ export const wrapUp2022Post: BlogPostType = {
       <p><strong>March 26:</strong> Puso Group, the company part owned by Malik and overseeing initial development of the d'app officially receives SEC licenses & registration in the Philippines.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/715fd439-ee9d-4308-bf2a-d706da2ce3be.png" alt="Puso Group International Corporation Certificate of Registration" class="w-full h-auto" />
+        <img src="/media/715fd439-ee9d-4308-bf2a-d706da2ce3be.png" alt="Puso Group International Corporation Certificate of Registration" class="w-full h-auto" />
       </div>
       
       <p><strong>April 1:</strong> Genesis rewards unlocked from V1 staking with over 50,000,000 in DeHub tokens distributed to all stakers.</p>
@@ -86,7 +86,7 @@ export const wrapUp2022Post: BlogPostType = {
       <p><strong>May 27:</strong> Partnership secured with Raceline bringing Lamborghinis and a host of other super cars onto our marketplace while offering their customers a chance to claim a free dehub.net minted NFT with every purchase.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/68257c55-c4a8-4aef-9df6-e6cb7c25b28e.png" alt="The future is phygital - DeHub marketplace with Lamborghini" class="w-full h-auto" />
+        <img src="/media/68257c55-c4a8-4aef-9df6-e6cb7c25b28e.png" alt="The future is phygital - DeHub marketplace with Lamborghini" class="w-full h-auto" />
       </div>
       
       <p><strong>June 6:</strong> Marketplace goes live on mainnet, and with it DeHub officially becomes the world's first dedicated phygital NFT marketplace with a transaction on chain. Our marketplace is custom built to host our own product lines but also opening up to public use in later stages.</p>
@@ -94,7 +94,7 @@ export const wrapUp2022Post: BlogPostType = {
       <p><strong>June 15:</strong> Released "Whack A Schiff" onto our arcade, a play and win to earn game where users fight for high scores for whacking the mole version of Peter Schiff on the head while avoiding the bombs!</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/55751848-fa12-432a-a72e-a17ca857c52b.png" alt="Whack A Schiff - DeHub Arcade game" class="w-full h-auto" />
+        <img src="/media/55751848-fa12-432a-a72e-a17ca857c52b.png" alt="Whack A Schiff - DeHub Arcade game" class="w-full h-auto" />
       </div>
       
       <p><strong>July 14:</strong> Way of the Warrior Episode 2 featuring Jorge Masvidal and Brad Pickett released to rave reviews and expecting retweets from the legend Gamebred himself prior to facing technical difficulties with our stake to access d'app. This also played a role in DeHub's transformation to a free public streaming app where anyone can view content. We are working closely with all past partners to bring this to life.</p>
@@ -130,13 +130,13 @@ export const wrapUp2022Post: BlogPostType = {
       <p><strong>November 11:</strong> Official release of Gas Guzzler, a play and win to earn game where users collect DeHub coins while avoiding other moonboys around a track in their Lambos making sure to keep the Ethereum Gas topped up and hitting the NOS for a boost!</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/c67683cf-6df1-4c93-83d4-1e0461855fc4.png" alt="Gas Guzzler - DeHub Arcade game" class="w-full h-auto" />
+        <img src="/media/c67683cf-6df1-4c93-83d4-1e0461855fc4.png" alt="Gas Guzzler - DeHub Arcade game" class="w-full h-auto" />
       </div>
       
       <p><strong>Nov 18:</strong> Banking on Zero (BOZ) trailer goes live and promises to be the most uncensored deep dive into the FTX saga and all of the victims that fell along with it.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/ba73d1dd-db12-4a09-8503-225f95ae7505.png" alt="Banking on Zero - DeHub Originals documentary" class="w-full h-auto" />
+        <img src="/media/ba73d1dd-db12-4a09-8503-225f95ae7505.png" alt="Banking on Zero - DeHub Originals documentary" class="w-full h-auto" />
       </div>
       
       <p><strong>November 23:</strong> Malik's younger brother and team member in our gaming division secures dream job at Binance working as an investment advisor for institutional clients.</p>
@@ -144,13 +144,13 @@ export const wrapUp2022Post: BlogPostType = {
       <p><strong>November 25:</strong> Released first gameplay teasers for LCFC's genesis 2D game "Street Slayer" including officially licensed UFC stars and more set for launch on IOS and Android stores as well as DeHub's arcade.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/a4ae39d5-b2b6-4d79-a4d0-70101370ac82.png" alt="Street Slayer - LCFC game coming soon" class="w-full h-auto" />
+        <img src="/media/a4ae39d5-b2b6-4d79-a4d0-70101370ac82.png" alt="Street Slayer - LCFC game coming soon" class="w-full h-auto" />
       </div>
       
       <p><strong>December 2:</strong> Streaming d'app upgrade whitepaper release and technical reveal.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/1adc74f0-a3ee-416c-b1f3-3f692e4796d4.png" alt="DeDocs - DeHub documentation" class="w-full h-auto" />
+        <img src="/media/1adc74f0-a3ee-416c-b1f3-3f692e4796d4.png" alt="DeDocs - DeHub documentation" class="w-full h-auto" />
       </div>
       
       <p><strong>December 12:</strong> Sheriff finally secures 1 token from Malik on his Birthday.</p>
@@ -158,7 +158,7 @@ export const wrapUp2022Post: BlogPostType = {
       <p><strong>December 16:</strong> Private beta goes live on testnet to outstanding reviews and feedback all contributing to further development prior to public launch.</p>
       
       <div class="my-6 rounded-xl overflow-hidden">
-        <img src="/lovable-uploads/7d1af569-0064-46dd-b326-f8eabeb4a252.png" alt="DeHub V1, V2, V3 evolution" class="w-full h-auto" />
+        <img src="/media/7d1af569-0064-46dd-b326-f8eabeb4a252.png" alt="DeHub V1, V2, V3 evolution" class="w-full h-auto" />
       </div>
       
       <p><strong>December 27:</strong> We closed the year with key updates on our latest test d'app, new token listing and marketing partner update where you will see me and the team regularly on Crypto Jamie's channel, currently ranked number 3 on Binance Live.</p>
@@ -166,7 +166,7 @@ export const wrapUp2022Post: BlogPostType = {
     
     <p class="mt-8 font-bold text-royal-blue text-xl">Bring on 2023.</p>
   `,
-  bannerImage: '/lovable-uploads/4476fbc3-58ec-467b-8c1b-30570349940c.png',
+  bannerImage: '/media/4476fbc3-58ec-467b-8c1b-30570349940c.png',
   bannerImageAlt: '2022 Wrap Up - DeHub year in review with fireworks celebration',
   author: {
     name: 'DeHub Team',

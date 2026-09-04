@@ -353,8 +353,8 @@ function persistableAvatar(url?: string | null): string | null {
  * `20260819180000_stage_write_policies.sql`, which is deliberately not applied
  * until the mobile release carrying the wallet headers is adopted — so the
  * generated union of RPC names cannot contain it yet and tsc rejects the
- * literal. Drop the casts once that migration is applied and Lovable
- * regenerates the types; nothing else has to change.
+ * literal. Drop the casts once that migration is applied and the types are
+ * regenerated; nothing else has to change.
  *
  * Kept in one place so that is one edit rather than five, and so the reason is
  * written down once.

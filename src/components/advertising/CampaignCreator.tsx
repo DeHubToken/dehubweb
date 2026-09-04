@@ -30,19 +30,19 @@ const CampaignCreator = () => {
   // Badge tier data with images for UI display
   const badgeImages: Record<string, string> = {
     'No Badge': '',
-    'Crab': '/lovable-uploads/60bc125c-8efd-4058-9e12-7ca393df4fce.png',
-    'Lobster': '/lovable-uploads/2c7200c2-681e-4499-863b-ea24fdbdb70c.png',
-    'Piranha': '/lovable-uploads/38387f75-fd38-4380-9588-1f19f68d8435.png',
-    'Tortoise': '/lovable-uploads/fc47a759-390a-4f41-ba96-5bc0066e82b9.png',
-    'Cobra': '/lovable-uploads/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png',
-    'Octopus': '/lovable-uploads/8fcbb3f6-223d-4e2f-9d82-30082a175491.png',
-    'Crocodite': '/lovable-uploads/c84eee0a-97c7-4938-9b9c-c991c802593e.png',
-    'Dolphin': '/lovable-uploads/4558c158-75d9-40fc-adfa-41125344a48e.png',
-    'Tiger Shark': '/lovable-uploads/6be493f1-51b4-481b-9ca1-340c030b2ef8.png',
-    'Killer Whale': '/lovable-uploads/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png',
-    'Great White Shark': '/lovable-uploads/dfcc3420-f654-486b-bc94-f84f0209ba5c.png',
-    'Blue Whale': '/lovable-uploads/fb9dfd31-d278-49fa-8ec8-1eee9ab74aef.png',
-    'Meglodon': '/lovable-uploads/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png'
+    'Crab': '/media/60bc125c-8efd-4058-9e12-7ca393df4fce.png',
+    'Lobster': '/media/2c7200c2-681e-4499-863b-ea24fdbdb70c.png',
+    'Piranha': '/media/38387f75-fd38-4380-9588-1f19f68d8435.png',
+    'Tortoise': '/media/fc47a759-390a-4f41-ba96-5bc0066e82b9.png',
+    'Cobra': '/media/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png',
+    'Octopus': '/media/8fcbb3f6-223d-4e2f-9d82-30082a175491.png',
+    'Crocodite': '/media/c84eee0a-97c7-4938-9b9c-c991c802593e.png',
+    'Dolphin': '/media/4558c158-75d9-40fc-adfa-41125344a48e.png',
+    'Tiger Shark': '/media/6be493f1-51b4-481b-9ca1-340c030b2ef8.png',
+    'Killer Whale': '/media/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png',
+    'Great White Shark': '/media/dfcc3420-f654-486b-bc94-f84f0209ba5c.png',
+    'Blue Whale': '/media/fb9dfd31-d278-49fa-8ec8-1eee9ab74aef.png',
+    'Meglodon': '/media/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png'
   };
 
   // Country names are the selected values, not display copy — they stay in English.

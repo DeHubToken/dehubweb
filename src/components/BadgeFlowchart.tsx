@@ -17,19 +17,19 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
  */
 const BadgeFlowchart = () => {
   const badges = [
-    { threshold: "10,000", usd: "$10", badge: "Crab Badge", color: "bg-muted", image: "/lovable-uploads/60bc125c-8efd-4058-9e12-7ca393df4fce.png" },
-    { threshold: "25k", usd: "$25", badge: "Lobster Badge", color: "bg-muted", image: "/lovable-uploads/2c7200c2-681e-4499-863b-ea24fdbdb70c.png" },
-    { threshold: "50k", usd: "$50", badge: "Piranha Badge", color: "bg-muted", image: "/lovable-uploads/38387f75-fd38-4380-9588-1f19f68d8435.png" },
-    { threshold: "100k", usd: "$100", badge: "Tortoise Badge", color: "bg-muted", image: "/lovable-uploads/fc47a759-390a-4f41-ba96-5bc0066e82b9.png" },
-    { threshold: "250k", usd: "$250", badge: "Cobra Badge", color: "bg-muted", image: "/lovable-uploads/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png" },
-    { threshold: "500k", usd: "$500", badge: "Octopus Badge", color: "bg-muted", image: "/lovable-uploads/8fcbb3f6-223d-4e2f-9d82-30082a175491.png" },
-    { threshold: "1m", usd: "$1,000", badge: "Crocodile Badge", color: "bg-muted", image: "/lovable-uploads/c84eee0a-97c7-4938-9b9c-c991c802593e.png" },
-    { threshold: "2m", usd: "$2,000", badge: "Dolphin Badge", color: "bg-muted", image: "/lovable-uploads/4558c158-75d9-40fc-adfa-41125344a48e.png" },
-    { threshold: "3m", usd: "$3,000", badge: "Tiger Shark Badge", color: "bg-muted", image: "/lovable-uploads/6be493f1-51b4-481b-9ca1-340c030b2ef8.png" },
-    { threshold: "5m", usd: "$5,000", badge: "Killer Whale Badge", color: "bg-muted", image: "/lovable-uploads/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png" },
-    { threshold: "10m", usd: "$10,000", badge: "Great White Shark Badge", color: "bg-muted", image: "/lovable-uploads/dfcc3420-f654-486b-bc94-f84f0209ba5c.png" },
-    { threshold: "25m", usd: "$25,000", badge: "Blue Whale Badge", color: "bg-muted", image: "/lovable-uploads/fb9dfd31-d278-49fa-8ec8-1eee9ab74aef.png" },
-    { threshold: "50m", usd: "$50,000", badge: "Megalodon Badge", color: "bg-muted", image: "/lovable-uploads/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png" }
+    { threshold: "10,000", usd: "$10", badge: "Crab Badge", color: "bg-muted", image: "/media/60bc125c-8efd-4058-9e12-7ca393df4fce.png" },
+    { threshold: "25k", usd: "$25", badge: "Lobster Badge", color: "bg-muted", image: "/media/2c7200c2-681e-4499-863b-ea24fdbdb70c.png" },
+    { threshold: "50k", usd: "$50", badge: "Piranha Badge", color: "bg-muted", image: "/media/38387f75-fd38-4380-9588-1f19f68d8435.png" },
+    { threshold: "100k", usd: "$100", badge: "Tortoise Badge", color: "bg-muted", image: "/media/fc47a759-390a-4f41-ba96-5bc0066e82b9.png" },
+    { threshold: "250k", usd: "$250", badge: "Cobra Badge", color: "bg-muted", image: "/media/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png" },
+    { threshold: "500k", usd: "$500", badge: "Octopus Badge", color: "bg-muted", image: "/media/8fcbb3f6-223d-4e2f-9d82-30082a175491.png" },
+    { threshold: "1m", usd: "$1,000", badge: "Crocodile Badge", color: "bg-muted", image: "/media/c84eee0a-97c7-4938-9b9c-c991c802593e.png" },
+    { threshold: "2m", usd: "$2,000", badge: "Dolphin Badge", color: "bg-muted", image: "/media/4558c158-75d9-40fc-adfa-41125344a48e.png" },
+    { threshold: "3m", usd: "$3,000", badge: "Tiger Shark Badge", color: "bg-muted", image: "/media/6be493f1-51b4-481b-9ca1-340c030b2ef8.png" },
+    { threshold: "5m", usd: "$5,000", badge: "Killer Whale Badge", color: "bg-muted", image: "/media/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png" },
+    { threshold: "10m", usd: "$10,000", badge: "Great White Shark Badge", color: "bg-muted", image: "/media/dfcc3420-f654-486b-bc94-f84f0209ba5c.png" },
+    { threshold: "25m", usd: "$25,000", badge: "Blue Whale Badge", color: "bg-muted", image: "/media/fb9dfd31-d278-49fa-8ec8-1eee9ab74aef.png" },
+    { threshold: "50m", usd: "$50,000", badge: "Megalodon Badge", color: "bg-muted", image: "/media/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png" }
   ];
 
   return (

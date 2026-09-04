@@ -4,7 +4,7 @@
  * Pre-generation confirm for music requests.
  * Auto-detects title, lyrics, style, voice gender from the user prompt.
  * Lets user review/edit before confirming.
- * Includes AI lyrics generation via Lovable AI.
+ * Includes AI lyrics generation via the AI gateway.
  */
 
 import { useState, useEffect, useCallback } from 'react';

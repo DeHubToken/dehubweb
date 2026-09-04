@@ -35,7 +35,7 @@ If you are hitting login or posting problems in the meantime, they are known. Th
 
 Waiting around on markets or perfect products is no longer viable. With the rise of AI and global uncertainty, speed is paramount — moats must be built. It's time to lock in, get vocal, get active and stand when others lay, because we're here to stay.
   `,
-  bannerImage: '/lovable-uploads/dev-update-jan-2026-banner.png',
+  bannerImage: '/media/dev-update-jan-2026-banner.png',
   bannerImageAlt: 'DeHub Development Update January 2026 - The DeHub Era Starts',
   author: {
     name: 'DeHub Team',

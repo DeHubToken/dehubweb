@@ -37,7 +37,7 @@ export function SEOHead({
   const isActivePage = useContext(CachedPageActiveContext);
   const fullTitle = title || defaults.title;
   // Canonical self-references the route but always on the canonical host with
-  // no query/hash: mirror hosts (lovable.app) and ?param variants must
+  // no query/hash: preview mirror hosts and ?param variants must
   // consolidate to the clean dehub.io URL, never self-canonicalize.
   const currentUrl =
     typeof window !== 'undefined'

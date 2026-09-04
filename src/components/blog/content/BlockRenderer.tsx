@@ -86,7 +86,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
       // silently deleted every non-avatar image from a post's markdown. Six
       // shipped posts carry fourteen such images (the alpha-launch milestone
       // alone has nine screenshots); all fourteen were authored deliberately,
-      // verified to exist under public/lovable-uploads/ (one Unsplash
+      // verified to exist under public/media/ (one Unsplash
       // hotlink), and they come back with this branch.
       return (
         <img
@@ -235,7 +235,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <p key={index} className="text-royal-blue/80 mb-4 leading-relaxed font-exo" dangerouslySetInnerHTML={createSanitizedHtml(processedContent)} />,
         <div key={`${index}-card-image`} className="my-8 rounded-xl overflow-hidden">
           <img 
-            src="/lovable-uploads/82928389-9659-4117-8bbe-351a68241694.png" 
+            src="/media/82928389-9659-4117-8bbe-351a68241694.png" 
             alt="DeHub Card in premium silver finish showcasing modern crypto payment solution" 
             className="w-full h-auto object-cover"
           />
@@ -250,7 +250,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <p key={index} className="text-royal-blue/80 mb-4 leading-relaxed font-exo" dangerouslySetInnerHTML={createSanitizedHtml(processedContent)} />,
         <div key={`${index}-card-stack-image`} className="my-8 rounded-xl overflow-hidden">
           <img 
-            src="/lovable-uploads/dd33f339-f2d6-46ac-9e87-98b96f3060ca.png" 
+            src="/media/dd33f339-f2d6-46ac-9e87-98b96f3060ca.png" 
             alt="Stack of DeHub Cards showing multiple card variants in elegant presentation" 
             className="w-full h-auto object-cover"
           />
@@ -266,7 +266,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
       return [
         <div key={`${index}-airdrop-calculator`} className="my-8 rounded-xl overflow-hidden">
           <img 
-            src="/lovable-uploads/79082851-6427-4cc2-847b-a7780deb8f44.png" 
+            src="/media/79082851-6427-4cc2-847b-a7780deb8f44.png" 
             alt="DeHub Airdrop Calculator interface showing allocation calculations" 
             className="w-full h-auto object-cover"
           />
@@ -283,7 +283,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <p key={index} className="text-royal-blue/80 mb-4 leading-relaxed font-exo" dangerouslySetInnerHTML={createSanitizedHtml(processedContent)} />,
         <div key={`${index}-airdrop-calculator`} className="my-8 rounded-xl overflow-hidden">
           <img 
-            src="/lovable-uploads/d306700c-5d81-4ec5-8010-864d72d705a2.png" 
+            src="/media/d306700c-5d81-4ec5-8010-864d72d705a2.png" 
             alt="DeHub Airdrop Calculator interface showing allocation calculations" 
             className="w-full h-auto object-cover"
           />

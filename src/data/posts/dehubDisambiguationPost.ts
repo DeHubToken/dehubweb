@@ -82,7 +82,7 @@ DeHub is an independent DAO, founded as a project in 2021 and governed on-chain 
 ### Where do I sign up for the DeHub social network?
 
 Visit [the DeHub web app](https://dehub.io/app) or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). You join with a crypto wallet, no university credentials needed.`,
-  bannerImage: '/lovable-uploads/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png',
+  bannerImage: '/media/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png',
   bannerImageAlt: 'DeHub disambiguation: the DeHub Web3 social network at dehub.io compared with DePaul and Rowan university portals of the same name',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-07-14T09:00:00.000Z',

@@ -18,7 +18,7 @@ The distinction is exactly the one we had already made for [NFT royalties](/guid
 
 We would rather not run the same experiment on people's income.
 
-![DeHub card reading "90% is not the point" — the terms are attached to the upload, not to a policy](/lovable-uploads/inbody-ninety-pc.jpg)
+![DeHub card reading "90% is not the point" — the terms are attached to the upload, not to a policy](/media/inbody-ninety-pc.jpg)
 
 ### What "tokenised upload" means here
 
@@ -300,7 +300,7 @@ Holders with significant positions decided the technology should serve a market 
 
 We did not obstruct it. We [transferred knowledge and provided technical support](/guides/supporting-growth-knowledge-transfer-to-fansite-team---a-dehub-milestone-from-q3-2023) to the team building it.
 
-![DeHub card reading "we could not stop it" — permissionless technology needs no approval to fork](/lovable-uploads/inbody-fork-support.jpg)
+![DeHub card reading "we could not stop it" — permissionless technology needs no approval to fork](/media/inbody-fork-support.jpg)
 
 ### Why not resist
 
@@ -450,7 +450,7 @@ That experience is not an argument against exchanges as such. It is an argument 
 
 Everything we had spent years building — [provably fair draws](/guides/fair-play-provably-fair-randomization-in-dehub-games---a-dehub-milestone-from-q4-2021), [on-chain leaderboards](/guides/on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade---a-dehub-milestone-from-q1-2022), published snapshots — was aimed at removing exactly that class of problem from our own operations. Continuing to route a large part of our market through a process with the opposite property was inconsistent.
 
-![DeHub card reading "we asked to leave" — the on-chain route was built before the delisting](/lovable-uploads/inbody-delisting.jpg)
+![DeHub card reading "we asked to leave" — the on-chain route was built before the delisting](/media/inbody-delisting.jpg)
 
 ### The timing
 

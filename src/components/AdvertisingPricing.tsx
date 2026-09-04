@@ -10,19 +10,19 @@ const AdvertisingPricing = () => {
   // verified holdings, anchored at Crab $100 and Meglodon $25,000.
   const pricingTiers = [
     { threshold: "< 10,000", badge: "No Badge", cpm: "$10", multiplier: "1x", image: null, color: "bg-gray-300" },
-    { threshold: "10,000+", badge: "Crab Badge", cpm: "$100", multiplier: "10x", image: "/lovable-uploads/60bc125c-8efd-4058-9e12-7ca393df4fce.png", color: "bg-orange-500" },
-    { threshold: "25,000+", badge: "Lobster Badge", cpm: "$180", multiplier: "18x", image: "/lovable-uploads/2c7200c2-681e-4499-863b-ea24fdbdb70c.png", color: "bg-red-500" },
-    { threshold: "50,000+", badge: "Piranha Badge", cpm: "$285", multiplier: "28x", image: "/lovable-uploads/38387f75-fd38-4380-9588-1f19f68d8435.png", color: "bg-purple-500" },
-    { threshold: "100,000+", badge: "Tortoise Badge", cpm: "$450", multiplier: "45x", image: "/lovable-uploads/fc47a759-390a-4f41-ba96-5bc0066e82b9.png", color: "bg-green-600" },
-    { threshold: "250,000+", badge: "Cobra Badge", cpm: "$800", multiplier: "80x", image: "/lovable-uploads/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png", color: "bg-gray-800" },
-    { threshold: "500,000+", badge: "Octopus Badge", cpm: "$1,250", multiplier: "125x", image: "/lovable-uploads/8fcbb3f6-223d-4e2f-9d82-30082a175491.png", color: "bg-blue-600" },
-    { threshold: "1,000,000+", badge: "Crocodite Badge", cpm: "$2,000", multiplier: "200x", image: "/lovable-uploads/c84eee0a-97c7-4938-9b9c-c991c802593e.png", color: "bg-green-800" },
-    { threshold: "2,000,000+", badge: "Dolphin Badge", cpm: "$3,000", multiplier: "300x", image: "/lovable-uploads/4558c158-75d9-40fc-adfa-41125344a48e.png", color: "bg-cyan-500" },
-    { threshold: "3,000,000+", badge: "Tiger Shark Badge", cpm: "$4,000", multiplier: "400x", image: "/lovable-uploads/6be493f1-51b4-481b-9ca1-340c030b2ef8.png", color: "bg-slate-600" },
-    { threshold: "5,000,000+", badge: "Killer Whale Badge", cpm: "$5,500", multiplier: "550x", image: "/lovable-uploads/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png", color: "bg-gray-900" },
-    { threshold: "10,000,000+", badge: "Great White Shark Badge", cpm: "$8,750", multiplier: "875x", image: "/lovable-uploads/dfcc3420-f654-486b-bc94-f84f0209ba5c.png", color: "bg-blue-800" },
-    { threshold: "25,000,000+", badge: "Blue Whale Badge", cpm: "$16,000", multiplier: "1600x", image: "/lovable-uploads/fb9dfd31-d278-49fa-8ec8-1eee9ab74aef.png", color: "bg-indigo-700" },
-    { threshold: "50,000,000+", badge: "Meglodon Badge", cpm: "$25,000", multiplier: "2500x", image: "/lovable-uploads/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png", color: "bg-purple-800" }
+    { threshold: "10,000+", badge: "Crab Badge", cpm: "$100", multiplier: "10x", image: "/media/60bc125c-8efd-4058-9e12-7ca393df4fce.png", color: "bg-orange-500" },
+    { threshold: "25,000+", badge: "Lobster Badge", cpm: "$180", multiplier: "18x", image: "/media/2c7200c2-681e-4499-863b-ea24fdbdb70c.png", color: "bg-red-500" },
+    { threshold: "50,000+", badge: "Piranha Badge", cpm: "$285", multiplier: "28x", image: "/media/38387f75-fd38-4380-9588-1f19f68d8435.png", color: "bg-purple-500" },
+    { threshold: "100,000+", badge: "Tortoise Badge", cpm: "$450", multiplier: "45x", image: "/media/fc47a759-390a-4f41-ba96-5bc0066e82b9.png", color: "bg-green-600" },
+    { threshold: "250,000+", badge: "Cobra Badge", cpm: "$800", multiplier: "80x", image: "/media/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png", color: "bg-gray-800" },
+    { threshold: "500,000+", badge: "Octopus Badge", cpm: "$1,250", multiplier: "125x", image: "/media/8fcbb3f6-223d-4e2f-9d82-30082a175491.png", color: "bg-blue-600" },
+    { threshold: "1,000,000+", badge: "Crocodite Badge", cpm: "$2,000", multiplier: "200x", image: "/media/c84eee0a-97c7-4938-9b9c-c991c802593e.png", color: "bg-green-800" },
+    { threshold: "2,000,000+", badge: "Dolphin Badge", cpm: "$3,000", multiplier: "300x", image: "/media/4558c158-75d9-40fc-adfa-41125344a48e.png", color: "bg-cyan-500" },
+    { threshold: "3,000,000+", badge: "Tiger Shark Badge", cpm: "$4,000", multiplier: "400x", image: "/media/6be493f1-51b4-481b-9ca1-340c030b2ef8.png", color: "bg-slate-600" },
+    { threshold: "5,000,000+", badge: "Killer Whale Badge", cpm: "$5,500", multiplier: "550x", image: "/media/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png", color: "bg-gray-900" },
+    { threshold: "10,000,000+", badge: "Great White Shark Badge", cpm: "$8,750", multiplier: "875x", image: "/media/dfcc3420-f654-486b-bc94-f84f0209ba5c.png", color: "bg-blue-800" },
+    { threshold: "25,000,000+", badge: "Blue Whale Badge", cpm: "$16,000", multiplier: "1600x", image: "/media/fb9dfd31-d278-49fa-8ec8-1eee9ab74aef.png", color: "bg-indigo-700" },
+    { threshold: "50,000,000+", badge: "Meglodon Badge", cpm: "$25,000", multiplier: "2500x", image: "/media/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png", color: "bg-purple-800" }
   ];
 
   return (

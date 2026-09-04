@@ -137,7 +137,7 @@ On federated networks, rarely, as they are mostly not built to pay creators. On 
 
 No. DeHub at dehub.io is a Web3 social network run as an independent DAO. It is unrelated to DePaul University's "DeHUB" student portal at dehub.depaul.edu and to Rowan University's "DEHub" digital engineering hub. The names sound alike but the projects are entirely separate.
 `,
-  bannerImage: '/lovable-uploads/decentralised-social-media-explained-uk-banner.png',
+  bannerImage: '/media/decentralised-social-media-explained-uk-banner.png',
   bannerImageAlt: 'Illustration of a decentralised social media network with user-owned nodes connected across an open protocol',
   author: { name: 'DeHub Team' },
   publishedAt: '2026-03-16T09:30:00.000Z',

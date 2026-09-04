@@ -25,11 +25,11 @@ const SEO: React.FC<SEOProps> = ({
   const siteName = 'DeHub Docs';
   const fullTitle = `${title} | ${siteName}`;
   // Canonical host is always dehub.io — window.location.origin would make
-  // mirror hosts (lovable.app) self-canonicalize as duplicates.
+  // preview mirror hosts self-canonicalize as duplicates.
   const baseUrl = 'https://dehub.io';
   const isCanonicalHost = ['dehub.io', 'localhost', '127.0.0.1'].includes(window.location.hostname);
   const fullUrl = `${baseUrl}${url}`;
-  const fullImage = image ? (image.startsWith('http') ? image : `${baseUrl}${image}`) : `${baseUrl}/lovable-uploads/a8b1baf2-99f3-4ff3-b2b5-4575f4ba8ace.png`;
+  const fullImage = image ? (image.startsWith('http') ? image : `${baseUrl}${image}`) : `${baseUrl}/media/a8b1baf2-99f3-4ff3-b2b5-4575f4ba8ace.png`;
 
   // Enhanced structured data for cryptocurrency/finance articles
   const isCryptoArticle = title.includes('DHB') || title.includes('Coinbase') || title.includes('Token') || tags?.some(tag => ['cryptocurrency', 'blockchain', 'trading', 'defi'].includes(tag.toLowerCase()));
@@ -52,7 +52,7 @@ const SEO: React.FC<SEOProps> = ({
         'url': 'https://dehub.io',
         'logo': {
           '@type': 'ImageObject',
-          'url': `${baseUrl}/lovable-uploads/a8b1baf2-99f3-4ff3-b2b5-4575f4ba8ace.png`
+          'url': `${baseUrl}/media/a8b1baf2-99f3-4ff3-b2b5-4575f4ba8ace.png`
         },
         'sameAs': [
           'https://www.wikidata.org/wiki/Q140518527',

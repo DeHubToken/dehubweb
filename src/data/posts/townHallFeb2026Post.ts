@@ -42,7 +42,7 @@ We will start increasing activity in the coming days, test in public and start s
 
 This is the start of the endless campaign loop we've discussed for years. Every new creator who joins is content in itself. Some of their community joins, growth compounds, one user at a time. Until we flip the system and disrupt a sector once thought to be undisruptable. This is where it begins.
   `,
-  bannerImage: '/lovable-uploads/town-hall-feb-2026-banner.png',
+  bannerImage: '/media/town-hall-feb-2026-banner.png',
   bannerImageAlt: 'DeHub Town Hall Overview February 2026 - A Major DeHub Update',
   author: {
     name: 'DeHub Team',

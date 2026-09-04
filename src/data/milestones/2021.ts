@@ -210,7 +210,7 @@ Two things made this rewrite finish rather than stall, and both are worth statin
 
 Nobody had to claim. Nobody had to sign anything. Nobody missed a window.
 
-![DeHub card reading "no claim page" — every v1 holder was airdropped automatically](/lovable-uploads/inbody-airdrop-1to1.jpg)
+![DeHub card reading "no claim page" — every v1 holder was airdropped automatically](/media/inbody-airdrop-1to1.jpg)
 
 ### Why automatic, and why it matters
 
@@ -262,7 +262,7 @@ An audit is a structured, adversarial read of the code by people who are paid to
 
 That last part is where audits get misrepresented. "Audited by Certik" is not a finding — a report with unresolved criticals is still an audit. The useful claim is that findings were resolved and the resolutions were verified, which is what we did here, and it is the version we have published since.
 
-![DeHub card reading "what an audit is not" — the limits of a smart contract security report](/lovable-uploads/inbody-certik.jpg)
+![DeHub card reading "what an audit is not" — the limits of a smart contract security report](/media/inbody-certik.jpg)
 
 ### What an audit does not buy you
 
@@ -406,7 +406,7 @@ Everything that followed reflects that. The [voluntary delisting from Gate.io](/
 
 The 1000x is the number people remember from this quarter. The lesson we kept is that the parts of your operation with no public record are the parts that will hurt you.
 
-![DeHub card reading "depth not multiple" — pool depth mattered more than the price multiple](/lovable-uploads/inbody-lp-depth.jpg)
+![DeHub card reading "depth not multiple" — pool depth mattered more than the price multiple](/media/inbody-lp-depth.jpg)
 
 ### On the number itself
 
@@ -444,7 +444,7 @@ Second, we ask people to trust an on-chain platform on the basis that things are
 
 Third, it is genuinely useful to somebody else. Projects preparing a first centralised listing are routinely introduced to intermediaries by people they have every reason to trust, and the failure mode is not obvious in advance.
 
-![DeHub card reading "records lost" — the outcome of the Gate.io listing agent investigation](/lovable-uploads/inbody-gate-agent.jpg)
+![DeHub card reading "records lost" — the outcome of the Gate.io listing agent investigation](/media/inbody-gate-agent.jpg)
 
 ### What we would do differently
 
