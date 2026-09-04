@@ -211,11 +211,11 @@ const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-a
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
 <p>DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
-<p><a href="${APP_URL}/docs" style="color:#9f9">Read the docs</a></p>
-<p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in" style="color:#9f9">DeHub press coverage</a></p>
+<p><a href="${APP_URL}/docs">Read the docs</a></p>
+<p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">DeHub press coverage</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
   HOME_INTRO_LINKS.map(([href, label]) =>
-    `<li style="margin:6px 0"><a href="${APP_URL}${href}" style="color:#9f9">${label}</a></li>`
+    `<li style="margin:6px 0"><a href="${APP_URL}${href}">${label}</a></li>`
   ).join('')
 }</ul></nav>
 </section>`;
@@ -374,7 +374,7 @@ function faqJsonLd(contentHtml) {
 
 function buildDocsHtml(route, meta, contentHtml) {
   const canonicalUrl = `${APP_URL}/docs/${route}`;
-  const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a href="${appHref(canonicalUrl)}" rel="nofollow">Open this page in the DeHub docs</a>.</p>`;
+  const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open this page in the DeHub docs</a>.</p>`;
   const nav = Object.entries(DOCS_PAGES).slice(0, 12).map(([r, m]) =>
     `<li><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — DeHub( Docs)?$/, ''))}</a></li>`).join('');
   return `<!DOCTYPE html>
@@ -397,12 +397,12 @@ ${shareMetaTags(`docs/${route}`, meta.title)}
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>${route === 'faq' ? faqJsonLd(contentHtml) : ''}
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
-<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/docs" style="color:#9f9">Docs</a></p>
+<body>
+<p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs">Docs</a></p>
 <article><h1>${escHtml(meta.title.replace(/ — DeHub( Docs)?$/, ''))}</h1>
 ${body}</article>
 <nav aria-label="DeHub documentation"><h2>More documentation</h2><ul>${nav}</ul></nav>
-<p><a href="${APP_URL}/docs/blog" style="color:#9f9">DeHub Blog</a> · <a href="${APP_URL}/" style="color:#9f9">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">DeHub Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -410,7 +410,7 @@ ${body}</article>
 function buildDocsIndexHtml() {
   const canonicalUrl = `${APP_URL}/docs`;
   const items = Object.entries(DOCS_PAGES).map(([r, m]) =>
-    `<li style="margin:10px 0"><a href="${APP_URL}/docs/${r}" style="color:#9f9">${escHtml(m.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escHtml(m.description)}</small></li>`).join('');
+    `<li style="margin:10px 0"><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escHtml(m.description)}</small></li>`).join('');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -432,11 +432,11 @@ ${shareMetaTags('docs', 'DeHub Documentation')}
   hasPart: Object.entries(DOCS_PAGES).map(([r, m]) => ({ '@type': 'TechArticle', headline: m.title, url: `${APP_URL}/docs/${r}` })),
 })}</script>
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
-<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › Docs</p>
+<body>
+<p><a href="${APP_URL}/">DeHub</a> › Docs</p>
 <h1>DeHub Documentation</h1>
 <ul style="list-style:none;padding:0">${items}</ul>
-<p><a href="${APP_URL}/docs/blog" style="color:#9f9">DeHub Blog</a> · <a href="${APP_URL}/" style="color:#9f9">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">DeHub Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -607,8 +607,8 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
-<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/docs/blog" style="color:#9f9">Blog</a></p>
+<body>
+<p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
 <article>
 <h1>${escHtml(post.title)}</h1>
 <p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — ${escHtml(published.slice(0, 10))}` : ''}</em></p>
@@ -616,7 +616,7 @@ ${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(post.bannerImageAlt || 
 ${body}
 </article>
 ${manifest ? relatedPostsHtml(manifest, post.slug) : ''}
-<p><a href="${APP_URL}/docs/blog" style="color:#9f9">← All DeHub blog posts</a> · <a href="${APP_URL}/" style="color:#9f9">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -628,10 +628,10 @@ function buildBlogIndexHtml(manifest) {
   // Standalone pillar guides first — they were sitemap-only orphans linked
   // from nowhere, which suppresses their ranking.
   const guideItems = Object.entries(GUIDE_PAGES).map(([slug, m]) =>
-    `<li style="margin:14px 0"><a href="${APP_URL}/guides/${slug}" style="color:#9f9">${escHtml(m.title)}</a><br><small>${escHtml(m.description.slice(0, 200))}</small></li>`).join('');
+    `<li style="margin:14px 0"><a href="${APP_URL}/guides/${slug}">${escHtml(m.title)}</a><br><small>${escHtml(m.description.slice(0, 200))}</small></li>`).join('');
   const items = guideItems + posts.map((p) => {
     const date = (p.publishedAt || '').slice(0, 10);
-    return `<li style="margin:14px 0"><a href="${APP_URL}/guides/${encodeURIComponent(p.slug)}" style="color:#9f9">${escHtml(p.title)}</a>${date ? ` <small>(${date})</small>` : ''}<br><small>${escHtml((p.excerpt || '').slice(0, 200))}</small></li>`;
+    return `<li style="margin:14px 0"><a href="${APP_URL}/guides/${encodeURIComponent(p.slug)}">${escHtml(p.title)}</a>${date ? ` <small>(${date})</small>` : ''}<br><small>${escHtml((p.excerpt || '').slice(0, 200))}</small></li>`;
   }).join('');
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -657,11 +657,11 @@ ${shareMetaTags('blog', 'DeHub Blog — news, guides and product updates')}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
-<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › Blog</p>
+<body>
+<p><a href="${APP_URL}/">DeHub</a> › Blog</p>
 <h1>DeHub Blog</h1>
 <ul style="list-style:none;padding:0">${items}</ul>
-<p><a href="${APP_URL}/" style="color:#9f9">dehub.io home</a></p>
+<p><a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -686,7 +686,7 @@ function primaryNavHtml(currentPath = '') {
   const items = PRIMARY_NAV.map((n) =>
     n.path === currentPath
       ? `<li style="margin:6px 0"><strong>${escHtml(n.label)}</strong></li>`
-      : `<li style="margin:6px 0"><a href="${APP_URL}${n.path}" style="color:#9f9">${escHtml(n.label)}</a></li>`
+      : `<li style="margin:6px 0"><a href="${APP_URL}${n.path}">${escHtml(n.label)}</a></li>`
   ).join('');
   return `<nav aria-label="DeHub sections"><h2 style="font-size:16px">Explore DeHub</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
 }
@@ -703,10 +703,10 @@ const SECTION_PAGES = {
     description: 'Discover what’s trending on DeHub: top creators, videos, music, live streams and communities on the open-source, user-owned social platform.',
     intro: 'Find trending creators, videos, shorts, music and communities across DeHub — the open source, user-owned social platform where every post is minted on-chain and creators earn natively.',
     bodyHtml: `<ul>
-<li><a href="${APP_URL}/videos" style="color:#9f9">Video Feed</a> — the latest on-chain videos from creators.</li>
-<li><a href="${APP_URL}/shorts" style="color:#9f9">Shorts</a> — a vertical, swipeable short-form feed.</li>
-<li><a href="${APP_URL}/music" style="color:#9f9">Music</a> — tracks and audio from DeHub artists.</li>
-<li><a href="${APP_URL}/tv" style="color:#9f9">DeHub TV</a> — lean-back, continuous video.</li>
+<li><a href="${APP_URL}/videos">Video Feed</a> — the latest on-chain videos from creators.</li>
+<li><a href="${APP_URL}/shorts">Shorts</a> — a vertical, swipeable short-form feed.</li>
+<li><a href="${APP_URL}/music">Music</a> — tracks and audio from DeHub artists.</li>
+<li><a href="${APP_URL}/tv">DeHub TV</a> — lean-back, continuous video.</li>
 </ul>`,
   },
   videos: {
@@ -721,7 +721,7 @@ const SECTION_PAGES = {
     heading: 'DeHub Shorts',
     description: 'Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.',
     intro: 'Scroll a vertical feed of short-form videos from DeHub creators — quick, swipeable clips on the user-owned social platform. Every short is minted on-chain, so creators keep ownership and earn natively.',
-    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos" style="color:#9f9">video feed</a> and <a href="${APP_URL}/music" style="color:#9f9">music</a> on DeHub — one open, censorship-resistant home for every format.</p>`,
+    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on DeHub — one open, censorship-resistant home for every format.</p>`,
   },
 };
 
@@ -752,13 +752,13 @@ ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
-<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › ${escHtml(meta.heading)}</p>
+<body>
+<p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
 <p>${escHtml(meta.intro)}</p>
 ${meta.bodyHtml || ''}
 ${primaryNavHtml(`/${key}`)}
-<p style="margin-top:24px"><a href="${appHref(canonicalUrl)}" rel="nofollow" style="color:#9f9">Open ${escHtml(meta.heading)} on DeHub</a></p>
+<p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on DeHub</a></p>
 </body>
 </html>`;
 }
@@ -800,9 +800,9 @@ const MARKETING_PAGES = {
     heading: 'Connect DeHub to your AI assistant',
     bodyHtml: `<p>DeHub ships a Model Context Protocol (MCP) server, so any MCP-compatible AI assistant can browse public DeHub posts, search topics and look up creator profiles.</p>
 <ul>
-<li><a href="${APP_URL}/connect/chatgpt" style="color:#9f9">DeHub for ChatGPT</a> — add the connector to ChatGPT in one click.</li>
-<li><a href="${APP_URL}/connect/claude" style="color:#9f9">DeHub for Claude</a> — add the connector to Claude in one click.</li>
-<li><a href="${APP_URL}/skill.md" style="color:#9f9">skill.md</a> — the agent-readable spec for the DeHub MCP API.</li>
+<li><a href="${APP_URL}/connect/chatgpt">DeHub for ChatGPT</a> — add the connector to ChatGPT in one click.</li>
+<li><a href="${APP_URL}/connect/claude">DeHub for Claude</a> — add the connector to Claude in one click.</li>
+<li><a href="${APP_URL}/skill.md">skill.md</a> — the agent-readable spec for the DeHub MCP API.</li>
 </ul>`,
   },
   'connect/chatgpt': {
@@ -842,21 +842,21 @@ const MARKETING_PAGES = {
 <li><strong>Team</strong> — £65/seat/mo billed annually (£79 month-to-month): 2,500 shared credits/mo, 2–9 seats, shared workspace and priority support.</li>
 <li><strong>Scale</strong> — £150/seat/mo billed annually (£215 month-to-month): 15,000 credits/mo, 5–15 seats, SSO, priority queue and admin controls.</li>
 </ul>
-<p>Looking for the DeHub Extra social membership instead? <a href="${APP_URL}/premium" style="color:#9f9">See Premium</a>.</p>`,
+<p>Looking for the DeHub Extra social membership instead? <a href="${APP_URL}/premium">See Premium</a>.</p>`,
   },
   'communities': {
     title: 'Communities — Find Your People on DeHub',
     description: 'Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform.',
     heading: 'DeHub Communities',
     bodyHtml: `<p>Communities are public groups on DeHub — join the ones that match your interests, follow their feeds, or create your own and grow it with posts, events and stages.</p>
-<p><a href="${APP_URL}/communities" style="color:#9f9">Browse communities on DeHub</a>.</p>`,
+<p><a href="${APP_URL}/communities">Browse communities on DeHub</a>.</p>`,
   },
   'stages': {
     title: 'Stages — Live Audio Rooms on DeHub',
     description: 'Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform.',
     heading: 'DeHub Stages',
     bodyHtml: `<p>Stages are live audio rooms on DeHub: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
-<p><a href="${APP_URL}/stages" style="color:#9f9">See live and recorded Stages</a>.</p>`,
+<p><a href="${APP_URL}/stages">See live and recorded Stages</a>.</p>`,
   },
   // The Arcade. Titles and descriptions mirror the SPA's SEOHead strings so
   // the bot and human variants never diverge, and each game gets its own page
@@ -869,11 +869,11 @@ const MARKETING_PAGES = {
     heading: 'DeHub Arcade',
     bodyHtml: `<p>Games that run in the browser tab. Nothing to install, nothing to buy — three of them open source, two made for DeHub, and all five served from DeHub itself.</p>
 <ul>
-<li><a href="${APP_URL}/arcade/kings-gambit" style="color:#9f9">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
-<li><a href="${APP_URL}/arcade/claude-of-duty" style="color:#9f9">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
-<li><a href="${APP_URL}/arcade/jungle-trail" style="color:#9f9">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
-<li><a href="${APP_URL}/arcade/street-slayer" style="color:#9f9">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
-<li><a href="${APP_URL}/arcade/trenchstar" style="color:#9f9">Trenchstar</a> — a trading floor you can walk, built out of forty live market screens.</li>
+<li><a href="${APP_URL}/arcade/kings-gambit">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
+<li><a href="${APP_URL}/arcade/claude-of-duty">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
+<li><a href="${APP_URL}/arcade/jungle-trail">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
+<li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
+<li><a href="${APP_URL}/arcade/trenchstar">Trenchstar</a> — a trading floor you can walk, built out of forty live market screens.</li>
 </ul>`,
   },
   'arcade/kings-gambit': {
@@ -882,7 +882,7 @@ const MARKETING_PAGES = {
     heading: "King's Gambit — Cinematic 3D Chess",
     bodyHtml: `<p>Chess with an army behind every piece. Three rigged civilisations — the Ivory Kingdom, the Sun Empire and the Grande Armée — march, strike and fall across a marble board in four battlegrounds.</p>
 <p>Full rules including castling, en passant and promotion; three engine strengths; a two-player hotseat; and an AI vs AI mode you can just sit and watch.</p>
-<p><a href="${APP_URL}/arcade/kings-gambit" style="color:#9f9">Play King's Gambit</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+<p><a href="${APP_URL}/arcade/kings-gambit">Play King's Gambit</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/claude-of-duty': {
     title: 'Claude of Duty | DeHub Arcade',
@@ -890,7 +890,7 @@ const MARKETING_PAGES = {
     heading: 'Claude of Duty — A Browser FPS With No Assets',
     bodyHtml: `<p>A first-person shooter that ships no art at all: every mesh, texture and sound is generated in JavaScript on your machine while the level loads.</p>
 <p>It is also hidden inside the War theme, where an arrow key offers to deploy you.</p>
-<p><a href="${APP_URL}/arcade/claude-of-duty" style="color:#9f9">Play Claude of Duty</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+<p><a href="${APP_URL}/arcade/claude-of-duty">Play Claude of Duty</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/jungle-trail': {
     title: 'Jungle Trail | DeHub Arcade',
@@ -898,7 +898,7 @@ const MARKETING_PAGES = {
     heading: 'Jungle Trail — A Procedural Rainforest Walk',
     bodyHtml: `<p>A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
 <p>It is also hidden inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.</p>
-<p><a href="${APP_URL}/arcade/jungle-trail" style="color:#9f9">Walk the trail</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+<p><a href="${APP_URL}/arcade/jungle-trail">Walk the trail</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/street-slayer': {
     title: 'Street Slayer | DeHub Arcade',
@@ -906,7 +906,7 @@ const MARKETING_PAGES = {
     heading: "Street Slayer — A Neon-Street Beat 'Em Up",
     bodyHtml: `<p>A side-scrolling beat 'em up down a neon-lit street: pick one of three fighters — Mike, Indi or Lerone — then punch, kick and throw your way through everything the block sends at you.</p>
 <p>The only game in the arcade that was not found: it was commissioned for DeHub and built by Studio Shook Pixel, so it exists nowhere else. Arrows or WASD to move, Z to jump, four attack keys, and a full set of on-screen controls on a touchscreen.</p>
-<p><a href="${APP_URL}/arcade/street-slayer" style="color:#9f9">Play Street Slayer</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+<p><a href="${APP_URL}/arcade/street-slayer">Play Street Slayer</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/trenchstar': {
     title: 'Trenchstar | DeHub Arcade',
@@ -914,14 +914,14 @@ const MARKETING_PAGES = {
     heading: 'Trenchstar — A Trading Floor Built Out Of Live Markets',
     bodyHtml: `<p>The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.</p>
 <p>Drag any screen to move it, drop it on another to swap them, and put a chart, a heatmap, a live web page or your own tab on any panel. Pick a character and walk the floor, or stay at the desk and fly the camera.</p>
-<p><a href="${APP_URL}/arcade/trenchstar" style="color:#9f9">Take the desk</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+<p><a href="${APP_URL}/arcade/trenchstar">Take the desk</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'guide': {
     title: 'DeHub Guide — Visual Walkthrough of the App',
     description: 'A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works.',
     heading: 'DeHub Guide',
     bodyHtml: `<p>A screen-by-screen walkthrough of the DeHub app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
-<p><a href="${APP_URL}/guide" style="color:#9f9">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs" style="color:#9f9">documentation</a>.</p>`,
+<p><a href="${APP_URL}/guide">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs">documentation</a>.</p>`,
   },
   // Direct APK download. The file itself is a GitHub release asset (~205 MB,
   // well past the 25 MiB per-file ceiling on Workers static assets), reached
@@ -945,8 +945,8 @@ const MARKETING_PAGES = {
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     },
     bodyHtml: `<p>Skip the stores and get the latest version of DeHub right here — straight from us, no store account and no waiting on a review queue.</p>
-<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk" style="color:#9f9">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
-<p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile" style="color:#9f9">on Google Play</a>.</p>`,
+<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
+<p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
 
   // The moderation handbook, published. The page itself is an iframe around a
@@ -971,7 +971,7 @@ const MARKETING_PAGES = {
 <li>Adult or extreme content is marked mature, not deleted. It stays on the creator's profile; it just does not greet a stranger on the home page.</li>
 <li>The only thing deleted without hesitation is child sexual abuse material. Everything else is left to community moderation.</li>
 </ol>
-<p><a href="${APP_URL}/admin-manual" style="color:#9f9">Read the full handbook</a>.</p>`,
+<p><a href="${APP_URL}/admin-manual">Read the full handbook</a>.</p>`,
   },
 
   // The rest of SSR_STATIC_ROUTES, moved here from the Supabase fn's own
@@ -1010,7 +1010,7 @@ const MARKETING_PAGES = {
 <li>Song generation with Suno, plus voice cloning and text-to-speech with ElevenLabs.</li>
 <li>Branded poster templates built on the DeHub design system.</li>
 </ul>
-<p>See <a href="${APP_URL}/pricing" style="color:#9f9">Creator Studio pricing</a> for plans and monthly credits.</p>`,
+<p>See <a href="${APP_URL}/pricing">Creator Studio pricing</a> for plans and monthly credits.</p>`,
   },
   'editor': {
     title: 'DeHub Editor — In-Browser Video Editor',
@@ -1067,7 +1067,7 @@ const MARKETING_PAGES = {
 <li>Extra bookmark folders, saved prompts and profile customisation.</li>
 <li>Exclusive drops, badges and community events.</li>
 </ul>
-<p>DeHub Extra is billed monthly and unlocks across the whole network — social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing" style="color:#9f9">pricing</a>.</p>`,
+<p>DeHub Extra is billed monthly and unlocks across the whole network — social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing">pricing</a>.</p>`,
   },
   'governance': {
     title: 'Governance — Vote on Community Proposals',
@@ -1127,7 +1127,7 @@ const MARKETING_PAGES = {
     description: 'Create and manage AI-powered agents on DeHub. Automate posting, engage with your audience, and integrate with the DeHub API.',
     heading: 'DeHub Agents',
     bodyHtml: `<p>DeHub Agents are configurable AI assistants that post on a schedule, reply to comments, moderate your community, curate feeds and report on growth. Start from a pre-built agent or build your own against the DeHub MCP server and API.</p>
-<p>See <a href="${APP_URL}/connect" style="color:#9f9">Connect</a> to wire DeHub into ChatGPT or Claude.</p>`,
+<p>See <a href="${APP_URL}/connect">Connect</a> to wire DeHub into ChatGPT or Claude.</p>`,
   },
   'assistant': {
     title: 'AI Assistant — Chat, Generate Images & Video',
@@ -1168,7 +1168,7 @@ const MARKETING_PAGES = {
     description: 'Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social.',
     heading: 'Careers at DeHub',
     bodyHtml: `<p>DeHub is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
-<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work" style="color:#9f9">DeHub bounties</a>.</p>`,
+<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">DeHub bounties</a>.</p>`,
   },
 
   // --- app surfaces that had no crawler copy at all --------------------------
@@ -1187,7 +1187,7 @@ const MARKETING_PAGES = {
 <h2>Refilled, not bought</h2>
 <p>Boosts arrive with the badge and refill every fortnight. They are earned by staking rather than sold, so the top of the feed cannot simply be paid for.</p>
 <h2>Thirteen rungs</h2>
-<p>Powers unlock one per tier across the thirteen badges, and higher rungs both hold more boosts and hold them for longer. See <a href="${APP_URL}/stake" style="color:#9f9">staking</a> for how a badge is earned.</p>`,
+<p>Powers unlock one per tier across the thirteen badges, and higher rungs both hold more boosts and hold them for longer. See <a href="${APP_URL}/stake">staking</a> for how a badge is earned.</p>`,
   },
   'converter': {
     title: 'Import from YouTube — DeHub',
@@ -1222,7 +1222,7 @@ const MARKETING_PAGES = {
     heading: 'DeHub Account Marketplace',
     bodyHtml: `<p>An established DeHub account can be sold whole. Listings are browsable by follower count, uploads and account age, and what transfers is everything the account is: the handle, the posts, the followers and the badge entitlements.</p>
 <h2>Settled on-chain</h2>
-<p>Payment is in DHB and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames" style="color:#9f9">username market</a> for selling a handle alone rather than a whole account.</p>`,
+<p>Payment is in DHB and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
   },
   'fractions': {
     path: '/app/fractions',
@@ -1292,12 +1292,12 @@ ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
-<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › ${escHtml(meta.heading)}</p>
+<body>
+<p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
 ${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}
 ${primaryNavHtml()}
-<p style="margin-top:24px"><a href="${appHref(canonicalUrl)}" rel="nofollow" style="color:#9f9">Open ${escHtml(meta.heading)} on DeHub</a></p>
+<p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on DeHub</a></p>
 </body>
 </html>`;
 }
@@ -1419,12 +1419,12 @@ ${entityImageMetaTags(image, title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
+<body>
 <p>${breadcrumb}</p>
 <h1>${escHtml(heading)}</h1>
 ${image ? `<img src="${escHtml(image)}" alt="${escHtml(heading)}" style="max-width:100%">` : ''}
 ${bodyHtml}
-<p style="margin-top:24px"><a href="${escHtml(appHref(canonicalUrl))}" rel="nofollow" style="color:#9f9">Open on DeHub</a></p>
+<p style="margin-top:24px"><a class="dh-cta" href="${escHtml(appHref(canonicalUrl))}" rel="nofollow">Open on DeHub</a></p>
 </body>
 </html>`;
 }
@@ -1711,7 +1711,7 @@ function buildStoreHtml(store) {
     image,
     ogType: 'profile',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/app/stores" style="color:#9f9">Stores</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/stores">Stores</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>`,
     jsonLd: {
       '@context': 'https://schema.org',
@@ -1751,7 +1751,7 @@ function buildListingHtml(listing) {
     // link still unfurls for anyone who shares it.
     noindex: listing.status !== 'active',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/app/stores/${escHtml(storeId)}" style="color:#9f9">${escHtml(storeName)}</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/stores/${escHtml(storeId)}">${escHtml(storeName)}</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${price.toLocaleString('en-US', { style: 'currency', currency: currency === 'DHB' ? 'USD' : currency })}</strong>${listing.is_digital ? ' · digital' : ''}${inStock ? '' : ' · sold out'}</p>`,
     jsonLd: {
@@ -1798,7 +1798,7 @@ function buildEventHtml(event) {
     // A private event is shareable by whoever holds the link, not crawlable.
     noindex: !!event.is_private,
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/app/events" style="color:#9f9">Events</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/events">Events</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
 ${event.location ? `<p>${escHtml(event.location)}</p>` : ''}
@@ -1874,7 +1874,7 @@ function buildStageHtml(stage) {
     // A finished stage is shareable by whoever holds the link, not crawlable.
     noindex: stage.status === 'ended',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/stages" style="color:#9f9">Stages</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stages">Stages</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
 <p>Hosted by ${escHtml(host)}</p>`,
@@ -1968,7 +1968,7 @@ function buildBountyHtml(job) {
     ogType: 'website',
     noindex: !isBountyIndexable(job),
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/work" style="color:#9f9">Bounties</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/work">Bounties</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${escHtml(budget)} ${escHtml(job.currency)}</strong> · ${escHtml(job.job_type)}${job.platform ? ` · ${escHtml(job.platform)}` : ''} · ${escHtml(String(job.status).replace(/_/g, ' '))}</p>
 ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
@@ -1996,9 +1996,9 @@ function buildCreatorFlowHtml(flow) {
     image: absolutize(flow.cover_url) || shareImage('creator'),
     ogType: 'article',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/creator" style="color:#9f9">Creator</a> › <a href="${APP_URL}/creator/flow" style="color:#9f9">Flow</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/creator">Creator</a> › <a href="${APP_URL}/creator/flow">Flow</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
-<p><a href="${appHref(canonicalUrl)}" rel="nofollow" style="color:#9f9">Open this flow</a> · <a href="${APP_URL}/creator/flow" style="color:#9f9">Build your own</a></p>`,
+<p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open this flow</a> · <a href="${APP_URL}/creator/flow">Build your own</a></p>`,
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'CreativeWork',
@@ -2036,7 +2036,7 @@ function buildProposalHtml(proposal) {
     image: shareImage('governance'),
     ogType: 'article',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/governance" style="color:#9f9">Governance</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/governance">Governance</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${escHtml(status)}</strong> · ${votes} votes · ${Number(proposal.comment_count) || 0} comments · proposed by ${escHtml(author)}</p>`,
     jsonLd: {
@@ -2093,7 +2093,7 @@ function buildFeatureRequestHtml(feature) {
     // finished bounty: shareable by whoever holds the link, not crawlable.
     noindex: feature.status === 'declined',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/features" style="color:#9f9">Feature Requests</a>`,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/features">Feature Requests</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${escHtml(status)}</strong> · ${escHtml(category)}</p>
 <p>${Number(feature.vote_count) || 0} votes · ${Number(feature.comment_count) || 0} comments · posted by ${escHtml(authorName)}</p>`,
@@ -2139,11 +2139,11 @@ ${shareMetaTags(`guides/${slug}`, meta.title)}
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>
 </head>
-<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
-<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › <a href="${APP_URL}/docs/blog" style="color:#9f9">Blog</a></p>
+<body>
+<p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
 <article><h1>${escHtml(meta.title)}</h1>
 ${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}</article>
-<p><a href="${APP_URL}/docs/blog" style="color:#9f9">← All DeHub blog posts</a> · <a href="${APP_URL}/" style="color:#9f9">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -2183,8 +2183,8 @@ ${canonicalizePath(pathname) === '/' ? `  <meta name="google-site-verification" 
   <meta name="twitter:site" content="@dehub_official">
   <link rel="canonical" href="${url}">
 </head>
-<body style="background:#000;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">
-  <p><a href="${url}" style="color:#0f0">${title}</a></p>
+<body>
+  <p><a href="${url}">${title}</a></p>
 </body>
 </html>`;
 }
@@ -2259,6 +2259,93 @@ export function isCrawlerUa(ua) {
 // user agent, and its response carries a noindex so the query-string twin
 // never enters the index.
 const APP_ESCAPE_PARAM = 'app';
+
+/**
+ * Every prerendered page is DeHub's front door. It is what a crawler indexes,
+ * what a preview card is built from, and what anyone lands on when a link is
+ * opened somewhere an ordinary browser is not. For years it was raw markup —
+ * pale-green links on black, a #00ff00 "View on DeHub" button, sans-serif —
+ * which looked nothing at all like the product it was advertising.
+ *
+ * This is the app's own design system (the rule block at the top of
+ * src/index.css: black / white / zinc only, Exo, liquid glass, no coloured
+ * accents) reduced to one inline stylesheet. Inline on purpose — a crawler
+ * fetches one document and the page has to render from it alone, so a
+ * stylesheet request is a request that may never be made.
+ *
+ * It reaches every prerendered response through guard(), including the pages
+ * proxied from the ssr-seo function: that function deploys on its own track
+ * and cannot be relied on to change, so its markup is restyled here instead.
+ */
+const PRERENDER_STYLE = `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap"><style>
+:root{--dh-bg:#000;--dh-panel:#131316;--dh-line:rgba(255,255,255,.12);--dh-fg:#fff;--dh-muted:#a1a1aa;--dh-dim:#71717a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--dh-bg);color:var(--dh-fg);font-family:'Exo','Apple Color Emoji','Noto Color Emoji','Segoe UI Emoji',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+.dh-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;border-bottom:1px solid var(--dh-line);background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.dh-head img{height:26px;width:auto;display:block;border:0;border-radius:0;margin:0}
+.dh-head a{border:0}
+.dh-open{font-size:13px;font-weight:700;padding:7px 15px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--dh-line);color:#fff;white-space:nowrap}
+.dh-open:hover{background:rgba(255,255,255,.16)}
+.dh-main{max-width:760px;margin:0 auto;padding:36px 20px 52px}
+h1{font-size:34px;line-height:1.16;font-weight:900;letter-spacing:-.01em;margin:0 0 14px}
+h2{font-size:20px;font-weight:700;margin:34px 0 12px}
+h3{font-size:16px;font-weight:700;margin:24px 0 8px}
+p,li{color:var(--dh-muted)}
+p{margin:0 0 14px}
+strong{color:#fff}
+a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28)}
+a:hover{border-bottom-color:#fff}
+img{max-width:100%;height:auto;display:block;border-radius:16px;border:1px solid var(--dh-line);margin:22px 0}
+.dh-cta{display:inline-block;margin:12px 0 6px;padding:11px 24px;border-radius:10px;background:#fff;color:#000;font-weight:700;border:0}
+.dh-cta:hover{background:#e4e4e7;border:0}
+nav{margin:34px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+nav h2{flex:0 0 100%;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dh-dim);margin:0}
+nav ul{flex:0 0 100%;list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+nav li{margin:0}
+nav a,nav strong{display:inline-block;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--dh-line);color:var(--dh-muted);font-size:13px;font-weight:400}
+nav a:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)}
+nav strong{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff}
+section{margin:34px 0 0}
+section h2{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dh-dim);margin:0 0 12px}
+section ul{list-style:none;padding:0;margin:0}
+section li{padding:12px 16px;margin:0 0 8px;background:var(--dh-panel);border:1px solid var(--dh-line);border-radius:12px}
+section li a{border:0;font-weight:700}
+code{background:rgba(255,255,255,.07);border:1px solid var(--dh-line);border-radius:6px;padding:1px 6px;font-size:.92em}
+table{width:100%;border-collapse:collapse;margin:18px 0}
+td,th{border:1px solid var(--dh-line);padding:9px 11px;text-align:left}
+th{color:#fff;font-weight:700}
+.dh-foot{border-top:1px solid var(--dh-line);padding:24px 20px 30px;color:var(--dh-dim);font-size:13px;text-align:center}
+.dh-foot a{color:var(--dh-muted);border:0}
+.dh-foot a:hover{color:#fff}
+@media(max-width:600px){h1{font-size:27px}.dh-main{padding:26px 16px 40px}}
+</style>`;
+
+const PRERENDER_HEADER = `<header class="dh-head"><a href="${APP_URL}/"><img src="${APP_URL}/dehub-header-logo.png" alt="DeHub" width="270" height="81"></a><a class="dh-open" href="${APP_URL}/app/explore">Open DeHub</a></header><main class="dh-main">`;
+
+const PRERENDER_FOOTER = `</main><footer class="dh-foot">DeHub — open source, user owned and censorship resistant media.<br><a href="${APP_URL}/docs">Docs</a> · <a href="${APP_URL}/guides">Blog</a> · <a href="${APP_URL}/app/explore">Explore</a></footer>`;
+
+/**
+ * The other half of the problem: every builder in this file, and the ssr-seo
+ * function, carries its own hardcoded inline colours, and each one outranks the
+ * sheet above. They are dropped wholesale so a single stylesheet owns the page.
+ * Scoped outside script and style blocks, where the same characters could
+ * belong to content rather than to an element.
+ */
+function stripInlineStyles(html) {
+  return html
+    .split(/(<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>)/i)
+    .map((part, i) => (i % 2 ? part : part.replace(/\sstyle="[^"]*"/gi, '')))
+    .join('');
+}
+
+export function stylePrerendered(html) {
+  if (typeof html !== 'string') return html;
+  if (!html.includes('</head>') || !html.includes('</body>')) return html;
+  if (html.includes('class="dh-main"')) return html;
+  return stripInlineStyles(html.replace('</head>', `${PRERENDER_STYLE}</head>`))
+    .replace(/<body[^>]*>/i, `<body>${PRERENDER_HEADER}`)
+    .replace('</body>', `${PRERENDER_FOOTER}</body>`);
+}
 
 export function appHref(url) {
   if (url.includes(`${APP_ESCAPE_PARAM}=1`)) return url;
@@ -2864,9 +2951,18 @@ async function handleRequest(request, env) {
   // Mirror hosts (staging, previews, aliases) serve identical content and
   // must not index as duplicates of dehub.io.
   const isCanonicalHost = url.hostname === 'dehub.io';
-  const guard = (resp) => {
+  // Every prerendered response passes through here, which makes it the one
+  // place that can put the site's own look on all of them — the pages built
+  // in this file and the ones proxied from the ssr-seo function alike.
+  // guardNext() (the React SPA, which already has the look) deliberately
+  // does not.
+  const guard = async (resp) => {
     if (!isCanonicalHost) resp.headers.set('X-Robots-Tag', 'noindex');
-    return resp;
+    if (!(resp.headers.get('Content-Type') || '').includes('text/html')) return resp;
+    return new Response(stylePrerendered(await resp.text()), {
+      status: resp.status,
+      headers: resp.headers,
+    });
   };
   // Response.redirect() headers are immutable — build redirects by hand so
   // guard() can still stamp mirror hosts.
@@ -3627,7 +3723,7 @@ async function handleRequest(request, env) {
         'work_jobs?status=in.(open,in_progress)&select=job_number,title,total_budget,currency&order=created_at.desc&limit=25',
       );
       if (rows && rows.length) {
-        const items = rows.map((j) => `<li style="margin:6px 0"><a href="${APP_URL}/bounty/${j.job_number}" style="color:#9f9">${escHtml(truncate(j.title || `Bounty #${j.job_number}`, 90))}</a> — ${escHtml(Number(j.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(j.currency || '')}</li>`).join('');
+        const items = rows.map((j) => `<li style="margin:6px 0"><a href="${APP_URL}/bounty/${j.job_number}">${escHtml(truncate(j.title || `Bounty #${j.job_number}`, 90))}</a> — ${escHtml(Number(j.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(j.currency || '')}</li>`).join('');
         html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Open bounties</h2><ul style="list-style:none;padding:0">${items}</ul></section></body>`);
       }
     }
@@ -3926,7 +4022,7 @@ async function handleRequest(request, env) {
     // at the escape hatch, which forces the SPA for any user agent.
     html = html.replace(
       /<a href="(https:\/\/[^"]+)"([^>]*)>(View on DeHub)<\/a>/g,
-      (m, href, attrs, label) => `<a href="${appHref(href)}" rel="nofollow"${attrs}>${label}</a>`,
+      (m, href, attrs, label) => `<a class="dh-cta" href="${appHref(href)}" rel="nofollow">${label}</a>`,
     );
 
     if (!html.includes('og:url')) {
@@ -4054,7 +4150,7 @@ async function handleRequest(request, env) {
       // candidates. Injected first so it sits above the blog link + post list.
       html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left">${primaryNavHtml('/')}</section></body>`);
       // Blog was linked from nowhere in bot HTML — give crawlers a path in.
-      html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog" style="color:#9f9">DeHub Blog — news, guides &amp; product updates</a></p></body>`);
+      html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog">DeHub Blog — news, guides &amp; product updates</a></p></body>`);
       try {
         const feedRes = await fetch(
           'https://api.dehub.io/api/feed?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=minted',
@@ -4075,7 +4171,7 @@ async function handleRequest(request, env) {
               // the two cannot drift into disagreeing.
               const authorUserRaw = String(p.minterUsername || p.mintername || '').replace(/[^A-Za-z0-9_.-]/g, '');
               const authorUser = couldBeProfileSegment(authorUserRaw.toLowerCase(), SYSTEM_ROUTES) ? authorUserRaw : '';
-              return `<li style="margin:6px 0"><a href="${APP_URL}/app/post/${p.tokenId}" style="color:#9f9">${t}</a>${authorUser ? ` by <a href="${APP_URL}/${authorUser}" style="color:#aaa">${authorName}</a>` : ''}</li>`;
+              return `<li style="margin:6px 0"><a href="${APP_URL}/app/post/${p.tokenId}">${t}</a>${authorUser ? ` by <a href="${APP_URL}/${authorUser}">${authorName}</a>` : ''}</li>`;
             }).join('');
             html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Latest on DeHub</h2><ul style="list-style:none;padding:0">${links}</ul></section></body>`);
           }
