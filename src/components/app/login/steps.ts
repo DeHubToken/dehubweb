@@ -18,6 +18,10 @@ export type LoginStep =
   | 'wallet-signing'
   | 'wallet-create'
   | 'wallet-unlock'
+  // The account exists but has no profile yet — username, display name, and
+  // optionally a picture and a reading language. Mandatory: the sheet will not
+  // close while `requiresUsername` is set, so the only other way out is Log out.
+  | 'profile'
   | 'resuming';
 
 /**
