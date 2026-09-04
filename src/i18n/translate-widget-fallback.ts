@@ -10,9 +10,9 @@
  *
  * It is deliberately NOT loaded for everyone:
  *
- *   - A viewer on a file-translated language never loads it, never sends a
- *     request to Google, and never gets the DOM patch below. Most viewers are
- *     in that group, so for them nothing about the app changes.
+ *   - A viewer on a file-translated language never loads it and never sends a
+ *     request to Google. Most viewers are in that group, so for them nothing
+ *     about the app changes.
  *   - A viewer on a tail language gets the widget instead of English.
  *   - A tail language Google does not support gets nothing, and falls back to
  *     English as before. Half of the tail is in this group: Google has no
@@ -24,6 +24,7 @@
  * is a fallback for readers, never a substitute for filling a locale file.
  */
 
+import { guardDomAgainstTranslator, protectVerbatimText } from './translator-dom-guard';
 import { WIDGET_FALLBACK_LOCALES } from './widget-fallback-locales';
 
 const COOKIE = 'googtrans';
@@ -86,62 +87,6 @@ function readCookieTarget(): string | null {
 function writeCookie(value: string | null) {
   const base = `${COOKIE}=${value ?? ''};path=/`;
   document.cookie = value ? base : `${base};expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-}
-
-/**
- * React and Google both own the same text nodes, and Google wins the race: it
- * replaces a text node with its own <font> wrapper, React then tries to remove
- * the node it still holds a handle on, throws NotFoundError, and blanks the
- * page. Swallowing exactly that case leaves React's tree intact — the node it
- * wanted gone is already gone.
- *
- * This patches Node.prototype, so it is applied ONLY once the widget is
- * actually being loaded, never for a viewer on a file-translated language.
- */
-function guardDomAgainstTranslator() {
-  const proto = Node.prototype as unknown as {
-    removeChild: <T extends Node>(child: T) => T;
-    insertBefore: <T extends Node>(node: T, ref: Node | null) => T;
-    __translateGuarded?: boolean;
-  };
-  if (proto.__translateGuarded) return;
-  proto.__translateGuarded = true;
-
-  const { removeChild, insertBefore } = proto;
-
-  proto.removeChild = function <T extends Node>(this: Node, child: T): T {
-    if (child.parentNode !== this) return child;
-    return removeChild.call(this, child) as T;
-  };
-
-  proto.insertBefore = function <T extends Node>(this: Node, node: T, ref: Node | null): T {
-    if (ref && ref.parentNode !== this) return this.appendChild(node) as T;
-    return insertBefore.call(this, node, ref) as T;
-  };
-}
-
-/**
- * Wallet addresses, transaction hashes, token amounts and contract ids must
- * survive verbatim — a translated address is a wrong address, and this app is
- * full of them. Google skips anything under `.notranslate`, so every monospace
- * wrapper is tagged, including the ones React mounts later.
- */
-function protectVerbatimText() {
-  const SELECTOR = '.font-mono, code, pre, [data-address], [data-tx-hash]';
-  const tag = (root: ParentNode) => {
-    root.querySelectorAll?.(SELECTOR).forEach((el) => el.classList.add('notranslate'));
-  };
-
-  tag(document);
-  new MutationObserver((records) => {
-    for (const record of records) {
-      record.addedNodes.forEach((node) => {
-        if (!(node instanceof HTMLElement)) return;
-        if (node.matches(SELECTOR)) node.classList.add('notranslate');
-        tag(node);
-      });
-    }
-  }).observe(document.body, { childList: true, subtree: true });
 }
 
 function loadWidget() {

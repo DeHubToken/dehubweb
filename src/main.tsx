@@ -5,6 +5,7 @@ import { shouldReloadForChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
+import { installTranslatorDomGuard } from "./i18n/translator-dom-guard";
 import "./lib/toast-i18n-interceptor";
 // NOTE: auth-toast translations are no longer imported here — English lives in
 // locales/en.json and other languages are merged lazily by loadLanguage()
@@ -20,6 +21,14 @@ import "./index.css";
 // stylesheet link is appended at the end of <head>.
 
 installSupabaseInterceptor();
+
+// Chrome/Edge/Safari's own "translate this page" rewrites the text nodes React
+// is holding, and React's next update then throws NotFoundError and unmounts
+// the page. That offer appears in every language on every route — including
+// mid-checkout — so the guard is installed before the first render rather than
+// only for the tail languages that use our own Google widget fallback.
+// See src/i18n/translator-dom-guard.ts.
+installTranslatorDomGuard();
 
 // Mirror hosts (cosmic-echo-hero.lovable.app etc.) must never index as
 // duplicates of dehub.io. index.html carries an inline flip script, but
